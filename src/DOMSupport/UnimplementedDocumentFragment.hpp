@@ -288,8 +288,6 @@ public:
 		return DOM_DocumentFragment::operator!=(other);
 	}
 
-protected:
-
 private:
 
 	// Not implemented...

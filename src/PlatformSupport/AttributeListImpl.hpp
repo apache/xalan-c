@@ -121,14 +121,30 @@ public:
 	getValue(const char* const name) const;
 
 	// The mutators are new to this class.
+
+	/**
+	 * Remove all attributes from the list
+	 */
 	virtual void
 	clear();
 
+	/**
+	 * Adds an attribute to the attribute list
+	 *
+	 * @param  name   attribute name
+	 * @param type   attribute type, "CDATA," for example
+	 * @param value  attribute value
+	 */
 	virtual bool
 	addAttribute(const XMLCh* const name,
 				 const XMLCh* const type,
 				 const XMLCh* const value);
 
+	/**
+	 * Removes an attribute from the attribute list
+	 *
+	 * @param  name   attribute name
+	 */
 	virtual bool
 	removeAttribute(const XMLCh* const name);
 

@@ -85,31 +85,66 @@ public:
 	virtual
 	~Writer();
 
+	/**
+	 * Close the stream
+	 */
 	virtual void
 	close() = 0;
 
+	/**
+	 * Flush the stream
+	 */
 	virtual void
 	flush() = 0;
 
 
 	// Output functions
 
-	// If the length is UINT_MAX, then the array is assumed to be null-terminated.
+	/**
+	 * Writes a string
+	 * 
+	 * @param 	s         string to write
+	 * @param 	theOffset starting offset in string to begin writing, default 0
+	 * @param 	theLength number of characters to write. If the length is
+	 *                    UINT_MAX, then the array is assumed to be
+	 *                    null-terminated.  Default is UINT_MAX.
+	 */
 	virtual void
 	write(const char*	s,
 		  unsigned int	theOffset = 0,
 		  unsigned int	theLength = UINT_MAX) = 0;
 
-	// If the length is UINT_MAX, then the array is assumed to be null-terminated.
+	/**
+	 * Writes a string
+	 * 
+	 * @param 	s         string to write
+	 * @param 	theOffset starting offset in string to begin writing, default 0
+	 * @param 	theLength number of characters to write. If the length is
+	 *                    UINT_MAX, then the array is assumed to be
+	 *                    null-terminated.  Default is UINT_MAX.
+	 */
 	virtual void
 	write(const XMLCh*	s,
 		  unsigned int	theOffset = 0,
 		  unsigned int	theLength = UINT_MAX) = 0;
 
+	/**
+	 * Writes a character
+	 * 
+	 * @param 	c         character to write
+	 */
 	virtual void
 	write(XMLCh		c) = 0;
 
-	// If the length is UINT_MAX, then the entire string is printed.
+	/**
+	 * Writes a string
+	 * 
+	 * @param 	s         string to write
+	 * @param 	theOffset starting offset in string to begin writing, default 0
+	 * @param 	theLength number of characters to write. If the length is
+	 *                    UINT_MAX,  then the entire string is printed. Default
+	 *                    is UINT_MAX.
+	 */
 	virtual void
 	write(const DOMString&	s,
 		  unsigned int		theOffset = 0,

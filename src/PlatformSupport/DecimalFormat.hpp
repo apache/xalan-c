@@ -78,6 +78,13 @@ class XALAN_PLATFORMSUPPORT_EXPORT DecimalFormat : public NumberFormat
 {
 public:
 
+	/**
+	 * Constructor
+	 * 
+	 * @param thePatternString string defining how output should be formatted
+	 * @param theSymbols       class defining the symbols used for output, for
+	 *                         example, symbol for currency
+	 */
 	explicit
 	DecimalFormat(
 			const DOMString&				thePatternString = DOMString(),
@@ -104,12 +111,25 @@ public:
 
 
 	// New for DecimalFormat...
+
+	/**
+	 * Retrieve class defining symbols used for output
+	 * 
+	 * @return class defining the symbols used for output, for example, symbol
+	 *         for currency
+	 */
 	const DecimalFormatSymbols&
 	getDecimalFormatSymbols() const
 	{
 		return m_decimalFormatSymbols;
 	}
 
+	/**
+	 * Set class defining symbols used for output
+	 * 
+	 * @param class defining the symbols used for output, for example, symbol
+	 *        for currency
+	 */
 	void
 	setDecimalFormatSymbols(const DecimalFormatSymbols&		theDecimalFormatSymbols)
 	{

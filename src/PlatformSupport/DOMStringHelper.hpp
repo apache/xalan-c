@@ -102,8 +102,14 @@ initializeAndTranscode(const char*	theString);
 #endif
 
 
-// Simulates the java String method indexOf().  Returns the index of theChar
-// in theString, or -1 if the character is not found.
+/**
+ * Simulates the java String method indexOf().
+ * 
+ * @param theString string to search
+ * @param theChar   character searched for
+ * @return the index of theChar in theString, or -1 if the character is not
+ * found.    
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 indexOf(
 			const DOMString&	theString,
@@ -111,16 +117,28 @@ indexOf(
 
 
 
-// Simulates the java String method indexOf().  Returns the index of theSubString
-// in theString, or -1 if the string is not found.
+/**
+ * Simulates the java String method indexOf().
+ * 
+ * @param theString string to search
+ * @param theSubString substring searched for
+ * @return the index of theSubString in theString, or -1 if the string is not
+ * found.
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 indexOf(
 			const DOMString&	theString,
 			const DOMString&	theSubString);
 
 
-// Simulates the java String method lastIndexOf().  Returns the index of theChar
-// in theString, or -1 if the character is not found.
+/**
+ * Simulates the java String method lastIndexOf().
+ * 
+ * @param theString string to search
+ * @param theChar   character searched for
+ * @return the index of theChar in theString, or -1 if the character is not
+ * found.    
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 lastIndexOf(
 			const DOMString&	theString,
@@ -128,6 +146,13 @@ lastIndexOf(
 
 
 
+/**
+ * Simulates the java String method startsWith().
+ * 
+ * @param theDOMString target string to search
+ * @param theSubString substring searched for
+ * @return true if the target string begins with the substring
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 startsWith(
 			const DOMString&	theDOMString,
@@ -135,6 +160,30 @@ startsWith(
 
 
 
+/**
+ * Simulates the java String method startsWith().
+ * 
+ * @param theDOMString target string to search
+ * @param theSubString substring searched for
+ * @return true if the target string begins with the substring
+ */
+inline bool
+startsWith(
+			const DOMString&	theDOMString,
+			const char*			theSubString)
+{
+	return startsWith(theDOMString,
+					  DOMString(theSubString));
+}
+
+
+/**
+ * Simulates the java String method endsWith().
+ * 
+ * @param theDOMString target string to search
+ * @param theSubString substring searched for
+ * @return true if the target string ends with the substring
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 endsWith(
 			const DOMString&	theDOMString,
@@ -142,6 +191,12 @@ endsWith(
 
 
 
+/**
+ * Simulates the java String method length() for a DOMString
+ * 
+ * @param theDOMString target string
+ * @return the length of the target string
+ */
 inline unsigned int
 length(const DOMString&		theString)
 {
@@ -150,6 +205,13 @@ length(const DOMString&		theString)
 
 
 
+/**
+ * Simulates the java String method length() for a null-terminated buffer of
+ * XMLCh characters
+ * 
+ * @param theBuffer target string
+ * @return the length of the target string
+ */
 inline unsigned int
 length(const XMLCh*		theBuffer)
 {
@@ -167,6 +229,12 @@ length(const XMLCh*		theBuffer)
 
 
 
+/**
+ * Determines if the target string contains any elements
+ * 
+ * @param str target string
+ * @return true if the target string has a non-zero length
+ */
 inline bool 
 isEmpty(const DOMString& str)
 {
@@ -175,17 +243,90 @@ isEmpty(const DOMString& str)
 
 
 
-inline bool
-startsWith(
-			const DOMString&	theDOMString,
-			const char*			theSubString)
-{
-	return startsWith(theDOMString,
-					  DOMString(theSubString));
-}
+
+/**
+ * Converts a double value into a DOMString
+ * 
+ * @param theDouble number to be converted
+ * @return decimal string representation of the number
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
+DoubleToDOMString(double	theDouble);
 
 
 
+/**
+ * Converts a long value into a DOMString
+ * 
+ * @param theInt number to be converted
+ * @return hexadecimal string representation of the number
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
+LongToHexDOMString(long		theInt);
+
+
+
+/**
+ * Converts a long value into a DOMString
+ * 
+ * @param theInt number to be converted
+ * @return decimal string representation of the number
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
+LongToDOMString(long	theInt);
+
+
+
+/**
+ * Converts an unsigned long value into a DOMString
+ * 
+ * @param theInt number to be converted
+ * @return decimal string representation of the number
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
+UnsignedLongToDOMString(unsigned long	theInt);
+
+
+
+/**
+ * Converts a DOMString into an integer value
+ * 
+ * @param theString target string
+ * @return integer value of target string
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+DOMStringToInt(const DOMString&	theString);
+
+
+
+/**
+ * Converts a DOMString into a long value
+ * 
+ * @param theString target string
+ * @return long value of target string
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(long)
+DOMStringToLong(const DOMString&	theString);
+
+
+
+/**
+ * Converts a DOMString into a double value
+ * 
+ * @param theString target string
+ * @return double value of target string
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(double)
+DOMStringToDouble(const DOMString&	theString);
+
+
+/**
+ * Outputs the target string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString target string
+ * @see operator<<
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
 			TextOutputStream&	theStream,
@@ -193,6 +334,13 @@ OutputString(
 
 
 
+/**
+ * Outputs the target string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString target string
+ * @see operator<<
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
 #if defined(XALAN_NO_NAMESPACES)
@@ -204,26 +352,13 @@ OutputString(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
-DoubleToDOMString(double	theDouble);
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
-LongToHexDOMString(long		theInt);
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
-LongToDOMString(long	theInt);
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
-UnsignedLongToDOMString(unsigned long	theInt);
-
-
-
+/**
+ * Outputs the target string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString target string
+ * @see OutputString
+ */
 inline TextOutputStream&
 operator<<(
 			TextOutputStream&	theStream,
@@ -237,6 +372,13 @@ operator<<(
 
 
 
+/**
+ * Outputs the target string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString target string
+ * @see OutputString
+ */
 #if defined(XALAN_NO_NAMESPACES)
 inline ostream&
 #else
@@ -254,6 +396,12 @@ operator<<(
 
 
 
+/**
+ * Creates a copy of the target string
+ * 
+ * @param theString target string
+ * @return copy of string
+ */
 inline DOMString
 clone(const DOMString&	theString)
 {
@@ -262,6 +410,12 @@ clone(const DOMString&	theString)
 
 
 
+/**
+ * Determines whether character represents white space
+ * 
+ * @param theChar target character
+ * @return true if character represents white space
+ */
 inline bool
 isSpace(XMLCh	theChar)
 {
@@ -270,6 +424,13 @@ isSpace(XMLCh	theChar)
 
 
 
+/**
+ * Retrieves a character at a specified index in the target string
+ * 
+ * @param theString target string
+ * @param theIndex  index of character
+ * @return character at specified index
+ */
 inline XMLCh
 charAt(
 			const DOMString&	theString,
@@ -280,6 +441,12 @@ charAt(
 
 
 
+/**
+ * Determines whether character represents a digit
+ * 
+ * @param theChar target character
+ * @return true if character represents a digit
+ */
 inline bool
 isDigit(XMLCh	theChar)
 {
@@ -288,6 +455,12 @@ isDigit(XMLCh	theChar)
 
 
 
+/**
+ * Determines whether character represents a letter or digit
+ * 
+ * @param theChar target character
+ * @return true if character represents a letter or digit
+ */
 inline bool
 isLetterOrDigit(XMLCh	theChar)
 {
@@ -296,6 +469,17 @@ isLetterOrDigit(XMLCh	theChar)
 
 
 
+/**
+ * Simulates the java String method substring(). Returns a new string that is
+ * a substring of this string. The substring begins at the specified
+ * theStartIndex and extends to the character at index theEndIndex - 1. Thus
+ * the length of the substring is theEndIndex-theStartIndex.
+ * 
+ * @param theString     target string
+ * @param theStartIndex starting index, inclusive
+ * @param theEndIndex   ending index, exclusive
+ * @return string containing the specified range of characters from target
+ */
 inline DOMString
 substring(
 			const DOMString&	theString,
@@ -325,28 +509,28 @@ substring(
 
 
 
+/**
+ * Simulates the java String method toLowerCase(). Returns a new string
+ * containing only lower case characters of target string.
+ * 
+ * @param theString target string
+ * @return string containing lower case characters
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 toLowerCase(const DOMString&	theString);
 
 
 
+/**
+ * Simulates the java String method toUpperCase(). Returns a new string
+ * containing only upper case characters of target string.
+ * 
+ * @param theString target string
+ * @return string containing upper case characters
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 toUpperCase(const DOMString&	theString);
 
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-DOMStringToInt(const DOMString&	theString);
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(long)
-DOMStringToLong(const DOMString&	theString);
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(double)
-DOMStringToDouble(const DOMString&	theString);
 
 
 // These two function are specifically not defined, and
@@ -367,8 +551,15 @@ operator!=(
 			const DOMString&		theRHS);
 
 
-// Get the underlying representation of the wide string.
-// returns a null-terminated string
+
+
+/**
+ * Get the underlying representation of the target DOMString as a
+ * null-terminated string                         
+ * 
+ * @param theString target string
+ * @return null-terminated string of XMLCh
+ */
 inline const XMLCh*
 c_wstr(const DOMString&		theString)
 {
@@ -380,7 +571,13 @@ c_wstr(const DOMString&		theString)
 }
 
 
-// not guaranteed to be null-terminated
+/**
+ * Get the underlying representation of the target DOMString as an array of
+ * XMLCh, not guaranteed to be null-terminated.
+ * 
+ * @param theString target string
+ * @return array of XMLCh
+ */
 inline const XMLCh*
 toCharArray(const DOMString&	theString)
 {
@@ -389,6 +586,13 @@ toCharArray(const DOMString&	theString)
 
 
 
+/**
+ * Get the underlying representation of the target DOMString as an array of
+ * XMLCh, not guaranteed to be null-terminated.
+ * 
+ * @param theString target string
+ * @return array of XMLCh
+ */
 inline XMLCh*
 toCharArray(DOMString&	theString)
 {
@@ -397,12 +601,26 @@ toCharArray(DOMString&	theString)
 
 
 
+/**
+ * Compare the contents of two strings for equality
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 equals(const XMLCh*	theLHS,
 	   const XMLCh*	theRHS);
 
 
 
+/**
+ * Compare the contents of two strings for equality
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
 inline bool
 equals(const XMLCh*			theLHS,
 	   const DOMString&		theRHS)
@@ -412,6 +630,13 @@ equals(const XMLCh*			theLHS,
 
 
 
+/**
+ * Compare the contents of two strings for equality
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
 inline bool
 equals(const DOMString&	theLHS,
 	   const XMLCh*		theRHS)
@@ -421,6 +646,13 @@ equals(const DOMString&	theLHS,
 
 
 
+/**
+ * Compare the contents of two strings for equality
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
 inline bool
 equals(const DOMString&		theLHS,
 	   const char*			theRHS)
@@ -430,6 +662,13 @@ equals(const DOMString&		theLHS,
 
 
 
+/**
+ * Compare the contents of two strings for equality
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
 inline bool
 equals(
 			const DOMString&		theLHS,
@@ -440,6 +679,13 @@ equals(
 
 
 
+/**
+ * Compare the contents of two strings for equality, without regard for case
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the case-insensitive contents of both strings are identical
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 equalsIgnoreCase(
 			const DOMString&	theLHS,
@@ -447,9 +693,16 @@ equalsIgnoreCase(
 
 
 
-// Returns 0 for equal strings, less than 0 if theLHS
-// is less than theRHS, or greater than 0 if theRHS
-// is greater than theLHS.
+/**
+ * Compare the contents of two strings for equality
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is lexically
+ * less than theRHS, or greater than 0 if theRHS is lexically greater than
+ * theLHS.
+ * @see operator<
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compare(
 			const DOMString&	theLHS,
@@ -457,6 +710,15 @@ compare(
 
 
 
+/**
+ * Compare the contents of two strings for equality
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns true if theLHS is lexically
+ * less than theRHS
+ * @see compare
+ */
 inline bool
 operator<(
 			const DOMString&	theLHS,
@@ -467,6 +729,13 @@ operator<(
 
 
 
+/**
+ * Concatenate two strings
+ * 
+ * @param theString         target string
+ * @param theStringToAppend string to add to target
+ * @return string with contents of 'theStringToAppend' added to target string
+ */
 inline DOMString&
 append(
 			DOMString&			theString,
@@ -479,11 +748,22 @@ append(
 
 
 
+/**
+ * Remove trailing whitespace
+ * 
+ * @param theString         target string
+ * @return string with contents of target string less trailing whitespace
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 trim(const DOMString&	theString);
 
 
 
+/**
+ * Remove all elements from target string
+ * 
+ * @param theString target string
+ */
 inline void
 clear(DOMString&	theString)
 {
@@ -492,6 +772,13 @@ clear(DOMString&	theString)
 
 
 
+/**
+ * Replaces a character at a specified index in a DOMString
+ * 
+ * @param theString target string
+ * @param theIndex  index of character
+ * @param theChar target character
+ */
 inline void
 setCharAt(
 			DOMString&		theString,
@@ -516,21 +803,39 @@ typedef std::vector<XMLCh>	XMLCharVectorType;
 
 
 
-// Utility function to make a 0-terminated vector of XMLChs, from
-// a 0-terminated array chars, via transcoding.
+
+
+/**
+ * Utility function to make a null-terminated vector of XMLChs, from a
+ * null-terminated array of chars, via transcoding.               
+ * 
+ * @param data array to be converted
+ * @return null-terminated vector of XMLCh
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XMLCharVectorType)
 MakeXMLChVector(const char*		data);
 
 
 
-// Utility function to make a 0-terminated vector of XMLChs, from
-// a 0-terminated array of them.
+/**
+ * Utility function to make a null-terminated vector of XMLChs, from a
+ * null-terminated array of XMLCh.
+ * 
+ * @param data array to be converted
+ * @return null-terminated vector of XMLCh
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XMLCharVectorType)
 MakeXMLChVector(const XMLCh*		data);
 
 
 
-// An inline version for DOMStrings....
+/**
+ * Utility function to make a null-terminated vector of XMLChs, from a
+ * DOMString
+ * 
+ * @param data DOMString to be converted
+ * @return null-terminated vector of XMLCh
+ */
 inline XMLCharVectorType
 MakeXMLChVector(const DOMString&		data)
 {
@@ -554,7 +859,12 @@ struct c_wstr_functor : public std::unary_function<DOMString, const XMLCh*>
 
 
 
-// Hash functor for DOMStrings
+/**
+ * Hash functor for DOMStrings
+ * 
+ * @param theKey DOMString to be hashed
+ * @return hash value for DOMString
+ */
 #if defined(XALAN_NO_NAMESPACES)
 struct DOMStringHashFunction : public unary_function<const DOMString&, size_t>
 #else
@@ -584,8 +894,13 @@ struct DOMStringHashFunction : public std::unary_function<const DOMString&, size
 
 
 
-// Equals functor for DOMStrings
-// Hash functor for DOMStrings
+/**
+ * Equals functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
 #if defined(XALAN_NO_NAMESPACES)
 struct DOMStringEqualsFunction : public binary_function<const DOMString&, const DOMString&, bool>
 #else
@@ -602,6 +917,12 @@ struct DOMStringEqualsFunction : public std::binary_function<const DOMString&, c
 
 
 
+/**
+ * Convert DOMString to C++ standard library string
+ * 
+ * @param theString target string
+ * @return C++ standard library string representation of target
+ */
 #if defined(XALAN_NO_NAMESPACES)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(string)
 #else
@@ -611,12 +932,25 @@ DOMStringToStdString(const DOMString& domString);
 
 
 
-//Is the string just whitespace?
+/**
+ * Determines if the string contains only whitespace
+ * 
+ * @param theString target string
+ * @return true if string contains only whitespace
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isWhiteSpace(const DOMString&	string);
 
 
 
+/**
+ * Determines if a range in an array contains only whitespace
+ * 
+ * @param ch target array
+ * @param start starting index to examine
+ * @param length number of characters to examine
+ * @return true if specified range contains only whitespace
+ */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isWhiteSpace(
 			const XMLCh*	ch,

@@ -75,6 +75,8 @@ public:
 
 	/**
 	 * Clone the instance.
+	 * 
+	 * @param deep	clone all subobjects if true
 	 */
 	virtual Cloneable*
 	clone(bool	deep) const = 0;

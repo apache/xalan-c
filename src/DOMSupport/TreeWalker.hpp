@@ -82,12 +82,18 @@ public:
 
 	/**
 	 * Perform a pre-order traversal non-recursive style.
+	 * 
+	 * @param pos starting node $$$
 	 */
+
 	virtual void
 	traverse(const DOM_Node&	pos);
 
 	/**
 	 * Perform a pre-order traversal non-recursive style.
+	 * 
+	 * @param pos starting node  $$$
+	 * @param parent parent node $$$
 	 */
 	virtual void
 	traverse(

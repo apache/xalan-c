@@ -73,6 +73,12 @@ class XALAN_PLATFORMSUPPORT_EXPORT XSLException
 {
 public:
 
+	/**
+	 * Constructor
+	 * 
+	 * @param theMessage message to write when exception thrown
+	 * @param theType    type of exception, default is "XSLException"
+	 */
 	XSLException(
 		const DOMString&	theMessage,
 		const DOMString&	theType = DOMString("XSLException"));
@@ -80,11 +86,21 @@ public:
 	virtual
 	~XSLException();
 
+	/**
+	 * Retrieve type of exception
+	 * 
+	 * @return type of exception
+	 */
 	DOMString getType() const
 	{
 		return m_type;
 	}
 
+	/**
+	 * Retrieve message for exception
+	 * 
+	 * @return exception message
+	 */
 	DOMString getMessage() const
 	{
 		return m_message;

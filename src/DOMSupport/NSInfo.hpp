@@ -82,8 +82,13 @@ public:
 						   ANCESTORNOXMLNS };
 
 
-	explicit
-	NSInfo(bool hasProcessedNS = false,
+	/**
+	 * Constructor for NSInfo class, for storing namespace data
+	 * 
+	 * @param hasProcessedNS $$$
+	 * @param hasXMLNSAttrs  $$$
+	 */
+	explicit NSInfo(bool hasProcessedNS = false,
 		   bool hasXMLNSAttrs = false) :
 		m_hasProcessedNS(hasProcessedNS),
 		m_hasXMLNSAttrs(hasXMLNSAttrs),
@@ -93,6 +98,13 @@ public:
 	};
 
   // Unused at the moment
+	/**
+	 * Constructor for NSInfo class, for storing namespace data
+	 * 
+	 * @param hasProcessedNS $$$
+	 * @param hasXMLNSAttrs  $$$
+	 * @param eHasXMLNSAttrs $$$
+	 */
 	NSInfo(bool				hasProcessedNS,
 		   bool				hasXMLNSAttrs,
 		   eHasXMLNSAttrs	ancestorHasXMLNSAttrs) :
@@ -103,6 +115,12 @@ public:
 	{
 	};
 
+	/**
+	 * Constructor for NSInfo class, for storing namespace data
+	 * 
+	 * @param theNamespace  namespace
+	 * @param hasXMLNSAttrs $$$
+	 */
 	NSInfo(DOMString	theNamespace,
 		   bool			hasXMLNSAttrs) :
 		m_hasProcessedNS(true),

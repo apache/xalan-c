@@ -72,6 +72,13 @@ public:
 	// values.  It seems that under the IA32 architecture, NaN will compare
 	// as equal to any number, which is a big problem.  Hence these helper
 	// functions.
+
+	/**
+	 * Determine if target is not a number
+	 * 
+	 * @param theNumber target number
+	 * @return true if target represents the "not a number" value
+	 */
 	static bool
 	isNaN(double	theNumber)
 	{
@@ -90,6 +97,12 @@ public:
 #endif
 	}
 
+	/**
+	 * Determine if target is positive infinity
+	 * 
+	 * @param theNumber target number
+	 * @return true if target represents the value for positive infinity
+	 */
 	static bool
 	isPositiveInfinity(double	theNumber)
 	{
@@ -100,6 +113,12 @@ public:
 #endif
 	}
 
+	/**
+	 * Determine if target is negative infinity
+	 * 
+	 * @param theNumber target number
+	 * @return true if target represents the value for negative infinity
+	 */
 	static bool
 	isNegativeInfinity(double	theNumber)
 	{
@@ -114,18 +133,34 @@ public:
 	// be used to do equality comparisons, as == may fail on
 	// some platforms.
 	//
+
+	/**
+	 * Double value that represents "not a number"
+	 * 
+	 * @return "not a number" value
+	 */
 	static double
 	getNaN()
 	{
 		return s_NaN;
 	}
 
+	/**
+	 * Double value that represents positive infinity
+	 * 
+	 * @return positive infinity value
+	 */
 	static double
 	getPositiveInfinity()
 	{
 		return s_positiveInfinity;
 	}
 
+	/**
+	 * Double value that represents negative infinity
+	 * 
+	 * @return negative infinity value
+	 */
 	static double
 	getNegativeInfinity()
 	{

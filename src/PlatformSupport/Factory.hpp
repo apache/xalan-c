@@ -99,9 +99,14 @@ public:
 	// These interfaces are new...
 
 	/*
-	 * Return an object to the factory.
 	 *
 	 */
+	/**
+	 * Return an object to the factory.
+	 * 
+	 * @param theFactoryObject object to be returned
+	 */
+
 	virtual bool
 	returnObject(const FactoryObject*	theFactoryObject) = 0;
 

@@ -107,16 +107,33 @@ public:
 		 * Tell if the node is ignorable whitespace.
 		 * This should be in the DOM.  Return false if the 
 		 * parser doesn't handle this.
+		 * 
+		 * @param node	text node queried
+		 * @return true if white space can be ignored
 		 */
+
 		virtual bool
 		isIgnorableWhitespace(const DOM_Text&	node) const = 0;
 	};
 
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param node        DOM node whose data is to be returned
+	 * @param theResolver $$$
+	 * @return a string representation of the node's data
+	 */
 	static DOMString
 	getNodeData(
 			const DOM_Node&				node,
 			const WhitespaceSupport&	theResolver);
 
+	/**
+	 * Retrieve local name of node
+	 * 
+	 * @param node	DOM node whose name is returned
+	 * @return name of node without namespace
+	 */
 	static DOMString
 	getLocalNameOfNode(const DOM_Node&		n);
 
@@ -125,10 +142,20 @@ public:
 	 * because the DOM WG decided that attributes don't 
 	 * have parents.  If this function is used with a DOM implementation
 	 * that reuses attribute nodes, this will not work correctly.
+	 * 
+	 * @param node child node
+	 * @return parent node
 	 */
 	static DOM_Node
 	getParentOfNode(const DOM_Node&		node);
 
+	/**
+	 * Retrieve the URI corresponding to a namespace prefix
+	 * 
+	 * @param prefix           prefix for a namespace
+	 * @param namespaceContext DOM element representing the context for namespace
+	 * @return URI corresponding to namespace
+	 */
 	static DOMString
 	getNamespaceForPrefix(
 			const DOMString&	prefix,

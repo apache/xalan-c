@@ -72,6 +72,15 @@ class XALAN_PLATFORMSUPPORT_EXPORT StringTokenizer
 {
 public:
 
+	/**
+	 * Constructs a tokenizer for the target string
+	 * 
+	 * @param theString     target string to tokenize
+	 * @param theTokens     string of delimiters used to parse target, default
+	 *                      is "\t\n\r\f"
+	 * @param fReturnTokens if true, delimiter characters are also returned
+	 *                      as tokens, default is false
+	 */
 	StringTokenizer(const DOMString&	theString,
 					const DOMString&	theTokens = DOMString("\t\n\r\f"),
 					bool				fReturnTokens = false);
@@ -79,12 +88,28 @@ public:
 	virtual
 	~StringTokenizer();
 
+	/**
+	 * Determine if there are tokens remaining
+	 * 
+	 * @return true if there are more tokens
+	 */
 	virtual bool
 	hasMoreTokens() const;
 
+	/**
+	 * Retrieve the next token to be parsed; behavior is undefined if there are
+	 * no more tokens
+	 * 
+	 * @return next token string
+	 */
 	virtual DOMString
 	nextToken();
 
+	/**
+	 * Count the number of tokens yet to be parsed
+	 * 
+	 * @return number of remaining tokens
+	 */
 	virtual int
 	countTokens() const;
 

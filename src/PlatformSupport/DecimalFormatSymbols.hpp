@@ -85,156 +85,293 @@ public:
 	DecimalFormatSymbols&
 	operator=(const DecimalFormatSymbols&	theRHS);
 
+	/**
+	 * Retrieve the string denoting the local currency, "$", for example
+	 * 
+	 * @return string used for local currency
+	 */
 	DOMString
 	getCurrencySymbol() const
 	{
 		return m_currencySymbol;
 	}
 
+	/**
+	 * Retrieve the character used for decimal sign, '.' for example
+	 * 
+	 * @return character used for decimal sign
+	 */
 	XMLCh
 	getDecimalSeparator() const
 	{
 		return m_decimalSeparator;
 	}
 
+	/**
+	 * Retrieve character used for a digit in a pattern
+	 * 
+	 * @return character used for a digit in a pattern 
+	 */
 	XMLCh
 	getDigit() const
 	{
 		return m_digit;
 	}
 
+	/**
+	 * Retrieve the character used for thousands separator, "," for example
+	 * 
+	 * @return character used for thousands separator
+	 */
 	XMLCh
 	getGroupingSeparator() const
 	{
 		return m_groupingSeparator;
 	}
 
+	/**
+	 * Retrieve the string used to represent infinity
+	 * 
+	 * @return string used to represent infinity
+	 */
 	DOMString
 	getInfinity() const
 	{
 		return m_infinity;
 	}
 
+	/**
+	 * Retrieve the international string denoting the local currency
+	 * 
+	 * @return international string denoting the local currency
+	 */
 	DOMString
 	getInternationalCurrencySymbol() const
 	{
 		return m_internationalCurrencySymbol;
 	}
 
+	/**
+	 * Retrieve the character used to represent minus sign
+	 * 
+	 * @return character used to represent minus sign
+	 */
 	XMLCh
 	getMinusSign() const
 	{
 		return m_minusSign;
 	}
 
+	/**
+	 * Retrieve the monetary decimal separator
+	 * 
+	 * @return character used to separate decimal portion of currency
+	 */
 	XMLCh
 	getMonetaryDecimalSeparator() const
 	{
 		return m_monetaryDecimalSeparator;
 	}
 
+	/**
+	 * Retrieve the string used for a numeric value that cannot be represented
+	 * as a number
+	 * 
+	 * @return string representing "not a number" value
+	 */
 	DOMString
 	getNaN() const
 	{
 		return m_NaN;
 	}
 
+	/**
+	 * Retrieve the character used to separate positive and negative
+	 * subpatterns in a pattern
+	 * 
+	 * @return character used to separate positive and negative subpatterns
+	 */
 	XMLCh
 	getPatternSeparator() const
 	{
 		return m_patternSeparator;
 	}
 
+	/**
+	 * Retrieve the character used for percent sign, "%," for example
+	 * 
+	 * @return character used for percent sign
+	 */
 	XMLCh
 	getPercent() const
 	{
 		return m_percent;
 	}
 
+	/**
+	 * Retrieve the character used for per thousand sign
+	 * 
+	 * @return character used for per thousand sign
+	 */
 	XMLCh
 	getPerMill() const
 	{
 		return m_perMill;
 	}
 
+	/**
+	 * Retrieve the character used for zero
+	 * 
+	 * @return character used for zero
+	 */
 	XMLCh
 	getZeroDigit() const
 	{
 		return m_zeroDigit;
 	}
 
+	/**
+	 * Sets the string denoting the local currency, "$", for example
+	 * 
+	 * @param theCurrencySymbol symbol used for local currency
+	 */
 	void
 	setCurrencySymbol(const DOMString&	theCurrencySymbol)
 	{
 		m_currencySymbol = theCurrencySymbol;
 	}
 
+	/**
+	 * Sets the character used for decimal sign, '.' for example
+	 * 
+	 * @param theDecimalSeparator character used for decimal sign
+	 */
 	void
 	setDecimalSeparator(XMLCh	theDecimalSeparator)
 	{
 		m_decimalSeparator = theDecimalSeparator;
 	}
 
+	/**
+	 * Sets the character used for a digit in a pattern
+	 * 
+	 * @param theDigit character used for a digit in a pattern 
+	 */
 	void
 	setDigit(XMLCh	theDigit)
 	{
 		m_digit = theDigit;
 	}
 
+	/**
+	 * Sets the character used for thousands separator, "," for example
+	 * 
+	 * @param theGroupingSeparator character used for thousands separator
+	 */
 	void
-	setGroupingSeparator(XMLCh	theGoupingSeparator)
+	setGroupingSeparator(XMLCh	theGroupingSeparator)
 	{
-		m_groupingSeparator = theGoupingSeparator;
+		m_groupingSeparator = theGroupingSeparator;
 	}
 
+	/**
+	 * Sets the string used to represent infinity
+	 * 
+	 * @param theInfinity string used to represent infinity
+	 */
 	void
 	setInfinity(const DOMString&	theInfinity)
 	{
 		m_infinity = theInfinity;
 	}
 
+	/**
+	 * Sets the international string denoting the local currency
+	 * 
+	 * @param theInternationalCurrencySymbol international string denoting the
+	 *                                       local currency
+	 */
 	void
 	setInternationalCurrencySymbol(const DOMString&		theInternationalCurrencySymbol)
 	{
 		m_internationalCurrencySymbol = theInternationalCurrencySymbol;
 	}
 
+	/**
+	 * Sets the character used to represent minus sign
+	 * 
+	 * @param theMinusSign character used to represent minus sign
+	 */
 	void
 	setMinusSign(XMLCh	theMinusSign)
 	{
 		m_minusSign = theMinusSign;
 	}
 
+	/**
+	 * Sets the monetary decimal separator
+	 * 
+	 * @param theMonetaryDecimalSeparator character used to separate decimal
+	 *                                    portion of currency
+	 */
 	void
 	setMonetaryDecimalSeparator(XMLCh	theMonetaryDecimalSeparator)
 	{
 		m_monetaryDecimalSeparator = theMonetaryDecimalSeparator;
 	}
 
+	/**
+	 * Sets the string used for a numeric value that cannot be represented
+	 * as a number
+	 * 
+	 * @param theNaN string representing "not a number" value
+	 */
 	void
 	setNaN(const DOMString&		theNaN)
 	{
 		m_NaN = theNaN;
 	}
 				   
+	/**
+	 * Sets the character used to separate positive and negative subpatterns in
+	 * a pattern
+	 * 
+	 * @param thePatternSeparator character used to separate positive and
+	 *                            negative subpatterns
+	 */
 	void
 	setPatternSeparator(XMLCh	thePatternSeparator)
 	{
 		m_patternSeparator = thePatternSeparator;
 	}
 
+	/**
+	 * Sets the character used for percent sign, "%," for example
+	 * 
+	 * @param thePercent character used for percent sign
+	 */
 	void
 	setPercent(XMLCh	thePercent)
 	{
 		m_percent = thePercent;
 	}
 
+	/**
+	 * Sets the character used for per thousand sign
+	 * 
+	 * @param thePerMill character used for per thousand sign
+	 */
 	void
 	setPerMill(XMLCh	thePerMill)
 	{
 		m_perMill = thePerMill;
 	}
 
+	/**
+	 * Sets the character used for zero
+	 * 
+	 * @param theZeroDigit character used for zero
+	 */
 	void
 	setZeroDigit(XMLCh	theZeroDigit)
 	{

@@ -77,8 +77,12 @@ class XALAN_DOMSUPPORT_EXPORT DOMSupportException : public XSLException
 {
 public:
 
-	explicit
-	DOMSupportException(
+	/**
+	 * Constructor for an exception arising from DOMSupport classes
+	 * 
+	 * @param message error message
+	 */
+	explicit DOMSupportException(
 			const DOMString&	message = DOMString());
 
 	virtual

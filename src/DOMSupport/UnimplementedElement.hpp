@@ -75,10 +75,16 @@ class XALAN_DOMSUPPORT_EXPORT UnimplementedElement : public ElementImpl
 public:
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
 	UnimplementedElement(DocumentImpl*		ownerDoc);
 
+	/**
+	 * Copy constructor
+	 * 
+	 * @param theOther source to be copied
+	 * @param deep copy child nodes as well if true
+	 */
 	UnimplementedElement(
 			const UnimplementedElement&	theOther,
 			bool						deep = false);
@@ -256,7 +262,7 @@ public:
 	 *	 for an extended time,	when the storage belonging to the underlying
 	 *	 node needs to be reclaimed.
 	 *
-	 * @param val.	Only a value of 0, or null, is allowed.
+	 * @param val	Only a value of 0, or null, is allowed.
 	 */
 	DOM_UnimplementedElement&
 	operator=(const DOM_NullPtr*	val)
@@ -284,9 +290,10 @@ public:
 	}
 
 	/**
-	 *	Compare with a pointer.  Intended only to allow a convenient
-	 *	  comparison with null.
+	 *	Compare with a pointer.  Intended only to allow a convenient comparison
+	 *	with null.
 	 *
+	 * @param other null value to compare with
 	 */
 	bool
 	operator==(const DOM_NullPtr*	other) const
@@ -297,6 +304,7 @@ public:
 	/**
 	 * The inequality operator.  See operator ==.
 	 *
+	 * @param other value to compare with
 	 */
 	bool
 	operator!=(const DOM_Node&	other) const
@@ -305,17 +313,16 @@ public:
 	}
 
 	/**
-	 *	Compare with a pointer.  Intended only to allow a convenient
-	 *	  comparison with null.
+	 *	Compare with a pointer.  Intended only to allow a convenient comparison
+	 *	with null.
 	 *
+	 * @param other null value to compare with
 	 */
 	bool
 	operator!=(const DOM_NullPtr*	other) const
 	{
 		return DOM_Node::operator!=(other);
 	}
-
-protected:
 
 private:
 

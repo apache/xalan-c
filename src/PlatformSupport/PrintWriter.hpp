@@ -77,16 +77,26 @@ class XALAN_PLATFORMSUPPORT_EXPORT PrintWriter : public Writer
 {
 public:
 
-	// If fAutoFlush is true, the output will not
-	// be buffered.
+	/**
+	 * Constructor
+	 * 
+	 * @param fAutoFlush if true, the output will not be buffered
+	 */
 	PrintWriter(bool	fAutoFlush = false);
 
 	virtual
 	~PrintWriter();
 
-	// Flush the stream, then check the error status.
+	
+	/**
+	 * Flush the stream, then check the error status.
+	 * 
+	 * @return true if no errors
+	 */
 	virtual bool
     checkError() const = 0;
+
+	// Functions inherited from Writer...
 
 	virtual void
 	close() = 0;

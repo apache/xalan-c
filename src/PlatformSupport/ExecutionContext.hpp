@@ -83,8 +83,11 @@ public:
 	~ExecutionContext();
 
 	/**
-	 * Tell the user of an error, and probably throw an 
-	 * exception.
+	 * Tell the user of an error, and probably throw an exception.
+	 * 
+	 * @param msg        text of message to output
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
 	 */
 	virtual void
 	error(
@@ -93,8 +96,11 @@ public:
 			const DOM_Node&		styleNode = DOM_Node()) const = 0;
 
 	/**
-	 * Tell the user of an warning, and probably throw an 
-	 * exception.
+	 * Tell the user of an warning, and probably throw an exception.
+	 * 
+	 * @param msg        text of message to output
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
 	 */
 	virtual void
 	warn(
@@ -104,6 +110,10 @@ public:
 
 	/**
 	 * Output a message.
+	 * 
+	 * @param msg        text of message to output
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
 	 */
 	virtual void
 	message(

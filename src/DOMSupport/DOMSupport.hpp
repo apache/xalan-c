@@ -95,12 +95,30 @@ public:
 
 	// These interfaces are new to DOMSupport...
 
+	/**
+	 * Retrieve namespace corresponding to a DOM node
+	 * 
+	 * @param theNode DOM node whose namespace is queried
+	 * @return namespace corresponding to 'theNode'
+	 */
 	virtual DOMString
 	getNamespaceOfNode(const DOM_Node&	theNode) const = 0;
 
+	/**
+	 * Retrieves expanded name of a DOM element, including namespace
+	 * 
+	 * @param elem	DOM element queried
+	 * @return expanded name corresponding to 'elem'
+	 */
 	virtual DOMString
 	getExpandedElementName(const DOM_Element&	elem) const = 0;
 
+	/**
+	 * Retrieves expanded name of a DOM attribute, including namespace
+	 * 
+	 * @param attr DOM attribute queried
+	 * @return expanded name corresponding to 'attr'
+	 */
 	virtual DOMString
 	getExpandedAttributeName(const DOM_Attr&	attr) const = 0;
 };

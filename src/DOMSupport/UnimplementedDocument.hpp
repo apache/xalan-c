@@ -338,8 +338,6 @@ public:
 		return DOM_Document::operator!=(other);
 	}
 
-protected:
-
 private:
 
 	// Not implemented...

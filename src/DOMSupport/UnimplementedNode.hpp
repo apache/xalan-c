@@ -80,6 +80,12 @@ public:
 	 */
 	UnimplementedNode(DocumentImpl*		ownerDoc);
 
+	/**
+	 * Copy constructor
+	 * 
+	 * @param theOther   source to be copied
+	 * @param deep copy  child nodes as well if true
+	 */
 	UnimplementedNode(
 			const UnimplementedNode&	theOther,
 			bool						deep = false);

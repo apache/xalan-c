@@ -92,6 +92,7 @@ public:
 	{
 		return m_outputString;
 	}
+	// Output functions inherited from PrintWriter...
 
 	// Flush the stream, then check the error status.
 	virtual bool

@@ -98,6 +98,12 @@ public:
 
 	// These interfaces are new to NamespaceResolver...
 
+	/**
+	 * Retrieves the namespace corresponding to a DOM node
+	 * 
+	 * @param theNode DOM node
+	 * @return namespace of 'theNode'
+	 */
 	virtual DOMString
 	getNamespaceOfNode(const DOM_Node&	theNode) const;
 
