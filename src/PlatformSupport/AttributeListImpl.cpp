@@ -61,6 +61,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <memory>
 
 
 
