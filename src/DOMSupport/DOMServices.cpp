@@ -756,7 +756,7 @@ DOMServices::getNamespaceForPrefix(
 		// Consider elements until NS is resolved, or we run out of
 		// ancestors, or we hit something other than an Element or 
 		// EntityReference node (ie, Document or DocumentFragment)
-		while (parent != 0 && length(*theNamespace) == 0
+		while (parent != 0 && theNamespace == 0
 			&& ((type = parent->getNodeType()) == XalanNode::ELEMENT_NODE
 				|| type == XalanNode::ENTITY_REFERENCE_NODE)) 
 		{
