@@ -312,7 +312,6 @@ ${ALL_OBJECTS_DIR}/%.o:%.hpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $(patsubst .hpp,.cpp,$<)
 
 
-
 ALLSOURCE = \
 	$(wildcard $(XALANDOM_DIR)/*.cpp) \
 	$(wildcard $(DOMSUPPORT_DIR)/*.cpp) \
@@ -321,6 +320,7 @@ ALLSOURCE = \
 	$(wildcard $(XMLSUPPORT_DIR)/*.cpp) \
 	$(wildcard $(XPATH_DIR)/*.cpp) \
 	$(wildcard $(XSLT_DIR)/*.cpp) \
+	$(wildcard $(XALANEXTENSIONS_DIR)/*.cpp) \
 	$(wildcard $(XERCESINIT_DIR)/*.cpp) \
 	$(wildcard $(XERCESPARSERLIAISON_DIR)/*.cpp) \
 	$(wildcard $(XALANTRANSFORMER_DIR)/*.cpp) \
