@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1337,10 +1337,33 @@ StylesheetHandler::processPreserveStripSpace(
 
 void
 StylesheetHandler::appendChildElementToParent(
+			ElemTemplateElement*	parent,
+			ElemTemplateElement*	elem)
+{
+	assert(elem != 0);
+
+	appendChildElementToParent(parent, elem, elem->getLocator());
+}
+
+
+
+void
+StylesheetHandler::appendChildElementToParent(
 			ElemTemplateElement*	elem,
 			const Locator*			locator)
 {
-	ElemTemplateElement* const	parent = m_elemStack.back();
+	appendChildElementToParent(m_elemStack.back(), elem, locator);
+}
+
+
+
+void
+StylesheetHandler::appendChildElementToParent(
+			ElemTemplateElement*	parent,
+			ElemTemplateElement*	elem,
+			const Locator*			locator)
+{
+	assert(parent != 0 && elem != 0);
 
 	try
 	{
@@ -1363,8 +1386,7 @@ StylesheetHandler::appendChildElementToParent(
 			XalanDOMString	theMessage(elem->getElementName());
 #endif
 
-			append(theMessage, " is not a valid child of ");
-			append(theMessage, parent->getElementName());
+			append(theMessage, " is not allowed at this position in the stylesheet");
 
 			error(theMessage, locator);
 		}
@@ -1790,12 +1812,21 @@ StylesheetHandler::processText(
 		{
 			while(!m_whiteSpaceElems.empty())
 			{
-				parent->appendChildElem(m_whiteSpaceElems.back());
+#if 1
+				assert(m_whiteSpaceElems.back() != 0);
 
+				appendChildElementToParent(
+					parent,
+					m_whiteSpaceElems.back());
+#else
+				parent->appendChildElem(m_whiteSpaceElems.back());
+#endif
 				m_whiteSpaceElems.pop_back();
 			}
 
-			parent->appendChildElem(elem.get());
+			appendChildElementToParent(
+				parent,
+				elem.get());
 
 			elem.release();
 		}
@@ -1816,7 +1847,14 @@ StylesheetHandler::processText(
 
 				if(isPrevCharData && ! isLastPoppedXSLText)
 				{
+#if 1
+					appendChildElementToParent(
+						parent,
+						elem.get());
+
+#else
 					parent->appendChildElem(elem.get());
+#endif
 
 					elem.release();
 
