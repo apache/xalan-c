@@ -153,8 +153,6 @@ public:
 	typedef std::ostream	StreamType;
 #endif
 
-	typedef size_t	size_type;
-
 	explicit
 	StylesheetExecutionContext(XObjectFactory*	theXObjectFactory = 0);
 
@@ -1563,7 +1561,7 @@ public:
 	 * 
 	 * @return number of listeners
 	 */
-	virtual size_type
+	virtual unsigned long
 	getTraceListeners() const = 0;
 
 	/**
