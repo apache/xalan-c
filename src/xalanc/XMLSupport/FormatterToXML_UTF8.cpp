@@ -183,7 +183,8 @@ FormatterToXML_UTF8::FormatterToXML_UTF8(
 	{
 		if(startsWith(
 			m_doctypePublic,
-			s_xhtmlDocTypeString) == true)
+			s_xhtmlDocTypeString,
+			s_xhtmlDocTypeStringLength) == true)
 		{
 			m_spaceBeforeClose = true;
 		}
@@ -1456,26 +1457,26 @@ const XalanDOMString::size_type		FormatterToXML_UTF8::s_cdataCloseStringLength =
 		FXML_SIZE(s_cdataCloseString);
 
 
-const char	FormatterToXML_UTF8::s_xhtmlDocTypeString[] =
+const XalanDOMChar	FormatterToXML_UTF8::s_xhtmlDocTypeString[] =
 {
-	char(XalanUnicode::charHyphenMinus),
-	char(XalanUnicode::charSolidus),
-	char(XalanUnicode::charSolidus),
-	char(XalanUnicode::charLetter_W),
-	char(XalanUnicode::charDigit_3),
-	char(XalanUnicode::charLetter_C),
-	char(XalanUnicode::charSolidus),
-	char(XalanUnicode::charSolidus),
-	char(XalanUnicode::charLetter_D),
-	char(XalanUnicode::charLetter_T),
-	char(XalanUnicode::charLetter_D),
-	char(XalanUnicode::charSpace),
-	char(XalanUnicode::charLetter_X),
-	char(XalanUnicode::charLetter_H),
-	char(XalanUnicode::charLetter_T),
-	char(XalanUnicode::charLetter_M),
-	char(XalanUnicode::charLetter_L),
-	char(0)
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_W,
+	XalanUnicode::charDigit_3,
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_D,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_D,
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_H,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_M,
+	XalanUnicode::charLetter_L,
+	XalanDOMChar(0)
 };
 
 const XalanDOMString::size_type		FormatterToXML_UTF8::s_xhtmlDocTypeStringLength =

@@ -569,7 +569,7 @@ private:
 	/**
  	 * The string "-//W3C//DTD XHTML".
  	 */
- 	static const char						s_xhtmlDocTypeString[];
+ 	static const XalanDOMChar				s_xhtmlDocTypeString[];
 
 	static const XalanDOMString::size_type	s_xhtmlDocTypeStringLength;
 
