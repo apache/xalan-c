@@ -980,10 +980,13 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("BASEFONT"),
 			ElemDesc(0|ElemDesc::EMPTY)));
 
+	PairType	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
 			XALAN_STATIC_UCODE_STRING("FRAME"),
 			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
+
+	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
@@ -1137,7 +1140,7 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("DIV"),
 			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
 
-	PairType	theResult =
+	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
 			XALAN_STATIC_UCODE_STRING("A"),
