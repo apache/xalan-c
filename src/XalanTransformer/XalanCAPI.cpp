@@ -71,6 +71,12 @@
 
 
 
+#if !defined(XALAN_NO_NAMESPACES)
+using std::istrstream;
+#endif
+
+
+
 #include "XalanCAPI.h"
 #include "XalanTransformer.hpp"
 
@@ -348,6 +354,32 @@ XalanCompileStylesheet(
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
+XalanCompileStylesheetFromStream(
+			const char*			theXSLStream,
+			unsigned long		theXSLStreamLength,
+			XalanHandle			theXalanHandle,
+			XalanCSSHandle*		theCSSHandle)
+{
+	const XalanCompiledStylesheet*	theCompiledStylesheet = 0;
+
+	istrstream	theInputStream(theXSLStream, theXSLStreamLength);
+
+	const int	theResult =
+		getTransformer(theXalanHandle)->compileStylesheet(
+			&theInputStream,
+			theCompiledStylesheet);
+
+	if (theResult == 0)
+	{
+		*theCSSHandle = theCompiledStylesheet;
+	}
+
+	return theResult;
+}
+
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 XalanDestroyCompiledStylesheet(
 			XalanCSSHandle	theCSSHandle,
 			XalanHandle		theXalanHandle)
@@ -368,6 +400,32 @@ XalanParseSource(
 	const int	theResult =
 		getTransformer(theXalanHandle)->parseSource(
 			theXMLFileName,
+			theParsedSource);
+
+	if (theResult == 0)
+	{
+		*thePSHandle = theParsedSource;
+	}
+
+	return theResult;
+}
+
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
+XalanParseSourceFromStream(
+			const char*		theXMLStream,
+			unsigned long	theXMLStreamLength,
+			XalanHandle		theXalanHandle,
+			XalanPSHandle*	thePSHandle)
+{
+	const XalanParsedSource*	theParsedSource = 0;
+
+	istrstream	theInputStream(theXMLStream, theXMLStreamLength);
+
+	const int	theResult =
+		getTransformer(theXalanHandle)->parseSource(
+			&theInputStream,
 			theParsedSource);
 
 	if (theResult == 0)

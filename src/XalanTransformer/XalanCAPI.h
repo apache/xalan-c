@@ -293,6 +293,22 @@ extern "C"
 			XalanCSSHandle*		theCSSHandle);
 
 	/**
+	 * Creates a compiled stylesheet.
+	 *
+	 * @param theXSLFileName The stream that contains the stylesheet xml
+	 * @param theXSLStreamLength The length of the stream.
+	 * @param theXalanHandle handle of XalanTransformer instance.
+	 * @param theCSSHandle a pointer to a XalanCSSHandle
+	 * @return 0 for success.
+	 */
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
+	XalanCompileStylesheetFromStream(
+			const char*			theXSLStream,
+			unsigned long		theXSLStreamLength,
+			XalanHandle			theXalanHandle,
+			XalanCSSHandle*		theCSSHandle);
+
+	/**
 	 * Destroys a compiled stylesheet.
 	 *
 	 * @param theCSSHandle		handle of the compiled stylesheet
@@ -305,17 +321,32 @@ extern "C"
 			XalanHandle		theXalanHandle);
 
 	/**
-	 * Parse source document.  The input source can be 
-	 * a file name, a stream or a root node.
+	 * Parse source document.
 	 *
-	 * @param theInputSource	input source	
-	 * @param theXalanHandle	handle of XalanTransformer instance.	 
-	 * @param thePSHandle		a pointer to a XalanPSHandle
+	 * @param theXMLFileName The name of the file containing the source document.
+	 * @param theXalanHandle The handle of XalanTransformer instance.	 
+	 * @param thePSHandle A pointer to a XalanPSHandle
 	 * @return 0 for success.
 	 */	
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 	XalanParseSource(
 			const char*		theXMLFileName,
+			XalanHandle		theXalanHandle,
+			XalanPSHandle*	thePSHandle);
+
+	/**
+	 * Parse source document from a stream.
+	 *
+	 * @param theXMLStream The stream that contains the source xml
+	 * @param theXSLStreamLength The length of the stream.
+	 * @param theXalanHandle The handle of XalanTransformer instance.	 
+	 * @param thePSHandle A pointer to a XalanPSHandle
+	 * @return 0 for success.
+	 */	
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
+	XalanParseSourceFromStream(
+			const char*		theXMLStream,
+			unsigned long	theXMLStreamLength,
 			XalanHandle		theXalanHandle,
 			XalanPSHandle*	thePSHandle);
 
