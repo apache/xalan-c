@@ -257,8 +257,14 @@ public:
 	}
 
 	void
+	erase()
+	{
+		m_data.clear();
+	}
+
+	void
 	erase(
-			size_type	theStartPosition = 0,
+			size_type	theStartPosition,
 			size_type	theCount = size_type(npos))
 	{
 		const iterator	i = getIteratorForPosition(theStartPosition);
@@ -338,6 +344,65 @@ public:
 	operator+=(XalanDOMChar theChar)
 	{
 		append(1, theChar);
+
+		return *this;
+	}
+
+	XalanDOMString&
+	assign(const XalanDOMChar*	theSource)
+	{
+		erase();
+
+		return append(theSource);
+	}
+
+	XalanDOMString&
+	assign(
+			const XalanDOMChar*		theSource,
+			size_type				theCount)
+	{
+		erase();
+
+		return append(theSource, theCount);
+	}
+
+	XalanDOMString&
+	assign(
+			const XalanDOMString&	theSource,
+			size_type				thePosition,
+			size_type				theCount)
+	{
+		erase();
+
+		return append(theSource, thePosition, theCount);
+	}
+
+	XalanDOMString&
+	assign(const XalanDOMString&	theSource)
+	{
+		m_data = theSource.m_data;
+
+		return *this;
+	}
+
+	XalanDOMString&
+	assign(
+			size_type		theCount,
+			XalanDOMChar	theChar)
+	{
+		erase();
+
+		return append(theCount, theChar);
+	}
+
+	XalanDOMString&
+	assign(
+		const_iterator	theFirstPosition,
+		const_iterator	theLastPosition)
+	{
+		erase();
+
+		insert(begin(), theFirstPosition, theLastPosition);
 
 		return *this;
 	}
@@ -834,7 +899,9 @@ TranscodeFromLocalCodePage(
  * @return The transcoded string.
  */
 XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
-TranscodeFromLocalCodePage(const char*	sourceString);
+TranscodeFromLocalCodePage(
+			const char*		theSourceString,
+			unsigned int	theSourceStringLength = -1);
 
 
 

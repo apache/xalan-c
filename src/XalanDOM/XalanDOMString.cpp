@@ -637,11 +637,20 @@ TranscodeFromLocalCodePage(
 
 
 XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
-TranscodeFromLocalCodePage(const char*	sourceString)
+TranscodeFromLocalCodePage(
+			const char*		theSourceString,
+			unsigned int	theSourceStringLength)
 {
 	XalanDOMCharVectorType	theResult;
 
-	TranscodeFromLocalCodePage(sourceString, theResult, false);
+	if (theSourceStringLength == unsigned(-1))
+	{
+		TranscodeFromLocalCodePage(theSourceString, theResult, false);
+	}
+	else
+	{
+		TranscodeFromLocalCodePage(theSourceString, theSourceStringLength, theResult, false);
+	}
 
 	const XalanDOMCharVectorType::size_type		theSize = theResult.size();
 
