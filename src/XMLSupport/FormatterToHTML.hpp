@@ -128,9 +128,13 @@ public:
 	/**
 	 * Constructor for customized encoding and doctype.
 	 * @param writer        The character output stream to use.
-	 * @param encoding      Java character encoding in use by <VAR>writer</VAR>.
-	 * @param doctype       String to be printed at the top of the document.
+	 * @param encoding      The character encoding in use by writer.
+	 * @param doctypeSystem The system ID for the DOCTYPE.
+	 * @param doctypePublic The public ID for the DOCTYPE.
+	 * @param doIndent      true if indenting should be enabled
 	 * @param indent        Number of spaces to indent at each nesting level.
+	 * @param escapeURLs    Whether or not to escape URLs according to the recommendation.  The default is true.
+	 * @param omitMetaTag   Whether or not to output a META TAG according to the recommendation.  The default is false.
 	 */
 	FormatterToHTML(
 			Writer&					writer,
@@ -140,9 +144,8 @@ public:
 			const XalanDOMString&	doctypePublic = XalanDOMString(),
 			bool					doIndent = true,
 			int						indent = eDefaultIndentAmount,
-			const XalanDOMString&	version = XalanDOMString(),
-			const XalanDOMString&	standalone = XalanDOMString(),
-			bool					xmlDecl = false);
+			bool					escapeURLs = true,
+			bool					omitMetaTag = false);
 
 	virtual
 	~FormatterToHTML();
@@ -193,6 +196,18 @@ public:
 			const XMLCh* const	target,
 			const XMLCh* const	data);
 
+
+	bool
+	getEscapeURLs() const
+	{
+		return m_escapeURLs;
+	}
+
+	void
+	setEscapeURLs(bool	flag)
+	{
+		m_escapeURLs = flag;
+	}
 
 	class ElemDesc
 	{
@@ -469,6 +484,11 @@ private:
 	 * a namespace.
 	 */
 	BoolStackType			m_hasNamespaceStack;
+
+	/**
+	 * This is set to true if we should omit the META tag in HTML output (the default is false)
+	 */
+	bool					m_omitMetaTag;
 
 	static const XalanDOMString		s_emptyString;
 };

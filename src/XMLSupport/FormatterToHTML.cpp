@@ -103,31 +103,31 @@ FormatterToHTML::FormatterToHTML(
 			const XalanDOMString&	doctypePublic,
 			bool					doIndent,
 			int						indent,
-			const XalanDOMString&	version,
-			const XalanDOMString&	standalone,
-			bool					xmlDecl) :
+			bool					escapeURLs,
+			bool					omitMetaTag) :
 	FormatterToXML(
 			writer,
-			version,
+			s_emptyString,
 			doIndent,
 			indent,
 			encoding,
 			mediaType,
 			doctypeSystem,
 			doctypePublic,
-			xmlDecl,
-			standalone,
+			false,
+			s_emptyString,
 			OUTPUT_METHOD_HTML),
 	m_currentElementName(),
 	m_inBlockElem(false),
 	m_isRawStack(),
 	m_isScriptOrStyleElem(false),
 	m_inScriptElemStack(),
-	m_escapeURLs(true),
+	m_escapeURLs(escapeURLs),
 	m_isFirstElement(false),
 	m_isUTF8(XalanTranscodingServices::encodingIsUTF8(m_encoding)),
 	m_elementLevel(0),
-	m_hasNamespaceStack()
+	m_hasNamespaceStack(),
+	m_omitMetaTag(omitMetaTag)
 {
 	assert(s_elementFlags != 0 && s_dummyDesc != 0 && s_xalanHTMLEntities != 0);
 
@@ -366,13 +366,16 @@ FormatterToHTML::startElement(
 		{
 			writeParentTagEnd();
 
-			if (m_doIndent)
-				indent(m_currentIndent);
+			if (m_omitMetaTag == false)
+			{
+				if (m_doIndent)
+					indent(m_currentIndent);
 
-			accumContent(s_metaString);
-			accumContent(getEncoding());      
-			accumContent(XalanUnicode::charQuoteMark);
-			accumContent(XalanUnicode::charGreaterThanSign);
+				accumContent(s_metaString);
+				accumContent(getEncoding());      
+				accumContent(XalanUnicode::charQuoteMark);
+				accumContent(XalanUnicode::charGreaterThanSign);
+			}
 		}
 
 		// We've written the first element, so turn off the flag...
