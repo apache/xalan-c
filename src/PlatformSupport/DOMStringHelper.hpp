@@ -525,6 +525,17 @@ WideStringToLong(const XalanDOMChar*	theString);
 
 
 /**
+ * Converts a wide string into an unsigned long value
+ * 
+ * @param theString target string
+ * @return unsigned long value of target string
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned long)
+WideStringToUnsignedLong(const XalanDOMChar*	theString);
+
+
+
+/**
  * Converts a wide string into a double value
  * 
  * @param theString target string
@@ -559,6 +570,20 @@ inline long
 DOMStringToLong(const XalanDOMString&	theString)
 {
 	return WideStringToLong(c_wstr(theString));
+}
+
+
+
+/**
+ * Converts a XalanDOMString into a long value
+ * 
+ * @param theString target string
+ * @return unsigned long value of target string
+ */
+inline unsigned long
+DOMStringToUnsignedLong(const XalanDOMString&	theString)
+{
+	return WideStringToUnsignedLong(c_wstr(theString));
 }
 
 

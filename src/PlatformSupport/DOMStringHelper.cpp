@@ -76,6 +76,7 @@
 using std::back_inserter;
 using std::copy;
 using std::hex;
+using std::istrstream;
 using std::ostream;
 using std::ostrstream;
 using std::string;
@@ -914,6 +915,28 @@ WideStringToLong(const XalanDOMChar*	theString)
 	if (theVector.size() > 0)
 	{
 		theResult = atol(theVector.begin());
+	}
+
+	return theResult;
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned long)
+WideStringToUnsignedLong(const XalanDOMChar*	theString)
+{
+	unsigned long	theResult = 0;
+
+	vector<char>	theVector;
+
+	CopyWideStringToVector(theString,
+						   theVector);
+
+	if (theVector.size() > 0)
+	{
+		istrstream	theFormatter(&theVector[0]);
+
+		theFormatter >> theResult;
 	}
 
 	return theResult;
