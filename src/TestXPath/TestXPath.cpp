@@ -458,7 +458,7 @@ FindContextNode(
 
 	try
 	{
-		assert(theXObject.null == false);
+		assert(theXObject.null() == false);
 
 		const NodeRefListBase&	theResultList =
 						theXObject->nodeset();
@@ -565,7 +565,7 @@ TestAxisResult(
 
 				try
 				{
-					assert(theResult.null == false);
+					assert(theResult.null() == false);
 
 					const NodeRefListBase&	theResultList =
 						theResult->nodeset();
