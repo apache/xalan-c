@@ -408,7 +408,8 @@ FileUtility::fileCompare(const char* goldFile,
 						const char* outputFile)
 {
 	FILE *result, *gold;			// declare files
-	char rline[132], gline[132];	// declare buffers to hold single line from file
+	char rline[132] = {'/n'};		// declare buffers to hold single line from file
+	char gline[132] = {'/n'};	
 	char temp[10];					// buffer to hold line number
 	char lineNum = 1;
 
@@ -441,7 +442,7 @@ FileUtility::fileCompare(const char* goldFile,
 		}
 
 		int i = 0;
-		while(gline[i] != '\n') 
+		while(i < sizeof(gline)) 
 		{
 			if (gline[i] == rline[i]) 
 			{
@@ -514,9 +515,9 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc)
 	case XalanNode::TEXT_NODE:	
 	{
 
-#if !defined(NDEBUG) && defined(_MSC_VER)
-		cout << "Node is: " << c_str(TranscodeToLocalCodePage(docNodeValue)) << endl;
-#endif
+//#if !defined(NDEBUG) && defined(_MSC_VER)
+//		cout << "Node is: " << c_str(TranscodeToLocalCodePage(docNodeValue)) << endl;
+//#endif
 		
 		if(goldNodeValue != docNodeValue)
 		{
@@ -563,9 +564,9 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc)
 	case XalanNode::DOCUMENT_NODE:
 	{
 
-#if !defined(NDEBUG) && defined(_MSC_VER)
-		cout << "Node is: " << c_str(TranscodeToLocalCodePage(docNodeName)) << endl;
-#endif
+//#if !defined(NDEBUG) && defined(_MSC_VER)
+//		cout << "Node is: " << c_str(TranscodeToLocalCodePage(docNodeName)) << endl;
+//#endif
 		// We should never reach this code path.  The parser should flag the fact that there
 		// is no Document_Node.
 		if (goldNodeName != docNodeName)  
@@ -624,9 +625,9 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 	const XalanDOMString&  docNsUri  = doc.getNamespaceURI();
 	const XalanDOMString&  goldNsUri = gold.getNamespaceURI();
 
-#if !defined(NDEBUG) && defined(_MSC_VER)
-	cout << "Node is: " << c_str(TranscodeToLocalCodePage(docNodeName)) << endl;
-#endif
+//#if !defined(NDEBUG) && defined(_MSC_VER)
+//	cout << "Node is: " << c_str(TranscodeToLocalCodePage(docNodeName)) << endl;
+//#endif
 
 	// This essentially checks 2 things, that the prefix and localname are the
 	// same.  So specific checks of these items are not necessary.
@@ -808,10 +809,10 @@ bool FileUtility::diffAttr(const XalanNode* gAttr, const XalanNode* dAttr)
 
 	const XalanDOMString& docAttrName  = dAttr->getNodeName();
 
-#if !defined(NDEBUG) && defined(_MSC_VER)
-	const XalanDOMString& goldAttrName = gAttr->getNodeName();
-	cout << "	Attribute is: " << c_str(TranscodeToLocalCodePage(goldAttrName)) << endl;
-#endif
+//#if !defined(NDEBUG) && defined(_MSC_VER)
+//	const XalanDOMString& goldAttrName = gAttr->getNodeName();
+//	cout << "	Attribute is: " << c_str(TranscodeToLocalCodePage(goldAttrName)) << endl;
+//#endif
 
 	const XalanDOMString& goldAttrNsUri = gAttr->getNamespaceURI();
 	const XalanDOMString& docAttrNsUri	= dAttr->getNamespaceURI();
@@ -854,8 +855,8 @@ FileUtility::reportDOMError()
 	cout << endl << "* Failed "<< data.testOrFile 
 		 << "  " << data.msg << endl
 		 << "	" << "Processing Node: " << data.currentNode << endl
-		 << "	Expected: " << data.expected << endl
-		 << "	Actual: " << data.actual << endl;
+		 << "	Expected:	" << data.expected << endl
+		 << "	Actual:		" << data.actual << endl;
 
 }
 
