@@ -163,6 +163,9 @@ const XalanNodeList*
 XalanSourceTreeProcessingInstruction::getChildNodes() const
 {
 	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 
