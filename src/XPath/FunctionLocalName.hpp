@@ -104,21 +104,33 @@ public:
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
-		if(args.size() != 1)
+		const XObjectArgVectorType::size_type	theSize =
+			args.size();
+
+		if(theSize > 1)
 		{
-			executionContext.error("The local-name() function takes one argument!",
+			executionContext.error("The local-name() function takes zero or one arguments!",
 								   context);
 		}
 
-		assert(args[0] != 0);
-
-		const NodeRefListBase&	theNodeList = args[0]->nodeset();
-
 		XalanDOMString	theData;
 
-		if (theNodeList.getLength() > 0)
+		if (theSize == 0)
 		{
-			theData = executionContext.getLocalNameOfNode(*theNodeList.item(0));
+			assert(context != 0);
+
+			theData = executionContext.getLocalNameOfNode(*context);
+		}
+		else
+		{
+			assert(args[0] != 0);
+
+			const NodeRefListBase&	theNodeList = args[0]->nodeset();
+
+			if (theNodeList.getLength() > 0)
+			{
+				theData = executionContext.getLocalNameOfNode(*theNodeList.item(0));
+			}
 		}
 
 		return executionContext.getXObjectFactory().createString(theData);
