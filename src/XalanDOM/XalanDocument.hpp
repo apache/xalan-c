@@ -726,7 +726,14 @@ public:
     virtual XalanElement*
 	getElementById(const XalanDOMString&	elementId) const = 0;
 
-	// This interface is a Xalan-specific extension.
+	/**
+	 * Get the document's number.  This interface is a Xalan-specific
+	 * extension.
+	 *
+	 * @return The document number.
+	 */
+	virtual unsigned long
+	getNumber() const = 0;
 
     //@}
 
