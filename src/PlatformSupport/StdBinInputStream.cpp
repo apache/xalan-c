@@ -116,6 +116,7 @@ StdBinInputStream::readBytes(
 	{
 		return 0;
 	}
+#if 0
 	else if (m_blockingRead == true)
 	{
 		unsigned int	i = 0;
@@ -138,14 +139,17 @@ StdBinInputStream::readBytes(
  
  		return i;
 	}
+#endif
 	else
 	{
 #if !defined(XALAN_OLD_STREAM_HEADERS)
 #if defined(XALAN_OLD_STYLE_CASTS)
-		return m_stream.readsome((char*)toFill, maxToRead);
+		m_stream.read((char*)toFill, maxToRead);
 #else
-		return m_stream.readsome(reinterpret_cast<char*>(toFill), maxToRead);
+		m_stream.read(reinterpret_cast<char*>(toFill), maxToRead);
 #endif
+
+		return m_stream.gcount();
 #else
 		m_stream.read(toFill, maxToRead);
 
