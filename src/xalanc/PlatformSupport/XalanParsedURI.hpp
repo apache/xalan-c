@@ -223,7 +223,7 @@ public:
 	 */
 	bool isSchemeDefined() const 
 	{ 
-		return !!(m_defined & d_scheme); 
+		return m_defined & d_scheme;
 	}
 
 	/**
@@ -257,7 +257,7 @@ public:
 	 */
 	bool isAuthorityDefined() const 
 	{ 
-		return !!(m_defined & d_authority); 
+		return m_defined & d_authority; 
 	}
 
 	/**
@@ -315,7 +315,7 @@ public:
 	 */
 	bool isQueryDefined() const 
 	{ 
-		return !!(m_defined & d_query); 
+		return m_defined & d_query;
 	}
 
 	/**
@@ -349,7 +349,7 @@ public:
 	 */
 	bool isFragmentDefined() const 
 	{ 
-		return !!(m_defined & d_fragment); 
+		return m_defined & d_fragment;
 	}
 
 	/**
