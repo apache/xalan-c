@@ -360,8 +360,8 @@ public:
 	XalanDocument*
 	createDocument(
 			const DOM_Document&		theXercesDocument,
-			bool					threadSafe = false,
-			bool					buildBridge = false);
+			bool					threadSafe,
+			bool					buildBridge);
 
 	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.
@@ -392,8 +392,8 @@ public:
 	XalanDocument*
 	createDocument(
 			const DOMDocument*	theXercesDocument,
-			bool				threadSafe = false,
-			bool				buildWrapper = false);
+			bool				threadSafe,
+			bool				buildWrapper);
 
 	/**
 	 * This API is deprecated.
