@@ -159,9 +159,9 @@ public:
 									const   XMLCh* const    qname,
                                     const   Attributes&		attributes);
 
-	void startDocument( void );
+	void startDocument();
 
-	void endDocument( void );
+	void endDocument();
 
    // -----------------------------------------------------------------------
     //  Implementations of the SAX ErrorHandler interface
@@ -179,31 +179,35 @@ public:
 
 	void setXML_Lang( const char* localName);
 
-	const XMLCh* const getXML_lang (void) const;
+	const XMLCh*
+	getXML_lang () const
+	{
+		return m_XML_lang;
+	}
 
 protected:
-	bool translateCharToXMLByteArr ( XMLByte* const buffer, int iBufLen, const char* const szSource)const;
+	bool translateCharToXMLByteArr ( XMLByte* buffer, int iBufLen, const char* szSource)const;
 
-	virtual void createHeaderForDataFile ( void )=0;
-	virtual void createBottomForDataFile ( void )=0;
+	virtual void createHeaderForDataFile ()=0;
+	virtual void createBottomForDataFile ()=0;
 
-	virtual void printBeginOfDataLine ( void )=0;
-	virtual void printEndOfDataLine ( void )=0;
+	virtual void printBeginOfDataLine ()=0;
+	virtual void printEndOfDataLine ()=0;
 
 	virtual void printToDataFile( const char* sArrayOfStrins[] ) = 0;
 	void printToIndexFile( const char* sArrayOfStrins[] );
 
-	void printNumbOfRecords (void );
+	void printNumbOfRecords ();
 
 
 
 private:
 
-	void createHeaderForIndexFile ( void );
-	void createBottomForIndexFile ( void );
+	void createHeaderForIndexFile ();
+	void createBottomForIndexFile ();
 
-	void printBeginOfIndexLine ( void );
-	void printEndOfIndexLine ( void );
+	void printBeginOfIndexLine ();
+	void printEndOfIndexLine ();
 
 protected :
 	int						 m_numberOfRecords;

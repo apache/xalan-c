@@ -86,11 +86,11 @@ InMemHandler::~InMemHandler()
 
 void InMemHandler::printToDataFile( const char* sArrayOfStrins[] )
 {
-	if ( sArrayOfStrins == NULL)
+	if ( sArrayOfStrins == 0)
 		return;
 
 
-	for (int i = 0; sArrayOfStrins[i] != NULL; i++)
+	for (int i = 0; sArrayOfStrins[i] != 0; i++)
 	{
 
 		m_fStream.writeAsASCII(sArrayOfStrins[i], strlen(sArrayOfStrins[i]));

@@ -116,13 +116,13 @@ public :
 		 * @param theErrorCode number of error encountered
 		 */
 		XalanFileOutputStreamOpenException(
-			const char*			theFileName,
-			int						theErrorCode);
+			const char*		theFileName,
+			int				theErrorCode);
 
 		virtual
 		~XalanFileOutputStreamOpenException();
 		
-		const char* m_pMessage;
+		char*	m_pMessage;
 	};
 
 	class XalanFileOutputStreamWriteException 
@@ -143,7 +143,7 @@ public :
 		virtual
 		~XalanFileOutputStreamWriteException();
 
-		const char* m_pMessage;
+		char* m_pMessage;
 	};
 
 
@@ -158,7 +158,7 @@ public :
 	void
 	writeAsASCII(const UTF16Ch*	theString, unsigned int		theLengts);
 	void
-	writeUTFprefix( void );
+	writeUTFprefix();
 protected:
 
 	void
@@ -184,7 +184,7 @@ private:
 	// Data members...
 	const char*			m_fileName;
 
-	const HandleType		m_handle;
+	const HandleType	m_handle;
 };
 
 

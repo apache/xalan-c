@@ -83,7 +83,7 @@ static const char* INDEX_FILE_NAME="LocalMsgIndex.hpp";
 SAX2Handler::SAX2Handler( ) :
 							m_fIndexFormatter(INDEX_FILE_NAME),
 							m_numberOfRecords(0),
-							m_XML_lang(NULL),
+							m_XML_lang(0),
 							m_startCollectingCharacters(false)
 {
 
@@ -91,20 +91,18 @@ SAX2Handler::SAX2Handler( ) :
 
 SAX2Handler::~SAX2Handler()
 {
-	if (m_XML_lang != NULL)
+	if (m_XML_lang != 0)
 	{
 		XMLString::release(&m_XML_lang);
-
-		m_XML_lang = NULL;
 	}
 }
 
 
-bool SAX2Handler::translateCharToXMLByteArr ( XMLByte* const buffer, int iBufLen, const char* const szSource)const
+bool SAX2Handler::translateCharToXMLByteArr ( XMLByte* buffer, int iBufLen, const char* szSource)const
 {
 	bool bResult = false;
 
-	if ( iBufLen == 0 || szSource == NULL || buffer == NULL )
+	if ( iBufLen == 0 || szSource == 0 || buffer == 0 )
 	{
 		return bResult;
 	}
@@ -130,27 +128,27 @@ bool SAX2Handler::translateCharToXMLByteArr ( XMLByte* const buffer, int iBufLen
 
 
 
-void SAX2Handler::createHeaderForIndexFile ( void )
+void SAX2Handler::createHeaderForIndexFile ()
 {
 	printToIndexFile( szApacheLicense );
 	
 	printToIndexFile ( szStartIndexFile );
 }
 
-void SAX2Handler::printBeginOfIndexLine ( void )
+void SAX2Handler::printBeginOfIndexLine ()
 {
 	printToIndexFile ( szBeginIndexLine );
 }
 
 	
-void SAX2Handler::printEndOfIndexLine ( void )
+void SAX2Handler::printEndOfIndexLine ()
 {
 //	printToIndexFile ( szEndIndexLine );
 }
 
 
 
-void SAX2Handler::createBottomForIndexFile ( void )
+void SAX2Handler::createBottomForIndexFile ()
 {
 	printToIndexFile ( szEndIndexFile );
 }
@@ -270,16 +268,16 @@ void SAX2Handler::warning(const SAXParseException& e)
 
 void SAX2Handler::setXML_Lang( const char* localName)
 {
-	assert(localName != NULL);
+	assert(localName != 0);
+
+	if (m_XML_lang != 0)
+	{
+		XMLString::release(&m_XML_lang);
+	}
 
 	m_XML_lang = XMLString::transcode(localName);
-
 }
 
-const XMLCh* const SAX2Handler::getXML_lang (void) const
-{
-	return m_XML_lang;
-}
 
 void SAX2Handler::startDocument()
 {

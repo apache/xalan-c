@@ -181,7 +181,7 @@ XalanFileOutputStream::writeData(
 
 
 
-static const char*
+static char*
 FormatMessageLocal(
 			const char*				theMessage,
 			const char*				theFileName,
@@ -227,10 +227,7 @@ XalanFileOutputStream::XalanFileOutputStreamOpenException::XalanFileOutputStream
 
 XalanFileOutputStream::XalanFileOutputStreamOpenException::~XalanFileOutputStreamOpenException()
 {
-	if(m_pMessage)
-	{
-		delete const_cast<char*> (m_pMessage);
-	}
+	delete [] m_pMessage;
 }
 
 
@@ -249,17 +246,14 @@ XalanFileOutputStream::XalanFileOutputStreamWriteException::XalanFileOutputStrea
 
 XalanFileOutputStream::XalanFileOutputStreamWriteException::~XalanFileOutputStreamWriteException()
 {
-	if(m_pMessage)
-	{
-		delete const_cast<char*>(m_pMessage);
-	}
+	delete [] m_pMessage;
 }
 
 
 void 	XalanFileOutputStream::write(const UTF16Ch*	theString, unsigned int		theLength)
 {
 	assert ( theString != 0 );
-	writeData((const char*)theString,theLength * 2 );
+	writeData((const char*)theString,theLength * sizeof(UTF16Ch) );
 }
 
 void 	XalanFileOutputStream::write(const char*	theString, unsigned int		theLength)
@@ -275,9 +269,9 @@ void 	XalanFileOutputStream::write(const char*	theString, unsigned int		theLengt
 
 void XalanFileOutputStream::writeAsASCII(const UTF16Ch*	theString, unsigned int		theLengts)
 {
-	const char* szString = XMLString::transcode(theString);
+	char* szString = XMLString::transcode(theString);
 	writeData( szString, theLengts );
-	XMLString::release(const_cast<char**>(&szString));
+	XMLString::release(&szString);
 
 }
 
@@ -292,10 +286,7 @@ const UTF16Ch	s_UTF16ByteOrderMark[] =
 	UTF16Ch(0)
 };
 
-void 	XalanFileOutputStream::writeUTFprefix( void )
+void 	XalanFileOutputStream::writeUTFprefix()
 {
 	write(s_UTF16ByteOrderMark,1);
 }
-
-
-

@@ -92,11 +92,11 @@ public:
 						, const unsigned int    length);
 
 protected:
-	virtual void createHeaderForDataFile ( void );
-	virtual void createBottomForDataFile ( void );
+	virtual void createHeaderForDataFile ();
+	virtual void createBottomForDataFile ();
 
-	virtual void printBeginOfDataLine ( void );
-	virtual void printEndOfDataLine ( void );
+	virtual void printBeginOfDataLine ();
+	virtual void printEndOfDataLine ();
 
 	void printToDataFile( const char* sArrayOfStrins[] );
 

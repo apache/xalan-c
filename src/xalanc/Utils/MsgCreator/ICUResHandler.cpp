@@ -168,7 +168,7 @@ void ICUResHandler::startElement(const   XMLCh* const    uri,
 	}
 	else if(!XMLString::compareString(localname,targetXMLCh))
 	{
-		if ( m_XML_lang != NULL )
+		if ( m_XML_lang != 0 )
 		{
 			m_startCollectingCharacters = true;	
 			
@@ -179,7 +179,7 @@ void ICUResHandler::startElement(const   XMLCh* const    uri,
 	
 }
 
-void ICUResHandler::createHeaderForDataFile ( void )
+void ICUResHandler::createHeaderForDataFile ()
 {
 	printToDataFile( szApacheLicense );
 
@@ -196,7 +196,7 @@ void ICUResHandler::createHeaderForDataFile ( void )
 
 
 
-void ICUResHandler::printBeginOfDataLine ( void )
+void ICUResHandler::printBeginOfDataLine ()
 {
 //	if ( m_isTheFirstLineInArray ){
 //		m_isTheFirstLineInArray = false;
@@ -209,7 +209,7 @@ void ICUResHandler::printBeginOfDataLine ( void )
 
 
 
-void ICUResHandler::createBottomForDataFile ( void )
+void ICUResHandler::createBottomForDataFile ()
 {
 
 	printToDataFile( szEndDataFile );
@@ -217,17 +217,17 @@ void ICUResHandler::createBottomForDataFile ( void )
 }
 
 
-void ICUResHandler::printEndOfDataLine ( void )
+void ICUResHandler::printEndOfDataLine ()
 {
 	printToDataFile( szEndOfLineInDataFile  );
 }
 
 void ICUResHandler::printToDataFile( const char* sArrayOfStrins[] )
 {
-	if ( sArrayOfStrins == NULL)
+	if ( sArrayOfStrins == 0)
 		return;
 
-	for (int i = 0; sArrayOfStrins[i] != NULL; i++)
+	for (int i = 0; sArrayOfStrins[i] != 0; i++)
 	{
 		m_fStream.write(sArrayOfStrins[i],strlen(sArrayOfStrins[i]));
 	}

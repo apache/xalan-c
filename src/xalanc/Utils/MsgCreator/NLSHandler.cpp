@@ -107,7 +107,7 @@ void NLSHandler::characters(	const   XMLCh* const    chars
 	}
 }
 
-void NLSHandler::createHeaderForDataFile ( void )
+void NLSHandler::createHeaderForDataFile ()
 {
 	if (m_bCreateUnicode )
 	{
@@ -133,7 +133,7 @@ void NLSHandler::printToDataFileasASCII( const char* sArrayOfStrins[] )
 	}
 }
 
-void NLSHandler::printBeginOfDataLine ( void )
+void NLSHandler::printBeginOfDataLine ()
 {
 	char szNumb[20];
 
@@ -153,14 +153,14 @@ void NLSHandler::printBeginOfDataLine ( void )
 
 
 
-void NLSHandler::createBottomForDataFile ( void )
+void NLSHandler::createBottomForDataFile ()
 {
 
 
 }
 
 
-void NLSHandler::printEndOfDataLine ( void )
+void NLSHandler::printEndOfDataLine ()
 {
 	if ( m_bCreateUnicode )
 	{
@@ -171,9 +171,3 @@ void NLSHandler::printEndOfDataLine ( void )
 		m_fStream.writeAsASCII("^\n",2);
 	}
 }
-
-
-
-
-
-

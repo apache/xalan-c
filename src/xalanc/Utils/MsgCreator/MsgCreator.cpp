@@ -127,13 +127,13 @@ public:
 	bool		isLocalGiven;
 
 	CmdLineParams():
-	inXMLFileName(NULL),
+	inXMLFileName(0),
 		enTypeOfLocalMsg(INMEM_LOCALMSG),
 		encodingName("LATIN1"),
 		localName(0),
 		isLocalGiven(false){}
 
-	~CmdLineParams() { if ( localName != NULL) delete[] localName; }
+	~CmdLineParams() { delete[] localName; }
 };
 
 #if defined(OS390)
@@ -162,8 +162,9 @@ compareNoCase(
 bool
 getArgs(
 		int				argc,
-		const char*		argv[],
-		CmdLineParams&	p, const char** pErrorMsg)
+		char*			argv[],
+		CmdLineParams&	p,
+		const char**	pErrorMsg)
 {
 	bool fSuccess = true;
 	char* errorMessage = 0;
@@ -254,7 +255,7 @@ getArgs(
 	return fSuccess;
 }
 
-static const char* buildInputFileName(const CmdLineParams&	p)
+static char* buildInputFileName(const CmdLineParams&	p)
 {
 
 	char* result = new char[85];
@@ -286,7 +287,7 @@ static const char* buildInputFileName(const CmdLineParams&	p)
 	return result;
 }
 
-static const char* buildOutputFileName(const CmdLineParams&	p)
+static char* buildOutputFileName(const CmdLineParams&	p)
 {
 	char* pOutputFileName = new char[80];
 	pOutputFileName[0] = '\0';
@@ -345,7 +346,7 @@ static const char* buildOutputFileName(const CmdLineParams&	p)
 // ---------------------------------------------------------------------------
 //  Program entry point
 // ---------------------------------------------------------------------------
-int main(int argC, const char* argV[])
+int main(int argC, char* argV[])
 {
 	
 #if !defined(NDEBUG) && defined(_MSC_VER)
@@ -405,13 +406,13 @@ int main(int argC, const char* argV[])
 				//  handler for the parser. Then parse the file and catch any exceptions
 				//  that propogate out
 				//
-				
+
 				int errorCount = 0;
-				
-				const char* fileName = buildInputFileName(theParams);
-				
-				const char* pOutputFileName = buildOutputFileName(theParams);
-				
+
+				char* const		fileName = buildInputFileName(theParams);
+
+				char* const		pOutputFileName = buildOutputFileName(theParams);
+
 				SAX2Handler* handler = 0;
 				try
 				{
@@ -513,9 +514,9 @@ int main(int argC, const char* argV[])
 
 				delete handler;
 
-				delete[] (const_cast <char*> (pOutputFileName));
+				delete[] pOutputFileName;
 
-				delete[] (const_cast <char*> (fileName));
+				delete[] fileName;
 				//
 				//  Delete the parser itself.  Must be done prior to calling Terminate, below.
 				//

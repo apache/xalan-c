@@ -64,18 +64,18 @@
 
 XERCES_CPP_NAMESPACE_USE
 
-class NLSHandler  : public ICUResHandler 
+class NLSHandler : public ICUResHandler 
 {
 public:
 	NLSHandler(const char* fileName, bool bCreateUnicode = false);
 
 	~NLSHandler(void){}
 
-	virtual void createHeaderForDataFile ( void );
-	virtual void createBottomForDataFile ( void );
+	virtual void createHeaderForDataFile ();
+	virtual void createBottomForDataFile ();
 
-	virtual void printBeginOfDataLine ( void );
-	virtual void printEndOfDataLine ( void );
+	virtual void printBeginOfDataLine ();
+	virtual void printEndOfDataLine ();
 
 	void characters(	const   XMLCh* const    chars
 						, const unsigned int    length);
