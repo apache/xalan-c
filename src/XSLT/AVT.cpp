@@ -79,11 +79,14 @@ AVT::AVT(
 			StylesheetConstructionContext&	constructionContext) :
 		AVTPart(),
 		m_name(name),
+		m_simpleString(),
 		m_pcType(type)
 {
 	StringTokenizer tokenizer(stringedValue, "{}\"\'", true);
 
 	const int	nTokens = tokenizer.countTokens();
+
+	assert(length(m_simpleString) == 0);
 
 	if(nTokens < 2)
 	{
@@ -110,15 +113,9 @@ AVT::AVT(
 					
 			if(length(t) == 1)
 			{
-				switch(t.charAt(0))
+				XMLCh theChar = t.charAt(0);
+				switch(theChar)
 				{
-					case('\"'):
-					case('\''):
-					{
-						// just keep on going, since we're not in an attribute template
-						append(buffer,t);
-						break;
-					}
 					case('{'):
 					{
 						// Attribute Value Template start
@@ -216,8 +213,12 @@ AVT::AVT(
 					}
 					default:
 					{
+						// @@ Just to make sure we're not getting the whole string
+						// There seemed to be a problem with single character
+						// strings
+						DOMString s(&theChar, 1);
 						// Anything else just add to string.
-						append(buffer,t);
+						append(buffer, s);
 					}
 				} // end switch t
 			} // end if length == 1
