@@ -161,9 +161,14 @@ XSLTInputSource::makeStream() const
 	}
 	else if (m_node == 0)
 	{
-		URISupport::URLAutoPtrType	theURL = URISupport::getURLFromString(getSystemId());
+		const XalanDOMChar* const	theSystemId = getSystemId();
 
-		theResult = theURL->makeNewStream();
+		if (theSystemId != 0)
+		{
+			const URISupport::URLAutoPtrType	theURL(URISupport::getURLFromString(theSystemId));
+
+			theResult = theURL->makeNewStream();
+		}
 	}
 
 	return theResult;
