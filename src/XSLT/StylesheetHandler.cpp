@@ -1327,7 +1327,19 @@ StylesheetHandler::characters(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	accumulateText(chars, length);
+	if (m_inTemplate == false &&
+		inExtensionElement() == false &&
+		isXMLWhitespace(chars, 0, length) == false)
+	{
+		error(
+			"Character data is not allowed at this position in the stylesheet",
+			m_constructionContext.getLocatorFromStack());
+			  
+	}
+	else
+	{
+		accumulateText(chars, length);
+	}
 }
 
 
