@@ -261,6 +261,8 @@ FunctionDocument::execute(
 
 	XalanDOMString	base;
 
+	bool			fNoRelativeURI = false;
+
 	if (context == 0)
 	{
 		executionContext.error(
@@ -285,12 +287,9 @@ FunctionDocument::execute(
 
 			if (nodeset.getLength() == 0)
 			{
-				executionContext.warn("Ignoring the empty node-set provided as the second argument to the function document()",
-									  context);
-
-				assert(executionContext.getPrefixResolver() != 0);
-
-				base = executionContext.getPrefixResolver()->getURI();
+				// The errata require that we refuse to resolve a relative URI if
+				// an empty node-set is provided as the second argument.
+				fNoRelativeURI = true;
 			}
 			else
 			{
@@ -310,19 +309,20 @@ FunctionDocument::execute(
 		}
 	}
 
-	return doExecute(executionContext, context, arg1, &base, 2, locator);
+	return doExecute(executionContext, context, arg1, &base, 2, locator, fNoRelativeURI);
 }
 
 
 
 XObjectPtr
 FunctionDocument::doExecute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectPtr				arg,
-			XalanDOMString*					base,
-			int								argCount,
-			const LocatorType*				locator) const
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const XObjectPtr&		arg,
+			XalanDOMString*			base,
+			int						argCount,
+			const LocatorType*		locator,
+			bool					fNoRelativeURI) const
 {
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
@@ -401,7 +401,14 @@ FunctionDocument::doExecute(
 			{
 				// The ref is relative.  If there was a base URI
 				// provided, use that...
-				if (base != 0)
+				if (fNoRelativeURI == true)
+				{
+					executionContext.warn(
+						"Cannot resolve a relative URI when the node-set provided as the second argument to the function document() is empty",
+						context,
+						locator);
+				}
+				else if (base != 0)
 				{
 					getDoc(executionContext, ref, *base, mnl, context, locator);
 				}

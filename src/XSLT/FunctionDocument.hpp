@@ -124,10 +124,11 @@ private:
 	doExecute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
-			const XObjectPtr		arg,
+			const XObjectPtr&		arg,
 			XalanDOMString*			base,
 			int						argCount,
-			const LocatorType*		locator) const;
+			const LocatorType*		locator,
+			bool					fNoRelativeURI = false) const;
 
 	// Not implemented...
 	FunctionDocument&
