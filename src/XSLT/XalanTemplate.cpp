@@ -214,6 +214,8 @@ static XalanTransformer::CompiledStylesheetPtrVectorType	theCompiledStylesheetVe
 static XalanTransformer::ParsedSourcePtrVectorType			theParsedSourceVector;
 static XalanTransformer::ParamPairVectorType				theParamsPairVector;
 static XalanDOMStringHashTable::BucketCountsType			theBucketCountsVector;
+static vector<pair<const char*, const char*> >				theStringPairVector;
+
 
 
 static void
