@@ -96,21 +96,6 @@ XObjectResultTreeFragProxyBase::~XObjectResultTreeFragProxyBase()
 
 
 
-XalanNode*
-XObjectResultTreeFragProxyBase::getNodesetRoot() const
-{
-	// I hate to do this, but since all of the non-const
-	// member functions will throw exceptions, I can live
-	// with it.
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XObjectResultTreeFragProxyBase*)this;
-#else
-	return const_cast<XObjectResultTreeFragProxyBase*>(this);
-#endif
-}
-
-
-
 const XalanDOMString&
 XObjectResultTreeFragProxyBase::getNodeName() const
 {

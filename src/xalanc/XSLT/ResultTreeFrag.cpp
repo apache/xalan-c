@@ -110,39 +110,6 @@ ResultTreeFrag::~ResultTreeFrag()
 
 
 
-XalanNode*
-ResultTreeFrag::getNodesetRoot() const
-{
-	if (m_documentFragment != 0)
-	{
-		return m_documentFragment;
-	}
-	else
-	{
-		// I hate to do this, but since all of the non-const
-		// member functions will throw exceptions, I can live
-		// with it.
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return (ResultTreeFrag*)this;
-#else
-		return const_cast<ResultTreeFrag*>(this);
-#endif
-	}
-}
-
-
-
-void
-ResultTreeFrag::clear()
-{
-	if (m_documentFragment != 0)
-	{
-		m_documentFragment->clearChildren();
-	}
-}
-
-
-
 const XalanDOMString&
 ResultTreeFrag::getNodeName() const
 {

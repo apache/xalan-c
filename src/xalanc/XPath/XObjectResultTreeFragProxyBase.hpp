@@ -87,10 +87,8 @@ public:
 	virtual
 	~XObjectResultTreeFragProxyBase();
 
-	// These interfaces are inherited from ResultTreeFragBase...
 
-	virtual XalanNode*
-	getNodesetRoot() const;
+	// These interfaces are inherited from ResultTreeFragBase...
 
 	virtual const XalanDOMString&
 	getNodeName() const;
