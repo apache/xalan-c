@@ -86,6 +86,12 @@
 	using std::endl;
 #endif
 
+// GLOBAL VARIABLES...
+FileUtility				futil;
+XalanDOMString			baseDir, outputRoot, goldRoot, goldFile;  // These are set by the getParams routine.
+const XalanDOMString	testDir("params");
+XalanDOMString			fileName;
+
 
 void
 printArgOptions()
@@ -103,12 +109,13 @@ printArgOptions()
 bool
 getParams(int argc, 
 		  const char*	argv[],
-		  FileUtility& f,
 		  XalanDOMString& basedir,
-		  XalanDOMString& outdir)
+		  XalanDOMString& outdir,
+		  XalanDOMString& goldroot)
 {
 	bool fSuccess = true;	// Used to continue argument loop
 	bool fSetOut = true;	// Set default output directory
+	bool fSetGold = true;	// Set default gold directory
 
 	// Insure that required "-base" argument is there.
 	if (argc == 1 || argv[1][0] == '-')
@@ -118,7 +125,7 @@ getParams(int argc,
 	}
 	else
 	{
-		if (f.checkDir(pathSep + XalanDOMString(argv[1])))
+		if (futil.checkDir(pathSep + XalanDOMString(argv[1])))
 		{
 			assign(basedir, XalanDOMString(argv[1]));
 			insert(basedir, 0, pathSep);
@@ -142,7 +149,7 @@ getParams(int argc,
 				assign(outdir, XalanDOMString(argv[i]));
 				insert(outdir, 0, XalanDOMString("\\"));
 				append(outdir, XalanDOMString("\\"));
-				f.checkAndCreateDir(outdir);
+				futil.checkAndCreateDir(outdir);
 				fSetOut = false;
 			}
 			else
@@ -165,25 +172,33 @@ getParams(int argc,
 		unsigned int ii = lastIndexOf(basedir,charAt(pathSep,0));
 		outdir = substring(basedir, 0, ii+1);
 		append(outdir,XalanDOMString("PARAM-RESULTS\\"));
-		f.checkAndCreateDir(outdir);
+		futil.checkAndCreateDir(outdir);
 	}
 	
+	if (fSetGold)
+	{
+		goldRoot = baseDir;
+		append(goldRoot,XalanDOMString("-gold"));
+		futil.checkAndCreateDir(goldRoot);
+		append(goldRoot,pathSep);
+	}
+
 	// Add the path seperator to the end of the base directory
 	append(basedir, pathSep);
 	return fSuccess;
 }
 
 //	This function returns the testcase number.  All of these tests are called
-//	variablemanXX, and there are only 6 of them,  so we can pick off the
+//	params0X, and there are only 6 of them,  so we can pick off the
 //	second X to determine what test number we're dealing with.  We need to
 //	know which test because each test gets different parameters. This code will
 //  need modification if the number of tests changes.
 unsigned short
 getTestNumber(const XalanDOMString& theFile)
 {
-	assert(12 < length(theFile));
+	assert(8 < length(theFile));
 
-	return charAt(theFile, 12) - XalanUnicode::charDigit_0;
+	return charAt(theFile, 7) - XalanUnicode::charDigit_0;
 }
 
 
@@ -199,18 +214,13 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	FileUtility		f;
+	char testCase[15];
 
-	XalanDOMString  category;	// Test all of base dir by default
-	XalanDOMString  baseDir;	
-	XalanDOMString  outputRoot;	
-
-
-	if (getParams(argc, argv, f, baseDir, outputRoot) == true)
+	if (getParams(argc, argv, baseDir, outputRoot, goldRoot) == true)
 	{
 
 		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString UniqRunid = f.GenerateUniqRunid();
+		const XalanDOMString UniqRunid = futil.GenerateUniqRunid();
 
 		// Defined basic constants for file manipulation 
 
@@ -218,7 +228,7 @@ main(
 		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
 		
 		XMLFileReporter	logFile(resultsFile);
-		logFile.logTestFileInit("Param Testing: Transforms using variablexx in xmanual directory. ");
+		logFile.logTestFileInit("Param Testing: Testing ability to pass parameters to stylesheets. ");
 
 		try
 		{
@@ -229,49 +239,45 @@ main(
 			{
 				XalanTransformer		transformEngine;
 					
-				// Check that output directory is there.
-				const XalanDOMString  xMan("xmanual");
-				const XalanDOMString  theOutputDir = outputRoot + xMan;
-				f.checkAndCreateDir(theOutputDir);
+				
+				// Get the files found in the "params" directory
+				const XalanDOMString  testDir("params");
+				const XalanDOMString  theOutputDir = outputRoot + testDir;
 
-				// Get the files found in the "xmanual" directory
-				const FileNameVectorType	files = f.getTestFileNames(baseDir, xMan,false);
+				// Check that output directory is there.
+				futil.checkAndCreateDir(theOutputDir);
+
+				const FileNameVectorType	files = futil.getTestFileNames(baseDir, testDir, true);
 
 				for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 				{
+					fileName = files[i];
+					sprintf(testCase, "%s%d","TestCase",i+1);
 
-					// If the file starts with "variable" process it.
-					if (startsWith(files[i],"variable"))
-					{
 						// Output file name to result log and console.
-						logFile.logTestCaseInit(files[i]);
-						cout << files[i] << endl;
+						logFile.logTestCaseInit(fileName);
+						//cout << fileName << endl;
 
 						// Set up the input/output files.
-						const XalanDOMString  theXSLFile= baseDir + xMan + pathSep + files[i];
-						const XalanDOMString  theXMLFile = f.GenerateFileName(theXSLFile,"xml");
-						const XalanDOMString  theOutput =  outputRoot + xMan + pathSep + files[i]; 
-						const XalanDOMString  theOutputFile = f.GenerateFileName(theOutput, "out");
+						const XalanDOMString  theXSLFile= baseDir + testDir + pathSep + fileName;
+						const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
+						const XalanDOMString  theOutput =  outputRoot + testDir + pathSep + fileName; 
+						const XalanDOMString  theOutputFile = futil.GenerateFileName(theOutput, "out");
+						goldFile = goldRoot +testDir + pathSep + fileName;
+						goldFile = futil.GenerateFileName(goldFile, "out");
 
 						XSLTResultTarget		theResultTarget(theOutputFile);
 						const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 						const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
 						
 						// Set the desired parameters
-						switch (getTestNumber(files[i]))
-						{	case 1:
-								transformEngine.setStylesheetParam(
-									XalanDOMString("input"),
-									XalanDOMString("'testing 1 2 3'"));
-								break;
-
+						switch (getTestNumber(fileName))
+						{	
 							case 2:
-								transformEngine.setStylesheetParam(
-									XalanDOMString("in1"),
-									XalanDOMString("'A '"));
-								transformEngine.setStylesheetParam(
-									XalanDOMString("in2"), 
-									XalanDOMString("'B '"));
+								transformEngine.setStylesheetParam("in1", "'A '");
+
+								transformEngine.setStylesheetParam("in2", "'B '");
+
 								transformEngine.setStylesheetParam(
 									XalanDOMString("in3"),
 									XalanDOMString("'C '"));
@@ -300,16 +306,16 @@ main(
 						int	theResult =
 							transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
 
-						if(theResult != 0)
+						if (!theResult)
 						{
-							logFile.logTestCaseClose("Done","Fail");
-							cerr << "XalanError: \n" << transformEngine.getLastError();
+							const XSLTInputSource resultInputSource(c_wstr(theOutputFile));
+							const XSLTInputSource goldInputSource(c_wstr(goldFile));
+							futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, testCase); 
 						}
 						else
 						{
-							logFile.logTestCaseClose("Done","Pass");
-						}
-					}		
+							cout << endl << "Failed: " << testCase ;
+						}		
 				}
 				
 			}
