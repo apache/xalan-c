@@ -80,12 +80,6 @@
 
 
 
-namespace
-{
-	const bool			gOnNT = true;
-};
-
-
 
 
 const TextFileOutputStream::BufferType::size_type	TextFileOutputStream::s_bufferSize = 8192;
@@ -105,7 +99,14 @@ TextFileOutputStream::TextFileOutputStream(const DOMString&		theFileName) :
 	m_buffer.reserve(s_bufferSize + 1);
 
 #if defined(_MSC_VER)
-    if (gOnNT)
+
+	// check the version.  Only NT allows  
+	// wide character file paths
+	OSVERSIONINFO verInfo;
+	verInfo.dwOSVersionInfoSize=sizeof(verInfo);
+	::GetVersionEx(&verInfo);
+
+    if (verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
     {
         m_handle = ::CreateFileW(toCharArray(theFileName),
 								 GENERIC_WRITE,
