@@ -888,8 +888,8 @@ xsltMain(const CmdLineParams&	params)
 	// the stylesheet is destroyed.
 	XPathFactoryBlock	theStylesheetXPathFactory;
 
-	StylesheetConstructionContextDefault	theConstructionContext(processor,
-			theXSLProcessorSupport,
+	StylesheetConstructionContextDefault	theConstructionContext(
+			processor,
 			theStylesheetXPathFactory);
 
 	/*
@@ -1297,7 +1297,7 @@ main(
 				}
 			}
 #endif
-			
+
 			XMLPlatformUtils::Terminate();
 		}
 	}
