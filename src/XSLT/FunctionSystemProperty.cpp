@@ -106,25 +106,27 @@ FunctionSystemProperty::execute(
 	const unsigned int		fullNameLength = length(fullName);
 	const unsigned int		indexOfNSSep = indexOf(fullName,':');
 
-	XalanDOMString result;
+	bool			fNumberResult = false;
+
+	XalanDOMString	result;
+
+	double			numberResult;
 
 	if(indexOfNSSep < fullNameLength)
 	{
 		const XalanDOMString	prefix = substring(fullName, 0, indexOfNSSep);
 
-		//$$$ ToDo: Fix this!!!
-//		const XalanDOMString nspace = executionContext.getNamespaceForPrefix(prefix);
-		const XalanDOMString	nspace =
-			XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform");
+		const XalanDOMString	nspace = executionContext.getNamespaceForPrefix(prefix);
 
-		
 		const XalanDOMString	propName = substring(fullName, indexOfNSSep + 1);
 
 		if(startsWith(nspace, XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform")))
 		{
 			if(equals(propName, XALAN_STATIC_UCODE_STRING("version")))
 			{
-				result = XALAN_STATIC_UCODE_STRING("1.0");
+				numberResult = 1.0;
+
+				fNumberResult = true;
 			}
 			else if(equals(propName, XALAN_STATIC_UCODE_STRING("vendor")))
 			{
@@ -151,7 +153,14 @@ FunctionSystemProperty::execute(
 		result = ::getenv(DOMStringToStdString(fullName).c_str());
 	}
 
-	return executionContext.getXObjectFactory().createString(result);
+	if (fNumberResult == true)
+	{
+		return executionContext.getXObjectFactory().createNumber(numberResult);
+	}
+	else
+	{
+		return executionContext.getXObjectFactory().createString(result);
+	}
 }
 
 
