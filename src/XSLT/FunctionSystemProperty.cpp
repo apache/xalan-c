@@ -119,7 +119,14 @@ FunctionSystemProperty::execute(
 
 		const XalanDOMString* const		nspace = executionContext.getNamespaceForPrefix(theBuffer);
 
-		if (nspace != 0)
+		if (nspace == 0)
+		{
+			executionContext.error(
+					"Undeclared namespace prefix",
+					context,
+					locator);
+		}
+		else
 		{
 			substring(fullName, theBuffer, indexOfNSSep + 1);
 
