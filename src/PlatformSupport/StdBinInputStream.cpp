@@ -110,7 +110,7 @@ StdBinInputStream::readBytes(
 
 	while(i < maxToRead && m_stream)
 	{
-		toFill[i] = m_stream.get();
+		toFill[i] = static_cast<XMLByte>(m_stream.get());
 
 		++i;
 	}
