@@ -55,6 +55,7 @@
 <q>What do I need to rebuild &xslt4c; on Windows?</q>
 
 <a><p>To build &xslt4c; on Windows, you need &xml4c; and MS Visual C++ 6.0 installed with Service Pack 3 for Visual C++ and Visual Studio. You should also apply the bug fixes for the C++ standard library that shipped with Visual C++ 6.0. These fixes are available from the Dinkumware site: <jump href="http://www.dinkumware.com/vc_fixes.html">http://www.dinkumware.com/vc_fixes.html</jump>.</p>
+<p>If you do not want to apply the Dinkumware patches, or you are using a different Service Pack, you must rebuild all of the Xerces and Xalan binaries.</p>
 <p>For more details, see <link idref="readme" anchor="win32">Steps for doing a Windows build</link>.</p></a>
 </faq>
 
@@ -93,6 +94,7 @@
 
 <a><p>The International Components for Unicode(ICU) is a C and C++ library that provides robust and full-featured Unicode support on a wide variety of platforms. &xslt4c; uses the ICU to extend support for encoding, number formatting, and sorting.</p> 
 <p>The ICU is available for download from <jump href="http://oss.software.ibm.com/developerworks/opensource/icu/project/index.html">http://oss.software.ibm.com/developerworks/opensource/icu/project/index.html</jump>.</p>
+<p>This release of Xalan was tested with ICU 2.2.</p>
 <p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p><!--icuNote--><anchor name="gnutar"/><p/></a>
 </faq>
 

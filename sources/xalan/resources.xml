@@ -35,7 +35,7 @@
 	
   <resource id="Readme" title="Xalan Repository Release Notes" location="http://www.apache.org/websrc/cvsweb.cgi/xml-xalan/README"/>
   
-  <resource id="XSL" title="Extensible Stylesheet Language (XSL) Version 1.0 W3C Candidate Recommendation"
+  <resource id="XSL" title="Extensible Stylesheet Language (XSL) Version 1.0 W3C Recommendation"
    location="http://www.w3.org/TR/xsl"/>
 
   <resource id="XSLT" title="W3C Recommendation 16 November 1999 XSL Transformations (XSLT) Version 1.0" 

@@ -73,8 +73,8 @@ The HP-UX 11 32-bit and 64-bit distributions were built with aCC A.03.33.</p>
 <p>The Visual C++ Xalan project included with the Windows release knows the relative paths to the Xalan headers and libraries, but it does not know where you have unzipped the Xerces distribution. If you plan to use Visual C++ to build Xalan applications or <link idref="readme" anchor="jar">rebuild Xalan</link>, you must also provide Visual C++ with access to the Xerces headers and libraries.</p> 
 <p>Use the Visual C++ Tools menu to open the Options dialog box, go to the Directories tab, and do the following:</p>
     <ul>
-      <li>Add the path to &xml4c-dist;-win32/include to the list of directories of Include files (see the figure below).</li>
-      <li>Add the path to &xml4c-dist;-win32/lib to the list of directories of Library files (see the figure below).</li></ul>
+      <li>Add the path to &xml4c-dist;-win32\include to the list of directories of Include files (see the figure below).</li>
+      <li>Add the path to &xml4c-dist;-win32\lib to the list of directories of Library files (see the figure below).</li></ul>
 <p><img src="options-include.gif"/></p>
 
 </s3><anchor name="unixpath"/>
@@ -128,7 +128,7 @@ most standard transformations is as follows:</p>
 <p><code>Xalan -o <ref>outputfile</ref> <ref>xmlSource</ref> <ref>stylesheet</ref></code></p>
 <p>where <ref>xmlSource</ref> is the XML source file name, <ref>stylesheet</ref> is the XSL stylesheet file name, and <ref>outputfile</ref> is the output file name.</p>
 <p>If you want the output to be displayed on the screen, simply omit the -o flag and <ref>outputfile</ref>.</p>
-<p>You can use this utility to try out XSL stylesheets you have written, to make sure they do what you expect with the XML source files they are designed to transform. The utility provides useful messages if the source file or stylesheet is not well formed. If you include a DOCTYPE statement in your XML source files and include the -v flag on the command line, the utility will also let you know whether the XML document is valid (conforms to that DOCTYPE). For more information, see <link idref="commandline">Command-Line Utility</link>.</p>
+<p>You can use this utility to try out XSL stylesheets you have written, to make sure they do what you expect with the XML source files they are designed to transform. The utility provides useful messages if the source file or stylesheet is not well formed. If you include a DOCTYPE statement or Schema hint in your XML source files and include the -v flag on the command line, the utility will also let you know whether the XML document is valid (conforms to that DOCTYPE or Schema). For more information, see <link idref="commandline">Command-Line Utility</link>.</p>
 </s2><anchor name="apps"/>
 <s2 title="Setting up your own XSLT applications">
 <p>You can start by using your own XML source files and XSL stylesheets with the sample applications, which illustrate a number of usage patterns. For more information on setting up applications, see <link idref="usagepatterns">Basic Usage Patterns</link>.</p>
