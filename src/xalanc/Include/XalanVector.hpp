@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+/**
+ * @author David Bertoni (david_n_bertoni@us.ibm.com)
+ * @author Matthew Hoyt (mhoyt@ca.ibm.com)
+ */
+
 #if !defined(XALANVECTOR_HEADER_GUARD_1357924680)
 #define XALANVECTOR_HEADER_GUARD_1357924680
 
@@ -26,7 +31,6 @@
 #include <algorithm>
 #include <cassert>
 #include <new>
-#include <cstring>
 #include <iterator>
 #include <stdexcept>
 
@@ -38,6 +42,8 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
+#pragma warning(push)
+#pragma warning(disable: 4100)
 
 template <class Type>
 class XalanVector
@@ -54,17 +60,17 @@ public:
     typedef size_t              size_type;
     typedef value_type*         iterator;
     typedef const value_type*   const_iterator;
-	typedef ptrdiff_t			difference_type;
-	
+    typedef ptrdiff_t           difference_type;
+    
 #if defined(_MSC_VER) && (_MSC_VER < 1300)
-	typedef XALAN_STD_QUALIFIER reverse_iterator<iterator,value_type> reverse_iterator;
-	typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
+    typedef XALAN_STD_QUALIFIER reverse_iterator<iterator,value_type> reverse_iterator;
+    typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
-	typedef XALAN_STD_QUALIFIER reverse_iterator<iterator> reverse_iterator;
-	typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef XALAN_STD_QUALIFIER reverse_iterator<iterator> reverse_iterator;
+    typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator> const_reverse_iterator;
 #endif
 
-	typedef XalanVector<value_type>     ThisType;
+    typedef XalanVector<value_type>     ThisType;
 
     XalanVector(
             MemoryManagerType*  theManager = 0,
@@ -84,7 +90,7 @@ public:
         m_memoryManager(theManager != 0 ? theManager : theSource.m_memoryManager),
         m_size(0),
         m_allocation(0),
-	m_data(0)
+        m_data(0)
     {
         if (theSource.m_size > 0)
         {
@@ -93,58 +99,59 @@ public:
                 initialAllocation = theSource.m_size;
             }
 
-			ThisType theTemp(theManager, initialAllocation);
+            ThisType    theTemp(theManager, initialAllocation);
 
-			theTemp.insert(theTemp.begin(),theSource.begin(),theSource.end());
+            theTemp.insert(theTemp.begin(), theSource.begin(), theSource.end());
 
-			swap(theTemp);
-	
+            swap(theTemp);
+    
         }
         else if (initialAllocation > 0)
         {
-			m_data = allocate(initialAllocation);
-			m_allocation = initialAllocation;
+            m_data = allocate(initialAllocation);
+
+            m_allocation = initialAllocation;
         }
 
         invariants();
     }
 
-	XalanVector(
-			const_iterator theStart, 
-			const_iterator theEnd,
-			MemoryManagerType*  theManager = 0) :
-	    m_memoryManager(theManager),
+    XalanVector(
+            const_iterator theStart, 
+            const_iterator theEnd,
+            MemoryManagerType*  theManager = 0) :
+        m_memoryManager(theManager),
         m_size(0),
         m_allocation(0),
         m_data(0)
 
-	{
-		ThisType theTemp(theManager);
+    {
+        ThisType    theTemp(theManager);
 
-		theTemp.insert(theTemp.begin(),theStart,theEnd);
+        theTemp.insert(theTemp.begin(), theStart, theEnd);
 
-		swap(theTemp);
+        swap(theTemp);
 
-		invariants();
-	}
+        invariants();
+    }
 
-	XalanVector(
-			size_type theInsertSize,
-			value_type data,
-			MemoryManagerType*  theManager = 0) :
-	    m_memoryManager(theManager),
+    XalanVector(
+            size_type theInsertSize,
+            value_type data,
+            MemoryManagerType*  theManager = 0) :
+        m_memoryManager(theManager),
         m_size(0),
         m_allocation(theInsertSize),
-        m_data(theInsertSize > 0 ? allocate(theInsertSize) : 0)
-	{
-		ThisType theTemp(theManager);
+        m_data(0)
+    {
+        ThisType    theTemp(theManager);
 
-		theTemp.insert(theTemp.begin(), theInsertSize, data);
+        theTemp.insert(theTemp.begin(), theInsertSize, data);
 
-		swap(theTemp);
+        swap(theTemp);
 
-		invariants();
-	}
+        invariants();
+    }
 
     ~XalanVector()
     {
@@ -191,18 +198,19 @@ public:
             iterator    start,
             iterator    end)
     {
+        invariants();
+
         if (start != end)
         {
-
-	        using XALAN_STD_QUALIFIER copy;
-
-            copy(
-				end, 
-				endPointer(),
-				start);
+            XALAN_STD_QUALIFIER copy(
+                end, 
+                endPointer(),
+                start);
 
             shrink(size() - (end - start));
         }
+
+        invariants();
 
         return start;
     }
@@ -213,16 +221,18 @@ public:
             const_iterator  theStart,
             const_iterator  theEnd)
     {
+        invariants();
+
         const size_type     theInsertSize = theEnd - theStart;
 
-		if (theInsertSize == 0)
-		{
-			return;
-		}
+        if (theInsertSize == 0)
+        {
+            return;
+        }
 
-		const size_type     theTotalSize = size() + theInsertSize;
+        const size_type     theTotalSize = size() + theInsertSize;
 
-		if (thePosition == end())
+        if (thePosition == end())
         {
             pointer     thePointer = ensureCapacity(theTotalSize);
 
@@ -239,7 +249,7 @@ public:
         {
             if (theTotalSize > capacity())
             {
-			    ThisType    theTemp(m_memoryManager, theTotalSize);
+                ThisType    theTemp(m_memoryManager, theTotalSize);
 
                 // insert everything up to the position...
                 theTemp.insert(theTemp.end(), begin(), thePosition);
@@ -254,76 +264,80 @@ public:
             }
             else
             {
-				// insert into the middle of the vector that has enough capacity
-				iterator theOriginalEnd = end();
-				size_type theRightSplitSize = end() - thePosition;
-				
-				if (theRightSplitSize <= theInsertSize)
-				{
-					// inserted range will go to or beyond edge of current vector
-					
-					// append from inserted range, all values that will extend 
-					// beyond the current vector
-					const_iterator toInsertSplit = theStart + theRightSplitSize;
-					const_iterator toInsertIter = toInsertSplit;
-					while (toInsertIter != theEnd)
-					{
-						construct(endPointer(),*toInsertIter);
-						++m_size;
-						++toInsertIter;
-					}
+                // insert into the middle of the vector that has enough capacity
+                iterator theOriginalEnd = end();
+                size_type theRightSplitSize = end() - thePosition;
+                
+                if (theRightSplitSize <= theInsertSize)
+                {
+                    // inserted range will go to or beyond edge of current vector
+                    
+                    // append from inserted range, all values that will extend 
+                    // beyond the current vector
+                    const_iterator toInsertSplit = theStart + theRightSplitSize;
+                    const_iterator toInsertIter = toInsertSplit;
+                    while (toInsertIter != theEnd)
+                    {
+                        construct(endPointer(),*toInsertIter);
+                        ++m_size;
+                        ++toInsertIter;
+                    }
 
-					// copy the "right" of the current vector to the end
-					toInsertIter = thePosition;
-					while (toInsertIter !=	theOriginalEnd)
-					{
-						construct(endPointer(),*toInsertIter);
-						++m_size;
-						++toInsertIter;
-					}
+                    // copy the "right" of the current vector to the end
+                    toInsertIter = thePosition;
+                    while (toInsertIter !=  theOriginalEnd)
+                    {
+                        construct(endPointer(),*toInsertIter);
+                        ++m_size;
+                        ++toInsertIter;
+                    }
 
-					// copy the remaining part of inserted range into 
-					// the original vector spaces
-					XALAN_STD_QUALIFIER copy(theStart, toInsertSplit, thePosition);
-				}
-				else
-				{
-					// inserted range will not extend beyond edge of current vector
-					
-					// move end of current vector by insertion size
-					const_iterator toMoveIter = end() - theInsertSize;
+                    // copy the remaining part of inserted range into 
+                    // the original vector spaces
+                    XALAN_STD_QUALIFIER copy(theStart, toInsertSplit, thePosition);
+                }
+                else
+                {
+                    // inserted range will not extend beyond edge of current vector
+                    
+                    // move end of current vector by insertion size
+                    const_iterator toMoveIter = end() - theInsertSize;
 
-					while (toMoveIter != theOriginalEnd)
-					{
-						construct(endPointer(),*toMoveIter);
-						++m_size;
-						++toMoveIter;
-					}
+                    while (toMoveIter != theOriginalEnd)
+                    {
+                        construct(endPointer(),*toMoveIter);
+                        ++m_size;
+                        ++toMoveIter;
+                    }
 
-					// reverse copy the remaining part of the "right" piece of the current vector
-					XALAN_STD_QUALIFIER copy_backward(thePosition, theOriginalEnd - theInsertSize, theOriginalEnd);
+                    // reverse copy the remaining part of the "right" piece of the current vector
+                    XALAN_STD_QUALIFIER copy_backward(thePosition, theOriginalEnd - theInsertSize, theOriginalEnd);
 
-					// insert into current vector
-					XALAN_STD_QUALIFIER copy(theStart, theEnd, thePosition);
-				}
-			}
+                    // insert into current vector
+                    XALAN_STD_QUALIFIER copy(theStart, theEnd, thePosition);
+                }
+            }
         }
+
+        invariants();
     }
 
-	void
-	insert(
-			iterator	thePosition,
-			size_type	theInsertSize,
-			value_type	data)
-	{
+    void
+    insert(
+            iterator    thePosition,
+            size_type   theInsertSize,
+            value_type  data)
+    {
+        invariants();
+
         const size_type     theTotalSize = size() + theInsertSize;
 
-		// Needs to be optimized
-		if (thePosition == end())
+        // Needs to be optimized
+        if (thePosition == end())
         {
             pointer     thePointer = ensureCapacity(theTotalSize);
 
-			size_type index = 0; 
+            size_type index = 0; 
             while (index < theInsertSize)
             {
                 construct(thePointer, data);
@@ -333,18 +347,18 @@ public:
                 ++index;
             }
         }
-		else
-		{
-			if (theTotalSize > capacity())
+        else
+        {
+            if (theTotalSize > capacity())
             {
-				ThisType    theTemp(m_memoryManager, theTotalSize);
+                ThisType    theTemp(m_memoryManager, theTotalSize);
 
                 // insert everything up to the position...
                 theTemp.insert(theTemp.end(), begin(), thePosition);
 
                 // insert the new stuff...
-				theTemp.insert(theTemp.end(), theInsertSize, data);
-				
+                theTemp.insert(theTemp.end(), theInsertSize, data);
+                
                 // insert everything from the position to the end...
                 theTemp.insert(theTemp.end(), thePosition, end());
 
@@ -352,75 +366,78 @@ public:
             }
             else
             {
-				// insert into the middle of the vector that has enough capacity			
-				iterator theOriginalEnd = end();
-				size_type theRightSplitSize = end() - thePosition;
-				
-				if (theRightSplitSize <= theInsertSize)
-				{
-					// inserted range will go to or beyond edge of current vector
-					
-					// append all copies that will extend 
-					// beyond the current vector				
-					size_type i = 0;
-					for (;  i < (theInsertSize - theRightSplitSize); ++i)
-					{
-						construct(endPointer(),data);
-						++m_size;
-					}
+                // insert into the middle of the vector that has enough capacity            
+                iterator theOriginalEnd = end();
+                size_type theRightSplitSize = end() - thePosition;
+                
+                if (theRightSplitSize <= theInsertSize)
+                {
+                    // inserted range will go to or beyond edge of current vector
+                    
+                    // append all copies that will extend 
+                    // beyond the current vector                
+                    size_type i = 0;
+                    for (;  i < (theInsertSize - theRightSplitSize); ++i)
+                    {
+                        construct(endPointer(),data);
+                        ++m_size;
+                    }
 
-					// copy the "right" of the current vector to the end
-					iterator toInsertIter = thePosition;
-					while (toInsertIter !=	theOriginalEnd)
-					{
-						construct(endPointer(),*toInsertIter);
-						++m_size;
-						++toInsertIter;
-					}
+                    // copy the "right" of the current vector to the end
+                    iterator toInsertIter = thePosition;
+                    while (toInsertIter !=  theOriginalEnd)
+                    {
+                        construct(endPointer(),*toInsertIter);
+                        ++m_size;
+                        ++toInsertIter;
+                    }
 
-					// copy the remaining part of inserted range into 
-					// the original vector spaces
-					XALAN_STD_QUALIFIER fill(thePosition, thePosition + theRightSplitSize, data);
-				}
-				else
-				{
-					// inserted range will not extend beyond edge of current vector
-					
-					// move end of current vector by insertion size
-					const_iterator toMoveIter = end() - theInsertSize;
+                    // copy the remaining part of inserted range into 
+                    // the original vector spaces
+                    XALAN_STD_QUALIFIER fill(thePosition, thePosition + theRightSplitSize, data);
+                }
+                else
+                {
+                    // inserted range will not extend beyond edge of current vector
+                    
+                    // move end of current vector by insertion size
+                    const_iterator toMoveIter = end() - theInsertSize;
 
-					while (toMoveIter != theOriginalEnd)
-					{
-						construct(endPointer(),*toMoveIter);
-						++m_size;
-						++toMoveIter;
-					}
+                    while (toMoveIter != theOriginalEnd)
+                    {
+                        construct(endPointer(),*toMoveIter);
+                        ++m_size;
+                        ++toMoveIter;
+                    }
 
-					// reverse copy the remaining part of the "right" piece of the current vector
-					XALAN_STD_QUALIFIER copy_backward(thePosition, theOriginalEnd - theInsertSize, theOriginalEnd);
+                    // reverse copy the remaining part of the "right" piece of the current vector
+                    XALAN_STD_QUALIFIER copy_backward(thePosition, theOriginalEnd - theInsertSize, theOriginalEnd);
 
-					// insert into current vector
-					XALAN_STD_QUALIFIER fill(thePosition, thePosition + theInsertSize, data);
-				
-				}
-			}
+                    // insert into current vector
+                    XALAN_STD_QUALIFIER fill(thePosition, thePosition + theInsertSize, data);
+                
+                }
+            }
         }
-	}
 
-	void
-	insert(
-			iterator thePosition,
-			value_type data)
-	{
-		insert(thePosition,1,data);
-	}
-			
-	void
-	assign(const_iterator theStart, const_iterator theEnd)
-	{
-		clear();
-		insert(0,theStart,theEnd);
-	}
+        invariants();
+    }
+
+    void
+    insert(
+            iterator thePosition,
+            value_type data)
+    {
+        insert(thePosition,1,data);
+    }
+            
+    void
+    assign(const_iterator theStart, const_iterator theEnd)
+    {
+        clear();
+
+        insert(0,theStart,theEnd);
+    }
 
     size_type
     size() const
@@ -561,34 +578,38 @@ public:
         return endPointer();
     }
 
-	reverse_iterator
-	rbegin()
-	{
-		invariants();
-		return reverse_iterator(end());
-	}
+    reverse_iterator
+    rbegin()
+    {
+        invariants();
 
-	const_reverse_iterator
-	rbegin() const
-	{
-		invariants();
-		return const_reverse_iterator(end());
-	}
+        return reverse_iterator(end());
+    }
 
-	reverse_iterator
-	rend()
-	{
-		invariants();
-		return reverse_iterator(begin());
-	}
+    const_reverse_iterator
+    rbegin() const
+    {
+        invariants();
 
-	const_reverse_iterator
-	rend() const
-	{
-		invariants();
-		return const_reverse_iterator(begin());
-	}
-	
+        return const_reverse_iterator(end());
+    }
+
+    reverse_iterator
+    rend()
+    {
+        invariants();
+
+        return reverse_iterator(begin());
+    }
+
+    const_reverse_iterator
+    rend() const
+    {
+        invariants();
+
+        return const_reverse_iterator(begin());
+    }
+    
 
     reference
     at(size_type    theIndex)
@@ -650,10 +671,6 @@ public:
             }
             else
             {
-#if !defined(XALAN_NO_STD_NAMESPACE)
-	            using std::copy;
-#endif
-
                 const_iterator  theRHSEnd = theRHS.end();
 
                 if (m_size > theRHS.m_size)
@@ -663,14 +680,14 @@ public:
                 }
                 else if (m_size < theRHS.m_size)
                 {
-					insert(
+                    insert(
                         end(),
                         theRHS.begin() + m_size,
                         theRHS.end());
                 }
 
                 // Copy everything that already exists...
-                copy(
+                XALAN_STD_QUALIFIER copy(
                     theRHS.begin(),
                     theRHSEnd,
                     begin());
@@ -734,49 +751,7 @@ public:
         return theTemp;
     }
 
-    friend bool operator==(const ThisType&, const ThisType&);
-    friend bool operator<(const ThisType&, const ThisType&);
-
 private:
-
-    bool
-    eq(const ThisType&  theRHS) const
-    {
-        invariants();
-
-        if (m_size != theRHS.m_size)
-        {
-            return false;
-        }
-        else if (m_size == 0)
-        {
-            return true;
-        }
-        else
-        {
-#if !defined(XALAN_NO_STD_NAMESPACE)
-	        using std::equal;
-#endif
-
-            return equal(begin(), end(), theRHS.begin());
-        }
-    }
-
-    bool
-    lt(const ThisType&  theRHS) const
-    {
-        invariants();
-
-#if !defined(XALAN_NO_STD_NAMESPACE)
-	    using std::lexicographical_compare;
-#endif
-
-        return lexicographical_compare(
-                    begin(),
-                    end(),
-                    theRHS.begin(),
-                    theRHS.end());
-    }
 
 #if defined(NDEBUG)
     void
@@ -924,11 +899,7 @@ private:
     void
     rangeError()
     {
-#if !defined(XALAN_NO_STD_NAMESPACE)
-	    using std::out_of_range;
-#endif
-
-        throw out_of_range("");
+        throw XALAN_STD_QUALIFIER out_of_range("");
     }
 
     void
@@ -971,7 +942,18 @@ operator==(
             const XalanVector<Type>&    theLHS,
             const XalanVector<Type>&    theRHS)
 {
-    return theLHS.eq(theRHS);
+    if (theLHS.size() != theRHS.size())
+    {
+        return false;
+    }
+    else if (theLHS.size() == 0)
+    {
+        return true;
+    }
+    else
+    {
+        return XALAN_STD_QUALIFIER equal(theLHS.begin(), theLHS.end(), theRHS.begin());
+    }
 }
 
 
@@ -993,7 +975,11 @@ operator<(
             const XalanVector<Type>&    theLHS,
             const XalanVector<Type>&    theRHS)
 {
-    return theLHS.lt(theRHS);
+    return XALAN_STD_QUALIFIER lexicographical_compare(
+                theLHS.begin(),
+                theLHS.end(),
+                theRHS.begin(),
+                theRHS.end());
 }
 
 
@@ -1029,6 +1015,9 @@ operator>=(
     return !(x < y);
 }
 
+
+
+#pragma warning(pop)
 
 
 XALAN_CPP_NAMESPACE_END
