@@ -54,63 +54,44 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <cassert>
-#include <fstream>
 #include <iostream>
-#include <strstream>
+
+
 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
 
-//These came from the debug test.
-#include <cstdio>
-#include <ctime>
-#include <string>
+
+
 #include <vector>
+
+
 
 #include <util/PlatformUtils.hpp>
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/XalanFileOutputStream.hpp>
-#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
 
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+
+#include <XSLT/XSLTInputSource.hpp>
+#include <XSLT/XSLTResultTarget.hpp>
+
+
 
 #include <XalanTransformer/XalanTransformer.hpp>
 
-#include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathFactoryDefault.hpp>
 
-#include <XSLT/StylesheetConstructionContextDefault.hpp>
-#include <XSLT/StylesheetExecutionContextDefault.hpp>
-#include <XSLT/StylesheetRoot.hpp>
-#include <XSLT/XSLTEngineImpl.hpp>
-#include <XSLT/XSLTInit.hpp>
-#include <XSLT/XSLTInputSource.hpp>
-#include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
-#include <XSLT/XSLTResultTarget.hpp>
 
 #include <XMLFileReporter.hpp>
 #include <FileUtility.hpp>
 
-//This is here for the threads.
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <winbase.h>
-#define THREADFUNCTIONRETURN DWORD WINAPI
+
 
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::cout;
-	using std::cin;
 	using std::endl;
-	using std::ifstream;
-	using std::ios_base;
-	using std::ostrstream;
-	using std::string;
 #endif
+
 
 
 // This is here for memory leak testing.
@@ -118,7 +99,9 @@
 #include <crtdbg.h>
 #endif
 
-const char* const excludeStylesheets[] =
+
+	
+static const char* const	excludeStylesheets[] =
 {
 //	"impincl16.xml",
 	0
@@ -129,32 +112,45 @@ const char* const excludeStylesheets[] =
 inline bool
 checkForExclusion(XalanDOMString currentFile)
 {
+	for (int i = 0; excludeStylesheets[i] != 0; ++i)
+	{	
+		if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
+		{
+			return true;
+		}
+	}
 
-		for (int i=0; excludeStylesheets[i] != 0; i++)
-			{	
-				if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
-					return true;
-			}
-		return false;
+	return false;
 }
 
-void
-getParams(int argc, 
-		  const char*	argv[])
+
+
+bool
+getParams(int			argc, 
+		  const char*	/* argv */[])
 {
 	// This needs additional work.
 	if (argc != 1)
 	{
 		cerr << "Usage: ThreadTest" << endl;
-		exit(1);
+
+		return false;
+	}
+	else
+	{
+		return true;
 	}
 }
 
+
+
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanDOMString>		FileNameVectorType;
+typedef vector<XalanDOMString>		FileNameVectorType;
 #else
-	typedef std::vector<XalanDOMString>	FileNameVectorType;
+typedef std::vector<XalanDOMString>	FileNameVectorType;
 #endif
+
+
 
 int
 main(
@@ -169,75 +165,78 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	// Defined root for performance directory. Based on PD's machine. 
-	const XalanDOMString	confDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\conf\\"));
-	const XalanDOMString	outDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\cplus-mem\\"));
-
-	FileUtility f;
-	FileNameVectorType dirs, files;
-
-	// Get the list of Directories that are below perf
-	dirs = f.getDirectoryNames(confDir);
-
-	//XMLFileReporter	logFile("cpp.xml");
-	//logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
-
-	getParams(argc, argv);
-
-	try
+	if (getParams(argc, argv) == true)
 	{
-		// Call the static initializers...
-		XMLPlatformUtils::Initialize();
-		XalanTransformer::initialize();
-		XalanTransformer transformEngine;
+		// Defined root for performance directory. Based on PD's machine. 
+		const XalanDOMString	confDir(XALAN_STATIC_UCODE_STRING("\\xsl-test\\conf\\"));
+		const XalanDOMString	outDir(XALAN_STATIC_UCODE_STRING("\\xsl-test\\cplus-mem\\"));
+
+		FileUtility			f;
+
+		// Get the list of Directories that are below perf
+		const FileNameVectorType	dirs = f.getDirectoryNames(confDir);
+
+		//XMLFileReporter	logFile("cpp.xml");
+		//logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
+
+		try
 		{
-			const XalanDOMString  theXSLSuffix(".xsl");
-			const XalanDOMString  theXMLSuffix(".xml");
-			const XalanDOMString  pathSep(XALAN_STATIC_UCODE_STRING("\\"));  
+			// Call the static initializers...
+			XMLPlatformUtils::Initialize();
 
-			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
+			XalanTransformer::initialize();
+
 			{
-			  files = f.getTestFileNames(confDir, dirs[j]);
-			  for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
-			  { 
-				if (checkForExclusion(files[i]))
-					{
-						continue;
-					}
+				XalanTransformer		transformEngine;
 
-				// Output file name to result log.
-				//logFile.logTestCaseInit(files[i]);
-			    cout << files[i] << endl;
+				const XalanDOMString	theXSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
+				const XalanDOMString	theXMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
+				const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));  
 
-				const XalanDOMString  theXMLFile= confDir + dirs[j] + pathSep + files[i];
-				const XalanDOMString  outFile = outDir + dirs[j] + pathSep + files[i];
-				const XalanDOMString  theXSLFile = f.GenerateFileName(theXMLFile,"xsl");
-				const XalanDOMString  theOutputFile = f.GenerateFileName(outFile, "out");
-
-				// Do a total end to end transform with no pre parsing of either xsl or xml files.
-				XSLTResultTarget		theResultTarget(theOutputFile);
-				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-				int theResult = 0;
-
-			    theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-				if(theResult != 0)
+				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 				{
-					cerr << "XalanError: \n" << transformEngine.getLastError();
-					//exit (1);
+					const FileNameVectorType	files = f.getTestFileNames(confDir, dirs[j]);
+
+					for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
+					{
+						if (checkForExclusion(files[i]) == false)
+						{
+							// Output file name to result log.
+							//logFile.logTestCaseInit(files[i]);
+							cout << files[i] << endl;
+
+							const XalanDOMString	theXMLFile= confDir + dirs[j] + pathSep + files[i];
+							const XalanDOMString	outFile = outDir + dirs[j] + pathSep + files[i];
+							const XalanDOMString	theXSLFile = f.GenerateFileName(theXMLFile,"xsl");
+							const XalanDOMString	theOutputFile = f.GenerateFileName(outFile, "out");
+
+							// Do a total end to end transform with no pre parsing of either xsl or xml files.
+							XSLTResultTarget		theResultTarget(theOutputFile);
+
+							const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+							const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+
+							int		theResult =
+								transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+
+							if(theResult != 0)
+							{
+								cerr << "XalanError: \n" << transformEngine.getLastError();
+							}
+						}
+					}
 				}
-
-			  }
 			}
+
+			XalanTransformer::terminate();
+
+			XMLPlatformUtils::Terminate();
 		}
-		XalanTransformer::terminate();
-		XMLPlatformUtils::Terminate();
-	}
-	catch(...)
-	{
-		cerr << "Exception caught!!!" << endl << endl;
+		catch(...)
+		{
+			cerr << "Exception caught!!!" << endl << endl;
+		}
 	}
 
-
-return 0;
+	return 0;
 }
