@@ -63,18 +63,19 @@
   <s2 title="What is it?">
     <p>Xalan is an XSLT processor for transforming XML documents into HTML, text, or other XML
      document types.</p>
-    <p>&xslt4c-current; represents a robust C++ reference implementation of the W3C Recommendations 
-    for XSL Transformations (XSLT) and the XML Path Language (XPath). It uses the latest release of
-     the &xml4c; XML parser (&xml4c-used;).</p>
+    <p>&xslt4c-current; is a robust C++ reference implementation of the W3C Recommendations 
+    for XSL Transformations (XSLT) and the XML Path Language (XPath). It uses the &xml4c-used;
+    XML parser.</p>
 	</s2>
   
   <s2 title="How do I get it?">
-    <p>Download and unzip the distribution file for your platform. In addition to the platform-specific binaries,
-    documentation, and sample applications, both distributions also include the complete &xslt4c; source tree.</p>
+    <p>Download and unzip the distribution file for your platform. In addition to the
+     platform-specific binaries, documentation, and sample applications, the distribution also
+     includes the complete &xslt4c; source tree.</p>
      <table>
        <tr>
-         <td><em>Platform</em></td>
-         <td><em>Download</em></td>
+         <th>Platform</th>
+         <th>Download</th>
        </tr>
        <tr>
          <td>Windows32</td>
@@ -97,18 +98,18 @@
      Windows, &xml4c-linuxlib; for Linux, and &xml4c-aixlib; for AIX.</p>
      <p>To build applications with Xalan and Xerces, you also need the &xml4c; binary distribution
      for your platform, which you can download from the <resource-ref idref="xml4c-distdir"/>.</p>
-     <note>Be sure you are using a compatible Xerces-C++ build. For information about the build with
-     which this release of Xalan-C++ was tested, see <link idref="readme" anchor="status">Version of
+     <note>Be sure you are using a compatible &xml4c; build. For information about the build with
+     which this release of &xml4c; was tested, see <link idref="readme" anchor="status">Version of
      Xerces to use</link>.</note>
   </s2>
-  <s2 title="How about extending support for internationalization?">
-    <p>To extend Unicode support for encoding, number formatting, and sorting to more than 150
-     locales, you can download, build, and integrate the <resource-ref idref="icu"/> with &xslt4c;.
-     For more information, see <link idref="usagepatterns" anchor="icu">Using the ICU</link>.</p>
+  <s2 title="How about support for internationalization?">
+    <p>To extend Unicode support for encoding, number formatting, and sorting, you can download,
+     build, and integrate the <resource-ref idref="icu"/> with &xslt4c;. See
+     <link idref="usagepatterns" anchor="icu">Using the ICU</link>.</p>
   </s2>
   <s2 title="For more information...">
-    <p>For more information, go to the <link idref="overview">Xalan-C++ Overview</link> and 
-    <link idref="getstarted">Getting Started with Xalan-C++</link>. All of the Xalan documentation
+    <p>For more information, go to the <link idref="overview">&xslt4c; Overview</link> and 
+    <link idref="getstarted">Getting Started with &xslt4c;</link>. All of the Xalan documentation
     on this website is included in the Xalan downloads, as are a number of samples to help you start
     using Xalan to transform XML documents.</p>
   </s2>   
