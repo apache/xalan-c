@@ -307,7 +307,7 @@ XalanDOMChar
 XalanTranscodingServices::getMaximumCharacterValue(const XalanDOMString&	theEncoding)
 {
 	const MaximumCharacterValueMapType::const_iterator	i =
-		s_maximumCharacterValues.find(toUpperCase(theEncoding));
+		s_maximumCharacterValues.find(toUpperCaseASCII(theEncoding));
 
 	if (i == s_maximumCharacterValues.end())
 	{
