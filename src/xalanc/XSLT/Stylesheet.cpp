@@ -1367,10 +1367,17 @@ Stylesheet::findTemplate(
                     XalanMessageLoader::getMessage(
                         XalanMessages::ConflictsFound,
                         conflictsString);
-					
+
+                    // Since the templates are arranged by their
+                    // priority and reverse order in the stylesheet,
+                    // the template with the highest priority that
+                    // was last in the stylesheet will be the
+                    // first one in the array.
+                    bestMatchedPattern = conflicts[0];
+
 					bestMatchedRule = bestMatchedPattern->getTemplate();
 
-					executionContext.warn(
+                    executionContext.warn(
                         conflictsString,
                         targetNode,
                         bestMatchedRule->getLocator());
