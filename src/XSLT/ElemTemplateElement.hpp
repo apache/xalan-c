@@ -71,6 +71,7 @@
 
 #include <XalanDOM/XalanDOMString.hpp>
 #include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanEmptyNamedNodeMap.hpp>
 #include <XalanDOM/XalanNodeListSurrogate.hpp>
 
 
@@ -767,6 +768,8 @@ private:
 	ElemTemplateElement*	m_firstChild;
 
 	XalanNodeListSurrogate	m_surrogateChildren;
+
+	XalanEmptyNamedNodeMap	m_fakeAttributes;
 
 	const XalanDOMString	m_baseIndentifier;
 };

@@ -136,6 +136,7 @@ ElemTemplateElement::ElemTemplateElement(
 	m_previousSibling(0),
 	m_firstChild(0),
 	m_surrogateChildren(*this),
+	m_fakeAttributes(),
 	m_baseIndentifier(stylesheetTree.getCurrentIncludeBaseIdentifier())
 {
 	assert(length(m_baseIndentifier) > 0);
@@ -963,7 +964,7 @@ ElemTemplateElement::getNextSibling() const
 const XalanNamedNodeMap*
 ElemTemplateElement::getAttributes() const
 {
-	return 0;
+	return &m_fakeAttributes;
 }
 
 
