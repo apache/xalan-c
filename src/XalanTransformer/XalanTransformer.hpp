@@ -541,7 +541,7 @@ private:
 
 	StylesheetExecutionContextDefault*		m_stylesheetExecutionContext;
 
-	static XSLTInit*						s_xsltInit;
+	static const XSLTInit*					s_xsltInit;
 };
 
 #endif	// XALANTRANSFORMER_HEADER_GUARD

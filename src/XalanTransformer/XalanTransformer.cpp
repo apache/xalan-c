@@ -113,7 +113,7 @@
 
 
 
-XSLTInit*	XalanTransformer::s_xsltInit = 0;
+const XSLTInit*		XalanTransformer::s_xsltInit = 0;
 
 #if defined(XALAN_USE_ICU)
 static const ICUBridgeCollationCompareFunctor*	theICUFunctor = 0;
@@ -186,12 +186,20 @@ void
 XalanTransformer::terminate()
 {
 	// Terminate Xalan and release memory.
+#if defined(XALAN_CANNOT_DELETE_CONST)
+	(XSLTInit*) s_xsltInit;
+#else
 	delete s_xsltInit;
+#endif
 
 	s_xsltInit = 0;
 
 #if defined(XALAN_USE_ICU)
+#if defined(XALAN_CANNOT_DELETE_CONST)
+	delete (ICUBridgeCollationCompareFunctor*)theICUFunctor;
+#else
 	delete theICUFunctor;
+#endif
 
 	theICUFunctor = 0;
 #endif
