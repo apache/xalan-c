@@ -350,11 +350,12 @@ public:
 	 * Output the result tree namespace declarations.
 	 *
 	 * @param theExecutionContext The current execution context.
+	 * @param supressDefault If true, any default namespace declaration will not be output.
 	 */
 	void
 	outputResultNamespaces(
 			StylesheetExecutionContext&		theExecutionContext,
-			const XalanDOMString*			theNamespaceToExclude = 0) const;
+			bool							supressDefault = false) const;
 
 	/**
 	 * Clear out the handler.

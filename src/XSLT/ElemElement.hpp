@@ -116,17 +116,38 @@ protected:
 	/** 
 	 * Process the children of a template.
 	 * 
-	 * @param executionContext The current execution context	 
-	 * @param sourceNode current context node
+	 * @param executionContext The current execution context
 	 * @param skipAttributeChildren If true, attribute children will not be executed.
 	 */
 	virtual void
 	doExecuteChildren(
-			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode,
+			StylesheetExecutionContext&		executionContext,
 			bool							skipAttributeChildren) const;
 
 private:
+
+	/** 
+	 * Output the static namespace definitions.
+	 * 
+	 * @param executionContext The current execution context
+	 * @param true if the element being generated has an unresolved prefix.
+	 * @param supressDefault If true, any default namespace declaration will not be output.
+	 */
+	void
+	outputResultNamespaces(
+			StylesheetExecutionContext&		executionContext,
+			bool							hasUnresolvedPrefix,
+			bool							supressDefault = false) const;
+
+	/** 
+	 * Get the default namespace from the parent of this element.  Returns
+	 * an empty string if there's no default namespace.
+	 *
+	 * @return The default namespace of the parent, if any.
+	 */
+	const XalanDOMString&
+	getParentDefaultNamespace() const;
+
 
 	// not implemented
 	ElemElement(const ElemElement &);

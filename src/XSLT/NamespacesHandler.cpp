@@ -386,7 +386,7 @@ NamespacesHandler::shouldExcludeResultNamespaceNode(
 void
 NamespacesHandler::outputResultNamespaces(
 			StylesheetExecutionContext&		theExecutionContext,
-			const XalanDOMString*			theNamespaceToExclude) const
+			bool							supressDefault) const
 {
 	// Write out the namespace declarations...
 	if (m_namespaceDeclarations.size() > 0)
@@ -401,13 +401,16 @@ NamespacesHandler::outputResultNamespaces(
 		{
 			const NameSpaceExtended&	theNamespace = (*i).second;
 
-			const XalanDOMString&		theResultURI = theNamespace.getURI();
-			assert(length(theNamespace.getResultAttributeName()) > 0);
+			const XalanDOMString&		thePrefix = theNamespace.getPrefix();
 
-//			if (theNamespaceToExclude == 0 ||
-//				equals(*theNamespaceToExclude, theResultURI) == false)
+			// If we're not supposed to suppress the default namespace, or
+			// there's a prefix (so it's not the default), we can continue
+			// to see if we need to add the result namespace.
+			if (supressDefault == false ||
+				length(thePrefix) != 0)
 			{
-				const XalanDOMString&		thePrefix = theNamespace.getPrefix();
+				const XalanDOMString&		theResultURI = theNamespace.getURI();
+				assert(length(theNamespace.getResultAttributeName()) > 0);
 
 				// Get the any namespace declaration currently active for the
 				// prefix.
