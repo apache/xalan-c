@@ -251,37 +251,16 @@ XPathFunctionTable::DestroyTable()
 
 
 
-XPathFunctionTableException::XPathFunctionTableException(const XalanDOMString&	theMessage) :
-		XPathException(theMessage)
+XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
+			const XalanDOMString&	theFunctionName,
+			const XalanNode*		styleNode) :
+	XPathException(XALAN_STATIC_UCODE_STRING("The specified function is not available: ") + theFunctionName,
+				   styleNode)
 {
 }
 
 
 
-XPathFunctionTableException::~XPathFunctionTableException()
+XPathExceptionFunctionNotAvailable::~XPathExceptionFunctionNotAvailable()
 {
-}
-
-
-
-XPathFunctionTableInvalidFunctionException::XPathFunctionTableInvalidFunctionException(const XalanDOMString&		theFunctionName) :
-	XPathFunctionTableException(FormatMessage(theFunctionName))
-{
-}
-
-
-
-XPathFunctionTableInvalidFunctionException::~XPathFunctionTableInvalidFunctionException()
-{
-}
-
-
-
-XalanDOMString
-XPathFunctionTableInvalidFunctionException::FormatMessage(const XalanDOMString&	theFunctionName)
-{
-	const char*		theMessage =
-				"Invalid function name detected: ";
-
-	return XalanDOMString(theMessage) + theFunctionName;
 }

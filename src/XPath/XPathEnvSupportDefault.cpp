@@ -440,7 +440,17 @@ XPathEnvSupportDefault::extFunction(
 
 	if (theResult == 0)
 	{
-		theResult = executionContext.getXObjectFactory().createNull();
+		XalanDOMString	theFunctionName;
+
+		if(length(theNamespace) > 0)
+		{
+			theFunctionName += theNamespace;
+			theFunctionName += XALAN_STATIC_UCODE_STRING(":");
+		}
+
+		theFunctionName += functionName;
+
+		throw XPathExceptionFunctionNotAvailable(theFunctionName);
 	}
 
 	return theResult;

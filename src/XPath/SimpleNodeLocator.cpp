@@ -1401,7 +1401,7 @@ SimpleNodeLocator::nodeTest(
 
 	const int	testType = currentExpression.getOpCodeMapValue(opPos);
 
-	const int	nodeType = context->getNodeType();
+	const XalanNode::NodeType	nodeType = context->getNodeType();
 
 	opPos++;
 
@@ -1697,7 +1697,7 @@ SimpleNodeLocator::predicates(
 		}
 
 		// Erase from the back to the front, to preserve the validity
-		// of the indesing, and so that we don't end up moving entries
+		// of the indexing, and so that we don't end up moving entries
 		// that we would already be erasing...
 		FailedEntriesVectorType::reverse_iterator	theIterator =
 			theFailedEntries.rbegin();

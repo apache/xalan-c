@@ -84,6 +84,7 @@
 
 
 
+#include <XPath/XPathException.hpp>
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/XPathExpression.hpp>
 #include <XPath/Function.hpp>
@@ -151,8 +152,6 @@ public:
 	 */
 	virtual void
 	shrink();
-
-public:
 
 	/**
 	 * Execute the XPath from the provided context.
@@ -365,7 +364,7 @@ public:
 	static void
 	installFunction(
 			const XalanDOMString&	funcName,
-			const Function& 	func);
+			const Function& 		func);
 
 	/**
 	 * Whether the named function is installed in the function table.

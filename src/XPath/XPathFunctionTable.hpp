@@ -83,48 +83,17 @@
 
 
 /**
- * Exception class thrown when a function table problem is encountered
+ * Exception class thrown when an unknown function is encountered
  */
-class XALAN_XPATH_EXPORT XPathFunctionTableException : public XPathException
+class XALAN_XPATH_EXPORT XPathExceptionFunctionNotAvailable : public XPathException
 {
 public:
 
-	virtual
-	~XPathFunctionTableException();
+	XPathExceptionFunctionNotAvailable(
+		const XalanDOMString&	theFunctionName,
+		const XalanNode*		styleNode = 0);
 
-protected:
-
-	/**
-	 * Construct an XPathFunctionTableException object
-	 * 
-	 * @param theMessage string error message
-	 */
-	XPathFunctionTableException(const XalanDOMString&	theMessage);
-};
-
-
-
-/**
- * Exception class thrown when an invalid function is encountered
- */
-class XALAN_XPATH_EXPORT XPathFunctionTableInvalidFunctionException : public XPathFunctionTableException
-{
-public:
-
-	/**
-	 * Construct an XPathFunctionTableException object
-	 * 
-	 * @param theMessage function name string
-	 */
-	XPathFunctionTableInvalidFunctionException(const XalanDOMString&	theFunctionName); 
-
-	virtual
-	~XPathFunctionTableInvalidFunctionException();
-
-private:
-
-	static XalanDOMString
-	FormatMessage(const XalanDOMString&		theFunctionName);
+	~XPathExceptionFunctionNotAvailable();
 };
 
 
@@ -166,7 +135,7 @@ public:
 		}
 		else
 		{
-			throw XPathFunctionTableInvalidFunctionException(theFunctionName);
+			throw XPathExceptionFunctionNotAvailable(theFunctionName);
 		}
 	}
 
