@@ -61,6 +61,8 @@
 #include "VCPPDefinitions.hpp"
 #elif defined(__GNUC__)
 #include "GCCDefinitions.hpp"
+#elif defined(_AIX)
+#include "AIXDefinitions.hpp"
 #endif
 
 
