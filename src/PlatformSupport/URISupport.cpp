@@ -147,7 +147,7 @@ URISupport::getURLFromString(
 
 	const unsigned int	theContextLength = length(context);
 
-	const unsigned int	indexOfSlash = lastIndexOf(context, '/');
+	const unsigned int	indexOfSlash = theContextLength == 0 ? 0 : lastIndexOf(context, '/');
 
 	if (indexOfSlash < theContextLength)
 	{
@@ -225,7 +225,7 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 
 	// OK, look for a quick, cheap exit...
 	const unsigned int	len = length(uriString);
-	const unsigned int	index = indexOf(uriString, '\\');
+	unsigned int		index = indexOf(uriString, '\\');
 
 	if (index != len)
 	{
