@@ -785,6 +785,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		{
 			pushTime(frag);
 
+			XalanAutoPtr<Stylesheet>	theGuard;
+
 			if(isRoot)
 			{
 				StylesheetRoot* const	theLocalRoot =
@@ -801,6 +803,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 #else
 				stylesheet = constructionContext.create(*const_cast<StylesheetRoot*>(m_stylesheetRoot), stringHolder);
 #endif
+
+				theGuard.reset(stylesheet);
 			}
 
 			StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);
@@ -815,6 +819,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 					frag);
 
 			stylesheet->postConstruction();
+
+			theGuard.release();
 		}
 		else
 		{
@@ -830,6 +836,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 				localXSLURLString +
 				XALAN_STATIC_UCODE_STRING(" =========="));
 		pushTime(&localXSLURLString);
+
+		XalanAutoPtr<Stylesheet>	theGuard;
 
 		if(isRoot)
 		{
@@ -847,6 +855,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 #else
 			stylesheet = new Stylesheet(*const_cast<StylesheetRoot*>(m_stylesheetRoot), localXSLURLString, constructionContext);
 #endif
+
+			theGuard.reset(stylesheet);
 		}
 
 		StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);
@@ -860,6 +870,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		m_parserLiaison.parseXMLStream(inputSource, stylesheetProcessor);
 
 		stylesheet->postConstruction();
+
+		theGuard.release();
 
 		displayDuration("Parsing and init of " + localXSLURLString, &localXSLURLString);
 	}
