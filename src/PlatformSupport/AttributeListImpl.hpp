@@ -72,7 +72,7 @@
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
+class AttributeVectorEntry;
 
 
 
@@ -170,48 +170,6 @@ public:
 	{
 		m_AttributeVector.reserve(theCount);
 	}
-
-	// A struct to hold information about each attribute.
-	struct AttributeVectorEntry
-	{
-#if defined(XALAN_NO_NAMESPACES)
-		typedef vector<XMLCh>		XMLChVectorType;
-#else
-		typedef std::vector<XMLCh>	XMLChVectorType;
-#endif
-
-		AttributeVectorEntry(const XMLChVectorType&	theName = XMLChVectorType(),
-							 const XMLChVectorType&	theValue = XMLChVectorType(),
-							 const XMLChVectorType&	theType = XMLChVectorType()) :
-			m_Name(theName),
-			m_Value(theValue),
-			m_Type(theType)
-		{
-		}
-
-		AttributeVectorEntry(const XMLCh*	theName,
-							 const XMLCh*	theValue,
-							 const XMLCh*	theType) :
-			m_Name(theName, theName + length(theName) + 1),
-			m_Value(theValue, theValue + length(theValue) + 1),
-			m_Type(theType, theType + length(theType) + 1)
-		{
-		}
-
-		void
-		clear()
-		{
-			m_Name.clear();
-			m_Value.clear();
-			m_Type.clear();
-		}
-
-		XMLChVectorType		m_Name;
-		XMLChVectorType		m_Value;
-		XMLChVectorType		m_Type;
-	};
-
-	typedef AttributeVectorEntry::XMLChVectorType	XMLChVectorType;
 
 #if defined(XALAN_NO_NAMESPACES)
 	// This vector will hold the entries.

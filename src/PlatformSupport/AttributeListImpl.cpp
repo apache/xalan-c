@@ -68,6 +68,7 @@
 
 
 
+#include "AttributeVectorEntry.hpp"
 #include "STLHelper.hpp"
 
 
@@ -269,7 +270,7 @@ struct NameCompareFunctor
 	}
 
 	bool
-	operator()(const AttributeListImpl::AttributeVectorEntry*	theEntry) const
+	operator()(const AttributeVectorEntry*	theEntry) const
 	{
 		return equals(&*theEntry->m_Name.begin(), m_name);
 	}
@@ -356,23 +357,6 @@ AttributeListImpl::clear()
 
 
 
-// A convenience function to find the length of a null-terminated
-// array of XMLChs
-inline const XMLCh*
-endArray(const XMLCh*	data)
-{
-	assert(data != 0);
-
-	while(*data)
-	{
-		++data;
-	}
-
-	return data;
-}
-
-
-
 bool
 AttributeListImpl::addAttribute(
 			const XMLCh*	name,
@@ -390,6 +374,8 @@ AttributeListImpl::addAttribute(
 	using std::copy;
 #endif
 
+	typedef AttributeVectorEntry::XMLChVectorType	XMLChVectorType;
+
 	// Update the attribute, if it's already there...
 	const AttributeVectorType::const_iterator	i =
 		find_if(
@@ -404,7 +390,7 @@ AttributeListImpl::addAttribute(
 		{
 			// If necessary, create the a new vector and swap them.  Otherwise,
 			// just copy the new data in.
-			const XMLCh* const	theNewTypeEnd = endArray(type) + 1;
+			const XMLCh* const	theNewTypeEnd = AttributeVectorEntry::endArray(type) + 1;
 
 			if ((*i)->m_Type.capacity() < XMLChVectorType::size_type(theNewTypeEnd - type))
 			{
@@ -418,7 +404,7 @@ AttributeListImpl::addAttribute(
 			}
 		}
 
-		const XMLCh* const	theNewValueEnd = endArray(value) + 1;
+		const XMLCh* const	theNewValueEnd = AttributeVectorEntry::endArray(value) + 1;
 
 		// If necessary, create the a new vector and swap them.  Otherwise,
 		// just copy the new data in.
@@ -457,7 +443,7 @@ AttributeListImpl::addAttribute(
 
 
 
-AttributeListImpl::AttributeVectorEntry*
+AttributeVectorEntry*
 AttributeListImpl::getNewEntry(
 			const XMLCh*	name,
 			const XMLCh*	type,
@@ -476,9 +462,9 @@ AttributeListImpl::getNewEntry(
 
 		assert(theEntry->m_Name.size() == 0 && theEntry->m_Value.size() == 0 && theEntry->m_Type.size() == 0);
 
-		theEntry->m_Name.insert(theEntry->m_Name.begin(), name, endArray(name) + 1);
-		theEntry->m_Value.insert(theEntry->m_Value.begin(), value, endArray(value) + 1);
-		theEntry->m_Type.insert(theEntry->m_Type.begin(), type, endArray(type) + 1);
+		theEntry->m_Name.insert(theEntry->m_Name.begin(), name, AttributeVectorEntry::endArray(name) + 1);
+		theEntry->m_Value.insert(theEntry->m_Value.begin(), value, AttributeVectorEntry::endArray(value) + 1);
+		theEntry->m_Type.insert(theEntry->m_Type.begin(), type, AttributeVectorEntry::endArray(type) + 1);
 
 		m_cacheVector.pop_back();
 
