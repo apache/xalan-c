@@ -95,12 +95,14 @@
 
 #if !defined (XALAN_NO_NAMESPACES)
 using std::cerr;
+using std::cin;
 using std::cout;
 using std::endl;
 #endif
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::atoi;
+using std::strlen;
 #endif
 
 
@@ -134,6 +136,12 @@ Usage()
 		 << "  -v                    Validates source documents."
 		 << endl
 		 << "  -?                    Display this message."
+		 << endl
+		 << "  -                     A dash as the 'source' argument reads from stdin."
+		 << endl
+		 << "  -                     A dash as the 'stylesheet' argument reads from stdin."
+		 << endl
+		 << "                        ('-' cannot be used for both arguments.)"
 		 << endl;
 }
 
@@ -186,7 +194,7 @@ public:
 	};
 
 	void
-	setParams(XalanTransformer&		theTransformer)
+	setParams(XalanTransformer&		theTransformer) const
 	{
 		theTransformer.setUseValidation(m_validate);
 
@@ -252,17 +260,13 @@ getArgs(
 			const char*			argv[],
 			Params&				params)
 {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-	using std::strlen;
-#endif
-
 	bool fSuccess = true;
 
 	for (int i = 1; i < argc && fSuccess == true; ++i)
 	{
-		if (argv[i][0] == '-')
+		if (argv[i][0] == '-' && argv[i][1] != '\0')
 		{
-			if (strlen(argv[i]) != 2)
+			if (argv[i][2] != '\0')
 			{
 				fSuccess = false;
 			}
@@ -379,13 +383,91 @@ getArgs(
 	{
 		return false;
 	}
-	else if (params.m_xslFileName == 0 && params.m_useStylesheetPI == false)
+	else if (params.m_xslFileName == 0)
+	{
+		return params.m_useStylesheetPI;
+	}
+	else if (strcmp(params.m_xslFileName, params.m_inFileName) == 0)
 	{
 		return false;
 	}
 	else
 	{
 		return fSuccess;
+	}
+}
+
+
+
+inline int
+transform(
+			XalanTransformer&		theTransformer,
+			const Params&			theParams,
+			const XSLTInputSource&	theSource,
+			const XSLTInputSource&	theStylesheetSource)
+{
+	if (theParams.m_outFileName != 0)
+	{
+		return theTransformer.transform(
+				theSource,
+				theStylesheetSource,
+				theParams.m_outFileName);
+	}
+	else
+	{
+		return theTransformer.transform(
+				theSource,
+				theStylesheetSource,
+				cout);
+	}
+}
+
+
+
+inline int
+transform(
+			XalanTransformer&		theTransformer,
+			const Params&			theParams,
+			const XSLTInputSource&	theSource)
+{
+	assert(theParams.m_xslFileName != 0);
+
+	if (theParams.m_xslFileName[0] == '-' &&
+		theParams.m_xslFileName[1] == '\0')
+	{
+		return transform(
+				theTransformer,
+				theParams,
+				theSource,
+				&cin);
+	}
+	else
+	{
+		return transform(
+				theTransformer,
+				theParams,
+				theSource,
+				theParams.m_xslFileName);
+	}
+}
+
+
+
+inline int
+transform(
+			XalanTransformer&	theTransformer,
+			const Params&		theParams)
+{
+	assert(theParams.m_inFileName != 0);
+
+	if (theParams.m_inFileName[0] == '-' &&
+		theParams.m_inFileName[1] == '\0')
+	{
+		return transform(theTransformer, theParams, &cin);
+	}
+	else
+	{
+		return transform(theTransformer, theParams, theParams.m_inFileName);
 	}
 }
 
@@ -424,20 +506,7 @@ xsltMain(
 			// Set any options...
 			theParams.setParams(theTransformer);
 
-			if (theParams.m_outFileName != 0)
-			{
-				theResult = theTransformer.transform(
-						theParams.m_inFileName,
-						theParams.m_xslFileName,
-						theParams.m_outFileName);
-			}
-			else
-			{
-				theResult = theTransformer.transform(
-						theParams.m_inFileName,
-						theParams.m_xslFileName,
-						cout);
-			}
+			theResult = transform(theTransformer, theParams);
 
 			if (theResult != 0)
 			{
