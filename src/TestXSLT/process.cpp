@@ -94,9 +94,11 @@
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
 
+#include <XMLSupport/FormatterToDOM.hpp>
 #include <XMLSupport/FormatterToHTML.hpp>
 #include <XMLSupport/FormatterToText.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
+#include <XMLSupport/FormatterTreeWalker.hpp>
 
 
 #include <XSLT/XSLTEngineImpl.hpp>
@@ -152,19 +154,19 @@ printArgOptions()
 		 << endl
 		 << " [-OUT outputFileName]"
 		 << endl
-		 << " [-V (Version info)]"
+		 << " [-V (Show version information only.)]"
 		 << endl
-		 << " [-QC (Quiet Pattern Conflicts Warnings)]"
+		 << " [-QC (Quiet pattern conflicts warnings.)]"
 		 << endl
-		 << " [-Q (Quiet Mode)]"
+		 << " [-Q (Use quiet mode.)]"
 		 << endl
-		 << " [-ESCAPE (Which characters to escape {default is <>&\"\'\\r\\n}]"
+		 << " [-ESCAPE (Specifies which characters to escape. {default is <>&\"\'\\r\\n}]"
 		 << endl
 		 << " [-EER (Expand entity references.  By default, they are not expanded.)]"
 		 << endl
-		 << " [-INDENT n (Control how many spaces to indent {default is 0})]"
+		 << " [-INDENT n (Controls how many spaces to indent. {default is 0})]"
 		 << endl
-		 << " [-VALIDATE (Set whether validation occurs. Validation is off by default.)]"
+		 << " [-VALIDATE (Controls whether validation occurs. Validation is off by default.)]"
 		 << endl
 		 << " [-TT (Trace the templates as they are being called.)]"
 		 << endl
@@ -180,7 +182,9 @@ printArgOptions()
 		 << endl
 		 << " [-HTML (Use HTML formatter.)]"
 		 << endl
-		 << " [-PARAM name expression (Set a stylesheet parameter)]"
+		 << " [-DOM (Use DOM formatter.  Formats to DOM, then formats XML for output.)]"
+		 << endl
+		 << " [-PARAM name expression (Sets a stylesheet parameter.)]"
 		 << endl
 #if !defined(NDEBUG)
 		 << " [-S (Display some interesting statistics.)]"
@@ -274,7 +278,7 @@ warnPreviousOutputMethod(int	outputMethod)
 	case FormatterListener::OUTPUT_METHOD_XML:
 		cerr << "-XML.";
 		break;
-		
+
 	case FormatterListener::OUTPUT_METHOD_TEXT:
 		cerr << "-TEXT.";
 		break;
@@ -282,6 +286,10 @@ warnPreviousOutputMethod(int	outputMethod)
 	case FormatterListener::OUTPUT_METHOD_HTML:
 		cerr << "-HTML.";
 		break;
+
+	case FormatterListener::OUTPUT_METHOD_DOM:
+		cerr << "-DOM.";
+		break;		
 	}
 
 	cerr << endl << endl;
@@ -445,6 +453,15 @@ getArgs(
 
 			p.outputType = FormatterListener::OUTPUT_METHOD_HTML;
 		}
+		else if(!stricmp("-DOM", argv[i]))
+		{
+			if (p.outputType != -1)
+			{
+				warnPreviousOutputMethod(p.outputType);
+			}
+
+			p.outputType = FormatterListener::OUTPUT_METHOD_DOM;
+		}
 		else if(!stricmp("-STRIPCDATA", argv[i]))
 		{
 			p.stripCData = true;
@@ -486,15 +503,17 @@ getArgs(
 
 FormatterListener*
 createFormatter(
-			const CmdLineParams&		params,
+			int							outputType,
+			bool						shouldWriteXMLHeader,
+			bool						stripCData,
+			bool						escapeCData,
 			PrintWriter&				resultWriter,
 			int							indentAmount,
 			const XalanDOMString&		mimeEncoding,
-			const StylesheetRoot*		stylesheet)
+			const StylesheetRoot*		stylesheet,
+			XMLParserLiaison&			parserLiaison)
 {
 	FormatterListener*	formatter = 0;
-
-	const int	outputType = params.outputType;
 
 	if(FormatterListener::OUTPUT_METHOD_XML == outputType)
 	{
@@ -526,9 +545,10 @@ createFormatter(
 					true,	// xmlDecl
 					standalone);
 
-		fToXML->setShouldWriteXMLHeader(params.shouldWriteXMLHeader);
-		fToXML->setStripCData(params.stripCData);
-		fToXML->setEscapeCData(params.escapeCData);
+		fToXML->setShouldWriteXMLHeader(shouldWriteXMLHeader);
+		fToXML->setStripCData(stripCData);
+		fToXML->setEscapeCData(escapeCData);
+
 		formatter = fToXML;
 	}
 	else if(FormatterListener::OUTPUT_METHOD_TEXT == outputType)
@@ -567,8 +587,13 @@ createFormatter(
 						standalone,
 						false);	// xmlDecl
 
-		fToHTML->setStripCData(params.stripCData);
+		fToHTML->setStripCData(stripCData);
+
 		formatter = fToHTML;
+	}
+	else if(FormatterListener::OUTPUT_METHOD_DOM == outputType)
+	{
+		formatter = new FormatterToDOM(parserLiaison.getDOMFactory(), 0);
 	}
 
 	return formatter;
@@ -649,6 +674,11 @@ xsltMain(const CmdLineParams&	params)
 	XObjectFactoryDefault theXObjectFactory(theXSLProcessorSupport, theXPathSupport);
 	XPathFactoryDefault theXPathFactory;
 
+	auto_ptr<TraceListener>		theTraceListener(
+			createTraceListener(
+				params,
+				diagnosticsWriter));
+
 	XSLTEngineImpl processor(
 			xmlParserLiaison, theXPathSupport,
 			theXSLProcessorSupport,
@@ -656,12 +686,6 @@ xsltMain(const CmdLineParams&	params)
 			theXPathFactory);
 
 	theXSLProcessorSupport.setProcessor(&processor);
-
-
-	auto_ptr<TraceListener>		theTraceListener(
-			createTraceListener(
-				params,
-				diagnosticsWriter));
 
 	if (theTraceListener.get() != 0)
 	{
@@ -737,11 +761,15 @@ xsltMain(const CmdLineParams&	params)
 
 	const auto_ptr<FormatterListener>	formatter(
 			createFormatter(
-				params,
+				params.outputType,
+				params.shouldWriteXMLHeader,
+				params.stripCData,
+				params.escapeCData,
 				resultWriter,
 				xmlParserLiaison.getIndent(),
 				mimeEncoding,
-				stylesheet));
+				stylesheet,
+				xmlParserLiaison));
 
 	XSLTResultTarget	rTreeTarget;
 
@@ -792,6 +820,55 @@ xsltMain(const CmdLineParams&	params)
 				theInputSource,
 				rTreeTarget,
 				theExecutionContext);
+	}
+
+	if (params.outputType == FormatterListener::OUTPUT_METHOD_DOM)
+	{
+		// Output is to DOM, so we have to format to XML to
+		// produce output...
+		assert(rTreeTarget.getFormatterListener() != 0 &&
+			   rTreeTarget.getFormatterListener()->getOutputFormat() ==
+					FormatterListener::OUTPUT_METHOD_DOM);
+
+		// Get the FormatterToDOM that produced the result document...
+		const FormatterToDOM* const	theResultFormatter =
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(FormatterToDOM*)rTreeTarget.getFormatterListener();
+#else
+			static_cast<FormatterToDOM*>(rTreeTarget.getFormatterListener());
+#endif
+
+		// Get the document...
+		const XalanDocument* const	theResultDocument =
+			theResultFormatter->getDocument();
+
+		if (theResultDocument == 0)
+		{
+			cerr << endl << "Warning: No DOM document to format!!!" << endl;
+		}
+		else
+		{
+			// Create a FormaterToDOM with the required output
+			// options...
+			const auto_ptr<FormatterListener>	formatter(
+					createFormatter(
+						FormatterListener::OUTPUT_METHOD_XML,
+						params.shouldWriteXMLHeader,
+						params.stripCData,
+						params.escapeCData,
+						resultWriter,
+						xmlParserLiaison.getIndent(),
+						mimeEncoding,
+						stylesheet,
+						xmlParserLiaison));
+
+			// Create a FormatterTreeWalker with the the
+			// new formatter...
+			FormatterTreeWalker theTreeWalker(*formatter.get());
+
+			// Walk the document and produce the XML...
+			theTreeWalker.traverse(theResultDocument);
+		}
 	}
 
 #if !defined(NDEBUG)
