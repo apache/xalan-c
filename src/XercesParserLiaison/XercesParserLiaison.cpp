@@ -192,7 +192,7 @@ XercesParserLiaison::createDocument()
 
 void XercesParserLiaison::fatalError(const SAXParseException& e)
 {
-	std::cerr << "\nFatatal Error at (file " << DOMStringToStdString(e.getSystemId())
+	std::cerr << "\nFatal Error at (file " << DOMStringToStdString(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
          << "): " << DOMStringToStdString(e.getMessage()) << std::endl;
