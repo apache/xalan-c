@@ -148,8 +148,8 @@ static const char* domainName = INVK_MAKE_STRING(XALAN_PRODUCT);
 
 
 XalanICUMessageLoader::XalanICUMessageLoader():
-	fLocaleBundle(0),
-	fDomainBundle(0),
+	m_localeBundle(0),
+	m_domainBundle(0),
 	m_unknownMessage(XALAN_STATIC_UCODE_STRING("The message was not found in the ICU resource bundle."))
 {
  	UErrorCode err = U_ZERO_ERROR;
@@ -171,15 +171,15 @@ XalanICUMessageLoader::XalanICUMessageLoader():
 		szLocal="en_US";
 	}
 
-	fLocaleBundle = ures_open(sPackageName, szLocal , &err);
-	if (!U_SUCCESS(err) || fLocaleBundle == 0)
+	m_localeBundle = ures_open(sPackageName, szLocal , &err);
+	if (!U_SUCCESS(err) || m_localeBundle == 0)
 	{
 		assert( 0 );
 	}
 
 	err = U_ZERO_ERROR;
-    fDomainBundle = ures_getByKey(fLocaleBundle, domainName, 0, &err);
-    if (!U_SUCCESS(err) || fDomainBundle == 0)
+    m_domainBundle = ures_getByKey(m_localeBundle, domainName, 0, &err);
+    if (!U_SUCCESS(err) || m_domainBundle == 0)
     {
         assert( 0 );
     }
@@ -189,8 +189,8 @@ XalanICUMessageLoader::XalanICUMessageLoader():
 
 XalanICUMessageLoader::~XalanICUMessageLoader()
 {
-	ures_close(fDomainBundle);	
-	ures_close(fLocaleBundle);
+	ures_close(m_domainBundle);	
+	ures_close(m_localeBundle);
 }
 
 
@@ -206,7 +206,7 @@ bool XalanICUMessageLoader::loadMsg(XalanMessages::Codes    msgToLoad
    int32_t      strLen = 0;
    
    // Assuming array format
-   const UChar * const	name = ures_getStringByIndex(fDomainBundle, (int32_t)msgToLoad+1, &strLen, &err);
+   const UChar * const	name = ures_getStringByIndex(m_domainBundle, (int32_t)msgToLoad+1, &strLen, &err);
    
    if (!U_SUCCESS(err) || (name == 0))
    {
@@ -215,26 +215,9 @@ bool XalanICUMessageLoader::loadMsg(XalanMessages::Codes    msgToLoad
 	   return false;
    }
 
+   const unsigned int	retStrLen = strLen > maxChars ? maxChars : strLen;
 
-   int retStrLen = strLen > (int32_t)maxChars ? maxChars : strLen;
-   
-   if (sizeof(UChar)==sizeof(XMLCh))
-   {
-
-	   XMLString::moveChars(toFill, (const XMLCh*)name, retStrLen);
-	   toFill[retStrLen] = (XMLCh) 0;
-   }
-   else
-   {
-	      
-	   XMLCh* retStr = toFill;
-	   const UChar *srcPtr = name;
-	   
-	   while (retStrLen--)
-           *retStr++ = *srcPtr++;
-	   
-	   *retStr = 0;
-   }
+   XalanCopy(name, name + retStrLen, toFill);
   
    return bResult;
 }

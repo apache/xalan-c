@@ -112,8 +112,8 @@ private:
 	//              locale specific resource bundle unavailable.
     //
      // -----------------------------------------------------------------------
-    UResourceBundle*		fLocaleBundle;
-    UResourceBundle*		fDomainBundle;
+    UResourceBundle*		m_localeBundle;
+    UResourceBundle*		m_domainBundle;
 
 	const XalanDOMString	m_unknownMessage;
 };
