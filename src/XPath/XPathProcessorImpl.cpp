@@ -78,6 +78,7 @@
 
 
 
+#include "XalanQName.hpp"
 #include "XPathEnvSupport.hpp"
 #include "XPathExecutionContext.hpp"
 #include "XPathParserException.hpp"
@@ -389,7 +390,7 @@ XPathProcessorImpl::tokenize(
 
 		case XalanUnicode::charColon:
 			{
-				if(posOfNSSep == i - 1)
+				if(posOfNSSep == i - 1 && i > 0)
 				{ 
 					if(startSubstring != -1)
 					{
@@ -603,7 +604,11 @@ XPathProcessorImpl::mapNSTokens(
 
 	const XalanDOMString 			prefix =
 				substring(pat, startSubstring, posOfNSSep);
-	assert(length(prefix) != 0);
+
+	if (XalanQName::isValidNCName(prefix) == false)
+	{
+		error(XalanDOMString("'") + prefix + XalanDOMString("' is not a valid NCName"));
+	}
 
 	const XalanDOMString* const		uName =
 				m_prefixResolver->getNamespaceForPrefix(prefix);
@@ -630,7 +635,11 @@ XPathProcessorImpl::mapNSTokens(
 
 		const XalanDOMString 	s = substring(pat, posOfNSSep + 1, posOfScan);
 	  
-		if(length(s) > 0)
+		if(XalanQName::isValidNCName(s) == false)
+		{
+			error(XalanDOMString("'") + s + XalanDOMString("' is not a valid NCName"));
+		}
+		else
 		{
 			addToTokenQueue(s);
 		}
