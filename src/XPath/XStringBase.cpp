@@ -74,6 +74,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XStringBase::XStringBase() :
 	XObject(eTypeString),
 	m_cachedNumberValue(0.0),
@@ -154,3 +158,7 @@ XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) 
 	theCallbackObject.String(*this,
 							 str());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XPATH_EXPORT XBoolean : public XObject
 {
 public:
@@ -140,6 +144,10 @@ private:
 
 	static XalanDOMString	s_trueString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

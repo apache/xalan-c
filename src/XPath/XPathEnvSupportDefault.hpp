@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,6 +74,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * Dummy class in order to make the XPath object happy 
  * for diagnostic purposes.
@@ -82,7 +86,7 @@ class XALAN_XPATH_EXPORT XPathEnvSupportDefault : public XPathEnvSupport
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef map<XalanDOMString, XalanDocument*, less<XalanDOMString> >		SourceDocsTableType;
 	typedef map<XalanDOMString, const Function*, less<XalanDOMString> >		FunctionTableType;
 	typedef map<XalanDOMString, FunctionTableType, less<XalanDOMString> >	NamespaceFunctionTablesType;
@@ -202,7 +206,7 @@ public:
 			const XalanDOMString&			functionName, 
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 	virtual bool
 	problem(
@@ -303,6 +307,10 @@ private:
 
 	static 	NamespaceFunctionTablesType		s_externalFunctions;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

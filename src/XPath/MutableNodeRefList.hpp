@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XPathExecutionContext;
 class XalanDocument;
 class XalanNodeList;
@@ -361,6 +365,10 @@ private:
 
 	eOrder	m_order;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

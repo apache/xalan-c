@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString	XalanXPathException::s_emptyString;
 
 
@@ -89,7 +93,7 @@ XalanXPathException::XalanXPathException(
 
 
 XalanXPathException::XalanXPathException(
-			const Locator&			theLocator,
+			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
 			const XalanNode*		styleNode,
 			const XalanDOMString&	theType) :
@@ -110,3 +114,7 @@ XalanXPathException::XalanXPathException() :
 XalanXPathException::~XalanXPathException()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

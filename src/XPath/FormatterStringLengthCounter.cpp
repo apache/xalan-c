@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FormatterStringLengthCounter::FormatterStringLengthCounter() :
 	FormatterListener(OUTPUT_METHOD_NONE),
 	m_count(0)
@@ -74,7 +78,7 @@ FormatterStringLengthCounter::~FormatterStringLengthCounter()
 
 
 void
-FormatterStringLengthCounter::setDocumentLocator(const Locator* const	/* locator */)
+FormatterStringLengthCounter::setDocumentLocator(const LocatorType* const	/* locator */)
 {
 }
 
@@ -96,8 +100,8 @@ FormatterStringLengthCounter::endDocument()
 
 void
 FormatterStringLengthCounter::startElement(
-			const	XMLCh* const	/* name */,
-			AttributeList&			/* attrs */)
+			const XMLCh* const	/* name */,
+			AttributeListType&	/* attrs */)
 {
 }
 
@@ -174,3 +178,7 @@ FormatterStringLengthCounter::cdata(
 			const unsigned int 	/* length */)
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

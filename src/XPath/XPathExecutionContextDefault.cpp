@@ -86,6 +86,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const NodeRefList	XPathExecutionContextDefault::s_dummyList;
 
 
@@ -284,7 +288,7 @@ XPathExecutionContextDefault::extFunction(
 			const XalanDOMString&			functionName, 
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
-			const Locator*					locator)
+			const LocatorType*				locator)
 {
 	assert(m_xpathEnvSupport != 0);
 
@@ -361,7 +365,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
 			XalanDocument*			/* doc */,
 			const XalanDOMString&	/* name */,
 			const XalanDOMString&	/* ref */,
-			const Locator*			/* locator */,
+			const LocatorType*		/* locator */,
 			MutableNodeRefList&		/* nodelist */)
 {
 }
@@ -371,7 +375,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
 const XObjectPtr
 XPathExecutionContextDefault::getVariable(
 			const XalanQName&		name,
-			const Locator*			/* locator */)
+			const LocatorType*		/* locator */)
 {
 	assert(m_xobjectFactory != 0);
 
@@ -438,7 +442,7 @@ void
 XPathExecutionContextDefault::error(
 			const XalanDOMString&	msg,
 			const XalanNode*		sourceNode,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	assert(m_xpathEnvSupport != 0);
 
@@ -490,7 +494,7 @@ void
 XPathExecutionContextDefault::error(
 			const char*			msg,
 			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const
+			const LocatorType* 	locator) const
 {
 	error(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
@@ -501,7 +505,7 @@ void
 XPathExecutionContextDefault::warn(
 			const XalanDOMString&	msg,
 			const XalanNode*		sourceNode,
-			const Locator* 			locator) const
+			const LocatorType* 		locator) const
 {
 	assert(m_xpathEnvSupport != 0);
 
@@ -553,7 +557,7 @@ void
 XPathExecutionContextDefault::warn(
 			const char*			msg,
 			const XalanNode*	sourceNode,
-			const Locator* 		locator) const
+			const LocatorType* 	locator) const
 {
 	warn(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
@@ -564,7 +568,7 @@ void
 XPathExecutionContextDefault::message(
 			const XalanDOMString&	msg,
 			const XalanNode*		sourceNode,
-			const Locator* 			locator) const
+			const LocatorType* 		locator) const
 {
 	assert(m_xpathEnvSupport != 0);
 
@@ -616,7 +620,7 @@ void
 XPathExecutionContextDefault::message(
 			const char*			msg,
 			const XalanNode*	sourceNode,
-			const Locator* 		locator) const
+			const LocatorType* 	locator) const
 {
 	message(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
@@ -666,3 +670,7 @@ XPathExecutionContextDefault::getDecimalFormatSymbols(const XalanQName&		/* qnam
 {
 	return 0;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

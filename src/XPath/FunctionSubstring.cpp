@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,6 +63,10 @@
 
 
 #include "XObjectFactory.hpp"
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -187,7 +191,7 @@ FunctionSubstring::execute(
 			XalanNode*				context,
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	assert(arg1.null() == false && arg2.null() == false);
 
@@ -203,7 +207,7 @@ FunctionSubstring::execute(
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
 			const XObjectPtr		arg3,
-			const Locator*			/* locator */) const
+			const LocatorType*		/* locator */) const
 {
 	assert(arg1.null() == false && arg2.null() == false);	
 
@@ -282,3 +286,7 @@ FunctionSubstring::getError() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The substring() function takes two or three arguments!"));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

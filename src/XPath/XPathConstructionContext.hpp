@@ -70,6 +70,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 //
 // An abstract class which provides support for constructing the internal
 // representation  of a stylesheet.
@@ -190,6 +194,10 @@ public:
 	};
 
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,6 +74,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * XPath implementation of "sum" function.
  */
@@ -93,7 +97,7 @@ public:
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
 			const XObjectPtr		arg1,
-			const Locator*			locator) const;
+			const LocatorType*		locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -116,6 +120,10 @@ private:
 	bool
 	operator==(const FunctionSum&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

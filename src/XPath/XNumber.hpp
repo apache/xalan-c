@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XPATH_EXPORT XNumber : public XNumberBase
 {
 public:
@@ -132,6 +136,10 @@ private:
 
 	mutable XalanDOMString	m_cachedStringValue;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

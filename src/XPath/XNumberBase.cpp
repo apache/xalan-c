@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XNumberBase::XNumberBase() :
 	XObject(eTypeNumber)
 {
@@ -120,3 +124,7 @@ XNumberBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) 
 	theCallbackObject.Number(*this,
 							 num());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * This class takes SAX events (in addition to some extra events 
  * that SAX doesn't handle yet) and produces counts the characters
@@ -77,6 +81,8 @@
 class XALAN_XPATH_EXPORT FormatterStringLengthCounter : public FormatterListener
 {
 public:
+
+	typedef unsigned long	size_type;
 
 	/**
 	 * FormatterStringLengthCounter instance constructor.
@@ -88,7 +94,7 @@ public:
 	~FormatterStringLengthCounter();
 
 
-	double
+	unsigned long
 	getCount() const
 	{
 		return m_count;
@@ -97,7 +103,7 @@ public:
 	// These methods are inherited from FormatterListener ...
 
 	virtual void
-	setDocumentLocator(const Locator* const		locator);
+	setDocumentLocator(const LocatorType* const		locator);
 
 	virtual void
 	startDocument();
@@ -107,8 +113,8 @@ public:
 
 	virtual void
 	startElement(
-			const	XMLCh* const	name,
-			AttributeList&			attrs);
+			const XMLCh* const	name,
+			AttributeListType&	attrs);
 
     virtual void
 	endElement(const XMLCh* const	name);
@@ -136,7 +142,6 @@ public:
 			const XMLCh* const	target,
 			const XMLCh* const	data);
 
-
 	virtual void
 	resetDocument();
 
@@ -160,8 +165,12 @@ private:
 	operator==(const FormatterStringLengthCounter&) const;
 
 	// Data members...
-	double	m_count;
+	size_type	m_count;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

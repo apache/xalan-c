@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,6 +67,10 @@
 // $$$ ToDo: This is necessarh while XalanDOMString is a typedef...
 #include <XalanDOM/XalanDOMString.hpp>
 
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -173,6 +177,10 @@ public:
 	virtual void
 	Null(const XObject&		theObject) = 0;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

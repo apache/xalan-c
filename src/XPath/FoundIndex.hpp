@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XPATH_EXPORT FoundIndex : public XalanXPathException
 {
 public:
@@ -78,6 +82,10 @@ public:
 	virtual
 	~FoundIndex();
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

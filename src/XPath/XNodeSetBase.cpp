@@ -78,6 +78,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const double	theBogusNumberValue = 123456789;
 
 
@@ -261,3 +265,7 @@ XNodeSetBase::clearCachedValues()
 
 	clear(m_cachedStringValue);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

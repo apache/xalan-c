@@ -59,7 +59,7 @@
 
 
 
-//#include <PlatformSupport/DOMStringHelper.hpp>
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -140,3 +140,7 @@ XString::stringLength() const
 {
 	return length(m_value);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

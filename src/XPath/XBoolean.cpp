@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanDOMString	XBoolean::s_falseString;
 
 XalanDOMString	XBoolean::s_trueString;
@@ -197,3 +201,7 @@ XBoolean::terminate()
 	releaseMemory(s_falseString);
 	releaseMemory(s_trueString);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

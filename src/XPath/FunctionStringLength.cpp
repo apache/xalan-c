@@ -66,6 +66,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FunctionStringLength::FunctionStringLength()
 {
 }
@@ -82,7 +86,7 @@ XObjectPtr
 FunctionStringLength::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	if (context == 0)
 	{
@@ -120,7 +124,7 @@ FunctionStringLength::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				/* context */,			
 			const XObjectPtr		arg,
-			const Locator*			/* locator */) const
+			const LocatorType*		/* locator */) const
 {
 	assert(arg.null() == false);	
 
@@ -146,3 +150,7 @@ FunctionStringLength::getError() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The string-length() function takes zero or one argument!"));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,7 +73,14 @@
 
 
 
-class Locator;
+XALAN_DECLARE_XERCES_CLASS(Locator)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanNode;
 
 
@@ -86,6 +93,8 @@ class XalanNode;
 class XALAN_XPATH_EXPORT Function
 {
 public:
+
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
 	explicit
 	Function();
@@ -106,7 +115,7 @@ public:
 	 * @param executionContext executing context
 	 * @param context          current context node
 	 * @param args             vector of pointers to XObject arguments
-	 * @param locator		   Locator for the XPath expression that contains the function call
+	 * @param locator		   LocatorType instance for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
@@ -114,7 +123,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
@@ -122,14 +131,14 @@ public:
 	 *
 	 * @param executionContext executing context
 	 * @param context          current context node	 
-	 * @param locator		   Locator for the XPath expression that contains the function call
+	 * @param locator		   LocatorType instance for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
-			const Locator*			locator) const;
+			const LocatorType*		locator) const;
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
@@ -138,7 +147,7 @@ public:
 	 * @param executionContext executing context
 	 * @param context          current context node
 	 * @param arg              pointer to XObject argument
-	 * @param locator		   Locator for the XPath expression that contains the function call
+	 * @param locator		   LocatorType instance for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
@@ -146,7 +155,7 @@ public:
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
 			const XObjectPtr		arg,
-			const Locator*			locator) const;
+			const LocatorType*		locator) const;
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
@@ -156,7 +165,7 @@ public:
 	 * @param context          current context node
 	 * @param arg1             pointer to XObject argument
 	 * @param arg2             pointer to XObject argument
-	 * @param locator		   Locator for the XPath expression that contains the function call
+	 * @param locator		   LocatorType instance for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
@@ -165,7 +174,7 @@ public:
 			XalanNode*				context,
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
-			const Locator*			locator) const;
+			const LocatorType*		locator) const;
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
@@ -176,7 +185,7 @@ public:
 	 * @param arg1             pointer to XObject arguments
 	 * @param arg2             pointer to XObject argument
 	 * @param arg3             pointer to XObject argument
-	 * @param locator		   Locator for the XPath expression that contains the function call
+	 * @param locator		   LocatorType instance for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
@@ -186,7 +195,7 @@ public:
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
 			const XObjectPtr		arg3,
-			const Locator*			locator) const;
+			const LocatorType*		locator) const;
 
 	/**
 	 * Create a copy of the function object.
@@ -217,6 +226,10 @@ private:
 	bool
 	operator==(const Function&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanQNameByValue::XalanQNameByValue() :
 	XalanQName(),
 	m_namespace(),
@@ -114,7 +118,7 @@ XalanQNameByValue::XalanQNameByValue(
 XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator,
+			const LocatorType*			locator,
 			bool						fUseDefault) :
 	m_namespace(),
 	m_localpart()
@@ -132,7 +136,7 @@ XalanQNameByValue::XalanQNameByValue(
 XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator,
+			const LocatorType*			locator,
 			bool						fUseDefault) :
 	m_namespace(),
 	m_localpart()
@@ -154,7 +158,7 @@ XalanQNameByValue::XalanQNameByValue(
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const DOMSupport& 		domSupport,
-			const Locator*			locator) :
+			const LocatorType*		locator) :
 	m_namespace(),
 	m_localpart()
 {
@@ -172,7 +176,7 @@ XalanQNameByValue::XalanQNameByValue(
 XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMString&	qname,
 			const PrefixResolver*	theResolver,
-			const Locator*			locator) :
+			const LocatorType*		locator) :
 	m_namespace(),
 	m_localpart()
 {
@@ -211,7 +215,7 @@ void
 XalanQNameByValue::set(
 			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator,
+			const LocatorType*			locator,
 			bool						fUseDefault)
 {
 	initialize(
@@ -228,7 +232,7 @@ void
 XalanQNameByValue::set(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator,
+			const LocatorType*			locator,
 			bool						fUseDefault)
 {
 	assert(qname != 0);
@@ -247,7 +251,7 @@ void
 XalanQNameByValue::set(
 			const XalanDOMString&	qname,
 			const PrefixResolver*	theResolver,
-			const Locator*			locator)
+			const LocatorType*		locator)
 {
 	resolvePrefix(
 		c_wstr(qname),
@@ -262,7 +266,7 @@ void
 XalanQNameByValue::set(
 			const XalanDOMChar*		qname,
 			const PrefixResolver*	theResolver,
-			const Locator*			locator)
+			const LocatorType*		locator)
 {
 	assert(qname != 0);
 
@@ -277,8 +281,8 @@ XalanQNameByValue::set(
 
 void
 throwException(
-			const XalanDOMString&	theMessage,
-			const Locator*			theLocator)
+			const XalanDOMString&					theMessage,
+			const XalanQNameByValue::LocatorType*	theLocator)
 {
 	if (theLocator == 0)
 	{
@@ -298,7 +302,7 @@ XalanQNameByValue::initialize(
 			const XalanDOMChar*			qname,
 			XalanDOMString::size_type	len,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator,
+			const LocatorType*			locator,
 			bool						fUseDefault)
 {
 	const XalanDOMString::size_type		indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
@@ -315,9 +319,9 @@ XalanQNameByValue::initialize(
 
 		m_localpart.assign(qname, indexOfNSSep);
 
-		if(::equals(m_localpart, DOMServices::s_XMLNamespace))
+		if(m_localpart == DOMServices::s_XMLNamespace)
 		{
-			::clear(m_localpart);
+			m_localpart.clear();
 		}
 		else
 		{
@@ -366,7 +370,7 @@ XalanQNameByValue::resolvePrefix(
 			const XalanDOMChar*			qname,
 			XalanDOMString::size_type	theLength,
 			const PrefixResolver*		theResolver,
-			const Locator*				locator)
+			const LocatorType*			locator)
 {
 	const XalanDOMString::size_type		indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
 
@@ -374,7 +378,7 @@ XalanQNameByValue::resolvePrefix(
 	{
 		m_localpart.assign(qname, theLength);
 
-		::clear(m_namespace);
+		m_namespace.clear();
 	}
 	else
 	{
@@ -384,14 +388,14 @@ XalanQNameByValue::resolvePrefix(
 
 		m_localpart.assign(qname, indexOfNSSep);
 
-		if(::equals(m_localpart, DOMServices::s_XMLString))
+		if(m_localpart == DOMServices::s_XMLString)
 		{
 			m_namespace = DOMServices::s_XMLNamespaceURI;
 		}
 		// The default namespace is not resolved.
-		else if(::equals(m_localpart, DOMServices::s_XMLNamespace))
+		else if(m_localpart == DOMServices::s_XMLNamespace)
 		{
-			::clear(m_localpart);
+			m_localpart.clear();
 
 			return;
 		}
@@ -426,3 +430,7 @@ XalanQNameByValue::resolvePrefix(
 		m_localpart.assign(qname + indexOfNSSep + 1, theLength - (indexOfNSSep + 1));
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

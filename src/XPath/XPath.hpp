@@ -83,7 +83,14 @@
 
 
 
-class Locator;
+XALAN_DECLARE_XERCES_CLASS(Locator)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class PrefixResolver;
 class XObject;
 class XalanNode;
@@ -93,6 +100,8 @@ class XalanNode;
 class XALAN_XPATH_EXPORT XPath
 {
 public:
+
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
 	static const XalanDOMChar	PSEUDONAME_ANY[];
 	static const XalanDOMChar	PSEUDONAME_ROOT[];
@@ -161,7 +170,7 @@ public:
 		eTargetType				m_targetType;
 	};
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<TargetData>		TargetDataVectorType;
 #else
 	typedef std::vector<TargetData>	TargetDataVectorType;
@@ -183,10 +192,10 @@ public:
 	/**
 	 * Construct an XPath.
 	 *
-	 * @param theLocator The applicable Locator, if any.
+	 * @param theLocator The applicable LocatorType, if any.
 	 */
 	explicit
-	XPath(const Locator*	theLocator = 0);
+	XPath(const LocatorType*	theLocator = 0);
 
 	virtual
 	~XPath();
@@ -510,14 +519,14 @@ public:
 		m_inStylesheet = fValue;
 	}
 
-	const Locator*
+	const LocatorType*
 	getLocator() const
 	{
 		return m_locator;
 	}
 
 	void
-	setLocator(const Locator*	theLocator)
+	setLocator(const LocatorType*	theLocator)
 	{
 		m_locator = theLocator;
 	}
@@ -1239,9 +1248,9 @@ protected:
 	XPathExpression						m_expression;
 
 	/**
-	 * A Locator for reporting errors.
+	 * A LocatorType for reporting errors.
 	 */
-	const Locator*						m_locator;
+	const LocatorType*						m_locator;
 
 	/**
 	 * If true, the XPath can allocated XObjects in more
@@ -1259,6 +1268,10 @@ protected:
 
 	static const XalanDOMString			s_emptyString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

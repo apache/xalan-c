@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FunctionNormalizeSpace::FunctionNormalizeSpace()
 {
 }
@@ -83,7 +87,7 @@ XObjectPtr
 FunctionNormalizeSpace::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	if (context == 0)
 	{
@@ -119,7 +123,7 @@ FunctionNormalizeSpace::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				/* context */,
 			const XObjectPtr		arg1,
-			const Locator*			/* locator */) const
+			const LocatorType*		/* locator */) const
 {
 	assert(arg1.null() == false);	
 		
@@ -275,3 +279,7 @@ FunctionNormalizeSpace::needsNormalization(const XalanDOMString&	theString) cons
 
 	return fNormalize;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

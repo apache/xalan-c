@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XPATH_EXPORT XNumberBase : public XObject
 {
 public:
@@ -120,6 +124,10 @@ protected:
 
 private:
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -61,6 +61,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XPathConstructionContextDefault::XPathConstructionContextDefault() :
 	XPathConstructionContext(),
 	m_stringPool(),
@@ -116,3 +120,7 @@ XPathConstructionContextDefault::releaseCachedString(XalanDOMString&	theString)
 {
 	return m_stringCache.release(theString);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

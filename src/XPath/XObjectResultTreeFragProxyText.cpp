@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,6 +67,10 @@
 
 
 #include "XObject.hpp"
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -408,7 +412,15 @@ XObjectResultTreeFragProxyText::isIgnorableWhitespace() const
 
 
 
-static XalanDOMString	s_nameString;
+XALAN_CPP_NAMESPACE_END
+
+
+
+static XALAN_CPP_NAMESPACE_QUALIFIER XalanDOMString		s_nameString;
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -429,3 +441,7 @@ XObjectResultTreeFragProxyText::terminate()
 {
 	releaseMemory(::s_nameString);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * XPath implementation of "true" function.
  */
@@ -87,7 +91,7 @@ public:
 	execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
-			const Locator*			locator) const;
+			const LocatorType*		locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -110,6 +114,11 @@ private:
 	bool
 	operator==(const FunctionTrue&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
+
 
 
 #endif	// FUNCTIONTRUE_HEADER_GUARD_1357924680

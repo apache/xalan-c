@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString	XalanQName::s_emptyString;
 
 
@@ -115,11 +119,11 @@ XalanQName::getNamespaceForPrefix(
 {
 	const XalanDOMString*	nsURI = 0;
 
-	if(::equals(prefix, DOMServices::s_XMLString))
+	if(prefix == DOMServices::s_XMLString)
 	{
 		nsURI = &DOMServices::s_XMLNamespaceURI;
 	}
-	else if (::equals(prefix, DOMServices::s_XMLNamespace))
+	else if (prefix == DOMServices::s_XMLNamespace)
 	{
 		nsURI = &DOMServices::s_XMLNamespacePrefixURI;
 	}
@@ -133,7 +137,7 @@ XalanQName::getNamespaceForPrefix(
 
 			const XalanDOMString&	thisPrefix = ns.getPrefix();
 
-			if(::equals(prefix, thisPrefix))
+			if(prefix == thisPrefix)
 			{
 				nsURI = &ns.getURI();
 
@@ -197,7 +201,7 @@ XalanQName::getPrefixForNamespace(
 		const NameSpace&		ns = namespaces[j - 1];
 		const XalanDOMString&	thisURI = ns.getURI();
 
-		if(::equals(uri, thisURI))
+		if(uri == thisURI)
 		{
 			thePrefix = &ns.getPrefix();
 
@@ -351,3 +355,7 @@ XalanQName::isValidQName(
 			   XalanQName::isValidNCName(theLocalName, theLength - theIndex - 1);
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FunctionSubstringBefore::FunctionSubstringBefore()
 {
 }
@@ -80,7 +84,7 @@ FunctionSubstringBefore::execute(
 			XalanNode*				/* context */,
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
-			const Locator*			/* locator */) const
+			const LocatorType*		/* locator */) const
 {
 	assert(arg1.null() == false && arg2.null() == false);
 
@@ -139,3 +143,7 @@ FunctionSubstringBefore::getError() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The substring-before() function takes two arguments!"));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

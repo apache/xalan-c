@@ -74,6 +74,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanNode;
 
 
@@ -109,7 +113,7 @@ public:
 	 * @param theType type of exception, default is "XalanXPathException"
 	 */
 	XalanXPathException(
-			const Locator&			theLocator,
+			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
 			const XalanNode*		styleNode = 0,
 			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XalanXPathException")));
@@ -150,6 +154,10 @@ private:
 
 	static const XalanDOMString		s_emptyString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

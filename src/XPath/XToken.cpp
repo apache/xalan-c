@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XToken::XToken() :
 	XObject(eTypeString),
 	m_stringValue(),
@@ -226,3 +230,7 @@ void
 XToken::dereferenced()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

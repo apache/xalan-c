@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XStringReference::XStringReference(const XalanDOMString&	val) :
 	XStringBase(),
 	m_value(val)
@@ -127,3 +131,7 @@ XStringReference::stringLength() const
 {
 	return length(m_value);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

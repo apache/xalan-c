@@ -73,12 +73,17 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XPATH_EXPORT XalanQNameByValueAllocator
 {
 public:
 
 	typedef XalanQNameByValue					data_type;
 	typedef data_type::NamespacesStackType		NamespacesStackType;
+	typedef data_type::LocatorType				LocatorType;
 
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
 	typedef ArenaBlock<data_type>				ArenaBlockType;
@@ -136,7 +141,7 @@ public:
 	create(
 			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator = 0,
+			const LocatorType*			locator = 0,
 			bool						fUseDefault = false);
 
 	/**
@@ -153,7 +158,7 @@ public:
 	create(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator = 0,
+			const LocatorType*			locator = 0,
 			bool						fUseDefault = false);
 
 	/**
@@ -173,7 +178,7 @@ public:
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const DOMSupport& 		domSupport,
-			const Locator*			locator = 0);
+			const LocatorType*		locator = 0);
 
 	/**
 	 * Create an instance.
@@ -188,7 +193,7 @@ public:
 	create(
 			const XalanDOMString&	qname,
 			const PrefixResolver*	theResolver = 0,
-			const Locator*			locator = 0);
+			const LocatorType*		locator = 0);
 
 	/**
 	 * Determine if an object is owned by the allocator...
@@ -242,6 +247,10 @@ private:
 	// Data members...
 	ArenaAllocatorType	m_allocator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

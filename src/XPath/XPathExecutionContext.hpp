@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,7 +85,10 @@
 
 
 
-class Locator;
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanDecimalFormatSymbols;
 class PrefixResolver;
 class XalanQName;
@@ -109,7 +112,7 @@ class XALAN_XPATH_EXPORT XPathExecutionContext : public ExecutionContext
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XObjectPtr>			XObjectArgVectorType;
 #else
 	typedef std::vector<XObjectPtr>		XObjectArgVectorType;
@@ -296,7 +299,7 @@ public:
 	 * @param functionName extension function name
 	 * @param context The context node
 	 * @param argVec vector of arguments to function
-	 * @param locator A Locator instance for error reporting
+	 * @param locator A LocatorType instance for error reporting
 	 * @return pointer to XObject result
 	 */
 	virtual const XObjectPtr
@@ -305,7 +308,7 @@ public:
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
-			const Locator*					locator) = 0;
+			const LocatorType*				locator) = 0;
 
 	/**
 	 * Provides support for XML parsing service.
@@ -534,7 +537,7 @@ public:
 	 *                         qname using the provided resolver.
 	 * @param ref              value that must match the value found by the
 	 *                         'match' attribute on xsl:key
-	 * @param locator          The Locator to use for error reporting.  Can be 0.
+	 * @param locator          The LocatorType to use for error reporting.  Can be 0.
 	 * @param nodelist         A node list to contain the nodes found
 	 */
 	virtual void
@@ -542,7 +545,7 @@ public:
 			XalanDocument*			doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const Locator*			locator,
+			const LocatorType*		locator,
 			MutableNodeRefList&		nodelist) = 0;
 
 	/**
@@ -555,7 +558,7 @@ public:
 	virtual const XObjectPtr
 	getVariable(
 			const XalanQName&	name,
-			const Locator*		locator = 0) = 0;
+			const LocatorType*	locator = 0) = 0;
 
 	/**
 	 * Retrieve the resolver for namespaces.
@@ -705,42 +708,46 @@ public:
 	error(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const Locator* 			locator = 0) const = 0;
+			const LocatorType* 		locator = 0) const = 0;
 
 	virtual void
 	error(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const Locator* 		locator = 0) const = 0;
+			const LocatorType* 	locator = 0) const = 0;
 
 	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const Locator* 			locator = 0) const = 0;
+			const LocatorType* 		locator = 0) const = 0;
 
 	virtual void
 	warn(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const Locator* 		locator = 0) const = 0;
+			const LocatorType* 	locator = 0) const = 0;
 
 	virtual void
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const Locator* 			locator = 0) const = 0;
+			const LocatorType* 		locator = 0) const = 0;
 
 	virtual void
 	message(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const Locator* 		locator = 0) const = 0;
+			const LocatorType* 	locator = 0) const = 0;
 
 protected:
 
 	XObjectFactory*		m_xobjectFactory;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

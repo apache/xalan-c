@@ -83,6 +83,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanNode;
 
 
@@ -95,7 +99,7 @@ class XALAN_XPATH_EXPORT XPathProcessorImpl : public XPathProcessor
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef map<XalanDOMString,
 				XalanDOMString,
 				less<XalanDOMString> >	StringToStringMapType;
@@ -122,7 +126,7 @@ public:
 			XPathConstructionContext&	constructionContext,
 			const XalanDOMString&		expression,
 			const PrefixResolver&		resolver,
-			const Locator*				locator = 0);
+			const LocatorType*			locator = 0);
 
 	virtual void
 	initMatchPattern(
@@ -130,7 +134,7 @@ public:
 			XPathConstructionContext&	constructionContext,
 			const XalanDOMString&		expression,
 			const PrefixResolver&		resolver,
-			const Locator*				locator = 0);
+			const LocatorType*			locator = 0);
 
 private:
 
@@ -629,7 +633,7 @@ private:
 	 | 'processing-instruction' '(' Literal ')' 
 	 */
 	int
-	NodeTest(XPathExpression::eOpCodes	axisType);
+	NodeTest();
 
 	/**
 	 * --------------------------------------------------------------------------------
@@ -800,7 +804,7 @@ private:
 
 	bool							m_isMatchPattern;
 
-	const Locator*					m_locator;
+	const LocatorType*				m_locator;
 
 	BoolVectorType					m_positionPredicateStack;
 
@@ -885,6 +889,10 @@ private:
 
 	static const TableEntry			s_dummyEntry;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

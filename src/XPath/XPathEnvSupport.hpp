@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -77,7 +77,6 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/Resettable.hpp>
 
 
 
@@ -85,7 +84,14 @@
 
 
 
-class Locator;
+XALAN_DECLARE_XERCES_CLASS(Locator)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class NodeRefListBase;
 class PrefixResolver;
 class XObject;
@@ -98,9 +104,11 @@ class XalanQName;
 
 
 
-class XALAN_XPATH_EXPORT XPathEnvSupport : public Resettable
+class XALAN_XPATH_EXPORT XPathEnvSupport
 {
 public:
+
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
 	typedef Function::XObjectArgVectorType	XObjectArgVectorType;
 
@@ -184,7 +192,7 @@ public:
 	 * @param theNamespace  namespace of function    
 	 * @param functionName extension function name
 	 * @param argVec        vector of arguments to function
-	 * @param locator A Locator instance for error reporting.
+	 * @param locator A LocatorType instance for error reporting.
 	 * @return pointer to XObject result
 	 */
 	virtual XObjectPtr
@@ -194,7 +202,7 @@ public:
 			const XalanDOMString&			functionName, 
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
-			const Locator*					locator) const = 0;
+			const LocatorType*				locator) const = 0;
 
 	enum eSource { eXMLParser		= 1,
 				   eXSLTProcessor	= 2,
@@ -251,6 +259,10 @@ private:
 	bool
 	operator==(const XPathEnvSupport&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

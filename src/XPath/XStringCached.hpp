@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XPATH_EXPORT XStringCached : public XStringBase
 {
 public:
@@ -121,6 +125,10 @@ private:
 
 	const GetAndReleaseCachedString		m_value;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

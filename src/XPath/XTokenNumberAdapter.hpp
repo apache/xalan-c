@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XToken;
 
 
@@ -129,6 +133,10 @@ private:
 	// XToken instance that we're adapting...
 	const XToken&	m_value;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XPATH_EXPORT XNull : public XObject
 {
 public:
@@ -131,6 +135,10 @@ private:
 	// not implemented
 	XNull& operator=(const XNull &);
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

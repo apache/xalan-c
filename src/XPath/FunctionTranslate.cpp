@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FunctionTranslate::FunctionTranslate()
 {
 }
@@ -81,7 +85,7 @@ FunctionTranslate::execute(
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
 			const XObjectPtr		arg3,
-			const Locator*			/* locator */) const
+			const LocatorType*		/* locator */) const
 {
 	assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);
 
@@ -93,7 +97,7 @@ FunctionTranslate::execute(
 	const XalanDOMString::size_type		theSecondStringLength = length(theSecondString);
 	const XalanDOMString::size_type		theThirdStringLength = length(theThirdString);
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XalanDOMChar>		VectorType;
 #else
 	typedef std::vector<XalanDOMChar>	VectorType;
@@ -159,3 +163,7 @@ FunctionTranslate::getError() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The translate() function takes three arguments!"));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

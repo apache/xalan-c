@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,10 @@
 #include "XStringCached.hpp"
 #include "XStringReference.hpp"
 #include "XUnknown.hpp"
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -507,7 +511,7 @@ XObjectFactoryDefault::reset()
 
 	m_xnodesetAllocator.reset();
 
-#if !defined(XALAN_NO_NAMESPACES)
+#if !defined(XALAN_NO_STD_NAMESPACE)
 	using std::for_each;
 #endif
 
@@ -523,3 +527,7 @@ XObjectFactoryDefault::reset()
 
 	m_xstringCache.clear();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

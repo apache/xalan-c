@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 
 XPathParserException::XPathParserException(
 			const XalanDOMString&	message,
@@ -73,7 +77,7 @@ XPathParserException::XPathParserException(
 
 
 XPathParserException::XPathParserException(
-			const Locator&			theLocator,
+			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theType) :
 	XalanXPathException(theLocator, theMessage, 0, theType)
@@ -94,3 +98,7 @@ XPathParserException::XPathParserException(
 XPathParserException::~XPathParserException()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

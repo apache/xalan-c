@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XStringAdapter::XStringAdapter(const XObjectPtr&	val) :
 	XStringBase(),
 	m_value(val)
@@ -124,3 +128,7 @@ XStringAdapter::stringLength() const
 {
 	return m_value->stringLength();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

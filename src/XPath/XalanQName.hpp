@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,6 +81,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanElement;
 class XPathEnvSupport;
 
@@ -102,7 +106,7 @@ class XALAN_XPATH_EXPORT XalanQName
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef	deque<NameSpace>					NamespaceVectorType;
 	typedef	deque<NamespaceVectorType>			NamespacesStackType;
 #else
@@ -159,7 +163,7 @@ public:
 	bool
 	isEmpty() const
 	{
-		return ::isEmpty(getNamespace()) && ::isEmpty(getLocalPart());
+		return getNamespace().empty() && getLocalPart().empty();
 	}
 
 	/**
@@ -174,8 +178,8 @@ public:
 	{
 		// Note that we do not use our member variables here.  See
 		// class QNameReference for details...
-		return ::equals(getLocalPart(), theRHS.getLocalPart()) &&
-			   ::equals(getNamespace(), theRHS.getNamespace());
+		return getLocalPart() == theRHS.getLocalPart() &&
+			   getNamespace() == theRHS.getNamespace();
 	}
 
 	class XALAN_XPATH_EXPORT PrefixResolverProxy : public PrefixResolver
@@ -386,6 +390,10 @@ operator<(
 		return false;
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

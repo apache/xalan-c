@@ -87,6 +87,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XPathProcessorImpl::XPathProcessorImpl() :
 	m_token(),
 	m_tokenChar(0),
@@ -115,7 +119,7 @@ XPathProcessorImpl::initXPath(
 			XPathConstructionContext&	constructionContext,
 			const XalanDOMString&		expression,
 			const PrefixResolver&		resolver,
-			const Locator*				locator)
+			const LocatorType*			locator)
 {
 	m_requireLiterals = false;
 
@@ -161,7 +165,7 @@ XPathProcessorImpl::initMatchPattern(
 			XPathConstructionContext&	constructionContext,
 			const XalanDOMString&		expression,
 			const PrefixResolver&		resolver,
-			const Locator*				locator)
+			const LocatorType*			locator)
 {
 	m_isMatchPattern = true;
 
@@ -1885,7 +1889,7 @@ XPathProcessorImpl::Basis()
 		m_expression->appendOpCode(XPathExpression::eFROM_CHILDREN);
 	}
 
-	NodeTest(axisType);
+	NodeTest();
 
 	// Tell how long the step is without the predicate
 	m_expression->updateOpCodeLengthAfterNodeTest(opPos);
@@ -1917,7 +1921,7 @@ XPathProcessorImpl::AxisName()
 
 
 int
-XPathProcessorImpl::NodeTest(XPathExpression::eOpCodes	axisType)
+XPathProcessorImpl::NodeTest()
 {
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
@@ -2385,7 +2389,7 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 	// This will be replaced by the right value.
 	m_expression->appendOpCode(XPathExpression::eENDOP);
 
-	NodeTest(axisType);
+	NodeTest();
 
 	m_expression->updateOpCodeLengthAfterNodeTest(opPos);
 
@@ -2957,3 +2961,7 @@ const XPathProcessorImpl::TableEntry	XPathProcessorImpl::s_dummyEntry =
 {
 	0, XPathExpression::eENDOP
 };
+
+
+
+XALAN_CPP_NAMESPACE_END

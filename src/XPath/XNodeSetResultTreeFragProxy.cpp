@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XNodeSetResultTreeFragProxy::XNodeSetResultTreeFragProxy(const XNodeSetBase&	theValue) :
 	XObjectResultTreeFragProxyBase(),
 	m_value(theValue)
@@ -153,3 +157,7 @@ XNodeSetResultTreeFragProxy::getLength() const
 
 	return unsigned(m_value.getLength());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

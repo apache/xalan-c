@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -91,6 +91,10 @@
 
 
 #include <XPath/MutableNodeRefList.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -225,7 +229,7 @@ public:
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
-			const Locator*					locator);
+			const LocatorType*				locator);
 
 	virtual XalanDocument*
 	parseXML(
@@ -259,13 +263,13 @@ public:
 			XalanDocument*			doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const Locator*			locator,
+			const LocatorType*		locator,
 			MutableNodeRefList&		nodelist);
 
 	virtual const XObjectPtr
 	getVariable(
 			const XalanQName&	name,
-			const Locator*		locator = 0);
+			const LocatorType*	locator = 0);
 
 	virtual const PrefixResolver*
 	getPrefixResolver() const;
@@ -311,37 +315,37 @@ public:
 	error(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const Locator* 			locator = 0) const;
+			const LocatorType* 		locator = 0) const;
 
 	virtual void
 	error(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const Locator* 		locator = 0) const;
+			const LocatorType* 	locator = 0) const;
 
 	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const Locator* 			locator = 0) const;
+			const LocatorType* 		locator = 0) const;
 
 	virtual void
 	warn(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const Locator* 		locator = 0) const;
+			const LocatorType* 	locator = 0) const;
 
 	virtual void
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const Locator* 			locator = 0) const;
+			const LocatorType* 		locator = 0) const;
 
 	virtual void
 	message(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const Locator* 		locator = 0) const;
+			const LocatorType* 	locator = 0) const;
 
 protected:
 
@@ -369,6 +373,10 @@ protected:
 
 	static const NodeRefList	s_dummyList;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,8 +69,16 @@
 
 
 
+
+XALAN_DECLARE_XERCES_CLASS(Locator)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class Function;
-class Locator;
 class PrefixResolver;
 class XPath;
 class XPathConstructionContext;
@@ -80,6 +88,8 @@ class XPathConstructionContext;
 class XALAN_XPATH_EXPORT XPathProcessor
 {
 public:
+
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
 	explicit
 	XPathProcessor();
@@ -95,7 +105,7 @@ public:
 	 * @param constructionContext The construction context
 	 * @param expression     expression that will be evaluated
 	 * @param resolver       prefix resolver to use
-	 * @param locator		 the Locator to use for error report. May be null
+	 * @param locator		 the LocatorType to use for error report. May be null
 	 */
 	virtual void
 	initXPath(
@@ -103,7 +113,7 @@ public:
 			XPathConstructionContext&	constructionContext,
 			const XalanDOMString&		expression,
 			const PrefixResolver&		resolver,
-			const Locator*				locator = 0) = 0;
+			const LocatorType*			locator = 0) = 0;
 
 	/**
 	 * Given a string, create an XSLT Match Pattern object.
@@ -112,7 +122,7 @@ public:
 	 * @param constructionContext The construction context
 	 * @param expression     expression that will be evaluated
 	 * @param resolver       prefix resolver to use
-	 * @param locator		 the Locator to use for error report. May be null
+	 * @param locator		 the LocatorType to use for error report. May be null
 	 */
 	virtual void
 	initMatchPattern(
@@ -120,7 +130,7 @@ public:
 			XPathConstructionContext&	constructionContext,
 			const XalanDOMString&		expression,
 			const PrefixResolver&		resolver,
-			const Locator*				locator = 0) = 0;
+			const LocatorType*			locator = 0) = 0;
 
 	/**
 	 * Given a string, and a reference to a function object, install the
@@ -134,6 +144,10 @@ public:
 			const XalanDOMString&	theFunctionName,
 			const Function&			theFunction);
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

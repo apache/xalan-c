@@ -66,6 +66,11 @@
 #include "XObjectTypeCallback.hpp"
 
 
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanDOMString	XUnknown::s_unknownVariableString;
 
 XalanDOMString	XUnknown::s_unknownString;
@@ -190,3 +195,7 @@ XUnknown::terminate()
 	releaseMemory(s_unknownVariableString);
 	releaseMemory(s_unknownString);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

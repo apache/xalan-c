@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XPATH_EXPORT XStringAdapter : public XStringBase
 {
 public:
@@ -117,6 +121,10 @@ private:
 
 	const XObjectPtr	m_value;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

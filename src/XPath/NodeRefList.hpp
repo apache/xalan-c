@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * Local implementation of NodeRefList.  This class is for internal use only.
  */
@@ -129,7 +133,7 @@ public:
 	checkForDuplicates() const;
 #endif
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XalanNode*>			NodeListVectorType;
 #else
 	typedef std::vector<XalanNode*>		NodeListVectorType;
@@ -159,6 +163,10 @@ protected:
 
 	NodeListVectorType	m_nodeList;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -63,6 +63,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XNull::XNull() :
 	XObject(eTypeNull)
 {
@@ -157,3 +161,7 @@ XNull::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
 	theCallbackObject.Null(*this);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XPATH_EXPORT XStringReference : public XStringBase
 {
 public:
@@ -118,6 +122,10 @@ private:
 
 	const XalanDOMString&	m_value;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

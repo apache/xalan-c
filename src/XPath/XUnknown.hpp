@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XPATH_EXPORT XUnknown : public XObject
 {
 public:
@@ -144,6 +148,10 @@ private:
 
 	static XalanDOMString	s_unknownString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanQNameByValueAllocator::XalanQNameByValueAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -111,7 +115,7 @@ XalanQNameByValueAllocator::data_type*
 XalanQNameByValueAllocator::create(
 			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator,
+			const LocatorType*			locator,
 			bool						fUseDefault)
 {
 	data_type* const	theBlock = m_allocator.allocateBlock();
@@ -131,7 +135,7 @@ XalanQNameByValueAllocator::data_type*
 XalanQNameByValueAllocator::create(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator,
+			const LocatorType*			locator,
 			bool						fUseDefault)
 {
 	data_type* const	theBlock = m_allocator.allocateBlock();
@@ -153,7 +157,7 @@ XalanQNameByValueAllocator::create(
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const DOMSupport& 		domSupport,
-			const Locator*			locator)
+			const LocatorType*		locator)
 {
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
@@ -172,7 +176,7 @@ XalanQNameByValueAllocator::data_type*
 XalanQNameByValueAllocator::create(
 			const XalanDOMString&	qname,
 			const PrefixResolver*	theResolver,
-			const Locator*			locator)
+			const LocatorType*		locator)
 {
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
@@ -184,3 +188,7 @@ XalanQNameByValueAllocator::create(
 
 	return theResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

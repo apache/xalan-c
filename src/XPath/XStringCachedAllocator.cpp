@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XStringCachedAllocator::XStringCachedAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -116,3 +120,7 @@ XStringCachedAllocator::reset()
 {
 	m_allocator.reset();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

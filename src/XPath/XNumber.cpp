@@ -63,6 +63,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XNumber::XNumber(double		val) :
 	XNumberBase(),
 	m_value(val),
@@ -168,3 +172,7 @@ XNumber::stringLength() const
 {
 	return length(str());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

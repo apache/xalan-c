@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XPATH_EXPORT XPathFactoryBlock : public XPathFactory
 {
 
@@ -109,6 +113,10 @@ private:
 
 	XPathAllocator	m_allocator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

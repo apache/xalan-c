@@ -88,9 +88,19 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XPATH_EXPORT XPathExpression
 {
 public:
+
+#if defined(XALAN_NO_STD_NAMESPACE)
+	typedef ostream			OstreamType;
+#else
+	typedef std::ostream	OstreamType;
+#endif
 
 	/**
 	 * List of operations codes.
@@ -696,7 +706,7 @@ public:
 	};
 
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 
 	typedef vector<int>						OpCodeMapType;
 	typedef vector<XToken>					TokenQueueType;
@@ -1261,11 +1271,7 @@ public:
 	 */
 	void
 	dumpOpCodeMap(
-#if defined(XALAN_NO_NAMESPACES)
-			ostream&			theStream,
-#else
-			std::ostream&		theStream,
-#endif
+			OstreamType&		theStream,
 			OpCodeMapSizeType	theStartPosition = 0) const;
 
 	/**
@@ -1275,8 +1281,9 @@ public:
 	 * @param theStartPosition starting position in token queue
 	 */
 	void
-	dumpTokenQueue(PrintWriter&			thePrintWriter,
-				   TokenQueueSizeType	theStartPosition = 0) const;
+	dumpTokenQueue(
+			PrintWriter&		thePrintWriter,
+			TokenQueueSizeType	theStartPosition = 0) const;
 
 	/**
 	 * Diagnostic function to output the token queue.
@@ -1286,11 +1293,7 @@ public:
 	 */
 	void
 	dumpTokenQueue(
-#if defined(XALAN_NO_NAMESPACES)
-			ostream&			theStream,
-#else
-			std::ostream&		theStream,
-#endif
+			OstreamType&		theStream,
 			TokenQueueSizeType	theStartPosition = 0) const;
 
 	/**
@@ -1515,6 +1518,10 @@ private:
 
 	NumberLiteralValueVectorType	m_numberLiteralValues;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,14 +69,23 @@
 
 
 
+XALAN_DECLARE_XERCES_CLASS(Locator)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class DOMSupport;
-class Locator;
 
 
 
 class XALAN_XPATH_EXPORT XalanQNameByValue : public XalanQName
 {
 public:
+
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
 	/**
 	 * Construct an empty XalanQNameByValue.
@@ -121,7 +130,7 @@ public:
 	XalanQNameByValue(
 			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator = 0,
+			const LocatorType*			locator = 0,
 			bool						fUseDefault = false);
 
 	/**
@@ -136,7 +145,7 @@ public:
 	XalanQNameByValue(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator = 0,
+			const LocatorType*			locator = 0,
 			bool						fUseDefault = false);
 
 	/**
@@ -154,7 +163,7 @@ public:
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const DOMSupport& 		domSupport,
-			const Locator*			locator = 0);
+			const LocatorType*		locator = 0);
 
 	/**
 	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
@@ -167,7 +176,7 @@ public:
 	XalanQNameByValue(
 			const XalanDOMString&	qname,
 			const PrefixResolver*	theResolver = 0,
-			const Locator*			locator = 0);
+			const LocatorType*		locator = 0);
 
 	virtual
 	~XalanQNameByValue();
@@ -224,7 +233,7 @@ public:
 	set(
 			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator = 0,
+			const LocatorType*			locator = 0,
 			bool						fUseDefault = false);
 
 	/**
@@ -241,7 +250,7 @@ public:
 	set(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator = 0,
+			const LocatorType*			locator = 0,
 			bool						fUseDefault = false);
 
 	/**
@@ -257,7 +266,7 @@ public:
 	set(
 			const XalanDOMString&	qname,
 			const PrefixResolver*	theResolver = 0,
-			const Locator*			locator = 0);
+			const LocatorType*		locator = 0);
 
 	/**
 	 * Set the local part and namespace URI of a XalanQNameByValue from
@@ -272,15 +281,15 @@ public:
 	set(
 			const XalanDOMChar*		qname,
 			const PrefixResolver*	theResolver = 0,
-			const Locator*			locator = 0);
+			const LocatorType*		locator = 0);
 	/**
 	 * Clear the instance.
 	 */
 	void
 	clear()
 	{
-		::clear(m_namespace);
-		::clear(m_localpart);
+		m_namespace.clear();
+		m_localpart.clear();
 	}
 
 	XalanQNameByValue&
@@ -308,7 +317,7 @@ private:
 			const XalanDOMChar*			qname,
 			XalanDOMString::size_type	len,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator,
+			const LocatorType*			locator,
 			bool						fUseDefault);
 
 	void
@@ -316,7 +325,7 @@ private:
 			const XalanDOMChar*			qname,
 			XalanDOMString::size_type	theLength,
 			const PrefixResolver*		theResolver,
-			const Locator*				locator);
+			const LocatorType*			locator);
 
 
 	// Data members...
@@ -324,6 +333,10 @@ private:
 
 	XalanDOMString	m_localpart;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

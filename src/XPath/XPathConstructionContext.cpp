@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XPathConstructionContext::XPathConstructionContext()
 {
 }
@@ -68,3 +72,7 @@ XPathConstructionContext::XPathConstructionContext()
 XPathConstructionContext::~XPathConstructionContext()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

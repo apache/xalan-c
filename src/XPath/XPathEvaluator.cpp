@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,6 +71,10 @@
 #include "XPathFactoryDefault.hpp"
 #include "XPathProcessorImpl.hpp"
 #include "XPathInit.hpp"
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -482,3 +486,7 @@ XPathEvaluator::evaluate(
 
 	return theResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

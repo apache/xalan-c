@@ -76,6 +76,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 MutableNodeRefList::MutableNodeRefList() :
 	NodeRefList(),
 	m_order(eUnknownOrder)
@@ -198,9 +202,7 @@ MutableNodeRefList::insertNode(
 void
 MutableNodeRefList::removeNode(const XalanNode*		n)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
+	XALAN_USING_STD(find)
 
 	NodeListVectorType::iterator	i =
 		find(m_nodeList.begin(),
@@ -322,11 +324,9 @@ MutableNodeRefList::addNodesInDocOrder(
 			const MutableNodeRefList&	nodelist,
 			XPathExecutionContext&		executionContext)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::back_inserter;
-	using std::copy;
-	using std::for_each;
-#endif
+	XALAN_USING_STD(back_inserter);
+	XALAN_USING_STD(copy);
+	XALAN_USING_STD(for_each);
 
 	const eOrder		theOtherOrder = nodelist.m_order;
 
@@ -708,11 +708,9 @@ MutableNodeRefList::clearNulls()
 void
 MutableNodeRefList::reverse()
 {
-#if defined(XALAN_NO_NAMESPACES)
-	::reverse(
-#else
-	std::reverse(
-#endif
+	XALAN_USING_STD(reverse)
+
+	reverse(
 		m_nodeList.begin(),
 		m_nodeList.end());
 
@@ -769,3 +767,7 @@ MutableNodeRefList::reverseAssign(MutableNodeRefList&	nodelist) const
 		}
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

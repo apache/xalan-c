@@ -63,6 +63,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XTokenStringAdapter::XTokenStringAdapter(const XToken&	theToken) :
 	XStringBase(),
 	m_value(theToken)
@@ -144,3 +148,7 @@ XTokenStringAdapter::getRealType() const
 {
 	return eTypeXTokenStringAdapter;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

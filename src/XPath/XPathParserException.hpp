@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * Exception class thrown when a problem parsing an XPath is encountered
  */
@@ -99,7 +103,7 @@ public:
 	 * @param theType type of exception, default is "XPathParserException"
 	 */
 	XPathParserException(
-			const Locator&			theLocator,
+			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathParserException")));
 
@@ -116,6 +120,10 @@ public:
 	virtual
 	~XPathParserException();
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

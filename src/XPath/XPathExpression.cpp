@@ -80,6 +80,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // This is an array which indicates which of the value defined by
 // XPathExpression::eOpCodes are node tests.
 static const bool	theNodeTestOpCodesArray[] =
@@ -359,10 +363,8 @@ XPathExpression::~XPathExpression()
 void
 XPathExpression::reset()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::fill;
-		using std::for_each;
-#endif
+	XALAN_USING_STD(fill);
+	XALAN_USING_STD(for_each);
 
 	m_opMap.clear();
 	m_tokenQueue.clear();
@@ -718,11 +720,7 @@ XPathExpression::dumpOpCodeMap(
 
 void
 XPathExpression::dumpOpCodeMap(
-#if defined(XALAN_NO_NAMESPACES)
-			ostream&			theStream,
-#else
-			std::ostream&		theStream,
-#endif
+			OstreamType&		theStream,
 			OpCodeMapSizeType	theStartPosition) const
 {
 	for (OpCodeMapSizeType	i = theStartPosition;
@@ -736,11 +734,7 @@ XPathExpression::dumpOpCodeMap(
 
 void
 XPathExpression::dumpTokenQueue(
-#if defined(XALAN_NO_NAMESPACES)
-			ostream&			theStream,
-#else
-			std::ostream&		theStream,
-#endif
+			OstreamType&		theStream,
 			TokenQueueSizeType	theStartPosition) const
 {
 	for (TokenQueueSizeType	i = theStartPosition;
@@ -907,3 +901,7 @@ XPathExpression::pushCurrentTokenOnOpCodeMap()
 	// Update the op map length.
 	m_opMap[s_opCodeMapLengthIndex]++;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

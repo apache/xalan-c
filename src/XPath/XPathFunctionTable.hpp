@@ -81,7 +81,7 @@
 
 
 
-class Locator;
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -92,17 +92,19 @@ class XALAN_XPATH_EXPORT XPathExceptionFunctionNotAvailable : public XalanXPathE
 {
 public:
 
+	typedef Function::LocatorType	LocatorType;
+
 	XPathExceptionFunctionNotAvailable(int	theFunctionNumber);
 
 	XPathExceptionFunctionNotAvailable(const XalanDOMString&	theFunctionName);
 
 	XPathExceptionFunctionNotAvailable(
 		int					theFunctionNumber,
-		const Locator&		theLocator);
+		const LocatorType&	theLocator);
 
 	XPathExceptionFunctionNotAvailable(
 		const XalanDOMString&	theFunctionName,
-		const Locator&			theLocator);
+		const LocatorType&		theLocator);
 
 	~XPathExceptionFunctionNotAvailable();
 };
@@ -288,7 +290,7 @@ public:
 
 #if defined(XALAN_NO_MEMBER_TEMPLATES)
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XalanDOMString>			InstalledFunctionNameVectorType;
 #else
 	typedef std::vector<XalanDOMString>		InstalledFunctionNameVectorType;
@@ -501,6 +503,10 @@ private:
 	// The last one in the table of function names.
 	static const FunctionNameTableEntry* const	s_lastFunctionName;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -92,11 +92,15 @@
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
+#if !defined(XALAN_NO_STD_NAMESPACE)
 using std::cerr;
 using std::endl;
 using std::for_each;
 #endif
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -428,7 +432,7 @@ XPathEnvSupportDefault::extFunction(
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	const Function* const	theFunction = findFunction(theNamespace, functionName);
 
@@ -516,3 +520,7 @@ XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const Na
 			 MapValueDeleteFunctor<FunctionTableInnerType>());
 #endif
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

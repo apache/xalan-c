@@ -77,6 +77,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class MutableNodeRefList;
 class NodeRefListBase;
 class ResultTreeFragBase;
@@ -525,6 +529,10 @@ operator<(
 {
 	return theLHS.m_xobjectPtr < theRHS.m_xobjectPtr;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

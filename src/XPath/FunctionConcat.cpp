@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FunctionConcat::FunctionConcat()
 {
 }
@@ -80,7 +84,7 @@ FunctionConcat::execute(
 			XalanNode*				/* context */,			
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
-			const Locator*			/* locator */) const
+			const LocatorType*		/* locator */) const
 {
 	assert(arg1.null() == false && arg2.null() == false);	
 
@@ -103,7 +107,7 @@ FunctionConcat::execute(
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
 			const XObjectPtr		arg3,
-			const Locator*			/* locator */) const
+			const LocatorType*		/* locator */) const
 {
 	assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);	
 
@@ -125,7 +129,7 @@ FunctionConcat::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						/* context */,
 			const XObjectArgVectorType&		args,
-			const Locator*					/* locator */) const
+			const LocatorType*				/* locator */) const
 {
 	const XObjectArgVectorType::const_iterator	theEnd = args.end();
 
@@ -162,3 +166,7 @@ FunctionConcat::getError() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The concat() function takes at least two arguments!"));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

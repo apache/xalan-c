@@ -97,6 +97,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class FunctionNotImplemented : public Function
 {
 public:
@@ -499,9 +503,7 @@ XPathFunctionTable::DestroyTable()
 {
 	try
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::for_each;
-#endif
+		XALAN_USING_STD(for_each)
 
 		for_each(
 			m_functionTable,
@@ -578,8 +580,8 @@ XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(const Xal
 
 
 XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
-			int				theFunctionNumber,
-			const Locator&	theLocator) :
+			int					theFunctionNumber,
+			const LocatorType&	theLocator) :
 	XalanXPathException(
 					theLocator,
 					TranscodeFromLocalCodePage("The specified function number is not available: ") + LongToDOMString(theFunctionNumber))
@@ -590,7 +592,7 @@ XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 
 XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 			const XalanDOMString&	theFunctionName,
-			const Locator&			theLocator) :
+			const LocatorType&		theLocator) :
 	XalanXPathException(
 					theLocator,
 					TranscodeFromLocalCodePage("The specified function is not available: ") + theFunctionName)
@@ -1276,3 +1278,7 @@ const FunctionNameTableEntry* const		XPathFunctionTable::s_lastFunctionName =
 
 const SizeType		XPathFunctionTable::s_functionNamesSize =
 	sizeof(s_functionNames) / sizeof(s_functionNames[0]);
+
+
+
+XALAN_CPP_NAMESPACE_END

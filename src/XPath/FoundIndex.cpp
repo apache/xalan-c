@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FoundIndex::FoundIndex() :
 	XalanXPathException()
 {
@@ -69,3 +73,7 @@ FoundIndex::FoundIndex() :
 FoundIndex::~FoundIndex()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

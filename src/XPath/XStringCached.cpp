@@ -63,6 +63,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XStringCached::XStringCached(GetAndReleaseCachedString&		val) :
 	XStringBase(),
 	m_value(val)
@@ -131,3 +135,7 @@ XStringCached::stringLength() const
 {
 	return length(m_value.get());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

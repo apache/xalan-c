@@ -77,6 +77,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString	XObject::s_nullString;
 
 
@@ -897,7 +901,7 @@ XObject::equals(
 				}
 				else
 				{
-					return ::equals(str(), theRHS.str());
+					return str() == theRHS.str();
 				}
 			}
 		}
@@ -951,7 +955,7 @@ XObject::notEquals(
 				}
 				else
 				{
-					return !::equals(str(), theRHS.str());
+					return str() != theRHS.str();
 				}
 			}
 		}
@@ -1143,3 +1147,7 @@ XObject::XObjectInvalidConversionException::formatErrorString(
 		   toType +
 		   XalanDOMString(XALAN_STATIC_UCODE_STRING("."));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

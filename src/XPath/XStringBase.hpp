@@ -70,6 +70,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XPathEnvSupport;
 
 
@@ -134,6 +138,10 @@ private:
 
 	mutable XObjectResultTreeFragProxy	m_resultTreeFrag;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

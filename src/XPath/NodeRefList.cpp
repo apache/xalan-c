@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,6 +65,10 @@
 #if !defined(NDEBUG)
 #include <set>
 #endif
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -166,15 +170,14 @@ NodeRefList::getLength() const
 NodeRefList::size_type
 NodeRefList::indexOf(const XalanNode*	theNode) const
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
+	XALAN_USING_STD(find)
 
 	// Look for the node in the list.
 	NodeListVectorType::const_iterator	i =
-		find(m_nodeList.begin(),
-			 m_nodeList.end(),
-			 theNode);
+		find(
+			m_nodeList.begin(),
+			m_nodeList.end(),
+			theNode);
 
 	// If not found, return npos.  Otherwise, subtract the iterator
 	// from the first iterator to get the distance between them.
@@ -187,7 +190,7 @@ NodeRefList::indexOf(const XalanNode*	theNode) const
 bool
 NodeRefList::checkForDuplicates() const
 {
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef set<const XalanNode*, less<const XalanNode*> >	NodeSetType;
 #else
 	typedef std::set<const XalanNode*>	NodeSetType;
@@ -219,3 +222,7 @@ NodeRefList::checkForDuplicates() const
 	return fResult;
 }
 #endif
+
+
+
+XALAN_CPP_NAMESPACE_END

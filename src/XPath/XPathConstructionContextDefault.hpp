@@ -76,6 +76,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  *
  * An default implementation of an abtract class which provides support for
@@ -117,6 +121,10 @@ private:
 
 	XalanDOMStringCache		m_stringCache;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

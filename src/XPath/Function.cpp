@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,6 +64,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 Function::Function()
 {
 }
@@ -81,7 +85,7 @@ Function::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	const XObjectArgVectorType::size_type	theArgCount = args.size();
 
@@ -115,7 +119,7 @@ XObjectPtr
 Function::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	executionContext.error(getError(), context, locator);
 
@@ -129,7 +133,7 @@ Function::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
 			const XObjectPtr		/* arg1 */,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	executionContext.error(getError(), context, locator);
 
@@ -144,7 +148,7 @@ Function::execute(
 			XalanNode*				context,			
 			const XObjectPtr		/* arg1 */,
 			const XObjectPtr		/* arg2 */,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	executionContext.error(getError(), context, locator);
 
@@ -160,9 +164,13 @@ Function::execute(
 			const XObjectPtr		/* arg1 */,
 			const XObjectPtr		/* arg2 */,
 			const XObjectPtr		/* arg3 */,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	executionContext.error(getError(), context, locator);
 
 	return XObjectPtr(0);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END
