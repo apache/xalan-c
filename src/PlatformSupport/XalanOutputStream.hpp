@@ -321,6 +321,11 @@ private:
 	void
 	doWrite(const XalanDOMChar*		theBuffer);
 
+	void
+	doWrite(
+			const XalanDOMChar*		theBuffer,
+			unsigned long			theBufferLength);
+
 
 	const TranscodeVectorType::size_type	m_transcoderBlockSize;
 

@@ -129,7 +129,7 @@ XalanOutputStream::write(
 
 	if (theBufferLength > m_bufferSize)
 	{
-		doWrite(theBuffer);
+		doWrite(theBuffer, theBufferLength);
 	}
 	else
 	{
@@ -432,6 +432,21 @@ XalanOutputStream::doWrite(const XalanDOMChar*	theBuffer)
 
 		throw;
 	}
+}
+
+
+
+void
+XalanOutputStream::doWrite(
+			const XalanDOMChar*		theBuffer,
+			unsigned long			theBufferLength)
+{
+	// $$$ ToDo: Revisit this!!!
+	BufferType	theLocalBuffer(theBuffer, theBuffer + theBufferLength);
+
+	theLocalBuffer.push_back(0);
+
+	doWrite(&theLocalBuffer[0]);
 }
 
 
