@@ -292,7 +292,7 @@ public:
 	virtual XalanDOMString
 	evaluateAttrVal(
 			XalanNode*				contextNode,
-			const XalanElement& 	namespaceContext,
+			const PrefixResolver& 	namespaceContext,
 			const XalanDOMString&	stringedValue,
 			XPathExecutionContext&	executionContext);
 
@@ -316,11 +316,11 @@ public:
 	virtual const XalanDOMString
 	getUniqueNSValue() const;
 	
-   virtual XObject*
-   createXResultTreeFrag(const ResultTreeFragBase&	r) const;
+	virtual XObject*
+	createXResultTreeFrag(const ResultTreeFragBase&		r) const;
 
 	virtual XObject*
-	getVariable(const QName& qname) const;
+	getVariable(const QName&	qname) const;
 
 	virtual XObject*
 	getParamVariable(const QName&	theName) const;
@@ -705,8 +705,8 @@ public:
 	 * @return Constants.ELEMNAME_XXX token, -1 if in XSL or Xalan namespace,
 	 *		   or -2 if not in known namespace
 	 */
-	int
-	getElementToken(const XalanDOMString&	name) const
+	static int
+	getElementToken(const XalanDOMString&	name)
 	{
 		AttributeKeysMapType::const_iterator iter=
 			s_elementKeys.find(name);
@@ -722,8 +722,8 @@ public:
 	 * @return Constants.ELEMNAME_XXX token, -1 if in XSL or Xalan namespace,
 	 *		   or -2 if not in known namespace
 	 */
-	int
-	getAttrTok(const XalanDOMString&	name) const
+	static int
+	getAttrTok(const XalanDOMString&	name)
 	{
 		AttributeKeysMapType::const_iterator iter=
 			s_attributeKeys.find(name);

@@ -465,7 +465,7 @@ StylesheetExecutionContextDefault::createMatchPattern(
 const XalanDOMString
 StylesheetExecutionContextDefault::evaluateAttrVal(
 			XalanNode*				contextNode,
-			const XalanElement&		namespaceContext,
+			const PrefixResolver&	namespaceContext,
 			const XalanDOMString&	stringedValue)
 {
 	return m_xsltProcessor.evaluateAttrVal(contextNode,
@@ -992,6 +992,14 @@ StylesheetExecutionContextDefault::getNamespaceOfNode(const XalanNode&	n) const
 
 
 XalanDOMString
+StylesheetExecutionContextDefault::getNameOfNode(const XalanNode&	n) const
+{
+	return m_xpathExecutionContextDefault.getNameOfNode(n);
+}
+
+
+
+XalanDOMString
 StylesheetExecutionContextDefault::getLocalNameOfNode(const XalanNode&	n) const
 {
 	return m_xpathExecutionContextDefault.getLocalNameOfNode(n);
@@ -1072,7 +1080,16 @@ StylesheetExecutionContextDefault::elementAvailable(
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	elementName) const
 {
-	return m_xpathExecutionContextDefault.elementAvailable(theNamespace, elementName);
+	if (equals(theNamespace, XSLTEngineImpl::getXSLNameSpaceURL()) == true)
+	{
+		const int	xslToken = XSLTEngineImpl::getElementToken(elementName);
+
+		return xslToken == -2 ? false : true;
+	}
+	else
+	{
+		return m_xpathExecutionContextDefault.elementAvailable(theNamespace, elementName);
+	}
 }
 
 

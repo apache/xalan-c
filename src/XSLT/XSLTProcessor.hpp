@@ -304,7 +304,7 @@ public:
 	virtual XalanDOMString
 	evaluateAttrVal(
 			XalanNode*				contextNode,
-			const XalanElement& 	namespaceContext,
+			const PrefixResolver& 	namespaceContext,
 			const XalanDOMString&	stringedValue,
 			XPathExecutionContext&	executionContext) = 0;
 

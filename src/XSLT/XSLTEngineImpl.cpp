@@ -1941,7 +1941,7 @@ XSLTEngineImpl::cloneToResultTree(
 			  // was: stripWhiteSpace = isLiteral ? true : shouldStripSourceNode(node);
 			}
 
-			XalanText& 	tx = static_cast<XalanText&>(node);
+			const XalanText& 	tx = static_cast<const XalanText&>(node);
 
 			XalanDOMString		data;
 
@@ -2005,7 +2005,7 @@ XSLTEngineImpl::cloneToResultTree(
 										false);
 			}
 
-			startElement(c_wstr(node.getNodeName()));
+			startElement(c_wstr(m_executionContext->getNameOfNode(node)));
 		}
 		break;
 
@@ -2019,14 +2019,14 @@ XSLTEngineImpl::cloneToResultTree(
 			cdata(toCharArray(data), 0, length(data));
 		}
 		break;
-	
+
 	case XalanNode::ATTRIBUTE_NODE:
 		{
 			const XalanAttr& 	attr =
 				static_cast<const XalanAttr&>(node);
 
 			addResultAttribute(m_pendingAttributes,
-							   attr.getName(),
+							   m_executionContext->getNameOfNode(attr),
 							   attr.getValue());
 		}
 		break;
@@ -2585,7 +2585,7 @@ XSLTEngineImpl::getAttrVal(
 XalanDOMString
 XSLTEngineImpl::evaluateAttrVal(
 			XalanNode*				contextNode,
-			const XalanElement&		namespaceContext,
+			const PrefixResolver&	namespaceContext,
 			const XalanDOMString&	stringedValue,
 			XPathExecutionContext&	executionContext)
 {
@@ -2605,8 +2605,6 @@ XSLTEngineImpl::evaluateAttrVal(
 		XalanDOMString	t; // base token
 		XalanDOMString	lookahead; // next token
 		XalanDOMString	error; // if not empty, break from loop
-
-		ElementPrefixResolverProxy	theProxy(&namespaceContext, m_xpathEnvSupport, m_xpathSupport);
 
 		while(tokenizer.hasMoreTokens())
 		{
@@ -2685,7 +2683,7 @@ XSLTEngineImpl::evaluateAttrVal(
 											// Proper close of attribute template.
 											// Evaluate the expression.
 											const XObject* const	xobj =
-												evalXPathStr(expression, contextNode, theProxy, executionContext);
+												evalXPathStr(expression, contextNode, namespaceContext, executionContext);
 
 											const XalanDOMString			exprResult(xobj->str());
 
@@ -2761,6 +2759,7 @@ XSLTEngineImpl::evaluateAttrVal(
 
 	return expressedValue;
 }
+
 
 
 void

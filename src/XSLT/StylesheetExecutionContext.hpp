@@ -646,7 +646,7 @@ public:
 	virtual const XalanDOMString
 	evaluateAttrVal(
 			XalanNode*				contextNode,
-			const XalanElement&		namespaceContext,
+			const PrefixResolver&	namespaceContext,
 			const XalanDOMString&	stringedValue) = 0;
 
 	/**
@@ -1304,6 +1304,9 @@ public:
 
 	virtual XalanDOMString
 	getNamespaceOfNode(const XalanNode&		n) const = 0;
+
+	virtual XalanDOMString
+	getNameOfNode(const XalanNode&	n) const = 0;
 
 	virtual XalanDOMString
 	getLocalNameOfNode(const XalanNode&		n) const = 0;
