@@ -70,6 +70,7 @@
 
 
 class Function;
+class Locator;
 class PrefixResolver;
 class XPath;
 
@@ -93,13 +94,14 @@ public:
 	 * @param expression     expression that will be evaluated
 	 * @param resolver       prefix resolver to use
 	 * @param xobjectFactory factory class instance for XObjects
-	 * @param envSupport     XPath environment support class instance
+	 * @param locator		 the Locator to use for error report. May be null
 	 */
 	virtual void
 	initXPath(
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
-			const PrefixResolver&	resolver) = 0;
+			const PrefixResolver&	resolver,
+			const Locator*			locator = 0) = 0;
 
 	/**
 	 * Given a string, create an XSLT Match Pattern object.
@@ -107,12 +109,14 @@ public:
 	 * @param pathObj        XPath object to be initialized
 	 * @param expression     expression that will be evaluated
 	 * @param resolver       prefix resolver to use
+	 * @param locator		 the Locator to use for error report. May be null
 	 */
 	virtual void
 	initMatchPattern(
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
-			const PrefixResolver&	resolver) = 0;
+			const PrefixResolver&	resolver,
+			const Locator*			locator = 0) = 0;
 
 	/**
 	 * Given a string, and a reference to a function object, install the

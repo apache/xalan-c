@@ -147,13 +147,15 @@ public:
 	initXPath(
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
-			const PrefixResolver&	prefixResolver);
+			const PrefixResolver&	prefixResolver,
+			const Locator*			locator = 0);
 
 	virtual void
 	initMatchPattern(
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
-			const PrefixResolver&	prefixResolver);
+			const PrefixResolver&	prefixResolver,
+			const Locator*			locator = 0);
 
 private:
 
@@ -796,6 +798,8 @@ private:
 	const PrefixResolver*			m_prefixResolver;
 
 	bool							m_requireLiterals;
+
+	const Locator*					m_locator;
 
 	enum eDummy
 	{

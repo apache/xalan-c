@@ -76,15 +76,30 @@ class XALAN_XPATH_EXPORT XPathParserException : public XPathException
 public:
 
 	/**
-	 * Construct an XPathParserException object.
+	 * Constructor
 	 * 
-	 * @param message string error message
-	 * @param styleNode The style tree node where the problem occurred
+	 * @param theMessage message to write when exception thrown
+	 * @param theURI the URI of the related document, if known
+	 * @param theLineNumber the line number of the related document, or -1 if not known
+	 * @param theColumnNumber the column number of the related document, or -1 if not known
+	 * @param theType type of exception, default is "XPathParserException"
 	 */
-	explicit
 	XPathParserException(
-			const XalanDOMString&	message = XalanDOMString(),
-			const XalanNode*		styleNode = 0);
+			const XalanDOMString&	theMessage,
+			const XalanDOMString&	theURI,
+			int						theLineNumber,
+			int						theColumnNumber,
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathParserException")));
+
+	/**
+	 * Constructor
+	 * 
+	 * @param theMessage message to write when exception thrown
+	 * @param theType type of exception, default is "XPathParserException"
+	 */
+	XPathParserException(
+			const XalanDOMString&	theMessage,
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathParserException")));
 
 	virtual
 	~XPathParserException();

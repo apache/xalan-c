@@ -62,6 +62,10 @@
 
 
 
+#include <sax/Locator.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
 #include <PlatformSupport/DoubleSupport.hpp>
@@ -100,9 +104,10 @@ XPathProcessorImpl::~XPathProcessorImpl()
 
 void
 XPathProcessorImpl::initXPath(
-			XPath&						pathObj,
-			const XalanDOMString&		expression,
-			const PrefixResolver&		prefixResolver)
+			XPath&					pathObj,
+			const XalanDOMString&	expression,
+			const PrefixResolver&	prefixResolver,
+			const Locator*			locator)
 {
 	m_requireLiterals = false;
 
@@ -111,6 +116,10 @@ XPathProcessorImpl::initXPath(
 	m_expression = &m_xpath->getExpression();
 
 	m_prefixResolver = &prefixResolver;
+
+	m_locator = locator;
+
+	m_expression->reset();
 
 	tokenize(expression);
 
@@ -128,6 +137,7 @@ XPathProcessorImpl::initXPath(
 	m_xpath = 0;
 	m_expression = 0;
 	m_prefixResolver = 0;
+	m_locator = 0;
 }
 
 
@@ -136,13 +146,16 @@ void
 XPathProcessorImpl::initMatchPattern(
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
-			const PrefixResolver&	prefixResolver)
+			const PrefixResolver&	prefixResolver,
+			const Locator*			locator)
 {
 	m_xpath = &pathObj;
 
 	m_expression = &m_xpath->getExpression();
 
 	m_prefixResolver = &prefixResolver;
+
+	m_locator = locator;
 
 	m_expression->reset();
 
@@ -167,6 +180,7 @@ XPathProcessorImpl::initMatchPattern(
 	m_xpath = 0;
 	m_expression = 0;
 	m_prefixResolver = 0;
+	m_locator = 0;
 }
 
 
@@ -916,7 +930,34 @@ XPathProcessorImpl::error(
 		{
 			thePrintWriter.print(XALAN_STATIC_UCODE_STRING("pattern = '"));
 			thePrintWriter.print(theCurrentPattern);
-			thePrintWriter.println("'");
+
+			thePrintWriter.print("'");
+
+			if (m_locator != 0)
+			{
+				const XalanDOMChar* const	theSystemID =
+					m_locator->getSystemId();
+
+				thePrintWriter.print("(");
+
+				if (theSystemID == 0)
+				{
+					thePrintWriter.print("Unknown URI");
+				}
+				else
+				{
+					thePrintWriter.print(theSystemID);
+				}
+
+				thePrintWriter.print(", ");
+				thePrintWriter.print(m_locator->getLineNumber());
+				thePrintWriter.print(", ");
+				thePrintWriter.print(m_locator->getColumnNumber());
+
+				thePrintWriter.print(")");
+			}
+
+			thePrintWriter.println();
 		}
 
 		// Back up one token, since we've consumed one...
@@ -926,7 +967,28 @@ XPathProcessorImpl::error(
 		m_expression->dumpRemainingTokenQueue(thePrintWriter);
 	}
 
-	throw XPathParserException(emsg);
+	if (m_locator != 0)
+	{
+		const XalanDOMChar* const	theSystemID =
+					m_locator->getSystemId();
+
+		XalanDOMString	theURI;
+
+		if (theSystemID != 0)
+		{
+			theURI = theSystemID;
+		}
+
+		throw XPathParserException(
+					emsg,
+					theURI,
+					m_locator->getLineNumber(),
+					m_locator->getColumnNumber());
+	}
+	else
+	{
+		throw XPathParserException(emsg);
+	}
 }
 
 

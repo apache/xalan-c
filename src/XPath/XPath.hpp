@@ -83,21 +83,13 @@
 
 
 
+class Locator;
 class PrefixResolver;
 class XObject;
 class XalanNode;
 
 
 
-/**
- * The XPath class represents the semantic parse tree of the XPath pattern. It
- * is the representation of the grammar which filters out the choice for
- * replacement order of the production rules. In order to conserve memory and
- * reduce object creation, the tree is represented as an array of integers:
- *	  [op code][length][...]
- * where strings are represented within the array as indices into the token
- * tree.
- */
 class XALAN_XPATH_EXPORT XPath
 {
 public:
@@ -131,9 +123,11 @@ public:
 
 	/**
 	 * Construct an XPath.
+	 *
+	 * @param theLocator The applicable Locator, if any.
 	 */
 	explicit
-	XPath();
+	XPath(const Locator*	theLocator = 0);
 
 	virtual
 	~XPath();
@@ -412,6 +406,18 @@ public:
 	setInStylesheet(bool	fValue)
 	{
 		m_inStylesheet = fValue;
+	}
+
+	const Locator*
+	getLocator() const
+	{
+		return m_locator;
+	}
+
+	void
+	setLocator(const Locator*	theLocator)
+	{
+		m_locator = theLocator;
 	}
 
 protected:
@@ -811,6 +817,11 @@ private:
 	 *
 	 */
 	XPathExpression						m_expression;
+
+	/**
+	 * A Locator for reporting errors.
+	 */
+	const Locator*						m_locator;
 
 	/**
 	 * If true, the XPath can allocated XObjects in more

@@ -86,12 +86,38 @@ public:
 	 * Construct an XPath exeption object.
 	 * 
 	 * @param message message explaining the problem. 
-	 * @param styleNode style tree node where the problem occurred
+	 * @param theURI the URI of the related document, if known
+	 * @param theLineNumber the line number of the related document, or -1 if not known
+	 * @param theColumnNumber the column number of the related document, or -1 if not known
+	 * @param theType type of exception, default is "XPathException"
 	 */
-	explicit
 	XPathException(
-			const XalanDOMString&	message = XalanDOMString(),
-			const XalanNode*		styleNode = 0,
+			const XalanDOMString&	message,
+			const XalanDOMString&	theURI,
+			int						theLineNumber,
+			int						theColumnNumber,
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathException")));
+
+	/**
+	 * Construct an XPath exeption object.
+	 * 
+	 * @param message message explaining the problem. 
+	 * @param styleNode the node in the stylesheet where the problem occurred
+	 * @param theType type of exception, default is "XPathException"
+	 */
+	XPathException(
+			const XalanDOMString&	message,
+			const XalanNode*		styleNode,
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathException")));
+
+	/**
+	 * Construct an XPath exeption object.
+	 * 
+	 * @param message message explaining the problem. 
+	 * @param theType type of exception, default is "XPathException"
+	 */
+	XPathException(
+			const XalanDOMString&	message,
 			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathException")));
 
 	virtual
@@ -103,9 +129,20 @@ public:
 		return m_styleNode;
 	}
 
+protected:
+
+	/**
+	 * Construct an XPath exeption object.
+	 * 
+	 */
+	explicit
+	XPathException();
+
 private:
 
 	const XalanNode*	m_styleNode;
+
+	static const XalanDOMString		s_emptyString;
 };
 
 

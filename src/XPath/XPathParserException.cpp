@@ -62,9 +62,20 @@
 
 XPathParserException::XPathParserException(
 			const XalanDOMString&	message,
-			const XalanNode*		styleNode) :
-	XPathException(message,
-				   styleNode)
+			const XalanDOMString&	theURI,
+			int						theLineNumber,
+			int						theColumnNumber,
+			const XalanDOMString&	theType) :
+	XPathException(message, theURI, theLineNumber, theColumnNumber, theType)
+{
+}
+
+
+
+XPathParserException::XPathParserException(
+			const XalanDOMString&	message,
+			const XalanDOMString&	theType) :
+	XPathException(message, theType)
 {
 }
 

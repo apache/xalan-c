@@ -88,8 +88,9 @@
 
 
 
-XPath::XPath() :
+XPath::XPath(const Locator*	theLocator) :
 	m_expression(),
+	m_locator(theLocator),
 	m_inStylesheet(false)
 {
 }
