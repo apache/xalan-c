@@ -86,15 +86,10 @@ FunctionConcat::execute(
 
 	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-	XalanDOMString&			theString = theResult.get();
+	XalanDOMString&		theString = theResult.get();
 
-	const XalanDOMString&	theArg1 = arg1->str();
-	const XalanDOMString&	theArg2 = arg2->str();
-
-	reserve(theString, length(theArg1) + length(theArg2) + 1);
-
-	append(theString, theArg1);
-	append(theString, theArg2);
+	arg1->str(theString);
+	arg2->str(theString);
 
 	return executionContext.getXObjectFactory().createString(theResult);
 }
@@ -116,15 +111,9 @@ FunctionConcat::execute(
 
 	XalanDOMString&			theString = theResult.get();
 
-	const XalanDOMString&	theArg1 = arg1->str();
-	const XalanDOMString&	theArg2 = arg2->str();
-	const XalanDOMString&	theArg3 = arg3->str();
-
-	reserve(theString, length(theArg1) + length(theArg2) + length(theArg3) + 1);
-
-	append(theString, theArg1);
-	append(theString, theArg2);
-	append(theString, theArg3);
+	arg1->str(theString);
+	arg2->str(theString);
+	arg3->str(theString);
 
 	return executionContext.getXObjectFactory().createString(theResult);
 }
@@ -138,34 +127,17 @@ FunctionConcat::execute(
 			const XObjectArgVectorType&		args,
 			const Locator*					/* locator */) const
 {
-	XalanDOMString::size_type	theCombinedLength = 0;
-
 	const XObjectArgVectorType::const_iterator	theEnd = args.end();
-
-	{
-		XObjectArgVectorType::const_iterator	i = args.begin();
-
-		for(; i != theEnd; ++i)
-		{
-			assert((*i).null() == false);
-
-			theCombinedLength += length((*i)->str());
-		}
-	}
 
 	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
 	XalanDOMString&		theString = theResult.get();
 
-	reserve(theString, theCombinedLength + 1);
+	XObjectArgVectorType::const_iterator	i = args.begin();
 
+	for(; i != theEnd; ++i)
 	{
-		XObjectArgVectorType::const_iterator	i = args.begin();
-
-		for(; i != theEnd; ++i)
-		{
-			append(theString, (*i)->str());
-		}
+		(*i)->str(theString);
 	}
 
 	return executionContext.getXObjectFactory().createString(theResult);
