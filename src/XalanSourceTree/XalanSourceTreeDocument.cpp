@@ -695,10 +695,10 @@ XalanSourceTreeDocument::createElementNode(
 		++theIndex;
 	}
 
-	const AttributesCountType	theSAXAttributeCount = attrs.getLength();
+	const unsigned int	theSAXAttributeCount = attrs.getLength();
 
 	// Now, create the attributes...
-	for(AttributesCountType i = 0; i < theSAXAttributeCount; ++i, ++theIndex)
+	for(unsigned int i = 0; i < theSAXAttributeCount; ++i, ++theIndex)
 	{
 		const XalanDOMChar* const	theName =
 			attrs.getName(i);
@@ -795,10 +795,10 @@ XalanSourceTreeDocument::createElementNode(
 		++theIndex;
 	}
 
-	const AttributesCountType	theSAXAttributeCount = attrs.getLength();
+	const unsigned int	theSAXAttributeCount = attrs.getLength();
 
 	// Now, create the attributes...
-	for(AttributesCountType i = 0; i < theSAXAttributeCount; ++i, ++theIndex)
+	for(unsigned int i = 0; i < theSAXAttributeCount; ++i, ++theIndex)
 	{
 		const XalanDOMChar* const	theName =
 			attrs.getName(i);
@@ -1309,10 +1309,10 @@ XalanSourceTreeDocument::createAttributes(
 		++theIndex;
 	}
 
-	const AttributesCountType	theSAXAttributeCount = theAttributes.getLength();
+	const unsigned int	theSAXAttributeCount = theAttributes.getLength();
 
 	// Now, create the attributes...
-	for(AttributesCountType i = 0; i < theSAXAttributeCount; ++i, ++theIndex)
+	for(unsigned int i = 0; i < theSAXAttributeCount; ++i, ++theIndex)
 	{
 		const XalanDOMChar* const	theQName =
 			theAttributes.getQName(i);
