@@ -1075,23 +1075,18 @@ MakeXalanDOMCharVector(
 {
 	assert(data != 0);
 
+	XalanDOMCharVectorType	theResult;
+
 	if (fTranscode == true)
 	{
-		XalanDOMChar*	theTranscodedData = XMLString::transcode(data);
-
-		const XalanArrayAutoPtr<XalanDOMChar>	theJanitor(theTranscodedData);
-
 		// Create a vector which includes the terminating 0.
-
-		return MakeXalanDOMCharVector(theTranscodedData);
+		TranscodeFromLocalCodePage(data, theResult, true);
 	}
 	else
 	{
 		// Include the terminating null byte...
 		const unsigned int	theLength = strlen(data) + 1;
 
-		XalanDOMCharVectorType	theResult;
-		
 		theResult.reserve(theLength);
 
 #if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
@@ -1105,9 +1100,9 @@ MakeXalanDOMCharVector(
 			data + theLength,
 			back_inserter(theResult));
 #endif
-
-		return theResult;
 	}
+
+	return theResult;
 }
 
 
@@ -1472,6 +1467,10 @@ DoubleToDOMString(
 	else if (DoubleSupport::isPositiveZero(theDouble) == true)
 	{
 		theResult = thePositiveZeroString;
+	}
+	else if (long(theDouble) == theDouble)
+	{
+		LongToDOMString(long(theDouble), theResult);
 	}
 	else
 	{
