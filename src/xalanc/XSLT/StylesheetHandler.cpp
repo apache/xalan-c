@@ -972,7 +972,7 @@ StylesheetHandler::checkForOrAddVariableName(
 	{
 		assert(m_inScopeVariableNamesStack.empty() == true);
 
-		if (m_globalVariableNames.find(theVariableName) != m_globalVariableNames.end())
+		if (m_globalVariableNames.count(theVariableName) != 0)
 		{
 			error(XalanMessageLoader::getMessage(XalanMessages::VariableHasBeenDeclared), theLocator);
 		}
@@ -992,7 +992,7 @@ StylesheetHandler::checkForOrAddVariableName(
 		{
 			QNameSetVectorType::value_type	theLocalScope = *theCurrent;
 
-			if (theLocalScope.find(theVariableName) != theLocalScope.end())
+			if (theLocalScope.count(theVariableName) != 0)
 			{
 				error(XalanMessageLoader::getMessage(XalanMessages::VariableHasBeenDeclaredInThisTemplate), theLocator);
 			}
@@ -1603,10 +1603,10 @@ StylesheetHandler::inExtensionElement() const
 {
 	XALAN_USING_STD(find)
 
-	if (find(
-			m_inExtensionElementStack.rbegin(),
-			m_inExtensionElementStack.rend(),
-			true) != m_inExtensionElementStack.rend())
+	if (!(find(
+			m_inExtensionElementStack.begin(),
+			m_inExtensionElementStack.end(),
+			true) == m_inExtensionElementStack.end()))
 	{
 		return true;
 	}
