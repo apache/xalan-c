@@ -136,16 +136,16 @@ protected:
 	 *
 	 */
 	#if defined(XALAN_NO_NAMESPACES)
-	struct DeleteFactoryObjectFunctor : public unary_function<const FactoryObject*, void>
+	struct ProtectedDeleteFactoryObjectFunctor : public unary_function<const FactoryObject*, void>
 	#else
-	struct DeleteFactoryObjectFunctor : public std::unary_function<const FactoryObject*, void>
+	struct ProtectedDeleteFactoryObjectFunctor : public std::unary_function<const FactoryObject*, void>
 	#endif
 	{
 	public:
 
-		DeleteFactoryObjectFunctor(
+		ProtectedDeleteFactoryObjectFunctor(
 			Factory&		theFactoryInstance,
-			bool			fInReset = false) :
+			bool			fInReset) :
 			m_factoryInstance(theFactoryInstance),
 			m_fInReset(fInReset)
 		{
@@ -165,7 +165,7 @@ protected:
 		const bool	m_fInReset;
 	};
 
-	friend struct DeleteFactoryObjectFunctor;
+	friend struct ProtectedDeleteFactoryObjectFunctor;
 
 private:
 
@@ -335,6 +335,37 @@ private:
 	// Data members...
 	Factory*	m_factory;
     Type*		m_object;
+};
+
+
+
+/**
+ *
+ * A public functor for use with stl algorithms.
+ *
+ */
+#if defined(XALAN_NO_NAMESPACES)
+struct DeleteFactoryObjectFunctor : public unary_function<const FactoryObject*, void>
+#else
+struct DeleteFactoryObjectFunctor : public std::unary_function<const FactoryObject*, void>
+#endif
+{
+public:
+
+	DeleteFactoryObjectFunctor(Factory&		theFactoryInstance) :
+		m_factoryInstance(theFactoryInstance)
+	{
+	}
+
+	result_type
+	operator()(argument_type	theFactoryObject) const
+	{
+		m_factoryInstance.returnObject(theFactoryObject);
+	}
+
+private:
+
+	Factory&	m_factoryInstance;
 };
 
 
