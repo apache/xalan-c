@@ -1,0 +1,144 @@
+#
+# The Apache Software License, Version 1.1
+#
+# Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
+# reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+#
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+#
+# 4. The names "Xalan", "Xerces" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written
+#    permission, please contact apache\@apache.org.
+#
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+#
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+#
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+#
+###################################################################
+#                    IMPORTANT NOTE                               #
+###################################################################
+# Before you try to run the Makefile, make sure you have two      #
+# environment variables set.                                      #
+#                                                                 #
+# export XALANCROOT=<the directory where you installed XALAN-C>   #
+# export XERCESCROOT=<the directory where you installed XERCES-C> #
+#                                                                 #
+###################################################################
+
+
+# Output directories
+ifneq ("$(shell cd $(XALANCROOT) && pwd)/Tests", "$(shell pwd)")
+  OUTDIR := $(shell pwd)
+else
+  OUTDIR = ${XALANCROOT}
+endif
+
+ifndef XALANCROOT
+noxalanroot:
+	@echo XALANCROOT must be defined
+endif
+
+ifndef XERCESCROOT
+noxercesroot:
+	@echo XERCESCROOT must be defined
+endif
+
+include $(wildcard version.incl ../version.incl)
+include $(wildcard Makefile.incl ../src/xalanc/Makefile.incl)
+
+all: Tests
+
+tests : ThreadTest
+
+Tests:   ThreadTest Conf
+
+ThreadTest:  prepare $(XSL_BIN_DIR)/ThreadTest
+
+$(XSL_BIN_DIR)/ThreadTest: ${XSL_OBJ_DIR}/ThreadTest.o 
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
+	${EXTRA_LINK_OPTIONS}  $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Threads/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+Harness :  ${XSL_OBJ_DIR}/XMLFileReporter.o ${XSL_OBJ_DIR}/HarnessInit.o  ${XSL_OBJ_DIR}/FileUtility.o
+
+${XSL_OBJ_DIR}/FileUtility.o:
+${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+${XSL_OBJ_DIR}/HarnessInit.o:
+${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+${XSL_OBJ_DIR}/XMLFileReporter.o:
+${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+Conf: prepare Harness $(XSL_BIN_DIR)/Conf
+
+$(XSL_BIN_DIR)/Conf: ${XSL_OBJ_DIR}/conf.o ${XSL_OBJ_DIR}/HarnessInit.o ${XSL_OBJ_DIR}/FileUtility.o ${XSL_OBJ_DIR}/XMLFileReporter.o 
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
+	${EXTRA_LINK_OPTIONS}  $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Conf/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+prepare:
+	-${MKDIR} -p ${XSL_LIB_DIR}
+	-${MKDIR} -p $(XSL_BIN_DIR)
+
+install: Tests
+	$(MKINSTALLDIRS) $(DESTDIR)/$(bindir)
+	$(INSTALL_PROGRAM) $(XSL_BIN_DIR)/Conf $(DESTDIR)/$(bindir)
+	$(INSTALL_PROGRAM) $(XSL_BIN_DIR)/ThreadTest $(DESTDIR)/$(bindir)
+
+install-extras:
+	cp -r $(TESTS_DIR) $(DESTDIR)/$(prefix)
+
+clean:
+	rm -rf $(XSL_OBJ_DIR)/*.o
+	rm -rf $(OUTDIR)/so_locations
+	rm -rf $(XSL_BIN_DIR)/SunWS_cache
+	rm -rf $(XSL_LIB_DIR)/SunWS_cache
+	rm -f  $(XSL_BIN_DIR)/Conf
+	rm -f  $(XSL_BIN_DIR)/ThreadTest
+
+

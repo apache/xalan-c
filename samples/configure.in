@@ -1,10 +1,9 @@
 dnl Process this file with autoconf to produce a configure script
-AC_INIT(PlatformSupport/PlatformSupportDefinitions.hpp)
+AC_INIT(ParsedSourceWrappers/ParsedSourceWrappers.cpp)
 
 dnl Checks for programs
 AC_PROG_CC
 AC_PROG_CXX
-AC_CONFIG_AUX_DIR($XALANCROOT/src/xalanc)
 AC_PROG_INSTALL
 AC_CHECK_PROG(AUTOCONF, autoconf, autoconf, true)
 
@@ -101,6 +100,7 @@ cc=${CC}
 AC_SUBST(cc)
 
 AC_SUBST(prefix)
+
 dnl  Not used:
 AC_SUBST(osver)
 
@@ -134,4 +134,4 @@ bitstobuild=${BITSTOBUILD}
 AC_SUBST(bitstobuild)
 
 dnl output the Makefiles
-+AC_OUTPUT([Makefile Makefile.incl ../../samples/Makefile ../../Tests/Makefile])
++AC_OUTPUT([Makefile Makefile.incl])

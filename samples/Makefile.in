@@ -1,0 +1,263 @@
+#
+# The Apache Software License, Version 1.1
+#
+# Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
+# reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+#
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+#
+# 4. The names "Xalan", "Xerces" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written
+#    permission, please contact apache\@apache.org.
+#
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+#
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+#
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+#
+###################################################################
+#                    IMPORTANT NOTE                               #
+###################################################################
+# Before you try to run the Makefile, make sure you have two      #
+# environment variables set.                                      #
+#                                                                 #
+# export XALANCROOT=<the directory where you installed XALAN-C>   #
+# export XERCESCROOT=<the directory where you installed XERCES-C> #
+#                                                                 #
+###################################################################
+
+# Output directories
+ifneq ("$(shell cd $(XALANCROOT) && pwd)/samples", "$(shell pwd)")
+  OUTDIR := $(shell pwd)
+else
+  OUTDIR = ${XALANCROOT}
+endif
+
+ifndef XALANCROOT
+noxalanroot:
+	@echo XALANCROOT must be defined
+endif
+
+ifndef XERCESCROOT
+noxercesroot:
+	@echo XERCESCROOT must be defined
+endif
+
+ALL_BINARIES =    CompileStylesheet \
+                  DocumentBuilder \
+                  ExternalFunction \
+                  ParsedSourceWrappers \
+                  SerializeNodeSet \
+                  SimpleTransform \
+                  SimpleXPathAPI \
+                  SimpleXPathCAPI \
+                  StreamTransform \
+                  TraceListen \
+                  TransformToXercesDOM \
+                  UseStylesheetParam \
+                  XalanTransform \
+                  XalanTransformerCallback \
+                  XPathWrapper
+
+include $(wildcard version.incl ../version.incl)
+include $(wildcard Makefile.incl ../src/xalanc/Makefile.incl)
+
+all: Samples
+
+samples: Samples
+
+Samples: CompileStylesheet DocumentBuilder ExternalFunction \
+         ParsedSourceWrappers SimpleTransform SerializeNodeSet SimpleXPathAPI \
+         SimpleXPathCAPI StreamTransform TraceListen TransformToXercesDOM \
+         UseStylesheetParam XalanTransform XalanTransformerCallback XPathWrapper
+
+ApacheModuleXSLT: prepare $(XSL_LIB_DIR)/mod_xslt$(SHLIBSUFFIX) 
+
+$(XSL_LIB_DIR)/mod_xslt$(SHLIBSUFFIX) : $(XSL_OBJ_DIR)/mod_xslt.o
+	$(MAKE_SHARED) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/ApacheModuleXSLT/%.c
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I/usr/include/apache/ $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+CompileStylesheet: prepare $(XSL_BIN_DIR)/CompileStylesheet
+
+$(XSL_BIN_DIR)/CompileStylesheet: $(XSL_OBJ_DIR)/CompileStylesheet.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/CompileStylesheet/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+DocumentBuilder: prepare $(XSL_BIN_DIR)/DocumentBuilder
+
+$(XSL_BIN_DIR)/DocumentBuilder: $(XSL_OBJ_DIR)/DocumentBuilder.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/DocumentBuilder/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+ExternalFunction: prepare $(XSL_BIN_DIR)/ExternalFunction
+
+$(XSL_BIN_DIR)/ExternalFunction: $(XSL_OBJ_DIR)/ExternalFunction.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/ExternalFunction/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+ParsedSourceWrappers: prepare $(XSL_BIN_DIR)/ParsedSourceWrappers
+
+$(XSL_BIN_DIR)/ParsedSourceWrappers: $(XSL_OBJ_DIR)/ParsedSourceWrappers.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/ParsedSourceWrappers/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+SerializeNodeSet: prepare $(XSL_BIN_DIR)/SerializeNodeSet
+
+$(XSL_BIN_DIR)/SerializeNodeSet: $(XSL_OBJ_DIR)/SerializeNodeSet.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/SerializeNodeSet/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+SimpleTransform: prepare $(XSL_BIN_DIR)/SimpleTransform
+
+$(XSL_BIN_DIR)/SimpleTransform: $(XSL_OBJ_DIR)/SimpleTransform.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/SimpleTransform/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+SimpleXPathAPI: prepare $(XSL_BIN_DIR)/SimpleXPathAPI
+
+$(XSL_BIN_DIR)/SimpleXPathAPI: $(XSL_OBJ_DIR)/SimpleXPathAPI.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/SimpleXPathAPI/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+SimpleXPathCAPI: prepare $(XSL_BIN_DIR)/SimpleXPathCAPI
+
+$(XSL_BIN_DIR)/SimpleXPathCAPI: $(XSL_OBJ_DIR)/SimpleXPathCAPI.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/SimpleXPathCAPI/%.c
+	$(CC4) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+StreamTransform: prepare $(XSL_BIN_DIR)/StreamTransform
+
+$(XSL_BIN_DIR)/StreamTransform: $(XSL_OBJ_DIR)/StreamTransform.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/StreamTransform/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
+
+TraceListen: prepare $(XSL_BIN_DIR)/TraceListen
+
+$(XSL_BIN_DIR)/TraceListen: $(XSL_OBJ_DIR)/TraceListen.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/TraceListen/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
+
+TransformToXercesDOM: prepare $(XSL_BIN_DIR)/TransformToXercesDOM
+
+$(XSL_BIN_DIR)/TransformToXercesDOM: $(XSL_OBJ_DIR)/TransformToXercesDOM.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/TransformToXercesDOM/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
+
+UseStylesheetParam: prepare $(XSL_BIN_DIR)/UseStylesheetParam
+
+$(XSL_BIN_DIR)/UseStylesheetParam: $(XSL_OBJ_DIR)/UseStylesheetParam.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/UseStylesheetParam/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<	
+
+XalanTransform: prepare $(XSL_BIN_DIR)/XalanTransform
+
+$(XSL_BIN_DIR)/XalanTransform: $(XSL_OBJ_DIR)/XalanTransform.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/XalanTransform/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+XalanTransformerCallback: prepare $(XSL_BIN_DIR)/XalanTransformerCallback
+
+$(XSL_BIN_DIR)/XalanTransformerCallback: $(XSL_OBJ_DIR)/XalanTransformerCallback.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/XalanTransformerCallback/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+XPathWrapper: prepare $(XSL_BIN_DIR)/XPathWrapper
+
+$(XSL_BIN_DIR)/XPathWrapper: $(XSL_OBJ_DIR)/XPathWrapper.o $(XSL_OBJ_DIR)/TestDriver.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/XPathWrapper/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+prepare:
+	-$(MKDIR) -p $(XSL_OBJ_DIR)
+	-$(MKDIR) -p $(XSL_LIB_DIR)
+	-$(MKDIR) -p $(XSL_BIN_DIR)
+
+install: Samples
+	$(MKINSTALLDIRS) $(DESTDIR)/$(bindir)
+	for bin in $(ALL_BINARIES); do \
+	  $(INSTALL_PROGRAM) $(XSL_BIN_DIR)/$$bin \
+	                     $(DESTDIR)/$(bindir); \
+	done
+
+install-extras:
+	cp -r $(SAMPLES_DIR)  $(DESTDIR)/$(prefix)
+
+clean:
+	rm -rf $(XSL_OBJ_DIR)/*.o
+	rm -rf $(OUTDIR)/so_locations
+	rm -rf $(XSL_BIN_DIR)/SunWS_cache
+	rm -rf $(XSL_LIB_DIR)/SunWS_cache
+	rm -f $(XSL_LIB_DIR)/mod_xslt$(SHLIBSUFFIX)
+	for bin in $(ALL_BINARIES); do \
+	  rm -f $(XSL_BIN_DIR)/$$bin; \
+	done
