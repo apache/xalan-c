@@ -138,7 +138,8 @@ FileUtility::getDrive()
 
 bool
 FileUtility::getParams(int argc, 
-		  const char*	argv[])
+		  const char*	argv[],
+		  char*	outDir)
 {
 	bool fSuccess = true;	// Used to continue argument loop
 	bool fsetOut = true;	// Set default output directory, set to false if data is provided
@@ -159,12 +160,6 @@ FileUtility::getParams(int argc,
 		if (checkDir(XalanDOMString(argv[1])))
 		{
 			assign(args.base, XalanDOMString(argv[1]));
-//			if ( argv[0] == "conf" && !endsWith(args.base, XalanDOMString("conf")) )
-//			{
-//				cout << endl << "Given base directory \"" << argv[1] << "\" not valid conformance directory" << endl;
-//				cout << args.help.str(); 
-//				return false;
-//			}
 		}
 		else
 		{
@@ -200,6 +195,8 @@ FileUtility::getParams(int argc,
 			if(i < argc && argv[i][0] != '-')
 			{
 				assign(args.gold, XalanDOMString(argv[i]));
+				append(args.gold, pathSep);
+				checkAndCreateDir(args.gold);
 				fsetGold = false;
 			}
 			else
@@ -216,10 +213,12 @@ FileUtility::getParams(int argc,
 				if (stricmp(argv[i],"XPL") == 0)
 				{
 					args.source = 1;
+					outDir = "DOM-XALAN";
 				}
 				else if (stricmp(argv[i], "DOM") == 0)
 				{
 					args.source = 2;
+					outDir = "DOM-XERCES";
 				}
 				else
 				{
@@ -276,17 +275,21 @@ FileUtility::getParams(int argc,
 	// Do we need to set the default output directory??
 	//
 	if (fsetOut)
-	{ /*
-		const XalanDOMString outDirName(argv[0]);
+	{ 
 		unsigned int ii = lastIndexOf(args.base,charAt(pathSep,0));
-		args.output = substring(args.base, 0, ii+1);
-		append(args.output,XalanDOMString("CONF-RESULTS"));
+
+		if (ii < length(args.base))
+		{
+			args.output = substring(args.base, 0, ii + 1);
+		}
+
+		append(args.output,XalanDOMString(outDir));
 		checkAndCreateDir(args.output);
-		append(args.output,pathSep); */
-		assign(args.output, args.base);
-		append(args.output, XalanDOMString("-RESULTS\\"));
-		checkAndCreateDir(args.output);
+		append(args.output,pathSep); 
+
 	}
+	// Do we need to set the default gold directory??
+	//
 	if (fsetGold)
 	{
 		args.gold = args.base;
@@ -408,9 +411,10 @@ void FileUtility::checkAndCreateDir(const XalanDOMString&	directory)
 XalanDOMString
 FileUtility::generateFileName(
 			const XalanDOMString&	theXMLFileName,
-			const char*				suffix)
+			const char*				suffix,
+			bool*					status)
 {
-	XalanDOMString	theResult;
+	XalanDOMString	targetFile;
 	int				thePeriodIndex = -1;
 	const int		theLength = length(theXMLFileName);
 
@@ -425,15 +429,34 @@ FileUtility::generateFileName(
 
 	if (thePeriodIndex != -1)
 	{
-		theResult = substring(theXMLFileName,
+		targetFile = substring(theXMLFileName,
 							  0,
 							  thePeriodIndex + 1);
 
 
-		theResult += XalanDOMString(suffix);
+		targetFile += XalanDOMString(suffix);
 	}
 
-	return theResult;
+	// Check the .xml file exists.
+	if (!strcmp(suffix,"xml"))
+	{
+		FILE* fileHandle = fopen(c_str(TranscodeToLocalCodePage(targetFile)), "r");
+		if (fileHandle == 0)
+		{
+			cout << "TEST ERROR: File Missing: " << targetFile << endl;
+
+			if (status != 0)
+			{
+				*status = false;
+			}
+		}
+		else
+		{
+			fclose(fileHandle);
+		}
+	}
+
+	return targetFile;
 }
 
 
@@ -1274,18 +1297,11 @@ FileUtility::reportPassFail(
 
 	runResults.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), runid));
 	runResults.insert(Hashtable::value_type(XalanDOMString("Xerces-Version "), getXercesVersion()));
-	runResults.insert(Hashtable::value_type(XalanDOMString("ICU-Enabled "), XalanDOMString("No")));
 	runResults.insert(Hashtable::value_type(XalanDOMString("BaseDrive "), XalanDOMString(getDrive())));
 	runResults.insert(Hashtable::value_type(XalanDOMString("TestBase "), XalanDOMString(args.base)));
 	runResults.insert(Hashtable::value_type(XalanDOMString("xmlFormat "), data.xmlFormat));
 	sprintf(temp, "%d", args.iters);
 	runResults.insert(Hashtable::value_type(XalanDOMString("Iters "), XalanDOMString(temp)));
-
-#if defined(XALAN_USE_ICU)
-	// At some point in time I want to be able to programatically check it the ICU is enabled.
-	// Dave needs to add some code before I can do this. It will not be done via ifdef's. 
-	runResults.insert(Hashtable::value_type(XalanDOMString("ICU-Enabled "), XalanDOMString("Yes")));
-#endif
 
 	sprintf(temp, "%d", data.pass);
 	runResults.insert(Hashtable::value_type(XalanDOMString("Passed"), XalanDOMString(temp)));
@@ -1314,20 +1330,37 @@ void
 FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resultsFile)
 {
 	XalanDOMString paramValue;
+	bool	fileStatus;
 
 	// Pass the results .xml file as a parameter to the stylesheet.  It must be wrapped in single
 	// quotes so that it is not considered an expression.
+	//
 	assign(paramValue, XalanDOMString("'"));
 	append(paramValue, resultsFile);
 	append(paramValue, XalanDOMString("'"));
 
 	// Set the parameter
+	//
 	xalan.setStylesheetParam(XalanDOMString("testfile"), paramValue);
 
 	// Generate the input and output file names.
-	const XalanDOMString  theHTMLFile = generateFileName(resultsFile,"html");
+	//
+	const XalanDOMString  theHTMLFile = generateFileName(resultsFile,"html", &fileStatus);
 	const XalanDOMString  theStylesheet = args.base + XalanDOMString("cconf.xsl");
 	const XalanDOMString  theXMLSource = args.base + XalanDOMString("cconf.xml");
+
+	// Check that we can find the stylesheet to analyze the results.
+	//
+	FILE* fileHandle = fopen(c_str(TranscodeToLocalCodePage(theStylesheet)), "r");
+	if (fileHandle == 0)
+	{
+		cout << "ANALYSIS ERROR: File Missing: " << c_str(TranscodeToLocalCodePage(theStylesheet)) << endl;
+		return;
+	}
+	else
+	{
+		fclose(fileHandle);
+	}
 
 	// Create the InputSources and ResultTarget.
 	const XSLTInputSource	xslInputSource(c_wstr(theStylesheet));

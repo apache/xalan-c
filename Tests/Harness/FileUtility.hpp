@@ -193,7 +193,7 @@ public:
 	getDrive();
 
 	bool
-	getParams(int argc, const char*	argv[]);
+	getParams(int argc, const char*	argv[], char* outDir);
 
 
 	FileNameVectorType
@@ -235,7 +235,8 @@ public:
 	XalanDOMString
 	generateFileName(
 			const XalanDOMString&  theXMLFileName,
-			const char*				suffix);
+			const char*				suffix,
+			bool*					status = 0);
 
 	/** 
 	* Utility method used to generate UniqRunid.

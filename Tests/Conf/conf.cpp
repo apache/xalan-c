@@ -155,6 +155,8 @@ parseWithTransformer(int sourceType, XalanTransformer &xalan, const XSLTInputSou
 {
 	const XalanParsedSource* parsedSource = 0;
 
+	// Parse the XML source accordingly.
+	//
 	if (sourceType != 0 )
 	{
 		xalan.parseSource(xmlInput, parsedSource, true);
@@ -165,18 +167,22 @@ parseWithTransformer(int sourceType, XalanTransformer &xalan, const XSLTInputSou
 		xalan.parseSource(xmlInput, parsedSource, false);
 		h.data.xmlFormat = XalanDOMString("XalanSourceTree");
 	}
-					
+				
+	// If the source was parsed correctly then perform the transform else report the failure.
+	//
 	if (parsedSource == 0)
 	{
 		// Report the failure and be sure to increment fail count.
 		//
-		cout << "Failed to PARSE source document for " << h.data.testOrFile << endl;
+		cout << "ParseWTransformer - Failed to PARSE source document for " << h.data.testOrFile << endl;
 		++h.data.fail;
 		logFile.logErrorResult(h.data.testOrFile, XalanDOMString("Failed to PARSE source document."));
 	}
-
-	xalan.transform(*parsedSource, styleSheet, output);
-	xalan.destroyParsedSource(parsedSource);
+	else 
+	{
+		xalan.transform(*parsedSource, styleSheet, output);
+		xalan.destroyParsedSource(parsedSource);
+	}
 }
 
 
@@ -204,7 +210,7 @@ parseWithXerces(XalanTransformer &xalan, const XSLTInputSource &xmlInput,
 
 	try
 	{
-		 const XercesDOMWrapperParsedSource		parsedSource(
+		const XercesDOMWrapperParsedSource	parsedSource(
 					theDOM, 
 					theParserLiaison, 
 					theDOMSupport, 
@@ -216,7 +222,7 @@ parseWithXerces(XalanTransformer &xalan, const XSLTInputSource &xmlInput,
 	{
 		// Report the failure and be sure to increment fail count.
 		//
-		cout << "Failed to PARSE source document for " << h.data.testOrFile << endl;
+		cout << "parseWXerces - Failed to PARSE source document for " << h.data.testOrFile << endl;
 		++h.data.fail;
 		logFile.logErrorResult(h.data.testOrFile, XalanDOMString("Failed to PARSE source document."));
 	}
@@ -237,7 +243,7 @@ main(int			argc,
 	//
 	setHelp();
 
-	if (h.getParams(argc, argv) == true)
+	if (h.getParams(argc, argv, "CONF-RESULTS") == true)
 	{
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
@@ -248,7 +254,7 @@ main(int			argc,
 		// Get drive designation for final analysis and generate Unique name for results log.
 		//
 		const XalanDOMString  drive(h.getDrive());			// This is used to get stylesheet for final analysis
-		const XalanDOMString  resultFilePrefix("cpp");		// This & UniqRunid used for log file name.
+		const XalanDOMString  resultFilePrefix("conf");		// This & UniqRunid used for log file name.
 		const XalanDOMString  UniqRunid = h.generateUniqRunid(); 
 		const XalanDOMString  resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + XMLSuffix);
 
@@ -290,13 +296,18 @@ main(int			argc,
 			{
 				Hashtable attrs;
 				const XalanDOMString currentFile(files[i]);
-				h.data.testOrFile = currentFile;
-
 				if (checkForExclusion(currentFile))
 					continue;
 
+				h.data.testOrFile = currentFile;
 				const XalanDOMString  theXSLFile = h.args.base + currentDir + pathSep + currentFile;
-				const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+
+				// Check and see if the .xml file exists. If not skip this .xsl file and continue.
+				bool fileStatus = true;
+				const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile, "xml", &fileStatus);
+				if (!fileStatus)
+					continue;
+
 				h.data.xmlFileURL = theXMLFile;
 				h.data.xslFileURL = theXSLFile;
 				
