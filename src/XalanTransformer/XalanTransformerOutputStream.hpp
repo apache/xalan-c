@@ -77,14 +77,14 @@ typedef void (*XalanFlushHandlerType) (const void*);
 
 
 
-// A class for output to a user define (callback) function.
+// A class for output to a user defined (callback) function.
 class XALAN_TRANSFORMER_EXPORT XalanTransformerOutputStream : public XalanOutputStream
 {
 public:
 
 	/**
 	 * Construct a XalanTransformerOutputStream instance for output to a
-	 * user define (callback) function.
+	 * user defined (callback) function.
 	 *
 	 * @param theOutputHandle	void pointer passed through to callback.
 	 * @param theOutputHandler	a user defined (callback) function.

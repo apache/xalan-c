@@ -65,10 +65,10 @@
 
 /**
  * This is a simple C interface for the class XalanTransformer. It's 
- * the responsibility of the caller to call initialize and terminate 
+ * the user's responsibility to call initialize and terminate 
  * before creating and after deleting any XalanTransformer instances 
- * respectively. As well, releasing any memory allocated from calling   
- * XalanTransformToData by calling XalanFreeData.
+ * respectively. After calling XalanTransformToData, the user should   
+ * call XalanFreeData to release the memory allocated by that operation.
  */
 #if defined(__cplusplus)
 extern "C"
@@ -84,13 +84,13 @@ extern "C"
 	 * Callback function passed to XalanTransformToHandler. 
 	 * Used to process transform output in blocks of data.
 	 * Caller is responsible for streaming or copying data to a user  
-	 * allocated buffer. Called should not attempt to write to or  
+	 * allocated buffer. Caller should not attempt to write to or  
 	 * free this data. Xalan will reuse the same buffer and free it 
 	 * upon termination.
 	 *
-	 * The callback should return the number of bytes written and this 
-	 * number should match the length received. Otherwise, the function 
-	 * XalanTransformToHandler will terminate and return a error status.	
+	 * The callback should return the number of bytes written, and
+	 * this number should match the length received. Otherwise the
+	 * XalanTransformToHandler function terminates and returns a error status.	
 	 *
 	 * static unsigned long xalanOutputHandler(const void* data, unsigned long length, const void *handle);
 	 *
@@ -112,7 +112,7 @@ extern "C"
 	typedef void (*XalanFlushHandlerType) (const void*);
 
 	/**
-	 * This is a typedef to workaround limitations with
+	 * This is a typedef to work around limitations with
 	 * the XALAN_TRANSFORMER_EXPORT_FUNCTION macro.
 	 */
 	typedef const char*		XalanCCharPtr;
@@ -151,8 +151,8 @@ extern "C"
 
 	/**
 	 * Transform the XML source tree to the given result file.
-	 * The processor will process the input file, the stylesheet file,
-	 * and transform to new output file.
+	 * The processor will apply the stylesheet file to the input
+	 * file and write the transformation result to a new output file.
 	 *
 	 * @param theXMLFileName	filename of XML input source
 	 * @param theXSLFileName	filename of stylesheet source
@@ -169,8 +169,8 @@ extern "C"
 
 	/**
 	 * Transform the XML source tree to a dynamically allocated buffer.
-	 * The processor will process the input file, the stylesheet file,
-	 * and assign the address of dynamically allocated result to a 
+	 * The processor will apply the stylesheet file to the input file
+	 * and assign the address of the dynamically allocated result to a 
 	 * user defined pointer. The user must call XalanFreeData with the  
 	 * address of this pointer.
 	 *
@@ -198,13 +198,13 @@ extern "C"
 
 	/**
 	 * Transform the XML source tree to a callback function.
-	 * The processor will process the input file, the stylesheet file,
-	 * and transform to output to a callback function in pre-allocated 
-	 * blocks. Once the transform is completed a second callback, to
-	 * flush the buffer, will be called. You can pass in NULL if you 
-	 * do not wish to implement a flush callback. Xalan will release 
-	 * any memory allocated upon termination and data passed to the 
-	 * callback is not guaranteed to be null terminated. 
+	 * The processor will apply the stylesheet file to the input file
+	 * and allocate the transformation result to a callback function  
+	 * in pre-allocated blocks. Once the transformation is complete,
+	 * a second callback, to flush the buffer, is called. You can pass
+	 * in NULL if you do not wish to implement a flush callback. Xalan 
+	 * will release any memory allocated upon termination, and data passed 
+	 * to the callback is not guaranteed to be null terminated. 
 	 * 
 	 * - See XalanOutputHandlerType and XalanFlushHandlerType for more 
 	 * details.
@@ -227,8 +227,8 @@ extern "C"
 				XalanFlushHandlerType	theFlushHandler);
 
 	/**
-	 * Returns the last error that occured as a 
-	 * result of callaing transform.
+	 * Returns the last error that occurred as a 
+	 * result of calling transform.
 	 *
 	 * The signiture for following function is really:
 	 * const char*
@@ -246,7 +246,3 @@ extern "C"
 
 
 #endif	// XALAN_CAPI_HEADER_GUARD_1357924680
-
-
-
-
