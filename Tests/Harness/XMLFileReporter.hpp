@@ -95,53 +95,51 @@ class HARNESS_API XMLFileReporter
 public:
 
 
-	/** Simple constructor, does not perform initialization.  */
+	// Simple constructor, does not perform initialization.
 	XMLFileReporter();   
 
 
-	/** Construct and initialize this reporter with specified filename.  */
+	// Construct and initialize this reporter with specified filename.
 	XMLFileReporter(const XalanDOMString& fileName);
 
-	/** Construct and initialize this reporter with specified filename.  */
+	// Construct and initialize this reporter with specified filename.
 	XMLFileReporter::XMLFileReporter(const char* fileName);
 
-	/** Initialize this XMLFileReporter.  Must be called before attempting to log anything.  */
+	// Initialize this XMLFileReporter.  Must be called before attempting to log anything.
 	bool initialize();
 
-	/** Accessor for flushing; is set from properties.  */
+	// Accessor for flushing; is set from properties.
 	bool getFlushOnCaseClose();
 
-	/** Accessor methods for our properties block.  */
+	// Accessor methods for our properties block.
 	const XalanDOMString& getFileName() const;
 
-	/** Accessor methods for our properties block.  */
+	// Accessor methods for our properties block.
 	void setFileName(const XalanDOMString& fileName);
 
-	/** Accessor methods for our properties block.  */
+	// Accessor methods for our properties block.
 	void setFileName(const char* fileName)
 	{
 		setFileName(XalanDOMString(fileName));
 	}
 
-	/**
-	* Is this Reporter still running OK?  
-	* @returns status - true if an error has occoured, false if it's still working fine
-	* <P>XMLFileReporter should just about never have errors.</P>
-	*/
+	//
+	// Is this Reporter still running OK?  
+	// @returns status - true if an error has occoured, false if it's still working fine
+	// <P>XMLFileReporter should just about never have errors.</P>
 	bool checkError();
 
 	  
-	/**
-	* Is this Reporter ready to log results?  
-	* @returns status - true if it's ready to report, false otherwise
-	*/
+	//
+	// Is this Reporter ready to log results?  
+	// @returns status - true if it's ready to report, false otherwise
 	bool isReady();
 
-	/** Flush this reporter - ensure our File is flushed.  */
+	// Flush this reporter - ensure our File is flushed.
 	void flush();
 
 
-	/** Close this reporter - ensure our File, etc. are closed.  */
+	// Close this reporter - ensure our File, etc. are closed.
 	void close();
 
 	//-----------------------------------------------------
@@ -216,6 +214,9 @@ public:
 	{
 		logStatistic(level, lVal, dVal, XalanDOMString(msg));
 	}
+
+	// This routine will add an attribute to the attribute list.
+	void addMetricToAttrs(char* desc, double theMetric, Hashtable& attrs);
 
 	/**
     * Logs out a element to results with specified severity.
