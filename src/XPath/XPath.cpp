@@ -876,7 +876,7 @@ XPath::plus(
 	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return executionContext.getXObjectFactory().createNumber(expr1->num() + expr2->num());
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::add(expr1->num(), expr2->num()));
 }
 
 
@@ -897,7 +897,7 @@ XPath::minus(
 	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return executionContext.getXObjectFactory().createNumber(expr1->num() - expr2->num());
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::subtract(expr1->num(), expr2->num()));
 }
 
 
@@ -918,7 +918,7 @@ XPath::mult(
 	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return executionContext.getXObjectFactory().createNumber(expr1->num() * expr2->num());
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::multiply(expr1->num(), expr2->num()));
 }
 
 
@@ -939,40 +939,7 @@ XPath::div(
 	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	const double	expr1Value = expr1->num();
-
-	const double	expr2Value = expr2->num();
-
-	double			theResult = 0.0;
-
-	if (expr2Value != 0)
-	{
-		// The simple case...
-		theResult = expr1Value / expr2Value;
-	}
-	else
-	{
-		// Special cases, since we don't want to actually do the division...
-		if (expr1Value == 0)
-		{
-			// This is NaN...
-			theResult = DoubleSupport::getNaN();
-		}
-		else if (expr1Value > 0.0)
-		{
-			// This is positive infinity...
-			theResult = DoubleSupport::getPositiveInfinity();
-		}
-		else
-		{
-			assert(expr1Value < 0.0);
-
-			// This is positive infinity...
-			theResult = DoubleSupport::getNegativeInfinity();
-		}
-	}
-
-	return executionContext.getXObjectFactory().createNumber(theResult);
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::divide(expr1->num(), expr2->num()));
 }
 
 
@@ -993,8 +960,7 @@ XPath::mod(
 	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return executionContext.getXObjectFactory().createNumber(static_cast<int>(expr1->num()) %
-															 static_cast<int>(expr2->num()));
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::modulus(expr1->num(), expr2->num()));
 }
 
 
@@ -1022,7 +988,7 @@ XPath::neg(
 	XObject* const	expr1 = executeMore(context, opPos + 2, executionContext);
 	assert(expr1 != 0);
 
-	return executionContext.getXObjectFactory().createNumber(-expr1->num());
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::negative(expr1->num()));
 }
 
 
