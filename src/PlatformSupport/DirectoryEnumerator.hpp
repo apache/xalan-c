@@ -103,7 +103,7 @@ public:
 	 *
 	 * @return file name
 	 */
-	const XalanDOMString
+	const XalanDOMChar*
 	getName() const
 	{
 		return name;
@@ -172,7 +172,7 @@ struct DirectoryFilterPredicate : public std::unary_function<FindFileStruct, boo
 		const XalanDOMString	parent(XALAN_STATIC_UCODE_STRING(".."));
 		const XalanDOMString	cvs(XALAN_STATIC_UCODE_STRING("CVS"));
 		
-		const XalanDOMString	dirName=theFindData.getName();
+		const XalanDOMString	dirName=XalanDOMString(theFindData.getName());
 
 		return theFindData.isDirectory() && (!equals(dirName, cvs) && !equals(dirName, current) && !equals(dirName, parent));
 
