@@ -128,15 +128,15 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 	using std::vector;
 #endif
 
-	const XalanNode*				theLocalNode = &theNode;
+	const XalanNode*					theLocalNode = &theNode;
 
-	bool							hasProcessedNS;
+	bool								hasProcessedNS;
     
-	NSInfo							nsInfo;
+	NSInfo								nsInfo;
 
-    const int						ntype = theLocalNode->getNodeType();
+    const const XalanNode::NodeType		ntype = theLocalNode->getNodeType();
 
-	NSInfoMapType::const_iterator	theIterator = m_NSInfos.end();
+	NSInfoMapType::const_iterator		theIterator = m_NSInfos.end();
 
 	// Find the node in the map of cached nodes, if it's not an
 	// attribute node.
