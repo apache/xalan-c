@@ -82,10 +82,10 @@
 
 XResultTreeFrag::XResultTreeFrag(ResultTreeFragBase*	val) :
 	XObject(eTypeResultTreeFrag),
-	NodeRefListBase(),
 	m_value(val),
 	m_cachedStringValue(),
-	m_cachedNumberValue(0.0)
+	m_cachedNumberValue(0.0),
+	m_nodeRefListBaseProxy(*this)
 {
 }
 
@@ -94,11 +94,11 @@ XResultTreeFrag::XResultTreeFrag(ResultTreeFragBase*	val) :
 XResultTreeFrag::XResultTreeFrag(
 			const XResultTreeFrag&	source,
 			bool					deepClone) :
-	XObject(source),
-	NodeRefListBase(source),
+	XObject(source),	
 	m_value(source.m_value->clone(deepClone)),
 	m_cachedStringValue(source.m_cachedStringValue),
-	m_cachedNumberValue(source.m_cachedNumberValue)
+	m_cachedNumberValue(source.m_cachedNumberValue),	
+	m_nodeRefListBaseProxy(*this)
 {
 }
 
@@ -192,7 +192,7 @@ XResultTreeFrag::rtree() const
 const NodeRefListBase&
 XResultTreeFrag::nodeset() const
 {
-	return *this;
+	return m_nodeRefListBaseProxy;
 }
 
 
@@ -276,4 +276,42 @@ XResultTreeFrag::indexOf(const XalanNode*	theNode) const
 	}
 
 	return fFound == true ? theIndex : NodeRefListBase::npos;
+}
+
+
+
+XResultTreeFrag::NodeRefListBaseProxy::NodeRefListBaseProxy(const XResultTreeFrag&	theXResultTreeFrag) :
+	NodeRefListBase(),
+	m_xresultTreeFrag(theXResultTreeFrag)
+{
+}
+
+
+
+XResultTreeFrag::NodeRefListBaseProxy::~NodeRefListBaseProxy()
+{
+}
+
+
+
+XalanNode*
+XResultTreeFrag::NodeRefListBaseProxy::item(unsigned int	index) const
+{
+	return m_xresultTreeFrag.item(index);
+}
+
+
+
+unsigned int
+XResultTreeFrag::NodeRefListBaseProxy::getLength() const
+{
+	return m_xresultTreeFrag.getLength();
+}
+
+
+
+unsigned int
+XResultTreeFrag::NodeRefListBaseProxy::indexOf(const XalanNode*	theNode) const
+{
+	return m_xresultTreeFrag.indexOf(theNode);
 }

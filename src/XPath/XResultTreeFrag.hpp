@@ -86,10 +86,10 @@
 
 class ResultTreeFragBase;
 class XPathSupport;
+class XResultTreeFrag;
 
 
-
-class XALAN_XPATH_EXPORT XResultTreeFrag : public XObject, private NodeRefListBase
+class XALAN_XPATH_EXPORT XResultTreeFrag : public XObject
 {
 public:
 
@@ -149,24 +149,52 @@ public:
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
-private:
-
-	// These methods are inherited from NodeRefListBase...
-
-	virtual XalanNode*
+	// New member functions for node list compatibility...
+	XalanNode*
 	item(unsigned int	index) const;
 
-	virtual unsigned int
+	unsigned int
 	getLength() const;
 
-	virtual unsigned int
+	unsigned int
 	indexOf(const XalanNode*	theNode) const;
 
-	XalanAutoPtr<ResultTreeFragBase>	m_value;
+private:
+
+	class  NodeRefListBaseProxy : public NodeRefListBase
+	{
+	public:
+
+		NodeRefListBaseProxy(const XResultTreeFrag&		theXResultTreeFrag);
+
+		virtual
+		~NodeRefListBaseProxy();
+
+		virtual XalanNode*
+		item(unsigned int	index) const;
+
+		virtual unsigned int
+		getLength() const;
+
+		virtual unsigned int
+		indexOf(const XalanNode*	theNode) const;
+
+	private:
+
+		// Not implemented...
+		NodeRefListBaseProxy(const NodeRefListBaseProxy&);
+
+		const XResultTreeFrag&	m_xresultTreeFrag;		
+	};
+
+	// Data members...
+	XalanAutoPtr<ResultTreeFragBase>	m_value;	
 
 	mutable XalanDOMString				m_cachedStringValue;
 
 	mutable double						m_cachedNumberValue;
+
+	const NodeRefListBaseProxy			m_nodeRefListBaseProxy;
 };
 
 
