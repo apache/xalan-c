@@ -249,8 +249,8 @@ public:
 	 * @param theInputSource		input source
 	 * @param theCompiledStylesheet	pointer to a compiled stylesheet
 	 * @param theOutputHandle		void pointer passed through to callback.
-	 * @param theOutputHandler		a user defined (callback) function.
-	 * @param theFlushHandler		(optional) a user defined (callback) function.
+	 * @param theOutputHandler		a user defined callback function.
+	 * @param theFlushHandler		An optional user-defined callback function.
 	 * @return	0 for success 
 	 */
 	int
@@ -274,8 +274,8 @@ public:
 	 * 
 	 * @param theInputSource		input source
 	 * @param theOutputHandle		void pointer passed through to callback.
-	 * @param theOutputHandler		a user defined (callback) function.
-	 * @param theFlushHandler		(optional) a user defined (callback) function.
+	 * @param theOutputHandler		a user defined callback function.
+	 * @param theFlushHandler		an optional user-defined callback function.
 	 * @return	0 for success 
 	 */
 	int
@@ -283,10 +283,10 @@ public:
 			const XSLTInputSource&		theInputSource, 		
 			const void*					theOutputHandle, 
 			XalanOutputHandlerType		theOutputHandler,
-			XalanFlushHandlerType		theFlushHandler =0);
+			XalanFlushHandlerType		theFlushHandler = 0);
 
 	/**
-	 * Creates a complied stylesheet.  The input source can be 
+	 * Creates a compeled stylesheet.  The input source can be 
 	 * a file name, a stream or a root node.   The XalanTransformer
 	 * instance owns the XalanCompiledStylesheet instance and will
 	 * delete it when the XalanTransformer instance goes out of scope,
@@ -404,8 +404,8 @@ public:
 	 */
 	void
 	uninstallExternalFunction(
-			const char*				theNamespace,
-			const char*				functionName);
+			const char*		theNamespace,
+			const char*		functionName);
 
 	/**
 	 * Set a top-level stylesheet parameter.  This value can be evaluated via
@@ -463,6 +463,24 @@ private:
 
 	void
 	reset();
+
+	class EnsureReset
+	{
+	public:
+
+		EnsureReset(XalanTransformer&	theTransformer) :
+			m_transformer(theTransformer)
+		{
+		}
+
+		~EnsureReset();
+
+	private:
+
+		XalanTransformer&	m_transformer;
+	};
+
+	friend class EnsureReset;
 
 	StylesheetExecutionContextDefault		m_stylesheetExecutionContext;
 

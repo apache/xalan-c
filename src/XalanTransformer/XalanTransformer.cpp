@@ -251,6 +251,8 @@ XalanTransformer::transform(
 					*(m_functionPairs[f].second));
 		}
 
+		const EnsureReset	theReset(*this);
+
 		// Do the transformation...
 		theProcessor.process(
 					theParsedXML.getDocument(),
@@ -258,8 +260,6 @@ XalanTransformer::transform(
 					tempResultTarget,
 					theStylesheetConstructionContext,
 					m_stylesheetExecutionContext);
-
-		reset();
 	}
 	catch (XSLException& e)
 	{
@@ -318,14 +318,6 @@ XalanTransformer::transform(
 
 		theResult = -4;
 	}
-
-	m_stylesheetExecutionContext.setXPathEnvSupport(0);
-
-	m_stylesheetExecutionContext.setDOMSupport(0);
-
-	m_stylesheetExecutionContext.setXObjectFactory(0);
-
-	m_stylesheetExecutionContext.setXSLTProcessor(0);
 
 	return theResult;
 }
@@ -413,6 +405,8 @@ XalanTransformer::transform(
 					*(m_functionPairs[f].second));
 		}
 
+		const EnsureReset	theReset(*this);
+
 		// Do the transformation...
 		theProcessor.process(
 					theParsedXML.getDocument(),		
@@ -477,16 +471,6 @@ XalanTransformer::transform(
 		theResult = -4;
 	}
 
-	m_stylesheetExecutionContext.setXPathEnvSupport(0);
-
-	m_stylesheetExecutionContext.setDOMSupport(0);
-
-	m_stylesheetExecutionContext.setXObjectFactory(0);
-
-	m_stylesheetExecutionContext.setXSLTProcessor(0);
-
-	reset();
-	
 	return theResult;
 }
 
@@ -715,6 +699,7 @@ XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 		}
 	}
+
 	return 0;
 }
 
@@ -826,6 +811,7 @@ XalanTransformer::parseSource(
 			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 		}
 	}
+
 	return 0;
 }
 
@@ -957,7 +943,7 @@ XalanTransformer::getLastError() const
 
 
 
-void 
+void
 XalanTransformer::reset()
 {
 	try
@@ -979,4 +965,14 @@ XalanTransformer::reset()
 	catch(...)
 	{
 	}
+}
+
+
+
+
+XalanTransformer::EnsureReset::~EnsureReset()
+{
+	m_transformer.m_stylesheetExecutionContext.reset();
+
+	m_transformer.reset();
 }
