@@ -592,6 +592,18 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc, const Xala
 			return false;
 		}
 	}
+	else if ( domNextNode)
+	{
+			reportDOMError(fileName, docNodeName, "Error: Transformed Doc has additional sibling nodes: ");
+			cout << c_str(TranscodeToLocalCodePage(domNextNode->getNodeName())) << endl; 
+			if ( domNextNode->getNodeType() == XalanNode::TEXT_NODE)
+			{
+				cout << "	"
+					 << "\"" << c_str(TranscodeToLocalCodePage(domNextNode->getNodeValue())) << "\"" << endl;
+			}
+			return false;
+
+	}
 
 	return true;
 }
