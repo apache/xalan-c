@@ -214,7 +214,7 @@ main(
 
 		// Defined basic constants for file manipulation 
 
-		const XalanDOMString  resultFilePrefix(XalanDOMString("params"));
+		const XalanDOMString  resultFilePrefix("params");
 		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
 		
 		XMLFileReporter	logFile(resultsFile);
@@ -230,7 +230,7 @@ main(
 				XalanTransformer		transformEngine;
 					
 				// Check that output directory is there.
-				const XalanDOMString  xMan(XalanDOMString("xmanual"));
+				const XalanDOMString  xMan("xmanual");
 				const XalanDOMString  theOutputDir = outputRoot + xMan;
 				f.checkAndCreateDir(theOutputDir);
 
@@ -260,21 +260,28 @@ main(
 						// Set the desired parameters
 						switch (getTestNumber(files[i]))
 						{	case 1:
-								transformEngine.setStylesheetParam("input", "'testing 1 2 3'");
+								transformEngine.setStylesheetParam(XalanDOMString("input"), 
+																   XalanDOMString("'testing 1 2 3'"));
 								break;
 							case 2:
-								transformEngine.setStylesheetParam("in1", "'A '");
+								transformEngine.setStylesheetParam(XalanDOMString("in1"), 
+																   XalanDOMString("'A '"));
 								transformEngine.setStylesheetParam(XalanDOMString("in2"), 
 																   XalanDOMString("'B '"));
-								transformEngine.setStylesheetParam("in3", "'C '");
-								transformEngine.setStylesheetParam("in4", "'D '");
-								transformEngine.setStylesheetParam("in5", "'E '");
+								transformEngine.setStylesheetParam(XalanDOMString("in3"),
+																   XalanDOMString("'C '"));
+								transformEngine.setStylesheetParam(XalanDOMString("in4"),
+																   XalanDOMString("'D '"));
+								transformEngine.setStylesheetParam(XalanDOMString("in5"),
+																   XalanDOMString("'E '"));
 								break;
 							case 3:
-								transformEngine.setStylesheetParam("'xyz:in1'", "'DATA'");
+								transformEngine.setStylesheetParam(XalanDOMString("'xyz:in1'"),
+															       XalanDOMString("'DATA'"));
 								break;
 							default:
-								transformEngine.setStylesheetParam("input", "'testing 1 2 3'");
+								transformEngine.setStylesheetParam(XalanDOMString("input"),
+																   XalanDOMString("'testing 1 2 3'"));
 								break;
 						}
 
