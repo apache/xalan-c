@@ -20,10 +20,6 @@
 
 
 
-class XMLException;
-
-
-
 int
 main(
 			int				argc,
@@ -68,7 +64,7 @@ main(
 		for (size_t i=0; i<len; i++)
 			cout << "item " << (i+1) << "= \"" << &*result[i].begin() << "\"" << endl;
 	}
-	catch(const XMLException&)
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
 	{
 		cerr << "Exception caught!  Exiting..." << endl;
 	}
