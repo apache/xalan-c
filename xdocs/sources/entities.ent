@@ -16,13 +16,13 @@
  -->
 
 <!ENTITY xslt4c "Xalan-C++">
-<!ENTITY xslt4c-dist "Xalan-C_1_8_0">
-<!ENTITY xslt4c-current "Xalan-C++ version 1.8">
-<!ENTITY xslt4c-windll "Xalan-C_1_8.dll">
-<!ENTITY xslt4c-linuxlib "libxalan-c.so.18">
-<!ENTITY xslt4c-aixlib "libxalan-c18.so">
-<!ENTITY xslt4c-hplib "libxalan-c.sl.18.0">
-<!ENTITY xslt4c-solarislib "libxalan-c1_8.so">
+<!ENTITY xslt4c-dist "Xalan-C_1_9_0">
+<!ENTITY xslt4c-current "Xalan-C++ version 1.9">
+<!ENTITY xslt4c-windll "Xalan-C_1_9.dll">
+<!ENTITY xslt4c-linuxlib "libxalan-c.so.19">
+<!ENTITY xslt4c-aixlib "libxalan-c19.so">
+<!ENTITY xslt4c-hplib "libxalan-c.sl.19.0">
+<!ENTITY xslt4c-solarislib "libxalan-c1_9.so">
 <!ENTITY xslt4c-win_root "xml-xalan\c">
 <!ENTITY xslt4c-unix_root "xml-xalan/c">
 
@@ -33,14 +33,15 @@
 <!ENTITY aix51v6_64-dist "-aix_510_64-xlc_60_040127">
 <!ENTITY redhat_72_icc-dist "-redhat_72-icc_71">
 <!ENTITY redhat_72_ecc-dist "-redhat_72_64-ecc_71">
+<!ENTITY redhat_80_gcc-dist "-redhat_80-gcc_32">
 <!ENTITY hpux11a-dist "-hpux_11-acc_a03">
 <!ENTITY hpux11a_64-dist "-hpux_11_64-acc_a03">
 <!ENTITY hpux11c-dist "-hpux_11-acc_c03">
 <!ENTITY hpux11c_64-dist "-hpux_11_64-acc_c03">
 <!ENTITY hpux11i-dist "-hpux_11i-acc_c03">
 <!ENTITY hpux11i_64-dist "-hpux_11i_64-acc_c03">
-<!ENTITY solaris_27-dist "-solaris_27-cc_62">
-<!ENTITY solaris_27_64-dist "-solaris_27_64-cc_62">
+<!ENTITY solaris_28-dist "-solaris_28-cc_62">
+<!ENTITY solaris_28_64-dist "-solaris_28_64-cc_62">
 <!ENTITY suse_72_zOS-dist "-suse_72_zOS-gcc_29">
 <!ENTITY suse_80_AMD_64-dist "-suse_80_AMD_64-gcc_32">
 <!ENTITY suse_81_IA-dist "-suse_81-gcc_32">
@@ -58,12 +59,13 @@
 <!ENTITY xslt4c-aix51v5_64-dist "&xslt4c-dist;&aix51v5_64-dist;&unix_ext;">
 <!ENTITY xslt4c-aix51v6-dist "&xslt4c-dist;&aix51v6-dist;&unix_ext;">
 <!ENTITY xslt4c-aix51v6_64-dist "&xslt4c-dist;&aix51v6_64-dist;&unix_ext;">
-<!ENTITY xslt4c-hpux11a-dist "&xslt4c-dist;&hpux11a-dist;&unix_ext;">
-<!ENTITY xslt4c-hpux11a_64-dist "&xslt4c-dist;&hpux11a_64-dist;&unix_ext;">
+<!ENTITY xslt4c-hpux11i-dist "&xslt4c-dist;&hpux11i-dist;&unix_ext;">
+<!ENTITY xslt4c-hpux11i_64-dist "&xslt4c-dist;&hpux11i_64-dist;&unix_ext;">
 <!ENTITY xslt4c-redhat72_icc-dist "&xslt4c-dist;&redhat_72_icc-dist;&unix_ext;">
 <!ENTITY xslt4c-redhat72_ecc-dist "&xslt4c-dist;&redhat_72_ecc-dist;&unix_ext;">
-<!ENTITY xslt4c-solaris27-dist "&xslt4c-dist;&solaris_27-dist;&unix_ext;">
-<!ENTITY xslt4c-solaris27_64-dist "&xslt4c-dist;&solaris_27_64-dist;&unix_ext;">
+<!ENTITY xslt4c-redhat80-dist "&xslt4c-dist;&redhat_80_gcc-dist;&unix_ext;">
+<!ENTITY xslt4c-solaris28-dist "&xslt4c-dist;&solaris_28-dist;&unix_ext;">
+<!ENTITY xslt4c-solaris28_64-dist "&xslt4c-dist;&solaris_28_64-dist;&unix_ext;">
 <!ENTITY xslt4c-suse72_zOS-dist "&xslt4c-dist;&suse_72_zOS-dist;&unix_ext;">
 <!ENTITY xslt4c-suse80_AMD_64-dist "&xslt4c-dist;&suse_80_AMD_64-dist;&unix_ext;">
 <!ENTITY xslt4c-suse81_IA-dist "&xslt4c-dist;&suse_81_IA-dist;&unix_ext;">
@@ -77,27 +79,27 @@
 <!ENTITY xslt4c-docs_dist_targz "&xslt4c-dist;-docs&unix_ext;">
 
 <!ENTITY xml4c "Xerces-C++">
-<!ENTITY xml4c-used "Xerces-C++ version 2.5.0">
-<!ENTITY xml4c-dist "xerces-c2_5_0">
-<!ENTITY xml4c-windll "xerces-c_2_5_0.dll">
+<!ENTITY xml4c-used "Xerces-C++ version 2.6.0">
+<!ENTITY xml4c-dist "xerces-c2_6_0">
+<!ENTITY xml4c-windll "xerces-c_2_6_0.dll">
 <!ENTITY xml4c-winlib "xerces-c_2.lib">
-<!ENTITY xml4c-linuxlib "libxerces-c.so.25.0">
-<!ENTITY xml4c-aixlib "libxerces-c25.0.a">
-<!ENTITY xml4c-hplib "libxerces-c.sl.25.0">
-<!ENTITY xml4c-solarislib "libxerces-c.so.25.0">
+<!ENTITY xml4c-linuxlib "libxerces-c.so.26.0">
+<!ENTITY xml4c-aixlib "libxerces-c26.0.a">
+<!ENTITY xml4c-hplib "libxerces-c.sl.26.0">
+<!ENTITY xml4c-solarislib "libxerces-c.so.26.0">
 
 <!ENTITY xml4c-aix43v5-dist "&xml4c-dist;&aix43v5-dist;&unix_ext;">
 <!ENTITY xml4c-aix51v5-dist "&xml4c-dist;&aix51v5-dist;&unix_ext;">
 <!ENTITY xml4c-aix51v6-dist "&xml4c-dist;&aix51v6-dist;&unix_ext;">
 <!ENTITY xml4c-aix51v5_64-dist "&xml4c-dist;&aix51v5_64-dist;&unix_ext;">
 <!ENTITY xml4c-aix51v6_64-dist "&xml4c-dist;&aix51v6_64-dist;&unix_ext;">
-<!ENTITY xml4c-hpux11a-dist "&xml4c-dist;&hpux11a-dist;&unix_ext;">
-<!ENTITY xml4c-hpux11a_64-dist "&xml4c-dist;&hpux11a_64-dist;&unix_ext;">
+<!ENTITY xml4c-hpux11i-dist "&xml4c-dist;&hpux11i-dist;&unix_ext;">
+<!ENTITY xml4c-hpux11i_64-dist "&xml4c-dist;&hpux11i_64-dist;&unix_ext;">
 <!ENTITY xml4c-redhat72_icc-dist "&xml4c-dist;&redhat_72_icc-dist;&unix_ext;">
 <!ENTITY xml4c-redhat72_ecc-dist "&xml4c-dist;&redhat_72_ecc-dist;&unix_ext;">
-<!ENTITY xml4c-redhat80_gcc-dist "&xml4c-dist;&redhat_80_gcc-dist;&unix_ext;">
-<!ENTITY xml4c-solaris27-dist "&xml4c-dist;&solaris_27-dist;&unix_ext;">
-<!ENTITY xml4c-solaris27_64-dist "&xml4c-dist;&solaris_27_64-dist;&unix_ext;">
+<!ENTITY xml4c-redhat80-dist "&xml4c-dist;&redhat_80_gcc-dist;&unix_ext;">
+<!ENTITY xml4c-solaris28-dist "&xml4c-dist;&solaris_28-dist;&unix_ext;">
+<!ENTITY xml4c-solaris28_64-dist "&xml4c-dist;&solaris_28_64-dist;&unix_ext;">
 <!ENTITY xml4c-suse72_zOS-dist "&xml4c-dist;&suse_72_zOS-dist;&unix_ext;">
 <!ENTITY xml4c-suse80_AMD_64-dist "&xml4c-dist;&suse_80_AMD_64-dist;&unix_ext;">
 <!ENTITY xml4c-suse81_IA-dist "&xml4c-dist;&suse_81_IA-dist;&unix_ext;">
@@ -107,9 +109,9 @@
 <!ENTITY xml4c-win2003c_64-dist "&xml4c-dist;&win2003c_64-dist;&win_ext;">
 
 <!ENTITY xslt4j "Xalan-Java">
-<!ENTITY icu-used "International Components for Unicode(ICU) 2.6.1 source files">
-<!ENTITY icu-current "International Components for Unicode(ICU) version 2.6.1">
-<!ENTITY icu-windlls "icui18n.dll, icuuc.dll">
+<!ENTITY icu-used "International Components for Unicode(ICU) 3.0 source files">
+<!ENTITY icu-current "International Components for Unicode(ICU) version 3.0">
+<!ENTITY icu-windlls "icui30n.dll, icuuc.dll">
 <!ENTITY icubridge-win "ICUBridge.dll">
 <!ENTITY done SYSTEM "xalan/DONE">
 <!ENTITY status SYSTEM "xalan/STATUS">
