@@ -73,6 +73,7 @@
 
 
 #include <PlatformSupport/AttributeListImpl.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
