@@ -227,6 +227,20 @@ protected:
 		eDefaultVectorSize = 1000
 	};
 
+	/**
+	 * Ensure that an allocation is either the default allocation
+	 * amount, or the amount specified in the parameter, whichever
+	 * is larger.
+	 *
+	 * @param theSize The requested size.
+	 */
+	void
+	ensureAllocation(NodeListVectorType::size_type	theSize = 0)
+	{
+		m_nodeList.reserve(eDefaultVectorSize > theSize ? eDefaultVectorSize : theSize);
+	}
+
+
 private:
 
 	XPathSupport*	m_support;

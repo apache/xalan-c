@@ -78,7 +78,6 @@ MutableNodeRefList::MutableNodeRefList(XPathSupport*	theSupport) :
 	NodeRefList(),
 	m_support(theSupport)
 {
-	m_nodeList.reserve(eDefaultVectorSize);
 }
 
 
@@ -167,6 +166,8 @@ MutableNodeRefList::addNode(XalanNode*	n)
 {
 	if (n != 0)
 	{
+		ensureAllocation();
+
 		m_nodeList.push_back(n);
 	}
 }
@@ -182,6 +183,8 @@ MutableNodeRefList::insertNode(
 
 	if (n != 0)
 	{
+		ensureAllocation();
+
 		m_nodeList.insert(&m_nodeList[pos], n);
 	}
 }
@@ -269,7 +272,7 @@ MutableNodeRefList::addNodes(const NodeRefListBase&		nodelist)
 	// more space than necessary, but it's a small price to
 	// pay for the increased speed.  We can always shrink by
 	// swapping if we have way to much space.
-	m_nodeList.reserve(getLength() + theLength);
+	ensureAllocation(getLength() + theLength);
 
 	for (unsigned int i = 0; i < theLength; i++)
 	{
@@ -288,7 +291,7 @@ MutableNodeRefList::addNodesInDocOrder(const XalanNodeList&		nodelist)
 	// more space than necessary, but it's a small price to
 	// pay for the increased speed.  We can always shrink by
 	// swapping if we have way to much space.
-	m_nodeList.reserve(getLength() + theLength);
+	ensureAllocation(getLength() + theLength);
 
 	for(unsigned int i = 0; i < theLength; i++)
 	{
@@ -307,7 +310,7 @@ MutableNodeRefList::addNodesInDocOrder(const NodeRefListBase&	nodelist)
 	// more space than necessary, but it's a small price to
 	// pay for the increased speed.  We can always shrink by
 	// swapping if we have way to much space.
-	m_nodeList.reserve(getLength() + theLength);
+	ensureAllocation(getLength() + theLength);
 
 	for(unsigned int i = 0; i < theLength; i++)
 	{
@@ -324,6 +327,8 @@ MutableNodeRefList::addNodeInDocOrder(
 {
 	if (node != 0)
 	{
+		ensureAllocation();
+
 		const unsigned int	size = getLength();
 
 		if (test == false || m_support == 0 || size == 0)
