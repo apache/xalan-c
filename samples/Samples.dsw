@@ -192,6 +192,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "SimpleXPathCAPI"=".\SimpleXPathCAPI\SimpleXPathCAPI.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XPathCAPI
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "StreamTransform"=".\StreamTransform\StreamTransform.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -349,6 +364,30 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XPathCAPI"="..\Projects\Win32\VC6\XPathCAPI\XPathCAPI.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
     End Project Dependency
 }}}
 
