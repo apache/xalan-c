@@ -81,9 +81,12 @@
     <p>Major updates since version 1.1 include:</p>
      <ul>
       <li><link idref="extensionslib">Introduction of a library of extension functions</link></li>
-      <li></li>      
-      <li></li>
-      <li></li>
+      <li>Support for pre-parsed source documents and pre-compiled stylesheets in 
+      <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> and the C API.</li>
+      <li>Support for stylesheet params in <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> 
+      and the C API</li>
+      <li>Support for extension functions in <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump></li>
+      <li>Performance enhancements</li>
       </ul>
    </s3>  
      <anchor name="bugs"/>
@@ -173,7 +176,7 @@
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>chmod +x conf*</code><br/><br/></li>
       <li>Run the runConfigure utility with at least the platform flag (Linux) or the platform, C compilier, and C++ compiler flags (AIX) as indicated below.<br/><br/>
       <ref>Linux:</ref>&nbsp;&nbsp;<code>runConfigure -p linux</code><br/>
-      <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc_r -x xlC_r</code><br/><br/>
+      <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc -x xlC</code><br/><br/>
       <ref>HP-UX 11:</ref>&nbsp;&nbsp;<code>runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>
       <ref>Solaris:</ref>&nbsp;&nbsp;<code>runConfigure -p solaris -c cc -x CC</code><br/><br/>            
       To see the other runConfigure flags you may include, use the help flag:<br/><br/>
@@ -185,13 +188,13 @@
       or<br/>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make <ref>targ</ref></code><br/><br/>
       where <ref>targ</ref> is ommitted or is <code>all</code> (rebuild all), <code>lib</code> (the XSLT libary), or
-      <code>TestXSLT</code> (the TestSXSLT executable). ICUBridge is included in the build of TestXSLT if XALAN_USE_ICU is
+      <code>testXSLT</code> (the testSXSLT executable). ICUBridge is included in the build of TestXSLT if XALAN_USE_ICU is
       defined.<br/><br/></li>
     </ol>
     <note>The command you use for setting environment variables depends on the shell you are
      using.<br/>
-     For Bourne Shell, K Shell, or Bash use <em>export</em> ENVAR "val"<br/>
-     For C Shell, use <em>setenv</em> ENVAR="val"<br/>
+     For Bourne Shell, K Shell, or Bash use <em>export</em> ENVAR="val"<br/>
+     For C Shell, use <em>setenv</em> ENVAR "val"<br/>
      where ENVAR is the environment variable name and val is the environment variable
      setting. You can check the setting of an environment variable with <em>echo</em> $ENVAR</note>
    </s3><anchor name="samples"/>

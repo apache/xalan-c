@@ -158,10 +158,10 @@ private:
 }</source>   
 </s2><anchor name="install"/>
 <s2 title="Installing an extension function">
-<p><jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> provides methods for installing and unistalling external functions:</p>
+<p><jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> provides methods for installing and unistalling external functions:</p>
 <ul>
 <li>installExternalFunction() makes the function available in the current instance of XalanTransformer. Use uninstallExternalFunction() to remove the function.<br/><br/></li>
-<li>installExternalFunctionGlobal() makes the function available globally. Use uninstallExternalFunctionGlobal() to remove the function. The global functions are static.</li>
+<li>installExternalFunctionGlobal() makes the function available globally. Use uninstallExternalFunctionGlobal() to remove the function. The global functions are static; they are not thread-safe!</li>
 </ul>
 <p>These methods include arguments for the namespace, the function name, and the function implementation.</p>
 <p>When you install an extension function, the function inhabits the namespace you designate. For information about XML namespaces, see <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces in XML</jump>.</p>
@@ -227,7 +227,7 @@ see the <link idref="samples" anchor="externalfunctions">External Functions</lin
 <p>Please keep in mind that <em>all</em> LocationPath expressions return a node-set, even if the expression only 
 returns a single attribute or a text node (node-sets with one member). You can use the XSLT string() function 
 to convert a node-set value to string, and the number() function to convert a node-set value to number (a double).</p>
-<p>If you want to pass a node-set to an extension function, set up the function to accept a <jump href="apidocs/class_xnodeset.html">XNodeSet</jump>.</p>
+<p>If you pass a node-set to an extension function, be sure to set up the function to process a node-set.</p>
 <p>Suppose, for example, you have a ProcessNodes function class that uses<br/><br/> 
 <code>const NodeRefListBase&amp; theNodeList = args[0]->nodeset();</code><br/><br/>
 in the execute() method to get a reference to the node-set.</p>
