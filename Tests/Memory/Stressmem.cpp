@@ -196,7 +196,7 @@ main(
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 				{
-					const FileNameVectorType	files = f.getTestFileNames(confDir, dirs[j]);
+					const FileNameVectorType	files = f.getTestFileNames(confDir, dirs[j],true);
 
 					for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 					{
