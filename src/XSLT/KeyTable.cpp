@@ -113,11 +113,8 @@ KeyTable::KeyTable(
 
 		if(XalanNode::ELEMENT_NODE == pos->getNodeType())
 		{
-#if defined(XALAN_OLD_STYLE_CASTS)
-			attrs = ((const XalanElement*)pos)->getAttributes();
-#else
-			attrs = static_cast<const XalanElement*>(pos)->getAttributes();
-#endif
+			attrs = pos->getAttributes();
+
 			nNodes = attrs->getLength();
         
 			if(0 == nNodes)
@@ -171,7 +168,7 @@ KeyTable::KeyTable(
 				} // if (kd.getInConstruction() == true)
 			} // end for(int i = 0; i < nDeclarations; ++i)
 
-			nodeIndex++;
+			++nodeIndex;
 
 			if(0 != attrs)
 			{
@@ -245,7 +242,7 @@ KeyTable::getNodeSetByKey(
 
 
 
-void
+inline void
 KeyTable::addIfNotFound(
 			MutableNodeRefList&		theNodeList,
 			XalanNode*				theNode)
@@ -270,10 +267,9 @@ KeyTable::processKeyDeclaration(
 	// use attribute in xsl:key.
 	assert(kd.getUse() != 0);
 
-	const XObjectPtr	xuse =
-			kd.getUse()->execute(testNode, resolver, NodeRefList(), executionContext);
+	const XObjectPtr	xuse(kd.getUse()->execute(testNode, resolver, NodeRefList(), executionContext));
 
-	if(xuse->getType() != xuse->eTypeNodeSet)
+	if(xuse->getType() != XObject::eTypeNodeSet)
 	{
 		addIfNotFound(
 			theKeys[kd.getName()][xuse->str()],
