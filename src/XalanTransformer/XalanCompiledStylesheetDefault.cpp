@@ -74,9 +74,15 @@ public:
 		m_errorHandler(theParserLiaison.getErrorHandler()),
 		m_entityResolver(theParserLiaison.getEntityResolver())
 	{
-		theParserLiaison.setErrorHandler(theErrorHandler);
+		if (theErrorHandler != 0)
+		{
+			theParserLiaison.setErrorHandler(theErrorHandler);
+		}
 
-		theParserLiaison.setEntityResolver(theEntityResolver);
+		if (theEntityResolver != 0)
+		{
+			theParserLiaison.setEntityResolver(theEntityResolver);
+		}
 	}
 
 	~SetAndRestoreHandlers()
