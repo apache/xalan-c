@@ -34,6 +34,32 @@
     
     <a><p>The &xslt4c; release notes includes information about the &xml4c; release with which the &xslt4c; release has been coordinated and tested. See <link idref="readme" anchor="status">Status</link></p><!--xml4cNote--></a>
   </faq>
+
+<faq title="Should I be using the Xerces DOM or Xalan DOM?">
+	<q>Should I be using the Xerces DOM or Xalan DOM?</q>
+
+	<a>
+	  <p>The Xalan DOM implementation is highly optimised for transformations.
+However, whilst you can build documents in the Xalan DOM, subsequent 
+modification will not work.  The Xalan DOM is designed to be either an
+input or an output from a transformation, not as a general DOM 
+implementation.</p>
+
+	  <p>So in cases where you want to simply transform documents using
+Xalan, using the internal DOM implementation is the best approach.</p>
+
+	  <p>In cases where you want to modify the DOM document on the fly,
+you should use the Xerces DOM as the base document.  You can wrap the 
+Xerces DOM in a wrapper (see  <link anchor="xercesdomwrapperparsedsource">
+passing in a Xerces DOM</link>) to then use as an input to a Xalan
+transformation.  Alternatively you can output the result of
+a transformation to a Xerces DOM document (see 
+<link anchor="dom">working with DOM input and output</link>).  
+In either case, the Xerces 
+document can be freely modified.  However, after you modify the document,
+you need to re-build the wrapper so that any changes are replicated in the
+Xalan wrappers.</p></a>
+</faq>
   
 <faq title="Problems with samples in Windows">
 <q>I have encountered problem executing the &xslt4c; sample applications after rebuilding them under Win32 Environment (Windows NT 4.0, SP3).
