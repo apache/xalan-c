@@ -81,7 +81,12 @@
 
 
 
+#include <XSLT/NodeSorter.hpp>
+
+
+
 class AttributeList;
+class NodeRefListBase;
 class QName;
 class Stylesheet;
 class StylesheetConstructionContext;
@@ -676,8 +681,83 @@ protected:
 			XalanNode*						sourceNodeContext,
 			const QName&					mode,
 			const XPath*					selectPattern,
-			int	xslToken,
-			int selectStackFrameIndex) const;
+			int								xslToken,
+			int								selectStackFrameIndex) const;
+
+	/**
+	 * Perform a query if needed, and call transformChild for each child.
+	 * 
+	 * @param stylesheetTree The owning stylesheet tree.
+	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
+	 *      not think we need this).
+	 * @param template The owning template context.
+	 * @param sourceTree The input source tree.
+	 * @param sourceNodeContext The current source node context.
+	 * @param mode The current mode.
+	 * @param selectPattern The XPath with which to perform the selection.
+	 * @param xslToken The current XSLT instruction (deprecated -- I do not     
+	 *     think we want this).
+	 * @param selectStackFrameIndex stack frame context for executing the
+	 *                              select statement
+	 */
+	void
+	doTransformSelectedChildren(
+			StylesheetExecutionContext&					executionContext,
+			const Stylesheet&							stylesheetTree,
+			const ElemTemplateElement&					xslInstruction,
+			const ElemTemplateElement*					theTemplate,
+			XalanNode*									sourceTree,
+			XalanNode*									sourceNodeContext,
+			const QName&								mode,
+			int											xslToken,
+			int											selectStackFrameIndex,
+			const NodeSorter::NodeSortKeyVectorType&	keys,
+			const NodeRefListBase&						sourceNodes,
+			unsigned int								sourceNodesCount) const;
+
+	/**
+	 * Perform a query if needed, and call transformChild for each child.
+	 * 
+	 * @param stylesheetTree The owning stylesheet tree.
+	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
+	 *      not think we need this).
+	 * @param template The owning template context.
+	 * @param sourceTree The input source tree.
+	 * @param sourceNodeContext The current source node context.
+	 * @param mode The current mode.
+	 * @param selectPattern The XPath with which to perform the selection.
+	 * @param xslToken The current XSLT instruction (deprecated -- I do not     
+	 *     think we want this).
+	 * @param selectStackFrameIndex stack frame context for executing the
+	 *                              select statement
+	 */
+	void
+	doTransformSelectedChildren(
+			StylesheetExecutionContext&					executionContext,
+			const Stylesheet&							stylesheetTree,
+			const ElemTemplateElement&					xslInstruction,
+			const ElemTemplateElement*					theTemplate,
+			XalanNode*									sourceTree,
+			XalanNode*									sourceNodeContext,
+			const QName&								mode,
+			int											xslToken,
+			int											selectStackFrameIndex,
+			const NodeSorter::NodeSortKeyVectorType&	keys,
+			const XalanNodeList&						childNodes,
+			unsigned int								childNodeCount) const;
+
+	void
+	doTransformSelectedChildren(
+			StylesheetExecutionContext&			executionContext,
+			const Stylesheet&					stylesheetTree,
+			const ElemTemplateElement&			xslInstruction,
+			const ElemTemplateElement*			theTemplate,
+			XalanNode*							sourceTree,
+			XalanNode*							sourceNodeContext,
+			const QName&						mode,
+			int									xslToken,
+			const NodeRefListBase&				sourceNodes,
+			unsigned int						sourceNodesCount) const;
 
   /**
    * Tell if the result namespace decl should be excluded.  Should be called before 

@@ -96,8 +96,7 @@
 #include "ElemForEach.hpp"
 #include "ElemSort.hpp"
 #include "ElemTemplate.hpp"
-#include "NodeSortKey.hpp"
-#include "NodeSorter.hpp"
+//#include "NodeSortKey.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetExecutionContext.hpp"
 #include "StylesheetRoot.hpp"
@@ -579,7 +578,7 @@ ElemTemplateElement::transformSelectedChildren(
 			const QName&					mode,
 			const XPath*					selectPattern,
 			int								xslToken,
-			int selectStackFrameIndex) const
+			int								selectStackFrameIndex) const
 {
 	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
 
@@ -630,9 +629,6 @@ ElemTemplateElement::transformSelectedChildren(
 			keys.push_back(key);
 		}
 	}
-	// @@ JMD: Now in method processSortKeys in java ...
-
-	MutableNodeRefList	sourceNodes = executionContext.createMutableNodeRefList();
 
 /*
 	@@@ JMD: This is newer java code that is not implemented in C++; so, the
@@ -645,35 +641,42 @@ ElemTemplateElement::transformSelectedChildren(
 
 	if (0 != selectPattern)
 	{
-		SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
-				executionContext,
-				selectStackFrameIndex);
+		XObject*	theXObject = 0;
 
-/*
-	@@@ JMD: This is newer java code that is not implemented in C++; the
-	callback mechanism may affect the correct positioning of the stack frame and
-	may be why the parameters aren't working right
+		{
+			SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
+					executionContext,
+					selectStackFrameIndex);
 
-      // Optimization note: is there a way we can keep from creating 
-      // a new callback context every time?
-      TemplateElementContext callbackContext 
-        = (null != callback) 
-			 ? new TemplateElementContext(stylesheetTree, xslInstruction,
-					 template, sourceNodeContext, mode, xslToken, tcontext,
-					 savedCurrentStackFrameIndex) : null;
-*/
+	/*
+		@@@ JMD: This is newer java code that is not implemented in C++; the
+		callback mechanism may affect the correct positioning of the stack frame and
+		may be why the parameters aren't working right
 
-		const XObjectGuard	result(
-				executionContext.getXObjectFactory(),
-				selectPattern->execute(
-					sourceNodeContext,
-					xslInstruction,
-					executionContext));
+		  // Optimization note: is there a way we can keep from creating 
+		  // a new callback context every time?
+		  TemplateElementContext callbackContext 
+			= (null != callback) 
+				 ? new TemplateElementContext(stylesheetTree, xslInstruction,
+						 template, sourceNodeContext, mode, xslToken, tcontext,
+						 savedCurrentStackFrameIndex) : null;
+	*/
+
+			theXObject = 
+					selectPattern->execute(
+						sourceNodeContext,
+						xslInstruction,
+						executionContext);
+		}
 
 		// @@ JMD: Should this be an assert ??
-		if (0 != result.get())
+		if (0 != theXObject)
 		{
-			sourceNodes = result->mutableNodeset();
+			const XObjectGuard	result(
+					executionContext.getXObjectFactory(),
+					theXObject);
+
+			const NodeRefListBase* const	sourceNodes = &result->mutableNodeset();
 
 			if(0 != executionContext.getTraceListeners())
 			{
@@ -685,63 +688,202 @@ ElemTemplateElement::transformSelectedChildren(
 							*selectPattern,
 							result.get()));
 			}
+
+			const unsigned int	nNodes = sourceNodes->getLength();
+
+			if (nNodes > 0)
+			{
+				doTransformSelectedChildren(
+						executionContext,
+						stylesheetTree,
+						xslInstruction,
+						theTemplate,
+						sourceTree,
+						sourceNodeContext,
+						mode,
+						xslToken,
+						selectStackFrameIndex,
+						keys,
+						*sourceNodes,
+						nNodes);
+			}
 		}
 	}
 	else if (keys.size() > 0)
 	{
-		sourceNodes = sourceNodeContext->getChildNodes();
-	}
+		const XalanNodeList* const	childNodes =
+						sourceNodeContext->getChildNodes();
 
-	const unsigned int	nNodes = sourceNodes.getLength();
+		const unsigned int	nNodes = childNodes->getLength();
 
-	if(nNodes > 0)
-	{
-		if (keys.size() > 0)
+		if (nNodes > 0)
 		{
-			NodeSorter sorter(executionContext);
-
-			SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
-				executionContext,
-				selectStackFrameIndex);
-
-			sorter.sort(sourceNodes, keys);
-		}
-
-		if(executionContext.getTraceSelects() == true)
-		{
-			executionContext.traceSelect(
-				xslInstruction,
-				sourceNodes);
-		}
-
-		// Create an object to set and restore the context node list...
-		StylesheetExecutionContext::ContextNodeListSetAndRestore	theSetAndRestore(
-				executionContext,
-				sourceNodes);
-
-		for(unsigned int i = 0; i < nNodes; i++) 
-		{
-			XalanNode*				childNode = sourceNodes.item(i);
-			assert(childNode != 0);
-
-			XalanDocument* const	ownerDoc = childNode->getOwnerDocument();
-
-			if(XalanNode::DOCUMENT_NODE != childNode->getNodeType() && ownerDoc == 0)
-			{
-				error(XalanDOMString("Child node does not have an owner document!"));
-			}
-
-			transformChild(
+			doTransformSelectedChildren(
 					executionContext,
 					stylesheetTree,
-					&xslInstruction,
+					xslInstruction,
 					theTemplate,
 					sourceTree,
-					sourceNodeContext, 
-					childNode,
+					sourceNodeContext,
 					mode,
-					xslToken);
+					xslToken,
+					selectStackFrameIndex,
+					keys,
+					*childNodes,
+					nNodes);
+			}
+	}
+}
+
+
+
+void
+ElemTemplateElement::doTransformSelectedChildren(
+			StylesheetExecutionContext&					executionContext,
+			const Stylesheet&							stylesheetTree,
+			const ElemTemplateElement&					xslInstruction,
+			const ElemTemplateElement*					theTemplate,
+			XalanNode*									sourceTree,
+			XalanNode*									sourceNodeContext,
+			const QName&								mode,
+			int											xslToken,
+			int											selectStackFrameIndex,
+			const NodeSorter::NodeSortKeyVectorType&	keys,
+			const NodeRefListBase&						sourceNodes,
+			unsigned int								sourceNodesCount) const
+{
+	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
+
+	if (keys.size() > 0)
+	{
+		MutableNodeRefList	sortedSourceNodes =
+				executionContext.createMutableNodeRefList();
+
+		sortedSourceNodes = sourceNodes;
+
+		{
+			NodeSorter	sorter;
+
+			SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
+					executionContext,
+					selectStackFrameIndex);
+
+			sorter.sort(executionContext, sortedSourceNodes, keys);
 		}
+
+		doTransformSelectedChildren(
+			executionContext,
+			stylesheetTree,
+			xslInstruction,
+			theTemplate,
+			sourceTree,
+			sourceNodeContext,
+			mode,
+			xslToken,
+			sortedSourceNodes,
+			sourceNodesCount);
+	}
+	else
+	{
+		doTransformSelectedChildren(
+			executionContext,
+			stylesheetTree,
+			xslInstruction,
+			theTemplate,
+			sourceTree,
+			sourceNodeContext,
+			mode,
+			xslToken,
+			sourceNodes,
+			sourceNodesCount);
+	}
+}
+
+
+
+void
+ElemTemplateElement::doTransformSelectedChildren(
+			StylesheetExecutionContext&					executionContext,
+			const Stylesheet&							stylesheetTree,
+			const ElemTemplateElement&					xslInstruction,
+			const ElemTemplateElement*					theTemplate,
+			XalanNode*									sourceTree,
+			XalanNode*									sourceNodeContext,
+			const QName&								mode,
+			int											xslToken,
+			int											selectStackFrameIndex,
+			const NodeSorter::NodeSortKeyVectorType&	keys,
+			const XalanNodeList&						childNodes,
+			unsigned int								childNodeCount) const
+{
+	MutableNodeRefList	sourceNodes = executionContext.createMutableNodeRefList();
+
+	sourceNodes = &childNodes;
+
+	doTransformSelectedChildren(
+			executionContext,
+			stylesheetTree,
+			xslInstruction,
+			theTemplate,
+			sourceTree,
+			sourceNodeContext,
+			mode,
+			xslToken,
+			selectStackFrameIndex,
+			keys,
+			sourceNodes,
+			childNodeCount);
+}
+
+
+
+void
+ElemTemplateElement::doTransformSelectedChildren(
+			StylesheetExecutionContext&			executionContext,
+			const Stylesheet&					stylesheetTree,
+			const ElemTemplateElement&			xslInstruction,
+			const ElemTemplateElement*			theTemplate,
+			XalanNode*							sourceTree,
+			XalanNode*							sourceNodeContext,
+			const QName&						mode,
+			int									xslToken,
+			const NodeRefListBase&				sourceNodes,
+			unsigned int						sourceNodesCount) const
+{
+	if(executionContext.getTraceSelects() == true)
+	{
+		executionContext.traceSelect(
+			xslInstruction,
+			sourceNodes);
+	}
+
+	// Create an object to set and restore the context node list...
+	StylesheetExecutionContext::ContextNodeListSetAndRestore	theSetAndRestore(
+				executionContext,
+				sourceNodes);
+
+	for(unsigned int i = 0; i < sourceNodesCount; i++) 
+	{
+		XalanNode* const		childNode = sourceNodes.item(i);
+		assert(childNode != 0);
+
+		XalanDocument* const	ownerDoc = childNode->getOwnerDocument();
+
+		if(XalanNode::DOCUMENT_NODE != childNode->getNodeType() && ownerDoc == 0)
+		{
+			error(XalanDOMString("Child node does not have an owner document!"));
+		}
+
+		transformChild(
+				executionContext,
+				stylesheetTree,
+				&xslInstruction,
+				theTemplate,
+				sourceTree,
+				sourceNodeContext, 
+				childNode,
+				mode,
+				xslToken);
 	}
 }
 
