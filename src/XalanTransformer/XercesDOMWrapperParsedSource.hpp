@@ -68,6 +68,7 @@
 
 
 
+class DOMDocument;
 class DOM_Document;
 class XercesParserLiaison;
 class XercesDOMSupport;
@@ -84,6 +85,12 @@ public:
 
 	XercesDOMWrapperParsedSource(
 			const DOM_Document&		theDocument,
+			XercesParserLiaison&	theParserLiaison,
+			XercesDOMSupport&		theDOMSupport,
+			const XalanDOMString&	theURI = XalanDOMString());
+
+	XercesDOMWrapperParsedSource(
+			const DOMDocument*		theDocument,
 			XercesParserLiaison&	theParserLiaison,
 			XercesDOMSupport&		theDOMSupport,
 			const XalanDOMString&	theURI = XalanDOMString());

@@ -92,6 +92,22 @@ XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
 
 
 
+XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
+			const DOMDocument*		theDocument,
+			XercesParserLiaison&	theParserLiaison,
+			XercesDOMSupport&		theDOMSupport,
+			const XalanDOMString&	theURI) :
+	XalanParsedSource(),
+	m_parserLiaison(theParserLiaison),
+	m_domSupport(theDOMSupport),
+	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
+	m_uri(URISupport::NormalizeURIText(theURI))
+{
+	assert(m_parsedSource != 0);
+}
+
+
+
 XercesDOMWrapperParsedSource::~XercesDOMWrapperParsedSource()
 {
 	m_parserLiaison.destroyDocument(m_parsedSource);
