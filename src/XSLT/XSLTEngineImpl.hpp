@@ -105,7 +105,6 @@
 
 
 // Forward definitions
-class DispatcherFactory;
 class GenerateEvent;
 class PrintWriter;
 class ResultTreeFragBase;
@@ -1053,28 +1052,6 @@ public:
 	{
 		return *m_xpathProcessor.get();
 	}
-
-	/**
-	 * Given a classID and codetype, try to register a code dispatcher.
-	 *
-	 * @param classid	class id for extension
-	 * @param codetype type of extension
-	 */
-	void
-	registerExtensionHandlerByName(
-			const XalanDOMString&	classid,
-			const XalanDOMString&	codetype);
-  
-	/**
-	 * Register the given DispatcherFactory for a given mime type.
-	 *
-	 * @param mimeType MIME type string
-	 * @param factory  factory to register
-	 */
-	void
-	registerExtensionHandler(
-			const XalanDOMString&	mimeType,
-			DispatcherFactory*		factory);
 
 	/**
 	 * Reset the state.  This needs to be called after a process() call 
