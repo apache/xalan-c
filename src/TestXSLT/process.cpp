@@ -245,9 +245,6 @@ printArgOptions()
 		 << endl
 		 << " [-DE (Disable built-in extension functions.)]"
 		 << endl
-		 << " [-EN (Specify the namespace URI for Xalan extension functions.  The default is 'http://xml.apache.org/xalan')]"
-		 << endl
-		 << endl
 		 << "The following options are valid only with -HTML or -XML."
 		 << endl
 		 << endl
@@ -302,7 +299,6 @@ struct CmdLineParams
 	const char*		outFileName;
 	const char*		xslFileName;
 	const char*		inFileName;
-	const char*		extentionsNamespace;
 
 	CmdLineParams() :
 		params(),
@@ -326,8 +322,7 @@ struct CmdLineParams
 		outputType(-1),
 		outFileName(0),
 		xslFileName(0),
-		inFileName(0),
-		extentionsNamespace(0)
+		inFileName(0)
 	{
 	}
 };
@@ -593,24 +588,6 @@ getArgs(
 		{
 			p.disableExtensions = true;
 		}
-		else if (!compareNoCase("-EN", argv[i]))
-		{
-			++i;
-
-			if(i < argc)
-			{
-				p.extentionsNamespace = argv[i];
-
-				if (XalanDOMString::length(p.extentionsNamespace) == 0)
-				{
-					fSuccess = false;
-				}
-			}
-			else
-			{
-				fSuccess = false;
-			}
-		}
 		else
 		{
 			cerr << endl << "Warning: Ignoring unknown option \"" << argv[i] << "\"." << endl << endl;
@@ -846,56 +823,6 @@ getParserLiaison(
 
 
 
-void
-installExtensions(
-			const CmdLineParams&				params,
-			XSLTProcessorEnvSupportDefault&		theXSLProcessorSupport)
-{
-	XalanDOMString	theXalanNamespace;
-
-	if (params.extentionsNamespace != 0)
-	{
-		theXalanNamespace = XalanDOMString(params.extentionsNamespace);
-		assert(length(theXalanNamespace) > 0);
-	}
-	else
-	{
-		theXalanNamespace = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan");
-	}
-
-	theXSLProcessorSupport.installExternalFunctionLocal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("difference")),
-			FunctionDifference());
-
-	theXSLProcessorSupport.installExternalFunctionLocal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("distinct")),
-			FunctionDistinct());
-
-	theXSLProcessorSupport.installExternalFunctionLocal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("evaluate")),
-			FunctionEvaluate());
-
-	theXSLProcessorSupport.installExternalFunctionLocal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("hasSameNodes")),
-			FunctionHasSameNodes());
-
-	theXSLProcessorSupport.installExternalFunctionLocal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("intersection")),
-			FunctionIntersection());
-
-	theXSLProcessorSupport.installExternalFunctionLocal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("nodeset")),
-			FunctionNodeSet());
-}
-
-
-
 int
 xsltMain(const CmdLineParams&	params)
 {
@@ -954,7 +881,7 @@ xsltMain(const CmdLineParams&	params)
 
 	if (params.disableExtensions == false)
 	{
-		installExtensions(params, theXSLProcessorSupport);
+		XalanExtensionsInstaller::installGlobal();
 	}
 
 	XObjectFactoryDefault	theXObjectFactory;
