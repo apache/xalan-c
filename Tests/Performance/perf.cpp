@@ -570,7 +570,7 @@ main(
 
 		}//try
 
-		catch(XalanFileOutputStream::XalanFileOutputStreamOpenException)
+		catch(const XalanFileOutputStream::XalanFileOutputStreamOpenException&)
 		{
 			cerr << "Could not open output file" << endl << endl;
 		}
