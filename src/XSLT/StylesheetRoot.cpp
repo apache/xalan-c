@@ -271,9 +271,9 @@ StylesheetRoot::setupFormatterListener(
 	/*
 	 * Output target has a character or byte stream or file
 	 */
-	else if((0 != outputTarget.getCharacterStream()) ||
-			(0 != outputTarget.getByteStream()) ||
-			(0 != outputTarget.getFileName().length()))
+	else if(0 != outputTarget.getCharacterStream() ||
+			0 != outputTarget.getByteStream() ||
+			0 != length(outputTarget.getFileName()))
 	{
 		Writer*		pw = 0;
 
