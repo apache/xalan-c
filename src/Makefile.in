@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.23  2001/01/18 23:23:56  dbertoni
+# Bumped up Xerces library number.
+#
 # Revision 1.22  2000/12/15 23:29:08  dbertoni
 # Changes to integrate new Xalan source tree.
 #
@@ -249,7 +252,7 @@ nogood:
 endif
 
 # We need the Xerces library
-ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_3
+ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_4
 
 # We need the ICU library if we are using the ICUBridge
 ifdef XALAN_USE_ICU
