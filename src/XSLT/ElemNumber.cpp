@@ -737,7 +737,7 @@ ElemNumber::getNumberFormatter(
 		m_groupingSeparator_avt->evaluate(digitGroupSepValue, contextNode,
 				 *this, executionContext);
 									 
-	if (length(digitGroupSepValue) != 1)
+	if (length(digitGroupSepValue) > 1)
 	{
 		executionContext.error(
 			"The grouping-separator value must be one character in length",
