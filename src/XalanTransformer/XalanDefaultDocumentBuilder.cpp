@@ -80,17 +80,9 @@ XalanDefaultDocumentBuilder::~XalanDefaultDocumentBuilder()
 
 
 XalanDocument*
-XalanDefaultDocumentBuilder::getDocument() const
+XalanDefaultDocumentBuilder::getDocument()
 {
 	return m_contentHandler.getDocument();
-}
-
-
-
-const XMLParserLiaison*
-XalanDefaultDocumentBuilder::getParserLiaison() const
-{
-	return &m_parserLiaison;
 }
 
 
@@ -105,14 +97,6 @@ XalanDefaultDocumentBuilder::getParserLiaison()
 
 DOMSupport*
 XalanDefaultDocumentBuilder::getDOMSupport()
-{
-	return &m_domSupport;
-}
-
-
-
-const DOMSupport*
-XalanDefaultDocumentBuilder::getDOMSupport() const
 {
 	return &m_domSupport;
 }

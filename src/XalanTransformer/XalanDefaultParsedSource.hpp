@@ -84,14 +84,14 @@
 class XALAN_TRANSFORMER_EXPORT XalanDefaultParsedSource : public XalanParsedSource
 {
 public:
-	
+
 	XalanDefaultParsedSource(const XSLTInputSource&		theInputSource);
 
 	virtual
 	~XalanDefaultParsedSource();
 
-	virtual XalanNode*
-	getParsedSource();
+	virtual XalanDocument*
+	getDocument();
 
 	virtual XMLParserLiaison*
 	getParserLiaison();
@@ -105,7 +105,7 @@ private:
 
 	XalanSourceTreeParserLiaison	m_parserLiaison;
 
-	XalanNode* const				m_parsedSource;
+	XalanDocument* const			m_parsedSource;
 };
 
 

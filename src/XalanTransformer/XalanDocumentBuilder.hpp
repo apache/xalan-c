@@ -64,6 +64,11 @@
 
 
 
+// Base class include file.
+#include <XalanTransformer/XalanParsedSource.hpp>
+
+
+
 class ContentHandler;
 class DOMSupport;
 class DTDHandler;
@@ -77,7 +82,7 @@ class XMLParserLiaison;
  * This is abstract base class designed to allow a XalanTranfomer 
  * object to use a document that is build dynamically by a user.
  */
-class XALAN_TRANSFORMER_EXPORT XalanDocumentBuilder
+class XALAN_TRANSFORMER_EXPORT XalanDocumentBuilder : public XalanParsedSource
 {
 public:
 
@@ -86,11 +91,9 @@ public:
 	{
 	}
 
+	// These are inherited from XalanParsedSource...
 	virtual XalanDocument*
-	getDocument() const = 0;	
-
-	virtual const XMLParserLiaison*
-	getParserLiaison() const = 0;
+	getDocument() = 0;	
 
 	virtual XMLParserLiaison*
 	getParserLiaison() = 0;
@@ -98,9 +101,7 @@ public:
 	virtual DOMSupport*
 	getDOMSupport() = 0;
 
-	virtual const DOMSupport*
-	getDOMSupport() const = 0;
-
+	// These are new to XalanDocumentBuilder...
 	virtual ContentHandler*
 	getContentHandler() = 0;
 

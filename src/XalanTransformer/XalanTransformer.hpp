@@ -68,37 +68,15 @@
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
-#include <XPath/QNameByValue.hpp>
-#include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathFactoryBlock.hpp>
-#include <XPath/XPathFactoryDefault.hpp>
-
-
-
 #include <XSLT/StylesheetConstructionContextDefault.hpp>
-#include <XSLT/StylesheetExecutionContextDefault.hpp>
-#include <XSLT/StylesheetRoot.hpp>
-#include <XSLT/XSLTEngineImpl.hpp>
-#include <XSLT/XSLTInit.hpp>
 #include <XSLT/XSLTInputSource.hpp>
-#include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
 
 
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
-
-
-
+#include <XalanTransformer/XalanDocumentBuilder.hpp>
 #include <XalanTransformer/XalanCompiledStylesheet.hpp>
-#include <XalanTransformer/XalanDefaultParsedSource.hpp>
 #include <XalanTransformer/XalanParsedSource.hpp>
-#include <XalanTransformer/XercesDOMParsedSource.hpp>
 #include <XalanTransformer/XalanTransformerOutputStream.hpp>
 
 
@@ -115,6 +93,9 @@
 	using std::ostream;
 	using std::istream;
 #endif
+
+
+class XSLTInit;
 
 
 
@@ -306,17 +287,35 @@ public:
 
 	/**
 	 * Creates a complied stylesheet.  The input source can be 
-	 * a file name, a stream or a root node.
+	 * a file name, a stream or a root node.   The XalanTransformer
+	 * instance owns the XalanCompiledStylesheet instance and will
+	 * delete it when the XalanTransformer instance goes out of scope,
+	 * or you explicitly call destroyStylesheet().  You must not delete
+	 * the instance yourself.
 	 *
-	 * @param theStylesheetSource	input source
-	 * @return	a pointer to a XalanCompiledStylesheet or 0 for failure.
+	 * @param theStylesheetSource input source
+	 * @return a pointer to a XalanCompiledStylesheet or 0 for failure.
 	 */
 	XalanCompiledStylesheet*
-	compileStylesheet(const XSLTInputSource&		theStylesheetSource);
+	compileStylesheet(const XSLTInputSource&	theStylesheetSource);
 
 	/**
-	 * Parse source document.  The input source can be 
-	 * a file name, a stream or a root node.
+	 * Destroy a XalanCompiledStylesheet instance created by a previous
+	 * call to compileStylesheet().  Passing a pointer that is not created
+	 * by a call to createDocumentBuilder() can result in undefined behavior.
+	 *
+	 * @param theStylesheet	The instance to destroy.
+	 */
+	void
+	destroyStylesheet(XalanCompiledStylesheet*	theStylesheet);
+
+	/**
+	 * Parse a source XML document.  The input source can be 
+	 * a file name, a stream or a root node.  The XalanTransformer
+	 * instance owns the XalanParsedSource instance and will
+	 * delete it when the XalanTransformer instance goes out of scope,
+	 * or you explicitly call destroyParsedSource().  You must not
+	 * delete the instance yourself.
 	 *
 	 * @param theInputSource	input source
 	 * @param useXercesDOM		input use default or xerces dom source tree
@@ -325,7 +324,39 @@ public:
 	XalanParsedSource*
 	parseSource(
 			const XSLTInputSource&	theInputSource, 
-			bool  useXercesDOM = 0);
+			bool					useXercesDOM = false);
+
+	/**
+	 * Destroy a parsed source created by a previous call to parseSource().
+	 * Passing a pointer that was not created by a call to parseSource() can
+	 * result in undefined behavior.
+	 *
+	 * @param theParsedSource The XalanParsedSource instance to destroy.
+	 */
+	void
+	destroyParsedSource(XalanParsedSource*	theParsedSource);
+
+	/**
+	 * Create a document builder.  Using the document builder, you
+	 * can construct a document using SAX2 interfaces.  The XalanTransformer
+	 * instance owns the document builder and will delete it when the
+	 * XalanTransformer instance goes out of scope, or you explicitly call
+	 * deleteDocumentBuilder().  You must not delete the instance yourself.
+	 *
+	 * @return	a pointer to a XalanDocumentBuilder instance or 0 for failure.
+	 */
+	XalanDocumentBuilder*
+	createDocumentBuilder();
+
+	/**
+	 * Destroy a document builder created by a previous call to createDocumentBuilder().
+	 * Passing a pointer that is not created by a call to createDocumentBuilder() can
+	 * result in undefined behavior.
+	 *
+	 * @param theDocumentBuilder The document builder to destroy.
+	 */
+	void
+	destroyDocumentBuilder(XalanDocumentBuilder*	theDocumentBuilder);
 
 	/**
 	 * Install an external function in the local space.
@@ -340,6 +371,14 @@ public:
 			const XalanDOMString&	functionName,
 			const Function&			function);
 
+	/**
+	 * Install an external function.  The function is only
+	 * available in this instance.
+	 *
+	 * @param theNamespace The namespace for the functionl
+	 * @param functionName The name of the function.
+	 * @param function The function to install.
+	 */
 	void
 	installExternalFunction(
 			const char*				theNamespace,
@@ -347,7 +386,7 @@ public:
 			const Function&			function);
 
 	/**
-	 * Uninstall an external function from the local space.
+	 * Uninstall an external function.
 	 *
 	 * @param theNamespace The namespace for the function
 	 * @param functionName The name of the function.
@@ -357,6 +396,12 @@ public:
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	functionName);
 
+	/**
+	 * Uninstall an external function.
+	 *
+	 * @param theNamespace The namespace for the function
+	 * @param functionName The name of the function.
+	 */
 	void
 	uninstallExternalFunction(
 			const char*				theNamespace,
@@ -373,10 +418,18 @@ public:
 	setStylesheetParam(
 			const XalanDOMString&	key,
 			const XalanDOMString&	expression);
+
+	/**
+	 * Set a top-level stylesheet parameter.  This value can be evaluated via
+	 * xsl:param-variable.
+	 *
+	 * @param key name of the param
+	 * @param expression expression that will be evaluated
+	 */
 	void
 	setStylesheetParam(
-			const char*				key,
-			const char*				expression);
+			const char*		key,
+			const char*		expression);
 
 	/**
 	 * Returns the last error that occurred as a 
@@ -408,7 +461,7 @@ protected:
 
 private:
 
-	void 
+	void
 	reset();
 
 	StylesheetExecutionContextDefault		m_stylesheetExecutionContext;

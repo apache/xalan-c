@@ -79,8 +79,8 @@ XalanDefaultParsedSource::~XalanDefaultParsedSource()
 
 
 
-XalanNode*	
-XalanDefaultParsedSource::getParsedSource()
+XalanDocument*	
+XalanDefaultParsedSource::getDocument()
 {
 	return m_parsedSource;
 }

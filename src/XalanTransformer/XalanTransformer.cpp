@@ -75,6 +75,34 @@
 
 
 
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include <XPath/XObjectFactoryDefault.hpp>
+#include <XPath/XPathFactoryBlock.hpp>
+#include <XPath/XPathFactoryDefault.hpp>
+
+
+
+#include <XSLT/StylesheetRoot.hpp>
+#include <XSLT/XSLTEngineImpl.hpp>
+#include <XSLT/XSLTInit.hpp>
+#include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
+
+
+
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+
+
+
+#include "XalanDefaultDocumentBuilder.hpp"
+#include "XalanDefaultParsedSource.hpp"
+#include "XercesDOMParsedSource.hpp"
+
+
+
 XSLTInit*	XalanTransformer::m_xsltInit = 0;
 
 
@@ -225,7 +253,7 @@ XalanTransformer::transform(
 
 		// Do the transformation...
 		theProcessor.process(
-					theParsedXML.getParsedSource(),
+					theParsedXML.getDocument(),
 					theStylesheetSource,
 					tempResultTarget,
 					theStylesheetConstructionContext,
@@ -387,7 +415,7 @@ XalanTransformer::transform(
 
 		// Do the transformation...
 		theProcessor.process(
-					theParsedXML.getParsedSource(),		
+					theParsedXML.getDocument(),		
 					tempResultTarget,					
 					m_stylesheetExecutionContext);
 	}
@@ -692,6 +720,29 @@ XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 
 
 
+void
+XalanTransformer::destroyStylesheet(XalanCompiledStylesheet*	theStylesheet)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+
+	const CompiledStylesheetPtrVectorType::iterator		i =
+		find(
+			m_compiledStylesheets.begin(),
+			m_compiledStylesheets.end(),
+			theStylesheet);
+
+	if (i != m_compiledStylesheets.end())
+	{
+		m_compiledStylesheets.erase(i);
+
+		delete theStylesheet;
+	}
+}
+
+
+
 XalanParsedSource*
 XalanTransformer::parseSource(
 			const XSLTInputSource&	theInputSource, 
@@ -781,6 +832,29 @@ XalanTransformer::parseSource(
 
 
 void
+XalanTransformer::destroyParsedSource(XalanParsedSource*	theParsedSource)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+
+	const ParsedSourcePtrVectorType::iterator	i =
+		find(
+			m_parsedSources.begin(),
+			m_parsedSources.end(),
+			theParsedSource);
+
+	if (i != m_parsedSources.end())
+	{
+		m_parsedSources.erase(i);
+
+		delete theParsedSource;
+	}
+}
+
+
+
+void
 XalanTransformer::setStylesheetParam(
 			const XalanDOMString&	key,
 			const XalanDOMString&	expression)
@@ -800,6 +874,28 @@ XalanTransformer::setStylesheetParam(
 	setStylesheetParam(
 					XalanDOMString(key),  
 					XalanDOMString(expression));
+}
+
+
+
+XalanDocumentBuilder*
+XalanTransformer::createDocumentBuilder()
+{
+	m_parsedSources.reserve(m_parsedSources.size() + 1);
+
+	XalanDocumentBuilder* const		theNewBuilder = new XalanDefaultDocumentBuilder;
+
+	m_parsedSources.push_back(theNewBuilder);
+
+	return theNewBuilder;
+}
+
+
+
+void
+XalanTransformer::destroyDocumentBuilder(XalanDocumentBuilder*	theDocumentBuilder)
+{
+	destroyParsedSource(theDocumentBuilder);
 }
 
 
@@ -884,4 +980,3 @@ XalanTransformer::reset()
 	{
 	}
 }
-

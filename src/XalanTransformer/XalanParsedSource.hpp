@@ -64,8 +64,13 @@
 
 
 
+// We're bringing in XalanDocument so that its derivation from XalanNode
+// is known...
+#include <XalanDOM/XalanDocument.hpp>
+
+
+
 class DOMSupport;
-class XalanNode;
 class XMLParserLiaison;
 
 
@@ -77,14 +82,14 @@ class XMLParserLiaison;
 class XALAN_TRANSFORMER_EXPORT XalanParsedSource
 {
 public:
-	
+
 	XalanParsedSource();
 
 	virtual
 	~XalanParsedSource();
 
-	virtual XalanNode*
-	getParsedSource() = 0;	
+	virtual XalanDocument*
+	getDocument() = 0;	
 
 	virtual XMLParserLiaison*
 	getParserLiaison() = 0;

@@ -75,10 +75,10 @@
 
 
 /**
- * This is abstract base class designed to allow a XalanTranfomer 
- * object to use a document that is build dynamically by a user.
+ * This is class is designed to allow a XalanTranfomer object
+ * to use a document that is build dynamically by a user.
  */
-class XALAN_TRANSFORMER_EXPORT XalanDefaultDocumentBuilder
+class XALAN_TRANSFORMER_EXPORT XalanDefaultDocumentBuilder : public XalanDocumentBuilder
 {
 public:
 
@@ -88,19 +88,13 @@ public:
 	~XalanDefaultDocumentBuilder();
 
 	virtual XalanDocument*
-	getDocument() const;
-
-	virtual const XMLParserLiaison*
-	getParserLiaison() const;
+	getDocument();
 
 	virtual XMLParserLiaison*
 	getParserLiaison();
 
 	virtual DOMSupport*
 	getDOMSupport();
-
-	virtual const DOMSupport*
-	getDOMSupport() const;
 
 	virtual ContentHandler*
 	getContentHandler();

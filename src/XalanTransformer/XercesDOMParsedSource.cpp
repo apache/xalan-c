@@ -62,7 +62,7 @@
 
 
 
-XercesDOMParsedSource::XercesDOMParsedSource(const XSLTInputSource&	theInputSource):
+XercesDOMParsedSource::XercesDOMParsedSource(const XSLTInputSource&		theInputSource):
 	XalanParsedSource(),
 	m_domSupport(),
 	m_parserLiaison(m_domSupport),
@@ -78,8 +78,8 @@ XercesDOMParsedSource::~XercesDOMParsedSource()
 
 
 
-XalanNode*	
-XercesDOMParsedSource::getParsedSource()
+XalanDocument*
+XercesDOMParsedSource::getDocument()
 {
 	return m_parsedSource;
 }
