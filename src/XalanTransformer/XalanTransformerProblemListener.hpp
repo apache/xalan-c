@@ -65,6 +65,14 @@
 
 
 
+#if defined(XALAN_OLD_STREAMS)
+class ostream;
+#else
+#include <iosfwd>
+#endif
+
+
+
 // Xalan header files.
 #include <XSLT/ProblemListenerDefault.hpp>
 
