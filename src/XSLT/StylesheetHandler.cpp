@@ -142,6 +142,7 @@ StylesheetHandler::StylesheetHandler(
 	m_foundStylesheet(false),
 	m_foundNotImport(false),
 	m_accumulateText(),
+	m_inExtensionElementStack(),
 	m_inLXSLTScript(false),
 	m_LXSLTScriptBody(),
 	m_LXSLTScriptLang(),
@@ -215,6 +216,7 @@ void StylesheetHandler::startDocument()
 void StylesheetHandler::endDocument()
 {
 	m_constructionContext.popLocatorStack();
+	m_inExtensionElementStack.clear();
 
 	if (m_exceptionPending == true)
 	{
@@ -273,6 +275,8 @@ StylesheetHandler::startElement(
 	// if we have apending exception, we don't want to even try to process this
 	if (m_exceptionPending == true)
 		return;
+
+	m_inExtensionElementStack.push_back(false);
 
 	try
 	{
@@ -427,7 +431,7 @@ StylesheetHandler::startElement(
 						}
 					}
 
-					if(!foundIt)
+					if(!foundIt && inExtensionElement() == false)
 					{
 						XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) +
 						" requires a " + Constants::ATTRNAME_ELEMENTS + " attribute!");
@@ -524,12 +528,13 @@ StylesheetHandler::startElement(
 				case Constants::ELEMNAME_COUNTERRESET:
 				case Constants::ELEMNAME_COUNTERSCOPE:
 				case Constants::ELEMNAME_APPLY_IMPORTS:
-				{
-					XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + " not allowed inside a stylesheet!");
+					if (inExtensionElement() == false)
+					{
+						XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + " not allowed inside a stylesheet!");
 
-					throw SAXException(toCharArray(msg));
-				}
-				// break;
+						throw SAXException(toCharArray(msg));
+					}
+					break;
 
 				case Constants::ELEMNAME_STYLESHEET:
 				{
@@ -568,9 +573,10 @@ StylesheetHandler::startElement(
 								const XalanDOMString	prefix = tokenizer.nextToken();
 								// SANJIVA: ask Scott: is the line below correct?
 
-								const XalanDOMString extns = m_stylesheet.getNamespaceForPrefixFromStack(prefix);
+								const XalanDOMString&	extns = m_stylesheet.getNamespaceForPrefixFromStack(prefix);
 
 								ExtensionNSHandler* const	nsh = new ExtensionNSHandler(extns);
+
 								m_stylesheet.addExtensionNamespace(extns, nsh);
 							}
 						}
@@ -615,11 +621,12 @@ StylesheetHandler::startElement(
 				break;
 
 				default:
-				{
-					XalanDOMString msg("Unknown XSL element: " + localName);
+					if (inExtensionElement() == false)
+					{
+						XalanDOMString msg("Unknown XSL element: " + localName);
 
-					throw SAXException(c_wstr(TranscodeFromLocalCodePage("Unknown XSL element: ") + localName));
-				}
+						throw SAXException(c_wstr(TranscodeFromLocalCodePage("Unknown XSL element: ") + localName));
+					}
 				break;
 
 			}
@@ -922,6 +929,10 @@ StylesheetHandler::startElement(
 					nsh = new ExtensionNSHandler(extns);
 
 					m_stylesheet.addExtensionNamespace(extns, nsh);
+
+					assert(m_inExtensionElementStack.empty() == false);
+
+					m_inExtensionElementStack.back() = true;
 				}
 
 				if (!isEmpty(elements)) 
@@ -995,6 +1006,10 @@ StylesheetHandler::startElement(
 											columnNumber,
 											*nsh,
 											localName);
+
+					assert(m_inExtensionElementStack.empty() == false);
+
+					m_inExtensionElementStack.back() = true;
 				}
 				else 
 				{
@@ -1076,7 +1091,7 @@ StylesheetHandler::startElement(
 
 
 ElemTemplateElement*
-StylesheetHandler::initWrapperless (
+StylesheetHandler::initWrapperless(
 			const XalanDOMChar*		name,
 			const AttributeList&	atts,
 			int						lineNumber,
@@ -1363,6 +1378,10 @@ StylesheetHandler::endElement(const XMLCh* const name)
 		m_pLXSLTExtensionNSH = 0;
 	}
 	// END SANJIVA CODE
+
+	assert(m_inExtensionElementStack.empty() == false);
+
+	m_inExtensionElementStack.pop_back();
 }
 
 
@@ -1590,6 +1609,36 @@ StylesheetHandler::processAccumulatedText()
 
 
 
+bool
+StylesheetHandler::inExtensionElement() const
+{
+	if (m_inExtensionElementStack.size() == 0)
+	{
+		return false;
+	}
+	else
+	{
+		BoolStackType::const_reverse_iterator			i = m_inExtensionElementStack.rbegin();
+		const BoolStackType::const_reverse_iterator		theEnd = m_inExtensionElementStack.rend();
+
+		while(i != theEnd)
+		{
+			if ((*i) == true)
+			{
+				return true;
+			}
+			else
+			{
+				++i;
+			}
+		}
+
+		return false;
+	}
+}
+
+
+
 StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	theHandler) :
 	m_handler(theHandler),
 	m_elemStack(theHandler.m_elemStack),
@@ -1602,7 +1651,8 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 	m_foundNotImport(theHandler.m_foundNotImport),
 	m_namespaceDecls(),
 	m_namespaces(),
-	m_namespacesHandler()
+	m_namespacesHandler(),
+	m_inExtensionElementStack()
 {
 	clear(m_handler.m_accumulateText);
 	m_handler.m_elemStack.clear();
@@ -1617,6 +1667,7 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 	m_namespaceDecls.swap(theHandler.m_stylesheet.getNamespaceDecls());
 	m_namespaces.swap(theHandler.m_stylesheet.getNamespaces());
 	m_namespacesHandler.swap(theHandler.m_stylesheet.getNamespacesHandler());
+	m_inExtensionElementStack.swap(theHandler.m_inExtensionElementStack);
 }
 
 
@@ -1648,4 +1699,5 @@ StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 	m_handler.m_stylesheet.getNamespaceDecls().swap(m_namespaceDecls);
 	m_handler.m_stylesheet.getNamespaces().swap(m_namespaces);
 	m_handler.m_stylesheet.getNamespacesHandler().swap(m_namespacesHandler);
+	m_handler.m_inExtensionElementStack.swap(m_inExtensionElementStack);
 }

@@ -108,10 +108,12 @@ public:
 	typedef vector<ElemTextLiteral*>			ElemTextLiteralStackType;
 	typedef set<ElemTemplateElement*,
 				less<ElemTemplateElement*> >	ElemTemplateSetType;
+	typedef vector<bool>						BoolStackType;
 #else
 	typedef std::vector<ElemTemplateElement*>	ElemTemplateStackType;
 	typedef std::vector<ElemTextLiteral*>		ElemTextLiteralStackType;
 	typedef std::set<ElemTemplateElement*>		ElemTemplateSetType;
+	typedef std::vector<bool>					BoolStackType;
 #endif
 
 	/**
@@ -421,6 +423,9 @@ private:
 	void
 	processAccumulatedText();
 
+	bool
+	inExtensionElement() const;
+
 	// Data members...
 	XalanDOMString	m_pendingException;
 
@@ -429,7 +434,7 @@ private:
 	/**
 	 * The owning stylesheet.
 	 */
-	Stylesheet& m_stylesheet;
+	Stylesheet&		m_stylesheet;
 
 	/**
 	 * The construction context.
@@ -494,7 +499,9 @@ private:
 	 * where possible.
 	 */
 	XalanDOMString	m_accumulateText;
-	
+
+	BoolStackType	m_inExtensionElementStack;
+
 	// BEGIN SANJIVA CODE
 	bool m_inLXSLTScript;
 	XalanDOMString m_LXSLTScriptBody;
@@ -547,6 +554,8 @@ private:
 		Stylesheet::NamespacesStackType		m_namespaces;
 
 		NamespacesHandler					m_namespacesHandler;
+
+		BoolStackType						m_inExtensionElementStack;
 	};
 
 	friend class PushPopIncludeState;
