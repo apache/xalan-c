@@ -438,7 +438,7 @@ Stylesheet::addTemplate(ElemTemplate *tmpl)
 
 	if(0 != xp)
 	{
-		using XPath::TargetElementStringsVectorType;
+		typedef XPath::TargetElementStringsVectorType	TargetElementStringsVectorType;
 
 		TargetElementStringsVectorType		strings;
 

@@ -859,14 +859,15 @@ ElemNumber::int2alphaCount(
 			int						val,
 			const XalanDOMString&	table)
 {
-	const int	radix = length(table);
+	const int		radix = length(table);
 
 	// Create a buffer to hold the result
 	// TODO:  size of the table can be determined by computing
 	// logs of the radix.  For now, we fake it.  
-	const int	buflen = 100;
+	const int		buflen = 100;
 
-	vector<XalanDOMChar>	buf(buflen + 1, 0);
+	XalanDOMChar	buf[buflen + 1];
+	memset(buf, 0, buflen + 1);
 
 	// next character to set in the buffer
 	int charPos = buflen - 1 ;    // work backward through buf[]
@@ -926,7 +927,7 @@ ElemNumber::int2alphaCount(
 	}
 	while (val > 0);
 
-	XalanDOMString retStr(buf.begin() + charPos + 1, (buflen - charPos - 1));
+	XalanDOMString retStr(buf + charPos + 1, (buflen - charPos - 1));
 
 	return retStr;
 }

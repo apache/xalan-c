@@ -380,7 +380,7 @@ XSLTEngineImpl::process(
 			XalanDOMString			stylesheetURI = 0;
 			XalanNode*				child = sourceTree->getFirstChild();
 
-#if !defined(XALAN_NO_NAMESPACES
+#if !defined(XALAN_NO_NAMESPACES)
 			using std::vector;
 #endif
 
@@ -2152,11 +2152,7 @@ XSLTEngineImpl::outputResultTreeFragment(const XObject&		theTree)
 bool
 XSLTEngineImpl::isCDataResultElem(const XalanDOMString& elementName)
 {
-#if defined(XALAN_NO_NAMESPACES)
 	typedef Stylesheet::QNameVectorType		QNameVectorType;
-#else
-	using Stylesheet::QNameVectorType;
-#endif
 
 	bool is = false;
 	const QNameVectorType&				cdataElems = m_stylesheetRoot->getCdataSectionElems();
@@ -3050,11 +3046,7 @@ XSLTEngineImpl::shouldStripSourceNode(const XalanNode&	textNode) const
 				{
 					// $$$ ToDo:  All of this should be moved into a member of
 					// Stylesheet, so as not to expose these two data members...
-#if defined(XALAN_NO_NAMESPACES)
 					typedef Stylesheet::XPathVectorType		XPathVectorType;
-#else
-					using Stylesheet::XPathVectorType;
-#endif
 
 					const XPathVectorType&	theElements =
 						m_stylesheetRoot->getWhitespacePreservingElements();
@@ -3082,11 +3074,7 @@ XSLTEngineImpl::shouldStripSourceNode(const XalanNode&	textNode) const
 				}
 
 				{
-#if defined(XALAN_NO_NAMESPACES)
 					typedef Stylesheet::XPathVectorType		XPathVectorType;
-#else
-					using Stylesheet::XPathVectorType;
-#endif
 
 					const XPathVectorType&	theElements =
 						m_stylesheetRoot->getWhitespaceStrippingElements();
