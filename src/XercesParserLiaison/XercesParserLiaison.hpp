@@ -105,7 +105,7 @@ public:
 	 */
 	XercesParserLiaison(
 			XercesDOMSupport&	theSupport,
-			DocumentNumberType	theStartingNumber);
+			DocumentNumberType	theStartingNumber = 0);
 
 	/**
 	 * Construct a XercesParserLiaison instance.
