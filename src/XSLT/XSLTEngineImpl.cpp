@@ -115,6 +115,7 @@
 #include <XPath/XPathEnvSupportDefault.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathFactory.hpp>
+#include <XPath/XPathFunctionTable.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
 
 
@@ -3375,15 +3376,15 @@ XSLTEngineImpl::fireCharacterGenerateEvent(
 void
 XSLTEngineImpl::installFunctions()
 {
-	XPath::installFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("current")), FunctionCurrent());
-	XPath::installFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("document")), FunctionDocument());
-	XPath::installFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("element-available")), FunctionElementAvailable());
-	XPath::installFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("function-available")), FunctionFunctionAvailable());
-	XPath::installFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")), FunctionFormatNumber());
-	XPath::installFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("generate-id")), FunctionGenerateID());
-	XPath::installFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("key")), FunctionKey());
-	XPath::installFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("system-property")), FunctionSystemProperty());
-	XPath::installFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("unparsed-entity-uri")), FunctionUnparsedEntityURI());
+	XPath::installFunction(XPathFunctionTable::s_current, FunctionCurrent());
+	XPath::installFunction(XPathFunctionTable::s_document, FunctionDocument());
+	XPath::installFunction(XPathFunctionTable::s_elementAvailable, FunctionElementAvailable());
+	XPath::installFunction(XPathFunctionTable::s_functionAvailable, FunctionFunctionAvailable());
+	XPath::installFunction(XPathFunctionTable::s_formatNumber, FunctionFormatNumber());
+	XPath::installFunction(XPathFunctionTable::s_generateId, FunctionGenerateID());
+	XPath::installFunction(XPathFunctionTable::s_key, FunctionKey());
+	XPath::installFunction(XPathFunctionTable::s_systemProperty, FunctionSystemProperty());
+	XPath::installFunction(XPathFunctionTable::s_unparsedEntityUri, FunctionUnparsedEntityURI());
 }
 
 
@@ -3391,15 +3392,15 @@ XSLTEngineImpl::installFunctions()
 void
 XSLTEngineImpl::uninstallFunctions()
 {
-	XPath::uninstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("current")));
-	XPath::uninstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("document")));
-	XPath::uninstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("element-available")));
-	XPath::uninstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("function-available")));
-	XPath::uninstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")));
-	XPath::uninstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("generate-id")));
-	XPath::uninstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("key")));
-	XPath::uninstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("system-property")));
-	XPath::uninstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("unparsed-entity-uri")));
+	XPath::uninstallFunction(XPathFunctionTable::s_current);
+	XPath::uninstallFunction(XPathFunctionTable::s_document);
+	XPath::uninstallFunction(XPathFunctionTable::s_elementAvailable);
+	XPath::uninstallFunction(XPathFunctionTable::s_functionAvailable);
+	XPath::uninstallFunction(XPathFunctionTable::s_formatNumber);
+	XPath::uninstallFunction(XPathFunctionTable::s_generateId);
+	XPath::uninstallFunction(XPathFunctionTable::s_key);
+	XPath::uninstallFunction(XPathFunctionTable::s_systemProperty);
+	XPath::uninstallFunction(XPathFunctionTable::s_unparsedEntityUri);
 }
 
 
