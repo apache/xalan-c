@@ -27,7 +27,7 @@
 
   <xsl:template match="now">       
     <when>
-      Date and time when we figured all this out: <xsl:value-of select="asctime()"/>.
+      Date and time when we figured all this out: <xsl:value-of select="external:asctime()"/>.
     </when>
   </xsl:template>
 

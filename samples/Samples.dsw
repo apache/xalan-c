@@ -30,13 +30,13 @@ Package=<4>
     Project_Dep_Name XSLT
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name XalanSourceTree
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name XPath
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
     End Project Dependency
 }}}
 
@@ -96,16 +96,16 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
     Project_Dep_Name XSLT
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanSourceTree
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
     End Project Dependency
 }}}
 
@@ -135,16 +135,10 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanSourceTree
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XPath
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
     End Project Dependency
 }}}
 
@@ -169,6 +163,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
     End Project Dependency
 }}}
 
@@ -252,13 +249,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanSourceTree
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XPath
+    Project_Dep_Name XalanTransformer
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XSLT

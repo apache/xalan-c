@@ -8,46 +8,19 @@
 
 
 
-#if defined(XALAN_OLD_STREAM_HEADERS)
-#include <fstream.h>
-#include <iostream.h>
-#else
-#include <fstream>
-#include <iostream>
-#endif
-
-
-
 #include <util/PlatformUtils.hpp>
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
+#include <XalanTransformer/XalanTransformer.hpp>
 
 
 
-#include <DOMSupport/DOMSupportDefault.hpp>
-
-
-
-#include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPath.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 
 
 
-#include <XSLT/StylesheetConstructionContextDefault.hpp>
-#include <XSLT/StylesheetExecutionContextDefault.hpp>
-#include <XSLT/XSLTEngineImpl.hpp>
-#include <XSLT/XSLTInit.hpp>
-#include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
-#include <XSLT/XSLTResultTarget.hpp>
-
-
-
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
 
 
@@ -179,16 +152,20 @@ public:
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
-	 * object. Called if function has no parameters.
+	 * object.
 	 *
 	 * @param executionContext executing context
-	 * @param context          current context node	 
+	 * @param context          current context node
+	 * @param opPos            current op position
+	 * @param args             vector of pointers to XObject arguments
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context)
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		args)
 	{
 		time_t	theTime;
 
@@ -244,8 +221,9 @@ main(
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::endl;
-	using std::ofstream;
 #endif
+
+	int	theResult = 0;
 
 	if (argc != 1)
 	{
@@ -255,117 +233,66 @@ main(
 	}
 	else
 	{
-		try
+		// Call the static initializer for Xerces.
+		XMLPlatformUtils::Initialize();
+
+		// Initialize Xalan.
+		XalanTransformer::initialize();
+
+		// Create a XalanTransformer.
+		XalanTransformer theXalanTransformer;
+
+		// Our input files...The assumption is that the executable will be run
+		// from same directory as the input files.
+		const char*		theXMLFileName = "foo.xml";
+		const char*		theXSLFileName = "foo.xsl";
+
+		// Our output target...
+		const char*	theOutputFileName = "foo.out";
+
+		// The namespace for our functions...
+		const XalanDOMString	theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");
+
+		// Install the function in the local space.  It will only
+		// be installed in this instance, so no other instances
+		// will know about the function...
+		theXalanTransformer.installExternalFunction(
+			theNamespace,
+			XalanDOMString("asctime"),
+			FunctionAsctime());
+
+		// Install the function in the local space.  It will only
+		// be installed in this instance, so no other instances
+		// will know about the function...
+		theXalanTransformer.installExternalFunction(
+			theNamespace,
+			XalanDOMString("square-root"),
+			FunctionSquareRoot());
+
+		// Install the function in the local space.  It will only
+		// be installed in this instance, so no other instances
+		// will know about the function...
+		theXalanTransformer.installExternalFunction(
+			theNamespace,
+			XalanDOMString("cube"),
+			FunctionCube());
+
+		// Do the transform.
+		theResult = theXalanTransformer.transform(theXMLFileName, theXSLFileName, theOutputFileName);
+    
+		if(theResult != 0)
 		{
-			// Call the static initializer for Xerces...
-			XMLPlatformUtils::Initialize();
-
-			{
-				// Initialize the Xalan XSLT subsystem...
-				XSLTInit						theInit;
-
-				// Create some support objects that are necessary for running the processor...
-				XalanSourceTreeDOMSupport		theDOMSupport;
-				XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport);
-
-				// Hook the two together...
-				theDOMSupport.setParserLiaison(&theParserLiaison);
-
-				// Create some more support objects.
-				XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-				XObjectFactoryDefault			theXObjectFactory;
-				XPathFactoryDefault				theXPathFactory;
-
-				// Create a processor...
-				XSLTEngineImpl	theProcessor(
-						theParserLiaison,
-						theXSLTProcessorEnvSupport,
-						theDOMSupport,
-						theXObjectFactory,
-						theXPathFactory);
-
-				// Connect the processor to the support object...
-				theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
-
-				// Create a stylesheet construction context, and a stylesheet
-				// execution context...
-				StylesheetConstructionContextDefault	theConstructionContext(
-							theProcessor,
-							theXSLTProcessorEnvSupport,
-							theXPathFactory);
-
-				StylesheetExecutionContextDefault		theExecutionContext(
-							theProcessor,
-							theXSLTProcessorEnvSupport,
-							theDOMSupport,
-							theXObjectFactory);
-
-				// Our input files...
-				// WARNING!!! You may need to modify these absolute paths depending on where
-				// you've put the Xalan sources.
-				const XalanDOMString		theXMLFileName("foo.xml");
-				const XalanDOMString		theXSLFileName("foo.xsl");
-
-				// Our input sources...
-				XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
-				XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
-
-				// Our output target...
-				const XalanDOMString	theOutputFile("foo.out");
-				XSLTResultTarget		theResultTarget(theOutputFile);
-
-				// Install the function directly into the XPath
-				// function table.  We don't recommend doing this,
-				// but you can if you want to be evil! ;-)  Since
-				// the function is in the XPath table, the XPath
-				// parser will treat it like any other XPath
-				// function.  Therefore, it cannot have a namespace
-				// prefix.  It will also be available to every
-				// processor in the executable's process, since there
-				// is one static XPath function table.
-				XPath::installFunction(
-					XalanDOMString("asctime"),
-					FunctionAsctime());
-
-				// The namespace for our functions...
-				const XalanDOMString	theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");
-
-				// Install the function in the global space.  All
-				// instances will know about the function, so all
-				// processors which use an instance of this the
-				// class XPathEnvSupportDefault will be able to
-				// use the function.
-				XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
-					theNamespace,
-					XalanDOMString("square-root"),
-					FunctionSquareRoot());
-
-				// Install the function in the local space.  It will only
-				// be installed in this instance, so no other instances
-				// will know about the function...
-				theXSLTProcessorEnvSupport.installExternalFunctionLocal(
-					theNamespace,
-					XalanDOMString("cube"),
-					FunctionCube());
-
-				theProcessor.process(
-							theInputSource,
-							theStylesheetSource,
-							theResultTarget,
-							theConstructionContext,
-							theExecutionContext);
-			}
-
-			// Call the static terminator for Xerces...
-			XMLPlatformUtils::Terminate();
-		}
-		catch(...)
-		{
-			cerr << "Exception caught!!!"
+			cerr << "ExternalFunction Error: \n" << theXalanTransformer.getLastError()
 				 << endl
 				 << endl;
 		}
+
+		// Terminate Xalan.
+		XalanTransformer::terminate();
+
+		// Call the static terminator for Xerces.
+		XMLPlatformUtils::Terminate();
 	}
 
-	return 0;
+	return theResult;
 }
