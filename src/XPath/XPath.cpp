@@ -227,11 +227,11 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_OR:
-		result = or(context, opPos, executionContext);
+		result = Or(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_AND:
-		result = and(context, opPos, executionContext);
+		result = And(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_NOTEQUALS:
@@ -676,7 +676,7 @@ XPath::step(
 
 
 XObject*
-XPath::or(
+XPath::Or(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
@@ -704,7 +704,7 @@ XPath::or(
 
 
 XObject*
-XPath::and(
+XPath::And(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const

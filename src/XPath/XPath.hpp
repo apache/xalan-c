@@ -479,7 +479,7 @@ protected:
 	 * @return XBoolean set to true if the one of the two arguments are true.
 	 */
 	virtual XObject*
-	or(
+	Or(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
@@ -491,7 +491,7 @@ protected:
 	 * @return XBoolean set to true if the two arguments are both true.
 	 */
 	virtual XObject*
-	and(
+	And(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;

@@ -232,11 +232,16 @@ public:
 	void
 	getInstalledFunctionNames(OutputIteratorType	theIterator) const
 	{
-		copy(m_FunctionCollection.begin(),
-			 m_FunctionCollection.end(),
-			 PairIsolatorOutputIterator<OutputIteratorType,
-										PairFirstIsolator<CollectionType::value_type> >(theIterator,
-																					    PairFirstIsolator<CollectionType::value_type>()));
+		CollectionType::const_iterator	i =
+			m_FunctionCollection.begin();
+
+		while(i != m_FunctionCollection.end())
+		{
+			*theIterator = (*i).first;
+
+			++i;
+			++theIterator;
+		}
 	}
 #endif
 
