@@ -277,7 +277,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_xpathEnvSupport(xpathEnvSupport),
 	m_flistener(0),
 	m_contextNodeList(),
-	m_keys(),
 	m_namedTemplates(),
 	m_topLevelVariables(),
 	m_needToCheckForInfiniteLoops(false),

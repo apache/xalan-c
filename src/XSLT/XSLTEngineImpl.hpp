@@ -240,14 +240,6 @@ typedef XALAN_STD runtime_error               RuntimeError;
 #if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
 	typedef hash_map<DOM_Node, int, DOM_NodeHashFunction>	XSLDirectiveMapType;
 	typedef hash_map<DOMString,
-					 MutableNodeRefList,
-					 DOMStringHashFunction,
-					 DOMStringEqualsFunction>	NodeListMapType;
-	typedef hash_map<DOMString,
-					 NodeListMapType,
-					 DOMStringHashFunction,
-					 DOMStringEqualsFunction>	KeysMapType;
-	typedef hash_map<DOMString,
 					 DOM_Node,
 					 DOMStringHashFunction,
 					 DOMStringEqualsFunction>	NamedTemplatesMapType;
@@ -257,10 +249,6 @@ typedef XALAN_STD runtime_error               RuntimeError;
 					 DOMStringEqualsFunction>		StylesheetMapType;
 #else
 	typedef XALAN_STD map<DOM_Node, int>							XSLDirectiveMapType;
-	typedef XALAN_STD map<DOMString,
-					 MutableNodeRefList>	NodeListMapType;
-	typedef XALAN_STD map<DOMString,
-					 NodeListMapType>		KeysMapType;
 	typedef XALAN_STD map<DOMString,
 					 DOM_Node>	NamedTemplatesMapType;
 	typedef XALAN_STD map<DOMString,
@@ -1578,31 +1566,6 @@ typedef XALAN_STD runtime_error               RuntimeError;
 	}
 
 	/**
-	 * Set the table of keys.  This will be used by the key() and keyref()
-	 * functions for lookup of a nodelist.
-	 *
-	 * @param table new table of keys
-	 */
-	void
-	setKeyTable(const KeysMapType&	table)
-	{
-		m_keys = table;
-	}
-
-	/**
-	 * Accessor method for the table of element IDs.	This table is used by
-	 * the id() functions for lookup of an element ID.
-	 *
-	 * @return table of element IDs, keyed by ID string, with values that are
-	 *         Element nodes
-	 */
-	const KeysMapType&
-	getKeysTable()
-	{
-		return m_keys;
-	}
-
-	/**
 	 * Add a named template to the table of template name and value pairs.
 	 *
 	 * @param theName name of template
@@ -2475,20 +2438,6 @@ private:
 	 * passed by parameter.
 	 */
 	MutableNodeRefList	m_contextNodeList;
-
-	/**
-	 * Table of element keys.  The table will be built on demand, 
-	 * when a key is requested, or set by the XMLParserLiaison or 
-	 * the caller.  The table is:
-	 * a) keyed by name,
-	 * b) each with a value of a hashtable, keyed by the value returned by 
-	 *    the use attribute,
-	 * c) each with a value that is a nodelist.
-	 * Thus, for a given key or keyref, look up hashtable by name, 
-	 * look up the nodelist by the given reference.
-	 */
-	KeysMapType		m_keys;
-
 
 	/**
 	 * Keyed on string macro names, and holding values that are macro elements
