@@ -133,9 +133,11 @@ URISupport::getURLStringFromString(
 
 		if (index != len)
 		{
+			const XalanDOMString	theProtocolString(urlString, index);
+
 			// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
 			const XMLURL::Protocols		theProtocol =
-					XMLURL().lookupByName(c_wstr(substring(urlString, 0 , index)));
+					XMLURL().lookupByName(c_wstr(theProtocolString));
 
 			if (theProtocol != XMLURL::Unknown)
 			{
@@ -277,7 +279,9 @@ URISupport::getURLStringFromString(
 
 					// OK, everything looks good, so strip off the protocol 
 					// and colon...
-					context += substring(urlString, theColonIndex + 1, urlStringLen);
+					context.append(
+							urlString + theColonIndex + 1,
+							urlStringLen - (theColonIndex + 1));
 				}
 			}
 		}

@@ -173,9 +173,11 @@ StringTokenizer::nextToken()
 			// The next delimiter is at the current index.  If we're
 			// returning delimiters as tokens, then make that the
 			// return value.  Otherwise, return an empty string.
-			theToken = substring(m_String,
-								 theIndex,
-								 theIndex + 1);
+			substring(
+				m_String,
+				theToken,
+				theIndex,
+				theIndex + 1);
 		}
 		else if (m_CurrentIndex < m_StringLength)
 		{
@@ -190,9 +192,11 @@ StringTokenizer::nextToken()
 		}
 		assert(theIndex > m_CurrentIndex);
 
-		theToken = substring(m_String,
-							 m_CurrentIndex,
-							 theIndex);
+		substring(
+			m_String,
+			theToken,
+			m_CurrentIndex,
+			theIndex);
 
 		m_CurrentIndex = theIndex;
 	}
