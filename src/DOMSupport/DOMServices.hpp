@@ -67,6 +67,7 @@
 #include <XalanDOM/XalanDOMString.hpp>
 #include <XalanDOM/XalanAttr.hpp>
 #include <XalanDOM/XalanComment.hpp>
+#include <XalanDOM/XalanDocument.hpp>
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanProcessingInstruction.hpp>
 #include <XalanDOM/XalanText.hpp>
@@ -389,11 +390,11 @@ public:
 	{
 		if(node.getNodeType() == XalanNode::ATTRIBUTE_NODE)
 		{
-	#if defined(XALAN_OLD_STYLE_CASTS)
-			return ((const XalanAttr&)node).getOwnerElement();
-	#else
-			return static_cast<const XalanAttr&>(node).getOwnerElement();
-	#endif
+#if defined(XALAN_OLD_STYLE_CASTS)
+			return findOwnerElement((const XalanAttr&)node);
+#else
+			return findOwnerElement(static_cast<const XalanAttr&>(node));
+#endif
 		}
 		else
 		{
@@ -438,6 +439,46 @@ public:
 			const XalanNode&	parent,
 			const XalanNode&	child1,
 			const XalanNode&	child2);
+
+private:
+
+	/**
+	 * If necessary, do a brute-force search for an owner element.  This is
+	 * necessary when a given DOM implementation returns 0 for
+	 * XalanAttr::getOwnerElement()
+	 *
+	 * @param attr The XalanAttr instance for which to find the owner element
+	 * @return A pointer to the element node that owns the attribute
+	 */
+	static XalanNode*
+	findOwnerElement(const XalanAttr&	attr)
+	{
+		XalanNode* const	theOwnerElement = attr.getOwnerElement();
+
+		if (theOwnerElement != 0)
+		{
+			return theOwnerElement;
+		}
+		else
+		{
+			return findOwnerElement(attr, *attr.getOwnerDocument()->getDocumentElement());
+		}
+	}
+
+	/**
+	 * If necessary, do a brute-force search for an owner element.  This is
+	 * necessary when a given DOM implementation returns 0 for
+	 * XalanAttr::getOwnerElement()
+	 *
+	 * @param attr The XalanAttr instance for which to find the owner element
+	 * @param element The document element
+	 * @return A pointer to the element node that owns the attribute
+	 */
+	static XalanNode*
+	findOwnerElement(
+			const XalanNode&	attr,
+			XalanNode&			element);
+
 };
 
 

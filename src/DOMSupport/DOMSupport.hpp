@@ -97,13 +97,15 @@ public:
 	// These interfaces are new to DOMSupport...
 
 	/**
-	 * Retrieve namespace corresponding to a DOM node
+	 * Retrieve the URI corresponding to a namespace prefix
 	 * 
-	 * @param theNode DOM node whose namespace is queried
-	 * @return namespace corresponding to 'theNode'
+	 * @param prefix prefix for a namespace
+	 * @return URI corresponding to namespace
 	 */
 	virtual const XalanDOMString&
-	getNamespaceOfNode(const XalanNode&	theNode) const = 0;
+	getNamespaceForPrefix(
+			const XalanDOMString&	prefix, 
+			const XalanElement&		namespaceContext) const = 0;
 
 	/**
 	 * Retrieves the URI of the named unparsed entity
@@ -117,6 +119,18 @@ public:
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const = 0;
+
+	/**
+	 * Determine if a node is after another node, in document order.
+	 *
+	 * @param node1 The first node
+	 * @param node2 The second node
+	 * @return true if node1 one is after node2, or false if it is not.
+	 */
+	virtual bool
+	isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const = 0;
 };
 
 

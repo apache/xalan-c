@@ -69,7 +69,6 @@
 
 
 #include <DOMSupport/DOMSupport.hpp>
-#include <DOMSupport/NamespaceResolver.hpp>
 
 
 
@@ -87,18 +86,25 @@ public:
 	virtual void
 	reset();
 
+
 	// These interfaces are inherited from DOMSupport...
+
 	virtual const XalanDOMString&
-	getNamespaceOfNode(const XalanNode&	theNode) const;
+	getNamespaceForPrefix(
+			const XalanDOMString&	prefix, 
+			const XalanElement&		namespaceContext) const;
 
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const;
 
-private:
+	virtual bool
+	isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const;
 
-	NamespaceResolver			m_resolver;
+private:
 
 	mutable XalanDOMStringPool	m_pool;
 };

@@ -788,3 +788,58 @@ DOMServices::isNodeAfterSibling(
 
 	return isNodeAfterSibling;
 }
+
+
+
+XalanNode*
+DOMServices::findOwnerElement(
+			const XalanNode&	attr,
+			XalanNode&			element)
+{
+
+    XalanNode*	parent = 0;
+
+	const XalanNamedNodeMap* const	attrs = element.getAttributes();
+
+	if(attrs != 0)
+	{
+		const unsigned int	nAttrs = attrs->getLength();
+
+		for(unsigned int i = 0; i < nAttrs; i++)
+		{
+			if(attrs->item(i) == &attr)
+			{
+				parent = &element;
+					
+				break;
+			}
+		}
+	}
+
+	if(parent == 0)
+    {
+		bool		fFound = false;
+
+		XalanNode*	child = element.getFirstChild();
+
+		while(child != 0 && fFound == false)
+		{
+			if(child->getNodeType() == XalanNode::ELEMENT_NODE)
+			{
+				parent = findOwnerElement(attr, *child);
+
+				if(parent != 0)
+				{
+					fFound = true;
+				}
+			}
+
+			if (fFound == false)
+			{
+				child = child->getNextSibling();
+			}
+		}
+    }
+
+	return parent;
+}

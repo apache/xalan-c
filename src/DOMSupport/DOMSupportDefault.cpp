@@ -80,7 +80,6 @@
 
 DOMSupportDefault::DOMSupportDefault() :
 	DOMSupport(),
-	m_resolver(),
 	m_pool()
 {
 }
@@ -96,15 +95,16 @@ DOMSupportDefault::~DOMSupportDefault()
 void
 DOMSupportDefault::reset()
 {
-	m_resolver.reset();
 }
 
 
 
 const XalanDOMString&
-DOMSupportDefault::getNamespaceOfNode(const XalanNode&	theNode) const
+DOMSupportDefault::getNamespaceForPrefix(
+			const XalanDOMString&	prefix, 
+			const XalanElement&		namespaceContext) const
 {
-	return m_resolver.getNamespaceOfNode(theNode);
+	return DOMServices::getNamespaceForPrefix(prefix, namespaceContext);
 }
 
 
@@ -172,4 +172,14 @@ DOMSupportDefault::getUnparsedEntityURI(
 #else
 	return m_pool.get(theURI);
 #endif
+}
+
+
+
+bool
+DOMSupportDefault::isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const
+{
+	return DOMServices::isNodeAfter(node1, node2);
 }
