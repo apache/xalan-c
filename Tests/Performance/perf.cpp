@@ -106,10 +106,25 @@
 #endif
 
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanDOMString>		FileNameVectorType;
+#else
+	typedef std::vector<XalanDOMString>	FileNameVectorType;
+#endif
+
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
+#else
+	typedef std::map<XalanDOMString, XalanDOMString>	Hashtable;
+#endif
+
 const char* const 	excludeStylesheets[] =
 {
-	"basic-all_well.xml",
+//	"basic-all_well.xml",
 	"large-evans_large.xml",
+//	"sort-cem-big.xml",
+//	"large-cem10k.xml",
 	0
 };
 
@@ -227,6 +242,18 @@ eTOeTransform(const XSLTInputSource&		inputSource,
 	return endTime - startTime;
 }
 
+void
+addMetricToAttrs(char* desc, double theMetric, Hashtable& attrs)
+{
+	XalanDOMString	temp;
+
+	DoubleToDOMString(theMetric, temp);
+	attrs.insert(Hashtable::value_type(XalanDOMString(desc), temp));
+
+	return;
+}
+
+
 bool
 getParams(int argc, 
 		  const char*	argv[], 
@@ -256,11 +283,8 @@ getParams(int argc,
 	return true;
 }
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanDOMString>		FileNameVectorType;
-#else
-	typedef std::vector<XalanDOMString>	FileNameVectorType;
-#endif
+
+
 
 int
 main(
@@ -302,33 +326,34 @@ main(
 				// Define some constants for file suffixes ...
 				const XalanDOMString  XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
 				const XalanDOMString  XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
-				const XalanDOMString  outputDir(XALAN_STATIC_UCODE_STRING("\\xslt-results\\perf\\test\\"));
+				const XalanDOMString  outputRoot(XALAN_STATIC_UCODE_STRING("d:\\xslt\\cperf-results\\"));
 				const XalanDOMString  pathSep(XALAN_STATIC_UCODE_STRING("\\"));  
-				const XalanDOMString  outputSuffix(XALAN_STATIC_UCODE_STRING(".out"));
-
-				// Define some variables used for timing...
-				clock_t startTime, endTime, accmTime;
-				double timeinMilliseconds, theAverage;
-
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 				{
 					const FileNameVectorType files = f.getTestFileNames(perfDir, dirs[j]);
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
+						// Define  variables used for timing and reporting ...
+						clock_t startTime, endTime, accmTime;
+						double timeinMilliseconds, theAverage;
+						Hashtable attrs;
+
+						attrs.insert(Hashtable::value_type(XalanDOMString("File"), files[i]));
+
 						if (skip)
 						{
 							if (checkForExclusion(files[i]))
 								continue;
 						}
-						// Output file name to result log.
-						logFile.logTestCaseInit(files[i]);
 
 						const XalanDOMString  theXMLFile= perfDir + dirs[j] + pathSep + files[i];
 						const XalanDOMString  theXSLFile = f.GenerateFileName(theXMLFile,"xsl");
-						const XalanDOMString  theOutputFile = f.GenerateFileName(theXMLFile, "out");
+						const XalanDOMString  theOutput =  outputRoot + dirs[j] + pathSep + files[i]; 
+						const XalanDOMString  theOutputFile = f.GenerateFileName(theOutput, "out");
 
 
+						attrs.insert(Hashtable::value_type(XalanDOMString("href"), theXSLFile));
 						// Create the necessary support objects to instantiate a processor.
 						XalanSourceTreeDOMSupport		csDOMSupport;
 						XalanSourceTreeParserLiaison	csParserLiaison(csDOMSupport);
@@ -378,26 +403,22 @@ main(
 						// Calculate & report performance on stylesheet parse to console and log file.
 						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
 						cout << "   XSL parse: " << timeinMilliseconds << " milliseconds." << endl;
-						logFile.logStatistic(60,
-									long(timeinMilliseconds),
-									timeinMilliseconds,
-									"Parse of XSL: ");
+						addMetricToAttrs("Parse_XSL",timeinMilliseconds, attrs);						
 
+						
 						// Parse the input XML and report how long it took...                             
 						startTime = clock();
 						XalanNode* const  glbSourceXML = parseSourceDocument(theXMLFile, 
 																	csProcessor);
 						endTime = clock();
+						assert(glbSourceXML != 0);
 
 						// Calculate & report performance on source document parse to console and log file.
 						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
 						cout << "   XML parse: " << timeinMilliseconds << " milliseconds." << endl;
-						logFile.logStatistic(60,
-									long(timeinMilliseconds),
-									timeinMilliseconds,
-									"Parse of XML: ");
+						addMetricToAttrs("Parse_XML",timeinMilliseconds, attrs);
 
-						assert(glbSourceXML != 0);
+
 
 						// The execution context uses the same factory support objects as
 						// the processor, since those objects have the same lifetime as
@@ -423,10 +444,7 @@ main(
 	
 						// Output single transform time to console and result log
 						cout << "   eTOe transform: " << etoetran << " milliseconds." << endl;
-						logFile.logStatistic(60,
-										etoetran,
-										etoetran,
-										"end To end transform: ");
+						addMetricToAttrs("eTOe", double(etoetran), attrs);
 
 
 						// Perform a single transform using compiled stylesheet and report results...
@@ -444,13 +462,14 @@ main(
 
 						// Output single transform time to console and result log
 						cout << "   One transform w/Parsed XSL: " << timeinMilliseconds << " milliseconds." << endl;
-						logFile.logStatistic(60,
-									long(timeinMilliseconds),
-									timeinMilliseconds,
-									"Single transform took: ");
+						addMetricToAttrs("Single_Transform",timeinMilliseconds, attrs);
 
+						
 						// Perform multiple transforms and calculate the average time ..
 						accmTime = 0;
+
+						addMetricToAttrs("Iterations",iterCount, attrs);
+
 						for(int j = 0; j < iterCount; ++j)
 						{	
 							accmTime += transformWParsedSource(glbSourceXML,
@@ -466,13 +485,9 @@ main(
 						// Output average transform time to console and result log
 						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Parsed XML" << endl;
 
-						char tmp[100];
-						sprintf(tmp, "%s%d%s","Avg: transform of ", iterCount, " iter's w/Parsed XML.");
-						logFile.logStatistic(60, 
-									long(theAverage), 
-									theAverage, 
-									tmp);
+						addMetricToAttrs("Ave_Parsed_XML",theAverage, attrs);
 
+						
 						//	This is currently how the XalanJ 2.0 is performing transforms,
 						//	i.e. with the unparsed XML Source.
 						
@@ -488,15 +503,12 @@ main(
 							csParserLiaison.reset();		// This deletes the document
 						}
 						theAverage = accmTime / iterCount;
-						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Source XML" << endl;
+						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/UnParsed XML" << endl;
 
-						sprintf(tmp, "%s%d%s","Avg: transform of ", iterCount, " iter's w/Source XML.");
-						logFile.logStatistic(60, 
-									long(theAverage), 
-									theAverage, 
-									tmp);
+						addMetricToAttrs("Ave_UnParsed_XML",theAverage, attrs);
 
-						logFile.logTestCaseClose(files[i], XalanDOMString("Done"));
+
+						logFile.logElement(10, "Metric", attrs, "xxx");
 					}//for files
 				}//for dirs
 			}//xsltinit
