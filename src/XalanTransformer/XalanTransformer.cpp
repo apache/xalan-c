@@ -86,10 +86,11 @@ XalanTransformer::XalanTransformer():
 				m_domSupport,
 				m_xobjectFactory,
 				m_xpathFactory),
+	m_stylesheetXPathFactory(),
 	m_stylesheetConstructionContext(
 				m_processor,
 				m_xsltprocessorEnvSupport,
-				m_xpathFactory),
+				m_stylesheetXPathFactory),
 	m_stylesheetExecutionContext(
 				m_processor,
 				m_xsltprocessorEnvSupport,

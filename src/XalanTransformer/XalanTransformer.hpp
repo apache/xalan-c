@@ -69,6 +69,7 @@
 
 
 #include <XPath/XObjectFactoryDefault.hpp>
+#include <XPath/XPathFactoryBlock.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 
 
@@ -303,8 +304,10 @@ private:
 	
 	XSLTEngineImpl							m_processor;
 	
+	XPathFactoryBlock						m_stylesheetXPathFactory;
+
 	StylesheetConstructionContextDefault	m_stylesheetConstructionContext;
-	
+
 	StylesheetExecutionContextDefault		m_stylesheetExecutionContext;
 
 	CharVectorType							m_errorMessage;
