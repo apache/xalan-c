@@ -1256,8 +1256,7 @@ StylesheetExecutionContextDefault::reset()
 
 	assert(m_elementRecursionStack.size() == 0);
 
-	// Reset the support objects...
-	m_xpathExecutionContextDefault.reset();
+	m_variablesStack.reset();
 
 	m_xsltProcessor.reset();
 
@@ -1279,8 +1278,6 @@ StylesheetExecutionContextDefault::reset()
 
 	m_outputStreams.clear();
 
-	m_variablesStack.reset();
-
 	// Clean up the key table vector
 	for_each(m_keyTables.begin(),
 			 m_keyTables.end(),
@@ -1289,6 +1286,9 @@ StylesheetExecutionContextDefault::reset()
 	m_keyTables.clear();
 
 	assert(m_matchPatternCache.size() == 0);
+
+	// Reset the default execution context...
+	m_xpathExecutionContextDefault.reset();
 }
 
 
