@@ -127,14 +127,6 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\Formatter.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XMLSupport\FormatterListener.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XMLSupport\FormatterToDOM.cpp
 # End Source File
 # Begin Source File
@@ -177,14 +169,6 @@ SOURCE=..\..\..\..\src\XMLSupport\XMLSupportInit.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XMLSupport\Formatter.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XMLSupport\FormatterListener.hpp
-# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XMLSupport\FormatterToDOM.hpp
