@@ -798,6 +798,10 @@ SOURCE=..\..\..\..\src\XalanDOM\XalanDOMString.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringCache.cpp
 # End Source File
 # Begin Source File
@@ -2242,6 +2246,10 @@ SOURCE=..\..\..\..\src\XalanDOM\XalanDOMInit.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanDOM\XalanDOMString.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringAllocator.hpp
 # End Source File
 # Begin Source File
 
