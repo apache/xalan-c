@@ -730,7 +730,7 @@ endsWith(
  * @param theResult the string to append with the result
  * @return a reference to the passed string result.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 PointerToDOMString(
 			const void*			theValue,
 			XalanDOMString&		theResult);
@@ -762,7 +762,7 @@ PointerToDOMString(const void*	theValue)
  * @param theResult the string to append with the result
  * @return a reference to the passed string result.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 DoubleToDOMString(
 			double				theValue,
 			XalanDOMString&		theResult);
@@ -816,7 +816,7 @@ public:
  * @param theResult the string to append with the result
  * @return a reference to the passed string result.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 LongToHexDOMString(
 			long				theValue,
 			XalanDOMString&		theResult);
@@ -850,7 +850,7 @@ LongToHexDOMString(long		theValue)
  * @param theResult the string to append with the result
  * @return a reference to the passed string result.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 UnsignedLongToHexDOMString(
 			unsigned long		theValue,
 			XalanDOMString&		theResult);
@@ -883,7 +883,7 @@ UnsignedLongToHexDOMString(unsigned long	theValue)
  * @param theResult the string to append with the result
  * @return a reference to the passed string result.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 LongToDOMString(
 			long				theValue,
 			XalanDOMString&		theResult);
@@ -916,7 +916,7 @@ LongToDOMString(long	theValue)
  * @param theResult the string to append with the result
  * @return a reference to the passed string result.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 UnsignedLongToDOMString(
 			unsigned long		theValue,
 			XalanDOMString&		theResult);
@@ -1373,7 +1373,7 @@ substring(
  * @param theEndIndex   ending index, exclusive
  * @return A reference to theSubstring
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 substring(
 			const XalanDOMChar*			theString,
 			XalanDOMString&				theSubstring,

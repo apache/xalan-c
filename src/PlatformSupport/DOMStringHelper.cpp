@@ -448,7 +448,7 @@ substring(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 substring(
 			const XalanDOMChar*			theString,
 			XalanDOMString&				theSubstring,
@@ -1370,7 +1370,7 @@ static const char* const	thePrintfStrings[] =
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 PointerToDOMString(
 			const void*			theValue,
 			XalanDOMString&		theResult)
@@ -1396,7 +1396,7 @@ PointerToDOMString(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 DoubleToDOMString(
 			double				theDouble,
 			XalanDOMString&		theResult)
@@ -1769,7 +1769,7 @@ DOMStringHelper::LongToCharacters(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 LongToHexDOMString(
 			long				theValue,
 			XalanDOMString&		theResult)
@@ -1781,7 +1781,7 @@ LongToHexDOMString(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 UnsignedLongToHexDOMString(
 			unsigned long		theValue,
 			XalanDOMString&		theResult)
@@ -1793,7 +1793,7 @@ UnsignedLongToHexDOMString(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 LongToDOMString(
 			long				theValue,
 			XalanDOMString&		theResult)
@@ -1804,8 +1804,7 @@ LongToDOMString(
 }
 
 
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 UnsignedLongToDOMString(
 			unsigned long		theValue,
 			XalanDOMString&		theResult)
