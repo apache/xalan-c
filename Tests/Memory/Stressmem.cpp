@@ -1,3 +1,59 @@
+/*
+ * The Apache Software License, Version 1.1
+ *
+ *
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:  
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
+ *
+ * 4. The names "Xalan" and "Apache Software Foundation" must
+ *    not be used to endorse or promote products derived from this
+ *    software without prior written permission. For written 
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache",
+ *    nor may "Apache" appear in their name, without prior written
+ *    permission of the Apache Software Foundation.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation and was
+ * originally based on software copyright (c) 1999, International
+ * Business Machines, Inc., http://www.ibm.com.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ */
 #include <cassert>
 #include <fstream>
 #include <iostream>
@@ -22,6 +78,8 @@
 #include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
 #include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
+#include <XalanTransformer/XalanTransformer.hpp>
+
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 
@@ -34,8 +92,8 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
-//#include <XMLFileReporter.hpp>
-//#include <FileUtility.hpp>
+#include <XMLFileReporter.hpp>
+#include <FileUtility.hpp>
 
 //This is here for the threads.
 #define WIN32_LEAN_AND_MEAN
@@ -60,1183 +118,37 @@
 #include <crtdbg.h>
 #endif
 
-const char* const xxslStylesheets[] =
+const char* const excludeStylesheets[] =
 {
-	"v:\\xsl-test\\perf\\basic\\basic-all_well",
-	"v:\\xsl-test\\perf\\basic\\basic-datetranscode",
-	"v:\\xsl-test\\perf\\basic\\basic-dict2",
-	"v:\\xsl-test\\perf\\basic\\basic-Fischer-Euwe",
-	"v:\\xsl-test\\perf\\basic\\basic-queens", 
-	"v:\\xsl-test\\perf\\large\\large-all_well",
-	//"v:\\xsl-test\\perf\\large\\large-evans_large", 
-	"v:\\xsl-test\\perf\\nodes\\nodes-fancy_xml_tree_viewer_34",
-	"v:\\xsl-test\\perf\\nodes\\nodes-showtree-19991008",
-	"v:\\xsl-test\\perf\\sort\\sort-big",
-	"v:\\xsl-test\\perf\\xpath\\xpath-evans_small",
-	"v:\\xsl-test\\perf\\xpath\\xpath-evans_tiny",
+
+	"attribset15.xml",
+	"entref08.xml",
+	"entref10.xml",
+	"extend01.xml",
 	0
 };
 
 
 const char* const xslStylesheets[] =
 {
-	"v:\\xsl-test\\conf\\attribset\\attribset01",
-	"v:\\xsl-test\\conf\\attribset\\attribset02",
-	"v:\\xsl-test\\conf\\attribset\\attribset03",
-	"v:\\xsl-test\\conf\\attribset\\attribset04",
-	"v:\\xsl-test\\conf\\attribset\\attribset05",
-	"v:\\xsl-test\\conf\\attribset\\attribset06",
-	"v:\\xsl-test\\conf\\attribset\\attribset07",
-	"v:\\xsl-test\\conf\\attribset\\attribset08",	
-	"v:\\xsl-test\\conf\\attribset\\attribset09",
-	"v:\\xsl-test\\conf\\attribset\\attribset10",
-	"v:\\xsl-test\\conf\\attribset\\attribset11",
-	"v:\\xsl-test\\conf\\attribset\\attribset12",
-	"v:\\xsl-test\\conf\\attribset\\attribset13",
-	"v:\\xsl-test\\conf\\attribset\\attribset14",
-	//"v:\\xsl-test\\conf\\attribset\\attribset15",
-	"v:\\xsl-test\\conf\\attribset\\attribset16",
-	"v:\\xsl-test\\conf\\attribset\\attribset17",
-	"v:\\xsl-test\\conf\\attribset\\attribset18",	
-	"v:\\xsl-test\\conf\\attribset\\attribset19",
-	"v:\\xsl-test\\conf\\attribset\\attribset20",
-	"v:\\xsl-test\\conf\\attribset\\attribset21",
-	"v:\\xsl-test\\conf\\attribset\\attribset22",
-	"v:\\xsl-test\\conf\\attribset\\attribset23",
-	"v:\\xsl-test\\conf\\attribset\\attribset24",
-	"v:\\xsl-test\\conf\\attribset\\attribset25",
-	"v:\\xsl-test\\conf\\attribset\\attribset26",
-	"v:\\xsl-test\\conf\\attribset\\attribset27",
-	"v:\\xsl-test\\conf\\attribset\\attribset28",	
-	"v:\\xsl-test\\conf\\attribset\\attribset29",
-	"v:\\xsl-test\\conf\\attribset\\attribset30",
-	"v:\\xsl-test\\conf\\attribset\\attribset31",
-	"v:\\xsl-test\\conf\\attribset\\attribset32",
-	"v:\\xsl-test\\conf\\attribset\\attribset33",
-	"v:\\xsl-test\\conf\\attribset\\attribset34",
-	"v:\\xsl-test\\conf\\attribset\\attribset35",
-	"v:\\xsl-test\\conf\\attribset\\attribset36",
-	"v:\\xsl-test\\conf\\attribset\\attribset37",
-	"v:\\xsl-test\\conf\\attribset\\attribset38",
-	"v:\\xsl-test\\conf\\attribvaltemplate\\attribvaltemplate01",
-	"v:\\xsl-test\\conf\\attribvaltemplate\\attribvaltemplate02",
-	"v:\\xsl-test\\conf\\attribvaltemplate\\attribvaltemplate03",
-	"v:\\xsl-test\\conf\\attribvaltemplate\\attribvaltemplate04",
-	"v:\\xsl-test\\conf\\attribvaltemplate\\attribvaltemplate05",
-	"v:\\xsl-test\\conf\\attribvaltemplate\\attribvaltemplate07",
-	"v:\\xsl-test\\conf\\axes\\axes01",
-	"v:\\xsl-test\\conf\\axes\\axes02",
-	"v:\\xsl-test\\conf\\axes\\axes03",
-	"v:\\xsl-test\\conf\\axes\\axes04",
-	"v:\\xsl-test\\conf\\axes\\axes05",
-	"v:\\xsl-test\\conf\\axes\\axes06",
-	"v:\\xsl-test\\conf\\axes\\axes07",
-	"v:\\xsl-test\\conf\\axes\\axes08",	
-	"v:\\xsl-test\\conf\\axes\\axes09",
-	"v:\\xsl-test\\conf\\axes\\axes10",
-	"v:\\xsl-test\\conf\\axes\\axes11",
-	"v:\\xsl-test\\conf\\axes\\axes12",
-	"v:\\xsl-test\\conf\\axes\\axes13",
-	"v:\\xsl-test\\conf\\axes\\axes14",
-	"v:\\xsl-test\\conf\\axes\\axes15",
-	"v:\\xsl-test\\conf\\axes\\axes16",
-	"v:\\xsl-test\\conf\\axes\\axes17",
-	"v:\\xsl-test\\conf\\axes\\axes18",	
-	"v:\\xsl-test\\conf\\axes\\axes19",
-	"v:\\xsl-test\\conf\\axes\\axes20",
-	"v:\\xsl-test\\conf\\axes\\axes21",
-	"v:\\xsl-test\\conf\\axes\\axes22",
-	"v:\\xsl-test\\conf\\axes\\axes23",
-	"v:\\xsl-test\\conf\\axes\\axes24",
-	"v:\\xsl-test\\conf\\axes\\axes25",
-	"v:\\xsl-test\\conf\\axes\\axes26",
-	"v:\\xsl-test\\conf\\axes\\axes27",
-	"v:\\xsl-test\\conf\\axes\\axes28",	
-	"v:\\xsl-test\\conf\\axes\\axes29",
-	"v:\\xsl-test\\conf\\axes\\axes30",
-	"v:\\xsl-test\\conf\\axes\\axes31",
-	"v:\\xsl-test\\conf\\axes\\axes32",
-	"v:\\xsl-test\\conf\\axes\\axes33",
-	"v:\\xsl-test\\conf\\axes\\axes34",
-	"v:\\xsl-test\\conf\\axes\\axes35",
-	"v:\\xsl-test\\conf\\axes\\axes36",
-	"v:\\xsl-test\\conf\\axes\\axes37",
-	"v:\\xsl-test\\conf\\axes\\axes38",
-	"v:\\xsl-test\\conf\\axes\\axes40",
-	"v:\\xsl-test\\conf\\axes\\axes41",
-	"v:\\xsl-test\\conf\\axes\\axes42",
-	"v:\\xsl-test\\conf\\axes\\axes43",
-	"v:\\xsl-test\\conf\\axes\\axes44",
-	"v:\\xsl-test\\conf\\axes\\axes45",
-	"v:\\xsl-test\\conf\\axes\\axes46",
-	"v:\\xsl-test\\conf\\axes\\axes47",	
-	"v:\\xsl-test\\conf\\axes\\axes48",
-	"v:\\xsl-test\\conf\\axes\\axes49",
-	"v:\\xsl-test\\conf\\axes\\axes50",
-	"v:\\xsl-test\\conf\\axes\\axes51",
-	"v:\\xsl-test\\conf\\axes\\axes52",
-	"v:\\xsl-test\\conf\\axes\\axes53",
-	"v:\\xsl-test\\conf\\axes\\axes54",
-	"v:\\xsl-test\\conf\\axes\\axes55",
-	"v:\\xsl-test\\conf\\axes\\axes56",
-	"v:\\xsl-test\\conf\\axes\\axes57",	
-	"v:\\xsl-test\\conf\\axes\\axes58",
-	"v:\\xsl-test\\conf\\axes\\axes59",
-	"v:\\xsl-test\\conf\\axes\\axes60",
-	"v:\\xsl-test\\conf\\axes\\axes61",
-	"v:\\xsl-test\\conf\\axes\\axes62",
-	"v:\\xsl-test\\conf\\axes\\axes63",
-	"v:\\xsl-test\\conf\\axes\\axes64",
-	"v:\\xsl-test\\conf\\axes\\axes65",
-	"v:\\xsl-test\\conf\\axes\\axes66",
-	"v:\\xsl-test\\conf\\axes\\axes67",	
-	"v:\\xsl-test\\conf\\axes\\axes68",
-	"v:\\xsl-test\\conf\\axes\\axes69",
-	"v:\\xsl-test\\conf\\axes\\axes70",
-	"v:\\xsl-test\\conf\\axes\\axes71",
-	"v:\\xsl-test\\conf\\axes\\axes72",
-	"v:\\xsl-test\\conf\\axes\\axes73",
-	"v:\\xsl-test\\conf\\axes\\axes74",
-	"v:\\xsl-test\\conf\\axes\\axes75",
-	"v:\\xsl-test\\conf\\axes\\axes76",
-	"v:\\xsl-test\\conf\\axes\\axes77",
-	"v:\\xsl-test\\conf\\axes\\axes78",
-	"v:\\xsl-test\\conf\\axes\\axes79",
-	"v:\\xsl-test\\conf\\axes\\axes80",
-	"v:\\xsl-test\\conf\\axes\\axes81",
-	"v:\\xsl-test\\conf\\axes\\axes82",
-	"v:\\xsl-test\\conf\\axes\\axes83",	
-	"v:\\xsl-test\\conf\\axes\\axes84",
-	"v:\\xsl-test\\conf\\axes\\axes85",
-	"v:\\xsl-test\\conf\\axes\\axes86",
-	"v:\\xsl-test\\conf\\axes\\axes87",
-	"v:\\xsl-test\\conf\\axes\\axes88",
-	"v:\\xsl-test\\conf\\axes\\axes89",
-	"v:\\xsl-test\\conf\\axes\\axes90",
-	"v:\\xsl-test\\conf\\axes\\axes91",
-	"v:\\xsl-test\\conf\\axes\\axes92",
-	"v:\\xsl-test\\conf\\axes\\axes93",
-	"v:\\xsl-test\\conf\\axes\\axes94",
-	"v:\\xsl-test\\conf\\boolean\\boolean01",
-	"v:\\xsl-test\\conf\\boolean\\boolean02",
-	"v:\\xsl-test\\conf\\boolean\\boolean03",
-	"v:\\xsl-test\\conf\\boolean\\boolean04",
-	"v:\\xsl-test\\conf\\boolean\\boolean05",
-	"v:\\xsl-test\\conf\\boolean\\boolean06",
-	"v:\\xsl-test\\conf\\boolean\\boolean07",
-	"v:\\xsl-test\\conf\\boolean\\boolean08",	
-	"v:\\xsl-test\\conf\\boolean\\boolean09",
-	"v:\\xsl-test\\conf\\boolean\\boolean10",
-	"v:\\xsl-test\\conf\\boolean\\boolean11",
-	"v:\\xsl-test\\conf\\boolean\\boolean12",
-	"v:\\xsl-test\\conf\\boolean\\boolean13",
-	"v:\\xsl-test\\conf\\boolean\\boolean14",
-	"v:\\xsl-test\\conf\\boolean\\boolean15",
-	"v:\\xsl-test\\conf\\boolean\\boolean16",
-	"v:\\xsl-test\\conf\\boolean\\boolean17",
-	"v:\\xsl-test\\conf\\boolean\\boolean18",	
-	"v:\\xsl-test\\conf\\boolean\\boolean19",
-	"v:\\xsl-test\\conf\\boolean\\boolean20",
-	"v:\\xsl-test\\conf\\boolean\\boolean21",
-	"v:\\xsl-test\\conf\\boolean\\boolean22",
-	"v:\\xsl-test\\conf\\boolean\\boolean23",
-	"v:\\xsl-test\\conf\\boolean\\boolean24",
-	"v:\\xsl-test\\conf\\boolean\\boolean25",
-	"v:\\xsl-test\\conf\\boolean\\boolean26",
-	"v:\\xsl-test\\conf\\boolean\\boolean27",
-	"v:\\xsl-test\\conf\\boolean\\boolean28",	
-	"v:\\xsl-test\\conf\\boolean\\boolean29",
-	"v:\\xsl-test\\conf\\boolean\\boolean30",
-	"v:\\xsl-test\\conf\\boolean\\boolean31",
-	"v:\\xsl-test\\conf\\boolean\\boolean32",
-	"v:\\xsl-test\\conf\\boolean\\boolean33",
-	"v:\\xsl-test\\conf\\boolean\\boolean34",
-	"v:\\xsl-test\\conf\\boolean\\boolean35",
-	"v:\\xsl-test\\conf\\boolean\\boolean36",
-	"v:\\xsl-test\\conf\\boolean\\boolean37",
-	"v:\\xsl-test\\conf\\boolean\\boolean38",
-	"v:\\xsl-test\\conf\\boolean\\boolean40",
-	"v:\\xsl-test\\conf\\boolean\\boolean41",
-	"v:\\xsl-test\\conf\\boolean\\boolean42",
-	"v:\\xsl-test\\conf\\boolean\\boolean43",
-	"v:\\xsl-test\\conf\\boolean\\boolean44",
-	"v:\\xsl-test\\conf\\boolean\\boolean45",
-	"v:\\xsl-test\\conf\\boolean\\boolean46",
-	"v:\\xsl-test\\conf\\boolean\\boolean47",	
-	"v:\\xsl-test\\conf\\boolean\\boolean48",
-	"v:\\xsl-test\\conf\\boolean\\boolean49",
-	"v:\\xsl-test\\conf\\boolean\\boolean50",
-	"v:\\xsl-test\\conf\\boolean\\boolean51",
-	"v:\\xsl-test\\conf\\boolean\\boolean52",
-	"v:\\xsl-test\\conf\\boolean\\boolean53",
-	"v:\\xsl-test\\conf\\boolean\\boolean54",
-	"v:\\xsl-test\\conf\\boolean\\boolean55",
-	"v:\\xsl-test\\conf\\boolean\\boolean56",
-	"v:\\xsl-test\\conf\\boolean\\boolean57",	
-	"v:\\xsl-test\\conf\\boolean\\boolean58",
-	"v:\\xsl-test\\conf\\boolean\\boolean59",
-	"v:\\xsl-test\\conf\\conditional\\conditional01",
-	"v:\\xsl-test\\conf\\conditional\\conditional02",
-	"v:\\xsl-test\\conf\\conditional\\conditional03",
-	"v:\\xsl-test\\conf\\conditional\\conditional04",
-	"v:\\xsl-test\\conf\\conditional\\conditional05",
-	"v:\\xsl-test\\conf\\conditional\\conditional06",
-	"v:\\xsl-test\\conf\\conditional\\conditional07",
-	"v:\\xsl-test\\conf\\conditional\\conditional08",
-	"v:\\xsl-test\\conf\\conditional\\conditional09",
-	"v:\\xsl-test\\conf\\conditional\\conditional10",
-	"v:\\xsl-test\\conf\\conditional\\conditional11",
-	"v:\\xsl-test\\conf\\conditional\\conditional12",
-	"v:\\xsl-test\\conf\\conditional\\conditional13",
-	"v:\\xsl-test\\conf\\conditional\\conditional14",
-	"v:\\xsl-test\\conf\\conditional\\conditional15",
-	"v:\\xsl-test\\conf\\conditional\\conditional16",
-	"v:\\xsl-test\\conf\\conditional\\conditional17",
-	"v:\\xsl-test\\conf\\conditional\\conditional18",
-	"v:\\xsl-test\\conf\\conditional\\conditional19",
-	"v:\\xsl-test\\conf\\conditional\\conditional20",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres01",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres02",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres03",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres04",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres05",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres06",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres07",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres08",	
-	"v:\\xsl-test\\conf\\conflictres\\conflictres09",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres10",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres11",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres12",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres13",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres14",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres15",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres16",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres17",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres18",	
-	"v:\\xsl-test\\conf\\conflictres\\conflictres19",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres20",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres21",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres22",
-	"v:\\xsl-test\\conf\\conflictres\\conflictres23",
-	"v:\\xsl-test\\conf\\copy\\copy01",
-	"v:\\xsl-test\\conf\\copy\\copy02",
-	"v:\\xsl-test\\conf\\copy\\copy03",
-	"v:\\xsl-test\\conf\\copy\\copy04",
-	"v:\\xsl-test\\conf\\copy\\copy05",
-	"v:\\xsl-test\\conf\\copy\\copy06",
-	"v:\\xsl-test\\conf\\copy\\copy07",
-	"v:\\xsl-test\\conf\\copy\\copy08",
-	"v:\\xsl-test\\conf\\copy\\copy09",
-	"v:\\xsl-test\\conf\\copy\\copy10",
-	"v:\\xsl-test\\conf\\copy\\copy11",
-	"v:\\xsl-test\\conf\\copy\\copy12",
-	"v:\\xsl-test\\conf\\copy\\copy13",
-	"v:\\xsl-test\\conf\\copy\\copy14",
-	"v:\\xsl-test\\conf\\copy\\copy15",
-	"v:\\xsl-test\\conf\\copy\\copy16",
-	"v:\\xsl-test\\conf\\copy\\copy17",
-	"v:\\xsl-test\\conf\\dflt\\dflt01",
-	"v:\\xsl-test\\conf\\dflt\\dflt02",
-	"v:\\xsl-test\\conf\\dflt\\dflt03",
-	"v:\\xsl-test\\conf\\dflt\\dflt04",
-	"v:\\xsl-test\\conf\\embed\\embed03",
-	"v:\\xsl-test\\conf\\embed\\embed06", 
-	"v:\\xsl-test\\conf\\entref\\entref01",
-	"v:\\xsl-test\\conf\\entref\\entref02",
-	"v:\\xsl-test\\conf\\entref\\entref03",
-	"v:\\xsl-test\\conf\\entref\\entref04",
-	"v:\\xsl-test\\conf\\entref\\entref05",
-	"v:\\xsl-test\\conf\\entref\\entref06",
-	"v:\\xsl-test\\conf\\entref\\entref07",
-	//"v:\\xsl-test\\conf\\entref\\entref08",
-	"v:\\xsl-test\\conf\\entref\\entref09",
-	//"v:\\xsl-test\\conf\\entref\\entref10",
-	"v:\\xsl-test\\conf\\expression\\expression01",
-	"v:\\xsl-test\\conf\\expression\\expression02",
-	"v:\\xsl-test\\conf\\expression\\expression03",
-	"v:\\xsl-test\\conf\\expression\\expression04",
-	"v:\\xsl-test\\conf\\expression\\expression05",
-//	"v:\\xsl-test\\conf\\extend\\extend01",
-	"v:\\xsl-test\\conf\\extend\\extend02",
-	"v:\\xsl-test\\conf\\extend\\extend03",
-	"v:\\xsl-test\\conf\\extend\\extend04",
-	"v:\\xsl-test\\conf\\idkey\\idkey01",
-	"v:\\xsl-test\\conf\\idkey\\idkey02",
-	"v:\\xsl-test\\conf\\idkey\\idkey03",
-	"v:\\xsl-test\\conf\\idkey\\idkey04",
-	"v:\\xsl-test\\conf\\idkey\\idkey05",
-	"v:\\xsl-test\\conf\\idkey\\idkey06",
-	"v:\\xsl-test\\conf\\idkey\\idkey07",
-	"v:\\xsl-test\\conf\\idkey\\idkey08",
-	"v:\\xsl-test\\conf\\idkey\\idkey09",
-	"v:\\xsl-test\\conf\\idkey\\idkey10",
-	"v:\\xsl-test\\conf\\idkey\\idkey11",
-	"v:\\xsl-test\\conf\\idkey\\idkey12",
-	"v:\\xsl-test\\conf\\idkey\\idkey10",
-	"v:\\xsl-test\\conf\\idkey\\idkey11",
-	"v:\\xsl-test\\conf\\idkey\\idkey12",
-	"v:\\xsl-test\\conf\\idkey\\idkey13",
-	//"v:\\xsl-test\\conf\\idkey\\idkey14",
-	"v:\\xsl-test\\conf\\idkey\\idkey15",
-	"v:\\xsl-test\\conf\\idkey\\idkey16",
-	"v:\\xsl-test\\conf\\idkey\\idkey17",
-	"v:\\xsl-test\\conf\\idkey\\idkey18",
-	"v:\\xsl-test\\conf\\idkey\\idkey24",
-	"v:\\xsl-test\\conf\\idkey\\idkey30",
-	"v:\\xsl-test\\conf\\idkey\\idkey33", 
-	"v:\\xsl-test\\conf\\impincl\\impincl01",
-	"v:\\xsl-test\\conf\\impincl\\impincl02",
-	"v:\\xsl-test\\conf\\impincl\\impincl03",
-	"v:\\xsl-test\\conf\\impincl\\impincl04",
-	"v:\\xsl-test\\conf\\impincl\\impincl05",
-	"v:\\xsl-test\\conf\\impincl\\impincl06",
-	"v:\\xsl-test\\conf\\impincl\\impincl07",
-	"v:\\xsl-test\\conf\\impincl\\impincl08",
-	"v:\\xsl-test\\conf\\impincl\\impincl09",
-	"v:\\xsl-test\\conf\\impincl\\impincl10",
-	"v:\\xsl-test\\conf\\impincl\\impincl11",
-	//"v:\\xsl-test\\conf\\impincl\\impincl12",
-	"v:\\xsl-test\\conf\\impincl\\impincl14",
-	"v:\\xsl-test\\conf\\impincl\\impincl15",
-	//"v:\\xsl-test\\conf\\impincl\\impincl16",
-	"v:\\xsl-test\\conf\\impincl\\impincl17",
-	//"v:\\xsl-test\\conf\\intl\\intl01",
-	"v:\\xsl-test\\conf\\intl\\intl02",
-	"v:\\xsl-test\\conf\\intl\\intl03",
-	"v:\\xsl-test\\conf\\intl\\intl04",
-	"v:\\xsl-test\\conf\\intl\\intl05",
-	"v:\\xsl-test\\conf\\intl\\intl06",
-	"v:\\xsl-test\\conf\\intl\\intl07", 
-	"v:\\xsl-test\\conf\\lre\\lre01",
-	"v:\\xsl-test\\conf\\lre\\lre02",
-	"v:\\xsl-test\\conf\\lre\\lre03",
-	"v:\\xsl-test\\conf\\lre\\lre04",
-	"v:\\xsl-test\\conf\\lre\\lre05",
-	//"v:\\xsl-test\\conf\\lre\\lre06",
-	"v:\\xsl-test\\conf\\lre\\lre07",
-	"v:\\xsl-test\\conf\\lre\\lre08",	
-	//"v:\\xsl-test\\conf\\lre\\lre09",
-	"v:\\xsl-test\\conf\\lre\\lre10",
-	"v:\\xsl-test\\conf\\lre\\lre11",
-	"v:\\xsl-test\\conf\\lre\\lre12",
-	"v:\\xsl-test\\conf\\lre\\lre13",
-	"v:\\xsl-test\\conf\\lre\\lre14",
-	"v:\\xsl-test\\conf\\lre\\lre15",
-	"v:\\xsl-test\\conf\\lre\\lre16",
-	"v:\\xsl-test\\conf\\match\\match01",
-	"v:\\xsl-test\\conf\\match\\match02",
-	"v:\\xsl-test\\conf\\match\\match03",
-	"v:\\xsl-test\\conf\\match\\match04",
-	"v:\\xsl-test\\conf\\match\\match05",
-	"v:\\xsl-test\\conf\\match\\match06",
-	"v:\\xsl-test\\conf\\match\\match07",
-	"v:\\xsl-test\\conf\\match\\match08",	
-	"v:\\xsl-test\\conf\\match\\match09",
-	"v:\\xsl-test\\conf\\match\\match10",
-	"v:\\xsl-test\\conf\\match\\match11",
-	"v:\\xsl-test\\conf\\match\\match12",
-	"v:\\xsl-test\\conf\\match\\match13",
-	"v:\\xsl-test\\conf\\match\\match14",
-	"v:\\xsl-test\\conf\\math\\math01",
-	"v:\\xsl-test\\conf\\math\\math02",
-	"v:\\xsl-test\\conf\\math\\math03",
-	"v:\\xsl-test\\conf\\math\\math04",
-	"v:\\xsl-test\\conf\\math\\math05",
-	"v:\\xsl-test\\conf\\math\\math06",
-	"v:\\xsl-test\\conf\\math\\math07",
-	"v:\\xsl-test\\conf\\math\\math08",	
-	"v:\\xsl-test\\conf\\math\\math09",
-	"v:\\xsl-test\\conf\\math\\math10",
-	"v:\\xsl-test\\conf\\math\\math11",
-	"v:\\xsl-test\\conf\\math\\math12",
-	"v:\\xsl-test\\conf\\math\\math13",
-	"v:\\xsl-test\\conf\\math\\math14",
-	"v:\\xsl-test\\conf\\math\\math15",
-	"v:\\xsl-test\\conf\\math\\math16",
-	"v:\\xsl-test\\conf\\math\\math17",
-	"v:\\xsl-test\\conf\\math\\math18",	
-	"v:\\xsl-test\\conf\\math\\math19",
-	"v:\\xsl-test\\conf\\math\\math20",
-	"v:\\xsl-test\\conf\\math\\math21",
-	"v:\\xsl-test\\conf\\math\\math22",
-	"v:\\xsl-test\\conf\\math\\math23",
-	"v:\\xsl-test\\conf\\math\\math24",
-	"v:\\xsl-test\\conf\\math\\math25",
-	"v:\\xsl-test\\conf\\math\\math26",
-	"v:\\xsl-test\\conf\\math\\math27",
-	"v:\\xsl-test\\conf\\math\\math28",	
-	"v:\\xsl-test\\conf\\math\\math29",
-	"v:\\xsl-test\\conf\\math\\math30",
-	"v:\\xsl-test\\conf\\math\\math31",
-	"v:\\xsl-test\\conf\\math\\math32",
-	"v:\\xsl-test\\conf\\math\\math33",
-	"v:\\xsl-test\\conf\\math\\math34",
-	"v:\\xsl-test\\conf\\math\\math35",
-	"v:\\xsl-test\\conf\\math\\math36",
-	"v:\\xsl-test\\conf\\math\\math37",
-	"v:\\xsl-test\\conf\\math\\math38",
-	"v:\\xsl-test\\conf\\math\\math40",
-	"v:\\xsl-test\\conf\\math\\math41",
-	"v:\\xsl-test\\conf\\math\\math42",
-	"v:\\xsl-test\\conf\\math\\math43",
-	"v:\\xsl-test\\conf\\math\\math44",
-	"v:\\xsl-test\\conf\\math\\math45",
-	"v:\\xsl-test\\conf\\math\\math46",
-	"v:\\xsl-test\\conf\\math\\math47",	
-	"v:\\xsl-test\\conf\\math\\math48",
-	"v:\\xsl-test\\conf\\math\\math49",
-	"v:\\xsl-test\\conf\\math\\math50",
-	"v:\\xsl-test\\conf\\math\\math51",
-	"v:\\xsl-test\\conf\\math\\math52",
-	"v:\\xsl-test\\conf\\math\\math53",
-	"v:\\xsl-test\\conf\\math\\math54",
-	"v:\\xsl-test\\conf\\math\\math55",
-	"v:\\xsl-test\\conf\\math\\math56",
-	"v:\\xsl-test\\conf\\math\\math57",	
-	"v:\\xsl-test\\conf\\math\\math58",
-	"v:\\xsl-test\\conf\\math\\math59",
-	"v:\\xsl-test\\conf\\math\\math60",
-	"v:\\xsl-test\\conf\\math\\math61",
-	"v:\\xsl-test\\conf\\math\\math62",
-	"v:\\xsl-test\\conf\\math\\math63",
-	"v:\\xsl-test\\conf\\math\\math64",
-	"v:\\xsl-test\\conf\\math\\math65",
-	"v:\\xsl-test\\conf\\math\\math66",
-	"v:\\xsl-test\\conf\\math\\math67",	
-	"v:\\xsl-test\\conf\\math\\math68",
-	"v:\\xsl-test\\conf\\math\\math69",
-	"v:\\xsl-test\\conf\\math\\math70",
-	"v:\\xsl-test\\conf\\math\\math71",
-	"v:\\xsl-test\\conf\\math\\math72",
-	"v:\\xsl-test\\conf\\math\\math73",
-	"v:\\xsl-test\\conf\\math\\math74",
-	"v:\\xsl-test\\conf\\math\\math75",
-	"v:\\xsl-test\\conf\\math\\math76",
-	"v:\\xsl-test\\conf\\math\\math77",
-	"v:\\xsl-test\\conf\\math\\math78",
-	"v:\\xsl-test\\conf\\math\\math79",
-	"v:\\xsl-test\\conf\\math\\math80",
-	"v:\\xsl-test\\conf\\math\\math81",
-	"v:\\xsl-test\\conf\\math\\math82",
-	"v:\\xsl-test\\conf\\math\\math83",	
-	"v:\\xsl-test\\conf\\math\\math84",
-	"v:\\xsl-test\\conf\\math\\math85",
-	"v:\\xsl-test\\conf\\math\\math86",
-	"v:\\xsl-test\\conf\\math\\math87",
-	"v:\\xsl-test\\conf\\math\\math88",
-	"v:\\xsl-test\\conf\\math\\math89",
-	"v:\\xsl-test\\conf\\math\\math90",
-	"v:\\xsl-test\\conf\\math\\math91",
-	"v:\\xsl-test\\conf\\math\\math92",
-	"v:\\xsl-test\\conf\\math\\math93",
-	"v:\\xsl-test\\conf\\math\\math94",
-	"v:\\xsl-test\\conf\\math\\math95",	
-	"v:\\xsl-test\\conf\\math\\math96",
-	"v:\\xsl-test\\conf\\math\\math97",
-	"v:\\xsl-test\\conf\\math\\math98",
-	"v:\\xsl-test\\conf\\math\\math99",
-	"v:\\xsl-test\\conf\\math\\math100",
-	"v:\\xsl-test\\conf\\math\\math101",
-	"v:\\xsl-test\\conf\\math\\math102",
-	"v:\\xsl-test\\conf\\math\\math103",
-	"v:\\xsl-test\\conf\\math\\math104", 
-	"v:\\xsl-test\\conf\\mdocs\\mdocs01",
-	"v:\\xsl-test\\conf\\mdocs\\mdocs02",
-//	"v:\\xsl-test\\conf\\mdocs\\mdocs03",
-	"v:\\xsl-test\\conf\\mdocs\\mdocs04",
-	"v:\\xsl-test\\conf\\mdocs\\mdocs05",
-//	"v:\\xsl-test\\conf\\mdocs\\mdocs06",
-	"v:\\xsl-test\\conf\\mdocs\\mdocs07",
-	"v:\\xsl-test\\conf\\mdocs\\mdocs08",
-	"v:\\xsl-test\\conf\\mdocs\\mdocs09",
-	"v:\\xsl-test\\conf\\mdocs\\mdocs10",
-	"v:\\xsl-test\\conf\\mdocs\\mdocs11",
-	"v:\\xsl-test\\conf\\mdocs\\mdocs12",
-	"v:\\xsl-test\\conf\\mdocs\\mdocs13",
-	"v:\\xsl-test\\conf\\mdocs\\mdocs14",
-	//"v:\\xsl-test\\conf\\mdocs\\mdocs15", 
-	"v:\\xsl-test\\conf\\message\\message01",
-	"v:\\xsl-test\\conf\\message\\message02",
-	//"v:\\xsl-test\\conf\\message\\message03",
-	"v:\\xsl-test\\conf\\message\\message04",
-	"v:\\xsl-test\\conf\\message\\message05",
-	"v:\\xsl-test\\conf\\message\\message06",
-	"v:\\xsl-test\\conf\\message\\message07",
-	"v:\\xsl-test\\conf\\message\\message08",
-	"v:\\xsl-test\\conf\\message\\message09",
-	"v:\\xsl-test\\conf\\message\\message10",
-	"v:\\xsl-test\\conf\\message\\message11",
-	"v:\\xsl-test\\conf\\message\\message12",
-	"v:\\xsl-test\\conf\\message\\message13",
-	"v:\\xsl-test\\conf\\message\\message14",
-	"v:\\xsl-test\\conf\\message\\message15",
-	"v:\\xsl-test\\conf\\modes\\modes01",
-	"v:\\xsl-test\\conf\\modes\\modes02",
-	"v:\\xsl-test\\conf\\modes\\modes03",
-	"v:\\xsl-test\\conf\\modes\\modes04",
-	"v:\\xsl-test\\conf\\modes\\modes05",
-	"v:\\xsl-test\\conf\\modes\\modes06",
-	"v:\\xsl-test\\conf\\modes\\modes07",
-	"v:\\xsl-test\\conf\\modes\\modes08",
-	"v:\\xsl-test\\conf\\modes\\modes09",
-	"v:\\xsl-test\\conf\\modes\\modes10",
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate01", 
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate02",
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate03",
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate04",
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate05",
-	//"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate06",
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate07",
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate08",
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate09",
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate10",
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate11",
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate12",
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate13",
-	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate14",
-	"v:\\xsl-test\\conf\\namespace\\namespace01",
-	"v:\\xsl-test\\conf\\namespace\\namespace02",
-	"v:\\xsl-test\\conf\\namespace\\namespace03",
-	"v:\\xsl-test\\conf\\namespace\\namespace04",
-	"v:\\xsl-test\\conf\\namespace\\namespace05",
-	"v:\\xsl-test\\conf\\namespace\\namespace06",
-	"v:\\xsl-test\\conf\\namespace\\namespace07",	
-	"v:\\xsl-test\\conf\\namespace\\namespace09",
-	"v:\\xsl-test\\conf\\namespace\\namespace10",
-	"v:\\xsl-test\\conf\\namespace\\namespace11",
-	"v:\\xsl-test\\conf\\namespace\\namespace12",
-	"v:\\xsl-test\\conf\\namespace\\namespace13",
-	"v:\\xsl-test\\conf\\namespace\\namespace14",
-	"v:\\xsl-test\\conf\\namespace\\namespace15",
-	"v:\\xsl-test\\conf\\namespace\\namespace16",
-	"v:\\xsl-test\\conf\\namespace\\namespace17",
-	"v:\\xsl-test\\conf\\namespace\\namespace18",	
-	"v:\\xsl-test\\conf\\namespace\\namespace19",
-	"v:\\xsl-test\\conf\\namespace\\namespace20",
-	"v:\\xsl-test\\conf\\namespace\\namespace21",
-	"v:\\xsl-test\\conf\\namespace\\namespace22",
-	"v:\\xsl-test\\conf\\namespace\\namespace23",
-	"v:\\xsl-test\\conf\\namespace\\namespace24",
-	"v:\\xsl-test\\conf\\namespace\\namespace25",
-	"v:\\xsl-test\\conf\\namespace\\namespace26",
-	"v:\\xsl-test\\conf\\namespace\\namespace27",
-	"v:\\xsl-test\\conf\\namespace\\namespace28",	
-	"v:\\xsl-test\\conf\\namespace\\namespace29",
-	"v:\\xsl-test\\conf\\namespace\\namespace30",
-	"v:\\xsl-test\\conf\\namespace\\namespace31",
-	"v:\\xsl-test\\conf\\namespace\\namespace32",
-	"v:\\xsl-test\\conf\\namespace\\namespace33",
-	"v:\\xsl-test\\conf\\namespace\\namespace34",
-	"v:\\xsl-test\\conf\\node\\node01", 
-	"v:\\xsl-test\\conf\\node\\node02",
-	"v:\\xsl-test\\conf\\node\\node03",
-	"v:\\xsl-test\\conf\\node\\node04",
-	"v:\\xsl-test\\conf\\node\\node05",
-	"v:\\xsl-test\\conf\\node\\node06",
-	"v:\\xsl-test\\conf\\node\\node07",
-	"v:\\xsl-test\\conf\\node\\node08",
-	"v:\\xsl-test\\conf\\node\\node09", 
-	"v:\\xsl-test\\conf\\node\\node10",
-	"v:\\xsl-test\\conf\\node\\node11",
-	"v:\\xsl-test\\conf\\node\\node12",
-	"v:\\xsl-test\\conf\\node\\node13",
-	"v:\\xsl-test\\conf\\node\\node14",
-	"v:\\xsl-test\\conf\\numb\\numb01",
-	"v:\\xsl-test\\conf\\numb\\numb02",
-	"v:\\xsl-test\\conf\\numb\\numb03",
-	"v:\\xsl-test\\conf\\numb\\numb04",
-	"v:\\xsl-test\\conf\\numb\\numb05",
-	"v:\\xsl-test\\conf\\numb\\numb06",
-	"v:\\xsl-test\\conf\\numb\\numb07",
-	"v:\\xsl-test\\conf\\numb\\numb08",	
-	"v:\\xsl-test\\conf\\numb\\numb09",
-	"v:\\xsl-test\\conf\\numb\\numb10",
-	"v:\\xsl-test\\conf\\numb\\numb11",
-	"v:\\xsl-test\\conf\\numb\\numb12",
-	"v:\\xsl-test\\conf\\numb\\numb13",
-	"v:\\xsl-test\\conf\\numb\\numb14",
-	"v:\\xsl-test\\conf\\numb\\numb15",
-	"v:\\xsl-test\\conf\\numb\\numb16",
-	"v:\\xsl-test\\conf\\numb\\numb17",
-	"v:\\xsl-test\\conf\\numb\\numb18",	
-	"v:\\xsl-test\\conf\\numb\\numb19",
-	"v:\\xsl-test\\conf\\numb\\numb20",
-	"v:\\xsl-test\\conf\\numb\\numb21",
-	"v:\\xsl-test\\conf\\numb\\numb22",
-	"v:\\xsl-test\\conf\\numb\\numb23",
-	"v:\\xsl-test\\conf\\numb\\numb24",
-	"v:\\xsl-test\\conf\\numb\\numb25",
-	"v:\\xsl-test\\conf\\numb\\numb26",
-	"v:\\xsl-test\\conf\\numb\\numb27",
-	"v:\\xsl-test\\conf\\numb\\numb28",	
-	"v:\\xsl-test\\conf\\numb\\numb29",
-	"v:\\xsl-test\\conf\\numb\\numb30",
-	"v:\\xsl-test\\conf\\numb\\numb31",
-	"v:\\xsl-test\\conf\\numb\\numb32",
-	"v:\\xsl-test\\conf\\numb\\numb33",
-	"v:\\xsl-test\\conf\\numb\\numb34",
-	"v:\\xsl-test\\conf\\numb\\numb35",
-	"v:\\xsl-test\\conf\\numb\\numb36",
-	"v:\\xsl-test\\conf\\numb\\numb37",
-	"v:\\xsl-test\\conf\\numb\\numb38",
-	"v:\\xsl-test\\conf\\numb\\numb40",
-	"v:\\xsl-test\\conf\\numb\\numb41",
-	"v:\\xsl-test\\conf\\numb\\numb42",
-	"v:\\xsl-test\\conf\\numb\\numb43",
-	"v:\\xsl-test\\conf\\numb\\numb44",
-	"v:\\xsl-test\\conf\\numb\\numb45",
-	"v:\\xsl-test\\conf\\numb\\numb46",
-	"v:\\xsl-test\\conf\\numb\\numb47",	
-	"v:\\xsl-test\\conf\\numb\\numb48",
-	"v:\\xsl-test\\conf\\numb\\numb49",
-	"v:\\xsl-test\\conf\\numb\\numb50",
-	"v:\\xsl-test\\conf\\numb\\numb51",
-	"v:\\xsl-test\\conf\\numb\\numb52",
-	"v:\\xsl-test\\conf\\numb\\numb53",
-	"v:\\xsl-test\\conf\\numb\\numb54",
-	"v:\\xsl-test\\conf\\numb\\numb55",
-	"v:\\xsl-test\\conf\\numb\\numb56",
-	"v:\\xsl-test\\conf\\numb\\numb57",	
-	"v:\\xsl-test\\conf\\numb\\numb58",
-	"v:\\xsl-test\\conf\\numb\\numb59",
-	"v:\\xsl-test\\conf\\numb\\numb60",
-	"v:\\xsl-test\\conf\\numb\\numb61",
-	"v:\\xsl-test\\conf\\numb\\numb62",
-	"v:\\xsl-test\\conf\\numb\\numb63",
-	"v:\\xsl-test\\conf\\numb\\numb64",
-	"v:\\xsl-test\\conf\\numb\\numb65",
-	"v:\\xsl-test\\conf\\numb\\numb66",
-	"v:\\xsl-test\\conf\\numb\\numb67",	
-	"v:\\xsl-test\\conf\\numb\\numb68",
-	"v:\\xsl-test\\conf\\numb\\numb69",
-	"v:\\xsl-test\\conf\\numb\\numb70",
-	"v:\\xsl-test\\conf\\numb\\numb71",
-	"v:\\xsl-test\\conf\\numb\\numb72",
-	"v:\\xsl-test\\conf\\numb\\numb73",
-	"v:\\xsl-test\\conf\\numb\\numb74",
-	"v:\\xsl-test\\conf\\numb\\numb75",
-	"v:\\xsl-test\\conf\\numb\\numb76",
-	"v:\\xsl-test\\conf\\numb\\numb77",
-	"v:\\xsl-test\\conf\\numb\\numb78",
-	"v:\\xsl-test\\conf\\numb\\numb79",
-	"v:\\xsl-test\\conf\\numb\\numb80",
-	"v:\\xsl-test\\conf\\numb\\numb81",
-	"v:\\xsl-test\\conf\\numb\\numb82",
-	"v:\\xsl-test\\conf\\numb\\numb83",	
-	"v:\\xsl-test\\conf\\numb\\numb84", 
-	"v:\\xsl-test\\conf\\numberformat\\numberformat23", 
-	"v:\\xsl-test\\conf\\output\\output01",
-	"v:\\xsl-test\\conf\\output\\output02",
-	"v:\\xsl-test\\conf\\output\\output03",
-	"v:\\xsl-test\\conf\\output\\output04",
-	"v:\\xsl-test\\conf\\output\\output05",
-	"v:\\xsl-test\\conf\\output\\output06",
-	"v:\\xsl-test\\conf\\output\\output07",
-	"v:\\xsl-test\\conf\\output\\output08",	
-	"v:\\xsl-test\\conf\\output\\output09",
-	"v:\\xsl-test\\conf\\output\\output10",
-	"v:\\xsl-test\\conf\\output\\output11",
-	"v:\\xsl-test\\conf\\output\\output12",
-	"v:\\xsl-test\\conf\\output\\output13",
-	"v:\\xsl-test\\conf\\output\\output14",
-	"v:\\xsl-test\\conf\\output\\output15",
-	"v:\\xsl-test\\conf\\output\\output16",
-	"v:\\xsl-test\\conf\\output\\output17",
-	"v:\\xsl-test\\conf\\output\\output18",	
-	"v:\\xsl-test\\conf\\output\\output19",
-	"v:\\xsl-test\\conf\\output\\output20",
-	"v:\\xsl-test\\conf\\output\\output21",
-	"v:\\xsl-test\\conf\\output\\output22",
-	"v:\\xsl-test\\conf\\output\\output23",
-	"v:\\xsl-test\\conf\\output\\output24",
-	"v:\\xsl-test\\conf\\output\\output25",
-	"v:\\xsl-test\\conf\\output\\output26",
-	"v:\\xsl-test\\conf\\output\\output27",
-	"v:\\xsl-test\\conf\\output\\output28",	
-	"v:\\xsl-test\\conf\\output\\output29",
-	"v:\\xsl-test\\conf\\output\\output30",
-	"v:\\xsl-test\\conf\\output\\output31",
-	"v:\\xsl-test\\conf\\output\\output32",
-	"v:\\xsl-test\\conf\\output\\output33",
-	"v:\\xsl-test\\conf\\output\\output34",
-	"v:\\xsl-test\\conf\\output\\output35",
-	"v:\\xsl-test\\conf\\output\\output36",
-	"v:\\xsl-test\\conf\\output\\output37",
-	"v:\\xsl-test\\conf\\output\\output38",
-	"v:\\xsl-test\\conf\\output\\output40",
-	"v:\\xsl-test\\conf\\output\\output41",
-	"v:\\xsl-test\\conf\\output\\output42",
-	"v:\\xsl-test\\conf\\output\\output43",
-	"v:\\xsl-test\\conf\\output\\output44",
-	"v:\\xsl-test\\conf\\output\\output45",
-	"v:\\xsl-test\\conf\\output\\output46",
-	"v:\\xsl-test\\conf\\output\\output47",	
-	"v:\\xsl-test\\conf\\output\\output48",
-	"v:\\xsl-test\\conf\\output\\output49",
-	"v:\\xsl-test\\conf\\output\\output50",
-	"v:\\xsl-test\\conf\\output\\output51",
-	"v:\\xsl-test\\conf\\output\\output52",
-	"v:\\xsl-test\\conf\\output\\output53",
-	"v:\\xsl-test\\conf\\output\\output54",
-	"v:\\xsl-test\\conf\\output\\output55",
-	"v:\\xsl-test\\conf\\output\\output56",
-	"v:\\xsl-test\\conf\\output\\output57",	
-	"v:\\xsl-test\\conf\\output\\output58",
-	"v:\\xsl-test\\conf\\output\\output59",
-	"v:\\xsl-test\\conf\\output\\output60",
-	"v:\\xsl-test\\conf\\output\\output61",
-	"v:\\xsl-test\\conf\\output\\output62",
-	"v:\\xsl-test\\conf\\output\\output63",
-	"v:\\xsl-test\\conf\\output\\output64",
-	"v:\\xsl-test\\conf\\output\\output65",
-	"v:\\xsl-test\\conf\\output\\output66",
-	"v:\\xsl-test\\conf\\output\\output67",	
-	"v:\\xsl-test\\conf\\output\\output68",
-	"v:\\xsl-test\\conf\\output\\output69",
-	"v:\\xsl-test\\conf\\output\\output70",
-	"v:\\xsl-test\\conf\\output\\output71",
-	"v:\\xsl-test\\conf\\output\\output72",
-	"v:\\xsl-test\\conf\\output\\output73",
-	"v:\\xsl-test\\conf\\output\\output74",
-	"v:\\xsl-test\\conf\\output\\output75",
-	"v:\\xsl-test\\conf\\output\\output76", 
-	"v:\\xsl-test\\conf\\position\\position01",
-	"v:\\xsl-test\\conf\\position\\position02",
-	"v:\\xsl-test\\conf\\position\\position03",
-	"v:\\xsl-test\\conf\\position\\position04",
-	"v:\\xsl-test\\conf\\position\\position05",
-	"v:\\xsl-test\\conf\\position\\position06",
-	"v:\\xsl-test\\conf\\position\\position07",
-	"v:\\xsl-test\\conf\\position\\position08",	
-	"v:\\xsl-test\\conf\\position\\position09",
-	"v:\\xsl-test\\conf\\position\\position10",
-	"v:\\xsl-test\\conf\\position\\position11",
-	"v:\\xsl-test\\conf\\position\\position12",
-	"v:\\xsl-test\\conf\\position\\position13",
-	"v:\\xsl-test\\conf\\position\\position14",
-	"v:\\xsl-test\\conf\\position\\position15",
-	"v:\\xsl-test\\conf\\position\\position16",
-	"v:\\xsl-test\\conf\\position\\position17",
-	"v:\\xsl-test\\conf\\position\\position18",	
-	"v:\\xsl-test\\conf\\position\\position19",
-	"v:\\xsl-test\\conf\\position\\position20",
-	"v:\\xsl-test\\conf\\position\\position21",
-	"v:\\xsl-test\\conf\\position\\position22",
-	"v:\\xsl-test\\conf\\position\\position23",
-	"v:\\xsl-test\\conf\\position\\position24",
-	"v:\\xsl-test\\conf\\position\\position25",
-	"v:\\xsl-test\\conf\\position\\position26",
-	"v:\\xsl-test\\conf\\position\\position27",
-	"v:\\xsl-test\\conf\\position\\position28",	
-	"v:\\xsl-test\\conf\\position\\position29",
-	"v:\\xsl-test\\conf\\position\\position30",
-	"v:\\xsl-test\\conf\\position\\position31",
-	"v:\\xsl-test\\conf\\position\\position32",
-	"v:\\xsl-test\\conf\\position\\position33",
-	"v:\\xsl-test\\conf\\position\\position34",
-	"v:\\xsl-test\\conf\\position\\position35",
-	"v:\\xsl-test\\conf\\position\\position36",
-	"v:\\xsl-test\\conf\\position\\position37",
-	"v:\\xsl-test\\conf\\position\\position38",
-	"v:\\xsl-test\\conf\\position\\position40",
-	"v:\\xsl-test\\conf\\position\\position41",
-	"v:\\xsl-test\\conf\\position\\position42",
-	"v:\\xsl-test\\conf\\position\\position43",
-	"v:\\xsl-test\\conf\\position\\position44",
-	"v:\\xsl-test\\conf\\position\\position45",
-	"v:\\xsl-test\\conf\\position\\position46",
-	"v:\\xsl-test\\conf\\position\\position47",	
-	"v:\\xsl-test\\conf\\position\\position48",
-	"v:\\xsl-test\\conf\\position\\position49",
-	"v:\\xsl-test\\conf\\position\\position50",
-	"v:\\xsl-test\\conf\\position\\position51",
-	"v:\\xsl-test\\conf\\position\\position52",
-	"v:\\xsl-test\\conf\\position\\position53",
-	"v:\\xsl-test\\conf\\position\\position54",
-	"v:\\xsl-test\\conf\\position\\position55",
-	"v:\\xsl-test\\conf\\position\\position56",
-	"v:\\xsl-test\\conf\\position\\position57",	
-	"v:\\xsl-test\\conf\\position\\position58",
-	"v:\\xsl-test\\conf\\position\\position59",
-	"v:\\xsl-test\\conf\\position\\position60",
-	"v:\\xsl-test\\conf\\position\\position61",
-	"v:\\xsl-test\\conf\\position\\position62",
-	"v:\\xsl-test\\conf\\position\\position63",
-	"v:\\xsl-test\\conf\\position\\position64",
-	"v:\\xsl-test\\conf\\position\\position65",
-	"v:\\xsl-test\\conf\\position\\position66",
-	"v:\\xsl-test\\conf\\position\\position67",	
-	"v:\\xsl-test\\conf\\position\\position68",
-	"v:\\xsl-test\\conf\\position\\position69",
-	"v:\\xsl-test\\conf\\position\\position70",
-	"v:\\xsl-test\\conf\\position\\position71",
-	"v:\\xsl-test\\conf\\position\\position72",
-	"v:\\xsl-test\\conf\\position\\position73",
-	"v:\\xsl-test\\conf\\position\\position74",
-	"v:\\xsl-test\\conf\\position\\position75",
-	"v:\\xsl-test\\conf\\position\\position76",
-	"v:\\xsl-test\\conf\\position\\position77", 
-	"v:\\xsl-test\\conf\\predicate\\predicate01",
-	"v:\\xsl-test\\conf\\predicate\\predicate02",
-	"v:\\xsl-test\\conf\\predicate\\predicate03",
-	"v:\\xsl-test\\conf\\predicate\\predicate04",
-	"v:\\xsl-test\\conf\\predicate\\predicate05",
-	"v:\\xsl-test\\conf\\predicate\\predicate06",
-	"v:\\xsl-test\\conf\\predicate\\predicate07",
-	"v:\\xsl-test\\conf\\predicate\\predicate08",	
-	"v:\\xsl-test\\conf\\predicate\\predicate09",
-	"v:\\xsl-test\\conf\\predicate\\predicate10",
-	"v:\\xsl-test\\conf\\predicate\\predicate11",
-	"v:\\xsl-test\\conf\\predicate\\predicate12",
-	"v:\\xsl-test\\conf\\predicate\\predicate13",
-	"v:\\xsl-test\\conf\\predicate\\predicate14",
-	"v:\\xsl-test\\conf\\predicate\\predicate15",
-	"v:\\xsl-test\\conf\\predicate\\predicate16",
-	"v:\\xsl-test\\conf\\predicate\\predicate17",
-	"v:\\xsl-test\\conf\\predicate\\predicate18",	
-	"v:\\xsl-test\\conf\\predicate\\predicate19",
-	"v:\\xsl-test\\conf\\predicate\\predicate20",
-	"v:\\xsl-test\\conf\\predicate\\predicate21",
-	"v:\\xsl-test\\conf\\predicate\\predicate22",
-	"v:\\xsl-test\\conf\\predicate\\predicate23",
-	"v:\\xsl-test\\conf\\predicate\\predicate24",
-	"v:\\xsl-test\\conf\\predicate\\predicate25",
-	"v:\\xsl-test\\conf\\predicate\\predicate26",
-	"v:\\xsl-test\\conf\\predicate\\predicate27",
-	"v:\\xsl-test\\conf\\predicate\\predicate28",	
-	"v:\\xsl-test\\conf\\predicate\\predicate29",
-	"v:\\xsl-test\\conf\\predicate\\predicate30",
-	"v:\\xsl-test\\conf\\predicate\\predicate31",
-	"v:\\xsl-test\\conf\\predicate\\predicate32",
-	"v:\\xsl-test\\conf\\predicate\\predicate33",
-	"v:\\xsl-test\\conf\\predicate\\predicate34",
-	"v:\\xsl-test\\conf\\predicate\\predicate35",
-	"v:\\xsl-test\\conf\\predicate\\predicate36",
-	"v:\\xsl-test\\conf\\predicate\\predicate37",
-	"v:\\xsl-test\\conf\\predicate\\predicate38",
-	"v:\\xsl-test\\conf\\processorinfo\\processorinfo01",
-	"v:\\xsl-test\\conf\\processorinfo\\processorinfo02",
-	"v:\\xsl-test\\conf\\processorinfo\\processorinfo03",
-	"v:\\xsl-test\\conf\\reluri\\reluri01",
-	"v:\\xsl-test\\conf\\reluri\\reluri02",
-	"v:\\xsl-test\\conf\\reluri\\reluri03",
-	"v:\\xsl-test\\conf\\reluri\\reluri04",
-	"v:\\xsl-test\\conf\\reluri\\reluri05",
-	"v:\\xsl-test\\conf\\reluri\\reluri06",
-	"v:\\xsl-test\\conf\\reluri\\reluri07",
-	"v:\\xsl-test\\conf\\reluri\\reluri08",
-	"v:\\xsl-test\\conf\\reluri\\reluri09",
-	"v:\\xsl-test\\conf\\reluri\\reluri10",
-	"v:\\xsl-test\\conf\\select\\select01", 
-	"v:\\xsl-test\\conf\\select\\select02",
-	"v:\\xsl-test\\conf\\select\\select03",
-	"v:\\xsl-test\\conf\\select\\select04",
-	"v:\\xsl-test\\conf\\select\\select05",
-	"v:\\xsl-test\\conf\\select\\select06",
-	"v:\\xsl-test\\conf\\select\\select07",
-	"v:\\xsl-test\\conf\\select\\select08",	
-	"v:\\xsl-test\\conf\\select\\select09",
-	"v:\\xsl-test\\conf\\select\\select10",
-	"v:\\xsl-test\\conf\\select\\select11",
-	"v:\\xsl-test\\conf\\select\\select12",
-	"v:\\xsl-test\\conf\\select\\select13",
-	"v:\\xsl-test\\conf\\select\\select14",
-	"v:\\xsl-test\\conf\\select\\select15",
-	"v:\\xsl-test\\conf\\select\\select16",
-	"v:\\xsl-test\\conf\\select\\select17",
-	"v:\\xsl-test\\conf\\select\\select18",	
-	"v:\\xsl-test\\conf\\select\\select19",
-	"v:\\xsl-test\\conf\\select\\select20",
-	"v:\\xsl-test\\conf\\select\\select21",
-	"v:\\xsl-test\\conf\\select\\select22",
-	"v:\\xsl-test\\conf\\select\\select23",
-	"v:\\xsl-test\\conf\\select\\select24",
-	"v:\\xsl-test\\conf\\select\\select25",
-	"v:\\xsl-test\\conf\\select\\select26",
-	"v:\\xsl-test\\conf\\select\\select27",
-	"v:\\xsl-test\\conf\\select\\select28",	
-	"v:\\xsl-test\\conf\\select\\select29",
-	"v:\\xsl-test\\conf\\select\\select30",
-	"v:\\xsl-test\\conf\\select\\select31",
-	"v:\\xsl-test\\conf\\select\\select32",
-	"v:\\xsl-test\\conf\\select\\select33",
-	"v:\\xsl-test\\conf\\select\\select34",
-	"v:\\xsl-test\\conf\\select\\select35",
-	"v:\\xsl-test\\conf\\select\\select36",
-	"v:\\xsl-test\\conf\\select\\select37",
-	"v:\\xsl-test\\conf\\select\\select38",
-	"v:\\xsl-test\\conf\\select\\select40",
-	"v:\\xsl-test\\conf\\select\\select41",
-	"v:\\xsl-test\\conf\\select\\select42",
-	"v:\\xsl-test\\conf\\select\\select43",
-	"v:\\xsl-test\\conf\\select\\select44",
-	"v:\\xsl-test\\conf\\select\\select45",
-	"v:\\xsl-test\\conf\\select\\select46",
-	"v:\\xsl-test\\conf\\select\\select47",	
-	"v:\\xsl-test\\conf\\select\\select48",
-	"v:\\xsl-test\\conf\\select\\select49",
-	"v:\\xsl-test\\conf\\select\\select50",
-	"v:\\xsl-test\\conf\\select\\select51",
-	"v:\\xsl-test\\conf\\select\\select52",
-	"v:\\xsl-test\\conf\\select\\select53",
-	"v:\\xsl-test\\conf\\select\\select54",
-	"v:\\xsl-test\\conf\\select\\select55",
-	"v:\\xsl-test\\conf\\select\\select56",
-	"v:\\xsl-test\\conf\\select\\select57",	
-	"v:\\xsl-test\\conf\\select\\select58",
-	"v:\\xsl-test\\conf\\select\\select59",
-	"v:\\xsl-test\\conf\\select\\select60",
-	"v:\\xsl-test\\conf\\select\\select61",
-	"v:\\xsl-test\\conf\\select\\select62",
-	"v:\\xsl-test\\conf\\select\\select63",
-	"v:\\xsl-test\\conf\\select\\select64",
-	"v:\\xsl-test\\conf\\select\\select65",
-	"v:\\xsl-test\\conf\\select\\select66",
-	"v:\\xsl-test\\conf\\select\\select67",	
-	"v:\\xsl-test\\conf\\select\\select68",
-	"v:\\xsl-test\\conf\\select\\select69",
-	"v:\\xsl-test\\conf\\select\\select70",
-	"v:\\xsl-test\\conf\\select\\select71",
-	"v:\\xsl-test\\conf\\sort\\sort01",
-	"v:\\xsl-test\\conf\\sort\\sort02",
-	"v:\\xsl-test\\conf\\sort\\sort03",
-	"v:\\xsl-test\\conf\\sort\\sort04",
-	"v:\\xsl-test\\conf\\sort\\sort05",
-	"v:\\xsl-test\\conf\\sort\\sort06",
-	"v:\\xsl-test\\conf\\sort\\sort07",
-	"v:\\xsl-test\\conf\\sort\\sort08",	
-	"v:\\xsl-test\\conf\\sort\\sort09",
-	"v:\\xsl-test\\conf\\sort\\sort10",
-	"v:\\xsl-test\\conf\\sort\\sort11",
-	"v:\\xsl-test\\conf\\sort\\sort12",
-	"v:\\xsl-test\\conf\\sort\\sort13",
-	"v:\\xsl-test\\conf\\sort\\sort14",
-	"v:\\xsl-test\\conf\\sort\\sort15",
-	"v:\\xsl-test\\conf\\sort\\sort16",
-	"v:\\xsl-test\\conf\\sort\\sort17",
-	"v:\\xsl-test\\conf\\sort\\sort18",	
-	"v:\\xsl-test\\conf\\sort\\sort19",
-	"v:\\xsl-test\\conf\\sort\\sort20",
-	"v:\\xsl-test\\conf\\sort\\sort21",
-	"v:\\xsl-test\\conf\\sort\\sort22",
-	"v:\\xsl-test\\conf\\sort\\sort23",
-	"v:\\xsl-test\\conf\\sort\\sort24",
-	"v:\\xsl-test\\conf\\sort\\sort25",
-	"v:\\xsl-test\\conf\\sort\\sort26",
-	"v:\\xsl-test\\conf\\sort\\sort27",
-	"v:\\xsl-test\\conf\\sort\\sort28",	
-	"v:\\xsl-test\\conf\\sort\\sort29",
-	"v:\\xsl-test\\conf\\sort\\sort30",
-	"v:\\xsl-test\\conf\\sort\\sort31",
-	"v:\\xsl-test\\conf\\sort\\sort32",
-	"v:\\xsl-test\\conf\\sort\\sort33",
-	"v:\\xsl-test\\conf\\sort\\sort34",
-	"v:\\xsl-test\\conf\\sort\\sort35",
-	"v:\\xsl-test\\conf\\sort\\sort36",
-	"v:\\xsl-test\\conf\\sort\\sort37",
-	"v:\\xsl-test\\conf\\sort\\sort38",
-	"v:\\xsl-test\\conf\\string\\string01",
-	"v:\\xsl-test\\conf\\string\\string02",
-	"v:\\xsl-test\\conf\\string\\string04",
-	"v:\\xsl-test\\conf\\string\\string05",
-	"v:\\xsl-test\\conf\\string\\string06",
-	"v:\\xsl-test\\conf\\string\\string07",
-	"v:\\xsl-test\\conf\\string\\string08",	
-	"v:\\xsl-test\\conf\\string\\string09",
-	"v:\\xsl-test\\conf\\string\\string10",
-	"v:\\xsl-test\\conf\\string\\string11",
-	"v:\\xsl-test\\conf\\string\\string12",
-	"v:\\xsl-test\\conf\\string\\string13",
-	"v:\\xsl-test\\conf\\string\\string14",
-	"v:\\xsl-test\\conf\\string\\string15",
-	"v:\\xsl-test\\conf\\string\\string16",
-	"v:\\xsl-test\\conf\\string\\string17",
-	"v:\\xsl-test\\conf\\string\\string18",	
-	"v:\\xsl-test\\conf\\string\\string19",
-	"v:\\xsl-test\\conf\\string\\string20",
-	"v:\\xsl-test\\conf\\string\\string21",
-	"v:\\xsl-test\\conf\\string\\string22",
-	"v:\\xsl-test\\conf\\string\\string30",
-	"v:\\xsl-test\\conf\\string\\string31",
-	"v:\\xsl-test\\conf\\string\\string32",
-	"v:\\xsl-test\\conf\\string\\string33",
-	"v:\\xsl-test\\conf\\string\\string34",
-	"v:\\xsl-test\\conf\\string\\string35",
-	"v:\\xsl-test\\conf\\string\\string36",
-	"v:\\xsl-test\\conf\\string\\string37",
-	"v:\\xsl-test\\conf\\string\\string38",
-	"v:\\xsl-test\\conf\\string\\string40",
-	"v:\\xsl-test\\conf\\string\\string41",
-	"v:\\xsl-test\\conf\\string\\string42",
-	"v:\\xsl-test\\conf\\string\\string43",
-	"v:\\xsl-test\\conf\\string\\string44",
-	"v:\\xsl-test\\conf\\string\\string45",
-	"v:\\xsl-test\\conf\\string\\string46",
-	"v:\\xsl-test\\conf\\string\\string47",	
-	"v:\\xsl-test\\conf\\string\\string48",
-	"v:\\xsl-test\\conf\\string\\string49",
-	"v:\\xsl-test\\conf\\string\\string50",
-	"v:\\xsl-test\\conf\\string\\string51",
-	"v:\\xsl-test\\conf\\string\\string52",
-	"v:\\xsl-test\\conf\\string\\string53",
-	"v:\\xsl-test\\conf\\string\\string54",
-	"v:\\xsl-test\\conf\\string\\string55",
-	"v:\\xsl-test\\conf\\string\\string56",
-	"v:\\xsl-test\\conf\\string\\string57",	
-	"v:\\xsl-test\\conf\\string\\string58",
-	"v:\\xsl-test\\conf\\string\\string59",
-	"v:\\xsl-test\\conf\\string\\string60",
-	"v:\\xsl-test\\conf\\string\\string61",
-	"v:\\xsl-test\\conf\\string\\string62",
-	"v:\\xsl-test\\conf\\string\\string63",
-	"v:\\xsl-test\\conf\\string\\string64",
-	"v:\\xsl-test\\conf\\string\\string65",
-	"v:\\xsl-test\\conf\\string\\string66",
-	"v:\\xsl-test\\conf\\string\\string67",	
-	"v:\\xsl-test\\conf\\string\\string68",
-	"v:\\xsl-test\\conf\\string\\string69",
-	"v:\\xsl-test\\conf\\string\\string70",
-	"v:\\xsl-test\\conf\\string\\string71",
-	"v:\\xsl-test\\conf\\string\\string72",
-	"v:\\xsl-test\\conf\\string\\string73",
-	"v:\\xsl-test\\conf\\string\\string74",
-	"v:\\xsl-test\\conf\\string\\string75",
-	"v:\\xsl-test\\conf\\string\\string76",
-	"v:\\xsl-test\\conf\\string\\string77",
-	"v:\\xsl-test\\conf\\string\\string78",
-	"v:\\xsl-test\\conf\\string\\string79",
-	"v:\\xsl-test\\conf\\string\\string80",
-	"v:\\xsl-test\\conf\\string\\string81",
-	"v:\\xsl-test\\conf\\string\\string82",
-	"v:\\xsl-test\\conf\\string\\string83",	
-	"v:\\xsl-test\\conf\\string\\string84",
-	"v:\\xsl-test\\conf\\string\\string85",
-	"v:\\xsl-test\\conf\\string\\string86",
-	"v:\\xsl-test\\conf\\string\\string87",
-	"v:\\xsl-test\\conf\\string\\string88",
-	"v:\\xsl-test\\conf\\string\\string89",
-	"v:\\xsl-test\\conf\\string\\string90",
-	"v:\\xsl-test\\conf\\string\\string91",
-	"v:\\xsl-test\\conf\\string\\string92",
-	"v:\\xsl-test\\conf\\string\\string93",
-	"v:\\xsl-test\\conf\\string\\string94",
-	"v:\\xsl-test\\conf\\string\\string95",	
-	"v:\\xsl-test\\conf\\string\\string96",
-	"v:\\xsl-test\\conf\\string\\string97",
-	"v:\\xsl-test\\conf\\string\\string98",
-	"v:\\xsl-test\\conf\\string\\string99",
-	"v:\\xsl-test\\conf\\string\\string100",
-	"v:\\xsl-test\\conf\\string\\string101",
-	"v:\\xsl-test\\conf\\string\\string102",
-	"v:\\xsl-test\\conf\\string\\string103",
-	"v:\\xsl-test\\conf\\string\\string104",
-	"v:\\xsl-test\\conf\\string\\string105",
-	"v:\\xsl-test\\conf\\string\\string106",
-	"v:\\xsl-test\\conf\\string\\string107",
-	"v:\\xsl-test\\conf\\string\\string108",
-	"v:\\xsl-test\\conf\\string\\string109",
-	"v:\\xsl-test\\conf\\string\\string110",
-	"v:\\xsl-test\\conf\\string\\string111",
-	"v:\\xsl-test\\conf\\string\\string112",
-	"v:\\xsl-test\\conf\\string\\string113",
-	"v:\\xsl-test\\conf\\string\\string114",
-	"v:\\xsl-test\\conf\\string\\string115",
-	"v:\\xsl-test\\conf\\string\\string116",
-	"v:\\xsl-test\\conf\\string\\string117",
-	"v:\\xsl-test\\conf\\string\\string118",
-	"v:\\xsl-test\\conf\\string\\string119",
-	"v:\\xsl-test\\conf\\string\\string120",
-	"v:\\xsl-test\\conf\\string\\string121",
-	"v:\\xsl-test\\conf\\string\\string122",
-	"v:\\xsl-test\\conf\\string\\string123",
-	"v:\\xsl-test\\conf\\string\\string124",
-	"v:\\xsl-test\\conf\\string\\string125",
-	"v:\\xsl-test\\conf\\string\\string126",
-	"v:\\xsl-test\\conf\\string\\string127",
-	"v:\\xsl-test\\conf\\string\\string128",
-	"v:\\xsl-test\\conf\\string\\string129",
-	"v:\\xsl-test\\conf\\string\\string130",
-	"v:\\xsl-test\\conf\\string\\string131",
-	"v:\\xsl-test\\conf\\string\\string132",
-	"v:\\xsl-test\\conf\\string\\string133",
-	"v:\\xsl-test\\conf\\string\\string134",
-	"v:\\xsl-test\\conf\\string\\string135",
-	"v:\\xsl-test\\conf\\variable\\variable01",
-	"v:\\xsl-test\\conf\\variable\\variable02",
-	"v:\\xsl-test\\conf\\variable\\variable03",
-	"v:\\xsl-test\\conf\\variable\\variable04",
-	"v:\\xsl-test\\conf\\variable\\variable05",
-	"v:\\xsl-test\\conf\\variable\\variable06",
-	"v:\\xsl-test\\conf\\variable\\variable07",
-	"v:\\xsl-test\\conf\\variable\\variable08",	
-	"v:\\xsl-test\\conf\\variable\\variable09",
-	"v:\\xsl-test\\conf\\variable\\variable10",
-	"v:\\xsl-test\\conf\\variable\\variable12",
-	"v:\\xsl-test\\conf\\variable\\variable13",
-	"v:\\xsl-test\\conf\\variable\\variable14",
-	"v:\\xsl-test\\conf\\variable\\variable15",
-	"v:\\xsl-test\\conf\\variable\\variable16",
-	"v:\\xsl-test\\conf\\variable\\variable17",
-	"v:\\xsl-test\\conf\\variable\\variable18",	
-	"v:\\xsl-test\\conf\\variable\\variable19",
-	"v:\\xsl-test\\conf\\variable\\variable20",
-	"v:\\xsl-test\\conf\\variable\\variable21",
-	"v:\\xsl-test\\conf\\variable\\variable23",
-	"v:\\xsl-test\\conf\\variable\\variable24",
-	//"v:\\xsl-test\\conf\\variable\\variable25",
-	"v:\\xsl-test\\conf\\variable\\variable26",
-	"v:\\xsl-test\\conf\\variable\\variable27",
-	"v:\\xsl-test\\conf\\variable\\variable28",
-	"v:\\xsl-test\\conf\\variable\\variable29",
-	"v:\\xsl-test\\conf\\variable\\variable30",
-	"v:\\xsl-test\\conf\\variable\\variable31",
-	//"v:\\xsl-test\\conf\\variable\\variable32",
-	//"v:\\xsl-test\\conf\\variable\\variable33",
-	//"v:\\xsl-test\\conf\\variable\\variable34",
-	//"v:\\xsl-test\\conf\\variable\\variable35",
-	"v:\\xsl-test\\conf\\variable\\variable36",
-	"v:\\xsl-test\\conf\\variable\\variable37",
-	"v:\\xsl-test\\conf\\variable\\variable38",
-	"v:\\xsl-test\\conf\\variable\\variable39",
-	"v:\\xsl-test\\conf\\variable\\variable40",
-	"v:\\xsl-test\\conf\\variable\\variable41",
-	"v:\\xsl-test\\conf\\variable\\variable42",
-	"v:\\xsl-test\\conf\\variable\\variable43",
-	//"v:\\xsl-test\\conf\\variable\\variable44",	
-	"v:\\xsl-test\\conf\\ver\\ver01",
-	"v:\\xsl-test\\conf\\ver\\ver02",
-	"v:\\xsl-test\\conf\\ver\\ver03",
-	"v:\\xsl-test\\conf\\ver\\ver04", 
-	"v:\\xsl-test\\conf\\whitespace\\whitespace01",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace02",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace03",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace04",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace05",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace06",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace07", 
-	"v:\\xsl-test\\conf\\whitespace\\whitespace08",	
-	"v:\\xsl-test\\conf\\whitespace\\whitespace09",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace10",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace12",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace13",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace14",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace15",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace16",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace17",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace18",	
-	"v:\\xsl-test\\conf\\whitespace\\whitespace19",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace20",
-	"v:\\xsl-test\\conf\\whitespace\\whitespace21",
+	"attribset15.xml",
+	"entref08.xml",
+	"entref10.xml",
+	"extend01.xml",
 	0
+
 };
 
+inline bool
+checkForExclusion(XalanDOMString currentFile)
+{
 
-// Used to hold compiled stylesheet, and source document.
-StylesheetRoot*		glbStylesheetRoot[sizeof(xslStylesheets) / sizeof(const char*)];
-
-XalanNode*			glbSourceDoc[sizeof(xslStylesheets) / sizeof(const char*)];
-
-
+		for (int i=0; excludeStylesheets[i] != 0; i++)
+			{	if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
+				return true;
+			}
+		return false;
+}
 
 void
 outputMessage(int iter)
@@ -1244,14 +156,28 @@ outputMessage(int iter)
 		cout << "\n" << "Starting Iteration: " << iter << '\0';
 }
 
+void
+getParams(int argc, 
+		  const char*	argv[])
+{
+	if (argc != 1)
+	{
+		cerr << "Usage: ThreadTest" << endl;
+		exit(1);
+	}
+}
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanDOMString>		FileNameVectorType;
+#else
+	typedef std::vector<XalanDOMString>	FileNameVectorType;
+#endif
 
 int
 main(
-			int				argc,
-			const char*		/* argv */[])
+	 int			argc,
+	 const char*	argv[])
 {
-	assert(sizeof(glbStylesheetRoot) == sizeof(glbSourceDoc));
 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
@@ -1260,142 +186,79 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	if (argc != 1)
-	{
-		cerr << "Usage: ThreadTest"
-			 << endl
-			 << endl;
-	}
-	else
-	{
-		try
-		{
-			// Call the static initializers...
-			XMLPlatformUtils::Initialize();
+	// Defined root for performance directory. Based on PD's machine. 
+	const XalanDOMString	confDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\conf\\"));
+	const XalanDOMString	outDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\cplus-mem\\"));
 
+	FileUtility f;
+	FileNameVectorType dirs, files;
+
+	// Get the list of Directories that are below perf
+	dirs = f.getDirectoryNames(confDir);
+
+	XMLFileReporter	logFile("cpp.xml");
+	logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
+
+	getParams(argc, argv);
+
+	try
+	{
+		// Call the static initializers...
+		//XMLPlatformUtils::Initialize();
+		XalanTransformer::initialize();
+
+		{
+			//XSLTInit	theInit;
+			XalanTransformer transformEngine;
+			const XalanDOMString  theXSLSuffix(".xsl");
+			const XalanDOMString  theXMLSuffix(".xml");
+			const XalanDOMString  pathSep(XALAN_STATIC_UCODE_STRING("\\"));  
+//			const XalanDOMString  outputSuffix(".out");
+
+			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 			{
-				XSLTInit	theInit;
-
-				// Create the necessary stuff to compile the stylesheet.
-				XalanSourceTreeDOMSupport		csDOMSupport;
-				XalanSourceTreeParserLiaison	csParserLiaison(csDOMSupport);
-
-				csDOMSupport.setParserLiaison(&csParserLiaison);
-
-				XSLTProcessorEnvSupportDefault	csXSLTProcessorEnvSupport;
-				XObjectFactoryDefault			csXObjectFactory;
-				XPathFactoryDefault				csXPathFactory;
-
-				// Create a processor to compile the stylesheet...
-				XSLTEngineImpl	csProcessor(
-						csParserLiaison,
-						csXSLTProcessorEnvSupport,
-						csDOMSupport,
-						csXObjectFactory,
-						csXPathFactory);
-
-				// Connect the processor to the support object...
-				csXSLTProcessorEnvSupport.setProcessor(&csProcessor);
-
-				// Create separate factory support objects so the stylesheet's
-				// factory-created XObject and XPath instances are independent 
-				// from processor's.
-				XObjectFactoryDefault	csStylesheetXObjectFactory;
-				XPathFactoryDefault		csStylesheetXPathFactory;
-
-				// Create a stylesheet construction context, using the
-				// stylesheet's factory support objects.
-				StylesheetConstructionContextDefault	csConstructionContext(
-														csProcessor,
-														csXSLTProcessorEnvSupport,
-														csStylesheetXPathFactory);
-
-				const XalanDOMString  theXSLSuffix(".xsl");
-				const XalanDOMString  theXMLSuffix(".xml");
-
-				for(int i = 0; xslStylesheets[i] != 0; i++)
+			  files = f.getTestFileNames(confDir, dirs[j]);
+			  for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
+			  { /*
+				if (skip)
 				{
-					const XalanDOMString  theXSLFilename(XalanDOMString(xslStylesheets[i]) + theXSLSuffix);
-					const XalanDOMString  theXMLFilename(XalanDOMString(xslStylesheets[i]) + theXMLSuffix);
-
-					//cout << "Now compiling Stylesheet: " << xslStylesheets[i] << endl;
-					cout << ".";
-
-					//Generate the XML and XSL input objects.
-					XSLTInputSource		csStylesheetSourceXSL(c_wstr(theXSLFilename));
-					XSLTInputSource		csDocumentSource(c_wstr(theXMLFilename));
-
-					// Ask the processor to create a StylesheetRoot for the specified
-					// input XSL.  This is the compiled stylesheet.  We don't have to
-					// delete it, since it is owned by the StylesheetConstructionContext
-					// instance.
-					glbStylesheetRoot[i] = csProcessor.processStylesheet(csStylesheetSourceXSL,
-														   csConstructionContext);
-					assert(glbStylesheetRoot[i] != 0);
-
-					// Ask the processor to create a compiles SourceDocument for the specified
-					// input XML. 
-					glbSourceDoc[i] = csProcessor.getSourceTreeFromInput(csDocumentSource);
-					assert(glbSourceDoc[i] != 0);
-				}
-
-				for(int j = 0; j < 10; ++j)
-				{
-					outputMessage(j);
-
-					for(int ii = 0; xslStylesheets[ii] != 0; ii++)
+					if (checkForExclusion(files[i]))
 					{
-						//cout << "Now running test: " << xslStylesheets[ii] << endl;
-						cout << "#";
-						// Create the necessary stuff to run the processor.
-						XalanSourceTreeDOMSupport		psDOMSupport;
-						XalanSourceTreeParserLiaison	psParserLiaison(psDOMSupport);
-						XSLTProcessorEnvSupportDefault	psXSLTProcessorEnvSupport;
-						XObjectFactoryDefault			psXObjectFactory;
-						XPathFactoryDefault				psXPathFactory;
-
-						// Create a processor to compile the stylesheet...
-						XSLTEngineImpl	psProcessor(
-							psParserLiaison,
-							psXSLTProcessorEnvSupport,
-							psDOMSupport,
-							psXObjectFactory,
-							psXPathFactory);
-
-						// Connect the processor to the support object...
-						psXSLTProcessorEnvSupport.setProcessor(&psProcessor);
-
-						// The execution context uses the same factory support objects as
-						// the processor, since those objects have the same lifetime as
-						// other objects created as a result of the execution.
-						StylesheetExecutionContextDefault		psExecutionContext(
-								psProcessor,
-								psXSLTProcessorEnvSupport,
-								psDOMSupport,
-								psXObjectFactory);
-
-						const XalanDOMString  outputFile("foo.out");
-
-						//Generate the XML input and output objects.
-						XSLTInputSource		csDocumentSource(glbSourceDoc[ii]);
-						XSLTResultTarget	theResultTarget(outputFile);
-
-						// Set the stylesheet to be the compiled stylesheet. Then do the transform.
-						psProcessor.setStylesheetRoot(glbStylesheetRoot[ii]);
-						psProcessor.process(csDocumentSource, theResultTarget,psExecutionContext);
+						continue;
 					}
-				}
-			}
+				} */
+				// Output file name to result log.
+				//logFile.logTestCaseInit(files[i]);
+			    cout << files[i] << endl;
 
-			XMLPlatformUtils::Terminate();
+				const XalanDOMString  theXMLFile= confDir + dirs[j] + pathSep + files[i];
+				const XalanDOMString  outFile = outDir + dirs[j] + pathSep + files[i];
+				const XalanDOMString  theXSLFile = f.GenerateFileName(theXMLFile,"xsl");
+				const XalanDOMString  theOutputFile = f.GenerateFileName(outFile, "out");
+
+				// Do a total end to end transform with no pre parsing of either xsl or xml files.
+				XSLTResultTarget		theResultTarget(theOutputFile);
+				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+				int theResult = 0;
+				/*
+				const etoetran = eTOeTransform(xmlInputSource, 
+												xslInputSource,
+												theResultTarget,
+												csConstructionContext,
+												psExecutionContext,
+												csProcessor); */
+			    theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+			  }
+			}
 		}
-		catch(...)
-		{
-			cerr << "Exception caught!!!"
-				 << endl
-				 << endl;
-		}
+		XalanTransformer::terminate();
+	}
+	catch(...)
+	{
+		cerr << "Exception caught!!!" << endl << endl;
 	}
 
-	return 0;
+
+return 0;
 }
