@@ -104,7 +104,7 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	XPathExecutionContext(&theXObjectFactory),
 	m_xpathEnvSupport(&theXPathEnvSupport),
 	m_domSupport(&theDOMSupport),
-	m_currentNode(theCurrentNode),
+	m_currentNodeStack(),
 	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
@@ -113,6 +113,7 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_cachedPosition(),
 	m_scratchQName()
 {
+	m_currentNodeStack.push_back(theCurrentNode);
 }
 
 
@@ -124,7 +125,7 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	XPathExecutionContext(),
 	m_xpathEnvSupport(0),
 	m_domSupport(0),
-	m_currentNode(theCurrentNode),
+	m_currentNodeStack(),
 	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
@@ -133,6 +134,7 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_cachedPosition(),
 	m_scratchQName()
 {
+	m_currentNodeStack.push_back(theCurrentNode);
 }
 
 
@@ -163,7 +165,8 @@ XPathExecutionContextDefault::reset()
 		m_xobjectFactory->reset();
 	}
 
-	m_currentNode = 0;
+	m_currentNodeStack.clear();
+
 	m_contextNodeList = &s_dummyList;
 	m_prefixResolver = 0;
 	m_throwFoundIndex = false;
@@ -180,15 +183,23 @@ XPathExecutionContextDefault::reset()
 XalanNode*
 XPathExecutionContextDefault::getCurrentNode() const
 {
-	return m_currentNode;
+	return m_currentNodeStack.back();
 }
 
 
 
 void
-XPathExecutionContextDefault::setCurrentNode(XalanNode*		theCurrentNode)
+XPathExecutionContextDefault::pushCurrentNode(XalanNode*	theCurrentNode)
 {
-	m_currentNode = theCurrentNode;
+	m_currentNodeStack.push_back(theCurrentNode);
+}
+
+
+
+void
+XPathExecutionContextDefault::popCurrentNode()
+{
+	m_currentNodeStack.pop_back();
 }
 
 

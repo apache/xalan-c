@@ -160,7 +160,7 @@ XPath::execute(
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodeSetAndRestore		theNodeSetAndRestore(
+	XPathExecutionContext::CurrentNodePushAndPop		theNodePushAndPop(
 									executionContext,
 									context);
 
@@ -184,7 +184,7 @@ XPath::execute(
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodeSetAndRestore		theNodeSetAndRestore(
+	XPathExecutionContext::CurrentNodePushAndPop		theNodePushAndPop(
 									executionContext,
 									context);
 
@@ -208,7 +208,7 @@ XPath::execute(
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodeSetAndRestore		theNodeSetAndRestore(
+	XPathExecutionContext::CurrentNodePushAndPop		theNodePushAndPop(
 									executionContext,
 									context);
 
@@ -232,7 +232,7 @@ XPath::execute(
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodeSetAndRestore		theNodeSetAndRestore(
+	XPathExecutionContext::CurrentNodePushAndPop		theNodePushAndPop(
 									executionContext,
 									context);
 
@@ -257,7 +257,7 @@ XPath::execute(
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodeSetAndRestore		theNodeSetAndRestore(
+	XPathExecutionContext::CurrentNodePushAndPop		theNodePushAndPop(
 									executionContext,
 									context);
 
@@ -282,7 +282,7 @@ XPath::execute(
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodeSetAndRestore		theNodeSetAndRestore(
+	XPathExecutionContext::CurrentNodePushAndPop		theNodePushAndPop(
 									executionContext,
 									context);
 

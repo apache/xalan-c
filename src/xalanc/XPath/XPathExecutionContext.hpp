@@ -146,42 +146,34 @@ public:
 	 * @param theCurrentNode new current node
 	 */
 	virtual void
-	setCurrentNode(XalanNode*	theCurrentNode) = 0;
+	pushCurrentNode(XalanNode*	theCurrentNode) = 0;
 
-	class CurrentNodeSetAndRestore
+	/**
+	 * Reset the node currently being executed.
+	 */
+	virtual void
+	popCurrentNode() = 0;
+
+	class CurrentNodePushAndPop
 	{
 	public:
 
-		CurrentNodeSetAndRestore(
+		CurrentNodePushAndPop(
 				XPathExecutionContext&	theExecutionContext,
 				XalanNode*				theNewNode) :
-			m_executionContext(theExecutionContext),
-			m_savedNode(theExecutionContext.getCurrentNode())
+			m_executionContext(theExecutionContext)
 		{
-			theExecutionContext.setCurrentNode(theNewNode);
+			theExecutionContext.pushCurrentNode(theNewNode);
 		}
 
-		CurrentNodeSetAndRestore(
-				XPathExecutionContext&	theExecutionContext,
-				XalanNode*				theOldNode,
-				XalanNode*				theNewNode) :
-			m_executionContext(theExecutionContext),
-			m_savedNode(theOldNode)
+		~CurrentNodePushAndPop()
 		{
-			assert(theExecutionContext.getCurrentNode() == theOldNode);
-
-			theExecutionContext.setCurrentNode(theNewNode);
-		}
-
-		~CurrentNodeSetAndRestore()
-		{
-			m_executionContext.setCurrentNode(m_savedNode);
+			m_executionContext.popCurrentNode();
 		}
 
 	private:
 
 		XPathExecutionContext&	m_executionContext;
-		XalanNode* const		m_savedNode;
 	};
 
 	/**

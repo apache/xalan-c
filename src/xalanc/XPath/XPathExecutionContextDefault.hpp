@@ -112,6 +112,12 @@ class XALAN_XPATH_EXPORT XPathExecutionContextDefault : public XPathExecutionCon
 {
 public:
 
+#if defined(XALAN_NO_STD_NAMESPACE)
+	typedef deque<XalanNode*>			CurrentNodeStackType;
+#else
+	typedef std::deque<XalanNode*>		CurrentNodeStackType;
+#endif
+
 	/**
 	 * Construct an XPathExecutionContextDefault object
 	 *
@@ -217,7 +223,10 @@ public:
 	getCurrentNode() const;
 
 	virtual void
-	setCurrentNode(XalanNode*		theCurrentNode);
+	pushCurrentNode(XalanNode*		theCurrentNode);
+
+	virtual void
+	popCurrentNode();
 
 	virtual bool
 	isNodeAfter(
@@ -408,7 +417,7 @@ protected:
 
 	DOMSupport*								m_domSupport;
 
-	XalanNode*								m_currentNode;
+	CurrentNodeStackType					m_currentNodeStack;
 
 	const NodeRefListBase*					m_contextNodeList;
 
