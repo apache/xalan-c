@@ -26,7 +26,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanDOMString   XNull::s_nullString;
+XalanDOMString   XNull::s_nullString(XalanMemMgrs::getDummyMemMgr());
 
 
 static const XalanDOMChar   s_null[] =
@@ -62,33 +62,12 @@ XNull::~XNull()
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XNull*
-#endif
-XNull::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XNull(*this);
-	}
-	else
-	{
-		return new (theAddress) XNull(*this);
-	}
-}
-
-
 
 const XalanDOMString&
 XNull::getTypeString() const
 {
 	return s_nullString;
 }
-
-
-
 double
 XNull::num() const
 {
@@ -108,7 +87,7 @@ XNull::boolean() const
 const XalanDOMString&
 XNull::str() const
 {
-	return s_emptyString;
+	return s_nullString;
 }
 
 
@@ -157,9 +136,6 @@ XNull::initialize()
 void
 XNull::terminate()
 {
-	releaseMemory(s_nullString);
+	releaseMemory(s_nullString, XalanMemMgrs::getDummyMemMgr());
 }
-
-
-
 XALAN_CPP_NAMESPACE_END

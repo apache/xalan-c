@@ -81,19 +81,19 @@ StylesheetRoot::StylesheetRoot(
  	Stylesheet(*this,
 			   baseIdentifier,
 			   constructionContext),	
-	m_version(),
+	m_version(constructionContext.getMemoryManager()),
 	m_indentResult(eIndentNoImplicit),
-	m_encoding(),
-	m_mediatype(),
-	m_doctypeSystem(),
-	m_doctypePublic(),
+	m_encoding(constructionContext.getMemoryManager()),
+	m_mediatype(constructionContext.getMemoryManager()),
+	m_doctypeSystem(constructionContext.getMemoryManager()),
+	m_doctypePublic(constructionContext.getMemoryManager()),
 	m_omitxmlDecl(false),
-	m_standalone(),
-	m_resultNameSpaceURL(),
+	m_standalone(constructionContext.getMemoryManager()),
+	m_resultNameSpaceURL(constructionContext.getMemoryManager()),
 	m_outputMethod(FormatterListener::OUTPUT_METHOD_NONE),
-	m_cdataSectionElems(),
+	m_cdataSectionElems(constructionContext.getMemoryManager()),
 	m_hasCDATASectionElems(false),
-	m_importStack(),
+	m_importStack(constructionContext.getMemoryManager()),
 	m_defaultTextRule(0),
 	m_defaultRule(0),
 	m_defaultRootRule(0),
@@ -102,7 +102,7 @@ StylesheetRoot::StylesheetRoot(
 	m_indentAmount(-1),
 	m_omitMETATag(false),
 	m_elemNumberNextID(0),
-	m_attributeSetsMap()
+	m_attributeSetsMap(constructionContext.getMemoryManager())
 {
 	// Our base class has already resolved the URI and pushed it on
 	// the back of the include stack, so get it from there...
@@ -112,6 +112,24 @@ StylesheetRoot::StylesheetRoot(
 }				
 
 
+StylesheetRoot*
+StylesheetRoot::create(
+                           MemoryManagerType&              theManager,
+                           const XalanDOMString&			baseIdentifier,
+                           StylesheetConstructionContext&	constructionContext)
+{
+    typedef StylesheetRoot ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(baseIdentifier, constructionContext);
+                             
+    theGuard.release();
+
+    return theResult;
+}
 
 StylesheetRoot::~StylesheetRoot()
 {
@@ -203,8 +221,11 @@ StylesheetRoot::process(
 
 	if(executionContext.doDiagnosticsOutput())
 	{
-		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING(" =============================")));
-		executionContext.diag(XalanMessageLoader::getMessage(XalanMessages::Transforming));
+        executionContext.diag(XalanDOMString(" =============================", executionContext.getMemoryManager()));
+
+        XalanDOMString theBuffer(executionContext.getMemoryManager());
+
+		executionContext.diag(XalanMessageLoader::getMessage(XalanMessages::Transforming, theBuffer));
 		executionContext.pushTime(&sourceTree);
 	}
 
@@ -252,9 +273,12 @@ StylesheetRoot::process(
 
 	if(executionContext.doDiagnosticsOutput())
 	{
-		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("")));
-		executionContext.displayDuration(XalanMessageLoader::getMessage(XalanMessages::Transform), &sourceTree);
-		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("")));
+        executionContext.diag(XalanDOMString("", executionContext.getMemoryManager()));
+
+        StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+
+		executionContext.displayDuration(XalanMessageLoader::getMessage(XalanMessages::Transform, theGuard.get()), &sourceTree);
+		executionContext.diag(XalanDOMString("", executionContext.getMemoryManager()));
 	}
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
@@ -320,14 +344,17 @@ StylesheetRoot::setupFormatterListener(
 			}
 			else if(!isEmpty(outputTarget.getFileName()))
 			{
+                StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
 				pw = executionContext.createPrintWriter(
 							outputTarget.getFileName(),
-							XalanDOMString());
+                            theGuard.get());
 			}
 			else
 			{
+                StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+
 				executionContext.error(
-					XalanMessageLoader::getMessage(XalanMessages::NoValidResultTarget),executionContext.getCurrentNode(), 0);
+					XalanMessageLoader::getMessage(XalanMessages::NoValidResultTarget, theGuard.get()),executionContext.getCurrentNode(), 0);
 			}
 		}
 
@@ -428,8 +455,10 @@ StylesheetRoot::setupFormatterListener(
 	}
 	else
 	{
+        StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+
 		executionContext.error(
-					XalanMessageLoader::getMessage(XalanMessages::NoValidResultTarget),
+					XalanMessageLoader::getMessage(XalanMessages::NoValidResultTarget, theGuard.get()),
 					executionContext.getCurrentNode(),
 					0);
 	}
@@ -473,7 +502,10 @@ StylesheetRoot::processOutputSpec(
 			}
 			else
 			{
-				constructionContext.warn(XalanMessageLoader::getMessage(XalanMessages::HasAnUnknownMethod_2Param,XalanDOMString(aname),XalanDOMString(method)),0, theLocator);
+                StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
+				constructionContext.warn(XalanMessageLoader::getMessage(XalanMessages::HasAnUnknownMethod_2Param, theGuard.get(),
+                    XalanDOMString(aname, constructionContext.getMemoryManager()),XalanDOMString(method, constructionContext.getMemoryManager())),0, theLocator);
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_OUTPUT_VERSION))
@@ -523,7 +555,9 @@ StylesheetRoot::processOutputSpec(
 
 				m_cdataSectionElems.reserve(m_cdataSectionElems.size() + theTokenCount);
 
-				XalanDOMString	theToken;
+                StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
+				XalanDOMString&	theToken = theGuard.get();
 
 				while(theTokenCount > 0)
 				{
@@ -540,7 +574,7 @@ StylesheetRoot::processOutputSpec(
 		}
 		else
 		{
-			const XalanQNameByValue		theAttributeName(aname, getNamespaces(), theLocator);
+            const XalanQNameByValue		theAttributeName(aname, getNamespaces(), constructionContext.getMemoryManager(), theLocator );
 
 			if (theAttributeName.getNamespace() == constructionContext.getXalanXSLNameSpaceURL())
 			{
@@ -563,16 +597,19 @@ StylesheetRoot::processOutputSpec(
 				}
 				else
 				{
+                    StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 					constructionContext.warn(
-						XalanMessageLoader::getMessage(XalanMessages::UnsupportedXalanSpecificAttribute_1Param,theAttributeName.getLocalPart()),
+						XalanMessageLoader::getMessage(XalanMessages::UnsupportedXalanSpecificAttribute_1Param, theGuard.get(), theAttributeName.getLocalPart()),
 						0,
 						theLocator);
 				}
 			}
 			else if (isAttrOK(aname, atts, i, constructionContext) == false)
 			{
+                StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
 				constructionContext.error(
-						XalanMessageLoader::getMessage(XalanMessages::HasIllegalAttribute_2Param, XalanDOMString(name) ,XalanDOMString(aname)),
+						XalanMessageLoader::getMessage(XalanMessages::HasIllegalAttribute_2Param, theGuard.get(),name ,aname),
 						0,
 						theLocator);
 			}
@@ -597,7 +634,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		assert(m_defaultTextRule == 0);
 		assert(m_defaultRootRule == 0);
 
-		AttributeListImpl		attrs;
+        AttributeListImpl		attrs(constructionContext.getMemoryManager());
 
 		attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
 	 					   c_wstr(Constants::ATTRTYPE_CDATA),
@@ -782,8 +819,10 @@ StylesheetRoot::getNodeSetByKey(
 		}
 		else
 		{
-			XalanAutoPtr<KeyTable>	kt(
-				new KeyTable(
+			XalanMemMgrAutoPtr<KeyTable>	kt(
+                        executionContext.getMemoryManager(),
+                        KeyTable::create(
+                            executionContext.getMemoryManager(),
 							 theKeyNode,
 							 resolver,
 							 m_keyDeclarations,
@@ -791,7 +830,7 @@ StylesheetRoot::getNodeSetByKey(
 
 			theKeysTable[theKeyNode] = kt.get();
 
-			const KeyTable* const	theNewTable = kt.release();
+			const KeyTable* const	theNewTable = kt.releasePtr();
 
 			const MutableNodeRefList&	nl = theNewTable->getNodeSetByKey(qname, ref);
 
@@ -863,8 +902,10 @@ StylesheetRoot::getAttributeSet(
 
 	if (i == m_attributeSetsMap.end())
 	{
+        StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+
 		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::UnknownNodeType_1Param,Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING),
+			XalanMessageLoader::getMessage(XalanMessages::UnknownNodeType_1Param, theGuard.get(), Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING),
 			executionContext.getCurrentNode(),
 			theLocator);
 	}

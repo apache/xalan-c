@@ -22,8 +22,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-StylesheetConstructionContext::StylesheetConstructionContext() :
-	XPathConstructionContext()
+StylesheetConstructionContext::StylesheetConstructionContext(MemoryManagerType&  theManager) :
+	XPathConstructionContext(theManager)
 {
 }
 

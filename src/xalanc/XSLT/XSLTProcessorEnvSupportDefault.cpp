@@ -55,9 +55,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(XSLTProcessor*	theProcessor) :
+XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(
+                                        MemoryManagerType& theManager,
+                                        XSLTProcessor*	theProcessor) :
 	XSLTProcessorEnvSupport(),
-	m_defaultSupport(),
+	m_defaultSupport(theManager),
 	m_processor(theProcessor)
 {
 }
@@ -123,12 +125,13 @@ XSLTProcessorEnvSupportDefault::reset()
 
 XalanDocument*
 XSLTProcessorEnvSupportDefault::parseXML(
+        MemoryManagerType&      theManager,
 		const XalanDOMString&	urlString,
 		const XalanDOMString&	base)
 {
 	if (m_processor == 0)
 	{
-		return m_defaultSupport.parseXML(urlString, base);
+		return m_defaultSupport.parseXML(theManager, urlString, base);
 	}
 	else
 	{
@@ -137,10 +140,10 @@ XSLTProcessorEnvSupportDefault::parseXML(
 		// $$$ ToDo: we should re-work this code to only use
 		// XMLRUL when necessary.
 		const URLAutoPtrType	xslURL =
-			URISupport::getURLFromString(urlString, base);
+			URISupport::getURLFromString(urlString, base, theManager);
 
 		// $$$ ToDo: Explicit XalanDOMString constructor
-		const XalanDOMString	urlText(xslURL->getURLText());
+		const XalanDOMString	urlText(xslURL->getURLText(), theManager);
 
 		// First see if it's already been parsed...
 		XalanDocument*		theDocument =
@@ -154,26 +157,32 @@ XSLTProcessorEnvSupportDefault::parseXML(
 			EntityResolverType* const	theResolver = 
 				parserLiaison.getEntityResolver();
 
+            XalanDOMString theEmptyString(theManager);
+
 			if (theResolver == 0)
 			{
 				const XSLTInputSource	inputSource(c_wstr(urlText));
 
-				theDocument = parserLiaison.parseXMLStream(inputSource);
+               
+
+				theDocument = parserLiaison.parseXMLStream(inputSource, theEmptyString);
 			}
 			else
 			{
-				const XalanAutoPtr<InputSourceType>		resolverInputSource =
-					theResolver->resolveEntity(0, c_wstr(urlText));
+                typedef XalanMemMgrAutoPtr<InputSourceType, true> AutoPtr;
+
+				const AutoPtr resolverInputSource(theManager, 
+					                        theResolver->resolveEntity(0, c_wstr(urlText)));
 
 				if (resolverInputSource.get() != 0)
 				{
-					theDocument = parserLiaison.parseXMLStream(*resolverInputSource.get());
+					theDocument = parserLiaison.parseXMLStream(*resolverInputSource.get(), theEmptyString);
 				}
 				else
 				{
 					const XSLTInputSource	inputSource(c_wstr(urlText));
 
-					theDocument = parserLiaison.parseXMLStream(inputSource);
+					theDocument = parserLiaison.parseXMLStream(inputSource, theEmptyString);
 				}
 			}
 
@@ -207,10 +216,11 @@ XSLTProcessorEnvSupportDefault::setSourceDocument(
 
 
 
-XalanDOMString
-XSLTProcessorEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
+XalanDOMString&
+XSLTProcessorEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner,
+                                               XalanDOMString&          theResult) const
 {
-	return m_defaultSupport.findURIFromDoc(owner);
+	return m_defaultSupport.findURIFromDoc(owner, theResult);
 }
 
 

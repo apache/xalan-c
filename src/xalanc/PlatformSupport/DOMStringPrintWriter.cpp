@@ -27,7 +27,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 DOMStringPrintWriter::DOMStringPrintWriter(XalanDOMString&	theString) :
-	PrintWriter(true),
+PrintWriter(theString.getMemoryManager(), true),
 	m_outputString(&theString)
 {
 }
@@ -70,8 +70,13 @@ DOMStringPrintWriter::write(
     assert(XalanDOMString::size_type(theOffset) == theOffset);
     assert(XalanDOMString::size_type(theLength) == theLength);
 
+    assert ( m_outputString != 0 );
+
+    XalanDOMString tmpString( m_outputString->getMemoryManager() );
+
+    tmpString = TranscodeFromLocalCodePage(s, tmpString);
 	write(
-        TranscodeFromLocalCodePage(s),
+        tmpString,
         XalanDOMString::size_type(theOffset),
         XalanDOMString::size_type(theLength));
 }
@@ -172,7 +177,13 @@ DOMStringPrintWriter::print(
 void
 DOMStringPrintWriter::print(double	d)
 {
-	(*m_outputString) += DoubleToDOMString(d);
+    assert ( m_outputString != 0 );
+
+    XalanDOMString tmpString( m_outputString->getMemoryManager() );
+
+    DoubleToDOMString(d, tmpString);
+
+	(*m_outputString) += tmpString;
 }
 
 
@@ -180,7 +191,13 @@ DOMStringPrintWriter::print(double	d)
 void
 DOMStringPrintWriter::print(int	i)
 {
-	(*m_outputString) += LongToDOMString(i);
+    assert ( m_outputString != 0 );
+
+    XalanDOMString tmpString( m_outputString->getMemoryManager() );
+
+    LongToDOMString(i, tmpString);
+
+	(*m_outputString) += tmpString;
 }
 
 
@@ -188,7 +205,13 @@ DOMStringPrintWriter::print(int	i)
 void
 DOMStringPrintWriter::print(long	l)
 {
-	(*m_outputString) += LongToDOMString(l);
+    assert ( m_outputString != 0 );
+
+    XalanDOMString tmpString( m_outputString->getMemoryManager() );
+
+    LongToDOMString(l, tmpString);
+
+	(*m_outputString) += tmpString;
 }
 
 

@@ -85,9 +85,12 @@ ElemSort::ElemSort(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                        theResult,
 							Constants::ELEMNAME_SORT_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -116,6 +119,31 @@ ElemSort::ElemSort(
 	}
 }
 
+ElemSort*
+ElemSort::create(
+            MemoryManagerType& theManager,
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const AttributeListType&		atts,
+			int								lineNumber,
+			int								columnNumber)
+{
+    typedef ElemSort ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(constructionContext,
+        stylesheetTree,
+        atts,
+        lineNumber,
+        columnNumber);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 ElemSort::~ElemSort()
 {

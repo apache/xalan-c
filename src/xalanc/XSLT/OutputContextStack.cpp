@@ -22,13 +22,12 @@
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
-
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-OutputContextStack::OutputContextStack() :
-	m_stack(1),
+OutputContextStack::OutputContextStack(MemoryManagerType& theManager) :
+	m_stack(theManager, 1 ),
 	m_stackPosition(m_stack.begin()),
 	m_stackSize(0)
 {
@@ -76,6 +75,7 @@ OutputContextStack::popContext()
 
 	theCurrentContext.reset();
 
+
 	--m_stackPosition;
 	--m_stackSize;
 }
@@ -87,7 +87,7 @@ OutputContextStack::clear()
 {
 	// Since we always keep one dummy entry at the beginning,
 	// swap with an OutputContextStackType instance of size 1.
-	OutputContextStackType(1).swap(m_stack);
+	OutputContextStackType( XalanMemMgrs::getDummyMemMgr(), 1).swap(m_stack);
 
 	m_stackPosition = m_stack.begin();
 

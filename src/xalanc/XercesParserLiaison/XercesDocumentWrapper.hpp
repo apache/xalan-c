@@ -37,7 +37,7 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 
 
@@ -96,10 +96,25 @@ public:
      *
      */
     XercesDocumentWrapper(
+            MemoryManagerType&          theManager,
             const DOMDocument_Type*     theXercesDocument,
             bool                        threadSafe = true,
             bool                        buildWrapper = true,
             bool                        buildMaps = false);
+
+    static XercesDocumentWrapper*
+    create( 
+            MemoryManagerType&          theManager,
+			const DOMDocument_Type*		theXercesDocument,
+			bool						threadSafe,
+			bool						buildWrapper,
+ 			bool						buildMaps);
+
+    MemoryManagerType&
+    getMemoryManager() const
+    {
+        return m_nodeMap.getMemoryManager();
+    }
 
     virtual
     ~XercesDocumentWrapper();
@@ -552,7 +567,7 @@ private:
 
     mutable XercesWrapperToXalanNodeMap     m_nodeMap;
 
-    XalanAutoPtr<XalanDOMImplementation>    m_domImplementation;
+    XalanMemMgrAutoPtr<XalanDOMImplementation, true>    m_domImplementation;
 
     mutable XercesWrapperNavigatorAllocator m_navigatorAllocator;
 
@@ -578,7 +593,7 @@ private:
 
     mutable XercesAttrWrapperAllocator      m_attributeAllocator;
 
-    const XalanAutoPtr<XalanDOMStringPool>  m_stringPool;
+    const XalanMemMgrAutoPtr<XalanDOMStringPool,true>  m_stringPool;
 };
 
 

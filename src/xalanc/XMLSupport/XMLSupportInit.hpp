@@ -41,7 +41,7 @@ class XALAN_XMLSUPPORT_EXPORT XMLSupportInit
 public:
 
 	explicit
-	XMLSupportInit();
+	XMLSupportInit(MemoryManagerType& theManager);
 
 	~XMLSupportInit();
 
@@ -55,7 +55,7 @@ private:
 
 	
 	static void
-	initialize();
+	initialize(MemoryManagerType& theManager);
 
 	static void
 	terminate();

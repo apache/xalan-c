@@ -23,8 +23,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XNodeSetNodeProxyAllocator::XNodeSetNodeProxyAllocator(size_type	theBlockCount) :
-	m_allocator(theBlockCount)
+XNodeSetNodeProxyAllocator::XNodeSetNodeProxyAllocator(MemoryManagerType&      theManager, size_type	theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -43,27 +43,13 @@ XNodeSetNodeProxyAllocator::create(XalanNode*	value)
 	nodeset_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	nodeset_type* const	theResult = new(theBlock) nodeset_type(value);
+    nodeset_type* const	theResult = new(theBlock) nodeset_type( m_allocator.getMemoryManager(), value);
 
 	m_allocator.commitAllocation(theBlock);
 
 	return theResult;
 }
 
-
-
-XNodeSetNodeProxyAllocator::nodeset_type*
-XNodeSetNodeProxyAllocator::clone(const nodeset_type&	value)
-{
-	nodeset_type* const		theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
-
-	value.clone(theBlock);
-
-	m_allocator.commitAllocation(theBlock);
-
-	return theBlock;
-}
 
 
 

@@ -48,7 +48,7 @@ public:
 	 * Perform static initialization.  See class PlatformSupportInit.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType&      theManager);
  
 	/**
 	 * Perform static shut down.  See class PlatformSupportInit.
@@ -95,6 +95,7 @@ public:
 	 */
 	static XalanOutputTranscoder*
 	makeNewTranscoder(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	theEncodingName,
 			eCode&					theResult,
 			size_type				theBlockSize);
@@ -238,7 +239,8 @@ public:
 
 		UnrepresentableCharacterException(
 			UnicodeCharType			theCharacter,
-			const XalanDOMString&	theEncoding);
+			const XalanDOMString&	theEncoding,
+            XalanDOMString&         theBuffer);
 
 		virtual
 		~UnrepresentableCharacterException();
@@ -290,10 +292,16 @@ public:
     typedef XalanTranscodingServices::UnicodeCharType   UnicodeCharType;
 
 	explicit
-	XalanOutputTranscoder();
+	XalanOutputTranscoder(MemoryManagerType& theManager);
 
 	virtual
 	~XalanOutputTranscoder();
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_memoryManager;
+    }
 
 	/**
 	 * Transcode data from UTF-16 to the transcoder's encoding.  If successfull,
@@ -346,6 +354,7 @@ public:
 
 private:
 
+    MemoryManagerType&              m_memoryManager;
 	// Not implemented...
 	XalanOutputTranscoder(const XalanOutputTranscoder&	theSource);
 

@@ -57,9 +57,18 @@ public:
 	 */
 	explicit
 	XalanDOMStringPool(
+            MemoryManagerType&  theManager,
 			block_size_type		theBlockSize = eDefaultBlockSize,
 			bucket_count_type	theBucketCount = eDefaultBucketCount,
 			bucket_size_type	theBucketSize = eDefaultBucketSize);
+
+    static XalanDOMStringPool*
+    create(
+            MemoryManagerType&  theManager,
+			block_size_type		theBlockSize = eDefaultBlockSize,
+			bucket_count_type	theBucketCount = eDefaultBucketCount,
+			bucket_size_type	theBucketSize = eDefaultBucketSize);
+
 
 	virtual
 	~XalanDOMStringPool();

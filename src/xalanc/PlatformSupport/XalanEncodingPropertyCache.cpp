@@ -24,11 +24,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanEncodingPropertyCache::XalanEncodingPropertyCache(
+            MemoryManagerType&              theManager,
 			size_t							theCacheSize,
 			const XalanOutputTranscoder*	theTranscoder) :
 	m_transcoder(theTranscoder),
-	m_presentBitmap(theCacheSize),
-	m_valueBitmap(theCacheSize)
+	m_presentBitmap(theManager, theCacheSize),
+	m_valueBitmap(theManager, theCacheSize)
 {
 }
 

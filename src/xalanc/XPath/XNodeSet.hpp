@@ -50,8 +50,8 @@ public:
 	 *
 	 * @param value Pointer to source node list.  The XNodeSet will adopt the pointer.
 	 */
-	XNodeSet(BorrowReturnMutableNodeRefList&	value);
-
+	XNodeSet(BorrowReturnMutableNodeRefList&	value,
+             MemoryManagerType& theManager);
 	/**
 	 * Create an XNodeSet from another.
 	 *
@@ -60,19 +60,13 @@ public:
 	 */
 	XNodeSet(
 			const XNodeSet&		source,
+            MemoryManagerType&  theManager,
 			bool				deepClone = false);
 
 	virtual
 	~XNodeSet();
 
 	// These methods are inherited from XNodeSetBase...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XNodeSet*
-#endif
-	clone(void*		theAddress = 0) const;
 
 	virtual const NodeRefListBase&
 	nodeset() const;

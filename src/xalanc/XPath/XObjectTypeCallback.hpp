@@ -52,7 +52,7 @@ class XALAN_XPATH_EXPORT XObjectTypeCallback
 {
 public:
 
-	XObjectTypeCallback();
+	XObjectTypeCallback(MemoryManagerType& theManager);
 
 	virtual
 	~XObjectTypeCallback();
@@ -135,6 +135,14 @@ public:
 	 */
 	virtual void
 	Null(const XObject&		theObject) = 0;
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_memoryManager;
+    }
+private:
+    MemoryManagerType& m_memoryManager;
 };
 
 

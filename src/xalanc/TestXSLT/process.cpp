@@ -273,7 +273,7 @@ struct CmdLineParams
 	const char*		inFileName;
 
 	CmdLineParams() :
-		params(),
+		params(XalanMemMgrs::getDefaultXercesMemMgr()),
 		setQuietConflictWarnings(false),
 		setQuietMode(false),
 		versionOnly(false),
@@ -577,6 +577,8 @@ createFormatter(
 			const PrefixResolver&			prefixResolver,
 			const XalanDocument*&			theResultDocument)
 {
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
 	FormatterListener*	formatter = 0;
 
 	if (formatToNull == true)
@@ -585,25 +587,26 @@ createFormatter(
 	}
 	else if(FormatterListener::OUTPUT_METHOD_XML == outputType)
 	{
-		XalanDOMString	version;
+		XalanDOMString	version(theManager);
 		bool			outputIndent = false;
-		XalanDOMString	mediatype;
-		XalanDOMString	doctypeSystem;
-		XalanDOMString	doctypePublic;
-		XalanDOMString	standalone;
+		XalanDOMString	mediatype(theManager);
+		XalanDOMString	doctypeSystem(theManager);
+		XalanDOMString	doctypePublic(theManager);
+		XalanDOMString	standalone(theManager);
 
 		if (stylesheet != 0)
 		{
-			version = stylesheet->getOutputVersion();
+			stylesheet->getOutputVersion(version);
 
-			mediatype = stylesheet->getOutputMediaType();
-			doctypeSystem = stylesheet->getOutputDoctypeSystem();
-			doctypePublic = stylesheet->getOutputDoctypePublic();
-			standalone = stylesheet->getOutputStandalone();
+			stylesheet->getOutputMediaType(mediatype);
+			stylesheet->getOutputDoctypeSystem(doctypeSystem);
+			stylesheet->getOutputDoctypePublic(doctypePublic);
+			stylesheet->getOutputStandalone(standalone);
 		}
 
 		FormatterToXML* const	fToXML =
 			new FormatterToXML(
+                    theManager,
 					resultWriter,
 					version,
 					outputIndent,
@@ -621,34 +624,35 @@ createFormatter(
 	}
 	else if(FormatterListener::OUTPUT_METHOD_TEXT == outputType)
 	{
-		formatter = new FormatterToText(resultWriter, mimeEncoding);
+		formatter = new FormatterToText( theManager, resultWriter, mimeEncoding);
 	}
 	else if(FormatterListener::OUTPUT_METHOD_HTML == outputType)
 	{
-		XalanDOMString	version;
+		XalanDOMString	version(theManager);
 		bool			outputIndent = !noIndent;
-		XalanDOMString	mediatype;
-		XalanDOMString	doctypeSystem;
-		XalanDOMString	doctypePublic;
-		XalanDOMString	standalone;
+		XalanDOMString	mediatype(theManager);
+		XalanDOMString	doctypeSystem(theManager);
+		XalanDOMString	doctypePublic(theManager);
+		XalanDOMString	standalone(theManager);
 
 		if (stylesheet != 0)
 		{
-			version = stylesheet->getOutputVersion();
+			stylesheet->getOutputVersion(version);
 
 			if (noIndent == false)
 			{
 				outputIndent = stylesheet->getOutputIndent();
 			}
 
-			mediatype = stylesheet->getOutputMediaType();
-			doctypeSystem = stylesheet->getOutputDoctypeSystem();
-			doctypePublic = stylesheet->getOutputDoctypePublic();
-			standalone = stylesheet->getOutputStandalone();
+			 stylesheet->getOutputMediaType(mediatype);
+			 stylesheet->getOutputDoctypeSystem(doctypeSystem);
+			 stylesheet->getOutputDoctypePublic(doctypePublic);
+			 stylesheet->getOutputStandalone(standalone);
 		}
 
 		FormatterToHTML* const	fToHTML =
 				new FormatterToHTML(
+                        theManager,
 						resultWriter,
 						mimeEncoding,
 						mediatype,
@@ -672,7 +676,7 @@ createFormatter(
 			theResultDocument = theDocument;
 
 			FormatterToSourceTree* const	fToSourceTree =
-				new FormatterToSourceTree(theDocument);
+				new FormatterToSourceTree(theManager, theDocument);
 
 			fToSourceTree->setPrefixResolver(&prefixResolver);
 
@@ -685,7 +689,7 @@ createFormatter(
 			assert(theDocument != 0);
 
 			FormatterToXercesDOM* const     fToDOM =
-				new FormatterToXercesDOM(theDocument, 0);
+				new FormatterToXercesDOM( theManager, theDocument, 0);
 
 			fToDOM->setPrefixResolver(&prefixResolver);
 
@@ -706,15 +710,19 @@ createFormatter(
 
 
 XalanOutputStream*
-createOutputStream(const CmdLineParams&		params)
+createOutputStream(MemoryManagerType& theManager , const CmdLineParams&		params)
 {
 	if (params.outFileName == 0)
 	{
-		return new XalanStdOutputStream(cout);
+		return new XalanStdOutputStream(cout, theManager);
 	}
 	else
 	{
-		return new XalanFileOutputStream(TranscodeFromLocalCodePage(params.outFileName));
+        XalanDOMString buffer(theManager);
+        
+        TranscodeFromLocalCodePage(params.outFileName, buffer); 
+
+		return new XalanFileOutputStream(buffer, theManager);
 	}
 }
 
@@ -722,6 +730,7 @@ createOutputStream(const CmdLineParams&		params)
 
 TraceListener*
 createTraceListener(
+            MemoryManagerType&      theManager ,
 			const CmdLineParams&	params,
 			PrintWriter&			diagnosticsWriter)
 {
@@ -731,6 +740,7 @@ createTraceListener(
 		params.traceSelectionEvent == true)
 	{
 		return new TraceListenerDefault(
+                theManager,
 				diagnosticsWriter,
 				params.traceTemplates,
 				params.traceTemplateChildren,
@@ -788,15 +798,17 @@ xsltMain(const CmdLineParams&	params)
 	// Initialize the XSLT subsystem.  This must stay in scope until
 	// we're done with the subsystem, since its destructor shuts down
 	// the subsystem.
-	XSLTInit	theInit;
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
-	const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
-	const XalanDOMString	encoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
+	XSLTInit	theInit(theManager);
+
+	const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"), theManager);
+	const XalanDOMString	encoding(XALAN_STATIC_UCODE_STRING("UTF-8"), theManager);
 
 	/**
 	 * The default diagnostic writer...
 	 */
-	XalanStdOutputStream				theStdErr(cerr);
+	XalanStdOutputStream				theStdErr(cerr, theManager);
 	XalanOutputStreamPrintWriter		diagnosticsWriter(theStdErr);
 
 	// Make sure that error reporting, which includes any TraceListener output
@@ -809,17 +821,17 @@ xsltMain(const CmdLineParams&	params)
 	// Initialize the XalanSourceTree subsystem.  This must stay in scope until
 	// we're done with the subsystem, since its destructor shuts down the
 	// subsystem.
-	XalanSourceTreeInit				theXalanSourceTreeInit;
+	XalanSourceTreeInit				theXalanSourceTreeInit(theManager);
 
 	XalanSourceTreeDOMSupport		theXalanSourceTreeDOMSupport;
-	XalanSourceTreeParserLiaison	theXalanSourceTreeParserLiaison(theXalanSourceTreeDOMSupport);
+	XalanSourceTreeParserLiaison	theXalanSourceTreeParserLiaison(theManager, theXalanSourceTreeDOMSupport);
 
 	// Hookup the parser liaison instance to the support instance.
-	theXalanSourceTreeDOMSupport.setParserLiaison(&theXalanSourceTreeParserLiaison);
+	theXalanSourceTreeDOMSupport.setParserLiaison( &theXalanSourceTreeParserLiaison);
 
 
-	XercesDOMSupport		theXercesDOMSupport;
-	XercesParserLiaison		theXercesParserLiaison;
+	XercesDOMSupport		theXercesDOMSupport(theManager);
+	XercesParserLiaison		theXercesParserLiaison(theManager);
 
 	DOMSupport&				theDOMSupport = getDOMSupport(
 		theXalanSourceTreeDOMSupport,
@@ -831,27 +843,29 @@ xsltMain(const CmdLineParams&	params)
 		theXercesParserLiaison,
 		params);
 
-	XSLTProcessorEnvSupportDefault	theXSLProcessorSupport;
+	XSLTProcessorEnvSupportDefault	theXSLProcessorSupport(theManager);
 
 	if (params.disableExtensions == false)
 	{
-		XalanExtensionsInstaller::installGlobal();
-		XalanEXSLTCommonFunctionsInstaller::installGlobal();
-		XalanEXSLTMathFunctionsInstaller::installGlobal();
-		XalanEXSLTSetFunctionsInstaller::installGlobal();
-		XalanEXSLTStringFunctionsInstaller::installGlobal();
+		XalanExtensionsInstaller::installGlobal(theManager);
+		XalanEXSLTCommonFunctionsInstaller::installGlobal(theManager);
+		XalanEXSLTMathFunctionsInstaller::installGlobal(theManager);
+		XalanEXSLTSetFunctionsInstaller::installGlobal(theManager);
+		XalanEXSLTStringFunctionsInstaller::installGlobal(theManager);
 	}
 
-	XObjectFactoryDefault	theXObjectFactory;
+	XObjectFactoryDefault	theXObjectFactory(theManager);
 
-	XPathFactoryDefault		theXPathFactory;
+	XPathFactoryDefault		theXPathFactory(theManager);
 
 	const XalanAutoPtr<TraceListener>		theTraceListener(
 			createTraceListener(
+                theManager,
 				params,
 				diagnosticsWriter));
 
 	XSLTEngineImpl	processor(
+            theManager,
 			xmlParserLiaison,
 			theXSLProcessorSupport,
 			theDOMSupport,
@@ -869,9 +883,10 @@ xsltMain(const CmdLineParams&	params)
 	// Use a different factory type for the stylesheet.  This is an optimization, since
 	// stylesheet XPath instances are built all at once and are deleted all at once when
 	// the stylesheet is destroyed.
-	XPathFactoryBlock	theStylesheetXPathFactory;
+	XPathFactoryBlock	theStylesheetXPathFactory(theManager);
 
 	StylesheetConstructionContextDefault	theConstructionContext(
+            theManager,
 			processor,
 			theStylesheetXPathFactory);
 
@@ -889,8 +904,8 @@ xsltMain(const CmdLineParams&	params)
 			assert((*it).first != 0 && (*it).second != 0);
 
 			processor.setStylesheetParam(
-					XalanDOMString((*it).first),
-					XalanDOMString((*it).second));
+					XalanDOMString((*it).first, theManager),
+					XalanDOMString((*it).second, theManager));
 		}
 	}
 
@@ -909,7 +924,7 @@ xsltMain(const CmdLineParams&	params)
 		processor.setDiagnosticsOutput(&diagnosticsWriter);
 	}
 
-	XalanDOMString	xslFileName;
+	XalanDOMString	xslFileName(theManager);
 
 	if(params.xslFileName != 0)
 	{
@@ -923,7 +938,7 @@ xsltMain(const CmdLineParams&	params)
 		stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
 	}
 
-	XalanAutoPtr<XalanOutputStream>		outputFileStream(createOutputStream(params));
+	XalanAutoPtr<XalanOutputStream>		outputFileStream(createOutputStream(theManager, params));
 	assert(outputFileStream.get() != 0);
 
 	XalanOutputStreamPrintWriter	resultWriter(*outputFileStream.get());
@@ -946,7 +961,7 @@ xsltMain(const CmdLineParams&	params)
 				processor,
 				theResultDocument));
 
-	XSLTResultTarget	rTreeTarget;
+	XSLTResultTarget	rTreeTarget(theManager);
 
 	if(formatter.get() == 0)
 	{
@@ -962,7 +977,7 @@ xsltMain(const CmdLineParams&	params)
 
 	if (params.inFileName != 0)
 	{
-		theInputSource.setSystemId(XalanDOMString(params.inFileName).c_str());
+		theInputSource.setSystemId(XalanDOMString(params.inFileName, theManager).c_str());
 	}
 	else
 	{
@@ -971,7 +986,7 @@ xsltMain(const CmdLineParams&	params)
 		cerr << "Reading input document from stdin..." << endl;
 	}
 
-	StylesheetExecutionContextDefault	theExecutionContext(processor,
+	StylesheetExecutionContextDefault	theExecutionContext(theManager, processor,
 			theXSLProcessorSupport,
 			theDOMSupport,
 			theXObjectFactory);
@@ -1052,7 +1067,7 @@ xsltMain(const CmdLineParams&	params)
 
 			// Create a FormatterTreeWalker with the the
 			// new formatter...
-			FormatterTreeWalker theTreeWalker(*formatter.get());
+			FormatterTreeWalker theTreeWalker(*formatter.get(), theManager);
 
 			// Walk the document and produce the XML...
 			theTreeWalker.traverse(theResultDocument);
@@ -1075,11 +1090,11 @@ xsltMain(const CmdLineParams&	params)
 
 	if (params.disableExtensions == false)
 	{
-		XalanExtensionsInstaller::uninstallGlobal();
-		XalanEXSLTCommonFunctionsInstaller::uninstallGlobal();
-		XalanEXSLTMathFunctionsInstaller::uninstallGlobal();
-		XalanEXSLTSetFunctionsInstaller::uninstallGlobal();
-		XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
+		XalanExtensionsInstaller::uninstallGlobal(theManager);
+		XalanEXSLTCommonFunctionsInstaller::uninstallGlobal(theManager);
+		XalanEXSLTMathFunctionsInstaller::uninstallGlobal(theManager);
+		XalanEXSLTSetFunctionsInstaller::uninstallGlobal(theManager);
+		XalanEXSLTStringFunctionsInstaller::uninstallGlobal(theManager);
 	}
 
 	return 0;
@@ -1170,7 +1185,7 @@ main(
 
 			if (theSystemID != 0)
 			{
-				cout << XalanDOMString(theSystemID);
+				cout << XalanDOMString(theSystemID,XalanMemMgrs::getDefaultXercesMemMgr());
 			}
 			else
 			{

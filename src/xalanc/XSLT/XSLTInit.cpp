@@ -31,23 +31,38 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 unsigned long	XSLTInit::s_initCounter = 0;
 
+static MemoryManagerType* s_staticMemoryManager = 0;
 
-
-XSLTInit::XSLTInit() :
-	m_platformSupportInit(),
-	m_domSupportInit(),
-	m_xmlSupportInit(),
-	m_xalanSourceTreeInit(),
-	m_xpathInit()
+XSLTInit::XSLTInit(MemoryManagerType&      theManager) :
+	m_platformSupportInit(theManager),
+	m_domSupportInit(theManager),
+	m_xmlSupportInit(theManager),
+	m_xalanSourceTreeInit(theManager),
+	m_xpathInit(theManager)
 {
 	++s_initCounter;
 
 	if (s_initCounter == 1)
 	{
-		initialize();
+		initialize(theManager);
 	}
 }
 
+XSLTInit*
+XSLTInit::create(MemoryManagerType&      theManager)
+{
+        typedef XSLTInit ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theManager);
+
+        theGuard.release();
+
+        return theResult;
+}
 
 
 XSLTInit::~XSLTInit()
@@ -60,18 +75,27 @@ XSLTInit::~XSLTInit()
 	}
 }
 
+MemoryManagerType&
+XSLTInit::getMemoryManager()
+{
+    assert( s_staticMemoryManager !=0);
 
+    return *s_staticMemoryManager;
+}
 
 void
-XSLTInit::initialize()
+XSLTInit::initialize(MemoryManagerType&  theManager)
 {
-	Constants::initialize();
+	Constants::initialize(theManager);
 
-	ElemNumber::initialize();
+	ElemNumber::initialize(theManager);
 
-	XSLTEngineImpl::initialize();
+	XSLTEngineImpl::initialize(theManager);
 
-	StylesheetHandler::initialize();
+	StylesheetHandler::initialize(theManager);
+
+    s_staticMemoryManager = & theManager;
+
 }
 
 
@@ -86,6 +110,9 @@ XSLTInit::terminate()
 	ElemNumber::terminate();
 
 	Constants::terminate();
+
+    s_staticMemoryManager = 0;
+
 }
 
 

@@ -46,7 +46,7 @@ FunctionNamespaceURI::~FunctionNamespaceURI()
 
 
 
-static const XalanDOMString		theEmptyString;
+static const XalanDOMString		theEmptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -58,8 +58,12 @@ FunctionNamespaceURI::execute(
 {
 	if (context == 0)
 	{
-		executionContext.error(
-				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param, "namespace-uri()"),
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+        XalanDOMString& theResult = theGuard.get();
+
+ 		executionContext.error(
+				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,theResult ,"namespace-uri()"),
 				context,
 				locator);
 
@@ -104,17 +108,19 @@ Function*
 #else
 FunctionNamespaceURI*
 #endif
-FunctionNamespaceURI::clone() const
+FunctionNamespaceURI::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionNamespaceURI(*this);
+	return cloneFunction_1<FunctionNamespaceURI>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionNamespaceURI::getError() const
+const XalanDOMString&
+FunctionNamespaceURI::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, "namespace-uri()");
+	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult, "namespace-uri()");
+
+    return theResult;
 }
 
 

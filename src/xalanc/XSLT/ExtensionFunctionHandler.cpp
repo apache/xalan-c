@@ -42,13 +42,14 @@ const XalanDOMChar	ExtensionFunctionHandler::s_tokenDelimiterCharacters[] =
 
 
 
-ExtensionFunctionHandler::ExtensionFunctionHandler(const XalanDOMString&	namespaceUri) :
-	m_namespaceUri(namespaceUri),
-	m_scriptLang(),
-	m_scriptSrc(),
-	m_scriptSrcURL(),
+ExtensionFunctionHandler::ExtensionFunctionHandler(const XalanDOMString&	namespaceUri,
+                                                   MemoryManagerType& theManager) :
+	m_namespaceUri(namespaceUri,theManager),
+	m_scriptLang(theManager),
+	m_scriptSrc(theManager),
+	m_scriptSrcURL(theManager),
 	m_javaObject(0),
-	m_functions(),
+	m_functions(theManager),
 	m_componentStarted(false)
 {
 }
@@ -62,17 +63,18 @@ ExtensionFunctionHandler::~ExtensionFunctionHandler()
 
 
 ExtensionFunctionHandler::ExtensionFunctionHandler (
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	namespaceUri,
 			const XalanDOMString&	funcNames,
 			const XalanDOMString&	lang,
 			const XalanDOMString&	srcURL,
 			const XalanDOMString&	src) :
-	m_namespaceUri(namespaceUri),
-	m_scriptLang(lang),
-	m_scriptSrc(src),
-	m_scriptSrcURL(srcURL),
+	m_namespaceUri(namespaceUri, theManager),
+	m_scriptLang(lang, theManager),
+	m_scriptSrc(src, theManager),
+	m_scriptSrcURL(srcURL, theManager),
 	m_javaObject(0),
-	m_functions(),
+	m_functions(theManager),
 	m_componentStarted(false)
 {
 	setFunctions (funcNames);
@@ -90,9 +92,13 @@ ExtensionFunctionHandler::setFunctions(const XalanDOMString&	funcNames)
 
 	StringTokenizer		st(funcNames, s_tokenDelimiterCharacters, false);
 
+    XalanDOMString theBuffer(getMemoryManager());
+
 	while (st.hasMoreTokens() == true)
 	{
-		m_functions.insert(st.nextToken());
+        st.nextToken(theBuffer);
+
+		m_functions.insert(theBuffer);
 	}
 }
 

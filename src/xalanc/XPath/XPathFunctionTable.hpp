@@ -53,17 +53,13 @@ public:
 
 	typedef Function::LocatorType	LocatorType;
 
-	XPathExceptionFunctionNotAvailable(int	theFunctionNumber);
-
-	XPathExceptionFunctionNotAvailable(const XalanDOMString&	theFunctionName);
-
-	XPathExceptionFunctionNotAvailable(
-		int					theFunctionNumber,
-		const LocatorType&	theLocator);
+	XPathExceptionFunctionNotAvailable(const XalanDOMString&	theFunctionNumber,
+                                        XalanDOMString&         theResult);
 
 	XPathExceptionFunctionNotAvailable(
-		const XalanDOMString&	theFunctionName,
-		const LocatorType&		theLocator);
+		const XalanDOMString&	theFunctionNumber,
+		const LocatorType&	    theLocator,
+        XalanDOMString&         theResult);
 
 	~XPathExceptionFunctionNotAvailable();
 };
@@ -78,7 +74,8 @@ class XALAN_XPATH_EXPORT XPathExceptionFunctionNotSupported : public XalanXPathE
 {
 public:
 
-	XPathExceptionFunctionNotSupported(const XalanDOMChar*	theFunctionName);
+	XPathExceptionFunctionNotSupported(const XalanDOMChar*	theFunctionName,
+                                        XalanDOMString&     theResult);
 
 	~XPathExceptionFunctionNotSupported();
 };
@@ -107,6 +104,11 @@ public:
 
 	~XPathFunctionTable();
 
+    void
+    setMemoryManager(MemoryManagerType& theManager)
+    {
+        m_memoryManager = &theManager;
+    }
 	/**
 	 * Set up the internal table.
 	 */
@@ -137,7 +139,11 @@ public:
 		}
 		else
 		{
-			throw XPathExceptionFunctionNotAvailable(theFunctionName);
+            MemoryManagerType* theManager = const_cast<MemoryManagerType*>(m_memoryManager);
+
+            XalanDOMString   theResult(*theManager);
+
+			throw XPathExceptionFunctionNotAvailable(theFunctionName, theResult);
 		}
 	}
 
@@ -162,19 +168,19 @@ public:
 	 * @param theFunctionID The ID number of the function
 	 * @return The name of the function, or an empty string if the function doesn't exist.
 	 */
-	const XalanDOMString
-	idToName(int	theFunctionID) const
+	const XalanDOMString&
+	idToName(int	theFunctionID,
+                XalanDOMString& theResult) const
 	{
-		XalanDOMString	theName;
 
 		if (theFunctionID >= 0 && theFunctionID < TableSize)
 		{
-			theName.assign(
+			theResult.assign(
 				s_functionNames[theFunctionID].m_name,
 				s_functionNames[theFunctionID].m_size);
 		}
 
-		return theName;
+		return theResult;
 	}
 
 	/**
@@ -450,6 +456,7 @@ private:
 			const XalanDOMChar*		theName,
 			StringSizeType			theNameLength);
 
+    MemoryManagerType*          m_memoryManager;
 
 	const Function*				m_functionTable[TableSize];
 

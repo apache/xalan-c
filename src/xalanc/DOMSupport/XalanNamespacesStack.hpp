@@ -36,7 +36,6 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-
 class XalanDOMString;
 
 
@@ -92,14 +91,16 @@ public:
 		typedef NamespaceCollectionType::const_iterator				const_iterator;
 		typedef NamespaceCollectionType::const_reverse_iterator		const_reverse_iterator;
 
-		XalanNamespacesStackEntry();
+		XalanNamespacesStackEntry(MemoryManagerType& theManager);
 
-		XalanNamespacesStackEntry(const XalanNamespacesStackEntry&	theSource);
+		XalanNamespacesStackEntry(const XalanNamespacesStackEntry&	theSource,
+                                    MemoryManagerType&              theManager);
 
 		~XalanNamespacesStackEntry();
 
 		XalanNamespacesStackEntry&
-		operator=(const XalanNamespacesStackEntry&	theRHS);
+		set(const XalanNamespacesStackEntry&	theRHS,
+                  MemoryManagerType&                theManager);
 
 		void
 		addDeclaration(
@@ -198,6 +199,9 @@ public:
 		swap(XalanNamespacesStackEntry&		theOther);
 
 	private:
+        //Not implemented
+        XalanNamespacesStackEntry();
+		XalanNamespacesStackEntry(const XalanNamespacesStackEntry&	theSource);
 
 		const XalanDOMString*
 		findEntry(
@@ -213,7 +217,7 @@ public:
 
 	typedef XalanNamespacesStackEntry	value_type;
 
-    typedef	XalanDeque<value_type>		NamespacesStackType;
+    typedef	XalanDeque<value_type, ConstructWithMemoryManagerTraits<value_type> >		NamespacesStackType;
 	typedef XalanVector<bool>			BoolVectorType;
 
 	typedef NamespacesStackType::iterator					iterator;
@@ -227,7 +231,7 @@ public:
 
 
 	explicit
-	XalanNamespacesStack();
+	XalanNamespacesStack(MemoryManagerType& theManager);
 
 	~XalanNamespacesStack();
 
@@ -348,6 +352,9 @@ private:
 
 	// not implemented
 	XalanNamespacesStack(const XalanNamespacesStack&);
+    XalanNamespacesStack();
+	XalanNamespacesStackEntry&
+	operator=(const XalanNamespacesStackEntry&	theRHS);
 
 	bool
 	operator==(const XalanNamespacesStack&) const;

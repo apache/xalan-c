@@ -49,14 +49,17 @@ public:
 	 * Construct an empty mutable node list.
 	 */
 	explicit
-	MutableNodeRefList();
+	MutableNodeRefList(MemoryManagerType& theManager);
 
+    static MutableNodeRefList*
+    create(MemoryManagerType& theManager);
 	/**
 	 * Construct a mutable node list from another list.
 	 * 
 	 * @param theSource source list
 	 */
-	MutableNodeRefList(const MutableNodeRefList&	theSource);
+	MutableNodeRefList(const MutableNodeRefList&	theSource,
+                        MemoryManagerType& theManager);
 
 	/**
 	 * Construct a mutable node list from another list.
@@ -64,7 +67,8 @@ public:
 	 * @param theSource  source list
 	 */
 	explicit
-	MutableNodeRefList(const NodeRefListBase&	theSource);
+	MutableNodeRefList(const NodeRefListBase&	theSource,
+                        MemoryManagerType& theManager);
 
 	virtual
 	~MutableNodeRefList();
@@ -322,6 +326,8 @@ public:
 	}
 
 private:
+    //not defined
+   	MutableNodeRefList(const MutableNodeRefList&	theSource);
 
 	// An enum to determine what the order of the nodes is...
 	enum eOrder { eUnknownOrder, eDocumentOrder, eReverseDocumentOrder };
@@ -329,7 +335,7 @@ private:
 	eOrder	m_order;
 };
 
-
+XALAN_USES_MEMORY_MANAGER(MutableNodeRefList)
 
 XALAN_CPP_NAMESPACE_END
 

@@ -47,26 +47,6 @@ XTokenNumberAdapter::~XTokenNumberAdapter()
 }
 
 
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XTokenNumberAdapter*
-#endif
-XTokenNumberAdapter::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XTokenNumberAdapter(*this);
-	}
-	else
-	{
-		return new (theAddress) XTokenNumberAdapter(*this);
-	}
-}
-
-
-
 double
 XTokenNumberAdapter::num() const
 {

@@ -22,7 +22,6 @@
 #include <xalanc/PlatformSupport/PlatformSupportDefinitions.hpp>
 
 
-
 XALAN_CPP_NAMESPACE_BEGIN
 
 
@@ -38,6 +37,7 @@ class XalanDOMString;
 class XALAN_PLATFORMSUPPORT_EXPORT PrefixResolver
 {
 public:
+
 
 	PrefixResolver();
 

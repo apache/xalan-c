@@ -23,7 +23,10 @@
 
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
 #include <LocalMsgIndex.hpp>
+
 
 
 XALAN_CPP_NAMESPACE_BEGIN
@@ -35,11 +38,46 @@ class  XALAN_PLATFORMSUPPORT_EXPORT XalanMessageLoader {
 
 
 public:
+    template <class Type>
+    class XalanMessageLoaderCreateFunct
+    {
+    public:
+        Type*
+        operator()(MemoryManagerType&      theManager)
+        {        
+            XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
 
+            Type* theResult = theGuard.get();
+
+            new (theResult) Type(theManager);
+
+            theGuard.release();
+
+            return theResult;
+        }
+
+    };
 	
-	// -----------------------------------------------------------------------
-	//  Public Constructors and Destructor
-	// -----------------------------------------------------------------------
+    template <class Type>
+    class XalanMessageLoaderDestructFunct
+    {
+    public:
+        void
+        operator()(MemoryManagerType&      theManager, XalanMessageLoader* p)
+        {        
+            assert ( p != 0);
+
+            Type* theObj = dynamic_cast<Type*> (p);
+
+             assert( theObj != 0 );
+
+            theObj->~Type();
+        
+            theManager.deallocate(theObj);
+        }
+
+    };
+
 	virtual
 	~XalanMessageLoader();
 
@@ -48,74 +86,75 @@ public:
 	}
 
 	static void
-	createLoader();
+	initialize(MemoryManagerType&      theManager);
 
 	static void
-	destroyLoader();
+	terminate();
 
-	static const XalanDOMString
-	getMessage(XalanMessages::Codes		msgToLoad
-		, const char* 			repText1 
-		, const char* 			repText2 = 0
-		, const char* 			repText3 = 0
-		, const char* 			repText4 = 0);
+	static XalanDOMString&
+	getMessage(XalanMessages::Codes		msgToLoad, 
+        XalanDOMString&         theResultMessage,
+        const char* 			repText1 , 
+        const char* 			repText2 = 0, 
+        const char* 			repText3 = 0, 
+        const char* 			repText4 = 0);
 
-	static const XalanDOMString
-	getMessage(XalanMessages::Codes		msgToLoad
-		, const XalanDOMChar* 			repText1 
-		, const XalanDOMChar* 			repText2 = 0
-		, const XalanDOMChar* 			repText3 = 0
-		, const XalanDOMChar* 			repText4 = 0);
+	static XalanDOMString&
+	getMessage(XalanMessages::Codes		msgToLoad, 
+        XalanDOMString&                 theResultMessage,
+        const XalanDOMChar* 			repText1,  
+        const XalanDOMChar* 			repText2 = 0, 
+        const XalanDOMChar* 			repText3 = 0, 
+        const XalanDOMChar* 			repText4 = 0);
 
-	static const XalanDOMString
-	getMessage(XalanMessages::Codes		msgToLoad);
+	static XalanDOMString&
+	getMessage(XalanMessages::Codes		msgToLoad,
+                        XalanDOMString&         theResultMessage);
 
-	static const XalanDOMString
-	getMessage(XalanMessages::Codes		msgToLoad
-		, const XalanDOMString& 				repText1 );
+	static XalanDOMString&
+	getMessage(XalanMessages::Codes		msgToLoad,
+        XalanDOMString&                 theResultMessage,
+        const XalanDOMString& 				repText1 );
 
-	static const XalanDOMString
-	getMessage(XalanMessages::Codes		msgToLoad
-		, const XalanDOMString& 				repText1 
-		, const XalanDOMString& 				repText2 );
+	static XalanDOMString&
+	getMessage(XalanMessages::Codes		    msgToLoad,
+        XalanDOMString&                     theResultMessage,
+        const XalanDOMString& 				repText1,  
+        const XalanDOMString& 				repText2 );
 
-	static const XalanDOMString
-	getMessage(XalanMessages::Codes		msgToLoad
-		, const XalanDOMString& 				repText1 
-		, const XalanDOMString& 				repText2 
-		, const XalanDOMString& 				repText3);
+	static XalanDOMString&
+	getMessage(XalanMessages::Codes		    msgToLoad,
+        XalanDOMString&                     theResultMessage,
+        const XalanDOMString& 				repText1,  
+        const XalanDOMString& 				repText2,  
+        const XalanDOMString& 				repText3);
 
 protected:
 	virtual bool loadMsg
 		(
-		  XalanMessages::Codes		msgToLoad
-		, XalanDOMChar*				toFill
-		, unsigned int				maxChars
-		) =0;
+		  XalanMessages::Codes		msgToLoad, 
+                XalanDOMChar*				toFill, 
+                unsigned int				maxChars) =0;
 
 private:
 
-	bool load
-		(
-		XalanMessages::Codes		msgToLoad
-		, XalanDOMChar*				toFill
-		, unsigned int				maxChars
-		, const XalanDOMChar* 		repText1 
-		, const XalanDOMChar* 		repText2 = 0
-		, const XalanDOMChar* 		repText3 = 0
-		, const XalanDOMChar* 		repText4 = 0
+	bool load(XalanMessages::Codes		msgToLoad,
+             XalanDOMChar*				toFill, 
+            unsigned int				maxChars, 
+            const XalanDOMChar* 		repText1 , 
+            const XalanDOMChar* 		repText2 = 0, 
+            const XalanDOMChar* 		repText3 = 0, 
+            const XalanDOMChar* 		repText4 = 0
 		);
 	
-	bool load
-		(
-		XalanMessages::Codes		msgToLoad
-		, XalanDOMChar*				toFill
-		, unsigned int				maxChars
-		, const char* 				repText1 
-		, const char* 				repText2 = 0
-		, const char* 				repText3 = 0
-		, const char* 				repText4 = 0
-		);
+	bool load(XalanMessages::Codes		    msgToLoad,
+                MemoryManagerType&          theManager,
+                XalanDOMChar*				toFill, 
+                unsigned int				maxChars, 
+                const char* 				repText1 , 
+                const char* 				repText2 = 0, 
+                const char* 				repText3 = 0, 
+                const char* 				repText4 = 0);
 
 	XalanMessageLoader(const XalanMessageLoader&);
 

@@ -49,6 +49,7 @@ class StylesheetExecutionContext;
 
 class XALAN_XSLT_EXPORT NamespacesHandler
 {
+    
 public:
 
 	class PrefixChecker
@@ -203,7 +204,7 @@ public:
 	 * Create a default, empty instance.
 	 */
 	explicit
-	NamespacesHandler();
+	NamespacesHandler(MemoryManagerType& theManager);
 
 	/**
 	 * Create an instance namespace handler using the
@@ -261,7 +262,7 @@ public:
 	postConstruction(
 			StylesheetConstructionContext&	theConstructionContext,
 			bool							fProcessNamespaceAliases = true,
-			const XalanDOMString&			theElementName = XalanDOMString(),
+			const XalanDOMString&			theElementName = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			const NamespacesHandler*		parentNamespacesHandler = 0,
 			const PrefixChecker*			prefixChecker = 0);
 

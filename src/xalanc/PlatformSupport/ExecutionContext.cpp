@@ -22,7 +22,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-ExecutionContext::ExecutionContext()
+ExecutionContext::ExecutionContext(MemoryManagerType& m_memoryManager) :
+    m_memoryManager(m_memoryManager)
 {
 }
 

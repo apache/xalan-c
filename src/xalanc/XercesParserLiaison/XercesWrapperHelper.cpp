@@ -46,11 +46,12 @@ XercesWrapperHelper::isSupported(
 
 
 
-const XalanDOMString
+const XalanDOMString&
 XercesWrapperHelper::substringData(
 			const DOMCharacterDataType*		theXercesNode,
 			unsigned int					offset,
-			unsigned int					count)
+			unsigned int					count,
+            XalanDOMString& theResult)
 {
 	assert(theXercesNode != 0);
 
@@ -58,7 +59,8 @@ XercesWrapperHelper::substringData(
 	{
 		const XMLCh* const	theString = theXercesNode->substringData(offset, count);
 
-		return XalanDOMString(theString, XalanDOMString::length(theString));
+        theResult.assign(theString, XalanDOMString::length(theString));
+		return theResult;
 	}
 	catch(const DOMExceptionType&	theException)
 	{

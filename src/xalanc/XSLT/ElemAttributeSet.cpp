@@ -66,9 +66,12 @@ ElemAttributeSet::ElemAttributeSet(
 		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
 					isAttrOK(aname, atts, i, constructionContext)))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theResult,
 							Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -78,9 +81,12 @@ ElemAttributeSet::ElemAttributeSet(
 
 	if(m_qname == 0)
 	{
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::TemplateMustHaveAttribute_2Param,
+                theResult,
 				Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING,
 				Constants::ATTRNAME_NAME),
 			0,
@@ -88,8 +94,11 @@ ElemAttributeSet::ElemAttributeSet(
 	}
 	else if (m_qname->isValid() == false)
 	{
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(XalanMessages::TemplateHasIllegalAttribute_2Param
+                ,theResult
 				,Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING
 				,Constants::ATTRNAME_NAME),
 				0,

@@ -26,13 +26,13 @@ unsigned long	XalanDOMInit::s_initCounter = 0;
 
 
 
-XalanDOMInit::XalanDOMInit()
+XalanDOMInit::XalanDOMInit(MemoryManagerType&      theManager)
 {
 	++s_initCounter;
 
 	if (s_initCounter == 1)
 	{
-		initialize();
+		initialize(theManager);
 	}
 }
 
@@ -51,7 +51,7 @@ XalanDOMInit::~XalanDOMInit()
 
 
 void
-XalanDOMInit::initialize()
+XalanDOMInit::initialize(MemoryManagerType&  /*    theManager */)
 {
 }
 

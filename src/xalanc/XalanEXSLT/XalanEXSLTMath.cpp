@@ -65,7 +65,7 @@ findNodes(
 
 		DOMServices::getNodeData(*theCurrentNode, theStringValue);
 
-		double	theNumericValue = DOMStringToDouble(theStringValue);
+		double	theNumericValue = DOMStringToDouble(theStringValue, executionContext.getMemoryManager());
 
 		if (DoubleSupport::isNaN(theNumericValue) == false)
 		{
@@ -80,7 +80,7 @@ findNodes(
 
 				DOMServices::getNodeData(*theCurrentNode, theStringValue);
 
-				const double	theCurrent = DOMStringToDouble(theStringValue);
+				const double	theCurrent = DOMStringToDouble(theStringValue, executionContext.getMemoryManager());
 
 				if (DoubleSupport::isNaN(theCurrent) == true)
 				{
@@ -130,7 +130,10 @@ XalanEXSLTFunctionHighest::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -140,11 +143,11 @@ XalanEXSLTFunctionHighest::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionHighest::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionHighest::getError(XalanDOMString &theBuffer) const
 {
 
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_highestFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_highestFunctionName);
 }
 
 
@@ -169,20 +172,23 @@ XalanEXSLTFunctionLowest::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
 
-	return findNodes(executionContext, args[0]->nodeset(), DoubleSupport::lessThan);
+    return findNodes(executionContext, args[0]->nodeset(), DoubleSupport::lessThan);
 }
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionLowest::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionLowest::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_lowestFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_lowestFunctionName);
 }
 
 
@@ -210,7 +216,7 @@ findValue(
 
 		DOMServices::getNodeData(*theNodeSet.item(0), theStringValue);
 
-		double	theResult = DOMStringToDouble(theStringValue);
+		double	theResult = DOMStringToDouble(theStringValue, executionContext.getMemoryManager());
 
 		for (NodeRefListBase::size_type i = 1; i < theLength; ++i)
 		{
@@ -220,7 +226,7 @@ findValue(
 
 			DOMServices::getNodeData(*theNodeSet.item(i), theStringValue);
 
-			const double	theCurrent = DOMStringToDouble(theStringValue);
+			const double	theCurrent = DOMStringToDouble(theStringValue, executionContext.getMemoryManager());
 
 			if (DoubleSupport::isNaN(theCurrent) == true)
 			{
@@ -257,7 +263,10 @@ XalanEXSLTFunctionMin::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -267,10 +276,10 @@ XalanEXSLTFunctionMin::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionMin::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionMin::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_minFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_minFunctionName);
 }
 
 
@@ -294,7 +303,10 @@ XalanEXSLTFunctionMax::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -304,10 +316,10 @@ XalanEXSLTFunctionMax::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionMax::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionMax::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_maxFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_maxFunctionName);
 }
 
 
@@ -331,7 +343,10 @@ XalanEXSLTFunctionAbs::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -340,15 +355,15 @@ XalanEXSLTFunctionAbs::execute(
 	using std::fabs;
 #endif
 
-	return executionContext.getXObjectFactory().createNumber(fabs(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(fabs(args[0]->num()));
 }
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionAbs::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionAbs::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_absFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_absFunctionName);
 }
 
 
@@ -375,7 +390,10 @@ XalanEXSLTFunctionRandom::execute(
 {
 	if (args.empty() == false)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
@@ -397,10 +415,10 @@ XalanEXSLTFunctionRandom::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionRandom::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionRandom::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsNoArgument_1Param,s_randomFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsNoArgument_1Param, theBuffer, s_randomFunctionName);
 }
 
 
@@ -425,7 +443,10 @@ XalanEXSLTFunctionAcos::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -434,15 +455,15 @@ XalanEXSLTFunctionAcos::execute(
 	using std::acos;
 #endif
 
-	return executionContext.getXObjectFactory().createNumber(acos(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(acos(args[0]->num()));
 }
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionAcos::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionAcos::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_acosFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_acosFunctionName);
 }
 
 
@@ -468,7 +489,10 @@ XalanEXSLTFunctionAsin::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -482,10 +506,10 @@ XalanEXSLTFunctionAsin::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionAsin::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionAsin::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_asinFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_asinFunctionName);
 }
 
 
@@ -510,7 +534,10 @@ XalanEXSLTFunctionAtan::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -524,10 +551,10 @@ XalanEXSLTFunctionAtan::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionAtan::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionAtan::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_atanFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_atanFunctionName);
 }
 
 
@@ -553,7 +580,10 @@ XalanEXSLTFunctionAtan2::execute(
 {
 	if (args.size() != 2)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false && args[1].null() == false);
@@ -567,10 +597,10 @@ XalanEXSLTFunctionAtan2::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionAtan2::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionAtan2::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,s_atan2FunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param, theBuffer, s_atan2FunctionName);
 }
 
 
@@ -957,7 +987,10 @@ XalanEXSLTFunctionConstant::execute(
 {
 	if (args.size() != 2)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false && args[1].null() == false);
@@ -1052,7 +1085,10 @@ XalanEXSLTFunctionCos::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -1066,10 +1102,10 @@ XalanEXSLTFunctionCos::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionCos::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionCos::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_cosFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_cosFunctionName);
 }
 
 
@@ -1093,7 +1129,10 @@ XalanEXSLTFunctionExp::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -1107,10 +1146,10 @@ XalanEXSLTFunctionExp::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionExp::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionExp::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_expFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_expFunctionName);
 }
 
 
@@ -1134,7 +1173,10 @@ XalanEXSLTFunctionLog::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -1148,10 +1190,10 @@ XalanEXSLTFunctionLog::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionLog::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionLog::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_logFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_logFunctionName);
 }
 
 
@@ -1177,7 +1219,10 @@ XalanEXSLTFunctionPower::execute(
 {
 	if (args.size() != 2)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false && args[1].null() == false);
@@ -1191,10 +1236,10 @@ XalanEXSLTFunctionPower::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionPower::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionPower::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,s_powerFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param, theBuffer, s_powerFunctionName);
 }
 
 
@@ -1218,7 +1263,10 @@ XalanEXSLTFunctionSin::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -1232,10 +1280,10 @@ XalanEXSLTFunctionSin::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionSin::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionSin::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_sinFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_sinFunctionName);
 
 }
 
@@ -1261,7 +1309,10 @@ XalanEXSLTFunctionSqrt::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -1275,10 +1326,10 @@ XalanEXSLTFunctionSqrt::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionSqrt::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionSqrt::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_sqrtFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_sqrtFunctionName);
 }
 
 
@@ -1302,7 +1353,10 @@ XalanEXSLTFunctionTan::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	    XalanDOMString &theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -1316,10 +1370,10 @@ XalanEXSLTFunctionTan::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionTan::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionTan::getError(XalanDOMString& theBuffer) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_tanFunctionName);
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer, s_tanFunctionName);
 }
 
 
@@ -1422,9 +1476,9 @@ XalanEXSLTMathFunctionsInstaller::installLocal(XPathEnvSupportDefault&		theSuppo
 
 
 void
-XalanEXSLTMathFunctionsInstaller::installGlobal()
+XalanEXSLTMathFunctionsInstaller::installGlobal(MemoryManagerType& theManager)
 {
-	doInstallGlobal(s_mathNamespace, theFunctionTable);
+	doInstallGlobal(theManager, s_mathNamespace, theFunctionTable);
 
 	// Sets the starting point for generating a series of pseudorandom integers,
 	// we need it for random() EXSLT function
@@ -1446,9 +1500,9 @@ XalanEXSLTMathFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&	theSupp
 
 
 void
-XalanEXSLTMathFunctionsInstaller::uninstallGlobal()
+XalanEXSLTMathFunctionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
 {
-	doUninstallGlobal(s_mathNamespace, theFunctionTable);
+	doUninstallGlobal(theManager, s_mathNamespace, theFunctionTable);
 }
 
 

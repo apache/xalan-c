@@ -45,21 +45,15 @@ public:
 	 *
 	 * @param val numeric value to use
 	 */
-	XNumber(double	val);
+	XNumber(double	val,
+            MemoryManagerType& theManager);
 
-	XNumber(const XNumber&	source);
+	XNumber(const XNumber&	source, MemoryManagerType& theManager);
 
 	virtual
 	~XNumber();
 
 	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XNumber*
-#endif
-	clone(void*		theAddress = 0) const;
 
 	virtual double
 	num() const;

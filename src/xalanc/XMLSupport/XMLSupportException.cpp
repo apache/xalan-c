@@ -23,8 +23,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XMLSupportException::XMLSupportException(const XalanDOMString&	message) :
-	XSLException(message)
+XMLSupportException::XMLSupportException(const XalanDOMString&	message,
+                                         MemoryManagerType& theManager) :
+	XSLException(message, theManager)
 {
 }
 

@@ -79,9 +79,12 @@ ElemElement::ElemElement(
 			    processSpaceAttr(aname, atts, i, constructionContext) ||
 				isAttrOK(aname, atts, i, constructionContext)))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theResult,
 							Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -91,8 +94,11 @@ ElemElement::ElemElement(
 
 	if(0 == m_nameAVT)
 	{
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(XalanMessages::TemplateMustHaveAttribute_2Param
+            ,theResult
 			,Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING
 			,Constants::ATTRNAME_NAME),
 			0,
@@ -127,8 +133,10 @@ ElemElement::startElement(StylesheetExecutionContext&		executionContext) const
 
 	if (isIllegalElement == true)
 	{
+        XalanDOMString  theResult(executionContext.getMemoryManager());
+
 		executionContext.warn(
-			XalanMessageLoader::getMessage(XalanMessages::IllegalElementName_1Param, elemName),
+			XalanMessageLoader::getMessage(XalanMessages::IllegalElementName_1Param, theResult, elemName),
 			executionContext.getCurrentNode(),
 			getLocator());
 
@@ -177,9 +185,12 @@ ElemElement::startElement(StylesheetExecutionContext&		executionContext) const
 
 				if(theNamespace == 0 && namespaceLen == 0)
 				{
+                    XalanDOMString  theResult(executionContext.getMemoryManager());
+
 					executionContext.warn(
 						XalanMessageLoader::getMessage(
 							XalanMessages::CannotResolvePrefix_1Param,
+                            theResult,
 							prefix),
 						executionContext.getCurrentNode(),
 						getLocator());
@@ -192,9 +203,12 @@ ElemElement::startElement(StylesheetExecutionContext&		executionContext) const
 					{
 						isIllegalElement = true;
 
+                        XalanDOMString  theResult(executionContext.getMemoryManager());
+
 						executionContext.warn(
 							XalanMessageLoader::getMessage(
 								XalanMessages::IllegalElementName_1Param,
+                                theResult,
 								elemName),
 							executionContext.getCurrentNode(),
 							getLocator());

@@ -18,7 +18,6 @@
 
 
 
-#include "XNull.hpp"
 #include "XObject.hpp"
 #include "XUnknown.hpp"
 #include "XPath.hpp"
@@ -35,19 +34,33 @@ unsigned long	XPathInit::s_initCounter = 0;
 
 
 
-XPathInit::XPathInit() :
-	m_platformSupportInit(),
-	m_domSupportInit()
+XPathInit::XPathInit(MemoryManagerType& theManager) :
+	m_platformSupportInit(theManager),
+	m_domSupportInit(theManager)
 {
 	++s_initCounter;
 
 	if (s_initCounter == 1)
 	{
-		initialize();
+		initialize(theManager);
 	}
 }
 
+XPathInit*
+XPathInit::create(MemoryManagerType& theManager)
+{
+    typedef XPathInit ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XPathInit::~XPathInit()
 {
@@ -62,17 +75,15 @@ XPathInit::~XPathInit()
 
 
 void
-XPathInit::initialize()
+XPathInit::initialize(MemoryManagerType& theManager)
 {
-    XNull::initialize();
+	XObject::initialize(theManager);
 
-	XObject::initialize();
+	XUnknown::initialize(theManager);
 
-	XUnknown::initialize();
+	XPath::initialize(theManager);
 
-	XPath::initialize();
-
-	XPathEnvSupportDefault::initialize();
+	XPathEnvSupportDefault::initialize(theManager);
 }
 
 
@@ -87,8 +98,6 @@ XPathInit::terminate()
 	XUnknown::terminate();
 
 	XObject::terminate();
-
-    XNull::terminate();
 }
 
 

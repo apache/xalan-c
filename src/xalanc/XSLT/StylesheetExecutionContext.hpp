@@ -34,6 +34,7 @@
 
 
 
+
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
 
 
@@ -49,7 +50,8 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
 
 
 
@@ -117,7 +119,7 @@ public:
 #endif
 
 	explicit
-	StylesheetExecutionContext(XObjectFactory*	theXObjectFactory = 0);
+	StylesheetExecutionContext(MemoryManagerType& m_memoryManager, XObjectFactory*	theXObjectFactory = 0);
 
 	virtual
 	~StylesheetExecutionContext();
@@ -549,13 +551,6 @@ public:
 	virtual bool
 	isPendingResultPrefix(const XalanDOMString&	thePrefix) = 0;
 
-	/**
-	 * Generate a random namespace prefix guaranteed to be unique.
-	 * 
-	 * @return unique namespace prefix
-	 */
-	virtual XalanDOMString
-	getUniqueNamespaceValue() const = 0;
 
 	/**
 	 * Generate a random namespace prefix guaranteed to be unique.
@@ -1424,18 +1419,19 @@ public:
 	 *                          standalone document declaration
 	 * @return a pointer to the new instance.
 	 */
+
 	virtual FormatterListener*
 	createFormatterToXML(
 			Writer&					writer,
-			const XalanDOMString&	version = XalanDOMString(),
+			const XalanDOMString&	version = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			bool					doIndent = false,
 			int						indent = eDefaultXMLIndentAmount,
-			const XalanDOMString&	encoding = XalanDOMString(),
-			const XalanDOMString&	mediaType = XalanDOMString(),
-			const XalanDOMString&	doctypeSystem = XalanDOMString(),
-			const XalanDOMString&	doctypePublic = XalanDOMString(),
+			const XalanDOMString&	encoding = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	mediaType = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypePublic = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			bool					xmlDecl = true,
-			const XalanDOMString&	standalone = XalanDOMString()) = 0;
+			const XalanDOMString&	standalone = XalanDOMString(XalanMemMgrs::getDummyMemMgr())) = 0;
 
 	/**
 	 * Create a new FormatterToHTML instance.  The execution context
@@ -1457,10 +1453,10 @@ public:
 	virtual FormatterListener*
 	createFormatterToHTML(
 			Writer&					writer,
-			const XalanDOMString&	encoding = XalanDOMString(),
-			const XalanDOMString&	mediaType = XalanDOMString(),
-			const XalanDOMString&	doctypeSystem = XalanDOMString(),
-			const XalanDOMString&	doctypePublic = XalanDOMString(),
+			const XalanDOMString&	encoding = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	mediaType = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypePublic = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			bool					doIndent = true,
 			int						indent = eDefaultHTMLIndentAmount,
 			bool					escapeURLs = true,
@@ -1601,7 +1597,7 @@ public:
 	};
 #endif
 
-	typedef XalanAutoPtr<XalanNumberFormat>		XalanNumberFormatAutoPtr;
+	typedef XalanMemMgrAutoPtr<XalanNumberFormat,true>		XalanNumberFormatAutoPtr;
 
 	/**
 	 * Create a new XalanNumberFormat instance.
@@ -1977,6 +1973,7 @@ public:
 
 	virtual XalanDocument*
 	parseXML(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) const = 0;
 
@@ -1987,7 +1984,7 @@ public:
 	returnMutableNodeRefList(MutableNodeRefList*	theList) = 0;
 
 	virtual MutableNodeRefList*
-	createMutableNodeRefList() const = 0;
+	createMutableNodeRefList(MemoryManagerType& theManager) const = 0;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 
@@ -2073,13 +2070,15 @@ public:
 	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const = 0;
 
-	virtual XalanDOMString
-	findURIFromDoc(const XalanDocument*		owner) const = 0;
+	virtual XalanDOMString&
+	findURIFromDoc(const XalanDocument*		owner,
+                    XalanDOMString& theResult) const = 0;
 
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const = 0;
+			const XalanDocument&	theDocument,
+            XalanDOMString&         theResult) const = 0;
 
 	virtual bool
 	shouldStripSourceNode(const XalanText&	node) = 0;

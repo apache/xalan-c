@@ -36,9 +36,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesDOMSupport::XercesDOMSupport() :
+XercesDOMSupport::XercesDOMSupport(MemoryManagerType& theManager) :
 	DOMSupport(),
-	m_domSupportDefault()
+	m_domSupportDefault(theManager)
 {
 }
 
@@ -61,9 +61,10 @@ XercesDOMSupport::reset()
 const XalanDOMString&
 XercesDOMSupport::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const
+			const XalanDocument&	theDocument,
+            XalanDOMString&	        theURI) const
 {
-	return m_domSupportDefault.getUnparsedEntityURI(theName, theDocument);
+	return m_domSupportDefault.getUnparsedEntityURI(theName, theDocument, theURI);
 }
 
 

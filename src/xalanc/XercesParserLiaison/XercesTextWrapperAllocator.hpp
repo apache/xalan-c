@@ -58,7 +58,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XercesTextWrapperAllocator(size_type	theBlockCount);
+	XercesTextWrapperAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
 
 	~XercesTextWrapperAllocator();
 	

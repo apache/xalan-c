@@ -28,9 +28,8 @@
 
 
 
-//#include <xalanc/Include/XalanVector.hpp>
+#include <xalanc/Include/XalanVector.hpp>
 
-#include <vector>
 
 
 
@@ -58,7 +57,7 @@ struct Counter
 {
 	typedef unsigned long	CountType;
 
-	typedef XALAN_STD_QUALIFIER vector<XalanNode*>			NodeVectorType;
+	typedef XalanVector<XalanNode*>			NodeVectorType;
 
 	/**
 	 * The start count from where m_countNodes counts 
@@ -89,10 +88,11 @@ struct Counter
 	 * Construct a counter object.
 	 */
 	Counter(
+            MemoryManagerType&  theManager,
 			const ElemNumber*	numberElem,
 			NodeVectorType&		countNodes) :
 		m_countNodesStartCount(0),
-		m_countNodes(countNodes),
+		m_countNodes(countNodes, theManager),
 		m_fromNode(0),
 		m_numberElem(numberElem)
 	{
@@ -101,11 +101,19 @@ struct Counter
 	/**
 	 * Construct a counter object.
 	 */
-	Counter(const ElemNumber*	numberElem = 0) :
+	Counter(MemoryManagerType& theManager, const ElemNumber*	numberElem = 0) :
 		m_countNodesStartCount(0),
-		m_countNodes(),
+		m_countNodes(theManager),
 		m_fromNode(0),
 		m_numberElem(numberElem)
+	{
+	}
+
+	Counter(const Counter& other, MemoryManagerType& theManager) :
+		m_countNodesStartCount(other.m_countNodesStartCount),
+		m_countNodes(other.m_countNodes, theManager),
+		m_fromNode(other.m_fromNode),
+		m_numberElem(other.m_numberElem)
 	{
 	}
 
@@ -128,10 +136,20 @@ struct Counter
 	{
 		return m_countNodes.empty() == true ? 0 : m_countNodes.back();
 	}
+
+private:
+    // Not implemented
+    Counter();
+    Counter(const Counter&);
 };
 
+XALAN_USES_MEMORY_MANAGER(Counter)
 
+typedef XalanVector<Counter>				CounterVectorTypeDecl;
+XALAN_USES_MEMORY_MANAGER(CounterVectorTypeDecl)
 
+typedef XalanVector<CounterVectorTypeDecl>	    ElemCounterVectorVectorTypeDecl;
+XALAN_USES_MEMORY_MANAGER(ElemCounterVectorVectorTypeDecl)
 /**
  * <meta name="usage" content="internal"/>
  * This is a table of counters, keyed by ElemNumber objects, each 
@@ -145,21 +163,21 @@ public:
 
 	typedef Counter::CountType	CountType;
 
-	typedef XALAN_STD_QUALIFIER vector<Counter>				CounterVectorType;
-	typedef XALAN_STD_QUALIFIER vector<CounterVectorType>	ElemCounterVectorVectorType;
+	typedef CounterVectorTypeDecl				CounterVectorType;
+	typedef ElemCounterVectorVectorTypeDecl	    ElemCounterVectorVectorType;
 
-	typedef Counter::NodeVectorType			NodeVectorType;
+	typedef Counter::NodeVectorType			    NodeVectorType;
 
 	/**
 	 * Construct a CountersTable.
 	 */
-	CountersTable(unsigned long		theSize = 0) :
-		m_countersVector(),
-		m_newFound()
+	CountersTable(MemoryManagerType& theManager,
+                    unsigned long		theSize = 0) :
+		m_countersVector(theManager),
+		m_newFound(theManager)
 	{
 		resize(theSize);
 	};
-
 
 	~CountersTable()
 	{
@@ -205,6 +223,9 @@ public:
 	}
 
 private:
+    // not implemented
+    CountersTable();
+    CountersTable(const CountersTable&);
 
 	/**
 	 * A vector which holds counters for ElemNumber instances.

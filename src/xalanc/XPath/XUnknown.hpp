@@ -46,7 +46,7 @@ public:
 	 * Perform static initialization.  See class XPathInit.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType& theManager);
 
 	/**
 	 * Perform static shut down.  See class XPathInit.
@@ -59,22 +59,17 @@ public:
 	 * 
 	 * @param name       source string
 	 */
-	XUnknown(const XalanDOMString&	name);
+	XUnknown(const XalanDOMString&	name, MemoryManagerType& theManager);
 
-	XUnknown(const XUnknown&	source);
+	XUnknown(const XUnknown&	source, MemoryManagerType& theManager);
+
+    static XUnknown*
+    create(const XalanDOMString&	name, MemoryManagerType& theManager);
 
 	virtual
 	~XUnknown();
 
 	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XUnknown*
-#endif
-	clone(void*		theAddress = 0) const;
-
 	virtual const XalanDOMString&
 	getTypeString() const;
   
@@ -106,6 +101,9 @@ public:
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
 private:
+    // undefined
+    XUnknown(const XUnknown&	source);
+    XUnknown();
 
 	const XalanDOMString	m_value;
 

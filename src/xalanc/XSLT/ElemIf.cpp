@@ -70,9 +70,12 @@ ElemIf::ElemIf(
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theResult,
 							Constants::ELEMNAME_IF_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -82,9 +85,12 @@ ElemIf::ElemIf(
 
 	if(0 == m_test)
 	{
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 		constructionContext.error(
 				XalanMessageLoader::getMessage(
 					XalanMessages::TemplateMustHaveAttribute_2Param,
+                    theResult,
 					Constants::ELEMNAME_IF_WITH_PREFIX_STRING,
 					Constants::ATTRNAME_TEST),
 				0,
@@ -119,7 +125,7 @@ ElemIf::startElement(StylesheetExecutionContext&		executionContext) const
 			SelectionEvent(executionContext,
 			executionContext.getCurrentNode(),
 			*this,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("test")),
+			XalanDOMString("test", executionContext.getMemoryManager()),
 			*m_test,
 			fResult));
 	}

@@ -38,6 +38,7 @@
 
 
 #include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 #include <xalanc/Include/STLHelper.hpp>
 
 
@@ -63,8 +64,7 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-
-XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
+XercesParserLiaison::XercesParserLiaison(MemoryManagerType& theManager, XercesDOMSupport&	/* theSupport */) :
 	m_indent(-1),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),
@@ -72,9 +72,9 @@ XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
 	m_exitOnFirstFatalError(true),
 	m_entityResolver(0),
 	m_errorHandler(this),
-	m_externalSchemaLocation(),
-	m_externalNoNamespaceSchemaLocation(),
-	m_documentMap(),
+	m_externalSchemaLocation(theManager),
+	m_externalNoNamespaceSchemaLocation(theManager),
+	m_documentMap(theManager),
 	m_buildBridge(true),
 	m_threadSafe(false),
 	m_buildMaps(false),
@@ -84,7 +84,7 @@ XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
 
 
 
-XercesParserLiaison::XercesParserLiaison() :
+XercesParserLiaison::XercesParserLiaison(MemoryManagerType& theManager) :
 	m_indent(-1),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),
@@ -92,9 +92,9 @@ XercesParserLiaison::XercesParserLiaison() :
 	m_exitOnFirstFatalError(true),
 	m_entityResolver(0),
 	m_errorHandler(this),
-	m_externalSchemaLocation(),
-	m_externalNoNamespaceSchemaLocation(),
-	m_documentMap(),
+	m_externalSchemaLocation(theManager),
+	m_externalNoNamespaceSchemaLocation(theManager),
+	m_documentMap(theManager),
 	m_buildWrapper(true),
 	m_buildBridge(true),
 	m_threadSafe(false),
@@ -123,18 +123,26 @@ XercesParserLiaison::reset()
 		if ((*i).second.isDeprecated() == false &&
 			(*i).second.isOwned() == true)
 		{
-#if defined(XALAN_CANNOT_DELETE_CONST)
-			delete (DOMDocument_Type*)(*i).second.m_wrapper->getXercesDocument();
-#else
-			delete (*i).second.m_wrapper->getXercesDocument();
-#endif
+			DOMDocument_Type* docToDelete =  const_cast<DOMDocument_Type*>((*i).second.m_wrapper->getXercesDocument());
+
+            if(docToDelete != 0 )
+            {
+                docToDelete->~DOMDocument_Type();
+
+                getMemoryManager().deallocate((void*)docToDelete);
+            }
+
 		}
 
-#if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (XalanDocument*)(*i).first;
-#else
-		delete (*i).first;
-#endif
+        XalanDocument* docToDelete = const_cast<XalanDocument*>((*i).first);
+
+        if(docToDelete != 0)
+        {
+            docToDelete->~XalanDocument();
+
+            getMemoryManager().deallocate((void*)docToDelete);
+        }
+
 	}
 
 	m_documentMap.clear();
@@ -244,7 +252,8 @@ XercesParserLiaison::destroyDocument(XalanDocument* 	theDocument)
 
 	if (i != m_documentMap.end())
 	{
-		const XalanAutoPtr<XalanDocument>	theGuard(theDocument);
+		const XalanMemMgrAutoPtr<XalanDocument, true>	theGuard(m_documentMap.getMemoryManager(),
+                                                                 theDocument);
 
 		m_documentMap.erase(i);
 	}
@@ -284,10 +293,12 @@ XercesParserLiaison::setUseValidation(bool	b)
 
 
 
-const XalanDOMString
-XercesParserLiaison::getParserDescription() const
+const XalanDOMString&
+XercesParserLiaison::getParserDescription(XalanDOMString& theResult) const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Xerces"));
+    theResult.assign("Xerces");
+
+	return theResult;
 }
 
 
@@ -526,7 +537,9 @@ XercesParserLiaison::mapToXercesDocument(const XalanDocument*	theDocument) const
 void
 XercesParserLiaison::fatalError(const SAXParseExceptionType&	e)
 {
-	XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::FatalError);
+	XalanDOMString	theMessage( getMemoryManager());
+    
+    XalanMessageLoader::getMessage(XalanMessages::FatalError, theMessage);
 
 	formatErrorMessage(e, theMessage);
 
@@ -552,7 +565,8 @@ XercesParserLiaison::fatalError(const SAXParseExceptionType&	e)
 void
 XercesParserLiaison::error(const SAXParseExceptionType& 	e)
 {
-	XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::Error2);
+	XalanDOMString	theMessage( getMemoryManager());
+    XalanMessageLoader::getMessage(XalanMessages::Error2, theMessage);
 
 	formatErrorMessage(e, theMessage);
 
@@ -581,7 +595,9 @@ XercesParserLiaison::error(const SAXParseExceptionType& 	e)
 void
 XercesParserLiaison::warning(const SAXParseExceptionType&	e)
 {
-	XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::Warning2);
+	XalanDOMString	theMessage( getMemoryManager());
+
+    XalanMessageLoader::getMessage(XalanMessages::Warning2,theMessage );
 
 	formatErrorMessage(e, theMessage);
 
@@ -608,21 +624,29 @@ XercesParserLiaison::formatErrorMessage(
 
 	const XalanDOMChar* const	theSystemID = e.getSystemId();
 
+    XalanDOMString theLineNumber( theMessage.getMemoryManager());
+    XalanDOMString theColumnNumb( theMessage.getMemoryManager());
+
+    LongToDOMString(long(e.getLineNumber()), theLineNumber);
+    LongToDOMString(long(e.getColumnNumber()), theColumnNumb);
+
+    XalanDOMString theErrorMsg( theMessage.getMemoryManager());
+
 	if (theSystemID == 0 || length(theSystemID) == 0)
 	{
-
-		append(theMessage,XalanMessageLoader::getMessage(XalanMessages::AtUnknownFileLineColumn_2Param
-			,LongToDOMString(long(e.getLineNumber()))
-			,LongToDOMString(long(e.getColumnNumber()))
-			));
+        
+		append(theMessage,XalanMessageLoader::getMessage(XalanMessages::AtUnknownFileLineColumn_2Param,
+            theErrorMsg,
+			theLineNumber,
+			theColumnNumb));
 	}
 	else
 	{
-		append(theMessage,XalanMessageLoader::getMessage(XalanMessages::AtFileLineColumn_3Param
-			,XalanDOMString(theSystemID)
-			,LongToDOMString(long(e.getLineNumber()))
-			,LongToDOMString(long(e.getColumnNumber()))
-			));
+		append(theMessage,XalanMessageLoader::getMessage(XalanMessages::AtFileLineColumn_3Param,
+            theErrorMsg,
+			XalanDOMString(theSystemID, theMessage.getMemoryManager()),
+			theLineNumber,
+			theColumnNumb));
 	}
 
 	append(theMessage, e.getMessage());
@@ -640,7 +664,7 @@ XercesParserLiaison::resetErrors()
 XercesParserLiaison::DOMParserType*
 XercesParserLiaison::CreateDOMParser()
 {
-	DOMParserType* const	theParser = new DOMParserType;
+	DOMParserType* const	theParser = new DOMParserType(0,&(getMemoryManager()));
 
 	theParser->setExpandEntityReferences(true);
 
@@ -683,7 +707,7 @@ XercesParserLiaison::CreateDOMParser()
 XercesParserLiaison::SAXParserType*
 XercesParserLiaison::CreateSAXParser()
 {
-	SAXParserType* const	theParser = new SAXParserType;
+	SAXParserType* const	theParser = new SAXParserType(0,&(getMemoryManager()));
 
 	theParser->setDoValidation(false);
 
@@ -730,7 +754,7 @@ XercesParserLiaison::doCreateDocument(
 			bool						isOwned)
 {
 	XercesDocumentWrapper* const		theNewDocument =
-		new XercesDocumentWrapper(theXercesDocument, threadSafe, buildWrapper, buildMaps);
+        XercesDocumentWrapper::create(getMemoryManager(),theXercesDocument, threadSafe, buildWrapper, buildMaps);
 
 	DocumentEntry&	theEntry = m_documentMap[theNewDocument];
 	

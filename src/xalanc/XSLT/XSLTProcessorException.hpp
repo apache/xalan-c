@@ -45,6 +45,7 @@ public:
 	 * @param theColumnNumber the column number of the related document.
 	 */
 	XSLTProcessorException(
+        MemoryManagerType&      theManager,
 		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theURI,
 		int						theLineNumber,
@@ -57,6 +58,7 @@ public:
 	 * @param theMessage message to write when exception thrown
 	 */
 	XSLTProcessorException(
+            MemoryManagerType&      theManager,
 			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage);
 
@@ -66,6 +68,7 @@ public:
 	 * @param theMessage message to print when exception thrown
 	 */
 	XSLTProcessorException(
+        MemoryManagerType&      theManager,
 		const XalanDOMString&	theMessage);
 
 	virtual

@@ -60,8 +60,14 @@ public :
 	 */
     XalanFileOutputStream(
 			const XalanDOMString&	theFileName,
+            MemoryManagerType&      theManager,
 			unsigned int			theBufferSize = eDefaultBufferSize);
 
+    static XalanFileOutputStream*
+    create(
+			const XalanDOMString&	theFileName,
+            MemoryManagerType&      theManager,
+			unsigned int			theBufferSize = eDefaultBufferSize);
     virtual
 	~XalanFileOutputStream();
 
@@ -79,7 +85,15 @@ public :
 		 */
 		XalanFileOutputStreamOpenException(
 			const XalanDOMString&	theFileName,
-			int						theErrorCode);
+			int						theErrorCode,
+            XalanDOMString&         theBuffer);
+
+        static XalanFileOutputStreamOpenException*
+        create(
+            MemoryManagerType&      theManager,
+            const XalanDOMString&	theFileName,
+			int						theErrorCode,
+            XalanDOMString&         theBuffer);
 
 		virtual
 		~XalanFileOutputStreamOpenException();
@@ -108,7 +122,8 @@ public :
 		 */
 		XalanFileOutputStreamWriteException(
 			const XalanDOMString&	theFileName,
-			int						theErrorCode);
+			int						theErrorCode,
+            XalanDOMString&         theBuffer);
 
 		virtual
 		~XalanFileOutputStreamWriteException();

@@ -50,7 +50,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XTokenStringAdapterAllocator(size_type	theBlockCount);
+	XTokenStringAdapterAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
 
 	~XTokenStringAdapterAllocator();
 
@@ -64,15 +64,6 @@ public:
 	object_type*
 	create(const XToken&	theXToken);
 
-	/**
-	 * Clone an XTokenStringAdapter object.
-	 * 
-	 * @param value source XTokenStringAdapter
-	 *
-	 * @return pointer to an XTokenStringAdapter
-	 */
-	object_type*
-	clone(const object_type&	value);
 
 	/**
 	 * Delete an XStringAdapter object from allocator.	 

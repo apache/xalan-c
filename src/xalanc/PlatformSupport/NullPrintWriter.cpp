@@ -22,8 +22,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-NullPrintWriter::NullPrintWriter() :
-	PrintWriter(false)
+NullPrintWriter::NullPrintWriter(MemoryManagerType& theManager) :
+	PrintWriter(theManager, false)
 {
 }
 

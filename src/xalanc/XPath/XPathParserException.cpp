@@ -52,8 +52,9 @@ XPathParserException::XPathParserException(
 			const XalanDOMString&	message,
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
-			int						theColumnNumber) :
-	XalanXPathException(message, theURI, theLineNumber, theColumnNumber)
+			int						theColumnNumber,
+            MemoryManagerType&      theManager) :
+	XalanXPathException(message, theURI, theLineNumber, theColumnNumber, theManager)
 {
 }
 
@@ -61,16 +62,18 @@ XPathParserException::XPathParserException(
 
 XPathParserException::XPathParserException(
 			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage) :
-	XalanXPathException(theLocator, theMessage)
+			const XalanDOMString&	theMessage,
+            MemoryManagerType&      theManager) :
+	XalanXPathException(theLocator, theMessage, theManager)
 {
 }
 
 
 
 XPathParserException::XPathParserException(
-			const XalanDOMString&	message) :
-	XalanXPathException(message)
+			const XalanDOMString&	message,
+            MemoryManagerType&      theManager) :
+	XalanXPathException(message, theManager)
 {
 }
 

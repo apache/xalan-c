@@ -25,7 +25,7 @@
 
 #include <xalanc/PlatformSupport/AttributeVectorEntry.hpp>
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 XALAN_CPP_NAMESPACE_BEGIN
 
@@ -39,11 +39,12 @@ public:
 			const XMLChVectorType&	theName,
 			const XMLChVectorType&	theValue,
 			const XMLChVectorType&	theType,
-			const XMLChVectorType&	theURI = XMLChVectorType(),
-			const XMLChVectorType&	theLocalName = XMLChVectorType()) :
-		AttributeVectorEntry(theName, theValue, theType),
-		m_uri(theURI),
-		m_localName(theLocalName)
+			const XMLChVectorType&	theURI ,
+			const XMLChVectorType&	theLocalName,
+            MemoryManagerType&      theManager) :
+		AttributeVectorEntry(theName, theValue, theType, theManager),
+		m_uri(theURI, theManager),
+		m_localName(theLocalName, theManager)
 	{
 	}
 
@@ -52,29 +53,53 @@ public:
 			const XMLCh*	theValue,
 			const XMLCh*	theType,
 			const XMLCh*	theURI,
-			const XMLCh*	theLocalName) :
-		AttributeVectorEntry(theName, theValue, theType),
-		m_uri(theURI, theURI + length(theURI) + 1),
-		m_localName(theLocalName, theLocalName + length(theLocalName) + 1)
+			const XMLCh*	theLocalName,
+            MemoryManagerType&      theManager) :
+		AttributeVectorEntry(theName, theValue, theType, theManager),
+		m_uri(theURI, theURI + length(theURI) + 1, theManager),
+		m_localName(theLocalName, theLocalName + length(theLocalName) + 1,theManager)
 	{
 	}
 
 	AttributeVectorEntryExtended(
 			const XMLCh*	theName,
 			const XMLCh*	theValue,
-			const XMLCh*	theType) :
-		AttributeVectorEntry(theName, theValue, theType),
-		m_uri(),
-		m_localName()
+			const XMLCh*	theType,
+            MemoryManagerType&      theManager) :
+		AttributeVectorEntry(theName, theValue, theType,theManager),
+		m_uri(theManager),
+		m_localName(theManager)
 	{
 	}
 
-	AttributeVectorEntryExtended() :
-		AttributeVectorEntry(),
-		m_uri(),
-		m_localName()
+	AttributeVectorEntryExtended(MemoryManagerType&      theManager) :
+		AttributeVectorEntry(theManager),
+		m_uri(theManager),
+		m_localName(theManager)
 	{
 	}
+
+    static AttributeVectorEntryExtended*
+    create(
+			const XMLCh*	theName,
+			const XMLCh*	theValue,
+			const XMLCh*	theType,
+			const XMLCh*	theURI,
+			const XMLCh*	theLocalName,
+            MemoryManagerType&      theManager)
+    {
+        typedef AttributeVectorEntryExtended ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theName, theValue, theType, theURI, theLocalName, theManager);
+
+        theGuard.release();
+
+        return theResult;
+    }
 
     virtual
 	~AttributeVectorEntryExtended()

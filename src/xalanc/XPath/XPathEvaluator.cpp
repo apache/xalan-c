@@ -39,12 +39,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 static XPathInit*	theXPathInit = 0;
 
-
+static MemoryManagerType* s_memoryManager = 0;
 
 void
-XPathEvaluator::initialize()
+XPathEvaluator::initialize(MemoryManagerType& theManager)
 {
-	theXPathInit = new XPathInit;
+    theXPathInit = XPathInit::create(theManager);
+
+    s_memoryManager = &theManager;
 }
 
 
@@ -52,18 +54,23 @@ XPathEvaluator::initialize()
 void
 XPathEvaluator::terminate()
 {
-	delete theXPathInit;
+	theXPathInit->~XPathInit();
+
+    s_memoryManager->deallocate(theXPathInit);
 
 	theXPathInit = 0;
+
+    s_memoryManager = 0;
 }
 
 
 
-XPathEvaluator::XPathEvaluator() :
-	m_xobjectFactory(new XObjectFactoryDefault),
-	m_xpathFactory(new XPathFactoryDefault),
-	m_constructionContext(new XPathConstructionContextDefault),
-	m_executionContext(new XPathExecutionContextDefault)
+XPathEvaluator::XPathEvaluator(MemoryManagerType& theManager) :
+    m_xobjectFactory(theManager, XObjectFactoryDefault::create(theManager)),
+	m_xpathFactory(theManager, XPathFactoryDefault::createXPathFactoryDefault(theManager)),
+	m_constructionContext(theManager, XPathConstructionContextDefault::create(theManager)),
+	m_executionContext(theManager, XPathExecutionContextDefault::create(theManager)),
+    m_memoryManager(theManager)
 
 {
 }
@@ -167,8 +174,9 @@ XPathEvaluator::selectSingleNode(
 
 
 
-NodeRefList
+NodeRefList&
 XPathEvaluator::selectNodeList(
+            NodeRefList&            result,
 			DOMSupport&				domSupport,
 			XalanNode*				contextNode,
 			const XalanDOMChar*		xpathString,
@@ -181,13 +189,16 @@ XPathEvaluator::selectNodeList(
 			xpathString,
 			namespaceNode));
 
-	return NodeRefList(theResult->nodeset());
+	result = (theResult->nodeset());
+
+    return result;
 }
 
 
 
-NodeRefList
+NodeRefList&
 XPathEvaluator::selectNodeList(
+            NodeRefList&            result,
 			DOMSupport&				domSupport,
 			XalanNode*				contextNode,
 			const XalanDOMChar*		xpathString,
@@ -200,13 +211,16 @@ XPathEvaluator::selectNodeList(
 			xpathString,
 			prefixResolver));
 
-	return NodeRefList(theResult->nodeset());
+	result = (theResult->nodeset());
+
+    return result;
 }
 
 
 
-NodeRefList
+NodeRefList&
 XPathEvaluator::selectNodeList(
+            NodeRefList&            result,
 			DOMSupport&				domSupport,
 			XalanNode*				contextNode,
 			const XPath&			xpath,
@@ -219,13 +233,16 @@ XPathEvaluator::selectNodeList(
 			xpath,
 			namespaceNode));
 
-	return NodeRefList(theResult->nodeset());
+    result = theResult->nodeset();
+
+	return result;
 }
 
 
 
-NodeRefList
+NodeRefList&
 XPathEvaluator::selectNodeList(
+            NodeRefList&            result,
 			DOMSupport&				domSupport,
 			XalanNode*				contextNode,
 			const XPath&			xpath,
@@ -238,7 +255,9 @@ XPathEvaluator::selectNodeList(
 			xpath,
 			prefixResolver));
 
-	return NodeRefList(theResult->nodeset());
+    result = theResult->nodeset();
+
+	return result;
 }
 
 
@@ -250,14 +269,15 @@ XPathEvaluator::evaluate(
 			const XalanDOMChar*		xpathString,
 			const XalanElement*		namespaceNode)
 {
-	XPathEnvSupportDefault	theEnvSupportDefault;
+	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
 
-	return	evaluate(
+	return evaluate(
 			domSupport,
 			contextNode,
 			xpathString,
-			ElementPrefixResolverProxy(namespaceNode, theEnvSupportDefault, domSupport),
+			ElementPrefixResolverProxy(m_memoryManager, namespaceNode, theEnvSupportDefault, domSupport),
 			theEnvSupportDefault);
+ 
 }
 
 
@@ -269,13 +289,13 @@ XPathEvaluator::evaluate(
 			const XPath&			xpath,
 			const XalanElement*		namespaceNode)
 {
-	XPathEnvSupportDefault	theEnvSupportDefault;
+	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
 
 	return evaluate(
 				domSupport,
 				contextNode,
 				xpath,
-				ElementPrefixResolverProxy(namespaceNode, theEnvSupportDefault, domSupport),
+				ElementPrefixResolverProxy(m_memoryManager, namespaceNode, theEnvSupportDefault, domSupport),
 				theEnvSupportDefault);
 }
 
@@ -288,7 +308,7 @@ XPathEvaluator::evaluate(
 			const XalanDOMChar*		xpathString,
 			const PrefixResolver&	prefixResolver)
 {
-	XPathEnvSupportDefault	theEnvSupportDefault;
+	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
 
 	return	evaluate(
 			domSupport,
@@ -307,7 +327,7 @@ XPathEvaluator::evaluate(
 			const XPath&			xpath,
 			const PrefixResolver&	prefixResolver)
 {
-	XPathEnvSupportDefault	theEnvSupportDefault;
+	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
 
 	return evaluate(
 				domSupport,
@@ -322,10 +342,10 @@ XPathEvaluator::evaluate(
 XPath*
 XPathEvaluator::createXPath(const XalanDOMChar*		xpathString)
 {
-	DOMSupportDefault		theDOMSupport;
-	XPathEnvSupportDefault	theEnvSupportDefault;
+	DOMSupportDefault		theDOMSupport(m_memoryManager);
+	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
 
-	return createXPath(xpathString, ElementPrefixResolverProxy(0, theEnvSupportDefault, theDOMSupport));
+	return createXPath(xpathString, ElementPrefixResolverProxy(m_memoryManager, 0, theEnvSupportDefault, theDOMSupport));
 }
 
 
@@ -336,9 +356,9 @@ XPathEvaluator::createXPath(
 			DOMSupport&				domSupport,
 			const XalanElement*		namespaceNode)
 {
-	XPathEnvSupportDefault	theEnvSupportDefault;
+	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
 
-	return createXPath(xpathString, ElementPrefixResolverProxy(namespaceNode, theEnvSupportDefault, domSupport));
+	return createXPath(xpathString, ElementPrefixResolverProxy(m_memoryManager, namespaceNode, theEnvSupportDefault, domSupport));
 }
 
 
@@ -351,12 +371,12 @@ XPathEvaluator::createXPath(
 	XPath* const	theXPath = m_xpathFactory->create();
 	assert(theXPath != 0);
 
-	XPathProcessorImpl		theProcessor;
+	XPathProcessorImpl		theProcessor(m_memoryManager);
 
     theProcessor.initXPath(
 			*theXPath,
 			*m_constructionContext.get(),
-			XalanDOMString(xpathString),
+			XalanDOMString(xpathString, m_memoryManager),
 			prefixResolver);
 
 	return theXPath;
@@ -394,14 +414,14 @@ XPathEvaluator::evaluate(
 
 	// Create an XPath, and an XPathProcessorImpl to process
 	// the XPath.
-	XPath					theXPath;
+	XPath					theXPath(m_memoryManager);
 
-	XPathProcessorImpl		theProcessor;
+	XPathProcessorImpl		theProcessor(m_memoryManager);
 
     theProcessor.initXPath(
 			theXPath,
 			*m_constructionContext.get(),
-			XalanDOMString(xpathString),
+			XalanDOMString(xpathString,m_memoryManager),
 			prefixResolver);
 
 	return evaluate(domSupport, contextNode, theXPath, prefixResolver, envSupport);

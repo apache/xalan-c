@@ -23,13 +23,27 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesLiaisonXalanDOMStringPool::XercesLiaisonXalanDOMStringPool() :
-	ParentType(),
+XercesLiaisonXalanDOMStringPool::XercesLiaisonXalanDOMStringPool(MemoryManagerType& theManager) :
+	ParentType(theManager),
 	m_mutex()
 {
 }
 
+XercesLiaisonXalanDOMStringPool*
+XercesLiaisonXalanDOMStringPool::    create(MemoryManagerType& theManager)
+{
+    typedef XercesLiaisonXalanDOMStringPool ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XercesLiaisonXalanDOMStringPool::~XercesLiaisonXalanDOMStringPool()
 {

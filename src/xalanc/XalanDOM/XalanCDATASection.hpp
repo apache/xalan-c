@@ -444,10 +444,11 @@ public:
 	 *	 <br>DOMSTRING_SIZE_ERR: Raised if the specified range of text does not 
 	 *	 fit into a <code>XalanDOMString</code>.
 	 */
-	virtual XalanDOMString
+	virtual XalanDOMString&
 	substringData(
-			unsigned int	offset,
-			unsigned int	count) const = 0;
+			unsigned int	offset, 
+			unsigned int	count,
+            XalanDOMString& theResult) const = 0;
 
 	//@}
 	/** @name Functions that set or change data. */

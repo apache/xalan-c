@@ -26,16 +26,18 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XTokenStringAdapter::XTokenStringAdapter(const XToken&	theToken) :
-	XStringBase(),
+XTokenStringAdapter::XTokenStringAdapter(const XToken&	    theToken,
+                                         MemoryManagerType& theManager) :
+	XStringBase(theManager),
 	m_value(theToken)
 {
 }
 
 
 
-XTokenStringAdapter::XTokenStringAdapter(const XTokenStringAdapter&		source) :
-	XStringBase(source),
+XTokenStringAdapter::XTokenStringAdapter(const XTokenStringAdapter&		source,
+                                         MemoryManagerType&             theManager) :
+	XStringBase(source, theManager),
 	m_value(source.m_value)
 {
 }
@@ -44,25 +46,6 @@ XTokenStringAdapter::XTokenStringAdapter(const XTokenStringAdapter&		source) :
 
 XTokenStringAdapter::~XTokenStringAdapter()
 {
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XTokenStringAdapter*
-#endif
-XTokenStringAdapter::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XTokenStringAdapter(*this);
-	}
-	else
-	{
-		return new (theAddress) XTokenStringAdapter(*this);
-	}
 }
 
 
@@ -88,7 +71,7 @@ XTokenStringAdapter::str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const
 {
-	m_value.str(formatterListener, function);
+	m_value.str( formatterListener, function);
 }
 
 

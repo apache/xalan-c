@@ -47,38 +47,44 @@ TracerEvent::~TracerEvent()
 
 
 
-XalanDOMString
-TracerEvent::printNode(const XalanNode&		n)
+XalanDOMString&
+TracerEvent::printNode(const XalanNode&		n,
+                       XalanDOMString& r)
 {
-	XalanDOMString	r;
 
 	PointerToDOMString(&n, r);
 
-	append(r, XALAN_STATIC_UCODE_STRING(" "));
+	append(r, " ");
 
 	if (n.getNodeType() == XalanNode::ELEMENT_NODE)
 	{
-		r += XALAN_STATIC_UCODE_STRING("<") + n.getNodeName();
+        r += XalanDOMString("<", r.getMemoryManager());
+        r += n.getNodeName();
 
 		const XalanNode*	c = n.getFirstChild();
+
+        XalanDOMString theBuffer(r.getMemoryManager());
 
 		while (c != 0)
 		{
 			if (c->getNodeType() == XalanNode::ATTRIBUTE_NODE)
 			{
-				r += printNode(*c) + XALAN_STATIC_UCODE_STRING(" ");
+				r += printNode(*c,theBuffer);
+                r += XalanDOMString(" ", r.getMemoryManager());
 			}
 
 			c = c->getNextSibling();
 		}
 
-		r += XALAN_STATIC_UCODE_STRING(">");
+		r += XalanDOMString(">", r.getMemoryManager());
 	}
 	else
 	{
 		if (n.getNodeType() == XalanNode::ATTRIBUTE_NODE)
 		{
-			r += n.getNodeName() + XALAN_STATIC_UCODE_STRING("=") + n.getNodeValue();
+			r += n.getNodeName();
+            r += XalanDOMString("=", r.getMemoryManager());
+            r += n.getNodeValue();
 		}
 		else
 		{
@@ -100,17 +106,20 @@ TracerEvent::printNode(const XalanNode&		n)
 
    @return a string representation of the given node list.
    */
-XalanDOMString
-TracerEvent::printNodeList(const XalanNodeList&	l)
+XalanDOMString&
+TracerEvent::printNodeList(const XalanNodeList&	l, XalanDOMString& r)
 {
-	XalanDOMString	r;
 
 	PointerToDOMString(&l, r);
 
-	append(r, XALAN_STATIC_UCODE_STRING("["));
+    
+	append(r, XalanDOMString("[", r.getMemoryManager()));
 
 	unsigned int	len = l.getLength();
 	unsigned int	i = 0;
+
+    XalanDOMString theBuffer(r.getMemoryManager());
+
 
 	while (i < len)
 	{
@@ -118,18 +127,19 @@ TracerEvent::printNodeList(const XalanNodeList&	l)
 
 		if (n != 0)
 		{
-			r += printNode(*n);
+			r += printNode(*n, theBuffer);
 
 			if (i != len - 1)
 			{
-				r += XALAN_STATIC_UCODE_STRING(", ");
+				r += XalanDOMString(", ", r.getMemoryManager());
 			}
 		}
 
 		++i;
 	}
 
-	return r + XALAN_STATIC_UCODE_STRING("]");
+    r +=  XalanDOMString("]", r.getMemoryManager());
+	return r;
 }
 
 

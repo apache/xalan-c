@@ -73,16 +73,16 @@ XNodeSetNodeProxy::Proxy::indexOf(const XalanNode*	theNode) const
 
 
 
-XNodeSetNodeProxy::XNodeSetNodeProxy(XalanNode*		theNode) :
-	XNodeSetBase(),
+XNodeSetNodeProxy::XNodeSetNodeProxy(MemoryManagerType& theManager, XalanNode*		theNode) :
+	XNodeSetBase(theManager),
 	m_proxy(theNode)
 {
 }
 
 
 
-XNodeSetNodeProxy::XNodeSetNodeProxy(const XNodeSetNodeProxy&	source) :
-	XNodeSetBase(source),
+XNodeSetNodeProxy::XNodeSetNodeProxy(const XNodeSetNodeProxy&	source, MemoryManagerType& theManager) :
+	XNodeSetBase(source, theManager),
 	m_proxy(source.m_proxy)
 {
 }
@@ -93,24 +93,6 @@ XNodeSetNodeProxy::~XNodeSetNodeProxy()
 {
 }
 
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XNodeSetNodeProxy*
-#endif
-XNodeSetNodeProxy::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XNodeSetNodeProxy(*this);
-	}
-	else
-	{
-		return new (theAddress) XNodeSetNodeProxy(*this);
-	}
-}
 
 
 

@@ -58,8 +58,10 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	ReusableArenaAllocator(size_type	theBlockSize, bool destroyBlocks = false) :
-		BaseClassType(theBlockSize),
+	ReusableArenaAllocator(MemoryManagerType&       theManager,
+                                    size_type	    theBlockSize, 
+                                    bool            destroyBlocks = false) :
+		BaseClassType(theManager, theBlockSize),
 		m_destroyBlocks(destroyBlocks)
 	{
 	}
@@ -189,7 +191,7 @@ public:
 		if( this->m_blocks.empty() 
 			|| !this->m_blocks.front()->blockAvailable() )
 		{
-			this->m_blocks.push_front(new ReusableArenaBlockType(this->m_blockSize));
+            this->m_blocks.push_front(ReusableArenaBlockType::create(getMemoryManager(), this->m_blockSize));
 			
 			assert( this->m_blocks.front() != 0 );
 		}

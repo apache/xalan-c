@@ -24,6 +24,7 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/XMLException.hpp>
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 
 typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLException		XMLExceptionType;
@@ -34,12 +35,27 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(XMLTranscoderType&	theTranscoder) :
-	XalanOutputTranscoder(),
+XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(MemoryManagerType& theManager, XMLTranscoderType&	theTranscoder) :
+	XalanOutputTranscoder(theManager),
 	m_transcoder(&theTranscoder)
 {
 }
 
+XalanToXercesTranscoderWrapper*
+XalanToXercesTranscoderWrapper::create(MemoryManagerType& theManager, XMLTranscoderType&	theTranscoder)
+{
+    typedef XalanToXercesTranscoderWrapper ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager, theTranscoder);
+
+   theGuard.release();
+
+    return theResult;
+}
 
 
 XalanToXercesTranscoderWrapper::~XalanToXercesTranscoderWrapper()

@@ -49,6 +49,7 @@ XALAN_CPP_NAMESPACE_BEGIN
  */
 class XALAN_XMLSUPPORT_EXPORT FormatterToHTML : public FormatterToXML 
 {  
+    
 public:
 
 
@@ -72,16 +73,29 @@ public:
 	 * @param omitMetaTag   Whether or not to output a META TAG according to the recommendation.  The default is false.
 	 */
 	FormatterToHTML(
+            MemoryManagerType&      theManager,
 			Writer&					writer,
-			const XalanDOMString&	encoding = XalanDOMString(),
-			const XalanDOMString&	mediaType = XalanDOMString(),
-			const XalanDOMString&	doctypeSystem = XalanDOMString(),
-			const XalanDOMString&	doctypePublic = XalanDOMString(),
+			const XalanDOMString&	encoding = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	mediaType = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypePublic = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			bool					doIndent = true,
 			int						indent = eDefaultIndentAmount,
 			bool					escapeURLs = true,
 			bool					omitMetaTag = false);
 
+    static FormatterToHTML*
+    create(
+            MemoryManagerType&      theManager,
+			Writer&					writer,
+			const XalanDOMString&	encoding, 
+			const XalanDOMString&	mediaType,
+			const XalanDOMString&	doctypeSystem,
+			const XalanDOMString&	doctypePublic,
+			bool					doIndent,
+			int						indent,
+			bool					escapeURLs,
+			bool					omitMetaTag);
 	virtual
 	~FormatterToHTML();
 

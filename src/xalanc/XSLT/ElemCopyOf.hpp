@@ -60,6 +60,9 @@ public:
 			int								lineNumber,
 			int								columnNumber);
 	
+
+
+
 	// These methods are inherited from ElemTemplateElement ...
 
 	virtual const XalanDOMString&

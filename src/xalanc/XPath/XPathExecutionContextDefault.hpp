@@ -98,6 +98,14 @@ public:
 	 */
 	explicit
 	XPathExecutionContextDefault(
+            MemoryManagerType&      theManager,
+			XalanNode*				theCurrentNode = 0,
+			const NodeRefListBase*	theContextNodeList = 0,
+			const PrefixResolver*	thePrefixResolver = 0);
+
+    static XPathExecutionContextDefault*
+    create(
+            MemoryManagerType&      theManager,
 			XalanNode*				theCurrentNode = 0,
 			const NodeRefListBase*	theContextNodeList = 0,
 			const PrefixResolver*	thePrefixResolver = 0);
@@ -233,6 +241,7 @@ public:
 
 	virtual XalanDocument*
 	parseXML(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) const;
 
@@ -243,7 +252,7 @@ public:
 	returnMutableNodeRefList(MutableNodeRefList*	theList);
 
 	virtual MutableNodeRefList*
-	createMutableNodeRefList() const;
+	createMutableNodeRefList(MemoryManagerType& theManager) const;
 
 	virtual XalanDOMString&
 	getCachedString();
@@ -280,13 +289,15 @@ public:
 	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
 
-	virtual XalanDOMString
-	findURIFromDoc(const XalanDocument*		owner) const;
+	virtual XalanDOMString&
+	findURIFromDoc(const XalanDocument*		owner,
+                    XalanDOMString& theResult) const;
 
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&		theName,
-			const XalanDocument&		theDocument) const;
+			const XalanDocument&		theDocument,
+            XalanDOMString&             theResult) const;
 
 	virtual bool
 	shouldStripSourceNode(const XalanText&	node);
@@ -337,7 +348,7 @@ public:
 
 protected:
 
-	typedef XalanObjectCache<MutableNodeRefList, DefaultCacheCreateFunctor<MutableNodeRefList>, DeleteFunctor<MutableNodeRefList>, ClearCacheResetFunctor<MutableNodeRefList> >	NodeListCacheType;
+	typedef XalanObjectCache<MutableNodeRefList, DefaultCacheCreateFunctorMemMgr<MutableNodeRefList>, DeleteFunctor<MutableNodeRefList>, ClearCacheResetFunctor<MutableNodeRefList> >	NodeListCacheType;
 
 	enum { eNodeListCacheListSize = 50 };
 
@@ -383,7 +394,7 @@ protected:
 
 	mutable XalanQNameByValue				m_scratchQName;
 
-	static const NodeRefList	s_dummyList;
+	static const NodeRefList	            s_dummyList;
 };
 
 

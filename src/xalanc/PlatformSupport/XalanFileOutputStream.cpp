@@ -113,7 +113,8 @@ const XalanDOMChar	XalanFileOutputStream::XalanFileOutputStreamWriteException::m
 
 
 static  XalanFileOutputStream::HandleType
-openFile(const XalanDOMString&	theFileName)
+openFile(const XalanDOMString&	theFileName,
+         MemoryManagerType&     theManager)
 {
 	typedef XalanFileOutputStream::HandleType	HandleType;
 
@@ -133,7 +134,9 @@ openFile(const XalanDOMString&	theFileName)
 	}
 	else
 	{
-		const CharVectorType	theResult(TranscodeToLocalCodePage(theFileName));
+        
+		CharVectorType	theResult(theManager);
+        TranscodeToLocalCodePage(theFileName, theResult, true);
 
 		if (theResult.empty() == true)
 		{
@@ -161,7 +164,8 @@ openFile(const XalanDOMString&	theFileName)
 		}
 	}
 #else
-	const CharVectorType	theResult(TranscodeToLocalCodePage(theFileName));
+	CharVectorType	theResult(theManager);
+    TranscodeToLocalCodePage(theFileName, theResult, true);
 
 	if (theResult.empty() == true)
 	{
@@ -187,29 +191,57 @@ openFile(const XalanDOMString&	theFileName)
 
 XalanFileOutputStream::XalanFileOutputStream(
 			const XalanDOMString&	theFileName,
+            MemoryManagerType&      theManager,
 			unsigned int			theBufferSize) :
-	XalanOutputStream(theBufferSize),
-	m_fileName(theFileName),
-	m_handle(openFile(theFileName))
+	XalanOutputStream(theManager, theBufferSize),
+	m_fileName(theFileName, theManager),
+	m_handle(openFile(theFileName, theManager))
 {
 #if defined(WIN32)
     if (m_handle == INVALID_HANDLE_VALUE)
 	{
+        XalanDOMString theBuffer(theManager);
+
 		throw XalanFileOutputStreamOpenException(
 					theFileName,
-					GetLastError());
+					GetLastError(),
+                    theBuffer);
 	}
 #else
     if (m_handle == 0)
 	{
+        XalanDOMString theBuffer(theManager);
+
 		throw XalanFileOutputStreamOpenException(
 					theFileName,
-					errno);
+					errno,
+                    theBuffer);
 	}
 #endif
 }
 
+XalanFileOutputStream*
+XalanFileOutputStream::create(
+			const XalanDOMString&	theFileName,
+            MemoryManagerType&      theManager,
+			unsigned int			theBufferSize)
+{
+    typedef XalanFileOutputStream ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(			
+                        theFileName,
+                        theManager,
+			            theBufferSize);
+
+                            
+    theGuard.release();
+
+    return theResult;
+}
 
 XalanFileOutputStream::~XalanFileOutputStream()
 {
@@ -256,9 +288,12 @@ XalanFileOutputStream::writeData(
 	if (WriteFile(m_handle, theBuffer, DWORD(theBufferLength), &theBytesWritten, 0) == false ||
 	    theBytesWritten != theBufferLength)
 	{
+        XalanDOMString theBuffer(getMemoryManager());
+
 		throw XalanFileOutputStreamWriteException(
 			m_fileName,
-			GetLastError());
+			GetLastError(),
+            theBuffer);
 	}
 #else
 	const size_t	theBytesWritten =
@@ -269,27 +304,32 @@ XalanFileOutputStream::writeData(
 
 	if (theBytesWritten != theBufferLength)
 	{
+       XalanDOMString theBuffer(theManager);
+
 		throw XalanFileOutputStreamWriteException(
 			m_fileName,
-			errno);
+			errno,
+            theBuffer);
 	}
 #endif
 }
 
 
-extern XalanDOMString
+extern XalanDOMString&
 FormatMessageLocal(
 			const XalanDOMString&	theMessage,
-			int				theErrorCode);
+			int				theErrorCode,
+            XalanDOMString& theResult);
 
 
 
 XalanFileOutputStream::XalanFileOutputStreamOpenException::XalanFileOutputStreamOpenException(
 		const XalanDOMString&	theFileName,
-		int					theErrorCode) :
+		int					theErrorCode,
+        XalanDOMString&     theBuffer) :
 	XalanOutputStreamException(FormatMessageLocal(
-				XalanMessageLoader::getMessage(XalanMessages::ErrorOpeningFile_1Param, theFileName ),
-				theErrorCode))
+				XalanMessageLoader::getMessage(XalanMessages::ErrorOpeningFile_1Param, theBuffer, theFileName ),
+                theErrorCode, theBuffer), theBuffer.getMemoryManager())
 {
 }
 
@@ -303,10 +343,11 @@ XalanFileOutputStream::XalanFileOutputStreamOpenException::~XalanFileOutputStrea
 
 XalanFileOutputStream::XalanFileOutputStreamWriteException::XalanFileOutputStreamWriteException(
 		const XalanDOMString&	theFileName,
-		int					theErrorCode) :
+		int					theErrorCode,
+        XalanDOMString&     theBuffer) :
 	XalanOutputStreamException(FormatMessageLocal(
-				XalanMessageLoader::getMessage(XalanMessages::ErrorWritingFile_1Param,theFileName),
-				theErrorCode))
+				XalanMessageLoader::getMessage(XalanMessages::ErrorWritingFile_1Param, theBuffer,theFileName),
+                theErrorCode, theBuffer), theBuffer.getMemoryManager())
 {
 }
 

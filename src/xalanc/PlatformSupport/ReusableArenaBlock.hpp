@@ -75,8 +75,8 @@ public:
 	 *
 	 * @param theBlockSize The size of the block (the number of objects it can contain).
 	 */
-	ReusableArenaBlock(size_type	theBlockSize) :
-		BaseClassType(theBlockSize),
+	ReusableArenaBlock(MemoryManagerType&      theManager, size_type	theBlockSize) :
+		BaseClassType(theManager, theBlockSize),
 		m_firstFreeBlock(0),
 		m_nextFreeBlock(0)
 
@@ -108,6 +108,22 @@ public:
 		}
 	}
 
+    static ReusableArenaBlock<ObjectType,size_Type>*
+    create( MemoryManagerType&       theManager,
+             size_type	             theBlockSize)
+    {
+        typedef ReusableArenaBlock<ObjectType,size_Type> ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theManager, theBlockSize);
+
+        theGuard.release();
+
+        return theResult;
+    }
 
 	/*
 	 * Allocate a block.  Once the object is constructed, you must call

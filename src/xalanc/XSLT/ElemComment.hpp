@@ -52,6 +52,7 @@ public:
 			int								lineNumber,
 			int								columnNumber);
 
+
 	virtual
 	~ElemComment();
 

@@ -37,7 +37,7 @@ class XALAN_DOMSUPPORT_EXPORT DOMSupportInit
 public:
 
 	explicit
-	DOMSupportInit();
+	DOMSupportInit(MemoryManagerType& theManager);
 
 	~DOMSupportInit();
 
@@ -51,7 +51,7 @@ private:
 
 	
 	static void
-	initialize();
+	initialize(MemoryManagerType& theManager);
 
 	static void
 	terminate();

@@ -23,11 +23,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-ResultNamespacesStack::ResultNamespacesStack() :
-	m_resultNamespaces(1),
+ResultNamespacesStack::ResultNamespacesStack(MemoryManagerType& theManager) :
+	m_resultNamespaces(theManager, 1),
 	m_stackBegin(m_resultNamespaces.begin()),
 	m_stackPosition(m_stackBegin),
-	m_createNewContextStack()
+	m_createNewContextStack(theManager)
 {
 	// m_resultNamespaces is initialized to a size of
 	// 1, so we always have a dummy entry at the
@@ -193,7 +193,7 @@ ResultNamespacesStack::clear()
 {
 	// Since we always keep one dummy entry at the beginning,
 	// swap with an OutputContextStackType instance of size 1.
-	NamespacesStackType(1).swap(m_resultNamespaces);
+ 	NamespacesStackType(XalanMemMgrs::getDummyMemMgr(), 1).swap(m_resultNamespaces);
 
 	m_stackBegin = m_resultNamespaces.begin();
 

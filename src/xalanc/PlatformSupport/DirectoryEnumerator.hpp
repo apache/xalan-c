@@ -254,9 +254,11 @@ EnumerateDirectory(
 	theHandleType	theSearchHandle = _wfindfirst(const_cast<wchar_t*>(theConversionFunction(theFullSearchSpec)),
 										  &theFindData);
 #pragma warning(pop)
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
 	if (theSearchHandle != -1)
 	{
+  
 		try
 		{
 			do
@@ -264,7 +266,7 @@ EnumerateDirectory(
 				if ((fIncludeSelfAndParent == true || theFindData.isSelfOrParent() == false) &&
 					theFilterPredicate(theFindData) == true)
 				{
-					*theOutputIterator = StringType(theFindData.getName());
+					*theOutputIterator = StringType(theFindData.getName(), theManager);
 				}
 			}
 			while(_wfindnext(theSearchHandle,
@@ -283,7 +285,7 @@ EnumerateDirectory(
 
 #else	
 
-	CharVectorType	theTargetVector;
+	CharVectorType	theTargetVector(theManager);
 
 	TranscodeToLocalCodePage(theFullSearchSpec, theTargetVector, false);
 
@@ -327,8 +329,8 @@ EnumerateDirectory(
 		const char* const	theSpec = c_str(theTargetVector);
 		assert(theSpec != 0);
 		
-		XalanDOMString		theName;
-		XalanDOMString		theSuffix;
+		XalanDOMString		theName(theManager);
+		XalanDOMString		theSuffix(theManager);
 		if ( !target_Dir )
 		{
 #if defined(XALAN_STRICT_ANSI_HEADERS)
@@ -336,8 +338,8 @@ EnumerateDirectory(
 #endif
 
 			int lenSpec = strlen(theSpec); 
-			theName = theFullSearchSpec.substr(lenSpec, indexName); 
-			theSuffix = theFullSearchSpec.substr(lenSpec+indexName+1, indexSuffix);
+			theFullSearchSpec.substr(lenSpec, indexName, theName); 
+			theFullSearchSpec.substr(lenSpec+indexName+1, indexSuffix, theSuffix);
 		}
 
 		DIR* const	theDirectory = opendir(theSpec);
@@ -362,9 +364,10 @@ EnumerateDirectory(
 							}
 							else
 							{
-								XalanDOMString	Getname = StringType(theEntry->getName());
+								XalanDOMString	Getname(StringType(theEntry->getName(), theManager));
 								int	Check_1 = Getname.compare(theName);
-								XalanDOMString	GetnameSuffix = Getname.substr(length(Getname)-indexSuffix, indexSuffix);            
+								XalanDOMString	GetnameSuffix(theManager);
+                                Getname.substr(length(Getname)-indexSuffix, indexSuffix, GetnameSuffix);            
 								int Check_2 = GetnameSuffix.compare(theSuffix);
 								if ( Check_1 == 1 && (!Check_2) )
 								{
@@ -413,7 +416,9 @@ EnumerateDirectory(
 			bool						fIncludeSelfAndParent = false)
 #endif
 {
-	StringType	theFullSearchSpec(theDirectory);
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
+	StringType	theFullSearchSpec(theDirectory, theManager);
 
 	theFullSearchSpec += theSearchSpec;
 

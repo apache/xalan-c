@@ -73,24 +73,41 @@ struct XSLProcessorContext
  * 
  * @param namespaceUri the extension namespace URI that I'm implementing
  */
-ExtensionNSHandler::ExtensionNSHandler(const XalanDOMString&	namespaceUri) :
-	ExtensionFunctionHandler(namespaceUri),
-	m_elements(),
+ExtensionNSHandler::ExtensionNSHandler(const XalanDOMString&	namespaceUri,
+                                       MemoryManagerType& theManager) :
+	ExtensionFunctionHandler(namespaceUri, theManager),
+	m_elements(theManager),
 	m_componentDescLoaded(false)
 {
 }
 
+ExtensionNSHandler*
+ExtensionNSHandler::create(const XalanDOMString&	namespaceUri,
+                           MemoryManagerType&       theManager)
+{
+    typedef ExtensionNSHandler ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(namespaceUri, theManager);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 ExtensionNSHandler::ExtensionNSHandler (
+            MemoryManagerType&    theManager,
 			const XalanDOMString& namespaceUri,
 			const XalanDOMString& elemNames,
 			const XalanDOMString& funcNames,
 			const XalanDOMString& lang,
 			const XalanDOMString& srcURL,
 			const XalanDOMString& src) :
-	ExtensionFunctionHandler(namespaceUri, funcNames, lang, srcURL, src),
-	m_elements(),
+	ExtensionFunctionHandler(theManager, namespaceUri, funcNames, lang, srcURL, src),
+	m_elements(theManager),
 	m_componentDescLoaded(true)
 		 
 {
@@ -129,9 +146,13 @@ ExtensionNSHandler::setElements(const XalanDOMString&	elemNames)
 	{
 		StringTokenizer		st(elemNames, s_tokenDelimiterCharacters, false);
 
+        XalanDOMString theResult(m_elements.getMemoryManager());
+
 		while (st.hasMoreTokens() == true)
 		{
-			m_elements.insert(st.nextToken()); // just stick it in there basically
+            st.nextToken(theResult);
+
+			m_elements.insert(theResult); // just stick it in there basically
 		}
 	
 		m_componentDescLoaded = true;
@@ -178,10 +199,12 @@ ExtensionNSHandler::loadComponentDescription()
 
 
 
-XalanDOMString
-ExtensionNSHandler::getScriptString(const XalanElement&		/* elem */)
+XalanDOMString&
+ExtensionNSHandler::getScriptString(const XalanElement&		/* elem */,
+                                    XalanDOMString& theResult)
 {
-	return XalanDOMString();
+    theResult.erase();
+	return theResult;
 }
 
 

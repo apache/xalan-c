@@ -45,20 +45,20 @@ const double	theBogusNumberValue = 123456789;
 
 
 
-XNodeSetBase::XNodeSetBase() :
+XNodeSetBase::XNodeSetBase(MemoryManagerType& theManager) :
 	XObject(eTypeNodeSet),
 	m_proxy(*this),
-	m_cachedStringValue(),
+	m_cachedStringValue(theManager),
 	m_cachedNumberValue(theBogusNumberValue)
 {
 }
 
 
 
-XNodeSetBase::XNodeSetBase(const XNodeSetBase&	source) :
+XNodeSetBase::XNodeSetBase(const XNodeSetBase&	source, MemoryManagerType& theManager) :
 	XObject(source),
 	m_proxy(*this),
-	m_cachedStringValue(source.m_cachedStringValue),
+	m_cachedStringValue(source.m_cachedStringValue, theManager),
 	m_cachedNumberValue(source.m_cachedNumberValue)
 {
 }
@@ -87,7 +87,7 @@ XNodeSetBase::num() const
 #if defined(XALAN_NO_MUTABLE)
 		((XNodeSetBase*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str());
 #else
-		m_cachedNumberValue = DoubleSupport::toDouble(str());
+		m_cachedNumberValue = DoubleSupport::toDouble(str(),getMemoryManager());
 #endif
 	}
 

@@ -51,11 +51,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	FormatterToDOM::s_emptyString;
+const XalanDOMString	FormatterToDOM::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 FormatterToDOM::FormatterToDOM(
+            MemoryManagerType&      theManager ,                   
 			XalanDocument*			doc,
 			XalanDocumentFragment*	docFrag,
 			XalanElement*			currentElement) :
@@ -63,9 +64,9 @@ FormatterToDOM::FormatterToDOM(
 	m_doc(doc),
 	m_docFrag(docFrag),
 	m_currentElem(currentElement),
-	m_elemStack(),
-	m_buffer1(),
-	m_buffer2()
+	m_elemStack(theManager),
+	m_buffer1(theManager),
+	m_buffer2(theManager)
 {
 	assert(m_doc != 0 && m_docFrag != 0);
 }
@@ -73,15 +74,16 @@ FormatterToDOM::FormatterToDOM(
 
 
 FormatterToDOM::FormatterToDOM(
+            MemoryManagerType& theManager,
 			XalanDocument*	doc,
 			XalanElement*	elem) :
 	FormatterListener(OUTPUT_METHOD_DOM),
 	m_doc(doc),
 	m_docFrag(0),
 	m_currentElem(elem),
-	m_elemStack(),
-	m_buffer1(),
-	m_buffer2()
+	m_elemStack(theManager),
+	m_buffer1(theManager),
+	m_buffer2(theManager)
 {
 	assert(m_doc != 0);
 }

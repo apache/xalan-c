@@ -45,7 +45,7 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 #include <xalanc/Include/XalanMap.hpp>
 
 
@@ -181,7 +181,7 @@ public:
 		const XalanDOMString&	m_string;
 	};
 
-	typedef XalanAutoPtr<XPathProcessor>				XPathProcessorPtrType;
+	typedef XalanMemMgrAutoPtr<XPathProcessor, true>				XPathProcessorPtrType;
 	typedef Function::XObjectArgVectorType				XObjectArgVectorType;
 	typedef StylesheetExecutionContext::ParamVectorType	ParamVectorType;
 
@@ -201,6 +201,7 @@ public:
 	 * @param xpathFactory	   object responsible for XPath objects
 	 */
 	XSLTEngineImpl(
+            MemoryManagerType&  theManager,
 			XMLParserLiaison&	parserLiaison,
 			XPathEnvSupport&	xpathEnvSupport,
 			DOMSupport&			domSupport,
@@ -210,12 +211,18 @@ public:
 	virtual
 	~XSLTEngineImpl();
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_xpathConstructionContext.getMemoryManager();
+    }
+
 	/**
 	 * Perform initialization of statics -- must be called before any
 	 * processing occurs.  See class XSLTInit.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType&      theManager);
 
 	/**
 	 * Perform termination of statics.  See class XSLTInit.
@@ -257,9 +264,6 @@ public:
 
 	virtual XMLParserLiaison&
 	getXMLParserLiaison() const;
-
-	virtual const XalanDOMString
-	getUniqueNamespaceValue();
 
 	virtual void
 	getUniqueNamespaceValue(XalanDOMString&		theValue);
@@ -1653,7 +1657,7 @@ private:
 	XPathConstructionContextDefault		m_xpathConstructionContext;
 
 	static void
-	installFunctions();
+	installFunctions(MemoryManagerType& theManager);
 
 	static void
 	uninstallFunctions();

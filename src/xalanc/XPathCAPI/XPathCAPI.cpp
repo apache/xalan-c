@@ -22,11 +22,7 @@
 #include <xercesc/framework/MemBufInputSource.hpp>
 #include <xercesc/sax/SAXException.hpp>
 
-
-
 #include <xalanc/Include/XalanAutoPtr.hpp>
-
-
 
 #include <xalanc/XalanDOM/XalanDocument.hpp>
 
@@ -66,7 +62,7 @@ XALAN_USING_XALAN(XPath)
 XALAN_USING_XALAN(XPathEvaluator)
 XALAN_USING_XALAN(XalanSourceTreeInit)
 XALAN_USING_XALAN(XalanTranscodingServices)
-
+XALAN_USING_XALAN(XalanMemMgrs)
 
 
 static XalanSourceTreeInit*		theSourceTreeInit = 0;
@@ -96,11 +92,11 @@ XalanXPathAPIInitialize()
 
 			try
 			{
-				XPathEvaluator::initialize();
+				XPathEvaluator::initialize(XalanMemMgrs::getDefaultXercesMemMgr());
 
 				try
 				{
-					theSourceTreeInit = new XalanSourceTreeInit;
+					theSourceTreeInit = new XalanSourceTreeInit(XalanMemMgrs::getDefaultXercesMemMgr());
 				}
 				catch(...)
 				{
@@ -192,7 +188,7 @@ XalanCreateXPathEvaluator(XalanXPathEvaluatorHandle*	theHandle)
 
 		try
 		{
-			*theHandle = new XPathEvaluator;
+            *theHandle = new XPathEvaluator(XalanMemMgrs::getDefaultXercesMemMgr());
 		}
 		catch(...)
 		{
@@ -334,7 +330,8 @@ transcodeString(
 
 		XalanOutputTranscoder* const	theTranscoder = 
 			XalanTranscodingServices::makeNewTranscoder(
-						XalanDOMString(theStringEncoding),
+                        XalanMemMgrs::getDefaultXercesMemMgr(),
+						XalanDOMString(theStringEncoding, XalanMemMgrs::getDefaultXercesMemMgr()),
 						theCode,
 						1024);
 
@@ -429,7 +426,7 @@ XalanCreateXPath(
 			XPathEvaluator* const	theEvaluator = getEvaluator(theXalanHandle);
 			assert(theEvaluator != 0);
 
-			XalanDOMString	theExpressionString;
+			XalanDOMString	theExpressionString(XalanMemMgrs::getDefaultXercesMemMgr());
 
 			theResult = transcodeString(
 				theXPathExpression,
@@ -543,7 +540,7 @@ XalanEvaluateXPathAsBoolean(
 			XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
 
 			XalanSourceTreeDOMSupport		theDOMSupport;
-			XalanSourceTreeParserLiaison	theLiaison(theDOMSupport);
+			XalanSourceTreeParserLiaison	theLiaison(XalanMemMgrs::getDefaultXercesMemMgr(), theDOMSupport);
 
 			// Hook the two together...
 			theDOMSupport.setParserLiaison(&theLiaison);

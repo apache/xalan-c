@@ -37,7 +37,7 @@ ElemEmpty::ElemEmpty(
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
 						StylesheetConstructionContext::ELEMNAME_UNDEFINED,
-						XalanDOMString(),
+                        XalanDOMString(constructionContext.getMemoryManager()),
 						lineNumber,
 						columnNumber),
 	m_elementName(elementName)

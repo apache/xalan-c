@@ -161,8 +161,7 @@ class XalanDeque
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager    MemoryManagerType;
-
+ 
     typedef size_t  size_type;
 
     typedef Type            value_type;
@@ -197,26 +196,49 @@ public:
     typedef const_reverse_iterator_     const_reverse_iterator;
 
     XalanDeque(
+    		MemoryManagerType& memoryManager,
             size_type initialSize = 0,
-            MemoryManagerType* memoryManager = 0, 
             size_type blockSize = 10) :
-        m_memoryManager(memoryManager),
+        m_memoryManager(&memoryManager),
         m_blockSize(blockSize),
         m_blockIndex(memoryManager,
-                    initialSize / blockSize + (initialSize % blockSize == 0 ? 0 : 1))                    
+                    initialSize / blockSize + (initialSize % blockSize == 0 ? 0 : 1)),                    
+        m_freeBlockVector(memoryManager)
     {
-        XALAN_STD_QUALIFIER fill_n(XALAN_STD_QUALIFIER back_inserter(*this), initialSize, value_type());
+        typename ConstructionTraits::Constructor::ConstructableType defaultValue(*m_memoryManager);
+
+        XALAN_STD_QUALIFIER fill_n(XALAN_STD_QUALIFIER back_inserter(*this), initialSize, defaultValue.value);
     }
 
-    XalanDeque(const XalanDeque& theRhs) :
-        m_memoryManager(theRhs.m_memoryManager),
+    XalanDeque(const XalanDeque& theRhs, MemoryManagerType& memoryManager) :
+        m_memoryManager(&memoryManager),
         m_blockSize(theRhs.m_blockSize),
-        m_blockIndex(theRhs.m_memoryManager,
-                    theRhs.size() / theRhs.m_blockSize + (theRhs.size() % theRhs.m_blockSize == 0 ? 0 : 1))
+        m_blockIndex(*theRhs.m_memoryManager,
+                    theRhs.size() / theRhs.m_blockSize + (theRhs.size() % theRhs.m_blockSize == 0 ? 0 : 1)),
+        m_freeBlockVector(memoryManager)
     {
         XALAN_STD_QUALIFIER copy(theRhs.begin(), theRhs.end(), XALAN_STD_QUALIFIER back_inserter(*this));
     }
     
+   static XalanDeque*
+   create(
+            MemoryManagerType&  theManager,
+            size_type initialSize = 0,
+            size_type blockSize = 10)
+    {
+        typedef XalanDeque ThisType;
+
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theManager, initialSize, blockSize);
+
+        theGuard.release();
+
+        return theResult;
+    }
+     
     ~XalanDeque()
     {
         clear();
@@ -224,7 +246,7 @@ public:
 
         while (iter != m_freeBlockVector.end())
         {
-            (*iter)->~XalanVector<Type>();
+            (*iter)->~XalanVector<Type, ConstructionTraits>();
             deallocate(*iter);
             ++iter;
         }
@@ -362,13 +384,20 @@ public:
         theRhs.m_freeBlockVector.swap(m_freeBlockVector);
     }
 
-    const XalanDeque & operator=(const XalanDeque & theRhs) 
+    XalanDeque & operator=(const XalanDeque & theRhs) 
     {
         clear();
         XALAN_STD_QUALIFIER copy(theRhs.begin(), theRhs.end(), XALAN_STD_QUALIFIER back_inserter(*this));
         return *this;
     }
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        assert (m_memoryManager != 0);
+
+        return *m_memoryManager;
+    }
 protected:
 
     BlockType* getNewBlock()
@@ -378,7 +407,7 @@ protected:
         if (m_freeBlockVector.empty())
         {
             newBlock = allocate(1);
-            new (&*newBlock) BlockType(m_memoryManager, m_blockSize);
+            new (&*newBlock) BlockType(*m_memoryManager, m_blockSize);
         }
         else
         {
@@ -396,24 +425,17 @@ protected:
     {
         const size_type     theBytesNeeded = size * sizeof(BlockType);
 
-        void*   pointer = m_memoryManager == 0 ?
-                    ::operator new (theBytesNeeded) :
-                                    m_memoryManager->allocate(theBytesNeeded);
+        BlockType* pointer = (BlockType*)m_memoryManager->allocate(theBytesNeeded);
+        
         assert(pointer != 0);
-        return (BlockType*) pointer;
+        
+        return pointer;
      }
 
     void
     deallocate(BlockType*  pointer)
     {
-        if (m_memoryManager == 0)
-        {
-            ::operator delete(pointer);
-        }
-	else
-        {
-            m_memoryManager->deallocate(pointer);
-        }
+    	m_memoryManager->deallocate(pointer);
     }
 
     BlockIndexType     m_blockIndex; 
@@ -421,7 +443,15 @@ protected:
     
     MemoryManagerType*  m_memoryManager;
     const size_type     m_blockSize;
+
+private:
+	// Not implemented
+	XalanDeque();
+	XalanDeque(const XalanDeque&);
+	
 };
+
+
 
 XALAN_CPP_NAMESPACE_END
 

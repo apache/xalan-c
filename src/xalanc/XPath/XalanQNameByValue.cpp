@@ -36,28 +36,30 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanQNameByValue::XalanQNameByValue() :
+XalanQNameByValue::XalanQNameByValue(MemoryManagerType& theManager) :
 	XalanQName(),
-	m_namespace(),
-	m_localpart()
+	m_namespace(theManager),
+	m_localpart(theManager)
 {
 }
 
 
 
-XalanQNameByValue::XalanQNameByValue(const XalanQNameByValue&	theSource) :
+XalanQNameByValue::XalanQNameByValue(const XalanQNameByValue&	theSource,
+                                     MemoryManagerType& theManager) :
 	XalanQName(),
-	m_namespace(theSource.m_namespace),
-	m_localpart(theSource.m_localpart)
+	m_namespace(theSource.m_namespace, theManager),
+	m_localpart(theSource.m_localpart, theManager)
 {
 }
 
 
 
-XalanQNameByValue::XalanQNameByValue(const XalanQName&	theSource) :
+XalanQNameByValue::XalanQNameByValue(const XalanQName&	theSource,
+                                     MemoryManagerType& theManager) :
 	XalanQName(),
-	m_namespace(theSource.getNamespace()),
-	m_localpart(theSource.getLocalPart())
+	m_namespace(theSource.getNamespace(), theManager),
+	m_localpart(theSource.getLocalPart(), theManager)
 {
 }
 
@@ -65,22 +67,45 @@ XalanQNameByValue::XalanQNameByValue(const XalanQName&	theSource) :
 
 XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	theLocalPart) :
+			const XalanDOMString&	theLocalPart,
+            MemoryManagerType& theManager) :
 	XalanQName(),
-	m_namespace(theNamespace),
-	m_localpart(theLocalPart)
+	m_namespace(theNamespace, theManager),
+	m_localpart(theLocalPart, theManager)
 {
 }
 
+XalanQNameByValue*
+XalanQNameByValue::create(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	theLocalPart,
+            MemoryManagerType& theManager)
+{
+    typedef XalanQNameByValue ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(
+                        theNamespace,
+                        theLocalPart,
+                        theManager);
+
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces,
+            MemoryManagerType&          theManager,
 			const LocatorType*			locator,
 			bool						fUseDefault) :
-	m_namespace(),
-	m_localpart()
+	m_namespace(theManager),
+	m_localpart(theManager)
 {
 	initialize(
 		c_wstr(qname),
@@ -95,10 +120,11 @@ XalanQNameByValue::XalanQNameByValue(
 XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
+            MemoryManagerType&          theManager,
 			const LocatorType*			locator,
 			bool						fUseDefault) :
-	m_namespace(),
-	m_localpart()
+	m_namespace(theManager),
+	m_localpart(theManager)
 {
 	assert(qname != 0);
 
@@ -117,11 +143,12 @@ XalanQNameByValue::XalanQNameByValue(
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const DOMSupport& 		domSupport,
+            MemoryManagerType&      theManager,
 			const LocatorType*		locator) :
-	m_namespace(),
-	m_localpart()
+	m_namespace(theManager),
+	m_localpart(theManager)
 {
-	ElementPrefixResolverProxy	theProxy(namespaceContext, envSupport, domSupport);
+	ElementPrefixResolverProxy	theProxy(theManager, namespaceContext, envSupport, domSupport);
 
 	resolvePrefix(
 		c_wstr(qname),
@@ -134,10 +161,11 @@ XalanQNameByValue::XalanQNameByValue(
 
 XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMString&	qname,
+            MemoryManagerType&      theManager,
 			const PrefixResolver*	theResolver,
 			const LocatorType*		locator) :
-	m_namespace(),
-	m_localpart()
+	m_namespace(theManager),
+	m_localpart(theManager)
 {
 	resolvePrefix(
 		c_wstr(qname),
@@ -241,15 +269,16 @@ XalanQNameByValue::set(
 void
 throwException(
 			const XalanDOMString&					theMessage,
-			const XalanQNameByValue::LocatorType*	theLocator)
+			const XalanQNameByValue::LocatorType*	theLocator,
+            XalanDOMString& theResult)
 {
 	if (theLocator == 0)
 	{
-		throw XalanQName::InvalidQNameException(theMessage.c_str(), theMessage.length());
+		throw XalanQName::InvalidQNameException(theMessage.c_str(), theMessage.length(), theResult);
 	}
 	else
 	{
-		throw XalanQName::InvalidQNameException(*theLocator,theMessage.c_str(), theMessage.length());
+		throw XalanQName::InvalidQNameException(*theLocator,theMessage.c_str(), theMessage.length(), theResult);
 	}
 }
 
@@ -268,7 +297,13 @@ XalanQNameByValue::initialize(
 
 	if (indexOfNSSep == 0)
 	{
-		throwException(XalanMessageLoader::getMessage(XalanMessages::PrefixOfLengthZeroDetected), locator);
+        XalanDOMString msg(getMemoryManager());
+
+        XalanMessageLoader::getMessage(XalanMessages::PrefixOfLengthZeroDetected,msg);
+
+        XalanDOMString theBuffer(getMemoryManager());
+
+		throwException(msg, locator, theBuffer);
 	}
 	else if(indexOfNSSep < len)
 	{
@@ -295,9 +330,15 @@ XalanQNameByValue::initialize(
 
 			if(theNamespace == 0 || 0 == length(*theNamespace))
 			{
+                XalanDOMString msg(getMemoryManager());
+                
+                XalanDOMString theBuffer(getMemoryManager());
+                
+                XalanMessageLoader::getMessage(XalanMessages::PrefixMustResolveToNamespace_1Param, msg, m_localpart);
 				throwException(
-					XalanMessageLoader::getMessage(XalanMessages::PrefixMustResolveToNamespace_1Param, m_localpart),
-					locator);
+                    msg,
+					locator,
+                    theBuffer);
 			}
 			else
 			{
@@ -343,7 +384,13 @@ XalanQNameByValue::resolvePrefix(
 
 	if (indexOfNSSep == 0)
 	{
-		throwException(XalanMessageLoader::getMessage(XalanMessages::PrefixOfLengthZeroDetected), locator);
+        XalanDOMString msg(getMemoryManager());
+
+        XalanDOMString theBuffer(getMemoryManager());
+
+        XalanMessageLoader::getMessage(XalanMessages::PrefixOfLengthZeroDetected, msg);
+
+		throwException(msg, locator, theBuffer);
 	}
 	else if(indexOfNSSep >= theLength)
 	{
@@ -370,12 +417,15 @@ XalanQNameByValue::resolvePrefix(
 			m_namespace = DOMServices::s_XMLNamespacePrefixURI;
 		}
 		else if (theResolver == 0)
-		{
-			throwException(
-				XalanMessageLoader::getMessage(
-					XalanMessages::PrefixMustResolveToNamespace_1Param,
-					m_localpart),
-				locator);
+        {
+            XalanDOMString msg(getMemoryManager());
+
+            XalanDOMString theBuffer(getMemoryManager());
+
+            XalanMessageLoader::getMessage(
+                XalanMessages::PrefixMustResolveToNamespace_1Param, msg,m_localpart);
+
+            throwException(msg,locator, theBuffer);
 		}
 		else
 		{
@@ -390,11 +440,15 @@ XalanQNameByValue::resolvePrefix(
 
 		if(0 == length(m_namespace))
 		{
-			throwException(
-				XalanMessageLoader::getMessage(
-					XalanMessages::PrefixMustResolveToNamespace_1Param,
-					m_localpart)
-				,locator);
+            XalanDOMString msg(getMemoryManager());
+
+            XalanDOMString theBuffer(getMemoryManager());
+
+            XalanMessageLoader::getMessage(
+                XalanMessages::PrefixMustResolveToNamespace_1Param,msg,m_localpart);
+
+            throwException(msg,locator, theBuffer);
+
 		}
 
 		m_localpart.assign(qname + indexOfNSSep + 1, theLength - (indexOfNSSep + 1));
@@ -413,13 +467,15 @@ XalanQNameByValue::validate(
 {
 	if (isValid() == false)
 	{
+        XalanDOMString theBuffer(getMemoryManager());
+
 		if (locator != 0)
 		{
-			throw InvalidQNameException(*locator, qname, theLength);
+			throw InvalidQNameException(*locator, qname, theLength, theBuffer);
 		}
 		else
 		{
-			throw InvalidQNameException(qname, theLength);
+			throw InvalidQNameException(qname, theLength, theBuffer);
 		}
 	}
 }

@@ -21,8 +21,7 @@
 #include "xalanc/Harness/XalanHarnessDefinitions.hpp"
 
 
-
-#include <vector>
+#include "xalanc/Include/XalanVector.hpp"
 
 
 #if defined(XALAN_CLASSIC_IOSTREAMS)
@@ -60,11 +59,9 @@ class XALAN_HARNESS_EXPORT XalanFileUtility
 public:
 
 // A vector to hold directory names and file names.
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef vector<XalanDOMString>          FileNameVectorType;
-#else
-    typedef std::vector<XalanDOMString>     FileNameVectorType;
-#endif
+
+    typedef XalanVector<XalanDOMString>     FileNameVectorType;
+
 
     struct XALAN_HARNESS_EXPORT reportStruct
     {
@@ -81,7 +78,7 @@ public:
         int             fail;
         int             nogold;
 
-        reportStruct();
+        reportStruct(MemoryManagerType& theManager);
 
         void
         reset();
@@ -111,7 +108,7 @@ public:
         long            iters;
 
 
-        cmdParams();
+        cmdParams(MemoryManagerType& theManager);
 
         ~cmdParams()
         {
@@ -129,7 +126,7 @@ public:
     } args;
 
     /** Simple constructor, does not perform initialization.  */
-    XalanFileUtility();
+    XalanFileUtility(MemoryManagerType& theManager);
 
     ~XalanFileUtility();
 
@@ -138,8 +135,8 @@ public:
     * @returns a vector containing test files.
     */
 
-    XalanDOMString
-    getDrive();
+    XalanDOMString&
+    getDrive(XalanDOMString& theResult);
 
     bool
     getParams(
@@ -149,18 +146,20 @@ public:
             bool            fsetGold = true);
 
 
-    FileNameVectorType
+    FileNameVectorType&
     getTestFileNames(
             const XalanDOMString&   baseDir,
             const XalanDOMString&   relDir,
-            bool                    useDirPrefix);
+            bool                    useDirPrefix,
+            FileNameVectorType&     theFiles);
 
     /** 
     * Utility method used to get subdirectories from a specific directory.
     * @returns a vector containing directory files.
     */  
-    FileNameVectorType
-    getDirectoryNames(const XalanDOMString&     rootDirectory);
+    FileNameVectorType&
+    getDirectoryNames(const XalanDOMString&     rootDirectory,
+                      FileNameVectorType&       theFiles);
 
     /** 
     * Utility method used to create default directories when neccessary
@@ -178,32 +177,34 @@ public:
     * Utility method used to get XSL file based on XML file.
     * @returns a XalanDOMString.
     */
-    XalanDOMString
-    getXSLFileName(const XalanDOMString&    theXMLFileName);
+    XalanDOMString&
+    getXSLFileName(const XalanDOMString&    theXMLFileName,
+                    XalanDOMString&         theResult);
 
     /** 
     * Utility method used to get OUT file based on XML file.
     * @returns a XalanDOMString.
     */
-    XalanDOMString
+    XalanDOMString&
     generateFileName(
             const XalanDOMString&  theXMLFileName,
             const char*             suffix,
+            XalanDOMString&         theResult,
             bool*                   status = 0);
 
     /** 
     * Utility method used to generate UniqRunid.
     * @returns a XalanDOMString.
     */
-    XalanDOMString
-    generateUniqRunid();
+    XalanDOMString&
+    generateUniqRunid(XalanDOMString& theResult);
 
     /** 
     * Utility methods used to get Xerces Version number.
     * @returns a XalanDOMString.
     */
-    XalanDOMString
-    getXercesVersion();
+    XalanDOMString&
+    getXercesVersion(XalanDOMString& theResult);
 
 
     void
@@ -230,11 +231,12 @@ public:
             XalanXMLFileReporter&        logfile,
             const XalanDOMString&   outputFile,
             const XalanDOMString&   goldFile,
+            MemoryManagerType&      theManager,
             bool                    containsOnly = false)
     {
         checkAPIResults(
-            XalanDOMString(actual), 
-            XalanDOMString(expected),
+            XalanDOMString(actual, theManager), 
+            XalanDOMString(expected, theManager),
             msg,
             logfile,
             outputFile,
@@ -355,8 +357,8 @@ private:
 
     static const XalanDOMString     s_emptyString;
 
-    XalanDOMString
-    getProgramName(const char* fullName);
+    XalanDOMString&
+    getProgramName(const char* fullName, XalanDOMString& theBuffer);
 
     /** 
     * Utility methods used to collect information about compare failures.

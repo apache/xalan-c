@@ -75,9 +75,12 @@ ElemAttribute::ElemAttribute(
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
+						XalanMessages::TemplateHasIllegalAttribute_2Param, 
+                            theResult, 
 							Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -87,9 +90,12 @@ ElemAttribute::ElemAttribute(
 
 	if(0 == m_nameAVT)
 	{
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
-				XalanMessages::TemplateMustHaveAttribute_2Param,
+				XalanMessages::TemplateMustHaveAttribute_2Param, 
+                theResult,
 				Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING,
 				Constants::ATTRNAME_NAME),
 			0,
@@ -332,9 +338,10 @@ ElemAttribute::startElement(StylesheetExecutionContext&	executionContext) const
 
 					if (isEmpty(attrNameSpace))
 					{
+                        XalanDOMString  theResult(executionContext.getMemoryManager());
 						// Could not resolve prefix
 						executionContext.warn(
-							XalanMessageLoader::getMessage(XalanMessages::CouldNotResolvePrefix),
+							XalanMessageLoader::getMessage(XalanMessages::CouldNotResolvePrefix , theResult),
 							executionContext.getCurrentNode(),
 							getLocator());
 					}
@@ -366,8 +373,10 @@ ElemAttribute::startElement(StylesheetExecutionContext&	executionContext) const
 		}
 		else
 		{
+            XalanDOMString  theResult(executionContext.getMemoryManager());
+
 			executionContext.warn(
-				XalanMessageLoader::getMessage(XalanMessages::AttributesCannotBeAdded),
+				XalanMessageLoader::getMessage(XalanMessages::AttributesCannotBeAdded, theResult),
 				executionContext.getCurrentNode(),
 				getLocator());
 		}

@@ -70,12 +70,12 @@ public:
 #else
 	virtual FunctionFormatNumber*
 #endif
-	clone() const;
+	clone(MemoryManagerType& theManager) const;
 
 private:
 
-	const XalanDOMString
-	getError() const;
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theResult) const;
 
 	// Not implemented...
 	FunctionFormatNumber&

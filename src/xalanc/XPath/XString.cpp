@@ -22,17 +22,19 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XString::XString(const XalanDOMString&	val) :
-	XStringBase(),
-	m_value(val)
+XString::XString(const XalanDOMString&	val,
+                 MemoryManagerType& theManager) :
+	XStringBase(theManager),
+	m_value(val,theManager)
 {
 }
 
 
 
-XString::XString(const XalanDOMChar*	val) :
-	XStringBase(),
-	m_value(val)
+XString::XString(const XalanDOMChar*	val,
+                 MemoryManagerType& theManager) :
+	XStringBase(theManager),
+	m_value(val, theManager)
 {
 }
 
@@ -40,17 +42,18 @@ XString::XString(const XalanDOMChar*	val) :
 
 XString::XString(
 			const XalanDOMChar*		val,
-			unsigned int			len) :
-	XStringBase(),
-	m_value(val, len)
+			unsigned int			len,
+            MemoryManagerType&      theManager) :
+	XStringBase(theManager),
+	m_value(val, theManager, len)
 {
 }
 
 
 
-XString::XString(const XString&	source) :
-	XStringBase(source),
-	m_value(source.m_value)
+XString::XString(const XString&	source,MemoryManagerType& theManager) :
+	XStringBase(source, theManager),
+	m_value(source.m_value, theManager)
 {
 }
 
@@ -59,26 +62,6 @@ XString::XString(const XString&	source) :
 XString::~XString()
 {
 }
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XString*
-#endif
-XString::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XString(*this);
-	}
-	else
-	{
-		return new (theAddress) XString(*this);
-	}
-}
-
 
 
 const XalanDOMString&

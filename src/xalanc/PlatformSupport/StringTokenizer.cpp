@@ -119,57 +119,6 @@ StringTokenizer::hasMoreTokens() const
 
 
 
-XalanDOMString
-StringTokenizer::nextToken()
-{
-	assert(m_currentIndex < m_stringLength);
-
-	XalanDOMString	theToken;
-
-	// Find the index of the next delimiter.
-	XalanDOMString::size_type	theIndex = FindNextDelimiterIndex(m_currentIndex);
-
-	if (theIndex == m_currentIndex)
-	{
-		m_currentIndex = theIndex + 1;
-
-		if (m_returnTokens == true)
-		{
-			// The next delimiter is at the current index.  If we're
-			// returning delimiters as tokens, then make that the
-			// return value.  Otherwise, return an empty string.
-			substring(
-				m_string,
-				theToken,
-				theIndex,
-				theIndex + 1);
-		}
-		else if (m_currentIndex < m_stringLength)
-		{
-			theToken = nextToken();
-		}
-	}
-	else
-	{
-		if (theIndex == m_currentIndex)
-		{
-			theIndex = FindNextDelimiterIndex(m_currentIndex + 1);
-		}
-		assert(theIndex > m_currentIndex);
-
-		substring(
-			m_string,
-			theToken,
-			m_currentIndex,
-			theIndex);
-
-		m_currentIndex = theIndex;
-	}
-
-	return theToken;
-}
-
-
 
 void
 StringTokenizer::nextToken(XalanDOMString&	theToken)
@@ -196,7 +145,7 @@ StringTokenizer::nextToken(XalanDOMString&	theToken)
 		}
 		else if (m_currentIndex < m_stringLength)
 		{
-			theToken = nextToken();
+			 nextToken( theToken );
 		}
 	}
 	else

@@ -49,20 +49,28 @@ class XALAN_PLATFORMSUPPORT_EXPORT AttributeListImpl : public AttributeListType
 public:
 
 	explicit
-	AttributeListImpl();
+	AttributeListImpl(MemoryManagerType&      theManager);
 
 	virtual
 	~AttributeListImpl();
 
-    AttributeListImpl(const AttributeListImpl&	theSource);
+    AttributeListImpl(const AttributeListImpl&	theSource,
+                        MemoryManagerType&      theManager);
 
-    AttributeListImpl(const AttributeListType&	theSource);
+    AttributeListImpl(const AttributeListType&	theSource,
+                        MemoryManagerType&      theManager);
 
     AttributeListImpl&
 	operator=(const AttributeListImpl&	theRHS);
 
 	AttributeListImpl&
 	operator=(const AttributeListType&	theRHS);
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_AttributeVector.getMemoryManager();
+    }
 
 	// These are inherited from AttributeList
     virtual unsigned int
@@ -85,7 +93,6 @@ public:
 
 	virtual const XMLCh*
 	getValue(const char* const name) const;
-
 	// The mutators are new to this class.
 
 	/**

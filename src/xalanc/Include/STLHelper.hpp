@@ -55,6 +55,10 @@ struct DeleteFunctor : public std::unary_function<const T*, void>
 	typedef typename BaseClassType::result_type		result_type;
 	typedef typename BaseClassType::argument_type	argument_type;
 
+    DeleteFunctor(MemoryManagerType&      theManager) :
+        m_memoryManager(theManager)
+    {
+    }
 	/**
 	 * Delete the object pointed to by argument.
 	 *
@@ -63,12 +67,18 @@ struct DeleteFunctor : public std::unary_function<const T*, void>
 	result_type
 	operator()(argument_type	thePointer) const
 	{
-#if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (T*)thePointer;
-#else
-		delete thePointer;
-#endif
+        if( thePointer == 0 )
+            return;
+
+		thePointer->~T();
+        
+        m_memoryManager.deallocate((void*)thePointer);
 	}
+
+private:
+
+   MemoryManagerType& m_memoryManager;
+
 };
 
 
@@ -197,6 +207,11 @@ struct MapValueDeleteFunctor : public unary_function<const typename T::value_typ
 struct MapValueDeleteFunctor : public std::unary_function<const typename T::value_type&, void>
 #endif
 {
+
+    MapValueDeleteFunctor( MemoryManagerType& theManager) :
+        m_memoryManager(theManager)
+    {
+    }
 #if defined(XALAN_NO_STD_NAMESPACE)
 	typedef unary_function<const typename T::value_type&, void>		BaseClassType;
 #else
@@ -206,6 +221,13 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
 	typedef typename BaseClassType::result_type		result_type;
 	typedef typename BaseClassType::argument_type	argument_type;
 
+    template<class Type>
+    static void 
+    deletePointer(Type* ptr)
+    {
+        ptr->~Type();
+    }
+    
 	/**
 	 * Delete the value object in a map value pair.  The value of the pair must
 	 * be of pointer type.
@@ -215,17 +237,31 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
 	result_type
 	operator()(argument_type	thePair) const
 	{
-		delete thePair.second;
+        if (thePair.second != 0)
+        {
+            typedef typename T::value_type::second_type second_type;
+
+            second_type vect  =  const_cast<typename T::value_type&>(thePair).second;
+
+            deletePointer(vect);
+
+            m_memoryManager.deallocate((void*)vect);
+
+            thePair.second;
+        }
 	}
+private:
+    MemoryManagerType& m_memoryManager;
+
 };
 
 
 
 template<class T>
 MapValueDeleteFunctor<T>
-makeMapValueDeleteFunctor(const T&	/* theMap */)
+makeMapValueDeleteFunctor(const T&	 theMap)
 {
-	return MapValueDeleteFunctor<T>();
+	return MapValueDeleteFunctor<T>(const_cast<T&>(theMap).getMemoryManager());
 }
 
 
@@ -428,7 +464,7 @@ public:
 			// Delete all of the objects in the temp vector.
 			for_each(m_collection->begin(),
 					 m_collection->end(),
-					 DeleteFunctorType());
+					 DeleteFunctorType(m_collection->getMemoryManager()));
 		}
 	}
 

@@ -20,7 +20,7 @@
 
 #include <xalanc/PlatformSupport/ArenaBlockBase.hpp>
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 XALAN_CPP_NAMESPACE_BEGIN
 
@@ -45,8 +45,9 @@ public:
 	 *
 	 * @param theBlockSize The size of the block (the number of objects it can contain).
 	 */
-	ArenaBlock(size_type	theBlockSize) :	
-	BaseClassType(theBlockSize)
+	ArenaBlock(MemoryManagerType&       theManager,
+                        size_type	    theBlockSize) :	
+	BaseClassType(theManager, theBlockSize)
 	{
 	}
 
@@ -62,7 +63,22 @@ public:
 		}
 
 	}
+    static ArenaBlock<ObjectType,size_Type>*
+    create( MemoryManagerType&       theManager,
+             size_type	             theBlockSize)
+    {
+        typedef ArenaBlock<ObjectType,size_Type> ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
 
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theManager, theBlockSize);
+
+        theGuard.release();
+
+        return theResult;
+    }
 	/*
 	 * Allocate a block.  Once the object is constructed, you must call
 	 * commitAllocation().

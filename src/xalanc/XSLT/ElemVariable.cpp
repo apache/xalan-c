@@ -120,9 +120,12 @@ ElemVariable::init(
 
 			if (m_qname->isValid() == false)
 			{
+                StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 				constructionContext.error(
 						XalanMessageLoader::getMessage(
 							XalanMessages::AttributeValueNotValidQName_2Param,
+                            theGuard.get(),
 							Constants::ATTRNAME_NAME.c_str(),
 							atts.getValue(i)),
 						0,
@@ -132,9 +135,12 @@ ElemVariable::init(
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
+            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                        theGuard.get(),
 						Constants::ELEMNAME_VARIABLE_WITH_PREFIX_STRING.c_str(),
 						aname),
 					0,
@@ -144,9 +150,12 @@ ElemVariable::init(
 
 	if(m_qname == 0)
 	{
+        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::TemplateMustHaveAttribute_2Param,
+                theGuard.get(),
 				Constants::ELEMNAME_VARIABLE_WITH_PREFIX_STRING,
 				Constants::ATTRNAME_NAME),
 			0,
@@ -174,15 +183,19 @@ ElemVariable::addToStylesheet(
 	// Processing a top-level element only...
 	if (&theStylesheet != &getStylesheet())
 	{
+        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 		constructionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::ElemVariableInstanceAddedToWrongStylesheet),
+			XalanMessageLoader::getMessage(XalanMessages::ElemVariableInstanceAddedToWrongStylesheet, theGuard.get()),
 			0,
 			this);
 	}
 	else if (getParentNodeElem() != 0)
 	{
+        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 		constructionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::ElemVariableInstanceIsAlreadyParented),
+			XalanMessageLoader::getMessage(XalanMessages::ElemVariableInstanceIsAlreadyParented, theGuard.get()),
 			0,
 			this);
 	}
@@ -221,13 +234,13 @@ ElemVariable::setParentNodeElem(ElemTemplateElement*	theParent)
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemVariable::startElement(StylesheetExecutionContext&  executionContext) const
+ElemVariable::startElement(StylesheetExecutionContext& executionContext) const
 {
 	assert(m_qname != 0);
 
 	ParentType::startElement(executionContext);
 
-	XObjectPtr  theValue;
+	XObjectPtr theValue;
 
 	if(m_selectPattern == 0)
 	{
@@ -238,7 +251,6 @@ ElemVariable::startElement(StylesheetExecutionContext&  executionContext) const
 		else
 		{
 			executionContext.beginCreateXResultTreeFrag(executionContext.getCurrentNode());
-
 			return beginExecuteChildren(executionContext);
 		}
 	}
@@ -253,27 +265,34 @@ ElemVariable::startElement(StylesheetExecutionContext&  executionContext) const
 					executionContext,
 					executionContext.getCurrentNode(),
 					*this,
-					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+                    XalanDOMString("select", executionContext.getMemoryManager()),
 					*m_selectPattern,
 					theValue));
 		}
 
 	}
 
-    assert(theValue.null() == false);
-
-    executionContext.pushVariable(
-			*m_qname,
-			theValue,
-			getParentNodeElem());
+	if (theValue.null() == false)
+	{
+		executionContext.pushVariable(
+				*m_qname,
+				theValue,
+				getParentNodeElem());
+	}
+	else
+	{
+		executionContext.pushVariable(
+				*m_qname,
+				this,
+				getParentNodeElem());
+	}
 
 	return 0;
 }
 
 
-
 void
-ElemVariable::endElement(StylesheetExecutionContext&    executionContext) const
+ElemVariable::endElement(StylesheetExecutionContext& executionContext) const
 {
 	if (0 == m_selectPattern && 0 != getFirstChildElem())
 	{
@@ -338,6 +357,7 @@ ElemVariable::getValue(
 		}
 		else
 		{
+			
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 			executionContext.beginCreateXResultTreeFrag(sourceNode);
 
@@ -373,7 +393,7 @@ ElemVariable::getValue(
 					executionContext,
 					sourceNode,
 					*this,
-					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+					XalanDOMString("select", executionContext.getMemoryManager()),
 					*m_selectPattern,
 					theValue));
 		}

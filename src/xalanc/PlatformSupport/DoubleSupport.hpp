@@ -45,7 +45,7 @@ public:
      * Perform static initialization.  See class PlatformSupportInit.
      */
     static void
-    initialize();
+    initialize(MemoryManagerType&      theManager);
  
     /**
      * Perform static shut down.  See class PlatformSupportInit.
@@ -523,7 +523,7 @@ public:
      * @return The result of the conversion
      */
     static double
-    toDouble(const XalanDOMString&  theString);
+    toDouble(const XalanDOMString&  theString, MemoryManagerType&      theManager);
 
     /**
      * Convert a string to a double value.  Returns
@@ -534,7 +534,7 @@ public:
      * @return The result of the conversion
      */
     static double
-    toDouble(const XalanDOMChar*    theString);
+    toDouble(const XalanDOMChar*    theString, MemoryManagerType&      theManager);
 
     /**
      * Round a number according to the XPath

@@ -33,9 +33,6 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
-
-
 
 // Base class header file.
 #include <xalanc/XPath/NodeRefListBase.hpp>
@@ -67,7 +64,8 @@ public:
 	 * 
 	 * @param val source result tree fragment.
 	 */
-	XResultTreeFrag(XalanDocumentFragment&		value);
+	XResultTreeFrag(XalanDocumentFragment&		value,
+                    MemoryManagerType& theManager);
 
 	/**
 	 * Construct an XResultTreeFrag object from another
@@ -77,11 +75,17 @@ public:
 	 */
 	XResultTreeFrag(
 			const XResultTreeFrag&	source,
+            MemoryManagerType&      theManager,
 			bool					deepClone = false);
 
 	virtual
 	~XResultTreeFrag();
 
+    MemoryManagerType&
+    getMemoryManager()const
+    {
+        return m_cachedStringValue.getMemoryManager();
+    }
 
 	void
 	setExecutionContext(StylesheetExecutionContext*		theExecutionContext)
@@ -90,13 +94,6 @@ public:
 	}
 
 	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XResultTreeFrag*
-#endif
-	clone(void*		theAddress = 0) const;
 
 	virtual const XalanDOMString&
 	getTypeString() const;
@@ -112,7 +109,7 @@ public:
 
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
+ 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const;
 
 	virtual void

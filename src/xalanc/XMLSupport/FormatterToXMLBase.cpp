@@ -105,6 +105,7 @@ const XalanDOMChar	FormatterToXMLBase::s_specialChars[kSpecialsSize] =
 
 
 FormatterToXMLBase::FormatterToXMLBase(
+            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	version,
 			const XalanDOMString&	mediaType,
@@ -116,17 +117,17 @@ FormatterToXMLBase::FormatterToXMLBase(
 	m_writer(&writer),
 	m_nextIsRaw(false),
 	m_spaceBeforeClose(false),
-	m_doctypeSystem(doctypeSystem),
-	m_doctypePublic(doctypePublic),
-	m_version(version),
-	m_standalone(standalone),
-	m_mediaType(mediaType),
+	m_doctypeSystem(doctypeSystem,theManager),
+	m_doctypePublic(doctypePublic,theManager),
+	m_version(version,theManager),
+	m_standalone(standalone,theManager),
+	m_mediaType(mediaType, theManager),
 	m_newlineString(0),
 	m_newlineStringLength(0),
 	m_needToOutputDoctypeDecl(false),
     // We must write the XML declaration if standalone is specified
     m_shouldWriteXMLHeader(xmlDecl == true ? true : standalone.length() != 0),
-	m_elemStack()
+	m_elemStack(theManager)
 {
 	if(isEmpty(m_doctypePublic) == false)
 	{
@@ -167,13 +168,14 @@ FormatterToXMLBase::~FormatterToXMLBase()
 unsigned int
 FormatterToXMLBase::decodeUTF16SurrogatePair(
 			XalanDOMChar	theHighSurrogate,
-			XalanDOMChar	theLowSurrogate)
+			XalanDOMChar	theLowSurrogate,
+            MemoryManagerType& theManager)
 {
 	assert(isUTF16HighSurrogate(theHighSurrogate) == true);
 
 	if (isUTF16LowSurrogate(theLowSurrogate) == false)
 	{
-		throwInvalidUTF16SurrogateException(theHighSurrogate, theLowSurrogate);
+        throwInvalidUTF16SurrogateException(theHighSurrogate, theLowSurrogate, theManager);
 	}
 
 	return ((theHighSurrogate - 0xD800u) << 10) + theLowSurrogate - 0xDC00u + 0x00010000u;
@@ -184,33 +186,47 @@ FormatterToXMLBase::decodeUTF16SurrogatePair(
 XALAN_USING_XERCES(SAXException)
 
 void
-FormatterToXMLBase::throwInvalidUTF16SurrogateException(XalanDOMChar	ch)
+FormatterToXMLBase::throwInvalidUTF16SurrogateException(XalanDOMChar	ch,
+                                                        MemoryManagerType& theManager)
 {
-	const XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidUFT16Surrogate_2Param, UnsignedLongToHexDOMString(ch));
+	XalanDOMString	theMessage(theManager);
+    XalanDOMString	theBuffer(theManager);
 
-	throw SAXException(c_wstr(theMessage));
+    XalanMessageLoader::getMessage(XalanMessages::InvalidUFT16Surrogate_2Param, theMessage, UnsignedLongToHexDOMString(ch, theBuffer));
+
+	throw SAXException(c_wstr(theMessage), &theManager);
 }
 
 
 
 void
 FormatterToXMLBase::throwInvalidUTF16SurrogateException(
-			XalanDOMChar	ch,
-			XalanDOMChar	next)
+			XalanDOMChar	    ch,
+			XalanDOMChar	    next,
+            MemoryManagerType&  theManager)
 {
-	const XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidUFT16Surrogate_2Param, UnsignedLongToHexDOMString(ch),UnsignedLongToHexDOMString(next));
+    XalanDOMString	theMessage(theManager);
+    XalanDOMString	theBuffer(theManager);
+    XalanDOMString	theBuffer2(theManager);
 
-	throw SAXException(c_wstr(theMessage));
+	XalanMessageLoader::getMessage(XalanMessages::InvalidUFT16Surrogate_2Param, theMessage, 
+                    UnsignedLongToHexDOMString(ch, theBuffer),UnsignedLongToHexDOMString(next, theBuffer2));
+
+	throw SAXException(c_wstr(theMessage), &theManager);
 }
 
 
 
 void
-FormatterToXMLBase::throwInvalidCharacterException(unsigned int		ch)
+FormatterToXMLBase::throwInvalidCharacterException(unsigned int		ch,
+                                                   MemoryManagerType& theManager)
 {
-	const XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidCharDetected_1Param, UnsignedLongToHexDOMString(ch));
+	XalanDOMString	theMessage(theManager);
+    XalanDOMString	theBuffer(theManager);  
 
-	throw SAXException(c_wstr(theMessage));
+    XalanMessageLoader::getMessage(XalanMessages::InvalidCharDetected_1Param, theMessage, UnsignedLongToHexDOMString(ch, theBuffer));
+
+	throw SAXException(c_wstr(theMessage),&theManager);
 }
 
 

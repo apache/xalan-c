@@ -31,9 +31,10 @@ XSLException::XSLException(
 		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theURI,
 		int						theLineNumber,
-		int						theColumnNumber) :
-	m_message(theMessage),
-	m_uri(theURI),
+		int						theColumnNumber,
+        MemoryManagerType&      theManager) :
+	m_message(theMessage, theManager),
+	m_uri(theURI, theManager),
 	m_lineNumber(theLineNumber),
 	m_columnNumber(theColumnNumber)
 {
@@ -43,9 +44,10 @@ XSLException::XSLException(
 
 XSLException::XSLException(
 			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage) :
-	m_message(theMessage),
-	m_uri(theLocator.getSystemId() == 0 ? &s_dummy : theLocator.getSystemId()),
+			const XalanDOMString&	theMessage,
+            MemoryManagerType&      theManager) :
+	m_message(theMessage,theManager),
+	m_uri(theLocator.getSystemId() == 0 ? &s_dummy : theLocator.getSystemId(), theManager),
 	m_lineNumber(theLocator.getLineNumber()),
 	m_columnNumber(theLocator.getColumnNumber())
 {
@@ -54,12 +56,22 @@ XSLException::XSLException(
 
 
 XSLException::XSLException(
-		const XalanDOMString&	theMessage) :
-	m_message(theMessage),
-	m_uri(),
+		const XalanDOMString&	theMessage,
+        MemoryManagerType&      theManager) :
+	m_message(theMessage,theManager),
+	m_uri(theManager),
 	m_lineNumber(XalanLocator::getUnknownValue()),
 	m_columnNumber(XalanLocator::getUnknownValue())
 {
+}
+
+XSLException::XSLException(const XSLException&	other) :
+	m_message(other.m_message,other.getMemoryManager()),
+	m_uri(other.m_uri, other.getMemoryManager()),
+	m_lineNumber(other.m_lineNumber),
+	m_columnNumber(other.m_columnNumber)
+{
+    // hack : breal const-ness , use the same memory manager
 }
 
 
@@ -68,26 +80,11 @@ XSLException::~XSLException()
 {
 }
 
-
-
-XalanDOMString
-XSLException::defaultFormat() const
-{
-	XalanDOMString	theBuffer;
-
-	defaultFormat(theBuffer);
-
-	return theBuffer;
-}
-
-
-
 void
 XSLException::defaultFormat(XalanDOMString&		theBuffer) const
 {
 	defaultFormat(m_message, m_uri, m_lineNumber, m_columnNumber, getType(), theBuffer);
 }
-
 
 
 static

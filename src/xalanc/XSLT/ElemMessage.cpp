@@ -65,8 +65,10 @@ ElemMessage::ElemMessage(
 			}
 			else if (equals(avalue, Constants::ATTRVAL_NO) == false)
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.error(
-					XalanMessageLoader::getMessage(XalanMessages::AttributeHasIllegalValue_1Param,Constants::ATTRNAME_TERMINATE),
+					XalanMessageLoader::getMessage(XalanMessages::AttributeHasIllegalValue_1Param, theResult, Constants::ATTRNAME_TERMINATE),
 					0,
 					this);
 			}
@@ -74,9 +76,12 @@ ElemMessage::ElemMessage(
 		else if(isAttrOK(aname, atts, i, constructionContext) == false ||
 				processSpaceAttr(aname, atts, i, constructionContext))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theResult,
 							Constants::ELEMNAME_MESSAGE_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -126,11 +131,11 @@ ElemMessage::endElement(StylesheetExecutionContext&		executionContext) const
 	{
 		if (theLocator != 0)
 		{
-			throw ElemMessageTerminateException(*theLocator, theResult);
+			throw ElemMessageTerminateException(executionContext.getMemoryManager(), *theLocator, theResult);
 		}
 		else
 		{
-			throw ElemMessageTerminateException(theResult);
+			throw ElemMessageTerminateException(executionContext.getMemoryManager(), theResult);
 		}
 	}
 
@@ -210,18 +215,21 @@ const XalanDOMChar	ElemMessage::ElemMessageTerminateException::m_type[] =
 
 
 
-ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(const XalanDOMString&		theMessage) :
-	XSLTProcessorException(
-			theMessage)
+ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(
+                                    MemoryManagerType&          theManager,
+                                    const XalanDOMString&		theMessage) :
+	XSLTProcessorException(theManager, theMessage)
 {
 }
 
 
 
 ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(
+            MemoryManagerType&      theManager,
 			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage) :
 	XSLTProcessorException(
+            theManager,
 			theLocator,
 			theMessage)
 {

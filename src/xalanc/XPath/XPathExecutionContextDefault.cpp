@@ -50,7 +50,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const NodeRefList	XPathExecutionContextDefault::s_dummyList;
+const NodeRefList	XPathExecutionContextDefault::s_dummyList(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -61,16 +61,17 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 			XalanNode*				theCurrentNode,
 			const NodeRefListBase*	theContextNodeList,
 			const PrefixResolver*	thePrefixResolver) :
-	XPathExecutionContext(&theXObjectFactory),
+    XPathExecutionContext(theXObjectFactory.getMemoryManager(), &theXObjectFactory),
 	m_xpathEnvSupport(&theXPathEnvSupport),
 	m_domSupport(&theDOMSupport),
-	m_currentNodeStack(),
-	m_contextNodeListStack(),
+	m_currentNodeStack(theXObjectFactory.getMemoryManager()),
+	m_contextNodeListStack(theXObjectFactory.getMemoryManager()),
 	m_prefixResolver(thePrefixResolver),
-	m_nodeListCache(eNodeListCacheListSize),
-	m_stringCache(),
+    m_currentPattern(theXObjectFactory.getMemoryManager()),
+	m_nodeListCache(theXObjectFactory.getMemoryManager(), eNodeListCacheListSize),
+	m_stringCache(theXObjectFactory.getMemoryManager()),
 	m_cachedPosition(),
-	m_scratchQName()
+	m_scratchQName(theXObjectFactory.getMemoryManager())
 {
 	m_currentNodeStack.push_back(theCurrentNode);
 
@@ -80,26 +81,48 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 
 
 XPathExecutionContextDefault::XPathExecutionContextDefault(
+            MemoryManagerType&      theManager,
 			XalanNode*				theCurrentNode,
 			const NodeRefListBase*	theContextNodeList,
 			const PrefixResolver*	thePrefixResolver) :
-	XPathExecutionContext(),
+	XPathExecutionContext(theManager),
 	m_xpathEnvSupport(0),
 	m_domSupport(0),
-	m_currentNodeStack(),
-	m_contextNodeListStack(),
+	m_currentNodeStack(theManager),
+	m_contextNodeListStack(theManager),
 	m_prefixResolver(thePrefixResolver),
-	m_nodeListCache(eNodeListCacheListSize),
-	m_stringCache(),
+    m_currentPattern(theManager),
+	m_nodeListCache(theManager, eNodeListCacheListSize),
+	m_stringCache(theManager),
 	m_cachedPosition(),
-	m_scratchQName()
+	m_scratchQName(theManager)
 {
 	m_currentNodeStack.push_back(theCurrentNode);
 
 	m_contextNodeListStack.push_back(theContextNodeList == 0 ? &s_dummyList : theContextNodeList);
 }
 
+XPathExecutionContextDefault*
+XPathExecutionContextDefault::create(
+                                     MemoryManagerType&      theManager,
+                                     XalanNode*				theCurrentNode,
+                                     const NodeRefListBase*	theContextNodeList,
+                                     const PrefixResolver*	thePrefixResolver)
+{
+    typedef XPathExecutionContextDefault ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(   theManager, 
+                                theCurrentNode,
+                                theContextNodeList,
+                                thePrefixResolver);
+    theGuard.release();
+
+    return theResult;
+}
 
 
 XPathExecutionContextDefault::~XPathExecutionContextDefault()
@@ -321,12 +344,13 @@ XPathExecutionContextDefault::extFunction(
 
 XalanDocument*
 XPathExecutionContextDefault::parseXML(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) const
 {
 	assert(m_xpathEnvSupport != 0);
 
-	return m_xpathEnvSupport->parseXML(urlString, base);
+	return m_xpathEnvSupport->parseXML(theManager, urlString, base);
 }
 
 
@@ -348,9 +372,9 @@ XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	theLi
 
 
 MutableNodeRefList*
-XPathExecutionContextDefault::createMutableNodeRefList() const
+XPathExecutionContextDefault::createMutableNodeRefList(MemoryManagerType& theManager) const
 {
-	return new MutableNodeRefList;
+    return MutableNodeRefList::create(theManager);
 }
 
 
@@ -432,12 +456,13 @@ XPathExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	prefix
 
 
 
-XalanDOMString
-XPathExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner) const
+XalanDOMString&
+XPathExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner,
+                                             XalanDOMString&        theResult) const
 {
 	assert(m_xpathEnvSupport != 0);
 
-	return m_xpathEnvSupport->findURIFromDoc(owner);
+	return m_xpathEnvSupport->findURIFromDoc(owner, theResult);
 }
 
 
@@ -445,9 +470,10 @@ XPathExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner) const
 const XalanDOMString&
 XPathExecutionContextDefault::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const
+			const XalanDocument&	theDocument,
+            XalanDOMString&         theResult) const
 {
-	return m_domSupport->getUnparsedEntityURI(theName, theDocument);
+	return m_domSupport->getUnparsedEntityURI(theName, theDocument, theResult);
 }
 
 
@@ -471,7 +497,9 @@ XPathExecutionContextDefault::error(
 	XalanLocator::size_type		lineNumber = XalanLocator::getUnknownValue();
 	XalanLocator::size_type		columnNumber = XalanLocator::getUnknownValue();
 
-	XalanDOMString	uri;
+    MemoryManagerType& theManager =  const_cast<XPathExecutionContextDefault*>(this)->getMemoryManager();
+
+	XalanDOMString	uri(theManager);
 
 	if (locator != 0)
 	{
@@ -506,7 +534,7 @@ XPathExecutionContextDefault::error(
 			lineNumber,
 			columnNumber) == true)
 	{
-		throw XalanXPathException(msg, uri, lineNumber, columnNumber);
+		throw XalanXPathException(msg, uri, lineNumber, columnNumber, theManager);
 	}
 }
 
@@ -523,7 +551,9 @@ XPathExecutionContextDefault::warn(
 	XalanLocator::size_type		lineNumber = XalanLocator::getUnknownValue();
 	XalanLocator::size_type		columnNumber = XalanLocator::getUnknownValue();
 
-	XalanDOMString	uri;
+    MemoryManagerType& theManager =  const_cast<XPathExecutionContextDefault*>(this)->getMemoryManager();
+
+	XalanDOMString	uri(theManager);
 
 	if (locator != 0)
 	{
@@ -558,7 +588,7 @@ XPathExecutionContextDefault::warn(
 			lineNumber,
 			columnNumber) == true)
 	{
-		throw XalanXPathException(msg, uri, lineNumber, columnNumber);
+		throw XalanXPathException(msg, uri, lineNumber, columnNumber, theManager);
 	}
 }
 
@@ -575,7 +605,9 @@ XPathExecutionContextDefault::message(
 	XalanLocator::size_type		lineNumber = XalanLocator::getUnknownValue();
 	XalanLocator::size_type		columnNumber = XalanLocator::getUnknownValue();
 
-	XalanDOMString	uri;
+   MemoryManagerType& theManager =  const_cast<XPathExecutionContextDefault*>(this)->getMemoryManager();
+
+	XalanDOMString	uri(theManager);
 
 	if (locator != 0)
 	{
@@ -610,7 +642,7 @@ XPathExecutionContextDefault::message(
 			lineNumber,
 			columnNumber) == true)
 	{
-		throw XalanXPathException(msg, uri, lineNumber, columnNumber);
+		throw XalanXPathException(msg, uri, lineNumber, columnNumber, theManager);
 	}
 }
 
@@ -706,8 +738,10 @@ void XPathExecutionContextDefault::doFormatNumber(
 	}
 	else
 	{
+        XalanDOMString theBuffer(theResult.getMemoryManager());
+
 	    warn( 
-			XalanMessageLoader::getMessage(XalanMessages::FunctionIsNotImplemented_1Param,"format-number()"),
+			XalanMessageLoader::getMessage(XalanMessages::FunctionIsNotImplemented_1Param, theBuffer, "format-number()"),
 			context, 
 			locator);
 

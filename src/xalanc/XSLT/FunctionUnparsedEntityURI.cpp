@@ -56,8 +56,10 @@ FunctionUnparsedEntityURI::execute(
 
 	if (context == 0)
 	{
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+
 		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,"unparsed-entity-uri()"),
+			XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,theGuard.get(),"unparsed-entity-uri()"),
 			context,
 			locator);
 
@@ -77,7 +79,11 @@ FunctionUnparsedEntityURI::execute(
 					context->getOwnerDocument();
 		assert(doc != 0);
 
-		const XalanDOMString&	uri = executionContext.getUnparsedEntityURI(name, *doc);
+        const XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+
+		XalanDOMString&	uri = theGuard.get();
+
+        executionContext.getUnparsedEntityURI(name, *doc, uri);
 
 		return executionContext.getXObjectFactory().createStringReference(uri);
 	}
@@ -85,10 +91,10 @@ FunctionUnparsedEntityURI::execute(
 
 
 
-const XalanDOMString
-FunctionUnparsedEntityURI::getError() const
+const XalanDOMString&
+FunctionUnparsedEntityURI::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"unparsed-entity-uri");
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,theResult,"unparsed-entity-uri");
 }
 
 

@@ -39,20 +39,98 @@
 
 
 
-#include <list>
-
-
 
 XALAN_CPP_NAMESPACE_BEGIN
 
 typedef StylesheetExecutionContextDefault::FormatNumberFunctor FormatNumberFunctor;
+
+#if defined(XALAN_HAS_CPP_NAMESPACE)
+	typedef U_ICU_NAMESPACE::DecimalFormat	DecimalFormatType;
+#else
+	typedef DecimalFormat					DecimalFormatType;
+#endif
+
+struct DecimalFormatCacheStruct
+{
+    DecimalFormatCacheStruct(
+        MemoryManagerType&                  theManager,
+        const XalanDecimalFormatSymbols&	theDFS,
+        DecimalFormatType*					theFormatter) :
+
+        m_DFS(theDFS, theManager),
+        m_formatter(theFormatter)
+    {
+    }
+
+    DecimalFormatCacheStruct(MemoryManagerType& theManager) :
+    m_DFS(theManager),
+        m_formatter(0)
+    {
+    }
+
+    DecimalFormatCacheStruct(const DecimalFormatCacheStruct& other, MemoryManagerType& theManager) :
+    m_DFS(other.m_DFS, theManager),
+        m_formatter(other.m_formatter)
+    {
+    }
+#if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
+    bool
+        operator<(const DecimalFormatCacheStruct&  theRHS) const
+    {
+        return this < &theRHS;
+    }
+
+    bool
+        operator==(const DecimalFormatCacheStruct&	theRHS) const
+    {
+        return this == &theRHS;
+    }
+#endif
+
+    XalanDecimalFormatSymbols	m_DFS;
+
+    DecimalFormatType *	m_formatter;
+
+    struct DecimalFormatDeleteFunctor
+    {
+
+        void
+            operator()(DecimalFormatCacheStruct&	theStruct) const
+        {
+            delete theStruct.m_formatter;
+        }
+    };
+
+    struct DecimalFormatFindFunctor
+    {
+        DecimalFormatFindFunctor(const XalanDecimalFormatSymbols*	theDFS) :
+            m_DFS(theDFS)
+            {
+            }
+
+        bool
+        operator()(DecimalFormatCacheStruct&	theStruct) const
+        {
+            return theStruct.m_DFS == (*m_DFS);
+        }
+
+        const XalanDecimalFormatSymbols * const	m_DFS;
+    };
+};
+
+
+XALAN_USES_MEMORY_MANAGER(DecimalFormatCacheStruct)
+
 // Class that implements the XSLT function format-number using the ICU.
 //
 class XALAN_ICUBRIDGE_EXPORT ICUFormatNumberFunctor : public FormatNumberFunctor
 {
 public:
 
-	ICUFormatNumberFunctor();
+	ICUFormatNumberFunctor(MemoryManagerType& theManager);
+
+	static ICUFormatNumberFunctor*
+    create(MemoryManagerType& theManager);
 
 	virtual
 	~ICUFormatNumberFunctor();
@@ -67,11 +145,7 @@ public:
 		const XalanNode*					context = 0,
 		const LocatorType*					locator = 0) const;
 	
-#if defined(XALAN_HAS_CPP_NAMESPACE)
-	typedef U_ICU_NAMESPACE::DecimalFormat	DecimalFormatType;
-#else
-	typedef DecimalFormat					DecimalFormatType;
-#endif
+
 
 	class UnlocalizePatternFunctor
 	{
@@ -81,78 +155,15 @@ public:
 		{
 		}
 
-		XalanDOMString
-		operator()(const XalanDOMString&	thePattern) const;
+		XalanDOMString&
+		operator()(const XalanDOMString&	thePattern, XalanDOMString& theResult) const;
 
 	private:
 		const XalanDecimalFormatSymbols& m_DFS;
 	};
 
-	struct DecimalFormatCacheStruct
-	{
-		DecimalFormatCacheStruct(
-				const XalanDecimalFormatSymbols&	theDFS,
-				DecimalFormatType*					theFormatter):
-			m_DFS(theDFS),
-			m_formatter(theFormatter)
-		{
-		}
+	typedef XalanList<DecimalFormatCacheStruct>			DecimalFormatCacheListType;
 
-		DecimalFormatCacheStruct() :
-			m_DFS(),
-			m_formatter(0)
-		{
-		}
-
-#if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
-		bool
-		operator<(const DecimalFormatCacheStruct&  theRHS) const
-		{
-			return this < &theRHS;
-		}
-
-		bool
-		operator==(const DecimalFormatCacheStruct&	theRHS) const
-		{
-			return this == &theRHS;
-		}
-#endif
-
-		XalanDecimalFormatSymbols	m_DFS;
-
-		DecimalFormatType *	m_formatter;
-
-		struct DecimalFormatDeleteFunctor
-		{
-			void
-			operator()(DecimalFormatCacheStruct&	theStruct) const
-			{
-				delete theStruct.m_formatter;
-			}
-		};
-
-		struct DecimalFormatFindFunctor
-		{
-			DecimalFormatFindFunctor(const XalanDecimalFormatSymbols*	theDFS) :
-				m_DFS(theDFS)
-			{
-			}
-
-			bool
-			operator()(DecimalFormatCacheStruct&	theStruct) const
-			{
-				return theStruct.m_DFS == (*m_DFS);
-			}
-
-			const XalanDecimalFormatSymbols * const	m_DFS;
-		};
-	};
-
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef list<DecimalFormatCacheStruct>			DecimalFormatCacheListType;
-#else
-	typedef std::list<DecimalFormatCacheStruct>		DecimalFormatCacheListType;
-#endif
 
 	DecimalFormatType * getCachedDecimalFormat(const XalanDecimalFormatSymbols &theDFS) const;
 
@@ -190,7 +201,8 @@ public:
 
 	bool
 	operator==(const ICUFormatNumberFunctor&) const;
-
+private:
+    mutable MemoryManagerType& m_memoryManager;
 };
 
 XALAN_CPP_NAMESPACE_END

@@ -50,7 +50,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XStringAdapterAllocator(size_type	theBlockCount);
+	XStringAdapterAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
 
 	~XStringAdapterAllocator();
 
@@ -64,15 +64,6 @@ public:
 	string_type*
 	createString(const XObjectPtr&	theXObject);
 
-	/**
-	 * Clone an XStringAdapter object.
-	 * 
-	 * @param value source XStringAdapter
-	 *
-	 * @return pointer to an XStringAdapter
-	 */
-	string_type*
-	clone(const string_type&	value);
 
 	/**
 	 * Delete an XStringAdapter object from allocator.	 

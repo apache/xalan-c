@@ -301,12 +301,15 @@ XercesTextWrapper::getLength() const
 
 
 
-XalanDOMString
+XalanDOMString&
 XercesTextWrapper::substringData(
 			unsigned int	offset, 
-			unsigned int	count) const
+			unsigned int	count,
+            XalanDOMString& theResult) const
 {
-	return XercesWrapperHelper::substringData(m_xercesNode, offset, count);
+    XercesWrapperHelper::substringData(m_xercesNode, offset, count, theResult);
+
+	return theResult;
 }
 
 

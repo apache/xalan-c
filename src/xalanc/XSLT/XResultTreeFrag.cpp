@@ -66,12 +66,13 @@ getSingleTextChildValue(const XalanDocumentFragment&	theRTreeFrag)
 
 
 
-XResultTreeFrag::XResultTreeFrag(XalanDocumentFragment&		value) :
+XResultTreeFrag::XResultTreeFrag(XalanDocumentFragment&		value,
+                                 MemoryManagerType& theManager) :
 	XObject(eTypeResultTreeFrag),
 	m_value(&value),
 	m_singleTextChildValue(getSingleTextChildValue(value)),
 	m_executionContext(0),
-	m_cachedStringValue(),
+	m_cachedStringValue(theManager),
 	m_cachedNumberValue(0.0)
 {
 }
@@ -80,12 +81,13 @@ XResultTreeFrag::XResultTreeFrag(XalanDocumentFragment&		value) :
 
 XResultTreeFrag::XResultTreeFrag(
 			const XResultTreeFrag&	source,
+            MemoryManagerType&      theManager,
 			bool					/* deepClone */) :
 	XObject(source),
 	m_value(source.m_value),
 	m_singleTextChildValue(source.m_singleTextChildValue),
 	m_executionContext(0),
-	m_cachedStringValue(source.m_cachedStringValue),
+	m_cachedStringValue(source.m_cachedStringValue, theManager),
 	m_cachedNumberValue(source.m_cachedNumberValue)
 {
 	assert(m_value != 0);
@@ -95,25 +97,6 @@ XResultTreeFrag::XResultTreeFrag(
 
 XResultTreeFrag::~XResultTreeFrag()
 {
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XResultTreeFrag*
-#endif
-XResultTreeFrag::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XResultTreeFrag(*this);
-	}
-	else
-	{
-		return new (theAddress) XResultTreeFrag(*this);
-	}
 }
 
 
@@ -134,7 +117,7 @@ XResultTreeFrag::num() const
 #if defined(XALAN_NO_MUTABLE)
 		((XResultTreeFrag*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str());
 #else
-		m_cachedNumberValue = DoubleSupport::toDouble(str());
+		m_cachedNumberValue = DoubleSupport::toDouble(str(), getMemoryManager());
 #endif
 	}
 

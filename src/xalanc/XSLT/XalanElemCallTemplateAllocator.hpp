@@ -57,7 +57,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanElemCallTemplateAllocator(size_type		theBlockCount);
+	XalanElemCallTemplateAllocator(MemoryManagerType&  theManager, size_type		theBlockCount);
 
 	~XalanElemCallTemplateAllocator();
 	

@@ -45,7 +45,7 @@ public:
 	 * 
 	 * @param message error message
 	 */
-	explicit DOMSupportException(const XalanDOMString&	message);
+	explicit DOMSupportException(const XalanDOMString&	message, MemoryManagerType& theManager);
 
 	virtual
 	~DOMSupportException();

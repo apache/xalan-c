@@ -64,12 +64,15 @@ class XPathEnvSupport;
  * is used as the name of the object. The default namespace is not used for 
  * unprefixed names."
  */
+
 class XALAN_XPATH_EXPORT XalanQName
 {
 public:
 
-    typedef	XalanDeque<NameSpace>					NamespaceVectorType;
-	typedef XalanDeque<NamespaceVectorType>			NamespacesStackType;
+    typedef	XalanDeque<NameSpace, ConstructWithMemoryManagerTraits<NameSpace> >
+															NamespaceVectorType;
+	typedef XalanDeque<NamespaceVectorType, ConstructWithMemoryManagerTraits<NamespaceVectorType> >
+															NamespacesStackType;
 
 	/**
 	 * Construct an empty XalanQName.
@@ -202,6 +205,11 @@ public:
 			const NamespacesStackType&	nsStack,
 			const XalanDOMString&		prefix);
 
+    static const XalanDOMString*
+	getNamespaceForPrefix(
+			const NamespacesStackType&	nsStack,
+			const XalanDOMChar*	        prefix);
+
 	/**
 	 * Get the namespace for a prefix by searching a range of iterators.
 	 * The search is done in reverse, from the end of the range to the
@@ -230,6 +238,11 @@ public:
 	getPrefixForNamespace(
 			const NamespaceVectorType&	namespaces,
 			const XalanDOMString&		uri);
+
+    static const XalanDOMString*
+    getNamespaceForPrefix(
+			const NamespaceVectorType&	namespaces,
+			const XalanDOMChar*	        prefix);
 
 	/**
 	 * Get the prefix for a namespace by searching a stack of namespace
@@ -260,6 +273,11 @@ public:
 			NamespacesStackType::const_iterator		theEnd,
 			const XalanDOMString&					uri);
 
+    static const XalanDOMString*
+    getNamespaceForPrefix(
+			NamespacesStackType::const_iterator		theBegin,
+			NamespacesStackType::const_iterator		theEnd,
+			const XalanDOMChar*	                    prefix);
 	/**
 	 * Determine if the string supplied satisfies the grammar for
 	 * an XML NCName.
@@ -327,7 +345,8 @@ public:
 				XalanDOMString::size_type	theQNameLength,
 				const XalanDOMString&		theURI,
 				int							theLineNumber,
-				int							theColumnNumber);
+				int							theColumnNumber,
+                XalanDOMString&         	theResult);
 
 		/**
 		 * Constructor
@@ -340,7 +359,8 @@ public:
 		InvalidQNameException(
 				const LocatorType&			theLocator,
 				const XalanDOMChar*			theQName,
-				XalanDOMString::size_type	theQNameLength);
+				XalanDOMString::size_type	theQNameLength,
+                XalanDOMString&         	theResult);
 
 		/**
 		 * Constructor
@@ -351,7 +371,8 @@ public:
 		 */
 		InvalidQNameException(
 				const XalanDOMChar*			theQName,
-				XalanDOMString::size_type	theQNameLength);
+				XalanDOMString::size_type	theQNameLength,
+                XalanDOMString&         	theResult);
 
 		virtual
 		~InvalidQNameException();
@@ -366,17 +387,17 @@ public:
 
 		static const XalanDOMChar	m_type[];
 
-		static const XalanDOMString
+		static const XalanDOMString&
 		format(
 				const XalanDOMChar*			theQName,
-				XalanDOMString::size_type	theQNameLength);
+				XalanDOMString::size_type	theQNameLength,
+                XalanDOMString&         	theResult);
 	};
 
 protected:
 
 	static const XalanDOMString		s_emptyString;
 };
-
 
 
 inline bool
@@ -431,7 +452,6 @@ struct XalanMapKeyTraits<const XalanQName*>
 	typedef XalanHashMemberPointer<XalanQName>		Hasher;
 	typedef	pointer_equal<XalanQName>				Comparator;
 };
-
 
 
 XALAN_CPP_NAMESPACE_END

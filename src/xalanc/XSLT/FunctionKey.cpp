@@ -101,8 +101,10 @@ FunctionKey::execute(
 
 	if (context == 0)
 	{
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
 		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,"key()"),
+            XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param, theGuard.get(), "key()"),
 			context,
 			locator);
 
@@ -196,17 +198,17 @@ Function*
 #else
 FunctionKey*
 #endif
-FunctionKey::clone() const
+FunctionKey::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionKey(*this);
+	return cloneFunction_1<FunctionKey>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionKey::getError() const
+const XalanDOMString&
+FunctionKey::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param,"key()");
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, theResult, "key()");
 }
 
 

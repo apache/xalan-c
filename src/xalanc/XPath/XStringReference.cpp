@@ -23,16 +23,18 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XStringReference::XStringReference(const XalanDOMString&	val) :
-	XStringBase(),
+XStringReference::XStringReference(const XalanDOMString&	val,
+                                   MemoryManagerType&       theManager) :
+	XStringBase(theManager),
 	m_value(val)
 {
 }
 
 
 
-XStringReference::XStringReference(const XStringReference&	source) :
-	XStringBase(source),
+XStringReference::XStringReference(const XStringReference&	source,
+                                   MemoryManagerType&       theManager) :
+	XStringBase(source, theManager),
 	m_value(source.m_value)
 {
 }
@@ -41,25 +43,6 @@ XStringReference::XStringReference(const XStringReference&	source) :
 
 XStringReference::~XStringReference()
 {
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XStringReference*
-#endif
-XStringReference::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XStringReference(*this);
-	}
-	else
-	{
-		return new (theAddress) XStringReference(*this);
-	}
 }
 
 

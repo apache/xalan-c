@@ -36,7 +36,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	XalanQName::s_emptyString;
+
+const XalanDOMString	XalanQName::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -70,6 +71,46 @@ XalanQName::PrefixResolverProxy::getURI() const
 	return m_uri;
 }
 
+
+
+const XalanDOMString*
+XalanQName::getNamespaceForPrefix(
+			const NamespaceVectorType&	namespaces,
+			const XalanDOMChar*	        prefix)
+{
+    assert( prefix != 0 );
+
+	const XalanDOMString*	nsURI = 0;
+
+	if(prefix == DOMServices::s_XMLString)
+	{
+		nsURI = &DOMServices::s_XMLNamespaceURI;
+	}
+	else if (prefix == DOMServices::s_XMLNamespace)
+	{
+		nsURI = &DOMServices::s_XMLNamespacePrefixURI;
+	}
+	else
+	{
+		const NamespaceVectorType::size_type	theSize = namespaces.size();
+
+		for(NamespaceVectorType::size_type j = theSize; j > 0; --j)
+		{
+			const NameSpace&	ns = namespaces[j - 1];
+
+			const XalanDOMString&	thisPrefix = ns.getPrefix();
+
+			if(prefix == thisPrefix)
+			{
+				nsURI = &ns.getURI();
+
+				break;
+			}
+		}
+	}
+
+	return nsURI;
+}
 
 
 const XalanDOMString*
@@ -109,8 +150,6 @@ XalanQName::getNamespaceForPrefix(
 	return nsURI;
 }
 
-
-
 const XalanDOMString*
 XalanQName::getNamespaceForPrefix(
 			const NamespacesStackType&	nsStack,
@@ -119,7 +158,39 @@ XalanQName::getNamespaceForPrefix(
 	return getNamespaceForPrefix(nsStack.begin(), nsStack.end(), prefix);
 }
 
+const XalanDOMString*
+XalanQName::getNamespaceForPrefix(
+			const NamespacesStackType&	nsStack,
+			const XalanDOMChar*	        prefix)
+{
+    return getNamespaceForPrefix(nsStack.begin(), nsStack.end(), prefix);
+}
 
+const XalanDOMString*
+XalanQName::getNamespaceForPrefix(
+			NamespacesStackType::const_iterator		theBegin,
+			NamespacesStackType::const_iterator		theEnd,
+			const XalanDOMChar*	                    prefix)
+{
+	const XalanDOMString*	nsURI = 0;
+
+	if (theBegin != theEnd)
+	{
+		do
+		{   
+            --theEnd;
+
+			nsURI = getNamespaceForPrefix((*theEnd), prefix);
+
+			if (nsURI != 0)
+			{
+				break;
+			}
+		} while(theBegin != theEnd);
+	}
+
+	return nsURI;
+}
 
 const XalanDOMString*
 XalanQName::getNamespaceForPrefix(
@@ -330,8 +401,9 @@ XalanQName::InvalidQNameException::InvalidQNameException(
 			XalanDOMString::size_type	theQNameLength,
 			const XalanDOMString&		theURI,
 			int							theLineNumber,
-			int							theColumnNumber) :
-	XSLException(format(theQName, theQNameLength), theURI, theLineNumber, theColumnNumber)
+			int							theColumnNumber,
+            XalanDOMString&         	theResult) :
+XSLException(format(theQName, theQNameLength,theResult), theURI, theLineNumber, theColumnNumber, theResult.getMemoryManager())
 {
 }
 
@@ -340,8 +412,9 @@ XalanQName::InvalidQNameException::InvalidQNameException(
 XalanQName::InvalidQNameException::InvalidQNameException(
 			const LocatorType&			theLocator,
 			const XalanDOMChar*			theQName,
-			XalanDOMString::size_type	theQNameLength) :
-	XSLException(theLocator, format(theQName, theQNameLength))
+			XalanDOMString::size_type	theQNameLength,
+            XalanDOMString&         	theResult) :
+	XSLException(theLocator, format(theQName, theQNameLength, theResult), theResult.getMemoryManager())
 {
 }
 
@@ -349,8 +422,9 @@ XalanQName::InvalidQNameException::InvalidQNameException(
 
 XalanQName::InvalidQNameException::InvalidQNameException(
 			const XalanDOMChar*			theQName,
-			XalanDOMString::size_type	theQNameLength) :
-	XSLException(format(theQName, theQNameLength))
+			XalanDOMString::size_type	theQNameLength,
+            XalanDOMString&         	theResult) :
+	XSLException(format(theQName, theQNameLength, theResult), theResult.getMemoryManager())
 {
 }
 
@@ -362,13 +436,12 @@ XalanQName::InvalidQNameException::~InvalidQNameException()
 
 
 
-const XalanDOMString
+const XalanDOMString&
 XalanQName::InvalidQNameException::format(
 			const XalanDOMChar*			theQName,
-			XalanDOMString::size_type	theQNameLength)
+			XalanDOMString::size_type	theQNameLength,
+            XalanDOMString&         	theResult )
 {
-	XalanDOMString	theResult;
-
 	theResult.append(theQName, theQNameLength);
 
 	return XalanMessageLoader::getMessage(XalanMessages::IsNotValidQName_1Param, theResult);

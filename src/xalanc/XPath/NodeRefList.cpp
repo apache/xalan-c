@@ -31,25 +31,27 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-NodeRefList::NodeRefList() :
+NodeRefList::NodeRefList(MemoryManagerType& theManager) :
 	NodeRefListBase(),
-	m_nodeList()
+	m_nodeList(theManager)
 {
 }
 
 
 
-NodeRefList::NodeRefList(const NodeRefList&		theSource) :
+NodeRefList::NodeRefList(const NodeRefList&		theSource,
+                         MemoryManagerType& theManager) :
 	NodeRefListBase(theSource),
-	m_nodeList(theSource.m_nodeList)
+	m_nodeList(theSource.m_nodeList, theManager)
 {
 }
 
 
 
-NodeRefList::NodeRefList(const NodeRefListBase&		theSource) :
+NodeRefList::NodeRefList(const NodeRefListBase&		theSource,
+                         MemoryManagerType& theManager) :
 	NodeRefListBase(theSource),
-	m_nodeList()
+	m_nodeList(theManager)
 {
 	*this = theSource;
 }
@@ -149,7 +151,7 @@ NodeRefList::indexOf(const XalanNode*	theNode) const
 
 #if !defined(NDEBUG)
 bool
-NodeRefList::checkForDuplicates() const
+NodeRefList::checkForDuplicates(MemoryManagerType& theManager) const
 {
 	typedef XalanSet<const XalanNode*>	NodeSetType;
 
@@ -159,7 +161,7 @@ NodeRefList::checkForDuplicates() const
 
 	if (theLength > 0)
 	{
-		NodeSetType		theNodes;
+		NodeSetType		theNodes(theManager);
 
 		for (size_type i = 0; i < theLength && fResult == false; ++i)
 		{

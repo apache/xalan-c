@@ -53,9 +53,16 @@ class XALAN_XSLT_EXPORT XSLTInit
 public:
 
 	explicit
-	XSLTInit();
+	XSLTInit(MemoryManagerType&      theManager);
 
 	~XSLTInit();
+
+    static XSLTInit*
+    create(MemoryManagerType&      theManager);
+
+    inline MemoryManagerType&
+    getMemoryManager();
+
 
 private:
 
@@ -67,7 +74,7 @@ private:
 
 	
 	static void
-	initialize();
+	initialize(MemoryManagerType&      theManager);
 
 	static void
 	terminate();

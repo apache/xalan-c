@@ -33,12 +33,15 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-FunctionLang::FunctionLang() :
-	m_attributeName(XALAN_STATIC_UCODE_STRING("lang"))
+FunctionLang::FunctionLang(MemoryManagerType& theManager) :
+	m_attributeName("lang", theManager)
 {
 }
 
-
+FunctionLang::FunctionLang(const FunctionLang& other, MemoryManagerType& theManager) :
+    m_attributeName(other.m_attributeName,theManager)
+{
+}
 
 FunctionLang::~FunctionLang()
 {
@@ -72,12 +75,15 @@ FunctionLang::execute(
 				static_cast<const XalanElement*>(parent);
 #endif
 
-			const XalanDOMString		langVal =
+			const XalanDOMString&		langVal =
 				theElementNode->getAttributeNS(DOMServices::s_XMLNamespaceURI, m_attributeName);
 
 			if(0 != length(langVal))
 			{
-				if(startsWith(toLowerCaseASCII(langVal), toLowerCaseASCII(lang)))
+                XPathExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
+                XPathExecutionContext::GetAndReleaseCachedString theGuard2(executionContext);
+
+				if(startsWith(toLowerCaseASCII(langVal, theGuard1.get()), toLowerCaseASCII(lang, theGuard2.get())))
 				{
 					const XalanDOMString::size_type		valLen = length(lang);
 
@@ -105,19 +111,17 @@ Function*
 #else
 FunctionLang*
 #endif
-FunctionLang::clone() const
+FunctionLang::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionLang(*this);
+	return cloneFunction<FunctionLang>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionLang::getError() const
+const XalanDOMString&
+FunctionLang::getError(XalanDOMString& theResult) const
 {
-
-
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, "lang()");
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult, "lang()");
 
 }
 

@@ -19,6 +19,9 @@
 
 
 #include <xalanc/XercesParserLiaison/XercesParserLiaisonDefinitions.hpp>
+
+#include <xalanc/Include/XalanMemoryManagement.hpp>
+
 #include <xalanc/XercesParserLiaison/XercesDOMWalker.hpp>
 
 
@@ -61,6 +64,7 @@ protected:
 private:
 
 	FormatterListener&	m_formatterListener;
+
 
 };
 

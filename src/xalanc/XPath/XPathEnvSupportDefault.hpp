@@ -23,17 +23,16 @@
 #include <xalanc/XPath/XPathEnvSupport.hpp>
 
 
+#include<xalanc/PlatformSupport/DOMStringHelper.hpp>
+
 
 #include<xalanc/Include/XalanMap.hpp>
 
 
-
-#include<xalanc/PlatformSupport/DOMStringHelper.hpp>
-
-
-
 XALAN_CPP_NAMESPACE_BEGIN
 
+typedef XalanMap<XalanDOMString, const Function*>   FunctionTableTypeDefinition;
+XALAN_USES_MEMORY_MANAGER(FunctionTableTypeDefinition)
 
 
 /**
@@ -46,7 +45,7 @@ class XALAN_XPATH_EXPORT XPathEnvSupportDefault : public XPathEnvSupport
 public:
 
 	typedef XalanMap<XalanDOMString, XalanDocument*>	SourceDocsTableType;
-	typedef XalanMap<XalanDOMString, const Function*>	FunctionTableType;
+	typedef FunctionTableTypeDefinition                         FunctionTableType;
 	typedef XalanMap<XalanDOMString, FunctionTableType>	NamespaceFunctionTablesType;
 
 	/**
@@ -54,7 +53,7 @@ public:
 	 * processing occurs.  See class XPathInit.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType&  theManager);
 
 	/**
 	 * Perform termination of statics.  See class XPathInit.
@@ -63,11 +62,16 @@ public:
 	terminate();
 
 
-	XPathEnvSupportDefault();
+	XPathEnvSupportDefault(MemoryManagerType&  theManager);
 
 	virtual
 	~XPathEnvSupportDefault();
 
+    MemoryManagerType& 
+    getMemoryManager()
+    {
+        return m_sourceDocs.getMemoryManager();
+    }
 
 	// Interfaces to install and uninstall external functions globally.
 	// These calls are not thread-safe, and should happen during
@@ -128,6 +132,7 @@ public:
 
 	virtual XalanDocument*
 	parseXML(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base);
 
@@ -139,8 +144,9 @@ public:
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument);
 
-	virtual XalanDOMString
-	findURIFromDoc(const XalanDocument*		owner) const;
+	virtual XalanDOMString&
+    findURIFromDoc(const XalanDocument*		owner,
+                   XalanDOMString&          theResult) const;
 
 	virtual bool
 	elementAvailable(
@@ -183,6 +189,7 @@ public:
 		typedef FunctionTableType				FunctionTableInnerType;
 		typedef NamespaceFunctionTablesType		NamespaceFunctionTablesInnerType;
 
+        NamespaceFunctionTableDeleteFunctor(MemoryManagerType& theManager);
 		/**
 		 * Delete the value object in a map value pair.  The value of the pair must
 		 * be of pointer type.
@@ -191,6 +198,8 @@ public:
 		 */
 		void
 		operator()(const NamespaceFunctionTablesInnerType::value_type&	thePair) const;
+    private:
+        MemoryManagerType& m_memMgr;
 	};
 
 protected:
@@ -260,8 +269,6 @@ private:
 
 	static 	NamespaceFunctionTablesType		s_externalFunctions;
 };
-
-
 
 XALAN_CPP_NAMESPACE_END
 

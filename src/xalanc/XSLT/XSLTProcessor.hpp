@@ -207,13 +207,6 @@ public:
 	virtual XMLParserLiaison&
 	getXMLParserLiaison() const = 0;
 
-	/**
-	 * Generate a random namespace prefix guaranteed to be unique.
-	 *
-	 * @return unique namespace prefix
-	 */
-	virtual const XalanDOMString
-	getUniqueNamespaceValue() = 0;
 
 	/**
 	 * Generate a random namespace prefix guaranteed to be unique.

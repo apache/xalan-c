@@ -64,9 +64,12 @@ ElemApplyImport::ElemApplyImport(
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false)
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theResult, 
 							Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -91,7 +94,9 @@ ElemApplyImport::startElement(StylesheetExecutionContext&	executionContext) cons
 {
 	if (executionContext.getCurrentTemplate() == 0)
 	{
-		executionContext.error(XalanMessageLoader::getMessage(XalanMessages::NoCurrentTemplate),
+        XalanDOMString  theResult(executionContext.getMemoryManager());
+
+		executionContext.error(XalanMessageLoader::getMessage(XalanMessages::NoCurrentTemplate, theResult),
 				executionContext.getCurrentNode(), getLocator());
 	}
 

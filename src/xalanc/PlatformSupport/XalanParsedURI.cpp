@@ -38,9 +38,10 @@ const int	XalanParsedURI::d_fragment;
 
 
 /* Merge the components back into a complete URI string */
-XalanDOMString XalanParsedURI::make() const
+XalanDOMString& XalanParsedURI::make(XalanDOMString&		uri) const
 {
-	XalanDOMString uri;
+    uri.erase();
+
 	if (m_defined & d_scheme)
 	{
 		uri += m_scheme;
@@ -91,7 +92,7 @@ void XalanParsedURI::parse(
 	
 	if (index > 0 && uriString[index] == XalanUnicode::charColon)
 	{
-		m_scheme = XalanDOMString(uriString, index);
+		m_scheme = XalanDOMString(uriString, getMemoryManager(), index);
 		++index;
 		m_defined |= d_scheme;
 	}
@@ -116,7 +117,7 @@ void XalanParsedURI::parse(
 		{
 			++index;
 		}
-		m_authority = XalanDOMString(uriString + authority, index - authority);
+		m_authority = XalanDOMString(uriString + authority, getMemoryManager(), index - authority);
 		m_defined |= d_authority;
 	}
 	else
@@ -132,7 +133,7 @@ void XalanParsedURI::parse(
 	{
 		++index;
 	}
-	m_path = XalanDOMString(uriString + path, index - path);
+	m_path = XalanDOMString(uriString + path,getMemoryManager(), index - path);
 
 	// Query portion
 	if (index < uriStringLen && uriString[index] == XalanUnicode::charQuestionMark)
@@ -145,7 +146,7 @@ void XalanParsedURI::parse(
 		{
 			++index;
 		}
-		m_query = XalanDOMString(uriString + query, index - query);
+		m_query = XalanDOMString(uriString + query,getMemoryManager(), index - query);
 		m_defined |= d_query;
 	}
 	else
@@ -157,7 +158,7 @@ void XalanParsedURI::parse(
 	if (index < uriStringLen && uriString[index] == XalanUnicode::charNumberSign)
 	{
 		++index;
-		m_fragment = XalanDOMString(uriString + index, uriStringLen - index);
+		m_fragment = XalanDOMString(uriString + index, getMemoryManager(), uriStringLen - index);
 		m_defined |= d_fragment;
 	}
 	else
@@ -287,18 +288,19 @@ void XalanParsedURI::resolve(
 }
 
 /* Static helper function to perform a resolve without mucking about with this class */
-XalanDOMString XalanParsedURI::resolve(
+XalanDOMString& XalanParsedURI::resolve(
 	const XalanDOMChar			*relative,
 	XalanDOMString::size_type	relativeLen,
 	const XalanDOMChar			*base,
-	XalanDOMString::size_type	baseLen
+	XalanDOMString::size_type	baseLen,
+    XalanDOMString&		        theResult
 )
 {
-	XalanParsedURI relativeURI(relative, relativeLen);
-	XalanParsedURI baseURI(base, baseLen);
+    XalanParsedURI relativeURI(relative, relativeLen, theResult.getMemoryManager());
+    XalanParsedURI baseURI(base, baseLen, theResult.getMemoryManager());
 
 	relativeURI.resolve(baseURI);
-	return relativeURI.make();
+	return relativeURI.make(theResult);
 }
 
 XALAN_CPP_NAMESPACE_END

@@ -33,7 +33,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	XercesWrapperNavigator::s_emptyString;
+const XalanDOMString	XercesWrapperNavigator::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 

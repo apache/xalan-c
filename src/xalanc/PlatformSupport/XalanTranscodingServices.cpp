@@ -240,6 +240,7 @@ translateCode(XMLTransService::Codes	theCode)
 
 XalanOutputTranscoder*
 XalanTranscodingServices::makeNewTranscoder(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	theEncodingName,
 			eCode&					theResult,
 			size_type				theBlockSize)
@@ -256,7 +257,7 @@ XalanTranscodingServices::makeNewTranscoder(
 	{
 		theResult = OK;
 
-		theTranscoder = new XalanUTF16Transcoder;
+        theTranscoder = XalanUTF16Transcoder::create(theManager);
 	}
 	else
 	{
@@ -270,7 +271,7 @@ XalanTranscodingServices::makeNewTranscoder(
 // we have to provide one.
 #if XERCES_VERSION_MAJOR == 2 && XERCES_VERSION_MINOR == 3
 					theBlockSize,
-					XMLPlatformUtils::fgMemoryManager);
+					&theManager);
 #else
 					theBlockSize);
 #endif
@@ -281,7 +282,7 @@ XalanTranscodingServices::makeNewTranscoder(
 
 		if (theResult == XalanTranscodingServices::OK)
 		{
-			theTranscoder = new XalanToXercesTranscoderWrapper(*theXercesTranscoder);
+            theTranscoder = XalanToXercesTranscoderWrapper::create(theManager, *theXercesTranscoder);
 		}
 	}
 
@@ -293,7 +294,16 @@ XalanTranscodingServices::makeNewTranscoder(
 void
 XalanTranscodingServices::destroyTranscoder(XalanOutputTranscoder*	theTranscoder)
 {
-	delete theTranscoder;
+    if( theTranscoder!= 0)
+    {
+
+        MemoryManagerType& theManager = theTranscoder->getMemoryManager();
+
+        theTranscoder->~XalanOutputTranscoder();
+
+        theManager.deallocate((void*)theTranscoder);
+    }
+   
 }
 
 
@@ -460,14 +470,16 @@ const XalanDOMChar	XalanTranscodingServices::UnrepresentableCharacterException::
 
 XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableCharacterException(
 			UnicodeCharType			theCharacter,
-			const XalanDOMString&	theEncoding) :
+			const XalanDOMString&	theEncoding,
+            XalanDOMString&         theBuffer) :
 	XSLException(
 		XalanMessageLoader::getMessage(
 			XalanMessages::UnrepresentableCharacter_2Param,
-			UnsignedLongToHexDOMString(theCharacter),
-			theEncoding)),
+            theBuffer,
+            UnsignedLongToHexDOMString(theCharacter,theBuffer),
+            theEncoding), theBuffer.getMemoryManager()),
 	m_badCharacter(theCharacter),
-	m_encoding(theEncoding)
+    m_encoding(theEncoding, theBuffer.getMemoryManager())
 {
 }
 
@@ -479,7 +491,8 @@ XalanTranscodingServices::UnrepresentableCharacterException::~UnrepresentableCha
 
 
 
-XalanOutputTranscoder::XalanOutputTranscoder()
+XalanOutputTranscoder::XalanOutputTranscoder(MemoryManagerType& theManager) :
+m_memoryManager(theManager)
 {
 }
 
@@ -492,7 +505,7 @@ XalanOutputTranscoder::~XalanOutputTranscoder()
 
 
 void
-XalanTranscodingServices::initialize()
+XalanTranscodingServices::initialize(MemoryManagerType&    /*  theManager */)
 {
 }
 

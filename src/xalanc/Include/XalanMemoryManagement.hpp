@@ -21,26 +21,38 @@
 #include <xalanc/Include/PlatformDefinitions.hpp>
 
 #include <xercesc/framework/MemoryManager.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
 
-#include <cassert>
+
 
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-
-
 typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager		MemoryManagerType;
 
+
+
+class XALAN_PLATFORM_EXPORT XalanMemMgrs
+{
+public:
+	
+	static MemoryManagerType&
+	getDummyMemMgr();
+	
+	
+	static MemoryManagerType&
+	getDefaultXercesMemMgr();
+};
+
 template <class C>
-struct ConstructValueWithNoMemoryManager 
-{   
-    ConstructValueWithNoMemoryManager(MemoryManagerType& /*mgr*/) :
-        value()
+class ConstructValueWithNoMemoryManager 
+{ 
+public:
+    ConstructValueWithNoMemoryManager(MemoryManagerType& /*mgr*/) 
     {
     }
 
-    const C value;
+    C value;
+
 };
 
 template <class C>
@@ -51,7 +63,7 @@ struct ConstructValueWithMemoryManager
     {
     }
 
-    const C value;
+    C value;
 };
 
 template <class C>
@@ -73,7 +85,7 @@ struct ConstructWithNoMemoryManager
 template <class C>
 struct ConstructWithMemoryManager
 {
-    typedef ConstructValueWithNoMemoryManager<C>    ConstructableType;
+    typedef ConstructValueWithMemoryManager<C>    ConstructableType;
 
     static C* construct(C* address, MemoryManagerType& mgr)
     {

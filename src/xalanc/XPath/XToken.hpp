@@ -44,7 +44,8 @@ public:
 	 * @param theString The string data for the token.  The instance will keep a point to this string, so it must be persistent.
 	 */
 	explicit
-	XToken(const XalanDOMString&	theString);
+	XToken(const XalanDOMString&	theString,
+            MemoryManagerType&      theManager);
 
 	/**
 	 * Create an XToken for number in the token queue.
@@ -60,13 +61,6 @@ public:
 
 	virtual
 	~XToken();
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XToken*
-#endif
-	clone(void*		theAddress = 0) const;
 
 	virtual const XalanDOMString&
 	getTypeString() const;
@@ -113,7 +107,8 @@ public:
 	 * @param theString The string data for the token.  XToken will keep a point to this string, so it must be persistent.
 	 */
 	void
-	set(const XalanDOMString&	theString);
+	set(const XalanDOMString&	theString,
+        MemoryManagerType& theManager);
 
 	/**
 	 * Set the instance as a number in the token queue.
@@ -124,7 +119,8 @@ public:
 	void
 	set(
 			double					theNumber,
-			const XalanDOMString&	theString);
+			const XalanDOMString&	theString,
+            MemoryManagerType&      theManager);
 
 protected:
 

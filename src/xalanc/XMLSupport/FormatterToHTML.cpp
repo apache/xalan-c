@@ -33,9 +33,8 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
@@ -54,11 +53,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	FormatterToHTML::s_emptyString;
+const XalanDOMString	FormatterToHTML::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 FormatterToHTML::FormatterToHTML(
+            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	encoding, 
 			const XalanDOMString&	mediaType,
@@ -69,6 +69,7 @@ FormatterToHTML::FormatterToHTML(
 			bool					escapeURLs,
 			bool					omitMetaTag) :
 	FormatterToXML(
+            theManager,
 			writer,
 			s_emptyString,
 			doIndent,
@@ -80,18 +81,18 @@ FormatterToHTML::FormatterToHTML(
 			false,
 			s_emptyString,
 			OUTPUT_METHOD_HTML),
-	m_currentElementName(),
+	m_currentElementName(theManager),
 	m_inBlockElem(false),
-	m_isRawStack(),
+	m_isRawStack(theManager),
 	m_isScriptOrStyleElem(false),
-	m_inScriptElemStack(),
+	m_inScriptElemStack(theManager),
 	m_escapeURLs(escapeURLs),
 	m_isFirstElement(false),
 	m_isUTF8(XalanTranscodingServices::encodingIsUTF8(m_encoding)),
 	m_elementLevel(0),
-	m_hasNamespaceStack(),
+	m_hasNamespaceStack(theManager),
 	m_omitMetaTag(omitMetaTag),
-	m_elementPropertiesStack()
+	m_elementPropertiesStack(theManager)
 {
 	initCharsMap();
 
@@ -100,7 +101,41 @@ FormatterToHTML::FormatterToHTML(
     m_shouldWriteXMLHeader = false;
 }
 
+FormatterToHTML*
+FormatterToHTML::create(
+            MemoryManagerType&      theManager,
+			Writer&					writer,
+			const XalanDOMString&	encoding, 
+			const XalanDOMString&	mediaType,
+			const XalanDOMString&	doctypeSystem,
+			const XalanDOMString&	doctypePublic,
+			bool					doIndent,
+			int						indent,
+			bool					escapeURLs,
+			bool					omitMetaTag) 
+{
+    typedef FormatterToHTML ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(           
+                        theManager,
+			            writer,
+			            encoding, 
+			            mediaType,
+			            doctypeSystem,
+			            doctypePublic,
+			            doIndent,
+			            indent,
+			            escapeURLs,
+			            omitMetaTag);
+
+   theGuard.release();
+
+    return theResult;
+}
 
 FormatterToHTML::~FormatterToHTML()
 {
@@ -689,7 +724,7 @@ FormatterToHTML::writeCharacters(
 
 					if (i + 1 >= theLength) 
 					{
-						throwInvalidUTF16SurrogateException(ch);
+                        throwInvalidUTF16SurrogateException(ch, getMemoryManager());
 					}
 					else
 					{
@@ -697,7 +732,7 @@ FormatterToHTML::writeCharacters(
 
 						if (!(0xdc00 <= next && next < 0xe000))
 						{
-							throwInvalidUTF16SurrogateException(ch, next);
+                            throwInvalidUTF16SurrogateException(ch, next, getMemoryManager());
 						}
 
 						next = XalanDOMChar(((ch - 0xd800) << 10) + next - 0xdc00 + 0x00010000);
@@ -765,7 +800,7 @@ FormatterToHTML::writeAttrString(
 
 					if (i + 1 >= theStringLength) 
 					{
-						throwInvalidUTF16SurrogateException(ch);
+						throwInvalidUTF16SurrogateException(ch, getMemoryManager());
 					}
 					else 
 					{
@@ -773,7 +808,7 @@ FormatterToHTML::writeAttrString(
 
 						if (!(0xdc00 <= next && next < 0xe000))
 						{
-							throwInvalidUTF16SurrogateException(ch, next);
+							throwInvalidUTF16SurrogateException(ch, next, getMemoryManager());
 						}
 
 						next = XalanDOMChar(((ch - 0xd800) << 10) + next -0xdc00 + 0x00010000);

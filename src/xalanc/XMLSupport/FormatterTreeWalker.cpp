@@ -35,9 +35,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-FormatterTreeWalker::FormatterTreeWalker(FormatterListener& 	formatterListener) :
+FormatterTreeWalker::FormatterTreeWalker(FormatterListener& 	formatterListener,
+                                         MemoryManagerType& theManager) :
 	TreeWalker(),
-	m_formatterListener(formatterListener)
+	m_formatterListener(formatterListener),
+    m_memoryManager(theManager)
 {
 }
 
@@ -82,7 +84,7 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 			const XalanNamedNodeMap*	atts = theElementNode->getAttributes();
 			assert(atts != 0);
 
-			NamedNodeMapAttributeList	theAttributeList(*atts);
+            NamedNodeMapAttributeList	theAttributeList(*atts, m_memoryManager);
 
 			m_formatterListener.startElement(c_wstr(theElementNode->getNodeName()),
 											 theAttributeList);

@@ -16,7 +16,7 @@
 // Class header file
 #include "FormatterToText.hpp"
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 #include <xalanc/PlatformSupport/Writer.hpp>
 #include <xalanc/PlatformSupport/XalanOutputStream.hpp>
@@ -31,11 +31,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-FormatterToText::FormatterToText() :
+FormatterToText::FormatterToText(MemoryManagerType& theManager) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_writer(0),
 	m_maxCharacter(XalanDOMChar(~0)),
-	m_encoding(),
+	m_encoding(theManager),
 	m_haveEncoding(false),
 	m_normalize(true),
 	m_handleIgnorableWhitespace(true),
@@ -47,13 +47,14 @@ FormatterToText::FormatterToText() :
 
 
 FormatterToText::FormatterToText(
+            MemoryManagerType& theManager,
 			Writer&		writer,
 			bool		normalizeLinefeed,
 			bool		handleIgnorableWhitespace) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_writer(&writer),
 	m_maxCharacter(XalanDOMChar(~0)),
-	m_encoding(),
+	m_encoding(theManager),
 	m_haveEncoding(false),
 	m_normalize(normalizeLinefeed),
 	m_handleIgnorableWhitespace(handleIgnorableWhitespace),
@@ -66,6 +67,7 @@ FormatterToText::FormatterToText(
 
 
 FormatterToText::FormatterToText(
+            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	encoding,
 			bool					normalizeLinefeed,
@@ -73,16 +75,50 @@ FormatterToText::FormatterToText(
 	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_writer(&writer),
 	m_maxCharacter(0),
-	m_encoding(isEmpty(encoding) == false ? encoding : XalanDOMString(XalanTranscodingServices::s_utf8String)),
+	m_encoding(theManager),
 	m_haveEncoding(true),
 	m_normalize(normalizeLinefeed),
 	m_handleIgnorableWhitespace(handleIgnorableWhitespace),
 	m_newlineString(0),
 	m_newlineStringLength(0)
 {
+    if(isEmpty(encoding) == false)
+    {
+        m_encoding = encoding;
+    }
+    else
+    {
+        m_encoding = XalanDOMString(XalanTranscodingServices::s_utf8String, theManager);
+    }
+
 	update(false);
 }
 
+FormatterToText*
+FormatterToText::create(
+            MemoryManagerType&      theManager,
+			Writer&					writer,
+			const XalanDOMString&	encoding,
+			bool					normalizeLinefeed,
+			bool					handleIgnorableWhitespace) 
+{
+    typedef FormatterToText ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(
+                        theManager,
+			            writer,
+			            encoding,
+			            normalizeLinefeed,
+			            handleIgnorableWhitespace); 
+
+    theGuard.release();
+
+    return theResult;
+}
 
 
 FormatterToText::~FormatterToText()
@@ -306,7 +342,7 @@ FormatterToText::update(bool	fNormalizationOnly)
 			}
 			catch(const XalanOutputStream::UnsupportedEncodingException&)
 			{
-				const XalanDOMString	theUTF8String(XalanTranscodingServices::s_utf8String);
+				const XalanDOMString	theUTF8String(XalanTranscodingServices::s_utf8String, getMemoryManager());
 
 				// Default to UTF-8 if the requested encoding is not supported...
 				theStream->setOutputEncoding(theUTF8String);

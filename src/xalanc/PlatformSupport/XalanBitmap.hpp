@@ -55,7 +55,7 @@ public:
 	 *
 	 * @param  theSize   The number of bits in the map.
 	 */
-	XalanBitmap(size_type	theSize);
+	XalanBitmap(MemoryManagerType& theManager, size_type	theSize);
 
 	~XalanBitmap();
 

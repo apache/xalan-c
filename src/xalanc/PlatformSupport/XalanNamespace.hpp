@@ -36,9 +36,9 @@ class XalanNamespace
 public:
 
 	explicit
-	XalanNamespace() :
-		m_prefix(),
-		m_uri()
+	XalanNamespace(MemoryManagerType&      theManager) :
+		m_prefix(theManager),
+		m_uri(theManager)
 	{
 	}
 
@@ -51,9 +51,18 @@ public:
 	 */
 	XalanNamespace(
 			const XalanDOMString&	thePrefix,
-			const XalanDOMString&	theURI) :
-		m_prefix(thePrefix),
-		m_uri(theURI)
+			const XalanDOMString&	theURI,
+            MemoryManagerType&      theManager) :
+		m_prefix(thePrefix,theManager),
+		m_uri(theURI, theManager)
+	{
+	}
+
+	XalanNamespace(
+            const XalanNamespace&   other,
+            MemoryManagerType&      theManager) :
+		m_prefix(other.m_prefix,theManager),
+		m_uri(other.m_uri, theManager)
 	{
 	}
 
@@ -161,16 +170,19 @@ public:
 	}	
 
 private:
+    //Not implemented
+    XalanNamespace();
+    XalanNamespace(const XalanNamespace&);
 
 	XalanDOMString	m_prefix;
 
 	XalanDOMString	m_uri;
 };
 
-
+XALAN_USES_MEMORY_MANAGER(XalanNamespace)
 
 XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANNAMESPACE_HEADER_GUARD_1357924680
+#endif	// ALANNAMESPACE_HEADER_GUARD_1357924680

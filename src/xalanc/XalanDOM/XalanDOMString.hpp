@@ -62,26 +62,33 @@ public:
 	enum { npos = -1 };
 #endif
 
-	XalanDOMString();
+	XalanDOMString(MemoryManagerType&  theManager);
 
 	explicit
 	XalanDOMString(
-			const char*		theString,
-			size_type		theCount = size_type(npos));
+			const char*		    theString,
+            MemoryManagerType&  theManager,
+			size_type		    theCount = size_type(npos));
 
 	XalanDOMString(
 			const XalanDOMString&	theSource,
+            MemoryManagerType&      theManager,
 			size_type				theStartPosition = 0,
 			size_type				theCount = size_type(npos));
 
 	explicit
 	XalanDOMString(
 			const XalanDOMChar*		theString,
+            MemoryManagerType&      theManager,
 			size_type				theCount = size_type(npos));
 
 	XalanDOMString(
 			size_type		theCount,
-			XalanDOMChar	theChar);
+			XalanDOMChar	theChar,
+            MemoryManagerType&  theManager);
+
+    XalanDOMString*
+    clone(MemoryManagerType&  theManager);
 
 	~XalanDOMString()
 	{
@@ -556,18 +563,6 @@ public:
 		iterator	theFirstPosition,
 		iterator	theLastPosition);
 
-	XalanDOMString
-	substr(
-			size_type	thePosition = 0,
-			size_type	theCount = size_type(npos)) const
-	{
-		assert(theCount == size_type(npos) && thePosition < length() ||
-			   thePosition + theCount <= length());
-
-		invariants();
-
-		return XalanDOMString(*this, thePosition, theCount);
-	}
 
 	XalanDOMString&
 	substr(
@@ -625,25 +620,12 @@ public:
 			const XalanDOMChar*		theString,
 			size_type				theCount2 = size_type(npos)) const;
 
-	int
-	compare(const char*		theString) const
-	{
-		invariants();
 
-		return compare(XalanDOMString(theString));
-	}
+    void 
+    reset(MemoryManagerType& theManager, const char*	theString);
 
-	int
-	compare(
-			size_type		thePosition1,
-			size_type		theCount1,
-			const char*		theString,
-			size_type		theCount2 = size_type(npos)) const
-	{
-		invariants();
-
-		return compare(thePosition1, theCount1, XalanDOMString(theString, theCount2));
-	}
+    void 
+    reset(MemoryManagerType& theManager, const XalanDOMChar* theString);
 
 	class TranscodingError : public XalanDOMException
 	{
@@ -660,15 +642,7 @@ public:
 		}
 	};
 
-	/**
-	 * Transcode the string to the local code page.  If the string
-	 * cannot be properly transcoded, and the transcoder can detect
-	 * the error a TranscodingError exception is thrown.
-	 *
-	 * @return A null-terminated CharVectorType instance.
-	 */
-	CharVectorType
-	transcode() const;
+
 
 	/**
 	 * Transcode the string to the local code page.  If the string
@@ -679,6 +653,12 @@ public:
 	 */
 	void
 	transcode(CharVectorType&	theResult) const;
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_data.getMemoryManager();
+    }
 
 	size_type
 	hash() const
@@ -801,6 +781,10 @@ protected:
 	}
 
 private:
+    // not defined
+    XalanDOMString();
+    XalanDOMString(const XalanDOMString&);
+
 
 	XalanDOMCharVectorType		m_data;
 
@@ -872,58 +856,71 @@ operator!=(
 
 
 
-inline XalanDOMString
-operator+(
+inline XalanDOMString&
+add(
 			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
+			const XalanDOMString&	theRHS,
+            XalanDOMString&         result)
 {
-	XalanDOMString	theTemp(theLHS);
+    result.assign(theLHS);
 
-	return theTemp += theRHS;
+	return result += theRHS;
 }
 
 
 
-inline XalanDOMString
-operator+(
+inline XalanDOMString&
+add(
 			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS)
+			const XalanDOMChar*		theRHS,
+            XalanDOMString&         result)
 {
-	XalanDOMString	theTemp(theLHS);
+    result.assign(theLHS);
 
-	return theTemp += theRHS;
+	return result += theRHS;
 }
 
 
 
-inline XalanDOMString
-operator+(
+inline XalanDOMString&
+add(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS)
+			const XalanDOMString&	theRHS,
+            XalanDOMString&         result)
 {
-	XalanDOMString	theTemp(theLHS);
+    result.assign(theLHS);
 
-	return theTemp += theRHS;
+	return result += theRHS;
 }
 
 
 
-inline const XalanDOMString
-operator+(
+inline const XalanDOMString&
+add(
 			const char*				theLHS,
-			const XalanDOMString&	theRHS)
+			const XalanDOMString&	theRHS,
+            XalanDOMString&         result)
 {
-	return XalanDOMString(theLHS) + theRHS;
+    result.assign(theLHS);
+
+    result.append(theRHS);
+
+	return result;
 }
 
 
 
-inline const XalanDOMString
-operator+(
+inline const XalanDOMString&
+add(
 			const XalanDOMString&	theLHS,
-			const char*				theRHS)
+			const char*				theRHS,
+            XalanDOMString&         result)
 {
-	return theLHS + XalanDOMString(theRHS);
+    result.assign(theLHS);
+    
+    result.append(theRHS);
+
+	return result;
 }
 
 
@@ -971,23 +968,6 @@ TranscodeToLocalCodePage(
 			CharVectorType&			targetVector,
 			bool					terminate = false);
 
-/**
- * Convert XalanDOMString to C++ standard library
- * vector, transcoding to the default local code
- * page.  Null-terminate the sttring...
- *
- * @param theSourceString source string
- * @return The transcoded string.
- */
-inline const CharVectorType
-TranscodeToLocalCodePage(const XalanDOMChar*	theSourceString)
-{
-	CharVectorType	theResult;
-
-	TranscodeToLocalCodePage(theSourceString, theResult, true);
-
-	return theResult;
-}
 
 
 
@@ -1011,24 +991,6 @@ TranscodeToLocalCodePage(
 
 
 
-/**
- * Convert XalanDOMString to C++ standard library
- * vector, transcoding to the default local code
- * page.
- *
- * @param thetheSourceString source string
- * @return The transcoded string.
- */
-inline const CharVectorType
-TranscodeToLocalCodePage(const XalanDOMString&	theSourceString)
-{
-	CharVectorType	theResult;
-
-	TranscodeToLocalCodePage(theSourceString, theResult, true);
-
-	return theResult;
-}
-
 
 
 /**
@@ -1039,12 +1001,15 @@ TranscodeToLocalCodePage(const XalanDOMString&	theSourceString)
  * @param theSourceStringLength The source string length.
  * @return The new string.
  */
-inline const XalanDOMString
+inline const XalanDOMString&
 TranscodeFromLocalCodePage(
 			const char*					theSourceString,
+             XalanDOMString&            result,
 			XalanDOMString::size_type	theSourceStringLength = XalanDOMString::npos)
 {
-	return XalanDOMString(theSourceString, theSourceStringLength);
+    result.assign(theSourceString, theSourceStringLength);
+
+	return result;
 }
 
 
@@ -1090,9 +1055,12 @@ TranscodeFromLocalCodePage(
  * @param theSourceString source string
  * @return The transcoded string.
  */
-XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
-TranscodeFromLocalCodePage(const CharVectorType&	theSourceString);
+XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString&)
+TranscodeFromLocalCodePage(const CharVectorType&	theSourceString,
+                           XalanDOMString&          result);
 
+
+XALAN_USES_MEMORY_MANAGER(XalanDOMString)
 
 
 XALAN_CPP_NAMESPACE_END

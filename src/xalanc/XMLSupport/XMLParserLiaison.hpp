@@ -53,6 +53,7 @@ class XalanElement;
 
 class XALAN_XMLSUPPORT_EXPORT XMLParserLiaison
 {
+    
 public:
 
 	XMLParserLiaison();
@@ -69,6 +70,9 @@ public:
 
 	virtual ExecutionContext*
 	getExecutionContext() const = 0;
+
+    virtual MemoryManagerType&
+    getMemoryManager() = 0;
 
 	virtual void
 	setExecutionContext(ExecutionContext&	theContext) = 0;
@@ -92,7 +96,7 @@ public:
 	virtual XalanDocument*
 	parseXMLStream(
 			const InputSourceType&	inputSource,
-			const XalanDOMString&	identifier = XalanDOMString()) = 0;
+			const XalanDOMString&	identifier) = 0;
 
 	/**
 	 * Parse the text pointed at by the reader as XML. It is recommended that
@@ -109,7 +113,7 @@ public:
 	parseXMLStream(
 			const InputSourceType&	inputSource,
 			DocumentHandlerType&	handler,
-			const XalanDOMString&	identifier = XalanDOMString()) = 0;
+			const XalanDOMString&	identifier) = 0;
 
 	/**
 	 * Destroy the supplied XalanDocument instance.  It must be an instance that
@@ -163,8 +167,8 @@ public:
 	 *
 	 * @return string describing parser
 	 */
-	virtual const XalanDOMString
-	getParserDescription() const = 0;
+	virtual const XalanDOMString&
+	getParserDescription(XalanDOMString& theResult) const = 0;
 
 	/**
 	  * This method returns the installed entity resolver.

@@ -67,12 +67,12 @@ public:
 #else
 	virtual FunctionFunctionAvailable*
 #endif
-	clone() const;
+	clone(MemoryManagerType& theManager) const;
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theResult) const;
 
 private:
 

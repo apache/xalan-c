@@ -50,12 +50,23 @@ public:
 
 	struct OutputContext
 	{
-		OutputContext(FormatterListener*	theListener = 0) :
+		OutputContext(MemoryManagerType&      theManager,
+                    FormatterListener*	theListener = 0) :
 			m_flistener(theListener),
-			m_pendingAttributes(),
-			m_pendingElementName(),
+			m_pendingAttributes(theManager),
+			m_pendingElementName(theManager),
 			m_hasPendingStartDocument(false),
 			m_mustFlushPendingStartDocument(false)
+		{
+		}
+
+		OutputContext( const OutputContext&		other, 
+			MemoryManagerType&      theManager) :
+			m_flistener(other.m_flistener),
+			m_pendingAttributes(other.m_pendingAttributes , theManager),
+			m_pendingElementName(other.m_pendingElementName , theManager),
+			m_hasPendingStartDocument(other.m_hasPendingStartDocument),
+			m_mustFlushPendingStartDocument(other.m_mustFlushPendingStartDocument)
 		{
 		}
 
@@ -88,12 +99,12 @@ public:
 		bool				m_mustFlushPendingStartDocument;
 	};
 
-	typedef XalanDeque<OutputContext>			OutputContextStackType;
+	typedef XalanDeque<OutputContext,  ConstructWithMemoryManagerTraits<OutputContext> >	OutputContextStackType;
 
 	typedef OutputContextStackType::size_type	size_type;
 
 	explicit
-	OutputContextStack();
+	OutputContextStack(MemoryManagerType& theManager);
 
 	~OutputContextStack();
 

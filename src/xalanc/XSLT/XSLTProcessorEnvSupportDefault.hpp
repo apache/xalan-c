@@ -44,7 +44,8 @@ class XALAN_XSLT_EXPORT XSLTProcessorEnvSupportDefault : public XSLTProcessorEnv
 {
 public:
 
-	XSLTProcessorEnvSupportDefault(XSLTProcessor*	theProcessor = 0);
+	XSLTProcessorEnvSupportDefault( MemoryManagerType& theManager, 
+                                    XSLTProcessor*	theProcessor = 0);
 
 	virtual
 	~XSLTProcessorEnvSupportDefault();
@@ -129,6 +130,7 @@ public:
 
 	virtual XalanDocument*
 	parseXML(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base);
 
@@ -140,8 +142,9 @@ public:
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument);
 
-	virtual XalanDOMString
-	findURIFromDoc(const XalanDocument*		owner) const;
+	virtual XalanDOMString&
+	findURIFromDoc(const XalanDocument*		owner,
+                    XalanDOMString& theResult) const;
 
 	virtual bool
 	elementAvailable(

@@ -31,7 +31,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	XObjectResultTreeFragProxyBase::s_emptyString;
+
+const XalanDOMString	XObjectResultTreeFragProxyBase::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 

@@ -43,14 +43,20 @@ class XALAN_XPATH_EXPORT NodeRefList : public NodeRefListBase
 public:
 
 	explicit
-	NodeRefList();
+	NodeRefList(MemoryManagerType& theManager);
 
 	/**
 	 * Construct a node list from another
 	 *
 	 * @param theSource source node list
 	 */
-	NodeRefList(const NodeRefList&	theSource);
+	NodeRefList(const NodeRefList&	theSource, MemoryManagerType& theManager);
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_nodeList.getMemoryManager();
+    }
 
 	/**
 	 * Construct a node list from another
@@ -58,7 +64,7 @@ public:
 	 * @param theSource source node list
 	 */
 	explicit
-	NodeRefList(const NodeRefListBase&	theSource);
+	NodeRefList(const NodeRefListBase&	theSource, MemoryManagerType& theManager);
 
 	virtual
 	~NodeRefList();
@@ -89,7 +95,7 @@ public:
 
 #if !defined(NDEBUG)
 	bool
-	checkForDuplicates() const;
+	checkForDuplicates(MemoryManagerType& theManager) const;
 #endif
 
 	typedef XalanVector<XalanNode*>			NodeListVectorType;
@@ -101,7 +107,8 @@ public:
 	}
 
 protected:
-
+    //undefined
+    NodeRefList(const NodeRefList&	theSource);
 	// Default vector allocation size.  It seems high, but
 	// it's really worth it...
 	enum

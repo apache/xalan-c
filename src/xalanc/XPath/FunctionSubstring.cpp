@@ -134,7 +134,7 @@ getTotal(
 
 
 
-static const XalanDOMString		theEmptyString;
+static const XalanDOMString		theEmptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 inline XObjectPtr
@@ -194,7 +194,7 @@ FunctionSubstring::execute(
 		else
 		{
 			const double	theTotal =
-				getTotal(theSourceStringLength, theSecondArgValue, arg3);
+				getTotal( theSourceStringLength, theSecondArgValue, arg3);
 
 			if (DoubleSupport::isNaN(theSecondArgValue) == true ||
 				DoubleSupport::isNaN(theTotal) == true ||
@@ -234,17 +234,19 @@ Function*
 #else
 FunctionSubstring*
 #endif
-FunctionSubstring::clone() const
+FunctionSubstring::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionSubstring(*this);
+	return cloneFunction_1<FunctionSubstring>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionSubstring::getError() const
+const XalanDOMString&
+FunctionSubstring::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoOrThreeArguments_1Param, "substring()");
+	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoOrThreeArguments_1Param, theResult, "substring()");
+
+    return theResult;
 }
 
 

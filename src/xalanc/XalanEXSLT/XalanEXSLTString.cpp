@@ -73,7 +73,11 @@ XalanEXSLTFunctionAlign::execute(
 
 	if (theSize != 2 && theSize != 3)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+		XalanDOMString&		theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false && args[1].null() == false && (theSize == 2 || args[2].null() == false));
@@ -159,7 +163,7 @@ XalanEXSLTFunctionAlign::execute(
 
 
 
-static const XalanDOMString		s_emptyString;
+static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -171,8 +175,12 @@ XalanEXSLTFunctionConcat::execute(
 			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
-	{
-		executionContext.error(getError(), context, locator);
+	{        
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+		XalanDOMString&		theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -224,7 +232,11 @@ XalanEXSLTFunctionPadding::execute(
 
 	if (theSize != 1 && theSize != 2)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+		XalanDOMString&		theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false && (theSize == 1 || args[1].null() == false));
@@ -326,7 +338,11 @@ XalanEXSLTFunctionEncodeURI::execute(
 
 	if (theSize != 2 && theSize != 3)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+		XalanDOMString&		theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false && 
@@ -348,6 +364,9 @@ XalanEXSLTFunctionEncodeURI::execute(
 	XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
 	XalanDOMString &theResult = theGuard.get();
 
+    XPathExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
+	XalanDOMString &theBuffer = theGuard1.get();
+
 	XALAN_USING_STD(find)
 
 	for (XalanDOMString::size_type i = 0; i < theString.length(); ++i)
@@ -364,8 +383,8 @@ XalanEXSLTFunctionEncodeURI::execute(
 				(escapeReserved && 
 				 find(s_reservedChars,s_reservedChars+s_reservedCharsSize,ch) 
 					 != s_reservedChars+s_reservedCharsSize))
-			{
-				theResult+= escapedOctet(ch);
+			{           
+				theResult+= escapedOctet(ch, theBuffer);
 			}
 			else 
 			{
@@ -377,9 +396,10 @@ XalanEXSLTFunctionEncodeURI::execute(
 		{
 			const XalanDOMChar	highByte = XalanDOMChar((ch >> 6) | 0xC0);
 			const XalanDOMChar	lowByte = XalanDOMChar((ch & 0x3F) | 0x80);
-			escapedOctet(highByte);
-			theResult+= escapedOctet(highByte);
-			theResult+= escapedOctet(lowByte);
+
+
+			theResult+= escapedOctet(highByte,theBuffer);
+			theResult+= escapedOctet(lowByte,theBuffer);
 		}
 		// Character is in a higher supplementary plane
 		else if((ch & 0xFC00) == 0xD800) // high surrogate
@@ -394,19 +414,20 @@ XalanEXSLTFunctionEncodeURI::execute(
 			const XalanDOMChar byte3 = XalanDOMChar(0x80 + ((highSurrogate & 0x0003) << 4) + ((lowSurrogate & 0x03C0) >> 6));
 			const XalanDOMChar byte4 = XalanDOMChar(0x80 + (lowSurrogate & 0x003F));
 
-			theResult+= escapedOctet(byte1);
-			theResult+= escapedOctet(byte2);
-			theResult+= escapedOctet(byte3);
-			theResult+= escapedOctet(byte4);
+			theResult+= escapedOctet(byte1,theBuffer);
+			theResult+= escapedOctet(byte2,theBuffer);
+			theResult+= escapedOctet(byte3,theBuffer);
+			theResult+= escapedOctet(byte4,theBuffer);
 		}
 		else
 		{
 			const XalanDOMChar	highByte = XalanDOMChar((ch >> 12) | 0xE0);
 			const XalanDOMChar	middleByte = XalanDOMChar(((ch & 0x0FC0) >> 6) | 0x80);
 			const XalanDOMChar	lowByte = XalanDOMChar((ch & 0x3F) | 0x80);
-			theResult+= escapedOctet(highByte);
-			theResult+= escapedOctet(middleByte);
-			theResult+= escapedOctet(lowByte);
+
+			theResult+= escapedOctet(highByte,theBuffer);
+			theResult+= escapedOctet(middleByte,theBuffer);
+			theResult+= escapedOctet(lowByte,theBuffer);
 		}	
 	}
 
@@ -414,13 +435,14 @@ XalanEXSLTFunctionEncodeURI::execute(
 
 }
 
-const XalanDOMString
-XalanEXSLTFunctionEncodeURI::escapedOctet(const XalanDOMChar	theChar) const
+const XalanDOMString&
+XalanEXSLTFunctionEncodeURI::escapedOctet(const XalanDOMChar	theChar,
+                                          XalanDOMString&       theResult) const
 {
-	XalanDOMString theResult;
+	theResult = XalanUnicode::charPercentSign;
 
-	theResult += XalanUnicode::charPercentSign;
-	XalanDOMString stringBuffer;
+    XalanDOMString stringBuffer(theResult.getMemoryManager());
+
 	UnsignedLongToHexDOMString(theChar, stringBuffer);
 	if (stringBuffer.length() == 1) 
 	{
@@ -443,7 +465,11 @@ XalanEXSLTFunctionDecodeURI::execute(
 
 	if (theSize != 1 && theSize != 2)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+		XalanDOMString&		theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false && 
@@ -573,27 +599,31 @@ XalanEXSLTFunctionDecodeURI::hexCharsToByte(
 	XalanDOMChar byte = 0;
 	
 	XalanDOMChar curChar = lowHexChar;
+
 	for (int place = 0; place < 2; ++place)
 	{
 		if (curChar >= XalanUnicode::charDigit_0 
 			&& curChar <= XalanUnicode::charDigit_9) // Digit 
 		{
-			byte += XalanDOMChar((curChar - XalanUnicode::charDigit_0) << (place * 4));
+			byte = byte + XalanDOMChar((curChar - XalanUnicode::charDigit_0) << (place * 4));
 		}
 		else if (curChar >= XalanUnicode::charLetter_A 
 			  	 && curChar <= XalanUnicode::charLetter_F) // Uppercase
 		{
-			byte += XalanDOMChar((curChar - XalanUnicode::charLetter_A + 10) << (place * 4));
+			byte = byte + XalanDOMChar((curChar - XalanUnicode::charLetter_A + 10) << (place * 4));
 		}
 		else if (curChar >= XalanUnicode::charLetter_a
 				 && curChar <= XalanUnicode::charLetter_f)  // Lowercase
 		{
-			byte += XalanDOMChar((curChar - XalanUnicode::charLetter_a + 10) << place);
+			byte = byte + XalanDOMChar((curChar - XalanUnicode::charLetter_a + 10) << place);
 		}
 		else 
 		{
+	        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	        XalanDOMString &theBuffer = theGuard.get();  
+
 			executionContext.error(
-				XalanMessageLoader::getMessage(XalanMessages::InvalidURI),
+				XalanMessageLoader::getMessage(XalanMessages::InvalidURI,theBuffer),
 				context, 
 				locator);
 		}
@@ -707,7 +737,9 @@ static const XalanEXSLTFunctionConcat	s_concatFunction;
 // Note this is a special constructor of XalanEXSLTFunctionPadding which
 // allocates no memory.  It is only used here, so we can have table-based
 // initialization, but not have any memory allocation.
-static const XalanEXSLTFunctionPadding	s_paddingFunction(1);
+
+static const XalanEXSLTFunctionPadding	s_paddingFunction(XalanMemMgrs::getDummyMemMgr(), 1);
+
 static const XalanEXSLTFunctionEncodeURI s_encodeUriFunction;
 static const XalanEXSLTFunctionDecodeURI s_decodeUriFunction;
 
@@ -734,9 +766,9 @@ XalanEXSLTStringFunctionsInstaller::installLocal(XPathEnvSupportDefault&		theSup
 
 
 void
-XalanEXSLTStringFunctionsInstaller::installGlobal()
+XalanEXSLTStringFunctionsInstaller::installGlobal(MemoryManagerType& theManager)
 {
-	doInstallGlobal(s_stringNamespace, theFunctionTable);
+	doInstallGlobal(theManager, s_stringNamespace, theFunctionTable);
 }
 
 
@@ -750,9 +782,9 @@ XalanEXSLTStringFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&	theSu
 
 
 void
-XalanEXSLTStringFunctionsInstaller::uninstallGlobal()
+XalanEXSLTStringFunctionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
 {
-	doUninstallGlobal(s_stringNamespace, theFunctionTable);
+	doUninstallGlobal(theManager, s_stringNamespace, theFunctionTable);
 }
 
 

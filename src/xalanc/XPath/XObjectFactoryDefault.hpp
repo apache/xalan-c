@@ -46,9 +46,6 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
-
-
 
 XALAN_CPP_NAMESPACE_BEGIN
 
@@ -85,14 +82,29 @@ public:
 	 */
 	explicit
 	XObjectFactoryDefault(
+            MemoryManagerType& theManager,
 			size_type	theXStringBlockSize = eDefaultXStringBlockSize,
 			size_type	theXNumberBlockSize = eDefaultXNumberBlockSize,
 			size_type	theXNodeSetBlockSize = eDefaultXNodeSetBlockSize,
 			size_type	theXNodeSetNodeProxyBlockSize = eDefaultXNodeSetNodeProxyBlockSize); 
 
+    static XObjectFactoryDefault*
+    create(
+            MemoryManagerType& theManager,
+			size_type	theXStringBlockSize = eDefaultXStringBlockSize,
+			size_type	theXNumberBlockSize = eDefaultXNumberBlockSize,
+			size_type	theXNodeSetBlockSize = eDefaultXNodeSetBlockSize,
+			size_type	theXNodeSetNodeProxyBlockSize = eDefaultXNodeSetNodeProxyBlockSize);
+
+
 	virtual
 	~XObjectFactoryDefault();
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_xobjects.getMemoryManager();
+    }
 	// These methods are inherited from XObjectFactory ...
 
 	virtual void

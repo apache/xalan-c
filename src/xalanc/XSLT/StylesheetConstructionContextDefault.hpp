@@ -39,7 +39,7 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 
 
@@ -140,6 +140,7 @@ public:
 	 * @param thePointerVectorAllocatorBlockSize The block size to use for allocating vectors of pointers.
 	 */
 	StylesheetConstructionContextDefault(
+            MemoryManagerType&                      theManager,
 			XSLTEngineImpl&							processor,
 			XPathFactory&							xpathFactory,
 			VectorAllocatorSizeType					theXalanDOMCharVectorAllocatorBlockSize = eDefaultXalanDOMCharVectorBlockSize,
@@ -211,18 +212,20 @@ public:
 	virtual URLAutoPtrType
 	getURLFromString(const XalanDOMString&	urlString);
 
-	virtual XalanDOMString
-	getURLStringFromString(const XalanDOMString&	urlString);
+	virtual XalanDOMString&
+	getURLStringFromString(const XalanDOMString&	urlString,
+                            XalanDOMString& theResult);
 
 	virtual URLAutoPtrType
 	getURLFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base);
 
-	virtual XalanDOMString
+	virtual XalanDOMString&
 	getURLStringFromString(
 			const XalanDOMString&	urlString,
-			const XalanDOMString&	base);
+			const XalanDOMString&	base,
+            XalanDOMString& theResult);
 
 	virtual const XalanDOMString&
 	getXSLTNamespaceURI() const;
@@ -460,7 +463,7 @@ private:
 
 	XPathFactory&							m_xpathFactory;
 
-	typedef XalanAutoPtr<XPathProcessor>	XPathProcessAutoPtr;
+	typedef XalanMemMgrAutoPtr<XPathProcessor, true>	XPathProcessAutoPtr;
 
 	XPathProcessAutoPtr						m_xpathProcessor;
 

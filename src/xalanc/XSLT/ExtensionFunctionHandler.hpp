@@ -62,7 +62,8 @@ public:
 	 * 
 	 * @param namespaceUri the extension namespace URI that I'm implementing
 	 */
-	ExtensionFunctionHandler(const XalanDOMString&	namespaceUri);
+	ExtensionFunctionHandler(const XalanDOMString&	namespaceUri,
+                            MemoryManagerType& theManager);
 
 	/**
 	 * Construct a new extension namespace handler given all the information
@@ -77,6 +78,7 @@ public:
 	 * @param scriptSrc    the actual script code (if any)
 	 */
 	ExtensionFunctionHandler(
+            MemoryManagerType& theManager,
 			const XalanDOMString&	namespaceUri,
 			const XalanDOMString&	funcNames,
 			const XalanDOMString&	lang,
@@ -86,6 +88,12 @@ public:
 
 	virtual
 	~ExtensionFunctionHandler();
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_namespaceUri.getMemoryManager();
+    }
 
 	/**
 	 * Set function local parts of extension NS.
@@ -125,7 +133,7 @@ public:
 	isFunctionAvailable(const XalanDOMString&	function) const;
 
 	/// Vector of pointers to function arguments
-	typedef XalanVector<void*>          ArgVectorType;
+	typedef XalanVector<void*>							ArgVectorType;
 
 	typedef XalanSet<XalanDOMString>	StringSetType;
 

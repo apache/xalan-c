@@ -35,7 +35,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	FunctionGenerateID::s_emptyString;
+const XalanDOMString	FunctionGenerateID::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -82,8 +82,10 @@ FunctionGenerateID::execute(
 {
 	if (context == 0)
 	{
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
 		executionContext.error(
-				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,"generate-id()"),
+				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,theGuard.get(), "generate-id()"),
 				context,
 				locator);
 
@@ -131,17 +133,17 @@ Function*
 #else
 FunctionGenerateID*
 #endif
-FunctionGenerateID::clone() const
+FunctionGenerateID::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionGenerateID(*this);
+	return cloneFunction_1<FunctionGenerateID>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionGenerateID::getError() const
+const XalanDOMString&
+FunctionGenerateID::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"generate-id");
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult,"generate-id");
 }
 
 

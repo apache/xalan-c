@@ -37,13 +37,15 @@ public:
 	installLocal(XPathEnvSupportDefault&	theSupport);
 
 	static void
-	installGlobal();
+	installGlobal(MemoryManagerType& theManager);
 
 	static void
 	uninstallLocal(XPathEnvSupportDefault&	theSupport);
 
 	static void
-	uninstallGlobal();
+	uninstallGlobal(MemoryManagerType& theManager);
+
+private:
 };
 
 

@@ -38,21 +38,32 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString;
+static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
-FunctionSystemProperty::FunctionSystemProperty() :
+FunctionSystemProperty::FunctionSystemProperty(MemoryManagerType& theManager) :
 	Function(),
-	m_xsltNamespaceURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform")),
-	m_versionPropertyString(XALAN_STATIC_UCODE_STRING("version")),
-	m_vendorPropertyString(XALAN_STATIC_UCODE_STRING("vendor")),
-	m_vendorURLPropertyString(XALAN_STATIC_UCODE_STRING("vendor-url")),
-	m_vendorString(XALAN_STATIC_UCODE_STRING("Apache Software Foundation")),
-	m_vendorURLString(XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan-c"))
+	m_xsltNamespaceURI("http://www.w3.org/1999/XSL/Transform", theManager),
+	m_versionPropertyString("version", theManager),
+	m_vendorPropertyString("vendor", theManager),
+	m_vendorURLPropertyString("vendor-url", theManager),
+	m_vendorString("Apache Software Foundation", theManager),
+	m_vendorURLString("http://xml.apache.org/xalan-c", theManager)
 {
 }
 
+FunctionSystemProperty::FunctionSystemProperty( const FunctionSystemProperty& other, 
+                                               MemoryManagerType& theManager) :
+	Function(other),
+	m_xsltNamespaceURI(other.m_xsltNamespaceURI, theManager),
+	m_versionPropertyString(other.m_versionPropertyString, theManager),
+	m_vendorPropertyString(other.m_vendorPropertyString, theManager),
+	m_vendorURLPropertyString(other.m_vendorURLPropertyString, theManager),
+	m_vendorString(other.m_vendorString, theManager),
+	m_vendorURLString(other.m_vendorURLString, theManager)
+{
+}
 
 
 FunctionSystemProperty::~FunctionSystemProperty()
@@ -70,8 +81,10 @@ validateNCName(
 {
 	if (XalanQName::isValidNCName(ncname) == false)
 	{
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
 		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::PropertyIsNotValidQName_1Param,"system-property()"),
+			XalanMessageLoader::getMessage(XalanMessages::PropertyIsNotValidQName_1Param, theGuard.get() ,"system-property()"),
 			context,
 			locator);
 	}
@@ -106,8 +119,10 @@ FunctionSystemProperty::execute(
 
 		if (nspace == 0)
 		{
+            XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
 			executionContext.error(
-					XalanMessageLoader::getMessage(XalanMessages::UndeclaredNamespacePrefix_1Param, theBuffer),
+                XalanMessageLoader::getMessage(XalanMessages::UndeclaredNamespacePrefix_1Param,theGuard.get(), theBuffer),
 					context,
 					locator);
 		}
@@ -142,11 +157,15 @@ FunctionSystemProperty::execute(
 	{
 		validateNCName(executionContext, context, locator, fullName);
 
+        XalanDOMString::CharVectorType theResultVect(executionContext.getMemoryManager());
+
+        TranscodeToLocalCodePage(fullName, theResultVect, true);
+
 		const char* const	theEnvString =
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-			std::getenv(c_str(TranscodeToLocalCodePage(fullName)));
+			std::getenv(c_str(theResultVect));
 #else
-			getenv(c_str(TranscodeToLocalCodePage(fullName)));
+			getenv(c_str(theResultVect));
 #endif
 
 		if (theEnvString != 0)
@@ -155,7 +174,7 @@ FunctionSystemProperty::execute(
 
 			XalanDOMString&		result = guard.get();
 
-			result = TranscodeFromLocalCodePage(theEnvString);
+			TranscodeFromLocalCodePage(theEnvString, result);
 
 			return executionContext.getXObjectFactory().createString(result);
 		}
@@ -171,17 +190,17 @@ Function*
 #else
 FunctionSystemProperty*
 #endif
-FunctionSystemProperty::clone() const
+FunctionSystemProperty::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionSystemProperty(*this);
+	return cloneFunction<FunctionSystemProperty>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionSystemProperty::getError() const
+const XalanDOMString&
+FunctionSystemProperty::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"system-property()");
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult, "system-property()");
 }
 
 

@@ -23,8 +23,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanMatchPatternDataAllocator::XalanMatchPatternDataAllocator(size_type    theBlockCount) :
-	m_allocator(theBlockCount)
+XalanMatchPatternDataAllocator::XalanMatchPatternDataAllocator(MemoryManagerType&  theManager, size_type    theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -50,6 +50,7 @@ XalanMatchPatternDataAllocator::create(
 
 	data_type* const	theResult =
 		new(theBlock) data_type(
+                m_allocator.getMemoryManager(),
 				theTemplate,
 				thePosition,
 				theTargetString,

@@ -67,15 +67,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionAbs*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionAbs(*this);
+		return cloneFunction_0<XalanEXSLTFunctionAbs>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -122,15 +122,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionRandom*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionRandom(*this);
+		return cloneFunction_0<XalanEXSLTFunctionRandom>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -177,15 +177,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionAcos*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionAcos(*this);
+		return cloneFunction_0<XalanEXSLTFunctionAcos>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -232,15 +232,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionAsin*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionAsin(*this);
+		return cloneFunction_0<XalanEXSLTFunctionAsin>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -287,15 +287,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionAtan*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionAtan(*this);
+		return cloneFunction_0<XalanEXSLTFunctionAtan>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -342,15 +342,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionAtan2*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionAtan2(*this);
+		return cloneFunction_0<XalanEXSLTFunctionAtan2>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -397,18 +397,17 @@ public:
 #else
 	virtual XalanEXSLTFunctionConstant*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionConstant(*this);
+		return cloneFunction_0<XalanEXSLTFunctionConstant>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const 
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"constant()");
-
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,theBuffer,"constant()");
 	}
 
 private:
@@ -473,15 +472,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionCos*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionCos(*this);
+		return cloneFunction_0<XalanEXSLTFunctionCos>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -528,15 +527,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionExp*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionExp(*this);
+		return cloneFunction_0<XalanEXSLTFunctionExp>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -583,15 +582,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionHighest*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionHighest(*this);
+		return cloneFunction_0<XalanEXSLTFunctionHighest>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -638,15 +637,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionLog*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionLog(*this);
+		return cloneFunction_0<XalanEXSLTFunctionLog>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -693,15 +692,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionLowest*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionLowest(*this);
+		return cloneFunction_0<XalanEXSLTFunctionLowest>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -748,15 +747,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionMax*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionMax(*this);
+		return cloneFunction_0<XalanEXSLTFunctionMax>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -803,15 +802,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionMin*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionMin(*this);
+		return cloneFunction_0<XalanEXSLTFunctionMin>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -858,15 +857,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionPower*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionPower(*this);
+		return cloneFunction_0<XalanEXSLTFunctionPower>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -913,15 +912,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionSin*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionSin(*this);
+		return cloneFunction_0<XalanEXSLTFunctionSin>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -968,15 +967,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionSqrt*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionSqrt(*this);
+		return cloneFunction_0<XalanEXSLTFunctionSqrt>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 
@@ -1023,15 +1022,15 @@ public:
 #else
 	virtual XalanEXSLTFunctionTan*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new XalanEXSLTFunctionTan(*this);
+		return cloneFunction_0<XalanEXSLTFunctionTan>()(theManager);
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const;
 
 private:
 

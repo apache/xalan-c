@@ -79,7 +79,7 @@ public:
 	 * other functions are called.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType&      theManager);
 
 	/**
 	 * Destroy static data.  After thus function is called,
@@ -88,14 +88,7 @@ public:
 	static void
 	terminate();
 
-	/**
-	 * Retrieves data for node
-	 * 
-	 * @param node DOM node whose data is to be returned
-	 * @return a string representation of the node's data
-	 */
-	static XalanDOMString
-	getNodeData(const XalanNode&	node);
+
 
 	/**
 	 * Retrieves data for node
@@ -108,17 +101,7 @@ public:
 			const XalanNode&	node,
 			XalanDOMString&		data);
 
-	/**
-	 * Retrieves data for node
-	 * 
-	 * @param attribute DOM node whose data is to be returned
-	 * @return a string representation of the node's data
-	 */
-	static XalanDOMString
-	getNodeData(const XalanAttr&	attribute)
-	{
-		return attribute.getNodeValue();
-	}
+
 
 	/**
 	 * Retrieves data for node
@@ -134,17 +117,7 @@ public:
 		append(data, attribute.getNodeValue());
 	}
 
-	/**
-	 * Retrieves data for node
-	 * 
-	 * @param comment DOM node whose data is to be returned
-	 * @return a string representation of the node's data
-	 */
-	static XalanDOMString
-	getNodeData(const XalanComment&		comment)
-	{
-		return comment.getData();
-	}
+
 
 	/**
 	 * Retrieves data for node
@@ -160,14 +133,7 @@ public:
 		append(data, comment.getData());
 	}
 
-	/**
-	 * Retrieves data for node
-	 * 
-	 * @param document DOM node whose data is to be returned
-	 * @return a string representation of the node's data
-	 */
-	static XalanDOMString
-	getNodeData(const XalanDocument&	document);
+
 
 	/**
 	 * Retrieves data for node
@@ -180,14 +146,7 @@ public:
 			const XalanDocument&	document,
 			XalanDOMString&			data);
 
-	/**
-	 * Retrieves data for node
-	 * 
-	 * @param documentFragment DOM node whose data is to be returned
-	 * @return a string representation of the node's data
-	 */
-	static XalanDOMString
-	getNodeData(const XalanDocumentFragment&	documentFragment);
+
 
 	/**
 	 * Retrieves data for node
@@ -200,14 +159,7 @@ public:
 			const XalanDocumentFragment&	documentFragment,
 			XalanDOMString&					data);
 
-	/**
-	 * Retrieves data for node
-	 * 
-	 * @param element DOM node whose data is to be returned
-	 * @return a string representation of the node's data
-	 */
-	static XalanDOMString
-	getNodeData(const XalanElement&		element);
+
 
 	/**
 	 * Retrieves data for node
@@ -220,17 +172,6 @@ public:
 			const XalanElement&		element,
 			XalanDOMString&			data);
 
-	/**
-	 * Retrieves data for node
-	 * 
-	 * @param pi DOM node whose data is to be returned
-	 * @return a string representation of the node's data
-	 */
-	static XalanDOMString
-	getNodeData(const XalanProcessingInstruction&	pi)
-	{
-		return pi.getData();
-	}
 
 	/**
 	 * Retrieves data for node
@@ -246,17 +187,7 @@ public:
 		append(data, pi.getData());
 	}
 
-	/**
-	 * Retrieves data for node
-	 * 
-	 * @param node DOM node whose data is to be returned
-	 * @return a string representation of the node's data
-	 */
-	static XalanDOMString
-	getNodeData(const XalanText&	text)
-	{
-		return text.getData();
-	}
+
 
 	/**
 	 * Retrieves data for node

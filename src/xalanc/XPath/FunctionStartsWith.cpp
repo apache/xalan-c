@@ -51,7 +51,8 @@ FunctionStartsWith::execute(
 {
 	assert(arg1.null() == false && arg2.null() == false);	
 
-	const bool	fStartsWith = startsWith(arg1->str(), arg2->str());
+	const bool	fStartsWith = startsWith(arg1->str(), 
+                            arg2->str());
 
 	return executionContext.getXObjectFactory().createBoolean(fStartsWith);
 }
@@ -63,18 +64,18 @@ Function*
 #else
 FunctionStartsWith*
 #endif
-FunctionStartsWith::clone() const
+FunctionStartsWith::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionStartsWith(*this);
+	return cloneFunction_1<FunctionStartsWith>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionStartsWith::getError() const
+const XalanDOMString&
+FunctionStartsWith::getError(XalanDOMString& theResult) const
 {
 
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, "starts-with()");
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, theResult, "starts-with()");
 
 }
 

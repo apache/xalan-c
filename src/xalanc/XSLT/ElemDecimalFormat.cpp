@@ -42,7 +42,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanQNameByValue	s_empty;
+static const XalanQNameByValue	s_empty(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -61,10 +61,10 @@ ElemDecimalFormat::ElemDecimalFormat(
 	m_fromMatchPattern(0),
 	m_valueExpr(0),
 	m_qname(&s_empty),
-	m_decimalFormatSymbols()
+    m_decimalFormatSymbols(constructionContext.getMemoryManager())
 {
-	m_decimalFormatSymbols.setInfinity(XalanDOMString());
-	m_decimalFormatSymbols.setNaN(XalanDOMString());
+	m_decimalFormatSymbols.setInfinity(XalanDOMString(constructionContext.getMemoryManager()));
+	m_decimalFormatSymbols.setNaN(XalanDOMString(constructionContext.getMemoryManager()));
 
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -83,9 +83,12 @@ ElemDecimalFormat::ElemDecimalFormat(
 
 			if (m_qname->isValid() == false)
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.error(
 						XalanMessageLoader::getMessage(
 							XalanMessages::AttributeValueNotValidQName_2Param,
+                            theResult,
 							Constants::ATTRNAME_NAME.c_str(),
 							atts.getValue(i)),
 						0,
@@ -103,9 +106,12 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.warn(
 					XalanMessageLoader::getMessage(
 						XalanMessages::ElementHasIllegalValue_3Param,
+                        theResult,
 						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
 						Constants::ATTRNAME_DECIMALSEPARATOR.c_str(),
 						decimalSepValue),
@@ -124,9 +130,12 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.warn(
 					XalanMessageLoader::getMessage(
 						XalanMessages::ElementHasIllegalValue_3Param,
+                        theResult,
 						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
 						Constants::ATTRNAME_GROUPINGSEPARATOR.c_str(),
 						sepValue),
@@ -151,9 +160,12 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.warn(
 					XalanMessageLoader::getMessage(
 						XalanMessages::ElementHasIllegalValue_3Param,
+                        theResult,
 						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
 						Constants::ATTRNAME_MINUSSIGN.c_str(),
 						minusValue),
@@ -178,9 +190,12 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.warn(
 					XalanMessageLoader::getMessage(
 						XalanMessages::ElementHasIllegalValue_3Param,
+                        theResult,
 						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
 						Constants::ATTRNAME_PERCENT.c_str(),
 						percentValue),
@@ -199,9 +214,12 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.warn(
 					XalanMessageLoader::getMessage(
 						XalanMessages::ElementHasIllegalValue_3Param,
+                        theResult,
 						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
 						Constants::ATTRNAME_PERMILLE.c_str(),
 						permilleValue),
@@ -220,9 +238,12 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.warn(
 					XalanMessageLoader::getMessage(
 						XalanMessages::ElementHasIllegalValue_3Param,
+                        theResult,
 						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
 						Constants::ATTRNAME_ZERODIGIT.c_str(),
 						zeroDigitValue),
@@ -241,9 +262,12 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.warn(
 					XalanMessageLoader::getMessage(
 						XalanMessages::ElementHasIllegalValue_3Param,
+                        theResult,
 						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
 						Constants::ATTRNAME_DIGIT.c_str(),
 						digitValue),
@@ -262,9 +286,12 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.warn(
 					XalanMessageLoader::getMessage(
 						XalanMessages::ElementHasIllegalValue_3Param,
+                        theResult,
 						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
 						Constants::ATTRNAME_PATTERNSEPARATOR.c_str(),
 						patternSepValue),
@@ -274,9 +301,12 @@ ElemDecimalFormat::ElemDecimalFormat(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 				XalanMessageLoader::getMessage(
 					XalanMessages::TemplateHasIllegalAttribute_2Param,
+                    theResult,
 					Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
 					aname),
 				0,
@@ -300,9 +330,12 @@ ElemDecimalFormat::ElemDecimalFormat(
 
 	if (theOther != 0 && *theOther != m_decimalFormatSymbols)
 	{
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::DuplicateDefinitions_1Param,
+                theResult,
 				Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING),
 			0,
 			this);

@@ -82,6 +82,7 @@ public:
 
 	virtual XalanDocument*
 	parseXML(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) = 0;
 
@@ -93,8 +94,9 @@ public:
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument) = 0;
 
-	virtual XalanDOMString
-	findURIFromDoc(const XalanDocument*		owner) const = 0;
+	virtual XalanDOMString&
+	findURIFromDoc(const XalanDocument*		owner,
+                    XalanDOMString& theResult) const = 0;
 
 	virtual bool
 	elementAvailable(

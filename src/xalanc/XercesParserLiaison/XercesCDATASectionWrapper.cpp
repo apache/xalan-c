@@ -50,7 +50,24 @@ XercesCDATASectionWrapper::XercesCDATASectionWrapper(
 	assert(theXercesCDATASection != 0);
 }
 
+XercesCDATASectionWrapper*
+XercesCDATASectionWrapper::create( MemoryManagerType& theManager,
+			const DOMCDATASectionType*		theXercesCDATASection,
+			const XercesWrapperNavigator&	theNavigator)
 
+{
+    typedef XercesCDATASectionWrapper ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theXercesCDATASection, theNavigator);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XercesCDATASectionWrapper::~XercesCDATASectionWrapper()
 {
@@ -302,12 +319,15 @@ XercesCDATASectionWrapper::getLength() const
 
 
 
-XalanDOMString
+XalanDOMString&
 XercesCDATASectionWrapper::substringData(
 			unsigned int	offset, 
-			unsigned int	count) const
+			unsigned int	count,
+            XalanDOMString& theResult) const
 {
-	return XercesWrapperHelper::substringData(m_xercesNode, offset, count);
+    XercesWrapperHelper::substringData(m_xercesNode, offset, count, theResult);
+
+	return theResult;
 }
 
 

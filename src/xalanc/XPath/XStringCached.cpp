@@ -26,16 +26,18 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XStringCached::XStringCached(GetAndReleaseCachedString&		val) :
-	XStringBase(),
+XStringCached::XStringCached(GetAndReleaseCachedString&		val,
+                             MemoryManagerType&             theManager) :
+	XStringBase(theManager),
 	m_value(val)
 {
 }
 
 
 
-XStringCached::XStringCached(const XStringCached&	source) :
-	XStringBase(source),
+XStringCached::XStringCached(const XStringCached&	source,
+                             MemoryManagerType&     theManager) :
+	XStringBase(source, theManager),
 	m_value(source.m_value.getExecutionContext())
 {
 	m_value.get() = source.m_value.get();
@@ -45,25 +47,6 @@ XStringCached::XStringCached(const XStringCached&	source) :
 
 XStringCached::~XStringCached()
 {
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XStringCached*
-#endif
-XStringCached::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XStringCached(*this);
-	}
-	else
-	{
-		return new (theAddress) XStringCached(*this);
-	}
 }
 
 

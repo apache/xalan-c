@@ -50,7 +50,23 @@ XercesDocumentTypeWrapper::XercesDocumentTypeWrapper(
 	assert(theXercesDOMDocumentType != 0);
 }
 
+XercesDocumentTypeWrapper*
+XercesDocumentTypeWrapper::create( MemoryManagerType& theManager,
+			const DOMDocumentType_Type*		theXercesDOMDocumentType,
+			const XercesWrapperNavigator&	theNavigator)
+{
+    typedef XercesDocumentTypeWrapper ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theXercesDOMDocumentType, theNavigator);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XercesDocumentTypeWrapper::~XercesDocumentTypeWrapper()
 {

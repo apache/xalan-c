@@ -21,6 +21,8 @@
 #include <xalanc/XercesParserLiaison/XercesParserLiaisonDefinitions.hpp>
 
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
 
 #include <xalanc/XalanDOM/XalanProcessingInstruction.hpp>
 
@@ -43,6 +45,11 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesProcessingInstructionWrapper : publ
 public:
 
 	XercesProcessingInstructionWrapper(
+			const DOMProcessingInstructionType*		theXercesDOMProcessingInstruction,
+			const XercesWrapperNavigator&			theNavigator);
+
+    static XercesProcessingInstructionWrapper*
+    create( MemoryManagerType& theManager,
 			const DOMProcessingInstructionType*		theXercesDOMProcessingInstruction,
 			const XercesWrapperNavigator&			theNavigator);
 

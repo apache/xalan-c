@@ -23,8 +23,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XNodeSetAllocator::XNodeSetAllocator(size_type	theBlockCount) :
-	m_allocator(theBlockCount)
+XNodeSetAllocator::XNodeSetAllocator(MemoryManagerType&      theManager, size_type	theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -43,7 +43,7 @@ XNodeSetAllocator::createNodeSet(BorrowReturnMutableNodeRefList&	value)
 	nodeset_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	nodeset_type* const	theResult = new(theBlock) nodeset_type(value);
+    nodeset_type* const	theResult = new(theBlock) nodeset_type(value, m_allocator.getMemoryManager());
 
 	m_allocator.commitAllocation(theBlock);
 
@@ -52,18 +52,6 @@ XNodeSetAllocator::createNodeSet(BorrowReturnMutableNodeRefList&	value)
 
 
 
-XNodeSetAllocator::nodeset_type*
-XNodeSetAllocator::clone(const XNodeSet&	value)
-{
-	nodeset_type* const		theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
-
-	value.clone(theBlock);
-
-	m_allocator.commitAllocation(theBlock);
-
-	return theBlock;
-}
 
 
 

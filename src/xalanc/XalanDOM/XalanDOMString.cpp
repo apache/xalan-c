@@ -22,7 +22,7 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMemMngArrayAllocate.hpp>
 
 
 
@@ -32,7 +32,7 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-
+//#define XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
 
 const XalanDOMChar	XalanDOMString::s_empty = 0;
 
@@ -42,8 +42,8 @@ const XalanDOMString::size_type     XalanDOMString::npos;
  
 
 
-XalanDOMString::XalanDOMString() :
-	m_data(),
+XalanDOMString::XalanDOMString(MemoryManagerType&  theManager) :
+	m_data(theManager),
 	m_size(0)
 {
 }
@@ -52,9 +52,10 @@ XalanDOMString::XalanDOMString() :
 
 XalanDOMString::XalanDOMString(
 			const XalanDOMString&	theSource,
+            MemoryManagerType&      theManager,
 			size_type				theStartPosition,
 			size_type				theCount) :
-	m_data(),
+	m_data(theManager),
 	m_size(0)
 {
 	if (theSource.length() != 0)
@@ -67,8 +68,9 @@ XalanDOMString::XalanDOMString(
 
 XalanDOMString::XalanDOMString(
 			const XalanDOMChar*		theString,
+            MemoryManagerType&      theManager,
 			size_type				theCount) :
-	m_data(),
+	m_data(theManager),
 	m_size(0)
 {
 	assert(theString != 0);
@@ -82,9 +84,10 @@ XalanDOMString::XalanDOMString(
 
 
 XalanDOMString::XalanDOMString(
-			const char*		theString,
-			size_type		theCount) :
-	m_data(),
+			const char*		    theString,
+            MemoryManagerType&  theManager,
+			size_type		    theCount) :
+	m_data(theManager),
 	m_size(0)
 {
 	assert(theString != 0);
@@ -97,17 +100,32 @@ XalanDOMString::XalanDOMString(
 	invariants();
 }
 
+XalanDOMString*
+XalanDOMString::clone(MemoryManagerType&  theManager)
+{
+        typedef XalanDOMString ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
 
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(*this, theManager);
+
+        theGuard.release();
+
+        return theResult;
+}
 
 XalanDOMString::XalanDOMString(
-			size_type		theCount,
-			XalanDOMChar	theChar) :
-	m_data(),
+			size_type		    theCount,
+			XalanDOMChar	    theChar,
+            MemoryManagerType&  theManager) :
+	m_data(theManager),
 	m_size(0)
 {
 	if (theCount != 0)
 	{
-		XalanDOMCharVectorType(theCount + 1, theChar).swap(m_data);
+		XalanDOMCharVectorType(theCount + 1, theChar, theManager).swap(m_data);
 
 		// Null-terminate it...
 		m_data.back() = 0;
@@ -350,7 +368,7 @@ XalanDOMString::append(
 		}
 		else
 		{
-			XalanDOMCharVectorType	theTempVector;
+			XalanDOMCharVectorType	theTempVector(getMemoryManager());
 
 			doTranscode(theString, theLength, theTempVector, false);
 
@@ -623,22 +641,29 @@ XalanDOMString::compare(
 	return doCompare(c_str() + thePosition1, theCount1, theString, theCount2);
 }
 
-
-
-XalanDOMString::CharVectorType
-XalanDOMString::transcode() const
+template<class Type>
+reset_func(XalanDOMString& obj, MemoryManagerType&    theManager, Type string)
 {
-	invariants();
+    assert( string != 0 );
 
-	CharVectorType	theResult;
+    XalanDOMString tmpString(string, theManager);
 
-	transcode(theResult);
-
-	return theResult;
+    obj.swap(tmpString);
 }
 
+void 
+XalanDOMString::reset(MemoryManagerType&    theManager,
+                      const char*		    theString)
+{
+    reset_func(*this, theManager, theString);
+}
 
-
+void 
+XalanDOMString::reset(MemoryManagerType&    theManager,
+                      const XalanDOMChar*   theString)
+{
+    reset_func(*this, theManager, theString);
+}
 void
 XalanDOMString::transcode(CharVectorType&	theResult) const
 {
@@ -807,7 +832,7 @@ doXercesTranscode(
 
 	XalanDOMString::size_type	theRealSourceStringLength = theSourceStringLength;
 
-	XalanArrayAutoPtr<SourceType>		theGuard;
+	XalanMemMgrAutoPtrArray<SourceType>		theGuard;
 
 	if (theSourceStringIsNullTerminated == true)
 	{
@@ -815,7 +840,11 @@ doXercesTranscode(
 	}
 	else
 	{
-		theGuard.reset(new SourceType[theRealSourceStringLength + 1]);
+        typedef XalanMemMngArrayAllocate<SourceType> ArrayAllocateSourceType;
+
+        theGuard.reset( &( theTargetVector.getMemoryManager()), 
+                        ArrayAllocateSourceType::allocate(theRealSourceStringLength + 1, theTargetVector.getMemoryManager()));
+
 		assert(theGuard.get() != 0);
 
 		for (XalanDOMString::size_type index = 0; index < theRealSourceStringLength; ++index)
@@ -847,7 +876,8 @@ doXercesTranscode(
 		fSuccess = XMLString::transcode(
 					theRealSourceString,
 					&*theTargetVector.begin(),
-					theTargetVector.size() - 1);
+					theTargetVector.size() - 1,
+                    & (theTargetVector.getMemoryManager()));
 
 		if (fSuccess == false)
 		{
@@ -926,7 +956,7 @@ doTranscodeToLocalCodePage(
 
 	// If our char sizes are not the same, or the input string is not null-terminated,
 	// we have to use a temporary buffer.
-	XalanArrayAutoPtr<wchar_t>	theTempSourceJanitor;
+	XalanMemMgrAutoPtrArray<wchar_t>	theTempSourceJanitor;
 
 #if !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 	// This is a short-cut for when the theSourceString is mull-terminated _and_
@@ -943,7 +973,10 @@ doTranscodeToLocalCodePage(
 			theSourceStringLength = length(theSourceString);
 		}
 
-		theTempSourceJanitor.reset(new wchar_t[theSourceStringLength + 1]);
+        theTempSourceJanitor.reset(
+            &(theTargetVector.getMemoryManager()),
+            XalanMemMngArrayAllocate<wchar_t>::allocate( theSourceStringLength + 1, theTargetVector.getMemoryManager()),
+            theSourceStringLength + 1);
 
 		for (size_t	index = 0; index < theSourceStringLength; ++index)
 		{
@@ -1054,7 +1087,7 @@ doTranscodeFromLocalCodePage(
 					terminate);
 	}
 #else
-	XalanArrayAutoPtr<char>		tempString;
+    XalanMemMgrAutoPtrArray<char> tempString;
 
 	if (theSourceStringIsNullTerminated == true)
 	{
@@ -1062,7 +1095,10 @@ doTranscodeFromLocalCodePage(
 	}
 	else
 	{
-		tempString.reset(new char[theSourceStringLength + 1]);
+		tempString.reset(
+            &(theTargetVector.getMemoryManager()),
+            XalanMemMngArrayAllocate<char>::allocate( theSourceStringLength + 1, theTargetVector.getMemoryManager()),
+            theSourceStringLength + 1);
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 		std::strncpy(tempString.get(), theSourceString, theSourceStringLength);
@@ -1154,12 +1190,15 @@ TranscodeFromLocalCodePage(
 
 
 
-XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
-TranscodeFromLocalCodePage(const CharVectorType&	theSourceString)
+XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString&)
+TranscodeFromLocalCodePage(const CharVectorType&	theSourceString,
+                           XalanDOMString&          result)
 {
 	if (theSourceString.empty() == true)
 	{
-		return XalanDOMString();
+        result.erase();
+
+        return result;
 	}
 	else
 	{
@@ -1169,11 +1208,11 @@ TranscodeFromLocalCodePage(const CharVectorType&	theSourceString)
 
 		if (theSourceString[theSize - 1] == CharVectorType::value_type(0))
 		{
-			return TranscodeFromLocalCodePage(&*theSourceString.begin(), size_type(theSize) - 1);
+			return TranscodeFromLocalCodePage(&*theSourceString.begin(), result , size_type(theSize) - 1);
 		}
 		else
 		{
-			return TranscodeFromLocalCodePage(&*theSourceString.begin(), size_type(theSize));
+			return TranscodeFromLocalCodePage(&*theSourceString.begin(), result , size_type(theSize));
 		}
 	}
 }

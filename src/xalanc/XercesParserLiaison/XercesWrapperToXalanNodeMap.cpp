@@ -34,8 +34,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesWrapperToXalanNodeMap::XercesWrapperToXalanNodeMap() :
-	m_xercesMap()
+XercesWrapperToXalanNodeMap::XercesWrapperToXalanNodeMap(MemoryManagerType& theManager) :
+	m_xercesMap(theManager)
 {
 }
 

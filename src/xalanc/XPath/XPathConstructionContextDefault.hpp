@@ -53,7 +53,10 @@ public:
 	/*
 	 * Construct an instance.
 	 */
-	XPathConstructionContextDefault();
+	XPathConstructionContextDefault(MemoryManagerType& theManager);
+
+    static XPathConstructionContextDefault*
+    create(MemoryManagerType& theManager);
 
 	virtual
 	~XPathConstructionContextDefault();

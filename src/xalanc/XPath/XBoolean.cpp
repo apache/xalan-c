@@ -52,23 +52,6 @@ XBoolean::~XBoolean()
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XBoolean*
-#endif
-XBoolean::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XBoolean(*this);
-	}
-	else
-	{
-		return new (theAddress) XBoolean(*this);
-	}
-}
-
 
 
 const XalanDOMString&
@@ -124,8 +107,7 @@ XBoolean::stringLength() const
 void
 XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
-	theCallbackObject.Boolean(*this,
-							  boolean());
+	theCallbackObject.Boolean(*this, boolean());
 }
 
 
@@ -133,8 +115,7 @@ XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 void
 XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
-	theCallbackObject.Boolean(*this,
-							  boolean());
+	theCallbackObject.Boolean(*this, boolean());
 }
 
 

@@ -65,7 +65,7 @@ public:
 	 * Constructor for a variable stack.
 	 */
 	explicit
-	VariablesStack();
+	VariablesStack(MemoryManagerType& theManager);
 
 	~VariablesStack();
 
@@ -296,7 +296,7 @@ public:
 	{
 	public:
 
-		InvalidStackContextException();
+		InvalidStackContextException(XalanDOMString& theResult);
 
 		virtual
 		~InvalidStackContextException();

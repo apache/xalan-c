@@ -68,6 +68,7 @@ public:
 	 * @param currentElement current element for nodes
 	 */
 	FormatterToDOM(
+            MemoryManagerType& theManager,
 			XalanDocument*			doc,
 			XalanDocumentFragment*	docFrag,
 			XalanElement*			currentElement);
@@ -80,6 +81,7 @@ public:
 	 * @param elem current element for nodes
 	 */
 	FormatterToDOM(
+            MemoryManagerType& theManager,
 			XalanDocument*	doc,
 			XalanElement*	elem);
 

@@ -37,49 +37,66 @@ XalanNumberingResourceBundle::XalanNumberingResourceBundle(
 		const XalanDOMCharVectorType&	theZeroChar,
 		const XalanDOMCharVectorType&	theMultiplierChars,
 		const DigitsTableVectorType&	theDigitsTable,
-		const NumberTypeVectorType&		theDigitsTableTable) :
-	m_language(theHelpLanguage),
-	m_uiLanguage(theLanguage),
-	m_helpLanguage(theUILanguage),
-	m_alphabet(theAlphabet),
-	m_traditionalAlphabet(theTraditionalAlphabet),
+		const NumberTypeVectorType&		theDigitsTableTable,
+        MemoryManagerType&              theManager) :
+	m_language(theHelpLanguage, theManager),
+	m_uiLanguage(theLanguage, theManager),
+	m_helpLanguage(theUILanguage, theManager),
+	m_alphabet(theAlphabet, theManager),
+	m_traditionalAlphabet(theTraditionalAlphabet, theManager),
 	m_orientation(theOrientation),
 	m_numberingMethod(theNumberingMethod),
 	m_multiplierOrder(theMultiplierOrder),
 	m_maxNumericalValue(theMaxNumericalValue),
-	m_numberGroups(theNumberGroups),
-	m_multipliers(theMultipliers),
-	m_zeroChar(theZeroChar),
-	m_multiplierChars(theMultiplierChars),
-	m_digitsTable(theDigitsTable),
-	m_digitsTableTable(theDigitsTableTable)
+	m_numberGroups(theNumberGroups, theManager),
+	m_multipliers(theMultipliers, theManager),
+	m_zeroChar(theZeroChar, theManager),
+	m_multiplierChars(theMultiplierChars, theManager),
+	m_digitsTable(theDigitsTable, theManager),
+	m_digitsTableTable(theDigitsTableTable, theManager)
 {
 }
 
 
 
-XalanNumberingResourceBundle::XalanNumberingResourceBundle()
+XalanNumberingResourceBundle::XalanNumberingResourceBundle(MemoryManagerType&  theManager) :
+	m_language(theManager),
+	m_uiLanguage(theManager),
+	m_helpLanguage(theManager),
+	m_alphabet(theManager),
+	m_traditionalAlphabet(theManager),
+	m_orientation(eLeftToRight),
+	m_numberingMethod(eAdditive),
+	m_multiplierOrder(eFollows),
+	m_maxNumericalValue(0),
+	m_numberGroups(theManager),
+	m_multipliers(theManager),
+	m_zeroChar(theManager),
+	m_multiplierChars(theManager),
+	m_digitsTable(theManager),
+	m_digitsTableTable(theManager)
 {
 }
 
 
 
-XalanNumberingResourceBundle::XalanNumberingResourceBundle(const XalanNumberingResourceBundle&	theSource) :
-	m_language(theSource.m_language),
-	m_uiLanguage(theSource.m_uiLanguage),
-	m_helpLanguage(theSource.m_helpLanguage),
-	m_alphabet(theSource.m_alphabet),
-	m_traditionalAlphabet(theSource.m_traditionalAlphabet),
+XalanNumberingResourceBundle::XalanNumberingResourceBundle(const XalanNumberingResourceBundle&	theSource,
+                                                           MemoryManagerType&  theManager) :
+	m_language(theSource.m_language, theManager),
+	m_uiLanguage(theSource.m_uiLanguage, theManager),
+	m_helpLanguage(theSource.m_helpLanguage, theManager),
+	m_alphabet(theSource.m_alphabet, theManager),
+	m_traditionalAlphabet(theSource.m_traditionalAlphabet, theManager),
 	m_orientation(theSource.m_orientation),
 	m_numberingMethod(theSource.m_numberingMethod),
 	m_multiplierOrder(theSource.m_multiplierOrder),
 	m_maxNumericalValue(theSource.m_maxNumericalValue),
-	m_numberGroups(theSource.m_numberGroups),
-	m_multipliers(theSource.m_multipliers),
-	m_zeroChar(theSource.m_zeroChar),
-	m_multiplierChars(theSource.m_multiplierChars),
-	m_digitsTable(theSource.m_digitsTable),
-	m_digitsTableTable(theSource.m_digitsTableTable)
+	m_numberGroups(theSource.m_numberGroups, theManager),
+	m_multipliers(theSource.m_multipliers, theManager),
+	m_zeroChar(theSource.m_zeroChar, theManager),
+	m_multiplierChars(theSource.m_multiplierChars, theManager),
+	m_digitsTable(theSource.m_digitsTable, theManager),
+	m_digitsTableTable(theSource.m_digitsTableTable, theManager)
 {
 }
 

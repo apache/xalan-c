@@ -46,22 +46,17 @@ public:
 	 * 
 	 * @param value      source string
 	 */
-	XStringReference(const XalanDOMString&	val);
+	XStringReference(const XalanDOMString&	val,
+                        MemoryManagerType&  theManager);
 
-	XStringReference(const XStringReference&	source);
+	XStringReference(const XStringReference&	source,
+                        MemoryManagerType&      theManager);
 
 	virtual
 	~XStringReference();
 
 
 	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XStringReference*
-#endif
-	clone(void*		theAddress = 0) const;
 
 	virtual const XalanDOMString&
 	str() const;
@@ -84,6 +79,9 @@ protected:
 	getRealType() const;
 
 private:
+    // Not implemented
+    XStringReference(const XStringReference&	source);
+    XStringReference();
 
 	const XalanDOMString&	m_value;
 };

@@ -36,30 +36,19 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanNumberFormat
 public:
 
 	explicit
-	XalanNumberFormat();
+	XalanNumberFormat(MemoryManagerType&      theManager);
+
+    static XalanNumberFormat*
+    create(MemoryManagerType&      theManager);
 
 	virtual
 	~XalanNumberFormat();
 
-	/**
-	 * Format a number into a string.
-	 *
-	 * @param theValue number to format
-	 * @return string representation of number
-	 */
-	virtual XalanDOMString
-	format(double	theValue);
-
-	/**
-	 * Format a number into a string.
-	 *
-	 * @param theValue number to format
-	 * @param theResult the string result
-	 */
-	virtual void
-	format(
-			double				theValue,
-			XalanDOMString&		theResult);
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_groupingSeparator.getMemoryManager();
+    }
 
 	/**
 	 * Format a number into a string.
@@ -67,19 +56,11 @@ public:
 	 * @param theValue number to format
 	 * @return string representation of number
 	 */
-	virtual XalanDOMString
-	format(int	theValue);
+	virtual XalanDOMString&
+	format(double	theValue,
+            XalanDOMString&		theResult);
 
-	/**
-	 * Format a number into a string.
-	 *
-	 * @param theValue number to format
-	 * @param theResult the string result
-	 */
-	virtual void
-	format(
-			int					theValue,
-			XalanDOMString&		theResult);
+
 
 	/**
 	 * Format a number into a string.
@@ -87,8 +68,11 @@ public:
 	 * @param theValue number to format
 	 * @return string representation of number
 	 */
-	virtual XalanDOMString
-	format(unsigned int		theValue);
+	virtual XalanDOMString&
+	format(int	theValue,
+            XalanDOMString&		theResult);
+
+
 
 	/**
 	 * Format a number into a string.
@@ -96,7 +80,7 @@ public:
 	 * @param theValue number to format
 	 * @param theResult the string result
 	 */
-	virtual void
+	virtual XalanDOMString&
 	format(
 			unsigned int		theValue,
 			XalanDOMString&		theResult);
@@ -107,8 +91,10 @@ public:
 	 * @param theValue number to format
 	 * @return string representation of number
 	 */
-	virtual XalanDOMString
-	format(long		theValue);
+	virtual XalanDOMString&
+	format(long		theValue,
+            XalanDOMString&		theResult);
+
 
 	/**
 	 * Format a number into a string.
@@ -116,27 +102,7 @@ public:
 	 * @param theValue number to format
 	 * @param theResult the string result
 	 */
-	virtual void
-	format(
-			long				theValue,
-			XalanDOMString&		theResult);
-
-	/**
-	 * Format a number into a string.
-	 *
-	 * @param theValue number to format
-	 * @return string representation of number
-	 */
-	virtual XalanDOMString
-	format(unsigned long	theValue);
-
-	/**
-	 * Format a number into a string.
-	 *
-	 * @param theValue number to format
-	 * @param theResult the string result
-	 */
-	virtual void
+	virtual XalanDOMString&
 	format(
 			unsigned long		theValue,
 			XalanDOMString&		theResult);

@@ -35,6 +35,8 @@
 #include <xalanc/Include/XalanObjectStackCache.hpp>
 
 
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 #include <xalanc/PlatformSupport/DOMStringPrintWriter.hpp>
@@ -76,13 +78,16 @@ class XalanSourceTreeDocument;
 class XPathProcessor;
 class XSLTEngineImpl;
 
-
-
+typedef VariablesStack::ParamsVectorType			ParamsVectorTypeDecl;
+XALAN_USES_MEMORY_MANAGER(ParamsVectorTypeDecl)
 //
 // An class which provides support for executing stylesheets.
 //
 class XALAN_XSLT_EXPORT StylesheetExecutionContextDefault : public StylesheetExecutionContext
 {
+
+
+
 public:
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
@@ -102,7 +107,7 @@ public:
 	typedef XalanVector<const ElemTemplate*>			CurrentTemplateStackType;
 
 	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;
-	typedef VariablesStack::ParamsVectorType			ParamsVectorType;
+	typedef ParamsVectorTypeDecl			            ParamsVectorType;
 
 	/**
 	 * Construct a StylesheetExecutionContextDefault object
@@ -115,6 +120,7 @@ public:
 	 * @param thePrefixResolver  pointer to prefix resolver to use
 	 */	
 	StylesheetExecutionContextDefault(
+            MemoryManagerType&      theManager,
 			XSLTEngineImpl&			xsltProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
 			DOMSupport&				theDOMSupport,
@@ -135,6 +141,14 @@ public:
 	 */
 	explicit
 	StylesheetExecutionContextDefault(
+            MemoryManagerType&      theManager,
+			XalanNode*				theCurrentNode = 0,
+			const NodeRefListBase*	theContextNodeList = 0,
+			const PrefixResolver*	thePrefixResolver = 0);
+
+    static StylesheetExecutionContextDefault*
+    create(
+            MemoryManagerType&      theManager,
 			XalanNode*				theCurrentNode = 0,
 			const NodeRefListBase*	theContextNodeList = 0,
 			const PrefixResolver*	thePrefixResolver = 0);
@@ -335,9 +349,6 @@ public:
 
 	virtual bool
 	isPendingResultPrefix(const XalanDOMString&	thePrefix);
-
-	virtual XalanDOMString
-	getUniqueNamespaceValue() const;
 
 	virtual void
 	getUniqueNamespaceValue(XalanDOMString&		theValue) const;
@@ -577,23 +588,23 @@ public:
 	virtual FormatterListener*
 	createFormatterToXML(
 			Writer&					writer,
-			const XalanDOMString&	version = XalanDOMString(),
+			const XalanDOMString&	version = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			bool					doIndent = false,
 			int						indent = eDefaultXMLIndentAmount,
-			const XalanDOMString&	encoding = XalanDOMString(),
-			const XalanDOMString&	mediaType = XalanDOMString(),
-			const XalanDOMString&	doctypeSystem = XalanDOMString(),
-			const XalanDOMString&	doctypePublic = XalanDOMString(),
+			const XalanDOMString&	encoding = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	mediaType = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypePublic = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			bool					xmlDecl = true,
-			const XalanDOMString&	standalone = XalanDOMString());
+			const XalanDOMString&	standalone = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
 	virtual FormatterListener*
 	createFormatterToHTML(
 			Writer&					writer,
-			const XalanDOMString&	encoding = XalanDOMString(),
-			const XalanDOMString&	mediaType = XalanDOMString(),
-			const XalanDOMString&	doctypeSystem = XalanDOMString(),
-			const XalanDOMString&	doctypePublic = XalanDOMString(),
+			const XalanDOMString&	encoding = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	mediaType = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypePublic = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			bool					doIndent = true,
 			int						indent = eDefaultHTMLIndentAmount,
 			bool					escapeURLs = true,
@@ -630,7 +641,7 @@ public:
 		~XalanNumberFormatFactory();
 
 		virtual XalanNumberFormat*
-		create();
+		create(MemoryManagerType& theManager);
 	};
 
 	static XalanNumberFormatFactory&
@@ -721,6 +732,7 @@ public:
 			const XalanDOMChar*					theLocale,
 			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) const;
 	};
+
 
 	const CollationCompareFunctor*
 	installCollationCompareFunctor(CollationCompareFunctor*		theFunctor);
@@ -872,6 +884,7 @@ public:
 
 	virtual XalanDocument*
 	parseXML(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) const;
 
@@ -882,7 +895,7 @@ public:
 	returnMutableNodeRefList(MutableNodeRefList*	theList);
 
 	virtual MutableNodeRefList*
-	createMutableNodeRefList() const;
+	createMutableNodeRefList(MemoryManagerType& theManager) const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	virtual void
@@ -970,13 +983,15 @@ public:
 	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
 
-	virtual XalanDOMString
-	findURIFromDoc(const XalanDocument*		owner) const;
+	virtual XalanDOMString&
+	findURIFromDoc(const XalanDocument*		owner,
+                    XalanDOMString& theResult) const;
 
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const;
+			const XalanDocument&	theDocument,
+            XalanDOMString&         theResult) const;
 
 	virtual bool
 	shouldStripSourceNode(const XalanText&	node);
@@ -1032,7 +1047,7 @@ public:
 	 * tree fragments.
 	 */
 	XalanSourceTreeDocument*
-	getSourceTreeFactory() const;
+	getSourceTreeFactory(MemoryManagerType& theManager) const;
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 protected:
@@ -1150,7 +1165,7 @@ private:
 	 * The factory that will be used to create result tree fragments based on our
 	 * proprietary source tree.
 	 */
-	mutable XalanAutoPtr<XalanSourceTreeDocument>	m_sourceTreeResultTreeFactory;
+	mutable XalanMemMgrAutoPtr<XalanSourceTreeDocument, true>	m_sourceTreeResultTreeFactory;
 
 	// Holds the current mode.
 	const XalanQName*					m_mode;
@@ -1190,7 +1205,7 @@ private:
     {
     public:
 
-        FormatterToTextDOMString();
+        FormatterToTextDOMString(MemoryManagerType& theManager);
 
         virtual
         ~FormatterToTextDOMString();
@@ -1208,13 +1223,19 @@ private:
         static XalanDOMString   s_dummyString;
     };
 
-	typedef XalanVector<XObjectPtr>			XObjectPtrStackType;
-	typedef XalanVector<ParamsVectorType>		ParamsVectorStackType;
-	typedef XalanVector<UseAttributeSetIndexes>  	UseAttributeSetIndexesStackType;
-	typedef XalanObjectStackCache<MutableNodeRefList>		MutableNodeRefListStackType;
-	typedef XalanObjectStackCache<XalanDOMString>			StringStackType;
-	typedef XalanObjectStackCache<FormatterToTextDOMString>			FormatterToTextStackType;
-	typedef XalanObjectStackCache<FormatterToSourceTree>		FormatterToSourceTreeStackType;
+	typedef XalanVector<XObjectPtr>			                    XObjectPtrStackType;
+	typedef XalanVector<ParamsVectorType>						ParamsVectorStackType;
+	typedef XalanVector<UseAttributeSetIndexes>  	            UseAttributeSetIndexesStackType;
+	typedef XalanObjectStackCache<MutableNodeRefList,DefaultCacheCreateFunctorMemMgr<MutableNodeRefList> >		    
+                                                                MutableNodeRefListStackType;
+
+	typedef XalanObjectStackCache<XalanDOMString,DefaultCacheCreateFunctorMemMgr<XalanDOMString> >			    
+                                                                StringStackType;
+
+	typedef XalanObjectStackCache<FormatterToTextDOMString,DefaultCacheCreateFunctorMemMgr<FormatterToTextDOMString> >
+                                                                FormatterToTextStackType;
+	typedef XalanObjectStackCache<FormatterToSourceTree,DefaultCacheCreateFunctorMemMgr<FormatterToSourceTree> >
+                                                                FormatterToSourceTreeStackType;
 
 	/*
 	 * class to maintain the list of nodes to be transformed by an element

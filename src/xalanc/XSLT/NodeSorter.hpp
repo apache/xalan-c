@@ -53,6 +53,12 @@ class XalanNode;
 class XPath;
 
 
+typedef	XalanVector<double>			NumberVectorTypeDecl;
+XALAN_USES_MEMORY_MANAGER(NumberVectorTypeDecl)
+
+typedef	XalanVector<XalanDOMString>	StringVectorTypeDecl;
+XALAN_USES_MEMORY_MANAGER(StringVectorTypeDecl)
+
 
 /**
  * This class can sort vectors of nodes according to a select pattern.
@@ -81,7 +87,7 @@ public:
 	typedef XalanVector<NodeSortKey>			NodeSortKeyVectorType;
 
 	explicit
-	NodeSorter();
+	NodeSorter(MemoryManagerType& theManager);
   
 	~NodeSorter();
 
@@ -189,9 +195,9 @@ public:
 
 	friend struct NodeSortKeyCompare;
 
-	typedef	XalanVector<double>			NumberVectorType;
+	typedef	NumberVectorTypeDecl		NumberVectorType;
 	typedef	XalanVector<XObjectPtr>		XObjectVectorType;
-	typedef	XalanVector<XalanDOMString>	StringVectorType;
+	typedef	StringVectorTypeDecl    	StringVectorType;
 
 	typedef XalanVector<NumberVectorType>	NumberCacheType;
 	typedef XalanVector<XObjectVectorType>	XObjectCacheType;

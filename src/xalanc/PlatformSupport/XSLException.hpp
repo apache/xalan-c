@@ -55,7 +55,8 @@ public:
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
-			int						theColumnNumber);
+			int						theColumnNumber,
+            MemoryManagerType&      theManager);
 	/**
 	 * Constructor
 	 * 
@@ -65,7 +66,8 @@ public:
 	 */
 	XSLException(
 			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage);
+			const XalanDOMString&	theMessage,
+            MemoryManagerType&      theManager);
 	/**
 	 * Constructor
 	 * 
@@ -73,7 +75,11 @@ public:
 	 * @param theType type of exception, default is "XSLException"
 	 */
 	XSLException(
-			const XalanDOMString&	theMessage);
+			const XalanDOMString&	theMessage,
+            MemoryManagerType&      theManager);
+
+
+	XSLException(const XSLException&	other);
 
 	virtual
 	~XSLException();
@@ -130,8 +136,14 @@ public:
 		return m_columnNumber;
 	}
 
-	XalanDOMString
-	defaultFormat() const;
+
+    MemoryManagerType& 
+    getMemoryManager()const
+    {
+//#pragma message ("Breaks the const-correctness !")
+        XalanDOMString* pnt = const_cast<XalanDOMString*>(&m_message);
+        return pnt->getMemoryManager();
+    }
 
 	void
 	defaultFormat(XalanDOMString&	theBuffer) const;
@@ -199,6 +211,7 @@ private:
 
 	const size_type			m_lineNumber;
 	const size_type			m_columnNumber;
+
 
 };
 

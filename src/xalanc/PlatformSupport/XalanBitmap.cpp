@@ -32,9 +32,9 @@ const int	XalanBitmap::s_clearMasks[XalanBitmap::eBitsPerUnit] = { ~1, ~2, ~4, ~
 
 
 
-XalanBitmap::XalanBitmap(size_type	theSize) :
+XalanBitmap::XalanBitmap(MemoryManagerType& theManager, size_type	theSize) :
 	m_size(theSize),
-	m_bitmap(size_type((theSize + eBitsPerUnit) / eBitsPerUnit), BitmapVectorType::value_type(0))
+	m_bitmap(size_type((theSize + eBitsPerUnit) / eBitsPerUnit), BitmapVectorType::value_type(0), theManager)
 {
 }
 

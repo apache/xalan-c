@@ -62,11 +62,12 @@ public:
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version);
 
-	static const XalanDOMString
+	static const XalanDOMString&
 	substringData(
 			const DOMCharacterDataType*		theXercesNode,
 			unsigned int					offset, 
-			unsigned int					count);
+			unsigned int					count,
+            XalanDOMString&                 theResult);
 
 private:
 

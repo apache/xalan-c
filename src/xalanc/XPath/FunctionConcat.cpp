@@ -117,17 +117,19 @@ Function*
 #else
 FunctionConcat*
 #endif
-FunctionConcat::clone() const
+FunctionConcat::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionConcat(*this);
+	return cloneFunction_1<FunctionConcat>()( *this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionConcat::getError() const
+const XalanDOMString&
+FunctionConcat::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakes2ArgsAtLeast_1Param, "concat()");
+	XalanMessageLoader::getMessage(XalanMessages::FunctionTakes2ArgsAtLeast_1Param,theResult , "concat()");
+
+    return theResult;
 }
 
 

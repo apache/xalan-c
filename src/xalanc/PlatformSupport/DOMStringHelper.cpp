@@ -47,7 +47,6 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
 #include <xalanc/Include/STLHelper.hpp>
 
 
@@ -370,43 +369,13 @@ OutputString(
 			ostream&				theStream,
 			const XalanDOMChar*		theString)
 {
-    CharVectorType  theVector;
+    CharVectorType  theVector(XalanMemMgrs::getDefaultXercesMemMgr());
 
-    TranscodeToLocalCodePage(theString, theVector);
+    TranscodeToLocalCodePage(theString, theVector, true);
 
 	OutputString(theStream, theVector);
 }
 
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-substring(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theStartIndex,
-			XalanDOMString::size_type	theEndIndex)
-{
-	assert(theString != 0);
-
-	const XalanDOMString::size_type		theStringLength = length(theString);
-
-	// $$$ ToDo: In Java-land, any failing of this
-	// assertion would result in an exception being thrown.
-	assert(theStartIndex <= theStringLength);
-
-	if (theStartIndex == theStringLength)
-	{
-		// This is allowed, and should return an empty string.
-		return XalanDOMString();
-	}
-	else
-	{
-		const XalanDOMString::size_type		theLength = theEndIndex == XalanDOMString::npos ? theStringLength - theStartIndex :
-													theEndIndex - theStartIndex;
-		assert(theStartIndex + theLength <= theStringLength);
-
-		return XalanDOMString(theString + theStartIndex, theLength);
-	}
-}
 
 
 
@@ -481,42 +450,6 @@ substring(
 }
 
 
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-substring(
-			const XalanDOMString&		theString,
-			XalanDOMString::size_type	theStartIndex,
-			XalanDOMString::size_type	theEndIndex)
-{
-	const XalanDOMString::size_type		theStringLength = length(theString);
-
-	assert(theStartIndex <= theStringLength);
-
-	if (theStartIndex == theStringLength)
-	{
-		// This is allowed, and should return an empty string.
-		return XalanDOMString();
-	}
-	else
-	{
-		const XalanDOMString::size_type		theLength = theEndIndex == XalanDOMString::npos ? theStringLength - theStartIndex :
-													theEndIndex - theStartIndex;
-
-		if (theLength == 0)
-		{
-			return XalanDOMString();
-		}
-		else
-		{
-			assert(theStartIndex + theLength <= theStringLength);
-
-			return theString.substr(theStartIndex, theLength);
-		}
-	}
-}
-
-
-
 template <class InputIteratorType, class OutputIteratorType, class FunctionType>
 OutputIteratorType
 TransformString(
@@ -543,15 +476,14 @@ TransformString(
 
 
 template <class FunctionType>
-XalanDOMString
+XalanDOMString&
 TransformString(
 			const XalanDOMChar*			theInputString,
 			XalanDOMString::size_type	theInputStringLength,
-			FunctionType				theFunction)
+			FunctionType				theFunction,
+            XalanDOMString&             theConvertedString)
 {
 	assert(theInputString != 0);
-
-	XalanDOMString	theConvertedString;
 
 	TransformString(
 			theInputString,
@@ -565,56 +497,71 @@ TransformString(
 
 
 template <class FunctionType>
-XalanDOMString
+XalanDOMString&
 TransformXalanDOMString(
 			const XalanDOMString&	theInputString,
-			FunctionType			theFunction)
+			FunctionType			theFunction,
+            XalanDOMString&         theResult)
 {
 	const XalanDOMString::size_type		theStringLength = length(theInputString);
 
 	if (theStringLength == 0)
 	{
-		return theInputString;
+        theResult = theInputString;
 	}
 	else
 	{
 		const XalanDOMChar* const	theBuffer = c_wstr(theInputString);
 		assert(theBuffer != 0);
 
-		return TransformString(theBuffer, theStringLength, theFunction);
+        TransformString(theBuffer, theStringLength, theFunction, theResult);	
 	}
+
+    return theResult;
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toLowerCaseASCII(const XalanDOMChar*	theString)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+toLowerCaseASCII(const XalanDOMChar*	theString,
+                 XalanDOMString&         theResult)
 {
-	return TransformString(theString, length(theString), toLowerASCII);
+    TransformString(theString, length(theString), toLowerASCII, theResult);
+
+	return theResult;
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toLowerCaseASCII(const XalanDOMString&	theString)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+toLowerCaseASCII(const XalanDOMString&	theString,
+                 XalanDOMString&         theResult)
 {
-	return TransformXalanDOMString(theString, toLowerASCII);
+    TransformXalanDOMString(theString, toLowerASCII, theResult);
+
+	return theResult;
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toUpperCaseASCII(const XalanDOMChar*	theString)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+toUpperCaseASCII(const XalanDOMChar*	theString,
+                 XalanDOMString&         theResult)
 {
-	return TransformString(theString, length(theString), toUpperASCII);
+    TransformString(theString, length(theString), toUpperASCII, theResult);
+
+	return theResult;
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toUpperCaseASCII(const XalanDOMString&	theString)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+toUpperCaseASCII(const XalanDOMString&	theString,
+                 XalanDOMString&         theResult)
 {
-	return TransformXalanDOMString(theString, toUpperASCII);
+    TransformXalanDOMString(theString, toUpperASCII, theResult);
+
+	return theResult;
 }
 
 
@@ -925,14 +872,13 @@ equalsIgnoreCaseASCII(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMCharVectorType)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMCharVectorType&)
 MakeXalanDOMCharVector(
 			const char*		data,
+            XalanDOMCharVectorType& theResult,
 			bool			fTranscode)
 {
 	assert(data != 0);
-
-	XalanDOMCharVectorType	theResult;
 
 	if (fTranscode == true)
 	{
@@ -961,15 +907,19 @@ MakeXalanDOMCharVector(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMCharVectorType)
-MakeXalanDOMCharVector(const XalanDOMChar*	data)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMCharVectorType&)
+MakeXalanDOMCharVector(const XalanDOMChar*	data,
+                       XalanDOMCharVectorType& theResult)
 {
 	assert(data != 0);
 
 	const XalanDOMString::size_type		theLength = length(data);
 
+    XalanDOMCharVectorType tmpVector(data, data + theLength + 1,theResult.getMemoryManager());
+
+    theResult.swap(tmpVector);
 	// Create a vector which includes the terminating 0.
-	return XalanDOMCharVectorType(data, data + theLength + 1);
+	return theResult;
 }
 
 
@@ -1094,18 +1044,23 @@ WideStringToUnsignedLong(const XalanDOMChar*	theString)
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(double)
-WideStringToDouble(const XalanDOMChar*	theString)
+WideStringToDouble(const XalanDOMChar*	theString,
+                   MemoryManagerType&   theManager)
 {
-	return DoubleSupport::toDouble(theString);
+	return DoubleSupport::toDouble(theString, theManager);
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-trim(const XalanDOMString&	theString)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+trim(const XalanDOMString&	theString,
+     XalanDOMString& theResult)
 {
 	if (isEmpty(theString))
-		return theString;
+    {
+        theResult.erase();
+		return theResult;
+    }
 
 	const XalanDOMString::size_type		strLen = length(theString);
 	assert(strLen > 0);
@@ -1124,7 +1079,9 @@ trim(const XalanDOMString&	theString)
 		if (!isXMLWhitespace(charAt(theString, trailingSpace)))
 			break;
 
-	return substring(theString, leadingSpace, trailingSpace +1);
+    substring(theString, theResult, leadingSpace, trailingSpace +1);
+
+	return theResult;
 }
 
 
@@ -1822,7 +1779,6 @@ isXMLWhitespace(
 
 	return true;
 }
-
 
 
 XALAN_CPP_NAMESPACE_END

@@ -133,18 +133,20 @@ Function*
 #else
 FunctionID*
 #endif
-FunctionID::clone() const
+FunctionID::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionID(*this);
+	return cloneFunction_1<FunctionID>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionID::getError() const
+const XalanDOMString&
+FunctionID::getError(XalanDOMString& theResult) const
 {
 
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, "id()");
+	XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult, "id()");
+
+    return theResult;
 }
 
 
@@ -152,7 +154,7 @@ FunctionID::getError() const
 FunctionID::FunctionIDXObjectTypeCallback::FunctionIDXObjectTypeCallback(
 			XPathExecutionContext&	theExecutionContext,
 			XalanDOMString&			theResultString) :
-	XObjectTypeCallback(),
+    XObjectTypeCallback(theExecutionContext.getMemoryManager()),
 	m_resultString(theResultString),
 	m_executionContext(theExecutionContext)
 {

@@ -79,7 +79,9 @@ public:
 		 * 
 		 * @param theMessage message to print when exception thrown
 		 */
-		ElemMessageTerminateException(const XalanDOMString&		theMessage);
+		ElemMessageTerminateException(
+                    MemoryManagerType&          theManager,
+                    const XalanDOMString&		theMessage);
 		
 		/**
 		 * Construct an ElemMessageTerminateException object
@@ -88,6 +90,7 @@ public:
 		 * @param theMessage message to print when exception thrown
 		 */
 		ElemMessageTerminateException(
+                MemoryManagerType&      theManager,
 				const LocatorType&		theLocator,
 				const XalanDOMString&	theMessage);
 

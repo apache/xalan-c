@@ -20,7 +20,7 @@
 
 #include <xalanc/XercesParserLiaison/XercesParserLiaisonDefinitions.hpp>
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 #include <xalanc/XalanDOM/XalanDOMImplementation.hpp>
 
@@ -43,6 +43,9 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMImplementationWrapper : public X
 public:
 
 	XercesDOMImplementationWrapper(DOMImplementationType*	theXercesDOMImplementation);
+
+    static XercesDOMImplementationWrapper*
+    create(MemoryManagerType& theManager, DOMImplementationType*	theXercesDOMImplementation);
 
 	virtual
 	~XercesDOMImplementationWrapper();

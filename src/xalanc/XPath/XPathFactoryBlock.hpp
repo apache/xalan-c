@@ -44,7 +44,7 @@ public:
 	enum { eDefaultBlockSize = 20 };
 
 	explicit
-	XPathFactoryBlock(unsigned int	theBlockSize = eDefaultBlockSize);
+	XPathFactoryBlock(MemoryManagerType&      theManager, unsigned int	theBlockSize = eDefaultBlockSize);
 
 	virtual
 	~XPathFactoryBlock();

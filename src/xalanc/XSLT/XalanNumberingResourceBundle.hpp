@@ -34,7 +34,7 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-
+XALAN_USES_MEMORY_MANAGER(XalanDOMCharVectorType)
 
 class XalanNumberingResourceBundle
 {
@@ -71,14 +71,22 @@ public:
 		const XalanDOMCharVectorType&	theZeroChar,
 		const XalanDOMCharVectorType&	theMultiplierChars,
 		const DigitsTableVectorType&	theDigitsTable,
-		const NumberTypeVectorType&		theDigitsTableTable);
+		const NumberTypeVectorType&		theDigitsTableTable,
+        MemoryManagerType&              theManager);
 
 	explicit
-	XalanNumberingResourceBundle();
+	XalanNumberingResourceBundle(MemoryManagerType&  theManager);
 
-	XalanNumberingResourceBundle(const XalanNumberingResourceBundle&	theSource);
+	XalanNumberingResourceBundle(const XalanNumberingResourceBundle&	theSource,
+                                    MemoryManagerType&                  theManager);
 
 	~XalanNumberingResourceBundle();
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_language.getMemoryManager();
+    }
 
 	bool
 	operator==(const XalanNumberingResourceBundle&	theRHS) const

@@ -65,39 +65,13 @@ class XalanOutputStream;
 
 #define XALAN_STATIC_UCODE_STRING(str) L##str
 
-/**
- * This is a convenience function to allow for identical
- * for platforms that support Unicode wide static strings
- * and platforms that don't.
- *
- * See the previous macro definition for more information.
- * 
- * @param theString the string to copy
- * @return a reference to the string passed
- */
-inline const XalanDOMString
-StaticStringToDOMString(const XalanDOMChar*		theString)
-{
-	return XalanDOMString(theString);
-}
+
 
 #else
 
 #define XALAN_STATIC_UCODE_STRING(str) XALAN_CPP_NAMESPACE_QUALIFIER TranscodeFromLocalCodePage(str)
 
-/**
- * Determines if a range in an array contains only whitespace
- * 
- * @param ch target array
- * @param start starting index to examine
- * @param length number of characters to examine
- * @return true if specified range contains only whitespace
- */
-inline const XalanDOMString&
-StaticStringToDOMString(const XalanDOMString&	theString)
-{
-	return theString;
-}
+
 
 #endif
 
@@ -639,22 +613,7 @@ startsWith(
 
 
 
-/**
- * Simulates the java String method startsWith().
- * 
- * @param theString target string to search
- * @param theSubstring substring searched for
- * @return true if the target string begins with the substring
- */
-inline bool
-startsWith(
-			const XalanDOMString&	theString,
-			const char*				theSubstring)
-{
-	return startsWith(
-			theString,
-			XalanDOMString(theSubstring));
-}
+
 
 
 
@@ -724,22 +683,6 @@ PointerToDOMString(
 
 
 
-/**
- * Converts a pointer into a XalanDOMString
- * 
- * @param theValue pointer to be converted
- * @return string representation of the pointer
- */
-inline const XalanDOMString
-PointerToDOMString(const void*	theValue)
-{
-	XalanDOMString	theResult;
-
-	PointerToDOMString(theValue, theResult);
-
-	return theResult;
-}
-
 
 
 /**
@@ -754,23 +697,6 @@ DoubleToDOMString(
 			double				theValue,
 			XalanDOMString&		theResult);
 
-
-
-/**
- * Converts a double value into a XalanDOMString
- * 
- * @param theValue number to be converted
- * @return decimal string representation of the number
- */
-inline const XalanDOMString
-DoubleToDOMString(double	theValue)
-{
-	XalanDOMString	theResult;
-
-	DoubleToDOMString(theValue, theResult);
-
-	return theResult;
-}
 
 
 
@@ -810,22 +736,6 @@ LongToHexDOMString(
 
 
 
-/**
- * Converts a long value into a XalanDOMString.  Returns
- * an empty string for negative values.
- * 
- * @param theValue number to be converted
- * @return hexadecimal string representation of the number
- */
-inline const XalanDOMString
-LongToHexDOMString(long		theValue)
-{
-	XalanDOMString	theResult;
-
-	LongToHexDOMString(theValue, theResult);
-
-	return theResult;
-}
 
 
 
@@ -845,25 +755,6 @@ UnsignedLongToHexDOMString(
 
 
 /**
- * Converts an unsigned long value and appends the
- * result to a XalanDOMString.
- *
- * @param theValue number to be converted
- * @return hexadecimal string representation of the number
- */
-inline const XalanDOMString
-UnsignedLongToHexDOMString(unsigned long	theValue)
-{
-	XalanDOMString	theResult;
-
-	UnsignedLongToHexDOMString(theValue, theResult);
-
-	return theResult;
-}
-
-
-
-/**
  * Converts a long value into a XalanDOMString
  * 
  * @param theValue number to be converted
@@ -875,23 +766,6 @@ LongToDOMString(
 			long				theValue,
 			XalanDOMString&		theResult);
 
-
-
-/**
- * Converts a long value into a XalanDOMString
- * 
- * @param theValue number to be converted
- * @return decimal string representation of the number
- */
-inline const XalanDOMString
-LongToDOMString(long	theValue)
-{
-	XalanDOMString	theResult;
-
-	LongToDOMString(theValue, theResult);
-
-	return theResult;
-}
 
 
 
@@ -909,22 +783,6 @@ UnsignedLongToDOMString(
 			XalanDOMString&		theResult);
 
 
-
-/**
- * Converts an unsigned long value into a XalanDOMString
- * 
- * @param theValue number to be converted
- * @return decimal string representation of the number
- */
-inline const XalanDOMString
-UnsignedLongToDOMString(unsigned long	theValue)
-{
-	XalanDOMString	theResult;
-
-	UnsignedLongToDOMString(theValue, theResult);
-
-	return theResult;
-}
 
 
 
@@ -968,7 +826,7 @@ WideStringToUnsignedLong(const XalanDOMChar*	theString);
  * @return double value of target string
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(double)
-WideStringToDouble(const XalanDOMChar*	theString);
+WideStringToDouble(const XalanDOMChar*	theString, MemoryManagerType&   theManager);
 
 
 
@@ -1021,9 +879,10 @@ DOMStringToUnsignedLong(const XalanDOMString&	theString)
  * @return double value of target string
  */
 inline double
-DOMStringToDouble(const XalanDOMString&		theString)
+DOMStringToDouble(const XalanDOMString&		theString,
+                  MemoryManagerType&        theManager)
 {
-	return WideStringToDouble(c_wstr(theString));
+	return WideStringToDouble(c_wstr(theString), theManager);
 }
 
 
@@ -1329,22 +1188,6 @@ isXMLLetterOrDigit(XalanDOMChar		theChar)
 
 
 
-/**
- * Simulates the java String method substring(). Returns a new string that is
- * a substring of this string. The substring begins at the specified
- * theStartIndex and extends to the character at index theEndIndex - 1. Thus
- * the length of the substring is theEndIndex - theStartIndex.
- * 
- * @param theString     source string
- * @param theStartIndex starting index, inclusive
- * @param theEndIndex   ending index, exclusive
- * @return string containing the specified range of characters from target
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-substring(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theStartIndex,
-			XalanDOMString::size_type	theEndIndex = XalanDOMString::npos);
 
 
 
@@ -1400,10 +1243,11 @@ substring(
  * @param theEndIndex   ending index, exclusive
  * @return string containing the specified range of characters from target
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 substring(
 			const XalanDOMString&		theString,
 			XalanDOMString::size_type	theStartIndex,
+            XalanDOMString&             theResult,
 			XalanDOMString::size_type	theEndIndex = XalanDOMString::npos);
 
 
@@ -1462,8 +1306,8 @@ toUpperASCII(XalanDOMChar	theChar)
  * @param theString target string
  * @return string containing lower case characters
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toLowerCaseASCII(const XalanDOMChar*	theString);
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+toLowerCaseASCII(const XalanDOMChar*	theString, XalanDOMString&         theResult);
 
 
 
@@ -1475,8 +1319,8 @@ toLowerCaseASCII(const XalanDOMChar*	theString);
  * @param theString target string
  * @return string containing lower case characters
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toLowerCaseASCII(const XalanDOMString&	theString);
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+toLowerCaseASCII(const XalanDOMString&	theString, XalanDOMString& theResult);
 
 
 
@@ -1488,8 +1332,8 @@ toLowerCaseASCII(const XalanDOMString&	theString);
  * @param theString target string
  * @return string containing upper case characters
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toUpperCaseASCII(const XalanDOMChar*	theString);
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+toUpperCaseASCII(const XalanDOMChar*	theString, XalanDOMString&  theResult);
 
 
 
@@ -1501,8 +1345,8 @@ toUpperCaseASCII(const XalanDOMChar*	theString);
  * @param theString target string
  * @return string containing upper case characters
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toUpperCaseASCII(const XalanDOMString&	theString);
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+toUpperCaseASCII(const XalanDOMString&	theString, XalanDOMString&  theResult);
 
 
 
@@ -1974,92 +1818,6 @@ equals(
 
 
 
-/**
- * Compare the contents of two strings for equality
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the contents of both strings are identical
- */
-inline bool
-equals(const XalanDOMString&	theLHS,
-	   const char*				theRHS)
-{
-	assert(theRHS != 0);
-
-	const XalanDOMString::size_type		theRHSLength = length(theRHS);
-
-	if (theRHSLength != length(theLHS))
-	{
-		return false;
-	}
-	else
-	{
-		return theLHS == XalanDOMString(theRHS, theRHSLength);
-	}
-}
-
-
-
-/**
- * Compare the contents of two strings for equality
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the contents of both strings are identical
- */
-inline bool
-equals(const char*				theLHS,
-	   const XalanDOMString&	theRHS)
-{
-	return equals(theRHS, theLHS);
-}
-
-
-
-/**
- * Compare the contents of two strings for equality
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the contents of both strings are identical
- */
-inline bool
-equals(const XalanDOMChar*	theLHS,
-	   const char*			theRHS)
-{
-	assert(theLHS != 0);
-	assert(theRHS != 0);
-
-	const XalanDOMString::size_type		theRHSLength = length(theRHS);
-
-	if (theRHSLength != length(theLHS))
-	{
-		return false;
-	}
-	else
-	{
-		return equals(XalanDOMString(theRHS, theRHSLength), theLHS);
-	}
-}
-
-
-
-/**
- * Compare the contents of two strings for equality
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the contents of both strings are identical
- */
-inline bool
-equals(const char*			theLHS,
-	   const XalanDOMChar*	theRHS)
-{
-	return equals(theRHS, theLHS);
-}
-
-
 
 /**
  * Compare the contents of two arrays for equality, without regard for case.
@@ -2330,7 +2088,11 @@ append(
 			const char*					theStringToAppend,
 			XalanDOMString::size_type	theStringToAppendLength = XalanDOMString::npos)
 {
-	theString.append(TranscodeFromLocalCodePage(theStringToAppend, theStringToAppendLength));
+    XalanDOMString tmp(theString.getMemoryManager());
+
+    TranscodeFromLocalCodePage(theStringToAppend, tmp, theStringToAppendLength);
+
+	theString.append(tmp);
 
 	return theString;
 }
@@ -2424,8 +2186,8 @@ insert(
  * @param theString         target string
  * @return string with contents of target string less trailing whitespace
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-trim(const XalanDOMString&	theString);
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+trim(const XalanDOMString&	theString, XalanDOMString& theResult);
 
 
 
@@ -2462,9 +2224,9 @@ erase(XalanDOMString&	theString)
  * @param theString target string
  */
 inline void
-releaseMemory(XalanDOMString&	theString)
+releaseMemory(XalanDOMString&	theString,MemoryManagerType&  theManager)
 {
-	XalanDOMString().swap(theString);
+    XalanDOMString(theManager).swap(theString);
 }
 
 
@@ -2491,9 +2253,10 @@ CopyStringToVector(
  * @param whether or not to transcode
  * @return null-terminated vector of XalanDOMChar
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMCharVectorType)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMCharVectorType&)
 MakeXalanDOMCharVector(
 			const char*		data,
+            XalanDOMCharVectorType& result,
 			bool			fTranscode = true);
 
 
@@ -2505,8 +2268,9 @@ MakeXalanDOMCharVector(
  * @param data array to be converted
  * @return null-terminated vector of XalanDOMChar
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMCharVectorType)
-MakeXalanDOMCharVector(const XalanDOMChar*	data);
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMCharVectorType&)
+MakeXalanDOMCharVector(const XalanDOMChar*	data,
+                       XalanDOMCharVectorType& result);
 
 
 
@@ -2517,10 +2281,11 @@ MakeXalanDOMCharVector(const XalanDOMChar*	data);
  * @param data XalanDOMString to be converted
  * @return null-terminated vector of XalanDOMChar
  */
-inline XalanDOMCharVectorType
-MakeXalanDOMCharVector(const XalanDOMString&	data)
+inline XalanDOMCharVectorType&
+MakeXalanDOMCharVector(const XalanDOMString&	data,
+                       XalanDOMCharVectorType& result)
 {
-	return MakeXalanDOMCharVector(c_wstr(data));
+	return MakeXalanDOMCharVector(c_wstr(data),result);
 }
 
 

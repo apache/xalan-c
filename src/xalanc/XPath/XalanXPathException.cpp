@@ -22,7 +22,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	XalanXPathException::s_emptyString;
+
+const XalanDOMString	XalanXPathException::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 const XalanDOMChar	XalanXPathException::m_type[] = 
 {	
@@ -52,16 +53,18 @@ XalanXPathException::XalanXPathException(
 			const XalanDOMString&	message,
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
-			int						theColumnNumber) :
-	XSLException(message, theURI, theLineNumber, theColumnNumber)
+			int						theColumnNumber,
+            MemoryManagerType&      theManager) :
+	XSLException(message, theURI, theLineNumber, theColumnNumber, theManager)
 {
 }
 
 
 
 XalanXPathException::XalanXPathException(
-			const XalanDOMString&	message) :
-	XSLException(message)
+			const XalanDOMString&	message,
+            MemoryManagerType&      theManager) :
+	XSLException(message, theManager)
 {
 }
 
@@ -69,19 +72,23 @@ XalanXPathException::XalanXPathException(
 
 XalanXPathException::XalanXPathException(
 			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage) :
-	XSLException(theLocator, theMessage)
+			const XalanDOMString&	theMessage,
+            MemoryManagerType&      theManager) :
+	XSLException(theLocator, theMessage, theManager)
 {
 }
 
 
 
-XalanXPathException::XalanXPathException() :
-	XSLException(s_emptyString)
+XalanXPathException::XalanXPathException(MemoryManagerType& theManager) :
+	XSLException(s_emptyString, theManager)
 {
 }
 
-
+XalanXPathException::XalanXPathException(const XalanXPathException& other) :
+    XSLException(other)
+{
+}
 
 XalanXPathException::~XalanXPathException()
 {

@@ -31,7 +31,7 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 
 
@@ -72,7 +72,7 @@ public:
 	// it once, unless you have called terminate previously, and
 	// you want to re-initialize the library.
 	static void
-	initialize();
+	initialize(MemoryManagerType& theManager);
 
 	// Static terminator to be called after all instances
 	// are destroyed.  The call is _not_ thread-safe.  Once
@@ -82,7 +82,7 @@ public:
 	terminate();
 
 
-	XPathEvaluator();
+	XPathEvaluator(MemoryManagerType& theManager);
 
 	~XPathEvaluator();
 
@@ -168,8 +168,9 @@ public:
 	 * @param namespaceNode A node to use for namespace prefix resolution.
 	 * @return A list of selected nodes.
 	 */
-	NodeRefList
+	NodeRefList&
 	selectNodeList(
+            NodeRefList&            result,
 			DOMSupport&				domSupport,
 			XalanNode*				contextNode,
 			const XalanDOMChar*		xpathString,
@@ -185,8 +186,9 @@ public:
 	 * @param prefixResolver A prefix resolver instance to use for namespace prefix resolution.
 	 * @return A list of selected nodes.
 	 */
-	NodeRefList
+	NodeRefList&
 	selectNodeList(
+            NodeRefList&            result,
 			DOMSupport&				domSupport,
 			XalanNode*				contextNode,
 			const XalanDOMChar*		xpathString,
@@ -202,8 +204,9 @@ public:
 	 * @param namespaceNode A node to use for namespace prefix resolution.
 	 * @return A list of selected nodes.
 	 */
-	NodeRefList
+	NodeRefList&
 	selectNodeList(
+            NodeRefList&            result,
 			DOMSupport&				domSupport,
 			XalanNode*				contextNode,
 			const XPath&			xpath,
@@ -219,8 +222,9 @@ public:
 	 * @param prefixResolver A prefix resolver instance to use for namespace prefix resolution.
 	 * @return A list of selected nodes.
 	 */
-	NodeRefList
+	NodeRefList&
 	selectNodeList(
+            NodeRefList&            result,
 			DOMSupport&				domSupport,
 			XalanNode*				contextNode,
 			const XPath&			xpath,
@@ -412,13 +416,15 @@ private:
 			XPathEnvSupport&		envSupport);
 
 	// Data members...
-	const XalanAutoPtr<XObjectFactory>					m_xobjectFactory;
+	const XalanMemMgrAutoPtr<XObjectFactory>					m_xobjectFactory;
 
-	const XalanAutoPtr<XPathFactoryDefault>				m_xpathFactory;
+	const XalanMemMgrAutoPtr<XPathFactoryDefault>				m_xpathFactory;
 
-	const XalanAutoPtr<XPathConstructionContextDefault>	m_constructionContext;
+	const XalanMemMgrAutoPtr<XPathConstructionContextDefault>	m_constructionContext;
 
-	const XalanAutoPtr<XPathExecutionContextDefault>	m_executionContext;
+	const XalanMemMgrAutoPtr<XPathExecutionContextDefault>	    m_executionContext;
+
+    MemoryManagerType&                                          m_memoryManager;
 };
 
 

@@ -85,22 +85,44 @@ public:
 	 * @param fBufferData		If true, data will be buffered in the formatter
 	 */
 	FormatterToXML(
+            MemoryManagerType&      theManager,
 			Writer&					writer,
-			const XalanDOMString&	version = XalanDOMString(),
+			const XalanDOMString&	version = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			bool					doIndent = false,
 			int						indent = eDefaultIndentAmount,
-			const XalanDOMString&	encoding = XalanDOMString(),
-			const XalanDOMString&	mediaType = XalanDOMString(),
-			const XalanDOMString&	doctypeSystem = XalanDOMString(),
-			const XalanDOMString&	doctypePublic = XalanDOMString(),
+			const XalanDOMString&	encoding = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	mediaType = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypePublic = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			bool					xmlDecl = true,
-			const XalanDOMString&	standalone = XalanDOMString(),
+			const XalanDOMString&	standalone = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			eFormat					format = OUTPUT_METHOD_XML,
+			bool					fBufferData = true);
+    
+    static FormatterToXML*
+    create(
+            MemoryManagerType&      theManager,
+			Writer&					writer,
+			const XalanDOMString&	version = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			bool					doIndent = false,
+			int						indent = eDefaultIndentAmount,
+			const XalanDOMString&	encoding = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	mediaType = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypePublic = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			bool					xmlDecl = true,
+			const XalanDOMString&	standalone = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			eFormat					format = OUTPUT_METHOD_XML,
 			bool					fBufferData = true);
 
 	virtual
 	~FormatterToXML();
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_stringBuffer.getMemoryManager();
+    }
 
 	// These methods are inherited from FormatterListener ...
 
@@ -528,7 +550,8 @@ protected:
 	 * @param ch The first character in the surrogate
 	 */
 	static void
-	throwInvalidUTF16SurrogateException(XalanDOMChar	ch);
+	throwInvalidUTF16SurrogateException(XalanDOMChar	ch,
+                                        MemoryManagerType& theManager);
 
 	/**
 	 * Throw an exception when an invalid
@@ -539,7 +562,8 @@ protected:
 	static void
 	throwInvalidUTF16SurrogateException(
 			XalanDOMChar	ch,
-			XalanDOMChar	next);
+			XalanDOMChar	next,
+            MemoryManagerType& theManager);
 
 	static bool
 	isUTF16Surrogate(XalanDOMChar	ch)

@@ -26,8 +26,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-ICUXalanNumberFormatFactory::ICUXalanNumberFormatFactory() :
-	StylesheetExecutionContextDefault::XalanNumberFormatFactory()
+ICUXalanNumberFormatFactory::ICUXalanNumberFormatFactory(MemoryManagerType& theManager) :
+	StylesheetExecutionContextDefault::XalanNumberFormatFactory(),
+    m_memoryManager(theManager)
 {
 }
 
@@ -42,7 +43,17 @@ ICUXalanNumberFormatFactory::~ICUXalanNumberFormatFactory()
 XalanNumberFormat*
 ICUXalanNumberFormatFactory::create()
 {
-	return new ICUXalanNumberFormatProxy;
+    typedef ICUXalanNumberFormatProxy ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( m_memoryManager , (ThisType*)m_memoryManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(m_memoryManager);
+
+   theGuard.release();
+
+   return theResult;
 }
 
 

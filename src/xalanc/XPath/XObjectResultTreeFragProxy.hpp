@@ -21,6 +21,7 @@
 // Base include file.  Must be first.
 #include <xalanc/XPath/XPathDefinitions.hpp>
 
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 
 #include <xalanc/XPath/XObjectResultTreeFragProxyBase.hpp>
@@ -37,12 +38,17 @@ class XALAN_XPATH_EXPORT XObjectResultTreeFragProxy : public XObjectResultTreeFr
 {
 public:
 
-	XObjectResultTreeFragProxy(const XObject&	value);
+	XObjectResultTreeFragProxy(const XObject&	value,
+                                MemoryManagerType& theManager);
 
 	virtual
 	~XObjectResultTreeFragProxy();
 
-
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_proxy.getMemoryManager();
+    }
 	// These interfaces are inherited from XalanDocumentFragment...
 
 	virtual XalanNode*

@@ -48,8 +48,8 @@ FunctionFormatNumber::execute(
 {
 	assert(arg1.null() == false && arg2.null() == false);	
 	
-	const double						theNumber = arg1->num();
-	const XalanDOMString&				thePattern = arg2->str();
+    const double						theNumber = arg1->num();
+    const XalanDOMString&				thePattern = arg2->str();
 	
 	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
 
@@ -78,7 +78,7 @@ FunctionFormatNumber::execute(
 {
 	assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);
 	
-	const double						theNumber = arg1->num();
+    const double						theNumber = arg1->num();
 	const XalanDOMString&				thePattern = arg2->str();
 
 	const XalanDOMString&				theDFSName = arg3->str();
@@ -104,15 +104,15 @@ Function*
 #else
 FunctionFormatNumber*
 #endif
-FunctionFormatNumber::clone() const
+FunctionFormatNumber::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionFormatNumber(*this);
+	return cloneFunction_1<FunctionFormatNumber>()(*this, theManager);
 }
 
-const XalanDOMString
-FunctionFormatNumber::getError() const
+const XalanDOMString&
+FunctionFormatNumber::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoOrThreeArguments_1Param,"format-number()");
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoOrThreeArguments_1Param, theResult, "format-number()");
 }
 
 XALAN_CPP_NAMESPACE_END

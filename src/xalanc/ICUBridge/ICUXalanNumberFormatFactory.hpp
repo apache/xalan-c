@@ -37,13 +37,15 @@ class XALAN_ICUBRIDGE_EXPORT ICUXalanNumberFormatFactory : public StylesheetExec
 {
 public:
 
-	ICUXalanNumberFormatFactory();
+	ICUXalanNumberFormatFactory(MemoryManagerType& theManager);
 
 	virtual
 	~ICUXalanNumberFormatFactory();
 
 	virtual XalanNumberFormat*
 	create();
+private:
+    MemoryManagerType& m_memoryManager;
 };
 
 

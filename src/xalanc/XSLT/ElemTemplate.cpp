@@ -45,7 +45,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanQNameByValue	s_empty;
+static const XalanQNameByValue	s_empty(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -84,9 +84,12 @@ ElemTemplate::ElemTemplate(
 
 			if (m_name->isValid() == false)
 			{
+                StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 				constructionContext.error(
 						XalanMessageLoader::getMessage(
 							XalanMessages::AttributeValueNotValidQName_2Param,
+                            theGuard.get(),
 							aname,
 							atts.getValue(i)),
 						0,
@@ -97,7 +100,7 @@ ElemTemplate::ElemTemplate(
 		{
 			assert(atts.getValue(i) != 0);
 
-			m_priority = DoubleSupport::toDouble(atts.getValue(i));
+			m_priority = DoubleSupport::toDouble(atts.getValue(i), constructionContext.getMemoryManager());
 		}
 		else if (equals(aname, Constants::ATTRNAME_MODE))
 		{
@@ -108,9 +111,12 @@ ElemTemplate::ElemTemplate(
 
 			if (m_mode->isValid() == false)
 			{
+                StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 				constructionContext.error(
 						XalanMessageLoader::getMessage(
 							XalanMessages::AttributeValueNotValidQName_2Param,
+                            theGuard.get(),
 							aname,
 							atts.getValue(i)),
 						0,
@@ -120,9 +126,12 @@ ElemTemplate::ElemTemplate(
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
+            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theGuard.get(),
 							Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -132,9 +141,12 @@ ElemTemplate::ElemTemplate(
 
 	if(0 == m_matchPattern && m_name->isEmpty() == true)
 	{
+        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 		constructionContext.error(
 				XalanMessageLoader::getMessage(
 					XalanMessages::RequiresEitherNameOrMatchAttribute_1Param,
+                    theGuard.get(),
 					Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING),
 				0,
 				this);

@@ -51,7 +51,8 @@ FunctionElementAvailable::execute(
 {
 	assert(arg1.null() == false);
 
-	return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(arg1->str(), locator));
+	return executionContext.getXObjectFactory().createBoolean(
+        executionContext.elementAvailable(arg1->str(), locator));
 }
 
 
@@ -61,17 +62,17 @@ Function*
 #else
 FunctionElementAvailable*
 #endif
-FunctionElementAvailable::clone() const
+FunctionElementAvailable::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionElementAvailable(*this);
+	return cloneFunction_1<FunctionElementAvailable>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionElementAvailable::getError() const
+const XalanDOMString&
+FunctionElementAvailable::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"function-available()");
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult, "function-available()");
 }
 
 

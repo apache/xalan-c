@@ -49,22 +49,17 @@ public:
 	 *
 	 * @param theValue	value used to create object 
 	 */
-	XStringCached(GetAndReleaseCachedString&	val);
+	XStringCached(GetAndReleaseCachedString&	val,
+                    MemoryManagerType&          theManager);
 
-	XStringCached(const XStringCached&	source);
+	XStringCached(const XStringCached&	source,
+                    MemoryManagerType&  theManager);
 
 	virtual
 	~XStringCached();
 
 
 	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XStringCached*
-#endif
-	clone(void*		theAddress = 0) const;
 
 	virtual const XalanDOMString&
 	str() const;
@@ -87,6 +82,9 @@ protected:
 	getRealType() const;
 
 private:
+    //Not implemented
+    XStringCached(const XStringCached&	source);
+    XStringCached();
 
 	const GetAndReleaseCachedString		m_value;
 };

@@ -111,7 +111,8 @@ public:
 	 * 
 	 * @param eventType one of the EVENTTYPE_XXX constants
 	 */
-	GenerateEvent(EventType		eventType);
+	GenerateEvent(EventType		eventType,
+                    MemoryManagerType& theManager);
 	
 	/** 
 	* Constructor for startElement, endElement events.
@@ -122,6 +123,7 @@ public:
 	*/
 	GenerateEvent(
 			EventType				eventType,
+            MemoryManagerType&      theManager,
 			const XalanDOMChar*		name,
 			AttributeListType*		atts);
 
@@ -134,6 +136,7 @@ public:
 	*/
 	GenerateEvent(
 			EventType					eventType,
+            MemoryManagerType&          theManager,
 			const XalanDOMString&		name,
 			const AttributeListType*	atts = 0);
 
@@ -147,6 +150,7 @@ public:
 	*/
 	GenerateEvent(
 			EventType					eventType,
+            MemoryManagerType&          theManager,
 			const XalanDOMChar*			ch,
 			XalanDOMString::size_type	start,
 			XalanDOMString::size_type	length);
@@ -160,6 +164,7 @@ public:
 	*/
 	GenerateEvent(
 			EventType				eventType,
+            MemoryManagerType&      theManager,
 			const XalanDOMChar*		name,
 			const XalanDOMChar*		data);
 	
@@ -172,6 +177,7 @@ public:
 	*/
 	GenerateEvent(
 			EventType				eventType,
+            MemoryManagerType&      theManager,
 			const XalanDOMChar*		data);
 
 	/** 

@@ -103,9 +103,21 @@ public:
     typedef XalanSetIterator<value_type, typename SetMapType::iterator>             iterator;
     typedef XalanSetIterator<const value_type, typename SetMapType::const_iterator> const_iterator;
 
-    XalanSet(MemoryManagerType * theMemoryManager = 0) :
+    XalanSet(MemoryManagerType& theMemoryManager) :
         m_map(theMemoryManager)
     {
+    }
+
+    XalanSet(const XalanSet&    other,
+             MemoryManagerType& theMemoryManager) :
+        m_map(other.m_map, theMemoryManager)
+    {
+    }
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_map.getMemoryManager();
     }
 
     const_iterator begin() const
@@ -142,7 +154,7 @@ public:
     void insert(const value_type& value)
     {
 	typedef typename SetMapType::value_type MapValueType;
-        m_map.insert(MapValueType(value,true));
+        m_map.insert(value, true);
     }
 
     size_type erase(const value_type& value)

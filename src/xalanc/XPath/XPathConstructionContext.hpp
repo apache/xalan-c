@@ -54,7 +54,7 @@ class XALAN_XPATH_EXPORT XPathConstructionContext
 {
 public:
 
-	XPathConstructionContext();
+	XPathConstructionContext(MemoryManagerType&              theManager);
 
 	virtual
 	~XPathConstructionContext();
@@ -152,6 +152,7 @@ public:
 			return *m_constructionContext;
 		}
 
+
 	private:
 
 		// Not implemented...
@@ -165,6 +166,12 @@ public:
 		XalanDOMString*				m_string;
 	};
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_memoryManager;
+    }
+
 	virtual void
 	error(
 			const XalanDOMString&	msg,
@@ -176,6 +183,8 @@ public:
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
 			const LocatorType* 		locator) const = 0;
+
+    MemoryManagerType&              m_memoryManager;
 };
 
 

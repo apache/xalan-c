@@ -26,6 +26,7 @@
 
 #include <xalanc/Include/XalanVector.hpp>
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 
 XALAN_CPP_NAMESPACE_BEGIN
@@ -41,29 +42,50 @@ public:
 	AttributeVectorEntry(
 			const XMLChVectorType&	theName,
 			const XMLChVectorType&	theValue,
-			const XMLChVectorType&	theType) :
-		m_Name(theName),
-		m_Value(theValue),
-		m_Type(theType)
+			const XMLChVectorType&	theType,
+            MemoryManagerType&      theManager) :
+		m_Name(theName,theManager),
+		m_Value(theValue,theManager),
+		m_Type(theType,theManager)
 	{
 	}
 
 	AttributeVectorEntry(
-			const XMLCh*	theName,
-			const XMLCh*	theValue,
-			const XMLCh*	theType) :
-		m_Name(theName, theName + length(theName) + 1),
-		m_Value(theValue, theValue + length(theValue) + 1),
-		m_Type(theType, theType + length(theType) + 1)
+			const XMLCh*	        theName,
+			const XMLCh*	        theValue,
+			const XMLCh*	        theType,
+            MemoryManagerType&      theManager) :
+		m_Name(theName, theName + length(theName) + 1, theManager),
+		m_Value(theValue, theValue + length(theValue) + 1, theManager),
+		m_Type(theType, theType + length(theType) + 1, theManager)
 	{
 	}
 
-	AttributeVectorEntry() :
-		m_Name(),
-		m_Value(),
-		m_Type()
+	AttributeVectorEntry(MemoryManagerType&      theManager) :
+		m_Name(theManager),
+		m_Value(theManager),
+		m_Type(theManager)
 	{
 	}
+
+    static AttributeVectorEntry*
+    create( const XMLCh*	theName,
+			const XMLCh*	theValue,
+			const XMLCh*	theType,
+            MemoryManagerType&      theManager)
+    {
+        typedef AttributeVectorEntry ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theName, theValue, theType, theManager);
+
+        theGuard.release();
+
+        return theResult;
+    }
 
     virtual
 	~AttributeVectorEntry()

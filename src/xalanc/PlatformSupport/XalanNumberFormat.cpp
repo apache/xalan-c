@@ -17,7 +17,9 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMemMngArrayAllocate.hpp>
+
+
 #include <xalanc/Include/STLHelper.hpp>
 
 
@@ -39,13 +41,28 @@ const XalanDOMChar	XalanNumberFormat::s_defaultGroupingSeparator[] =
 
 
 
-XalanNumberFormat::XalanNumberFormat() :
+XalanNumberFormat::XalanNumberFormat(MemoryManagerType&      theManager) :
 	m_isGroupingUsed(false),
-	m_groupingSeparator(s_defaultGroupingSeparator),
+	m_groupingSeparator(s_defaultGroupingSeparator, theManager),
 	m_groupingSize(3)	// Default to US values
 {
 }
 
+XalanNumberFormat*
+XalanNumberFormat::create(MemoryManagerType&      theManager)
+{
+    typedef XalanNumberFormat ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 
 XalanNumberFormat::~XalanNumberFormat()
@@ -54,20 +71,7 @@ XalanNumberFormat::~XalanNumberFormat()
 
 
 
-XalanDOMString
-XalanNumberFormat::format(double	theValue)
-{
-	// $$$ ToDo: Fix this!
-	XalanDOMString	theResult;
-
-	format(theValue, theResult);
-
-	return theResult;
-}
-
-
-
-void
+XalanDOMString&
 XalanNumberFormat::format(
 			double				theValue,
 			XalanDOMString&		theResult)
@@ -76,50 +80,29 @@ XalanNumberFormat::format(
 	DoubleToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
+
+    return theResult;
 }
 
 
 
-XalanDOMString
-XalanNumberFormat::format(int	theValue)
-{
-	// $$$ ToDo: Fix this!
-	XalanDOMString	theResult;
 
-	format(theValue, theResult);
-
-	return theResult;
-}
-
-
-
-void
+XalanDOMString&
 XalanNumberFormat::format(
 			int					theValue,
 			XalanDOMString&		theResult)
 {
-	// $$$ ToDo: Fix this!
 	LongToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
-}
-
-
-
-XalanDOMString
-XalanNumberFormat::format(unsigned int	theValue)
-{
-	// $$$ ToDo: Fix this!
-	XalanDOMString	theResult;
-
-	format(theValue, theResult);
 
 	return theResult;
 }
 
 
 
-void
+
+XalanDOMString&
 XalanNumberFormat::format(
 			unsigned int		theValue,
 			XalanDOMString&		theResult)
@@ -128,24 +111,15 @@ XalanNumberFormat::format(
 	UnsignedLongToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
-}
-
-
-
-XalanDOMString
-XalanNumberFormat::format(long	theValue)
-{
-	// $$$ ToDo: Fix this!
-	XalanDOMString	theResult;
-
-	format(theValue, theResult);
 
 	return theResult;
 }
 
 
 
-void
+
+
+XalanDOMString&
 XalanNumberFormat::format(
 			long				theValue,
 			XalanDOMString&		theResult)
@@ -154,24 +128,15 @@ XalanNumberFormat::format(
 	LongToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
-}
-
-
-
-XalanDOMString
-XalanNumberFormat::format(unsigned long		theValue)
-{
-	// $$$ ToDo: Fix this!
-	XalanDOMString	theResult;
-
-	format(theValue, theResult);
 
 	return theResult;
 }
 
 
 
-void
+
+
+XalanDOMString&
 XalanNumberFormat::format(
 			unsigned long		theValue,
 			XalanDOMString&		theResult)
@@ -180,6 +145,8 @@ XalanNumberFormat::format(
 	UnsignedLongToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
+
+    return theResult;
 }
 
 
@@ -211,9 +178,14 @@ XalanNumberFormat::applyGrouping(
 			// Add two, so we leave one byte at the beginning as empty space
 			const XalanDOMString::size_type		bufsize = len + len / m_groupingSize + 2;
 
-			XalanDOMChar* const		buffer = new XalanDOMChar[bufsize];
+            typedef XalanMemMngArrayAllocate<XalanDOMChar> XalanDOMCharHeapAllocator;
 
-			XalanArrayAutoPtr<XalanDOMChar>		theGuard(buffer);
+			XalanDOMChar* const		buffer = XalanDOMCharHeapAllocator::allocate( bufsize, 
+                                                                                 result.getMemoryManager());
+
+			XalanMemMgrAutoPtrArray<XalanDOMChar>		theGuard(result.getMemoryManager(),
+                                                                  buffer,
+                                                                  bufsize);
 
 			XalanDOMChar*			p = buffer + bufsize - 1;
 

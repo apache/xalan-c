@@ -41,7 +41,7 @@ FunctionSubstringAfter::~FunctionSubstringAfter()
 
 
 
-static const XalanDOMString		theEmptyString;
+static const XalanDOMString		theEmptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 inline XObjectPtr
@@ -125,18 +125,20 @@ Function*
 #else
 FunctionSubstringAfter*
 #endif
-FunctionSubstringAfter::clone() const
+FunctionSubstringAfter::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionSubstringAfter(*this);
+	return cloneFunction_1<FunctionSubstringAfter>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionSubstringAfter::getError() const
+const XalanDOMString&
+FunctionSubstringAfter::getError(XalanDOMString& theResult) const
 {
 
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, "substring-after()");
+	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, theResult, "substring-after()");
+
+    return theResult;
 
 }
 

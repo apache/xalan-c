@@ -61,6 +61,7 @@ public:
 	 * @param currentElement current element for nodes
 	 */
 	FormatterToXercesDOM(
+            MemoryManagerType&          theManager,
 			DOMDocument_Type*			doc,
 			DOMDocumentFragmentType*	docFrag,
 			DOMElementType*				currentElement);
@@ -73,6 +74,7 @@ public:
 	 * @param elem current element for nodes
 	 */
 	FormatterToXercesDOM(
+            MemoryManagerType&          theManager,
 			DOMDocument_Type*			doc,
 			DOMElementType*				currentElement);
 

@@ -59,19 +59,18 @@ public:
 #else
 	virtual XalanEXSLTFunctionDifference*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new XalanEXSLTFunctionDifference(*this);
+		return cloneFunction_0<XalanEXSLTFunctionDifference>()(theManager);
 	}
 
 protected:
 
-	virtual const XalanDOMString
-	getError() const
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"difference()");
-
-
+        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,theBuffer , "difference()");
+		return theBuffer;
 	}
 
 private:
@@ -105,19 +104,20 @@ public:
 #else
 	virtual XalanEXSLTFunctionDistinct*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new XalanEXSLTFunctionDistinct(*this);
+		return cloneFunction_0<XalanEXSLTFunctionDistinct>()(theManager);
 	}
 
 protected:
 
-	virtual const XalanDOMString
-	getError() const
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"distinct()");
-
+        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer , "distinct()");
+		return theBuffer;
 	}
+
 
 private:
 
@@ -165,19 +165,21 @@ public:
 #else
 	virtual XalanEXSLTFunctionHasSameNode*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new XalanEXSLTFunctionHasSameNode(*this);
+		return cloneFunction_0<XalanEXSLTFunctionHasSameNode>()(theManager);
 	}
 
 protected:
 
-	virtual const XalanDOMString
-	getError() const
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"has-same-node()");
-
+        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param, theBuffer, "has-same-node()");
+		return theBuffer;
 	}
+
+
 
 private:
 
@@ -210,20 +212,21 @@ public:
 #else
 	virtual XalanEXSLTFunctionIntersection*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new XalanEXSLTFunctionIntersection(*this);
+		return cloneFunction_0<XalanEXSLTFunctionIntersection>()(theManager);
 	}
 
 protected:
 
-	virtual const XalanDOMString
-	getError() const
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"distinct()");
+        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param, theBuffer, "distinct()");
 
-
+		return theBuffer;
 	}
+
 
 private:
 
@@ -271,18 +274,19 @@ public:
 #else
 	virtual XalanEXSLTFunctionLeading*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new XalanEXSLTFunctionLeading(*this);
+		return cloneFunction_0<XalanEXSLTFunctionLeading>()(theManager);
 	}
 
 protected:
 
-	virtual const XalanDOMString
-	getError() const
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"leading()");
+        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,  theBuffer, "leading()");
 
+		return theBuffer;
 	}
 
 private:
@@ -331,17 +335,19 @@ public:
 #else
 	virtual XalanEXSLTFunctionTrailing*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new XalanEXSLTFunctionTrailing(*this);
+		return cloneFunction_0<XalanEXSLTFunctionTrailing>()(theManager);
 	}
 
 protected:
 
-	virtual const XalanDOMString
-	getError() const
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"trailing()");
+        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param, theBuffer ,"trailing()");
+
+		return theBuffer;
 	}
 
 private:

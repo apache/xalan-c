@@ -30,8 +30,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-StylesheetExecutionContext::StylesheetExecutionContext(XObjectFactory*	theXObjectFactory) :
-	XPathExecutionContext(theXObjectFactory)
+StylesheetExecutionContext::StylesheetExecutionContext(MemoryManagerType& m_memoryManager, XObjectFactory*	theXObjectFactory) :
+	XPathExecutionContext(m_memoryManager, theXObjectFactory)
 {
 }
 

@@ -22,6 +22,7 @@
 // Base include file.  Must be first.
 #include <xalanc/XalanDOM/XalanDOMDefinitions.hpp>
 
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 
 XALAN_CPP_NAMESPACE_BEGIN
@@ -33,7 +34,7 @@ class XALAN_DOM_EXPORT XalanDOMInit
 public:
 
 	explicit
-	XalanDOMInit();
+	XalanDOMInit(MemoryManagerType&      theManager);
 
 	~XalanDOMInit();
 
@@ -47,7 +48,7 @@ private:
 
 
 	static void
-	initialize();
+	initialize(MemoryManagerType&      theManager);
 
 	static void
 	terminate();

@@ -60,7 +60,12 @@ public:
 	/** 
 	 * Default constructor 
 	 */
-	XalanParsedURI() :
+	XalanParsedURI(MemoryManagerType&      theManager) :
+        m_scheme(theManager),
+        m_authority(theManager),
+        m_path(theManager),
+        m_query(theManager),
+        m_fragment(theManager),
 		m_defined(0)
 	{
 	}
@@ -73,7 +78,13 @@ public:
 	 */
 	XalanParsedURI(
 		const XalanDOMChar*			uriString,
-		XalanDOMString::size_type	uriStringLen) : 
+		XalanDOMString::size_type	uriStringLen,
+        MemoryManagerType&          theManager) : 
+        m_scheme(theManager),
+        m_authority(theManager),
+        m_path(theManager),
+        m_query(theManager),
+        m_fragment(theManager),
 		m_defined(0)
 	{
 		parse(uriString, uriStringLen);
@@ -85,11 +96,23 @@ public:
 	 * @param uriString		URI to parse
 	 */
 	XalanParsedURI(
-		const XalanDOMString		&uriString) :
+		const XalanDOMString		&uriString,
+        MemoryManagerType&          theManager) :
+        m_scheme(theManager),
+        m_authority(theManager),
+        m_path(theManager),
+        m_query(theManager),
+        m_fragment(theManager),
 		m_defined(0)
 	{
 		parse(uriString.c_str(), uriString.length());
 	}
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_scheme.getMemoryManager();
+    }
 
 	/**
 	 * Parse the passed in uri
@@ -118,7 +141,7 @@ public:
 	 *
 	 * @return	The reassembled URI
 	 */
-	XalanDOMString make() const;
+	XalanDOMString& make(XalanDOMString&		theResult) const;
 
 	/**
 	 * Resolve this URI relative to another, according to RFC2396.
@@ -137,7 +160,7 @@ public:
 		const XalanDOMChar *base,
 		const XalanDOMString::size_type baseLen)
 	{
-		XalanParsedURI baseURI(base, baseLen);
+		XalanParsedURI baseURI(base, baseLen,getMemoryManager());
 
 		resolve(baseURI);
 	}
@@ -162,11 +185,12 @@ public:
 	 * @baseLen The length of the base URI string
 	 *
 	 */
-	static XalanDOMString resolve(
+	static XalanDOMString& resolve(
 		const XalanDOMChar			*relative,
 		XalanDOMString::size_type	relativeLen,
 		const XalanDOMChar			*base,
-		XalanDOMString::size_type	baseLen
+		XalanDOMString::size_type	baseLen,
+        XalanDOMString&		        theResult
 	);
 
 
@@ -177,12 +201,13 @@ public:
 	 * @base The base URI string
 	 *
 	 */
-	static XalanDOMString resolve(
-		const XalanDOMString &relative,
-		const XalanDOMString &base
+	static XalanDOMString& resolve(
+		const XalanDOMString    &relative,
+		const XalanDOMString    &base,
+        XalanDOMString&		    theResult
 	)
 	{
-		return resolve(relative.c_str(), relative.length(), base.c_str(), base.length());
+		return resolve(relative.c_str(), relative.length(), base.c_str(), base.length(), theResult);
 	}
 
 	/**

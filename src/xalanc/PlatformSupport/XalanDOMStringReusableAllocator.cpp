@@ -23,8 +23,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanDOMStringReusableAllocator::XalanDOMStringReusableAllocator(size_type  theBlockCount) :
-	m_allocator(theBlockCount)
+XalanDOMStringReusableAllocator::XalanDOMStringReusableAllocator(MemoryManagerType&      theManager, size_type  theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -42,7 +42,7 @@ XalanDOMStringReusableAllocator::create()
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	data_type* const	theResult = new(theBlock) data_type;
+	data_type* const	theResult = new(theBlock) data_type(m_allocator.getMemoryManager());
 
 	m_allocator.commitAllocation(theBlock);
 
@@ -58,7 +58,7 @@ XalanDOMStringReusableAllocator::create(
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	data_type* const	theResult = new(theBlock) data_type(theString, theCount);
+	data_type* const	theResult = new(theBlock) data_type(theString,m_allocator.getMemoryManager(), theCount);
 
 	m_allocator.commitAllocation(theBlock);
 
@@ -76,7 +76,7 @@ XalanDOMStringReusableAllocator::create(
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	data_type* const	theResult = new(theBlock) data_type(theSource, theStartPosition, theCount);
+	data_type* const	theResult = new(theBlock) data_type(theSource,m_allocator.getMemoryManager(), theStartPosition, theCount);
 
 	m_allocator.commitAllocation(theBlock);
 
@@ -93,7 +93,7 @@ XalanDOMStringReusableAllocator::create(
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	data_type* const	theResult = new(theBlock) data_type(theString, theCount);
+	data_type* const	theResult = new(theBlock) data_type(theString,m_allocator.getMemoryManager(), theCount);
 
 	m_allocator.commitAllocation(theBlock);
 
@@ -110,7 +110,7 @@ XalanDOMStringReusableAllocator::create(
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	data_type* const	theResult = new(theBlock) data_type(theCount, theChar);
+	data_type* const	theResult = new(theBlock) data_type(theCount, theChar, m_allocator.getMemoryManager());
 
 	m_allocator.commitAllocation(theBlock);
 

@@ -40,28 +40,50 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XObjectFactoryDefault::XObjectFactoryDefault(
+            MemoryManagerType& theManager,
 			size_type	theXStringBlockSize,
 			size_type	theXNumberBlockSize,
 			size_type	theXNodeSetBlockSize,
 			size_type	theXNodeSetNodeProxyBlockSize) : 
-	XObjectFactory(),
-	m_xstringAdapterAllocator(theXStringBlockSize),
-	m_xstringAllocator(theXStringBlockSize),
-	m_xstringCachedAllocator(theXStringBlockSize),
-	m_xstringReferenceAllocator(theXStringBlockSize),
-	m_xnumberAllocator(theXNumberBlockSize),
-	m_xnodesetAllocator(theXNodeSetBlockSize),
-	m_xnodesetNodeProxyAllocator(theXNodeSetNodeProxyBlockSize),
-	m_xtokenNumberAdapterAllocator(theXNumberBlockSize),
-	m_xtokenStringAdapterAllocator(theXStringBlockSize),
-	m_xobjects(),
-	m_xnumberCache(),
-	m_xnodesetCache(),
-	m_xstringCache(),
+	XObjectFactory(theManager),
+	m_xstringAdapterAllocator(theManager, theXStringBlockSize),
+	m_xstringAllocator(theManager, theXStringBlockSize),
+	m_xstringCachedAllocator(theManager, theXStringBlockSize),
+	m_xstringReferenceAllocator(theManager, theXStringBlockSize),
+	m_xnumberAllocator(theManager, theXNumberBlockSize),
+	m_xnodesetAllocator(theManager, theXNodeSetBlockSize),
+	m_xnodesetNodeProxyAllocator(theManager, theXNodeSetNodeProxyBlockSize),
+	m_xtokenNumberAdapterAllocator(theManager, theXNumberBlockSize),
+	m_xtokenStringAdapterAllocator(theManager, theXStringBlockSize),
+	m_xobjects(theManager),
+	m_xnumberCache(theManager),
+	m_xnodesetCache(theManager),
+	m_xstringCache(theManager),
 	m_xnull(),
 	m_xbooleanFalse(false),
 	m_xbooleanTrue(true)
 {
+}
+
+XObjectFactoryDefault*
+XObjectFactoryDefault::create(
+                              MemoryManagerType& theManager,
+                              size_type	theXStringBlockSize ,
+                              size_type	theXNumberBlockSize ,
+                              size_type	theXNodeSetBlockSize,
+                              size_type	theXNodeSetNodeProxyBlockSize)
+{
+    typedef XObjectFactoryDefault Type;
+
+    XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
+
+    Type* theResult = theGuard.get();
+
+    new (theResult) Type(theManager, theXStringBlockSize , theXNumberBlockSize, theXNodeSetBlockSize, theXNodeSetNodeProxyBlockSize);
+
+    theGuard.release();
+
+    return theResult;
 }
 
 
@@ -291,7 +313,7 @@ XObjectFactoryDefault::createNull()
 const XObjectPtr
 XObjectFactoryDefault::createUnknown(const XalanDOMString&	theValue)
 {
-	XUnknown* const	theXUnknown = new XUnknown(theValue);
+    XUnknown* const	theXUnknown = XUnknown::create(theValue, getMemoryManager());
 
 	m_xobjects.push_back(theXUnknown);
 

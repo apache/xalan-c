@@ -142,7 +142,7 @@ ElemLiteralResult::init(
 					{
 						const XalanDOMChar*	const	value = atts.getValue(i);
 
-						stylesheetTree.setXSLTVerDeclared(DoubleSupport::toDouble(value));
+                        stylesheetTree.setXSLTVerDeclared(DoubleSupport::toDouble(value,constructionContext.getMemoryManager() ));
 					}
 				}
 			}

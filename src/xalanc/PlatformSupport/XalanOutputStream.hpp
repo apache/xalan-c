@@ -64,12 +64,19 @@ public :
 	 */
 	explicit
 	XalanOutputStream(
+            MemoryManagerType&      theManager,
 			size_type	theBufferSize = eDefaultBufferSize,
 			size_type	theTranscoderBlockSize = eDefaultTranscoderBlockSize,
 			bool		fThrowTranscodeException = true);
 
 	virtual
 	~XalanOutputStream();
+
+    MemoryManagerType& 
+    getMemoryManager()
+    {
+        return m_buffer.getMemoryManager();
+    }
 
 	static const XalanDOMChar*
 	defaultNewlineString()
@@ -231,6 +238,7 @@ public :
 	bool
 	canTranscodeTo(UnicodeCharType 	theChar) const;
 
+
 	const XalanOutputTranscoder*
 	getTranscoder() const
 	{
@@ -281,7 +289,13 @@ public :
 	public:
 
 		XalanOutputStreamException(
-			const XalanDOMString&	theMessage);
+			const XalanDOMString&	theMessage,
+            MemoryManagerType&      theManager);
+
+        XalanOutputStreamException( const XalanOutputStreamException& other):
+            XSLException(other)
+            {
+            }
 
 		virtual
 		~XalanOutputStreamException();
@@ -302,7 +316,7 @@ public :
 	public:
 
 		explicit
-		UnknownEncodingException();
+		UnknownEncodingException(XalanDOMString& theBuffer);
 
 		virtual
 		~UnknownEncodingException();
@@ -322,7 +336,14 @@ public :
 	{
 	public:
 
-		UnsupportedEncodingException(const XalanDOMString&	theEncoding);
+		UnsupportedEncodingException(const XalanDOMString&	theEncoding,
+                                        XalanDOMString& theBuffer);
+
+        UnsupportedEncodingException(const UnsupportedEncodingException& other) :
+        XalanOutputStreamException(other),
+        m_encoding(other.getEncoding(),(const_cast<XalanDOMString*>(&(other.m_encoding)))->getMemoryManager())
+        {
+        }
 
 		virtual
 		~UnsupportedEncodingException();
@@ -350,7 +371,14 @@ public :
 	{
 	public:
 
-		TranscoderInternalFailureException(const XalanDOMString&	theEncoding);
+		TranscoderInternalFailureException(const XalanDOMString&	theEncoding,
+                                            XalanDOMString& theBuffer);
+
+        TranscoderInternalFailureException(const TranscoderInternalFailureException& other) :
+            XalanOutputStreamException(other),
+            m_encoding(other.getEncoding(),(const_cast<XalanDOMString*>(&(other.m_encoding)))->getMemoryManager())
+            {
+            }
 
 		virtual
 		~TranscoderInternalFailureException();
@@ -371,7 +399,12 @@ public :
 	public:
 
 		explicit
-		TranscodingException();
+		TranscodingException(XalanDOMString& theBuffer);
+
+        TranscodingException(const TranscodingException& other) :
+        XalanOutputStreamException(other)
+        {
+        }
 
 		virtual
 		~TranscodingException();
@@ -400,8 +433,8 @@ protected:
 	 */
 	virtual void
 	writeData(
-			const char* 	theBuffer,
-			size_type		theBufferLength) = 0;
+			const char* 	    theBuffer,
+			size_type		    theBufferLength) = 0;
 
 	/**
 	 * Flush the stream.

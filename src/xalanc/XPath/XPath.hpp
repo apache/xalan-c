@@ -142,7 +142,7 @@ public:
 	 * Perform static initialization.  See class XPathInit.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType& theManager);
 
 	/**
 	 * Perform static shut down.  See class XPathInit.
@@ -156,8 +156,16 @@ public:
 	 * @param theLocator The applicable LocatorType, if any.
 	 */
 	explicit
-	XPath(const LocatorType*	theLocator = 0);
+	XPath(MemoryManagerType& theManager, const LocatorType*	theLocator = 0);
 
+    static XPath*
+    create(MemoryManagerType& theManager, const LocatorType*	theLocator = 0);
+
+    MemoryManagerType&
+     getMemoryManager()
+    {
+        return m_expression.getMemoryManager();
+    }
 	~XPath();
 
 	/**

@@ -46,14 +46,32 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-ICUFormatNumberFunctor::ICUFormatNumberFunctor()
+ICUFormatNumberFunctor::ICUFormatNumberFunctor(MemoryManagerType& theManager) :
+    m_decimalFormatCache(theManager),
+    m_memoryManager(theManager)
+
 {
-	XalanDecimalFormatSymbols defaultXalanDFS;
+	XalanDecimalFormatSymbols defaultXalanDFS(theManager);
 
 	m_defaultDecimalFormat = createDecimalFormat(defaultXalanDFS);
 }
 
+ICUFormatNumberFunctor*
+ICUFormatNumberFunctor::create(MemoryManagerType& theManager) 
+{
+    typedef ICUFormatNumberFunctor ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager);
+
+   theGuard.release();
+
+    return theResult;
+}
+ 
 	
 ICUFormatNumberFunctor::~ICUFormatNumberFunctor()
 {
@@ -80,8 +98,10 @@ ICUFormatNumberFunctor::operator() (
 {
 	if (!doFormat(theNumber, thePattern, theResult, theDFS))
 	{
+        XalanDOMString buffer(executionContext.getMemoryManager());
+
 		executionContext.warn(
-			XalanMessageLoader::getMessage(XalanMessages::FormatNumberFailed),
+			XalanMessageLoader::getMessage(XalanMessages::FormatNumberFailed, buffer),
 			context,
 			locator);
 	}		
@@ -89,7 +109,7 @@ ICUFormatNumberFunctor::operator() (
 
 
 
-ICUFormatNumberFunctor::DecimalFormatType * 
+DecimalFormatType * 
 ICUFormatNumberFunctor::getCachedDecimalFormat(const XalanDecimalFormatSymbols &theDFS) const
 {
 	XALAN_USING_STD(find_if)
@@ -152,7 +172,11 @@ ICUFormatNumberFunctor::doFormat(
 		return doICUFormat(theNumber,thePattern,theResult);
 	}
 
-	XalanDOMString	nonLocalPattern = UnlocalizePatternFunctor(*theDFS)(thePattern);
+	XalanDOMString	nonLocalPattern(theResult.getMemoryManager()); 
+
+    UnlocalizePatternFunctor formatter(*theDFS);
+
+    formatter(thePattern, nonLocalPattern);
 
 
 	DecimalFormatType*	theFormatter = getCachedDecimalFormat(*theDFS);
@@ -185,7 +209,7 @@ ICUFormatNumberFunctor::doFormat(
 
 
 
-ICUFormatNumberFunctor::DecimalFormatType *
+DecimalFormatType *
 ICUFormatNumberFunctor::createDecimalFormat(
 		const XalanDecimalFormatSymbols&	theXalanDFS) const
 {
@@ -203,11 +227,11 @@ ICUFormatNumberFunctor::createDecimalFormat(
 	theDFS->setSymbol(DecimalFormatSymbols::kDigitSymbol, UChar(theXalanDFS.getDigit()));
 	theDFS->setSymbol(DecimalFormatSymbols::kPatternSeparatorSymbol, UChar(theXalanDFS.getPatternSeparator()));
 
-	theDFS->setSymbol(DecimalFormatSymbols::kInfinitySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInfinity()));
-	theDFS->setSymbol(DecimalFormatSymbols::kNaNSymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getNaN()));
+	theDFS->setSymbol(DecimalFormatSymbols::kInfinitySymbol, ICUBridge::XalanDOMStringToUnicodeString(m_memoryManager, theXalanDFS.getInfinity()));
+	theDFS->setSymbol(DecimalFormatSymbols::kNaNSymbol, ICUBridge::XalanDOMStringToUnicodeString(m_memoryManager,theXalanDFS.getNaN()));
 	theDFS->setSymbol(DecimalFormatSymbols::kMinusSignSymbol, UChar(theXalanDFS.getMinusSign()));
-	theDFS->setSymbol(DecimalFormatSymbols::kCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getCurrencySymbol()));
-	theDFS->setSymbol(DecimalFormatSymbols::kIntlCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInternationalCurrencySymbol()));
+	theDFS->setSymbol(DecimalFormatSymbols::kCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(m_memoryManager, theXalanDFS.getCurrencySymbol()));
+	theDFS->setSymbol(DecimalFormatSymbols::kIntlCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(m_memoryManager, theXalanDFS.getInternationalCurrencySymbol()));
 	theDFS->setSymbol(DecimalFormatSymbols::kMonetarySeparatorSymbol, UChar(theXalanDFS.getMonetaryDecimalSeparator()));
 
 	// Construct a DecimalFormat.  Note that we release the XalanAutoPtr, since the
@@ -252,7 +276,7 @@ ICUFormatNumberFunctor::cacheDecimalFormat(
 	}
 
 
-	theNonConstCache.push_front(DecimalFormatCacheListType::value_type());
+	theNonConstCache.push_front(DecimalFormatCacheListType::value_type(m_memoryManager));
 
 	DecimalFormatCacheListType::value_type&		theEntry = 
 		theNonConstCache.front();
@@ -284,7 +308,7 @@ ICUFormatNumberFunctor::doICUFormat(
 		}
 	}
 
-	theFormatter->applyPattern(ICUBridge::XalanDOMStringToUnicodeString(thePattern),theStatus);
+	theFormatter->applyPattern(ICUBridge::XalanDOMStringToUnicodeString(m_memoryManager, thePattern),theStatus);
 
 	if (U_SUCCESS(theStatus))
 	{
@@ -297,12 +321,11 @@ ICUFormatNumberFunctor::doICUFormat(
     return U_SUCCESS(theStatus) ? true : false;
 }
 
-XalanDOMString
-ICUFormatNumberFunctor::UnlocalizePatternFunctor::operator()(const XalanDOMString&	thePattern) const
+XalanDOMString&
+ICUFormatNumberFunctor::UnlocalizePatternFunctor::operator()(const XalanDOMString&	thePattern, 	XalanDOMString& theResult) const
 {
-	XalanDOMString theResult;
 
-	XalanDecimalFormatSymbols defaultDFS;
+	XalanDecimalFormatSymbols defaultDFS( theResult.getMemoryManager());
 
 	XalanDOMString::const_iterator iterator = thePattern.begin();
 

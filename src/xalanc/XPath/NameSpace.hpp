@@ -21,7 +21,7 @@
 // Base header file.  Must be first.
 #include <xalanc/XPath/XPathDefinitions.hpp>
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
@@ -40,9 +40,9 @@ class XALAN_XPATH_EXPORT NameSpace
 public:
 
 	explicit
-	NameSpace() :
-		m_prefix(),
-		m_uri()
+	NameSpace(MemoryManagerType&  theManager) :
+		m_prefix(theManager),
+		m_uri(theManager)
 	{
 	}
 
@@ -55,11 +55,37 @@ public:
 	 */
 	NameSpace(
 			const XalanDOMString&	prefix,
-			const XalanDOMString&	uri) :
-		m_prefix(prefix),
-		m_uri(uri)
+			const XalanDOMString&	uri,
+            MemoryManagerType&      theManager) :
+		m_prefix(prefix, theManager),
+		m_uri(uri, theManager)
 	{
 	}
+
+	static NameSpace*
+	create(
+			const XalanDOMString&	prefix,
+			const XalanDOMString&	uri,
+            MemoryManagerType&      theManager)
+	{
+		typedef NameSpace ThisType;
+		
+		XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+		
+		ThisType* theResult = theGuard.get();
+		
+		new (theResult) ThisType(prefix, uri, theManager);
+		
+		theGuard.release();
+		
+		return theResult;
+	}
+    NameSpace( const NameSpace&     other,
+        MemoryManagerType&      theManager) :
+		m_prefix(other.m_prefix, theManager),
+		m_uri(other.m_uri, theManager)        
+    {
+    }
 
 	~NameSpace()
 	{
@@ -171,7 +197,7 @@ private:
 	XalanDOMString	m_uri;
 };
 
-
+XALAN_USES_MEMORY_MANAGER(NameSpace)
 
 XALAN_CPP_NAMESPACE_END
 

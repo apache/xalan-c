@@ -23,7 +23,7 @@
 
 
 
-#include <list>
+#include <xalanc/Include/XalanList.hpp>
 
 
 
@@ -39,6 +39,99 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
+#if defined(XALAN_HAS_CPP_NAMESPACE)
+typedef U_ICU_NAMESPACE::Collator	CollatorType;
+#else
+typedef Collator					CollatorType;
+#endif
+
+struct CollationCacheStruct
+{
+    CollationCacheStruct(
+        MemoryManagerType&      theManager,
+        const XalanDOMString&	theLocale,
+        CollatorType*			theCollator) :
+    m_locale(theLocale, theManager),
+        m_collator(theCollator)
+    {
+    }
+
+    CollationCacheStruct(MemoryManagerType& theManager) :
+    m_locale(theManager),
+        m_collator(0)
+    {
+    }
+
+    CollationCacheStruct(   const CollationCacheStruct& other,
+                            MemoryManagerType&          theManager) :
+    m_locale(other.m_locale,theManager),
+    m_collator(other.m_collator)
+    {
+    }
+    void
+        swap(CollationCacheStruct&	theOther)
+    {
+        m_locale.swap(theOther.m_locale);
+
+        CollatorType* const		theTemp = m_collator;
+
+        m_collator = theOther.m_collator;
+
+        theOther.m_collator = theTemp;
+    }
+
+#if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
+    bool
+        operator<(const CollationCacheStruct&  theRHS) const
+    {
+        return this < &theRHS;
+    }
+
+    bool
+        operator==(const CollationCacheStruct&	theRHS) const
+    {
+        return this == &theRHS;
+    }
+#endif
+
+    XalanDOMString	m_locale;
+
+    CollatorType*	m_collator;
+
+    struct CollatorDeleteFunctor
+    {
+     CollatorDeleteFunctor(MemoryManagerType& theManager):
+        m_memoryManager(theManager)
+    {
+    }
+
+    void
+        operator()(CollationCacheStruct&	theStruct) const
+    {
+        delete theStruct.m_collator;
+    }
+    private:
+        MemoryManagerType& m_memoryManager;
+    };
+
+    struct CollatorFindFunctor
+    {
+        CollatorFindFunctor(const XalanDOMChar*	theLocale) :
+    m_locale(theLocale)
+    {
+    }
+
+    bool
+        operator()(CollationCacheStruct&	theStruct) const
+    {
+        return XalanDOMString::equals(theStruct.m_locale ,m_locale);
+    }
+
+    const XalanDOMChar* const	m_locale;
+    };
+};
+
+XALAN_USES_MEMORY_MANAGER(CollationCacheStruct)
 
 class XALAN_ICUBRIDGE_EXPORT ICUBridgeCollationCompareFunctorImpl : public XalanCollationServices::CollationCompareFunctor
 {
@@ -49,9 +142,21 @@ public:
 	 * 
 	 * @param fCacheCollators If true, the instance will cache collators.  This is not thread-safe, so each thread must have its own instance.
 	 */
-	ICUBridgeCollationCompareFunctorImpl(bool	fCacheCollators = false);
+	ICUBridgeCollationCompareFunctorImpl(   MemoryManagerType&  theManager ,
+                                            bool	            fCacheCollators = false);
+
+	static ICUBridgeCollationCompareFunctorImpl*
+    create( MemoryManagerType&  theManager,
+            bool	            fCacheCollators = false);
+
 
 	~ICUBridgeCollationCompareFunctorImpl();
+
+    MemoryManagerType& 
+    getMemoryManager()const
+    {
+        return m_collatorCache.getMemoryManager();
+    }
 
 	int
 	operator()(
@@ -72,89 +177,8 @@ public:
 		return m_isValid;
 	}
 
-#if defined(XALAN_HAS_CPP_NAMESPACE)
-	typedef U_ICU_NAMESPACE::Collator	CollatorType;
-#else
-	typedef Collator					CollatorType;
-#endif
 
-	struct CollationCacheStruct
-	{
-		CollationCacheStruct(
-				const XalanDOMString&	theLocale,
-				CollatorType*			theCollator) :
-			m_locale(theLocale),
-			m_collator(theCollator)
-		{
-		}
-
-		CollationCacheStruct() :
-			m_locale(),
-			m_collator(0)
-		{
-		}
-
-		void
-		swap(CollationCacheStruct&	theOther)
-		{
-			m_locale.swap(theOther.m_locale);
-
-			CollatorType* const		theTemp = m_collator;
-
-			m_collator = theOther.m_collator;
-
-			theOther.m_collator = theTemp;
-		}
-
-#if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
-		bool
-		operator<(const CollationCacheStruct&  theRHS) const
-		{
-			return this < &theRHS;
-		}
-
-		bool
-		operator==(const CollationCacheStruct&	theRHS) const
-		{
-			return this == &theRHS;
-		}
-#endif
-
-		XalanDOMString	m_locale;
-
-		CollatorType*	m_collator;
-
-		struct CollatorDeleteFunctor
-		{
-			void
-			operator()(CollationCacheStruct&	theStruct) const
-			{
-				delete theStruct.m_collator;
-			}
-		};
-
-		struct CollatorFindFunctor
-		{
-			CollatorFindFunctor(const XalanDOMChar*	theLocale) :
-				m_locale(theLocale)
-			{
-			}
-
-			bool
-			operator()(CollationCacheStruct&	theStruct) const
-			{
-				return XalanDOMString::equals(theStruct.m_locale ,m_locale);
-			}
-
-			const XalanDOMChar* const	m_locale;
-		};
-	};
-
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef list<CollationCacheStruct>			CollatorCacheListType;
-#else
-	typedef std::list<CollationCacheStruct>		CollatorCacheListType;
-#endif
+	typedef XalanList<CollationCacheStruct>			CollatorCacheListType;
 
 	enum { eCacheMax = 10 };
 

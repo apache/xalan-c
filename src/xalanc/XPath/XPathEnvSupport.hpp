@@ -81,6 +81,7 @@ public:
 	 */
 	virtual XalanDocument*
 	parseXML(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) = 0;
 
@@ -111,8 +112,9 @@ public:
 	 * @param owner source document
 	 * @return document URI
 	 */
-	virtual XalanDOMString
-	findURIFromDoc(const XalanDocument*		owner) const = 0;
+	virtual XalanDOMString&
+	findURIFromDoc(const XalanDocument*		owner,
+                    XalanDOMString& theResult) const = 0;
 
 	/**
 	 * Determine if an external element is available.

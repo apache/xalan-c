@@ -74,9 +74,12 @@ ElemWithParam::ElemWithParam(
 
 			if (m_qname->isValid() == false)
 			{
+                StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 				constructionContext.error(
 						XalanMessageLoader::getMessage(
 							XalanMessages::AttributeValueNotValidQName_2Param,
+                            theGuard.get(),
 							Constants::ATTRNAME_NAME.c_str(),
 							atts.getValue(i)),
 						0,
@@ -85,9 +88,12 @@ ElemWithParam::ElemWithParam(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
+            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                        theGuard.get(),
 						Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING.c_str(),
 						aname),
 					0,
@@ -97,9 +103,12 @@ ElemWithParam::ElemWithParam(
 
 	if(m_qname == 0)
 	{
+        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::TemplateMustHaveAttribute_2Param,
+                theGuard.get(),
 				Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING,
 				Constants::ATTRNAME_NAME),
 			0,
@@ -134,13 +143,13 @@ ElemWithParam::getXPath(unsigned int	index) const
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 
 const ElemTemplateElement* 
-ElemWithParam::startElement(StylesheetExecutionContext&     executionContext) const
+ElemWithParam::startElement(StylesheetExecutionContext& executionContext) const
 {
 	assert(m_qname != 0);
 
 	ElemTemplateElement::startElement(executionContext);
 
-	XObjectPtr  theValue;
+	XObjectPtr theValue;
 
 	if(m_selectPattern == 0)
 	{
@@ -151,8 +160,7 @@ ElemWithParam::startElement(StylesheetExecutionContext&     executionContext) co
 		else
 		{
 			executionContext.beginCreateXResultTreeFrag(executionContext.getCurrentNode());
-
-            return beginExecuteChildren(executionContext);
+			return beginExecuteChildren(executionContext);
 		}
 	}
 	else
@@ -166,7 +174,7 @@ ElemWithParam::startElement(StylesheetExecutionContext&     executionContext) co
 					executionContext,
 					executionContext.getCurrentNode(),
 					*this,
-					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+					XalanDOMString(XALAN_STATIC_UCODE_STRING("select"), executionContext.getMemoryManager()),
 					*m_selectPattern,
 					theValue));
 		}
@@ -183,9 +191,8 @@ ElemWithParam::startElement(StylesheetExecutionContext&     executionContext) co
 }
 
 
-
 void
-ElemWithParam::endElement(StylesheetExecutionContext&   executionContext) const
+ElemWithParam::endElement(StylesheetExecutionContext& executionContext) const
 {
 	if (0 == m_selectPattern && 0 != getFirstChildElem())
 	{
@@ -197,7 +204,6 @@ ElemWithParam::endElement(StylesheetExecutionContext&   executionContext) const
 	}
 }
 #endif
-
 
 
 XALAN_CPP_NAMESPACE_END

@@ -23,21 +23,40 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	XalanDOMStringPool::s_emptyString;
+const XalanDOMString	XalanDOMStringPool::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XalanDOMStringPool::XalanDOMStringPool(
+           MemoryManagerType&   theManager,
 			block_size_type		theBlockSize,
 			bucket_count_type	theBucketCount,
 			bucket_size_type	theBucketSize) :
-	m_stringAllocator(theBlockSize),
+	m_stringAllocator(theManager, theBlockSize),
 	m_stringCount(0),
-	m_hashTable(theBucketCount, theBucketSize)
+	m_hashTable(theManager, theBucketCount, theBucketSize)
 {
 }
 
+XalanDOMStringPool*
+XalanDOMStringPool::create(
+                           MemoryManagerType&  theManager,
+                           block_size_type		theBlockSize ,
+                           bucket_count_type	theBucketCount ,
+                           bucket_size_type	theBucketSize )
+{
+    typedef XalanDOMStringPool ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager, theBlockSize, theBucketCount, theBucketSize);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XalanDOMStringPool::~XalanDOMStringPool()
 {

@@ -33,13 +33,16 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString;
+
+static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
-XObjectResultTreeFragProxyText::XObjectResultTreeFragProxyText(const XObject&	theXObject) :
+XObjectResultTreeFragProxyText::XObjectResultTreeFragProxyText(const XObject&	theXObject,
+                                                               MemoryManagerType& theManager) :
 	XalanText(),
-	m_value(theXObject)
+	m_value(theXObject),
+    m_MemoryManager(theManager)
 {
 }
 
@@ -304,12 +307,15 @@ XObjectResultTreeFragProxyText::getLength() const
 
 
 
-XalanDOMString
+XalanDOMString&
 XObjectResultTreeFragProxyText::substringData(
 			unsigned int	offset,
-			unsigned int	count) const
+			unsigned int	count,
+            XalanDOMString& theResult) const
 {
-	return m_value.str().substr(offset, count);
+    m_value.str().substr(theResult, offset, count);
+
+    return theResult;
 }
 
 
@@ -373,9 +379,9 @@ XObjectResultTreeFragProxyText::isIgnorableWhitespace() const
 
 XALAN_CPP_NAMESPACE_END
 
+XALAN_USING_XALAN(XalanMemMgrs)
 
-
-static XALAN_CPP_NAMESPACE_QUALIFIER XalanDOMString		s_nameString;
+static XALAN_CPP_NAMESPACE_QUALIFIER XalanDOMString		s_nameString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -388,9 +394,11 @@ const XalanDOMString&	XObjectResultTreeFragProxyText::s_nameString = ::s_nameStr
 
 
 void
-XObjectResultTreeFragProxyText::initialize()
+XObjectResultTreeFragProxyText::initialize(MemoryManagerType& theManager)
 {
-	::s_nameString = XALAN_STATIC_UCODE_STRING("#text");
+    XalanDOMString tmpString("#text", theManager);
+
+    ::s_nameString.swap(tmpString);
 }
 
 
@@ -398,7 +406,7 @@ XObjectResultTreeFragProxyText::initialize()
 void
 XObjectResultTreeFragProxyText::terminate()
 {
-	releaseMemory(::s_nameString);
+	releaseMemory(::s_nameString, XalanMemMgrs::getDummyMemMgr());
 }
 
 

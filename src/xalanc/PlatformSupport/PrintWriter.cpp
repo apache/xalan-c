@@ -56,9 +56,10 @@ const XalanDOMChar	PrintWriter::s_newlineString[] =
 
 
 
-PrintWriter::PrintWriter(bool	fAutoFlush) :
+PrintWriter::PrintWriter(MemoryManagerType& theManager, bool	fAutoFlush) :
 	Writer(),
-	m_fAutoFlush(fAutoFlush)
+	m_fAutoFlush(fAutoFlush),
+    m_memoryManager(theManager)
 {
 }
 

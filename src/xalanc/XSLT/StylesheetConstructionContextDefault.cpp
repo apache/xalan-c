@@ -74,6 +74,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
+            MemoryManagerType&                      theManager,
 			XSLTEngineImpl&							processor,
 			XPathFactory&							xpathFactory,
 			VectorAllocatorSizeType					theXalanDOMCharVectorAllocatorBlockSize,
@@ -82,34 +83,34 @@ StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
 			XalanAVTPartXPathAllocator::size_type	theAVTPartXPathAllocatorBlockSize,
 			XalanQNameByValueAllocator::size_type	theXalanQNameByValueAllocatorBlockSize,
 			VectorAllocatorSizeType					thePointerVectorAllocatorBlockSize) :
-	StylesheetConstructionContext(),
+	StylesheetConstructionContext(theManager),
 	m_processor(processor),
 	m_xpathFactory(xpathFactory),
-	m_xpathProcessor(new XPathProcessorImpl),
-	m_stylesheets(),
-	m_stringPool(),
-	m_xalanDOMCharVectorAllocator(theXalanDOMCharVectorAllocatorBlockSize),
-	m_tempBuffer(),
-	m_scratchQName(),
-	m_stringCache(),
-	m_avtAllocator(theAVTAllocatorBlockSize),
-	m_avtPartSimpleAllocator(theAVTPartSimpleAllocatorBlockSize),
-	m_avtPartXPathAllocator(theAVTPartXPathAllocatorBlockSize),
-	m_xalanQNameByValueAllocator(theXalanQNameByValueAllocatorBlockSize),
+    m_xpathProcessor(theManager, XPathProcessorImpl::create(theManager)),
+	m_stylesheets(theManager),
+	m_stringPool(theManager),
+	m_xalanDOMCharVectorAllocator(theManager, theXalanDOMCharVectorAllocatorBlockSize),
+	m_tempBuffer(theManager),
+	m_scratchQName(theManager),
+	m_stringCache(theManager),
+	m_avtAllocator(theManager, theAVTAllocatorBlockSize),
+	m_avtPartSimpleAllocator(theManager, theAVTPartSimpleAllocatorBlockSize),
+	m_avtPartXPathAllocator(theManager, theAVTPartXPathAllocatorBlockSize),
+	m_xalanQNameByValueAllocator(theManager, theXalanQNameByValueAllocatorBlockSize),
 	m_useAttributeSetsQName(XSLTEngineImpl::getXSLNameSpaceURL(), Constants::ATTRNAME_USEATTRIBUTESETS),
-	m_pointerVectorAllocator(thePointerVectorAllocatorBlockSize),
-	m_allocatedElements(),
-	m_elemApplyTemplatesAllocator(eDefaultElemApplyTemplatesBlockSize),
-	m_elemAttributeAllocator(eDefaultElemAttributeBlockSize),
-	m_elemAttributeSetAllocator(eDefaultElemAttributeSetBlockSize),
-	m_elemCallTemplateAllocator(eDefaultElemCallTemplateBlockSize),
-	m_elemElementAllocator(eDefaultElemElementBlockSize),
-	m_elemLiteralResultAllocator(eDefaultElemLiteralResultBlockSize),
-	m_elemTemplateAllocator(eDefaultElemTemplateBlockSize),
-	m_elemTextLiteralAllocator(eDefaultElemTextLiteralBlockSize),
-	m_elemValueOfAllocator(eDefaultElemValueOfBlockSize),
-	m_elemVariableAllocator(eDefaultElemVariableBlockSize),
-    m_matchPatternDataAllocator(eDefaultMatchPatternDataBlockSize),
+	m_pointerVectorAllocator(theManager, thePointerVectorAllocatorBlockSize),
+	m_allocatedElements(theManager),
+	m_elemApplyTemplatesAllocator(theManager, eDefaultElemApplyTemplatesBlockSize),
+	m_elemAttributeAllocator(theManager, eDefaultElemAttributeBlockSize),
+	m_elemAttributeSetAllocator(theManager, eDefaultElemAttributeSetBlockSize),
+	m_elemCallTemplateAllocator(theManager, eDefaultElemCallTemplateBlockSize),
+	m_elemElementAllocator(theManager, eDefaultElemElementBlockSize),
+	m_elemLiteralResultAllocator(theManager, eDefaultElemLiteralResultBlockSize),
+	m_elemTemplateAllocator(theManager, eDefaultElemTemplateBlockSize),
+	m_elemTextLiteralAllocator(theManager, eDefaultElemTextLiteralBlockSize),
+	m_elemValueOfAllocator(theManager, eDefaultElemValueOfBlockSize),
+	m_elemVariableAllocator(theManager, eDefaultElemVariableBlockSize),
+    m_matchPatternDataAllocator(theManager,eDefaultMatchPatternDataBlockSize),
 	m_spaceAttrQName(DOMServices::s_XMLNamespaceURI, Constants::ATTRNAME_SPACE)
 {
 }
@@ -217,14 +218,14 @@ StylesheetConstructionContextDefault::reset()
 	for_each(
 			m_stylesheets.begin(),
 			m_stylesheets.end(),
-			DeleteFunctor<StylesheetRoot>());
+			DeleteFunctor<StylesheetRoot>( getMemoryManager()));
 
 	m_stylesheets.clear();
 
 	for_each(
 			m_allocatedElements.begin(),
 			m_allocatedElements.end(),
-			DeleteFunctor<ElemTemplateElement>());
+			DeleteFunctor<ElemTemplateElement>( getMemoryManager()));
 
 	m_allocatedElements.clear();
 
@@ -275,7 +276,7 @@ StylesheetConstructionContextDefault::create(const XalanDOMString&	theBaseIdenti
 	m_stylesheets.reserve(m_stylesheets.size() + 1);
 
 	StylesheetRoot* const	theStylesheetRoot =
-		new StylesheetRoot(theBaseIdentifier, *this);
+		StylesheetRoot::create( getMemoryManager(), theBaseIdentifier, *this);
 
 	m_stylesheets.push_back(theStylesheetRoot);
 
@@ -290,9 +291,15 @@ StylesheetConstructionContextDefault::create(const XSLTInputSource&		theInputSou
 	const XMLCh* const	theSystemID =
 				theInputSource.getSystemId();
 
-	const XalanDOMString	theBaseIdentifier =
-				theSystemID == 0 ? XalanDOMString() :
-				XalanDOMString(theSystemID);
+    GetAndReleaseCachedString theGuard(*this);
+
+    XalanDOMString& theBaseIdentifier = theGuard.get();
+
+    if (theSystemID != 0)
+    {
+        theBaseIdentifier.assign(theSystemID); 
+    }
+
 
 	return create(theBaseIdentifier);
 }
@@ -305,7 +312,8 @@ StylesheetConstructionContextDefault::create(
 			const XalanDOMString&	theBaseIdentifier)
 {
 	Stylesheet* const	theStylesheet =
-		new Stylesheet(
+        Stylesheet::create(
+            getMemoryManager(),
 			theStylesheetRoot,
 			theBaseIdentifier,
 			*this);
@@ -344,15 +352,18 @@ StylesheetConstructionContextDefault::destroy(StylesheetRoot*	theStylesheetRoot)
 StylesheetConstructionContextDefault::URLAutoPtrType
 StylesheetConstructionContextDefault::getURLFromString(const XalanDOMString&	urlString)
 {
-	return URISupport::getURLFromString(urlString);
+	return URISupport::getURLFromString(urlString,  getMemoryManager());
 }
 
 
 
-XalanDOMString
-StylesheetConstructionContextDefault::getURLStringFromString(const XalanDOMString&	urlString)
+XalanDOMString&
+StylesheetConstructionContextDefault::getURLStringFromString(const XalanDOMString&	urlString,
+                                                             XalanDOMString&        theResult)
 {
-	return URISupport::getURLStringFromString(urlString);
+    URISupport::getURLStringFromString(urlString, theResult);
+
+	return theResult;
 }
 
 
@@ -362,17 +373,20 @@ StylesheetConstructionContextDefault::getURLFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base)
 {
-	return URISupport::getURLFromString(urlString, base);
+	return URISupport::getURLFromString(urlString, base,  getMemoryManager());
 }
 
 
 
-XalanDOMString
+XalanDOMString&
 StylesheetConstructionContextDefault::getURLStringFromString(
 			const XalanDOMString&	urlString,
-			const XalanDOMString&	base)
+			const XalanDOMString&	base,
+            XalanDOMString&         theResult)
 {
-	return URISupport::getURLStringFromString(urlString, base);
+    URISupport::getURLStringFromString(urlString, base, theResult);
+
+	return theResult;
 }
 
 
@@ -594,7 +608,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_APPLY_IMPORTS:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemApplyImport(
+        theElement = CreateElementFunctor<ElemApplyImport>() (
+            getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -641,7 +656,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_CHOOSE:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemChoose(
+        theElement = CreateElementFunctor<ElemChoose>()(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -652,7 +668,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_COMMENT:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemComment(
+        theElement = CreateElementFunctor<ElemComment>()(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -663,7 +680,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_COPY:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemCopy(
+        theElement = CreateElementFunctor<ElemCopy>()(
+            getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -674,7 +692,9 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_COPY_OF:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemCopyOf(
+//		theElement = ElemCopyOf::create(
+        theElement = CreateElementFunctor<ElemCopyOf>()(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -685,7 +705,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_DECIMAL_FORMAT:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemDecimalFormat(
+        theElement = CreateElementFunctor<ElemDecimalFormat>()(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -705,7 +726,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_FALLBACK:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemFallback(
+        theElement = CreateElementFunctor<ElemFallback>()(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -716,7 +738,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_FOR_EACH:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemForEach(
+        theElement = CreateElementFunctor<ElemForEach>()(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -727,7 +750,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_IF:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemIf(
+        theElement = CreateElementFunctor<ElemIf>()(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -738,7 +762,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_MESSAGE:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemMessage(
+        theElement = CreateElementFunctor<ElemMessage>()(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -749,7 +774,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_NUMBER:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemNumber(
+        theElement = ElemNumber::create(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -761,7 +787,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_OTHERWISE:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemOtherwise(
+		theElement = CreateElementFunctor<ElemOtherwise>()(
+            getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -772,7 +799,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_PARAM:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemParam(
+		theElement = CreateElementFunctor<ElemParam>()(
+            getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -783,7 +811,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_PI:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemPI(
+		theElement = CreateElementFunctor<ElemPI>()(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -794,7 +823,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_SORT:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemSort(
+		theElement = CreateElementFunctor<ElemSort>()(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -822,7 +852,7 @@ StylesheetConstructionContextDefault::createElement(
 
 	case ELEMNAME_VARIABLE:
 		return m_elemVariableAllocator.create(
-			*this,
+ 			*this,
 			stylesheetTree,
 			atts,
 			lineNumber,
@@ -832,7 +862,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_WITH_PARAM:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemWithParam(
+		theElement = CreateElementFunctor<ElemWithParam>()(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -843,7 +874,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_WHEN:
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemWhen(
+		theElement = CreateElementFunctor<ElemWhen>()(
+            getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -852,7 +884,13 @@ StylesheetConstructionContextDefault::createElement(
 		break;
 
 	default:
-		error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLTToken_1Param, LongToDOMString(token)), 0, locator);
+        {
+            GetAndReleaseCachedString theGuard(*this);
+            GetAndReleaseCachedString theGuard1(*this);
+
+		    error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLTToken_1Param, theGuard.get(),
+                            LongToDOMString(token, theGuard1.get())), 0, locator);
+        }
 		break;
 	};
 
@@ -892,7 +930,8 @@ StylesheetConstructionContextDefault::createElement(
 	{
 		m_allocatedElements.push_back(0);
 
-		theElement = new ElemForwardCompatible(
+        theElement = ElemForwardCompatible::create(
+             getMemoryManager(),
 			*this,
 			stylesheetTree,
 			name,
@@ -904,7 +943,10 @@ StylesheetConstructionContextDefault::createElement(
 	}
 	else
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLTToken_1Param, LongToDOMString(token)), 0, locator);
+        GetAndReleaseCachedString theGuard(*this);
+        GetAndReleaseCachedString theGuard1(*this);
+
+		error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLTToken_1Param, theGuard.get(), LongToDOMString(token, theGuard1.get())), 0, locator);
 	}
 
 	return theElement;
@@ -925,7 +967,8 @@ StylesheetConstructionContextDefault::createElement(
 
 	m_allocatedElements.push_back(0);
 
-	m_allocatedElements.back() = new ElemExtensionCall(
+    m_allocatedElements.back() = ElemExtensionCall::create(
+            getMemoryManager(),
 			*this,
 			stylesheetTree,
 			name,

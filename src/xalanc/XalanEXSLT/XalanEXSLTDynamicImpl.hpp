@@ -70,17 +70,19 @@ public:
 #else
 	virtual XalanEXSLTFunctionEvaluate*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new XalanEXSLTFunctionEvaluate(*this);
+		return cloneFunction_0<XalanEXSLTFunctionEvaluate>()(theManager);
 	}
 
 protected:
 
-	virtual const XalanDOMString
-	getError() const
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theResult) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"evaluate()");
+		XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theResult , "evaluate()");
+
+        return theResult;
 	}
 
 private:

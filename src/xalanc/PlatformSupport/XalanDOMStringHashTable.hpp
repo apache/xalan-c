@@ -26,8 +26,8 @@
 #include <xalanc/Include/XalanVector.hpp>
 
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
 
 
 
@@ -58,6 +58,7 @@ public:
 	 */
 	explicit
 	XalanDOMStringHashTable(
+            MemoryManagerType&  theManager,
 			size_t				theBucketCount = eDefaultBucketCount,
 			bucket_size_type	theBucketSize = eDefaultBucketSize);
 
@@ -216,7 +217,7 @@ private:
 
 	const bucket_size_type			m_bucketSize;
 
-	XalanArrayAutoPtr<BucketType>	m_buckets;
+	XalanMemMgrAutoPtrArray<BucketType>	m_buckets;
 
 	size_t							m_count;
 

@@ -107,14 +107,6 @@ public:
 	bool
 	hasMoreTokens() const;
 
-	/**
-	 * Retrieve the next token to be parsed; behavior is undefined if there are
-	 * no more tokens
-	 * 
-	 * @return next token string
-	 */
-	XalanDOMString
-	nextToken();
 
 	/**
 	 * Retrieve the next token to be parsed; behavior is undefined if there are

@@ -53,6 +53,11 @@ public:
 			XalanOutputStream&	theOutputStream,
 			bool				fAutoFlush = false);
 
+    static XalanOutputStreamPrintWriter*
+    create(
+			XalanOutputStream&	theOutputStream,
+			bool				fAutoFlush = false);
+
 	virtual
 	~XalanOutputStreamPrintWriter();
 

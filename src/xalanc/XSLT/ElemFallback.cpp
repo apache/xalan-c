@@ -60,9 +60,12 @@ ElemFallback::ElemFallback(
 		if (!(isAttrOK(aname, atts, i, constructionContext) ||
 			processSpaceAttr(aname, atts, i, constructionContext)))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                        theResult,
 							Constants::ELEMNAME_FALLBACK_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,

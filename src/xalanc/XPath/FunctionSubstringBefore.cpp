@@ -41,7 +41,7 @@ FunctionSubstringBefore::~FunctionSubstringBefore()
 
 
 
-static const XalanDOMString		theEmptyString;
+static const XalanDOMString		theEmptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 inline XObjectPtr
@@ -113,18 +113,20 @@ Function*
 #else
 FunctionSubstringBefore*
 #endif
-FunctionSubstringBefore::clone() const
+FunctionSubstringBefore::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionSubstringBefore(*this);
+	return cloneFunction_1<FunctionSubstringBefore>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionSubstringBefore::getError() const
+const XalanDOMString&
+FunctionSubstringBefore::getError(XalanDOMString& theResult) const
 {
 
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, "substring-before()");
+	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, theResult, "substring-before()");
+
+    return theResult;
 
 }
 

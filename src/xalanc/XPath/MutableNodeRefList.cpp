@@ -22,7 +22,7 @@
 #include <cassert>
 #include <functional>
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 #include <xalanc/XalanDOM/XalanNamedNodeMap.hpp>
 #include <xalanc/XalanDOM/XalanDocument.hpp>
@@ -39,24 +39,40 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-MutableNodeRefList::MutableNodeRefList() :
-	NodeRefList(),
+MutableNodeRefList::MutableNodeRefList(MemoryManagerType& theManager) :
+	NodeRefList(theManager),
 	m_order(eUnknownOrder)
 {
 }
+MutableNodeRefList*
+MutableNodeRefList::create(MemoryManagerType& theManager)
+{
+    typedef MutableNodeRefList ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 
-
-MutableNodeRefList::MutableNodeRefList(const MutableNodeRefList&	theSource) :
-	NodeRefList(theSource),
+MutableNodeRefList::MutableNodeRefList(const MutableNodeRefList&	theSource,
+                                       MemoryManagerType& theManager) :
+	NodeRefList(theSource, theManager),
 	m_order(theSource.m_order)
 {
 }
 
 
 
-MutableNodeRefList::MutableNodeRefList(const NodeRefListBase&	theSource) :
-	NodeRefList(theSource),
+MutableNodeRefList::MutableNodeRefList(const NodeRefListBase&	theSource,
+                                       MemoryManagerType& theManager) :
+	NodeRefList(theSource, theManager),
 	m_order(eUnknownOrder)
 {
 }
@@ -662,7 +678,7 @@ MutableNodeRefList::clearNulls()
 		m_order = eUnknownOrder;
 	}
 
-	assert(checkForDuplicates() == false);
+	assert(checkForDuplicates(getMemoryManager()) == false);
 }
 
 

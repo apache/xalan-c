@@ -66,10 +66,9 @@ public:
     virtual const XMLCh*
 	getValue(const XMLCh* const name) const;
 
-	virtual const XMLCh* 
-	getValue(const char* const name) const;
-
 private:
+    virtual const XMLCh* 
+    getValue(const char* const name) const;
 
 	// Not implemented...
 	XercesNamedNodeMapAttributeList&

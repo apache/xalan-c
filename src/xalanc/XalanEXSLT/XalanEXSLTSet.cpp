@@ -40,12 +40,14 @@ XalanEXSLTFunctionHasSameNode::execute(
 {
 	if (args.size() != 2)
 	{
-		executionContext.error(getError(), context, locator);
+        XalanDOMString theResult(executionContext.getMemoryManager());
+
+		executionContext.error(getError(theResult), context, locator);
 	}
 
 	assert(args[0].null() == false && args[1].null() == false);
 
-	const NodeRefListBase&	nodeset1 = args[0]->nodeset();
+    const NodeRefListBase&	nodeset1 = args[0]->nodeset();
 	const NodeRefListBase&	nodeset2 = args[1]->nodeset();
 
 	const NodeRefListBase::size_type	theLength1 = nodeset1.getLength();
@@ -158,7 +160,9 @@ XalanEXSLTFunctionLeading::execute(
 {
 	if (args.size() != 2)
 	{
-		executionContext.error(getError(), context, locator);
+        XalanDOMString theResult(executionContext.getMemoryManager());
+
+		executionContext.error(getError(theResult), context, locator);
 	}
 
 	return findNodes(executionContext, args, LeadingCompareFunctor(executionContext));
@@ -199,7 +203,9 @@ XalanEXSLTFunctionTrailing::execute(
 {
 	if (args.size() != 2)
 	{
-		executionContext.error(getError(), context, locator);
+        XalanDOMString theResult(executionContext.getMemoryManager());
+
+		executionContext.error(getError(theResult), context, locator);
 	}
 
 	return findNodes(executionContext, args, TrailingCompareFunctor(executionContext));
@@ -366,9 +372,9 @@ XalanEXSLTSetFunctionsInstaller::installLocal(XPathEnvSupportDefault&	theSupport
 
 
 void
-XalanEXSLTSetFunctionsInstaller::installGlobal()
+XalanEXSLTSetFunctionsInstaller::installGlobal(MemoryManagerType& theManager)
 {
-	doInstallGlobal(s_setNamespace, theFunctionTable);
+	doInstallGlobal(theManager, s_setNamespace, theFunctionTable);
 }
 
 
@@ -382,9 +388,9 @@ XalanEXSLTSetFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&	theSuppo
 
 
 void
-XalanEXSLTSetFunctionsInstaller::uninstallGlobal()
+XalanEXSLTSetFunctionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
 {
-	doUninstallGlobal(s_setNamespace, theFunctionTable);
+	doUninstallGlobal(theManager, s_setNamespace, theFunctionTable);
 }
 
 

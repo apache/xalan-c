@@ -23,8 +23,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanSourceTreeDocumentAllocator::XalanSourceTreeDocumentAllocator(size_type	theBlockCount) :
-	m_allocator(theBlockCount)
+XalanSourceTreeDocumentAllocator::XalanSourceTreeDocumentAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -51,6 +51,7 @@ XalanSourceTreeDocumentAllocator::create(
 	assert(theBlock != 0);
 
 	data_type* const	theResult = new(theBlock) data_type(
+                m_allocator.getMemoryManager(),
 				fPoolAllText,
 				theNamesStringPoolBlockSize,
 				theNamesStringPoolBucketCount,
@@ -82,6 +83,7 @@ XalanSourceTreeDocumentAllocator::create(
 	assert(theBlock != 0);
 
 	data_type* const	theResult = new(theBlock) data_type(
+                m_allocator.getMemoryManager(),
 				theAttributeBlockSize,
 				theAttributeNSBlockSize,
 				theCommentBlockSize,

@@ -26,7 +26,7 @@
 // Base class header file...
 #include <xalanc/XSLT/TraceListener.hpp>
 
-
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 XALAN_CPP_NAMESPACE_BEGIN
 
@@ -44,6 +44,7 @@ class XALAN_XSLT_EXPORT TraceListenerDefault : public TraceListener
 public:
 
 	TraceListenerDefault(
+            MemoryManagerType& theManager,
 			PrintWriter&	thePrintWriter,
 			bool			traceTemplates = false,
 			bool			traceElements = false,
@@ -120,15 +121,17 @@ private:
 
 
 	// Data members...
-	PrintWriter&	m_printWriter;
+	PrintWriter&	    m_printWriter;
 
-	bool			m_traceTemplates;
+	bool			    m_traceTemplates;
 
-	bool			m_traceElements;
+	bool			    m_traceElements;
 
-	bool			m_traceGeneration;
+	bool			    m_traceGeneration;
 
-	bool			m_traceSelection;
+	bool			    m_traceSelection;
+
+    MemoryManagerType&  m_memoryManager;
 };
 
 

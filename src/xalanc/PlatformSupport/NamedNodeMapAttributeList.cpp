@@ -43,10 +43,12 @@ const XalanDOMChar	NamedNodeMapAttributeList::s_typeString[] =
 
 
 
-NamedNodeMapAttributeList::NamedNodeMapAttributeList(const XalanNamedNodeMap&	theMap) :
+NamedNodeMapAttributeList::NamedNodeMapAttributeList(const XalanNamedNodeMap&	theMap,
+                                                     MemoryManagerType&         theManager) :
 	ParentType(),
 	m_nodeMap(theMap),
-	m_lastIndex(theMap.getLength() - 1)
+	m_lastIndex(theMap.getLength() - 1),
+    m_memoryManager(theManager)
 {
 }
 
@@ -109,9 +111,9 @@ NamedNodeMapAttributeList::getType(const XMLCh* const /* name */) const
 
 
 const XMLCh*
-NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
+NamedNodeMapAttributeList::getValue(const XMLCh* const      name) const
 {
-	const XalanNode*	theNode = m_nodeMap.getNamedItem(XalanDOMString(name));
+	const XalanNode*	theNode = m_nodeMap.getNamedItem(XalanDOMString(name, m_memoryManager));
 
 	if (theNode == 0)
 	{
@@ -128,7 +130,9 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 const XMLCh* 
 NamedNodeMapAttributeList::getValue(const char* const name) const
 {
-	return getValue(c_wstr(TranscodeFromLocalCodePage(name)));
+    XalanDOMString theBuffer(m_memoryManager);
+
+	return getValue(c_wstr(TranscodeFromLocalCodePage(name, theBuffer)));
 }
 
 

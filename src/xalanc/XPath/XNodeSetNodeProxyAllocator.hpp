@@ -50,7 +50,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XNodeSetNodeProxyAllocator(size_type	theBlockCount);
+	XNodeSetNodeProxyAllocator(MemoryManagerType&      theManager, size_type	theBlockCount);
 
 	~XNodeSetNodeProxyAllocator();
 	

@@ -58,7 +58,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XPathAllocator(size_type	theBlockCount);
+	XPathAllocator(MemoryManagerType&      theManager, size_type	theBlockCount);
 
 	~XPathAllocator();
 

@@ -64,7 +64,7 @@ static const XalanDOMChar	theRightCurlyBracketString[] =
 
 
 
-const XalanDOMString	AVT::s_emptyString;
+const XalanDOMString	AVT::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -103,10 +103,10 @@ AVT::AVT(
 		// will need the first time.
 		m_parts = constructionContext.allocateAVTPartPointerVector(nTokens + 1);
 
-		XalanDOMString	buffer;
-		XalanDOMString	exprBuffer;
-		XalanDOMString	t; // base token
-		XalanDOMString	lookahead; // next token
+        XalanDOMString	buffer(constructionContext.getMemoryManager());
+		XalanDOMString	exprBuffer(constructionContext.getMemoryManager());
+		XalanDOMString	t(constructionContext.getMemoryManager()); // base token
+		XalanDOMString	lookahead(constructionContext.getMemoryManager()); // next token
 
 		while(tokenizer.hasMoreTokens())
 		{
@@ -191,9 +191,12 @@ AVT::AVT(
 										}
 
 										case XalanUnicode::charLeftCurlyBracket:
-											// What's another brace doing here?
-											constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::LeftBraceCannotAppearWithinExpression));
-											break;
+                                            {
+                                                XalanDOMString  theResult(constructionContext.getMemoryManager());
+                                                // What's another brace doing here?
+                                                constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::LeftBraceCannotAppearWithinExpression, theResult));
+                                                break;
+                                            }
 
 										default:
 											// part of the template stuff, just add it.
@@ -242,14 +245,15 @@ AVT::AVT(
 						}
 						else
 						{
-							constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::UnmatchedWasFound));
+                            XalanDOMString  theResult(constructionContext.getMemoryManager());
+							constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::UnmatchedWasFound, theResult));
 
 						}
 						break;
 					}
 					default:
 					{
-						const XalanDOMString	s(&theChar, 1);
+                        const XalanDOMString	s(&theChar, constructionContext.getMemoryManager(),  1);
 
 						// Anything else just add to string.
 						append(buffer, s);
@@ -330,7 +334,9 @@ AVT::nextToken(
 {
 	if (tokenizer.hasMoreTokens() == false)
 	{
-		constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::AttributeValueTemplateHasMissing),0,locator);
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
+		constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::AttributeValueTemplateHasMissing, theResult),0,locator);
 	}
 	else
 	{

@@ -26,14 +26,28 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathConstructionContextDefault::XPathConstructionContextDefault() :
-	XPathConstructionContext(),
-	m_stringPool(),
-	m_stringCache()
+XPathConstructionContextDefault::XPathConstructionContextDefault(MemoryManagerType& theManager) :
+	XPathConstructionContext(theManager),
+	m_stringPool(theManager),
+	m_stringCache(theManager)
 {
 }
 
+XPathConstructionContextDefault*
+XPathConstructionContextDefault::create(MemoryManagerType& theManager)
+{
+    typedef XPathConstructionContextDefault ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XPathConstructionContextDefault::~XPathConstructionContextDefault()
 {
@@ -90,13 +104,17 @@ XPathConstructionContextDefault::error(
 			const XalanNode* 		/* sourceNode */,
 			const LocatorType* 		locator) const
 {
-	if (locator != 0)
+    MemoryManagerType& theManager = const_cast<XPathConstructionContextDefault*>(this)-> getMemoryManager();
+
+    if (locator != 0)
 	{
-		throw XPathParserException(*locator, msg);
+        MemoryManagerType& theManager = const_cast<XPathConstructionContextDefault*>(this)-> getMemoryManager();
+
+		throw XPathParserException(*locator, msg, theManager);
 	}
 	else
 	{
-		throw XPathParserException(msg);
+		throw XPathParserException(msg, theManager);
 	}
 }
 

@@ -49,21 +49,16 @@ public:
 	 *
 	 * @param theXToken The XToken instance to adapt
 	 */
-	XTokenStringAdapter(const XToken&	theToken);
+	XTokenStringAdapter(const XToken&	    theToken,
+                        MemoryManagerType& theManager);
 
-	XTokenStringAdapter(const XTokenStringAdapter&	source);
+	XTokenStringAdapter(const XTokenStringAdapter&	source,
+                        MemoryManagerType&          theManager);
 
 	virtual
 	~XTokenStringAdapter();
 
 	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XTokenStringAdapter*
-#endif
-	clone(void*		theAddress = 0) const;
 
 	virtual double
 	num() const;
@@ -88,6 +83,9 @@ protected:
 	getRealType() const;
 
 private:
+    // Not implemented
+    XTokenStringAdapter(const XTokenStringAdapter&	source);
+    XTokenStringAdapter();
 
 	// XToken instance that we're adapting...
 	const XToken&	m_value;

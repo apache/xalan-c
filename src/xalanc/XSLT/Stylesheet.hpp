@@ -76,6 +76,9 @@ class XObject;
 class StylesheetExecutionContext;
 
 
+typedef XalanVector<const XalanMatchPatternData*>	PatternTableVectorTypeDecl;
+XALAN_USES_MEMORY_MANAGER(PatternTableVectorTypeDecl)
+
 
 /**
  * This class represents the base stylesheet or an "import" stylesheet.
@@ -97,7 +100,7 @@ public:
 	typedef XalanVector<XalanDOMString>					URLStackType;
 	typedef XalanVector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 	typedef XalanVector<XalanSpaceNodeTester>			WhitespaceElementsVectorType;
-    typedef XalanVector<const XalanMatchPatternData*>	PatternTableVectorType;
+    typedef PatternTableVectorTypeDecl					PatternTableVectorType;
 	
 	typedef  XalanMap<XalanDOMString, ExtensionNSHandler*>		ExtensionNamespacesMapType;
 
@@ -120,6 +123,18 @@ public:
 
 	virtual
 	~Stylesheet();
+
+    static Stylesheet*
+    create(MemoryManagerType& theManager,
+            StylesheetRoot& 				root,
+			const XalanDOMString&			baseIdentifier,
+			StylesheetConstructionContext&	constructionContext);
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_elementPatternTable.getMemoryManager();
+    }
 
 	/**
 	 * Retrieve XSLT version number
@@ -284,9 +299,10 @@ public:
 	 * @return namespace string for node, or null if not found.
 	 */
 	const XalanDOMString*
-	getNamespaceFromStack(const XalanDOMString& 	nodeName) const
+	getNamespaceFromStack(const XalanDOMString& 	nodeName,
+                            XalanDOMString&         theBuffer) const
 	{
-		return getNamespaceFromStack(c_wstr(nodeName));
+		return getNamespaceFromStack(c_wstr(nodeName), theBuffer);
 	}
 
 	/**
@@ -296,7 +312,8 @@ public:
 	 * @return namespace string for node, or null if not found.
 	 */
 	const XalanDOMString*
-	getNamespaceFromStack(const XalanDOMChar* 	nodeName) const;
+	getNamespaceFromStack(const XalanDOMChar* 	nodeName,
+                            XalanDOMString&     theBuffer) const;
 
 	/**
 	 * Get the namespace from a prefix by searching the stack of namespace
@@ -323,7 +340,7 @@ public:
 	{
 		assert(prefix != 0);
 
-		return XalanQName::getNamespaceForPrefix(m_namespaces, XalanDOMString(prefix));
+		return XalanQName::getNamespaceForPrefix(m_namespaces, (const XalanDOMChar*)prefix);
 	}
 
 	/**

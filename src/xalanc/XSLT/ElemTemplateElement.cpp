@@ -73,7 +73,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString			ElemTemplateElement::s_emptyString;
+const XalanDOMString			ElemTemplateElement::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 const XalanQNameByReference			ElemTemplateElement::s_emptyQName(s_emptyString, s_emptyString);
 
@@ -116,7 +116,7 @@ ElemTemplateElement::ElemTemplateElement(
 			int								columnNumber) :
 	PrefixResolver(),
 	m_stylesheet(stylesheetTree),
-	m_namespacesHandler(),
+    m_namespacesHandler(constructionContext.getMemoryManager()),
 	m_lineNumber(lineNumber),
 	m_columnNumber(columnNumber),
 	m_xslToken(xslToken),
@@ -124,7 +124,7 @@ ElemTemplateElement::ElemTemplateElement(
 	m_nextSibling(0),
 	m_previousSibling(0),
 	m_firstChild(0),
-	m_baseIndentifier(constructionContext.getPooledString(baseURI)),
+    m_baseIndentifier(constructionContext.getPooledString(baseURI)),
 	m_locatorProxy(*this),
 	m_flags(eCanGenerateAttributes)
 {
@@ -190,8 +190,10 @@ ElemTemplateElement::processSpaceAttr(
 		}
 		else if (equals(spaceVal, Constants::ATTRVAL_DEFAULT) == false)
 		{
+            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 			constructionContext.error(
-				XalanMessageLoader::getMessage(XalanMessages::AttributeHasIllegalValue_1Param,"xml:space"),
+				XalanMessageLoader::getMessage(XalanMessages::AttributeHasIllegalValue_1Param,theGuard.get(),"xml:space"),
 				0,
 				this);
 		}
@@ -232,7 +234,7 @@ ElemTemplateElement::endElement(StylesheetExecutionContext&		/*executionContext*
 
 
 void
-ElemTemplateElement::execute(StylesheetExecutionContext&    executionContext) const
+ElemTemplateElement::execute(StylesheetExecutionContext&			executionContext) const
 {
 	const ElemTemplateElement* const    invoker =
             getParentNodeElem();
@@ -255,7 +257,7 @@ ElemTemplateElement::execute(StylesheetExecutionContext&    executionContext) co
 			{
 				nextElement = 0;
 
-                break;
+				break;
 			}
 
             const ElemTemplateElement* const    localInvoker =
@@ -319,9 +321,9 @@ ElemTemplateElement::beginExecuteChildren(StylesheetExecutionContext&	executionC
 
 
 void 
-ElemTemplateElement::endExecuteChildren(StylesheetExecutionContext&	    executionContext) const
+ElemTemplateElement::endExecuteChildren(StylesheetExecutionContext&	executionContext) const
 {
-    if (hasParams() == true || hasVariables() == true)
+	if (hasParams() == true || hasVariables() == true)
 	{
 		executionContext.popElementFrame();
 	}
@@ -613,8 +615,10 @@ ElemTemplateElement::processSortElement(
 			const AttributeListType&		/* atts */,
 			const LocatorType*				locator)
 {
+    StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 	constructionContext.error(
-		XalanMessageLoader::getMessage(XalanMessages::TemplateIsNotAllowedAtThisPosition_1Param,Constants::ELEMNAME_SORT_WITH_PREFIX_STRING),
+		XalanMessageLoader::getMessage(XalanMessages::TemplateIsNotAllowedAtThisPosition_1Param,theGuard.get(),Constants::ELEMNAME_SORT_WITH_PREFIX_STRING),
 		0,
 		locator);
 }

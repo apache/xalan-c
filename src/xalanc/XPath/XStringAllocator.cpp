@@ -23,8 +23,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XStringAllocator::XStringAllocator(size_type	theBlockCount) :
-	m_allocator(theBlockCount)
+XStringAllocator::XStringAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -42,7 +42,7 @@ XStringAllocator::createString(const XalanDOMString&	theString)
 	string_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	string_type* const	theResult = new(theBlock) string_type(theString);
+    string_type* const	theResult = new(theBlock) string_type(theString, m_allocator.getMemoryManager());
 
 	m_allocator.commitAllocation(theBlock);
 
@@ -57,7 +57,7 @@ XStringAllocator::createString(const XalanDOMChar*	theString)
 	string_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	string_type* const	theResult = new(theBlock) string_type(theString);
+	string_type* const	theResult = new(theBlock) string_type(theString, m_allocator.getMemoryManager());
 
 	m_allocator.commitAllocation(theBlock);
 
@@ -74,7 +74,7 @@ XStringAllocator::createString(
 	string_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	string_type* const	theResult = new(theBlock) string_type(theString, theLength);
+	string_type* const	theResult = new(theBlock) string_type(theString, theLength, m_allocator.getMemoryManager());
 
 	m_allocator.commitAllocation(theBlock);
 
@@ -82,19 +82,6 @@ XStringAllocator::createString(
 }
 
 
-
-XStringAllocator::string_type*
-XStringAllocator::clone(const XString&	value)
-{
-	string_type* const		theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
-
-	value.clone(theBlock);
-
-	m_allocator.commitAllocation(theBlock);
-
-	return theBlock;
-}
 
 
 

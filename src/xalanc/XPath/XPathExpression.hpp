@@ -602,7 +602,8 @@ public:
 		 * 
 		 * @param theMessage string error message
 		 */
-		XPathExpressionException(const XalanDOMString&	theMessage);
+		XPathExpressionException(const XalanDOMString&	theMessage,
+                                    MemoryManagerType& theManager);
 
 		virtual~
 		XPathExpressionException();
@@ -620,15 +621,17 @@ public:
 		 * 
 		 * @param theOpCode operation code that caused the exception
 		 */
-		InvalidOpCodeException(OpCodeMapValueType	theOpCode);
+		InvalidOpCodeException(OpCodeMapValueType	theOpCode,
+                                XalanDOMString&     theResult);
 
 		virtual~
 		InvalidOpCodeException();
 
 	private:
 
-		static XalanDOMString
-		FormatErrorMessage(OpCodeMapValueType	theOpCode);
+		static XalanDOMString&
+		FormatErrorMessage(OpCodeMapValueType	theOpCode,
+                            XalanDOMString&     theResult);
 	};
 
 	/**
@@ -649,18 +652,20 @@ public:
 		InvalidArgumentCountException(
 			OpCodeMapValueType	theOpCode,
 			OpCodeMapValueType	theExpectedCount,
-			OpCodeMapValueType	theSuppliedCount);
+			OpCodeMapValueType	theSuppliedCount,
+            XalanDOMString&     theResult);
 
 		virtual~
 		InvalidArgumentCountException();
 
 	private:
 
-		static XalanDOMString
+		static XalanDOMString&
 		FormatErrorMessage(
 			OpCodeMapValueType	theOpCode,
 			OpCodeMapValueType	theExpectedCount,
-			OpCodeMapValueType	theSuppliedCount);
+			OpCodeMapValueType	theSuppliedCount,
+            XalanDOMString&     theResult);
 	};
 
 	/**
@@ -678,17 +683,19 @@ public:
 		 */
 		InvalidArgumentException(
 			OpCodeMapValueType	theOpCode,
-			OpCodeMapValueType	theValue);
+			OpCodeMapValueType	theValue,
+            XalanDOMString&     theResult);
 
 		virtual~
 		InvalidArgumentException();
 
 	private:
 
-		static XalanDOMString
+		static XalanDOMString&
 		FormatErrorMessage(
 				OpCodeMapValueType	theOpCode,
-				OpCodeMapValueType	theValue);
+				OpCodeMapValueType	theValue,
+                XalanDOMString&     theResult);
 	};
 
 
@@ -708,10 +715,15 @@ public:
 #endif
 
 	explicit
-	XPathExpression();
+	XPathExpression(MemoryManagerType& theManager);
 
 	~XPathExpression();
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_opMap.getMemoryManager();
+    }
 	/**
 	 * Reset the expression.
 	 */
@@ -859,7 +871,8 @@ public:
 	 * @return length of operation code
 	 */
 	OpCodeMapValueType
-	getOpCodeLengthFromOpMap(OpCodeMapPositionType  opPos) const;
+	getOpCodeLengthFromOpMap(OpCodeMapPositionType  opPos,
+                             MemoryManagerType&     theManager) const;
 
 #if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
 	/**
@@ -870,7 +883,8 @@ public:
 	 * @return length of operation code
 	 */
 	OpCodeMapValueType
-	getOpCodeLengthFromOpMap(OpCodeMapSizeType  theIndex) const;
+	getOpCodeLengthFromOpMap(OpCodeMapSizeType      theIndex,
+                                MemoryManagerType& theManager) const;
 #endif
 
 #if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
@@ -1182,7 +1196,7 @@ public:
 	void
 	pushToken(const XalanDOMString&		theToken)
 	{
-		m_tokenQueue.push_back(XToken(theToken));
+		m_tokenQueue.push_back(XToken(theToken, getMemoryManager()));
 	}
 
 	/**
@@ -1208,7 +1222,7 @@ public:
 	void
 	insertToken(const XalanDOMString&	theToken)
 	{
-		m_tokenQueue.insert(m_tokenQueue.begin() + (m_currentPosition - 1), XToken(theToken));
+		m_tokenQueue.insert(m_tokenQueue.begin() + (m_currentPosition - 1), XToken(theToken, getMemoryManager()));
 	}
 
 	/**
@@ -1242,7 +1256,7 @@ public:
             calculateRelativePosition(theOffset, theDirection);
         assert(thePosition < tokenQueueSize());
 
-		m_tokenQueue[thePosition].set(theString);
+		m_tokenQueue[thePosition].set(theString, getMemoryManager());
 	}
 
 	/**

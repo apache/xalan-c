@@ -53,8 +53,12 @@ FunctionString::execute(
 {
 	if (context == 0)
 	{
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+        XalanDOMString& theResult = theGuard.get();
+
+        XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,theResult, "string"),
 		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param, "string"),
+			    theResult,
 				context,
 				locator);
 
@@ -110,18 +114,20 @@ Function*
 #else
 FunctionString*
 #endif
-FunctionString::clone() const
+FunctionString::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionString(*this);
+	return cloneFunction_1<FunctionString>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionString::getError() const
+const XalanDOMString&
+FunctionString::getError(XalanDOMString& theResult) const
 {
 
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, "string()");
+	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult, "string()");
+
+    return theResult;
 }
 
 

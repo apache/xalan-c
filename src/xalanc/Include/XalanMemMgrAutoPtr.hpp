@@ -41,7 +41,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 // variations amongst the varous platforms we have to
 // support
 template<	class	Type, 
-			bool	toCallDestructor >
+			bool	toCallDestructor = true>
 class XalanMemMgrAutoPtr
 {
 public:
@@ -111,9 +111,9 @@ public:
 	
 	
 	XalanMemMgrAutoPtr(
-			MemoryManagerType*  theManager, 
+			MemoryManagerType&  theManager, 
 			Type* ptr  ) : 
-		m_pointerInfo(theManager, ptr)
+		m_pointerInfo(&theManager, ptr)
 	{
 	}	
 
@@ -172,6 +172,14 @@ public:
 		
 		return MemMgrAutoPtrData(tmp);
 	}
+	
+	Type*
+	releasePtr()
+	{		
+		MemMgrAutoPtrData tmp = release();
+	
+		return tmp.second;
+	}	
 	
 	void
 	reset(	MemoryManagerType*  theManager = 0,
@@ -236,13 +244,11 @@ public:
 			{			
 				assert ( m_dataArray != 0 );
 
-				Type* runPtr = m_dataArray;
-
 				for ( size_type i = 0; i < m_size ; ++i )
 				{
-					runPtr->~Type();
+					m_dataArray[i].~Type();
 				}
-				XalanMemoryManagement::deallocate ( m_dataArray, m_memoryManager );
+				m_memoryManager->deallocate ( m_dataArray);
 			}
 		}
 		
@@ -273,18 +279,14 @@ public:
 		{
 			assert( isInitilized() ||
 					( (m_memoryManager == 0) && (m_dataArray ==0) && (m_size == 0)) );
-		}
-
-
-
-		
+		}		
 	};
 	
 	XalanMemMgrAutoPtrArray(
-			MemoryManagerType*  theManager, 
+			MemoryManagerType&  theManager, 
 			Type*				ptr,
 			size_type			size) : 
-		m_pointerInfo(theManager, ptr, size)
+		m_pointerInfo(&theManager, ptr, size)
 	{
 	}	
 
@@ -366,6 +368,15 @@ public:
 		m_pointerInfo.reset( 0 , 0 , 0); 
 		
 		return MemMgrAutoPtrArrayData(tmp);
+	}
+
+	Type*
+	releasePtr()
+	{		
+		MemMgrAutoPtrArrayData tmp = release();
+	
+		
+		return tmp.dataPointer;
 	}
 	
 	void

@@ -59,13 +59,15 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathEnvSupportDefault::NamespaceFunctionTablesType		XPathEnvSupportDefault::s_externalFunctions;
-
+XPathEnvSupportDefault::NamespaceFunctionTablesType		XPathEnvSupportDefault::s_externalFunctions(XalanMemMgrs::getDummyMemMgr());
 
 
 void
-XPathEnvSupportDefault::initialize()
+XPathEnvSupportDefault::initialize(MemoryManagerType&  theManager)
 {
+    XPathEnvSupportDefault::NamespaceFunctionTablesType tmpMap(theManager);
+
+    s_externalFunctions.swap(tmpMap);
 }
 
 
@@ -78,17 +80,17 @@ XPathEnvSupportDefault::terminate()
 	// Clean up the extension namespaces vector
 	for_each(s_externalFunctions.begin(),
 			 s_externalFunctions.end(),
-			 NamespaceFunctionTableDeleteFunctor());
+			 NamespaceFunctionTableDeleteFunctor(s_externalFunctions.getMemoryManager()));
 
-	NamespaceFunctionTablesType().swap(s_externalFunctions);
+	NamespaceFunctionTablesType(XalanMemMgrs::getDummyMemMgr()).swap(s_externalFunctions);
 }
 
 
 
-XPathEnvSupportDefault::XPathEnvSupportDefault() :
+XPathEnvSupportDefault::XPathEnvSupportDefault(MemoryManagerType&  theManager) :
 	XPathEnvSupport(),
-	m_sourceDocs(),
-	m_externalFunctions()
+	m_sourceDocs(theManager),
+	m_externalFunctions(theManager)
 {
 }
 
@@ -101,9 +103,9 @@ XPathEnvSupportDefault::~XPathEnvSupportDefault()
 	// Clean up the extension namespaces vector
 	for_each(m_externalFunctions.begin(),
 			 m_externalFunctions.end(),
-			 NamespaceFunctionTableDeleteFunctor());
+			 NamespaceFunctionTableDeleteFunctor(m_externalFunctions.getMemoryManager()));
 
-	NamespaceFunctionTablesType().swap(m_externalFunctions);
+	NamespaceFunctionTablesType(XalanMemMgrs::getDummyMemMgr()).swap(m_externalFunctions);
 }
 
 
@@ -126,7 +128,7 @@ XPathEnvSupportDefault::updateFunctionTable(
 		if (function != 0)
 		{
 			theTable[theNamespace][functionName] =
-				function->clone();
+                function->clone(theTable.getMemoryManager());
 		}
 	}
 	else
@@ -142,24 +144,24 @@ XPathEnvSupportDefault::updateFunctionTable(
 			// 0, then add a clone of the function.
 			if (function != 0)
 			{
-				(*i).second[functionName] = function->clone();
+				(*i).second[functionName] = function->clone(theTable.getMemoryManager());
 			}
 		}
 		else
 		{
 			// Found it, so delete the function...
-#if defined(XALAN_CANNOT_DELETE_CONST)
-			delete (Function*)(*j).second;
-#else
-			delete (*j).second;
-#endif
+            (*j).second->~Function();
+
+            MemoryManagerType& theManager = theTable.getMemoryManager();
+
+            theManager.deallocate((void*)(*j).second);
 
 			// If function is not 0, then we update
 			// the entry.  Otherwise, we erase it...
 			if (function != 0)
 			{
 				// Update it...
-				(*j).second = function->clone();
+				(*j).second = function->clone(theTable.getMemoryManager());
 			}
 			else
 			{
@@ -224,6 +226,7 @@ XPathEnvSupportDefault::reset()
 
 XalanDocument*
 XPathEnvSupportDefault::parseXML(
+            MemoryManagerType&      /* theManager */,
 			const XalanDOMString&	/* urlString */,
 			const XalanDOMString&	/* base */)
 {
@@ -260,8 +263,9 @@ XPathEnvSupportDefault::setSourceDocument(
 
 
 
-XalanDOMString
-XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
+XalanDOMString&
+XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner,
+                                       XalanDOMString&          theResult) const
 {
 	SourceDocsTableType::const_iterator	i =
 			m_sourceDocs.begin();
@@ -279,8 +283,16 @@ XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
 			++i;
 		}
 	}
+    if(fFound == false)
+    {
+        theResult.erase();
+    }
+    else
+    {
+        theResult = (*i).first;
+    }
 
-	return fFound == false ? XalanDOMString() : (*i).first;
+	return theResult;
 }
 
 
@@ -405,7 +417,7 @@ XPathEnvSupportDefault::extFunction(
 	}
 	else
 	{
-		XalanDOMString	theFunctionName;
+        XalanDOMString	theFunctionName(executionContext.getMemoryManager());
 
 		if(length(theNamespace) > 0)
 		{
@@ -415,13 +427,15 @@ XPathEnvSupportDefault::extFunction(
 
 		theFunctionName += functionName;
 
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+
 		if (locator != 0)
 		{
-			throw XPathExceptionFunctionNotAvailable(theFunctionName, *locator);
+			throw XPathExceptionFunctionNotAvailable(theFunctionName, *locator, theGuard.get());
 		}
 		else
 		{
-			throw XPathExceptionFunctionNotAvailable(theFunctionName);
+			throw XPathExceptionFunctionNotAvailable(theFunctionName,  theGuard.get());
 		}
 
 		// dummy return value...
@@ -461,28 +475,26 @@ XPathEnvSupportDefault::problem(
 	return classification == XPathEnvSupport::eError ? true : false;
 }
 
-
+XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::NamespaceFunctionTableDeleteFunctor(MemoryManagerType& theManager) :
+m_memMgr(theManager)
+{
+}
 
 void
 XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const NamespaceFunctionTablesInnerType::value_type&	thePair) const
 {
-#if defined(XALAN_CANNOT_DELETE_CONST)
+
 	FunctionTableInnerType::const_iterator	i = thePair.second.begin();
 
 	while(i != thePair.second.end())
 	{
-		delete (Function*) (*i).second;
+        (*i).second->~Function();
 
-		++i;
+        m_memMgr.deallocate((void*)(*i).second);
+
+        ++i;
 	}
-#else
-	XALAN_USING_STD(for_each)
 
-	// Clean up the extension namespaces vector
-	for_each(thePair.second.begin(),
-			 thePair.second.end(),
-			 MapValueDeleteFunctor<FunctionTableInnerType>());
-#endif
 }
 
 

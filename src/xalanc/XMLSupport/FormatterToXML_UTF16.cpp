@@ -22,7 +22,7 @@
 
 #include <xercesc/sax/AttributeList.hpp>
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/Writer.hpp>
@@ -40,6 +40,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 FormatterToXML_UTF16::FormatterToXML_UTF16(
+            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	version,
 			const XalanDOMString&	mediaType,
@@ -48,6 +49,7 @@ FormatterToXML_UTF16::FormatterToXML_UTF16(
 			bool					xmlDecl,
 			const XalanDOMString&	standalone) :
 	FormatterToXMLBase(
+        theManager,
 		writer,
 		version,
 		mediaType,
@@ -71,6 +73,38 @@ FormatterToXML_UTF16::FormatterToXML_UTF16(
 #else
 	m_writer->write(reinterpret_cast<const char*>(theProlog), 0, theLength);
 #endif
+}
+
+FormatterToXML_UTF16*
+FormatterToXML_UTF16::create(
+                             MemoryManagerType&         theManager,
+                             Writer&					writer,
+                             const XalanDOMString&	    version ,
+                             const XalanDOMString&	    mediaType ,
+                             const XalanDOMString&	    doctypeSystem ,
+                             const XalanDOMString&	    doctypePublic ,
+                             bool					    xmlDecl ,
+                             const XalanDOMString&	    standalone )
+{
+    typedef FormatterToXML_UTF16 ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(   theManager,
+                            	writer,
+                            	version ,
+                            	mediaType ,
+                            	doctypeSystem ,
+                            	doctypePublic ,
+                                xmlDecl ,
+                            	standalone );
+
+
+    theGuard.release();
+
+    return theResult;
 }
 
 
@@ -690,7 +724,7 @@ FormatterToXML_UTF16::writeNormalizedPIData(
 
 
 
-static XalanDOMString	s_localUTF16String;
+static XalanDOMString	s_localUTF16String(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -699,9 +733,11 @@ const XalanDOMString&	FormatterToXML_UTF16::s_utf16String = s_localUTF16String;
 
 
 void
-FormatterToXML_UTF16::initialize()
+FormatterToXML_UTF16::initialize(MemoryManagerType& theManager)
 {
-	s_localUTF16String = XalanTranscodingServices::s_utf16String;
+    XalanDOMString tmpString(XalanTranscodingServices::s_utf16String, theManager);
+
+	s_localUTF16String.swap(tmpString);
 }
 
 
@@ -709,7 +745,7 @@ FormatterToXML_UTF16::initialize()
 void
 FormatterToXML_UTF16::terminate()
 {
-	XalanDOMString().swap(s_localUTF16String);
+	XalanDOMString(XalanMemMgrs::getDummyMemMgr()).swap(s_localUTF16String);
 }
 
 

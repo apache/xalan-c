@@ -37,9 +37,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-DOMSupportDefault::DOMSupportDefault() :
+DOMSupportDefault::DOMSupportDefault(MemoryManagerType& theManager) :
 	DOMSupport(),
-	m_pool()
+	m_pool(theManager)
 {
 }
 
@@ -61,9 +61,9 @@ DOMSupportDefault::reset()
 const XalanDOMString&
 DOMSupportDefault::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const
+			const XalanDocument&	theDocument,
+            XalanDOMString&			theURI) const
 {
-	XalanDOMString					theURI;
 
 	const XalanDocumentType* const	theDoctype =
 		theDocument.getDoctype();
@@ -87,7 +87,7 @@ DOMSupportDefault::getUnparsedEntityURI(
 					static_cast<const XalanEntity*>(theNode);
 #endif
 
-				const XalanDOMString		theNotationName(theEntity->getNotationName());
+                const XalanDOMString		theNotationName(theEntity->getNotationName(),theURI.getMemoryManager());
 
 				if(isEmpty(theNotationName) == false) // then it's unparsed
 				{

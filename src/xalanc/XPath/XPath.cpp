@@ -56,18 +56,33 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	XPath::s_emptyString;
+
+const XalanDOMString	XPath::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
-XPath::XPath(const LocatorType*		theLocator) :
-	m_expression(),
+XPath::XPath(MemoryManagerType& theManager, const LocatorType*		theLocator) :
+	m_expression(theManager),
 	m_locator(theLocator),
 	m_inStylesheet(false)
 {
 }
 
+XPath*
+XPath::create(MemoryManagerType& theManager, const LocatorType*	theLocator)
+{
+    typedef XPath Type;
 
+    XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
+
+    Type* theResult = theGuard.get();
+
+    new (theResult) Type(theManager, theLocator);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XPath::~XPath()
 {
@@ -81,12 +96,14 @@ XPath::unknownOpCodeError(
 			XPathExecutionContext&	executionContext,
 			OpCodeMapPositionType	opPos) const
 {
-	XalanDOMString	theOpCode;
+	XalanDOMString	theOpCode(executionContext.getMemoryManager());
 			
 	LongToDOMString(m_expression.getOpCodeMapValue(opPos), theOpCode);
 
+    XalanDOMString theBuffer(executionContext.getMemoryManager());
+
 	executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::UnknownOpCode_1Param,theOpCode),
+			XalanMessageLoader::getMessage(XalanMessages::UnknownOpCode_1Param, theBuffer, theOpCode),
 			context,
 			m_locator);
 }
@@ -98,8 +115,10 @@ XPath::notNodeSetError(
 			XalanNode*				context,
 			XPathExecutionContext&	executionContext) const
 {
+    XalanDOMString  theBuffer(executionContext.getMemoryManager());
+
 	executionContext.error(
-		XalanMessageLoader::getMessage(XalanMessages::ExpressionDoesNotEvaluateToNodeSet),
+		XalanMessageLoader::getMessage(XalanMessages::ExpressionDoesNotEvaluateToNodeSet, theBuffer),
 		context,
 		m_locator);
 }
@@ -770,19 +789,19 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_FUNCTION_NAME_0:
-		result = XObject::number(functionName(context));
+		result = XObject::number(functionName(context),executionContext.getMemoryManager());
 		break;
 
 	case XPathExpression::eOP_FUNCTION_NAME_1:
-		result = XObject::number(functionName(context, opPos, executionContext));
+		result = XObject::number(functionName(context, opPos, executionContext),executionContext.getMemoryManager());
 		break;
 
 	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
-		result = XObject::number(functionLocalName(context));
+		result = XObject::number(functionLocalName(context),executionContext.getMemoryManager());
 		break;
 
 	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
-		result = XObject::number(functionLocalName(context, opPos, executionContext));
+		result = XObject::number(functionLocalName(context, opPos, executionContext),executionContext.getMemoryManager());
 		break;
 
 	case XPathExpression::eOP_FUNCTION_FLOOR:
@@ -1116,7 +1135,7 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_VARIABLE:
-		variable(opPos, executionContext)->str(formatterListener, function);
+		variable(opPos, executionContext)->str( formatterListener, function);
 		break;
 
 	case XPathExpression::eOP_GROUP:
@@ -1128,7 +1147,7 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_EXTFUNCTION:
-		runExtFunction(context, opPos, executionContext)->str(formatterListener, function);
+		runExtFunction(context, opPos, executionContext)->str( formatterListener, function);
 		break;
 
 	case XPathExpression::eOP_FUNCTION:
@@ -1234,6 +1253,10 @@ XPath::executeMore(
 
 	switch(m_expression.getOpCodeMapValue(opPos))
 	{
+	case XPathExpression::eOP_XPATH:
+		theXObject = executeMore(context, opPos + 2, executionContext, result);
+		break;
+
 	case XPathExpression::eOP_OR:
 	case XPathExpression::eOP_AND:
 	case XPathExpression::eOP_NOTEQUALS:
@@ -1354,8 +1377,10 @@ XPath::getMatchScore(
 
 	if(m_expression.getOpCodeMapValue(0) != XPathExpression::eOP_MATCHPATTERN)
 	{
+        XalanDOMString  theResult(executionContext.getMemoryManager());
+
 		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::CannotEvaluateXPathExpressionAsMatchPattern),
+			XalanMessageLoader::getMessage(XalanMessages::CannotEvaluateXPathExpressionAsMatchPattern, theResult),
 			node,
 			m_locator);
 	}
@@ -2225,7 +2250,7 @@ XPath::literal(
     const XToken* const	    theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
 
-	theLiteral->str(formatterListener, function);
+	theLiteral->str( formatterListener, function);
 }
 
 
@@ -2337,7 +2362,7 @@ XPath::numberlit(
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
     assert(theLiteral != 0);
 
-    theLiteral->str(formatterListener, function);
+    theLiteral->str( formatterListener, function);
 }
 
 
@@ -2467,7 +2492,7 @@ XPath::runExtFunction(
 
 	typedef XPathExecutionContext::XObjectArgVectorType		XObjectArgVectorType;
 
-	XObjectArgVectorType	args;
+	XObjectArgVectorType	args(executionContext.getMemoryManager());
 
 	while(opPos < endExtFunc)
 	{
@@ -2559,7 +2584,7 @@ XPath::runFunction(
 	{
 		typedef XPathExecutionContext::XObjectArgVectorType		XObjectArgVectorType;
 
-		XObjectArgVectorType	args;
+		XObjectArgVectorType	args(executionContext.getMemoryManager());
 
 		args.reserve(argCount);
 
@@ -2760,7 +2785,7 @@ XPath::functionSum(
 		{
 			DOMServices::getNodeData(*theNodeList->item(i), theString);
 
-			sum = DoubleSupport::add(sum, DoubleSupport::toDouble(theString));
+			sum = DoubleSupport::add(sum, DoubleSupport::toDouble(theString, executionContext.getMemoryManager()));
 
 			clear(theString);
 		}
@@ -3025,7 +3050,8 @@ XPath::stepPattern(
 
 	case XPathExpression::eOP_FUNCTION:
 		{
-			argLen = currentExpression.getOpCodeLengthFromOpMap(opPos);
+			argLen = currentExpression.getOpCodeLengthFromOpMap(opPos,
+                                                                executionContext.getMemoryManager());
 
 			const XObjectPtr		obj(executeMore(context, opPos, executionContext));
 			assert(obj.get() != 0);
@@ -3212,10 +3238,14 @@ XPath::stepPattern(
 		break;
 
 	default:
-		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::UnknownMatchOperation)
-			, context, getLocator());
-		break;
+        {
+            XalanDOMString  theBuffer(executionContext.getMemoryManager());
+
+            executionContext.error(
+                XalanMessageLoader::getMessage(XalanMessages::UnknownMatchOperation, theBuffer)
+                , context, getLocator());
+            break;
+        }
 	}
 
 	opPos += argLen;
@@ -3380,7 +3410,7 @@ XPath::findNodeSet(
 		subQueryResults.setDocumentOrder();
 	}
 
-	return opPos + getExpression().getOpCodeLengthFromOpMap(opPos);
+	return opPos + getExpression().getOpCodeLengthFromOpMap(opPos, executionContext.getMemoryManager());
 }
 
 
@@ -4329,8 +4359,10 @@ XPath::findNodesOnUnknownAxis(
 	const OpCodeMapValueType	argLen =
 		currentExpression.getOpCodeArgumentLength(opPos);
 
+    XalanDOMString  theBuffer(executionContext.getMemoryManager());
+
 	executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::UnknownAxis),
+			XalanMessageLoader::getMessage(XalanMessages::UnknownAxis, theBuffer),
 			context,
 			getLocator());
 
@@ -4404,8 +4436,9 @@ XPath::nodeTest(
 			}
 			else
 			{
+                XalanDOMString  theBuffer(executionContext.getMemoryManager());
 
-				executionContext.error(XalanMessageLoader::getMessage(XalanMessages::ArgLengthNodeTestIsIncorrect_1Param, "processing-instruction()"), context, getLocator());
+				executionContext.error(XalanMessageLoader::getMessage(XalanMessages::ArgLengthNodeTestIsIncorrect_1Param, theBuffer,  "processing-instruction()"), context, getLocator());
 			}
 		}
 
@@ -4795,9 +4828,11 @@ XPath::NodeTester::NodeTester(
 		}
 		else
 		{
+            XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+
 			executionContext.error(
                 XalanMessageLoader::getMessage(
-                    XalanMessages::ArgLengthNodeTestIsIncorrect_1Param,
+                    XalanMessages::ArgLengthNodeTestIsIncorrect_1Param, theGuard.get(),
                     "processing-instruction()"),
                     0,
                     xpath.getLocator());
@@ -4990,9 +5025,11 @@ XPath::NodeTester::initialize(
         {
             if (XalanQName::isValidNCName(theNameTest) == false)
             {
+                XalanDOMString  theBuffer(theConstructionContext.getMemoryManager());
+
 		        theConstructionContext.error(
                     XalanMessageLoader::getMessage(
-                        XalanMessages::IsNotValidQName_1Param,
+                        XalanMessages::IsNotValidQName_1Param, theBuffer,
                         theNameTest),
                         0,
                         theLocator);
@@ -5029,10 +5066,12 @@ XPath::NodeTester::initialize(
             {
                 // OK, now we have a namespace URI...
                 if (XalanQName::isValidNCName(theScratchString) == false)
-                {
+                {                    
+                    XalanDOMString  theBuffer(theConstructionContext.getMemoryManager());
+
 		            theConstructionContext.error(
                         XalanMessageLoader::getMessage(
-                            XalanMessages::IsNotValidQName_1Param,
+                            XalanMessages::IsNotValidQName_1Param, theBuffer,
                             theNameTest),
                             0,
                             theLocator);
@@ -5051,9 +5090,11 @@ XPath::NodeTester::initialize(
 
                     if (XalanQName::isValidNCName(theScratchString) == false)
                     {
+                        XalanDOMString  theBuffer(theConstructionContext.getMemoryManager());
+
 		                theConstructionContext.error(
                             XalanMessageLoader::getMessage(
-                                XalanMessages::IsNotValidQName_1Param,
+                                XalanMessages::IsNotValidQName_1Param, theBuffer,
                                 theNameTest),
                                 0,
                                 theLocator);
@@ -5654,13 +5695,16 @@ const XalanDOMChar	XPath::PSEUDONAME_NODE[] =
 
 
 // Don't auto-create the table...
+
 XPath::FunctionTableType		XPath::s_functions(false);
 
 
 
 void
-XPath::initialize()
+XPath::initialize(MemoryManagerType& theManager)
 {
+    s_functions.setMemoryManager(theManager);
+
 	s_functions.CreateTable();
 }
 

@@ -71,6 +71,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison :
 	public XMLParserLiaison,
 	public ErrorHandlerType
 {
+    
 public:
 
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER SAXParser			SAXParserType;
@@ -82,17 +83,24 @@ public:
 	 *
 	 * @deprecated This constructor is deprecated.  Use the next constructor instead.
 	 */
-	XercesParserLiaison(XercesDOMSupport&	theSupport);
+	XercesParserLiaison(MemoryManagerType& theManager, XercesDOMSupport&	theSupport);
 
 	/**
 	 * Construct a XercesParserLiaison instance.
 	 */
-	XercesParserLiaison();
+	XercesParserLiaison(MemoryManagerType& theManager);
 
 	virtual
 	~XercesParserLiaison();
 
+
+
 	// These interfaces are inherited from XMLParserLiaison...
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_externalSchemaLocation.getMemoryManager();
+    }
 
 	virtual void
 	reset();
@@ -106,13 +114,13 @@ public:
 	virtual XalanDocument*
 	parseXMLStream(
 			const InputSourceType&	reader,
-			const XalanDOMString&	identifier = XalanDOMString());
+			const XalanDOMString&	identifier = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
 	virtual void
 	parseXMLStream(
 			const InputSourceType&	urlInputSource,
 			DocumentHandlerType&	handler,
-			const XalanDOMString&	identifier = XalanDOMString());
+			const XalanDOMString&	identifier = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
@@ -129,8 +137,8 @@ public:
 	virtual void
 	setUseValidation(bool	b);
 
-	virtual const XalanDOMString
-	getParserDescription() const;
+	virtual const XalanDOMString&
+	getParserDescription(XalanDOMString& theResult) const;
 
 	virtual EntityResolverType*
 	getEntityResolver() const;

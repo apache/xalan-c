@@ -39,7 +39,9 @@ public:
 
 	typedef Function	ParentType;
 
-	FunctionSystemProperty();
+	FunctionSystemProperty(MemoryManagerType& theManager);
+
+    FunctionSystemProperty( const FunctionSystemProperty& other, MemoryManagerType& theManager);
 
 	virtual
 	~FunctionSystemProperty();
@@ -62,12 +64,12 @@ public:
 #else
 	virtual FunctionSystemProperty*
 #endif
-	clone() const;
+	clone(MemoryManagerType& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString
-	getError() const;
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theResult) const;
 
 private:
 

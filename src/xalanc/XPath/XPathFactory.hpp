@@ -21,7 +21,7 @@
 // Base include file.  Must be first.
 #include <xalanc/XPath/XPathDefinitions.hpp>
 
-
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 #include <cassert>
 #include <functional>

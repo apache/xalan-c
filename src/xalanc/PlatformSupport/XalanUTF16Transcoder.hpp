@@ -37,8 +37,11 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanUTF16Transcoder : public XalanOutputTran
 public:
 
 	explicit
-	XalanUTF16Transcoder();
-   
+	XalanUTF16Transcoder(MemoryManagerType& theManager);
+
+    static XalanUTF16Transcoder*
+    create(MemoryManagerType& theManager);
+
 	virtual
 	~XalanUTF16Transcoder();
 

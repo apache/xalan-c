@@ -63,15 +63,15 @@ public:
 #else
 	virtual FunctionUnparsedEntityURI*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new FunctionUnparsedEntityURI(*this);
+		return cloneFunction_1<FunctionUnparsedEntityURI>()(*this, theManager);
 	}
 
 protected:
 
-	virtual const XalanDOMString
-	getError() const;
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theResult) const;
 
 private:
 

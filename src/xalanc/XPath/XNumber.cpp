@@ -26,19 +26,21 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XNumber::XNumber(double		val) :
+XNumber::XNumber(double		val,
+                 MemoryManagerType& theManager) :
 	XNumberBase(),
 	m_value(val),
-	m_cachedStringValue()
+	m_cachedStringValue(theManager)
 {
 }
 
 
 
-XNumber::XNumber(const XNumber&		source) :
+XNumber::XNumber(const XNumber&		source,
+                 MemoryManagerType& theManager) :
 	XNumberBase(source),
 	m_value(source.m_value),
-	m_cachedStringValue(source.m_cachedStringValue)
+	m_cachedStringValue(source.m_cachedStringValue, theManager)
 {
 }
 
@@ -47,26 +49,6 @@ XNumber::XNumber(const XNumber&		source) :
 XNumber::~XNumber()
 {
 }
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XNumber*
-#endif
-XNumber::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XNumber(*this);
-	}
-	else
-	{
-		return new (theAddress) XNumber(*this);
-	}
-}
-
 
 
 double
@@ -99,7 +81,7 @@ XNumber::str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const
 {
-	const XalanDOMString&	theValue = str();
+    const XalanDOMString&	theValue = str();
 
 	assert(length(theValue) == FormatterListener::size_type(length(theValue)));
 
@@ -136,7 +118,7 @@ XNumber::set(double		theValue)
 double
 XNumber::stringLength() const
 {
-	return length(str());
+    return length(str());
 }
 
 

@@ -32,56 +32,56 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanXMLFileReporter::XalanXMLFileReporter(const XalanDOMString&  fileName) :
-    OPT_FILENAME(),
-    ELEM_RESULTSFILE(),
-    ELEM_TESTFILE(),
-    ELEM_FILERESULT(),
-    ELEM_TESTCASE(),
-    ELEM_CASERESULT(),
-    ELEM_CHECKRESULT(),
-    ELEM_STATISTIC(),
-    ELEM_LONGVAL(),
-    ELEM_DOUBLEVAL(),
-    ELEM_MESSAGE(),
-    ELEM_ARBITRARY(),
-    ELEM_HASHTABLE(),
-    ELEM_HASHITEM(),
-    ATTR_LEVEL(),
-    ATTR_DESC(),
-    ATTR_TIME(),
-    ATTR_RESULT(),
-    ATTR_KEY(),
-    ATTR_FILENAME(),
-    LESS_THAN(),
-    GREATER_THAN(),
-    EQUALS_QUOTE(),
-    SPACE(),
-    QUOTE(),
-    QUOTE_SPACE(),
-    QUOTE_GREATER_THAN(),
-    QUOTE_SOLIDUS_GREATER_THAN(),
-    PASS(),
-    AMBG(),
-    ERRR(),
-    FAIL(),
-    LESS_THAN_SOLIDUS(),
-    XML_HEADER(),
-    REASON_EQUALS_QUOTE(),
-    TESTCASEINIT_HDR(),
-    TESTCASECLOSE_HDR(),
-    MESSAGE_HDR(),
-    STATISTIC_HDR(),
-    ARBITRARY_HDR(),
-    HASHTABLE_HDR(),
-    HASHITEM_HDR(),
-    CHECKPASS_HDR(),
-    CHECKAMBG_HDR(),
-    CHECKERRR_HDR(),
-    CHECKFAIL_HDR(),
-    CHECKFAIL_FTR(),
+XalanXMLFileReporter::XalanXMLFileReporter( MemoryManagerType& theManager, const XalanDOMString&  fileName) :
+    OPT_FILENAME(theManager),
+    ELEM_RESULTSFILE(theManager),
+    ELEM_TESTFILE(theManager),
+    ELEM_FILERESULT(theManager),
+    ELEM_TESTCASE(theManager),
+    ELEM_CASERESULT(theManager),
+    ELEM_CHECKRESULT(theManager),
+    ELEM_STATISTIC(theManager),
+    ELEM_LONGVAL(theManager),
+    ELEM_DOUBLEVAL(theManager),
+    ELEM_MESSAGE(theManager),
+    ELEM_ARBITRARY(theManager),
+    ELEM_HASHTABLE(theManager),
+    ELEM_HASHITEM(theManager),
+    ATTR_LEVEL(theManager),
+    ATTR_DESC(theManager),
+    ATTR_TIME(theManager),
+    ATTR_RESULT(theManager),
+    ATTR_KEY(theManager),
+    ATTR_FILENAME(theManager),
+    LESS_THAN(theManager),
+    GREATER_THAN(theManager),
+    EQUALS_QUOTE(theManager),
+    SPACE(theManager),
+    QUOTE(theManager),
+    QUOTE_SPACE(theManager),
+    QUOTE_GREATER_THAN(theManager),
+    QUOTE_SOLIDUS_GREATER_THAN(theManager),
+    PASS(theManager),
+    AMBG(theManager),
+    ERRR(theManager),
+    FAIL(theManager),
+    LESS_THAN_SOLIDUS(theManager),
+    XML_HEADER(theManager),
+    REASON_EQUALS_QUOTE(theManager),
+    TESTCASEINIT_HDR(theManager),
+    TESTCASECLOSE_HDR(theManager),
+    MESSAGE_HDR(theManager),
+    STATISTIC_HDR(theManager),
+    ARBITRARY_HDR(theManager),
+    HASHTABLE_HDR(theManager),
+    HASHITEM_HDR(theManager),
+    CHECKPASS_HDR(theManager),
+    CHECKAMBG_HDR(theManager),
+    CHECKERRR_HDR(theManager),
+    CHECKFAIL_HDR(theManager),
+    CHECKFAIL_FTR(theManager),
     m_anyOutput(false),
-    m_fileName(fileName),
+    m_fileName(fileName, theManager),
     m_fileHandle(0),
     m_ready(false),
     m_error(false),
@@ -89,12 +89,12 @@ XalanXMLFileReporter::XalanXMLFileReporter(const XalanDOMString&  fileName) :
 {
     if (m_fileName.empty() == false)
     {
-        m_ready = initialize();
+        m_ready = initialize(theManager);
     }
 }
 
 bool
-XalanXMLFileReporter::initialize()
+XalanXMLFileReporter::initialize(MemoryManagerType& theManager)
 {       
     if (m_fileName.empty() == true)
     {
@@ -106,7 +106,7 @@ XalanXMLFileReporter::initialize()
     else
     {
         // Transcode down the file name...
-        CharVectorType  theTranscodedFileName;
+        CharVectorType  theTranscodedFileName(theManager);
         
         TranscodeToLocalCodePage(m_fileName, theTranscodedFileName, true);
 
@@ -223,10 +223,27 @@ XalanXMLFileReporter::close()
 void 
 XalanXMLFileReporter::logTestFileInit(const XalanDOMString& msg)
 {
+    XalanDOMString b(getMemoryManager());
     if (isReady())
     {
-        printToFile(LESS_THAN + ELEM_TESTFILE 
-                              + SPACE + ATTR_DESC + EQUALS_QUOTE + escapestring(msg) + QUOTE_SPACE + ATTR_TIME + EQUALS_QUOTE + getDateTimeString() + QUOTE_GREATER_THAN);
+        XalanDOMString b(getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
+
+        b += LESS_THAN;
+        b += ELEM_TESTFILE;
+        b += SPACE;
+        b +=ATTR_DESC;
+        b +=EQUALS_QUOTE;
+        b +=escapestring(msg, buffer);
+        b +=QUOTE_SPACE;
+        b +=ATTR_TIME;
+        b +=EQUALS_QUOTE;
+        buffer.clear();
+        b +=getDateTimeString(buffer);
+        b +=QUOTE_GREATER_THAN;
+
+
+        printToFile(b);
     }
 }
 
@@ -237,9 +254,12 @@ XalanXMLFileReporter::logTestFileClose(const XalanDOMString& /* msg */, const Xa
 {
     if (isReady())
     {
-//        printToFile(LESS_THAN + ELEM_FILERESULT 
-//                             + SPACE + ATTR_DESC + EQUALS_QUOTE + escapestring(msg) + QUOTE_SPACE + ATTR_RESULT + EQUALS_QUOTE + result + QUOTE_SPACE + ATTR_TIME + EQUALS_QUOTE + getDateTimeString() + QUOTE_SOLIDUS_GREATER_THAN);
-        printToFile(LESS_THAN_SOLIDUS + ELEM_TESTFILE + GREATER_THAN);
+        XalanDOMString b(getMemoryManager());
+        b +=LESS_THAN_SOLIDUS;
+        b +=ELEM_TESTFILE;
+        b +=GREATER_THAN;
+
+        printToFile(b);
     }
     flush();
 }
@@ -251,7 +271,14 @@ XalanXMLFileReporter::logTestCaseInit(const XalanDOMString& msg)
 {
     if (isReady())
     {
-        printToFile(TESTCASEINIT_HDR + escapestring(msg) + QUOTE_GREATER_THAN);
+        XalanDOMString b(getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
+
+        b +=TESTCASEINIT_HDR;
+        b +=escapestring(msg, buffer);
+        b +=QUOTE_GREATER_THAN;
+
+        printToFile(b);
     }
 }
 
@@ -262,8 +289,12 @@ XalanXMLFileReporter::logTestCaseClose(const XalanDOMString& /* msg */, const Xa
 {
     if (isReady())
     {
-        //printToFile(TESTCASECLOSE_HDR + escapestring(msg) + QUOTE_SPACE + ATTR_RESULT + EQUALS_QUOTE + result + QUOTE_SOLIDUS_GREATER_THAN);
-        printToFile(LESS_THAN_SOLIDUS + ELEM_TESTCASE + GREATER_THAN);
+        XalanDOMString b(getMemoryManager());
+        b +=LESS_THAN_SOLIDUS;
+        b +=ELEM_TESTCASE;
+        b +=GREATER_THAN;
+
+        printToFile(b);
     }
     if (getFlushOnCaseClose())
     {
@@ -281,48 +312,71 @@ XalanXMLFileReporter::logMessage(int level, const XalanDOMString& msg)
 
     if (isReady())
     {
-        printToFile(MESSAGE_HDR + tmp + QUOTE_GREATER_THAN);
-        printToFile(escapestring(msg));
-        printToFile(LESS_THAN_SOLIDUS + ELEM_MESSAGE + GREATER_THAN);
+        XalanDOMString b(getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
+
+        b +=LESS_THAN_SOLIDUS;
+        b +=MESSAGE_HDR;
+        b.append(tmp);
+        b +=QUOTE_GREATER_THAN;
+
+        printToFile(b);
+        printToFile(escapestring(msg, buffer));
+        b.clear();
+        b +=LESS_THAN_SOLIDUS;
+        b +=ELEM_MESSAGE;
+        b +=GREATER_THAN;
+
+        printToFile(b );
     }
 }
 
-void XalanXMLFileReporter::addMetricToAttrs(char* desc, double theMetric, Hashtable& attrs)
+void 
+XalanXMLFileReporter::addMetricToAttrs(char* desc, double theMetric, Hashtable& attrs)
 {
-    XalanDOMString  temp;
+    XalanDOMString  temp(getMemoryManager());
 
     DoubleToDOMString(theMetric, temp);
-    attrs.insert(Hashtable::value_type(XalanDOMString(desc), temp));
 
-    return;
+    attrs.insert(XalanDOMString(desc,getMemoryManager()) ,temp);
+
 }
 
 void 
-XalanXMLFileReporter::logElementWAttrs(int /* level */, const XalanDOMString& element, Hashtable attrs, const XalanDOMString& msg)
+XalanXMLFileReporter::logElementWAttrs(int /* level */, const XalanDOMString& element, Hashtable& attrs, const XalanDOMString& msg)
 {
     if (isReady() && !element.empty()&& !attrs.empty())
     {
-//      char tmp[20];
-//      sprintf(tmp, "%d", level);
-//
-//      Took out this level attribute cuz we don't use it.
-//      printToFile(LESS_THAN + element + SPACE + ATTR_LEVEL + EQUALS_QUOTE
-//                      + tmp + QUOTE);
-        printToFile(LESS_THAN + element + SPACE);
+
+        XalanDOMString b(getMemoryManager());
+        b +=LESS_THAN;
+        b +=element;
+        b +=SPACE;
+        printToFile( b);
     
         Hashtable::iterator theEnd = attrs.end();   
     
         for(Hashtable::iterator i = attrs.begin(); i != theEnd; ++i)
         {            
-            
-            printToFile((*i).first + EQUALS_QUOTE
-                                  + (*i).second + QUOTE);
+            b.erase();
+            b +=(*i).first;
+            b +=EQUALS_QUOTE;
+            b +=(*i).second ;
+            b +=QUOTE;
+            printToFile(b);
         }
 
         printToFile(GREATER_THAN);
         if (msg.empty() != 0)
-            printToFile(escapestring(msg));
-        printToFile(LESS_THAN_SOLIDUS + element + GREATER_THAN);
+        {
+            XalanDOMString theResult( getMemoryManager());
+            printToFile(escapestring(msg,theResult ));
+        }
+        b.erase();
+        b +=LESS_THAN_SOLIDUS;
+        b +=element;
+        b +=GREATER_THAN;
+        printToFile(b);
     }
 }
 
@@ -331,7 +385,18 @@ XalanXMLFileReporter::logElement(const XalanDOMString& element, const XalanDOMSt
 {
     if (isReady() && !element.empty() && !msg.empty())
     {
-        printToFile(LESS_THAN + element + GREATER_THAN + escapestring(msg) + LESS_THAN_SOLIDUS + element + GREATER_THAN);
+        XalanDOMString theString( getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
+
+        theString += LESS_THAN;
+        theString += element;
+        theString +=GREATER_THAN;
+        theString +=escapestring(msg, buffer);
+        theString +=LESS_THAN_SOLIDUS;
+        theString +=element;
+        theString +=GREATER_THAN;
+
+        printToFile(theString);
     }
 }
 
@@ -340,18 +405,53 @@ XalanXMLFileReporter::logStatistic (int level, long lVal, double dVal, const Xal
 {
     if (isReady())
     {
+        XalanDOMString b(getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
         char tmp[40];
 
         sprintf(tmp, "%d", level);
-        printToFile(STATISTIC_HDR + tmp + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE + escapestring(msg) + QUOTE_GREATER_THAN);
+        b += STATISTIC_HDR;
+        b += XalanDOMString(tmp, getMemoryManager());
+        b += QUOTE_SPACE;
+        b += ATTR_DESC;
+        b += EQUALS_QUOTE;
+        b += escapestring(msg,buffer);
+        b += QUOTE_GREATER_THAN;
+
+        printToFile(b);
+        b.clear();
         
         sprintf(tmp, "%ld", lVal);
-        printToFile(LESS_THAN + ELEM_LONGVAL + GREATER_THAN + tmp + LESS_THAN_SOLIDUS + ELEM_LONGVAL + GREATER_THAN);
-        
+
+        b += LESS_THAN;
+        b += ELEM_LONGVAL;
+        b += GREATER_THAN;
+        b += XalanDOMString(tmp, getMemoryManager());
+        b += LESS_THAN_SOLIDUS;
+        b += ELEM_LONGVAL;
+        b += GREATER_THAN;
+
+        printToFile(b);
+        b.clear();
+
         sprintf(tmp, "%f", dVal);
-        printToFile(LESS_THAN + ELEM_DOUBLEVAL + GREATER_THAN + tmp + LESS_THAN_SOLIDUS + ELEM_DOUBLEVAL + GREATER_THAN);
-        
-        printToFile(LESS_THAN_SOLIDUS + ELEM_STATISTIC + GREATER_THAN);
+
+        b += LESS_THAN;
+        b += XalanDOMString(ELEM_DOUBLEVAL, getMemoryManager());
+        b += GREATER_THAN;
+        b += XalanDOMString(tmp, getMemoryManager());
+        b += LESS_THAN_SOLIDUS;
+        b += ELEM_DOUBLEVAL;
+        b += GREATER_THAN;
+
+        printToFile(b);
+        b.clear(); 
+
+        b += LESS_THAN_SOLIDUS;
+        b += ELEM_STATISTIC;
+        b += GREATER_THAN;
+
+        printToFile(b);
         
     }
 }
@@ -365,10 +465,24 @@ XalanXMLFileReporter::logArbitraryMessage (int level, const XalanDOMString& msg)
     sprintf(tmp, "%d", level);
 
     if (isReady())
-    {            
-        printToFile(ARBITRARY_HDR + tmp + QUOTE_GREATER_THAN);
-        printToFile(escapestring(msg));
-        printToFile(LESS_THAN_SOLIDUS + ELEM_ARBITRARY + GREATER_THAN);
+    {   
+        XalanDOMString b(getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
+
+        b += ARBITRARY_HDR;
+        b += XalanDOMString(tmp,getMemoryManager());
+        b += QUOTE_GREATER_THAN;
+
+        printToFile(b);
+
+        printToFile(escapestring(msg, buffer));
+
+        b.clear();
+        b +=LESS_THAN_SOLIDUS;
+        b +=ELEM_ARBITRARY;
+        b +=GREATER_THAN;
+
+        printToFile(b);
     }
 }
 
@@ -411,7 +525,13 @@ XalanXMLFileReporter::logCheckPass(const XalanDOMString& comment)
 {
     if (isReady())
     {
-        printToFile(CHECKPASS_HDR + escapestring(comment) + QUOTE_SOLIDUS_GREATER_THAN);
+        XalanDOMString b(getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
+        b += CHECKPASS_HDR;
+        b += escapestring(comment,buffer);
+        b +=QUOTE_SOLIDUS_GREATER_THAN;
+
+        printToFile(b);
     }
 }
 
@@ -421,23 +541,37 @@ XalanXMLFileReporter::logCheckFail(const XalanDOMString& comment)
 {
     if (isReady())
     {
-        printToFile(CHECKFAIL_HDR + escapestring(comment) + QUOTE_SOLIDUS_GREATER_THAN);
+        XalanDOMString b(getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
+
+        b+= CHECKFAIL_HDR;
+        b+=escapestring(comment, buffer);
+        b+= QUOTE_SOLIDUS_GREATER_THAN;
+
+        printToFile(b);
 
     }
 }
 
 
 void 
-XalanXMLFileReporter::logCheckFail(const XalanDOMString& test, Hashtable actexp)
+XalanXMLFileReporter::logCheckFail(const XalanDOMString& test, const Hashtable& actexp)
 {
     if (isReady())
     {
-        printToFile(CHECKFAIL_HDR + escapestring(test) + QUOTE);
+        XalanDOMString b(getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
+
+        b+= CHECKFAIL_HDR;
+        b+= escapestring(test, buffer);
+        b+= QUOTE;
+
+        printToFile(b);
 
         printToFile(GREATER_THAN);
         
-        Hashtable::iterator aeEnd = actexp.end();
-        for(Hashtable::iterator ii = actexp.begin(); ii != aeEnd; ++ii)
+        Hashtable::const_iterator aeEnd = actexp.end();
+        for(Hashtable::const_iterator ii = actexp.begin(); ii != aeEnd; ++ii)
         {            
             logElement((*ii).first, (*ii).second);
         }
@@ -447,23 +581,31 @@ XalanXMLFileReporter::logCheckFail(const XalanDOMString& test, Hashtable actexp)
 }
 
 void 
-XalanXMLFileReporter::logCheckFail(const XalanDOMString& test, Hashtable attrs, Hashtable actexp)
+XalanXMLFileReporter::logCheckFail(const XalanDOMString& test, const Hashtable& attrs, const Hashtable& actexp)
 {
     if (isReady())
     {
-        printToFile(CHECKFAIL_HDR + escapestring(test) + QUOTE);
+        XalanDOMString b(getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
+        b+= CHECKFAIL_HDR;
+        b+= escapestring(test, buffer);
+        b+= QUOTE;
+        printToFile(b);
 
-        Hashtable::iterator fdEnd = attrs.end();    
-        for(Hashtable::iterator i = attrs.begin(); i != fdEnd; ++i)
-        {            
-            printToFile((*i).first + EQUALS_QUOTE
-                                  + (*i).second + QUOTE);
+        Hashtable::const_iterator fdEnd = attrs.end();    
+        for(Hashtable::const_iterator i = attrs.begin(); i != fdEnd; ++i)
+        {   
+            b.clear();
+            b += (*i).first;
+            b += EQUALS_QUOTE;
+            b += QUOTE;
+            printToFile(b);
         }
 
         printToFile(GREATER_THAN);
         
-        Hashtable::iterator aeEnd = actexp.end();
-        for(Hashtable::iterator ii = actexp.begin(); ii != aeEnd; ++ii)
+        Hashtable::const_iterator aeEnd = actexp.end();
+        for(Hashtable::const_iterator ii = actexp.begin(); ii != aeEnd; ++ii)
         {            
             logElement((*ii).first, (*ii).second);
         }
@@ -477,7 +619,14 @@ XalanXMLFileReporter::logCheckAmbiguous(const XalanDOMString& comment)
 {
     if (isReady())
     {
-        printToFile(CHECKAMBG_HDR + escapestring(comment) + QUOTE_SOLIDUS_GREATER_THAN);
+        XalanDOMString b(getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
+
+        b += CHECKAMBG_HDR;
+        b += escapestring(comment, buffer);
+        b += QUOTE_SOLIDUS_GREATER_THAN;
+
+        printToFile(b);
     }
 }
 
@@ -487,7 +636,17 @@ XalanXMLFileReporter::logErrorResult(const XalanDOMString& test, const XalanDOMS
 {
     if (isReady())
     {
-        printToFile(CHECKFAIL_HDR + escapestring(test) + QUOTE_SPACE + XalanDOMString(REASON_EQUALS_QUOTE) + escapestring(reason)  + QUOTE_SOLIDUS_GREATER_THAN);
+        XalanDOMString b(getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
+
+        b += CHECKFAIL_HDR;
+        b += escapestring(test, buffer);
+        b += QUOTE_SPACE;
+        b += XalanDOMString(REASON_EQUALS_QUOTE, getMemoryManager());
+        buffer.clear();
+        b += escapestring(reason, buffer);
+        b += QUOTE_SOLIDUS_GREATER_THAN;
+        printToFile( b);
 
     }
 }
@@ -498,7 +657,13 @@ XalanXMLFileReporter::logCheckErr(const XalanDOMString& comment)
 {
     if (isReady())
     {
-        printToFile(CHECKERRR_HDR + escapestring(comment) + QUOTE_SOLIDUS_GREATER_THAN);
+        XalanDOMString b(getMemoryManager());
+        XalanDOMString buffer(getMemoryManager());
+
+        b +=  CHECKERRR_HDR;
+        b += escapestring(comment, buffer);
+        b += QUOTE_SOLIDUS_GREATER_THAN;
+        printToFile(b);
     }
 }
 
@@ -564,10 +729,9 @@ static const XalanDOMChar   theQuoteString[] =
 
 
 
-XalanDOMString
-XalanXMLFileReporter::escapestring(const XalanDOMString&  s)
+XalanDOMString&
+XalanXMLFileReporter::escapestring(const XalanDOMString&  s, XalanDOMString&      sb)
 {
-    XalanDOMString      sb;
 
     const XalanDOMString::size_type     length = s.length();
 
@@ -617,7 +781,17 @@ XalanXMLFileReporter::startResultsFile()
         printToFile(XML_HEADER);
 
         // Note: this tag is closed in our .close() method, which the caller had better call!
-        printToFile(LESS_THAN + ELEM_RESULTSFILE + SPACE + ATTR_FILENAME + EQUALS_QUOTE + m_fileName + QUOTE_GREATER_THAN);
+
+        XalanDOMString b(getMemoryManager());
+        b += LESS_THAN;
+        b += ELEM_RESULTSFILE;
+        b += SPACE;
+        b += ATTR_FILENAME;
+        b += EQUALS_QUOTE;
+        b += m_fileName;
+        b += QUOTE_GREATER_THAN;
+
+        printToFile(b);
 
         return true;
     }
@@ -637,8 +811,13 @@ XalanXMLFileReporter::closeResultsFile()
         return false;
     }
     else
-    {            
-        printToFile(LESS_THAN_SOLIDUS + ELEM_RESULTSFILE + GREATER_THAN);
+    {        
+        XalanDOMString b(getMemoryManager());
+        b += LESS_THAN_SOLIDUS;
+        b += ELEM_RESULTSFILE;
+        b += GREATER_THAN;
+
+        printToFile(b);
         return true;
     }
 }
@@ -653,7 +832,8 @@ XalanXMLFileReporter::printToFile(const XalanDOMString&  output)
     }
     else
     {
-        const CharVectorType    theResult(TranscodeToLocalCodePage(output));
+        CharVectorType    theResult(getMemoryManager());
+        TranscodeToLocalCodePage(output, theResult, true);
 
         if(!theResult.size())
         {
@@ -672,8 +852,8 @@ XalanXMLFileReporter::printToFile(const XalanDOMString&  output)
 
 
 
-XalanDOMString 
-XalanXMLFileReporter::getDateTimeString() 
+XalanDOMString &
+XalanXMLFileReporter::getDateTimeString(XalanDOMString& theResult) 
 {
 #if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::tm;
@@ -691,7 +871,9 @@ XalanXMLFileReporter::getDateTimeString()
     
     const char* const   theTime = asctime(tmNow);
 
-    return XalanDOMString(theTime, XalanDOMString::length(theTime) - 1);
+    theResult.assign(theTime, XalanDOMString::length(theTime) - 1);
+
+    return theResult;
 }
 
 
@@ -699,54 +881,116 @@ XalanXMLFileReporter::getDateTimeString()
 void
 XalanXMLFileReporter::initStrings()
 {
-    OPT_FILENAME = XALAN_STATIC_UCODE_STRING("filename");
-    ELEM_RESULTSFILE = XALAN_STATIC_UCODE_STRING("resultsfile");
-    ELEM_TESTFILE = XALAN_STATIC_UCODE_STRING("testfile");
-    ELEM_FILERESULT = XALAN_STATIC_UCODE_STRING("fileresult");
-    ELEM_TESTCASE = XALAN_STATIC_UCODE_STRING("Test_Dir");
-    ELEM_CASERESULT = XALAN_STATIC_UCODE_STRING("Dir-result");
-    ELEM_CHECKRESULT = XALAN_STATIC_UCODE_STRING("Testcase");
-    ELEM_STATISTIC = XALAN_STATIC_UCODE_STRING("statistic");
-    ELEM_LONGVAL = XALAN_STATIC_UCODE_STRING("longval");
-    ELEM_DOUBLEVAL = XALAN_STATIC_UCODE_STRING("doubleval");
-    ELEM_MESSAGE = XALAN_STATIC_UCODE_STRING("message");
-    ELEM_ARBITRARY = XALAN_STATIC_UCODE_STRING("arbitrary");
-    ELEM_HASHTABLE = XALAN_STATIC_UCODE_STRING("hashtable");
-    ELEM_HASHITEM = XALAN_STATIC_UCODE_STRING("hashitem");
-    ATTR_LEVEL = XALAN_STATIC_UCODE_STRING("level");
-    ATTR_DESC = XALAN_STATIC_UCODE_STRING("desc");
-    ATTR_TIME = XALAN_STATIC_UCODE_STRING("time");
-    ATTR_RESULT = XALAN_STATIC_UCODE_STRING("result");
-    ATTR_KEY = XALAN_STATIC_UCODE_STRING("key");
+    OPT_FILENAME = XalanDOMString("filename", getMemoryManager());
+    ELEM_RESULTSFILE = XalanDOMString("resultsfile", getMemoryManager());
+    ELEM_TESTFILE = XalanDOMString("testfile", getMemoryManager());
+    ELEM_FILERESULT = XalanDOMString("fileresult", getMemoryManager());
+    ELEM_TESTCASE = XalanDOMString("Test_Dir", getMemoryManager());
+    ELEM_CASERESULT = XalanDOMString("Dir-result", getMemoryManager());
+    ELEM_CHECKRESULT = XalanDOMString("Testcase", getMemoryManager());
+    ELEM_STATISTIC = XalanDOMString("statistic", getMemoryManager());
+    ELEM_LONGVAL = XalanDOMString("longval", getMemoryManager());
+    ELEM_DOUBLEVAL = XalanDOMString("doubleval", getMemoryManager());
+    ELEM_MESSAGE = XalanDOMString("message", getMemoryManager());
+    ELEM_ARBITRARY = XalanDOMString("arbitrary", getMemoryManager());
+    ELEM_HASHTABLE = XalanDOMString("hashtable", getMemoryManager());
+    ELEM_HASHITEM = XalanDOMString("hashitem", getMemoryManager());
+    ATTR_LEVEL = XalanDOMString("level", getMemoryManager());
+    ATTR_DESC = XalanDOMString("desc", getMemoryManager());
+    ATTR_TIME = XalanDOMString("time", getMemoryManager());
+    ATTR_RESULT = XalanDOMString("result", getMemoryManager());
+    ATTR_KEY = XalanDOMString("key", getMemoryManager());
     ATTR_FILENAME = OPT_FILENAME;
-    LESS_THAN = XALAN_STATIC_UCODE_STRING("<");
-    GREATER_THAN = XALAN_STATIC_UCODE_STRING(">");
-    EQUALS_QUOTE = XALAN_STATIC_UCODE_STRING("=\"");
-    SPACE = XALAN_STATIC_UCODE_STRING(" ");
-    QUOTE = XALAN_STATIC_UCODE_STRING("\"");
-    QUOTE_SPACE = XALAN_STATIC_UCODE_STRING("\" ");
-    QUOTE_GREATER_THAN = XALAN_STATIC_UCODE_STRING("\">");
-    QUOTE_SOLIDUS_GREATER_THAN = XALAN_STATIC_UCODE_STRING("\"/>");
-    PASS = XALAN_STATIC_UCODE_STRING("PASS");
-    AMBG = XALAN_STATIC_UCODE_STRING("AMBG");
-    ERRR = XALAN_STATIC_UCODE_STRING("ERRR");
-    FAIL = XALAN_STATIC_UCODE_STRING("FAIL");
-    LESS_THAN_SOLIDUS = XALAN_STATIC_UCODE_STRING("</");
-    XML_HEADER = XALAN_STATIC_UCODE_STRING("<?xml version=\"1.0\"?>");
-    REASON_EQUALS_QUOTE = XALAN_STATIC_UCODE_STRING("reason=\"");
+    LESS_THAN = XalanDOMString("<", getMemoryManager());
+    GREATER_THAN = XalanDOMString(">", getMemoryManager());
+    EQUALS_QUOTE = XalanDOMString("=\"", getMemoryManager());
+    SPACE = XalanDOMString(" ", getMemoryManager());
+    QUOTE = XalanDOMString("\"", getMemoryManager());
+    QUOTE_SPACE = XalanDOMString("\" ", getMemoryManager());
+    QUOTE_GREATER_THAN = XalanDOMString("\">", getMemoryManager());
+    QUOTE_SOLIDUS_GREATER_THAN = XalanDOMString("\"/>", getMemoryManager());
+    PASS = XalanDOMString("PASS", getMemoryManager());
+    AMBG = XalanDOMString("AMBG", getMemoryManager());
+    ERRR = XalanDOMString("ERRR", getMemoryManager());
+    FAIL = XalanDOMString("FAIL", getMemoryManager());
+    LESS_THAN_SOLIDUS = XalanDOMString("</", getMemoryManager());
+    XML_HEADER = XalanDOMString("<?xml version=\"1.0\"?>", getMemoryManager());
+    REASON_EQUALS_QUOTE = XalanDOMString("reason=\"", getMemoryManager());
 
-    TESTCASEINIT_HDR = LESS_THAN + ELEM_TESTCASE + SPACE + ATTR_DESC + EQUALS_QUOTE;
-    TESTCASECLOSE_HDR = LESS_THAN + ELEM_CASERESULT + SPACE + ATTR_DESC + EQUALS_QUOTE;
-    MESSAGE_HDR = LESS_THAN + ELEM_MESSAGE + SPACE + ATTR_LEVEL + EQUALS_QUOTE;
-    STATISTIC_HDR = LESS_THAN + ELEM_STATISTIC + SPACE + ATTR_LEVEL + EQUALS_QUOTE;
-    ARBITRARY_HDR = LESS_THAN + ELEM_ARBITRARY + SPACE + ATTR_LEVEL + EQUALS_QUOTE;
-    HASHTABLE_HDR = LESS_THAN + ELEM_HASHTABLE + SPACE + ATTR_LEVEL + EQUALS_QUOTE;
-    HASHITEM_HDR = LESS_THAN + ELEM_HASHITEM + SPACE + ATTR_KEY + EQUALS_QUOTE;
-    CHECKPASS_HDR = LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + PASS + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE;
-    CHECKAMBG_HDR = LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + AMBG + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE;
-    CHECKERRR_HDR = LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + ERRR + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE;
-    CHECKFAIL_HDR = LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + FAIL + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE;
-    CHECKFAIL_FTR = LESS_THAN_SOLIDUS + ELEM_CHECKRESULT + GREATER_THAN;
+    TESTCASEINIT_HDR = LESS_THAN;
+    TESTCASEINIT_HDR += ELEM_TESTCASE ;  
+    TESTCASEINIT_HDR +=  SPACE;
+    TESTCASEINIT_HDR += ATTR_DESC;
+    TESTCASEINIT_HDR += EQUALS_QUOTE;
+
+    TESTCASECLOSE_HDR = LESS_THAN;
+    TESTCASECLOSE_HDR +=  ELEM_CASERESULT;
+    TESTCASECLOSE_HDR += SPACE;   
+    TESTCASECLOSE_HDR += ATTR_DESC;
+    TESTCASECLOSE_HDR += EQUALS_QUOTE;
+
+    MESSAGE_HDR = LESS_THAN;
+    MESSAGE_HDR += ELEM_MESSAGE;    
+    MESSAGE_HDR += SPACE;    
+    MESSAGE_HDR += ATTR_LEVEL;    
+    MESSAGE_HDR += EQUALS_QUOTE;
+
+    STATISTIC_HDR +=LESS_THAN;
+    STATISTIC_HDR +=ELEM_STATISTIC;
+    STATISTIC_HDR +=SPACE;
+    STATISTIC_HDR +=ATTR_LEVEL;
+    STATISTIC_HDR +=EQUALS_QUOTE;
+
+    ARBITRARY_HDR += LESS_THAN;
+    ARBITRARY_HDR += ELEM_ARBITRARY;
+    ARBITRARY_HDR += SPACE;
+    ARBITRARY_HDR += ATTR_LEVEL;
+    ARBITRARY_HDR += EQUALS_QUOTE;
+
+    HASHTABLE_HDR += LESS_THAN;
+    HASHTABLE_HDR += ELEM_HASHTABLE;
+    HASHTABLE_HDR += SPACE;
+    HASHTABLE_HDR += ATTR_LEVEL;
+    HASHTABLE_HDR += EQUALS_QUOTE;
+ 
+    HASHITEM_HDR += LESS_THAN;
+    HASHITEM_HDR += ELEM_HASHITEM;
+    HASHITEM_HDR += SPACE;
+    HASHITEM_HDR += ATTR_KEY;
+    HASHITEM_HDR += EQUALS_QUOTE;
+
+    XalanDOMString prefix(getMemoryManager()), suffix(getMemoryManager());
+
+    prefix += LESS_THAN;
+    prefix += ELEM_CHECKRESULT;
+    prefix += SPACE;
+    prefix += ATTR_RESULT;
+    prefix += EQUALS_QUOTE;
+
+    suffix += QUOTE_SPACE;
+    suffix += ATTR_DESC;
+    suffix += EQUALS_QUOTE;
+
+    CHECKPASS_HDR += prefix;
+    CHECKPASS_HDR += PASS;
+    CHECKPASS_HDR += suffix;
+
+    CHECKAMBG_HDR += prefix;
+    CHECKAMBG_HDR += AMBG;
+    CHECKAMBG_HDR += suffix;
+
+    CHECKERRR_HDR += prefix;
+    CHECKERRR_HDR += ERRR;
+    CHECKERRR_HDR += suffix;
+
+    CHECKFAIL_HDR += prefix;
+    CHECKFAIL_HDR += FAIL;
+    CHECKFAIL_HDR += suffix;
+
+    CHECKFAIL_FTR += LESS_THAN_SOLIDUS;
+    CHECKFAIL_FTR += ELEM_CHECKRESULT;   
+    CHECKFAIL_FTR += GREATER_THAN;     
+
 }
 
 

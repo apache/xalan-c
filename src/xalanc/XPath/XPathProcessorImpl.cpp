@@ -49,8 +49,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathProcessorImpl::XPathProcessorImpl() :
-	m_token(),
+XPathProcessorImpl::XPathProcessorImpl(MemoryManagerType& theManager) :
+	m_token(theManager),
 	m_tokenChar(0),
 	m_xpath(0),
 	m_constructionContext(0),
@@ -58,11 +58,25 @@ XPathProcessorImpl::XPathProcessorImpl() :
 	m_prefixResolver(0),
 	m_requireLiterals(false),
 	m_isMatchPattern(false),
-	m_positionPredicateStack(),
-	m_namespaces()
+	m_positionPredicateStack(theManager),
+	m_namespaces(theManager)
 {
 }
+XPathProcessorImpl*
+XPathProcessorImpl::create(MemoryManagerType& theManager)
+{
+        typedef XPathProcessorImpl ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
 
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theManager);
+
+        theGuard.release();
+
+        return theResult;
+}
 
 
 XPathProcessorImpl::~XPathProcessorImpl()
@@ -105,7 +119,9 @@ XPathProcessorImpl::initXPath(
 
 	if (length(m_token) != 0)
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::ExtraIllegalTokens));
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
+		error(XalanMessageLoader::getMessage(XalanMessages::ExtraIllegalTokens, theResult));
 	}
 
 	m_xpath = 0;
@@ -151,7 +167,9 @@ XPathProcessorImpl::initMatchPattern(
 
 	if (length(m_token) != 0)
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::ExtraIllegalTokens));
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
+		error(XalanMessageLoader::getMessage(XalanMessages::ExtraIllegalTokens, theResult));
 	}
 
 	// Terminate for safety.
@@ -224,7 +242,9 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 				}
 				else
 				{
-					error(XalanMessageLoader::getMessage(XalanMessages::UnterminatedStringLiteral));
+                    XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+					error(XalanMessageLoader::getMessage(XalanMessages::UnterminatedStringLiteral, theResult));
 				}
 			}
 			break;
@@ -259,7 +279,9 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 				}
 				else
 				{
-					error(XalanMessageLoader::getMessage(XalanMessages::UnterminatedStringLiteral));
+                    XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+					error(XalanMessageLoader::getMessage(XalanMessages::UnterminatedStringLiteral,theResult));
 
 				}
 			}
@@ -431,8 +453,9 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 
 	if (0 == m_expression->tokenQueueSize())
 	{
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
 
-		error(XalanMessageLoader::getMessage(XalanMessages::EmptyExpression));
+		error(XalanMessageLoader::getMessage(XalanMessages::EmptyExpression, theResult));
 
 	}
 
@@ -742,9 +765,9 @@ XPathProcessorImpl::consumeExpected(XalanDOMChar	expected)
 	{
 		const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
 
-		XalanDOMString	theMsg = theGuard.get();
+		XalanDOMString&	theMsg = theGuard.get();
 
-		theMsg = XalanMessageLoader::getMessage(XalanMessages::NotFoundWhatExpected_2Param, XalanDOMString(&expected), m_token);
+        XalanMessageLoader::getMessage(XalanMessages::NotFoundWhatExpected_2Param, theMsg, XalanDOMString(&expected, m_constructionContext->getMemoryManager()), m_token);
 		error(theMsg);
 	}
 }
@@ -775,14 +798,18 @@ XPathProcessorImpl::error(const XalanDOMString&		msg) const
 
 		if (length(theCurrentPattern) != 0)
 		{
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
 			if (m_isMatchPattern == true)
 			{
-				thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::PatternIs_1Param,theCurrentPattern));
+
+				thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::PatternIs_1Param,theResult, theCurrentPattern));
 			}
 			else
 			{
-				thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::ExpressionIs_1Param,theCurrentPattern));
+				thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::ExpressionIs_1Param, theResult, theCurrentPattern));
 			}
+
 		}
 
 		// Back up one token, since we've consumed one...
@@ -797,7 +824,7 @@ XPathProcessorImpl::error(const XalanDOMString&		msg) const
 		const XalanDOMChar* const	theSystemID =
 					m_locator->getSystemId();
 
-		XalanDOMString	theURI;
+		XalanDOMString	theURI(m_constructionContext->getMemoryManager());
 
 		if (theSystemID != 0)
 		{
@@ -808,11 +835,12 @@ XPathProcessorImpl::error(const XalanDOMString&		msg) const
 					emsg,
 					theURI,
 					m_locator->getLineNumber(),
-					m_locator->getColumnNumber());
+					m_locator->getColumnNumber(),
+                    m_constructionContext->getMemoryManager());
 	}
 	else
 	{
-		throw XPathParserException(emsg);
+		throw XPathParserException(emsg, m_constructionContext->getMemoryManager());
 	}
 }
 
@@ -837,7 +865,9 @@ XPathProcessorImpl::OrExpr()
 	{
 		if (nextToken() == false)
         {
-		    error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken));
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+		    error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken, theResult));
         }
         else
         {
@@ -867,7 +897,9 @@ XPathProcessorImpl::AndExpr()
 	{
 		if (nextToken() == false)
         {
-		    error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken));
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+		    error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken, theResult));
         }
         else
         {
@@ -919,7 +951,9 @@ XPathProcessorImpl::EqualityExpr(int	opCodePos)
 	{
         if (foundToken == false)
         {
-            error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken));
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+            error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken, theResult));
         }
         else
         {
@@ -1014,7 +1048,9 @@ XPathProcessorImpl::RelationalExpr(int	opCodePos)
 		{
             if (foundToken == false)
             {
-                error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken));
+                XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+                error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken, theResult));
             }
             else
             {
@@ -1086,7 +1122,9 @@ XPathProcessorImpl::AdditiveExpr(int	opCodePos)
 		{
 		    if (nextToken() == false)
             {
-		        error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken));
+                XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+		        error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken, theResult));
             }
             else
             {
@@ -1096,12 +1134,12 @@ XPathProcessorImpl::AdditiveExpr(int	opCodePos)
 				    m_expression->insertOpCode(theOpCode,
 										       opPos);
 
-			    // Update the length
-			    m_expression->updateOpCodeLength(theOpCode,
-											     opPos);
+			// Update the length
+			m_expression->updateOpCodeLength(theOpCode,
+											 opPos);
 
-			    // Do the right term of the expression.
-			    theOpDisplacement += AdditiveExpr(opPos);
+			// Do the right term of the expression.
+			theOpDisplacement += AdditiveExpr(opPos);
 
 			    // If there's any displacement from the right
 			    // term, update the length for a shift. Otherwise,
@@ -1120,10 +1158,10 @@ XPathProcessorImpl::AdditiveExpr(int	opCodePos)
 						opPos);
 			    }
 
-			    // Accumulate the displacement.
-			    theOpDisplacement += theLocalDisplacement;
-            }
+			// Accumulate the displacement.
+			theOpDisplacement += theLocalDisplacement;
 		}
+	}
 	}
 
 	return theOpDisplacement;
@@ -1162,7 +1200,9 @@ XPathProcessorImpl::MultiplicativeExpr(int	opCodePos)
 		{
             if (nextToken() == false)
             {
-                error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken));
+                XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+                error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken, theResult));
             }
             else
             {
@@ -1176,8 +1216,8 @@ XPathProcessorImpl::MultiplicativeExpr(int	opCodePos)
 			    m_expression->updateOpCodeLength(theOpCode,
 											     opPos);
 
-			    // Do the right term of the expression.
-			    theOpDisplacement += MultiplicativeExpr(opPos);
+			// Do the right term of the expression.
+			theOpDisplacement += MultiplicativeExpr(opPos);
 
 			    // If there's any displacement from the right
 			    // term, update the length for a shift. Otherwise,
@@ -1196,10 +1236,10 @@ XPathProcessorImpl::MultiplicativeExpr(int	opCodePos)
 						opPos);
 			    }
 
-			    // Accumulate the displacement.
-			    theOpDisplacement += theLocalDisplacement;
-            }
+			// Accumulate the displacement.
+			theOpDisplacement += theLocalDisplacement;
 		}
+	}
 	}
 
 	return theOpDisplacement;
@@ -1426,7 +1466,9 @@ XPathProcessorImpl::Argument()
 	}
 	else
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::LiteralArgumentIsRequired));
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+		error(XalanMessageLoader::getMessage(XalanMessages::LiteralArgumentIsRequired, theResult));
 	}
 }
 
@@ -1443,7 +1485,9 @@ XPathProcessorImpl::FunctionCallArguments()
 	{
 		if(tokenIs(XalanUnicode::charComma) == true)
 		{
-			error(XalanMessageLoader::getMessage(XalanMessages::NoPrecedingArgument));
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+			error(XalanMessageLoader::getMessage(XalanMessages::NoPrecedingArgument, theResult));
 		}
 
 		Argument();
@@ -1456,7 +1500,9 @@ XPathProcessorImpl::FunctionCallArguments()
 
 			if(tokenIs(XalanUnicode::charRightParenthesis) == true)
 			{
-				error(XalanMessageLoader::getMessage(XalanMessages::NoFollowingArgument));
+                XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+				error(XalanMessageLoader::getMessage(XalanMessages::NoFollowingArgument, theResult));
 			}
 		}
 	}
@@ -1479,7 +1525,7 @@ XPathProcessorImpl::FunctionCall()
 	{
 		m_expression->appendOpCode(XPathExpression::eOP_EXTFUNCTION);
 
-		XPathExpression::OpCodeMapValueVectorType	theArgs(2, 0);
+		XPathExpression::OpCodeMapValueVectorType	theArgs(2, 0, m_constructionContext->getMemoryManager());
 
 		// Replace the token in the queue with the actual namespace URI...
 		replaceTokenWithNamespaceToken();
@@ -1597,7 +1643,7 @@ XPathProcessorImpl::FunctionCall()
 					m_positionPredicateStack.back() = true;
 				}
 
-				XPathExpression::OpCodeMapValueVectorType	theArgs(2, 0);
+				XPathExpression::OpCodeMapValueVectorType	theArgs(2, 0, m_constructionContext->getMemoryManager());
 		
 				theArgs[0] = theFunctionID;
 				theArgs[1] = 0;
@@ -1640,7 +1686,9 @@ XPathProcessorImpl::FunctionPosition()
 
 	if (argCount != 0)
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,"position()"));
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param, theResult, "position()"));
 	}
 	else
 	{
@@ -1666,7 +1714,9 @@ XPathProcessorImpl::FunctionLast()
 
 	if (argCount != 0)
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param, XalanDOMString("last()")));
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param, theResult , "last()"));
 	}
 	else
 	{
@@ -1692,7 +1742,9 @@ XPathProcessorImpl::FunctionCount()
 
 	if (argCount != 1)
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"count()")); 
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,theResult, "count()")); 
 	}
 }
 
@@ -1711,8 +1763,9 @@ XPathProcessorImpl::FunctionNot()
 
 	if (argCount != 1)
 	{
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
 
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"not()")); 
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,theResult ,"not()")); 
 
 	}
 }
@@ -1732,7 +1785,9 @@ XPathProcessorImpl::FunctionTrue()
 
 	if (argCount != 0)
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,"true()"));
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param, theResult ,"true()"));
 	}
 }
 
@@ -1751,8 +1806,9 @@ XPathProcessorImpl::FunctionFalse()
 
 	if (argCount != 0)
 	{
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
 
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,"false()")); 
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param, theResult ,"false()")); 
 
 	}
 }
@@ -1772,7 +1828,9 @@ XPathProcessorImpl::FunctionBoolean()
 
 	if (argCount != 1)
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"boolean()")); 
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult ,"boolean()")); 
 	}
 }
 
@@ -1800,7 +1858,9 @@ XPathProcessorImpl::FunctionName(int	opPos)
 		}
 		else
 		{
-			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"name()")); 
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult ,"name()")); 
 		}
 	}
 }
@@ -1829,7 +1889,9 @@ XPathProcessorImpl::FunctionLocalName(int	opPos)
 		}
 		else
 		{
-			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"locale-name()")); 
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult ,"locale-name()")); 
 		}
 	}
 }
@@ -1858,7 +1920,9 @@ XPathProcessorImpl::FunctionNumber(int	opPos)
 		}
 		else
 		{
-			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"number()")); 
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult ,"number()")); 
 		}
 	}
 }
@@ -1878,8 +1942,9 @@ XPathProcessorImpl::FunctionFloor()
 
 	if (argCount != 1)
 	{
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
 
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"floor()")); 
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult ,"floor()")); 
 
 	}
 }
@@ -1899,7 +1964,9 @@ XPathProcessorImpl::FunctionCeiling()
 
 	if (argCount != 1)
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"ceiling()")); 
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult ,"ceiling()")); 
 	}
 }
 
@@ -1918,7 +1985,9 @@ XPathProcessorImpl::FunctionRound()
 
 	if (argCount != 1)
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"round()")); 
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult ,"round()")); 
 	}
 }
 
@@ -1946,7 +2015,9 @@ XPathProcessorImpl::FunctionString(int	opPos)
 		}
 		else
 		{
-			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"string()")); 
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult ,"string()")); 
 		}
 	}
 }
@@ -1966,8 +2037,9 @@ XPathProcessorImpl::FunctionSum()
 
 	if (argCount != 1)
 	{
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
 
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"sum()")); 
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,theResult, "sum()")); 
 
 	}
 }
@@ -1996,7 +2068,9 @@ XPathProcessorImpl::FunctionStringLength(int	opPos)
 		}
 		else
 		{
-			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"string-length()")); 
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,theResult, "string-length()")); 
 		}
 	}
 }
@@ -2025,7 +2099,9 @@ XPathProcessorImpl::FunctionNamespaceURI(int	opPos)
 		}
 		else
 		{
-			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"namespace-uri()")); 
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult, "namespace-uri()")); 
 		}
 	}
 }
@@ -2046,7 +2122,7 @@ XPathProcessorImpl::LocationPath()
 		const int	newOpPos = m_expression->opCodeMapLength();
 
 		// Tell how long the step is without the predicate
-		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
+		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4, m_constructionContext->getMemoryManager());
 
 		m_expression->appendOpCode(
 			XPathExpression::eFROM_ROOT,
@@ -2098,10 +2174,12 @@ XPathProcessorImpl::Step()
 
 		if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
 		{
-			error(XalanMessageLoader::getMessage(XalanMessages::IllegalSyntaxOfPredicatesSelf));
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+			error(XalanMessageLoader::getMessage(XalanMessages::IllegalSyntaxOfPredicatesSelf, theResult));
 		}
 
-		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
+		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4, m_constructionContext->getMemoryManager());
 
 		m_expression->appendOpCode(XPathExpression::eFROM_SELF,
 								   theArgs);
@@ -2117,11 +2195,13 @@ XPathProcessorImpl::Step()
 
 		if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
 		{
-			error(XalanMessageLoader::getMessage(XalanMessages::IllegalSyntaxOfPredicatesParent));
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+			error(XalanMessageLoader::getMessage(XalanMessages::IllegalSyntaxOfPredicatesParent, theResult));
 		}
 
 		// Tell how long the step is without the predicate
-		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
+		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4,m_constructionContext->getMemoryManager());
 
 		m_expression->appendOpCode(XPathExpression::eFROM_PARENT,
 								   theArgs);
@@ -2192,13 +2272,15 @@ XPathProcessorImpl::Basis()
 		{
 			nextToken();
 
-			error(XalanMessageLoader::getMessage(XalanMessages::ExpectedAxis)); 
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+			error(XalanMessageLoader::getMessage(XalanMessages::ExpectedAxis, theResult)); 
 
 		}
 		else
 		{
 			// Tell how long the step is without the predicate
-			const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
+			const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4, m_constructionContext->getMemoryManager());
 
 			m_expression->appendOpCode(XPathExpression::eFROM_DESCENDANTS_OR_SELF,
 									   theArgs);
@@ -2319,7 +2401,9 @@ XPathProcessorImpl::NodeTest()
 		}
 		else if (isNodeTest(m_token) == false)
 		{
-			error(XalanMessageLoader::getMessage(XalanMessages::ExpectedNodeTest)); 
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+			error(XalanMessageLoader::getMessage(XalanMessages::ExpectedNodeTest, theResult)); 
 
 		}
 		else
@@ -2447,7 +2531,9 @@ XPathProcessorImpl::Literal()
 	}
 	else
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::LiteralArgumentIsRequired)); 
+        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+		error(XalanMessageLoader::getMessage(XalanMessages::LiteralArgumentIsRequired,theResult)); 
 
 	}
 }
@@ -2462,7 +2548,7 @@ XPathProcessorImpl::Number()
 
 	if(0 != length(m_token))
 	{
-		const double	num = DoubleSupport::toDouble(m_token);
+		const double	num = DoubleSupport::toDouble(m_token, m_constructionContext->getMemoryManager());
 
  		const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
  
@@ -2521,7 +2607,7 @@ XPathProcessorImpl::LocationPathPattern()
 			const int	newOpPos = m_expression->opCodeMapLength();
 
 			// Tell how long the step is without the predicate
-			const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
+			const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4, m_constructionContext->getMemoryManager());
 
 			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL,
 									   theArgs);
@@ -2536,7 +2622,7 @@ XPathProcessorImpl::LocationPathPattern()
 		const int	newOpPos = m_expression->opCodeMapLength();
 
 		// Tell how long the step is without the predicate
-		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
+		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4, m_constructionContext->getMemoryManager());
 
 		if(lookahead(XalanUnicode::charSolidus, 1) == true)
 		{
@@ -2657,7 +2743,9 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 		}
 		else
 		{
-			error(XalanMessageLoader::getMessage(XalanMessages::OnlyChildAndAttributeAxesAreAllowed)); 
+            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+			error(XalanMessageLoader::getMessage(XalanMessages::OnlyChildAndAttributeAxesAreAllowed, theResult)); 
 		}
 
 		nextToken();
@@ -2693,7 +2781,9 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 			}
 			else
 			{
-				error(XalanMessageLoader::getMessage(XalanMessages::OnlyChildAndAttributeAxesAreAllowed)); 
+                XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+
+				error(XalanMessageLoader::getMessage(XalanMessages::OnlyChildAndAttributeAxesAreAllowed, theResult)); 
 
 			}
 
@@ -2889,7 +2979,7 @@ XPathProcessorImpl::searchTable(
 
 
 
-const XalanDOMString	XPathProcessorImpl::s_emptyString;
+const XalanDOMString	XPathProcessorImpl::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 

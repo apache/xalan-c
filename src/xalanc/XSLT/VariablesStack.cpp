@@ -38,13 +38,13 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-VariablesStack::VariablesStack() :
-	m_stack(),
+VariablesStack::VariablesStack(MemoryManagerType& theManager) :
+	m_stack(theManager),
 	m_globalStackFrameIndex(~0u),
 	m_globalStackFrameMarked(false),
 	m_currentStackFrameIndex(0),
-	m_guardStack(),
-	m_elementFrameStack()
+	m_guardStack(theManager),
+	m_elementFrameStack(theManager)
 {
 	m_stack.reserve(eDefaultStackSize);
 }
@@ -267,7 +267,9 @@ VariablesStack::pushVariable(
 {
 	if(elementFrameAlreadyPushed(e) == false)
 	{
-		throw InvalidStackContextException();
+        XalanDOMString theBuffer(m_stack.getMemoryManager());
+
+		throw InvalidStackContextException(theBuffer);
 	}
 
 	push(StackEntry(&name, val));
@@ -386,8 +388,10 @@ VariablesStack::findXObject(
 				// See if the ElemVariable instance is already being evaluated...
 				if (find(m_guardStack.begin(), m_guardStack.end(), var) != m_guardStack.end())
 				{
+                    StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+
 					executionContext.error(
-						XalanMessageLoader::getMessage(XalanMessages::CircularVariableDefWasDetected),
+                        XalanMessageLoader::getMessage(XalanMessages::CircularVariableDefWasDetected, theGuard.get()),
 						doc,
 						var->getLocator());
 				}
@@ -559,7 +563,9 @@ VariablesStack::popElementFrame()
 
 		if(theEntry.getType() == StackEntry::eContextMarker)
 		{
-			throw InvalidStackContextException();
+            XalanDOMString theBuffer(m_stack.getMemoryManager());
+
+			throw InvalidStackContextException(theBuffer);
 		}
 		else if (theEntry.getType() == StackEntry::eElementFrameMarker)
 		{
@@ -569,7 +575,9 @@ VariablesStack::popElementFrame()
 
 			if (m_elementFrameStack.empty() == true)
 			{
-				throw InvalidStackContextException();
+                XalanDOMString theBuffer(m_stack.getMemoryManager());
+
+				throw InvalidStackContextException(theBuffer);
 			}
 
 			const ElemTemplateElement* const	theStackBack =
@@ -579,7 +587,9 @@ VariablesStack::popElementFrame()
 
 			if (theElement != theStackBack)
 			{
-				throw InvalidStackContextException();
+                XalanDOMString theBuffer(m_stack.getMemoryManager());
+
+				throw InvalidStackContextException(theBuffer);
 			}
 #endif
 
@@ -777,8 +787,8 @@ const XalanDOMChar	VariablesStack::InvalidStackContextException::m_type[] =
 
 
 
-VariablesStack::InvalidStackContextException::InvalidStackContextException() :
-	XSLTProcessorException(XalanMessageLoader::getMessage(XalanMessages::InvalidStackContext))
+VariablesStack::InvalidStackContextException::InvalidStackContextException(XalanDOMString& theResult) :
+    XSLTProcessorException(theResult.getMemoryManager(), XalanMessageLoader::getMessage(XalanMessages::InvalidStackContext, theResult))
 {
 }
 

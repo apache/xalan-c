@@ -41,7 +41,9 @@ public:
 
 	typedef Function	ParentType;
 
-	FunctionLang();
+	FunctionLang(MemoryManagerType& theManager);
+
+	FunctionLang(const FunctionLang& other, MemoryManagerType& theManager);
 
 	virtual
 	~FunctionLang();
@@ -64,16 +66,18 @@ public:
 #else
 	virtual FunctionLang*
 #endif
-	clone() const;
+	clone(MemoryManagerType& theManager) const;
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theResult) const;
 
 private:
 
 	// Not implemented...
+    FunctionLang();
+    FunctionLang(const FunctionLang&);
 	FunctionLang&
 	operator=(const FunctionLang&);
 

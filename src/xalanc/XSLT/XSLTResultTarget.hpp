@@ -60,42 +60,47 @@ public:
 
 
 	explicit
-	XSLTResultTarget();
+	XSLTResultTarget(MemoryManagerType& theManager);
 
 	/**
 	 * Create a new output target with a file name.
 	 *
 	 * @param fileName valid system file name
 	 */
-	XSLTResultTarget(const XalanDOMString&	fileName);
+	XSLTResultTarget(const XalanDOMString&	fileName,
+                    MemoryManagerType& theManager);
 
 	/**
 	 * Create a new output target with a file name.
 	 *
 	 * @param fileName valid system file name
 	 */
-	XSLTResultTarget(const XalanDOMChar*	fileName);
+	XSLTResultTarget(const XalanDOMChar*	fileName,
+                    MemoryManagerType& theManager);
 
 	/**
 	 * Create a new output target with a file name.
 	 *
 	 * @param fileName valid system file name
 	 */
-	XSLTResultTarget(const char*	fileName);
+	XSLTResultTarget(const char*	fileName,
+                    MemoryManagerType& theManager);
 
 	/**
 	 * Create a new output target with a stream.
 	 *
 	 * @param byteStream a pointer to a std ostream for the output
 	 */
-	XSLTResultTarget(StreamType*	theStream);
+	XSLTResultTarget(StreamType*	theStream,
+                    MemoryManagerType& theManager);
 
 	/**
 	 * Create a new output target with a stream.
 	 *
 	 * @param byteStream a reference to a std ostream for the output
 	 */
-	XSLTResultTarget(StreamType&	theStream);
+	XSLTResultTarget(StreamType&	theStream,
+                    MemoryManagerType& theManager);
 
 	/**
 	 * Create a new output target with a character stream.
@@ -103,7 +108,8 @@ public:
 	 * @param characterStream pointer to character stream where the results
 	 *                        will be written
 	 */ 
-	XSLTResultTarget(Writer*	characterStream);
+	XSLTResultTarget(Writer*	characterStream,
+                    MemoryManagerType& theManager);
 
 	/**
 	 * Create a new output target with a stream.
@@ -111,15 +117,19 @@ public:
 	 * @param characterStream pointer to character stream where the results
 	 *                        will be written
 	 */ 
-	XSLTResultTarget(FILE*	characterStream);
+	XSLTResultTarget(FILE*	characterStream,
+                    MemoryManagerType& theManager);
 
 	/**
 	 * Create a new output target with a FormatterListener.
 	 *
 	 * @param flistener A FormatterListener instance for result tree events.
 	 */
-	XSLTResultTarget(FormatterListener&		flistener);
+	XSLTResultTarget(FormatterListener&		flistener,
+                    MemoryManagerType& theManager);
 
+    XSLTResultTarget(const XSLTResultTarget& other,
+                    MemoryManagerType&      theManager);
 	~XSLTResultTarget();
 
 	/**

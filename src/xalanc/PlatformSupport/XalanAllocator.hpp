@@ -39,18 +39,23 @@ public:
 	typedef const Type&		const_reference;
 	typedef Type			value_type;
 
-	XalanAllocator()
+	
+	XalanAllocator(MemoryManagerType&      theManager) :
+        m_memoryManager(theManager)
 	{
 	}
 
-	XalanAllocator(const XalanAllocator<Type>&)
-	{
-	};
 
 	~XalanAllocator()
 	{
 	}
-
+	
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_memoryManager;
+    }
+    
 	pointer
 	address(reference	x) const
 	{
@@ -68,7 +73,7 @@ public:
 			size_type		size,
 			const void*		/* hint */ = 0)
 	{
-		return (pointer)operator new(size * sizeof(Type));
+		return (pointer)m_memoryManager.allocate(size * sizeof(Type));
 	}
 
 	void
@@ -76,7 +81,12 @@ public:
 				pointer		p,
 				size_type	/* n */)
 	{
-		operator delete(p);
+        if( p == 0 )
+        {
+            return;
+        }
+
+        m_memoryManager.deallocate(p);
 	}
 
 	size_type
@@ -98,6 +108,14 @@ public:
 	{
 		p->Type::~Type();
 	}
+	
+private:
+	XalanAllocator(const XalanAllocator<Type>&);
+	
+    XalanAllocator<Type>&
+    operator=(const XalanAllocator<Type>&);
+    
+    MemoryManagerType&      m_memoryManager;
 };
 
 

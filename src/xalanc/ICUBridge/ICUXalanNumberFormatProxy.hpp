@@ -42,50 +42,32 @@ class XALAN_ICUBRIDGE_EXPORT ICUXalanNumberFormatProxy : public XalanNumberForma
 public:
 
 	explicit
-	ICUXalanNumberFormatProxy();
+	ICUXalanNumberFormatProxy(MemoryManagerType& theManager);
 
 	virtual
 	~ICUXalanNumberFormatProxy();
 
-	virtual XalanDOMString
-	format(double	theValue);
+	virtual XalanDOMString&
+	format(double	        theValue,
+            XalanDOMString& theResult);
 
-	virtual void
-	format(
-			double				theValue,
-			XalanDOMString&		theResult);
 
-	virtual XalanDOMString
-	format(int	theValue);
+	virtual XalanDOMString&
+	format(int	            theValue,
+            XalanDOMString& theResult);
 
-	virtual void
-	format(
-			int					theValue,
-			XalanDOMString&		theResult);
 
-	virtual XalanDOMString
-	format(unsigned int		theValue);
+	virtual XalanDOMString&
+	format(unsigned int		theValue, XalanDOMString& theResult);
 
-	virtual void
-	format(
-			unsigned int		theValue,
-			XalanDOMString&		theResult);
 
-	virtual XalanDOMString
-	format(long		theValue);
+	virtual XalanDOMString&
+	format(long		theValue, XalanDOMString& theResult);
 
-	virtual void
-	format(
-			long				theValue,
-			XalanDOMString&		theResult);
 
-	virtual XalanDOMString
-	format(unsigned long	theValue);
+	virtual XalanDOMString&
+	format(unsigned long	theValue, XalanDOMString& theResult);
 
-	virtual void
-	format(
-			unsigned long		theValue,
-			XalanDOMString&		theResult);
 
 	virtual bool
 	isGroupingUsed() const;
@@ -102,10 +84,13 @@ public:
 private:
 
 #if defined(XALAN_HAS_CPP_NAMESPACE)
-	U_ICU_NAMESPACE::DecimalFormat*		m_decimalFormat;
+	typedef U_ICU_NAMESPACE::DecimalFormat		DecimalFormatType;
 #else
-	DecimalFormat*						m_decimalFormat;
+	typedef DecimalFormat*						DecimalFormatType;
 #endif
+
+	DecimalFormatType*		m_decimalFormat;
+
 };
 
 

@@ -48,14 +48,16 @@ class XALAN_PLATFORMSUPPORT_EXPORT AttributesImpl : public AttributesType
 public:
 
 	explicit
-	AttributesImpl();
+	AttributesImpl(MemoryManagerType&      theManager);
 
 	virtual
 	~AttributesImpl();
 
-    AttributesImpl(const AttributesImpl&	theSource);
+    AttributesImpl(const AttributesImpl&	theSource,
+                    MemoryManagerType&      theManager);
 
-    AttributesImpl(const AttributesType&	theSource);
+    AttributesImpl(const AttributesType&	theSource,
+                    MemoryManagerType&      theManager);
 
     AttributesImpl&
 	operator=(const AttributesImpl&		theRHS);
@@ -105,6 +107,12 @@ public:
 	getValue(
 			const XMLCh* const	uri,
 			const XMLCh* const	localName) const;
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_attributesVector.getMemoryManager();
+    }
 
 	// The mutators are new to this class.
 

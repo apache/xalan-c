@@ -43,17 +43,21 @@
 
 XALAN_USING_XALAN(XalanDOMString)
 
+
 // These XalanDOMString instances will hold the actual
 // data.  This way, the DOMSupport references can be const,
 // but we can initialize the data when we want to.
-static XalanDOMString	s_XMLString;
-static XalanDOMString	s_XMLStringWithSeparator;
-static XalanDOMString	s_XMLNamespacePrefix;
-static XalanDOMString	s_XMLNamespaceURI;
-static XalanDOMString	s_XMLNamespace;
-static XalanDOMString	s_XMLNamespaceWithSeparator;
-static XalanDOMString	s_XMLNamespaceSeparatorString;
-static XalanDOMString	s_XMLNamespacePrefixURI;
+
+XALAN_USING_XALAN(XalanMemMgrs)
+
+static XalanDOMString	s_XMLString(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString	s_XMLStringWithSeparator(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString	s_XMLNamespacePrefix(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString	s_XMLNamespaceURI(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString	s_XMLNamespace(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString	s_XMLNamespaceWithSeparator(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString	s_XMLNamespaceSeparatorString(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString	s_XMLNamespacePrefixURI(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -83,7 +87,7 @@ const XalanDOMString&	DOMServices::s_XMLNamespace = ::s_XMLNamespace;
 const XalanDOMString&	DOMServices::s_XMLNamespaceWithSeparator = ::s_XMLNamespaceWithSeparator;
 const XalanDOMString&	DOMServices::s_XMLNamespaceSeparatorString  = ::s_XMLNamespaceSeparatorString;
 const XalanDOMString&	DOMServices::s_XMLNamespacePrefixURI = ::s_XMLNamespacePrefixURI;
-const XalanDOMString	DOMServices::s_emptyString;
+const XalanDOMString	DOMServices::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -97,18 +101,18 @@ const XalanDOMString::size_type&	DOMServices::s_XMLNamespaceSeparatorStringLengt
 const XalanDOMString::size_type&	DOMServices::s_XMLNamespacePrefixURILength = ::s_XMLNamespacePrefixURILength;
 
 
-
 void
-DOMServices::initialize()
+DOMServices::initialize(MemoryManagerType&  theManager)
 {
-	::s_XMLString = XALAN_STATIC_UCODE_STRING("xml");
-	::s_XMLStringWithSeparator = XALAN_STATIC_UCODE_STRING("xml:");
-	::s_XMLNamespacePrefix = XALAN_STATIC_UCODE_STRING("xmlns:xml");
-	::s_XMLNamespaceURI = XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace");
-	::s_XMLNamespace = XALAN_STATIC_UCODE_STRING("xmlns");
-	::s_XMLNamespaceWithSeparator = XALAN_STATIC_UCODE_STRING("xmlns:");
-	::s_XMLNamespaceSeparatorString = XALAN_STATIC_UCODE_STRING(":");
-	::s_XMLNamespacePrefixURI = XALAN_STATIC_UCODE_STRING("http://www.w3.org/2000/xmlns/");
+    ::s_XMLString.reset( theManager, "xml");
+
+    ::s_XMLStringWithSeparator.reset( theManager, "xml:" );
+	::s_XMLNamespacePrefix.reset( theManager, "xmlns:xml");
+	::s_XMLNamespaceURI.reset( theManager, "http://www.w3.org/XML/1998/namespace");
+	::s_XMLNamespace.reset( theManager, "xmlns");
+	::s_XMLNamespaceWithSeparator.reset( theManager, "xmlns:");
+	::s_XMLNamespaceSeparatorString.reset( theManager, ":");
+	::s_XMLNamespacePrefixURI.reset( theManager, "http://www.w3.org/2000/xmlns/");
 
 	::s_XMLStringLength = length(DOMServices::s_XMLString);
 	::s_XMLStringWithSeparatorLength = length(DOMServices::s_XMLStringWithSeparator);
@@ -125,14 +129,16 @@ DOMServices::initialize()
 void
 DOMServices::terminate()
 {
-	releaseMemory(::s_XMLString);
-	releaseMemory(::s_XMLStringWithSeparator);
-	releaseMemory(::s_XMLNamespacePrefix);
-	releaseMemory(::s_XMLNamespaceURI);
-	releaseMemory(::s_XMLNamespace);
-	releaseMemory(::s_XMLNamespaceWithSeparator);
-	releaseMemory(::s_XMLNamespaceSeparatorString);
-	releaseMemory(::s_XMLNamespacePrefixURI);
+    MemoryManagerType& theManager = XalanMemMgrs::getDummyMemMgr();
+
+	releaseMemory(::s_XMLString, theManager );
+	releaseMemory(::s_XMLStringWithSeparator, theManager );
+	releaseMemory(::s_XMLNamespacePrefix, theManager );
+	releaseMemory(::s_XMLNamespaceURI, theManager );
+	releaseMemory(::s_XMLNamespace, theManager );
+	releaseMemory(::s_XMLNamespaceWithSeparator, theManager );
+	releaseMemory(::s_XMLNamespaceSeparatorString, theManager );
+	releaseMemory(::s_XMLNamespacePrefixURI, theManager );
 
 	::s_XMLStringLength = 0;
 	::s_XMLStringWithSeparatorLength = 0;
@@ -144,17 +150,6 @@ DOMServices::terminate()
 	::s_XMLNamespacePrefixURILength = 0;
 }
 
-
-
-XalanDOMString
-DOMServices::getNodeData(const XalanNode&	node)
-{
-	XalanDOMString	data;
-
-	getNodeData(node, data);
-
-	return data;
-}
 
 
 
@@ -259,17 +254,6 @@ DOMServices::getNodeData(
 
 
 
-XalanDOMString
-DOMServices::getNodeData(const XalanDocument&	document)
-{
-	XalanDOMString	data;
-
-	getNodeData(document, data);
-
-	return data;
-}
-
-
 
 inline void
 getChildData(
@@ -332,16 +316,6 @@ DOMServices::getNodeData(
 
 
 
-XalanDOMString
-DOMServices::getNodeData(const XalanDocumentFragment&	documentFragment)
-{
-	XalanDOMString	data;
-
-	getNodeData(documentFragment, data);
-
-	return data;
-}
-
 
 
 void
@@ -357,17 +331,6 @@ DOMServices::getNodeData(
 	}
 }
 
-
-
-XalanDOMString
-DOMServices::getNodeData(const XalanElement&	element)
-{
-	XalanDOMString	data;
-
-	getNodeData(element, data);
-
-	return data;
-}
 
 
 

@@ -49,14 +49,14 @@ public:
 	virtual
 	~XNodeSetBase();
 
+    MemoryManagerType&
+    getMemoryManager()const
+    {
+        return m_cachedStringValue.getMemoryManager();
+    }
+
 	// These methods are inherited from XObject ...
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XNodeSetBase*
-#endif
-	clone(void*		theAddress = 0) const = 0;
 
 	virtual const XalanDOMString&
 	getTypeString() const;
@@ -104,14 +104,14 @@ protected:
 	/**
 	 * Create an XNodeSetBase
 	 */
-	XNodeSetBase();
+	XNodeSetBase(MemoryManagerType& theManager);
 
 	/**
 	 * Create an XNodeSetBase from another.
 	 *
 	 * @param source    object to copy
 	 */
-	XNodeSetBase(const XNodeSetBase&	source);
+	XNodeSetBase(const XNodeSetBase&	source, MemoryManagerType& theManager);
 
 	void
 	clearCachedValues();
@@ -119,6 +119,8 @@ protected:
 private:
 
 	// Not implemented...
+    XNodeSetBase();
+    XNodeSetBase(const& XNodeSetBase);
 	XNodeSetBase&
 	operator=(const XNodeSetBase&);
 

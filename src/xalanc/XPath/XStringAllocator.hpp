@@ -50,7 +50,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XStringAllocator(size_type	theBlockCount);
+	XStringAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
 
 	~XStringAllocator();
 
@@ -86,16 +86,6 @@ public:
 	createString(
 			const XalanDOMChar*		theString,
 			unsigned int			theLength);
-
-	/**
-	 * Clone an XString object.
-	 * 
-	 * @param value			source XString
-	 *
-	 * @return pointer to an XString
-	 */
-	string_type*
-	clone(const XString&	value);
 
 	/**
 	 * Delete an XString object from allocator.	 

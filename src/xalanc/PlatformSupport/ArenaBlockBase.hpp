@@ -20,11 +20,12 @@
 
 #include <cassert>
 #include <functional>
-#include <memory>
+//#include <memory>
+
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 
-
-#if defined(XALAN_NO_STD_ALLOCATORS) && !defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
+#if !defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
 #include <xalanc/PlatformSupport/XalanAllocator.hpp>
 #endif
 
@@ -47,24 +48,28 @@ public:
 	typedef const Type&		const_reference;
 	typedef Type			value_type;
 
-	ArenaBlockAllocator()
+    ArenaBlockAllocator(MemoryManagerType&      theManager) :
+        m_memoryManager(theManager)
 	{
 	}
 
-	ArenaBlockAllocator(const ArenaBlockAllocator<Type>&)
-	{
-	};
 
 	~ArenaBlockAllocator()
 	{
 	}
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_memoryManager;
+    }
 
 	pointer
 	allocate(
 			size_type		size,
 			const void*		/* hint */ = 0)
 	{
-		return (pointer)operator new(size * sizeof(Type));
+		return (pointer)m_memoryManager.allocate(size * sizeof(Type));
 	}
 
 	void
@@ -72,8 +77,23 @@ public:
 				pointer		p,
 				size_type	/* n */)
 	{
-		operator delete(p);
+        if( p == 0 )
+        {
+            return;
+        }
+
+        m_memoryManager.deallocate(p);
+
 	}
+
+private:
+    // not defined
+	ArenaBlockAllocator(const ArenaBlockAllocator<Type>&);
+
+    ArenaBlockAllocator<Type>&
+    operator=(const ArenaBlockAllocator<Type>&);
+
+    MemoryManagerType&      m_memoryManager;
 };
 #endif
 
@@ -90,16 +110,15 @@ public:
 
 #if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
 	typedef ArenaBlockAllocator<ObjectType>		AllocatorType;
-#elif defined(XALAN_NO_STD_ALLOCATORS)
-	typedef XalanAllocator<ObjectType>			AllocatorType;
 #else
-	typedef std::allocator<ObjectType>			AllocatorType;
+	typedef XalanAllocator<ObjectType>			AllocatorType;
 #endif
 
 	typedef size_Type							size_type;
 
-	ArenaBlockBase(size_type	theBlockSize) :	
-		m_allocator(),
+	ArenaBlockBase(MemoryManagerType&       theManager,
+                    size_type	            theBlockSize) :	
+		m_allocator(theManager),
 		m_objectCount(0),
 		m_blockSize(theBlockSize),
 #if defined(XALAN_NEW_STD_ALLOCATOR)
@@ -119,6 +138,14 @@ public:
 		m_allocator.deallocate(m_objectBlock, m_blockSize);
 
 	}
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_allocator.getMemoryManager();
+    }
+
+
 	/*
 	 * Find out if there is a block available.
 	 *

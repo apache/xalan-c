@@ -21,6 +21,8 @@
 #include <xalanc/XercesParserLiaison/XercesParserLiaisonDefinitions.hpp>
 
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
 
 #include <xalanc/XalanDOM/XalanNotation.hpp>
 
@@ -43,6 +45,11 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesNotationWrapper : public XalanNotat
 public:
 
 	XercesNotationWrapper(
+			const DOMNotationType*			theXercesDOMNotation,
+			const XercesWrapperNavigator&	theNavigator);
+
+    static XercesNotationWrapper*
+    create( MemoryManagerType& theManager,
 			const DOMNotationType*			theXercesDOMNotation,
 			const XercesWrapperNavigator&	theNavigator);
 

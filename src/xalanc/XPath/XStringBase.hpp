@@ -47,22 +47,22 @@ public:
 	 * Construct an XStringBase object from a string.
 	 * 
 	 */
-	XStringBase();
+	XStringBase(MemoryManagerType& theManager);
 
-	XStringBase(const XStringBase&	source);
+	XStringBase(const XStringBase&	source,
+                MemoryManagerType&  theManager);
+
+    MemoryManagerType&
+    getMemoryManager()const
+    {
+        return m_resultTreeFrag.getMemoryManager();
+    }
 
 	virtual
 	~XStringBase();
 
 
 	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XStringBase*
-#endif
-	clone(void*		theAddress = 0) const = 0;
 
 	virtual const XalanDOMString&
 	getTypeString() const;
@@ -98,6 +98,9 @@ public:
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
 private:
+    // Not implemented
+    XStringBase(const XStringBase&	source);
+    XStringBase();
 
 	mutable double						m_cachedNumberValue;
 

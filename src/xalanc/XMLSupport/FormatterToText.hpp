@@ -51,7 +51,7 @@ public:
 	/**
 	 * FormatterToText instance constructor.
 	 */
-	FormatterToText();
+	FormatterToText(MemoryManagerType& theManager);
 
 	/**
 	 * FormatterToText instance constructor.
@@ -61,6 +61,7 @@ public:
 	 * @param handleIgnorableWhitespace If true ignorableWhitespace() will write data to the Writer
 	 */
 	FormatterToText(
+            MemoryManagerType& theManager,
 			Writer&		writer,
 			bool		normalizeLinefeed = true,
 			bool		handleIgnorableWhitespace = true);
@@ -74,6 +75,15 @@ public:
 	 * @param handleIgnorableWhitespace If true ignorableWhitespace() will write data to the Writer
 	 */
 	FormatterToText(
+            MemoryManagerType&      theManager,
+			Writer&					writer,
+			const XalanDOMString&	encoding,
+			bool					normalizeLinefeed = true,
+			bool					handleIgnorableWhitespace = true);
+
+	static FormatterToText*
+    create(
+            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	encoding,
 			bool					normalizeLinefeed = true,
@@ -82,6 +92,11 @@ public:
 	virtual
 	~FormatterToText();
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_encoding.getMemoryManager();
+    }
 
 	Writer*
 	getWriter() const

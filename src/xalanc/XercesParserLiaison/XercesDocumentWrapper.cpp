@@ -73,6 +73,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesDocumentWrapper::XercesDocumentWrapper(
+            MemoryManagerType&          theManager,
 			const DOMDocument_Type*		theXercesDocument,
 			bool						threadSafe,
 			bool						buildWrapper,
@@ -80,21 +81,21 @@ XercesDocumentWrapper::XercesDocumentWrapper(
 	XalanDocument(),
 	m_xercesDocument(theXercesDocument),
 	m_documentElement(0),
-	m_nodeMap(),
-	m_domImplementation(new XercesDOMImplementationWrapper(theXercesDocument->getImplementation())),
-	m_navigatorAllocator(25),
+	m_nodeMap(theManager),
+    m_domImplementation(theManager, XercesDOMImplementationWrapper::create(theManager, theXercesDocument->getImplementation())),
+	m_navigatorAllocator(theManager, 25),
 	m_navigator(0),
 	m_children(theXercesDocument->getChildNodes(),
 			   *m_navigator),
-	m_nodes(),
+	m_nodes(theManager),
 	m_doctype(0),
 	m_mappingMode(threadSafe == true ? false : !buildWrapper),
 	m_indexValid(false),
 	m_buildMaps(m_mappingMode == true ? true : buildMaps),
-	m_elementAllocator(25),
-	m_textAllocator(25),
-	m_attributeAllocator(25),
-	m_stringPool(threadSafe == true ? new XercesLiaisonXalanDOMStringPool : new XalanDOMStringPool)
+	m_elementAllocator(theManager, 25),
+	m_textAllocator(theManager, 25),
+	m_attributeAllocator(theManager, 25),
+    m_stringPool(theManager, threadSafe == true ? XercesLiaisonXalanDOMStringPool::create(theManager) : XalanDOMStringPool::create(theManager))
 {
 	assert(theXercesDocument != 0);
 
@@ -115,7 +116,30 @@ XercesDocumentWrapper::XercesDocumentWrapper(
 	}
 }
 
+XercesDocumentWrapper*
+XercesDocumentWrapper::create( 
+            MemoryManagerType&          theManager,
+			const DOMDocument_Type*		theXercesDocument,
+			bool						threadSafe,
+			bool						buildWrapper,
+ 			bool						buildMaps)
+{
+    typedef XercesDocumentWrapper ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager,
+                            theXercesDocument,
+                            threadSafe,
+                            buildWrapper,
+                            buildMaps);
+        
+    theGuard.release();
+
+    return theResult;
+}
 
 XercesDocumentWrapper::~XercesDocumentWrapper()
 {
@@ -317,7 +341,7 @@ XercesDocumentWrapper::destroyWrapper()
 	for_each(
 			m_nodes.begin(),
 			m_nodes.end(),
-			DeleteFunctor<XalanNode>());
+            DeleteFunctor<XalanNode>(m_nodes.getMemoryManager()));
 
 	// Clear everything out, since we just delete everything...
 	m_nodes.clear();
@@ -391,7 +415,7 @@ XercesDocumentWrapper::createWrapperNode(
 #endif
 
 	// Update the member variable for the new instance.
-	This->m_doctype = new XercesDocumentTypeWrapper(theDoctype, theNavigator);
+    This->m_doctype =  XercesDocumentTypeWrapper::create( getMemoryManager(), theDoctype, theNavigator);
 
 	if (mapNode == true)
 	{
@@ -494,7 +518,7 @@ XercesDocumentWrapper::createWrapperNode(
 XercesCommentWrapper*
 XercesDocumentWrapper::createWrapperNode(
 			const DOMCommentType*	    theXercesNode,
-			IndexType				    theIndex,
+ 			IndexType				    theIndex,
 			bool					    mapNode,
             XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
@@ -504,7 +528,9 @@ XercesDocumentWrapper::createWrapperNode(
 	theNavigator.setIndex(theIndex);
 
 	XercesCommentWrapper* const	theWrapper =
-		new XercesCommentWrapper(theXercesNode,
+        XercesCommentWrapper::create(
+                                getMemoryManager(),
+                                theXercesNode,
 								theNavigator);
 
 #if defined(XALAN_NO_MUTABLE)
@@ -546,7 +572,9 @@ XercesDocumentWrapper::createWrapperNode(
 	theNavigator.setIndex(theIndex);
 
 	XercesCDATASectionWrapper* const		theWrapper =
-		new XercesCDATASectionWrapper(theXercesNode,
+        XercesCDATASectionWrapper::create(
+                                     getMemoryManager(),
+                                     theXercesNode,
 									 theNavigator);
 
 #if defined(XALAN_NO_MUTABLE)
@@ -588,7 +616,9 @@ XercesDocumentWrapper::createWrapperNode(
 	theNavigator.setIndex(theIndex);
 
 	XercesProcessingInstructionWrapper* const	theWrapper =
-		new XercesProcessingInstructionWrapper(theXercesNode,
+        XercesProcessingInstructionWrapper::create(
+                                              getMemoryManager(),
+                                              theXercesNode,
 											  theNavigator);
 
 #if defined(XALAN_NO_MUTABLE)
@@ -668,7 +698,9 @@ XercesDocumentWrapper::createWrapperNode(
 	theNavigator.setIndex(theIndex);
 
 	XercesEntityWrapper* const	theWrapper =
-		new XercesEntityWrapper(theXercesNode,
+        XercesEntityWrapper::create(
+                               getMemoryManager(),
+                               theXercesNode,
 							   theNavigator);
 
 #if defined(XALAN_NO_MUTABLE)
@@ -708,7 +740,9 @@ XercesDocumentWrapper::createWrapperNode(
 	theNavigator.setIndex(theIndex);
 
 	XercesEntityReferenceWrapper* const	theWrapper =
-		new XercesEntityReferenceWrapper(theXercesNode,
+        XercesEntityReferenceWrapper::create(
+                                        getMemoryManager(),
+                                        theXercesNode,
 										theNavigator);
 
 #if defined(XALAN_NO_MUTABLE)
@@ -750,7 +784,9 @@ XercesDocumentWrapper::createWrapperNode(
 	theNavigator.setIndex(theIndex);
 
 	XercesNotationWrapper* const		theWrapper =
-		new XercesNotationWrapper(theXercesNode,
+        XercesNotationWrapper::create(
+                                 getMemoryManager(),
+                                 theXercesNode,
 								 theNavigator);
 
 #if defined(XALAN_NO_MUTABLE)
@@ -962,7 +998,17 @@ XercesDocumentWrapper::destroyNode(XalanNode*	theNode)
 	else
 	{
 		// Delete the node...
-		delete *i;
+        XalanNode* ptrToDelete = *i;
+
+        if ( ptrToDelete != 0 )
+        {
+            MemoryManagerType& theManager = m_nodes.getMemoryManager();
+
+            ptrToDelete->~XalanNode();
+
+            theManager.deallocate(ptrToDelete);
+
+        }
 
 		// Erase it from the map...
 		m_nodes.erase(i);
@@ -1460,8 +1506,8 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::BuildWrapperTreeWalker(
 			bool							    theBuildMapsFlag) :
 	m_document(theDocument),
 	m_currentIndex(theStartIndex),
-	m_parentNavigatorStack(),
-	m_siblingNavigatorStack(),
+	m_parentNavigatorStack(theDocument->getMemoryManager()),
+	m_siblingNavigatorStack(theDocument->getMemoryManager()),
 	m_buildMaps(theBuildMapsFlag)
 {
 	assert(theDocument != 0 && theDocumentNavigator != 0);

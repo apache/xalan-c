@@ -158,6 +158,7 @@ class XalanList
 {
 public:
 
+
     typedef Type                value_type;
     typedef value_type*         pointer;
     typedef const value_type*   const_pointer;
@@ -178,7 +179,7 @@ public:
 			next(&nextNode) 
 		{
 		}
-
+	
 		value_type	value;
 		Node*		prev;
 		Node*		next;
@@ -211,8 +212,8 @@ public:
     typedef typename MemoryManagedConstructionTraits<value_type>::Constructor Constructor;
 
     XalanList(
-            MemoryManagerType*  theManager = 0) :
-        m_memoryManager(theManager),
+            MemoryManagerType&  theManager) :
+        m_memoryManager(&theManager),
         m_listHead(0),
 		m_freeListHeadPtr(0)
     {
@@ -225,7 +226,7 @@ public:
 			iterator pos = begin();
 			while (pos != end())
 			{
-				destroyNode(pos++.node());
+				destroyNode(pos++.node()); 
 			}
 
 			Node * freeNode = m_freeListHeadPtr;
@@ -239,7 +240,15 @@ public:
 			deallocate(m_listHead);
 		}
     }
-
+    
+    MemoryManagerType&
+    getMemoryManager()
+    {
+    	assert(m_memoryManager != 0 );
+    	
+        return *m_memoryManager;
+    }
+    
 	iterator
 	begin()
 	{
@@ -335,6 +344,12 @@ public:
 	pop_front()
 	{
 		erase(begin());
+	}
+
+	void
+	pop_back()
+	{
+		erase(--end());
 	}
 
 	iterator
@@ -443,13 +458,13 @@ protected:
         {
             newNode = m_freeListHeadPtr;
             nextFreeNode = m_freeListHeadPtr->next;
-        }
-        else
-        {
+		}
+		else
+		{
            m_freeListHeadPtr = allocate(1);
            newNode = m_freeListHeadPtr;
-         }
-		
+		}
+
         Constructor::construct(&newNode->value, data, *m_memoryManager);
         new (&newNode->prev) Node*(pos.node().prev);
         new (&newNode->next) Node*(&(pos.node()));
@@ -458,7 +473,7 @@ protected:
 		pos.node().prev = newNode;
 		
         m_freeListHeadPtr = nextFreeNode;
-
+		
 		return *newNode;
 	}
 
@@ -501,12 +516,12 @@ protected:
 	allocate(size_type  size)
 	{
 		const size_type     theBytesNeeded = size * sizeof(Node);
+		
+		assert(m_memoryManager != 0);
 
-		void*   pointer = m_memoryManager == 0 ?
-			::operator new (theBytesNeeded) :
-			m_memoryManager->allocate(theBytesNeeded);
+		void* pointer = m_memoryManager->allocate(theBytesNeeded);
 
-		assert(pointer != 0);
+		assert( pointer != 0 );
 
 		return (Node*) pointer;
 	}
@@ -515,14 +530,9 @@ protected:
 	void
 	deallocate(Node*  pointer)
 	{
-		if (m_memoryManager == 0)
-		{
-			::operator delete(pointer);
-		}
-		else
-		{
-			m_memoryManager->deallocate(pointer);
-		}
+		assert(m_memoryManager != 0);
+		
+		m_memoryManager->deallocate(pointer);
 	}
 
 	MemoryManagerType *	m_memoryManager;
@@ -532,7 +542,8 @@ protected:
 	Node*				m_freeListHeadPtr;
 
 private:
-
+    // not defined
+    XalanList();
 	XalanList(const XalanList& theRhs);
 
 	XalanList& operator=(const XalanList& theRhs);

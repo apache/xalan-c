@@ -60,8 +60,12 @@ public:
 	 * 
 	 * @param namespaceUri extension namespace URI being implemented
 	 */
-	ExtensionNSHandler(const XalanDOMString&	namespaceUri);
+	ExtensionNSHandler(const XalanDOMString&	namespaceUri,
+                        MemoryManagerType& theManager);
 
+	static ExtensionNSHandler*
+    create(const XalanDOMString&	namespaceUri,
+                        MemoryManagerType& theManager);
 	/**
 	 * Construct a new extension namespace handler given all the information
 	 * needed. 
@@ -76,6 +80,7 @@ public:
 	 * @param scriptSrc    the actual script code (if any)
 	 */
 	ExtensionNSHandler(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	namespaceUri,
 			const XalanDOMString&	elemNames,
 			const XalanDOMString&	funcNames,
@@ -199,8 +204,8 @@ private:
 	 * @return string resulting from concatanating the text/cdata child
 	 *				 nodes' values.
 	 */
-	static XalanDOMString
-	getScriptString(const XalanElement&		elem);
+	static XalanDOMString&
+	getScriptString(const XalanElement&		elem, XalanDOMString& theResult);
 };
 
 

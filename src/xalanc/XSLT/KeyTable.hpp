@@ -66,6 +66,8 @@ class XalanNode;
  * to tables that contain mappings of identifier values to nodes.
  */
 
+typedef XalanMap<XalanDOMString, MutableNodeRefList>	NodeListMapTypeDefinitions;
+XALAN_USES_MEMORY_MANAGER(NodeListMapTypeDefinitions)
 
 
 class KeyTable
@@ -74,11 +76,9 @@ public:
 
 	typedef XalanVector<KeyDeclaration>			KeyDeclarationVectorType;
 
-	typedef XalanMap<XalanDOMString,
-					 MutableNodeRefList>	NodeListMapType;
+    typedef NodeListMapTypeDefinitions NodeListMapType;
 
-	typedef XalanMap<XalanQNameByReference,
-					 NodeListMapType	>	KeysMapType;
+	typedef XalanMap<XalanQNameByReference, NodeListMapType>	KeysMapType;
 
 	/**
 	 * Build a keys table.
@@ -90,6 +90,13 @@ public:
 	 * @param executionContext current execution context
 	 */
 	KeyTable(
+			XalanNode*							startNode,
+			const PrefixResolver&				resolver,
+			const KeyDeclarationVectorType&		keyDeclarations,
+			StylesheetExecutionContext&			executionContext);
+
+    static KeyTable*
+    create(MemoryManagerType& theManager,
 			XalanNode*							startNode,
 			const PrefixResolver&				resolver,
 			const KeyDeclarationVectorType&		keyDeclarations,

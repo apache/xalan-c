@@ -43,15 +43,18 @@ public:
 	 * 
 	 * @param value      source string
 	 */
-	XString(const XalanDOMString&	val);
+	XString(const XalanDOMString&	val,
+            MemoryManagerType& theManager);
 
-	XString(const XalanDOMChar*		val);
+	XString(const XalanDOMChar*		val,
+            MemoryManagerType& theManager);
 
 	XString(
 			const XalanDOMChar*		val,
-			unsigned int			len);
+			unsigned int			len,
+            MemoryManagerType& theManager);
 
-	XString(const XString&	source);
+	XString(const XString&	source, MemoryManagerType& theManager);
 
 	virtual
 	~XString();
@@ -63,13 +66,6 @@ public:
 	}
 
 	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XString*
-#endif
-	clone(void*		theAddress = 0) const;
 
 	virtual const XalanDOMString&
 	str() const;
@@ -87,6 +83,8 @@ public:
 	stringLength() const;
 
 private:
+    //not implemented
+    XString(const XString&	source);
 
 	XalanDOMString	m_value;
 };

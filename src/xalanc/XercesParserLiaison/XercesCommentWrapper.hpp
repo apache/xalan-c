@@ -20,7 +20,7 @@
 
 #include <xalanc/XercesParserLiaison/XercesParserLiaisonDefinitions.hpp>
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 #include <xalanc/XalanDOM/XalanComment.hpp>
 #include <xalanc/XercesParserLiaison/XercesWrapperTypes.hpp>
@@ -40,6 +40,11 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesCommentWrapper : public XalanCommen
 public:
 
 	XercesCommentWrapper(
+			const DOMCommentType*			theXercesComment,
+			const XercesWrapperNavigator&	theNavigator);
+
+    static XercesCommentWrapper*
+    create( MemoryManagerType& theManager,
 			const DOMCommentType*			theXercesComment,
 			const XercesWrapperNavigator&	theNavigator);
 
@@ -437,10 +442,11 @@ public:
 	 *	 <br>DOMSTRING_SIZE_ERR: Raised if the specified range of text does not 
 	 *	 fit into a <code>DOMString</code>.
 	 */
-	virtual XalanDOMString
+	virtual XalanDOMString&
 	substringData(
 			unsigned int	offset, 
-			unsigned int	count) const;
+			unsigned int	count,
+            XalanDOMString& theResult) const;
 
 	//@}
 	/** @name Functions that set or change data. */

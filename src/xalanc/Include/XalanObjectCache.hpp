@@ -24,7 +24,7 @@
 
 #include <xalanc/Include/XalanVector.hpp>
 #include <xalanc/Include/STLHelper.hpp>
-#include <xalanc/Include/XalanAutoPtr.hpp>
+
 
 
 
@@ -38,12 +38,43 @@ class DefaultCacheCreateFunctor
 public:
 
 	ObjectType*
-	operator()() const
+	operator()(MemoryManagerType& theManager) const
 	{
-		return new ObjectType;
+        typedef ObjectType ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType();
+
+        theGuard.release();
+
+        return theResult;
 	}
 };
 
+template<class ObjectType>
+class DefaultCacheCreateFunctorMemMgr
+{
+public:
+
+	ObjectType*
+	operator()(MemoryManagerType& theManager) const
+	{
+        typedef ObjectType ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theManager);
+
+        theGuard.release();
+
+        return theResult;
+	}
+};
 
 
 template<class ObjectType>
@@ -95,9 +126,10 @@ public:
 	typedef ObjectType	CacheObjectType;
 
 	explicit
-	XalanObjectCache(unsigned int	initialListSize = 0) :
-		m_availableList(),
-		m_busyList()
+	XalanObjectCache(MemoryManagerType& theManager,
+                    unsigned int	initialListSize = 0) :
+		m_availableList(theManager),
+		m_busyList(theManager)
 	{
 		m_availableList.reserve(initialListSize);
 
@@ -115,7 +147,7 @@ public:
 		for_each(
 				m_availableList.begin(),
 				m_availableList.end(),
-				m_deleteFunctor);
+				m_deleteFunctor(theManager));
 	}
 
 	ObjectType*
@@ -125,7 +157,7 @@ public:
 		// that's the cheapest thing.
 		if (m_availableList.empty() == true)
 		{
-			ObjectType* const	theNewObject = m_createFunctor();
+			ObjectType* const	theNewObject = m_createFunctor(theManager);
 
 			m_busyList.push_back(theNewObject);
 
@@ -237,8 +269,10 @@ public:
 	typedef ObjectType	CacheObjectType;
 
 	explicit
-	XalanObjectCache(unsigned int	initialListSize = 0) :
-		m_availableList()
+	XalanObjectCache(MemoryManagerType& theManager,
+                    unsigned int	initialListSize = 0) :
+        m_deleteFunctor(theManager),
+		m_availableList(theManager)
 	{
 		m_availableList.reserve(initialListSize);
 	}
@@ -264,7 +298,7 @@ public:
 		// that's the cheapest thing.
 		if (m_availableList.empty() == true)
 		{
-			return m_createFunctor();
+			return m_createFunctor(m_availableList.getMemoryManager());
 		}
 		else
 		{

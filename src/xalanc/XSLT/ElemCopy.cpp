@@ -64,9 +64,11 @@ ElemCopy::ElemCopy(
 				processSpaceAttr(aname, atts, i, constructionContext) ||
 				isAttrOK(aname, atts, i, constructionContext)))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
+						XalanMessages::TemplateHasIllegalAttribute_2Param, theResult,
 							Constants::ELEMNAME_COPY_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -74,7 +76,6 @@ ElemCopy::ElemCopy(
 		}
 	}
 }
-
 
 
 const XalanDOMString&

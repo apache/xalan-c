@@ -61,7 +61,7 @@ public:
 
 
 	explicit
-	ResultNamespacesStack();
+	ResultNamespacesStack(MemoryManagerType& theManager);
 
 	~ResultNamespacesStack();
 

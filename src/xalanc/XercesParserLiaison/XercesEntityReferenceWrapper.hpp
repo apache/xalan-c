@@ -21,6 +21,8 @@
 #include <xalanc/XercesParserLiaison/XercesParserLiaisonDefinitions.hpp>
 
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
 
 #include <xalanc/XalanDOM/XalanEntityReference.hpp>
 
@@ -44,6 +46,11 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesEntityReferenceWrapper : public Xal
 public:
 
 	XercesEntityReferenceWrapper(
+			const DOMEntityReferenceType*	theXercesDOMEntityReference,
+			const XercesWrapperNavigator&	theNavigator);
+
+    static XercesEntityReferenceWrapper*
+    create( MemoryManagerType& theManager,
 			const DOMEntityReferenceType*	theXercesDOMEntityReference,
 			const XercesWrapperNavigator&	theNavigator);
 

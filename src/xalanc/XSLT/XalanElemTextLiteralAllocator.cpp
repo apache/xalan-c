@@ -23,8 +23,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanElemTextLiteralAllocator::XalanElemTextLiteralAllocator(size_type	theBlockCount) :
-	m_allocator(theBlockCount)
+XalanElemTextLiteralAllocator::XalanElemTextLiteralAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 

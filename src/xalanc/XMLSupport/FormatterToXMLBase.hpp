@@ -68,6 +68,7 @@ public:
 	 *                          the standalone document declaration
 	 */
 	FormatterToXMLBase(
+            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	version,
 			const XalanDOMString&	mediaType,
@@ -79,6 +80,11 @@ public:
 	virtual
 	~FormatterToXMLBase();
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_elemStack.getMemoryManager();
+    }
 	// These methods are inherited from FormatterListener ...
 
 	virtual void
@@ -343,7 +349,8 @@ protected:
 	static unsigned int
 	decodeUTF16SurrogatePair(
 			XalanDOMChar	theHighSurrogate,
-			XalanDOMChar	theLowSurrogate);
+			XalanDOMChar	theLowSurrogate,
+            MemoryManagerType& theManager);
 
 	/**
 	 * Throw an exception when an invalid
@@ -351,7 +358,8 @@ protected:
 	 * @param ch The first character in the surrogate
 	 */
 	static void
-	throwInvalidUTF16SurrogateException(XalanDOMChar	ch);
+	throwInvalidUTF16SurrogateException(XalanDOMChar	ch,
+                                        MemoryManagerType& theManager);
 
 	/**
 	 * Throw an exception when an invalid
@@ -362,7 +370,8 @@ protected:
 	static void
 	throwInvalidUTF16SurrogateException(
 			XalanDOMChar	ch,
-			XalanDOMChar	next);
+			XalanDOMChar	next,
+            MemoryManagerType& theManager);
 
 	/**
 	 * Throw an exception when an invalid
@@ -371,7 +380,8 @@ protected:
 	 * @param next The next character in the surrogate
 	 */
 	static void
-	throwInvalidCharacterException(unsigned int		ch);
+	throwInvalidCharacterException(unsigned int		ch,
+                                    MemoryManagerType& theManager);
 
 	enum
 	{

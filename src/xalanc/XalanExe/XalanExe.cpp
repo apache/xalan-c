@@ -126,17 +126,28 @@ Usage()
 	XALAN_USING_XALAN(XalanDOMString)
 	XALAN_USING_XALAN(XalanMessageLoader)
 	XALAN_USING_XALAN(XalanMessages)
+    XALAN_USING_XALAN(XalanMemMgrs)
+    XALAN_USING_XALAN(MemoryManagerType)
+
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
+
 
 	bool	bErrorState = true ; // means OK
 
-	const XalanDOMString	szXalanVersion = XalanMessageLoader::getMessage(XalanMessages::XalanExeHelpMenuXalanVersion_1Param, XALAN_FULLVERSIONDOT );
+	XalanDOMString	szXalanVersion(theManager);
+    XalanMessageLoader::getMessage(XalanMessages::XalanExeHelpMenuXalanVersion_1Param, szXalanVersion, XALAN_FULLVERSIONDOT );
 
-	const XalanDOMString	szXercesVersion = XalanMessageLoader::getMessage(XalanMessages::XalanExeHelpMenuXercesVersion_1Param, XERCES_FULLVERSIONDOT);
+	XalanDOMString	szXercesVersion(theManager);
+    XalanMessageLoader::getMessage(XalanMessages::XalanExeHelpMenuXercesVersion_1Param, szXercesVersion, XERCES_FULLVERSIONDOT);
 
 	try
 	{
-		const XalanDOMString::CharVectorType	cvtXalanVersion = szXalanVersion.transcode();
-		const XalanDOMString::CharVectorType	cvtXercesVersion = szXercesVersion.transcode();
+		XalanDOMString::CharVectorType	cvtXalanVersion(theManager);
+        szXalanVersion.transcode(cvtXalanVersion);
+
+		XalanDOMString::CharVectorType	cvtXercesVersion(theManager);
+        szXercesVersion.transcode(cvtXercesVersion);
 
 		cerr << &cvtXalanVersion[0] << endl;
 		cerr << &cvtXercesVersion[0]<< endl;
@@ -148,12 +159,18 @@ Usage()
 		bErrorState = false;
 	} 
 
+    XalanDOMString::CharVectorType	cvtXalanExeHelpMenu(theManager);
+    
+    XalanDOMString theBuffer(theManager);
+
 	for (int i = XalanMessages::XalanExeHelpMenu; bErrorState && ( i <=  XalanMessages::XalanExeHelpMenu12 );  ++i)
 	{
 		try
 		{
-			const XalanDOMString::CharVectorType	cvtXalanExeHelpMenu =
-				XalanMessageLoader::getMessage(XalanMessages::Codes(i)).transcode();
+			
+			XalanMessageLoader::getMessage(XalanMessages::Codes(i), theBuffer);
+
+            theBuffer.transcode(cvtXalanExeHelpMenu);
 
 			cerr  << &cvtXalanExeHelpMenu[0] << endl;
 		}
@@ -689,12 +706,15 @@ transform(
 {
 	XALAN_USING_XALAN(XalanDOMString)
 	XALAN_USING_XALAN(XSLTResultTarget)
+	XALAN_USING_XALAN(MemoryManagerType)
 
-	XSLTResultTarget	theTarget;
+    MemoryManagerType& theManager = theTransformer.getMemoryManager();
+
+	XSLTResultTarget	theTarget(theManager);
 
 	if (theParams.m_encoding != 0)
 	{
-		theTarget.setEncoding(XalanDOMString(theParams.m_encoding));
+		theTarget.setEncoding(XalanDOMString(theParams.m_encoding, theManager));
 	}
 
 	if (theParams.m_outFileName != 0)

@@ -30,7 +30,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString;
+static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 XToken::XToken() :
 	XObject(eTypeString),
@@ -42,10 +42,11 @@ XToken::XToken() :
 
 
 
-XToken::XToken(const XalanDOMString&	theString) :
+XToken::XToken(const XalanDOMString&	theString,
+               MemoryManagerType& theManager) :
 	XObject(eTypeString),
 	m_stringValue(&theString),
-	m_numberValue(DoubleSupport::toDouble(theString)),
+	m_numberValue(DoubleSupport::toDouble(theString, theManager)),
 	m_isString(true)
 {
 }
@@ -82,26 +83,6 @@ XToken::~XToken()
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XToken*
-#endif
-XToken::clone(void*	theAddress) const
-{
-	assert(m_stringValue != 0);
-
-	if (theAddress == 0)
-	{
-		return new XToken(*this);
-	}
-	else
-	{
-		return new (theAddress) XToken(*this);
-	}
-}
-
-
 
 const XalanDOMString&
 XToken::getTypeString() const
@@ -110,9 +91,6 @@ XToken::getTypeString() const
 
 	return s_stringString;
 }
-
-
-
 double
 XToken::num() const
 {
@@ -211,11 +189,12 @@ XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) cons
 
 
 void
-XToken::set(const XalanDOMString&	theString)
+XToken::set(const XalanDOMString&	theString,
+            MemoryManagerType& theManager)
 {
 	m_stringValue = &theString;
 
-	m_numberValue = DoubleSupport::toDouble(theString);
+	m_numberValue = DoubleSupport::toDouble(theString, theManager);
 
 	m_isString = true;
 }
@@ -225,9 +204,12 @@ XToken::set(const XalanDOMString&	theString)
 void
 XToken::set(
 			double					theNumber,
-			const XalanDOMString&	theString)
+			const XalanDOMString&	theString,
+            MemoryManagerType&      theManager)
 {
-	assert(theString == DoubleToDOMString(theNumber));
+    XalanDOMString theResult(theManager);
+
+	assert(theString == DoubleToDOMString(theNumber,theResult));
 
 	m_stringValue = &theString;
 

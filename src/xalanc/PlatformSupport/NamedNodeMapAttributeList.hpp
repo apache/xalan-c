@@ -25,6 +25,7 @@
 
 #include <xercesc/sax/AttributeList.hpp>
 
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 
 XALAN_CPP_NAMESPACE_BEGIN
@@ -42,7 +43,8 @@ public:
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	ParentType;
 
 	explicit
-	NamedNodeMapAttributeList(const XalanNamedNodeMap&	theMap);
+	NamedNodeMapAttributeList(const XalanNamedNodeMap&	theMap,
+                                MemoryManagerType& theManager);
 
 	virtual
 	~NamedNodeMapAttributeList();
@@ -64,7 +66,7 @@ public:
 	getType(const XalanDOMChar* const name) const;
 
     virtual const XalanDOMChar*
-	getValue(const XalanDOMChar* const name) const;
+	getValue(const XalanDOMChar*     const name) const;
 
 	virtual const XalanDOMChar* 
 	getValue(const char* const name) const;
@@ -84,6 +86,8 @@ private:
 	const unsigned int			m_lastIndex;
 
 	static const XalanDOMChar	s_typeString[];
+
+    mutable MemoryManagerType&  m_memoryManager;
 };
 
 

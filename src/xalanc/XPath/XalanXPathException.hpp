@@ -59,7 +59,8 @@ public:
 			const XalanDOMString&	message,
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
-			int						theColumnNumber);
+			int						theColumnNumber,
+            MemoryManagerType&      theManager);
 
 	/**
 	 * Constructor
@@ -71,7 +72,8 @@ public:
 	 */
 	XalanXPathException(
 			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage);
+			const XalanDOMString&	theMessage,
+            MemoryManagerType&      theManager);
 
 	/**
 	 * Construct an XPath exeption object.
@@ -79,7 +81,10 @@ public:
 	 * @param message message explaining the problem. 
 	 * @param theType type of exception, default is "XalanXPathException"
 	 */
-	XalanXPathException(const XalanDOMString&	message);
+	XalanXPathException(const XalanDOMString&	message,
+                            MemoryManagerType& theManager);
+
+    XalanXPathException(const XalanXPathException& other);
 
 	virtual
 	~XalanXPathException();
@@ -97,7 +102,7 @@ protected:
 	 * 
 	 */
 	explicit
-	XalanXPathException();
+	XalanXPathException(MemoryManagerType& theManager);
 
 private:
 	static const XalanDOMChar	m_type[];

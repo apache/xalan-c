@@ -57,23 +57,28 @@ public:
 #else
 	virtual XalanEXSLTFunctionNodeSet*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new XalanEXSLTFunctionNodeSet(*this);
+		return cloneFunction_0<XalanEXSLTFunctionNodeSet>()(theManager);
 	}
 
 protected:
 
-	virtual const XalanDOMString
-	getError() const
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"node-set()");
+        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,theBuffer , "node-set()");
+
+		return theBuffer;
 	}
 
-	virtual const XalanDOMString
-	getInvalidArgumentTypeError() const 
+
+	virtual const XalanDOMString&
+	getInvalidArgumentTypeError(XalanDOMString& theResult) const 
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::InvalidArgumentType_1Param,"node-set()");;
+		 XalanMessageLoader::getMessage(XalanMessages::InvalidArgumentType_1Param,theResult,"node-set()");
+         
+         return theResult;
 	}
 
 private:
@@ -94,26 +99,26 @@ public:
 
 	typedef Function	ParentType;
 
-	XalanEXSLTFunctionObjectType() :
+	XalanEXSLTFunctionObjectType(MemoryManagerType& theManager) :
 		Function(),
-		m_boolean(s_booleanString),
-		m_external(s_externalString),
-		m_nodeSet(s_nodeSetString),
-		m_number(s_numberString),
-		m_rtf(s_rtfString),
-		m_string(s_stringString)
+		m_boolean(s_booleanString, theManager),
+		m_external(s_externalString, theManager),
+		m_nodeSet(s_nodeSetString, theManager),
+		m_number(s_numberString, theManager),
+		m_rtf(s_rtfString, theManager),
+		m_string(s_stringString, theManager)
 	{
 	}
 
 	// A dummy constructor for use internally.  Do not use this one!!!!
-	XalanEXSLTFunctionObjectType(int	/* theDummy */) :
+	XalanEXSLTFunctionObjectType(MemoryManagerType& theManager, int	/* theDummy */) :
 		Function(),
-		m_boolean(),
-		m_external(),
-		m_nodeSet(),
-		m_number(),
-		m_rtf(),
-		m_string()
+		m_boolean(theManager),
+		m_external(theManager),
+		m_nodeSet(theManager),
+		m_number(theManager),
+		m_rtf(theManager),
+		m_string(theManager)
 	{
 	}
 
@@ -140,15 +145,27 @@ public:
 #else
 	virtual XalanEXSLTFunctionObjectType*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new XalanEXSLTFunctionObjectType;
+        typedef  XalanEXSLTFunctionObjectType Type;
+
+        XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
+
+        Type* theResult = theGuard.get();
+
+        new (theResult) Type(theManager);
+
+         theGuard.release();
+
+        return theResult;
 	}
 
 protected:
 
-	const XalanDOMString
-	getError() const;
+
+
+	const XalanDOMString&
+	getError(XalanDOMString& theResult) const;
 
 private:
 

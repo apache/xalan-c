@@ -57,7 +57,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanElemTextLiteralAllocator(size_type		theBlockCount);
+	XalanElemTextLiteralAllocator(MemoryManagerType&  theManager, size_type		theBlockCount);
 
 	~XalanElemTextLiteralAllocator();
 	

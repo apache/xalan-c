@@ -23,8 +23,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XTokenStringAdapterAllocator::XTokenStringAdapterAllocator(size_type	theBlockCount) :
-	m_allocator(theBlockCount)
+XTokenStringAdapterAllocator::XTokenStringAdapterAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -42,27 +42,13 @@ XTokenStringAdapterAllocator::create(const XToken&	theXToken)
 	object_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	object_type* const	theResult = new(theBlock) object_type(theXToken);
+    object_type* const	theResult = new(theBlock) object_type(theXToken, m_allocator.getMemoryManager());
 
 	m_allocator.commitAllocation(theBlock);
 
 	return theResult;
 }
 
-
-
-XTokenStringAdapterAllocator::object_type*
-XTokenStringAdapterAllocator::clone(const object_type&	value)
-{
-	object_type* const		theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
-
-	value.clone(theBlock);
-
-	m_allocator.commitAllocation(theBlock);
-
-	return theBlock;
-}
 
 
 

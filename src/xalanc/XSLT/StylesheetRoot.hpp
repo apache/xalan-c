@@ -50,6 +50,8 @@ class XalanText;
 class XSLTResultTarget;
 
 
+typedef XalanVector<ElemAttributeSet*> 		AttributeSetVectorTypeDecl;
+XALAN_USES_MEMORY_MANAGER(AttributeSetVectorTypeDecl)
 
 /**
  * This acts as the stylesheet root of the stylesheet 
@@ -61,8 +63,9 @@ class XALAN_XSLT_EXPORT StylesheetRoot : public Stylesheet
 public:
 
 	typedef XalanVector<const XalanQName*> 		XalanQNameVectorType;
-	typedef XalanVector<ElemAttributeSet*> 		AttributeSetVectorType;
-	
+
+	typedef AttributeSetVectorTypeDecl			AttributeSetVectorType;
+
 	typedef XalanMap<const XalanQName*,
 			    AttributeSetVectorType>			AttributeSetMapType;
 
@@ -79,6 +82,17 @@ public:
 	virtual 
 	~StylesheetRoot();
 
+    static StylesheetRoot*
+    create(
+        MemoryManagerType&              theManager,
+        const XalanDOMString&			baseIdentifier,
+		StylesheetConstructionContext&	constructionContext);
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_version.getMemoryManager();
+    }
 	/**
 	 * Called after construction is completed.
 	 */
@@ -139,10 +153,12 @@ public:
 	 *
 	 * @return output version string
 	 */
-	XalanDOMString
-	getOutputVersion() const
+	XalanDOMString&
+	getOutputVersion(XalanDOMString& theResult) const
 	{ 
-		return m_version;
+        theResult.assign(m_version);
+         
+         return theResult;
 	}
 
 	/**
@@ -178,10 +194,12 @@ public:
 	 *
 	 * @return encoding string
 	 */
-	XalanDOMString 
-	getOutputEncoding() const
+	XalanDOMString& 
+	getOutputEncoding(XalanDOMString& theResult) const
 	{
-		return m_encoding;
+        theResult.assign(m_encoding);
+        
+        return theResult;
 	}
 
 	/**
@@ -190,10 +208,12 @@ public:
 	 *
 	 * @return media type string
 	 */
-	XalanDOMString 
-	getOutputMediaType() const
+	XalanDOMString& 
+	getOutputMediaType(XalanDOMString& theResult) const
 	{
-		return m_mediatype;
+        theResult.assign(m_mediatype);
+        
+        return theResult;
 	}
 
 	/**
@@ -202,10 +222,12 @@ public:
 	 *
 	 * @return document type string
 	 */
-	XalanDOMString 
-	getOutputDoctypeSystem() const
+	XalanDOMString &
+	getOutputDoctypeSystem(XalanDOMString& theResult) const
 	{
-		return m_doctypeSystem;
+        theResult.assign(m_doctypeSystem);
+        
+        return theResult;
 	}
 
 	/**
@@ -214,10 +236,12 @@ public:
 	 *
 	 * @return document type public id string
 	 */
-	XalanDOMString 
-	getOutputDoctypePublic() const
+	XalanDOMString& 
+	getOutputDoctypePublic(XalanDOMString& theResult) const
 	{
-		return m_doctypePublic;
+        theResult.assign(m_doctypePublic);
+        
+        return theResult;
 	}
 
 	/**
@@ -237,10 +261,12 @@ public:
 	 *
 	 * @return standalone string
 	 */
-	XalanDOMString
-	getOutputStandalone() const
+	XalanDOMString&
+	getOutputStandalone(XalanDOMString& theResult) const
 	{
-		return m_standalone;
+        theResult.assign(m_standalone);
+        
+        return theResult;
 	}
 
 	/**

@@ -153,7 +153,7 @@ public:
 	typedef URISupport::URLAutoPtrType	URLAutoPtrType;
 
 	explicit
-	StylesheetConstructionContext();
+	StylesheetConstructionContext(MemoryManagerType&  theManager);
 
 	virtual
 	~StylesheetConstructionContext();
@@ -226,8 +226,9 @@ public:
 	 * @param urlString string to qualify
 	 * @return string to fully qualified URI
 	 */
-	virtual XalanDOMString
-	getURLStringFromString(const XalanDOMString&	urlString) = 0;
+	virtual XalanDOMString&
+	getURLStringFromString(const XalanDOMString&	urlString,
+                            XalanDOMString& theResult) = 0;
 
 	/**
 	 * Determine the fully qualified URI for a string.
@@ -248,10 +249,11 @@ public:
 	 * @param base base location for URI
 	 * @return string to fully qualified URI
 	 */
-	virtual XalanDOMString
+	virtual XalanDOMString&
 	getURLStringFromString(
 			const XalanDOMString&	urlString,
-			const XalanDOMString&	base) = 0;
+			const XalanDOMString&	base,
+            XalanDOMString& theResult) = 0;
 
 	/**
 	 * Retrieve the URI for the current XSLT namespace, for example,

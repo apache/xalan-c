@@ -23,8 +23,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanSourceTreeDocumentFragmentAllocator::XalanSourceTreeDocumentFragmentAllocator(size_type	theBlockCount) :
-	m_allocator(theBlockCount)
+XalanSourceTreeDocumentFragmentAllocator::XalanSourceTreeDocumentFragmentAllocator(MemoryManagerType&      theManager,
+                                                                                   size_type	theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -43,7 +44,7 @@ XalanSourceTreeDocumentFragmentAllocator::create(XalanSourceTreeDocument&	theVal
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	data_type* const	theResult = new(theBlock) data_type(theValue);
+    data_type* const	theResult = new(theBlock) data_type(m_allocator.getMemoryManager(), theValue);
 
 	m_allocator.commitAllocation(theBlock);
 

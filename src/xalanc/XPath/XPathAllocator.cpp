@@ -23,8 +23,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathAllocator::XPathAllocator(size_type	theBlockCount) :
-	m_allocator(theBlockCount)
+XPathAllocator::XPathAllocator(MemoryManagerType&      theManager, size_type	theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -42,7 +42,7 @@ XPathAllocator::create()
 	object_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	new(theBlock) object_type;
+	new(theBlock) object_type(m_allocator.getMemoryManager());
 
 	m_allocator.commitAllocation(theBlock);
 

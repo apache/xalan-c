@@ -42,7 +42,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanQNameByValue	s_defaultMode;
+static const XalanQNameByValue	s_defaultMode(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -76,9 +76,12 @@ ElemApplyTemplates::ElemApplyTemplates(
 
 			if (m_mode->isValid() == false)
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.error(
 						XalanMessageLoader::getMessage(
 							XalanMessages::AttributeValueNotValidQName_2Param,
+                            theResult,
 							aname,
 							atts.getValue(i)),
 						0,
@@ -87,9 +90,12 @@ ElemApplyTemplates::ElemApplyTemplates(
 		}
 		else if (!isAttrOK(aname, atts, i, constructionContext))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theResult,
 							Constants::ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,

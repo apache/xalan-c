@@ -25,19 +25,20 @@
 
 #include "DOMStringHelper.hpp"
 
-
+#include <xalanc/Include/XalanMemMngArrayAllocate.hpp>
 
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 
 XalanDOMStringHashTable::XalanDOMStringHashTable(
+            MemoryManagerType& theManager,
 			size_t		theBucketCount,
 			size_t		theBucketSize) :
 
 	m_bucketCount(theBucketCount),
 	m_bucketSize(theBucketSize),
-	m_buckets(new BucketType[theBucketCount]),
+    m_buckets(theManager , XalanMemMngArrayAllocate<BucketType>::allocateMemMgr(theBucketCount, theManager), theBucketCount),
 	m_count(0),
 	m_collisions(0)
 {

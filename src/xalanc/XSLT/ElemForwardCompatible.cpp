@@ -63,9 +63,12 @@ ElemForwardCompatible::ElemForwardCompatible(
 		if (!(isAttrOK(aname, atts, i, constructionContext) ||
 			processSpaceAttr(aname, atts, i, constructionContext)))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theResult,
 							m_elementName.c_str(),
 							aname),
 					0,
@@ -74,7 +77,33 @@ ElemForwardCompatible::ElemForwardCompatible(
 	}
 }
 
+ElemForwardCompatible*
+ElemForwardCompatible::    create(
+            MemoryManagerType&              theManager,
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMChar*				name,
+			const AttributeListType&		atts,
+			int								lineNumber,
+			int								columnNumber)
+{
+    typedef ElemForwardCompatible ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(constructionContext,
+        stylesheetTree,
+        name,
+        atts,
+        lineNumber,
+        columnNumber);
+
+   theGuard.release();
+
+    return theResult;
+}
 
 const XalanDOMString&
 ElemForwardCompatible::getElementName() const

@@ -46,26 +46,19 @@ public:
 	/**
 	 * Create an XNodeSetNodeProxy
 	 */
-	XNodeSetNodeProxy(XalanNode*	theNode);
+	XNodeSetNodeProxy(MemoryManagerType& theManager, XalanNode*	theNode);
 
 	/**
 	 * Create an XNodeSetNodeProxy from another.
 	 *
 	 * @param source    object to copy
 	 */
-	XNodeSetNodeProxy(const XNodeSetNodeProxy&	source);
+	XNodeSetNodeProxy(const XNodeSetNodeProxy&	source, MemoryManagerType& theManager);
 
 	virtual
 	~XNodeSetNodeProxy();
 
 	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XNodeSetNodeProxy*
-#endif
-	clone(void*		theAddress = 0) const;
 
 	virtual const NodeRefListBase&
 	nodeset() const;
@@ -108,6 +101,7 @@ private:
 	// Not implemented...
 	XNodeSetNodeProxy&
 	operator=(const XNodeSetNodeProxy&);
+    XNodeSetNodeProxy(const XNodeSetNodeProxy&	source);
 
 
 	// Data members...

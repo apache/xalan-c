@@ -44,11 +44,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-NodeSorter::NodeSorter() :
-	m_numberResultsCache(),
-	m_stringResultsCache(),
-	m_keys(),
-	m_scratchVector()
+NodeSorter::NodeSorter(MemoryManagerType& theManager) :
+	m_numberResultsCache(theManager),
+	m_stringResultsCache(theManager),
+	m_keys(theManager),
+	m_scratchVector(theManager)
 {
 }
 
@@ -250,7 +250,7 @@ getResult(
 
 		DOMServices::getNodeData(*theNode, temp.get());
 
-		return DoubleSupport::toDouble(temp.get());
+        return DoubleSupport::toDouble(temp.get(), theExecutionContext.getMemoryManager());
 	}
 	else
 	{
@@ -309,7 +309,7 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 	}
 	else
 	{
-		theCache[theKeyIndex].resize(m_nodes.size());
+		theCache[theKeyIndex].resize(m_nodes.size(), 0);
 
 		XALAN_USING_STD(fill)
 
@@ -459,7 +459,8 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 	}
 	else
 	{
-		theCache[theKeyIndex].resize(m_nodes.size());
+
+        theCache[theKeyIndex].resize(m_nodes.size());
 
 		getResult(
 			xpath,

@@ -69,9 +69,12 @@ ElemCallTemplate::ElemCallTemplate(
 
 			if (m_templateName->isValid() == false)
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.error(
 						XalanMessageLoader::getMessage(
 							XalanMessages::AttributeValueNotValidQName_2Param,
+                            theResult,
 							Constants::ATTRNAME_NAME.c_str(),
 							atts.getValue(i)),
 						0,
@@ -79,10 +82,12 @@ ElemCallTemplate::ElemCallTemplate(
 			}
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
-		{
+		{   XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theResult,
 							Constants::ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -92,9 +97,12 @@ ElemCallTemplate::ElemCallTemplate(
 
 	if (m_templateName == 0)
 	{
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::TemplateMustHaveAttribute_2Param,
+                theResult,
 				Constants::ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING,
 				Constants::ATTRNAME_NAME),
 			0,
@@ -216,8 +224,10 @@ ElemCallTemplate::postConstruction(
 
 	if(m_template == 0)
 	{
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 		constructionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::CannotFindNamedTemplate),
+			XalanMessageLoader::getMessage(XalanMessages::CannotFindNamedTemplate, theResult),
 			0,
 			this);
 	}

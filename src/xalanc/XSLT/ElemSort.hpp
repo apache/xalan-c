@@ -62,6 +62,15 @@ public:
 			int								lineNumber,
 			int								columnNumber);
 
+    static ElemSort*
+	create(
+            MemoryManagerType& theManager,
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const AttributeListType&		atts,
+			int								lineNumber,
+			int								columnNumber);
+
 	~ElemSort();
 
 	/**

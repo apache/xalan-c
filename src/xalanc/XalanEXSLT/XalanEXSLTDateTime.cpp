@@ -165,7 +165,9 @@ XalanEXSLTFunctionDateTime::execute(
 {
 	if (args.size() != 0)
 	{
-		executionContext.error(getError(), context, locator);
+        XalanDOMString theResult(executionContext.getMemoryManager());
+
+		executionContext.error(getError(theResult), context, locator);
 	}
 
 	XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
@@ -246,10 +248,12 @@ XalanEXSLTFunctionDateTime::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionDateTime::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionDateTime::getError(XalanDOMString& theResult) const
 {
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, s_dateTimeFunctionName);
+    XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theResult, s_dateTimeFunctionName);
+
+    return theResult;
 }
 
 
@@ -263,10 +267,9 @@ XalanEXSLTDateTimeFunctionsInstaller::installLocal(XPathEnvSupportDefault&		theS
 
 
 void
-XalanEXSLTDateTimeFunctionsInstaller::installGlobal()
+XalanEXSLTDateTimeFunctionsInstaller::installGlobal(MemoryManagerType& theManager)
 {
-	doInstallGlobal(s_dateTimeNamespace, theFunctionTable);
-
+	doInstallGlobal(theManager, s_dateTimeNamespace, theFunctionTable);
 }
 
 
@@ -280,9 +283,9 @@ XalanEXSLTDateTimeFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&	the
 
 
 void
-XalanEXSLTDateTimeFunctionsInstaller::uninstallGlobal()
+XalanEXSLTDateTimeFunctionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
 {
-	doUninstallGlobal(s_dateTimeNamespace, theFunctionTable);
+	doUninstallGlobal(theManager, s_dateTimeNamespace, theFunctionTable);
 }
 
 

@@ -27,7 +27,6 @@
 #include <cassert>
 
 
-
 #include <xalanc/XPath/XObject.hpp>
 #include <xalanc/XPath/XPathExecutionContext.hpp>
 
@@ -57,11 +56,17 @@ public:
 	typedef XPathExecutionContext::GetAndReleaseCachedString		GetAndReleaseCachedString;
 
 
-	XObjectFactory();
+	XObjectFactory(MemoryManagerType& theManager);
 
 	virtual
 	~XObjectFactory();
 
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_memoryManager;
+    }
 
 	/**
 	 * Return an XObject to the factory.
@@ -286,11 +291,16 @@ protected:
 	void
 	deleteObject(const XObject* 	theXObject) const
 	{
-#if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (XObject*)theXObject;
-#else
-		delete theXObject;
-#endif
+        if( theXObject!= 0)
+        {
+            XObject* 	theTmpXObject = const_cast<XObject*>(theXObject);
+            MemoryManagerType& theManager = const_cast<MemoryManagerType&>(m_memoryManager);
+
+            theTmpXObject->~XObject();
+
+            theManager.deallocate((void*)theTmpXObject);
+        }
+    
 	}
 
 	/**
@@ -315,6 +325,8 @@ private:
 
 	bool
 	operator==(const XObjectFactory&) const;
+
+    MemoryManagerType& m_memoryManager;
 };
 
 

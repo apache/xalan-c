@@ -21,7 +21,7 @@
 // Base include file.  Must be first.
 #include <xalanc/PlatformSupport/PlatformSupportDefinitions.hpp>
 
-
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 XALAN_DECLARE_XERCES_CLASS(Locator)
 
@@ -47,7 +47,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT ExecutionContext
 public:
 
 	explicit
-	ExecutionContext();
+	ExecutionContext( MemoryManagerType& m_memoryManager);
 
 	virtual
 	~ExecutionContext();
@@ -91,6 +91,13 @@ public:
 			const XalanNode* 		sourceNode = 0,
 			const LocatorType* 		locator = 0) const = 0;
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_memoryManager;
+    }
+protected:
+    MemoryManagerType&              m_memoryManager;
 };
 
 

@@ -65,9 +65,41 @@ class StylesheetExecutionContext;
 class XPath;
 
 
-class XALAN_XSLT_EXPORT ElemTemplateElement : public PrefixResolver
+
+template <class Type>
+class CreateElementFunctor
 {
 public:
+	Type*
+    operator()(			
+		MemoryManagerType&              theManager,
+		StylesheetConstructionContext&	constructionContext,
+		Stylesheet& 					stylesheetTree,
+		const AttributeListType&		atts,
+		int								lineNumber,
+		int								columnNumber)
+	{
+		XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
+		
+		Type* theResult = theGuard.get();
+		
+		new (theResult) Type(constructionContext,
+			stylesheetTree,
+			atts,
+			lineNumber, 
+			columnNumber);
+		
+		theGuard.release();
+		
+		return theResult;
+	}
+};
+
+class XALAN_XSLT_EXPORT ElemTemplateElement : public PrefixResolver
+{
+     
+public:
+
 
 	/**
 	 * Construct a template element instance.
@@ -102,7 +134,7 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet& 					stylesheetTree,
 			int 							xslToken,
-			const XalanDOMString&			baseURI = XalanDOMString(),
+			const XalanDOMString&			baseURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			int 							lineNumber = XalanLocator::getUnknownValue(),
 			int 							columnNumber = XalanLocator::getUnknownValue());
 

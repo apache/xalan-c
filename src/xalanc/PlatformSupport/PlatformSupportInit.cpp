@@ -32,14 +32,14 @@ unsigned long	PlatformSupportInit::s_initCounter = 0;
 
 
 
-PlatformSupportInit::PlatformSupportInit() :
-	m_xalanDOMInit()
+PlatformSupportInit::PlatformSupportInit(MemoryManagerType&      theManager) :
+	m_xalanDOMInit(theManager)
 {
 	++s_initCounter;
 
 	if (s_initCounter == 1)
 	{
-		initialize();
+		initialize(theManager);
 	}
 }
 
@@ -58,13 +58,13 @@ PlatformSupportInit::~PlatformSupportInit()
 
 
 void
-PlatformSupportInit::initialize()
+PlatformSupportInit::initialize(MemoryManagerType&      theManager)
 {
-    DoubleSupport::initialize();
+    DoubleSupport::initialize(theManager);
 
-	XalanMessageLoader::createLoader();
+	XalanMessageLoader::initialize(theManager);
 
-	XalanTranscodingServices::initialize();
+	XalanTranscodingServices::initialize(theManager);
 }
 
 
@@ -74,7 +74,7 @@ PlatformSupportInit::terminate()
 {
 	XalanTranscodingServices::terminate();
 
-	XalanMessageLoader::destroyLoader();
+	XalanMessageLoader::terminate();
 
     DoubleSupport::terminate();
 }

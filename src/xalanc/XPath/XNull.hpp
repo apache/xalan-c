@@ -70,13 +70,6 @@ public:
 
 	// These methods are inherited from XObject ...
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XNull*
-#endif
-	clone(void*		theAddress = 0) const;
-
 	virtual const XalanDOMString&
 	getTypeString() const;
 
@@ -112,8 +105,7 @@ private:
     static XalanDOMString   s_nullString;
 
 	// not implemented
-	XNull&
-    operator=(const XNull &);
+	XNull& operator=(const XNull &);
 };
 
 

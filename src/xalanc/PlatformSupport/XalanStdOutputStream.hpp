@@ -68,7 +68,12 @@ public:
 	 *
 	 * @param theOutputStream output stream to use
 	 */
-    XalanStdOutputStream(StreamType&	theOutputStream);
+    XalanStdOutputStream(StreamType&	theOutputStream,
+                         MemoryManagerType&  theManager);
+
+    static XalanStdOutputStream*
+    create( StreamType&	theOutputStream,
+            MemoryManagerType&  theManager);
 
     virtual
 	~XalanStdOutputStream();
@@ -86,7 +91,8 @@ public:
 	{
 	public:
 
-		XalanStdOutputStreamWriteException(int	theErrorCode);
+		XalanStdOutputStreamWriteException(int	theErrorCode,
+                                            XalanDOMString&		theResult);
 
 		virtual
 		~XalanStdOutputStreamWriteException();

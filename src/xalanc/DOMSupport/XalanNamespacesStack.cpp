@@ -59,16 +59,17 @@ XalanNamespacesStack::PrefixResolverProxy::getURI() const
 
 
 
-XalanNamespacesStack::XalanNamespacesStackEntry::XalanNamespacesStackEntry() :
-	m_namespaces(),
+XalanNamespacesStack::XalanNamespacesStackEntry::XalanNamespacesStackEntry(MemoryManagerType& theManager) :
+	m_namespaces(theManager),
 	m_position(m_namespaces.begin())
 {
 }
 
 
 
-XalanNamespacesStack::XalanNamespacesStackEntry::XalanNamespacesStackEntry(const XalanNamespacesStackEntry&		theSource) :
-	m_namespaces(theSource.m_namespaces),
+XalanNamespacesStack::XalanNamespacesStackEntry::XalanNamespacesStackEntry(const XalanNamespacesStackEntry&		theSource,
+                                                                                        MemoryManagerType&      theManager) :
+	m_namespaces(theSource.m_namespaces, theManager),
 	m_position(m_namespaces.begin() + (const_iterator(theSource.m_position) - theSource.m_namespaces.begin()))
 {
 }
@@ -76,11 +77,12 @@ XalanNamespacesStack::XalanNamespacesStackEntry::XalanNamespacesStackEntry(const
 
 
 XalanNamespacesStack::XalanNamespacesStackEntry&
-XalanNamespacesStack::XalanNamespacesStackEntry::operator=(const XalanNamespacesStackEntry&		theRHS)
+XalanNamespacesStack::XalanNamespacesStackEntry::set(const XalanNamespacesStackEntry&		theRHS,
+                                                           MemoryManagerType&                   theManager)
 {
 	if (this != &theRHS)
 	{
-		XalanNamespacesStackEntry	theCopy(theRHS);
+		XalanNamespacesStackEntry	theCopy(theRHS, theManager);
 
 		swap(theCopy);
 	}
@@ -176,11 +178,11 @@ XalanNamespacesStack::XalanNamespacesStackEntry::clear()
 
 
 
-XalanNamespacesStack::XalanNamespacesStack() :
-	m_resultNamespaces(1),
+XalanNamespacesStack::XalanNamespacesStack(MemoryManagerType& theManager) :
+	m_resultNamespaces(theManager, 1),
 	m_stackBegin(m_resultNamespaces.begin()),
 	m_stackPosition(m_stackBegin),
-	m_createNewContextStack()
+	m_createNewContextStack(theManager)
 {
 	// m_resultNamespaces is initialized to a size of
 	// 1, so we always have a dummy entry at the
@@ -335,7 +337,7 @@ XalanNamespacesStack::clear()
 {
 	// Since we always keep one dummy entry at the beginning,
 	// swap with an OutputContextStackType instance of size 1.
-	NamespacesStackType(1).swap(m_resultNamespaces);
+	NamespacesStackType(m_resultNamespaces.getMemoryManager(), 1 ).swap(m_resultNamespaces);
 
 	m_stackBegin = m_resultNamespaces.begin();
 

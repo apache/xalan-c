@@ -54,8 +54,11 @@ FunctionNormalizeSpace::execute(
 {
 	if (context == 0)
 	{
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+        XalanDOMString& theResult = theGuard.get();
+
 		executionContext.error(
-				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param, "normalize-space()"),
+				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param, theResult, "normalize-space()"),
 				context,
 				locator);
 
@@ -148,7 +151,7 @@ FunctionNormalizeSpace::normalize(
 
 	if (theNewStringLength == 0)
 	{
-		return executionContext.getXObjectFactory().createString(XalanDOMString());
+        return executionContext.getXObjectFactory().createString(XalanDOMString(executionContext.getMemoryManager()));
 	}
 	else
 	{
@@ -197,18 +200,20 @@ Function*
 #else
 FunctionNormalizeSpace*
 #endif
-FunctionNormalizeSpace::clone() const
+FunctionNormalizeSpace::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionNormalizeSpace(*this);
+	return cloneFunction_1<FunctionNormalizeSpace>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionNormalizeSpace::getError() const
+const XalanDOMString&
+FunctionNormalizeSpace::getError(XalanDOMString& theResult) const
 {
 	
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, "normalize-space()");
+	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult, "normalize-space()");
+
+    return theResult;
 
 }
 

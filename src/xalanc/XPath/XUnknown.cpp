@@ -20,7 +20,6 @@
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
-#include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -32,7 +31,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanDOMString	XUnknown::s_unknownString;
+XalanDOMString	XUnknown::s_unknownString(XalanMemMgrs::getDummyMemMgr());
 
 
 static const XalanDOMChar   s_unknown[] =
@@ -51,17 +50,35 @@ static const XalanDOMChar   s_unknown[] =
 
 
 
-XUnknown::XUnknown(const XalanDOMString&	name) :
+XUnknown::XUnknown(const XalanDOMString&	name,
+                   MemoryManagerType& theManager) :
 	XObject(eTypeUnknown),
-	m_value(XalanMessageLoader::getMessage(XalanMessages::UnknownVariable_1Param, name))
+	m_value(theManager)
 {
+    XalanDOMString* pnt = const_cast<XalanDOMString*>(&m_value);
+
+    XalanMessageLoader::getMessage(XalanMessages::UnknownVariable_1Param, *pnt, name);
 }
 
+XUnknown*
+XUnknown::create(const XalanDOMString&	name, MemoryManagerType& theManager)
+{
+    typedef XUnknown Type;
 
+    XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
 
-XUnknown::XUnknown(const XUnknown&	source) :
+    Type* theResult = theGuard.get();
+
+    new (theResult) Type(name, theManager);
+
+    theGuard.release();
+
+    return theResult;
+}
+
+XUnknown::XUnknown(const XUnknown&	source, MemoryManagerType& theManager) :
 	XObject(source),
-	m_value(source.m_value)
+	m_value(source.m_value, theManager)
 {
 }
 
@@ -73,33 +90,12 @@ XUnknown::~XUnknown()
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XUnknown*
-#endif
-XUnknown::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XUnknown(*this);
-	}
-	else
-	{
-		return new (theAddress) XUnknown(*this);
-	}
-}
-
-
 
 const XalanDOMString&
 XUnknown::getTypeString() const
 {
 	return s_unknownString;
 }
-
-
-
 double
 XUnknown::num() const
 {
@@ -163,9 +159,9 @@ XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) con
 
 
 void
-XUnknown::initialize()
+XUnknown::initialize(MemoryManagerType& theManager)
 {
-	s_unknownString = s_unknown;
+	s_unknownString.reset(theManager, s_unknown);
 }
 
 
@@ -173,7 +169,7 @@ XUnknown::initialize()
 void
 XUnknown::terminate()
 {
-	releaseMemory(s_unknownString);
+	releaseMemory(s_unknownString, XalanMemMgrs::getDummyMemMgr());
 }
 
 

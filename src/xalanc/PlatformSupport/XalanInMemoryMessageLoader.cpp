@@ -81,8 +81,8 @@ XalanInMemoryMessageLoader::~XalanInMemoryMessageLoader()
 
 
 
-XalanInMemoryMessageLoader::XalanInMemoryMessageLoader() :
-	m_unknownMessage(XALAN_STATIC_UCODE_STRING("The message was not found in the message library."))
+XalanInMemoryMessageLoader::XalanInMemoryMessageLoader(MemoryManagerType& theManager) :
+	m_unknownMessage("The message was not found in the message library.", theManager)
 {
 }
 

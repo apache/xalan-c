@@ -61,7 +61,9 @@ FormatterListener::getWriter() const
 
 
 
-const XalanDOMString	FormatterListener::s_emptyString;
+
+
+const XalanDOMString	FormatterListener::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 

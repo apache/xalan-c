@@ -52,7 +52,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XStringCachedAllocator(size_type	theBlockCount);
+	XStringCachedAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
 
 	~XStringCachedAllocator();
 
@@ -66,15 +66,6 @@ public:
 	string_type*
 	createString(GetAndReleaseCachedString&		theValue);
 
-	/**
-	 * Clone an XStringCached object.
-	 * 
-	 * @param value source XStringCached
-	 *
-	 * @return pointer to an XStringCached
-	 */
-	string_type*
-	clone(const string_type&	value);
 
 	/**
 	 * Delete an XStringCached object from allocator.	 

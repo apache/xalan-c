@@ -64,9 +64,12 @@ ElemPI::ElemPI(
 		else if(isAttrOK(aname, atts, i, constructionContext) == false ||
 				processSpaceAttr(aname, atts, i, constructionContext))
 		{
+            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theGuard.get(),
 							Constants::ELEMNAME_PI_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -76,9 +79,12 @@ ElemPI::ElemPI(
 
 	if(0 == m_nameAVT)
 	{
+        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::TemplateMustHaveAttribute_2Param,
+                theGuard.get(),
 				Constants::ELEMNAME_PI_WITH_PREFIX_STRING,
 				Constants::ATTRNAME_NAME),
 			0,
@@ -114,14 +120,18 @@ ElemPI::startElement(StylesheetExecutionContext& executionContext) const
 
 	if(equalsIgnoreCaseASCII(piName, Constants::ATTRVAL_OUTPUT_METHOD_XML))
 	{
+        StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+
 		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::NameCanNotBe_1Param,"xml"),
+			XalanMessageLoader::getMessage(XalanMessages::NameCanNotBe_1Param, theGuard.get(), "xml"),
 			0, getLocator());
 	}
 	else if(!isValidNCName(piName))
 	{
+        StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+
 		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::NameMustBeValidNCName),
+			XalanMessageLoader::getMessage(XalanMessages::NameMustBeValidNCName, theGuard.get()),
 			0, getLocator());
 	}
 

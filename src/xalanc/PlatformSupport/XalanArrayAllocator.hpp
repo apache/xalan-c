@@ -26,7 +26,7 @@
 #include <utility>
 
 
-
+#include <xalanc/Include/XalanMemMgrHelper.hpp>
 #include <xalanc/Include/XalanVector.hpp>
 #include <xalanc/Include/XalanList.hpp>
 
@@ -44,8 +44,8 @@ public:
 	typedef XalanVector<Type>				VectorType;
 	typedef typename VectorType::size_type	size_type;
 
-	typedef XALAN_STD_QUALIFIER pair<size_type, VectorType>		ListEntryType;
-	typedef XalanList<ListEntryType>							ListType;
+	typedef XALAN_STD_QUALIFIER pair<size_type, VectorType * >		ListEntryType;
+	typedef XalanList<ListEntryType>							    ListType;
 
 	typedef Type							value_type;
 
@@ -59,16 +59,30 @@ public:
 	 *
 	 * @param theBlockSize The block size when allocating.
 	 */
-	XalanArrayAllocator(size_type	theBlockSize = eDefaultBlockSize) :
-		m_list(),
+	XalanArrayAllocator(MemoryManagerType&       theManager,
+                        size_type	theBlockSize = eDefaultBlockSize) :
+		m_list(theManager),
 		m_blockSize(theBlockSize),
 		m_lastEntryFound(0)
 	{
 	}
 
-	~XalanArrayAllocator()
-	{
-	}
+    ~XalanArrayAllocator()
+    {        
+        ListType::iterator iter = m_list.begin();
+
+        MemoryManagerType& theManager = m_list.getMemoryManager();
+
+        for( iter = m_list.begin(); iter != m_list.end(); ++iter)
+        {
+            if( (*iter).second != 0)
+            {
+                (*iter).second->VectorType::~VectorType();
+                
+                theManager.deallocate((void*)(*iter).second);
+            }
+        }
+    }
 
 	/**
 	 * Clear the instance, and release all allocated memory
@@ -100,7 +114,7 @@ public:
 
 			do
 			{
-				(*theCurrent).first = (*theCurrent).second.size();
+				(*theCurrent).first = (*theCurrent).second->size();
 
 				++theCurrent;
 			} while(theCurrent != theEnd);
@@ -138,8 +152,9 @@ public:
 			{
 				// The address we want is that of the first free element in the
 				// vector...
+                assert( theEntry->second != 0);
 				Type* const		thePointer =
-					&*theEntry->second.begin() + (theEntry->second.size() - theEntry->first);
+					&*theEntry->second->begin() + (theEntry->second->size() - theEntry->first);
 
 				// Resize the vector to the appropriate size...
 				theEntry->first -= theCount;
@@ -161,13 +176,15 @@ private:
 
 		// Push on a new entry.  The entry has no open space,
 		// since it's greater than our block size...
-		m_list.push_back(ListEntryType(0, VectorType()));
+        m_list.push_back(ListEntryType(0, VectorType::create(m_list.getMemoryManager())));
 
 		// Get the new entry...
 		ListEntryType&	theNewEntry = m_list.back();
 
 		// Resize the vector to the appropriate size...
-		theNewEntry.second.resize(theBlockSize, value_type());
+        assert(theNewEntry.second);
+
+		theNewEntry.second->resize(theBlockSize, value_type());
 
 		// Set the number of free spaces accordingly...
 		theNewEntry.first = theBlockSize - theCount;
@@ -178,7 +195,7 @@ private:
 		}
 
 		// Return a pointer to the beginning of the allocated memory...
-		return &*theNewEntry.second.begin();
+		return &*theNewEntry.second->begin();
 	}
 
 	ListEntryType*

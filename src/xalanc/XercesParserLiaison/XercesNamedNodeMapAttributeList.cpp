@@ -123,13 +123,14 @@ XercesNamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 	}
 }
 
-
-
 const XMLCh* 
-XercesNamedNodeMapAttributeList::getValue(const char* const name) const
+XercesNamedNodeMapAttributeList::getValue(const char* const /*name*/) const
 {
-	return getValue(c_wstr(TranscodeFromLocalCodePage(name)));
+    assert( 0 );
+
+    return 0;
 }
+
 
 
 

@@ -225,7 +225,7 @@ findNamespace(
 
 
 
-const XalanDOMString		NamespacesHandler::Namespace::s_emptyString;
+const XalanDOMString		NamespacesHandler::Namespace::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -241,11 +241,11 @@ NamespacesHandler::PrefixChecker::~PrefixChecker()
 
 
 
-NamespacesHandler::NamespacesHandler() :
-	m_excludedResultPrefixes(),
-	m_namespaceDeclarations(),
-	m_extensionNamespaceURIs(),
-	m_namespaceAliases()
+NamespacesHandler::NamespacesHandler(MemoryManagerType& theManager) :
+	m_excludedResultPrefixes(theManager),
+	m_namespaceDeclarations(theManager),
+	m_extensionNamespaceURIs(theManager),
+	m_namespaceAliases(theManager)
 {
 }
 
@@ -256,10 +256,10 @@ NamespacesHandler::NamespacesHandler(
 			const NamespacesHandler&		/* stylesheetNamespacesHandler */,
 			const NamespacesStackType&		theCurrentNamespaces,
 			const XalanDOMString&			theXSLTNamespaceURI) :
-	m_excludedResultPrefixes(),
-	m_namespaceDeclarations(),
-	m_extensionNamespaceURIs(),
-	m_namespaceAliases()
+    m_excludedResultPrefixes(theConstructionContext.getMemoryManager()),
+	m_namespaceDeclarations(theConstructionContext.getMemoryManager()),
+	m_extensionNamespaceURIs(theConstructionContext.getMemoryManager()),
+	m_namespaceAliases(theConstructionContext.getMemoryManager())
 {
 	// Go through the namespaces stack in reverse order...
 	const NamespacesStackType::const_reverse_iterator	theEnd =
@@ -483,7 +483,6 @@ NamespacesHandler::processExtensionElementPrefixes(
 }
 
 
-
 void
 NamespacesHandler::postConstruction(
 			StylesheetConstructionContext&	theConstructionContext,
@@ -698,7 +697,8 @@ NamespacesHandler::createResultAttributeNames(StylesheetConstructionContext&	the
 		NamespaceExtendedVectorType::iterator		i =
 				m_namespaceDeclarations.begin();
 
-		XalanDOMString	theName;
+        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(theConstructionContext);
+        XalanDOMString&	theName = theGuard.get();
 
 		for(; i != theEnd; ++i)
 		{

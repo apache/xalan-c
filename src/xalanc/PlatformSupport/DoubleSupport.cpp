@@ -44,7 +44,7 @@ const DoubleSupport::NumberUnion    DoubleSupport::s_negativeZero = { -s_positiv
 
 
 void
-DoubleSupport::initialize()
+DoubleSupport::initialize(MemoryManagerType&     /* theManager */)
 {
     // We initialize this at here because some
     // platforms have had issues with signals
@@ -304,9 +304,10 @@ DoubleSupport::negative(double  theDouble)
 
 
 double
-DoubleSupport::toDouble(const XalanDOMString&   theString)
+DoubleSupport::toDouble(const XalanDOMString&   theString,
+                        MemoryManagerType&      theManager)
 {
-    return toDouble(c_wstr(theString));
+    return toDouble(c_wstr(theString), theManager);
 }
 
 
@@ -540,7 +541,8 @@ translateWideString(
 inline double
 convertHelper(
             const XalanDOMChar*     theString,
-            bool                    fGotDecimalPoint)
+            bool                    fGotDecimalPoint,
+            MemoryManagerType&      theManager)
 {
     // This is a big hack.  If the length of the
     // string is less than n characters, we'll convert
@@ -598,7 +600,7 @@ convertHelper(
         }
         else
         {
-            CharVectorType  theVector;
+            CharVectorType  theVector(theManager);
 
 #if !defined(XALAN_NON_ASCII_PLATFORM)
             theVector.reserve(theLength + 1);
@@ -622,7 +624,8 @@ convertHelper(
 
 
 double
-doConvert(const XalanDOMChar*   theString)
+doConvert(const XalanDOMChar*   theString,
+          MemoryManagerType&      theManager)
 {
     assert(theString != 0);
     assert(*theString != 0);
@@ -635,14 +638,15 @@ doConvert(const XalanDOMChar*   theString)
     }
     else
     {
-        return convertHelper(theString, fGotDecimalPoint);
+        return convertHelper(theString, fGotDecimalPoint,theManager);
     }
 }
 
 
 
 double
-DoubleSupport::toDouble(const XalanDOMChar*     theString)
+DoubleSupport::toDouble(const XalanDOMChar*     theString,
+                        MemoryManagerType&      theManager)
 {
     if (theString == 0 ||
         *theString == 0)
@@ -651,7 +655,7 @@ DoubleSupport::toDouble(const XalanDOMChar*     theString)
     }
     else
     {
-        return doConvert(theString);
+        return doConvert(theString, theManager);
     }
 }
 

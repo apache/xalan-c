@@ -73,14 +73,15 @@ public:
 	typedef XalanVector<ElemTemplateElement*>		ElemTextLiteralStackType;
 
 	typedef XalanVector<bool>						BoolStackType;
-	typedef XalanSet<XalanQNameByReference> 		QNameSetType;
-	typedef XalanVector<QNameSetType>				QNameSetVectorType;
-    
-    /**
+	typedef XalanSet<XalanQNameByReference>  		QNameSetType;
+	typedef XalanVector<QNameSetType, ConstructWithMemoryManagerTraits<QNameSetType> >
+                                                    QNameSetVectorType;
+
+	/**
 	 * Perform static initialization.  See class XMLSupportInit.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType&  theManager);
 
 	/**
 	 * Perform static shut down.  See class XMLSupportInit.
@@ -95,6 +96,12 @@ public:
 	StylesheetHandler(
 			Stylesheet&						stylesheetTree,
 			StylesheetConstructionContext&	constructionContext);
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_constructionContext.getMemoryManager();
+    }
 
 	virtual
 	~StylesheetHandler();
@@ -709,7 +716,8 @@ private:
 			const LocatorType*			locator);
 
 	const XalanDOMString*
-	getNamespaceFromStack(const XalanDOMChar*	theName) const;
+	getNamespaceFromStack(const XalanDOMChar*	theName,
+                            XalanDOMString&     theBuffer) const;
 
 	const XalanDOMString*
 	getNamespaceForPrefixFromStack(const XalanDOMString&	thePrefix) const;

@@ -48,7 +48,7 @@ public:
 	 * Perform static initialization.  See class XMLSupportInit.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType& theManager);
  
 	/**
 	 * Perform static shut down.  See class XMLSupportInit.
@@ -72,13 +72,25 @@ public:
 	 *                          the standalone document declaration
 	 */
 	FormatterToXML_UTF8(
+            MemoryManagerType&      theManager,
 			Writer&					writer,
-			const XalanDOMString&	version = XalanDOMString(),
-			const XalanDOMString&	mediaType = XalanDOMString(),
-			const XalanDOMString&	doctypeSystem = XalanDOMString(),
-			const XalanDOMString&	doctypePublic = XalanDOMString(),
+			const XalanDOMString&	version = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	mediaType = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypePublic = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			bool					xmlDecl = true,
-			const XalanDOMString&	standalone = XalanDOMString());
+			const XalanDOMString&	standalone = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
+
+    static FormatterToXML_UTF8*
+    create(
+            MemoryManagerType&      theManager,
+			Writer&					writer,
+			const XalanDOMString&	version = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	mediaType = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			const XalanDOMString&	doctypePublic = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+			bool					xmlDecl = true,
+			const XalanDOMString&	standalone = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
 	virtual
 	~FormatterToXML_UTF8();

@@ -78,7 +78,7 @@ public:
 	typedef NodeRefListBase::size_type	size_type;
 
 	explicit
-	XPathExecutionContext(XObjectFactory*	theXObjectFactory = 0);
+	XPathExecutionContext(MemoryManagerType& m_memoryManager, XObjectFactory*	theXObjectFactory = 0);
 
 	virtual
 	~XPathExecutionContext();
@@ -295,6 +295,7 @@ public:
 	 */
 	virtual XalanDocument*
 	parseXML(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) const = 0;
 
@@ -485,7 +486,7 @@ public:
 	 * @return pointer to node list created
 	 */
 	virtual MutableNodeRefList*
-	createMutableNodeRefList() const = 0;
+	createMutableNodeRefList(MemoryManagerType& theManager) const = 0;
 
 	/**
 	 * Given a valid element key, return the corresponding node list.
@@ -603,8 +604,9 @@ public:
 	 * @param owner source document
 	 * @return document URI
 	 */
-	virtual XalanDOMString
-	findURIFromDoc(const XalanDocument*		owner) const = 0;
+	virtual XalanDOMString&
+	findURIFromDoc(const XalanDocument*		owner,
+                    XalanDOMString& theResult) const = 0;
 
 	/**
 	 * The getUnparsedEntityURI function returns the URI of the unparsed
@@ -619,7 +621,8 @@ public:
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const = 0;
+			const XalanDocument&	theDocument,
+            XalanDOMString&         theResult) const = 0;
 
 	/**
 	 * Tells, through the combination of the default-space attribute

@@ -60,7 +60,18 @@ public:
 			int								lineNumber,
 			int								columnNumber,
 			ExtensionNSHandler&				ns);
-	
+
+	static ElemExtensionCall*
+    create(
+            MemoryManagerType&              theManager,
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMChar*				name,
+			const AttributeListType&		atts,
+			int								lineNumber,
+			int								columnNumber,
+			ExtensionNSHandler&				ns);
+
 	// These methods are inherited from ElemLiteralResult ...
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)

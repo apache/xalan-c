@@ -28,6 +28,8 @@
 #include <xalanc/Include/PlatformDefinitions.hpp>
 
 
+#include <xalanc/Include/XalanMemoryManagement.hpp>
+
 
 #include <cstddef>
 #include <algorithm>
@@ -37,8 +39,6 @@
 #include <stdexcept>
 
 
-
-#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 
 
@@ -54,6 +54,7 @@ template <class Type, class ConstructionTraits = MemoryManagedConstructionTraits
 class XalanVector
 {
 public:
+
 
     typedef Type                value_type;
     typedef value_type*         pointer;
@@ -104,14 +105,14 @@ public:
     typedef reverse_iterator_           reverse_iterator;
     typedef const_reverse_iterator_     const_reverse_iterator;
 
-    typedef XalanVector<value_type>     ThisType;
+    typedef XalanVector<value_type, ConstructionTraits>     ThisType;
 
     typedef typename ConstructionTraits::Constructor Constructor;
 
     XalanVector(
-            MemoryManagerType*  theManager = 0,
+            MemoryManagerType&  theManager,
             size_type           initialAllocation = size_type(0)) :
-        m_memoryManager(theManager),
+        m_memoryManager(&theManager),
         m_size(0),
         m_allocation(initialAllocation),
         m_data(initialAllocation > 0 ? allocate(initialAllocation) : 0)
@@ -119,11 +120,29 @@ public:
         invariants();
     }
 
+    static XalanVector*
+    create(
+        MemoryManagerType&  theManager,
+        size_type           initialAllocation = size_type(0))
+    {
+        typedef XalanVector ThisType;
+
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theManager, initialAllocation);
+
+        theGuard.release();
+
+        return theResult;
+    }
+
     XalanVector(
             const ThisType&     theSource,
-            MemoryManagerType*  theManager = 0,
+            MemoryManagerType&  theManager,
             size_type           theInitialAllocation = size_type(0)) :
-        m_memoryManager(theManager != 0 ? theManager : theSource.m_memoryManager),
+        m_memoryManager(&theManager),
         m_size(0),
         m_allocation(0),
         m_data(0)
@@ -150,8 +169,8 @@ public:
     XalanVector(
             const_iterator      theFirst, 
             const_iterator      theLast,
-            MemoryManagerType*  theManager = 0) :
-        m_memoryManager(theManager),
+            MemoryManagerType&  theManager) :
+        m_memoryManager(&theManager),
         m_size(0),
         m_allocation(0),
         m_data(0)
@@ -166,11 +185,29 @@ public:
         invariants();
     }
 
+    static XalanVector*
+    create(           
+            const_iterator      theFirst, 
+            const_iterator      theLast,
+            MemoryManagerType&  theManager)
+    {
+        typedef XalanVector ThisType;
+
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theFirst, theLast, theManager);
+
+        theGuard.release();
+
+        return theResult;
+    }
     XalanVector(
             size_type           theInsertSize,
             const value_type&   theData,
-            MemoryManagerType*  theManager = 0) :
-        m_memoryManager(theManager),
+            MemoryManagerType&  theManager) :
+        m_memoryManager(&theManager),
         m_size(0),
         m_allocation(0),
         m_data(0)
@@ -285,7 +322,9 @@ public:
         {
             if (theTotalSize > capacity())
             {
-                ThisType    theTemp(m_memoryManager, theTotalSize);
+                assert (m_memoryManager != 0);
+
+                ThisType    theTemp(*m_memoryManager, theTotalSize);
 
                 // insert everything up to the position...
                 theTemp.insert(theTemp.end(), begin(), thePosition);
@@ -400,7 +439,9 @@ public:
         {
             if (theTotalSize > capacity())
             {
-                ThisType    theTemp(m_memoryManager, theTotalSize);
+                assert ( m_memoryManager != 0 );
+
+                ThisType    theTemp(*m_memoryManager, theTotalSize);
 
                 // insert everything up to the position...
                 theTemp.insert(theTemp.end(), begin(), thePosition);
@@ -544,14 +585,16 @@ public:
     }
 
     void
-    resize(
-            size_type           theSize,
-#if !defined(SOLARIS)  // Causes Solaris 5.3 compiler assert
-            const value_type&   theValue = value_type()
-#else
-	    value_type 		theValue = value_type()
-#endif
-)
+    resize(size_type   theSize)
+    {
+        typename ConstructionTraits::Constructor::ConstructableType defaultValue(*m_memoryManager);
+
+        resize(theSize , defaultValue.value);
+    }
+
+    void
+    resize( size_type           theSize,
+            const value_type&   theValue)
     {
         invariants();
 
@@ -729,12 +772,16 @@ public:
     reference
     operator[](size_type    theIndex)
     {
+        assert (theIndex < m_size);
+
         return m_data[theIndex];
     }
 
     const_reference
     operator[](size_type    theIndex) const
     {
+        assert (theIndex < m_size);
+
         return m_data[theIndex];
     }
 
@@ -761,7 +808,7 @@ public:
         {
             if (m_allocation < theRHS.m_size)
             {
-                ThisType    theTemp(theRHS);
+                ThisType    theTemp(theRHS,*m_memoryManager);
 
                 swap(theTemp);
             }
@@ -827,10 +874,12 @@ public:
         return m_memoryManager;
     }
 
-    MemoryManagerType*
+    MemoryManagerType&
     getMemoryManager()
     {
-        return m_memoryManager;
+        assert (m_memoryManager != 0);
+
+        return *m_memoryManager;
     }
 
     // Detaches the allocated memory from the vector, and returns
@@ -891,9 +940,9 @@ private:
     {
         const size_type     theBytesNeeded = size * sizeof(value_type);
 
-        void*   pointer = m_memoryManager == 0 ?
-            ::operator new (theBytesNeeded) :
-            m_memoryManager->allocate(theBytesNeeded);
+        assert (m_memoryManager != 0);
+
+        void*   pointer = m_memoryManager->allocate(theBytesNeeded);
 
         assert(pointer != 0);
 
@@ -903,14 +952,10 @@ private:
     void
     deallocate(value_type*  pointer)
     {
-        if (m_memoryManager == 0)
-        {
-            ::operator delete(pointer);
-        }
-        else
-        {
-            m_memoryManager->deallocate(pointer);
-        }
+        assert(m_memoryManager != 0);
+
+        m_memoryManager->deallocate(pointer);
+
     }
 
     static void
@@ -948,7 +993,7 @@ private:
             const size_type     theNewSize = m_size == 0 ? 1 : size_type((m_size * 1.6) + 0.5);
             assert(theNewSize > m_size);
 
-            ThisType    theTemp(*this, m_memoryManager, theNewSize);
+            ThisType    theTemp(*this, *m_memoryManager, theNewSize);
 
             theTemp.doPushBack(data);
 
@@ -976,7 +1021,7 @@ private:
 
         assert(theSize > m_allocation);
 
-        ThisType    theTemp(*this, m_memoryManager, theSize);
+        ThisType    theTemp(*this, *m_memoryManager, theSize);
 
         swap(theTemp);
 
@@ -1033,6 +1078,9 @@ private:
         return theLHS > theRHS ? theLHS : theRHS;
     }
 
+    //not implemented
+    XalanVector(const     XalanVector&);
+    XalanVector();
 
     // Data members...
     MemoryManagerType*  m_memoryManager;
@@ -1141,6 +1189,7 @@ operator>=(
 #if defined(_MSC_VER)
 #pragma warning(pop)
 #endif
+
 
 
 XALAN_CPP_NAMESPACE_END

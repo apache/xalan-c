@@ -21,8 +21,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XSpan::XSpan(BorrowReturnMutableNodeRefList&	value) :
-	XNodeSet(value),
+XSpan::XSpan(BorrowReturnMutableNodeRefList&	value,
+             MemoryManagerType& theManager) :
+	XNodeSet(value, theManager),
 	m_start(-1),
 	m_end(-1)
 {
@@ -30,8 +31,8 @@ XSpan::XSpan(BorrowReturnMutableNodeRefList&	value) :
 
 
 
-XSpan::XSpan(const XSpan&	source) :
-	XNodeSet(source),
+XSpan::XSpan(const XSpan&	source, MemoryManagerType& theManager) :
+	XNodeSet(source, theManager),
 	m_start(source.m_start),
 	m_end(source.m_end)
 {
@@ -44,23 +45,6 @@ XSpan::~XSpan()
 }
 
 
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XSpan*
-#endif
-XSpan::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XSpan(*this);
-	}
-	else
-	{
-		return new (theAddress) XSpan(*this);
-	}
-}
 
 
 

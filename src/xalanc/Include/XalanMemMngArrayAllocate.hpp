@@ -33,14 +33,16 @@ XALAN_CPP_NAMESPACE_BEGIN
 template <class Type>
 class XalanMemMngArrayAllocate
 {
+    typedef typename XalanMemMgrAutoPtrArray<Type>::size_type size_type;
+
 public:
 	static Type*
 	allocate(	size_t				size, 
-				MemoryManagerType* 	memoryManager)
+				MemoryManagerType& 	memoryManager)
 	{		
 		XalanMemMgrAutoPtrArray<Type> theGuard (	memoryManager,
-													(Type*)XalanMemoryManagement::allocate( sizeof(Type)*size , memoryManager ),
-													0 );
+													(Type*)memoryManager.allocate( sizeof(Type)*size),
+													size_type(size) );
 
 		size_t allocated = 0;
 
@@ -57,11 +59,35 @@ public:
 
 		return theResult;
 	}
+	
+	static Type*
+	allocateMemMgr(	size_t				size, 
+				MemoryManagerType& 	memoryManager)
+	{		
+		XalanMemMgrAutoPtrArray<Type> theGuard (	memoryManager,
+													(Type*)memoryManager.allocate( sizeof(Type)*size),
+													size_type(size) );
 
+		size_t allocated = 0;
+
+		for ( Type* runPtr = theGuard.get() ; allocated < size ; ++ allocated )
+		{
+			new ( runPtr + allocated ) Type(memoryManager);
+
+			++theGuard;
+		}
+
+		Type*  theResult = theGuard.get();
+
+		theGuard.release();
+
+		return theResult;
+	}
+	
 	static void
 	deallocate (	Type*				ptr,
 					size_t				size,
-					MemoryManagerType* 	memoryManager)
+					MemoryManagerType& 	memoryManager)
 	{
 		assert ( ptr != 0 );
 
@@ -72,7 +98,7 @@ public:
 			runPtr->~Type();
 		}
 
-		XalanMemoryManagement::deallocate ( ptr, memoryManager );
+		memoryManager.deallocate ( ptr);
 	}
  
 };

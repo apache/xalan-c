@@ -21,7 +21,7 @@
 // Base include file.  Must be first.
 #include <xalanc/XMLSupport/XMLSupportDefinitions.hpp>
 
-
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 #include <xalanc/DOMSupport/TreeWalker.hpp>
 
@@ -45,7 +45,8 @@ public:
 	 * @param formatterListener implemention of the FormatterListener operation
 	 *                          (toXMLString, digest, ...)
 	 */
-	FormatterTreeWalker(FormatterListener&	formatterListener);
+	FormatterTreeWalker(FormatterListener&	formatterListener,
+                        MemoryManagerType& theManager);
 
 	virtual
 	~FormatterTreeWalker();
@@ -67,6 +68,8 @@ protected:
 private:
 
 	FormatterListener&	m_formatterListener;
+
+    MemoryManagerType&  m_memoryManager;
 };
 
 

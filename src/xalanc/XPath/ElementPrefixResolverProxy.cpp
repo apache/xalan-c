@@ -40,23 +40,25 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElementPrefixResolverProxy::ElementPrefixResolverProxy(
+            MemoryManagerType&      theManager,
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const DOMSupport& 		/* domSupport */) :
 	m_namespaceContext(namespaceContext),
 	m_envSupport(&envSupport),
-	m_uri()
+	m_uri(theManager)
 {
 }
 
 
 
 ElementPrefixResolverProxy::ElementPrefixResolverProxy(
+            MemoryManagerType&      theManager,
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport*	envSupport) :
 	m_namespaceContext(namespaceContext),
 	m_envSupport(envSupport),
-	m_uri()
+	m_uri(theManager)
 {
 }
 
@@ -93,7 +95,7 @@ ElementPrefixResolverProxy::getURI() const
 #else
 		m_uri =
 #endif
-				m_envSupport->findURIFromDoc(m_namespaceContext->getOwnerDocument());
+				m_envSupport->findURIFromDoc(m_namespaceContext->getOwnerDocument(),m_uri);
 	}
 
 	return m_uri;

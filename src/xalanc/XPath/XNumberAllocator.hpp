@@ -50,7 +50,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XNumberAllocator(size_type	theBlockCount);
+	XNumberAllocator(MemoryManagerType&      theManager, size_type	theBlockCount);
 
 	~XNumberAllocator();
 
@@ -64,15 +64,6 @@ public:
 	number_type*
 	createNumber(double		theNumber);
 
-	/**
-	 * Clone an XNumber object.
-	 * 
-	 * @param value			source XNumber
-	 *
-	 * @return pointer to an XNumber
-	 */
-	number_type*
-	clone(const XNumber&	value);
 
 	/**
 	 * Delete an XNumber object from allocator.	 

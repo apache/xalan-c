@@ -84,17 +84,19 @@ Function*
 #else
 FunctionContains*
 #endif
-FunctionContains::clone() const
+FunctionContains::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionContains(*this);
+	return cloneFunction_1<FunctionContains>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionContains::getError() const
+const XalanDOMString&
+FunctionContains::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, "contains()");
+	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, theResult, "contains()");
+
+    return theResult;
 }
 
 

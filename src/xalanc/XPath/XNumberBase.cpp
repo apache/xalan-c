@@ -69,8 +69,7 @@ XNumberBase::boolean() const
 void
 XNumberBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
-	theCallbackObject.Number(*this,
-							 num());
+	theCallbackObject.Number(*this, num());
 }
 
 
@@ -78,8 +77,7 @@ XNumberBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 void
 XNumberBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
-	theCallbackObject.Number(*this,
-							 num());
+	theCallbackObject.Number(*this, num());
 }
 
 

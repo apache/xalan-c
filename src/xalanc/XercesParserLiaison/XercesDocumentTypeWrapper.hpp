@@ -24,7 +24,7 @@
 
 #include <xalanc/XalanDOM/XalanDocumentType.hpp>
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 #include <xalanc/XercesParserLiaison/XercesNamedNodeMapWrapper.hpp>
 #include <xalanc/XercesParserLiaison/XercesWrapperTypes.hpp>
@@ -47,6 +47,11 @@ public:
 	XercesDocumentTypeWrapper(
 			const DOMDocumentType_Type*		theXercesDOMDocumentType,
 			const XercesWrapperNavigator&	theNavigator);
+
+    static XercesDocumentTypeWrapper*
+    create( MemoryManagerType& theManager,
+        const DOMDocumentType_Type*		theXercesDOMDocumentType,
+        const XercesWrapperNavigator&	theNavigator);
 
 	virtual
 	~XercesDocumentTypeWrapper();

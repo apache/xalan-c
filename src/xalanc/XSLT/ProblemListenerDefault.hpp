@@ -39,7 +39,8 @@ class XALAN_XSLT_EXPORT ProblemListenerDefault : public ProblemListener
 {
 public:
 
-	ProblemListenerDefault(PrintWriter*		pw = 0);
+	ProblemListenerDefault(MemoryManagerType& theManager, 
+                            PrintWriter*		pw = 0);
 
 	virtual
 	~ProblemListenerDefault();
@@ -81,6 +82,8 @@ public:
 			int							charOffset);
 
 private:
+
+    MemoryManagerType& m_memoryManager;
 
 	PrintWriter*	m_pw;
 };

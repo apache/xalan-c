@@ -27,7 +27,6 @@
 
 
 
-#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/DOMStringPrintWriter.hpp>
 #include <xalanc/PlatformSupport/XalanOutputStream.hpp>
 #include <xalanc/PlatformSupport/XalanNumberFormat.hpp>
@@ -95,6 +94,7 @@ const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		Stylesh
 
 
 StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
+            MemoryManagerType&      theManager,
 			XSLTEngineImpl&			xsltProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
 			DOMSupport&				theDOMSupport,
@@ -102,7 +102,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 			XalanNode*				theCurrentNode,
 			const NodeRefListBase*	theContextNodeList,
 			const PrefixResolver*	thePrefixResolver) :
-	StylesheetExecutionContext(&theXObjectFactory),
+	StylesheetExecutionContext(theManager, &theXObjectFactory),
 	m_xpathExecutionContextDefault(theXPathEnvSupport,
 								   theDOMSupport,
 								   theXObjectFactory,
@@ -111,45 +111,47 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 								   thePrefixResolver),
 	m_xsltProcessor(&xsltProcessor),
 	m_rootDocument(0),
-	m_elementRecursionStack(),
+	m_elementRecursionStack(theManager),
 	m_stylesheetRoot(0),
-	m_formatterListeners(),
-	m_printWriters(),
-	m_outputStreams(),
+	m_formatterListeners(theManager),
+	m_printWriters(theManager),
+	m_outputStreams(theManager),
 	m_collationCompareFunctor(0),
 	m_formatNumberFunctor(0),
-	m_variablesStack(),
-	m_matchPatternCache(),
-	m_keyTables(),
-	m_keyDeclarationSet(),
-	m_countersTable(),
+	m_variablesStack(theManager),
+    m_paramsVector(theManager),
+	m_matchPatternCache(theManager),
+	m_keyTables(theManager),
+	m_keyDeclarationSet(theManager),
+	m_countersTable(theManager),
 	m_sourceTreeResultTreeFactory(),
-	m_currentTemplateStack(),
+    m_mode(0),
+	m_currentTemplateStack(theManager),
 	m_indentAmount(-1),
-	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
-	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
-	m_documentAllocator(eDocumentAllocatorBlockSize),
-	m_copyTextNodesOnlyStack(),
-	m_modeStack(),
-	m_currentIndexStack(),
+	m_xresultTreeFragAllocator(theManager, eXResultTreeFragAllocatorBlockSize),
+	m_documentFragmentAllocator(theManager, eDocumentFragmentAllocatorBlockSize),
+	m_documentAllocator(theManager, eDocumentAllocatorBlockSize),
+	m_copyTextNodesOnlyStack(theManager),
+	m_modeStack(theManager),
+	m_currentIndexStack(theManager),
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	m_xobjectPtrStack(),
-	m_mutableNodeRefListStack(),
-	m_nodesToTransformStack(),
-	m_processCurrentAttributeStack(),
-	m_executeIfStack(),
-	m_stringStack(),
-	m_formatterToTextStack(),
-	m_skipElementAttributesStack(),
-	m_formatterToSourceTreeStack(),
-	m_paramsVectorStack(),
-	m_elementInvokerStack(),
-	m_useAttributeSetIndexesStack(),
-	m_nodeSorter(),
+	m_xobjectPtrStack(theManager),
+	m_mutableNodeRefListStack(theManager),
+	m_nodesToTransformStack(theManager),
+	m_processCurrentAttributeStack(theManager),
+	m_executeIfStack(theManager),
+	m_stringStack(theManager),
+	m_formatterToTextStack(theManager),
+	m_skipElementAttributesStack(theManager),
+	m_formatterToSourceTreeStack(theManager),
+	m_paramsVectorStack(theManager),
+	m_elementInvokerStack(theManager),
+	m_useAttributeSetIndexesStack(theManager),
+	m_nodeSorter(theManager),
 #else
-	m_formatterToTextCache(),
-	m_formatterToSourceTreeCache(),
-	m_nodeSorterCache(),
+	m_formatterToTextCache(theManager),
+	m_formatterToSourceTreeCache(theManager),
+	m_nodeSorterCache(theManager),
 #endif
 	m_usePerInstanceDocumentFactory(false),
 	m_escapeURLs(eEscapeURLsDefault),
@@ -162,54 +164,57 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 
 
 StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
+            MemoryManagerType&      theManager,
 			XalanNode*				theCurrentNode,
 			const NodeRefListBase*	theContextNodeList,
 			const PrefixResolver*	thePrefixResolver) :
-	StylesheetExecutionContext(),
-	m_xpathExecutionContextDefault(theCurrentNode,
+	StylesheetExecutionContext(theManager),
+	m_xpathExecutionContextDefault(theManager,
+                                   theCurrentNode,
 								   theContextNodeList,
 								   thePrefixResolver),
 	m_xsltProcessor(0),
 	m_rootDocument(0),
-	m_elementRecursionStack(),
+	m_elementRecursionStack(theManager),
 	m_stylesheetRoot(0),
-	m_formatterListeners(),
-	m_printWriters(),
-	m_outputStreams(),
+	m_formatterListeners(theManager),
+	m_printWriters(theManager),
+	m_outputStreams(theManager),
 	m_collationCompareFunctor(0),
 	m_formatNumberFunctor(0),
-	m_variablesStack(),
-	m_matchPatternCache(),
-	m_keyTables(),
-	m_keyDeclarationSet(),
-	m_countersTable(),
+	m_variablesStack(theManager),
+    m_paramsVector(theManager),
+	m_matchPatternCache(theManager),
+	m_keyTables(theManager),
+	m_keyDeclarationSet(theManager),
+	m_countersTable(theManager),
 	m_sourceTreeResultTreeFactory(),
-	m_currentTemplateStack(),
+	m_currentTemplateStack(theManager),
 	m_indentAmount(-1),
-	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
-	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
-	m_documentAllocator(eDocumentAllocatorBlockSize),
-	m_copyTextNodesOnlyStack(),
-	m_modeStack(),
-	m_currentIndexStack(),
+	m_xresultTreeFragAllocator(theManager, eXResultTreeFragAllocatorBlockSize),
+	m_documentFragmentAllocator(theManager, eDocumentFragmentAllocatorBlockSize),
+	m_documentAllocator(theManager, eDocumentAllocatorBlockSize),
+	m_copyTextNodesOnlyStack(theManager),
+	m_modeStack(theManager),
+	m_currentIndexStack(theManager),
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	m_xobjectPtrStack(),
-	m_mutableNodeRefListStack(),
-	m_nodesToTransformStack(),
-	m_processCurrentAttributeStack(),
-	m_executeIfStack(),
-	m_stringStack(),
-	m_formatterToTextStack(),
-	m_skipElementAttributesStack(),
-	m_formatterToSourceTreeStack(),
-	m_paramsVectorStack(),
-	m_elementInvokerStack(),
-	m_useAttributeSetIndexesStack(),
-	m_nodeSorter(),
+	m_xobjectPtrStack(theManager),
+	m_mutableNodeRefListStack(theManager),
+	m_nodesToTransformStack(theManager),
+	m_processCurrentAttributeStack(theManager),
+	m_executeIfStack(theManager),
+	m_stringStack(theManager),
+	m_formatterToTextStack(theManager),
+	m_skipElementAttributesStack(theManager),
+	m_formatterToSourceTreeStack(theManager),
+	m_paramsVectorStack(theManager),
+	m_elementInvokerStack(theManager),
+	m_useAttributeSetIndexesStack(theManager),
+	m_nodeSorter(theManager),
 #else
-	m_formatterToTextCache(),
-	m_formatterToSourceTreeCache(),
-	m_nodeSorterCache(),
+	m_formatterToTextCache(theManager),
+	m_formatterToSourceTreeCache(theManager),
+	m_nodeSorterCache(theManager),
 #endif
 	m_usePerInstanceDocumentFactory(false),
 	m_escapeURLs(eEscapeURLsDefault),
@@ -218,6 +223,29 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
     m_currentTemplateStack.push_back(0);
 }
 
+StylesheetExecutionContextDefault*
+StylesheetExecutionContextDefault::create(
+            MemoryManagerType&      theManager,
+			XalanNode*				theCurrentNode,
+			const NodeRefListBase*	theContextNodeList,
+			const PrefixResolver*	thePrefixResolver)
+{
+    typedef StylesheetExecutionContextDefault ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(            
+                                theManager,
+			                    theCurrentNode,
+			                    theContextNodeList,
+			                    thePrefixResolver);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 
 StylesheetExecutionContextDefault::~StylesheetExecutionContextDefault()
@@ -501,17 +529,6 @@ StylesheetExecutionContextDefault::isPendingResultPrefix(const XalanDOMString&	t
 }
 
 
-
-XalanDOMString
-StylesheetExecutionContextDefault::getUniqueNamespaceValue() const
-{
-	assert(m_xsltProcessor != 0);
-
-	return m_xsltProcessor->getUniqueNamespaceValue();
-}
-
-
-
 void
 StylesheetExecutionContextDefault::getUniqueNamespaceValue(XalanDOMString&	theValue) const
 {
@@ -793,7 +810,7 @@ StylesheetExecutionContextDefault::clearTopLevelParams()
 void
 StylesheetExecutionContextDefault::beginParams()
 {
-	ParamsVectorType  newParamsVector;
+    ParamsVectorType  newParamsVector (getMemoryManager());
 	m_paramsVectorStack.push_back(newParamsVector);
 }
 
@@ -1074,7 +1091,7 @@ StylesheetExecutionContextDefault::beginCreateXResultTreeFrag(XalanNode*    sour
 			eDefaultPIAllocatorBlockSize,
 			eDefaultTextAllocatorBlockSize,
 			eDefaultTextIWSAllocatorBlockSize) :
-		getSourceTreeFactory();
+		getSourceTreeFactory(getMemoryManager());
 	assert(theDocument != 0);
 
 	XalanSourceTreeDocumentFragment* const	theDocumentFragment =
@@ -1281,20 +1298,26 @@ StylesheetExecutionContextDefault::pushOnElementRecursionStack(const ElemTemplat
 	{
 		const LocatorType* const	theLocator = theElement->getLocator();
 
+        StylesheetExecutionContext::GetAndReleaseCachedString theGuard(*this);
+
 		if (theLocator == 0)
 		{
 			throw XSLTProcessorException(
+                    getMemoryManager(),
 					XalanMessageLoader::getMessage(
 						XalanMessages::InfiniteRecursion_1Param,
-							theElement->getElementName()));
+                        theGuard.get(),
+						theElement->getElementName()));
 		}
 		else
 		{
 			throw XSLTProcessorException(
+                    getMemoryManager(),
 					*theLocator,
 					XalanMessageLoader::getMessage(
 						XalanMessages::InfiniteRecursion_1Param,
-							theElement->getElementName()));
+                        theGuard.get(),
+						theElement->getElementName()));
 		}
 	}
 
@@ -1341,7 +1364,9 @@ StylesheetExecutionContextDefault::returnXResultTreeFrag(XResultTreeFrag*	theXRe
 
             m_keyTables.erase(i);
 
-            delete theTable;
+            theTable->~KeyTable();
+
+            m_keyTables.getMemoryManager().deallocate((void*)theTable);
         }
 
 		m_xresultTreeFragAllocator.destroy(theXResultTreeFrag);
@@ -1416,7 +1441,8 @@ StylesheetExecutionContextDefault::createFormatterToXML(
 		(encoding.empty() == true || XalanTranscodingServices::encodingIsUTF8(encoding)))
 	{
 		FormatterToXML_UTF8* const	theFormatter =
-			new FormatterToXML_UTF8(
+            FormatterToXML_UTF8::create(
+                getMemoryManager(),
 				writer,
 				version,
 				mediaType,
@@ -1432,7 +1458,8 @@ StylesheetExecutionContextDefault::createFormatterToXML(
 	else if (doIndent == false && XalanTranscodingServices::encodingIsUTF16(encoding))
 	{
 		FormatterToXML_UTF16* const	theFormatter =
-			new FormatterToXML_UTF16(
+            FormatterToXML_UTF16::create(
+                getMemoryManager(),
 				writer,
 				version,
 				mediaType,
@@ -1448,7 +1475,8 @@ StylesheetExecutionContextDefault::createFormatterToXML(
 	else
 	{
 		FormatterToXML* const	theFormatter =
-			new FormatterToXML(
+            FormatterToXML::create(
+                getMemoryManager(),
 				writer,
 				version,
 				doIndent,
@@ -1481,7 +1509,8 @@ StylesheetExecutionContextDefault::createFormatterToHTML(
 			bool					omitMetaTag)
 {
 	FormatterToHTML* const	theFormatter =
-		new FormatterToHTML(
+        FormatterToHTML::create(
+            getMemoryManager(),
 			writer,
 			encoding,
 			mediaType,
@@ -1507,7 +1536,7 @@ StylesheetExecutionContextDefault::createFormatterToText(
 			const XalanDOMString&	encoding)
 {
 	FormatterToText* const	theFormatter =
-		new FormatterToText(writer, encoding);
+        FormatterToText::create(getMemoryManager(), writer, encoding);
 
 	m_formatterListeners.push_back(theFormatter);
 
@@ -1563,7 +1592,7 @@ StylesheetExecutionContextDefault::returnNodeSorter(NodeSorter*		theSorter)
 StylesheetExecutionContextDefault::XalanNumberFormatAutoPtr
 StylesheetExecutionContextDefault::createXalanNumberFormat()
 {
-	return XalanNumberFormatAutoPtr(s_xalanNumberFormatFactory->create());
+	return XalanNumberFormatAutoPtr(getMemoryManager(), s_xalanNumberFormatFactory->create(getMemoryManager()));
 }
 
 
@@ -1581,9 +1610,9 @@ StylesheetExecutionContextDefault::XalanNumberFormatFactory::~XalanNumberFormatF
 
 
 XalanNumberFormat*
-StylesheetExecutionContextDefault::XalanNumberFormatFactory::create()
+StylesheetExecutionContextDefault::XalanNumberFormatFactory::create(MemoryManagerType& theManager)
 {
-	return new XalanNumberFormat();
+    return XalanNumberFormat::create(theManager);
 }
 
 
@@ -1754,7 +1783,7 @@ StylesheetExecutionContextDefault::uninstallCollationCompareFunctor()
 
 
 
-static const XalanQNameByValue	theEmptyQName;
+static const XalanQNameByValue	theEmptyQName(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -1797,8 +1826,9 @@ StylesheetExecutionContextDefault::formatNumber(
 
 	if (theDFS == 0)
 	{
+        GetAndReleaseCachedString theGuard(*this);
 		warn(
-				XalanMessageLoader::getMessage(XalanMessages::Decimal_formatElementNotFound_1Param,"format-number()"),
+				XalanMessageLoader::getMessage(XalanMessages::Decimal_formatElementNotFound_1Param, theGuard.get(),"format-number()"),
 				context,
 				locator);
 
@@ -2082,10 +2112,11 @@ StylesheetExecutionContextDefault::extFunction(
 
 XalanDocument*
 StylesheetExecutionContextDefault::parseXML(
+            MemoryManagerType&      theManager,
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) const
 {
-	return m_xpathExecutionContextDefault.parseXML(urlString, base);
+	return m_xpathExecutionContextDefault.parseXML(theManager, urlString, base);
 }
 
 
@@ -2126,9 +2157,9 @@ StylesheetExecutionContextDefault::popCopyTextNodesOnly()
 
 
 MutableNodeRefList*
-StylesheetExecutionContextDefault::createMutableNodeRefList() const
+StylesheetExecutionContextDefault::createMutableNodeRefList(MemoryManagerType& theManager) const
 {
-	return m_xpathExecutionContextDefault.createMutableNodeRefList();
+	return m_xpathExecutionContextDefault.createMutableNodeRefList(theManager);
 }
 
 
@@ -2221,7 +2252,7 @@ StylesheetExecutionContextDefault::getVariable(
 
 		XalanDOMString&		theString = theGuard.get();
 
-		theString = XalanMessageLoader::getMessage(XalanMessages::VariableIsNotDefined_1Param,name.getLocalPart());
+		XalanMessageLoader::getMessage(XalanMessages::VariableIsNotDefined_1Param, theString, name.getLocalPart());
 
 		error(
 			theString,
@@ -2258,10 +2289,13 @@ StylesheetExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	p
 
 
 
-XalanDOMString
-StylesheetExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner) const
+XalanDOMString&
+StylesheetExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner,
+                                                  XalanDOMString&       theResult) const
 {
-	return m_xpathExecutionContextDefault.findURIFromDoc(owner);
+    m_xpathExecutionContextDefault.findURIFromDoc(owner, theResult);
+
+	return theResult;
 }
 
 
@@ -2269,9 +2303,12 @@ StylesheetExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner) co
 const XalanDOMString&
 StylesheetExecutionContextDefault::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const
+			const XalanDocument&	theDocument,
+            XalanDOMString&         theResult) const
 {
-	return m_xpathExecutionContextDefault.getUnparsedEntityURI(theName, theDocument);
+    m_xpathExecutionContextDefault.getUnparsedEntityURI(theName, theDocument, theResult);
+
+	return theResult;
 }
 
 
@@ -2333,7 +2370,7 @@ StylesheetExecutionContextDefault::createPrintWriter(XalanOutputStream*	theTextO
 	assert(theTextOutputStream != 0);
 
 	PrintWriter* const	thePrintWriter =
-		new XalanOutputStreamPrintWriter(*theTextOutputStream);
+        XalanOutputStreamPrintWriter::create(*theTextOutputStream);
 
 	m_printWriters.push_back(thePrintWriter);
 
@@ -2348,7 +2385,7 @@ StylesheetExecutionContextDefault::createPrintWriter(
 			const XalanDOMString&		/* theEncoding */)
 {
 	XalanOutputStream* const	theOutputStream =
-		new XalanFileOutputStream(theFileName);
+        XalanFileOutputStream::create( theFileName, getMemoryManager());
 
 	m_outputStreams.push_back(theOutputStream);
 
@@ -2361,7 +2398,7 @@ PrintWriter*
 StylesheetExecutionContextDefault::createPrintWriter(StreamType&	theStream)
 {
 	XalanOutputStream* const		theOutputStream =
-		new XalanStdOutputStream(theStream);
+        XalanStdOutputStream::create(theStream, getMemoryManager());
 
 	m_outputStreams.push_back(theOutputStream);
 
@@ -2374,7 +2411,7 @@ PrintWriter*
 StylesheetExecutionContextDefault::createPrintWriter(FILE*	theStream)
 {
 	XalanOutputStream* const		theOutputStream =
-		new XalanFStreamOutputStream(theStream);
+        XalanFStreamOutputStream::create(theStream, getMemoryManager());
 
 	m_outputStreams.push_back(theOutputStream);
 
@@ -2666,7 +2703,7 @@ StylesheetExecutionContextDefault::getParams(
 
 
 XalanSourceTreeDocument*
-StylesheetExecutionContextDefault::getSourceTreeFactory() const
+StylesheetExecutionContextDefault::getSourceTreeFactory(MemoryManagerType& theManager) const
 {
 	assert(m_xsltProcessor != 0);
 
@@ -2677,7 +2714,8 @@ StylesheetExecutionContextDefault::getSourceTreeFactory() const
 #else
 		m_sourceTreeResultTreeFactory.reset(
 #endif
-			new XalanSourceTreeDocument);
+            &theManager, 
+            XalanSourceTreeDocument::create(theManager));
 	}
 
 	return m_sourceTreeResultTreeFactory.get();
@@ -2795,7 +2833,7 @@ StylesheetExecutionContextDefault::addToXPathCache(
 	}
 
 	// Add the XPath with the current clock
-	m_matchPatternCache.insert(XPathCacheMapType::value_type(pattern, XPathCacheEntry(theXPath, addClock)));
+	m_matchPatternCache.insert(pattern, XPathCacheEntry(theXPath, addClock));
 }
 
 
@@ -2807,19 +2845,19 @@ StylesheetExecutionContextDefault::cleanUpTransients()
 
 	for_each(m_formatterListeners.begin(),
 			 m_formatterListeners.end(),
-			 DeleteFunctor<FormatterListener>());
+			 DeleteFunctor<FormatterListener>(getMemoryManager()));
 
 	m_formatterListeners.clear();
 
 	for_each(m_printWriters.begin(),
 			 m_printWriters.end(),
-			 DeleteFunctor<PrintWriter>());
+			 DeleteFunctor<PrintWriter>(getMemoryManager()));
 
 	m_printWriters.clear();
 
 	for_each(m_outputStreams.begin(),
 			 m_outputStreams.end(),
-			 DeleteFunctor<XalanOutputStream>());
+			 DeleteFunctor<XalanOutputStream>(getMemoryManager()));
 
 	m_outputStreams.clear();
 
@@ -2834,7 +2872,7 @@ StylesheetExecutionContextDefault::cleanUpTransients()
 
 	// Clear any cached XPaths...
 	clearXPathCache();
-
+  
 	assert(m_matchPatternCache.empty() == true);
 }
 
@@ -3111,13 +3149,12 @@ StylesheetExecutionContextDefault::popNodesToTransformList()
 }
 
 
-
-XalanDOMString  StylesheetExecutionContextDefault::FormatterToTextDOMString::s_dummyString;
-
+XalanDOMString  StylesheetExecutionContextDefault::FormatterToTextDOMString::s_dummyString(XalanMemMgrs::getDummyMemMgr());
 
 
-StylesheetExecutionContextDefault::FormatterToTextDOMString::FormatterToTextDOMString() :
-    FormatterToText(),
+
+StylesheetExecutionContextDefault::FormatterToTextDOMString::FormatterToTextDOMString(MemoryManagerType& theManager) :
+    FormatterToText(theManager),
     m_printWriter(s_dummyString)
 {
     setNormalizeLinefeed(false);

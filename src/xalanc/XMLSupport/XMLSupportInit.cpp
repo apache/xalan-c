@@ -31,15 +31,15 @@ unsigned long	XMLSupportInit::s_initCounter = 0;
 
 
 
-XMLSupportInit::XMLSupportInit() :
-	m_platformSupportInit(),
-	m_domSupportInit()
+XMLSupportInit::XMLSupportInit(MemoryManagerType& theManager) :
+	m_platformSupportInit(theManager),
+	m_domSupportInit(theManager)
 {
 	++s_initCounter;
 
 	if (s_initCounter == 1)
 	{
-		initialize();
+		initialize(theManager);
 	}
 }
 
@@ -58,10 +58,10 @@ XMLSupportInit::~XMLSupportInit()
 
 
 void
-XMLSupportInit::initialize()
+XMLSupportInit::initialize(MemoryManagerType& theManager)
 {
-	FormatterToXML_UTF8::initialize();
-	FormatterToXML_UTF16::initialize();
+	FormatterToXML_UTF8::initialize(theManager);
+	FormatterToXML_UTF16::initialize(theManager);
 }
 
 

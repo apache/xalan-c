@@ -54,6 +54,15 @@ public:
 			int								lineNumber,
 			int								columnNumber);
 
+    static ElemForwardCompatible*
+    create(
+            MemoryManagerType&              theManager,
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMChar*				name,
+			const AttributeListType&		atts,
+			int								lineNumber,
+			int								columnNumber);
 	virtual
 	~ElemForwardCompatible();
 

@@ -22,7 +22,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XObjectFactory::XObjectFactory()
+XObjectFactory::XObjectFactory(MemoryManagerType& theManager) :
+    m_memoryManager(theManager)
 {
 }
 

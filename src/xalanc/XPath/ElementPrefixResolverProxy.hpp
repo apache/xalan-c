@@ -56,6 +56,7 @@ public:
 	 * @deprecated
 	 */
 	ElementPrefixResolverProxy(
+            MemoryManagerType&      theManager,
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const DOMSupport& 		domSupport);
@@ -68,6 +69,7 @@ public:
 	 *
 	 */
 	ElementPrefixResolverProxy(
+            MemoryManagerType&      theManager,
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport*	envSupport = 0);
 
@@ -83,6 +85,8 @@ public:
 	getURI() const;
 
 private:
+    //notimplemented
+    ElementPrefixResolverProxy(const ElementPrefixResolverProxy&);
 
 	const XalanElement* const		m_namespaceContext;
 

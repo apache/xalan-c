@@ -51,7 +51,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const MutableNodeRefList	KeyTable::s_dummyList;
+const MutableNodeRefList	KeyTable::s_dummyList(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -60,7 +60,7 @@ KeyTable::KeyTable(
 			const PrefixResolver&				resolver,
 			const KeyDeclarationVectorType&		keyDeclarations,
 			StylesheetExecutionContext&			executionContext) :
-	m_keys()
+	m_keys(executionContext.getMemoryManager())
 {
     XalanNode*	pos = startNode;
 
@@ -103,9 +103,11 @@ KeyTable::KeyTable(
 				if (executionContext.getInConstruction(kd) == true)			
 				{
 					assert(kd.getURI() != 0);
+                    StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
 
 					throw XSLTProcessorException(
-						XalanMessageLoader::getMessage(XalanMessages::UseOfFunctionIsIllegal_2Param,"key()","xsl:key"),
+                            executionContext.getMemoryManager(),
+						XalanMessageLoader::getMessage(XalanMessages::UseOfFunctionIsIllegal_2Param, theGuard.get(),"key()","xsl:key"),
 							*kd.getURI(),
 							kd.getLineNumber(),
 							kd.getColumnNumber());
@@ -206,7 +208,27 @@ KeyTable::KeyTable(
 	}	
 } // end constructor
 
+KeyTable*
+KeyTable::create(MemoryManagerType& theManager,
+			XalanNode*							startNode,
+			const PrefixResolver&				resolver,
+			const KeyDeclarationVectorType&		keyDeclarations,
+			StylesheetExecutionContext&			executionContext)
+{
+    typedef KeyTable ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType( startNode,
+                               resolver,
+                               keyDeclarations,
+                              executionContext);
+   theGuard.release();
+
+    return theResult;
+}
 
 KeyTable::~KeyTable()
 {
@@ -251,8 +273,7 @@ addIfNotFound(
 }
 
 
-
-static const NodeRefList	theEmptyList;
+static const NodeRefList	theEmptyList(XalanMemMgrs::getDummyMemMgr());
 
 void
 KeyTable::processKeyDeclaration(

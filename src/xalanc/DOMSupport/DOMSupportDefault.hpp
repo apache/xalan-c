@@ -39,7 +39,7 @@ class XALAN_DOMSUPPORT_EXPORT DOMSupportDefault : public DOMSupport
 {
 public:
 
-	DOMSupportDefault();
+	DOMSupportDefault(MemoryManagerType& theManager);
 
 	virtual
 	~DOMSupportDefault();
@@ -55,7 +55,8 @@ public:
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const;
+			const XalanDocument&	theDocument,
+            XalanDOMString&			theURI) const;
 
 	virtual bool
 	isNodeAfter(

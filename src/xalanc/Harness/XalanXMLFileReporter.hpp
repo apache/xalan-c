@@ -28,7 +28,7 @@
 
 #include "xalanc/Include/XalanMap.hpp"
 
-
+#include "xalanc/Include/XalanMemMgrHelper.hpp"
 
 #include "xalanc/PlatformSupport/DOMStringHelper.hpp"
 
@@ -42,9 +42,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-// This class is exported from the Harness.dll
+
 class XALAN_HARNESS_EXPORT XalanXMLFileReporter
 {
+    
 public:
 
     typedef XalanMap<XalanDOMString, XalanDOMString>  Hashtable;
@@ -60,10 +61,16 @@ public:
 
     // Construct and initialize this reporter with specified filename, if
     // the filename is not empty.
-    XalanXMLFileReporter(const XalanDOMString& fileName = XalanDOMString());
+    XalanXMLFileReporter(MemoryManagerType& theManager, const XalanDOMString& fileName);
 
     // Initialize this XalanXMLFileReporter.  Must be called before attempting to log anything.
-    bool initialize();
+    bool initialize(MemoryManagerType& theManager);
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_fileName.getMemoryManager();
+    }
 
     // Accessor for flushing; is set from properties.
     bool getFlushOnCaseClose();
@@ -75,9 +82,9 @@ public:
     void setFileName(const XalanDOMString& fileName);
 
     // Accessor methods for our properties block.
-    void setFileName(const char* fileName)
+    void setFileName(const char* fileName, MemoryManagerType& theManager)
     {
-        setFileName(XalanDOMString(fileName));
+        setFileName(XalanDOMString(fileName, theManager));
     }
 
     //
@@ -110,7 +117,7 @@ public:
 
     void logTestFileInit(const char*    msg)
     {
-        logTestFileInit(XalanDOMString(msg));
+        logTestFileInit(XalanDOMString(msg,  getMemoryManager()));
     }
 
     /**
@@ -122,14 +129,14 @@ public:
 
     void logTestFileClose(const char* msg, const char* result)
     {
-        logTestFileClose(XalanDOMString(msg), XalanDOMString(result));  
+        logTestFileClose(XalanDOMString(msg, getMemoryManager()), XalanDOMString(result, getMemoryManager()));  
     }
 
     void logTestCaseInit(const XalanDOMString& msg);
 
     void logTestCaseInit(const char*    msg)
     {
-        logTestCaseInit(XalanDOMString(msg));
+        logTestCaseInit(XalanDOMString(msg,  getMemoryManager()));
     }
 
     /**
@@ -141,7 +148,7 @@ public:
 
     void logTestCaseClose(const char* msg, const char* result)
     {
-        logTestCaseClose(XalanDOMString(msg), XalanDOMString(result));
+        logTestCaseClose(XalanDOMString(msg , getMemoryManager()), XalanDOMString(result , getMemoryManager()));
     }
     //-----------------------------------------------------
     //-------- Test results reporting and logging routines --------
@@ -168,7 +175,7 @@ public:
 
     void logStatistic (int level, long lVal, double dVal, const char*   msg)
     {
-        logStatistic(level, lVal, dVal, XalanDOMString(msg));
+        logStatistic(level, lVal, dVal, XalanDOMString(msg, getMemoryManager()));
     }
 
     // This routine will add an attribute to the attribute list.
@@ -185,11 +192,11 @@ public:
     * caller must ensure they're legal XML
     * @param msg comment to log out.
     */
-    void logElementWAttrs(int level, const XalanDOMString& element, Hashtable attrs, const XalanDOMString& msg);
+    void logElementWAttrs(int level, const XalanDOMString& element, Hashtable& attrs, const XalanDOMString& msg);
 
-    void logElementWAttrs(int level,  const char* element, Hashtable attrs, const char* msg)
+    void logElementWAttrs(int level,  const char* element, Hashtable& attrs, const char* msg)
     {
-        logElementWAttrs(level, XalanDOMString(element), attrs, XalanDOMString(msg));
+        logElementWAttrs(level, XalanDOMString(element, getMemoryManager()), attrs, XalanDOMString(msg, getMemoryManager()));
     }
 
     void logElement(int level, const XalanDOMString& element, const XalanDOMString& msg);
@@ -245,9 +252,9 @@ public:
     */
     void logCheckFail(const XalanDOMString& comment);
 
-    void logCheckFail(const XalanDOMString& test, Hashtable faildata, Hashtable actexp);
+    void logCheckFail(const XalanDOMString& test, const Hashtable& faildata, const Hashtable& actexp);
 
-    void logCheckFail(const XalanDOMString& test, Hashtable actexp);
+    void logCheckFail(const XalanDOMString& test, const Hashtable& actexp);
 
     void logErrorResult(const XalanDOMString& test, const XalanDOMString& reason);
 
@@ -264,11 +271,12 @@ public:
     * @param s XalanDOMString to escape.
     * @return XalanDOMString that has been escaped.
     */
-    XalanDOMString escapestring(const XalanDOMString& s);
+    XalanDOMString& escapestring(const XalanDOMString& s, XalanDOMString&      buffer);
 
 
 private:
-
+    // not implemented
+    XalanXMLFileReporter(const XalanXMLFileReporter&);
     /**
     * worker method to dump the xml header and open the resultsfile element.  
     */
@@ -290,7 +298,8 @@ private:
     /**
     * worker method to prints to the resultsfile.  
     */
-    XalanDOMString getDateTimeString();
+    XalanDOMString&
+    getDateTimeString(XalanDOMString& result);
     
     /** Key for Properties block that denotes our output filename.  */
     XalanDOMString  OPT_FILENAME;

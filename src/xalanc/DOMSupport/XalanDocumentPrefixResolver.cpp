@@ -34,9 +34,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XalanDocumentPrefixResolver::XalanDocumentPrefixResolver(
 			const XalanDocument*	theDocument,
-			const XalanDOMString&	theURI) :
-	m_namespaces(),
-	m_uri(theURI)
+			const XalanDOMString&	theURI,
+            MemoryManagerType&      theManager) :
+	m_namespaces(theManager),
+	m_uri(theURI, theManager)
 {
 	assert(theDocument != 0);
 
@@ -64,18 +65,21 @@ XalanDocumentPrefixResolver::getNamespaceForPrefix(const XalanDOMString&	prefix)
 	}
 	else
 	{
-		const AttributeVectorType&	theVector = (*i).second;
-		assert(theVector.empty() == false);
+		const AttributeVectorType*	theVector = (*i).second;
 
-		if (theVector.size() == 1)
+        assert( theVector != 0);
+
+		assert(theVector->empty() == false);
+
+		if (theVector->size() == 1)
 		{
-			assert(theVector.front() != 0);
+			assert(theVector->front() != 0);
 
-			return &(theVector.front()->getNodeValue());
+			return &(theVector->front()->getNodeValue());
 		}
 		else
 		{
-			return duplicateBinding(theVector);
+			return duplicateBinding(*theVector);
 		}
 	}
 }
@@ -148,7 +152,7 @@ XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::startNode(const XalanNode
 
 				if (DOMServices::isNamespaceDeclaration(*theAttr) == true)
 				{
-					m_map[&theAttr->getLocalName()].push_back(theAttr);
+					m_map[&theAttr->getLocalName()]->push_back(theAttr);
 				}
 			}
 		}

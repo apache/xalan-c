@@ -24,19 +24,34 @@
 
 #include "XPath.hpp"
 
+#include <xalanc/Include/XalanMemMgrHelper.hpp>
 
 
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathFactoryDefault::XPathFactoryDefault() :
+XPathFactoryDefault::XPathFactoryDefault(MemoryManagerType& theManager) :
 	XPathFactory(),
-	m_xpaths()
+	m_xpaths(theManager)
 {
 }
 
+XPathFactoryDefault*
+XPathFactoryDefault::createXPathFactoryDefault(MemoryManagerType& theManager)
+{
+    typedef XPathFactoryDefault ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XPathFactoryDefault::~XPathFactoryDefault()
 {
@@ -73,12 +88,7 @@ XPathFactoryDefault::doReturnObject(
     }
     else
     {
-
-#if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (XPath*)theXPath;
-#else
-		delete theXPath;
-#endif
+        destroyObjWithMemMgr(theXPath, m_xpaths.getMemoryManager());
 
 		return true;
 	}
@@ -89,7 +99,7 @@ XPathFactoryDefault::doReturnObject(
 XPath*
 XPathFactoryDefault::create()
 {
-	XPath* const	theXPath = new XPath;
+    XPath* const	theXPath = XPath::create(m_xpaths.getMemoryManager());
 
 	m_xpaths.insert(theXPath);
 

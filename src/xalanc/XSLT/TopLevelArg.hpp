@@ -56,9 +56,15 @@ public:
 	 * @param expr	expression argument represents
 	 */
 	TopLevelArg(
+        MemoryManagerType&      theManager,
 		const XalanQName&		name,
 		const XalanDOMString&	expr);
 
+	static TopLevelArg*
+    create(
+        MemoryManagerType&      theManager,
+		const XalanQName&		name,
+		const XalanDOMString&	expr);
 	/**
 	 * Construct an argument object from an XObject instance.
 	 * 
@@ -66,15 +72,24 @@ public:
 	 * @param variable	the XObject instance.
 	 */
 	TopLevelArg(
-		const XalanQName&	name = XalanQNameByValue(),
+        MemoryManagerType&  theManager,
+		const XalanQName&	name,
 		const XObjectPtr	variable = XObjectPtr());
 
+	static TopLevelArg*
+    create(
+        MemoryManagerType&      theManager,
+		const XalanQName&		name,
+		const XObjectPtr	variable = XObjectPtr());
 	/**
 	 * Copy constructor
 	 * 
 	 * @param theSource	the TopLevelArg to copy.
 	 */
-	TopLevelArg(const TopLevelArg&	theSource);
+	TopLevelArg(
+                const TopLevelArg&	theSource,
+                MemoryManagerType&  theManager);
+
 
 	/**
 	 * Destructor
@@ -131,6 +146,8 @@ public:
 	}
 
 private:
+    // not implemented
+    TopLevelArg(const TopLevelArg&	theSource);
 
 	XalanQNameByValue	m_qname;
 
@@ -139,7 +156,7 @@ private:
 	const XObjectPtr	m_xobject;
 };
 
-
+XALAN_USES_MEMORY_MANAGER(TopLevelArg);
 
 XALAN_CPP_NAMESPACE_END
 

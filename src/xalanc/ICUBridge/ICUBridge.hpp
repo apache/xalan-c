@@ -40,20 +40,20 @@ class XALAN_ICUBRIDGE_EXPORT ICUBridge
 public:
 
 	static const UnicodeString
-	XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString);
+	XalanDOMCharStringToUnicodeString(MemoryManagerType&    theManager, 
+                                        const XalanDOMChar*	theString);
 
 	static const UnicodeString
 	XalanDOMCharStringToUnicodeString(
+            MemoryManagerType&          theManager,
 			const XalanDOMChar*			theString,
 			XalanDOMString::size_type	theLHSLength);
 
 	static const UnicodeString
-	XalanDOMStringToUnicodeString(const XalanDOMString&		theString);
+	XalanDOMStringToUnicodeString(MemoryManagerType&            theManager, 
+                                    const XalanDOMString&		theString);
 
-	static const XalanDOMString
-	UnicodeStringToXalanDOMString(const UnicodeString&	theString);
-
-	static void
+	static XalanDOMString&
 	UnicodeStringToXalanDOMString(
 			const UnicodeString&	theString,
 			XalanDOMString&			theResult);

@@ -46,7 +46,9 @@ public:
 	 * @param theMessage message to print when exception thrown
 	 */
 	explicit
-	XMLSupportException(const XalanDOMString&	message);
+	XMLSupportException(const XalanDOMString&	message,
+                        MemoryManagerType& theManager);
+
 
 	virtual
 	~XMLSupportException();

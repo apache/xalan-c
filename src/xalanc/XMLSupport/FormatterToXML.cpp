@@ -55,6 +55,7 @@ static const XalanDOMChar 	theDefaultAttrSpecialChars[] =
 
 
 FormatterToXML::FormatterToXML(
+            MemoryManagerType&      theManager,
 			Writer& 				writer,
 			const XalanDOMString&	version,
 			bool					doIndent,
@@ -85,26 +86,26 @@ FormatterToXML::FormatterToXML(
 	m_nextIsRaw(false),
 	m_inCData(false),
 	m_encodingIsUTF(false),
-	m_doctypeSystem(doctypeSystem),
-	m_doctypePublic(doctypePublic),
-	m_encoding(isEmpty(encoding) == false ? encoding : XalanDOMString(XalanTranscodingServices::s_utf8String)),
+	m_doctypeSystem(doctypeSystem, theManager),
+	m_doctypePublic(doctypePublic, theManager),
+	m_encoding(theManager),
 	m_currentIndent(0),
 	m_indent(indent),
-	m_preserves(),
-	m_stringBuffer(),
+	m_preserves(theManager),
+	m_stringBuffer(theManager),
 	m_bytesEqualChars(false),
 	m_shouldFlush(fBufferData),
 	m_spaceBeforeClose(false),
 	m_escapeCData(false),
 	m_inEntityRef(false),
-	m_version(version),
-	m_standalone(standalone),
-	m_mediaType(mediaType),
-	m_attrSpecialChars(theDefaultAttrSpecialChars),
-	m_charBuf(),
+	m_version(version, theManager),
+	m_standalone(standalone, theManager),
+	m_mediaType(mediaType, theManager),
+	m_attrSpecialChars(theDefaultAttrSpecialChars, theManager),
+	m_charBuf(theManager),
 	m_pos(0),
-	m_byteBuf(),
-	m_elemStack(),
+	m_byteBuf(theManager),
+	m_elemStack(theManager),
 	m_accumNameCharFunction(0),
 	m_accumNameStringFunction(0),
 	m_accumNameDOMStringFunction(0),
@@ -114,7 +115,16 @@ FormatterToXML::FormatterToXML(
 	m_accumContentDOMStringFunction(0),
 	m_accumContentArrayFunction(0)
 {
-	assert(isEmpty(m_encoding) == false);
+    if (isEmpty(encoding) == false)
+    {
+        m_encoding = encoding;
+    }
+    else
+    {
+        m_encoding = XalanDOMString(XalanTranscodingServices::s_utf8String, theManager);
+    }
+
+ 	assert(isEmpty(m_encoding) == false);
 
 	if(isEmpty(m_doctypePublic) == false)
 	{
@@ -139,7 +149,7 @@ FormatterToXML::FormatterToXML(
 		catch(const XalanOutputStream::UnsupportedEncodingException&)
 		{
 			// Default to UTF-8 if the requested encoding is not supported...
-			m_stream->setOutputEncoding(XalanDOMString(XalanTranscodingServices::s_utf8String));
+			m_stream->setOutputEncoding(XalanDOMString(XalanTranscodingServices::s_utf8String, theManager));
 
 			m_encoding = XalanTranscodingServices::s_utf8String;
 		}
@@ -302,7 +312,47 @@ FormatterToXML::FormatterToXML(
 	initCharsMap();
 }
 
+FormatterToXML*
+FormatterToXML::create(
+                       MemoryManagerType&      theManager,
+                       Writer&					writer,
+                       const XalanDOMString&	version,
+                       bool					    doIndent ,
+                       int						indent ,
+                       const XalanDOMString&	encoding ,
+                       const XalanDOMString&	mediaType ,
+                       const XalanDOMString&	doctypeSystem ,
+                       const XalanDOMString&	doctypePublic ,
+                       bool					    xmlDecl ,
+                       const XalanDOMString&	standalone ,
+                       eFormat					format,
+                       bool					    fBufferData )
+{
+    typedef FormatterToXML ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(   theManager,
+                     	        writer,
+                     	        version,
+                                doIndent ,
+                     	        indent ,
+                     	        encoding ,
+                     	        mediaType ,
+                     	        doctypeSystem ,
+                     	        doctypePublic ,
+                                xmlDecl ,
+                     	        standalone ,
+                     	        format,
+                                fBufferData);
+
+
+    theGuard.release();
+
+    return theResult;
+}
 
 FormatterToXML::~FormatterToXML()
 {
@@ -723,13 +773,17 @@ FormatterToXML::accumDOMStringUTFDirect(const XalanDOMString&	str)
 XALAN_USING_XERCES(SAXException)
 
 void
-FormatterToXML::throwInvalidUTF16SurrogateException(XalanDOMChar	ch)
+FormatterToXML::throwInvalidUTF16SurrogateException(XalanDOMChar	ch, MemoryManagerType& theManager)
 {
-	const XalanDOMString chStr = UnsignedLongToHexDOMString(ch);
-	const XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidSurrogate_1Param,chStr);
+    XalanDOMString chStr(theManager);
+    chStr = UnsignedLongToHexDOMString(ch, chStr);
+
+	XalanDOMString	theMessage (theManager) ;
+
+    XalanMessageLoader::getMessage(XalanMessages::InvalidSurrogate_1Param, theMessage, chStr);
 
 
-	throw SAXException(c_wstr(theMessage));
+	throw SAXException(c_wstr(theMessage),&theManager);
 }
 
 
@@ -737,13 +791,21 @@ FormatterToXML::throwInvalidUTF16SurrogateException(XalanDOMChar	ch)
 void
 FormatterToXML::throwInvalidUTF16SurrogateException(
 			XalanDOMChar	ch,
-			XalanDOMChar	next)
+			XalanDOMChar	next,
+            MemoryManagerType& theManager)
 {
 
-	const XalanDOMString chStr = UnsignedLongToHexDOMString(ch)+UnsignedLongToHexDOMString(next);
-	const XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidSurrogate_1Param,chStr);
+	XalanDOMString chStr(theManager); 
+    XalanDOMString chStr1(theManager); 
 
-	throw SAXException(c_wstr(theMessage));
+    UnsignedLongToHexDOMString(ch, chStr);
+    UnsignedLongToHexDOMString(next, chStr1);
+
+    chStr.append(chStr1);
+	XalanDOMString	theMessage(theManager);
+    XalanMessageLoader::getMessage(XalanMessages::InvalidSurrogate_1Param,theMessage, chStr);
+
+	throw SAXException(c_wstr(theMessage),&theManager);
 }
 
 
@@ -765,7 +827,7 @@ FormatterToXML::accumDefaultEscape(
 
 			if (i + 1 >= len)
 			{
-				throwInvalidUTF16SurrogateException(ch);
+				throwInvalidUTF16SurrogateException(ch, getMemoryManager());
 			}
 			else 
 			{
@@ -773,7 +835,7 @@ FormatterToXML::accumDefaultEscape(
 
 				if (!(0xdc00u <= next && next < 0xe000u))
 				{
-					throwInvalidUTF16SurrogateException(ch, XalanDOMChar(next));
+					throwInvalidUTF16SurrogateException(ch, XalanDOMChar(next),getMemoryManager());
 				}
 
 				next = ((ch - 0xd800u) << 10) + next - 0xdc00u + 0x00010000u;
@@ -1346,7 +1408,7 @@ FormatterToXML::writeNormalizedChars(
 
 				if (i + 1 >= end) 
 				{
-					throwInvalidUTF16SurrogateException(c);
+					throwInvalidUTF16SurrogateException(c,getMemoryManager());
 				}
 				else 
 				{
@@ -1354,7 +1416,7 @@ FormatterToXML::writeNormalizedChars(
 
 					if (!(0xdc00 <= next && next < 0xe000))
 					{
-						throwInvalidUTF16SurrogateException(c, next);
+						throwInvalidUTF16SurrogateException(c, next, getMemoryManager());
 					}
 
 					next = XalanDOMChar(((c - 0xd800) << 10) + next - 0xdc00 + 0x00010000);
@@ -1420,7 +1482,7 @@ FormatterToXML::writeNormalizedChars(
 
 				if (i + 1 >= end) 
 				{
-					throwInvalidUTF16SurrogateException(c);
+                    throwInvalidUTF16SurrogateException(c, getMemoryManager());
 				}
 				else
 				{
@@ -1428,7 +1490,7 @@ FormatterToXML::writeNormalizedChars(
 
 					if (!(0xdc00 <= next && next < 0xe000))
 					{
-						throwInvalidUTF16SurrogateException(c, next);
+                        throwInvalidUTF16SurrogateException(c, next, getMemoryManager());
 					}
 
 					next = XalanDOMChar(((c - 0xd800) << 10) + next - 0xdc00 + 0x00010000);

@@ -73,7 +73,7 @@ public:
 	 * Perform static initialization.  See class XSLTInit.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType&  theManager);
 
 	/**
 	 * Perform static shut down.  See class XSLTInit.
@@ -92,6 +92,16 @@ public:
 	 * @param id				  The unique ID within the stylesheet for this xsl:number element
 	 */
 	ElemNumber(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const AttributeListType&		atts,
+			int								lineNumber,
+			int								columnNumber,
+			unsigned long					id);
+
+    static ElemNumber*
+    create(
+            MemoryManagerType& theManager,
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
@@ -466,14 +476,6 @@ public:
 			m_currentPosition = 0;
 		}
 
-		/**
-		 * Retrieve the next token to be parsed; behavior is undefined if there
-		 * are no more tokens
-		 * 
-		 * @return next token string
-		 */
-		XalanDOMString
-		nextToken();
 
 		/**
 		 * Retrieve the next token to be parsed.

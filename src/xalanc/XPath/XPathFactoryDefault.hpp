@@ -42,17 +42,20 @@ class XALAN_XPATH_EXPORT XPathFactoryDefault : public XPathFactory
 public:
 
 	explicit
-	XPathFactoryDefault();
+	XPathFactoryDefault(MemoryManagerType& theManager);
 
 	virtual
 	~XPathFactoryDefault();
 
+	static XPathFactoryDefault*
+	createXPathFactoryDefault(MemoryManagerType& theManager);
 
 	// Inherited from XPathFactory...
 	virtual void
 	reset();
 
 	// Inherited from XPathFactory...
+
 
 	virtual XPath*
 	create();

@@ -22,16 +22,18 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XStringAdapter::XStringAdapter(const XObjectPtr&	val) :
-	XStringBase(),
+XStringAdapter::XStringAdapter(const XObjectPtr&	val,
+                               MemoryManagerType&   theManager) :
+	XStringBase(theManager),
 	m_value(val)
 {
 }
 
 
 
-XStringAdapter::XStringAdapter(const XStringAdapter&	source) :
-	XStringBase(source),
+XStringAdapter::XStringAdapter(const XStringAdapter&	source,
+                               MemoryManagerType&       theManager) :
+	XStringBase(source, theManager),
 	m_value(source.m_value)
 {
 }
@@ -40,25 +42,6 @@ XStringAdapter::XStringAdapter(const XStringAdapter&	source) :
 
 XStringAdapter::~XStringAdapter()
 {
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XStringAdapter*
-#endif
-XStringAdapter::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XStringAdapter(*this);
-	}
-	else
-	{
-		return new (theAddress) XStringAdapter(*this);
-	}
 }
 
 

@@ -71,8 +71,8 @@ public:
 	 * @param n any DOM node
 	 * @return string representation of the given node
 	 */
-	static XalanDOMString
-	printNode(const XalanNode&	n);
+	static XalanDOMString&
+	printNode(const XalanNode&	n, XalanDOMString& theResult);
 
 	/**
 	 * Returns a string representation of the node list. The string will contain
@@ -83,8 +83,8 @@ public:
 	 * @param l any DOM node list
 	 * @return string representation of the given node list
 	 */
-	static XalanDOMString
-	printNodeList(const XalanNodeList&	l);
+	static XalanDOMString&
+	printNodeList(const XalanNodeList&	l, XalanDOMString& theResult);
 
 	/**
 	 * The XSLT processor instance.

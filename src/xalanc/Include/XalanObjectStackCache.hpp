@@ -52,8 +52,12 @@ public:
 	typedef ObjectType	CacheObjectType;
 
 	explicit
-	XalanObjectStackCache(unsigned int	initialListSize = 0) :
-		m_stack(),m_numObjectsOnStack(0)
+	XalanObjectStackCache(MemoryManagerType& theManager, 
+                          unsigned int	initialListSize = 0) :
+		m_stack(theManager),
+        m_numObjectsOnStack(0),
+        m_createFunctor(),
+        m_deleteFunctor(theManager)
 	{
 		m_stack.reserve(initialListSize);
 
@@ -76,7 +80,7 @@ public:
 		
 		if (m_stack.size() == m_numObjectsOnStack)
 		{
-			ObjectType* const	theNewObject = m_createFunctor();
+            ObjectType* const	theNewObject = m_createFunctor(m_stack.getMemoryManager());
 			m_stack.push_back(theNewObject);
 			++m_numObjectsOnStack;
 			return theNewObject;

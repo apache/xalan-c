@@ -30,9 +30,6 @@
 
 
 
-#include <xalanc/Include/XalanMemoryManagement.hpp>
-
-
 
 #include <xalanc/Include/XalanVector.hpp>
 #include <xalanc/Include/XalanList.hpp>
@@ -166,7 +163,7 @@ struct XalanMapIterator : public BaseIterator
     {
     }
 
-    XalanMapIterator(const BaseIterator& theRhs) :
+    XalanMapIterator(const BaseIterator & theRhs) :
             BaseIterator(theRhs)
     {
     }
@@ -234,27 +231,27 @@ public:
     typedef typename MemoryManagedConstructionTraits<data_type>::Constructor SecondConstructor;
 
 	XalanMap(
-			MemoryManagerType* theMemoryManager = 0,
+			MemoryManagerType& theMemoryManager,
 			float loadFactor = 0.75,
 			size_type minBuckets = 10) :
-		m_memoryManager(theMemoryManager),
+		m_memoryManager(&theMemoryManager),
 		m_loadFactor(loadFactor),
 		m_minBuckets(minBuckets),
 		m_size(0),
-		m_entries(m_memoryManager),
-		m_buckets(m_memoryManager)
+		m_entries(*m_memoryManager),
+		m_buckets(*m_memoryManager)
 	{
 	}
 
 	XalanMap(
 			const XalanMap &theRhs,
-			MemoryManagerType*  theManager = 0) :
-        m_memoryManager(theManager != 0 ? theManager : theRhs.m_memoryManager),
+			MemoryManagerType&  theManager) :
+        m_memoryManager(&theManager),
 		m_loadFactor(theRhs.m_loadFactor),
 		m_minBuckets(10),
 		m_size(0),
-		m_entries(m_memoryManager),
-		m_buckets(size_type(m_loadFactor * theRhs.size())+ 1, m_entries.end(), m_memoryManager)
+		m_entries(*m_memoryManager),
+		m_buckets(size_type(m_loadFactor * theRhs.size())+ 1, m_entries.end(), theManager)
 	{
 		const_iterator entry = theRhs.begin();
 		while(entry != theRhs.end())
@@ -266,6 +263,14 @@ public:
 		assert(m_size == theRhs.m_size);
 	}
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        assert (m_memoryManager != 0);
+
+        return *m_memoryManager;
+    }
+
 	~XalanMap()
 	{
         doRemoveEntries();
@@ -273,10 +278,11 @@ public:
 
 	XalanMap & operator=(const XalanMap& theRhs) 
 	{
-		XalanMap theTemp(theRhs);
+		XalanMap theTemp(theRhs, *m_memoryManager);
 		swap(theTemp);
 		return *this;
 	}
+
 
 	size_type size() const
 	{
@@ -477,7 +483,7 @@ public:
 				m_buckets[index] = m_entries.end();
 			}
 		}
-
+        
         value_type& toRemove = *toRemovePos;
 #if defined(_MSC_VER) && _MSC_VER <= 1300
         toRemove.value_type::~value_type();
@@ -506,11 +512,11 @@ public:
 	void rehash()
 	{
 		// grow the number of buckets by 60%
-		EntryPosVectorType temp(size_type(1.6 * size()), m_entries.end(), m_memoryManager);
+		EntryPosVectorType temp(size_type(1.6 * size()), m_entries.end(), *m_memoryManager);
 		m_buckets.swap(temp);
 	
 		// move current entries into a temporary list
-		EntryListType tempEntryList;
+		EntryListType tempEntryList(*m_memoryManager);
 		tempEntryList.splice(tempEntryList.begin(),m_entries, m_entries.begin(), m_entries.end());
 
 		// rehash each entry assign to bucket and insert into list
@@ -542,9 +548,9 @@ public:
     {
         const size_type     theBytesNeeded = size * sizeof(value_type);
 
-        void*   pointer = m_memoryManager == 0 ?
-            ::operator new (theBytesNeeded) :
-            m_memoryManager->allocate(theBytesNeeded);
+        assert( m_memoryManager != 0 );
+
+        void*   pointer = m_memoryManager->allocate(theBytesNeeded);
 
         assert(pointer != 0);
 
@@ -581,8 +587,11 @@ public:
 
     EntryPosVectorType					m_buckets;
 
+    private:
+    // not defined
+    XalanMap();
+    XalanMap(const XalanMap&);
 };
-
 
 
 XALAN_CPP_NAMESPACE_END

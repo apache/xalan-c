@@ -46,7 +46,24 @@ XercesProcessingInstructionWrapper::XercesProcessingInstructionWrapper(
 	assert(theXercesDOMProcessingInstruction != 0);
 }
 
+XercesProcessingInstructionWrapper*
+XercesProcessingInstructionWrapper::create( MemoryManagerType& theManager,
+			const DOMProcessingInstructionType*		theXercesDOMProcessingInstruction,
+			const XercesWrapperNavigator&			theNavigator)
 
+{
+    typedef XercesProcessingInstructionWrapper ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theXercesDOMProcessingInstruction, theNavigator);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XercesProcessingInstructionWrapper::~XercesProcessingInstructionWrapper()
 {

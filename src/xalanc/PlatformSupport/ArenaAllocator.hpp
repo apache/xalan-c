@@ -39,16 +39,25 @@ template<class Type>
 class ArenaDeleteFunctor
 {
 public:
+    ArenaDeleteFunctor(MemoryManagerType&          theManager):
+      m_memoryManager(theManager)
+      {
+      }
 
 	void
 	operator()(const Type*	theType) const
 	{
-#if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (Type*)theType;
-#else
-		delete theType;
-#endif
+        if( theType == 0 )
+            return;
+        else
+        {
+            theType->~Type();
+            
+            m_memoryManager.deallocate((void*)theType);
+        }
 	}
+private:
+    MemoryManagerType&  m_memoryManager;
 };
 
 
@@ -70,9 +79,10 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	ArenaAllocator(size_type	theBlockSize) :
+	ArenaAllocator(MemoryManagerType&       theManager,
+                    size_type	            theBlockSize) :
 		m_blockSize(theBlockSize),
-		m_blocks()
+		m_blocks(theManager)
 	{
 	}
 
@@ -82,6 +92,11 @@ public:
 		reset();
 	}
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_blocks.getMemoryManager();
+    }
 	/*
 	 * Get size of an ArenaBlock, that is, the number
 	 * of objects in each block.
@@ -131,7 +146,7 @@ public:
 		if (m_blocks.empty() == true ||
 			m_blocks.back()->blockAvailable() == false)
 		{
-			m_blocks.push_back(new ArenaBlockType(m_blockSize));
+            m_blocks.push_back(ArenaBlockType::create(getMemoryManager(), m_blockSize));
 		}
 		assert(m_blocks.empty() == false && m_blocks.back() != 0 && m_blocks.back()->blockAvailable() == true);
 
@@ -190,7 +205,7 @@ public:
 		XALAN_STD_QUALIFIER for_each(
 			m_blocks.begin(),
 			m_blocks.end(),
-			ArenaDeleteFunctor<ArenaBlockType>());
+            ArenaDeleteFunctor<ArenaBlockType>(m_blocks.getMemoryManager()));
 
 		m_blocks.clear();
 	}

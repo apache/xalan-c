@@ -53,6 +53,36 @@ ElemExtensionCall::ElemExtensionCall(
 	assert(m_qname != 0);
 }
 
+ElemExtensionCall*
+ElemExtensionCall::create(
+            MemoryManagerType&              theManager,
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMChar*				name,
+			const AttributeListType&		atts,
+			int								lineNumber,
+			int								columnNumber,
+			ExtensionNSHandler&				ns)
+{
+    typedef ElemExtensionCall ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(constructionContext,
+                            stylesheetTree,
+                            name,
+                            atts,
+                            lineNumber,
+                            columnNumber,
+                            ns);
+
+   theGuard.release();
+
+    return theResult;
+}
+
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
@@ -60,8 +90,10 @@ ElemExtensionCall::startElement(StylesheetExecutionContext&	executionContext) co
 {
 	ElemTemplateElement::startElement(executionContext);
 
+    XalanDOMString  theResult(executionContext.getMemoryManager());
+
 	executionContext.warn( 
-		XalanMessageLoader::getMessage(XalanMessages::XalanHandleExtensions),
+		XalanMessageLoader::getMessage(XalanMessages::XalanHandleExtensions, theResult),
 		0,
 		getLocator());
 

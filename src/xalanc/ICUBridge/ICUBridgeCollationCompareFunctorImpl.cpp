@@ -26,7 +26,7 @@
 
 #include <xalanc/Include/XalanAutoPtr.hpp>
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
@@ -41,13 +41,12 @@ const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		ICUBrid
 
 
 
-inline ICUBridgeCollationCompareFunctorImpl::CollatorType*
+inline CollatorType*
 createCollator(
 			UErrorCode&			theStatus,
 			const Locale&		theLocale,
 			XalanDOMString*		theLocaleName = 0)
 {
-	typedef ICUBridgeCollationCompareFunctorImpl::CollatorType	CollatorType;
 
 	if (theLocaleName != 0)
 	{
@@ -67,7 +66,7 @@ createCollator(
 
 
 
-inline ICUBridgeCollationCompareFunctorImpl::CollatorType*
+inline CollatorType*
 createCollator(
 			UErrorCode&			theStatus,
 			XalanDOMString*		theLocaleName = 0)
@@ -95,12 +94,13 @@ createCollator(
 
 
 
-ICUBridgeCollationCompareFunctorImpl::ICUBridgeCollationCompareFunctorImpl(bool		fCacheCollators) :
+ICUBridgeCollationCompareFunctorImpl::ICUBridgeCollationCompareFunctorImpl(MemoryManagerType&   theManager,
+                                                                           bool		            fCacheCollators) :
 	m_isValid(false),
 	m_defaultCollator(0),
-	m_defaultCollatorLocaleName(),
+	m_defaultCollatorLocaleName(theManager),
 	m_cacheCollators(fCacheCollators),
-	m_collatorCache()
+	m_collatorCache(theManager)
 {
 	UErrorCode	theStatus = U_ZERO_ERROR;
 
@@ -112,7 +112,21 @@ ICUBridgeCollationCompareFunctorImpl::ICUBridgeCollationCompareFunctorImpl(bool	
 	}
 }
 
+ICUBridgeCollationCompareFunctorImpl*
+ICUBridgeCollationCompareFunctorImpl::create (MemoryManagerType& theManager , bool	fCacheCollators) 
+{
+    typedef ICUBridgeCollationCompareFunctorImpl ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager, fCacheCollators);
+
+   theGuard.release();
+
+    return theResult;
+}
 
 ICUBridgeCollationCompareFunctorImpl::~ICUBridgeCollationCompareFunctorImpl()
 {
@@ -123,7 +137,7 @@ ICUBridgeCollationCompareFunctorImpl::~ICUBridgeCollationCompareFunctorImpl()
 	for_each(
 			m_collatorCache.begin(),
 			m_collatorCache.end(),
-			CollationCacheStruct::CollatorDeleteFunctor());
+			CollationCacheStruct::CollatorDeleteFunctor(getMemoryManager()));
 }
 
 
@@ -196,7 +210,7 @@ ICUBridgeCollationCompareFunctorImpl::doDefaultCompare(
 
 
 
-inline ICUBridgeCollationCompareFunctorImpl::CollatorType*
+inline CollatorType*
 createCollator(
 			const XalanDOMChar*		theLocale,
 			UErrorCode&				theStatus)
@@ -229,7 +243,7 @@ createCollator(
 			theBuffer[i] = char(theLocale[i]);
 		}
 #endif
-		return ICUBridgeCollationCompareFunctorImpl::CollatorType::createInstance(
+		return CollatorType::createInstance(
 					Locale::createFromName(theBuffer),
 					theStatus);
 	}
@@ -388,7 +402,7 @@ ICUBridgeCollationCompareFunctorImpl::operator()(
 
 
 
-ICUBridgeCollationCompareFunctorImpl::CollatorType*
+CollatorType*
 ICUBridgeCollationCompareFunctorImpl::getCachedCollator(const XalanDOMChar*		theLocale) const
 {
 	XALAN_USING_STD(find_if)
@@ -462,7 +476,7 @@ ICUBridgeCollationCompareFunctorImpl::cacheCollator(
 		theNonConstCache.pop_back();
 	}
 
-	theNonConstCache.push_front(CollatorCacheListType::value_type());
+	theNonConstCache.push_front(CollatorCacheListType::value_type(getMemoryManager()));
 
 	CollatorCacheListType::value_type&		theEntry = 
 		theNonConstCache.front();

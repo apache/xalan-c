@@ -147,7 +147,9 @@ XalanEXSLTFunctionObjectType::execute(
 
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XalanDOMString theResult(executionContext.getMemoryManager());
+
+		executionContext.error(getError(theResult), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -187,10 +189,12 @@ XalanEXSLTFunctionObjectType::execute(
 
 
 
-const XalanDOMString
-XalanEXSLTFunctionObjectType::getError() const
+const XalanDOMString&
+XalanEXSLTFunctionObjectType::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_objectTypeFunctionName);
+	 XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theResult, s_objectTypeFunctionName);
+     
+     return theResult;
 }
 
 
@@ -245,7 +249,8 @@ static const XalanEXSLTFunctionNodeSet		s_nodesetFunction;
 // Note this is a special constructor of XalanEXSLTFunctionObjectType which
 // allocates no memory.  It is only used here, so we can have table-based
 // initialization, but not have any memory allocation.
-static const XalanEXSLTFunctionObjectType	s_objectTypeFunction(1);
+
+static const XalanEXSLTFunctionObjectType	s_objectTypeFunction(XalanMemMgrs::getDummyMemMgr(), 1);
 
 
 
@@ -267,9 +272,9 @@ XalanEXSLTCommonFunctionsInstaller::installLocal(XPathEnvSupportDefault&	theSupp
 
 
 void
-XalanEXSLTCommonFunctionsInstaller::installGlobal()
+XalanEXSLTCommonFunctionsInstaller::installGlobal(MemoryManagerType& theManager)
 {
-	doInstallGlobal(s_commonNamespace, theFunctionTable);
+	doInstallGlobal( theManager, s_commonNamespace, theFunctionTable);
 }
 
 
@@ -283,9 +288,9 @@ XalanEXSLTCommonFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&	theSu
 
 
 void
-XalanEXSLTCommonFunctionsInstaller::uninstallGlobal()
+XalanEXSLTCommonFunctionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
 {
-	doUninstallGlobal(s_commonNamespace, theFunctionTable);
+	doUninstallGlobal(theManager, s_commonNamespace, theFunctionTable);
 }
 
 

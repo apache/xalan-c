@@ -27,6 +27,7 @@
 
 
 #include <xalanc/Include/STLHelper.hpp>
+#include <xalanc/Include/XalanMemMgrHelper.hpp>
 
 
 
@@ -57,7 +58,7 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 
 
@@ -75,22 +76,23 @@ StylesheetHandler::StylesheetHandler(
 	FormatterListener(OUTPUT_METHOD_OTHER),
 	m_stylesheet(stylesheetTree),
 	m_constructionContext(constructionContext),
-	m_elemEmptyAllocator(eElemEmptyAllocatorBlockSize),
-	m_elemTextAllocator(eElemTextBlockSize),
-	m_elemStack(),
-	m_whiteSpaceElems(),
+    m_elemEmptyAllocator(constructionContext.getMemoryManager(), eElemEmptyAllocatorBlockSize),
+	m_elemTextAllocator(constructionContext.getMemoryManager(), eElemTextBlockSize),
+	m_elemStack(constructionContext.getMemoryManager()),
+	m_whiteSpaceElems(constructionContext.getMemoryManager()),
 	m_pTemplate(0),
 	m_lastPopped(*this),
 	m_inTemplate(false),
 	m_foundStylesheet(false),
 	m_foundNotImport(false),
-	m_elementLocalName(),
-	m_accumulateText(),
-	m_includeBase(stylesheetTree.getBaseIdentifier()),
-	m_inExtensionElementStack(),
+	m_elementLocalName(constructionContext.getMemoryManager()),
+	m_accumulateText(constructionContext.getMemoryManager()),
+	m_includeBase(stylesheetTree.getBaseIdentifier(), constructionContext.getMemoryManager()),
+	m_inExtensionElementStack(constructionContext.getMemoryManager()),
+    m_preserveSpaceStack(constructionContext.getMemoryManager()),
 	m_locatorsPushed(0),
-	m_globalVariableNames(),
-	m_inScopeVariableNamesStack()
+	m_globalVariableNames(constructionContext.getMemoryManager()),
+	m_inScopeVariableNamesStack(constructionContext.getMemoryManager())
 {
 	m_inScopeVariableNamesStack.reserve(eVariablesStackDefault);
 }
@@ -172,14 +174,18 @@ StylesheetHandler::processSpaceAttr(
 		{
 			fPreserve = true;
 		}
-		else
-		{
-			error(
-				XalanMessageLoader::getMessage(
-					XalanMessages::AttributeHasIllegalValue_1Param,
-					Constants::ATTRNAME_XMLSPACE),
-				locator);
-		}
+        else
+        {
+            const GetAndReleaseCachedString		theGuard(m_constructionContext);
+            XalanDOMString&		msg = theGuard.get();
+
+            error(
+                XalanMessageLoader::getMessage(
+                XalanMessages::AttributeHasIllegalValue_1Param,
+                msg,
+                Constants::ATTRNAME_XMLSPACE),
+                locator);
+        }
 
 		return true;
 	}
@@ -242,14 +248,20 @@ StylesheetHandler::startElement(
 		const XalanDOMString::size_type		nameLength = length(name);
 		const XalanDOMString::size_type		index = indexOf(name, XalanUnicode::charColon);
 
-		const XalanDOMString*	ns = getNamespaceFromStack(name);
+        const GetAndReleaseCachedString		theGuard2(m_constructionContext);
+        XalanDOMString&		buffer = theGuard2.get();
+
+		const XalanDOMString*	ns = getNamespaceFromStack(name, buffer);
 
 		if(ns == 0)
 		{
 			if (index < nameLength)
-			{
-				error(XalanMessageLoader::getMessage(XalanMessages::CannotResolvePrefix_1Param, name), locator);
-			}
+            {
+                const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                XalanDOMString&		msg = theGuard.get();
+
+                error(XalanMessageLoader::getMessage(XalanMessages::CannotResolvePrefix_1Param, msg, name), locator);
+            }
 			else
 			{
 				ns = &s_emptyString;
@@ -325,9 +337,12 @@ StylesheetHandler::startElement(
 				case StylesheetConstructionContext::ELEMNAME_SORT:
 					{
 						if (m_elemStack.empty() == true)
-						{
-							error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInThisPosition_1Param,Constants::ELEMNAME_SORT_WITH_PREFIX_STRING), locator);
-						}
+                        {
+                            const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                            XalanDOMString&		msg = theGuard.get();
+
+                            error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInThisPosition_1Param, msg, Constants::ELEMNAME_SORT_WITH_PREFIX_STRING), locator);
+                        }
 
 						ElemTemplateElement* const	theElement =
 								m_elemStack.back();
@@ -350,9 +365,12 @@ StylesheetHandler::startElement(
 				case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
 					{
 						if (m_elemStack.empty() == true)
-						{
-							error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInThisPosition_1Param,Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING), locator);
-						}
+                        {
+                            const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                            XalanDOMString&		msg = theGuard.get();
+
+                            error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInThisPosition_1Param, msg, Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING), locator);
+                        }
 
 						ElemTemplateElement* const	theElement =
 								m_elemStack.back();
@@ -362,9 +380,12 @@ StylesheetHandler::startElement(
 							theElement->getXSLToken();
 
 						if (parentToken == StylesheetConstructionContext::ELEMNAME_FOR_EACH)
-						{
-							error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInThisPosition_1Param,Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING), locator);
-						}
+                        {
+                            const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                            XalanDOMString&		msg = theGuard.get();
+
+                            error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInThisPosition_1Param, msg, Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING), locator);
+                        }
 
 						elem = m_constructionContext.createElement(
 													xslToken,
@@ -394,10 +415,14 @@ StylesheetHandler::startElement(
 						ElemTemplateElement* const	parent = m_elemStack.back();
 
 						if(StylesheetConstructionContext::ELEMNAME_CHOOSE != parent->getXSLToken())
-						{
-							error(XalanMessageLoader::getMessage(XalanMessages::NotParentedBy_2Param,
-								Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING,Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING), locator);
-						}
+                        {
+                            const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                            XalanDOMString&		msg = theGuard.get();
+
+                            error(XalanMessageLoader::getMessage(XalanMessages::NotParentedBy_2Param,
+                                msg,
+                                Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING,Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING), locator);
+                        }
 						else
 						{
 							ElemTemplateElement* const	lastChild = parent->getLastChildElem();
@@ -414,10 +439,13 @@ StylesheetHandler::startElement(
 								assert(elem != 0);
 							}
 							else
-							{
-								error(XalanMessageLoader::getMessage(XalanMessages::Misplaced_1Param,Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING), locator);
-							}
-						}
+                            {
+                                const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                                XalanDOMString&		msg = theGuard.get();
+
+                                error(XalanMessageLoader::getMessage(XalanMessages::Misplaced_1Param, msg, Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING), locator);
+                            }
+                        }
 					}
 					break;
           
@@ -426,11 +454,15 @@ StylesheetHandler::startElement(
 						ElemTemplateElement* parent = m_elemStack.back();
 
 						if(StylesheetConstructionContext::ELEMNAME_CHOOSE != parent->getXSLToken())
-						{
-							error(XalanMessageLoader::getMessage(XalanMessages::NotParentedBy_2Param
-								,Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING
-								,Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING), locator);
-						}
+                        {
+                            const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                            XalanDOMString&		msg = theGuard.get();
+
+                            error(XalanMessageLoader::getMessage(XalanMessages::NotParentedBy_2Param,
+                                msg,
+                                Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING,
+                                Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING), locator);
+                        }
 						else
 						{
 							ElemTemplateElement* lastChild = parent->getLastChildElem();
@@ -447,9 +479,12 @@ StylesheetHandler::startElement(
 								assert(elem != 0);
 							}
 							else
-							{
-								error(XalanMessageLoader::getMessage(XalanMessages::Misplaced_1Param, Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING), locator);
-							}
+                            {
+                                const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                                XalanDOMString&		msg = theGuard.get();
+
+                                error(XalanMessageLoader::getMessage(XalanMessages::Misplaced_1Param, msg, Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING), locator);
+                            }
 						}
 					}
 					break;
@@ -482,34 +517,42 @@ StylesheetHandler::startElement(
 				case StylesheetConstructionContext::ELEMNAME_INCLUDE:
 				case StylesheetConstructionContext::ELEMNAME_PRESERVE_SPACE:
 				case StylesheetConstructionContext::ELEMNAME_STRIP_SPACE:
-				case StylesheetConstructionContext::ELEMNAME_DECIMAL_FORMAT:
-					{
-						error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInsideTemplate_1Param, name), locator);
-					}
+                case StylesheetConstructionContext::ELEMNAME_DECIMAL_FORMAT:
+                    {
+                        const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                        XalanDOMString&		msg = theGuard.get();
+
+                        error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInsideTemplate_1Param, msg, name), locator);
+                    }
 					break;
 
 				default:
 					{
 						// If this stylesheet is declared to be of a higher version than the one
 						// supported, don't flag an error.
-						if(m_constructionContext.getXSLTVersionSupported() < m_stylesheet.getXSLTVerDeclared())
-						{
-							warn(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement_1Param, name), locator);
+                        if(m_constructionContext.getXSLTVersionSupported() < m_stylesheet.getXSLTVerDeclared())
+                        {
+                            const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                            XalanDOMString&		msg = theGuard.get();
 
-							elem = m_constructionContext.createElement(
-										StylesheetConstructionContext::ELEMNAME_FORWARD_COMPATIBLE,
-										m_stylesheet,
-										name,
-										atts,
-										locator);
-						}
+                            warn(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement_1Param, msg, name), locator);
+
+                            elem = m_constructionContext.createElement(
+                                StylesheetConstructionContext::ELEMNAME_FORWARD_COMPATIBLE,
+                                m_stylesheet,
+                                name,
+                                atts,
+                                locator);
+                        }
 						else
-						{
-							error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement_1Param, name), locator);
-						}
+                        {
+                            const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                            XalanDOMString&		msg = theGuard.get();
+
+                            error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement_1Param, msg, name), locator);
+                        }
 					}
 				}
-
 				m_inScopeVariableNamesStack.resize(m_inScopeVariableNamesStack.size() + 1);
 			}
 		}
@@ -527,9 +570,12 @@ StylesheetHandler::startElement(
 					elem = initWrapperless(name, atts, locator);
 				}
 				else if (length(*ns) == 0 && m_elemStack.size() == 1)
-				{
-					error(XalanMessageLoader::getMessage(XalanMessages::IllegalTopLevelElement), locator);
-				}
+                {
+                    const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                    XalanDOMString&		msg = theGuard.get();
+
+                    error(XalanMessageLoader::getMessage(XalanMessages::IllegalTopLevelElement,msg), locator);
+                }
 				else
 				{
 					m_inExtensionElementStack.back() = true;
@@ -655,9 +701,10 @@ StylesheetHandler::initWrapperless(
 
 
 const XalanDOMString*
-StylesheetHandler::getNamespaceFromStack(const XalanDOMChar*	theName) const
+StylesheetHandler::getNamespaceFromStack(const XalanDOMChar*	theName,
+                                         XalanDOMString&        theBuffer) const
 {
-	return m_stylesheet.getNamespaceFromStack(theName);
+	return m_stylesheet.getNamespaceFromStack(theName, theBuffer);
 }
 
 
@@ -796,10 +843,11 @@ StylesheetHandler::processTopLevelElement(
 	case StylesheetConstructionContext::ELEMNAME_WHEN:
 	case StylesheetConstructionContext::ELEMNAME_ELEMENT:
 	case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
-		if (inExtensionElement() == false)
-		{
-			error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInsideStylesheet_1Param, name), locator);
-		}
+        if (inExtensionElement() == false)
+        {   const GetAndReleaseCachedString		theGuard(m_constructionContext);
+            XalanDOMString&		msg = theGuard.get();
+            error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInsideStylesheet_1Param, msg, name), locator);
+        }
 		break;
 
 	case StylesheetConstructionContext::ELEMNAME_STYLESHEET:
@@ -815,9 +863,11 @@ StylesheetHandler::processTopLevelElement(
 				m_inExtensionElementStack.back() = true;
 			}
 			else
-			{
-				error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement_1Param, name), locator);
-			}
+            {
+                const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                XalanDOMString&		msg = theGuard.get();
+                error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement_1Param, msg, name), locator);
+            }
 		}
 		break;
 	}
@@ -882,7 +932,7 @@ StylesheetHandler::processStylesheet(
 			const XalanDOMChar* const	versionStr = atts.getValue(i);
 			assert(versionStr != 0);
 
-			m_stylesheet.setXSLTVerDeclared(DoubleSupport::toDouble(versionStr));
+			m_stylesheet.setXSLTVerDeclared(DoubleSupport::toDouble(versionStr, getMemoryManager()));
 
 			fVersionFound = true;
 		}
@@ -906,7 +956,10 @@ StylesheetHandler::processStylesheet(
 
 	if (fVersionFound == false)
 	{
-		error(XalanMessageLoader::getMessage(XalanMessages::StylesheetAttribDidNotSpecifyVersionAttrib), locator);
+	    const GetAndReleaseCachedString		theGuard(m_constructionContext);
+	    XalanDOMString&		msg = theGuard.get();
+
+		error(XalanMessageLoader::getMessage(XalanMessages::StylesheetAttribDidNotSpecifyVersionAttrib, msg), locator);
 	}
 }
 
@@ -933,9 +986,11 @@ StylesheetHandler::checkForOrAddVariableName(
 		assert(m_inScopeVariableNamesStack.empty() == true);
 
 		if (m_globalVariableNames.count(theVariableName) != 0)
-		{
-			error(XalanMessageLoader::getMessage(XalanMessages::VariableHasBeenDeclared), theLocator);
-		}
+        {
+            const GetAndReleaseCachedString		theGuard(m_constructionContext);
+            XalanDOMString&		msg = theGuard.get();
+            error(XalanMessageLoader::getMessage(XalanMessages::VariableHasBeenDeclared, msg), theLocator);
+        }
 		else
 		{
 			m_globalVariableNames.insert(theVariableName);
@@ -950,12 +1005,15 @@ StylesheetHandler::checkForOrAddVariableName(
 
 		while(theCurrent != theEnd)
 		{
-			QNameSetVectorType::value_type	theLocalScope = *theCurrent;
+			QNameSetVectorType::value_type&	theLocalScope = *theCurrent;
 
 			if (theLocalScope.count(theVariableName) != 0)
-			{
-				error(XalanMessageLoader::getMessage(XalanMessages::VariableHasBeenDeclaredInThisTemplate), theLocator);
-			}
+            {
+                const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                XalanDOMString&		msg = theGuard.get();
+
+                error(XalanMessageLoader::getMessage(XalanMessages::VariableHasBeenDeclaredInThisTemplate, msg), theLocator);
+            }
 
 			++theCurrent;
 		}
@@ -1021,9 +1079,13 @@ StylesheetHandler::processPreserveStripSpace(
 
 	if(!foundIt && inExtensionElement() == false)
 	{
+	    const GetAndReleaseCachedString		theGuard(m_constructionContext);
+	    XalanDOMString&		msg = theGuard.get();
+
 		error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::ElementRequiresAttribute_2Param,
+                msg, 
 				isPreserveSpace == true ? 
 				    Constants::ELEMNAME_PRESERVESPACE_WITH_PREFIX_STRING :
 					Constants::ELEMNAME_STRIPSPACE_WITH_PREFIX_STRING,
@@ -1072,18 +1134,21 @@ StylesheetHandler::appendChildElementToParent(
 	{
 		if (e.getExceptionCode() == XalanDOMException::HIERARCHY_REQUEST_ERR)
 		{
-			if (elem->getXSLToken() == StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT)
-			{
-				error(
-					XalanMessageLoader::getMessage(XalanMessages::ElemOrLTIsNotAllowed_1Param, elem->getElementName()),
-					locator);
-			}
-			else
-			{
-				error(
-					XalanMessageLoader::getMessage(XalanMessages::ElemIsNotAllowed_1Param, elem->getElementName()),
-					locator);
-			}
+            const GetAndReleaseCachedString		theGuard(m_constructionContext);
+            XalanDOMString&		msg = theGuard.get();
+
+            if (elem->getXSLToken() == StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT)
+            {
+                error(
+                    XalanMessageLoader::getMessage(XalanMessages::ElemOrLTIsNotAllowed_1Param, msg, elem->getElementName()),
+                    locator);
+            }
+            else
+            {
+                error(
+                    XalanMessageLoader::getMessage(XalanMessages::ElemIsNotAllowed_1Param, msg,elem->getElementName()),
+                    locator);
+            }
 		}
 	}
 }
@@ -1137,6 +1202,9 @@ StylesheetHandler::processImport(
 
 	bool				foundIt = false;
 
+    const GetAndReleaseCachedString		theGuard4(m_constructionContext);
+    XalanDOMString&		hrefUrl = theGuard4.get();
+
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
@@ -1146,9 +1214,12 @@ StylesheetHandler::processImport(
 			foundIt = true;
 			
 			if(m_foundNotImport)
-			{
-				error(XalanMessageLoader::getMessage(XalanMessages::ImportCanOnlyOccur), locator);
-			}
+            {
+                const GetAndReleaseCachedString		theGuard5(m_constructionContext);
+                XalanDOMString&		msg = theGuard5.get();
+
+                error(XalanMessageLoader::getMessage(XalanMessages::ImportCanOnlyOccur, msg), locator);
+            }
 
 			const GetAndReleaseCachedString		theGuard1(m_constructionContext);
 
@@ -1165,21 +1236,27 @@ StylesheetHandler::processImport(
 			Stylesheet::URLStackType&	includeStack = m_stylesheet.getIncludeStack();
 			assert(includeStack.empty() == false);
 
-			const XalanDOMString	hrefUrl = m_constructionContext.getURLStringFromString(href, includeStack.back());
+			hrefUrl = m_constructionContext.getURLStringFromString(href, includeStack.back());
+
 			assert(length(hrefUrl) != 0);
 
 			Stylesheet::URLStackType&	importStack = m_stylesheet.getStylesheetRoot().getImportStack();
 
 			if(stackContains(importStack, hrefUrl))
 			{
-				error(XalanMessageLoader::getMessage(XalanMessages::ImportingItself_1Param, hrefUrl), locator);
+                const GetAndReleaseCachedString		theGuard2(m_constructionContext);
+                XalanDOMString& msg = theGuard2.get();
+
+				error(XalanMessageLoader::getMessage(XalanMessages::ImportingItself_1Param, msg, hrefUrl), locator);
 			}
 
 			importStack.push_back(hrefUrl);
 			
 			// This will take care of cleaning up the stylesheet if an exception
 			// is thrown.
-			XalanAutoPtr<Stylesheet>	importedStylesheet( 
+            typedef XalanMemMgrAutoPtr<Stylesheet, true> AutpPtr;
+			AutpPtr	importedStylesheet( 
+                m_constructionContext.getMemoryManager(),
 				m_constructionContext.create(
 				m_stylesheet.getStylesheetRoot(), 
 				hrefUrl));
@@ -1204,15 +1281,19 @@ StylesheetHandler::processImport(
 		}
 	}
 
-	if(!foundIt)
-	{
-		error(
-			XalanMessageLoader::getMessage(
-				XalanMessages::ElementRequiresAttribute_2Param,
-				Constants::ELEMNAME_IMPORT_WITH_PREFIX_STRING,
-				Constants::ATTRNAME_HREF),
-			locator);
-	}
+    if(!foundIt)
+    {            
+        const GetAndReleaseCachedString		theGuard(m_constructionContext);
+        XalanDOMString&		msg = theGuard.get();
+
+        error(
+            XalanMessageLoader::getMessage(
+            XalanMessages::ElementRequiresAttribute_2Param,
+            msg,
+            Constants::ELEMNAME_IMPORT_WITH_PREFIX_STRING,
+            Constants::ATTRNAME_HREF),
+            locator);
+    }
 }
 
 
@@ -1227,6 +1308,12 @@ StylesheetHandler::processInclude(
 
 	bool				foundIt = false;
 
+    const GetAndReleaseCachedString		theGuard1(m_constructionContext);
+    XalanDOMString&	href = theGuard1.get();
+
+    const GetAndReleaseCachedString		theGuard2(m_constructionContext);
+    XalanDOMString&	hrefUrl = theGuard2.get();
+
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
@@ -1237,16 +1324,21 @@ StylesheetHandler::processInclude(
 
 			PushPopIncludeState		theStateHandler(*this);
 
-			const XalanDOMString	href(atts.getValue(i));
+            href.assign(atts.getValue(i));
 		
 			assert(c_wstr(m_stylesheet.getIncludeStack().back()) != 0);
-			const XalanDOMString	hrefUrl = m_constructionContext.getURLStringFromString(href, m_stylesheet.getIncludeStack().back());
+     
+            m_constructionContext.getURLStringFromString(href, m_stylesheet.getIncludeStack().back(), hrefUrl);
 
 			if(stackContains(m_stylesheet.getIncludeStack(), hrefUrl))
-			{
+            {
+                const GetAndReleaseCachedString		theGuard(m_constructionContext);
+                XalanDOMString&		msg = theGuard.get();
 
-				error(XalanMessageLoader::getMessage(XalanMessages::IncludingItself_1Param,hrefUrl) , locator);
-			}
+                XalanMessageLoader::getMessage(XalanMessages::IncludingItself_1Param, msg, hrefUrl );
+
+                error(msg , locator);
+            }
 
 			m_stylesheet.getIncludeStack().push_back(hrefUrl);
 
@@ -1263,9 +1355,13 @@ StylesheetHandler::processInclude(
 
 	if(!foundIt)
 	{
+	    const GetAndReleaseCachedString		theGuard(m_constructionContext);
+	    XalanDOMString&		msg = theGuard.get();
+
 		error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::ElementRequiresAttribute_2Param,
+                msg,
 				Constants::ELEMNAME_INCLUDE_WITH_PREFIX_STRING,
 				Constants::ATTRNAME_HREF),
 			locator);
@@ -1341,8 +1437,11 @@ StylesheetHandler::characters(
 		inExtensionElement() == false &&
 		isXMLWhitespace(chars, 0, length) == false)
 	{
+	    const GetAndReleaseCachedString		theGuard(m_constructionContext);
+	    XalanDOMString&		msg = theGuard.get();
+
 		error(
-			XalanMessageLoader::getMessage(XalanMessages::CharIsNotAllowedInStylesheet),
+			XalanMessageLoader::getMessage(XalanMessages::CharIsNotAllowedInStylesheet, msg),
 			m_constructionContext.getLocatorFromStack());
 			  
 	}
@@ -1677,10 +1776,20 @@ StylesheetHandler::illegalAttributeError(
 
 {
 	const GetAndReleaseCachedString		theGuard(m_constructionContext);
-
 	XalanDOMString&		msg = theGuard.get();
 
-	msg = XalanMessageLoader::getMessage(XalanMessages::HasIllegalAttribute_2Param,XalanDOMString(theElementName),XalanDOMString(theAttributeName));
+
+	const GetAndReleaseCachedString		theGuard1(m_constructionContext);
+	XalanDOMString&		theElementNameString = theGuard1.get();
+
+    theElementNameString.assign(theElementName);
+
+	const GetAndReleaseCachedString		theGuard2(m_constructionContext);
+	XalanDOMString&		theAttributeNameString = theGuard2.get();
+
+    theAttributeNameString.assign(theAttributeName);
+
+	XalanMessageLoader::getMessage(XalanMessages::HasIllegalAttribute_2Param , msg, theElementNameString, theAttributeNameString);
 
 
 	error(msg, theLocator);
@@ -1690,17 +1799,18 @@ StylesheetHandler::illegalAttributeError(
 
 StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	theHandler) :
 	m_handler(theHandler),
-	m_elemStack(theHandler.m_elemStack),
+	m_elemStack(theHandler.m_elemStack, theHandler.getMemoryManager()),
 	m_pTemplate(theHandler.m_pTemplate),
 	m_lastPopped(theHandler),
 	m_inTemplate(theHandler.m_inTemplate),
 	m_foundStylesheet(theHandler.m_foundStylesheet),
-	m_XSLNameSpaceURL(theHandler.m_stylesheet.getXSLTNamespaceURI()),
+	m_XSLNameSpaceURL(theHandler.m_stylesheet.getXSLTNamespaceURI(), theHandler.getMemoryManager()),
 	m_foundNotImport(theHandler.m_foundNotImport),
-	m_namespaceDecls(),
-	m_namespaces(),
-	m_namespacesHandler(),
-	m_inExtensionElementStack()
+	m_namespaceDecls(theHandler.getMemoryManager()),
+	m_namespaces(theHandler.getMemoryManager()),
+	m_namespacesHandler(theHandler.getMemoryManager()),
+	m_inExtensionElementStack(theHandler.getMemoryManager()),
+    m_preserveSpaceStack(theHandler.getMemoryManager())
 {
 	clear(m_handler.m_accumulateText);
 
@@ -1776,12 +1886,12 @@ StylesheetHandler::LastPoppedHolder::cleanup()
 
 
 
-const XalanDOMString	StylesheetHandler::s_emptyString;
+const XalanDOMString	StylesheetHandler::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 void
-StylesheetHandler::initialize()
+StylesheetHandler::initialize(MemoryManagerType& /* theManager*/)
 {
 }
 

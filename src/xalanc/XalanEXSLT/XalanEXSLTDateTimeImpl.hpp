@@ -63,15 +63,17 @@ public:
 #else
 	virtual XalanEXSLTFunctionDateTime*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new XalanEXSLTFunctionDateTime(*this);
+		return cloneFunction_0<XalanEXSLTFunctionDateTime>()(theManager);
 	}
 
 protected:
 
-	virtual const XalanDOMString
-	getError() const;
+
+
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theResult) const;
 
 private:
 

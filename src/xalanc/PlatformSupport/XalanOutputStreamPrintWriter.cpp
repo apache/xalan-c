@@ -20,7 +20,7 @@
 
 #include <cassert>
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
 
@@ -38,14 +38,31 @@ XALAN_CPP_NAMESPACE_BEGIN
 XalanOutputStreamPrintWriter::XalanOutputStreamPrintWriter(
 			XalanOutputStream&	theOutputStream,
 			bool				fAutoFlush) :
-	PrintWriter(fAutoFlush),
+    PrintWriter(theOutputStream.getMemoryManager(), fAutoFlush),
 	m_outputStream(theOutputStream),
-	m_buffer(),
+    m_buffer(theOutputStream.getMemoryManager()),
 	m_flushWideChars(false)
 {
 }
+XalanOutputStreamPrintWriter*
+XalanOutputStreamPrintWriter::create(
+			XalanOutputStream&	theOutputStream,
+			bool				fAutoFlush) 
+{
+    typedef XalanOutputStreamPrintWriter ThisType;
 
+    MemoryManagerType& theManager = theOutputStream.getMemoryManager();
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theOutputStream, fAutoFlush);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XalanOutputStreamPrintWriter::~XalanOutputStreamPrintWriter()
 {

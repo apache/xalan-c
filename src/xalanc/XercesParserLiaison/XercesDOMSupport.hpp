@@ -36,7 +36,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMSupport : public DOMSupport
 {
 public:
 
-	XercesDOMSupport();
+	XercesDOMSupport(MemoryManagerType& theManager);
 
 	virtual
 	~XercesDOMSupport();
@@ -51,7 +51,8 @@ public:
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const;
+			const XalanDocument&	theDocument,
+            XalanDOMString&	        theURI) const;
 
 	virtual bool
 	isNodeAfter(

@@ -219,9 +219,14 @@ XSLTInputSource::makeStream() const
 {
 	BinInputStreamType*		theResult = 0;
 
+    MemoryManagerType*  theManager = getMemoryManager();
+
+    assert(theManager != 0 );
+
 	if (m_stream != 0)
 	{
-		theResult = new StdBinInputStream(*m_stream);
+        
+		theResult = new (theManager) StdBinInputStream(*m_stream);
 	}
 	else if (m_node == 0)
 	{
@@ -231,7 +236,7 @@ XSLTInputSource::makeStream() const
 		{
 			XERCES_CPP_NAMESPACE_QUALIFIER XMLURL	theURL;
 
-			URISupport::getURLFromString(theSystemId, theURL);
+			URISupport::getURLFromString(theSystemId, theURL, *theManager);
 
 			theResult = theURL.makeNewStream();
 		}

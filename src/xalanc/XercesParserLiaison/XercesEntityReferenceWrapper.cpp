@@ -48,6 +48,24 @@ XercesEntityReferenceWrapper::XercesEntityReferenceWrapper(
 	assert(theXercesDOMEntityReference != 0);
 }
 
+XercesEntityReferenceWrapper*
+XercesEntityReferenceWrapper::create( MemoryManagerType& theManager,
+			const DOMEntityReferenceType*	theXercesDOMEntityReference,
+			const XercesWrapperNavigator&	theNavigator)
+
+{
+    typedef XercesEntityReferenceWrapper ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theXercesDOMEntityReference, theNavigator);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 
 XercesEntityReferenceWrapper::~XercesEntityReferenceWrapper()

@@ -98,9 +98,12 @@ ElemValueOf::ElemValueOf(
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
+            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                        theGuard.get(),
 							Constants::ELEMNAME_VALUEOF_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -110,9 +113,12 @@ ElemValueOf::ElemValueOf(
 
 	if(isSelectCurrentNode == false && m_selectPattern == 0)
 	{
+        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::ElementRequiresAttribute_2Param,
+                theGuard.get(),
 				Constants::ELEMNAME_VALUEOF_WITH_PREFIX_STRING,
 				Constants::ATTRNAME_SELECT),
 			0,
@@ -411,7 +417,7 @@ ElemValueOf::fireSelectionEvent(
 			executionContext,
 			sourceNode,
 			*this,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+			XalanDOMString("select", executionContext.getMemoryManager()),
 			thePattern,
 			theValue));
 }

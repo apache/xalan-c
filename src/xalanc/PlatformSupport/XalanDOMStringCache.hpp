@@ -48,7 +48,8 @@ public:
 	typedef XalanVector<XalanDOMString*>	StringListType;
 
 	explicit
-	XalanDOMStringCache(unsigned int	theMaximumSize = eDefaultMaximumSize);
+	XalanDOMStringCache(MemoryManagerType&     theManager,
+                        unsigned int	theMaximumSize = eDefaultMaximumSize);
 
 	~XalanDOMStringCache();
 

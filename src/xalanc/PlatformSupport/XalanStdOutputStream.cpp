@@ -39,8 +39,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanStdOutputStream::XalanStdOutputStream(StreamType&	theOutputStream) :
-	XalanOutputStream(),
+XalanStdOutputStream::XalanStdOutputStream(StreamType&	theOutputStream,
+                                           MemoryManagerType&  theManager) :
+	XalanOutputStream(theManager),
 #if !defined(XALAN_NEWLINE_IS_CRLF)
 	m_outputStream(theOutputStream)
 #else
@@ -73,7 +74,22 @@ XalanStdOutputStream::XalanStdOutputStream(StreamType&	theOutputStream) :
 #endif
 }
 
+XalanStdOutputStream*
+XalanStdOutputStream::create(   StreamType&	theOutputStream,
+                                MemoryManagerType&  theManager)
+{
+    typedef XalanStdOutputStream ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theOutputStream, theManager);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XalanStdOutputStream::~XalanStdOutputStream()
 {
@@ -116,8 +132,9 @@ XalanStdOutputStream::doFlush()
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 			using namespace std;
 #endif
+            XalanDOMString thebuffer(getMemoryManager());
 
-			throw XalanStdOutputStreamWriteException(errno);
+			throw XalanStdOutputStreamWriteException(errno, thebuffer);
 		}
 	}
 }
@@ -138,24 +155,31 @@ XalanStdOutputStream::writeData(
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 		using namespace std;
 #endif
+        XalanDOMString thebuffer(getMemoryManager());
 
-		throw XalanStdOutputStreamWriteException(errno);
+		throw XalanStdOutputStreamWriteException(errno, thebuffer);
 	}
 }
 
 
 
-static XalanDOMString
+static XalanDOMString&
 FormatMessageLocal(
 			const XalanDOMString&	theMessage,
-			int						theErrorCode)
+			int						theErrorCode,
+            XalanDOMString&         theResult)
 {
-	XalanDOMString	theResult(theMessage);
+    theResult.assign(theMessage);
 
-	XalanDOMString  theStrErrCode;
+    XalanDOMString  theStrErrCode(theResult.getMemoryManager());
+
+    XalanDOMString  theStrErrMsg(theResult.getMemoryManager());
+
 	LongToDOMString(theErrorCode, theStrErrCode);
 
-	return theResult + XalanMessageLoader::getMessage(XalanMessages::MessageErrorCodeWas_1Param,theStrErrCode);
+    theResult.append(XalanMessageLoader::getMessage(XalanMessages::MessageErrorCodeWas_1Param,theStrErrMsg, theStrErrCode));
+
+	return theResult ;
 }
 
 
@@ -201,9 +225,10 @@ const XalanDOMChar	XalanStdOutputStream::XalanStdOutputStreamWriteException::m_t
 
 
 XalanStdOutputStream::XalanStdOutputStreamWriteException::XalanStdOutputStreamWriteException(
-		int					theErrorCode) :
-	XalanOutputStreamException(FormatMessageLocal(XalanMessageLoader::getMessage(XalanMessages::ErrorWritingToStdStream),
-													   theErrorCode))
+		int					theErrorCode,
+        XalanDOMString&		theBuffer) :
+	XalanOutputStreamException(FormatMessageLocal(XalanMessageLoader::getMessage(XalanMessages::ErrorWritingToStdStream,theBuffer),
+        theErrorCode, theBuffer),theBuffer.getMemoryManager())
 {
 }
 

@@ -21,6 +21,8 @@
 #include <xalanc/XPath/XPathDefinitions.hpp>
 
 
+#include <xalanc/Include/XalanMemoryManagement.hpp>
+
 
 #include <xalanc/XalanDOM/XalanText.hpp>
 
@@ -42,7 +44,7 @@ public:
 	 * Perform static initialization.  See class XPathInit.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType& theManager);
 
 	/**
 	 * Perform static shut down.  See class XPathInit.
@@ -55,12 +57,17 @@ public:
 	 *
 	 * @param theXObject The XObject instance for which this is a proxy.
 	 */
-	XObjectResultTreeFragProxyText(const XObject&	theXObject);
+	XObjectResultTreeFragProxyText(const XObject&	theXObject,
+                                    MemoryManagerType& theManager);
 
 	virtual
 	~XObjectResultTreeFragProxyText();
 
-
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_MemoryManager;
+    }
 	/**
 	 * Gets the name of this node.
 	 */
@@ -452,10 +459,11 @@ public:
 	 *	 <br>DOMSTRING_SIZE_ERR: Raised if the specified range of text does not 
 	 *	 fit into a <code>DOMString</code>.
 	 */
-	virtual XalanDOMString
+	virtual XalanDOMString&
 	substringData(
 			unsigned int	offset, 
-			unsigned int	count) const;
+			unsigned int	count,
+            XalanDOMString& theResult) const;
 
 	//@}
 	/** @name Functions that set or change data. */
@@ -577,6 +585,7 @@ private:
 	// Data members...
 	const XObject&	m_value;
 
+    MemoryManagerType&              m_MemoryManager;
 	static const XalanDOMString&	s_nameString;
 };
 

@@ -30,14 +30,14 @@ unsigned long	DOMSupportInit::s_initCounter = 0;
 
 
 
-DOMSupportInit::DOMSupportInit() :
-	m_platformSupportInit()
+DOMSupportInit::DOMSupportInit(MemoryManagerType& theManager) :
+	m_platformSupportInit(theManager)
 {
 	++s_initCounter;
 
 	if (s_initCounter == 1)
 	{
-		initialize();
+		initialize(theManager);
 	}
 }
 
@@ -56,9 +56,9 @@ DOMSupportInit::~DOMSupportInit()
 
 
 void
-DOMSupportInit::initialize()
+DOMSupportInit::initialize(MemoryManagerType& theManager)
 {
-	DOMServices::initialize();
+	DOMServices::initialize(theManager);
 }
 
 

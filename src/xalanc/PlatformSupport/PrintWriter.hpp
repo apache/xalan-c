@@ -41,7 +41,13 @@ public:
 	 * 
 	 * @param fAutoFlush if true, the output will not be buffered
 	 */
-	PrintWriter(bool	fAutoFlush = false);
+	PrintWriter(MemoryManagerType& theManager, bool	fAutoFlush = false);
+
+    MemoryManagerType& 
+    getMemoryManager()
+    {
+        return m_memoryManager;
+    }
 
 	virtual
 	~PrintWriter();
@@ -154,6 +160,8 @@ public:
 protected:
 
 	const bool						m_fAutoFlush;
+
+    MemoryManagerType&              m_memoryManager;
 
 	// Some static strings to help derived classes...
 	static const XalanDOMChar	s_trueString[];

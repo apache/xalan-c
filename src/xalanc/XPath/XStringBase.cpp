@@ -37,19 +37,20 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XStringBase::XStringBase() :
+XStringBase::XStringBase(MemoryManagerType& theManager) :
 	XObject(eTypeString),
 	m_cachedNumberValue(0.0),
-	m_resultTreeFrag(*this)
+	m_resultTreeFrag(*this, theManager)
 {
 }
 
 
 
-XStringBase::XStringBase(const XStringBase&		source) :
+XStringBase::XStringBase(const XStringBase&		source,
+                         MemoryManagerType&     theManager) :
 	XObject(source),
 	m_cachedNumberValue(source.m_cachedNumberValue),
-	m_resultTreeFrag(*this)
+	m_resultTreeFrag(*this, theManager)
 {
 }
 
@@ -74,10 +75,11 @@ XStringBase::num() const
 {
 	if (m_cachedNumberValue == 0.0)
 	{
+
 #if defined(XALAN_NO_MUTABLE)
-		((XStringBase*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str());
+		((XStringBase*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str(),getMemoryManager());
 #else
-		m_cachedNumberValue = DoubleSupport::toDouble(str());
+		m_cachedNumberValue = DoubleSupport::toDouble(str(),getMemoryManager());
 #endif
 	}
 
@@ -105,8 +107,7 @@ XStringBase::rtree() const
 void
 XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
-	theCallbackObject.String(*this,
-							 str());
+	theCallbackObject.String(*this,	str());
 }
 
 
@@ -114,8 +115,7 @@ XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 void
 XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
-	theCallbackObject.String(*this,
-							 str());
+	theCallbackObject.String(*this, str());
 }
 
 

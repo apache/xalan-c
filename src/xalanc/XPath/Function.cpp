@@ -66,7 +66,9 @@ Function::execute(
 	}
 	else
 	{
-		executionContext.error(getError(), context, locator);
+        XalanDOMString theBuffer(executionContext.getMemoryManager());
+
+		executionContext.error(getError(theBuffer), context, locator);
 
 		return XObjectPtr(0);
 	}
@@ -80,7 +82,9 @@ Function::execute(
 			XalanNode*				context,			
 			const LocatorType*		locator) const
 {
-	executionContext.error(getError(), context, locator);
+    XalanDOMString theBuffer(executionContext.getMemoryManager());
+
+	executionContext.error(getError(theBuffer), context, locator);
 
 	return XObjectPtr(0);
 }
@@ -94,7 +98,9 @@ Function::execute(
 			const XObjectPtr		/* arg1 */,
 			const LocatorType*		locator) const
 {
-	executionContext.error(getError(), context, locator);
+    XalanDOMString theBuffer(executionContext.getMemoryManager());
+
+	executionContext.error(getError(theBuffer), context, locator);
 
 	return XObjectPtr(0);
 }
@@ -109,7 +115,9 @@ Function::execute(
 			const XObjectPtr		/* arg2 */,
 			const LocatorType*		locator) const
 {
-	executionContext.error(getError(), context, locator);
+    XalanDOMString theBuffer(executionContext.getMemoryManager());
+
+	executionContext.error(getError(theBuffer), context, locator);
 
 	return XObjectPtr(0);
 }
@@ -125,7 +133,9 @@ Function::execute(
 			const XObjectPtr		/* arg3 */,
 			const LocatorType*		locator) const
 {
-	executionContext.error(getError(), context, locator);
+    XalanDOMString theBuffer(executionContext.getMemoryManager());
+
+	executionContext.error(getError(theBuffer), context, locator);
 
 	return XObjectPtr(0);
 }

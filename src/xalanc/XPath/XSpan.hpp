@@ -41,19 +41,13 @@ public:
 	 * 
 	 * @param value      source node list.  The instance will adopt the value instance.
 	 */
-	XSpan(BorrowReturnMutableNodeRefList&	value);
+	XSpan(BorrowReturnMutableNodeRefList&	value, MemoryManagerType& theManager);
 
-	XSpan(const XSpan&	source);
+	XSpan(const XSpan&	source, MemoryManagerType& theManager);
 
 	virtual
 	~XSpan();
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XSpan*
-#endif
-	clone(void*		theAddress = 0) const;
 
 	/**
 	 * Get the start span offset from the first node, or -1 if offset isn't

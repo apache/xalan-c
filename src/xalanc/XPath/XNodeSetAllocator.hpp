@@ -52,7 +52,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XNodeSetAllocator(size_type	theBlockCount);
+	XNodeSetAllocator(MemoryManagerType&      theManager, size_type	theBlockCount);
 
 	~XNodeSetAllocator();
 	
@@ -66,15 +66,6 @@ public:
 	nodeset_type*
 	createNodeSet(BorrowReturnMutableNodeRefList&	value);
 
-	/**
-	 * Clone an XNodeSet object.
-	 * 
-	 * @param value			source XNodeSet
-	 *
-	 * @return pointer to an XNodeSet
-	 */
-	nodeset_type*
-	clone(const XNodeSet&	value);
 
 	/**
 	 * Delete an XNodeSet object from allocator.	 

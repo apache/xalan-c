@@ -45,22 +45,17 @@ public:
 	 *
 	 * @param theValue	value used to create object  
 	 */
-	XStringAdapter(const XObjectPtr&	val);
+	XStringAdapter(const XObjectPtr&	val, 
+                    MemoryManagerType&  theManager);
 
-	XStringAdapter(const XStringAdapter&	source);
+	XStringAdapter(const XStringAdapter&	source,
+                    MemoryManagerType&      theManager);
 
 	virtual
 	~XStringAdapter();
 
 
 	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XStringAdapter*
-#endif
-	clone(void*		theAddress = 0) const;
 
 	virtual const XalanDOMString&
 	str() const;
@@ -83,6 +78,9 @@ protected:
 	getRealType() const;
 
 private:
+    // Not implemented
+    XStringAdapter(const XStringAdapter&	source);
+    XStringAdapter();
 
 	const XObjectPtr	m_value;
 };

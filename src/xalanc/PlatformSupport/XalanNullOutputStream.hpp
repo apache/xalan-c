@@ -37,7 +37,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanNullOutputStream : public XalanOutputStr
 public :
 
 	explicit
-    XalanNullOutputStream();
+    XalanNullOutputStream(MemoryManagerType&      theManager);
 
     virtual
 	~XalanNullOutputStream();

@@ -22,7 +22,7 @@
 
 #include <xercesc/sax/AttributeList.hpp>
 
-
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
@@ -41,6 +41,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 FormatterToXML_UTF8::FormatterToXML_UTF8(
+            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	version,
 			const XalanDOMString&	mediaType,
@@ -49,6 +50,7 @@ FormatterToXML_UTF8::FormatterToXML_UTF8(
 			bool					xmlDecl,
 			const XalanDOMString&	standalone) :
 	FormatterToXMLBase(
+        theManager,
 		writer,
 		version,
 		mediaType,
@@ -62,7 +64,7 @@ FormatterToXML_UTF8::FormatterToXML_UTF8(
 	m_bufferRemaining(kBufferSize)
 {
 	if (m_version.empty() == true ||
-		DoubleSupport::equal(DOMStringToDouble(m_version), 1.0) == true)
+		DoubleSupport::equal(DOMStringToDouble(m_version, theManager), 1.0) == true)
 	{
 		m_nameFunction = &FormatterToXML_UTF8::writeName1_0;
 	}
@@ -72,7 +74,36 @@ FormatterToXML_UTF8::FormatterToXML_UTF8(
 	}
 }
 
+FormatterToXML_UTF8*
+FormatterToXML_UTF8::create(
+            MemoryManagerType&      theManager,
+			Writer&					writer,
+			const XalanDOMString&	version ,
+			const XalanDOMString&	mediaType ,
+			const XalanDOMString&	doctypeSystem ,
+			const XalanDOMString&	doctypePublic ,
+			bool					xmlDecl ,
+			const XalanDOMString&	standalone )
+{
+    typedef FormatterToXML_UTF8 ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager,
+                            writer,
+                            version,
+                            mediaType, 
+                            doctypeSystem,
+                            doctypePublic,
+                            xmlDecl,
+                            standalone);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 FormatterToXML_UTF8::~FormatterToXML_UTF8()
 {
@@ -250,7 +281,7 @@ FormatterToXML_UTF8::write(unsigned int		theChar)
 	}
 	else
 	{
-		throwInvalidCharacterException(theChar);
+		throwInvalidCharacterException(theChar, getMemoryManager());
 	}
 }
 
@@ -318,7 +349,7 @@ FormatterToXML_UTF8::writeName1_1(const XalanDOMChar*	theChars)
 			const XalanDOMChar	high = *currentChar;
 			const XalanDOMChar	low = *(++currentChar);
 
-			write(decodeUTF16SurrogatePair(high, low));
+			write(decodeUTF16SurrogatePair(high, low,  getMemoryManager()));
 
 			++currentChar;
 
@@ -732,11 +763,11 @@ FormatterToXML_UTF8::writeNormalizedChar(
 	{
 		if (start + 1 >= length)
 		{
-			throwInvalidUTF16SurrogateException(ch);
+			throwInvalidUTF16SurrogateException(ch,  getMemoryManager());
 		}
 		else 
 		{
-			write(decodeUTF16SurrogatePair(ch, chars[++start]));
+			write(decodeUTF16SurrogatePair(ch, chars[++start],  getMemoryManager()));
 		}
 	}
 	else
@@ -960,7 +991,7 @@ FormatterToXML_UTF8::writeNormalizedPIData(
 
 
 
-static XalanDOMString	s_localUTF8String;
+static XalanDOMString	s_localUTF8String(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -969,9 +1000,11 @@ const XalanDOMString&	FormatterToXML_UTF8::s_utf8String = s_localUTF8String;
 
 
 void
-FormatterToXML_UTF8::initialize()
+FormatterToXML_UTF8::initialize(MemoryManagerType& theManager)
 {
-	s_localUTF8String = XalanTranscodingServices::s_utf8String;
+    XalanDOMString theTmp(XalanTranscodingServices::s_utf8String, theManager);
+
+	s_localUTF8String.swap(theTmp);
 }
 
 
@@ -979,7 +1012,7 @@ FormatterToXML_UTF8::initialize()
 void
 FormatterToXML_UTF8::terminate()
 {
-	XalanDOMString().swap(s_localUTF8String);
+	XalanDOMString(XalanMemMgrs::getDummyMemMgr()).swap(s_localUTF8String);
 }
 
 

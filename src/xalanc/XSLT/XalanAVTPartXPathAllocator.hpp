@@ -57,7 +57,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanAVTPartXPathAllocator(size_type		theBlockCount);
+	XalanAVTPartXPathAllocator(MemoryManagerType&  theManager, size_type		theBlockCount);
 
 	~XalanAVTPartXPathAllocator();
 	

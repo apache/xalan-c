@@ -23,7 +23,7 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 #include <xalanc/Include/STLHelper.hpp>
 
 
@@ -36,10 +36,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-AttributeListImpl::AttributeListImpl() :
+AttributeListImpl::AttributeListImpl(MemoryManagerType&      theManager) :
 	AttributeListType(),
-	m_AttributeVector(),
-	m_cacheVector()
+	m_AttributeVector(theManager),
+	m_cacheVector(theManager)
 {
 }
 
@@ -57,9 +57,11 @@ AttributeListImpl::~AttributeListImpl()
 
 
 
-AttributeListImpl::AttributeListImpl(const AttributeListImpl&	theSource) :
+AttributeListImpl::AttributeListImpl(const AttributeListImpl&	theSource,
+                                     MemoryManagerType&      theManager) :
 	AttributeListType(),
-	m_AttributeVector()
+	m_AttributeVector(theManager),
+    m_cacheVector(theManager)
 {
 	// Use the assignment operator to do the dirty work...
 	*this = theSource;
@@ -69,9 +71,12 @@ AttributeListImpl::AttributeListImpl(const AttributeListImpl&	theSource) :
 
 
 
-AttributeListImpl::AttributeListImpl(const AttributeListType&	theSource) :
+AttributeListImpl::AttributeListImpl(const AttributeListType&	theSource,
+                                     MemoryManagerType&      theManager) :
 	AttributeListType(),
-	m_AttributeVector()
+	m_AttributeVector(theManager),
+        m_cacheVector(theManager)
+
 {
 	// Use the assignment operator to do the dirty work...
 	*this = theSource;
@@ -88,7 +93,7 @@ AttributeListImpl::deleteEntries(AttributeVectorType&	theVector)
 	XALAN_STD_QUALIFIER for_each(
 		theVector.begin(),
 		theVector.end(),
-		DeleteFunctor<AttributeVectorEntry>());
+        DeleteFunctor<AttributeVectorEntry>(theVector.getMemoryManager()));
 }
 
 
@@ -103,7 +108,7 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 
 		// Some temporary structures to hold everything
 		// until we're done.
-		AttributeVectorType		tempVector;
+		AttributeVectorType		tempVector(getMemoryManager());
 
 		const unsigned int	theLength = theRHS.getLength();
 
@@ -159,7 +164,7 @@ AttributeListImpl::operator=(const AttributeListType&	theRHS)
 		// Add all of the attributes to this temp list,
 		// then swap at the end.  This means we're exception
 		// safe and don't need any try blocks.
-		AttributeListImpl	theTempList;
+		AttributeListImpl	theTempList(getMemoryManager());
 
 		const unsigned int	theLength = theRHS.getLength();
 
@@ -223,7 +228,13 @@ AttributeListImpl::getValue(const unsigned int index) const
 	return &*m_AttributeVector[index]->m_Value.begin();
 }
 
+const XMLCh*
+AttributeListImpl::	getValue(const char* const /*name*/) const
+{
+    assert(0);
 
+    return 0;
+}
 
 #if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
 bool
@@ -274,15 +285,6 @@ AttributeListImpl::getType(const XMLCh* const name) const
 		return 0;
 	}
 }
-
-
-
-const XMLCh*
-AttributeListImpl::getValue(const char* const name) const
-{
-	return getValue(&*MakeXalanDOMCharVector(name).begin());
-}
-
 
 
 const XMLCh*
@@ -355,7 +357,7 @@ AttributeListImpl::addAttribute(
 
 			if ((*i)->m_Type.capacity() < XMLChVectorType::size_type(theNewTypeEnd - type))
 			{
-				XMLChVectorType		theNewType(type, theNewTypeEnd);
+				XMLChVectorType		theNewType(type, theNewTypeEnd, getMemoryManager());
 
 				theNewType.swap((*i)->m_Type);
 			}
@@ -374,7 +376,7 @@ AttributeListImpl::addAttribute(
 		// just copy the new data in.
 		if ((*i)->m_Value.capacity() < theNewSize)
 		{
-			XMLChVectorType		theNewValue(value, theNewValueEnd);
+			XMLChVectorType		theNewValue(value, theNewValueEnd, getMemoryManager());
 
 			theNewValue.swap((*i)->m_Value); 
 		}
@@ -391,14 +393,15 @@ AttributeListImpl::addAttribute(
 		{
 			m_AttributeVector.reserve(eDefaultVectorSize);
 		}
+        
+        typedef XalanMemMgrAutoPtr<AttributeVectorEntry,true> AutoPtr;
 
-		XalanAutoPtr<AttributeVectorEntry>	theEntry(getNewEntry(name, type, value));
+		AutoPtr	theEntry(getMemoryManager(), getNewEntry(name, type, value));
 
 		// Add the new one.
 		m_AttributeVector.push_back(theEntry.get());
 
-		// The entry is now safely in the vector, so release the
-		// XalanAutoPtr...
+
 		theEntry.release();
 
 		fResult = true;
@@ -417,7 +420,7 @@ AttributeListImpl::getNewEntry(
 {
 	if (m_cacheVector.empty() == true)
 	{
-		return new AttributeVectorEntry(name, value, type);
+        return AttributeVectorEntry::create(name, value, type,getMemoryManager());
 	}
 	else
 	{

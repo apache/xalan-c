@@ -46,7 +46,24 @@ XercesCommentWrapper::XercesCommentWrapper(
 	assert(theXercesComment != 0);
 }
 
+XercesCommentWrapper*
+XercesCommentWrapper::create( MemoryManagerType& theManager,
+                             const DOMCommentType*			theXercesComment,
+                             const XercesWrapperNavigator&	theNavigator)
 
+{
+    typedef XercesCommentWrapper ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theXercesComment, theNavigator);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XercesCommentWrapper::~XercesCommentWrapper()
 {
@@ -298,12 +315,15 @@ XercesCommentWrapper::getLength() const
 
 
 
-XalanDOMString
+XalanDOMString&
 XercesCommentWrapper::substringData(
 			unsigned int	offset, 
-			unsigned int	count) const
+			unsigned int	count,
+            XalanDOMString& theResult) const
 {
-	return XercesWrapperHelper::substringData(m_xercesNode, offset, count);
+	XercesWrapperHelper::substringData(m_xercesNode, offset, count, theResult);
+
+    return theResult;
 }
 
 

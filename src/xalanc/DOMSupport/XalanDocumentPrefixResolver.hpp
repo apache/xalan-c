@@ -59,7 +59,7 @@ public:
 
 	typedef XalanVector<const XalanNode*> 				AttributeVectorType;
 	typedef XalanMap<const XalanDOMString*,
-					AttributeVectorType>				NamespacesMapType;
+					AttributeVectorType*>				NamespacesMapType;
 
 	/**
 	 * Constructor.
@@ -69,7 +69,8 @@ public:
 	 */
 	XalanDocumentPrefixResolver(
 			const XalanDocument*	theDocument,
-			const XalanDOMString&	theURI = XalanDOMString());
+			const XalanDOMString&	theURI,
+            MemoryManagerType&      theManager);
 
 	virtual
 	~XalanDocumentPrefixResolver();

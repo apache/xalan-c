@@ -68,11 +68,16 @@ const XalanDOMChar	URISupport::s_fileProtocolString2[] =
 
 
 URISupport::URLAutoPtrType
-URISupport::getURLFromString(const XalanDOMChar*	urlString)
+URISupport::getURLFromString(const XalanDOMChar*	urlString,
+                             MemoryManagerType&     theManager)
 {
-	URLAutoPtrType	url(new XMLURLType);
+	URLAutoPtrType	url(new (&theManager)XMLURLType(&theManager));
 
-	url->setURL(getURLStringFromString(urlString).c_str());
+    XalanDOMString normalizedURL(theManager);
+
+    getURLStringFromString(urlString, normalizedURL);
+
+	url->setURL(normalizedURL.c_str());
 
 	return url;
 }
@@ -96,7 +101,7 @@ URISupport::getURLStringFromString(
 
 		if (index != len)
 		{
-			const XalanDOMString	theProtocolString(urlString, index);
+            const XalanDOMString	theProtocolString(urlString, theNormalizedURI.getMemoryManager(), index );
 
 			// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
 			const XMLURLType::Protocols		theProtocol =
@@ -121,7 +126,7 @@ URISupport::getURLStringFromString(
 
 			// Assume it's a file specification...
 #if _XERCES_VERSION >= 20300
-			const ArrayJanitor<XMLCh>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)), XMLPlatformUtils::fgMemoryManager);
+            const ArrayJanitor<XMLCh>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)), & (theNormalizedURI.getMemoryManager()));
 #else
 			const ArrayJanitor<XMLCh>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
 #endif
@@ -167,15 +172,17 @@ URISupport::getURLStringFromString(
 			XalanDOMString::size_type	baseLen,
 			XalanDOMString&				theNormalizedURI)
 {
-	XalanDOMString	context(base, baseLen);
-	XalanDOMString	url(urlString, urlStringLen);
+    MemoryManagerType& theMemoryManager = theNormalizedURI.getMemoryManager();
+
+	XalanDOMString	context(base, theMemoryManager, baseLen);
+	XalanDOMString	url(urlString, theMemoryManager, urlStringLen);
 
 	// Flip slashes
 	NormalizeURIText(context);
 	NormalizeURIText(url);
 
 	// Resolve the URI
-	url = XalanParsedURI::resolve(url, context);
+	XalanParsedURI::resolve(url, context, url);
 
 	// Do platform specific stuff
 	getURLStringFromString(url, theNormalizedURI);
@@ -206,16 +213,6 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 
 
 
-const XalanDOMString
-URISupport::NormalizeURIText(const XalanDOMString&	uriString)
-{
-	XalanDOMString	theCopy(uriString);
-
-	NormalizeURIText(theCopy);
-
-	return theCopy;
-}
-
 const XalanDOMChar	URISupport::InvalidURIException::m_type[] = 
 {	
 	XalanUnicode::charLetter_I,
@@ -242,8 +239,9 @@ const XalanDOMChar	URISupport::InvalidURIException::m_type[] =
 
 
 
-URISupport::InvalidURIException::InvalidURIException(const XalanDOMString&	theMessage) :
-	XSLException(theMessage)
+URISupport::InvalidURIException::InvalidURIException(const XalanDOMString&	theMessage,
+                                                     MemoryManagerType&      theManager) :
+	XSLException(theMessage,theManager)
 {
 }
 

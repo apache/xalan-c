@@ -62,7 +62,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanDOMStringAllocator(size_type	theBlockCount);
+	XalanDOMStringAllocator(MemoryManagerType&      theManager, size_type	theBlockCount);
 
 	~XalanDOMStringAllocator();
 

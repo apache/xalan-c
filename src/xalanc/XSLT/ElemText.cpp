@@ -68,9 +68,12 @@ ElemText::ElemText(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
+            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theGuard.get(),
 							Constants::ELEMNAME_TEXT_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,

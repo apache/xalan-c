@@ -61,9 +61,12 @@ ElemWhen::ElemWhen(
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
+            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                        theGuard.get(),
 						Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING.c_str(),
 						aname),
 					0,
@@ -73,9 +76,12 @@ ElemWhen::ElemWhen(
 
 	if(0 == m_test)
 	{
+        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::TemplateMustHaveAttribute_2Param,
+                theGuard.get(),
 				Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING,
 				Constants::ATTRNAME_TEST),
 			0,

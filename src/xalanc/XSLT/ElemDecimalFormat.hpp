@@ -60,6 +60,7 @@ public:
 			int								lineNumber,
 			int								columnNumber);
 
+
 	~ElemDecimalFormat();
 
 	// These methods are inherited from ElemTemplateElement ...

@@ -81,7 +81,6 @@ public:
 	virtual
 	~FormatterListener();
 
-
 	eFormat
 	getOutputFormat() const
 	{
@@ -238,6 +237,7 @@ public:
 	static const XalanDOMString::size_type	s_piTargetLength;
 	static const XalanDOMString::size_type	s_piDataLength;
 #endif
+
 
 protected:
 

@@ -63,7 +63,7 @@ ElemForEach::ElemForEach(
 						columnNumber,
 						StylesheetConstructionContext::ELEMNAME_FOR_EACH),
 	m_selectPattern(0),
-	m_sortElems(),
+    m_sortElems(constructionContext.getMemoryManager()),
 	m_sortElemsCount(0)
 {
 	const unsigned int	nAttrs = atts.getLength();
@@ -79,9 +79,12 @@ ElemForEach::ElemForEach(
 		else if(!(isAttrOK(aname, atts, i, constructionContext) ||
 				processSpaceAttr(aname, atts, i, constructionContext)))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                        theResult,
 							Constants::ELEMNAME_FOREACH_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -91,9 +94,12 @@ ElemForEach::ElemForEach(
 
 	if(0 == m_selectPattern)
 	{
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::TemplateMustHaveAttribute_2Param,
+                theResult,
 				Constants::ELEMNAME_FOREACH_WITH_PREFIX_STRING,
 				Constants::ATTRNAME_SELECT),
 			0,
@@ -115,7 +121,7 @@ ElemForEach::ElemForEach(
 						columnNumber,
 						xslToken),
 	m_selectPattern(0),
-	m_sortElems(),
+    m_sortElems(constructionContext.getMemoryManager()),
 	m_sortElemsCount(0)
 {
 }
@@ -126,9 +132,11 @@ ElemForEach::~ElemForEach()
 {
 	XALAN_USING_STD(for_each)
 
+     MemoryManagerType& theManager = m_sortElems.getMemoryManager();
+
 	for_each(m_sortElems.begin(),
 			 m_sortElems.end(),
-			 DeleteFunctor<ElemSort>());
+			 DeleteFunctor<ElemSort>(theManager));
 }
 
 
@@ -145,7 +153,8 @@ ElemForEach::processSortElement(
 
 	m_sortElems.reserve(m_sortElems.size() + 1);
 
-	ElemSort* sortElem = new ElemSort(
+    ElemSort* sortElem = ElemSort::create(
+        constructionContext.getMemoryManager(),
 		constructionContext,
 		theStylesheet,
 		atts,
@@ -276,7 +285,7 @@ ElemForEach::createSelectedAndSortedNodeList(
 		}
 		else
 		{
-			nodesToTransform = &xobjectResult->nodeset();
+            nodesToTransform = &xobjectResult->nodeset();
 		}
 	}
 	executionContext.pushXObjectPtr(xobjectResult);
@@ -288,7 +297,7 @@ ElemForEach::createSelectedAndSortedNodeList(
 					executionContext, 
 					executionContext.getCurrentNode(),
 					*this,
-					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+                    XalanDOMString("select", executionContext.getMemoryManager()),
 					*m_selectPattern,
 					*nodesToTransform));
 	}
@@ -383,19 +392,23 @@ ElemForEach::sortChildren(
 			}
 			else if (equals(scratchString, Constants::ATTRVAL_DATATYPE_TEXT) == false)
 			{
-				const XalanQNameByValue		theQName(scratchString, this);
+                const XalanQNameByValue		theQName(scratchString, executionContext.getMemoryManager(), this);
 
 				if (theQName.getNamespace().length() == 0)
 				{
+                    XalanDOMString  theResult(executionContext.getMemoryManager());
+
 					executionContext.error(
-						XalanMessageLoader::getMessage(XalanMessages::XslSortDataTypeMustBe),
+						XalanMessageLoader::getMessage(XalanMessages::XslSortDataTypeMustBe, theResult),
 						executionContext.getCurrentNode(),
 						sort->getLocator());
 				}
 				else
 				{
+                    XalanDOMString  theResult(executionContext.getMemoryManager());
+
 					executionContext.warn(
-						XalanMessageLoader::getMessage(XalanMessages::XslSortHasUnlnownDataType),
+						XalanMessageLoader::getMessage(XalanMessages::XslSortHasUnlnownDataType, theResult),
 						executionContext.getCurrentNode(),
 						sort->getLocator());
 				}
@@ -421,8 +434,10 @@ ElemForEach::sortChildren(
 			}
 			else if (equals(scratchString, Constants::ATTRVAL_ORDER_ASCENDING) == false)
 			{
+                XalanDOMString  theResult(executionContext.getMemoryManager());
+
 				executionContext.error(
-					XalanMessageLoader::getMessage(XalanMessages::XslSortMustBeAscendOrDescend),
+					XalanMessageLoader::getMessage(XalanMessages::XslSortMustBeAscendOrDescend,theResult),
 					executionContext.getCurrentNode(),
 					sort->getLocator());
 			}
@@ -451,8 +466,10 @@ ElemForEach::sortChildren(
 			}
 			else
 			{
+                XalanDOMString  theResult(executionContext.getMemoryManager());
+
 				executionContext.error(
-					XalanMessageLoader::getMessage(XalanMessages::XslSortCaseOrderMustBe),
+					XalanMessageLoader::getMessage(XalanMessages::XslSortCaseOrderMustBe, theResult),
 					executionContext.getCurrentNode(),
 					sort->getLocator());
 			}

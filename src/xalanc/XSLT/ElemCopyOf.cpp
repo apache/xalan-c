@@ -82,9 +82,12 @@ ElemCopyOf::ElemCopyOf(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theResult,
 							Constants::ELEMNAME_COPY_OF_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -94,9 +97,12 @@ ElemCopyOf::ElemCopyOf(
 
 	if (isSelectCurrentNode == false && m_selectPattern == 0)
 	{
+        XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::TemplateMustHaveAttribute_2Param,
+                theResult,
 				Constants::ELEMNAME_COPY_OF_WITH_PREFIX_STRING,
 				Constants::ATTRNAME_SELECT),
 			0,
@@ -135,8 +141,8 @@ ElemCopyOf::startElement(StylesheetExecutionContext&		executionContext) const
 					executionContext,
 					sourceNode,
 					*this,
-					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
-					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING(".")),
+					XalanDOMString("select", executionContext.getMemoryManager()),
+                    XalanDOMString(".", executionContext.getMemoryManager()),
 					executionContext.getXObjectFactory().createNodeSet(theNodeList)));
 		}
 
@@ -154,7 +160,7 @@ ElemCopyOf::startElement(StylesheetExecutionContext&		executionContext) const
 					executionContext,
 					sourceNode,
 					*this,
-					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+                    XalanDOMString("select", executionContext.getMemoryManager()),
 					*m_selectPattern,
 					value));
 		}
@@ -171,7 +177,7 @@ ElemCopyOf::startElement(StylesheetExecutionContext&		executionContext) const
 
 		case XObject::eTypeNodeSet:
 			{
-				const NodeRefListBase&				theNodeList = value->nodeset();
+                const NodeRefListBase&				theNodeList = value->nodeset();
 				const NodeRefListBase::size_type	nChildren = theNodeList.getLength();
 
 				for(NodeRefListBase::size_type i = 0; i < nChildren; i++)
@@ -220,8 +226,8 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 					executionContext,
 					sourceNode,
 					*this,
-					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
-					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING(".")),
+					XalanDOMString("select", executionContext.getMemoryManager()),
+                    XalanDOMString(".", executionContext.getMemoryManager()),
 					executionContext.getXObjectFactory().createNodeSet(theNodeList)));
 		}
 

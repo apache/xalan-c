@@ -15,6 +15,7 @@
  */
 #include "XalanUTF16Transcoder.hpp"
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 
 #include <cassert>
@@ -25,11 +26,26 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanUTF16Transcoder::XalanUTF16Transcoder() :
-	XalanOutputTranscoder()
+XalanUTF16Transcoder::XalanUTF16Transcoder(MemoryManagerType& theManager) :
+	XalanOutputTranscoder(theManager)
 {
 }
 
+XalanUTF16Transcoder*
+XalanUTF16Transcoder::create(MemoryManagerType& theManager)
+{
+        typedef XalanUTF16Transcoder ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theManager);
+
+        theGuard.release();
+
+        return theResult;
+}
 
 
 XalanUTF16Transcoder::~XalanUTF16Transcoder()

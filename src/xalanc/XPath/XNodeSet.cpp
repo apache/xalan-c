@@ -42,17 +42,17 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XNodeSet::XNodeSet(BorrowReturnMutableNodeRefList&	value) :
-	XNodeSetBase(),
-	m_value(value)
+XNodeSet::XNodeSet(BorrowReturnMutableNodeRefList&	value,
+                   MemoryManagerType& theManager) :
+XNodeSetBase(theManager),
+m_value(value)
 {
 }
 
-
-
 XNodeSet::XNodeSet(const XNodeSet&	source,
+                   MemoryManagerType& theManager,
 				   bool				/* deepClone */) :
-	XNodeSetBase(source),
+	XNodeSetBase(source, theManager),
 	m_value(source.m_value.clone())
 {
 }
@@ -63,24 +63,6 @@ XNodeSet::~XNodeSet()
 {
 }
 
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XObject*
-#else
-XNodeSet*
-#endif
-XNodeSet::clone(void*	theAddress) const
-{
-	if (theAddress == 0)
-	{
-		return new XNodeSet(*this);
-	}
-	else
-	{
-		return new (theAddress) XNodeSet(*this);
-	}
-}
 
 
 

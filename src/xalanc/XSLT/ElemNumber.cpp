@@ -35,9 +35,7 @@
 
 #include <xalanc/DOMSupport/DOMServices.hpp>
 
-
-
-#include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 #include <xalanc/Include/XalanVector.hpp>
 
 
@@ -111,8 +109,10 @@ ElemNumber::ElemNumber(
 			}
 			else
 			{
+                XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 				constructionContext.error(
-					XalanMessageLoader::getMessage(XalanMessages::AttributeHasIllegalValue_1Param,"level"),
+					XalanMessageLoader::getMessage(XalanMessages::AttributeHasIllegalValue_1Param, theResult,"level"),
 					0,
 					this);
 			}
@@ -156,9 +156,12 @@ ElemNumber::ElemNumber(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
 						XalanMessages::TemplateHasIllegalAttribute_2Param,
+                            theResult,
 							Constants::ELEMNAME_NUMBER_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -166,7 +169,33 @@ ElemNumber::ElemNumber(
 		}
 	}
 }
+ElemNumber*
+ElemNumber::create(
+                   MemoryManagerType& theManager,
+                   StylesheetConstructionContext&	constructionContext,
+                   Stylesheet&						stylesheetTree,
+                   const AttributeListType&		    atts,
+                   int								lineNumber,
+                   int								columnNumber,
+                   unsigned long					id)
+{
+    typedef ElemNumber ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(constructionContext,
+        stylesheetTree,
+        atts,
+        lineNumber,
+        columnNumber,
+        id);
+
+    theGuard.release();
+
+    return theResult;
+}
 	
 ElemNumber::~ElemNumber()
 {
@@ -352,7 +381,7 @@ ElemNumber::getCountMatchPattern(
 #else
 					static_cast<const XalanElement*>(contextNode);
 #endif
-					const ElementPrefixResolverProxy	theProxy(theElement);
+					const ElementPrefixResolverProxy	theProxy(executionContext.getMemoryManager(), theElement);
 
 				countMatchPattern =
 						executionContext.createMatchPattern(theNodeName, theProxy);
@@ -401,7 +430,7 @@ ElemNumber::getCountMatchPattern(
 
 			const XalanDOMString&	theNodeName = theAttribute->getNodeName();
 
-			const ElementPrefixResolverProxy	theProxy(theAttribute->getOwnerElement());
+			const ElementPrefixResolverProxy	theProxy(executionContext.getMemoryManager(),theAttribute->getOwnerElement());
 
 			StylesheetExecutionContext::GetAndReleaseCachedString	theMatchPatternString(executionContext);
 
@@ -563,9 +592,10 @@ ElemNumber::getCountString(
 				}
 				else
 				{
-					CountTypeArrayType	numberList;
+					CountTypeArrayType	numberList(executionContext.getMemoryManager());
 
-					numberList.resize(lastIndex);
+
+					numberList.resize(lastIndex, 0);
 
 					getCountString(
 						executionContext,
@@ -787,7 +817,8 @@ XalanNumberFormat*
 ElemNumber::getNumberFormatter(StylesheetExecutionContext&	executionContext) const
 {
     // Helper to format local specific numbers to strings.
-	XalanAutoPtr<XalanNumberFormat>		formatter(executionContext.createXalanNumberFormat());
+
+    XalanMemMgrAutoPtr<XalanNumberFormat, true>		formatter(executionContext.createXalanNumberFormat());
 
 	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
 
@@ -800,8 +831,10 @@ ElemNumber::getNumberFormatter(StylesheetExecutionContext&	executionContext) con
 									 
 	if (length(digitGroupSepValue) > 1)
 	{
+        XalanDOMString  theResult(executionContext.getMemoryManager());
+
 		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::Grouping_separatorValueMustSeOneCharacterLength),
+			XalanMessageLoader::getMessage(XalanMessages::Grouping_separatorValueMustSeOneCharacterLength, theResult),
 			executionContext.getCurrentNode(),
 			getLocator());
 	}
@@ -821,7 +854,7 @@ ElemNumber::getNumberFormatter(StylesheetExecutionContext&	executionContext) con
 		formatter->setGroupingSize(DOMStringToUnsignedLong(nDigitsPerGroupValue));
 	}
 
-	return formatter.release();
+	return formatter.releasePtr();
 }
 
 
@@ -849,7 +882,7 @@ ElemNumber::formatNumberList(
 	// We should be able to replace this with a vector of the indexes in
 	// the evaluated string where the tokens start.  But for now, this will
 	// have to do...
-	StringVectorType	tokenVector;
+	StringVectorType	tokenVector(executionContext. getMemoryManager()) ;
 
 	{
 		typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
@@ -1023,7 +1056,7 @@ ElemNumber::traditionalAlphaCount(
 	// if this number is larger than the largest number we can represent, error!
 	//if (val > theResourceBundle.getMaxNumericalValue())
 	//return XSLTErrorResources.ERROR_STRING;
-	XalanDOMCharVectorType	table;
+	XalanDOMCharVectorType	table(theResult.getMemoryManager());
 
 	// index in table of the last character that we stored
 	NumberTypeVectorType::size_type	lookupIndex = 1;  // start off with anything other than zero to make correction work
@@ -1288,20 +1321,36 @@ ElemNumber::getFormattedNumber(
 			break;
 
 		case XalanUnicode::charLetter_a:
-			int2alphaCount(listElement, s_alphaCountTable, s_alphaCountTableSize, theResult);
+            {
+                int2alphaCount(listElement, s_alphaCountTable, s_alphaCountTableSize, theResult);
 
-			theResult = toLowerCaseASCII(theResult);
-			break;
+                StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+                
+                XalanDOMString& thetmpResult = theGuard.get();
 
+                toLowerCaseASCII(theResult,thetmpResult);
+
+                theResult = thetmpResult;
+
+                break;
+            }
 		case XalanUnicode::charLetter_I:
 			long2roman(listElement, true, theResult);
 			break;
 
 		case XalanUnicode::charLetter_i:
-			long2roman(listElement, true, theResult);
+            {
+                long2roman(listElement, true, theResult);
 
-			theResult = toLowerCaseASCII(theResult);
-			break;
+                StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+                
+                XalanDOMString& thetmpResult = theGuard.get();
+
+                toLowerCaseASCII(theResult,thetmpResult);
+
+                theResult = thetmpResult;
+                break;
+            }
 
 		case 0x3042:
 		case 0x3044:
@@ -1313,13 +1362,20 @@ ElemNumber::getFormattedNumber(
 		case 0x05D0:
 		case 0x10D0:
 		case 0x0430:
-			executionContext.error(
-				XalanMessageLoader::getMessage(
-					XalanMessages::NumberingFormatNotSupported_1Param,
-					UnsignedLongToHexDOMString(numberType)),
-				executionContext.getCurrentNode(),
-				getLocator());
-			break;
+            {
+                XalanDOMString  theResult(executionContext.getMemoryManager());
+
+                XalanDOMString  theBuffer(executionContext.getMemoryManager());
+
+                executionContext.error(
+                    XalanMessageLoader::getMessage(
+                    XalanMessages::NumberingFormatNotSupported_1Param,
+                    theResult,
+                    UnsignedLongToHexDOMString(numberType, theBuffer)),
+                    executionContext.getCurrentNode(),
+                    getLocator());
+                break;
+            }
 
 		// Handle the special case of Greek letters for now
 		case elalphaNumberType:
@@ -1340,8 +1396,10 @@ ElemNumber::getFormattedNumber(
 				}
 				else
 				{
+                    XalanDOMString  theResult(executionContext.getMemoryManager());
+
 					executionContext.error(
-						XalanMessageLoader::getMessage(XalanMessages::LegalValuesForLetterValue),
+						XalanMessageLoader::getMessage(XalanMessages::LegalValuesForLetterValue, theResult),
 						executionContext.getCurrentNode(),
 						getLocator());
 				}
@@ -1351,6 +1409,7 @@ ElemNumber::getFormattedNumber(
 		default: // "1"
 			{
 				StylesheetExecutionContext::XalanNumberFormatAutoPtr	formatter(
+                        executionContext.getMemoryManager(),
 						getNumberFormatter(executionContext));
 
 				formatter->format(listElement, theResult);
@@ -1365,7 +1424,7 @@ ElemNumber::getFormattedNumber(
 
 					XalanDOMString&		padString = theGuard.get();
 
-					padString = formatter->format(0);
+					formatter->format(0, padString);
 
 					reserve(theResult, nPadding * length(padString) + lengthNumString + 1);
 
@@ -1574,38 +1633,6 @@ ElemNumber::NumberFormatStringTokenizer::setString(const XalanDOMString&	theStri
 
 
 
-XalanDOMString
-ElemNumber::NumberFormatStringTokenizer::nextToken() 
-{
-	if (m_currentPosition >= m_maxPosition) 
-	{
-		return XalanDOMString();
-	}
-
-	const size_type		start = m_currentPosition;
-
-	if (isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
-	{
-		while (m_currentPosition < m_maxPosition &&
-			   isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
-		{
-			m_currentPosition++;
-		}
-	}
-	else
-	{
-		while (m_currentPosition < m_maxPosition &&
-			   !isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
-		{
-			m_currentPosition++;
-		}
-	}
-
-	return XalanDOMString(*m_string, start, m_currentPosition);
-}
-
-
-
 void
 ElemNumber::NumberFormatStringTokenizer::nextToken(XalanDOMString&	theToken)
 {
@@ -1746,11 +1773,12 @@ const XalanDOMString::size_type		ElemNumber::s_elalphaCountTableSize =
 		ELEMNUMBER_SIZE(s_elalphaCountTable);
 
 
-static XalanDOMString	s_staticTextString;
 
-static XalanDOMString	s_staticCommentString;
+static XalanDOMString	s_staticTextString(XalanMemMgrs::getDummyMemMgr());
 
-static XalanDOMString	s_staticSlashString;
+static XalanDOMString	s_staticCommentString(XalanMemMgrs::getDummyMemMgr());
+
+static XalanDOMString	s_staticSlashString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -1936,7 +1964,7 @@ const DecimalToRoman	ElemNumber::s_romanConvertTable[] =
 
 
 
-static XalanNumberingResourceBundle		s_staticElalphaResourceBundle;
+static XalanNumberingResourceBundle		s_staticElalphaResourceBundle(XalanMemMgrs::getDummyMemMgr());
 
 const XalanNumberingResourceBundle&	ElemNumber::s_elalphaResourceBundle =
 		s_staticElalphaResourceBundle;
@@ -1944,8 +1972,10 @@ const XalanNumberingResourceBundle&	ElemNumber::s_elalphaResourceBundle =
 
 
 static void
-initializeTraditionalElalphaBundle(XalanNumberingResourceBundle&	theBundle)
+initializeTraditionalElalphaBundle(MemoryManagerType& theManager, 
+                                   XalanNumberingResourceBundle&	theBundle)
 {
+
 
 	// The following are a bunch of static data the comprise the contents of the bundle.
 	static const XalanDOMChar	elalphaAlphabet[] =
@@ -2003,19 +2033,19 @@ initializeTraditionalElalphaBundle(XalanNumberingResourceBundle&	theBundle)
 	typedef XalanNumberingResourceBundle::NumberTypeVectorType			NumberTypeVectorType;
 
 	// Create the table of characters for the various digit positions...
-	DigitsTableVectorType			theElalphaDigitsTable;
+	DigitsTableVectorType			theElalphaDigitsTable(theManager);
 
 	// Since we know the size, create the empty vectors in the table...
 	theElalphaDigitsTable.resize(3);
 
 	// Swap the empty tables with temporary ones...
-	XalanDOMCharVectorType(elalphaDigits, elalphaDigits + length(elalphaDigits)).swap(theElalphaDigitsTable[0]);
-	XalanDOMCharVectorType(elalphaTens, elalphaTens + length(elalphaTens)).swap(theElalphaDigitsTable[1]);
-	XalanDOMCharVectorType(elalphaHundreds, elalphaHundreds + length(elalphaHundreds)).swap(theElalphaDigitsTable[2]);
+	XalanDOMCharVectorType(elalphaDigits, elalphaDigits + length(elalphaDigits), theManager).swap(theElalphaDigitsTable[0]);
+	XalanDOMCharVectorType(elalphaTens, elalphaTens + length(elalphaTens), theManager).swap(theElalphaDigitsTable[1]);
+	XalanDOMCharVectorType(elalphaHundreds, elalphaHundreds + length(elalphaHundreds), theManager).swap(theElalphaDigitsTable[2]);
 
 	// This table will indicate which positions the vectors of digits are in
 	// the table...
-	NumberTypeVectorType	theDigitsTableTable;
+	NumberTypeVectorType	theDigitsTableTable(theManager);
 
 	theDigitsTableTable.reserve(3);
 
@@ -2024,25 +2054,27 @@ initializeTraditionalElalphaBundle(XalanNumberingResourceBundle&	theBundle)
 	theDigitsTableTable.push_back(1);
 	theDigitsTableTable.push_back(0);
 
-	const XalanDOMString	theLanguageString("el");
+	const XalanDOMString	theLanguageString("el",theManager);
 
 	// Create an instance...
 	XalanNumberingResourceBundle	theElaphaBundle(
 		theLanguageString,
 		theLanguageString,
 		theLanguageString,
-		XalanDOMCharVectorType(elalphaAlphabet, elalphaAlphabet + length(elalphaAlphabet)),
-		XalanDOMCharVectorType(elalphaTraditionalAlphabet, elalphaTraditionalAlphabet + length(elalphaTraditionalAlphabet)),
+		XalanDOMCharVectorType(elalphaAlphabet, elalphaAlphabet + length(elalphaAlphabet), theManager),
+		XalanDOMCharVectorType(elalphaTraditionalAlphabet, elalphaTraditionalAlphabet + length(elalphaTraditionalAlphabet), theManager),
 		XalanNumberingResourceBundle::eLeftToRight,
 		XalanNumberingResourceBundle::eMultiplicativeAdditive,
 		XalanNumberingResourceBundle::ePrecedes,
 		~NumberType(0),
-		NumberTypeVectorType(elalphaNumberGroups, elalphaNumberGroups + elalphaNumberGroupsCount),
-		NumberTypeVectorType(elalphaMultipliers, elalphaMultipliers + elalphaMultipliersCount),
-		XalanDOMCharVectorType(),
-		XalanDOMCharVectorType(elalphaMultiplierChars, elalphaMultiplierChars + length(elalphaMultiplierChars)),
+		NumberTypeVectorType(elalphaNumberGroups, elalphaNumberGroups + elalphaNumberGroupsCount, theManager),
+		NumberTypeVectorType(elalphaMultipliers, elalphaMultipliers + elalphaMultipliersCount, theManager),
+		XalanDOMCharVectorType(theManager),
+		XalanDOMCharVectorType(elalphaMultiplierChars, elalphaMultiplierChars + length(elalphaMultiplierChars), theManager),
 		theElalphaDigitsTable,
-		theDigitsTableTable);
+		theDigitsTableTable,
+        theManager);
+
 
 	// Swap it with the one (this avoids making a copy...)
 	theBundle.swap(theElaphaBundle);
@@ -2051,27 +2083,29 @@ initializeTraditionalElalphaBundle(XalanNumberingResourceBundle&	theBundle)
 
 
 void
-ElemNumber::initialize()
+ElemNumber::initialize(MemoryManagerType&  theManager)
 {
-	s_staticTextString = XALAN_STATIC_UCODE_STRING("text()");
 
-	s_staticCommentString = XALAN_STATIC_UCODE_STRING("comment()");
+	s_staticTextString.reset( theManager, "text()");
 
-	s_staticSlashString = XALAN_STATIC_UCODE_STRING("/");
+	s_staticCommentString.reset( theManager, "comment()");
 
-	initializeTraditionalElalphaBundle(s_staticElalphaResourceBundle);
+	s_staticSlashString.reset( theManager, "/");
+
+	initializeTraditionalElalphaBundle(theManager, s_staticElalphaResourceBundle);
 }
-
 
 
 void
 ElemNumber::terminate()
 {
-	releaseMemory(s_staticTextString);
-	releaseMemory(s_staticCommentString);
-	releaseMemory(s_staticSlashString);
+    MemoryManagerType& theManager = XalanMemMgrs::getDummyMemMgr();
 
-	XalanNumberingResourceBundle().swap(s_staticElalphaResourceBundle);
+	releaseMemory(s_staticTextString, theManager );
+	releaseMemory(s_staticCommentString, theManager );
+	releaseMemory(s_staticSlashString, theManager );
+
+	XalanNumberingResourceBundle(theManager).swap(s_staticElalphaResourceBundle);
 }
 
 

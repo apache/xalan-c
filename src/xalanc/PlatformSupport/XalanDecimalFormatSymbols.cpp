@@ -56,16 +56,16 @@ static XalanDOMChar		theCurrencySymbol[] =
 
 
 
-XalanDecimalFormatSymbols::XalanDecimalFormatSymbols() :
-	m_currencySymbol(theCurrencySymbol),
+XalanDecimalFormatSymbols::XalanDecimalFormatSymbols(MemoryManagerType&  theManager) :
+	m_currencySymbol(theCurrencySymbol,theManager),
 	m_decimalSeparator(XalanUnicode::charFullStop),
 	m_digit(XalanUnicode::charNumberSign),
 	m_groupingSeparator(XalanUnicode::charComma),
-	m_infinity(theInfinityDefault),
-	m_internationalCurrencySymbol(),
+	m_infinity(theInfinityDefault, theManager),
+	m_internationalCurrencySymbol(theManager),
 	m_minusSign(XalanUnicode::charHyphenMinus),
 	m_monetaryDecimalSeparator(XalanUnicode::charFullStop),
-	m_NaN(theNaNDefault),
+	m_NaN(theNaNDefault,theManager),
 	m_patternSeparator(XalanUnicode::charSemicolon),
 	m_percent(XalanUnicode::charPercentSign),
 	m_perMill(XalanUnicode::charPerMilleSign),
@@ -75,16 +75,17 @@ XalanDecimalFormatSymbols::XalanDecimalFormatSymbols() :
 
 
 
-XalanDecimalFormatSymbols::XalanDecimalFormatSymbols(const XalanDecimalFormatSymbols&	theSource) :
-	m_currencySymbol(theSource.m_currencySymbol),
+XalanDecimalFormatSymbols::XalanDecimalFormatSymbols(const XalanDecimalFormatSymbols&	theSource,
+                                                     MemoryManagerType&                 theManager) :
+	m_currencySymbol(theSource.m_currencySymbol,theManager),
 	m_decimalSeparator(theSource.m_decimalSeparator),
 	m_digit(theSource.m_digit),
 	m_groupingSeparator(theSource.m_groupingSeparator),
-	m_infinity(theSource.m_infinity),
-	m_internationalCurrencySymbol(theSource.m_internationalCurrencySymbol),
+	m_infinity(theSource.m_infinity,theManager),
+	m_internationalCurrencySymbol(theSource.m_internationalCurrencySymbol, theManager),
 	m_minusSign(theSource.m_minusSign),
 	m_monetaryDecimalSeparator(theSource.m_monetaryDecimalSeparator),
-	m_NaN(theSource.m_NaN),
+	m_NaN(theSource.m_NaN,theManager),
 	m_patternSeparator(theSource.m_patternSeparator),
 	m_percent(theSource.m_percent),
 	m_perMill(theSource.m_perMill),

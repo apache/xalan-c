@@ -57,9 +57,11 @@ ElemComment::ElemComment(
 		if(isAttrOK(aname, atts, i, constructionContext) == false ||
 		   processSpaceAttr(aname, atts, i, constructionContext))
 		{
+            XalanDOMString  theResult(constructionContext.getMemoryManager());
+
 			constructionContext.error(
 					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
+						XalanMessages::TemplateHasIllegalAttribute_2Param, theResult,
 							Constants::ELEMNAME_COMMENT_WITH_PREFIX_STRING.c_str(),
 							aname),
 					0,
@@ -67,7 +69,6 @@ ElemComment::ElemComment(
 		}
 	}	
 }
-
 
 
 ElemComment::~ElemComment()
