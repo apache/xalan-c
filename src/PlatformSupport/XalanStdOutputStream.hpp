@@ -64,15 +64,11 @@
 
 
 
-#if defined(XALAN_OLD_STREAM_HEADERS)
+#if defined(XALAN_OLD_STREAMS)
 #include <iostream.h>
-#else
-#if defined(XALAN_NO_IOSFWD)
-#include <ostream>
 #else
 #include <iosfwd>
 #include <ios>
-#endif
 #endif
 
 
@@ -89,10 +85,18 @@ public:
 
 #if defined (XALAN_NO_NAMESPACES)
 	typedef ostream				StreamType;
-	typedef int					StreamSizeType;
 #else
 	typedef std::ostream		StreamType;
+#endif
+
+#if defined (XALAN_OLD_STREAMS)
+	typedef int					StreamSizeType;
+#else
+#if defined (XALAN_NO_NAMESPACES)
+	typedef streamsize			StreamSizeType
+#else
 	typedef std::streamsize		StreamSizeType;
+#endif
 #endif
 
 	/**

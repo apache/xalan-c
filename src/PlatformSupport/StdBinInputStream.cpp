@@ -63,6 +63,12 @@
 
 
 
+#if !defined(XALAN_OLD_STREAMS)
+#include <istream>
+#endif
+
+
+
 #if defined(XALAN_NO_NAMESPACES)
 StdBinInputStream::StdBinInputStream(istream&		theStream) :
 #else

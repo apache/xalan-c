@@ -66,14 +66,9 @@
 
 
 
-#if defined(XALAN_OLD_STREAM_HEADERS)
+#if defined(XALAN_OLD_STREAMS)
 #include <iostream.h>
-#else
-#if defined(XALAN_NO_IOSFWD)
-#include <ostream>
-#else
 #include <iosfwd>
-#endif
 #endif
 
 
