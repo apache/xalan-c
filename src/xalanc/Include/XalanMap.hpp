@@ -475,7 +475,7 @@ public:
 		}
         
         value_type& toRemove = *toRemovePos;
-        toRemove.~value_type();
+        toRemove.value_type::~value_type();
         deallocate(&toRemove);
 		m_entries.erase(toRemovePos);
 		--m_size;
