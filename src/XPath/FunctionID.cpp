@@ -146,10 +146,16 @@ FunctionID::execute(
 
 		StringTokenizer		theTokenizer(theResultString);
 
+		typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
+		GetAndReleaseCachedString	theGuard(executionContext);
+
+		XalanDOMString&				theToken = theGuard.get();
+
 		// Parse the result string...
 		while(theTokenizer.hasMoreTokens() == true)
 		{
-			const XalanDOMString	theToken = theTokenizer.nextToken();
+			theTokenizer.nextToken(theToken);
 
 			if (length(theToken) > 0)
 			{
@@ -169,7 +175,7 @@ FunctionID::execute(
 					}
 				}
 			}
-		} //while
+		}
 	}
 
 	return executionContext.getXObjectFactory().createNodeSet(theNodeList);
