@@ -155,9 +155,7 @@ FormatMessageLocal(
 	XalanDOMString  theStrErrCode;
 	LongToDOMString(theErrorCode, theStrErrCode);
 
-
-
-	return XalanMessageLoader::getMessage(XalanMessages::MessageErrorCodeWas_2Param,theResult,theStrErrCode);
+	return theResult + XalanMessageLoader::getMessage(XalanMessages::MessageErrorCodeWas_1Param,theStrErrCode);
 }
 
 

@@ -314,9 +314,7 @@ StylesheetRoot::setupFormatterListener(
 			else
 			{
 				executionContext.error(
-					XalanMessageLoader::getMessage(XalanMessages::NoValidResultTarget),
-					executionContext.getCurrentNode(),
-					0);
+					XalanMessageLoader::getMessage(XalanMessages::NoValidResultTarget),executionContext.getCurrentNode(), 0);
 			}
 		}
 

@@ -121,29 +121,25 @@ ProblemListenerDefault::problem(
 
 	if (eERROR == classification)
 	{
-		pw.print(XalanMessageLoader::getMessage(XalanMessages::Error_));
+		pw.print(XalanMessageLoader::getMessage(XalanMessages::Error_1Param, msg));
 	}
 	else if (eWARNING == classification)
 	{
-		pw.print(XalanMessageLoader::getMessage(XalanMessages::Warning_));
+		pw.print(XalanMessageLoader::getMessage(XalanMessages::Warning_1Param, msg));
 	}
 	else
 	{
-		pw.print(XalanMessageLoader::getMessage(XalanMessages::Message_));
+		pw.print(XalanMessageLoader::getMessage(XalanMessages::Message_1Param, msg));
 	}
-
-	pw.print(msg);
 
 	if (0 != styleNode)
 	{
-		pw.print(XalanMessageLoader::getMessage(XalanMessages::StyleTreeNode_));
-		pw.print(styleNode->getElementName());
+		pw.print(XalanMessageLoader::getMessage(XalanMessages::StyleTreeNode_1Param, styleNode->getElementName()));
 	}
 
 	if (0 != sourceNode)
 	{
-		pw.print(XalanMessageLoader::getMessage(XalanMessages::SourceTreeNode));
-		pw.print(sourceNode->getNodeName());
+		pw.print(XalanMessageLoader::getMessage(XalanMessages::SourceTreeNode_1Param, sourceNode->getNodeName()));
 	}
 
 	pw.print(locationOpen);
@@ -154,11 +150,11 @@ ProblemListenerDefault::problem(
 		pw.print(uri);
 	}
 
-	pw.print(XalanMessageLoader::getMessage(XalanMessages::LineNumber));
-	pw.print(lineNo);
+	const XalanDOMString lineNoString = LongToDOMString(lineNo);
 
-	pw.print(XalanMessageLoader::getMessage(XalanMessages::ColumnNumber));
-	pw.print(charOffset);
+	const XalanDOMString charOffsetString = LongToDOMString(charOffset);
+
+	pw.print(XalanMessageLoader::getMessage(XalanMessages::LineNumberColumnNumber_2Params, lineNoString , charOffsetString));
 
 	pw.print(locationClose);
 

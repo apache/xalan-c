@@ -446,7 +446,7 @@ XalanOutputStream::XalanOutputStreamException::~XalanOutputStreamException()
 
 XalanOutputStream::UnknownEncodingException::UnknownEncodingException() :
 	XalanOutputStreamException(
-			XalanMessageLoader::getMessage(XalanMessages::UnknownErrorOccurredWhileTranscoding),
+			XalanMessageLoader::getMessage(XalanMessages::AnErrorOccurredWhileTranscoding),
 			TranscodeFromLocalCodePage("UnknownEncodingException"))
 {
 }

@@ -294,10 +294,8 @@ ElemTemplateElement::addToStylesheet(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						/* theStylesheet */)
 {
-	constructionContext.error(
-		XalanMessageLoader::getMessage(XalanMessages::IllegalCallWasMadeDuringCompilation),
-		0,
-		this);
+	// An illegal call to addToStylesheet() was made during compilation of the stylesheet.
+	assert ( false );
 }
 
 

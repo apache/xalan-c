@@ -198,11 +198,11 @@ XalanFileOutputStream::writeData(
 }
 
 
-
+/*
 static XalanDOMString
 FormatMessageLocal(
 			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theFileName,
+
 			int						theErrorCode)
 {
 	return XalanMessageLoader::getMessage(
@@ -215,15 +215,17 @@ FormatMessageLocal(
 				theFileName,
 				LongToDOMString(theErrorCode));
 }
-
-
+*/
+extern XalanDOMString
+FormatMessageLocal(
+			const XalanDOMString&	theMessage,
+			int				theErrorCode);
 
 XalanFileOutputStream::XalanFileOutputStreamOpenException::XalanFileOutputStreamOpenException(
 		const XalanDOMString&	theFileName,
 		int					theErrorCode) :
 	XalanOutputStreamException(FormatMessageLocal(
-				XalanMessageLoader::getMessage(XalanMessages::ErrorOpeningFile),
-				theFileName,
+				XalanMessageLoader::getMessage(XalanMessages::ErrorOpeningFile_1Param, theFileName ),
 				theErrorCode),
 			TranscodeFromLocalCodePage("XalanFileOutputStreamOpenException"))
 {
@@ -241,8 +243,7 @@ XalanFileOutputStream::XalanFileOutputStreamWriteException::XalanFileOutputStrea
 		const XalanDOMString&	theFileName,
 		int					theErrorCode) :
 	XalanOutputStreamException(FormatMessageLocal(
-				XalanMessageLoader::getMessage(XalanMessages::ErrorWritingFile),
-				theFileName,
+				XalanMessageLoader::getMessage(XalanMessages::ErrorWritingFile_1Param,theFileName),
 				theErrorCode),
 			TranscodeFromLocalCodePage("XalanFileOutputStreamWriteException"))
 {

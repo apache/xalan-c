@@ -72,19 +72,15 @@ XalanFStreamOutputStream::writeData(
 	}
 }
 
-
-
-static XalanDOMString
+XalanDOMString
 FormatMessageLocal(
 			const XalanDOMString&	theMessage,
 			int				theErrorCode)
 {
-
 	XalanDOMString strErrorCode;
 	LongToDOMString(theErrorCode, strErrorCode);
 
-	XalanDOMString	theResult = XalanMessageLoader::getMessage(XalanMessages::CPPRunTimeErrorCode_3Params, theMessage, XalanDOMString(""), strErrorCode);
-
+	XalanDOMString	theResult = theMessage + XalanMessageLoader::getMessage(XalanMessages::SystemErrorCode_1Param, strErrorCode);
 	return theResult;
 }
 
@@ -92,7 +88,7 @@ FormatMessageLocal(
 
 XalanFStreamOutputStream::XalanFStreamOutputStreamWriteException::XalanFStreamOutputStreamWriteException(int	theErrorCode) :
 	XalanOutputStreamException(FormatMessageLocal(
-				XalanMessageLoader::getMessage(XalanMessages::ErrorWritingFile),
+				XalanMessageLoader::getMessage(XalanMessages::ErrorWritingFile_1Param,XalanDOMString("")),
 				theErrorCode),
 			TranscodeFromLocalCodePage("XalanFStreamOutputStreamWriteException"))
 {

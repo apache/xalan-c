@@ -105,11 +105,12 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 				static_cast<const ElemTemplate&>(ev.m_styleNode);
 #endif
 
-			m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::LineNumber));
-			m_printWriter.print(ev.m_styleNode.getLineNumber());
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING(", "));
-			m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::ColumnNumber));
-			m_printWriter.print(ev.m_styleNode.getColumnNumber());
+			const XalanDOMString lineNumbString = LongToDOMString(ev.m_styleNode.getLineNumber());
+
+			const XalanDOMString colNumbString = LongToDOMString(ev.m_styleNode.getColumnNumber());
+
+			m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::LineNumberColumnNumber_2Params, lineNumbString, colNumbString));
+
 			m_printWriter.print(XALAN_STATIC_UCODE_STRING(": "));
 			m_printWriter.print(ev.m_styleNode.getElementName());
 
@@ -149,10 +150,12 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 	default:
 		if(m_traceElements == true)
 		{
-			m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::LineNumber));
-			m_printWriter.print(ev.m_styleNode.getLineNumber());
-			m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::ColumnNumber));
-			m_printWriter.print(ev.m_styleNode.getColumnNumber());
+			const XalanDOMString lineNumbString = LongToDOMString(ev.m_styleNode.getLineNumber());
+			
+			const XalanDOMString colNumbString = LongToDOMString(ev.m_styleNode.getColumnNumber());
+			
+			m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::LineNumberColumnNumber_2Params, lineNumbString, colNumbString));
+
 			m_printWriter.print(XALAN_STATIC_UCODE_STRING(": "));
 			m_printWriter.println(ev.m_styleNode.getElementName());
 		}
@@ -327,8 +330,9 @@ TraceListenerDefault::printNodeInfo(const ElemTemplateElement&	node)
 
 	if (uri.length() != 0)
 	{
-		m_printWriter.print(XalanMessageLoader::getMessage(
-			XalanMessages::CommaAndBrackets_1Param,uri));
+		m_printWriter.print(" (");
+		m_printWriter.print(uri);
+		m_printWriter.print(")");
 	}
 }
 

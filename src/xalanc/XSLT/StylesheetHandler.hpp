@@ -466,6 +466,10 @@ private:
 			const XalanDOMChar*		theMessage1,
 			const XalanDOMString&	theMessage2,
 			const LocatorType*		theLocator) const;
+	void
+	warn(
+			const XalanDOMString&	theMessage,
+			const LocatorType*		theLocator) const;
 
 	void
 	error(

@@ -427,7 +427,7 @@ StylesheetHandler::startElement(
 
 						if(StylesheetConstructionContext::ELEMNAME_CHOOSE != parent->getXSLToken())
 						{
-							error(XalanMessageLoader::getMessage(XalanMessages::NotParented_2Param
+							error(XalanMessageLoader::getMessage(XalanMessages::NotParentedBy_2Param
 								,Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING
 								,Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING), locator);
 						}
@@ -448,7 +448,7 @@ StylesheetHandler::startElement(
 							}
 							else
 							{
-								error(XalanMessageLoader::getMessage(XalanMessages::MisplacedOtherwise), locator);
+								error(XalanMessageLoader::getMessage(XalanMessages::Misplaced_1Param, Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING), locator);
 							}
 						}
 					}
@@ -484,7 +484,7 @@ StylesheetHandler::startElement(
 				case StylesheetConstructionContext::ELEMNAME_STRIP_SPACE:
 				case StylesheetConstructionContext::ELEMNAME_DECIMAL_FORMAT:
 					{
-						error(name, XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInsideTemplate), locator);
+						error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInsideTemplate_1Param, name), locator);
 					}
 					break;
 
@@ -494,7 +494,7 @@ StylesheetHandler::startElement(
 						// supported, don't flag an error.
 						if(m_constructionContext.getXSLTVersionSupported() < m_stylesheet.getXSLTVerDeclared())
 						{
-							warn(name, XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement), locator);
+							warn(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement_1Param, name), locator);
 
 							elem = m_constructionContext.createElement(
 										StylesheetConstructionContext::ELEMNAME_FORWARD_COMPATIBLE,
@@ -505,7 +505,7 @@ StylesheetHandler::startElement(
 						}
 						else
 						{
-							error(name, XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement), locator);
+							error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement_1Param, name), locator);
 						}
 					}
 				}
@@ -798,7 +798,7 @@ StylesheetHandler::processTopLevelElement(
 	case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
 		if (inExtensionElement() == false)
 		{
-			error(name, XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInsideStylesheet), locator);
+			error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInsideStylesheet_1Param, name), locator);
 		}
 		break;
 
@@ -816,7 +816,7 @@ StylesheetHandler::processTopLevelElement(
 			}
 			else
 			{
-				error(name, XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement), locator);
+				error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement_1Param, name), locator);
 			}
 		}
 		break;
@@ -1075,15 +1075,13 @@ StylesheetHandler::appendChildElementToParent(
 			if (elem->getXSLToken() == StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT)
 			{
 				error(
-					elem->getElementName(),
-					XalanMessageLoader::getMessage(XalanMessages::ElemOrLTIsNotAllowed),
+					XalanMessageLoader::getMessage(XalanMessages::ElemOrLTIsNotAllowed_1Param, elem->getElementName()),
 					locator);
 			}
 			else
 			{
 				error(
-					elem->getElementName(),
-					XalanMessageLoader::getMessage(XalanMessages::ElemIsNotAllowed),
+					XalanMessageLoader::getMessage(XalanMessages::ElemIsNotAllowed_1Param, elem->getElementName()),
 					locator);
 			}
 		}
@@ -1653,6 +1651,13 @@ StylesheetHandler::warn(
 	warn(theMessage1, theMessage2.c_str(), theLocator);
 }
 
+void
+StylesheetHandler::warn(
+			const XalanDOMString&	theMessage,
+			const LocatorType*		theLocator) const
+{
+	m_constructionContext.warn(theMessage, 0, theLocator);
+}
 
 
 

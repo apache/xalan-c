@@ -775,7 +775,7 @@ XPathProcessorImpl::error(const XalanDOMString&		msg) const
 			}
 			else
 			{
-				thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::ExpressionIs_1Paran,theCurrentPattern));
+				thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::ExpressionIs_1Param,theCurrentPattern));
 			}
 
 		}

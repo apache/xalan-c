@@ -192,7 +192,7 @@ AVT::AVT(
 
 										case XalanUnicode::charLeftCurlyBracket:
 											// What's another brace doing here?
-											constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::CannotAppearWithinExpression_1Param,"{"));
+											constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::LeftBraceCannotAppearWithinExpression));
 											break;
 
 										default:
