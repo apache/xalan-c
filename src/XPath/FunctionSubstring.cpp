@@ -132,13 +132,24 @@ getTotal(
 	// Total the second and third arguments.  Ithe third argument is
 	// missing, make it the length of the string + 1 (for XPath
 	// indexing style).
-	if (arg3.null() == true || DoubleSupport::isPositiveInfinity(arg3->num()) == true)
+	if (arg3.null() == true)
 	{
 		return double(theSourceStringLength + 1);
 	}
 	else
 	{
-		return FunctionRound::getRoundedValue(theSecondArgValue + arg3->num());
+		const double	theRoundedValue =
+			FunctionRound::getRoundedValue(theSecondArgValue + arg3->num());
+
+		// If there's overflow, then we should return the length of the string + 1.
+		if (DoubleSupport::isPositiveInfinity(theRoundedValue) == true)
+		{
+			return double(theSourceStringLength + 1);
+		}
+		else
+		{
+			return theRoundedValue;
+		}
 	}
 }
 
