@@ -115,6 +115,13 @@ public:
 	 *
 	 * @param fileName valid system file name
 	 */
+	XSLTResultTarget(const XalanDOMChar*	fileName);
+
+	/**
+	 * Create a new output target with a file name.
+	 *
+	 * @param fileName valid system file name
+	 */
 	XSLTResultTarget(const char*	fileName);
 
 	/**

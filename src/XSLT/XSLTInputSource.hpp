@@ -92,6 +92,8 @@ typedef XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream	BinInputStreamType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource		InputSourceType;
 
 
+
+class XalanDOMString;
 class XalanNode;
 
 
@@ -142,6 +144,18 @@ public:
 	 *
 	 * @param systemId  system identifier (URI)
 	 */
+	XSLTInputSource(const XalanDOMString&	systemId);
+
+	/**
+	 * Create a new input source with a system identifier.
+	 *
+	 * <p>Applications may use setPublicId to include a public identifier as
+	 * well, or setEncoding to specify the character encoding, if known.</p>
+	 *
+	 * <p>If the system identifier is a URL, it must be full resolved.</p>
+	 *
+	 * @param systemId  system identifier (URI)
+	 */
 	XSLTInputSource(const char*		systemId);
 
 	/**
@@ -169,6 +183,19 @@ public:
 	XSLTInputSource(
 			const XMLCh*	systemId,
 			const XMLCh*	publicId);
+
+	/**
+	 * Create a new input source with a system identifier and a public
+	 * identifier.
+	 *
+	 * <p>If the system identifier is a URL, it must be full resolved.</p>
+	 *
+	 * @param systemId system identifier (URI)
+	 * @param publicId public identifier
+	 */
+	XSLTInputSource(
+			const XalanDOMString&	systemId,
+			const XalanDOMString&	publicId);
 
 	/**
 	 * Create a new input source with a DOM node.

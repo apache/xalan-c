@@ -175,10 +175,30 @@ XSLTInputSource::XSLTInputSource(const XMLCh*	systemId) :
 
 
 
+XSLTInputSource::XSLTInputSource(const XalanDOMString&	systemId) :
+	InputSource(systemId.c_str()),
+	m_stream(0),
+	m_node(0)
+{
+}
+
+
+
 XSLTInputSource::XSLTInputSource(
 			const XMLCh*	systemId,
 			const XMLCh*	publicId) :
 	InputSource(systemId, publicId),
+	m_stream(0),
+	m_node(0)
+{
+}
+
+
+
+XSLTInputSource::XSLTInputSource(
+			const XalanDOMString&	systemId,
+			const XalanDOMString&	publicId) :
+	InputSource(systemId.c_str(), publicId.c_str()),
 	m_stream(0),
 	m_node(0)
 {

@@ -105,6 +105,20 @@ XSLTResultTarget::XSLTResultTarget(const XalanDOMString&	fileName) :
 
 
 
+XSLTResultTarget::XSLTResultTarget(const XalanDOMChar*	fileName) :
+	m_fileName(fileName),
+	m_byteStream(0),
+	m_encoding(),
+	m_characterStream(0),
+	m_document(0),
+	m_documentFragment(0),
+	m_element(0),
+	m_formatterListener(0)
+{
+}
+
+
+
 XSLTResultTarget::XSLTResultTarget(const char*	fileName) :
 	m_fileName(fileName),
 	m_byteStream(0),
