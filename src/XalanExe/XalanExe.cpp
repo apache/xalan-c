@@ -93,12 +93,10 @@
 
 
 
-#if !defined (XALAN_NO_NAMESPACES)
-using std::cerr;
-using std::cin;
-using std::cout;
-using std::endl;
-#endif
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cin)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::atoi;
@@ -145,6 +143,10 @@ Usage()
 		 << endl;
 }
 
+
+
+XALAN_USING_XALAN(XalanTransformer)
+XALAN_USING_XALAN(XSLTInputSource)
 
 
 class Params
@@ -246,10 +248,12 @@ private:
 		const char*		m_expression;
 	};
 
-	XalanArrayAutoPtr<ParamPair>	m_params;
+	typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanArrayAutoPtr<ParamPair>	ArrayAutoPtrType;
 
-	const unsigned long				m_maxParams;
-	unsigned long					m_currentParam;
+	ArrayAutoPtrType		m_params;
+
+	const unsigned long		m_maxParams;
+	unsigned long			m_currentParam;
 };
 
 
@@ -493,6 +497,8 @@ xsltMain(
 	}
 	else
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
 		// Call the static initializer for Xerces...
 		XMLPlatformUtils::Initialize();
 
