@@ -1577,18 +1577,6 @@ typedef XALAN_STD runtime_error               RuntimeError;
 		m_contextNodeList = ref;		
 	}
 
-	/**
-	 * Add a declaration to the table of KeyDeclaration objects.
-	 *
-	 * @param KeyDeclaration declaration to add
-	 */
-	void
-	addKeyDeclaration(const KeyDeclaration&		theDeclaration)
-	{
-		m_keyDeclarations.push_back(theDeclaration);
-		setNeedToBuildKeysTable(true);
-	}
-
 	// $$$ ToDO: Are these next two really needed?
 	/**
 	 * Set the table of KeyDeclaration objects, which are set by the 
@@ -1636,32 +1624,6 @@ typedef XALAN_STD runtime_error               RuntimeError;
 	getKeysTable()
 	{
 		return m_keys;
-	}
-
-	/**
-	 * Set needToBuildKeysTable to true if an xsl:key directive is found.
-	 * Mainly for use by the XMLParserLiaison classes for optimized processing
-	 * of keys.
-	 *
-	 * @param b boolean value to set
-	 */
-	void
-	setNeedToBuildKeysTable(bool	b)
-	{
-		m_needToBuildKeysTable = b;
-	}
-
-	/**
-	 * Set the needToBuildKeysTable property, which, if true, will trigger the
-	 * building of the keys table. Mainly for use by the XMLParserLiaison
-	 * classes for optimized processing of keys.
-	 *
-	 * @return true to build keys table
-	 */
-	bool
-	getNeedToBuildKeysTable() const
-	{
-		return m_needToBuildKeysTable;
 	}
 
 	/**
@@ -2183,13 +2145,6 @@ private:
 	 * own RuntimeExceptions).
 	 */
 	ProblemListener*	m_problemListener;
-
-	/**
-	 * This is set to true if an xsl:id directive is found.
-	 * Mainly for use by the XMLParserLiaison classes for 
-	 * optimized processing of ids.
-	 */
-	bool	m_needToBuildKeysTable;
 
 	/**
 	 * Print a trace of a template that is being called, either by 
