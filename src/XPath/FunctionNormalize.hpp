@@ -190,7 +190,7 @@ private:
 			thePreviousChar = theCurrentChar;
 		}
 
-		const VectorType::size_type		theSize = theVector.size();
+		VectorType::size_type	theSize = theVector.size();
 
 		if (theSize == 0)
 		{
@@ -201,7 +201,7 @@ private:
 			if (isXMLWhitespace(theVector.back()) == true)
 			{
 				// The last character is a space, so remove it
-				theVector.pop_back();
+				--theSize;
 			}
 
 			return executionContext.getXObjectFactory().createString(XalanDOMString(theVector.begin(), theSize));
