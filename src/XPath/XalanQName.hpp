@@ -170,7 +170,7 @@ public:
 	 * @return true if namespace and local part are both empty
 	 */
 	bool
-	equals(const XalanQName&		theRHS) const
+	equals(const XalanQName&	theRHS) const
 	{
 		// Note that we do not use our member variables here.  See
 		// class QNameReference for details...

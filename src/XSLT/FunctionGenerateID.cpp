@@ -97,14 +97,16 @@ getSuffix(
 		XalanDOMString&		theResult)
 {
 	assert(theNode != 0);
-	assert(theNode->getOwnerDocument() != 0);
-
-	PointerToDOMString(theNode->getOwnerDocument(), theResult);
-
-	append(theResult, XalanDOMChar(XalanUnicode::charFullStop));
 
 	// We're assuming here that each node has an implementation with a 
 	// unique address that we can convert into a string...
+	if (theNode->getOwnerDocument() != 0)
+	{
+		PointerToDOMString(theNode->getOwnerDocument(), theResult);
+
+		append(theResult, XalanDOMChar(XalanUnicode::charFullStop));
+	}
+
 	PointerToDOMString(theNode, theResult);
 }
 

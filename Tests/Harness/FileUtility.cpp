@@ -382,7 +382,7 @@ FileUtility::getParams(int argc,
 
 		if (ii < length(args.base))
 		{
-			args.output = substring(args.base, 0, ii + 1);
+			args.output.assign(args.base, 0, ii + 1);
 		}
 
 		append(args.output,XalanDOMString(outDir));
@@ -539,10 +539,7 @@ FileUtility::generateFileName(
 
 	if (thePeriodIndex != -1)
 	{
-		targetFile = substring(theXMLFileName,
-							  0,
-							  thePeriodIndex + 1);
-
+		targetFile.assign(theXMLFileName, 0, thePeriodIndex + 1);
 
 		targetFile += XalanDOMString(suffix);
 	}

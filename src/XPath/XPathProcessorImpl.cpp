@@ -197,7 +197,7 @@ XPathProcessorImpl::initMatchPattern(
 	{
 		initMatchPattern(
 			pathObj,
-			substring(expression, 2),
+			XalanDOMString(expression, 2, expression.length() - 2),
 			prefixResolver,
 			locator);
 	}
@@ -237,7 +237,8 @@ XPathProcessorImpl::tokenize(
 	// counted inside the m_patternMap.
 	int nesting = 0;
 
-	// char[] chars = pat.toCharArray();
+	XalanDOMString	theToken;
+
 	for(int i = 0; i < nChars; i++)
 	{
 		XalanDOMChar	c = charAt(pat, i);
@@ -258,7 +259,9 @@ XPathProcessorImpl::tokenize(
 					}
 					else
 					{
-						addToTokenQueue(substring(pat, startSubstring, i));
+						substring(pat, theToken, startSubstring, i);
+
+						addToTokenQueue(theToken);
 					}
 				}
 
@@ -268,7 +271,10 @@ XPathProcessorImpl::tokenize(
 
 				if(c == XalanUnicode::charQuoteMark)
 				{
-					addToTokenQueue(substring(pat, startSubstring, i + 1));
+					substring(pat, theToken, startSubstring, i + 1);
+
+					addToTokenQueue(theToken);
+
 					startSubstring = -1;
 				}
 				else
@@ -291,7 +297,9 @@ XPathProcessorImpl::tokenize(
 					}
 					else
 					{
-						addToTokenQueue(substring(pat, startSubstring, i));
+						substring(pat, theToken, startSubstring, i);
+
+						addToTokenQueue(theToken);
 					}
 				}
 
@@ -301,7 +309,10 @@ XPathProcessorImpl::tokenize(
 
 				if(c == XalanUnicode::charApostrophe)
 				{
-					addToTokenQueue(substring(pat, startSubstring, i + 1));
+					substring(pat, theToken, startSubstring, i + 1);
+
+					addToTokenQueue(theToken);
+
 					startSubstring = -1;
 				}
 				else
@@ -327,7 +338,9 @@ XPathProcessorImpl::tokenize(
 					}
 					else
 					{
-						addToTokenQueue(substring(pat, startSubstring, i));
+						substring(pat, theToken, startSubstring, i);
+
+						addToTokenQueue(theToken);
 					}
 
 					startSubstring = -1;
@@ -379,7 +392,9 @@ XPathProcessorImpl::tokenize(
 					}
 					else
 					{
-						addToTokenQueue(substring(pat, startSubstring, i));
+						substring(pat, theToken, startSubstring, i);
+
+						addToTokenQueue(theToken);
 					}
 
 					startSubstring = -1;
@@ -416,7 +431,9 @@ XPathProcessorImpl::tokenize(
 					nesting++;
 				}
 
-				addToTokenQueue(substring(pat, i, i + 1));
+				substring(pat, theToken, i, i + 1);
+
+				addToTokenQueue(theToken);
 			}		
 			break;
 
@@ -428,7 +445,9 @@ XPathProcessorImpl::tokenize(
 					{
 						if (startSubstring < i - 1)
 						{
-							addToTokenQueue(substring(pat, startSubstring, i - 1));
+							substring(pat, theToken, startSubstring, i - 1);
+
+							addToTokenQueue(theToken);
 						}
 					}
 
@@ -436,7 +455,9 @@ XPathProcessorImpl::tokenize(
 					startSubstring = -1;
 					posOfNSSep = -1;
 
-					addToTokenQueue(substring(pat, i - 1, i + 1));
+					substring(pat, theToken, i - 1, i + 1);
+
+					addToTokenQueue(theToken);
 					break;
 				}
 				else
@@ -484,7 +505,9 @@ XPathProcessorImpl::tokenize(
 							}
 						}
 
-						addToTokenQueue(substring(pat, startSubstring, i + 1));
+						substring(pat, theToken, startSubstring, i + 1);
+
+						addToTokenQueue(theToken);
 
 						startSubstring = -1;
 					}
@@ -503,7 +526,9 @@ XPathProcessorImpl::tokenize(
 		}
 		else
 		{
-			addToTokenQueue(substring(pat, startSubstring, nChars));
+			substring(pat, theToken, startSubstring, nChars);
+
+			addToTokenQueue(theToken);
 		}
 	}
 
@@ -634,8 +659,7 @@ XPathProcessorImpl::mapNSTokens(
 {
 	assert(m_prefixResolver != 0);
 
-	const XalanDOMString 			prefix =
-				substring(pat, startSubstring, posOfNSSep);
+	const XalanDOMString 	prefix(pat, startSubstring, posOfNSSep - startSubstring);
 
 	if (XalanQName::isValidNCName(prefix) == false)
 	{
@@ -672,7 +696,7 @@ XPathProcessorImpl::mapNSTokens(
 		// here...
 		if(posOfNSSep + 1 < posOfScan)
 		{
-			const XalanDOMString 	s = substring(pat, posOfNSSep + 1, posOfScan);
+			const XalanDOMString 	s(pat, posOfNSSep + 1, posOfScan - (posOfNSSep + 1));
 
 			assert(length(s) > 0);
 
@@ -2222,7 +2246,7 @@ XPathProcessorImpl::Literal()
 
 	if(isCurrentLiteral() == true)
 	{
-		const XalanDOMString	theArgument = substring(m_token, 1, length(m_token) - 1);
+		const XalanDOMString	theArgument(m_token, 1, length(m_token) - 2);
 
 		m_expression->pushArgumentOnOpCodeMap(theArgument);
 

@@ -280,73 +280,62 @@ XSLTEngineImpl::process(
 	{
 		// Didn't get a stylesheet from the input source, so look for a
 		// stylesheet processing instruction...
-		XalanDOMString			stylesheetURI;
 
 		// The PI must be a child of the document...
-		XalanNode*				child = sourceTree->getFirstChild();
+		const XalanNode*	child = sourceTree->getFirstChild();
 
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::vector;
-#endif
+		XalanDOMString		theCurrentToken;
+		XalanDOMString		theStylesheetURI;
 
-		vector<XalanDOMString>	hrefs;
+		bool			isOK = false;
 
-		const XalanDOMString	stylesheetNodeName(XALAN_STATIC_UCODE_STRING("xml-stylesheet"));
-		const XalanDOMString	typeString(XALAN_STATIC_UCODE_STRING("type"));
-		const XalanDOMString	typeValueString1(XALAN_STATIC_UCODE_STRING("text/xml"));
-		const XalanDOMString	typeValueString2(XALAN_STATIC_UCODE_STRING("text/xsl"));
-		const XalanDOMString	typeValueString3(XALAN_STATIC_UCODE_STRING("application/xml"));
-		const XalanDOMString	typeValueString4(XALAN_STATIC_UCODE_STRING("application/xml+xslt"));
-
-		// $$$ ToDo: This code is much like that in getStyleSheetURIFromDoc().
-		// Why is it repeated???
-		// $$$ ToDo: Move these embedded strings from inside these loops
-		// out here...
-		// $$$ ToDo: These loops are a mess of repeated use of the
-		// same data values.
-		while(child != 0)
+		while(child != 0 && isOK == false && theStylesheetURI.empty() == true)
 		{
 			if(XalanNode::PROCESSING_INSTRUCTION_NODE == child->getNodeType())
 			{
 				const XalanDOMString&	nodeName = child->getNodeName();
 
-				if(equals(nodeName, stylesheetNodeName))
+				if(equals(nodeName, s_stylesheetNodeName))
 				{
-					bool isOK = false;
+					StringTokenizer 	tokenizer(child->getNodeValue(), s_piTokenizerString);
 
-					StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="));
-
-					while(tokenizer.hasMoreTokens())
+					while(tokenizer.hasMoreTokens() == true && (isOK == false || theStylesheetURI.empty() == true))
 					{
-						if(equals(tokenizer.nextToken(), typeString)) // "type"
+						tokenizer.nextToken(theCurrentToken);
+
+						if(equals(theCurrentToken, s_typeString))
 						{
-							XalanDOMString	typeVal = tokenizer.nextToken();
+							tokenizer.nextToken(theCurrentToken);
 
-							typeVal = substring(typeVal, 1, length(typeVal) - 1);
 
-							if(equals(typeVal, typeValueString1) ||
-								equals(typeVal, typeValueString2) ||
-								equals(typeVal, typeValueString3) ||
-								equals(typeVal, typeValueString4))
+							const XalanDOMString::size_type		theLength =
+									theCurrentToken.length();
+
+							if (theLength > 2)
 							{
-								isOK = true;
+								theCurrentToken.erase(theLength - 1, 1);
+								theCurrentToken.erase(0, 1);
+
+								if(equals(theCurrentToken, s_typeValueString1) ||
+									equals(theCurrentToken, s_typeValueString2) ||
+									equals(theCurrentToken, s_typeValueString3) ||
+									equals(theCurrentToken, s_typeValueString4))
+								{
+									isOK = true;
+								}
 							}
 						}
-					}
-
-					if(isOK)
-					{
-						StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="));
-
-						while(tokenizer.hasMoreTokens())
+						else if(equals(theCurrentToken, s_hrefString))
 						{
-							const XalanDOMString	theCurrentToken = tokenizer.nextToken();
+							tokenizer.nextToken(theCurrentToken);
 
-							if(equals(theCurrentToken, XALAN_STATIC_UCODE_STRING("href")))
+							const XalanDOMString::size_type		theLength =
+									theCurrentToken.length();
+
+							if (theLength > 2)
 							{
-								stylesheetURI = tokenizer.nextToken();
-								stylesheetURI = substring(stylesheetURI, 1, length(stylesheetURI) - 1);
-								hrefs.push_back(stylesheetURI);
+								// Trim of the starting and trailing delimiters...
+								theStylesheetURI.assign(theCurrentToken, 1, theLength - 2);
 							}
 						}
 					}
@@ -356,36 +345,18 @@ XSLTEngineImpl::process(
 			child = child->getNextSibling();
 		}
 
-		bool isRoot = true;
-		Stylesheet* prevStylesheet = 0;
-			
-		if (hrefs.empty() == false)
+		if (isOK == true && theStylesheetURI.empty() == false)
 		{
 			const XalanDOMChar* const	pxch = inputSource.getSystemId();
 
 			const XalanDOMString		sysid(pxch == 0 ? &s_dummyString : pxch); 
 
-			do
-			{
-				const XalanDOMString&	ref =  hrefs.back();
-
-				Stylesheet* stylesheet =
-							getStylesheetFromPIURL(
-								ref,
-								*sourceTree,
-								sysid,
-								isRoot,
-								constructionContext);
-
-				if(false == isRoot)
-				{
-					prevStylesheet->addImport(stylesheet, false);
-				}
-
-				prevStylesheet = stylesheet;
-				isRoot = false;
-				hrefs.pop_back();
-			} while(!hrefs.empty());
+			getStylesheetFromPIURL(
+					theStylesheetURI,
+					*sourceTree,
+					sysid,
+					true,
+					constructionContext);
 		}
 	}
 
@@ -686,7 +657,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 	{
 		diag("Locating stylesheet from fragment identifier...");
 
-		const XalanDOMString	fragID = substring(localXSLURLString, 1);
+		const XalanDOMString	fragID(localXSLURLString, 1);
 
 		const XalanElement*		nsNode = 0;
 
@@ -1772,7 +1743,7 @@ XSLTEngineImpl::addResultAttribute(
 
 			XalanDOMString&		prefix = prefixGuard.get();
 
-			prefix = substring(aname, DOMServices::s_XMLNamespaceWithSeparatorLength);
+			substring(aname, prefix, DOMServices::s_XMLNamespaceWithSeparatorLength);
 
 			const XalanDOMString* const	theNamespace = getResultNamespaceForPrefix(prefix);
 
@@ -3432,11 +3403,28 @@ XSLTEngineImpl::initializeElementKeysTable(ElementKeysMapType&	theElementKeys)
 
 
 
-static XalanDOMString							s_XSLNameSpaceURL;
+static XalanDOMString	s_XSLNameSpaceURL;
 
-static XalanDOMString							s_XSLT4JNameSpaceURL;
+static XalanDOMString	s_XSLT4JNameSpaceURL;
 
-static XalanDOMString							s_uniqueNamespacePrefix;
+static XalanDOMString	s_uniqueNamespacePrefix;
+
+static XalanDOMString	s_stylesheetNodeName;
+
+static XalanDOMString	s_typeString;
+
+static XalanDOMString	s_hrefString;
+
+static XalanDOMString	s_piTokenizerString;
+
+static XalanDOMString	s_typeValueString1;
+
+static XalanDOMString	s_typeValueString2;
+
+static XalanDOMString	s_typeValueString3;
+
+static XalanDOMString	s_typeValueString4;
+
 
 static XSLTEngineImpl::AttributeKeysMapType		s_attributeKeys;
 
@@ -3452,6 +3440,21 @@ const XalanDOMString&	XSLTEngineImpl::s_XSLT4JNameSpaceURL = ::s_XSLT4JNameSpace
 
 const XalanDOMString&	XSLTEngineImpl::s_uniqueNamespacePrefix = ::s_uniqueNamespacePrefix;
 
+const XalanDOMString&	XSLTEngineImpl::s_stylesheetNodeName = ::s_stylesheetNodeName;
+
+const XalanDOMString&	XSLTEngineImpl::s_typeString = ::s_typeString;
+
+const XalanDOMString&	XSLTEngineImpl::s_hrefString = ::s_hrefString;
+
+const XalanDOMString&	XSLTEngineImpl::s_piTokenizerString = ::s_piTokenizerString;
+
+const XalanDOMString&	XSLTEngineImpl::s_typeValueString1 = ::s_typeValueString1;
+
+const XalanDOMString&	XSLTEngineImpl::s_typeValueString2 = ::s_typeValueString2;
+
+const XalanDOMString&	XSLTEngineImpl::s_typeValueString3 = ::s_typeValueString3;
+
+const XalanDOMString&	XSLTEngineImpl::s_typeValueString4 = ::s_typeValueString4;
 
 const XSLTEngineImpl::AttributeKeysMapType&		XSLTEngineImpl::s_attributeKeys = ::s_attributeKeys;
 
@@ -3467,6 +3470,22 @@ XSLTEngineImpl::initialize()
 	::s_XSLT4JNameSpaceURL = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt");
 
 	::s_uniqueNamespacePrefix = XALAN_STATIC_UCODE_STRING("ns");
+
+	::s_stylesheetNodeName = XALAN_STATIC_UCODE_STRING("xml-stylesheet");
+
+	::s_typeString = XALAN_STATIC_UCODE_STRING("type");
+
+	::s_hrefString = XALAN_STATIC_UCODE_STRING("href");
+
+	::s_piTokenizerString = XALAN_STATIC_UCODE_STRING(" \t=");
+
+	::s_typeValueString1 = XALAN_STATIC_UCODE_STRING("text/xml");
+
+	::s_typeValueString2 = XALAN_STATIC_UCODE_STRING("text/xsl");
+
+	::s_typeValueString3 = XALAN_STATIC_UCODE_STRING("application/xml");
+
+	::s_typeValueString4 = XALAN_STATIC_UCODE_STRING("application/xml+xslt");
 
 	installFunctions();
 
@@ -3491,4 +3510,20 @@ XSLTEngineImpl::terminate()
 	releaseMemory(::s_XSLT4JNameSpaceURL);
 
 	releaseMemory(::s_XSLNameSpaceURL);
+
+	releaseMemory(::s_stylesheetNodeName);
+
+	releaseMemory(::s_typeString);
+
+	releaseMemory(::s_hrefString);
+
+	releaseMemory(::s_piTokenizerString);
+
+	releaseMemory(::s_typeValueString1);
+
+	releaseMemory(::s_typeValueString2);
+
+	releaseMemory(::s_typeValueString3);
+
+	releaseMemory(::s_typeValueString4);
 }

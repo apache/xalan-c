@@ -239,7 +239,7 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 							attrName,
 							length(attrName) - (indexOfNSSep + 1) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
 
-						assign(attrName, substring(attrName, indexOfNSSep + 1));
+						attrName.erase(0, indexOfNSSep + 1);
 					}
 					else
 					{
@@ -266,7 +266,7 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 					if(indexOfNSSep < origAttrNameLength &&
 					    fPrefixIsXMLNS == false)
 					{
-						newPrefix = substring(origAttrName, 0, indexOfNSSep);
+						substring(origAttrName, newPrefix, 0, indexOfNSSep);
 
 						// OK, make sure that the prefix provided maps to
 						// the same namespace as the one the user requested,
@@ -283,7 +283,7 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 							clear(newPrefix);
 
 							// Strip the user-supplied prefix from the name...
-							attrName = substring(origAttrName, indexOfNSSep + 1);
+							substring(origAttrName, attrName, indexOfNSSep + 1);
 						}
 					}
 
@@ -293,7 +293,7 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 						// off...
 						if (fPrefixIsXMLNS == true)
 						{
-							assign(attrName, substring(attrName, indexOfNSSep + 1));
+							attrName.erase(0, indexOfNSSep + 1);
 						}
 
 						// Get a new, unique namespace prefix...
@@ -347,7 +347,7 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 
 					XalanDOMString&		nsprefix = nsprefixGuard.get();
 
-					nsprefix = substring(origAttrName, 0, indexOfNSSep);
+					substring(origAttrName, nsprefix, 0, indexOfNSSep);
 
 					const XalanDOMString* const		theNamespace =
 						getNamespaceForPrefix(nsprefix);

@@ -108,6 +108,15 @@ private:
 
 	bool
 	operator==(const FunctionSystemProperty&) const;
+
+
+	// Data members...
+	const XalanDOMString	m_xsltNamespaceURI;
+	const XalanDOMString	m_versionPropertyString;
+	const XalanDOMString	m_vendorPropertyString;
+	const XalanDOMString	m_vendorURLPropertyString;
+	const XalanDOMString	m_vendorString;
+	const XalanDOMString	m_vendorURLString;
 };
 
 

@@ -1668,7 +1668,16 @@ private:
 
 	static const XalanDOMString		s_emptyString;
 
-    // Not implemented...
+	static const XalanDOMString&	s_stylesheetNodeName;
+	static const XalanDOMString&	s_typeString;
+	static const XalanDOMString&	s_hrefString;
+	static const XalanDOMString&	s_piTokenizerString;
+	static const XalanDOMString&	s_typeValueString1;
+	static const XalanDOMString&	s_typeValueString2;
+	static const XalanDOMString&	s_typeValueString3;
+	static const XalanDOMString&	s_typeValueString4;
+
+	// Not implemented...
     XSLTEngineImpl(const XSLTEngineImpl&);
 
     XSLTEngineImpl&

@@ -403,7 +403,7 @@ AVT::getPrefix(const XalanDOMChar*	theName)
 {
 	if (startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true)
 	{
-		return substring(theName, DOMServices::s_XMLNamespaceWithSeparatorLength);
+		return XalanDOMString(theName, DOMServices::s_XMLNamespaceWithSeparatorLength);
 	}
 	else
 	{

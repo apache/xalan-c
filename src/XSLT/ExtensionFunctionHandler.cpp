@@ -186,13 +186,13 @@ ExtensionFunctionHandler::startupComponent()
 	{
 		try 
 		{
-			XalanDOMString	cname = m_scriptSrcURL;
+			XalanDOMString	cname(m_scriptSrcURL);
 
 			bool isClass = false;
 
 			if (startsWith(m_scriptSrcURL, "class:")) 
 			{
-				cname = substring(m_scriptSrcURL, 6);
+				substring(m_scriptSrcURL, cname, 6);
 
 				isClass = true;
 			}

@@ -74,7 +74,13 @@
 
 
 FunctionSystemProperty::FunctionSystemProperty() :
-	Function()
+	Function(),
+	m_xsltNamespaceURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform")),
+	m_versionPropertyString(XALAN_STATIC_UCODE_STRING("version")),
+	m_vendorPropertyString(XALAN_STATIC_UCODE_STRING("vendor")),
+	m_vendorURLPropertyString(XALAN_STATIC_UCODE_STRING("vendor-url")),
+	m_vendorString(XALAN_STATIC_UCODE_STRING("Apache Software Foundation")),
+	m_vendorURLString(XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan-c"))
 {
 }
 
@@ -107,34 +113,38 @@ FunctionSystemProperty::execute(
 
 	if(indexOfNSSep < fullNameLength)
 	{
-		const XalanDOMString	prefix = substring(fullName, 0, indexOfNSSep);
+		XPathExecutionContext::GetAndReleaseCachedString	guard(executionContext);
 
-		const XalanDOMString* const		nspace = executionContext.getNamespaceForPrefix(prefix);
+		XalanDOMString&		theBuffer = guard.get();
+
+		substring(fullName, theBuffer, 0, indexOfNSSep);
+
+		const XalanDOMString* const		nspace = executionContext.getNamespaceForPrefix(theBuffer);
 
 		if (nspace != 0)
 		{
-			const XalanDOMString	propName = substring(fullName, indexOfNSSep + 1);
+			substring(fullName, theBuffer, indexOfNSSep + 1);
 
-			if(startsWith(*nspace, XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform")))
+			if(startsWith(*nspace, m_xsltNamespaceURI))
 			{
-				if(equals(propName, XALAN_STATIC_UCODE_STRING("version")))
+				if(equals(theBuffer, m_versionPropertyString))
 				{
 					numberResult = 1.0;
 
 					fNumberResult = true;
 				}
-				else if(equals(propName, XALAN_STATIC_UCODE_STRING("vendor")))
+				else if(equals(theBuffer, m_vendorPropertyString))
 				{
-					result = XALAN_STATIC_UCODE_STRING("Apache Software Foundation");
+					result = m_vendorString;
 				}
-				else if(equals(propName, XALAN_STATIC_UCODE_STRING("vendor-url")))
+				else if(equals(theBuffer, m_vendorURLPropertyString))
 				{
-					result = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan-c");
+					result = m_vendorURLString;
 				}
 				else
 				{
 					executionContext.error(
-						"XSL Property not supported: " + fullName,
+						"Unknown property in system-property()",
 						context,
 						locator);
 				}

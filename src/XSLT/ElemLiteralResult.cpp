@@ -107,40 +107,41 @@ ElemLiteralResult::ElemLiteralResult(
 
 	m_avts.reserve(nAttrs);
 
+	XalanDOMString	theBuffer;
+
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
 		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		bool								needToProcess = true;
 		const XalanDOMString::size_type		indexOfNSSep = indexOf(aname, XalanUnicode::charColon);
+		const XalanDOMString::size_type		len = length(aname);
 
-		XalanDOMString				prefix;
-
-		if(indexOfNSSep < length(aname))
+		if(indexOfNSSep < len)
 		{
-			prefix = substring(aname, 0, indexOfNSSep);
+			substring(aname, theBuffer, 0, indexOfNSSep);
 
-			if(!equals(prefix, DOMServices::s_XMLNamespace))
+			if(!equals(theBuffer, DOMServices::s_XMLNamespace))
 			{
 				const XalanDOMString* const		ns =
-						getNamespaceForPrefixInternal(prefix);
+						getNamespaceForPrefixInternal(theBuffer);
 
 				if(ns == 0)
 				{
 					constructionContext.error(
-						"Cannot resolve namespace prefix: " + prefix,
+						"Cannot resolve namespace prefix",
 						0,
 						this);
 				}
 				else if(equals(*ns, stylesheetTree.getXSLTNamespaceURI()))
 				{
-					const XalanDOMString localName = substring(aname, indexOfNSSep + 1);
+					theBuffer.assign(aname + indexOfNSSep + 1, len - (indexOfNSSep + 1));
 
-					if(processPrefixControl(constructionContext, stylesheetTree, localName, atts.getValue(i)) == true)
+					if(processPrefixControl(constructionContext, stylesheetTree, theBuffer, atts.getValue(i)) == true)
 					{
 						needToProcess = false;
 					}
-					else if (equals(localName, Constants::ATTRNAME_VERSION) == true)
+					else if (equals(theBuffer, Constants::ATTRNAME_VERSION) == true)
 					{
 						const XalanDOMChar*	const	value = atts.getValue(i);
 
@@ -223,7 +224,7 @@ ElemLiteralResult::postConstruction(
 
 		if (theColonIndex != length(theName))
 		{
-			m_namespacesHandler.addActivePrefix(substring(theName, 0, theColonIndex));
+			m_namespacesHandler.addActivePrefix(XalanDOMString(theName, 0, theColonIndex));
 		}
 	}
 
@@ -382,7 +383,7 @@ ElemLiteralResult::isAttrOK(
 
 		if(indexOfNSSep < length(attrName))
 		{
-			const XalanDOMString	prefix = substring(attrName, 0, indexOfNSSep);
+			const XalanDOMString	prefix(attrName, indexOfNSSep);
 
 			const XalanDOMString* const		ns = getStylesheet().getNamespaceForPrefixFromStack(prefix);
 

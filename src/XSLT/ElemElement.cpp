@@ -207,7 +207,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 
 		if (haveNamespace == true)
 		{
-			prefix = substring(elemName, 0, indexOfNSSep);
+			substring(elemName, prefix, 0, indexOfNSSep);
 
 			const XalanDOMString* const		theNamespace =
 				executionContext.getResultNamespaceForPrefix(prefix);
@@ -232,7 +232,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 					{
 						hasUnresolvedPrefix = true;
 
-						elemName = substring(elemName, indexOfNSSep + 1);
+						elemName.erase(0, indexOfNSSep + 1);
 					}
 					else
 					{

@@ -346,7 +346,7 @@ XObjectResultTreeFragProxyText::substringData(
 			unsigned int	offset,
 			unsigned int	count) const
 {
-	return substring(m_value.str(), offset, count);
+	return m_value.str().substr(offset, count);
 }
 
 

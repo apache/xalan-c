@@ -301,6 +301,8 @@ Stylesheet::pushNamespaces(const AttributeList&		atts)
 
 	NamespaceVectorType 	namespaces;
 
+	XalanDOMString			prefix;
+
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
@@ -310,9 +312,16 @@ Stylesheet::pushNamespaces(const AttributeList&		atts)
 
 		if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix) 
 		{
-			const XalanDOMString	p = isPrefix ? substring(aname, 6) : XalanDOMString();
+			if (isPrefix == false)
+			{
+				prefix.clear();
+			}
+			else
+			{
+				substring(aname, prefix, DOMServices::s_XMLNamespaceWithSeparatorLength);
+			}
 
-			namespaces.push_back(NameSpace(p, XalanDOMString(value)));
+			namespaces.push_back(NameSpace(prefix, XalanDOMString(value)));
 		}
 	}
 
@@ -480,7 +489,7 @@ Stylesheet::isAttrOK(
 
 		if(indexOfNSSep < length(attrName))
 		{
-			const XalanDOMString	prefix = substring(attrName, 0, indexOfNSSep);
+			const XalanDOMString	prefix(attrName, indexOfNSSep);
 			const XalanDOMString*	ns = getNamespaceForPrefixFromStack(prefix);
 
 			attrOK = ns != 0 && !::isEmpty(*ns) && !equals(*ns, constructionContext.getXSLTNamespaceURI());
@@ -503,12 +512,14 @@ Stylesheet::getNamespaceFromStack(const XalanDOMChar* 	nodeName) const
 
 	const XalanDOMString::size_type		indexOfNSSep = indexOf(nodeName, XalanUnicode::charColon);
 
-	const XalanDOMString	prefix =
-		indexOfNSSep < length(nodeName) ?
-				substring(nodeName, 0, indexOfNSSep) :
-				XalanDOMString();
-
-	return getNamespaceForPrefixFromStack(prefix);
+	if (indexOfNSSep == length(nodeName))
+	{
+		return getNamespaceForPrefixFromStack(s_emptyString);
+	}
+	else
+	{
+		return getNamespaceForPrefixFromStack(XalanDOMString(nodeName, indexOfNSSep));
+	}
 }
 
 

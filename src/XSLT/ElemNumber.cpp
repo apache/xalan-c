@@ -1664,7 +1664,7 @@ ElemNumber::NumberFormatStringTokenizer::nextToken()
 		}
 	}
 
-	return substring(*m_string, start, m_currentPosition);
+	return XalanDOMString(*m_string, start, m_currentPosition);
 }
 
 

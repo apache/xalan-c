@@ -222,7 +222,7 @@ XalanQNameByValue::initialize(
 	}
 	else if(indexOfNSSep < length(qname))
 	{
-		const XalanDOMString		prefix = substring(qname, 0, indexOfNSSep);
+		const XalanDOMString	prefix(qname, indexOfNSSep);
 
 		if(::equals(prefix, DOMServices::s_XMLNamespace))
 			return;
@@ -239,7 +239,7 @@ XalanQNameByValue::initialize(
 			m_namespace = *theNamespace;
 		}
 
-		m_localpart =  substring(qname, indexOfNSSep + 1);
+		m_localpart.assign(qname + indexOfNSSep + 1);
 	}
 	else
 	{
@@ -275,7 +275,7 @@ XalanQNameByValue::resolvePrefix(
 	}
 	else
 	{
-		const XalanDOMString	prefix = substring(qname, 0, indexOfNSSep);
+		const XalanDOMString	prefix(qname, 0, indexOfNSSep);
 
 		if(::equals(prefix, DOMServices::s_XMLString))
 		{
@@ -314,6 +314,6 @@ XalanQNameByValue::resolvePrefix(
 				locator);
 		}
 
-		m_localpart = substring(qname, indexOfNSSep + 1);
+		m_localpart.assign(qname, indexOfNSSep + 1, theLength - (indexOfNSSep + 1));
 	}
 }

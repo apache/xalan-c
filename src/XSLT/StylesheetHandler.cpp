@@ -370,11 +370,16 @@ StylesheetHandler::startElement(
 		const XalanDOMString::size_type		nameLength = length(name);
 		const XalanDOMString::size_type		index = indexOf(name, XalanUnicode::charColon);
 
-		const XalanDOMString	localName = index == nameLength ? XalanDOMString(name) : substring(name, index + 1);
-
-		if(length(ns) == 0 && nameLength != length(localName))
+		if(length(ns) == 0 && index < nameLength)
 		{
 			error("Could not resolve prefix.", locator);
+		}
+
+		XalanDOMString	localName(name, nameLength);
+
+		if (index < nameLength)
+		{
+			localName.erase(0, index + 1);
 		}
 
 		ElemTemplateElement* elem = 0;

@@ -96,20 +96,33 @@ FunctionFunctionAvailable::execute(
 	const XalanDOMString::size_type		nameLength = length(fullName);
 	const XalanDOMString::size_type		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
 
-	const XalanDOMString	prefix = indexOfNSSep < nameLength ? substring(fullName, 0, indexOfNSSep) : XalanDOMString();
+	XPathExecutionContext::GetAndReleaseCachedString	guard(executionContext);
+
+	XalanDOMString&		theBuffer = guard.get();
+
+	if (indexOfNSSep < nameLength)
+	{
+		substring(fullName, theBuffer, 0, indexOfNSSep);
+	}
 
 	const XalanDOMString*	theNamespace =
-			executionContext.getNamespaceForPrefix(prefix);
+			executionContext.getNamespaceForPrefix(theBuffer);
 
 	if (theNamespace == 0)
 	{
 		theNamespace = &s_emptyString;
 	}
 
-	const XalanDOMString	functionName =
-			indexOfNSSep == nameLength ? fullName : substring(fullName, indexOfNSSep + 1);
+	if (indexOfNSSep == nameLength)
+	{
+		return executionContext.getXObjectFactory().createBoolean(executionContext.functionAvailable(*theNamespace, fullName));
+	}
+	else
+	{
+		substring(fullName, theBuffer, indexOfNSSep + 1);
 
-	return executionContext.getXObjectFactory().createBoolean(executionContext.functionAvailable(*theNamespace, functionName));
+		return executionContext.getXObjectFactory().createBoolean(executionContext.functionAvailable(*theNamespace, theBuffer));
+	}
 }
 
 
