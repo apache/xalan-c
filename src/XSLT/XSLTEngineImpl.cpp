@@ -1402,10 +1402,10 @@ XSLTEngineImpl::startDocument()
 	assert(getFormatterListener() != 0);
 	assert(m_executionContext != 0);
 
-	m_resultNamespacesStack.pushContext();
-
 	if (getHasPendingStartDocument() == false)
 	{
+		m_resultNamespacesStack.pushContext();
+
 		setHasPendingStartDocument(true);
 
 		setMustFlushPendingStartDocument(false);
@@ -1449,6 +1449,8 @@ XSLTEngineImpl::endDocument()
 	}
 
 	m_resultNamespacesStack.popContext();
+
+	assert(m_resultNamespacesStack.size() == 0);
 }
 
 
@@ -1956,6 +1958,8 @@ XSLTEngineImpl::cloneToResultTree(
 
 	case XalanNode::ELEMENT_NODE:
 		{
+			startElement(c_wstr(DOMServices::getNameOfNode(node)));
+
 			if(shouldCloneAttributes == true)
 			{
 				copyAttributesToAttList(&node,
@@ -1967,11 +1971,8 @@ XSLTEngineImpl::cloneToResultTree(
 #endif
 										getPendingAttributesImpl());
 
-				copyNamespaceAttributes(node,
-										false);
+				copyNamespaceAttributes(node);
 			}
-
-			startElement(c_wstr(DOMServices::getNameOfNode(node)));
 		}
 		break;
 
@@ -2240,64 +2241,60 @@ XSLTEngineImpl::getResultPrefixForNamespace(const XalanDOMString&	theNamespace) 
 
 
 void
-XSLTEngineImpl::copyNamespaceAttributes(
-			const XalanNode&	src,
-			bool				/* srcIsStylesheetTree */) 
+XSLTEngineImpl::addResultNamespace(
+			const XalanNode&	theNode,
+			AttributeListImpl&	thePendingAttributes)
+{
+	assert(theNode.getNodeType() == XalanNode::ATTRIBUTE_NODE);
+
+	const XalanDOMString& 	aname = theNode.getNodeName();
+
+	const bool	isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
+
+	if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix) 
+	{
+		const XalanDOMString 	prefix = isPrefix == true ?
+			substring(aname, DOMServices::s_XMLNamespaceWithSeparatorLength) : XalanDOMString();
+
+		const XalanDOMString& 	desturi = getResultNamespaceForPrefix(prefix);
+		const XalanDOMString&	srcURI = theNode.getNodeValue();
+
+		if(equals(srcURI, desturi) == false)
+		{
+			addResultAttribute(thePendingAttributes, aname, srcURI);
+		}
+	}
+}
+
+
+
+void
+XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&	src) 
 {
 	int type;
 
 	const XalanNode*	parent = &src;
 
-	while (parent != 0
-		   && ((type = parent->getNodeType()) == XalanNode::ELEMENT_NODE
-			   || type == XalanNode::ENTITY_REFERENCE_NODE)) 
+	while (parent != 0 &&
+		   (type = parent->getNodeType()) == XalanNode::ELEMENT_NODE) 
 	{
-		if (type == XalanNode::ELEMENT_NODE) 
-		{
-			const XalanNamedNodeMap* const	nnm =
+		const XalanNamedNodeMap* const	nnm =
 				parent->getAttributes();
-			assert(nnm != 0);
+		assert(nnm != 0);
 
-			const unsigned int	nAttrs = nnm->getLength();
+		const unsigned int	nAttrs = nnm->getLength();
 
-			assert(m_outputContextStack.size() > 0);
+		assert(m_outputContextStack.size() > 0);
 
-			AttributeListImpl&	thePendingAttributes =
+		AttributeListImpl&	thePendingAttributes =
 				getPendingAttributesImpl();
 
-			for (unsigned int i = 0;  i < nAttrs; i++) 
-			{
-				const XalanNode* const	attr = nnm->item(i);
+		for (unsigned int i = 0;  i < nAttrs; i++) 
+		{
+			const XalanNode* const	attr = nnm->item(i);
+			assert(attr != 0);
 
-				const XalanDOMString& 	aname = attr->getNodeName();
-
-				const bool				isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
-
-				if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix) 
-				{
-					const XalanDOMString 	prefix = isPrefix ? substring(aname, 6) : XalanDOMString();
-					const XalanDOMString& 	desturi = getResultNamespaceForPrefix(prefix);
-					const XalanDOMString&	srcURI = attr->getNodeValue();
-					/*
-					@@ JMD: Not used anymore in java ...
-					const bool			isXSLNS =
-						srcIsStylesheetTree && equalsIgnoreCase(srcURI, s_XSLNameSpaceURL)
-						|| 0 != m_stylesheetRoot->lookupExtensionNSHandler(srcURI)
-						|| srcIsStylesheetTree && equalsIgnoreCase(srcURI, s_XSLT4JNameSpaceURL);
-
-					if(startsWith(srcURI, XALAN_STATIC_UCODE_STRING("quote:")))
-					{
-						srcURI = substring(srcURI, 6);
-					}
-
-					if(!equalsIgnoreCase(srcURI, desturi) && !isXSLNS)
-					*/
-					if(!equalsIgnoreCase(srcURI, desturi))
-					{
-						addResultAttribute(thePendingAttributes, aname, srcURI);
-					}
-				}
-			}
+			addResultNamespace(*attr, thePendingAttributes);
 		}
 
 		parent = parent->getParentNode();

@@ -899,12 +899,9 @@ public:
 	 * Copy XMLNS: attributes in if not already in scope.
 	 *
 	 * @param src				  source node
-	 * @param srcIsStylesheetTree true if source node is a stylesheet tree
 	 */
 	void
-	copyNamespaceAttributes(
-			const XalanNode&	src,
-			bool				srcIsStylesheetTree);
+	copyNamespaceAttributes(const XalanNode&	src);
 
 	/**
 	 * Evaluate an xpath string and return the result.
@@ -1473,6 +1470,11 @@ private:
 	bool
 	pendingAttributesHasDefaultNS() const; 
 
+	void
+	addResultNamespace(
+			const XalanNode&	theNode,
+			AttributeListImpl&	thePendingAttributes);
+
   /**
    * The top of this stack should contain the currently processed
    * stylesheet SAX locator object.
@@ -1572,12 +1574,6 @@ private:
 	 */
 	mutable unsigned long	m_uniqueNSValue;	// 0
   
-	/**
-	 * Translate CSS attributes and put them in a style tag.
-	 * @deprecated
-	 */
-	void
-	translateCSSAttrsToStyleAttr(AttributeListImpl&		attList);
 
 	/**
 	 * Get an XLocator provider keyed by node.	This gets the association
