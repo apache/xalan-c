@@ -2066,9 +2066,8 @@ SimpleNodeLocator::NodeTester::testText(
 			const XalanNode& 		context,
 			XalanNode::NodeType		nodeType) const
 {
-	if ((XalanNode::CDATA_SECTION_NODE == nodeType ||
-		 XalanNode::TEXT_NODE == nodeType) &&
-			m_executionContext.shouldStripSourceNode(context) == false)
+	if ((XalanNode::CDATA_SECTION_NODE == nodeType || XalanNode::TEXT_NODE == nodeType) &&
+		 shouldStripSourceNode(context) == false)
 	{
 		return XPath::eMatchScoreNodeTest;
 	}
@@ -2122,12 +2121,8 @@ SimpleNodeLocator::NodeTester::testNode(
 			const XalanNode& 		context,
 			XalanNode::NodeType		nodeType) const
 {
-	if (nodeType != XalanNode::CDATA_SECTION_NODE &&
-		nodeType != XalanNode::TEXT_NODE)
-	{
-		return XPath::eMatchScoreNodeTest;
-	}
-	else if (shouldStripSourceNode(context) == false)
+	if ((nodeType != XalanNode::CDATA_SECTION_NODE && nodeType != XalanNode::TEXT_NODE) ||
+		shouldStripSourceNode(context) == false)
 	{
 		return XPath::eMatchScoreNodeTest;
 	}
