@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.13  2000/09/21 16:54:07  auriemma
+# Clean up.
+#
 # Revision 1.12  2000/09/20 18:21:21  auriemma
 # Fixed problem on Linux.
 #
@@ -383,11 +386,7 @@ $(SAMPLES_DIR)/XPathWrapper/XPathWrapper: ${ALL_OBJECTS_DIR}/XPathWrapper.o ${AL
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XPathWrapper/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<	
 
-ifeq ($(PLATFORM), AIX)
-lib:	prepare templates compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
-else
 lib:	prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
-endif
 
 $(THISLIB)$(VER)$(SHLIBSUFFIX): $(ALL_OBJECTS)
 	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS) $^ -o $@ 
