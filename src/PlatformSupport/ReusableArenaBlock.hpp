@@ -185,7 +185,7 @@ public:
 	{
 		assert(ownsObject(theObject) == true);
 
-		m_destroyFunction(*theObject);
+		this->m_destroyFunction(*theObject);
 
 		addToFreeList(theObject);
 	}
@@ -237,7 +237,7 @@ private:
 		else
 		{
 			const size_type		theOffset =
-					getBlockOffset(theObject);
+					this->getBlockOffset(theObject);
 
 			return m_freeList.isSet(theOffset);
 		}
@@ -254,7 +254,7 @@ private:
 	addToFreeList(const ObjectType*		theObject)
 	{
 		const size_type		theOffset =
-				getBlockOffset(theObject);
+				this->getBlockOffset(theObject);
 
 		m_freeList.set(theOffset);
 
@@ -272,7 +272,7 @@ private:
 	removeFromFreeList(const ObjectType*	theObject)
 	{
 		const size_type		theOffset =
-				getBlockOffset(theObject);
+				this->getBlockOffset(theObject);
 
 		m_freeList.clear(theOffset);
 
