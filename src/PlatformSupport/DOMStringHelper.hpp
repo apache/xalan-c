@@ -1134,10 +1134,11 @@ trim(const XalanDOMString&	theString);
 inline void
 clear(XalanDOMString&	theString)
 {
-	if (length(theString) > 0)
-	{
-		theString = DOMString();
-	}
+#if defined(XALAN_OLD_STYLE_CASTS)
+	theString = (DOM_NullPtr)0;
+#else
+	theString = static_cast<DOM_NullPtr*>(0);
+#endif
 }
 
 
