@@ -59,7 +59,6 @@
 #if !defined(FILEUTILITY_HEADER_GUARD_1357924680)
 #define FILEUTILITY_HEADER_GUARD_1357924680
 
-
 #include<string>
 #include<stdio.h>
 #include <time.h>
@@ -70,14 +69,28 @@
 #include <iostream>
 #endif
 
-#include <util/XercesDefs.hpp>
-#include <XSLT/XSLTInputSource.hpp>
+// XERCES HEADERS ... 
+//	Are included in HarnessInit.hpp
+
+// XALAN HEADERS...
+#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
+#include <PlatformSupport/XalanFileOutputStream.hpp>
+#include <PlatformSupport/DirectoryEnumerator.hpp>
+
+#include <XPath/XObjectFactoryDefault.hpp>
+#include <XPath/XPathFactoryDefault.hpp>
+
+#include <XMLSupport/FormatterToXML.hpp>
+#include <XMLSupport/FormatterTreeWalker.hpp>
+
 #include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
 #include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 #include <XalanSourceTree/XalanSourceTreeDocument.hpp>
 
-using namespace std;
+#include <XalanTransformer/XalanCompiledStylesheetDefault.hpp>
+#include <XalanTransformer/XalanTransformer.hpp>
 
+using namespace std;
 
 
 /**
@@ -92,7 +105,7 @@ using namespace std;
 #define HARNESS_API __declspec(dllimport)
 #endif
 
-// Misc typedefs and const definitions
+// Misc typedefs and Global variables.
 // These structures hold vectors of directory names and file names.
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanDOMString>		FileNameVectorType;
@@ -100,10 +113,11 @@ using namespace std;
 	typedef std::vector<XalanDOMString>	FileNameVectorType;
 #endif
 
-	const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
-	const XalanDOMString	XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
-	const XalanDOMString	XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
-	const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
+// Basic Global variables used by many tests.
+const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
+const XalanDOMString	XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
+const XalanDOMString	XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
+const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
 
 // This class is exported from the Harness.dll
 class HARNESS_API FileUtility 
@@ -165,6 +179,39 @@ public:
 	* @returns a XalanDOMString.
 	*/
 	XalanDOMString FileUtility::getXercesVersion();
+
+	/**
+	* Utility method used to compare the results. It inturn
+	* call domCompare.  
+	* @returns Void.
+	*/
+	void
+	FileUtility::compareResults(const XalanDOMString& theOutputFile, 
+								const XalanCompiledStylesheet* compiledSS, 
+								XalanSourceTreeDocument* dom,
+								XalanDOMString fileName,
+								const XSLTInputSource& goldInputSource);
+	/** 
+	* Simplified version of above.
+	*/
+	void
+	FileUtility::compareSerializedResults(const XSLTInputSource& transformResult,
+								const XSLTInputSource& goldInputSource,
+								XalanDOMString fileName, const char* testCase);
+	/**
+	* Utility method used to create a FormatterToXML FormatterListener.
+	* This is required to DOM comparisions. 
+	* @returns a pointer to a FormatterListener.
+	*/
+	FormatterListener* 
+	FileUtility::getXMLFormatter(bool	shouldWriteXMLHeader,
+				bool					stripCData,
+				bool					escapeCData,
+				PrintWriter&			resultWriter,
+				int						indentAmount,
+				const XalanDOMString&	mimeEncoding,
+				const StylesheetRoot*	stylesheet);
+
 
 	/** 
 	* Utility methods used to perform a DOM Compare

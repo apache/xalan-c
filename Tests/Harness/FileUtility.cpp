@@ -30,25 +30,12 @@
 #include <crtdbg.h>
 #endif
 
-//#include <Include/PlatformDefinitions.hpp>
+// XERCES HEADERS...
+//	Are included by HarnessInit.hpp
 
-#include <framework/URLInputSource.hpp>
-#include <util/PlatformUtils.hpp>
-#include <util/XercesDefs.hpp>
+// XALAN HEADERS...
+//	Are included by FileUtility.hpp
 
-#include <XalanDOM/XalanNode.hpp>
-#include <XalanDOM/XalanDocument.hpp>
-#include <XalanDOM/XalanElement.hpp>
-#include <XalanDOM/XalanNodeList.hpp>
-
-#include <XalanSourceTree/FormatterToSourceTree.hpp>
-
-#include <PlatformSupport/DoubleSupport.hpp>
-#include <PlatformSupport/DirectoryEnumerator.hpp>
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/XalanUnicode.hpp>
-#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
-#include <PlatformSupport/XalanStdOutputStream.hpp>
 #include "FileUtility.hpp"
 
 bool diffElement(const XalanNode& gold, const XalanNode& doc, const XalanDOMString& fileName);
@@ -213,14 +200,133 @@ XalanDOMString FileUtility::GenerateUniqRunid()
 
 }
 
-/*	This routine get Xerces Version number. 
+//	This routine gets Xerces Version number. It's used to put the Xerces Version
+//	into the output xml results file as an attribute of 'PerfData' element.
 //	Inputs: None
 //				
-*/
+
 XalanDOMString FileUtility::getXercesVersion()
 {
 
 	return(XalanDOMString(gXercesFullVersionStr));
+
+}
+
+/*	This routine creates a FormatterToXML FormatterListener. This is used to format
+//	the output DOM so a comparision can be done with the expected GOLD file. 
+//	Inputs: None
+//				
+*/
+
+
+FormatterListener* 
+FileUtility::getXMLFormatter(bool		shouldWriteXMLHeader,
+				bool					stripCData,
+				bool					escapeCData,
+				PrintWriter&			resultWriter,
+				int						indentAmount,
+				const XalanDOMString&	mimeEncoding,
+				const StylesheetRoot*	stylesheet)
+{
+	FormatterListener*	formatter = 0;
+
+		XalanDOMString	version;
+		bool			outputIndent= 0;
+		XalanDOMString	mediatype;
+		XalanDOMString	doctypeSystem;
+		XalanDOMString	doctypePublic;
+		XalanDOMString	standalone;
+
+		if (stylesheet != 0)
+		{
+			version = stylesheet->m_version;
+
+			mediatype = stylesheet->m_mediatype;
+			doctypeSystem = stylesheet->getOutputDoctypeSystem();
+			doctypePublic = stylesheet->getOutputDoctypePublic();
+			standalone = stylesheet->m_standalone;
+			outputIndent = stylesheet->m_indentResult;
+		}
+
+		FormatterToXML* const	fToXML =
+			new FormatterToXML(
+					resultWriter,
+					version,
+					outputIndent,
+					indentAmount,
+					mimeEncoding,
+					mediatype,
+					doctypeSystem,
+					doctypePublic,
+					true,	// xmlDecl
+					standalone);
+
+//		fToXML->setShouldWriteXMLHeader(shouldWriteXMLHeader);
+//		fToXML->setStripCData(stripCData);
+//		fToXML->setEscapeCData(escapeCData);
+
+		formatter = fToXML;
+		return formatter;
+}
+
+/*	This routine compares the results of a transform with the gold file.
+//	It in turn call the domCompare routine to do the actual comparision. 
+//	Inputs: 
+//		gold - Dom tree for the expected results
+//		doc  - Dom tree created during transformation
+//		filename - Current filename
+//		
+//	Returns: 
+//		Void
+//		
+*/
+void
+FileUtility::compareResults(const XalanDOMString& theOutputFile, 
+			   const XalanCompiledStylesheet* compiledSS, 
+			   XalanSourceTreeDocument* dom,
+			   XalanDOMString fileName,
+			   const XSLTInputSource& goldInputSource)
+{
+	const XalanDOMString mimeEncoding("whatever");
+	XalanFileOutputStream myOutput(theOutputFile);
+	XalanOutputStreamPrintWriter myResultWriter(myOutput);
+	FormatterListener* theFormatter = getXMLFormatter(true,true,true,
+															myResultWriter,0,
+															mimeEncoding,
+															compiledSS->getStylesheetRoot());
+
+	FormatterTreeWalker theTreeWalker(*theFormatter);
+	theTreeWalker.traverse(dom);
+	delete theFormatter;
+
+
+	XalanSourceTreeDOMSupport domSupport;
+	XalanSourceTreeParserLiaison parserLiaison(domSupport);
+	domSupport.setParserLiaison(&parserLiaison);
+	
+	XalanDocument* goldDom = parserLiaison.parseXMLStream(goldInputSource);
+	if ( domCompare(*goldDom, *dom, fileName) )
+	{
+		cout << endl << "Passed: " << c_str(TranscodeToLocalCodePage(fileName));
+	}
+
+}
+
+void
+FileUtility::compareSerializedResults(const XSLTInputSource& transformResult,
+									const XSLTInputSource& goldInputSource,
+									XalanDOMString fileName, const char* testCase)
+{
+	XalanSourceTreeDOMSupport domSupport;
+	XalanSourceTreeParserLiaison parserLiaison(domSupport);
+	domSupport.setParserLiaison(&parserLiaison);
+	
+	XalanDocument* goldDom = parserLiaison.parseXMLStream(goldInputSource);
+	XalanDocument* transformDom = parserLiaison.parseXMLStream(transformResult);
+	if ( domCompare(*goldDom, *transformDom, fileName) )
+	{
+		cout << endl << "Passed: " << testCase;
+	}
 
 }
 
@@ -245,17 +351,6 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc,  const Xala
 
 	const XalanDOMString&	docNodeValue  = doc.getNodeValue();
 	const XalanDOMString&	goldNodeValue = gold.getNodeValue();
-
-
-	//const XalanDOMString&  docNsUri  = doc.getNamespaceURI();
-	//const XalanDOMString&  goldNsUri = gold.getNamespaceURI();
-
-	//const XalanDOMString&  docPrefix = doc.getPrefix();
-	//const XalanDOMString&  goldPrefix = gold.getPrefix();
-
-	//const XalanDOMString& docLName = doc.getLocalName();
-	//const XalanDOMString& goldLName = gold.getLocalName();
-
 
 
 	if (goldNodeType != docNodeType)
@@ -288,7 +383,29 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc,  const Xala
 		{
 			reportDOMError(fileName, docNodeName, "Error: Text node mismatch. Expected: ");
 			cout << c_str(TranscodeToLocalCodePage(goldNodeValue));
+			cout << c_str(TranscodeToLocalCodePage(docNodeValue));
 			return false;
+		}
+
+		// Need to process textnode siblings.  Note that text nodes do not have child nodes.
+		const XalanNode	*goldNextNode;
+		const XalanNode	*domNextNode;
+		goldNextNode = gold.getNextSibling();
+		domNextNode = doc.getNextSibling();
+
+		if (0 != goldNextNode)
+		{
+			if (0 != domNextNode)
+			{
+				if ( ! domCompare(*goldNextNode, *domNextNode, fileName) )
+					return false;
+			}
+			else
+			{
+				reportDOMError(fileName, docNodeName, "Error: Element missing SiblingNode. Expected: ");
+				cout << c_str(TranscodeToLocalCodePage(goldNextNode->getNodeName()));
+				return false;
+			}
 		}
 
 		break;
@@ -482,9 +599,9 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc, const Xala
 
 /*	This routine compares two attribute nodes. 
 //	Inputs: 
-//		gold - Dom tree for the expected results
-//		doc  - Dom tree created during transformation
-//		filename - Current filenam
+//		gAttr - attribute from Gold dom tree 
+//		dAttr - attribute from Dom tree created during transformation
+//		fileName - Current filenam
 //		
 //	Returns: 
 //		True or False
@@ -494,11 +611,10 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc, const Xala
 bool FileUtility::diffATTR(const XalanNode* gAttr, const XalanNode* dAttr, const XalanDOMString& fileName)
 {
 
-	const XalanDOMString& goldAttrName = gAttr->getNodeName();
 	const XalanDOMString& docAttrName  = dAttr->getNodeName();
 
-
 #if !defined(NDEBUG) && defined(_MSC_VER)
+	const XalanDOMString& goldAttrName = gAttr->getNodeName();
 	cout << "	Attribute is: " << c_str(TranscodeToLocalCodePage(goldAttrName)) << endl;
 #endif
 
@@ -528,23 +644,6 @@ bool FileUtility::diffATTR(const XalanNode* gAttr, const XalanNode* dAttr, const
 		return false;
 	}
 
-/*	I think that these are not necessary. I assume that they will be caught earlier when
-	checking for named attributes.
-
-	if (goldAttrPrefix != docAttrPrefix)
-	{
-		reportDOMError(fileName, "Error: Attribute Namespace Prefix mismatch. Expected: ",errAttrName);
-		cout << c_str(TranscodeToLocalCodePage(goldAttrPrefix));							
-		return false;
-	}
-
-	if (goldAttrLName != docAttrLName)
-	{
-		reportDOMError(fileName, "Error: Attribute LocalName mismatch. Expected: ",errAttrName);
-		cout << c_str(TranscodeToLocalCodePage(goldAttrLName)); 						
-		return false;
-	}
-*/
 	return true;
 }
 

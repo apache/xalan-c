@@ -64,11 +64,14 @@
 #include<stdio.h>
 #include <time.h>
 
+// Base header file.  Must be first... 
+// Not sure what this is refering to, but it was in front of the PlatformDefinitions include??
+// XERCES HEADERS...
+#include <Include/PlatformDefinitions.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/PlatformUtils.hpp>
-#include <FileUtility.hpp>
 
 using namespace std;
-
 
 
 /**
