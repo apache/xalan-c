@@ -87,7 +87,11 @@ ResultTreeFragBaseNodeRefListBaseProxy::~ResultTreeFragBaseNodeRefListBaseProxy(
 
 
 XalanNode*
+#if defined(NDEBUG)
+ResultTreeFragBaseNodeRefListBaseProxy::item(size_type) const
+#else
 ResultTreeFragBaseNodeRefListBaseProxy::item(size_type	index) const
+#endif
 {
 	assert(index == 0);
 
