@@ -210,6 +210,7 @@ public:
 	static const XalanDOMString	ELEMNAME_EXTENSION_STRING;
 	static const XalanDOMString	ELEMNAME_FALLBACK_STRING;
 	static const XalanDOMString	ELEMNAME_FOREACH_STRING;
+	static const XalanDOMString	ELEMNAME_HTML_STRING;
 	static const XalanDOMString	ELEMNAME_IF_STRING;
 	static const XalanDOMString	ELEMNAME_IMPORT_STRING;
 	static const XalanDOMString	ELEMNAME_INCLUDE_STRING;
@@ -300,6 +301,7 @@ public:
 	static const XalanDOMString	ATTRNAME_SELECT;
 	static const XalanDOMString	ATTRNAME_SEQUENCESRC;
 	static const XalanDOMString	ATTRNAME_STYLE;
+	static const XalanDOMString	ATTRNAME_TERMINATE;
 	static const XalanDOMString	ATTRNAME_TEST;
 	static const XalanDOMString	ATTRNAME_TOSTRING;
 	static const XalanDOMString	ATTRNAME_TYPE;

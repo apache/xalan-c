@@ -134,6 +134,7 @@ const XalanDOMString		Constants::ATTRNAME_SELECT(XALAN_STATIC_UCODE_STRING("sele
 const XalanDOMString		Constants::ATTRNAME_SEQUENCESRC(XALAN_STATIC_UCODE_STRING("sequence-src"));
 const XalanDOMString		Constants::ATTRNAME_STYLE(XALAN_STATIC_UCODE_STRING("style"));
 const XalanDOMString		Constants::ATTRNAME_STYLESHEET_PREFIX(XALAN_STATIC_UCODE_STRING("stylesheet-prefix"));
+const XalanDOMString		Constants::ATTRNAME_TERMINATE(XALAN_STATIC_UCODE_STRING("terminate"));
 const XalanDOMString		Constants::ATTRNAME_TEST(XALAN_STATIC_UCODE_STRING("test"));
 const XalanDOMString		Constants::ATTRNAME_TOSTRING(XALAN_STATIC_UCODE_STRING("to-string"));
 const XalanDOMString		Constants::ATTRNAME_TYPE(XALAN_STATIC_UCODE_STRING("type"));
@@ -145,6 +146,7 @@ const XalanDOMString		Constants::ATTRNAME_XMLNS(XALAN_STATIC_UCODE_STRING("xmlns
 const XalanDOMString		Constants::ATTRNAME_XMLNSDEF(XALAN_STATIC_UCODE_STRING("xmlns"));
 const XalanDOMString		Constants::ATTRNAME_XMLSPACE(XALAN_STATIC_UCODE_STRING("xml:space"));
 const XalanDOMString		Constants::ATTRNAME_ZERODIGIT(XALAN_STATIC_UCODE_STRING("zero-digit"));
+
 const XalanDOMString		Constants::ATTRVAL_ALPHABETIC(XALAN_STATIC_UCODE_STRING("alphabetic"));
 const XalanDOMString		Constants::ATTRVAL_ANCESTOR(XALAN_STATIC_UCODE_STRING("ancestor"));
 const XalanDOMString		Constants::ATTRVAL_ANY(XALAN_STATIC_UCODE_STRING("any"));
@@ -204,6 +206,7 @@ const XalanDOMString		Constants::ELEMNAME_EXTENSIONHANDLER_STRING(XALAN_STATIC_U
 const XalanDOMString		Constants::ELEMNAME_EXTENSION_STRING(XALAN_STATIC_UCODE_STRING("functions"));
 const XalanDOMString		Constants::ELEMNAME_FALLBACK_STRING(XALAN_STATIC_UCODE_STRING("fallback"));
 const XalanDOMString		Constants::ELEMNAME_FOREACH_STRING(XALAN_STATIC_UCODE_STRING("for-each"));
+const XalanDOMString		Constants::ELEMNAME_HTML_STRING(XALAN_STATIC_UCODE_STRING("HTML"));
 const XalanDOMString		Constants::ELEMNAME_IF_STRING(XALAN_STATIC_UCODE_STRING("if"));
 const XalanDOMString		Constants::ELEMNAME_IMPORT_STRING(XALAN_STATIC_UCODE_STRING("import"));
 const XalanDOMString		Constants::ELEMNAME_INCLUDE_STRING(XALAN_STATIC_UCODE_STRING("include"));
