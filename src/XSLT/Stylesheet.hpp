@@ -75,8 +75,8 @@
 
 
 #include <XalanDOM/XalanDocument.hpp>
+#include <XalanDOM/XalanEmptyNamedNodeMap.hpp>
 #include <XalanDOM/XalanNodeListSurrogate.hpp>
-
 
 
 #include <XPath/PrefixResolver.hpp>
@@ -1245,6 +1245,8 @@ private:
 	AttributeSetMapType 	m_attributeSets;
 
 	XalanNodeListSurrogate	m_surrogateChildren;
+
+	XalanEmptyNamedNodeMap	m_fakeAttributes;
 
 	ElemDecimalFormatVectorType		m_elemDecimalFormats;
 };

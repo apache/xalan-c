@@ -144,6 +144,7 @@ Stylesheet::Stylesheet(
 	m_patternTable(),
 	m_attributeSets(),
 	m_surrogateChildren(*this),
+	m_fakeAttributes(),
 	m_elemDecimalFormats()
 {
 	if (length(m_baseIdent) != 0)
@@ -1486,7 +1487,7 @@ Stylesheet::getNextSibling() const
 const XalanNamedNodeMap*
 Stylesheet::getAttributes() const
 {
-	return 0;
+	return &m_fakeAttributes;
 }
 
 
