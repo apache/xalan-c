@@ -30,6 +30,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "PerfT"=".\PerfT\PerfT.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "ThreadTest"=".\Threads\ThreadTest.dsp" - Package Owner=<4>
 
 Package=<5>
