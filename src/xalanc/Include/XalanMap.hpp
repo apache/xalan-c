@@ -171,6 +171,19 @@ struct XalanMapIterator : public BaseIterator
     {
     }
 
+    XalanMapIterator operator++(int)
+    {
+	 XalanMapIterator temp(*this);
+	 BaseIterator::operator++();
+	 return temp;
+    }
+
+    XalanMapIterator& operator++()
+    {
+	 BaseIterator::operator++();
+	 return *this;
+    }
+
     reference operator*() const
     {
         return *(BaseIterator::operator*());
