@@ -626,10 +626,6 @@ XalanSourceTreeDocument::createElementNode(
 	const unsigned int	theColonIndex = indexOf(qname, XalanUnicode::charColon);
 	const unsigned int	theLength = length(qname);
 
-	theColonIndex == theLength ?
-			m_stringPool.get(XalanDOMString()) :
-			m_stringPool.get(qname, theColonIndex);
-
 	XalanSourceTreeElement* const	theNewElement =
 		m_elementNSAllocator.create(
 				m_stringPool.get(qname),
