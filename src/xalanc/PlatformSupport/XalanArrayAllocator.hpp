@@ -167,7 +167,7 @@ private:
 		ListEntryType&	theNewEntry = m_list.back();
 
 		// Resize the vector to the appropriate size...
-		theNewEntry.second.resize(theBlockSize, VectorType::value_type(0));
+		theNewEntry.second.resize(theBlockSize, value_type());
 
 		// Set the number of free spaces accordingly...
 		theNewEntry.first = theBlockSize - theCount;
