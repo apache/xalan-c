@@ -132,8 +132,6 @@ public:
 		const ListIteratorType	theEnd = m_list.end();
 		ListIteratorType		theCurrent = m_list.begin();
 
-		ListEntryType*	theEntry = 0;
-
 		while(theCurrent != theEnd)
 		{
 			(*theCurrent).first = (*theCurrent).second.size();
