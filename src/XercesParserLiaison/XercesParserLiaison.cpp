@@ -130,6 +130,7 @@ XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
 
 
 XercesParserLiaison::XercesParserLiaison() :
+	m_documentNumber(0),
 	m_indent(-1),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),

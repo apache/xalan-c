@@ -139,6 +139,7 @@ XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(XalanSourceTreeDOMSup
 
 
 XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison() :
+	m_documentNumber(0),
 	m_xercesParserLiaison(),
 	m_documentMap(),
 	m_persistentDocumentMap(),
