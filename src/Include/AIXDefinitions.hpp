@@ -95,10 +95,9 @@
 #define XALAN_LSTRSUPPORT
 #define XALAN_AUTO_PTR_REQUIRES_DEFINITION
 
-
-//#define __STL_NO_SGI_IOSTREAMS
-//#include <stl/_config.h>
-//#define __STL_NO_AUTO_PTR_PROXY_ARROW_OPERATOR
+// STL Port Definitions
+#define __STL_NO_SGI_IOSTREAMS
+#include <stl/_config.h>
 
 
 #endif	// AIXDEFINITIONS_HEADER_GUARD_1357924680
