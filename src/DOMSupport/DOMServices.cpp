@@ -132,7 +132,7 @@ const XalanDOMString::size_type&	DOMServices::s_XMLNamespaceURILength = ::s_XMLN
 const XalanDOMString::size_type&	DOMServices::s_XMLNamespaceLength = ::s_XMLNamespaceLength;
 const XalanDOMString::size_type&	DOMServices::s_XMLNamespaceWithSeparatorLength = ::s_XMLNamespaceWithSeparatorLength;
 const XalanDOMString::size_type&	DOMServices::s_XMLNamespaceSeparatorStringLength = ::s_XMLNamespaceSeparatorStringLength;
-
+const XalanDOMString::size_type&	DOMServices::s_XMLNamespacePrefixURILength = ::s_XMLNamespacePrefixURILength;
 
 
 DOMServices::WhitespaceSupport::WhitespaceSupport()
