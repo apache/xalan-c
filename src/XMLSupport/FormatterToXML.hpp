@@ -97,7 +97,7 @@ public:
 
 	enum eDummy
 	{
-		eDefaultIndentAmount = 4
+		eDefaultIndentAmount = 0
 	};
 
 	/**
