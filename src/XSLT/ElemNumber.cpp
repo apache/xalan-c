@@ -67,6 +67,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/XalanAutoPtr.hpp>
 #include <PlatformSupport/XalanNumberFormat.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
@@ -150,7 +151,6 @@ ElemNumber::ElemNumber(
 		{
 			m_format_avt = new AVT(aname, atts.getType(i),
 						atts.getValue(i), *this, constructionContext);
-
 		}
 		else if(equals(aname, Constants::ATTRNAME_LANG))
 		{
@@ -380,7 +380,16 @@ ElemNumber::getCountString(
 				m_valueExpr->execute(sourceNode, *this, executionContext));
 		assert(countObj.get() != 0);
 
-		numberList.push_back(int(countObj->num()));
+		const double	theValue = countObj->num();
+
+		if (DoubleSupport::isNaN(theValue) == true)
+		{
+			numberList.push_back(0);
+		}
+		else
+		{
+			numberList.push_back(int(theValue));
+		}
 	}
 	else
 	{
@@ -716,7 +725,7 @@ ElemNumber::formatNumberList(
 		{
 			assert(!isLetterOrDigit(charAt((*it), 0)));
 			sepString = *it++;
-		}			
+		}
 		formattedNumber += getFormattedNumber(executionContext, contextNode,
 				numberType, numberWidth, theList[i]);
 		// All but the last one
