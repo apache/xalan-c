@@ -77,6 +77,10 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 	XObjectFactoryDefault			theXObjectFactory;
 	XPathFactoryDefault				theXPathFactory;
 
+	// The default is that documents are not thread-safe.  Set this to
+	// true so they are.
+	theParserLiaison.setThreadSafe(true);
+
 	// Create a processor...and output the start message.
 	XSLTEngineImpl	theProcessor(
 					theParserLiaison,
@@ -99,8 +103,8 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 						theXPathSupport,
 						theXObjectFactory);
 
-  // Set the XSLTInputSource...
-  XSLTInputSource xslIn(glbDocSource);
+	// Set the XSLTInputSource...
+	XSLTInputSource xslIn(glbDocSource);
 
 	// Generate the output file name for this thread.
     ostrstream theFormatterOut;

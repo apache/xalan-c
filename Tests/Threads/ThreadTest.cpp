@@ -63,6 +63,11 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 	// Create the support objects that are necessary for running the processor...
 	XercesDOMSupport				theDOMSupport;
 	XercesParserLiaison				theParserLiaison(theDOMSupport);
+
+	// The default is that documents are not thread-safe.  Set this to
+	// true so they are.
+	theParserLiaison.setThreadSafe(true);
+
 	XPathSupportDefault				theXPathSupport(theDOMSupport);
 	XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
 	XObjectFactoryDefault			theXObjectFactory;
