@@ -68,6 +68,7 @@
 
 #include "XalanSourceTreeDocument.hpp"
 #include "XalanSourceTreeElement.hpp"
+#include "XalanSourceTreeHelper.hpp"
 
 
 
@@ -80,6 +81,8 @@ XalanSourceTreeContentHandler::XalanSourceTreeContentHandler(
 	m_document(theDocument),
 	m_currentElement(0),
 	m_elementStack(),
+	m_lastChild(0),
+	m_lastChildStack(),
 	m_ownsDocument(false),
 	m_accumulateText(fAccumulateText),
 	m_textBuffer()
@@ -125,7 +128,12 @@ XalanSourceTreeContentHandler::characters(
 void
 XalanSourceTreeContentHandler::endDocument()
 {
+	// Pop off the dummy value that we pushed in 
+	// startDocument()...
+	m_elementStack.pop_back();
+
 	assert(m_elementStack.empty() == true);
+	assert(m_lastChildStack.empty() == true);
 
 	assert(isEmpty(m_textBuffer) == true);
 }
@@ -138,6 +146,7 @@ XalanSourceTreeContentHandler::endElement(
 			const XMLCh* const	/* localname */, 
 			const XMLCh* const	/* qname */)
 {
+	// Process any text that we may have accumulated...
 	processAccumulatedText();
 
 	assert(m_elementStack.empty() == false);
@@ -145,15 +154,66 @@ XalanSourceTreeContentHandler::endElement(
 	// Pop the element of the stack...
 	m_elementStack.pop_back();
 
+	assert(m_elementStack.empty() == false);
+
 	// Get the element from the back of the
-	// stack, if any...
-	if (m_elementStack.empty() == false)
+	// stack.
+	m_currentElement = m_elementStack.back();
+
+	assert(m_lastChildStack.empty() == false);
+
+	m_lastChild = m_lastChildStack.back();
+
+	// Pop the last child stack
+	m_lastChildStack.pop_back();
+}
+
+
+
+// A helper function to manage appending the new child.
+template <class ParentNodeType, class ChildNodeType>
+inline void
+doAppendChildNode(
+			ParentNodeType*		theParent,
+			XalanNode*&			theLastChild,
+			ChildNodeType		theNewChild)
+{
+	assert(theParent != 0);
+	assert(theNewChild != 0);
+
+	if (theLastChild == 0)
 	{
-		m_currentElement = m_elementStack.back();
+		theParent->appendChildNode(theNewChild);
 	}
 	else
 	{
-		m_currentElement = 0;
+		XalanSourceTreeHelper::appendSibling(theLastChild, theNewChild);
+	}
+
+	theLastChild = theNewChild;
+}
+
+
+
+// A helper function to manage appending the new child.
+template <class ChildNodeType>
+inline void
+doAppendChildNode(
+			XalanSourceTreeDocument*	theDocument,
+			XalanSourceTreeElement*		theCurrentElement,
+			XalanNode*&					theLastChild,
+			ChildNodeType				theNewChild)
+{
+	assert(theDocument != 0);
+	assert(theNewChild != 0);
+
+	if (theCurrentElement == 0)
+	{
+		doAppendChildNode(theDocument, theLastChild, theNewChild);
+	}
+	else
+	{
+		doAppendChildNode(theCurrentElement, theLastChild, theNewChild);
 	}
 }
 
@@ -167,9 +227,14 @@ XalanSourceTreeContentHandler::ignorableWhitespace(
 	// Ignore any whitespace reported before the document element has been parsed.
 	if (m_elementStack.empty() == false)
 	{
+		assert(m_currentElement != 0);
+
 		processAccumulatedText();
 
-		m_currentElement->appendChildNode(m_document->createTextIWSNode(chars, length, m_currentElement));
+		XalanSourceTreeText*	theNewTextNode =
+			m_document->createTextIWSNode(chars, length, m_currentElement);
+
+		doAppendChildNode(m_currentElement, m_lastChild, theNewTextNode);
 	}
 }
 
@@ -180,18 +245,16 @@ XalanSourceTreeContentHandler::processingInstruction(
 		const XMLCh* const	target,
 		const XMLCh* const	data)
 {
-	if (m_currentElement == 0)
-	{
-		assert(m_document != 0);
+	processAccumulatedText();
 
-		m_document->appendChildNode(m_document->createProcessingInstructionNode(target, data));
-	}
-	else
-	{
-		processAccumulatedText();
+	XalanSourceTreeProcessingInstruction* const		theNewPI =
+		m_document->createProcessingInstructionNode(target, data, m_currentElement);
 
-		m_currentElement->appendChildNode(m_document->createProcessingInstructionNode(target, data, m_currentElement));
-	}
+	doAppendChildNode(
+			m_document,
+			m_currentElement,
+			m_lastChild,
+			theNewPI);
 }
 
 
@@ -206,6 +269,7 @@ XalanSourceTreeContentHandler::setDocumentLocator(const Locator* const	/* locato
 void
 XalanSourceTreeContentHandler::startDocument()
 {
+	// Clean up and reset everything...
 	if (m_document == 0)
 	{
 		m_document = new XalanSourceTreeDocument;
@@ -217,9 +281,17 @@ XalanSourceTreeContentHandler::startDocument()
 		m_document = new XalanSourceTreeDocument;
 	}
 
+	m_currentElement = 0;
+
 	m_elementStack.clear();
 
 	m_elementStack.reserve(eDefaultStackSize);
+
+	m_lastChild = 0;
+
+	m_lastChildStack.clear();
+
+	m_lastChildStack.reserve(eDefaultStackSize);
 
 	if (m_accumulateText == true)
 	{
@@ -227,6 +299,10 @@ XalanSourceTreeContentHandler::startDocument()
 
 		reserve(m_textBuffer, eDefaultTextBufferSize);
 	}
+
+	// Push a dummy value for the current element, so we
+	// don't have to check for an empty stack in endElement().
+	m_elementStack.push_back(0);
 }
 
 
@@ -243,18 +319,19 @@ XalanSourceTreeContentHandler::startElement(
 	XalanSourceTreeElement* const	theNewElement =
 		createElement(uri, localname, qname, attrs, m_currentElement);
 
-	if (m_currentElement == 0)
-	{
-		m_document->appendChildNode(theNewElement);
-	}
-	else
-	{
-		m_currentElement->appendChildNode(theNewElement);
-	}
+	doAppendChildNode(
+			m_document,
+			m_currentElement,
+			m_lastChild,
+			theNewElement);
 
 	m_elementStack.push_back(theNewElement);
 
+	m_lastChildStack.push_back(m_lastChild);
+
 	m_currentElement = theNewElement;
+
+	m_lastChild = 0;
 }
 
 
@@ -325,14 +402,11 @@ XalanSourceTreeContentHandler::comment(
 	XalanSourceTreeComment* const	theNewComment =
 		m_document->createCommentNode(chars, length, m_currentElement);
 
-	if (m_currentElement != 0)
-	{
-		m_currentElement->appendChildNode(theNewComment);
-	}
-	else
-	{
-		m_document->appendChildNode(theNewComment);
-	}
+	doAppendChildNode(
+			m_document,
+			m_currentElement,
+			m_lastChild,
+			theNewComment);
 }
 
 
@@ -451,5 +525,10 @@ XalanSourceTreeContentHandler::doCharacters(
 			const XMLCh*	chars,
 			unsigned int	length)
 {
-	m_currentElement->appendChildNode(m_document->createTextNode(chars, length, m_currentElement));
+	assert(m_currentElement != 0);
+
+	XalanSourceTreeText*	theNewTextNode = 
+				m_document->createTextNode(chars, length, m_currentElement);
+
+	doAppendChildNode(m_currentElement, m_lastChild, theNewTextNode);
 }

@@ -78,6 +78,7 @@
 
 
 
+class XalanNode;
 class XalanSourceTreeDocument;
 class XalanSourceTreeElement;
 
@@ -90,8 +91,10 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanSourceTreeElement*> 		ElementStackType;
+	typedef vector<XalanNode*> 						LastChildStackType;
 #else
 	typedef std::vector<XalanSourceTreeElement*>	ElementStackType;
+	typedef std::vector<XalanNode*> 				LastChildStackType;
 #endif
 
 	enum { eDefaultStackSize = 50, eDefaultTextBufferSize = 100 };
@@ -250,16 +253,36 @@ private:
 
 
 	// Data members...
+
+	// The current document we're building...
 	XalanSourceTreeDocument*	m_document;
 
+	// The current element...
 	XalanSourceTreeElement* 	m_currentElement;
 
+	// Stack of elements...
 	ElementStackType			m_elementStack;
 
+	// The last child appended to the current element.  This is
+	// an important optimization, because XalanSourceTreeElement
+	// does not have a pointer to it's last child.  Without this,
+	// appending a child becomes a linear search.
+	XalanNode* 					m_lastChild;
+
+	// Stack of last children appended.  There is a ono-to-one
+	// correspondance to the entries in m_elementStack.
+	LastChildStackType			m_lastChildStack;
+
+	// If true, the instance owns the document and will delete
+	// it when necessary.
 	bool						m_ownsDocument;
 
+	// If true, the handler will accumulate text from calls to
+	// characters() until another event triggers the creation
+	// of the node.
 	const bool					m_accumulateText;
 
+	// A buffer to hold accumulated text.
 	XalanDOMString				m_textBuffer;
 };
 

@@ -80,16 +80,8 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeHelper
 {
 public:
 
-	friend class XalanSourceTreeComment;
-	friend class XalanSourceTreeDocument;
-	friend class XalanSourceTreeElement;
-	friend class XalanSourceTreeProcessingInstruction;
-	friend class XalanSourceTreeText;
-
 	static XalanNode*
 	getLastSibling(XalanNode*	theNode);
-
-private:
 
 	static void
 	appendSibling(
@@ -121,11 +113,34 @@ private:
 			XalanNode*&				theNextSiblingSlot,
 			XalanNode*				theNewSibling);
 
+	// New appendSibling interfaces...
+	static void
+	appendSibling(
+			XalanNode*					theLastSibling,
+			XalanSourceTreeComment*		theNewLastSibling);
+
+	static void
+	appendSibling(
+			XalanNode*					theLastSibling,
+			XalanSourceTreeElement*		theNewLastSibling);
+
+	static void
+	appendSibling(
+			XalanNode*								theLastSibling,
+			XalanSourceTreeProcessingInstruction*	theNewLastSibling);
+
+	static void
+	appendSibling(
+			XalanNode*				theLastSibling,
+			XalanSourceTreeText*	theNewLastSibling);
+
+
 	static void
 	appendSiblingToChild(
 			XalanSourceTreeElement*		theOwnerElement,
 			XalanNode*&					theChildSlot,
 			XalanSourceTreeComment*		theNewSibling);
+
 
 	static void
 	appendSiblingToChild(
