@@ -120,7 +120,7 @@
       a wide variety of platforms. &xslt4c; uses the ICU to extend support for encoding, number formatting, and sorting.</p> 
    <p>The ICU is available for download from <jump href="http://oss.software.ibm.com/icu/index.html">
       http://oss.software.ibm.com/icu/index.html</jump>.</p>
-   <p>This release of Xalan was tested with ICU 2.6.1.</p>
+   <p>This release of Xalan was tested with &icu-current;.</p>
    <p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p>
    <!--icuNote-->
 </a>
