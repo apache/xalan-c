@@ -358,7 +358,7 @@ public:
 	/** 
 	 * Called during compilation to process xsl:sort elements in
 	 * the stylesheet.
-	 * 
+	 *
 	 * @param constructionContext  The current construction context
 	 * @param theStylesheet The owning stylesheet
 	 * @param atts The list of attributes for the sort element
@@ -405,18 +405,20 @@ public:
 
 	/** 
 	 * Set the flag indicating construction of the element is completed.
+	 *
+	 * @param fValue  The value to set
 	 */
 	void
-	finishedConstruction()
+	setFinishedConstruction(bool	fValue)
 	{
-		setFlag(eFinishedConstruction, true);
+		setFlag(eFinishedConstruction, fValue);
 	}
 
 	/** 
 	 * Get the flag indicating construction of the element is completed.
 	 */
 	bool
-	finishedConstruction() const
+	getFinishedConstruction() const
 	{
 		return getFlag(eFinishedConstruction);
 	}

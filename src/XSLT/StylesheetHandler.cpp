@@ -1249,7 +1249,7 @@ StylesheetHandler::processInclude(
 
 
 void
-StylesheetHandler::endElement(const XMLCh* const /* name */)
+StylesheetHandler::endElement(const XMLCh* const	/* name */)
 {
 	processAccumulatedText();
 
@@ -1264,7 +1264,7 @@ StylesheetHandler::endElement(const XMLCh* const /* name */)
 	assert(m_lastPopped != 0);
 
 	m_elemStack.pop_back();
-	m_lastPopped->finishedConstruction();
+	m_lastPopped->setFinishedConstruction(true);
 
 	const int tok = m_lastPopped->getXSLToken();
 

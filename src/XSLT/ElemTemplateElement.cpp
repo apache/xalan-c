@@ -1216,7 +1216,7 @@ ElemTemplateElement::getNamespaceForPrefixInternal(const XalanDOMString&	prefix)
 
 	if (isEmpty(prefix) == false)
 	{
-		if(finishedConstruction() == true)
+		if(getFinishedConstruction() == true)
 		{
 			if (equals(prefix, DOMServices::s_XMLString) == true)
 			{
