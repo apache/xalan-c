@@ -93,7 +93,6 @@
 #include "StylesheetRoot.hpp"
 
 
-
 const Stylesheet::NamespaceVectorType	Stylesheet::s_emptyNamespace;
 
 
@@ -355,8 +354,6 @@ void Stylesheet::addTemplate(ElemTemplate *tmpl)
 		m_firstTemplate = tmpl;
 	else
 	{
-//	@@ JMD: was: can't make this an UnimplementedElement because there's not a
-//	setNextSibling method -- is this right ??
 		ElemTemplateElement*	next = m_firstTemplate;
 		while(0 != next)
 		{
@@ -890,7 +887,6 @@ Stylesheet::getNodeSetByKey(
 							XPathExecutionContext&	executionContext) const
 {
 	const NodeRefListBase *nl = 0;
-
 	if(0 != m_keyDeclarations.size())
 	{
 		bool foundDoc = false;
@@ -900,9 +896,12 @@ Stylesheet::getNodeSetByKey(
 			const KeyTable* const kt = m_key_tables[i];
 			if(doc == kt->getDocKey())
 			{
-				foundDoc = true;
 				nl = kt->getNodeSetByKey(name, ref);
-				break;
+				if (nl !=0 && nl->getLength() > 0)
+				{
+					foundDoc = true;
+					break;
+				}
 			}
 		}
 		if((0 == nl) && !foundDoc && m_needToBuildKeysTable)
@@ -981,12 +980,6 @@ Stylesheet::MatchPattern2::~MatchPattern2()
 void Stylesheet::addExtensionNamespace (const DOMString& uri, ExtensionNSHandler* nsh)
 {
 	m_extensionNamespaces.insert(std::make_pair(uri, nsh));
-	/*
-		@@ JMD: Not in XMLParserLiaisonDefault
-		XMLParserLiaisonDefault xld = 
-		((XMLParserLiaisonDefault)m_XSLProcessor->m_parserLiaison);
-		xld.addExtensionNamespace (uri, (ExtensionFunctionHandler) nsh);
-	 */
 }
 
 
