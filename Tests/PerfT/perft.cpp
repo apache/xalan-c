@@ -301,7 +301,7 @@ main(
 
 
 			// Defined basic constants for file manipulation and open results file
-			const XalanDOMString  resultFilePrefix(XalanDOMString("cpp"));
+			const XalanDOMString  resultFilePrefix("cpp");
 			const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
 
 
@@ -311,6 +311,7 @@ main(
 
 			// Create run entry that contains runid and number of iterations used for averages.
 			runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
+			runAttrs.insert(Hashtable::value_type(XalanDOMString("Xerces-Version "), futil.getXercesVersion()));
 			logFile.addMetricToAttrs("Iterations",iterCount, runAttrs);
 			logFile.logElement(10, "perfdata", runAttrs, "xxx");
 
