@@ -111,16 +111,6 @@ public:
 
 private:
 
-	void
-	doCloneNode(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode&						theNode) const;
-
-	void
-	doCloneNodeSet(
-			StylesheetExecutionContext&		executionContext,
-			const NodeRefListBase&			theNodeList) const;
-
 	const XPath*	m_selectPattern;
 
 	bool			m_isDot;

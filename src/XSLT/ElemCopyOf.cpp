@@ -138,95 +138,6 @@ ElemCopyOf::getElementName() const
 
 
 
-inline void
-ElemCopyOf::doCloneNode(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode&						theNode) const
-{
-#if 1
-	executionContext.cloneToResultTree(theNode, this);
-#else
-	XalanNode*				pos = &theNode;
-	XalanNode::NodeType		posNodeType = pos->getNodeType();
-
-	while(pos != 0)
-	{
-		if(posNodeType != XalanNode::ATTRIBUTE_NODE)
-		{
-			executionContext.flushPending();
-		}
-
-		executionContext.cloneToResultTree(
-						*pos,
-						posNodeType,
-						false,
-						false,
-						true,
-						this);
-
-		XalanNode*	nextNode = pos->getFirstChild();
-
-		while(nextNode == 0)
-		{
-			if(XalanNode::ELEMENT_NODE == posNodeType)
-			{
-				executionContext.endElement(c_wstr(pos->getNodeName()));
-			}
-
-			if(&theNode == pos)
-				break;
-
-			nextNode = pos->getNextSibling();
-
-			if(nextNode == 0)
-			{
-				pos = pos->getParentNode();
-				assert(pos != 0);
-
-				posNodeType = pos->getNodeType();
-
-				if(&theNode == pos)
-				{
-					if(XalanNode::ELEMENT_NODE == posNodeType)
-					{
-						executionContext.endElement(c_wstr(pos->getNodeName()));
-					}
-
-					nextNode = 0;
-					break;
-				}
-			}
-		}
-
-		pos = nextNode;
-
-		if (pos != 0)
-		{
-			posNodeType = pos->getNodeType();
-		}
-	}
-#endif
-}
-
-
-
-inline void
-ElemCopyOf::doCloneNodeSet(
-			StylesheetExecutionContext&		executionContext,
-			const NodeRefListBase&			theNodeList) const
-{
-	const NodeRefListBase::size_type	nChildren = theNodeList.getLength();
-
-	for(NodeRefListBase::size_type i = 0; i < nChildren; i++)
-	{
-		assert(theNodeList.item(i) != 0);
-
-		doCloneNode(executionContext, *theNodeList.item(i));
-	}
-}
-
-
-
 void
 ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 {
@@ -251,7 +162,7 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 					XObjectPtr()));
 		}
 
-		doCloneNode(executionContext, *sourceNode);
+		executionContext.cloneToResultTree(*sourceNode, this);
 	}
 	else
 	{
@@ -281,7 +192,17 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 			break;
 
 		case XObject::eTypeNodeSet:
-			doCloneNodeSet(executionContext, value->nodeset());
+			{
+				const NodeRefListBase&				theNodeList = value->nodeset();
+				const NodeRefListBase::size_type	nChildren = theNodeList.getLength();
+
+				for(NodeRefListBase::size_type i = 0; i < nChildren; i++)
+				{
+					assert(theNodeList.item(i) != 0);
+
+					executionContext.cloneToResultTree(*theNodeList.item(i), this);
+				}
+			}
 			break;
 
 		case XObject::eTypeResultTreeFrag:
