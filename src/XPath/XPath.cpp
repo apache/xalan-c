@@ -141,7 +141,6 @@ XPath::createXLocatorHandler() const
 const XObjectPtr
 XPath::execute(XPathExecutionContext&	executionContext) const
 {
-	assert(executionContext.getCurrentNode() != 0);
 	assert(executionContext.getPrefixResolver() != 0);
 
 	return executeMore(executionContext.getCurrentNode(), 0, executionContext);
@@ -155,8 +154,6 @@ XPath::execute(
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const
 {
-	assert(context != 0);
-
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
@@ -179,8 +176,6 @@ XPath::execute(
 			const NodeRefListBase&	contextNodeList,
 			XPathExecutionContext&	executionContext) const
 {
-	assert(context != 0);
-
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
 									executionContext,
@@ -197,8 +192,6 @@ XPath::executeMore(
 			int 					opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	assert(context != 0);
-
 	switch(m_expression.m_opMap[opPos])
 	{
 	case XPathExpression::eOP_XPATH:
@@ -350,6 +343,8 @@ XPath::doGetMatchScore(
 			XPathExecutionContext&	executionContext,
 			double&					score) const
 {
+	assert(context != 0);
+
 	int		opPos = 2;
 
 	XLocator* const		locator = m_defaultXLocator;
