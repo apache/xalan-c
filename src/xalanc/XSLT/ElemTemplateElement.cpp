@@ -231,13 +231,17 @@ ElemTemplateElement::executeChildren(StylesheetExecutionContext&	executionContex
 		{
 			assert(m_directTemplate != 0);
 
+            // This is temporary, until we can process stylesheet in such a way that we
+            // can detect variable references...
+		    const StylesheetExecutionContext::PushAndPopContextMarker   thePushAndPop(executionContext);
+
 			m_directTemplate->execute(executionContext);
 		}
 		else
 		{
 			if (hasParams() == true || hasVariables() == true)
 			{
-				StylesheetExecutionContext::PushAndPopElementFrame	thePushAndPop(executionContext, this);
+				const StylesheetExecutionContext::PushAndPopElementFrame	thePushAndPop(executionContext, this);
 
 				for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
 				{
