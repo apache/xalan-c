@@ -306,6 +306,11 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 								// default namespace in the statically-generated namespaces,
 								// and don't put out the one we've dynamically generated...
 								outputResultNamespaces(executionContext, hasUnresolvedPrefix, true);
+
+								if (executionContext.getResultNamespaceForPrefix(s_emptyString) != 0)
+								{
+									executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
+								}
 							}
 							else
 							{
