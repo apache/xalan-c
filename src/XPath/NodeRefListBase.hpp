@@ -91,7 +91,7 @@ public:
 	 *   index.
 	 */
 	virtual DOM_Node
-	item(int index) const = 0;
+	item(unsigned long	index) const = 0;
 
 	/**
 	 * The number of nodes in the list. The range of valid child node indices is 

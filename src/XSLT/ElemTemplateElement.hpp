@@ -420,7 +420,7 @@ public:
 #else
 	virtual ElemTemplateElement*
 #endif
-	item(int i);
+	item(unsigned long	i);
 
 	const Stylesheet&
 	getStylesheet() const

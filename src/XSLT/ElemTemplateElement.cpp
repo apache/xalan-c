@@ -980,7 +980,7 @@ int ElemTemplateElement::getLength()
  * @param index 
  * @return org.w3c.dom.Node
  */
-NodeImpl* ElemTemplateElement::item(int index) 
+NodeImpl* ElemTemplateElement::item(unsigned long	index) 
 {
     // It is assumed that the getChildNodes call synchronized
     // the children. Therefore, we can access the first child

@@ -142,7 +142,7 @@ NodeRefList::operator=(const NodeRefList&	theRHS)
 
 
 DOM_Node
-NodeRefList::item(int index) const
+NodeRefList::item(unsigned long		index) const
 {
 	assert(index < m_nodeList.size());
 

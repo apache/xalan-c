@@ -280,7 +280,7 @@ UnimplementedDocument::insertBefore(
 
 
 NodeImpl*
-UnimplementedDocument::item(int /* index */)
+UnimplementedDocument::item(unsigned long	/* index */)
 {
 	assert(false);
 

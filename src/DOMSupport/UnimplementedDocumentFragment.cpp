@@ -266,7 +266,7 @@ UnimplementedDocumentFragment::insertBefore(
 
 
 NodeImpl*
-UnimplementedDocumentFragment::item(int /* index */)
+UnimplementedDocumentFragment::item(unsigned long	/* index */)
 {
 	assert(false);
 

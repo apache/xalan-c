@@ -284,7 +284,7 @@ UnimplementedElement::insertBefore(
 
 
 NodeImpl*
-UnimplementedElement::item(int /* index */)
+UnimplementedElement::item(unsigned long	/* index */)
 {
 	assert(false);
 
