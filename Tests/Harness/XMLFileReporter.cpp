@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -96,7 +96,17 @@ const XalanDOMString	XMLFileReporter::LESS_THAN(L"<");
 const XalanDOMString	XMLFileReporter::GREATER_THAN(L">");
 const XalanDOMString	XMLFileReporter::EQUALS_QUOTE(L"=\"");
 const XalanDOMString	XMLFileReporter::SPACE(L" ");
+const XalanDOMString	XMLFileReporter::QUOTE(L"\"");
 const XalanDOMString	XMLFileReporter::QUOTE_SPACE(L"\" ");
+const XalanDOMString	XMLFileReporter::QUOTE_GREATER_THAN(L"\">");
+const XalanDOMString	XMLFileReporter::QUOTE_SOLIDUS_GREATER_THAN(L"\"/>");
+const XalanDOMString	XMLFileReporter::PASS(L"PASS");
+const XalanDOMString	XMLFileReporter::AMBG(L"AMBG");
+const XalanDOMString	XMLFileReporter::ERRR(L"ERRR");
+const XalanDOMString	XMLFileReporter::FAIL(L"FAIL");
+const XalanDOMString	XMLFileReporter::LESS_THAN_SOLIDUS(L"</");
+const XalanDOMString	XMLFileReporter::XML_HEADER("<?xml version=\"1.0\"?>");
+const XalanDOMString	XMLFileReporter::REASON_EQUALS_QUOTE("reason=\"");
 
 const XalanDOMString	XMLFileReporter::TESTCASEINIT_HDR(LESS_THAN + ELEM_TESTCASE + SPACE + ATTR_DESC + EQUALS_QUOTE);
 const XalanDOMString	XMLFileReporter::TESTCASECLOSE_HDR(LESS_THAN + ELEM_CASERESULT + SPACE + ATTR_DESC + EQUALS_QUOTE);
@@ -105,11 +115,11 @@ const XalanDOMString	XMLFileReporter::STATISTIC_HDR(LESS_THAN + ELEM_STATISTIC +
 const XalanDOMString	XMLFileReporter::ARBITRARY_HDR(LESS_THAN + ELEM_ARBITRARY + SPACE + ATTR_LEVEL + EQUALS_QUOTE);
 const XalanDOMString	XMLFileReporter::HASHTABLE_HDR(LESS_THAN + ELEM_HASHTABLE + SPACE + ATTR_LEVEL + EQUALS_QUOTE);
 const XalanDOMString	XMLFileReporter::HASHITEM_HDR(LESS_THAN + ELEM_HASHITEM + SPACE + ATTR_KEY + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::CHECKPASS_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + L"PASS" + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::CHECKAMBG_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + L"AMBG" + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::CHECKERRR_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + L"ERRR" + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::CHECKFAIL_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + L"FAIL" + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::CHECKFAIL_FTR(L"</" + ELEM_CHECKRESULT + GREATER_THAN);
+const XalanDOMString	XMLFileReporter::CHECKPASS_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + PASS + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::CHECKAMBG_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + AMBG + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::CHECKERRR_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + ERRR + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::CHECKFAIL_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + FAIL + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::CHECKFAIL_FTR(LESS_THAN_SOLIDUS + ELEM_CHECKRESULT + GREATER_THAN);
 
 
 XMLFileReporter::XMLFileReporter():
@@ -268,8 +278,8 @@ XMLFileReporter::logTestFileInit(const XalanDOMString& msg)
 {
     if (isReady())
     {
-        printToFile("<" + ELEM_TESTFILE 
-                              + " " + ATTR_DESC + "=\"" + escapestring(msg) + "\" " + ATTR_TIME + "=\"" + getDateTimeString() + "\">");
+        printToFile(LESS_THAN + ELEM_TESTFILE 
+                              + SPACE + ATTR_DESC + EQUALS_QUOTE + escapestring(msg) + QUOTE_SPACE + ATTR_TIME + EQUALS_QUOTE + getDateTimeString() + QUOTE_GREATER_THAN);
     }
 }
 
@@ -280,9 +290,9 @@ XMLFileReporter::logTestFileClose(const XalanDOMString& /* msg */, const XalanDO
 {
     if (isReady())
     {
-//        printToFile("<" + ELEM_FILERESULT 
-//                             + " " + ATTR_DESC + "=\"" + escapestring(msg) + "\" " + ATTR_RESULT + "=\"" + result + "\" " + ATTR_TIME + "=\"" + getDateTimeString() + "\"/>");
-        printToFile("</" + ELEM_TESTFILE + ">");
+//        printToFile(LESS_THAN + ELEM_FILERESULT 
+//                             + SPACE + ATTR_DESC + EQUALS_QUOTE + escapestring(msg) + QUOTE_SPACE + ATTR_RESULT + EQUALS_QUOTE + result + QUOTE_SPACE + ATTR_TIME + EQUALS_QUOTE + getDateTimeString() + QUOTE_SOLIDUS_GREATER_THAN);
+        printToFile(LESS_THAN_SOLIDUS + ELEM_TESTFILE + GREATER_THAN);
     }
     flush();
 }
@@ -294,7 +304,7 @@ XMLFileReporter::logTestCaseInit(const XalanDOMString& msg)
 {
     if (isReady())
     {
-        printToFile(TESTCASEINIT_HDR + escapestring(msg) + "\">");
+        printToFile(TESTCASEINIT_HDR + escapestring(msg) + QUOTE_GREATER_THAN);
     }
 }
 
@@ -305,8 +315,8 @@ XMLFileReporter::logTestCaseClose(const XalanDOMString& /* msg */, const XalanDO
 {
     if (isReady())
     {
-        //printToFile(TESTCASECLOSE_HDR + escapestring(msg) + "\" " + ATTR_RESULT + "=\"" + result + "\"/>");
-        printToFile("</" + ELEM_TESTCASE + ">");
+        //printToFile(TESTCASECLOSE_HDR + escapestring(msg) + QUOTE_SPACE + ATTR_RESULT + EQUALS_QUOTE + result + QUOTE_SOLIDUS_GREATER_THAN);
+        printToFile(LESS_THAN_SOLIDUS + ELEM_TESTCASE + GREATER_THAN);
     }
     if (getFlushOnCaseClose())
     {
@@ -324,9 +334,9 @@ XMLFileReporter::logMessage(int level, const XalanDOMString& msg)
 
     if (isReady())
     {
-        printToFile(MESSAGE_HDR + tmp + "\">");
+        printToFile(MESSAGE_HDR + tmp + QUOTE_GREATER_THAN);
         printToFile(escapestring(msg));
-        printToFile("</" + ELEM_MESSAGE +">");
+        printToFile(LESS_THAN_SOLIDUS + ELEM_MESSAGE + GREATER_THAN);
     }
 }
 
@@ -349,23 +359,23 @@ XMLFileReporter::logElementWAttrs(int /* level */, const XalanDOMString& element
 //		sprintf(tmp, "%d", level);
 //
 //		Took out this level attribute cuz we don't use it.
-//      printToFile("<" + element + " " + ATTR_LEVEL + "=\""
-//                      + tmp + "\"");
-        printToFile("<" + element + " ");
+//      printToFile(LESS_THAN + element + SPACE + ATTR_LEVEL + EQUALS_QUOTE
+//                      + tmp + QUOTE);
+        printToFile(LESS_THAN + element + SPACE);
 	
 		Hashtable::iterator theEnd = attrs.end();	
     
        	for(Hashtable::iterator i = attrs.begin(); i != theEnd; ++i)
         {            
 			
-            printToFile((*i).first + "=\""
-                                  + (*i).second + "\"");
+            printToFile((*i).first + EQUALS_QUOTE
+                                  + (*i).second + QUOTE);
         }
 
-        printToFile(XalanDOMString(">"));
+        printToFile(GREATER_THAN);
         if (msg.empty() != 0)
             printToFile(escapestring(msg));
-        printToFile("</" + element + ">");
+        printToFile(LESS_THAN_SOLIDUS + element + GREATER_THAN);
     }
 }
 
@@ -374,9 +384,7 @@ XMLFileReporter::logElement(const XalanDOMString& element, const XalanDOMString&
 {
 	if (isReady() && !element.empty() && !msg.empty())
     {
-		printToFile("<" + element + ">");
-		printToFile(escapestring(msg));
-		printToFile("</" + element + ">");
+		printToFile(LESS_THAN + element + GREATER_THAN + escapestring(msg) + LESS_THAN_SOLIDUS + element + GREATER_THAN);
     }
 }
 
@@ -388,15 +396,15 @@ XMLFileReporter::logStatistic (int level, long lVal, double dVal, const XalanDOM
 		char tmp[40];
 
 		sprintf(tmp, "%d", level);
-        printToFile(STATISTIC_HDR + tmp + "\" " + ATTR_DESC + "=\"" + escapestring(msg) + "\">");
+        printToFile(STATISTIC_HDR + tmp + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE + escapestring(msg) + QUOTE_GREATER_THAN);
 		
 		sprintf(tmp, "%ld", lVal);
-		printToFile("<" + ELEM_LONGVAL + ">" + tmp + "</" + ELEM_LONGVAL + ">");
+		printToFile(LESS_THAN + ELEM_LONGVAL + GREATER_THAN + tmp + LESS_THAN_SOLIDUS + ELEM_LONGVAL + GREATER_THAN);
 		
 		sprintf(tmp, "%f", dVal);
-        printToFile("<" + ELEM_DOUBLEVAL + ">" + tmp + "</" + ELEM_DOUBLEVAL + ">");
+        printToFile(LESS_THAN + ELEM_DOUBLEVAL + GREATER_THAN + tmp + LESS_THAN_SOLIDUS + ELEM_DOUBLEVAL + GREATER_THAN);
         
-		printToFile("</" + ELEM_STATISTIC + ">");
+		printToFile(LESS_THAN_SOLIDUS + ELEM_STATISTIC + GREATER_THAN);
 		
     }
 }
@@ -411,9 +419,9 @@ XMLFileReporter::logArbitraryMessage (int level, const XalanDOMString& msg)
 
     if (isReady())
     {            
-		printToFile(ARBITRARY_HDR + tmp + "\">");
+		printToFile(ARBITRARY_HDR + tmp + QUOTE_GREATER_THAN);
         printToFile(escapestring(msg));
-        printToFile("</" + ELEM_ARBITRARY +">");
+        printToFile(LESS_THAN_SOLIDUS + ELEM_ARBITRARY + GREATER_THAN);
     }
 }
 
@@ -422,11 +430,11 @@ void logHashtable (int level, Hashtable hash, XalanDOMString msg)
 {
     if (isReady())
     {
-        printToFile(HASHTABLE_HDR + level + "\" " + ATTR_DESC + "=\"" + msg + "\">");
+        printToFile(HASHTABLE_HDR + level + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE + msg + QUOTE_GREATER_THAN);
         if (hash == null)
         {
-            printToFile("<" + ELEM_HASHITEM + " " + ATTR_KEY + "=\"null\">");
-            printToFile("</" + ELEM_HASHITEM + ">");
+            printToFile(LESS_THAN + ELEM_HASHITEM + SPACE + ATTR_KEY + "=\"null\">");
+            printToFile(LESS_THAN_SOLIDUS + ELEM_HASHITEM + GREATER_THAN);
         }
         try
         {
@@ -435,16 +443,16 @@ void logHashtable (int level, Hashtable hash, XalanDOMString msg)
                 Object key = enum.nextElement();
                 // Ensure we'll have clean output by pre-fetching value before outputting anything
                 XalanDOMString value = hash.get(key).tostring();
-                printToFile(HASHITEM_HDR + key.tostring() + "\">");
+                printToFile(HASHITEM_HDR + key.tostring() + QUOTE_GREATER_THAN);
                 printToFile(value);
-                printToFile("</" + ELEM_HASHITEM + ">");
+                printToFile(LESS_THAN_SOLIDUS + ELEM_HASHITEM + GREATER_THAN);
             }
         } 
         catch (Exception e)
         {
             // No-op: should ensure we have clean output
         }
-        printToFile("</" + ELEM_HASHTABLE +">");
+        printToFile(LESS_THAN_SOLIDUS + ELEM_HASHTABLE + GREATER_THAN);
     }
 }
 */
@@ -456,7 +464,7 @@ XMLFileReporter::logCheckPass(const XalanDOMString& comment)
 {
     if (isReady())
     {
-        printToFile(CHECKPASS_HDR + escapestring(comment) + "\"/>");
+        printToFile(CHECKPASS_HDR + escapestring(comment) + QUOTE_SOLIDUS_GREATER_THAN);
     }
 }
 
@@ -466,7 +474,7 @@ XMLFileReporter::logCheckFail(const XalanDOMString& comment)
 {
     if (isReady())
     {
-        printToFile(CHECKFAIL_HDR + escapestring(comment) + "\"/>");
+        printToFile(CHECKFAIL_HDR + escapestring(comment) + QUOTE_SOLIDUS_GREATER_THAN);
 
     }
 }
@@ -477,9 +485,9 @@ XMLFileReporter::logCheckFail(const XalanDOMString& test, Hashtable actexp)
 {
     if (isReady())
     {
-        printToFile(CHECKFAIL_HDR + escapestring(test) + "\"");
+        printToFile(CHECKFAIL_HDR + escapestring(test) + QUOTE);
 
-		printToFile(XalanDOMString(">"));
+		printToFile(GREATER_THAN);
 		
 		Hashtable::iterator aeEnd = actexp.end();
        	for(Hashtable::iterator ii = actexp.begin(); ii != aeEnd; ++ii)
@@ -496,16 +504,16 @@ XMLFileReporter::logCheckFail(const XalanDOMString& test, Hashtable attrs, Hasht
 {
     if (isReady())
     {
-        printToFile(CHECKFAIL_HDR + escapestring(test) + "\"");
+        printToFile(CHECKFAIL_HDR + escapestring(test) + QUOTE);
 
 		Hashtable::iterator fdEnd = attrs.end();	
        	for(Hashtable::iterator i = attrs.begin(); i != fdEnd; ++i)
         {            
-            printToFile((*i).first + "=\""
-                                  + (*i).second + "\"");
+            printToFile((*i).first + EQUALS_QUOTE
+                                  + (*i).second + QUOTE);
         }
 
-		printToFile(XalanDOMString(">"));
+		printToFile(GREATER_THAN);
 		
 		Hashtable::iterator aeEnd = actexp.end();
        	for(Hashtable::iterator ii = actexp.begin(); ii != aeEnd; ++ii)
@@ -522,7 +530,7 @@ XMLFileReporter::logCheckAmbiguous(const XalanDOMString& comment)
 {
     if (isReady())
     {
-        printToFile(CHECKAMBG_HDR + escapestring(comment) + "\"/>");
+        printToFile(CHECKAMBG_HDR + escapestring(comment) + QUOTE_SOLIDUS_GREATER_THAN);
     }
 }
 
@@ -532,7 +540,7 @@ XMLFileReporter::logErrorResult(const XalanDOMString& test, const XalanDOMString
 {
     if (isReady())
     {
-        printToFile(CHECKFAIL_HDR + escapestring(test) + "\" " + XalanDOMString("reason=\"") + escapestring(reason)  + "\"/>");
+        printToFile(CHECKFAIL_HDR + escapestring(test) + QUOTE_SPACE + XalanDOMString(REASON_EQUALS_QUOTE) + escapestring(reason)  + QUOTE_SOLIDUS_GREATER_THAN);
 
     }
 }
@@ -543,7 +551,7 @@ XMLFileReporter::logCheckErr(const XalanDOMString& comment)
 {
     if (isReady())
     {
-        printToFile(CHECKERRR_HDR + escapestring(comment) + "\"/>");
+        printToFile(CHECKERRR_HDR + escapestring(comment) + QUOTE_SOLIDUS_GREATER_THAN);
     }
 }
 
@@ -659,10 +667,10 @@ XMLFileReporter::startResultsFile()
     if (isReady())
     {
         // Write out XML header and root test result element
-        printToFile(XalanDOMString("<?xml version=\"1.0\"?>"));
+        printToFile(XML_HEADER);
 
         // Note: this tag is closed in our .close() method, which the caller had better call!
-        printToFile("<" + ELEM_RESULTSFILE + " " + ATTR_FILENAME + "=\"" + m_fileName + "\">");
+        printToFile(LESS_THAN + ELEM_RESULTSFILE + SPACE + ATTR_FILENAME + EQUALS_QUOTE + m_fileName + QUOTE_GREATER_THAN);
 
         return true;
     }
@@ -683,7 +691,7 @@ XMLFileReporter::closeResultsFile()
 	}
 	else
     {            
-		printToFile("</" + ELEM_RESULTSFILE + ">");
+		printToFile(LESS_THAN_SOLIDUS + ELEM_RESULTSFILE + GREATER_THAN);
         return true;
     }
 }
@@ -698,7 +706,7 @@ XMLFileReporter::printToFile(const XalanDOMString&	output)
 	}
 	else
     {
-		CharVectorType	theResult(TranscodeToLocalCodePage(output));
+		const CharVectorType	theResult(TranscodeToLocalCodePage(output));
 
 		if(!theResult.size())
 		{

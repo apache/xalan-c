@@ -302,7 +302,7 @@ public:
 	void logCheckErr(const XalanDOMString& comment);
 
 	/**
-	* Escapes a XalanDOMString to remove < and > so it's valid XML.  
+	* Escapes a XalanDOMString to remove <, >, ', &, and " so it's valid XML.  
 	* <P>Stolen mostly from Xalan applet sample.</P>
 	* @param s XalanDOMString to escape.
 	* @return XalanDOMString that has been escaped.
@@ -361,7 +361,17 @@ private:
 	static const XalanDOMString	GREATER_THAN;
 	static const XalanDOMString	EQUALS_QUOTE;
 	static const XalanDOMString	SPACE;
+	static const XalanDOMString	QUOTE;
 	static const XalanDOMString	QUOTE_SPACE;
+	static const XalanDOMString QUOTE_GREATER_THAN;
+	static const XalanDOMString QUOTE_SOLIDUS_GREATER_THAN;
+	static const XalanDOMString	PASS;
+	static const XalanDOMString	AMBG;
+	static const XalanDOMString	ERRR;
+	static const XalanDOMString	FAIL;
+	static const XalanDOMString	LESS_THAN_SOLIDUS;
+	static const XalanDOMString	XML_HEADER;
+	static const XalanDOMString	REASON_EQUALS_QUOTE;
 
 	/** 
 	* Optimization: for heavy use methods, form pre-defined constants to save on XalanDOMString concatenation.  
