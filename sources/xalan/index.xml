@@ -103,7 +103,7 @@
         <td>Solaris 2.6</td>
         <td><resource-ref idref="xslt4c-Solaris-download"/>*<br/>
         [*Use GNU tar to untar; see <link idref="faq" anchor="gnutar">FAQs</link>]</td>
-        <td>[Workshop 4.2]</td>
+        <td>Sun Workshop 6 update 2</td>
       </tr>      
      </table>
   <p>Volunteers are more than welcome to help develop builds for other platforms!</p>

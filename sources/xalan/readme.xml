@@ -84,6 +84,7 @@
        <li>New XPath samples exploiting the XPathEvaluator C API and illustrating serialization of an XPath result set: <link idref="samples" anchor="simplexpathcapi">SimpleXPathCAPI</link> and <link idref="samples" anchor="serializenodeset">SerializeNodeSet</link></li>
        <li>A new <link idref="usagepatterns" anchor="xercesdomwrapperparsedsource">wrapper class</link> that lets you pass in a Xerces DOM as input for a transformation</li>
 <li>Bug fixes.</li>
+<li>Changed XPathException to XalanXPathException because of a clash with a new Xerces class of the same name.</li>
       </ul>
    </s3>  
      <anchor name="bugs"/>
