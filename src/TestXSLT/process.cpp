@@ -1068,7 +1068,7 @@ main(
 		else if (theParams.versionOnly == true)
 		{
 			cout << endl
-				 << "TestXSLT version 0.40.0 (Xalan C++ version 0.40.0)"
+				 << "TestXSLT version 1.0.0 (Xalan C++ version 1.0.0)"
 				 << endl;
 		}
 		else if (theParams.inFileName.size() == 0)
