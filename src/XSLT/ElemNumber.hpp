@@ -228,6 +228,7 @@ protected:
 	 * pattern.
 	 * @param patterns if non-0, count only nodes
 	 * that match this pattern, if 0 count all ancestors.
+	 * @param executionContext The current execution context.
 	 * @param node Count this node and it's ancestors.
 	 * @param stopAtFirstFound If true, only get the first matching ancestor
 	 * @param ancestors The ancestors that match the pattern.
@@ -333,11 +334,27 @@ protected:
 
 private:
 
-	bool
+	/**
+	 * Convert a long integer into roman numerals.
+	 * @param executionContext The current execution context.
+	 * @param contextNode The current context node.
+	 * @param val Value to convert.
+	 * @param prefixesAreOK true to enable prefix notation (e.g. 4 = "IV"), false to disable prefix notation (e.g. 4 = "IIII").
+	 * @param theResult The formatted Roman numeral string.
+	 */
+	void
+	long2roman(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						contextNode,
+			long							val,
+			bool							prefixesAreOK,
+			XalanDOMString&					theResult) const;
+
+	void
 	evaluateLetterValueAVT(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode* 						contextNode,
-			const XalanDOMString&			compareValue) const;
+			XalanDOMString&					value) const;
 
 	void
 	traditionalAlphaCount(

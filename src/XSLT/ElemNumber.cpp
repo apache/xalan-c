@@ -701,8 +701,8 @@ ElemNumber::getMatchingAncestors(
 		if(0 == countMatchPattern)
 			executionContext.error(
 				"Programmer error! countMatchPattern should never be 0!",
-				0,
-				this);
+				node,
+				getLocator());
 
 		if(countMatchPattern->getMatchScore(node, *this, executionContext) !=
 				XPath::eMatchScoreNone)
@@ -734,9 +734,16 @@ ElemNumber::getNumberFormatter(
 	XalanDOMString&				digitGroupSepValue = theGuard1.get();
 
 	if (0 != m_groupingSeparator_avt)
-		 m_groupingSeparator_avt->evaluate(digitGroupSepValue, contextNode,
+		m_groupingSeparator_avt->evaluate(digitGroupSepValue, contextNode,
 				 *this, executionContext);
 									 
+	if (length(digitGroupSepValue) != 1)
+	{
+		executionContext.error(
+			"The grouping-separator value must be one character in length",
+			contextNode,
+			getLocator());
+	}
 
 	GetAndReleaseCachedString	theGuard2(executionContext);
 
@@ -926,28 +933,23 @@ ElemNumber::formatNumberList(
 
 
 
-bool
+void
 ElemNumber::evaluateLetterValueAVT(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode* 						contextNode,
-			const XalanDOMString&			compareValue) const
+			XalanDOMString&					value) const
 {
 	if (m_lettervalue_avt == 0)
 	{
-		return false;
+		clear(value);
 	}
 	else
 	{
-		// A string to hold the result.
-		StylesheetExecutionContext::GetAndReleaseCachedString	letterVal(executionContext);
-
 		m_lettervalue_avt->evaluate(
-				letterVal.get(),
+				value,
 				contextNode,
 				*this,
 				executionContext);
-
-		return equals(compareValue, letterVal.get());
 	}
 }
 
@@ -1241,11 +1243,11 @@ ElemNumber::getFormattedNumber(
 			break;
 
 		case XalanUnicode::charLetter_I:
-			long2roman(listElement, true, theResult);
+			long2roman(executionContext, contextNode, listElement, true, theResult);
 			break;
 
 		case XalanUnicode::charLetter_i:
-			long2roman(listElement, true, theResult);
+			long2roman(executionContext, contextNode, listElement, true, theResult);
 
 			theResult = toLowerCaseASCII(theResult);
 			break;
@@ -1262,24 +1264,40 @@ ElemNumber::getFormattedNumber(
 		case 0x0430:
 			executionContext.error(
 				"Numbering format not supported yet",
-				0,
-				this);
+				contextNode,
+				getLocator());
 			break;
 
 		// Handle the special case of Greek letters for now
 		case elalphaNumberType:
-			if (evaluateLetterValueAVT(executionContext, contextNode, Constants::ATTRVAL_TRADITIONAL) == true)
 			{
-				NumberingResourceBundleMapType::const_iterator	i = s_resourceBundles.find(0x03B1);
+				// A string to hold the result.
+				StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
 
-				if (i != s_resourceBundles.end())
+				XalanDOMString&		letterVal = theGuard.get();
+
+				evaluateLetterValueAVT(executionContext, contextNode, letterVal);
+
+				if (equals(letterVal, Constants::ATTRVAL_TRADITIONAL) == true)
 				{
-					traditionalAlphaCount(listElement, (*i).second, theResult);
+					NumberingResourceBundleMapType::const_iterator	i = s_resourceBundles.find(0x03B1);
+
+					if (i != s_resourceBundles.end())
+					{
+						traditionalAlphaCount(listElement, (*i).second, theResult);
+					}
 				}
-			}
-			else
-			{
-				int2alphaCount(listElement, s_elalphaCountTable, theResult);
+				else if (equals(letterVal, Constants::ATTRVAL_ALPHABETIC) == true)
+				{
+					int2alphaCount(listElement, s_elalphaCountTable, theResult);
+				}
+				else
+				{
+					executionContext.error(
+						"The legal values for letter-value are 'alphabetic' and 'traditional'",
+						contextNode,
+						getLocator());
+				}
 			}
 			break;
 
@@ -1427,6 +1445,30 @@ ElemNumber::tradAlphaCount(
 {
 //	@@ JMD: We don't do languages yet, so this is just a placeholder
 	assert(false);
+}
+
+
+
+void
+ElemNumber::long2roman(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						contextNode,
+			long							val,
+			bool							prefixesAreOK,
+			XalanDOMString&					theResult) const
+{
+	if(val < 0)
+	{
+		executionContext.error(
+			"I and i can only format positive numbers",
+			contextNode,
+			getLocator());
+
+	}
+	else
+	{
+		long2roman(val, prefixesAreOK, theResult);
+	}
 }
 
 
