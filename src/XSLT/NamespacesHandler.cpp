@@ -218,7 +218,7 @@ addOrUpdateByPrefix(
 	if (theEntry == 0)
 	{
 		theVector.push_back(
-			VectorType::value_type(
+			value_type(
 				theConstructionContext.getPooledString(thePrefix),
 				theConstructionContext.getPooledString(theURI)));
 
@@ -247,7 +247,9 @@ findNamespace(
 			const VectorType&		theVector,
 			const XalanDOMString&	thePrefix)
 {
-	const typename VectorType::value_type* const	theEntry =
+	typedef typename VectorType::value_type		value_type;
+
+	const value_type* const		theEntry =
 		findByPrefix(theVector, thePrefix);
 
 	if (theEntry == 0)
