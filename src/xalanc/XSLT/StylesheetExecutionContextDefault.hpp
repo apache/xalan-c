@@ -484,7 +484,6 @@ public:
 	cloneToResultTree(
 			const XalanNode&		node,
 			XalanNode::NodeType		nodeType,
-			bool					isLiteral,
 			bool					overrideStrip,
 			bool					shouldCloneAttributes,
 			const LocatorType*		locator);
@@ -893,7 +892,7 @@ public:
 			const XalanDocument&	theDocument) const;
 
 	virtual bool
-	shouldStripSourceNode(const XalanNode&	node);
+	shouldStripSourceNode(const XalanText&	node);
 
 	virtual XalanDocument*
 	getSourceDocument(const XalanDOMString&		theURI) const;

@@ -1108,7 +1108,6 @@ public:
 	 *
 	 * @param node                  node to clone
 	 * @param nodeType				the type of the node
-	 * @param isLiteral             true if a literal element
 	 * @param overrideStrip         false if white space stripping should be done
 	 * @param shouldCloneAttributes true if attributes should be cloned
 	 * @param locator				The Locator, if any
@@ -1117,7 +1116,6 @@ public:
 	cloneToResultTree(
 			const XalanNode&		node,
 			XalanNode::NodeType		nodeType,
-			bool					isLiteral,
 			bool					overrideStrip,
 			bool					shouldCloneAttributes,
 			const LocatorType*		locator) = 0;
@@ -1883,7 +1881,7 @@ public:
 			const XalanDocument&	theDocument) const = 0;
 
 	virtual bool
-	shouldStripSourceNode(const XalanNode&	node) = 0;
+	shouldStripSourceNode(const XalanText&	node) = 0;
 
 	virtual XalanDocument*
 	getSourceDocument(const XalanDOMString&		theURI) const = 0;

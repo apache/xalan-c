@@ -2033,17 +2033,23 @@ XSLTEngineImpl::warnCopyTextNodesOnly(
 void
 XSLTEngineImpl::cloneToResultTree(
 			const XalanText&	node,
-			bool				isLiteral,
 			bool				overrideStrip)
 {
-	bool	stripWhiteSpace = false;
+#if 1
+	assert(m_executionContext != 0 && m_stylesheetRoot != 0);
+	assert(node.getParentNode() == 0 ||
+		   node.getParentNode()->getNodeType() != XalanNode::DOCUMENT_NODE);
 
-	// If stripWhiteSpace is false, then take this as an override and 
-	// just preserve the space, otherwise use the XSL whitespace rules.
-	if(!overrideStrip)
-	{
-		stripWhiteSpace = isLiteral ? true : false;
-	}
+    if (overrideStrip == true ||
+        shouldStripSourceNode(*m_executionContext, node) == false)
+    {
+	    const XalanDOMString&	data = node.getData();
+        assert(0 != length(data));
+
+	    characters(toCharArray(data), 0, length(data));
+    }
+#else
+	bool	stripWhiteSpace = false;
 
 	const bool	isIgnorableWhitespace = node.isIgnorableWhitespace();
 
@@ -2065,7 +2071,8 @@ XSLTEngineImpl::cloneToResultTree(
 				characters(toCharArray(data), 0, length(data));
 			}
 		}
-	}			
+	}
+#endif
 }
 
 
@@ -2110,7 +2117,6 @@ XSLTEngineImpl::cloneToResultTree(
 			cloneToResultTree(
 							*pos,
 							posNodeType,
-							false,
 							false,
 							true,
 							false,
@@ -2166,7 +2172,6 @@ void
 XSLTEngineImpl::cloneToResultTree(
 			const XalanNode&		node,
 			XalanNode::NodeType		nodeType,
-			bool					isLiteral,
 			bool					overrideStrip,
 			bool					shouldCloneAttributes,
 			bool					cloneTextNodesOnly,
@@ -2192,7 +2197,7 @@ XSLTEngineImpl::cloneToResultTree(
 				static_cast<const XalanText&>(node);
 #endif
 
-			cloneToResultTree(tx, isLiteral, overrideStrip);
+			cloneToResultTree(tx, overrideStrip);
 		}
 	}
 	else
@@ -2208,7 +2213,7 @@ XSLTEngineImpl::cloneToResultTree(
 					static_cast<const XalanText&>(node);
 	#endif
 
-				cloneToResultTree(tx, isLiteral, overrideStrip);
+				cloneToResultTree(tx, overrideStrip);
 			}
 			break;
 
@@ -2340,7 +2345,7 @@ XSLTEngineImpl::outputToResultTree(
 
 						XalanNode::NodeType		posNodeType = pos->getNodeType();
 
-						cloneToResultTree(*pos, posNodeType, false, false, false, false, locator);
+						cloneToResultTree(*pos, posNodeType, false, false, false, locator);
 
 						XalanNode*	nextNode = pos->getFirstChild();
 
@@ -2430,7 +2435,7 @@ XSLTEngineImpl::outputResultTreeFragment(
 			{
 				flushPending();
 
-				cloneToResultTree(*pos, posNodeType, false, false, true, false, locator);
+				cloneToResultTree(*pos, posNodeType, true, true, false, locator);
 
 				XalanNode*	nextNode = pos->getFirstChild();
 
@@ -2968,7 +2973,7 @@ XSLTEngineImpl::copyAttributesToAttList(
 bool
 XSLTEngineImpl::shouldStripSourceNode(
 			StylesheetExecutionContext&		executionContext,
-			const XalanNode&				textNode) const
+			const XalanText&				textNode) const
 {
 	if (m_hasStripOrPreserveSpace == false || m_stylesheetRoot == 0)
 	{
@@ -2976,40 +2981,19 @@ XSLTEngineImpl::shouldStripSourceNode(
 	}
 	else
 	{
-		bool	strip = false;
-
 		assert(m_stylesheetRoot->hasPreserveOrStripSpaceElements() == true);
+        assert(length(textNode.getData()) != 0);
 
-		const XalanNode::NodeType	type = textNode.getNodeType();
-
-		if(XalanNode::TEXT_NODE == type || XalanNode::CDATA_SECTION_NODE == type)
+        if(textNode.isIgnorableWhitespace() == false)
+        {
+            return false;
+        }
+        else
 		{
-			const XalanText& 	theTextNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-					(const XalanText&)textNode;
-#else
-					static_cast<const XalanText&>(textNode);
-#endif
-
-			if(!theTextNode.isIgnorableWhitespace())
-			{
-				const XalanDOMString&	data = theTextNode.getData();
-
-				if(0 == length(data))
-				{
-					strip = true;
-				}
-			}
-			else
-			{
-				strip =
-					m_stylesheetRoot->shouldStripSourceNode(
+			return m_stylesheetRoot->shouldStripSourceNode(
 							executionContext,
-							theTextNode);
-			}
+							textNode);
 		}
-
-		return strip;
 	}
 }
 

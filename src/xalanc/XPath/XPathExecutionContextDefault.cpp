@@ -453,7 +453,7 @@ XPathExecutionContextDefault::getUnparsedEntityURI(
 
 
 bool
-XPathExecutionContextDefault::shouldStripSourceNode(const XalanNode&	/* node */)
+XPathExecutionContextDefault::shouldStripSourceNode(const XalanText&	/* node */)
 {
 	return false;
 }

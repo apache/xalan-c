@@ -291,11 +291,6 @@ public:
 			const XalanDOMString&	key,
 			XObjectPtr				value);
 
-	virtual bool
-	shouldStripSourceNode(
-			StylesheetExecutionContext&		executionContext,
-			const XalanNode&				node) const;
-
 	virtual FormatterListener*
 	getFormatterListener() const;
 
@@ -668,6 +663,24 @@ public:
 			XalanDOMString::size_type	length);
 
 	/**
+	 * Tells, through the combination of the default-space attribute on
+	 * xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the xml:space
+	 * attribute, whether or not extra whitespace should be stripped from the
+	 * node.  Literal elements from template elements should <em>not</em> be
+	 * tested with this function.
+	 *
+	 * @param executionContext  current execution context
+	 * @param node text node from the source tree
+	 * @return true if the text node should be stripped of extra whitespace
+	 *
+	 * $$$ ToDo: This has no business being here in the engine...
+	 */
+	bool
+	shouldStripSourceNode(
+			StylesheetExecutionContext&		executionContext,
+			const XalanText&				node) const;
+
+	/**
 	 * Clone a node to the result tree
 	 *
 	 * @param node      node to clone
@@ -685,7 +698,6 @@ public:
 	 *
 	 * @param node					node to clone
 	 * @param nodeType				the type of the node
-	 * @param isLiteral 			true if a literal element
 	 * @param overrideStrip 		false if white space stripping should be done
 	 * @param shouldCloneAttributes true if attributes should be cloned
 	 * @param cloneTextNodesOnly    if true, only text nodes will be cloned
@@ -695,7 +707,6 @@ public:
 	cloneToResultTree(
 			const XalanNode& 		node,
 			XalanNode::NodeType		nodeType,
-			bool					isLiteral,
 			bool					overrideStrip,
 			bool					shouldCloneAttributes,
 			bool					cloneTextNodesOnly,
@@ -706,7 +717,7 @@ public:
 	*
 	* @param value the XObject to output
 	* @param outputTextNodesOnly if true, only text nodes will be copied
-	 * @param locator				the Locator for the event, if any.
+	* @param locator				the Locator for the event, if any.
 	*/
 	void
 	outputToResultTree(
@@ -1464,13 +1475,11 @@ private:
 	 * Clone a text node to the result tree
 	 *
 	 * @param node					node to clone
-	 * @param isLiteral 			true if a literal element
 	 * @param overrideStrip 		false if white space stripping should be done
 	 */
 	void
 	cloneToResultTree(
 			const XalanText&	node,
-			bool				isLiteral,
 			bool				overrideStrip);
 
 	/**

@@ -1026,6 +1026,173 @@ public:
 		m_locator = theLocator;
 	}
 
+	class NodeTester
+	{
+	public:
+
+		NodeTester(
+			const XPath&			xpath,
+			XPathExecutionContext&	executionContext,
+			OpCodeMapPositionType 	opPos,
+			OpCodeMapValueType 	    argLen,
+			OpCodeMapValueType 		stepType);
+
+		NodeTester();
+
+		NodeTester(
+            const XalanDOMString&   theNamespaceURI,
+            const XalanDOMString&   theLocalName,
+            eMatchScore&            theMatchScore);
+
+		eMatchScore
+		operator()(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+		{
+			assert(context.getNodeType() == nodeType);
+
+			return (this->*m_testFunction)(context, nodeType);
+		}
+
+		eMatchScore
+		operator()(const XalanNode&     context) const
+		{
+			return (this->*m_testFunction2)(context);
+		}
+
+	private:
+
+		typedef eMatchScore (NodeTester::*TestFunctionPtr)(const XalanNode&, XalanNode::NodeType) const;
+		typedef eMatchScore (NodeTester::*TestFunctionPtr2)(const XalanNode&) const;
+
+
+		eMatchScore
+		testComment(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testText(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testPI(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testPIName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testNode(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testRoot(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testAttributeNCName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testAttributeQName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testAttributeNamespaceOnly(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testAttributeTotallyWild(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testElementNCName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testElementQName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testElementNamespaceOnly(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testElementTotallyWild(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testElementNCName2(const XalanNode&     context) const;
+
+		eMatchScore
+		testElementQName2(const XalanNode& 		context) const;
+
+		eMatchScore
+		testElementNamespaceOnly2(const XalanNode&  context) const;
+
+		eMatchScore
+		testElementTotallyWild2(const XalanNode&    context) const;
+
+		eMatchScore
+		testNamespaceNCName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testNamespaceTotallyWild(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testDefault(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testDefault2(const XalanNode&   context) const;
+
+		bool
+		matchLocalName(const XalanNode&		context) const;
+
+		bool
+		matchNamespaceURI(const XalanNode&	context) const;
+
+		bool
+		matchLocalNameAndNamespaceURI(const XalanNode&	context) const;
+
+		bool
+		matchNamespace(const XalanNode&		context) const;
+
+		bool
+		shouldStripSourceNode(const XalanText&	context) const;
+
+		// Data members...
+		XPathExecutionContext*	m_executionContext;
+
+		const XalanDOMString*	m_targetNamespace;
+
+		const XalanDOMString*	m_targetLocalName;
+
+		TestFunctionPtr			m_testFunction;
+
+        TestFunctionPtr2        m_testFunction2;
+	};
+
 protected:
 
 	/**
@@ -2187,142 +2354,6 @@ private:
 			XalanNode& 				context, 
 			OpCodeMapPositionType 	opPos) const;
 
-	class NodeTester
-	{
-	public:
-
-		NodeTester(
-			const XPath&			xpath,
-			XPathExecutionContext&	executionContext,
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 	    argLen,
-			OpCodeMapValueType 		stepType);
-
-		eMatchScore
-		operator()(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
-		{
-			assert(context.getNodeType() == nodeType);
-
-			return (this->*m_testFunction)(context, nodeType);
-		}
-
-	private:
-
-		typedef eMatchScore (NodeTester::*TestFunctionPtr)(const XalanNode&, XalanNode::NodeType) const;
-
-
-		eMatchScore
-		testComment(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testText(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testPI(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testPIName(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testNode(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testRoot(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testAttributeNCName(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testAttributeQName(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testAttributeNamespaceOnly(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testAttributeTotallyWild(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testElementNCName(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testElementQName(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testElementNamespaceOnly(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testElementTotallyWild(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testNamespaceNCName(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testNamespaceTotallyWild(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		eMatchScore
-		testDefault(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const;
-
-		bool
-		matchLocalName(const XalanNode&		context) const;
-
-		bool
-		matchNamespaceURI(const XalanNode&	context) const;
-
-		bool
-		matchLocalNameAndNamespaceURI(const XalanNode&	context) const;
-
-		bool
-		matchNamespace(const XalanNode&		context) const;
-
-		bool
-		shouldStripSourceNode(const XalanNode&	context) const;
-
-		// Data members...
-		XPathExecutionContext&	m_executionContext;
-
-		const XalanDOMString*	m_targetNamespace;
-
-		const XalanDOMString*	m_targetLocalName;
-
-		TestFunctionPtr			m_testFunction;
-	};
-
 protected:
 
 	void
@@ -2469,6 +2500,7 @@ protected:
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
+#if !defined(NDEBUG)
 	eMatchScore
 	nodeTest(
 			XPathExecutionContext&	executionContext,
@@ -2477,6 +2509,7 @@ protected:
 			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 	    argLen,
 			OpCodeMapValueType 		stepType) const;
+#endif
 
 	OpCodeMapPositionType
 	predicates(

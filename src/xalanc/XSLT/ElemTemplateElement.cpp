@@ -658,9 +658,14 @@ ElemTemplateElement::transformChild(
 		{
 			switch(nodeType)
 			{
-			case XalanNode::CDATA_SECTION_NODE:
+		    case XalanNode::CDATA_SECTION_NODE:
 			case XalanNode::TEXT_NODE:
-				executionContext.cloneToResultTree(*child, nodeType, false, false, false, getLocator());
+				executionContext.cloneToResultTree(
+                    *child,
+                    XalanNode::TEXT_NODE,
+                    false,
+                    false,
+                    getLocator());
 				break;
 
 			case XalanNode::ATTRIBUTE_NODE:
@@ -688,8 +693,8 @@ ElemTemplateElement::transformChild(
 		{
 			if(0 != executionContext.getTraceListeners())
 			{
-				TracerEvent te(executionContext,							   
-								*theTemplate);
+				const TracerEvent   te(executionContext,							   
+								       *theTemplate);
 
 				executionContext.fireTraceEvent(te);
 			}

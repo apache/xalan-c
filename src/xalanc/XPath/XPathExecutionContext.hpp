@@ -632,7 +632,7 @@ public:
 	 * @return true if the text node should be stripped of extra whitespace
 	 */
 	virtual bool
-	shouldStripSourceNode(const XalanNode&	node) = 0;
+	shouldStripSourceNode(const XalanText&	node) = 0;
 
 	/**
 	 * Get the document associated with the given URI.

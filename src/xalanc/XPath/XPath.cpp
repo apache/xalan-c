@@ -4362,6 +4362,7 @@ XPath::findNodesOnUnknownAxis(
 
 
 
+#if !defined(NDEBUG)
 XPath::eMatchScore
 XPath::nodeTest(
 			XPathExecutionContext&	executionContext,
@@ -4391,7 +4392,11 @@ XPath::nodeTest(
 	case XPathExpression::eNODETYPE_TEXT:
 		if ((XalanNode::CDATA_SECTION_NODE == nodeType ||
 			 XalanNode::TEXT_NODE == nodeType) &&
-			executionContext.shouldStripSourceNode(*context) == false)
+#if defined(XALAN_OLD_STYLE_CASTS)
+			executionContext.shouldStripSourceNode((const XalanText&)*context) == false)
+#else
+			executionContext.shouldStripSourceNode(static_cast<const XalanText&>(*context)) == false)
+#endif			
 		{
 			  score = eMatchScoreNodeTest;
 		}
@@ -4433,7 +4438,11 @@ XPath::nodeTest(
 		if (nodeType == XalanNode::CDATA_SECTION_NODE ||
 			nodeType == XalanNode::TEXT_NODE)
 		{
-			if (executionContext.shouldStripSourceNode(*context) == false)
+#if defined(XALAN_OLD_STYLE_CASTS)
+			if (executionContext.shouldStripSourceNode((const XalanText&)*context) == false)
+#else
+			if (executionContext.shouldStripSourceNode(static_cast<const XalanText&>(*context)) == false)
+#endif
 			{
 				score = eMatchScoreNodeTest;
 			}
@@ -4640,6 +4649,7 @@ XPath::nodeTest(
 
 	return score;
 }
+#endif  // !defined(NDEBUG)
 
 
 
@@ -4764,10 +4774,11 @@ XPath::NodeTester::NodeTester(
 			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 	    argLen,
 			OpCodeMapValueType		stepType) :
-	m_executionContext(executionContext),
+	m_executionContext(&executionContext),
 	m_targetNamespace(0),
 	m_targetLocalName(0),
-	m_testFunction(0)
+	m_testFunction(0),
+    m_testFunction2(&NodeTester::testDefault2)
 {
 	const XPathExpression&	theExpression = xpath.getExpression();
 
@@ -4796,8 +4807,12 @@ XPath::NodeTester::NodeTester(
 		}
 		else
 		{
-
-			executionContext.error(XalanMessageLoader::getMessage(XalanMessages::ArgLengthNodeTestIsIncorrect_1Param, "processing-instruction()"), 0, xpath.getLocator());
+			executionContext.error(
+                XalanMessageLoader::getMessage(
+                    XalanMessages::ArgLengthNodeTestIsIncorrect_1Param,
+                    "processing-instruction()"),
+                    0,
+                    xpath.getLocator());
 		}
 		break;
 
@@ -4902,6 +4917,62 @@ XPath::NodeTester::NodeTester(
 
 
 
+XPath::NodeTester::NodeTester() :
+	m_executionContext(0),
+	m_targetNamespace(0),
+	m_targetLocalName(0),
+	m_testFunction(&NodeTester::testDefault),
+    m_testFunction2(&NodeTester::testDefault2)
+{
+}
+
+
+
+XPath::NodeTester::NodeTester(
+            const XalanDOMString&   theNamespaceURI,
+            const XalanDOMString&   theLocalName,
+            eMatchScore&            theMatchScore) :
+	m_executionContext(0),
+	m_targetNamespace(0),
+	m_targetLocalName(0),
+	m_testFunction(&NodeTester::testDefault),
+    m_testFunction2(0)
+{
+    if (theNamespaceURI.empty() == false)
+    {
+        m_targetNamespace = &theNamespaceURI;
+
+        if (theLocalName.empty() == true)
+        {
+            m_testFunction2 = &NodeTester::testElementNamespaceOnly2;
+
+            theMatchScore = eMatchScoreNSWild;
+        }
+        else
+        {
+            m_testFunction2 = &NodeTester::testElementQName2;
+
+            theMatchScore = eMatchScoreQName;
+        }
+    }
+    else if (theLocalName.empty() == false)
+    {
+        m_testFunction2 = &NodeTester::testElementNCName2;
+
+        m_targetLocalName = &theLocalName;
+
+        theMatchScore = eMatchScoreQName;
+    }
+    else
+    {
+        m_testFunction2 = &NodeTester::testElementTotallyWild2;
+
+        theMatchScore = eMatchScoreNodeTest;
+    }
+}
+
+
+
 // MSVC generates some really horrible code for some of these very simple functions when they're inlined...
 #if defined(_MSC_VER)
 #pragma auto_inline(off)
@@ -4930,7 +5001,11 @@ XPath::NodeTester::testText(
 			XalanNode::NodeType		nodeType) const
 {
 	if ((XalanNode::TEXT_NODE == nodeType || XalanNode::CDATA_SECTION_NODE == nodeType) &&
-		 shouldStripSourceNode(context) == false)
+#if defined(XALAN_OLD_STYLE_CASTS)
+		shouldStripSourceNode((const XalanText&)context) == false)
+#else
+		shouldStripSourceNode(static_cast<const XalanText&>(context)) == false)
+#endif
 	{
 		return eMatchScoreNodeTest;
 	}
@@ -4985,7 +5060,11 @@ XPath::NodeTester::testNode(
 			XalanNode::NodeType		nodeType) const
 {
 	if ((nodeType != XalanNode::TEXT_NODE && nodeType != XalanNode::CDATA_SECTION_NODE) ||
-		shouldStripSourceNode(context) == false)
+#if defined(XALAN_OLD_STYLE_CASTS)
+		shouldStripSourceNode((const XalanText&)context) == false)
+#else
+		shouldStripSourceNode(static_cast<const XalanText&>(context)) == false)
+#endif
 	{
 		return eMatchScoreNodeTest;
 	}
@@ -5190,6 +5269,79 @@ XPath::NodeTester::testElementTotallyWild(
 
 
 XPath::eMatchScore
+XPath::NodeTester::testElementNCName2(const XalanNode&  context) const
+{
+	assert(
+        m_targetNamespace == 0 &&
+        m_targetLocalName != 0 &&
+        XalanNode::ELEMENT_NODE == context.getNodeType());
+
+	if (matchLocalName(context) == false)
+	{
+		return eMatchScoreNone;
+	}
+	else
+	{
+		return eMatchScoreQName;
+	}
+}
+
+
+
+XPath::eMatchScore
+XPath::NodeTester::testElementQName2(const XalanNode&   context) const
+{
+	assert(
+        m_targetNamespace != 0 &&
+        m_targetLocalName != 0 &&
+        XalanNode::ELEMENT_NODE == context.getNodeType());
+
+	if (matchLocalNameAndNamespaceURI(context) == false)
+	{
+		return eMatchScoreNone;
+	}
+	else
+	{
+		return eMatchScoreQName;
+	}
+}
+
+
+
+XPath::eMatchScore
+XPath::NodeTester::testElementNamespaceOnly2(const XalanNode&   context) const
+{
+	assert(
+        m_targetNamespace != 0 &&
+        m_targetLocalName == 0 &&
+        XalanNode::ELEMENT_NODE == context.getNodeType());
+
+	if (matchNamespaceURI(context) == false)
+	{
+		return eMatchScoreNone;
+	}
+	else
+	{
+		return eMatchScoreNSWild;
+	}
+}
+
+
+
+XPath::eMatchScore
+XPath::NodeTester::testElementTotallyWild2(const XalanNode&     context) const
+{
+	assert(
+        m_targetNamespace == 0 &&
+        m_targetLocalName == 0 &&
+        XalanNode::ELEMENT_NODE == context.getNodeType());
+
+	return eMatchScoreNodeTest;
+}
+
+
+
+XPath::eMatchScore
 XPath::NodeTester::testNamespaceNCName(
 			const XalanNode& 		context,
 			XalanNode::NodeType		nodeType) const
@@ -5240,6 +5392,14 @@ XPath::NodeTester::testDefault(
 
 
 
+XPath::eMatchScore
+XPath::NodeTester::testDefault2(const XalanNode&    /* context */) const
+{
+	return eMatchScoreNone;
+}
+
+
+
 bool
 XPath::NodeTester::matchLocalName(const XalanNode&	context) const
 {
@@ -5283,12 +5443,11 @@ XPath::NodeTester::matchNamespace(const XalanNode&	context) const
 
 
 bool
-XPath::NodeTester::shouldStripSourceNode(const XalanNode&	context) const
+XPath::NodeTester::shouldStripSourceNode(const XalanText&	context) const
 {
-	assert(context.getNodeType() == XalanNode::CDATA_SECTION_NODE ||
-		   context.getNodeType() == XalanNode::TEXT_NODE);
+	assert(m_executionContext != 0);
 
-	return m_executionContext.shouldStripSourceNode(context);
+    return m_executionContext->shouldStripSourceNode(context);
 }
 
 

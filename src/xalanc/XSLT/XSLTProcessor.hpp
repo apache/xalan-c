@@ -248,24 +248,6 @@ public:
 			const XalanDOMString&	expression) = 0;
 
 	/**
-	 * Tells, through the combination of the default-space attribute on
-	 * xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the xml:space
-	 * attribute, whether or not extra whitespace should be stripped from the
-	 * node.  Literal elements from template elements should <em>not</em> be
-	 * tested with this function.
-	 *
-	 * @param executionContext  current execution context
-	 * @param node text node from the source tree
-	 * @return true if the text node should be stripped of extra whitespace
-	 *
-	 * $$$ ToDo: This has no business being here in the engine...
-	 */
-	virtual bool
-	shouldStripSourceNode(
-			StylesheetExecutionContext&		executionContext,
-			const XalanNode&				node) const = 0;
-
-	/**
 	 * Get the current formatter listener.
 	 * 
 	 * @return pointer to formatter listener

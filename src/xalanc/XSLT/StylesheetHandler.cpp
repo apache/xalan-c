@@ -53,6 +53,7 @@
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetRoot.hpp"
+#include "XalanSpaceNodeTester.hpp"
 
 
 
@@ -993,12 +994,14 @@ StylesheetHandler::processPreserveStripSpace(
 
 			const GetAndReleaseCachedString		theGuard(m_constructionContext);
 
-			XalanDOMString&		wildcardName = theGuard.get();
+			XalanDOMString&		theNameTest = theGuard.get();
+
+            const XalanQName::PrefixResolverProxy   theProxy(m_stylesheet.getNamespaces(), m_stylesheet.getURI());
 
 			while(tokenizer.hasMoreTokens())
 			{
 				// Use only the root, at least for right now.
-				tokenizer.nextToken(wildcardName);
+				tokenizer.nextToken(theNameTest);
 
 				/**
 				 * Creating a match pattern is too much overhead, but it's a reasonably 
@@ -1007,8 +1010,10 @@ StylesheetHandler::processPreserveStripSpace(
 				const XPath* const	matchPat =
 						m_constructionContext.createMatchPattern(
 								0,
-								wildcardName,
-								XalanQName::PrefixResolverProxy(m_stylesheet.getNamespaces(), m_stylesheet.getURI()));
+								theNameTest,
+								theProxy);
+
+                const XalanSpaceNodeTester  theNodeTest(m_constructionContext, theNameTest, theProxy, locator);
 
 				if(isPreserveSpace == true)
 				{

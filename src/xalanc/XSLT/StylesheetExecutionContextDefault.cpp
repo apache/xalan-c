@@ -932,7 +932,6 @@ void
 StylesheetExecutionContextDefault::cloneToResultTree(
 			const XalanNode&		node,
 			XalanNode::NodeType		nodeType,
-			bool					isLiteral,
 			bool					overrideStrip,
 			bool					shouldCloneAttributes,
 			const LocatorType*		locator)
@@ -942,7 +941,6 @@ StylesheetExecutionContextDefault::cloneToResultTree(
 	m_xsltProcessor->cloneToResultTree(
 			node,
 			nodeType,
-			isLiteral,
 			overrideStrip,
 			shouldCloneAttributes,
 			m_cloneTextNodesOnly,
@@ -2069,7 +2067,7 @@ StylesheetExecutionContextDefault::getUnparsedEntityURI(
 
 
 bool
-StylesheetExecutionContextDefault::shouldStripSourceNode(const XalanNode&	node)
+StylesheetExecutionContextDefault::shouldStripSourceNode(const XalanText&	node)
 {
 	if (m_xsltProcessor == 0)
 	{
