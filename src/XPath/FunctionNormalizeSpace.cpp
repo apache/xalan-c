@@ -54,7 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <XPath/FunctionNormalizeSpace.hpp>
+
+#include "FunctionNormalizeSpace.hpp"
 
 
 
@@ -78,7 +79,7 @@ FunctionNormalizeSpace::execute(
 {
 	assert(arg1.null() == false);	
 		
-	return normalize(executionContext, arg1->str());
+	return normalize(executionContext, arg1);
 }
 
 
@@ -111,11 +112,9 @@ FunctionNormalizeSpace::execute(
 XObjectPtr
 FunctionNormalizeSpace::normalize(
 		XPathExecutionContext&	executionContext,
-		const XalanDOMString&	theString)
+		const XalanDOMString&	theString) const
 {
 	const unsigned int	theStringLength = length(theString);
-
-	XalanDOMChar		thePreviousChar = 0;
 
 	// A vector to contain the new characters.  We'll use it to construct
 	// the result string.
@@ -132,6 +131,8 @@ FunctionNormalizeSpace::normalize(
 	// just reserve the space now.
 	theVector.reserve(theStringLength);
 
+	bool	fPreviousIsSpace = false;
+
 	// OK, strip out any multiple spaces...
 	for (unsigned int i = 0; i < theStringLength; i++)
 	{
@@ -140,22 +141,29 @@ FunctionNormalizeSpace::normalize(
 		if (isXMLWhitespace(theCurrentChar) == true)
 		{
 			// If the previous character wasn't a space, and we've
-			// encountered some non-space characters, then push the
-			// space.
-			if (isXMLWhitespace(thePreviousChar) == false && theVector.size() > 0)
+			// encountered some non-space characters, and it's not
+			// the last character in the string, then push the
+			// space character (not the original character).
+			if (fPreviousIsSpace == false)
 			{
-				theVector.push_back(XalanDOMChar(XalanUnicode::charSpace));
+				if (theVector.size() > 0 &&
+					i < theStringLength - 1)
+				{
+					theVector.push_back(XalanDOMChar(XalanUnicode::charSpace));
+				}
+
+				fPreviousIsSpace = true;
 			}
 		}
 		else
 		{
 			theVector.push_back(theCurrentChar);
-		}
 
-		thePreviousChar = theCurrentChar;
+			fPreviousIsSpace = false;
+		}
 	}
 
-	VectorType::size_type	theSize = theVector.size();
+	const VectorType::size_type		theSize = theVector.size();
 
 	if (theSize == 0)
 	{
@@ -165,11 +173,31 @@ FunctionNormalizeSpace::normalize(
 	{
 		if (isXMLWhitespace(theVector.back()) == true)
 		{
-			// The last character is a space, so remove it...
-			--theSize;
+			return executionContext.getXObjectFactory().createString(&*theVector.begin(), theSize - 1);
 		}
+		else
+		{
+			return executionContext.getXObjectFactory().createString(&*theVector.begin(), theSize);
+		}
+	}
+}
 
-		return executionContext.getXObjectFactory().createString(theVector.begin(), theSize);
+
+
+XObjectPtr
+FunctionNormalizeSpace::normalize(
+		XPathExecutionContext&	executionContext,
+		const XObjectPtr&		theArg) const
+{
+	const XalanDOMString&	theString = theArg->str();
+
+	if (needsNormalization(theString) == false)
+	{
+		return theArg;
+	}
+	else
+	{
+		return normalize(executionContext, theString);
 	}
 }
 
@@ -192,4 +220,48 @@ FunctionNormalizeSpace::getError() const
 {
 	return XALAN_STATIC_UCODE_STRING(
 		"The normalize-space() function takes zero arguments or one argument!");
+}
+
+
+
+bool
+FunctionNormalizeSpace::needsNormalization(const XalanDOMString&	theString) const
+{
+	const unsigned int	theStringLength = length(theString);
+
+	bool	fNormalize = false;
+
+	bool	fPreviousIsSpace = false;
+
+	// OK, search for multiple spaces, or whitespace that is not the
+	// space character...
+	for (unsigned int i = 0; i < theStringLength && fNormalize == false; ++i)
+	{
+		const XalanDOMChar	theCurrentChar = charAt(theString, i);
+
+		if (isXMLWhitespace(theCurrentChar) == false)
+		{
+			++i;
+
+			fPreviousIsSpace = false;
+		}
+		else
+		{
+			if (i == 0 ||
+				i == theStringLength - 1 ||
+				theCurrentChar != XalanDOMChar(XalanUnicode::charSpace) ||
+				fPreviousIsSpace == true)
+			{
+				fNormalize = true;
+			}
+			else
+			{
+				fPreviousIsSpace = true;
+
+				++i;
+			}
+		}
+	}
+
+	return fNormalize;
 }

@@ -106,14 +106,18 @@ public:
 
 private:
 
+	bool
+	needsNormalization(const XalanDOMString&	theString) const;
+
 	XObjectPtr
 	normalize(
 		XPathExecutionContext&	executionContext,
-		const XalanDOMString&	theString);
+		const XalanDOMString&	theString) const;
 
-	const XalanDOMString
-	NormalizeSpace(
-			const XalanDOMString& theSourceString) const;
+	XObjectPtr
+	normalize(
+		XPathExecutionContext&	executionContext,
+		const XObjectPtr&		theArg) const;
 
 	const XalanDOMString
 	getError() const;
