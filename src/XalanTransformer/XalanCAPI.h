@@ -202,6 +202,25 @@ extern "C"
 				const void*				theOutputHandle, 
 				XalanOutputHandlerType	theOutputHandler);
 
+	/**
+	 * This is a typedef to workaround limitations with
+	 * the XALAN_TRANSFORMER_EXPORT_FUNCTION macro.
+	 */
+	typedef const char*		XalanCCharPtr;
+
+	/**
+	 * Returns the last error that occured as a 
+	 * result of callaing transform.
+	 *
+	 * The signiture for following function is really:
+	 * const char*
+	 * XalanGetLastError(XalanHandle theXalanHandle) const;
+	 *
+	 * @return	error message int cons c string 
+	 */
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanCCharPtr)
+	XalanGetLastError(XalanHandle theXalanHandle);
+
 #if defined(__cplusplus)
 }
 #endif

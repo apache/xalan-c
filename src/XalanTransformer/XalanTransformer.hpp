@@ -140,6 +140,15 @@ public:
 	terminate();
 
 	/**
+	 * Returns the last error that occured as a 
+	 * result of callaing transform.	
+	 *
+	 * @return	error message int const c string 
+	 */
+	const char*
+	getLastError() const;
+
+	/**
 	 * Transform the source tree to the output in the given result tree target.
 	 * The processor will process the input source, the stylesheet source,
 	 * and transform to the output target. Call internally by all transform
@@ -186,7 +195,7 @@ public:
 	transform(
 			const char*					theXMLFileName, 
 			const char*					theXSLFileName,
-			ostream*					theOutStream);
+			ostream&					theOutStream);
 
 	/**
 	 * Transform the XML source tree to an output stream.
@@ -200,9 +209,9 @@ public:
 	 */
 	int
 	transform(
-			istream*					theXMLInStream, 
-			istream*					theXSLInStream,
-			ostream*					theOutStream);
+			istream&					theXMLInStream, 
+			istream&					theXSLInStream,
+			ostream&					theOutStream);
 
 	/**
 	 * Transform the XML source tree to the address of a callback.
@@ -230,6 +239,9 @@ protected:
 
 private:
 
+	void 
+	reset();
+
 	XalanSourceTreeDOMSupport				m_domSupport;
 
 	XalanSourceTreeParserLiaison			m_parserLiaison;
@@ -246,7 +258,9 @@ private:
 	
 	StylesheetExecutionContextDefault		m_stylesheetExecutionContext;
 
-	static XSLTInit*	m_xsltInit;
+	CharVectorType							m_errorMessage;
+
+	static XSLTInit*						m_xsltInit;
 };
 
 

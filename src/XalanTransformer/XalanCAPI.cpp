@@ -132,9 +132,9 @@ XalanTransformToData(
 
 	// Do the transformation...
 #if defined(XALAN_OLD_STYLE_CASTS)
-	status = ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, &theOutputStream);
+	status = ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputStream);
 #else
-	status = static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theXSLFileName, &theOutputStream);
+	status = static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputStream);
 #endif
 	// Null-terminate the data.
 	theOutputStream << '\0';
@@ -166,5 +166,17 @@ XalanTransformToHandler(
 	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputHandle, theOutputHandler);
 #else
 	return 	static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputHandle, theOutputHandler);
+#endif	
+}
+
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanCCharPtr)
+XalanGetLastError(XalanHandle theXalanHandle)
+{
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return ((XalanTransformer*)theXalanHandle)->getLastError();
+#else
+	return 	static_cast<XalanTransformer*>(theXalanHandle)->getLastError();
 #endif	
 }
