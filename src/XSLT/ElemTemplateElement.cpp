@@ -318,57 +318,19 @@ ElemTemplateElement::childrenToString(
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
-{ 
-	FormatterListener* const	savedFListener = executionContext.getFormatterListener();
-
+{
+	// Create a print writer and formatter to generate the children as
+	// a string.
 	DOMStringPrintWriter		thePrintWriter;
 
 	FormatterToText				theFormatter(thePrintWriter);
 
-	try
-	{
-		executionContext.setFormatterListener(&theFormatter);
+	// Create an object to set and restore the execution state.
+	StylesheetExecutionContext::ExecutionStateSetAndRestore		theStateSetAndRestore(
+					executionContext,
+					&theFormatter);
 
-		const XalanDOMString	savedPendingName = executionContext.getPendingElementName();
-
-		try
-		{
-			executionContext.setPendingElementName(XalanDOMString());
-
-			const AttributeListImpl		savedPendingAttributes(executionContext.getPendingAttributes());
-
-			try
-			{
-				executionContext.setPendingAttributes(AttributeListImpl());
-
-				executeChildren(executionContext, sourceTree, sourceNode, mode);
-			}
-			catch(...)
-			{
-				executionContext.setPendingAttributes(savedPendingAttributes);
-
-				throw;
-			}
-
-			executionContext.setPendingAttributes(savedPendingAttributes);
-		}
-		catch(...)
-		{
-			executionContext.setPendingElementName(savedPendingName);
-
-			throw;
-		}
-
-		executionContext.setPendingElementName(savedPendingName);
-	}
-	catch(...)
-	{
-		executionContext.setFormatterListener(savedFListener);
-
-		throw;
-	}
-
-	executionContext.setFormatterListener(savedFListener);
+	executeChildren(executionContext, sourceTree, sourceNode, mode);
 
 	return thePrintWriter.getString();
 }
@@ -654,7 +616,7 @@ ElemTemplateElement::transformSelectedChildren(
 	}
 	// @@ JMD: Now in method processSortKeys in java ...
 
-	MutableNodeRefList sourceNodes;
+	MutableNodeRefList	sourceNodes = executionContext.createMutableNodeRefList();
 
 /*
 	@@@ JMD: This is newer java code that is not implemented in C++; so, the
@@ -704,6 +666,7 @@ ElemTemplateElement::transformSelectedChildren(
 							result));
 			}
 		}
+
 		executionContext.setCurrentStackFrameIndex(savedCurrentStackFrameIndex);
 	}
 	else if (keys.size() > 0)
@@ -724,30 +687,31 @@ ElemTemplateElement::transformSelectedChildren(
 			executionContext.setCurrentStackFrameIndex(savedCurrentStackFrameIndex);
 		}
 
-		const MutableNodeRefList	savedContextNodeList(executionContext.getContextNodeList());
+		// Create an object to set and restore the context node list...
+		StylesheetExecutionContext::ContextNodeListSetAndRestore	theSetAndRestore(
+				executionContext,
+				sourceNodes);
 
-		executionContext.setContextNodeList(sourceNodes);
-
-		try
+		if(executionContext.isTraceSelect())
 		{
-			if(executionContext.isTraceSelect())
-				executionContext.traceSelect(
-					xslInstruction, 
-					sourceNodes);
+			executionContext.traceSelect(
+				xslInstruction,
+				sourceNodes);
+		}
 
-			for(unsigned int i = 0; i < nNodes; i++) 
+		for(unsigned int i = 0; i < nNodes; i++) 
+		{
+			XalanNode*				childNode = sourceNodes.item(i);
+			assert(childNode != 0);
+
+			XalanDocument* const	ownerDoc = childNode->getOwnerDocument();
+
+			if(XalanNode::DOCUMENT_NODE != childNode->getNodeType() && ownerDoc == 0)
 			{
-				XalanNode*				childNode = sourceNodes.item(i);
-				assert(childNode != 0);
+				error(XalanDOMString("Child node does not have an owner document!"));
+			}
 
-				XalanDocument* const	ownerDoc = childNode->getOwnerDocument();
-
-				if(XalanNode::DOCUMENT_NODE != childNode->getNodeType() && ownerDoc == 0)
-				{
-					error(XalanDOMString("Child node does not have an owner document!"));
-				}
-
-				transformChild(
+			transformChild(
 					executionContext,
 					stylesheetTree,
 					&xslInstruction,
@@ -757,16 +721,7 @@ ElemTemplateElement::transformSelectedChildren(
 					childNode,
 					mode,
 					xslToken);
-			}
 		}
-		catch(...)
-		{
-			executionContext.setContextNodeList(savedContextNodeList);
-
-			throw;
-		}
-
-		executionContext.setContextNodeList(savedContextNodeList);
 	}
 }
 

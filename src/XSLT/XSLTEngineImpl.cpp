@@ -197,8 +197,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_resultNameSpaceURL(),
 	m_stylesheets(),
 	m_currentNode(),
-	m_cssKeys(),
-	m_translateCSS(false),
 	m_pendingElementName(),
 	m_pendingAttributes(),
 	m_resultNameSpaces(),
@@ -230,7 +228,7 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_xpathSupport(xpathSupport),
 	m_xpathEnvSupport(xpathEnvSupport),
 	m_flistener(0),
-	m_contextNodeList(),
+	m_contextNodeList(&xpathSupport),
 	m_namedTemplates(),
 	m_topLevelVariables(),
 	m_needToCheckForInfiniteLoops(false),
@@ -342,7 +340,7 @@ XSLTEngineImpl::setPendingAttributes(const AttributeList&	pendingAttributes)
 void
 XSLTEngineImpl::setPendingElementName(const XalanDOMString&	elementName)
 {
-		m_pendingElementName = elementName;
+	m_pendingElementName = elementName;
 }
 
 
@@ -2016,6 +2014,52 @@ XSLTEngineImpl::cloneToResultTree(
 }
 
 
+
+class StatePushPop
+{
+public:
+
+	StatePushPop(
+		FormatterListener*&		theCurrentListener,
+		FormatterListener*		theNewListener,
+		DOMString&				thePendingElementName,
+		AttributeListImpl&		thePendingAttributes) :
+			m_listener(theCurrentListener),
+			m_savedListener(theCurrentListener),
+			m_pendingElementName(thePendingElementName),
+			m_savedPendingElementName(thePendingElementName),
+			m_pendingAttributes(thePendingAttributes),
+			m_savedPendingAttributes(thePendingAttributes)
+	{
+		theCurrentListener = theNewListener;
+
+		clear(m_pendingElementName);
+
+		m_pendingAttributes.clear();
+	}
+
+	~StatePushPop()
+	{
+		m_listener = m_savedListener;
+		m_pendingElementName = m_savedPendingElementName;
+		m_pendingAttributes = m_savedPendingAttributes;
+	}
+
+private:
+
+	FormatterListener*&			m_listener;
+	FormatterListener* const	m_savedListener;
+
+	DOMString&					m_pendingElementName;
+	const DOMString				m_savedPendingElementName;
+
+	AttributeListImpl&			m_pendingAttributes;
+	const AttributeListImpl		m_savedPendingAttributes;
+};
+
+
+
+
 // @@ java: DocumentFragment
 ResultTreeFragBase*
 XSLTEngineImpl::createResultTreeFrag(
@@ -2025,8 +2069,6 @@ XSLTEngineImpl::createResultTreeFrag(
 			XalanNode*						sourceNode,
 			const QName&					mode)
 {
-	FormatterListener* const	savedFormatterListener = m_flistener;
-
 #if !defined(XALAN_NO_NAMESPACES)
 		using std::auto_ptr;
 #endif
@@ -2036,24 +2078,20 @@ XSLTEngineImpl::createResultTreeFrag(
 	FormatterToDOM	tempFormatter(m_resultTreeFactory, 
 								  pfrag.get());
 
-	const XalanDOMString savedPendingName = m_pendingElementName;
-	clear(m_pendingElementName);
-
-	AttributeListImpl savedPendingAttributes(m_pendingAttributes);
-	m_pendingAttributes.clear();
-
-	m_flistener = &tempFormatter;
+	StatePushPop	theStateSaver(
+						m_flistener,
+						&tempFormatter,
+						m_pendingElementName,
+						m_pendingAttributes);
 
 	templateChild.executeChildren(executionContext, sourceTree, sourceNode, mode);
-
-	// flushPending();
-	m_flistener = savedFormatterListener;
-	m_pendingElementName = savedPendingName;
-	m_pendingAttributes = savedPendingAttributes;
 
 	return pfrag.release();
 }
 
+
+
+// $$$ ToDo: This is not called anywhere, can it be removed?
 void
 XSLTEngineImpl::writeChildren(
 			FormatterListener*				flistener,
@@ -2065,20 +2103,17 @@ XSLTEngineImpl::writeChildren(
 {
     flushPending();
 
-    FormatterListener* const	savedFormatterListener = m_flistener;
-    XalanDOMString savedPendingName = m_pendingElementName;
-    m_pendingElementName = 0;
-    AttributeListImpl savedPendingAttributes = m_pendingAttributes;
-    m_pendingAttributes.clear();
-    m_flistener = flistener;
-        
+	StatePushPop	theStateSaver(
+						m_flistener,
+						flistener,
+						m_pendingElementName,
+						m_pendingAttributes);
+
     templateParent.executeChildren(executionContext, &sourceTree, &sourceNode, mode);
     
     flushPending();
-    m_flistener = savedFormatterListener;
-    m_pendingElementName = savedPendingName;
-    m_pendingAttributes = savedPendingAttributes;
 }
+
 
 
 void
@@ -2144,11 +2179,9 @@ XSLTEngineImpl::outputResultTreeFragment(const XObject&		theTree)
 }
 
 
-/**
- * Tell if a given element name should output its text as cdata.
- */
+
 bool
-XSLTEngineImpl::isCDataResultElem(const XalanDOMString& elementName)
+XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName)
 {
 	typedef Stylesheet::QNameVectorType		QNameVectorType;
 
@@ -2189,14 +2222,11 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString& elementName)
 			elemLocalName = substring(elementName, indexOfNSSep + 1);
 		}
 
-		for(Stylesheet::QNameVectorType::size_type i = 0; i < theSize; i++)
+		for(Stylesheet::QNameVectorType::size_type i = 0; i < theSize && is == false; i++)
 		{
 			const QName& qname = cdataElems[i];
 
 			is = qname.equals(QName(elemNS, elemLocalName));
-
-			if(is)
-				break;
 		}
 	}
 
@@ -2204,7 +2234,11 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString& elementName)
 }
 	
 
-bool XSLTEngineImpl::qnameEqualsResultElemName(const QName& qname, const XalanDOMString& elementName)
+
+bool
+XSLTEngineImpl::qnameEqualsResultElemName(
+			const QName&			qname,
+			const XalanDOMString&	elementName)
 {
 	XalanDOMString		elemNS;
 	XalanDOMString		elemLocalName;
@@ -2223,18 +2257,23 @@ bool XSLTEngineImpl::qnameEqualsResultElemName(const QName& qname, const XalanDO
 		{
 			elemNS = getResultNamespaceForPrefix(prefix);
 		}
+
 		if(0 == elemNS.length())
 		{
 			error(XalanDOMString("Prefix must resolve to a namespace: ") + prefix);
-		 // throw new RuntimeException(+prefix);
 		}
+
 		elemLocalName =  substring(elementName, indexOfNSSep+1);
 	}
 	else
+	{
 		elemLocalName = elementName;
+	}
 
 	return qname.equals(QName(elemNS, elemLocalName));
 }
+
+
 
 XalanDOMString
 XSLTEngineImpl::getResultNamespaceForPrefix(const XalanDOMString&	prefix) const
@@ -2453,7 +2492,7 @@ XSLTEngineImpl::createProcessingXPath(
  */
 XPath*
 XSLTEngineImpl::createXPath(
-		const XalanDOMString&		str, 
+		const XalanDOMString&	str, 
 		const PrefixResolver&	resolver)
 {
 	XPath* const	xpath = m_xpathFactory.create();
@@ -2513,12 +2552,13 @@ XSLTEngineImpl::createMatchPattern(
 
 
 XPath* XSLTEngineImpl::getExpression(
-					AttributeList& attrs,
-					const XalanDOMString& key,
-					const PrefixResolver& resolver)
+					const AttributeList&	attrs,
+					const XalanDOMString&	key,
+					const PrefixResolver&	resolver)
 {
-    const XMLCh* val = attrs.getValue(c_wstr(key));
-    return (0 != val) ? createXPath(XalanDOMString(val), resolver) : 0;
+    const XMLCh* const	val = attrs.getValue(c_wstr(key));
+
+    return 0 != val ? createXPath(XalanDOMString(val), resolver) : 0;
 }
 
 
@@ -2529,7 +2569,6 @@ XSLTEngineImpl::getAttrVal(
 			const XalanDOMString&	key,
 			const XalanNode&		/* contextNode */		)
 {
-	// @@ JMD: context not used
 	return getAttrVal(el, key);
 }
 
@@ -2537,10 +2576,10 @@ XSLTEngineImpl::getAttrVal(
 
 XalanDOMString
 XSLTEngineImpl::getAttrVal(
-			const XalanElement&	el,
+			const XalanElement&		el,
 			const XalanDOMString&	key)
 {
-	const XalanAttr*	a = el.getAttributeNode(key);
+	const XalanAttr* const	a = el.getAttributeNode(key);
 
 	return 0 == a ? XalanDOMString() : a->getValue();
 }
@@ -2803,191 +2842,6 @@ XSLTEngineImpl::copyAttributesToAttList(
 
 
  
-void
-XSLTEngineImpl::translateCSSAttrsToStyleAttr(AttributeListImpl&		attList)
-{
-	if(m_translateCSS == true)
-	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::vector;
-#endif
-
-		XalanDOMString			styleAttrValueString;
-		vector<const XMLCh*>	toBeRemoved;
-		const unsigned int nAttributes = attList.getLength();
-		for(unsigned int i = 0; i < nAttributes; i++)
-		{
-			const XMLCh* const	attrName = attList.getName(i);
-			if(isCSSAttribute(attrName) == true)
-			{
-				toBeRemoved.push_back(attrName);
-				if(0 == length(styleAttrValueString))
-				{
-					// $$$ ToDo: Fix this when XalanDOMString::operator+() is const.
-					styleAttrValueString = attrName;
-					styleAttrValueString += ":";
-					styleAttrValueString += attList.getValue(i);
-//					styleAttrValueString = attrName+":"+attList.getValue(i);
-				}
-				else
-				{
-					// $$$ ToDo: Fix this when XalanDOMString::operator+() is const.
-					styleAttrValueString += "; ";
-					styleAttrValueString += attrName;
-					styleAttrValueString += ":";
-					styleAttrValueString += attList.getValue(i);
-//					styleAttrValueString += "; "+attrName+":"+attList.getValue(i);
-				}
-			}
-		}
-		const unsigned int	nAttrsToRemove = toBeRemoved.size();
-		for(unsigned int j = 0; j < nAttrsToRemove; j++)
-		{
-			attList.removeAttribute(toBeRemoved[j]);
-		}
-		if(0 != length(styleAttrValueString))
-		{
-			addResultAttribute(attList, "style", styleAttrValueString);
-		}
-	}
-}
-
-
-
-bool
-XSLTEngineImpl::isCSSAttribute(const XalanDOMString&	name) const
-{
-	if(m_cssKeys.size() == 0)
-	{
-		// Cast away const to initialize the table.
-		const_cast<XSLTEngineImpl*>(this)->initCSS2Table();
-	}
-	return (m_cssKeys.find(name) != m_cssKeys.end() ? true : false);
-}
-
-
-
-void
-XSLTEngineImpl::initCSS2Table()
-{
-	m_cssKeys.insert("azimuth");
-	m_cssKeys.insert("background");
-	m_cssKeys.insert("background-attachment");
-	m_cssKeys.insert("background-color");
-	m_cssKeys.insert("background-image");
-	m_cssKeys.insert("background-position");
-	m_cssKeys.insert("background-repeat");
-	m_cssKeys.insert("border");
-	m_cssKeys.insert("border-bottom");
-	m_cssKeys.insert("border-bottom-color");
-	m_cssKeys.insert("border-bottom-style");
-	m_cssKeys.insert("border-bottom-width");
-	m_cssKeys.insert("border-color");
-	m_cssKeys.insert("border-left");
-	m_cssKeys.insert("border-left-color");
-	m_cssKeys.insert("border-left-style");
-	m_cssKeys.insert("border-left-width");
-	m_cssKeys.insert("border-right");
-	m_cssKeys.insert("border-right-color");
-	m_cssKeys.insert("border-right-style");
-	m_cssKeys.insert("border-right-width");
-	m_cssKeys.insert("border-spacing");
-	m_cssKeys.insert("border-style");
-	m_cssKeys.insert("border-top");
-	m_cssKeys.insert("border-top-color");
-	m_cssKeys.insert("border-top-style");
-	m_cssKeys.insert("border-top-width");
-	m_cssKeys.insert("border-width");
-	m_cssKeys.insert("bottom");
-	m_cssKeys.insert("caption-side");
-	m_cssKeys.insert("clear");
-	m_cssKeys.insert("clip");
-	m_cssKeys.insert("color");
-	m_cssKeys.insert("column-span");
-	m_cssKeys.insert("content");
-	m_cssKeys.insert("cue");
-	m_cssKeys.insert("cue-after");
-	m_cssKeys.insert("cue-before");
-	m_cssKeys.insert("cursor");
-	m_cssKeys.insert("direction");
-	m_cssKeys.insert("display");
-	m_cssKeys.insert("elevation");
-	m_cssKeys.insert("float");
-	m_cssKeys.insert("font");
-	m_cssKeys.insert("font-family");
-	m_cssKeys.insert("font-size");
-	m_cssKeys.insert("font-size-adjust");
-	m_cssKeys.insert("font-style");
-	m_cssKeys.insert("font-variant");
-	m_cssKeys.insert("font-weight");
-	m_cssKeys.insert("height");
-	m_cssKeys.insert("left");
-	m_cssKeys.insert("letter-spacing");
-	m_cssKeys.insert("line-height");
-	m_cssKeys.insert("list-style");
-	m_cssKeys.insert("list-style-image");
-	m_cssKeys.insert("list-style-position");
-	m_cssKeys.insert("list-style-type");
-	m_cssKeys.insert("margin");
-	m_cssKeys.insert("margin-bottom");
-	m_cssKeys.insert("margin-left");
-	m_cssKeys.insert("margin-right");
-	m_cssKeys.insert("margin-top");
-	m_cssKeys.insert("marks");
-	m_cssKeys.insert("max-height");
-	m_cssKeys.insert("max-width");
-	m_cssKeys.insert("min-height");
-	m_cssKeys.insert("min-width");
-	m_cssKeys.insert("orphans");
-	m_cssKeys.insert("overflow");
-	m_cssKeys.insert("padding");
-	m_cssKeys.insert("padding-bottom");
-	m_cssKeys.insert("padding-left");
-	m_cssKeys.insert("padding-right");
-	m_cssKeys.insert("padding-top");
-	m_cssKeys.insert("page-break-after");
-	m_cssKeys.insert("page-break-before");
-	m_cssKeys.insert("pause");
-	m_cssKeys.insert("pause-after");
-	m_cssKeys.insert("pause-before");
-	m_cssKeys.insert("pitch");
-	m_cssKeys.insert("pitch-range");
-	m_cssKeys.insert("play-during");
-	m_cssKeys.insert("position");
-	m_cssKeys.insert("quotes");
-	m_cssKeys.insert("richness");
-	m_cssKeys.insert("right");
-	m_cssKeys.insert("row-span");
-	m_cssKeys.insert("size");
-	m_cssKeys.insert("speak");
-	m_cssKeys.insert("speak-date");
-	m_cssKeys.insert("speak-header");
-	m_cssKeys.insert("speak-numeral");
-	m_cssKeys.insert("speak-punctuation");
-	m_cssKeys.insert("speak-time");
-	m_cssKeys.insert("speech-rate");
-	m_cssKeys.insert("stress");
-	m_cssKeys.insert("table-layout");
-	m_cssKeys.insert("text-align");
-	m_cssKeys.insert("text-decoration");
-	m_cssKeys.insert("text-indent");
-	m_cssKeys.insert("text-shadow");
-	m_cssKeys.insert("text-transform");
-	m_cssKeys.insert("top");
-	m_cssKeys.insert("unicode-bidi");
-	m_cssKeys.insert("vertical-align");
-	m_cssKeys.insert("visibility");
-	m_cssKeys.insert("voice-family");
-	m_cssKeys.insert("volume");
-	m_cssKeys.insert("white-space");
-	m_cssKeys.insert("widows");
-	m_cssKeys.insert("width");
-	m_cssKeys.insert("word-spacing");
-	m_cssKeys.insert("z-index");
-}
-
-
-
 XalanElement*
 XSLTEngineImpl::getElementByID(
 			const XalanDOMString&	id,
@@ -3327,56 +3181,6 @@ XSLTEngineImpl::getDOMFactory() const
 
 
 
-#if 0
-XObject* XSLTEngineImpl::createXString(const XalanDOMString& s)
-{
-	return m_xobjectFactory->createString(s);
-}
-
-
-
-XObject* XSLTEngineImpl::createXNumber(double d)
-{
-	return m_xobjectFactory->createNumber(d);
-}
-
-
-
-XObject* XSLTEngineImpl::createXBoolean(bool b)
-{
-	return m_xobjectFactory->createBoolean(b);
-}
-
-
-
-XObject* XSLTEngineImpl::createXNodeSet(const NodeRefListBase& nl)
-{
-	return m_xobjectFactory->createNodeSet(nl);
-}
-
-
-
-XObject* XSLTEngineImpl::createXResultTreeFrag(const ResultTreeFragBase& r)
-{
-	return m_xobjectFactory->createResultTreeFrag(r);
-}
-
-
-
-XObject* XSLTEngineImpl::createXNodeSet(const XalanNode& n)
-{
-	return m_xobjectFactory->createNodeSet(n);
-}
-
-
-
-XObject* XSLTEngineImpl::createXNull()
-{
-	return m_xobjectFactory->createNull();
-}
-#endif
-
-
 /**
  * Given a name, locate a variable in the current context, and return 
  * the Object.
@@ -3467,6 +3271,7 @@ XSLTEngineImpl::getTopLevelVariable(const XalanDOMString&	theName) const
 	else
 	{
 		assert((*i).second != 0);
+
 		return (*i).second;
 	}
 }
@@ -3488,9 +3293,9 @@ XSLTEngineImpl::getStyleSheetURIFromDoc(const XalanNode&	sourceTree)
 
 	const XalanNode*	child = sourceTree.getFirstChild();
 
-	// $$$ ToDo: is this first one style valid?
-	const XalanDOMString	stylesheetNodeName1("xml-stylesheet");
-	const XalanDOMString	stylesheetNodeName2("xml:stylesheet");
+	// $$$ ToDo: is this first one still valid?
+	const XalanDOMString	stylesheetNodeName1(XALAN_STATIC_UCODE_STRING("xml-stylesheet"));
+	const XalanDOMString	stylesheetNodeName2(XALAN_STATIC_UCODE_STRING("xml:stylesheet"));
 
 	// $$$ ToDo: This code is much like that in process().
 	// Why is it repeated???
@@ -3884,7 +3689,6 @@ XSLTEngineImpl::StackGuard::StackGuard(
 
 XSLTEngineImpl::StackGuard::~StackGuard()
 {
-	m_processor = 0;
 }
 
 
@@ -4116,17 +3920,83 @@ XSLTEngineImpl::VariableStack::popCurrentContext()
 {
 	const int	nElems = m_stack.size();
 	bool		fFound = false;
+
 	// Sub 1 extra for the context marker.
 	for(int i = (nElems - 1); i >= 0 && fFound == false; i--)
 	{
 		const StackEntry* const		theEntry = m_stack[i];
 		assert(theEntry != 0);
-		int type = theEntry->getType();
-		assert(type <4 && type >= 0);
-		fFound  = (type == StackEntry::eContextMarker);
+
+		const StackEntry::eStackEntryType	type = theEntry->getType();
+		assert(type < 4 && type >= 0);
+
+		fFound = type == StackEntry::eContextMarker ? true : false;
+
 		pop();
 	}
 }
+
+
+
+class PopPushStackEntry
+{
+public:
+
+	PopPushStackEntry(
+			XSLTEngineImpl::VariableStack&	theVariableStack) :
+		m_variableStack(theVariableStack),
+		m_stackEntry(theVariableStack.back())
+	{
+		theVariableStack.pop();
+	}
+
+	~PopPushStackEntry()
+	{
+		m_variableStack.push(m_stackEntry);
+	}
+
+private:
+
+	XSLTEngineImpl::VariableStack&	m_variableStack;
+
+	StackEntry* const				m_stackEntry;
+};
+
+
+
+class CommitPushElementMarker
+{
+public:
+
+	CommitPushElementMarker(
+			XSLTEngineImpl::VariableStack&	theVariableStack,
+			const XalanNode*				targetTemplate) :
+		m_variableStack(&theVariableStack),
+		m_targetTemplate(targetTemplate)
+	{
+		theVariableStack.pushElementMarker(targetTemplate);
+	}
+
+	~CommitPushElementMarker()
+	{
+		if (m_variableStack != 0)
+		{
+			m_variableStack->popElementMarker(m_targetTemplate);
+		}
+	}
+
+	void
+	commit()
+	{
+		m_variableStack = 0;
+	}
+
+private:
+
+	XSLTEngineImpl::VariableStack*	m_variableStack;
+
+	const XalanNode* const			m_targetTemplate;
+};
 
 
 
@@ -4150,120 +4020,90 @@ XSLTEngineImpl::VariableStack::pushParams(
 
 	VariableStackStackType		tempStack;
 
-	ContextMarker* const	cm =
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(ContextMarker*)theStackEntry;
-#else
-			static_cast<ContextMarker*>(theStackEntry);
-#endif
-
-	try
-	{
-		// If we do a pop, the current stack index may point to the last
-		// element, in which case it will be changed when the push happens, so
-		// we need to preserve the current index
-		const ElemTemplateElement*	child =
+	const ElemTemplateElement*	child =
 			xslCallTemplateElement.getFirstChildElem();
-		if (0 != child)
+
+	if (0 != child)
+	{
+		// This object will take care of popping, then
+		// pushing the context marker at the top of the
+		// stack, even if an exception is thrown...
+		PopPushStackEntry	thePopPush(*this);
+
+		while(0 != child)
 		{
-			try
+			if(Constants::ELEMNAME_WITHPARAM == child->getXSLToken())
 			{
-				pop();
-				while(0 != child)
-				{
-					if(Constants::ELEMNAME_WITHPARAM == child->getXSLToken())
-					{
-						const ElemWithParam* const	xslParamElement =
+				const ElemWithParam* const	xslParamElement =
 #if defined(XALAN_OLD_STYLE_CASTS)
 							(ElemWithParam*)child;
 #else
-						static_cast<const ElemWithParam*>(child);
+				static_cast<const ElemWithParam*>(child);
 #endif
 
-						Arg*	theArg = 0;
+				Arg*	theArg = 0;
 
-						const XPath* const	pxpath = xslParamElement->getSelectPattern();
+				const XPath* const	pxpath = xslParamElement->getSelectPattern();
 
-						if(0 != pxpath)
-						{
-							XObject* const	theXObject =
+				if(0 != pxpath)
+				{
+					XObject* const	theXObject =
 								pxpath->execute(sourceNode,
 										*xslParamElement,
 										executionContext);
 
-							theArg = new Arg(xslParamElement->getQName(), theXObject, true);
-						}
-						else
-						{
-							ResultTreeFragBase* const	theDocFragment =
+					theArg = new Arg(xslParamElement->getQName(), theXObject, true);
+				}
+				else
+				{
+					ResultTreeFragBase* const	theDocFragment =
 								m_processor.createResultTreeFrag(executionContext,
 										*xslParamElement,
 										sourceTree,
 										sourceNode,
 										mode);
-							assert(theDocFragment != 0);
+					assert(theDocFragment != 0);
 
 #if !defined(XALAN_NO_NAMESPACES)
-							using std::auto_ptr;
+					using std::auto_ptr;
 #endif
 
-							// Make sure this sucker gets cleaned up...
-							auto_ptr<ResultTreeFragBase>	theGuard(theDocFragment);
+					// Make sure this sucker gets cleaned up...
+					auto_ptr<ResultTreeFragBase>	theGuard(theDocFragment);
 
-							XObject* var = m_processor.createXResultTreeFrag(*theDocFragment);
+					XObject* const	var = m_processor.createXResultTreeFrag(*theDocFragment);
 
-							theArg = new Arg(xslParamElement->getQName(), var, true);
-						}
-						assert(theArg != 0);
-
-						m_stackEntries.insert(theArg);
-
-						tempStack.push_back(theArg);
-					}
-
-					child = child->getNextSiblingElem();
+					theArg = new Arg(xslParamElement->getQName(), var, true);
 				}
-			}
-			catch(...)
-			{
-				push(cm);
-				throw;
-			}
-			push(cm);
-		}
+				assert(theArg != 0);
 
-		try
-		{
-			pushElementMarker(targetTemplate);
-			const int	nParams = tempStack.size();
-			for(int i = 0; i < nParams; i++)
-			{
-				push(tempStack.back());
-				tempStack.pop_back();
+				m_stackEntries.insert(theArg);
+
+				tempStack.push_back(theArg);
 			}
-		}
-		catch(...)
-		{
-			popElementMarker(targetTemplate);
-			throw;
+
+			child = child->getNextSiblingElem();
 		}
 	}
-	catch(...)
+
+	// This object will push an element marker, and pop it
+	// if we don't call it's commit() member function.  So
+	// if an exception is thrown will transferring the
+	// parameters, the element marker will be popped.
+	// This keeps the stack in a consistent state.
+	CommitPushElementMarker		thePusher(*this,
+										  targetTemplate);
+
+	const VariableStackStackType::size_type		nParams = tempStack.size();
+
+	for(VariableStackStackType::size_type i = 0; i < nParams; ++i)
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::for_each;
-#endif
-
-		// Delete all temp entries not yet transferred.
-		// Any transferred ones will have been deleted
-		// by popElementMarker();
-		for_each(tempStack.begin(),
-				 tempStack.end(),
-				 DeleteFunctor<StackEntry>());
-
-		throw;
+		push(tempStack[i]);
 	}
+
+	thePusher.commit();
 }
+
 
 
 void
@@ -4532,8 +4372,6 @@ XSLTEngineImpl::InitializeElementKeysTable()
 void
 XSLTEngineImpl::InitializeXSLT4JElementKeys()
 {
-	s_XSLT4JElementKeys[Constants::ELEMNAME_CSSSTYLECONVERSION_STRING] = Constants::ELEMNAME_CSSSTYLECONVERSION;
-
 	s_XSLT4JElementKeys[Constants::ELEMNAME_COMPONENT_STRING] = Constants::ELEMNAME_COMPONENT;
 	s_XSLT4JElementKeys[Constants::ELEMNAME_SCRIPT_STRING] = Constants::ELEMNAME_SCRIPT;
 }

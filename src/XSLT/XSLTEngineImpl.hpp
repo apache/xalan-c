@@ -1112,10 +1112,11 @@ public:
 	 * @param resolver resolver for namespace resolution
 	 * @return pointer to XPath for expression
 	 */
-	XPath* getExpression(
-					AttributeList& attrs,
-					const XalanDOMString& key,
-					const PrefixResolver& resolver);
+	XPath*
+	getExpression(
+			const AttributeList&	attrs,
+			const XalanDOMString&	key,
+			const PrefixResolver&	resolver);
 
 	/**
 	 * Given an element, return an attribute value in the form of a string.
@@ -1127,9 +1128,9 @@ public:
 	 */
 	XalanDOMString
 	getAttrVal(
-			const XalanElement&	el,
+			const XalanElement&		el,
 			const XalanDOMString&	key,
-			const XalanNode& 	contextNode);
+			const XalanNode& 		contextNode);
   
 	/**
 	 * Given an element, return an attribute value in the form of a string.
@@ -1140,7 +1141,7 @@ public:
 	 */
 	static XalanDOMString
 	getAttrVal(
-			const XalanElement&	el,
+			const XalanElement&		el,
 			const XalanDOMString&	key);
 
 	/**
@@ -1161,32 +1162,6 @@ public:
 			const Stylesheet*		stylesheetTree,
 			AttributeListImpl&		attrList, 
 			const XalanElement&		namespaceContext);
-  
-	/**
-	 * Determine whether to translate CSS attributes on the output to a "style"
-	 * attribute, for old submission support.
-	 * 
-	 * @return true to translate CSS attributes
-	 * @deprecated
-	 */
-	bool
-	getTranslateCSS() 
-	{
-		return m_translateCSS;
-	} 
-
-	/**
-	 * Set whether to translate CSS attributes on the output to a "style"
-	 * attribute, for old submission support.
-	 * 
-	 * @param b true to translate CSS attributes
-	 * @deprecated
-	 */
-	void
-	setTranslateCSS(bool	b) 
-	{
-		m_translateCSS = b;
-	} 
 
 	/**
 	 * Determine the value of the default-space attribute.
@@ -1724,6 +1699,14 @@ public:
 			m_stack.pop_back();
 		}
 
+		StackEntry*
+		back() const
+		{
+			assert(m_stack.empty() == false);
+
+			return m_stack.back();
+		}
+
 	private:
 
 		XObject*
@@ -1889,8 +1872,8 @@ public:
 			const XMLCh* const	name);
 
 	virtual void characters (
-		const XMLCh* const		chars,
-		const unsigned int	  length);
+		const XMLCh* const	chars,
+		const unsigned int	length);
 
 	virtual void
 	ignorableWhitespace(
@@ -1902,7 +1885,8 @@ public:
 			const XMLCh* const	target,
 			const XMLCh* const	data);
 
-	virtual void resetDocument();
+	virtual void
+	resetDocument();
 
 protected:
 
@@ -1923,24 +1907,6 @@ protected:
 			const XalanDOMString&	targetAttributeName,
 			const XalanDOMString&	targetAttributeValue);
 
-
-	/**
-	 * Returns whether or not an attribute key 
-	 * is a CSS2 attribute.
-	 * @deprecated
-	 */
-	bool
-	isCSSAttribute(const XalanDOMString&	name) const;
-
-	/**
-	 * Stuff a hash table with CSS2 keys & dummy values
-	 * in order to quickly look up if a template child
-	 * attribute is a CSS attribute or not.
-	 * @deprecated
-	 */
-	void
-	initCSS2Table();
-
 	/**
 	 * Copy the attributes from the XSL element to the created 
 	 * output element, executing attribute templates and 
@@ -1954,20 +1920,6 @@ protected:
 			const Stylesheet*		stylesheetTree,
 			const XalanElement&		templateChild,
 			AttributeListImpl&		attList);
-
-  /**
-  * Keyed on CSS2 property names, and holding dummy 
-  * values for quickly looking up if a result tree element
-  * attribute is a CSS attribute or not.
-  * @deprecated
-  */
-	TranslateCSSSetType 	m_cssKeys;
-
- /*
-  * If this is true, translate CSS attributes on the output to a "style"
-  * attribute.
-  */
-	bool					m_translateCSS;
 
 public:
 

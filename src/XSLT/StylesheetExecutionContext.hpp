@@ -83,7 +83,10 @@
 
 
 
-class AttributeList;
+#include <PlatformSupport/AttributeListImpl.hpp>
+
+
+
 class ElemTemplateElement;
 class FormatterListener;
 class PrefixResolver;
@@ -220,20 +223,28 @@ public:
 			const void*				theKey) = 0;
 
 	/**
-	 * Retrieve list of attributes yet to be processed
-	 * 
-	 * @return attribute list
-	 */
-	virtual const AttributeList&
-	getPendingAttributes() const = 0;
-
-	/**
 	 * Retrieve name of the pending element currently being processed.
 	 * 
 	 * @return element name
 	 */
 	virtual XalanDOMString
 	getPendingElementName() const = 0;
+
+	/**
+	 * Changes the currently pending element name.
+	 * 
+	 * @param elementName new name of element
+	 */
+	virtual void
+	setPendingElementName(const XalanDOMString&		elementName) = 0;
+
+	/**
+	 * Retrieve list of attributes yet to be processed
+	 * 
+	 * @return attribute list
+	 */
+	virtual const AttributeList&
+	getPendingAttributes() const = 0;
 
 	/**
 	 * Sets a list of attributes yet to be processed.
@@ -258,12 +269,156 @@ public:
 			const XalanDOMChar*		theNewValue) = 0;
 
 	/**
-	 * Changes the currently pending element name.
+	 * Get the current formatter listener.
 	 * 
-	 * @param elementName new name of element
+	 * @return pointer to formatter listener
+	 */
+	virtual FormatterListener*
+	getFormatterListener() const = 0;
+
+	/**
+	 * Set the current formatter listener.
+	 *
+	 * @param flistener pointer to new formatter listener
 	 */
 	virtual void
-	setPendingElementName(const XalanDOMString&		elementName) = 0;
+	setFormatterListener(FormatterListener*		flistener) = 0;
+
+	// These next four classes are used to save and restore
+	// the execution state in an automated, and exception-safe
+	// manner.
+
+	class FormatterListenerSetAndRestore
+	{
+	public:
+
+		/**
+		 * Construct an object to set and restore the current formatter listener.
+		 *
+		 * @param theExecutionContext a reference to the current execution context
+		 * @param theNewListener the new listener to set.
+		 */
+		FormatterListenerSetAndRestore(
+			StylesheetExecutionContext&		theExecutionContext,
+			FormatterListener*				theNewListener = 0) :
+				m_executionContext(theExecutionContext),
+				m_savedListener(theExecutionContext.getFormatterListener())
+		{
+			theExecutionContext.setFormatterListener(theNewListener);
+		}
+
+		~FormatterListenerSetAndRestore()
+		{
+			m_executionContext.setFormatterListener(m_savedListener);
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_executionContext;
+
+		FormatterListener* const		m_savedListener;
+	};
+
+	class PendingElementNameSetAndRestore
+	{
+	public:
+
+		/**
+		 * Construct an object to set and restore the current pending element name.
+		 *
+		 * @param theExecutionContext a reference to the current execution context
+		 * @param theNewPendingElementName the new pending element name to set.
+		 */
+		PendingElementNameSetAndRestore(
+			StylesheetExecutionContext&		theExecutionContext,
+			const XalanDOMString&			theNewPendingElementName = XalanDOMString()) :
+				m_executionContext(theExecutionContext),
+				m_savedPendingElementName(theExecutionContext.getPendingElementName())
+		{
+			theExecutionContext.setPendingElementName(theNewPendingElementName);
+		}
+
+		~PendingElementNameSetAndRestore()
+		{
+			m_executionContext.setPendingElementName(m_savedPendingElementName);
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_executionContext;
+
+		const DOMString					m_savedPendingElementName;
+	};
+
+	class PendingAttributesSetAndRestore
+	{
+	public:
+
+		/**
+		 * Construct an object to set and restore the current pending attributes.
+		 *
+		 * @param theExecutionContext a reference to the current execution context
+		 * @param theNewPendingAttributes the new pending attributes to set.
+		 */
+		PendingAttributesSetAndRestore(
+			StylesheetExecutionContext&		theExecutionContext,
+			const AttributeListImpl&		theNewPendingAttributes = AttributeListImpl()) :
+				m_executionContext(theExecutionContext),
+				m_savedPendingAttributes(theExecutionContext.getPendingAttributes())
+		{
+			theExecutionContext.setPendingAttributes(theNewPendingAttributes);
+		}
+
+		~PendingAttributesSetAndRestore()
+		{
+			m_executionContext.setPendingAttributes(m_savedPendingAttributes);
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_executionContext;
+
+		const AttributeListImpl			m_savedPendingAttributes;
+	};
+
+	class ExecutionStateSetAndRestore
+	{
+	public:
+
+		/**
+		 * Construct an object to set and restore the current execution state.
+		 *
+		 * @param theExecutionContext a reference to the current execution context
+		 * @param theNewListener the new listener to set.
+		 * @param theNewPendingElementName the new pending element name to set.
+		 * @param theNewPendingAttributes the new pending attributes to set.
+		 */
+		ExecutionStateSetAndRestore(
+			StylesheetExecutionContext&		theExecutionContext,
+			FormatterListener*				theNewListener = 0,
+			const XalanDOMString&			theNewPendingElementName = XalanDOMString(),
+			const AttributeListImpl&		theNewPendingAttributes = AttributeListImpl()) :
+				m_formatterListenerSetAndRestore(theExecutionContext,
+												 theNewListener),
+				m_pendingElementNameSetAndRestore(theExecutionContext,
+												  theNewPendingElementName),
+				m_pendingAttributesSetAndRestore(theExecutionContext,
+												 theNewPendingAttributes)
+		{
+		}
+
+		~ExecutionStateSetAndRestore()
+		{
+		}
+
+	private:
+
+		FormatterListenerSetAndRestore		m_formatterListenerSetAndRestore;
+
+		PendingElementNameSetAndRestore		m_pendingElementNameSetAndRestore;
+
+		PendingAttributesSetAndRestore		m_pendingAttributesSetAndRestore;
+	};
 
 	/**
 	 * Add a result attribute to the list of pending attributes.
@@ -311,22 +466,6 @@ public:
 	 */
 	virtual XalanDOMString
 	getUniqueNameSpaceValue() const = 0;
-
-	/**
-	 * Get the current formatter listener.
-	 * 
-	 * @return pointer to formatter listener
-	 */
-	virtual FormatterListener*
-	getFormatterListener() const = 0;
-
-	/**
-	 * Set the current formatter listener.
-	 *
-	 * @param flistener pointer to new formatter listener
-	 */
-	virtual void
-	setFormatterListener(FormatterListener*		flistener) = 0;
 
 	/**
 	 * Retrieve the current number of spaces to indent.

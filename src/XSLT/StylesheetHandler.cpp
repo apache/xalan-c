@@ -312,10 +312,6 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 					m_stylesheet.addTemplate(m_pTemplate);
 					break;
 
-				case Constants::ELEMNAME_CSSSTYLECONVERSION:
-					m_processor.setTranslateCSS(true);
-					break;
-
 				case Constants::ELEMNAME_EXTENSION:
 					if(!equalsIgnoreCase(ns, m_processor.getXalanXSLNameSpaceURL()))
 					{
