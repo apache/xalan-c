@@ -1,3 +1,7 @@
+#include "XPathWrapper.hpp"
+
+
+
 #include <string>
 #include <vector>
 #include <cassert>
@@ -15,11 +19,18 @@
 #include <XalanDOM/XalanDocument.hpp>
 #include <XalanDOM/XalanElement.hpp>
 
+
+
 #include <PlatformSupport/DirectoryEnumerator.hpp>
+//#include <E:\Apache\xml-xalan.old\c\src\PlatformSupport/DirectoryEnumerator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/STLHelper.hpp>
 
+
+
 #include <DOMSupport/DOMSupportDefault.hpp>
+
+
 
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
@@ -30,12 +41,15 @@
 #include <XPath/XPathFactoryDefault.hpp>
 #include <XPath/ElementPrefixResolverProxy.hpp>
 
+
+
 #include <XMLSupport/FormatterTreeWalker.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
 
+
+
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
-#include "XPathWrapper.hpp"
 
 
 #if !defined(XALAN_NO_NAMESPACES)

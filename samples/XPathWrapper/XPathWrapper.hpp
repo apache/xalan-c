@@ -59,20 +59,21 @@
 
 
 
+#include <Include/PlatformDefinitions.hpp>
+
+
+
 #include <string>
 #include <vector>
 
 
 
-#include <Include/PlatformDefinitions.hpp>
-
-
-
 #if defined(WIN32)
-#ifdef _XPathWrapper
+#if defined(_XPathWrapper)
 #define XALAN_XPATHWRAPPER_EXPORT XALAN_PLATFORM_EXPORT
 #else
 #define XALAN_XPATHWRAPPER_EXPORT XALAN_PLATFORM_IMPORT
+#endif
 #else
 #define XALAN_XPATHWRAPPER_EXPORT
 #endif

@@ -272,6 +272,10 @@ struct DirectoryEnumeratorFunctor
 	}
 };
 #else
+template<class CollectionType,
+  	 class StringType = XalanDOMString,
+  	 class FilterPredicateType = FilesOnlyFilterPredicate,
+  	 class StringConversionFunction = c_wstr_functor>
 #if defined(XALAN_NO_NAMESPACES)
 struct DirectoryEnumeratorFunctor : public unary_function<StringType, CollectionType>
 #else
