@@ -34,28 +34,35 @@ public:
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
-	 * object.
+	 * object.  Extension functions should override this version of execute(),
+	 * rather than one of the other calls designed for a specific number of
+	 * arguments.
 	 *
 	 * @param executionContext executing context
-	 * @param context current context node
-	 * @param arg The argument for the function
-	 * @param locator A Locator instance for error reporting
-	 * @return pointer to the result XObject
+	 * @param context          current context node
+	 * @param args             vector of pointers to XObject arguments
+	 * @param locator		   Locator for the XPath expression that contains the function call
+	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,			
-			const XObjectPtr		arg,
-			const Locator*			/* locator */) const
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const Locator*					locator) const
 	{
-		assert(arg.null() == false);	
+		if (args.size() != 1)
+		{
+			executionContext.error(getError(), context, locator);
+		}
+
+		assert(args[0].null() == false);	
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 		using std::sqrt;
 #endif
 
-		return executionContext.getXObjectFactory().createNumber(sqrt(arg->num()));
+		return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num()));
 	}
 
 	/**
@@ -75,10 +82,17 @@ public:
 
 protected:
 
+	/**
+	 * Get the error message to report when
+	 * the function is called with the wrong
+	 * number of arguments.
+	 *
+	 * @return function error message
+	 */
 	const XalanDOMString
 	getError() const
 	{
-		return XALAN_STATIC_UCODE_STRING("The square-root() function accepts one argument!");
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The square-root() function accepts one argument!"));
 	}
 
 private:
@@ -101,28 +115,35 @@ public:
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
-	 * object.
+	 * object.  Extension functions should override this version of execute(),
+	 * rather than one of the other calls designed for a specific number of
+	 * arguments.
 	 *
 	 * @param executionContext executing context
 	 * @param context          current context node
-	 * @param opPos            current op position
 	 * @param args             vector of pointers to XObject arguments
+	 * @param locator		   Locator for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,			
-			const XObjectPtr		arg,
-			const Locator*			/* locator */) const
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const Locator*					locator) const
 	{
-		assert(arg.null() == false);
+		if (args.size() != 1)
+		{
+			executionContext.error(getError(), context, locator);
+		}
+
+		assert(args[0].null() == false);	
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 		using std::pow;
 #endif
 
-		return executionContext.getXObjectFactory().createNumber(pow(arg->num(), 3));
+		return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(), 3));
 	}
 
 	/**
@@ -142,10 +163,17 @@ public:
 
 protected:
 
+	/**
+	 * Get the error message to report when
+	 * the function is called with the wrong
+	 * number of arguments.
+	 *
+	 * @return function error message
+	 */
 	const XalanDOMString
 	getError() const
 	{
-		return XALAN_STATIC_UCODE_STRING("The cube() function accepts one argument!");
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The cube() function accepts one argument!"));
 	}
 
 private:
@@ -168,20 +196,28 @@ public:
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
-	 * object.
+	 * object.  Extension functions should override this version of execute(),
+	 * rather than one of the other calls designed for a specific number of
+	 * arguments.
 	 *
 	 * @param executionContext executing context
 	 * @param context          current context node
-	 * @param opPos            current op position
 	 * @param args             vector of pointers to XObject arguments
+	 * @param locator		   Locator for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,
-			const Locator*			/* locator */) const
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const Locator*					locator) const
 	{
+		if (args.size() != 0)
+		{
+			executionContext.error(getError(), context, locator);
+		}
+
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 		using std::time;
 		using std::time_t;
@@ -221,10 +257,17 @@ public:
 
 protected:
 
+	/**
+	 * Get the error message to report when
+	 * the function is called with the wrong
+	 * number of arguments.
+	 *
+	 * @return function error message
+	 */
 	const XalanDOMString
 	getError() const
 	{
-		return XALAN_STATIC_UCODE_STRING("The asctime() function accepts one argument!");
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The asctime() function accepts one argument!"));
 	}
 
 private:
