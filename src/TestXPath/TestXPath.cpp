@@ -54,6 +54,11 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
+#include <Include/PlatformDefinitions.hpp>
+
+
+
 #include <cstdio>
 #include <ctime>
 #include <vector>
@@ -61,19 +66,28 @@
 
 
 
+#include <framework/URLInputSource.hpp>
+#include <util/PlatformUtils.hpp>
+
+
+
 #include <XalanDOM/XalanNode.hpp>
 #include <XalanDOM/XalanDocument.hpp>
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanNodeList.hpp>
-#include <framework/URLInputSource.hpp>
-#include <util/PlatformUtils.hpp>
 
 
 
 #include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/DirectoryEnumerator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <DOMSupport/DOMSupportDefault.hpp>
+
+
+
 #include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
@@ -82,8 +96,14 @@
 #include <XPath/XPath.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
+
+
+
 #include <XMLSupport/FormatterTreeWalker.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
+
+
+
 #include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
 #include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>

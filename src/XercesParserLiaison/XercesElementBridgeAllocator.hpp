@@ -71,14 +71,21 @@
 #include <XercesParserLiaison/XercesElementBridge.hpp>
 
 
-
+#define XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesElementBridgeAllocator
 {
 public:
 
-	typedef XercesElementBridge				ObjectType;
+	typedef XercesElementBridge						ObjectType;
 
-	typedef ArenaAllocator<ObjectType>		ArenaAllocatorType;
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+	typedef ArenaBlock<ObjectType>					ArenaBlockType;
+
+	typedef ArenaAllocator<ObjectType,
+						   ArenaBlockType>			ArenaAllocatorType;
+#else
+	typedef ArenaAllocator<ObjectType>				ArenaAllocatorType;
+#endif
 
 	typedef ArenaAllocatorType::size_type	size_type;
 

@@ -64,7 +64,7 @@
 
 
 ICUXalanNumberFormatFactory::ICUXalanNumberFormatFactory() :
-	XalanNumberFormatFactory()
+	StylesheetExecutionContextDefault::XalanNumberFormatFactory()
 {
 }
 

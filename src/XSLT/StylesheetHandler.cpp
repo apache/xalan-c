@@ -59,7 +59,6 @@
 
 
 #include <algorithm>
-#include <memory>
 
 
 
@@ -78,6 +77,7 @@
 #include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
 #include <PlatformSupport/STLHelper.hpp>
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -636,7 +636,12 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
           
 			case Constants::ELEMNAME_SORT:
 				{
-					ElemForEach* foreach = static_cast<ElemForEach*>(m_elemStack.back());
+					ElemForEach* foreach =
+#if defined(XALAN_OLD_STYLE_CASTS)
+						(ElemForEach*)m_elemStack.back();
+#else
+						static_cast<ElemForEach*>(m_elemStack.back());
+#endif
 
 					ElemSort* sortElem = new ElemSort(m_constructionContext,
 												 m_stylesheet,
@@ -1127,9 +1132,6 @@ StylesheetHandler::processImport(
 
 		if(equals(aname, Constants::ATTRNAME_HREF))
 		{
-#if !defined(XALAN_NO_NAMESPACES)
-			using std::auto_ptr;
-#endif
 			foundIt = true;
 			
 			if(m_foundNotImport)
@@ -1160,7 +1162,7 @@ StylesheetHandler::processImport(
 			
 			// This will take care of cleaning up the stylesheet if an exception
 			// is thrown.
-			auto_ptr<Stylesheet>	importedStylesheet( 
+			XalanAutoPtr<Stylesheet>	importedStylesheet( 
 				m_constructionContext.create(
 				m_stylesheet.getStylesheetRoot(), 
 				hrefUrl));
@@ -1173,7 +1175,7 @@ StylesheetHandler::processImport(
 			m_stylesheet.addImport(importedStylesheet.get(), true);
 
 			// The imported stylesheet is now owned by the stylesheet, so
-			// release the auto_ptr.
+			// release the XalanAutoPtr.
 			importedStylesheet.release();
 
 			assert(equals(importStack.back(), hrefUrl));
@@ -1271,7 +1273,11 @@ StylesheetHandler::endElement(const XMLCh* const name)
 	else if((Constants::ELEMNAME_PARAMVARIABLE == tok) ||
 		Constants::ELEMNAME_VARIABLE == tok)
 	{
+#if defined(XALAN_OLD_STYLE_CASTS)
+		ElemVariable* const		var = (ElemVariable*)m_lastPopped;
+#else
 		ElemVariable* const		var = static_cast<ElemVariable*>(m_lastPopped);
+#endif
 
 		if(var->isTopLevel())
 		{
@@ -1339,7 +1345,11 @@ StylesheetHandler::characters(
 
 		if(Constants::ELEMNAME_TEXT == parent->getXSLToken())
 		{
+#if defined(XALAN_OLD_STYLE_CASTS)
+			disableOutputEscaping = ((ElemText*)parent)->getDisableOutputEscaping();
+#else
 			disableOutputEscaping = static_cast<ElemText*>(parent)->getDisableOutputEscaping();
+#endif
 			parent = m_elemStack[m_elemStack.size()-2];
 			preserveSpace = true;
 		}
@@ -1427,7 +1437,11 @@ StylesheetHandler::cdata(
 
 		if(Constants::ELEMNAME_TEXT == parent->getXSLToken())
 		{
+#if defined(XALAN_OLD_STYLE_CASTS)
+			disableOutputEscaping = ((ElemText*)parent)->getDisableOutputEscaping();
+#else
 			disableOutputEscaping = static_cast<ElemText*>(parent)->getDisableOutputEscaping();
+#endif
 			parent = m_elemStack[m_elemStack.size()-2];
 			preserveSpace = true;
 		}

@@ -64,13 +64,22 @@
 
 
 
-#include <memory>
 #include <set>
 
 
 
 // Base class header file...
 #include <XPath/XObjectFactory.hpp>
+
+
+
+#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
+#include <XPath/XNull.hpp>
+#endif
+
+
+
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -232,13 +241,9 @@ private:
 
 
 	// Data members...
-	CollectionType		m_xobjects;
+	CollectionType				m_xobjects;
 
-#if defined(XALAN_NO_NAMESPACES)
-	const auto_ptr<XNull>		m_XNull;
-#else
-	const std::auto_ptr<XNull>	m_XNull;
-#endif
+	const XalanAutoPtr<XNull>	m_XNull;
 
 #if !defined(NDEBUG)
 

@@ -220,7 +220,11 @@ XercesDocumentBridge::mapNode(const XalanAttr* 	theXalanNode) const
 	NodeImpl* const		theXercesNodeImpl =
 		mapNodeToImpl(theXalanNode);
 
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return XercesDOM_AttrHack((AttrImpl*)theXercesNodeImpl);
+#else
 	return XercesDOM_AttrHack(reinterpret_cast<AttrImpl*>(theXercesNodeImpl));
+#endif
 }
 
 
@@ -346,8 +350,22 @@ XercesDocumentBridge::createBridgeNode(
 
 	theNavigator.setIndex(theIndex);
 
+#if defined(XALAN_NO_MUTABLE)
+	XercesDocumentBridge* const		This =
+		(XercesDocumentBridge*)this;
+
 	// Update the member variable for the new instance.
-	m_doctype = new XercesDocumentTypeBridge(theDoctype, theNavigator);;
+	This->m_doctype = new XercesDocumentTypeBridge(theDoctype, theNavigator);
+
+	if (mapNode == true)
+	{
+		This->m_nodeMap.addAssociation(theDoctype, m_doctype);
+	}
+
+	This->m_nodes.push_back(m_doctype);
+#else
+	// Update the member variable for the new instance.
+	m_doctype = new XercesDocumentTypeBridge(theDoctype, theNavigator);
 
 	if (mapNode == true)
 	{
@@ -355,6 +373,7 @@ XercesDocumentBridge::createBridgeNode(
 	}
 
 	m_nodes.push_back(m_doctype);
+#endif
 
 	return m_doctype;
 }
@@ -371,6 +390,30 @@ XercesDocumentBridge::createBridgeNode(
 	XercesBridgeNavigator&	theNavigator = pushNavigator(mapNode);
 
 	theNavigator.setIndex(theIndex);
+
+#if defined(XALAN_NO_MUTABLE)
+	XercesDocumentBridge* const		This =
+		(XercesDocumentBridge*)this;
+
+	XercesElementBridge* const	theBridge =
+#if defined(XALAN_USE_BLOCK_ALLOCATORS)
+		This->m_elementAllocator.create(theXercesNode,
+										theNavigator);
+#else
+		new XercesElementBridge(theXercesNode,
+								theNavigator);
+
+	This->m_nodes.push_back(theBridge);
+#endif
+
+	if (m_doctype != 0 || mapNode == true)
+	{
+		// Add it to the node map, since we my need it for getting
+		// elements by ID, or we're in mapping mode.
+		This->m_nodeMap.addAssociation(theXercesNode, theBridge);
+	}
+
+#else	// XALAN_NO_MUTABLE
 
 	XercesElementBridge* const	theBridge =
 #if defined(XALAN_USE_BLOCK_ALLOCATORS)
@@ -389,6 +432,7 @@ XercesDocumentBridge::createBridgeNode(
 		// elements by ID, or we're in mapping mode.
 		m_nodeMap.addAssociation(theXercesNode, theBridge);
 	}
+#endif
 
 	return theBridge;
 }
@@ -410,6 +454,18 @@ XercesDocumentBridge::createBridgeNode(
 		new XercesDocumentFragmentBridge(theXercesNode,
 										 theNavigator);
 
+#if defined(XALAN_NO_MUTABLE)
+	XercesDocumentBridge* const		This =
+		(XercesDocumentBridge*)this;
+
+	This->m_nodes.push_back(theBridge);
+
+	if (mapNode == true)
+	{
+		// Add it to the node map...
+		This->m_nodeMap.addAssociation(theXercesNode, theBridge);
+	}
+#else
 	m_nodes.push_back(theBridge);
 
 	if (mapNode == true)
@@ -417,6 +473,7 @@ XercesDocumentBridge::createBridgeNode(
 		// Add it to the node map...
 		m_nodeMap.addAssociation(theXercesNode, theBridge);
 	}
+#endif
 
 	return theBridge;
 }
@@ -434,6 +491,29 @@ XercesDocumentBridge::createBridgeNode(
 
 	theNavigator.setIndex(theIndex);
 
+#if defined(XALAN_NO_MUTABLE)
+	XercesDocumentBridge* const		This =
+		(XercesDocumentBridge*)this;
+
+	XercesTextBridge* const		theBridge =
+#if defined(XALAN_USE_BLOCK_ALLOCATORS)
+		This->m_textAllocator.create(theXercesNode,
+									 theNavigator);
+#else
+		new XercesTextBridge(theXercesNode,
+							 theNavigator);
+
+	This->m_nodes.push_back(theBridge);
+#endif
+
+	if (mapNode == true)
+	{
+		// Add it to the node map...
+		This->m_nodeMap.addAssociation(theXercesNode, theBridge);
+	}
+
+#else	// XALAN_NO_MUTABLE
+
 	XercesTextBridge* const		theBridge =
 #if defined(XALAN_USE_BLOCK_ALLOCATORS)
 		m_textAllocator.create(theXercesNode,
@@ -450,6 +530,8 @@ XercesDocumentBridge::createBridgeNode(
 		// Add it to the node map...
 		m_nodeMap.addAssociation(theXercesNode, theBridge);
 	}
+
+#endif
 
 	return theBridge;
 }
@@ -471,6 +553,20 @@ XercesDocumentBridge::createBridgeNode(
 		new XercesCommentBridge(theXercesNode,
 								theNavigator);
 
+#if defined(XALAN_NO_MUTABLE)
+	XercesDocumentBridge* const		This =
+		(XercesDocumentBridge*)this;
+
+	This->m_nodes.push_back(theBridge);
+
+	if (mapNode == true)
+	{
+		// Add it to the node map...
+		This->m_nodeMap.addAssociation(theXercesNode, theBridge);
+	}
+
+#else	// XALAN_NO_MUTABLE
+
 	m_nodes.push_back(theBridge);
 
 	if (mapNode == true)
@@ -478,6 +574,8 @@ XercesDocumentBridge::createBridgeNode(
 		// Add it to the node map...
 		m_nodeMap.addAssociation(theXercesNode, theBridge);
 	}
+
+#endif
 
 	return theBridge;
 }
@@ -499,6 +597,20 @@ XercesDocumentBridge::createBridgeNode(
 		new XercesCDATASectionBridge(theXercesNode,
 									 theNavigator);
 
+#if defined(XALAN_NO_MUTABLE)
+	XercesDocumentBridge* const		This =
+		(XercesDocumentBridge*)this;
+
+	This->m_nodes.push_back(theBridge);
+
+	if (mapNode == true)
+	{
+		// Add it to the node map...
+		This->m_nodeMap.addAssociation(theXercesNode, theBridge);
+	}
+
+#else	// XALAN_NO_MUTABLE
+
 	m_nodes.push_back(theBridge);
 
 	if (mapNode == true)
@@ -506,6 +618,8 @@ XercesDocumentBridge::createBridgeNode(
 		// Add it to the node map...
 		m_nodeMap.addAssociation(theXercesNode, theBridge);
 	}
+
+#endif
 
 	return theBridge;
 }
@@ -527,6 +641,20 @@ XercesDocumentBridge::createBridgeNode(
 		new XercesProcessingInstructionBridge(theXercesNode,
 											  theNavigator);
 
+#if defined(XALAN_NO_MUTABLE)
+	XercesDocumentBridge* const		This =
+		(XercesDocumentBridge*)this;
+
+	This->m_nodes.push_back(theBridge);
+
+	if (mapNode == true)
+	{
+		// Add it to the node map...
+		This->m_nodeMap.addAssociation(theXercesNode, theBridge);
+	}
+
+#else	// XALAN_NO_MUTABLE
+
 	m_nodes.push_back(theBridge);
 
 	if (mapNode == true)
@@ -534,6 +662,8 @@ XercesDocumentBridge::createBridgeNode(
 		// Add it to the node map...
 		m_nodeMap.addAssociation(theXercesNode, theBridge);
 	}
+
+#endif
 
 	return theBridge;
 }
@@ -551,6 +681,27 @@ XercesDocumentBridge::createBridgeNode(
 
 	theNavigator.setIndex(theIndex);
 
+#if defined(XALAN_NO_MUTABLE)
+	XercesDocumentBridge* const		This =
+		(XercesDocumentBridge*)this;
+
+	XercesAttrBridge* const		theBridge =
+#if defined(XALAN_USE_BLOCK_ALLOCATORS)
+		This->m_attributeAllocator.create(theXercesNode,
+										  theNavigator);
+#else
+		new XercesAttrBridge(theXercesNode,
+							 theNavigator);
+
+	This->m_nodes.push_back(theBridge);
+#endif
+
+	// Add it to the node map -- attributes ALWAYS go in the map
+	// for now...
+	This->m_nodeMap.addAssociation(theXercesNode, theBridge);
+
+#else	// XALAN_NO_MUTABLE
+
 	XercesAttrBridge* const		theBridge =
 #if defined(XALAN_USE_BLOCK_ALLOCATORS)
 		m_attributeAllocator.create(theXercesNode,
@@ -565,6 +716,8 @@ XercesDocumentBridge::createBridgeNode(
 	// Add it to the node map -- attributes ALWAYS go in the map
 	// for now...
 	m_nodeMap.addAssociation(theXercesNode, theBridge);
+
+#endif
 
 	return theBridge;
 }
@@ -586,11 +739,25 @@ XercesDocumentBridge::createBridgeNode(
 		new XercesEntityBridge(theXercesNode,
 							   theNavigator);
 
+#if defined(XALAN_NO_MUTABLE)
+	XercesDocumentBridge* const		This =
+		(XercesDocumentBridge*)this;
+
+	This->m_nodes.push_back(theBridge);
+
+	// Add it to the node map -- entities ALWAYS go in the map
+	// for now...
+	This->m_nodeMap.addAssociation(theXercesNode, theBridge);
+
+#else	// XALAN_NO_MUTABLE
+
 	m_nodes.push_back(theBridge);
 
 	// Add it to the node map -- entities ALWAYS go in the map
 	// for now...
 	m_nodeMap.addAssociation(theXercesNode, theBridge);
+
+#endif
 
 	return theBridge;
 }
@@ -612,6 +779,20 @@ XercesDocumentBridge::createBridgeNode(
 		new XercesEntityReferenceBridge(theXercesNode,
 										theNavigator);
 
+#if defined(XALAN_NO_MUTABLE)
+	XercesDocumentBridge* const		This =
+		(XercesDocumentBridge*)this;
+
+	This->m_nodes.push_back(theBridge);
+
+	if (mapNode == true)
+	{
+		// Add it to the node map...
+		This->m_nodeMap.addAssociation(theXercesNode, theBridge);
+	}
+
+#else	// XALAN_NO_MUTABLE
+
 	m_nodes.push_back(theBridge);
 
 	if (mapNode == true)
@@ -619,6 +800,8 @@ XercesDocumentBridge::createBridgeNode(
 		// Add it to the node map...
 		m_nodeMap.addAssociation(theXercesNode, theBridge);
 	}
+
+#endif
 
 	return theBridge;
 }
@@ -640,11 +823,25 @@ XercesDocumentBridge::createBridgeNode(
 		new XercesNotationBridge(theXercesNode,
 								 theNavigator);
 
+#if defined(XALAN_NO_MUTABLE)
+	XercesDocumentBridge* const		This =
+		(XercesDocumentBridge*)this;
+
+	This->m_nodes.push_back(theBridge);
+
+	// Add it to the node map -- notations ALWAYS go in the map
+	// for now...
+	This->m_nodeMap.addAssociation(theXercesNode, theBridge);
+
+#else	// XALAN_NO_MUTABLE
+
 	m_nodes.push_back(theBridge);
 
 	// Add it to the node map -- notations ALWAYS go in the map
 	// for now...
 	m_nodeMap.addAssociation(theXercesNode, theBridge);
+
+#endif
 
 	return theBridge;
 }
@@ -1465,8 +1662,8 @@ XercesDocumentBridge::getElementById(const XalanDOMString&	elementId) const
 {
 	// $$$ ToDo: This is because DOM_Document::getElementById() is not
 	// const...
-#if defined(XERCES_NO_MUTABLE)
-	const DOM_Node	theXercesNode((DOM_Document&)m_xercesDocument).getElementById(elementId));
+#if defined(XALAN_NO_MUTABLE)
+	const DOM_Node	theXercesNode(((DOM_Document&)m_xercesDocument).getElementById(elementId));
 #else
 	const DOM_Node	theXercesNode(m_xercesDocument.getElementById(elementId));
 #endif
@@ -1516,8 +1713,8 @@ private:
 	struct NavigatorStackEntryType
 	{
 		NavigatorStackEntryType(
-					XercesBridgeNavigator*	theNavigator,
-					XalanNode*				theNode) :
+					XercesBridgeNavigator*	theNavigator = 0,
+					XalanNode*				theNode = 0) :
 			m_navigator(theNavigator),
 			m_node(theNode)
 		{

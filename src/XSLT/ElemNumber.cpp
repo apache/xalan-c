@@ -67,6 +67,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanAutoPtr.hpp>
 #include <PlatformSupport/XalanNumberFormat.hpp>
 
 
@@ -76,6 +77,7 @@
 
 
 
+#include "AVT.hpp"
 #include "Constants.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
@@ -209,11 +211,19 @@ ElemNumber::ElemNumber(
 	
 ElemNumber::~ElemNumber()
 {
+#if defined(XALAN_CANNOT_DELETE_CONST)
+	delete	(AVT*)m_format_avt;
+	delete	(AVT*)m_lang_avt;
+	delete	(AVT*)m_lettervalue_avt;
+	delete	(AVT*)m_groupingSeparator_avt;
+	delete	(AVT*)m_groupingSize_avt;
+#else
 	delete	m_format_avt;
 	delete	m_lang_avt;
 	delete	m_lettervalue_avt;
 	delete	m_groupingSeparator_avt;
 	delete	m_groupingSize_avt;
+#endif
 }
 
 
@@ -394,7 +404,7 @@ ElemNumber::getCountString(
 				m_valueExpr->execute(sourceNode, *this, executionContext));
 		assert(countObj.get() != 0);
 
-		numberList.push_back(static_cast<int>(countObj->num()));
+		numberList.push_back(int(countObj->num()));
 	}
 	else
 	{
@@ -623,31 +633,14 @@ ElemNumber::getMatchingAncestors(
 } // end getMatchingAncestors method
 
 
-#if !defined(XALAN_NO_LOCALES)
-
-std::locale
-ElemNumber::getLocale(
-			StylesheetExecutionContext&		/* executionContext */,
-			XalanNode*						/* contextNode */) const
-{
-	//TODO
-	return std::locale();
-}
-
-#endif
-
 
 XalanNumberFormat*
 ElemNumber::getNumberFormatter(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						contextNode) const
 {
-#if ! defined(__GNUC__)
-//	std::locale loc = getLocale(executionContext, contextNode);
-#endif
-
     // Helper to format local specific numbers to strings.
-	std::auto_ptr<XalanNumberFormat>	formatter(executionContext.createXalanNumberFormat());
+	XalanAutoPtr<XalanNumberFormat>		formatter(executionContext.createXalanNumberFormat());
 
 	XalanDOMString	digitGroupSepValue;
 	if (0 != m_groupingSeparator_avt)

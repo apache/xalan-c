@@ -111,6 +111,28 @@ NodeSortKey::NodeSortKey(
 
 
 
+NodeSortKey::NodeSortKey() :
+	m_executionContext(0),
+	m_selectPat(0),
+	m_treatAsNumbers(false),
+	m_descending(false),
+	m_prefixResolver(0)
+{
+}
+
+
+
+NodeSortKey::NodeSortKey(const NodeSortKey&		theSource) :
+	m_executionContext(theSource.m_executionContext),
+	m_selectPat(theSource.m_selectPat),
+	m_treatAsNumbers(theSource.m_treatAsNumbers),
+	m_descending(theSource.m_descending),
+	m_prefixResolver(theSource.m_prefixResolver)
+{
+}
+
+
+
 NodeSortKey::~NodeSortKey()
 {
 }

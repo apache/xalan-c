@@ -76,8 +76,11 @@
 
 
 
+#include <XPath/NameSpace.hpp>
+
+
+
 class XalanElement;
-class NameSpace;
 class PrefixResolver;
 class XPathEnvSupport;
 class XPathSupport;

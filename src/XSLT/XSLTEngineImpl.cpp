@@ -327,9 +327,19 @@ XSLTEngineImpl::process(
 {
 	try
 	{
-		XalanDOMString xslIdentifier(0 == stylesheetSource.getSystemId() 
-										 ? XalanDOMString(XALAN_STATIC_UCODE_STRING("Input XSL")) : stylesheetSource.getSystemId());
+		XalanDOMString	xslIdentifier;
+
+		if (0 == stylesheetSource.getSystemId())
+		{
+			xslIdentifier = XalanDOMString(XALAN_STATIC_UCODE_STRING("Input XSL"));
+		}
+		else
+		{
+			xslIdentifier = stylesheetSource.getSystemId();
+		}
+
 		bool totalTimeID = true;
+
 		pushTime(&totalTimeID);
 
 		XalanNode*	sourceTree = getSourceTreeFromInput(inputSource);
@@ -706,14 +716,15 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 			bool							isRoot,
 			StylesheetConstructionContext&	constructionContext)
 {
-	Stylesheet*			stylesheet = 0;
+	Stylesheet*				stylesheet = 0;
 
 	XalanDOMString			stringHolder;
+
 	const XalanDOMString	localXSLURLString = clone(trim(xslURLString));
 
-	const unsigned int	fragIndex = indexOf(localXSLURLString, '#');
+	const unsigned int		fragIndex = indexOf(localXSLURLString, '#');
 
-	XalanDocument*		stylesheetDoc = 0;
+	const XalanDocument*	stylesheetDoc = 0;
 
 	if(fragIndex == 0)
 	{
@@ -721,18 +732,26 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		const XalanDOMString	fragID = substring(localXSLURLString, 1);
 
-		XalanElement*			nsNode = 0;
+		const XalanElement*		nsNode = 0;
 
 		if (fragBase.getNodeType() == XalanNode::DOCUMENT_NODE)
 		{
 			const XalanDocument&	doc =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanDocument&)fragBase;
+#else
 				static_cast<const XalanDocument&>(fragBase);
+#endif
 
 			nsNode = doc.getDocumentElement(); 
 		}
 		else if	(fragBase.getNodeType() == XalanNode::ELEMENT_NODE)
 		{
-			nsNode = static_cast<XalanElement*>(&fragBase);
+#if defined(XALAN_OLD_STYLE_CASTS)
+			nsNode = (const XalanElement*)&fragBase;
+#else
+			nsNode = static_cast<const XalanElement*>(&fragBase);
+#endif
 		}
 		else
 		{
@@ -740,7 +759,11 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 			if	(node->getNodeType() == XalanNode::ELEMENT_NODE) 
 			{
+#if defined(XALAN_OLD_STYLE_CASTS)
+				nsNode = (const XalanElement*)&fragBase;
+#else
 				nsNode = static_cast<XalanElement*>(node);
+#endif
 			}
 			else
 			{
@@ -842,7 +865,11 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 			}
 			else
 			{
+#if defined(XALAN_OLD_STYLE_CASTS)
+				stylesheet = constructionContext.create(*((StylesheetRoot*)m_stylesheetRoot), stringHolder);
+#else
 				stylesheet = constructionContext.create(*const_cast<StylesheetRoot*>(m_stylesheetRoot), stringHolder);
+#endif
 			}
 
 			StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);
@@ -881,7 +908,11 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		}
 		else
 		{
+#if defined(XALAN_OLD_STYLE_CASTS)
+			stylesheet = new Stylesheet(*(StylesheetRoot*)m_stylesheetRoot, localXSLURLString, constructionContext);
+#else
 			stylesheet = new Stylesheet(*const_cast<StylesheetRoot*>(m_stylesheetRoot), localXSLURLString, constructionContext);
+#endif
 		}
 
 		StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);
@@ -1258,7 +1289,11 @@ XSLTEngineImpl::pushTime(const void*	key) const
 {
 	if(0 != key)
 	{
+#if defined(XALAN_NO_MUTABLE)
+		((XSLTEngineImpl*)this)->m_durationsTable.insert(DurationsTableMapType::value_type(key, clock()));
+#else
 		m_durationsTable.insert(DurationsTableMapType::value_type(key, clock()));
+#endif
 	}
 }
 
@@ -1272,7 +1307,11 @@ XSLTEngineImpl::popDuration(const void*	key) const
 	if(0 != key)
 	{
 		const DurationsTableMapType::iterator	i =
+#if defined(XALAN_NO_MUTABLE)
+				((XSLTEngineImpl*)this)->m_durationsTable.find(key);
+#else
 				m_durationsTable.find(key);
+#endif
 
 		assert(i != m_durationsTable.end());
 
@@ -1280,7 +1319,11 @@ XSLTEngineImpl::popDuration(const void*	key) const
 		{
 			clockTicksDuration = clock() - (*i).second;
 
+#if defined(XALAN_NO_MUTABLE)
+			((XSLTEngineImpl*)this)->m_durationsTable.erase(i);
+#else
 			m_durationsTable.erase(i);
+#endif
 		}
 	}
 
@@ -1553,7 +1596,11 @@ XSLTEngineImpl::flushPending()
 					// Yuck!!! Ugly hack to switch to HTML on-the-fly.  You can
 					// blame this ridiculous crap on the XSLT Working Group...
 					FormatterToXML* const	theFormatter =
+#if defined(XALAN_OLD_STYLE_CASTS)
+						(FormatterToXML*)m_flistener;
+#else
 						static_cast<FormatterToXML*>(m_flistener);
+#endif
 
 					m_flistener =
 						m_executionContext->createFormatterToHTML(
@@ -1929,7 +1976,12 @@ XSLTEngineImpl::cloneToResultTree(
 			  // was: stripWhiteSpace = isLiteral ? true : shouldStripSourceNode(node);
 			}
 
-			const XalanText& 	tx = static_cast<const XalanText&>(node);
+			const XalanText& 	tx =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanText&)node;
+#else
+				static_cast<const XalanText&>(node);
+#endif
 
 			XalanDOMString		data;
 
@@ -1987,7 +2039,11 @@ XSLTEngineImpl::cloneToResultTree(
 			{
 				copyAttributesToAttList(&node,
 										m_stylesheetRoot,
+#if defined(XALAN_OLD_STYLE_CASTS)
+										(const XalanElement&)node,
+#else
 										static_cast<const XalanElement&>(node),
+#endif
 										m_pendingAttributes);
 
 				copyNamespaceAttributes(node,
@@ -2001,7 +2057,11 @@ XSLTEngineImpl::cloneToResultTree(
 	case XalanNode::CDATA_SECTION_NODE:
 		{
 			const XalanCDATASection& 	theCDATA =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanCDATASection&)node;
+#else
 				static_cast<const XalanCDATASection&>(node);
+#endif
 
 			const XalanDOMString 	data = theCDATA.getData();
 
@@ -2012,8 +2072,11 @@ XSLTEngineImpl::cloneToResultTree(
 	case XalanNode::ATTRIBUTE_NODE:
 		{
 			const XalanAttr& 	attr =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanAttr&)node;
+#else
 				static_cast<const XalanAttr&>(node);
-
+#endif
 			addResultAttribute(m_pendingAttributes,
 							   m_executionContext->getNameOfNode(attr),
 							   attr.getValue());
@@ -2023,7 +2086,11 @@ XSLTEngineImpl::cloneToResultTree(
 	case XalanNode::COMMENT_NODE:
 		{
 			const XalanComment&		theComment =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanComment&)node;
+#else
 				static_cast<const XalanComment&>(node);
+#endif
 
 			const XalanDOMString 	theData = theComment.getData();
 
@@ -2047,7 +2114,11 @@ XSLTEngineImpl::cloneToResultTree(
 	case XalanNode::PROCESSING_INSTRUCTION_NODE:
 		{
 			const XalanProcessingInstruction&	pi =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanProcessingInstruction&)node;
+#else
 				static_cast<const XalanProcessingInstruction&>(node);
+#endif
 
 			const XalanDOMString 	theTarget = pi.getTarget();
 			const XalanDOMString 	theData = pi.getData();
@@ -2079,11 +2150,7 @@ XSLTEngineImpl::createResultTreeFrag(
 			XalanNode*						sourceNode,
 			const QName&					mode)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::auto_ptr;
-#endif
-
-	auto_ptr<ResultTreeFragBase> pfrag(createDocFrag());
+	XalanAutoPtr<ResultTreeFragBase> pfrag(createDocFrag());
 
 	FormatterToDOM	tempFormatter(m_resultTreeFactory, 
 								  pfrag.get(),
@@ -2738,7 +2805,11 @@ XSLTEngineImpl::copyAttributesToAttList(
 	for(unsigned int	i = 0; i < nAttributes; i++)  
 	{	
 		const XalanAttr* const 	attr =
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(const XalanAttr*)attributes->item(i);
+#else
 			static_cast<const XalanAttr*>(attributes->item(i));
+#endif
 		assert(attr != 0);
 
 		const XalanDOMString	theTemp(s_XSLNameSpaceURL + ":use");
@@ -2786,7 +2857,11 @@ XSLTEngineImpl::shouldStripSourceNode(
 		if((XalanNode::TEXT_NODE == type) || (XalanNode::CDATA_SECTION_NODE == type))
 		{
 			const XalanText& 	theTextNode =
+#if defined(XALAN_OLD_STYLE_CASTS)
+					(const XalanText&)textNode;
+#else
 					static_cast<const XalanText&>(textNode);
+#endif
 
 			if(!theTextNode.isIgnorableWhitespace())
 			{
@@ -2809,8 +2884,11 @@ XSLTEngineImpl::shouldStripSourceNode(
 				if(parent->getNodeType() == XalanNode::ELEMENT_NODE)
 				{
 					const XalanElement*	const	parentElem =
+#if defined(XALAN_OLD_STYLE_CASTS)
+						(const XalanElement*)parent;
+#else
 						static_cast<const XalanElement*>(parent);
-
+#endif
 					/* 
 					const XalanAttr* const		attr =
 						parentElem->getAttributeNode(XALAN_STATIC_UCODE_STRING("xml:space"));
@@ -3100,7 +3178,11 @@ XSLTEngineImpl::getDOMFactory() const
 {
 	if(m_resultTreeFactory == 0)
 	{
+#if defined(XALAN_NO_MUTABLE)
+		((XSLTEngineImpl*)this)->m_resultTreeFactory = m_parserLiaison.createDocument();
+#else
 		m_resultTreeFactory = m_parserLiaison.createDocument();
+#endif
 	}
 
 	return m_resultTreeFactory;
@@ -3214,8 +3296,12 @@ XSLTEngineImpl::findElementByAttribute(
 
 			for(unsigned int i = 0; i < nAttributes; i++)  
 			{
-				const XalanAttr* 		attr = 
+				const XalanAttr* 		attr =
+#if defined(XALAN_OLD_STYLE_CASTS)
+						  (const XalanAttr*)attributes->item(i);
+#else
 						  static_cast<const XalanAttr*>(attributes->item(i));
+#endif
 
 				const XalanDOMString 	attrName = attr->getName();
 
@@ -3245,7 +3331,11 @@ XSLTEngineImpl::findElementByAttribute(
 			if (childNode->getNodeType() == XalanNode::ELEMENT_NODE) 
 			{
 				XalanElement*	child = 
+#if defined(XALAN_OLD_STYLE_CASTS)
+						  (XalanElement*)childNode;
+#else
 						  static_cast<XalanElement*>(childNode);
+#endif
 
 				const XalanDOMString 	childName = child->getTagName();
 

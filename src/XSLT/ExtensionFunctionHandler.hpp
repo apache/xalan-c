@@ -73,7 +73,7 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 

@@ -64,7 +64,7 @@
 
 
 
-#include <stack>
+#include <vector>
 
 
 
@@ -204,9 +204,9 @@ private:
 	XalanElement*				m_currentElem;
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef stack<XalanElement*>		ElementStackType;
+	typedef vector<XalanElement*>		ElementStackType;
 #else
-	typedef std::stack<XalanElement*>	ElementStackType;
+	typedef std::vector<XalanElement*>	ElementStackType;
 #endif
 
 	ElementStackType			m_elemStack;

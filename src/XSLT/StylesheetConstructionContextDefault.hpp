@@ -66,12 +66,21 @@
 
 
 
+#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
+#include <XPath/XPathProcessor.hpp>
+#endif
+
+
+
+#include <PlatformSupport/XalanAutoPtr.hpp>
+
+
+
 // Base class header file...
 #include <XSLT/StylesheetConstructionContext.hpp>
 
 
 
-#include <memory>
 #include <set>
 #include <vector>
 
@@ -215,14 +224,12 @@ private:
 	XPathEnvSupport&					m_xpathEnvSupport;
 	XPathFactory&						m_xpathFactory;
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef auto_ptr<XPathProcessor>		XPathProcessAutoPtr;
+	typedef XalanAutoPtr<XPathProcessor>	XPathProcessAutoPtr;
 
+#if defined(XALAN_NO_NAMESPACES)
 	typedef set<StylesheetRoot*,
 				less<StylesheetRoot*> >		StylesheetSetType;
 #else
-	typedef std::auto_ptr<XPathProcessor>	XPathProcessAutoPtr;
-
 	typedef std::set<StylesheetRoot*>		StylesheetSetType;
 #endif
 

@@ -220,7 +220,11 @@ XPathSupportDefault::getUnparsedEntityURI(
 			if (theNode != 0 && theNode->getNodeType() == XalanNode::ENTITY_NODE)
 			{
 				const XalanEntity*	theEntity =
+#if defined(XALAN_OLD_STYLE_CASTS)
+					(const XalanEntity*)theNode;
+#else
 					static_cast<const XalanEntity*>(theNode);
+#endif
 
 				const XalanDOMString		theNotationName(theEntity->getNotationName());
 

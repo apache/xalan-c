@@ -64,7 +64,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/STLHelper.hpp>
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -194,7 +194,7 @@ XercesTextOutputStream::doWrite(const XalanDOMChar*		theBuffer)
 {
 	assert(theBuffer != 0);
 
-    array_auto_ptr<char>	theTranscodedString(XMLString::transcode(theBuffer));
+    const XalanArrayAutoPtr<char>	theTranscodedString(XMLString::transcode(theBuffer));
 
 	writeData(theTranscodedString.get(),
 			  strlen(theTranscodedString.get()));

@@ -65,7 +65,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/STLHelper.hpp>
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -75,11 +75,9 @@ TextFileOutputStream::TextFileOutputStream(const DOMString&		theFileName) :
 	m_fileName(theFileName),
 	m_handle(0)
 {
-	char* const	tmpName = theFileName.transcode();
+	const XalanArrayAutoPtr<char>	tmpName(theFileName.transcode());
 
-	array_auto_ptr<char>	janTmp(tmpName);
-
-	m_handle = fopen(tmpName, "wt");
+	m_handle = fopen(tmpName.get(), "wt");
 
     if (m_handle == 0)
 	{

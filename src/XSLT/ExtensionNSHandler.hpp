@@ -203,7 +203,8 @@ protected:
 private:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef set<XalanDOMString>			ExtensionSetType;
+	typedef set<XalanDOMString,
+				less<XalanDOMString> >	ExtensionSetType;
 #else
 	typedef std::set<XalanDOMString>	ExtensionSetType;
 #endif

@@ -64,10 +64,6 @@
 
 
 
-#include <memory>
-
-
-
 #include <XalanDOM/XalanDOMString.hpp>
 
 

@@ -787,9 +787,9 @@ FormatterToXML::endElement(const XMLCh* const	name)
 		}
 		else
 		{
-			m_ispreserve = m_preserves.top();
+			m_ispreserve = m_preserves.back();
 
-			m_preserves.pop();
+			m_preserves.pop_back();
 		}
 	}
 
@@ -1197,15 +1197,15 @@ FormatterToXML::writeParentTagEnd()
 	if(!m_elemStack.empty())
 	{
 		// See if the parent element has already been flagged as having children.
-		if(false == m_elemStack.top())
+		if(false == m_elemStack.back())
 		{
 			accum('>');
 			m_isprevtext = false;
 
-			m_elemStack.pop();
-			m_elemStack.push(true);
+			m_elemStack.pop_back();
+			m_elemStack.push_back(true);
 
-			m_preserves.push(m_ispreserve);
+			m_preserves.push_back(m_ispreserve);
 		}
 	}
 }
@@ -1215,7 +1215,7 @@ FormatterToXML::writeParentTagEnd()
 void
 FormatterToXML::openElementForChildren()
 {
-	m_elemStack.push(false);
+	m_elemStack.push_back(false);
 }
 
 
@@ -1227,9 +1227,9 @@ FormatterToXML::childNodesWereAdded()
 
 	if (m_elemStack.size() > 0)
 	{
-		fResult = m_elemStack.top();
+		fResult = m_elemStack.back();
 
-		m_elemStack.pop();
+		m_elemStack.pop_back();
 	}
 
 	return fResult;

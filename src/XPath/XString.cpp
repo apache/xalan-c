@@ -180,26 +180,10 @@ XString::rtree(XPathExecutionContext&	executionContext) const
 
 		theFrag->appendChild(textNode);
 
-#if defined(XALAN_OLD_AUTO_PTR)
-
-#if !defined (XALAN_NO_NAMESPACES)
-		using std::auto_ptr;
-#endif
-
-#if defined(XALAN_NO_MUTABLE)
-		((XString*)this)->m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
-#else
-		m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
-#endif
-
-#else
-
 #if defined(XALAN_NO_MUTABLE)
 		((XString*)this)->m_resultTreeFrag.reset(theFrag);
 #else
 		m_resultTreeFrag.reset(theFrag);
-#endif
-
 #endif
 	}
 

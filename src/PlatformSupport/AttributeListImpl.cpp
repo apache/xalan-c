@@ -61,11 +61,11 @@
 
 #include <algorithm>
 #include <cassert>
-#include <memory>
 
 
 
 #include "DOMStringHelper.hpp"
+#include "XalanAutoPtr.hpp"
 
 
 
@@ -133,10 +133,6 @@ AttributeListImpl::deleteEntries(AttributeVectorType&	theVector)
 AttributeListImpl&
 AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
-
 	if (this != &theRHS)
 	{
 		// Note that we can't chain up to our base class operator=()
@@ -159,14 +155,14 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 			{
 				assert(theRHS.m_AttributeVector[i] != 0);
 
-				auto_ptr<AttributeVectorEntry>	theEntry(
+				XalanAutoPtr<AttributeVectorEntry>	theEntry(
 					new AttributeVectorEntry(*theRHS.m_AttributeVector[i]));
 
 				// Add the item...
 				tempVector.push_back(theEntry.get());
 
 				// The entry is now safely in the vector, so release the
-				// auto_ptr...
+				// XalanAutoPtr...
 				AttributeVectorEntry* const		entry = theEntry.release();
 
 				// Create an entry in the index map...
@@ -319,7 +315,6 @@ AttributeListImpl::getType(const XMLCh* const name) const
 
 
 
-
 const XMLCh*
 AttributeListImpl::getValue(const char* const name) const
 {
@@ -390,10 +385,6 @@ AttributeListImpl::addAttribute(
 			const XMLCh*	type,
 			const XMLCh*	value)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
-
 	assert(name != 0);
 	assert(type != 0);
 	assert(value != 0);
@@ -416,7 +407,7 @@ AttributeListImpl::addAttribute(
 	}
 	else
 	{
-		auto_ptr<AttributeVectorEntry>	theEntry(
+		XalanAutoPtr<AttributeVectorEntry>	theEntry(
 					new AttributeVectorEntry(XMLChVectorType(name, endArray(name) + 1),
 											 XMLChVectorType(value, endArray(value) + 1),
 											 XMLChVectorType(type, endArray(type) + 1)));
@@ -425,7 +416,7 @@ AttributeListImpl::addAttribute(
 		m_AttributeVector.push_back(theEntry.get());
 
 		// The entry is now safely in the vector, so release the
-		// auto_ptr...
+		// XalanAutoPtr...
 		AttributeVectorEntry* const		entry = theEntry.release();
 
 		// Create an entry in the index map.
@@ -443,13 +434,12 @@ AttributeListImpl::addAttribute(
 
 
 bool
-AttributeListImpl::removeAttribute(const XMLCh* const name)
+AttributeListImpl::removeAttribute(const XMLCh*		name)
 {
 	assert(name != 0);
 	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
 	using std::bind1st;
 	using std::equal_to;
 	using std::find_if;
@@ -468,12 +458,12 @@ AttributeListImpl::removeAttribute(const XMLCh* const name)
 		const AttributeVectorType::iterator		j =
 			find_if(m_AttributeVector.begin(),
 					m_AttributeVector.end(),
-					bind1st(equal_to<const AttributeVectorEntry*>(), (*i).second));
+					bind1st(equal_to<AttributeVectorEntry*>(), (*i).second));
 		assert(j != m_AttributeVector.end());
 
 		// This will delete the entry, even if something
 		// bad happens updating the containers.
-		auto_ptr<const AttributeVectorEntry>	theGuard(*j);
+		XalanAutoPtr<AttributeVectorEntry>	theGuard(*j);
 
 		// Erase it from the vector.
 		m_AttributeVector.erase(j);

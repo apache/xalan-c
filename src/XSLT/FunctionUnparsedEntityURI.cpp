@@ -114,7 +114,11 @@ FunctionUnparsedEntityURI::execute(
 
 	XalanDocument* const	doc =
 			XalanNode::DOCUMENT_NODE == context->getNodeType() ?
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(XalanDocument*)context :
+#else
 				static_cast<XalanDocument*>(context) :
+#endif
 				context->getOwnerDocument();
 	assert(doc != 0);
 

@@ -77,25 +77,27 @@ public:
 	void
 	operator()(const Type*	theType) const
 	{
+#if defined(XALAN_CANNOT_DELETE_CONST)
+		delete (Type*)theType;
+#else
 		delete theType;
+#endif
 	}
 };
 
 
 
 template<class ObjectType,
-		 class DestroyFunctionType = ArenaBlockDestroy<ObjectType>,
-#if defined(XALAN_NO_NAMESPACES)
-		 class AllocatorType = allocator<ObjectType>,
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+		 class ArenaBlockType>
 #else
-		 class AllocatorType = std::allocator<ObjectType>,
+		 class ArenaBlockType = ArenaBlock<ObjectType> >
 #endif
-		 class ArenaBlockType = ArenaBlock<ObjectType, DestroyFunctionType, AllocatorType> >
 class ArenaAllocator
 {
 public:
 
-	typedef ArenaBlockType::size_type	size_type;
+	typedef typename ArenaBlockType::size_type	size_type;
 
 	/*
 	 * Construct an instance that will allocate blocks of the specified size.
@@ -198,6 +200,14 @@ protected:
 	ArenaBlockListType	m_blocks;
 
 	const size_type		m_blockSize;
+
+private:
+
+	// Not defined...
+	ArenaAllocator(const ArenaAllocator<ObjectType, ArenaBlockType>&);
+
+	ArenaAllocator<ObjectType, ArenaBlockType>&
+	operator=(const ArenaAllocator<ObjectType, ArenaBlockType>&);
 };
 
 

@@ -110,8 +110,11 @@ KeyTable::KeyTable(
 
 		if(XalanNode::ELEMENT_NODE == pos->getNodeType())
 		{
+#if defined(XALAN_OLD_STYLE_CASTS)
+			attrs = ((const XalanElement*)pos)->getAttributes();
+#else
 			attrs = static_cast<const XalanElement*>(pos)->getAttributes();
-
+#endif
 			nNodes = attrs->getLength();
         
 			if(0 == nNodes)
@@ -144,9 +147,12 @@ KeyTable::KeyTable(
 
 						// See if our node matches the given key declaration according to 
 						// the match attribute on xsl:key.
-						const double	score = kd.getMatchPattern().getMatchScore(testNode,
-																				   resolver,
-																				   executionContext);
+						assert(kd.getMatchPattern() != 0);
+
+						const double	score =
+							kd.getMatchPattern()->getMatchScore(testNode,
+																resolver,
+																executionContext);
 
 						if(score == XPath::s_MatchScoreNone)
 						{
@@ -156,8 +162,10 @@ KeyTable::KeyTable(
 						{
 							// Query from the node, according the the select pattern in the
 							// use attribute in xsl:key.
+							assert(kd.getUse() != 0);
+
 							const XObject* const	xuse =
-								kd.getUse().execute(testNode, resolver, NodeRefList(), executionContext);
+								kd.getUse()->execute(testNode, resolver, NodeRefList(), executionContext);
 
 							const NodeRefListBase*	nl = 0;
 							unsigned int nUseValues;

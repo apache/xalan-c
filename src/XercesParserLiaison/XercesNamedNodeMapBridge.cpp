@@ -79,7 +79,7 @@ XercesNamedNodeMapBridge::XercesNamedNodeMapBridge(
 	m_xercesNamedNodeMap(theXercesNamedNodeMap),
 	m_navigator(theNavigator)
 {
-	assert(m_xercesNamedNodeMap != reinterpret_cast<const DOM_NullPtr*>(0));
+	assert(m_xercesNamedNodeMap != (const DOM_NullPtr*)0);
 }
 
 
@@ -181,7 +181,11 @@ XercesNamedNodeMapBridge::getNamedItemNS(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const
 {
+#if defined(XALAN_NO_MUTABLE)
+	return m_navigator.mapNode(((XercesNamedNodeMapBridge*)this)->m_xercesNamedNodeMap.getNamedItemNS(namespaceURI, localName));
+#else
 	return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItemNS(namespaceURI, localName));
+#endif
 }
 
 

@@ -98,6 +98,7 @@ using std::vector;
 #include "DoubleSupport.hpp"
 #include "STLHelper.hpp"
 #include "TextOutputStream.hpp"
+#include "XalanAutoPtr.hpp"
 
 
 
@@ -393,7 +394,7 @@ OutputString(
 	char* const		theTranscodedString =
 		theString.transcode();
 
-	array_auto_ptr<char>	theJanitor(theTranscodedString);
+	const XalanArrayAutoPtr<char>	theJanitor(theTranscodedString);
 
 	theStream << theTranscodedString;
 }
@@ -429,6 +430,55 @@ substring(
 	}
 }
 
+
+
+#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+
+template<class OutputIteratorType>
+inline void
+XalanCopy(
+			const char*			begin,
+			const char*			end,
+			OutputIteratorType	iterator)
+{
+	for(; begin != end; ++iterator, ++begin)
+	{
+		*iterator = *begin;
+	}
+}
+
+
+
+template<class OutputIteratorType>
+inline void
+XalanCopy(
+			const XalanDOMChar*		begin,
+			const XalanDOMChar*		end,
+			OutputIteratorType		iterator)
+{
+	for(; begin != end; ++iterator, ++begin)
+	{
+		*iterator = *begin;
+	}
+}
+
+
+
+template<class OutputIteratorType, class UnaryFunction>
+inline void
+XalanTransform(
+			const XalanDOMChar*		begin,
+			const XalanDOMChar*		end,
+			OutputIteratorType		iterator,
+			UnaryFunction			function)
+{
+	for(; begin != end; ++iterator, ++begin)
+	{
+		*iterator = function(*begin);
+	}
+}
+
+#endif
 
 
 
@@ -471,9 +521,17 @@ substring(
 
 			const XalanDOMChar* const	ptr = theString.rawBuffer();
 
-			copy(ptr,
-				 ptr + theLength,
-				 back_inserter(theBuffer));
+#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+			XalanCopy(
+				ptr,
+				ptr + theLength,
+				back_inserter(theBuffer));
+#else
+			copy(
+				ptr,
+				ptr + theLength,
+				back_inserter(theBuffer));
+#endif
 
 			return XalanDOMString(theBuffer.begin(), theBuffer.size());
 		}
@@ -505,10 +563,19 @@ TransformXalanDOMString(
 		const XalanDOMChar* const	theBuffer = c_wstr(theInputString);
 		assert(theBuffer != 0);
 
-		transform(theBuffer,
-				  theBuffer + theStringLength,
-				  back_inserter(theConvertedString),
-				  theFunction);
+#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+		XalanTransform(
+			theBuffer,
+			theBuffer + theStringLength,
+			back_inserter(theConvertedString),
+			theFunction);
+#else
+		transform(
+			theBuffer,
+			theBuffer + theStringLength,
+			back_inserter(theConvertedString),
+			theFunction);
+#endif
 
 		return XalanDOMString(theConvertedString.begin(), theConvertedString.size());
 	}
@@ -795,7 +862,7 @@ MakeXalanDOMCharVector(
 	{
 		XalanDOMChar*	theTranscodedData = XMLString::transcode(data);
 
-		array_auto_ptr<XalanDOMChar>	theJanitor(theTranscodedData);
+		const XalanArrayAutoPtr<XalanDOMChar>	theJanitor(theTranscodedData);
 
 		// Create a vector which includes the terminating 0.
 
@@ -810,9 +877,17 @@ MakeXalanDOMCharVector(
 		
 		theResult.reserve(theLength);
 
-		copy(data,
-			 data + theLength,
-			 back_inserter(theResult));
+#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+		XalanCopy(
+			data,
+			data + theLength,
+			back_inserter(theResult));
+#else
+		copy(
+			data,
+			data + theLength,
+			back_inserter(theResult));
+#endif
 
 		return theResult;
 	}
@@ -1058,7 +1133,11 @@ LongToHexDOMString(long		theLong)
 
 	const unsigned int	theLength = length(theBuffer);
 
+#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+	XalanCopy(theBuffer, theBuffer + theLength, theResult);
+#else
 	copy(theBuffer, theBuffer + theLength, theResult);
+#endif
 
 	return XalanDOMString(theResult, theLength);
 
@@ -1082,7 +1161,11 @@ UnsignedLongToHexDOMString(unsigned long	theUnsignedLong)
 
 	const unsigned int	theLength = length(theBuffer);
 
+#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+	XalanCopy(theBuffer, theBuffer + theLength, theResult);
+#else
 	copy(theBuffer, theBuffer + theLength, theResult);
+#endif
 
 	return XalanDOMString(theResult, theLength);
 }
@@ -1116,10 +1199,13 @@ LongToDOMString(long	theLong)
 
 	const unsigned int	theLength = length(theBuffer);
 
+#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+	XalanCopy(theBuffer, theBuffer + theLength, theResult);
+#else
 	copy(theBuffer, theBuffer + theLength, theResult);
+#endif
 
 	return XalanDOMString(theResult, theLength);
-
 #endif
 }
 
@@ -1177,10 +1263,13 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 
 	const unsigned int	theLength = length(theBuffer);
 
+#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+	XalanCopy(theBuffer, theBuffer + theLength, theResult);
+#else
 	copy(theBuffer, theBuffer + theLength, theResult);
+#endif
 
 	return XalanDOMString(theResult, theLength);
-
 #endif
 }
 
@@ -1261,7 +1350,7 @@ DOMStringToStdString(const XalanDOMString&	domString)
     //
     wchar_t* const	tmpSource = new wchar_t[realLen + 1];
 
-	array_auto_ptr<wchar_t>		tmpSourceJanitor(tmpSource);
+	const XalanArrayAutoPtr<wchar_t>	tmpSourceJanitor(tmpSource);
 
     if (isSameSize)
     {
@@ -1283,7 +1372,7 @@ DOMStringToStdString(const XalanDOMString&	domString)
     // Allocate out storage member
     char* const		localForm = new char[targetLen + 1];
 
-	array_auto_ptr<char>	localFormJanitor(localForm);
+	const XalanArrayAutoPtr<char>	localFormJanitor(localForm);
 
     //
     //  And transcode our temp source buffer to the local buffer. Cap it

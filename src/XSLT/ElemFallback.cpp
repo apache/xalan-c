@@ -133,7 +133,11 @@ ElemFallback::execute(
 	if(parent->getXSLToken() == Constants::ELEMNAME_EXTENSIONCALL)
 	{
 		const ElemExtensionCall* const	extensionParent =
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(const ElemExtensionCall*)parent;
+#else
 			static_cast<const ElemExtensionCall*>(parent); 
+#endif
 
 		if(extensionParent->elementAvailable(executionContext) == false)
 		{

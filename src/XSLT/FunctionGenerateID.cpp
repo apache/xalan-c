@@ -97,7 +97,11 @@ getSuffix(const XalanNode*	theNode)
 	{
 		// We're assuming here that each nodes has an implementation with a 
 		// unique address that we can convert into a string
-		return UnsignedLongToDOMString(unsigned long(theNode));
+#if defined(XALAN_OLD_STYLE_CASTS)
+		return UnsignedLongToDOMString((unsigned long)theNode);
+#else
+		return UnsignedLongToDOMString(reinterpret_cast<unsigned long>(theNode));
+#endif
 	}
 	else
 	{

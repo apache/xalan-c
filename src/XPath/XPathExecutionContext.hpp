@@ -117,6 +117,13 @@ public:
 	~XPathExecutionContext();
 
 	/**
+	 * Reset the instance.  This must be called before another
+	 * execution is attempted.
+	 */
+	virtual void
+	reset() = 0;
+
+	/**
 	 * Retrieve the node currently being executed.
 	 * 
 	 * @return current node
@@ -461,7 +468,7 @@ public:
 			assert(m_mutableNodeRefList != 0);
 		}
 
-		// N.B. Non-const copy constructor semantics (like std::auto_ptr)
+#if defined(XALAN_CANNOT_MUTATE_ANONYMOUS_OBJECT)
 		BorrowReturnMutableNodeRefList(const BorrowReturnMutableNodeRefList&	theSource) :
 			m_xpathExecutionContext(theSource.m_xpathExecutionContext),
 			m_mutableNodeRefList(theSource.m_mutableNodeRefList)
@@ -470,15 +477,17 @@ public:
 
 			((BorrowReturnMutableNodeRefList&)theSource).m_mutableNodeRefList = 0;
 		}
+#else
+		// N.B. Non-const copy constructor semantics (like std::auto_ptr)
+		BorrowReturnMutableNodeRefList(BorrowReturnMutableNodeRefList&	theSource) :
+			m_xpathExecutionContext(theSource.m_xpathExecutionContext),
+			m_mutableNodeRefList(theSource.m_mutableNodeRefList)
+		{
+			assert(m_mutableNodeRefList != 0);
 
-//		BorrowReturnMutableNodeRefList(const BorrowReturnMutableNodeRefList&	theSource) :
-//			m_xpathExecutionContext(theSource.m_xpathExecutionContext),
-//			m_mutableNodeRefList(theSource.m_mutableNodeRefList)
-//		{
-//			assert(m_mutableNodeRefList != 0);
-
-//			theSource.m_mutableNodeRefList = 0;
-//		}
+			theSource.m_mutableNodeRefList = 0;
+		}
+#endif
 
 		~BorrowReturnMutableNodeRefList()
 		{

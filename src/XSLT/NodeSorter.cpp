@@ -144,8 +144,7 @@ NodeSorter::sort(
 			theList, 
 			theNodes,
 			keys);
-	assert(theNodes.size() ==
-				static_cast<NodeVectorType::size_type>(theLength));
+	assert(theNodes.size() == NodeVectorType::size_type(theLength));
 
 	// Copy the nodes back to the list in sorted order.
 	theList.clear();
@@ -284,10 +283,11 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 				const NodeSortKey&	theKey,
 				XalanNode*			node) const
 {
-	const XPath&		xpath = theKey.getSelectPattern();
+	const XPath* const	xpath = theKey.getSelectPattern();
+	assert(xpath != 0);
 
 	const NumberResultsCacheMapType::const_iterator		i =
-		m_numberResultsCache.find(&xpath);
+		m_numberResultsCache.find(xpath);
 
 	if (i != m_numberResultsCache.end())
 	{
@@ -303,15 +303,15 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 
 	const XObjectGuard	result(
 		m_executionContext.getXObjectFactory(),
-		xpath.execute(node, theKey.getPrefixResolver(), dummy, m_executionContext));
+		xpath->execute(node, *theKey.getPrefixResolver(), dummy, m_executionContext));
 	assert(result.get() != 0);
 
 	const double	theResult = result->num();
 
 #if defined(XALAN_NO_MUTABLE)
-	((NodeSortKeyCompare*)this)->m_numberResultsCache[&xpath][node] = theResult;
+	((NodeSortKeyCompare*)this)->m_numberResultsCache[xpath][node] = theResult;
 #else
-	m_numberResultsCache[&xpath][node] = theResult;
+	m_numberResultsCache[xpath][node] = theResult;
 #endif
 
 	return theResult;
@@ -324,10 +324,13 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 				const NodeSortKey&	theKey,
 				XalanNode*			node) const
 {
-	const XPath&		xpath = theKey.getSelectPattern();
+	assert(theKey.getPrefixResolver() != 0);
+
+	const XPath* const	xpath = theKey.getSelectPattern();
+	assert(xpath != 0);
 
 	const StringResultsCacheMapType::const_iterator		i =
-		m_stringResultsCache.find(&xpath);
+		m_stringResultsCache.find(xpath);
 
 	if (i != m_stringResultsCache.end())
 	{
@@ -343,15 +346,15 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 
 	const XObjectGuard	result(
 		m_executionContext.getXObjectFactory(),
-		xpath.execute(node, theKey.getPrefixResolver(), dummy, m_executionContext));
+		xpath->execute(node, *theKey.getPrefixResolver(), dummy, m_executionContext));
 	assert(result.get() != 0);
 
 	const XalanDOMString	theResult = result->str();
 
 #if defined(XALAN_NO_MUTABLE)
-	((NodeSortKeyCompare*)this)->m_stringResultsCache[&xpath][node] = theResult;
+	((NodeSortKeyCompare*)this)->m_stringResultsCache[xpath][node] = theResult;
 #else
-	m_stringResultsCache[&xpath][node] = theResult;
+	m_stringResultsCache[xpath][node] = theResult;
 #endif
 
 	return theResult;

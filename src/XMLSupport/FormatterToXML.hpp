@@ -606,13 +606,13 @@ protected:
 	static const XalanDOMCharVectorType		s_formatterToDOMString;
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef stack<bool>									BoolStackType;
-	typedef vector<XalanDOMChar>						DOMCharBufferType;
-	typedef vector<char>								ByteBufferType;
+	typedef vector<bool>				BoolStackType;
+	typedef vector<XalanDOMChar>		DOMCharBufferType;
+	typedef vector<char>				ByteBufferType;
 #else
-	typedef std::stack<bool>							BoolStackType;
-	typedef std::vector<XalanDOMChar>					DOMCharBufferType;
-	typedef std::vector<char>							ByteBufferType;
+	typedef std::vector<bool>			BoolStackType;
+	typedef std::vector<XalanDOMChar>	DOMCharBufferType;
+	typedef std::vector<char>			ByteBufferType;
 #endif
 
 	/**

@@ -96,7 +96,6 @@
 #include "ElemForEach.hpp"
 #include "ElemSort.hpp"
 #include "ElemTemplate.hpp"
-//#include "NodeSortKey.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetExecutionContext.hpp"
 #include "StylesheetRoot.hpp"
@@ -591,7 +590,13 @@ ElemTemplateElement::transformSelectedChildren(
 	if((Constants::ELEMNAME_APPLY_TEMPLATES == tok) ||
 		(Constants::ELEMNAME_FOREACH == tok))
 	{
-		const ElemForEach* foreach = static_cast<const ElemForEach *>(&xslInstruction);
+		const ElemForEach* foreach =
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(const ElemForEach*)&xslInstruction;
+#else
+			static_cast<const ElemForEach*>(&xslInstruction);
+#endif
+
 		const unsigned int nChildren = foreach->getSortElems().size();
 
 		// Reserve the space now...
@@ -990,7 +995,12 @@ ElemTemplateElement::transformChild(
 
 					case XalanNode::ATTRIBUTE_NODE:
 						{
-							const XalanAttr* const	attr = static_cast<const XalanAttr*>(child);
+							const XalanAttr* const	attr =
+#if defined(XALAN_OLD_STYLE_CASTS)
+								(const XalanAttr*)child;
+#else
+								static_cast<const XalanAttr*>(child);
+#endif
 
 							const XalanDOMString	val = attr->getValue();
 
@@ -1565,7 +1575,7 @@ ElemTemplateElement::getNamespaceForPrefixInternal(
 			 }
 			 else
 			 {
-				 ElemTemplateElement*  elem = const_cast<ElemTemplateElement *>(this);
+				 const ElemTemplateElement*  elem = this;
 
 				 while(isEmpty(nameSpace) && elem != 0)
 				 {

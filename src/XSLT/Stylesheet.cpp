@@ -797,8 +797,12 @@ Stylesheet::findTemplate(
 		{
 			const bool		quietConflictWarnings = executionContext.getQuietConflictWarnings();
 
-			XalanDOMString	conflictsString = (quietConflictWarnings == false) 
-									 ? XALAN_STATIC_UCODE_STRING("Specificity conflicts found: ") : XalanDOMString();
+			XalanDOMString	conflictsString;
+			
+			if (quietConflictWarnings == false)
+			{
+				conflictsString = XALAN_STATIC_UCODE_STRING("Specificity conflicts found: ");
+			}
 
 			for(unsigned int i = 0; i < nConflicts; i++)
 			{
@@ -1107,7 +1111,7 @@ void Stylesheet::pushTopLevelVariables(
 					{
 						isParam = true;
 
-						XObject* const	theXObject = arg.getXObject();
+						const XObject* const	theXObject = arg.getXObject();
 
 						if (theXObject != 0)
 						{

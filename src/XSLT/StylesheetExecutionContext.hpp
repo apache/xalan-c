@@ -90,7 +90,14 @@
 
 
 
+#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
+#include <PlatformSupport/XalanNumberFormat.hpp>
+#endif
+
+
+
 #include <PlatformSupport/AttributeListImpl.hpp>
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -144,13 +151,6 @@ public:
 	~StylesheetExecutionContext();
 
 	// These interfaces are new...
-
-	/**
-	 * Reset the instance, and prepare to re-use the
-	 * context.
-	 */
-	virtual void
-	reset() = 0;
 
 	/**
 	 * Determine whether conflicts should be reported.
@@ -1398,16 +1398,13 @@ public:
 	createFormatterToText(Writer&	writer) = 0;
 
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef auto_ptr<XalanNumberFormat>			XalanNumberFormatAutoPtr;
-#else
-	typedef std::auto_ptr<XalanNumberFormat>	XalanNumberFormatAutoPtr;
-#endif
+	typedef XalanAutoPtr<XalanNumberFormat>		XalanNumberFormatAutoPtr;
 
 	/**
 	 * Create a new XalanNumberFormat instance.
 	 *
-	 * @return an auto_ptr that owns a new XalanNumberFormat instance.
+	 * @return an XalanNumberFormatAutoPtr that owns a new
+	 * XalanNumberFormat instance.
 	 */
 	virtual XalanNumberFormatAutoPtr
 	createXalanNumberFormat() = 0;
@@ -1518,6 +1515,9 @@ public:
 	endConstruction(const KeyDeclaration& keyDeclaration) = 0;
 
 	// These interfaces are inherited from XPathExecutionContext...
+
+	virtual void
+	reset() = 0;
 
 	virtual XalanNode*
 	getCurrentNode() const = 0;

@@ -69,7 +69,6 @@
 
 
 
-#include "NameSpace.hpp"
 #include "ElementPrefixResolverProxy.hpp"
 #include "PrefixResolver.hpp"
 #include "XPathSupport.hpp"

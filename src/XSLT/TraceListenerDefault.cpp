@@ -121,7 +121,12 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 			m_printWriter.print(ev.m_styleNode.getElementName());
 			m_printWriter.print(XALAN_STATIC_UCODE_STRING("    "));
 
-			const ElemTextLiteral&	etl = static_cast<const ElemTextLiteral&>(ev.m_styleNode);
+			const ElemTextLiteral&	etl =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const ElemTextLiteral&)ev.m_styleNode;
+#else
+				static_cast<const ElemTextLiteral&>(ev.m_styleNode);
+#endif
 
 			m_printWriter.println(c_wstr(etl.getText()), etl.getText().size());
 		}
@@ -130,7 +135,12 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 	case Constants::ELEMNAME_TEMPLATE:
 		if(m_traceTemplates == true || m_traceElements == true)
 		{
-			const ElemTemplate&		et = static_cast<const ElemTemplate&>(ev.m_styleNode);
+			const ElemTemplate&		et =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const ElemTemplate&)ev.m_styleNode;
+#else
+				static_cast<const ElemTemplate&>(ev.m_styleNode);
+#endif
 
 			m_printWriter.print(XALAN_STATIC_UCODE_STRING("Line #"));
 			m_printWriter.print(ev.m_styleNode.getLineNumber());

@@ -123,7 +123,11 @@ FunctionKey::execute(
 	{
 		XalanDocument* const	docContext = 
 				XalanNode::DOCUMENT_NODE == context->getNodeType() ?
+#if defined(XALAN_OLD_STYLE_CASTS)
+						(XalanDocument*)context :
+#else
 						static_cast<XalanDocument*>(context) :
+#endif
 							context->getOwnerDocument();
 
 		if(0 == docContext)

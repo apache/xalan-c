@@ -72,6 +72,7 @@ NamedNodeMapAttributeList::NamedNodeMapAttributeList(const XalanNamedNodeMap&	th
 	m_lastIndex(theMap.getLength() - 1),
 	m_cachedData()
 {
+	m_cachedData.push_back(XALAN_STATIC_UCODE_STRING("CDATA"));
 }
 
 
@@ -99,28 +100,25 @@ NamedNodeMapAttributeList::getName(const unsigned int index) const
 	// safe, so we have a vector to hold everything.
 	const XalanAttr* const	theAttribute =
 #if defined(XALAN_OLD_STYLE_CASTS)
-		(const XalanAttr*)m_nodeMap.item(m_lastIndex - index)
+		(const XalanAttr*)m_nodeMap.item(m_lastIndex - index);
 #else
 		static_cast<const XalanAttr*>(m_nodeMap.item(m_lastIndex - index));
 #endif
 	assert(theAttribute != 0);
 
-	m_cachedData.push_back(theAttribute->getName());
+	cacheData(theAttribute->getName());
 
 	return c_wstr(m_cachedData.back());
 }
 
 
 
-// This is out here so we don't have to worry about multithreading issues.
-static const XalanDOMCharVectorType		theType(MakeXalanDOMCharVector(XALAN_STATIC_UCODE_STRING("CDATA")));
-
-
-
 const XMLCh*
 NamedNodeMapAttributeList::getType(const unsigned int /* index */) const
 {
-	return &theType.front();
+	assert(m_cachedData.size() > 0);
+
+	return c_wstr(m_cachedData.front());
 }
 
 
@@ -130,13 +128,13 @@ NamedNodeMapAttributeList::getValue(const unsigned int index) const
 {
 	const XalanAttr* const	theAttribute =
 #if defined(XALAN_OLD_STYLE_CASTS)
-		(const XalanAttr*)m_nodeMap.item(m_lastIndex - index)
+		(const XalanAttr*)m_nodeMap.item(m_lastIndex - index);
 #else
 		static_cast<const XalanAttr*>(m_nodeMap.item(m_lastIndex - index));
 #endif
 	assert(theAttribute != 0);
 
-	m_cachedData.push_back(theAttribute->getValue());
+	cacheData(theAttribute->getValue());
 
 	return c_wstr(m_cachedData.back());
 }
@@ -146,7 +144,9 @@ NamedNodeMapAttributeList::getValue(const unsigned int index) const
 const XMLCh*
 NamedNodeMapAttributeList::getType(const XMLCh* const /* name */) const
 {
-	return &theType.front();
+	assert(m_cachedData.size() > 0);
+
+	return c_wstr(m_cachedData.front());
 }
 
 
@@ -173,7 +173,7 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 			static_cast<const XalanAttr*>(theNode);
 #endif
 
-		m_cachedData.push_back(theAttribute->getValue());
+		cacheData(theAttribute->getValue());
 
 		return c_wstr(m_cachedData.back());
 	}
@@ -188,4 +188,16 @@ NamedNodeMapAttributeList::getValue(const char* const name) const
 		MakeXalanDOMCharVector(name);
 
 	return getValue(theName.front());
+}
+
+
+
+void
+NamedNodeMapAttributeList::cacheData(const XalanDOMString&	theData) const
+{
+#if defined(XALAN_NO_MUTABLE)
+	((NamedNodeMapAttributeList*)this)->m_cachedData.push_back(theData);
+#else
+	m_cachedData.push_back(theData);
+#endif
 }

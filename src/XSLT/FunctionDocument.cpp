@@ -161,7 +161,11 @@ FunctionDocument::execute(
 	else
 	{
 		XalanDocument* const	docContext = XalanNode::DOCUMENT_NODE == context->getNodeType() ?
+#if defined(XALAN_OLD_STYLE_CASTS)
+										(XalanDocument*)context :
+#else
 										static_cast<XalanDocument*>(context) :
+#endif
 											context->getOwnerDocument();
 
 		const XObject* const	arg = args[0];
@@ -169,33 +173,51 @@ FunctionDocument::execute(
 
 		XalanDOMString				base;
 
-		if(args.size() > 1)
+		if(args.size() == 1)
+		{
+			assert(executionContext.getPrefixResolver() != 0);
+
+			base = executionContext.getPrefixResolver()->getURI();
+		}
+		else
 		{
 			const XObject* const	arg2 = args[1];
 			assert(arg2 != 0);
 
 			if(XObject::eTypeNodeSet == arg2->getType())
 			{
-				XalanNode* const		baseNode =
-							arg2->nodeset().item(0);
-				assert(baseNode != 0);
+				const NodeRefListBase&	nodeset = arg2->nodeset();
 
-				XalanDocument* const	baseDoc = XalanNode::DOCUMENT_NODE == baseNode->getNodeType() ?
-												static_cast<XalanDocument*>(baseNode) :
-													baseNode->getOwnerDocument();
+				if (nodeset.getLength() == 0)
+				{
+					executionContext.warn("Ignoring the empty node-set provided as the second argument to the function document().",
+										  context);
 
-				base = executionContext.findURIFromDoc(baseDoc);
+					assert(executionContext.getPrefixResolver() != 0);
+
+					base = executionContext.getPrefixResolver()->getURI();
+				}
+				else
+				{
+					XalanNode* const		baseNode =
+								nodeset.item(0);
+					assert(baseNode != 0);
+
+					XalanDocument* const	baseDoc = XalanNode::DOCUMENT_NODE == baseNode->getNodeType() ?
+#if defined(XALAN_OLD_STYLE_CASTS)
+													(XalanDocument*)baseNode :
+#else
+													static_cast<XalanDocument*>(baseNode) :
+#endif
+														baseNode->getOwnerDocument();
+
+					base = executionContext.findURIFromDoc(baseDoc);
+				}
 			}
 			else
 			{
 				base = arg2->str();
 			}
-		}
-		else
-		{
-			assert(executionContext.getPrefixResolver() != 0);
-
-			base = executionContext.getPrefixResolver()->getURI();
 		}
 
 		typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;

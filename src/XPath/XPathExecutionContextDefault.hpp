@@ -122,6 +122,9 @@ public:
 
 	// These interfaces are inherited from XPathExecutionContext...
 
+	virtual void
+	reset();
+
 	virtual XalanNode*
 	getCurrentNode() const;
 

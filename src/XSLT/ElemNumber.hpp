@@ -72,16 +72,10 @@
 
 // Base class header file.
 #include "ElemTemplateElement.hpp"
-#include "AVT.hpp"
+
+
 
 #include "XPath/MutableNodeRefList.hpp"
-
-
-
-// Just locale.h in G++
-#if ! defined(__GNUC__)
-#include <locale>
-#endif
 
 
 
@@ -89,6 +83,7 @@
 
 
 
+class AVT;
 class QName;
 class XalanNumberFormat;
 class XPath;
@@ -105,17 +100,17 @@ struct Counter;
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-#     define XALAN_STD
+	typedef vector<int>						IntArrayType;
+	typedef vector<Counter>					CounterVectorType;
+	typedef map<const ElemNumber*,
+				CounterVectorType,
+				less<const ElemNumber*> >	ElemToCounterVectorMapType;
 #else
-#     define XALAN_STD std::
+	typedef std::vector<int>				IntArrayType;
+	typedef std::vector<Counter>			CounterVectorType;
+	typedef std::map<const ElemNumber*,
+					 CounterVectorType>		ElemToCounterVectorMapType;
 #endif
-	typedef XALAN_STD vector<int>		IntArrayType;
-	typedef XALAN_STD vector<Counter>	CounterVectorType;
-	typedef XALAN_STD map<const ElemNumber*,	CounterVectorType>	ElemToCounterVectorMapType;
-#	if !defined(XALAN_NO_LOCALES)
-	typedef XALAN_STD locale LocaleType;
-#	endif
-#undef XALAN_STD
 
 	/**
 	 * Construct an object corresponding to an "xsl:number" element
@@ -228,16 +223,12 @@ protected:
 			XalanNode*						node, 
 			bool							stopAtFirstFound) const;
 
-#if !defined(XALAN_NO_LOCALES)
 	/**
-	 * Get the locale we should be using.
+	 * Get a formatter.
+	 * @param executionContext The current execution context.
+	 * @param contextNode The current context node.
+	 * @return A new XalanNumberFormat instance.  The caller owns the memory.
 	 */
-	LocaleType
-	getLocale(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						contextNode) const;
-#endif
-
 	XalanNumberFormat*
 	getNumberFormatter(
 			StylesheetExecutionContext&		executionContext,
@@ -245,6 +236,7 @@ protected:
 
 	/**
 	 * Format a vector of numbers into a formatted string.
+	 * @param executionContext The current execution context.
 	 * @param xslNumberElement Element that takes %conversion-atts; attributes.
 	 * @param list Array of one or more integer numbers.
 	 * @return String that represents list according to 
@@ -335,12 +327,12 @@ private:
 	const XPath*	m_valueExpr;
 
 	int				m_level; // = Constants.NUMBERLEVEL_SINGLE;
-	
-	AVT*	m_format_avt;
-	AVT*	m_lang_avt;
-	AVT*	m_lettervalue_avt;
-	AVT*	m_groupingSeparator_avt;
-	AVT*	m_groupingSize_avt;
+
+	const AVT*		m_format_avt;
+	const AVT*		m_lang_avt;
+	const AVT*		m_lettervalue_avt;
+	const AVT*		m_groupingSeparator_avt;
+	const AVT*		m_groupingSize_avt;
 
 	/**
 	* Chars for converting integers into alpha counts.
@@ -539,7 +531,7 @@ private:
 		/**
 		 * Construct a counter object.
 		 */
-		Counter(const ElemNumber*	numberElem) :
+		Counter(const ElemNumber*	numberElem = 0) :
 			m_countNodesStartCount(0),
 			m_countNodes(),
 			m_fromNode(0),

@@ -96,16 +96,32 @@ class XALAN_XPATH_EXPORT XPathProcessorImpl : public XPathProcessor
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-#	define XALAN_STD
+	typedef map<XalanDOMString,
+				int,
+				less<XalanDOMString> >		KeywordsMapType;
+	typedef map<XalanDOMString,
+				XPathExpression::eOpCodes,
+				less<XalanDOMString> >		FunctionNameMapType;
+	typedef map<XalanDOMString,
+				XPathExpression::eOpCodes,
+				less<XalanDOMString> >		AxisNamesMapType;
+	typedef map<XalanDOMString,
+				XPathExpression::eOpCodes,
+				less<XalanDOMString> >		NodeTypesMapType;
+
+	typedef vector<XalanDOMString>			DOMStringVectorType;
 #else
-#	define XALAN_STD std::
+	typedef std::map<XalanDOMString,
+					 int>							KeywordsMapType;
+	typedef std::map<XalanDOMString,
+					 XPathExpression::eOpCodes>		FunctionNameMapType;
+	typedef std::map<XalanDOMString,
+					 XPathExpression::eOpCodes>		AxisNamesMapType;
+	typedef std::map<XalanDOMString,
+					 XPathExpression::eOpCodes>		NodeTypesMapType;
+
+	typedef std::vector<XalanDOMString>				DOMStringVectorType;
 #endif
-	typedef XALAN_STD map<XalanDOMString, int>							KeywordsMapType;
-	typedef XALAN_STD map<XalanDOMString, XPathExpression::eOpCodes>	FunctionNameMapType;
-	typedef XALAN_STD map<XalanDOMString, XPathExpression::eOpCodes>	AxisNamesMapType;
-	typedef XALAN_STD map<XalanDOMString, XPathExpression::eOpCodes>	NodeTypesMapType;
-	typedef XALAN_STD vector<XalanDOMString>							DOMStringVectorType;
-#undef XALAN_STD
 	
 
 	explicit

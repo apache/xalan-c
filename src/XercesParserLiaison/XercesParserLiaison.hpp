@@ -397,9 +397,12 @@ protected:
 private:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef map<const XalanDocument*, XercesDocumentBridge*>		DocumentMapType;
+	typedef map<const XalanDocument*,
+				XercesDocumentBridge*,
+				less<const XalanDocument*> >	DocumentMapType;
 #else
-	typedef std::map<const XalanDocument*, XercesDocumentBridge*>	DocumentMapType;
+	typedef std::map<const XalanDocument*,
+					 XercesDocumentBridge*>		DocumentMapType;
 #endif
 
 	// Data members...

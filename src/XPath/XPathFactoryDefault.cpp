@@ -116,7 +116,11 @@ XPathFactoryDefault::doReturnObject(
 			m_xpaths.erase(i);
 		}
 
+#if defined(XALAN_CANNOT_DELETE_CONST)
+		delete (XPath*)theXPath;
+#else
 		delete theXPath;
+#endif
 
 		return true;
 	}

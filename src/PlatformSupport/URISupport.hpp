@@ -64,10 +64,6 @@
 
 
 
-#include <memory>
-
-
-
 #include <util/XMLURL.hpp>
 
 
@@ -77,6 +73,7 @@
 
 
 #include <PlatformSupport/XSLException.hpp>
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -84,11 +81,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT URISupport
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef auto_ptr<XMLURL>		URLAutoPtrType;
-#else
-	typedef std::auto_ptr<XMLURL>	URLAutoPtrType;
-#endif
+	typedef XalanAutoPtr<XMLURL>	URLAutoPtrType;
 
 	/**
 	 * Determine the fully qualified URI for a string.

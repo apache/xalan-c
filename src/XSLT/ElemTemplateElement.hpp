@@ -76,6 +76,10 @@
 
 
 
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <XPath/PrefixResolver.hpp>
 #include <XPath/NameSpace.hpp>
 

@@ -76,11 +76,18 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesTextBridgeAllocator
 {
 public:
 
-	typedef XercesTextBridge				ObjectType;
+	typedef XercesTextBridge						ObjectType;
 
-	typedef ArenaAllocator<ObjectType>		ArenaAllocatorType;
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+	typedef ArenaBlock<ObjectType>					ArenaBlockType;
 
-	typedef ArenaAllocatorType::size_type	size_type;
+	typedef ArenaAllocator<ObjectType,
+						   ArenaBlockType>			ArenaAllocatorType;
+#else
+	typedef ArenaAllocator<ObjectType>				ArenaAllocatorType;
+#endif
+
+	typedef ArenaAllocatorType::size_type			size_type;
 
 	/**
 	 * Construct an instance that will allocate blocks of the specified size.

@@ -128,6 +128,7 @@ protected:
 	 * @param xpath The xpath that is executing
 	 * @param context The current source tree context node
 	 * @param opPos The current position in the xpath operation map array
+	 * @param scoreHolder a reference to a double to receive the result.
 	 * @return the last matched context node
 	 */
 	XalanNode*

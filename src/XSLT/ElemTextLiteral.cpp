@@ -93,8 +93,7 @@ ElemTextLiteral::ElemTextLiteral(
 	m_ch(ch + start, ch + start + length),
 	m_disableOutputEscaping(disableOutputEscaping)
 {
-	assert(static_cast<XMLChVectorType::size_type>(static_cast<int>(m_ch.size()))
-			== m_ch.size());
+	assert(XMLChVectorType::size_type(int(m_ch.size())) == m_ch.size());
 }
 
 
@@ -116,10 +115,10 @@ ElemTextLiteral::execute(
 
     if(!m_disableOutputEscaping)
     {
-		executionContext.characters(m_ch.begin(), 0, static_cast<unsigned int>(m_ch.size()));
+		executionContext.characters(m_ch.begin(), 0, unsigned(m_ch.size()));
     }
     else
     {
-		executionContext.charactersRaw(m_ch.begin(), 0, static_cast<unsigned int>(m_ch.size()));
+		executionContext.charactersRaw(m_ch.begin(), 0, unsigned(m_ch.size()));
     }
 }

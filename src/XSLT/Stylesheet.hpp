@@ -121,28 +121,47 @@ class XALAN_XSLT_EXPORT Stylesheet : public XalanDocument, private PrefixResolve
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-#	define XALAN_STD
+	typedef map<XalanDOMString,
+				XalanDOMString,
+				less<XalanDOMString> >				PrefixAliasesMapType;
+	typedef map<XalanDOMString,
+				ExtensionNSHandler*,
+				less<XalanDOMString> >				ExtensionNamespacesMapType;
+	typedef map<QName,
+				ElemTemplate*,
+				less<QName> >						ElemTemplateMapType;
+	typedef vector<ElemAttributeSet*> 				AttributeSetMapType;
+	typedef vector<ElemVariable*> 					ElemVariableVectorType;
+	typedef vector<KeyDeclaration>					KeyDeclarationVectorType;
+	typedef vector<KeyTable*> 						KeyTableVectorType;
+	typedef map<const XalanNode*,
+				KeyTable*,
+				less<const XalanNode*> >			KeyTablesTableType;
+	typedef vector<NameSpace> 						NamespaceVectorType;
+	typedef vector<NamespaceVectorType>				NamespacesStackType;
+	typedef vector<QName> 							QNameVectorType;
+	typedef vector<const Stylesheet*>				StylesheetVectorType;
+	typedef vector<XalanDOMString>					URLStackType;
+	typedef vector<const XPath*>					XPathVectorType;
+	typedef vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 #else
-#	define XALAN_STD std::
+	typedef std::map<XalanDOMString, XalanDOMString>		PrefixAliasesMapType;
+	typedef std::map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
+	typedef std::map<QName, ElemTemplate*>					ElemTemplateMapType;
+	typedef std::vector<ElemAttributeSet*> 					AttributeSetMapType;
+	typedef std::vector<ElemVariable*> 						ElemVariableVectorType;
+	typedef std::vector<KeyDeclaration>						KeyDeclarationVectorType;
+	typedef std::vector<KeyTable*> 							KeyTableVectorType;
+	typedef std::map<const XalanNode*, KeyTable*>			KeyTablesTableType;
+	typedef std::vector<NameSpace> 							NamespaceVectorType;
+	typedef std::vector<NamespaceVectorType>				NamespacesStackType;
+	typedef std::vector<QName> 								QNameVectorType;
+	typedef std::vector<const Stylesheet*>					StylesheetVectorType;
+	typedef std::vector<XalanDOMString>						URLStackType;
+	typedef std::vector<const XPath*>						XPathVectorType;
+	typedef std::vector<ElemDecimalFormat*>					ElemDecimalFormatVectorType;
 #endif
 
-typedef XALAN_STD map<XalanDOMString, XalanDOMString>		PrefixAliasesMapType;
-typedef XALAN_STD map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
-typedef XALAN_STD map<QName, ElemTemplate*>					ElemTemplateMapType;
-typedef XALAN_STD vector<ElemAttributeSet*> 				AttributeSetMapType;
-typedef XALAN_STD vector<ElemVariable*> 					ElemVariableVectorType;
-typedef XALAN_STD vector<KeyDeclaration>					KeyDeclarationVectorType;
-typedef XALAN_STD vector<KeyTable*> 						KeyTableVectorType;
-typedef XALAN_STD map<const XalanNode*, KeyTable*>			KeyTablesTableType;
-typedef XALAN_STD vector<NameSpace> 						NamespaceVectorType;
-typedef XALAN_STD vector<NamespaceVectorType>				NamespacesStackType;
-typedef XALAN_STD vector<QName> 							QNameVectorType;
-typedef XALAN_STD vector<const Stylesheet*>					StylesheetVectorType;
-typedef XALAN_STD vector<XalanDOMString>					URLStackType;
-typedef XALAN_STD vector<const XPath*>						XPathVectorType;
-typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
-
-#undef XALAN_STD
 
 	typedef StylesheetExecutionContext::ParamVectorType	ParamVectorType;
 

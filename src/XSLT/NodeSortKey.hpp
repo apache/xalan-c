@@ -110,6 +110,10 @@ public:
 			const XalanDOMString&	langValue, 
 			const PrefixResolver&	resolver);
 
+	NodeSortKey();
+
+	NodeSortKey(const NodeSortKey&	theSource);
+
 	~NodeSortKey();
 
 	NodeSortKey&
@@ -120,10 +124,10 @@ public:
 	 * 
 	 * @return XPath for selection
 	 */
-	const XPath&
+	const XPath*
 	getSelectPattern() const
 	{
-		return *m_selectPat;
+		return m_selectPat;
 	}
 
 	/**
@@ -153,10 +157,10 @@ public:
 	 * 
 	 * @return object for namespace resolution
 	 */
-	const PrefixResolver&
+	const PrefixResolver*
 	getPrefixResolver() const
 	{
-		return *m_prefixResolver;
+		return m_prefixResolver;
 	}
 
 private:

@@ -64,12 +64,17 @@
 
 
 
-// Standard header files.
-#include <memory>
-
-
-
 #include <XalanDOM/XalanDOMString.hpp>
+
+
+
+#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
+#include <XPath/ResultTreeFragBase.hpp>
+#endif
+
+
+
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -140,19 +145,7 @@ private:
 
 	mutable double								m_cachedNumberValue;
 
-#if defined(XALAN_NO_NAMESPACES)
-#if defined(XALAN_NO_MUTABLE)
-	auto_ptr<ResultTreeFragBase>				m_resultTreeFrag;
-#else
-	mutable auto_ptr<ResultTreeFragBase>		m_resultTreeFrag;
-#endif
-#else
-#if defined(XALAN_NO_MUTABLE)
-	std::auto_ptr<ResultTreeFragBase>			m_resultTreeFrag;
-#else
-	mutable std::auto_ptr<ResultTreeFragBase>	m_resultTreeFrag;
-#endif
-#endif
+	mutable XalanAutoPtr<ResultTreeFragBase>	m_resultTreeFrag;
 };
 
 

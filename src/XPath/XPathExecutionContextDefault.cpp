@@ -108,6 +108,18 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 
 XPathExecutionContextDefault::~XPathExecutionContextDefault()
 {
+	reset();
+}
+
+
+
+void
+XPathExecutionContextDefault::reset()
+{
+	m_xpathEnvSupport.reset();
+	m_xpathSupport.reset();
+	m_xobjectFactory.reset();
+
 	assert(m_busyCachedNodeLists.size() == 0);
 	assert(m_argVectorsStackPosition == m_argVectorsStack.begin() ||
 		   m_argVectorsStack.size() == 0);
@@ -120,6 +132,8 @@ XPathExecutionContextDefault::~XPathExecutionContextDefault()
 		m_availableCachedNodeLists.begin(),
 		m_availableCachedNodeLists.end(),
 		DeleteFunctor<MutableNodeRefList>());
+
+	m_availableCachedNodeLists.clear();
 
 	m_argVectorsStack.clear();
 
@@ -338,7 +352,7 @@ XPathExecutionContextDefault::popArgVector()
 	}
 	else
 	{
-		m_argVectorsStackPosition->clear();
+		(*m_argVectorsStackPosition).clear();
 
 		--m_argVectorsStackPosition;
 	}

@@ -157,46 +157,6 @@ StylesheetExecutionContextDefault::~StylesheetExecutionContextDefault()
 
 
 
-void
-StylesheetExecutionContextDefault::reset()
-{
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-	
-	for_each(m_formatterListeners.begin(),
-			 m_formatterListeners.end(),
-			 DeleteFunctor<FormatterListener>());
-
-	m_formatterListeners.clear();
-
-	for_each(m_printWriters.begin(),
-			 m_printWriters.end(),
-			 DeleteFunctor<PrintWriter>());
-
-	m_printWriters.clear();
-
-	for_each(m_textOutputStreams.begin(),
-			 m_textOutputStreams.end(),
-			 DeleteFunctor<TextOutputStream>());
-
-	m_textOutputStreams.clear();
-
-	clearLiveVariablesStack();
-
-	m_variablesStack.reset();
-
-	// Clean up the key table vector
-	for_each(m_keyTables.begin(),
-			 m_keyTables.end(),
-			 makeMapValueDeleteFunctor(m_keyTables));
-
-	m_keyTables.clear();
-	assert(m_matchPatternCache.size() == 0);
-}
-
-
-
 bool
 StylesheetExecutionContextDefault::getQuietConflictWarnings() const
 {
@@ -756,9 +716,9 @@ StylesheetExecutionContextDefault::pushParams(
 			{
 				const ElemWithParam* const	xslParamElement =
 #if defined(XALAN_OLD_STYLE_CASTS)
-							(ElemWithParam*)child;
+						(ElemWithParam*)child;
 #else
-				static_cast<const ElemWithParam*>(child);
+						static_cast<const ElemWithParam*>(child);
 #endif
 
 				const XPath* const	pxpath = xslParamElement->getSelectPattern();
@@ -965,11 +925,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 			XalanNode*					sourceNode,
 			const QName&				mode)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
-
-	auto_ptr<ResultTreeFragBase>
+	XalanAutoPtr<ResultTreeFragBase>
 		theFragment(m_xsltProcessor.createResultTreeFrag(*this,
 														 templateChild,
 														 sourceTree,
@@ -1324,15 +1280,15 @@ StylesheetExecutionContextDefault::installCollationCompareFunctor(const Collatio
 
 
 bool
-StylesheetExecutionContextDefault::getInConstruction(const KeyDeclaration& keyDeclaration) const
+StylesheetExecutionContextDefault::getInConstruction(const KeyDeclaration&	keyDeclaration) const
 {
-	return m_keyDeclarationSet.count(&keyDeclaration)?true:false;
+	return m_keyDeclarationSet.count(&keyDeclaration) != 0 ? true : false;
 }
 
 
 
 void
-StylesheetExecutionContextDefault::beginConstruction(const KeyDeclaration& keyDeclaration)
+StylesheetExecutionContextDefault::beginConstruction(const KeyDeclaration&	keyDeclaration)
 {	
 	m_keyDeclarationSet.insert(&keyDeclaration);
 }
@@ -1340,9 +1296,57 @@ StylesheetExecutionContextDefault::beginConstruction(const KeyDeclaration& keyDe
 	
 
 void
-StylesheetExecutionContextDefault::endConstruction(const KeyDeclaration& keyDeclaration)
+StylesheetExecutionContextDefault::endConstruction(const KeyDeclaration&	keyDeclaration)
 {
 	m_keyDeclarationSet.erase(&keyDeclaration);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::reset()
+{
+	assert(m_elementRecursionStack.size() == 0);
+
+	// Reset the support objects...
+	m_xpathExecutionContextDefault.reset();
+
+	m_xsltProcessor.reset();
+
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+	
+	for_each(m_formatterListeners.begin(),
+			 m_formatterListeners.end(),
+			 DeleteFunctor<FormatterListener>());
+
+	m_formatterListeners.clear();
+
+	for_each(m_printWriters.begin(),
+			 m_printWriters.end(),
+			 DeleteFunctor<PrintWriter>());
+
+	m_printWriters.clear();
+
+	for_each(m_textOutputStreams.begin(),
+			 m_textOutputStreams.end(),
+			 DeleteFunctor<TextOutputStream>());
+
+	m_textOutputStreams.clear();
+
+	clearLiveVariablesStack();
+
+	m_variablesStack.reset();
+
+	// Clean up the key table vector
+	for_each(m_keyTables.begin(),
+			 m_keyTables.end(),
+			 makeMapValueDeleteFunctor(m_keyTables));
+
+	m_keyTables.clear();
+
+	assert(m_matchPatternCache.size() == 0);
 }
 
 

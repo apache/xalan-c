@@ -72,7 +72,11 @@
 // I'm using this to distinguish between null nodes, which are valid, and
 // an uninitialized cached node address.  This is probably bogus, and I'll
 // probably just change this to 0, but this is experimental anyway...
-XalanNode* const	invalidNodeAddress = reinterpret_cast<XalanNode*>(1);
+#if defined(XALAN_OLD_STYLE_CASTS)
+static XalanNode* const		invalidNodeAddress = (XalanNode*)1;
+#else
+static XalanNode* const		invalidNodeAddress = reinterpret_cast<XalanNode*>(1);
+#endif
 
 
 

@@ -202,7 +202,7 @@ const FormatterToHTML::ElementFlagsMapType		FormatterToHTML::s_elementFlags =
 	FormatterToHTML::createElementFlagsMap();
 
 
-const FormatterToHTML::ElemDesc					FormatterToHTML::s_dummyDesc(ElemDesc::BLOCK);
+const FormatterToHTML::ElemDesc					FormatterToHTML::s_dummyDesc(FormatterToHTML::ElemDesc::BLOCK);
 
 
 const XalanDOMCharVectorType	FormatterToHTML::s_doctypeHeaderStartString =
@@ -402,7 +402,7 @@ FormatterToHTML::startElement(
 
 	m_inBlockElem = !isBlockElement;
 
-	m_isRawStack.push(elemDesc.is(ElemDesc::RAW));
+	m_isRawStack.push_back(elemDesc.is(ElemDesc::RAW));
 
 	m_currentElementName = nameUpper;
 
@@ -436,7 +436,7 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 
     const bool	hasChildNodes = childNodesWereAdded();
 
-    m_isRawStack.pop();
+    m_isRawStack.pop_back();
     
     const XalanDOMString	nameUpper = toUpperCase(name);
 
@@ -505,7 +505,7 @@ FormatterToHTML::endElement(const XMLCh* const	name)
     {
 		if (m_preserves.empty() == false)
 		{
-			m_preserves.pop();
+			m_preserves.pop_back();
 		}
     }
 
@@ -532,7 +532,7 @@ FormatterToHTML::characters(
 			charactersRaw(chars, length);
 		}
 		else if (m_isRawStack.empty() == false &&
-				 m_isRawStack.top() == true)
+				 m_isRawStack.back() == true)
 		{
 			writeParentTagEnd();
 

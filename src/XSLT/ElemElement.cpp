@@ -123,9 +123,15 @@ ElemElement::ElemElement(
 
 ElemElement::~ElemElement()
 {
+#if defined(XALAN_CANNOT_DELETE_CONST)
+	delete (AVT*)m_nameAVT;
+
+	delete (AVT*)m_namespaceAVT;
+#else
 	delete m_nameAVT;
 
 	delete m_namespaceAVT;
+#endif
 }
 
 

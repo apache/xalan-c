@@ -66,22 +66,12 @@
 
 
 
-template<class ObjectType,
-		 class DestroyFunctionType = ArenaBlockDestroy<ObjectType>,
-#if defined(XALAN_NO_NAMESPACES)
-		 class AllocatorType = allocator<ObjectType> >
-#else
-		 class AllocatorType = std::allocator<ObjectType> >
-#endif
-class ReusableArenaBlock : public ArenaBlock<ObjectType,
-											 DestroyFunctionType,
-											 AllocatorType>
+template<class ObjectType>
+class ReusableArenaBlock : public ArenaBlock<ObjectType>
 {
 public:
 
-	typedef ArenaBlock<ObjectType,
-					   DestroyFunctionType,
-					   AllocatorType>				BaseClassType;
+	typedef ArenaBlock<ObjectType>	BaseClassType;
 
 	/*
 	 * Construct an ArenaBlock of the specified size
@@ -216,14 +206,15 @@ protected:
 
 private:
 
-	// Cannot and should not be implemented...
-	ReusableArenaBlock(const ReusableArenaBlock&);
+	// Not implemented...
+	ReusableArenaBlock(const ReusableArenaBlock<ObjectType>&);
 
-	ReusableArenaBlock&
-	operator=(const ReusableArenaBlock&);
+	ReusableArenaBlock<ObjectType>&
+	operator=(const ReusableArenaBlock<ObjectType>&);
 
 	bool
-	operator==(const ReusableArenaBlock&) const;
+	operator==(const ReusableArenaBlock<ObjectType>&) const;
+
 
 	/*
 	 * Determine if the block is on the free list.  The behavior is

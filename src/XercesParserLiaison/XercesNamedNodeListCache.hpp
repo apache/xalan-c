@@ -113,9 +113,12 @@ private:
 	const XercesBridgeNavigator&	m_navigator;
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString, XercesNodeListBridge*>			NodeListCacheType;
+	typedef map<XalanDOMString,
+				XercesNodeListBridge*,
+				less<XalanDOMString> >			NodeListCacheType;
 #else
-	typedef std::map<XalanDOMString, XercesNodeListBridge*>		NodeListCacheType;
+	typedef std::map<XalanDOMString,
+					 XercesNodeListBridge*>		NodeListCacheType;
 #endif
 
 #if defined(XALAN_NO_MUTABLE)

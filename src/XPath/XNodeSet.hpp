@@ -64,7 +64,13 @@
 
 
 
-#include <memory>
+#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
+#include <XPath/ResultTreeFragBase.hpp>
+#endif
+
+
+
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -77,6 +83,7 @@
 
 
 
+class ResultTreeFragBase;
 class XalanNode;
 
 
@@ -157,11 +164,7 @@ private:
 
 	const BorrowReturnMutableNodeRefList		m_value;
 
-#if defined(XALAN_NO_NAMESPACES)
-	mutable auto_ptr<ResultTreeFragBase>		m_resultTreeFrag;
-#else
-	mutable std::auto_ptr<ResultTreeFragBase>	m_resultTreeFrag;
-#endif
+	mutable XalanAutoPtr<ResultTreeFragBase>	m_resultTreeFrag;
 
 	mutable XalanDOMString						m_cachedStringValue;
 

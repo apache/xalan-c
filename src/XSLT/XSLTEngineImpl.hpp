@@ -87,8 +87,15 @@
 
 
 
+#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
+#include <XPath/XPathProcessor.hpp>
+#endif
+
+
+
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -142,22 +149,32 @@ class XALAN_XSLT_EXPORT XSLTEngineImpl : public XSLTProcessor, private DocumentH
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-#	define XALAN_STD
+	typedef map<XalanDOMString,
+				int,
+				less<XalanDOMString> >		AttributeKeysMapType;
+	typedef map<XalanDOMString,
+				int,
+				less<XalanDOMString> >		ElementKeysMapType;
+	typedef map<const void*,
+				clock_t,
+				less<const void*> >			DurationsTableMapType;
+	typedef vector<const Locator*>			LocatorStack;
+	typedef vector<NameSpace> 				NamespaceVectorType;
+	typedef vector<NamespaceVectorType>		NamespacesStackType;
+	typedef vector<TraceListener*>			TraceListenerVectorType;
+	typedef vector<bool>					BoolVectorType;
 #else
-#	define XALAN_STD std::
+	typedef std::map<XalanDOMString, int>		AttributeKeysMapType;
+	typedef std::map<XalanDOMString, int>		ElementKeysMapType;
+	typedef std::map<const void*, clock_t>		DurationsTableMapType;
+	typedef std::vector<const Locator*>			LocatorStack;
+	typedef std::vector<NameSpace> 				NamespaceVectorType;
+	typedef std::vector<NamespaceVectorType>	NamespacesStackType;
+	typedef std::vector<TraceListener*>			TraceListenerVectorType;
+	typedef std::vector<bool>					BoolVectorType;
 #endif
 
-	typedef XALAN_STD auto_ptr<XPathProcessor>			XPathProcessorPtrType;
-	typedef XALAN_STD map<XalanDOMString, int>			AttributeKeysMapType;
-	typedef XALAN_STD map<XalanDOMString, int>			ElementKeysMapType;
-	typedef XALAN_STD map<const void*, clock_t>			DurationsTableMapType;
-	typedef XALAN_STD vector<const Locator*>			LocatorStack;
-	typedef XALAN_STD vector<NameSpace> 				NamespaceVectorType;
-	typedef XALAN_STD vector<NamespaceVectorType>		NamespacesStackType;
-	typedef XALAN_STD vector<TraceListener*>			TraceListenerVectorType;
-	typedef XALAN_STD vector<bool>						BoolVectorType;
-#undef XALAN_STD
-
+	typedef XalanAutoPtr<XPathProcessor>				XPathProcessorPtrType;
 	typedef Function::XObjectArgVectorType				XObjectArgVectorType;
 	typedef StylesheetExecutionContext::ParamVectorType	ParamVectorType;
 

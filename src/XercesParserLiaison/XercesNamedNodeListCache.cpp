@@ -116,20 +116,16 @@ XercesNamedNodeListCache::getElementsByTagName(const XalanDOMString&	tagname) co
 	}
 	else
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::make_pair;
-#endif
-
 		XercesNodeListBridge* const		theNewBridge =
 			new XercesNodeListBridge(getXercesNodeList(tagname),
 									 m_navigator);
 
 #if defined(XALAN_NO_MUTABLE)
-		return ((NodeListCacheType&)m_cachedNodeLists).insert(make_pair(tagname,
-																		theNewBridge)).first->second;
+		return (*((XercesNamedNodeListCache*)this)->m_cachedNodeLists.insert(
+			NodeListCacheType::value_type(tagname, theNewBridge)).first).second;
 #else
-		return m_cachedNodeLists.insert(make_pair(tagname,
-												  theNewBridge)).first->second;
+		return (*m_cachedNodeLists.insert(
+			NodeListCacheType::value_type(tagname, theNewBridge)).first).second;
 #endif
 	}
 }
@@ -152,20 +148,16 @@ XercesNamedNodeListCache::getElementsByTagNameNS(
 	}
 	else
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::make_pair;
-#endif
-
 		XercesNodeListBridge* const		theNewBridge =
 			new XercesNodeListBridge(getXercesNodeList(namespaceURI, localName),
 									 m_navigator);
 
 #if defined(XALAN_NO_MUTABLE)
-		return ((NodeListCacheType&)m_cachedNodeLists).insert(make_pair(theSearchString,
-																		theNewBridge)).first->second;
+		return (*((XercesNamedNodeListCache*)this)->m_cachedNodeLists.insert(
+			NodeListCacheType::value_type(theSearchString, theNewBridge)).first).second;
 #else
-		return m_cachedNodeLists.insert(make_pair(theSearchString,
-												  theNewBridge)).first->second;
+		return (*m_cachedNodeLists.insert(
+			NodeListCacheType::value_type(theSearchString, theNewBridge)).first).second;
 #endif
 	}
 }

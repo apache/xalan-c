@@ -88,11 +88,30 @@ public:
 	 */
 	KeyDeclaration(
 			const XalanDOMString&	name,
-			XPath&					matchPattern,
-			XPath&					use) :
+			const XPath&			matchPattern,
+			const XPath&			use) :
 		m_name(name),
 		m_match(&matchPattern),
 		m_use(&use)
+	{
+	}
+
+	explicit
+	KeyDeclaration() :
+		m_name(),
+		m_match(0),
+		m_use(0)
+	{
+	}
+
+	KeyDeclaration(const KeyDeclaration&	theSource) :
+		m_name(theSource.m_name),
+		m_match(theSource.m_match),
+		m_use(theSource.m_use)
+	{
+	}
+
+	~KeyDeclaration()
 	{
 	}
 
@@ -112,10 +131,10 @@ public:
 	 * 
 	 * @return XPath for "use" attribute
 	 */
-	const XPath&
+	const XPath*
 	getUse() const
 	{
-		return *m_use;
+		return m_use;
 	}
 
 	/**
@@ -123,10 +142,10 @@ public:
 	 * 
 	 * @return XPath for "match" attribute
 	 */
-	const XPath&
+	const XPath*
 	getMatchPattern() const
 	{
-		return *m_match;
+		return m_match;
 	}
 
 private:

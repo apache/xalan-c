@@ -101,6 +101,14 @@ class XALAN_XSLT_EXPORT StylesheetHandler : public FormatterListener
 
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<ElemTemplateElement*>		ElemTemplateStackType;
+	typedef vector<ElemTextLiteral*>			ElemTextLiteralStackType;
+#else
+	typedef std::vector<ElemTemplateElement*>	ElemTemplateStackType;
+	typedef std::vector<ElemTextLiteral*>		ElemTextLiteralStackType;
+#endif
+
 	/**
 	 * Stack to keep track of the current include base.
 	 */
@@ -395,14 +403,6 @@ private:
 	XalanDOMString	m_pendingException;
 	bool			m_exceptionPending;
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<ElemTemplateElement*>		ElemTemplateStackType;
-	typedef vector<ElemTextLiteral*>			ElemTextLiteralStackType;
-#else
-	typedef std::vector<ElemTemplateElement*>	ElemTemplateStackType;
-	typedef std::vector<ElemTextLiteral*>		ElemTextLiteralStackType;
-#endif
-
 	/**
 	 * The owning stylesheet.
 	 */
@@ -470,10 +470,13 @@ private:
 	/**
 	 * Init the wrapperless template
 	 */
-	ElemTemplateElement* initWrapperless (const XalanDOMString& name,
-							const AttributeList& atts,
-							int lineNumber,
-							int columnNumber);
+	ElemTemplateElement*
+	initWrapperless(
+			const XalanDOMString& name,
+			const AttributeList& atts,
+			int lineNumber,
+			int columnNumber);
+
 
 	class PushPopIncludeState
 	{

@@ -67,6 +67,59 @@
 
 
 
+#if defined(XALAN_NO_STD_ALLOCATORS) && !defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
+#include <PlatformSupport/XalanAllocator.hpp>
+#endif
+
+
+#define XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION
+#if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
+
+template <class Type>
+class ArenaBlockAllocator
+{
+public:
+
+	typedef size_t			size_type;
+	typedef ptrdiff_t		difference_type;
+	typedef Type*			pointer;
+	typedef const Type*		const_pointer;
+	typedef Type&			reference;
+	typedef const Type&		const_reference;
+	typedef Type			value_type;
+
+	ArenaBlockAllocator()
+	{
+	}
+
+	ArenaBlockAllocator(const ArenaBlockAllocator<Type>&)
+	{
+	};
+
+	~ArenaBlockAllocator()
+	{
+	}
+
+	pointer
+	allocate(
+			size_type		size,
+			const void*		/* hint */ = 0)
+	{
+		return (pointer)operator new(size * sizeof(Type));
+	}
+
+	void
+	deallocate(
+				pointer		p,
+				size_type	/* n */)
+	{
+		operator delete(p);
+	}
+};
+#endif
+
+
+
 template<class ObjectType>
 class ArenaBlockDestroy
 {
@@ -81,18 +134,22 @@ public:
 
 
 
-template<class ObjectType,
-		 class DestroyFunctionType = ArenaBlockDestroy<ObjectType>,
-#if defined(XALAN_NO_NAMESPACES)
-		 class AllocatorType = allocator<ObjectType> >
-#else
-		 class AllocatorType = std::allocator<ObjectType> >
-#endif
+template<class ObjectType>
 class ArenaBlock
 {
 public:
 
-	typedef AllocatorType::size_type	size_type;
+#if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
+	typedef ArenaBlockAllocator<ObjectType>	AllocatorType;
+#elif defined(XALAN_NO_STD_ALLOCATORS)
+	typedef XalanAllocator<ObjectType>		AllocatorType;
+#else
+	typedef std::allocator<ObjectType>		AllocatorType;
+#endif
+
+	typedef ArenaBlockDestroy<ObjectType>	DestroyFunctionType;
+
+	typedef AllocatorType::size_type		size_type;
 
 	/*
 	 * Construct an ArenaBlock of the specified size
@@ -101,6 +158,7 @@ public:
 	 * @param theBlockSize The size of the block (the number of objects it can contain).
 	 */
 	ArenaBlock(size_type	theBlockSize) :
+		m_destroyFunction(DestroyFunctionType()),
 		m_objectCount(0),
 		m_blockSize(theBlockSize),
 		m_objectBlock(0),
@@ -330,8 +388,8 @@ protected:
 	struct DeleteFunctor
 	{
 		DeleteFunctor(
-				const ArenaBlock&			theArenaBlock,
-				const DestroyFunctionType&	theDestroyFunction) :
+				const ArenaBlock<ObjectType>&	theArenaBlock,
+				const DestroyFunctionType&		theDestroyFunction) :
 			m_arenaBlock(theArenaBlock),
 			m_destroyFunction(theDestroyFunction)
 		{
@@ -348,8 +406,8 @@ protected:
 
 	private:
 
-		const ArenaBlock&			m_arenaBlock;
-		const DestroyFunctionType&	m_destroyFunction;
+		const ArenaBlock<ObjectType>&	m_arenaBlock;
+		const DestroyFunctionType&		m_destroyFunction;
 	};
 
 	friend struct DeleteFunctor;
@@ -358,14 +416,15 @@ protected:
 
 private:
 
-	// Cannot and should not be implemented...
-	ArenaBlock(const ArenaBlock&);
+	// Not implemented...
+	ArenaBlock(const ArenaBlock<ObjectType>&);
 
-	ArenaBlock&
-	operator=(const ArenaBlock&);
+	ArenaBlock<ObjectType>&
+	operator=(const ArenaBlock<ObjectType>&);
 
 	bool
-	operator==(const ArenaBlock&) const;
+	operator==(const ArenaBlock<ObjectType>&) const;
+
 
 	// data members...
 	size_type				m_objectCount;

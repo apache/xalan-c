@@ -115,14 +115,14 @@ XPathExpression::InvalidOpCodeException::FormatErrorMessage(int		theOpCode)
 	using std::ostrstream;
 #endif
 
-	ostrstream	theFormatter;
+	char	theBuffer[50];
+
+	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
 
 	theFormatter << "Invalid op code "
 				 << theOpCode
 				 << " was detected."
 				 << '\0';
-
-	theFormatter.freeze(false);
 
 	return theFormatter.str();
 }
@@ -155,7 +155,9 @@ XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
 	using std::ostrstream;
 #endif
 
-	ostrstream	theFormatter;
+	char	theBuffer[200];
+
+	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
 
 	theFormatter << "An invalid number of arguments for op code "
 				 << theOpCode
@@ -166,8 +168,6 @@ XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
 				 << theSuppliedCount
 				 << " arguments(s) were supplied."
 				 << '\0';
-
-	theFormatter.freeze(false);
 
 	return theFormatter.str();
 }
@@ -198,7 +198,9 @@ XPathExpression::InvalidArgumentException::FormatErrorMessage(
 	using std::ostrstream;
 #endif
 
-	ostrstream	theFormatter;
+	char	theBuffer[100];
+
+	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
 
 	theFormatter << "An invalid argument of "
 				 << theValue
@@ -206,8 +208,6 @@ XPathExpression::InvalidArgumentException::FormatErrorMessage(
 				 << theOpCode
 				 << "."
 				 << '\0';
-
-	theFormatter.freeze(false);
 
 	return theFormatter.str();
 }
@@ -234,7 +234,9 @@ XPathExpression::InvalidRelativeTokenPosition::FormatErrorMessage(int	theOffset)
 	using std::ostrstream;
 #endif
 
-	ostrstream	theFormatter;
+	char	theBuffer[100];
+
+	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
 
 	theFormatter << "An invalid offset of "
 				 << theOffset
@@ -558,8 +560,7 @@ XPathExpression::appendOpCode(eOpCodes	theOpCode)
 		}
 	}
 
-	assert(opCodeMapSize() ==
-			static_cast<OpCodeMapSizeType>(opCodeMapLength()));
+	assert(opCodeMapSize() == OpCodeMapSizeType(opCodeMapLength()));
 }
 
 

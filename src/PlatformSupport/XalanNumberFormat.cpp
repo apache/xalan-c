@@ -60,6 +60,7 @@
 
 #include "DOMStringHelper.hpp"
 #include "STLHelper.hpp"
+#include "XalanAutoPtr.hpp"
 
 
 
@@ -130,7 +131,7 @@ XalanNumberFormat::applyGrouping(const XalanDOMString& value)
 
 	XalanDOMChar* const		buffer = new XalanDOMChar[bufsize];
 
-	array_auto_ptr<XalanDOMChar>	theGuard(buffer);
+	XalanArrayAutoPtr<XalanDOMChar>		theGuard(buffer);
 
 	XalanDOMChar*			p = buffer + bufsize - 1;
 

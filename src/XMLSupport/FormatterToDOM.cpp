@@ -158,7 +158,7 @@ FormatterToDOM::startElement(
 
 	append(elem);
 
-	m_elemStack.push(m_currentElem);
+	m_elemStack.push_back(m_currentElem);
 
 	m_currentElem = elem;
 }
@@ -171,9 +171,9 @@ FormatterToDOM::endElement(
 {
 	if(m_elemStack.empty() == false)
 	{
-		m_currentElem = m_elemStack.top();
+		m_currentElem = m_elemStack.back();
 
-		m_elemStack.pop();
+		m_elemStack.pop_back();
 	}
 	else
 	{

@@ -118,6 +118,12 @@ ElemAttribute::ElemAttribute(
 
 	if(0 == m_pNameAVT)
 	{
+#if defined(XALAN_CANNOT_DELETE_CONST)
+		delete (AVT*)m_pNamespaceAVT;
+#else
+		delete m_pNamespaceAVT;
+#endif
+
 		constructionContext.error(name + " must have a name attribute.");
 	} 
 	
@@ -127,9 +133,15 @@ ElemAttribute::ElemAttribute(
 
 ElemAttribute::~ElemAttribute()
 {
+#if defined(XALAN_CANNOT_DELETE_CONST)
+	delete (AVT*)m_pNameAVT;
+
+	delete (AVT*)m_pNamespaceAVT;
+#else
 	delete m_pNameAVT;
 
 	delete m_pNamespaceAVT;
+#endif
 }
 
 

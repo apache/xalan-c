@@ -194,12 +194,6 @@ XNodeSet::str() const
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-using std::auto_ptr;
-#endif
-
-
-
 const ResultTreeFragBase&
 XNodeSet::rtree(XPathExecutionContext&	executionContext) const
 {
@@ -218,18 +212,10 @@ XNodeSet::rtree(XPathExecutionContext&	executionContext) const
 			theFrag->appendChild(m_value->item(i)->cloneNode(true));
 		}
 
-#if defined(XALAN_OLD_AUTO_PTR)
-#if defined(XALAN_NO_MUTABLE)
-		((XNodeSet*)this)->m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
-#else
-		m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
-#endif
-#else
 #if defined(XALAN_NO_MUTABLE)
 		((XNodeSet*)this)->m_resultTreeFrag.reset(theFrag);
 #else
 	    m_resultTreeFrag.reset(theFrag);
-#endif
 #endif
 	}
 

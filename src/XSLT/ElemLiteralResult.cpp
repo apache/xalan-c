@@ -319,6 +319,18 @@ void ElemLiteralResult::execute(
 
 bool
 ElemLiteralResult::isAttrOK(
+			int						tok,
+			const XalanDOMChar*		attrName,
+			const AttributeList&	atts,
+			int						which) const
+{
+	return ElemUse::isAttrOK(tok, attrName, atts, which);
+}
+
+
+
+bool
+ElemLiteralResult::isAttrOK(
 			const XalanDOMChar*				attrName,
 			const AttributeList&			/* atts */,
 			int								/* which */,

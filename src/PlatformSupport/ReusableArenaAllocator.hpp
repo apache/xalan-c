@@ -70,29 +70,25 @@
 
 
 
-template<class ObjectType,
-		 class DestroyFunctionType = ArenaBlockDestroy<ObjectType>,
-#if defined(XALAN_NO_NAMESPACES)
-		 class AllocatorType = allocator<ObjectType>,
-#else
-		 class AllocatorType = std::allocator<ObjectType>,
-#endif
-		 class ReusableArenaBlockType = ReusableArenaBlock<ObjectType,
-														   DestroyFunctionType,
-														   AllocatorType> >
+template<class ObjectType>
 class ReusableArenaAllocator : public ArenaAllocator<ObjectType,
-													 DestroyFunctionType,
-													 AllocatorType,
-													 ReusableArenaBlockType>
+													 ReusableArenaBlock<ObjectType> >
 {
 public:
+
+	typedef ReusableArenaBlock<ObjectType>				ReusableArenaBlockType;
 
 	typedef ReusableArenaBlockType::size_type			size_type;
 
 	typedef ArenaAllocator<ObjectType,
-						   DestroyFunctionType,
-						   AllocatorType,
 						   ReusableArenaBlockType>		BaseClassType;
+
+	// $$$ ToDo: This typedef is here because of a bug in gcc.
+#if defined (XALAN_NO_NAMESPACES)
+	typedef	vector<ReusableArenaBlockType*>				ArenaBlockListType;
+#else
+	typedef	std::vector<ReusableArenaBlockType*>		ArenaBlockListType;
+#endif
 
 	/*
 	 * Construct an instance that will allocate blocks of the specified size.
@@ -130,7 +126,6 @@ public:
 		}
 		else
 		{
-			// Search for the block that owns the object...
 			const ArenaBlockListType::reverse_iterator	theEnd = m_blocks.rend();
 
 			ArenaBlockListType::reverse_iterator	i = m_blocks.rbegin();
@@ -173,8 +168,9 @@ public:
 			m_lastBlockReferenced->blockAvailable() == false)
 		{
 			// Search back for a block with some space available...
-			ArenaBlockListType::reverse_iterator	i = m_blocks.rbegin();
 			const ArenaBlockListType::reverse_iterator	theEnd = m_blocks.rend();
+
+			ArenaBlockListType::reverse_iterator	i = m_blocks.rbegin();
 
 			while(i != theEnd)
 			{
@@ -237,8 +233,9 @@ public:
 			if (fResult == false)
 			{
 				// Search back for a block with some space available...
-				ArenaBlockListType::const_reverse_iterator	i = m_blocks.rbegin();
 				const ArenaBlockListType::const_reverse_iterator	theEnd = m_blocks.rend();
+
+				ArenaBlockListType::const_reverse_iterator	i = m_blocks.rbegin();
 
 				while(i != theEnd)
 				{
@@ -263,6 +260,13 @@ public:
 
 private:
 
+	// Not defined...
+	ReusableArenaAllocator(const ReusableArenaAllocator<ObjectType>&);
+
+	ReusableArenaAllocator<ObjectType>&
+	operator=(const ReusableArenaAllocator<ObjectType>&);
+
+	// Data members...
 	ReusableArenaBlockType*		m_lastBlockReferenced;
 };
 

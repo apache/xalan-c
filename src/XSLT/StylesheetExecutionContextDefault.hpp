@@ -112,9 +112,6 @@ public:
 
 	// These interfaces are inherited from StylesheetExecutionContext...
 
-	virtual void
-	reset();
-
 	virtual bool
 	getQuietConflictWarnings() const;
 
@@ -539,6 +536,9 @@ public:
 	endConstruction(const KeyDeclaration& keyDeclaration);
 
 	// These interfaces are inherited from XPathExecutionContext...
+
+	virtual void
+	reset();
 
 	virtual XalanNode*
 	getCurrentNode() const;

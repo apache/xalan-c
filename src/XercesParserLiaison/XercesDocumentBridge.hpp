@@ -64,7 +64,6 @@
 
 
 #include <deque>
-#include <memory>
 #include <set>
 #include <vector>
 
@@ -75,6 +74,16 @@
 
 
 #include <XalanDOM/XalanDocument.hpp>
+
+
+
+#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
+#include <XalanDOM/XalanDOMImplementation.hpp>
+#endif
+
+
+
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -97,7 +106,6 @@
 
 
 
-class XalanDOMImplementation;
 class XercesAttrBridge;
 class XercesCommentBridge;
 class XercesCDATASectionBridge;
@@ -478,15 +486,13 @@ private:
 
 	mutable XercesToXalanNodeMap			m_nodeMap;
 
-#if defined(XALAN_NO_NAMESPACES)
-	auto_ptr<XalanDOMImplementation>		m_domImplementation;
+	XalanAutoPtr<XalanDOMImplementation>	m_domImplementation;
 
+#if defined(XALAN_NO_NAMESPACES)
 	typedef deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
 
 	typedef deque<XalanNode*>				NodeVectorType;
 #else
-	std::auto_ptr<XalanDOMImplementation>	m_domImplementation;
-
 	typedef std::deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
 
 	typedef std::deque<XalanNode*>				NodeVectorType;

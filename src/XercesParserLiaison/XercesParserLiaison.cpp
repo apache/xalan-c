@@ -60,7 +60,6 @@
 
 
 #include <algorithm>
-#include <memory>
 #include <iostream>
 
 
@@ -73,6 +72,7 @@
 
 
 #include <PlatformSupport/STLHelper.hpp>
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -146,11 +146,7 @@ XercesParserLiaison::parseXMLStream(
 			DocumentHandler&		handler,
 			const XalanDOMString&	/* identifier */)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
-
-	auto_ptr<SAXParser>		theParser(CreateSAXParser());
+	XalanAutoPtr<SAXParser>		theParser(CreateSAXParser());
 
 	theParser->setDocumentHandler(&handler);
 
@@ -164,11 +160,7 @@ XercesParserLiaison::parseXMLStream(
 			InputSource&			reader,
 			const XalanDOMString&	/* identifier */)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
-
-	auto_ptr<DOMParser>		theParser(CreateDOMParser());
+	XalanAutoPtr<DOMParser>		theParser(CreateDOMParser());
 
 	theParser->parse(reader);
 

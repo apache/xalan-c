@@ -140,7 +140,7 @@ XResultTreeFrag::num() const
 	if (m_cachedNumberValue == 0.0)
 	{
 #if defined(XALAN_NO_MUTABLE)
-		((XNodeSet*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str());
+		((XResultTreeFrag*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str());
 #else
 		m_cachedNumberValue = DoubleSupport::toDouble(str());
 #endif

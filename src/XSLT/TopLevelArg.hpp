@@ -105,8 +105,8 @@ public:
 	 * @param variable	the XObject instance.
 	 */
 	TopLevelArg(
-		const QName&	name,
-		XObject*		variable);
+		const QName&	name = QName(),
+		const XObject*	variable = 0);
 
 	/**
 	 * Copy constructor
@@ -147,7 +147,7 @@ public:
 	 * 
 	 * @return pointer to the XObject instance
 	 */
-	XObject*
+	const XObject*
 	getXObject() const
 	{
 		return m_xobject;
@@ -171,11 +171,11 @@ public:
 
 private:
 
-	QName							m_qname;
+	QName				m_qname;
 
-	XalanDOMString					m_expression;
+	XalanDOMString		m_expression;
 
-	XObject*						m_xobject;
+	const XObject*		m_xobject;
 };
 
 

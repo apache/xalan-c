@@ -117,7 +117,7 @@ URISupport::getURLStringFromString(const XalanDOMString&	urlString)
 	else
 	{
 		// Assume it's a file specification...
-		array_auto_ptr<XMLCh>	theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
+		XalanArrayAutoPtr<XMLCh>	theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
 		assert(theFullPath.get() != 0);
 
 		theNormalizedURI = theFullPath.get();

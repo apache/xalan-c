@@ -60,11 +60,8 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanAutoPtr.hpp>
 #include <PlatformSupport/XalanDecimalFormatSymbols.hpp>
-
-
-
-#include <memory>
 
 
 
@@ -219,14 +216,10 @@ ICUBridge::FormatNumber(
 			const XalanDecimalFormatSymbols*	theXalanDFS,
 			XalanDOMString&						theResult)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
-
 	UErrorCode				theStatus = U_ZERO_ERROR;
 
-	// Use an auto_ptr, to keep this safe until we construct the DecimalFormat instance.
-	const auto_ptr<DecimalFormatSymbols>	theDFS(new DecimalFormatSymbols(theStatus));
+	// Use a XalanAutoPtr, to keep this safe until we construct the DecimalFormat instance.
+	XalanAutoPtr<DecimalFormatSymbols>	theDFS(new DecimalFormatSymbols(theStatus));
 
 	if (theStatus == U_ZERO_ERROR ||
 		theStatus == U_USING_DEFAULT_ERROR)
@@ -255,7 +248,7 @@ ICUBridge::FormatNumber(
 
 		UnicodeString	theUnicodeResult;
 
-		// Construct a DecimalFormat.  Note that we release the auto_ptr, since the
+		// Construct a DecimalFormat.  Note that we release the XalanAutoPtr, since the
 		// DecimalFormat will adopt the DecimalFormatSymbols instance.
 		DecimalFormat	theFormatter(XalanDOMStringToUnicodeString(thePattern), theDFS.release(), theStatus);
 
@@ -292,14 +285,10 @@ ICUBridge::collationCompare(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
-
 	UErrorCode				theStatus = U_ZERO_ERROR;
 
-	// Create a collcator, and keep it in an auto_ptr
-	const auto_ptr<Collator>	theCollator(Collator::createInstance(theStatus));
+	// Create a collator, and keep it in an XalanAutoPtr...
+	const XalanAutoPtr<Collator>	theCollator(Collator::createInstance(theStatus));
 
 	if (theStatus == U_ZERO_ERROR || theStatus == U_USING_DEFAULT_ERROR)
 	{

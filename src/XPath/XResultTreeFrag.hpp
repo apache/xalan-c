@@ -64,7 +64,17 @@
 
 
 
-#include <memory>
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+#if defined(XALAN_AUTO_PTR_NEEDS_DEFINITION)
+#include <XPath/ResultTreeFragBase.hpp>
+#endif
+
+
+
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -74,10 +84,7 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
+class ResultTreeFragBase;
 class XPathSupport;
 
 
@@ -161,11 +168,7 @@ private:
 	virtual NodeRefListBase*
 	clone() const;
 
-#if defined(XALAN_NO_NAMESPACES)
-	auto_ptr<ResultTreeFragBase>		m_value;
-#else
-	std::auto_ptr<ResultTreeFragBase>	m_value;
-#endif
+	XalanAutoPtr<ResultTreeFragBase>	m_value;
 
 	mutable XalanDOMString				m_cachedStringValue;
 

@@ -153,7 +153,9 @@ private:
 NodeImpl*
 XercesToXalanNodeMap::getNodeImpl(const XalanNode*	theXalanNode) const
 {
+#if !defined(XALAN_NO_NAMESPACES)
 	using std::find_if;
+#endif
 
 	const XercesNodeMapType::const_iterator		i =
 		find_if(m_xercesMap.begin(),

@@ -114,6 +114,9 @@ public:
 
 private:
 
+	void
+	cacheData(const XalanDOMString&		theData) const;
+
 	// Not implemented...
 	NamedNodeMapAttributeList&
 	operator=(const NamedNodeMapAttributeList&);

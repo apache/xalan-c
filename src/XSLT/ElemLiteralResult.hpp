@@ -103,6 +103,13 @@ public:
 	
 	virtual bool
 	isAttrOK(
+			int						tok,
+			const XalanDOMChar*		attrName,
+			const AttributeList&	atts,
+			int						which) const;
+
+	virtual bool
+	isAttrOK(
 			const XalanDOMChar*				attrName,
 			const AttributeList&			atts,
 			int								which,

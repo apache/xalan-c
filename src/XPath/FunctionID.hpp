@@ -141,7 +141,11 @@ public:
 
 		// Get the context document, so we can search for nodes.
 		const XalanDocument* const	theDocContext = context->getNodeType() == XalanNode::DOCUMENT_NODE ?
-										reinterpret_cast<const XalanDocument*>(context) :
+#if defined(XALAN_OLD_STYLE_CASTS)
+										(const XalanDocument*)context :
+#else
+										static_cast<const XalanDocument*>(context) :
+#endif
 										context->getOwnerDocument();
 		assert(theDocContext != 0);
 

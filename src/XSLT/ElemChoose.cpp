@@ -124,7 +124,12 @@ ElemChoose::execute(
 
 		if(Constants::ELEMNAME_WHEN == type)
 		{
-			const ElemWhen* when = static_cast<const ElemWhen*>(node);
+			const ElemWhen* when = 
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const ElemWhen*)node;
+#else
+				static_cast<const ElemWhen*>(node);
+#endif
 
 			const XPath* const		theXPath = when->getXPath();
 			assert(theXPath != 0);

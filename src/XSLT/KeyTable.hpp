@@ -77,7 +77,7 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
@@ -170,7 +170,6 @@ private:
 	 */
 	const XalanNode*	m_docKey;
 
-	/**
 	/**
 	 * Table of element keys.  The table will be built on demand, 
 	 * when a key is requested, or set by the XMLParserLiaison or 
