@@ -98,7 +98,7 @@ public:
 	 */
 	FormatterToDOM(
 			XalanDocument*			doc,
-			XalanDocumentFragment*	docFrag = 0,
+			XalanDocumentFragment*	docFrag,
 			XalanElement*			currentElement = 0);
 
 	/**
