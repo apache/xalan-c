@@ -328,7 +328,6 @@ XPath::doGetMatchScore(
 XPath::eMatchScore
 XPath::getMatchScore(
 			XalanNode*				node,
-			const PrefixResolver&	resolver,
 			XPathExecutionContext&	executionContext) const
 {
 	eMatchScore		score = eMatchScoreNone;
@@ -344,26 +343,37 @@ XPath::getMatchScore(
 	{
 		assert(node != 0);
 
-		const PrefixResolver* const		theCurrentResolver =
-			executionContext.getPrefixResolver();
-
-		if (theCurrentResolver == &resolver)
-		{
-			doGetMatchScore(node, executionContext, score);
-		}
-		else
-		{
-			// Push and pop the PrefixResolver...
-			XPathExecutionContext::PrefixResolverSetAndRestore	theSetAndRestore(
-										executionContext,
-										theCurrentResolver,
-										&resolver);
-
-			doGetMatchScore(node, executionContext, score);
-		}
+		doGetMatchScore(node, executionContext, score);
 	}
-	
+
 	return score;
+}
+
+
+
+XPath::eMatchScore
+XPath::getMatchScore(
+			XalanNode*				node,
+			const PrefixResolver&	resolver,
+			XPathExecutionContext&	executionContext) const
+{
+	const PrefixResolver* const		theCurrentResolver =
+		executionContext.getPrefixResolver();
+
+	if (theCurrentResolver == &resolver)
+	{
+		return getMatchScore(node, executionContext);
+	}
+	else
+	{
+		// Push and pop the PrefixResolver...
+		XPathExecutionContext::PrefixResolverSetAndRestore	theSetAndRestore(
+									executionContext,
+									theCurrentResolver,
+									&resolver);
+
+		return getMatchScore(node, executionContext);
+	}
 }
 
 
@@ -1001,8 +1011,6 @@ XPath::variable(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	assert(executionContext.getPrefixResolver() != 0);
-
 	const XObject&	ns = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
 
 	const XObject&	varName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 3]];
@@ -1686,10 +1694,22 @@ XPath::stepPattern(
 			{
 				// This is a quick hack to look ahead and see if we have
 				// number literal as the predicate, i.e. match="foo[1]".
-				if (m_expression.getOpCodeMapValue(opPos + 2) == XPathExpression::eOP_NUMBERLIT,
-					XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
+				if (XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
 				{
-					score = handleFoundIndex(executionContext, context, startOpPos);
+					if (m_expression.getOpCodeMapValue(opPos + 2) == XPathExpression::eOP_NUMBERLIT)
+					{
+						score = handleFoundIndexPositional(
+							executionContext,
+							context,
+							startOpPos);
+					}
+					else
+					{
+						score = handleFoundIndex(
+							executionContext,
+							context,
+							startOpPos);
+					}
 				}
 				else
 				{
@@ -1765,6 +1785,42 @@ XPath::handleFoundIndex(
 		}
 		else
 		{
+			return eMatchScoreOther;
+		}
+	}
+}
+
+
+
+XPath::eMatchScore
+XPath::handleFoundIndexPositional(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				localContext,
+			int 					startOpPos) const
+{
+	XalanNode* const	parentContext =
+				DOMServices::getParentOfNode(*localContext);
+
+	if (parentContext == 0)
+	{
+		return eMatchScoreNone;
+	}
+	else
+	{
+		typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+		BorrowReturnMutableNodeRefList	mnl(executionContext);
+
+		step(executionContext, parentContext, startOpPos, *mnl);
+
+		if (mnl->empty() == true)
+		{
+			return eMatchScoreNone;
+		}
+		else
+		{
+			assert(mnl->getLength() == 1 && mnl->item(0) == localContext);
+
 			return eMatchScoreOther;
 		}
 	}

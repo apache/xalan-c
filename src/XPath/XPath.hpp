@@ -335,6 +335,18 @@ public:
 	 * Get the match score for the specified node.
 	 *
 	 * @param node The node for the score
+	 * @param executionContext current execution context
+	 * @return union of node-set operands
+	 */
+	eMatchScore
+	getMatchScore(
+			XalanNode*				node,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Get the match score for the specified node.
+	 *
+	 * @param node The node for the score
 	 * @param resolver The prefix resolver
 	 * @param executionContext current execution context
 	 * @return union of node-set operands
@@ -1176,6 +1188,12 @@ protected:
 
 	eMatchScore
 	handleFoundIndex(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				localContext,
+			int 					startOpPos) const;
+
+	eMatchScore
+	handleFoundIndexPositional(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				localContext,
 			int 					startOpPos) const;
