@@ -359,13 +359,6 @@ FormatterToXML::characters(
 			const int chNum = ch;
 			if ('\n' == ch) 
 			{
-			/*
-				java:
-				for(int k = 0; k < m_lineSepLen; k++)
-				{
-					m_charBuf[pos++] = m_lineSep.charAt(k);
-				}
-			*/
 				m_charBuf[pos++] = m_lineSep;
 			}
 			else if ('<' == ch) 

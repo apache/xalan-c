@@ -240,7 +240,7 @@ FormatterToHTML::endElement(
 {
 	try
 	{
-		m_currentIndent -= m_indent;
+ 		m_currentIndent -= m_indent;
 		// name = name.toUpperCase();
 		const bool	hasChildNodes = childNodesWereAdded();
       bool isWhitespaceSensitive 
@@ -331,13 +331,6 @@ FormatterToHTML::characters(
 			int chNum = ch;
 			if ('\n' == ch) 
 			{
-			/*
-				java:
-				for(int k = 0; k < m_lineSepLen; k++)
-				{
-					m_charBuf[pos++] = m_lineSep.charAt(k);
-				}
-			*/
 				m_charBuf[pos++] = m_lineSep;
 			}
 			else if ('<' == ch) 
