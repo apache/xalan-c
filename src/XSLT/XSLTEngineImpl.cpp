@@ -1305,7 +1305,7 @@ XSLTEngineImpl::displayDuration(
 
 		if(0 != m_diagnosticsPrintWriter)
 		{
-			const double	millis = (theDuration / CLOCKS_PER_SEC) * 1000.0L;
+			const double	millis = (double(theDuration) / CLOCKS_PER_SEC) * 1000.0L;
 
 			XalanDOMString	msg(info);
 
