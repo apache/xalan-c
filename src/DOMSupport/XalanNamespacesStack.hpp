@@ -124,7 +124,7 @@ public:
 
 		typedef XalanNamespace	value_type;
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 		typedef	deque<value_type>		NamespaceCollectionType;
 #else
 		typedef	std::deque<value_type>	NamespaceCollectionType;
@@ -258,7 +258,7 @@ public:
 
 	typedef XalanNamespacesStackEntry	value_type;
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef	deque<value_type>		NamespacesStackType;
 	typedef vector<bool>			BoolVectorType;
 #else
