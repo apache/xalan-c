@@ -378,13 +378,27 @@ protected:
 	 * @param aname The name of the attribute in question.
 	 * @param atts The attribute list that owns the attribute.
 	 * @param which The index of the attribute into the attribute list.
+	 * @param fPreserve set to true if the attribute value is "preserve"
 	 * @return True if this is a xml:space attribute.
 	 */
 	bool
 	processSpaceAttr(
 			const XalanDOMChar*		aname,
 			const AttributeList&	atts,
-			int						which);
+			int						which,
+			bool&					fPreserve);
+
+	/** 
+	 * Tell whether or not this is a xml:space attribute and, if so, process it.
+	 * 
+	 * @param atts The attribute list that owns the attribute.
+	 * @param fPreserve set to true if an xml:space attribute value is "preserve"
+	 * @return True if this is a xml:space attribute.
+	 */
+	bool
+	processSpaceAttr(
+			const AttributeList&	atts,
+			bool&					fPreserve);
 
 	/**
 	 * Process xsl:import.
@@ -502,6 +516,8 @@ private:
 
 	BoolStackType	m_inExtensionElementStack;
 
+	BoolStackType	m_preserveSpaceStack;
+
 	// BEGIN SANJIVA CODE
 	bool m_inLXSLTScript;
 	XalanDOMString m_LXSLTScriptBody;
@@ -556,6 +572,8 @@ private:
 		NamespacesHandler					m_namespacesHandler;
 
 		BoolStackType						m_inExtensionElementStack;
+
+		BoolStackType						m_preserveSpaceStack;
 	};
 
 	friend class PushPopIncludeState;

@@ -244,21 +244,26 @@ bool
 StylesheetHandler::processSpaceAttr(
 			const XalanDOMChar*		aname,
 			const AttributeList&	atts,
-			int						which)
+			int						which,
+			bool&					fPreserve)
 {
 	const bool	isSpaceAttr = equals(aname, Constants::ATTRNAME_XMLSPACE);
 
-	if(isSpaceAttr)
+	if(isSpaceAttr == false)
+	{
+		fPreserve = false;
+	}
+	else
 	{
 		const XalanDOMChar*	const	spaceVal = atts.getValue(which);
 
 		if(equals(spaceVal, Constants::ATTRVAL_DEFAULT))
 		{
-			m_stylesheet.setDefaultSpaceProcessing(true);
+			fPreserve = false;
 		}
 		else if(equals(spaceVal, Constants::ATTRVAL_PRESERVE))
 		{
-			m_stylesheet.setDefaultSpaceProcessing(false);
+			fPreserve = true;
 		}
 		else
 		{
@@ -267,6 +272,26 @@ StylesheetHandler::processSpaceAttr(
 	}
 
 	return isSpaceAttr;
+}
+
+
+
+bool
+StylesheetHandler::processSpaceAttr(
+			const AttributeList&	atts,
+			bool&					fPreserve)
+{
+	const unsigned int	len = atts.getLength();
+
+	for (unsigned int i = 0; i < len; ++i)
+	{
+		if (processSpaceAttr(atts.getName(i), atts, i, fPreserve) == true)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 
@@ -282,11 +307,25 @@ StylesheetHandler::startElement(
 
 	m_inExtensionElementStack.push_back(false);
 
+	if (m_preserveSpaceStack.empty() == true)
+	{
+		m_preserveSpaceStack.push_back(false);
+	}
+	else
+	{
+		m_preserveSpaceStack.push_back(m_preserveSpaceStack.back());
+	}
+
 	try
 	{
 #if !defined(XALAN_NO_NAMESPACES)
 		using std::for_each;
 #endif
+
+		// By default, space is not preserved...
+		bool	fPreserveSpace = false;
+		bool	fSpaceAttrProcessed = false;
+
 		processAccumulatedText();
 
 		// Clean up the whitespace elements.
@@ -549,8 +588,6 @@ StylesheetHandler::startElement(
 
 					bool				fVersionFound = false;
 
-					// bool didSpecifiyIndent = false;	//doesn't seem to be used
-
 					for(unsigned int i = 0; i < nAttrs; i++)
 					{
 						const XalanDOMChar* const	aname = atts.getName(i);
@@ -600,7 +637,11 @@ StylesheetHandler::startElement(
 
 							fVersionFound = true;
 						}
-						else if(!(isAttrOK(aname, atts, i) || processSpaceAttr(aname, atts, i)))
+						else if(processSpaceAttr(aname, atts, i, fPreserveSpace) == true)
+						{
+							fSpaceAttrProcessed = true;
+						}
+						else if(isAttrOK(aname, atts, i) == false)
 						{
 							if(false == m_stylesheet.isWrapperless())
 							{
@@ -621,6 +662,18 @@ StylesheetHandler::startElement(
 					{
 						throw SAXException(c_wstr(TranscodeFromLocalCodePage("The stylesheet element did not specify a version attribute!")));
 					}
+					else
+					{
+						if (fPreserveSpace == false)
+						{
+							m_stylesheet.setDefaultSpaceProcessing(true);
+						}
+						else
+						{
+							m_stylesheet.setDefaultSpaceProcessing(false);
+						}
+					}
+
 				}
 				break;
 
@@ -1050,6 +1103,19 @@ StylesheetHandler::startElement(
 			m_elemStack.push_back(elem);
 		}
 
+		// If we haven't processed an xml:space attribute already, look for one...
+		if (fSpaceAttrProcessed == false)
+		{
+			fSpaceAttrProcessed = processSpaceAttr(atts, fPreserveSpace);
+		}
+
+		// Only update the stack if we actually processed an xml:space attribute...
+		if (fSpaceAttrProcessed == true)
+		{
+			// Set the preserve value...
+			m_preserveSpaceStack.back() = fPreserveSpace;
+		}
+
 		// If for some reason something didn't get pushed, push an empty 
 		// object.
 		if(origStackSize == m_elemStack.size())
@@ -1402,6 +1468,10 @@ StylesheetHandler::endElement(const XMLCh* const name)
 	assert(m_inExtensionElementStack.empty() == false);
 
 	m_inExtensionElementStack.pop_back();
+
+	assert(m_preserveSpaceStack.empty() == false);
+
+	m_preserveSpaceStack.pop_back();
 }
 
 
@@ -1525,27 +1595,30 @@ StylesheetHandler::processText(
 	if(m_inTemplate)
 	{
 		ElemTemplateElement*	parent = m_elemStack.back();
+		assert(parent != 0);
 
-		bool					preserveSpace = false;
-		bool					disableOutputEscaping = false;
+		assert(m_preserveSpaceStack.empty() == false);
 
-		if(Constants::ELEMNAME_TEXT == parent->getXSLToken())
+		bool		preserveSpace = m_preserveSpaceStack.back();
+		bool		disableOutputEscaping = false;
+
+		if (preserveSpace == false && parent->getXSLToken() == Constants::ELEMNAME_TEXT)
 		{
 #if defined(XALAN_OLD_STYLE_CASTS)
 			disableOutputEscaping = ((ElemText*)parent)->getDisableOutputEscaping();
 #else
 			disableOutputEscaping = static_cast<ElemText*>(parent)->getDisableOutputEscaping();
 #endif
-			parent = m_elemStack[m_elemStack.size()-2];
 			preserveSpace = true;
+			parent = m_elemStack[m_elemStack.size()-2];
 		}
 
 		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
 
-		const int lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
-		const int columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
+		const int	lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
+		const int	columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
 
-		ElemTextLiteral* elem = new ElemTextLiteral(m_constructionContext,
+		ElemTextLiteral* const	elem = new ElemTextLiteral(m_constructionContext,
 			m_stylesheet,
 			lineNumber, columnNumber,
 			chars, 0, length,
@@ -1688,6 +1761,7 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 	m_namespaces.swap(theHandler.m_stylesheet.getNamespaces());
 	m_namespacesHandler.swap(theHandler.m_stylesheet.getNamespacesHandler());
 	m_inExtensionElementStack.swap(theHandler.m_inExtensionElementStack);
+	m_preserveSpaceStack.swap(theHandler.m_preserveSpaceStack);
 }
 
 
@@ -1720,4 +1794,5 @@ StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 	m_handler.m_stylesheet.getNamespaces().swap(m_namespaces);
 	m_handler.m_stylesheet.getNamespacesHandler().swap(m_namespacesHandler);
 	m_handler.m_inExtensionElementStack.swap(m_inExtensionElementStack);
+	m_handler.m_preserveSpaceStack.swap(m_preserveSpaceStack);
 }
