@@ -351,6 +351,18 @@ SOURCE=..\..\..\..\src\XPath\XObjectFactoryDefault.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyBase.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyText.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XObjectTypeCallback.cpp
 # End Source File
 # Begin Source File
@@ -728,6 +740,18 @@ SOURCE=..\..\..\..\src\XPath\XObjectFactory.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XObjectFactoryDefault.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxy.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyBase.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyText.hpp
 # End Source File
 # Begin Source File
 
