@@ -499,8 +499,6 @@ AttributesImpl::addAttribute(
 	assert(type != 0);
 	assert(value != 0);
 
-	bool	fResult = false;
-
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::find_if;
 	using std::copy;
@@ -521,8 +519,6 @@ AttributesImpl::addAttribute(
 	// The entry is now safely in the vector, so release the
 	// XalanAutoPtr...
 	theEntry.release();
-
-	fResult = true;
 }
 
 
