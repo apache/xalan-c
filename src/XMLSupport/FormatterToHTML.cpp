@@ -1595,7 +1595,7 @@ const XalanDOMCharVectorType&	FormatterToHTML::s_fnofString =
 #if !defined(XALAN_LSTRSUPPORT)
 void
 pushStringsOnVector(
-			const char*					theStrings[],
+			const char*	const			theStrings[],
 			size_t						theStringsSize,
 			XalanDOMStringVectorType&	theVector)
 {

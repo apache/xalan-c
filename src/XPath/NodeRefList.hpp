@@ -87,7 +87,6 @@ public:
 	 *
 	 * @param theSource source node list
 	 */
-	explicit
 	NodeRefList(const NodeRefList&	theSource);
 
 	/**

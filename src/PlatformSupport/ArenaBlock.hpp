@@ -147,9 +147,9 @@ public:
 	typedef std::allocator<ObjectType>		AllocatorType;
 #endif
 
-	typedef ArenaBlockDestroy<ObjectType>	DestroyFunctionType;
+	typedef ArenaBlockDestroy<ObjectType>		DestroyFunctionType;
 
-	typedef AllocatorType::size_type		size_type;
+	typedef typename AllocatorType::size_type	size_type;
 
 	/*
 	 * Construct an ArenaBlock of the specified size

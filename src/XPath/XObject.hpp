@@ -288,7 +288,6 @@ public:
 	{
 	public:
 
-		explicit
 		XObjectInvalidCastException(
 				const XalanDOMString&	fromType,
 				const XalanDOMString&	toType);
