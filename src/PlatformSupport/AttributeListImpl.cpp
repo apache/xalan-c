@@ -65,11 +65,11 @@
 
 
 #include <Include/XalanAutoPtr.hpp>
+#include <Include/STLHelper.hpp>
 
 
 
 #include "AttributeVectorEntry.hpp"
-#include "STLHelper.hpp"
 
 
 

@@ -72,7 +72,10 @@
 
 
 
-#include <PlatformSupport/STLHelper.hpp>
+#include <Include/STLHelper.hpp>
+
+
+
 #include <PlatformSupport/XalanDOMStringPool.hpp>
 
 

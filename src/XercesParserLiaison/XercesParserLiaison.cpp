@@ -79,11 +79,11 @@
 
 
 #include <Include/XalanAutoPtr.hpp>
+#include <Include/STLHelper.hpp>
 
 
 
 #include <PlatformSupport/ExecutionContext.hpp>
-#include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 
 

@@ -107,11 +107,11 @@ using std::vector;
 
 
 #include <Include/XalanAutoPtr.hpp>
+#include <Include/STLHelper.hpp>
 
 
 
 #include "DoubleSupport.hpp"
-#include "STLHelper.hpp"
 #include "XalanOutputStream.hpp"
 #include "XalanUnicode.hpp"
 

@@ -59,11 +59,11 @@
 
 
 #include <Include/XalanAutoPtr.hpp>
+#include <Include/STLHelper.hpp>
 
 
 
 #include "DOMStringHelper.hpp"
-#include "STLHelper.hpp"
 #include "XalanUnicode.hpp"
 
 

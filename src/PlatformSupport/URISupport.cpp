@@ -67,7 +67,10 @@
 
 
 
-#include "STLHelper.hpp"
+#include <Include/STLHelper.hpp>
+
+
+
 #include "XalanUnicode.hpp"
 
 
