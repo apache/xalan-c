@@ -692,7 +692,7 @@ FormatterToHTML::writeCharacters(
 {
 	assert(theString != 0);
 
-	if (theLength == unsigned(-1))
+	if (theLength == XalanDOMString::npos)
 	{
 		theLength = length(theString);
 	}
