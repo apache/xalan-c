@@ -121,19 +121,42 @@ public:
 
 	/**
 	 * Initialize Xalan.
+	 *
 	 * Should be called only once per process before creating any
-	 * instances of XalanTransformer. See class XSLTInit.
+	 * instances of XalanTransformer.
 	 */
 	static void
 	initialize();
 
 	/**
 	 * Terminate Xalan.
+	 *
 	 * Should be called only once per process after deleting all
-	 * instances of XalanTransformer. See class XSLTInit.
+	 * instances of XalanTransformer.
+	 *
+	 * This is handy when using leak-detection software, as all
+	 * static data allocated by Xalan is freed.
+	 *
 	 */
 	static void
 	terminate();
+
+	/**
+	 * Clean up the ICU, if ICU integration is enabled.
+	 *
+	 * This should be called only once per process after calling
+	 * XalanTransformer::terminate() and XMLPlatformUtils::Terminate.
+	 *
+	 * This must only be done if the ICU will no longer be used by
+	 * the process, since the ICU will no longer be in a usable state.
+	 * See the ICU documentation for more details.
+	 *
+	 * This is handy when using leak-detection software, as all
+	 * static data allocated by the ICU is freed.
+	 *
+	 */
+	static void
+	ICUCleanUp();
 
 	/**
 	 * Transform will apply the stylesheet source to the parsed xml source

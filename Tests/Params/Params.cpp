@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -115,15 +115,13 @@ getTestNumber(const XalanDOMString& theFile)
 }
 
 
+
 int
-main(int			argc,
-	 const char*	argv [])
+runTests(
+			int				argc,
+			const char*		argv[])
 {
-#if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-#endif
+	int				theResult = 0;
 
 	HarnessInit		xmlPlatformUtils;
 
@@ -148,23 +146,23 @@ main(int			argc,
 		{
 			cout << "Invalid base directory - " << c_str(TranscodeToLocalCodePage(extDir)) << endl;
 			cout << h.args.getHelpMessage();
-			return 0;
-		}
 
-		// Call the static initializers...
-		XalanTransformer::initialize();
+			theResult = -1;
+		}
+		else
 		{
 			XalanTransformer	xalan;
 
 			// Generate Unique Run id. (Only used to name the result logfile.)
-			const XalanDOMString UniqRunid = h.generateUniqRunid();
+			const XalanDOMString	UniqRunid = h.generateUniqRunid();
 
 			// Defined basic constants for file manipulation
-			const XalanDOMString  drive(h.getDrive());
-			const XalanDOMString  resultFilePrefix("params");
-			const XalanDOMString  resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+			const XalanDOMString	drive(h.getDrive());
+			const XalanDOMString	resultFilePrefix("params");
+			const XalanDOMString	resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
 			
 			XMLFileReporter	logFile(resultsFile);
+
 			logFile.logTestFileInit("Param Testing: Testing ability to pass parameters to stylesheets. ");
 
 			try
@@ -272,10 +270,11 @@ main(int			argc,
 								
 				logFile.logTestCaseClose("Done", "Pass");
 			}
-
 			catch(...)
 			{
 				cerr << "Exception caught!!!" << endl << endl;
+
+				theResult = -1;
 			}
 
 			h.reportPassFail(logFile, UniqRunid);
@@ -284,10 +283,48 @@ main(int			argc,
 
 			h.analyzeResults(xalan, resultsFile);
 		}
-
-		XalanTransformer::terminate();
 	}
 
-	return 0;
+	return theResult;
+}
 
+
+
+int
+main(
+			int				argc,
+			const char*		argv[])
+{
+#if !defined(NDEBUG) && defined(_MSC_VER)
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
+	int	theResult = 0;
+
+	try
+	{
+		// Call the static initializers for xerces and xalan, and create a transformer
+		//
+		XMLPlatformUtils::Initialize();
+
+		XalanTransformer::initialize();
+
+		theResult = runTests(argc, argv);
+
+		XalanTransformer::terminate();
+
+		XMLPlatformUtils::Terminate();
+
+		XalanTransformer::ICUCleanUp();
+	}
+	catch(...)
+	{
+		cerr << "Initialization failed!" << endl << endl;
+
+		theResult = -1;
+	}
+
+	return theResult;
 }

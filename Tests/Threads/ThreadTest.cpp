@@ -560,6 +560,7 @@ main(
 				// Initialize Xalan...
 				XalanTransformer::initialize();
 
+				try
 				{
 					// Create a XalanTransformer.  We won't actually use this to transform --
 					// it's just acting as a factory for the compiled stylesheet and
@@ -582,16 +583,25 @@ main(
 
 					doThreads(threadCount, fContinuous);
 				}
+				catch(...)
+				{
+					cerr << "Exception caught!!!"
+						 << endl
+						 << endl;
+				}
 
 				// Terminate Xalan...
 				XalanTransformer::terminate();
 
 				// Terminate Xerces...
 				XMLPlatformUtils::Terminate();
+
+				// Clean up the ICU, if it's integrated.
+				XalanTransformer::ICUCleanUp();
 			}
 			catch(...)
 			{
-				cerr << "Exception caught!!!"
+				cerr << "Initialization failed!!!"
 					 << endl
 					 << endl;
 			}

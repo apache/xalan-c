@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,9 +68,13 @@
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::cout;
-//	using std::cin;
 	using std::endl;
 #endif
+
+
+
+// XERCES HEADERS...
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 
@@ -148,16 +152,11 @@ checkForExclusion(XalanDOMString currentFile)
 
 
 int
-main(int			argc,
-	 const char*	argv[])
+runTests(
+			int				argc,
+			const char*		argv[])
 {
-#if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-#endif
-
-	HarnessInit xmlPlatformUtils;
+	HarnessInit		xmlPlatformUtils;
 
 	FileUtility		h;
 
@@ -169,136 +168,124 @@ main(int			argc,
 
 	if (h.getParams(argc, argv, "ERR-RESULTS", setGold) == true)
 	{
-		XalanTransformer::initialize();
+		XalanTransformer				xalan;
 
+		XalanSourceTreeDOMSupport		domSupport;
+		XalanSourceTreeParserLiaison	parserLiaison(domSupport);
+
+		domSupport.setParserLiaison(&parserLiaison);
+
+		// Generate Unique Run id and processor info
+		const XalanDOMString UniqRunid = h.generateUniqRunid();
+
+		// Defined basic constants for file manipulation and open results file
+		const XalanDOMString  resultFilePrefix("cpperr");
+		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+
+		XMLFileReporter	logFile(resultsFile);
+		logFile.logTestFileInit("Error Testing:");
+
+		// Get the list of Directories that are below conf
+		bool foundDir = false;		// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
+		const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
+
+		for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 		{
-			//
-			// Call the static initializers for xerces and xalan, and create a transformer
-			//
-			XalanTransformer xalan;
-
-			XalanSourceTreeDOMSupport domSupport;
-			XalanSourceTreeParserLiaison parserLiaison(domSupport);
-			domSupport.setParserLiaison(&parserLiaison);
-
-
-			// Generate Unique Run id and processor info
-			const XalanDOMString UniqRunid = h.generateUniqRunid();
-
-
-			// Defined basic constants for file manipulation and open results file
-			const XalanDOMString  resultFilePrefix("cpperr");
-			const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
-
-
-			XMLFileReporter	logFile(resultsFile);
-			logFile.logTestFileInit("Error Testing:");
-
-			// Get the list of Directories that are below conf
-			bool foundDir = false;		// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
-			const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
-
-			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
-			{
-				// If conformance directory structure does not exist, it needs to be created.
-				const XalanDOMString  confSubdir = h.args.output + dirs[j];
-				h.checkAndCreateDir(confSubdir);
+			// If conformance directory structure does not exist, it needs to be created.
+			const XalanDOMString  confSubdir = h.args.output + dirs[j];
+			h.checkAndCreateDir(confSubdir);
 
 				// Set up to get files from the associated error directories
-				const XalanDOMString currentDir(dirs[j]);
-				const XalanDOMString subErrDir(h.args.sub);
+				const XalanDOMString&	currentDir = dirs[j];
 
 				// Run specific category of files from given directory
-				if (length(h.args.sub) > 0 && !equals(currentDir, subErrDir))
+				if (length(h.args.sub) == 0 || equals(currentDir, h.args.sub) == true)
 				{
-					continue;
-				}					
+					// Check that output directory is there.
+					const XalanDOMString  theOutputDir = h.args.output + currentDir;
+					h.checkAndCreateDir(theOutputDir);
+
 					
-				// Check that output directory is there.
-				const XalanDOMString  theOutputDir = h.args.output + currentDir;
-				h.checkAndCreateDir(theOutputDir);
+					// Indicate that directory was processed and get test files from the directory
+					foundDir = true;
+					logFile.logTestCaseInit(currentDir);
 
-				
-				// Indicate that directory was processed and get test files from the directory
-				foundDir = true;
-				logFile.logTestCaseInit(currentDir);
-
-				const FileNameVectorType files = h.getTestFileNames(h.args.base, currentDir, false);
-				for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
-				{
-					Hashtable attrs;
-					const XalanDOMString currentFile(files[i]);
-					h.data.testOrFile = currentFile;
-
-					if (checkForExclusion(currentFile))
-						continue;
-
-					const XalanDOMString  theXSLFile= h.args.base + currentDir + FileUtility::s_pathSep + currentFile;
-					const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
-					XalanDOMString  theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + currentFile;
-					theGoldFile = h.generateFileName(theGoldFile, "out");
-
-					const XalanDOMString  outbase =  h.args.output + currentDir + FileUtility::s_pathSep + currentFile; 
-					const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
-
-					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-					const XSLTInputSource	goldInputSource(c_wstr(theGoldFile));
-					const XSLTResultTarget	resultFile(theOutputFile);
-
-					// Parsing(compile) the XSL stylesheet and report the results..
-					//
-					const XalanCompiledStylesheet*	compiledSS = 0;
-					try 
+					const FileNameVectorType files = h.getTestFileNames(h.args.base, currentDir, false);
+					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
-						cout << endl << "PARSING STYLESHEET FOR: " << currentFile << endl;
+						Hashtable attrs;
+						const XalanDOMString currentFile(files[i]);
+						h.data.testOrFile = currentFile;
 
-						xalan.compileStylesheet(xslInputSource, compiledSS);
-						if (compiledSS == 0 )
+						if (checkForExclusion(currentFile))
+							continue;
+
+						const XalanDOMString  theXSLFile= h.args.base + currentDir + FileUtility::s_pathSep + currentFile;
+						const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+						XalanDOMString  theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + currentFile;
+						theGoldFile = h.generateFileName(theGoldFile, "out");
+
+						const XalanDOMString  outbase =  h.args.output + currentDir + FileUtility::s_pathSep + currentFile; 
+						const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
+
+						const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+						const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+						const XSLTInputSource	goldInputSource(c_wstr(theGoldFile));
+						const XSLTResultTarget	resultFile(theOutputFile);
+
+						// Parsing(compile) the XSL stylesheet and report the results..
+						//
+						const XalanCompiledStylesheet*	compiledSS = 0;
+						try 
 						{
-							cout << "FAILED to parse stylesheet for " << currentFile << endl;
-							cout << "Reason: " << xalan.getLastError() << endl;
-							logFile.logErrorResult(currentFile, XalanDOMString(xalan.getLastError()));
+							cout << endl << "PARSING STYLESHEET FOR: " << currentFile << endl;
+
+							xalan.compileStylesheet(xslInputSource, compiledSS);
+							if (compiledSS == 0 )
+							{
+								cout << "FAILED to parse stylesheet for " << currentFile << endl;
+								cout << "Reason: " << xalan.getLastError() << endl;
+								logFile.logErrorResult(currentFile, XalanDOMString(xalan.getLastError()));
+								continue;
+							}
+						}
+						catch(...)
+						{
+							cerr << "Exception caught!!!" << endl << endl;
+						}
+
+						// Parsing the input XML and report the results..
+						//
+						cout << "PARSING SOURCE XML FOR: " << currentFile << endl;
+						const XalanParsedSource*	parsedSource = 0;
+						xalan.parseSource(xmlInputSource, parsedSource);
+						if (parsedSource == 0)
+						{
+							cout << "Failed to PARSE source document for " << currentFile << endl;
 							continue;
 						}
+
+						// Perform One transform using parsed stylesheet and parsed xml source, report results...
+						// 
+						cout << "TRANSFORMING: " << currentFile << endl;
+
+						const int	theResult = xalan.transform(*parsedSource, compiledSS, resultFile);
+
+						if (theResult != 0)
+						{
+							cout << "FAILED to transform stylesheet for " << currentFile << endl;
+							cout << "Reason: " << xalan.getLastError() << endl;
+							logFile.logErrorResult(currentFile, XalanDOMString(xalan.getLastError()));
+						}
+						else
+						{
+							logFile.logCheckPass(currentFile);
+						}
+
+						parserLiaison.reset();
+						xalan.destroyParsedSource(parsedSource);
+						xalan.destroyStylesheet(compiledSS);
 					}
-					catch(...)
-					{
-						cerr << "Exception caught!!!" << endl << endl;
-					}
-
-					// Parsing the input XML and report the results..
-					//
-					cout << "PARSING SOURCE XML FOR: " << currentFile << endl;
-					const XalanParsedSource*	parsedSource = 0;
-					xalan.parseSource(xmlInputSource, parsedSource);
-					if (parsedSource == 0)
-					{
-						cout << "Failed to PARSE source document for " << currentFile << endl;
-						continue;
-					}
-
-					// Perform One transform using parsed stylesheet and parsed xml source, report results...
-					// 
-					cout << "TRANSFORMING: " << currentFile << endl;
-
-					const int	theResult = xalan.transform(*parsedSource, compiledSS, resultFile);
-
-					if (theResult != 0)
-					{
-						cout << "FAILED to transform stylesheet for " << currentFile << endl;
-						cout << "Reason: " << xalan.getLastError() << endl;
-						logFile.logErrorResult(currentFile, XalanDOMString(xalan.getLastError()));
-					}
-					else
-					{
-						logFile.logCheckPass(currentFile);
-					}
-
-					parserLiaison.reset();
-					xalan.destroyParsedSource(parsedSource);
-					xalan.destroyStylesheet(compiledSS);
-
 				}
 
 				logFile.logTestCaseClose("Done", "Pass");
@@ -312,14 +299,51 @@ main(int			argc,
 		}
 
 		h.reportPassFail(logFile, UniqRunid);
+
 		logFile.logTestFileClose("Conformance ", "Done");
 		logFile.close();
-
-		}
 	}
 
-	XalanTransformer::terminate();
-
-
 	return 0;
+}
+
+
+
+int
+main(
+			int				argc,
+			const char*		argv[])
+{
+#if !defined(NDEBUG) && defined(_MSC_VER)
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
+	int	theResult = 0;
+
+	try
+	{
+		// Call the static initializers for xerces and xalan, and create a transformer
+		//
+		XMLPlatformUtils::Initialize();
+
+		XalanTransformer::initialize();
+
+		theResult = runTests(argc, argv);
+
+		XalanTransformer::terminate();
+
+		XMLPlatformUtils::Terminate();
+
+		XalanTransformer::ICUCleanUp();
+	}
+	catch(...)
+	{
+		cerr << "Initialization failed!" << endl << endl;
+
+		theResult = -1;
+	}
+
+	return theResult;
 }

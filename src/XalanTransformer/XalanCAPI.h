@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -104,20 +104,39 @@ extern "C"
 	 *
 	 * Should be called only once per process before making
 	 * any other API calls.
+	 *
+	 * @return 0 if successful, -1 if initialization fails.
 	 */
-	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
+#if defined(__cplusplus)
 	XalanInitialize();
+#else
+	XalanInitialize(void);
+#endif
 
 	/**
 	 * Terminate Xalan and Xerces.
 	 *
 	 * Should be called only once per process after deleting all
-	 * instances of XalanTransformer.  Once a process has called
-	 * this function, it cannot use the API for the remaining
-	 * lifetime of the process.
+	 * instances of XalanTransformer.
+	 *
+	 * Once a process has called this function, it cannot use the
+	 * API until another call to XalanInitialize has been made.
+	 * 
+	 * Optionally, if the ICU has been integrated, this will
+	 * call the ICU clean up function.  This must only be done
+	 * if the ICU will no longer be used by the process, since
+	 * the ICU will no longer be in a usable state.  See the
+	 * ICU documentation for more details.
+	 *
+	 * This is handy when using leak-detection software, as all
+	 * static data allocated by Xalan (and optionally, the ICU)
+	 * will be freed.
+	 *
+	 * @param fCleanUpICU If true, call the ICU clean up function.
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
-	XalanTerminate();
+	XalanTerminate(int	fCleanUpICU);
 
 	/**
 	 * Create a XalanTransformer instance.
@@ -125,7 +144,11 @@ extern "C"
 	 * @return  the XalanTransformer handle
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanHandle)
+#if defined(__cplusplus)
 	CreateXalanTransformer();
+#else
+	CreateXalanTransformer(void);
+#endif
 
 	/**
 	 * Delete a XalanTransformer instance.
@@ -388,7 +411,7 @@ extern "C"
 	 * @return	error message const character pointer.
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanCCharPtr)
-	XalanGetLastError(XalanHandle theXalanHandle);
+	XalanGetLastError(XalanHandle	theXalanHandle);
 
 #if defined(__cplusplus)
 }

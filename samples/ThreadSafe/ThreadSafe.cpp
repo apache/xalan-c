@@ -173,33 +173,21 @@ main(
 	}
 	else
 	{
-		// Call the static initializer for Xerces.
-		XMLPlatformUtils::Initialize();
-
-		// Initialize Xalan.
-		XalanTransformer::initialize();
-
+		try
 		{
-			// Create a XalanTransformer.  We won't actually use this to transform --
-			// it's just acting likely a factory for the compiled stylesheet and
-			// pre-parsed source.
-			XalanTransformer	theXalanTransformer;
+			// Call the static initializer for Xerces.
+			XMLPlatformUtils::Initialize();
 
-			glbError = theXalanTransformer.compileStylesheet("birds.xsl", glbCompiledStylesheet);
+			// Initialize Xalan.
+			XalanTransformer::initialize();
 
-			if (glbError != 0)
 			{
-				cerr << "ThreadSafe Error: \n" << theXalanTransformer.getLastError()
-					 << endl
-					 << endl;
-			}
-			else
-			{
-				assert(glbCompiledStylesheet != 0);
+				// Create a XalanTransformer.  We won't actually use this to transform --
+				// it's just acting likely a factory for the compiled stylesheet and
+				// pre-parsed source.
+				XalanTransformer	theXalanTransformer;
 
-				// Compile the XML source document as well. All threads will use
-				// this binary representation of the source tree.
-				glbError = theXalanTransformer.parseSource("birds.xml", glbParsedSource);
+				glbError = theXalanTransformer.compileStylesheet("birds.xsl", glbCompiledStylesheet);
 
 				if (glbError != 0)
 				{
@@ -209,21 +197,45 @@ main(
 				}
 				else
 				{
-					assert(glbParsedSource != 0);
+					assert(glbCompiledStylesheet != 0);
 
-					// Create and run the threads...
-					// Each thread uses the same document and 
-					// stylesheet to perform a transformation.
-					doThreads(10);
+					// Compile the XML source document as well. All threads will use
+					// this binary representation of the source tree.
+					glbError = theXalanTransformer.parseSource("birds.xml", glbParsedSource);
+
+					if (glbError != 0)
+					{
+						cerr << "ThreadSafe Error: \n" << theXalanTransformer.getLastError()
+							 << endl
+							 << endl;
+					}
+					else
+					{
+						assert(glbParsedSource != 0);
+
+						// Create and run the threads...
+						// Each thread uses the same document and 
+						// stylesheet to perform a transformation.
+						doThreads(10);
+					}
 				}
 			}
+
+			// Terminate Xalan...
+			XalanTransformer::terminate();
+
+			// Terminate Xerces...
+			XMLPlatformUtils::Terminate();
+
+			// Clean up the ICU, if it's integrated...
+			XalanTransformer::ICUCleanUp();
 		}
+		catch(...)
+		{
+			cerr << "Initialization failed!" << endl;
 
-		// Terminate Xalan.
-		XalanTransformer::terminate();
-
-		// Call the static terminator for Xerces.
-		XMLPlatformUtils::Terminate();
+			glbError = -1;
+		}
 	}
 
 	return glbError;

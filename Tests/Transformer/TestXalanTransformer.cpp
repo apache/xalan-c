@@ -83,8 +83,10 @@
 
 
 #if !defined(XALAN_NO_NAMESPACES)
-using std::ostrstream;
-using std::cout;
+	using std::cerr;
+	using std::cout;
+	using std::endl;
+	using std::ostrstream;
 #endif
 
 #else
@@ -120,17 +122,10 @@ static void xalan_flush_handler(const void *handle)
 
 
 int
-main(
+runTests(
 			int				/* argc */,
-			const char*		/* argv[] */)
+			const char*		/* argv*/ [])
 {
-#if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-#endif
-
 	const char* const		theXMLFileName = "d:\\xslt\\xsl-test\\perf\\basic\\basic-all_well.xml";
 	const char* const 		theXSLFileName = "d:\\xslt\\xsl-test\\perf\\basic\\basic-all_well.xsl";
 	const char* const		theOutFileName = "d:\\Transformer-Results\\basic-all_well.out";
@@ -145,12 +140,6 @@ main(
 	const char* const 		theXSLFileName4 = "d:\\xml-xalan\\c\\samples\\UseStylesheetParam\\foo.xsl";	
 
 #if defined(TEST_XALAN_CPP)
-
-	// Call the static initializer for Xerces.
-	XMLPlatformUtils::Initialize();
-
-    // Initialize Xalan.
-    XalanTransformer::initialize();
 
 	XalanTransformer xalan;
 
@@ -236,13 +225,9 @@ main(
 		}
 	}
 
-   // Terminate Xalan.
-	XalanTransformer::terminate();
-
-	// Call the static terminator for Xerces.
-	XMLPlatformUtils::Terminate();
-
 #else
+	// $$$ ToDo: This C code is broken, because it returns without
+	// shutting things down!!!!
 	XalanInitialize();
 
 	XalanHandle xalan = CreateXalanTransformer();
@@ -265,7 +250,7 @@ main(
 		return 0;	
 	}
 
-	for(int i=0; i<2; ++i)
+	for(int i = 0; i < 2; ++i)
 	{
 		if(XalanTransformToFile(theXMLFileName, theXSLFileName, theOutFileName, xalan))
 		{
@@ -274,7 +259,7 @@ main(
 			return 0;	
 		}
 
-		char* 		theOutput;
+		char* 	theOutput;
 
 		if(XalanTransformToData(theXMLFileName2, theXSLFileName2, &theOutput, xalan))
 		{
@@ -341,13 +326,57 @@ main(
 		puts(theOutput);
 
 		XalanFreeData(theOutput);
-
 	}
 
 	DeleteXalanTransformer(xalan);
 
-	XalanTerminate();
+	// Terminate Xerces and Xalan, and clean up the ICU...
+	XalanTerminate(1);
 #endif
 
 	return 0;
+}
+
+
+
+int
+main(
+			int				argc,
+			const char*		argv[])
+{
+#if !defined(NDEBUG) && defined(_MSC_VER)
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
+	int	theResult = 0;
+
+#if defined(TEST_XALAN_CPP)
+	try
+	{
+		// Call the static initializers for xerces and xalan, and create a transformer
+		//
+		XMLPlatformUtils::Initialize();
+
+		XalanTransformer::initialize();
+
+		theResult = runTests(argc, argv);
+
+		// Terminate everything...
+		XalanTransformer::terminate();
+
+		XMLPlatformUtils::Terminate();
+
+		XalanTransformer::ICUCleanUp();
+	}
+	catch(...)
+	{
+		cerr << "Initialization failed!" << endl << endl;
+
+		theResult = -1;
+	}
+#endif
+
+	return theResult;
 }

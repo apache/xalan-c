@@ -198,7 +198,6 @@ FormatterListener*
 getXMLFormatter(bool					shouldWriteXMLHeader,
 				bool					stripCData,
 				bool					escapeCData,
-				bool					noIndent,
 				PrintWriter&			resultWriter,
 				int						indentAmount,
 				const XalanDOMString&	mimeEncoding,
@@ -247,16 +246,10 @@ getXMLFormatter(bool					shouldWriteXMLHeader,
 
 
 int
-main(
+runTests(
 		  int			argc,
 		  const char*	argv [])
 {
-#if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-#endif
 
 	HarnessInit		xmlPlatformUtils;
 
@@ -285,93 +278,84 @@ main(
 
 		try
 		{
-			// Call the static initializers...
-			XalanTransformer::initialize();
-
-			{
-				XalanTransformer		transformEngine;
+			XalanTransformer		transformEngine;
 						
-				XercesDOMSupport domSupport;
-				XercesParserLiaison parserLiaison(domSupport);
+			XercesDOMSupport domSupport;
+			XercesParserLiaison parserLiaison(domSupport);
 					
-				// Specify the "test" directory for both input and output.
-				const XalanDOMString  xMan("dtod");
-				const XalanDOMString  theOutputDir = outputRoot + xMan;
-				f.checkAndCreateDir(theOutputDir);
+			// Specify the "test" directory for both input and output.
+			const XalanDOMString  xMan("dtod");
+			const XalanDOMString  theOutputDir = outputRoot + xMan;
+			f.checkAndCreateDir(theOutputDir);
 
-				// Get the files found in the test directory
-				const FileNameVectorType	files = f.getTestFileNames(baseDir, xMan,true);
+			// Get the files found in the test directory
+			const FileNameVectorType	files = f.getTestFileNames(baseDir, xMan,true);
 
-				for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
-				{
-					// Output file name to result log and console.
-					logFile.logTestCaseInit(files[i]);
-					cout << files[i] << endl;
+			for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
+			{
+				// Output file name to result log and console.
+				logFile.logTestCaseInit(files[i]);
+				cout << files[i] << endl;
 
-					// Set up the input/output files.
-					const XalanDOMString  theXSLFile= baseDir + xMan + FileUtility::s_pathSep + files[i];
-					const XalanDOMString  theXMLFile = f.generateFileName(theXSLFile,"xml");
-					const XalanDOMString  theOutput =  outputRoot + xMan + FileUtility::s_pathSep + files[i]; 
-					const XalanDOMString  theOutputFile = f.generateFileName(theOutput, "out");
+				// Set up the input/output files.
+				const XalanDOMString  theXSLFile= baseDir + xMan + FileUtility::s_pathSep + files[i];
+				const XalanDOMString  theXMLFile = f.generateFileName(theXSLFile,"xml");
+				const XalanDOMString  theOutput =  outputRoot + xMan + FileUtility::s_pathSep + files[i]; 
+				const XalanDOMString  theOutputFile = f.generateFileName(theOutput, "out");
 
-					// Use a Xerces Dom document to create the XSLTResultTarget. 
-					XalanDocument* domOut = parserLiaison.createDocument();
-					const XSLTResultTarget domResultTarget(domOut);
+				// Use a Xerces Dom document to create the XSLTResultTarget. 
+				XalanDocument* domOut = parserLiaison.createDocument();
+				const XSLTResultTarget domResultTarget(domOut);
 
-					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
 					
-					const XalanCompiledStylesheet*	compiledSS = 0;
+				const XalanCompiledStylesheet*	compiledSS = 0;
 
-					int	theResult = transformEngine.compileStylesheet(
+				int	theResult = transformEngine.compileStylesheet(
 						xslInputSource,
 						compiledSS);
 
-					if (theResult != 0)
+				if (theResult != 0)
+				{
+					logFile.logTestCaseClose("Done","Fail");
+					cerr << "XalanError: \n" << transformEngine.getLastError();
+				}
+				else
+				{
+					// Transform using compiled stylesheet.
+					theResult =
+							transformEngine.transform(xmlInputSource, compiledSS, domResultTarget);
+
+					if(theResult != 0)
 					{
 						logFile.logTestCaseClose("Done","Fail");
 						cerr << "XalanError: \n" << transformEngine.getLastError();
 					}
 					else
 					{
-						// Transform using compiled stylesheet.
-						theResult =
-							transformEngine.transform(xmlInputSource, compiledSS, domResultTarget);
+						const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
+						const XalanDOMString	encoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
 
-						if(theResult != 0)
-						{
-							logFile.logTestCaseClose("Done","Fail");
-							cerr << "XalanError: \n" << transformEngine.getLastError();
-						}
-						else
-						{
-							const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
-							const XalanDOMString	encoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
-
-							XalanFileOutputStream myOutput(theOutputFile);
-							XalanOutputStreamPrintWriter myResultWriter(myOutput);
-							FormatterListener* theFormatter = getXMLFormatter(true,true,true,false,
+						XalanFileOutputStream myOutput(theOutputFile);
+						XalanOutputStreamPrintWriter myResultWriter(myOutput);
+						FormatterListener* theFormatter = getXMLFormatter(true,true,true,
 																		myResultWriter,0,
 																		mimeEncoding,
 																		compiledSS->getStylesheetRoot());
 
-							FormatterTreeWalker theTreeWalker(*theFormatter);
-							theTreeWalker.traverse(domOut);
+						FormatterTreeWalker theTreeWalker(*theFormatter);
+						theTreeWalker.traverse(domOut);
 
-							delete theFormatter;
-							logFile.logTestCaseClose("Done","Pass");
-						}	
-					}
+						delete theFormatter;
+						logFile.logTestCaseClose("Done","Pass");
+					}	
 				}
 			}
 
-			XalanTransformer::terminate();
-
 			logFile.logTestFileClose("Dom2Dom Testing: ", "Done");
 			logFile.close();
-
 		}
-
 		catch(...)
 		{
 			cerr << "Exception caught!!!" << endl << endl;
@@ -380,4 +364,45 @@ main(
 
 	return 0;
 
+}
+
+
+
+int
+main(
+			int				argc,
+			const char*		argv[])
+{
+#if !defined(NDEBUG) && defined(_MSC_VER)
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
+	int	theResult = 0;
+
+	try
+	{
+		// Call the static initializers for xerces and xalan, and create a transformer
+		//
+		XMLPlatformUtils::Initialize();
+
+		XalanTransformer::initialize();
+
+		theResult = runTests(argc, argv);
+
+		XalanTransformer::terminate();
+
+		XMLPlatformUtils::Terminate();
+
+		XalanTransformer::ICUCleanUp();
+	}
+	catch(...)
+	{
+		cerr << "Initialization failed!" << endl << endl;
+
+		theResult = -1;
+	}
+
+	return theResult;
 }

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,7 +58,7 @@
 
 #include <iostream>
 #include <strstream>
-#include <stdio.h>
+#include <cstdio>
 #include <direct.h>
 #include <vector>
 
@@ -66,6 +66,10 @@
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
+
+
+
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 
@@ -91,6 +95,7 @@
 
 
 #if !defined(XALAN_NO_NAMESPACES)
+	using std::cerr;
 	using std::cout;
 	using std::endl;
 #endif
@@ -342,15 +347,13 @@ void TestCase4(
 }
 
 
+
 int
-main(int			argc,
-	 const char*	argv [])
+runTests(
+			int				argc,
+			const char*		argv[])
 {
-#if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-#endif
+	int				theResult = 0;
 
 	HarnessInit		xmlPlatformUtils;
 
@@ -370,66 +373,112 @@ main(int			argc,
 		{
 			cout << "Invalid base directory - " << c_str(TranscodeToLocalCodePage(extDir)) << endl;
 			cout << h.args.getHelpMessage();
-			return 0;
+
+			theResult = -1;
 		}
-
-		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString	UniqRunid = h.generateUniqRunid();
-
-		// Defined basic constants for file manipulation 
-		const XalanDOMString drive(h.getDrive());
-		const XalanDOMString  resultsFile(drive + h.args.output + currentDir + UniqRunid + FileUtility::s_xmlSuffix);
-		
-		XMLFileReporter	logFile(resultsFile);
-		logFile.logTestFileInit("C++ Extension Testing. ");
-		logFile.logTestCaseInit(currentDir);
-
-		cout << "Performing Extension testing ..." << endl;
-
-		// Call the static initializers...
-		XalanTransformer::initialize();
-
+		else
 		{
-			XalanTransformer	xalan;				
-					
-			// Check that output directory is there.
-			XalanDOMString		fileName;
-					
-			const XalanDOMString	theOutputDir(h.args.output + currentDir);
+			try
+			{
+				// Generate Unique Run id. (Only used to name the result logfile.)
+				const XalanDOMString	UniqRunid = h.generateUniqRunid();
 
-			h.checkAndCreateDir(theOutputDir);
-
-			// Get the files found in the "cextension" directory
-			const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
-
-			// TestCase1 is used to verify correct functioning of the default extension functions
-			TestCase1(xalan, files[0], currentDir, logFile, h);	// Difference function
-			TestCase1(xalan, files[1], currentDir, logFile, h);	// Distinct 
-			TestCase1(xalan, files[2], currentDir, logFile, h);	// Evaluate 
-			TestCase1(xalan, files[3], currentDir, logFile, h);	// HasSameNodes 
-			TestCase1(xalan, files[4], currentDir, logFile, h);	// Intersection 
-			TestCase1(xalan, files[5], currentDir, logFile, h);	// NodeSet01 - basic testing
-			TestCase1(xalan, files[6], currentDir, logFile, h);	// NodeSet02 - extensive RTF testing. 
-
-			const XalanDOMString	theNamespace("http://xml.apache.org/xalan");
-
-			// These testcases are used to test the Install/Uninstall Function API's of the transformer.
-			TestCase2(xalan, files[5], currentDir, theNamespace, logFile, h);
-			TestCase3(xalan, files[5], currentDir, theNamespace, logFile, h);
-			TestCase4(xalan, files[5], currentDir, theNamespace, logFile, h);
-
-			logFile.logTestCaseClose("Done", "Pass");
-			h.reportPassFail(logFile, UniqRunid);
+				// Defined basic constants for file manipulation 
+				const XalanDOMString	drive(h.getDrive());
+				const XalanDOMString	resultsFile(drive + h.args.output + currentDir + UniqRunid + FileUtility::s_xmlSuffix);
 				
-			logFile.logTestFileClose("C++ Extension Testing: ", "Done");
-			logFile.close();
+				XMLFileReporter	logFile(resultsFile);
+				logFile.logTestFileInit("C++ Extension Testing. ");
+				logFile.logTestCaseInit(currentDir);
 
-			h.analyzeResults(xalan, resultsFile);
+				cout << "Performing Extension testing ..." << endl;
+
+				XalanTransformer	xalan;				
+						
+				// Check that output directory is there.
+				XalanDOMString		fileName;
+						
+				const XalanDOMString	theOutputDir(h.args.output + currentDir);
+
+				h.checkAndCreateDir(theOutputDir);
+
+				// Get the files found in the "cextension" directory
+				const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
+
+				// TestCase1 is used to verify correct functioning of the default extension functions
+				TestCase1(xalan, files[0], currentDir, logFile, h);	// Difference function
+				TestCase1(xalan, files[1], currentDir, logFile, h);	// Distinct 
+				TestCase1(xalan, files[2], currentDir, logFile, h);	// Evaluate 
+				TestCase1(xalan, files[3], currentDir, logFile, h);	// HasSameNodes 
+				TestCase1(xalan, files[4], currentDir, logFile, h);	// Intersection 
+				TestCase1(xalan, files[5], currentDir, logFile, h);	// NodeSet01 - basic testing
+				TestCase1(xalan, files[6], currentDir, logFile, h);	// NodeSet02 - extensive RTF testing. 
+
+				const XalanDOMString	theNamespace("http://xml.apache.org/xalan");
+
+				// These testcases are used to test the Install/Uninstall Function API's of the transformer.
+				TestCase2(xalan, files[5], currentDir, theNamespace, logFile, h);
+				TestCase3(xalan, files[5], currentDir, theNamespace, logFile, h);
+				TestCase4(xalan, files[5], currentDir, theNamespace, logFile, h);
+
+				logFile.logTestCaseClose("Done", "Pass");
+				h.reportPassFail(logFile, UniqRunid);
+					
+				logFile.logTestFileClose("C++ Extension Testing: ", "Done");
+				logFile.close();
+
+				h.analyzeResults(xalan, resultsFile);
+			}
+			catch(...)
+			{
+				cerr << "Exception caught!!!" << endl << endl;
+
+				theResult = -1;
+			}
 		}
-
-		XalanTransformer::terminate();
 	}
 
-	return 0;
+	return theResult;
 
+}
+
+
+
+int
+main(
+			int				argc,
+			const char*		argv[])
+{
+#if !defined(NDEBUG) && defined(_MSC_VER)
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
+	int	theResult = 0;
+
+	try
+	{
+		// Call the static initializers for xerces and xalan, and create a transformer
+		//
+		XMLPlatformUtils::Initialize();
+
+		XalanTransformer::initialize();
+
+		theResult = runTests(argc, argv);
+
+		XalanTransformer::terminate();
+
+		XMLPlatformUtils::Terminate();
+
+		XalanTransformer::ICUCleanUp();
+	}
+	catch(...)
+	{
+		cerr << "Initialization failed!" << endl << endl;
+
+		theResult = -1;
+	}
+
+	return theResult;
 }

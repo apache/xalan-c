@@ -130,17 +130,12 @@ setHelp(FileUtility&	h)
 
 
 int
-main(int			argc,
-	 const char*	argv[])
+runTests(
+			int				argc,
+			const char*		argv[])
 {
-#if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-#endif
+	int	theResult = 0;
 
-	// Set the program help string,  then get the command line parameters.
-	//
 	try
 	{
 		HarnessInit		xmlPlatformUtils;
@@ -151,6 +146,8 @@ main(int			argc,
 
 		bool setGold = false;
 
+		// Set the program help string,  then get the command line parameters.
+		//
 		if (h.getParams(argc, argv, "MEM-RESULTS", setGold) == true)
 		{
 			// Get the list of Directories that are below perf
@@ -167,9 +164,6 @@ main(int			argc,
 			XMLFileReporter		logFile(resultsFile);
 
 			logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
-
-			// Call the static initializers...
-			XalanTransformer::initialize();
 
 			try
 			{
@@ -240,15 +234,58 @@ main(int			argc,
 			catch(...)
 			{
 				cerr << "Exception caught!!!" << endl << endl;
+
+				theResult  = -1;
 			}
 		}
-
-		XalanTransformer::terminate();
 	}
 	catch(...)
 	{
-		cerr << "Initialization failed!!!" << endl << endl;
+		cerr << "Initialization of testing harness failed!" << endl << endl;
+
+		theResult  = -1;
 	}
 
-	return 0;
+	return theResult;
+}
+
+
+
+int
+main(
+			int				argc,
+			const char*		argv[])
+{
+#if !defined(NDEBUG) && defined(_MSC_VER)
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
+	int	theResult = 0;
+
+	try
+	{
+		// Call the static initializers for xerces and xalan, and create a transformer
+		//
+		XMLPlatformUtils::Initialize();
+
+		XalanTransformer::initialize();
+
+		theResult = runTests(argc, argv);
+
+		XalanTransformer::terminate();
+
+		XMLPlatformUtils::Terminate();
+
+		XalanTransformer::ICUCleanUp();
+	}
+	catch(...)
+	{
+		cerr << "Initialization failed!" << endl << endl;
+
+		theResult = -1;
+	}
+
+	return theResult;
 }

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,13 +57,11 @@
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
-#include <sstream>
 #else
 #include <iostream>
-#include <sstream>
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
@@ -74,7 +72,8 @@
 #endif
 
 
-#include <xercesc/util/XercesDefs.hpp>
+
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 
@@ -250,15 +249,13 @@ parseWithXerces(
 }
 
 
+
 int
-main(int			argc,
-	 const char*	argv[])
+runTests(
+			int				argc,
+			const char*		argv[])
 {
-#if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-#endif
+	int	theResult = 0;
 
 	try
 	{
@@ -272,45 +269,37 @@ main(int			argc,
 
 		if (h.getParams(argc, argv, "CONF-RESULTS") == true)
 		{
-			// Call the static initializers for xerces and xalan, and create a transformer
+			XalanTransformer	xalan;
+
+			// Get drive designation for final analysis and generate Unique name for results log.
 			//
-			XalanTransformer::initialize();
+			const XalanDOMString  drive(h.getDrive());			// This is used to get stylesheet for final analysis
+			const XalanDOMString  resultFilePrefix("conf");		// This & UniqRunid used for log file name.
+			const XalanDOMString  UniqRunid = h.generateUniqRunid(); 
+			const XalanDOMString  resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
 
+			// Open results log, and do some initialization of result data.
+			//
+			XMLFileReporter	logFile(resultsFile);
+			logFile.logTestFileInit("Conformance Testing:");
+			h.data.xmlFormat = XalanDOMString("NotSet");
+
+			// Get the list of Directories that are below conf and iterate through them
+			//
+
+			// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
+			bool	foundDir = false;
+
+			const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
+
+			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 			{
-				XalanTransformer	xalan;
-
-				// Get drive designation for final analysis and generate Unique name for results log.
+				// Skip all but the specified directory if the -sub cmd-line option was used.
 				//
-				const XalanDOMString  drive(h.getDrive());			// This is used to get stylesheet for final analysis
-				const XalanDOMString  resultFilePrefix("conf");		// This & UniqRunid used for log file name.
-				const XalanDOMString  UniqRunid = h.generateUniqRunid(); 
-				const XalanDOMString  resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+				const XalanDOMString&	currentDir = dirs[j];
 
-				// Open results log, and do some initialization of result data.
-				//
-				XMLFileReporter	logFile(resultsFile);
-				logFile.logTestFileInit("Conformance Testing:");
-				h.data.xmlFormat = XalanDOMString("NotSet");
-
-				// Get the list of Directories that are below conf and iterate through them
-				//
-
-				// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
-				bool	foundDir = false;
-
-				const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
-
-				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
+				if (length(h.args.sub) == 0 || equals(currentDir, h.args.sub) == true)
 				{
-					// Skip all but the specified directory if the -sub cmd-line option was used.
-					//
-					const XalanDOMString	currentDir(dirs[j]);
-
-					if (length(h.args.sub) > 0 && !equals(currentDir, h.args.sub))
-					{
-						continue;
-					}					
-
 					// Check that output directory is there.
 					//
 					const XalanDOMString  theOutputDir = h.args.output + currentDir;
@@ -328,7 +317,7 @@ main(int			argc,
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
 						Hashtable attrs;
-						const XalanDOMString	currentFile(files[i]);
+						const XalanDOMString&	currentFile = files[i];
 						if (checkForExclusion(currentFile))
 							continue;
 
@@ -391,29 +380,67 @@ main(int			argc,
 
 					logFile.logTestCaseClose("Done", "Pass");
 				}
-
-				// Check to see if -sub cmd-line directory was processed correctly.
-				//
-				if (!foundDir)
-				{
-					cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
-				}
-
-				h.reportPassFail(logFile, UniqRunid);
-				logFile.logTestFileClose("Conformance ", "Done");
-				logFile.close();
-
-				h.analyzeResults(xalan, resultsFile);
 			}
 
-		}
+			// Check to see if -sub cmd-line directory was processed correctly.
+			//
+			if (!foundDir)
+			{
+				cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
+			}
 
-		XalanTransformer::terminate();
+			h.reportPassFail(logFile, UniqRunid);
+			logFile.logTestFileClose("Conformance ", "Done");
+			logFile.close();
+
+			h.analyzeResults(xalan, resultsFile);
+		}
 	}
 	catch(...)
 	{
-		cerr << "Initialization failed!!!" << endl << endl;
+		cerr << "Initialization of testing harness failed!" << endl << endl;
 	}
 
-	return 0;
+	return theResult;
+}
+
+
+
+int
+main(
+			int				argc,
+			const char*		argv[])
+{
+#if !defined(NDEBUG) && defined(_MSC_VER)
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
+	int	theResult = 0;
+
+	try
+	{
+		// Call the static initializers for xerces and xalan, and create a transformer
+		//
+		XMLPlatformUtils::Initialize();
+
+		XalanTransformer::initialize();
+
+		theResult = runTests(argc, argv);
+
+		XalanTransformer::terminate();
+
+		XMLPlatformUtils::Terminate();
+
+		XalanTransformer::ICUCleanUp();
+	}
+	catch(...)
+	{
+		cerr << "Initialization failed!" << endl << endl;
+
+		theResult = -1;
+	}
+
+	return theResult;
 }

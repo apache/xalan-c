@@ -248,6 +248,16 @@ XalanTransformer::terminate()
 
 
 
+void
+XalanTransformer::ICUCleanUp()
+{
+#if defined(XALAN_USE_ICU)
+	ICUBridgeCleanup::cleanup();
+#endif
+}
+
+
+
 static void
 addTraceListeners(
 				  const XalanTransformer::TraceListenerVectorType&	theTraceListeners,

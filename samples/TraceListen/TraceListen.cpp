@@ -141,9 +141,14 @@ main(
 			}
 		}
 
+		// Terminate Xalan...
 		XalanTransformer::terminate();
 
+		// Terminate Xerces...
 		XMLPlatformUtils::Terminate();
+
+		// Clean up the ICU, if it's integrated...
+		XalanTransformer::ICUCleanUp();
 	}
 	catch(...)
 	{

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,7 +58,7 @@
 
 #include <iostream>
 #include <strstream>
-#include <stdio.h>
+#include <cstdio>
 #include <direct.h>
 #include <vector>
 
@@ -67,8 +67,10 @@
 #include <crtdbg.h>
 #endif
 
+
+
 // XERCES HEADERS...
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 
@@ -356,15 +358,11 @@ testCase5(
 
 
 int
-main(
+runTests(
 			int				argc,
 			const char*		argv[])
 {
-#if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-#endif
+	int				theResult = 0;
 
 	HarnessInit		xmlPlatformUtils;
 
@@ -376,9 +374,6 @@ main(
 
 	if (h.getParams(argc, argv, "INPUTSOURCE-RESULTS") == true)
 	{
-		// Call the static initializers...
-		XalanTransformer::initialize();
-
 		// Generate and Initialize Unique result logfile, and get drive designation
 		//
 		const XalanDOMString UniqRunid = h.generateUniqRunid();
@@ -391,51 +386,47 @@ main(
 
 		try
 		{
-			// Call the static initializers...
-			//
-			XalanTransformer xalan;
+			XalanTransformer	xalan;
 
-			{
-				XalanDOMString		fileName;
+			XalanDOMString		fileName;
 					
-				// Get testfiles from the capi\smoke directory, create output directory, .
-				//
-				const XalanDOMString  currentDir("smoke");
-				const XalanDOMString  theOutputDir = h.args.output + currentDir;
+			// Get testfiles from the capi\smoke directory, create output directory, .
+			//
+			const XalanDOMString  currentDir("smoke");
+			const XalanDOMString  theOutputDir = h.args.output + currentDir;
 				
-				h.checkAndCreateDir(theOutputDir);
+			h.checkAndCreateDir(theOutputDir);
 
-				// Get the single file found in the "smoke" directory, and run tests.
-				//
-				const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
-				logFile.logTestCaseInit(currentDir);
+			// Get the single file found in the "smoke" directory, and run tests.
+			//
+			const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
+			logFile.logTestCaseInit(currentDir);
 
-				for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
-				{
-					fileName = files[i];
-					h.data.testOrFile = fileName;
+			for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
+			{
+				fileName = files[i];
+				h.data.testOrFile = fileName;
 
-					// Set up the input/output files.
-					const XalanDOMString  theXSLFile= h.args.base + currentDir + FileUtility::s_pathSep + fileName;
-					const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
-					h.data.xmlFileURL = theXMLFile;
-					h.data.xslFileURL = theXSLFile;
+				// Set up the input/output files.
+				const XalanDOMString  theXSLFile= h.args.base + currentDir + FileUtility::s_pathSep + fileName;
+				const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+				h.data.xmlFileURL = theXMLFile;
+				h.data.xslFileURL = theXSLFile;
 
-					// Set the gold file.
-					XalanDOMString  theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + fileName;
-					theGoldFile = h.generateFileName(theGoldFile, "out");
+				// Set the gold file.
+				XalanDOMString  theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + fileName;
+				theGoldFile = h.generateFileName(theGoldFile, "out");
 						
-					// Execute the test cases. 
-					//
-					testCase1(xalan, logFile, theXMLFile, theXSLFile, theOutputDir, theGoldFile, h);
-					testCase2(xalan, logFile, theOutputDir, theGoldFile, h);
-					testCase3(logFile, theOutputDir, theGoldFile, h);
-					testCase4(xalan, logFile, theOutputDir, theGoldFile, h);
-					testCase5(xalan, logFile, theXMLFile, theXSLFile, theOutputDir, theGoldFile, h);
-				}
-
-				logFile.logTestCaseClose("Done", "Pass");	
+				// Execute the test cases. 
+				//
+				testCase1(xalan, logFile, theXMLFile, theXSLFile, theOutputDir, theGoldFile, h);
+				testCase2(xalan, logFile, theOutputDir, theGoldFile, h);
+				testCase3(logFile, theOutputDir, theGoldFile, h);
+				testCase4(xalan, logFile, theOutputDir, theGoldFile, h);
+				testCase5(xalan, logFile, theXMLFile, theXSLFile, theOutputDir, theGoldFile, h);
 			}
+
+			logFile.logTestCaseClose("Done", "Pass");	
 
 			h.reportPassFail(logFile, UniqRunid);
 			logFile.logTestFileClose("ISource Testing: ", "Done");
@@ -446,10 +437,51 @@ main(
 		catch(...)
 		{
 			cerr << "Exception caught!!!" << endl << endl;
-		}
 
-		XalanTransformer::terminate();
+			theResult = -1;
+		}
 	}
 
-	return 0;
+	return theResult;
+}
+
+
+
+int
+main(
+			int				argc,
+			const char*		argv[])
+{
+#if !defined(NDEBUG) && defined(_MSC_VER)
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
+	int	theResult = 0;
+
+	try
+	{
+		// Call the static initializers for xerces and xalan, and create a transformer
+		//
+		XMLPlatformUtils::Initialize();
+
+		XalanTransformer::initialize();
+
+		theResult = runTests(argc, argv);
+
+		XalanTransformer::terminate();
+
+		XMLPlatformUtils::Terminate();
+
+		XalanTransformer::ICUCleanUp();
+	}
+	catch(...)
+	{
+		cerr << "Initialization failed!" << endl << endl;
+
+		theResult = -1;
+	}
+
+	return theResult;
 }

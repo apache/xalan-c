@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,27 +81,47 @@ using std::istrstream;
 #include "XalanTransformer.hpp"
 
 
+static bool	fInitialized = false;
 
-XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 XalanInitialize()
 {
-	// Call the static initializer for Xerces.
-	XMLPlatformUtils::Initialize();
+	try
+	{
+		// Call the static initializer for Xerces.
+		XMLPlatformUtils::Initialize();
 
-	// Initialize Xalan.
-	XalanTransformer::initialize();
+		// Initialize Xalan.
+		XalanTransformer::initialize();
+
+		fInitialized = true;
+	}
+	catch(...)
+	{
+	}
+
+	return fInitialized == true ? 0 : -1;
 }
 
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
-XalanTerminate()
+XalanTerminate(int	fCleanUpICU)
 {
 	// Terminate Xalan.
 	XalanTransformer::terminate();
 
 	// Call the static terminator for Xerces.
 	XMLPlatformUtils::Terminate();
+
+	// Call the cleanup function for the ICU,
+	// if requested.
+	if (fCleanUpICU)
+	{
+		XalanTransformer::ICUCleanUp();
+	}
 }
 
 

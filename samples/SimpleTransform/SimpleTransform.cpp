@@ -29,45 +29,53 @@ main(
 	using std::endl;
 #endif
 
-	int	theResult = 0;
+	int	theResult = -1;
 
 	if (argc != 1)
 	{
 		cerr << "Usage: SimpleTransform"
 			 << endl
 			 << endl;
-
-		theResult = -1;
 	}
 	else
 	{
-		// Call the static initializer for Xerces.
-		XMLPlatformUtils::Initialize();
-
-		// Initialize Xalan.
-		XalanTransformer::initialize();
-
+		try
 		{
-			// Create a XalanTransformer.
-			XalanTransformer theXalanTransformer;
+			// Call the static initializer for Xerces.
+			XMLPlatformUtils::Initialize();
 
-			// The assumption is that the executable will be run
-			// from same directory as the input files.
-			theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
+			// Initialize Xalan.
+			XalanTransformer::initialize();
 
-			if(theResult != 0)
 			{
-				cerr << "SimpleTransform Error: \n" << theXalanTransformer.getLastError()
-					 << endl
-					 << endl;
+				// Create a XalanTransformer.
+				XalanTransformer theXalanTransformer;
+
+				// The assumption is that the executable will be run
+				// from same directory as the input files.
+				theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
+
+				if(theResult != 0)
+				{
+					cerr << "SimpleTransform Error: \n" << theXalanTransformer.getLastError()
+						 << endl
+						 << endl;
+				}
 			}
+
+			// Terminate Xalan...
+			XalanTransformer::terminate();
+
+			// Terminate Xerces...
+			XMLPlatformUtils::Terminate();
+
+			// Clean up the ICU, if it's integrated...
+			XalanTransformer::ICUCleanUp();
 		}
-
-		// Terminate Xalan.
-		XalanTransformer::terminate();
-
-		// Call the static terminator for Xerces.
-		XMLPlatformUtils::Terminate();
+		catch(...)
+		{
+			cerr << "Initialization failed!" << endl;
+		}
 	}
 
 	return theResult;

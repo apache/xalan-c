@@ -159,6 +159,9 @@ main(
 
 		// Call the static terminator for Xerces.
 		XMLPlatformUtils::Terminate();
+
+		// Clean up the ICU, if it's integrated.
+		XalanTransformer::ICUCleanUp();
 	}
 
 	return theResult;

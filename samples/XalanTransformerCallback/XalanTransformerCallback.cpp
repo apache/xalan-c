@@ -155,7 +155,7 @@ main(
     }
     else
     {
-		// Ooutput file specified, so try to open it...
+		// Output file specified, so try to open it...
 		FILE* const	theOutputFile = fopen(argv[3], "w");
 
 		if (theOutputFile == 0)
@@ -170,11 +170,14 @@ main(
 		}
     }
 
-    // Terminate Xalan.
+	// Terminate Xalan...
 	XalanTransformer::terminate();
 
-	// Call the static terminator for Xerces.
+	// Terminate Xerces...
 	XMLPlatformUtils::Terminate();
+
+	// Clean up the ICU, if it's integrated...
+	XalanTransformer::ICUCleanUp();
 
 	return theResult;
 }
