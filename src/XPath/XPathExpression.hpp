@@ -69,6 +69,16 @@
 #include <set>
 #include <vector>
 
+#if defined(XALAN_NO_IOSFWD)
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <iostream.h>
+#else
+#include <ostream>
+#endif
+#else
+#include <iosfwd>
+#endif
+
 
 
 #include <XalanDOM/XalanDOMString.hpp>
@@ -1230,6 +1240,21 @@ public:
 				  OpCodeMapSizeType		theStartPosition = 0) const;
 
 	/**
+	 * Diagnostic function to output the operation code map.
+	 * 
+	 * @param theStream output stream
+	 * @param theStartPosition starting position in map
+	 */
+	void
+	dumpOpCodeMap(
+#if defined(XALAN_NO_NAMESPACES)
+			ostream&			theStream,
+#else
+			std::ostream&		theStream,
+#endif
+			OpCodeMapSizeType	theStartPosition = 0) const;
+
+	/**
 	 * Diagnostic function to output the token queue.
 	 * 
 	 * @param thePrintWriter   output device
@@ -1240,12 +1265,39 @@ public:
 				   TokenQueueSizeType	theStartPosition = 0) const;
 
 	/**
+	 * Diagnostic function to output the token queue.
+	 * 
+	 * @param thePrintWriter   output device
+	 * @param theStartPosition starting position in token queue
+	 */
+	void
+	dumpTokenQueue(
+#if defined(XALAN_NO_NAMESPACES)
+			ostream&			theStream,
+#else
+			std::ostream&		theStream,
+#endif
+			TokenQueueSizeType	theStartPosition = 0) const;
+
+	/**
 	 * Diagnostic function to output the remaining tokens in the token queue.
 	 * 
 	 * @param thePrintWriter   output device
 	 */
 	void
 	dumpRemainingTokenQueue(PrintWriter&	thePrintWriter) const;
+
+	/**
+	 * Diagnostic function to output the remaining tokens in the token queue.
+	 * 
+	 * @param theStream The output stream
+	 */
+	void
+#if defined(XALAN_NO_NAMESPACES)
+	dumpRemainingTokenQueue(ostream&		theStream) const;
+#else
+	dumpRemainingTokenQueue(std::ostream&	theStream) const;
+#endif
 
 	/**
 	 * Push a token onto the token queue and its index onto the operations code

@@ -64,6 +64,12 @@
 
 
 
+#if !defined(XALAN_NO_IOSFWD)
+#include <ostream>
+#endif
+
+
+
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <strstream.h>
 #else
@@ -639,6 +645,44 @@ XPathExpression::dumpOpCodeMap(
 
 
 void
+XPathExpression::dumpOpCodeMap(
+#if defined(XALAN_NO_NAMESPACES)
+			ostream&			theStream,
+#else
+			std::ostream&		theStream,
+#endif
+			OpCodeMapSizeType	theStartPosition) const
+{
+	for (OpCodeMapSizeType	i = theStartPosition;
+				i < opCodeMapSize(); i++) 
+	{
+		theStream << " '" << m_opMap[i] << "'";
+	}
+}
+
+
+
+void
+XPathExpression::dumpTokenQueue(
+#if defined(XALAN_NO_NAMESPACES)
+			ostream&			theStream,
+#else
+			std::ostream&		theStream,
+#endif
+			TokenQueueSizeType	theStartPosition) const
+{
+	for (TokenQueueSizeType	i = theStartPosition;
+				i < tokenQueueSize(); i++) 
+	{
+		assert(getToken(i) != 0);
+
+		theStream << " '" << getToken(i)->str() << "'";
+	}
+}
+
+
+
+void
 XPathExpression::dumpTokenQueue(
 			PrintWriter&		thePrintWriter,
 			TokenQueueSizeType	theStartPosition) const
@@ -673,6 +717,23 @@ XPathExpression::dumpRemainingTokenQueue(PrintWriter&	thePrintWriter) const
 				   m_currentPosition);
 
 	thePrintWriter.print(")");
+}
+
+
+
+void
+#if defined(XALAN_NO_NAMESPACES)
+XPathExpression::dumpRemainingTokenQueue(ostream&		theStream) const
+#else
+XPathExpression::dumpRemainingTokenQueue(std::ostream&	theStream) const
+#endif
+{
+	theStream << "Remaining tokens: (";
+
+	dumpTokenQueue(theStream,
+				   m_currentPosition);
+
+	theStream << ")";
 }
 
 
