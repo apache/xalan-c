@@ -1398,9 +1398,9 @@ ElemTemplateElement::getAttributeNodeNS(
 XalanAttr*
 ElemTemplateElement::setAttributeNodeNS(XalanAttr*	/* newAttr */)
 {
-	return 0;
-
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	return 0;
 }
 
 
