@@ -102,8 +102,8 @@ XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
 			const XalanDOMString&	theURI) :
 	XalanParsedSource(),
 	m_parserLiaison(theParserLiaison),
-	m_parsedSource(theParserLiaison.createDocument(theDocument)),
 	m_domSupport(theDOMSupport),
+	m_parsedSource(theParserLiaison.createDocument(theDocument)),
 	m_uri(theURI)
 {
 	assert(m_parsedSource != 0);
