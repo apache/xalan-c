@@ -69,8 +69,8 @@
 // ---------------------------------------------------------------------------
 #define XALAN_PLATFORM_EXPORT     __declspec(dllexport)
 #define XALAN_PLATFORM_IMPORT     __declspec(dllimport)
-#define XALAN_PLATFORM_EXPORT_FUNCTION(T) T XALAN_PLATFORM_EXPORT
-#define XALAN_PLATFORM_IMPORT_FUNCTION(T) T XALAN_PLATFORM_IMPORT
+#define XALAN_PLATFORM_EXPORT_FUNCTION(T) XALAN_PLATFORM_EXPORT T
+#define XALAN_PLATFORM_IMPORT_FUNCTION(T) XALAN_PLATFORM_IMPORT T
 
 
 #if __INTEL_COMPILER >= 600
