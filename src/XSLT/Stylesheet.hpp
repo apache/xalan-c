@@ -808,13 +808,20 @@ typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 	};
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef list<MatchPattern2*>				 PatternTableListType;
-	typedef vector<const MatchPattern2*>		 PatternTableVectorType;
-	typedef map<XalanDOMString, PatternTableListType> PatternTableMapType;
+	typedef list<MatchPattern2*>				PatternTableListType;
+
+	typedef vector<const MatchPattern2*>		PatternTableVectorType;
+
+	typedef map<XalanDOMString,
+			    PatternTableListType,
+				less<XalanDOMString> >			PatternTableMapType;
 #else
-	typedef std::list<MatchPattern2*>				  PatternTableListType;
-	typedef std::vector<const MatchPattern2*>		  PatternTableVectorType;
-	typedef std::map<XalanDOMString, PatternTableListType> PatternTableMapType;
+	typedef std::list<MatchPattern2*>			PatternTableListType;
+
+	typedef std::vector<const MatchPattern2*>	PatternTableVectorType;
+
+	typedef std::map<XalanDOMString,
+					 PatternTableListType>		PatternTableMapType;
 #endif
 
 	/**

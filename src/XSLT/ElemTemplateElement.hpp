@@ -319,7 +319,7 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef	vector<NameSpace>		NamespaceVectorType;
-	typedef map<XalanDOMString, XalanDOMString>	String2StringMapType;
+	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	String2StringMapType;
 #else
 	typedef	std::vector<NameSpace>		NamespaceVectorType;
 	typedef std::map<XalanDOMString, XalanDOMString>	String2StringMapType;

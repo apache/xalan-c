@@ -264,7 +264,9 @@ private:
 	operator==(const XSLTProcessorEnvSupportDefault&) const;
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef map<const XalanNode*, XLocator*>		XLocatorTableType;
+	typedef map<const XalanNode*,
+				XLocator*,
+				less<const XalanNode*> >			XLocatorTableType;
 #else
 	typedef std::map<const XalanNode*, XLocator*>	XLocatorTableType;
 #endif

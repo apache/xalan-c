@@ -482,9 +482,9 @@ StylesheetExecutionContextDefault::createMatchPattern(
 		if (i != m_matchPatternCache.end())
 		{
 			// Update hit time...
-			i->second.second = clock();
+			(*i).second.second = clock();
 
-			theResult = i->second.first;
+			theResult = (*i).second.first;
 		}
 		else
 		{
@@ -1864,7 +1864,7 @@ StylesheetExecutionContextDefault::isCached(const XPath*	theXPath)
 
 	while(i != theEnd)
 	{
-		if (i->second.first == theXPath)
+		if ((*i).second.first == theXPath)
 		{
 			return true;
 		}
@@ -1974,7 +1974,7 @@ StylesheetExecutionContextDefault::addToXPathCache(
 
 		while(i != theEnd)
 		{
-			const clock_t	current = i->second.second;
+			const clock_t	current = (*i).second.second;
 
 			if (current < lowest)
 			{
@@ -1992,7 +1992,7 @@ StylesheetExecutionContextDefault::addToXPathCache(
 		assert(earliest != theEnd);
 
 		// Return the XPath and erase it from the cache.
-		m_xsltProcessor.returnXPath(earliest->second.first);
+		m_xsltProcessor.returnXPath((*earliest).second.first);
 
 		m_matchPatternCache.erase(earliest);
 	}

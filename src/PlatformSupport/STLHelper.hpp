@@ -85,7 +85,11 @@ struct DeleteFunctor : public std::unary_function<const T*, void>
 	result_type
 	operator()(argument_type	thePointer) const
 	{
+#if defined(XALAN_REALY_STUPID_COMPILER)
+		delete (T*)thePointer;
+#else
 		delete thePointer;
+#endif
 	}
 };
 

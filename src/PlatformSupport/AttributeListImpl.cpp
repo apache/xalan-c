@@ -309,7 +309,7 @@ AttributeListImpl::getType(const XMLCh* const name) const
 	if (i != m_AttributeKeyMap.end())
 	{
 		// Found it, so return a pointer to the type.
-		return i->second->m_Type.begin();
+		return (*i).second->m_Type.begin();
 	}
 	else
 	{
@@ -341,7 +341,7 @@ AttributeListImpl::getValue(const XMLCh* const name) const
 	if (i != m_AttributeKeyMap.end())
 	{
 		// Found it, so return a pointer to the value.
-		return i->second->m_Value.begin();
+		return (*i).second->m_Value.begin();
 	}
 	else
 	{
@@ -411,8 +411,8 @@ AttributeListImpl::addAttribute(
 		XMLChVectorType		theNewType(type, endArray(type) + 1);
 		XMLChVectorType		theNewValue(value, endArray(value) + 1);
 
-		theNewType.swap(i->second->m_Type);
-		theNewValue.swap(i->second->m_Value); 
+		theNewType.swap((*i).second->m_Type);
+		theNewValue.swap((*i).second->m_Value); 
 	}
 	else
 	{

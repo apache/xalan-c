@@ -1928,10 +1928,10 @@ XPathProcessorImpl::AxisName()
 	}
 	else
 	{
-		m_expression->appendOpCode(i->second);
+		m_expression->appendOpCode((*i).second);
 	}
 
-	return i->second;
+	return (*i).second;
 }
 
 

@@ -154,12 +154,6 @@ protected:
     bool
 	operator==(const AttributeListImpl&) const;
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XMLCh>		XMLChVectorType;
-#else
-	typedef std::vector<XMLCh>	XMLChVectorType;
-#endif
-
 	// Default vector allocation size.
 	enum
 	{
@@ -169,6 +163,12 @@ protected:
 	// A struct to hold information about each attribute.
 	struct AttributeVectorEntry
 	{
+#if defined(XALAN_NO_NAMESPACES)
+		typedef vector<XMLCh>		XMLChVectorType;
+#else
+		typedef std::vector<XMLCh>	XMLChVectorType;
+#endif
+
 		AttributeVectorEntry(const XMLChVectorType&	theName = XMLChVectorType(),
 							 const XMLChVectorType&	theValue = XMLChVectorType(),
 							 const XMLChVectorType&	theType = XMLChVectorType()) :
@@ -182,6 +182,8 @@ protected:
 		XMLChVectorType			m_Value;
 		XMLChVectorType			m_Type;
 	};
+
+	typedef AttributeVectorEntry::XMLChVectorType	XMLChVectorType;
 
 #if defined(XALAN_NO_NAMESPACES)
 	// This vector will hold the entries.

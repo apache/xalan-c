@@ -606,14 +606,10 @@ protected:
 	static const XalanDOMCharVectorType		s_formatterToDOMString;
 
 #if defined(XALAN_NO_NAMESPACES)
-//	typedef map<XalanDOMString, XalanDOMString>			DOMStringMapType;
-//	typedef map<XalanDOMString, int>					DOMString2IntMapType;
 	typedef stack<bool>									BoolStackType;
 	typedef vector<XalanDOMChar>						DOMCharBufferType;
 	typedef vector<char>								ByteBufferType;
 #else
-//	typedef std::map<XalanDOMString, XalanDOMString>	DOMStringMapType;
-//	typedef std::map<XalanDOMString, int>				DOMString2IntMapType;
 	typedef std::stack<bool>							BoolStackType;
 	typedef std::vector<XalanDOMChar>					DOMCharBufferType;
 	typedef std::vector<char>							ByteBufferType;

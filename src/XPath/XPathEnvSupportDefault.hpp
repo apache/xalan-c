@@ -254,9 +254,9 @@ private:
 	operator==(const XPathEnvSupportDefault&) const;
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString, XalanDocument*>			SourceDocsTableType;
-	typedef map<XalanDOMString, Function*>				FunctionTableType;
-	typedef map<XalanDOMString, FunctionTableType>		NamespaceFunctionTablesType;
+	typedef map<XalanDOMString, XalanDocument*, less<XalanDOMString> >		SourceDocsTableType;
+	typedef map<XalanDOMString, Function*, less<XalanDOMString> >			FunctionTableType;
+	typedef map<XalanDOMString, FunctionTableType, less<XalanDOMString> >	NamespaceFunctionTablesType;
 #else
 	typedef std::map<XalanDOMString, XalanDocument*>	SourceDocsTableType;
 	typedef std::map<XalanDOMString, Function*>			FunctionTableType;

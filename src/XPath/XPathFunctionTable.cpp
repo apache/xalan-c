@@ -121,12 +121,12 @@ XPathFunctionTable::InstallFunction(
 
 	if (i != m_FunctionNameIndex.end())
 	{
-		assert(CollectionType::size_type(i->second) < m_FunctionCollection.size());
+		assert(CollectionType::size_type((*i).second) < m_FunctionCollection.size());
 
 		// It is, so delete the old one, and add the new one...
-		delete m_FunctionCollection[i->second];
+		delete m_FunctionCollection[(*i).second];
 
-		m_FunctionCollection[i->second] = theFunction.clone();
+		m_FunctionCollection[(*i).second] = theFunction.clone();
 	}
 	else
 	{
@@ -155,17 +155,17 @@ XPathFunctionTable::UninstallFunction(const XalanDOMString&		theFunctionName)
 	}
 	else
 	{
-		assert(CollectionType::size_type(i->second) < m_FunctionCollection.size());
+		assert(CollectionType::size_type((*i).second) < m_FunctionCollection.size());
 
 #if !defined(XALAN_NO_NAMESPACES)
 		using std::find;
 #endif
 
 		// Delete the function...
-		delete m_FunctionCollection[i->second];
+		delete m_FunctionCollection[(*i).second];
 
 		// Erase it from the table...
-		m_FunctionCollection.erase(&m_FunctionCollection[i->second]);
+		m_FunctionCollection.erase(&m_FunctionCollection[(*i).second]);
 
 		return true;
 	}

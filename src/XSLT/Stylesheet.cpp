@@ -204,7 +204,7 @@ Stylesheet::~Stylesheet()
 			it != m_patternTable.end();
 				++it)
 	{
-		const PatternTableListType&		theList = it->second;
+		const PatternTableListType&		theList = (*it).second;
 
 		for_each(theList.begin(),
 				 theList.end(),
@@ -990,7 +990,7 @@ Stylesheet::getNodeSetByKey(
 
 		if (i != theKeysTable.end())
 		{
-			nl = i->second->getNodeSetByKey(name, ref);
+			nl = (*i).second->getNodeSetByKey(name, ref);
 
 			if (nl->getLength() > 0)
 			{
@@ -1245,7 +1245,7 @@ Stylesheet::processNSAliasElement(
 		if (i != m_prefixAliases.end())
 		{
 			// $$$ ToDo: This could also be an error?
-			i->second = resultNamespace;
+			(*i).second = resultNamespace;
 		}
 		else
 		{
@@ -1271,7 +1271,7 @@ Stylesheet::getAliasNamespaceURI(const XalanDOMString&	uri) const
 
 	if (i != m_prefixAliases.end())
 	{
-		result = i->second;
+		result = (*i).second;
 
 		assert(length(result) > 0);
 	}

@@ -126,11 +126,9 @@ private:
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const AVT*>				AVTVectorType;
 	typedef vector<XalanDOMString>			ExtensionElementPrefixesVectorType;
-	typedef map<DOMString, DOMString>		String2StringMapType;
 #else
 	typedef std::vector<const AVT*>			AVTVectorType;
 	typedef std::vector<XalanDOMString>		ExtensionElementPrefixesVectorType;
-	typedef std::map<DOMString, DOMString>	String2StringMapType;
 #endif
 
 	/**
@@ -154,8 +152,8 @@ private:
 	 */
 	void
 	ElemLiteralResult::processPrefixControl(
-			const DOMString&	localName, 
-			const DOMString&	attrValue);
+			const XalanDOMString&	localName, 
+			const XalanDOMString&	attrValue);
 };
 
 

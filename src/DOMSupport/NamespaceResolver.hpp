@@ -110,7 +110,7 @@ public:
 protected:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef map<const XalanNode*, NSInfo>		NSInfoMapType;
+	typedef map<const XalanNode*, NSInfo, less<const XalanNode*> >	NSInfoMapType;
 #else
 	typedef std::map<const XalanNode*, NSInfo>	NSInfoMapType;
 #endif

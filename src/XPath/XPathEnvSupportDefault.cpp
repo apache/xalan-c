@@ -131,33 +131,33 @@ XPathEnvSupportDefault::updateFunctionTable(
 		// There is already a table for the namespace,
 		// so look for the function...
 		const FunctionTableType::iterator	j =
-			i->second.find(functionName);
+			(*i).second.find(functionName);
 
-		if (j == i->second.end())
+		if (j == (*i).second.end())
 		{
 			// The function was not found.  If function is not
 			// 0, then add a clone of the function.
 			if (function != 0)
 			{
-				i->second[functionName] = function->clone();
+				(*i).second[functionName] = function->clone();
 			}
 		}
 		else
 		{
 			// Found it, so delete the function...
-			delete j->second;
+			delete (*j).second;
 
 			// If function is not 0, then we update
 			// the entry.  Otherwise, we erase it...
 			if (function != 0)
 			{
 				// Update it...
-				j->second = function->clone();
+				(*j).second = function->clone();
 			}
 			else
 			{
 				// Erase it...
-				i->second.erase(j);
+				(*i).second.erase(j);
 			}
 		}
 	}
@@ -250,7 +250,7 @@ XPathEnvSupportDefault::getSourceDocument(const XalanDOMString&		theURI) const
 	}
 	else
 	{
-		return i->second;
+		return (*i).second;
 	}
 }
 
@@ -276,7 +276,7 @@ XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
 
 	while(i != m_sourceDocs.end() && fFound == false)
 	{
-		if (i->second == owner)
+		if ((*i).second == owner)
 		{
 			fFound = true;
 		}
@@ -286,7 +286,7 @@ XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
 		}
 	}
 
-	return fFound == false ? XalanDOMString() : i->first;
+	return fFound == false ? XalanDOMString() : (*i).first;
 }
 
 
@@ -333,9 +333,9 @@ XPathEnvSupportDefault::functionAvailable(
 			// There is a table for the namespace,
 			// so look for the function...
 			const FunctionTableType::const_iterator		j =
-				i->second.find(functionName);
+				(*i).second.find(functionName);
 
-			if (j != i->second.end())
+			if (j != (*i).second.end())
 			{
 				theResult = true;
 			}
@@ -389,14 +389,14 @@ XPathEnvSupportDefault::findFunction(
 		// There is a table for the namespace,
 		// so look for the function...
 		const FunctionTableType::const_iterator		j =
-			i->second.find(functionName);
+			(*i).second.find(functionName);
 
-		if (j != i->second.end())
+		if (j != (*i).second.end())
 		{
 			// Found the function...
-			assert(j->second != 0);
+			assert((*j).second != 0);
 
-			theFunction = j->second;
+			theFunction = (*j).second;
 		}
 	}
 

@@ -111,7 +111,9 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<Function*>				CollectionType;
-	typedef map<XalanDOMString, int>		FunctionNameIndexMapType;
+	typedef map<XalanDOMString,
+				int,
+				less<XalanDOMString> >		FunctionNameIndexMapType;
 #else
 	typedef std::vector<Function*>			CollectionType;
 	typedef std::map<XalanDOMString, int>	FunctionNameIndexMapType;
@@ -137,7 +139,7 @@ public:
 
 		if (i != m_FunctionNameIndex.end())
 		{
-			return *m_FunctionCollection[i->second];
+			return *m_FunctionCollection[(*i).second];
 		}
 		else
 		{
@@ -186,9 +188,9 @@ public:
 
 			while (i != m_FunctionNameIndex.end())
 			{
-				if (i->second == theFunctionID)
+				if ((*i).second == theFunctionID)
 				{
-					theName = i->first;
+					theName = (*i).first;
 
 					break;
 				}
@@ -212,7 +214,7 @@ public:
 
 		if (i != m_FunctionNameIndex.end())
 		{
-			return i->second;
+			return (*i).second;
 		}
 		else
 		{

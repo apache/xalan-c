@@ -199,11 +199,21 @@ public:
 		const NodeSortKeyVectorType&	m_nodeSortKeys;
 
 #if defined(XALAN_NO_NAMESPACES)
-		typedef	map<const XalanNode*, double>			NumberResultsNodeCacheMapType;
-		typedef	map<const XalanNode*, XalanDOMString>	StringResultsNodeCacheMapType;
+		typedef	map<const XalanNode*,
+					double,
+					less<const XalanNode*> >	NumberResultsNodeCacheMapType;
 
-		typedef	map<const XPath*, NumberResultsNodeCacheMapType>	NumberResultsCacheMapType;
-		typedef	map<const XPath*, StringResultsNodeCacheMapType>	StringResultsCacheMapType;
+		typedef	map<const XalanNode*,
+				    XalanDOMString,
+					less<const XalanNode*> >		StringResultsNodeCacheMapType;
+
+		typedef	map<const XPath*,
+					NumberResultsNodeCacheMapType,
+					less<const XPath*> >	NumberResultsCacheMapType;
+
+		typedef	map<const XPath*,
+					StringResultsNodeCacheMapType,
+					less<const XPath*> >	StringResultsCacheMapType;
 #else
 		typedef	std::map<const XalanNode*, double>			NumberResultsNodeCacheMapType;
 		typedef	std::map<const XalanNode*, XalanDOMString>	StringResultsNodeCacheMapType;

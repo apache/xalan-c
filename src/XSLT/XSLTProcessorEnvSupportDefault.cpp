@@ -183,7 +183,7 @@ XSLTProcessorEnvSupportDefault::getKeyTable(const XalanNode*	doc) const
 	}
 	else
 	{
-		return i->second;
+		return (*i).second;
 	}
 }
 
@@ -388,7 +388,7 @@ XSLTProcessorEnvSupportDefault::getXLocatorFromNode(const XalanNode*	node) const
 	}
 	else
 	{
-		return i->second;
+		return (*i).second;
 	}
 }
 

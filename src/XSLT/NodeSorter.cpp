@@ -292,12 +292,12 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 	if (i != m_numberResultsCache.end())
 	{
 		const NumberResultsNodeCacheMapType::const_iterator	j =
-			i->second.find(node);
+			(*i).second.find(node);
 
-		if (j != i->second.end())
+		if (j != (*i).second.end())
 		{
 			// Yuck!!!!  Big ugly return here!!!
-			return j->second;
+			return (*j).second;
 		}
 	}
 
@@ -332,12 +332,12 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 	if (i != m_stringResultsCache.end())
 	{
 		const StringResultsNodeCacheMapType::const_iterator	j =
-			i->second.find(node);
+			(*i).second.find(node);
 
-		if (j != i->second.end())
+		if (j != (*i).second.end())
 		{
 			// Yuck!!!!  Big ugly return here!!!
-			return j->second;
+			return (*j).second;
 		}
 	}
 

@@ -246,16 +246,16 @@ private:
 			}
 			else
 			{
-				return i->second & flags ? true : false;
+				return (*i).second & flags ? true : false;
 			}
 		}
 
 	private:
 
 	#if defined(XALAN_NO_NAMESPACES)
-		typedef map<DOMString, unsigned int>	AttributeMapType;
+		typedef map<XalanDOMString, unsigned int, less<XalanDOMString> >	AttributeMapType;
 	#else
-		typedef std::map<DOMString, unsigned int>	AttributeMapType;
+		typedef std::map<XalanDOMString, unsigned int>	AttributeMapType;
 	#endif
 
 		const unsigned int	m_flags;
@@ -265,9 +265,9 @@ private:
 
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef map<DOMString, ElemDesc>	ElementFlagsMapType;
+	typedef map<XalanDOMString, ElemDesc, less<XalanDOMString> >	ElementFlagsMapType;
 #else
-	typedef std::map<DOMString, ElemDesc>	ElementFlagsMapType;
+	typedef std::map<XalanDOMString, ElemDesc>	ElementFlagsMapType;
 #endif
 
 	static const ElementFlagsMapType	s_elementFlags;

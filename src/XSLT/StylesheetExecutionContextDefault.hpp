@@ -780,7 +780,9 @@ private:
 	typedef vector<const XObject*>						VariablesCollectionType;
 	typedef vector<VariablesCollectionType>				LiveVariablesStackType;
 	typedef pair<XPath*, clock_t>						XPathCacheEntry;
-	typedef map<XalanDOMString, XPathCacheEntry>		XPathCacheMapType;
+	typedef map<XalanDOMString,
+				XPathCacheEntry,
+				less<XalanDOMString> >					XPathCacheMapType;
 #else
 	typedef std::deque<const ElemTemplateElement*>		ElementRecursionStackType;
 	typedef std::set<FormatterListener*>				FormatterListenerSetType;

@@ -316,7 +316,7 @@ FormatterToHTML::getElemDesc(const XalanDOMString&	name)
 	}
 	else
 	{
-		return i->second;
+		return (*i).second;
 	}
 }
 
@@ -986,7 +986,7 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("FRAME"),
 			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
@@ -1146,8 +1146,8 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("A"),
 			ElemDesc(0|ElemDesc::SPECIAL)));
 	
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("HREF"), ElemDesc::ATTRURL);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("NAME"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("HREF"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("NAME"), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
@@ -1170,9 +1170,9 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("IMG"),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::EMPTY|ElemDesc::WHITESPACESENSITIVE)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("LONGDESC"), ElemDesc::ATTRURL);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("USEMAP"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("LONGDESC"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("USEMAP"), ElemDesc::ATTRURL);
 
 	theResult =
 	theElementFlags.insert(
@@ -1180,11 +1180,11 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("OBJECT"),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::HEADMISC|ElemDesc::WHITESPACESENSITIVE)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("CLASSID"), ElemDesc::ATTRURL);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("CODEBASE"), ElemDesc::ATTRURL);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("DATA"), ElemDesc::ATTRURL);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("ARCHIVE"), ElemDesc::ATTRURL);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("USEMAP"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CLASSID"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CODEBASE"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("DATA"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("ARCHIVE"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("USEMAP"), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
@@ -1242,7 +1242,7 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("Q"),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("CITE"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CITE"), ElemDesc::ATTRURL);
 
 	theResult =
 	theElementFlags.insert(
@@ -1250,7 +1250,7 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("BLOCKQUOTE"),
 			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("CITE"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CITE"), ElemDesc::ATTRURL);
 
 	theResult =
 	theElementFlags.insert(
@@ -1258,7 +1258,7 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("INS"),
 			ElemDesc(0)));
 	
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("CITE"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CITE"), ElemDesc::ATTRURL);
 
 	theResult =
 	theElementFlags.insert(
@@ -1266,7 +1266,7 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("DEL"),
 			ElemDesc(0)));
 	
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("CITE"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CITE"), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
@@ -1304,7 +1304,7 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("FORM"),
 			ElemDesc(0|ElemDesc::BLOCK)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("ACTION"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("ACTION"), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
@@ -1317,11 +1317,11 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("INPUT"),
 			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL|ElemDesc::EMPTY)));
 	
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("USEMAP"), ElemDesc::ATTRURL);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("CHECKED"), ElemDesc::ATTREMPTY);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("READONLY"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("USEMAP"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CHECKED"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("READONLY"), ElemDesc::ATTREMPTY);
 
 	theResult =
 	theElementFlags.insert(
@@ -1329,8 +1329,8 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("SELECT"),
 			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("READONLY"), ElemDesc::ATTREMPTY);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("MULTIPLE"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("READONLY"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("MULTIPLE"), ElemDesc::ATTREMPTY);
 
 	theResult =
 	theElementFlags.insert(
@@ -1338,7 +1338,7 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("OPTGROUP"),
 			ElemDesc(0)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
 
 	theResult =
 	theElementFlags.insert(
@@ -1346,8 +1346,8 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("OPTION"),
 			ElemDesc(0)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("SELECTED"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("SELECTED"), ElemDesc::ATTREMPTY);
 
 	theResult =
 	theElementFlags.insert(
@@ -1355,8 +1355,8 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("TEXTAREA"),
 			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("READONLY"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("READONLY"), ElemDesc::ATTREMPTY);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
@@ -1374,7 +1374,7 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("BUTTON"),
 			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
@@ -1432,7 +1432,7 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("HEAD"),
 			ElemDesc(0|ElemDesc::BLOCK)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("PROFILE"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("PROFILE"), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
@@ -1445,7 +1445,7 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("BASE"),
 			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("HREF"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("HREF"), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
@@ -1463,8 +1463,8 @@ FormatterToHTML::createElementFlagsMap()
 			XALAN_STATIC_UCODE_STRING("SCRIPT"),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::HEADMISC|ElemDesc::RAW)));
 
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
-	theResult.first->second.setAttr(XALAN_STATIC_UCODE_STRING("FOR"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("FOR"), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(

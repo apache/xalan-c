@@ -184,10 +184,12 @@ private:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
-				MutableNodeRefList>			NodeListMapType;
+				MutableNodeRefList,
+				less<XalanDOMString> >		NodeListMapType;
 
 	typedef map<XalanDOMString,
-				NodeListMapType>			KeysMapType;
+				NodeListMapType,
+				less<XalanDOMString> >		KeysMapType;
 #else
 	typedef std::map<XalanDOMString,
 					 MutableNodeRefList>	NodeListMapType;
