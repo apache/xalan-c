@@ -108,7 +108,7 @@ public:
 	 * 
 	 * @param val source result tree fragment.
 	 */
-	XResultTreeFrag(ResultTreeFragBase&		value);
+	XResultTreeFrag(XalanDocumentFragment&		value);
 
 	/**
 	 * Construct an XResultTreeFrag object from another
@@ -162,7 +162,7 @@ public:
 	virtual double
 	stringLength() const;
 
-	virtual const ResultTreeFragBase&
+	virtual const XalanDocumentFragment&
 	rtree() const;
 
 	virtual const NodeRefListBase&
@@ -177,7 +177,7 @@ public:
 	/**
 	 * Release the ResultTreeFrag held by the instance.
 	 */
-	ResultTreeFragBase*
+	XalanDocumentFragment*
 	release();
 
 	/**
@@ -186,7 +186,7 @@ public:
 	 * @param theValue The new value.
 	 */
 	void
-	set(ResultTreeFragBase&		theValue);
+	set(XalanDocumentFragment&	theValue);
 
 protected:
 
@@ -196,7 +196,7 @@ protected:
 private:
 
 	// Data members...
-	ResultTreeFragBase*				m_value;	
+	XalanDocumentFragment*			m_value;	
 
 	const XalanDOMString*			m_singleTextChildValue;
 

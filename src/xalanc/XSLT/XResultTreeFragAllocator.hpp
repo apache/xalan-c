@@ -103,7 +103,7 @@ public:
 	 * @return pointer to a node
 	 */
 	data_type*
-	create(ResultTreeFragBase&	theValue);
+	create(XalanDocumentFragment&	theValue);
 
 	/**
 	 * Create an XResultTreeFrag object.

@@ -81,7 +81,6 @@
 
 
 
-#include <xalanc/XPath/ResultTreeFragBase.hpp>
 #include <xalanc/XPath/XObjectFactory.hpp>
 #include <xalanc/XPath/XPath.hpp>
 #include <xalanc/XPath/XPathEnvSupport.hpp>
@@ -174,7 +173,6 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_nodeSorterCache(),
 	m_indentAmount(-1),
 	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
-	m_resultTreeFragAllocator(eResultTreeFragAllocatorBlockSize),
 	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
 	m_documentAllocator(eDocumentAllocatorBlockSize),
 	m_usePerInstanceDocumentFactory(false),
@@ -217,7 +215,6 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_nodeSorterCache(),
 	m_indentAmount(-1),
 	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
-	m_resultTreeFragAllocator(eResultTreeFragAllocatorBlockSize),
 	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
 	m_documentAllocator(eDocumentAllocatorBlockSize),
 	m_usePerInstanceDocumentFactory(false),
@@ -1028,10 +1025,6 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 		m_documentFragmentAllocator.create(*theDocument);
 	assert(theDocumentFragment != 0);
 
-	ResultTreeFragBase* const	theResultTreeFrag =
-		m_resultTreeFragAllocator.create(theDocumentFragment);
-	assert(theResultTreeFrag != 0);
-
 	GuardCachedObject<FormatterToSourceTreeCacheType>	theGuard(m_formatterToSourceTreeCache);
 
 	FormatterToSourceTree* const	theFormatter = theGuard.get();
@@ -1054,7 +1047,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 	theFormatter->endDocument();
 
 	XResultTreeFrag* const	theXResultTreeFrag =
-		m_xresultTreeFragAllocator.create(*theResultTreeFrag);
+		m_xresultTreeFragAllocator.create(*theDocumentFragment);
 
 	theXResultTreeFrag->setExecutionContext(this);
 
@@ -1188,23 +1181,10 @@ StylesheetExecutionContextDefault::returnXResultTreeFrag(XResultTreeFrag*	theXRe
 	}
 	else
 	{
-		ResultTreeFragBase* const	theResultTreeFragBase =
+		XalanDocumentFragment* const	theDocumentFragment =
 			theXResultTreeFrag->release();
 
 		m_xresultTreeFragAllocator.destroy(theXResultTreeFrag);
-
-		ResultTreeFrag* const	theResultTreeFrag =
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(ResultTreeFrag*)theResultTreeFragBase;
-#else
-			static_cast<ResultTreeFrag*>(theResultTreeFragBase);
-#endif
-
-		XalanSourceTreeDocumentFragment* const	theDocumentFragment =
-			theResultTreeFrag->getDocumentFragment();
-		assert(theDocumentFragment != 0);
-
-		m_resultTreeFragAllocator.destroy(theResultTreeFrag);
 
 		if (m_usePerInstanceDocumentFactory == true)
 		{
@@ -1219,7 +1199,11 @@ StylesheetExecutionContextDefault::returnXResultTreeFrag(XResultTreeFrag*	theXRe
 #endif
 		}
 
-		m_documentFragmentAllocator.destroy(theDocumentFragment);
+#if defined(XALAN_OLD_STYLE_CASTS)
+		m_documentFragmentAllocator.destroy((XalanSourceTreeDocumentFragment*)theDocumentFragment);
+#else
+		m_documentFragmentAllocator.destroy(static_cast<XalanSourceTreeDocumentFragment*>(theDocumentFragment));
+#endif
 
         return true;
 	}
@@ -1693,7 +1677,6 @@ StylesheetExecutionContextDefault::reset()
 	m_nodeSorterCache.reset();
 	m_documentAllocator.reset();
 	m_documentFragmentAllocator.reset();
-	m_resultTreeFragAllocator.reset();
 	m_xresultTreeFragAllocator.reset();
 
 	// Just in case endDocument() was not called,

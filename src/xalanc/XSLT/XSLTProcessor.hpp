@@ -90,7 +90,6 @@ class GenerateEvent;
 class NodeRefListBase;
 class PrefixResolver;
 class PrintWriter;
-class ResultTreeFragBase;
 class SelectionEvent;
 class StylesheetConstructionContext;
 class StylesheetExecutionContext;

@@ -60,9 +60,7 @@
 
 #include <xalanc/XPath/XNodeSetBase.hpp>
 #include <xalanc/XPath/XObjectFactory.hpp>
-
-
-#include <xalanc/XSLT/ResultTreeFragBaseNodeRefListBaseProxy.hpp>
+#include <xalanc/XPath/XalanDocumentFragmentNodeRefListBaseProxy.hpp>
 
 
 
@@ -70,18 +68,18 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class ResultTreeFragBaseXNodeSetBaseProxy : public XNodeSetBase
+class XalanDocumentFragmentXNodeSetBaseProxy : public XNodeSetBase
 {
 public:
 
-	ResultTreeFragBaseXNodeSetBaseProxy(const XObjectPtr&	theXObject) :
+	XalanDocumentFragmentXNodeSetBaseProxy(const XObjectPtr&	theXObject) :
 		XNodeSetBase(),
 		m_xobject(theXObject),
 		m_proxy(theXObject->rtree())
 	{
 	}
 
-	ResultTreeFragBaseXNodeSetBaseProxy(const ResultTreeFragBaseXNodeSetBaseProxy&	theSource) :
+	XalanDocumentFragmentXNodeSetBaseProxy(const XalanDocumentFragmentXNodeSetBaseProxy&	theSource) :
 		XNodeSetBase(theSource),
 		m_xobject(theSource.m_xobject),
 		m_proxy(theSource.m_proxy)
@@ -89,7 +87,7 @@ public:
 	}
 
 	virtual
-	~ResultTreeFragBaseXNodeSetBaseProxy()
+	~XalanDocumentFragmentXNodeSetBaseProxy()
 	{
 	}
 
@@ -97,17 +95,17 @@ public:
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XObject*
 #else
-	virtual ResultTreeFragBaseXNodeSetBaseProxy*
+	virtual XalanDocumentFragmentXNodeSetBaseProxy*
 #endif
 	clone(void*		theAddress = 0) const
 	{
 		if (theAddress == 0)
 		{
-			return new ResultTreeFragBaseXNodeSetBaseProxy(*this);
+			return new XalanDocumentFragmentXNodeSetBaseProxy(*this);
 		}
 		else
 		{
-			return new (theAddress) ResultTreeFragBaseXNodeSetBaseProxy(*this);
+			return new (theAddress) XalanDocumentFragmentXNodeSetBaseProxy(*this);
 		}
 	}
 
@@ -137,9 +135,9 @@ public:
 
 private:
 
-	const XObjectPtr								m_xobject;
+	const XObjectPtr									m_xobject;
 
-	const ResultTreeFragBaseNodeRefListBaseProxy	m_proxy;
+	const XalanDocumentFragmentNodeRefListBaseProxy		m_proxy;
 };
 
 
@@ -176,7 +174,7 @@ FunctionNodeSet::execute(
 	if (theType == XObject::eTypeResultTreeFrag ||
 		(theType == XObject::eTypeString && m_convertString == true))
 	{
-		return XObjectPtr(new ResultTreeFragBaseXNodeSetBaseProxy(args[0]));
+		return XObjectPtr(new XalanDocumentFragmentXNodeSetBaseProxy(args[0]));
 	}
 	else
 	{

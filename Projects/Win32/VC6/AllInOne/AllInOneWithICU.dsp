@@ -1010,11 +1010,11 @@ SOURCE=..\..\..\..\src\xalanc\XPath\NodeRefListBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\xalanc\XPath\ResultTreeFragBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanDocumentFragmentNodeRefListBaseProxy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\xalanc\XPath\ResultTreeFragBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanDocumentFragmentNodeRefListBaseProxy.hpp
 # End Source File
 # Begin Source File
 
@@ -2779,30 +2779,6 @@ SOURCE=..\..\..\..\src\xalanc\XSLT\ResultNamespacesStack.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\xalanc\XSLT\ResultNamespacesStack.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XSLT\ResultTreeFrag.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XSLT\ResultTreeFrag.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XSLT\ResultTreeFragAllocator.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XSLT\ResultTreeFragAllocator.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.hpp
 # End Source File
 # Begin Source File
 

@@ -136,7 +136,6 @@ typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler	DocumentHandlerType;
 class DOMSupport;
 class GenerateEvent;
 class PrintWriter;
-class ResultTreeFragBase;
 class StylesheetConstructionContext;
 class StylesheetExecutionContext;
 class StylesheetRoot;

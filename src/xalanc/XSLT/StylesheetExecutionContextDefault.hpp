@@ -96,8 +96,6 @@
 
 #include <xalanc/XSLT/CountersTable.hpp>
 #include <xalanc/XSLT/NodeSorter.hpp>
-#include <xalanc/XSLT/ResultTreeFrag.hpp>
-#include <xalanc/XSLT/ResultTreeFragAllocator.hpp>
 #include <xalanc/XSLT/Stylesheet.hpp>
 #include <xalanc/XSLT/VariablesStack.hpp>
 #include <xalanc/XSLT/XResultTreeFragAllocator.hpp>
@@ -1071,7 +1069,6 @@ private:
 	enum { eXPathCacheMax = 50,
 		   eDefaultParamsVectorSize = 10,
 		   eXResultTreeFragAllocatorBlockSize = 10,
-		   eResultTreeFragAllocatorBlockSize = 10,
 		   eDocumentAllocatorBlockSize = 10,
 		   eDocumentFragmentAllocatorBlockSize = 10,
 		   eDefaultAttributeAllocatorBlockSize = 10,
@@ -1141,8 +1138,6 @@ private:
 	int									m_indentAmount;
 
 	XResultTreeFragAllocator			m_xresultTreeFragAllocator;
-
-	ResultTreeFragAllocator				m_resultTreeFragAllocator;
 
 	XalanSourceTreeDocumentFragmentAllocator	m_documentFragmentAllocator;
 

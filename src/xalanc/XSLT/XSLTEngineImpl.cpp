@@ -73,6 +73,7 @@
 
 
 #include <xalanc/XalanDOM/XalanDOMException.hpp>
+#include <xalanc/XalanDOM/XalanDocumentFragment.hpp>
 #include <xalanc/XalanDOM/XalanNode.hpp>
 #include <xalanc/XalanDOM/XalanAttr.hpp>
 #include <xalanc/XalanDOM/XalanComment.hpp>
@@ -105,7 +106,6 @@
 
 #include <xalanc/XPath/ElementPrefixResolverProxy.hpp>
 #include <xalanc/XPath/XalanQNameByReference.hpp>
-#include <xalanc/XPath/ResultTreeFragBase.hpp>
 #include <xalanc/XPath/XObject.hpp>
 #include <xalanc/XPath/XObjectFactory.hpp>
 #include <xalanc/XPath/XPathEnvSupport.hpp>
@@ -2187,11 +2187,7 @@ XSLTEngineImpl::cloneToResultTree(
 
 					posNodeType = pos->getNodeType();
 
-					if (posNodeType == XalanNode::DOCUMENT_FRAGMENT_NODE)
-					{
-						break;
-					}
-					else if (&node == pos)
+					if (&node == pos)
 					{
 						if(XalanNode::ELEMENT_NODE == posNodeType)
 						{

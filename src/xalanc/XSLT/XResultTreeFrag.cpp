@@ -59,6 +59,7 @@
 
 
 
+#include <xalanc/XalanDOM/XalanDocumentFragment.hpp>
 #include <xalanc/XalanDOM/XalanNodeList.hpp>
 #include <xalanc/XalanDOM/XalanText.hpp>
 
@@ -75,7 +76,6 @@
 
 #include <xalanc/XPath/FormatterStringLengthCounter.hpp>
 #include <xalanc/XPath/NodeRefListBase.hpp>
-#include <xalanc/XPath/ResultTreeFragBase.hpp>
 #include <xalanc/XPath/XObjectTypeCallback.hpp>
 
 
@@ -89,7 +89,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 inline const XalanDOMString*
-getSingleTextChildValue(const ResultTreeFragBase&	theRTreeFrag)
+getSingleTextChildValue(const XalanDocumentFragment&	theRTreeFrag)
 {
 	const XalanNode* const	theFirstChild = theRTreeFrag.getFirstChild();
 
@@ -107,7 +107,7 @@ getSingleTextChildValue(const ResultTreeFragBase&	theRTreeFrag)
 
 
 
-XResultTreeFrag::XResultTreeFrag(ResultTreeFragBase&	value) :
+XResultTreeFrag::XResultTreeFrag(XalanDocumentFragment&		value) :
 	XObject(eTypeResultTreeFrag),
 	m_value(&value),
 	m_singleTextChildValue(getSingleTextChildValue(value)),
@@ -287,7 +287,7 @@ XResultTreeFrag::stringLength() const
 
 
 
-const ResultTreeFragBase&
+const XalanDocumentFragment&
 XResultTreeFrag::rtree() const
 {
 	assert(m_value != 0);
@@ -323,7 +323,7 @@ XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObje
 
 
 
-ResultTreeFragBase*
+XalanDocumentFragment*
 XResultTreeFrag::release()
 {
 	m_singleTextChildValue = 0;
@@ -332,7 +332,7 @@ XResultTreeFrag::release()
 
 	m_cachedNumberValue = 0.0;
 
-	ResultTreeFragBase* const	temp = m_value;
+	XalanDocumentFragment* const	temp = m_value;
 
 	m_value = 0;
 
@@ -342,7 +342,7 @@ XResultTreeFrag::release()
 
 
 void
-XResultTreeFrag::set(ResultTreeFragBase&	theValue)
+XResultTreeFrag::set(XalanDocumentFragment&		theValue)
 {
 	release();
 

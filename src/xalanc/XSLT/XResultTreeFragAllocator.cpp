@@ -79,7 +79,7 @@ XResultTreeFragAllocator::~XResultTreeFragAllocator()
 
 
 XResultTreeFragAllocator::data_type*
-XResultTreeFragAllocator::create(ResultTreeFragBase&	theValue)
+XResultTreeFragAllocator::create(XalanDocumentFragment&		theValue)
 {
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
