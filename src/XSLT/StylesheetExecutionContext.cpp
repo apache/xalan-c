@@ -88,28 +88,44 @@ StylesheetExecutionContext::ParamsPushPop::ParamsPushPop(
 	m_executionContext(executionContext),
 	m_savedStackFrameIndex(executionContext.getCurrentStackFrameIndex())
 {
+	// It would be cleaner to replace these two lines with separate
+	// subobjects, but that would means saving two more copies of
+	// the execution context on the stack.  Instead, we're just using
+	// a catch block to make sure that the code in the destructor runs
+	// if there's a problem pushing the params.
 	executionContext.pushContextMarker();
 
 	executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
 
-	if (xslCallTemplateElement.hasParams() == true)
+	try
 	{
-		executionContext.pushParams(
-					xslCallTemplateElement,
-					sourceNode,
-					targetTemplate);
-	}
+		if (xslCallTemplateElement.hasParams() == true)
+		{
+			executionContext.pushParams(
+						xslCallTemplateElement,
+						sourceNode,
+						targetTemplate);
+		}
 
-	executionContext.setCurrentStackFrameIndex();
+		executionContext.setCurrentStackFrameIndex();
+	}
+	catch(...)
+	{
+		m_executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
+
+		m_executionContext.popContextMarker();
+
+		throw;
+	}
 }
 
 
 
 StylesheetExecutionContext::ParamsPushPop::~ParamsPushPop()
 {
-	m_executionContext.popContextMarker();
-
 	m_executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
+
+	m_executionContext.popContextMarker();
 }
 
 
