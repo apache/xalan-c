@@ -239,18 +239,15 @@ transform()
 	return theResult;
 }
 
-// This sample shows how existing Xerces DOM_Document instances and XalanSourceTreeDocument
+// This sample shows how existing Xerces DOMDocument instances and XalanSourceTreeDocument
 // instances can be wrapped to use as input for to an instance of XalanTransformer.
 int
 main(
 			int				 argc,
 			const char*		 /* argv */[])
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cout;
-	using std::cerr;
-    using std::endl;
-#endif
+	XALAN_USING_STD(cerr)
+	XALAN_USING_STD(endl)
 
 	int		theResult = -1;
 
