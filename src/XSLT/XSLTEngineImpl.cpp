@@ -2437,8 +2437,8 @@ XSLTEngineImpl::evalXPathStr(
 			const XalanDOMString&	str,
 			XPathExecutionContext&	executionContext)
 {
-	FactoryObjectAutoPointer<XPath>		theXPath(&m_xpathFactory,
-												 m_xpathFactory.create());
+	XPathGuard	theXPath(m_xpathFactory,
+						 m_xpathFactory.create());
 
     m_xpathProcessor->initXPath(*theXPath.get(),
 								str,
@@ -2460,8 +2460,8 @@ XSLTEngineImpl::evalXPathStr(
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext)
 {
-	FactoryObjectAutoPointer<XPath>		theXPath(&m_xpathFactory,
-												 m_xpathFactory.create());
+	XPathGuard	theXPath(m_xpathFactory,
+						 m_xpathFactory.create());
 
     m_xpathProcessor->initXPath(*theXPath.get(),
 								str,

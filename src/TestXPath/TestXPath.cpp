@@ -420,8 +420,8 @@ FindContextNode(
 {
 	XalanNode*							theResult = 0;
 
-	FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
-												 theXPathFactory.create());
+	XPathGuard	theXPath(theXPathFactory,
+						 theXPathFactory.create());
 
 	XalanElement*				theNamespaceContext = 0;
 	ElementPrefixResolverProxy	thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
@@ -519,8 +519,8 @@ TestAxisResult(
 				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
 				NodeRefList						theContextNodeList;
 
-				FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
-															 theXPathFactory.create());
+				XPathGuard	theXPath(theXPathFactory,
+									 theXPathFactory.create());
 
 				theXPathProcessor.initXPath(*theXPath.get(),
 											theXPathString,
@@ -634,8 +634,8 @@ TestPredicateResult(
 				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
 				NodeRefList						theContextNodeList;
 
-				FactoryObjectAutoPointer<XPath>		theXPath1(&theXPathFactory,
-															  theXPathFactory.create());
+				XPathGuard	theXPath1(theXPathFactory,
+									  theXPathFactory.create());
 
 				theXPathProcessor.initXPath(*theXPath1.get(),
 											"following-sibling::*",
@@ -643,8 +643,8 @@ TestPredicateResult(
 											theXObjectFactory,
 											theXPathEnvSupport);
 
-				FactoryObjectAutoPointer<XPath>		theXPath2(&theXPathFactory,
-															  theXPathFactory.create());
+				XPathGuard	theXPath2(theXPathFactory,
+									  theXPathFactory.create());
 
 				theXPathProcessor.initXPath(*theXPath2.get(),
 											"descendant::*",
@@ -816,8 +816,8 @@ TestNumericResults(
 
 	for(int i = 0; theNumericTestInput[i] != 0; i++)
 	{
-		FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
-													 theXPathFactory.create());
+		XPathGuard	theXPath(theXPathFactory,
+							 theXPathFactory.create());
 
 		TestNumericResult(theXPathProcessor,
 						  *theXPath.get(),
@@ -937,8 +937,8 @@ TestStringResults(
 
 	for(int i = 0; theStringTestInput[i] != 0; i++)
 	{
-		FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
-													 theXPathFactory.create());
+		XPathGuard	theXPath(theXPathFactory,
+							 theXPathFactory.create());
 
 		TestStringResult(theXPathProcessor,
 						 *theXPath.get(),
@@ -1062,8 +1062,8 @@ TestBooleanResults(
 
 	for(int i = 0; theBooleanTestInput[i] != 0; i++)
 	{
-		FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
-													 theXPathFactory.create());
+		XPathGuard	theXPath(theXPathFactory,
+							 theXPathFactory.create());
 
 		TestBooleanResult(theXPathProcessor,
 						  *theXPath.get(),
@@ -1155,8 +1155,8 @@ TestAxes(
 			// Get the name of the corresponding XSL file...
 			const XalanDOMString		theXSLFileName = GetXSLFileName(theXMLFileName);
 
-			FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
-														 theXPathFactory.create());
+			XPathGuard	theXPath(theXPathFactory,
+								 theXPathFactory.create());
 
 			TestAxisResult(theXPathProcessor,
 						   theXPathEnvSupport,
