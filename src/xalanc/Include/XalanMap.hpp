@@ -91,25 +91,90 @@ struct XalanHashMemberReference
 	}
 };
 
-template <class Value>
-struct XalanMapEntry : public Value
+/**
+ * Xalan map entry pair of a key and data
+ */
+template <class KeyType,  class DataType>
+struct XalanMapEntry
 {
-	typedef Value	value_type;
+    typedef KeyType     first_type;
+    typedef DataType    second_type;
+
 	typedef size_t	size_type;
 	
-	size_type	bucketIndex;
-
-	XalanMapEntry(const value_type& value, size_type index) : 
-		value_type(value), bucketIndex(index)
+    XalanMapEntry(
+            const first_type & theFirst, 
+            const second_type& theSecond,
+            size_type index = 0) : 
+		first(theFirst),
+        second(theSecond),
+        bucketIndex(index)
 	{
 	}
 
 	XalanMapEntry() : 
-		value_type(),
+		first(),
+        second(),
         bucketIndex(size_type())
 	{
 	}
+
+    first_type      first;
+    second_type     second;
+    size_type       bucketIndex;
 };
+
+
+
+template <class Value>
+struct XalanMapIteratorTraits
+{
+	typedef Value	        value_type;
+	typedef Value&	        reference;
+	typedef Value*	        pointer;
+};
+
+template <class Value>
+struct XalanMapConstIteratorTraits
+{
+	typedef Value	        value_type;
+	typedef const Value&	reference;
+	typedef const Value*	pointer;
+};
+
+template <class XalanMapTraits, class BaseIterator>
+struct XalanMapIterator : public BaseIterator
+{
+    typedef typename XalanMapTraits::value_type         value_type;
+    typedef typename XalanMapTraits::reference          reference;
+    typedef typename XalanMapTraits::pointer            pointer;
+
+	typedef ptrdiff_t		                    difference_type;
+	typedef XALAN_STD_QUALIFIER bidirectional_iterator_tag iterator_category;
+
+    typedef typename BaseIterator::iterator             Iterator;
+
+    XalanMapIterator() :
+            BaseIterator()
+    {
+    }
+
+    XalanMapIterator(const BaseIterator & theRhs) :
+            BaseIterator(theRhs)
+    {
+    }
+
+    reference operator*() const
+    {
+        return *(BaseIterator::operator*());
+    }
+
+    pointer operator->() const
+    {
+        return (BaseIterator::operator*());
+    }
+};
+
 
 
 /**
@@ -135,15 +200,18 @@ public:
 	typedef Value				data_type;
 	typedef size_t				size_type;
 
-	typedef XALAN_STD_QUALIFIER pair<const key_type, data_type>	value_type;
-	typedef XalanMapEntry<value_type> Entry;
+	typedef XalanMapEntry<const key_type, data_type>   value_type;
+    typedef value_type  Entry;
 
-	typedef XalanList<Entry>									EntryListType;
+	typedef XalanList<Entry*>									EntryListType;
 
-	typedef typename EntryListType::iterator					iterator;
-	typedef typename EntryListType::const_iterator				const_iterator;
+    typedef XalanMapIterator<XalanMapIteratorTraits<Entry>, typename EntryListType::iterator>            iterator;
+    typedef XalanMapIterator<XalanMapConstIteratorTraits<Entry>, typename EntryListType::const_iterator> const_iterator;
 
-	typedef XalanVector<typename EntryListType::iterator>		EntryPosVectorType;
+	typedef XalanVector<iterator>		EntryPosVectorType;
+
+    typedef typename MemoryManagedConstructionTraits<key_type>::Constructor  FirstConstructor;
+    typedef typename MemoryManagedConstructionTraits<data_type>::Constructor SecondConstructor;
 
 	XalanMap(
 			MemoryManagerType* theMemoryManager = 0,
@@ -251,7 +319,7 @@ public:
 
 		if (pos == end())
 		{
-			pos = doCreateEntry(key, data_type());
+			pos = doCreateEntry(key);
 		}
 
 		return (*pos).second;
@@ -262,14 +330,19 @@ public:
 		const key_type& key = value.first;
 		const data_type& data = value.second;
 
+		insert(key, data);
+	}
+
+    void insert(const key_type& key, const data_type& data)
+	{
 		iterator pos = find(key);
 
 		if (pos == end())
 		{
-			doCreateEntry(key, data);
+			doCreateEntry(key, &data);
 		}
-
 	}
+
 
 	void erase(iterator pos)
 	{
@@ -322,7 +395,7 @@ public:
 
 	protected:
 
-	iterator doCreateEntry(const key_type & key, const data_type&  data)
+	iterator doCreateEntry(const key_type & key, const data_type*  data = 0)
 	{
 		// if there are no buckets, create initial minimum set of buckets
 		if (m_buckets.empty())
@@ -341,13 +414,25 @@ public:
 		iterator & bucketStartPos = m_buckets[index];
 
 		// insert a new entry as the first position in the bucket
-		bucketStartPos = m_entries.insert(bucketStartPos, Entry(value_type(key, data), index));
+        Entry * newEntry = allocate(1);
+        FirstConstructor::construct((key_type*)&newEntry->first, key, *m_memoryManager);
+        if (data != 0)
+        {
+            SecondConstructor::construct(&newEntry->second, *data, *m_memoryManager);
+        }
+        else
+        {
+             SecondConstructor::construct(&newEntry->second, *m_memoryManager);
+        }
+
+        new (&newEntry->bucketIndex) size_type(index);
+		bucketStartPos = m_entries.insert(bucketStartPos, newEntry);
 			
 		++m_size;
 		return bucketStartPos;
 	}
 
-	void doRemoveEntry(const iterator & toRemovePos)
+	void doRemoveEntry(iterator & toRemovePos)
 	{
 		size_type index = toRemovePos->bucketIndex;
 		iterator nextPos = ++(iterator(toRemovePos));
@@ -357,7 +442,8 @@ public:
 		// if there are no more entries set it to the end
 		if (m_buckets[index] == toRemovePos)
 		{
-			if (nextPos->bucketIndex == index)
+			if (nextPos != m_entries.end() &&
+                nextPos->bucketIndex == index)
 			{
 				m_buckets[index] = nextPos;
 			}
@@ -366,7 +452,10 @@ public:
 				m_buckets[index] = m_entries.end();
 			}
 		}
-
+        
+        value_type& toRemove = *toRemovePos;
+        toRemove.~value_type();
+        deallocate(&toRemove);
 		m_entries.erase(toRemovePos);
 		--m_size;
 	}
@@ -409,6 +498,33 @@ public:
 			}
 		}
 	}
+
+    value_type*
+    allocate(size_type  size)
+    {
+        const size_type     theBytesNeeded = size * sizeof(value_type);
+
+        void*   pointer = m_memoryManager == 0 ?
+            ::operator new (theBytesNeeded) :
+            m_memoryManager->allocate(theBytesNeeded);
+
+        assert(pointer != 0);
+
+        return (value_type*) pointer;
+    }
+
+    void
+    deallocate(value_type*  pointer)
+    {
+        if (m_memoryManager == 0)
+        {
+            ::operator delete(pointer);
+        }
+        else
+        {
+            m_memoryManager->deallocate(pointer);
+        }
+    }
 
 	// Data members...
 	typename KeyTraits::Hasher					m_hash;
