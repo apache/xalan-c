@@ -91,9 +91,6 @@ public:
 	static bool
 	isNaN(double	theNumber)
 	{
-#if !defined(XALAN_NEED_SPECIAL_NAN_SUPPORT)
-		return theNumber == s_NaN;
-#else
 		// Compare the two DWORDs of the double as unsigned longs.
 		const unsigned long* const	theFirstDWORD =
 			reinterpret_cast<const unsigned long*>(&theNumber);
@@ -103,7 +100,6 @@ public:
 
 		return *theFirstDWORD == *s_NaNFirstDWORD &&
 			   *theSecondDWORD == *s_NaNSecondDWORD;
-#endif
 	}
 
 	/**
@@ -115,11 +111,7 @@ public:
 	static bool
 	isPositiveInfinity(double	theNumber)
 	{
-#if !defined(XALAN_NEED_SPECIAL_NAN_SUPPORT)
-		return theNumber == s_positiveInfinity;
-#else
 		return !isNaN(theNumber) && theNumber == s_positiveInfinity;
-#endif
 	}
 
 	/**
@@ -131,11 +123,7 @@ public:
 	static bool
 	isNegativeInfinity(double	theNumber)
 	{
-#if !defined(XALAN_NEED_SPECIAL_NAN_SUPPORT)
-		return theNumber == s_negativeInfinity;
-#else
 		return !isNaN(theNumber) && theNumber == s_negativeInfinity;
-#endif
 	}
 
 	// These can be used to initialize values, but should not

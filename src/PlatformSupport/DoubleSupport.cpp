@@ -57,20 +57,8 @@
 #include "DoubleSupport.hpp"
 
 
-#if defined(NO_STD_LIMITS)
-#	if defined(__GNUC__)
-#		include <math.h>
-#		if defined(SOLARIS)
-#			include <nan.h>
-#		else
-#			include <bits/nan.h>
-#		endif
-#	else
-#		error Unsupported platform!!!
-#	endif
-#else
-#	include <limits>
-#endif
+
+#include <cmath>
 
 
 
@@ -79,39 +67,12 @@
 
 
 
-#if defined(NO_STD_LIMITS)
-#	if defined(__GNUC__)
-
-#		if defined(SOLARIS)
-			static const unsigned char	__nan_bits[] = { 0x7f, 0xf0,0xc0,0x0,0x0,0x0,0x0,0x0 };
-			const double				DoubleSupport::s_NaN = *reinterpret_cast<const double*>(__nan_bits);
-#		else
-			const double	DoubleSupport::s_NaN = NAN;
-#		endif
-
-		const double	DoubleSupport::s_positiveInfinity = HUGE_VAL;
-		const double	DoubleSupport::s_negativeInfinity = -HUGE_VAL;
-
-#	else
-#		error Unsupported platform!!!
-#	endif
-#else
-
-#if defined(XALAN_NO_NAMESPACES)
-typedef numeric_limits<double>			NumericLimitsType;
-#else
-typedef std::numeric_limits<double>		NumericLimitsType;
-#endif
-
-const double	DoubleSupport::s_NaN = NumericLimitsType::quiet_NaN();
-const double	DoubleSupport::s_positiveInfinity = NumericLimitsType::infinity();
-const double	DoubleSupport::s_negativeInfinity = NumericLimitsType::signaling_NaN();
-
-#endif
+const double	DoubleSupport::s_NaN = sqrt(-2);
+const double	DoubleSupport::s_positiveInfinity = HUGE_VAL;
+const double	DoubleSupport::s_negativeInfinity = -DoubleSupport::s_positiveInfinity;
 
 
 
-#if defined(XALAN_NEED_SPECIAL_NAN_SUPPORT)
 const unsigned long*	DoubleSupport::s_NaNFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
 					(const unsigned long*)&s_NaN;
@@ -121,7 +82,6 @@ const unsigned long*	DoubleSupport::s_NaNFirstDWORD =
 
 const unsigned long*	DoubleSupport::s_NaNSecondDWORD =
 					s_NaNFirstDWORD + 1;
-#endif
 
 
 
@@ -232,9 +192,13 @@ DoubleSupport::add(
 			double	theLHS,
 			double	theRHS)
 {
-	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	if (isNaN(theLHS) == true)
 	{
-		return getNaN();
+		return theLHS;
+	}
+	else if (isNaN(theRHS) == true)
+	{
+		return theRHS;
 	}
 	else
 	{
@@ -249,9 +213,13 @@ DoubleSupport::subtract(
 			double	theLHS,
 			double	theRHS)
 {
-	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	if (isNaN(theLHS) == true)
 	{
-		return getNaN();
+		return theLHS;
+	}
+	else if (isNaN(theRHS) == true)
+	{
+		return theRHS;
 	}
 	else
 	{
@@ -266,9 +234,13 @@ DoubleSupport::multiply(
 			double	theLHS,
 			double	theRHS)
 {
-	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	if (isNaN(theLHS) == true)
 	{
-		return getNaN();
+		return theLHS;
+	}
+	else if (isNaN(theRHS) == true)
+	{
+		return theRHS;
 	}
 	else
 	{
@@ -283,11 +255,15 @@ DoubleSupport::divide(
 			double	theLHS,
 			double	theRHS)
 {
-	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	if (isNaN(theLHS) == true)
 	{
-		return getNaN();
+		return theLHS;
 	}
-	else if (theRHS != 0)
+	else if (isNaN(theRHS) == true)
+	{
+		return theRHS;
+	}
+	else if (theRHS != 0.0L)
 	{
 		return theLHS / theRHS;
 	}
@@ -295,12 +271,12 @@ DoubleSupport::divide(
 	{
 		// These are special cases, since we can't actually
 		// do the division...
-		if (theLHS == 0)
+		if (theLHS == 0.0L)
 		{
 			// This is NaN...
 			return DoubleSupport::getNaN();
 		}
-		else if (theLHS > 0.0)
+		else if (theLHS > 0.0L)
 		{
 			// This is positive infinity...
 			return DoubleSupport::getPositiveInfinity();
@@ -320,9 +296,13 @@ DoubleSupport::modulus(
 			double	theLHS,
 			double	theRHS)
 {
-	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	if (isNaN(theLHS) == true)
 	{
-		return getNaN();
+		return theLHS;
+	}
+	else if (isNaN(theRHS) == true)
+	{
+		return theRHS;
 	}
 	else
 	{

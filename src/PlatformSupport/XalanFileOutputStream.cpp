@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,79 +54,137 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-#include "PlatformSupportInit.hpp"
-
-
-
-#include "DOMStringHelper.hpp"
-#include "NamedNodeMapAttributeList.hpp"
-#include "PrintWriter.hpp"
-#include "URISupport.hpp"
-#include "XalanNumberFormat.hpp"
-#include "XalanTranscodingServices.hpp"
+// Class header file...
+#include "XalanFileOutputStream.hpp"
 
 
 
-unsigned long	PlatformSupportInit::s_initCounter = 0;
+#include <cerrno>
+#include <strstream>
 
 
 
-PlatformSupportInit::PlatformSupportInit() :
-	m_xalanDOMInit()
+#include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanAutoPtr.hpp>
+
+
+
+
+XalanFileOutputStream::XalanFileOutputStream(const XalanDOMString&		theFileName) :
+	XalanOutputStream(),
+	m_fileName(theFileName),
+	m_handle(0)
 {
-	++s_initCounter;
+	const XalanArrayAutoPtr<char>	tmpName(theFileName.transcode());
 
-	if (s_initCounter == 1)
+	m_handle = fopen(tmpName.get(), "wb");
+
+    if (m_handle == 0)
 	{
-		initialize();
+		throw XalanFileOutputStreamOpenException(theFileName,
+												errno);
 	}
 }
 
 
 
-PlatformSupportInit::~PlatformSupportInit()
+XalanFileOutputStream::~XalanFileOutputStream()
 {
-	--s_initCounter;
-
-	if (s_initCounter == 0)
+    if (m_handle != 0)
 	{
-		terminate();
+		fclose(m_handle);
 	}
 }
 
 
 
 void
-PlatformSupportInit::initialize()
+XalanFileOutputStream::doFlush()
 {
-	DOMStringHelperInitialize();
-
-	XalanTranscodingServices::initialize();
-
-	PrintWriter::initialize();
-
-	NamedNodeMapAttributeList::initialize();
-
-	XalanNumberFormat::initialize();
-
-	URISupport::initialize();
+	fflush(m_handle);
 }
 
 
 
 void
-PlatformSupportInit::terminate()
+XalanFileOutputStream::writeData(
+			const char*		theBuffer,
+			unsigned long	theBufferLength)
 {
-	URISupport::terminate();
+	const size_t	theBytesWritten =
+		fwrite(theBuffer,
+			   1,
+			   theBufferLength,
+			   m_handle);
 
-	XalanNumberFormat::terminate();
+	if(theBytesWritten != theBufferLength)
+	{
+		throw XalanFileOutputStreamWriteException(m_fileName,
+												 errno);
+	}
+}
 
-	NamedNodeMapAttributeList::terminate();
 
-	PrintWriter::terminate();
 
-	XalanTranscodingServices::terminate();
+static XalanDOMString
+FormatMessageLocal(
+			const XalanDOMString&	theMessage,
+			const XalanDOMString&	theFileName,
+			int					theErrorCode)
+{
+	XalanDOMString	theResult(clone(theMessage));
 
-	DOMStringHelperTerminate();
+	theResult += theFileName;
+
+#if !defined(XALAN_NO_NAMESPACES)
+using std::ostrstream;
+#endif
+
+	ostrstream	theFormatter;
+
+	theFormatter << ".  The error code was "
+				 << theErrorCode << "." << '\0';
+
+	theResult += theFormatter.str();
+
+	delete theFormatter.str();
+	return theResult;
+}
+
+
+
+XalanFileOutputStream::XalanFileOutputStreamOpenException::XalanFileOutputStreamOpenException(
+		const XalanDOMString&	theFileName,
+		int					theErrorCode) :
+	XalanOutputStreamException(FormatMessageLocal(
+				"Error opening file: ",
+				theFileName,
+				theErrorCode),
+			XALAN_STATIC_UCODE_STRING("XalanFileOutputStreamOpenException"))
+{
+}
+
+
+
+XalanFileOutputStream::XalanFileOutputStreamOpenException::~XalanFileOutputStreamOpenException()
+{
+}
+
+
+
+XalanFileOutputStream::XalanFileOutputStreamWriteException::XalanFileOutputStreamWriteException(
+		const XalanDOMString&	theFileName,
+		int					theErrorCode) :
+	XalanOutputStreamException(FormatMessageLocal(
+				"Error writing file: ",
+				theFileName,
+				theErrorCode),
+			XALAN_STATIC_UCODE_STRING("XalanFileOutputStreamWriteException"))
+{
+}
+
+
+
+XalanFileOutputStream::XalanFileOutputStreamWriteException::~XalanFileOutputStreamWriteException()
+{
 }

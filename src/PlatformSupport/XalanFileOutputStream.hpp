@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,79 +54,117 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-#include "PlatformSupportInit.hpp"
-
-
-
-#include "DOMStringHelper.hpp"
-#include "NamedNodeMapAttributeList.hpp"
-#include "PrintWriter.hpp"
-#include "URISupport.hpp"
-#include "XalanNumberFormat.hpp"
-#include "XalanTranscodingServices.hpp"
+#if !defined(XALANFILEOUTPUTSTREAM_HEADER_GUARD_1357924680)
+#define XALANFILEOUTPUTSTREAM_HEADER_GUARD_1357924680
 
 
 
-unsigned long	PlatformSupportInit::s_initCounter = 0;
+// Base include file.  Must be first.
+#include <PlatformSupport/PlatformSupportDefinitions.hpp>
 
 
 
-PlatformSupportInit::PlatformSupportInit() :
-	m_xalanDOMInit()
+#include <cstdio>
+#include <vector>
+
+
+
+// Base class header file.
+#include <PlatformSupport/XalanOutputStream.hpp>
+
+
+
+class XALAN_PLATFORMSUPPORT_EXPORT XalanFileOutputStream : public XalanOutputStream
 {
-	++s_initCounter;
+public :
 
-	if (s_initCounter == 1)
+	/**
+	 * Construct an XalanFileOutputStream exception object.
+	 * 
+	 * @param theFileName name of file causing the exception
+	 */
+    XalanFileOutputStream(const XalanDOMString&		theFileName);
+
+    virtual
+	~XalanFileOutputStream();
+
+
+	class XALAN_PLATFORMSUPPORT_EXPORT XalanFileOutputStreamOpenException : public XalanOutputStream::XalanOutputStreamException
 	{
-		initialize();
-	}
-}
+	public:
 
+		/**
+		 * Construct an XalanFileOutputStreamOpen exception object for an exception
+		 * that occurred on opening a text file stream.
+		 * 
+		 * @param theFileName  name of file causing the exception
+		 * @param theErrorCode number of error encountered
+		 */
+		XalanFileOutputStreamOpenException(
+			const XalanDOMString&	theFileName,
+			int						theErrorCode);
 
+		virtual
+		~XalanFileOutputStreamOpenException();
+	};
 
-PlatformSupportInit::~PlatformSupportInit()
-{
-	--s_initCounter;
-
-	if (s_initCounter == 0)
+	class XALAN_PLATFORMSUPPORT_EXPORT XalanFileOutputStreamWriteException : public XalanOutputStream::XalanOutputStreamException
 	{
-		terminate();
-	}
-}
+	public:
+
+		/**
+		 * Construct an XalanFileOutputStreamOpen exception object for an exception
+		 * that occurred while writing to a text file stream.
+		 * 
+		 * @param theFileName  name of file causing the exception
+		 * @param theErrorCode number of error encountered
+		 */
+		XalanFileOutputStreamWriteException(
+			const XalanDOMString&	theFileName,
+			int						theErrorCode);
+
+		virtual
+		~XalanFileOutputStreamWriteException();
+	};
+
+protected:
+
+	virtual void
+	writeData(
+			const char*		theBuffer,
+			unsigned long	theBufferLength);
+
+	virtual void
+	doFlush();
+
+private:
+
+    // These are not implemented...
+    XalanFileOutputStream(const XalanFileOutputStream&);
+
+    XalanFileOutputStream&
+	operator=(const XalanFileOutputStream&);
+
+	void
+	flushBuffer();
+
+	void
+	doWrite(const XalanDOMChar*		theBuffer);
+
+	void
+	doWrite(
+			const char*		theBuffer,
+			unsigned long	theBufferLength);
+
+    bool
+	operator==(const XalanFileOutputStream&) const;
+
+	// Data members...
+	const XalanDOMString	m_fileName;
+
+	FILE*					m_handle;
+};
 
 
 
-void
-PlatformSupportInit::initialize()
-{
-	DOMStringHelperInitialize();
-
-	XalanTranscodingServices::initialize();
-
-	PrintWriter::initialize();
-
-	NamedNodeMapAttributeList::initialize();
-
-	XalanNumberFormat::initialize();
-
-	URISupport::initialize();
-}
-
-
-
-void
-PlatformSupportInit::terminate()
-{
-	URISupport::terminate();
-
-	XalanNumberFormat::terminate();
-
-	NamedNodeMapAttributeList::terminate();
-
-	PrintWriter::terminate();
-
-	XalanTranscodingServices::terminate();
-
-	DOMStringHelperTerminate();
-}
+#endif	// XALANFILEOUTPUTSTREAM_HEADER_GUARD_1357924680

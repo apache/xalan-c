@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,79 +54,69 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-#include "PlatformSupportInit.hpp"
-
-
-
-#include "DOMStringHelper.hpp"
-#include "NamedNodeMapAttributeList.hpp"
-#include "PrintWriter.hpp"
-#include "URISupport.hpp"
-#include "XalanNumberFormat.hpp"
-#include "XalanTranscodingServices.hpp"
+#if !defined(XALANNULLOUTPUTSTREAM_HEADER_GUARD_1357924680)
+#define XALANNULLOUTPUTSTREAM_HEADER_GUARD_1357924680
 
 
 
-unsigned long	PlatformSupportInit::s_initCounter = 0;
+// Base include file.  Must be first.
+#include <PlatformSupport/PlatformSupportDefinitions.hpp>
 
 
 
-PlatformSupportInit::PlatformSupportInit() :
-	m_xalanDOMInit()
+// Base class header file.
+#include <PlatformSupport/XalanOutputStream.hpp>
+
+
+
+class XALAN_PLATFORMSUPPORT_EXPORT XalanNullOutputStream : public XalanOutputStream
 {
-	++s_initCounter;
+public :
 
-	if (s_initCounter == 1)
-	{
-		initialize();
-	}
-}
+	explicit
+    XalanNullOutputStream();
+
+    virtual
+	~XalanNullOutputStream();
+
+    // These are inherited from XalanOutputStream...
+    virtual void
+	flush();
+
+    virtual void
+	write(char	theChar);
+
+    virtual void
+	write(XalanDOMChar	theChar);
+
+    virtual void
+	write(const XalanDOMChar*	theBuffer);
+
+    virtual void
+	write(const char*	theBuffer);
+
+    virtual void
+	write(
+			const char*		theBuffer,
+			unsigned long	theBufferLength);
+
+    virtual void
+	write(
+			const XalanDOMChar*		theBuffer,
+			unsigned long			theBufferLength);
+
+private:
+
+    // These are not implemented...
+    XalanNullOutputStream(const XalanNullOutputStream&);
+
+    XalanNullOutputStream&
+	operator=(const XalanNullOutputStream&);
+
+    bool
+	operator==(const XalanNullOutputStream&) const;
+};
 
 
 
-PlatformSupportInit::~PlatformSupportInit()
-{
-	--s_initCounter;
-
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
-}
-
-
-
-void
-PlatformSupportInit::initialize()
-{
-	DOMStringHelperInitialize();
-
-	XalanTranscodingServices::initialize();
-
-	PrintWriter::initialize();
-
-	NamedNodeMapAttributeList::initialize();
-
-	XalanNumberFormat::initialize();
-
-	URISupport::initialize();
-}
-
-
-
-void
-PlatformSupportInit::terminate()
-{
-	URISupport::terminate();
-
-	XalanNumberFormat::terminate();
-
-	NamedNodeMapAttributeList::terminate();
-
-	PrintWriter::terminate();
-
-	XalanTranscodingServices::terminate();
-
-	DOMStringHelperTerminate();
-}
+#endif	// NULLTEXTOUTPUTSTREAM_HEADER_GUARD_1357924680

@@ -54,79 +54,56 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-#include "PlatformSupportInit.hpp"
-
-
-
-#include "DOMStringHelper.hpp"
-#include "NamedNodeMapAttributeList.hpp"
-#include "PrintWriter.hpp"
-#include "URISupport.hpp"
-#include "XalanNumberFormat.hpp"
-#include "XalanTranscodingServices.hpp"
+#if !defined(XALANTOXERCESTRANSCODERWRAPPER_HEADER_GUARD_1357924680)
+#define XALANTOXERCESTRANSCODERWRAPPER_HEADER_GUARD_1357924680
 
 
 
-unsigned long	PlatformSupportInit::s_initCounter = 0;
+// Base include file.  Must be first.
+#include <PlatformSupport/PlatformSupportDefinitions.hpp>
 
 
 
-PlatformSupportInit::PlatformSupportInit() :
-	m_xalanDOMInit()
+// Base class header file...
+#include <PlatformSupport/XalanTranscodingServices.hpp>
+
+
+
+class XMLTranscoder;
+
+
+
+class XALAN_PLATFORMSUPPORT_EXPORT XalanToXercesTranscoderWrapper : public XalanOutputTranscoder
 {
-	++s_initCounter;
+public:
 
-	if (s_initCounter == 1)
-	{
-		initialize();
-	}
-}
+	explicit
+	XalanToXercesTranscoderWrapper(XMLTranscoder*	theTranscoder);
+   
+	virtual
+	~XalanToXercesTranscoderWrapper();
+
+	virtual eCode
+	transcode(
+			const XalanDOMChar*		theSourceData,
+			unsigned int			theSourceCount,
+			XalanXMLByte*			theTarget,
+			unsigned int			theTargetSize,
+			unsigned int&			theSourceCharsTranscoded,
+			unsigned int&			theTargetBytesUsed);
+
+private:
+
+	// Not implemented...
+	XalanToXercesTranscoderWrapper(const XalanToXercesTranscoderWrapper&);
+
+	XalanToXercesTranscoderWrapper&
+	operator=(const XalanToXercesTranscoderWrapper&);
 
 
-
-PlatformSupportInit::~PlatformSupportInit()
-{
-	--s_initCounter;
-
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
-}
-
-
-
-void
-PlatformSupportInit::initialize()
-{
-	DOMStringHelperInitialize();
-
-	XalanTranscodingServices::initialize();
-
-	PrintWriter::initialize();
-
-	NamedNodeMapAttributeList::initialize();
-
-	XalanNumberFormat::initialize();
-
-	URISupport::initialize();
-}
+	XMLTranscoder* const	m_transcoder;
+};
 
 
 
-void
-PlatformSupportInit::terminate()
-{
-	URISupport::terminate();
-
-	XalanNumberFormat::terminate();
-
-	NamedNodeMapAttributeList::terminate();
-
-	PrintWriter::terminate();
-
-	XalanTranscodingServices::terminate();
-
-	DOMStringHelperTerminate();
-}
+#endif	// XALANTOXERCESTRANSCODERWRAPPER_HEADER_GUARD_1357924680

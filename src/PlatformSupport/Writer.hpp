@@ -73,7 +73,7 @@
 
 
 
-class TextOutputStream;
+class XalanOutputStream;
 
 
 
@@ -102,13 +102,13 @@ public:
 	/**
 	 * Get the stream associated with the writer...
 	 */
-	virtual TextOutputStream*
+	virtual XalanOutputStream*
 	getStream();
 
 	/**
 	 * Get the stream associated with the writer...
 	 */
-	virtual const TextOutputStream*
+	virtual const XalanOutputStream*
 	getStream() const;
 
 

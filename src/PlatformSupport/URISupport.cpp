@@ -84,7 +84,6 @@ URISupport::getURLFromString(const XalanDOMString&	urlString)
 
 
 
-
 XalanDOMString
 URISupport::getURLStringFromString(const XalanDOMString&	urlString)
 {
@@ -92,43 +91,47 @@ URISupport::getURLStringFromString(const XalanDOMString&	urlString)
 
 	// Let's see what sort of URI we have...
 	const unsigned int	len = length(theNormalizedURI);
-	const unsigned int	index = indexOf(theNormalizedURI, XalanUnicode::charColon);
 
-	bool				protocolPresent = false;
-
-	if (index != len)
+	if (len != 0)
 	{
-		// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
-		const XMLURL::Protocols		theProtocol =
-			XMLURL().lookupByName(c_wstr(substring(theNormalizedURI, 0 , index)));
+		const unsigned int	index = indexOf(theNormalizedURI, XalanUnicode::charColon);
 
-		if (theProtocol != XMLURL::Unknown)
+		bool				protocolPresent = false;
+
+		if (index != len)
 		{
-			protocolPresent = true;
+			// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
+			const XMLURL::Protocols		theProtocol =
+				XMLURL().lookupByName(c_wstr(substring(theNormalizedURI, 0 , index)));
+
+			if (theProtocol != XMLURL::Unknown)
+			{
+				protocolPresent = true;
+			}
 		}
-	}
 
-	if (protocolPresent == true)
-	{
-		NormalizeURIText(theNormalizedURI);
-	}
-	else
-	{
-		// Assume it's a file specification...
-		XalanArrayAutoPtr<XMLCh>	theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
-		assert(theFullPath.get() != 0);
+		if (protocolPresent == true)
+		{
+			NormalizeURIText(theNormalizedURI);
+		}
+		else
+		{
+			// Assume it's a file specification...
+			XalanArrayAutoPtr<XMLCh>	theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
+			assert(theFullPath.get() != 0);
 
-		theNormalizedURI = theFullPath.get();
-		assert(length(theNormalizedURI) > 0);
+			theNormalizedURI = theFullPath.get();
+			assert(length(theNormalizedURI) > 0);
 
-		NormalizeURIText(theNormalizedURI);
+			NormalizeURIText(theNormalizedURI);
 
-		const XalanDOMString	theFilePrefix(
-					indexOf(theNormalizedURI, XalanUnicode::charSolidus) == 0 ?
-					s_fileProtocolString1 :
-					s_fileProtocolString2);
+			const XalanDOMString	theFilePrefix(
+						indexOf(theNormalizedURI, XalanUnicode::charSolidus) == 0 ?
+						s_fileProtocolString1 :
+						s_fileProtocolString2);
 
-		theNormalizedURI = theFilePrefix + theNormalizedURI;
+			theNormalizedURI = theFilePrefix + theNormalizedURI;
+		}
 	}
 
 	return theNormalizedURI;

@@ -98,7 +98,7 @@ using std::vector;
 
 #include "DoubleSupport.hpp"
 #include "STLHelper.hpp"
-#include "TextOutputStream.hpp"
+#include "XalanOutputStream.hpp"
 #include "XalanAutoPtr.hpp"
 #include "XalanUnicode.hpp"
 
@@ -406,7 +406,7 @@ endsWith(
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
-OutputString(TextOutputStream&		theStream,
+OutputString(XalanOutputStream&		theStream,
 			 const CharVectorType&	theString)
 {
 	if (theString.size() > 0)
@@ -435,7 +435,7 @@ OutputString(
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
-OutputString(TextOutputStream&		theStream,
+OutputString(XalanOutputStream&		theStream,
 			 const XalanDOMChar*	theString)
 {
 	if (theString != 0)
@@ -757,13 +757,13 @@ equalsIgnoreCase(
 
 
 
-template <class Type>
+template <class Type, class SizeType>
 int
 doCompare(
 			const Type*		theLHS,
-			unsigned int	theLHSLength,
+			SizeType		theLHSLength,
 			const Type*		theRHS,
-			unsigned int	theRHSLength)
+			SizeType		theRHSLength)
 {
 	int					theResult = 0;
 
@@ -772,7 +772,7 @@ doCompare(
 		Type		theLHSChar = Type(0);
 		Type		theRHSChar = Type(0);
 
-		unsigned int	i = 0;
+		SizeType	i = 0;
 
 		for(; i < theLHSLength && i < theRHSLength; i++)
 		{
@@ -1550,9 +1550,11 @@ isWhiteSpace(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-TranscodeToLocalCodePage(
+static bool
+doTranscodeToLocalCodePage(
 			const XalanDOMChar*		sourceString,
+			unsigned int			sourceStringLength,
+			bool					sourceStringIsNullTerminated,
 			CharVectorType&			targetVector,
 			bool					terminate)
 {
@@ -1562,49 +1564,56 @@ TranscodeToLocalCodePage(
 		if (terminate == true)
 		{
 			targetVector.resize(1);
+
+			targetVector.back() = '\0';
 		}
 		else
 		{
-			targetVector.resize(1);
+			targetVector.resize(0);
 		}
 
         return true;
 	}
 
-	const unsigned int			len = length(sourceString);
+	const XalanDOMChar*		tempSource = 0;
 
+	// If our char sizes are not the same, we have to use a temp buffer.
 	XalanArrayAutoPtr<wchar_t>	tempSourceJanitor;
 
-	const XalanDOMChar*			tempSource = sourceString;
-
-    // See if our XalanDOMChar and wchar_t as the same on this platform
-    if (sizeof(XalanDOMChar) != sizeof(wchar_t))
-    {
-		//
-		//  If either the passed length was non-zero or our char sizes are not 
-		//  same, we have to use a temp buffer.
-		//
-		tempSourceJanitor.reset(new wchar_t[len + 1]);
-
-        for (unsigned int index = 0; index < len; index++)
+#if !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
+	// This is a short-cut for when the sourceString is mull-terminated _and_
+	// XalanDOMChar and wchar_t are the same thing.
+	if (sourceStringIsNullTerminated == true)
+	{
+		tempSource = sourceString;
+	}
+	else
+#endif
+	{
+		if (sourceStringIsNullTerminated == true)
 		{
-            tempSourceJanitor[index] = wchar_t(sourceString[index]);
+			sourceStringLength = length(sourceString);
 		}
 
-		tempSourceJanitor[len] = 0;
+		tempSourceJanitor.reset(new wchar_t[sourceStringLength + 1]);
+
+		for (unsigned int index = 0; index < sourceStringLength; ++index)
+		{
+			tempSourceJanitor[index] = wchar_t(sourceString[index]);
+		}
+
+		tempSourceJanitor[sourceStringLength] = 0;
 
 		tempSource = tempSourceJanitor.get();
-    }
+	}
 
-    // See now many chars we need to transcode this guy
+    // See now many chars we need to transcode.
     const unsigned int targetLen = ::wcstombs(0, tempSource, 0);
 
-	targetVector.resize(targetLen);
+	// Resize, adding one byte if terminating...
+	targetVector.resize(terminate == true ? targetLen + 1 : targetLen);
 
-    //
-    //  And transcode our temp source buffer to the local buffer. Cap it
-    //  off since the converter won't do it (because the null is beyond
-    //  where the target will fill up.)
+    //  And transcode our temp source buffer to the local buffer. Terminate
     //
     if (wcstombs(&targetVector[0], tempSource, targetLen) == size_t(-1))
 	{
@@ -1614,9 +1623,146 @@ TranscodeToLocalCodePage(
 	{
 		if (terminate == true)
 		{
-			targetVector.resize(targetVector.size() + 1);
+			targetVector.back() = '\0';
 		}
 
 		return true;
 	}
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+TranscodeToLocalCodePage(
+			const XalanDOMChar*		sourceString,
+			unsigned int			sourceStringLength,
+			CharVectorType&			targetVector,
+			bool					terminate)
+{
+#if 1
+	return doTranscodeToLocalCodePage(sourceString, sourceStringLength, false, targetVector, terminate);
+#else
+    // Short circuit if it's a null pointer, or of length 0.
+    if (!sourceString || (!sourceString[0]))
+    {
+		if (terminate == true)
+		{
+			targetVector.resize(1);
+
+			targetVector.back() = '\0';
+		}
+		else
+		{
+			targetVector.resize(0);
+		}
+
+        return true;
+	}
+
+	// If our char sizes are not the same, we have to use a temp buffer.
+	XalanArrayAutoPtr<wchar_t>	tempSourceJanitor(new wchar_t[sourceStringLength + 1]);
+
+	for (unsigned int index = 0; index < sourceStringLength; ++index)
+	{
+		tempSourceJanitor[index] = wchar_t(sourceString[index]);
+	}
+
+	tempSourceJanitor[sourceStringLength] = 0;
+
+	const XalanDOMChar*	const	tempSource = tempSourceJanitor.get();
+
+    // See now many chars we need to transcode.
+    const unsigned int targetLen = ::wcstombs(0, tempSource, 0);
+
+	// Resize, adding one byte if terminating...
+	targetVector.resize(terminate == true ? targetLen + 1 : targetLen);
+
+    //  And transcode our temp source buffer to the local buffer. Terminate
+    //
+    if (wcstombs(&targetVector[0], tempSource, targetLen) == size_t(-1))
+	{
+		return false;
+	}
+	else
+	{
+		if (terminate == true)
+		{
+			targetVector.back() = '\0';
+		}
+
+		return true;
+	}
+#endif
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+TranscodeToLocalCodePage(
+			const XalanDOMChar*		sourceString,
+			CharVectorType&			targetVector,
+			bool					terminate)
+{
+#if 1
+	return doTranscodeToLocalCodePage(sourceString, 0, true, targetVector, terminate);
+#else
+    // Short circuit if it's a null pointer, or of length 0.
+    if (!sourceString || (!sourceString[0]))
+    {
+		if (terminate == true)
+		{
+			targetVector.resize(1);
+
+			targetVector.back() = '\0';
+		}
+		else
+		{
+			targetVector.resize(0);
+		}
+
+        return true;
+	}
+
+#if !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
+	const XalanDOMChar*	const	tempSource = sourceString;
+#else
+    assert(sizeof(XalanDOMChar) != sizeof(wchar_t));
+
+	const unsigned int			len = length(sourceString);
+
+	// If our char sizes are not the same, we have to use a temp buffer.
+	XalanArrayAutoPtr<wchar_t>	tempSourceJanitor(new wchar_t[len + 1]);
+
+	for (unsigned int index = 0; index < len; ++index)
+	{
+		tempSourceJanitor[index] = wchar_t(sourceString[index]);
+	}
+
+	tempSourceJanitor[len] = 0;
+
+	const XalanDOMChar*	const	tempSource = tempSourceJanitor.get();
+#endif
+
+    // See now many chars we need to transcode.
+    const unsigned int targetLen = ::wcstombs(0, tempSource, 0);
+
+	// Resize, adding one byte if terminating...
+	targetVector.resize(terminate == true ? targetLen + 1 : targetLen);
+
+    //  And transcode our temp source buffer to the local buffer. Terminate
+    //
+    if (wcstombs(&targetVector[0], tempSource, targetLen) == size_t(-1))
+	{
+		return false;
+	}
+	else
+	{
+		if (terminate == true)
+		{
+			targetVector.back() = '\0';
+		}
+
+		return true;
+	}
+#endif
 }

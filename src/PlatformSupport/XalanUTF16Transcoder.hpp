@@ -54,79 +54,62 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-#include "PlatformSupportInit.hpp"
-
-
-
-#include "DOMStringHelper.hpp"
-#include "NamedNodeMapAttributeList.hpp"
-#include "PrintWriter.hpp"
-#include "URISupport.hpp"
-#include "XalanNumberFormat.hpp"
-#include "XalanTranscodingServices.hpp"
+#if !defined(XALANUTF16TRANSCODER_HEADER_GUARD_1357924680)
+#define XALANUTF16TRANSCODER_HEADER_GUARD_1357924680
 
 
 
-unsigned long	PlatformSupportInit::s_initCounter = 0;
+// Base include file.  Must be first.
+#include <PlatformSupport/PlatformSupportDefinitions.hpp>
 
 
 
-PlatformSupportInit::PlatformSupportInit() :
-	m_xalanDOMInit()
+// Base class header file...
+#include <PlatformSupport/XalanTranscodingServices.hpp>
+
+
+
+class XALAN_PLATFORMSUPPORT_EXPORT XalanUTF16Transcoder : public XalanOutputTranscoder
 {
-	++s_initCounter;
+public:
 
-	if (s_initCounter == 1)
-	{
-		initialize();
-	}
-}
+	explicit
+	XalanUTF16Transcoder();
+   
+	virtual
+	~XalanUTF16Transcoder();
+
+	/**
+	 * Transcode data from UTF-16 to UTF-16.  Used for the time being, because, on some
+	 * platforms, we store UTF-16 in 4-byte wchar_t.
+	 *
+	 * @param theSourceData The source data to transcode
+	 * @param theSourceCount The length of the source data.
+	 * @param theResult The error code, if any.
+	 * @param theTarget The target array for storing the transcoded data.
+	 * @param theTargetSize The number of characters that can be stored in the target.
+	 * @param theSourceCharsTranscoded The count of the source characters that were transcoded.
+	 * @param theTargetBytesUsed The number of characters stored in the target array
+	 * @return The result code.
+	 */
+	virtual eCode
+	transcode(
+			const XalanDOMChar*		theSourceData,
+			unsigned int			theSourceCount,
+			XalanXMLByte*			theTarget,
+			unsigned int			theTargetSize,
+			unsigned int&			theSourceCharsTranscoded,
+			unsigned int&			theTargetBytesUsed);
+
+private:
+
+	// Not implemented...
+	XalanUTF16Transcoder(const XalanUTF16Transcoder&);
+
+	XalanUTF16Transcoder&
+	operator=(const XalanUTF16Transcoder&);
+};
 
 
 
-PlatformSupportInit::~PlatformSupportInit()
-{
-	--s_initCounter;
-
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
-}
-
-
-
-void
-PlatformSupportInit::initialize()
-{
-	DOMStringHelperInitialize();
-
-	XalanTranscodingServices::initialize();
-
-	PrintWriter::initialize();
-
-	NamedNodeMapAttributeList::initialize();
-
-	XalanNumberFormat::initialize();
-
-	URISupport::initialize();
-}
-
-
-
-void
-PlatformSupportInit::terminate()
-{
-	URISupport::terminate();
-
-	XalanNumberFormat::terminate();
-
-	NamedNodeMapAttributeList::terminate();
-
-	PrintWriter::terminate();
-
-	XalanTranscodingServices::terminate();
-
-	DOMStringHelperTerminate();
-}
+#endif	// XALANUTF16TRANSCODER_HEADER_GUARD_1357924680

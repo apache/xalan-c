@@ -92,7 +92,7 @@
 
 
 
-class TextOutputStream;
+class XalanOutputStream;
 
 
 
@@ -704,7 +704,7 @@ c_str(const CharVectorType&		theString)
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-			TextOutputStream&		theStream,
+			XalanOutputStream&		theStream,
 			const CharVectorType&	theString);
 
 
@@ -736,7 +736,7 @@ OutputString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-			TextOutputStream&		theStream,
+			XalanOutputStream&		theStream,
 			const XalanDOMChar*		theString);
 
 
@@ -768,7 +768,7 @@ OutputString(
  */
 inline void
 OutputString(
-			TextOutputStream&		theStream,
+			XalanOutputStream&		theStream,
 			const XalanDOMString&	theString)
 {
 	if (isEmpty(theString) == false)
@@ -807,9 +807,9 @@ OutputString(
  * @param theString the string to output
  * @see OutputString
  */
-inline TextOutputStream&
+inline XalanOutputStream&
 operator<<(
-			TextOutputStream&		theStream,
+			XalanOutputStream&		theStream,
 			const CharVectorType&	theString)
 {
 	OutputString(theStream, theString);
@@ -851,9 +851,9 @@ operator<<(
  * @param theString target string
  * @see OutputString
  */
-inline TextOutputStream&
+inline XalanOutputStream&
 operator<<(
-			TextOutputStream&		theStream,
+			XalanOutputStream&		theStream,
 			const XalanDOMChar*		theString)
 {
 	OutputString(theStream,
@@ -897,9 +897,9 @@ operator<<(
  * @param theString target string
  * @see OutputString
  */
-inline TextOutputStream&
+inline XalanOutputStream&
 operator<<(
-			TextOutputStream&		theStream,
+			XalanOutputStream&		theStream,
 			const XalanDOMString&	theString)
 {
 	OutputString(theStream,
@@ -1963,9 +1963,29 @@ struct DOMStringGreaterThanOrEqualFunction : public std::binary_function<const X
 
 
 /**
- * Convert XalanDOMString to C++ standard library
+ * Convert a XalanDOMChar string to C++ standard library
  * vector, transcoding to the default local code
  * page.
+ * 
+ * @param sourceString The source string
+ * @param sourceStringLength The source string length.
+ * @param targetVector The target string
+ * @param terminate If true, the transcoded string will be null-terminated
+ * @return true if successful, false if not.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+TranscodeToLocalCodePage(
+			const XalanDOMChar*		sourceString,
+			unsigned int			sourceStringLength,
+			CharVectorType&			targetVector,
+			bool					terminate = false);
+
+
+
+/**
+ * Convert a XalanDOMChar string to C++ standard library
+ * vector, transcoding to the default local code
+ * page.  The string _must_ be null-terminated.
  * 
  * @param sourceString The source string
  * @param targetVector The target string
@@ -2012,9 +2032,10 @@ TranscodeToLocalCodePage(const XalanDOMChar*	sourceString)
 inline bool
 TranscodeToLocalCodePage(
 			const XalanDOMString&	sourceString,
-			CharVectorType&			targetVector)
+			CharVectorType&			targetVector,
+			bool					terminate = false)
 {
-	return TranscodeToLocalCodePage(c_wstr(sourceString), targetVector);
+	return TranscodeToLocalCodePage(c_wstr(sourceString), targetVector, terminate);
 }
 
 
@@ -2032,7 +2053,7 @@ TranscodeToLocalCodePage(const XalanDOMString&	sourceString)
 {
 	CharVectorType	theResult;
 
-	TranscodeToLocalCodePage(sourceString, theResult);
+	TranscodeToLocalCodePage(sourceString, theResult, true);
 
 	return theResult;
 }

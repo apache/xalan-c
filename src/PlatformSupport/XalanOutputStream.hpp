@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(TEXTOUTPUTSTREAM_HEADER_GUARD_1357924680)
-#define TEXTOUTPUTSTREAM_HEADER_GUARD_1357924680
+#if !defined(XALANOUTPUTSTREAM_HEADER_GUARD_1357924680)
+#define XALANOUTPUTSTREAM_HEADER_GUARD_1357924680
 
 
 
@@ -76,27 +76,40 @@
 
 
 
-class XMLTranscoder;
+class XalanOutputTranscoder;
 
 
 
-class XALAN_PLATFORMSUPPORT_EXPORT TextOutputStream
+class XALAN_PLATFORMSUPPORT_EXPORT XalanOutputStream
 {
 public :
 
-	enum { eDefaultBlockSize = 1024 };
+	enum { eDefaultBufferSize = 512, eDefaultTranscoderBlockSize = 1024 };
+
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanDOMChar>		BufferType;
+
+	typedef vector<char>				TranscodeVectorType;
+#else
+	typedef std::vector<XalanDOMChar>	BufferType;
+
+	typedef std::vector<char>			TranscodeVectorType;
+#endif
 
 	explicit
-	TextOutputStream(unsigned int	theTranscoderBlockSize = eDefaultBlockSize);
+	XalanOutputStream(
+			BufferType::size_type			theBufferSize = eDefaultBufferSize,
+			TranscodeVectorType::size_type	theTranscoderBlockSize = eDefaultTranscoderBlockSize);
 
 	virtual
-	~TextOutputStream();
+	~XalanOutputStream();
 
 	/**
 	 * Flush the stream's buffer.
 	 */
     virtual void
-	flush() = 0;
+	flush();
 
 	/**
 	 * Write a character to the output stream.  The character
@@ -105,7 +118,7 @@ public :
 	 * @param theChar       the character to write
 	 */
     virtual void
-	write(char	theChar) = 0;
+	write(char	theChar);
 
 	/**
 	 * Write a wide character to the output stream.  The character
@@ -114,7 +127,7 @@ public :
 	 * @param theChar       the character to write
 	 */
     virtual void
-	write(XalanDOMChar	theChar) = 0;
+	write(XalanDOMChar	theChar);
 
 	/**
 	 * Write a null-terminated string to the output file.  The character
@@ -123,7 +136,7 @@ public :
 	 * @param theBuffer       character buffer to write
 	 */
     virtual void
-	write(const char*	theBuffer) = 0;
+	write(const char*	theBuffer);
 
 	/**
 	 * Write a null-terminated wide string to the output file.  The string
@@ -132,7 +145,7 @@ public :
 	 * @param theBuffer       character buffer to write
 	 */
     virtual void
-	write(const XalanDOMChar*	theBuffer) = 0;
+	write(const XalanDOMChar*	theBuffer);
 
 	/**
 	 * Write a specified number of characters to the output stream.  The string
@@ -144,7 +157,7 @@ public :
     virtual void
 	write(
 			const char*		theBuffer,
-			unsigned long	theBufferLength) = 0;
+			unsigned long	theBufferLength);
 
 	/**
 	 * Write a specified number of characters to the output stream.  The string
@@ -156,7 +169,7 @@ public :
     virtual void
 	write(
 			const XalanDOMChar*		theBuffer,
-			unsigned long			theBufferLength) = 0;
+			unsigned long			theBufferLength);
 
 	/**
 	 * Get the output encoding for the stream.
@@ -174,19 +187,28 @@ public :
 	virtual void
 	setOutputEncoding(const XalanDOMString&		theEncoding);
 
-	class TextOutputStreamException : public XSLException
+	/**
+	 * Set the size of the output buffer.
+	 *
+	 * @param theBufferSize The buffer size.
+	 */
+	virtual void
+	setBufferSize(BufferType::size_type		theBufferSize);
+
+
+	class XALAN_PLATFORMSUPPORT_EXPORT XalanOutputStreamException : public XSLException
 	{
 	public:
 
-		TextOutputStreamException(
+		XalanOutputStreamException(
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theType);
 
 		virtual
-		~TextOutputStreamException();
+		~XalanOutputStreamException();
 	};
 
-	class UnknownEncodingException : public TextOutputStreamException
+	class XALAN_PLATFORMSUPPORT_EXPORT UnknownEncodingException : public XalanOutputStreamException
 	{
 	public:
 
@@ -197,7 +219,7 @@ public :
 		~UnknownEncodingException();
 	};
 
-	class UnsupportedEncodingException : public TextOutputStreamException
+	class XALAN_PLATFORMSUPPORT_EXPORT UnsupportedEncodingException : public XalanOutputStreamException
 	{
 	public:
 
@@ -217,7 +239,7 @@ public :
 		const XalanDOMString&	m_encoding;
 	};
 
-	class TranscoderInternalFailureException : public TextOutputStreamException
+	class XALAN_PLATFORMSUPPORT_EXPORT TranscoderInternalFailureException : public XalanOutputStreamException
 	{
 	public:
 
@@ -237,7 +259,7 @@ public :
 		const XalanDOMString&	m_encoding;
 	};
 
-	class TranscodingException : public TextOutputStreamException
+	class XALAN_PLATFORMSUPPORT_EXPORT TranscodingException : public XalanOutputStreamException
 	{
 	public:
 
@@ -250,37 +272,69 @@ public :
 
 protected:
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<char>		TranscodeVectorType;
-#else
-	typedef std::vector<char>	TranscodeVectorType;
-#endif
+	/**
+	 * Transcode a null-terminated wide string.
+	 *
+	 * @param theBuffer The string to transcode.
+	 * @param theDestination The destination vector.
+	 */
+	void
+	transcode(
+			const XalanDOMChar*		theBuffer,
+			TranscodeVectorType&	theDestination);
 
+	/**
+	 * Transcode a wide string.
+	 *
+	 * @param theBuffer The string to transcode.
+	 * @param theBufferLength The length of the string.
+	 * @param theDestination The destination vector.
+	 */
 	void
 	transcode(
 			const XalanDOMChar*		theBuffer,
 			unsigned long			theBufferLength,
 			TranscodeVectorType&	theDestination);
 
+	virtual void
+	writeData(const char*		theBuffer,
+			  unsigned long		theBufferLength) = 0;
+
+	virtual void
+	doFlush() = 0;
+
 private:
 
     // These are not implemented...
-    TextOutputStream(const TextOutputStream&);
+    XalanOutputStream(const XalanOutputStream&);
 
-    TextOutputStream&
-	operator=(const TextOutputStream&);
+    XalanOutputStream&
+	operator=(const XalanOutputStream&);
 
     bool
-	operator==(const TextOutputStream&) const;
+	operator==(const XalanOutputStream&) const;
+
+	// Utility functions...
+	void
+	flushBuffer();
+
+	void
+	doWrite(const XalanDOMChar*		theBuffer);
 
 
-	const unsigned int	m_transcoderBlockSize;
+	const TranscodeVectorType::size_type	m_transcoderBlockSize;
 
-	XalanDOMString		m_encoding;
+	XalanOutputTranscoder*					m_transcoder;
 
-	XMLTranscoder*		m_transcoder;
+	BufferType::size_type					m_bufferSize;
+
+	BufferType								m_buffer;
+
+	XalanDOMString							m_encoding;
+
+	bool									m_writeAsUTF16;
 };
 
 
 
-#endif	// TEXTOUTPUTSTREAM_HEADER_GUARD_1357924680
+#endif	// XALANOUTPUTSTREAM_HEADER_GUARD_1357924680

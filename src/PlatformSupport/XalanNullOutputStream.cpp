@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,79 +54,71 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-#include "PlatformSupportInit.hpp"
-
-
-
-#include "DOMStringHelper.hpp"
-#include "NamedNodeMapAttributeList.hpp"
-#include "PrintWriter.hpp"
-#include "URISupport.hpp"
-#include "XalanNumberFormat.hpp"
-#include "XalanTranscodingServices.hpp"
+// Class header file...
+#include "XalanNullOutputStream.hpp"
 
 
 
-unsigned long	PlatformSupportInit::s_initCounter = 0;
-
-
-
-PlatformSupportInit::PlatformSupportInit() :
-	m_xalanDOMInit()
+XalanNullOutputStream::XalanNullOutputStream() :
+	XalanOutputStream()
 {
-	++s_initCounter;
-
-	if (s_initCounter == 1)
-	{
-		initialize();
-	}
 }
 
 
 
-PlatformSupportInit::~PlatformSupportInit()
+XalanNullOutputStream::~XalanNullOutputStream()
 {
-	--s_initCounter;
-
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
 }
 
 
 
 void
-PlatformSupportInit::initialize()
+XalanNullOutputStream::flush()
 {
-	DOMStringHelperInitialize();
-
-	XalanTranscodingServices::initialize();
-
-	PrintWriter::initialize();
-
-	NamedNodeMapAttributeList::initialize();
-
-	XalanNumberFormat::initialize();
-
-	URISupport::initialize();
 }
 
 
 
 void
-PlatformSupportInit::terminate()
+XalanNullOutputStream::write(char	/* theChar */)
 {
-	URISupport::terminate();
+}
 
-	XalanNumberFormat::terminate();
 
-	NamedNodeMapAttributeList::terminate();
 
-	PrintWriter::terminate();
+void
+XalanNullOutputStream::write(XalanDOMChar	/* theChar */)
+{
+}
 
-	XalanTranscodingServices::terminate();
 
-	DOMStringHelperTerminate();
+
+void
+XalanNullOutputStream::write(const XalanDOMChar*		/* theBuffer */)
+{
+}
+
+
+
+void
+XalanNullOutputStream::write(const char*		/* theBuffer */)
+{
+}
+
+
+
+void
+XalanNullOutputStream::write(
+			const char*		/* theBuffer */,
+			unsigned long	/* theBufferLength */)
+{
+}
+
+
+
+void
+XalanNullOutputStream::write(
+			const XalanDOMChar*		/* theBuffer */,
+			unsigned long			/* theBufferLength */)
+{
 }

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,79 +54,87 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-#include "PlatformSupportInit.hpp"
-
-
-
-#include "DOMStringHelper.hpp"
-#include "NamedNodeMapAttributeList.hpp"
-#include "PrintWriter.hpp"
-#include "URISupport.hpp"
-#include "XalanNumberFormat.hpp"
-#include "XalanTranscodingServices.hpp"
+#if !defined(XALANSTDOUTPUTSTREAM_HEADER_GUARD_1357924680)
+#define XALANSTDOUTPUTSTREAM_HEADER_GUARD_1357924680
 
 
 
-unsigned long	PlatformSupportInit::s_initCounter = 0;
+// Base include file.  Must be first.
+#include <PlatformSupport/PlatformSupportDefinitions.hpp>
 
 
 
-PlatformSupportInit::PlatformSupportInit() :
-	m_xalanDOMInit()
+#if defined(XALAN_NO_IOSFWD)
+#include <ostream>
+#else
+#include <iosfwd>
+#endif
+
+
+
+// Base class header file.
+#include <PlatformSupport/XalanOutputStream.hpp>
+
+
+
+// A base class for all text output streams.
+class XALAN_PLATFORMSUPPORT_EXPORT XalanStdOutputStream : public XalanOutputStream
 {
-	++s_initCounter;
+public:
 
-	if (s_initCounter == 1)
+	/**
+	 * Construct a XalanStdOutputStream instance for output to the
+	 * standard output device.
+	 *
+	 * @param theOutputStream output stream to use
+	 */
+    XalanStdOutputStream(
+#if defined (XALAN_NO_NAMESPACES)
+			ostream&		theOutputStream);
+#else
+			std::ostream&	theOutputStream);
+#endif
+
+    virtual
+	~XalanStdOutputStream();
+
+	class XALAN_PLATFORMSUPPORT_EXPORT XalanStdOutputStreamWriteException : public XalanOutputStream::XalanOutputStreamException
 	{
-		initialize();
-	}
-}
+	public:
+
+		XalanStdOutputStreamWriteException(
+			int					theErrorCode);
+
+		virtual
+		~XalanStdOutputStreamWriteException();
+
+	};
+
+protected:
+
+	virtual void
+	writeData(const char*		theBuffer,
+			  unsigned long		theBufferLength);
+
+	virtual void
+	doFlush();
+
+private:
+
+    // These are not implemented...
+    XalanStdOutputStream(const XalanStdOutputStream&);
+
+    XalanStdOutputStream&
+	operator=(const XalanStdOutputStream&);
+
+	// Data members...
+#if defined (XALAN_NO_NAMESPACES)
+	ostream&		m_outputStream;
+#else
+	std::ostream&	m_outputStream;
+#endif
+};
 
 
 
-PlatformSupportInit::~PlatformSupportInit()
-{
-	--s_initCounter;
-
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
-}
-
-
-
-void
-PlatformSupportInit::initialize()
-{
-	DOMStringHelperInitialize();
-
-	XalanTranscodingServices::initialize();
-
-	PrintWriter::initialize();
-
-	NamedNodeMapAttributeList::initialize();
-
-	XalanNumberFormat::initialize();
-
-	URISupport::initialize();
-}
-
-
-
-void
-PlatformSupportInit::terminate()
-{
-	URISupport::terminate();
-
-	XalanNumberFormat::terminate();
-
-	NamedNodeMapAttributeList::terminate();
-
-	PrintWriter::terminate();
-
-	XalanTranscodingServices::terminate();
-
-	DOMStringHelperTerminate();
-}
+#endif	// XERCESSTDTEXTOUTPUTSTREAM_HEADER_GUARD_1357924680

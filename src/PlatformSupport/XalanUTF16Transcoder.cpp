@@ -54,79 +54,68 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-#include "PlatformSupportInit.hpp"
-
-
-
-#include "DOMStringHelper.hpp"
-#include "NamedNodeMapAttributeList.hpp"
-#include "PrintWriter.hpp"
-#include "URISupport.hpp"
-#include "XalanNumberFormat.hpp"
-#include "XalanTranscodingServices.hpp"
+#include "XalanUTF16Transcoder.hpp"
 
 
 
-unsigned long	PlatformSupportInit::s_initCounter = 0;
+#include <cassert>
 
 
 
-PlatformSupportInit::PlatformSupportInit() :
-	m_xalanDOMInit()
+XalanUTF16Transcoder::XalanUTF16Transcoder() :
+	XalanOutputTranscoder()
 {
-	++s_initCounter;
+}
 
-	if (s_initCounter == 1)
+
+
+XalanUTF16Transcoder::~XalanUTF16Transcoder()
+{
+}
+
+
+
+XalanUTF16Transcoder::eCode
+XalanUTF16Transcoder::transcode(
+			const XalanDOMChar*		theSourceData,
+			unsigned int			theSourceCount,
+			XalanXMLByte*			theTarget,
+			unsigned int			theTargetSize,
+			unsigned int&			theSourceCharsTranscoded,
+			unsigned int&			theTargetBytesUsed)
+{
+	unsigned int	theSourceEaten = 0;
+	unsigned int	theTargetPosition = 0;
+
+	while(theSourceEaten < theSourceCount)
 	{
-		initialize();
+		// Swap bytes to big endian...
+		if (theTargetPosition + 1 >= theTargetSize)
+		{
+			break;
+		}
+		else
+		{
+			const XMLByte	theHighByte = XMLByte((theSourceData[theSourceEaten] & 0xFF00) >> 8);
+			const XMLByte	theLowByte = XMLByte(theSourceData[theSourceEaten] & 0x00FF);
+
+#if defined(XALAN_LITLE_ENDIAN)
+			theTarget[theTargetPosition++] = theLowByte;
+			theTarget[theTargetPosition++] = theHighByte;
+#elif defined(XALAN_BIG_ENDIAN)
+			theTarget[theTargetPosition++] = theHighByte;
+			theTarget[theTargetPosition++] = theLowByte;
+#else
+#error The platform must define the byte order!
+#endif
+
+			++theSourceEaten;
+		}
 	}
-}
 
+	theSourceCharsTranscoded = theSourceEaten;
 
+	theTargetBytesUsed = theTargetPosition;
 
-PlatformSupportInit::~PlatformSupportInit()
-{
-	--s_initCounter;
-
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
-}
-
-
-
-void
-PlatformSupportInit::initialize()
-{
-	DOMStringHelperInitialize();
-
-	XalanTranscodingServices::initialize();
-
-	PrintWriter::initialize();
-
-	NamedNodeMapAttributeList::initialize();
-
-	XalanNumberFormat::initialize();
-
-	URISupport::initialize();
-}
-
-
-
-void
-PlatformSupportInit::terminate()
-{
-	URISupport::terminate();
-
-	XalanNumberFormat::terminate();
-
-	NamedNodeMapAttributeList::terminate();
-
-	PrintWriter::terminate();
-
-	XalanTranscodingServices::terminate();
-
-	DOMStringHelperTerminate();
+	return XalanTranscodingServices::OK;
 }

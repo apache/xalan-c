@@ -71,7 +71,7 @@ Writer::~Writer()
 
 
 
-TextOutputStream*
+XalanOutputStream*
 Writer::getStream()
 {
 	return 0;
@@ -79,7 +79,7 @@ Writer::getStream()
 
 
 
-const TextOutputStream*
+const XalanOutputStream*
 Writer::getStream() const
 {
 	return 0;

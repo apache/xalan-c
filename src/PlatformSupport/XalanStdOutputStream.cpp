@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,79 +54,105 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-#include "PlatformSupportInit.hpp"
-
-
-
-#include "DOMStringHelper.hpp"
-#include "NamedNodeMapAttributeList.hpp"
-#include "PrintWriter.hpp"
-#include "URISupport.hpp"
-#include "XalanNumberFormat.hpp"
-#include "XalanTranscodingServices.hpp"
+// Class header file...
+#include "XalanStdOutputStream.hpp"
 
 
 
-unsigned long	PlatformSupportInit::s_initCounter = 0;
+#include <cerrno>
+#include <iostream>
+#include <strstream>
 
 
 
-PlatformSupportInit::PlatformSupportInit() :
-	m_xalanDOMInit()
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#if !defined(XALAN_NO_NAMESPACES)
+using std::ostream;
+using std::cerr;
+#endif
+
+
+
+XalanStdOutputStream::XalanStdOutputStream(ostream&	theOutputStream) :
+	XalanOutputStream(),
+	m_outputStream(theOutputStream)
 {
-	++s_initCounter;
-
-	if (s_initCounter == 1)
+	// This will make sure that cerr is not buffered...
+	if (&m_outputStream == &cerr)
 	{
-		initialize();
+		setBufferSize(0);
 	}
 }
 
 
 
-PlatformSupportInit::~PlatformSupportInit()
+XalanStdOutputStream::~XalanStdOutputStream()
 {
-	--s_initCounter;
+}
 
-	if (s_initCounter == 0)
+
+
+void
+XalanStdOutputStream::doFlush()
+{
+	m_outputStream.flush();
+}
+
+
+
+void
+XalanStdOutputStream::writeData(
+			const char*		theBuffer,
+			unsigned long	theBufferLength)
+{
+	m_outputStream.write(theBuffer, theBufferLength);
+
+	if(!m_outputStream)
 	{
-		terminate();
+		throw XalanStdOutputStreamWriteException(errno);
 	}
 }
 
 
 
-void
-PlatformSupportInit::initialize()
+static DOMString
+FormatMessageLocal(
+			const DOMString&	theMessage,
+			int					theErrorCode)
 {
-	DOMStringHelperInitialize();
+#if !defined(XALAN_NO_NAMESPACES)
+using std::ostrstream;
+#endif
 
-	XalanTranscodingServices::initialize();
+	DOMString	theResult(clone(theMessage));
 
-	PrintWriter::initialize();
+	ostrstream   theFormatter;
 
-	NamedNodeMapAttributeList::initialize();
+	theFormatter << ".  The error code was "
+				 << theErrorCode
+				 << "." << '\0';
 
-	XalanNumberFormat::initialize();
+	theResult += theFormatter.str();
 
-	URISupport::initialize();
+	delete theFormatter.str();
+	return theResult;
 }
 
 
 
-void
-PlatformSupportInit::terminate()
+XalanStdOutputStream::XalanStdOutputStreamWriteException::XalanStdOutputStreamWriteException(
+		int					theErrorCode) :
+	XalanOutputStreamException(FormatMessageLocal("Error writing to standard stream!",
+													   theErrorCode),
+								    XALAN_STATIC_UCODE_STRING("XercesStdTextOutputStreamWriteException"))
 {
-	URISupport::terminate();
+}
 
-	XalanNumberFormat::terminate();
 
-	NamedNodeMapAttributeList::terminate();
 
-	PrintWriter::terminate();
-
-	XalanTranscodingServices::terminate();
-
-	DOMStringHelperTerminate();
+XalanStdOutputStream::XalanStdOutputStreamWriteException::~XalanStdOutputStreamWriteException()
+{
 }

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,79 +54,154 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-#include "PlatformSupportInit.hpp"
-
-
-
-#include "DOMStringHelper.hpp"
-#include "NamedNodeMapAttributeList.hpp"
-#include "PrintWriter.hpp"
-#include "URISupport.hpp"
-#include "XalanNumberFormat.hpp"
-#include "XalanTranscodingServices.hpp"
+#if !defined(XALANOUTPUTSTREAMPRINTWRITER_HEADER_GUARD_1357924680)
+#define XALANOUTPUTSTREAMPRINTWRITER_HEADER_GUARD_1357924680
 
 
 
-unsigned long	PlatformSupportInit::s_initCounter = 0;
+// Base include file.  Must be first.
+#include <PlatformSupport/PlatformSupportDefinitions.hpp>
 
 
 
-PlatformSupportInit::PlatformSupportInit() :
-	m_xalanDOMInit()
+#include <PlatformSupport/PrintWriter.hpp>
+
+
+
+class XalanOutputStream;
+
+
+
+class XALAN_PLATFORMSUPPORT_EXPORT XalanOutputStreamPrintWriter : public PrintWriter
 {
-	++s_initCounter;
+public:
 
-	if (s_initCounter == 1)
-	{
-		initialize();
-	}
-}
+	/**
+	 * Construct a XalanOutputStreamPrintWriter instance. 
+	 *
+	 * @param theOutputStream output stream to write
+	 * @param fAutoFlush      if true, the output will not be buffered
+	 */
+	XalanOutputStreamPrintWriter(
+			XalanOutputStream&	theOutputStream,
+			bool				fAutoFlush = false);
 
+	virtual
+	~XalanOutputStreamPrintWriter();
 
+	// These methods are inherited from PrintWriter ...
 
-PlatformSupportInit::~PlatformSupportInit()
-{
-	--s_initCounter;
+	virtual bool
+    checkError() const;
 
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
-}
+	virtual void
+	close();
 
+	virtual void
+	flush();
 
+	virtual XalanOutputStream*
+	getStream();
 
-void
-PlatformSupportInit::initialize()
-{
-	DOMStringHelperInitialize();
-
-	XalanTranscodingServices::initialize();
-
-	PrintWriter::initialize();
-
-	NamedNodeMapAttributeList::initialize();
-
-	XalanNumberFormat::initialize();
-
-	URISupport::initialize();
-}
+	virtual const XalanOutputStream*
+	getStream() const;
 
 
+	// Output functions...
 
-void
-PlatformSupportInit::terminate()
-{
-	URISupport::terminate();
+	virtual void
+	write(const char*	s,
+		  unsigned int	theOffset = 0,
+		  unsigned int	theLength = UINT_MAX);
 
-	XalanNumberFormat::terminate();
+	virtual void
+	write(const XalanDOMChar*	s,
+		  unsigned int			theOffset = 0,
+		  unsigned int			theLength = UINT_MAX);
 
-	NamedNodeMapAttributeList::terminate();
+	virtual void
+	write(XalanDOMChar		c);
 
-	PrintWriter::terminate();
+	virtual void
+	write(const XalanDOMString&		s,
+		  unsigned int				theOffset = 0,
+		  unsigned int				theLength = UINT_MAX);
 
-	XalanTranscodingServices::terminate();
+#if !defined(XALAN_BOOL_AS_INT)
+	virtual void
+	print(bool	b);
+#endif
 
-	DOMStringHelperTerminate();
-}
+	virtual void
+	print(char	c);
+
+	virtual void
+	print(const char*	s,
+		  unsigned int	theLength = UINT_MAX);
+
+	virtual void
+	print(const XalanDOMChar*	s,
+		  unsigned int			theLength = UINT_MAX);
+
+	virtual void
+	print(double	d);
+
+	virtual void
+	print(int	i);
+
+	virtual void
+	print(long	l);
+
+	virtual void
+	print(const XalanDOMString&		s);
+
+	virtual void
+	println();
+
+#if !defined(XALAN_BOOL_AS_INT)
+	virtual void
+	println(bool	b);
+#endif
+
+	virtual void
+	println(char	c);
+
+	virtual void
+	println(const char*		s,
+		    unsigned int	theLength = UINT_MAX);
+
+	virtual void
+	println(const XalanDOMChar*		s,
+			unsigned int			theLength = UINT_MAX);
+
+	virtual void
+	println(double	d);
+
+	virtual void
+	println(int		i);
+
+	virtual void
+	println(long	l);
+
+	virtual void
+	println(const XalanDOMString&	s);
+
+protected:
+
+	XalanOutputStream&	m_OutputStream;
+
+private:
+
+	// Not implemented
+	XalanOutputStreamPrintWriter(const XalanOutputStreamPrintWriter&);
+
+	XalanOutputStreamPrintWriter&
+	operator=(const XalanOutputStreamPrintWriter&);
+
+	bool
+	operator==(const XalanOutputStreamPrintWriter&);
+};
+
+
+
+#endif	// XALANOUTPUTSTREAMPRINTWRITER_HEADER_GUARD_1357924680

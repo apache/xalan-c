@@ -54,79 +54,61 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-#include "PlatformSupportInit.hpp"
-
-
-
-#include "DOMStringHelper.hpp"
-#include "NamedNodeMapAttributeList.hpp"
-#include "PrintWriter.hpp"
-#include "URISupport.hpp"
-#include "XalanNumberFormat.hpp"
-#include "XalanTranscodingServices.hpp"
+#include "XalanToXercesTranscoderWrapper.hpp"
 
 
 
-unsigned long	PlatformSupportInit::s_initCounter = 0;
+#include <cassert>
 
 
 
-PlatformSupportInit::PlatformSupportInit() :
-	m_xalanDOMInit()
+#include <util/TransService.hpp>
+#include <util/XMLException.hpp>
+
+
+
+XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(XMLTranscoder*	theTranscoder) :
+	XalanOutputTranscoder(),
+	m_transcoder(theTranscoder)
 {
-	++s_initCounter;
+}
 
-	if (s_initCounter == 1)
+
+
+XalanToXercesTranscoderWrapper::~XalanToXercesTranscoderWrapper()
+{
+	delete m_transcoder;
+}
+
+
+
+XalanToXercesTranscoderWrapper::eCode
+XalanToXercesTranscoderWrapper::transcode(
+			const XalanDOMChar*		theSourceData,
+			unsigned int			theSourceCount,
+			XalanXMLByte*			theTarget,
+			unsigned int			theTargetSize,
+			unsigned int&			theSourceCharsTranscoded,
+			unsigned int&			theTargetBytesUsed)
+{
+	eCode	theCode = XalanTranscodingServices::OK;
+
+	try
 	{
-		initialize();
+		theTargetBytesUsed = m_transcoder->transcodeTo(
+			theSourceData,
+			theSourceCount,
+			theTarget,
+			theTargetSize,
+			theSourceCharsTranscoded,
+			XMLTranscoder::UnRep_Throw);
 	}
-}
-
-
-
-PlatformSupportInit::~PlatformSupportInit()
-{
-	--s_initCounter;
-
-	if (s_initCounter == 0)
+	catch(const XMLException&)
 	{
-		terminate();
+		theSourceCharsTranscoded = 0;
+		theTargetBytesUsed = 0;
+		theCode = XalanTranscodingServices::InternalFailure;
 	}
-}
 
-
-
-void
-PlatformSupportInit::initialize()
-{
-	DOMStringHelperInitialize();
-
-	XalanTranscodingServices::initialize();
-
-	PrintWriter::initialize();
-
-	NamedNodeMapAttributeList::initialize();
-
-	XalanNumberFormat::initialize();
-
-	URISupport::initialize();
-}
-
-
-
-void
-PlatformSupportInit::terminate()
-{
-	URISupport::terminate();
-
-	XalanNumberFormat::terminate();
-
-	NamedNodeMapAttributeList::terminate();
-
-	PrintWriter::terminate();
-
-	XalanTranscodingServices::terminate();
-
-	DOMStringHelperTerminate();
+	return theCode;
 }
