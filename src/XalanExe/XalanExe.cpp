@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,10 +61,8 @@
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
-#include <fstream.h>
 #else
 #include <iostream>
-#include <fstream>
 #endif
 
 
@@ -98,7 +96,6 @@
 using std::cerr;
 using std::cout;
 using std::endl;
-using std::ofstream;
 #endif
 
 
@@ -107,7 +104,11 @@ void
 Usage()
 {
 	cerr << endl
-		 << "Xalan version 1.3"
+		 << "Xalan version "
+		 << XALAN_FULLVERSIONDOT
+		 << endl
+		 << "Xerces version "
+		 << XERCES_FULLVERSIONDOT
 		 << endl
 		 << "Usage: Xalan [options] source stylesheet"
 		 << endl
@@ -370,12 +371,10 @@ xsltMain(
 
 			if (theParams.m_outFileName != 0)
 			{
-				ofstream	theOutputStream(theParams.m_outFileName);
-
 				theResult = theTransformer.transform(
 						theParams.m_inFileName,
 						theParams.m_xslFileName,
-						theOutputStream);
+						theParams.m_outFileName);
 			}
 			else
 			{
