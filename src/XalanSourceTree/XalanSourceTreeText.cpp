@@ -522,10 +522,22 @@ const XalanDOMString&	XalanSourceTreeText::s_nameString = ::s_nameString;
 
 
 
+const XalanDOMChar	s_text[] =
+{
+	XalanUnicode::charNumberSign,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+
+
 void
 XalanSourceTreeText::initialize()
 {
-	::s_nameString = XALAN_STATIC_UCODE_STRING("#text");
+	::s_nameString = s_text;
 }
 
 

@@ -1430,10 +1430,26 @@ const XalanDOMString&	XalanSourceTreeDocument::s_nameString = ::s_nameString;
 
 
 
+static const XalanDOMChar	s_document[] =
+{
+	XalanUnicode::charNumberSign,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+
+
 void
 XalanSourceTreeDocument::initialize()
 {
-	::s_nameString = XALAN_STATIC_UCODE_STRING("#document");
+	::s_nameString = s_document;
 }
 
 

@@ -517,10 +517,25 @@ const XalanDOMString&	XalanSourceTreeComment::s_nameString = ::s_nameString;
 
 
 
+static const XalanDOMChar	s_comment[] =
+{
+	XalanUnicode::charNumberSign,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+
+
 void
 XalanSourceTreeComment::initialize()
 {
-	::s_nameString = XALAN_STATIC_UCODE_STRING("#comment");
+	::s_nameString = s_comment;
 }
 
 
