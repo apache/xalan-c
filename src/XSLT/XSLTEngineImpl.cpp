@@ -1501,6 +1501,9 @@ XSLTEngineImpl::addResultAttribute(
 		// of the namespace is 0.  If it's not, go ahead and add the declaration.
 		// If it's not, it means we're "turning off" the previous default
 		// declaration.
+
+		// Note that we use an empty string for the prefix, instead of "xmlns", since the
+		// prefix really is "".
 		if (length(value) != 0)
 		{
 			addResultNamespaceDecl(s_emptyString, value);
@@ -1511,7 +1514,7 @@ XSLTEngineImpl::addResultAttribute(
 			// Check to see if there is one, and if there isn't, don't add
 			// the namespace declaration _and_ don't add the attribute.
 			const XalanDOMString&	currentDefaultNamespace =
-					getNamespaceForPrefix(DOMServices::s_XMLNamespace);
+					getNamespaceForPrefix(s_emptyString);
 
 			if (length(currentDefaultNamespace) != 0)
 			{

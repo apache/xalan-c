@@ -212,6 +212,18 @@ ElemElement::execute(
 			executionContext.startElement(c_wstr(elemName));   
 
 			m_namespacesHandler.outputResultNamespaces(executionContext);
+
+			// OK, now let's check to make sure we don't have to change the default namespace...
+			const XalanDOMString&	theCurrentDefaultNamespace =
+				executionContext.getResultNamespaceForPrefix(s_emptyString);
+
+			const XalanDOMString&	theElementDefaultNamespace =
+				m_namespacesHandler.getNamespace(s_emptyString);
+
+			if (equals(theCurrentDefaultNamespace, theElementDefaultNamespace) == false)
+			{
+				executionContext.addResultAttribute(DOMServices::s_XMLNamespace, theElementDefaultNamespace);
+			}
 		}
 		else
 		{
