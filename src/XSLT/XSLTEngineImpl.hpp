@@ -99,7 +99,6 @@
 
 
 #include <XPath/Function.hpp>
-#include <XPath/NameSpace.hpp>
 
 
 
