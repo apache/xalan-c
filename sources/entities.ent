@@ -17,11 +17,13 @@
 <!ENTITY xml4c-aixlib "libxerces-c2_2_0.a">
 <!ENTITY xml4c-hplib "libxerces-c2_2_0.sl">
 <!ENTITY xml4c-solarislib "libxerces-c2_2_0.so">
-<!ENTITY xml4c-linuxdist "&xml4c-dist;-linux7.2gcc3.1.tar.gz">
+<!ENTITY xml4c-linuxdist "&xml4c-dist;-linux7.2Proton.tar.gz">
 <!ENTITY xml4c-aixdist "&xml4c-dist;-AIX51_5.02.tar.gz">
+<!ENTITY xml4c-aix64dist "&xml4c-dist;-AIX51_5.02_64.tar.gz">
 <!ENTITY xml4c-hpdist "&xml4c-dist;-HP11ACC.tar.gz">
 <!ENTITY xml4c-hp64dist "&xml4c-dist;-HP11ACC_64.tar.gz">
-<!ENTITY xml4c-solarisdist "&xml4c-dist;-.Sol2.7ForCC.tar.gz">
+<!ENTITY xml4c-solarisdist "&xml4c-dist;-Sol2.7ForCC.tar.gz">
+<!ENTITY xml4c-solaris64dist "&xml4c-dist;-Sol2.7ForCC_64.tar.gz">
 <!ENTITY xslt4j "Xalan-Java">
 <!ENTITY icu-used "International Components for Unicode(ICU) 2.2 source files">
 <!ENTITY icu-windlls "icui18n.dll, icuuc.dll">

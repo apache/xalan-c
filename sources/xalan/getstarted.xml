@@ -11,49 +11,59 @@
 </ul>
 <anchor name="download"/>
 <s2 title="Downloading what you need">
-<p>For &xslt4c-current;, we are distributing a Windows32 Visual C++ build and 5 UNIX builds with makefiles: a Red Hat Linux GNU build, an AIX xlC build, an HP-UX 11 aCC 32-bit build, an HP-UX 11 aCC 64-bit build, and a Solaris build. 
+<p>For &xslt4c-current;, we are distributing a Windows32 Visual C++ build and 7 UNIX builds with makefiles: a Red Hat Linux GNU build, a AIX xlC (32 and 64 bit) builds, an HP-UX 11 aCC 32-bit build, an HP-UX 11 aCC 64-bit build, and Solaris 32 and 64 bit builds. 
 Please contact us at <human-resource-ref idref="xalandev"/> if you would like to help provide builds for other platforms.</p>
-<p>If you do not already have it, you must also download the &xml4c; 2.1.0 build as indicated below.</p> 
+<p>If you do not already have it, you must also download the &xml4c; 2.2.0 build as indicated below.</p> 
 <note>The Xalan distribution files are in <resource-ref idref="xslt4c-distdir"/>. The Xerces distribution files are in <resource-ref idref="xml4c-distdir"/>.</note>
-   <table>
-     <tr>
-       <th>Xalan distribution files</th>
-       <th>Xerces distribution files</th>
-       <th>Platform</th>
-     </tr>
-     <tr>
-       <td>&xslt4c-dist;-win32.zip</td>
-       <td>&xml4c-dist;-win32.zip</td>
-       <td>Windows32</td>
-    </tr>
-     <tr>
-       <td>&xslt4c-dist;-linux.tar.gz</td>
-       <td>&xml4c-linuxdist;</td>
-       <td>Redhat Linux 7.2</td>
-    </tr>
-     <tr>
-       <td>&xslt4c-dist;-aix.tar.gz</td>
-       <td>&xml4c-aixdist;</td>
-       <td>AIX 4.3</td>
-    </tr>
-     <tr>
-       <td>&xslt4c-dist;-solaris.tar.gz</td>
-       <td>&xml4c-solarisdist;</td>
-       <td>Solaris 2.6</td>
-    </tr>
-     <tr>
-       <td>&xslt4c-dist;-hp-ux.tar.gz</td>
-       <td>&xml4c-hpdist;</td>
-       <td>HP-UX 11.0 (32 bit)</td>
-    </tr>
-     <tr>
-       <td>&xslt4c-dist;-hp-ux-64.tar.gz</td>
-       <td>&xml4c-hp64dist;</td>
-       <td>HP-UX 11.0 (64 bit)</td>
+	<table>
+	  <tr>
+		<th>Xalan distribution files</th>
+		<th>Xerces distribution files</th>
+		<th>Platform</th>
+	  </tr>
+	  <tr>
+		<td>&xslt4c-dist;-win32.zip</td>
+		<td>&xml4c-dist;-win32.zip</td>
+		<td>Windows32</td>
+	  </tr>
+	  <tr>
+		<td>&xslt4c-dist;-linux7.2Proton.tar.gz</td>
+		<td>&xml4c-linuxdist;</td>
+		<td>Redhat Linux 7.2</td>
+	  </tr>
+	  <tr>
+		<td>&xslt4c-dist;-AIX51_502.tar.gz</td>
+		<td>&xml4c-aixdist;</td>
+		<td>AIX 5.1</td>
+	  </tr>
+	  <tr>
+		<td>&xslt4c-dist;-AIX51_502_64.tar.gz</td>
+		<td>&xml4c-aix64dist;</td>
+		<td>AIX 5.1 (64 bit)</td>
+	  </tr>
+	  <tr>
+		<td>&xslt4c-dist;-Sol2.8ForCC.tar.gz </td>
+		<td>&xml4c-solarisdist;</td>
+		<td>Solaris 2.8</td>
+	  </tr>
+	  <tr>
+		<td>&xslt4c-dist;-Sol2.8ForCC_64.tar.gz </td>
+		<td>&xml4c-solaris64dist;</td>
+		<td>Solaris 2.8</td>
+	  </tr>
+	  <tr>
+		<td>&xslt4c-dist;-HP11ACC.tar.gz</td>
+		<td>&xml4c-hpdist;</td>
+		<td>HP-UX 11.0 (32 bit)</td>
+	  </tr>
+	  <tr>
+		<td>&xslt4c-dist;-HP11ACC_64.tar.gz</td>
+		<td>&xml4c-hp64dist;</td>
+		<td>HP-UX 11.0 (64 bit)</td>
     </tr>    
   </table>
-  <p>The Windows32 distribution was built with MSVC 6.0 SP3 and <jump href="http://www.dinkumware.com/vc_fixes.html">Dinkumware C++ library fixes</jump>. The Red Hat Linux 7.2 32-bit distribution was built with gcc 3.1. The AIX 4.3 32-bit distribution was built with IBM C and C++ for AIX 5.02. The Solaris 2.6 32-bit distribution was built with Sun Workshop 6 update 2. 
-The HP-UX 11 32-bit and 64-bit distributions were built with aCC A.03.33.</p>
+  <p>The Windows32 distribution was built with MSVC 6.0 SP3 and <jump href="http://www.dinkumware.com/vc_fixes.html">Dinkumware C++ library fixes</jump>. The Red Hat Linux 7.2 32-bit distribution was built with Intel C++ Compiler version 6.0.1. The AIX 5.1 32-bit distribution was built with IBM C and C++ for AIX 5.02. The Solaris 2.6 32-bit and 64-bit distributions were built with Sun Workshop 6 update 2. 
+The HP-UX 11 32-bit and 64-bit distributions were built with aCC A.03.37.</p>
 <note>Use GNU tar to untar the Solaris distribution file; see <link idref="faq" anchor="gnutar">A tar checksum error on Solaris </link>.</note>
 <p>This release also includes alpha support for building 64-bit Solaris and AIX binaries. See <link idref="readme" anchor="64bit">building 64-bit binaries</link>.</p>
 <anchor name="xalandists"/>
