@@ -85,9 +85,13 @@ XPathFactoryDefault::~XPathFactoryDefault()
 void
 XPathFactoryDefault::reset()
 {
-	std::for_each(m_xpaths.begin(),
-				  m_xpaths.end(),
-				  DeleteFactoryObjectFunctor(*this));
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	for_each(m_xpaths.begin(),
+			 m_xpaths.end(),
+			 DeleteFactoryObjectFunctor(*this, true));
 
 	m_xpaths.clear();
 }
@@ -95,21 +99,20 @@ XPathFactoryDefault::reset()
 
 
 bool
-XPathFactoryDefault::returnObject(const FactoryObject*	theFactoryObject)
+XPathFactoryDefault::doReturnObject(
+			const FactoryObject*	theFactoryObject,
+			bool					fInReset)
 {
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-	if(m_xpaths.erase(theObject) > 0)
-	{
-#else
-	CollectionType::iterator	i =
-		std::find(m_xpaths.begin(),
-				  m_xpaths.end(),
-				  theFactoryObject);
+	const CollectionType::iterator	i =
+		m_xpaths.find(theFactoryObject);
 
 	if (i != m_xpaths.end())
 	{
-		m_xpaths.erase(i);
-#endif
+		if (fInReset == false)
+		{
+			m_xpaths.erase(i);
+		}
+
 		return deleteObject(theFactoryObject);
 	}
 	else
@@ -125,11 +128,7 @@ XPathFactoryDefault::create(bool	/* fOptimize */)
 {
 	XPath* const	theXPath = new XPath;
 
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
 	m_xpaths.insert(theXPath);
-#else
-	m_xpaths.push_back(theXPath);
-#endif
 
 	return theXPath;
 }

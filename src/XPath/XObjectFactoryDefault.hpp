@@ -64,10 +64,8 @@
 
 
 
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-#include <hash_set>
-#elif !defined(XALAN_XTREE_BUG)
-#include <slist>
+#if !defined(XALAN_XTREE_BUG)
+#include <set>
 #else
 #include <vector>
 #endif
@@ -105,33 +103,10 @@ public:
 	~XObjectFactoryDefault();
 
 
-#if defined(XALAN_NO_NAMESPACES)
-#	define XALAN_STD
-#else
-#	define XALAN_STD std::
-#endif
+	// These methods are inherited from Factory...
 
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-	typedef XALAN_STD hash_set<const FactoryObject*>		CollectionType;
-#elif !defined(XALAN_XTREE_BUG)
-	typedef XALAN_STD slist<const FactoryObject*>		CollectionType;
-#else
-	typedef XALAN_STD vector<const FactoryObject*>		CollectionType;
-#endif
-
-#undef XALAN_STD
-
-	/**
-	 * Retrieve the number of instances in existence
-	 * 
-	 * @return number of objects
-	 */
-	CollectionType::size_type
-	instanceCount() const
-	{
-		return m_xobjects.size();
-	}
-
+	virtual void
+	reset();
 
 	// These methods are inherited from XObjectFactory ...
 	
@@ -193,17 +168,31 @@ public:
 			const DOM_Node&		value,
 			bool				fOptimize = true);
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef set<const FactoryObject*>		CollectionType;
+#else
+	typedef std::set<const FactoryObject*>	CollectionType;
+#endif
+
+	/**
+	 * Retrieve the number of instances in existence
+	 * 
+	 * @return number of objects
+	 */
+	CollectionType::size_type
+	instanceCount() const
+	{
+		return m_xobjects.size();
+	}
 	
+protected:
+
 	// These methods are inherited from Factory ...
-	
+
 	virtual bool
-	returnObject(const FactoryObject*	theFactoryObject);
-
-
-	// These methods are inherited from Resettable ...
-	
-	virtual void
-	reset();
+	doReturnObject(
+			const FactoryObject*	theFactoryObject,
+			bool					fInReset = false);
 
 private:
 

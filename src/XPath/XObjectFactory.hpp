@@ -99,6 +99,18 @@ public:
 	virtual
 	~XObjectFactory();
 
+
+	// These interfaces are inherited from Resetable...
+
+	/**
+	 * Reset the instance.  This invalidates all existing FactoryObject
+	 * instances created with this Factory.
+	 */
+	virtual void
+	reset() = 0;
+
+	// These interfaces are new to XObjectFactory...
+
 	/**
 	 * Create a boolean XObject from a boolean value.
 	 * 
@@ -243,16 +255,21 @@ public:
 			const DOM_Node&		theValue,
 			bool				fOptimize = true) = 0;
 
+protected:
 
 	// These interfaces are inherited from Factory...
 
+	/**
+	 * Return an object to the factory.
+	 * 
+	 * @param theFactoryObject object to be returned
+	 * @param fInReset true when called during reset().
+	 */
+
 	virtual bool
-	returnObject(const FactoryObject*	theFactoryObject) = 0;
-
-	// These interfaces are inherited from Resetable...
-
-	virtual void
-	reset() = 0;
+	doReturnObject(
+			const FactoryObject*	theFactoryObject,
+			bool					fInReset = false) = 0;
 
 private:
 

@@ -85,6 +85,12 @@ public:
 	virtual
 	~XPathFactory();
 
+	// Inherited from Factory...
+	virtual void
+	reset() = 0;
+
+	// New to XPathFactory...
+
 	/**
 	 * Create an XPath.  The XPath instance is owned by the factory, and should
 	 * not be deleted.  The factory will manage the lifetime.
@@ -94,14 +100,14 @@ public:
 	virtual XPath*
 	create(bool		fOptimize = true) = 0;
 
+protected:
 
 	// Inherited from Factory...
 
-	virtual void
-	reset() = 0;
-
 	virtual bool
-	returnObject(const FactoryObject*	theFactoryObject) = 0;
+	doReturnObject(
+			const FactoryObject*	theFactoryObject,
+			bool					fInReset = false) = 0;
 
 };
 

@@ -113,12 +113,22 @@ XPathFunctionTable::InstallFunction(
 {
 	assert(length(theFunctionName) != 0);
 
-	// Delete the currently installed function, if there is
-	// one
-	delete m_FunctionCollection[theFunctionName];
+	// See if a function of that name is already installed...
+	const CollectionType::iterator	i =
+		m_FunctionCollection.find(theFunctionName);
 
-	// Clone the function and add it to the collection.
-	m_FunctionCollection[theFunctionName] = theFunction.clone();
+	if (i != m_FunctionCollection.end())
+	{
+		// It is, so delete the old one, and add the new one...
+		delete i->second;
+
+		i->second = theFunction.clone();
+	}
+	else
+	{
+		// It's not, so clone the function and add it to the collection.
+		m_FunctionCollection[theFunctionName] = theFunction.clone();
+	}
 }
 
 

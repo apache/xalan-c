@@ -87,50 +87,6 @@ static XBooleanStatic		theFalseBoolean(false);
 
 
 
-template<class ValueType, class CollectionType>
-void
-InsertObjectIntoCollection(
-			CollectionType&		theCollection,
-			const ValueType&	theObject)
-{
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-	theCollection.insert(theObject);
-#else
-	theCollection.push_back(theObject);
-#endif
-}
-
-
-
-template<class ValueType, class CollectionType>
-bool
-RemoveObjectFromCollection(
-			CollectionType&		theCollection,
-			const ValueType&	theObject)
-{
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-	return theCollection.erase(theObject) > 0 ? true : false;
-#else
-	typename CollectionType::iterator	i =
-		std::find(theCollection.begin(),
-				  theCollection.end(),
-				  theObject);
-	
-	if (i == theCollection.end())
-	{
-		return false;
-	}
-	else
-	{
-		theCollection.erase(i);
-
-		return true;
-	}
-#endif
-}
-
-
-
 XObjectFactoryDefault::XObjectFactoryDefault(
 			XPathEnvSupport&	theEnvSupport,
 			XPathSupport&		theSupport) :
@@ -152,7 +108,9 @@ XObjectFactoryDefault::~XObjectFactoryDefault()
 
 
 bool
-XObjectFactoryDefault::returnObject(const FactoryObject*	theFactoryObject)
+XObjectFactoryDefault::doReturnObject(
+			const FactoryObject*	theFactoryObject,
+			bool					fInReset)
 {
 	if (theFactoryObject == &theTrueBoolean ||
 		theFactoryObject == &theFalseBoolean ||
@@ -162,9 +120,16 @@ XObjectFactoryDefault::returnObject(const FactoryObject*	theFactoryObject)
 	}
 	else
 	{
-		if (RemoveObjectFromCollection(m_xobjects,
-									   theFactoryObject) == true)
+		const CollectionType::iterator	i =
+				m_xobjects.find(theFactoryObject);
+
+		if (i != m_xobjects.end())
 		{
+			if (fInReset == false)
+			{
+				m_xobjects.erase(i);
+			}
+
 			return deleteObject(theFactoryObject);
 		}
 		else
@@ -189,8 +154,7 @@ XObjectFactoryDefault::createBoolean(
 	{
 		XBoolean* const		theBoolean = new XBoolean(m_envSupport, theValue);
 
-		InsertObjectIntoCollection(m_xobjects,
-								   theBoolean);
+		m_xobjects.insert(theBoolean);
 
 		return theBoolean;
 	}
@@ -205,8 +169,7 @@ XObjectFactoryDefault::createNodeSet(
 {
 	XNodeSet* const		theXNodeSet = new XNodeSet(m_envSupport, m_support, value);
 
-	InsertObjectIntoCollection(m_xobjects,
-							   theXNodeSet);
+	m_xobjects.insert(theXNodeSet);
 
 	return theXNodeSet;
 }
@@ -220,8 +183,7 @@ XObjectFactoryDefault::createNodeSet(
 {
 	XNodeSet* const		theXNodeSet = new XNodeSet(m_envSupport, m_support, value);
 
-	InsertObjectIntoCollection(m_xobjects,
-							   theXNodeSet);
+	m_xobjects.insert(theXNodeSet);
 
 	return theXNodeSet;
 }
@@ -235,8 +197,7 @@ XObjectFactoryDefault::createNodeSet(
 {
 	XNodeSet* const		theXNodeSet = new XNodeSet(m_envSupport, m_support, value);
 
-	InsertObjectIntoCollection(m_xobjects,
-							   theXNodeSet);
+	m_xobjects.insert(theXNodeSet);
 
 	return theXNodeSet;
 }
@@ -254,8 +215,7 @@ XObjectFactoryDefault::createNull(bool		fOptimize)
 	{
 		XNull* const	theXNull = new XNull(m_envSupport, m_support);
 
-		InsertObjectIntoCollection(m_xobjects,
-								   theXNull);
+		m_xobjects.insert(theXNull);
 
 		return theXNull;
 	}
@@ -270,8 +230,7 @@ XObjectFactoryDefault::createNumber(
 {
 	XNumber*	theXNumber = new XNumber(m_envSupport, theValue);
 
-	InsertObjectIntoCollection(m_xobjects,
-							   theXNumber);
+	m_xobjects.insert(theXNumber);
 
 	return theXNumber;
 }
@@ -285,8 +244,7 @@ XObjectFactoryDefault::createString(
 {
 	XString* const	theXString = new XString(m_envSupport, m_support, theValue);
 
-	InsertObjectIntoCollection(m_xobjects,
-							   theXString);
+	m_xobjects.insert(theXString);
 
 	return theXString;
 }
@@ -300,8 +258,7 @@ XObjectFactoryDefault::createUnknown(
 {
 	XUnknown* const	theXUnknown = new XUnknown(m_envSupport, theValue);
 
-	InsertObjectIntoCollection(m_xobjects,
-							   theXUnknown);
+	m_xobjects.insert(theXUnknown);
 
 	return theXUnknown;
 }
@@ -315,8 +272,7 @@ XObjectFactoryDefault::createResultTreeFrag(
 {
 	XResultTreeFrag* const	theResultTreeFrag = new XResultTreeFrag(m_envSupport, m_support, theValue);
 
-	InsertObjectIntoCollection(m_xobjects,
-							   theResultTreeFrag);
+	m_xobjects.insert(theResultTreeFrag);
 
 	return theResultTreeFrag;
 }
@@ -330,8 +286,7 @@ XObjectFactoryDefault::createSpan(
 {
 	XSpan* const	theXSpan = new XSpan(m_envSupport, m_support, theValue);
 
-	InsertObjectIntoCollection(m_xobjects,
-							   theXSpan);
+	m_xobjects.insert(theXSpan);
 
 	return theXSpan;
 }
@@ -345,8 +300,7 @@ XObjectFactoryDefault::createSpan(
 {
 	XSpan* const	theXSpan = new XSpan(m_envSupport, m_support, theValue);
 
-	InsertObjectIntoCollection(m_xobjects,
-							   theXSpan);
+	m_xobjects.insert(theXSpan);
 
 	return theXSpan;
 }
@@ -360,8 +314,7 @@ XObjectFactoryDefault::createSpan(
 {
 	XSpan* const	theXSpan = new XSpan(m_envSupport, m_support, theValue);
 
-	InsertObjectIntoCollection(m_xobjects,
-							   theXSpan);
+	m_xobjects.insert(theXSpan);
 
 	return theXSpan;
 }
@@ -371,9 +324,13 @@ XObjectFactoryDefault::createSpan(
 void
 XObjectFactoryDefault::reset()
 {
-	std::for_each(m_xobjects.begin(),
-				  m_xobjects.end(),
-				  DeleteFactoryObjectFunctor(*this));
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	for_each(m_xobjects.begin(),
+			 m_xobjects.end(),
+			 DeleteFactoryObjectFunctor(*this, true));
 
 	m_xobjects.clear();
 }

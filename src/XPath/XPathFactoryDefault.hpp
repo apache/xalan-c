@@ -64,10 +64,8 @@
 
 
 
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-#include <hash_set>
-#elif !defined(XALAN_XTREE_BUG)
-#include <slist>
+#if !defined(XALAN_XTREE_BUG)
+#include <set>
 #else
 #include <vector>
 #endif
@@ -89,6 +87,9 @@ public:
 	virtual
 	~XPathFactoryDefault();
 
+	// Inherited from Factory...
+	virtual void
+	reset();
 
 	// Inherited from XPathFactory...
 
@@ -96,22 +97,21 @@ public:
 	create(bool		fOptimize = true);
 
 	
+protected:
+
 	// Inherited from Factory...
-	
-	virtual void
-	reset();
 
 	virtual bool
-	returnObject(const FactoryObject*	theFactoryObject);
+	doReturnObject(
+			const FactoryObject*	theFactoryObject,
+			bool					fInReset = false);
 
 private:
 
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-	typedef std::hash_set<const FactoryObject*>		CollectionType;
-#elif !defined(XALAN_XTREE_BUG)
-	typedef std::slist<const FactoryObject*>		CollectionType;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef set<const FactoryObject*>		CollectionType;
 #else
-	typedef std::vector<const FactoryObject*>		CollectionType;
+	typedef std::set<const FactoryObject*>		CollectionType;
 #endif
 
 	CollectionType		m_xpaths;
