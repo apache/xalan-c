@@ -221,7 +221,7 @@ printArgOptions()
 		 << endl
 		 << " [-PARAM name expression (Sets a stylesheet parameter.)]"
 		 << endl
-		 << " [-XST Use XSLT source tree instead of Xerces DOM]"
+		 << " [-XD Use Xerces DOM instead of Xalan source tree.]"
 		 << endl
 		 << endl
 		 << "The following options are valid only with -HTML or -XML."
@@ -272,7 +272,7 @@ struct CmdLineParams
 	bool doValidation;
 	bool noIndent;
 	bool formatToNull;
-	bool useXST;
+	bool useDOM;
 	int indentAmount;
 	int outputType;
 	CharVectorType outFileName;
@@ -297,7 +297,7 @@ struct CmdLineParams
 		doValidation(false),
 		noIndent(false),
 		formatToNull(false),
-		useXST(false),
+		useDOM(false),
 		indentAmount(-1),
 		outputType(-1),
 		outFileName(),
@@ -538,9 +538,9 @@ getArgs(
 		{
 			p.traceTemplateChildren = true;
 		}
-		else if (!stricmp("-XST", argv[i]))
+		else if (!stricmp("-XD", argv[i]))
 		{
-			p.useXST = true;
+			p.useDOM = true;
 		}
 		else
 		{
@@ -711,7 +711,7 @@ getDOMSupport(
 		XercesDOMSupport&			theXercesDOMSupport,
 		const CmdLineParams&		params)
 {
-	if (params.useXST == true)
+	if (params.useDOM == false)
 	{
 		return theXalanSourceTreeDOMSupport;
 	}
@@ -729,7 +729,7 @@ getParserLiaison(
 		XercesParserLiaison&			theXercesParserLiaison,
 		const CmdLineParams&			params)
 {
-	if (params.useXST == true)
+	if (params.useDOM == false)
 	{
 		return theXalanSourceTreeParserLiaison;
 	}
@@ -798,9 +798,9 @@ xsltMain(const CmdLineParams&	params)
 	XPathSupportDefault				theXPathSupport(theDOMSupport);
 	XSLTProcessorEnvSupportDefault	theXSLProcessorSupport;
 
-	XObjectFactoryDefault			theXObjectFactory;
+	XObjectFactoryDefault	theXObjectFactory;
 
-	XPathFactoryDefault theXPathFactory;
+	XPathFactoryDefault		theXPathFactory;
 
 	const XalanAutoPtr<TraceListener>		theTraceListener(
 			createTraceListener(
@@ -915,7 +915,6 @@ xsltMain(const CmdLineParams&	params)
 	{
 		rTreeTarget.setFormatterListener(formatter.get());
 	}
-
 
 	// Do the transformation...
 	XSLTInputSource		theInputSource(c_str(params.inFileName));
@@ -1041,15 +1040,6 @@ main(
 #if defined(XALAN_VQ_SPECIAL_TRACE)
 	QuantifyStopRecordingData();
 #endif
-
-   /**
-	 * Command line interface to transform the XML according to 
-	 * the instructions found in the XSL document.
-	 *		-in inputXMLURL
-	 *		-xsl XSLTransformationURL
-	 *		-out outputFileName
-	 *		-F (Format output pretty-printed)
-	 */
 
 	XMLPlatformUtils::Initialize();
 
