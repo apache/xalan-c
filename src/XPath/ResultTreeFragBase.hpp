@@ -97,12 +97,6 @@ public:
 	~ResultTreeFragBase();
 
 
-	/**
-	 * Clear all of the children from the ResultTreeFrag instance.
-	 */
-	virtual void
-	clear() = 0;
-
 	// These interfaces are inherited from XalanDocumentFragment...
 	virtual const XalanDOMString&
 	getNodeName() const = 0;
