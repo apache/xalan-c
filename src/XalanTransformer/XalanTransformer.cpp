@@ -105,6 +105,13 @@
 
 
 
+#include <XalanEXSLT/XalanEXSLTCommon.hpp>
+#include <XalanEXSLT/XalanEXSLTMath.hpp>
+#include <XalanEXSLT/XalanEXSLTSet.hpp>
+#include <XalanEXSLT/XalanEXSLTString.hpp>
+
+
+
 //#define XALAN_USE_ICU
 #if defined(XALAN_USE_ICU)
 #include <ICUBridge/FunctionICUFormatNumber.hpp>
@@ -188,37 +195,11 @@ XalanTransformer::initialize()
 	// Initialize Xalan. 
 	s_xsltInit = new XSLTInit;
 
-	const XalanDOMString	theXalanNamespace(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan")));
-
-	XalanTransformer::installExternalFunctionGlobal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("difference")),
-			FunctionDifference());
-
-	XalanTransformer::installExternalFunctionGlobal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("distinct")),
-			FunctionDistinct());
-
-	XalanTransformer::installExternalFunctionGlobal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("evaluate")),
-			FunctionEvaluate());
-
-	XalanTransformer::installExternalFunctionGlobal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("hasSameNodes")),
-			FunctionHasSameNodes());
-
-	XalanTransformer::installExternalFunctionGlobal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("intersection")),
-			FunctionIntersection());
-
-	XalanTransformer::installExternalFunctionGlobal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("nodeset")),
-			FunctionNodeSet());
+	XalanExtensionsInstaller::installGlobal();
+	XalanEXSLTCommonFunctionsInstaller::installGlobal();
+	XalanEXSLTMathFunctionsInstaller::installGlobal();
+	XalanEXSLTSetFunctionsInstaller::installGlobal();
+	XalanEXSLTStringFunctionsInstaller::installGlobal();
 
 #if defined(XALAN_USE_ICU)
 	theICUFunctor = new ICUBridgeCollationCompareFunctor;
@@ -244,31 +225,11 @@ XalanTransformer::terminate()
 
 	s_xsltInit = 0;
 
-	const XalanDOMString	theXalanNamespace(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan")));
-
-	XalanTransformer::uninstallExternalFunctionGlobal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("difference")));
-
-	XalanTransformer::uninstallExternalFunctionGlobal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("distinct")));
-
-	XalanTransformer::uninstallExternalFunctionGlobal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("evaluate")));
-
-	XalanTransformer::uninstallExternalFunctionGlobal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("hasSameNodes")));
-
-	XalanTransformer::uninstallExternalFunctionGlobal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("intersection")));
-
-	XalanTransformer::uninstallExternalFunctionGlobal(
-			theXalanNamespace,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("nodeset")));
+	XalanExtensionsInstaller::uninstallGlobal();
+	XalanEXSLTCommonFunctionsInstaller::uninstallGlobal();
+	XalanEXSLTMathFunctionsInstaller::uninstallGlobal();
+	XalanEXSLTSetFunctionsInstaller::uninstallGlobal();
+	XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
 
 #if defined(XALAN_USE_ICU)
 	XPath::uninstallFunction(
@@ -479,6 +440,9 @@ XalanTransformer::compileStylesheet(
 		XalanSourceTreeDOMSupport		theDOMSupport;
 
 		XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport);
+
+		theParserLiaison.setEntityResolver(m_entityResolver);
+		theParserLiaison.setErrorHandler(m_errorHandler);
 
 		// Hook the two together...
 		theDOMSupport.setParserLiaison(&theParserLiaison);
@@ -973,6 +937,8 @@ XalanTransformer::doTransform(
 
 		theParserLiaison.setExecutionContext(*m_stylesheetExecutionContext);
 
+		theParserLiaison.setEntityResolver(m_entityResolver);
+		theParserLiaison.setErrorHandler(m_errorHandler);
 		theParserLiaison.setUseValidation(m_useValidation);
 
 		// Create some more support objects...
