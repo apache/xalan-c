@@ -150,8 +150,9 @@ main(
 				else
 				{
 					// OK, let's evaluate the expression...
-					const NodeRefList	theResult =
-						theEvaluator.selectNodeList(
+					NodeRefList	theResult;
+				    theEvaluator.selectNodeList(
+                                theResult,
 								theDOMSupport,
 								theContextNode,
 								XalanDOMString(argv[3]).c_str(),

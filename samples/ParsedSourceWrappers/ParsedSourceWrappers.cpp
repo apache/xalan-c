@@ -171,7 +171,8 @@ transform()
 
 			const XalanDOMString	theInputFile("foo.xml");
 
-			const XalanDOMString	theURI(URISupport::getURLStringFromString(theInputFile));
+			XalanDOMString	theURI;
+            URISupport::getURLStringFromString(theInputFile, theURI);
 
 			const XSLTResultTarget	theResultTarget(cout);
 

@@ -47,7 +47,7 @@ XALAN_USING_XALAN(XalanDOMString)
 XALAN_USING_XALAN(XalanNode)
 XALAN_USING_XALAN(StaticStringToDOMString)
 XALAN_USING_XALAN(XObjectPtr)
-
+XALAN_USING_XALAN(MemoryManagerType)
 
 
 // This class defines a function that will return the square root
@@ -77,7 +77,9 @@ public:
 	{
 		if (args.size() != 1)
 		{
-			executionContext.error(getError(), context, locator);
+            XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+			executionContext.error(getError(theGuard.get()), context, locator);
 		}
 
 		assert(args[0].null() == false);	
@@ -103,9 +105,9 @@ public:
 #else
 	virtual FunctionSquareRoot*
 #endif
-	clone() const
+	clone(MemoryManagerType&  theManager) const
 	{
-		return new FunctionSquareRoot(*this);
+		return cloneFunction_1<FunctionSquareRoot>()( *this, theManager);
 	}
 
 protected:
@@ -117,10 +119,12 @@ protected:
 	 *
 	 * @return function error message
 	 */
-	const XalanDOMString
-	getError() const
+	const XalanDOMString&
+	getError(XalanDOMString& theResult) const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The square-root() function accepts one argument!"));
+        theResult.assign(XALAN_STATIC_UCODE_STRING("The square-root() function accepts one argument!"));
+
+		return theResult;
 	}
 
 private:
@@ -162,7 +166,9 @@ public:
 	{
 		if (args.size() != 1)
 		{
-			executionContext.error(getError(), context, locator);
+            XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+			executionContext.error(getError(theGuard.get()), context, locator);
 		}
 
 		assert(args[0].null() == false);	
@@ -188,9 +194,9 @@ public:
 #else
 	virtual FunctionCube*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new FunctionCube(*this);
+		return cloneFunction_1<FunctionCube>()(*this, theManager);
 	}
 
 protected:
@@ -202,10 +208,12 @@ protected:
 	 *
 	 * @return function error message
 	 */
-	const XalanDOMString
-	getError() const
+	const XalanDOMString&
+	getError(XalanDOMString& theResult) const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The cube() function accepts one argument!"));
+        theResult.assign(XALAN_STATIC_UCODE_STRING("The cube() function accepts one argument!"));
+
+		return theResult;
 	}
 
 private:
@@ -247,7 +255,9 @@ public:
 	{
 		if (args.empty() == false)
 		{
-			executionContext.error(getError(), context, locator);
+            XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+			executionContext.error(getError(theGuard.get()), context, locator);
 		}
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
@@ -286,9 +296,9 @@ public:
 #else
 	virtual FunctionAsctime*
 #endif
-	clone() const
+	clone(MemoryManagerType& theManager) const
 	{
-		return new FunctionAsctime(*this);
+		return cloneFunction_1<FunctionAsctime>()(*this, theManager);
 	}
 
 protected:
@@ -300,10 +310,12 @@ protected:
 	 *
 	 * @return function error message
 	 */
-	const XalanDOMString
-	getError() const
+	const XalanDOMString&
+	getError(XalanDOMString& theResult) const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The asctime() function accepts one argument!"));
+        theResult.assign(XALAN_STATIC_UCODE_STRING("The asctime() function accepts one argument!"));
+
+		return theResult;
 	}
 
 private:
