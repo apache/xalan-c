@@ -174,7 +174,11 @@ XercesDocumentWrapper::mapNode(const DOMNode*	theXercesNode) const
 		{
 			if (theXercesNode != m_xercesDocument &&
 					theXercesNode->getOwnerDocument() != m_xercesDocument &&
+#if defined(XALAN_OLD_STYLE_CASTS)
+				theXercesNode->getParentNode() != (const DOMNode*)m_xercesDocument)
+#else
 				theXercesNode->getParentNode() != static_cast<const DOMNode*>(m_xercesDocument))
+#endif
 			{
 				throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
 			}
