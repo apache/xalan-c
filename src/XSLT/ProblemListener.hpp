@@ -125,10 +125,8 @@ public:
 	 *                         (may be 0)
 	 * @param   msg            string message explaining the problem.
 	 * @param   uri            the URI of the document where the problem occurred.  May be 0.
-	 * @param   lineNo         line number where the problem occurred,  
-	 *                         if it is known, else -1
-	 * @param   charOffset     character offset where the problem,  
-	 *                         occurred if it is known, else -1
+	 * @param   lineNo         line number where the problem occurred.
+	 * @param   charOffset     character offset where the problem.
 	 */
 	virtual void
 	problem(

@@ -174,8 +174,8 @@ ElemForEach::processSortElement(
 			const AttributeListType&		atts,
 			const LocatorType*				locator)
 {
-	const int	lineNumber = locator != 0 ? locator->getLineNumber() : -1;
-	const int	columnNumber = locator != 0 ? locator->getColumnNumber() : -1;
+	const int	lineNumber = XalanLocator::getLineNumber(locator);
+	const int	columnNumber = XalanLocator::getColumnNumber(locator);
 
 	m_sortElems.reserve(m_sortElems.size() + 1);
 

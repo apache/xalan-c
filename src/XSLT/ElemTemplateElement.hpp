@@ -143,8 +143,8 @@ public:
 	ElemTemplateElement(
 			Stylesheet& 					stylesheetTree,
 			int 							xslToken,
-			int 							lineNumber = -1,
-			int 							columnNumber = -1);
+			int 							lineNumber = XalanLocator::getUnknownValue(),
+			int 							columnNumber = XalanLocator::getUnknownValue());
 
 	virtual
 	~ElemTemplateElement();
@@ -296,7 +296,6 @@ public:
 
 	/** 
 	 * Get the line number in the stylesheet where the element appears.
-	 * Returns -1 if the information is not available.
 	 *
 	 * @return the line number in the stylesheet
 	 */
@@ -308,7 +307,6 @@ public:
 
 	/** 
 	 * Get the column number in the stylesheet where the element appears.
-	 * Returns -1 if the information is not available.
 	 *
 	 * @return the column number in the stylesheet
 	 */
@@ -523,33 +521,6 @@ public:
 	virtual ElemTemplateElement*
 	appendChildElem(ElemTemplateElement*	newChild);
 
-	// Type-safe getters...
-
-	/**
-	 * Append a child.
-	 *
-	 * @param newChild the new child to insert
-	 * @param refChild the node before which to insert the new node
-	 *
-	 * @return newChild
-	 */
-	virtual ElemTemplateElement*
-	insertBeforeElem(
-			ElemTemplateElement*	newChild,
-			ElemTemplateElement*	refChild);
-
-	/**
-	 * Replace a child.
-	 *
-	 * @param newChild the new child to insert
-	 * @param oldChild the child to be replaced
-	 *
-	 * @return oldChild
-	 */
-	virtual ElemTemplateElement*
-	replaceChildElem(
-			ElemTemplateElement*	newChild,
-			ElemTemplateElement*	oldChild);
 
 	// These interfaces are inherited from XalanElement ...
 

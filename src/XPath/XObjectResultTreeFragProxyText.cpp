@@ -395,7 +395,7 @@ XObjectResultTreeFragProxyText::replaceData(
 
 
 XalanText*
-XObjectResultTreeFragProxyText::splitText(unsigned int		/* offset */)
+XObjectResultTreeFragProxyText::splitText(unsigned int	/* offset */)
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 

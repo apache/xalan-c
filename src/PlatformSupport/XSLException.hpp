@@ -88,8 +88,8 @@ public:
 	 * 
 	 * @param theMessage message to write when exception thrown
 	 * @param theURI the URI of the related document, if known
-	 * @param theLineNumber the line number of the related document, or -1 if not known
-	 * @param theColumnNumber the column number of the related document, or -1 if not known
+	 * @param theLineNumber the line number of the related document.
+	 * @param theColumnNumber the column number of the related document.
 	 * @param theType type of exception, default is "XSLException"
 	 */
 	XSLException(
@@ -158,7 +158,7 @@ public:
 	}
 
 	/**
-	 * Retrieve the line number, or -1 if unknown
+	 * Retrieve the line number.
 	 * 
 	 * @return the line number
 	 */
@@ -169,7 +169,7 @@ public:
 	}
 
 	/**
-	 * Retrieve the column number, or -1 if unknown
+	 * Retrieve the column number.
 	 * 
 	 * @return the column number
 	 */

@@ -337,7 +337,14 @@ Stylesheet::processKeyElement(
 			locator);
 	}
 
-	m_keyDeclarations.push_back(KeyDeclaration(*theQName, *matchAttr, *useAttr));
+	m_keyDeclarations.push_back(
+		KeyDeclaration(
+			*theQName,
+			*matchAttr,
+			*useAttr,
+			m_baseIdent,
+			XalanLocator::getLineNumber(locator),
+			XalanLocator::getColumnNumber(locator)));
 }
 
 
@@ -1416,15 +1423,14 @@ Stylesheet::processNSAliasElement(
 
 
 
-
 void
 Stylesheet::processDecimalFormatElement(
 			StylesheetConstructionContext&	constructionContext,
 			const AttributeListType&		atts,
 			const LocatorType*				locator)
 {
-	const int	lineNumber = locator != 0 ? locator->getLineNumber() : -1;
-	const int	columnNumber = locator != 0 ? locator->getColumnNumber() : -1;
+	const int	lineNumber = XalanLocator::getLineNumber(locator);
+	const int	columnNumber = XalanLocator::getColumnNumber(locator);
 
 	m_elemDecimalFormats.reserve(m_elemDecimalFormats.size() + 1);
 

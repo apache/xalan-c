@@ -509,8 +509,8 @@ XPathExecutionContextDefault::error(
 {
 	assert(m_xpathEnvSupport != 0);
 
-	XalanLocator::size_type		lineNumber = -1;
-	XalanLocator::size_type		columnNumber = -1;
+	XalanLocator::size_type		lineNumber = XalanLocator::getUnknownValue();
+	XalanLocator::size_type		columnNumber = XalanLocator::getUnknownValue();
 
 	XalanDOMString	uri;
 
@@ -572,8 +572,8 @@ XPathExecutionContextDefault::warn(
 {
 	assert(m_xpathEnvSupport != 0);
 
-	int					lineNumber = -1;
-	int					columnNumber = -1;
+	XalanLocator::size_type		lineNumber = XalanLocator::getUnknownValue();
+	XalanLocator::size_type		columnNumber = XalanLocator::getUnknownValue();
 
 	XalanDOMString	uri;
 
@@ -635,8 +635,8 @@ XPathExecutionContextDefault::message(
 {
 	assert(m_xpathEnvSupport != 0);
 
-	int					lineNumber = -1;
-	int					columnNumber = -1;
+	XalanLocator::size_type		lineNumber = XalanLocator::getUnknownValue();
+	XalanLocator::size_type		columnNumber = XalanLocator::getUnknownValue();
 
 	XalanDOMString	uri;
 

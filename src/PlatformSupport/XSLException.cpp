@@ -59,10 +59,6 @@
 
 
 
-#include <xercesc/sax/Locator.hpp>
-
-
-
 #include "XalanUnicode.hpp"
 #include "DOMStringHelper.hpp"
 
@@ -107,8 +103,8 @@ XSLException::XSLException(
 		const XalanDOMString&	theType) :
 	m_message(theMessage),
 	m_uri(),
-	m_lineNumber(size_type(-1)),
-	m_columnNumber(size_type(-1)),
+	m_lineNumber(XalanLocator::getUnknownValue()),
+	m_columnNumber(XalanLocator::getUnknownValue()),
 	m_type(theType)
 {
 }

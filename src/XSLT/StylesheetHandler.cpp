@@ -222,22 +222,6 @@ StylesheetHandler::processSpaceAttr(
 
 
 
-inline int
-getLineNumber(const LocatorType*	theLocator)
-{
-	return theLocator == 0 ? -1 : theLocator->getLineNumber();
-}
-
-
-
-inline int
-getColumnNumber(const LocatorType*	theLocator)
-{
-	return theLocator == 0 ? -1 : theLocator->getColumnNumber();
-}
-
-
-
 bool
 StylesheetHandler::processSpaceAttr(
 			const AttributeListType&	atts,
@@ -497,8 +481,8 @@ StylesheetHandler::startElement(
 							m_constructionContext,
 							m_stylesheet,
 							atts,
-							getLineNumber(locator),
-							getColumnNumber(locator)));
+							XalanLocator::getLineNumber(locator),
+							XalanLocator::getColumnNumber(locator)));
 					break;
 
 				case StylesheetConstructionContext::ELEMNAME_TEMPLATE:

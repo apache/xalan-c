@@ -681,22 +681,6 @@ StylesheetConstructionContextDefault::isValidQName(
 
 
 
-inline XMLSSize_t
-getLineNumber(const LocatorType*	theLocator)
-{
-	return theLocator == 0 ? -1 : theLocator->getLineNumber();
-}
-
-
-
-inline XMLSSize_t
-getColumnNumber(const LocatorType*	theLocator)
-{
-	return theLocator == 0 ? -1 : theLocator->getColumnNumber();
-}
-
-
-
 ElemTemplateElement*
 StylesheetConstructionContextDefault::createElement(
 			int							token,
@@ -704,8 +688,8 @@ StylesheetConstructionContextDefault::createElement(
 			const AttributeListType&	atts,
 			const LocatorType*			locator)
 {
-	const XMLSSize_t	lineNumber = getLineNumber(locator);
-	const XMLSSize_t	columnNumber = getColumnNumber(locator);
+	const XalanLocator::size_type	lineNumber = XalanLocator::getLineNumber(locator);
+	const XalanLocator::size_type	columnNumber = XalanLocator::getColumnNumber(locator);
 
 	ElemTemplateElement*	theElement = 0;
 
@@ -992,8 +976,8 @@ StylesheetConstructionContextDefault::createElement(
 			const AttributeListType&	atts,
 			const LocatorType*			locator)
 {
-	const XMLSSize_t	lineNumber = getLineNumber(locator);
-	const XMLSSize_t	columnNumber = getColumnNumber(locator);
+	const XalanLocator::size_type	lineNumber = XalanLocator::getLineNumber(locator);
+	const XalanLocator::size_type	columnNumber = XalanLocator::getColumnNumber(locator);
 
 	return m_elemLiteralResultAllocator.create(
 			*this,
@@ -1014,8 +998,8 @@ StylesheetConstructionContextDefault::createElement(
 			ExtensionNSHandler&			handler,
 			const LocatorType*			locator)
 {
-	const XMLSSize_t	lineNumber = getLineNumber(locator);
-	const XMLSSize_t	columnNumber = getColumnNumber(locator);
+	const XalanLocator::size_type	lineNumber = XalanLocator::getLineNumber(locator);
+	const XalanLocator::size_type	columnNumber = XalanLocator::getColumnNumber(locator);
 
 	m_allocatedElements.push_back(0);
 
@@ -1042,8 +1026,8 @@ StylesheetConstructionContextDefault::createElement(
             bool						disableOutputEscaping,
 			const LocatorType*			locator)
 {
-	const XMLSSize_t	lineNumber = getLineNumber(locator);
-	const XMLSSize_t	columnNumber = getColumnNumber(locator);
+	const XalanLocator::size_type	lineNumber = XalanLocator::getLineNumber(locator);
+	const XalanLocator::size_type	columnNumber = XalanLocator::getColumnNumber(locator);
 
 	return m_elemTextLiteralAllocator.create(
 			*this,

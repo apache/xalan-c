@@ -1083,8 +1083,8 @@ XSLTEngineImpl::problem(
 
 	XalanDOMString			uri;
 
-	int						lineNumber = -1;
-	int 					columnNumber = -1;
+	int						lineNumber = XalanLocator::getUnknownValue();
+	int 					columnNumber = XalanLocator::getUnknownValue();
 
 	const LocatorType*		locator = getLocatorFromStack();
 
