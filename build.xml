@@ -106,9 +106,9 @@
 
   <!-- pack all doc for transfer to website -->
  <target name="pack.docs">
-    <tar tarfile="./build/xalan-c-docs.tar" basedir="./build/docs" includes="**"/>
-    <gzip src="./build/xalan-c-docs.tar" zipfile="./build/xalan-c-docs.tar.gz"/>
-    <!--zip zipfile="./build/xalan-c-apidocs.zip" basedir="./build/docs/apidocs" includes="*"/-->
+    <!--tar tarfile="./build/xalan-c-docs.tar" basedir="./build/docs" includes="**"/>
+    <gzip src="./build/xalan-c-docs.tar" zipfile="./build/xalan-c-docs.tar.gz"/-->
+    <zip zipfile="./build/xalan-c-docs.zip" basedir="./xml-site" includes="**" excludes="apidocs/*"/>
   </target>
 
   
