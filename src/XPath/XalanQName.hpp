@@ -182,6 +182,12 @@ public:
 			   getNamespace() == theRHS.getNamespace();
 	}
 
+	XalanDOMString::size_type
+	hash() const
+	{
+		return getLocalPart().hash() % getNamespace().hash();
+	}
+
 	class XALAN_XPATH_EXPORT PrefixResolverProxy : public PrefixResolver
 	{
 	public:
