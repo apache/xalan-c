@@ -1,5 +1,5 @@
 <s3 title="Version of &xml4c; to use"> 
-<p>&xslt4c-current; has been tested with &xml4c-used;. The &xslt4c-current; Windows32 download includes xerces-c_1_2.dll. The &xslt4c-current; Linux download includes libxerces-c_1_2.so. For information about including The Xerces-C++ dynamic link or shared object library on the path, see <link idref="getstarted" anchor="path">Setting up the system path</link>.</p>
+<p>&xslt4c-current; has been tested with &xml4c-used;. The &xslt4c-current; Windows32 download includes &xml4c-windll;. The &xslt4c-current; Linux download includes &xml4c-linuxlib;. For information about including The Xerces-C++ dynamic link or shared object library on the path, see <link idref="getstarted" anchor="path">Setting up the system path</link>.</p>
 <p><em>Important</em> You may experience unpredictable anomalies if your Xalan and Xerces builds are not in synch. If you download an update to Xalan, check the release notes to determine which version of Xerces you should use.</p>
 </s3><anchor name="to-do"/>
 <s3 title="To-do tasks for future &xslt4c; releases">
