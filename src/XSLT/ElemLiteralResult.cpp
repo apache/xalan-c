@@ -166,7 +166,7 @@ ElemLiteralResult::init(
 				if(ns == 0)
 				{
 					constructionContext.error(
-						"Cannot resolve namespace prefix",
+						"Undeclared namespace prefix",
 						0,
 						this);
 				}
