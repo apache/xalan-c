@@ -169,6 +169,6 @@ XBoolean::initialize()
 void
 XBoolean::terminate()
 {
-	clear(s_falseString);
-	clear(s_trueString);
+	releaseMemory(s_falseString);
+	releaseMemory(s_trueString);
 }

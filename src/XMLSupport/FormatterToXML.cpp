@@ -1452,27 +1452,27 @@ FormatterToXML::initialize()
 void
 FormatterToXML::terminate()
 {
-	clear(::s_defaultMIMEEncoding);
+	releaseMemory(::s_defaultMIMEEncoding);
 
-	clear(::s_doctypeHeaderStartString);
+	releaseMemory(::s_doctypeHeaderStartString);
 
-	clear(::s_doctypeHeaderPublicString);
+	releaseMemory(::s_doctypeHeaderPublicString);
 
-	clear(::s_doctypeHeaderSystemString);
+	releaseMemory(::s_doctypeHeaderSystemString);
 
-	clear(::s_defaultVersionString);
+	releaseMemory(::s_defaultVersionString);
 
-	clear(::s_xmlHeaderStartString);
+	releaseMemory(::s_xmlHeaderStartString);
 
-	clear(::s_xmlHeaderEncodingString);
+	releaseMemory(::s_xmlHeaderEncodingString);
 
-	clear(::s_xmlHeaderStandaloneString);
+	releaseMemory(::s_xmlHeaderStandaloneString);
 
-	clear(::s_xmlHeaderEndString);
+	releaseMemory(::s_xmlHeaderEndString);
 
-	clear(::s_xhtmlDocType);
+	releaseMemory(::s_xhtmlDocType);
 
-	clear(::s_iso88591String);	
+	releaseMemory(::s_iso88591String);	
 
-	clear(::s_dtdCDATACloseString);
+	releaseMemory(::s_dtdCDATACloseString);
 }

@@ -167,6 +167,6 @@ XUnknown::initialize()
 void
 XUnknown::terminate()
 {
-	clear(s_unknownVariableString);
-	clear(s_unknownString);
+	releaseMemory(s_unknownVariableString);
+	releaseMemory(s_unknownString);
 }

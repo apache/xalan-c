@@ -1471,12 +1471,12 @@ XPath::initialize()
 void
 XPath::terminate()
 {
-	clear(::PSEUDONAME_ANY);
-	clear(::PSEUDONAME_ROOT);
-	clear(::PSEUDONAME_TEXT);
-	clear(::PSEUDONAME_COMMENT);
-	clear(::PSEUDONAME_PI);
-	clear(::PSEUDONAME_OTHER);
+	releaseMemory(::PSEUDONAME_ANY);
+	releaseMemory(::PSEUDONAME_ROOT);
+	releaseMemory(::PSEUDONAME_TEXT);
+	releaseMemory(::PSEUDONAME_COMMENT);
+	releaseMemory(::PSEUDONAME_PI);
+	releaseMemory(::PSEUDONAME_OTHER);
 
 	s_functions.DestroyTable();
 }

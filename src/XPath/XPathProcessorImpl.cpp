@@ -2597,16 +2597,16 @@ XPathProcessorImpl::terminate()
 	AxisNamesMapType().swap(::s_axisNames);
 	NodeTypesMapType().swap(::s_nodeTypes);
 
-	clear(::s_functionIDString);
-	clear(::s_functionKeyString);
-	clear(::s_orString);
-	clear(::s_andString);
-	clear(::s_divString);
-	clear(::s_modString);
-	clear(::s_quoString);
-	clear(::s_dotString);
-	clear(::s_dotDotString);
-	clear(::s_axisString);
-	clear(::s_attributeString);
-	clear(::s_childString);
+	releaseMemory(::s_functionIDString);
+	releaseMemory(::s_functionKeyString);
+	releaseMemory(::s_orString);
+	releaseMemory(::s_andString);
+	releaseMemory(::s_divString);
+	releaseMemory(::s_modString);
+	releaseMemory(::s_quoString);
+	releaseMemory(::s_dotString);
+	releaseMemory(::s_dotDotString);
+	releaseMemory(::s_axisString);
+	releaseMemory(::s_attributeString);
+	releaseMemory(::s_childString);
 }

@@ -2012,17 +2012,17 @@ FormatterToHTML::terminate()
 
 	XalanEntityReferenceType().swap(::s_xalanHTMLEntities);
 
-	clear(::s_doctypeHeaderStartString);
+	releaseMemory(::s_doctypeHeaderStartString);
 
-	clear(::s_doctypeHeaderPublicString);
+	releaseMemory(::s_doctypeHeaderPublicString);
 
-	clear(::s_doctypeHeaderSystemString);
+	releaseMemory(::s_doctypeHeaderSystemString);
 
-	clear(::s_scriptString);
+	releaseMemory(::s_scriptString);
 
-	clear(::s_styleString);
+	releaseMemory(::s_styleString);
 
-	clear(::s_fnofString);
+	releaseMemory(::s_fnofString);
 
-	clear(::s_metaString);		
+	releaseMemory(::s_metaString);		
 }
