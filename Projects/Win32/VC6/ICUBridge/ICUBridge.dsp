@@ -100,6 +100,10 @@ SOURCE=..\..\..\..\src\ICUBridge\ICUBridge.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCollationCompareFunctor.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\ICUBridge\ICUXalanNumberFormatFactory.cpp
 # End Source File
 # Begin Source File
@@ -117,6 +121,10 @@ SOURCE=..\..\..\..\src\ICUBridge\FunctionICUFormatNumber.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\ICUBridge\ICUBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCollationCompareFunctor.hpp
 # End Source File
 # Begin Source File
 

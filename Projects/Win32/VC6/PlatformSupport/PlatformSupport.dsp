@@ -162,6 +162,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\Writer.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanBitmap.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormat.cpp
 # End Source File
 # Begin Source File
@@ -180,6 +184,14 @@ SOURCE=..\..\..\..\src\PlatformSupport\XSLException.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\ArenaAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\ArenaBlock.hpp
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\AttributeListImpl.hpp
@@ -238,6 +250,14 @@ SOURCE=..\..\..\..\src\PlatformSupport\Resettable.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\ReusableArenaAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\ReusableArenaBlock.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\StdBinInputStream.hpp
 # End Source File
 # Begin Source File
@@ -259,6 +279,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\URISupport.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\Writer.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanBitmap.hpp
 # End Source File
 # Begin Source File
 
