@@ -88,6 +88,7 @@
 #include <xalanc/PlatformSupport/PrintWriter.hpp>
 #include <xalanc/PlatformSupport/StringTokenizer.hpp>
 #include <xalanc/PlatformSupport/XalanLocator.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
 
@@ -264,7 +265,7 @@ XSLTEngineImpl::process(
 
 	if (0 == stylesheetSource.getSystemId())
 	{
-		xslIdentifier = XALAN_STATIC_UCODE_STRING("Input XSL");
+		xslIdentifier = XalanMessageLoader::getMessage(XalanMessages::InputXSL);
 	}
 	else
 	{
@@ -368,7 +369,7 @@ XSLTEngineImpl::process(
 
 	if(0 == m_stylesheetRoot)
 	{
-		error(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Failed to process stylesheet!")));
+		error(XalanMessageLoader::getMessage(XalanMessages::FailedToProcessStylesheet));
 	}
 	else if(0 != sourceTree)
 	{
@@ -391,7 +392,7 @@ XSLTEngineImpl::process(
 
 	if(m_diagnosticsPrintWriter != 0)
 	{
-		displayDuration(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Total time")), &totalTimeID);
+		displayDuration(XalanMessageLoader::getMessage(XalanMessages::TotalTime), &totalTimeID);
 	}
 }
 
@@ -416,7 +417,7 @@ XSLTEngineImpl::process(
 	{
 		if (m_stylesheetRoot == 0)
 		{
-			error(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("No stylesheet is available to process!")));
+			error(XalanMessageLoader::getMessage(XalanMessages::NoStylesheet));
 		}
 
 		FormatterListener* const	theFormatter =
@@ -436,7 +437,7 @@ XSLTEngineImpl::process(
 
 	if(m_diagnosticsPrintWriter != 0)
 	{
-		displayDuration(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Total time")), &totalTimeID);
+		displayDuration(XalanMessageLoader::getMessage(XalanMessages::TotalTime), &totalTimeID);
 	}
 }
 
@@ -478,11 +479,11 @@ XSLTEngineImpl::processStylesheet(
 
 			if (theType != XalanNode::ELEMENT_NODE && theType != XalanNode::DOCUMENT_NODE)
 			{
-				error(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Compiling a stylesheet from a DOM instance requires a Document or Element node")));
+				error(XalanMessageLoader::getMessage(XalanMessages::CompilingDOMStylesheetReqDocument));
 			}
 			else
 			{
-				xslIdentifier = XALAN_STATIC_UCODE_STRING("Input XSL");
+				xslIdentifier = XalanMessageLoader::getMessage(XalanMessages::InputXSL);
 
 				FormatterTreeWalker tw(stylesheetProcessor);
 
@@ -509,7 +510,7 @@ XSLTEngineImpl::processStylesheet(
 
 			if(m_diagnosticsPrintWriter != 0)
 			{
-				diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") + xslIdentifier + XALAN_STATIC_UCODE_STRING(" =========="));
+				diag(XalanMessageLoader::getMessage(XalanMessages::Parsing_1Param, xslIdentifier));
 
 				pushTime(&xslIdentifier);
 			}
@@ -519,7 +520,7 @@ XSLTEngineImpl::processStylesheet(
 
 			if(m_diagnosticsPrintWriter != 0)
 			{
-				displayDuration(XALAN_STATIC_UCODE_STRING("Parse of ") + xslIdentifier, &xslIdentifier);
+				displayDuration(XalanMessageLoader::getMessage(XalanMessages::ParseOf_1Param, xslIdentifier),&xslIdentifier);
 			}
 		}
 
@@ -544,15 +545,14 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 	{
 		const XalanDOMString	xmlIdentifier = 0 != inputSource.getSystemId() ?
 												XalanDOMString(inputSource.getSystemId()) :
-												StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Input XML"));
+												XalanMessageLoader::getMessage(XalanMessages::InputXML);
 
 		if(m_diagnosticsPrintWriter != 0)
 		{
 			// In case we have a fragment identifier, go ahead and 
 			// try to parse the XML here.
-			diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") +
-						xmlIdentifier +
-						XALAN_STATIC_UCODE_STRING(" =========="));
+
+			diag(XalanMessageLoader::getMessage(XalanMessages::Parsing_1Param, xmlIdentifier));
 
 			pushTime(&xmlIdentifier);
 		}
@@ -572,7 +572,7 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 		if(0 != m_diagnosticsPrintWriter)
 		{
 			displayDuration(
-				XALAN_STATIC_UCODE_STRING("Parse of ") + xmlIdentifier,
+				XalanMessageLoader::getMessage(XalanMessages::ParseOf_1Param, xmlIdentifier),
 				&xmlIdentifier);
 		}
 
@@ -730,7 +730,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 			}
 			else
 			{
-				error("Could not identify fragment: " + fragID);
+				error(XalanMessageLoader::getMessage(XalanMessages::CantFindFragment_1Param, fragID));
 			}
 		}
 
@@ -790,7 +790,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		if(nl.getLength() == 0)
 		{
-			error("Could not find fragment: " + fragID);
+			error(XalanMessageLoader::getMessage(XalanMessages::CantFindFragment_1Param,fragID));
 		}
 
 		XalanNode* const	frag = nl.item(0);
@@ -837,7 +837,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 			if(m_diagnosticsPrintWriter != 0)
 			{
 				displayDuration(
-						XalanDOMString(XALAN_STATIC_UCODE_STRING("Setup of ")) + localXSLURLString,
+						XalanMessageLoader::getMessage(XalanMessages::SetupOf_1Param,localXSLURLString),
 						frag);
 			}
 
@@ -849,15 +849,14 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		{
 			stylesheetDoc = 0;
 
-			error("Node pointed to by fragment identifier was not an element: " + fragID);
+			error(XalanMessageLoader::getMessage(XalanMessages::NodePointedByFragment,fragID));
 		}
 	}
 	else
 	{
 		if(m_diagnosticsPrintWriter != 0)
 		{
-			diag(XalanDOMString(XALAN_STATIC_UCODE_STRING("========= Parsing and preparing ")) +
-					localXSLURLString +
+			diag(XalanMessageLoader::getMessage(XalanMessages::ParsingAndPreparing_1Param,localXSLURLString) + 
 					XALAN_STATIC_UCODE_STRING(" =========="));
 			pushTime(&localXSLURLString);
 		}
@@ -936,7 +935,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		if(m_diagnosticsPrintWriter != 0)
 		{
-			displayDuration("Parsing and init of " + localXSLURLString, &localXSLURLString);
+			displayDuration(XalanMessageLoader::getMessage(XalanMessages::ParsingAndInitOf_1Param, localXSLURLString),&localXSLURLString);
+
 		}
 	}
 
@@ -2064,9 +2064,8 @@ XSLTEngineImpl::warnCopyTextNodesOnly(
 			const XalanNode*	sourceNode,
 			const LocatorType*	locator)
 {
-	warn(
-			"Only text nodes can be copied in this context.  The node is ignored",
-			locator,
+	warn(XalanMessageLoader::getMessage(XalanMessages::OnlyTextNodesCanBeCopied),
+			*locator,
 			sourceNode);
 }
 
@@ -2293,8 +2292,8 @@ XSLTEngineImpl::cloneToResultTree(
 			else
 			{
 				warn(
-					"Attempting to add an attribute when there is no open element.  The attribute will be ignored",
-					locator,
+					XalanMessageLoader::getMessage(XalanMessages::WrongAttemptingToAddAttrinbute),
+					*locator,
 					&node);
 			}
 			break;
@@ -2324,7 +2323,7 @@ XSLTEngineImpl::cloneToResultTree(
 		break;
 
 		default:
-			error("Cannot create item in result tree", locator, &node);
+			error(XalanMessageLoader::getMessage(XalanMessages::CantCreateItemInResultTree), *locator, &node);
 		break;
 		}
 	}
@@ -2585,7 +2584,7 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 
 				if(elemNS == 0)
 				{
-					error("Prefix must resolve to a namespace: " + prefix);
+					error(XalanMessageLoader::getMessage(XalanMessages::PrefixMustResolveToNamespace_1Param,prefix));
 				}
 				else
 				{
@@ -3423,7 +3422,7 @@ XSLTEngineImpl::initialize()
 
 	::s_typeString = XALAN_STATIC_UCODE_STRING("type");
 
-	::s_hrefString = XALAN_STATIC_UCODE_STRING("href");
+	::s_hrefString = Constants::ATTRNAME_HREF;
 
 	::s_piTokenizerString = XALAN_STATIC_UCODE_STRING(" \t=");
 

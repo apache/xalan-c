@@ -354,7 +354,7 @@ ElemAttribute::execute(StylesheetExecutionContext&	executionContext) const
 					{
 						// Could not resolve prefix
 						executionContext.warn(
-							"Warning: Could not resolve prefix",
+							XalanMessageLoader::getMessage(XalanMessages::CouldNotResolvePrefix),
 							executionContext.getCurrentNode(),
 							getLocator());
 					}

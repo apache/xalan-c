@@ -115,18 +115,22 @@ public:
 	static const XalanDOMString&	ELEMNAME_FOREACH_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_HTML_STRING;
 	static const XalanDOMString&	ELEMNAME_IF_WITH_PREFIX_STRING;
+	static const XalanDOMString&	ELEMNAME_IMPORT_WITH_PREFIX_STRING;
+	static const XalanDOMString&	ELEMNAME_INCLUDE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_KEY_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_MESSAGE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_NUMBER_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_OTHERWISE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_SORT_WITH_PREFIX_STRING;
+	static const XalanDOMString&	ELEMNAME_STRIPSPACE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_TEMPLATE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_TEXT_WITH_PREFIX_STRING;
+	static const XalanDOMString&	ELEMNAME_PARAM_WITH_PREFIX_STRING;
+	static const XalanDOMString&	ELEMNAME_PRESERVESPACE_WITH_PREFIX_STRING;
+	static const XalanDOMString&	ELEMNAME_PI_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_VALUEOF_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_VARIABLE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_WHEN_WITH_PREFIX_STRING;
-	static const XalanDOMString&	ELEMNAME_PARAM_WITH_PREFIX_STRING;
-	static const XalanDOMString&	ELEMNAME_PI_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_WITHPARAM_WITH_PREFIX_STRING;
   
 	/*---------------------------------------------

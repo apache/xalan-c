@@ -244,11 +244,11 @@ TraceListenerDefault::selected(const SelectionEvent&	ev)
 
 			if(parent == ete.getStylesheet().getStylesheetRoot().getDefaultRootRule())
 			{
-				m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::DefaultRootRule_1Param,"root"));
+				m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::DefaultRootRule));
 			}
 			else if(parent == ete.getStylesheet().getStylesheetRoot().getDefaultTextRule())
 			{
-				m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::DefaultRootRule_1Param,"text"));
+				m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::DefaultRootRule_1Param,Constants::ATTRNAME_DATATYPE));
 			}
 			else if(parent == ete.getStylesheet().getStylesheetRoot().getDefaultRule())
 			{
@@ -361,17 +361,15 @@ TraceListenerDefault::printNodeInfo(const ElemTemplateElement&	node)
 {
 	const XalanDOMString&	uri = node.getURI();
 
-	m_printWriter.print(XALAN_STATIC_UCODE_STRING("Line #"));
-	m_printWriter.print(node.getLineNumber());
-	m_printWriter.print(XALAN_STATIC_UCODE_STRING(", "));
-	m_printWriter.print(XALAN_STATIC_UCODE_STRING("Column #"));
-	m_printWriter.print(node.getColumnNumber());
+	m_printWriter.print(XalanMessageLoader::getMessage(
+		XalanMessages::TextAndColumnNumber_2Param
+		,LongToDOMString(node.getLineNumber())
+		,LongToDOMString(node.getColumnNumber())));
 
 	if (uri.length() != 0)
 	{
-		m_printWriter.print(XALAN_STATIC_UCODE_STRING(", ("));
-		m_printWriter.print(uri);
-		m_printWriter.print(XALAN_STATIC_UCODE_STRING(")"));
+		m_printWriter.print(XalanMessageLoader::getMessage(
+			XalanMessages::CommaAndBrackets_1Param,uri));
 	}
 }
 

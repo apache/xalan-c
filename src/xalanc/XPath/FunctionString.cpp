@@ -95,7 +95,7 @@ FunctionString::execute(
 	if (context == 0)
 	{
 		executionContext.error(
-				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param, "string()"),
+			XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param, "string"),
 				context,
 				locator);
 

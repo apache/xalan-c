@@ -341,6 +341,16 @@
 		<target>The attribute name '{0}' is not a valid QName</target>
 </trans-unit>
 
+<trans-unit id="IsNotValidQName_1Param">
+		<source>'{0}' is not a valid QName</source>
+		<target>'{0}' is not a valid QName</target>
+</trans-unit>
+
+<trans-unit id="IsNotValidNCName_1Param">
+		<source>'{0}' is not a valid NCName</source>
+		<target>'{0}' is not a valid NCName</target>
+</trans-unit>
+
 <trans-unit id="AttributeValueNotValidQName_2Param">
 		<source>The attribute '{0}' has a value '{1}' which is not a valid QName</source>
 		<target>The attribute '{0}' has a value '{1}' which is not a valid QName</target>
@@ -695,11 +705,51 @@
 		<target>Line {0}, Column {0} ,</target>
 </trans-unit>
 
+<trans-unit id="CommaAndBrackets_1Param">
+		<source>, ({0})</source>
+		<target>, ({0})</target>
+</trans-unit>
+
+<trans-unit id="CouldNotResolvePrefix">
+		<source>Warning: Could not resolve prefix</source>
+		<target>Warning: Could not resolve prefix</target>
+</trans-unit>
+
 <trans-unit id="MatchIs_1Param">
 		<source>  match="{0}"  </source>
 		<target>  match="{0}"  </target>
 </trans-unit>
         	
+<trans-unit id="Warning2">
+		<source>Warning </source>
+		<target>Warning </target>
+</trans-unit>
+
+<trans-unit id="AtFileLineColumn_3Param">
+		<source> at (file {0} , line {1} , column {2} ): </source>
+		<target> at (file {0} , line {1} , column {2} ): </target>
+</trans-unit>
+
+<trans-unit id="FatalError">
+		<source>Fatal Error</source>
+		<target>Fatal Error</target>
+</trans-unit>
+
+<trans-unit id="FormatNumberFailed_1Param">
+		<source>ICUBridge::FormatNumber failed ({0})</source>
+		<target>ICUBridge::FormatNumber failed ({0})</target>
+</trans-unit>
+
+<trans-unit id="UnknownMatchOperation">
+		<source>unknown match operation!</source>
+		<target>unknown match operation!</target>
+</trans-unit>
+
+<trans-unit id="AtUnknownFileLineColumn_2Param">
+		<source> at (unknown file , line {1} , column {2} ): </source>
+		<target> at (unknown file , line {1} , column {2} ): </target>
+</trans-unit>
+
 <trans-unit id="EmptyNodeList">
 		<source>[empty node list]</source>
 		<target>[empty node list]</target>
@@ -708,6 +758,11 @@
 <trans-unit id="DefaultRootRule_1Param">
 		<source>(default {0} rule)</source>
 		<target>(default {0} rule)</target>
+</trans-unit>
+
+<trans-unit id="DefaultRootRule">
+		<source>(default root rule)</source>
+		<target>(default root rule)</target>
 </trans-unit>
 
 <trans-unit id="Equal_3Param">
@@ -993,6 +1048,11 @@
 		<target>Error opening file: </target>
 </trans-unit>
 
+<trans-unit id="Error2">
+		<source>Error </source>
+		<target>Error </target>
+</trans-unit>
+
 <trans-unit id="ErrorWritingToStdStream">
 		<source>Error writing to standard stream</source>
 		<target>Error writing to standard stream</target>
@@ -1023,6 +1083,25 @@
 		<target>Input XML</target>
 </trans-unit>
 
+<trans-unit id="XslSortMustBeAscendOrDescend">
+		<source>xsl:sort order must be 'ascending' or 'descending'</source>
+		<target>xsl:sort order must be 'ascending' or 'descending'</target>
+</trans-unit>
+
+<trans-unit id="XslSortDataTypeMustBe">
+		<source>xsl:sort data-type must be 'text', 'number' or a prefixed name</source>
+		<target>xsl:sort data-type must be 'text', 'number' or a prefixed name</target>
+</trans-unit>
+
+<trans-unit id="XslSortHasUnlnownDataType">
+		<source>xsl:sort has an unknown data-type.  The data-type will be 'text'</source>
+		<target>xsl:sort has an unknown data-type.  The data-type will be 'text'</target>
+</trans-unit>
+
+<trans-unit id="XslSortCaseOrderMustBe">
+		<source>xsl:sort case-order must be 'upper-first' or 'lower-first'</source>
+		<target>xsl:sort case-order must be 'upper-first' or 'lower-first'</target>
+</trans-unit>
     </body>
   </file>
 </xliff>  	

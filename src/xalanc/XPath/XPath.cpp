@@ -123,12 +123,12 @@ XPath::unknownOpCodeError(
 			XPathExecutionContext&	executionContext,
 			int						opPos) const
 {
-	XalanDOMString	theMessage("Unknown op code: ");
+	XalanDOMString	theOpCode;
 			
-	LongToDOMString(m_expression.getOpCodeMapValue(opPos), theMessage);
+	LongToDOMString(m_expression.getOpCodeMapValue(opPos), theOpCode);
 
 	executionContext.error(
-			theMessage,
+			XalanMessageLoader::getMessage(XalanMessages::UnknownOpCode_1Param,theOpCode),
 			context,
 			m_locator);
 }
@@ -141,7 +141,7 @@ XPath::notNodeSetError(
 			XPathExecutionContext&	executionContext) const
 {
 	executionContext.error(
-		"The expression does not evaluate to a node-set",
+		XalanMessageLoader::getMessage(XalanMessages::ExpressionDoesNotEvaluateToNodeSet),
 		context,
 		m_locator);
 }
@@ -3237,7 +3237,9 @@ XPath::stepPattern(
 		break;
 
 	default:
-		executionContext.error(TranscodeFromLocalCodePage("unknown match operation!"), context, getLocator());
+		executionContext.error(
+			XalanMessageLoader::getMessage(XalanMessages::UnknownMatchOperation)
+			, context, getLocator());
 		break;
 	}
 
@@ -4452,7 +4454,8 @@ XPath::nodeTest(
 			}
 			else
 			{
-				executionContext.error(TranscodeFromLocalCodePage("Arg length of processing-instruction() node test is incorrect!"), context, getLocator());
+
+				executionContext.error(XalanMessageLoader::getMessage(XalanMessages::ArgLengthNodeTestIsIncorrect_1Param, "processing-instruction()"), context, getLocator());
 			}
 		}
 
@@ -4823,7 +4826,8 @@ XPath::NodeTester::NodeTester(
 		}
 		else
 		{
-			executionContext.error(TranscodeFromLocalCodePage("Arg length of processing-instruction() node test is incorrect!"), 0, xpath.getLocator());
+
+			executionContext.error(XalanMessageLoader::getMessage(XalanMessages::ArgLengthNodeTestIsIncorrect_1Param, "processing-instruction()"), 0, xpath.getLocator());
 		}
 		break;
 

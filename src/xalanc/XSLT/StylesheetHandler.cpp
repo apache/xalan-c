@@ -366,7 +366,7 @@ StylesheetHandler::startElement(
 					{
 						if (m_elemStack.empty() == true)
 						{
-							error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInThisPosition_1Param,"xsl:sort"), locator);
+							error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInThisPosition_1Param,Constants::ELEMNAME_SORT_WITH_PREFIX_STRING), locator);
 						}
 
 						ElemTemplateElement* const	theElement =
@@ -391,7 +391,7 @@ StylesheetHandler::startElement(
 					{
 						if (m_elemStack.empty() == true)
 						{
-							error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInThisPosition_1Param,"xsl:apply-imports"), locator);
+							error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInThisPosition_1Param,Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING), locator);
 						}
 
 						ElemTemplateElement* const	theElement =
@@ -403,7 +403,7 @@ StylesheetHandler::startElement(
 
 						if (parentToken == StylesheetConstructionContext::ELEMNAME_FOR_EACH)
 						{
-							error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInThisPosition_1Param,"xsl:apply-imports"), locator);
+							error(XalanMessageLoader::getMessage(XalanMessages::IsNotAllowedInThisPosition_1Param,Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING), locator);
 						}
 
 						elem = m_constructionContext.createElement(
@@ -435,7 +435,8 @@ StylesheetHandler::startElement(
 
 						if(StylesheetConstructionContext::ELEMNAME_CHOOSE != parent->getXSLToken())
 						{
-							error(XalanMessageLoader::getMessage(XalanMessages::NotParentedBy_2Param,"xsl:when","xsl:choose"), locator);
+							error(XalanMessageLoader::getMessage(XalanMessages::NotParentedBy_2Param,
+								Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING,Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING), locator);
 						}
 						else
 						{
@@ -454,7 +455,7 @@ StylesheetHandler::startElement(
 							}
 							else
 							{
-								error(XalanMessageLoader::getMessage(XalanMessages::Misplaced_1Param,"xsl:when"), locator);
+								error(XalanMessageLoader::getMessage(XalanMessages::Misplaced_1Param,Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING), locator);
 							}
 						}
 					}
@@ -466,7 +467,9 @@ StylesheetHandler::startElement(
 
 						if(StylesheetConstructionContext::ELEMNAME_CHOOSE != parent->getXSLToken())
 						{
-							error(XalanMessageLoader::getMessage(XalanMessages::NotParented_2Param,"xsl:otherwise","xsl:choose"), locator);
+							error(XalanMessageLoader::getMessage(XalanMessages::NotParented_2Param
+								,Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING
+								,Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING), locator);
 						}
 						else
 						{
@@ -1060,8 +1063,9 @@ StylesheetHandler::processPreserveStripSpace(
 		error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::ElementRequiresAttribute_2Param,
-				isPreserveSpace == true ? "xsl:preserve-space" : "xsl:strip-space",
-				"elements"),
+				isPreserveSpace == true ? 
+				Constants::ELEMNAME_PRESERVESPACE_WITH_PREFIX_STRING : Constants::ELEMNAME_STRIPSPACE_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_ELEMENTS),
 			locator);
 	}
 }
@@ -1245,8 +1249,8 @@ StylesheetHandler::processImport(
 		error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::ElementRequiresAttribute_2Param,
-				"xsl:import",
-				"href"),
+				Constants::ELEMNAME_IMPORT_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_HREF),
 			locator);
 	}
 }
@@ -1302,8 +1306,8 @@ StylesheetHandler::processInclude(
 		error(
 			XalanMessageLoader::getMessage(
 				XalanMessages::ElementRequiresAttribute_2Param,
-				"xsl:include",
-				"href"),
+				Constants::ELEMNAME_INCLUDE_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_HREF),
 			locator);
 	}
 }

@@ -107,7 +107,7 @@ ElemMessage::ElemMessage(
 			else if (equals(avalue, Constants::ATTRVAL_NO) == false)
 			{
 				constructionContext.error(
-					XalanMessageLoader::getMessage(XalanMessages::AttributeHasIllegalValue_1Param,"terminate"),
+					XalanMessageLoader::getMessage(XalanMessages::AttributeHasIllegalValue_1Param,Constants::ATTRNAME_TERMINATE),
 					0,
 					this);
 			}

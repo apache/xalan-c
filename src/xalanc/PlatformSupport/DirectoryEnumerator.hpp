@@ -72,6 +72,7 @@
 
 
 
+#include <cstring>
 #include <functional>
 #include <iterator>
 
@@ -155,7 +156,7 @@ public:
 	}
 };
 
-#else
+#elif defined(XALAN_POSIX2_AVAILABLE)
 
 struct FindFileStruct : public dirent
 {
@@ -176,33 +177,37 @@ public:
 	 *
 	 * @return true if file is a directory
 	 */
-	bool isDirectory() const
+	bool isDirectory(const char*	theParentPath) const
 	{
-#if defined(AIX) || defined(HPUX) || defined(SOLARIS) || defined(OS390) || defined(OS400) || defined(TRU64)
-		return false;
-#else		
-		if (d_type == DT_DIR || d_type == DT_UNKNOWN)
+		bool	fIsDir = false;
+
+		char	theBuffer[5000];
+
+		getcwd(theBuffer, sizeof(theBuffer) / sizeof(theBuffer[0]) - 1);
+
+		strcat(theBuffer, "/");
+		strcat(theBuffer, getName());
+
+		if (chdir(theBuffer) == 0)
 		{
-			return true;
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+			using std::strrchr;
+#endif
+
+			*strrchr(theBuffer, '/') = '\0';
+
+			chdir(theBuffer);
+
+			fIsDir = true;
 		}
-		else
-		{
-			return false;
-		}
-#endif		
+
+		return fIsDir;
 	}
 
 	bool
 	isSelfOrParent() const
 	{
-#if defined(AIX) || defined(HPUX) || defined(SOLARIS) || defined(OS390) || defined(OS400) || defined(TRU64)
-		return false;
-#else		
-		if (isDirectory() == false)
-		{
-			return false;
-		}
-		else if (d_name[0] == '.')
+		if (d_name[0] == '.')
 		{
 			if (d_name[1] == '\0')
 			{
@@ -218,14 +223,13 @@ public:
 				return false;
 			}
 		}
-		else
-		{
-			return false;
-		}
-#endif
+
+		return false;
 	}
 };
 
+#else
+	#error Unsupported platform!
 #endif
 
 
@@ -257,7 +261,6 @@ struct FilesOnlyFilterPredicate : public std::unary_function<FindFileStruct, boo
 		DirectoryFilterPredicate		theDirectoryPredicate;
 
 		return !theDirectoryPredicate(theFindData);
-			   
 	}
 };
 
@@ -311,7 +314,7 @@ EnumerateDirectory(
 	}
 
 	
-#elif defined(LINUX)
+#elif defined(XALAN_POSIX2_AVAILABLE)
 
 	CharVectorType	theTargetVector;
 
@@ -367,8 +370,7 @@ EnumerateDirectory(
 		}
 	}
 #else
-	// Do nothing for now...
-	// Unsupported platform!!!
+	#error Unsupported platform!
 #endif
 }
 

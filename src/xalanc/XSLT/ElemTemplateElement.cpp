@@ -351,7 +351,7 @@ ElemTemplateElement::processSortElement(
 			const LocatorType*				locator)
 {
 	constructionContext.error(
-		XalanMessageLoader::getMessage(XalanMessages::TemplateIsNotAllowedAtThisPosition_1Param,"xsl:sort"),
+		XalanMessageLoader::getMessage(XalanMessages::TemplateIsNotAllowedAtThisPosition_1Param,Constants::ELEMNAME_SORT_WITH_PREFIX_STRING),
 		0,
 		locator);
 }

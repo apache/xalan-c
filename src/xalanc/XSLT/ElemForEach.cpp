@@ -312,14 +312,14 @@ ElemForEach::transformSelectedChildren(
 					if (theQName.getNamespace().length() == 0)
 					{
 						executionContext.error(
-							"xsl:sort data-type must be 'text', 'number' or a prefixed name",
+							XalanMessageLoader::getMessage(XalanMessages::XslSortDataTypeMustBe),
 							executionContext.getCurrentNode(),
 							sort->getLocator());
 					}
 					else
 					{
 						executionContext.warn(
-							"xsl:sort has an unknown data-type.  The data-type will be 'text'",
+							XalanMessageLoader::getMessage(XalanMessages::XslSortHasUnlnownDataType),
 							executionContext.getCurrentNode(),
 							sort->getLocator());
 					}
@@ -346,7 +346,7 @@ ElemForEach::transformSelectedChildren(
 				else if (equals(scratchString, Constants::ATTRVAL_ORDER_ASCENDING) == false)
 				{
 					executionContext.error(
-						"xsl:sort order must be 'ascending' or 'descending'",
+						XalanMessageLoader::getMessage(XalanMessages::XslSortMustBeAscendOrDescend),
 						executionContext.getCurrentNode(),
 						sort->getLocator());
 				}
@@ -376,7 +376,7 @@ ElemForEach::transformSelectedChildren(
 				else
 				{
 					executionContext.error(
-						"xsl:sort case-order must be 'upper-first' or 'lower-first'",
+						XalanMessageLoader::getMessage(XalanMessages::XslSortCaseOrderMustBe),
 						executionContext.getCurrentNode(),
 						sort->getLocator());
 				}

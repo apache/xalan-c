@@ -149,6 +149,18 @@ findNodes(
 }
 
 
+static const XalanDOMChar	s_highestFunctionName[] =
+{
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	0
+};
+
 
 XObjectPtr
 XalanEXSLTFunctionHighest::execute(
@@ -173,9 +185,20 @@ const XalanDOMString
 XalanEXSLTFunctionHighest::getError() const
 {
 
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"highest()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_highestFunctionName);
 }
 
+
+static const XalanDOMChar	s_lowestFunctionName[] =
+{
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_w,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	0
+};
 
 
 XObjectPtr
@@ -200,7 +223,7 @@ XalanEXSLTFunctionLowest::execute(
 const XalanDOMString
 XalanEXSLTFunctionLowest::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"lowest()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_lowestFunctionName);
 }
 
 
@@ -257,6 +280,14 @@ findValue(
 }
 
 
+static const XalanDOMChar	s_minFunctionName[] =
+{
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	0
+};
+
 
 XObjectPtr
 XalanEXSLTFunctionMin::execute(
@@ -280,8 +311,18 @@ XalanEXSLTFunctionMin::execute(
 const XalanDOMString
 XalanEXSLTFunctionMin::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"min()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_minFunctionName);
 }
+
+
+
+static const XalanDOMChar	s_maxFunctionName[] =
+{
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_x,
+	0
+};
 
 
 
@@ -307,8 +348,18 @@ XalanEXSLTFunctionMax::execute(
 const XalanDOMString
 XalanEXSLTFunctionMax::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"max()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_maxFunctionName);
 }
+
+
+
+static const XalanDOMChar	s_absFunctionName[] =
+{
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_s,
+	0
+};
 
 
 
@@ -338,8 +389,21 @@ XalanEXSLTFunctionAbs::execute(
 const XalanDOMString
 XalanEXSLTFunctionAbs::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"abs()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_absFunctionName);
 }
+
+
+
+static const XalanDOMChar	s_randomFunctionName[] =
+{
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_m,
+	0
+};
 
 
 
@@ -377,8 +441,19 @@ XalanEXSLTFunctionRandom::execute(
 const XalanDOMString
 XalanEXSLTFunctionRandom::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsNoArgument_1Param,"random()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsNoArgument_1Param,s_randomFunctionName);
 }
+
+
+
+static const XalanDOMChar	s_acosFunctionName[] =
+{
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_s,
+	0
+};
 
 
 
@@ -408,8 +483,20 @@ XalanEXSLTFunctionAcos::execute(
 const XalanDOMString
 XalanEXSLTFunctionAcos::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"acos()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_acosFunctionName);
 }
+
+
+
+static const XalanDOMChar	s_asinFunctionName[] =
+{
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	0
+};
+
 
 
 
@@ -439,8 +526,19 @@ XalanEXSLTFunctionAsin::execute(
 const XalanDOMString
 XalanEXSLTFunctionAsin::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"asin()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_asinFunctionName);
 }
+
+
+
+static const XalanDOMChar	s_atanFunctionName[] =
+{
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	0
+};
 
 
 
@@ -470,8 +568,20 @@ XalanEXSLTFunctionAtan::execute(
 const XalanDOMString
 XalanEXSLTFunctionAtan::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"atan()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_atanFunctionName);
 }
+
+
+
+static const XalanDOMChar	s_atan2FunctionName[] =
+{
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charDigit_2,
+	0
+};
 
 
 
@@ -501,7 +611,7 @@ XalanEXSLTFunctionAtan2::execute(
 const XalanDOMString
 XalanEXSLTFunctionAtan2::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"atan2()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,s_atan2FunctionName);
 }
 
 
@@ -964,6 +1074,16 @@ XalanEXSLTFunctionConstant::execute(
 
 
 
+static const XalanDOMChar	s_cosFunctionName[] =
+{
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_s,
+	0
+};
+
+
+
 XObjectPtr
 XalanEXSLTFunctionCos::execute(
 			XPathExecutionContext&			executionContext,
@@ -990,8 +1110,18 @@ XalanEXSLTFunctionCos::execute(
 const XalanDOMString
 XalanEXSLTFunctionCos::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"cos()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_cosFunctionName);
 }
+
+
+
+static const XalanDOMChar	s_expFunctionName[] =
+{
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_p,
+	0
+};
 
 
 
@@ -1021,8 +1151,18 @@ XalanEXSLTFunctionExp::execute(
 const XalanDOMString
 XalanEXSLTFunctionExp::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"exp()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_expFunctionName);
 }
+
+
+
+static const XalanDOMChar	s_logFunctionName[] =
+{
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_g,
+	0
+};
 
 
 
@@ -1052,8 +1192,20 @@ XalanEXSLTFunctionLog::execute(
 const XalanDOMString
 XalanEXSLTFunctionLog::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"log()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_logFunctionName);
 }
+
+
+
+static const XalanDOMChar	s_powerFunctionName[] =
+{
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_w,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	0
+};
 
 
 
@@ -1083,8 +1235,18 @@ XalanEXSLTFunctionPower::execute(
 const XalanDOMString
 XalanEXSLTFunctionPower::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"power()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,s_powerFunctionName);
 }
+
+
+
+static const XalanDOMChar	s_sinFunctionName[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	0
+};
 
 
 
@@ -1114,9 +1276,20 @@ XalanEXSLTFunctionSin::execute(
 const XalanDOMString
 XalanEXSLTFunctionSin::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"sin()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_sinFunctionName);
 
 }
+
+
+
+static const XalanDOMChar	s_sqrtFunctionName[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_q,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_t,
+	0
+};
 
 
 
@@ -1146,8 +1319,18 @@ XalanEXSLTFunctionSqrt::execute(
 const XalanDOMString
 XalanEXSLTFunctionSqrt::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"sqrt()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_sqrtFunctionName);
 }
+
+
+
+static const XalanDOMChar	s_tanFunctionName[] =
+{
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	0
+};
 
 
 
@@ -1177,7 +1360,7 @@ XalanEXSLTFunctionTan::execute(
 const XalanDOMString
 XalanEXSLTFunctionTan::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"tan()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_tanFunctionName);
 }
 
 
@@ -1210,60 +1393,6 @@ static const XalanDOMChar	s_mathNamespace[] =
 
 
 
-static const XalanDOMChar	s_absFunctionName[] =
-{
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_b,
-	XalanUnicode::charLetter_s,
-	0
-};
-
-
-
-static const XalanDOMChar	s_acosFunctionName[] =
-{
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_s,
-	0
-};
-
-
-
-static const XalanDOMChar	s_asinFunctionName[] =
-{
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	0
-};
-
-
-
-static const XalanDOMChar	s_atanFunctionName[] =
-{
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	0
-};
-
-
-
-static const XalanDOMChar	s_atan2FunctionName[] =
-{
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charDigit_2,
-	0
-};
-
-
 
 static const XalanDOMChar	s_constantFunctionName[] =
 {
@@ -1280,135 +1409,6 @@ static const XalanDOMChar	s_constantFunctionName[] =
 
 
 
-static const XalanDOMChar	s_cosFunctionName[] =
-{
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_s,
-	0
-};
-
-
-
-static const XalanDOMChar	s_expFunctionName[] =
-{
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_p,
-	0
-};
-
-
-
-static const XalanDOMChar	s_highestFunctionName[] =
-{
-	XalanUnicode::charLetter_h,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_g,
-	XalanUnicode::charLetter_h,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_t,
-	0
-};
-
-
-
-static const XalanDOMChar	s_logFunctionName[] =
-{
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_g,
-	0
-};
-
-
-
-static const XalanDOMChar	s_lowestFunctionName[] =
-{
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_w,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_t,
-	0
-};
-
-
-
-static const XalanDOMChar	s_maxFunctionName[] =
-{
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_x,
-	0
-};
-
-
-
-static const XalanDOMChar	s_minFunctionName[] =
-{
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	0
-};
-
-
-
-static const XalanDOMChar	s_powFunctionName[] =
-{
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_w,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_r,
-	0
-};
-
-
-
-static const XalanDOMChar	s_sinFunctionName[] =
-{
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	0
-};
-
-
-
-static const XalanDOMChar	s_sqrtFunctionName[] =
-{
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_q,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_t,
-	0
-};
-
-
-
-static const XalanDOMChar	s_tanFunctionName[] =
-{
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	0
-};
-
-static const XalanDOMChar	s_randomFunctionName[] =
-{
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_m,
-	0
-};
-
 static const XalanEXSLTFunctionAbs			s_absFunction;
 static const XalanEXSLTFunctionAcos			s_acosFunction;
 static const XalanEXSLTFunctionAsin			s_asinFunction;
@@ -1422,7 +1422,7 @@ static const XalanEXSLTFunctionLog			s_logFunction;
 static const XalanEXSLTFunctionLowest		s_lowestFunction;
 static const XalanEXSLTFunctionMax			s_maxFunction;
 static const XalanEXSLTFunctionMin			s_minFunction;
-static const XalanEXSLTFunctionPower		s_powFunction;
+static const XalanEXSLTFunctionPower		s_powerFunction;
 static const XalanEXSLTFunctionSin			s_sinFunction;
 static const XalanEXSLTFunctionSqrt			s_sqrtFunction;
 static const XalanEXSLTFunctionTan			s_tanFunction;
@@ -1444,7 +1444,7 @@ static const XalanEXSLTMathFunctionsInstaller::FunctionTableEntry	theFunctionTab
 	{ s_lowestFunctionName, &s_lowestFunction },
 	{ s_maxFunctionName, &s_maxFunction },
 	{ s_minFunctionName, &s_minFunction },
-	{ s_powFunctionName, &s_powFunction },
+	{ s_powerFunctionName, &s_powerFunction },
 	{ s_sinFunctionName, &s_sinFunction },
 	{ s_sqrtFunctionName, &s_sqrtFunction },
 	{ s_tanFunctionName, &s_tanFunction },

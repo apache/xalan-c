@@ -371,8 +371,7 @@ AVT::nextToken(
 {
 	if (tokenizer.hasMoreTokens() == false)
 	{
-		constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::AttributeValueTemplateHasMissing),0,
-			locator);
+		constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::AttributeValueTemplateHasMissing),0,locator);
 	}
 	else
 	{

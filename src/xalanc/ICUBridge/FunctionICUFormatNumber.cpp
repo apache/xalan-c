@@ -141,9 +141,8 @@ FunctionICUFormatNumber::doFormat(
 	if (theResultCode != 0)
 	{
 		executionContext.warn(
-			XALAN_STATIC_UCODE_STRING("ICUBridge::FormatNumber failed (") +
-				UnsignedLongToDOMString(theResultCode) +
-				XALAN_STATIC_UCODE_STRING(")"),
+			XalanMessageLoader::getMessage(XalanMessages::FormatNumberFailed_1Param, 
+					UnsignedLongToDOMString(theResultCode)),
 			context,
 			locator);
 

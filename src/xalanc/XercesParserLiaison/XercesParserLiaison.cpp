@@ -83,6 +83,7 @@
 
 
 #include <xalanc/PlatformSupport/ExecutionContext.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
 
@@ -546,7 +547,7 @@ XercesParserLiaison::mapToXercesDocument(const XalanDocument*	theDocument) const
 void
 XercesParserLiaison::fatalError(const SAXParseExceptionType&	e)
 {
-	XalanDOMString	theMessage("Fatal Error");
+	XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::FatalError);
 
 	formatErrorMessage(e, theMessage);
 
@@ -572,7 +573,7 @@ XercesParserLiaison::fatalError(const SAXParseExceptionType&	e)
 void
 XercesParserLiaison::error(const SAXParseExceptionType& 	e)
 {
-	XalanDOMString	theMessage("Error ");
+	XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::Error2);
 
 	formatErrorMessage(e, theMessage);
 
@@ -601,7 +602,7 @@ XercesParserLiaison::error(const SAXParseExceptionType& 	e)
 void
 XercesParserLiaison::warning(const SAXParseExceptionType&	e)
 {
-	XalanDOMString	theMessage("Warning ");
+	XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::Warning2);
 
 	formatErrorMessage(e, theMessage);
 
@@ -625,24 +626,26 @@ XercesParserLiaison::formatErrorMessage(
 			const SAXParseExceptionType&	e,
 			XalanDOMString& 				theMessage)
 {
-	append(theMessage, " at (file ");
 
 	const XalanDOMChar* const	theSystemID = e.getSystemId();
 
 	if (theSystemID == 0 || length(theSystemID) == 0)
 	{
-		append(theMessage, "<unknown>");
+
+		append(theMessage,XalanMessageLoader::getMessage(XalanMessages::AtUnknownFileLineColumn_2Param
+			,LongToDOMString(long(e.getLineNumber()))
+			,LongToDOMString(long(e.getColumnNumber()))
+			));
 	}
 	else
 	{
-		append(theMessage, theSystemID);
+		append(theMessage,XalanMessageLoader::getMessage(XalanMessages::AtFileLineColumn_3Param
+			,XalanDOMString(theSystemID)
+			,LongToDOMString(long(e.getLineNumber()))
+			,LongToDOMString(long(e.getColumnNumber()))
+			));
 	}
 
-	append(theMessage, ", line ");
-	append(theMessage, LongToDOMString(long(e.getLineNumber())));
-	append(theMessage, ", column ");
-	append(theMessage, LongToDOMString(long(e.getColumnNumber())));
-	append(theMessage, "): ");
 	append(theMessage, e.getMessage());
 }
 

@@ -146,10 +146,10 @@ KeyTable::KeyTable(
 					assert(kd.getURI() != 0);
 
 					throw XSLTProcessorException(
-							XalanMessageLoader::getMessage(XalanMessages::UseOfFunctionIsIllegal_2Param,"key()","xsl:key"),
+						XalanMessageLoader::getMessage(XalanMessages::UseOfFunctionIsIllegal_2Param,"key()","xsl:key"),
 							*kd.getURI(),
 							kd.getLineNumber(),
-							kd.getColumnNumber(),
+							kd.getColumnNumber(), 
 							TranscodeFromLocalCodePage("XSLTKeyIllegalKeyFunctionException"));
 				}
 				else

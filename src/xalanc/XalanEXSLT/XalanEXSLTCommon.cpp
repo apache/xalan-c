@@ -153,6 +153,23 @@ const XalanDOMChar	XalanEXSLTFunctionObjectType::s_stringString[] =
 
 
 
+static const XalanDOMChar	s_objectTypeFunctionName[] =
+{
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_j,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_y,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+
 XObjectPtr
 XalanEXSLTFunctionObjectType::execute(
 			XPathExecutionContext&			executionContext,
@@ -214,7 +231,7 @@ XalanEXSLTFunctionObjectType::execute(
 const XalanDOMString
 XalanEXSLTFunctionObjectType::getError() const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"object-type()");
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,s_objectTypeFunctionName);
 }
 
 
@@ -259,24 +276,6 @@ static const XalanDOMChar	s_nodeSetFunctionName[] =
 	XalanUnicode::charLetter_s,
 	XalanUnicode::charLetter_e,
 	XalanUnicode::charLetter_t,
-	0
-};
-
-
-
-static const XalanDOMChar	s_objectTypeFunctionName[] =
-{
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_b,
-	XalanUnicode::charLetter_j,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_y,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_e,
 	0
 };
 

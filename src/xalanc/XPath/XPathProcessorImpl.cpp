@@ -531,7 +531,9 @@ XPathProcessorImpl::mapNSTokens(
 
 	if (XalanQName::isValidNCName(scratchString) == false)
 	{
-		error(XalanDOMString("'") + scratchString + XalanDOMString("' is not a valid NCName"));
+	
+		error(XalanMessageLoader::getMessage(XalanMessages::IsNotValidNCName_1Param,scratchString));
+
 	}
 
 	const XalanDOMString* const		uName =
@@ -1714,7 +1716,7 @@ XPathProcessorImpl::FunctionTrue()
 
 	if (argCount != 0)
 	{
-		error("The true() function does not accept any arguments");
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,"true()"));
 	}
 }
 

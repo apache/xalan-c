@@ -644,7 +644,7 @@ Stylesheet::getYesOrNo(
 	}
 	else
 	{
-		constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::AttributeMustBe_2Params,"yes","no"));
+		constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::AttributeMustBe_2Params,Constants::ATTRVAL_YES,Constants::ATTRVAL_NO));
 		return false;
 	}
 }

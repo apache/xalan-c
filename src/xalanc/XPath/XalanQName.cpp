@@ -64,6 +64,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
 
@@ -400,12 +401,11 @@ XalanQName::InvalidQNameException::format(
 			const XalanDOMChar*			theQName,
 			XalanDOMString::size_type	theQNameLength)
 {
-	XalanDOMString	theResult("'");
+	XalanDOMString	theResult;
 
 	theResult.append(theQName, theQNameLength);
-	theResult += XalanDOMString("' is not a valid QName");
 
-	return theResult;
+	return XalanMessageLoader::getMessage(XalanMessages::IsNotValidQName_1Param, theResult);
 }
 
 

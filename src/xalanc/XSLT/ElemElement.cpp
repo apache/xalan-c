@@ -133,7 +133,9 @@ ElemElement::ElemElement(
 	if(0 == m_nameAVT)
 	{
 		constructionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::TemplateMustHaveAttribute_2Param,"xsl:element","name"),
+			XalanMessageLoader::getMessage(XalanMessages::TemplateMustHaveAttribute_2Param
+			,Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING
+			,Constants::ATTRNAME_NAME),
 			0,
 			this);
 	}

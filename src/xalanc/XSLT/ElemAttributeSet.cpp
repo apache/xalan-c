@@ -130,9 +130,11 @@ ElemAttributeSet::ElemAttributeSet(
 	else if (m_qname->isValid() == false)
 	{
 		constructionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::TemplateHasIllegalAttribute_2Param,"xsl:attribute-set","name"),
-			0,
-			this);
+			XalanMessageLoader::getMessage(XalanMessages::TemplateHasIllegalAttribute_2Param
+				,Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING
+				,Constants::ATTRNAME_NAME),
+				0,
+				this);
 	}
 }
 
