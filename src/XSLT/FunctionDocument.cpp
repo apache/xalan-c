@@ -200,27 +200,6 @@ FunctionDocument::execute(
 
 		return doExecute(executionContext, context, arg1, &base, 1);
 	}
-#if 0
-	if (context == 0)
-	{
-		executionContext.error(
-			"The document() function requires a non-null context node!",
-			context,
-			locator);
-
-		return XObjectPtr();
-	}
-	else
-	{
-		XalanDOMString				base;
-
-		assert(executionContext.getPrefixResolver() != 0);
-
-		base = executionContext.getPrefixResolver()->getURI();
-
-		return doExecute(executionContext, context, arg1, 0, 1);
-	}
-#endif
 }
 
 
