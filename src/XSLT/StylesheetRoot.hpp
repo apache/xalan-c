@@ -493,6 +493,15 @@ private:
 	 * This is set to true if an xsl:key directive is found.
 	 */
 	bool						m_needToBuildKeysTable;
+
+    // Not implemented...
+    StylesheetRoot(const StylesheetRoot&);
+
+    StylesheetRoot&
+    operator=(const StylesheetRoot&);
+
+    bool
+    operator==(const StylesheetRoot&) const;
 };
 
 
