@@ -93,23 +93,16 @@ ElemFallback::ElemFallback(
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
 
-		const int					tok =
-			constructionContext.getAttrTok(aname);
-
-		switch(tok)
+		if (equals(aname, Constants::ATTRNAME_XMLSPACE))
 		{
-		case Constants::TATTRNAME_XMLSPACE:
 			processSpaceAttr(atts, i, constructionContext);
-			break;
-
-		default:
-			if(!isAttrOK(aname, atts, i, constructionContext))
-			{
-				constructionContext.error(
+		}
+		else if (!isAttrOK(aname, atts, i, constructionContext))
+		{
+			constructionContext.error(
 					"xsl:fallback has an illegal attribute",
 					0,
 					this);
-			}
 		}
 	}
 }

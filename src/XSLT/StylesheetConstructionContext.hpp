@@ -158,28 +158,6 @@ public:
 	destroy(StylesheetRoot*		theStylesheetRoot) = 0;
 
 	/**
-	 * Given an XSL tag name, return an integer token that corresponds to
-	 * ELEMNAME_XXX constants defined in Constants.hpp.
-	 *
-	 * @param name a probable xsl:xxx element name
-	 * @return Constants.ELEMNAME_XXX token, or -1 if in xsl or Xalan namespace,
-	 * -2 if not in known namespace
-	 */
-	virtual int
-	getAttrTok(const XalanDOMString&	name) const = 0;
-
-	/**
-	 * Given an XSL tag name, return an integer token that corresponds to
-	 * ELEMNAME_XXX constants defined in Constants.hpp.
-	 *
-	 * @param name a probable xsl:xxx element name
-	 * @return Constants.ELEMNAME_XXX token, or -1 if in xsl or Xalan namespace,
-	 * -2 if not in known namespace
-	 */
-	virtual int
-	getAttrTok(const XalanDOMChar*	name) const = 0;
-
-	/**
 	 * Determine the fully qualified URI for a string.
 	 *
 	 * @param urlString string to qualify

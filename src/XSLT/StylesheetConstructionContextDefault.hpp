@@ -233,12 +233,6 @@ public:
 	virtual void
 	destroy(StylesheetRoot*		theStylesheetRoot);
 
-	virtual int
-	getAttrTok(const XalanDOMString&	name) const;
-
-	virtual int
-	getAttrTok(const XalanDOMChar*	name) const;
-
 	virtual URLAutoPtrType
 	getURLFromString(const XalanDOMString&	urlString);
 

@@ -116,7 +116,7 @@ ElemNumber::ElemNumber(
 	m_countMatchPattern(0),
 	m_fromMatchPattern(0),
 	m_valueExpr(0),
-	m_level(Constants::NUMBERLEVEL_SINGLE),
+	m_level(eSingle),
 	m_format_avt(0),
 	m_lang_avt(0),
 	m_lettervalue_avt(0),
@@ -130,21 +130,29 @@ ElemNumber::ElemNumber(
 	{
 		const XalanDOMChar*	const	aname = atts.getName(i);
 
-		if(equals(aname, Constants::ATTRNAME_LEVEL))
+		if(equals(aname, s_levelString))
 		{
 			const XalanDOMChar*	const	levelValue = atts.getValue(i);
 
-			if(equals(Constants::ATTRVAL_MULTI, levelValue))
-				m_level = Constants::NUMBERLEVEL_MULTI;
-			else if(equals(levelValue,Constants::ATTRVAL_ANY))
-				m_level = Constants::NUMBERLEVEL_ANY;
-			else if(equals(levelValue,Constants::ATTRVAL_SINGLE))
-				m_level = Constants::NUMBERLEVEL_SINGLE;
+			if(equals(s_multipleString, levelValue))
+			{
+				m_level = eMultiple;
+			}
+			else if(equals(s_anyString, levelValue))
+			{
+				m_level = eAny;
+			}
+			else if(equals(s_singleString, levelValue))
+			{
+				m_level = eSingle;
+			}
 			else
+			{
 				constructionContext.error(
 					"The attribute 'level' has an illegal value",
 					0,
 					this);
+			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_COUNT))
 		{
@@ -535,7 +543,7 @@ ElemNumber::getCountString(
 	{
 		CountersTable&	ctable = executionContext.getCountersTable();
 
-		if(Constants::NUMBERLEVEL_ANY == m_level)
+		if(eAny == m_level)
 		{
 			const int	theNumber =
 				ctable.countNode(executionContext, this, sourceNode);
@@ -556,7 +564,7 @@ ElemNumber::getCountString(
 			getMatchingAncestors(
 				executionContext,
 				sourceNode,
-				Constants::NUMBERLEVEL_SINGLE == m_level,
+				eSingle == m_level,
 				*ancestors.get());
 
 			const NodeRefListBase::size_type	lastIndex = ancestors->getLength();
@@ -620,7 +628,7 @@ ElemNumber::getPreviousNode(
 		countMatchPattern = xpathGuard.get();
 	}
 
-	if(Constants::NUMBERLEVEL_ANY == m_level)
+	if(eAny == m_level)
 	{
 		const XPath* const	fromMatchPattern = m_fromMatchPattern;
 
@@ -723,7 +731,7 @@ ElemNumber::getTargetNode(
 		countMatchPattern = xpathGuard.get();
 	}
 
-	if(Constants::NUMBERLEVEL_ANY == m_level)
+	if(eAny == m_level)
 	{
 		target = findPrecedingOrAncestorOrSelf(
 				executionContext,
@@ -1365,7 +1373,7 @@ ElemNumber::getFormattedNumber(
 
 				evaluateLetterValueAVT(executionContext, contextNode, letterVal);
 
-				if (equals(letterVal, Constants::ATTRVAL_TRADITIONAL) == true)
+				if (equals(letterVal, s_traditionalString) == true)
 				{
 					NumberingResourceBundleMapType::const_iterator	i = s_resourceBundles.find(0x03B1);
 
@@ -1374,7 +1382,7 @@ ElemNumber::getFormattedNumber(
 						traditionalAlphaCount(listElement, (*i).second, theResult);
 					}
 				}
-				else if (equals(letterVal, Constants::ATTRVAL_ALPHABETIC) == true)
+				else if (equals(letterVal, s_alphabeticString) == true)
 				{
 					int2alphaCount(listElement, s_elalphaCountTable, theResult);
 				}
@@ -1851,6 +1859,79 @@ const XalanDOMString&	ElemNumber::s_defaultSeparatorString = ::s_defaultSeparato
 const XalanDOMString&	ElemNumber::s_alphaCountTable = ::s_alphaCountTable;
 
 const XalanDOMString&	ElemNumber::s_elalphaCountTable = ::s_elalphaCountTable;
+
+const XalanDOMChar		ElemNumber::s_levelString[] =
+{
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_l,
+	0
+};
+
+const XalanDOMChar		ElemNumber::s_multipleString[] =
+{
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar		ElemNumber::s_anyString[] =
+{
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_y,
+	0
+};
+
+const XalanDOMChar		ElemNumber::s_singleString[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar		ElemNumber::s_alphabeticString[] =
+{
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_c,
+	0
+};
+
+const XalanDOMChar		ElemNumber::s_traditionalString[] =
+{
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	0
+};
 
 const ElemNumber::DecimalToRomanVectorType&		ElemNumber::s_romanConvertTable =
 				::s_romanConvertTable;

@@ -183,9 +183,6 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
 				int,
-				less<XalanDOMString> >		AttributeKeysMapType;
-	typedef map<XalanDOMString,
-				int,
 				less<XalanDOMString> >		ElementKeysMapType;
 	typedef map<const void*,
 				ClockType,
@@ -196,7 +193,6 @@ public:
 	typedef set<const XalanDOMString*,
 				LessXalanDOMStringPointers>	XalanDOMStringPointerSetType;
 #else
-	typedef std::map<XalanDOMString, int>		AttributeKeysMapType;
 	typedef std::map<XalanDOMString, int>		ElementKeysMapType;
 	typedef std::map<const void*, ClockType>	DurationsTableMapType;
 	typedef std::vector<const Locator*>			LocatorStack;
@@ -735,27 +731,10 @@ public:
 	static int
 	getElementToken(const XalanDOMString&	name)
 	{
-		AttributeKeysMapType::const_iterator iter=
+		ElementKeysMapType::const_iterator iter=
 			s_elementKeys.find(name);
 
 		return iter == s_elementKeys.end() ? -2 : (*iter).second;
-	}
-
-	/**
-	 * Given an XSL tag name, return an integer token that corresponds to
-	 * ELEMNAME_XXX constants defined in Constants.hpp.
-	 *
-	 * @param name a probable xsl:xxx element
-	 * @return Constants.ELEMNAME_XXX token, -1 if in XSL or Xalan namespace,
-	 *		   or -2 if not in known namespace
-	 */
-	static int
-	getAttrTok(const XalanDOMString&	name)
-	{
-		ElementKeysMapType::const_iterator iter=
-			s_attributeKeys.find(name);
-
-		return iter == s_attributeKeys.end() ? -2 : (*iter).second;
 	}
 
 	/**
@@ -1572,11 +1551,6 @@ private:
 	static const XalanDOMString&		s_uniqueNamespacePrefix;
 
 	/**
-	 * Map of XSLT IDs for attribute names.
-	 */
-	static const AttributeKeysMapType&	s_attributeKeys;
-
-	/**
 	 * Map of XSLT element IDs for element names.
 	 */
 	static const ElementKeysMapType&	s_elementKeys;
@@ -1753,9 +1727,6 @@ private:
 
 	static void
 	uninstallFunctions();
-
-	static void
-	initializeAttributeKeysTable(AttributeKeysMapType&	theAttributeKeys);
 
 	static void
 	initializeElementKeysTable(ElementKeysMapType&	theElementKeys);

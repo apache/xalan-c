@@ -91,28 +91,20 @@ ElemApplyTemplates::ElemApplyTemplates(
 	{
 		const XalanDOMChar*	const	aname = atts.getName(i);
 
-		const int					tok =
-			constructionContext.getAttrTok(aname);
-
-		switch(tok)
+		if (equals(aname, Constants::ATTRNAME_SELECT))
 		{
-		case Constants::TATTRNAME_SELECT:
 			m_selectPattern = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
-			break;
-
-		case Constants::TATTRNAME_MODE:
+		}
+		else if (equals(aname, Constants::ATTRNAME_MODE))
+		{
 			m_mode = XalanQNameByValue(atts.getValue(i), getStylesheet().getNamespaces());
-			break;
-
-		default:
-			if(!isAttrOK(aname, atts, i, constructionContext))
-			{
-				constructionContext.error(
+		}
+		else if (!isAttrOK(aname, atts, i, constructionContext))
+		{
+			constructionContext.error(
 					"xsl:apply-templates has an illegal attribute",
 					0,
 					this);
-			}
-			break;
 		}
 	}
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -128,31 +128,15 @@ public:
 	getLocator() const;
 
 	/** 
-	* See if this is a xmlns attribute, and, if so, process it.
-	* 
-	* @param attrName qualified name of attribute
-	* @param atts	  attribute list where the element comes from (not used at 
-	*				  this time)
-	* @param which	  index into the attribute list (not used at this time)
-	* @return		  true if this is a namespace name
-	*/
-	virtual bool
-	isAttrOK(
-			int 					tok,
-			const XalanDOMChar* 	attrName,
-			const AttributeList&	atts,
-			int 					which) const;
-
-	/** 
-	* See if this is a xmlns attribute or in a non-XSLT.
-	* 
-	* @param attrName qualified name of attribute
-	* @param atts	  attribute list where the element comes from (not used at 
-	*				  this time)
-	* @param which	  index into the attribute list (not used at this time)
-	* @param constructionContext The current construction context
-	* @return		  true if this is a namespace name
-	*/
+	 * See if this is a xmlns attribute or in a non-XSLT.
+	 * 
+	 * @param attrName qualified name of attribute
+	 * @param atts	  attribute list where the element comes from (not used at 
+	 *				  this time)
+	 * @param which	  index into the attribute list (not used at this time)
+	 * @param constructionContext The current construction context
+	 * @return		  true if this is a namespace name
+	 */
 	virtual bool
 	isAttrOK(
 			const XalanDOMChar* 			attrName,

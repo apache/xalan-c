@@ -174,19 +174,6 @@ ElemTemplateElement::isWhitespace() const
 
 bool
 ElemTemplateElement::isAttrOK(
-			int						tok,
-			const XalanDOMChar*		attrName,
-			const AttributeList&	/* atts */,
-			int						/* which */) const
-{
-    return Constants::TATTRNAME_XMLNSDEF == tok	||
-		startsWith(attrName, Constants::ATTRNAME_XMLNS);
-}
-
-
-
-bool
-ElemTemplateElement::isAttrOK(
 			const XalanDOMChar*				attrName,
 			const AttributeList&			atts,
 			int								which,

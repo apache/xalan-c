@@ -94,6 +94,13 @@ private:
 
 public:
 
+	enum eLevel
+	{
+		eSingle,
+		eMultiple,
+		eAny,
+	};
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<DecimalToRoman>					DecimalToRomanVectorType;
 	typedef vector<int>								IntArrayType;
@@ -430,6 +437,36 @@ private:
  	 * The string ".".
  	 */
  	static const XalanDOMString&			s_defaultSeparatorString;
+
+	/**
+ 	 * The string "level".
+ 	 */
+ 	static const XalanDOMChar				s_levelString[];
+
+	/**
+ 	 * The string "multiple".
+ 	 */
+ 	static const XalanDOMChar				s_multipleString[];
+
+	/**
+ 	 * The string "any".
+ 	 */
+ 	static const XalanDOMChar				s_anyString[];
+
+	/**
+ 	 * The string "single".
+ 	 */
+ 	static const XalanDOMChar				s_singleString[];
+
+	/**
+ 	 * The string "alphabetic".
+ 	 */
+ 	static const XalanDOMChar				s_alphabeticString[];
+
+	/**
+ 	 * The string "traditional".
+ 	 */
+ 	static const XalanDOMChar				s_traditionalString[];
 
 	/**
 	* Chars for converting integers into alpha counts.

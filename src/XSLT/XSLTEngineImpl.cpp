@@ -3454,79 +3454,6 @@ XSLTEngineImpl::uninstallFunctions()
 
 
 void
-XSLTEngineImpl::initializeAttributeKeysTable(AttributeKeysMapType&	theAttributeKeys)
-{
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_METHOD] = Constants::TATTRNAME_OUTPUT_METHOD;
-	theAttributeKeys[Constants::ATTRNAME_AMOUNT] = Constants::TATTRNAME_AMOUNT;
-	theAttributeKeys[Constants::ATTRNAME_ANCESTOR] = Constants::TATTRNAME_ANCESTOR;
-	theAttributeKeys[Constants::ATTRNAME_ATTRIBUTE] = Constants::TATTRNAME_ATTRIBUTE;
-	theAttributeKeys[Constants::ATTRNAME_ATTRIBUTE_SET] = Constants::TATTRNAME_ATTRIBUTE_SET;
-	theAttributeKeys[Constants::ATTRNAME_CASEORDER] = Constants::TATTRNAME_CASEORDER;
-	theAttributeKeys[Constants::ATTRNAME_CLASS] = Constants::TATTRNAME_CLASS;
-	theAttributeKeys[Constants::ATTRNAME_CLASSID] = Constants::TATTRNAME_CLASSID;
-	theAttributeKeys[Constants::ATTRNAME_CODEBASE] = Constants::TATTRNAME_CODEBASE;
-	theAttributeKeys[Constants::ATTRNAME_CODETYPE] = Constants::TATTRNAME_CODETYPE;
-	theAttributeKeys[Constants::ATTRNAME_CONDITION] = Constants::TATTRNAME_CONDITION;
-	theAttributeKeys[Constants::ATTRNAME_COPYTYPE] = Constants::TATTRNAME_COPYTYPE;
-	theAttributeKeys[Constants::ATTRNAME_COUNT] = Constants::TATTRNAME_COUNT;
-	theAttributeKeys[Constants::ATTRNAME_DATATYPE] = Constants::TATTRNAME_DATATYPE;
-	theAttributeKeys[Constants::ATTRNAME_DEFAULT] = Constants::TATTRNAME_DEFAULT;
-	theAttributeKeys[Constants::ATTRNAME_DEFAULTSPACE] = Constants::TATTRNAME_DEFAULTSPACE;
-	theAttributeKeys[Constants::ATTRNAME_DEPTH] = Constants::TATTRNAME_DEPTH;
-	theAttributeKeys[Constants::ATTRNAME_DIGITGROUPSEP] = Constants::TATTRNAME_DIGITGROUPSEP;
-	theAttributeKeys[Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING] = Constants::TATTRNAME_DISABLE_OUTPUT_ESCAPING;
-	theAttributeKeys[Constants::ATTRNAME_ELEMENT] = Constants::TATTRNAME_ELEMENT;
-	theAttributeKeys[Constants::ATTRNAME_ELEMENTS] = Constants::TATTRNAME_ELEMENTS;
-	theAttributeKeys[Constants::ATTRNAME_EXPR] = Constants::TATTRNAME_EXPR;
-	theAttributeKeys[Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES] = Constants::TATTRNAME_EXTENSIONELEMENTPREFIXES;
-	theAttributeKeys[Constants::ATTRNAME_FORMAT] = Constants::TATTRNAME_FORMAT;
-	theAttributeKeys[Constants::ATTRNAME_FROM] = Constants::TATTRNAME_FROM;
-	theAttributeKeys[Constants::ATTRNAME_GROUPINGSEPARATOR] = Constants::TATTRNAME_GROUPINGSEPARATOR;
-	theAttributeKeys[Constants::ATTRNAME_GROUPINGSIZE] = Constants::TATTRNAME_GROUPINGSIZE;
-	theAttributeKeys[Constants::ATTRNAME_HREF] = Constants::TATTRNAME_HREF;
-	theAttributeKeys[Constants::ATTRNAME_ID] = Constants::TATTRNAME_ID;
-	theAttributeKeys[Constants::ATTRNAME_INDENTRESULT] = Constants::TATTRNAME_INDENTRESULT;
-	theAttributeKeys[Constants::ATTRNAME_LANG] = Constants::TATTRNAME_LANG;
-	theAttributeKeys[Constants::ATTRNAME_LETTERVALUE] = Constants::TATTRNAME_LETTERVALUE;
-	theAttributeKeys[Constants::ATTRNAME_LEVEL] = Constants::TATTRNAME_LEVEL;
-	theAttributeKeys[Constants::ATTRNAME_MATCH] = Constants::TATTRNAME_MATCH;
-	theAttributeKeys[Constants::ATTRNAME_METHOD] = Constants::TATTRNAME_METHOD;
-	theAttributeKeys[Constants::ATTRNAME_MODE] = Constants::TATTRNAME_MODE;
-	theAttributeKeys[Constants::ATTRNAME_NAME] = Constants::TATTRNAME_NAME;
-	theAttributeKeys[Constants::ATTRNAME_NAMESPACE] = Constants::TATTRNAME_NAMESPACE;
-	theAttributeKeys[Constants::ATTRNAME_NDIGITSPERGROUP] = Constants::TATTRNAME_NDIGITSPERGROUP;
-	theAttributeKeys[Constants::ATTRNAME_NS] = Constants::TATTRNAME_NS;
-	theAttributeKeys[Constants::ATTRNAME_ONLY] = Constants::TATTRNAME_ONLY;
-	theAttributeKeys[Constants::ATTRNAME_ORDER] = Constants::TATTRNAME_ORDER;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS] = Constants::TATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_DOCTYPE_PUBLIC] = Constants::TATTRNAME_OUTPUT_DOCTYPE_PUBLIC;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_DOCTYPE_SYSTEM] = Constants::TATTRNAME_OUTPUT_DOCTYPE_SYSTEM;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_ENCODING] = Constants::TATTRNAME_OUTPUT_ENCODING;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_INDENT] = Constants::TATTRNAME_OUTPUT_INDENT;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_MEDIATYPE] = Constants::TATTRNAME_OUTPUT_MEDIATYPE;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_STANDALONE] = Constants::TATTRNAME_OUTPUT_STANDALONE;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_VERSION] = Constants::TATTRNAME_OUTPUT_VERSION;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_OMITXMLDECL] = Constants::TATTRNAME_OUTPUT_OMITXMLDECL;
-	theAttributeKeys[Constants::ATTRNAME_PRIORITY] = Constants::TATTRNAME_PRIORITY;
-	theAttributeKeys[Constants::ATTRNAME_REFID] = Constants::TATTRNAME_REFID;
-	theAttributeKeys[Constants::ATTRNAME_RESULTNS] = Constants::TATTRNAME_RESULTNS;
-	theAttributeKeys[Constants::ATTRNAME_SELECT] = Constants::TATTRNAME_SELECT;
-	theAttributeKeys[Constants::ATTRNAME_STYLE] = Constants::TATTRNAME_STYLE;
-	theAttributeKeys[Constants::ATTRNAME_TEST] = Constants::TATTRNAME_TEST;
-	theAttributeKeys[Constants::ATTRNAME_TOSTRING] = Constants::TATTRNAME_TOSTRING;
-	theAttributeKeys[Constants::ATTRNAME_TYPE] = Constants::TATTRNAME_TYPE;
-	theAttributeKeys[Constants::ATTRNAME_USE] = Constants::TATTRNAME_USE;
-	theAttributeKeys[Constants::ATTRNAME_USEATTRIBUTESETS] = Constants::TATTRNAME_USEATTRIBUTESETS;
-	theAttributeKeys[Constants::ATTRNAME_VALUE] = Constants::TATTRNAME_VALUE;
-
-	theAttributeKeys[Constants::ATTRNAME_XMLNSDEF] = Constants::TATTRNAME_XMLNSDEF;
-	theAttributeKeys[Constants::ATTRNAME_XMLNS] = Constants::TATTRNAME_XMLNS;
-	theAttributeKeys[Constants::ATTRNAME_XMLSPACE] = Constants::TATTRNAME_XMLSPACE;
-}
-
-
-
-void
 XSLTEngineImpl::initializeElementKeysTable(ElementKeysMapType&	theElementKeys)
 {
 	theElementKeys[Constants::ELEMNAME_APPLY_TEMPLATES_STRING] = Constants::ELEMNAME_APPLY_TEMPLATES;
@@ -3603,8 +3530,6 @@ static XalanDOMString	s_typeValueString3;
 static XalanDOMString	s_typeValueString4;
 
 
-static XSLTEngineImpl::AttributeKeysMapType		s_attributeKeys;
-
 static XSLTEngineImpl::ElementKeysMapType		s_elementKeys;
 
 
@@ -3632,8 +3557,6 @@ const XalanDOMString&	XSLTEngineImpl::s_typeValueString2 = ::s_typeValueString2;
 const XalanDOMString&	XSLTEngineImpl::s_typeValueString3 = ::s_typeValueString3;
 
 const XalanDOMString&	XSLTEngineImpl::s_typeValueString4 = ::s_typeValueString4;
-
-const XSLTEngineImpl::AttributeKeysMapType&		XSLTEngineImpl::s_attributeKeys = ::s_attributeKeys;
 
 const XSLTEngineImpl::ElementKeysMapType&		XSLTEngineImpl::s_elementKeys = ::s_elementKeys;
 
@@ -3666,8 +3589,6 @@ XSLTEngineImpl::initialize()
 
 	installFunctions();
 
-	initializeAttributeKeysTable(::s_attributeKeys);
-
 	initializeElementKeysTable(::s_elementKeys);
 }
 
@@ -3677,8 +3598,6 @@ void
 XSLTEngineImpl::terminate()
 {
 	ElementKeysMapType().swap(::s_elementKeys);
-
-	AttributeKeysMapType().swap(::s_attributeKeys);
 
 	uninstallFunctions();
 

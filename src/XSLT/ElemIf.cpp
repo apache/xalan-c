@@ -98,28 +98,21 @@ ElemIf::ElemIf(
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
 		const XalanDOMChar*	const	aname = atts.getName(i);
-		
-		const int					tok =
-			constructionContext.getAttrTok(aname);
 
-		switch(tok)
+		if (equals(aname, Constants::ATTRNAME_TEST))
 		{
-		case Constants::TATTRNAME_TEST:
 			m_test = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
-			break;
-
-		case Constants::TATTRNAME_XMLSPACE:
+		}
+		else if (equals(aname, Constants::ATTRNAME_XMLSPACE))
+		{
 			processSpaceAttr(atts, i, constructionContext);
-			break;
-
-		default:
-			if(!isAttrOK(aname, atts, i, constructionContext))
-			{
-				constructionContext.error(
+		}
+		else if (!isAttrOK(aname, atts, i, constructionContext))
+		{
+			constructionContext.error(
 					"xsl:if has an illegal attribute",
 					0,
 					this);
-			}
 		}
 	}
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -164,7 +164,6 @@ public:
 	 * Literals for XSL element names.  Note that there are more
 	 * names than IDs, because some names map to the same ID.
 	 */
-
 	// Result tree counting
 	static const XalanDOMString&	ELEMNAME_ANY_STRING;
 	static const XalanDOMString&	ELEMNAME_APPLY_IMPORTS_STRING;
@@ -280,7 +279,6 @@ public:
 	static const XalanDOMString&	ATTRNAME_INFINITY;
 	static const XalanDOMString&	ATTRNAME_LANG;
 	static const XalanDOMString&	ATTRNAME_LETTERVALUE;
-	static const XalanDOMString&	ATTRNAME_LEVEL;
 	static const XalanDOMString&	ATTRNAME_MATCH;
 	static const XalanDOMString&	ATTRNAME_MINUSSIGN;
 	static const XalanDOMString&	ATTRNAME_MODE;
@@ -335,16 +333,6 @@ public:
 	static const XalanDOMString&	ATTRVAL_YES;
 	static const XalanDOMString&	ATTRVAL_NO;
   
-	  // For letter-value attribute (part of conversion attributes).
-	static const XalanDOMString&	ATTRVAL_ALPHABETIC;
-	static const XalanDOMString&	ATTRVAL_OTHER;
-    static const XalanDOMString&	ATTRVAL_TRADITIONAL;
-
-	  // For level attribute in xsl:number.
-	static const XalanDOMString&	ATTRVAL_SINGLE;
-	static const XalanDOMString&	ATTRVAL_MULTI;
-	static const XalanDOMString&	ATTRVAL_ANY;
-
 	// Output stuff
 	static const XalanDOMString&	ATTRNAME_OUTPUT_METHOD;
 	static const XalanDOMString&	ATTRNAME_DISABLE_OUTPUT_ESCAPING;
@@ -356,7 +344,7 @@ public:
 	static const XalanDOMString&	ATTRNAME_OUTPUT_MEDIATYPE;
 	static const XalanDOMString&	ATTRNAME_OUTPUT_STANDALONE;
 	static const XalanDOMString&	ATTRNAME_OUTPUT_VERSION;
-   static const XalanDOMString&	ATTRNAME_OUTPUT_OMITXMLDECL;
+	static const XalanDOMString&	ATTRNAME_OUTPUT_OMITXMLDECL;
 
 	static const XalanDOMString&	ATTRVAL_OUTPUT_METHOD_HTML;
 	static const XalanDOMString&	ATTRVAL_OUTPUT_METHOD_XML;
@@ -383,93 +371,11 @@ public:
 
 	// Value for default text rule
 	static const XalanDOMString&	ATTRVAL_DEFAULT_TEXT_RULE;
-	enum eNumberLevel
-	{
-		/*
-		 * Integer equivalents for above
-		 */
-		NUMBERLEVEL_SINGLE = 1,
-		NUMBERLEVEL_MULTI = 2,
-		NUMBERLEVEL_ANY = 3,
-
-		MAX_MULTI_COUNTING_DEPTH = 32
-	};
 
 	static const XalanDOMString&	ATTRVAL_DEFAULT;
 
 	// For Stylesheet-prefix and result-prefix in xsl:namespace-alias 
 	static const XalanDOMString&	ATTRVAL_DEFAULT_PREFIX;
-
-	enum eAttributeName
-	{
-		TATTRNAME_OUTPUT_METHOD = 1,
-		TATTRNAME_AMOUNT = 2,
-		TATTRNAME_ANCESTOR = 3,
-		TATTRNAME_ARCHIVE = 4,
-		TATTRNAME_ATTRIBUTE = 5,
-		TATTRNAME_ATTRIBUTE_SET = 6,
-		TATTRNAME_CASEORDER = 7,
-		TATTRNAME_CLASS = 8,
-		TATTRNAME_CLASSID = 9,
-		TATTRNAME_CODEBASE = 10,
-		TATTRNAME_CODETYPE = 11,
-		TATTRNAME_CONDITION = 12,
-		TATTRNAME_COPYTYPE = 13,
-		TATTRNAME_COUNT = 14,
-		TATTRNAME_DATATYPE = 15,
-		TATTRNAME_DEFAULT = 16,
-		TATTRNAME_DEFAULTSPACE = 17,
-		TATTRNAME_DEPTH = 18,
-		TATTRNAME_DIGITGROUPSEP = 19,
-		TATTRNAME_DISABLE_OUTPUT_ESCAPING= 20,
-		TATTRNAME_ELEMENT = 21,
-		TATTRNAME_ELEMENTS = 22,
-		TATTRNAME_EXPR = 23,
-		TATTRNAME_EXTENSIONELEMENTPREFIXES = 24,
-		TATTRNAME_FORMAT = 25,
-		TATTRNAME_FROM = 26,
-		TATTRNAME_GROUPINGSEPARATOR = 27,
-		TATTRNAME_GROUPINGSIZE = 28,
-		TATTRNAME_HREF = 29,
-		TATTRNAME_ID = 30,
-		TATTRNAME_INDENTRESULT = 32,
-		TATTRNAME_LANG = 33,
-		TATTRNAME_LETTERVALUE = 34,
-		TATTRNAME_LEVEL = 35,
-		TATTRNAME_MATCH = 36,
-		TATTRNAME_METHOD = 37,
-		TATTRNAME_MODE = 38,
-		TATTRNAME_NAME = 39,
-		TATTRNAME_NAMESPACE = 40,
-		TATTRNAME_NDIGITSPERGROUP = 41,
-		TATTRNAME_NS = 42,
-		TATTRNAME_ONLY = 43,
-		TATTRNAME_ORDER = 44,
-		TATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS= 45,
-		TATTRNAME_OUTPUT_DOCTYPE_PUBLIC = 46,
-		TATTRNAME_OUTPUT_DOCTYPE_SYSTEM = 47,
-		TATTRNAME_OUTPUT_ENCODING = 48,
-		TATTRNAME_OUTPUT_INDENT = 49,
-		TATTRNAME_OUTPUT_MEDIATYPE = 50,
-		TATTRNAME_OUTPUT_STANDALONE= 51,
-		TATTRNAME_OUTPUT_VERSION = 52,
-		TATTRNAME_OUTPUT_OMITXMLDECL = 53,
-		TATTRNAME_PRIORITY = 54,
-		TATTRNAME_REFID = 55,
-		TATTRNAME_RESULTNS = 56,
-		TATTRNAME_SELECT = 57,
-		TATTRNAME_STYLE = 59,
-		TATTRNAME_TEST = 60,
-		TATTRNAME_TOSTRING = 61,
-		TATTRNAME_TYPE = 62,
-		TATTRNAME_USE = 63,
-		TATTRNAME_USEATTRIBUTESETS = 64,
-		TATTRNAME_VALUE = 65,
-		TATTRNAME_XMLNSDEF = 66,
-		TATTRNAME_XMLNS = 67,
-		TATTRNAME_XMLSPACE = 68,
-		TATTRNAME_EXCLUDE_RESULT_PREFIXES = 69
-	};
 
 	// This is used for trace reporting.
 	static const XalanDOMString&	PSEUDONAME_NODE;

@@ -99,43 +99,34 @@ ElemTemplate::ElemTemplate(
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
 
-		const int					tok =
-			constructionContext.getAttrTok(aname);
-
-		switch(tok)
+		if (equals(aname, Constants::ATTRNAME_MATCH))
 		{
-		case Constants::TATTRNAME_MATCH:
 			m_matchPattern = constructionContext.createMatchPattern(getLocator(), atts.getValue(i), *this);
-			break; 
-
-		case Constants::TATTRNAME_NAME:
+		}
+		else if (equals(aname, Constants::ATTRNAME_NAME))
+		{
 			m_name = XalanQNameByValue(atts.getValue(i), getStylesheet().getNamespaces());
-			break;
+		}
+		else if (equals(aname, Constants::ATTRNAME_PRIORITY))
+		{
+			assert(atts.getValue(i) != 0);
 
-		case Constants::TATTRNAME_PRIORITY:
-			{
-				assert(atts.getValue(i) != 0);
-
-				m_priority = DoubleSupport::toDouble(atts.getValue(i));
-			}
-			break;
-
-		case Constants::TATTRNAME_MODE:
+			m_priority = DoubleSupport::toDouble(atts.getValue(i));
+		}
+		else if (equals(aname, Constants::ATTRNAME_MODE))
+		{
 			m_mode = XalanQNameByValue(atts.getValue(i), getStylesheet().getNamespaces());
-			break;
-
-		case Constants::TATTRNAME_XMLSPACE:
+		}
+		else if (equals(aname, Constants::ATTRNAME_XMLSPACE))
+		{
 			processSpaceAttr(atts, i, constructionContext);
-			break;
-
-		default:
-			if(!isAttrOK(aname, atts, i, constructionContext))
-			{
-				constructionContext.error(
+		}
+		else if (!isAttrOK(aname, atts, i, constructionContext))
+		{
+			constructionContext.error(
 					"xsl:template has an illegal attribute",
 					0,
 					this);
-			}
 		}
 	}
 

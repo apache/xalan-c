@@ -354,31 +354,6 @@ StylesheetConstructionContextDefault::destroy(StylesheetRoot*	theStylesheetRoot)
 
 
 
-int
-StylesheetConstructionContextDefault::getAttrTok(const XalanDOMString&	name) const
-{
-	return m_processor.getAttrTok(name);
-}
-
-
-
-int
-StylesheetConstructionContextDefault::getAttrTok(const XalanDOMChar*	name) const
-{
-	assert(name != 0);
-
-	// $$$ ToDo: Change getAttrTok() to take a const XalanDOMChar*
-#if defined(XALAN_NO_MUTABLE)
-	assign((XalanDOMString&)m_tempBuffer, name);
-#else
-	assign(m_tempBuffer, name);
-#endif
-
-	return m_processor.getAttrTok(m_tempBuffer);
-}
-
-
-
 StylesheetConstructionContextDefault::URLAutoPtrType
 StylesheetConstructionContextDefault::getURLFromString(const XalanDOMString&	urlString)
 {

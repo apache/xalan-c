@@ -105,46 +105,37 @@ ElemValueOf::ElemValueOf(
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
 
-		const int					tok =
-			constructionContext.getAttrTok(aname);
-
-		switch(tok)
+		if (equals(aname, Constants::ATTRNAME_SELECT))
 		{
-		case Constants::TATTRNAME_SELECT:
+			const XalanDOMChar* const	avalue = atts.getValue(i);
+			assert(avalue != 0);
+
+			if (avalue[0] == XalanUnicode::charFullStop && avalue[1] == 0)
 			{
-				const XalanDOMChar* const	avalue = atts.getValue(i);
-				assert(avalue != 0);
+				m_isDot = true;
+			}
 
-				if (avalue[0] == XalanUnicode::charFullStop && avalue[1] == 0)
-				{
-					m_isDot = true;
-				}
-
-				m_selectPattern =
+			m_selectPattern =
 					constructionContext.createXPath(
 						getLocator(),
 						avalue,
 						*this);
-			}
-			break;
-
-		case Constants::TATTRNAME_DISABLE_OUTPUT_ESCAPING:
+		}
+		else if (equals(aname, Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING))
+		{
 			m_disableOutputEscaping =
 						getStylesheet().getYesOrNo(aname, atts.getValue(i), constructionContext);
-			break;
-
-		case Constants::TATTRNAME_XMLSPACE:
+		}
+		else if (equals(aname, Constants::ATTRNAME_XMLSPACE))
+		{
 			processSpaceAttr(atts, i, constructionContext);
-			break; 
-
-		default:
-			if(!isAttrOK(aname, atts, i, constructionContext))
-			{
-				constructionContext.error(
+		}
+		else if (!isAttrOK(aname, atts, i, constructionContext))
+		{
+			constructionContext.error(
 					"xsl:value-of has an illegal attribute",
 					0,
 					this);
-			} 
 		}
 	}
 

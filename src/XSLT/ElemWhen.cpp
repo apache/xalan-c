@@ -90,27 +90,20 @@ ElemWhen::ElemWhen(
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
 
-		const int					tok =
-			constructionContext.getAttrTok(aname);
-
-		switch(tok)
+		if (equals(aname, Constants::ATTRNAME_TEST))
 		{
-		case Constants::TATTRNAME_TEST:
 			m_pTest = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
-			break;
-
-		case Constants::TATTRNAME_XMLSPACE:
+		}
+		else if (equals(aname, Constants::ATTRNAME_XMLSPACE))
+		{
 			processSpaceAttr(atts, i, constructionContext);
-			break;
-
-		default:
-			if(!isAttrOK(aname, atts, i, constructionContext))
-			{
-				constructionContext.error(
+		}
+		else if (!isAttrOK(aname, atts, i, constructionContext))
+		{
+			constructionContext.error(
 					"xsl:when has an illegal attribute",
 					0,
 					this);
-			}
 		}
 	}
 

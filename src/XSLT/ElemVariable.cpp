@@ -102,32 +102,24 @@ ElemVariable::ElemVariable(
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
 
-		const int					tok =
-			constructionContext.getAttrTok(aname);
-
-		switch(tok)
+		if (equals(aname, Constants::ATTRNAME_SELECT))
 		{
-		case Constants::TATTRNAME_SELECT:
-			m_selectPattern = constructionContext.createXPath(getLocator(), atts.getValue(i),
-				*this);
-			break;
-
-		case Constants::TATTRNAME_NAME:
+			m_selectPattern = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
+		}
+		else if (equals(aname, Constants::ATTRNAME_NAME))
+		{
 			m_qname = XalanQNameByValue(atts.getValue(i), stylesheetTree.getNamespaces());
-			break;
-
-		case Constants::TATTRNAME_XMLSPACE:
+		}
+		else if (equals(aname, Constants::ATTRNAME_XMLSPACE))
+		{
 			processSpaceAttr(atts, i, constructionContext);
-			break; 
-
-		default:
-			if(!isAttrOK(aname, atts, i, constructionContext))
-			{
-				constructionContext.error(
+		}
+		else if (!isAttrOK(aname, atts, i, constructionContext))
+		{
+			constructionContext.error(
 					"xsl:variable has an illegal attribute",
 					0,
 					this);
-			}
 		}
 	}
 
