@@ -586,7 +586,7 @@ TestAxisResult(
 						for (unsigned int i = 0; i < theLength; i++)
 						{
 							thePrintWriter.print(theResultList.item(i)->getNodeName());
-							thePrintWriter.print(L" ");
+							thePrintWriter.print(XALAN_STATIC_UCODE_STRING(" "));
 						}
 					}
 
