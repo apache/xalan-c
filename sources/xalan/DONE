@@ -20,7 +20,7 @@ anchor="xalantransformer">XalanTransformer</link> class and associated header fi
 <li>Fixed &lt;xsl:number&gt; bug with use of letter-value="traditional" for "classical" Greek numbering.<br/><br/></li>
 <li>Fixed use of &lt;xsl:fallback&gt; within a top-level extension function.<br/><br/></li>
 <li>Fixed HTML output method bug. The &lt;HEAD&gt; element was not including a &lt;META&gt; tag with the encoding.<br/><br/></li>
-<li>Fixed bug using key() im match patterns to find descendants.<br/><br/></li>
+<li>Fixed bug using key() in match patterns to find descendants.<br/><br/></li>
 <li>Fixed bug using the id() function in complex match patterns.<br/><br/></li>
 <li>Fixed problem outputting multiple single-character CDATA sections.<br/><br/></li>
 <li>Fixed problem outputting whitespace characters.<br/><br/></li>
