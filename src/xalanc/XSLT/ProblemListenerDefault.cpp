@@ -43,14 +43,61 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const char* const	xslHeader = "XSLT ";
-static const char* const	xmlHeader = "XML ";
-static const char* const	xpathHeader = "XPath ";
+static const XalanDOMChar	xsltHeader[] =
+{
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_L,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charSpace,
+	0
+};
 
-static const char* const	uriHeader = "";
+static const XalanDOMChar	xmlHeader[] =
+{
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_M,
+	XalanUnicode::charLetter_L,
+	XalanUnicode::charSpace,
+	0
+};
 
-static const char* const	locationOpen = " (";
-static const char* const	locationClose = ")";
+static const XalanDOMChar	xpathHeader[] =
+{
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_P,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charSpace,
+	0
+};
+
+static const XalanDOMChar	uriHeader[] =
+{
+	0
+};
+
+static const XalanDOMChar	uriSeparator[] =
+{
+	XalanUnicode::charComma,
+	XalanUnicode::charSpace,
+	0
+};
+
+static const XalanDOMChar	locationOpen[] =
+{
+	XalanUnicode::charSpace,
+	XalanUnicode::charLeftParenthesis,
+	0
+};
+
+static const XalanDOMChar	locationClose[] =
+{
+	XalanUnicode::charRightParenthesis,
+	0
+};
+
 
 
 ProblemListenerDefault::ProblemListenerDefault(PrintWriter*		pw) :
@@ -116,7 +163,7 @@ ProblemListenerDefault::problem(
 	}
 	else
 	{
-		pw.print(xslHeader);
+		pw.print(xsltHeader);
 	}
 
 	if (eERROR == classification)
@@ -132,6 +179,8 @@ ProblemListenerDefault::problem(
 		pw.print(XalanMessageLoader::getMessage(XalanMessages::Message_1Param, msg));
 	}
 
+	pw.write(XalanDOMChar(XalanUnicode::charSpace));
+
 	if (0 != styleNode)
 	{
 		pw.print(XalanMessageLoader::getMessage(XalanMessages::StyleTreeNode_1Param, styleNode->getElementName()));
@@ -146,8 +195,8 @@ ProblemListenerDefault::problem(
 
 	if (0 != uri)
 	{
-		pw.print(uriHeader);
 		pw.print(uri);
+		pw.print(uriSeparator);
 	}
 
 	const XalanDOMString lineNoString = LongToDOMString(lineNo);
