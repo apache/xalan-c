@@ -73,18 +73,6 @@ const XalanDOMString	QName::s_emptyString;
 
 
 
-QName::QName()
-{
-}
-
-
-
-QName::~QName()
-{
-}
-
-
-
 const XalanDOMString&
 QName::getNamespaceForPrefix(
 			const NamespaceVectorType&	namespaces,

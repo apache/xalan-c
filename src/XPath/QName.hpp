@@ -115,10 +115,14 @@ public:
 	 *
 	 */
 	explicit
-	QName();
+	QName()
+	{
+	}
 
 	virtual
-	~QName();
+	~QName()
+	{
+	}
 
 	/**
 	 * Retrieve the local part of qualified name.
