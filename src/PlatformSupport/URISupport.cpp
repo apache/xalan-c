@@ -149,9 +149,15 @@ URISupport::getURLFromString(
 
 	const unsigned int	indexOfSlash = theContextLength == 0 ? 0 : lastIndexOf(context, '/');
 
+	bool				hasPath = true;
+
 	if (indexOfSlash < theContextLength)
 	{
 		context = substring(context, 0, indexOfSlash + 1);
+	}
+	else
+	{
+		hasPath = false;
 	}
 
 	// OK, now let's look at the urlString...
@@ -170,7 +176,14 @@ URISupport::getURLFromString(
 			context = substring(context, 0, indexOfSlash + 1);
 		}
 
-		context += urlString;
+		if (hasPath == true)
+		{
+			context += urlString;
+		}
+		else
+		{
+			context = urlString;
+		}
 	}
 	else
 	{
