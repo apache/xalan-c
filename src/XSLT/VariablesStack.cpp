@@ -78,7 +78,7 @@ VariablesStack::VariablesStack() :
 	m_currentStackFrameIndex(0),
 	m_guardStack()
 {
-	m_stack.reserve(eDefaultStackSize);
+//	m_stack.reserve(eDefaultStackSize);
 }
 
 
@@ -381,10 +381,15 @@ VariablesStack::findXObject(
 			bool							fSearchGlobalSpace,
 			bool&							fNameFound)
 {
-	StackEntry* const	theEntry =
+	typedef VariableStackStackType::size_type	size_type;
+
+	// findEntry() returns an index into the stack.  We should
+	// _never_ take the address of anything in the stack, since
+	// the address could change at unexpected times.
+	size_type	theEntryIndex =
 		findEntry(name, fIsParam, fSearchGlobalSpace);
 
-	if (theEntry == 0)
+	if (theEntryIndex == m_stack.size())
 	{
 		fNameFound = false;
 
@@ -392,13 +397,15 @@ VariablesStack::findXObject(
 	}
 	else
 	{
+		assert(theEntryIndex < m_stack.size());
+
 		fNameFound = true;
 
-		assert(theEntry->getType() == StackEntry::eVariable ||
-			   theEntry->getType() == StackEntry::eParam ||
-			   theEntry->getType() == StackEntry::eActiveParam);
+		assert(m_stack[theEntryIndex].getType() == StackEntry::eVariable ||
+			   m_stack[theEntryIndex].getType() == StackEntry::eParam ||
+			   m_stack[theEntryIndex].getType() == StackEntry::eActiveParam);
 
-		const XObjectPtr&	theValue = theEntry->getValue();
+		const XObjectPtr&	theValue = m_stack[theEntryIndex].getValue();
 
 		if (theValue.null() == false)
 		{
@@ -406,7 +413,7 @@ VariablesStack::findXObject(
 		}
 		else
 		{
-			const ElemVariable* const	var = theEntry->getVariable();
+			const ElemVariable* const	var = m_stack[theEntryIndex].getVariable();
 
 			XObjectPtr					theNewValue;
 
@@ -442,8 +449,8 @@ VariablesStack::findXObject(
 
 				m_guardStack.pop_back();
 
-				theEntry->setValue(theNewValue);
-				theEntry->activate();
+				m_stack[theEntryIndex].setValue(theNewValue);
+				m_stack[theEntryIndex].activate();
 			}
 
 			return theNewValue;
@@ -453,13 +460,15 @@ VariablesStack::findXObject(
 
 
 
-VariablesStack::StackEntry*
+VariablesStack::VariableStackStackType::size_type
 VariablesStack::findEntry(
 			const XalanQName&	qname,
 			bool				fIsParam,
 			bool				fSearchGlobalSpace)
 {
-	StackEntry*		theResult = 0;
+	typedef VariableStackStackType::size_type	size_type;
+
+	size_type	theEntryIndex = m_stack.size();
 
 	const unsigned int	nElems = getCurrentStackFrameIndex();
 
@@ -479,7 +488,7 @@ VariablesStack::findEntry(
 
 			if(theEntry.getName()->equals(qname))
 			{
-				theResult = &theEntry;
+				theEntryIndex = size_type(i);
 
 				break;
 			}
@@ -492,7 +501,7 @@ VariablesStack::findEntry(
 				{
 					theEntry.activate();
 
-					theResult = &theEntry;
+					theEntryIndex = size_type(i);
 
 					break;
 				}
@@ -504,7 +513,7 @@ VariablesStack::findEntry(
 		}
 	}
 
-	if(0 == theResult && fIsParam == false && true == fSearchGlobalSpace && m_globalStackFrameIndex > 1)
+	if(theEntryIndex == m_stack.size() && fIsParam == false && true == fSearchGlobalSpace && m_globalStackFrameIndex > 1)
 	{
 		// Look in the global space
 		for(unsigned int i = m_globalStackFrameIndex - 1; i > 0; i--)
@@ -519,7 +528,7 @@ VariablesStack::findEntry(
 
 				if(theEntry.getName()->equals(qname))
 				{
-					theResult = &theEntry;
+					theEntryIndex = size_type(i);
 
 					break;
 				}
@@ -531,7 +540,7 @@ VariablesStack::findEntry(
 		}
 	}
 
-	return theResult;
+	return theEntryIndex;
 }
 
 

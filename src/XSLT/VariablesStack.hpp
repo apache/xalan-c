@@ -564,7 +564,7 @@ private:
 			bool							fSearchGlobalSpace,
 			bool&							fNameFound);
 
-	StackEntry*
+	VariableStackStackType::size_type
 	findEntry(
 			const XalanQName&	name,
 			bool				fIsParam,
