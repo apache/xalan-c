@@ -55,6 +55,7 @@
  * <http://www.apache.org/>.
  */
 #include <cstdio>
+#include <ctime>
 #include <vector>
 #include <iostream>
 
@@ -69,6 +70,7 @@
 
 
 
+#include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/DirectoryEnumerator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <DOMSupport/DOMSupportDefault.hpp>
@@ -442,8 +444,8 @@ FindContextNode(
 	{
 		assert(theXObject != 0);
 
-		const MutableNodeRefList&	theResultList =
-						theXObject->mutableNodeset();
+		const NodeRefListBase&	theResultList =
+						theXObject->nodeset();
 
 		if (theResultList.getLength() == 0)
 		{
@@ -555,8 +557,8 @@ TestAxisResult(
 				{
 					assert(theResult != 0);
 
-					const MutableNodeRefList&	theResultList =
-						theResult->mutableNodeset();
+					const NodeRefListBase&	theResultList =
+						theResult->nodeset();
 
 					const unsigned int	theLength = theResultList.getLength();
 
@@ -693,8 +695,8 @@ TestPredicateResult(
 					{
 						assert(theResult1 != 0);
 
-						const MutableNodeRefList&	theResultList =
-								theResult1->mutableNodeset();
+						const NodeRefListBase&	theResultList =
+								theResult1->nodeset();
 
 						const unsigned int	theLength = theResultList.getLength();
 
@@ -726,8 +728,8 @@ TestPredicateResult(
 					{
 						assert(theResult2 != 0);
 
-						const MutableNodeRefList&	theResultList =
-								theResult2->mutableNodeset();
+						const NodeRefListBase&	theResultList =
+								theResult2->nodeset();
 
 						const int	theLength = theResultList.getLength();
 
@@ -1218,7 +1220,7 @@ RunTests(
 
 int
 main(int			/* argc */,
-	 const char*	/* argv[] */)
+	 const char*	argv[])
 {
 #if !defined (XALAN_NO_NAMESPACES)
 	using std::cout;
@@ -1244,6 +1246,4 @@ main(int			/* argc */,
 		     theXPathSupport,
 			 theLiaison,
 			 thePrintWriter);
-
-	return 0;
 }
