@@ -1485,7 +1485,7 @@ DoubleToDOMString(
 	}
 	else if (DoubleSupport::isNegativeInfinity(theDouble) == true)
 	{
-		theResult = theNegativeInfinityString;
+		append(theResult, theNegativeInfinityString);
 	}
 	else if (DoubleSupport::isPositiveZero(theDouble) == true)
 	{
