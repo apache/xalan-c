@@ -74,6 +74,8 @@
 
 
 class ContentHandler;
+class DTDHandler;
+class LexicalHandler;
 class XalanSourceTreeDOMSupport;
 class XalanSourceTreeDocument;
 
@@ -149,16 +151,20 @@ public:
 	// These interfaces are new to XalanSourceTreeParserLiaison...
 
 	/**
-	 * Parse using a SAX2 ContentHandler.
+	 * Parse using a SAX2 ContentHandler, DTDHandler, and LexicalHandler.
 	 *
 	 * @param theInputSource The input source for the parser
 	 * @param theContentHandler The ContentHandler to use
+	 * @param theDTDHandler The DTDHandler to use.  May be null.
+	 * @param theLexicalHandler The LexicalHandler to use.  May be null.
 	 * @param identifier Used for error reporting only.
 	 */
 	virtual void
 	parseXMLStream(
 			const InputSource&		theInputSource,
 			ContentHandler&			theContentHandler,
+			DTDHandler*				theDTDHandler = 0,
+			LexicalHandler*			theLexicalHandler = 0,
 			const XalanDOMString&	theIdentifier = XalanDOMString());
 
 	/** Get the 'include ignorable whitespace' flag.

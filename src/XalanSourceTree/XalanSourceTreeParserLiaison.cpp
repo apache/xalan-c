@@ -262,13 +262,19 @@ void
 XalanSourceTreeParserLiaison::parseXMLStream(
 			const InputSource&		theInputSource,
 			ContentHandler&			theContentHandler,
+			DTDHandler*				theDTDHandler,
+			LexicalHandler*			theLexicalHandler,
 			const XalanDOMString&	/* theIdentifier */)
 {
 	XalanAutoPtr<SAX2XMLReader>		theReader(XMLReaderFactory::createXMLReader());
 
 	theReader->setContentHandler(&theContentHandler);
 
+	theReader->setDTDHandler(theDTDHandler);
+
 	theReader->setErrorHandler(&m_xercesParserLiaison);
+
+	theReader->setLexicalHandler(theLexicalHandler);
 
 	theReader->parse(theInputSource);
 }
