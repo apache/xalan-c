@@ -103,5 +103,5 @@ FunctionNot::clone() const
 const XalanDOMString
 FunctionNot::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The not() function takes one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The not() function takes one argument!"));
 }

@@ -100,5 +100,5 @@ FunctionFalse::clone() const
 const XalanDOMString
 FunctionFalse::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The false() function does not accept arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The false() function does not accept arguments!"));
 }

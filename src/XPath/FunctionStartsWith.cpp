@@ -77,7 +77,7 @@ FunctionStartsWith::~FunctionStartsWith()
 XObjectPtr
 FunctionStartsWith::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
+			XalanNode*				/* context */,
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
 			const Locator*			/* locator */) const
@@ -106,5 +106,5 @@ FunctionStartsWith::clone() const
 const XalanDOMString
 FunctionStartsWith::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The starts-with() function takes two arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The starts-with() function takes two arguments!"));
 }

@@ -134,5 +134,5 @@ FunctionElementAvailable::clone() const
 const XalanDOMString
 FunctionElementAvailable::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The function-available() function takes one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The function-available() function takes one argument!"));
 }

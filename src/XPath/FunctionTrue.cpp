@@ -100,6 +100,6 @@ FunctionTrue::clone() const
 const XalanDOMString
 FunctionTrue::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The true() function does not accept arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The true() function does not accept arguments!"));
 }
 

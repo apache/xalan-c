@@ -114,5 +114,5 @@ FunctionPosition::clone() const
 const XalanDOMString
 FunctionPosition::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The position() function does not accept any arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The position() function does not accept any arguments!"));
 }

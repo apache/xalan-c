@@ -125,5 +125,5 @@ FunctionIntersection::clone() const
 const XalanDOMString
 FunctionIntersection::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The intersection() function accepts two arguments");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The intersection() function accepts two arguments"));
 }

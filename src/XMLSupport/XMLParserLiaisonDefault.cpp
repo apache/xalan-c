@@ -159,6 +159,6 @@ XMLParserLiaisonDefault::destroyDocument(XalanDocument*		/* theDocument */)
 const XalanDOMString
 XMLParserLiaisonDefault::getParserDescription() const
 {
-	return XALAN_STATIC_UCODE_STRING("(No parser - generic DOM)");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("(No parser - generic DOM)"));
 }
 

@@ -150,5 +150,5 @@ FunctionNamespaceURI::clone() const
 const XalanDOMString
 FunctionNamespaceURI::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The namespace-uri() function takes zero arguments or one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The namespace-uri() function takes zero arguments or one argument!"));
 }

@@ -103,5 +103,5 @@ FunctionCeiling::clone() const
 const XalanDOMString
 FunctionCeiling::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The ceiling() function takes one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The ceiling() function takes one argument!"));
 }

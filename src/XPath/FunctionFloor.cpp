@@ -103,5 +103,5 @@ FunctionFloor::clone() const
 const XalanDOMString
 FunctionFloor::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The floor() function takes one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The floor() function takes one argument!"));
 }

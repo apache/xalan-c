@@ -148,5 +148,5 @@ FunctionLang::clone() const
 const XalanDOMString
 FunctionLang::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The lang() function takes one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The lang() function takes one argument!"));
 }

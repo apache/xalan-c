@@ -343,5 +343,5 @@ FunctionDocument::clone() const
 const XalanDOMString
 FunctionDocument::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The document() function accepts one or two arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The document() function accepts one or two arguments!"));
 }

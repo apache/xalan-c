@@ -124,7 +124,7 @@ XToken::clone(void*	theAddress) const
 XalanDOMString
 XToken::getTypeString() const
 {
-	return XALAN_STATIC_UCODE_STRING("#TOKEN");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("#TOKEN"));
 }
 
 

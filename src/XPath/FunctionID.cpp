@@ -191,7 +191,7 @@ FunctionID::clone() const
 const XalanDOMString
 FunctionID::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The id() function takes one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The id() function takes one argument!"));
 }
 
 

@@ -188,5 +188,5 @@ FunctionConcat::clone() const
 const XalanDOMString
 FunctionConcat::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The concat() function takes at least two arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The concat() function takes at least two arguments!"));
 }

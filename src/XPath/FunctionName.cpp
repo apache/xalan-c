@@ -144,5 +144,5 @@ FunctionName::clone() const
 const XalanDOMString
 FunctionName::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The name() function takes zero or one arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The name() function takes zero or one arguments!"));
 }

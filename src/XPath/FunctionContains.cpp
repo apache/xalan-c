@@ -127,5 +127,5 @@ FunctionContains::clone() const
 const XalanDOMString
 FunctionContains::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The contains() function takes two arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The contains() function takes two arguments!"));
 }

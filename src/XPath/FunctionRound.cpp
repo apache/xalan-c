@@ -107,5 +107,5 @@ FunctionRound::clone() const
 const XalanDOMString
 FunctionRound::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The round() function takes one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The round() function takes one argument!"));
 }

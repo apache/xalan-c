@@ -128,5 +128,5 @@ FunctionDifference::clone() const
 const XalanDOMString
 FunctionDifference::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The difference() function accepts two arguments");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The difference() function accepts two arguments"));
 }

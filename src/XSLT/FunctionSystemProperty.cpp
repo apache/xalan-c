@@ -179,5 +179,5 @@ FunctionSystemProperty::clone() const
 const XalanDOMString
 FunctionSystemProperty::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The system-property() function accepts one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The system-property() function accepts one argument!"));
 }

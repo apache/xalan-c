@@ -98,7 +98,7 @@ XNull::clone(void*	theAddress) const
 XalanDOMString
 XNull::getTypeString() const
 {
-	return XALAN_STATIC_UCODE_STRING("#NULL");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("#NULL"));
 }
 
 

@@ -233,7 +233,7 @@ FunctionNormalizeSpace::clone() const
 const XalanDOMString
 FunctionNormalizeSpace::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The normalize-space() function takes zero arguments or one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The normalize-space() function takes zero arguments or one argument!"));
 }
 
 

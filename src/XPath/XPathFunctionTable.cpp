@@ -111,6 +111,7 @@ XPathFunctionTable::~XPathFunctionTable()
 }
 
 
+
 void
 XPathFunctionTable::InstallFunction(
 			const XalanDOMString&	theFunctionName,
@@ -137,11 +138,11 @@ XPathFunctionTable::InstallFunction(
 	}
 	else
 	{
-		const int	theIndex = m_FunctionCollection.size();
+		const CollectionType::size_type		theIndex = m_FunctionCollection.size();
 
 		m_FunctionCollection.push_back(theFunction.clone());
 
-		m_FunctionNameIndex[theFunctionName] = theIndex;
+		m_FunctionNameIndex[theFunctionName] = int(theIndex);
 	}
 }
 

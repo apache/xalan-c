@@ -314,7 +314,7 @@ XalanSourceTreeParserLiaison::setUseValidation(bool		b)
 const XalanDOMString
 XalanSourceTreeParserLiaison::getParserDescription() const
 {
-	return XALAN_STATIC_UCODE_STRING("XalanSourceTree");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("XalanSourceTree"));
 }
 
 

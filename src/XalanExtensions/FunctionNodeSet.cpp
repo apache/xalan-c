@@ -192,5 +192,5 @@ FunctionNodeSet::clone() const
 const XalanDOMString
 FunctionNodeSet::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The node-set() function accepts one argument");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The node-set() function accepts one argument"));
 }

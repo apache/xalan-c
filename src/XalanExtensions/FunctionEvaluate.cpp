@@ -133,5 +133,5 @@ FunctionEvaluate::clone() const
 const XalanDOMString
 FunctionEvaluate::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The evaluate() function accepts one argument");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The evaluate() function accepts one argument"));
 }

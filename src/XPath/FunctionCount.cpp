@@ -105,5 +105,5 @@ FunctionCount::clone() const
 const XalanDOMString
 FunctionCount::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The count() function takes one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The count() function takes one argument!"));
 }

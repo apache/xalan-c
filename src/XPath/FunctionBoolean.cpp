@@ -103,5 +103,5 @@ FunctionBoolean::clone() const
 const XalanDOMString
 FunctionBoolean::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The boolean() function takes one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The boolean() function takes one argument!"));
 }

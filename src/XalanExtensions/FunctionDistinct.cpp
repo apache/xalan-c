@@ -164,5 +164,5 @@ FunctionDistinct::clone() const
 const XalanDOMString
 FunctionDistinct::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The distinct() function accepts one argument");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The distinct() function accepts one argument"));
 }

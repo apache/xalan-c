@@ -121,5 +121,5 @@ FunctionUnparsedEntityURI::execute(
 const XalanDOMString
 FunctionUnparsedEntityURI::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The unparsed-entity-uri function accepts one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The unparsed-entity-uri function accepts one argument!"));
 }

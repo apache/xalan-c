@@ -126,5 +126,5 @@ FunctionSum::clone() const
 const XalanDOMString
 FunctionSum::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The sum() function takes one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The sum() function takes one argument!"));
 }

@@ -102,5 +102,5 @@ FunctionLast::clone() const
 const XalanDOMString
 FunctionLast::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The last() function does not accept any arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The last() function does not accept any arguments!"));
 }

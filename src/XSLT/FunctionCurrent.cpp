@@ -110,5 +110,5 @@ FunctionCurrent::clone() const
 const XalanDOMString
 FunctionCurrent::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The current() function does not accept any arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The current() function does not accept any arguments!"));
 }

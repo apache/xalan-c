@@ -229,5 +229,5 @@ FunctionKey::clone() const
 const XalanDOMString
 FunctionKey::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The key() function takes two arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The key() function takes two arguments!"));
 }

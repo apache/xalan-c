@@ -179,7 +179,6 @@ FunctionLocalName::clone() const
 const XalanDOMString
 FunctionLocalName::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The local-name() function takes zero or one arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The local-name() function takes zero or one arguments!"));
 }
 

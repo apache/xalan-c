@@ -148,5 +148,5 @@ FunctionSubstringAfter::clone() const
 const XalanDOMString
 FunctionSubstringAfter::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The substring-after() function takes two arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The substring-after() function takes two arguments!"));
 }

@@ -256,7 +256,7 @@ FunctionFormatNumber::clone() const
 const XalanDOMString
 FunctionFormatNumber::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The format-number() function takes two or three arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The format-number() function takes two or three arguments!"));
 }
 
 

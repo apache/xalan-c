@@ -90,7 +90,7 @@ XNumberBase::~XNumberBase()
 XalanDOMString
 XNumberBase::getTypeString() const
 {
-	return XALAN_STATIC_UCODE_STRING("#NUMBER");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("#NUMBER"));
 }
 
 

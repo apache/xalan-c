@@ -157,5 +157,5 @@ FunctionTranslate::clone() const
 const XalanDOMString
 FunctionTranslate::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The translate() function takes three arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The translate() function takes three arguments!"));
 }

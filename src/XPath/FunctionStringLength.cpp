@@ -144,5 +144,5 @@ FunctionStringLength::clone() const
 const XalanDOMString
 FunctionStringLength::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The string-length() function takes zero or one argument!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The string-length() function takes zero or one argument!"));
 }

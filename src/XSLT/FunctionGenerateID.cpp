@@ -194,5 +194,5 @@ FunctionGenerateID::clone() const
 const XalanDOMString
 FunctionGenerateID::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The generate-id function takes zero or one arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The generate-id function takes zero or one arguments!"));
 }

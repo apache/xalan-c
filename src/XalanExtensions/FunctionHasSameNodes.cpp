@@ -130,5 +130,5 @@ FunctionHasSameNodes::clone() const
 const XalanDOMString
 FunctionHasSameNodes::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The has-same-nodes() function accepts two arguments");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The has-same-nodes() function accepts two arguments"));
 }

@@ -104,7 +104,7 @@ XStringBase::~XStringBase()
 XalanDOMString
 XStringBase::getTypeString() const
 {
-	return XALAN_STATIC_UCODE_STRING("#STRING");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("#STRING"));
 }
 
 

@@ -153,5 +153,5 @@ FunctionString::clone() const
 const XalanDOMString
 FunctionString::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The string() function takes zero or one arguments!");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The string() function takes zero or one arguments!"));
 }

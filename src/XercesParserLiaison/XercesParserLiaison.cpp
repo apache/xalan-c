@@ -304,7 +304,7 @@ XercesParserLiaison::setUseValidation(bool	b)
 const XalanDOMString
 XercesParserLiaison::getParserDescription() const
 {
-	return XALAN_STATIC_UCODE_STRING("Xerces");
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Xerces"));
 }
 
 
