@@ -64,6 +64,38 @@
 
 
 
+XalanNamespacesStack::PrefixResolverProxy::PrefixResolverProxy(
+			const XalanNamespacesStack&		theStack,
+			const XalanDOMString&			theURI) :
+	m_stack(theStack),
+	m_uri(theURI)
+{
+}
+
+
+
+XalanNamespacesStack::PrefixResolverProxy::~PrefixResolverProxy()
+{
+}
+
+
+
+const XalanDOMString*
+XalanNamespacesStack::PrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&	prefix) const
+{
+	return m_stack.getNamespaceForPrefix(prefix);
+}
+
+
+
+const XalanDOMString&
+XalanNamespacesStack::PrefixResolverProxy::getURI() const
+{
+	return m_uri;
+}
+
+
+
 XalanNamespacesStack::XalanNamespacesStackEntry::XalanNamespacesStackEntry() :
 	m_namespaces(),
 	m_position(m_namespaces.begin())

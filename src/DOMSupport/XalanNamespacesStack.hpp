@@ -73,6 +73,7 @@
 
 
 
+#include <PlatformSupport/PrefixResolver.hpp>
 #include <PlatformSupport/XalanNamespace.hpp>
 
 
@@ -80,6 +81,38 @@
 class XALAN_DOMSUPPORT_EXPORT XalanNamespacesStack
 {
 public:
+
+	class XALAN_DOMSUPPORT_EXPORT PrefixResolverProxy : public PrefixResolver
+	{
+	public:
+
+		/**
+		 * Construct a PrefixResolver from a XalanNamespaceStack
+		 * instance.
+		 *
+		 * @param theStack The stack to use for prefix resolution
+		 * @param theURI The namespace URI of the resolver, if any.  Only a reference is kept, so this cannot be a temporary
+		 * @return pointer to the string value if found, otherwise 0.
+		 */
+		PrefixResolverProxy(
+				const XalanNamespacesStack&		theStack,
+				const XalanDOMString&			theURI);
+
+		virtual
+		~PrefixResolverProxy();
+
+		virtual const XalanDOMString*
+		getNamespaceForPrefix(const XalanDOMString&		prefix) const;
+
+		virtual const XalanDOMString&
+		getURI() const;
+
+	private:
+
+		const XalanNamespacesStack&		m_stack;
+
+		const XalanDOMString&			m_uri;
+	};
 
 	class XALAN_DOMSUPPORT_EXPORT XalanNamespacesStackEntry
 	{
