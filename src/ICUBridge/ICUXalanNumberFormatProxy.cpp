@@ -191,7 +191,7 @@ ICUXalanNumberFormatProxy::format(
 {
 	UnicodeString	theUnicodeResult;
 
-	m_decimalFormat->format(theValue, theUnicodeResult);
+	m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
 
 	ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 }
