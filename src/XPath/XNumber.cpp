@@ -134,9 +134,9 @@ XNumber::str() const
 	if (isEmpty(m_cachedStringValue) == true)
 	{
 #if defined(XALAN_NO_MUTABLE)
-		((XNumber*)this)->m_cachedStringValue = DoubleToDOMString(m_value);
+		DoubleToDOMString(m_value, ((XNumber*)this)->m_cachedStringValue);
 #else
-		m_cachedStringValue = DoubleToDOMString(m_value);
+		DoubleToDOMString(m_value, m_cachedStringValue);
 #endif
 	}
 
