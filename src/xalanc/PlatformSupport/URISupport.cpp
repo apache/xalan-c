@@ -63,6 +63,7 @@
 
 
 
+#include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
 
@@ -157,10 +158,11 @@ URISupport::getURLStringFromString(
 		}
 		else
 		{
+			XALAN_USING_XERCES(ArrayJanitor)
 			XALAN_USING_XERCES(XMLPlatformUtils)
 
 			// Assume it's a file specification...
-			const XalanArrayAutoPtr<XalanDOMChar>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
+			const ArrayJanitor<XMLCh>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)), XMLPlatformUtils::fgMemoryManager);
 
 			const XalanDOMChar* const	theFullPath = theFullPathGuard.get();
 			assert(theFullPath != 0);
