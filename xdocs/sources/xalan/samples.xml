@@ -99,10 +99,10 @@
     <p>What it does: XalanTransform uses the XalanTransformer class and the associated C++ API to apply an XSL stylesheet file to an XML document file and write
     the transformation output to either an output file or to a stream. XalanTransform takes command-line 
     arguments for the XML document to be transformed, the XSL stylesheet to apply, and an optional output file argument. If you omit 
-    the third argument, XalanTransform writes the transformation output to a stream that is sent to standard out (the screen).</p>
+    the third argument, XalanTransform writes the transformation output to a stream that is sent to standard out (the console).</p>
     <p>You can run XalanTransform from the XalanTransform subdirectory with</p>
     <p><code>XalanTransform foo.xml foo.xsl foo.out</code></p>
-    <p>Omit the third argument to write the transformation result to the screen. See also: <link idref="usagepatterns" 
+    <p>Omit the third argument to write the transformation result to the console. See also: <link idref="usagepatterns" 
     anchor="xalantransformer">Using the XalanTransformer class.</link>.</p>
   </s2><anchor name="simpletransform"/>
   <s2 title="SimpleTransform">
@@ -139,7 +139,7 @@
   anchor="incremental">Processing output incrementally</link>.</p>
   <p>You can run it from the XalanTransformerCallback subdirectory with</p>
   <p><code>XalanTransformerCallback foo.xml foo.xsl [foo.out]</code></p>
-  <note>If you omit the third argument, the transformation result is written to the screen.</note>
+  <note>If you omit the third argument, the transformation result is written to the console.</note>
   </s2>
   <anchor name="tracelisten"/>
   <s2 title="TraceListen">
@@ -148,15 +148,21 @@
   <p>You can run it from the TraceListen subdirectory with</p>
   <p><code>TraceListen <ref>traceFlags</ref></code></p>
   <p>where <ref>traceFlags</ref> is one or more of the following:</p>
-  <p>&nbsp;&nbsp;<code>-TT</code> (Trace the templates as they are being called)</p>
-  <p>&nbsp;&nbsp;<code>-TG</code> (Trace each result tree generation event)</p>
-  <p>&nbsp;&nbsp;<code>-TS</code> (Trace each selection event)</p>
-  <p>&nbsp;&nbsp;<code>-TTC</code> (Trace the template children as they are being processed)</p>
+  <p>&nbsp;&nbsp;<code>-tt</code> (Trace the templates as they are being called)</p>
+  <p>&nbsp;&nbsp;<code>-tg</code> (Trace each result tree generation event)</p>
+  <p>&nbsp;&nbsp;<code>-ts</code> (Trace each selection event)</p>
+  <p>&nbsp;&nbsp;<code>-ttc</code> (Trace the template children as they are being processed)</p>
   <p>These flags are also available in the <link idref="commandline">command-line utility (TestXSLT)</link>.</p>
   <p>The core of this example is the following fragment:</p>
   <source>// Set up a diagnostic writer to be used by the TraceListener...
 XalanStdOutputStream  theStdErr(cerr);
 XalanOutputStreamPrintWriter  diagnosticsWriter(theStdErr);
+// Make sure that error reporting, which includes any TraceListener 
+// output does not throw exceptions when transcoding, since that could 
+// result in an exception being thrown while another exception is active.
+// In particular, characters that the TraceListener writes might not be 
+// representable in the local code page.
+theStdErr.setThrowTranscodeException(false);
 
 // Set up the TraceListener...
 // traceTemplates, traceTemplateChildren, traceGenerationEvent,
@@ -190,7 +196,7 @@ theProcessor.addTraceListener(&amp;theTraceListener);
   </s2><anchor name="threadsafe"/>
   <s2 title="ThreadSafe (Windows32 Only)">
   <p>What it does: Multiple threads use a single compiled stylesheet (StylesheetRoot) and DOM source tree (XalanNode) to perform
-  transformations concurrently. The application tracks the progress of the threads in messages to the screen, and each thread
+  transformations concurrently. The application tracks the progress of the threads in messages to the console, and each thread
   writes its own output file. Imagine a server application responding to multiple clients who happen to request the same
   transformation.</p>
   <note>This sample uses Windows libraries, but could readily be adapted to run under Linux, AIX, or other environments. It
@@ -234,7 +240,7 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     <p><code>SimpleXPathAPI foo.xml /doc name/@last</code></p>
     <p>and</p>
     <p><code>SimpleXPathAPI foo.xml / '//name[position()="4"]/@first'</code></p>
-     <note>If a SimpleXPathAPI argument includes characters (such as *) that the shell intercepts, enclose the argument 
+     <note>If a SimpleXPathAPI argument includes characters (such as *) that the shell interprets incorrectly, enclose the argument 
      in double quotes.</note>
     <p>See also: <link idref="usagepatterns" anchor="xpath">Working with XPath expressions</link>.</p>      
   </s2><anchor name="externalfunctions"/>
@@ -271,7 +277,7 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     /usr/lib; see <link idref="getstarted" anchor="path">Setting up the path/library path</link>), and copy the Apache module to 
     /usr/lib/apache.<br/><br/></li>
     <li>Add LoadModule and (UNIX only) AddModule entries to the Apache configuration file: httpd.conf.<br/><br/>
-    Windows: <code>LoadModule mod_xslt xml-xalan\c\Build\Win32\VC6\Release\ApacheModuleXSLT.dll</code><br/><br/>
+    Windows: <code>LoadModule xslt_module xml-xalan\c\Build\Win32\VC6\Release\ApacheModuleXSLT.dll</code><br/><br/>
     UNIX: <code>AddModule mod_xslt.c</code><br/>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and<br/>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>LoadModule xslt_module /usr/lib/apache/mod_xslt.<ref>xx</ref></code><br/><br/>

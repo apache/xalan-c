@@ -62,24 +62,24 @@
 <s1 title="&xslt4c; Command-Line Utility">
 <ul>
 <li><link anchor="use">Using the Command-Line Utility</link></li>
-<li><link anchor="icu">Enabling ICU support for TestXSLT</link></li>
+<li><link anchor="icu">Enabling ICU support for testXSLT</link></li>
 </ul><anchor name="use"/>
    
    <s2 title="Using the Command-Line Utility">
       <p>To perform a transformation, you can call &xslt4c; from the command line (or script), 
       or from within an application (see <link idref="usagepatterns">Usage Patterns</link>).</p>
-     <p>TestXSLT provides a command-line interface
+     <p>The testXSLT executable provides a command-line interface
     for performing XSL transformation. To perform a transformation from the command line or a script,
     do the following:</p>
  		<ol>
     <li><link idref="getstarted" anchor="download">Download &xslt4c;</link>.<br/><br/></li> 
     <li><link idref="getstarted"
      anchor="path">Set the path</link> to include the build directory.<br/><br/></li>
-    <li>Call the TestXSLT executable with the appropriate flags and
+    <li>Call the testXSLT executable with the appropriate flags and
     arguments (described below). The following command line, for example, includes the -IN, -XSL,
     and -OUT flags with their accompanying arguments -- the XML source document, the XSL
     stylesheet, and the output file:<br/><br/>
-    <code>TestXSLT -IN foo.xml -XSL foo.xsl -OUT foo.out</code>
+    <code>testXSLT -IN foo.xml -XSL foo.xsl -OUT foo.out</code>
     </li></ol>
     <p>The command line utility can take the following flags and arguments (the flags are case insensitive):</p> 
       <source>-IN inputXMLURL
@@ -114,21 +114,21 @@ The -XML or -HTML flag must be set:
       <p>Use -HTML to write 4.0 transitional HTML (some elements, such as &lt;br&gt;, are
       not well formed XML).</p>
       <p>To set stylesheet parameters from the command line, use <br/>
-      <code>TestXSLT -PARAM <ref>name expression</ref></code><br/>
+      <code>testXSLT -PARAM <ref>name expression</ref></code><br/>
       To set the parameter to a string value, enclose the string in single quotes (') to
       make it an expression.</p>
     </s2><anchor name="icu"/>  
-    <s2 title="Enabling ICU support for TestXSLT">
+    <s2 title="Enabling ICU support for testXSLT">
      <p>You can set up the <resource-ref idref="icu"/> to enhance the support that &xslt4c; provides for encoding, number
      formatting, and sorting. For more information, see <link idref="usagepatterns" anchor="icu">Using the ICU</link>.</p>
-     <p>If you have built and integrated the ICU with &xml4c;, TestXSLT (like any &xslt4c; application) automatically uses ICU
+     <p>If you have built and integrated the ICU with &xml4c;, testXSLT (like any &xslt4c; application) automatically uses ICU
      support for output encoding. See <resource-ref idref="xerces-build-icu"/>.</p>     
-     <p>TestXSLT also conditionally includes ICU support for number formatting and sorting. Look in process.cpp for the
+     <p>The testXSLT executable also conditionally includes ICU support for number formatting and sorting. Look in process.cpp for the
      <code>#if defined(XALAN_USE_ICU)</code> blocks. In these blocks, process.cpp #includes the ICUBridge headers, and
      substitutes ICU support for xsl:number, format-number(), and xsl:sort. To activate this support:</p>
      <ol>
        <li>Download and build the ICU (see <link idref="usagepatterns" anchor="icu">Using the ICU</link>).<br/><br/></li>
-       <li>Rebuild TestXSLT with the ICU enabled (see below).</li>
+       <li>Rebuild testXSLT with the ICU enabled (see below).</li>
      </ol>
      <s3 title="Rebuilding TestXSLT in Windows">
      <ol>
@@ -137,18 +137,18 @@ The -XML or -HTML flag must be set:
        <li>Build TestXSLT.exe.</li>     
      </ol>     
      </s3>
-     <s3 title="Rebuilding TestXSLT in UNIX">
+     <s3 title="Rebuilding testXSLT in UNIX">
      <p>In the Linux, AIX, HP-UX 11, and Solaris builds, the ICUBridge is in the core Xalan library (&xslt4c-linuxlib; in Linux; &xslt4c-aixlib; in
-     AIX; &xslt4c-hplib; in HP-UX 11; &xslt4c-solarislib; in Solaris), so you must rebuild this library along with TestXSLT.</p>
+     AIX; &xslt4c-hplib; in HP-UX 11; &xslt4c-solarislib; in Solaris), so you must rebuild this library along with testXSLT.</p>
      <p>Before you do the build, define the XALAN_USE_ICU environment variable.  For information about defining this
      environment variable and doing a build, see <link idref="readme" anchor="unix">Steps for doing a
      UNIX build</link>.</p>
      <note>The make file uses the XALAN_USE_ICU environment variable to do the equivalent of a #define and to add
-     ICUBridge to the list of dependencies for TestXSLT. If you uncomment the <code>#define XALAN_USE_ICU</code>
+     ICUBridge to the list of dependencies for testXSLT. If you uncomment the <code>#define XALAN_USE_ICU</code>
      statement in process.cpp (which is the right thing to do in Windows), you will get an error in AIX ("The
      macro 'XALAN_USE_ICU' has already been defined"), an error in HP-UX 11 ("Redefinition of macro 'XALAN-USE_ICU' 
      differs from previous definition"), or a warning in Linux or Solaris about duplicate settings when you
-     run the make, and TestXSLT does not link with ICUBridge.</note>
+     run the make, and testXSLT does not link with ICUBridge.</note>
      </s3>
    </s2>
 </s1>
