@@ -195,14 +195,23 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 		{
 			m_pNamespaceAVT->evaluate(attrNameSpace, sourceNode, *this, executionContext);
 
+			indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
+
 			if(isEmpty(attrNameSpace))
 			{
+				// If there's no namespace, but the attribute has a
+				// prefix, then we must strip the prefix off.
+				if (indexOfNSSep < origAttrNameLength)
+				{
+					substring(origAttrName, attrName, indexOfNSSep + 1);
+				}
+
+				// We set this to indicate that there is no prefix any
+				// longer.
 				indexOfNSSep = origAttrNameLength;
 			}
 			else
 			{
-				indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
-
 				// See if the namespace already exists.  If it does, we'll get the
 				// prefix that was used when it was declared.
 				const XalanDOMString*  const	prefix =
