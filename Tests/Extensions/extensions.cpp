@@ -54,13 +54,22 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+// Base header file.  Must be first.
+#include <Include/PlatformDefinitions.hpp>
 
 
+
+#include <cstdio>
+
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#include <strstream.h>
+#else
 #include <iostream>
 #include <strstream>
-#include <cstdio>
-#include <direct.h>
-#include <vector>
+#endif
+
+
 
 // This is here for memory leak testing. 
 #if !defined(NDEBUG) && defined(_MSC_VER)
@@ -94,16 +103,23 @@
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-#endif
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
 
 
 
 // GLOBAL VARIABLES...
 const char* const	resultString = "The specified function is not available: http://xml.apache.org/xalan:nodeset";
+
+
+XALAN_USING_XALAN(FileUtility)
+XALAN_USING_XALAN(XalanDOMString)
+XALAN_USING_XALAN(XalanTransformer)
+XALAN_USING_XALAN(XMLFileReporter)
+XALAN_USING_XALAN(XSLTInputSource)
+XALAN_USING_XALAN(XSLTResultTarget)
+
 
 
 void
@@ -173,8 +189,8 @@ TestCase1(
 	h.data.xslFileURL = xsl;
 
 	// Create the InputSources and ResultTraget.
-	const XSLTInputSource	xmlInputSource(c_wstr(xml));
-	const XSLTInputSource	xslInputSource(c_wstr(xsl));
+	const XSLTInputSource	xmlInputSource(xml);
+	const XSLTInputSource	xslInputSource(xsl);
 	const XSLTResultTarget	theResultTarget(theOutputFile);
 
 	// Perform the transform and check the results.
@@ -208,8 +224,8 @@ TestCase2(
 	h.data.xslFileURL = xsl;
 
 	// Create the InputSources and ResultTraget.
-	const XSLTInputSource	xmlInputSource(c_wstr(xml));
-	const XSLTInputSource	xslInputSource(c_wstr(xsl));
+	const XSLTInputSource	xmlInputSource(xml);
+	const XSLTInputSource	xslInputSource(xsl);
 	const XSLTResultTarget	theResultTarget(theOutputFile);
 
 	// UnInstall the external Global function "nodeset"
@@ -244,7 +260,8 @@ void TestCase3(
 			XMLFileReporter&		logFile,
 			FileUtility&			h)
 {
-	
+	XALAN_USING_XALAN(FunctionNodeSet)
+
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 	
 	generateFiles(fileName, currentDir, xml, xsl, theOutputFile, theGoldFile, "tc3-", h);
@@ -254,8 +271,8 @@ void TestCase3(
 	h.data.xslFileURL = xsl;
 
 	// Create the InputSources and ResultTraget.
-	const XSLTInputSource	xmlInputSource(c_wstr(xml));
-	const XSLTInputSource	xslInputSource(c_wstr(xsl));
+	const XSLTInputSource	xmlInputSource(xml);
+	const XSLTInputSource	xslInputSource(xsl);
 	const XSLTResultTarget	theResultTarget(theOutputFile);
 
 	// Install the external function "nodeset"
@@ -315,6 +332,7 @@ void TestCase4(
 			XMLFileReporter&		logFile,
 			FileUtility&			h)
 {
+	XALAN_USING_XALAN(FunctionNodeSet)
 	
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 
@@ -324,8 +342,8 @@ void TestCase4(
 	h.data.xslFileURL = xsl;
 
 	// Create the InputSources and ResultTraget.
-	const XSLTInputSource	xmlInputSource(c_wstr(xml));
-	const XSLTInputSource	xslInputSource(c_wstr(xsl));
+	const XSLTInputSource	xmlInputSource(xml);
+	const XSLTInputSource	xslInputSource(xsl);
 	const XSLTResultTarget	theResultTarget(theOutputFile);
 
 	// Install the external function "nodeset" Globally
@@ -355,6 +373,8 @@ runTests(
 {
 	int				theResult = 0;
 
+	XALAN_USING_XALAN(HarnessInit)
+
 	HarnessInit		xmlPlatformUtils;
 
 	FileUtility		h;
@@ -371,7 +391,7 @@ runTests(
 		// Check that the base directory is correct.
 		if ( !h.checkDir(extDir) )
 		{
-			cout << "Invalid base directory - " << c_str(TranscodeToLocalCodePage(extDir)) << endl;
+			cout << "Invalid base directory - " << extDir << endl;
 			cout << h.args.getHelpMessage();
 
 			theResult = -1;
@@ -401,6 +421,8 @@ runTests(
 				const XalanDOMString	theOutputDir(h.args.output + currentDir);
 
 				h.checkAndCreateDir(theOutputDir);
+
+				typedef FileUtility::FileNameVectorType		FileNameVectorType;
 
 				// Get the files found in the "cextension" directory
 				const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
@@ -459,6 +481,8 @@ main(
 
 	try
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
 		XMLPlatformUtils::Initialize();

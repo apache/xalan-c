@@ -57,34 +57,45 @@
 // Base header file.  Must be first.
 #include <Include/PlatformDefinitions.hpp>
 
+
+
+#include <cstdio>
+
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#else
 #include <iostream>
-#include <strstream>
-#include <stdio.h>
-#include <direct.h>
-#include <vector>
+#endif
 
 // This is here for memory leak testing. 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
 
+
+
 #include <xercesc/util/PlatformUtils.hpp>
+
+
 
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
+
+
 #include <XalanTransformer/XalanTransformer.hpp>
+
+
 
 #include <Harness/XMLFileReporter.hpp>
 #include <Harness/FileUtility.hpp>
 #include <Harness/HarnessInit.hpp>
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-#endif
+
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
 
 
 
@@ -205,9 +216,9 @@ runTests(
 					theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + fileName;
 					theGoldFile = h.generateFileName(theGoldFile, "out");
 
-					XSLTResultTarget		theResultTarget(theOutputFile);
-					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+					const XSLTResultTarget	theResultTarget(theOutputFile);
+					const XSLTInputSource	xslInputSource(theXSLFile);
+					const XSLTInputSource	xmlInputSource(theXMLFile);
 							
 					// Set the desired parameters
 					switch (getTestNumber(fileName))
@@ -236,7 +247,7 @@ runTests(
 
 						case 7:
 							{
-								const XSLTInputSource	embed07InputSource(c_wstr(theXSLFile));
+								const XSLTInputSource	embed07InputSource(theXSLFile);
 								xalan.transform(embed07InputSource, theResultTarget);
 								append(h.data.testOrFile, " (Embed01)" );
 								embedFlag = true;
@@ -245,7 +256,7 @@ runTests(
 
 						case 8:
 							{
-								const XSLTInputSource	embed08InputSource(c_wstr(theXSLFile));
+								const XSLTInputSource	embed08InputSource(theXSLFile);
 								xalan.transform(embed08InputSource, theResultTarget);
 								append(h.data.testOrFile, " (Embed02)" );
 								embedFlag = true;

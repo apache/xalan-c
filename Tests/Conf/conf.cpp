@@ -55,6 +55,11 @@
  * <http://www.apache.org/>.
  */
 
+// Base header file.  Must be first.
+#include <Include/PlatformDefinitions.hpp>
+
+
+
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
 #else
@@ -64,13 +69,10 @@
 #include <cstdio>
 
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
-	using std::cerr;
-	using std::cout;
-	using std::cin;
-	using std::endl;
-	using std::ostringstream;
-#endif
+
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
 
 
 
@@ -134,7 +136,7 @@ setHelp(FileUtility&	h)
 
 static const char* const 	excludeStylesheets[] =
 {
-	"output22.xsl",		// Excluded because it outputs EBCDIC
+//	"output22.xsl",		// Excluded because it outputs EBCDIC
 	0
 };
 
@@ -291,6 +293,8 @@ runTests(
 			// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
 			bool	foundDir = false;
 
+			typedef FileUtility::FileNameVectorType		FileNameVectorType;
+
 			const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
 
 			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
@@ -317,7 +321,8 @@ runTests(
 
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
-						Hashtable attrs;
+						XMLFileReporter::Hashtable	attrs;
+
 						const XalanDOMString&	currentFile = files[i];
 						if (checkForExclusion(currentFile))
 							continue;
@@ -341,8 +346,8 @@ runTests(
 						const XalanDOMString  outbase =  h.args.output + currentDir + FileUtility::s_pathSep + currentFile; 
 						const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
 
-						const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-						const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+						const XSLTInputSource	xslInputSource(theXSLFile);
+						const XSLTInputSource	xmlInputSource(theXMLFile);
 						const XSLTResultTarget	resultFile(theOutputFile);
 
 						// Parsing(compile) the XSL stylesheet and report the results..

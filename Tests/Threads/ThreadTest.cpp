@@ -54,23 +54,29 @@ typedef long sigjmp_buf[_JBLEN];
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
+
+
+	
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 	using std::atoi;
 	using std::signal;
 	using std::strcmp;
 #endif
-#endif
-
 
 	
-// This is here for memory leak testing.
+	
+	// This is here for memory leak testing.
 #if defined(_DEBUG)
 #include <crtdbg.h>
 #endif
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutex			XMLMutexType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutexLock		XMLMutexLockType;
 
 
 
@@ -93,9 +99,9 @@ public:
 
 private:
 
-	mutable XMLMutex	m_mutex;
+	mutable XMLMutexType	m_mutex;
 
-	long				m_counter;
+	long					m_counter;
 };
 
 
@@ -117,7 +123,7 @@ SynchronizedCounter::~SynchronizedCounter()
 void
 SynchronizedCounter::increment()
 {
-	XMLMutexLock	theLock(&m_mutex);
+	XMLMutexLockType	theLock(&m_mutex);
 
 	if (m_counter < LONG_MAX)
 	{
@@ -130,7 +136,7 @@ SynchronizedCounter::increment()
 void
 SynchronizedCounter::decrement()
 {
-	XMLMutexLock	theLock(&m_mutex);
+	XMLMutexLockType	theLock(&m_mutex);
 
 	if (m_counter > 0)
 	{
@@ -166,6 +172,13 @@ ThreadInfo
 
 	bool					m_done;
 };
+
+
+
+XALAN_USING_XALAN(XalanCompiledStylesheet)
+XALAN_USING_XALAN(XalanDOMChar)
+XALAN_USING_XALAN(XalanDOMString)
+XALAN_USING_XALAN(XalanParsedSource)
 
 
 
@@ -250,6 +263,9 @@ thePreparsedThreadRoutine(void*		param)
 
 	try
 	{
+		XALAN_USING_XALAN(UnsignedLongToDOMString)
+		XALAN_USING_XALAN(XalanTransformer)
+
 		// Our input file.  The assumption is that the executable will be run
 		// from same directory as the input files.
 
@@ -263,7 +279,7 @@ thePreparsedThreadRoutine(void*		param)
 		XalanTransformer	theTransformer;
 
 		// Do the transform...
-		theTransformer.transform(*glbParsedSource, glbCompiledStylesheet, XSLTResultTarget(theOutputFile));
+		theTransformer.transform(*glbParsedSource, glbCompiledStylesheet, theOutputFile);
 	}
 	catch(...)
 	{
@@ -311,6 +327,9 @@ theUnparsedThreadRoutine(void*		param)
 
 	try
 	{
+		XALAN_USING_XALAN(UnsignedLongToDOMString)
+		XALAN_USING_XALAN(XalanTransformer)
+
 		// Our input file.  The assumption is that the executable will be run
 		// from same directory as the input files.
 
@@ -329,7 +348,7 @@ theUnparsedThreadRoutine(void*		param)
 		theTransformer.transform(
 			theSourceFileName,
 			theStylesheetFileName,
-			XSLTResultTarget(theOutputFile));
+			theOutputFile);
 	}
 	catch(...)
 	{
@@ -531,6 +550,8 @@ doThreads(
 
 	cout << endl << "Starting " << theThreadCount << " threads." << endl;
 
+	XALAN_USING_XALAN(XalanArrayAutoPtr)
+
 	XalanArrayAutoPtr<ThreadInfo>	theThreadInfo(new ThreadInfo[theThreadCount]);
 
 	try
@@ -655,6 +676,10 @@ main(
 		{
 			try
 			{
+				XALAN_USING_XERCES(XMLPlatformUtils)
+
+				XALAN_USING_XALAN(XalanTransformer)
+
 				// Initialize Xerces...
 				XMLPlatformUtils::Initialize();
 

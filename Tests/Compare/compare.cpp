@@ -55,41 +55,62 @@
  * <http://www.apache.org/>.
  */
 
+// Base header file.  Must be first.
+#include <Include/PlatformDefinitions.hpp>
+
+
+
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#include <strstream.h>
+#else
 #include <iostream>
 #include <strstream>
-#include <cstdio>
-#include <direct.h>
-
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::endl;
 #endif
+
+#include <cstdio>
+
+#if defined(_MSC_VER)
+#include <direct.h>
+#endif
+
+
+
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(endl)
+
+
 
 // XERCES HEADERS...
 #include <xercesc/util/PlatformUtils.hpp>
+
+
 
 // XALAN HEADERS...
 #include <XalanSourceTree/FormatterToSourceTree.hpp>
 #include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
 #include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
+
+
 #include <XalanTransformer/XalanTransformer.hpp>
 
-// HARNESS HEADERS...
+
+
 #include <Harness/XMLFileReporter.hpp>
 #include <Harness/FileUtility.hpp>
 #include <Harness/HarnessInit.hpp>
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
-#else
-	typedef std::map<XalanDOMString, XalanDOMString>  Hashtable;
-#endif
+
 
 // This is here for memory leak testing.
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
+
+
+
+XALAN_USING_XALAN(FileUtility)
 
 
 
@@ -115,7 +136,9 @@ runTests(
 			int				argc,
 			const char*		argv[])
 {
-	HarnessInit xmlPlatformUtils;
+	XALAN_USING_XALAN(HarnessInit)
+
+	HarnessInit		xmlPlatformUtils;
 
 	FileUtility		h;
 
@@ -127,13 +150,25 @@ runTests(
 
 	if (h.getParams(argc, argv, "DOMCOM-RESULTS", setGold) == true)
 	{
+		XALAN_USING_XALAN(FormatterToSourceTree)
+		XALAN_USING_XALAN(XalanCompiledStylesheet)
+		XALAN_USING_XALAN(XalanDOMString)
+		XALAN_USING_XALAN(XalanParsedSource)
+		XALAN_USING_XALAN(XalanSourceTreeDocument)
+		XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
+		XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
+		XALAN_USING_XALAN(XalanTransformer)
+		XALAN_USING_XALAN(XMLFileReporter)
+		XALAN_USING_XALAN(XSLTInputSource)
+		XALAN_USING_XALAN(XSLTResultTarget)
+
 		//
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
-		XalanTransformer xalan;
+		XalanTransformer	xalan;
 
-		XalanSourceTreeDOMSupport domSupport;
-		XalanSourceTreeParserLiaison parserLiaison(domSupport);
+		XalanSourceTreeDOMSupport		domSupport;
+		XalanSourceTreeParserLiaison	parserLiaison(domSupport);
 		domSupport.setParserLiaison(&parserLiaison);
 
 
@@ -142,7 +177,7 @@ runTests(
 		const XalanDOMString  resultFilePrefix("cpp");
 		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
 
-		XMLFileReporter	logFile(resultsFile);
+		XMLFileReporter		logFile(resultsFile);
 		logFile.logTestFileInit("Comparison Testing:");
 					
 		// Specify the "test" directory for both input and output.
@@ -154,7 +189,10 @@ runTests(
 		// Get the files found in the test directory
 		//
 		logFile.logTestCaseInit(currentDir);
-		const FileNameVectorType files = h.getTestFileNames(h.args.base, currentDir, true);
+
+		typedef FileUtility::FileNameVectorType		FileNameVectorType;
+
+		const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
 
 		for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 		{
@@ -170,15 +208,15 @@ runTests(
 			const XalanDOMString  outbase =  h.args.output + currentDir + FileUtility::s_pathSep + fileName; 
 			const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
 
-			const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-			const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-			const XSLTInputSource	goldInputSource(c_wstr(theGoldFile));
+			const XSLTInputSource	xslInputSource(theXSLFile);
+			const XSLTInputSource	xmlInputSource(theXMLFile);
+			const XSLTInputSource	goldInputSource(theGoldFile);
 
 			// Use a XalanSourceTreeDocument to create the XSLTResultTarget. 
 			//
 			XalanSourceTreeDocument* dom = parserLiaison.createXalanSourceTreeDocument();
-			FormatterToSourceTree domOut(dom); 
-			XSLTResultTarget domResultTarget;
+			FormatterToSourceTree	domOut(dom); 
+			XSLTResultTarget		domResultTarget;
 			domResultTarget.setDocumentHandler(&domOut);
 
 			// Parsing(compile) the XSL stylesheet and report the results..
@@ -237,6 +275,10 @@ main(
 
 	try
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
+		XALAN_USING_XALAN(XalanTransformer)
+
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
 		XMLPlatformUtils::Initialize();

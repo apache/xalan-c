@@ -236,8 +236,8 @@ runTests(
 				const XalanDOMString  outbase =  h.args.output + dirs[j] + FileUtility::s_pathSep + files[i]; 
 				const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
 
-				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+				const XSLTInputSource	xslInputSource(theXSLFile);
+				const XSLTInputSource	xmlInputSource(theXMLFile);
 				const XSLTResultTarget	theResultTarget(theOutputFile);
 
 				attrs.insert(Hashtable::value_type(XalanDOMString("href"), theXSLFile));

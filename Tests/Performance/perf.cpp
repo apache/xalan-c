@@ -55,18 +55,19 @@
  * <http://www.apache.org/>.
  */
 
-#include <iostream>
-#include <strstream>
-#include <stdio.h>
-#include <direct.h>
+#include <cstdio>
 
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#else
+#include <iostream>
+#endif
 
 // This is here for memory leak testing.
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
 
-#include <vector>
 
 #include <xercesc/util/PlatformUtils.hpp>
 
@@ -94,41 +95,36 @@
 #include <Harness/HarnessInit.hpp>
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-#endif
 
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
-#else
-	typedef std::map<XalanDOMString, XalanDOMString>	Hashtable;
-#endif
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
 
 
 
-	const char* const 	excludeStylesheets[] =
+const char* const 	excludeStylesheets[] =
 {
 	"large-evans_large.xsl",
 	0
 };
 
 
+
 inline bool
 checkForExclusion(const XalanDOMString&		currentFile)
 {
+	for (int i=0; excludeStylesheets[i] != 0; i++)
+	{	
+		if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
+		{
+			return true;
+		}
+	}
 
-		for (int i=0; excludeStylesheets[i] != 0; i++)
-			{	
-				if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
-					{
-						return true;
-					}
-			}
-		return false;
+	return false;
 }
+
+
 
 inline StylesheetRoot*
 processStylesheet(
@@ -136,7 +132,7 @@ processStylesheet(
 			XSLTProcessor&					theProcessor,
 			StylesheetConstructionContext&	theConstructionContext)
 {
-	const XSLTInputSource	theInputSource(c_wstr(theFileName));
+	const XSLTInputSource	theInputSource(theFileName);
 
 	return theProcessor.processStylesheet(theInputSource, theConstructionContext);
 }
@@ -148,7 +144,7 @@ parseSourceDocument(
 			const XalanDOMString&	theFileName,
 			XSLTProcessor&			theProcessor)
 {
-	const XSLTInputSource	theInputSource(c_wstr(theFileName));
+	const XSLTInputSource	theInputSource(theFileName);
 
 	return theProcessor.getSourceTreeFromInput(theInputSource);
 }
@@ -301,11 +297,12 @@ main(int			argc,
 	{
 
 		// Generate Unique Run id and processor info
-		const XalanDOMString UniqRunid = h.generateUniqRunid();
-		const XalanDOMString  resultFilePrefix(XalanDOMString("cpp"));
-		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+		const XalanDOMString	UniqRunid = h.generateUniqRunid();
+		const XalanDOMString	resultFilePrefix(XalanDOMString("cpp"));
+		const XalanDOMString	resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
 
 		XMLFileReporter	logFile(resultsFile);
+
 		logFile.logTestFileInit("Performance Testing - Reports performance times for single transform, and average for multiple transforms using compiled stylesheet");
 
 		try
@@ -348,10 +345,9 @@ main(int			argc,
 						double timeinMilliseconds, theAverage;
 						Hashtable attrs;
 					
-						if (skip)
+						if (skip && checkForExclusion(files[i]))
 						{
-							if (checkForExclusion(files[i]))
-								continue;
+							continue;
 						}
 
 						const XalanDOMString  theXSLFile= h.args.base + dirs[j] + FileUtility::s_pathSep + files[i];
@@ -436,9 +432,9 @@ main(int			argc,
 						// the processor, since those objects have the same lifetime as
 						// other objects created as a result of the execution.
 
-						XSLTResultTarget		theResultTarget(theOutputFile);
-						const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-						const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+						const XSLTResultTarget	theResultTarget(theOutputFile);
+						const XSLTInputSource	xslInputSource(theXSLFile);
+						const XSLTInputSource	xmlInputSource(theXMLFile);
 
 						StylesheetExecutionContextDefault	psExecutionContext(
 											csProcessor,
@@ -548,30 +544,25 @@ main(int			argc,
 
 			}
 
-		// Check to see if -sub cmd-line directory was processed correctly.
-		if (!foundDir)
-		{
-			cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
+			// Check to see if -sub cmd-line directory was processed correctly.
+			if (!foundDir)
+			{
+				cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
+			}
+
+			h.reportPassFail(logFile, UniqRunid);
+			logFile.logTestFileClose("Performance", "Done");
+			logFile.close();
 		}
-
-		h.reportPassFail(logFile, UniqRunid);
-		logFile.logTestFileClose("Performance", "Done");
-		logFile.close();
-
-		}//try
-
 		catch(const XalanFileOutputStream::XalanFileOutputStreamOpenException& ex)
 		{
 			cerr << ex.getMessage() << endl << endl;
 		}
-
 		catch(...)
 		{
 			cerr << "Exception caught!!!" << endl  << endl;
 		}
-		
-
-	} //if getParams
+	}
 
 	return 0;
 }

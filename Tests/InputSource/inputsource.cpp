@@ -59,11 +59,15 @@
 
 
 
-#include <iostream>
-#include <strstream>
 #include <cstdio>
-#include <direct.h>
-#include <vector>
+
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#else
+#include <iostream>
+#endif
+
+
 
 // This is here for memory leak testing. 
 #if !defined(NDEBUG) && defined(_MSC_VER)
@@ -77,11 +81,7 @@
 
 
 
-#if XERCES_VERSION_MAJOR >= 2
-#include <xercesc/dom/deprecated/DOMParser.hpp>
-#else
-#include <xercesc/parsers/DOMParser.hpp>
-#endif
+#include <xercesc/parsers/XercesDOMParser.hpp>
 
 
 
@@ -103,20 +103,24 @@
 #include <XalanTransformer/XalanTransformer.hpp>
 #include <XalanTransformer/XercesDOMWrapperParsedSource.hpp>
 
+
 // HARNESS HEADERS...
 #include <Harness/XMLFileReporter.hpp>
 #include <Harness/FileUtility.hpp>
 #include <Harness/HarnessInit.hpp>
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-#endif
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
 
 
 	
+// Just hoist everything...
+XALAN_CPP_NAMESPACE_USE
+
+
+
 void
 setHelp(FileUtility&	h)
 {
@@ -152,8 +156,8 @@ testCase1(
 	h.data.testOrFile = "InputSource-TestCase1";
 
 	// This code exercised the stated methods of XSLTInputSource
-	const XSLTInputSource	xmlInputSource(c_wstr(xml));
-	const XSLTInputSource	xslInputSource(c_wstr(xsl), c_wstr(publicID));
+	const XSLTInputSource	xmlInputSource(xml);
+	const XSLTInputSource	xslInputSource(xsl, publicID);
 
 	// Do the transform and report the results.
 	xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
@@ -329,13 +333,16 @@ testCase5(
 			const XalanDOMString&	theGoldFile,
 			FileUtility&			h)
 {
+	XALAN_USING_XERCES(XercesDOMParser)
+	XALAN_USING_XERCES(DOMDocument)
+
 	h.data.testOrFile = "InputSource-TestCase5";
-	const XSLTInputSource	xmlInputSource(c_wstr(xml));
+	const XSLTInputSource	xmlInputSource(xml);
 		 
-	DOMParser  theParser;
-	theParser.setToCreateXMLDeclTypeNode(false);
+	XercesDOMParser		theParser;
+
 	theParser.parse(xmlInputSource);
-	const DOM_Document theDOM = theParser.getDocument();
+	const DOMDocument* const	theDOM = theParser.getDocument();
 
 	XercesDOMSupport	theDOMSupport;
 	XercesParserLiaison theParserLiaison(theDOMSupport);
@@ -348,7 +355,7 @@ testCase5(
 
 	const XalanDOMString theOutputFile(outBase + XalanDOMString("\\InputSource-TestCase5.out"));
 
-	const XSLTInputSource	xslInputSource(c_wstr(xsl));
+	const XSLTInputSource	xslInputSource(xsl);
 	const XSLTResultTarget	theResultTarget(theOutputFile);
 
 	// Do the transform and report the results.
@@ -382,7 +389,7 @@ runTests(
 		const XalanDOMString drive(h.getDrive());
 		const XalanDOMString  resultFilePrefix("isource");
 		const XalanDOMString  resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
-			
+
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("XSLTInputSource Testing: Give various types of allowable Inputs. ");
 
@@ -391,13 +398,15 @@ runTests(
 			XalanTransformer	xalan;
 
 			XalanDOMString		fileName;
-					
+
 			// Get testfiles from the capi\smoke directory, create output directory, .
 			//
 			const XalanDOMString  currentDir("smoke");
 			const XalanDOMString  theOutputDir = h.args.output + currentDir;
 				
 			h.checkAndCreateDir(theOutputDir);
+
+			typedef FileUtility::FileNameVectorType		FileNameVectorType;
 
 			// Get the single file found in the "smoke" directory, and run tests.
 			//
@@ -464,6 +473,8 @@ main(
 
 	try
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
 		XMLPlatformUtils::Initialize();

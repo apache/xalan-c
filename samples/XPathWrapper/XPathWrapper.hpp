@@ -88,7 +88,7 @@ public:
 
 	typedef XALAN_CPP_NAMESPACE_QUALIFIER CharVectorType	CharVectorType;
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<CharVectorType>			CharVectorTypeVectorType;	
 #else
 	typedef std::vector<CharVectorType>		CharVectorTypeVectorType;	

@@ -148,13 +148,15 @@ public:
 	{
 	private:
 
-#if defined(XALAN_NO_NAMESPACES)
-		ostrstream			help;
+#if defined(XALAN_NO_STD_NAMESPACE)
+		typedef ostrstream			StreamType;
 #else
-		std::ostrstream		help;
+		typedef std::ostrstream		StreamType;
 #endif
 
-		char*				data;
+		StreamType	help;
+
+		char*		data;
 
 	public:
 
@@ -186,11 +188,7 @@ public:
 			return data;
 		}
 
-#if defined(XALAN_NO_NAMESPACES)
-		ostream&
-#else
-		std::ostream&
-#endif
+		StreamType&
 		getHelpStream()
 		{
 			return help;

@@ -123,9 +123,7 @@ theThread(LPVOID	param)
 void
 doThreads(int	nThreads)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::vector;
-#endif
+	XALAN_USING_STD(vector)
 
 	vector<HANDLE>	hThreads;
 

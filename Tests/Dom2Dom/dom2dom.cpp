@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,19 +57,26 @@
 // Base header file.  Must be first.
 #include <Include/PlatformDefinitions.hpp>
 
+
+
 #include <iostream>
 #include <strstream>
 #include <stdio.h>
 #include <direct.h>
 #include <vector>
 
+
+
 // This is here for memory leak testing. 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
 
+
+
 #include <xercesc/sax/SAXException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
@@ -77,8 +84,12 @@
 #include <PlatformSupport/XalanFileOutputStream.hpp>
 #include <PlatformSupport/XalanStdOutputStream.hpp>
 
+
+
 #include <XMLSupport/FormatterToXML.hpp>
 #include <XMLSupport/FormatterTreeWalker.hpp>
+
+
 
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
@@ -86,20 +97,28 @@
 #include <XalanTransformer/XalanTransformer.hpp>
 #include <XalanTransformer/XalanCompiledStylesheetDefault.hpp>
 
+
+
 #include <Harness/XMLFileReporter.hpp>
 #include <Harness/FileUtility.hpp>
 #include <Harness/HarnessInit.hpp>
+
 
 
 #include <XercesParserLiaison/XercesDOMSupport.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-#endif
+
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
+
+
+
+// Just hoist everything...
+XALAN_CPP_NAMESPACE_USE
+
 
 
 void
@@ -182,7 +201,7 @@ getParams(
 	{
 		unsigned int ii = lastIndexOf(basedir,charAt(FileUtility::s_pathSep,0));
 		outdir = substring(basedir, 0, ii+1);
-		append(outdir,XalanDOMString("Dom2Dom-RESULTS\\"));
+		append(outdir, "Dom2Dom-RESULTS\\");
 		f.checkAndCreateDir(outdir);
 	}
 	
@@ -261,6 +280,7 @@ runTests(
 	
 	if (getParams(argc, argv, f, baseDir, outputRoot) == true)
 	{
+		typedef FileUtility::FileNameVectorType		FileNameVectorType;
 
 		// Get the list of Directories that are below perf
 		const FileNameVectorType	dirs = f.getDirectoryNames(baseDir);
@@ -307,8 +327,8 @@ runTests(
 				XalanDocument* domOut = parserLiaison.createDocument();
 				const XSLTResultTarget domResultTarget(domOut);
 
-				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+				const XSLTInputSource	xslInputSource(theXSLFile);
+				const XSLTInputSource	xmlInputSource(theXMLFile);
 					
 				const XalanCompiledStylesheet*	compiledSS = 0;
 
@@ -383,6 +403,8 @@ main(
 
 	try
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
 		XMLPlatformUtils::Initialize();

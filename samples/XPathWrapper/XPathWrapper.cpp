@@ -2,7 +2,6 @@
 
 
 
-#include <vector>
 #include <cassert>
 
 
@@ -54,10 +53,9 @@
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-using std::endl;
-using std::vector;
-#endif
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(endl)
+XALAN_USING_STD(ostream)
 
 
 
@@ -73,11 +71,7 @@ public:
 		const char*		xml,
 		const char*		context, 
 		const char*		expr,
-#if defined(XALAN_NO_STD_NAMESPACE)
 		ostream&		errorStream)
-#else
-		std::ostream&	errorStream)
-#endif
 	{
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 		using std::strlen;
@@ -281,11 +275,7 @@ XPathWrapper::evaluate(
 			xml,
 			context,
 			path,
-#if defined(XALAN_NO_NAMESPACES)
 			cerr);
-#else
-			std::cerr);
-#endif
 }
 
 

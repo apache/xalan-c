@@ -54,17 +54,24 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+#include <Include/PlatformDefinitions.hpp>
+
+
+
+#include <cstdio>
+
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#else
 #include <iostream>
-#include <strstream>
-#include <stdio.h>
-//#include <direct.h>
+#endif
+
+
 
 // This is here for memory leak testing. 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
-
-#include <vector>
 
 
 
@@ -80,19 +87,21 @@
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-#endif
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
 
 
 
 static const char* const	excludeStylesheets[] =
 {
-//	"impincl16.xml",
 	0
 };
+
+
+
+XALAN_USING_XALAN(FileUtility)
+XALAN_USING_XALAN(XalanDOMString)
 
 
 
@@ -101,7 +110,7 @@ checkForExclusion(const XalanDOMString&		currentFile)
 {
 	for (int i = 0; excludeStylesheets[i] != 0; ++i)
 	{	
-		if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
+		if (currentFile == XalanDOMString(excludeStylesheets[i]))
 		{
 			return true;
 		}
@@ -138,6 +147,8 @@ runTests(
 
 	try
 	{
+		XALAN_USING_XALAN(HarnessInit)
+
 		HarnessInit		xmlPlatformUtils;
 
 		FileUtility		h;
@@ -150,6 +161,12 @@ runTests(
 		//
 		if (h.getParams(argc, argv, "MEM-RESULTS", setGold) == true)
 		{
+			//XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
+			//XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
+			XALAN_USING_XALAN(XMLFileReporter)
+
+			typedef FileUtility::FileNameVectorType		FileNameVectorType;
+
 			// Get the list of Directories that are below perf
 			const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
 
@@ -167,6 +184,8 @@ runTests(
 
 			try
 			{
+				XALAN_USING_XALAN(XalanTransformer)
+
 				bool foundDir = false;
 
 				XalanTransformer		transformEngine;
@@ -175,7 +194,7 @@ runTests(
 				{
 					// Skip all but the specified directory if the -sub cmd-line option was used.
 					//
-					if (length(h.args.sub) > 0 && !equals(dirs[j], h.args.sub))
+					if (h.args.sub.length() > 0 && dirs[j] != h.args.sub)
 					{
 						continue;
 					}					
@@ -191,6 +210,9 @@ runTests(
 					{
 						if (checkForExclusion(files[i]) == false)
 						{
+							XALAN_USING_XALAN(XSLTInputSource)
+							XALAN_USING_XALAN(XSLTResultTarget)
+
 							// Output file name to result log and console.
 							logFile.logTestCaseInit(files[i]);
 							cout << files[i] << endl;
@@ -203,8 +225,8 @@ runTests(
 							// Do a total end to end transform with no pre parsing of either xsl or xml files.
 							const XSLTResultTarget	theResultTarget(theOutputFile);
 
-							const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-							const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+							const XSLTInputSource	xslInputSource(theXSLFile);
+							const XSLTInputSource	xmlInputSource(theXMLFile);
 
 							const int	theResult =
 									transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
@@ -225,7 +247,7 @@ runTests(
 				// Check to see if -sub cmd-line directory was processed correctly.
 				if (!foundDir)
 				{
-					cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
+					cout << "Specified test directory: \"" << h.args.sub << "\" not found" << endl;
 				}
 
 				logFile.logTestFileClose("Memory Testing: ", "Done");
@@ -266,6 +288,10 @@ main(
 
 	try
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
+		XALAN_USING_XALAN(XalanTransformer)
+
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
 		XMLPlatformUtils::Initialize();

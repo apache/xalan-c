@@ -100,6 +100,7 @@ XALAN_USING_STD(endl)
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::atoi;
+using std::strcmp;
 using std::strlen;
 #endif
 

@@ -55,6 +55,10 @@
  * <http://www.apache.org/>.
  */
 
+#include <Include/PlatformDefinitions.hpp>
+
+
+
 #include <cstdio>
 
 #if defined(XALAN_CLASSIC_IOSTREAMS)
@@ -65,11 +69,10 @@
 #include <strstream>
 #endif
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-#endif
+
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
 
 
 
@@ -99,13 +102,6 @@
 
 
 
-#if defined(XALAN_NO_NAMESPACES)
-typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
-#else
-typedef std::map<XalanDOMString, XalanDOMString>  Hashtable;
-#endif
-
-
 // This is here for memory leak testing. 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
@@ -115,6 +111,11 @@ const char* const 	excludeStylesheets[] =
 {
 	0
 };
+
+
+
+XALAN_USING_XALAN(FileUtility)
+XALAN_USING_XALAN(XalanDOMString)
 
 
 
@@ -136,11 +137,11 @@ setHelp(FileUtility&	h)
 
 
 inline bool
-checkForExclusion(XalanDOMString currentFile)
+checkForExclusion(const XalanDOMString&		currentFile)
 {
 	for (int i = 0; excludeStylesheets[i] != 0; i++)
-	{	
-		if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
+	{
+		if (currentFile == XalanDOMString(excludeStylesheets[i]))
 		{
 			return true;
 		}
@@ -156,6 +157,8 @@ runTests(
 			int				argc,
 			const char*		argv[])
 {
+	XALAN_USING_XALAN(HarnessInit)
+
 	HarnessInit		xmlPlatformUtils;
 
 	FileUtility		h;
@@ -168,6 +171,11 @@ runTests(
 
 	if (h.getParams(argc, argv, "ERR-RESULTS", setGold) == true)
 	{
+		XALAN_USING_XALAN(XalanTransformer)
+		XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
+		XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
+		XALAN_USING_XALAN(XMLFileReporter)
+
 		XalanTransformer				xalan;
 
 		XalanSourceTreeDOMSupport		domSupport;
@@ -182,11 +190,14 @@ runTests(
 		const XalanDOMString  resultFilePrefix("cpperr");
 		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
 
-		XMLFileReporter	logFile(resultsFile);
+		XMLFileReporter		logFile(resultsFile);
 		logFile.logTestFileInit("Error Testing:");
 
 		// Get the list of Directories that are below conf
 		bool foundDir = false;		// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
+
+		typedef FileUtility::FileNameVectorType		FileNameVectorType;
+
 		const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
 
 		for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
@@ -199,7 +210,7 @@ runTests(
 				const XalanDOMString&	currentDir = dirs[j];
 
 				// Run specific category of files from given directory
-				if (length(h.args.sub) == 0 || equals(currentDir, h.args.sub) == true)
+				if (h.args.sub.size() == 0 || currentDir == h.args.sub)
 				{
 					// Check that output directory is there.
 					const XalanDOMString  theOutputDir = h.args.output + currentDir;
@@ -211,9 +222,16 @@ runTests(
 					logFile.logTestCaseInit(currentDir);
 
 					const FileNameVectorType files = h.getTestFileNames(h.args.base, currentDir, false);
+
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
-						Hashtable attrs;
+						XALAN_USING_XALAN(XSLTInputSource)
+						XALAN_USING_XALAN(XSLTResultTarget)
+						XALAN_USING_XALAN(XalanCompiledStylesheet)
+						XALAN_USING_XALAN(XalanParsedSource)
+
+						XMLFileReporter::Hashtable	attrs;
+
 						const XalanDOMString currentFile(files[i]);
 						h.data.testOrFile = currentFile;
 
@@ -228,9 +246,9 @@ runTests(
 						const XalanDOMString  outbase =  h.args.output + currentDir + FileUtility::s_pathSep + currentFile; 
 						const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
 
-						const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-						const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-						const XSLTInputSource	goldInputSource(c_wstr(theGoldFile));
+						const XSLTInputSource	xslInputSource(theXSLFile);
+						const XSLTInputSource	xmlInputSource(theXMLFile);
+						const XSLTInputSource	goldInputSource(theGoldFile);
 						const XSLTResultTarget	resultFile(theOutputFile);
 
 						// Parsing(compile) the XSL stylesheet and report the results..
@@ -295,7 +313,7 @@ runTests(
 		// Check to see if -sub cmd-line directory was processed correctly.
 		if (!foundDir)
 		{
-			cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
+			cout << "Specified test directory: \"" << h.args.sub << "\" not found" << endl;
 		}
 
 		h.reportPassFail(logFile, UniqRunid);
@@ -324,6 +342,10 @@ main(
 
 	try
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
+		XALAN_USING_XALAN(XalanTransformer)
+
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
 		XMLPlatformUtils::Initialize();

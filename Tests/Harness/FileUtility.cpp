@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -153,11 +153,9 @@ const char* const	xalanNodeTypes[] =
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-#endif
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
 
 
 
@@ -688,10 +686,14 @@ FileUtility::checkResults(
 		data.pass += 1;
 	}
 	else
-	{	// if the compairson fails gather up the failure data and determine if it failed 
+	{
+		typedef XMLFileReporter::Hashtable	Hashtable;
+
+		// if the compairson fails gather up the failure data and determine if it failed 
 		// due to bad output or missing Gold file. Lastly, log the failure.
-		Hashtable attrs;
-		Hashtable actexp;
+		Hashtable	attrs;
+		Hashtable	actexp;
+
 		reportError();
 
 		attrs.insert(Hashtable::value_type(XalanDOMString("reason"), XalanDOMString(data.msg)));
@@ -741,7 +743,10 @@ FileUtility::checkAPIResults(
 		data.fail += 1;
 
 		reportError();
-		Hashtable actexp;
+
+		typedef XMLFileReporter::Hashtable	Hashtable;
+
+		Hashtable	actexp;
 
 		actexp.insert(Hashtable::value_type(XalanDOMString("exp"), expected));
 		actexp.insert(Hashtable::value_type(XalanDOMString("act"), actual));
@@ -811,10 +816,14 @@ FileUtility::checkDOMResults(
 		data.pass += 1;
 	}
 	else
-	{	// if the compairson fails gather up the failure data and determine if it failed 
+	{
+		typedef XMLFileReporter::Hashtable	Hashtable;
+
+		// if the compairson fails gather up the failure data and determine if it failed 
 		// due to bad output or missing Gold file. Lastly, log the failure.
 		Hashtable attrs;
 		Hashtable actexp;
+
 		reportError();
 
 		attrs.insert(Hashtable::value_type(XalanDOMString("reason"), XalanDOMString(data.msg)));
@@ -851,8 +860,8 @@ FileUtility::compareSerializedResults(
 			const XalanDOMString&	goldFile)
 {
 
-	const XSLTInputSource resultInputSource(c_wstr(outputFile));
-	const XSLTInputSource goldInputSource(c_wstr(goldFile));
+	const XSLTInputSource resultInputSource(outputFile);
+	const XSLTInputSource goldInputSource(goldFile);
 
 	XalanSourceTreeDOMSupport		domSupport;
 	XalanSourceTreeParserLiaison	parserLiaison(domSupport);
@@ -1462,7 +1471,10 @@ FileUtility::reportPassFail(
 			XMLFileReporter&		logfile,
 			const XalanDOMString&	runid)
 {
-	Hashtable runResults;
+	typedef XMLFileReporter::Hashtable	Hashtable;
+
+	Hashtable	runResults;
+
 	char temp[5];
 
 	// Create entrys that contain runid, xerces version, and numbers for Pass, Fail and No Gold.
@@ -1535,8 +1547,8 @@ FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resul
 	}
 
 	// Create the InputSources and ResultTarget.
-	const XSLTInputSource	xslInputSource(c_wstr(theStylesheet));
-	const XSLTInputSource	xmlInputSource(c_wstr(theXMLSource));
+	const XSLTInputSource	xslInputSource(theStylesheet);
+	const XSLTInputSource	xmlInputSource(theXMLSource);
 	const XSLTResultTarget	resultFile(theHTMLFile);
 
 	// Do the transform, display the output HTML, or report any failure.

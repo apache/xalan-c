@@ -55,6 +55,9 @@
  * <http://www.apache.org/>.
  */
 
+#include <Include/PlatformDefinitions.hpp>
+
+
 
 #define TEST_XALAN_CPP
 
@@ -82,12 +85,10 @@
 #endif
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-	using std::ostrstream;
-#endif
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
+XALAN_USING_STD(ostrstream)
 
 #else
 
@@ -98,21 +99,16 @@
 #endif
 
 
-static unsigned long xalan_output_handler(const void *data, unsigned long length, const void *handle)
+static CallbackSizeType xalan_output_handler(const char *data, CallbackSizeType length, void *handle)
 {
 	FILE *fp = (FILE*)handle;
 
-	char* d = (char *)data;
-
-	
-	fwrite( d, sizeof( char ), length, stdout );
-
-	return fwrite( d, sizeof( char ), length, fp );
+	return fwrite( data, sizeof( char ), length, fp );
 }
 
 
 
-static void xalan_flush_handler(const void *handle)
+static void xalan_flush_handler(void *handle)
 {
 	FILE *fp = (FILE*)handle;
 
@@ -141,7 +137,10 @@ runTests(
 
 #if defined(TEST_XALAN_CPP)
 
-	XalanTransformer xalan;
+	XALAN_USING_XALAN(XalanTransformer)
+	XALAN_USING_XALAN(XalanCompiledStylesheet)
+
+	XalanTransformer	xalan;
 
 	const XalanCompiledStylesheet*	css = 0;
 	
@@ -207,8 +206,8 @@ runTests(
 			return 0;	
 		}
 */		
-		xalan.setStylesheetParam(XalanDOMString("param1"),
-								 XalanDOMString("'What is Up'"));
+		xalan.setStylesheetParam("param1",
+								 "'What is Up'");
 
 		if(xalan.transform(theXMLFileName4, theXSLFileName4, &cout))
 		{
@@ -233,6 +232,7 @@ runTests(
 	XalanHandle xalan = CreateXalanTransformer();
 	XalanCSSHandle theXalanCSS2;
 	XalanCSSHandle theXalanCSS4;
+	XalanPSHandle  theXalanPS2;
 
 	if (XalanCompileStylesheet(theXSLFileName2, xalan, &theXalanCSS2) != 0)
 	{
@@ -242,7 +242,15 @@ runTests(
 		return 0;	
 	}
 
-	XalanCompileStylesheet(theXSLFileName4, xalan, &theXalanCSS4) != 0)
+	if (XalanCompileStylesheet(theXSLFileName4, xalan, &theXalanCSS4) != 0)
+	{
+		puts("Error");
+		puts(XalanGetLastError(xalan));
+
+		return 0;	
+	}
+
+	if (XalanParseSource(theXMLFileName2, xalan, &theXalanPS2) != 0)
 	{
 		puts("Error");
 		puts(XalanGetLastError(xalan));
@@ -290,7 +298,7 @@ runTests(
 
 		XalanFreeData(theOutput);
 
-		if(XalanTransformToDataCSS(theXMLFileName2, theXalanCSS2, &theOutput, xalan))
+		if(XalanTransformToDataPrebuilt(theXalanPS2, theXalanCSS2, &theOutput, xalan))
 		{
 			puts("Error");
 			puts(XalanGetLastError(xalan));
@@ -304,7 +312,7 @@ runTests(
 		FILE* fp =0;
 		fp = fopen("c:\\temp\\test.out", "w");
 
-		if(XalanTransformToHandlerCSS(theXMLFileName2, theXalanCSS2, xalan, fp, xalan_output_handler, xalan_flush_handler))
+		if(XalanTransformToHandler(theXMLFileName2, theXSLFileName2, xalan, fp, xalan_output_handler, xalan_flush_handler))
 		{
 			puts("Error");
 			puts(XalanGetLastError(xalan));
@@ -316,7 +324,7 @@ runTests(
 		XalanSetStylesheetParam("param1", "'hi'", xalan);
 
 		//if(xalan.transform(theXMLFileName4, theXSLFileName4, &cout))
-		if(XalanTransformToDataCSS(theXMLFileName4, theXalanCSS4, &theOutput, xalan))
+		if(XalanTransformToDataPrebuilt(theXMLFileName4, theXalanCSS4, &theOutput, xalan))
 		{
 			puts("Error");
 			puts(XalanGetLastError(xalan));
@@ -355,6 +363,10 @@ main(
 #if defined(TEST_XALAN_CPP)
 	try
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
+		XALAN_USING_XALAN(XalanTransformer)
+
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
 		XMLPlatformUtils::Initialize();

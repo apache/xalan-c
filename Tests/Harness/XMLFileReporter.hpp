@@ -78,17 +78,16 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+// This class is exported from the Harness.dll
+class HARNESS_API XMLFileReporter 
+{
+public:
+
 #if defined(XALAN_NO_STD_NAMESPACE)
 	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
 #else
 	typedef std::map<XalanDOMString, XalanDOMString>	Hashtable;
 #endif
-
-
-// This class is exported from the Harness.dll
-class HARNESS_API XMLFileReporter 
-{
-
 
 public:
 
