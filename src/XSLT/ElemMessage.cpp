@@ -138,7 +138,7 @@ ElemMessage::execute(StylesheetExecutionContext&		executionContext) const
     executionContext.message(
 		childrenToString(executionContext,theResult.get()),
 		executionContext.getCurrentNode(),
-		this);
+		getLocator());
 
 	if (m_terminate == true)
 	{
