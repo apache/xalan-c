@@ -190,7 +190,7 @@ static ElemNumber::DecimalToRomanVectorType theDecimalToRomanVector;
 static vector<NamespacesHandler::NamespacesMapType::iterator> theNamespacesMapTypeIteratorVector;
 static VariablesStack::ParamsVectorType	theParamsVector;
 static ElemNumber::NumberingResourceBundleMapType theNumberingResourceBundleMapType;
-
+static FormatterToXML::MaximumCharacterValueMapType theMaximumCharacterValueMapType;
 
 
 static void
