@@ -84,6 +84,7 @@ StylesheetExecutionContext::~StylesheetExecutionContext()
 
 
 
+void
 StylesheetExecutionContext::ParamsPushPop::doPush(
 			const ElemTemplateElement&		xslCallTemplateElement,
 			int								savedStackFrameIndex)
@@ -98,6 +99,7 @@ StylesheetExecutionContext::ParamsPushPop::doPush(
 
 
 
+void
 StylesheetExecutionContext::ParamsPushPop::doPush(const ElemTemplateElement&	xslCallTemplateElement)
 {
 	if (xslCallTemplateElement.hasParams() == true)
