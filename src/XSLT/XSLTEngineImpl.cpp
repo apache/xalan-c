@@ -2016,15 +2016,15 @@ XSLTEngineImpl::cloneToResultTree(
 		}
 		break;
 
+	// Can't really do this, but we won't throw an error so that copy-of will
+	// work
+	case XalanNode::DOCUMENT_NODE:
+	break;
+
 	default:
-		{
-			// $$$ ToDo: Fix this when XalanDOMString::operator+() is const.
-			XalanDOMString	msg("Can not create item in result tree: ");
-			msg +=node.getNodeName();
-			error(msg);
-//			error(XalanDOMString("Can not create item in result tree: ") +
-//				  node.getNodeName());
-		}
+		error("Can not create item in result tree: " + node.getNodeName());
+	break;
+
 	}
 }
 
