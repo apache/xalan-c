@@ -813,6 +813,323 @@ private:
 		eDefaultTargetStringsSize = 5
 	};
 
+	const XObjectPtr
+	locationPath(
+			XPathExecutionContext&	executionContext,
+			XalanNode& 				context, 
+			int 					opPos) const;
+
+	eMatchScore
+	locationPathPattern(
+			XPathExecutionContext&	executionContext,
+			XalanNode& 				context, 
+			int 					opPos) const;
+
+	class NodeTester
+	{
+	public:
+
+		NodeTester(
+			const XPath&			xpath,
+			XPathExecutionContext&	executionContext,
+			int 					opPos,
+			int 					argLen,
+			int 					stepType);
+
+		eMatchScore
+		operator()(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+		{
+			assert(context.getNodeType() == nodeType);
+
+			return (this->*m_testFunction)(context, nodeType);
+		}
+
+	private:
+
+		typedef eMatchScore (NodeTester::*MemberFunctionPtr)(const XalanNode&, XalanNode::NodeType) const;
+
+
+		eMatchScore
+		testComment(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testText(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testPI(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testPIName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testNode(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testRoot(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testAttributeNCName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testAttributeQName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testAttributeNamespaceOnly(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testAttributeTotallyWild(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testElementNCName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testElementQName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testElementNamespaceOnly(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testElementTotallyWild(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testNamespaceNCName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testNamespaceTotallyWild(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		eMatchScore
+		testDefault(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const;
+
+		bool
+		matchLocalName(const XalanNode&		context) const;
+
+		bool
+		matchNamespaceURI(const XalanNode&	context) const;
+
+		bool
+		matchLocalNameAndNamespaceURI(const XalanNode&	context) const;
+
+		bool
+		matchNamespace(const XalanNode&		context) const;
+
+		bool
+		shouldStripSourceNode(const XalanNode&	context) const;
+
+		// Data members...
+		XPathExecutionContext&	m_executionContext;
+
+		const XalanDOMString*	m_targetNamespace;
+
+		const XalanDOMString*	m_targetLocalName;
+
+		MemberFunctionPtr		m_testFunction;
+	};
+
+protected:
+
+	void
+	step(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			MutableNodeRefList&		queryResults) const;
+
+	/**
+	 * Execute a step in a location path.
+	 *
+	 * @param xpath The xpath that is executing
+	 * @param context The current source tree context node
+	 * @param opPos The current position in the xpath operation map array
+	 * @param scoreHolder a reference to an eMatchScore to receive
+	 * the result.
+	 * @return the last matched context node
+	 */
+	XalanNode*
+	stepPattern(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			eMatchScore& 			scoreHolder) const;
+
+	int
+	findNodeSet(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findRoot(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findParent(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findSelf(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findAncestors(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findAncestorsOrSelf(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findAttributes(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findChildren(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findDescendants(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findFollowing(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findFollowingSiblings(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findPreceeding(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findPreceedingSiblings(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findNamespace(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	int
+	findNodesOnUnknownAxis(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults) const;
+
+	eMatchScore
+	nodeTest(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context,
+			XalanNode::NodeType		nodeType,
+			int 					opPos,
+			int 					argLen,
+			int 					stepType) const;
+
+	void
+	predicates(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				context, 
+			int 					opPos,
+			MutableNodeRefList& 	subQueryResults,
+			int&					endPredicatesPos) const;
+
+	eMatchScore
+	handleFoundIndex(
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				localContext,
+			int 					startOpPos) const;
+
 	// Data members...
 
 	/**
@@ -840,6 +1157,8 @@ private:
 	 *
 	 */
 	static FunctionTableType			s_functions;
+
+	static const XalanDOMString			s_emptyString;
 };
 
 
