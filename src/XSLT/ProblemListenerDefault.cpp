@@ -79,18 +79,20 @@
 
 
 
-static const char* const	errorHeader = "Error: ";
-static const char* const	warningHeader = "Warning: ";
+static const char* const	errorHeader = "error: ";
+static const char* const	warningHeader = "warning: ";
 
-static const char* const	xslHeader = "XSL ";
+static const char* const	xslHeader = "XSLT ";
 static const char* const	xmlHeader = "XML ";
-static const char* const	xpathHeader = "XPATH ";
+static const char* const	xpathHeader = "XPath ";
 
 static const char* const	styleTreeNodeHeader = ", style tree node: ";
 static const char* const	sourceTreeNodeHeader = ", source tree node: ";
-static const char* const	uriHeader = ", document ";
+static const char* const	locationOpen = " (";
+static const char* const	uriHeader = "";
 static const char* const	lineNoHeader = ", line ";
-static const char* const	charOffsetHeader = ", offset ";
+static const char* const	charOffsetHeader = ", column ";
+static const char* const	locationClose = ")";
 
 
 
@@ -166,6 +168,8 @@ ProblemListenerDefault::problem(
 			m_pw->print(sourceNode->getNodeName());
 		}
 
+		m_pw->print(locationOpen);
+
 		if (0 != uri)
 		{
 			m_pw->print(uriHeader);
@@ -183,6 +187,8 @@ ProblemListenerDefault::problem(
 			m_pw->print(charOffsetHeader);
 			m_pw->print(charOffset);
 		}
+
+		m_pw->print(locationClose);
 
 		m_pw->println();
 	}
