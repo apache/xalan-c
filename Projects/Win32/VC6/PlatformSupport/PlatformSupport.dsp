@@ -100,7 +100,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_XERCES" /FD /I /xml4c/include" /I /xml4c/include" " " " " " " /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /Ob2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_XERCES" /FD /I /xml4c/include" /I /xml4c/include" " " " " " " /c
+# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /Ob2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /FD /I /xml4c/include" /I /xml4c/include" " " " " " " /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -204,6 +204,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormat.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormatSymbols.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringAllocator.cpp
 # End Source File
 # Begin Source File
 
@@ -388,6 +392,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormat.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormatSymbols.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringAllocator.hpp
 # End Source File
 # Begin Source File
 
