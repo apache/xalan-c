@@ -64,38 +64,18 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
-#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
-#include <XPath/ResultTreeFragBase.hpp>
-#endif
-
-
-
-#include <Include/XalanAutoPtr.hpp>
-
-
-
 // Base class header file.
-#include <XPath/XObject.hpp>
+#include <XPath/XStringBase.hpp>
 
 
 
-class ResultTreeFragBase;
-class XPathEnvSupport;
-
-
-
-class XALAN_XPATH_EXPORT XString : public XObject
+class XALAN_XPATH_EXPORT XString : public XStringBase
 {
 public:
 
 	/**
 	 * Construct an XString object from a string.
 	 * 
-	 * @param envSupport XPath environment support class instance
 	 * @param value      source string
 	 */
 	XString(const XalanDOMString&	val);
@@ -121,34 +101,12 @@ public:
 #endif
 	clone(void*		theAddress = 0) const;
 
-	virtual XalanDOMString
-	getTypeString() const;
-  
-	virtual double
-	num() const;
-
-	virtual bool
-	boolean() const;
-
 	virtual const XalanDOMString&
 	str() const;
   
-	virtual const ResultTreeFragBase&
-	rtree(XPathExecutionContext&	executionContext) const;
-
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
-
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
-
 private:
 
-	const XalanDOMString						m_value;
-
-	mutable double								m_cachedNumberValue;
-
-	mutable XalanAutoPtr<ResultTreeFragBase>	m_resultTreeFrag;
+	const XalanDOMString	m_value;
 };
 
 

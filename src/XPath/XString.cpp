@@ -59,36 +59,21 @@
 
 
 
-#include <XalanDOM/XalanText.hpp>
-
-
-
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/DoubleSupport.hpp>
-
-
-
-#include "ResultTreeFrag.hpp"
-#include "XObjectTypeCallback.hpp"
-#include "XPathExecutionContext.hpp"
+//#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
 XString::XString(const XalanDOMString&	val) :
-	XObject(eTypeString),
-	m_value(val),
-	m_cachedNumberValue(0.0),
-	m_resultTreeFrag(0)
+	XStringBase(),
+	m_value(val)
 {
 }
 
 
 
 XString::XString(const XalanDOMChar*	val) :
-	XObject(eTypeString),
-	m_value(val),
-	m_cachedNumberValue(0.0),
-	m_resultTreeFrag(0)
+	XStringBase(),
+	m_value(val)
 {
 }
 
@@ -97,22 +82,16 @@ XString::XString(const XalanDOMChar*	val) :
 XString::XString(
 			const XalanDOMChar*		val,
 			unsigned int			len) :
-	XObject(eTypeString),
-	m_value(val, len),
-	m_cachedNumberValue(0.0),
-	m_resultTreeFrag(0)
+	XStringBase(),
+	m_value(val, len)
 {
 }
 
 
 
 XString::XString(const XString&	source) :
-	XObject(source),
-	m_value(source.m_value),
-	m_cachedNumberValue(source.m_cachedNumberValue),
-	m_resultTreeFrag(source.m_resultTreeFrag.get() == 0 ?
-						0 :
-						source.m_resultTreeFrag->clone(true))
+	XStringBase(source),
+	m_value(source.m_value)
 {
 }
 
@@ -136,88 +115,8 @@ XString::clone(void*	theAddress) const
 
 
 
-XalanDOMString
-XString::getTypeString() const
-{
-	return XALAN_STATIC_UCODE_STRING("#STRING");
-}
-
-
-
-double
-XString::num() const
-{
-	if (m_cachedNumberValue == 0.0)
-	{
-#if defined(XALAN_NO_MUTABLE)
-		((XString*)this)->m_cachedNumberValue = DoubleSupport::toDouble(m_value);
-#else
-		m_cachedNumberValue = DoubleSupport::toDouble(m_value);
-#endif
-	}
-
-	return m_cachedNumberValue;
-}
-
-
-
-bool
-XString::boolean() const
-{
-	return length(m_value) > 0 ? true : false;
-}
-
-
-
 const XalanDOMString&
 XString::str() const
 {
 	return m_value;
-}
-
-
-
-const ResultTreeFragBase&
-XString::rtree(XPathExecutionContext&	executionContext) const
-{
-	if (m_resultTreeFrag.get() == 0)
-	{
-		XalanDocument* const	theFactory = executionContext.getDOMFactory();
-		assert(theFactory != 0);
-
-		ResultTreeFrag* const	theFrag =
-			new ResultTreeFrag(*theFactory);
-
-		XalanNode* const	textNode =
-			theFactory->createTextNode(str());
-		assert(textNode != 0);
-
-		theFrag->appendChild(textNode);
-
-#if defined(XALAN_NO_MUTABLE)
-		((XString*)this)->m_resultTreeFrag.reset(theFrag);
-#else
-		m_resultTreeFrag.reset(theFrag);
-#endif
-	}
-
-	return *m_resultTreeFrag.get();
-}
-
-
-
-void
-XString::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
-{
-	theCallbackObject.String(*this,
-							 str());
-}
-
-
-
-void
-XString::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
-{
-	theCallbackObject.String(*this,
-							 str());
 }
