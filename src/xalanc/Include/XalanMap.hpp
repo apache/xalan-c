@@ -91,10 +91,6 @@ struct XalanHashMemberReference
 	}
 };
 
-/**
- * Xalan map entry pair of a key and data
- */
-
 
 
 template <class Value>
@@ -276,7 +272,7 @@ public:
 
         if (!m_buckets.empty())
         {
-            EntryListType::iterator toRemove = m_freeEntries.begin();
+            typename EntryListType::iterator toRemove = m_freeEntries.begin();
             while(toRemove != m_freeEntries.end())
             {
                 deallocate(toRemove->value);
@@ -407,7 +403,7 @@ public:
 	{
         doRemoveEntries();
 
-		BucketTableType::iterator bucketPos = m_buckets.begin();
+		typename BucketTableType::iterator bucketPos = m_buckets.begin();
 		while (bucketPos != m_buckets.end())
 		{
 			bucketPos->clear();
@@ -520,7 +516,7 @@ protected:
 		m_buckets.swap(temp);
 	
         // rehash each entry assign to bucket and insert into list
-		EntryListType::iterator entryPos = m_entries.begin();
+		typename EntryListType::iterator entryPos = m_entries.begin();
 		while (entryPos != m_entries.end())
 		{
         	size_type index = doHash(entryPos->value->first);
