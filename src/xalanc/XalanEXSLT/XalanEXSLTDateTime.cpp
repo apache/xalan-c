@@ -18,10 +18,7 @@
 #include "XalanEXSLTDateTimeImpl.hpp"
 
 
-
-#include <ctime>
-#include <cstdio>
-
+#include <time.h>
 
 
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
@@ -157,16 +154,6 @@ XalanEXSLTFunctionDateTime::execute(
 	XalanDOMString&		theResult = theGuard.get();
 	
 	theResult.clear();
-
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-	using std::localtime_r;
-	using std::tm;
-	using std::time_t;
-	using std::time;
-	using std::size_t;
-	using std::strftime;
-	using std::gmtime_r;
-#endif
 
 	time_t long_time;
 
