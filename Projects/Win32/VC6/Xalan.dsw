@@ -3,6 +3,69 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
+Project: "ApacheModuleXSLT"="..\..\..\samples\ApacheModuleXSLT\ApacheModuleXSLT.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "CompileStylesheet"="..\..\..\samples\CompileStylesheet\CompileStylesheet.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "DLL"="..\..\..\samples\XPathWrapper\DLL.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "DOMSupport"=".\DOMSupport\DOMSupport.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -16,6 +79,30 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "DocumentBuilder"="..\..\..\samples\DocumentBuilder\DocumentBuilder.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
     End Project Dependency
 }}}
 
@@ -43,6 +130,33 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "ExternalFunction"="..\..\..\samples\ExternalFunction\ExternalFunction.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name PlatformSupport
@@ -201,6 +315,132 @@ Package=<4>
 
 ###############################################################################
 
+Project: "SerializeNodeSet"="..\..\..\samples\SerializeNodeSet\SerializeNodeSet.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XMLSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "SimpleTransform"="..\..\..\samples\SimpleTransform\SimpleTransform.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "SimpleXPathAPI"="..\..\..\samples\SimpleXPathAPI\SimpleXPathAPI.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "SimpleXPathCAPI"="..\..\..\samples\SimpleXPathCAPI\SimpleXPathCAPI.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XPathCAPI
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "StreamTransform"="..\..\..\samples\StreamTransform\StreamTransform.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "TestDriver"="..\..\..\samples\XPathWrapper\TestDriver.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name DLL
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "TestXPath"=".\TestXPath\TestXPath.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -265,6 +505,72 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XalanExtensions
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "ThreadSafe"="..\..\..\samples\ThreadSafe\ThreadSafe.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "TraceListen"="..\..\..\samples\TraceListen\TraceListen.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "UseStylesheetParam"="..\..\..\samples\UseStylesheetParam\UseStylesheetParam.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
     End Project Dependency
 }}}
 
@@ -453,6 +759,27 @@ Package=<4>
 
 ###############################################################################
 
+Project: "XalanTransform"="..\..\..\samples\XalanTransform\XalanTransform.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "XalanTransformer"=".\XalanTransformer\XalanTransformer.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -487,6 +814,24 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XalanExtensions
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XalanTransformerCallback"="..\..\..\samples\XalanTransformerCallback\XalanTransformerCallback.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
     End Project Dependency
 }}}
 
