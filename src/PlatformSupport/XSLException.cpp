@@ -59,6 +59,10 @@
 
 
 
+#include <sax/Locator.hpp>
+
+
+
 XSLException::XSLException(
 		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theURI,
@@ -69,6 +73,20 @@ XSLException::XSLException(
 	m_uri(theURI),
 	m_lineNumber(theLineNumber),
 	m_columnNumber(theColumnNumber),
+	m_type(theType)
+{
+}
+
+
+
+XSLException::XSLException(
+			const Locator&			theLocator,
+			const XalanDOMString&	theMessage,
+			const XalanDOMString&	theType) :
+	m_message(theMessage),
+	m_uri(theLocator.getSystemId()),
+	m_lineNumber(theLocator.getLineNumber()),
+	m_columnNumber(theLocator.getColumnNumber()),
 	m_type(theType)
 {
 }

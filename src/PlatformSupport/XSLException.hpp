@@ -68,6 +68,10 @@
 
 
 
+class Locator;
+
+
+
 class XALAN_PLATFORMSUPPORT_EXPORT XSLException
 {
 public:
@@ -86,6 +90,18 @@ public:
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
 			int						theColumnNumber,
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLException")));
+
+	/**
+	 * Constructor
+	 * 
+	 * @param theLocator The locator instance for error reporting.
+	 * @param theMessage message to write when exception thrown
+	 * @param theType type of exception, default is "XSLException"
+	 */
+	XSLException(
+			const Locator&			theLocator,
+			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLException")));
 
 	/**
