@@ -72,12 +72,14 @@
 
 
 
-#if __GNUC__ < 3 && __GNUC_MINOR__ < 1
+#if __GNUC__ < 3
 #define XALAN_OLD_STREAM_HEADERS
 #define XALAN_NO_MEMBER_TEMPLATES
 #define XALAN_NO_STD_ALLOCATORS
 #endif
 
+// As of 3.1, std::numeric_limits<double> is broken, so
+// we don't use it.
 #define XALAN_NO_STD_NUMERIC_LIMITS
 #define XALAN_RTTI_AVAILABLE
 #define XALAN_SGI_BASED_STL
