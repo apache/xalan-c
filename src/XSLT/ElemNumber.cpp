@@ -1454,39 +1454,6 @@ static const XalanDOMChar	elalphaCountTable[] =
 
 
 
-static const XalanDOMChar	elalphaTraditionalCountTable[] =
-{
-	0x03c9,
-	0x03b1,
-	0x03b2,
-	0x03b3,
-	0x03db,
-	0x03b4,
-	0x03b5,
-	0x03b6,
-	0x03b7,
-	0x03b8,
-	0x03b9,
-	0x03ba,
-	0x03bb,
-	0x03bc,
-	0x03bd,
-	0x03be,
-	0x03bf,
-	0x03c0,
-	0x03c1,
-	0x03c2,
-	0x03c3,
-	0x03c4,
-	0x03c5,
-	0x03c6,
-	0x03c7,
-	0x03c8,
-	0
-};
-
-
-
 static XalanDOMString								s_atString;
 
 static XalanDOMString								s_textString;
@@ -1507,7 +1474,6 @@ static XalanDOMString								s_alphaCountTable;
 
 static XalanDOMString								s_elalphaCountTable;
 
-static XalanDOMString								s_elalphaTraditionalCountTable;
 
 
 static ElemNumber::DecimalToRomanVectorType			s_romanConvertTable;
@@ -1534,8 +1500,6 @@ const XalanDOMString&	ElemNumber::s_oneString = ::s_oneString;
 const XalanDOMString&	ElemNumber::s_alphaCountTable = ::s_alphaCountTable;
 
 const XalanDOMString&	ElemNumber::s_elalphaCountTable = ::s_elalphaCountTable;
-
-const XalanDOMString&	ElemNumber::s_elalphaTraditionalCountTable = ::s_elalphaTraditionalCountTable;
 
 const ElemNumber::DecimalToRomanVectorType&		ElemNumber::s_romanConvertTable =
 				::s_romanConvertTable;
@@ -1669,8 +1633,6 @@ ElemNumber::initialize()
 
 	::s_elalphaCountTable = elalphaCountTable;
 
-	::s_elalphaTraditionalCountTable = elalphaTraditionalCountTable;
-
 	::s_romanConvertTable.reserve(7);
 
 	::s_romanConvertTable.push_back(
@@ -1741,7 +1703,6 @@ ElemNumber::terminate()
 
 	clear(::s_alphaCountTable);
 	clear(::s_elalphaCountTable);
-	clear(::s_elalphaTraditionalCountTable);
 
 	DecimalToRomanVectorType().swap(::s_romanConvertTable);
 
