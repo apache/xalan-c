@@ -675,8 +675,8 @@ doEqualsIgnoreCase(
 		const XalanDOMChar	charRHS = theRHS[i];
 
 		if (charLHS != charRHS &&
-			towupper(charLHS) != charRHS &&
-			charLHS != towupper(charRHS))
+			XalanDOMChar(towupper(charLHS)) != charRHS &&
+			charLHS != XalanDOMChar(towupper(charRHS)))
 		{
 			break;
 		}

@@ -93,8 +93,8 @@ public:
 			bool hasXMLNSAttrs = false) :
 		m_hasProcessedNS(hasProcessedNS),
 		m_hasXMLNSAttrs(hasXMLNSAttrs),
-		m_namespace(),
-		m_ancestorHasXMLNSAttrs(ANCESTORXMLNSUNPROCESSED)
+		m_ancestorHasXMLNSAttrs(ANCESTORXMLNSUNPROCESSED),
+		m_namespace()
 	{
 	};
 
@@ -127,9 +127,9 @@ public:
 			const XalanDOMString&	theNamespace,
 			bool					hasXMLNSAttrs) :
 		m_hasProcessedNS(true),
-		m_hasXMLNSAttrs(hasXMLNSAttrs),
-		m_namespace(theNamespace),
-		m_ancestorHasXMLNSAttrs(ANCESTORXMLNSUNPROCESSED)
+		m_hasXMLNSAttrs(hasXMLNSAttrs),		
+		m_ancestorHasXMLNSAttrs(ANCESTORXMLNSUNPROCESSED),
+		m_namespace(theNamespace)
 	{
 	};
 
@@ -140,18 +140,19 @@ public:
 	bool
 	operator==(const NSInfo&	theRHS) const
 	{
-		return equals(m_namespace, theRHS.m_namespace) &&
-			   m_hasXMLNSAttrs == theRHS.m_hasXMLNSAttrs &&
+		return m_hasXMLNSAttrs == theRHS.m_hasXMLNSAttrs &&
 			   m_hasProcessedNS == theRHS.m_hasProcessedNS &&
-			   m_ancestorHasXMLNSAttrs == theRHS.m_ancestorHasXMLNSAttrs;
+			   m_ancestorHasXMLNSAttrs == theRHS.m_ancestorHasXMLNSAttrs &&
+			   equals(m_namespace, theRHS.m_namespace);
 	}
 
-	XalanDOMString	m_namespace;
 
-	bool			m_hasXMLNSAttrs;
 	bool			m_hasProcessedNS;
+	bool			m_hasXMLNSAttrs;
 
 	eHasXMLNSAttrs	m_ancestorHasXMLNSAttrs;
+
+	XalanDOMString	m_namespace;
 };
 
 

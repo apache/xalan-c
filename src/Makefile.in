@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.20  2000/10/11 21:13:29  auriemma
+# Reordered members and added -Wall as recommended by Nile Geisinger.
+#
 # Revision 1.19  2000/10/10 16:34:56  auriemma
 # Update version number.
 #
@@ -158,7 +161,7 @@ PREFIX = @prefix@
 ifeq ($(PLATFORM), LINUX)
 
 SUPPORTED = TRUE
-PLATFORM_COMPILE_OPTIONS = -fpic -instances=static -D${PLATFORM} -D_REENTRANT
+PLATFORM_COMPILE_OPTIONS = -fpic -Wall -instances=static -D${PLATFORM} -D_REENTRANT
 #ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc
 ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib 
 SHLIBSUFFIX=.so
