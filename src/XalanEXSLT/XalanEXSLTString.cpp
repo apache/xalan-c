@@ -258,7 +258,7 @@ XalanEXSLTFunctionPadding::execute(
 			const XObjectArgVectorType&		args,
 			const LocatorType*				locator) const
 {
-	assert(m_space.length() == 1);
+	assert(m_space == s_spaceString);
 
 	const XObjectArgVectorType::size_type	theSize = args.size();
 
