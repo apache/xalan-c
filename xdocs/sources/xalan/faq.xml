@@ -234,12 +234,12 @@ Xalan wrappers.</p></a>
 </faq>
 
 <faq title="Transformation Output Methods">
-	<q>How do I output a transformation to [a DOM, a file, an in-memory string, as input to another transformation]?</q>
+	<q>How do I output a transformation to a DOM, a file, an in-memory buffer, or as input to another transformation?  Since the C++ language can automatically construct an XSLTResultTarget from any of its constructor's argument types, you usually don't need to create one explicitly.</q>
 	<a>
 		<p>The output parameter of XalanTransformer::transform() is an XSLTResultTarget which has many constructors.</p>
 		<p>Output to a file:</p>
 		<ul>
-			<li>The easiest way is to use a null-terminated string containing the file name to create an XSLTResultTarget.  Or, use an instance of std::ofstream or std::ostringstream to create an XSLTResultTarget.</li>
+			<li>The easiest way is to use a null-terminated string containing the file name to create an XSLTResultTarget.  Or, use an instance of std::ofstream.  The command line executables, and many of the sample applications use file names, so take a look through the source code for more information.</li>
 		</ul>
 		<p>Output to an in-memory buffer:</p>
 		<ul>
@@ -255,16 +255,15 @@ Xalan wrappers.</p></a>
 <faq title="std:istrstream Problems Using Sun's Forte/Workshop Compiler">
 	<q>Why won't XSLTInputSource work with std::istrstream on Sun Solaris using Forte/Sun Workshop compiler?</q>
 	<a>
-		<p>There is a bug in Sun's C++ standard library implementation. See <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=14176">this bug</jump>. The short answer is that you need to get a patch. The bug gives some sample (straight C++, no &xslt4c; library needed) to see if your setup has the bug. There is also a link to the patch.
-		</p>
+		<p>There is a bug in Sun's C++ standard library implementation; see <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=14176">this bug</jump>. The short answer is that you need to get a patch. The bug gives some sample (straight C++, no &xslt4c; library needed) to see if your setup has the bug. There is also a link to the patch.</p>
 	</a>
 
 </faq>
 
-<faq title="Manipulating XalanDocument DOM">
+<faq title="Modifying an instance of XalanDocument">
 	<q>My transformation outputs to a XalanDocument (actually XalanSourceTreeDocument underneath) but W3C DOM functions like DOMElement::setAttribute don't work! Am I going crazy or what?</q>
 	<a>
-		<p>No, you aren't going crazy. The Xalan preferred DOM is read-only for efficiency reasons. If you need a DOM that supports modifications, use the Xerces DOM instead.  See the TransformToXercesDOM sample for more information.</p>
+		<p>No, you aren't going crazy. Xalan's default source tree is read-only for efficiency. If you need a DOM that supports modifications, use the Xerces DOM instead.  See the TransformToXercesDOM sample for more information.</p>
 	</a>
 
 </faq>
@@ -274,19 +273,19 @@ Xalan wrappers.</p></a>
 	<a>
 		<p>By default, XalanTransformer creates a XalanTransformerProblemListener (a subclass of ProblemListener) that writes output to std::cerr. To change this you can:</p>
 		<ul>
-			<li>Redirect cerr somewhere else</li>
+			<li>Redirect std::cerr from the command line.</li>
 			<li>Call XalanTranformer::setWarningStream with a different std::ostream before calling XalanTransformer::transform.</li>
 			<li>Instantiate your own XalanTransformerProblemListener with a different output stream and call XalanTransformer::setProblemListener() before calling XalanTransformer::transform().</li>
 			<li>Subclass some ProblemListener type and do custom handling of errors (you still then need to tell XalanTransformer instances to use your ProblemListener.)</li>
 		</ul>
-		<p>In most case you probably want to do one of the first two. :)</p>
+		<p>In most case you probably want to do one of the first two.</p>
 	</a>
 </faq>
 
 <faq title="Programmatic Error Information">
-	<q>How do I (programmatically) get the filename, line, column, etc. for an error?</q>
+	<q>How do I programmatically get the file name, line number, and column number for an error in an XML file?</q>
 	<a>
-		<p>Create a custom ErrorHandler (a &xml4c; class) and call XalanTransformer::setErrorHnadler before parsing any sources.</p>
+		<p>Create a custom ErrorHandler (a &xml4c; class) and call XalanTransformer::setErrorHandler before parsing any sources.</p>
 	</a>
 </faq>
 

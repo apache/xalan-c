@@ -59,7 +59,7 @@
 <s1 title="Extensions library">
 <ul>
 <li><link anchor="intro">Introduction</link></li>
-<li><link anchor="exslt">Alpha support for EXSLT extensions</link></li>
+<li><link anchor="exslt">Beta support for EXSLT extensions</link></li>
 <li><link anchor="xalanns">Xalan namespace</link></li>
 
 <li><link anchor="nodeset">nodeset</link></li>
@@ -77,7 +77,7 @@ extensions in an extensions library distributed with &xslt4c;. If you have ideas
 </s2><anchor name="exslt"/>
 <s2 title="EXSLT extensions">
  <p>&xslt4c; supports the <jump href="http://exslt.org/">EXSLT</jump> initiative to provide a set of
-standard extension functions to XSLT users. &xslt4c; 1.4 includes alpha implementations for 
+standard extension functions to XSLT users. &xslt4c; 1.4 includes beta implementations for 
 functions in four of the EXSLT namespaces (some are calls to extension already in the Xalan namespace).</p> 
 <p>The source files for the implementations are in the XalanEXSLT subdirectory of the source tree.
 See</p> 
