@@ -65,7 +65,7 @@
      document types.</p>
     <p>&xslt4c-current; is a robust implementation of the W3C Recommendations 
     for XSL Transformations (XSLT) and the XML Path Language (XPath). It includes a compatible release of the 
-    &xml4c; XML parser: &xml4c-used;. In addition to adding a build for Solaris, the focus for this release 
+    &xml4c; XML parser: &xml4c-used;. In addition to adding builds for HP-UX 11 and Solaris, the focus for this release 
     is on bug fixes, performance enhancements, and providing a simpler C++ and C API for performing standard transformations. 
     For the details, see the <link idref="readme">Release Notes</link>.</p>
 	</s2>

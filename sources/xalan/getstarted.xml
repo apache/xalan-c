@@ -62,7 +62,7 @@ If you want to take advantage of the support for number formatting, sorting, and
 </ul>
 <p>If you want to enable ICU support for the command-line utility, you must build the ICU and rebuild the Xalan-C++ shared/load library (Linux/AIX/HP-UX 11) and TestXSLT (all platforms) with the ICUBridge. See <link idref="usagepatterns" anchor="icu">Using the ICU</link> and <link idref="commandline" anchor="icu">Enabling ICU support for TestXSLT</link>.</p>
 <p>For information about using the command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
-<note>If you want to do your own AIX build, you must download <resource-ref idref="stlport"/> and set the STLPORTROOT
+<note>If you want to do your own AIX or Solaris build, you must download <resource-ref idref="stlport"/> and set the STLPORTROOT
 environment variable to the complete path to the STLPort distribution (see the <link idref="readme" anchor="build">Build notes</link>)</note>
 </s3>
 <s3 title="What you need to build and run applications">
