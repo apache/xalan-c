@@ -131,8 +131,8 @@ public:
 	 */
 	virtual void
 	process(
-		XSLTInputSource&				inputSource, 
-		XSLTInputSource&				stylesheetSource,
+		const XSLTInputSource&			inputSource,
+		const XSLTInputSource&			stylesheetSource,
 		XSLTResultTarget&				outputTarget,
 		StylesheetConstructionContext&	constructionContext,
 		StylesheetExecutionContext& 	executionContext) = 0;
@@ -150,7 +150,7 @@ public:
 	 */
 	virtual void
 	process(
-			XSLTInputSource&				inputSource, 
+			const XSLTInputSource&			inputSource,
 			XSLTResultTarget&				outputTarget,
 			StylesheetExecutionContext& 	executionContext) = 0;
 
@@ -165,7 +165,7 @@ public:
 	 */
 	virtual StylesheetRoot*
 	processStylesheet(
-			XSLTInputSource&				stylesheetSource,
+			const XSLTInputSource&			stylesheetSource,
 			StylesheetConstructionContext&	constructionContext) = 0;
   
 	/**
@@ -204,7 +204,7 @@ public:
 	 * @return source tree
 	 */
 	virtual XalanNode*
-	getSourceTreeFromInput(XSLTInputSource& 	inputSource) = 0;
+	getSourceTreeFromInput(const XSLTInputSource& 	inputSource) = 0;
 
    /**
 	* Output an object to the result tree by doing the right conversions.

@@ -240,7 +240,7 @@ public:
 	 * @return pointer to character stream, or null if none was supplied.
 	 */
 	Writer*
-	getCharacterStream()
+	getCharacterStream() const
 	{
 		return m_characterStream;
 	}

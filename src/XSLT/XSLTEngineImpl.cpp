@@ -234,8 +234,8 @@ XSLTEngineImpl::~XSLTEngineImpl()
 
 void
 XSLTEngineImpl::process(
-			XSLTInputSource&				inputSource, 
-	        XSLTInputSource&				stylesheetSource,
+			const XSLTInputSource&			inputSource, 
+	        const XSLTInputSource&			stylesheetSource,
 	        XSLTResultTarget&				outputTarget,
 			StylesheetConstructionContext&	constructionContext,
 			StylesheetExecutionContext&		executionContext)
@@ -404,7 +404,7 @@ XSLTEngineImpl::process(
 
 void
 XSLTEngineImpl::process(
-			XSLTInputSource&				inputSource, 
+			const XSLTInputSource&			inputSource, 
 	        XSLTResultTarget&				outputTarget,
 			StylesheetExecutionContext&		executionContext)
 {
@@ -460,7 +460,7 @@ XSLTEngineImpl::processStylesheet(
 
 StylesheetRoot*
 XSLTEngineImpl::processStylesheet(
-  			XSLTInputSource&				stylesheetSource,
+  			const XSLTInputSource&			stylesheetSource,
 			StylesheetConstructionContext&	constructionContext)
 {
 	StylesheetRoot*		theStylesheet = 0;
@@ -533,7 +533,7 @@ XSLTEngineImpl::processStylesheet(
 //==========================================================
 
 XalanNode*
-XSLTEngineImpl::getSourceTreeFromInput(XSLTInputSource&		inputSource)
+XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 {
 	XalanNode*		sourceTree = 0;
 

@@ -221,21 +221,21 @@ public:
 	
 	virtual void
 	process(
-			XSLTInputSource&				inputSource, 
-			XSLTInputSource&				stylesheetSource,
+			const XSLTInputSource&			inputSource, 
+			const XSLTInputSource&			stylesheetSource,
 			XSLTResultTarget&				outputTarget,
 			StylesheetConstructionContext&	constructionContext,
 			StylesheetExecutionContext& 	executionContext);
 
 	virtual void
 	process(
-			XSLTInputSource&				inputSource,
+			const XSLTInputSource&			inputSource,
 			XSLTResultTarget&				outputTarget,
 			StylesheetExecutionContext& 	executionContext);
 
 	virtual StylesheetRoot*
 	processStylesheet(
-			XSLTInputSource&				stylesheetSource,
+			const XSLTInputSource&			stylesheetSource,
 			StylesheetConstructionContext&	constructionContext);
 
 	virtual StylesheetRoot*
@@ -244,7 +244,7 @@ public:
 			StylesheetConstructionContext&	constructionContext);
 
 	virtual XalanNode*
-	getSourceTreeFromInput(XSLTInputSource&		inputSource);
+	getSourceTreeFromInput(const XSLTInputSource&	inputSource);
 
 	virtual void
 	outputToResultTree(

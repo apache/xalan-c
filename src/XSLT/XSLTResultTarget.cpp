@@ -171,5 +171,3 @@ XSLTResultTarget::XSLTResultTarget(XalanElement*	element) :
 {
 	assert(element != 0);
 }
-
-
