@@ -155,7 +155,7 @@ XalanSourceTreeContentHandler::endElement(
 
 	assert(m_elementStack.empty() == false);
 
-	// Pop the element of the stack...
+	// Pop the stack...
 	m_elementStack.pop_back();
 
 	assert(m_elementStack.empty() == false);

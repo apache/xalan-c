@@ -87,7 +87,6 @@ class XalanSourceTreeElement;
 class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeContentHandler : public ContentHandler, public DTDHandler, public LexicalHandler
 {
 public:
-	/** @name Constructors and Destructor */
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanSourceTreeElement*> 		ElementStackType;
@@ -262,7 +261,7 @@ private:
 
 	// The last child appended to the current element.  This is
 	// an important optimization, because XalanSourceTreeElement
-	// does not have a pointer to it's last child.  Without this,
+	// does not have a pointer to its last child.  Without this,
 	// appending a child becomes a linear search.
 	XalanNode* 					m_lastChild;
 
