@@ -59,6 +59,11 @@
 
 
 
+#include <memory>
+
+
+
+#include <unicode/coll.h>
 #include <unicode/dcfmtsym.h>
 #include <unicode/decimfmt.h>
 
@@ -70,7 +75,6 @@ ICUBridge::FormatNumber(
 			double						theNumber,
 			UTF16VectorType&			theResult)
 {
-
 	const UnicodeString		theUnicodePattern(&thePattern[0], thePattern.size());
 
 	UErrorCode				theStatus = U_ZERO_ERROR;
@@ -79,7 +83,8 @@ ICUBridge::FormatNumber(
 
 	DecimalFormat			theFormatter(theUnicodePattern, theStatus);
 
-	if (theStatus == U_ZERO_ERROR)
+	if (theStatus == U_ZERO_ERROR ||
+		theStatus == U_USING_DEFAULT_ERROR)
 	{
 		// Do the format...
 		theFormatter.format(theNumber, theUnicodeResult);
@@ -91,6 +96,8 @@ ICUBridge::FormatNumber(
 		theResult.resize(theLength);
 
 		theUnicodeResult.extract(0, theLength, &theResult[0]);
+
+		theStatus = U_ZERO_ERROR;
 	}
 
 	return theStatus;
@@ -161,4 +168,56 @@ ICUBridge::FormatNumber(
 	}
 
 	return theStatus;
+}
+
+
+
+int
+ICUBridge::strLength(const UnicodeCharType*		theString)
+{
+	if (theString == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		const UnicodeCharType*	current = theString;
+
+		while(*current)
+		{
+			++current;
+		}
+
+		return current - theString;
+	}
+}
+
+
+
+int
+ICUBridge::collationCompare(
+			const UnicodeCharType*		theLHS,
+			const UnicodeCharType*		theRHS)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::auto_ptr;
+#endif
+
+	const UnicodeString		theUnicodeLHS(theLHS, strLength(theLHS));
+	const UnicodeString		theUnicodeRHS(theRHS, strLength(theRHS));
+
+	UErrorCode				theStatus = U_ZERO_ERROR;
+
+	auto_ptr<Collator>	theCollator(Collator::createInstance(theStatus));
+
+	if (theStatus == U_ZERO_ERROR || theStatus == U_USING_DEFAULT_ERROR)
+	{
+		return theCollator->compare(
+					theUnicodeLHS,
+					theUnicodeRHS);
+	}
+	else
+	{
+		return theUnicodeLHS.compare(theUnicodeRHS);
+	}
 }

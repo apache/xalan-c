@@ -72,6 +72,8 @@ class XALAN_ICUBRIDGE_EXPORT ICUBridge
 {
 public:
 
+	typedef wchar_t							UnicodeCharType;
+
 #if defined(XALAN_NO_NAMESPACES
 	typedef vector<unsigned short>			UTF16VectorType;
 #else
@@ -102,6 +104,14 @@ public:
 			unsigned short				thePerMillChar,
 			unsigned short				theZeroDigitChar,
 			UTF16VectorType&			theResult);
+
+	static int
+	collationCompare(
+			const UnicodeCharType*		theLHS,
+			const UnicodeCharType*		theRHS);
+
+	static int
+	strLength(const UnicodeCharType*	theString);
 };
 
 
