@@ -76,6 +76,7 @@
 #define XALAN_CLASSIC_IOSTREAMS
 #define XALAN_NO_MEMBER_TEMPLATES
 #define XALAN_NO_STD_ALLOCATORS
+#define XALAN_NO_USING_DECLARATION
 #endif
 
 // As of 3.1, std::numeric_limits<double> is broken, so
