@@ -116,9 +116,9 @@
 
 //#define XALAN_USE_ICU
 #if defined(XALAN_USE_ICU)
-#include <xalanc/ICUBridge/FunctionICUFormatNumber.hpp>
 #include <xalanc/ICUBridge/ICUBridgeCleanup.hpp>
 #include <xalanc/ICUBridge/ICUBridgeCollationCompareFunctor.hpp>
+#include <xalanc/ICUBridge/ICUFormatNumberFunctor.hpp>
 #endif
 
 
@@ -169,7 +169,11 @@ XalanTransformer::XalanTransformer():
 
 	m_stylesheetExecutionContext->installCollationCompareFunctor(theICUFunctor.get());
 
+	XalanAutoPtr<ICUFormatNumberFunctor>  theFormatNumberFunctor(new ICUFormatNumberFunctor());
+	m_stylesheetExecutionContext->installFormatNumberFunctor(theFormatNumberFunctor.get());
 	theICUFunctor.release();
+	theFormatNumberFunctor.release();
+
 #endif
 }
 
@@ -197,6 +201,7 @@ XalanTransformer::~XalanTransformer()
 #if defined(XALAN_USE_ICU)
 	// Uninstall the ICU collation compare functor, and destroy it...
 	delete m_stylesheetExecutionContext->uninstallCollationCompareFunctor();
+	delete m_stylesheetExecutionContext->uninstallFormatNumberFunctor();
 #endif
 
 	delete m_stylesheetExecutionContext;
@@ -218,14 +223,6 @@ XalanTransformer::initialize()
 	XalanEXSLTSetFunctionsInstaller::installGlobal();
 	XalanEXSLTStringFunctionsInstaller::installGlobal();
 	XalanEXSLTDateTimeFunctionsInstaller::installGlobal();
-
-
-#if defined(XALAN_USE_ICU)
-	// Install the ICU version of format-number...
-	XPath::installFunction(
-			XPathFunctionTable::s_formatNumber,
-			FunctionICUFormatNumber());
-#endif
 
 	s_xsltInit = initGuard.release();
 	s_emptyInputSource = inputSourceGuard.release();

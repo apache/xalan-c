@@ -158,7 +158,6 @@
 
 //#define XALAN_USE_ICU
 #if defined(XALAN_USE_ICU)
-#include <xalanc/ICUBridge/FunctionICUFormatNumber.hpp>
 #include <xalanc/ICUBridge/ICUBridgeCollationCompareFunctor.hpp>
 #endif
 
@@ -819,11 +818,6 @@ xsltMain(const CmdLineParams&	params)
 	// we're done with the subsystem, since its destructor shuts down
 	// the subsystem.
 	XSLTInit	theInit;
-
-#if defined(XALAN_USE_ICU)
-	// Create an installer to install the substitute format-number() function.
-	FunctionICUFormatNumber::FunctionICUFormatNumberInstaller	theInstaller;
-#endif
 
 	const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
 	const XalanDOMString	encoding(XALAN_STATIC_UCODE_STRING("UTF-8"));

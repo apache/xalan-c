@@ -61,7 +61,6 @@
 
 #include "Constants.hpp"
 #include "ElemNumber.hpp"
-#include "FunctionFormatNumber.hpp"
 #include "StylesheetHandler.hpp"
 #include "XSLTEngineImpl.hpp"
 
@@ -111,8 +110,6 @@ XSLTInit::initialize()
 
 	ElemNumber::initialize();
 
-	FunctionFormatNumber::initialize();
-
 	XSLTEngineImpl::initialize();
 
 	StylesheetHandler::initialize();
@@ -126,8 +123,6 @@ XSLTInit::terminate()
 	StylesheetHandler::terminate();
 
 	XSLTEngineImpl::terminate();
-
-	FunctionFormatNumber::terminate();
 
 	ElemNumber::terminate();
 

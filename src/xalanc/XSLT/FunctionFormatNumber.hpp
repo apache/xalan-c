@@ -64,31 +64,11 @@
 
 
 
-#include <vector>
-
-
-
-#include <xalanc/XalanDOM/XalanDOMString.hpp>
-
-
-
-#include <xalanc/PlatformSupport/XalanDecimalFormatSymbols.hpp>
-
-
-
 #include <xalanc/XPath/Function.hpp>
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
-
-
-
-class XalanDecimalFormatSymbols;
-class XObject;
-class XPathExecutionContext;
-
-
 
 // Implementation of the XSLT function format-number.
 //
@@ -97,18 +77,6 @@ class XALAN_XSLT_EXPORT FunctionFormatNumber : public Function
 public:
 
 	typedef Function	ParentType;
-
-	/**
-	 * Perform static initialization.  See class XSLTInit.
-	 */
-	static void
-	initialize();
-
-	/**
-	 * Perform static shut down.  See class XSLTInit.
-	 */
-	static void
-	terminate();
 
 	FunctionFormatNumber();
 
@@ -145,19 +113,6 @@ public:
 #endif
 	clone() const;
 
-protected:
-
-	virtual void
-	doFormat(
-			XPathExecutionContext&				executionContext,
-			XalanNode*							context,
-			double								theNumber,
-			const XalanDOMString&				thePattern,
-			const XalanDecimalFormatSymbols*	theDFS,
-			XalanDOMString&						theResult,
-			const LocatorType*					locator,
-			bool								fWarn = true) const;
-
 private:
 
 	const XalanDOMString
@@ -170,14 +125,6 @@ private:
 	bool
 	operator==(const FunctionFormatNumber&) const;
 
-	// Data members...
-	const XalanDecimalFormatSymbols		m_decimalFormatSymbols;
-
-	static const XalanDOMString&		s_warningNotImplementedString;
-
-	static const XalanDOMString&		s_warningNotFoundString;
-
-	static const XalanDOMString			s_emptyString;
 };
 
 

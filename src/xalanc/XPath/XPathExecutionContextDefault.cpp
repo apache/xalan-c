@@ -72,6 +72,10 @@
 
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
 #include <xalanc/PlatformSupport/XalanLocator.hpp>
+#include <xalanc/PlatformSupport/DoubleSupport.hpp>
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanDecimalFormatSymbols.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -703,10 +707,81 @@ XPathExecutionContextDefault::setSourceDocument(
 
 
 
-const XalanDecimalFormatSymbols*
-XPathExecutionContextDefault::getDecimalFormatSymbols(const XalanQName&		/* qname */)
+void XPathExecutionContextDefault::formatNumber(
+		double								number,
+		const XalanDOMString&				pattern,
+		XalanDOMString&						theResult,
+		const XalanNode*					context,
+		const LocatorType*					locator) 
 {
-	return 0;
+	doFormatNumber(number,pattern,0,theResult,context,locator);
+}
+
+
+
+void XPathExecutionContextDefault::formatNumber(
+			double								number,
+			const XalanDOMString&				pattern,
+			const XalanDOMString&				dfsName,
+			XalanDOMString&						theResult,
+			const XalanNode*					context,
+			const LocatorType*					locator) 
+{
+	doFormatNumber(number,pattern,0,theResult,context,locator);
+}
+
+
+	
+void XPathExecutionContextDefault::doFormatNumber(
+			double								number,
+			const XalanDOMString&				pattern,
+			const XalanDecimalFormatSymbols*	theDFS,
+			XalanDOMString&						theResult,
+			const XalanNode*					context,
+			const LocatorType*					locator) 
+{
+	if (DoubleSupport::isNaN(number) == true)
+	{
+		if (theDFS != 0)
+		{
+			theResult = theDFS->getNaN();
+		}
+		else
+		{
+			DoubleToDOMString(number, theResult);
+		}
+	}
+	else if (DoubleSupport::isNegativeInfinity(number) == true)
+	{
+		if (theDFS != 0)
+		{
+			theResult = theDFS->getMinusSign();
+			theResult += theDFS->getInfinity();
+		}
+		else
+		{
+			DoubleToDOMString(number, theResult);
+		}
+	}
+	else if (DoubleSupport::isPositiveInfinity(number) == true )
+	{
+		if (theDFS != 0)
+		{
+			theResult = theDFS->getInfinity();
+		}
+		else
+		{
+			DoubleToDOMString(number, theResult);
+		}
+	}
+	else
+	{
+	    warn( 
+			XalanMessageLoader::getMessage(XalanMessages::FunctionIsNotImplemented_1Param,"format-number()"),
+			context, 
+			locator);
+		DoubleToDOMString(number,theResult);
+	}
 }
 
 

@@ -694,16 +694,40 @@ public:
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument) = 0;
 
+	/**
+	 * Formats a number according to the specified pattern.
+	 * 
+	 * @param number the number to be formatted
+	 * @param pattern the format pattern
+	 * @param theResult the formatted number
+	 * @param context the source node
+	 * @param locator the locator 
+	 */
+	virtual void formatNumber(
+			double								number,
+			const XalanDOMString&				pattern,
+			XalanDOMString&						theResult,
+			const XalanNode*					context = 0,
+			const LocatorType*					locator = 0) = 0;
 
 	/**
-	 * Retrieve the XalanDecimalFormatSymbols instance associated with
-	 * the name.
-	 *
-	 * @param qname the QName for the lookup
-	 * @return a pointer to the matching instance, or 0 if none was found
+	 * Formats a number according to the specified pattern.
+	 * 
+	 * @param number the number to be formatted
+	 * @param pattern the format pattern
+	 * @param dfsName the name of decimal format to use 
+	 * @param theResult the formatted number
+	 * @param context the source node
+	 * @param locator the locator 
+	 * @return a pointer to the functor, 0 if none was found
 	 */
-	virtual const XalanDecimalFormatSymbols*
-	getDecimalFormatSymbols(const XalanQName&	qname) = 0;
+	virtual void formatNumber(
+			double								number,
+			const XalanDOMString&				pattern,
+			const XalanDOMString&				dfsName,
+			XalanDOMString&						theResult,
+			const XalanNode*					context = 0,
+			const LocatorType*					locator = 0) = 0;
 
 	// These interfaces are inherited from ExecutionContext...
 

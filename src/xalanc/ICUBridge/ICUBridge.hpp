@@ -77,8 +77,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 class Function;
-class XalanDecimalFormatSymbols;
-
 
 
 class XALAN_ICUBRIDGE_EXPORT ICUBridge
@@ -103,13 +101,6 @@ public:
 	UnicodeStringToXalanDOMString(
 			const UnicodeString&	theString,
 			XalanDOMString&			theResult);
-
-	static unsigned long
-	FormatNumber(
-			const XalanDOMString&				thePattern,
-			double								theNumber,
-			const XalanDecimalFormatSymbols*	theXalanDFS,
-			XalanDOMString&						theResult);
 };
 
 

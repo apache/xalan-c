@@ -216,6 +216,14 @@ public:
 #endif
 	}
 
+	virtual void doFormatNumber(
+			double								number,
+			const XalanDOMString&				pattern,
+			const XalanDecimalFormatSymbols*	theDFS,
+			XalanDOMString&						theResult,
+			const XalanNode*					context = 0,
+			const LocatorType*					locator = 0);
+
 	// These interfaces are inherited from XPathExecutionContext...
 
 	virtual void
@@ -342,11 +350,23 @@ public:
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument);
 
-	virtual const XalanDecimalFormatSymbols*
-	getDecimalFormatSymbols(const XalanQName&	qname);
-
-
 	// These interfaces are inherited from ExecutionContext...
+
+	virtual void formatNumber(
+			double								number,
+			const XalanDOMString&				pattern,
+			XalanDOMString&						theResult,
+			const XalanNode*					context = 0,
+			const LocatorType*					locator = 0);
+
+	virtual void formatNumber(
+			double								number,
+			const XalanDOMString&				pattern,
+			const XalanDOMString&				dfsName,
+			XalanDOMString&						theResult,
+			const XalanNode*					context = 0,
+			const LocatorType*					locator = 0);
+
 
 	virtual void
 	error(

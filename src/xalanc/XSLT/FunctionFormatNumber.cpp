@@ -58,20 +58,8 @@
 
 
 
-#include <xalanc/PlatformSupport/DoubleSupport.hpp>
-#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
-#include <xalanc/PlatformSupport/XalanDecimalFormat.hpp>
-#include <xalanc/PlatformSupport/XalanDecimalFormatSymbols.hpp>
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
-
-
-
 #include <xalanc/XPath/XObjectFactory.hpp>
-#include <xalanc/XPath/XalanQNameByValue.hpp>
-
-
-
-#include "Constants.hpp"
 
 
 
@@ -91,10 +79,6 @@ FunctionFormatNumber::~FunctionFormatNumber()
 
 
 
-static const XalanQNameByValue	theEmptyQName;
-
-
-
 XObjectPtr
 FunctionFormatNumber::execute(
 			XPathExecutionContext&	executionContext,
@@ -108,25 +92,16 @@ FunctionFormatNumber::execute(
 	const double						theNumber = arg1->num();
 	const XalanDOMString&				thePattern = arg2->str();
 	
-	const XalanDecimalFormatSymbols*	theDFS = 0;
-
-	if (theDFS == 0)
-	{
-		theDFS = executionContext.getDecimalFormatSymbols(theEmptyQName);
-	}
-
 	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
 
 	GetAndReleaseCachedString	theString(executionContext);
 
-	doFormat(
-			executionContext,
-			context,
-			theNumber,
-			thePattern,
-			theDFS,
-			theString.get(),
-			locator);
+	executionContext.formatNumber(
+			theNumber, 
+			thePattern, 
+			theString.get(), 
+			context, 
+			locator);	
 
 	return executionContext.getXObjectFactory().createString(theString);
 }
@@ -147,115 +122,23 @@ FunctionFormatNumber::execute(
 	const double						theNumber = arg1->num();
 	const XalanDOMString&				thePattern = arg2->str();
 
-	const XalanDOMString&				theDecimalFormatName = arg3->str();
-	assert(length(theDecimalFormatName) != 0);
-
-	const XalanQNameByValue				theQName(theDecimalFormatName, executionContext.getPrefixResolver());
-
-	const XalanDecimalFormatSymbols*	theDFS =
-			executionContext.getDecimalFormatSymbols(theQName);
-
-	if (theDFS == 0)
-	{
-		executionContext.warn(
-				s_warningNotFoundString,
-				context,
-				locator);
-
-		theDFS = executionContext.getDecimalFormatSymbols(theEmptyQName);
+	const XalanDOMString&				theDFSName = arg3->str();
+	assert(length(theDFSName) != 0);
 	
-	}	
-
 	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
 
 	GetAndReleaseCachedString	theString(executionContext);
 
-	doFormat(
-			executionContext,
-			context,
-			theNumber,
-			thePattern,
-			theDFS,
-			theString.get(),
-			locator);
+	executionContext.formatNumber(
+		theNumber, 
+		thePattern,
+		theDFSName,
+		theString.get(),
+		context, 
+		locator);
 
 	return executionContext.getXObjectFactory().createString(theString);
 }
-
-
-
-void
-FunctionFormatNumber::doFormat(
-			XPathExecutionContext&				executionContext,
-			XalanNode*							context,
-			double								theNumber,
-			const XalanDOMString&				thePattern,
-			const XalanDecimalFormatSymbols*	theDFS,
-			XalanDOMString&						theResult,
-			const LocatorType*					locator,
-			bool								fWarn) const
-{
-	if (DoubleSupport::isNaN(theNumber) == true)
-	{
-		if (theDFS != 0)
-		{
-			theResult = theDFS->getNaN();
-		}
-		else
-		{
-			DoubleToDOMString(theNumber, theResult);
-		}
-	}
-	else if (DoubleSupport::isNegativeInfinity(theNumber) == true)
-	{
-		if (theDFS != 0)
-		{
-			theResult = theDFS->getMinusSign();
-			theResult += theDFS->getInfinity();
-		}
-		else
-		{
-			DoubleToDOMString(theNumber, theResult);
-		}
-	}
-	else if (DoubleSupport::isPositiveInfinity(theNumber) == true )
-	{
-		if (theDFS != 0)
-		{
-			theResult = theDFS->getInfinity();
-		}
-		else
-		{
-			DoubleToDOMString(theNumber, theResult);
-		}
-	}
-	else
-	{
-		if (fWarn == true)
-		{
-			executionContext.warn(s_warningNotImplementedString, context, locator);
-		}
-
-		if (theDFS != 0)
-		{
-			XalanDecimalFormat	theFormatter(s_emptyString, *theDFS);
-
-			theFormatter.applyLocalizedPattern(thePattern);
-
-			theFormatter.format(theNumber, theResult);
-		}
-		else
-		{
-			XalanDecimalFormat	theFormatter(s_emptyString, m_decimalFormatSymbols);
-
-			theFormatter.applyLocalizedPattern(thePattern);
-
-			theFormatter.format(theNumber, theResult);
-		}
-	}
-}
-
-
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 Function*
@@ -267,47 +150,10 @@ FunctionFormatNumber::clone() const
 	return new FunctionFormatNumber(*this);
 }
 
-
-
 const XalanDOMString
 FunctionFormatNumber::getError() const
 {
 	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoOrThreeArguments_1Param,"format-number()");
 }
-
-
-
-static XalanDOMString	s_staticWarningNotImplementedString;
-static XalanDOMString	s_staticWarningNotFoundString;
-
-
-const XalanDOMString&	FunctionFormatNumber::s_warningNotImplementedString =
-		s_staticWarningNotImplementedString;
-
-const XalanDOMString&	FunctionFormatNumber::s_warningNotFoundString =
-		s_staticWarningNotFoundString;
-
-const XalanDOMString	FunctionFormatNumber::s_emptyString;
-
-
-void
-FunctionFormatNumber::initialize()
-{
-	s_staticWarningNotImplementedString = XalanMessageLoader::getMessage(XalanMessages::FunctionIsNotImplemented_1Param,"format-number()");
-
-	s_staticWarningNotFoundString = XalanMessageLoader::getMessage(XalanMessages::Decimal_formatElementNotFound_1Param,"format-number()");
-}
-
-
-
-void
-FunctionFormatNumber::terminate()
-{
-	releaseMemory(s_staticWarningNotImplementedString);
-
-	releaseMemory(s_staticWarningNotFoundString);
-}
-
-
 
 XALAN_CPP_NAMESPACE_END

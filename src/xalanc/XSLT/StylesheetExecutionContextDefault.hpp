@@ -769,6 +769,50 @@ public:
 	CollationCompareFunctor*
 	uninstallCollationCompareFunctor();
 
+
+	class  FormatNumberFunctor
+	{
+	public:
+		FormatNumberFunctor() {};
+
+		virtual
+		~FormatNumberFunctor() {};
+
+		virtual void
+		operator() (
+			XPathExecutionContext&				executionContext,
+			double								theNumber,
+			const XalanDOMString&				thePattern,
+			const XalanDecimalFormatSymbols*	theDFS,
+			XalanDOMString&						theResult,
+			const XalanNode*					context = 0,
+			const LocatorType*					locator = 0) const =0;
+	};
+
+	void 
+	formatNumber(
+			double								number,
+			const XalanDOMString&				pattern,
+			XalanDOMString&						theResult,
+			const XalanNode*					context = 0,
+			const LocatorType*					locator = 0);
+
+	void 
+	formatNumber(
+			double								number,
+			const XalanDOMString&				pattern,
+			const XalanDOMString&				dfsName,
+			XalanDOMString&						theResult,
+			const XalanNode*					context = 0,
+			const LocatorType*					locator = 0);
+
+
+	const FormatNumberFunctor * 
+	installFormatNumberFunctor(FormatNumberFunctor * formatNumberFunctor);
+	
+	FormatNumberFunctor *
+	uninstallFormatNumberFunctor();
+
 	virtual	bool
 	getInConstruction(const KeyDeclaration&		keyDeclaration) const;
 
@@ -777,9 +821,6 @@ public:
 
 	virtual	void
 	endConstruction(const KeyDeclaration&	keyDeclaration);
-
-	virtual const XalanDecimalFormatSymbols*
-	getDecimalFormatSymbols(const XalanQName&	qname);
 
 	virtual PrintWriter*
 	createPrintWriter(XalanOutputStream*		theTextOutputStream);
@@ -1009,6 +1050,9 @@ protected:
 	virtual bool
 	returnFormatterToText(FormatterToText*	theFormatter);
 
+	virtual const XalanDecimalFormatSymbols*
+	getDecimalFormatSymbols(const XalanQName&	qname);
+
 private:
 
 	/**
@@ -1091,6 +1135,8 @@ private:
 
 	CollationCompareFunctor*			m_collationCompareFunctor;
 
+	FormatNumberFunctor *				m_formatNumberFunctor;
+
 	/**
 	 * Holds all information about variables during execution.
 	 */
@@ -1158,6 +1204,7 @@ private:
 	static XalanNumberFormatFactory*	s_xalanNumberFormatFactory;
 
 	static const DefaultCollationCompareFunctor		s_defaultCollationFunctor;
+
 };
 
 

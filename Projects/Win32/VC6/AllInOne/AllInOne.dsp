@@ -591,14 +591,6 @@ SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanCollationServices.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormat.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormat.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormatSymbols.cpp
 # End Source File
 # Begin Source File

@@ -136,6 +136,8 @@ const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		Stylesh
 
 
 
+
+
 StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 			XSLTEngineImpl&			xsltProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
@@ -160,6 +162,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_printWriters(),
 	m_outputStreams(),
 	m_collationCompareFunctor(0),
+	m_formatNumberFunctor(0),
 	m_variablesStack(),
 	m_matchPatternCache(),
 	m_keyTables(),
@@ -202,6 +205,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_printWriters(),
 	m_outputStreams(),
 	m_collationCompareFunctor(0),
+	m_formatNumberFunctor(0),
 	m_variablesStack(),
 	m_matchPatternCache(),
 	m_keyTables(),
@@ -1645,6 +1649,100 @@ StylesheetExecutionContextDefault::uninstallCollationCompareFunctor()
 
 
 
+static const XalanQNameByValue	theEmptyQName;
+
+
+
+void 
+StylesheetExecutionContextDefault::formatNumber(
+			double								number,
+			const XalanDOMString&				pattern,
+			XalanDOMString&						theResult,
+			const XalanNode*					context,
+			const LocatorType*					locator)
+{
+	const XalanDecimalFormatSymbols * theDFS = getDecimalFormatSymbols(theEmptyQName);
+
+	if (m_formatNumberFunctor == 0) 
+	{
+		m_xpathExecutionContextDefault.doFormatNumber(number,pattern, theDFS, theResult,context,locator);
+	} 
+	else 
+	{
+		(*m_formatNumberFunctor)(*this, number,	pattern, theDFS, theResult, context, locator);
+	}
+}
+ 
+
+
+void 
+StylesheetExecutionContextDefault::formatNumber(
+			double								number,
+			const XalanDOMString&				pattern,
+			const XalanDOMString&				dfsName,
+			XalanDOMString&						theResult,
+			const XalanNode*					context,
+			const LocatorType*					locator)
+{
+	XalanQNameByValue&	theDFSQName = m_xpathExecutionContextDefault.getScratchQName();
+	theDFSQName.set(dfsName, getPrefixResolver(), locator);
+
+	const XalanDecimalFormatSymbols*	theDFS = getDecimalFormatSymbols(theDFSQName);
+
+	if (theDFS == 0)
+	{
+		warn(
+				XalanMessageLoader::getMessage(XalanMessages::Decimal_formatElementNotFound_1Param,"format-number()"),
+				context,
+				locator);	
+		theDFS = getDecimalFormatSymbols(theEmptyQName);
+		
+	}
+
+	if (m_formatNumberFunctor == 0) 
+	{
+		m_xpathExecutionContextDefault.doFormatNumber(number,pattern,theDFS,theResult,context,locator);
+	} 
+	else 
+	{	
+		(*m_formatNumberFunctor)(*this, number, pattern, theDFS, theResult, context, locator);
+	}
+}
+
+
+
+const StylesheetExecutionContextDefault::FormatNumberFunctor*
+StylesheetExecutionContextDefault::installFormatNumberFunctor(FormatNumberFunctor*	theFunctor)
+{
+	assert(theFunctor != 0);
+
+	const FormatNumberFunctor * const	temp = m_formatNumberFunctor;
+
+	m_formatNumberFunctor = theFunctor;
+
+	return temp;
+}
+
+
+
+StylesheetExecutionContextDefault::FormatNumberFunctor*
+StylesheetExecutionContextDefault::uninstallFormatNumberFunctor() {
+	if (m_formatNumberFunctor == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		FormatNumberFunctor * const	temp = m_formatNumberFunctor;
+
+		m_formatNumberFunctor = 0;
+
+		return temp;
+	}
+}
+
+
+
 bool
 StylesheetExecutionContextDefault::getInConstruction(const KeyDeclaration&	keyDeclaration) const
 {
@@ -2062,7 +2160,7 @@ StylesheetExecutionContextDefault::getDecimalFormatSymbols(const XalanQName&	qna
 {
 	if (m_stylesheetRoot == 0)
 	{
-		return m_xpathExecutionContextDefault.getDecimalFormatSymbols(qname);
+		return 0; 
 	}
 	else
 	{

@@ -591,14 +591,6 @@ SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanCollationServices.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormat.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormat.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormatSymbols.cpp
 # End Source File
 # Begin Source File
@@ -2679,14 +2671,6 @@ SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTResultTarget.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\xalanc\ICUBridge\FunctionICUFormatNumber.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\ICUBridge\FunctionICUFormatNumber.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridge.cpp
 # End Source File
 # Begin Source File
@@ -2720,6 +2704,14 @@ SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctorImpl.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeDefinitions.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUFormatNumberFunctor.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUFormatNumberFunctor.hpp
 # End Source File
 # Begin Source File
 

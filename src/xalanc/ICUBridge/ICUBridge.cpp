@@ -60,21 +60,10 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
-#include <xalanc/PlatformSupport/XalanDecimalFormatSymbols.hpp>
-
-
-
-#include <xalanc/PlatformSupport/DoubleSupport.hpp>
 
 
 
 #include <unicode/coll.h>
-#include <unicode/dcfmtsym.h>
-#include <unicode/decimfmt.h>
-
-
-
-#include <xalanc/Include/XalanAutoPtr.hpp>
 
 
 
@@ -294,93 +283,5 @@ ICUBridge::UnicodeStringToXalanDOMString(
 	}
 #endif
 }
-
-
-
-static void
-doFormatNumber(
-			const XalanDOMString&				thePattern,
-			double								theNumber,
-			const XalanDecimalFormatSymbols&	theXalanDFS,
-			UErrorCode&							theStatus,
-			XalanDOMString&						theResult)
-{
-	if (theStatus == U_ZERO_ERROR ||
-		theStatus == U_USING_DEFAULT_WARNING)
-	{
-		// Use a XalanAutoPtr, to keep this safe until we construct the DecimalFormat instance.
-		XalanAutoPtr<DecimalFormatSymbols>	theDFS(new DecimalFormatSymbols(theStatus));
-
-		// We got a XalanDecimalFormatSymbols, so set the
-		// corresponding data in the ICU DecimalFormatSymbols.
-		theDFS->setSymbol(DecimalFormatSymbols::kZeroDigitSymbol, UChar(theXalanDFS.getZeroDigit()));
-		theDFS->setSymbol(DecimalFormatSymbols::kGroupingSeparatorSymbol, UChar(theXalanDFS.getGroupingSeparator()));
-		theDFS->setSymbol(DecimalFormatSymbols::kDecimalSeparatorSymbol, UChar(theXalanDFS.getDecimalSeparator()));
-		theDFS->setSymbol(DecimalFormatSymbols::kPerMillSymbol, UChar(theXalanDFS.getPerMill()));
-		theDFS->setSymbol(DecimalFormatSymbols::kPercentSymbol, UChar(theXalanDFS.getPercent()));
-		theDFS->setSymbol(DecimalFormatSymbols::kDigitSymbol, UChar(theXalanDFS.getDigit()));
-		theDFS->setSymbol(DecimalFormatSymbols::kPatternSeparatorSymbol, UChar(theXalanDFS.getPatternSeparator()));
-
-		theDFS->setSymbol(DecimalFormatSymbols::kInfinitySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInfinity()));
-		theDFS->setSymbol(DecimalFormatSymbols::kNaNSymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getNaN()));
-		theDFS->setSymbol(DecimalFormatSymbols::kMinusSignSymbol, UChar(theXalanDFS.getMinusSign()));
-		theDFS->setSymbol(DecimalFormatSymbols::kCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getCurrencySymbol()));
-		theDFS->setSymbol(DecimalFormatSymbols::kIntlCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInternationalCurrencySymbol()));
-		theDFS->setSymbol(DecimalFormatSymbols::kMonetarySeparatorSymbol, UChar(theXalanDFS.getMonetaryDecimalSeparator()));
-
-		UnicodeString	theUnicodeResult;
-
-		// Construct a DecimalFormat.  Note that we release the XalanAutoPtr, since the
-		// DecimalFormat will adopt the DecimalFormatSymbols instance.
-		DecimalFormat	theFormatter(ICUBridge::XalanDOMStringToUnicodeString(thePattern), theDFS.release(), theStatus);
-
-		if (U_SUCCESS(theStatus))
-		{
-			// Do the format...
-			theFormatter.format(theNumber, theUnicodeResult);
-
-			ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
-
-			theStatus = U_ZERO_ERROR;
-		}
-	}
-}
-
-
-
-unsigned long
-ICUBridge::FormatNumber(
-			const XalanDOMString&				thePattern,
-			double								theNumber,
-			const XalanDecimalFormatSymbols*	theXalanDFS,
-			XalanDOMString&						theResult)
-{
-	UErrorCode	theStatus = U_ZERO_ERROR;
-
-	if (theXalanDFS == 0)
-	{
-		XalanDecimalFormatSymbols	theDefaultSymbols;
-
-		doFormatNumber(
-				thePattern,
-				theNumber,
-				theDefaultSymbols,
-				theStatus,
-				theResult);
-	}
-	else
-	{
-		doFormatNumber(
-				thePattern,
-				theNumber,
-				*theXalanDFS,
-				theStatus,
-				theResult);
-	}
-
-	return theStatus;
-}
-
-
 
 XALAN_CPP_NAMESPACE_END
