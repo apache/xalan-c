@@ -1,11 +1,59 @@
 /*
-*
-* FileUtility.cpp
-*
-* Copyright 2000 Lotus Development Corporation. All rights reserved.
-* This software is subject to the Lotus Software Agreement, Restricted
-* Rights for U.S. government users and applicable export regulations.
-*/
+ * The Apache Software License, Version 1.1
+ *
+ *
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:  
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
+ *
+ * 4. The names "Xalan" and "Apache Software Foundation" must
+ *    not be used to endorse or promote products derived from this
+ *    software without prior written permission. For written 
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache",
+ *    nor may "Apache" appear in their name, without prior written
+ *    permission of the Apache Software Foundation.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation and was
+ * originally based on software copyright (c) 1999, International
+ * Business Machines, Inc., http://www.ibm.com.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ */
 
 #include <cstdlib>
 #include <cstdio>
@@ -86,6 +134,176 @@ FileUtility::getDrive()
 
 }
 #endif
+
+
+bool
+FileUtility::getParams(int argc, 
+		  const char*	argv[])
+{
+	bool fSuccess = true;	// Used to continue argument loop
+	bool fsetOut = true;	// Set default output directory, set to false if data is provided
+	bool fsetGold = true;	// Set default gold directory, set to false if data is provided
+
+	args.skip = true;		// Default values for performance testing parameters.
+	args.iters = 3;			
+
+	// Insure that required "-base" argument is there.
+	//
+	if (argc == 1 || argv[1][0] == '-')
+	{
+		cout << args.help.str();  
+		return false;
+	}
+	else
+	{
+		if (checkDir(XalanDOMString(argv[1])))
+		{
+			assign(args.base, XalanDOMString(argv[1]));
+//			if ( argv[0] == "conf" && !endsWith(args.base, XalanDOMString("conf")) )
+//			{
+//				cout << endl << "Given base directory \"" << argv[1] << "\" not valid conformance directory" << endl;
+//				cout << args.help.str(); 
+//				return false;
+//			}
+		}
+		else
+		{
+			cout << endl << "Given base directory \"" << argv[1] << "\" does not exist" << endl;
+			cout << args.help.str();
+			return false;
+		}
+	}
+
+	// Get the rest of the arguments.
+	//
+	for (int i = 2; i < argc && fSuccess == true; ++i)
+	{
+		if(!stricmp("-out", argv[i]))
+		{
+			++i;
+			if(i < argc && argv[i][0] != '-')
+			{
+				assign(args.output, XalanDOMString(argv[i]));
+				append(args.output, pathSep);
+				checkAndCreateDir(args.output);
+				fsetOut = false;
+			}
+			else
+			{
+				cout << args.help.str();
+				fSuccess = false;
+			}
+		}
+		else if(!stricmp("-gold", argv[i]))
+		{
+			++i;
+			if(i < argc && argv[i][0] != '-')
+			{
+				assign(args.gold, XalanDOMString(argv[i]));
+				fsetGold = false;
+			}
+			else
+			{
+				cout << args.help.str();
+				fSuccess = false;
+			}
+		}
+		else if(!stricmp("-source", argv[i]))
+		{
+			++i;
+			if(i < argc && argv[i][0] != '-')
+			{
+				if (stricmp(argv[i],"XPL") == 0)
+				{
+					args.source = 1;
+				}
+				else if (stricmp(argv[i], "DOM") == 0)
+				{
+					args.source = 2;
+				}
+				else
+				{
+					cout << args.help.str();
+					fSuccess = false;
+				}
+			}
+			else
+			{
+				cout << args.help.str();
+				fSuccess = false;
+			}
+		}
+		else if(!stricmp("-sub", argv[i]))
+		{
+			++i;
+			if(i < argc && argv[i][0] != '-')
+			{
+				assign(args.sub, XalanDOMString(argv[i]));
+			}
+			else
+			{
+				cout << args.help.str();
+				fSuccess = false;
+			}
+		}
+		else if(!stricmp("-i", argv[i]))
+		{
+			args.skip = false;
+		}
+		else if(!stricmp("-iter", argv[i]))
+		{
+			++i;
+			
+			// Make sure number is there and is greater then zero
+			if(i < argc && atol(argv[i]) > 0)
+			{
+				args.iters = atol(argv[i]);
+			}
+			else
+			{
+				cout << args.help.str();
+				fSuccess = false;
+			}
+		}
+		else
+		{
+			cout << args.help.str();
+			fSuccess = false;
+		}
+
+	} // End of for-loop
+
+	// Do we need to set the default output directory??
+	//
+	if (fsetOut)
+	{ /*
+		const XalanDOMString outDirName(argv[0]);
+		unsigned int ii = lastIndexOf(args.base,charAt(pathSep,0));
+		args.output = substring(args.base, 0, ii+1);
+		append(args.output,XalanDOMString("CONF-RESULTS"));
+		checkAndCreateDir(args.output);
+		append(args.output,pathSep); */
+		assign(args.output, args.base);
+		append(args.output, XalanDOMString("-RESULTS\\"));
+		checkAndCreateDir(args.output);
+	}
+	if (fsetGold)
+	{
+		args.gold = args.base;
+		append(args.gold,XalanDOMString("-gold"));
+		checkAndCreateDir(args.gold);
+		append(args.gold,pathSep);
+	}
+	
+	// Add the path seperator to the end of the base directory 
+	// here after we've finished using it for all directory creation.
+	//
+	append(args.base,pathSep);
+	
+	return fSuccess;
+}
+
+
 
 //	This routine retrieves test file names from specified directories.
 //	Inputs: baseDir:	typically "conf" or "perf"
@@ -170,6 +388,10 @@ void FileUtility::checkAndCreateDir(const XalanDOMString&	directory)
 		if ( !(mkdir(c_str(TranscodeToLocalCodePage(directory)))))
 		{
 			cout << directory << " created." << endl;
+		}
+		else
+		{
+			cout << directory << " NOT created." << endl;
 		}
 	}
 
@@ -1054,8 +1276,10 @@ FileUtility::reportPassFail(
 	runResults.insert(Hashtable::value_type(XalanDOMString("Xerces-Version "), getXercesVersion()));
 	runResults.insert(Hashtable::value_type(XalanDOMString("ICU-Enabled "), XalanDOMString("No")));
 	runResults.insert(Hashtable::value_type(XalanDOMString("BaseDrive "), XalanDOMString(getDrive())));
-	runResults.insert(Hashtable::value_type(XalanDOMString("TestBase "), XalanDOMString(data.testBase)));
+	runResults.insert(Hashtable::value_type(XalanDOMString("TestBase "), XalanDOMString(args.base)));
 	runResults.insert(Hashtable::value_type(XalanDOMString("xmlFormat "), data.xmlFormat));
+	sprintf(temp, "%d", args.iters);
+	runResults.insert(Hashtable::value_type(XalanDOMString("Iters "), XalanDOMString(temp)));
 
 #if defined(XALAN_USE_ICU)
 	// At some point in time I want to be able to programatically check it the ICU is enabled.
@@ -1102,8 +1326,8 @@ FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resul
 
 	// Generate the input and output file names.
 	const XalanDOMString  theHTMLFile = generateFileName(resultsFile,"html");
-	const XalanDOMString  theStylesheet = data.testBase + XalanDOMString("cconf.xsl");
-	const XalanDOMString  theXMLSource = data.testBase + XalanDOMString("cconf.xml");
+	const XalanDOMString  theStylesheet = args.base + XalanDOMString("cconf.xsl");
+	const XalanDOMString  theXMLSource = args.base + XalanDOMString("cconf.xml");
 
 	// Create the InputSources and ResultTarget.
 	const XSLTInputSource	xslInputSource(c_wstr(theStylesheet));

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,8 +65,10 @@
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
+#include <sstream.h>
 #else
 #include <iostream>
+#include <sstream>
 #endif
 
 // XERCES HEADERS ... 
@@ -119,12 +121,14 @@ using namespace std;
 	typedef vector<XalanDOMString>		FileNameVectorType;
 #else
 	typedef std::vector<XalanDOMString>	FileNameVectorType;
+	using std::ostringstream;
 #endif
 
+
 // Basic Global variables used by many tests.
-const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
-const XalanDOMString	XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
+//const XalanDOMString	XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
 const XalanDOMString	XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
+
 #if defined(WIN32)
 const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
 #else
@@ -142,7 +146,6 @@ public:
 		XalanDOMString	testOrFile;
 		XalanDOMString  xmlFileURL;
 		XalanDOMString  xslFileURL;
-		XalanDOMString  testBase;
 		XalanDOMString  xmlFormat;
 		const char*		msg;
 		XalanDOMString	currentNode;
@@ -162,6 +165,19 @@ public:
 		}
 	} data;
 
+	struct cmdParams
+	{
+		ostringstream   help;
+		XalanDOMString  base;
+		XalanDOMString	output;
+		XalanDOMString  gold;
+		XalanDOMString  sub;
+		int				source;
+		bool			skip;
+		long			iters;
+
+	} args;
+
 	/** Simple constructor, does not perform initialization.  */
 	FileUtility()
 	{
@@ -175,6 +191,9 @@ public:
 
 	XalanDOMString
 	getDrive();
+
+	bool
+	getParams(int argc, const char*	argv[]);
 
 
 	FileNameVectorType
@@ -339,6 +358,9 @@ public:
 	analyzeResults(XalanTransformer& xalan, const XalanDOMString& resultsFile);
 
 private:
+
+	XalanDOMString
+	getProgramName(const char* fullName);
 
 	/** 
 	* Utility methods used to collect information about compare failures.
