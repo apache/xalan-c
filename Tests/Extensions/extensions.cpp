@@ -72,6 +72,13 @@
 
 // XALAN HEADERS...
 //	Are included by FileUtility.hpp
+
+// EXTENSION HEADERS...
+#include <XalanExtensions/FunctionDifference.hpp>
+#include <XalanExtensions/FunctionDistinct.hpp>
+#include <XalanExtensions/FunctionEvaluate.hpp>
+#include <XalanExtensions/FunctionHasSameNodes.hpp>
+#include <XalanExtensions/FunctionIntersection.hpp>
 #include <XalanExtensions/FunctionNodeSet.hpp>
 
 // HARNESS HEADERS...
@@ -197,6 +204,49 @@ getParams(int argc,
 	return fSuccess;
 }
 
+void installExtensions(XalanTransformer &transformer)
+{
+	// The namespace for our functions...
+	const XalanDOMString	theNamespace("http://xml.apache.org/xslt");
+
+	// Install the functions in the local space.  They will only
+	// be installed in this instance, so no other instances
+	// will know about them...
+
+	transformer.installExternalFunction(
+		theNamespace,
+		XalanDOMString("difference"),
+		FunctionNodeSet());
+
+	transformer.installExternalFunction(
+		theNamespace,
+		XalanDOMString("distinct"),
+		FunctionNodeSet());
+
+	transformer.installExternalFunction(
+		theNamespace,
+		XalanDOMString("evaluate"),
+		FunctionNodeSet());
+
+	transformer.installExternalFunction(
+		theNamespace,
+		XalanDOMString("hassamenodes"),
+		FunctionNodeSet());
+
+	transformer.installExternalFunction(
+		theNamespace,
+		XalanDOMString("intersection"),
+		FunctionNodeSet());
+
+	const XalanDOMString	theNamespace2("http://ExternalFunction.xalan-c.xml.apache.org");
+
+	transformer.installExternalFunction(
+		theNamespace2,
+		XalanDOMString("nodeset"),
+		FunctionNodeSet());
+
+	return;
+}
 
 // TestCase1 will use the following method of XSLTInputSource
 //		- XSLTextensions(const XMLCh* systemId)
@@ -229,7 +279,6 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-//	FileUtility		futil;
 
 	XalanDOMString  category;	// Test all of base dir by default
 	XalanDOMString  baseDir, outputRoot, goldRoot;	 	
@@ -255,20 +304,9 @@ main(
 			HarnessInit xmlPlatformUtils;
 			XalanTransformer::initialize();
 
-
 			{
-				XalanTransformer		transformEngine;
-				
-				// The namespace for our functions...
-				const XalanDOMString	theNamespace("http://ExternalFunction.xalan-c.xml.apache.org");
-
-				// Install the functions in the local space.  They will only
-				// be installed in this instance, so no other instances
-				// will know about them...
-				transformEngine.installExternalFunction(
-					theNamespace,
-					XalanDOMString("nodeset"),
-					FunctionNodeSet());
+				XalanTransformer transformEngine;
+				installExtensions(transformEngine);				
 				
 
 				// Check that output directory is there.
@@ -286,7 +324,7 @@ main(
 					// Output file name to result log and console.
 					//logFile.logTestCaseInit(files[i]);
 					fileName = files[i];
-					cout << fileName << endl;
+					cout << endl << fileName << endl;
 
 					// Set up the input/output files.
 					const XalanDOMString  theXSLFile= baseDir + xDir + pathSep + fileName;
@@ -304,7 +342,12 @@ main(
 					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 
 					int	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-
+					if (!theResult)
+					{
+						const XSLTInputSource resultInputSource(c_wstr(theOutput));
+						const XSLTInputSource goldInputSource(c_wstr(theGoldFile));
+						futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, "TestCase1"); 
+					}
 //					testCase1(transformEngine, theXMLFile, theXSLFile, theOutput, theGoldFile, fileName);
 
 //					testCase2(transformEngine, theOutput, theGoldFile, fileName);
