@@ -69,12 +69,14 @@ ElemEmpty::ElemEmpty(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			int								lineNumber,
-			int								columnNumber) :
+			int								columnNumber,
+			const XalanDOMString*			elementName) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_UNDEFINED)
+						Constants::ELEMNAME_UNDEFINED),
+	m_elementName(elementName)
 {
 }
 
@@ -89,7 +91,7 @@ ElemEmpty::~ElemEmpty()
 const XalanDOMString&
 ElemEmpty::getElementName() const
 {
-	return s_emptyString;
+	return m_elementName != 0 ? *m_elementName : s_emptyString;
 }
 
 
@@ -100,4 +102,12 @@ ElemEmpty::execute(StylesheetExecutionContext&		executionContext) const
 	assert(false);	// really shouldn't be executing empty nodes
 
 	ElemTemplateElement::execute(executionContext);
+}
+
+
+
+bool
+ElemEmpty::childTypeAllowed(int		/* xslToken */) const
+{
+	return false;
 }

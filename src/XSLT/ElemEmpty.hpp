@@ -84,12 +84,14 @@ public:
 	 * @param atts                list of attributes for element
 	 * @param lineNumber				line number in document
 	 * @param columnNumber			column number in document
+	 * @param elementName The element name for which this instance is representing
 	 */
 	ElemEmpty(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			int								lineNumber,
-			int								columnNumber);
+			int								columnNumber,
+			const XalanDOMString*			elementName = 0);
 
 	virtual
 	~ElemEmpty();
@@ -101,6 +103,15 @@ public:
 
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
+
+protected:
+
+	virtual bool
+	childTypeAllowed(int	xslToken) const;
+
+private:
+
+	const XalanDOMString* const		m_elementName;
 };
 
 
