@@ -26,10 +26,10 @@
 	<delete file="${doc.generator.styletar}"/>
     <mkdir dir="${build.apidocs}"/>
     <mkdir dir="${site.dir}/apidocs"/>
-    <echo message="Transform commits.xml and put the result in ${xdocs.dir}/DONE"/>
+    <!--echo message="Transform commits.xml and put the result in ${xdocs.dir}/DONE"/>
     <java fork="yes" classname="org.apache.xalan.xslt.Process" classpath="${java.class.path}">
       <arg line="-in commits.xml -xsl ${xdocs.style}/stylesheets/done-c.xsl -out xdocs/sources/xalan/DONE"/>
-    </java>        
+    </java-->        
     
   </target>
 
