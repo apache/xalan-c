@@ -336,6 +336,7 @@ static const XalanDOMChar	s_stringNamespace[] =
 	XalanUnicode::charLetter_i,
 	XalanUnicode::charLetter_n,
 	XalanUnicode::charLetter_g,
+	XalanUnicode::charLetter_s,
 	0
 };
 
