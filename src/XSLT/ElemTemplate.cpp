@@ -198,7 +198,5 @@ ElemTemplate::executeChildren(
 		StylesheetExecutionContext&		executionContext,
 		XalanNode*						sourceNode) const
 {
-	StylesheetExecutionContext::SetAndRestoreCurrentTemplate	theSetAndRestore(executionContext, this);
-
 	ElemTemplateElement::executeChildren(executionContext, sourceNode);
 }
