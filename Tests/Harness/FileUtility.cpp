@@ -283,6 +283,7 @@ FileUtility::checkResults(const XalanDOMString& outputFile,
 						  const XalanDOMString& goldFile, 
 						  XMLFileReporter& logfile)
 {
+	int ambgFlag = data.nogold;
 
 	if(compareSerializedResults(outputFile, goldFile))
 	{
@@ -301,9 +302,14 @@ FileUtility::checkResults(const XalanDOMString& outputFile,
 		actexp.insert(Hashtable::value_type(XalanDOMString("exp"), data.expected));
 		actexp.insert(Hashtable::value_type(XalanDOMString("act"), data.actual));
 
-		
-		logfile.logCheckFail(data.testOrFile, attrs, actexp);
-						
+		if (ambgFlag < data.nogold)
+		{
+			logfile.logCheckAmbiguous(data.testOrFile);
+		}
+		else
+		{
+			logfile.logCheckFail(data.testOrFile, attrs, actexp);
+		}
 	}
 
 }
