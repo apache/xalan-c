@@ -232,7 +232,38 @@ XalanTransformer::terminate()
 
 	s_xsltInit = 0;
 
+	const XalanDOMString	theXalanNamespace(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan")));
+
+	XalanTransformer::uninstallExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("difference")));
+
+	XalanTransformer::uninstallExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("distinct")));
+
+	XalanTransformer::uninstallExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("evaluate")));
+
+	XalanTransformer::uninstallExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("hasSameNodes")));
+
+	XalanTransformer::uninstallExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("intersection")));
+
+	XalanTransformer::uninstallExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("nodeset")));
+
 #if defined(XALAN_USE_ICU)
+	// Install the ICU version of format-number...
+	XPath::installFunction(
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")),
+			FunctionICUFormatNumber());
+
 #if defined(XALAN_CANNOT_DELETE_CONST)
 	delete (ICUBridgeCollationCompareFunctor*)theICUFunctor;
 #else
