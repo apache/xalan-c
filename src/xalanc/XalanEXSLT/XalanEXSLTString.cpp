@@ -334,7 +334,7 @@ XalanEXSLTFunctionEncodeURI::s_reservedChars[] =
 	XalanUnicode::charRightSquareBracket
 };
 const XalanDOMString::size_type 
-XalanEXSLTFunctionEncodeURI::s_reservedCharsSize = sizeof(s_reservedChars) / sizeof(s_reservedChars[0]);;
+XalanEXSLTFunctionEncodeURI::s_reservedCharsSize = sizeof(s_reservedChars) / sizeof(s_reservedChars[0]);
 
 // Excluded URI characters
 const XalanDOMChar
@@ -603,7 +603,7 @@ XalanEXSLTFunctionDecodeURI::execute(
 	return executionContext.getXObjectFactory().createString(theResult);
 }
 
-const XalanDOMChar
+XalanDOMChar
 XalanEXSLTFunctionDecodeURI::hexCharsToByte(
 			XPathExecutionContext&		executionContext,
 			XalanNode*					context,

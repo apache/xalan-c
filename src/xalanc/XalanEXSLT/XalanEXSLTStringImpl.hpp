@@ -396,7 +396,7 @@ protected:
 		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function decode-uri() accepts one or two arguments"));
 	}
 
-	const XalanDOMChar
+	XalanDOMChar
 	hexCharsToByte(	
 			XPathExecutionContext&		executionContext,
 			XalanNode*					context,
