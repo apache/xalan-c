@@ -1850,7 +1850,9 @@ XPath::findNodeSet(
 
 	const NodeRefListBase&	nl = obj->nodeset();
 
-	subQueryResults.addNodes(nl);
+	subQueryResults.addNodesInDocOrder(nl, executionContext);
+
+	subQueryResults.setDocumentOrder();
 
 	return currentExpression.getOpCodeLengthFromOpMap(opPos);
 }
