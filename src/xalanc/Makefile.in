@@ -967,8 +967,8 @@ install:	all
 	$(MKINSTALLDIRS) $(PREFIX)/lib
 	$(INSTALL_DATA) $(THISLIB) $(PREFIX)/lib
 ifneq ($(PLATFORM), OS390)
-	$(LN) -s $(PREFIX)/lib/$(LIB) $(PREFIX)/lib/$(LIBNAME)$(SHLIBSUFFIX)
-	$(LN) -s $(PREFIX)/lib/$(LIB) $(PREFIX)/lib/$(LIBNAME)$(SHLIBSUFFIX).$(LIBMAJORVER)
+	$(LN) -fs $(LIB) $(PREFIX)/lib/$(LIBNAME)$(SHLIBSUFFIX)
+	$(LN) -fs $(LIB) $(PREFIX)/lib/$(LIBNAME)$(SHLIBSUFFIX).$(LIBMAJORVER)
 endif
 	$(MKINSTALLDIRS) $(PREFIX)/include/xalanc
 	$(foreach hdir,$(ALL_HEADERS_DIRS), $(shell $(MKINSTALLDIRS) $(PREFIX)/include/xalanc/$(hdir)))
