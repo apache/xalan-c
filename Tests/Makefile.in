@@ -66,11 +66,7 @@
 
 
 # Output directories
-ifneq ("$(shell cd $(XALANCROOT) && pwd)/Tests", "$(shell pwd)")
-  OUTDIR := $(shell pwd)
-else
-  OUTDIR = ${XALANCROOT}
-endif
+OUTDIR = ..
 
 ifndef XALANCROOT
 noxalanroot:
@@ -82,8 +78,8 @@ noxercesroot:
 	@echo XERCESCROOT must be defined
 endif
 
-include $(wildcard version.incl $(XALANCROOT)/version.incl)
-include $(wildcard Makefile.incl $(XALANCROOT)/src/xalanc/Makefile.incl)
+include $(XALANCROOT)/version.incl
+include ../Makefile.incl
 
 all: Tests
 

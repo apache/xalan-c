@@ -65,10 +65,10 @@
 ###################################################################
 
 # Output directories
-ifneq ("$(shell cd $(XALANCROOT) && pwd)/samples", "$(shell pwd)")
-  OUTDIR := $(shell pwd)
-else
-  OUTDIR = ${XALANCROOT}
+ifeq ($(wildcard ../Makefile.incl),) 
+  OUTDIR := .
+else 
+  OUTDIR := ..
 endif
 
 ifndef XALANCROOT
@@ -97,8 +97,15 @@ ALL_BINARIES =    CompileStylesheet \
                   XalanTransformerCallback \
                   XPathWrapper
 
-include $(wildcard version.incl $(XALANCROOT)/version.incl)
-include $(wildcard Makefile.incl $(XALANCROOT)/src/xalanc/Makefile.incl)
+include $(wildcard $(XALANCROOT)/samples/version.incl \
+                   $(XALANCROOT)/version.incl)
+include $(wildcard Makefile.incl ../Makefile.incl)
+
+COMMON_BUILD = version.incl \
+               Makefile.incl.in \
+               config.sub \
+               config.guess \
+               install-sh
 
 all: Samples
 
@@ -251,6 +258,12 @@ install: Samples
 
 install-extras:
 	cp -r $(SAMPLES_DIR)  $(DESTDIR)/$(prefix)
+	for common_build_file in $(COMMON_BUILD); do \
+          $(INSTALL_PROGRAM) $(XALANCROOT)/$$common_build_file \
+                             $(DESTDIR)/$(prefix)/samples; \
+        done
+
+install-package: install install-extras
 
 clean:
 	rm -rf $(XSL_OBJ_DIR)/*.o

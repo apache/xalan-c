@@ -81,12 +81,9 @@
 
 DEPFILE=depends
 
-# Output directories
-ifneq ("$(shell cd $(XALANCROOT) && pwd)/src/xalanc", "$(shell pwd)")
-  OUTDIR := $(shell pwd)
-else
-  OUTDIR = ${XALANCROOT}
-endif
+# Output directory
+OUTDIR := ../..
+
 
 ifndef XALANCROOT 
 noxalanroot:
@@ -155,14 +152,8 @@ ALL_HEADERS_DIRS = \
 
 ALL_BINARIES = Xalan
 
-COMMON_BUILD = version.incl \
-	       src/xalanc/Makefile.incl.in \
-	       src/xalanc/config.sub \
-	       src/xalanc/config.guess \
-	       src/xalanc/install-sh
-
 include $(XALANCROOT)/version.incl
-include Makefile.incl
+include ../../Makefile.incl
 
 # Using ICUBridge
 ifdef XALAN_USE_ICU
@@ -267,7 +258,7 @@ else
 endif ## OS390                                
 endif ## OS390BATCH
 
-install:	all
+install: lib XalanExe
 	$(MKINSTALLDIRS) $(DESTDIR)/$(bindir)
 	for bin in $(ALL_BINARIES); do \
 	  $(INSTALL_PROGRAM) $(XSL_BIN_DIR)/$$bin \
@@ -282,8 +273,9 @@ endif ## OS390
 	$(MKINSTALLDIRS) $(DESTDIR)/$(includedir)/xalanc
 	for hdir in $(ALL_HEADERS_DIRS); do \
 	  $(MKINSTALLDIRS) $(DESTDIR)/$(includedir)/xalanc/$$hdir; \
-	  cp $$hdir/*.h* $(DESTIDR)/$(includedir)/xalanc/$$hdir \
-	      2> /dev/null; \
+	  cp $(XALANCROOT)/src/xalanc/$$hdir/*.h* \
+             $(DESTDIR)/$(includedir)/xalanc/$$hdir \
+	     2> /dev/null; \
 	done
 
 clean:	prepare doClean
@@ -302,30 +294,4 @@ doClean:
 	rm -f $(XSL_BIN_DIR)/testXPath
 	rm -f $(XSL_BIN_DIR)/Xalan
 
-samples: lib
-	$(MAKE) -C $(SAMPLES_DIR) all
-
-tests: lib
-	$(MAKE) -C $(TESTS_DIR) all
-
-package: all
-	$(MAKE) -C $(SAMPLES_DIR) $<
-
-install-extras:
-	$(INSTALL_PROGRAM) $(XALANCROOT)/../KEYS.txt $(DESTDIR)/$(prefix)
-	$(INSTALL_PROGRAM) $(XALANCROOT)/License     $(DESTDIR)/$(prefix)
-
-install-package-bin: install
-	$(MAKE) -C $(SAMPLES_DIR) $<
-
-install-package-extras: install-extras 
-	$(MAKE) -C $(SAMPLES_DIR) $<
-	for common_build_file in $(COMMON_BUILD); do \
-	  $(INSTALL_PROGRAM) $(XALANCROOT)/$$common_build_file \
-	                     $(DESTDIR)/$(prefix)/samples; \
-	done
-
-install-package:  install-package-bin install-package-extras
-
-package-clean: clean
-	$(MAKE) -C $(SAMPLES_DIR) $<
+install-package: install
