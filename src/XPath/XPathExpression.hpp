@@ -887,8 +887,9 @@ public:
 	 * Add an operation code to the list.
 	 * 
 	 * @param theOpCode operation code
+	 * @return the position of the op code
 	 */
-	void
+	OpCodeMapSizeType
 	appendOpCode(eOpCodes	theOpCode);
 
 	/**
@@ -897,15 +898,17 @@ public:
 	 * @param theOpCode operation code
 	 * @param theArgs   vector or arguments to supply
 	 */
-	void
+	OpCodeMapSizeType
 	appendOpCode(eOpCodes							theOpCode,
 				 const OpCodeMapValueVectorType&	theArgs)
 	{
-		appendOpCode(theOpCode);
+		const OpCodeMapSizeType		thePosition = appendOpCode(theOpCode);
 
 		setOpCodeArgs(theOpCode,
-					  m_lastOpCodeIndex,
+					  thePosition,
 					  theArgs);
+
+		return thePosition;
 	}
 
 	/**

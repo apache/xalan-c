@@ -370,111 +370,208 @@ XPath::getMatchScore(
 
 
 
+inline const XalanDOMString*
+getStringFromTokenQueue(
+			const XPathExpression&	expression,
+			int						opPos)
+{
+	const int	tokenPosition =
+				expression.getOpCodeMapValue(opPos);
+
+	if (tokenPosition < 0)
+	{
+		return 0;
+	}
+	else
+	{
+		const XObject* const	token =
+					expression.getToken(tokenPosition);
+		assert(token != 0);
+
+		return &token->str();
+	}
+}
+
+
+
 void
-XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings) const
+XPath::getTargetData(TargetDataVectorType&	targetData) const
 {
 	int opPos = 2;
 
-	targetStrings.reserve(eDefaultTargetStringsSize);
+	targetData.reserve(eDefaultTargetDataSize);
 
 	while(m_expression.m_opMap[opPos] == XPathExpression::eOP_LOCATIONPATHPATTERN)
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
 		opPos += 2;
-	  
-		while(m_expression.m_opMap[opPos] != XPathExpression::eENDOP)
+	 
+		int		stepCount = 0;
+
+		while(m_expression.getOpCodeMapValue(opPos) != XPathExpression::eENDOP)
 		{
+			++stepCount;
+
 			const int	nextStepPos =
 				m_expression.getNextOpCodePosition(opPos);
 
-			const int	nextOp = m_expression.m_opMap[nextStepPos];
+			const int	nextOp = m_expression.getOpCodeMapValue(nextStepPos);
 
-			if(nextOp == XPathExpression::eOP_PREDICATE ||
-			   nextOp == XPathExpression::eOP_PREDICATE_WITH_POSITION ||
-			   nextOp == XPathExpression::eENDOP)
+			if(nextOp == XPathExpression::eENDOP)
 			{
-				const int	stepType = m_expression.m_opMap[opPos];
+				eMatchScore					score = eMatchScoreNone;
+
+				const XalanDOMString*		targetLocalName = 0;
+
+				TargetData::eTargetType		targetType = TargetData::eOther;
+
+				bool	fIsAttribute = false;
+
+				const int	stepType = m_expression.getOpCodeMapValue(opPos);
 
 				opPos += 3;
 
 				switch(stepType)
 				{
 				case XPathExpression::eOP_FUNCTION:
-					targetStrings.push_back(PSEUDONAME_ANY);
+					targetLocalName = &PSEUDONAME_ANY;
+					score = eMatchScoreOther;
+					targetType = TargetData::eAny;
 					break;
 
 				case XPathExpression::eFROM_ROOT:
-					targetStrings.push_back(PSEUDONAME_ROOT);
+					targetLocalName = &PSEUDONAME_ROOT;
+					score = eMatchScoreOther;
 					break;
 
 				case XPathExpression::eMATCH_ATTRIBUTE:
+					fIsAttribute = true;
+					// fall through on purpose...
+
 				case XPathExpression::eMATCH_ANY_ANCESTOR:
 				case XPathExpression::eMATCH_IMMEDIATE_ANCESTOR:
 					{
-						const int	tok = m_expression.m_opMap[opPos];
-
-						opPos++;
+						const int	tok = m_expression.getOpCodeMapValue(opPos);
 
 						switch(tok)
 						{
 						case XPathExpression::eNODETYPE_COMMENT:
-							targetStrings.push_back(PSEUDONAME_COMMENT);
+							targetLocalName = &PSEUDONAME_COMMENT;
+							score = eMatchScoreNodeTest;
 							break;
 
 						case XPathExpression::eNODETYPE_TEXT:
-							targetStrings.push_back(PSEUDONAME_TEXT);
+							targetLocalName = &PSEUDONAME_TEXT;
+							score = eMatchScoreNodeTest;
 							break;
 
 						case XPathExpression::eNODETYPE_NODE:
-							targetStrings.push_back(PSEUDONAME_NODE);
+							targetLocalName = &PSEUDONAME_NODE;
+							score = eMatchScoreNodeTest;
 							break;
 
 						case XPathExpression::eNODETYPE_ROOT:
-							targetStrings.push_back(PSEUDONAME_ROOT);
+							targetLocalName = &PSEUDONAME_ROOT;
+							score = eMatchScoreNodeTest;
 							break;
 
 						case XPathExpression::eNODETYPE_ANYELEMENT:
-							targetStrings.push_back(PSEUDONAME_ANY);
+							targetLocalName = &PSEUDONAME_ANY;
+							score = eMatchScoreNodeTest;
+							targetType = TargetData::eElement;
 							break;
 
 						case XPathExpression::eNODETYPE_PI:
-							targetStrings.push_back(PSEUDONAME_PI);
-							break;
-
-						case XPathExpression::eNODENAME:
 							{
-								// Skip the namespace
-								const int	tokenIndex = m_expression.m_opMap[opPos + 1];
+								const int	argLen =
+									m_expression.getOpCodeMapValue(opPos - 3 + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
-								if(tokenIndex >= 0)
+								targetLocalName = &PSEUDONAME_PI;
+
+								if (argLen == 1)
 								{
-									const XalanDOMString&	targetName =
-										m_expression.m_tokenQueue[tokenIndex].str();
-
-									if(::equals(targetName, PSEUDONAME_ANY) == true)
-									{
-										targetStrings.push_back(PSEUDONAME_ANY);
-									}
-									else
-									{
-										targetStrings.push_back(targetName);
-									}
+									score = eMatchScoreNodeTest;
 								}
-								else
+								else if (argLen == 2)
 								{
-									targetStrings.push_back(PSEUDONAME_ANY);
+									score = eMatchScoreQName;
 								}
 							}
 							break;
 
+						case XPathExpression::eNODENAME:
+							{
+								const XalanDOMString* const		targetNamespace =
+										getStringFromTokenQueue(m_expression, opPos + 1);
+
+								targetLocalName =
+									getStringFromTokenQueue(m_expression, opPos + 2);
+
+								targetType = fIsAttribute ?
+									TargetData::eAttribute :
+									TargetData::eElement;
+
+								if(targetLocalName != 0)
+								{
+									if(::equals(*targetLocalName, PSEUDONAME_ANY) == true)
+									{
+										targetLocalName = &PSEUDONAME_ANY;
+
+										if (targetNamespace == 0 ||
+											::equals(*targetNamespace, PSEUDONAME_ANY) == true)
+										{
+											score = eMatchScoreNodeTest;
+										}
+										else
+										{
+											score = eMatchScoreNSWild;
+										}
+									}
+									else
+									{
+										score = eMatchScoreQName;
+									}
+								}
+								else
+								{
+									targetLocalName = &PSEUDONAME_ANY;
+
+									if (targetNamespace == 0 ||
+										::equals(*targetNamespace, PSEUDONAME_ANY) == true)
+									{
+										score = eMatchScoreNodeTest;
+									}
+									else
+									{
+										score = eMatchScoreNSWild;
+									}
+								}
+							}
+
+							break;
+
 						default:
-							targetStrings.push_back(PSEUDONAME_ANY);
+							targetLocalName = &PSEUDONAME_ANY;
+							score = eMatchScoreNodeTest;
 							break;
 						}
 					}
 					break;
 				}
+
+				assert(targetLocalName != 0);
+
+				// If there are multiple steps, or a predicate,
+				// the priority is always eMatchScoreOther.
+				if (stepCount > 1 ||
+					opPos + 3 < nextStepPos)
+				{
+					score = eMatchScoreOther;
+				}
+
+				targetData.push_back(
+					TargetData(*targetLocalName, score, targetType));
 			}
 
 			opPos = nextStepPos;
@@ -502,7 +599,7 @@ XPath::matchPattern(
 		score = executeMore(context, opPos, executionContext);
 		assert(score.null() == false);
 
-		if(score->num() != eMatchScoreNone)
+		if(score->num() != getMatchScoreValue(eMatchScoreNone))
 		{
 			break;
 		}
@@ -2812,7 +2909,14 @@ XPath::nodeTest(
 								{
 									if (isNamespace == false)
 									{
-										score = eMatchScoreNodeTest;
+										if (isTotallyWild == true)
+										{
+											score = eMatchScoreNodeTest;
+										}
+										else
+										{
+											score = eMatchScoreNSWild;
+										}
 									}
 								}
 								else
@@ -3021,30 +3125,6 @@ XPath::predicates(
 	}
 
 	endPredicatesPos = opPos;
-}
-
-
-
-inline const XalanDOMString*
-getStringFromTokenQueue(
-			const XPathExpression&	expression,
-			int						opPos)
-{
-	const int	tokenPosition =
-				expression.getOpCodeMapValue(opPos);
-
-	if (tokenPosition < 0)
-	{
-		return 0;
-	}
-	else
-	{
-		const XObject* const	token =
-					expression.getToken(tokenPosition);
-		assert(token != 0);
-
-		return &token->str();
-	}
 }
 
 
@@ -3376,7 +3456,7 @@ XPath::NodeTester::testAttributeNamespaceOnly(
 	}
 	else
 	{
-		return eMatchScoreNodeTest;
+		return eMatchScoreNSWild;
 	}
 }
 

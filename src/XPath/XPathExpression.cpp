@@ -501,7 +501,7 @@ XPathExpression::setOpCodeArgs(
 
 
 
-void
+XPathExpression::OpCodeMapSizeType
 XPathExpression::appendOpCode(eOpCodes	theOpCode)
 {
 	const int	theOpCodeLength = getOpCodeLength(theOpCode);
@@ -536,6 +536,8 @@ XPathExpression::appendOpCode(eOpCodes	theOpCode)
 			m_opMap[s_opCodeMapLengthIndex] += theOpCodeLength;
 		}
 	}
+
+	return m_lastOpCodeIndex;
 
 	assert(opCodeMapSize() == OpCodeMapSizeType(opCodeMapLength()));
 }

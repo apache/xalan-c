@@ -1780,7 +1780,7 @@ XPathProcessorImpl::FunctionCall()
 
 				// This code is disabled for the time being, as
 				// it needs more testing.
-#if 0
+#if 1
 				if (equals(m_token, s_positionString) == true &&
 					m_positionPredicateStack.empty() == false)
 				{
@@ -2028,11 +2028,13 @@ XPathProcessorImpl::AxisName()
 
 
 
-void
+int
 XPathProcessorImpl::NodeTest(int	axisType)
 {
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
+
+	int		nodeTestPos = -1;
 
 	if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true)
 	{
@@ -2048,7 +2050,7 @@ XPathProcessorImpl::NodeTest(int	axisType)
 		{
 			nextToken();
 
-			m_expression->appendOpCode((*i).second);
+			nodeTestPos = m_expression->appendOpCode((*i).second);
 
 			consumeExpected(XalanUnicode::charLeftParenthesis);
 
@@ -2122,6 +2124,8 @@ XPathProcessorImpl::NodeTest(int	axisType)
 
 		nextToken();
 	}
+
+	return nodeTestPos;
 }
 
 
@@ -2417,8 +2421,6 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 	}
 	else if(lookahead(s_axisString, 1) == true)
 	{
-		matchTypePos = m_expression->opCodeMapLength();
-
 		if(tokenIs(s_attributeString) == true)
 		{
 			axisType = XPathExpression::eMATCH_ATTRIBUTE;
@@ -2427,6 +2429,8 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 		}
 		else if(tokenIs(s_childString) == true)
 		{
+			matchTypePos = m_expression->opCodeMapLength();
+
 			axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
 
 			m_expression->appendOpCode(axisType);
@@ -2441,10 +2445,10 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 	}
 	else if(tokenIs(XalanUnicode::charSolidus) == true)
 	{
-		matchTypePos = m_expression->opCodeMapLength();
-
 		if(lookahead(s_axisString, 2) == false)
 		{
+			matchTypePos = m_expression->opCodeMapLength();
+
 			axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
 
 			m_expression->appendOpCode(axisType);
@@ -2461,6 +2465,8 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 			}
 			else if(tokenIs(s_childString) == true)
 			{
+				matchTypePos = m_expression->opCodeMapLength();
+
 				axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
 
 				m_expression->appendOpCode(axisType);

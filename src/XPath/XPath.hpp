@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -102,10 +102,69 @@ public:
 	static const XalanDOMString&	PSEUDONAME_OTHER;
 	static const XalanDOMString&	PSEUDONAME_NODE;
 
+	enum eMatchScore
+	{
+		eMatchScoreNone,
+		eMatchScoreNodeTest,
+		eMatchScoreNSWild,
+		eMatchScoreQName,
+		eMatchScoreOther
+	};
+
+	class TargetData
+	{
+	public:
+
+		enum eTargetType { eAttribute, eElement, eAny, eOther };
+
+		TargetData() :
+			m_string(),
+			m_priority(eMatchScoreNone),
+			m_targetType(eOther)
+		{
+		}
+
+		TargetData(
+				const XalanDOMString&	theString,
+				eMatchScore				thePriority,
+				eTargetType				theTargetType) :
+			m_string(theString),
+			m_priority(thePriority),
+			m_targetType(theTargetType)
+		{
+		}
+
+		const XalanDOMString&
+		getString() const
+		{
+			return m_string;
+		}
+
+		eMatchScore
+		getDefaultPriority() const
+		{
+			return m_priority;
+		}
+
+		eTargetType
+		getTargetType() const
+		{
+			return m_targetType;
+		}
+
+	private:
+
+		XalanDOMString	m_string;
+
+		eMatchScore		m_priority;
+
+		eTargetType		m_targetType;
+	};
+
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanDOMString>			TargetElementStringsVectorType;
+	typedef vector<TargetData>		TargetDataVectorType;
 #else
-	typedef std::vector<XalanDOMString>		TargetElementStringsVectorType;
+	typedef std::vector<TargetData>	TargetDataVectorType;
 #endif
 
 
@@ -242,15 +301,6 @@ public:
 		return m_expression;
 	}
 
-	enum eMatchScore
-	{
-		eMatchScoreNone,
-		eMatchScoreNodeTest,
-		eMatchScoreNSWild,
-		eMatchScoreQName,
-		eMatchScoreOther
-	};
-
 	static double
 	getMatchScoreValue(eMatchScore	score)
 	{
@@ -313,12 +363,12 @@ public:
 	}
 
 	/**
-	 * Add the strings for the target element to a vector of strings.
+	 * Add the data for the target of match pattern to a vector.
 	 * 
-	 * @param targetStrings vector of strings
+	 * @param targetData The vector for the data
 	 */
 	void
-	getTargetElementStrings(TargetElementStringsVectorType&		targetStrings) const;
+	getTargetData(TargetDataVectorType&		targetData) const;
 
 	/**
 	 * Install a built-in function.
@@ -810,7 +860,7 @@ private:
 	// Default vector allocation sizes.
 	enum
 	{
-		eDefaultTargetStringsSize = 5
+		eDefaultTargetDataSize = 5
 	};
 
 	const XObjectPtr

@@ -663,7 +663,7 @@ private:
 	 | NodeType '(' ')'  
 	 | 'processing-instruction' '(' Literal ')' 
 	 */
-	void
+	int
 	NodeTest(int	axisType);
 
 	/**
