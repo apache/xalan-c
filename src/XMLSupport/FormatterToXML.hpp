@@ -85,6 +85,7 @@
 
 class AttributeList;
 class Writer;
+class XalanOutputStream;
 
 
 
@@ -131,6 +132,7 @@ public:
 	 *                          standalone document declaration
 	 *
 	 * @param format			should be used only by derived classes.
+	 * @param fBufferData		If true, data will be buffered in the formatter
 	 */
 	FormatterToXML(
 			Writer&					writer,
@@ -143,7 +145,8 @@ public:
 			const XalanDOMString&	doctypePublic = XalanDOMString(),
 			bool					xmlDecl = true,
 			const XalanDOMString&	standalone = XalanDOMString(),
-			eFormat					format = OUTPUT_METHOD_XML);
+			eFormat					format = OUTPUT_METHOD_XML,
+			bool					fBufferData = true);
 
 	virtual
 	~FormatterToXML();
@@ -203,13 +206,13 @@ public:
 			const XMLCh* const	ch,
 			const unsigned int 	length);
 
-	const Writer&
+	const Writer*
 	getWriter() const
 	{
 		return m_writer;
 	}
 
-	Writer&
+	Writer*
 	getWriter()
 	{
 		return m_writer;
@@ -314,7 +317,12 @@ protected:
 	/** 
 	 * The writer where the XML will be written.
 	 */
-	Writer&		m_writer;
+	Writer*	const				m_writer;
+
+	/** 
+	 * The stream where the XML will be written.
+	 */
+	XalanOutputStream* const	m_stream;
 
 	/**
 	 * Output a line break.
@@ -324,6 +332,7 @@ protected:
 
 	/**
 	 * Append a wide character to the buffer.
+	 *
 	 * Characters that are not representable
 	 * in the encoding are not written as
 	 * entities.
@@ -340,9 +349,6 @@ protected:
 
 	/**
 	 * Append a wide character to the buffer.
-	 * Characters that are not representable
-	 * in the encoding are not written as
-	 * entities.
 	 *
 	 * @ch the character to append.
 	 */
@@ -357,6 +363,10 @@ protected:
 	/**
 	 * Append a null-terminated array of wide characters to
 	 * the buffer.
+	 *
+	 * Characters that are not representable
+	 * in the encoding are not written as
+	 * entities.
 	 *
 	 * @chars the array to append
 	 */
@@ -374,6 +384,10 @@ protected:
 
 	/**
 	 * Append an array of wide character to the buffer.
+	 *
+	 * Characters that are not representable
+	 * in the encoding are not written as
+	 * entities.
 	 *
 	 * @chars the array to append
 	 * @start the offset into the array to start from
@@ -400,6 +414,10 @@ protected:
 
 	/**
 	 * Append a string to the buffer.
+	 *
+	 * Characters that are not representable
+	 * in the encoding are not written as
+	 * entities.
 	 *
 	 * @param str the string to append
 	 */
@@ -693,12 +711,33 @@ private:
 	/**
 	 * Append a wide character to the buffer.
 	 * Characters that are not representable
+	 * in the encoding are not written as
+	 * entities.
+	 *
+	 * @ch the character to append.
+	 */
+	void
+	accumNameAsByteDirect(XalanDOMChar	ch);
+
+	/**
+	 * Append a wide character to the buffer.
+	 * Characters that are not representable
 	 * in the encoding are written as entities.
 	 *
 	 * @ch the character to append.
 	 */
 	void
 	accumContentAsByte(XalanDOMChar		ch);
+
+	/**
+	 * Append a wide character to the stream with buffering.
+	 * Characters that are not representable
+	 * in the encoding are written as entities.
+	 *
+	 * @ch the character to append.
+	 */
+	void
+	accumContentAsByteDirect(XalanDOMChar	ch);
 
 	/**
 	 * Append a wide character to the buffer.
@@ -713,11 +752,30 @@ private:
 
 	/**
 	 * Append a wide character to the buffer.
+	 * Characters that are not representable
+	 * in the encoding are not written as
+	 * entities.
+	 *
+	 * @ch the character to append.
+	 */
+	void
+	accumNameAsCharDirect(XalanDOMChar	ch);
+
+	/**
+	 * Append a wide character to the buffer.
 	 *
 	 * @ch the character to append.
 	 */
 	void
 	accumContentAsChar(XalanDOMChar		ch);
+
+	/**
+	 * Append a wide character to the stream without buffering.
+	 *
+	 * @ch the character to append.
+	 */
+	void
+	accumContentAsCharDirect(XalanDOMChar	ch);
 
 	/**
 	 * Output the doc type declaration.

@@ -97,9 +97,11 @@ FormatterToXML::FormatterToXML(
 			const XalanDOMString&	doctypePublic,
 			bool					xmlDecl,
 			const XalanDOMString&	standalone,
-			eFormat					format) :
+			eFormat					format,
+			bool					fBufferData) :
 	FormatterListener(format),
-	m_writer(writer),
+	m_writer(&writer),
+	m_stream(m_writer->getStream()),
 	m_maxCharacter(0),
 #if !defined(XALAN_NO_DEFAULT_BUILTIN_ARRAY_INITIALIZATION)
 	m_attrCharsMap(),
@@ -150,18 +152,16 @@ FormatterToXML::FormatterToXML(
 		}
 	}
 
-	XalanOutputStream* const	theStream = m_writer.getStream();
-
-	if (theStream != 0)
+	if (m_stream != 0)
 	{
 		try
 		{
-			theStream->setOutputEncoding(m_encoding);
+			m_stream->setOutputEncoding(m_encoding);
 		}
 		catch(const XalanOutputStream::UnsupportedEncodingException&)
 		{
 			// Default to UTF-8 if the requested encoding is not supported...
-			theStream->setOutputEncoding(XalanDOMString(XalanTranscodingServices::s_utf8String));
+			m_stream->setOutputEncoding(XalanDOMString(XalanTranscodingServices::s_utf8String));
 
 			m_encoding = XalanTranscodingServices::s_utf8String;
 		}
@@ -175,19 +175,37 @@ FormatterToXML::FormatterToXML(
 	{
 		m_bytesEqualChars = true;
 
-		m_byteBuf.resize(s_maxBufferSize);
+		if (fBufferData == false)
+		{
+			m_accumNameFunction = &FormatterToXML::accumNameAsByteDirect;
 
-		m_accumNameFunction = &FormatterToXML::accumNameAsByte;
+			m_accumContentFunction = &FormatterToXML::accumContentAsByteDirect;
+		}
+		else
+		{
+			m_byteBuf.resize(s_maxBufferSize);
 
-		m_accumContentFunction = &FormatterToXML::accumContentAsByte;
+			m_accumNameFunction = &FormatterToXML::accumNameAsByte;
+
+			m_accumContentFunction = &FormatterToXML::accumContentAsByte;
+		}
 	}
 	else
 	{
-		m_charBuf.resize(s_maxBufferSize);
+		if (fBufferData == false)
+		{
+			m_accumNameFunction = &FormatterToXML::accumNameAsCharDirect;
 
-		m_accumNameFunction = &FormatterToXML::accumNameAsChar;
+			m_accumContentFunction = &FormatterToXML::accumContentAsCharDirect;
+		}
+		else
+		{
+			m_charBuf.resize(s_maxBufferSize);
 
-		m_accumContentFunction = &FormatterToXML::accumContentAsChar;
+			m_accumNameFunction = &FormatterToXML::accumNameAsChar;
+
+			m_accumContentFunction = &FormatterToXML::accumContentAsChar;
+		}
 	}
 
 	// Do this last so we initialize the map according to the value of
@@ -302,6 +320,23 @@ FormatterToXML::accumNameAsByte(XalanDOMChar	ch)
 
 
 void
+FormatterToXML::accumNameAsByteDirect(XalanDOMChar	ch)
+{
+	assert(m_stream != 0);
+
+	if (ch > m_maxCharacter)
+	{
+		m_stream->write(char(XalanUnicode::charQuestionMark));
+	}
+	else
+	{
+		m_stream->write(char(ch));
+	}
+}
+
+
+
+void
 FormatterToXML::accumContentAsByte(XalanDOMChar		ch)
 {
 	if (ch > m_maxCharacter)
@@ -322,11 +357,26 @@ FormatterToXML::accumContentAsByte(XalanDOMChar		ch)
 
 
 void
+FormatterToXML::accumContentAsByteDirect(XalanDOMChar	ch)
+{
+	if (ch > m_maxCharacter)
+	{
+		writeNumberedEntityReference(ch);
+	}
+	else
+	{
+		m_stream->write(char(ch));
+	}
+}
+
+
+
+void
 FormatterToXML::accumNameAsChar(XalanDOMChar	ch)
 {
 	if (ch > m_maxCharacter)
 	{
-		m_charBuf[m_pos++] = char(XalanUnicode::charQuestionMark);
+		m_charBuf[m_pos++] = XalanUnicode::charQuestionMark;
 	}
 	else
 	{
@@ -336,6 +386,21 @@ FormatterToXML::accumNameAsChar(XalanDOMChar	ch)
 	if(m_pos == s_maxBufferSize)
 	{
 		flushChars();
+	}
+}
+
+
+
+void
+FormatterToXML::accumNameAsCharDirect(XalanDOMChar	ch)
+{
+	if (ch > m_maxCharacter)
+	{
+		m_stream->write(XalanUnicode::charQuestionMark);
+	}
+	else
+	{
+		m_stream->write(ch);
 	}
 }
 
@@ -356,6 +421,21 @@ FormatterToXML::accumContentAsChar(XalanDOMChar	ch)
 	if(m_pos == s_maxBufferSize)
 	{
 		flushChars();
+	}
+}
+
+
+
+void
+FormatterToXML::accumContentAsCharDirect(XalanDOMChar	ch)
+{
+	if (ch > m_maxCharacter)
+	{
+		writeNumberedEntityReference(ch);
+	}
+	else
+	{
+		m_stream->write(ch);
 	}
 }
 
@@ -583,7 +663,7 @@ FormatterToXML::flushChars()
 {
 	assert(m_charBuf.size() > 0 && m_charBuf.size() >= m_pos);
 
-	m_writer.write(&m_charBuf[0], 0, m_pos);
+	m_writer->write(&m_charBuf[0], 0, m_pos);
 
 	m_pos = 0;
 }
@@ -595,7 +675,7 @@ FormatterToXML::flushBytes()
 {
 	assert(m_byteBuf.size() > 0 && m_byteBuf.size() >= m_pos);
 
-	m_writer.write(&m_byteBuf[0], 0, m_pos);
+	m_writer->write(&m_byteBuf[0], 0, m_pos);
 
 	m_pos = 0;
 }
@@ -605,13 +685,20 @@ FormatterToXML::flushBytes()
 void
 FormatterToXML::flush()
 {
-	if (m_bytesEqualChars == true)
+	if (m_stream != 0)
 	{
-		flushBytes();
+		m_stream->flush();
 	}
 	else
 	{
-		flushChars();
+		if (m_bytesEqualChars == true)
+		{
+			flushBytes();
+		}
+		else
+		{
+			flushChars();
+		}
 	}
 }
 
@@ -620,7 +707,9 @@ FormatterToXML::flush()
 void
 FormatterToXML::flushWriter()
 {
-	m_writer.flush();
+	assert(m_writer != 0);
+
+	m_writer->flush();
 }
 
 
@@ -1124,6 +1213,15 @@ FormatterToXML::ignorableWhitespace(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
+#if 1
+	// We need to do normalization, which is slower,
+	// but there you have it...
+	if (length > 0)
+	{
+		characters(chars, length);
+	}
+#else
+	// We'ed like to be able to do this...
 	if(m_inEntityRef == false && length != 0)
 	{
 		assert(isXMLWhitespace(chars, 0, length));
@@ -1152,6 +1250,7 @@ FormatterToXML::ignorableWhitespace(
 			}
 		}
 	}
+#endif
 }
 
 
