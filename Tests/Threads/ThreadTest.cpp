@@ -166,7 +166,7 @@ ThreadInfo
 	{
 	}
 
-	unsigned int			m_threadNumber;
+	long					m_threadNumber;
 
 	SynchronizedCounter*	m_counter;
 
@@ -263,7 +263,7 @@ thePreparsedThreadRoutine(void*		param)
 
 	try
 	{
-		XALAN_USING_XALAN(UnsignedLongToDOMString)
+		XALAN_USING_XALAN(LongToDOMString)
 		XALAN_USING_XALAN(XalanTransformer)
 
 		// Our input file.  The assumption is that the executable will be run
@@ -272,7 +272,7 @@ thePreparsedThreadRoutine(void*		param)
 		// Generate the output file name.
 		const XalanDOMString	theOutputFile(
 				XalanDOMString("birds") +
-				UnsignedLongToDOMString(theInfo->m_threadNumber) +
+				LongToDOMString(theInfo->m_threadNumber) +
 				XalanDOMString(".out"));
 
 		// Create a transformer...
@@ -327,7 +327,7 @@ theUnparsedThreadRoutine(void*		param)
 
 	try
 	{
-		XALAN_USING_XALAN(UnsignedLongToDOMString)
+		XALAN_USING_XALAN(LongToDOMString)
 		XALAN_USING_XALAN(XalanTransformer)
 
 		// Our input file.  The assumption is that the executable will be run
@@ -336,7 +336,7 @@ theUnparsedThreadRoutine(void*		param)
 		// Generate the output file name.
 		const XalanDOMString	theOutputFile(
 				XalanDOMString("birds") +
-				UnsignedLongToDOMString(theInfo->m_threadNumber) +
+				LongToDOMString(theInfo->m_threadNumber) +
 				XalanDOMString(".out"));
 
 		// Create a transformer...
