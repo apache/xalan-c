@@ -408,9 +408,12 @@ AttributeListImpl::addAttribute(
 
 		const XMLCh* const	theNewValueEnd = AttributeVectorEntry::endArray(value) + 1;
 
+		const XMLChVectorType::size_type	theNewSize =
+						XMLChVectorType::size_type(theNewValueEnd - value);
+
 		// If necessary, create the a new vector and swap them.  Otherwise,
 		// just copy the new data in.
-		if ((*i)->m_Value.capacity() < XMLChVectorType::size_type(theNewValueEnd - value))
+		if ((*i)->m_Value.capacity() < theNewSize)
 		{
 			XMLChVectorType		theNewValue(value, theNewValueEnd);
 
@@ -418,6 +421,8 @@ AttributeListImpl::addAttribute(
 		}
 		else
 		{
+			(*i)->m_Value.resize(theNewSize);
+
 			copy(value, theNewValueEnd, (*i)->m_Value.begin());
 		}
 	}
