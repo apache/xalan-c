@@ -659,12 +659,12 @@ XSLTEngineImpl::parseXML(
 		}
 		else
 		{
-			InputSource* const	resolverInputSource =
+			const XalanAutoPtr<InputSource>		resolverInputSource =
 				theResolver->resolveEntity(0, c_wstr(urlString));
 
-			if (resolverInputSource != 0)
+			if (resolverInputSource.get() != 0)
 			{
-				doc = parseXML(*resolverInputSource, docHandler, docToRegister);
+				doc = parseXML(*resolverInputSource.get(), docHandler, docToRegister);
 			}
 			else
 			{
