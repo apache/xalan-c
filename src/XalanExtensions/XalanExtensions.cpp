@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -94,10 +94,9 @@ static const XalanDOMChar	s_extensionsNamespace[] =
 	XalanUnicode::charLetter_g,
 	XalanUnicode::charSolidus,
 	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_s,
 	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
 	0
 };
 
