@@ -87,7 +87,7 @@
 #include <XSLT/XSLTInit.hpp>
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
-#include <XSLT/XSLTResultTarget.hpp>
+#include <XSLT/XSLTResultTarget.hpp>  
 
 #include <XMLFileReporter.hpp>
 #include <FileUtility.hpp>
@@ -180,7 +180,7 @@ calculateAvgTime(
 }
 
 inline double
-calculateAverageElapsedTime(
+calculateAverageElapsedTime( 
 			clock_t			theStartTime,
 			clock_t			theEndTime,
 			long			theIterationCount)
@@ -521,7 +521,7 @@ main(
 
 						// Calculate & report performance on stylesheet parse to console and log file.
 						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
-						cout << "   XSL parse: " << timeinMilliseconds << " milliseconds." << endl;
+						cout << "   XSL: " << timeinMilliseconds << " milliseconds, Parse" << endl;
 						logFile.addMetricToAttrs("parsexsl",timeinMilliseconds, attrs);						
 
 						
@@ -534,7 +534,7 @@ main(
 
 						// Calculate & report performance on source document parse to console and log file.
 						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
-						cout << "   XML parse: " << timeinMilliseconds << " milliseconds." << endl;
+						cout << "   XML: " << timeinMilliseconds << " milliseconds, Parse" << endl;
 						logFile.addMetricToAttrs("parsexml",timeinMilliseconds, attrs);
 
 
@@ -542,29 +542,16 @@ main(
 						// The execution context uses the same factory support objects as
 						// the processor, since those objects have the same lifetime as
 						// other objects created as a result of the execution.
+
+						XSLTResultTarget		theResultTarget(theOutputFile);
+						const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+						const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+
 						StylesheetExecutionContextDefault	psExecutionContext(
 											csProcessor,
 											csXSLTProcessorEnvSupport,
 											csDOMSupport,
 											csXObjectFactory);
-
-			
-
-						// Do a total end to end transform with no pre parsing of either xsl or xml files.
-						XSLTResultTarget		theResultTarget(theOutputFile);
-						const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-						const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-						const etoetran = eTOeTransform(xmlInputSource, 
-													xslInputSource,
-													theResultTarget,
-													csConstructionContext,
-													psExecutionContext,
-													csProcessor);
-	
-						// Output single etoe transform time to console and result log
-						cout << "   Single eTOe: " << etoetran << " milliseconds." << endl;
-						logFile.addMetricToAttrs("etoe", etoetran, attrs);
-
 
 						// Perform a single transform using parsed stylesheet and unparsed xml source, report results...
 						csProcessor.setStylesheetRoot(glbStylesheetRoot);
@@ -580,9 +567,25 @@ main(
 						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
 
 						// Output single transform time to console and result log
-						cout << "   One transform w/Parsed XSL: " << timeinMilliseconds << " milliseconds." << endl;
+						cout << endl << "   One: " << timeinMilliseconds << " w/Parsed XSL" << endl;
 						logFile.addMetricToAttrs("single",timeinMilliseconds, attrs);
 
+
+
+			
+
+						// Do a total end to end transform with no pre parsing of either xsl or xml files.
+
+						const etoetran = eTOeTransform(xmlInputSource, 
+													xslInputSource,
+													theResultTarget,
+													csConstructionContext,
+													psExecutionContext,
+													csProcessor);
+	
+						// Output single etoe transform time to console and result log
+						cout << "   One: " << etoetran << " eToe" << endl;
+						logFile.addMetricToAttrs("etoe", etoetran, attrs);
 
 
 						// Perform multiple transforms and calculate the average time ..
@@ -605,7 +608,7 @@ main(
 						theAverage = calculateAvgTime(accmTime, iterCount); 
 
 						// Output average transform time to console and result log
-						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Parsed XML" << endl;
+						cout << endl  << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Parsed files" << endl;
 
 						logFile.addMetricToAttrs("avgparsedxml",theAverage, attrs);
 
