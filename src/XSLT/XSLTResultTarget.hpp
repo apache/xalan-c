@@ -259,7 +259,7 @@ public:
 	 *
 	 * @return pointer to current handler
 	 */
-	DocumentHandler*
+	FormatterListener*
 	getDocumentHandler() const
 	{
 		return m_formatterListener;

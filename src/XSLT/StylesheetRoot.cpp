@@ -212,27 +212,28 @@ StylesheetRoot::process(
 
 		Writer* pw = 0;
 
-		/*
-		 * Output target has a document handler
-		 */
-		if(0 != outputTarget.getDocumentHandler())
+		flistener = outputTarget.getFormatterListener();
+
+		if(flistener == 0)
 		{
-			// Stuff a DocumentHandler into a FormatterListener
-			flistener =
-#if defined(XALAN_OLD_STYLE_CASTS) || !defined(XALAN_RTTI_AVAILABLE)
-				(FormatterListener*)outputTarget.getDocumentHandler();
-#else
-				dynamic_cast<FormatterListener*>(outputTarget.getDocumentHandler());
-#endif
+			// $$$ ToDo: For right now, XSLTResultTarget::getDocumentHandler()
+			// and XSLTResultTarget::getFormatterListener() both return a
+			// FormatterListener*.  When we have RTTI on all platforms, that
+			// may change...
+			flistener = outputTarget.getDocumentHandler();
+		}
+
+		if (flistener != 0)
+		{
+			// Do encoding stuff here...
 		}
 		/*
 		 * Output target has a character or byte stream or file
 		 */
-		else if((0 != outputTarget.getCharacterStream()) || 
-						(0 != outputTarget.getByteStream()) || 
+		else if((0 != outputTarget.getCharacterStream()) ||
+						(0 != outputTarget.getByteStream()) ||
 						(0 != outputTarget.getFileName().length()))
 		{
-
 			if(0 != outputTarget.getCharacterStream())
 			{
 				pw = outputTarget.getCharacterStream();
@@ -272,12 +273,12 @@ StylesheetRoot::process(
 					pw = executionContext.createPrintWriter(cout);
 				}
 			}
-			
-			int indentAmount = executionContext.getIndent();
-			bool doIndent = (indentAmount > -1) ? true : m_indentResult;
+
+			int			indentAmount = executionContext.getIndent();
+			const bool	doIndent = (indentAmount > -1) ? true : m_indentResult;
 			// Make sure we don't have a negative indent amount if we're
 			// indenting
-			if (m_indentResult && (indentAmount < 0))
+			if (m_indentResult && indentAmount < 0)
 				indentAmount = 0;
 			
 			switch(m_outputmethod)
