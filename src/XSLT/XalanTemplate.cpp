@@ -213,6 +213,7 @@ static set<XalanNode*, less<XalanNode*> >	theInstanceSetType;
 static XalanTransformer::CompiledStylesheetPtrVectorType	theCompiledStylesheetVector;
 static XalanTransformer::ParsedSourcePtrVectorType			theParsedSourceVector;
 static XalanTransformer::ParamPairVectorType				theParamsPairVector;
+static XalanTransformer::TraceListenerVectorType			theTraceListenerVector;
 static XalanDOMStringHashTable::BucketCountsType			theBucketCountsVector;
 static vector<pair<const char*, const char*> >				theStringPairVector;
 
