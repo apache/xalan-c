@@ -136,7 +136,7 @@ public:
 		const XalanDOMString*
 		getPrefixForNamespace(const XalanDOMString&		theURI) const
 		{
-			return findEntry(theURI, XalanNamespace::getURI, XalanNamespace::getPrefix);
+			return findEntry(theURI, XalanNamespace::getURI, &XalanNamespace::getPrefix);
 		}
 
 		bool
