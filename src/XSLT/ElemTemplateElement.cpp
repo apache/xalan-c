@@ -272,13 +272,12 @@ ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 void
 ElemTemplateElement::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
 	if(0 != executionContext.getTraceListeners())
     {
 		executionContext.fireTraceEvent(
-			TracerEvent(executionContext, sourceNode, mode, *this));
+			TracerEvent(executionContext, sourceNode, *this));
 	}    
 }
 
@@ -287,14 +286,13 @@ ElemTemplateElement::execute(
 void
 ElemTemplateElement::executeChildren(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
 	StylesheetExecutionContext::PushAndPopElementFrame	thePushAndPop(executionContext, this);
 
     for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
     {
-		node->execute(executionContext, sourceNode, mode);
+		node->execute(executionContext, sourceNode);
     }
 }
 
@@ -304,7 +302,6 @@ void
 ElemTemplateElement::childrenToString(
 			StylesheetExecutionContext&		executionContext, 
 			XalanNode*						sourceNode,
-			const QName&					mode,
 			XalanDOMString&					result) const
 {
 	reserve(result, length(result) + 1024);
@@ -322,7 +319,7 @@ ElemTemplateElement::childrenToString(
 					executionContext,
 					&theFormatter);
 
-	executeChildren(executionContext, sourceNode, mode);
+	executeChildren(executionContext, sourceNode);
 }
 
 
@@ -553,8 +550,7 @@ ElemTemplateElement::transformSelectedChildren(
 			const Stylesheet&				stylesheetTree,
 			const ElemTemplateElement&		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceNodeContext,
-			const QName&					mode,
+			XalanNode*						sourceNodeContext,			
 			const XPath*					selectPattern,
 			int								xslToken,
 			int								selectStackFrameIndex) const
@@ -665,7 +661,7 @@ ElemTemplateElement::transformSelectedChildren(
 		  TemplateElementContext callbackContext 
 			= (null != callback) 
 				 ? new TemplateElementContext(stylesheetTree, xslInstruction,
-						 template, sourceNodeContext, mode, xslToken, tcontext,
+						 template, sourceNodeContext, xslToken, tcontext,
 						 savedCurrentStackFrameIndex) : null;
 	*/
 
@@ -702,7 +698,6 @@ ElemTemplateElement::transformSelectedChildren(
 						xslInstruction,
 						theTemplate,
 						sourceNodeContext,
-						mode,
 						xslToken,
 						selectStackFrameIndex,
 						keys,
@@ -726,7 +721,6 @@ ElemTemplateElement::transformSelectedChildren(
 					xslInstruction,
 					theTemplate,
 					sourceNodeContext,
-					mode,
 					xslToken,
 					selectStackFrameIndex,
 					keys,
@@ -745,7 +739,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 			const ElemTemplateElement&					xslInstruction,
 			const ElemTemplateElement*					theTemplate,
 			XalanNode*									sourceNodeContext,
-			const QName&								mode,
 			int											xslToken,
 			int											selectStackFrameIndex,
 			const NodeSorter::NodeSortKeyVectorType&	keys,
@@ -782,7 +775,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 			xslInstruction,
 			theTemplate,
 			sourceNodeContext,
-			mode,
 			xslToken,
 			*sortedSourceNodes,
 			sourceNodesCount);
@@ -795,7 +787,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 			xslInstruction,
 			theTemplate,
 			sourceNodeContext,
-			mode,
 			xslToken,
 			sourceNodes,
 			sourceNodesCount);
@@ -811,7 +802,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 			const ElemTemplateElement&					xslInstruction,
 			const ElemTemplateElement*					theTemplate,
 			XalanNode*									sourceNodeContext,
-			const QName&								mode,
 			int											xslToken,
 			int											selectStackFrameIndex,
 			const NodeSorter::NodeSortKeyVectorType&	keys,
@@ -830,7 +820,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 			xslInstruction,
 			theTemplate,
 			sourceNodeContext,
-			mode,
 			xslToken,
 			selectStackFrameIndex,
 			keys,
@@ -847,7 +836,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 			const ElemTemplateElement&			xslInstruction,
 			const ElemTemplateElement*			theTemplate,
 			XalanNode*							sourceNodeContext,
-			const QName&						mode,
 			int									xslToken,
 			const NodeRefListBase&				sourceNodes,
 			unsigned int						sourceNodesCount) const
@@ -883,7 +871,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 				theTemplate,
 				sourceNodeContext, 
 				childNode,
-				mode,
 				xslToken);
 	}
 }
@@ -898,7 +885,6 @@ ElemTemplateElement::transformChild(
 			const ElemTemplateElement*	theTemplate,
 			XalanNode*					selectContext,
 			XalanNode*					child,
-			const QName&				mode,
 			int							xslToken) const
 {
 	const XalanNode::NodeType	nodeType = child->getNodeType();
@@ -918,7 +904,7 @@ ElemTemplateElement::transformChild(
 		theTemplate = stylesheetTree->findTemplate(
 						executionContext,
 						child,
-						mode,
+						*executionContext.getCurrentMode(),
 						isApplyImports,
 						foundStylesheet);
 	}
@@ -988,16 +974,14 @@ ElemTemplateElement::transformChild(
 			if(0 != executionContext.getTraceListeners())
 			{
 				TracerEvent te(executionContext,
-							   child, 
-								mode,
+							   child,
 								*theTemplate);
 
 				executionContext.fireTraceEvent(te);
 			}
 
 			theTemplate->executeChildren(executionContext, 
-										 child,
-										 mode);
+										 child);
 		}
 
 		executionContext.resetCurrentState(selectContext);

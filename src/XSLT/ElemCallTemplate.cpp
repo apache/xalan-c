@@ -130,10 +130,9 @@ ElemCallTemplate::getElementName() const
 void
 ElemCallTemplate::execute(
 			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode);
 
 	assert(isEmpty(m_templateName.getLocalPart()) == false);
 
@@ -148,10 +147,9 @@ ElemCallTemplate::execute(
 				theTemplate,
 				*this,			
 				sourceNode,
-				mode,
 				theTemplate);
 
-		theTemplate->execute(executionContext, sourceNode, mode);
+		theTemplate->execute(executionContext, sourceNode);
 	}
 	else
 	{

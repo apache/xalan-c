@@ -196,12 +196,11 @@ ElemLiteralResult::getElementName() const
 void
 ElemLiteralResult::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
 	executionContext.startElement(c_wstr(getElementName()));
 
-	ElemUse::execute(executionContext, sourceNode, mode);
+	ElemUse::execute(executionContext, sourceNode);
 
 	m_namespacesHandler.outputResultNamespaces(executionContext);
 
@@ -245,7 +244,7 @@ ElemLiteralResult::execute(
 		}
 	}
 
-	executeChildren(executionContext, sourceNode, mode);
+	executeChildren(executionContext, sourceNode);
 
 	executionContext.endElement(c_wstr(getElementName()));
 }

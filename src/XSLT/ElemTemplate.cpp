@@ -161,10 +161,9 @@ ElemTemplate::getElementName() const
 void
 ElemTemplate::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode);
 
-	executeChildren(executionContext, sourceNode, mode);
+	executeChildren(executionContext, sourceNode);
 }

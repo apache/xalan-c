@@ -71,11 +71,9 @@
 TracerEvent::TracerEvent(
 			const StylesheetExecutionContext&	executionContext,
 			const XalanNode*					sourceNode,
-			const QName&						mode,
 			const ElemTemplateElement&			styleNode) :
 	m_executionContext(executionContext),
 	m_sourceNode(sourceNode),
-	m_mode(mode),
 	m_styleNode(styleNode)
 {
 }

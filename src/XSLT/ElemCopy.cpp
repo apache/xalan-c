@@ -115,8 +115,7 @@ ElemCopy::getElementName() const
 void
 ElemCopy::execute(
 			StylesheetExecutionContext&		executionContext,		
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
 	assert(sourceNode != 0);
 
@@ -136,14 +135,12 @@ ElemCopy::execute(
 
 			ElemUse::execute(
 				executionContext,			
-				sourceNode,
-				mode);
+				sourceNode);
 
 			executionContext.copyNamespaceAttributes(*sourceNode);
 
 			executeChildren(executionContext,				
-				sourceNode,
-				mode);
+				sourceNode);
 
 			const XalanDOMString&	s = DOMServices::getNameOfNode(*sourceNode);
 
@@ -155,7 +152,6 @@ ElemCopy::execute(
 			{
 				executionContext.fireTraceEvent(TracerEvent(executionContext,				
 					sourceNode,
-					mode,
 					*this));
 			}
 		}
@@ -166,15 +162,13 @@ ElemCopy::execute(
 		{
 			executionContext.fireTraceEvent(TracerEvent(executionContext, 				
 				sourceNode,
-				mode,
 				*this));
 		}
 
 		ElemUse::execute(
 			executionContext, 			
-			sourceNode, 
-			mode);
+			sourceNode);
 
-		executeChildren(executionContext, sourceNode, mode);
+		executeChildren(executionContext, sourceNode);
 	}  
 }

@@ -121,10 +121,9 @@ ElemCopyOf::getElementName() const
 void
 ElemCopyOf::execute(
 			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode);
 
 	assert(m_pSelectPattern != 0);
 

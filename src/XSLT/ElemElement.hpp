@@ -111,8 +111,7 @@ public:
 	virtual void 
 	execute(
 			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode,
-			const QName&					mode) const;
+			XalanNode*						sourceNode) const;
 
 protected:
 
@@ -121,14 +120,12 @@ protected:
 	 * 
 	 * @param executionContext The current execution context	 
 	 * @param sourceNode current context node
-	 * @param mode current mode
 	 * @param skipAttributeChildren If true, attribute children will not be executed.
 	 */
 	virtual void
 	doExecuteChildren(
 			StylesheetExecutionContext&		executionContext,			
 			XalanNode*						sourceNode,
-			const QName&					mode,
 			bool							skipAttributeChildren) const;
 
 private:

@@ -62,7 +62,6 @@
    * @param processor The XSLT Processor.
    * @param sourceTree The input source tree.
    * @param sourceNode The current context node.
-   * @param mode The current mode.
    * @param m_styleNode node in the style tree reference for the event.
    * Should not be null.  That is not enforced.
    */

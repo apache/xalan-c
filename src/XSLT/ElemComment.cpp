@@ -116,17 +116,15 @@ ElemComment::getElementName() const
 void
 ElemComment::execute(
 			StylesheetExecutionContext&		executionContext,		
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode);
 
 	StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
 	childrenToString(
 			executionContext,
 			sourceNode,
-			mode,
 			theResult.get());
 
     executionContext.comment(c_wstr(theResult.get()));

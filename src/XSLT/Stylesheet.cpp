@@ -1464,8 +1464,7 @@ void
 Stylesheet::applyAttrSets(
 			const QNameVectorType&			attributeSetsNames, 
 			StylesheetExecutionContext& 	executionContext, 			
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
 	const QNameVectorType::size_type	nNames = attributeSetsNames.size();
 
@@ -1480,7 +1479,7 @@ Stylesheet::applyAttrSets(
 			const Stylesheet* const 	stylesheet = m_imports[i];
 
 			stylesheet->applyAttrSets(attributeSetsNames, 
-									 executionContext, sourceNode, mode);
+									 executionContext, sourceNode);
 		}
 
 		for(QNameVectorType::size_type j = 0; j < nNames; j++)
@@ -1495,7 +1494,7 @@ Stylesheet::applyAttrSets(
 
 				if(qname.equals(attrSet->getQName()))
 				{
-					attrSet->execute(executionContext, sourceNode, mode);
+					attrSet->execute(executionContext, sourceNode);
 				}
 			}
 		}

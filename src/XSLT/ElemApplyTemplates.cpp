@@ -124,6 +124,12 @@ ElemApplyTemplates::ElemApplyTemplates(
 
 
 
+ElemApplyTemplates::~ElemApplyTemplates()
+{
+}
+
+
+
 const XalanDOMString&
 ElemApplyTemplates::getElementName() const
 {
@@ -135,13 +141,12 @@ ElemApplyTemplates::getElementName() const
 void
 ElemApplyTemplates::execute(
 			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
 	if(0 != executionContext.getTraceListeners())
 	{
 		executionContext.fireTraceEvent(TracerEvent(
-		  executionContext, sourceNode, mode, *this));
+		  executionContext, sourceNode, *this));
 	}
 	if (0 != sourceNode)
 	{
@@ -154,21 +159,29 @@ ElemApplyTemplates::execute(
 			this,
 			*this,		
 			sourceNode,
-			mode,
 			this);
 
-		if (m_isDefaultTemplate == false)
+		// Initialize the member mode of execution context.
+		if (executionContext.getCurrentMode() == 0)
+			executionContext.setCurrentMode(&m_mode);
+
+		if (m_isDefaultTemplate == false &&           
+			!m_mode.equals(*executionContext.getCurrentMode()))
 		{
+			const QName* oldMode = executionContext.getCurrentMode();
+			executionContext.setCurrentMode(&m_mode);
+
 			transformSelectedChildren(
 				executionContext,
 				getStylesheet(),
 				*this,
 				0,				
-				sourceNode,
-				m_mode,
+				sourceNode,				
 				m_pSelectPattern,
 				Constants::ELEMNAME_APPLY_TEMPLATES,
 				thePushPop.getStackFrameIndex());
+
+			executionContext.setCurrentMode(oldMode);
 		}
 		else
 		{
@@ -177,8 +190,7 @@ ElemApplyTemplates::execute(
 				getStylesheet(),
 				*this,
 				0,				
-				sourceNode,
-				mode,
+				sourceNode,				
 				m_pSelectPattern,
 				Constants::ELEMNAME_APPLY_TEMPLATES,
 				thePushPop.getStackFrameIndex());

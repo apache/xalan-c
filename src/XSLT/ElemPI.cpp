@@ -132,10 +132,9 @@ ElemPI::getElementName() const
 void
 ElemPI::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode);
 	
 	XalanDOMString	piName;
 	
@@ -155,7 +154,6 @@ ElemPI::execute(
 	childrenToString(
 			executionContext,
 			sourceNode,
-			mode,
 			theResult.get());
 
 	executionContext.processingInstruction(c_wstr(piName), c_wstr(theResult.get()));

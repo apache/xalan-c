@@ -209,6 +209,22 @@ public:
 	setStylesheetRoot(const StylesheetRoot*		theStylesheet) = 0;
 
 	/**
+	 * Retrieve the current mode of the element
+	 * 
+	 * @return QName for mode
+	 */
+	virtual const QName*
+	getCurrentMode() const = 0;
+
+	/**
+	 * Set the current mode of the element
+	 * 
+	 * @param QName for mode
+	 */
+	virtual	void
+	setCurrentMode(const QName* theMode) = 0; 
+
+	/**
 	 * Reset the state of execution to node 'xmlNode' in source tree 'sourceTree.'
 	 * 
 	 * @param xmlNode    node to execute
@@ -509,7 +525,6 @@ public:
 	 * Create an ResultTreeFragment as a variable and push it
 	 * on to the stack with the current context.
 	 *
-	 * @param name    name of variable
 	 * @param element element marker for variable
 	 * @param templateChild result tree fragment to use.
 	 * @param sourceNode source node
@@ -519,8 +534,7 @@ public:
 	createVariable(
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceNode,
-			const QName&				mode) = 0;
+			XalanNode*					sourceNode) = 0;
 
 	/**
 	 * Execute an XPath using the provided expression, 
@@ -636,14 +650,12 @@ public:
 	 *
 	 * @param xslCallTemplateElement "call-template" element
 	 * @param sourceNode             source node
-	 * @param mode                   mode under which the template is operating
 	 * @param targetTemplate         target template
 	 */
 	virtual	void
 	pushParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
 			XalanNode*					sourceNode,
-			const QName&				mode,
 			const ElemTemplateElement*	targetTemplate) = 0;
 
 	/**
@@ -765,7 +777,6 @@ public:
 			const ElemTemplateElement*		contextElement,
 			const ElemTemplateElement&		xslCallTemplateElement,
 			XalanNode*						sourceNode,
-			const QName&					mode,
 			const ElemTemplateElement*		targetTemplate);
 
 		~ParamsPushPop();
@@ -950,20 +961,6 @@ public:
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode) = 0;
-
-	/**
-	 * Create an XObject that represents a Result tree fragment.
-	 *
-	 * @param templateChild result tree fragment to use.
-	 * @param sourceNode source node
-	 * @param mode current mode
-	 * @return XObject instance
-	 */
-	virtual const XObjectPtr
-	createXResultTreeFrag(
-			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceNode,
-			const QName&				mode) = 0;
 
 	/**
 	 * Output an object to the result tree by doing the right conversions.

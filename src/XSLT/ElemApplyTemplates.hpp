@@ -99,6 +99,9 @@ public:
 			int								lineNumber, 
 			int								columnNumber);
 
+    virtual
+    ~ElemApplyTemplates();
+
 	/**
 	 * Determines whether this is the default template
 	 *
@@ -129,8 +132,7 @@ public:
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const;
+			XalanNode*						sourceNode) const;
 
 protected:
 

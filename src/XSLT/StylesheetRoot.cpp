@@ -226,7 +226,7 @@ StylesheetRoot::process(
 
 	// Output the action of the found root rule.  All processing
 	// occurs from here.
-	rootRule->execute(executionContext, sourceTree, QNameByReference());
+	rootRule->execute(executionContext, sourceTree);
 
 	// At this point, anything transient during the tranformation
 	// may have been deleted, so we may not refer to anything the

@@ -118,10 +118,9 @@ ElemApplyImport::getElementName() const
 void
 ElemApplyImport::execute(
 			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode);
 
 	// This will have to change to current template, (which will have 
 	// to be the top of a current template stack).
@@ -133,9 +132,7 @@ ElemApplyImport::execute(
 				   0,                    
 				   DOMServices::getParentOfNode(*sourceNode), 
 				   sourceNode, 
-                   mode,
-				   getXSLToken());
-   
+				   getXSLToken());   
 }
 
 

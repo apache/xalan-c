@@ -147,8 +147,10 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_countersTable(),
 	m_useDOMResultTreeFactory(false),
 	m_ignoreHTMLElementNamespaces(false),
-	m_sourceTreeResultTreeFactory()
+	m_sourceTreeResultTreeFactory(),
+	m_mode(0)
 {
+	m_mode = 0;
 }
 
 
@@ -209,6 +211,22 @@ StylesheetExecutionContextDefault::setStylesheetRoot(const StylesheetRoot*	theSt
 	{
 		m_xsltProcessor.setExecutionContext(this);
 	}
+}
+
+
+
+const QName*
+StylesheetExecutionContextDefault::getCurrentMode() const
+{
+	return m_mode;
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setCurrentMode(const QName* theMode) 
+{		
+	m_mode = theMode;
 }
 
 
@@ -465,10 +483,9 @@ const XObjectPtr
 StylesheetExecutionContextDefault::createVariable(
 			const ElemTemplateElement*	/* element */,
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceNode,
-			const QName&				mode)
+			XalanNode*					sourceNode)
 {
-	return createXResultTreeFrag(templateChild, sourceNode, mode);
+	return createXResultTreeFrag(templateChild, sourceNode);
 }
 
 
@@ -605,7 +622,6 @@ void
 StylesheetExecutionContextDefault::pushParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
 			XalanNode*					sourceNode,
-			const QName&				mode,
 			const ElemTemplateElement*	targetTemplate)
 {
 	const ElemTemplateElement*	child =
@@ -661,8 +677,7 @@ StylesheetExecutionContextDefault::pushParams(
 						createVariable(
 							&xslCallTemplateElement,
 							*xslParamElement,
-							sourceNode,
-							mode);
+							sourceNode);
 				}
 
 				m_paramsVector.push_back(ParamsVectorType::value_type(&xslParamElement->getQName(), theXObject));
@@ -831,19 +846,6 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode)
 {
-	return createXResultTreeFrag(templateChild,
-								 sourceNode,
-								 QNameByReference());
-}
-
-
-
-const XObjectPtr
-StylesheetExecutionContextDefault::createXResultTreeFrag(
-			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceNode,
-			const QName&				mode)
-{
 	BorrowReturnResultTreeFrag	theResultTreeFrag(*this);
 
 	if (m_useDOMResultTreeFactory == true)
@@ -863,7 +865,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 				*this,
 				&tempFormatter);
 
-		templateChild.executeChildren(*this, sourceNode, mode);
+		templateChild.executeChildren(*this, sourceNode);
 	}
 	else
 	{
@@ -881,7 +883,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 				*this,
 				&tempFormatter);
 
-		templateChild.executeChildren(*this, sourceNode, mode);
+		templateChild.executeChildren(*this, sourceNode);
 	}
 
 	return getXObjectFactory().createResultTreeFrag(theResultTreeFrag);
@@ -1291,6 +1293,8 @@ StylesheetExecutionContextDefault::reset()
 	m_variablesStack.reset();
 
 	m_xsltProcessor.reset();
+
+	m_mode = 0;
 
 	// Just in case endDocument() was not called,
 	// clean things up...

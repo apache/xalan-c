@@ -128,8 +128,7 @@ ElemFallback::~ElemFallback()
 void
 ElemFallback::execute(
 			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
 	const ElemTemplateElement* const	parent =
 			getParentNodeElem();
@@ -146,12 +145,11 @@ ElemFallback::execute(
 
 		if(extensionParent->elementAvailable(executionContext) == false)
 		{
-			ElemTemplateElement::execute(executionContext, sourceNode, mode);
+			ElemTemplateElement::execute(executionContext, sourceNode);
 
 			executeChildren(
 				executionContext,
-				sourceNode,
-				mode);
+				sourceNode);
 		}
 	}
 	else

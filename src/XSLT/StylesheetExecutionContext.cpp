@@ -81,7 +81,6 @@ StylesheetExecutionContext::ParamsPushPop::ParamsPushPop(
 			const ElemTemplateElement*		/* contextElement */,
 			const ElemTemplateElement&		xslCallTemplateElement,
 			XalanNode*						sourceNode,
-			const QName&					mode,
 			const ElemTemplateElement*		targetTemplate) :
 	m_executionContext(executionContext),
 	m_savedStackFrameIndex(executionContext.getCurrentStackFrameIndex())
@@ -93,7 +92,6 @@ StylesheetExecutionContext::ParamsPushPop::ParamsPushPop(
 	executionContext.pushParams(
 			xslCallTemplateElement,
 			sourceNode,
-			mode,
 			targetTemplate);
 
 	executionContext.setCurrentStackFrameIndex();

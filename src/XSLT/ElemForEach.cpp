@@ -157,8 +157,7 @@ ElemForEach::getElementName() const
 void
 ElemForEach::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
 	if (sourceNode != 0)
 	{
@@ -170,7 +169,6 @@ ElemForEach::execute(
 			*this,
 			this,
 			sourceNode,
-			mode,
 			m_pSelectPattern,
 			Constants::ELEMNAME_FOREACH,
 			executionContext.getCurrentStackFrameIndex());

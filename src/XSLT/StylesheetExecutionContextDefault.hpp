@@ -207,7 +207,6 @@ public:
 		m_ignoreHTMLElementNamespaces = theValue;
 	}
 
-
 	// These interfaces are inherited from StylesheetExecutionContext...
 
 	virtual bool
@@ -224,6 +223,12 @@ public:
 
 	virtual void
 	setStylesheetRoot(const StylesheetRoot*		theStylesheet);
+
+	virtual const QName*
+	getCurrentMode() const;
+
+	virtual	void
+	setCurrentMode(const QName* theMode); 
 
 	virtual void
 	resetCurrentState(
@@ -316,8 +321,7 @@ public:
 	createVariable(
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceNode,
-			const QName&				mode);
+			XalanNode*					sourceNode);
 
 	virtual void
 	pushVariable(
@@ -370,7 +374,6 @@ public:
 	pushParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
 			XalanNode*					sourceNode,
-			const QName&				mode,
 			const ElemTemplateElement*	targetTemplate);
 
 	virtual const XObjectPtr
@@ -434,12 +437,6 @@ public:
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode);
-
-	virtual const XObjectPtr
-	createXResultTreeFrag(
-			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceNode,
-			const QName&				mode);
 
 	virtual void
 	outputToResultTree(const XObject&	xobj);
@@ -926,6 +923,9 @@ private:
 	// namespaces.  This is an optimization which can lead to
 	// non-conforming behavior.
 	bool								m_ignoreHTMLElementNamespaces;
+
+	// Holds the current mode.
+	const QName*	                    m_mode;
 
 	/**
 	 * The factory that will be used to create result tree fragments based on our

@@ -167,10 +167,9 @@ ElemValueOf::getElementName() const
 void
 ElemValueOf::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode);
 
 	if (m_isDot == true)
 	{

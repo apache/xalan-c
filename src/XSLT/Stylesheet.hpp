@@ -535,14 +535,12 @@ public:
 	 * @param attributeSetsNames list of attribute set names
 	 * @param executionContext	 current execution context
 	 * @param sourceNode		 source node
-	 * @param mode				 execution mode
 	 */
 	void
 	applyAttrSets(
 			const QNameVectorType&			attributeSetsNames,
 			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const;
+			XalanNode*						sourceNode) const;
   
 	/**
 	 * Determine whether default whitespace processing is in effect

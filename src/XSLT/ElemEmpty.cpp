@@ -97,10 +97,9 @@ ElemEmpty::getElementName() const
 void
 ElemEmpty::execute(
 			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
 	assert(false);	// really shouldn't be executing empty nodes
 
-	ElemTemplateElement::execute(executionContext, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode);
 }

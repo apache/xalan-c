@@ -90,13 +90,11 @@ public:
 	 * 
 	 * @param executionContext    XSLT processor instance
 	 * @param sourceNode current  context node
-	 * @param mode                current mode
 	 * @param styleNode           node in the style tree where the event occurs
 	 */
 	TracerEvent(
 			const StylesheetExecutionContext&	executionContext,
 			const XalanNode*					sourceNode,
-			const QName&						mode,
 			const ElemTemplateElement&			styleNode);
 
 	virtual
@@ -136,11 +134,6 @@ public:
 	 */
 	const XalanNode*						m_sourceNode;
   
-	/**
-	 * The current mode.
-	 */
-	const QName&							m_mode;
-
 	/**
 	 * The node in the style tree where the event occurs.
 	 */

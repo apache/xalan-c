@@ -199,26 +199,22 @@ public:
 	 * 
 	 * @param executionContext  The current execution context
 	 * @param sourceNode current context node
-	 * @param mode       current mode
 	 */
 	virtual	void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const;
+			XalanNode*						sourceNode) const;
 
 	/** 
 	 * Process the children of a template.
 	 * 
 	 * @param processor  XSLT processor instance
-	 * @param sourceNode current context node
-	 * @param mode       current mode
+	 * @param sourceNode current context node	
 	 */
 	void
 	executeChildren(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const;
+			XalanNode*						sourceNode) const;
 
 	/** 
 	 * Take the contents of a template element, process it, and
@@ -226,14 +222,12 @@ public:
 	 * 
 	 * @param executionContext  The current execution context
 	 * @param sourceNode current source node context
-	 * @param mode       current mode
 	 * @param result result of executing the elements children
 	 */
 	void
 	childrenToString(
 			StylesheetExecutionContext&		executionContext, 
 			XalanNode*						sourceNode,
-			const QName&					mode,
 			XalanDOMString&					result) const;
 
 
@@ -651,7 +645,6 @@ protected:
 	 *      not think we need this).
 	 * @param template The owning template context.
 	 * @param sourceNodeContext The current source node context.
-	 * @param mode The current mode.
 	 * @param selectPattern The XPath with which to perform the selection.
 	 * @param xslToken The current XSLT instruction (deprecated -- I do not     
 	 *     think we want this).
@@ -665,7 +658,6 @@ protected:
 			const ElemTemplateElement&		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
 			XalanNode*						sourceNodeContext,
-			const QName&					mode,
 			const XPath*					selectPattern,
 			int								xslToken,
 			int								selectStackFrameIndex) const;
@@ -679,7 +671,6 @@ protected:
 	 *      not think we need this).
 	 * @param template The owning template context.
 	 * @param sourceNodeContext The current source node context.
-	 * @param mode The current mode.
 	 * @param selectPattern The XPath with which to perform the selection.
 	 * @param xslToken The current XSLT instruction (deprecated -- I do not     
 	 *     think we want this).
@@ -693,7 +684,6 @@ protected:
 			const ElemTemplateElement&					xslInstruction,
 			const ElemTemplateElement*					theTemplate,
 			XalanNode*									sourceNodeContext,
-			const QName&								mode,
 			int											xslToken,
 			int											selectStackFrameIndex,
 			const NodeSorter::NodeSortKeyVectorType&	keys,
@@ -709,7 +699,6 @@ protected:
 	 *      not think we need this).
 	 * @param template The owning template context.
 	 * @param sourceNodeContext The current source node context.
-	 * @param mode The current mode.
 	 * @param selectPattern The XPath with which to perform the selection.
 	 * @param xslToken The current XSLT instruction (deprecated -- I do not     
 	 *     think we want this).
@@ -723,7 +712,6 @@ protected:
 			const ElemTemplateElement&					xslInstruction,
 			const ElemTemplateElement*					theTemplate,
 			XalanNode*									sourceNodeContext,
-			const QName&								mode,
 			int											xslToken,
 			int											selectStackFrameIndex,
 			const NodeSorter::NodeSortKeyVectorType&	keys,
@@ -737,13 +725,12 @@ protected:
 			const ElemTemplateElement&			xslInstruction,
 			const ElemTemplateElement*			theTemplate,
 			XalanNode*							sourceNodeContext,
-			const QName&						mode,
 			int									xslToken,
 			const NodeRefListBase&				sourceNodes,
 			unsigned int						sourceNodesCount) const;
 
 	/**
-	 * Given an element and mode, find the corresponding
+	 * Given an element, find the corresponding
 	 * template and process the contents.
 	 * 
 	 * @param executionContext The current execution context
@@ -753,7 +740,6 @@ protected:
 	 * @param template The template to use if xsl:for-each, or null.
 	 * @param selectContext The selection context.
 	 * @param child The source context node.
-	 * @param mode The current mode, may be null.
 	 * @param xslToken ELEMNAME_APPLY_TEMPLATES, ELEMNAME_APPLY_IMPORTS, or     
 	 *      ELEMNAME_FOREACH.
 	 * @return true if applied a template, false if not.
@@ -766,7 +752,6 @@ protected:
 			const ElemTemplateElement*		theTemplate,
 			XalanNode*						selectContext,
 			XalanNode*						child,
-			const QName&					mode,
 			int								xslToken) const;
 
 	/**

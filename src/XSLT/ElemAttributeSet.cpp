@@ -127,19 +127,18 @@ ElemAttributeSet::getElementName() const
 void
 ElemAttributeSet::execute(
 			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
 	// This will push and pop the stack automatically...
 	StylesheetExecutionContext::ElementRecursionStackPusher		thePusher(executionContext, this);
 
-	ElemUse::execute(executionContext, sourceNode, mode);
+	ElemUse::execute(executionContext, sourceNode);
 
 	const ElemTemplateElement*	attr = getFirstChildElem();
 
 	while(0 != attr)
 	{
-		attr->execute(executionContext, sourceNode, mode);
+		attr->execute(executionContext, sourceNode);
 
 		attr = attr->getNextSiblingElem();
 	}

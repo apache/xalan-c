@@ -156,12 +156,11 @@ ElemAttribute::getElementName() const
 void
 ElemAttribute::execute(
 			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
 	assert(m_pNameAVT != 0);
 
-	ElemTemplateElement::execute(executionContext, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode);
 
 	StylesheetExecutionContext::GetAndReleaseCachedString	attrNameGuard(executionContext);
 
@@ -347,7 +346,6 @@ ElemAttribute::execute(
 			childrenToString(
 					executionContext,					
 					sourceNode,
-					mode,
 					theResult.get());
 
 			executionContext.addResultAttribute(attrName, theResult.get());

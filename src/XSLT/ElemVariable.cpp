@@ -155,10 +155,9 @@ ElemVariable::getElementName() const
 void
 ElemVariable::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode);
 
 	const XObjectPtr	theValue(getValue(executionContext, sourceNode));
 

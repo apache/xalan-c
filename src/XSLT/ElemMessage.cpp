@@ -125,17 +125,15 @@ ElemMessage::getElementName() const
 void
 ElemMessage::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode);
 
 	StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
 	childrenToString(
 			executionContext,
 			sourceNode,
-			mode,
 			theResult.get());
 
     executionContext.message(theResult.get(), sourceNode, this);

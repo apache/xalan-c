@@ -98,8 +98,7 @@ ElemExtensionCall::getElementName() const
 void
 ElemExtensionCall::execute(
 			StylesheetExecutionContext&		executionContext,		
-			XalanNode*						sourceNode,
-			const QName&					mode) const
+			XalanNode*						sourceNode) const
 {
 	executionContext.warn("Xalan C++ does not yet handle extensions!");
 
@@ -107,7 +106,7 @@ ElemExtensionCall::execute(
 	{
 		if(child->getXSLToken() == Constants::ELEMNAME_FALLBACK)
 		{
-			child->execute(executionContext, sourceNode, mode);
+			child->execute(executionContext, sourceNode);
 		}
 	}
 }
