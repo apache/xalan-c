@@ -125,6 +125,11 @@ public :
 
 protected:
 
+	/**
+	 * Constructor.
+	 *
+	 * @param theBufferSize The initial size of the buffer.
+	 */
 	explicit
     XercesTextOutputStream(BufferType::size_type	theBufferSize = eDefaultBufferSize);
 
