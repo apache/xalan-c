@@ -78,6 +78,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include <XMLSupport/FormatterToText.hpp>
 
 
@@ -1365,37 +1369,46 @@ ElemTemplateElement::getNamespaceForPrefixInternal(
 {
     XalanDOMString	nameSpace;
 
-    if(m_finishedConstruction == true)
-    {
-		 if(!isEmpty(prefix))
-		 {
-			 ElemTemplateElement*  elem = const_cast<ElemTemplateElement *>(this);
-
-			 while(isEmpty(nameSpace) && elem != 0)
-			 {
-				 const NamespaceVectorType&		nsVector = elem->getNameSpace();
-
-				 nameSpace = QName::getNamespaceForPrefix(nsVector, prefix);
-
-				 if (!isEmpty(nameSpace))
-					 break;
-
-				 elem = elem->getParentNodeElem();
-			 }
-		 }
-		 else
-		 {
-			 nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
-		 }
-    }
-    else
-    {
-		nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
-    }
-
-    if(fReportError == true && isEmpty(nameSpace) == true)
+	if (isEmpty(prefix) == false)
 	{
-		error("Can not resolve namespace prefix: " + prefix);
+		bool			fEmptyIsError = true;
+
+		if(m_finishedConstruction == true)
+		{
+			 if (equals(prefix, DOMServices::s_XMLString) == true)
+			 {
+				 nameSpace = DOMServices::s_XMLNamespaceURI;
+			 }
+			 else if (equals(prefix, DOMServices::s_XMLNamespace) == true)
+			 {
+				 fEmptyIsError = false;
+			 }
+			 else
+			 {
+				 ElemTemplateElement*  elem = const_cast<ElemTemplateElement *>(this);
+
+				 while(isEmpty(nameSpace) && elem != 0)
+				 {
+					 const NamespaceVectorType&		nsVector = elem->getNameSpace();
+
+					 nameSpace = QName::getNamespaceForPrefix(nsVector, prefix);
+
+					 if (!isEmpty(nameSpace))
+						 break;
+
+					 elem = elem->getParentNodeElem();
+				 }
+			 }
+		}
+		else
+		{
+			nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
+		}
+
+		if(fReportError == true && fEmptyIsError == true && isEmpty(nameSpace) == true)
+		{
+			error("Can not resolve namespace prefix: " + prefix);
+		}
 	}
 
     return nameSpace;
