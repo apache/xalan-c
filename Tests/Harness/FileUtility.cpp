@@ -94,7 +94,7 @@ extern "C" int mkdir(const char*, mode_t mode);
 
 
 
-#include <xercesc/sax/SAXException.hpp>
+#include <sax/SAXException.hpp>
 
 
 
