@@ -125,7 +125,6 @@ DOMStringPrintWriter::write(
 #endif
 
 	assert(s != 0);
-	assert(theLength == UINT_MAX || length(s) >= theOffset + theLength);
 
 	append(m_outputString, (s + theOffset), theLength);
 }
