@@ -135,6 +135,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "ICUBridge"="..\Projects\Win32\VC6\ICUBridge\ICUBridge.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "PlatformSupport"="..\Projects\Win32\VC6\PlatformSupport\PlatformSupport.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -478,6 +490,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ICUBridge
     End Project Dependency
 }}}
 
