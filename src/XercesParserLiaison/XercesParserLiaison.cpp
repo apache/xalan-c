@@ -433,46 +433,69 @@ XercesParserLiaison::mapXercesDocument(const XalanDocument*		theDocument) const
 
 
 void
-XercesParserLiaison::fatalError(const SAXParseException& e)
+XercesParserLiaison::fatalError(const SAXParseException&	e)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::endl;
 #endif
 
-	cerr << "\nFatal Error at (file " << DOMStringToStdString(e.getSystemId())
-		 << ", line " << e.getLineNumber()
-		 << ", char " << e.getColumnNumber()
-         << "): " << DOMStringToStdString(e.getMessage()) << endl;
+	cerr << endl
+		 << "Fatal Error at (file "
+		 << e.getSystemId()
+		 << ", line "
+		 << e.getLineNumber()
+		 << ", char"
+		 << e.getColumnNumber()
+         << "): "
+		 << e.getMessage()
+		 << endl;
 
 	throw e;
 }
 
-void XercesParserLiaison::error(const SAXParseException& e)
+
+
+void
+XercesParserLiaison::error(const SAXParseException&		e)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::endl;
 #endif
 
-	cerr << "\nError at (file " << DOMStringToStdString(e.getSystemId())
-		 << ", line " << e.getLineNumber()
-		 << ", char " << e.getColumnNumber()
-         << "): " << DOMStringToStdString(e.getMessage()) << endl;
+	cerr << endl
+		 << "Error at (file "
+		 << e.getSystemId()
+		 << ", line "
+		 << e.getLineNumber()
+		 << ", char"
+		 << e.getColumnNumber()
+         << "): "
+		 << e.getMessage()
+		 << endl;
 }
 
 
-void XercesParserLiaison::warning(const SAXParseException& e)
+
+void
+XercesParserLiaison::warning(const SAXParseException&	e)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::endl;
 #endif
 
-	cerr << "\nWarning at (file " << DOMStringToStdString(e.getSystemId())
-		 << ", line " << e.getLineNumber()
-		 << ", char " << e.getColumnNumber()
-         << "): " << DOMStringToStdString(e.getMessage()) << endl;
+	cerr << endl
+		 << "Warning at (file "
+		 << e.getSystemId()
+		 << ", line "
+		 << e.getLineNumber()
+		 << ", char"
+		 << e.getColumnNumber()
+         << "): "
+		 << e.getMessage()
+		 << endl;
 }
 
 

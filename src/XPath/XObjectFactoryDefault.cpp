@@ -335,7 +335,7 @@ XObjectFactoryDefault::reset()
 
 	for_each(m_xobjects.begin(),
 			 m_xobjects.end(),
-			 ProtectedDeleteXObjectFunctor(*this, true));
+			 DeleteXObjectFunctor(*this, true));
 
 	m_xobjects.clear();
 }

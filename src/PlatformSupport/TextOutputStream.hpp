@@ -64,7 +64,19 @@
 
 
 
+#include <vector>
+
+
+
 #include <XalanDOM/XalanDOMString.hpp>
+
+
+
+#include <PlatformSupport/XSLException.hpp>
+
+
+
+class XMLTranscoder;
 
 
 
@@ -72,8 +84,10 @@ class XALAN_PLATFORMSUPPORT_EXPORT TextOutputStream
 {
 public :
 
+	enum { eDefaultBlockSize = 1024 };
+
 	explicit
-	TextOutputStream();
+	TextOutputStream(unsigned int	theTranscoderBlockSize = eDefaultBlockSize);
 
 	virtual
 	~TextOutputStream();
@@ -85,7 +99,8 @@ public :
 	flush() = 0;
 
 	/**
-	 * Write a character to the output stream.
+	 * Write a character to the output stream.  The character
+	 * will not be transcoded.
 	 *
 	 * @param theChar       the character to write
 	 */
@@ -93,7 +108,8 @@ public :
 	write(char	theChar) = 0;
 
 	/**
-	 * Write a wide character to the output stream.
+	 * Write a wide character to the output stream.  The character
+	 * will be transcoded, if an output encoding is specified.
 	 *
 	 * @param theChar       the character to write
 	 */
@@ -101,7 +117,8 @@ public :
 	write(XalanDOMChar	theChar) = 0;
 
 	/**
-	 * Write a null-terminated string to the output file.
+	 * Write a null-terminated string to the output file.  The character
+	 * will not be transcoded.
 	 *
 	 * @param theBuffer       character buffer to write
 	 */
@@ -109,7 +126,8 @@ public :
 	write(const char*	theBuffer) = 0;
 
 	/**
-	 * Write a null-terminated wide string to the output file.
+	 * Write a null-terminated wide string to the output file.  The string
+	 * will be transcoded, if an output encoding is specified.
 	 *
 	 * @param theBuffer       character buffer to write
 	 */
@@ -117,7 +135,8 @@ public :
 	write(const XalanDOMChar*	theBuffer) = 0;
 
 	/**
-	 * Write a specified number of characters to the output stream.
+	 * Write a specified number of characters to the output stream.  The string
+	 * will not be transcoded.
 	 *
 	 * @param theBuffer       character buffer to write
 	 * @param theBufferLength number of characters to write
@@ -128,7 +147,8 @@ public :
 			unsigned long	theBufferLength) = 0;
 
 	/**
-	 * Write a specified number of characters to the output stream.
+	 * Write a specified number of characters to the output stream.  The string
+	 * will be transcoded, if an output encoding is specified.
 	 *
 	 * @param theBuffer       character buffer to write
 	 * @param theBufferLength number of characters to write
@@ -137,6 +157,110 @@ public :
 	write(
 			const XalanDOMChar*		theBuffer,
 			unsigned long			theBufferLength) = 0;
+
+	/**
+	 * Get the output encoding for the stream.
+	 *
+	 * @return The encoding name
+	 */
+	virtual const XalanDOMString&
+	getOutputEncoding() const;
+
+	/**
+	 * Set the output encoding for the stream.
+	 *
+	 * @param theEncoding The encoding name
+	 */
+	virtual void
+	setOutputEncoding(const XalanDOMString&		theEncoding);
+
+	class TextOutputStreamException : public XSLException
+	{
+	public:
+
+		TextOutputStreamException(
+			const XalanDOMString&	theMessage,
+			const XalanDOMString&	theType);
+
+		virtual
+		~TextOutputStreamException();
+	};
+
+	class UnknownEncodingException : public TextOutputStreamException
+	{
+	public:
+
+		explicit
+		UnknownEncodingException();
+
+		virtual
+		~UnknownEncodingException();
+	};
+
+	class UnsupportedEncodingException : public TextOutputStreamException
+	{
+	public:
+
+		UnsupportedEncodingException(const XalanDOMString&	theEncoding);
+
+		virtual
+		~UnsupportedEncodingException();
+
+		const XalanDOMString&
+		getEncoding() const
+		{
+			return m_encoding;
+		}
+
+	private:
+
+		const XalanDOMString&	m_encoding;
+	};
+
+	class TranscoderInternalFailureException : public TextOutputStreamException
+	{
+	public:
+
+		TranscoderInternalFailureException(const XalanDOMString&	theEncoding);
+
+		virtual
+		~TranscoderInternalFailureException();
+
+		const XalanDOMString&
+		getEncoding() const
+		{
+			return m_encoding;
+		}
+
+	private:
+
+		const XalanDOMString&	m_encoding;
+	};
+
+	class TranscodingException : public TextOutputStreamException
+	{
+	public:
+
+		explicit
+		TranscodingException();
+
+		virtual
+		~TranscodingException();
+	};
+
+protected:
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<char>		TranscodeVectorType;
+#else
+	typedef std::vector<char>	TranscodeVectorType;
+#endif
+
+	void
+	transcode(
+			const XalanDOMChar*		theBuffer,
+			unsigned long			theBufferLength,
+			TranscodeVectorType&	theDestination);
 
 private:
 
@@ -148,6 +272,13 @@ private:
 
     bool
 	operator==(const TextOutputStream&) const;
+
+
+	const unsigned int	m_transcoderBlockSize;
+
+	XalanDOMString		m_encoding;
+
+	XMLTranscoder*		m_transcoder;
 };
 
 

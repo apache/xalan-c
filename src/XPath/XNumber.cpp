@@ -69,7 +69,7 @@
 
 
 XNumber::XNumber(double		val) :
-	XObject(),
+	XObject(eTypeNumber),
 	m_value(val),
 	m_cachedStringValue()
 {
@@ -104,14 +104,6 @@ XNumber::clone(void*	theAddress) const
 
 
 
-XNumber::eObjectType
-XNumber::getType() const
-{
-	return eTypeNumber;
-}
-
-
-
 XalanDOMString
 XNumber::getTypeString() const
 {
@@ -136,7 +128,7 @@ XNumber::boolean() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XNumber::str() const
 {
 	if (isEmpty(m_cachedStringValue) == true)

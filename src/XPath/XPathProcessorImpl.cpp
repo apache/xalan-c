@@ -2466,10 +2466,10 @@ const XPathProcessorImpl::NodeTypesMapType&		XPathProcessorImpl::s_nodeTypes = :
 void
 XPathProcessorImpl::initialize()
 {
-	XPathProcessorImpl::initializeKeywordsTable(::s_keywords);
-	XPathProcessorImpl::initializeFunctionTable(::s_functions);
-	XPathProcessorImpl::initializeAxisNamesTable(::s_axisNames);
-	XPathProcessorImpl::initializeNodeTypesTable(::s_nodeTypes);
+	initializeKeywordsTable(::s_keywords);
+	initializeFunctionTable(::s_functions);
+	initializeAxisNamesTable(::s_axisNames);
+	initializeNodeTypesTable(::s_nodeTypes);
 
 	::s_functionIDString = XALAN_STATIC_UCODE_STRING("id");
 	::s_functionKeyString = XALAN_STATIC_UCODE_STRING("key");

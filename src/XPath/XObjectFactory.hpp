@@ -235,21 +235,37 @@ public:
 	{
 	public:
 
-		DeleteXObjectFunctor(XObjectFactory&	theFactoryInstance) :
-			m_factoryInstance(theFactoryInstance)
+		DeleteXObjectFunctor(
+			XObjectFactory&		theFactoryInstance,
+			bool				fInReset = false) :
+			m_factoryInstance(theFactoryInstance),
+			m_fInReset(fInReset)
 		{
 		}
 
 		result_type
 		operator()(argument_type	theXObject) const
 		{
-			m_factoryInstance.returnObject(theXObject);
+			if (m_fInReset == true)
+			{
+				m_factoryInstance.doReturnObject(
+					theXObject,
+					true);
+			}
+			else
+			{
+				m_factoryInstance.returnObject(theXObject);
+			}
 		}
 
 	private:
 
 		XObjectFactory&		m_factoryInstance;
+
+		const bool			m_fInReset;
 	};
+
+	friend struct DeleteXObjectFunctor;
 
 protected:
 
@@ -279,43 +295,6 @@ protected:
 	doReturnObject(
 			const XObject*	theXObject,
 			bool			fInReset = false) = 0;
-
-	/**
-	 *
-	 * A functor for use with stl algorithms.
-	 *
-	 */
-#if defined(XALAN_NO_NAMESPACES)
-	struct ProtectedDeleteXObjectFunctor : public unary_function<const XObject*, void>
-#else
-	struct ProtectedDeleteXObjectFunctor : public std::unary_function<const XObject*, void>
-#endif
-	{
-	public:
-
-		ProtectedDeleteXObjectFunctor(
-			XObjectFactory&		theFactoryInstance,
-			bool				fInReset) :
-			m_factoryInstance(theFactoryInstance),
-			m_fInReset(fInReset)
-		{
-		}
-
-		result_type
-		operator()(argument_type	theXObject) const
-		{
-			m_factoryInstance.doReturnObject(theXObject,
-											 m_fInReset);
-		}
-
-	private:
-
-		XObjectFactory&		m_factoryInstance;
-
-		const bool			m_fInReset;
-	};
-
-	friend struct ProtectedDeleteXObjectFunctor;
 
 private:
 

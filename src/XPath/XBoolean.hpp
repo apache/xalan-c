@@ -74,6 +74,18 @@ class XALAN_XPATH_EXPORT XBoolean : public XObject
 public:
 
 	/**
+	 * Perform static initialization.  See class XPathInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XPathInit.
+	 */
+	static void
+	terminate();
+
+	/**
 	 * Construct an XBoolean object from a boolean value
 	 * 
 	 * @param val		boolean value to initialize object
@@ -94,9 +106,6 @@ public:
 #endif
 	clone(void*		theAddress = 0) const;
 
-	virtual eObjectType
-	getType() const;
-
 	virtual XalanDOMString
 	getTypeString() const;
 
@@ -106,7 +115,7 @@ public:
 	virtual bool
 	boolean() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	str() const;
 
 	virtual void
@@ -118,6 +127,10 @@ public:
 private:
 
 	bool	m_value;
+
+	static XalanDOMString	s_falseString;
+
+	static XalanDOMString	s_trueString;
 };
 
 

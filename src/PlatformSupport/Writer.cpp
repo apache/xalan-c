@@ -68,3 +68,19 @@ Writer::Writer()
 Writer::~Writer()
 {
 }
+
+
+
+TextOutputStream*
+Writer::getStream()
+{
+	return 0;
+}
+
+
+
+const TextOutputStream*
+Writer::getStream() const
+{
+	return 0;
+}

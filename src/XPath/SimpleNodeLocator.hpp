@@ -64,8 +64,15 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 // Base class header file
 #include <XPath/XLocator.hpp>
+
+
+
 #include <XPath/MutableNodeRefList.hpp>
 
 
@@ -301,7 +308,9 @@ protected:
 
 private:
 
-	static SimpleNodeLocator	s_defaultInstance;
+	static SimpleNodeLocator		s_defaultInstance;
+
+	static const XalanDOMString		s_emptyString;
 };
 
 

@@ -94,7 +94,7 @@ XPathFactoryDefault::reset()
 
 	for_each(m_xpaths.begin(),
 			 m_xpaths.end(),
-			 ProtectedDeleteXPathFunctor(*this, true));
+			 DeleteXPathFunctor(*this, true));
 
 	m_xpaths.clear();
 }

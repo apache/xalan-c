@@ -106,8 +106,8 @@ public:
 								   context);
 		}
 
-		const XalanDOMString	theFirstString = args[0]->str();
-		const XalanDOMString	theSecondString = args[1]->str();
+		const XalanDOMString&	theFirstString = args[0]->str();
+		const XalanDOMString&	theSecondString = args[1]->str();
 
 		const unsigned int		theIndex = indexOf(theFirstString,
 												   theSecondString);

@@ -95,8 +95,17 @@ public:
 
 	virtual XercesNodeListBridge*
 	getElementsByTagNameNS(
-			const XalanDOMString&			namespaceURI,
-			const XalanDOMString&			localName) const;
+			const XalanDOMString&	namespaceURI,
+			const XalanDOMString&	localName) const;
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<XalanDOMString,
+				XercesNodeListBridge*,
+				less<XalanDOMString> >			NodeListCacheType;
+#else
+	typedef std::map<XalanDOMString,
+					 XercesNodeListBridge*>		NodeListCacheType;
+#endif
 
 protected:
 
@@ -111,15 +120,6 @@ protected:
 private:
 
 	const XercesBridgeNavigator&	m_navigator;
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString,
-				XercesNodeListBridge*,
-				less<XalanDOMString> >			NodeListCacheType;
-#else
-	typedef std::map<XalanDOMString,
-					 XercesNodeListBridge*>		NodeListCacheType;
-#endif
 
 #if defined(XALAN_NO_MUTABLE)
 	NodeListCacheType			m_cachedNodeLists;

@@ -761,7 +761,7 @@ public:
 		virtual double
 		num() const;
 
-		virtual XalanDOMString
+		virtual const XalanDOMString&
 		str() const;
 
 		virtual void
@@ -769,9 +769,6 @@ public:
 
 		virtual void
 		ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
-
-		virtual	eObjectType
-		getType() const;
 
 		XToken&
 		operator=(const XToken&		theRHS)

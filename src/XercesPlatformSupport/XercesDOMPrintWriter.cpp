@@ -112,6 +112,22 @@ XercesDOMPrintWriter::flush()
 
 
 
+TextOutputStream*
+XercesDOMPrintWriter::getStream()
+{
+	return &m_OutputStream;
+}
+
+
+
+const TextOutputStream*
+XercesDOMPrintWriter::getStream() const
+{
+	return &m_OutputStream;
+}
+
+
+
 void
 XercesDOMPrintWriter::write(
 			const char*		s,

@@ -195,10 +195,31 @@ XercesTextOutputStream::doWrite(const XalanDOMChar*		theBuffer)
 {
 	assert(theBuffer != 0);
 
+#if 0
     const XalanArrayAutoPtr<char>	theTranscodedString(XMLString::transcode(theBuffer));
 
 	writeData(theTranscodedString.get(),
 			  strlen(theTranscodedString.get()));
+#else
+	try
+	{
+		TranscodeVectorType		theTranscodedData;
+
+		transcode(theBuffer, length(theBuffer), theTranscodedData);
+
+		assert(&theTranscodedData[0] != 0);
+
+		writeData(reinterpret_cast<const char*>(&theTranscodedData[0]),
+				  theTranscodedData.size());
+	}
+	catch(const TextOutputStreamException&)
+	{
+		// Have to catch this error and flush any output remaining...
+		m_buffer.clear();
+
+		throw;
+	}
+#endif
 }
 
 

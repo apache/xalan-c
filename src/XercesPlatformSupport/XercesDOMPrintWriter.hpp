@@ -100,6 +100,12 @@ public:
 	virtual void
 	flush();
 
+	virtual TextOutputStream*
+	getStream();
+
+	virtual const TextOutputStream*
+	getStream() const;
+
 
 	// Output functions...
 

@@ -95,6 +95,8 @@
 #include <XercesParserLiaison/XercesBridgeNavigator.hpp>
 #include <XercesParserLiaison/XercesDocumentNamedNodeListCache.hpp>
 #include <XercesParserLiaison/XercesNodeListBridge.hpp>
+#include <XercesParserLiaison/XercesTreeWalker.hpp>
+
 
 #define XALAN_USE_BLOCK_ALLOCATORS
 
@@ -366,6 +368,74 @@ public:
 	void
 	buildBridgeNodes();
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
+
+	typedef deque<XalanNode*>				NodeVectorType;
+#else
+	typedef std::deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
+
+	typedef std::deque<XalanNode*>				NodeVectorType;
+#endif
+
+	// Helper class to walk the tree and build everything...
+	class BuildBridgeTreeWalker : public XercesTreeWalker
+	{
+	public:
+
+		typedef NavigatorBridgeVectorType	NavigatorBridgeVectorType;
+
+		BuildBridgeTreeWalker(
+				XercesDocumentBridge*		theDocument,
+				XercesBridgeNavigator*		theDocumentNavigator,
+				NavigatorBridgeVectorType&	theNavigators,
+				unsigned long				theStartIndex);
+
+		virtual
+		~BuildBridgeTreeWalker();
+
+		struct NavigatorStackEntryType
+		{
+			NavigatorStackEntryType(
+						XercesBridgeNavigator*	theNavigator = 0,
+						XalanNode*				theNode = 0) :
+				m_navigator(theNavigator),
+				m_node(theNode)
+			{
+			}
+
+			XercesBridgeNavigator*	m_navigator;
+
+			XalanNode*				m_node;
+		};
+
+	#if defined(XALAN_NO_NAMESPACES)
+		typedef vector<NavigatorStackEntryType>		NavigatorStackType;
+	#else
+		typedef std::vector<NavigatorStackEntryType>	NavigatorStackType;
+	#endif
+
+	protected:
+
+		virtual void
+		startNode(const DOM_Node&	node);
+
+		virtual void
+		endNode(const DOM_Node&	node);
+
+	private:
+
+		XercesDocumentBridge*		m_document;
+
+		NavigatorBridgeVectorType&	m_navigators;
+
+		unsigned long				m_currentIndex;
+
+		NavigatorStackType	m_parentNavigatorStack;
+
+		NavigatorStackType	m_siblingNavigatorStack;
+	};
+
 private:
 
 	XalanNode*
@@ -487,16 +557,6 @@ private:
 	mutable XercesToXalanNodeMap			m_nodeMap;
 
 	XalanAutoPtr<XalanDOMImplementation>	m_domImplementation;
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
-
-	typedef deque<XalanNode*>				NodeVectorType;
-#else
-	typedef std::deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
-
-	typedef std::deque<XalanNode*>				NodeVectorType;
-#endif
 
 	mutable NavigatorBridgeVectorType		m_navigators;
 

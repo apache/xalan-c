@@ -125,21 +125,32 @@ public:
 	public:
 
 		DeleteXPathFunctor(
-			XPathFactory&		theFactoryInstance) :
-			m_factoryInstance(theFactoryInstance)
+			XPathFactory&		theFactoryInstance,
+			bool				fInReset = false) :
+			m_factoryInstance(theFactoryInstance),
+			m_fInReset(fInReset)
 		{
 		}
 
 		result_type
 		operator()(argument_type	theXPath) const
 		{
-			m_factoryInstance.doReturnObject(theXPath,
-											 false);
+			if (m_fInReset == true)
+			{
+				m_factoryInstance.doReturnObject(theXPath,
+												 true);
+			}
+			else
+			{
+				m_factoryInstance.returnObject(theXPath);
+			}
 		}
 
 	private:
 
 		XPathFactory&		m_factoryInstance;
+
+		const bool			m_fInReset;
 	};
 
 	friend struct DeleteXPathFunctor;
@@ -150,43 +161,6 @@ protected:
 	doReturnObject(
 			const XPath*	theXPath,
 			bool			fInReset = false) = 0;
-
-	/**
-	 *
-	 * A functor for use with stl algorithms.
-	 *
-	 */
-#if defined(XALAN_NO_NAMESPACES)
-	struct ProtectedDeleteXPathFunctor : public unary_function<const XPath*, void>
-#else
-	struct ProtectedDeleteXPathFunctor : public std::unary_function<const XPath*, void>
-#endif
-	{
-	public:
-
-		ProtectedDeleteXPathFunctor(
-			XPathFactory&		theFactoryInstance,
-			bool				fInReset) :
-			m_factoryInstance(theFactoryInstance),
-			m_fInReset(fInReset)
-		{
-		}
-
-		result_type
-		operator()(argument_type	theXPath) const
-		{
-			m_factoryInstance.doReturnObject(theXPath,
-											 m_fInReset);
-		}
-
-	private:
-
-		XPathFactory&		m_factoryInstance;
-
-		const bool			m_fInReset;
-	};
-
-	friend struct ProtectedDeleteXPathFunctor;
 };
 
 

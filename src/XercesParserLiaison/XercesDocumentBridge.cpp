@@ -96,7 +96,6 @@
 #include "XercesNotationBridge.hpp"
 #include "XercesProcessingInstructionBridge.hpp"
 #include "XercesTextBridge.hpp"
-#include "XercesTreeWalker.hpp"
 
 
 
@@ -1678,66 +1677,6 @@ XercesDocumentBridge::getElementById(const XalanDOMString&	elementId) const
 
 
 
-// Helper class to walk the tree and build everything...
-class BuildBridgeTreeWalker : public XercesTreeWalker
-{
-public:
-
-	typedef XercesDocumentBridge::NavigatorBridgeVectorType		NavigatorBridgeVectorType;
-
-	BuildBridgeTreeWalker(
-			XercesDocumentBridge*		theDocument,
-			XercesBridgeNavigator*		theDocumentNavigator,
-			NavigatorBridgeVectorType&	theNavigators,
-			unsigned long				theStartIndex);
-
-	virtual
-	~BuildBridgeTreeWalker();
-
-protected:
-
-	virtual void
-	startNode(const DOM_Node&	node);
-
-	virtual void
-	endNode(const DOM_Node&	node);
-
-private:
-
-	XercesDocumentBridge*		m_document;
-
-	NavigatorBridgeVectorType&	m_navigators;
-
-	unsigned long				m_currentIndex;
-
-	struct NavigatorStackEntryType
-	{
-		NavigatorStackEntryType(
-					XercesBridgeNavigator*	theNavigator = 0,
-					XalanNode*				theNode = 0) :
-			m_navigator(theNavigator),
-			m_node(theNode)
-		{
-		}
-
-		XercesBridgeNavigator*	m_navigator;
-
-		XalanNode*				m_node;
-	};
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<NavigatorStackEntryType>		NavigatorStackType;
-#else
-	typedef std::vector<NavigatorStackEntryType>	NavigatorStackType;
-#endif
-
-	NavigatorStackType	m_parentNavigatorStack;
-
-	NavigatorStackType	m_siblingNavigatorStack;
-};
-
-
-
 void
 XercesDocumentBridge::buildBridgeNodes()
 {
@@ -1778,7 +1717,7 @@ XercesDocumentBridge::buildBridgeNodes()
 
 
 
-BuildBridgeTreeWalker::BuildBridgeTreeWalker(
+XercesDocumentBridge::BuildBridgeTreeWalker::BuildBridgeTreeWalker(
 			XercesDocumentBridge*		theDocument,
 			XercesBridgeNavigator*		theDocumentNavigator,
 			NavigatorBridgeVectorType&	theNavigators,
@@ -1804,14 +1743,14 @@ BuildBridgeTreeWalker::BuildBridgeTreeWalker(
 
 
 
-BuildBridgeTreeWalker::~BuildBridgeTreeWalker()
+XercesDocumentBridge::BuildBridgeTreeWalker::~BuildBridgeTreeWalker()
 {
 }
 
 
 
 void
-BuildBridgeTreeWalker::startNode(const DOM_Node&	node)
+XercesDocumentBridge::BuildBridgeTreeWalker::startNode(const DOM_Node&	node)
 {
 	XalanNode* const	theBridgeNode = m_document->createBridgeNode(node, m_currentIndex, false);
 
@@ -1947,7 +1886,7 @@ BuildBridgeTreeWalker::startNode(const DOM_Node&	node)
 
 
 void
-BuildBridgeTreeWalker::endNode(const DOM_Node&	/* node */)
+XercesDocumentBridge::BuildBridgeTreeWalker::endNode(const DOM_Node&	/* node */)
 {
 	assert(m_parentNavigatorStack.empty() == false);
 	assert(m_siblingNavigatorStack.empty() == false);

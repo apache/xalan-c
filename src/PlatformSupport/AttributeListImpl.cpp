@@ -74,7 +74,7 @@ AttributeListImpl::AttributeListImpl() :
 	m_AttributeKeyMap(),
 	m_AttributeVector()
 {
-		m_AttributeVector.reserve(eDefaultVectorSize);
+	m_AttributeVector.reserve(eDefaultVectorSize);
 }
 
 
@@ -360,6 +360,10 @@ AttributeListImpl::addAttribute(
 			const XMLCh*	type,
 			const XMLCh*	value)
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::copy;
+#endif
+
 	assert(name != 0);
 	assert(type != 0);
 	assert(value != 0);
@@ -373,12 +377,39 @@ AttributeListImpl::addAttribute(
 
 	if (i != m_AttributeKeyMap.end())
 	{
-		// Create the new vectors, then swap them...
-		XMLChVectorType		theNewType(type, endArray(type) + 1);
-		XMLChVectorType		theNewValue(value, endArray(value) + 1);
+		// This is a special optimization for type, since it's (almost) always "CDATA".
+		if (equals(type, (*i).second->m_Type.begin()) == false)
+		{
+			// If necessary, create the a new vector and swap them.  Otherwise,
+			// just copy the new data in.
+			const XMLCh* const	theNewTypeEnd = endArray(type) + 1;
 
-		theNewType.swap((*i).second->m_Type);
-		theNewValue.swap((*i).second->m_Value); 
+			if ((*i).second->m_Type.capacity() < XMLChVectorType::size_type(theNewTypeEnd - type))
+			{
+				XMLChVectorType		theNewType(type, theNewTypeEnd);
+
+				theNewType.swap((*i).second->m_Type);
+			}
+			else
+			{
+				copy(type, theNewTypeEnd, (*i).second->m_Type.begin());
+			}
+		}
+
+		const XMLCh* const	theNewValueEnd = endArray(value) + 1;
+
+		// If necessary, create the a new vector and swap them.  Otherwise,
+		// just copy the new data in.
+		if ((*i).second->m_Value.capacity() < XMLChVectorType::size_type(theNewValueEnd - value))
+		{
+			XMLChVectorType		theNewValue(value, theNewValueEnd);
+
+			theNewValue.swap((*i).second->m_Value); 
+		}
+		else
+		{
+			copy(value, theNewValueEnd, (*i).second->m_Value.begin());
+		}
 	}
 	else
 	{

@@ -109,8 +109,8 @@ public:
 								   context);
 		}
 
-		const XalanDOMString	arg1 = args[0]->str();
-		const XalanDOMString	arg2 = args[1]->str();
+		const XalanDOMString&	arg1 = args[0]->str();
+		const XalanDOMString&	arg2 = args[1]->str();
 
 		bool					fResult = true;
 

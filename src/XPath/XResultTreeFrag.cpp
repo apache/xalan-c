@@ -77,7 +77,7 @@
 
 
 XResultTreeFrag::XResultTreeFrag(ResultTreeFragBase*	val) :
-	XObject(),
+	XObject(eTypeResultTreeFrag),
 	NodeRefListBase(),
 	m_value(val),
 	m_cachedStringValue(),
@@ -115,14 +115,6 @@ XResultTreeFrag::clone(void*	theAddress) const
 {
 	return theAddress == 0 ? new XResultTreeFrag(*this) : new (theAddress) XResultTreeFrag(*this);
 };
-
-
-
-XResultTreeFrag::eObjectType
-XResultTreeFrag::getType() const
-{
-	return eTypeResultTreeFrag;
-}
 
 
 
@@ -188,7 +180,7 @@ XResultTreeFrag::boolean() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XResultTreeFrag::str() const
 {
 	if (isEmpty(m_cachedStringValue) == true)

@@ -568,7 +568,7 @@ XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings) co
 
 								if(tokenIndex >= 0)
 								{
-									const XalanDOMString	targetName =
+									const XalanDOMString&	targetName =
 										m_expression.m_tokenQueue[tokenIndex].str();
 
 									if(::equals(targetName, PSEUDONAME_ANY) == true)
@@ -1324,11 +1324,11 @@ XPath::runExtFunction(
 
 	opPos += 2;
 
-	const XalanDOMString	ns = m_expression.m_tokenQueue[m_expression.m_opMap[opPos]].str();
+	const XalanDOMString&	ns = m_expression.m_tokenQueue[m_expression.m_opMap[opPos]].str();
 
 	opPos++;
 
-	const XalanDOMString	funcName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos]].str();
+	const XalanDOMString&	funcName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos]].str();
 
 	opPos++;
 

@@ -557,16 +557,15 @@ public:
 	 * @param ref              value that must match the value found by the
 	 *                         'match' attribute on xsl:key
 	 * @param resolver         resolver for namespace resolution
-	 * @return if the name was not declared with xsl:key, this will return
-	 *         null, if the identifier is not found, it will return an empty
-	 *         node set, otherwise it will return a nodeset of nodes.
+	 * @param nodelist         A node list to contain the nodes found
 	 */
-	virtual const NodeRefListBase*
+	virtual void
 	getNodeSetByKey(
 			XalanNode*				doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver) = 0;
+			const PrefixResolver&	resolver,
+			MutableNodeRefList&		nodelist) = 0;
 
 	/**
 	 * Given a name, locate a variable in the current context, and return 

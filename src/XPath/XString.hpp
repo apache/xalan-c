@@ -115,9 +115,6 @@ public:
 #endif
 	clone(void*		theAddress = 0) const;
 
-	virtual	eObjectType
-	getType() const;
-
 	virtual XalanDOMString
 	getTypeString() const;
   
@@ -127,7 +124,7 @@ public:
 	virtual bool
 	boolean() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	str() const;
   
 	virtual const ResultTreeFragBase&

@@ -466,14 +466,14 @@ XPathExecutionContextDefault::getProcessNamespaces() const
 
 
 
-const NodeRefListBase*
+void
 XPathExecutionContextDefault::getNodeSetByKey(
 			XalanNode*				/* doc */,
 			const XalanDOMString&	/* name */,
 			const XalanDOMString&	/* ref */,
-			const PrefixResolver&	/* resolver */)
+			const PrefixResolver&	/* resolver */,
+			MutableNodeRefList&		/* nodelist */)
 {
-	return 0;
 }
 
 

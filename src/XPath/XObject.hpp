@@ -88,11 +88,25 @@ class XALAN_XPATH_EXPORT XObject
 public:
 
 	/**
+	 * Enumeration of possible object types
+	 */
+	enum	eObjectType { eTypeNull = 0,
+						  eTypeUnknown = 1,
+						  eTypeBoolean = 2,
+						  eTypeNumber = 3,
+						  eTypeString = 4,
+						  eTypeNodeSet = 5,
+						  eTypeResultTreeFrag = 6,
+						  eTypeUserDefined = 7,
+						  eUnknown
+						};
+
+	/**
 	 * Create an XObject.
 	 *
+	 * @param theObjectType The enum for the type of the object.
 	 */
-	explicit
-	XObject();
+	XObject(eObjectType		theObjectType);
 
 	XObject(const XObject&	source);
 
@@ -135,7 +149,7 @@ public:
 	 *
 	 * @return string value
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	str() const;
 
 	/**
@@ -230,26 +244,15 @@ public:
 	greaterThanOrEqual(const XObject&	theRHS) const;
 
 	/**
-	 * Enumeration of possible object types
-	 */
-	enum	eObjectType { eTypeNull = 0,
-						  eTypeUnknown = 1,
-						  eTypeBoolean = 2,
-						  eTypeNumber = 3,
-						  eTypeString = 4,
-						  eTypeNodeSet = 5,
-						  eTypeResultTreeFrag = 6,
-						  eTypeUserDefined = 7,
-						  eUnknown
-						};
-
-	/**
 	 * Tell what kind of class this is.
 	 *
 	 * @return numeric type value
 	 */
-	virtual	eObjectType
-	getType() const = 0;
+	eObjectType
+	getType() const
+	{
+		return m_objectType;
+	}
 
 	// All XObject instances are controlled by an instance of an XObjectFactory.
 	friend class XObjectFactory;
@@ -309,11 +312,15 @@ protected:
 	virtual
 	~XObject();
 
+	static const XalanDOMString		s_nullString;
+
 private:
 
 	// Not implemented...
 	XObject&
 	operator=(const XObject&);
+
+	const eObjectType	m_objectType;
 };
 
 

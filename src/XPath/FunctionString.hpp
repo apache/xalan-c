@@ -103,7 +103,7 @@ public:
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
-		XalanDOMString	theResult;
+		XObject*		theResult = 0;
 
 		const XObjectArgVectorType::size_type	theSize = args.size();
 
@@ -121,18 +121,20 @@ public:
 			}
 			else
 			{
-				theResult = getDefaultStringArgument(executionContext,
-													 *context);
+				theResult = executionContext.getXObjectFactory().createString(
+									getDefaultStringArgument(
+											executionContext,
+											*context));
 			}
 		}
 		else
 		{
 			assert(args[0] != 0);
 
-			theResult = args[0]->str();
+			theResult = executionContext.getXObjectFactory().createString(args[0]->str());
 		}
 
-		return executionContext.getXObjectFactory().createString(theResult);
+		return theResult;
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

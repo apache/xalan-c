@@ -67,8 +67,14 @@
 
 
 
+XalanDOMString	XBoolean::s_falseString;
+
+XalanDOMString	XBoolean::s_trueString;
+
+
+
 XBoolean::XBoolean(bool		val) :
-	XObject(),
+	XObject(eTypeBoolean),
 	m_value(val)
 {
 }
@@ -101,14 +107,6 @@ XBoolean::clone(void*	theAddress) const
 
 
 
-XBoolean::eObjectType
-XBoolean::getType() const
-{
-	return eTypeBoolean;
-}
-
-
-
 XalanDOMString
 XBoolean::getTypeString() const
 {
@@ -133,11 +131,10 @@ XBoolean::boolean() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XBoolean::str() const
 {
-	return m_value == true ? XALAN_STATIC_UCODE_STRING("true") :
-							 XALAN_STATIC_UCODE_STRING("false");
+	return m_value == true ? s_trueString : s_falseString;
 }
 
 
@@ -156,4 +153,22 @@ XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) con
 {
 	theCallbackObject.Boolean(*this,
 							  boolean());
+}
+
+
+
+void
+XBoolean::initialize()
+{
+	s_falseString = XALAN_STATIC_UCODE_STRING("false");
+	s_trueString = XALAN_STATIC_UCODE_STRING("true");
+}
+
+
+
+void
+XBoolean::terminate()
+{
+	clear(s_falseString);
+	clear(s_trueString);
 }

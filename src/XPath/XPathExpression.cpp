@@ -250,6 +250,7 @@ XPathExpression::InvalidRelativeTokenPosition::FormatErrorMessage(int	theOffset)
 
 
 XPathExpression::XToken::XToken() :
+	XObject(eTypeString),
 	m_stringValue(),
 	m_numberValue(DoubleSupport::getNaN())
 {
@@ -258,6 +259,7 @@ XPathExpression::XToken::XToken() :
 
 
 XPathExpression::XToken::XToken(const XalanDOMString&	theString) :
+	XObject(eTypeString),
 	m_stringValue(theString),
 	m_numberValue(DoubleSupport::toDouble(theString))
 {
@@ -265,7 +267,8 @@ XPathExpression::XToken::XToken(const XalanDOMString&	theString) :
 
 
 
-	XPathExpression::XToken::XToken(double	theNumber) :
+XPathExpression::XToken::XToken(double	theNumber) :
+	XObject(eTypeString),
 	m_stringValue(DoubleToDOMString(theNumber)),
 	m_numberValue(theNumber)
 {
@@ -274,6 +277,7 @@ XPathExpression::XToken::XToken(const XalanDOMString&	theString) :
 
 
 XPathExpression::XToken::XToken(const XToken&	theSource) :
+	XObject(theSource),
 	m_stringValue(theSource.m_stringValue),
 	m_numberValue(theSource.m_numberValue)
 {
@@ -315,7 +319,7 @@ XPathExpression::XToken::num() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XPathExpression::XToken::str() const
 {
 	return m_stringValue;
@@ -335,14 +339,6 @@ void
 XPathExpression::XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
 	theCallbackObject.String(*this, m_stringValue);
-}
-
-
-
-XPathExpression::XToken::eObjectType
-XPathExpression::XToken::getType() const
-{
-	return eTypeString;
 }
 
 

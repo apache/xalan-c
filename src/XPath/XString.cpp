@@ -75,7 +75,7 @@
 
 
 XString::XString(const XalanDOMString&	val) :
-	XObject(),
+	XObject(eTypeString),
 	m_value(val),
 	m_cachedNumberValue(0.0),
 	m_resultTreeFrag(0)
@@ -114,14 +114,6 @@ XString::clone(void*	theAddress) const
 
 
 
-XString::eObjectType
-XString::getType() const
-{
-	return eTypeString;
-}
-
-
-
 XalanDOMString
 XString::getTypeString() const
 {
@@ -155,7 +147,7 @@ XString::boolean() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XString::str() const
 {
 	return m_value;

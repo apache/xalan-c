@@ -244,6 +244,22 @@ public:
 	virtual void
 	reset();
 
+	// Delete functor for table cleanup...
+	struct NamespaceFunctionTableDeleteFunctor
+	{
+		typedef FunctionTableType				FunctionTableType;
+		typedef NamespaceFunctionTablesType		NamespaceFunctionTablesType;
+
+		/**
+		 * Delete the value object in a map value pair.  The value of the pair must
+		 * be of pointer type.
+		 *
+		 * @param thePair key-value pair
+		 */
+		void
+		operator()(const NamespaceFunctionTablesType::value_type&	thePair) const;
+	};
+
 protected:
 
 	/**

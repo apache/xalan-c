@@ -186,6 +186,7 @@ namespace XalanUnicode
 		charLetter_s			= 0x73,
 		charLetter_t			= 0x74,
 		charLetter_u			= 0x75,
+		charLetter_y			= 0x79,
 
 		charLeftCurlyBracket	= 0x7B,
 
@@ -304,6 +305,7 @@ namespace XalanUnicode
 	static const XalanDOMChar	charLetter_s			= 0x73;
 	static const XalanDOMChar	charLetter_t			= 0x74;
 	static const XalanDOMChar	charLetter_u			= 0x75;
+	static const XalanDOMChar	charLetter_y			= 0x79;
 
 	static const XalanDOMChar	charLeftCurlyBracket	= 0x7B;
 

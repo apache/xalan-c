@@ -68,8 +68,8 @@
 
 
 XUnknown::XUnknown(const XalanDOMString&	name) :
-	XObject(),
-	m_name(name)
+	XObject(eTypeUnknown),
+	m_value(XALAN_STATIC_UCODE_STRING("Unknown variable: ") + name)
 {
 }
 
@@ -77,7 +77,7 @@ XUnknown::XUnknown(const XalanDOMString&	name) :
 
 XUnknown::XUnknown(const XUnknown&	source) :
 	XObject(source),
-	m_name(source.m_name)
+	m_value(source.m_value)
 {
 }
 
@@ -98,14 +98,6 @@ XUnknown::clone(void*	theAddress) const
 {
 	return theAddress == 0 ? new XUnknown(*this) : new (theAddress) XUnknown(*this);
 };
-
-
-
-XUnknown::eObjectType
-XUnknown::getType() const
-{
-	return eTypeUnknown;
-}
 
 
 
@@ -133,10 +125,10 @@ XUnknown::boolean() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XUnknown::str() const
 {
-	return XalanDOMString(XALAN_STATIC_UCODE_STRING("Unknown variable: ")) + m_name;
+	return m_value;
 }
 
 
@@ -145,7 +137,7 @@ void
 XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
 	theCallbackObject.Unknown(*this,
-							  m_name);
+							  m_value);
 }
 
 
@@ -154,5 +146,5 @@ void
 XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
 	theCallbackObject.Unknown(*this,
-							  m_name);
+							  m_value);
 }

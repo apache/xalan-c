@@ -79,7 +79,9 @@
 
 
 
-SimpleNodeLocator	SimpleNodeLocator::s_defaultInstance;
+SimpleNodeLocator		SimpleNodeLocator::s_defaultInstance;
+
+const XalanDOMString	SimpleNodeLocator::s_emptyString;
 
 
 
@@ -612,11 +614,7 @@ SimpleNodeLocator::findNodeSet(
 
 	const NodeRefListBase&	nl = obj->nodeset();
 
-	// Should this be adding in doc order?
-	// We can not simply assign the nl value to 
-	// subQueryResults, because nl may be a ref to 
-	// a variable or the like, and we may mutate 
-	// below... which results in a hard-to-find bug!
+	// $$$ ToDo: Should this be adding in doc order?
 	subQueryResults.addNodes(nl);
 
 	return currentExpression.getOpCodeLength(opPos);
@@ -1435,9 +1433,9 @@ SimpleNodeLocator::nodeTest(
 
 				int 					queueIndex = currentExpression.getOpCodeMapValue(opPos);
 
-				const XalanDOMString	targetNS = queueIndex >= 0 ?
+				const XalanDOMString&	targetNS = queueIndex >= 0 ?
 										currentExpression.getToken(queueIndex)->str() :
-											XalanDOMString();
+											s_emptyString;
 
 				opPos++;
 
@@ -1486,8 +1484,8 @@ SimpleNodeLocator::nodeTest(
 
 				if(test == true)
 				{
-					const XalanDOMString	targetLocalName =
-								queueIndex >= 0 ? currentExpression.getToken(queueIndex)->str() : XalanDOMString();
+					const XalanDOMString&	targetLocalName =
+								queueIndex >= 0 ? currentExpression.getToken(queueIndex)->str() : s_emptyString;
 
 					switch(nodeType)
 					{

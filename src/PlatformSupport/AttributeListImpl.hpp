@@ -174,18 +174,6 @@ public:
 		m_AttributeVector.reserve(theCount);
 	}
 
-protected:
-
-	// This is not implemented.
-    bool
-	operator==(const AttributeListImpl&) const;
-
-	// Default vector allocation size.
-	enum
-	{
-		eDefaultVectorSize = 5
-	};
-
 	// A struct to hold information about each attribute.
 	struct AttributeVectorEntry
 	{
@@ -230,6 +218,18 @@ protected:
 					 AttributeVectorEntry*,
 					 less_null_terminated_arrays<XMLCh> >	AttributeKeyMapType;
 #endif
+
+private:
+
+	// This is not implemented.
+    bool
+	operator==(const AttributeListImpl&) const;
+
+	// Default vector allocation size.
+	enum
+	{
+		eDefaultVectorSize = 5
+	};
 
 	// Helper function to delete entries...
 	static void

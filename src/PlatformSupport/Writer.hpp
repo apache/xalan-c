@@ -73,6 +73,10 @@
 
 
 
+class TextOutputStream;
+
+
+
 class XALAN_PLATFORMSUPPORT_EXPORT Writer
 {
 public:
@@ -93,6 +97,19 @@ public:
 	 */
 	virtual void
 	flush() = 0;
+
+
+	/**
+	 * Get the stream associated with the writer...
+	 */
+	virtual TextOutputStream*
+	getStream();
+
+	/**
+	 * Get the stream associated with the writer...
+	 */
+	virtual const TextOutputStream*
+	getStream() const;
 
 
 	// Output functions

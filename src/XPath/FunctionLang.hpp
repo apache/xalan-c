@@ -119,7 +119,7 @@ public:
 
 		bool					fMatch = false;
 
-		const XalanDOMString	lang(args[0]->str());
+		const XalanDOMString&	lang = args[0]->str();
 
 		while(0 != parent)
 		{

@@ -109,9 +109,9 @@ public:
 								   context);
 		}
 
-		const XalanDOMString	theFirstString = args[0]->str();
-		const XalanDOMString	theSecondString = args[1]->str();
-		const XalanDOMString	theThirdString = args[2]->str();
+		const XalanDOMString&	theFirstString = args[0]->str();
+		const XalanDOMString&	theSecondString = args[1]->str();
+		const XalanDOMString&	theThirdString = args[2]->str();
 
 		const unsigned int		theFirstStringLength = length(theFirstString);
 		const unsigned int		theSecondStringLength = length(theSecondString);
@@ -123,12 +123,12 @@ public:
 
 		// A vector to contain the new characters.  We'll use it to construct
 		// the result string.
-		vector<XalanDOMChar>	theVector;
+		vector<XalanDOMChar>	theBuffer;
 
 		// The result string can only be as large as the first string, so
 		// just reserve the space now.  Also reserve space for the
 		// terminating 0.
-		theVector.reserve(theFirstStringLength + 1);
+		theBuffer.reserve(theFirstStringLength + 1);
 
 		for (unsigned int i = 0; i < theFirstStringLength; i++)
 		{
@@ -140,13 +140,13 @@ public:
 			{
 				// Didn't find the character in the second string, so it
 				// is not translated.
-				theVector.push_back(theCurrentChar);
+				theBuffer.push_back(theCurrentChar);
 			}
 			else if (theIndex < theThirdStringLength)
 			{
 				// OK, there's a corresponding character in the
 				// third string, so do the translation...
-				theVector.push_back(charAt(theThirdString, theIndex));
+				theBuffer.push_back(charAt(theThirdString, theIndex));
 			}
 			else
 			{
@@ -158,10 +158,7 @@ public:
 			}
 		}
 
-		// Push a terminating 0.
-		theVector.push_back(0);
-
-		return executionContext.getXObjectFactory().createString(XalanDOMString(theVector.begin()));
+		return executionContext.getXObjectFactory().createString(XalanDOMString(theBuffer.begin(), theBuffer.size()));
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

@@ -72,7 +72,6 @@
 #include <iosfwd>
 #endif
 #include <vector>
-#include <string>
 
 #if defined(XALAN_LSTRSUPPORT)
 #include <cwchar>
@@ -153,8 +152,8 @@ reserve(
 	theString.reserve(theCount);
 }
 
- 
- 
+
+
 /**
  * Get the underlying representation of the target XalanDOMString as a
  * null-terminated string
@@ -664,6 +663,38 @@ DOMStringToDouble(const XalanDOMString&		theString)
 
 
 
+// Standard vector of XalanDOMChars and chars
+#if defined(XALAN_NO_NAMESPACES)
+typedef vector<XalanDOMChar>		XalanDOMCharVectorType;
+
+typedef vector<char>				CharVectorType;
+#else
+typedef std::vector<XalanDOMChar>	XalanDOMCharVectorType;
+
+typedef std::vector<char>			CharVectorType;
+#endif
+
+
+
+/**
+ * Get the underlying representation of the target CharVectorType as a
+ * null-terminated string
+ * 
+ * @param theString target string
+ * @return null-terminated string of chars
+ */
+inline const char*
+c_str(const CharVectorType&		theString)
+{
+	const char* const	ptr = &theString[0];
+
+	assert(!ptr || ptr[theString.size() - 1] == '\0');
+
+	return ptr;
+}
+
+
+
 /**
  * Outputs the target string to the specified stream
  * 
@@ -674,7 +705,7 @@ DOMStringToDouble(const XalanDOMString&		theString)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
 			TextOutputStream&		theStream,
-			const XalanDOMString&	theString);
+			const CharVectorType&	theString);
 
 
 
@@ -688,11 +719,174 @@ OutputString(
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
 #if defined(XALAN_NO_NAMESPACES)
-			 ostream&				theStream,
+			ostream&				theStream,
 #else
-			 std::ostream&			theStream,
+			std::ostream&			theStream,
 #endif
-			 const XalanDOMString&	theString);
+			const CharVectorType&	theString);
+
+
+
+/**
+ * Outputs the target string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString target string
+ * @see operator<<
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+OutputString(
+			TextOutputStream&		theStream,
+			const XalanDOMChar*		theString);
+
+
+
+/**
+ * Outputs the target string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString target string
+ * @see operator<<
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+OutputString(
+#if defined(XALAN_NO_NAMESPACES)
+			ostream&				theStream,
+#else
+			std::ostream&			theStream,
+#endif
+			const XalanDOMChar*		theString);
+
+
+
+/**
+ * Outputs the target string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString target string
+ * @see operator<<
+ */
+inline void
+OutputString(
+			TextOutputStream&		theStream,
+			const XalanDOMString&	theString)
+{
+	if (isEmpty(theString) == false)
+	{
+		OutputString(theStream, c_wstr(theString));
+	}
+}
+
+
+
+/**
+ * Outputs the target string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString target string
+ * @see operator<<
+ */
+inline void
+OutputString(
+#if defined(XALAN_NO_NAMESPACES)
+			ostream&				theStream,
+#else
+			std::ostream&			theStream,
+#endif
+			const XalanDOMString&	theString)
+{
+	OutputString(theStream, c_wstr(theString));
+}
+
+
+
+/**
+ * Outputs the string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString the string to output
+ * @see OutputString
+ */
+inline TextOutputStream&
+operator<<(
+			TextOutputStream&		theStream,
+			const CharVectorType&	theString)
+{
+	OutputString(theStream, theString);
+
+	return theStream;
+}
+
+
+
+/**
+ * Outputs the string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString the string to output
+ * @see OutputString
+ */
+#if defined(XALAN_NO_NAMESPACES)
+inline ostream&
+operator<<(
+			ostream&				theStream,
+#else
+inline std::ostream&
+operator<<(
+			std::ostream&			theStream,
+#endif
+			const CharVectorType&	theString)
+{
+	OutputString(theStream, theString);
+
+	return theStream;
+}
+
+
+
+/**
+ * Outputs the target string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString target string
+ * @see OutputString
+ */
+inline TextOutputStream&
+operator<<(
+			TextOutputStream&		theStream,
+			const XalanDOMChar*		theString)
+{
+	OutputString(theStream,
+				 theString);
+
+	return theStream;
+}
+
+
+
+/**
+ * Outputs the target string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString target string
+ * @see OutputString
+ */
+#if defined(XALAN_NO_NAMESPACES)
+inline ostream&
+operator<<(
+			ostream&				theStream,
+#else
+inline std::ostream&
+operator<<(
+			std::ostream&			theStream,
+#endif
+			const XalanDOMChar*		theString)
+{
+	OutputString(theStream,
+				 theString);
+
+	return theStream;
+}
 
 
 
@@ -903,6 +1097,22 @@ operator!=(
 
 
 
+/**
+ * Compare the contents of two strings.
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ * @see operator<()
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+compare(
+			const CharVectorType&	theLHS,
+			const CharVectorType&	theRHS);
+
+
+
 // For the time being, we're using our own custom routine,
 // since performance is better.
 
@@ -934,6 +1144,24 @@ compare(
 			const XalanDOMChar*		theRHS);
 
 #endif
+
+
+
+/**
+ * Compare the contents of two strings, in a case insensitive
+ * manner
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ * @see operator<
+ * @see collationCompare
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+compareIgnoreCase(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS);
 
 
 
@@ -987,6 +1215,24 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compare(
 			const XalanDOMString&	theLHS,
 			const XalanDOMString&	theRHS);
+
+
+/**
+ * Compare the contents of two strings, in a case insensitive
+ * manner
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ * @see operator<
+ * @see collationCompare
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+compareIgnoreCase(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS);
+
 
 
 /**
@@ -1158,6 +1404,25 @@ equalsIgnoreCase(
 
 
 /**
+ * Implements operator< for CharVectorType.
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns true if theLHS is lexically
+ * less than theRHS
+ * @see compare
+ */
+inline bool
+operator<(
+			const CharVectorType&	theLHS,
+			const CharVectorType&	theRHS)
+{
+	return compare(theLHS, theRHS) < 0 ? true : false;
+}
+
+
+
+/**
  * Implements operator< for DOMStrings.
  * 
  * @param theLHS first string to compare
@@ -1223,23 +1488,17 @@ clear(XalanDOMString&	theString)
 
 
 
-// A standard vector of XalanChars
-#if defined(XALAN_NO_NAMESPACES)
-typedef vector<XalanDOMChar>		XalanDOMCharVectorType;
-
-typedef vector<char>				CharVectorType;
-#else
-typedef std::vector<XalanDOMChar>	XalanDOMCharVectorType;
-
-typedef std::vector<char>			CharVectorType;
-#endif
-
-
-
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 CopyWideStringToVector(
 			const XalanDOMChar*		theString,
 			CharVectorType&			theVector);
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+CopyStringToVector(
+			const char*			theString,
+			CharVectorType&		theVector);
 
 
 
@@ -1361,6 +1620,28 @@ compare(
 			const XalanDOMCharVectorType&	theRHS)
 {
 	return compare(&theLHS[0], &theRHS[0]);
+}
+
+
+
+/**
+ * Compare the contents of two XalanDOMCharVectorTypes, in a case insensitive
+ * manner
+ * 
+ * @param theLHS first vector to compare
+ * @param theRHS second vector to compare
+ * @return Returns 0 for equal vectors, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ * @see operator<
+ * @see collationCompare
+ */
+inline int
+compareIgnoreCase(
+
+			const XalanDOMCharVectorType&	theLHS,
+			const XalanDOMCharVectorType&	theRHS)
+{
+	return compareIgnoreCase(&theLHS[0], &theRHS[0]);
 }
 
 
@@ -1521,6 +1802,29 @@ struct DOMStringEqualsFunction : public std::binary_function<const XalanDOMStrin
 
 
 /**
+ * Case-insensitive equals functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are equal, without respect to case
+ */
+#if defined(XALAN_NO_NAMESPACES)
+struct DOMStringEqualsIgnoreCaseFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#else
+struct DOMStringEqualsIgnoreCaseFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#endif
+{
+	result_type
+	operator() (first_argument_type		theLHS,
+				second_argument_type	theRHS) const
+	{
+		return equalsIgnoreCase(theLHS, theRHS);
+	}
+};
+
+
+
+/**
  * Not equals functor for DOMStrings
  * 
  * @param theLHS first string to compare
@@ -1548,7 +1852,7 @@ struct DOMStringNotEqualsFunction : public std::binary_function<const XalanDOMSt
  * 
  * @param theLHS first string to compare
  * @param theRHS second string to compare
- * @return true if the contents of both strings are identical
+ * @return true if the theLHS is less than theRHSl
  */
 #if defined(XALAN_NO_NAMESPACES)
 struct DOMStringLessThanFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
@@ -1567,11 +1871,34 @@ struct DOMStringLessThanFunction : public std::binary_function<const XalanDOMStr
 
 
 /**
+ * Less than functor for DOMStrings which ignores case
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the theLHS is less than theRHS, without respect to case.
+ */
+#if defined(XALAN_NO_NAMESPACES)
+struct DOMStringLessThanIgnoreCaseFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#else
+struct DOMStringLessThanIgnoreCaseFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#endif
+{
+	result_type
+	operator() (first_argument_type		theLHS,
+				second_argument_type	theRHS) const
+	{
+		return compareIgnoreCase(theLHS, theRHS) < 0 ? true : false;
+	}
+};
+
+
+
+/**
  * Less than or equal functor for DOMStrings
  * 
  * @param theLHS first string to compare
  * @param theRHS second string to compare
- * @return true if the contents of both strings are identical
+ * @return true if the theLHS is less than or equal to theRHS
  */
 #if defined(XALAN_NO_NAMESPACES)
 struct DOMStringLessThanOrEqualFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
@@ -1594,7 +1921,7 @@ struct DOMStringLessThanOrEqualFunction : public std::binary_function<const Xala
  * 
  * @param theLHS first string to compare
  * @param theRHS second string to compare
- * @return true if the contents of both strings are identical
+ * @return true if the theLHS is greater than theRHS
  */
 #if defined(XALAN_NO_NAMESPACES)
 struct DOMStringGreaterThanFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
@@ -1617,7 +1944,7 @@ struct DOMStringGreaterThanFunction : public std::binary_function<const XalanDOM
  * 
  * @param theLHS first string to compare
  * @param theRHS second string to compare
- * @return true if the contents of both strings are identical
+ * @return true if the theLHS is greater than or equal to theRHS
  */
 #if defined(XALAN_NO_NAMESPACES)
 struct DOMStringGreaterThanOrEqualFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
@@ -1636,17 +1963,79 @@ struct DOMStringGreaterThanOrEqualFunction : public std::binary_function<const X
 
 
 /**
- * Convert XalanDOMString to C++ standard library string
+ * Convert XalanDOMString to C++ standard library
+ * vector, transcoding to the default local code
+ * page.
  * 
- * @param theString target string
- * @return C++ standard library string representation of target
+ * @param sourceString The source string
+ * @param targetVector The target string
+ * @param terminate If true, the transcoded string will be null-terminated
+ * @return true if successful, false if not.
  */
-#if defined(XALAN_NO_NAMESPACES)
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(string)
-#else
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(std::string)
-#endif
-DOMStringToStdString(const XalanDOMString&	domString);
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+TranscodeToLocalCodePage(
+			const XalanDOMChar*		sourceString,
+			CharVectorType&			targetVector,
+			bool					terminate = false);
+
+
+
+/**
+ * Convert XalanDOMString to C++ standard library
+ * vector, transcoding to the default local code
+ * page.  Null-terminate the sttring...
+ *
+ * @param theSourceString source string
+ * @return The transcoded string.
+ */
+inline const CharVectorType
+TranscodeToLocalCodePage(const XalanDOMChar*	sourceString)
+{
+	CharVectorType	theResult;
+
+	TranscodeToLocalCodePage(sourceString, theResult, true);
+
+	return theResult;
+}
+
+
+
+/**
+ * Convert XalanDOMString to C++ standard library
+ * vector, transcoding to the default local code
+ * page.
+ * 
+ * @param sourceString The source string
+ * @param targetVector The target string
+ * @return true if successful, false if not.
+ */
+inline bool
+TranscodeToLocalCodePage(
+			const XalanDOMString&	sourceString,
+			CharVectorType&			targetVector)
+{
+	return TranscodeToLocalCodePage(c_wstr(sourceString), targetVector);
+}
+
+
+
+/**
+ * Convert XalanDOMString to C++ standard library
+ * vector, transcoding to the default local code
+ * page.
+ *
+ * @param theSourceString source string
+ * @return The transcoded string.
+ */
+inline const CharVectorType
+TranscodeToLocalCodePage(const XalanDOMString&	sourceString)
+{
+	CharVectorType	theResult;
+
+	TranscodeToLocalCodePage(sourceString, theResult);
+
+	return theResult;
+}
 
 
 

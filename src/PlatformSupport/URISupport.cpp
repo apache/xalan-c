@@ -77,14 +77,8 @@ URISupport::getURLFromString(const XalanDOMString&	urlString)
 {
 	URLAutoPtrType	url(new XMLURL);
 
-	try 
-	{
-		url->setURL(c_wstr(getURLStringFromString(urlString)));
-	}
-	catch (...)
-	{
-		throw ("Error! Cannot create url for: " + urlString);
-	}
+	url->setURL(c_wstr(getURLStringFromString(urlString)));
+
 	return url;
 }
 
@@ -267,8 +261,8 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 		replace(
 				theVector.begin(),
 				theVector.end(),
-				XalanUnicode::charReverseSolidus,
-				XalanUnicode::charSolidus);
+				XalanDOMCharVectorType::value_type(XalanUnicode::charReverseSolidus),
+				XalanDOMCharVectorType::value_type(XalanUnicode::charSolidus));
 
 		uriString = XalanDOMString(&theVector[0]);
 	}

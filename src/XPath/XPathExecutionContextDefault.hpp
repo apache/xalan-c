@@ -225,12 +225,13 @@ public:
 	virtual bool
 	getProcessNamespaces() const;
 
-	virtual const NodeRefListBase*
+	virtual void
 	getNodeSetByKey(
 			XalanNode*				doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver);
+			const PrefixResolver&	resolver,
+			MutableNodeRefList&		nodelist);
 
 	virtual const XObject*
 	getVariable(
@@ -303,8 +304,6 @@ public:
 			const XalanNode* 		sourceNode = 0,
 			const XalanNode*		styleNode = 0) const;
 
-protected:
-
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<MutableNodeRefList*>			NodeRefListCacheType;
 	typedef deque<XObjectArgVectorType>			XObjectArgVectorStackType;
@@ -314,6 +313,8 @@ protected:
 #endif
 
 	typedef XObjectArgVectorStackType::iterator		ArgVectorStackIteratorType;
+
+protected:
 
 	enum { eMutableNodeRefListCacheMax = 50,
 		   eArgVectorStackMax = 25,

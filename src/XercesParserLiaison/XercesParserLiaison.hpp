@@ -374,6 +374,15 @@ public:
 	virtual void
 	resetErrors();
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<const XalanDocument*,
+				XercesDocumentBridge*,
+				less<const XalanDocument*> >	DocumentMapType;
+#else
+	typedef std::map<const XalanDocument*,
+					 XercesDocumentBridge*>		DocumentMapType;
+#endif
+
 protected:
 
 	virtual DOMParser*
@@ -395,15 +404,6 @@ protected:
 			bool					buildBridge);
 
 private:
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<const XalanDocument*,
-				XercesDocumentBridge*,
-				less<const XalanDocument*> >	DocumentMapType;
-#else
-	typedef std::map<const XalanDocument*,
-					 XercesDocumentBridge*>		DocumentMapType;
-#endif
 
 	// Data members...
 	DOMSupport& 		m_DOMSupport;

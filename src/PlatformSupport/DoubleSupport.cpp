@@ -58,14 +58,18 @@
 
 
 #if defined(NO_STD_LIMITS)
-#if defined(__GNUC__)
-#include <math.h>
-#include <bits/nan.h>
+#	if defined(__GNUC__)
+#		include <math.h>
+#		if defined(SOLARIS)
+#			include <nan.h>
+#		else
+#			include <bits/nan.h>
+#		endif
+#	else
+#		error Unsupported platform!!!
+#	endif
 #else
-#error Unsupported platform!!!
-#endif
-#else
-#include <limits>
+#	include <limits>
 #endif
 
 
@@ -76,13 +80,21 @@
 
 
 #if defined(NO_STD_LIMITS)
-#if defined(__GNUC__)
-const double	DoubleSupport::s_NaN = NAN;
-const double	DoubleSupport::s_positiveInfinity = HUGE_VAL;
-const double	DoubleSupport::s_negativeInfinity = -HUGE_VAL;
-#else
-#error Unsupported platform!!!
-#endif
+#	if defined(__GNUC__)
+
+#		if defined(SOLARIS)
+			static const unsigned char	__nan_bits[] = { 0x7f, 0xf0,0xc0,0x0,0x0,0x0,0x0,0x0 };
+			const double				DoubleSupport::s_NaN = *reinterpret_cast<const double*>(__nan_bits);
+#		else
+			const double	DoubleSupport::s_NaN = NAN;
+#		endif
+
+		const double	DoubleSupport::s_positiveInfinity = HUGE_VAL;
+		const double	DoubleSupport::s_negativeInfinity = -HUGE_VAL;
+
+#	else
+#		error Unsupported platform!!!
+#	endif
 #else
 
 #if defined(XALAN_NO_NAMESPACES)
@@ -375,8 +387,6 @@ doConvert(const XalanDOMChar*	theString)
 {
 	assert(theString != 0);
 	assert(*theString != 0);
-
-	double	theResult = 0.0;
 
 	bool	fError = false;
 	bool	fGotDecimalPoint = false;

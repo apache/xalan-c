@@ -67,6 +67,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/TextOutputStream.hpp>
 #include <PlatformSupport/Writer.hpp>
 
 
@@ -81,6 +82,7 @@ static const XalanDOMChar 	theDefaultAttrSpecialChars[] =
 	XalanUnicode::charLF,
 	0
 };
+
 
 
 FormatterToXML::FormatterToXML(
@@ -143,6 +145,16 @@ FormatterToXML::FormatterToXML(
 		}
 	}
 
+	if (isEmpty(m_encoding) == false)
+	{
+		TextOutputStream* const		theStream = m_writer.getStream();
+
+		if (theStream != 0)
+		{
+			theStream->setOutputEncoding(m_encoding);
+		}
+	}
+
 	m_isUTF8 = equals(m_encoding, s_utf8EncodingString); // || isEmpty(m_encoding);
 
 	if (equals(m_encoding, s_windows1250EncodingString) == true ||
@@ -184,17 +196,21 @@ FormatterToXML::initAttrCharsMap()
 
 	const unsigned int	nSpecials = length(m_attrSpecialChars);
 
-	for(unsigned int i = 0; i < nSpecials; ++i)
 	{
-		m_attrCharsMap[charAt(m_attrSpecialChars, i)] = 'S';
+		for(unsigned int i = 0; i < nSpecials; ++i)
+		{
+			m_attrCharsMap[charAt(m_attrSpecialChars, i)] = 'S';
+		}
 	}
 
 	m_attrCharsMap[0x0A] = 'S';
 	m_attrCharsMap[0x0D] = 'S';
 
-	for(i = 160; i < SPECIALSSIZE; i++)
 	{
-		m_attrCharsMap[i] = 'S';
+		for(unsigned int i = 160; i < SPECIALSSIZE; i++)
+		{
+			m_attrCharsMap[i] = 'S';
+		}
 	}
 }
 

@@ -76,7 +76,7 @@
 
 
 XNodeSet::XNodeSet(BorrowReturnMutableNodeRefList&	value) :
-	XObject(),
+	XObject(eTypeNodeSet),
 	m_value(value),
 	m_cachedStringValue(),
 	m_cachedNumberValue(0.0),
@@ -118,14 +118,6 @@ XNodeSet::clone(void*	theAddress) const
 
 
 
-XNodeSet::eObjectType
-XNodeSet::getType() const
-{
-	return eTypeNodeSet;
-}
-
-
-
 XalanDOMString
 XNodeSet::getTypeString() const
 {
@@ -159,7 +151,7 @@ XNodeSet::boolean() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XNodeSet::str() const
 {
 	if (isEmpty(m_cachedStringValue) == true &&

@@ -130,6 +130,12 @@ public:
 	checkForDuplicates() const;
 #endif
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanNode*>			NodeListVectorType;
+#else
+	typedef std::vector<XalanNode*>		NodeListVectorType;
+#endif
+
 protected:
 
 	// Default vector allocation size.  It seems high, but
@@ -138,12 +144,6 @@ protected:
 	{
 		eDefaultVectorSize = 100
 	};
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanNode*>			NodeListVectorType;
-#else
-	typedef std::vector<XalanNode*>		NodeListVectorType;
-#endif
 
 	/**
 	 * Ensure that an allocation is either the default allocation

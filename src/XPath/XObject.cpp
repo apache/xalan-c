@@ -79,13 +79,19 @@
 
 
 
-XObject::XObject()
+const XalanDOMString	XObject::s_nullString;
+
+
+
+XObject::XObject(eObjectType	theObjectType) :
+	m_objectType(theObjectType)
 {
 }
 
 
 
-XObject::XObject(const XObject&		/* source */)
+XObject::XObject(const XObject&		source) :
+	m_objectType(source.m_objectType)
 {
 }
 
@@ -119,13 +125,13 @@ XObject::boolean() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XObject::str() const
 {
 	throw XObjectInvalidCastException(getTypeString(), XALAN_STATIC_UCODE_STRING("string"));
 
 	// This is just a dummy value to satisfy the compiler.
-	return XalanDOMString();
+	return s_nullString;
 }
 
 
@@ -142,6 +148,7 @@ XObject::rtree(XPathExecutionContext&	/* executionContext */) const
 	return *static_cast<ResultTreeFragBase*>(0);
 #endif
 }
+
 
 
 static const NodeRefList	s_dummyList;
@@ -161,8 +168,7 @@ XObject::nodeset() const
 
 
 const XalanDOMString
-getStringFromNode(
-			const XalanNode&		theNode)
+getStringFromNode(const XalanNode&	theNode)
 {
 	return theNode.getXSLTData();
 }
@@ -186,8 +192,7 @@ getStringFromNodeFunction
 
 
 double
-getNumberFromNode(
-			const XalanNode&		theNode)
+getNumberFromNode(const XalanNode&	theNode)
 {
 	return DoubleSupport::toDouble(getStringFromNode(theNode));
 }
@@ -881,25 +886,28 @@ XObject::equals(const XObject&	theRHS) const
 		{
 			return equalNodeSet(*this, theRHS, theRHS.getType());
 		}
-		else if (theRHS.getType() == eTypeNodeSet)
-		{
-			return equalNodeSet(theRHS, *this, theLHSType);
-		}
 		else
 		{
 			const eObjectType	theRHSType = theRHS.getType();
 
-			if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
+			if (theRHSType == eTypeNodeSet)
 			{
-				return boolean() == theRHS.boolean();
-			}
-			else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
-			{
-				return DoubleSupport::equal(num(), theRHS.num());
+				return equalNodeSet(theRHS, *this, theLHSType);
 			}
 			else
 			{
-				return ::equals(str(), theRHS.str());
+				if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
+				{
+					return boolean() == theRHS.boolean();
+				}
+				else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
+				{
+					return DoubleSupport::equal(num(), theRHS.num());
+				}
+				else
+				{
+					return ::equals(str(), theRHS.str());
+				}
 			}
 		}
 	}
@@ -931,25 +939,28 @@ XObject::notEquals(
 		{
 			return notEqualNodeSet(*this, theRHS, theRHS.getType());
 		}
-		else if (theRHS.getType() == eTypeNodeSet)
-		{
-			return notEqualNodeSet(theRHS, *this, theLHSType);
-		}
 		else
 		{
 			const eObjectType	theRHSType = theRHS.getType();
 
-			if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
+			if (theRHSType == eTypeNodeSet)
 			{
-				return boolean() != theRHS.boolean();
-			}
-			else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
-			{
-				return DoubleSupport::notEqual(num(), theRHS.num());
+				return notEqualNodeSet(theRHS, *this, theLHSType);
 			}
 			else
 			{
-				return !::equals(str(), theRHS.str());
+				if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
+				{
+					return boolean() != theRHS.boolean();
+				}
+				else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
+				{
+					return DoubleSupport::notEqual(num(), theRHS.num());
+				}
+				else
+				{
+					return !::equals(str(), theRHS.str());
+				}
 			}
 		}
 	}

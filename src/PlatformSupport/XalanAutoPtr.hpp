@@ -81,34 +81,13 @@ public:
 	{
 	}
 
-#if defined(XALAN_CANNOT_MUTATE_ANONYMOUS_OBJECT)
 	XalanAutoPtr(const XalanAutoPtr<Type>&	theSource) :
 		m_pointer(((XalanAutoPtr<Type>&)theSource).release())
 	{
 	}
-#else
-	XalanAutoPtr(XalanAutoPtr&	theSource) :
-		m_pointer(theSource.release())
-	{
-	}
-#endif
 
-#if defined(XALAN_CANNOT_MUTATE_ANONYMOUS_OBJECT)
 	XalanAutoPtr<Type>&
-	operator=(const XalanAutoPtr<Type>&		theRHS)
-	{
-		if (this != &theRHS)
-		{
-			delete m_pointer;
-
-			m_pointer = ((XalanAutoPtr<Type>&)theRHS).release();
-		}
-
-		return *this;
-	}
-#else
-	XalanAutoPtr&
-	operator=(XalanAutoPtr&	theRHS)
+	operator=(XalanAutoPtr<Type>&	theRHS)
 	{
 		if (this != &theRHS)
 		{
@@ -119,7 +98,6 @@ public:
 
 		return *this;
 	}
-#endif
 
 	~XalanAutoPtr()
 	{
@@ -164,12 +142,6 @@ public:
 
 private:
 
-#if !defined(XALAN_CANNOT_MUTATE_ANONYMOUS_OBJECT)
-	// Not defined...
-	XalanAutoPtr&
-	operator=(const XalanAutoPtr&	theRHS);
-#endif
-
 	Type*	m_pointer;
 };
 
@@ -186,34 +158,13 @@ public:
 	{
 	}
 
-#if defined(XALAN_CANNOT_MUTATE_ANONYMOUS_OBJECT)
 	XalanArrayAutoPtr(const XalanArrayAutoPtr<Type>&	theSource) :
 		m_pointer(((XalanArrayAutoPtr<Type>&)theSource).release())
 	{
 	}
-#else
-	XalanArrayAutoPtr(XalanArrayAutoPtr&	theSource) :
-		m_pointer(theSource.release())
-	{
-	}
-#endif
 
-#if defined(XALAN_CANNOT_MUTATE_ANONYMOUS_OBJECT)
 	XalanArrayAutoPtr<Type>&
-	operator=(const XalanArrayAutoPtr<Type>&	theRHS)
-	{
-		if (this != &theRHS)
-		{
-			delete [] m_pointer;
-
-			m_pointer = ((XalanArrayAutoPtr<Type>&)theRHS).release();
-		}
-
-		return *this;
-	}
-#else
-	XalanArrayAutoPtr&
-	operator=(XalanArrayAutoPtr&	theRHS)
+	operator=(XalanArrayAutoPtr<Type>&	theRHS)
 	{
 		if (this != &theRHS)
 		{
@@ -224,7 +175,6 @@ public:
 
 		return *this;
 	}
-#endif
 
 	~XalanArrayAutoPtr()
 	{
@@ -268,12 +218,6 @@ public:
 	}
 
 private:
-
-#if !defined(XALAN_CANNOT_MUTATE_ANONYMOUS_OBJECT)
-	// Not defined...
-	XalanArrayAutoPtr&
-	operator=(const XalanArrayAutoPtr&	theRHS);
-#endif
 
 	Type*	m_pointer;
 };

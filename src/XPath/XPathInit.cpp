@@ -59,6 +59,7 @@
 
 
 
+#include "XBoolean.hpp"
 #include "XPath.hpp"
 #include "XPathEnvSupportDefault.hpp"
 #include "XPathProcessorImpl.hpp"
@@ -98,6 +99,8 @@ XPathInit::~XPathInit()
 void
 XPathInit::initialize()
 {
+	XBoolean::initialize();
+
 	XPath::initialize();
 
 	XPathProcessorImpl::initialize();
@@ -110,9 +113,11 @@ XPathInit::initialize()
 void
 XPathInit::terminate()
 {
-	XPath::terminate();
+	XPathEnvSupportDefault::terminate();
 
 	XPathProcessorImpl::terminate();
 
-	XPathEnvSupportDefault::terminate();
+	XPath::terminate();
+
+	XBoolean::terminate();
 }

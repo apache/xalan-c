@@ -60,9 +60,37 @@
 
 
 
-static XalanDOMChar		theNaNDefault[] = { 0xFFFD, 0 };
-static XalanDOMChar		theInfinityDefault[] = { 0x221E, 0 };
-static XalanDOMChar		theCurrencySymbol[] = { XalanUnicode::charDollarSign, 0 };
+static XalanDOMChar		theNaNDefault[] =
+{
+	XalanUnicode::charLetter_N,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_N,
+	0
+};
+
+
+
+static XalanDOMChar		theInfinityDefault[] =
+{
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_y,
+	0
+};
+
+
+
+static XalanDOMChar		theCurrencySymbol[] =
+{
+	XalanUnicode::charDollarSign,
+	0
+};
+
 
 
 XalanDecimalFormatSymbols::XalanDecimalFormatSymbols() :

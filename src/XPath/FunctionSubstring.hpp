@@ -114,7 +114,7 @@ public:
 								   context);
 		}
 
-		const XalanDOMString	theSourceString = args[0]->str();
+		const XalanDOMString&	theSourceString = args[0]->str();
 		const unsigned int		theSourceStringLength = length(theSourceString);
 
 #if !defined(XALAN_NO_NAMESPACES)

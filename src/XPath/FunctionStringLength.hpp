@@ -102,7 +102,7 @@ public:
 	{
 		const XObjectArgVectorType::size_type	theSize = args.size();
 
-		XalanDOMString	theResult;
+		unsigned int	theLength = 0;
 
 		if(theSize == 0)
 		{
@@ -113,13 +113,13 @@ public:
 			}
 			else
 			{
-				theResult = getDefaultStringArgument(executionContext,
-													 *context);
+				theLength = length(getDefaultStringArgument(executionContext,
+															*context));
 			}
 		}
 		else if (theSize == 1)
 		{
-			theResult = args[0]->str();
+			theLength = length(args[0]->str());
 		}
 		else
 		{
@@ -127,7 +127,7 @@ public:
 								   context);
 		}
 
-		return executionContext.getXObjectFactory().createNumber(length(theResult));
+		return executionContext.getXObjectFactory().createNumber(theLength);
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

@@ -64,7 +64,7 @@
 
 
 XNull::XNull() :
-	XObject()
+	XObject(eTypeNull)
 {
 }
 
@@ -95,14 +95,6 @@ XNull::clone(void*	theAddress) const
 
 
 
-XNull::eObjectType
-XNull::getType() const
-{
-	return eTypeNull;
-}
-
-
-
 XalanDOMString
 XNull::getTypeString() const
 {
@@ -127,10 +119,10 @@ XNull::boolean() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XNull::str() const
 {
-	return XalanDOMString();
+	return s_nullString;
 }
 
 
