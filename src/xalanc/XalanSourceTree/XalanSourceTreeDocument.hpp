@@ -184,13 +184,7 @@ public:
 	virtual
 	~XalanSourceTreeDocument();
 
-    MemoryManagerType&
-    getMemoryManager()
-    {
-        return m_stringBuffer.getMemoryManager();
-    }
 	// These interfaces are inherited from XalanNode...
-
 	virtual const XalanDOMString&
 	getNodeName() const;
 
@@ -448,6 +442,12 @@ public:
     appendChildNode(XalanSourceTreeProcessingInstruction*   theChild);
 
 private:
+
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_stringBuffer.getMemoryManager();
+    }
 
 	// Helper functions...
 	XalanSourceTreeAttr*
