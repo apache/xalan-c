@@ -1156,9 +1156,10 @@ StylesheetHandler::processImport(
 			}
 
 			importStack.push_back(hrefUrl.get());
-			hrefUrl.release();
 
-			const XalanDOMString	theImportURI(hrefUrl->getURLText());
+			const XMLURL* const		hrefUrlptr = hrefUrl.release();
+
+			const XalanDOMString	theImportURI(hrefUrlptr->getURLText());
 
 			// This will take care of cleaning up the stylesheet if an exception
 			// is thrown.
@@ -1169,7 +1170,7 @@ StylesheetHandler::processImport(
 
 			StylesheetHandler tp(*importedStylesheet.get(), m_constructionContext);
 
-			m_constructionContext.parseXML(*hrefUrl, &tp, importedStylesheet.get());
+			m_constructionContext.parseXML(*hrefUrlptr, &tp, importedStylesheet.get());
 
 			// Add it to the front of the imports
 			m_stylesheet.addImport(importedStylesheet.get(), true);
@@ -1230,9 +1231,10 @@ StylesheetHandler::processInclude(
 			}
 
 			m_stylesheet.getIncludeStack().push_back(hrefUrl.get());
-			hrefUrl.release();
 
-			m_constructionContext.parseXML(*hrefUrl, this, &m_stylesheet);
+			const XMLURL* const		hrefUrlptr = hrefUrl.release();
+
+			m_constructionContext.parseXML(*hrefUrlptr, this, &m_stylesheet);
 
 			m_stylesheet.getIncludeStack().pop_back();
 		}

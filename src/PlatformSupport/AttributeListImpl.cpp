@@ -169,7 +169,7 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 				AttributeVectorEntry* const		entry = theEntry.release();
 
 				// Create an entry in the index map...
-				tempMap.insert(AttributeKeyMapType::value_type(theEntry->m_Name.begin(),
+				tempMap.insert(AttributeKeyMapType::value_type(entry->m_Name.begin(),
 															   entry));
 			}
 		}
@@ -428,7 +428,7 @@ AttributeListImpl::addAttribute(
 		AttributeVectorEntry* const		entry = theEntry.release();
 
 		// Create an entry in the index map.
-		m_AttributeKeyMap.insert(AttributeKeyMapType::value_type(theEntry->m_Name.begin(), entry));
+		m_AttributeKeyMap.insert(AttributeKeyMapType::value_type(entry->m_Name.begin(), entry));
 
 		fResult = true;
 	}

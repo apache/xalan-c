@@ -81,12 +81,12 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_NodeList.hpp>
 #include <util/PlatformUtils.hpp>
 #include <sax/SAXException.hpp>
 
+
+
+#include <XalanDOM/XalanDOMException.hpp>
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
@@ -126,7 +126,8 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 
 
-//#define XALAN_USE_ICU
+
+#define XALAN_USE_ICU
 #if defined(XALAN_USE_ICU)
 #include <ICUBridge/ICUBridge.hpp>
 #include <ICUBridge/FunctionICUFormatNumber.hpp>
@@ -335,6 +336,10 @@ void getArgs(int argc, const char* argv[], CmdLineParams& p) throw()
 		else if(!stricmp("-TTC", argv[i]))
 		{
 			p.traceTemplateChildren = true;
+		}
+		else
+		{
+			cout << endl << "Warning: Ignoring unknown option \"" << argv[i] << "\"" << endl << endl;
 		}
 	}
 }
@@ -825,12 +830,22 @@ int main(int argc, const char* argv[]) throw()
 
 				theResult = -1;
 			}
+			catch(const XalanDOMException&	e)
+			{
+				cout << endl
+					 << "XalanDOMException caught.  The code is "
+					 << e.getExceptionCode()
+					 << "."
+					 << endl;
+
+				theResult = -1;
+			}
 			catch (...)
 			{
 				cout << "\nUnhandled Exception\n";
 			}
 
-	#if !defined(NDEBUG)
+#if !defined(NDEBUG)
 			const unsigned long		theInstanceCount =
 				XalanNode::getInstanceCount();
 
@@ -868,17 +883,17 @@ int main(int argc, const char* argv[]) throw()
 							 << "\"  Node value: \""
 							 << theInstance->getNodeValue()
 							 << "\""
-	#if defined(XALAN_RTTI_AVAILABLE) && !defined(XALAN_NO_TYPEINFO)
+#if defined(XALAN_RTTI_AVAILABLE) && !defined(XALAN_NO_TYPEINFO)
 							 << "  Type: \""
 							 << typeid(*theInstance).name()
 							 << "\""
-	#endif
+#endif
 							 << endl
 							 << endl;
 					}
 				}
 			}
-	#endif
+#endif
 
 		}
 	}
