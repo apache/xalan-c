@@ -104,12 +104,6 @@ public:
 	AVTPartXPath(const XPath*	xpath);
 
 
-	virtual XObjectPtr
-	evaluate(
-			XalanNode*				contextNode,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const;
-
 	// These methods are inherited from AVTPart ...
 	
 	virtual void

@@ -71,12 +71,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanDOMString	XBoolean::s_falseString;
-
-XalanDOMString	XBoolean::s_trueString;
-
-
-
 XBoolean::XBoolean(bool		val) :
 	XObject(eTypeBoolean),
 	m_value(val)
@@ -122,7 +116,7 @@ XBoolean::getTypeString() const
 double
 XBoolean::num() const
 {
-	return m_value == true ? 1.0 : 0.0;
+	return number(m_value);
 }
 
 
@@ -138,7 +132,7 @@ XBoolean::boolean() const
 const XalanDOMString&
 XBoolean::str() const
 {
-	return m_value == true ? s_trueString : s_falseString;
+	return string(m_value);
 }
 
 
@@ -148,14 +142,7 @@ XBoolean::str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const
 {
-	if (m_value == true)
-	{
-		(formatterListener.*function)(c_wstr(s_trueString), FormatterListener::size_type(length(s_trueString)));
-	}
-	else
-	{
-		(formatterListener.*function)(c_wstr(s_falseString), FormatterListener::size_type(length(s_falseString)));
-	}
+	string(m_value, formatterListener, function);
 }
 
 
@@ -182,24 +169,6 @@ XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) con
 {
 	theCallbackObject.Boolean(*this,
 							  boolean());
-}
-
-
-
-void
-XBoolean::initialize()
-{
-	s_falseString = XALAN_STATIC_UCODE_STRING("false");
-	s_trueString = XALAN_STATIC_UCODE_STRING("true");
-}
-
-
-
-void
-XBoolean::terminate()
-{
-	releaseMemory(s_falseString);
-	releaseMemory(s_trueString);
 }
 
 

@@ -145,8 +145,9 @@ ElemIf::execute(StylesheetExecutionContext&		executionContext) const
 
 	XalanNode* sourceNode = executionContext.getCurrentNode();
 
-	const XObjectPtr	test(m_test->execute(sourceNode, *this, executionContext));
-	assert(test.null() == false);
+	bool	fResult;
+
+	m_test->execute(sourceNode, *this, executionContext, fResult);
 
 	if(0 != executionContext.getTraceListeners())
 	{
@@ -156,10 +157,10 @@ ElemIf::execute(StylesheetExecutionContext&		executionContext) const
 			*this,
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("test")),
 			*m_test,
-			test));
+			fResult));
 	}
 
-	if(test->boolean())
+	if(fResult == true)
 	{
 		executeChildren(executionContext);
 	}

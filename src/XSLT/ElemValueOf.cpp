@@ -170,6 +170,109 @@ ElemValueOf::getElementName() const
 
 
 
+class FormatterListenerAdapater : public FormatterListener
+{
+public:
+
+	FormatterListenerAdapater(StylesheetExecutionContext&	executionContext) :
+		FormatterListener(OUTPUT_METHOD_NONE),
+		m_executionContext(executionContext)
+	{
+	}
+
+	~FormatterListenerAdapater()
+	{
+	}
+
+	void
+	setDocumentLocator(const LocatorType* const	/* locator */)
+	{
+	}
+
+	void
+	startDocument()
+	{
+	}
+
+	void
+	endDocument()
+	{
+	}
+
+	void
+	startElement(
+				const	XMLCh* const	/* name */,
+				AttributeListType&		/* attrs */)
+	{
+	}
+
+	void
+	endElement(const	XMLCh* const	/* name */)
+	{
+	}
+
+	void
+	characters(
+				const XMLCh* const	chars,
+				const unsigned int	length)
+	{
+		m_executionContext.characters(chars, 0, length);
+	}
+
+	void
+	charactersRaw(
+			const XMLCh* const	chars,
+			const unsigned int	length)
+	{
+		m_executionContext.charactersRaw(chars, 0, length);
+	}
+
+	void
+	entityReference(const XMLCh* const	/* name */)
+	{
+	}
+
+	void
+	ignorableWhitespace(
+				const XMLCh* const	/* chars */,
+				const unsigned int	/* length */)
+	{
+	}
+
+	void
+	processingInstruction(
+				const XMLCh* const	target,
+				const XMLCh* const	data)
+	{
+		m_executionContext.processingInstruction(target, data);
+	}
+
+	void
+	resetDocument()
+	{
+	}
+
+	void
+	comment(const XMLCh* const	data)
+	{
+		m_executionContext.comment(data);
+	}
+
+	void
+	cdata(
+				const XMLCh* const	/* ch */,
+				const unsigned int 	/* length */)
+	{
+	}
+
+private:
+
+	StylesheetExecutionContext&		m_executionContext;
+
+};
+
+
+
 void
 ElemValueOf::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -200,27 +303,20 @@ ElemValueOf::execute(StylesheetExecutionContext&	executionContext) const
 	}
 	else
 	{
-		const XObjectPtr	value(m_selectPattern->execute(sourceNode, *this, executionContext));
+		FormatterListenerAdapater	theAdapter(executionContext);
 
-		if(value.null() == false)	
+		XPath::MemberFunctionPtr	theFunction = disableOutputEscaping() == false ?
+			&FormatterListener::characters : &FormatterListener::charactersRaw;
+
+		m_selectPattern->execute(sourceNode, *this, executionContext, theAdapter, theFunction);
+
+		if(0 != executionContext.getTraceListeners())
 		{
-			if(0 != executionContext.getTraceListeners())
+			const XObjectPtr	value(m_selectPattern->execute(sourceNode, *this, executionContext));
+
+			if (value.null() == false)
 			{
 				fireSelectionEvent(executionContext, sourceNode, value);
-			}
-
-			const XObject::eObjectType	type = value->getType();
-
-			if (XObject::eTypeNull != type)
-			{
-				if (disableOutputEscaping() == false)
-				{
-					executionContext.characters(value);
-				}
-				else
-				{
-					executionContext.charactersRaw(value);
-				}
 			}
 		}
 	}

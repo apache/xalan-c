@@ -68,11 +68,17 @@
 
 
 
+#include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/FormatterListener.hpp>
 #include <PlatformSupport/XalanReferenceCountedObject.hpp>
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
+#include <XPath/NodeRefListBase.hpp>
 #include <XPath/XalanXPathException.hpp>
 
 
@@ -119,6 +125,18 @@ public:
 						  eTypeXTokenStringAdapter = 12,
 						  eUnknown
 						};
+
+	/**
+	 * Perform static initialization.  See class XPathInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XPathInit.
+	 */
+	static void
+	terminate();
 
 	/**
 	 * Create an XObject.
@@ -314,6 +332,148 @@ public:
 		return m_objectType;
 	}
 
+	/**
+	 * Static conversion function.
+	 *
+	 * @return bool value
+	 */
+	static bool
+	boolean(double	theNumber)
+	{
+		return DoubleSupport::isNaN(theNumber) || DoubleSupport::isPositiveZero(theNumber) ? false : true;
+	}
+
+	/**
+	 * Static conversion function.
+	 *
+	 * @return bool value
+	 */
+	static bool
+	boolean(const XalanDOMString&	theString)
+	{
+		return theString.length() == 0 ? false : true;
+	}
+
+	/**
+	 * Static conversion function.
+	 *
+	 * @return bool value
+	 */
+	static bool
+	boolean(const NodeRefListBase&	theNodeList)
+	{
+		return theNodeList.getLength() == 0 ? false : true;
+	}
+
+	/**
+	 * Static conversion function.
+	 *
+	 * @return The string value of the number
+	 */
+	static const XalanDOMString&
+	string(bool		theBool)
+	{
+		return theBool == true ? s_trueString : s_falseString;
+	}
+
+	static void
+	string(
+			bool				theBool,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
+	{
+		if(theBool == true)
+		{
+			(formatterListener.*function)(s_trueString.c_str(), s_trueString.length());
+		}
+		else
+		{
+			(formatterListener.*function)(s_falseString.c_str(), s_falseString.length());
+		}
+	}
+
+	static void
+	string(
+			const NodeRefListBase&	theNodeList,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function)
+	{
+		if (theNodeList.getLength() > 0)
+		{
+			assert(theNodeList.item(0) != 0);
+
+			DOMServices::getNodeData(*theNodeList.item(0), formatterListener, function);
+		}
+	}
+
+	/**
+	 * Static conversion function.
+	 *
+	 * @return The string value of the number
+	 */
+	static void
+	string(
+			double				theNumber,
+			XalanDOMString&		theString)
+	{
+		DoubleToDOMString(theNumber, theString);
+	}
+
+	/**
+	 * Static conversion function.
+	 *
+	 * @return The string value of the node list
+	 */
+	static void
+	string(
+			const NodeRefListBase&	theNodeList,
+			XalanDOMString&			theString)
+	{
+		if (theNodeList.getLength() > 0)
+		{
+			assert(theNodeList.item(0) != 0);
+
+			DOMServices::getNodeData(*theNodeList.item(0), theString);
+		}
+	}
+
+	static void
+	string(
+			double				theNumber,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
+	{
+		DOMStringHelper::DoubleToCharacters(theNumber, formatterListener, function);
+	}
+
+	/**
+	 * Static conversion function.
+	 *
+	 * @return bool value
+	 */
+	static double
+	number(bool		theBoolean)
+	{
+		return theBoolean == true ? 1.0 : 0.0;
+	}
+
+	static double
+	number(const XalanDOMString&	theString)
+	{
+		return DoubleSupport::toDouble(theString);
+	}
+
+	/**
+	 * Static conversion function.
+	 *
+	 * @return The number value of the node list
+	 */
+	static double
+	number(
+			XPathExecutionContext&		executionContext,
+			const MutableNodeRefList&	theNodeList);
+
+
 	// All XObject instances are controlled by an instance of an XObjectFactory.
 	friend class XObjectFactory;
 
@@ -393,6 +553,12 @@ protected:
 	~XObject();
 
 	static const XalanDOMString		s_nullString;
+
+protected:
+
+	static XalanDOMString	s_falseString;
+
+	static XalanDOMString	s_trueString;
 
 private:
 

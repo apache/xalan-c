@@ -409,7 +409,8 @@ public:
 		/**
 		 * [OP_FUNCTION]
 		 * [length]
-		 * [FUNC_name]
+		 * [FUNC_ID]
+		 * [arg count]
 		 *  {OP_ARGUMENT}*
 		 * [ENDOP]
 		 * 
@@ -576,6 +577,60 @@ public:
 		 */
 		eOP_PREDICATE_WITH_POSITION = 55,
   
+		/**
+		 * [OP_FUNCTION_POSITION]
+		 * [length]
+		 * [FUNC_ID]
+		 * [arg count]
+		 *  {OP_ARGUMENT}*
+		 * [ENDOP]
+		 * 
+		 * returns: 
+		 *  XNodeSet
+		 *  XNumber
+		 *  XString
+		 *  XBoolean
+		 *  XRTree
+		 *  XObject
+		 */
+		eOP_FUNCTION_POSITION = 56,
+
+		/**
+		 * [OP_FUNCTION_POSITION]
+		 * [length]
+		 * [FUNC_ID]
+		 * [arg count]
+		 *  {OP_ARGUMENT}*
+		 * [ENDOP]
+		 * 
+		 * returns: 
+		 *  XNodeSet
+		 *  XNumber
+		 *  XString
+		 *  XBoolean
+		 *  XRTree
+		 *  XObject
+		 */
+		eOP_FUNCTION_LAST = 57,
+
+		/**
+		 * [OP_FUNCTION_POSITION]
+		 * [length]
+		 * [FUNC_ID]
+		 * [arg count]
+		 *  {OP_ARGUMENT}*
+		 * [ENDOP]
+		 * 
+		 * returns: 
+		 *  XNodeSet
+		 *  XNumber
+		 *  XString
+		 *  XBoolean
+		 *  XRTree
+		 *  XObject
+		 */
+		eOP_FUNCTION_COUNT = 58,
+
 		// Always add _before_ this one and update
 		// s_opCodeLengthArray.
 		eOpCodeNextAvailable

@@ -504,10 +504,9 @@ ElemNumber::getCountString(
 
 	if(0 != m_valueExpr)
 	{
-		const XObjectPtr	countObj(m_valueExpr->execute(sourceNode, *this, executionContext));
-		assert(countObj.null() == false);
+		double	theValue;
 
-		const double	theValue = countObj->num();
+		m_valueExpr->execute(sourceNode, *this, executionContext, theValue);
 
 		CountType	theNumber = 0;
 

@@ -145,8 +145,9 @@ ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 			const XPath* const		theXPath = when->getXPath();
 			assert(theXPath != 0);
 
-			const XObjectPtr	test(theXPath->execute(sourceNode, *this, executionContext));
-			assert(test.null() == false);
+			bool	test;
+
+			theXPath->execute(sourceNode, *this, executionContext, test);
 
 			if(0 != executionContext.getTraceListeners())
 			{
@@ -159,7 +160,7 @@ ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 					test));
 			}
 
-			if(test->boolean() == true)
+			if(test == true)
 			{
 				node->execute(executionContext);
 

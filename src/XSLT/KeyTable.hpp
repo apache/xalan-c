@@ -71,7 +71,11 @@
 
 
 
+#if defined(XALAN_USE_HASH_MAP)
+#include <hash_map>
+#else
 #include <map>
+#endif
 #include <vector>
 
 
@@ -123,11 +127,19 @@ public:
 #else
 	typedef std::vector<KeyDeclaration>		KeyDeclarationVectorType;
 
+#if defined(XALAN_USE_HASH_MAP)
+	typedef std::hash_map<XalanDOMString,
+						  MutableNodeRefList>	NodeListMapType;
+
+	typedef std::hash_map<XalanQNameByReference,
+						  NodeListMapType>		KeysMapType;
+#else
 	typedef std::map<XalanDOMString,
 					 MutableNodeRefList>	NodeListMapType;
 
 	typedef std::map<XalanQNameByReference,
 					 NodeListMapType>		KeysMapType;
+#endif
 #endif
 
 

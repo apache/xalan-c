@@ -125,8 +125,48 @@ public:
 			const XalanDOMString&			xpathExpression,
 			const XObjectPtr				selection);
 
+	/**
+	 * Create an event originating at the given node of the style tree.
+	 *
+	 * @param executionContext The current execution context
+	 * @param sourceNode The source node selected.
+	 * @param styleNode The node in the style tree reference for the event
+	 * @param attributeName The attribute name where the XPath expression was supplied
+	 * @param xpath The XPath instance executed
+	 * @param selection The result of evaluating the XPath
+	 *
+	 */
+	SelectionEvent(
+			StylesheetExecutionContext&		executionContext,
+			const XalanNode*				sourceNode,
+			const ElemTemplateElement&		styleNode,
+			const XalanDOMString&			attributeName,
+			const XPath&					xpath,
+			bool							selection);
+
+	/**
+	 * Create an event originating at the given node of the style tree.
+	 *
+	 * @param executionContext The current execution context
+	 * @param sourceNode The source node selected.
+	 * @param styleNode The node in the style tree reference for the event
+	 * @param attributeName The attribute name where the XPath expression was supplied
+	 * @param xpath The XPath instance executed
+	 * @param selection The result of evaluating the XPath
+	 *
+	 */
+	SelectionEvent(
+			StylesheetExecutionContext&		executionContext,
+			const XalanNode*				sourceNode,
+			const ElemTemplateElement&		styleNode,
+			const XalanDOMString&			attributeName,
+			const XPath&					xpath,
+			const NodeRefListBase&			selection);
+
 	virtual
 	~SelectionEvent();
+
+	enum eSelectionType { eNone, eBoolean, eNodeSet, eUnknown };
 
 	/**
 	 * The executionContext instance.
@@ -155,9 +195,19 @@ public:
   
 	/**
 	 * The result of the selection.  If it's null, m_sourceNode
-	 * was selected.
+	 * was selected, or some specific type was selected.  See
+	 * the above enums.
 	 */
 	const XObjectPtr					m_selection;
+
+	/**
+	 * The type of the selection.
+	 */
+	const eSelectionType				m_type;
+
+	bool								m_boolean;
+
+	const NodeRefListBase* const		m_nodeList;
 
 private:
 

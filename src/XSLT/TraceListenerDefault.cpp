@@ -205,6 +205,31 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 
 
 void
+TraceListenerDefault::processNodeList(const NodeRefListBase&		nl)
+{
+	m_printWriter.println();
+
+	const NodeRefListBase::size_type	n = nl.getLength();
+
+	if(n == 0)
+	{
+		m_printWriter.println(XALAN_STATIC_UCODE_STRING("     [empty node list]"));
+	}
+	else
+	{
+		for(NodeRefListBase::size_type i = 0; i < n; i++)
+		{
+			assert(nl.item(i) != 0);
+
+			m_printWriter.print(XALAN_STATIC_UCODE_STRING("     "));
+			m_printWriter.println(DOMServices::getNodeData(*nl.item(i)));
+		}
+	}
+}
+
+
+
+void
 TraceListenerDefault::selected(const SelectionEvent&	ev)
 {
     if(m_traceSelection == true)
@@ -250,34 +275,20 @@ TraceListenerDefault::selected(const SelectionEvent&	ev)
 
 		if (ev.m_selection.null() == true)
 		{
-			assert(ev.m_sourceNode != 0);
-			m_printWriter.println();
+			if (ev.m_type == SelectionEvent::eBoolean)
+			{
+				m_printWriter.println(ev.m_boolean == true ? "true" : "false");
+			}
+			else if (ev.m_type == SelectionEvent::eNodeSet)
+			{
+				assert(ev.m_nodeList != 0);
 
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING("     "));
-			m_printWriter.println(DOMServices::getNodeData(*ev.m_sourceNode));
+				processNodeList(*ev.m_nodeList);
+			}
 		}
 		else if(ev.m_selection->getType() == XObject::eTypeNodeSet)
 		{
-			m_printWriter.println();
-
-			const NodeRefListBase&	nl = ev.m_selection->nodeset();
-
-			const NodeRefListBase::size_type	n = nl.getLength();
-
-			if(n == 0)
-			{
-				m_printWriter.println(XALAN_STATIC_UCODE_STRING("     [empty node list]"));
-			}
-			else
-			{
-				for(NodeRefListBase::size_type i = 0; i < n; i++)
-				{
-					assert(nl.item(i) != 0);
-
-					m_printWriter.print(XALAN_STATIC_UCODE_STRING("     "));
-					m_printWriter.println(DOMServices::getNodeData(*nl.item(i)));
-				}
-			}
+			processNodeList(ev.m_selection->nodeset());
 		}
 		else
 		{

@@ -78,7 +78,10 @@ SelectionEvent::SelectionEvent(
 	m_styleNode(styleNode),
 	m_attributeName(attributeName),
 	m_xpathExpression(xpath.getExpression().getCurrentPattern()),
-	m_selection(selection)
+	m_selection(selection),
+	m_type(selection.null() == true ? eNone : eUnknown),
+	m_boolean(false),
+	m_nodeList(0)
 {
 }
 
@@ -96,7 +99,52 @@ SelectionEvent::SelectionEvent(
 	m_styleNode(styleNode),
 	m_attributeName(attributeName),
 	m_xpathExpression(xpathExpression),
-	m_selection(selection)
+	m_selection(selection),
+	m_type(selection.null() == true ? eNone : eUnknown),
+	m_boolean(false),
+	m_nodeList(0)
+{
+}
+
+
+
+SelectionEvent::SelectionEvent(
+			StylesheetExecutionContext&		executionContext,
+			const XalanNode*				sourceNode,
+			const ElemTemplateElement&		styleNode,
+			const XalanDOMString&			attributeName,
+			const XPath&					xpath,
+			bool							selection) :
+	m_executionContext(executionContext),
+	m_sourceNode(sourceNode),
+	m_styleNode(styleNode),
+	m_attributeName(attributeName),
+	m_xpathExpression(xpath.getExpression().getCurrentPattern()),
+	m_selection(),
+	m_type(eBoolean),
+	m_boolean(selection),
+	m_nodeList(0)
+{
+}
+
+
+
+SelectionEvent::SelectionEvent(
+			StylesheetExecutionContext&		executionContext,
+			const XalanNode*				sourceNode,
+			const ElemTemplateElement&		styleNode,
+			const XalanDOMString&			attributeName,
+			const XPath&					xpath,
+			const NodeRefListBase&			selection) :
+	m_executionContext(executionContext),
+	m_sourceNode(sourceNode),
+	m_styleNode(styleNode),
+	m_attributeName(attributeName),
+	m_xpathExpression(xpath.getExpression().getCurrentPattern()),
+	m_selection(),
+	m_type(eNodeSet),
+	m_boolean(false),
+	m_nodeList(&selection)
 {
 }
 

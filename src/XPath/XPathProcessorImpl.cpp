@@ -145,7 +145,7 @@ XPathProcessorImpl::initXPath(
 
 	if (length(m_token) != 0)
 	{
-		error("Extra illegal tokens!");
+		error("Extra illegal tokens.");
 	}
 
 	m_xpath = 0;
@@ -191,7 +191,7 @@ XPathProcessorImpl::initMatchPattern(
 
 	if (length(m_token) != 0)
 	{
-		error("Extra illegal tokens!");
+		error("Extra illegal tokens.");
 	}
 
 	// Terminate for safety.
@@ -275,7 +275,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 				}
 				else
 				{
-					error("misquoted literal... expected double quote!");
+					error("misquoted literal... expected double quote.");
 				}
 			}
 			break;
@@ -313,7 +313,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 				}
 				else
 				{
-					error("misquoted literal... expected single quote!");
+					error("misquoted literal... expected single quote.");
 				}
 			}
 			break;
@@ -525,7 +525,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 
 	if (0 == m_expression->tokenQueueSize())
 	{
-		error("Empty expression!");
+		error("Empty expression.");
 	}
 
 	m_expression->setTokenPosition(0);
@@ -543,8 +543,9 @@ XPathProcessorImpl::mapPatternElemPos(
 	{
 		if(!isStart)
 		{
-			m_expression->adjustPattern(m_expression->patternMapSize() - 1,
-										-TARGETEXTRA);
+			m_expression->adjustPattern(
+				m_expression->patternMapSize() - 1,
+				-TARGETEXTRA);
 		}
 
 		const int	theValue =
@@ -1357,28 +1358,6 @@ XPathProcessorImpl::UnaryExpr()
 
 
 void
-XPathProcessorImpl::BooleanExpr()
-{
-	const int	opPos = m_expression->opCodeMapLength();
-
-	m_expression->appendOpCode(XPathExpression::eOP_BOOL);
-
-	Expr();
-
-	const int	opLen = m_expression->opCodeMapLength() - opPos;
-
-	if(opLen == 2)
-	{
-		error("boolean(...) argument is no longer optional with 19990709 XPath draft.");
-	}
-
-	m_expression->updateOpCodeLength(XPathExpression::eOP_BOOL,
-									 opPos);
-}
-
-
-
-void
 XPathProcessorImpl::UnionExpr()
 {
 	const int	opPos = m_expression->opCodeMapLength();
@@ -1567,7 +1546,7 @@ XPathProcessorImpl::Argument()
 	}
 	else
 	{
-		error(TranscodeFromLocalCodePage("A literal argument is required!"));
+		error(TranscodeFromLocalCodePage("A literal argument is required."));
 	}
 
 	m_expression->updateOpCodeLength(XPathExpression::eOP_ARGUMENT,
@@ -1587,7 +1566,7 @@ XPathProcessorImpl::FunctionCallArguments()
 	{
 		if(tokenIs(XalanUnicode::charComma) == true)
 		{
-			error("Found ',' but no preceding argument!");
+			error("Found ',' but no preceding argument.");
 		}
 
 		Argument();
@@ -1600,7 +1579,7 @@ XPathProcessorImpl::FunctionCallArguments()
 
 			if(tokenIs(XalanUnicode::charRightParenthesis) == true)
 			{
-				error("Found ',' but no following argument!");
+				error("Found ',' but no following argument.");
 			}
 		}
 	}
@@ -1666,6 +1645,18 @@ XPathProcessorImpl::FunctionCall()
 			return;
 			break;
 
+		case XPathExpression::eOP_FUNCTION_POSITION:
+			FunctionPosition();
+			break;
+
+		case XPathExpression::eOP_FUNCTION_LAST:
+			FunctionLast();
+			break;
+
+		case XPathExpression::eOP_FUNCTION_COUNT:
+			FunctionCount();
+			break;
+
 		default:
 			{
 				// The position must be at least zero, since
@@ -1690,24 +1681,95 @@ XPathProcessorImpl::FunctionCall()
 				m_expression->appendOpCode(
 						XPathExpression::eOP_FUNCTION,
 						theArgs);
+
+				nextToken();
+
+				// Get the arguments, and the argument count...
+				const int	argCount = FunctionCallArguments();
+
+				assert(m_expression->m_opMap[opPos + 3] == 0);
+
+				// update the arg count in the op map...
+				m_expression->m_opMap[opPos + 3] = argCount;
 			}
 		}
-
-		nextToken();
-
-		// Get the arguments, and the argument count...
-		const int	argCount = FunctionCallArguments();
-
-		assert(m_expression->m_opMap[opPos + 3] == 0);
-
-		// update the arg count in the op map...
-		m_expression->m_opMap[opPos + 3] = argCount;
 	}
 
 	// Terminate for safety.
 	m_expression->appendOpCode(XPathExpression::eENDOP);
 
 	m_expression->updateOpCodeLength(opPos);
+}
+
+
+
+void
+XPathProcessorImpl::FunctionPosition()
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_POSITION);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 0)
+	{
+		error("The position() function does not accept any arguments");
+	}
+	else
+	{
+		if (m_positionPredicateStack.empty() == false)
+		{
+			m_positionPredicateStack.back() = true;
+		}
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionLast()
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_LAST);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 0)
+	{
+		error("The last() function does not accept any arguments");
+	}
+	else
+	{
+		if (m_positionPredicateStack.empty() == false)
+		{
+			m_positionPredicateStack.back() = true;
+		}
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionCount()
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_COUNT);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 1)
+	{
+		error("The count() function takes one arguments");
+	}
 }
 
 
@@ -1823,7 +1885,7 @@ XPathProcessorImpl::Step()
 	}
 	else if (tokenIs(XalanUnicode::charRightParenthesis) == false)
 	{
-		error("Unexpected token!");
+		error("Unexpected token.");
 	}
 }
 
@@ -1866,7 +1928,7 @@ XPathProcessorImpl::Basis()
 		{
 			nextToken();
 
-			error("Expected axis or node test!");
+			error("Expected axis or node test.");
 		}
 		else
 		{
@@ -1992,7 +2054,7 @@ XPathProcessorImpl::NodeTest()
 		}
 		else if (isNodeTest(m_token) == false)
 		{
-			error("Expected node test!");
+			error("Expected node test.");
 		}
 		else
 		{
@@ -2126,7 +2188,7 @@ XPathProcessorImpl::Literal()
 	{
 		error(TranscodeFromLocalCodePage("Pattern literal (") +
 			  m_token +
-			  TranscodeFromLocalCodePage(") needs to be quoted!"));
+			  TranscodeFromLocalCodePage(") needs to be quoted."));
 	}
 }
 
@@ -2328,7 +2390,7 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 		}
 		else
 		{
-			error("Only child:: and attribute:: axes are allowed in match patterns!");
+			error("Only child:: and attribute:: axes are allowed in match patterns.");
 		}
 
 		nextToken();
@@ -2364,7 +2426,7 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 			}
 			else
 			{
-				error("Only child:: and attribute:: axes are allowed in match patterns!");
+				error("Only child:: and attribute:: axes are allowed in match patterns.");
 			}
 
 			nextToken();
@@ -2922,9 +2984,12 @@ const XalanDOMChar		XPathProcessorImpl::s_namespaceString[] =
 
 const XPathProcessorImpl::TableEntry	XPathProcessorImpl::s_functionTable[] =
 {
+	{ XPathProcessorImpl::s_lastString, XPathExpression::eOP_FUNCTION_LAST },
 	{ XPathProcessorImpl::s_nodeString, XPathExpression::eNODETYPE_NODE },
 	{ XPathProcessorImpl::s_textString, XPathExpression::eNODETYPE_TEXT },
+	{ XPathFunctionTable::s_count, XPathExpression::eOP_FUNCTION_COUNT  },
 	{ XPathProcessorImpl::s_commentString, XPathExpression::eNODETYPE_COMMENT },
+	{ XPathProcessorImpl::s_positionString, XPathExpression::eOP_FUNCTION_POSITION },
 	{ XPathProcessorImpl::s_piString, XPathExpression::eNODETYPE_PI },
 };
 

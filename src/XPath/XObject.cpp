@@ -81,7 +81,29 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+XalanDOMString	XObject::s_falseString;
+
+XalanDOMString	XObject::s_trueString;
+
 const XalanDOMString	XObject::s_nullString;
+
+
+
+void
+XObject::initialize()
+{
+	s_falseString = XALAN_STATIC_UCODE_STRING("false");
+	s_trueString = XALAN_STATIC_UCODE_STRING("true");
+}
+
+
+
+void
+XObject::terminate()
+{
+	releaseMemory(s_falseString);
+	releaseMemory(s_trueString);
+}
 
 
 

@@ -59,7 +59,7 @@
 
 
 
-#include "XBoolean.hpp"
+#include "XObject.hpp"
 #include "XUnknown.hpp"
 #include "XPath.hpp"
 #include "XPathEnvSupportDefault.hpp"
@@ -104,7 +104,7 @@ XPathInit::~XPathInit()
 void
 XPathInit::initialize()
 {
-	XBoolean::initialize();
+	XObject::initialize();
 
 	XUnknown::initialize();
 
@@ -124,7 +124,7 @@ XPathInit::terminate()
 
 	XUnknown::terminate();
 
-	XBoolean::terminate();
+	XObject::terminate();
 }
 
 

@@ -429,84 +429,90 @@ ElemForEach::transformSelectedChildren(
 
 	assert(m_selectPattern != 0);
 
-	XObjectPtr	theXObject;
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+	BorrowReturnMutableNodeRefList	theGuard(executionContext);
+
+	const NodeRefListBase*	sourceNodes = 0;
+
+	XObjectPtr				xobjectResult;
 
 	{
 		SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
 					executionContext,
 					selectStackFrameIndex);
 
-		theXObject = m_selectPattern->execute(
+		xobjectResult = m_selectPattern->execute(
 						sourceNodeContext,
 						*this,
-						executionContext);
+						executionContext,
+						*theGuard);
+
+		if (xobjectResult.null() == true)
+		{
+			sourceNodes = &*theGuard;
+		}
+		else
+		{
+			theGuard.release();
+
+			sourceNodes = &xobjectResult->nodeset();
+		}
 	}
 
-	if (theXObject.null() == false)
+	if(0 != executionContext.getTraceListeners())
 	{
-		if (theXObject->getType() != XObject::eTypeNodeSet)
+		executionContext.fireSelectEvent(
+				SelectionEvent(
+					executionContext, 
+					sourceNodeContext,
+					*this,
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+					*m_selectPattern,
+					*sourceNodes));
+	}
+
+	const NodeRefListBase::size_type	nNodes = sourceNodes->getLength();
+
+	if (nNodes > 0)
+	{
+		// If there's not NodeSorter, or we've only selected one node,
+		// then just do the transform...
+		if (sorter == 0 || nNodes == 1)
 		{
-			executionContext.error(
-				"xsl:for-each 'select' must evaluate to a node-set",
-				sourceNodeContext,
-				getLocator());
+			transformSelectedChildren(
+				executionContext,
+				theTemplate,
+				*sourceNodes,
+				nNodes);
 		}
-
-		const NodeRefListBase&	sourceNodes = theXObject->nodeset();
-
-		if(0 != executionContext.getTraceListeners())
+		else
 		{
-			executionContext.fireSelectEvent(
-					SelectionEvent(executionContext, 
-						sourceNodeContext,
-						*this,
-						StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
-						*m_selectPattern,
-						theXObject));
-		}
+			typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
+			typedef StylesheetExecutionContext::ContextNodeListSetAndRestore			ContextNodeListSetAndRestore;
+			typedef StylesheetExecutionContext::BorrowReturnMutableNodeRefList			BorrowReturnMutableNodeRefList;
 
-		const NodeRefListBase::size_type	nNodes = sourceNodes.getLength();
+			BorrowReturnMutableNodeRefList	sortedSourceNodes(executionContext);
 
-		if (nNodes > 0)
-		{
-			// If there's not NodeSorter, or we've only selected one node,
-			// then just do the transform...
-			if (sorter == 0 || nNodes == 1)
+			*sortedSourceNodes = *sourceNodes;
+
 			{
-				transformSelectedChildren(
-					executionContext,
-					theTemplate,
-					sourceNodes,
-					nNodes);
+				SetAndRestoreCurrentStackFrameIndex		theStackFrameSetAndRestore(
+						executionContext,
+						selectStackFrameIndex);
+
+				ContextNodeListSetAndRestore			theContextNodeListSetAndRestore(
+						executionContext,
+						*sourceNodes);
+
+				sorter->sort(executionContext, *sortedSourceNodes);
 			}
-			else
-			{
-				typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
-				typedef StylesheetExecutionContext::ContextNodeListSetAndRestore			ContextNodeListSetAndRestore;
-				typedef StylesheetExecutionContext::BorrowReturnMutableNodeRefList			BorrowReturnMutableNodeRefList;
 
-				BorrowReturnMutableNodeRefList	sortedSourceNodes(executionContext);
-
-				*sortedSourceNodes = sourceNodes;
-
-				{
-					SetAndRestoreCurrentStackFrameIndex		theStackFrameSetAndRestore(
-							executionContext,
-							selectStackFrameIndex);
-
-					ContextNodeListSetAndRestore			theContextNodeListSetAndRestore(
-							executionContext,
-							sourceNodes);
-
-					sorter->sort(executionContext, *sortedSourceNodes);
-				}
-
-				transformSelectedChildren(
-					executionContext,
-					theTemplate,
-					*sortedSourceNodes,
-					nNodes);
-			}
+			transformSelectedChildren(
+				executionContext,
+				theTemplate,
+				*sortedSourceNodes,
+				nNodes);
 		}
 	}
 }

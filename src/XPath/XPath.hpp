@@ -77,6 +77,7 @@
 
 
 
+#include <XPath/MutableNodeRefList.hpp>
 #include <XPath/XPathExpression.hpp>
 #include <XPath/Function.hpp>
 #include <XPath/XPathFunctionTable.hpp>
@@ -197,7 +198,6 @@ public:
 	explicit
 	XPath(const LocatorType*	theLocator = 0);
 
-	virtual
 	~XPath();
 
 	/**
@@ -215,7 +215,7 @@ public:
 	 * @param context          current source tree context node
 	 * @param prefixResolver   prefix resolver to use
 	 * @param executionContext current execution context
-	 * @return pointer to union of node-set operands
+	 * @return smart-pointer to result XObject
 	 */
 	const XObjectPtr
 	execute(
@@ -228,9 +228,100 @@ public:
 	 *
 	 * @param context          current source tree context node
 	 * @param prefixResolver   prefix resolver to use
+	 * @param executionContext current execution context
+	 * @param result           the boolean result
+	 */
+	void
+	execute(
+			XalanNode*				context,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext,
+			bool&					result) const;
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param context          current source tree context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param executionContext current execution context
+	 * @param result           the numeric result
+	 */
+	void
+	execute(
+			XalanNode*				context,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext,
+			double&					result) const;
+
+	/**
+	 * Execute the XPath from the provided context.  The
+	 * result is appended to the supplied string.
+	 *
+	 * @param context          current source tree context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param executionContext current execution context
+	 * @param result           the string result
+	 */
+	void
+	execute(
+			XalanNode*				context,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext,
+			XalanDOMString&			result) const;
+
+	typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const unsigned int);
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param context          current source tree context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	void
+	execute(
+			XalanNode*				context,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const;
+
+	/**
+	 * Execute the XPath from the provided context.  Normally,
+	 * the expression will be evaluated and the result placed
+	 * in the parameter result.  However, some cases (such as
+	 * the evalution of a variable) could result in the copying
+	 * of a node-set, which is extremely expensive.  In that
+	 * case, the return value will contain the result of the
+	 * evaluation.  If the call to XObject::null() on the return
+	 * value is true, that indicates the value was executed
+	 * directly into the parameter.  Otherwise, the parameter
+	 * will be empty, and the result will be in the XObject
+	 * instance returned.
+	 *
+	 * @param context          current source tree context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param executionContext current execution context
+	 * @param result           the node-set result
+	 * @return the node-set result, if the result was not returned in the parameter
+	 */
+	const XObjectPtr
+	execute(
+			XalanNode*				context,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext,
+			MutableNodeRefList&		result) const;
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param context          current source tree context node
+	 * @param prefixResolver   prefix resolver to use
 	 * @param contextNodeList  node list for current context
 	 * @param executionContext current execution context
-	 * @return pointer to union of node-set operands
+	 * @return smart-pointer to result XObject
 	 */
 	const XObjectPtr
 	execute(
@@ -242,9 +333,148 @@ public:
 		// Set and restore the context node list...
 		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
 										executionContext,
-										contextNodeList);	
+										contextNodeList);
 
 		return execute(context, prefixResolver, executionContext);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param context          current source tree context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param contextNodeList  node list for current context
+	 * @param executionContext current execution context
+	 * @param result           the boolean result
+	 */
+	void
+	execute(
+			XalanNode*				context,
+			const PrefixResolver&	prefixResolver,
+			const NodeRefListBase&	contextNodeList,
+			XPathExecutionContext&	executionContext,
+			bool&					result) const
+	{
+		// Set and restore the context node list...
+		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
+										executionContext,
+										contextNodeList);
+
+		execute(context, prefixResolver, executionContext, result);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param context          current source tree context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param contextNodeList  node list for current context
+	 * @param executionContext current execution context
+	 * @param result           the numeric result
+	 */
+	void
+	execute(
+			XalanNode*				context,
+			const PrefixResolver&	prefixResolver,
+			const NodeRefListBase&	contextNodeList,
+			XPathExecutionContext&	executionContext,
+			double&					result) const
+	{
+		// Set and restore the context node list...
+		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
+										executionContext,
+										contextNodeList);
+
+		execute(context, prefixResolver, executionContext, result);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.  The
+	 * result is appended to the supplied string.
+	 *
+	 * @param context          current source tree context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param contextNodeList  node list for current context
+	 * @param executionContext current execution context
+	 * @param result           the string result
+	 */
+	void
+	execute(
+			XalanNode*				context,
+			const PrefixResolver&	prefixResolver,
+			const NodeRefListBase&	contextNodeList,
+			XPathExecutionContext&	executionContext,
+			XalanDOMString&			result) const
+	{
+		// Set and restore the context node list...
+		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
+										executionContext,
+										contextNodeList);
+
+		execute(context, prefixResolver, executionContext, result);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param context          current source tree context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param contextNodeList  node list for current context
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	void
+	execute(
+			XalanNode*				context,
+			const PrefixResolver&	prefixResolver,
+			const NodeRefListBase&	contextNodeList,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const
+	{
+		// Set and restore the context node list...
+		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
+										executionContext,
+										contextNodeList);
+
+		execute(context, prefixResolver, executionContext, formatterListener, function);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.  Normally,
+	 * the expression will be evaluated and the result placed
+	 * in the parameter result.  However, some cases (such as
+	 * the evalution of a variable) could result in the copying
+	 * of a node-set, which is extremely expensive.  In that
+	 * case, the return value will contain the result of the
+	 * evaluation.  If the call to XObject::null() on the return
+	 * value is true, that indicates the value was executed
+	 * directly into the parameter.  Otherwise, the parameter
+	 * will be empty, and the result will be in the XObject
+	 * instance returned.
+	 *
+	 * @param context          current source tree context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param contextNodeList  node list for current context
+	 * @param executionContext current execution context
+	 * @param result           the result as a set of nodes
+	 * @return the node-set result, if the result was not returned in the parameter
+	 */
+	const XObjectPtr
+	execute(
+			XalanNode*				context,
+			const PrefixResolver&	prefixResolver,
+			const NodeRefListBase&	contextNodeList,
+			XPathExecutionContext&	executionContext,
+			MutableNodeRefList&		result) const
+	{
+		// Set and restore the context node list...
+		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
+										executionContext,
+										contextNodeList);
+
+		return execute(context, prefixResolver, executionContext, result);
 	}
 
 	/**
@@ -253,7 +483,7 @@ public:
 	 * execution context.
 	 *
 	 * @param executionContext current execution context
-	 * @return pointer to result XObject
+	 * @return smart-pointer to result XObject
 	 */
 	const XObjectPtr
 	execute(XPathExecutionContext&	executionContext) const
@@ -264,32 +494,108 @@ public:
 	}
 
 	/**
-	 * Execute the XPath from the provided context.
+	 * Execute the XPath from the provided context.  The
+	 * prefix resolver must already be set in the
+	 * execution context.
 	 *
-	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
 	 * @param executionContext current execution context
-	 * @return pointer to union of node-set operands
+	 * @param result           the boolean result
 	 */
-	const XObjectPtr
-	executeMore(
-			XalanNode* 				context,
-			int 					opPos,
-			XPathExecutionContext&	executionContext) const;
+	void
+	execute(
+			XPathExecutionContext&	executionContext,
+			bool&					result) const
+	{
+		assert(executionContext.getPrefixResolver() != 0);
+
+		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+	}
 
 	/**
-	 * Execute a location path.
+	 * Execute the XPath from the provided context.  The
+	 * prefix resolver must already be set in the
+	 * execution context.
 	 *
-	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
 	 * @param executionContext current execution context
-	 * @return node-set
+	 * @param result           the numeric result
+	 */
+	void
+	execute(
+			XPathExecutionContext&	executionContext,
+			double&					result) const
+	{
+		assert(executionContext.getPrefixResolver() != 0);
+
+		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.  The
+	 * prefix resolver must already be set in the
+	 * execution context.  The result is appended to the
+	 * supplied string.
+	 *
+	 * @param executionContext current execution context
+	 * @param result           the string result
+	 */
+	void
+	execute(
+			XPathExecutionContext&	executionContext,
+			XalanDOMString&			result) const
+	{
+		assert(executionContext.getPrefixResolver() != 0);
+
+		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.  The
+	 * prefix resolver must already be set in the
+	 * execution context.
+	 *
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	void
+	execute(
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const
+	{
+		assert(executionContext.getPrefixResolver() != 0);
+
+		executeMore(executionContext.getCurrentNode(), 0, executionContext, formatterListener, function);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.  Normally,
+	 * the expression will be evaluated and the result placed
+	 * in the parameter result.  However, some cases (such as
+	 * the evalution of a variable) could result in the copying
+	 * of a node-set, which is extremely expensive.  In that
+	 * case, the return value will contain the result of the
+	 * evaluation.  If the call to XObject::null() on the return
+	 * value is true, that indicates the value was executed
+	 * directly into the parameter.  Otherwise, the parameter
+	 * will be empty, and the result will be in the XObject
+	 * instance returned.
+	 * 
+	 * The prefix resolver must already be set in the
+	 * execution context.
+	 *
+	 * @param executionContext current execution context
+	 * @return the node-set result, if the result was not returned in the parameter
 	 */
 	const XObjectPtr
-	locationPath(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const;
+	execute(
+			XPathExecutionContext&	executionContext,
+			MutableNodeRefList&		result) const
+	{
+		assert(executionContext.getPrefixResolver() != 0);
+
+		return executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+	}
 
 	/**
 	 * Retrieve a reference to the current expression.
@@ -534,18 +840,177 @@ public:
 protected:
 
 	/**
-	 * Computes the union of its operands which must be node-sets.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @return the match score in the form of an XObject.
+	 * Execute a location path.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @return node-set
 	 */
 	const XObjectPtr
-	matchPattern(
+	locationPath(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
-protected:
+	/**
+	 * Execute a location path.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @param theResult	       the result as a node list
+	 */
+	void
+	locationPath(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			MutableNodeRefList&		theResult) const
+	{
+		step(executionContext, context, opPos + 2, theResult);
+	}
+
+	/**
+	 * Execute a location path.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @param theResult	       the result as a number
+	 */
+	void
+	locationPath(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			double&					theResult) const;
+
+	/**
+	 * Execute a location path.  The result is appended to the
+	 * supplied string.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @param theResult	       the string
+	 */
+	void
+	locationPath(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			XalanDOMString&			theResult) const;
+
+	/**
+	 * Execute a location path.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	void
+	locationPath(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const;
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @return pointer to union of node-set operands
+	 */
+	const XObjectPtr
+	executeMore(
+			XalanNode* 				context,
+			int 					opPos,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @param theResult        The result of the execution
+	 */
+	void
+	executeMore(
+			XalanNode* 				context,
+			int 					opPos,
+			XPathExecutionContext&	executionContext,
+			bool&					theResult) const;
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @param theResult        The result of the execution
+	 */
+	void
+	executeMore(
+			XalanNode* 				context,
+			int 					opPos,
+			XPathExecutionContext&	executionContext,
+			double&					theResult) const;
+
+	/**
+	 * Execute the XPath from the provided context.  The result
+	 * is appended to the supplied string.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @param theResult        The result of the execution
+	 */
+	void
+	executeMore(
+			XalanNode* 				context,
+			int 					opPos,
+			XPathExecutionContext&	executionContext,
+			XalanDOMString&			theResult) const;
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	void
+	executeMore(
+			XalanNode* 				context,
+			int 					opPos,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const;
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @param theResult        The result of the execution
+	 * @return the node-set result, if the result was not returned in the parameter
+	 */
+	const XObjectPtr
+	executeMore(
+			XalanNode* 				context,
+			int 					opPos,
+			XPathExecutionContext&	executionContext,
+			MutableNodeRefList&		theResult) const;
 
 	/**
 	 * Helper function to get match score.
@@ -563,9 +1028,10 @@ protected:
 	 * OR two expressions and return the boolean result.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return XBoolean set to true if the one of the two arguments are true.
+	 * @param executionContext current execution context
+	 * @return true if the one of the two arguments are true.
 	 */
-	const XObjectPtr
+	bool
 	Or(
 			XalanNode*				context,
 			int						opPos,
@@ -575,9 +1041,10 @@ protected:
 	 * OR two expressions and return the boolean result.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return XBoolean set to true if the two arguments are both true.
+	 * @param executionContext current execution context
+	 * @return true if the two arguments are both true.
 	 */
-	const XObjectPtr
+	bool
 	And(
 			XalanNode*				context,
 			int						opPos,
@@ -587,9 +1054,10 @@ protected:
 	 * Tell if two expressions are functionally not equal.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return XBoolean set to true if the two arguments are not equal.
+	 * @param executionContext current execution context
+	 * @return true if the two arguments are not equal.
 	 */
-	const XObjectPtr
+	bool
 	notequals(
 			XalanNode*				context,
 			int						opPos,
@@ -599,9 +1067,10 @@ protected:
 	 * Tell if two expressions are functionally equal.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return XBoolean set to true if the two arguments are equal.
+	 * @param executionContext current execution context
+	 * @return true if the two arguments are equal.
 	 */
-	const XObjectPtr
+	bool
 	equals(
 			XalanNode*				context,
 			int						opPos,
@@ -611,9 +1080,10 @@ protected:
 	 * Tell if one argument is less than or equal to the other argument.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return XBoolean set to true if arg 1 is less than or equal to arg 2.
+	 * @param executionContext current execution context
+	 * @return true if arg 1 is less than or equal to arg 2.
 	 */
-	const XObjectPtr
+	bool
 	lte(
 			XalanNode*				context,
 			int						opPos,
@@ -623,9 +1093,10 @@ protected:
 	 * Tell if one argument is less than the other argument.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return XBoolean set to true if arg 1 is less than arg 2.
+	 * @param executionContext current execution context
+	 * @return true if arg 1 is less than arg 2.
 	 */
-	const XObjectPtr
+	bool
 	lt(
 			XalanNode*				context,
 			int						opPos,
@@ -635,9 +1106,10 @@ protected:
 	 * Tell if one argument is greater than or equal to the other argument.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return XBoolean set to true if arg 1 is greater than or equal to arg 2.
+	 * @param executionContext current execution context
+	 * @return true if arg 1 is greater than or equal to arg 2.
 	 */
-	const XObjectPtr
+	bool
 	gte(
 			XalanNode*				context,
 			int						opPos,
@@ -647,9 +1119,10 @@ protected:
 	 * Tell if one argument is greater than the other argument.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return XBoolean set to true if arg 1 is greater than arg 2.
+	 * @param executionContext current execution context
+	 * @return true if arg 1 is greater than arg 2.
 	 */
-	const XObjectPtr
+	bool
 	gt(
 			XalanNode*				context,
 			int						opPos,
@@ -659,10 +1132,40 @@ protected:
 	 * Give the sum of two arguments.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
 	 * @return sum of arg1 and arg2.
 	 */
-	const XObjectPtr
+	double
 	plus(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Give the sum of two arguments.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	void
+	plus(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const;
+
+	/**
+	 * Give the difference of two arguments.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return difference of arg1 and arg2.
+	 */
+	double
+	minus(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
@@ -671,10 +1174,27 @@ protected:
 	 * Give the difference of two arguments.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return difference of arg1 and arg2.
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
 	 */
-	const XObjectPtr
+	void
 	minus(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const;
+
+	/**
+	 * Multiply two arguments.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return arg1 * arg2.
+	 */
+	double
+	mult(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
@@ -683,10 +1203,27 @@ protected:
 	 * Multiply two arguments.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return arg1 * arg2.
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
 	 */
-	const XObjectPtr
+	void
 	mult(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const;
+
+	/**
+	 * Divide a number.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return arg1 / arg2.
+	 */
+	double
+	div(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
@@ -695,10 +1232,27 @@ protected:
 	 * Divide a number.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return arg1 / arg2.
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
 	 */
-	const XObjectPtr
+	void
 	div(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const;
+
+	/**
+	 * Return the remainder from a truncating division.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return arg1 mod arg2.
+	 */
+	double
+	mod(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
@@ -707,10 +1261,27 @@ protected:
 	 * Return the remainder from a truncating division.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return arg1 mod arg2.
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
 	 */
-	const XObjectPtr
+	void
 	mod(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const;
+
+	/**
+	 * Return the negation of a number.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return -arg.
+	 */
+	double
+	neg(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
@@ -719,42 +1290,23 @@ protected:
 	 * Return the negation of a number.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return -arg.
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
 	 */
-	const XObjectPtr
+	void
 	neg(
 			XalanNode*				context,
 			int						opPos,
-			XPathExecutionContext&	executionContext) const;
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const;
 
-	/**
-	 * Cast an expression to a string.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @return arg cast to a string.
-	 */
-	const XObjectPtr
-	string(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const;
-
-	/**
-	 * Cast an expression to a boolean.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @return arg cast to a boolean.
-	 */
-	const XObjectPtr
-	boolean(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const;
- 
 	/**
 	 * Computes the union of its operands which must be node-sets.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
 	 * @return the union of node-set operands.
 	 */
 	const XObjectPtr
@@ -764,26 +1316,62 @@ protected:
 			XPathExecutionContext&	executionContext) const;
 
 	/**
-	 * Get a literal value.
+	 * Computes the union of its operands which must be node-sets.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @result the result of the union of node-set operands.
+	 */
+	void
+	Union(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			MutableNodeRefList&		result) const;
+
+	/**
+	 * Get a literal value.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
 	 * @return an XObject object.
 	 */
 	const XObjectPtr
 	literal(
-			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
   
 	/**
-	 * Get the value of a variable.
-	 * @param context The current source tree context node.
+	 * Get a literal value.  The value is appended to the
+	 * supplied string.
+	 *
 	 * @param opPos The current position in the m_opMap array.
+	 * @param theResult The string.
+	 */
+	void
+	literal(
+			int					opPos,
+			XalanDOMString&		theResult) const;
+
+	/**
+	 * Get a literal value.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return The result as a double.
+	 */
+	void
+	literal(
+			int					opPos,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const;
+
+	/**
+	 * Get the value of a variable.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
 	 * @return an XObject object.
 	 */
 	const XObjectPtr
 	variable(
-			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -791,6 +1379,7 @@ protected:
 	 * Execute an expression as a group.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
 	 * @return arg.
 	 */
 	const XObjectPtr
@@ -803,21 +1392,71 @@ protected:
 	}
 
 	/**
-	 * Get a literal value.
+	 * Execute an expression as a group.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return an XObject object.
+	 * @param executionContext current execution context
+	 * @param theResult The result of the execution
+	 */
+	void
+	group(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			MutableNodeRefList&		theResult) const
+	{
+		executeMore(context, opPos + 2, executionContext, theResult);
+	}
+
+	/**
+	 * Get a literal value.
+	 * @param opPos The current position in the m_opMap array.
+	 * @return The result as a double.
+	 */
+	double
+	numberlit(int	opPos) const;
+
+	/**
+	 * Get a literal value.
+	 * @param opPos The current position in the m_opMap array.
+	 * @return The result as a double.
 	 */
 	const XObjectPtr
 	numberlit(
-			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
+	 * Get a literal value.  The value is appended to the
+	 * supplied string.
+	 *
+	 * @param opPos The current position in the m_opMap array.
+	 * @param theResult The string.
+	 */
+	void
+	numberlit(
+			int					opPos,
+			XalanDOMString&		theResult) const;
+
+	/**
+	 * Get a literal value.
+	 *
+	 * @param opPos The current position in the m_opMap array.
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	void
+	numberlit(
+			int					opPos,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const;
+
+	/**
 	 * Execute a function argument.
+	 *
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
 	 * @return the result of the argument expression.
 	 */
 	const XObjectPtr
@@ -830,20 +1469,29 @@ protected:
 	}
 
 	/**
-	 * Execute a location path.
+	 * Execute a function argument.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @return score in an XNumber, one of MATCH_SCORE_NODETEST, 
-	 * MATCH_SCORE_NONE, MATCH_SCORE_OTHER, MATCH_SCORE_QNAME.
+	 * @param executionContext current execution context
+	 * @param the result of the argument expression.
+	 * @result the result of the argument expression.
 	 */
 	const XObjectPtr
-	locationPathPattern(
+	arg(
 			XalanNode*				context,
 			int						opPos,
-			XPathExecutionContext&	executionContext) const;
+			XPathExecutionContext&	executionContext,
+			MutableNodeRefList&		result) const
+	{
+		return executeMore(context, opPos + 2, executionContext, result);
+	}
 
 	/**
 	 * Setup for and run an extension function.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
 	 */
 	const XObjectPtr
 	runExtFunction(
@@ -853,6 +1501,13 @@ protected:
 
 	/**
 	 * Handle an extension function.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param theNamespace The namespace of the function.
+	 * @param functionName The name of the function.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
 	 */
 	const XObjectPtr
 	extfunction(
@@ -872,6 +1527,10 @@ protected:
 
 	/**
 	 * Setup for and run a function.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
 	 */
 	const XObjectPtr
 	runFunction(
@@ -881,6 +1540,11 @@ protected:
 
 	/**
 	 * Handle a built-in function.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param argVec The arguments for the function.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
 	 */
 	const XObjectPtr
 	function(
@@ -892,6 +1556,79 @@ protected:
 		return s_functions[funcID].execute(executionContext, context, argVec, m_locator);
 	}
 
+	/**
+	 * Handle the built-in function "position".
+	 *
+	 * @param context The current source tree context node.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	double
+	functionPosition(
+			XalanNode*				context,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Handle the built-in function "position".
+	 *
+	 * @param context The current source tree context node.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	const XObjectPtr
+	functionPositionGeneric(
+			XalanNode*				context,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Handle the built-in function "last".
+	 *
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	double
+	functionLast(XPathExecutionContext&		executionContext) const;
+
+	/**
+	 * Handle the built-in function "last".
+	 *
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	const XObjectPtr
+	functionLastGeneric(XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Handle the built-in function "count".
+	 *
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	double
+	functionCount(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Handle the built-in function "count".
+	 *
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	const XObjectPtr
+	functionCountGeneric(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Get a numeric operand for an expression.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return The value of the operand.
+	 */
 	double
 	getNumericOperand(
 			XalanNode*				context,
@@ -914,12 +1651,6 @@ private:
 	{
 		eDefaultTargetDataSize = 5
 	};
-
-	const XObjectPtr
-	locationPath(
-			XPathExecutionContext&	executionContext,
-			XalanNode& 				context, 
-			int 					opPos) const;
 
 	eMatchScore
 	locationPathPattern(
@@ -1218,13 +1949,11 @@ protected:
 			int 					argLen,
 			int 					stepType) const;
 
-	void
+	int
 	predicates(
 			XPathExecutionContext&	executionContext,
-			XalanNode* 				context, 
 			int 					opPos,
-			MutableNodeRefList& 	subQueryResults,
-			int&					endPredicatesPos) const;
+			MutableNodeRefList& 	subQueryResults) const;
 
 	eMatchScore
 	handleFoundIndex(
@@ -1238,6 +1967,19 @@ protected:
 			XalanNode* 				localContext,
 			int 					startOpPos) const;
 
+private:
+
+	void
+	unknownOpCodeError(
+			XalanNode*				context,
+			XPathExecutionContext&	executionContext,
+			int						opPos) const;
+
+	void
+	notNodeSetError(
+			XalanNode*				context,
+			XPathExecutionContext&	executionContext) const;
+
 	// Data members...
 
 	/**
@@ -1245,19 +1987,19 @@ protected:
 	 * Holds information about the current expression.
 	 *
 	 */
-	XPathExpression						m_expression;
+	XPathExpression		m_expression;
 
 	/**
 	 * A LocatorType for reporting errors.
 	 */
-	const LocatorType*						m_locator;
+	const LocatorType*	m_locator;
 
 	/**
 	 * If true, the XPath can allocated XObjects in more
 	 * efficient ways, since its lifetime is guaranteed
-	 * to be at least that of the transform.
+	 * to be at least that of the transformation.
 	 */
-	bool								m_inStylesheet;
+	bool				m_inStylesheet;
 
 	/**
 	 *

@@ -78,18 +78,6 @@ class XALAN_XPATH_EXPORT XBoolean : public XObject
 public:
 
 	/**
-	 * Perform static initialization.  See class XPathInit.
-	 */
-	static void
-	initialize();
-
-	/**
-	 * Perform static shut down.  See class XPathInit.
-	 */
-	static void
-	terminate();
-
-	/**
 	 * Construct an XBoolean object from a boolean value
 	 * 
 	 * @param val		boolean value to initialize object
@@ -139,10 +127,6 @@ public:
 private:
 
 	bool	m_value;
-
-	static XalanDOMString	s_falseString;
-
-	static XalanDOMString	s_trueString;
 };
 
 

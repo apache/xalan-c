@@ -306,6 +306,8 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 				unsigned int			theKeyIndex,
 				first_argument_type		theEntry) const
 {
+	assert(theKey.getPrefixResolver() != 0);
+
 	const XPath* const	xpath = theKey.getSelectPattern();
 	assert(xpath != 0);
 
@@ -330,8 +332,11 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 	{
 		if (DoubleSupport::equal(theCache[theKeyIndex][theEntry.m_position], theDummyValue) == true)
 		{
-			theCache[theKeyIndex][theEntry.m_position] =
-				xpath->execute(theEntry.m_node, *theKey.getPrefixResolver(), m_executionContext)->num();
+			xpath->execute(
+				theEntry.m_node,
+				*theKey.getPrefixResolver(),
+				m_executionContext,
+				theCache[theKeyIndex][theEntry.m_position]);
 		}
 
 		return theCache[theKeyIndex][theEntry.m_position];
@@ -348,12 +353,9 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 			theCache[theKeyIndex].end(),
 			theDummyValue);
 
-		const XObjectPtr	result(xpath->execute(theEntry.m_node, *theKey.getPrefixResolver(), m_executionContext));
-		assert(result.null() == false);
+		double&		theResult = theCache[theKeyIndex][theEntry.m_position];
 
-		const double	theResult = result->num();
-
-		theCache[theKeyIndex][theEntry.m_position] = theResult;
+		xpath->execute(theEntry.m_node, *theKey.getPrefixResolver(), m_executionContext, theResult);
 
 		return theResult;
 	}
