@@ -1205,7 +1205,28 @@ FormatterToXML::writeAttrString(const XalanDOMChar*		theString)
 void
 FormatterToXML::accumCommentData(const XalanDOMChar*	data)
 {
-	accumName(data);
+	const XalanDOMString::size_type		len = length(data);
+	XalanDOMChar						previousChar = 0;
+
+	for (XalanDOMString::size_type i = 0; i < len; ++i)
+	{
+		const XalanDOMChar	currentChar = data[i];
+
+		if (currentChar == XalanUnicode::charHyphenMinus &&
+			previousChar == XalanUnicode::charHyphenMinus)
+		{
+			accumName(XalanUnicode::charSpace);
+		}
+
+		accumName(currentChar);
+
+		previousChar = currentChar;
+	}
+		
+	if (previousChar == XalanUnicode::charHyphenMinus)
+	{
+		accumName(XalanUnicode::charSpace);
+	}
 }
 
 
