@@ -80,7 +80,7 @@ class QName;
 class Stylesheet;
 class XalanElement;
 class XalanNode;
-class XSLTProcessor;
+class StylesheetExecutionContext;
 
 
 
@@ -169,7 +169,6 @@ public:
 	 *
 	 * @param localPart      element name's local part
 	 * @param element        extension element being processed
-	 * @param processor      handle to XSLTProcessor
 	 * @param stylesheetTree compiled stylesheet tree
 	 * @param mode           current mode
 	 * @param sourceTree     root of the source tree (but don't assume it's a
@@ -184,13 +183,13 @@ public:
 	 */
 	void
 	processElement (
-			const XalanDOMString&	localPart,
-			const XalanElement*		element,
-			XSLTProcessor&			processor, 
-			Stylesheet&				stylesheetTree, 
-			const XalanNode*		sourceTree,
-			const XalanNode*		sourceNode,
-			const QName&			mode);
+			StylesheetExecutionContext&		executionContext,
+			const XalanDOMString&			localPart,
+			const XalanElement*				element,
+			Stylesheet&						stylesheetTree, 
+			const XalanNode*				sourceTree,
+			const XalanNode*				sourceNode,
+			const QName&					mode);
 
 protected:
 

@@ -577,6 +577,15 @@ public:
 	virtual void
 	setPrefix(const XalanDOMString&	prefix);
 
+	virtual bool
+	isIndexed() const;
+
+	virtual unsigned long
+	getIndex() const;
+
+	virtual XalanDOMString
+	getXSLTData() const;
+
 	virtual XalanDOMString
 	getTagName() const;
 

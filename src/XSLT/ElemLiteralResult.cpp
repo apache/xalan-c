@@ -246,7 +246,7 @@ void ElemLiteralResult::execute(
 					DOMServices::s_XMLNamespaceWithSeparator + prefix :
 							DOMServices::s_XMLNamespace;
 
-				XalanDOMString srcURI = ns.getURI();
+				XalanDOMString			srcURI = ns.getURI();
 
 				const XalanDOMString	alias = getStylesheet().getAliasNamespaceURI(srcURI);
 
@@ -257,9 +257,9 @@ void ElemLiteralResult::execute(
 
 				bool isXSLNS = equals(srcURI, executionContext.getXSLNameSpaceURL())
 					|| 0 != getStylesheet().lookupExtensionNSHandler(srcURI)
-					|| equalsIgnoreCase(srcURI,executionContext.getXalanXSLNameSpaceURL());
+					|| equals(srcURI,executionContext.getXalanXSLNameSpaceURL());
 
-				if(!isXSLNS && !equalsIgnoreCase(srcURI,desturi)) // TODO: Check for extension namespaces
+				if(!isXSLNS && !equals(srcURI, desturi)) // TODO: Check for extension namespaces
 				{
 					executionContext.addResultAttribute(attrName, srcURI);
 				}

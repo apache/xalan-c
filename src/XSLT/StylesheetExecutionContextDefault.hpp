@@ -207,19 +207,19 @@ public:
 	getIndent() const;
 
 	// $$$ ToDo: Get rid of this!!!!
-	virtual XObject*
+	virtual const XObject*
 	executeXPath(
 			const XalanDOMString&	str,
 			XalanNode*				contextNode,
 			const XalanElement&		resolver);
 
-	virtual XPath*
+	virtual const XPath*
 	createMatchPattern(
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver);
 
 	virtual void
-	returnXPath(XPath*	xpath);
+	returnXPath(const XPath*	xpath);
 
 	virtual const XalanDOMString
 	evaluateAttrVal(
@@ -230,14 +230,14 @@ public:
 	virtual void
 	pushTopLevelVariables(const ParamVectorType&	topLevelParams);
 
-	virtual XObject*
+	virtual const XObject*
 	createVariable(
 			const ElemTemplateElement*	element,
 			const XPath&				xpath,
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver);
 
-	virtual XObject*
+	virtual const XObject*
 	createVariable(
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
@@ -256,7 +256,7 @@ public:
 	virtual void
 	pushVariable(
 			const QName&				name,
-			XObject*					var,
+			const XObject*				var,
 			const ElemTemplateElement*	element);
 
 	virtual void
@@ -295,7 +295,7 @@ public:
 			const QName&				mode,
 			const ElemTemplateElement*	targetTemplate);
 
-	virtual XObject*
+	virtual const XObject*
 	getParamVariable(const QName&	theName) const;
 
 	virtual void
@@ -352,13 +352,13 @@ public:
 			bool		overrideStrip,
 			bool		shouldCloneAttributes);
 
-	virtual XObject*
+	virtual const XObject*
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceTree,
 			XalanNode*					sourceNode);
 
-	virtual XObject*
+	virtual const XObject*
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceTree,
@@ -366,7 +366,10 @@ public:
 			const QName&				mode);
 
 	virtual bool
-	destroyXObject(XObject*		theXObject) const;
+	destroyXObject(const XObject*	theXObject) const;
+
+	virtual void
+	outputToResultTree(const XObject&	xobj);
 
 	virtual void
 	outputResultTreeFragment(const XObject&		theTree);
@@ -536,6 +539,9 @@ public:
 	virtual XObjectFactory&
 	getXObjectFactory() const;
 
+	virtual bool
+	isIgnorableWhitespace(const XalanText&	node) const;
+
 	virtual XalanDOMString
 	getNamespaceOfNode(const XalanNode&		n) const;
 
@@ -589,7 +595,7 @@ public:
 	virtual void
 	popArgVector();
 
-	virtual XObject*
+	virtual const XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
@@ -641,7 +647,7 @@ public:
 			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver);
 
-	virtual XObject*
+	virtual const XObject*
 	getVariable(const QName&	name) const;
 
 	virtual const PrefixResolver*
@@ -655,6 +661,9 @@ public:
 
 	virtual XalanDOMString
 	findURIFromDoc(const XalanDocument*		owner) const;
+
+	virtual XalanDocument*
+	getDOMFactory() const;
 
 	virtual XalanDOMString
 	getUnparsedEntityURI(
@@ -762,7 +771,7 @@ private:
 	void
 	addToXPathCache(
 			const XalanDOMString&	pattern,
-			XPath*					theXPath);
+			const XPath*			theXPath);
 
 
 	XPathExecutionContextDefault	m_xpathExecutionContextDefault;
@@ -779,7 +788,7 @@ private:
 	typedef set<TextOutputStream*>						TextOutputStreamSetType;
 	typedef vector<const XObject*>						VariablesCollectionType;
 	typedef vector<VariablesCollectionType>				LiveVariablesStackType;
-	typedef pair<XPath*, clock_t>						XPathCacheEntry;
+	typedef pair<const XPath*, clock_t>					XPathCacheEntry;
 	typedef map<XalanDOMString,
 				XPathCacheEntry,
 				less<XalanDOMString> >					XPathCacheMapType;
@@ -790,7 +799,7 @@ private:
 	typedef std::set<TextOutputStream*>					TextOutputStreamSetType;
 	typedef std::vector<const XObject*>					VariablesCollectionType;
 	typedef std::vector<VariablesCollectionType>		LiveVariablesStackType;
-	typedef std::pair<XPath*, clock_t>					XPathCacheEntry;
+	typedef std::pair<const XPath*, clock_t>			XPathCacheEntry;
 	typedef std::map<XalanDOMString, XPathCacheEntry>	XPathCacheMapType;
 #endif
 

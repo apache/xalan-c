@@ -325,12 +325,12 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 
 
 
-XPath*
+const XPath*
 ElemNumber::getCountMatchPattern(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						contextNode) const
 {
-	XPath*	countMatchPattern = 0;
+	const XPath*	countMatchPattern = 0;
 
 	switch(contextNode->getNodeType())
 	{

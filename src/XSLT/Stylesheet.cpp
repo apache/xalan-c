@@ -1680,6 +1680,22 @@ Stylesheet::setPrefix(const XalanDOMString& /* prefix */)
 
 
 
+unsigned long
+Stylesheet::getIndex() const
+{
+	return 0;
+}
+
+
+
+XalanDOMString
+Stylesheet::getXSLTData() const
+{
+	return DOMString();
+}
+
+
+
 XalanElement*
 Stylesheet::createElement(const XalanDOMString& 	/* tagName */)
 {
@@ -1866,6 +1882,17 @@ Stylesheet::getElementById(const XalanDOMString&	/* elementId */) const
 	assert(false);	
 
 	return 0;
+}
+
+
+
+bool
+Stylesheet::isIndexed() const
+{
+	//should not be called
+	assert(false);	
+
+	return false;
 }
 
 

@@ -229,7 +229,9 @@ public:
 	getSourceTreeFromInput(XSLTInputSource&		inputSource);
 
 	virtual void
-	outputToResultTree(const XObject&	xobj);
+	outputToResultTree(
+			StylesheetExecutionContext&		executionContext,
+			const XObject&					xobj);
 
 	virtual void
 	resetCurrentState(
@@ -534,7 +536,9 @@ public:
 	 * @param theTree result tree fragment
 	 */
 	void
-	outputResultTreeFragment(const XObject& 	theTree);
+	outputResultTreeFragment(
+			StylesheetExecutionContext&		executionContext,
+			const XObject& 					theTree);
 
 	/**
 	 * Retrieve the root stylesheet.
@@ -824,7 +828,7 @@ public:
 	 * @param resolver resolver for namespace resolution
 	 * @return pointer to XPath created
 	 */
-	XPath*
+	const XPath*
 	createMatchPattern(
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver);
@@ -836,7 +840,7 @@ public:
 	 * @param xpath	   The XPath to return.
 	 */
 	void
-	returnXPath(XPath*	xpath);
+	returnXPath(const XPath*	xpath);
 
 	/**
 	 * Copy XMLNS: attributes in if not already in scope.
@@ -856,7 +860,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to XObject result
 	 */
-	XObject*
+	const XObject*
 	evalXPathStr(
 			const XalanDOMString&	str,
 			XPathExecutionContext&	executionContext);
@@ -870,7 +874,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to XObject result
 	 */
-	XObject*
+	const XObject*
 	evalXPathStr(
 			const XalanDOMString&	str,
 			XalanNode* 				contextNode,
@@ -886,7 +890,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to XObject result
 	 */
-	XObject*
+	const XObject*
 	evalXPathStr(
 			const XalanDOMString&	str,
 			XalanNode* 				contextNode,

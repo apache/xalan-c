@@ -62,6 +62,10 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 #include <XPath/Function.hpp>
 
 
@@ -98,7 +102,12 @@ private:
 	// Not implemented...
 	FunctionGenerateID&	operator=(const FunctionGenerateID&);
 
-	bool operator==(const FunctionGenerateID&) const;
+	bool
+	operator==(const FunctionGenerateID&) const;
+
+	const XalanDOMString	m_prefix;
+
+	const unsigned int		m_prefixLength;
 };
 
 

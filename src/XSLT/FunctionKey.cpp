@@ -166,8 +166,7 @@ FunctionKey::execute(
 				{
 					assert(theNodeSet.item(i) != 0);
 
-					const XalanDOMString		ref =
-							executionContext.getNodeData(*theNodeSet.item(i));
+					const XalanDOMString		ref = theNodeSet.item(i)->getXSLTData();
 
 					if(0 != length(ref))
 					{
@@ -183,7 +182,7 @@ FunctionKey::execute(
 											*executionContext.getPrefixResolver());
 							assert(nl != 0);
 
-							theNodeRefList->addNodesInDocOrder(*nl);
+							theNodeRefList->addNodesInDocOrder(*nl, executionContext);
 						}
 					}
 				}
@@ -201,7 +200,7 @@ FunctionKey::execute(
 
 			if (nl != 0)
 			{
-				theNodeRefList->addNodesInDocOrder(*nl);
+				theNodeRefList->addNodesInDocOrder(*nl, executionContext);
 			}
 		}
 

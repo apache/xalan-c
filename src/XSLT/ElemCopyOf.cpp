@@ -135,7 +135,7 @@ ElemCopyOf::execute(
 				*this, XalanDOMString(XALAN_STATIC_UCODE_STRING("select")), *m_pSelectPattern, value.get()));
 	}
 
-	const int	type = value->getType();
+	const XObject::eObjectType	type = value->getType();
 
 	XalanDOMString s;
 

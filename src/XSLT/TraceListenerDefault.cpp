@@ -250,7 +250,7 @@ TraceListenerDefault::selected(const SelectionEvent&	ev)
 				for(unsigned int i = 0; i < n; i++)
 				{
 					m_printWriter.print(XALAN_STATIC_UCODE_STRING("     "));
-					m_printWriter.println(DOMServices::getNodeData(*nl.item(i)));
+					m_printWriter.println(nl.item(i)->getXSLTData());
 				}
 			}
 		}

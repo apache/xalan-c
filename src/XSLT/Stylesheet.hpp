@@ -1040,6 +1040,12 @@ typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 	virtual void
 	setPrefix(const XalanDOMString& prefix);
 
+	virtual unsigned long
+	getIndex() const;
+
+	virtual XalanDOMString
+	getXSLTData() const;
+
 	virtual XalanElement*
 	createElement(const XalanDOMString& tagName);
 
@@ -1100,6 +1106,9 @@ typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 
 	virtual XalanElement*
 	getElementById(const XalanDOMString&	elementId) const;
+
+	virtual bool
+	isIndexed() const;
 
 	// These interfaces are inherited from PrefixResolver...
 

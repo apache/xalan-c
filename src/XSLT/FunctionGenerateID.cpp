@@ -58,6 +58,10 @@
 
 
 
+#include <XalanDOM/XalanNode.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
@@ -70,7 +74,9 @@
 
 
 FunctionGenerateID::FunctionGenerateID() :
-	Function()
+	Function(),
+	m_prefix(XALAN_STATIC_UCODE_STRING("N")),
+	m_prefixLength(length(m_prefix))
 {
 }
 
@@ -78,6 +84,25 @@ FunctionGenerateID::FunctionGenerateID() :
 
 FunctionGenerateID::~FunctionGenerateID()
 {
+}
+
+
+
+const XalanDOMString
+getSuffix(const XalanNode*	theNode)
+{
+	const unsigned long		theIndex = theNode->getIndex();
+
+	if (theIndex == 0)
+	{
+		// We're assuming here that each nodes has an implementation with a 
+		// unique address that we can convert into a string
+		return UnsignedLongToDOMString(unsigned long(theNode));
+	}
+	else
+	{
+		return UnsignedLongToDOMString(theIndex);
+	}
 }
 
 
@@ -101,14 +126,17 @@ FunctionGenerateID::execute(
 			theContext = 0;
 	}
 
-	// We're assuming here that each nodes has an implementation with a 
-	// unique address that we can convert into a string
-
 	XalanDOMString id;
 
 	if (0 != theContext)
 	{
-		id = XALAN_STATIC_UCODE_STRING("N") + LongToDOMString(reinterpret_cast<long>(theContext)); 		
+		const XalanDOMString	theSuffix = getSuffix(theContext);
+		assert(length(theSuffix) != 0);
+
+		reserve(id, m_prefixLength + length(theSuffix) + 1);
+
+		id += m_prefix;
+		id += theSuffix;
 	}
 
 	return executionContext.getXObjectFactory().createString(id);

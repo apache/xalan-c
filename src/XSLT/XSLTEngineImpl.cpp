@@ -972,9 +972,11 @@ XSLTEngineImpl::isXSLTagOfType(const XalanNode&	node,
 
 
 void
-XSLTEngineImpl::outputToResultTree(const XObject&	value)
+XSLTEngineImpl::outputToResultTree(
+			StylesheetExecutionContext&		executionContext,
+			const XObject&					value)
 {
-	const int	type = value.getType();
+	const XObject::eObjectType	type = value.getType();
 
 	XalanDOMString s;
 
@@ -1041,7 +1043,7 @@ XSLTEngineImpl::outputToResultTree(const XObject&	value)
 		break;
 		
 	case XObject::eTypeResultTreeFrag:
-		outputResultTreeFragment(value);
+		outputResultTreeFragment(executionContext, value);
 		break;
 
 	case XObject::eTypeNull:
@@ -1934,9 +1936,10 @@ XSLTEngineImpl::cloneToResultTree(
 
 			if(stripWhiteSpace == true)
 			{
-				if(!m_xpathSupport.isIgnorableWhitespace(tx))
+				if(tx.isIgnorableWhitespace())
 				{
 					data = getNormalizedText(tx);
+
 					if((0 != length(data)) && (0 == length(trim(data))))
 					{
 						clear(data);
@@ -1967,7 +1970,7 @@ XSLTEngineImpl::cloneToResultTree(
 				// if the node after that is a ignorable text node, append 
 				// it to the text node just added.
 			  
-				if(m_xpathSupport.isIgnorableWhitespace(tx))
+				if(tx.isIgnorableWhitespace())
 				{
 					ignorableWhitespace(toCharArray(data), length(data));
 				}
@@ -2103,9 +2106,11 @@ XSLTEngineImpl::createResultTreeFrag(
 
 
 void
-XSLTEngineImpl::outputResultTreeFragment(const XObject&		theTree)
+XSLTEngineImpl::outputResultTreeFragment(
+			StylesheetExecutionContext&		executionContext,
+			const XObject&					theTree)
 {
-	const ResultTreeFragBase&	docFrag = theTree.rtree();
+	const ResultTreeFragBase&	docFrag = theTree.rtree(executionContext);
 
 	const XalanNodeList*		nl = docFrag.getChildNodes();
 	assert(nl != 0);
@@ -2393,18 +2398,19 @@ XSLTEngineImpl::copyNamespaceAttributes(
 
 
 
-XObject*
+const XObject*
 XSLTEngineImpl::evalXPathStr(
 			const XalanDOMString&	str,
 			XPathExecutionContext&	executionContext)
 {
-	XPathGuard	theXPath(m_xpathFactory,
-						 m_xpathFactory.create());
+	XPath* const	theXPath = m_xpathFactory.create();
 
-    m_xpathProcessor->initXPath(*theXPath.get(),
+	XPathGuard	theGuard(m_xpathFactory,
+						 theXPath);
+
+    m_xpathProcessor->initXPath(*theXPath,
 								str,
 								*executionContext.getPrefixResolver(),
-								m_xobjectFactory,
 								m_xpathEnvSupport);
 
     return theXPath->execute(executionContext.getCurrentNode(),
@@ -2414,20 +2420,21 @@ XSLTEngineImpl::evalXPathStr(
 
 
 
-XObject*
+const XObject*
 XSLTEngineImpl::evalXPathStr(
 			const XalanDOMString&	str,
 			XalanNode*				contextNode,
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext)
 {
-	XPathGuard	theXPath(m_xpathFactory,
-						 m_xpathFactory.create());
+	XPath* const	theXPath = m_xpathFactory.create();
 
-    m_xpathProcessor->initXPath(*theXPath.get(),
+	XPathGuard	theGuard(m_xpathFactory,
+						 theXPath);
+
+    m_xpathProcessor->initXPath(*theXPath,
 								str,
 								prefixResolver,
-								m_xobjectFactory,
 								m_xpathEnvSupport);
 
     return theXPath->execute(contextNode, prefixResolver, executionContext);
@@ -2435,7 +2442,7 @@ XSLTEngineImpl::evalXPathStr(
 
 
 
-XObject*
+const XObject*
 XSLTEngineImpl::evalXPathStr(
 			const XalanDOMString&	str,
 			XalanNode*				contextNode,
@@ -2455,14 +2462,14 @@ XSLTEngineImpl::evalXPathStr(
 /**
  * Create and initialize an xpath and return it.
  */
-XPath*
+const XPath*
 XSLTEngineImpl::createMatchPattern(
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver)
 {
 	XPath* const	xpath = m_xpathFactory.create();
 
-	m_xpathProcessor->initMatchPattern(*xpath, str, resolver, m_xobjectFactory, m_xpathEnvSupport);
+	m_xpathProcessor->initMatchPattern(*xpath, str, resolver, m_xpathEnvSupport);
 
 	return xpath;
 }
@@ -2470,7 +2477,7 @@ XSLTEngineImpl::createMatchPattern(
 
 
 void
-XSLTEngineImpl::returnXPath(XPath*	xpath)
+XSLTEngineImpl::returnXPath(const XPath*	xpath)
 {
 	m_xpathFactory.returnObject(xpath);
 }
@@ -2782,7 +2789,7 @@ XSLTEngineImpl::shouldStripSourceNode(
 			const XalanText& 	theTextNode =
 					static_cast<const XalanText&>(textNode);
 
-			if(!m_xpathSupport.isIgnorableWhitespace(theTextNode))
+			if(!theTextNode.isIgnorableWhitespace())
 			{
 				const XalanDOMString	data = theTextNode.getData();
 
@@ -3107,7 +3114,7 @@ XSLTEngineImpl::getDOMFactory() const
  */
 ResultTreeFragBase* XSLTEngineImpl::createDocFrag() const
 {
-	return new ResultTreeFrag(*getDOMFactory(), m_xpathSupport);
+	return new ResultTreeFrag(*getDOMFactory());
 }
   
 
@@ -3133,7 +3140,7 @@ XSLTEngineImpl::associateXLocatorToNode(
 ResultTreeFragBase*
 XSLTEngineImpl::createResultTreeFrag() const
 {
-	return new ResultTreeFrag(*getDOMFactory(), m_xpathSupport);
+	return new ResultTreeFrag(*getDOMFactory());
 }
 
 

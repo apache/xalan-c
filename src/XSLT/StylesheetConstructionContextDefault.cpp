@@ -86,12 +86,10 @@
 StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
 			XSLTEngineImpl&		processor,
 			XPathEnvSupport&	xpathEnvSupport,
-			XObjectFactory&		xobjectFactory,
 			XPathFactory&		xpathFactory) :
 	StylesheetConstructionContext(),
 	m_processor(processor),
 	m_xpathEnvSupport(xpathEnvSupport),
-	m_xobjectFactory(xobjectFactory),
 	m_xpathFactory(xpathFactory),
 	m_xpathProcessor(new XPathProcessorImpl),
 	m_stylesheets()
@@ -152,8 +150,6 @@ StylesheetConstructionContextDefault::reset()
 			 DeleteFunctor<StylesheetRoot>());
 
 	m_stylesheets.clear();
-
-	m_xobjectFactory.reset();
 
 	m_xpathFactory.reset();
 }
@@ -264,7 +260,6 @@ StylesheetConstructionContextDefault::createMatchPattern(
 	m_xpathProcessor->initMatchPattern(*xpath,
 									   str,
 									   resolver,
-									   m_xobjectFactory,
 									   m_xpathEnvSupport);
 
 	return xpath;
@@ -282,7 +277,6 @@ StylesheetConstructionContextDefault::createXPath(
 	m_xpathProcessor->initXPath(*xpath,
 								str,
 								resolver,
-								m_xobjectFactory,
 								m_xpathEnvSupport);
 
 	return xpath;

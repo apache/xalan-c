@@ -74,7 +74,11 @@
 
 
 
-#include "XSLTProcessor.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
+
+class XSLTProcessor;
 
 
 
@@ -241,13 +245,13 @@ bool ExtensionNSHandler::isElementAvailable (const XalanDOMString& element)
  */
 void
 ExtensionNSHandler::processElement(
-			const XalanDOMString&	localPart,
-			const XalanElement*		/* element */,
-			XSLTProcessor&			processor, 
-			Stylesheet&				stylesheetTree, 
-			const XalanNode*		sourceTree,
-			const XalanNode*		sourceNode,
-			const QName&			mode)
+			StylesheetExecutionContext&		executionContext,
+			const XalanDOMString&			localPart,
+			const XalanElement*				/* element */,
+			Stylesheet&						stylesheetTree, 
+			const XalanNode*				sourceTree,
+			const XalanNode*				sourceNode,
+			const QName&					mode)
 {
 	const XObject*	result = 0;
 
@@ -259,8 +263,8 @@ ExtensionNSHandler::processElement(
 
 			ExtensionFunctionHandler::ArgVector argv;
 			
-			XSLProcessorContext xpc(processor,
-					stylesheetTree, sourceTree, sourceNode, mode);
+//			XSLProcessorContext xpc(processor,
+//					stylesheetTree, sourceTree, sourceNode, mode);
 			/*
 				java:
 				Vector argv = new Vector (2);
@@ -285,7 +289,7 @@ ExtensionNSHandler::processElement(
 
 	if (result != 0) 
 	{
-		processor.outputToResultTree(*result);
+		executionContext.outputToResultTree(*result);
 	}
 }
 

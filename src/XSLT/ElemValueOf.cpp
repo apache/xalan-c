@@ -176,7 +176,7 @@ ElemValueOf::execute(
 		}
 		else
 		{
-			theValue = executionContext.getNodeData(*sourceNode);
+			theValue = sourceNode->getXSLTData();
 		}
 
 		if(0 != executionContext.getTraceListeners())

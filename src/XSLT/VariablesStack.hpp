@@ -140,9 +140,9 @@ public:
 	popContextMarker();
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<pair<const QName*, XObject*> >				ParamsVectorType;
+	typedef vector<pair<const QName*, const XObject*> >				ParamsVectorType;
 #else
-	typedef std::vector<std::pair<const QName*, XObject*> >		ParamsVectorType;
+	typedef std::vector<std::pair<const QName*, const XObject*> >	ParamsVectorType;
 #endif
 
 	/**
@@ -164,7 +164,7 @@ public:
 	 * @param theName name of variable
 	 * @return pointer to XObject for variable
 	 */
-	XObject*
+	const XObject*
 	getParamVariable(const QName& qname) const
 	{
 		return findXObject(qname, false);
@@ -176,7 +176,7 @@ public:
 	 * @param qname name of variable
 	 * @return pointer to the corresponding XObject
 	 */
-	XObject*
+	const XObject*
 	getVariable(const QName& 	name) const
 	{
 		return findXObject(name, true);
@@ -194,7 +194,7 @@ public:
 	void
 	pushVariable(
 			const QName&				name,
-			XObject*					val,
+			const XObject*				val,
 			const ElemTemplateElement*	e);
 
 	/**
@@ -321,7 +321,7 @@ private:
 		 */
 		StackEntry(
 			const QName*	name,
-			XObject*		val);
+			const XObject*	val);
 
 		/**
 		 * Construct an element frame marker.
@@ -366,7 +366,7 @@ private:
 		 * 
 		 * @return pointer to XObject
 		 */
-		XObject*
+		const XObject*
 		getVariable() const
 		{
 			return variable.m_value;
@@ -400,7 +400,7 @@ private:
 			{
 				const QName*				m_qname;
 
-				XObject*					m_value;
+				const XObject*				m_value;
 			} variable;
 
 			struct
@@ -419,7 +419,7 @@ private:
 	enum { eDefaultStackSize = 100 };
 
 
-	XObject*
+	const XObject*
 	findXObject(
 			const QName&	name,
 			bool			fSearchGlobalSpace) const;

@@ -438,7 +438,7 @@ StylesheetExecutionContextDefault::getIndent() const
 
 
 
-XObject*
+const XObject*
 StylesheetExecutionContextDefault::executeXPath(
 			const XalanDOMString&	str,
 			XalanNode*				contextNode,
@@ -452,12 +452,12 @@ StylesheetExecutionContextDefault::executeXPath(
 
 
 
-XPath*
+const XPath*
 StylesheetExecutionContextDefault::createMatchPattern(
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver)
 {
-	XPath*	theResult = 0;
+	const XPath*	theResult = 0;
 
 	// We won't cache any xpath that has a namespace, since
 	// we have no idea how that might be resolved.  We could
@@ -500,7 +500,7 @@ StylesheetExecutionContextDefault::createMatchPattern(
 
 
 void
-StylesheetExecutionContextDefault::returnXPath(XPath*	xpath)
+StylesheetExecutionContextDefault::returnXPath(const XPath*		xpath)
 {
 	if (isCached(xpath) == false)
 	{
@@ -534,14 +534,14 @@ StylesheetExecutionContextDefault::pushTopLevelVariables(const ParamVectorType&	
 
 
 
-XObject*
+const XObject*
 StylesheetExecutionContextDefault::createVariable(
 			const ElemTemplateElement*	/* element */,
 			const XPath&				xpath,
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver)
 {
-	XObject* const	theVariable =
+	const XObject* const	theVariable =
 		xpath.execute(contextNode, resolver, *this);
 
 	assert(m_liveVariablesStack.empty() == false);
@@ -555,7 +555,7 @@ StylesheetExecutionContextDefault::createVariable(
 
 
 
-XObject*
+const XObject*
 StylesheetExecutionContextDefault::createVariable(
 			const ElemTemplateElement*	/* element */,
 			const ElemTemplateElement&	templateChild,
@@ -563,8 +563,8 @@ StylesheetExecutionContextDefault::createVariable(
 			XalanNode*					sourceNode,
 			const QName&				mode)
 {
-	XObject* const	theVariable =
-		this->createXResultTreeFrag(templateChild, sourceTree, sourceNode, mode);
+	const XObject* const	theVariable =
+		createXResultTreeFrag(templateChild, sourceTree, sourceNode, mode);
 
 	// We'll want to return this variable after the current element frame
 	// has finished executing, so save this off for later...
@@ -583,7 +583,7 @@ StylesheetExecutionContextDefault::pushVariable(
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver)
 {
-	XObject*	var = 0;
+	const XObject*	var = 0;
 
 	if (length(str) > 0)
 	{
@@ -604,7 +604,7 @@ StylesheetExecutionContextDefault::pushVariable(
 void
 StylesheetExecutionContextDefault::pushVariable(
 			const QName&				name,
-			XObject*					var,
+			const XObject*				var,
 			const ElemTemplateElement*	element)
 {
 	m_variablesStack.pushVariable(name, var, element);
@@ -756,7 +756,7 @@ StylesheetExecutionContextDefault::pushParams(
 
 				const XPath* const	pxpath = xslParamElement->getSelectPattern();
 
-				XObject*			theXObject = 0;
+				const XObject*	theXObject = 0;
 
 				if(0 != pxpath)
 				{
@@ -791,7 +791,7 @@ StylesheetExecutionContextDefault::pushParams(
 
 
 
-XObject*
+const XObject*
 StylesheetExecutionContextDefault::getParamVariable(const QName&	theName) const
 {
 	return m_variablesStack.getParamVariable(theName);
@@ -937,7 +937,7 @@ StylesheetExecutionContextDefault::cloneToResultTree(
 
 
 
-XObject*
+const XObject*
 StylesheetExecutionContextDefault::createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceTree,
@@ -951,7 +951,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 
 
 
-XObject*
+const XObject*
 StylesheetExecutionContextDefault::createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceTree,
@@ -975,7 +975,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 
 
 bool
-StylesheetExecutionContextDefault::destroyXObject(XObject*	theXObject) const
+StylesheetExecutionContextDefault::destroyXObject(const XObject*	theXObject) const
 {
 	return getXObjectFactory().returnObject(theXObject);
 }
@@ -983,9 +983,17 @@ StylesheetExecutionContextDefault::destroyXObject(XObject*	theXObject) const
 
 
 void
+StylesheetExecutionContextDefault::outputToResultTree(const XObject&	xobj)
+{
+	m_xsltProcessor.outputToResultTree(*this, xobj);
+}
+
+
+
+void
 StylesheetExecutionContextDefault::outputResultTreeFragment(const XObject&	theTree)
 {
-	m_xsltProcessor.outputResultTreeFragment(theTree);
+	m_xsltProcessor.outputResultTreeFragment(*this, theTree);
 }
 
 
@@ -1332,6 +1340,14 @@ StylesheetExecutionContextDefault::getXObjectFactory() const
 
 
 
+bool
+StylesheetExecutionContextDefault::isIgnorableWhitespace(const XalanText&	node) const
+{
+	return m_xpathExecutionContextDefault.isIgnorableWhitespace(node);
+}
+
+
+
 XalanDOMString
 StylesheetExecutionContextDefault::getNamespaceOfNode(const XalanNode&	n) const
 {
@@ -1469,7 +1485,7 @@ StylesheetExecutionContextDefault::popArgVector()
 
 
 
-XObject*
+const XObject*
 StylesheetExecutionContextDefault::extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
@@ -1576,10 +1592,10 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
 
 
 
-XObject*
+const XObject*
 StylesheetExecutionContextDefault::getVariable(const QName&		name) const
 {
-	XObject* const	theVariable =
+	const XObject* const	theVariable =
 		m_variablesStack.getVariable(name);
 
 	return m_xpathExecutionContextDefault.getXObjectFactory().clone(*theVariable);
@@ -1607,6 +1623,14 @@ XalanDOMString
 StylesheetExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
 	return m_xpathExecutionContextDefault.getNamespaceForPrefix(prefix);
+}
+
+
+
+XalanDocument*
+StylesheetExecutionContextDefault::getDOMFactory() const
+{
+	return m_xpathExecutionContextDefault.getDOMFactory();
 }
 
 
@@ -1951,7 +1975,7 @@ private:
 void
 StylesheetExecutionContextDefault::addToXPathCache(
 			const XalanDOMString&	pattern,
-			XPath*					theXPath)
+			const XPath*			theXPath)
 {
 	clock_t		addClock = clock();
 

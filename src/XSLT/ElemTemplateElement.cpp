@@ -641,7 +641,7 @@ ElemTemplateElement::transformSelectedChildren(
 
 	if (0 != selectPattern)
 	{
-		XObject*	theXObject = 0;
+		const XObject*	theXObject = 0;
 
 		{
 			SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
@@ -1305,6 +1305,30 @@ void
 ElemTemplateElement::setPrefix(const XalanDOMString&	/* prefix */)
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+}
+
+
+
+bool
+ElemTemplateElement::isIndexed() const
+{
+	return false;
+}
+
+
+
+unsigned long
+ElemTemplateElement::getIndex() const
+{
+	return 0;
+}
+
+
+
+XalanDOMString
+ElemTemplateElement::getXSLTData() const
+{
+	return DOMString();
 }
 
 

@@ -188,7 +188,7 @@ KeyTable::KeyTable(
 									XalanNode* const	useNode = nl->item(k);
 									assert(useNode != 0);
 
-									exprResult = executionContext.getNodeData(*useNode);
+									exprResult = useNode->getXSLTData();
 								}
 
 								MutableNodeRefList&		keyNodes =

@@ -78,7 +78,6 @@ class XPath;
 class XPathEnvSupport;
 class XPathFactory;
 class XPathProcessor;
-class XObjectFactory;
 
 
 
@@ -95,24 +94,6 @@ public:
 	 * @param xpath XPath to evaluate
 	 */
 	AVTPartXPath(const XPath*	xpath);
-
-	/**
-	 * Construct an XPath Attribute Value Template (AVT) part from a string.
-	 *
-	 * @param val             pure string section of an AVT
-	 * @param resolver        prefix resolver to use
-	 * @param xobjectFactory  factory class instance for XObjects
-	 * @param xpathEnvSupport XPath environment support class instance
-	 * @param xpathProcessor  processor class instance for XPaths
-	 * @param xpathFactory    factory class instance for XPaths
-	 */
-	AVTPartXPath(
-			const XalanDOMString&	val,
-			const PrefixResolver&	resolver,
-			XObjectFactory&			xobjectFactory,
-			XPathEnvSupport&		xpathEnvSupport,
-			XPathProcessor&			xpathProcessor, 
-			XPathFactory&			xpathFactory);
 
 
 	// These methods are inherited from AVTPart ...

@@ -209,10 +209,13 @@ public:
 	* Output an object to the result tree by doing the right conversions.
 	* This is public for access by extensions.
 	*
+	* @param executionContext	  current execution context
 	* @param obj the XObject to output
 	*/
 	virtual void
-	outputToResultTree(const XObject&	xobj) = 0;
+	outputToResultTree(
+			StylesheetExecutionContext&		executionContext,
+			const XObject&					xobj) = 0;
 
 	/**
 	 * Reset the state of execution to node 'xmlNode' in source tree

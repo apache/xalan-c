@@ -602,7 +602,7 @@ public:
 	 * @param resolver    resolver for namespace resolution
 	 * @return pointer to resulting XObject
 	 */
-	virtual XObject*
+	virtual const XObject*
 	executeXPath(
 			const XalanDOMString&	str,
 			XalanNode*				contextNode,
@@ -616,7 +616,7 @@ public:
 	 * @param resolver resolver for namespace resolution
 	 * @return pointer to resulting XPath
 	 */
-	virtual XPath*
+	virtual const XPath*
 	createMatchPattern(
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver) = 0;
@@ -627,7 +627,7 @@ public:
 	 * @param xpath The XPath to return.
 	 */
 	virtual void
-	returnXPath(XPath*	xpath) = 0;
+	returnXPath(const XPath*	xpath) = 0;
 
 	// A helper class to automatically return an XPath instance.
 	class XPathGuard
@@ -636,7 +636,7 @@ public:
 
 		XPathGuard(
 				StylesheetExecutionContext&		context,
-				XPath*							xpath = 0) :
+				const XPath*					xpath = 0) :
 			m_context(context),
 			m_xpath(xpath)
 		{
@@ -650,16 +650,16 @@ public:
 			}
 		}
 
-		XPath*
+		const XPath*
 		get() const
 		{
 			return m_xpath;
 		}
 
-		XPath*
+		const XPath*
 		release()
 		{
-			XPath* const	temp = m_xpath;
+			const XPath* const	temp = m_xpath;
 
 			m_xpath = 0;
 
@@ -667,7 +667,7 @@ public:
 		}
 
 		void
-		reset(XPath*	xpath)
+		reset(const XPath*	xpath)
 		{
 			if (m_xpath != 0)
 			{
@@ -681,7 +681,7 @@ public:
 
 		StylesheetExecutionContext&		m_context;
 
-		XPath*							m_xpath;
+		const XPath*					m_xpath;
 	};
 
 	/**
@@ -723,7 +723,7 @@ public:
 	 * @param resolver    resolver for namespace resolution
 	 * @return a pointer to the XObject result
 	 */
-	virtual XObject*
+	virtual const XObject*
 	createVariable(
 			const ElemTemplateElement*	element,
 			const XPath&				xpath,
@@ -741,7 +741,7 @@ public:
 	 * @param sourceNode source node
 	 * @return a pointer to the XObject result
 	 */
-	virtual XObject*
+	virtual const XObject*
 	createVariable(
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
@@ -816,7 +816,7 @@ public:
 	virtual void
 	pushVariable(
 			const QName&				name,
-			XObject*					var,
+			const XObject*				var,
 			const ElemTemplateElement*	element) = 0;
 
 	/**
@@ -869,7 +869,7 @@ public:
 	 * @param theName name of variable
 	 * @return pointer to XObject for variable
 	 */
-	virtual XObject*
+	virtual const XObject*
 	getParamVariable(const QName&	theName) const = 0;
 
 	/**
@@ -1164,7 +1164,7 @@ public:
 	 * @param sourceNode source node
 	 * @return XObject instance
 	 */
-	virtual XObject*
+	virtual const XObject*
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceTree,
@@ -1179,7 +1179,7 @@ public:
 	 * @param mode current mode
 	 * @return XObject instance
 	 */
-	virtual XObject*
+	virtual const XObject*
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceTree,
@@ -1195,7 +1195,16 @@ public:
 	 * @return true if the object was destroyed.
 	 */
 	virtual bool
-	destroyXObject(XObject*		theXObject) const = 0;
+	destroyXObject(const XObject*	theXObject) const = 0;
+
+	/**
+	 * Output an object to the result tree by doing the right conversions.
+	 * This is public for access by extensions.
+	 *
+	 * @param obj the XObject to output
+	 */
+	virtual void
+	outputToResultTree(const XObject&	xobj) = 0;
 
 	/**
 	 * Given a result tree fragment, walk the tree and
@@ -1491,6 +1500,9 @@ public:
 	virtual XObjectFactory&
 	getXObjectFactory() const = 0;
 
+	virtual bool
+	isIgnorableWhitespace(const XalanText&	node) const = 0;
+
 	virtual XalanDOMString
 	getNamespaceOfNode(const XalanNode&		n) const = 0;
 
@@ -1544,7 +1556,7 @@ public:
 	virtual void
 	popArgVector() = 0;
 
-	virtual XObject*
+	virtual const XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
@@ -1596,7 +1608,7 @@ public:
 			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver) = 0;
 
-	virtual XObject*
+	virtual const XObject*
 	getVariable(const QName&	name) const = 0;
 
 	virtual const PrefixResolver*
@@ -1610,6 +1622,9 @@ public:
 
 	virtual XalanDOMString
 	findURIFromDoc(const XalanDocument*		owner) const = 0;
+
+	virtual XalanDocument*
+	getDOMFactory() const = 0;
 
 	virtual XalanDOMString
 	getUnparsedEntityURI(

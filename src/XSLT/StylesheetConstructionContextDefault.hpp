@@ -77,7 +77,6 @@
 
 
 
-class XObjectFactory;
 class XPathEnvSupport;
 class XPathFactory;
 class XPathProcessor;
@@ -104,14 +103,12 @@ public:
 	 *
 	 * @param processor a reference to an XSLTEngineImpl instance.  Used for error reporting.
 	 * @param xpathEnvSupport a reference to an XPathEnvSupport instance.
-	 * @param xobjectFactory a reference to an XObjectFactory instance.  See comments above for important details.
 	 * @param xpathFactory a reference to an XPathFactory instance.  See comments above for important details.
 	 *
 	 */
 	StylesheetConstructionContextDefault(
 			XSLTEngineImpl&		processor,
 			XPathEnvSupport&	xpathEnvSupport,
-			XObjectFactory&		xobjectFactory,
 			XPathFactory&		xpathFactory);
 
 	virtual
@@ -208,7 +205,6 @@ private:
 
 	XSLTEngineImpl&						m_processor;
 	XPathEnvSupport&					m_xpathEnvSupport;
-	XObjectFactory&						m_xobjectFactory;
 	XPathFactory&						m_xpathFactory;
 
 #if defined(XALAN_NO_NAMESPACES)

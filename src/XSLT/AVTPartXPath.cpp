@@ -78,43 +78,6 @@ AVTPartXPath::AVTPartXPath(const XPath*		xpath) :
 
 
 
-static const XPath*
-createAndInitXPath(
-			const XalanDOMString&	val,
-			const PrefixResolver&	resolver,
-			XObjectFactory&			xobjectFactory,
-			XPathEnvSupport&		xpathEnvSupport,
-			XPathProcessor&			xpathProcessor, 
-			XPathFactory&			xpathFactory)
-{
-	XPath* const	theXPath = xpathFactory.create();
-
-	xpathProcessor.initMatchPattern(*theXPath, val, resolver, xobjectFactory, xpathEnvSupport);
-
-	return theXPath;
-}
-
-
-
-AVTPartXPath::AVTPartXPath(
-			const XalanDOMString&	val,
-			const PrefixResolver&	resolver,
-			XObjectFactory&			xobjectFactory,
-			XPathEnvSupport&		xpathEnvSupport,
-			XPathProcessor&			xpathProcessor, 
-			XPathFactory&			xpathFactory) :
-	AVTPart(),
-	m_pXPath(createAndInitXPath(val,
-								resolver,
-								xobjectFactory,
-								xpathEnvSupport,
-								xpathProcessor,
-								xpathFactory))
-{
-}
-
-
-
 void
 AVTPartXPath::	evaluate(
 			XalanDOMString&			buf,

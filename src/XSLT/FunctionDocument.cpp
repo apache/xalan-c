@@ -214,7 +214,7 @@ FunctionDocument::execute(
 								arg->nodeset().item(i) != 0);
 
 			XalanDOMString	ref = XObject::eTypeNodeSet == arg->getType() ?
-													executionContext.getNodeData(*arg->nodeset().item(i)) :
+													arg->nodeset().item(i)->getXSLTData() :
 													arg->str();
 
 			// This is the case where the function was called with
@@ -261,7 +261,7 @@ FunctionDocument::execute(
 
 				if(newDoc != 0)
 				{
-					mnl->addNodeInDocOrder(newDoc, true);
+					mnl->addNodeInDocOrder(newDoc, executionContext);
 				}
 			}
 		}

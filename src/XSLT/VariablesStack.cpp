@@ -321,7 +321,7 @@ VariablesStack::pushParams(
 void
 VariablesStack::pushVariable(
 			const QName&				name,
-			XObject*					val,
+			const XObject*				val,
 			const ElemTemplateElement*	e)
 {
 	if(elementFrameAlreadyPushed(e) == false)
@@ -351,12 +351,12 @@ VariablesStack::markGlobalStackFrame()
 
 
 
-XObject*
+const XObject*
 VariablesStack::findXObject(
 			const QName&	name,
 			bool			fSearchGlobalSpace) const
 {
-	XObject*		theXObject = 0;
+	const XObject*		theXObject = 0;
 
 	const StackEntry*	theVariable = findVariable(name, fSearchGlobalSpace);
 
@@ -508,7 +508,7 @@ VariablesStack::StackEntry::StackEntry() :
 
 VariablesStack::StackEntry::StackEntry(
 		const QName*	name,
-		XObject*		val) :
+		const XObject*	val) :
 	m_type(eVariable)
 {
 	variable.m_qname = name;
