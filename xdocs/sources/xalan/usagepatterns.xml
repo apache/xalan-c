@@ -91,9 +91,11 @@ how to take advantage of the API it provides.</note>
 <s3 title="Basic usage patten with XalanTransformer C++ API">
 <p>Using XalanTransformer and the C++ API, you can perform one or more transformations as follows:</p>
 <ol>
-  <li>Include the XalanTransformer header file.<br/>
-  <code>#include &lt;XalanTransformer/XalanTransformer.hpp</code><br/><br/></li>
-  <li>Initialize Xalan and Xerces.<br/>
+  <li>Include the PlatformUtils and XalanTransformer header files.<br/>
+  <code>#include &lt;util/PlatformUtils.hpp&gt;</code><br/>
+  <code>#include &lt;XalanTransformer/XalanTransformer.hpp&gt;</code><br/><br/></li>
+  <li>Initialize Xerces and Xalan.<br/>
+  <code>XMLPlatformUtils::Initialize();</code><br/>
   <code>XalanTransformer::initialize();</code><br/><br/></li>
   <li>Create a XalanTransformer.<br/>
   <code>XalanTransformer theXalanTransformer;</code><br/><br/></li>
@@ -103,8 +105,9 @@ how to take advantage of the API it provides.</note>
   <code>const char* xmlOut = "foo.out";</code><br/>
   <code>int theResult = 0;</code><br/>
   <code>theResult = theXalanTransformer(xmlIn,xslSheet,xmlOut);</code><br/><br/></li>
-  <li>Shut down Xalan.<br/>
-  <code>XalanTransformer::terminate();</code></li>
+  <li>Shut down Xalan and (optionally) Xerces.<br/>
+  <code>XalanTransformer::terminate();</code><br/>
+  <code>XMLPlatformUtils::Terminate();</code></li>
 </ol>
 </s3><anchor name="cppvar"/>
 <s3 title="Variations with the XalanTransformer C++ API">
