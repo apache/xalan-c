@@ -147,6 +147,7 @@ private:
 	const bool				m_isCData;
 	const bool				m_preserveSpace;
 	const bool				m_disableOutputEscaping;
+	const bool				m_isWhitespace;
 
 	const XalanDOMString	m_ch;
 };

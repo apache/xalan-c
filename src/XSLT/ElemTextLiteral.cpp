@@ -90,6 +90,7 @@ ElemTextLiteral::ElemTextLiteral(
 	m_isCData(isCData),
 	m_preserveSpace(preserveSpace),	
 	m_disableOutputEscaping(disableOutputEscaping),
+	m_isWhitespace(isXMLWhitespace(ch, start, length)),
 	m_ch(ch + start, length)
 {
 }
@@ -113,7 +114,7 @@ ElemTextLiteral::getNodeValue() const
 const XalanDOMString&
 ElemTextLiteral::getElementName() const
 {
-	return Constants::PSEUDONAME_TEXT;
+	return Constants::ELEMNAME_TEXT_WITH_PREFIX_STRING;
 }
 
 
@@ -121,13 +122,13 @@ ElemTextLiteral::getElementName() const
 bool
 ElemTextLiteral::isWhitespace() const
 {
-	return isXMLWhitespace(m_ch);
+	return m_isWhitespace;
 }
 
 
 
 void
-ElemTextLiteral::execute(StylesheetExecutionContext&		executionContext) const
+ElemTextLiteral::execute(StylesheetExecutionContext&	executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
