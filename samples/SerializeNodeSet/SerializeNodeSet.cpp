@@ -102,8 +102,10 @@ main(
 				// Hook the two together...
 				theDOMSupport.setParserLiaison(&theLiaison);
 
+				const XalanDOMString	theFileName(argv[1]);
+
 				// Create an input source that represents a local file...
-				const LocalFileInputSource	theInputSource(XalanDOMString(argv[1]).c_str());
+				const LocalFileInputSource	theInputSource(theFileName.c_str());
 
 				// Parse the document...
 				XalanDocument* const	theDocument =
