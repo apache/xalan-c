@@ -98,6 +98,7 @@
 
 
 #include <PlatformSupport/AttributeListImpl.hpp>
+#include <PlatformSupport/AttributeVectorEntry.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/PrintWriter.hpp>
 #include <PlatformSupport/XalanOutputStream.hpp>
@@ -251,7 +252,7 @@ foo()
 		
 		for_each(theVector.begin(),
 			 theVector.end(),
-			 DeleteFunctor<AttributeListImpl::AttributeVectorEntry>());
+			 DeleteFunctor<AttributeVectorEntry>());
 	}	
 
 	{
