@@ -80,7 +80,7 @@
   <s3 title="Changes since &xslt4c; version 1.1">
      <p>TO BE ADDED</p>
      <ul>
-      <li>Extension functions</li>
+      <li><link idref="extensionslib">Set of extension functions</link></li>
       <li></li>      
       <li></li>
       <li></li>
