@@ -436,7 +436,7 @@ ICUBridgeCollationCompareFunctorImpl::getCachedCollator(const XalanDOMChar*		the
 
 	CollatorCacheListType&		theNonConstCache =
 #if defined(XALAN_NO_MUTABLE)
-		(CollatorCacheListType*)m_collatorCache;
+		(CollatorCacheListType&)m_collatorCache;
 #else
 		m_collatorCache;
 #endif
@@ -489,7 +489,7 @@ ICUBridgeCollationCompareFunctorImpl::cacheCollator(
 
 	CollatorCacheListType&		theNonConstCache =
 #if defined(XALAN_NO_MUTABLE)
-		(CollatorCacheListType*)m_collatorCache;
+		(CollatorCacheListType&)m_collatorCache;
 #else
 		m_collatorCache;
 #endif
