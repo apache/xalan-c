@@ -352,8 +352,8 @@ public:
 		{
 		}
 
-		const void
-		operator()(const ParamsVectorType::value_type&	theEntry);
+		void
+		operator()(const ParamsVectorType::value_type&	theEntry) const;
 
 	private:
 

@@ -244,8 +244,8 @@ VariablesStack::pop()
 
 
 
-const void
-VariablesStack::PushParamFunctor::operator()(const VariablesStack::ParamsVectorType::value_type&	theEntry)
+void
+VariablesStack::PushParamFunctor::operator()(const VariablesStack::ParamsVectorType::value_type&	theEntry) const
 {
 	assert(theEntry.m_qname != 0);
 
