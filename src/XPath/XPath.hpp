@@ -1961,6 +1961,20 @@ protected:
 			XPathExecutionContext&	executionContext) const;
 
 	/**
+	 * Handle the built-in function "sum".
+	 *
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	double
+	functionSum(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
 	 * Get a numeric operand for an expression.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.

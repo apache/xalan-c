@@ -1672,6 +1672,10 @@ XPathProcessorImpl::FunctionCall()
 			FunctionNamespaceURI(opPos);
 			break;
 
+		case XPathExpression::eOP_FUNCTION_SUM:
+			FunctionSum();
+			break;
+
 		default:
 			{
 				// The position must be at least zero, since
@@ -2039,6 +2043,25 @@ XPathProcessorImpl::FunctionString(int	opPos)
 
 
 void
+XPathProcessorImpl::FunctionSum()
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_SUM);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 1)
+	{
+		error("The sum() function takes one argument");
+	}
+}
+
+
+
+void
 XPathProcessorImpl::FunctionStringLength(int	opPos)
 {
 	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_STRINGLENGTH_0);
@@ -2109,19 +2132,17 @@ XPathProcessorImpl::LocationPath()
 
 		const int	newOpPos = m_expression->opCodeMapLength();
 
-//		if (tokenIs(XalanUnicode::charSolidus) == false)
-		{
-			// Tell how long the step is without the predicate
-			const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
+		// Tell how long the step is without the predicate
+		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
 
-			m_expression->appendOpCode(XPathExpression::eFROM_ROOT,
-									   theArgs);
+		m_expression->appendOpCode(
+			XPathExpression::eFROM_ROOT,
+			theArgs);
 
-			m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
+		m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
 
-			// Tell how long the entire step is.
-			m_expression->updateOpCodeLength(newOpPos);
-		}
+		// Tell how long the entire step is.
+		m_expression->updateOpCodeLength(newOpPos);
 	}
 
 	if(length(m_token) != 0)
@@ -3315,6 +3336,7 @@ const XalanDOMChar		XPathProcessorImpl::s_namespaceString[] =
 const XPathProcessorImpl::TableEntry	XPathProcessorImpl::s_functionTable[] =
 {
 	{ XPathFunctionTable::s_not, XPathExpression::eOP_FUNCTION_NOT },
+	{ XPathFunctionTable::s_sum, XPathExpression::eOP_FUNCTION_SUM },
 	{ XPathProcessorImpl::s_lastString, XPathExpression::eOP_FUNCTION_LAST },
 	{ XPathFunctionTable::s_name, XPathExpression::eOP_FUNCTION_NAME_0 },
 	{ XPathProcessorImpl::s_nodeString, XPathExpression::eNODETYPE_NODE },

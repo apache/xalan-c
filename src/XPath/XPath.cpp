@@ -473,6 +473,10 @@ XPath::executeMore(
 		return executionContext.getXObjectFactory().createNumber(functionStringLength(context, opPos, executionContext));
 		break;
 
+	case XPathExpression::eOP_FUNCTION_SUM:
+		return executionContext.getXObjectFactory().createNumber(functionSum(context, opPos, executionContext));
+		break;
+
 	default:
 		unknownOpCodeError(context, executionContext, opPos);
 		break;
@@ -656,6 +660,10 @@ XPath::executeMore(
 		result = XObject::boolean(functionStringLength(context, opPos, executionContext));
 		break;
 
+	case XPathExpression::eOP_FUNCTION_SUM:
+		result = XObject::boolean(functionSum(context, opPos, executionContext));
+		break;
+
 	default:
 		unknownOpCodeError(context, executionContext, opPos);
 		break;
@@ -837,6 +845,10 @@ XPath::executeMore(
 		result = functionStringLength(context, opPos, executionContext);
 		break;
 
+	case XPathExpression::eOP_FUNCTION_SUM:
+		result = functionSum(context, opPos, executionContext);
+		break;
+
 	default:
 		unknownOpCodeError(context, executionContext, opPos);
 		break;
@@ -1016,6 +1028,10 @@ XPath::executeMore(
 
 	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
 		XObject::string(functionStringLength(context, opPos, executionContext), result);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_SUM:
+		XObject::string(functionSum(context, opPos, executionContext), result);
 		break;
 
 	default:
@@ -1235,6 +1251,10 @@ XPath::executeMore(
 		XObject::string(functionStringLength(context, opPos, executionContext), formatterListener, function);
 		break;
 
+	case XPathExpression::eOP_FUNCTION_SUM:
+		XObject::string(functionSum(context, opPos, executionContext), formatterListener, function);
+		break;
+
 	default:
 		unknownOpCodeError(context, executionContext, opPos);
 		break;
@@ -1296,6 +1316,7 @@ XPath::executeMore(
 	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
 	case XPathExpression::eOP_FUNCTION_NAMESPACEURI_0:
 	case XPathExpression::eOP_FUNCTION_NAMESPACEURI_1:
+	case XPathExpression::eOP_FUNCTION_SUM:
 		notNodeSetError(context, executionContext);
 		break;
 
@@ -2717,6 +2738,51 @@ XPath::functionStringLength(
 	executeMore(context, opPos + 2, executionContext, theCounter, &FormatterListener::characters);
 
 	return theCounter.getCount();
+}
+
+
+
+double
+XPath::functionSum(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
+{
+	assert(context != 0);
+
+	double	sum = 0.0;
+
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+	BorrowReturnMutableNodeRefList	result(executionContext);
+
+	const XObjectPtr	nodesetResult(executeMore(context, opPos + 2, executionContext, *result));
+
+	const NodeRefListBase* const	theNodeList = nodesetResult.null() == false ?
+			&nodesetResult->nodeset() : &*result;
+	assert(theNodeList != 0);
+
+	const NodeRefListBase::size_type	theLength = theNodeList->getLength();
+
+	if (theLength != 0)
+	{
+		assert(theNodeList->item(0) != 0);
+
+		XPathExecutionContext::GetAndReleaseCachedString	theData(executionContext);
+
+		XalanDOMString&		theString = theData.get();
+
+		for (NodeRefListBase::size_type i = 0; i < theLength; i++)
+		{
+			DOMServices::getNodeData(*theNodeList->item(i), theString);
+
+			sum = DoubleSupport::add(sum, DoubleSupport::toDouble(theString));
+
+			clear(theString);
+		}
+	}
+
+	return sum;
 }
 
 

@@ -603,6 +603,8 @@ public:
 		eOP_FUNCTION_STRINGLENGTH_1 = 75,
 		eOP_FUNCTION_NAMESPACEURI_0 = 76,
 		eOP_FUNCTION_NAMESPACEURI_1 = 77,
+		eOP_FUNCTION_SUM = 78,
+		eOP_FUNCTION_CONCAT = 79,
 
 		// Always add _before_ this one and update
 		// s_opCodeLengthArray.

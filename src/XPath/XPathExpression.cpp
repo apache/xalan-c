@@ -191,6 +191,8 @@ static const int	theOpCodeLengthArray[] =
 	XPathExpression::s_opCodeMapLengthIndex + 1,
 	XPathExpression::s_opCodeMapLengthIndex + 1,
 	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
 	XPathExpression::s_opCodeMapLengthIndex + 1
 };
 

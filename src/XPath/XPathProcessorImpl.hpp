@@ -624,6 +624,9 @@ private:
 	FunctionStringLength(int	opPos);
 
 	void
+	FunctionSum();
+
+	void
 	FunctionNamespaceURI(int	opPos);
 
 	/**
