@@ -208,7 +208,7 @@ public:
 			StylesheetExecutionContext&		executionContext,
 			bool&							fNameFound)
 	{
-		return findXObject(qname, executionContext, false, fNameFound);
+		return findXObject(qname, executionContext, true, false, fNameFound);
 	}
 
 	/**
@@ -226,7 +226,7 @@ public:
 			StylesheetExecutionContext&		executionContext,
 			bool&							fNameFound)
 	{
-		return findXObject(qname, executionContext, true, fNameFound);
+		return findXObject(qname, executionContext, false, true, fNameFound);
 	}
 
 	/**
@@ -264,6 +264,12 @@ public:
 	 */
 	void
 	start();
+
+	/**
+	 * Reset all params in the current stack frame.
+	 */
+	void
+	resetParams();
 
 	/**
 	 * Mark the top of the global stack frame.
@@ -383,10 +389,12 @@ private:
 		 * Enumeration for types of stack entries, one of context state, context
 		 * marker, element marker, or argument.
 		 */
-		enum eStackEntryType { eContextMarker,
-							   eVariable,
-							   eElementFrameMarker,
-							   eNextValue };
+		enum eType { eContextMarker,
+				    eVariable,
+					eParam,
+					eActiveParam,
+					eElementFrameMarker,
+					eNextValue };
 
 		/**
 		 * Construct a context marker.
@@ -399,14 +407,16 @@ private:
 		 */
 		StackEntry(
 			const QName*		name,
-			const XObjectPtr&	val);
+			const XObjectPtr&	val,
+			bool				isParam = false);
 
 		/**
 		 * Construct a variable that has not been evaluated yet.
 		 */
 		StackEntry(
 			const QName*			name,
-			const ElemVariable*		var);
+			const ElemVariable*		var,
+			bool					isParam = false);
 
 		/**
 		 * Construct an element frame marker.
@@ -429,7 +439,7 @@ private:
 		 * 
 		 * @return enumeration value for type
 		 */
-		eStackEntryType
+		eType
 		getType() const
 		{
 			return m_type;
@@ -479,6 +489,12 @@ private:
 			return m_variable;
 		}
 
+		void
+		activate();
+
+		void
+		deactivate();
+
 		/**
 		 * Retrieve the ElemTemplateElem where frame begins.  Valid only for element frame markers
 		 *
@@ -499,7 +515,7 @@ private:
 	private:
 
 		// Data members...
-		eStackEntryType				m_type;
+		eType						m_type;
 
 		const QName*				m_qname;
 
@@ -523,12 +539,14 @@ private:
 	findXObject(
 			const QName&					name,
 			StylesheetExecutionContext&		executionContext,
+			bool							fIsParam,
 			bool							fSearchGlobalSpace,
 			bool&							fNameFound);
 
 	StackEntry*
 	findEntry(
 			const QName&	name,
+			bool			fIsParam,
 			bool			fSearchGlobalSpace);
 
 

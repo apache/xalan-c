@@ -145,10 +145,10 @@ VariablesStack::popContextMarker()
 
 	for(int i = (nElems - 1); i >= 0 && m_stack.empty() == false; --i)
 	{
-		const StackEntry&	theEntry = m_stack[i];
+		const StackEntry&			theEntry = m_stack[i];
 		assert(theEntry == back());
 
-		const StackEntry::eStackEntryType	type = theEntry.getType();
+		const StackEntry::eType		type = theEntry.getType();
 		assert(type < StackEntry::eNextValue && type >= 0);
 
 		pop();
@@ -244,13 +244,13 @@ VariablesStack::PushParamFunctor::operator()(const VariablesStack::ParamsVectorT
 
 	if (theEntry.m_value.null() == false)
 	{
-		m_variablesStack.push(VariablesStack::StackEntry(theEntry.m_qname, theEntry.m_value));
+		m_variablesStack.push(VariablesStack::StackEntry(theEntry.m_qname, theEntry.m_value, true));
 	}
 	else
 	{
 		assert(theEntry.m_variable != 0);
 
-		m_variablesStack.push(VariablesStack::StackEntry(theEntry.m_qname, theEntry.m_variable));
+		m_variablesStack.push(VariablesStack::StackEntry(theEntry.m_qname, theEntry.m_variable, true));
 	}
 }
 
@@ -322,6 +322,31 @@ VariablesStack::start()
 
 
 void
+VariablesStack::resetParams()
+{
+	const unsigned int	nElems = getCurrentStackFrameIndex();
+
+	// There is guaranteed to be a context marker at
+	// the bottom of the stack, so i should stop at
+	// 1.
+	for(unsigned int i = nElems - 1; i > 0; --i)
+	{
+		StackEntry&		theEntry = m_stack[i];
+
+		if(theEntry.getType() == StackEntry::eContextMarker)
+		{
+			break;
+		}
+		else
+		{
+			theEntry.deactivate();
+		}
+	}
+}
+
+
+
+void
 VariablesStack::markGlobalStackFrame()
 {
 	m_globalStackFrameIndex = m_stack.size();
@@ -362,11 +387,12 @@ const XObjectPtr
 VariablesStack::findXObject(
 			const QName&					name,
 			StylesheetExecutionContext&		executionContext,
+			bool							fIsParam,
 			bool							fSearchGlobalSpace,
 			bool&							fNameFound)
 {
 	StackEntry* const	theEntry =
-		findEntry(name, fSearchGlobalSpace);
+		findEntry(name, fIsParam, fSearchGlobalSpace);
 
 	if (theEntry == 0)
 	{
@@ -378,7 +404,9 @@ VariablesStack::findXObject(
 	{
 		fNameFound = true;
 
-		assert(theEntry->getType() == StackEntry::eVariable);
+		assert(theEntry->getType() == StackEntry::eVariable ||
+			   theEntry->getType() == StackEntry::eParam ||
+			   theEntry->getType() == StackEntry::eActiveParam);
 
 		const XObjectPtr&	theValue = theEntry->getValue();
 
@@ -403,6 +431,7 @@ VariablesStack::findXObject(
 				assert(theNewValue.null() == false);
 
 				theEntry->setValue(theNewValue);
+				theEntry->activate();
 			}
 
 			return theNewValue;
@@ -415,6 +444,7 @@ VariablesStack::findXObject(
 VariablesStack::StackEntry*
 VariablesStack::findEntry(
 			const QName&	qname,
+			bool			fIsParam,
 			bool			fSearchGlobalSpace)
 {
 	StackEntry*		theResult = 0;
@@ -428,9 +458,12 @@ VariablesStack::findEntry(
 		// 1.
 		for(unsigned int i = nElems - 1; i > 0; --i)
 		{
-			StackEntry&		theEntry = m_stack[i];
+			StackEntry&					theEntry = m_stack[i];
 
-			if(theEntry.getType() == StackEntry::eVariable)
+			const StackEntry::eType		theType = theEntry.getType();
+
+			if(theType == StackEntry::eVariable ||
+			   theType == StackEntry::eActiveParam)
 			{
 				assert(theEntry.getName() != 0);
 
@@ -441,6 +474,20 @@ VariablesStack::findEntry(
 					break;
 				}
 			}
+			else if (theType == StackEntry::eParam)
+			{
+				if (fIsParam == true)
+				{
+					if(theEntry.getName()->equals(qname))
+					{
+						theEntry.activate();
+
+						theResult = &theEntry;
+
+						break;
+					}
+				}
+			}
 			else if(theEntry.getType() == StackEntry::eContextMarker)
 			{
 				break;
@@ -448,7 +495,7 @@ VariablesStack::findEntry(
 		}
 	}
 
-	if(0 == theResult && true == fSearchGlobalSpace && m_globalStackFrameIndex > 1)
+	if(0 == theResult && fIsParam == false && true == fSearchGlobalSpace && m_globalStackFrameIndex > 1)
 	{
 		// Look in the global space
 		for(unsigned int i = m_globalStackFrameIndex - 1; i > 0; i--)
@@ -552,9 +599,10 @@ VariablesStack::StackEntry::StackEntry() :
 
 
 VariablesStack::StackEntry::StackEntry(
-		const QName*		name,
-		const XObjectPtr&	val) :
-	m_type(eVariable),
+			const QName*		name,
+			const XObjectPtr&	val,
+			bool				isParam) :
+	m_type(isParam == true ? eParam : eVariable),
 	m_qname(name),
 	m_value(val),
 	m_variable(0),
@@ -566,8 +614,9 @@ VariablesStack::StackEntry::StackEntry(
 
 VariablesStack::StackEntry::StackEntry(
 			const QName*			name,
-			const ElemVariable*		var) :
-	m_type(eVariable),
+			const ElemVariable*		var,
+			bool					isParam) :
+	m_type(isParam == true ? eParam : eVariable),
 	m_qname(name),
 	m_value(),
 	m_variable(var),
@@ -612,7 +661,7 @@ VariablesStack::StackEntry::operator=(const StackEntry&		theRHS)
 {
 	m_type = theRHS.m_type;
 
-	if (m_type == eVariable)
+	if (m_type == eVariable || m_type == eParam || m_type == eActiveParam)
 	{
 		m_qname = theRHS.m_qname;
 
@@ -654,7 +703,7 @@ VariablesStack::StackEntry::operator==(const StackEntry&	theRHS) const
 				fResult = true;
 			}
 		}
-		else if (m_type == eVariable)
+		else if (m_type == eVariable || m_type == eParam || m_type == eActiveParam)
 		{
 			// We only need to compare the variable related members...
 			if (m_value == theRHS.m_value ||
@@ -677,6 +726,28 @@ VariablesStack::StackEntry::operator==(const StackEntry&	theRHS) const
 	}
 
 	return fResult;
+}
+
+
+
+void
+VariablesStack::StackEntry::activate()
+{
+	if (m_type == eParam)
+	{
+		m_type = eActiveParam;
+	}
+}
+
+
+
+void
+VariablesStack::StackEntry::deactivate()
+{
+	if (m_type == eActiveParam)
+	{
+		m_type = eParam;
+	}
 }
 
 
