@@ -13,9 +13,20 @@
 
 
 
-#include <xercesc/dom/impl/DOMDocumentImpl.hpp>
+#if !defined(NDEBUG) && defined(_MSC_VER)
+#include <crtdbg.h>
+#endif
+
+
+
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
+
+
+
+#include <Include/XalanAutoPtr.hpp>
 
 
 
@@ -62,21 +73,23 @@ serialize(const DOMDocument&	theDocument)
 	XALAN_USING_XALAN(FormatterToXML)
 	XALAN_USING_XALAN(XercesDOMFormatterWalker)
 
-	// OK, we're going to serialize the nodes that were
-	// found.  We should really check to make sure the
-	// root (document) has not been selected, since we
-	// really can't serialize a node list with the root.
+	// Create an output stream and a PrintWriter for the
+	// output
 	XalanStdOutputStream			theStream(cout);
 	XalanOutputStreamPrintWriter	thePrintWriter(theStream);
 
+	// We're going to serialize XML...
 	FormatterToXML	theFormatter(thePrintWriter);
 
+	// Do pretty-printing...
 	theFormatter.setDoIndent(true);
 
 	theFormatter.setIndent(2);
 
 	XercesDOMFormatterWalker	theWalker(theFormatter);
 
+	// This will walk the document and send
+	// events to the FormatterToXML.
 	theWalker.traverse(&theDocument);
 }
 
@@ -88,13 +101,20 @@ transformAndSerialize(
 			const XalanParsedSource&		theParsedSource,
 			const XalanCompiledStylesheet&	theStylesheet)
 {
-	XALAN_USING_XERCES(DOMDocumentImpl)
+	XALAN_USING_XERCES(DOMDocument)
+	XALAN_USING_XERCES(DOMImplementation)
 	XALAN_USING_XALAN(FormatterToXercesDOM)
+	XALAN_USING_XALAN(XalanAutoPtr)
 
-	DOMDocumentImpl			theDocument;
+	// This is the document which we'll build...
+	const XalanAutoPtr<DOMDocument>		theDocument(DOMImplementation::getImplementation()->createDocument());
+	assert(theDocument.get() != 0);
 
-	FormatterToXercesDOM	theFormatter(&theDocument, 0);
+	// This is a class derived from FormatterListener, which
+	// we'll hook up to Xalan's output stage...
+	FormatterToXercesDOM	theFormatter(theDocument.get(), 0);
 
+	// Do the transformation...
 	int		theResult =
 		theTransformer.transform(
 			theParsedSource,
@@ -109,7 +129,7 @@ transformAndSerialize(
 	}
 	else
 	{
-		serialize(theDocument);
+		serialize(*theDocument.get());
 	}
 
 	return theResult;
@@ -122,6 +142,13 @@ main(
 			int				argc,
 			const char*		argv[])
 {
+#if !defined(NDEBUG) && defined(_MSC_VER)
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
 	int		theResult = 0;
 
 	if (argc != 3)
