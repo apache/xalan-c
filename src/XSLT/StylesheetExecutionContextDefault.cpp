@@ -1867,9 +1867,16 @@ StylesheetExecutionContextDefault::getVariable(
 	}
 	else
 	{
+		StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(*this);
+
+		XalanDOMString&		theString = theGuard.get();
+
+		theString = XALAN_STATIC_UCODE_STRING("The variable '");
+		theString += name.getLocalPart();
+		theString += XALAN_STATIC_UCODE_STRING("' is not defined.");
+
 		error(
-			TranscodeFromLocalCodePage("Variable reference given for variable out of context or without definition!  Name = '") +
-			name.getLocalPart() + "'",
+			theString,
 			getCurrentNode(),
 			locator);
 
