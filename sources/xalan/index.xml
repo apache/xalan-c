@@ -3,7 +3,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,6 +70,7 @@
   
   <s2 title="How do I get it?">
     <p>Download and unzip the &xslt4c; distribution file and the corresponding &xml4c; distributions file for your platform. For the details, see <link idref="getstarted" anchor="download">Downloading what you need</link>. The &xslt4c; distribution includes platform-specific binaries, documentation, sample applications, the complete &xslt4c; source tree.</p>
+    <p>A source-only distribution is also available, if you want to build your own binaries.</p>
   </s2>
   <s2 title="How about support for internationalization?">
     <p>To extend Unicode support for encoding, number formatting, and sorting, you can download,
