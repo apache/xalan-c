@@ -235,7 +235,7 @@ XalanDOMString FileUtility::getXercesVersion()
 //		
 */
 bool 
-domCompare(const XalanNode& gold ,const XalanNode& doc,  const XalanDOMString& fileName)
+FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc,  const XalanDOMString& fileName)
 {
 	const XalanNode::NodeType	docNodeType  = doc.getNodeType();
 	const XalanNode::NodeType	goldNodeType = gold.getNodeType();
@@ -356,7 +356,7 @@ domCompare(const XalanNode& gold ,const XalanNode& doc,  const XalanDOMString& f
 */
 
 bool
-diffElement(const XalanNode& gold, const XalanNode& doc, const XalanDOMString& fileName)
+FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc, const XalanDOMString& fileName)
 {
 	const XalanDOMString&  docNodeName  = doc.getNodeName();	
 	const XalanDOMString&  goldNodeName = gold.getNodeName();
@@ -491,7 +491,7 @@ diffElement(const XalanNode& gold, const XalanNode& doc, const XalanDOMString& f
 //				
 */
 
-bool diffATTR(const XalanNode* gAttr, const XalanNode* dAttr, const XalanDOMString& fileName)
+bool FileUtility::diffATTR(const XalanNode* gAttr, const XalanNode* dAttr, const XalanDOMString& fileName)
 {
 
 	const XalanDOMString& goldAttrName = gAttr->getNodeName();
@@ -557,7 +557,7 @@ bool diffATTR(const XalanNode* gAttr, const XalanNode* dAttr, const XalanDOMStri
 */
 
 void
-reportDOMError( XalanDOMString file, XalanDOMString node, char* msg)
+FileUtility::reportDOMError( XalanDOMString file, XalanDOMString node, char* msg)
 {
 
 	cout << endl << "Failed "<< file << endl
