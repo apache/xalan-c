@@ -72,43 +72,7 @@
 
 
 
-inline UnicodeString
-XalanDOMStringToUnicodeString(const XalanDOMString&		theString)
-{
-	const XalanDOMChar* const	theBuffer = c_wstr(theString);
-
-	if (theBuffer == 0)
-	{
-		return UnicodeString();
-	}
-	else
-	{
-		return UnicodeString(theBuffer, length(theBuffer));
-	}
-}
-
-
-
-inline XalanDOMString
-UnicodeStringToXalanDOMString(const UnicodeString&	theString)
-{
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::vector;
-#endif
-
-	vector<XalanDOMChar>	theBuffer;
-
-	const int32_t			theLength = theString.length();
-
-	theBuffer.reserve(theLength);
-
-	for (int32_t i = 0; i < theLength; ++i)
-	{
-		theBuffer.push_back(theString[i]);
-	}
-
-	return XalanDOMString(&theBuffer[0], theBuffer.size());
-}
+#include "ICUBridge.hpp"
 
 
 
@@ -137,7 +101,7 @@ ICUXalanNumberFormatProxy::format(double	theValue)
 
 	m_decimalFormat->format(theValue, theResult);
 
-	return UnicodeStringToXalanDOMString(theResult);
+	return ICUBridge::UnicodeStringToXalanDOMString(theResult);
 }
 
 
@@ -147,9 +111,9 @@ ICUXalanNumberFormatProxy::format(int	theValue)
 {
 	UnicodeString	theResult;
 
-	m_decimalFormat->format(static_cast<long int>(theValue), theResult);
+	m_decimalFormat->format(int32_t(theValue), theResult);
 
-	return UnicodeStringToXalanDOMString(theResult);
+	return ICUBridge::UnicodeStringToXalanDOMString(theResult);
 }
 
 
@@ -159,9 +123,9 @@ ICUXalanNumberFormatProxy::format(unsigned int	theValue)
 {
 	UnicodeString	theResult;
 
-	m_decimalFormat->format(static_cast<long int>(theValue), theResult);
+	m_decimalFormat->format(int32_t(theValue), theResult);
 
-	return UnicodeStringToXalanDOMString(theResult);
+	return ICUBridge::UnicodeStringToXalanDOMString(theResult);
 }
 
 
@@ -171,9 +135,9 @@ ICUXalanNumberFormatProxy::format(long	theValue)
 {
 	UnicodeString	theResult;
 
-	m_decimalFormat->format(theValue, theResult);
+	m_decimalFormat->format(int32_t(theValue), theResult);
 
-	return UnicodeStringToXalanDOMString(theResult);
+	return ICUBridge::UnicodeStringToXalanDOMString(theResult);
 }
 
 
@@ -183,9 +147,9 @@ ICUXalanNumberFormatProxy::format(unsigned long	theValue)
 {
 	UnicodeString	theResult;
 
-	m_decimalFormat->format(static_cast<long int>(theValue), theResult);
+	m_decimalFormat->format(int32_t(theValue), theResult);
 
-	return UnicodeStringToXalanDOMString(theResult);
+	return ICUBridge::UnicodeStringToXalanDOMString(theResult);
 }
 
 
