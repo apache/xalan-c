@@ -88,8 +88,7 @@
 
 
 
-XPath::XPath(bool	createDefaultLocator) :
-	m_defaultXLocator(createDefaultLocator == false ? 0 : createXLocatorHandler()),
+XPath::XPath() :
 	m_expression(),
 	m_inStylesheet(false)
 {
@@ -130,24 +129,6 @@ XPath::uninstallFunction(const XalanDOMString&	funcName)
 
 
 
-XLocator*
-XPath::createXLocatorHandler() const
-{
-	return SimpleNodeLocator::getDefaultInstance();
-}
-
-
-
-const XObjectPtr
-XPath::execute(XPathExecutionContext&	executionContext) const
-{
-	assert(executionContext.getPrefixResolver() != 0);
-
-	return executeMore(executionContext.getCurrentNode(), 0, executionContext);
-}
-
-
-
 const XObjectPtr
 XPath::execute(
 			XalanNode*				context,
@@ -164,24 +145,7 @@ XPath::execute(
 									executionContext,
 									context);
 
-	return execute(executionContext);
-}
-
-
-
-const XObjectPtr
-XPath::execute(
-			XalanNode*				context,
-			const PrefixResolver&	prefixResolver,
-			const NodeRefListBase&	contextNodeList,
-			XPathExecutionContext&	executionContext) const
-{
-	// Push and pop the PrefixResolver...
-	XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
-									executionContext,
-									contextNodeList);	
-
-	return execute(context, prefixResolver, executionContext);
+	return executeMore(context, 0, executionContext);
 }
 
 
@@ -266,10 +230,6 @@ XPath::executeMore(
 		return boolean(context, opPos, executionContext);
 		break;
 
-	case XPathExpression::eOP_NUMBER:
-		return number(context, opPos, executionContext);
-		break;
-
 	case XPathExpression::eOP_UNION:
 		return Union(context, opPos, executionContext);
 		break;
@@ -329,21 +289,19 @@ inline void
 XPath::doGetMatchScore(
 			XalanNode*				context,
 			XPathExecutionContext&	executionContext,
-			double&					score) const
+			eMatchScore&			score) const
 {
 	assert(context != 0);
 
 	int		opPos = 2;
 
-	XLocator* const		locator = m_defaultXLocator;
-
 	while(m_expression.m_opMap[opPos] == XPathExpression::eOP_LOCATIONPATHPATTERN)
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		score = locator->locationPathPattern(*this, executionContext, *context, opPos);
+		score = SimpleNodeLocator::locationPathPattern(*this, executionContext, *context, opPos);
 
-		if(score == s_MatchScoreNone)
+		if(score == eMatchScoreNone)
 		{
 			opPos = nextOpPos;
 		}
@@ -356,23 +314,24 @@ XPath::doGetMatchScore(
 
 
 
-double
-XPath::getMatchScore(XalanNode*					context,
-					 const PrefixResolver&		resolver,
-					 XPathExecutionContext&		executionContext) const
+XPath::eMatchScore
+XPath::getMatchScore(
+			XalanNode*				node,
+			const PrefixResolver&	resolver,
+			XPathExecutionContext&	executionContext) const
 {
-	double	score = s_MatchScoreNone;
+	eMatchScore		score = eMatchScoreNone;
 
 	if(m_expression.m_opMap[0] == XPathExpression::eOP_MATCHPATTERN)
 	{
-		assert(context != 0);
+		assert(node != 0);
 
 		const PrefixResolver* const		theCurrentResolver =
 			executionContext.getPrefixResolver();
 
 		if (theCurrentResolver == &resolver)
 		{
-			doGetMatchScore(context, executionContext, score);
+			doGetMatchScore(node, executionContext, score);
 		}
 		else
 		{
@@ -382,13 +341,13 @@ XPath::getMatchScore(XalanNode*					context,
 										theCurrentResolver,
 										&resolver);
 
-			doGetMatchScore(context, executionContext, score);
+			doGetMatchScore(node, executionContext, score);
 		}
 	}
 	else
 	{
 		executionContext.error(TranscodeFromLocalCodePage("Expected match pattern in getMatchScore!"),
-							   context);
+							   node);
 	}
 	
 	return score;
@@ -527,7 +486,7 @@ XPath::matchPattern(
 		score = executeMore(context, opPos, executionContext);
 		assert(score.null() == false);
 
-		if(score->num() != s_MatchScoreNone)
+		if(score->num() != eMatchScoreNone)
 		{
 			break;
 		}
@@ -537,12 +496,14 @@ XPath::matchPattern(
 		}
 	}
 
-	if(score.null() == true)
+	if(score.null() == false)
 	{
-		score = executionContext.getXObjectFactory().createNumber(s_MatchScoreNone);
+		return score;
 	}
-
-	return score;
+	else
+	{
+		return executionContext.getXObjectFactory().createNumber(getMatchScoreValue(eMatchScoreNone));
+	}
 }
 
 
@@ -901,29 +862,6 @@ XPath::boolean(
 
  
 const XObjectPtr
-XPath::number(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const
-{
-	const XObjectPtr	expr1(executeMore(context, opPos + 2, executionContext));
-	assert(expr1.get() != 0);
-
-	// Try to optimize when the result of the execution is
-	// already a number.
-	if (expr1->getType() == XObject::eTypeNumber)
-	{
-		return expr1;
-	}
-	else
-	{
-		return executionContext.getXObjectFactory().createNumber(expr1->num());
-	}
-}
-
-
-
-const XObjectPtr
 XPath::Union(
 			XalanNode*				context,
 			int						opPos,
@@ -1050,9 +988,7 @@ XPath::locationPath(
 {    
 	assert(context != 0);
 
-	XLocator* const		locator = m_defaultXLocator;
-
-	return locator->locationPath(*this, executionContext, *context, opPos);
+	return SimpleNodeLocator::locationPath(*this, executionContext, *context, opPos);
 }
 
 
@@ -1076,11 +1012,10 @@ XPath::locationPathPattern(
 {
 	assert(context != 0);
 
-	XLocator* const		locator = m_defaultXLocator;
+	const eMatchScore	result =
+		SimpleNodeLocator::locationPathPattern(*this, executionContext, *context, opPos);
 
-	const double	result = locator->locationPathPattern(*this, executionContext, *context, opPos);
-
-	return executionContext.getXObjectFactory().createNumber(result);
+	return executionContext.getXObjectFactory().createNumber(getMatchScoreValue(result));
 }
 
 
@@ -1277,14 +1212,6 @@ const XalanDOMString&	XPath::PSEUDONAME_COMMENT = ::PSEUDONAME_COMMENT;
 const XalanDOMString&	XPath::PSEUDONAME_PI = ::PSEUDONAME_PI;
 const XalanDOMString&	XPath::PSEUDONAME_OTHER = ::PSEUDONAME_OTHER;
 const XalanDOMString&	XPath::PSEUDONAME_NODE = ::PSEUDONAME_NODE;
-
-
-
-const double			XPath::s_MatchScoreNone = -9999999999999.0;
-const double			XPath::s_MatchScoreQName = 0.0;
-const double			XPath::s_MatchScoreNSWild = -0.25;
-const double			XPath::s_MatchScoreNodeTest = -0.5;
-const double			XPath::s_MatchScoreOther = 0.5;
 
 
 

@@ -69,12 +69,9 @@
 
 
 
-// Base class header file
-#include <XPath/XLocator.hpp>
-
-
-
 #include <XPath/MutableNodeRefList.hpp>
+#include <XPath/XObject.hpp>
+#include <XPath/XPath.hpp>
 
 
 
@@ -83,37 +80,21 @@ class XPathExpression;
 
 
 /**
- * SimpleNodeLocator implements a search of one or more DOM trees. By using
- * the connect function as an extension, the user may specify a directory and
- * a filter specification for XML files that will be searched. This is a
- * singleton class.
+ * SimpleNodeLocator implements a search of one or more DOM trees.  It
+ * has no constructors, since it is never instantiated.
  */
-class XALAN_XPATH_EXPORT SimpleNodeLocator : public XLocator
+class XALAN_XPATH_EXPORT SimpleNodeLocator
 {
 public:
 
-	static SimpleNodeLocator*
-	getDefaultInstance();
-
-	/*
-	 * Create a SimpleNodeLocator object.
-	 */
-	explicit
-	SimpleNodeLocator();
-
-	virtual
-	~SimpleNodeLocator();
-
-	// These methods are inherited from XLocator ...
-
-	virtual const XObjectPtr
+	static const XObjectPtr
 	locationPath(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			XalanNode& 				context, 
 			int 					opPos);
 
-	virtual double
+	static XPath::eMatchScore
 	locationPathPattern(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -122,7 +103,7 @@ public:
 
 protected:
 
-	void
+	static void
 	step(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -136,18 +117,19 @@ protected:
 	 * @param xpath The xpath that is executing
 	 * @param context The current source tree context node
 	 * @param opPos The current position in the xpath operation map array
-	 * @param scoreHolder a reference to a double to receive the result.
+	 * @param scoreHolder a reference to an XPath::eMatchScore to receive
+	 * the result.
 	 * @return the last matched context node
 	 */
-	XalanNode*
+	static XalanNode*
 	stepPattern(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
 			int 					opPos,
-			double& 				scoreHolder);
+			XPath::eMatchScore& 	scoreHolder);
 
-	int
+	static int
 	findNodeSet(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -156,7 +138,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findRoot(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -165,7 +147,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findParent(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -174,7 +156,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findSelf(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -183,7 +165,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findAncestors(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -192,7 +174,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findAncestorsOrSelf(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -201,7 +183,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findAttributes(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -210,7 +192,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findChildren(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -219,7 +201,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findDescendants(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -228,7 +210,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findFollowing(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -237,7 +219,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findFollowingSiblings(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -246,7 +228,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findPreceeding(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -255,7 +237,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findPreceedingSiblings(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -264,7 +246,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findNamespace(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -273,7 +255,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	int
+	static int
 	findNodesOnUnknownAxis(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -282,7 +264,7 @@ protected:
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
 
-	double
+	static XPath::eMatchScore
 	nodeTest(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -292,7 +274,7 @@ protected:
 			int 					argLen,
 			int 					stepType);
 
-	void
+	static void
 	predicates(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -301,7 +283,7 @@ protected:
 			MutableNodeRefList& 	subQueryResults,
 			int&					endPredicatesPos);
 
-	double
+	static XPath::eMatchScore
 	handleFoundIndex(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -310,7 +292,11 @@ protected:
 
 private:
 
-	static SimpleNodeLocator		s_defaultInstance;
+	// Not defined...
+	SimpleNodeLocator();
+
+	~SimpleNodeLocator();
+
 
 	static const XalanDOMString		s_emptyString;
 };

@@ -68,6 +68,10 @@
 
 
 
+#include <PlatformSupport/DoubleSupport.hpp>
+
+
+
 // Base class header files...
 #include <XPath/XPathExecutionContext.hpp>
 
@@ -80,7 +84,6 @@
 
 
 class PrefixResolver;
-class XLocator;
 class XObject;
 class XalanNode;
 
@@ -127,13 +130,10 @@ public:
 	terminate();
 
 	/**
-	 * Construct an XPath and optionally a default locator 
-	 * 
-	 * @param createDefaultLocator true to create a default locator object,
-	 *                             default true
+	 * Construct an XPath.
 	 */
 	explicit
-	XPath(bool	createDefaultLocator = true);
+	XPath();
 
 	virtual
 	~XPath();
@@ -141,7 +141,7 @@ public:
 	/**
 	 * Shrink internal tables.
 	 */
-	virtual void
+	void
 	shrink();
 
 	/**
@@ -152,7 +152,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to union of node-set operands
 	 */
-	virtual const XObjectPtr
+	const XObjectPtr
 	execute(
 			XalanNode*				context,
 			const PrefixResolver&	prefixResolver,
@@ -167,12 +167,20 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to union of node-set operands
 	 */
-	virtual const XObjectPtr
+	const XObjectPtr
 	execute(
 			XalanNode*				context,
 			const PrefixResolver&	prefixResolver,
 			const NodeRefListBase&	contextNodeList,
-			XPathExecutionContext&	executionContext) const;
+			XPathExecutionContext&	executionContext) const
+	{
+		// Set and restore the context node list...
+		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
+										executionContext,
+										contextNodeList);	
+
+		return execute(context, prefixResolver, executionContext);
+	}
 
 	/**
 	 * Execute the XPath from the provided context.  The
@@ -182,8 +190,13 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to result XObject
 	 */
-	virtual const XObjectPtr
-	execute(XPathExecutionContext&	executionContext) const;
+	const XObjectPtr
+	execute(XPathExecutionContext&	executionContext) const
+	{
+		assert(executionContext.getPrefixResolver() != 0);
+
+		return executeMore(executionContext.getCurrentNode(), 0, executionContext);
+	}
 
 	/**
 	 * Execute the XPath from the provided context.
@@ -193,7 +206,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to union of node-set operands
 	 */
-	virtual const XObjectPtr
+	const XObjectPtr
 	executeMore(
 			XalanNode* 				context,
 			int 					opPos,
@@ -207,7 +220,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return node-set
 	 */
-	virtual const XObjectPtr
+	const XObjectPtr
 	locationPath(
 			XalanNode*				context,
 			int						opPos,
@@ -235,72 +248,56 @@ public:
 		return m_expression;
 	}
 
-#if defined(XALAN_INLINE_INITIALIZATION)
-	/**
-	 * The match score if no match is made.
-	 */
-	const double					s_MatchScoreNone = -9999999999999.0;
+	enum eMatchScore
+	{
+		eMatchScoreNone,
+		eMatchScoreNodeTest,
+		eMatchScoreNSWild,
+		eMatchScoreQName,
+		eMatchScoreOther
+	};
+
+	static double
+	getMatchScoreValue(eMatchScore	score)
+	{
+		switch(score)
+		{
+		case eMatchScoreNone:
+			return DoubleSupport::getNegativeInfinity();
+			break;
+
+		case eMatchScoreNodeTest:
+			return -0.5;
+			break;
+
+		case eMatchScoreNSWild:
+			return -0.25;
+			break;
+
+		case eMatchScoreOther:
+			return 0.5;
+			break;
+
+		case eMatchScoreQName:
+			return 0.0;
+			break;
+		};
+
+		assert(false);
+		return 0.0;
+	}
 
 	/**
-	 * The match score if the pattern has the form 
-	 * of a QName optionally preceded by an @ character.
-	 */
-	const double					s_MatchScoreQName = 0.0;
-
-	/**
-	 * The match score if the pattern has the form NCName:*.
-	 */
-	const double					s_MatchScoreNSWild = -0.25;
-
-	/**
-	 * The match score if the pattern consists of just a NodeTest.
-	 */
-	const double					s_MatchScoreNodeTest = -0.5;
-
-	/**
-	 * The match score if the pattern consists of something 
-	 * other than just a NodeTest or just a qname.
-	 */
-	const double					s_MatchScoreOther = 0.5;
-#else
-	/**
-	 * The match score if no match is made.
-	 */
-	static const double					s_MatchScoreNone;
-
-	/**
-	 * The match score if the pattern has the form 
-	 * of a QName optionally preceded by an @ character.
-	 */
-	static const double					s_MatchScoreQName;
-
-	/**
-	 * The match score if the pattern has the form NCName:*.
-	 */
-	static const double					s_MatchScoreNSWild;
-
-	/**
-	 * The match score if the pattern consists of just a NodeTest.
-	 */
-	static const double					s_MatchScoreNodeTest;
-
-	/**
-	 * The match score if the pattern consists of something 
-	 * other than just a NodeTest or just a qname.
-	 */
-	static const double					s_MatchScoreOther;
-#endif
-
-	/**
-	 * Computes the union of its operands which must be node-sets.
+	 * Get the match score for the specified node.
 	 *
-	 * @param context current source tree context node
+	 * @param node The node for the score
+	 * @param resolver The prefix resolver
 	 * @param executionContext current execution context
 	 * @return union of node-set operands
 	 */
-	virtual double
+	eMatchScore
 	getMatchScore(
-			XalanNode*				context,
+			XalanNode*				node,
 			const PrefixResolver&	resolver,
 			XPathExecutionContext&	executionContext) const;
 
@@ -312,7 +309,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to either a boolean or a number
 	 */
-	virtual const XObjectPtr
+	const XObjectPtr
 	predicate(
 			XalanNode*				context,
 			int						opPos,
@@ -323,7 +320,7 @@ public:
 	 * 
 	 * @param targetStrings vector of strings
 	 */
-	virtual void
+	void
 	getTargetElementStrings(TargetElementStringsVectorType&		targetStrings) const;
 
 	/**
@@ -422,7 +419,7 @@ protected:
 	/**
 	 * createXLocatorHandler.
 	 */
-	virtual XLocator*
+	XLocator*
 	createXLocatorHandler() const;
 
 	/**
@@ -431,7 +428,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return the match score in the form of an XObject.
 	 */
-	virtual const XObjectPtr
+	const XObjectPtr
 	matchPattern(
 			XalanNode*				context,
 			int						opPos,
@@ -463,7 +460,7 @@ protected:
 	doGetMatchScore(
 			XalanNode*				context,
 			XPathExecutionContext&	executionContext,
-			double&					score) const;
+			eMatchScore&			score) const;
 
 	/**
 	 * OR two expressions and return the boolean result.
@@ -658,18 +655,6 @@ protected:
 			XPathExecutionContext&	executionContext) const;
  
 	/**
-	 * Cast an expression to a number.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @return arg cast to a number.
-	 */
-	const XObjectPtr
-	number(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const;
-
-	/**
 	 * Computes the union of its operands which must be node-sets.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
@@ -819,14 +804,6 @@ private:
 	};
 
 	// Data members...
-
-	/**
-	 *
-	 * The default XLocator to use if a custom one is not
-	 * available.
-	 *
-	 */
-	XLocator*							m_defaultXLocator;
 
 	/**
 	 *
