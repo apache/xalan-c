@@ -57,15 +57,16 @@ XalanSpaceNodeTester::XalanSpaceNodeTester(
             const XalanDOMString&           theNameTest,
             const PrefixResolver&           thePrefixResolver,
             const LocatorType*              theLocator) :
-    NodeTester(
-		theConstructionContext,
-		theNameTest,
-		thePrefixResolver,
-		theLocator,
-		&m_matchScore),
+    NodeTester(),
     m_matchScore(),
 	m_type(theType)
 {
+	m_matchScore = initialize(
+		theConstructionContext,
+		theNameTest,
+		thePrefixResolver,
+		theLocator);
+
     assert(m_matchScore != XPath::eMatchScoreNone);
 }
     
