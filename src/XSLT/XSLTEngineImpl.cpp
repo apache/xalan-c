@@ -2898,11 +2898,7 @@ XSLTEngineImpl::copyAttributeToTarget(
 			const XalanDOMString&	attrValue,
 			AttributeListImpl&		attrList)
 {
-	// TODO: Find out about empty attribute template expression handling.
-	if(0 != length(attrValue))
-	{
-		addResultAttribute(attrList, attrName, attrValue);
-	}
+	addResultAttribute(attrList, attrName, attrValue);
 }
 
 
