@@ -366,6 +366,10 @@ SOURCE=..\..\..\..\src\XSLT\ResultTreeFrag.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\ResultTreeFragAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\SelectionEvent.cpp
 # End Source File
 # Begin Source File
@@ -419,6 +423,18 @@ SOURCE=..\..\..\..\src\XSLT\VariablesStack.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\XalanNumberingResourceBundle.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentFragmentAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XResultTreeFrag.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XResultTreeFragAllocator.cpp
 # End Source File
 # Begin Source File
 
@@ -717,6 +733,10 @@ SOURCE=..\..\..\..\src\XSLT\ResultTreeFrag.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\ResultTreeFragAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\SelectionEvent.hpp
 # End Source File
 # Begin Source File
@@ -770,6 +790,18 @@ SOURCE=..\..\..\..\src\XSLT\VariablesStack.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\XalanNumberingResourceBundle.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentFragmentAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XResultTreeFrag.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XResultTreeFragAllocator.hpp
 # End Source File
 # Begin Source File
 
