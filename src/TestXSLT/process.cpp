@@ -392,7 +392,7 @@ void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 static inline bool exists(std::string &filename)
 {
 	struct stat statBuffer;
-	return (0 == stat(filename.data(), &statBuffer));
+	return (0 == stat(filename.c_str(), &statBuffer));
 }
 
 static	CmdLineParams theParams;
@@ -469,8 +469,8 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 	{
 		String2StringMapType::const_iterator it = params.paramsMap.begin();
 		for ( ; it != params.paramsMap.end(); it++)
-			processor.setStylesheetParam((*it).first.data(),
-					(*it).second.data());
+			processor.setStylesheetParam((*it).first.c_str(),
+					(*it).second.c_str());
 	}
 
 	/*
@@ -478,7 +478,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 	 */
 	if (params.indentAmount)
 		xmlParserLiaison.setIndent(params.indentAmount);
-	xmlParserLiaison.setSpecialCharacters(params.specialCharacters.data());
+	xmlParserLiaison.setSpecialCharacters(params.specialCharacters.c_str());
 	xmlParserLiaison.SetShouldExpandEntityRefs(params.shouldExpandEntityRefs);
 
 	bool noOutputFileSpecified =  outputFileNameBase.empty();
@@ -499,7 +499,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 	DOMString xslFileName;
 	if(0 != params.xslFileName.size())
 	{
-		xslFileName = params.xslFileName.data();
+		xslFileName = params.xslFileName.c_str();
 	}
 
 	stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
@@ -518,7 +518,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 
 		std::string theInputFileName = params.inFileNames[i];
 		std::string outputFileName;
-		XSLTInputSource theInputSource(theInputFileName.data());
+		XSLTInputSource theInputSource(theInputFileName.c_str());
 		DOM_Node sourceTree = processor.getSourceTreeFromInput(&theInputSource);
 
 	/*
@@ -580,7 +580,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 		{
 			outputFileStream = 
 				std::auto_ptr<TextFileOutputStream>(new TextFileOutputStream(
-							outputFileName.data()));
+							outputFileName.c_str()));
 			outputStream = outputFileStream.get();
 		}
 		XercesDOMPrintWriter	resultWriter(*outputStream);
