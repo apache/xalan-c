@@ -3,7 +3,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "AllInOne"=".\AllInOne\AllInOne.dsp" - Package Owner=<4>
+Project: "AllInOneWithICU"=".\AllInOne\AllInOneWithICU.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
