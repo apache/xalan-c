@@ -162,6 +162,8 @@ printArgOptions()
 		 << endl
 		 << " [-INDENT n (Control how many spaces to indent {default is 0})]"
 		 << endl
+		 << " [-VALIDATE (Set whether validation occurs. Validation is off by default.)]"
+		 << endl
 		 << " [-TT (Trace the templates as they are being called.)]"
 		 << endl
 		 << " [-TG (Trace each generation event.)]"
@@ -170,8 +172,6 @@ printArgOptions()
 		 << endl
 		 << " [-TTC (Trace the template children as they are being processed.)]"
 		 << endl
-//		 << " [-VALIDATE (Set whether validation occurs. Validation is off by default.)]"
-//		 << endl
 		 << " [-XML (Use XML formatter and add XML header.)]"
 		 << endl
 		 << " [-TEXT (Use simple Text formatter.)]"
@@ -221,6 +221,7 @@ struct CmdLineParams
 	bool traceSelectionEvent;
 	bool traceTemplateChildren;
 	bool shouldWriteXMLHeader;
+	bool doValidation;
 #if !defined(NDEBUG)
 	bool showStats;
 #endif
@@ -237,7 +238,7 @@ struct CmdLineParams
 		escapeCData(false),
 		setQuietConflictWarnings(false),
 		setQuietMode(false),
-		shouldExpandEntityRefs(false),
+		shouldExpandEntityRefs(true),
 		stripCData(false),
 		versionOnly(false),
 		traceTemplates(false),
@@ -245,6 +246,7 @@ struct CmdLineParams
 		traceSelectionEvent(false),
 		traceTemplateChildren(false),
 		shouldWriteXMLHeader(true),
+		doValidation(false),
 #if !defined(NDEBUG)
 		showStats(false),
 #endif
@@ -360,6 +362,10 @@ getArgs(
 				fSuccess = false;
 			}
 		} 
+		else if(!stricmp("-VALIDATE", argv[i]))
+		{
+			p.doValidation = true;
+		}
 		else if (!stricmp("-PARAM", argv[i])) 
 		{
 			++i;
@@ -695,6 +701,7 @@ xsltMain(const CmdLineParams&	params)
 
 	xmlParserLiaison.setSpecialCharacters(params.specialCharacters.c_str());
 	xmlParserLiaison.SetShouldExpandEntityRefs(params.shouldExpandEntityRefs);
+	xmlParserLiaison.setUseValidation(params.doValidation);
 
 	assert(params.inFileName.size() > 0);
 
@@ -739,8 +746,6 @@ xsltMain(const CmdLineParams&	params)
 	else
 	{
 		rTreeTarget.setFormatterListener(formatter.get());
-
-		xmlParserLiaison.setFormatterListener(formatter.get());
 	}
 
 
