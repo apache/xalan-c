@@ -111,14 +111,7 @@ public:
 
 	~ArenaBlock()
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::for_each;
-#endif
-
-		// Destroy all existing objects...
-		for_each(m_objectBlock,
-				 m_objectBlock + m_objectCount,
-				 DeleteFunctor(*this, m_destroyFunction));
+		destroyAll();
 
 		// Release the memory...
 		m_allocator.deallocate(m_objectBlock, 0);
@@ -263,6 +256,25 @@ public:
 		{
 			return false;
 		}
+	}
+
+	/*
+	 * Destroy all objects in the block.  You can then reuse the
+	 * block.
+	 */
+	void
+	destroyAll()
+	{
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::for_each;
+#endif
+
+		// Destroy all existing objects...
+		for_each(m_objectBlock,
+				 m_objectBlock + m_objectCount,
+				 DeleteFunctor(*this, m_destroyFunction));
+
+		m_objectCount = 0;
 	}
 
 protected:

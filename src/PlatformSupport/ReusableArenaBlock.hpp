@@ -98,6 +98,7 @@ public:
 
 	~ReusableArenaBlock()
 	{
+		destroyAll();
 	}
 
 	/*

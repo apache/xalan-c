@@ -119,8 +119,6 @@ public:
 	bool
 	destroyObject(ObjectType*	theObject)
 	{
-		assert(m_blocks.size() != 0);
-
 		bool	fSucess = false;
 
 		// Check this, just in case...
@@ -222,6 +220,45 @@ public:
 
 		m_lastBlockReferenced->commitAllocation(theObject);
 		assert(m_lastBlockReferenced->ownsObject(theObject) == true);
+	}
+
+	virtual bool
+	ownsObject(const ObjectType*	theObject) const
+	{
+		bool	fResult = false;
+
+		// If no block has ever been referenced, then we haven't allocated
+		// any objects.
+		if (m_lastBlockReferenced != 0)
+		{
+			// Check the last referenced block first.
+			fResult = m_lastBlockReferenced->ownsObject(theObject);
+
+			if (fResult == false)
+			{
+				// Search back for a block with some space available...
+				ArenaBlockListType::const_reverse_iterator	i = m_blocks.rbegin();
+				const ArenaBlockListType::const_reverse_iterator	theEnd = m_blocks.rend();
+
+				while(i != theEnd)
+				{
+					assert(*i != 0);
+
+					if ((*i)->ownsObject(theObject) == true)
+					{
+						fResult = true;
+
+						break;
+					}
+					else
+					{
+						++i;
+					}
+				}
+			}
+		}
+
+		return fResult;
 	}
 
 private:
