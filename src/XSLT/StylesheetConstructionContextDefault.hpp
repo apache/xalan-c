@@ -128,10 +128,7 @@ class XALAN_XSLT_EXPORT StylesheetConstructionContextDefault : public Stylesheet
 public:
 
 	typedef XalanArrayAllocator<XalanDOMChar>			XalanDOMCharVectorAllocatorType;
-	typedef XalanArrayAllocator<const AVT*>				XalanAVTPointerVectorAllocatorType;
-	typedef XalanArrayAllocator<const AVTPart*>			XalanAVTPartPointerVectorAllocatorType;
-	typedef XalanArrayAllocator<const XalanQName*>		XalanQNameVectorAllocatorType;
-	typedef XalanArrayAllocator<const void*>			XalanVoidPointerVectorAllocatorType;
+	typedef XalanArrayAllocator<const void*>			PointerVectorAllocatorType;
 	typedef XalanDOMCharVectorAllocatorType::size_type	VectorAllocatorSizeType;
 
     // Default size for vector allocation.
@@ -140,10 +137,8 @@ public:
 			eDefaultAVTBlockSize = 128,
 			eDefaultAVTPartSimpleBlockSize = 128,
 			eDefaultAVTPartXPathBlockSize = 128,
-			eDefaultAVTPointerVectorBlockSize = 512,
-			eDefaultAVTPartPointerVectorBlockSize = 512,
 			eDefaultXalanQNameByValueBlockSize = 32,
-			eDefaultXalanQNamePointerVectorBlockSize = 512 };
+			eDefaultPointerVectorBlockSize = 512 };
 
 	/*
 	 * Construct an instance.  If the stylesheet(s) constructed is/are meant to be reused (a.k.a. "compiled"),
@@ -158,9 +153,8 @@ public:
 	 * @param theAVTAllocatorBlockSize The block size to use for allocating AVT instances.
 	 * @param theAVTPartSimpleAllocatorBlockSize The block size to use for allocating AVTPartSimple instances.
 	 * @param theAVTPartXPathAllocatorBlockSize The block size to use for allocating AVTPartXPath instances.
-	 * @param theAVTPartPointerVectorAllocatorBlockSize The block size to use for allocating vectors of AVTPart pointers.
 	 * @param theXalanQNameByValueAllocatorBlockSize The block size to use for allocating XalanQNameByValue instances.
-	 * @param theAVTPartPointerVectorAllocatorBlockSize The block size to use for allocating vectors of AVTPart pointers.
+	 * @param thePointerVectorAllocatorBlockSize The block size to use for allocating vectors of pointers.
 	 */
 	StylesheetConstructionContextDefault(
 			XSLTEngineImpl&							processor,
@@ -169,10 +163,8 @@ public:
 			XalanAVTAllocator::size_type			theAVTAllocatorBlockSize = eDefaultAVTBlockSize,
 			XalanAVTPartSimpleAllocator::size_type	theAVTPartSimpleAllocatorBlockSize = eDefaultAVTPartSimpleBlockSize,
 			XalanAVTPartXPathAllocator::size_type	theAVTPartXPathAllocatorBlockSize = eDefaultAVTPartXPathBlockSize,
-			VectorAllocatorSizeType					theAVTPointerVectorAllocatorBlockSize = eDefaultAVTPointerVectorBlockSize,
-			VectorAllocatorSizeType					theAVTPartPointerVectorAllocatorBlockSize = eDefaultAVTPartPointerVectorBlockSize,
 			XalanQNameByValueAllocator::size_type	theXalanQNameByValueAllocatorBlockSize = eDefaultXalanQNameByValueBlockSize,
-			VectorAllocatorSizeType					theXalanQNamePointerVectorAllocatorBlockSize = eDefaultAVTPartPointerVectorBlockSize);
+			VectorAllocatorSizeType					thePointerVectorAllocatorBlockSize = eDefaultPointerVectorBlockSize);
 
 	virtual
 	~StylesheetConstructionContextDefault();
@@ -429,6 +421,43 @@ public:
 
 private:
 
+	const AVT**
+	doAllocateAVTPointerVector(size_type	theSize)
+	{
+		assert(sizeof(AVT**) == sizeof(PointerVectorAllocatorType::value_type));
+
+#if defined(XALAN_OLD_STYLE_CASTS)
+		return (const AVT**)m_pointerVectorAllocator.allocate(theSize);
+#else
+		return reinterpret_cast<const AVT**>(m_pointerVectorAllocator.allocate(theSize));
+#endif
+	}
+
+	const AVTPart**
+	doAllocateAVTPartPointerVector(size_type	theSize)
+	{
+		assert(sizeof(AVTPart**) == sizeof(PointerVectorAllocatorType::value_type));
+
+#if defined(XALAN_OLD_STYLE_CASTS)
+		return (const AVTPart**)m_pointerVectorAllocator.allocate(theSize);
+#else
+		return reinterpret_cast<const AVTPart**>(m_pointerVectorAllocator.allocate(theSize));
+#endif
+	}
+
+	const XalanQName**
+	doAllocateXalanQNamePointerVector(size_type	theSize)
+	{
+		assert(sizeof(XalanQName**) == sizeof(PointerVectorAllocatorType::value_type));
+
+#if defined(XALAN_OLD_STYLE_CASTS)
+		return (const XalanQName**)m_pointerVectorAllocator.allocate(theSize);
+#else
+		return reinterpret_cast<const XalanQName**>(m_pointerVectorAllocator.allocate(theSize));
+#endif
+	}
+
+
 	XSLTEngineImpl&							m_processor;
 
 	XPathFactory&							m_xpathFactory;
@@ -455,17 +484,11 @@ private:
 
 	XalanAVTPartXPathAllocator				m_avtPartXPathAllocator;
 
-	XalanAVTPointerVectorAllocatorType		m_avtPointerVectorAllocator;
-
-	XalanAVTPartPointerVectorAllocatorType	m_avtPartPointerVectorAllocator;
-
 	XalanQNameByValueAllocator				m_xalanQNameByValueAllocator;
-
-	XalanQNameVectorAllocatorType			m_xalanQNameVectorAllocator;
 
 	const XalanQNameByReference				m_useAttributeSetsQName;
 
-	XalanVoidPointerVectorAllocatorType		m_pointerVectorAllocator;
+	PointerVectorAllocatorType				m_pointerVectorAllocator;
 
 	static const XalanQNameByReference	s_spaceAttrQName;
 

@@ -100,10 +100,8 @@ StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
 			XalanAVTAllocator::size_type			theAVTAllocatorBlockSize,
 			XalanAVTPartSimpleAllocator::size_type	theAVTPartSimpleAllocatorBlockSize,
 			XalanAVTPartXPathAllocator::size_type	theAVTPartXPathAllocatorBlockSize,
-			VectorAllocatorSizeType					theAVTPointerVectorAllocatorBlockSize,
-			VectorAllocatorSizeType					theAVTPartPointerVectorAllocatorBlockSize,
 			XalanQNameByValueAllocator::size_type	theXalanQNameByValueAllocatorBlockSize,
-			VectorAllocatorSizeType					theXalanQNamePointerVectorAllocatorBlockSize) :
+			VectorAllocatorSizeType					thePointerVectorAllocatorBlockSize) :
 	StylesheetConstructionContext(),
 	m_processor(processor),
 	m_xpathFactory(xpathFactory),
@@ -117,12 +115,9 @@ StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
 	m_avtAllocator(theAVTAllocatorBlockSize),
 	m_avtPartSimpleAllocator(theAVTPartSimpleAllocatorBlockSize),
 	m_avtPartXPathAllocator(theAVTPartXPathAllocatorBlockSize),
-	m_avtPointerVectorAllocator(theAVTPointerVectorAllocatorBlockSize),
-	m_avtPartPointerVectorAllocator(theAVTPartPointerVectorAllocatorBlockSize),
 	m_xalanQNameByValueAllocator(theXalanQNameByValueAllocatorBlockSize),
-	m_xalanQNameVectorAllocator(theXalanQNamePointerVectorAllocatorBlockSize),
 	m_useAttributeSetsQName(XSLTEngineImpl::getXSLNameSpaceURL(), Constants::ATTRNAME_USEATTRIBUTESETS),
-	m_pointerVectorAllocator(512)
+	m_pointerVectorAllocator(thePointerVectorAllocatorBlockSize)
 {
 }
 
@@ -760,28 +755,10 @@ StylesheetConstructionContextDefault::createAVTPart(
 
 
 
-template<class Type>
-Type
-allocate(
-			StylesheetConstructionContextDefault::XalanVoidPointerVectorAllocatorType&	theAllocator,
-			StylesheetConstructionContextDefault::size_type								theSize,
-			Type																		theDummy)
-{
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (Type)theAllocator.allocate(theSize);
-#else
-	return reinterpret_cast<Type>(theAllocator.allocate(theSize));
-#endif
-}
-
-
-
 const AVT**
 StylesheetConstructionContextDefault::allocateAVTPointerVector(size_type	theLength)
 {
-	const AVT**	theDummy;
-
-	return allocate(m_pointerVectorAllocator, theLength, theDummy);
+	return doAllocateAVTPointerVector(theLength);
 }
 
 
@@ -789,9 +766,7 @@ StylesheetConstructionContextDefault::allocateAVTPointerVector(size_type	theLeng
 const AVTPart**
 StylesheetConstructionContextDefault::allocateAVTPartPointerVector(size_type	theLength)
 {
-	const AVTPart**	theDummy;
-
-	return allocate(m_pointerVectorAllocator, theLength, theDummy);
+	return doAllocateAVTPartPointerVector(theLength);
 }
 
 
@@ -829,7 +804,7 @@ StylesheetConstructionContextDefault::tokenizeQNames(
 	}
 	else
 	{
-		const XalanQName**	theResult = allocate(m_pointerVectorAllocator, count, theResult);
+		const XalanQName**	theResult = doAllocateXalanQNamePointerVector(count);
 		assert(theResult != 0);
 
 		const GetAndReleaseCachedString		theGuard(*this);
