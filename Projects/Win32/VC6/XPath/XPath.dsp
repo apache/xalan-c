@@ -334,6 +334,10 @@ SOURCE=..\..\..\..\src\XPath\XPath.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XPathAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XPathEnvSupport.cpp
 # End Source File
 # Begin Source File
@@ -359,6 +363,10 @@ SOURCE=..\..\..\..\src\XPath\XPathExpression.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XPathFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathFactoryBlock.cpp
 # End Source File
 # Begin Source File
 
@@ -686,6 +694,10 @@ SOURCE=..\..\..\..\src\XPath\XPath.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XPathAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XPathDefinitions.hpp
 # End Source File
 # Begin Source File
@@ -715,6 +727,10 @@ SOURCE=..\..\..\..\src\XPath\XPathExpression.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XPathFactory.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathFactoryBlock.hpp
 # End Source File
 # Begin Source File
 
