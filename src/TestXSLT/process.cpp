@@ -208,11 +208,10 @@ printArgOptions()
 		 << endl
 		 << " [-Q (Use quiet mode.)]"
 		 << endl
-		 << " [-ESCAPE (Specifies which characters to escape. {default is <>&\"\'\\r\\n}]"
-		 << endl
 		 << " [-INDENT n (Controls how many spaces to indent. {default is 0})]"
 		 << endl
 		 << " [-VALIDATE (Controls whether validation occurs. Validation is off by default.)]"
+		 << endl
 		 << endl
 		 << " [-TT (Trace the templates as they are being called.)]"
 		 << endl
@@ -221,6 +220,7 @@ printArgOptions()
 		 << " [-TS (Trace each selection event.)]"
 		 << endl
 		 << " [-TTC (Trace the template children as they are being processed.)]"
+		 << endl
 		 << endl
 		 << " [-XML (Use XML formatter and add XML header.)]"
 		 << endl
@@ -232,7 +232,9 @@ printArgOptions()
 		 << endl
 		 << " [-XST (Use source tree formatter.  Formats to Xalan source tree, then formats XML for output.)]"
 		 << endl
+		 << endl
 		 << " [-PARAM name expression (Sets a stylesheet parameter.)]"
+		 << endl
 		 << endl
 		 << " [-XD Use Xerces DOM instead of Xalan source tree.]"
 		 << endl
@@ -290,7 +292,6 @@ struct CmdLineParams
 	int indentAmount;
 	int outputType;
 	const char* outFileName;
-	const char* specialCharacters;
 	const char* xslFileName;
 	const char* inFileName;
 
@@ -315,7 +316,6 @@ struct CmdLineParams
 		indentAmount(-1),
 		outputType(-1),
 		outFileName(0),
-		specialCharacters(0),
 		xslFileName(0),
 		inFileName(0)
 	{
@@ -425,19 +425,6 @@ getArgs(
 			if(i < argc && argv[i][0] != '-')
 			{
 				p.outFileName = argv[i];
-			}
-			else
-			{
-				fSuccess = false;
-			}
-		}
-		else if (!compareNoCase("-ESCAPE", argv[i]))
-		{
-			++i;
-
-			if(i < argc && argv[i][0] != '-')
-			{
-				p.specialCharacters = argv[i];
 			}
 			else
 			{
@@ -917,11 +904,6 @@ xsltMain(const CmdLineParams&	params)
 	if (params.indentAmount != 0)
 	{
 		xmlParserLiaison.setIndent(params.indentAmount);
-	}
-
-	if (params.specialCharacters != 0)
-	{
-		xmlParserLiaison.setSpecialCharacters(XalanDOMString(params.specialCharacters));
 	}
 
 	xmlParserLiaison.setUseValidation(params.doValidation);
