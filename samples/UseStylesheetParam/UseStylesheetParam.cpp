@@ -1,3 +1,6 @@
+// Base header file.  Must be first.
+#include <Include/PlatformDefinitions.hpp>
+
 #include <iostream>
 #include <fstream>
 
