@@ -232,16 +232,6 @@ public:
 private:
 
 	/**
-	 * Add a list of counted nodes that were built in backwards document 
-	 * order, or a list of counted nodes that are in forwards document 
-	 * order.
-	 */
-	void
-	appendBtoFList(
-			NodeVectorType&		flist,
-			NodeVectorType&		blist);
-
-	/**
 	 * A map which holds counters for ElemNumber instances.
 	 */
 	ElemToCounterVectorMapType	m_counterMap;

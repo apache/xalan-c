@@ -68,9 +68,9 @@
 
 
 inline void
-CountersTable::appendBtoFList(
-			NodeVectorType&		flist,
-			NodeVectorType&		blist)
+appendBtoFList(
+			CountersTable::NodeVectorType&			flist,
+			const CountersTable::NodeVectorType&	blist)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::back_inserter;
