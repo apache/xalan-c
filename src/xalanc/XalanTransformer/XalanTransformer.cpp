@@ -105,6 +105,7 @@
 
 
 #include <xalanc/XalanEXSLT/XalanEXSLTCommon.hpp>
+#include <xalanc/XalanEXSLT/XalanEXSLTDynamic.hpp>
 #include <xalanc/XalanEXSLT/XalanEXSLTMath.hpp>
 #include <xalanc/XalanEXSLT/XalanEXSLTSet.hpp>
 #include <xalanc/XalanEXSLT/XalanEXSLTString.hpp>
@@ -210,6 +211,7 @@ XalanTransformer::initialize()
 
 	XalanExtensionsInstaller::installGlobal();
 	XalanEXSLTCommonFunctionsInstaller::installGlobal();
+	XalanEXSLTDynamicFunctionsInstaller::installGlobal();
 	XalanEXSLTMathFunctionsInstaller::installGlobal();
 	XalanEXSLTSetFunctionsInstaller::installGlobal();
 	XalanEXSLTStringFunctionsInstaller::installGlobal();
@@ -232,6 +234,7 @@ XalanTransformer::terminate()
 {
 	XalanExtensionsInstaller::uninstallGlobal();
 	XalanEXSLTCommonFunctionsInstaller::uninstallGlobal();
+	XalanEXSLTDynamicFunctionsInstaller::uninstallGlobal();
 	XalanEXSLTMathFunctionsInstaller::uninstallGlobal();
 	XalanEXSLTSetFunctionsInstaller::uninstallGlobal();
 	XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
