@@ -9,8 +9,14 @@ anchor="xalantransformer">XalanTransformer</link> class and associated header fi
 (<link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link>). ApacheModuleXSLT also shows how to run &xslt4c; on an
 Apache Web server.<br/><br/></li>
 <li>Added the <link idref="samples" anchor="streamtransform">StreamTransform</link> sample.<br/><br/></li>
-<li>xxxxxxxxxx<br/><br/></li>
-<li>yyyyyyyyyy<br/><br/></li>
+<li>Fixed namespace mapping and inheritance problems.<br/><br/></li>
+<li>Fixed failure of &lt;copy-of ...&gt; to include CRLFs (if any) in the result.<br/><br/></li>
+<li>Fixed HTML output method bug. The &lt;HEAD&gt; element was not including a &lt;META&gt; tag with the encoding.<br/><br/></li>
+<li>Fixed bug using key() im match patterns to find descendants.<br/><br/></li>
+<li>Fixed bug using the id() function in complex match patterns.<br/><br/></li>
+<li>Fixed problem outputting multiple single-character CDATA sections.<br/><br/></li>
+<li>Fixed problem outputting whitespace characters.<br/><br/></li>
+<li><br/><br/></li>
 <li>zzzzzzzzzzzzzz</li>
 </ul>
 </s3>
