@@ -1249,23 +1249,5 @@ main(int			/* argc */,
 			 theLiaison,
 			 thePrintWriter);
 
-	const XalanDOMChar* const	theFirstString =
-		XALAN_STATIC_UCODE_STRING("This is a long string for substrings.");
-
-	const XalanDOMChar* const	theSecondString =
-		XALAN_STATIC_UCODE_STRING("This is an even longer string for substrings.  Boy isn't this fun!");
-
-	const XalanDOMString		theFirstDOMString(substring(theFirstString, 0, length(theFirstString)));
-	const XalanDOMString		theSecondDOMString(substring(theFirstString, 0));
-
-	const XalanDOMString		theThirdDOMString(substring(theFirstString, 5));
-	const XalanDOMString		theFourthDOMString(substring(theFirstString, 1));
-	const XalanDOMString		theFifthDOMString(substring(theFirstString, length(theFirstString)));
-
-	const XalanDOMString		theSixthDOMString(substring(theSecondString, 10, 20));
-
-	const unsigned int			theFirstIndex = indexOf(theFirstString, 'l');
-	const unsigned int			theSecondIndex = lastIndexOf(theSecondString, 'o');
-
 	return 0;
 }
