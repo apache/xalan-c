@@ -90,18 +90,23 @@ public:
 	 * FormatterToText instance constructor.
 	 *
 	 * @param writer writer for output
+	 * @param normalizeLindefeed Normalize \n or \r\n (on certain platforms).
 	 */
-	FormatterToText(Writer&		writer);
+	FormatterToText(
+			Writer&		writer,
+			bool		normalizeLinefeed = true);
 
 	/**
 	 * FormatterToText instance constructor.
 	 *
 	 * @param writer writer for output
 	 * @param encoding character encoding for the writer
+	 * @param normalizeLindefeed Normalize \n or \r\n on certain platforms.
 	 */
 	FormatterToText(
 			Writer&					writer,
-			const XalanDOMString&	encoding);
+			const XalanDOMString&	encoding,
+			bool					normalizeLinefeed = true);
 
 	virtual
 	~FormatterToText();
@@ -163,12 +168,6 @@ public:
 
 private:
 
-	Writer&			m_writer;
-
-	XalanDOMChar	m_maxCharacter;
-
-	XalanDOMString	m_encoding;
-
 	// These are not implemented.
 	FormatterToText(const FormatterToText&);
 
@@ -177,6 +176,17 @@ private:
 
 	bool
 	operator==(const FormatterToText&) const;
+
+	// Data members...
+	Writer&			m_writer;
+
+	XalanDOMChar	m_maxCharacter;
+
+	XalanDOMString	m_encoding;
+
+	const bool		m_haveEncoding;
+
+	const bool		m_normalize;
 };
 
 

@@ -72,11 +72,15 @@
 
 
 
-FormatterToText::FormatterToText(Writer&	writer) :
+FormatterToText::FormatterToText(
+			Writer&		writer,
+			bool		normalizeLinefeed) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_writer(writer),
 	m_maxCharacter(~0),
-	m_encoding()
+	m_encoding(),
+	m_haveEncoding(false),
+	m_normalize(normalizeLinefeed)
 {
 }
 
@@ -84,11 +88,14 @@ FormatterToText::FormatterToText(Writer&	writer) :
 
 FormatterToText::FormatterToText(
 			Writer&					writer,
-			const XalanDOMString&	encoding) :
+			const XalanDOMString&	encoding,
+			bool					normalizeLinefeed) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_writer(writer),
 	m_maxCharacter(0),
-	m_encoding(isEmpty(encoding) == false ? encoding : XalanDOMString(XalanTranscodingServices::s_utf8String))
+	m_encoding(isEmpty(encoding) == false ? encoding : XalanDOMString(XalanTranscodingServices::s_utf8String)),
+	m_haveEncoding(true),
+	m_normalize(normalizeLinefeed)
 {
 	XalanOutputStream* const	theStream = m_writer.getStream();
 
@@ -175,23 +182,33 @@ FormatterToText::characters(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	for (unsigned int i = 0; i < length; ++i)
+	if (m_normalize == false && m_haveEncoding == false)
 	{
+		m_writer.write(chars, 0, length);
+	}
+	else
+	{
+		for (unsigned int i = 0; i < length; ++i)
+		{
 #if defined(XALAN_NEWLINE_IS_CRLF)
-		// Normalize LF to CR/LF...
-		if (chars[i] == XalanUnicode::charLF &&
-			(i == 0 ||
-			 chars[i - 1] != XalanUnicode::charCR))
-		{
-			m_writer.write(XalanUnicode::charCR);
-		}
+			if (m_normalize == true)
+			{
+				// Normalize LF to CR/LF...
+				if (chars[i] == XalanUnicode::charLF &&
+					(i == 0 ||
+					 chars[i - 1] != XalanUnicode::charCR))
+				{
+					m_writer.write(XalanUnicode::charCR);
+				}
+			}
 #endif
-		if (chars[i] > m_maxCharacter)
-		{
-			//$$$ ToDo: Figure out what we're going to do here...
-		}
+			if (chars[i] > m_maxCharacter)
+			{
+				//$$$ ToDo: Figure out what we're going to do here...
+			}
 
-		m_writer.write(chars[i]);
+			m_writer.write(chars[i]);
+		}
 	}
 }
 
