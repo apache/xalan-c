@@ -92,8 +92,6 @@ FunctionFunctionAvailable::execute(
 	{
 		executionContext.error("The function-available() function takes one argument!",
 							   context);
-
-		return 0;
 	}
 
 	const XalanDOMString	fullName = args[0]->str();
@@ -105,7 +103,7 @@ FunctionFunctionAvailable::execute(
 
 	const XalanDOMString	theNamespace = executionContext.getNamespaceForPrefix(prefix);
 
-	const XalanDOMString	functionName = indexOfNSSep < nameLength ? fullName : substring(fullName, indexOfNSSep + 1);
+	const XalanDOMString	functionName = indexOfNSSep == nameLength ? fullName : substring(fullName, indexOfNSSep + 1);
 
 	return executionContext.getXObjectFactory().createBoolean(executionContext.functionAvailable(theNamespace, functionName));
 }

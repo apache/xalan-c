@@ -105,7 +105,7 @@ FunctionElementAvailable::execute(
 
 	const XalanDOMString	theNamespace = executionContext.getNamespaceForPrefix(prefix);
 
-	const XalanDOMString	elementName = indexOfNSSep < nameLength ? fullName : substring(fullName, indexOfNSSep + 1);
+	const XalanDOMString	elementName = indexOfNSSep == nameLength ? fullName : substring(fullName, indexOfNSSep + 1);
 
 	return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(theNamespace, elementName));
 }
