@@ -261,8 +261,34 @@ ElemForEach::transformSelectedChildren(
 				avt->evaluate(scratchString, sourceNodeContext, *this, executionContext);
 			}			
 
-			const bool	treatAsNumbers = !isEmpty(scratchString) && equals(scratchString, Constants::ATTRVAL_DATATYPE_NUMBER) ?
-					true : false;
+			bool	treatAsNumbers = false;
+
+			if (isEmpty(scratchString) == false)
+			{
+				if (equals(scratchString, Constants::ATTRVAL_DATATYPE_NUMBER) == true)
+				{
+					treatAsNumbers = true;
+				}
+				else if (equals(scratchString, Constants::ATTRVAL_DATATYPE_TEXT) == false)
+				{
+					const XalanQNameByValue		theQName(scratchString, this);
+
+					if (theQName.getNamespace().length() == 0)
+					{
+						executionContext.error(
+							"xsl:sort data-type must be 'text', 'number' or a prefixed name",
+							sourceNodeContext,
+							sort->getLocator());
+					}
+					else
+					{
+						executionContext.warn(
+							"xsl:sort has an unknown data-type.  The data-type will be 'text'",
+							sourceNodeContext,
+							sort->getLocator());
+					}
+				}
+			}
 
 			clear(scratchString);
 
@@ -273,8 +299,22 @@ ElemForEach::transformSelectedChildren(
 				avt->evaluate(scratchString, sourceNodeContext, *this, executionContext);
 			}			
 
-			const bool	descending = !isEmpty(scratchString) && equals(scratchString, Constants::ATTRVAL_ORDER_DESCENDING) ?
-					true : false;
+			bool	descending = false;
+			
+			if (isEmpty(scratchString) == false)
+			{
+				if (equals(scratchString, Constants::ATTRVAL_ORDER_DESCENDING) == true)
+				{
+					descending = true;
+				}
+				else if (equals(scratchString, Constants::ATTRVAL_ORDER_ASCENDING) == false)
+				{
+					executionContext.error(
+						"xsl:sort order must be 'ascending' or 'descending'",
+						sourceNodeContext,
+						sort->getLocator());
+				}
+			}
 
 			clear(scratchString);
 

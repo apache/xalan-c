@@ -467,6 +467,10 @@ StylesheetHandler::startElement(
 						sortElem->setParentNodeElem(foreach);
 
 						m_elemStackParentedElements.insert(foreach);
+
+						m_elemStack.push_back(new ElemEmpty(m_constructionContext,
+									 m_stylesheet,
+									 lineNumber, columnNumber, &Constants::ELEMNAME_SORT_WITH_PREFIX_STRING));
 					}
 					break;
 
