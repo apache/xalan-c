@@ -198,6 +198,10 @@ SOURCE=..\..\..\..\src\XPath\XPathExecutionContext.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XPathExecutionContextDefault.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XPathExpression.cpp
 # End Source File
 # Begin Source File
@@ -479,6 +483,10 @@ SOURCE=..\..\..\..\src\XPath\XPathException.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XPathExecutionContext.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathExecutionContextDefault.hpp
 # End Source File
 # Begin Source File
 
