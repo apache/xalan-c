@@ -389,7 +389,7 @@ findInsertionPointBinarySearch(
 
 	// At this point, we are guaranteed that the range is only for this
 	// document, and that the range is indexed...
-	const unsigned long		theIndex = node->getIndex();
+	const XalanNode::IndexType	theIndex = node->getIndex();
 
 	typedef MutableNodeRefList::NodeListIteratorType	NodeListIteratorType;
 
@@ -409,7 +409,7 @@ findInsertionPointBinarySearch(
 		NodeListIteratorType	first(begin);
 		NodeListIteratorType	current(end);
 
-		unsigned long			theCurrentIndex = 0;
+		XalanNode::IndexType	theCurrentIndex = 0;
 
 		while (first <= last)
 		{

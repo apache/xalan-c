@@ -1760,7 +1760,7 @@ Stylesheet::setPrefix(const XalanDOMString& /* prefix */)
 
 
 
-unsigned long
+Stylesheet::IndexType
 Stylesheet::getIndex() const
 {
 	return 0;

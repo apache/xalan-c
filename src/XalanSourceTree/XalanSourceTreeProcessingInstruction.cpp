@@ -90,7 +90,7 @@ XalanSourceTreeProcessingInstruction::XalanSourceTreeProcessingInstruction(
 			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
-			unsigned int				theIndex) :
+			IndexType					theIndex) :
 	XalanProcessingInstruction(),
 	m_target(theTarget),
 	m_data(theData),
@@ -359,7 +359,7 @@ XalanSourceTreeProcessingInstruction::isIndexed() const
 
 
 
-unsigned long
+XalanSourceTreeProcessingInstruction::IndexType
 XalanSourceTreeProcessingInstruction::getIndex() const
 {
 	return m_index;

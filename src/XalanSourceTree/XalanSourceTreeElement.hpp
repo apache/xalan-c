@@ -104,7 +104,7 @@ public:
 			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
-			unsigned int				theIndex = 0);
+			IndexType					theIndex = 0);
 
 	virtual
 	~XalanSourceTreeElement();
@@ -447,7 +447,7 @@ public:
 	virtual bool
 	isIndexed() const;
 
-	virtual unsigned long
+	virtual IndexType
 	getIndex() const;
 
 	//@}
@@ -785,7 +785,7 @@ public:
 	appendChildNode(XalanSourceTreeText*	theChild);
 
 	void
-	setIndex(unsigned long	theIndex)
+	setIndex(IndexType	theIndex)
 	{
 		m_index = theIndex;
 	}
@@ -833,7 +833,7 @@ private:
 
 	XalanNode*					m_firstChild;
 
-	unsigned long				m_index;
+	IndexType					m_index;
 };
 
 

@@ -315,7 +315,7 @@ XercesCommentWrapper::isIndexed() const
 
 
 
-unsigned long
+XercesCommentWrapper::IndexType
 XercesCommentWrapper::getIndex() const
 {
 	return m_navigator.getIndex();

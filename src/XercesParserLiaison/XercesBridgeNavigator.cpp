@@ -93,7 +93,7 @@ XercesBridgeNavigator::XercesBridgeNavigator(
 	m_nextSibling(mappingMode == true ? invalidNodeAddress : 0),
 	m_firstChild(mappingMode == true ? invalidNodeAddress : 0),
 	m_lastChild(mappingMode == true ? invalidNodeAddress : 0),
-	m_index(UINT_MAX)
+	m_index(0)
 {
 }
 

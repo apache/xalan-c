@@ -323,7 +323,7 @@ XercesElementWrapper::isIndexed() const
 
 
 
-unsigned long
+XercesElementWrapper::IndexType
 XercesElementWrapper::getIndex() const
 {
 	return m_navigator.getIndex();

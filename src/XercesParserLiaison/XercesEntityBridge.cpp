@@ -309,7 +309,7 @@ XercesEntityBridge::isIndexed() const
 
 
 
-unsigned long
+XercesEntityBridge::IndexType
 XercesEntityBridge::getIndex() const
 {
 	return m_navigator.getIndex();

@@ -319,7 +319,7 @@ XercesCDATASectionWrapper::isIndexed() const
 
 
 
-unsigned long
+XercesCDATASectionWrapper::IndexType
 XercesCDATASectionWrapper::getIndex() const
 {
 	return m_navigator.getIndex();

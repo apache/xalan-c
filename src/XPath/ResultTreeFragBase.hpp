@@ -200,7 +200,7 @@ public:
 	virtual bool
 	isIndexed() const = 0;
 
-	virtual unsigned long
+	virtual IndexType
 	getIndex() const = 0;
 
 	virtual ResultTreeFragBase*

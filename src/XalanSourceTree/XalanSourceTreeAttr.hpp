@@ -105,7 +105,7 @@ public:
 			const XalanDOMString&		theName,
 			const XalanDOMString&		theValue,
 			XalanSourceTreeElement*		theOwnerElement = 0,
-			unsigned int				theIndex = 0);
+			IndexType					theIndex = 0);
 
 	virtual
 	~XalanSourceTreeAttr();
@@ -458,7 +458,7 @@ public:
 	 *
 	 * @return The index value, or 0 if the node is not indexed.
 	 */
-	virtual unsigned long
+	virtual IndexType
 	getIndex() const;
 
 	//@}
@@ -528,7 +528,7 @@ public:
 	}
 
 	void
-	setIndex(unsigned long	theIndex)
+	setIndex(IndexType	theIndex)
 	{
 		m_index = theIndex;
 	}
@@ -556,7 +556,7 @@ private:
 
 	XalanSourceTreeElement*		m_ownerElement;
 
-	unsigned long				m_index;
+	IndexType					m_index;
 };
 
 

@@ -85,7 +85,7 @@ XalanSourceTreeAttributeNSAllocator::create(
 			const XalanDOMString&		thePrefix,
 			const XalanDOMString&		theValue,
 			XalanSourceTreeElement*		theOwnerElement,
-			unsigned int				theIndex)
+			IndexType					theIndex)
 {
 	ObjectType* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);

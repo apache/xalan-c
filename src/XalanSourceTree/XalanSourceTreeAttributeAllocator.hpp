@@ -82,6 +82,8 @@ public:
 
 	typedef XalanSourceTreeAttr						ObjectType;
 
+	typedef ObjectType::IndexType					IndexType;
+
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
 	typedef ArenaBlock<ObjectType>					ArenaBlockType;
 
@@ -98,7 +100,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanSourceTreeAttributeAllocator(size_type	theBlockCount);
+	XalanSourceTreeAttributeAllocator(size_type		theBlockCount);
 
 	~XalanSourceTreeAttributeAllocator();
 
@@ -118,7 +120,7 @@ public:
 			const XalanDOMString&		theName,
 			const XalanDOMString&		theValue,
 			XalanSourceTreeElement*		theOwnerElement = 0,
-			unsigned int				theIndex = 0);
+			IndexType					theIndex = 0);
 
 	/**
 	 * Delete all objects from allocator.	 

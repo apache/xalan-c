@@ -323,7 +323,7 @@ XercesDocumentTypeBridge::isIndexed() const
 
 
 
-unsigned long
+XercesDocumentTypeBridge::IndexType
 XercesDocumentTypeBridge::getIndex() const
 {
 	return m_navigator.getIndex();

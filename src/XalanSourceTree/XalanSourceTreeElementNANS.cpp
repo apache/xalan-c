@@ -71,7 +71,7 @@ XalanSourceTreeElementNANS::XalanSourceTreeElementNANS(
 			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
-			unsigned int				theIndex) :
+			IndexType					theIndex) :
 	XalanSourceTreeElementNA(
 		theTagName,
 		theOwnerDocument,

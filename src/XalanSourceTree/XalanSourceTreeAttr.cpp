@@ -82,7 +82,7 @@ XalanSourceTreeAttr::XalanSourceTreeAttr(
 			const XalanDOMString&		theName,
 			const XalanDOMString&		theValue,
 			XalanSourceTreeElement*		theOwnerElement,
-			unsigned int				theIndex) :
+			IndexType					theIndex) :
 	XalanAttr(),
 	m_name(theName),
 	m_value(theValue),
@@ -341,7 +341,7 @@ XalanSourceTreeAttr::isIndexed() const
 
 
 
-unsigned long
+XalanSourceTreeAttr::IndexType
 XalanSourceTreeAttr::getIndex() const
 {
 	return m_index;

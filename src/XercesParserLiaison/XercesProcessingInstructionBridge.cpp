@@ -315,7 +315,7 @@ XercesProcessingInstructionBridge::isIndexed() const
 
 
 
-unsigned long
+XercesProcessingInstructionBridge::IndexType
 XercesProcessingInstructionBridge::getIndex() const
 {
 	return m_navigator.getIndex();

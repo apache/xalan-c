@@ -89,7 +89,7 @@ XalanSourceTreeComment::XalanSourceTreeComment(
 			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
-			unsigned int				theIndex) :
+			IndexType					theIndex) :
 	XalanComment(),
 	m_data(theData),
 	m_ownerDocument(theOwnerDocument),
@@ -358,7 +358,7 @@ XalanSourceTreeComment::isIndexed() const
 
 
 
-unsigned long
+XalanSourceTreeComment::IndexType
 XalanSourceTreeComment::getIndex() const
 {
 	return m_index;

@@ -82,7 +82,7 @@ XalanSourceTreeElementA::XalanSourceTreeElementA(
 			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
-			unsigned int				theIndex) :
+			IndexType					theIndex) :
 	XalanSourceTreeElement(
 		theTagName,
 		theOwnerDocument,

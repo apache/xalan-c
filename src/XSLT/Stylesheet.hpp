@@ -965,7 +965,7 @@ public:
 	virtual void
 	setPrefix(const XalanDOMString& prefix);
 
-	virtual unsigned long
+	virtual IndexType
 	getIndex() const;
 
 	virtual XalanElement*

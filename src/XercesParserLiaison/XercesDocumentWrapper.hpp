@@ -234,7 +234,7 @@ public:
 	virtual bool
 	isIndexed() const;
 
-	virtual unsigned long
+	virtual IndexType
 	getIndex() const;
 
 	virtual XalanElement*
@@ -414,7 +414,7 @@ public:
 				XercesDocumentWrapper*				theDocument,
 				XercesWrapperNavigator*				theDocumentNavigator,
 				WrapperNavigatorVectorInnerType&	theNavigators,
-				unsigned long						theStartIndex,
+				IndexType							theStartIndex,
 				bool								theBuildMapsFlag);
 
 		virtual
@@ -455,7 +455,7 @@ public:
 
 		WrapperNavigatorVectorInnerType&	m_navigators;
 
-		unsigned long						m_currentIndex;
+		IndexType							m_currentIndex;
 
 		NavigatorStackType					m_parentNavigatorStack;
 
@@ -513,71 +513,71 @@ private:
 	XalanNode*
 	createWrapperNode(
 			const DOMNodeType*	theXercesNode,
-			unsigned long		theIndex,
+			IndexType			theIndex,
 			bool				mapNode) const;
 
 	XercesDocumentTypeWrapper*
 	createWrapperNode(
 			const DOMDocumentType_Type*		theDoctype,
-			unsigned long					theIndex,
+			IndexType						theIndex,
 			bool							mapNode) const;
 
 	XercesElementWrapper*
 	createWrapperNode(
 			const DOMElementType* 	theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const;
 
 	XercesTextWrapper*
 	createWrapperNode(
 			const DOMTextType*	theXercesNode,
-			unsigned long		theIndex,
+			IndexType			theIndex,
 			bool				mapNode) const;
 
 	XercesCommentWrapper*
 	createWrapperNode(
 			const DOMCommentType*	theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const;
 
 	XercesCDATASectionWrapper*
 	createWrapperNode(
 			const DOMCDATASectionType*	theXercesNode,
-			unsigned long				theIndex,
+			IndexType					theIndex,
 			bool						mapNode) const;
 
 	XercesProcessingInstructionWrapper*
 	createWrapperNode(
 			const DOMProcessingInstructionType*		theXercesNode,
-			unsigned long							theIndex,
+			IndexType								theIndex,
 			bool									mapNode) const;
 
 	XercesAttrWrapper*
 	createWrapperNode(
 			const DOMAttrType*	theXercesNode,
-			unsigned long		theIndex,
+			IndexType			theIndex,
 			bool				mapNode) const;
 
 	XercesEntityWrapper*
 	createWrapperNode(
 			const DOMEntityType*	theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const;
 
 	XercesEntityReferenceWrapper*
 	createWrapperNode(
 			const DOMEntityReferenceType*	theXercesNode,
-			unsigned long					theIndex,
+			IndexType						theIndex,
 			bool							mapNode) const;
 
 	XercesNotationWrapper*
 	createWrapperNode(
 			const DOMNotationType*	theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const;
 
 	XercesWrapperNavigator&
-	pushNavigator(bool	mappingMode) const;
+	pushNavigator() const;
 
 	// This is a private helper class for building the tree...
 	friend class BuildWrapperTreeWalker;

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -333,7 +333,7 @@ XercesDocumentBridge::pushNavigator(bool	mappingMode) const
 XercesDocumentTypeBridge*
 XercesDocumentBridge::createBridgeNode(
 			const DOM_DocumentType_Type&	theDoctype,
-			unsigned long					theIndex,
+			IndexType						theIndex,
 			bool							mapNode) const
 {
 	// This is a special case, since there is only one
@@ -373,7 +373,7 @@ XercesDocumentBridge::createBridgeNode(
 XercesElementBridge*
 XercesDocumentBridge::createBridgeNode(
 			const DOM_ElementType& 	theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const
 {
 	// Create a navigator...
@@ -408,7 +408,7 @@ XercesDocumentBridge::createBridgeNode(
 XercesDocumentFragmentBridge*
 XercesDocumentBridge::createBridgeNode(
 			const DOM_DocumentFragmentType&		theXercesNode,
-			unsigned long						theIndex,
+			IndexType							theIndex,
 			bool								mapNode) const
 {
 	// Create a navigator...
@@ -444,7 +444,7 @@ XercesDocumentBridge::createBridgeNode(
 XercesTextBridge*
 XercesDocumentBridge::createBridgeNode(
 			const DOM_TextType&		theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const
 {
 	// Create a navigator...
@@ -478,7 +478,7 @@ XercesDocumentBridge::createBridgeNode(
 XercesCommentBridge*
 XercesDocumentBridge::createBridgeNode(
 			const DOM_CommentType&	theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const
 {
 	// Create a navigator...
@@ -514,7 +514,7 @@ XercesDocumentBridge::createBridgeNode(
 XercesCDATASectionBridge*
 XercesDocumentBridge::createBridgeNode(
 			const DOM_CDATASectionType&		theXercesNode,
-			unsigned long					theIndex,
+			IndexType						theIndex,
 			bool							mapNode) const
 {
 	// Create a navigator...
@@ -550,7 +550,7 @@ XercesDocumentBridge::createBridgeNode(
 XercesProcessingInstructionBridge*
 XercesDocumentBridge::createBridgeNode(
 			const DOM_ProcessingInstructionType&	theXercesNode,
-			unsigned long							theIndex,
+			IndexType								theIndex,
 			bool									mapNode) const
 {
 	// Create a navigator...
@@ -586,7 +586,7 @@ XercesDocumentBridge::createBridgeNode(
 XercesAttrBridge*
 XercesDocumentBridge::createBridgeNode(
 			const DOM_AttrType&		theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const
 {
 	// Create a navigator...
@@ -618,7 +618,7 @@ XercesDocumentBridge::createBridgeNode(
 XercesEntityBridge*
 XercesDocumentBridge::createBridgeNode(
 			const DOM_EntityType&	theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const
 {
 	// Create a navigator...
@@ -652,7 +652,7 @@ XercesDocumentBridge::createBridgeNode(
 XercesEntityReferenceBridge*
 XercesDocumentBridge::createBridgeNode(
 			const DOM_EntityReferenceType& 	theXercesNode,
-			unsigned long					theIndex,
+			IndexType						theIndex,
 			bool							mapNode) const
 {
 	// Create a navigator...
@@ -688,8 +688,8 @@ XercesDocumentBridge::createBridgeNode(
 XercesNotationBridge*
 XercesDocumentBridge::createBridgeNode(
 			const DOM_NotationType&		theXercesNode,
-			unsigned long				theIndex,
-			bool					mapNode) const
+			IndexType					theIndex,
+			bool						mapNode) const
 {
 	// Create a navigator...
 	XercesBridgeNavigator&	theNavigator = pushNavigator(mapNode);
@@ -722,7 +722,7 @@ XercesDocumentBridge::createBridgeNode(
 XalanNode*
 XercesDocumentBridge::createBridgeNode(
 			const DOM_NodeType&		theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const
 {
 	XalanNode*				theNewNode = 0;
@@ -1202,7 +1202,7 @@ XercesDocumentBridge::isIndexed() const
 
 
 
-unsigned long
+XercesDocumentBridge::IndexType
 XercesDocumentBridge::getIndex() const
 {
 	assert(m_navigator != 0);
@@ -1448,8 +1448,8 @@ XercesDocumentBridge::getElementsByTagName(const XalanDOMString&	/* tagname */) 
 
 XalanNode*
 XercesDocumentBridge::importNode(
-			XalanNode*	importedNode,
-			bool		deep)
+			XalanNode*	/* importedNode */,
+			bool		/* deep */)
 {
 	throw XercesDOMException(XercesDOMException::NOT_SUPPORTED_ERR);
 
@@ -1592,7 +1592,7 @@ XercesDocumentBridge::BuildBridgeTreeWalker::BuildBridgeTreeWalker(
 			XercesDocumentBridge*		theDocument,
 			XercesBridgeNavigator*		theDocumentNavigator,
 			NavigatorBridgeVectorType&	theNavigators,
-			unsigned long				theStartIndex) :
+			IndexType					theStartIndex) :
 	m_document(theDocument),
 	m_navigators(theNavigators),
 	m_currentIndex(theStartIndex),

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -241,7 +241,7 @@ public:
 	virtual bool
 	isIndexed() const;
 
-	virtual unsigned long
+	virtual IndexType
 	getIndex() const;
 
 	virtual XalanElement*
@@ -387,7 +387,7 @@ public:
 				XercesDocumentBridge*			theDocument,
 				XercesBridgeNavigator*			theDocumentNavigator,
 				NavigatorBridgeVectorInnerType&	theNavigators,
-				unsigned long					theStartIndex);
+				IndexType						theStartIndex);
 
 		virtual
 		~BuildBridgeTreeWalker();
@@ -427,7 +427,7 @@ public:
 
 		NavigatorBridgeVectorInnerType&	m_navigators;
 
-		unsigned long					m_currentIndex;
+		IndexType						m_currentIndex;
 
 		NavigatorStackType				m_parentNavigatorStack;
 
@@ -491,73 +491,73 @@ private:
 	XalanNode*
 	createBridgeNode(
 			const DOM_NodeType&		theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const;
 
 	XercesDocumentTypeBridge*
 	createBridgeNode(
 			const DOM_DocumentType_Type&	theDoctype,
-			unsigned long					theIndex,
+			IndexType						theIndex,
 			bool							mapNode) const;
 
 	XercesElementBridge*
 	createBridgeNode(
 			const DOM_ElementType& 	theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const;
 
 	XercesDocumentFragmentBridge*
 	createBridgeNode(
 			const DOM_DocumentFragmentType&		theXercesNode,
-			unsigned long						theIndex,
+			IndexType							theIndex,
 			bool								mapNode) const;
 
 	XercesTextBridge*
 	createBridgeNode(
 			const DOM_TextType&		theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const;
 
 	XercesCommentBridge*
 	createBridgeNode(
 			const DOM_CommentType&	theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const;
 
 	XercesCDATASectionBridge*
 	createBridgeNode(
 			const DOM_CDATASectionType&		theXercesNode,
-			unsigned long					theIndex,
+			IndexType						theIndex,
 			bool							mapNode) const;
 
 	XercesProcessingInstructionBridge*
 	createBridgeNode(
 			const DOM_ProcessingInstructionType&	theXercesNode,
-			unsigned long							theIndex,
+			IndexType								theIndex,
 			bool									mapNode) const;
 
 	XercesAttrBridge*
 	createBridgeNode(
 			const DOM_AttrType&		theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const;
 
 	XercesEntityBridge*
 	createBridgeNode(
 			const DOM_EntityType&	theXercesNode,
-			unsigned long			theIndex,
+			IndexType				theIndex,
 			bool					mapNode) const;
 
 	XercesEntityReferenceBridge*
 	createBridgeNode(
 			const DOM_EntityReferenceType&	theXercesNode,
-			unsigned long					theIndex,
+			IndexType						theIndex,
 			bool							mapNode) const;
 
 	XercesNotationBridge*
 	createBridgeNode(
 			const DOM_NotationType&		theXercesNode,
-			unsigned long				theIndex,
+			IndexType					theIndex,
 			bool						mapNode) const;
 
 	XercesBridgeNavigator&

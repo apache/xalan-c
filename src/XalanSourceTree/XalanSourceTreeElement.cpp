@@ -90,7 +90,7 @@ XalanSourceTreeElement::XalanSourceTreeElement(
 			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
-			unsigned int				theIndex) :
+			IndexType					theIndex) :
 	XalanElement(),
 	m_tagName(theTagName),
 	m_ownerDocument(theOwnerDocument),
@@ -314,7 +314,7 @@ XalanSourceTreeElement::isIndexed() const
 
 
 
-unsigned long
+XalanSourceTreeElement::IndexType
 XalanSourceTreeElement::getIndex() const
 {
 	return m_index;

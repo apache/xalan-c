@@ -206,7 +206,7 @@ public:
 	virtual bool
 	isIndexed() const;
 
-	virtual unsigned long
+	virtual IndexType
 	getIndex() const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

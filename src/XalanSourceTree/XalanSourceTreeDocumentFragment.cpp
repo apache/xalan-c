@@ -335,7 +335,7 @@ XalanSourceTreeDocumentFragment::isIndexed() const
 
 
 
-unsigned long
+XalanSourceTreeDocumentFragment::IndexType
 XalanSourceTreeDocumentFragment::getIndex() const
 {
 	return 0;

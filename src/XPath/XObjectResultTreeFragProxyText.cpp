@@ -319,7 +319,7 @@ XObjectResultTreeFragProxyText::isIndexed() const
 
 
 
-unsigned long
+XObjectResultTreeFragProxyText::IndexType
 XObjectResultTreeFragProxyText::getIndex() const
 {
 	return 0;

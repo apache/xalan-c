@@ -79,15 +79,14 @@ const XalanDOMString	XercesWrapperNavigator::s_emptyString;
 
 
 XercesWrapperNavigator::XercesWrapperNavigator(
-			XercesDocumentWrapper*	theOwnerDocument,
-			bool					mappingMode) :
+			XercesDocumentWrapper*	theOwnerDocument) :
 	m_ownerDocument(theOwnerDocument),
 	m_parentNode(0),
 	m_previousSibling(0),
 	m_nextSibling(0),
 	m_firstChild(0),
 	m_lastChild(0),
-	m_index(UINT_MAX)
+	m_index(0)
 {
 	assert(theOwnerDocument != 0);
 }

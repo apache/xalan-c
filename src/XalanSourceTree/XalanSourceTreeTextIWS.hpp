@@ -89,7 +89,7 @@ public:
 			XalanNode*				theParentNode = 0,
 			XalanNode*				thePreviousSibling = 0,
 			XalanNode*				theNextSibling = 0,
-			unsigned int			theIndex = 0);
+			IndexType				theIndex = 0);
 
 	virtual
 	~XalanSourceTreeTextIWS();

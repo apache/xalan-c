@@ -390,7 +390,7 @@ XalanSourceTreeDocument::isIndexed() const
 
 
 
-unsigned long
+XalanSourceTreeDocument::IndexType
 XalanSourceTreeDocument::getIndex() const
 {
 	return 1;

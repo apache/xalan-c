@@ -82,6 +82,8 @@ public:
 
 	typedef XalanSourceTreeElementA					ObjectType;
 
+	typedef ObjectType::IndexType					IndexType;
+
 	typedef ObjectType::AttributesCountType			AttributesCountType;
 
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
@@ -127,7 +129,7 @@ public:
 			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
-			unsigned int				theIndex = 0);
+			IndexType					theIndex = 0);
 
 	/**
 	 * Delete all objects from allocator.	 

@@ -429,7 +429,7 @@ public:
 	virtual bool
 	isIndexed() const;
 
-	virtual unsigned long
+	virtual IndexType
 	getIndex() const;
 
 	//@}

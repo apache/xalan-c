@@ -317,7 +317,7 @@ XercesAttrBridge::isIndexed() const
 
 
 
-unsigned long
+XercesAttrBridge::IndexType
 XercesAttrBridge::getIndex() const
 {
 	return m_navigator.getIndex();

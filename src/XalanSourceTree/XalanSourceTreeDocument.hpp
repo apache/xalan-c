@@ -316,7 +316,7 @@ public:
 	virtual bool
 	isIndexed() const;
 
-	virtual unsigned long
+	virtual IndexType
 	getIndex() const;
 
 	virtual XalanElement*
@@ -576,7 +576,7 @@ private:
 
 	AttributesArrayAllocatorType					m_attributesVector;
 
-	unsigned int									m_nextIndexValue;
+	IndexType										m_nextIndexValue;
 
 	const bool										m_poolAllText;
 

@@ -87,7 +87,7 @@ XalanSourceTreeText::XalanSourceTreeText(
 			XalanNode*				theParentNode,
 			XalanNode*				thePreviousSibling,
 			XalanNode*				theNextSibling,
-			unsigned int			theIndex) :
+			IndexType				theIndex) :
 	XalanText(),
 	m_data(theData),
 	m_parentNode(theParentNode),
@@ -346,7 +346,7 @@ XalanSourceTreeText::isIndexed() const
 
 
 
-unsigned long
+XalanSourceTreeText::IndexType
 XalanSourceTreeText::getIndex() const
 {
 	return m_index;

@@ -941,7 +941,7 @@ ElemTemplateElement::isIndexed() const
 
 
 
-unsigned long
+ElemTemplateElement::IndexType
 ElemTemplateElement::getIndex() const
 {
 	return 0;

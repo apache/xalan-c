@@ -85,7 +85,7 @@ XalanSourceTreeProcessingInstructionAllocator::create(
 			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
-			unsigned int				theIndex)
+			IndexType					theIndex)
 {
 	ObjectType* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);

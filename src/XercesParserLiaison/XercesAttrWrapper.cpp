@@ -325,7 +325,7 @@ XercesAttrWrapper::isIndexed() const
 
 
 
-unsigned long
+XercesAttrWrapper::IndexType
 XercesAttrWrapper::getIndex() const
 {
 	return m_navigator.getIndex();

@@ -73,7 +73,7 @@ XalanSourceTreeAttrNS::XalanSourceTreeAttrNS(
 			const XalanDOMString&		thePrefix,
 			const XalanDOMString&		theValue,
 			XalanSourceTreeElement*		theOwnerElement,
-			unsigned int				theIndex) :
+			IndexType					theIndex) :
 	XalanSourceTreeAttr(
 		theName,
 		theValue,

@@ -315,7 +315,7 @@ XercesNotationWrapper::isIndexed() const
 
 
 
-unsigned long
+XercesNotationWrapper::IndexType
 XercesNotationWrapper::getIndex() const
 {
 	return m_navigator.getIndex();

@@ -317,7 +317,7 @@ XercesEntityWrapper::isIndexed() const
 
 
 
-unsigned long
+XercesEntityWrapper::IndexType
 XercesEntityWrapper::getIndex() const
 {
 	return m_navigator.getIndex();

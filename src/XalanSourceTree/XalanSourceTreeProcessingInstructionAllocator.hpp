@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,6 +82,8 @@ public:
 
 	typedef XalanSourceTreeProcessingInstruction	ObjectType;
 
+	typedef ObjectType::IndexType					IndexType;
+
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
 	typedef ArenaBlock<ObjectType>					ArenaBlockType;
 
@@ -123,7 +125,7 @@ public:
 			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
-			unsigned int				theIndex = 0);
+			IndexType					theIndex = 0);
 
 	/**
 	 * Delete all objects from allocator.	 

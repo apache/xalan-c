@@ -398,7 +398,7 @@ ResultTreeFrag::isIndexed() const
 
 
 
-unsigned long
+ResultTreeFrag::IndexType
 ResultTreeFrag::getIndex() const
 {
 	return 0;

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,7 +67,7 @@ XalanSourceTreeTextIWS::XalanSourceTreeTextIWS(
 			XalanNode*				theParentNode,
 			XalanNode*				thePreviousSibling,
 			XalanNode*				theNextSibling,
-			unsigned int			theIndex) :
+			IndexType				theIndex) :
 	XalanSourceTreeText(theData, theParentNode, thePreviousSibling, theNextSibling, theIndex)
 {
 }

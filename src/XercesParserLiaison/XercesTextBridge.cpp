@@ -321,7 +321,7 @@ XercesTextBridge::isIndexed() const
 
 
 
-unsigned long
+XercesTextBridge::IndexType
 XercesTextBridge::getIndex() const
 {
 	return m_navigator.getIndex();

@@ -72,6 +72,7 @@
 
 
 #include <XalanDOM/XalanDOMString.hpp>
+#include <XalanDOM/XalanNode.hpp>
 
 
 
@@ -86,7 +87,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 class XercesDocumentWrapper;
 class XalanAttr;
 class XalanElement;
-class XalanNode;
 class XalanText;
 
 
@@ -95,10 +95,10 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesWrapperNavigator
 {
 public:
 
+	typedef XalanNode::IndexType	IndexType;
+
 	explicit
-	XercesWrapperNavigator(
-			XercesDocumentWrapper*	theOwnerDocument = 0,
-			bool					mappingMode = true);
+	XercesWrapperNavigator(XercesDocumentWrapper*	theOwnerDocument = 0);
 
 	XercesWrapperNavigator(const XercesWrapperNavigator&	theSource);
 
@@ -127,14 +127,14 @@ public:
 	const DOMNodeType*
 	mapNode(XalanNode*	theXalanNode) const;
 
-	unsigned long
+	IndexType
 	getIndex() const
 	{
 		return m_index;
 	}
 
 	void
-	setIndex(unsigned long	theIndex)
+	setIndex(IndexType	theIndex)
 	{
 		m_index = theIndex;
 	}
@@ -246,7 +246,7 @@ private:
 
 	XalanNode*				m_lastChild;
 
-	unsigned long			m_index;
+	IndexType				m_index;
 
 	static const XalanDOMString		s_emptyString;
 };

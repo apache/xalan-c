@@ -306,7 +306,7 @@ XercesNotationBridge::isIndexed() const
 
 
 
-unsigned long
+XercesNotationBridge::IndexType
 XercesNotationBridge::getIndex() const
 {
 	return m_navigator.getIndex();

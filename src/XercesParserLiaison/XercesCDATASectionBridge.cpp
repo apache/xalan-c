@@ -321,7 +321,7 @@ XercesCDATASectionBridge::isIndexed() const
 
 
 
-unsigned long
+XercesCDATASectionBridge::IndexType
 XercesCDATASectionBridge::getIndex() const
 {
 	return m_navigator.getIndex();

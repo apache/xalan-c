@@ -68,6 +68,7 @@
 
 
 #include <XalanDOM/XalanDOMString.hpp>
+#include <XalanDOM/XalanNode.hpp>
 
 
 
@@ -82,7 +83,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 class XercesDocumentBridge;
 class XalanAttr;
 class XalanElement;
-class XalanNode;
 class XalanText;
 
 
@@ -90,6 +90,8 @@ class XalanText;
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesBridgeNavigator
 {
 public:
+
+	typedef XalanNode::IndexType	IndexType;
 
 	explicit
 	XercesBridgeNavigator(
@@ -126,14 +128,14 @@ public:
 	DOM_AttrType
 	mapNode(const XalanAttr*	theXercesNode) const;
 
-	unsigned long
+	IndexType
 	getIndex() const
 	{
 		return m_index;
 	}
 
 	void
-	setIndex(unsigned long	theIndex)
+	setIndex(IndexType	theIndex)
 	{
 		m_index = theIndex;
 	}
@@ -278,7 +280,7 @@ private:
 
 	mutable	XalanNode*		m_lastChild;
 
-	unsigned long			m_index;
+	IndexType				m_index;
 };
 
 
