@@ -132,7 +132,7 @@ getParams(int			argc,
 	// This needs additional work.
 	if (argc != 1)
 	{
-		cerr << "Usage: ThreadTest" << endl;
+		cerr << "Usage: Stressmem" << endl;
 
 		return false;
 	}
