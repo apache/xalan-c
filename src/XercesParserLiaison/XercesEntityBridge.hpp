@@ -473,6 +473,13 @@ private:
 	operator==(const XercesEntityBridge&		theRHS) const;
 
 	// Data members...
+	// $$$ Note that there is an order dependency here,
+	// due do a code generation bug with MSVC 6.0.  The
+	// call to construct the XercesNodeListBridge uses
+	// the m_xercesNode data member instead of the 
+	// constructor parameter.  I have no idea why MSVC
+	// generate bogus code when using the parameter, but
+	// it does...
 	DOM_Entity						m_xercesNode;
 
 	const XercesBridgeNavigator&	m_navigator;

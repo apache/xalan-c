@@ -70,7 +70,7 @@ XercesEntityBridge::XercesEntityBridge(
 	XalanEntity(),
 	m_xercesNode(theXercesDOMEntity),
 	m_navigator(theNavigator),
-	m_children(theXercesDOMEntity.getChildNodes(),
+	m_children(m_xercesNode.getChildNodes(),
 			   theNavigator)
 {
 }
