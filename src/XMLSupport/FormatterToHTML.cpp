@@ -1753,8 +1753,6 @@ static XalanDOMString	s_styleString;
 
 static XalanDOMString	s_ampString;
 
-static XalanDOMString	s_fnofString;
-
 static XalanDOMString	s_metaString;
 
 
@@ -1772,9 +1770,6 @@ const XalanDOMString&	FormatterToHTML::s_scriptString =
 
 const XalanDOMString&	FormatterToHTML::s_styleString =
 			::s_styleString;
-
-const XalanDOMString&	FormatterToHTML::s_fnofString =
-			::s_fnofString;
 
 const XalanDOMString&	FormatterToHTML::s_metaString =
 			::s_metaString;
@@ -2111,7 +2106,6 @@ const unsigned long		FormatterToHTML::s_entitiesSize =
 				sizeof(s_entities) / sizeof (s_entities[0]);
 
 
-
 void
 FormatterToHTML::initialize()
 {
@@ -2120,8 +2114,8 @@ FormatterToHTML::initialize()
 	::s_dummyDesc.reset();
 
 	// New everything in a local so that an exception will clean up everything...
-	XalanAutoPtr<ElementFlagsMapType>			theElementFlags(new ElementFlagsMapType);
-	XalanAutoPtr<FormatterToHTML::ElemDesc>		theDummyDesc(new FormatterToHTML::ElemDesc(FormatterToHTML::ElemDesc::BLOCK));
+	XalanAutoPtr<ElementFlagsMapType>	theElementFlags(new ElementFlagsMapType);
+	XalanAutoPtr<ElemDesc>				theDummyDesc(new ElemDesc(ElemDesc::BLOCK));
 
 	// Do initialization...
 	initializeElementFlagsMap(*theElementFlags.get());
@@ -2135,8 +2129,6 @@ FormatterToHTML::initialize()
 	::s_scriptString = XALAN_STATIC_UCODE_STRING("SCRIPT");
 
 	::s_styleString = XALAN_STATIC_UCODE_STRING("STYLE");
-
-	::s_fnofString = XALAN_STATIC_UCODE_STRING("fnof");
 
 	::s_metaString = XALAN_STATIC_UCODE_STRING("<META http-equiv=\"Content-Type\" content=\"text/html; charset=");
 
@@ -2174,8 +2166,6 @@ FormatterToHTML::terminate()
 	releaseMemory(::s_scriptString);
 
 	releaseMemory(::s_styleString);
-
-	releaseMemory(::s_fnofString);
 
 	releaseMemory(::s_metaString);		
 }

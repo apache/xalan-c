@@ -354,11 +354,6 @@ private:
 	static const XalanDOMString&	s_styleString;
 
 	/**
-	 * The string "fnof".
-	 */
-	static const XalanDOMString&	s_fnofString;
-
-	/**
 	 * The string "<META http-equiv=\"Content-Type\" content=\"text/html; charset=".
 	 */
 	static const XalanDOMString&	s_metaString;
