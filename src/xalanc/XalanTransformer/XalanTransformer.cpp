@@ -250,7 +250,7 @@ XalanTransformer::terminate()
 
 	// Terminate Xalan and release memory.
 #if defined(XALAN_CANNOT_DELETE_CONST)
-	delete (XSLTInputSource*) s_emptyInputSource
+	delete (XSLTInputSource*) s_emptyInputSource;
 	delete (XSLTInit*) s_xsltInit;
 #else
 	delete s_emptyInputSource;
