@@ -64,11 +64,13 @@
     <li><link anchor="simpletransform">SimpleTransform</link></li>
     <li><link anchor="streamtransform">StreamTransform</link></li>    
     <li><link anchor="usestylesheetparam">UseStylesheetParam</link></li>
+    <li><link anchor="xalantransformercallback">XalanTransformerCallback</link></li>
     <li><link anchor="tracelisten">TraceListen</link></li>        
     <li><link anchor="compilestylesheet">CompileStylesheet</link></li>
      <li><link anchor="documentbuilder">DocumentBuilder</link></li>
     <li><link anchor="threadsafe">ThreadSafe</link></li>  
     <li><link anchor="xpathwrapper">XPathWrapper</link></li>
+    <li><link anchor="simplexpathapi">SimpleXPathAPI</link></li>    
     <li><link anchor="externalfunctions">ExternalFunctions</link></li>
     <li><link anchor="apachemodulexslt">ApacheModuleXSLT</link></li>
   </ul>
@@ -129,7 +131,17 @@
      as a single argument. For example:</p>
      <p><code>UseStylesheetParam param1 "'hello out there'"</code></p>
      <p>See also: <link idref="usagepatterns" anchor="params">Setting stylesheet parameters</link>.</p>     
-  </s2><anchor name="tracelisten"/>
+  </s2><anchor name="xalantransformercallback"/>
+  <s2 title="XalanTransformerCallback">
+  <p>What it does: it returns transformation output in blocks to a callback function, which writes the output to a file.
+  This sample illustrats the use of a callback function to incrementally process a transformation result, that is to begin
+  working with the transformation result before the transformation has beeen completed. See <link idref="usagepatterns"
+  anchor="incremental">Processing output incrementally</link>.</p>
+  <p>You can run it from the XalanTransformerCallback subdirectory with</p>
+  <p><code>XalanTransformerCallback foo.xml foo.xsl [foo.out]</code></p>
+  <note>If you omit the third argument, the transformation result is written to the screen.</note>
+  </s2>
+  <anchor name="tracelisten"/>
   <s2 title="TraceListen">
   <p>What it does: Trace events during a transformation; the transformation uses birds.xsl to transform birds.xml and writes the
   output to birds.out.</p>
@@ -188,6 +200,8 @@ theProcessor.addTraceListener(&amp;theTraceListener);
   <p>See also: <link idref="usagepatterns" anchor="compiled">Compiling stylesheets</link>.</p>  
   </s2><anchor name="xpathwrapper"/>
   <s2 title="XPathWrapper">
+  <note>For a more streamlined sample that uses the XPathEvaluator interface, see 
+  <link anchor="simplexpathapi">SimpleXPathAPI</link>.</note>
     <p>This sample uses an executable (TestDriver in Windows, XPathWrapper in Linux and AIX), and two classes: XPathWrapper and
     XPathWrapperImp.</p>
     <p>What it does: The executable passes XPathWrapper an XML file name, a context node location path, and an XPath
@@ -195,12 +209,18 @@ theProcessor.addTraceListener(&amp;theTraceListener);
      XPath expression from specified context node in the XML document and returns the nodes it finds (if any).</p>
      <note>You can use this sample as an aid when you want to find out what a given XPath expression returns from a
      given context node in an XML file.</note>
-    <p>Run this sample from the XPathWrapper subdirectory with</p> 
-    <p>Windows:<br/>
-    &nbsp;&nbsp;<code>TestDriver <ref>XMLFile ContextNode XPathExpression</ref></code></p>
-    <p>UNIX:<br/>
-    &nbsp;&nbsp;<code>XPathWrapper <ref>XMLFile ContextNode XPathExpression</ref></code></p>
-    <p>where <ref>XMLFile</ref> is an XML source file, <ref>ContextNode</ref> is the location path to the context
+    <p>Run this sample from the XPathWrapper subdirectory with the same command line arguments described for <link
+    anchor="simplexpathapi">SimpleXPathAPI</link>. Under Windows, the executable is TestDriver; under UNIX, the 
+    executable is XPathWrapper.</p> 
+  </s2><anchor name="simplexpathapi"/>
+  <s2 title="SimpleXPathAPI">
+  <p>What it does: uses the XPathEvaluator interface to evaluate an XPath expression from the specified context node of 
+  an XML file, and displays the nodeset returned by the expression.</p>
+  <note>You can use this sample as an aid when you want to find out what a given XPath expression returns from a
+  given context node in an XML file.</note>
+  <p>Run this sample from the SimpleXPathAPI subdirectory with</p>
+  <p><code>SimpleXPathAPI <ref>XMLFile</ref> <ref>ContextNode</ref> <ref>XPathExpression</ref></code></p>
+  <p>where <ref>XMLFile</ref> is an XML source file, <ref>ContextNode</ref> is the location path to the context
      node, and <ref>XPathExpression</ref> is an XPath expression to apply to that context node. The XPathWrapper
      subdirectory contains an XML file named xml.foo (part of it appears below).</p>
      <source>&lt;?xml version="1.0"?&gt;
@@ -211,18 +231,12 @@ theProcessor.addTraceListener(&amp;theTraceListener);
   &lt;name first="Paul" last="Dick"/&gt;
 &lt;/doc&gt;</source>
     <p>You can try command lines like</p>
-    <p>Windows:<br/>
-    &nbsp;&nbsp;<code>TestDriver foo.xml /doc name/@last</code></p>
-    <p>UNIX:<br/>
-    &nbsp;&nbsp;<code>XPathWrapper foo.xml /doc name/@last</code></p>
+    <p><code>SimpleXPathAPI foo.xml /doc name/@last</code></p>
     <p>and</p>
-    <p>Windows:<br/>
-    &nbsp;&nbsp;<code>TestDriver foo.xml / '//name[position()="4"]/@first'</code></p>
-    <p>UNIX:<br/>
-    &nbsp;&nbsp;<code>XPathWrapper foo.xml / '//name[position()="4"]/@first'</code></p>
-     <note>If an XPathWrapper argument includes characters (such as *) that the shell intercepts, enclose the argument 
-     in double quotes.</note>   
-    <p>See also: <link idref="usagepatterns" anchor="xpath">Working with XPath expressions</link>.</p> 
+    <p><code>SimpleXPathAPI foo.xml / '//name[position()="4"]/@first'</code></p>
+     <note>If a SimpleXPathAPI argument includes characters (such as *) that the shell intercepts, enclose the argument 
+     in double quotes.</note>
+    <p>See also: <link idref="usagepatterns" anchor="xpath">Working with XPath expressions</link>.</p>      
   </s2><anchor name="externalfunctions"/>
   <s2 title="ExternalFunctions">
     <p>What it does: implement, install, and illustrate the usage of three extension functions. The functions return a
