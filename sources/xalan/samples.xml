@@ -1,0 +1,152 @@
+<?xml version="1.0" standalone="no"?> 
+<!--
+ * The Apache Software License, Version 1.1
+ *
+ *
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:  
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
+ *
+ * 4. The names "Xalan" and "Apache Software Foundation" must
+ *    not be used to endorse or promote products derived from this
+ *    software without prior written permission. For written 
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache",
+ *    nor may "Apache" appear in their name, without prior written
+ *    permission of the Apache Software Foundation.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation and was
+ * originally based on software copyright (c) 1999, Lotus
+ * Development Corporation., http://www.lotus.com.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ -->
+
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+<s1 title="Samples">
+  <ul>
+    <li><link anchor="getstarted">Samples to help you get started</link></li>
+    <li><link anchor="simpletransform">SimpleTransform</link></li>
+    <li><link anchor="usestylesheetparam">Use StylesheetParam</link></li>    
+    <li><link anchor="compilestylesheet">CompileStylesheet</link></li>    
+    <li><link anchor="xpathwrapper">XPathWrapper</link></li>
+    <li><link anchor="externalfunctions">ExternalFunctions</link></li>
+  </ul>
+
+  <anchor name="getstarted"/>
+	<s2 title="Samples to help you get started">
+    <p>Each of the subdirectories in the &xslt4j; samples directory contains the source files for a
+    sample application. The executables for all the samples are in  the xxx directory, so to run the samples, 
+    you should place this directory on the system path.</p>
+    <p>With most of the samples, you can use the following procedure:</p>
+     <ol>
+      <li>Go to the samples subdirectory containing the sample (use the DOS shell if you are running Windows)
+      <br/><br/></li>
+      <li>Run the sample from the command line (as indicated below)<br/><br/></li>
+      <li>Examine the application source files. You may also want to modify the source files. Remember that if you
+      modify a .cpp file, you must rebuild the executable and place it on the path before you can run the
+      modified application.</li>
+     </ol>      
+    <p>The basic command line for running samples is </p> 
+    <p><code><ref>executable</ref></code></p>
+    <p>or</p>
+    <p><code><ref>executable args</ref></code></p>
+    <p>where <ref>executable</ref> is the name of the executable and <ref>args</ref> are the arguments.</p>
+  </s2><anchor name="simpletransform"/>
+  <s2 title="SimpleTransform">
+    <p>What it does: The SimpleTransform class uses the foo.xsl stylesheet to transform foo.xml, and prints the
+     output to foo.out.</p>
+    <p>You can run it from the SimpleTransform subdirectory with</p>
+    <p><code>SimpleTransform</code></p>
+    <p>See also: <link idref="usagepatterns" anchor="basic">Basic proecedures for performing XSL
+    transformations</link>.</p>
+  </s2><anchor name="usestylesheetparam"/>    
+  <s2 title="UseStylesheetParam">    
+    <p>What it does: Set a stylesheet parameter that the stylesheet uses during the transformation.</p>
+    <p>You can run it from the UseStylesheetParam subdirectory with</p>
+    <p><code>UseStylesheetParam <ref>key expression</ref></code></p>
+    <p>where <ref>key</ref> is the parameter key (or name) and <ref>expression</ref> is a string expression enclosed
+     in single quotes.</p>
+    <p>The example uses a stylesheet (foo.xsl) with a parameter named param1. The stylesheet accepts any string
+     expression. Enclose the string expression in single quotes (so it is interpreted as an expression); if it
+     includes more than a single word, enclose the resulting string in double quotes so the executable interprets it
+     as a single argument. For example:</p>
+     <p><code>UseStylesheetParam param1 "'this is a mulit-word string expression'"</code></p>
+     <p>See also: <link idref="usagepatterns" anchor="params">Setting stylesheet params</link>.</p>     
+  </s2><anchor name="compilestylesheet"/>    
+  <s2 title="CompileStylesheet">
+    <p>What it does: Use a compiled stylesheet to perform a series of transformations.</p>
+    <p>You can run it from the CompileStylesheet subdirectory with</p>
+    <p><code>CompileStylesheet</code></p>
+    <p>See also: <link idref="usagepatterns" anchor="compiled">Compiling stylesheets</link>.</p>
+  </s2><anchor name="xpathwrapper"/>
+  <s2 title="XPathWrapper">
+    <p>This sample uses TestDriver, an executable, and two classes: XPathWrapper and XPathWrapperImp. </p>
+    <p>What it does: TestDriver passes XPathWrapper an XML file name, a context node location path, and an XPath
+    expression. XPathWrapper in turn passes these arguments to the XPahtWrapperImpl evaluate() method, which executes
+    the XPath expression from specified context node in the XML document and returns the nodes (if any) it finds.</p>
+     <note>You can use this sample as an aid when you want to find out what a given XPath expression returns from a
+     given context node in an XML file.</note>
+    <p>Run this sample from the XPathWrapper subdirectory with</p> 
+    <p><code>TestDriver <ref>XMLFile ContextNode XPathExpression</ref></code></p>
+    <p>where <ref>XMLFile</ref> is an XML source file, <ref>ContextNode</ref> is the location path to the context
+     node, and <ref>XPathExpression</ref> is an XPath expression to apply to that context node. The XPathWrapper
+     subdirectory contains an XML file named xml.foo (part of it appears below).</p>
+     <source>&lt;?xml version="1.0"?&gt;
+&lt;doc&gt;
+  &lt;name first="David" last="Marston"/&gt;
+  &lt;name first="David" last="Bertoni"/&gt;
+  ...
+  &lt;name first="Paul" last="Dick"/&gt;
+&lt;/doc&gt;</source>
+     <p>You can try command lines like</p>
+    <p><code>TestDriver foo.xml /doc name/@last</code></p>
+    <p>and</p>
+    <p><code>TestDriver foo.xml //name[position()="4" ./@first</code></p>
+    <p>See also: <link idref="usagepatterns" anchor="xpath">Working with XPath expressions</link>.</p>    
+  </s2><anchor name="externalfunctions"/>
+  <s2 title="ExternalFunctions">
+    <p>What it does: implement, install, and illustratethe usage of three extension functions. The functions return a
+    square root, a cube, and a string with the current date and time. The sample stylesheet (foo.xsl) gets the area
+    of a cube and units of measurement from an XML document (foo.xml), computes the length of each side
+    of a cube and the volume of the cube, and enters the date and time of the transformation. The output appears in
+    foo.out.</p>
+    <p>Run this sample from the ExternalFunctions subdirectory with</p> 
+    <p><code>ExternalFunctions</code></p>
+    <p>See also: <link idref="extensions">Extension Functions</link>.</p>
+  </s2>
+</s1>

@@ -1,0 +1,12 @@
+<?xml encoding="US-ASCII"?>
+
+<!ENTITY xslt4j "Xalan-J">
+<!ENTITY xml4j "Xerces-J">
+<!ENTITY xslt4c "Xalan-C">
+<!ENTITY xml4c "Xerces-C">
+<!ENTITY done SYSTEM "sbk:/sources/xalan/DONE">
+<!ENTITY status SYSTEM "sbk:/sources/xalan/STATUS">
+<!ENTITY bugs SYSTEM "sbk:/sources/xalan/BUGS">
+
+<!ENTITY download "The Xalan download from xml.apache.org includes xerces-c_1_1.dll.">
+

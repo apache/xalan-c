@@ -1,0 +1,88 @@
+<?xml version="1.0" standalone="no"?>
+<!-- 
+ * The Apache Software License, Version 1.1
+ *
+ *
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:  
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
+ *
+ * 4. The names "Xalan" and "Apache Software Foundation" must
+ *    not be used to endorse or promote products derived from this
+ *    software without prior written permission. For written 
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache",
+ *    nor may "Apache" appear in their name, without prior written
+ *    permission of the Apache Software Foundation.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation and was
+ * originally based on software copyright (c) 1999, Lotus
+ * Development Corporation., http://www.lotus.com.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ -->
+
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="Xalan-C Version 1.0.0">
+      
+  <s2 title="What is it?">
+    <p>Xalan is an XSL processor for transforming XML documents into HTML, text, or other XML document types. Xalan-C version
+    1.0.0 represents a complete and a robust C++ reference implementation of the W3C Recommendations for XSL Transformations
+    (XSLT) and the XML Path Language (XPath).</p>
+    <p>Xalan-C uses the Xerces-C XML parser.</p>
+	</s2>
+  
+  <s2 title="How do I get it?">
+    <p>Download and unzip either of the following:</p>
+    <ul>
+      <li><jump href="http://xml.apache.org/dist/xalan-j/xalan-j_1_0_1.zip">xalan-j_1_0_0.zip</jump></li>
+      <li><jump href="http://xml.apache.org/dist/xalan-j/xalan-j_1_0_1.tar.gz">xalan-j_1_0_0.tar.gz</jump></li>
+    </ul> 
+  </s2>
+  
+  <s2 title="Where do I get Xerces?">
+    <p>The Xalan-C dowload includes xerces-c_1_1.dll from Xerces-C 1.0.3. This provides the Xerces runtime environment for
+     Xalan.To build applications with Xalan and the Xerces XML parser, you also need the Xerces-C source tree, which you can
+     obtain by downloading the Xerces-C Source distribution from the <resource-ref idref="Xeces-c-dist"/>.</p>
+  </s2>  
+    <s2 title="For more information...">
+    <p>For more information, go to <link idref="overview">Xalan Overview</link> and <link idref="getstarted">Getting
+    Started</link>. All of the Xalan documentation on this website is included in the Xalan download, as are a number of samples
+    to help you start using Xalan to transform XML documents.</p>
+  </s2>   
+</s1>

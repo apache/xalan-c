@@ -1,8 +1,5 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd"[
-<!ENTITY done-c SYSTEM "sbk:/sources/xalan/c/DONE">
-<!ENTITY status-c SYSTEM "sbk:/sources/xalan/c/STATUS">
-<!ENTITY bugs-c SYSTEM "sbk:/sources/xalan/c/BUGS">]>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <!--
  * The Apache Software License, Version 1.1
@@ -61,63 +58,69 @@
  * <http://www.apache.org/>.
  -->
  
-<s1 title="Xalan C++ XSL Transformer">
 
-  <s2 title="Xalan C++">
-     <p>Like Xalan-J, Xalan-C implements <resource-ref idref="XSLT"/> and the <resource-ref idref="XPath"/>. 
-     Version 0.30.0 is our second release, including builds for Win32 and Linux. You can download this release from the
-     <jump href="http://xml.apache.org/dist/">Apache XML Distribution directory</jump></p>
-     <p>The build includes 8 DLLs and an executable (TestXSLT.exe, a command-line utility). To use this utility 
-     to perform transformations, place these files in a directory with the Xerces dynamic link library, xerces-c_1_0.dll.</p>
-  </s2>
-  <s2 title="Command-line utility">  
-    <p>&xslt4c; implements a subset of the same interface provided by &xslt4j;. This version accepts the following switches
-    and arguments:</p> 
-      <source>
--IN inputXMLURL
+<s1 title="Command-Line Utility">
+   
+   <s2 title="Using the Command-Line Utility">
+      <p>To perform a transformation, you can call &xslt4c; from the command line (or script), 
+      of from within an application (see <link idref="usagepatterns">Usage Patterns</link>).</p>
+     <p>Process main() method provides a command-line interface
+    for performing XSL transformation. To perform a transformation from the command line or a script,
+    do the following:</p>
+ 		<ol>
+    <li><link idref="getstarted" anchor="download">Download &xslt4c;</link>.<br/><br/></li> 
+    <li><link idref="getstarted"
+     anchor="classpath">Set the path</link> to include the build directory.<br/><br/></li>
+    <li>Call the TestXSLT executable with the appropriate flags and
+    arguments (described below). The following command line, for example, includes the -IN, -XSL,
+    and -OUT flags with their accompanying arguments -- the XML source document, the XSL
+    stylesheet, and the output file:<br/><br/>
+    <code>TestXSLT -IN foo.xml -XSL foo.xsl -OUT foo.out</code>
+    </li></ol>
+    <p>The command line utility can take the following flags and arguments:</p> 
+      <source>-IN inputXMLURL
 -XSL XSLTransformationURL
 -OUT outputFileName
--E (Keep--do not expand -- entity refs)
+-LXCIN compiledStylesheetFileNameIn
+-LXCOUT compiledStylesheetFileNameOut
+-PARSER fully qualified class name of parser liaison
 -V (Version info)
 -QC (Quiet Pattern Conflicts Warnings)
 -Q  (Quiet Mode)
--INDENT (Number of spaces to indent each level in output tree -- default is 0)
+-LF (Use linefeeds only on output -- default is CR/LF)
+-CR (Use carriage returns only on output -- default is CR/LF)
+-INDENT (Number of spaces to indent each level in output tree --default is 0)
+-TT (Trace the templates as they are being called)
+-TG (Trace each result tree generation event)
+-TS (Trace each selection event)
+-TTC (Trace the template children as they are being processed)
 -VALIDATE (Validate the XML and XSL input -- validation is off by default)
+-EDUMP [optional]FileName (Do stackdump on error)
 -XML (Use XML formatter and add XML header)
 -TEXT (Use simple Text formatter)
 -HTML (Use HTML formatter)
 -PARAM name expression (Set a stylesheet parameter)</source>
-      <p>Use -IN to specify the XML source document, -XSL to specify the XSL stylesheet, and -OUT to specify the
-      output file.</p>
+      <p>Use -IN to specify the XML source document.</p> 
+      <p>Use -XSL to specify the XSL stylesheet file.</p>
+      <p>Use -LXCIN to specify a compiled XSL stylesheet file.</p>
+      <p>Use -LXCOUT to compile an XSL stylesheet for future use as -LXCIN input.</p>
+      <note>You can only use -LXCIN with a compiled stylesheet that you have already created with the -LXOUT switch. For an
+       example, see <link anchor="compiledstylesheet">Using a compiled stylesheet</link></note>
+      <p>Include -PARSER if you supply your own parser liaison class, which is required if you do not use the 
+        Xerces parser.</p>
       <p>Use -TEXT if you want the output to include only element values (not element tags with element names and
-      attributes). Use -HTML to write 4.0 transitional HTML (some elements, such as &lt;br&gt;, are
+      attributes).</p>
+      <p>Use -HTML to write 4.0 transitional HTML (some elements, such as &lt;br&gt;, are
       not well formed.</p>
       <p>To set stylesheet parameters from the command line, use -PARAM name expression. If 
       you want to set the parameter to a string value, enclose the string in single quotes (') to
       make it an expression.</p>
-  </s2>
-  <s2 title="API">
-    <p>The API documentation, generated using Doc++ from comments in the header files, is still in very preliminary form. For example,
-    it lists public classes, class members, and functions, but does not yet identify which of these are exported. 
-    With this in mind, see <jump href="c-apidocs/index.html">Xalan C++ API: Main Page</jump>.</p>
-  </s2>
-  <s2 title="&xslt4c; Features">
-	    <ul> 
-		    <li>Implements the <resource-ref idref="XSLT"/> and the <resource-ref idref="XPath"/></li> 
-    	  <li>Uses the &xml4c; XML parser></li>
-    	  <li>Can output to SAX or DOM</li>
-	    </ul> 
-	  </s2>
-    <s2 title="Version Notes">
-
-     &status-c;
-     &bugs-c;
+      <p><anchor name="compiledstylesheet"/><em>Using a compiled stylesheet</em></p>
+        <p>If you are using a stylesheet repeatedly, you can improve performance by compiling the stylesheet the first time
+          you use it and using the compiled stylesheet for subsequent transformations.</p>
+        <p>For example, the following command line performs a transformation and compiles the stylesheet:"<br/><br/>
+      <code>TestXSLT -in foo.xml -xsl foo.xsl -lxcout foo.style</code><br/><br/>
+      The following command line uses the compiled stylesheet for the next transformation:<br/><br/>
+      <code>TestXSLT -in foo2.xml -lxcin foo.style</code></p>
    </s2>
- 
-	 <s2 title="Contact Info and Bug Reports"> 
-          <p>Contact information for &xslt4c;: <human-resource-ref idref="xalandev"/>, 
-          <human-resource-ref idref="pweir"/>.</p>
-	 </s2> 
- 
-
 </s1>
