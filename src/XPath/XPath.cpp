@@ -154,8 +154,6 @@ XPath::execute(
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const
 {
-	assert(context != 0);
-
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
@@ -2503,8 +2501,6 @@ XPath::runFunction(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	assert(context != 0);
-
 	const int	endFunc = opPos + m_expression.m_opMap[opPos + 1] - 1;
 
 	opPos += 2;
