@@ -304,57 +304,57 @@ private:
 	/**
 	 * The string "<!DOCTYPE  HTML".
 	 */
-	static const XalanDOMCharVectorType&	s_doctypeHeaderStartString;
+	static const XalanDOMString&	s_doctypeHeaderStartString;
 
 	/**
 	 * The string " PUBLIC \"".
 	 */
-	static const XalanDOMCharVectorType&	s_doctypeHeaderPublicString;
+	static const XalanDOMString&	s_doctypeHeaderPublicString;
 
 	/**
 	 * The string " SYSTEM".
 	 */
-	static const XalanDOMCharVectorType&	s_doctypeHeaderSystemString;
+	static const XalanDOMString&	s_doctypeHeaderSystemString;
 
 	/**
 	 * The string "SCRIPT".
 	 */
-	static const XalanDOMCharVectorType&	s_scriptString;
+	static const XalanDOMString&	s_scriptString;
 
 	/**
 	 * The string "STYLE".
 	 */
-	static const XalanDOMCharVectorType&	s_styleString;
+	static const XalanDOMString&	s_styleString;
 
 	/**
 	 * The string "lt".
 	 */
-	static const XalanDOMCharVectorType&	s_ltString;
+	static const XalanDOMString&	s_ltString;
 
 	/**
 	 * The string "gt".
 	 */
-	static const XalanDOMCharVectorType&	s_gtString;
+	static const XalanDOMString&	s_gtString;
 
 	/**
 	 * The string "amp.
 	 */
-	static const XalanDOMCharVectorType&	s_ampString;
+	static const XalanDOMString&	s_ampString;
 
 	/**
 	 * The string "fnof".
 	 */
-	static const XalanDOMCharVectorType&	s_fnofString;
+	static const XalanDOMString&	s_fnofString;
 
 	/**
 	 * The string "OElig".
 	 */
-	static const XalanDOMCharVectorType&	s_oeligString;
+	static const XalanDOMString&	s_oeligString;
 
 	/**
 	 * The string "<META http-equiv=\"Content-Type\" content=\"text/html; charset=".
 	 */
-	static const XalanDOMCharVectorType&	s_metaString;
+	static const XalanDOMString&	s_metaString;
 
 	/**
 	 * Set the attribute characters what will require special mapping.

@@ -664,12 +664,12 @@ protected:
 	/**
 	 * The text "xslt-next-is-raw".
 	 */
-	static const XalanDOMCharVectorType&	s_xsltNextIsRawString;
+	static const XalanDOMString&	s_xsltNextIsRawString;
 
 	/**
 	 * The string "formatter-to-dom".
 	 */
-	static const XalanDOMCharVectorType&	s_formatterToDOMString;
+	static const XalanDOMString&	s_formatterToDOMString;
 
 	/**
 	 * Stack to keep track of whether or not we need to 
@@ -823,47 +823,47 @@ private:
 	/**
 	 * The default MIME encoding.
 	 */
-	static const XalanDOMCharVectorType&	s_defaultMIMEEncoding;
+	static const XalanDOMString&	s_defaultMIMEEncoding;
 
 	/**
 	 * The string "<!DOCTYPE ".
 	 */
-	static const XalanDOMCharVectorType&	s_doctypeHeaderStartString;
+	static const XalanDOMString&	s_doctypeHeaderStartString;
 
 	/**
 	 * The string " PUBLIC \"".
 	 */
-	static const XalanDOMCharVectorType&	s_doctypeHeaderPublicString;
+	static const XalanDOMString&	s_doctypeHeaderPublicString;
 
 	/**
 	 * The string " SYSTEM \"".
 	 */
-	static const XalanDOMCharVectorType&	s_doctypeHeaderSystemString;
+	static const XalanDOMString&	s_doctypeHeaderSystemString;
 
 	/**
 	 * The string "<?xml version=\"".
 	 */
-	static const XalanDOMCharVectorType&	s_xmlHeaderStartString;
+	static const XalanDOMString&	s_xmlHeaderStartString;
 
 	/**
 	 * The string "<?xml version=\"".
 	 */
-	static const XalanDOMCharVectorType&	s_xmlHeaderEncodingString;
+	static const XalanDOMString&	s_xmlHeaderEncodingString;
 
 	/**
 	 * The string "\" standalone=\"".
 	 */
-	static const XalanDOMCharVectorType&	s_xmlHeaderStandaloneString;
+	static const XalanDOMString&	s_xmlHeaderStandaloneString;
 
 	/**
 	 * The string "\"?>".
 	 */
-	static const XalanDOMCharVectorType&	s_xmlHeaderEndString;
+	static const XalanDOMString&	s_xmlHeaderEndString;
 
 	/**
 	 * The string "1.0".
 	 */
-	static const XalanDOMCharVectorType&	s_defaultVersionString;
+	static const XalanDOMString&	s_defaultVersionString;
 
 	/**
  	 * The string "-//W3C//DTD XHTML".
