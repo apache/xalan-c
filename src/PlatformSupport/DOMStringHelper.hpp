@@ -114,6 +114,23 @@ initializeAndTranscode(const char*	theString);
 
 
 /**
+ * Reserve some space in the string for more efficient
+ * concatenation...
+ * 
+ * @param theString target string
+ * @param theCount The amount of space to reserve
+ */
+inline void
+reserve(
+			XalanDOMString&		theString,
+			unsigned int		theCount)
+{
+	theString.reserve(theCount);
+}
+
+ 
+ 
+/**
  * Get the underlying representation of the target XalanDOMString as a
  * null-terminated string
  * 
@@ -169,22 +186,6 @@ toCharArray(const XalanDOMString&	theString)
 }
 
 
-#if 0
-/**
- * Get the underlying representation of the target XalanDOMString as an array of
- * XalanDOMChar, not guaranteed to be null-terminated.
- * 
- * @param theString target string
- * @return array of XalanDOMChar
- */
-inline const XalanDOMChar*
-toCharArray(XalanDOMString&		theString)
-{
-	return theString.rawBuffer();
-}
-#endif
-
-
 
 /**
  * Simulates the java String method length() for a XalanDOMString
@@ -212,7 +213,9 @@ length(const XalanDOMChar*	theBuffer)
 {
 	assert(theBuffer != 0);
 
-#if defined(XALAN_FULL_WCHAR_SUPPORT)
+	// For the time being, we're using our own custom routine,
+	// since performance is better.
+#if defined(XALAN_USE_WCHAR_SUPPORT)
 	return wcslen(theBuffer);
 #else
 	const XalanDOMChar*		theBufferPointer = theBuffer;
@@ -242,13 +245,24 @@ isEmpty(const XalanDOMString&	str)
 
 
 
-#if defined(XALAN_FULL_WCHAR_SUPPORT)
-
+/**
+ * Simulates the java String method indexOf().
+ * 
+ * @param theString string to search
+ * @param theChar   character searched for
+ * @return the index of theChar in theString,
+ * or length(theString) if the character is not
+ * found.    
+ */
 inline unsigned int
 indexOf(
 			const XalanDOMChar*		theString,
 			XalanDOMChar			theChar)
 {
+	// For the time being, we're using our own custom routine,
+	// since performance is better.
+#if defined(XALAN_USE_WCHAR_SUPPORT)
+
 	const XalanDOMChar* const	thePointer =
 			wcschr(theString, theChar);
 
@@ -260,23 +274,20 @@ indexOf(
 	{
 		return thePointer - theString;
 	}
-}
 
 #else
-/**
- * Simulates the java String method indexOf().
- * 
- * @param theString string to search
- * @param theChar   character searched for
- * @return the index of theChar in theString,
- * or length(theString) if the character is not
- * found.    
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
-indexOf(
-			const XalanDOMChar*		theString,
-			XalanDOMChar			theChar);
+
+	const XalanDOMChar*		thePointer = theString;
+
+	while(*thePointer != theChar && *thePointer != 0)
+	{
+		++thePointer;
+	}
+
+	return thePointer - theString;
+
 #endif
+}
 
 
 
@@ -346,7 +357,10 @@ indexOf(
  * or length(theString) if the character is not
  * found.
  */
-#if defined(XALAN_FULL_WCHAR_SUPPORT)
+
+// For the time being, we're using our own custom routine,
+// since performance is better.
+#if defined(XALAN_USE_WCHAR_SUPPORT)
 
 inline unsigned int
 lastIndexOf(
@@ -726,7 +740,11 @@ clone(const XalanDOMString&	theString)
 inline bool
 isSpace(XalanDOMChar	theChar)
 {
-	return iswspace(theChar) ? true : false;
+	return theChar > 0x20 ? false :
+		   (theChar == 0x20 ||
+		    theChar == 0xD ||
+		    theChar == 0xA ||
+		    theChar == 0x9) ? true : false;
 }
 
 
@@ -858,7 +876,10 @@ operator!=(
 
 
 
-#if defined(XALAN_FULL_WCHAR_SUPPORT)
+// For the time being, we're using our own custom routine,
+// since performance is better.
+
+#if defined(XALAN_USE_WCHAR_SUPPORT)
 
 /**
  * Compare the contents of two strings.
@@ -889,7 +910,7 @@ compare(
 
 
 
-#if defined(XALAN_FULL_WCHAR_SUPPORT)
+#if defined(XALAN_USE_WCHAR_SUPPORT)
 
 /**
  * Compare the contents of two strings using the
@@ -1081,21 +1102,6 @@ equals(
 
 
 
-#if defined(_MSC_VER)
-
-inline bool
-equalsIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	assert(theLHS != 0);
-	assert(theRHS != 0);
-
-	return _wcsicmp(theLHS, theRHS) == 0 ? true : false;
-}
-
-#else
-
 /**
  * Compare the contents of two strings for equality, without regard for case
  * 
@@ -1107,7 +1113,6 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 equalsIgnoreCase(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS);
-#endif
 
 
 

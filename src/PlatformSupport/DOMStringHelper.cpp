@@ -102,7 +102,7 @@ using std::vector;
 
 
 // The maximum number of digits that sprintf can put in a buffer.
-// 100 for now.  We're using this because we want to avoid transcoding
+// 50 for now.  We're using this because we want to avoid transcoding
 // number strings when we don't have to,
 const size_t	MAX_PRINTF_DIGITS = 50;
 
@@ -130,40 +130,6 @@ initializeAndTranscode(const char*	theString)
 	}
 
 	return XalanDOMString(theString);
-}
-
-#endif
-
-
-
-
-#if !defined(XALAN_FULL_WCHAR_SUPPORT)
-
-// Simulates the java String method indexOf().  Returns the index of theChar
-// in theString, or length(theString) if the character is not found.
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
-indexOf(
-			const XalanDOMChar*		theString,
-			XalanDOMChar			theChar)
-{
-	const unsigned int	theLength = length(theString);
-
-	if (theLength == 0)
-	{
-		return theLength;
-	}
-	else
-	{
-		unsigned int	theIndex = 0;
-
-		while(theIndex < theLength &&
-			  theString[theIndex] != theChar)
-		{
-			++theIndex;
-		}
-
-		return theIndex == theLength ? theLength : theIndex;
-	}
 }
 
 #endif
@@ -261,8 +227,6 @@ indexOf(
 
 
 
-#if !defined(XALAN_FULL_WCHAR_SUPPORT)
-
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
 lastIndexOf(
 			const XalanDOMChar*		theString,
@@ -278,6 +242,7 @@ lastIndexOf(
 	{
 		unsigned int	theIndex = theLength - 1;
 
+		// Rely on wrap-around...
 		while(theIndex < theLength && theString[theIndex] != theChar)
 		{
 			theIndex--;
@@ -286,8 +251,6 @@ lastIndexOf(
 		return theIndex > theLength ? theLength : theIndex;
 	}
 }
-
-#endif
 
 
 
@@ -503,7 +466,7 @@ substring(
 
 			// Reserve the buffer now.  We don't have to null-terminate,
 			// because the XalanDOMString constructor will take a size
-			// option.
+			// parameter.
 			theBuffer.reserve(theLength);
 
 			const XalanDOMChar* const	ptr = theString.rawBuffer();
@@ -570,7 +533,41 @@ toUpperCase(const XalanDOMString&	theString)
 
 
 
-#if !defined(_MSC_VER)
+inline bool
+doEqualsIgnoreCase(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theLength)
+{
+	// Check each character, converting to uppercase
+	// for the test.
+	unsigned int	i = 0;
+
+	for(; i < theLength; i++)
+	{
+		const XalanDOMChar	charLHS = theLHS[i];
+		const XalanDOMChar	charRHS = theRHS[i];
+
+		if (charLHS != charRHS &&
+			towupper(charLHS) != charRHS &&
+			charLHS != towupper(charRHS))
+		{
+			break;
+		}
+	}
+
+	// Did we reach the end of the string?
+	if (i == theLength)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 equalsIgnoreCase(
@@ -587,30 +584,11 @@ equalsIgnoreCase(
 	// If they are equal, then compare
 	if (theLength == length(theRHS))
 	{
-		// Check each character, converting to uppercase
-		// for the test.
-		unsigned int	i = 0;
-
-		for(; i < theLength; i++)
-		{
-			if (towupper(theLHS[i]) !=
-						towupper(theRHS[i]))
-			{
-				break;
-			}
-		}
-
-		// Did we reach the end of the string?
-		if (i == theLength)
-		{
-			fResult = true;
-		}
+		fResult = doEqualsIgnoreCase(theLHS, theRHS, theLength);
 	}
 
 	return fResult;
 }
-
-#endif
 
 
 
@@ -638,13 +616,20 @@ equalsIgnoreCase(
 		assert(c_wstr(theLHS) != 0);
 		assert(c_wstr(theRHS) != 0);
 
-		return equalsIgnoreCase(c_wstr(theLHS), c_wstr(theRHS));
+		unsigned const int	theLHSLength = length(theLHS);
+
+		if (theLHSLength == length(theRHS))
+		{
+			return doEqualsIgnoreCase(c_wstr(theLHS), c_wstr(theRHS), theLHSLength);
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
 
 
-
-#if !defined(XALAN_FULL_WCHAR_SUPPORT)
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compare(
@@ -703,8 +688,6 @@ compare(
 
 	return theResult;
 }
-
-#endif
 
 
 
@@ -861,19 +844,12 @@ CopyWideStringToVector(
 	{
 		theVector.reserve(theLength + 1);
 
-		for(unsigned int	i = 0; i < theLength; i++)
+		for(unsigned int i = 0; i < theLength; i++)
 		{
-#if defined(XALAN_OLD_STYLE_CASTS)
 			// Assert that the truncation will not affect the resulting character.
-			assert(theString[i] == (char)theString[i]);
+			assert(theString[i] == char(theString[i]));
 
-			theVector.push_back((char)theString[i]);
-#else
-			// Assert that the truncation will not affect the resulting character.
-			assert(theString[i] == static_cast<char>(theString[i]));
-
-			theVector.push_back(static_cast<char>(theString[i]));
-#endif
+			theVector.push_back(char(theString[i]));
 		}
 
 		// Put a terminating 0 byte.
@@ -1011,7 +987,9 @@ DoubleToDOMString(double	theDouble)
 		}
 		else
 		{
-			ostrstream	theFormatter;
+			char		theBuffer[MAX_PRINTF_DIGITS + 1];
+
+			ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
 
 			theFormatter << theDouble << '\0';
 
@@ -1025,9 +1003,7 @@ DoubleToDOMString(double	theDouble)
 			// the decimal point, since any values with no
 			// fractional part were printed as integers
 			XalanDOMCharVectorType	theResult =
-				MakeXalanDOMCharVector(theFormatter.str(), false);
-
-			theFormatter.freeze(false);
+				MakeXalanDOMCharVector(theBuffer, false);
 
 			XalanDOMCharVectorType::iterator	thePosition = theResult.end();
 
@@ -1055,7 +1031,10 @@ DoubleToDOMString(double	theDouble)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 LongToHexDOMString(long		theLong)
 {
-#if defined(XALAN_FULL_WCHAR_SUPPORT)
+// I'm 99% sure that we don't need to use swprintf
+// to format, since strings of numbers don't to be
+// generated as wide strings.
+#if defined(XALAN_USE_WCHAR_SUPPORT)
 
 	wchar_t		theBuffer[MAX_PRINTF_DIGITS + 1];
 
@@ -1067,15 +1046,21 @@ LongToHexDOMString(long		theLong)
 
 #else
 
-	ostrstream	theFormatter;
+	char		theBuffer[MAX_PRINTF_DIGITS + 1];
+
+	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
 
 	theFormatter << hex << theLong << '\0';
 
-	const XalanDOMString	theString = theFormatter.str();
+	// We don't need to transcode, so just make it a
+	// wide character string...
+	wchar_t		theResult[MAX_PRINTF_DIGITS + 1];
 
-	theFormatter.freeze(false);
+	const unsigned int	theLength = length(theBuffer);
 
-	return theString;
+	copy(theBuffer, theBuffer + theLength, theResult);
+
+	return XalanDOMString(theResult, theLength);
 
 #endif
 }
@@ -1085,15 +1070,21 @@ LongToHexDOMString(long		theLong)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 UnsignedLongToHexDOMString(unsigned long	theUnsignedLong)
 {
-	ostrstream	theFormatter;
+	char		theBuffer[MAX_PRINTF_DIGITS + 1];
+
+	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
 
 	theFormatter << hex << theUnsignedLong << '\0';
 
-	const XalanDOMString	theString = theFormatter.str();
+	// We don't need to transcode, so just make it a
+	// wide character string...
+	wchar_t		theResult[MAX_PRINTF_DIGITS + 1];
 
-	theFormatter.freeze(false);
+	const unsigned int	theLength = length(theBuffer);
 
-	return theString;
+	copy(theBuffer, theBuffer + theLength, theResult);
+
+	return XalanDOMString(theResult, theLength);
 }
 
 
@@ -1101,7 +1092,7 @@ UnsignedLongToHexDOMString(unsigned long	theUnsignedLong)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 LongToDOMString(long	theLong)
 {
-#if defined(XALAN_FULL_WCHAR_SUPPORT)
+#if defined(XALAN_USE_WCHAR_SUPPORT)
 
 	wchar_t		theBuffer[MAX_PRINTF_DIGITS + 1];
 
@@ -1113,15 +1104,21 @@ LongToDOMString(long	theLong)
 
 #else
 
-	ostrstream	theFormatter;
+	char		theBuffer[MAX_PRINTF_DIGITS + 1];
+
+	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
 
 	theFormatter << theLong << '\0';
 
-	XalanDOMString	theString = theFormatter.str();
+	// We don't need to transcode, so just make it a
+	// wide character string...
+	wchar_t		theResult[MAX_PRINTF_DIGITS + 1];
 
-	theFormatter.freeze(false);
+	const unsigned int	theLength = length(theBuffer);
 
-	return theString;
+	copy(theBuffer, theBuffer + theLength, theResult);
+
+	return XalanDOMString(theResult, theLength);
 
 #endif
 }
@@ -1131,7 +1128,34 @@ LongToDOMString(long	theLong)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 {
-#if defined(XALAN_FULL_WCHAR_SUPPORT)
+#if 1
+
+	wchar_t			theBuffer[MAX_PRINTF_DIGITS + 1];
+
+	wchar_t*		thePointer = &theBuffer[MAX_PRINTF_DIGITS + 1];
+	wchar_t* const	theEnd = thePointer;
+
+	// Null terminate it...
+	*thePointer = 0;
+
+	do
+	{
+		// Next spot...
+		--thePointer;
+
+		// Isolate the left most character.  We may need to
+		// change this to a switch statement on platforms
+		// that are not ASCII-based (i.e. EBCDIC)
+		*thePointer = wchar_t(theUnsignedLong % 10 + '0');
+
+		// OK, we're done with it...
+		theUnsignedLong /= 10;
+	}
+	while(theUnsignedLong != 0);
+
+	return XalanDOMString(thePointer, theEnd - thePointer);
+
+#elif defined(XALAN_USE_WCHAR_SUPPORT)
 
 	wchar_t		theBuffer[MAX_PRINTF_DIGITS + 1];
 
@@ -1143,15 +1167,19 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 
 #else
 
-	ostrstream	theFormatter;
+	char		theBuffer[MAX_PRINTF_DIGITS + 1];
+
+	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
 
 	theFormatter << theUnsignedLong << '\0';
 
-	XalanDOMString	theString = theFormatter.str();
+	wchar_t		theResult[MAX_PRINTF_DIGITS + 1];
 
-	theFormatter.freeze(false);
+	const unsigned int	theLength = length(theBuffer);
 
-	return theString;
+	copy(theBuffer, theBuffer + theLength, theResult);
+
+	return XalanDOMString(theResult, theLength);
 
 #endif
 }
