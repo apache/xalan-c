@@ -131,6 +131,12 @@ public:
 		return m_resultNamespaces.size();
 	}
 
+	bool
+	empty() const
+	{
+		return m_resultNamespaces.empty();
+	}
+
 private:
 
 	// not implemented
