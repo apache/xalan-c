@@ -139,17 +139,28 @@ FunctionSystemProperty::execute(
 			else
 			{
 				executionContext.warn(
-					"Don't currently do anything with namespace " + *nspace + " in property: " + fullName,
+					"Only the XSLT namespace is supported in the function system-property()",
 					context,
 					locator);
-
-				result = TranscodeFromLocalCodePage(::getenv(c_str(TranscodeToLocalCodePage(propName))));
 			}
 		}
 	}
 	else
 	{
-		result = TranscodeFromLocalCodePage(::getenv(c_str(TranscodeToLocalCodePage(fullName))));
+		const char* const	theEnvString =
+			getenv(c_str(TranscodeToLocalCodePage(fullName)));
+
+		if (theEnvString == 0)
+		{
+				executionContext.warn(
+					"Unknown environment proprerty requested",
+					context,
+					locator);
+		}
+		else
+		{
+			result = TranscodeFromLocalCodePage(theEnvString);
+		}
 	}
 
 	if (fNumberResult == true)
