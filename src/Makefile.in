@@ -402,7 +402,7 @@ samples : Samples
 
 tests : ThreadTest
 
-Samples: lib  CompileStylesheet  ExternalFunction  SimpleTransform  StreamTransform  TraceListen  UseStylesheetParam  XalanTransform XPathWrapper #  ThreadSafe
+Samples: lib CompileStylesheet DocumentBuilder ExternalFunction SimpleTransform SimpleXPathAPI StreamTransform ThreadSafe TraceListen UseStylesheetParam XalanTransform XalanTransformerCallback XPathWrapper
 
 ApacheModuleXSLT: lib ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 
 
@@ -431,6 +431,21 @@ else
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/CompileStylesheet/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+endif
+
+DocumentBuilder: lib $(BINTARGETDIR)/DocumentBuilder
+
+$(BINTARGETDIR)/DocumentBuilder: ${ALL_OBJECTS_DIR}/DocumentBuilder.o
+ifeq ($(PLATFORM), OS390)                                                       
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/DocumentBuilder/%.cpp
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+else
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/DocumentBuilder/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
@@ -464,6 +479,21 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SimpleTransform/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
+SimpleXPathAPI: lib $(BINTARGETDIR)/SimpleXPathAPI
+
+$(BINTARGETDIR)/SimpleXPathAPI: ${ALL_OBJECTS_DIR}/SimpleXPathAPI.o
+ifeq ($(PLATFORM), OS390)                                                       
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SimpleXPathAPI/%.cpp
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+else
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SimpleXPathAPI/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+endif
+
 StreamTransform: lib $(BINTARGETDIR)/StreamTransform
 
 $(BINTARGETDIR)/StreamTransform: ${ALL_OBJECTS_DIR}/StreamTransform.o
@@ -476,6 +506,21 @@ else
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/StreamTransform/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
+endif
+
+ThreadSafe: lib $(BINTARGETDIR)/ThreadSafe
+
+$(BINTARGETDIR)/ThreadSafe: ${ALL_OBJECTS_DIR}/ThreadSafe.o
+ifeq ($(PLATFORM), OS390)                                                       
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ThreadSafe/%.cpp
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
+else
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ThreadSafe/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
 endif
 
@@ -521,6 +566,21 @@ else
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XalanTransform/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+endif
+
+XalanTransformerCallback: lib $(BINTARGETDIR)/XalanTransformerCallback
+
+$(BINTARGETDIR)/XalanTransformerCallback: ${ALL_OBJECTS_DIR}/XalanTransformerCallback.o
+ifeq ($(PLATFORM), OS390)                                                       
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XalanTransformerCallback/%.cpp
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+else
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XalanTransformerCallback/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
