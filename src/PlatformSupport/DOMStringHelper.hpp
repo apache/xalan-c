@@ -1927,7 +1927,7 @@ inline XalanDOMString&
 assign(
 			XalanDOMString&			theString,
 			const XalanDOMChar*		theStringToAssign,
-			unsigned int			theStringToAssignLength = -1)
+			unsigned int			theStringToAssignLength = unsigned(-1))
 {
 #if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 	if (theStringToAssignLength == unsigned(-1))
@@ -1966,7 +1966,7 @@ inline XalanDOMString&
 append(
 			XalanDOMString&			theString,
 			const XalanDOMChar*		theStringToAppend,
-			unsigned int			theStringToAppendLength = -1)
+			unsigned int			theStringToAppendLength = unsigned(-1))
 {
 	assert(theStringToAppend != 0);
 
@@ -2007,7 +2007,7 @@ inline XalanDOMString&
 append(
 			XalanDOMString&		theString,
 			const char*			theStringToAppend,
-			unsigned int		theStringToAppendLength = -1)
+			unsigned int		theStringToAppendLength = unsigned(-1))
 {
 #if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 		theString.append(TranscodeFromLocalCodePage(theStringToAppend, theStringToAppendLength));

@@ -901,7 +901,7 @@ TranscodeFromLocalCodePage(
 XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
 TranscodeFromLocalCodePage(
 			const char*		theSourceString,
-			unsigned int	theSourceStringLength = -1);
+			unsigned int	theSourceStringLength = unsigned(-1));
 
 
 
