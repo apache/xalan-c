@@ -500,6 +500,10 @@ FormatterToXML_UTF8::writeDefaultAttributeEntity(XalanDOMChar	ch)
 	{
 		write(s_linefeedNCRString, s_linefeedNCRStringLength);
 	}
+	else if (XalanUnicode::charCR == ch) 
+	{
+		write(s_carriageReturnNCRString, s_carriageReturnNCRStringLength);
+	}
 	else if (XalanUnicode::charQuoteMark == ch) 
 	{
 		write(s_quoteEntityString, s_quoteEntityStringLength);
@@ -1281,6 +1285,19 @@ const char	FormatterToXML_UTF8::s_linefeedNCRString[] =
 
 const XalanDOMString::size_type		FormatterToXML_UTF8::s_linefeedNCRStringLength =
 		FXML_SIZE(s_linefeedNCRString);
+
+const char	FormatterToXML_UTF8::s_carriageReturnNCRString[] =
+{
+	char(XalanUnicode::charAmpersand),
+	char(XalanUnicode::charNumberSign),
+	char(XalanUnicode::charDigit_1),
+	char(XalanUnicode::charDigit_3),
+	char(XalanUnicode::charSemicolon),
+	char(0)
+};
+
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_carriageReturnNCRStringLength =
+		FXML_SIZE(s_carriageReturnNCRString);
 
 const char	FormatterToXML_UTF8::s_htabNCRString[] =
 {

@@ -465,6 +465,13 @@ private:
 	static const XalanDOMString::size_type	s_linefeedNCRStringLength;
 
 	/**
+ 	 * The string "&#13;".
+ 	 */
+ 	static const char						s_carriageReturnNCRString[];
+
+	static const XalanDOMString::size_type	s_carriageReturnNCRStringLength;
+
+	/**
  	 * The string "&#9;".
  	 */
  	static const char						s_htabNCRString[];
