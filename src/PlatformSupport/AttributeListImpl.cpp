@@ -157,10 +157,10 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 
 			typedef AttributeVectorType::const_iterator		const_iterator;
 
-			const const_iterator	theEnd = theRHS.m_AttributeVector.begin();
+			const const_iterator	theEnd = theRHS.m_AttributeVector.end();
 
 			// Copy the vector entries, and build the index map...
-			for(const_iterator i = theRHS.m_AttributeVector.end(); i != theEnd; ++i)
+			for(const_iterator i = theRHS.m_AttributeVector.begin(); i != theEnd; ++i)
 			{
 				AttributeVectorEntry* const		theEntry = *i;
 
@@ -169,9 +169,9 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 				// Add the item...
 				tempVector.push_back(
 					getNewEntry(
-						theEntry->m_Name.begin(),
-						theEntry->m_Type.begin(),
-						theEntry->m_Value.begin()));
+						&*theEntry->m_Name.begin(),
+						&*theEntry->m_Type.begin(),
+						&*theEntry->m_Value.begin()));
 			}
 
 			// OK, we're safe, so swap the contents of the
