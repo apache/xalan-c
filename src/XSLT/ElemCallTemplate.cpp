@@ -130,15 +130,15 @@ ElemCallTemplate::execute(
 {
 	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
 
-	if(!isEmpty(m_templateName.getLocalPart()))
-	{
-		const ElemTemplate* const	theTemplate =
+	assert(isEmpty(m_templateName.getLocalPart()) == false);
+
+	const ElemTemplate* const	theTemplate =
 			getStylesheet().getStylesheetRoot().findNamedTemplate(m_templateName,
 					executionContext);
 
-		if(0 != theTemplate)
-		{
-			StylesheetExecutionContext::ParamsPushPop	thePushPop(
+	if(0 != theTemplate)
+	{
+		StylesheetExecutionContext::ParamsPushPop	thePushPop(
 				executionContext,
 				theTemplate,
 				*this,
@@ -147,17 +147,12 @@ ElemCallTemplate::execute(
 				mode,
 				theTemplate);
 
-			theTemplate->execute(executionContext, sourceTree, sourceNode, mode);
-		}
-		else
-		{
-			executionContext.error("Could not find template named: '" +
-					m_templateName.getLocalPart() + "'");
-		}
+		theTemplate->execute(executionContext, sourceTree, sourceNode, mode);
 	}
 	else
 	{
-		executionContext.error("Could not resolve name in xsl:call-template.");
+		executionContext.error("Could not find template named: '" +
+				m_templateName.getLocalPart() + "'");
 	}
 }
 
