@@ -154,7 +154,7 @@ public:
 	 */
 	XalanQNameByValue(
 			const XalanDOMString&	qname,
-			const PrefixResolver&	theResolver);
+			const PrefixResolver*	theResolver = 0);
 
 	virtual
 	~XalanQNameByValue();
@@ -217,7 +217,7 @@ private:
 	void
 	resolvePrefix(
 			const XalanDOMString&	qname,
-			const PrefixResolver&	theResolver);
+			const PrefixResolver*	theResolver);
 
 	XalanDOMString	m_namespace;
 

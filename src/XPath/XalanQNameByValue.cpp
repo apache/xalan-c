@@ -145,14 +145,14 @@ XalanQNameByValue::XalanQNameByValue(
 {
 	ElementPrefixResolverProxy	theProxy(namespaceContext, envSupport, domSupport);
 
-	resolvePrefix(qname, theProxy);
+	resolvePrefix(qname, &theProxy);
 }
 
 
 
 XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMString&	qname,
-			const PrefixResolver&	theResolver) :
+			const PrefixResolver*	theResolver) :
 	m_namespace(),
 	m_localpart()
 {
@@ -222,12 +222,16 @@ XalanQNameByValue::initialize(
 void
 XalanQNameByValue::resolvePrefix(
 			const XalanDOMString&	qname,
-			const PrefixResolver&	theResolver)
+			const PrefixResolver*	theResolver)
 {
 	const XalanDOMString::size_type		indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
 	const XalanDOMString::size_type		theLength = length(qname);
 
-	if(indexOfNSSep < theLength)
+	if(indexOfNSSep >= theLength)
+	{
+		m_localpart = qname;
+	}
+	else
 	{
 		const XalanDOMString	prefix = substring(qname, 0, indexOfNSSep);
 
@@ -240,10 +244,17 @@ XalanQNameByValue::resolvePrefix(
 		{
 			return;
 		}
+		else if (theResolver == 0)
+		{
+			throw XSLException(
+				TranscodeFromLocalCodePage("Unable to resolve prefix '") +
+				prefix +
+				TranscodeFromLocalCodePage("'"));
+		}
 		else
 		{
 			const XalanDOMString* const		theNamespace =
-				theResolver.getNamespaceForPrefix(prefix);
+				theResolver->getNamespaceForPrefix(prefix);
 
 			if (theNamespace != 0)
 			{
@@ -253,13 +264,12 @@ XalanQNameByValue::resolvePrefix(
 
 		if(0 == length(m_namespace))
 		{
-			throw XSLException(TranscodeFromLocalCodePage("Prefix must resolve to a namespace: ") + prefix);
+			throw XSLException(
+				TranscodeFromLocalCodePage("The prefix '") +
+				 prefix +
+				TranscodeFromLocalCodePage("' must resolve to a namespace."));
 		}
-	}
-	else
-	{
-		// $$$ ToDo: error or warning...
-	}
 
-	m_localpart = indexOfNSSep == theLength ? qname : substring(qname, indexOfNSSep + 1);
+		m_localpart = substring(qname, indexOfNSSep + 1);
+	}
 }
