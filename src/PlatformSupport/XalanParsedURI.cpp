@@ -278,15 +278,16 @@ void XalanParsedURI::resolve(
 
 				// a) strip off characters after the right most slash in the base path
 				XalanDOMString::size_type pathEnd = base.m_path.length();
-				while (pathEnd >= 0 && base.m_path[pathEnd] != XalanUnicode::charSolidus)
+				while (pathEnd > 0 && base.m_path[pathEnd - 1] != XalanUnicode::charSolidus)
 				{
 					--pathEnd;
 				}
 
-				if (pathEnd >= 0) 
+				if (pathEnd > 0) 
 				{
 					// b) append relative path
-					m_path = base.m_path.substr(0, pathEnd + 1) + m_path;
+					// This inserts the path portion from base...
+					m_path.insert(0, base.m_path, 0, pathEnd);
 				}
 				else
 				{
