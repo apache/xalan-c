@@ -113,37 +113,54 @@ FunctionID::execute(
 									context->getOwnerDocument();
 	assert(theDocContext != 0);
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
-
-	// This list will hold the nodes we find.
-	BorrowReturnMutableNodeRefList	theNodeList(executionContext);
-
-	if (length(theResultString) > 0)
+	if (theResultString.size() == 0)
+	{
+		return executionContext.getXObjectFactory().createNodeSet(0);
+	}
+	else
 	{
 		StringTokenizer		theTokenizer(theResultString);
 
 		GetAndReleaseCachedString	theGuard2(executionContext);
 
-		XalanDOMString&				theToken = theGuard2.get();
+		XalanDOMString&		theToken = theGuard2.get();
 
-		// Parse the result string...
-		while(theTokenizer.hasMoreTokens() == true)
+		StringTokenizer::size_type	theTokenCount = theTokenizer.countTokens();
+
+		if (theTokenCount == 1)
 		{
 			theTokenizer.nextToken(theToken);
 
-			if (length(theToken) > 0)
-			{
-				XalanNode* const	theNode = theDocContext->getElementById(theToken);
+			return executionContext.getXObjectFactory().createNodeSet(theDocContext->getElementById(theToken));
+		}
+		else
+		{
+			assert(theTokenCount != 0);
 
-				if (theNode != 0)
+			typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+			// This list will hold the nodes we find.
+			BorrowReturnMutableNodeRefList	theNodeList(executionContext);
+
+			// Parse the result string...
+			while(theTokenCount-- > 0)
+			{
+				theTokenizer.nextToken(theToken);
+
+				if (length(theToken) > 0)
 				{
-					theNodeList->addNodeInDocOrder(theNode, executionContext);
+					XalanNode* const	theNode = theDocContext->getElementById(theToken);
+
+					if (theNode != 0)
+					{
+						theNodeList->addNodeInDocOrder(theNode, executionContext);
+					}
 				}
 			}
+
+			return executionContext.getXObjectFactory().createNodeSet(theNodeList);
 		}
 	}
-
-	return executionContext.getXObjectFactory().createNodeSet(theNodeList);
 }
 
 
@@ -163,7 +180,7 @@ FunctionID::clone() const
 const XalanDOMString
 FunctionID::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The id() function takes one argument!"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The id() function takes one argument"));
 }
 
 
