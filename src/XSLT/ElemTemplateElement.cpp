@@ -1508,7 +1508,7 @@ ElemTemplateElement::getNamespaceForPrefixInternal(
 
 		if(fReportError == true && fEmptyIsError == true && isEmpty(nameSpace) == true)
 		{
-			error("Can not resolve namespace prefix: " + prefix);
+			error("Cannot resolve namespace prefix: " + prefix);
 		}
 	}
 
