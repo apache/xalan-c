@@ -17,7 +17,6 @@
    <s3 title="Changes for &xslt4c; version 1.8">
      <p>Major updates since version 1.7 include:</p>
      <ul>
-      <li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
       <li>Upgrade from Xerces-C 2.4 to Xerces-C 2.5. </li>
       <li>Provide build support for Cygwin and HP-UX 11.00 on Itanium.  Although binary distributions are not provided for the Cygwin environment and 
           HP-UX 11.00 on Itanium platform, the build configuration files provided in the source distribution can be used to build on these platforms. </li>
@@ -41,7 +40,6 @@
    <s3 title="Changes for &xslt4c; version 1.7">
      <p>Major updates since version 1.7 include:</p>
      <ul>
-      <li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
       <li>Message Localization Support. This feature enables &xslt4c; to issue diagnostic messages 
       in languages other than the default language (English). In order to utilize this feature, 
       the user must provide a version of the &xslt4c; message catalog that has been translated in 
@@ -72,7 +70,6 @@
    <s3 title="Changes for &xslt4c; version 1.6">
      <p>Major updates since version 1.5 include:</p>
      <ul>
-	<li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
 	<li>Directory "sane include" reorganization.  A new sub-directory called &apos;xalanc&apos; has been added to the src directory (for source distribution packages) and include directory (for binary distribution packages).  New source files which include Xalan headers will need to be modified to include the 'xalanc' prefix in the header path.  
             For example: <br/><br/>
             <code>#include &lt;XPath/XObject.hpp&gt;</code><br/><br/>
@@ -85,13 +82,10 @@
    <s3 title="Changes for &xslt4c; version 1.5">
      <p>Major updates since version 1.4 include:</p>
      <ul>
-		<li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
-		<li>For Windows, Xalan-C++ is now packaged as a single DLL.  The project files to build separate DLLs are now deprecated and will not be maintained.</li>
-		<li>Support for &xml4c; DOMNode classes.</li>
-		<li>New sample <em>TransformToXercesDOM</em> that illustrates how
-		  to perform a transform resulting in a &xml4c; DOMDocument</li>
-		<li>Usage of the &xml4c; C++ namespace and creation of &xslt4c;
-		  namespace.</li>
+	<li>For Windows, Xalan-C++ is now packaged as a single DLL.  The project files to build separate DLLs are now deprecated and will not be maintained.</li>
+	<li>Support for &xml4c; DOMNode classes.</li>
+	<li>New sample <em>TransformToXercesDOM</em> that illustrates how to perform a transform resulting in a &xml4c; DOMDocument</li>
+	<li>Usage of the &xml4c; C++ namespace and creation of &xslt4c; namespace.</li>
      </ul>  
    </s3>  
    <s3 title="Changes for &xslt4c; version 1.4">

@@ -30,7 +30,7 @@
 </ul>
 <p>The Visual C++ Xalan project included with the Windows release knows the relative paths to the Xalan headers and libraries, but it 
    does not know where you have unzipped the Xerces distribution. If you plan to use Visual C++ to build Xalan applications or <link 
-   idref="readme" anchor="jar">rebuild Xalan</link>, you must also provide Visual C++ with access to the Xerces headers and libraries.</p> 
+   idref="build_instruct" anchor="rebuild">rebuild Xalan</link>, you must also provide Visual C++ with access to the Xerces headers and libraries.</p> 
 <p>Use the Visual C++ Tools menu to open the Options dialog box, go to the Directories tab, and do the following:</p>
 <ul>
   <li>Add the path to &xml4c-dist;-&lt;my_Windows_distribution&gt;\include to the list of directories of Include files.</li>

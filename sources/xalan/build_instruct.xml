@@ -32,7 +32,9 @@
   <li><link anchor="dotNet">Steps for doing a Windows Build with Visual Studio .NET</link></li>
   <li><link anchor="unix">Steps for doing a UNIX build</link></li>       
   <li><link anchor="locale">Steps for doing a Build with Message Localization Support</link></li>
+  <!--
   <li><link anchor="xercesdepdom">Steps for doing a Build with Xerces Deprecated DOM Support</link></li>
+  -->
 </ul>
 </s3>
 
@@ -277,6 +279,7 @@
 </ul>   
 </s3>   
 
+<!--
 <anchor name="xercesdepdom"/>
 <s3 title="Steps for doing a Build with Xerces Deprecated DOM Support">
 <p>If your application is dependent on the XercesBridge classes to interface with the deprecated Xerces DOM, then the following 
@@ -294,5 +297,6 @@
    For example,</p>
 &nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r -z -DXALAN_BUILD_DEPRECATED_DOM_BRIDGE</code><br/><br/>
 </s3>
+-->
 
 </s1>

@@ -84,7 +84,7 @@ XALAN_USING_XALAN(XalanTransformer)
 <p>These macros can be used immediately after the included header files (for global applicability in a given source file) or within 
    functions and methods for local applicability.</p>
 <note>Whilst you can use the standard C++ namespace syntax directly, the &xml4c; and &xslt4c; namespaces are linked to the version 
-      number.  For example, the Xalan namespace is currently <em>xalanc_1_8</em>.  The macros will automatically take care of this 
+      number.  For example, the Xalan namespace is currently <em>xalanc_1_9</em>.  The macros will automatically take care of this 
       when code is re-compiled against a new version of the libraries.  Using the namespaces directly will require each namespace 
       related statement be updated by hand.</note>
 </s3>
