@@ -264,11 +264,6 @@ void getArgs(int argc, const char* argv[], CmdLineParams& p) throw()
 			if(((i+1) < argc) && (argv[i+1][0] != '-'))
 				p.indentAmount = atoi( argv[++i] );
 		} 
-		else if (!stricmp("-MT", argv[i])) 
-		{
-			if(((i+1) < argc) && (argv[i+1][0] != '-'))
-				p.nThreads = atoi( argv[++i] );
-		} 
 		else if (!stricmp("-IN", argv[i])) 
 		{
 			p.inFileNames.push_back(argv[++i]);
@@ -501,8 +496,6 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 
 	theXSLProcessorSupport.setProcessor(&processor);
 
-	processor.setFormatter(&xmlParserLiaison);
-
 
 	auto_ptr<TraceListener>		theTraceListener;
 
@@ -511,12 +504,21 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 		params.traceGenerationEvent == true ||
 		params.traceSelectionEvent)
 	{
+#if defined(XALAN_OLD_AUTO_PTR)
 		theTraceListener = auto_ptr<TraceListener>(new TraceListenerDefault(
 				diagnosticsWriter,
 				params.traceTemplates,
 				params.traceTemplateChildren,
 				params.traceGenerationEvent,
 				params.traceSelectionEvent));
+#else
+		theTraceListener.reset(new TraceListenerDefault(
+				diagnosticsWriter,
+				params.traceTemplates,
+				params.traceTemplateChildren,
+				params.traceGenerationEvent,
+				params.traceSelectionEvent));
+#endif
 
 		processor.setTraceSelects(params.traceSelectionEvent);
 		processor.addTraceListener(theTraceListener.get());
@@ -651,19 +653,25 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 			pthread_self();
 #else
 			0;
-#endif				
-#endif				
+#endif
+#endif
 			char buffer[16];
          sprintf(buffer, ".%d", pid);
          outputFileName += buffer;
 		}
 		if (! outputFileName.empty())	
 		{
+#if defined(XALAN_OLD_AUTO_PTR)
 			outputFileStream = 
 				auto_ptr<TextFileOutputStream>(new TextFileOutputStream(
 							outputFileName.c_str()));
+#else
+			outputFileStream.reset(new TextFileOutputStream(outputFileName.c_str()));
+#endif
+
 			outputStream = outputFileStream.get();
 		}
+
 		XercesDOMPrintWriter	resultWriter(*outputStream);
 
 
