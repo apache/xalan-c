@@ -114,22 +114,6 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttrNS.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCDATASection.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCDATASectionAllocator.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCDATASectionIWS.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCDATASectionIWSAllocator.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeComment.cpp
 # End Source File
 # Begin Source File
@@ -227,22 +211,6 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributesVector.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttrNS.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCDATASection.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCDATASectionAllocator.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCDATASectionIWS.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCDATASectionIWSAllocator.hpp
 # End Source File
 # Begin Source File
 
