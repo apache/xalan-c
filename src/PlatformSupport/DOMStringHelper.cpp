@@ -310,10 +310,8 @@ startsWith(
 	bool		fResult = false;
 
 	const unsigned int	theStringLength = length(theString);
-	assert(theStringLength >= 0);
 
 	const unsigned int	theSubstringLength = length(theSubstring);
-	assert(theSubstringLength >= 0);
 
 	if (theSubstringLength == 0)
 	{
@@ -498,9 +496,9 @@ substring(
 
 	const unsigned int	theStringLength = length(theString);
 
-	// $$$ ToDo: In Java-land, any failing of these
-	// assertions would result in an exception being thrown.
-	assert(theStartIndex <= theStringLength && theStartIndex >= 0);
+	// $$$ ToDo: In Java-land, any failing of this
+	// assertion would result in an exception being thrown.
+	assert(theStartIndex <= theStringLength);
 
 	if (theStartIndex == theStringLength)
 	{
@@ -566,9 +564,9 @@ substring(
 {
 	const unsigned int	theStringLength = length(theString);
 
-	// $$$ ToDo: In Java-land, any failing of these
-	// assertions would result in an exception being thrown.
-	assert(theStartIndex <= theStringLength && theStartIndex >= 0);
+	// $$$ ToDo: In Java-land, any failing of this
+	// assertion would result in an exception being thrown.
+	assert(theStartIndex <= theStringLength);
 
 	if (theStartIndex == theStringLength)
 	{
