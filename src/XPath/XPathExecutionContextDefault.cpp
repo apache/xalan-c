@@ -438,30 +438,6 @@ void
 XPathExecutionContextDefault::error(
 			const XalanDOMString&	msg,
 			const XalanNode*		sourceNode,
-			const XalanNode*		/* styleNode */) const
-{
-	assert(m_xpathEnvSupport != 0);
-
-	if (m_xpathEnvSupport->problem(
-			XPathEnvSupport::eXPATHProcessor, 
-			XPathEnvSupport::eError,
-			m_prefixResolver, 
-			sourceNode,
-			msg,
-			0,
-			-1,
-			-1) == true)
-	{
-		throw XalanXPathException(msg, 0);
-	}
-}
-
-
-
-void
-XPathExecutionContextDefault::error(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode,
 			const Locator*			locator) const
 {
 	assert(m_xpathEnvSupport != 0);
@@ -513,45 +489,10 @@ XPathExecutionContextDefault::error(
 void
 XPathExecutionContextDefault::error(
 			const char*			msg,
-			const XalanNode*	sourceNode,
-			const XalanNode*	styleNode) const
-{
-	error(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
-}
-
-
-
-void
-XPathExecutionContextDefault::error(
-			const char*			msg,
 			const XalanNode* 	sourceNode,
 			const Locator* 		locator) const
 {
 	error(TranscodeFromLocalCodePage(msg), sourceNode, locator);
-}
-
-
-
-void
-XPathExecutionContextDefault::warn(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode,
-			const XalanNode*		/* styleNode */) const
-{
-	assert(m_xpathEnvSupport != 0);
-
-	if (m_xpathEnvSupport->problem(
-			XPathEnvSupport::eXPATHProcessor, 
-			XPathEnvSupport::eWarning,
-			m_prefixResolver, 
-			sourceNode,
-			msg,
-			0,
-			-1,
-			-1) == true)
-	{
-		throw XalanXPathException(msg, sourceNode);
-	}
 }
 
 
@@ -604,17 +545,6 @@ XPathExecutionContextDefault::warn(
 	{
 		throw XalanXPathException(msg, uri, lineNumber, columnNumber);
 	}
-}
-
-
-
-void
-XPathExecutionContextDefault::warn(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const XalanNode*	styleNode) const
-{
-	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
 }
 
 
@@ -634,31 +564,6 @@ void
 XPathExecutionContextDefault::message(
 			const XalanDOMString&	msg,
 			const XalanNode*		sourceNode,
-			const XalanNode*		/* styleNode */) const
-{
-	assert(m_xpathEnvSupport != 0);
-
-	if (m_xpathEnvSupport->problem(
-			XPathEnvSupport::eXPATHProcessor, 
-			XPathEnvSupport::eMessage,
-			m_prefixResolver, 
-			sourceNode,
-			msg,
-			0,
-			-1,
-			-1) == true)
-	{
-		// $$$ ToDo: Do something with the PrefixResolver here...
-		throw XalanXPathException(msg);
-	}
-}
-
-
-
-void
-XPathExecutionContextDefault::message(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode,
 			const Locator* 			locator) const
 {
 	assert(m_xpathEnvSupport != 0);
@@ -703,17 +608,6 @@ XPathExecutionContextDefault::message(
 	{
 		throw XalanXPathException(msg, uri, lineNumber, columnNumber);
 	}
-}
-
-
-
-void
-XPathExecutionContextDefault::message(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const XalanNode*	styleNode) const
-{
-	message(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
 }
 
 

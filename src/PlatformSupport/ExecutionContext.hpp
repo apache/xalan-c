@@ -88,160 +88,82 @@ public:
 	~ExecutionContext();
 
 	/**
-	 * Tell the user of an error, and throw an exception.
+	 * Report an error and throw an exception.
 	 * 
-	 * @param msg        text of message to output
-	 * @param sourceNode node in source where the error occurred
-	 * @param styleNode  node in stylesheet where the error occurred
+	 * @param msg The text of the message.
+	 * @param sourceNode The source node where the error occurred.  May be 0.
+	 * @param locator A Locator to determine where the error occurred.  May be 0.
 	 */
 	virtual void
 	error(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode* 		styleNode = 0) const = 0;
+			const Locator* 			locator = 0) const = 0;
 
 	/**
-	 * Tell the user of an error, and throw an exception.
+	 * Report an error and throw an exception.
 	 * 
-	 * @param msg        text of message to output
-	 * @param sourceNode node in source where the error occurred.  May be 0.
-	 * @param locator  A Locator to determine where the error occurred.  May be 0.
-	 */
-	virtual void
-	error(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const Locator* 			locator) const = 0;
-
-	/**
-	 * Tell the user of an error, and throw an exception.
-	 * 
-	 * @param msg        text of message to output
-	 * @param sourceNode node in source where the error occurred
-	 * @param styleNode  node in stylesheet where the error occurred
+	 * @param msg The text of the message.
+	 * @param sourceNode The source node where the error occurred.  May be 0.
+	 * @param locator A Locator to determine where the error occurred.  May be 0.
 	 */
 	virtual void
 	error(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const XalanNode* 	styleNode = 0) const = 0;
+			const Locator* 		locator = 0) const = 0;
 
 	/**
-	 * Tell the user of an error, and throw an exception.
+	 * Report a warning
 	 * 
-	 * @param msg        text of message to output
-	 * @param sourceNode node in source where the error occurred.  May be 0.
-	 * @param locator  A Locator to determine where the error occurred.  May be 0.
-	 */
-	virtual void
-	error(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const = 0;
-
-	/**
-	 * Tell the user of an warning.
-	 * 
-	 * @param msg        text of message to output
-	 * @param sourceNode node in source where the warning occurred
-	 * @param styleNode  node in stylesheet where the warning occurred
+	 * @param msg The text of the message.
+	 * @param sourceNode The source node where the warning occurred.  May be 0.
+	 * @param locator A Locator to determine where the warning occurred.  May be 0.
 	 */
 	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode* 		styleNode = 0) const = 0;
+			const Locator* 			locator = 0) const = 0;
 
 	/**
-	 * Tell the user of a warning.
+	 * Report a warning
 	 * 
-	 * @param msg        text of message to output
-	 * @param sourceNode node in source where the warning occurred.  May be 0.
-	 * @param locator  A Locator to determine where the warning occurred.  May be 0.
-	 */
-	virtual void
-	warn(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const Locator* 			locator) const = 0;
-
-	/**
-	 * Tell the user of an warning, and probably throw an exception.
-	 * 
-	 * @param msg        text of message to output
-	 * @param sourceNode node in source where the warning occurred
-	 * @param styleNode  node in stylesheet where the warning occurred
+	 * @param msg The text of the message.
+	 * @param sourceNode The source node where the warning occurred.  May be 0.
+	 * @param locator A Locator to determine where the warning occurred.  May be 0.
 	 */
 	virtual void
 	warn(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const XalanNode* 	styleNode = 0) const = 0;
-
-	/**
-	 * Tell the user of a warning.
-	 * 
-	 * @param msg        text of message to output
-	 * @param sourceNode node in source where the warning occurred.  May be 0.
-	 * @param locator  A Locator to determine where the warning occurred.  May be 0.
-	 */
-	virtual void
-	warn(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const = 0;
+			const Locator* 		locator = 0) const = 0;
 
 	/**
 	 * Output a message.
 	 * 
-	 * @param msg        text of message to output
-	 * @param sourceNode node in source where error occurred
-	 * @param styleNode  node in stylesheet where error occurred
+	 * @param msg The text of the message.
+	 * @param sourceNode The source node where the message occurred.  May be 0.
+	 * @param locator A Locator to determine where the message occurred.  May be 0.
 	 */
 	virtual void
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode* 		styleNode = 0) const = 0;
+			const Locator* 			locator = 0) const = 0;
 
 	/**
 	 * Output a message.
 	 * 
-	 * @param msg        text of message to output
-	 * @param sourceNode node in source where the message occurred.  May be 0.
-	 * @param locator  A Locator to determine where the message occurred.  May be 0.
-	 */
-	virtual void
-	message(
-			const XalanDOMString&	msg,
-			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const = 0;
-
-	/**
-	 * Output a message.
-	 * 
-	 * @param msg        text of message to output
-	 * @param sourceNode node in source where the message occurred
-	 * @param styleNode  node in stylesheet where the message occurred
+	 * @param msg The text of the message.
+	 * @param sourceNode The source node where the message occurred.  May be 0.
+	 * @param locator A Locator to determine where the message occurred.  May be 0.
 	 */
 	virtual void
 	message(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const XalanNode* 	styleNode = 0) const = 0;
-
-	/**
-	 * Output a message.
-	 * 
-	 * @param msg        text of message to output
-	 * @param sourceNode node in source where the message occurred.  May be 0.
-	 * @param locator  A Locator to determine where the message occurred.  May be 0.
-	 */
-	virtual void
-	message(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const = 0;
+			const Locator* 		locator = 0) const = 0;
 };
 
 

@@ -472,35 +472,6 @@ bool
 XPathEnvSupportDefault::problem(
 			eSource					/* where */,
 			eClassification			classification,
-			const XalanNode*		/* styleNode */,
-			const XalanNode*		/* sourceNode */,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		uri,
-			int						lineNo,
-			int						charOffset) const
-{
-	cerr << msg;
-
-	if (uri != 0)
-	{
-		cerr << ",in " << uri;
-	}
-
-	cerr << ", at line number "
-		 << lineNo
-		 << " at offset "
-		 << charOffset
-		 << endl;
-
-	return classification == XPathEnvSupport::eError ? true : false;
-}
-
-
-
-bool
-XPathEnvSupportDefault::problem(
-			eSource					/* where */,
-			eClassification			classification,
 			const PrefixResolver*	/* resolver */,
 			const XalanNode*		/* sourceNode */,
 			const XalanDOMString&	msg,

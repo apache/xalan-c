@@ -311,73 +311,37 @@ public:
 	error(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const;
-
-	virtual void
-	error(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const Locator* 			locator) const;
+			const Locator* 			locator = 0) const;
 
 	virtual void
 	error(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const XalanNode* 	styleNode = 0) const;
-
-	virtual void
-	error(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const;
+			const Locator* 		locator = 0) const;
 
 	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode* 		styleNode = 0) const;
-
-	virtual void
-	warn(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const Locator* 			locator) const;
+			const Locator* 			locator = 0) const;
 
 	virtual void
 	warn(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const XalanNode* 	styleNode = 0) const;
-
-	virtual void
-	warn(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const;
+			const Locator* 		locator = 0) const;
 
 	virtual void
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode* 		styleNode = 0) const;
-
-	virtual void
-	message(
-			const XalanDOMString&	msg,
-			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const;
+			const Locator* 			locator = 0) const;
 
 	virtual void
 	message(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const XalanNode* 	styleNode = 0) const;
-
-	virtual void
-	message(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const;
+			const Locator* 		locator = 0) const;
 
 protected:
 

@@ -208,17 +208,6 @@ public:
 	problem(
 			eSource					where,
 			eClassification			classification,
-			const XalanNode*		styleNode,
-			const XalanNode*		sourceNode,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		uri,
-			int						lineNo,
-			int						charOffset) const;
-
-	virtual bool
-	problem(
-			eSource					where,
-			eClassification			classification,
 			const PrefixResolver*	resolver,
 			const XalanNode*		sourceNode,
 			const XalanDOMString&	msg,
