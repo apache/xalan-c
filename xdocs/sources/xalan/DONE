@@ -16,7 +16,7 @@ Apache Web server.<br/><br/></li>
 <li>Fixed bug using the id() function in complex match patterns.<br/><br/></li>
 <li>Fixed problem outputting multiple single-character CDATA sections.<br/><br/></li>
 <li>Fixed problem outputting whitespace characters.<br/><br/></li>
-<li><br/><br/></li>
+<li>Fixed problem transforming from a stream on UNIX platforms.<br/><br/></li>
 <li>zzzzzzzzzzzzzz</li>
 </ul>
 </s3>
