@@ -112,8 +112,7 @@
  * This is a simple C++ interface for some common usage patterns. It's 
  * the user's responsibility to call initialize and terminate 
  * before creating and after deleting any XalanTransformer instances 
- * respectively. After calling XalanTransformToData, the user should   
- * call XalanFreeData to release the memory allocated by that operation.
+ * respectively.
 */
 class XALAN_TRANSFORMER_EXPORT XalanTransformer
 {
