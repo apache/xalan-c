@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
@@ -104,7 +108,7 @@ XalanTransformerOutputStream::writeData(
 	if(theBytesWritten != theBufferLength)
 	{
 		throw XalanOutputStreamException(
-			TranscodeFromLocalCodePage("Number of bytes written does not equal number of bytes sent!"),
+			XalanMessageLoader::getMessage(XalanMessages::NumberBytesWrittenDoesNotEqual),
 			TranscodeFromLocalCodePage("UnknownOutputHandlerException"));
 	}
 }

@@ -78,6 +78,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 

@@ -63,6 +63,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -126,9 +127,12 @@ ElemSort::ElemSort(
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
-				"xsl:sort has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_SORT_WITH_PREFIX_STRING.c_str(),
+							aname),
+					0,
+					this);
 		}
 	}
 

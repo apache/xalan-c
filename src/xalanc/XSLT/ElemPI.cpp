@@ -63,6 +63,8 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
 
 
 #include "AVT.hpp"
@@ -104,16 +106,22 @@ ElemPI::ElemPI(
 				processSpaceAttr(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
-				"xsl:processing-instruction has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_PI_WITH_PREFIX_STRING.c_str(),
+							aname),
+					0,
+					this);
 		}
 	}
 
 	if(0 == m_nameAVT)
 	{
 		constructionContext.error(
-			"xsl:processing-instruction must have a 'name' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::TemplateMustHaveAttribute_2Param,
+				Constants::ELEMNAME_PI_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_NAME),
 			0,
 			this);
 	}
@@ -148,11 +156,15 @@ ElemPI::execute(StylesheetExecutionContext&		executionContext) const
 
 	if(equalsIgnoreCaseASCII(piName, Constants::ATTRVAL_OUTPUT_METHOD_XML))
 	{
-		executionContext.error("processing-instruction name can not be 'xml'", 0, getLocator());
+		executionContext.error(
+			XalanMessageLoader::getMessage(XalanMessages::NameCanNotBe_1Param,"xml"),
+			0, getLocator());
 	}
 	else if(!isValidNCName(piName))
 	{
-		executionContext.error("processing-instruction name must be a valid NCName", 0, getLocator());
+		executionContext.error(
+			XalanMessageLoader::getMessage(XalanMessages::NameMustBeValidNCName),
+			0, getLocator());
 	}
 
 	StylesheetExecutionContext::SetAndRestoreCopyTextNodesOnly	theSetAndRestore(executionContext, true);

@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/DOMSupport/DOMServices.hpp>
 
 
@@ -91,7 +95,7 @@ FunctionString::execute(
 	if (context == 0)
 	{
 		executionContext.error(
-				"The string() function requires a non-null context node!",
+				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param, "string()"),
 				context,
 				locator);
 
@@ -157,7 +161,8 @@ FunctionString::clone() const
 const XalanDOMString
 FunctionString::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The string() function takes zero or one arguments!"));
+
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, "string()");
 }
 
 

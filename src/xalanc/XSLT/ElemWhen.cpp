@@ -63,6 +63,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -90,7 +91,7 @@ ElemWhen::ElemWhen(
 {
 	const unsigned int	nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; ++i)
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
 
@@ -102,7 +103,10 @@ ElemWhen::ElemWhen(
 				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
-					"xsl:when has an illegal attribute",
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+						Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING.c_str(),
+						aname),
 					0,
 					this);
 		}
@@ -111,7 +115,10 @@ ElemWhen::ElemWhen(
 	if(0 == m_pTest)
 	{
 		constructionContext.error(
-			"xsl:when must have a 'test' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::TemplateMustHaveAttribute_2Param,
+				Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_TEST),
 			0,
 			this);
 	}

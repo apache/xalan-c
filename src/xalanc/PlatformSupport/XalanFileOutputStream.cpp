@@ -65,7 +65,8 @@
 
 
 
-#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include "DOMStringHelper.hpp"
+#include "XalanMessageLoader.hpp"
 
 
 
@@ -241,25 +242,19 @@ XalanFileOutputStream::writeData(
 
 static XalanDOMString
 FormatMessageLocal(
-			const char*				theMessage,
+			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theFileName,
 			int						theErrorCode)
 {
-	XalanDOMString	theResult(theMessage);
-
-	theResult += theFileName;
-
+	return XalanMessageLoader::getMessage(
 #if defined(WIN32)
-	append(theResult, ".  The Windows error code is ");
+				XalanMessages::WindowsErrorCodeIs_3Params,
 #else
-	append(theResult, ".  The C++ run-time error code (errno) is ");
+				XalanMessages::CPPRunTimeErrorCode_3Params,
 #endif
-
-	LongToDOMString(theErrorCode, theResult);
-
-	append(theResult, ".");
-
-	return theResult;
+				theMessage,
+				theFileName,
+				LongToDOMString(theErrorCode));
 }
 
 
@@ -268,7 +263,7 @@ XalanFileOutputStream::XalanFileOutputStreamOpenException::XalanFileOutputStream
 		const XalanDOMString&	theFileName,
 		int					theErrorCode) :
 	XalanOutputStreamException(FormatMessageLocal(
-				"Error opening file: ",
+				XalanMessageLoader::getMessage(XalanMessages::ErrorOpeningFile),
 				theFileName,
 				theErrorCode),
 			TranscodeFromLocalCodePage("XalanFileOutputStreamOpenException"))
@@ -287,7 +282,7 @@ XalanFileOutputStream::XalanFileOutputStreamWriteException::XalanFileOutputStrea
 		const XalanDOMString&	theFileName,
 		int					theErrorCode) :
 	XalanOutputStreamException(FormatMessageLocal(
-				"Error writing file: ",
+				XalanMessageLoader::getMessage(XalanMessages::ErrorWritingFile),
 				theFileName,
 				theErrorCode),
 			TranscodeFromLocalCodePage("XalanFileOutputStreamWriteException"))

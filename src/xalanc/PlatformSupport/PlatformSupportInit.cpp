@@ -59,6 +59,7 @@
 
 
 
+#include "XalanMessageLoader.hpp"
 #include "XalanTranscodingServices.hpp"
 
 
@@ -99,6 +100,8 @@ PlatformSupportInit::~PlatformSupportInit()
 void
 PlatformSupportInit::initialize()
 {
+	XalanMessageLoader::createLoader();
+
 	XalanTranscodingServices::initialize();
 }
 
@@ -108,6 +111,8 @@ void
 PlatformSupportInit::terminate()
 {
 	XalanTranscodingServices::terminate();
+
+	XalanMessageLoader::destroyLoader();
 }
 
 

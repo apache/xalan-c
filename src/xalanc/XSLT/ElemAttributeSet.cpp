@@ -62,6 +62,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include "Constants.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetRoot.hpp"
@@ -104,23 +108,29 @@ ElemAttributeSet::ElemAttributeSet(
 					isAttrOK(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
-				"xsl:attribute-set has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING.c_str(),
+							aname),
+					0,
+					this);
 		}
 	}
 
 	if(m_qname == 0)
 	{
 		constructionContext.error(
-			"xsl:attribute-set must have a 'name' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::TemplateMustHaveAttribute_2Param,
+				Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_NAME),
 			0,
 			this);
 	}
 	else if (m_qname->isValid() == false)
 	{
 		constructionContext.error(
-			"xsl:attribute-set has an invalid 'name' attribute",
+			XalanMessageLoader::getMessage(XalanMessages::TemplateHasIllegalAttribute_2Param,"xsl:attribute-set","name"),
 			0,
 			this);
 	}

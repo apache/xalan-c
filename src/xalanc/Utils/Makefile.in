@@ -1,0 +1,304 @@
+#
+# The Apache Software License, Version 1.1
+# 
+# Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
+# reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer. 
+# 
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:  
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+# 
+# 4. The names "Xalan", "Xerces" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written 
+#    permission, please contact apache\@apache.org.
+# 
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+# 
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+# 
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+#
+
+# Output directory
+OUTDIR := ../../..
+
+
+
+include $(XALANCROOT)/version.incl
+include ../../../Makefile.incl
+
+
+## ----------------------------------------------------------------------------
+
+LOC_LIBNAME = lib${LOC_PROJECT_NAME}
+
+LOC_LIB = ${LOC_LIBNAME}$(SHLIBSUFFIX).${LIB_MAJOR_VER}.${LIB_MINOR_VER}
+
+LOC_SONAME = ${LOC_LIBNAME}${SHLIBSUFFIX}.${LIBMAJORVER}
+
+MESSAGELIB = ${XSL_LIB_DIR}/${LOC_LIB}
+
+XALANMSGLIB_SRC=$(XALANCROOT)/src/xalanc/Utils/XalanMsgLib
+
+MSG_CREATOR_SRC=$(XALANCROOT)/src/xalanc/Utils/MsgCreator
+
+XSL_NLS_DIR=$(XALANCROOT)/src/xalanc/NLS
+
+MSGFILENAME=XalanMsg_
+
+XIFFEXT=.xlf
+
+MOVE= mv
+
+COPY=cp
+
+MSG_CREATOR_OBJECTS= $(XSL_OBJ_DIR)/MsgFileOutputStream.o $(XSL_OBJ_DIR)/ICUResHandler.o $(XSL_OBJ_DIR)/InMemHandler.o $(XSL_OBJ_DIR)/MsgCreator.o $(XSL_OBJ_DIR)/NLSHandler.o $(XSL_OBJ_DIR)/SAX2Handler.o 
+
+CATALOG_NAME=$(MSGFILENAME)$(LOCAL).cat
+
+LOC_ALLLIBS = $(subst $(LOCAL_LIB), ,$(ALLLIBS))
+
+INCLUDE_DIR = $(XALANCROOT)/src/xalanc/Include
+
+
+.PHONY: local doClean prepare
+## ----------------------------------------------------------------------------
+## Per platform defs
+
+#=============== LINUX SPECIFIC OPTIONS =========================
+ifeq ($(PLATFORM), LINUX)
+
+export LD_LIBRARY_PATH = $(XERCESCROOT)/lib:$(ICUROOT)/lib
+MAKE_SHARED_LOC = ${CXX} $(CXXFLAGS) -Wl,-soname,$(LOC_SONAME) -D${PLATFORM} -shared ${PIC_OPTION}
+
+endif
+
+#=============== FREEBSD SPECIFIC OPTIONS ======================
+
+ifeq ($(PLATFORM), FREEBSD)
+
+MAKE_SHARED_LOC=$(MAKE_SHARED)
+
+endif
+
+#=============== NETBSD SPECIFIC OPTIONS ======================
+
+ifeq ($(PLATFORM), NETBSD)
+
+MAKE_SHARED_LOC=$(MAKE_SHARED)
+
+endif
+
+#=============== HPUX SPECIFIC OPTIONS =========================
+ifeq ($(PLATFORM), HPUX)
+
+export SHLIB_PATH=$(XERCESCROOT)/lib:$(ICUROOT)/lib
+
+MAKE_SHARED_LOC = $(CXX) -b +Z ${LDFLAGS} -Wl,+s -Wl,+h,${LOC_SONAME}
+
+endif
+#=============== SOLARIS SPECIFIC OPTIONS =========================
+ifeq ($(PLATFORM), SOLARIS)
+
+export LD_LIBRARY_PATH = $(XERCESCROOT)/lib:$(ICUROOT)/lib
+
+MAKE_SHARED_LOC = ${CXX} -D${PLATFORM} -G -ptr$(ALL_OBJECTS_DIR) ${LDFLAGS} -h ${LOC_SONAME}
+
+endif
+#=============== AIX SPECIFIC OPTIONS =========================
+ifeq ($(PLATFORM), AIX)
+
+export LIBPATH = $(XERCESCROOT)/lib:$(ICUROOT)/lib
+
+MAKE_SHARED_LOC=$(MAKE_SHARED)
+
+LOC_LIB = ${LOC_LIBNAME}${LIBMAJORVER}.${LIBMINORVER}${SHLIBSUFFIX}
+
+LOC_LIBKEYNAME=${LOC_PROJECT_NAME}${LIBMAJORVER}
+
+endif
+
+#=============== OS390 SPECIFIC OPTIONS =========================
+
+ifeq ($(PLATFORM), OS390)
+
+MAKE_SHARED_LOC=$(MAKE_SHARED)
+
+LOC_LIB = ${LOC_LIBNAME}.${VER}$(OS390SIDEDECK)
+
+
+
+endif
+
+#============ TRU64 SPECIFIC OPTIONS ============================
+ifeq ($(PLATFORM), TRU64)
+
+MAKE_SHARED_LOC=$(MAKE_SHARED)
+
+endif
+#============ MacOSX SPECIFIC OPTIONS ============================
+ifeq ($(PLATFORM), MACOSX)
+MAKE_SHARED_LOC=$(MAKE_SHARED)
+endif
+#============ end of Platform SPECIFIC OPTIONS ============================
+##=================== Common for all localization systems area ============
+
+$(XSL_OBJ_DIR)/%.o : $(MSG_CREATOR_SRC)/%.cpp    
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+$(XSL_OBJ_DIR)/%.o : $(MSG_CREATOR_SRC)/%.hpp    
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+$(XSL_BIN_DIR)/MsgCreator : $(MSG_CREATOR_OBJECTS)
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS}  $(LOC_ALLLIBS) $^ -o $@
+
+
+##=================== End of Common for all localization systems area =====
+## ----------------------------------------------------------------------------
+ifeq ($(MESSAGELOADER),INMEM)
+
+
+
+local: $(MESSAGELIB)
+
+${XSL_OBJ_DIR}/XalanMsgLib.o : $(XALANMSGLIB_SRC)/XalanMsgLib.cpp $(XALANMSGLIB_SRC)/XalanMsgLib.hpp $(XALANMSGLIB_SRC)/LocalMsgData.hpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $(XALANMSGLIB_SRC)/XalanMsgLib.cpp
+	
+	
+$(MESSAGELIB) : ${XSL_OBJ_DIR}/XalanMsgLib.o 
+	$(MAKE_SHARED_LOC) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(LOC_ALLLIBS) $^ -o $@
+	$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX)
+ifeq ($(PLATFORM), AIX)
+	$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(LIBMAJORVER)$(SHLIBSUFFIX)
+else	
+	$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX).$(LIBMAJORVER)
+endif ## AIX
+
+$(XALANMSGLIB_SRC)/LocalMsgData.hpp : $(XSL_BIN_DIR)/MsgCreator $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL)$(XIFFEXT)
+	$(XSL_BIN_DIR)/MsgCreator $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL)$(XIFFEXT) -TYPE $(MESSAGELOADER)
+	@$(MOVE) LocalMsgIndex.hpp $(INCLUDE_DIR)
+	@$(MOVE) LocalMsgData.hpp  $(XALANMSGLIB_SRC)		
+
+install:
+
+prepare :
+	
+endif  # end of ($(MESSAGELOADER),INMEM))
+
+## ----------------------------------------------------------------------------
+
+ifeq ($(MESSAGELOADER),ICU)
+##=============================== Specific for ICU variables ================================
+
+GENRB    = $(ICUROOT)/bin/genrb
+
+PKGDATA  = $(ICUROOT)/bin/pkgdata
+
+
+
+##=============================== End of Specific for ICU variables ================================-M 
+
+local: $(MESSAGELIB) $(INCLUDE_DIR)/LocalMsgIndex.hpp
+
+$(MESSAGELIB) : $(XSL_NLS_DIR)/$(LOCAL)/$(LOCAL).txt
+	$(GENRB) --package-name $(LOC_PROJECT_NAME) -d $(XSL_NLS_DIR)/$(LOCAL)  $(XSL_NLS_DIR)/$(LOCAL)/$(LOCAL).txt
+	echo $(XSL_NLS_DIR)/$(LOCAL)/$(LOC_PROJECT_NAME)_$(LOCAL).res >> res-file-list.txt
+	$(PKGDATA) --name $(LOC_PROJECT_NAME) -T . -v -O $(ICUROOT)/lib/icu/Makefile.inc  --mode dll -d $(XSL_LIB_DIR) res-file-list.txt -M "prefix=$(ICUROOT) TARGET=$(LOC_LIB)"   
+	$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX)
+ifeq ($(PLATFORM), AIX)
+	$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(LIBMAJORVER)$(SHLIBSUFFIX)
+else	
+	$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX).$(LIBMAJORVER)
+endif ## AIX
+
+$(INCLUDE_DIR)/LocalMsgIndex.hpp : $(XSL_NLS_DIR)/$(LOCAL)/$(LOCAL).txt
+
+$(XSL_NLS_DIR)/$(LOCAL)/$(LOCAL).txt : $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL)$(XIFFEXT) $(XSL_BIN_DIR)/MsgCreator
+	$(XSL_BIN_DIR)/MsgCreator $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL)$(XIFFEXT) -TYPE $(MESSAGELOADER) -LOCAL $(LOCAL)
+	$(MOVE) LocalMsgIndex.hpp $(INCLUDE_DIR)
+	$(MOVE) $(LOCAL).txt $(XSL_NLS_DIR)/$(LOCAL)
+	
+prepare :
+	-${MKDIR} -p $(XSL_NLS_DIR)/$(LOCAL)
+
+install:
+	
+endif # end of ($(MESSAGELOADER),ICU)
+
+##=============================== NLS SYSTEM =====================================================
+ifeq ($(MESSAGELOADER),NLS)
+
+
+
+
+install:
+	$(COPY) $(XSL_NLS_DIR)/$(LOCAL)/$(CATALOG_NAME) $(XSL_BIN_DIR)/bin
+
+
+prepare:
+
+local:  $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL).cat $(INCLUDE_DIR)/LocalMsgIndex.hpp
+
+$(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL).cat : $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL)$(XIFFEXT) $(XSL_BIN_DIR)/MsgCreator
+	$(XSL_BIN_DIR)/MsgCreator $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL)$(XIFFEXT) -TYPE $(MESSAGELOADER) -LOCAL $(LOCAL)
+	$(MOVE) LocalMsgIndex.hpp $(INCLUDE_DIR)
+	$(MOVE) $(MSGFILENAME)$(LOCAL).msg $(XSL_NLS_DIR)/$(LOCAL)
+	-rm -f $(MSGFILENAME)$(LOCAL).cat
+	gencat  $(CATALOG_NAME) $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL).msg
+	$(MOVE)	$(CATALOG_NAME) $(XSL_NLS_DIR)/$(LOCAL)
+	
+$(INCLUDE_DIR)/LocalMsgIndex.hpp :
+	
+
+endif
+##=============================== END OF NLS SYSTEM ==================================================
+
+doClean:
+	rm -f	$(XSL_BIN_DIR)/MsgCreator
+	rm -f	$(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL).msg
+	rm -f	$(XSL_NLS_DIR)/$(LOCAL)/$(CATALOG_NAME)
+	rm -f   $(XSL_NLS_DIR)/$(LOCAL)/$(LOCAL).txt
+	rm -f   $(XSL_NLS_DIR)/$(LOCAL)/$(LOC_PROJECT_NAME)_$(LOCAL).res
+	rm -f   res-file-list.txt
+	rm -f	$(XSL_LIB_DIR)/$(LOC_LIBNAME)*
+	rm -f   $(XALANMSGLIB_SRC)/LocalMsgData.hpp
+	rm -f 	$(INCLUDE_DIR)/XalanMsgIndex.hpp
+	rm -f   $(MESSAGELIB)
+
+

@@ -62,6 +62,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/XPath/XalanQNameByValue.hpp>
 
 
@@ -110,11 +114,25 @@ ElemApplyTemplates::ElemApplyTemplates(
 		else if (equals(aname, Constants::ATTRNAME_MODE))
 		{
 			m_mode = constructionContext.createXalanQName(atts.getValue(i), getStylesheet().getNamespaces(), getLocator());
+
+			if (m_mode->isValid() == false)
+			{
+				constructionContext.error(
+						XalanMessageLoader::getMessage(
+							XalanMessages::AttributeValueNotValidQName_2Param,
+							aname,
+							atts.getValue(i)),
+						0,
+						this);
+			}
 		}
 		else if (!isAttrOK(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
-					"xsl:apply-templates has an illegal attribute",
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING.c_str(),
+							aname),
 					0,
 					this);
 		}
@@ -131,13 +149,6 @@ ElemApplyTemplates::ElemApplyTemplates(
 	if (m_mode == 0)
 	{
 		m_mode = &s_defaultMode;
-	}
-	else if (m_mode->isValid() == false)
-	{
-		constructionContext.error(
-				"xsl:apply-templates has an illegal 'mode' attribute",
-				0,
-				this);
 	}
 
 	assert(m_selectPattern != 0 && m_mode != 0);

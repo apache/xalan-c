@@ -73,6 +73,7 @@
 
 
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -250,13 +251,11 @@ XPathExpression::InvalidOpCodeException::~InvalidOpCodeException()
 XalanDOMString
 XPathExpression::InvalidOpCodeException::FormatErrorMessage(int		theOpCode)
 {
-	XalanDOMString	theResult("An invalid op code ");
+	XalanDOMString	theOpcode; 
 
-	LongToDOMString(theOpCode, theResult);
+	LongToDOMString(theOpCode, theOpcode);
 
-	append(theResult, " was detected.");
-
-	return theResult;
+	return XalanMessageLoader::getMessage(XalanMessages::InvalidOpcodeWasDetected_1Param, theOpcode);
 }
 
 
@@ -287,17 +286,14 @@ XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
 
 	LongToDOMString(theOpCode, theResult);
 
-	append(theResult, " was detected.  The required number of arguments is ");
+	XalanDOMString	theResult1;
+	LongToDOMString(theExpectedCount, theResult1);
 
-	LongToDOMString(theExpectedCount, theResult);
+	XalanDOMString	theResult2;
+	LongToDOMString(theSuppliedCount, theResult2);
 
-	append(theResult, ", but ");
 
-	LongToDOMString(theSuppliedCount, theResult);
-
-	append(theResult, " arguments(s) were supplied.");
-
-	return theResult;
+	return  XalanMessageLoader::getMessage(XalanMessages::InvalidNumberOfArgsWasDetected_3Param, theResult ,theResult1 , theResult2);
 }
 
 
@@ -322,17 +318,16 @@ XPathExpression::InvalidArgumentException::FormatErrorMessage(
 				int		theOpCode,
 				int		theValue)
 {
-	XalanDOMString	theResult("An invalid argument of ");
+	XalanDOMString	theResult; 
 
 	LongToDOMString(theValue, theResult);
 
-	append(theResult, " was supplied for op code ");
+	
+	XalanDOMString	theResult1;
+	LongToDOMString(theOpCode, theResult1);
 
-	LongToDOMString(theOpCode, theResult);
 
-	append(theResult, ".");
-
-	return theResult;
+	return XalanMessageLoader::getMessage(XalanMessages::InvalidNumberOfArgsWasSupplied_2Param, theResult, theResult1) ;
 }
 
 
@@ -353,13 +348,11 @@ XPathExpression::InvalidRelativeTokenPosition::~InvalidRelativeTokenPosition()
 XalanDOMString
 XPathExpression::InvalidRelativeTokenPosition::FormatErrorMessage(int	theOffset)
 {
-	XalanDOMString	theResult("An invalid offset of ");
+	XalanDOMString	theResult; 
 
 	LongToDOMString(theOffset, theResult);
 
-	append(theResult, " was supplied as a relative token position.");
-
-	return theResult;
+	return XalanMessageLoader::getMessage(XalanMessages::InvalidOffsetWasSupplied_1Param, theResult);
 }
 
 
@@ -798,7 +791,8 @@ XPathExpression::dumpTokenQueue(
 void
 XPathExpression::dumpRemainingTokenQueue(PrintWriter&	thePrintWriter) const
 {
-	thePrintWriter.print("Remaining tokens: (");
+	thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::RemainingTokens));
+	thePrintWriter.print("(");
 
 	dumpTokenQueue(thePrintWriter,
 				   m_currentPosition);
@@ -811,7 +805,8 @@ XPathExpression::dumpRemainingTokenQueue(PrintWriter&	thePrintWriter) const
 void
 XPathExpression::dumpRemainingTokenQueue(OstreamType&	theStream) const
 {
-	theStream << "Remaining tokens: (";
+	theStream << XalanMessageLoader::getMessage(XalanMessages::RemainingTokens) << "(";
+
 
 	dumpTokenQueue(theStream,
 				   m_currentPosition);

@@ -77,6 +77,7 @@
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/DOMStringPrintWriter.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanOutputStreamPrintWriter.hpp>
 
 
@@ -481,13 +482,14 @@ FormatXalanDOMException(
 			const XalanDOMException&	theException,
 			CharVectorType&				theErrorMessage)
 {
-	XalanDOMString	theBuffer("XalanDOMException caught.  The code is ");
+	XalanDOMString	theBuffer;
 
 	append(theBuffer, LongToDOMString(long(theException.getExceptionCode())));
 
 	append(theBuffer, XalanDOMChar(XalanUnicode::charFullStop));
+	XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::XalanDOMExceptionCaught_1Param,theBuffer);
 
-	TranscodeToLocalCodePage(theBuffer, theErrorMessage, true);
+	TranscodeToLocalCodePage(theMessage, theErrorMessage, true);
 }
 
 
@@ -621,11 +623,12 @@ XalanTransformer::compileStylesheet(
 		}
 		else
 		{
-			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
+			XalanDOMString	theBuffer;
+			append(theBuffer, LongToDOMString(long(e.getExceptionCode())));
 
-			append(theMessage, LongToDOMString(long(e.getExceptionCode())));
+			append(theBuffer, XalanDOMChar(XalanUnicode::charFullStop));
 
-			append(theMessage, XalanDOMChar(XalanUnicode::charFullStop));
+			XalanDOMString theMessage = XalanMessageLoader::getMessage(XalanMessages::XalanDOMExceptionCaught_1Param,theBuffer);
 
 			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 		}
@@ -651,19 +654,28 @@ XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet
 
 	if (i == m_compiledStylesheets.end())
 	{
-		const char* const	theStylesheetErrorMessage =
-				"An invalid compiled stylesheet was provided.";
+		XalanDOMString theStylesheetErrorMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidCompiledStylesheetProvided);
 
-		const XalanDOMString::size_type		theLength =
-			length(theStylesheetErrorMessage);
-
-		m_errorMessage.resize(theLength + 1, '\0');
-
+		try
+		{
+			m_errorMessage = theStylesheetErrorMessage.transcode();
+		}
+		catch(...)
+		{
+			const char* const	theParsedSourceErrorMessage =
+				"Failure in fetching/transcoding of an error message";
+			
+			const XalanDOMString::size_type		theLength =
+				length(theParsedSourceErrorMessage);
+			
+			m_errorMessage.resize(theLength + 1, '\0');
+			
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-		std::strncpy(&*m_errorMessage.begin(), theStylesheetErrorMessage, theLength);
+			std::strncpy(&*m_errorMessage.begin(), theParsedSourceErrorMessage, theLength);
 #else
-		strncpy(&*m_errorMessage.begin(), theStylesheetErrorMessage, theLength);
+			strncpy(&*m_errorMessage.begin(), theParsedSourceErrorMessage, theLength);
 #endif
+		}
 
 		return -1;
 	}
@@ -775,20 +787,28 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 
 	if (i == m_parsedSources.end())
 	{
-		const char* const	theParsedSourceErrorMessage =
-				"An invalid parsed source was provided.";
+		XalanDOMString theParserErrorMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidParsedSourceProvided);
 
-		const XalanDOMString::size_type		theLength =
-			length(theParsedSourceErrorMessage);
-
-		m_errorMessage.resize(theLength + 1, '\0');
-
+		try
+		{
+			m_errorMessage = theParserErrorMessage.transcode();
+		}
+		catch(...)
+		{
+			const char* const	theParsedSourceErrorMessage =
+				"Failure in fetching/transcoding of an error message";
+			
+			const XalanDOMString::size_type		theLength =
+				length(theParsedSourceErrorMessage);
+			
+			m_errorMessage.resize(theLength + 1, '\0');
+			
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-		std::strncpy(&*m_errorMessage.begin(), theParsedSourceErrorMessage, theLength);
+			std::strncpy(&*m_errorMessage.begin(), theParsedSourceErrorMessage, theLength);
 #else
-		strncpy(&*m_errorMessage.begin(), theParsedSourceErrorMessage, theLength);
+			strncpy(&*m_errorMessage.begin(), theParsedSourceErrorMessage, theLength);
 #endif
-
+		}
 		return -1;
 	}
 	else

@@ -377,6 +377,30 @@ public:
 	}
 
 	/**
+	 * Get the namespace for a prefix, and report an error if it wasn't found.
+	 * 
+	 * @param prefix prefix to search
+	 * @param constructionContext The current construction context
+	 * @return namespace corresponding to prefix, or null if not found.
+	 */
+	const XalanDOMString*
+	getNamespaceForPrefix(
+			const XalanDOMString&			prefix,
+			StylesheetConstructionContext&	constructionContext) const;
+
+	/**
+	 * Get the namespace for a prefix, and report an error if it wasn't found.
+	 * 
+	 * @param prefix prefix to search
+	 * @param constructionContext The current construction context
+	 * @return namespace corresponding to prefix, or null if not found.
+	 */
+	const XalanDOMString*
+	getNamespaceForPrefix(
+			const XalanDOMChar*				prefix,
+			StylesheetConstructionContext&	constructionContext) const;
+
+	/**
 	 * See if a namespace should be excluded.
 	 * 
 	 * @param theConstructionContext the current construction context.

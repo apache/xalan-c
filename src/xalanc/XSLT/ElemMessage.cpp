@@ -63,6 +63,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -106,7 +107,7 @@ ElemMessage::ElemMessage(
 			else if (equals(avalue, Constants::ATTRVAL_NO) == false)
 			{
 				constructionContext.error(
-					"The attribute 'terminate' has an illegal value",
+					XalanMessageLoader::getMessage(XalanMessages::AttributeHasIllegalValue_1Param,"terminate"),
 					0,
 					this);
 			}
@@ -115,9 +116,12 @@ ElemMessage::ElemMessage(
 				processSpaceAttr(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
-				"xsl:message has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_MESSAGE_WITH_PREFIX_STRING.c_str(),
+							aname),
+					0,
+					this);
 		}
 	}
 }

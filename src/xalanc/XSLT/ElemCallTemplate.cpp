@@ -63,6 +63,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -106,27 +107,37 @@ ElemCallTemplate::ElemCallTemplate(
 					atts.getValue(i),
 					getStylesheet().getNamespaces(),
 					getLocator());
+
+			if (m_templateName->isValid() == false)
+			{
+				constructionContext.error(
+						XalanMessageLoader::getMessage(
+							XalanMessages::AttributeValueNotValidQName_2Param,
+							Constants::ATTRNAME_NAME.c_str(),
+							atts.getValue(i)),
+						0,
+						this);
+			}
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
-				"xsl:call-template has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING.c_str(),
+							aname),
+					0,
+					this);
 		}
 	}
 
 	if (m_templateName == 0)
 	{
 		constructionContext.error(
-			"xsl:call-template must have a 'name' attribute",
-			0,
-			this);
-	}
-	else if (m_templateName->isValid() == false)
-	{
-		constructionContext.error(
-			"xsl:call-template has an invalid 'name' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::TemplateMustHaveAttribute_2Param,
+				Constants::ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_NAME),
 			0,
 			this);
 	}
@@ -176,7 +187,7 @@ ElemCallTemplate::postConstruction(
 	if(m_template == 0)
 	{
 		constructionContext.error(
-			"Could not find named template.",
+			XalanMessageLoader::getMessage(XalanMessages::CannotFindNamedTemplate),
 			0,
 			this);
 	}

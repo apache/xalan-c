@@ -59,6 +59,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -111,7 +112,7 @@ FunctionElementAvailable::clone() const
 const XalanDOMString
 FunctionElementAvailable::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The function-available() function takes one argument!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"function-available()");
 }
 
 

@@ -77,7 +77,6 @@ class XALAN_PLATFORMSUPPORT_EXPORT PlatformSupportInit
 {
 public:
 
-	explicit
 	PlatformSupportInit();
 
 	~PlatformSupportInit();

@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/XPath/XPathExecutionContext.hpp>
 #include <xalanc/XPath/XObjectFactory.hpp>
 
@@ -138,7 +142,8 @@ FunctionHasSameNodes::clone() const
 const XalanDOMString
 FunctionHasSameNodes::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The has-same-nodes() function accepts two arguments"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsTwoArguments_1Param,"has-same-nodes()");
+
 }
 
 

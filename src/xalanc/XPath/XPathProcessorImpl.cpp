@@ -70,6 +70,7 @@
 #include <xalanc/PlatformSupport/DOMStringPrintWriter.hpp>
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
 #include <xalanc/PlatformSupport/XalanXMLChar.hpp>
 
@@ -145,7 +146,7 @@ XPathProcessorImpl::initXPath(
 
 	if (length(m_token) != 0)
 	{
-		error("Extra illegal tokens.");
+		error(XalanMessageLoader::getMessage(XalanMessages::ExtraIllegalTokens));
 	}
 
 	m_xpath = 0;
@@ -191,7 +192,7 @@ XPathProcessorImpl::initMatchPattern(
 
 	if (length(m_token) != 0)
 	{
-		error("Extra illegal tokens.");
+		error(XalanMessageLoader::getMessage(XalanMessages::ExtraIllegalTokens));
 	}
 
 	// Terminate for safety.
@@ -264,7 +265,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 				}
 				else
 				{
-					error("misquoted literal... expected double quote.");
+					error(XalanMessageLoader::getMessage(XalanMessages::ExpectedDoubleQuote_1Param,"double"));
 				}
 			}
 			break;
@@ -299,7 +300,8 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 				}
 				else
 				{
-					error("misquoted literal... expected single quote.");
+					error(XalanMessageLoader::getMessage(XalanMessages::ExpectedDoubleQuote_1Param,XalanDOMString("single")));
+
 				}
 			}
 			break;
@@ -470,7 +472,9 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 
 	if (0 == m_expression->tokenQueueSize())
 	{
-		error("Empty expression.");
+
+		error(XalanMessageLoader::getMessage(XalanMessages::EmptyExpression));
+
 	}
 
 	m_expression->setTokenPosition(0);
@@ -535,17 +539,11 @@ XPathProcessorImpl::mapNSTokens(
 
 	if(uName == 0)
 	{
-		error(
-			TranscodeFromLocalCodePage("Unable to resolve prefix '") +
-			scratchString +
-			TranscodeFromLocalCodePage("'."));
+		error(XalanMessageLoader::getMessage(XalanMessages::PrefixMustResolveToNamespace_1Param, scratchString));
 	}
 	else if (length(*uName) == 0)
 	{
-		error(
-			TranscodeFromLocalCodePage("The prefix '") +
-			scratchString +
-			TranscodeFromLocalCodePage("' is bound to a zero-length URI."));
+		error(XalanMessageLoader::getMessage(XalanMessages::PrefixIsBoundToZeroLengthURI_1Param, scratchString));
 	}
 	else
 	{
@@ -568,7 +566,7 @@ XPathProcessorImpl::mapNSTokens(
 
 			if (XalanQName::isValidNCName(scratchString) == false)
 			{
-				error(XalanDOMString("'") + scratchString + XalanDOMString("' is not a valid NCName"));
+				error(XalanMessageLoader::getMessage(XalanMessages::NotValidNCName_1Param, scratchString));
 			}
 			else
 			{
@@ -776,11 +774,7 @@ XPathProcessorImpl::consumeExpected(XalanDOMChar	expected)
 
 		XalanDOMString	theMsg = theGuard.get();
 
-		append(theMsg, "Expected ");
-		append(theMsg, expected);
-		append(theMsg, ", but found: ");
-		append(theMsg, m_token);
-
+		theMsg = XalanMessageLoader::getMessage(XalanMessages::NotFoundWhatExpected_2Param, XalanDOMString(&expected), m_token);
 		error(theMsg);
 	}
 }
@@ -813,16 +807,13 @@ XPathProcessorImpl::error(const XalanDOMString&		msg) const
 		{
 			if (m_isMatchPattern == true)
 			{
-				thePrintWriter.print(XALAN_STATIC_UCODE_STRING("pattern = '"));
+				thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::PatternIs_1Param,theCurrentPattern));
 			}
 			else
 			{
-				thePrintWriter.print(XALAN_STATIC_UCODE_STRING("expression = '"));
+				thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::ExpressionIs_1Paran,theCurrentPattern));
 			}
 
-			thePrintWriter.print(theCurrentPattern);
-
-			thePrintWriter.println("'");
 		}
 
 		// Back up one token, since we've consumed one...
@@ -1417,7 +1408,7 @@ XPathProcessorImpl::Argument()
 	}
 	else
 	{
-		error(TranscodeFromLocalCodePage("A literal argument is required."));
+		error(XalanMessageLoader::getMessage(XalanMessages::LiteralArgumentIsRequired));
 	}
 }
 
@@ -1434,7 +1425,7 @@ XPathProcessorImpl::FunctionCallArguments()
 	{
 		if(tokenIs(XalanUnicode::charComma) == true)
 		{
-			error("Found ',' but no preceding argument.");
+			error(XalanMessageLoader::getMessage(XalanMessages::NoPrecedingArgument));
 		}
 
 		Argument();
@@ -1447,7 +1438,7 @@ XPathProcessorImpl::FunctionCallArguments()
 
 			if(tokenIs(XalanUnicode::charRightParenthesis) == true)
 			{
-				error("Found ',' but no following argument.");
+				error(XalanMessageLoader::getMessage(XalanMessages::NoFollowingArgument));
 			}
 		}
 	}
@@ -1495,9 +1486,8 @@ XPathProcessorImpl::FunctionCall()
 	{
 		if (isValidFunction(m_token) == false)
 		{
-			error(TranscodeFromLocalCodePage("Could not find function: ") +
-				 m_token +
-				 TranscodeFromLocalCodePage("()"));
+			error(XalanMessageLoader::getMessage(XalanMessages::CouldNotFindFunction_1Param, m_token));
+
 		}
 
 		const XPathExpression::eOpCodes		funcTok = getFunctionToken(m_token);
@@ -1632,7 +1622,7 @@ XPathProcessorImpl::FunctionPosition()
 
 	if (argCount != 0)
 	{
-		error("The position() function does not accept any arguments");
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,"position()"));
 	}
 	else
 	{
@@ -1658,7 +1648,7 @@ XPathProcessorImpl::FunctionLast()
 
 	if (argCount != 0)
 	{
-		error("The last() function does not accept any arguments");
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param, XalanDOMString("last()")));
 	}
 	else
 	{
@@ -1684,7 +1674,7 @@ XPathProcessorImpl::FunctionCount()
 
 	if (argCount != 1)
 	{
-		error("The count() function takes one arguments");
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"count()")); 
 	}
 }
 
@@ -1703,7 +1693,9 @@ XPathProcessorImpl::FunctionNot()
 
 	if (argCount != 1)
 	{
-		error("The not() function takes one arguments");
+
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"not()")); 
+
 	}
 }
 
@@ -1741,7 +1733,9 @@ XPathProcessorImpl::FunctionFalse()
 
 	if (argCount != 0)
 	{
-		error("The false() function does not accept any arguments");
+
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,"false()")); 
+
 	}
 }
 
@@ -1760,7 +1754,7 @@ XPathProcessorImpl::FunctionBoolean()
 
 	if (argCount != 1)
 	{
-		error("The boolean() function takes one arguments");
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"boolean()")); 
 	}
 }
 
@@ -1788,7 +1782,7 @@ XPathProcessorImpl::FunctionName(int	opPos)
 		}
 		else
 		{
-			error("The name() function takes zero or one argument(s)");
+			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"name()")); 
 		}
 	}
 }
@@ -1817,7 +1811,7 @@ XPathProcessorImpl::FunctionLocalName(int	opPos)
 		}
 		else
 		{
-			error("The locale-name() function takes zero or one argument(s)");
+			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"locale-name()")); 
 		}
 	}
 }
@@ -1846,7 +1840,7 @@ XPathProcessorImpl::FunctionNumber(int	opPos)
 		}
 		else
 		{
-			error("The number() function takes zero or one argument(s)");
+			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"number()")); 
 		}
 	}
 }
@@ -1866,7 +1860,9 @@ XPathProcessorImpl::FunctionFloor()
 
 	if (argCount != 1)
 	{
-		error("The floor() function accepts one argument");
+
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"floor()")); 
+
 	}
 }
 
@@ -1885,7 +1881,7 @@ XPathProcessorImpl::FunctionCeiling()
 
 	if (argCount != 1)
 	{
-		error("The ceiling() function accepts one argument");
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"ceiling()")); 
 	}
 }
 
@@ -1904,7 +1900,7 @@ XPathProcessorImpl::FunctionRound()
 
 	if (argCount != 1)
 	{
-		error("The round() function accepts one argument");
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"round()")); 
 	}
 }
 
@@ -1932,7 +1928,7 @@ XPathProcessorImpl::FunctionString(int	opPos)
 		}
 		else
 		{
-			error("The string() function takes zero or one argument(s)");
+			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"string()")); 
 		}
 	}
 }
@@ -1952,7 +1948,9 @@ XPathProcessorImpl::FunctionSum()
 
 	if (argCount != 1)
 	{
-		error("The sum() function takes one argument");
+
+		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"sum()")); 
+
 	}
 }
 
@@ -1980,7 +1978,7 @@ XPathProcessorImpl::FunctionStringLength(int	opPos)
 		}
 		else
 		{
-			error("The string-length() function takes zero or one argument(s)");
+			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"string-length()")); 
 		}
 	}
 }
@@ -2009,7 +2007,7 @@ XPathProcessorImpl::FunctionNamespaceURI(int	opPos)
 		}
 		else
 		{
-			error("The namespace-uri() function takes zero or one argument(s)");
+			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"namespace-uri()")); 
 		}
 	}
 }
@@ -2082,7 +2080,7 @@ XPathProcessorImpl::Step()
 
 		if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
 		{
-			error("'..[predicate]' or '.[predicate]' is illegal syntax.  Use 'self::node()[predicate]' instead.");
+			error(XalanMessageLoader::getMessage(XalanMessages::IllegalSyntaxOfPredicatesSelf));
 		}
 
 		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
@@ -2101,7 +2099,7 @@ XPathProcessorImpl::Step()
 
 		if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
 		{
-			error("'..[predicate]' or '.[predicate]' is illegal syntax.  Use 'self::node()[predicate]' instead.");
+			error(XalanMessageLoader::getMessage(XalanMessages::IllegalSyntaxOfPredicatesParent));
 		}
 
 		// Tell how long the step is without the predicate
@@ -2133,7 +2131,7 @@ XPathProcessorImpl::Step()
 	}
 	else if (tokenIs(XalanUnicode::charRightParenthesis) == false)
 	{
-		error("Unexpected token.");
+		error(XalanMessageLoader::getMessage(XalanMessages::UnexpectedTokenFound_1Param, m_token)); 
 	}
 }
 
@@ -2176,7 +2174,8 @@ XPathProcessorImpl::Basis()
 		{
 			nextToken();
 
-			error("Expected axis or node test.");
+			error(XalanMessageLoader::getMessage(XalanMessages::ExpectedAxis)); 
+
 		}
 		else
 		{
@@ -2220,7 +2219,7 @@ XPathProcessorImpl::AxisName()
 
 	if (theOpCode == XPathExpression::eENDOP)
 	{
-		error(TranscodeFromLocalCodePage("Illegal axis name: ") + m_token);
+		error(XalanMessageLoader::getMessage(XalanMessages::IllegalAxisName_1Param,m_token)); 
 	}
 	else
 	{
@@ -2246,8 +2245,8 @@ XPathProcessorImpl::NodeTest()
 
 		if (theOpCode == XPathExpression::eENDOP)
 		{
-			error(TranscodeFromLocalCodePage("Unknown nodetype: ") +
-				  m_token);
+			error(XalanMessageLoader::getMessage(XalanMessages::UnknownNodeType_1Param, m_token)); 
+
 		}
 		else
 		{
@@ -2302,7 +2301,8 @@ XPathProcessorImpl::NodeTest()
 		}
 		else if (isNodeTest(m_token) == false)
 		{
-			error("Expected node test.");
+			error(XalanMessageLoader::getMessage(XalanMessages::ExpectedNodeTest)); 
+
 		}
 		else
 		{
@@ -2429,9 +2429,8 @@ XPathProcessorImpl::Literal()
 	}
 	else
 	{
-		error(TranscodeFromLocalCodePage("Pattern literal (") +
-			  m_token +
-			  TranscodeFromLocalCodePage(") needs to be quoted."));
+		error(XalanMessageLoader::getMessage(XalanMessages::LiteralArgumentIsRequired)); 
+
 	}
 }
 
@@ -2552,7 +2551,8 @@ XPathProcessorImpl::LocationPathPattern()
 		}
 		else if (lookahead(XalanUnicode::charVerticalLine, -1) == true)
 		{
-			error("Unexpected token '|' found in match pattern");
+			error(XalanMessageLoader::getMessage(XalanMessages::UnexpectedTokenFound_1Param, m_token));
+	
 		}
 	}
 
@@ -2639,7 +2639,7 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 		}
 		else
 		{
-			error("Only child:: and attribute:: axes are allowed in match patterns.");
+			error(XalanMessageLoader::getMessage(XalanMessages::OnlyChildAndAttributeAxesAreAllowed)); 
 		}
 
 		nextToken();
@@ -2675,7 +2675,8 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 			}
 			else
 			{
-				error("Only child:: and attribute:: axes are allowed in match patterns.");
+				error(XalanMessageLoader::getMessage(XalanMessages::OnlyChildAndAttributeAxesAreAllowed)); 
+
 			}
 
 			nextToken();

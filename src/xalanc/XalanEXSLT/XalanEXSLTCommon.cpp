@@ -60,6 +60,7 @@
 
 
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -213,7 +214,7 @@ XalanEXSLTFunctionObjectType::execute(
 const XalanDOMString
 XalanEXSLTFunctionObjectType::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function object-type() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"object-type()");
 }
 
 

@@ -46,7 +46,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XSLT_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /D "NDEBUG" /D "XALAN_DOMSUPPORT_BUILD_DLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_DOM_BUILD_DLL" /D "XALAN_XALANEXTENSIONS_BUILD_DLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "XALAN_TRANSFORMER_BUILD_DLL" /D "XALAN_XERCESPARSERLIAISON_BUILD_DLL" /D "XALAN_XMLSUPPORT_BUILD_DLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XPATHCAPI_BUILD_DLL" /D "XALAN_ALLINONE_BUILD_DLL" /D "XALAN_EXSLT_BUILD_DLL" /D "XALAN_ICUBRIDGE_BUILD_DLL" /D "XALAN_USE_ICU" /FD /Zm125 /c
+# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /D "NDEBUG" /D "XALAN_DOMSUPPORT_BUILD_DLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_DOM_BUILD_DLL" /D "XALAN_XALANEXTENSIONS_BUILD_DLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "XALAN_TRANSFORMER_BUILD_DLL" /D "XALAN_XERCESPARSERLIAISON_BUILD_DLL" /D "XALAN_XMLSUPPORT_BUILD_DLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XPATHCAPI_BUILD_DLL" /D "XALAN_ALLINONE_BUILD_DLL" /D "XALAN_EXSLT_BUILD_DLL" /D "XALAN_ICUBRIDGE_BUILD_DLL" /D "XALAN_USE_ICU" /D "XALAN_ICU_MSG_LOADER" /FD /Zm125 /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -56,7 +56,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 xerces-c_2.lib icuuc.lib icuin.lib /nologo /dll /pdb:none /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1_6_0.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib"
+# ADD LINK32 xerces-c_2.lib XalanMessages_1_6.lib icuuc.lib icuin.lib /nologo /dll /pdb:none /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1_6_0.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib" /libpath:"..\..\..\..\Build\Win32\VC6\Release"
 
 !ELSEIF  "$(CFG)" == "AllInOneWithICU - Win32 Debug"
 
@@ -72,7 +72,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XSLT_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /D "_DEBUG" /D "XALAN_DOMSUPPORT_BUILD_DLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_DOM_BUILD_DLL" /D "XALAN_XALANEXTENSIONS_BUILD_DLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "XALAN_TRANSFORMER_BUILD_DLL" /D "XALAN_XERCESPARSERLIAISON_BUILD_DLL" /D "XALAN_XMLSUPPORT_BUILD_DLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XPATHCAPI_BUILD_DLL" /D "XALAN_ALLINONE_BUILD_DLL" /D "XALAN_EXSLT_BUILD_DLL" /D "XALAN_ICUBRIDGE_BUILD_DLL" /D "XALAN_USE_ICU" /YX /FD /GZ /Zm125 /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /D "_DEBUG" /D "XALAN_DOMSUPPORT_BUILD_DLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_DOM_BUILD_DLL" /D "XALAN_XALANEXTENSIONS_BUILD_DLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "XALAN_TRANSFORMER_BUILD_DLL" /D "XALAN_XERCESPARSERLIAISON_BUILD_DLL" /D "XALAN_XMLSUPPORT_BUILD_DLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XPATHCAPI_BUILD_DLL" /D "XALAN_ALLINONE_BUILD_DLL" /D "XALAN_EXSLT_BUILD_DLL" /D "XALAN_ICUBRIDGE_BUILD_DLL" /D "XALAN_USE_ICU" /D "XALAN_ICU_MSG_LOADER" /FR /YX /FD /GZ /Zm125 /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -82,7 +82,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2D.lib icuucd.lib icuind.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1_6_0D.dll" /implib:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug" /libpath:"..\..\..\..\..\..\icu\lib"
+# ADD LINK32 xerces-c_2D.lib XalanMessages_1_6D.lib icuucd.lib icuind.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1_6_0D.dll" /implib:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug" /libpath:"..\..\..\..\..\..\icu\lib" /libpath:"..\..\..\..\Build\Win32\VC6\Debug"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "AllInOneWithICU - Win32 Release with symbols"
@@ -101,7 +101,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W4 /GR /GX /O2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_XERCES" /FD /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /Ob2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /D "NDEBUG" /D "XALAN_DOMSUPPORT_BUILD_DLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_DOM_BUILD_DLL" /D "XALAN_XALANEXTENSIONS_BUILD_DLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "XALAN_TRANSFORMER_BUILD_DLL" /D "XALAN_XERCESPARSERLIAISON_BUILD_DLL" /D "XALAN_XMLSUPPORT_BUILD_DLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XPATHCAPI_BUILD_DLL" /D "XALAN_ALLINONE_BUILD_DLL" /D "XALAN_EXSLT_BUILD_DLL" /D "XALAN_ICUBRIDGE_BUILD_DLL" /D "XALAN_USE_ICU" /FD /Zm125 /c
+# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /Ob2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /D "NDEBUG" /D "XALAN_DOMSUPPORT_BUILD_DLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_DOM_BUILD_DLL" /D "XALAN_XALANEXTENSIONS_BUILD_DLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "XALAN_TRANSFORMER_BUILD_DLL" /D "XALAN_XERCESPARSERLIAISON_BUILD_DLL" /D "XALAN_XMLSUPPORT_BUILD_DLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XPATHCAPI_BUILD_DLL" /D "XALAN_ALLINONE_BUILD_DLL" /D "XALAN_EXSLT_BUILD_DLL" /D "XALAN_ICUBRIDGE_BUILD_DLL" /D "XALAN_USE_ICU" /D "XALAN_ICU_MSG_LOADER" /FD /Zm125 /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -111,7 +111,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /debug /machine:I386
-# ADD LINK32 xerces-c_2.lib icuuc.lib icuin.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release.symbols/Xalan-C_1_6_0S.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release.symbols/Xalan-C_1S.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib"
+# ADD LINK32 xerces-c_2.lib XalanMessages_1_6S.lib icuuc.lib icuin.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release.symbols/Xalan-C_1_6_0S.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release.symbols/Xalan-C_1S.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib" /libpath:"..\..\..\..\Build\Win32\VC6\Release"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "AllInOneWithICU - Win64 Release"
@@ -128,7 +128,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XSLT_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /D "WIN64" /D "NDEBUG" /D "XALAN_DOMSUPPORT_BUILD_DLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_DOM_BUILD_DLL" /D "XALAN_XALANEXTENSIONS_BUILD_DLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "XALAN_TRANSFORMER_BUILD_DLL" /D "XALAN_XERCESPARSERLIAISON_BUILD_DLL" /D "XALAN_XMLSUPPORT_BUILD_DLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XPATHCAPI_BUILD_DLL" /D "XALAN_ALLINONE_BUILD_DLL" /D "XALAN_EXSLT_BUILD_DLL" /D "XALAN_ICUBRIDGE_BUILD_DLL" /D "XALAN_USE_ICU" /FD /c
+# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /D "WIN64" /D "NDEBUG" /D "XALAN_DOMSUPPORT_BUILD_DLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_DOM_BUILD_DLL" /D "XALAN_XALANEXTENSIONS_BUILD_DLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "XALAN_TRANSFORMER_BUILD_DLL" /D "XALAN_XERCESPARSERLIAISON_BUILD_DLL" /D "XALAN_XMLSUPPORT_BUILD_DLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XPATHCAPI_BUILD_DLL" /D "XALAN_ALLINONE_BUILD_DLL" /D "XALAN_EXSLT_BUILD_DLL" /D "XALAN_ICUBRIDGE_BUILD_DLL" /D "XALAN_USE_ICU" /D "XALAN_ICU_MSG_LOADER" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -139,7 +139,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 xerces-c_2.lib icuuc.lib icuin.lib /nologo /dll /pdb:none /machine:IX86 /out:"..\..\..\..\Build\Win64\VC6\Release/Xalan-C_1_6_0.dll" /implib:"..\..\..\..\Build\Win64\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib" /machine:IA64
+# ADD LINK32 xerces-c_2.lib XalanMessages_1_6.lib icuuc.lib icuin.lib /nologo /dll /pdb:none /machine:IX86 /out:"..\..\..\..\Build\Win64\VC6\Release/Xalan-C_1_6_0.dll" /implib:"..\..\..\..\Build\Win64\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib" /machine:IA64
 
 !ELSEIF  "$(CFG)" == "AllInOneWithICU - Win64 Debug"
 
@@ -155,7 +155,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XSLT_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /D "WIN64" /D "_DEBUG" /D "XALAN_DOMSUPPORT_BUILD_DLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_DOM_BUILD_DLL" /D "XALAN_XALANEXTENSIONS_BUILD_DLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "XALAN_TRANSFORMER_BUILD_DLL" /D "XALAN_XERCESPARSERLIAISON_BUILD_DLL" /D "XALAN_XMLSUPPORT_BUILD_DLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XPATHCAPI_BUILD_DLL" /D "XALAN_ALLINONE_BUILD_DLL" /D "XALAN_EXSLT_BUILD_DLL" /D "XALAN_ICUBRIDGE_BUILD_DLL" /D "XALAN_USE_ICU" /YX /FD /GZ /Zm125 /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /D "WIN64" /D "_DEBUG" /D "XALAN_DOMSUPPORT_BUILD_DLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_DOM_BUILD_DLL" /D "XALAN_XALANEXTENSIONS_BUILD_DLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "XALAN_TRANSFORMER_BUILD_DLL" /D "XALAN_XERCESPARSERLIAISON_BUILD_DLL" /D "XALAN_XMLSUPPORT_BUILD_DLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XPATHCAPI_BUILD_DLL" /D "XALAN_ALLINONE_BUILD_DLL" /D "XALAN_EXSLT_BUILD_DLL" /D "XALAN_ICUBRIDGE_BUILD_DLL" /D "XALAN_USE_ICU" /D "XALAN_ICU_MSG_LOADER" /YX /FD /GZ /Zm125 /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -165,7 +165,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2D.lib icuucd.lib icuind.lib /nologo /dll /debug /machine:IX86 /out:"..\..\..\..\Build\Win64\VC6\Debug/Xalan-C_1_6_0D.dll" /implib:"..\..\..\..\Build\Win64\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug" /libpath:"..\..\..\..\..\..\icu\lib" /machine:IA64
+# ADD LINK32 xerces-c_2D.lib XalanMessages_1_6D.lib icuucd.lib icuind.lib /nologo /dll /debug /machine:IX86 /out:"..\..\..\..\Build\Win64\VC6\Debug/Xalan-C_1_6_0D.dll" /implib:"..\..\..\..\Build\Win64\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug" /libpath:"..\..\..\..\..\..\icu\lib" /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -478,6 +478,30 @@ SOURCE=..\..\..\..\src\xalanc\PlatformSupport\FormatterListener.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\MsgLoader.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\MsgLoader.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\MsgLoaderICU.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\MsgLoaderICU.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\MsgLoaderInMem.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\MsgLoaderInMem.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\PlatformSupport\NamedNodeMapAttributeList.cpp
 # End Source File
 # Begin Source File
@@ -662,7 +686,23 @@ SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanFStreamOutputStream.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanInMemoryMessageLoader.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanInMemoryMessageLoader.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanLocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanMessageLoader.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanMessageLoader.hpp
 # End Source File
 # Begin Source File
 

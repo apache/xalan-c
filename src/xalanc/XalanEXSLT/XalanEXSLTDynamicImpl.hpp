@@ -59,7 +59,11 @@
 
 
 
-#include <xalanc/XalanEXSLT/XalanEXSLTDefinitions.hpp>
+#include "XalanEXSLTDefinitions.hpp"
+
+
+
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -80,7 +84,9 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionEvaluate : public FunctionEvaluate
 public:
 
 	typedef FunctionEvaluate	ParentType;
-
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	XalanEXSLTFunctionEvaluate() :
 		FunctionEvaluate()
@@ -118,7 +124,7 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function evaluate() accepts one argument"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"evaluate()");
 	}
 
 private:

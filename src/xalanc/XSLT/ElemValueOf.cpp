@@ -63,6 +63,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -139,7 +140,10 @@ ElemValueOf::ElemValueOf(
 				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
-					"xsl:value-of has an illegal attribute",
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_VALUEOF_WITH_PREFIX_STRING.c_str(),
+							aname),
 					0,
 					this);
 		}
@@ -148,7 +152,10 @@ ElemValueOf::ElemValueOf(
 	if(isSelectCurrentNode == false && m_selectPattern == 0)
 	{
 		constructionContext.error(
-			"xsl:value-of requires a 'select' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::ElementRequiresAttribute_2Param,
+				Constants::ELEMNAME_VALUEOF_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_SELECT),
 			0,
 			this);
 	}

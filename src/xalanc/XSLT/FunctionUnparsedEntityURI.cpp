@@ -63,6 +63,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/XPath/XObjectFactory.hpp>
 
 
@@ -94,7 +98,7 @@ FunctionUnparsedEntityURI::execute(
 	if (context == 0)
 	{
 		executionContext.error(
-			"The unparsed-entity-uri() function requires a non-null context node!",
+			XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,"unparsed-entity-uri()"),
 			context,
 			locator);
 
@@ -125,7 +129,7 @@ FunctionUnparsedEntityURI::execute(
 const XalanDOMString
 FunctionUnparsedEntityURI::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The unparsed-entity-uri function accepts one argument!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"unparsed-entity-uri");
 }
 
 

@@ -62,6 +62,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/XPath/XObject.hpp>
 #include <xalanc/XPath/XObjectFactory.hpp>
 #include <xalanc/XPath/XPath.hpp>
@@ -120,16 +124,22 @@ ElemCopyOf::ElemCopyOf(
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
-				"xsl:copy-of has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_COPY_OF_WITH_PREFIX_STRING.c_str(),
+							aname),
+					0,
+					this);
 		}
 	}
 
 	if (isSelectCurrentNode == false && m_selectPattern == 0)
 	{
 		constructionContext.error(
-			"xsl:copy-of must have a 'select' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::TemplateMustHaveAttribute_2Param,
+				Constants::ELEMNAME_COPY_OF_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_SELECT),
 			0,
 			this);
 	}

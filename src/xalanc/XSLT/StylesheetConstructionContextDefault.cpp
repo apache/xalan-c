@@ -69,6 +69,7 @@
 
 #include <xalanc/PlatformSupport/StringTokenizer.hpp>
 #include <xalanc/PlatformSupport/URISupport.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -955,7 +956,7 @@ StylesheetConstructionContextDefault::createElement(
 		break;
 
 	default:
-		error("Unsupported XSLT element requested", 0, locator);
+		error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLTToken_1Param, LongToDOMString(token)), 0, locator);
 		break;
 	};
 

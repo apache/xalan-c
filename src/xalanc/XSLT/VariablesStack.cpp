@@ -66,6 +66,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include "ElemVariable.hpp"
 #include "StylesheetExecutionContext.hpp"
 
@@ -415,7 +419,7 @@ VariablesStack::findXObject(
 				if (find(m_guardStack.begin(), m_guardStack.end(), var) != m_guardStack.end())
 				{
 					executionContext.error(
-						"A circular variable definition was detected",
+						XalanMessageLoader::getMessage(XalanMessages::CircularVariableDefWasDetected),
 						doc,
 						var->getLocator());
 				}
@@ -773,7 +777,7 @@ VariablesStack::StackEntry::deactivate()
 
 
 VariablesStack::InvalidStackContextException::InvalidStackContextException() :
-	XSLTProcessorException(TranscodeFromLocalCodePage("Invalid stack context"),
+	XSLTProcessorException(XalanMessageLoader::getMessage(XalanMessages::InvalidStackContext),
 						   TranscodeFromLocalCodePage("InvalidStackContextException"))
 {
 }

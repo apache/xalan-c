@@ -64,6 +64,7 @@
 
 
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -1198,11 +1199,9 @@ XObject::XObjectInvalidConversionException::formatErrorString(
 				const XalanDOMString&	fromType,
 				const XalanDOMString&	toType)
 {
-	return XalanDOMString(XALAN_STATIC_UCODE_STRING("Cannot convert a ")) +
-		   fromType +
-		   XalanDOMString(XALAN_STATIC_UCODE_STRING(" to a ")) +
-		   toType +
-		   XalanDOMString(XALAN_STATIC_UCODE_STRING("."));
+
+	return XalanMessageLoader::getMessage(XalanMessages::CannotConvertTypetoType_2Param, fromType, toType);
+
 }
 
 

@@ -62,6 +62,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/DOMSupport/DOMServices.hpp>
 
 
@@ -117,16 +121,19 @@ ElemElement::ElemElement(
 				isAttrOK(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
-				"xsl:element has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING.c_str(),
+							aname),
+					0,
+					this);
 		}
 	}
 
 	if(0 == m_nameAVT)
 	{
 		constructionContext.error(
-			"xsl:element must have a 'name' attribute",
+			XalanMessageLoader::getMessage(XalanMessages::TemplateMustHaveAttribute_2Param,"xsl:element","name"),
 			0,
 			this);
 	}
@@ -162,7 +169,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 	if (isIllegalElement == true)
 	{
 		executionContext.warn(
-			"Illegal element name",
+			XalanMessageLoader::getMessage(XalanMessages::IllegalElementName_1Param, elemName),
 			executionContext.getCurrentNode(),
 			getLocator());
 
@@ -214,7 +221,9 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 				if(theNamespace == 0 && namespaceLen == 0)
 				{
 					executionContext.warn(
-						"Could not resolve prefix",
+						XalanMessageLoader::getMessage(
+							XalanMessages::CannotResolvePrefix_1Param,
+							prefix),
 						executionContext.getCurrentNode(),
 						getLocator());
 
@@ -227,7 +236,9 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 						isIllegalElement = true;
 
 						executionContext.warn(
-							"Illegal element name",
+							XalanMessageLoader::getMessage(
+								XalanMessages::IllegalElementName_1Param,
+								elemName),
 							executionContext.getCurrentNode(),
 							getLocator());
 					}

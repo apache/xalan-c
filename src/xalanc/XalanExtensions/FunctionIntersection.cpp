@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/XPath/XPathExecutionContext.hpp>
 #include <xalanc/XPath/XObjectFactory.hpp>
 
@@ -135,7 +139,7 @@ FunctionIntersection::clone() const
 const XalanDOMString
 FunctionIntersection::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The intersection() function accepts two arguments"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsTwoArguments_1Param,"intersection()");
 }
 
 

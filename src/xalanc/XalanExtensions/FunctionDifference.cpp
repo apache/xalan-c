@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/XPath/XPathExecutionContext.hpp>
 #include <xalanc/XPath/XObjectFactory.hpp>
 
@@ -138,7 +142,7 @@ FunctionDifference::clone() const
 const XalanDOMString
 FunctionDifference::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The difference() function accepts two arguments"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsTwoArguments_1Param,"difference()");
 }
 
 

@@ -64,6 +64,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -147,7 +148,7 @@ FunctionSystemProperty::execute(
 		if (nspace == 0)
 		{
 			executionContext.error(
-					"Undeclared namespace prefix",
+					XalanMessageLoader::getMessage(XalanMessages::UndeclaredNamespacePrefix_1Param, theBuffer),
 					context,
 					locator);
 		}
@@ -221,7 +222,7 @@ FunctionSystemProperty::clone() const
 const XalanDOMString
 FunctionSystemProperty::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The system-property() function accepts one argument!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"system-property()");
 }
 
 

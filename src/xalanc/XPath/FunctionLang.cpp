@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/DOMSupport/DOMServices.hpp>
 
 
@@ -152,7 +156,10 @@ FunctionLang::clone() const
 const XalanDOMString
 FunctionLang::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The lang() function takes one argument!"));
+
+
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, "lang()");
+
 }
 
 

@@ -65,6 +65,7 @@
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -103,10 +104,8 @@ doWarn(
 			const XalanNode*					sourceNode,
 			const LocatorType*					locator)
 {
-	XalanDOMString	theMessage(TranscodeFromLocalCodePage("Cannot load requested document: "));
 
-	theMessage += uri;
-
+	XalanDOMString	theMessage(XalanMessageLoader::getMessage(XalanMessages::CantLoadReqDocument_1Param,uri));
 	if (length(base) > 0)
 	{
 		theMessage += TranscodeFromLocalCodePage(" (Base URI: ");
@@ -266,7 +265,7 @@ FunctionDocument::execute(
 	if (context == 0)
 	{
 		executionContext.error(
-			"The document() function requires a non-null context node",
+			XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,"document()"),
 			context,
 			locator);
 
@@ -277,7 +276,7 @@ FunctionDocument::execute(
 		if(XObject::eTypeNodeSet != arg2->getType())
 		{
 			executionContext.error(
-				"The second argument to the document() function must be a node-set",
+				XalanMessageLoader::getMessage(XalanMessages::SecondArgumentToFunctionMustBeNode_set_1Param,"document()"),
 				context,
 				locator);
 		}
@@ -402,7 +401,7 @@ FunctionDocument::doExecute(
 				if (fNoRelativeURI == true)
 				{
 					executionContext.warn(
-						"Cannot resolve a relative URI when the node-set provided as the second argument to the function document() is empty",
+						XalanMessageLoader::getMessage(XalanMessages::CannotResolveURIInDocumentFunction),
 						context,
 						locator);
 				}
@@ -451,7 +450,7 @@ FunctionDocument::clone() const
 const XalanDOMString
 FunctionDocument::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The document() function accepts one or two arguments!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneTwoArguments_1Param,"document()");
 }
 
 

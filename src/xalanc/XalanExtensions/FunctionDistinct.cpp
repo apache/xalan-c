@@ -66,6 +66,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/DOMSupport/DOMServices.hpp>
 
 
@@ -175,7 +179,9 @@ FunctionDistinct::clone() const
 const XalanDOMString
 FunctionDistinct::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The distinct() function accepts one argument"));
+
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"distinct()");
+
 }
 
 

@@ -62,6 +62,7 @@
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/XalanDecimalFormat.hpp>
 #include <xalanc/PlatformSupport/XalanDecimalFormatSymbols.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -271,7 +272,7 @@ FunctionFormatNumber::clone() const
 const XalanDOMString
 FunctionFormatNumber::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The format-number() function takes two or three arguments!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoOrThreeArguments_1Param,"format-number()");
 }
 
 
@@ -292,9 +293,9 @@ const XalanDOMString	FunctionFormatNumber::s_emptyString;
 void
 FunctionFormatNumber::initialize()
 {
-	s_staticWarningNotImplementedString = XALAN_STATIC_UCODE_STRING("format-number() is not fully implemented!");
+	s_staticWarningNotImplementedString = XalanMessageLoader::getMessage(XalanMessages::FunctionIsNotImplemented_1Param,"format-number()");
 
-	s_staticWarningNotFoundString = XALAN_STATIC_UCODE_STRING("format-number: Specified decimal-format element not found!");
+	s_staticWarningNotFoundString = XalanMessageLoader::getMessage(XalanMessages::Decimal_formatElementNotFound_1Param,"format-number()");
 }
 
 

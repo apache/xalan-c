@@ -59,6 +59,7 @@
 
 
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -284,7 +285,7 @@ FunctionSubstring::clone() const
 const XalanDOMString
 FunctionSubstring::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The substring() function takes two or three arguments!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoOrThreeArguments_1Param, "substring()");
 }
 
 

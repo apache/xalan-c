@@ -60,6 +60,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -71,14 +72,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanDOMString	XUnknown::s_unknownVariableString;
-
 XalanDOMString	XUnknown::s_unknownString;
 
 
 XUnknown::XUnknown(const XalanDOMString&	name) :
 	XObject(eTypeUnknown),
-	m_value(s_unknownVariableString + name)
+	m_value(XalanMessageLoader::getMessage(XalanMessages::UnknownVariable_1Param, name))
 {
 }
 
@@ -190,7 +189,6 @@ XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) con
 void
 XUnknown::initialize()
 {
-	s_unknownVariableString = XALAN_STATIC_UCODE_STRING("Unknown variable: ");
 	s_unknownString = XALAN_STATIC_UCODE_STRING("#UNKNOWN");
 }
 
@@ -199,7 +197,6 @@ XUnknown::initialize()
 void
 XUnknown::terminate()
 {
-	releaseMemory(s_unknownVariableString);
 	releaseMemory(s_unknownString);
 }
 

@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include "XObjectFactory.hpp"
 
 
@@ -131,7 +135,7 @@ FunctionContains::clone() const
 const XalanDOMString
 FunctionContains::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The contains() function takes two arguments!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, "contains()");
 }
 
 

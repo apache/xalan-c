@@ -115,6 +115,7 @@ public:
 	static const XalanDOMString&	ELEMNAME_FOREACH_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_HTML_STRING;
 	static const XalanDOMString&	ELEMNAME_IF_WITH_PREFIX_STRING;
+	static const XalanDOMString&	ELEMNAME_KEY_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_MESSAGE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_NUMBER_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_OTHERWISE_WITH_PREFIX_STRING;
@@ -180,6 +181,7 @@ public:
 	static const XalanDOMString&	ATTRNAME_VALUE;
 	static const XalanDOMString&	ATTRNAME_VERSION;
 	static const XalanDOMString&	ATTRNAME_SPACE;
+	static const XalanDOMString&	ATTRNAME_XMLSPACE;
 	static const XalanDOMString&	ATTRNAME_ZERODIGIT;
  
 	static const XalanDOMString&	ATTRTYPE_CDATA;

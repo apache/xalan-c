@@ -67,6 +67,7 @@
 
 
 
+#include "XalanMessageLoader.hpp"
 #include "XalanTranscodingServices.hpp"
 
 
@@ -485,7 +486,7 @@ XalanOutputStream::XalanOutputStreamException::~XalanOutputStreamException()
 
 XalanOutputStream::UnknownEncodingException::UnknownEncodingException() :
 	XalanOutputStreamException(
-			TranscodeFromLocalCodePage("Unknown error occurred while transcoding!"),
+			XalanMessageLoader::getMessage(XalanMessages::UnknownErrorOccurredWhileTranscoding),
 			TranscodeFromLocalCodePage("UnknownEncodingException"))
 {
 }
@@ -500,7 +501,7 @@ XalanOutputStream::UnknownEncodingException::~UnknownEncodingException()
 
 XalanOutputStream::UnsupportedEncodingException::UnsupportedEncodingException(const XalanDOMString&	theEncoding) :
 	XalanOutputStreamException(
-			TranscodeFromLocalCodePage("Unsupported encoding: ") + theEncoding,
+			XalanMessageLoader::getMessage(XalanMessages::UnsupportedEncoding_1Param,theEncoding),
 			TranscodeFromLocalCodePage("UnsupportedEncodingException")),
 	m_encoding(theEncoding)
 {
@@ -516,9 +517,7 @@ XalanOutputStream::UnsupportedEncodingException::~UnsupportedEncodingException()
 
 XalanOutputStream::TranscoderInternalFailureException::TranscoderInternalFailureException(const XalanDOMString&	theEncoding) :
 	XalanOutputStreamException(
-			TranscodeFromLocalCodePage("Unknown error occurred while transcoding to ") +
-					theEncoding +
-					TranscodeFromLocalCodePage("!"),
+			XalanMessageLoader::getMessage(XalanMessages::UnknownErrorOccurredWhileTranscodingToEncoding_1Param,theEncoding),
 			TranscodeFromLocalCodePage("TranscoderInternalFailureException")),
 	m_encoding(theEncoding)
 {
@@ -534,7 +533,7 @@ XalanOutputStream::TranscoderInternalFailureException::~TranscoderInternalFailur
 
 XalanOutputStream::TranscodingException::TranscodingException() :
 	XalanOutputStreamException(
-			TranscodeFromLocalCodePage("An error occurred while transcoding!"),
+			XalanMessageLoader::getMessage(XalanMessages::AnErrorOccurredWhileTranscoding),
 			TranscodeFromLocalCodePage("TranscodingException"))
 {
 }

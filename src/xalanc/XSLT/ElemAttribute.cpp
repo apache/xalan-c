@@ -63,6 +63,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
 
@@ -116,16 +117,22 @@ ElemAttribute::ElemAttribute(
 				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
-				"xsl:attribute has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING.c_str(),
+							aname),
+					0,
+					this);
 		}
 	}
 
 	if(0 == m_nameAVT)
 	{
 		constructionContext.error(
-			"xsl:attribute must have a 'name' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::TemplateMustHaveAttribute_2Param,
+				Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_NAME),
 			0,
 			this);
 	} 
@@ -163,7 +170,7 @@ ElemAttribute::execute(StylesheetExecutionContext&	executionContext) const
 	if(XalanQName::isValidQName(attrName) == false)
 	{
 		executionContext.warn(
-			"The attribute name is invalid",
+			XalanMessageLoader::getMessage(XalanMessages::AttributeNameNotValidQName_1Param, attrName),
 			executionContext.getCurrentNode(),
 			getLocator());
 	}
@@ -380,7 +387,7 @@ ElemAttribute::execute(StylesheetExecutionContext&	executionContext) const
 		else
 		{
 			executionContext.warn(
-				"Attributes cannot be added after a child has been added.  The attribute(s) will not be added",
+				XalanMessageLoader::getMessage(XalanMessages::AttributesCannotBeAdded),
 				executionContext.getCurrentNode(),
 				getLocator());
 		}

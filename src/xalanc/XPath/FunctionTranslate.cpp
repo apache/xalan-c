@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include "XObjectFactory.hpp"
 
 
@@ -161,7 +165,7 @@ FunctionTranslate::clone() const
 const XalanDOMString
 FunctionTranslate::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The translate() function takes three arguments!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesThreeArguments_1Param, "translate()");
 }
 
 

@@ -82,6 +82,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/XPath/ElementPrefixResolverProxy.hpp>
 #include <xalanc/XPath/XPath.hpp>
 #include <xalanc/XPath/XObjectFactory.hpp>
@@ -148,7 +152,7 @@ ElemNumber::ElemNumber(
 			else
 			{
 				constructionContext.error(
-					"The attribute 'level' has an illegal value",
+					XalanMessageLoader::getMessage(XalanMessages::AttributeHasIllegalValue_1Param,"level"),
 					0,
 					this);
 			}
@@ -193,9 +197,12 @@ ElemNumber::ElemNumber(
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
-				"xsl:number has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_NUMBER_WITH_PREFIX_STRING.c_str(),
+							aname),
+					0,
+					this);
 		}
 	}
 }

@@ -59,7 +59,11 @@
 
 
 
-#include <xalanc/XalanEXSLT/XalanEXSLTDefinitions.hpp>
+#include "XalanEXSLTDefinitions.hpp"
+
+
+
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -114,7 +118,7 @@ protected:
 	const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function align() accepts two or three arguments"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoOrThreeArguments_1Param,"align()");
 	}
 
 private:
@@ -178,7 +182,7 @@ protected:
 	const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function concat() accepts one argument"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"concat()");
 	}
 
 private:
@@ -245,7 +249,7 @@ protected:
 	const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function padding() accepts one or two arguments"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAccepts1Or2Argument_1Param,"padding()");
 	}
 
 private:
@@ -311,7 +315,7 @@ protected:
 	const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function encode-uri() accepts two or three arguments"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoOrThreeArguments_1Param,"encode-uri()");
 	}
 
 	const XalanDOMString
@@ -381,7 +385,8 @@ protected:
 	const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function decode-uri() accepts one or two arguments"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAccepts1Or2Argument_1Param,"decode-uri()");
+
 	}
 
 	XalanDOMChar

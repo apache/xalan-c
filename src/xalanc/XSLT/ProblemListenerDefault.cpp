@@ -72,6 +72,7 @@
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/PrintWriter.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -83,22 +84,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const char* const	errorHeader = "error: ";
-static const char* const	warningHeader = "warning: ";
-static const char* const	messageHeader = "message: ";
-
 static const char* const	xslHeader = "XSLT ";
 static const char* const	xmlHeader = "XML ";
 static const char* const	xpathHeader = "XPath ";
 
-static const char* const	styleTreeNodeHeader = ", style tree node: ";
-static const char* const	sourceTreeNodeHeader = ", source tree node: ";
-static const char* const	locationOpen = " (";
 static const char* const	uriHeader = "";
-static const char* const	lineNoHeader = ", line ";
-static const char* const	charOffsetHeader = ", column ";
-static const char* const	locationClose = ")";
 
+static const char* const	locationOpen = " (";
+static const char* const	locationClose = ")";
 
 
 ProblemListenerDefault::ProblemListenerDefault(PrintWriter*		pw) :
@@ -169,28 +162,28 @@ ProblemListenerDefault::problem(
 
 	if (eERROR == classification)
 	{
-		pw.print(errorHeader);
+		pw.print(XalanMessageLoader::getMessage(XalanMessages::Error_));
 	}
 	else if (eWARNING == classification)
 	{
-		pw.print(warningHeader);
+		pw.print(XalanMessageLoader::getMessage(XalanMessages::Warning_));
 	}
 	else
 	{
-		pw.print(messageHeader);
+		pw.print(XalanMessageLoader::getMessage(XalanMessages::Message_));
 	}
 
 	pw.print(msg);
 
 	if (0 != styleNode)
 	{
-		pw.print(styleTreeNodeHeader);
+		pw.print(XalanMessageLoader::getMessage(XalanMessages::StyleTreeNode_));
 		pw.print(styleNode->getElementName());
 	}
 
 	if (0 != sourceNode)
 	{
-		pw.print(sourceTreeNodeHeader);
+		pw.print(XalanMessageLoader::getMessage(XalanMessages::SourceTreeNode));
 		pw.print(sourceNode->getNodeName());
 	}
 
@@ -202,10 +195,10 @@ ProblemListenerDefault::problem(
 		pw.print(uri);
 	}
 
-	pw.print(lineNoHeader);
+	pw.print(XalanMessageLoader::getMessage(XalanMessages::LineNumber));
 	pw.print(lineNo);
 
-	pw.print(charOffsetHeader);
+	pw.print(XalanMessageLoader::getMessage(XalanMessages::ColumnNumber));
 	pw.print(charOffset);
 
 	pw.print(locationClose);

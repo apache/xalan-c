@@ -76,6 +76,7 @@
 
 
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
 
 
@@ -1395,7 +1396,7 @@ XPath::getMatchScore(
 	if(m_expression.getOpCodeMapValue(0) != XPathExpression::eOP_MATCHPATTERN)
 	{
 		executionContext.error(
-			TranscodeFromLocalCodePage("Expected match pattern in getMatchScore!"),
+			XalanMessageLoader::getMessage(XalanMessages::CannotEvaluateXPathExpressionAsMatchPattern),
 			node,
 			m_locator);
 	}
@@ -4381,7 +4382,10 @@ XPath::findNodesOnUnknownAxis(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
-	executionContext.error(TranscodeFromLocalCodePage("Unknown axis!"), context, getLocator());
+	executionContext.error(
+			XalanMessageLoader::getMessage(XalanMessages::UnknownAxis),
+			context,
+			getLocator());
 
 	return argLen + 3;
 }

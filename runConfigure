@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.2  2003/12/02 19:58:50  dbertoni
+# Patch for Bugzilla 24567.
+#
 # Revision 1.1  2003/11/12 20:42:18  dbertoni
 # Patches for bug 13238.
 #
@@ -158,6 +161,8 @@ usage()
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -t <transcoder> can be 'icu' (everything else means default)"
+    echo "       -m <msg local system> (accepts 'inmem', 'icu','nls')" 
+    echo "       -M <given local> (example: 'fr_FR'. Default: 'en_US')"     
     echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
     echo "       -b <bitsToBuild> (accepts '64', '32')"
     echo "       -P <install-prefix>"
@@ -191,9 +196,9 @@ fi
 
 # Get the command line parameters
 if test -x /bin/getopt -o -x /usr/bin/getopt; then
-set -- `getopt C:p:P:c:x:dm:n:t:r:b:l:z:h $*`
+set -- `getopt C:p:P:c:x:dm:n:t:m:M:r:b:l:z:h $*`
 else
-set -- `getopts C:p:P:c:x:dm:n:t:r:b:l:z:h $*`
+set -- `getopts C:p:P:c:x:dm:n:t:m:M:r:b:l:z:h $*`
 fi
 
 if [ $? != 0 ]
@@ -206,6 +211,8 @@ fi
 debug=off                # by default debug is off
 bitsToBuild=32           # by default 32 bit build assumed
 transcoder=default       # by default use default transcoder
+localSys=inmem		     # by default use inmem local
+local=en_US		         # by default use US local
 
 while [ $# -gt 0 ]
    do
@@ -224,7 +231,16 @@ while [ $# -gt 0 ]
 
    -t)
         transcoder=$2; shift 2;;
+        
+   -m)
 
+ 	localSys=$2; shift 2;;
+ 	
+
+   -M)
+
+    	local=$2; shift 2;;
+    	
    -r) 
         thread=$2; shift 2;;
 
@@ -264,6 +280,8 @@ echo "C++ Compiler: $cppcompiler"
 echo "Extra compile options: $compileroptions"
 echo "Extra link options: $linkeroptions"
 echo "Transcoder: $transcoder"
+echo "Localization system: $localSys"
+echo "Local: $local"
 echo "Thread option: $thread"
 echo "bitsToBuild option: $bitsToBuild"
 echo "Extra configure options: $configureoptions"
@@ -386,6 +404,37 @@ fi
 
 export TRANSCODER
 
+
+XALAN_LOCAL_SYST=
+
+if test $localSys; then
+	case $localSys in
+		icu)
+			if test ${ICUROOT}o = "o"; then
+			      echo '***Error*** ICUROOT environment variable not defined. Exiting...'
+	              exit ${ERROR_EXIT_CODE};
+	        fi
+			XALAN_LOCAL_SYST=ICU;;
+
+		inmem)
+			XALAN_LOCAL_SYST=INMEM;;
+
+		nls)
+			XALAN_LOCAL_SYST=NLS;;
+
+		default)
+			XALAN_LOCAL_SYST=INMEM;;
+
+		*)
+			echo "Unknown local '$localSys'. Using default."
+	esac
+fi
+
+export XALAN_LOCAL_SYST
+
+XALAN_LOCAL=$local
+
+export XALAN_LOCAL 
 
 #
 # Check for the threading option

@@ -150,8 +150,6 @@ private:
 
 	const XalanDOMString	m_value;
 
-	static XalanDOMString	s_unknownVariableString;
-
 	static XalanDOMString	s_unknownString;
 };
 

@@ -72,6 +72,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -120,16 +121,22 @@ ElemForEach::ElemForEach(
 				processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
-				"xsl:for-each has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_FOREACH_WITH_PREFIX_STRING.c_str(),
+							aname),
+					0,
+					this);
 		}
 	}
 
 	if(0 == m_selectPattern)
 	{
 		constructionContext.error(
-			"xsl:for-each must have a 'select' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::TemplateMustHaveAttribute_2Param,
+				Constants::ELEMNAME_FOREACH_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_SELECT),
 			0,
 			this);
 	}

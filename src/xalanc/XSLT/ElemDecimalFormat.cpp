@@ -66,6 +66,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/XPath/XalanQNameByValue.hpp>
 
 
@@ -73,7 +77,6 @@
 #include "Constants.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
-
 
 
 XALAN_CPP_NAMESPACE_BEGIN
@@ -118,6 +121,17 @@ ElemDecimalFormat::ElemDecimalFormat(
 						atts.getValue(i),
 						getStylesheet().getNamespaces(),
 						getLocator());
+
+			if (m_qname->isValid() == false)
+			{
+				constructionContext.error(
+						XalanMessageLoader::getMessage(
+							XalanMessages::AttributeValueNotValidQName_2Param,
+							Constants::ATTRNAME_NAME.c_str(),
+							atts.getValue(i)),
+						0,
+						this);
+			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_DECIMALSEPARATOR))
 		{
@@ -131,7 +145,11 @@ ElemDecimalFormat::ElemDecimalFormat(
 			else
 			{
 				constructionContext.warn(
-					"xsl:decimal-format has an illegal decimal-separator attribute value",
+					XalanMessageLoader::getMessage(
+						XalanMessages::ElementHasIllegalValue_3Param,
+						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
+						Constants::ATTRNAME_DECIMALSEPARATOR.c_str(),
+						decimalSepValue),
 					0,
 					this);
 			}
@@ -148,7 +166,11 @@ ElemDecimalFormat::ElemDecimalFormat(
 			else
 			{
 				constructionContext.warn(
-					"xsl:decimal-format has an illegal 'grouping-separator' value",
+					XalanMessageLoader::getMessage(
+						XalanMessages::ElementHasIllegalValue_3Param,
+						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
+						Constants::ATTRNAME_GROUPINGSEPARATOR.c_str(),
+						sepValue),
 					0,
 					this);
 			}
@@ -171,7 +193,11 @@ ElemDecimalFormat::ElemDecimalFormat(
 			else
 			{
 				constructionContext.warn(
-					"xsl:decimal-format has an illegal 'minus-sign' value",
+					XalanMessageLoader::getMessage(
+						XalanMessages::ElementHasIllegalValue_3Param,
+						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
+						Constants::ATTRNAME_MINUSSIGN.c_str(),
+						minusValue),
 					0,
 					this);
 			}
@@ -194,7 +220,11 @@ ElemDecimalFormat::ElemDecimalFormat(
 			else
 			{
 				constructionContext.warn(
-					"xsl:decimal-format has an illegal 'percent' value",
+					XalanMessageLoader::getMessage(
+						XalanMessages::ElementHasIllegalValue_3Param,
+						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
+						Constants::ATTRNAME_PERCENT.c_str(),
+						percentValue),
 					0,
 					this);
 			}
@@ -211,7 +241,11 @@ ElemDecimalFormat::ElemDecimalFormat(
 			else
 			{
 				constructionContext.warn(
-					"xsl:decimal-format has an illegal 'per-mille' value",
+					XalanMessageLoader::getMessage(
+						XalanMessages::ElementHasIllegalValue_3Param,
+						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
+						Constants::ATTRNAME_PERMILLE.c_str(),
+						permilleValue),
 					0,
 					this);
 			}
@@ -228,7 +262,11 @@ ElemDecimalFormat::ElemDecimalFormat(
 			else
 			{
 				constructionContext.warn(
-					"xsl:decimal-format has an illegal 'zero-digit' value",
+					XalanMessageLoader::getMessage(
+						XalanMessages::ElementHasIllegalValue_3Param,
+						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
+						Constants::ATTRNAME_ZERODIGIT.c_str(),
+						zeroDigitValue),
 					0,
 					this);
 			}
@@ -245,7 +283,11 @@ ElemDecimalFormat::ElemDecimalFormat(
 			else
 			{
 				constructionContext.warn(
-					"xsl:decimal-format has an illegal 'digit' value",
+					XalanMessageLoader::getMessage(
+						XalanMessages::ElementHasIllegalValue_3Param,
+						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
+						Constants::ATTRNAME_DIGIT.c_str(),
+						digitValue),
 					0,
 					this);
 			}
@@ -262,7 +304,11 @@ ElemDecimalFormat::ElemDecimalFormat(
 			else
 			{
 				constructionContext.warn(
-					"xsl:decimal-format has an illegal 'pattern-separator' value",
+					XalanMessageLoader::getMessage(
+						XalanMessages::ElementHasIllegalValue_3Param,
+						Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
+						Constants::ATTRNAME_PATTERNSEPARATOR.c_str(),
+						patternSepValue),
 					0,
 					this);
 			}
@@ -270,7 +316,10 @@ ElemDecimalFormat::ElemDecimalFormat(
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
-				"xsl:decimal-format has an illegal attribute",
+				XalanMessageLoader::getMessage(
+					XalanMessages::TemplateHasIllegalAttribute_2Param,
+					Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING.c_str(),
+					aname),
 				0,
 				this);
 		}
@@ -293,7 +342,9 @@ ElemDecimalFormat::ElemDecimalFormat(
 	if (theOther != 0 && *theOther != m_decimalFormatSymbols)
 	{
 		constructionContext.error(
-			"Duplicate definition of xsl:decimal-format element",
+			XalanMessageLoader::getMessage(
+				XalanMessages::DuplicateDefinitions_1Param,
+				Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING),
 			0,
 			this);
 	}

@@ -67,6 +67,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanOutputStream.hpp>
 #include <xalanc/PlatformSupport/XalanTranscodingServices.hpp>
 #include <xalanc/PlatformSupport/Writer.hpp>
@@ -767,10 +768,9 @@ FormatterToXML::throwInvalidUTF16SurrogateException(
 			XalanDOMChar	ch,
 			XalanDOMChar	next)
 {
-	const XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid UTF-16 surrogate detected: ") +
-									   UnsignedLongToHexDOMString(ch) +
-									   UnsignedLongToHexDOMString(next) +
-									   TranscodeFromLocalCodePage(" ?"));
+
+	const XalanDOMString chStr = UnsignedLongToHexDOMString(ch)+UnsignedLongToHexDOMString(next);
+	const XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidSurrogate_1Param,chStr);
 
 	throw SAXException(c_wstr(theMessage));
 }

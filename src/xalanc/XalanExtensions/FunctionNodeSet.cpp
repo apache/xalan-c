@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/XPath/XNodeSetBase.hpp>
 #include <xalanc/XPath/XObjectFactory.hpp>
 #include <xalanc/XPath/XalanDocumentFragmentNodeRefListBaseProxy.hpp>
@@ -204,7 +208,8 @@ FunctionNodeSet::clone() const
 const XalanDOMString
 FunctionNodeSet::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The nodeset() function accepts one argument"));
+
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"nodeset()");
 }
 
 
@@ -212,7 +217,7 @@ FunctionNodeSet::getError() const
 const XalanDOMString
 FunctionNodeSet::getInvalidArgumentTypeError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Invalid argument type in function nodeset()"));
+	return XalanMessageLoader::getMessage(XalanMessages::InvalidArgumentTypeFunction_1Param,"nodeset()");
 }
 
 

@@ -77,6 +77,7 @@
 #include <xalanc/PlatformSupport/XalanStdOutputStream.hpp>
 #include <xalanc/PlatformSupport/XalanFileOutputStream.hpp>
 #include <xalanc/PlatformSupport/XalanFStreamOutputStream.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanTranscodingServices.hpp>
 
 
@@ -1126,6 +1127,8 @@ StylesheetExecutionContextDefault::traceSelect(
 bool
 StylesheetExecutionContextDefault::findOnElementRecursionStack(const ElemTemplateElement*	theElement) const
 {
+	assert(theElement != 0);
+
 	XALAN_USING_STD(find)
 
 	const ElementTemplateElementStackType::const_iterator	i =
@@ -1141,13 +1144,27 @@ StylesheetExecutionContextDefault::findOnElementRecursionStack(const ElemTemplat
 void
 StylesheetExecutionContextDefault::pushOnElementRecursionStack(const ElemTemplateElement*	theElement)
 {
+	assert(theElement != 0);
+
 	if (findOnElementRecursionStack(theElement) == true)
 	{
-		XalanDOMString	theMessage(XALAN_STATIC_UCODE_STRING("Infinite recursion detected for element: "));
+		const LocatorType* const	theLocator = theElement->getLocator();
 
-		theMessage += theElement->getElementName();
-
-		throw XSLTProcessorException(theMessage);
+		if (theLocator == 0)
+		{
+			throw XSLTProcessorException(
+					XalanMessageLoader::getMessage(
+						XalanMessages::InfiniteRecursion_1Param,
+							theElement->getElementName()));
+		}
+		else
+		{
+			throw XSLTProcessorException(
+					*theLocator,
+					XalanMessageLoader::getMessage(
+						XalanMessages::InfiniteRecursion_1Param,
+							theElement->getElementName()));
+		}
 	}
 
 	m_elementRecursionStack.push_back(theElement);

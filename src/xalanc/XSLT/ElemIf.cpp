@@ -63,6 +63,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -111,7 +112,10 @@ ElemIf::ElemIf(
 				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
-					"xsl:if has an illegal attribute",
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_IF_WITH_PREFIX_STRING.c_str(),
+							aname),
 					0,
 					this);
 		}
@@ -120,7 +124,10 @@ ElemIf::ElemIf(
 	if(0 == m_test)
 	{
 		constructionContext.error(
-				"xsl:if must have a 'test' attribute",
+				XalanMessageLoader::getMessage(
+					XalanMessages::TemplateMustHaveAttribute_2Param,
+					Constants::ELEMNAME_IF_WITH_PREFIX_STRING,
+					Constants::ATTRNAME_TEST),
 				0,
 				this);
 	}

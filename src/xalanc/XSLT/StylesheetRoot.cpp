@@ -73,8 +73,9 @@
 
 
 #include <xalanc/PlatformSupport/AttributeListImpl.hpp>
-#include <xalanc/PlatformSupport/StringTokenizer.hpp>
 #include <xalanc/PlatformSupport/PrintWriter.hpp>
+#include <xalanc/PlatformSupport/StringTokenizer.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -249,8 +250,8 @@ StylesheetRoot::process(
 
 	if(executionContext.doDiagnosticsOutput())
 	{
-		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("=============================")));
-		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Transforming...")));
+		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING(" =============================")));
+		executionContext.diag(XalanMessageLoader::getMessage(XalanMessages::Transforming));
 		executionContext.pushTime(&sourceTree);
 	}
 
@@ -292,7 +293,7 @@ StylesheetRoot::process(
 	if(executionContext.doDiagnosticsOutput())
 	{
 		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("")));
-		executionContext.displayDuration(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("transform")), &sourceTree);
+		executionContext.displayDuration(XalanMessageLoader::getMessage(XalanMessages::Transform), &sourceTree);
 		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("")));
 	}
 }
@@ -360,7 +361,7 @@ StylesheetRoot::setupFormatterListener(
 			else
 			{
 				executionContext.error(
-					"There is no valid result target",
+					XalanMessageLoader::getMessage(XalanMessages::NoValidResultTarget),
 					executionContext.getCurrentNode(),
 					0);
 			}
@@ -464,7 +465,7 @@ StylesheetRoot::setupFormatterListener(
 	else
 	{
 		executionContext.error(
-					"There is no valid result target",
+					XalanMessageLoader::getMessage(XalanMessages::NoValidResultTarget),
 					executionContext.getCurrentNode(),
 					0);
 	}
@@ -510,7 +511,7 @@ StylesheetRoot::processOutputSpec(
 			}
 			else
 			{
-				constructionContext.warn(XalanDOMString(aname) + " has an unknown method: " + method, 0, theLocator);
+				constructionContext.warn(XalanMessageLoader::getMessage(XalanMessages::HasAnUnknownMethod_2Param,XalanDOMString(aname),XalanDOMString(method)),0, theLocator);
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_OUTPUT_VERSION))
@@ -600,7 +601,7 @@ StylesheetRoot::processOutputSpec(
 				else
 				{
 					constructionContext.warn(
-						theAttributeName.getLocalPart() + " is an unsupported Xalan-specific attribute",
+						XalanMessageLoader::getMessage(XalanMessages::UnsupportedXalanSpecificAttribute_1Param,theAttributeName.getLocalPart()),
 						0,
 						theLocator);
 				}
@@ -608,7 +609,7 @@ StylesheetRoot::processOutputSpec(
 			else if (isAttrOK(aname, atts, i, constructionContext) == false)
 			{
 				constructionContext.error(
-						XalanDOMString(name) + " has an illegal attribute: " + aname,
+						XalanMessageLoader::getMessage(XalanMessages::HasIllegalAttribute_2Param, XalanDOMString(name) ,XalanDOMString(aname)),
 						0,
 						theLocator);
 			}
@@ -912,7 +913,8 @@ StylesheetRoot::shouldStripSourceNode(
 				}
 				else
 				{
-					executionContext.warn("Match conflict between xsl:strip-space and xsl:preserve-space");
+					executionContext.warn(
+						XalanMessageLoader::getMessage(XalanMessages::MatchConflictBetween_strip_space_preserve_space)); 
 				}
 				break;
 			}

@@ -82,6 +82,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
@@ -127,43 +131,47 @@ using std::strlen;
 void
 Usage()
 {
-	cerr << endl
-		 << "Xalan version "
-		 << XALAN_FULLVERSIONDOT
-		 << endl
-		 << "Xerces version "
-		 << XERCES_FULLVERSIONDOT
-		 << endl
-		 << "Usage: Xalan [options] source stylesheet"
-		 << endl
-	     << "Options:"
-		 << endl
-		 << "  -a                    Use xml-stylesheet PI, not the 'stylesheet' argument"
-		 << endl
-		 << "  -e encoding           Force the specified encoding for the output."
-		 << endl
-		 << "  -i integer            Indent the specified amount."
-		 << endl
-		 << "  -m                    Omit the META tag in HTML output."
-		 << endl
-		 << "  -o filename           Write output to the specified file."
-		 << endl
-		 << "  -p name expression    Sets a stylesheet parameter."
-		 << endl
-		 << "  -t                    Diplay timing information."
-		 << endl
-		 << "  -u                    Disable escaping of URLs in HTML output."
-		 << endl
-		 << "  -v                    Validates source documents."
-		 << endl
-		 << "  -?                    Display this message."
-		 << endl
-		 << "  -                     A dash as the 'source' argument reads from stdin."
-		 << endl
-		 << "  -                     A dash as the 'stylesheet' argument reads from stdin."
-		 << endl
-		 << "                        ('-' cannot be used for both arguments.)"
-		 << endl;
+	XALAN_USING_XALAN(XalanDOMString)
+	XALAN_USING_XALAN(XalanMessageLoader)
+	XALAN_USING_XALAN(XalanMessages)
+
+	bool	bErrorState = true ; // means OK
+
+	const XalanDOMString	szXalanVersion = XalanMessageLoader::getMessage(XalanMessages::XalanExeHelpMenuXalanVersion_1Param, XALAN_FULLVERSIONDOT );
+
+	const XalanDOMString	szXercesVersion = XalanMessageLoader::getMessage(XalanMessages::XalanExeHelpMenuXercesVersion_1Param, XERCES_FULLVERSIONDOT);
+
+	try
+	{
+		const XalanDOMString::CharVectorType	cvtXalanVersion = szXalanVersion.transcode();
+		const XalanDOMString::CharVectorType	cvtXercesVersion = szXercesVersion.transcode();
+
+		cerr << &cvtXalanVersion[0] << endl;
+		cerr << &cvtXercesVersion[0]<< endl;
+	}
+	catch(const XalanDOMString::TranscodingError&) 
+	{
+		cerr << endl << "Transcoding error: wrong XalanC or XercesC versions." <<endl;
+
+		bErrorState = false;
+	} 
+
+	for (int i = XalanMessages::XalanExeHelpMenu; bErrorState && ( i <=  XalanMessages::XalanExeHelpMenu11 );  ++i)
+	{
+		try
+		{
+			const XalanDOMString::CharVectorType	cvtXalanExeHelpMenu =
+				XalanMessageLoader::getMessage(XalanMessages::Codes(i)).transcode();
+
+			cerr  << &cvtXalanExeHelpMenu[0] << endl;
+		}
+		catch(const XalanDOMString::TranscodingError&) 
+		{
+			cerr << endl << "Cannot read help message " << i << "." << endl;
+
+			bErrorState = false;
+		}
+	}
 }
 
 
@@ -776,33 +784,36 @@ xsltMain(
 {
 	int	theResult = -1;
 
-	// Set the maximum number of params as half of argc - 1.
-	// It's actually argc - 2, but that could get us into negative
-	// numbers, so don't bother.  Also, always add 1, in case
-	// (argc - 1) / 2 is 0.
-	Params	theParams((argc - 1) / 2 + 1);
-
-	if (getArgs(argc, argv, theParams) == false)
+	XALAN_USING_XERCES(XMLPlatformUtils)
+		
+	// Call the static initializer for Xerces...
+	XMLPlatformUtils::Initialize();
+	
+	// Initialize Xalan...
+	XalanTransformer::initialize();
+	
 	{
-		Usage();
-	}
-	else
-	{
-		XALAN_USING_XERCES(XMLPlatformUtils)
-
-		// Call the static initializer for Xerces...
-		XMLPlatformUtils::Initialize();
-
-		// Initialize Xalan...
-		XalanTransformer::initialize();
-
+		// we need to read the params after the XMLPlatformUtils::Initialize(), because we may
+		// need the local and the local dlls for usage of the Usage function
+		
+		// Set the maximum number of params as half of argc - 1.
+		// It's actually argc - 2, but that could get us into negative
+		// numbers, so don't bother.  Also, always add 1, in case
+		// (argc - 1) / 2 is 0.
+		Params	theParams((argc - 1) / 2 + 1);
+		
+		if (getArgs(argc, argv, theParams) == false)
+		{
+			Usage();
+		}
+		else
 		{
 			// Create a XalanTransformer instance...
 			XalanTransformer	theTransformer;
-
+			
 			// Set any options...
 			theParams.setParams(theTransformer);
-
+			
 			theResult = transform(theTransformer, theParams);
 
 			if (theResult != 0)
@@ -810,16 +821,16 @@ xsltMain(
 				cerr << theTransformer.getLastError() << endl;
 			}
 		}
-
-		// Terminate Xalan...
-		XalanTransformer::terminate();
-
-		// Terminate Xerces...
-		XMLPlatformUtils::Terminate();
-
-		// Clean up the ICU, if it's integrated...
-		XalanTransformer::ICUCleanUp();
 	}
+	
+	// Terminate Xalan...
+	XalanTransformer::terminate();
+	
+	// Terminate Xerces...
+	XMLPlatformUtils::Terminate();
+	
+	// Clean up the ICU, if it's integrated...
+	XalanTransformer::ICUCleanUp();
 
 	return theResult;
 }
@@ -843,14 +854,6 @@ main(
 	QuantifyClearData();
 #endif
 
-    if (argc < 2)
-	{
-		Usage();
+	return xsltMain(argc, argv);
 
-		return -1;
-	}
-	else
-	{
-		return xsltMain(argc, argv);
-	}
 }

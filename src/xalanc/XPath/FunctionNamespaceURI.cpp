@@ -59,6 +59,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -99,7 +100,7 @@ FunctionNamespaceURI::execute(
 	if (context == 0)
 	{
 		executionContext.error(
-				"The namespace-uri() function requires a non-null context node!",
+				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param, "namespace-uri()"),
 				context,
 				locator);
 
@@ -154,7 +155,7 @@ FunctionNamespaceURI::clone() const
 const XalanDOMString
 FunctionNamespaceURI::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The namespace-uri() function takes zero arguments or one argument!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, "namespace-uri()");
 }
 
 

@@ -64,6 +64,7 @@
 
 
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
 
@@ -171,7 +172,8 @@ XalanEXSLTFunctionHighest::execute(
 const XalanDOMString
 XalanEXSLTFunctionHighest::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function highest() accepts one argument"));
+
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"highest()");
 }
 
 
@@ -198,7 +200,7 @@ XalanEXSLTFunctionLowest::execute(
 const XalanDOMString
 XalanEXSLTFunctionLowest::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function lowest() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"lowest()");
 }
 
 
@@ -278,7 +280,7 @@ XalanEXSLTFunctionMin::execute(
 const XalanDOMString
 XalanEXSLTFunctionMin::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function min() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"min()");
 }
 
 
@@ -305,7 +307,7 @@ XalanEXSLTFunctionMax::execute(
 const XalanDOMString
 XalanEXSLTFunctionMax::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function max() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"max()");
 }
 
 
@@ -336,7 +338,7 @@ XalanEXSLTFunctionAbs::execute(
 const XalanDOMString
 XalanEXSLTFunctionAbs::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function abs() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"abs()");
 }
 
 
@@ -375,7 +377,7 @@ XalanEXSLTFunctionRandom::execute(
 const XalanDOMString
 XalanEXSLTFunctionRandom::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function random() accepts no arguments"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsNoArgument_1Param,"random()");
 }
 
 
@@ -406,7 +408,7 @@ XalanEXSLTFunctionAcos::execute(
 const XalanDOMString
 XalanEXSLTFunctionAcos::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function acos() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"acos()");
 }
 
 
@@ -437,7 +439,7 @@ XalanEXSLTFunctionAsin::execute(
 const XalanDOMString
 XalanEXSLTFunctionAsin::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function asin() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"asin()");
 }
 
 
@@ -468,7 +470,7 @@ XalanEXSLTFunctionAtan::execute(
 const XalanDOMString
 XalanEXSLTFunctionAtan::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function atan() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"atan()");
 }
 
 
@@ -499,7 +501,7 @@ XalanEXSLTFunctionAtan2::execute(
 const XalanDOMString
 XalanEXSLTFunctionAtan2::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function atan2() accepts two arguments"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"atan2()");
 }
 
 
@@ -988,7 +990,7 @@ XalanEXSLTFunctionCos::execute(
 const XalanDOMString
 XalanEXSLTFunctionCos::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function cos() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"cos()");
 }
 
 
@@ -1019,7 +1021,7 @@ XalanEXSLTFunctionExp::execute(
 const XalanDOMString
 XalanEXSLTFunctionExp::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function exp() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"exp()");
 }
 
 
@@ -1050,7 +1052,7 @@ XalanEXSLTFunctionLog::execute(
 const XalanDOMString
 XalanEXSLTFunctionLog::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function log() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"log()");
 }
 
 
@@ -1081,7 +1083,7 @@ XalanEXSLTFunctionPower::execute(
 const XalanDOMString
 XalanEXSLTFunctionPower::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function power() accepts two arguments"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"power()");
 }
 
 
@@ -1112,7 +1114,8 @@ XalanEXSLTFunctionSin::execute(
 const XalanDOMString
 XalanEXSLTFunctionSin::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function sin() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"sin()");
+
 }
 
 
@@ -1143,7 +1146,7 @@ XalanEXSLTFunctionSqrt::execute(
 const XalanDOMString
 XalanEXSLTFunctionSqrt::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function sqrt() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"sqrt()");
 }
 
 
@@ -1174,7 +1177,7 @@ XalanEXSLTFunctionTan::execute(
 const XalanDOMString
 XalanEXSLTFunctionTan::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function tan() accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"tan()");
 }
 
 

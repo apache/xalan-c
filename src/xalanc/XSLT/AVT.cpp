@@ -59,6 +59,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/StringTokenizer.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
@@ -71,7 +72,6 @@
 #include "AVTPartSimple.hpp"
 #include "AVTPartXPath.hpp"
 #include "StylesheetConstructionContext.hpp"
-
 
 
 XALAN_CPP_NAMESPACE_BEGIN
@@ -233,8 +233,7 @@ AVT::AVT(
 
 										case XalanUnicode::charLeftCurlyBracket:
 											// What's another brace doing here?
-											constructionContext.error("\"{\" cannot appear within an expression.");
-
+											constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::CannotAppearWithinExpression_1Param,"{"));
 											break;
 
 										default:
@@ -284,7 +283,8 @@ AVT::AVT(
 						}
 						else
 						{
-							constructionContext.error("An unmatched \"}\" was found!");
+							constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::UnmatchedWasFound));
+
 						}
 						break;
 					}
@@ -371,9 +371,7 @@ AVT::nextToken(
 {
 	if (tokenizer.hasMoreTokens() == false)
 	{
-		constructionContext.error(
-			"The attribute value template has a missing a '}'",
-			0,
+		constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::AttributeValueTemplateHasMissing),0,
 			locator);
 	}
 	else

@@ -71,7 +71,8 @@
 
 
 
-#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include "DOMStringHelper.hpp"
+#include "XalanMessageLoader.hpp"
 
 
 
@@ -187,25 +188,24 @@ XalanStdOutputStream::writeData(
 
 static XalanDOMString
 FormatMessageLocal(
-			const char*		theMessage,
-			int				theErrorCode)
+			const XalanDOMString&	theMessage,
+			int						theErrorCode)
 {
 	XalanDOMString	theResult(theMessage);
 
-	append(theResult, ".  The error code was ");
+	XalanDOMString  theStrErrCode;
+	LongToDOMString(theErrorCode, theStrErrCode);
 
-	LongToDOMString(theErrorCode, theResult);
 
-	append(theResult, ".");
 
-	return theResult;
+	return XalanMessageLoader::getMessage(XalanMessages::MessageErrorCodeWas_2Param,theResult,theStrErrCode);
 }
 
 
 
 XalanStdOutputStream::XalanStdOutputStreamWriteException::XalanStdOutputStreamWriteException(
 		int					theErrorCode) :
-	XalanOutputStreamException(FormatMessageLocal("Error writing to standard stream!",
+	XalanOutputStreamException(FormatMessageLocal(XalanMessageLoader::getMessage(XalanMessages::ErrorWritingToStdStream),
 													   theErrorCode),
 								    TranscodeFromLocalCodePage("XercesStdOutputStreamWriteException"))
 {

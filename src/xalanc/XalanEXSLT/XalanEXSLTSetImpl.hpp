@@ -59,7 +59,11 @@
 
 
 
-#include <xalanc/XalanEXSLT/XalanEXSLTDefinitions.hpp>
+#include "XalanEXSLTDefinitions.hpp"
+
+
+
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -106,7 +110,9 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function difference() accepts two arguments"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"difference()");
+
+
 	}
 
 private:
@@ -150,7 +156,8 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function distinct() accepts one argument"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"distinct()");
+
 	}
 
 private:
@@ -209,7 +216,8 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function has-same-node() accepts two arguments"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"has-same-node()");
+
 	}
 
 private:
@@ -253,7 +261,9 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function distinct() function accepts two arguments"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"distinct()");
+
+
 	}
 
 private:
@@ -312,7 +322,8 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function leading() function accepts two arguments"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"leading()");
+
 	}
 
 private:
@@ -371,7 +382,7 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function trailing() function accepts two arguments"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"trailing()");
 	}
 
 private:

@@ -59,7 +59,11 @@
 
 
 
-#include <xalanc/XalanEXSLT/XalanEXSLTDefinitions.hpp>
+#include "XalanEXSLTDefinitions.hpp"
+
+
+
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -442,9 +446,10 @@ public:
 protected:
 
 	const XalanDOMString
-	getError() const
+	getError() const 
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function constant() function accepts two arguments"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,"constant()");
+
 	}
 
 private:

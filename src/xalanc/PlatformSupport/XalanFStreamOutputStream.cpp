@@ -63,7 +63,8 @@
 
 
 
-#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include "DOMStringHelper.hpp"
+#include "XalanMessageLoader.hpp"
 
 
 
@@ -116,16 +117,14 @@ XalanFStreamOutputStream::writeData(
 
 static XalanDOMString
 FormatMessageLocal(
-			const char*		theMessage,
+			const XalanDOMString&	theMessage,
 			int				theErrorCode)
 {
-	XalanDOMString	theResult(theMessage);
 
-	append(theResult, ".  The C++ run-time error code (errno) is ");
+	XalanDOMString strErrorCode;
+	LongToDOMString(theErrorCode, strErrorCode);
 
-	LongToDOMString(theErrorCode, theResult);
-
-	append(theResult, ".");
+	XalanDOMString	theResult = XalanMessageLoader::getMessage(XalanMessages::CPPRunTimeErrorCode_3Params, theMessage, XalanDOMString(""), strErrorCode);
 
 	return theResult;
 }
@@ -134,7 +133,7 @@ FormatMessageLocal(
 
 XalanFStreamOutputStream::XalanFStreamOutputStreamWriteException::XalanFStreamOutputStreamWriteException(int	theErrorCode) :
 	XalanOutputStreamException(FormatMessageLocal(
-				"Error writing file",
+				XalanMessageLoader::getMessage(XalanMessages::ErrorWritingFile),
 				theErrorCode),
 			TranscodeFromLocalCodePage("XalanFStreamOutputStreamWriteException"))
 {

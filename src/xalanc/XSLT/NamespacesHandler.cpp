@@ -65,6 +65,7 @@
 
 
 #include <xalanc/PlatformSupport/StringTokenizer.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -464,7 +465,10 @@ NamespacesHandler::processExcludeResultPrefixes(
 
 		if(theNamespaceURI == 0)
 		{
-			theConstructionContext.error("Undeclared prefix in exclude-result-prefixes");
+			theConstructionContext.error(
+				XalanMessageLoader::getMessage(
+					XalanMessages::PrefixMustResolveToNamespace_1Param,
+					thePrefix));
 		}
 
 		addOrUpdateByPrefix(
@@ -510,7 +514,10 @@ NamespacesHandler::processExtensionElementPrefixes(
 
 		if(theNamespace == 0)
 		{
-			theConstructionContext.error("Undeclared prefix in extension-element-prefixes");
+			theConstructionContext.error(
+				XalanMessageLoader::getMessage(
+					XalanMessages::PrefixMustResolveToNamespace_1Param,
+					thePrefix));
 		}
 
 		assert(theNamespace != 0);

@@ -64,6 +64,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -118,13 +119,9 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		XalanDOMString	theError;
+		XalanDOMString	theName(m_name);
 
-		theError.append("The function '");
-		theError.append(m_name);
-		theError.append("' is not implemented.");
-
-		return theError;
+		return XalanMessageLoader::getMessage(XalanMessages::FunctionIsNotImplemented_1Param, theName);
 	}
 
 private:
@@ -547,14 +544,14 @@ XPathFunctionTable::getFunctionIndex(
 
 
 XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(int	theFunctionNumber) :
-	XalanXPathException(TranscodeFromLocalCodePage("The specified function number is not available: ") + LongToDOMString(theFunctionNumber))
+	XalanXPathException(XalanMessageLoader::getMessage(XalanMessages::FunctionNumberIsNotAvailable_1Param,LongToDOMString(theFunctionNumber)))
 {
 }
 
 
 
 XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(const XalanDOMString&	theFunctionName) :
-	XalanXPathException(TranscodeFromLocalCodePage("The specified function is not available: ") + theFunctionName)
+	XalanXPathException(XalanMessageLoader::getMessage(XalanMessages::SpecifiedFuncIsNotAvailable_1Param, theFunctionName))
 {
 }
 
@@ -565,7 +562,7 @@ XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 			const LocatorType&	theLocator) :
 	XalanXPathException(
 					theLocator,
-					TranscodeFromLocalCodePage("The specified function number is not available: ") + LongToDOMString(theFunctionNumber))
+					XalanMessageLoader::getMessage(XalanMessages::FunctionNumberIsNotAvailable_1Param,LongToDOMString(theFunctionNumber)))
 {
 }
 
@@ -576,7 +573,7 @@ XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 			const LocatorType&		theLocator) :
 	XalanXPathException(
 					theLocator,
-					TranscodeFromLocalCodePage("The specified function is not available: ") + theFunctionName)
+					XalanMessageLoader::getMessage(XalanMessages::SpecifiedFuncIsNotAvailable_1Param, theFunctionName))
 {
 }
 
@@ -590,7 +587,7 @@ XPathExceptionFunctionNotAvailable::~XPathExceptionFunctionNotAvailable()
 
 
 XPathExceptionFunctionNotSupported::XPathExceptionFunctionNotSupported(const XalanDOMChar*	theFunctionName) :
-	XalanXPathException(TranscodeFromLocalCodePage("The specified function is not supported: ") + theFunctionName)
+	XalanXPathException(XalanMessageLoader::getMessage(XalanMessages::FunctionIsNotSupported_1Param,XalanDOMString(theFunctionName)))
 {
 }
 

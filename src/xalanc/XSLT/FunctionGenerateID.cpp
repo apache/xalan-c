@@ -63,6 +63,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -123,7 +124,7 @@ FunctionGenerateID::execute(
 	if (context == 0)
 	{
 		executionContext.error(
-				"The generate-id() function requires a non-null context node!",
+				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,"generate-id()"),
 				context,
 				locator);
 
@@ -181,7 +182,7 @@ FunctionGenerateID::clone() const
 const XalanDOMString
 FunctionGenerateID::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The generate-id function takes zero or one arguments!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,"generate-id");
 }
 
 

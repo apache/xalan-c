@@ -66,6 +66,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/Writer.hpp>
 #include <xalanc/PlatformSupport/XalanOutputStream.hpp>
 
@@ -225,9 +226,7 @@ XALAN_USING_XERCES(SAXException)
 void
 FormatterToXMLBase::throwInvalidUTF16SurrogateException(XalanDOMChar	ch)
 {
-	const XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid UTF-16 surrogate detected: ") +
-									   UnsignedLongToHexDOMString(ch) +
-									   TranscodeFromLocalCodePage(" ?"));
+	const XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidUFT16Surrogate_2Param, UnsignedLongToHexDOMString(ch));
 
 	throw SAXException(c_wstr(theMessage));
 }
@@ -239,10 +238,7 @@ FormatterToXMLBase::throwInvalidUTF16SurrogateException(
 			XalanDOMChar	ch,
 			XalanDOMChar	next)
 {
-	const XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid UTF-16 surrogate detected: ") +
-									   UnsignedLongToHexDOMString(ch) +
-									   UnsignedLongToHexDOMString(next) +
-									   TranscodeFromLocalCodePage(" ?"));
+	const XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidUFT16Surrogate_2Param, UnsignedLongToHexDOMString(ch),UnsignedLongToHexDOMString(next));
 
 	throw SAXException(c_wstr(theMessage));
 }
@@ -252,8 +248,7 @@ FormatterToXMLBase::throwInvalidUTF16SurrogateException(
 void
 FormatterToXMLBase::throwInvalidCharacterException(unsigned int		ch)
 {
-	const XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid character detected: ") +
-									   UnsignedLongToHexDOMString(ch));
+	const XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidCharDetected_1Param, UnsignedLongToHexDOMString(ch));
 
 	throw SAXException(c_wstr(theMessage));
 }

@@ -64,6 +64,7 @@
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -121,6 +122,17 @@ ElemTemplate::ElemTemplate(
 						atts.getValue(i),
 						getStylesheet().getNamespaces(),
 						getLocator());
+
+			if (m_name->isValid() == false)
+			{
+				constructionContext.error(
+						XalanMessageLoader::getMessage(
+							XalanMessages::AttributeValueNotValidQName_2Param,
+							aname,
+							atts.getValue(i)),
+						0,
+						this);
+			}
 		}
 		else if (equals(aname, Constants::ATTRNAME_PRIORITY))
 		{
@@ -134,40 +146,43 @@ ElemTemplate::ElemTemplate(
 						atts.getValue(i),
 						getStylesheet().getNamespaces(),
 						getLocator());
+
+			if (m_mode->isValid() == false)
+			{
+				constructionContext.error(
+						XalanMessageLoader::getMessage(
+							XalanMessages::AttributeValueNotValidQName_2Param,
+							aname,
+							atts.getValue(i)),
+						0,
+						this);
+			}
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
-					"xsl:template has an illegal attribute",
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING.c_str(),
+							aname),
 					0,
 					this);
 		}
 	}
 
-	const bool	isEmptyName = m_name->isEmpty();
-
-	if(0 == m_matchPattern && isEmptyName == true)
+	if(0 == m_matchPattern && m_name->isEmpty() == true)
 	{
 		constructionContext.error(
-				"xsl:template requires either a name or a match attribute",
+				XalanMessageLoader::getMessage(
+					XalanMessages::RequiresEitherNameOrMatchAttribute_1Param,
+					Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING),
 				0,
 				this);
 	}
-	else if (isEmptyName == false && m_name->isValid() == false)
-	{
-		constructionContext.error(
-			"xsl:template has an invalid 'name' attribute",
-			0,
-			this);
-	}
-	else if (m_mode->isEmpty() == false && m_mode->isValid() == false)
-	{
-		constructionContext.error(
-			"xsl:template has an invalid 'mode' attribute",
-			0,
-			this);
-	}
+
+	assert(m_name->isEmpty() == true || m_name->isValid() == true);
+	assert(m_mode->isEmpty() == true || m_mode->isValid() == true);
 }
 
 

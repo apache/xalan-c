@@ -187,6 +187,7 @@ prepare:
 	-${MKDIR} -p ${XSL_OBJ_DIR}
 	-${MKDIR} -p ${XSL_LIB_DIR}
 	-${MKDIR} -p $(XSL_BIN_DIR)
+	$(MAKE) -C Utils $@
 
 # Create header dependencies file -- this must be run before any objects are
 # built
@@ -243,7 +244,7 @@ ${XSL_OBJ_DIR}/%.o:$(TESTXPATH_DIR)/%.cpp
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-lib:	prepare compile ${BATCH_TARGET}
+lib:	prepare local compile ${BATCH_TARGET}
 
 ${BATCH_TARGET}: $(ALL_OBJECTS)
 	@echo Building ${BATCH_TARGET}
@@ -251,7 +252,10 @@ ${BATCH_TARGET}: $(ALL_OBJECTS)
 
 else
 
-lib:	prepare compile $(XSL_LIB_DIR)/$(LIB)
+lib:	prepare local compile $(XSL_LIB_DIR)/$(LIB)
+
+local:	
+	$(MAKE) -C Utils $@
 
 $(XSL_LIB_DIR)/$(LIB): $(ALL_OBJECTS)
 	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS) $^ -o $@ 
@@ -264,6 +268,7 @@ endif ## OS390
 endif ## OS390BATCH
 
 install: lib XalanExe
+	$(MAKE) -C Utils $@
 	$(MKINSTALLDIRS) $(DESTDIR)/$(bindir)
 	for bin in $(ALL_BINARIES); do \
 	  $(INSTALL_PROGRAM) $(XSL_BIN_DIR)/$$bin \
@@ -286,6 +291,7 @@ endif ## OS390
 clean:	prepare doClean
 
 doClean:
+	$(MAKE) -C Utils $@
 	(cd $(XSL_OBJ_DIR); rm -rf *)
 	rm -rf $(OUTDIR)/so_locations
 	rm -rf $(XSL_BIN_DIR)/SunWS_cache

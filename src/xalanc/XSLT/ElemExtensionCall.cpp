@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include "Constants.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
@@ -95,8 +99,8 @@ ElemExtensionCall::ElemExtensionCall(
 void
 ElemExtensionCall::execute(StylesheetExecutionContext&		executionContext) const
 {
-	executionContext.warn(
-		"Xalan C++ does not yet handle extensions!",
+	executionContext.warn( 
+		XalanMessageLoader::getMessage(XalanMessages::XalanHandleExtensions),
 		0,
 		getLocator());
 

@@ -69,6 +69,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -146,7 +147,7 @@ FunctionKey::execute(
 	if (context == 0)
 	{
 		executionContext.error(
-			"The key() function requires a non-null context node!",
+			XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,"key()"),
 			context,
 			locator);
 
@@ -250,7 +251,7 @@ FunctionKey::clone() const
 const XalanDOMString
 FunctionKey::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The key() function takes two arguments!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param,"key()");
 }
 
 

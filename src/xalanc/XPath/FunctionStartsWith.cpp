@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include "XObjectFactory.hpp"
 
 
@@ -110,7 +114,9 @@ FunctionStartsWith::clone() const
 const XalanDOMString
 FunctionStartsWith::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The starts-with() function takes two arguments!"));
+
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, "starts-with()");
+
 }
 
 

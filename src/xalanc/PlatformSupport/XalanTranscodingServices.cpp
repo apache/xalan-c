@@ -68,6 +68,7 @@
 
 
 #include "DOMStringHelper.hpp"
+#include "XalanMessageLoader.hpp"
 #include "XalanToXercesTranscoderWrapper.hpp"
 #include "XalanUTF16Transcoder.hpp"
 
@@ -464,10 +465,14 @@ XalanTranscodingServices::getBytesEqualChars(const XalanDOMString&	theEncoding)
 
 
 XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableCharacterException(
-			XalanDOMChar			theCharacter,
+			unsigned int			theCharacter,
 			const XalanDOMString&	theEncoding) :
-	XSLException(TranscodeFromLocalCodePage("Unable to represent a character in the specified encoding"),
-				 TranscodeFromLocalCodePage("UnrepresentableCharacterException")),
+	XSLException(
+		XalanMessageLoader::getMessage(
+			XalanMessages::UnrepresentableCharacter_2Param,
+			UnsignedLongToHexDOMString(theCharacter),
+			theEncoding),
+		TranscodeFromLocalCodePage("UnrepresentableCharacterException")),
 	m_badCharacter(theCharacter),
 	m_encoding(theEncoding)
 {

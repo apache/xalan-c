@@ -59,6 +59,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/DOMSupport/DOMServices.hpp>
 
 
@@ -92,7 +96,7 @@ FunctionNormalizeSpace::execute(
 	if (context == 0)
 	{
 		executionContext.error(
-				"The normalize-space() function requires a non-null context node!",
+				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param, "normalize-space()"),
 				context,
 				locator);
 
@@ -244,7 +248,9 @@ FunctionNormalizeSpace::clone() const
 const XalanDOMString
 FunctionNormalizeSpace::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The normalize-space() function takes zero arguments or one argument!"));
+	
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, "normalize-space()");
+
 }
 
 

@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include "XObjectFactory.hpp"
 
 
@@ -164,7 +168,7 @@ FunctionConcat::clone() const
 const XalanDOMString
 FunctionConcat::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The concat() function takes at least two arguments!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakes2ArgsAtLeast_1Param, "concat()");
 }
 
 

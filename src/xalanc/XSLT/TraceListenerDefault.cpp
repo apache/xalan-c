@@ -61,6 +61,7 @@
 
 #include <xalanc/PlatformSupport/PrintWriter.hpp>
 #include <xalanc/PlatformSupport/XalanLocator.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -145,8 +146,11 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 				static_cast<const ElemTemplate&>(ev.m_styleNode);
 #endif
 
-			printNodeInfo(ev.m_styleNode);
-
+			m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::LineNumber));
+			m_printWriter.print(ev.m_styleNode.getLineNumber());
+			m_printWriter.print(XALAN_STATIC_UCODE_STRING(", "));
+			m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::ColumnNumber));
+			m_printWriter.print(ev.m_styleNode.getColumnNumber());
 			m_printWriter.print(XALAN_STATIC_UCODE_STRING(": "));
 			m_printWriter.print(ev.m_styleNode.getElementName());
 
@@ -155,16 +159,16 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 
 			if(0 != theMatchPattern)
 			{
-				m_printWriter.print(XALAN_STATIC_UCODE_STRING(" match=\""));
-				m_printWriter.print(theMatchPattern->getExpression().getCurrentPattern());
-				m_printWriter.print(XALAN_STATIC_UCODE_STRING("\" "));
+				m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::MatchIs_1Param, 
+					theMatchPattern->getExpression().getCurrentPattern() ));
+
 			}
 
 			const XalanQName&	theName = et.getNameAttribute();
 
 			if(theName.isEmpty() == false)
 			{
-				m_printWriter.print(XALAN_STATIC_UCODE_STRING("name=\""));
+				m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::NameIs_1Param));
 
 				const XalanDOMString&	theNamespace =
 					theName.getNamespace();
@@ -186,8 +190,10 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 	default:
 		if(m_traceElements == true)
 		{
-			printNodeInfo(ev.m_styleNode);
-
+			m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::LineNumber));
+			m_printWriter.print(ev.m_styleNode.getLineNumber());
+			m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::ColumnNumber));
+			m_printWriter.print(ev.m_styleNode.getColumnNumber());
 			m_printWriter.print(XALAN_STATIC_UCODE_STRING(": "));
 			m_printWriter.println(ev.m_styleNode.getElementName());
 		}
@@ -206,7 +212,7 @@ TraceListenerDefault::processNodeList(const NodeRefListBase&		nl)
 
 	if(n == 0)
 	{
-		m_printWriter.println(XALAN_STATIC_UCODE_STRING("     [empty node list]"));
+		m_printWriter.println(XalanMessageLoader::getMessage(XalanMessages::EmptyNodeList));
 	}
 	else
 	{
@@ -238,22 +244,21 @@ TraceListenerDefault::selected(const SelectionEvent&	ev)
 
 			if(parent == ete.getStylesheet().getStylesheetRoot().getDefaultRootRule())
 			{
-				m_printWriter.print("(default root rule) ");
+				m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::DefaultRootRule_1Param,"root"));
 			}
 			else if(parent == ete.getStylesheet().getStylesheetRoot().getDefaultTextRule())
 			{
-				m_printWriter.print("(default text rule) ");
+				m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::DefaultRootRule_1Param,"text"));
 			}
 			else if(parent == ete.getStylesheet().getStylesheetRoot().getDefaultRule())
 			{
-				m_printWriter.print("(default rule) ");
+				m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::DefaultRootRule_1Param," "));
 			}
 		}
 		else
 		{
-			printNodeInfo(ev.m_styleNode);
-
-			m_printWriter.print(", ");
+			m_printWriter.print(XalanMessageLoader::getMessage(XalanMessages::TextAndColumnNumber_2Param,
+				LongToDOMString(ev.m_styleNode.getLineNumber()),LongToDOMString( ev.m_styleNode.getColumnNumber())));
 		}
 
 		m_printWriter.print(ete.getElementName());

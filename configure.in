@@ -122,6 +122,10 @@ AC_SUBST(libs)
 transcoder=${TRANSCODER}
 AC_SUBST(transcoder)
 
+xalan_local_syst=${XALAN_LOCAL_SYST}
+AC_SUBST(xalan_local_syst)
+xalan_local=${XALAN_LOCAL}
+AC_SUBST(xalan_local)
 wcstombs=${WCSTOMBS}
 AC_SUBST(wcstombs)
 
@@ -139,5 +143,6 @@ fi
 +AC_OUTPUT([Makefile.incl \
 	    Makefile \
             src/xalanc/Makefile \
+            src/xalanc/Utils/Makefile \
             samples/Makefile \
             Tests/Makefile])

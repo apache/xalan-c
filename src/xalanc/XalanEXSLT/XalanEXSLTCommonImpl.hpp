@@ -59,7 +59,11 @@
 
 
 
-#include <xalanc/XalanEXSLT/XalanEXSLTDefinitions.hpp>
+#include "XalanEXSLTDefinitions.hpp"
+
+
+
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -104,13 +108,13 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function node-set() accepts one argument"));
+		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,"node-set()");
 	}
 
 	virtual const XalanDOMString
-	getInvalidArgumentTypeError() const
+	getInvalidArgumentTypeError() const 
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Invalid argument type in EXSLT function node-set()"));
+		return XalanMessageLoader::getMessage(XalanMessages::InvalidArgumentType_1Param,"node-set()");;
 	}
 
 private:

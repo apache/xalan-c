@@ -70,6 +70,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/DOMSupport/DOMServices.hpp>
 
 
@@ -142,7 +146,7 @@ KeyTable::KeyTable(
 					assert(kd.getURI() != 0);
 
 					throw XSLTProcessorException(
-							TranscodeFromLocalCodePage("The use of the key() function in the \"match\" or \"use\" attribute of xsl:key is illegal!"),
+							XalanMessageLoader::getMessage(XalanMessages::UseOfFunctionIsIllegal_2Param,"key()","xsl:key"),
 							*kd.getURI(),
 							kd.getLineNumber(),
 							kd.getColumnNumber(),

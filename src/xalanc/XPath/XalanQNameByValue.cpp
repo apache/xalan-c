@@ -60,6 +60,7 @@
 
 
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XSLException.hpp>
 
 
@@ -309,7 +310,7 @@ XalanQNameByValue::initialize(
 
 	if (indexOfNSSep == 0)
 	{
-		throwException(TranscodeFromLocalCodePage("A prefix of length 0 was detected"), locator);
+		throwException(XalanMessageLoader::getMessage(XalanMessages::PrefixOfLengthZeroDetected), locator);
 	}
 	else if(indexOfNSSep < len)
 	{
@@ -337,7 +338,7 @@ XalanQNameByValue::initialize(
 			if(theNamespace == 0 || 0 == length(*theNamespace))
 			{
 				throwException(
-					TranscodeFromLocalCodePage("Prefix must resolve to a namespace: ") + m_localpart,
+					XalanMessageLoader::getMessage(XalanMessages::PrefixMustResolveToNamespace_1Param, m_localpart),
 					locator);
 			}
 			else
@@ -384,7 +385,7 @@ XalanQNameByValue::resolvePrefix(
 
 	if (indexOfNSSep == 0)
 	{
-		throwException(TranscodeFromLocalCodePage("A prefix of length 0 was detected"), locator);
+		throwException(XalanMessageLoader::getMessage(XalanMessages::PrefixOfLengthZeroDetected), locator);
 	}
 	else if(indexOfNSSep >= theLength)
 	{
@@ -413,9 +414,9 @@ XalanQNameByValue::resolvePrefix(
 		else if (theResolver == 0)
 		{
 			throwException(
-				TranscodeFromLocalCodePage("Unable to resolve prefix '") +
-					m_localpart +
-					TranscodeFromLocalCodePage("'"),
+				XalanMessageLoader::getMessage(
+					XalanMessages::PrefixMustResolveToNamespace_1Param,
+					m_localpart),
 				locator);
 		}
 		else
@@ -432,10 +433,10 @@ XalanQNameByValue::resolvePrefix(
 		if(0 == length(m_namespace))
 		{
 			throwException(
-				TranscodeFromLocalCodePage("The prefix '") +
-					m_localpart +
-					TranscodeFromLocalCodePage("' must resolve to a namespace."),
-				locator);
+				XalanMessageLoader::getMessage(
+					XalanMessages::PrefixMustResolveToNamespace_1Param,
+					m_localpart)
+				,locator);
 		}
 
 		m_localpart.assign(qname + indexOfNSSep + 1, theLength - (indexOfNSSep + 1));

@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/XPath/XObjectFactory.hpp>
 
 
@@ -106,7 +110,7 @@ FunctionCurrent::clone() const
 const XalanDOMString
 FunctionCurrent::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The current() function does not accept any arguments!"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,"current()");
 }
 
 

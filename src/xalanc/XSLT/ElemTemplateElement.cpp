@@ -74,6 +74,7 @@
 
 #include <xalanc/PlatformSupport/AttributeListImpl.hpp>
 #include <xalanc/PlatformSupport/DOMStringPrintWriter.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
 
@@ -231,7 +232,7 @@ ElemTemplateElement::processSpaceAttr(
 		else if (equals(spaceVal, Constants::ATTRVAL_DEFAULT) == false)
 		{
 			constructionContext.error(
-				"xml:space has an illegal value",
+				XalanMessageLoader::getMessage(XalanMessages::AttributeHasIllegalValue_1Param,"xml:space"),
 				0,
 				this);
 		}
@@ -335,7 +336,7 @@ ElemTemplateElement::addToStylesheet(
 			Stylesheet&						/* theStylesheet */)
 {
 	constructionContext.error(
-		"An illegal call to addToStylesheet() was made during compilation of the stylesheet.",
+		XalanMessageLoader::getMessage(XalanMessages::IllegalCallWasMadeDuringCompilation),
 		0,
 		this);
 }
@@ -350,7 +351,7 @@ ElemTemplateElement::processSortElement(
 			const LocatorType*				locator)
 {
 	constructionContext.error(
-		"xsl:sort is not allowed at this position in the stylesheet",
+		XalanMessageLoader::getMessage(XalanMessages::TemplateIsNotAllowedAtThisPosition_1Param,"xsl:sort"),
 		0,
 		locator);
 }

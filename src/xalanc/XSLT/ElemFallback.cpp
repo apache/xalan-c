@@ -67,6 +67,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -101,7 +102,10 @@ ElemFallback::ElemFallback(
 			processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
-					"xsl:fallback has an illegal attribute",
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_FALLBACK_WITH_PREFIX_STRING.c_str(),
+							aname),
 					0,
 					this);
 		}

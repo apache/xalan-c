@@ -59,6 +59,7 @@
 
 
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -177,7 +178,7 @@ FunctionEvaluate::execute(
 			if (context->getNodeType() != XalanNode::ELEMENT_NODE)
 			{
 				executionContext.warn(
-					"No prefix resolver is available in evaluate().",
+					XalanMessageLoader::getMessage(XalanMessages::NoPrefixResolverAvailable),
 					context,
 					locator);
 
@@ -206,7 +207,7 @@ FunctionEvaluate::clone() const
 const XalanDOMString
 FunctionEvaluate::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The evaluate() function accepts one argument"));
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"evaluate()");
 }
 
 

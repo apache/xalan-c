@@ -67,6 +67,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -105,9 +106,12 @@ ElemApplyImport::ElemApplyImport(
 		if(isAttrOK(aname, atts, i, constructionContext) == false)
 		{
 			constructionContext.error(
-				"xsl:apply-imports has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING.c_str(),
+							aname),
+					0,
+					this);
 		}
     }
 }
@@ -130,7 +134,8 @@ ElemApplyImport::execute(StylesheetExecutionContext&	executionContext) const
 
 	if (executionContext.getCurrentTemplate() == 0)
 	{
-		executionContext.error("There is no current template", sourceNode, getLocator());
+		executionContext.error(XalanMessageLoader::getMessage(XalanMessages::NoCurrentTemplate),
+				sourceNode, getLocator());
 	}
 
 	ElemTemplateElement::execute(executionContext);

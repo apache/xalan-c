@@ -276,13 +276,13 @@ public:
 	public:
 
 		UnrepresentableCharacterException(
-			XalanDOMChar			theCharacter,
+			unsigned int			theCharacter,
 			const XalanDOMString&	theEncoding);
 
 		virtual
 		~UnrepresentableCharacterException();
 
-		XalanDOMChar
+		unsigned int
 		getCharacter() const
 		{
 			return m_badCharacter;
@@ -296,7 +296,7 @@ public:
 
 	private:
 
-		const XalanDOMChar		m_badCharacter;
+		const unsigned int		m_badCharacter;
 
 		const XalanDOMString	m_encoding;
 	};

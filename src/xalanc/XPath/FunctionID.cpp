@@ -58,6 +58,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/DOMSupport/DOMServices.hpp>
 
 
@@ -180,7 +184,8 @@ FunctionID::clone() const
 const XalanDOMString
 FunctionID::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The id() function takes one argument"));
+
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, "id()");
 }
 
 

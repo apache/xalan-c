@@ -75,6 +75,14 @@
 
 
 
+#include <xalanc/XalanDOM/XalanDOMException.hpp>
+
+
+
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+
+
+
 #include <xalanc/DOMSupport/DOMServices.hpp>
 
 
@@ -210,7 +218,7 @@ Stylesheet::initWrapperless(
 	if (m_isWrapperless == true)
 	{
 		constructionContext.error(
-			"The stylesheet already has a wrapperless template",
+			XalanMessageLoader::getMessage(XalanMessages::StylesheetHasWrapperlessTemplate),
 			0,
 			locator);
 	}
@@ -249,7 +257,7 @@ Stylesheet::processKeyElement(
 			const LocatorType*				locator,
 			StylesheetConstructionContext&	constructionContext)
 {
-	const XalanDOMChar* 	nameAttr = 0;
+	const XalanQName*		theQName = 0;
 	XPath*					matchAttr = 0;
 	XPath*					useAttr = 0;
  
@@ -261,7 +269,18 @@ Stylesheet::processKeyElement(
 
 		if (equals(aname, Constants::ATTRNAME_NAME))
 		{
-			nameAttr = atts.getValue(i);
+			theQName = constructionContext.createXalanQName(atts.getValue(i), m_namespaces, locator);
+
+			if (theQName->isValid() == false)
+			{
+				constructionContext.error(
+						XalanMessageLoader::getMessage(
+							XalanMessages::AttributeValueNotValidQName_2Param,
+							Constants::ATTRNAME_NAME.c_str(),
+							atts.getValue(i)),
+						0,
+						locator);
+			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_MATCH))
 		{
@@ -282,16 +301,22 @@ Stylesheet::processKeyElement(
 		else if (isAttrOK(aname, atts, i, constructionContext) == false)
 		{
 			constructionContext.error(
-				"xsl:key has an illegal attribute",
+				XalanMessageLoader::getMessage(
+					XalanMessages::TemplateHasIllegalAttribute_2Param,
+					Constants::ELEMNAME_KEY_WITH_PREFIX_STRING.c_str(),
+					aname),
 				0,
 				locator);
 		}
 	}
 
-	if(0 == nameAttr)
+	if(0 == theQName)
 	{
 		constructionContext.error(
-			"xsl:key requires a 'name' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::ElementRequiresAttribute_2Param,
+				Constants::ELEMNAME_KEY_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_NAME),
 			0,
 			locator);
 	}
@@ -299,7 +324,10 @@ Stylesheet::processKeyElement(
 	if(0 == matchAttr)
 	{
 		constructionContext.error(
-			"xsl:key requires a 'match' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::ElementRequiresAttribute_2Param,
+				Constants::ELEMNAME_KEY_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_MATCH),
 			0,
 			locator);
 	}
@@ -307,19 +335,10 @@ Stylesheet::processKeyElement(
 	if(0 == useAttr)
 	{
 		constructionContext.error(
-			"xsl:key requires a 'use' attribute",
-			0,
-			locator);
-	}
-
-	const XalanQName* const		theQName =
-		constructionContext.createXalanQName(nameAttr, m_namespaces, locator);
-	assert(theQName != 0);
-
-	if (theQName->isValid() == false)
-	{
-		constructionContext.error(
-			"xsl:key has an invalid 'name' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::ElementRequiresAttribute_2Param,
+				Constants::ELEMNAME_KEY_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_USE),
 			0,
 			locator);
 	}
@@ -576,6 +595,39 @@ Stylesheet::getNamespaceFromStack(const XalanDOMChar* 	nodeName) const
 
 
 
+const XalanDOMString*
+Stylesheet::getNamespaceForPrefix(
+			const XalanDOMString&			prefix,
+			StylesheetConstructionContext&	constructionContext) const
+{
+	const XalanDOMString* const		theURI = getNamespaceForPrefix(prefix);
+
+	if (theURI == 0)
+	{
+		constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::UndeclaredNamespacePrefix_1Param, prefix));
+	}
+
+	return theURI;
+}
+
+
+
+const XalanDOMString*
+Stylesheet::getNamespaceForPrefix(
+			const XalanDOMChar*				prefix,
+			StylesheetConstructionContext&	constructionContext) const
+{
+	StylesheetConstructionContext::GetAndReleaseCachedString	theGuard(constructionContext);
+
+	XalanDOMString&		theTemp = theGuard.get();
+
+	theTemp.assign(prefix);
+
+	return getNamespaceForPrefix(theTemp, constructionContext);
+}
+
+
+
 bool
 Stylesheet::getYesOrNo(
 			const XalanDOMChar* 			/* aname */,
@@ -592,8 +644,7 @@ Stylesheet::getYesOrNo(
 	}
 	else
 	{
-		constructionContext.error("The attribute value must be 'yes' or 'no'");
-
+		constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::AttributeMustBe_2Params,"yes","no"));
 		return false;
 	}
 }
@@ -630,7 +681,7 @@ Stylesheet::addTemplate(
 		if (m_firstTemplate != 0)
 		{
 			constructionContext.error(
-				"The stylesheet already has a wrapperless template",
+				XalanMessageLoader::getMessage(XalanMessages::StylesheetHasWrapperlessTemplate),
 				0,
 				theTemplate);
 		}
@@ -676,7 +727,7 @@ Stylesheet::addTemplate(
 		{
 			// This is an error...
 			constructionContext.error(
-				"The stylesheet already has a template with this name",
+				XalanMessageLoader::getMessage(XalanMessages::LastFoundStylesheetWillBeUsed),
 				0,
 				theTemplate);
 		}
@@ -1219,7 +1270,7 @@ Stylesheet::findTemplate(
 				{
 					assert(conflicts != 0 && nConflicts <= m_patternCount);
 
-					XalanDOMString	conflictsString(XALAN_STATIC_UCODE_STRING("Specificity conflicts found: "));
+					XalanDOMString	conflictsString(XalanMessageLoader::getMessage(XalanMessages::ConflictsFound));
 					
 					for(unsigned int i = 0; i < nConflicts; i++)
 					{
@@ -1249,7 +1300,7 @@ Stylesheet::findTemplate(
 					bestMatchedRule = bestMatchedPattern->getTemplate();
 
 					conflictsString += XALAN_STATIC_UCODE_STRING(" ");
-					conflictsString += XALAN_STATIC_UCODE_STRING("Last found in stylesheet will be used.");
+					conflictsString += XalanMessageLoader::getMessage(XalanMessages::LastFoundStylesheetWillBeUsed);
 					executionContext.warn(conflictsString, targetNode, bestMatchedRule->getLocator());
 				}
 			}
@@ -1358,15 +1409,14 @@ Stylesheet::pushTopLevelVariables(
 
 void
 Stylesheet::processNSAliasElement(
-			const XalanDOMChar*				/* name */,
+			const XalanDOMChar*				name,
 			const AttributeListType&		atts,
 			StylesheetConstructionContext&	constructionContext)
 {
 	const unsigned int		nAttrs = atts.getLength();
 
-	const XalanDOMString*	stylesheetNamespace = &DOMServices::s_emptyString;
-	const XalanDOMString*	resultNamespace = &DOMServices::s_emptyString;
-	const XalanDOMString	dummy;
+	const XalanDOMString*	stylesheetNamespace = 0;
+	const XalanDOMString*	resultNamespace = 0;
 
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
@@ -1378,11 +1428,11 @@ Stylesheet::processNSAliasElement(
 
 			if (equals(value, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 			{
-				stylesheetNamespace = getNamespaceForPrefix(dummy);
+				stylesheetNamespace = getNamespaceForPrefix(DOMServices::s_emptyString, constructionContext);
 			}
 			else
 			{
-				stylesheetNamespace = getNamespaceForPrefix(XalanDOMString(value));
+				stylesheetNamespace = getNamespaceForPrefix(value, constructionContext);
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_RESULT_PREFIX))
@@ -1391,24 +1441,40 @@ Stylesheet::processNSAliasElement(
 
 			if (equals(value, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 			{
-				resultNamespace = getNamespaceForPrefix(dummy);
+				resultNamespace = getNamespaceForPrefix(DOMServices::s_emptyString, constructionContext);
 			}
 			else
 			{
-				resultNamespace = getNamespaceForPrefix(XalanDOMString(value));
+				resultNamespace = getNamespaceForPrefix(value, constructionContext);
 			}
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error("xsl:namespace-alias has an illegal attribute");
+			constructionContext.error(
+				XalanMessageLoader::getMessage(
+					XalanMessages::TemplateHasIllegalAttribute_2Param,
+					name,
+					aname));
 		}
 	}
 
 	// Build a table of aliases, the key is the stylesheet uri and the
 	// value is the result uri
-	if (stylesheetNamespace == 0 || resultNamespace == 0)
+	if (stylesheetNamespace == 0)
 	{
-		constructionContext.error("Undeclared namespace prefix");
+		constructionContext.error(
+			XalanMessageLoader::getMessage(
+				XalanMessages::TemplateMustHaveAttribute_2Param,
+				name,
+				Constants::ATTRNAME_STYLESHEET_PREFIX.c_str()));
+	}
+	else if (resultNamespace == 0)
+	{
+		constructionContext.error(
+			XalanMessageLoader::getMessage(
+				XalanMessages::TemplateMustHaveAttribute_2Param,
+				name,
+				Constants::ATTRNAME_RESULT_PREFIX.c_str()));
 	}
 	else
 	{

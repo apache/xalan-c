@@ -63,6 +63,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -157,12 +158,26 @@ ElemVariable::init(
 						atts.getValue(i),
 						stylesheetTree.getNamespaces(),
 						getLocator());
+
+			if (m_qname->isValid() == false)
+			{
+				constructionContext.error(
+						XalanMessageLoader::getMessage(
+							XalanMessages::AttributeValueNotValidQName_2Param,
+							Constants::ATTRNAME_NAME.c_str(),
+							atts.getValue(i)),
+						0,
+						this);
+			}
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
-					"xsl:variable has an illegal attribute",
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+						Constants::ELEMNAME_VARIABLE_WITH_PREFIX_STRING.c_str(),
+						aname),
 					0,
 					this);
 		}
@@ -171,14 +186,10 @@ ElemVariable::init(
 	if(m_qname == 0)
 	{
 		constructionContext.error(
-			"xsl:variable must have a 'name' attribute",
-			0,
-			this);
-	}
-	else if (m_qname->isValid() == false)
-	{
-		constructionContext.error(
-			"xsl:variable has an invalid 'name' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::TemplateMustHaveAttribute_2Param,
+				Constants::ELEMNAME_VARIABLE_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_NAME),
 			0,
 			this);
 	}
@@ -205,14 +216,14 @@ ElemVariable::addToStylesheet(
 	if (&theStylesheet != &getStylesheet())
 	{
 		constructionContext.error(
-			"The ElemVariable instance was added to wrong stylesheet.",
+			XalanMessageLoader::getMessage(XalanMessages::ElemVariableInstanceAddedToWrongStylesheet),
 			0,
 			this);
 	}
 	else if (getParentNodeElem() != 0)
 	{
 		constructionContext.error(
-			"The ElemVariable instance is already parented and cannot be a top-level element.",
+			XalanMessageLoader::getMessage(XalanMessages::ElemVariableInstanceIsAlreadyParented),
 			0,
 			this);
 	}

@@ -63,6 +63,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -98,9 +99,12 @@ ElemComment::ElemComment(
 		   processSpaceAttr(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
-				"xsl:comment has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+							Constants::ELEMNAME_COMMENT_WITH_PREFIX_STRING.c_str(),
+							aname),
+					0,
+					this);
 		}
 	}	
 }

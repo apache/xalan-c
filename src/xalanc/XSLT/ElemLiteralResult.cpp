@@ -63,6 +63,7 @@
 
 
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -166,7 +167,7 @@ ElemLiteralResult::init(
 				if(ns == 0)
 				{
 					constructionContext.error(
-						"Undeclared namespace prefix",
+						XalanMessageLoader::getMessage(XalanMessages::UndeclaredNamespacePrefix_1Param, theBuffer),
 						0,
 						this);
 				}

@@ -63,6 +63,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
@@ -106,27 +107,37 @@ ElemWithParam::ElemWithParam(
 						atts.getValue(i),
 						stylesheetTree.getNamespaces(),
 						getLocator());
+
+			if (m_qname->isValid() == false)
+			{
+				constructionContext.error(
+						XalanMessageLoader::getMessage(
+							XalanMessages::AttributeValueNotValidQName_2Param,
+							Constants::ATTRNAME_NAME.c_str(),
+							atts.getValue(i)),
+						0,
+						this);
+			}
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
-				"xsl:with-param has an illegal attribute",
-				0,
-				this);
+					XalanMessageLoader::getMessage(
+						XalanMessages::TemplateHasIllegalAttribute_2Param,
+						Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING.c_str(),
+						aname),
+					0,
+					this);
 		}
 	}
 
 	if(m_qname == 0)
 	{
 		constructionContext.error(
-			"xsl:with-param must have a 'name' attribute",
-			0,
-			this);
-	}
-	else if (m_qname->isValid() == false)
-	{
-		constructionContext.error(
-			"xsl:with-param has an invalid 'name' attribute",
+			XalanMessageLoader::getMessage(
+				XalanMessages::TemplateMustHaveAttribute_2Param,
+				Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING,
+				Constants::ATTRNAME_NAME),
 			0,
 			this);
 	}
