@@ -157,7 +157,7 @@ URISupport::getURLStringFromString(
 		}
 		else
 		{
-			XALAN_USING(xercesc, XMLPlatformUtils)
+			XALAN_USING_XERCES(XMLPlatformUtils)
 
 			// Assume it's a file specification...
 			const XalanArrayAutoPtr<XalanDOMChar>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
