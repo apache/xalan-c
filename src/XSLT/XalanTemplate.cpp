@@ -109,16 +109,7 @@
 
 
 
-#include <XMLSupport/FormatterToHTML.hpp>
-#include <XMLSupport/FormatterToXML.hpp>
-#include <XMLSupport/FormatterToDOM.hpp>
-#include <XMLSupport/FormatterToText.hpp>
-
-
-
-#include <XPath/FunctionID.hpp>
 #include <XPath/NodeRefList.hpp>
-#include <XPath/XObjectFactory.hpp>
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
@@ -127,7 +118,6 @@
 #include <XPath/XPathFactoryBlock.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 #include <XPath/XPathFunctionTable.hpp>
-#include <XPath/XPathProcessorImpl.hpp>
 
 
 
@@ -151,7 +141,6 @@
 #include <XSLT/ElemDecimalFormat.hpp>
 #include <XSLT/ElemForEach.hpp>
 #include <XSLT/ElemLiteralResult.hpp>
-#include <XSLT/ElemNumber.hpp>
 #include <XSLT/ElemSort.hpp>
 #include <XSLT/ElemTextLiteral.hpp>
 #include <XSLT/ElemUse.hpp>
@@ -197,14 +186,11 @@ foo(XPathExecutionContext&	theExecutionContext)
 		XPathExpression::TokenQueueType theTokenQueueType;
 		set<const XalanNode*,less<const XalanNode*> > theXalanNodeSet;
 		XPathExecutionContext::XObjectArgVectorType theVector;
-		XPathProcessorImpl::NodeTypesMapType theNodeTypesMapType;
 		Stylesheet::PatternTableListType	thePatternTableList;
 		Stylesheet::PatternTableVectorType thePatternTableVector;
 		map<int,int,less<int> > theIntMap;
-		ElemNumber::DecimalToRomanVectorType theDecimalToRomanVector;
 		vector<NamespacesHandler::NamespacesMapType::iterator> theNamespacesMapTypeIteratorVector;
 		VariablesStack::ParamsVectorType	theParamsVector;
-		ElemNumber::NumberingResourceBundleMapType theNumberingResourceBundleMapType;
 		XalanTranscodingServices::MaximumCharacterValueMapType theMaximumCharacterValueMapType;
 		set<XalanNode*, less<XalanNode*> >	theInstanceSetType;
 		XalanTransformer::CompiledStylesheetPtrVectorType	theCompiledStylesheetVector;
