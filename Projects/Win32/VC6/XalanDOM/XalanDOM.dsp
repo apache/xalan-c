@@ -164,6 +164,10 @@ SOURCE=..\..\..\..\src\XalanDOM\XalanNodeList.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListDummy.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListSurrogate.cpp
 # End Source File
 # Begin Source File
@@ -257,6 +261,10 @@ SOURCE=..\..\..\..\src\XalanDOM\XalanNode.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanDOM\XalanNodeList.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListDummy.hpp
 # End Source File
 # Begin Source File
 
