@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.26  2001/02/01 16:26:18  auriemma
+# Added XalanTranfomer class to library and added ApacheModuleXSLT sample to makefile.
+#
 # Revision 1.25  2001/01/27 18:04:10  dbertoni
 # Incorporated changes for Solaris with Sun Workshop 4.2.
 #
@@ -204,6 +207,7 @@ XPATH_DIR = XPath
 XSLT_DIR = XSLT
 XERCESINIT_DIR = XercesInit
 XERCESPARSERLIAISON_DIR = XercesParserLiaison
+XALANTRANSFORMER_DIR = XalanTransformer
 ALL_OBJECTS_DIR = ${XALANCROOT}/obj
 LIB_DIR = ${XALANCROOT}/lib
 SAMPLES_DIR = ${XALANCROOT}/samples
@@ -219,8 +223,7 @@ BINTARGETDIR=${XALANCROOT}/bin
 
 ALL_VPATH_CPP = \
 $(XALANDOM_DIR):$(DOMSUPPORT_DIR):$(PLATFORMSUPPORT_DIR):$(XALANSOURCETREE_DIR):$(TESTXPATH_DIR):$(TESTXSLT_DIR):\
-$(XMLSUPPORT_DIR):$(XPATH_DIR):$(XSLT_DIR):$(XERCESINIT_DIR):\
-$(XERCESPARSERLIAISON_DIR)
+$(XMLSUPPORT_DIR):$(XPATH_DIR):$(XSLT_DIR):$(XERCESINIT_DIR):$(XALANTRANSFORMER_DIR):$(XERCESPARSERLIAISON_DIR)
 
 # Using ICUBridge
 ifdef XALAN_USE_ICU
@@ -384,7 +387,8 @@ ALLSOURCE = \
 	$(wildcard $(XSLT_DIR)/*.cpp) \
 	$(wildcard $(XERCESINIT_DIR)/*.cpp) \
 	$(wildcard $(XERCESPARSERLIAISON_DIR)/*.cpp) \
-	
+	$(wildcard $(XALANTRANSFORMER_DIR)/*.cpp) \
+		
 
 # Using ICUBridge
 ifdef XALAN_USE_ICU
@@ -435,6 +439,14 @@ ${ALL_OBJECTS_DIR}/%.o:$(TESTXPATH_DIR)/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 Samples: lib  CompileStylesheet  ExternalFunction  SimpleTransform  TraceListen  UseStylesheetParam  XPathWrapper #  ThreadSafe
+
+ApacheModuleXSLT: lib ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 
+
+${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) : ${ALL_OBJECTS_DIR}/mod_xslt.o
+	$(MAKE_SHARED) $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ApacheModuleXSLT/%.c
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I/usr/include/apache/ $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 CompileStylesheet: lib $(SAMPLES_DIR)/CompileStylesheet/CompileStylesheet 
 
@@ -493,7 +505,8 @@ clean:
 	rm -f $(ALL_OBJECTS_DIR)/*.o
 	rm -f $(THISLIB)$(VER)$(SHLIBSUFFIX)
 	rm -f $(BINTARGETDIR)/testXSLT
-	rm -f $(BINTARGETDIR)/testXPath	
+	rm -f $(BINTARGETDIR)/testXPath
+	rm -f ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 
 	rm -f $(SAMPLES_DIR)/CompileStylesheet/CompileStylesheet
 	rm -f $(SAMPLES_DIR)/ExternalFunction/ExternalFunction
 	rm -f $(SAMPLES_DIR)/SimpleTransform/SimpleTransform
