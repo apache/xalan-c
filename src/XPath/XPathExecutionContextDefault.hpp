@@ -240,7 +240,7 @@ public:
 			const XalanDocument&		theDocument) const;
 
 	virtual bool
-	shouldStripSourceNode(const XalanNode&	node) const;
+	shouldStripSourceNode(const XalanNode&	node);
 
 	virtual bool
 	getThrowFoundIndex() const;

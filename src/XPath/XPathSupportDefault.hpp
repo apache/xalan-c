@@ -148,6 +148,8 @@ private:
 	DOMSupport&								m_DOMSupport;
 
 	DOMServices::WhitespaceSupportDefault	m_whitespaceSupport;
+
+	bool									m_processNamespaces;
 };
 
 

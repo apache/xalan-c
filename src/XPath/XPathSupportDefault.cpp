@@ -81,7 +81,8 @@
 XPathSupportDefault::XPathSupportDefault(DOMSupport&	theDOMSupport) :
 	XPathSupport(),
 	m_DOMSupport(theDOMSupport),
-	m_whitespaceSupport()
+	m_whitespaceSupport(),
+	m_processNamespaces(true)
 {
 }
 
@@ -173,8 +174,9 @@ XPathSupportDefault::getElementByID(
 
 
 void
-XPathSupportDefault::setProcessNamespaces(bool	/* processNamespaces */)
+XPathSupportDefault::setProcessNamespaces(bool	processNamespaces)
 {
+	m_processNamespaces = processNamespaces;
 }
 
 
@@ -182,7 +184,7 @@ XPathSupportDefault::setProcessNamespaces(bool	/* processNamespaces */)
 bool
 XPathSupportDefault::getProcessNamespaces() const
 {
-	return false;
+	return m_processNamespaces;
 }
 
 

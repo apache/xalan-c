@@ -510,14 +510,6 @@ StylesheetExecutionContextDefault::setCurrentStackFrameIndex(int	currentStackFra
 
 
 void
-StylesheetExecutionContextDefault::markGlobalStackFrame()
-{
-	m_xsltProcessor.getVariableStacks().markGlobalStackFrame();
-}
-	
-
-
-void
 StylesheetExecutionContextDefault::startDocument()
 {
 	m_xsltProcessor.startDocument();
@@ -1051,7 +1043,7 @@ StylesheetExecutionContextDefault::getUnparsedEntityURI(
 
 
 bool
-StylesheetExecutionContextDefault::shouldStripSourceNode(const XalanNode&	node) const
+StylesheetExecutionContextDefault::shouldStripSourceNode(const XalanNode&	node)
 {
 	return m_xpathExecutionContextDefault.shouldStripSourceNode(node);
 }

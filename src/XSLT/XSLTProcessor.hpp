@@ -389,7 +389,8 @@ public:
    * @param key name of the param
    * @param expression expression that will be evaluated
    */
-   virtual void setStylesheetParam(
+	virtual void
+	setStylesheetParam(
 			const XalanDOMString&	key,
 			const XalanDOMString&	expression) = 0;
 
@@ -400,11 +401,16 @@ public:
 	 * node.  Literal elements from template elements should <em>not</em> be
 	 * tested with this function.
 	 *
-	 * @param textNode text node from the source tree
+	 * @param executionContext  current execution context
+	 * @param node text node from the source tree
 	 * @return true if the text node should be stripped of extra whitespace
+	 *
+	 * $$$ ToDo: This has no business being here in the engine...
 	 */
 	virtual bool
-	shouldStripSourceNode(const XalanNode&	textNode) const = 0;
+	shouldStripSourceNode(
+			XPathExecutionContext&	executionContext,
+			const XalanNode&		node) const = 0;
 
 	/**
 	 * Get the current formatter listener.

@@ -521,7 +521,7 @@ public:
 	 * @return true if the text node should be stripped of extra whitespace
 	 */
 	virtual bool
-	shouldStripSourceNode(const XalanNode&	node) const = 0;
+	shouldStripSourceNode(const XalanNode&	node) = 0;
 
 	/**
 	 * Tells if FoundIndex should be thrown if index is found. This is an

@@ -457,7 +457,9 @@ XPathEnvSupportDefault::associateXLocatorToNode(
 
 
 bool
-XPathEnvSupportDefault::shouldStripSourceNode(const XalanNode&	/* node */) const
+XPathEnvSupportDefault::shouldStripSourceNode(
+			XPathExecutionContext&	/* executionContext */,
+			const XalanNode&		/* node */) const
 {
 	return false;
 }

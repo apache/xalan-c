@@ -264,11 +264,14 @@ public:
 	 * node.  Literal elements from template elements should <em>not</em> be
 	 * tested with this function.
 	 *
+	 * @param executionContext  current execution context
 	 * @param node text node from the source tree
 	 * @return true if the text node should be stripped of extra whitespace
 	 */
 	virtual bool
-	shouldStripSourceNode(const XalanNode&	node) const = 0;
+	shouldStripSourceNode(
+			XPathExecutionContext&	executionContext,
+			const XalanNode&		node) const = 0;
 
 	enum eSource { eXMLParser		= 1,
 				   eXSLTProcessor	= 2,

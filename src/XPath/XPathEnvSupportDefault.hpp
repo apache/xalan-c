@@ -204,7 +204,9 @@ public:
 			XLocator*			xlocator);
 
 	virtual bool
-	shouldStripSourceNode(const XalanNode&	node) const;
+	shouldStripSourceNode(
+			XPathExecutionContext&	executionContext,
+			const XalanNode&		node) const;
 
 	virtual bool
 	problem(

@@ -1522,7 +1522,7 @@ SimpleNodeLocator::nodeTest(
 					else
 					{
 						test = XPathExpression::eELEMWILDCARD == queueIndex || 
-						   0 == length(contextNS) || 0 == length(contextNS);
+						   (0 == length(contextNS) && 0 == length(targetNS));
 					}
 				}
 				else

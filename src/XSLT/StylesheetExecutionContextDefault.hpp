@@ -252,9 +252,6 @@ public:
 	setCurrentStackFrameIndex(int currentStackFrameIndex = -1);
 
 	virtual void
-	markGlobalStackFrame();
-	
-	virtual void
 	startDocument();
 
 	virtual void
@@ -493,7 +490,7 @@ public:
 			const XalanDocument&	theDocument) const;
 
 	virtual bool
-	shouldStripSourceNode(const XalanNode&	node) const;
+	shouldStripSourceNode(const XalanNode&	node);
 
 	virtual bool
 	getThrowFoundIndex() const;

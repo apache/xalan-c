@@ -412,15 +412,17 @@ XSLTProcessorEnvSupportDefault::associateXLocatorToNode(
 
 
 bool
-XSLTProcessorEnvSupportDefault::shouldStripSourceNode(const XalanNode&	node) const
+XSLTProcessorEnvSupportDefault::shouldStripSourceNode(
+			XPathExecutionContext&	executionContext,
+			const XalanNode&		node) const
 {
 	if (m_processor == 0)
 	{
-		return m_defaultSupport.shouldStripSourceNode(node);
+		return m_defaultSupport.shouldStripSourceNode(executionContext, node);
 	}
 	else
 	{
-		return m_processor->shouldStripSourceNode(node);
+		return m_processor->shouldStripSourceNode(executionContext, node);
 	}
 }
 
