@@ -256,7 +256,7 @@ endif
 ifeq ($(PLATFORM), TRU64)
 
 SUPPORTED = TRUE
-PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -ieee -pthread
+PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -ieee -pthread -assume noaligned_objects
 ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc -lrt -lm
 SHLIBSUFFIX = .so
 CC1 = ${CXX} ${CXXFLAGS} $(PLATFORM_COMPILE_OPTIONS)
