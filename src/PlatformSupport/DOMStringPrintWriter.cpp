@@ -135,18 +135,7 @@ DOMStringPrintWriter::write(
 void
 DOMStringPrintWriter::write(XalanDOMChar	c)
 {
-#if defined(XALAN_USE_XERCES_DOMSTRING)
-	// Write the data as a null-terminated array,
-	// so we can guarantee null-termination of our
-	// string...
-	XalanDOMChar	theBuffer[2] = { 0, 0 };
-
-	theBuffer[0] = c;
-
-	m_outputString += theBuffer;
-#else
 	m_outputString += c;
-#endif
 }
 
 
