@@ -214,7 +214,11 @@ public:
 	}
 
 	Type&
+#if defined(XALAN_SIZE_T_IN_NAMESPACE_STD)
+	operator[](std::size_t	index) const
+#else
 	operator[](size_t	index) const
+#endif
 	{
 		return m_pointer[index];
 	}

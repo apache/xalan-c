@@ -85,7 +85,11 @@ public:
 	virtual
 	~NodeRefListBase();
 
-	typedef size_t	size_type;
+#if defined(XALAN_SIZE_T_IN_NAMESPACE_STD)
+	typedef std::size_t		size_type;
+#else
+	typedef size_t			size_type;
+#endif
 
 	/**
 	 * Returns the <code>index</code>th item in the collection. If
