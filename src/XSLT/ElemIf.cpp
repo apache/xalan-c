@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -90,7 +90,7 @@ ElemIf::ElemIf(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_IF),
+						StylesheetConstructionContext::ELEMNAME_IF),
 	m_test(0)
 {
 	const unsigned int	nAttrs = atts.getLength();

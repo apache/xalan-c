@@ -87,7 +87,7 @@ ElemChoose::ElemChoose(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_CHOOSE)
+						StylesheetConstructionContext::ELEMNAME_CHOOSE)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -129,7 +129,7 @@ ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
     {
 		const int	type = node->getXSLToken();
 
-		if(Constants::ELEMNAME_WHEN == type)
+		if(StylesheetConstructionContext::ELEMNAME_WHEN == type)
 		{
 			const ElemWhen* when = 
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -180,8 +180,8 @@ ElemChoose::childTypeAllowed(int	xslToken) const
 	switch(xslToken)
 	{
 	// char-instructions 
-    case Constants::ELEMNAME_WHEN:
-    case Constants::ELEMNAME_OTHERWISE:
+    case StylesheetConstructionContext::ELEMNAME_WHEN:
+    case StylesheetConstructionContext::ELEMNAME_OTHERWISE:
 		fResult = true;
 		break;
 		

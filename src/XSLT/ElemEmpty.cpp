@@ -61,7 +61,7 @@
 #include <cassert>
 
 
-#include "Constants.hpp"
+#include "StylesheetConstructionContext.hpp"
 
 
 
@@ -75,7 +75,7 @@ ElemEmpty::ElemEmpty(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_UNDEFINED),
+						StylesheetConstructionContext::ELEMNAME_UNDEFINED),
 	m_elementName(elementName)
 {
 }

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,7 +81,7 @@ ElemSort::ElemSort(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_SORT),
+						StylesheetConstructionContext::ELEMNAME_SORT),
 	m_selectPattern(0),
 	m_langAVT(0),
 	m_dataTypeAVT(0),

@@ -105,8 +105,7 @@ public:
 			Stylesheet&						stylesheetTree,
 			const AttributeList&			atts,
 			int								lineNumber,
-			int								columnNumber,
-			int								xslToken = Constants::ELEMNAME_VARIABLE);
+			int								columnNumber);
 
 	virtual
 	~ElemVariable();
@@ -158,6 +157,37 @@ public:
 			XalanNode*						sourceNode) const;
 
 protected:
+
+	/**
+	 * Construct an object corresponding to an "xsl:variable" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
+	ElemVariable(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber,
+			int								xslToken);
+
+	/**
+	 * Do common initialization.
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param atts                list of attributes for element
+	 */
+	void
+	init(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const AttributeList&			atts);
+
 
 	XalanQNameByValue	m_qname;
 

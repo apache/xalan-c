@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -87,7 +87,7 @@ ElemTextLiteral::ElemTextLiteral(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_TEXTLITERALRESULT),
+						StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT),
 	m_isCData(isCData),
 	m_preserveSpace(preserveSpace),	
 	m_disableOutputEscaping(disableOutputEscaping),

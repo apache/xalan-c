@@ -93,8 +93,7 @@ public:
 			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
-			int								columnNumber,
-			int								xslToken = Constants::ELEMNAME_LITERALRESULT);
+			int								columnNumber);
 
 	virtual
 	~ElemLiteralResult();
@@ -124,6 +123,41 @@ public:
 #else
 	typedef std::vector<const AVT*>			AVTVectorType;
 #endif
+
+protected:
+
+	/**
+	 * Do common initialization.
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param atts                list of attributes for element
+	 */
+	void
+	init(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const AttributeList&			atts);
+
+	/**
+	 * Construct an object corresponding to a literal result element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 * @param xslToken			The xsl token value for this class
+	 */
+	ElemLiteralResult(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMChar*				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber,
+			int								xslToken);
 
 private:
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -334,6 +334,134 @@ private:
 	XalanDOMCharVectorAllocatorType		m_xalanDOMCharVectorAllocator;
 
 	mutable XalanDOMString				m_tempBuffer;
+
+
+	// Static strings for stylesheet compilation...
+
+	// The string "if"
+	static const XalanDOMChar	s_if[];
+
+	// The string "key"
+	static const XalanDOMChar	s_key[];
+
+	// The string "copy"
+	static const XalanDOMChar	s_copy[];
+
+	// The string "sort"
+	static const XalanDOMChar	s_sort[];
+
+	// The string "text"
+	static const XalanDOMChar	s_text[];
+
+	// The string "when"
+	static const XalanDOMChar	s_when[];
+
+	// The string "empty"
+	static const XalanDOMChar	s_empty[];
+
+	// The string "param"
+	static const XalanDOMChar	s_param[];
+
+	// The string "choose"
+	static const XalanDOMChar	s_choose[];
+
+	// The string "import"
+	static const XalanDOMChar	s_import[];
+
+	// The string "number"
+	static const XalanDOMChar	s_number[];
+
+	// The string "output"
+	static const XalanDOMChar	s_output[];
+
+	// The string "comment"
+	static const XalanDOMChar	s_comment[];
+
+	// The string "copy-of"
+	static const XalanDOMChar	s_copyOf[];
+
+	// The string "element"
+	static const XalanDOMChar	s_element[];
+
+	// The string "include"
+	static const XalanDOMChar	s_include[];
+
+	// The string "message"
+	static const XalanDOMChar	s_message[];
+
+	// The string "fallback"
+	static const XalanDOMChar	s_fallback[];
+
+	// The string "for-each"
+	static const XalanDOMChar	s_forEach[];
+
+	// The string "template"
+	static const XalanDOMChar	s_template[];
+
+	// The string "value-of"
+	static const XalanDOMChar	s_valueOf[];
+
+	// The string "variable"
+	static const XalanDOMChar	s_variable[];
+
+	// The string "attribute"
+	static const XalanDOMChar	s_attribute[];
+
+	// The string "otherwise"
+	static const XalanDOMChar	s_otherwise[];
+
+	// The string "transform"
+	static const XalanDOMChar	s_transform[];
+
+	// The string "stylesheet"
+	static const XalanDOMChar	s_stylesheet[];
+
+	// The string "with-param"
+	static const XalanDOMChar	s_withParam[];
+
+	// The string "strip-space"
+	static const XalanDOMChar	s_stripSpace[];
+
+	// The string "apply-imports"
+	static const XalanDOMChar	s_applyImports[];
+
+	// The string "attribute-set"
+	static const XalanDOMChar	s_attributeSet[];
+
+	// The string "call-template"
+	static const XalanDOMChar	s_callTemplate[];
+
+	// The string "decimal-format"
+	static const XalanDOMChar	s_decimalFormat[];
+
+	// The string "preserve-space"
+	static const XalanDOMChar	s_preserveSpace[];
+
+	// The string "apply-templates"
+	static const XalanDOMChar	s_applyTemplates[];
+
+	// The string "namespace-alias"
+	static const XalanDOMChar	s_namespaceAlias[];
+
+	// The string "processing-instruction"
+	static const XalanDOMChar	s_processingInstruction[];
+
+	// A struct for an array that maps stylesheet element names
+	// to int tokens.
+	struct ElementTokenTableEntry
+	{
+		const XalanDOMChar*		m_name;
+
+		eElementToken			m_token;
+	};
+
+	static const ElementTokenTableEntry		s_elementTokenTable[];
+
+	static const unsigned int				s_elementTokenTableSize;
+
+	static const ElementTokenTableEntry&	s_elementTokenTableLast;
+
+	static const ElementTokenTableEntry&	s_elementTokenTableDummy;
 };
 
 

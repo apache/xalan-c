@@ -112,7 +112,7 @@ ElemNumber::ElemNumber(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_NUMBER),	
+						StylesheetConstructionContext::ELEMNAME_NUMBER),	
 	m_countMatchPattern(0),
 	m_fromMatchPattern(0),
 	m_valueExpr(0),

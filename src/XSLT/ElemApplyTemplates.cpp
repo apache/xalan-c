@@ -81,7 +81,7 @@ ElemApplyTemplates::ElemApplyTemplates(
 				stylesheetTree,
 				lineNumber,
 				columnNumber,
-				Constants::ELEMNAME_APPLY_TEMPLATES),
+				StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES),
 	m_isDefaultTemplate(false),
 	m_mode()
 {
@@ -203,8 +203,8 @@ ElemApplyTemplates::childTypeAllowed(int	xslToken) const
 
 	switch(xslToken)
 	{
-	case Constants::ELEMNAME_SORT:
-	case Constants::ELEMNAME_WITHPARAM:
+	case StylesheetConstructionContext::ELEMNAME_SORT:
+	case StylesheetConstructionContext::ELEMNAME_WITH_PARAM:
 		fResult = true;
 		break;
 

@@ -97,7 +97,7 @@ ElemForEach::ElemForEach(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_FOREACH),
+						StylesheetConstructionContext::ELEMNAME_FOR_EACH),
 	m_selectPattern(0),
 	m_sortElems(),
 	m_sortElemsCount(0)

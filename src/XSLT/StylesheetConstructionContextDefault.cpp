@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -516,9 +516,42 @@ StylesheetConstructionContextDefault::parseXML(
 
 
 int
-StylesheetConstructionContextDefault::getElementToken(const XalanDOMString&	name) const
+StylesheetConstructionContextDefault::getElementToken(const XalanDOMString&		name)
 {
-	return m_processor.getElementToken(name);
+	return StylesheetConstructionContextDefault::getElementToken(name);
+}
+
+
+
+int
+StylesheetConstructionContextDefault::getElementToken(const XalanDOMString&		name)
+{
+	// Find the entity, if any...
+	const ElementTokenTableEntry*	theFirst = s_elementTokenTable;
+	const ElementTokenTableEntry*	theLast = &s_elementTokenTableLast;
+
+	while(theFirst <= theLast)
+	{
+		const ElementTokenTableEntry* const	
+			theCurrent = theFirst + (theLast - theFirst) / 2;
+
+		const int	theResult = compareIgnoreCaseASCII(name, theCurrent->m_name);
+
+		if (theResult < 0)
+		{
+			theLast = theCurrent - 1;
+		}
+		else if (theResult > 0)
+		{
+			theFirst = theCurrent + 1;
+		}
+		else
+		{
+			return theCurrent->m_token;
+		}
+	}
+
+	return s_elementTokenTableDummy.m_token;
 }
 
 
@@ -581,3 +614,655 @@ StylesheetConstructionContextDefault::allocateVector(
 
 	return theVector;
 }
+
+
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_if[] =
+{
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_f,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_key[] =
+{
+	XalanUnicode::charLetter_k,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_y,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_copy[] =
+{
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_y,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_sort[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_text[] =
+{
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_when[] =
+{
+	XalanUnicode::charLetter_w,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_empty[] =
+{
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_y,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_param[] =
+{
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_choose[] =
+{
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_import[] =
+{
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_number[] =
+{
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_output[] =
+{
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_comment[] =
+{
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_copyOf[] =
+{
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_y,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_f,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_element[] =
+{
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_include[] =
+{
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_message[] =
+{
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_fallback[] =
+{
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_k,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_forEach[] =
+{
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_h,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_template[] =
+{
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_valueOf[] =
+{
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_f,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_variable[] =
+{
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_attribute[] =
+{
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_otherwise[] =
+{
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_w,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_transform[] =
+{
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_m,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_stylesheet[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_y,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_withParam[] =
+{
+	XalanUnicode::charLetter_w,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_stripSpace[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_applyImports[] =
+{
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_y,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_s,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_attributeSet[] =
+{
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_callTemplate[] =
+{
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_decimalFormat[] =
+{
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_preserveSpace[] =
+{
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_applyTemplates[] =
+{
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_y,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_namespaceAlias[] =
+{
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_s,
+	0
+};
+
+const XalanDOMChar	StylesheetConstructionContextDefault::s_processingInstruction[] =
+{
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
+
+
+const StylesheetConstructionContextDefault::ElementTokenTableEntry	StylesheetConstructionContextDefault::s_elementTokenTable[] =
+{
+	{
+		s_if,
+		ELEMNAME_IF
+	},
+	{
+		s_key,
+		ELEMNAME_KEY
+	},
+	{
+		s_copy,
+		ELEMNAME_COPY
+	},
+	{
+		s_sort,
+		ELEMNAME_SORT
+	},
+	{
+		s_text,
+		ELEMNAME_TEXT
+	},
+	{
+		s_when,
+		ELEMNAME_WHEN
+	},
+	{
+		s_empty,
+		ELEMNAME_EMPTY
+	},
+	{
+		s_param,
+		ELEMNAME_PARAM
+	},
+	{
+		s_choose,
+		ELEMNAME_CHOOSE
+	},
+	{
+		s_import,
+		ELEMNAME_IMPORT
+	},
+	{
+		s_number,
+		ELEMNAME_NUMBER
+	},
+	{
+		s_output,
+		ELEMNAME_OUTPUT
+	},
+	{
+		s_comment,
+		ELEMNAME_COMMENT
+	},
+	{
+		s_copyOf,
+		ELEMNAME_COPY_OF
+	},
+	{
+		s_element,
+		ELEMNAME_ELEMENT
+	},
+	{
+		s_include,
+		ELEMNAME_INCLUDE
+	},
+	{
+		s_message,
+		ELEMNAME_MESSAGE
+	},
+	{
+		s_fallback,
+		ELEMNAME_FALLBACK
+	},
+	{
+		s_forEach,
+		ELEMNAME_FOR_EACH
+	},
+	{
+		s_template,
+		ELEMNAME_TEMPLATE
+	},
+	{
+		s_valueOf,
+		ELEMNAME_VALUE_OF
+	},
+	{
+		s_variable,
+		ELEMNAME_VARIABLE
+	},
+	{
+		s_attribute,
+		ELEMNAME_ATTRIBUTE
+	},
+	{
+		s_otherwise,
+		ELEMNAME_OTHERWISE
+	},
+	{
+		s_transform,
+		ELEMNAME_STYLESHEET
+	},
+	{
+		s_stylesheet,
+		ELEMNAME_STYLESHEET
+	},
+	{
+		s_withParam,
+		ELEMNAME_WITH_PARAM
+	},
+	{
+		s_stripSpace,
+		ELEMNAME_STRIP_SPACE
+	},
+	{
+		s_applyImports,
+		ELEMNAME_APPLY_IMPORTS
+	},
+	{
+		s_attributeSet,
+		ELEMNAME_ATTRIBUTE_SET
+	},
+	{
+		s_callTemplate,
+		ELEMNAME_CALL_TEMPLATE
+	},
+	{
+		s_decimalFormat,
+		ELEMNAME_DECIMAL_FORMAT
+	},
+	{
+		s_preserveSpace,
+		ELEMNAME_PRESERVE_SPACE
+	},
+	{
+		s_applyTemplates,
+		ELEMNAME_APPLY_TEMPLATES
+	},
+	{
+		s_namespaceAlias,
+		ELEMNAME_NAMESPACE_ALIAS
+	},
+	{
+		s_processingInstruction,
+		ELEMNAME_PI
+	},
+	// This must be the last one...
+	{
+		0,
+		ELEMNAME_UNDEFINED
+	}
+};
+
+const unsigned int	StylesheetConstructionContextDefault::s_elementTokenTableSize =
+		sizeof(s_elementTokenTable) / sizeof(s_elementTokenTable[0]);
+
+const StylesheetConstructionContextDefault::ElementTokenTableEntry&		StylesheetConstructionContextDefault::s_elementTokenTableLast =
+	StylesheetConstructionContextDefault::s_elementTokenTable[s_elementTokenTableSize - 2];
+
+const StylesheetConstructionContextDefault::ElementTokenTableEntry&		StylesheetConstructionContextDefault::s_elementTokenTableDummy =
+	StylesheetConstructionContextDefault::s_elementTokenTable[s_elementTokenTableSize - 1];

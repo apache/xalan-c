@@ -88,7 +88,7 @@ ElemCopyOf::ElemCopyOf(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_COPY_OF),
+						StylesheetConstructionContext::ELEMNAME_COPY_OF),
 	m_selectPattern(0),
 	m_isDot(false)
 {

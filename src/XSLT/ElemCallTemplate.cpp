@@ -86,7 +86,7 @@ ElemCallTemplate::ElemCallTemplate(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_CALLTEMPLATE),
+						StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE),
 	m_templateName(),
 	m_template(0)
 {
@@ -194,7 +194,7 @@ ElemCallTemplate::childTypeAllowed(int	xslToken) const
 	switch(xslToken)
 	{
 	// char-instructions 
-	case Constants::ELEMNAME_WITHPARAM:
+	case StylesheetConstructionContext::ELEMNAME_WITH_PARAM:
 		fResult = true;
 		break;
 		

@@ -82,7 +82,7 @@ ElemMessage::ElemMessage(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_MESSAGE),
+						StylesheetConstructionContext::ELEMNAME_MESSAGE),
 	m_terminate(false)
 {
 	const unsigned int	nAttrs = atts.getLength();

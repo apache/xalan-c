@@ -94,7 +94,7 @@ ElemValueOf::ElemValueOf(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_VALUEOF),
+						StylesheetConstructionContext::ELEMNAME_VALUE_OF),
 	m_selectPattern(0),
 	m_disableOutputEscaping(false),
 	m_isDot(false)

@@ -1248,7 +1248,7 @@ Stylesheet::pushTopLevelVariables(
 		ElemVariable* const 	var = m_topLevelVariables[i];
 
 		bool					isParam =
-				Constants::ELEMNAME_PARAMVARIABLE == var->getXSLToken();
+				StylesheetConstructionContext::ELEMNAME_PARAM == var->getXSLToken();
 
 		if(isParam == true)
 		{

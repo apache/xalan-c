@@ -103,7 +103,7 @@ public:
 			Stylesheet&						stylesheetTree,
 			int								lineNumber,
 			int								columnNumber,
-			int								xslToken = Constants::ELEMNAME_USE);
+			int								xslToken);
 
 	virtual
 	~ElemUse();

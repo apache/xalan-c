@@ -82,7 +82,7 @@ ElemDecimalFormat::ElemDecimalFormat(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_DECIMALFORMAT),
+						StylesheetConstructionContext::ELEMNAME_DECIMAL_FORMAT),
 	m_countMatchPattern(0),
 	m_fromMatchPattern(0),
 	m_valueExpr(0),

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -95,6 +95,69 @@ class XSLTInputSource;
 class XALAN_XSLT_EXPORT StylesheetConstructionContext
 {
 public:
+
+	/**
+	 * IDs for XSL element types. These are the values
+	 * that must be returned by getElementToken().
+	 */
+	enum eElementToken
+	{
+		ELEMNAME_UNDEFINED = -2,
+		ELEMNAME_EMPTY = -1,
+		ELEMNAME_WITH_PARAM,
+		ELEMNAME_APPLY_TEMPLATES,
+		ELEMNAME_CHOOSE,
+		ELEMNAME_COMMENT,
+		ELEMNAME_COPY,
+		ELEMNAME_COPY_OF,
+		ELEMNAME_ATTRIBUTE,
+		ELEMNAME_ATTRIBUTE_SET,
+		ELEMNAME_EXTENSION,
+		ELEMNAME_FOR_EACH,
+		ELEMNAME_KEY,
+		ELEMNAME_IF,
+		ELEMNAME_IMPORT,
+		ELEMNAME_INCLUDE,
+		ELEMNAME_CALL_TEMPLATE,
+		ELEMNAME_PARAM,
+		ELEMNAME_NUMBER,
+		ELEMNAME_OTHERWISE,
+		ELEMNAME_PI,
+		ELEMNAME_PRESERVE_SPACE,
+		ELEMNAME_TEMPLATE,
+		ELEMNAME_SORT,
+		ELEMNAME_STRIP_SPACE,
+		ELEMNAME_STYLESHEET,
+		ELEMNAME_TEXT,
+		ELEMNAME_VALUE_OF,
+		ELEMNAME_WHEN,
+		ELEMNAME_FALLBACK,
+		ELEMNAME_ELEMENT,
+
+		ELEMNAME_APPLY_IMPORTS,
+
+		ELEMNAME_VARIABLE,
+		ELEMNAME_MESSAGE,
+
+		ELEMNAME_OUTPUT,
+		ELEMNAME_DECIMAL_FORMAT,
+		ELEMNAME_NAMESPACE_ALIAS,
+
+		// This one doesn't really have a name.
+		// It's used for any literal result
+		// element.
+		ELEMNAME_LITERAL_RESULT,
+
+		// This one doesn't really have a name.
+		// It's used for any literal text in
+		// the content of a literal result
+		// element.
+		ELEMNAME_TEXT_LITERAL_RESULT,
+
+		// Extension handling.
+		ELEMNAME_EXTENSION_CALL,
+		ELEMNAME_EXTENSION_HANDLER
+	};
 
 	typedef URISupport::URLAutoPtrType	URLAutoPtrType;
 
@@ -321,11 +384,10 @@ public:
 
 	/**
 	 * Given an XSL tag name, return an integer token that corresponds to
-	 * ELEMNAME_XXX constants defined in Constants.hpp
+	 * the enums defined above.
 	 *
 	 * @param name a probable xsl:xxx element
-	 * @return Constants.ELEMNAME_XXX token, -1 if in XSL or Xalan namespace,
-	 *		   or -2 if not in known namespace
+	 * @return The enum value for that token, or ELEMNAME_UNDEFINED
 	 */
 	virtual int
 	getElementToken(const XalanDOMString&	name) const = 0;

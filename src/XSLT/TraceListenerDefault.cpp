@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -77,6 +77,7 @@
 #include "ElemTemplate.hpp"
 #include "GenerateEvent.hpp"
 #include "SelectionEvent.hpp"
+#include "StylesheetConstructionContext.hpp"
 #include "StylesheetRoot.hpp"
 #include "TracerEvent.hpp"
 
@@ -109,7 +110,7 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 {
 	switch(ev.m_styleNode.getXSLToken())
 	{
-	case Constants::ELEMNAME_TEXTLITERALRESULT:
+	case StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT:
 		if(m_traceElements == true)
 		{
 			m_printWriter.print(XALAN_STATIC_UCODE_STRING("Line #"));
@@ -132,7 +133,7 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 		}
 		break;
 
-	case Constants::ELEMNAME_TEMPLATE:
+	case StylesheetConstructionContext::ELEMNAME_TEMPLATE:
 		if(m_traceTemplates == true || m_traceElements == true)
 		{
 			const ElemTemplate&		et =

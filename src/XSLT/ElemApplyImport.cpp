@@ -90,7 +90,7 @@ ElemApplyImport::ElemApplyImport(
 							stylesheetTree,
 							lineNumber,
 							columnNumber,
-							Constants::ELEMNAME_APPLY_IMPORTS)
+							StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS)
 {
 	const unsigned int	nAttrs = atts.getLength();
 

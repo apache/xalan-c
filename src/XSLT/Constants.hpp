@@ -89,7 +89,7 @@ public:
 	 */
 	static void
 	terminate();
-
+#if 0
 	/**
 	 * IDs for XSL element types. These are associated 
 	 * with the string literals in the XSLTProcessor class.
@@ -159,7 +159,7 @@ public:
 
 	  // Next free number: 85
 	};
-
+#endif
 	/**
 	 * Literals for XSL element names.  Note that there are more
 	 * names than IDs, because some names map to the same ID.

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -86,7 +86,7 @@ ElemText::ElemText(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_TEXT),
+						StylesheetConstructionContext::ELEMNAME_TEXT),
 	m_disableOutputEscaping(false)
 {
 	const unsigned int	nAttrs = atts.getLength();
@@ -136,7 +136,7 @@ ElemText::childTypeAllowed(int	xslToken) const
 	switch(xslToken)
 	{
 	// char-instructions 
-	case Constants::ELEMNAME_TEXTLITERALRESULT:
+	case StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT:
 		fResult = true;
 		break;
 

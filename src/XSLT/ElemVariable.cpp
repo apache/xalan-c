@@ -83,6 +83,28 @@ ElemVariable::ElemVariable(
 			Stylesheet&						stylesheetTree,
 			const AttributeList&			atts,
 			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						lineNumber,
+						columnNumber,
+						StylesheetConstructionContext::ELEMNAME_VARIABLE),
+	m_qname(),
+	m_selectPattern(0),
+	m_isTopLevel(false),
+	m_value(0),
+	m_varContext(0)
+{
+	init(constructionContext, stylesheetTree, atts);
+}
+
+
+
+ElemVariable::ElemVariable(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const AttributeList&			atts,
+			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :
 	ElemTemplateElement(constructionContext,
@@ -95,6 +117,23 @@ ElemVariable::ElemVariable(
 	m_isTopLevel(false),
 	m_value(0),
 	m_varContext(0)
+{
+	init(constructionContext, stylesheetTree, atts);
+}
+
+
+
+ElemVariable::~ElemVariable()
+{
+}
+
+
+
+void
+ElemVariable::init(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const AttributeList&			atts)
 {
 	const unsigned int	nAttrs = atts.getLength();
 	
@@ -130,12 +169,6 @@ ElemVariable::ElemVariable(
 			0,
 			this);
 	}
-}
-
-
-
-ElemVariable::~ElemVariable()
-{
 }
 
 

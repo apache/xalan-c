@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -164,7 +164,7 @@ ElemUse::processUseAttributeSets(
 {
 	bool isUAS = false;
 
-	if(Constants::ELEMNAME_LITERALRESULT == getXSLToken())
+	if(StylesheetConstructionContext::ELEMNAME_LITERAL_RESULT == getXSLToken())
 	{
 		const XalanQNameByValue	qname(attrName, getStylesheet().getNamespaces());
 

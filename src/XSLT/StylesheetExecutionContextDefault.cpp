@@ -103,6 +103,7 @@
 #include "Constants.hpp"
 #include "ElemTemplateElement.hpp"
 #include "ElemWithParam.hpp"
+#include "StylesheetConstructionContext.hpp"
 #include "StylesheetRoot.hpp"
 #include "XSLTEngineImpl.hpp"
 #include "XSLTProcessorException.hpp"
@@ -1759,9 +1760,9 @@ StylesheetExecutionContextDefault::elementAvailable(
 {
 	if (equals(theNamespace, XSLTEngineImpl::getXSLNameSpaceURL()) == true)
 	{
-		const int	xslToken = XSLTEngineImpl::getElementToken(elementName);
+		const int	xslToken = StylesheetConstructionContext::getElementToken(elementName);
 
-		return xslToken == -2 ? false : true;
+		return xslToken < 0 ? false : true;
 	}
 	else
 	{
@@ -2368,7 +2369,7 @@ StylesheetExecutionContextDefault::getParams(
 
 		while(0 != child)
 		{
-			if(Constants::ELEMNAME_WITHPARAM == child->getXSLToken())
+			if(StylesheetConstructionContext::ELEMNAME_WITH_PARAM == child->getXSLToken())
 			{
 				const ElemWithParam* const	xslParamElement =
 #if defined(XALAN_OLD_STYLE_CASTS)

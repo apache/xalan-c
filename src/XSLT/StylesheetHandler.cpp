@@ -417,31 +417,31 @@ StylesheetHandler::startElement(
 			{
 				switch(xslToken)
 				{            
-				case Constants::ELEMNAME_APPLY_TEMPLATES:
+				case StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES:
 					elem = new ElemApplyTemplates(m_constructionContext,
 												m_stylesheet,
 												atts, lineNumber, columnNumber);
 					break;
           
-				case Constants::ELEMNAME_CALLTEMPLATE:
+				case StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE:
 					elem = new ElemCallTemplate(m_constructionContext,
 											  m_stylesheet,
 											  atts, lineNumber, columnNumber);
 					break;
           
-				case Constants::ELEMNAME_WITHPARAM:
+				case StylesheetConstructionContext::ELEMNAME_WITH_PARAM:
 					elem = new ElemWithParam(m_constructionContext,
 										   m_stylesheet,
 										   atts, lineNumber, columnNumber);
 					break;
           
-				case Constants::ELEMNAME_FOREACH:
+				case StylesheetConstructionContext::ELEMNAME_FOR_EACH:
 					elem = new ElemForEach(m_constructionContext,
 										 m_stylesheet,
 										 atts, lineNumber, columnNumber);
 					break;
           
-				case Constants::ELEMNAME_SORT:
+				case StylesheetConstructionContext::ELEMNAME_SORT:
 					{
 						if (m_elemStack.empty() == true)
 						{
@@ -454,8 +454,8 @@ StylesheetHandler::startElement(
 
 						const int	xslToken = theElement->getXSLToken();
 
-						if (xslToken != Constants::ELEMNAME_FOREACH &&
-							xslToken != Constants::ELEMNAME_APPLY_TEMPLATES)
+						if (xslToken != StylesheetConstructionContext::ELEMNAME_FOR_EACH &&
+							xslToken != StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES)
 						{
 							error("Misplaced xsl:sort.", locator);
 						}
@@ -484,7 +484,7 @@ StylesheetHandler::startElement(
 					}
 					break;
 
-				case Constants::ELEMNAME_APPLY_IMPORTS:
+				case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
 					{
 						if (m_elemStack.empty() == true)
 						{
@@ -497,7 +497,7 @@ StylesheetHandler::startElement(
 
 						const int	xslToken = theElement->getXSLToken();
 
-						if (xslToken == Constants::ELEMNAME_FOREACH)
+						if (xslToken == StylesheetConstructionContext::ELEMNAME_FOR_EACH)
 						{
 							error("xsl:apply-imports is not allowed at this position in the stylesheet", locator);
 						}
@@ -508,19 +508,19 @@ StylesheetHandler::startElement(
 					}
 					break;
           
-				case Constants::ELEMNAME_VALUEOF:
+				case StylesheetConstructionContext::ELEMNAME_VALUE_OF:
 					elem = new ElemValueOf(m_constructionContext,
 										 m_stylesheet,
 										 atts, lineNumber, columnNumber);
 					break;
 
-				case Constants::ELEMNAME_NUMBER:
+				case StylesheetConstructionContext::ELEMNAME_NUMBER:
 					elem = new ElemNumber(m_constructionContext,
 										m_stylesheet,
 										atts, lineNumber, columnNumber);
 					break;
           
-				case Constants::ELEMNAME_VARIABLE:
+				case StylesheetConstructionContext::ELEMNAME_VARIABLE:
 					{
 						XalanAutoPtr<ElemVariable>	newVar(
 							new ElemVariable(
@@ -536,19 +536,19 @@ StylesheetHandler::startElement(
 					}
 					break;
 
-				case Constants::ELEMNAME_PARAMVARIABLE:
+				case StylesheetConstructionContext::ELEMNAME_PARAM:
 					elem = new ElemParam(m_constructionContext,
 									   m_stylesheet,
 									   atts, lineNumber, columnNumber);
 					break;
           
-				case Constants::ELEMNAME_IF:
+				case StylesheetConstructionContext::ELEMNAME_IF:
 					elem = new ElemIf(m_constructionContext,
 									m_stylesheet,
 									atts, lineNumber, columnNumber);
 					break;
 
-				case Constants::ELEMNAME_FALLBACK:
+				case StylesheetConstructionContext::ELEMNAME_FALLBACK:
 					elem = new ElemFallback(
 							m_constructionContext,
 							m_stylesheet,
@@ -557,22 +557,22 @@ StylesheetHandler::startElement(
 							columnNumber);
 					break;
 
-				case Constants::ELEMNAME_CHOOSE:
+				case StylesheetConstructionContext::ELEMNAME_CHOOSE:
 					elem = new ElemChoose(m_constructionContext,
 										m_stylesheet,
 										atts, lineNumber, columnNumber);
 					break;
           
-				case Constants::ELEMNAME_WHEN:
+				case StylesheetConstructionContext::ELEMNAME_WHEN:
 					{
 						ElemTemplateElement* const	parent = m_elemStack.back();
 
-						if(Constants::ELEMNAME_CHOOSE == parent->getXSLToken())
+						if(StylesheetConstructionContext::ELEMNAME_CHOOSE == parent->getXSLToken())
 						{
 							ElemTemplateElement* const	lastChild = parent->getLastChildElem();
 
 							if(0 == lastChild ||
-								Constants::ELEMNAME_WHEN == lastChild->getXSLToken() ||
+								StylesheetConstructionContext::ELEMNAME_WHEN == lastChild->getXSLToken() ||
 								lastChild->isWhitespace() == true)
 							{
 								elem = new ElemWhen(m_constructionContext,
@@ -591,16 +591,16 @@ StylesheetHandler::startElement(
 					}
 					break;
           
-				case Constants::ELEMNAME_OTHERWISE:
+				case StylesheetConstructionContext::ELEMNAME_OTHERWISE:
 					{
 						ElemTemplateElement* parent = m_elemStack.back();
 
-						if(Constants::ELEMNAME_CHOOSE == parent->getXSLToken())
+						if(StylesheetConstructionContext::ELEMNAME_CHOOSE == parent->getXSLToken())
 						{
 							ElemTemplateElement* lastChild = parent->getLastChildElem();
 
 							if(0 == lastChild ||
-								Constants::ELEMNAME_WHEN == lastChild->getXSLToken() ||
+								StylesheetConstructionContext::ELEMNAME_WHEN == lastChild->getXSLToken() ||
 								lastChild->isWhitespace() == true)
 							{
 								elem = new ElemOtherwise(m_constructionContext,
@@ -619,19 +619,19 @@ StylesheetHandler::startElement(
 					}
 					break;
 
-				case Constants::ELEMNAME_COPY_OF:
+				case StylesheetConstructionContext::ELEMNAME_COPY_OF:
 					elem = new ElemCopyOf(m_constructionContext,
 										m_stylesheet,
 										atts, lineNumber, columnNumber);
 					break;
 
-				case Constants::ELEMNAME_COPY:
+				case StylesheetConstructionContext::ELEMNAME_COPY:
 					elem = new ElemCopy(m_constructionContext,
 									  m_stylesheet,
 									  atts, lineNumber, columnNumber);
 					break;
 
-				case Constants::ELEMNAME_TEXT:
+				case StylesheetConstructionContext::ELEMNAME_TEXT:
 				  // Just push the element on the stack to signal
 				  // that space should be preserved.
 					m_elemStack.push_back(new ElemText(m_constructionContext,
@@ -639,52 +639,46 @@ StylesheetHandler::startElement(
 											atts, lineNumber, columnNumber));
 					break;
 
-				case Constants::ELEMNAME_USE:
-					elem = new ElemUse(m_constructionContext,
-									 m_stylesheet,
-									 lineNumber, columnNumber);
-					break;
-
-				case Constants::ELEMNAME_ATTRIBUTE:
+				case StylesheetConstructionContext::ELEMNAME_ATTRIBUTE:
 					elem = new ElemAttribute(m_constructionContext,
 										   m_stylesheet,
 										   atts, lineNumber, columnNumber);
 					break;
 
-				case Constants::ELEMNAME_ELEMENT:
+				case StylesheetConstructionContext::ELEMNAME_ELEMENT:
 					elem = new ElemElement(m_constructionContext,
 										 m_stylesheet,
 										 atts, lineNumber, columnNumber);
 				  break;
           
-				case Constants::ELEMNAME_PI:
+				case StylesheetConstructionContext::ELEMNAME_PI:
 					elem = new ElemPI(m_constructionContext,
 									m_stylesheet,
 									atts, lineNumber, columnNumber);
 				  break;
 
-				case Constants::ELEMNAME_COMMENT:
+				case StylesheetConstructionContext::ELEMNAME_COMMENT:
 					elem = new ElemComment(m_constructionContext,
 										 m_stylesheet,
 										 atts, lineNumber, columnNumber);
 				  break;
           
-				case Constants::ELEMNAME_MESSAGE:
+				case StylesheetConstructionContext::ELEMNAME_MESSAGE:
 					elem = new ElemMessage(m_constructionContext,
 										 m_stylesheet,
 										 atts, lineNumber, columnNumber);
 
 					break;
           
-				case Constants::ELEMNAME_TEMPLATE:
-				case Constants::ELEMNAME_DEFINEATTRIBUTESET:
-				case Constants::ELEMNAME_EXTENSION:
-				case Constants::ELEMNAME_EXTENSIONHANDLER:
-				case Constants::ELEMNAME_KEY:
-				case Constants::ELEMNAME_IMPORT:
-				case Constants::ELEMNAME_INCLUDE:
-				case Constants::ELEMNAME_PRESERVESPACE:
-				case Constants::ELEMNAME_STRIPSPACE:
+				case StylesheetConstructionContext::ELEMNAME_TEMPLATE:
+				case StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET:
+				case StylesheetConstructionContext::ELEMNAME_EXTENSION:
+				case StylesheetConstructionContext::ELEMNAME_EXTENSION_HANDLER:
+				case StylesheetConstructionContext::ELEMNAME_KEY:
+				case StylesheetConstructionContext::ELEMNAME_IMPORT:
+				case StylesheetConstructionContext::ELEMNAME_INCLUDE:
+				case StylesheetConstructionContext::ELEMNAME_PRESERVE_SPACE:
+				case StylesheetConstructionContext::ELEMNAME_STRIP_SPACE:
 					{
 						const XalanDOMString	msg(XalanDOMString(name) + " is not allowed inside a template.");
 
@@ -932,7 +926,7 @@ StylesheetHandler::processTopLevelElement(
 			bool&					fPreserveSpace,
 			bool&					fSpaceAttrProcessed)
 {
-	if(m_foundStylesheet && Constants::ELEMNAME_IMPORT != xslToken)
+	if(m_foundStylesheet && StylesheetConstructionContext::ELEMNAME_IMPORT != xslToken)
 	{
 		m_foundNotImport = true;
 	}
@@ -942,7 +936,7 @@ StylesheetHandler::processTopLevelElement(
 
 	switch(xslToken)
 	{
-	case Constants::ELEMNAME_TEMPLATE:
+	case StylesheetConstructionContext::ELEMNAME_TEMPLATE:
 		assert(m_pTemplate == 0);
 
 		m_pTemplate = new ElemTemplate(
@@ -958,17 +952,17 @@ StylesheetHandler::processTopLevelElement(
 		m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
 		break;
 
-	case Constants::ELEMNAME_EXTENSION:
+	case StylesheetConstructionContext::ELEMNAME_EXTENSION:
 		if(!equalsIgnoreCaseASCII(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
 		{
 			m_constructionContext.warn("Old syntax: the functions instruction should use a url of " + m_constructionContext.getXalanXSLNameSpaceURL());
 		}
 		break;
 
-	case Constants::ELEMNAME_VARIABLE:
-	case Constants::ELEMNAME_PARAMVARIABLE:
+	case StylesheetConstructionContext::ELEMNAME_VARIABLE:
+	case StylesheetConstructionContext::ELEMNAME_PARAM:
 		{
-			ElemVariable* varelem = (Constants::ELEMNAME_PARAMVARIABLE == xslToken) 
+			ElemVariable* varelem = (StylesheetConstructionContext::ELEMNAME_PARAM == xslToken) 
 									   ? new ElemParam(m_constructionContext,
 													   m_stylesheet,
 													   atts, 
@@ -994,12 +988,12 @@ StylesheetHandler::processTopLevelElement(
 		}
 	break;
 
-	case Constants::ELEMNAME_PRESERVESPACE:
-	case Constants::ELEMNAME_STRIPSPACE:
+	case StylesheetConstructionContext::ELEMNAME_PRESERVE_SPACE:
+	case StylesheetConstructionContext::ELEMNAME_STRIP_SPACE:
 		processPreserveStripSpace(name, atts, locator, xslToken);
 		break;
 
-	case Constants::ELEMNAME_KEY:
+	case StylesheetConstructionContext::ELEMNAME_KEY:
 		{
 			ElemEmpty nsContext(m_constructionContext, m_stylesheet, lineNumber, columnNumber);
 
@@ -1007,7 +1001,7 @@ StylesheetHandler::processTopLevelElement(
 		}
 		break;
 
-	case Constants::ELEMNAME_DEFINEATTRIBUTESET:
+	case StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET:
 		{
 			m_inTemplate = true; // fake it out
 			m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
@@ -1022,19 +1016,19 @@ StylesheetHandler::processTopLevelElement(
 		}
 		break;
 
-	case Constants::ELEMNAME_INCLUDE:
+	case StylesheetConstructionContext::ELEMNAME_INCLUDE:
 		processInclude(name, atts, locator);
 		break;
 
-	case Constants::ELEMNAME_IMPORT:
+	case StylesheetConstructionContext::ELEMNAME_IMPORT:
 		processImport(name, atts, locator);
 		break;
 
-	case Constants::ELEMNAME_OUTPUT:
+	case StylesheetConstructionContext::ELEMNAME_OUTPUT:
 		m_stylesheet.getStylesheetRoot().processOutputSpec(name, atts, m_constructionContext);
 		break;
 
-	case Constants::ELEMNAME_DECIMALFORMAT:
+	case StylesheetConstructionContext::ELEMNAME_DECIMAL_FORMAT:
 		m_stylesheet.processDecimalFormatElement(
 					new ElemDecimalFormat(
 							m_constructionContext,
@@ -1044,34 +1038,30 @@ StylesheetHandler::processTopLevelElement(
 							columnNumber));
 		break;
 
-	case Constants::ELEMNAME_NSALIAS:
+	case StylesheetConstructionContext::ELEMNAME_NAMESPACE_ALIAS:
 		m_stylesheet.processNSAliasElement(name, atts, m_constructionContext);
 		break;
 
-	case Constants::ELEMNAME_WITHPARAM:
-	case Constants::ELEMNAME_ATTRIBUTE:
-	case Constants::ELEMNAME_APPLY_TEMPLATES:
-	case Constants::ELEMNAME_USE:
-	case Constants::ELEMNAME_CHILDREN:
-	case Constants::ELEMNAME_CHOOSE:
-	case Constants::ELEMNAME_COMMENT:
-	case Constants::ELEMNAME_CONSTRUCT:
-	case Constants::ELEMNAME_CONTENTS:
-	case Constants::ELEMNAME_COPY:
-	case Constants::ELEMNAME_COPY_OF:
-	case Constants::ELEMNAME_FOREACH:
-	case Constants::ELEMNAME_IF:
-	case Constants::ELEMNAME_CALLTEMPLATE:
-	case Constants::ELEMNAME_MESSAGE:
-	case Constants::ELEMNAME_NUMBER:
-	case Constants::ELEMNAME_OTHERWISE:
-	case Constants::ELEMNAME_PI:
-	case Constants::ELEMNAME_SORT:
-	case Constants::ELEMNAME_TEXT:
-	case Constants::ELEMNAME_VALUEOF:
-	case Constants::ELEMNAME_WHEN:
-	case Constants::ELEMNAME_ELEMENT:
-	case Constants::ELEMNAME_APPLY_IMPORTS:
+	case StylesheetConstructionContext::ELEMNAME_WITH_PARAM:
+	case StylesheetConstructionContext::ELEMNAME_ATTRIBUTE:
+	case StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES:
+	case StylesheetConstructionContext::ELEMNAME_CHOOSE:
+	case StylesheetConstructionContext::ELEMNAME_COMMENT:
+	case StylesheetConstructionContext::ELEMNAME_COPY:
+	case StylesheetConstructionContext::ELEMNAME_COPY_OF:
+	case StylesheetConstructionContext::ELEMNAME_FOR_EACH:
+	case StylesheetConstructionContext::ELEMNAME_IF:
+	case StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE:
+	case StylesheetConstructionContext::ELEMNAME_MESSAGE:
+	case StylesheetConstructionContext::ELEMNAME_NUMBER:
+	case StylesheetConstructionContext::ELEMNAME_OTHERWISE:
+	case StylesheetConstructionContext::ELEMNAME_PI:
+	case StylesheetConstructionContext::ELEMNAME_SORT:
+	case StylesheetConstructionContext::ELEMNAME_TEXT:
+	case StylesheetConstructionContext::ELEMNAME_VALUE_OF:
+	case StylesheetConstructionContext::ELEMNAME_WHEN:
+	case StylesheetConstructionContext::ELEMNAME_ELEMENT:
+	case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
 		if (inExtensionElement() == false)
 		{
 			const XalanDOMString	msg("(StylesheetHandler) " + XalanDOMString(name) + " not allowed inside a stylesheet.");
@@ -1080,7 +1070,7 @@ StylesheetHandler::processTopLevelElement(
 		}
 		break;
 
-	case Constants::ELEMNAME_STYLESHEET:
+	case StylesheetConstructionContext::ELEMNAME_STYLESHEET:
 		processStylesheet(name, atts, locator, fPreserveSpace, fSpaceAttrProcessed);
 		break;
 
@@ -1357,7 +1347,7 @@ StylesheetHandler::processPreserveStripSpace(
 
 	bool foundIt = false;
 
-	const bool	isPreserveSpace = Constants::ELEMNAME_PRESERVESPACE == xslToken? true : false;
+	const bool	isPreserveSpace = StylesheetConstructionContext::ELEMNAME_PRESERVE_SPACE == xslToken? true : false;
 
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
@@ -1487,7 +1477,7 @@ StylesheetHandler::doCleanup()
 
 	// Pop anything that's not an empty element...
 	while(m_elemStack.empty() == false &&
-		  m_elemStack.back()->getXSLToken() != Constants::ELEMNAME_UNDEFINED)
+		  m_elemStack.back()->getXSLToken() != StylesheetConstructionContext::ELEMNAME_UNDEFINED)
 	{
 		m_elemStackParentedElements.erase(m_elemStack.back());
 		m_elemStack.pop_back();
@@ -1691,14 +1681,14 @@ StylesheetHandler::endElement(const XMLCh* const name)
 		m_inScopeVariableNamesStack.pop_back();
 	}
 
-	if(Constants::ELEMNAME_TEMPLATE == tok)
+	if(StylesheetConstructionContext::ELEMNAME_TEMPLATE == tok)
 	{
 		m_inTemplate = false;
 		m_stylesheet.addTemplate(m_pTemplate, m_constructionContext);
 		m_pTemplate = 0;
 	}
-	else if((Constants::ELEMNAME_PARAMVARIABLE == tok) ||
-		Constants::ELEMNAME_VARIABLE == tok)
+	else if((StylesheetConstructionContext::ELEMNAME_PARAM == tok) ||
+			 StylesheetConstructionContext::ELEMNAME_VARIABLE == tok)
 	{
 #if defined(XALAN_OLD_STYLE_CASTS)
 		const ElemVariable* const	var = (const ElemVariable*)m_lastPopped;
@@ -1712,12 +1702,12 @@ StylesheetHandler::endElement(const XMLCh* const name)
 			m_inTemplate = false;
 		}
 	}
-	else if(Constants::ELEMNAME_DEFINEATTRIBUTESET == tok)
+	else if(StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET == tok)
 	{
 		m_inTemplate = false;
 	}
-	else if (tok == Constants::ELEMNAME_UNDEFINED ||
-		tok == Constants::ELEMNAME_TEXT)
+	else if (tok == StylesheetConstructionContext::ELEMNAME_UNDEFINED ||
+			 tok == StylesheetConstructionContext::ELEMNAME_TEXT)
 	{
 		// These are stray elements, so stuff them away
 		// to be deleted when we're finished...
@@ -1863,7 +1853,7 @@ StylesheetHandler::processText(
 		bool	preserveSpace = m_preserveSpaceStack.back();
 		bool	disableOutputEscaping = false;
 
-		if (preserveSpace == false && parent->getXSLToken() == Constants::ELEMNAME_TEXT)
+		if (preserveSpace == false && parent->getXSLToken() == StylesheetConstructionContext::ELEMNAME_TEXT)
 		{
 #if defined(XALAN_OLD_STYLE_CASTS)
 			disableOutputEscaping = ((ElemText*)parent)->getDisableOutputEscaping();
@@ -1922,10 +1912,10 @@ StylesheetHandler::processText(
 			{
 				// If it was surrounded by xsl:text, it will count as an element.
 				const bool	isPrevCharData =
-					Constants::ELEMNAME_TEXTLITERALRESULT == last->getXSLToken();
+					StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT == last->getXSLToken();
 
 				const bool	isLastPoppedXSLText = (m_lastPopped != 0) &&
-						(Constants::ELEMNAME_TEXT == m_lastPopped->getXSLToken());
+						(StylesheetConstructionContext::ELEMNAME_TEXT == m_lastPopped->getXSLToken());
 
 				if(isPrevCharData && ! isLastPoppedXSLText)
 				{

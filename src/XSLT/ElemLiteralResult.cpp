@@ -92,6 +92,28 @@ ElemLiteralResult::ElemLiteralResult(
 			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
+			int								columnNumber) :
+	ElemUse(constructionContext,
+			stylesheetTree,
+			lineNumber,
+			columnNumber,
+			StylesheetConstructionContext::ELEMNAME_LITERAL_RESULT),
+	m_elementName(constructionContext.getPooledString(name)),
+	m_avts(),
+	m_attrCount(0),
+	m_hasPrefix(indexOf(name, XalanUnicode::charColon) < length(name) ? true : false)
+{
+	init(constructionContext, stylesheetTree, atts);
+}
+
+
+
+ElemLiteralResult::ElemLiteralResult(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMChar*				name,
+			const AttributeList&			atts,
+			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :
 	ElemUse(constructionContext,
@@ -103,6 +125,17 @@ ElemLiteralResult::ElemLiteralResult(
 	m_avts(),
 	m_attrCount(0),
 	m_hasPrefix(indexOf(name, XalanUnicode::charColon) < length(name) ? true : false)
+{
+	init(constructionContext, stylesheetTree, atts);
+}
+
+
+
+void
+ElemLiteralResult::init(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const AttributeList&			atts)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -257,7 +290,7 @@ ElemLiteralResult::postConstruction(
 			// is another LRE, then we won't generate any attributes.
 			// Otherwise, we might...
 			if (hasSingleTextChild() == false &&
-				getFirstChildElem()->getXSLToken() != Constants::ELEMNAME_LITERALRESULT)
+				getFirstChildElem()->getXSLToken() != StylesheetConstructionContext::ELEMNAME_LITERAL_RESULT)
 			{
 				canGenerateAttributes(true);
 			}

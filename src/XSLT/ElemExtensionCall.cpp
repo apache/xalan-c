@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,7 +79,7 @@ ElemExtensionCall::ElemExtensionCall(
 					  atts,
 					  lineNumber,
 					  columnNumber,
-					  Constants::ELEMNAME_EXTENSIONCALL),
+					  StylesheetConstructionContext::ELEMNAME_EXTENSION_CALL),
 	m_name(constructionContext.getPooledString(name)),
 	m_nsh(ns),
 	m_localPart(constructionContext.getPooledString(localpart))	
@@ -103,7 +103,7 @@ ElemExtensionCall::execute(StylesheetExecutionContext&		executionContext) const
 
 	for (const ElemTemplateElement*	child = getFirstChildElem(); child != 0; child = child->getNextSiblingElem())
 	{
-		if(child->getXSLToken() == Constants::ELEMNAME_FALLBACK)
+		if(child->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK)
 		{
 			child->execute(executionContext);
 		}

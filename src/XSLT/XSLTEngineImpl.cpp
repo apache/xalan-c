@@ -3452,6 +3452,7 @@ XSLTEngineImpl::uninstallFunctions()
 void
 XSLTEngineImpl::initializeElementKeysTable(ElementKeysMapType&	theElementKeys)
 {
+#if 0
 	theElementKeys[Constants::ELEMNAME_APPLY_TEMPLATES_STRING] = Constants::ELEMNAME_APPLY_TEMPLATES;
 	theElementKeys[Constants::ELEMNAME_WITHPARAM_STRING] = Constants::ELEMNAME_WITHPARAM;
 	theElementKeys[Constants::ELEMNAME_CONSTRUCT_STRING] = Constants::ELEMNAME_CONSTRUCT;
@@ -3499,6 +3500,7 @@ XSLTEngineImpl::initializeElementKeysTable(ElementKeysMapType&	theElementKeys)
 
 	theElementKeys[Constants::ELEMNAME_DECIMALFORMAT_STRING] = Constants::ELEMNAME_DECIMALFORMAT;
 	theElementKeys[Constants::ELEMNAME_NSALIAS_STRING] = Constants::ELEMNAME_NSALIAS;
+#endif
 }
 
 
@@ -3556,6 +3558,86 @@ const XalanDOMString&	XSLTEngineImpl::s_typeValueString4 = ::s_typeValueString4;
 
 const XSLTEngineImpl::ElementKeysMapType&		XSLTEngineImpl::s_elementKeys = ::s_elementKeys;
 
+
+#if 0
+#include <fstream>
+
+void
+dumpTable(
+			const XSLTEngineImpl::ElementKeysMapType&	theTable,
+			std::ostream&								theSourceStream,
+			std::ostream&								theHeaderStream)
+{
+	XSLTEngineImpl::ElementKeysMapType::const_iterator	i = theTable.begin();
+
+	while(i != theTable.end())
+	{
+		theSourceStream << "const XalanDOMChar\tXSLTEngineImpl::s_";
+
+		const XalanDOMString&	theString = (*i).first;
+
+		theHeaderStream << "\t// The string \"" << theString << "\"\n\tstatic const XalanDOMChar\ts_";
+
+		bool	nextCap = false;
+
+		XalanDOMString::const_iterator	j = theString.begin();
+
+		while(*j)
+		{
+			if (*j == '-')
+			{
+				nextCap = true;
+			}
+			else
+			{
+				assert(*j >= 'a' && *j <= 'z');
+
+				if (nextCap)
+				{
+					theSourceStream << char(*j -'a' + 'A');
+					theHeaderStream << char(*j -'a' + 'A');
+
+					nextCap = false;
+				}
+				else
+				{
+					theSourceStream << char(*j);
+					theHeaderStream << char(*j);
+				}
+			}
+
+			++j;
+		}
+
+		j = theString.begin();
+
+		theSourceStream << "[] =\n{\n";
+		theHeaderStream << "[];\n\n";
+
+		while(*j)
+		{
+			if (*j == '-')
+			{
+				theSourceStream << "\tXalanUnicode::charHyphenMinus,\n";
+			}
+			else
+			{
+				assert(*j >= 'a' && *j <= 'z');
+
+				theSourceStream << "\tXalanUnicode::charLetter_";
+
+				theSourceStream << char(*j) << ",\n";
+			}
+
+			++j;
+		}
+
+		theSourceStream << "\t0\n};\n\n";
+
+		++i;
+	}
+}
+#endif
 
 
 void

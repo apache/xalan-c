@@ -84,7 +84,7 @@ ElemElement::ElemElement(
 			stylesheetTree,
 			lineNumber,
 			columnNumber,
-			Constants::ELEMNAME_ELEMENT),
+			StylesheetConstructionContext::ELEMNAME_ELEMENT),
 	m_nameAVT(0),
 	m_namespaceAVT(0)
 {
@@ -370,7 +370,7 @@ ElemElement::doExecuteChildren(
 
 		for (ElemTemplateElement* node = getFirstChildElem(); node != 0; node = node->getNextSiblingElem()) 
 		{
-			if (node->getXSLToken() != Constants::ELEMNAME_ATTRIBUTE)
+			if (node->getXSLToken() != StylesheetConstructionContext::ELEMNAME_ATTRIBUTE)
 			{
 				node->execute(executionContext);
 			}

@@ -85,7 +85,7 @@ ElemCopy::ElemCopy(
 			stylesheetTree,
 			lineNumber,
 			columnNumber,
-			Constants::ELEMNAME_COPY)
+			StylesheetConstructionContext::ELEMNAME_COPY)
 {
 	const unsigned int	nAttrs = atts.getLength();
 

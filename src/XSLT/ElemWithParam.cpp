@@ -82,7 +82,7 @@ ElemWithParam::ElemWithParam(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_WITHPARAM),
+						StylesheetConstructionContext::ELEMNAME_WITH_PARAM),
 	m_selectPattern(0),
 	m_qname()
 {

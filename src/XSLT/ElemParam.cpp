@@ -64,6 +64,7 @@
 
 #include "Constants.hpp"
 #include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 #include "StylesheetRoot.hpp"
 #include "TracerEvent.hpp"
@@ -81,7 +82,7 @@ ElemParam::ElemParam(
 				 atts,
 				 lineNumber,
 				 columnNumber,
-				 Constants::ELEMNAME_PARAMVARIABLE)
+				 StylesheetConstructionContext::ELEMNAME_PARAM)
 {
 }
 

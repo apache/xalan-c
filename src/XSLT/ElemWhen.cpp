@@ -81,7 +81,7 @@ ElemWhen::ElemWhen(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_WHEN),
+						StylesheetConstructionContext::ELEMNAME_WHEN),
 	m_pTest(0)
 {
 	const unsigned int	nAttrs = atts.getLength();

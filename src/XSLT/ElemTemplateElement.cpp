@@ -678,7 +678,8 @@ ElemTemplateElement::transformChild(
 	{
 		// Find the XSL template that is the best match for the 
 		// element...
-		const bool			isApplyImports = xslInstruction.getXSLToken() == Constants::ELEMNAME_APPLY_IMPORTS;
+		const bool			isApplyImports = xslInstruction.getXSLToken() ==
+			StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS;
 
 		const Stylesheet*	stylesheetTree = isApplyImports ?
 								&xslInstruction.getStylesheet() :
@@ -1086,14 +1087,14 @@ ElemTemplateElement::postConstruction(
 			const int	theToken = node->getXSLToken();
 
 			if (hasVariables() == false &&
-				(theToken == Constants::ELEMNAME_VARIABLE ||
-				 theToken == Constants::ELEMNAME_PARAMVARIABLE))
+				(theToken == StylesheetConstructionContext::ELEMNAME_VARIABLE ||
+				 theToken == StylesheetConstructionContext::ELEMNAME_PARAM))
 			{
 				m_optimizationFlags |= eHasVariables;
 			}
 
 			if (hasParams() == false &&
-				theToken == Constants::ELEMNAME_WITHPARAM)
+				theToken == StylesheetConstructionContext::ELEMNAME_WITH_PARAM)
 			{
 				m_optimizationFlags |= eHasParams;
 			}
@@ -1105,12 +1106,12 @@ ElemTemplateElement::postConstruction(
 
 		// There are opportunities for optimization if there's only one
 		// xsl:text child node.  See childrenToString()...
-		if (theToken == Constants::ELEMNAME_TEXTLITERALRESULT &&
+		if (theToken == StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT &&
 			m_firstChild->getNextSibling() == 0)
 		{
 			m_optimizationFlags |= eHasSingleTextChild;
 		}
-		else if (theToken == Constants::ELEMNAME_CALLTEMPLATE &&
+		else if (theToken == StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE &&
 				 m_firstChild->getNextSibling() == 0)
 		{
 			// Just a single xsl:call-template child, so we don't need to
@@ -1133,7 +1134,7 @@ ElemTemplateElement::postConstruction(
 			}
 		}
 		else if (canGenerateAttributes() == false &&
-				 theToken != Constants::ELEMNAME_LITERALRESULT)
+				 theToken != StylesheetConstructionContext::ELEMNAME_LITERAL_RESULT)
 		{
 			m_optimizationFlags |= eCanGenerateAttributes;
 		}

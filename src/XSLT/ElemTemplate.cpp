@@ -87,7 +87,7 @@ ElemTemplate::ElemTemplate(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_TEMPLATE),
+						StylesheetConstructionContext::ELEMNAME_TEMPLATE),
 	m_matchPattern(0),
 	m_name(),
 	m_mode(),

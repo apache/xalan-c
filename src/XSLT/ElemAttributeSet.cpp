@@ -79,7 +79,7 @@ ElemAttributeSet::ElemAttributeSet(
 			stylesheetTree,
 			lineNumber,
 			columnNumber,
-			Constants::ELEMNAME_DEFINEATTRIBUTESET),
+			StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET),
 	m_QName()
 {
 	const unsigned int	nAttrs = atts.getLength();
@@ -88,7 +88,7 @@ ElemAttributeSet::ElemAttributeSet(
 	{
 		const XalanDOMChar*	const	aname = atts.getName(i);
 
-		if(equals(aname,Constants::ATTRNAME_NAME))
+		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
 			m_QName.set(atts.getValue(i), stylesheetTree.getNamespaces());
 
@@ -171,7 +171,7 @@ ElemAttributeSet::childTypeAllowed(int	xslToken) const
 
 	switch(xslToken)
 	{
-	case Constants::ELEMNAME_ATTRIBUTE:
+	case StylesheetConstructionContext::ELEMNAME_ATTRIBUTE:
 		fResult = true;
 		break;
 		

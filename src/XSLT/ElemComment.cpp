@@ -82,7 +82,7 @@ ElemComment::ElemComment(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_COMMENT)
+						StylesheetConstructionContext::ELEMNAME_COMMENT)
 {
 	const unsigned int nAttrs = atts.getLength();
 
@@ -137,20 +137,20 @@ ElemComment::childTypeAllowed(int	xslToken) const
 	switch(xslToken)
 	{
 	// char-instructions 
-	case Constants::ELEMNAME_TEXTLITERALRESULT:
-	case Constants::ELEMNAME_APPLY_TEMPLATES:
-	case Constants::ELEMNAME_APPLY_IMPORTS:
-	case Constants::ELEMNAME_CALLTEMPLATE:
-	case Constants::ELEMNAME_FOREACH:
-	case Constants::ELEMNAME_VALUEOF:
-	case Constants::ELEMNAME_COPY_OF:
-	case Constants::ELEMNAME_NUMBER:
-	case Constants::ELEMNAME_CHOOSE:
-	case Constants::ELEMNAME_IF:
-	case Constants::ELEMNAME_TEXT:
-	case Constants::ELEMNAME_COPY:
-	case Constants::ELEMNAME_VARIABLE:
-	case Constants::ELEMNAME_MESSAGE:
+	case StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT:
+	case StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES:
+	case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
+	case StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE:
+	case StylesheetConstructionContext::ELEMNAME_FOR_EACH:
+	case StylesheetConstructionContext::ELEMNAME_VALUE_OF:
+	case StylesheetConstructionContext::ELEMNAME_COPY_OF:
+	case StylesheetConstructionContext::ELEMNAME_NUMBER:
+	case StylesheetConstructionContext::ELEMNAME_CHOOSE:
+	case StylesheetConstructionContext::ELEMNAME_IF:
+	case StylesheetConstructionContext::ELEMNAME_TEXT:
+	case StylesheetConstructionContext::ELEMNAME_COPY:
+	case StylesheetConstructionContext::ELEMNAME_VARIABLE:
+	case StylesheetConstructionContext::ELEMNAME_MESSAGE:
 		fResult = true;
 		break;
 		
