@@ -146,6 +146,10 @@ SOURCE=..\..\..\..\src\DOMSupport\NamespaceResolver.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\DOMSupport\NSInfo.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.hpp
 # End Source File
 # End Group
