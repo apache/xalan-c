@@ -212,7 +212,11 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
 	result_type
 	operator()(argument_type	thePair) const
 	{
+#if defined(XALAN_CANNOT_DELETE_CONST)
+		delete (T*)thePair.second;
+#else
 		delete thePair.second;
+#endif
 	}
 };
 

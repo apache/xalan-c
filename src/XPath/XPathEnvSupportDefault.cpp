@@ -185,7 +185,11 @@ XPathEnvSupportDefault::updateFunctionTable(
 		else
 		{
 			// Found it, so delete the function...
+#if defined(XALAN_CANNOT_DELETE_CONST)
+			delete (Function*)(*j).second;
+#else
 			delete (*j).second;
+#endif
 
 			// If function is not 0, then we update
 			// the entry.  Otherwise, we erase it...
