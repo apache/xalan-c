@@ -114,10 +114,8 @@ private:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString, XercesNodeListBridge*>			NodeListCacheType;
-
 #else
 	typedef std::map<XalanDOMString, XercesNodeListBridge*>		NodeListCacheType;
-
 #endif
 
 #if defined(XALAN_NO_MUTABLE)

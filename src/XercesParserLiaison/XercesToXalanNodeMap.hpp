@@ -166,9 +166,15 @@ private:
 		unsigned long	m_index;
 	};
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<const XalanNode*, XalanNodeMapEntryType>		XalanNodeMapType;
+
+	typedef map<const NodeImpl*, XalanNode*>					XercesNodeMapType;
+#else
 	typedef std::map<const XalanNode*, XalanNodeMapEntryType>	XalanNodeMapType;
 
-	typedef std::map<const NodeImpl*, XalanNode*>		XercesNodeMapType;
+	typedef std::map<const NodeImpl*, XalanNode*>				XercesNodeMapType;
+#endif
 
 	XalanNodeMapType	m_xalanMap;
 	XercesNodeMapType	m_xercesMap;
