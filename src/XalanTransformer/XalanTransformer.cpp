@@ -271,10 +271,8 @@ XalanTransformer::terminate()
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("nodeset")));
 
 #if defined(XALAN_USE_ICU)
-	// Install the ICU version of format-number...
-	XPath::installFunction(
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")),
-			FunctionICUFormatNumber());
+	XPath::uninstallFunction(
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")));
 
 #if defined(XALAN_CANNOT_DELETE_CONST)
 	delete (ICUBridgeCollationCompareFunctor*)theICUFunctor;
