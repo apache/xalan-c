@@ -74,7 +74,6 @@
 
 
 
-#include <PlatformSupport/FactoryObject.hpp>
 #include <PlatformSupport/STLHelper.hpp>
 
 
