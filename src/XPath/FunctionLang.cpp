@@ -66,7 +66,8 @@
 
 
 
-FunctionLang::FunctionLang()
+FunctionLang::FunctionLang() :
+	m_attributeName(XALAN_STATIC_UCODE_STRING("xml:lang"))
 {
 }
 
@@ -116,12 +117,11 @@ FunctionLang::execute(
 #endif
 
 			const XalanDOMString		langVal =
-				theElementNode->getAttribute(StaticStringToDOMString(
-				XALAN_STATIC_UCODE_STRING("xml:lang")));
+				theElementNode->getAttribute(m_attributeName);
 
 			if(0 != length(langVal))
 			{
-				if(startsWith(toLowerCase(langVal), toLowerCase(lang)))
+				if(startsWith(toLowerCaseASCII(langVal), toLowerCaseASCII(lang)))
 				{
 					const unsigned int	valLen = length(lang);
 
@@ -202,7 +202,6 @@ FunctionLang::clone() const
 const XalanDOMString
 FunctionLang::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The lang() function takes one argument!");
+	return XALAN_STATIC_UCODE_STRING("The lang() function takes one argument!");
 }
 

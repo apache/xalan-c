@@ -139,6 +139,8 @@ private:
 
 	bool
 	operator==(const FunctionLang&) const;
+
+	const XalanDOMString	m_attributeName;
 };
 
 
