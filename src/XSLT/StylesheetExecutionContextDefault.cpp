@@ -2139,10 +2139,11 @@ StylesheetExecutionContextDefault::getSourceTreeFactory() const
 	if(m_sourceTreeResultTreeFactory.get() == 0)
 	{
 #if defined(XALAN_NO_MUTABLE)
-		((StylesheetExecutionContextDefault*)this)->m_sourceTreeResultTreeFactory.reset(new XalanSourceTreeDocument);
+		((StylesheetExecutionContextDefault*)this)->m_sourceTreeResultTreeFactory.reset(
 #else
-		m_sourceTreeResultTreeFactory.reset(new XalanSourceTreeDocument);
+		m_sourceTreeResultTreeFactory.reset(
 #endif
+			new XalanSourceTreeDocument(m_xsltProcessor->getXMLParserLiaison().getDocumentNumber()));
 	}
 
 	return m_sourceTreeResultTreeFactory.get();
