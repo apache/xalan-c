@@ -78,6 +78,8 @@ public:
 
 	typedef XalanSourceTreeElementNS				ObjectType;
 
+	typedef ObjectType::AttributesCountType			AttributesCountType;
+
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
 	typedef ArenaBlock<ObjectType>					ArenaBlockType;
 
@@ -123,7 +125,7 @@ public:
 			const XalanDOMString&		thePrefix,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
-			unsigned int				theAttributeCount,
+			AttributesCountType			theAttributeCount,
 			XalanSourceTreeElement*		theParentElement = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,

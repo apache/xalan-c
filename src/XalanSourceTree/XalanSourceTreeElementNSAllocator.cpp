@@ -81,7 +81,7 @@ XalanSourceTreeElementNSAllocator::create(
 			const XalanDOMString&		thePrefix,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
-			unsigned int				theAttributeCount,
+			AttributesCountType			theAttributeCount,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,

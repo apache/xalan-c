@@ -58,6 +58,10 @@
 
 
 
+#include <cassert>
+
+
+
 #include <XalanDOM/XalanDOMException.hpp>
 
 
@@ -67,10 +71,6 @@
 
 
 static const XalanDOMString		s_emptyString;
-
-
-
-const XalanNodeListDummy	XalanSourceTreeAttr::s_children;
 
 
 
@@ -145,7 +145,7 @@ XalanSourceTreeAttr::getParentNode() const
 const XalanNodeList*
 XalanSourceTreeAttr::getChildNodes() const
 {
-	return &s_children;
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 }
 
 

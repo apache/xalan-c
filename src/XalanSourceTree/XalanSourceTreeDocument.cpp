@@ -83,7 +83,6 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(bool	fPoolAllText) :
 	XalanDocument(),
 	m_firstChild(0),
 	m_documentElement(0),
-	m_children(*this),
 	m_attributeAllocator(100),
 	m_attributeNSAllocator(50),
 	m_commentAllocator(20),
@@ -145,7 +144,7 @@ XalanSourceTreeDocument::getParentNode() const
 const XalanNodeList*
 XalanSourceTreeDocument::getChildNodes() const
 {
-	return &m_children;
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 }
 
 
@@ -536,7 +535,11 @@ XalanSourceTreeDocument::createElementNode(
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling)
 {
-	const unsigned int	theAttributeCount = attrs.getLength();
+	// We might have typedef'ed this to something smaller than unsigned int.
+	const AttributesCountType	theAttributeCount = AttributesCountType(attrs.getLength());
+
+	// assert that we didn't lose anything...
+	assert(theAttributeCount == attrs.getLength());
 
 	XalanSourceTreeAttr** const		theAttributeVector =
 		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
@@ -553,7 +556,7 @@ XalanSourceTreeDocument::createElementNode(
 				m_nextIndexValue++);
 
 	// Now, create the attributes...
-	for(unsigned int i = 0; i < theAttributeCount; ++i)
+	for(AttributesCountType i = 0; i < theAttributeCount; ++i)
 	{
 		const XalanDOMChar* const	theName =
 			attrs.getName(i);
@@ -608,7 +611,11 @@ XalanSourceTreeDocument::createElementNode(
 			XalanNode*					theNextSibling)
 {
 
-	const unsigned int	theAttributeCount = attrs.getLength();
+	// We might have typedef'ed this to something smaller than unsigned int.
+	const AttributesCountType	theAttributeCount = AttributesCountType(attrs.getLength());
+
+	// assert that we didn't lose anything...
+	assert(theAttributeCount == attrs.getLength());
 
 	XalanSourceTreeAttr** const		theAttributeVector =
 		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
@@ -653,7 +660,11 @@ XalanSourceTreeDocument::createElementNode(
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling)
 {
-	const unsigned int	theAttributeCount = attrs.getLength();
+	// We might have typedef'ed this to something smaller than unsigned int.
+	const AttributesCountType	theAttributeCount = AttributesCountType(attrs.getLength());
+
+	// assert that we didn't lose anything...
+	assert(theAttributeCount == attrs.getLength());
 
 	XalanSourceTreeAttr** const		theAttributeVector =
 		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
@@ -779,10 +790,10 @@ XalanSourceTreeDocument::createTextIWSNode(
 
 void
 XalanSourceTreeDocument::unparsedEntityDeclaration(
-			const XMLCh*	name,
-			const XMLCh*	publicId,
-			const XMLCh*	systemId,
-			const XMLCh*	notationName)
+			const XalanDOMChar*		name,
+			const XalanDOMChar*		publicId,
+			const XalanDOMChar*		systemId,
+			const XalanDOMChar*		notationName)
 {
 	m_unparsedEntityURIs[XalanDOMString(name)] = XalanDOMString(systemId);
 }
@@ -858,7 +869,7 @@ XalanSourceTreeElement*
 XalanSourceTreeDocument::createElement(
 			const XalanDOMChar*			theTagName,
 			XalanSourceTreeAttr**		theAttributeVector,
-			unsigned int				theAttributeCount,
+			AttributesCountType			theAttributeCount,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling)
@@ -919,11 +930,11 @@ void
 XalanSourceTreeDocument::createAttributes(
 			const Attributes&			theAttributes,
 			XalanSourceTreeAttr**		theAttributeVector,
-			unsigned int				theAttributeCount,
+			AttributesCountType			theAttributeCount,
 			XalanSourceTreeElement*		theOwnerElement)
 {
 	// Now, create the attributes...
-	for(unsigned int i = 0; i < theAttributeCount; ++i)
+	for(AttributesCountType i = 0; i < theAttributeCount; ++i)
 	{
 		const XalanDOMChar* const	theQName =
 			theAttributes.getQName(i);

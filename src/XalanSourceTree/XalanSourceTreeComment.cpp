@@ -161,7 +161,7 @@ XalanSourceTreeComment::getParentNode() const
 const XalanNodeList*
 XalanSourceTreeComment::getChildNodes() const
 {
-	return 0;
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 }
 
 

@@ -554,8 +554,6 @@ private:
 	XalanSourceTreeElement*				m_ownerElement;
 
 	unsigned int						m_index;
-
-	static const XalanNodeListDummy		s_children;
 };
 
 

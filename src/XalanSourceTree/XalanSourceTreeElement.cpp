@@ -83,7 +83,7 @@ XalanSourceTreeElement::XalanSourceTreeElement(
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
-			unsigned int				theAttributeCount,
+			AttributesCountType			theAttributeCount,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
@@ -97,9 +97,7 @@ XalanSourceTreeElement::XalanSourceTreeElement(
 	m_firstChild(0),
 	m_index(theIndex),
 	m_attributes(theAttributes),
-	m_attributeCount(theAttributeCount),
-	m_childList(*this),
-	m_attributeNamedNodeMap(this)
+	m_attributeCount(theAttributeCount)
 {
 }
 
@@ -123,9 +121,7 @@ XalanSourceTreeElement::XalanSourceTreeElement(
 	m_firstChild(0),
 	m_index(0),
 	m_attributes(theSource.m_attributes),
-	m_attributeCount(theSource.m_attributeCount),
-	m_childList(*this),
-	m_attributeNamedNodeMap(this)
+	m_attributeCount(theSource.m_attributeCount)
 {
 }
 
@@ -173,7 +169,7 @@ XalanSourceTreeElement::getParentNode() const
 const XalanNodeList*
 XalanSourceTreeElement::getChildNodes() const
 {
-	return &m_childList;
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 }
 
 
@@ -213,7 +209,7 @@ XalanSourceTreeElement::getNextSibling() const
 const XalanNamedNodeMap*
 XalanSourceTreeElement::getAttributes() const
 {
-	return &m_attributeNamedNodeMap;
+	return this;
 }
 
 
@@ -619,4 +615,84 @@ void
 XalanSourceTreeElement::appendChildNode(XalanSourceTreeText*	theChild)
 {
 	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
+}
+
+
+
+XalanNode*
+XalanSourceTreeElement::setNamedItem(XalanNode* 	/* arg */)
+{
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
+}
+
+
+
+XalanNode*
+XalanSourceTreeElement::item(unsigned int	index) const
+{
+	return index < m_attributeCount ? m_attributes[index] : 0;
+}
+
+
+
+XalanNode*
+XalanSourceTreeElement::getNamedItem(const XalanDOMString& 	name) const
+{
+	return getAttributeNode(name);
+}
+
+
+
+unsigned int
+XalanSourceTreeElement::getLength() const
+{
+	return m_attributeCount;
+}
+
+
+
+XalanNode*
+XalanSourceTreeElement::removeNamedItem(const XalanDOMString&	/* name */)
+{
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
+}
+
+
+
+XalanNode*
+XalanSourceTreeElement::getNamedItemNS(
+			const XalanDOMString&	namespaceURI,
+			const XalanDOMString&	localName) const
+{
+	return getAttributeNodeNS(namespaceURI, localName);
+}
+
+
+
+XalanNode*
+XalanSourceTreeElement::setNamedItemNS(XalanNode*	/* arg */)
+{
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
+}
+
+
+
+XalanNode*
+XalanSourceTreeElement::removeNamedItemNS(
+			const XalanDOMString&	/* namespaceURI */,
+			const XalanDOMString&	/* localName */)
+{
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
 }

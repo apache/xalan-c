@@ -338,6 +338,14 @@ public:
 	XalanSourceTreeDocument*
 	mapDocument(const XalanDocument*	theDocument) const;
 
+	/** 
+	 * Create a XalanSourceTreeDocument instance.
+	 *
+	 * @return A pointer to the XalanSourceTreeDocument instance.
+	 */
+	XalanSourceTreeDocument*
+	createXalanSourceTreeDocument();
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<const XalanDocument*,
 				XalanSourceTreeDocument*,
@@ -348,10 +356,6 @@ public:
 #endif
 
 private:
-
-	XalanSourceTreeDocument*
-	createXalanSourceTreeDocument();
-
 
 	// Data members...
 	XercesDOMSupport				m_xercesDOMSupport;	// Must be before m_xercesParserLiaison!!!

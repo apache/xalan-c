@@ -65,11 +65,7 @@
 
 #include <XalanDOM/XalanDOMString.hpp>
 #include <XalanDOM/XalanElement.hpp>
-#include <XalanDOM/XalanNodeListSurrogate.hpp>
-
-
-
-#include <XalanSourceTree/XalanSourceTreeNamedNodeMap.hpp>
+#include <XalanDOM/XalanNamedNodeMap.hpp>
 
 
 
@@ -81,9 +77,11 @@ class XalanSourceTreeText;
 
 
 
-class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeElement : public XalanElement
+class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeElement : public XalanElement, private XalanNamedNodeMap
 {
 public:
+
+	typedef unsigned long	AttributesCountType;
 
 	/**
 	 * Constructor.
@@ -101,7 +99,7 @@ public:
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
-			unsigned int				theAttributeCount,
+			AttributesCountType			theAttributeCount,
 			XalanSourceTreeElement*		theParentElement = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
@@ -802,7 +800,7 @@ public:
 	}
 
 	XalanSourceTreeAttr*
-	item(unsigned int	index) const
+	getAttributeByIndex(unsigned int	index) const
 	{
 		return index < m_attributeCount ? m_attributes[index] : 0;
 	}
@@ -814,6 +812,37 @@ protected:
 			bool							deep = false);
 
 private:
+
+	// These are from XalanNamedNodeMap...
+
+	virtual XalanNode*
+	setNamedItem(XalanNode* 	arg);
+
+	virtual XalanNode*
+	item(unsigned int	index) const;
+
+	virtual XalanNode*
+	getNamedItem(const XalanDOMString& 	name) const;
+
+	virtual unsigned int
+	getLength() const;
+
+	virtual XalanNode*
+	removeNamedItem(const XalanDOMString&	name);
+
+	virtual XalanNode*
+	getNamedItemNS(
+			const XalanDOMString&	namespaceURI,
+			const XalanDOMString&	localName) const;
+
+	virtual XalanNode*
+	setNamedItemNS(XalanNode*	arg);
+
+	virtual XalanNode*
+	removeNamedItemNS(
+			const XalanDOMString&	namespaceURI,
+			const XalanDOMString&	localName);
+
 
 	// Not implemented...
 	XalanSourceTreeElement&
@@ -840,11 +869,7 @@ private:
 
 	XalanSourceTreeAttr* const *	m_attributes;
 
-	const unsigned int				m_attributeCount;
-
-	XalanNodeListSurrogate			m_childList;
-
-	XalanSourceTreeNamedNodeMap		m_attributeNamedNodeMap;
+	const AttributesCountType		m_attributeCount;
 };
 
 

@@ -73,8 +73,8 @@
 
 
 
-#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include "XalanSourceTreeDocument.hpp"
+#include "XalanSourceTreeParserLiaison.hpp"
 
 
 
@@ -84,7 +84,6 @@ static const XalanDOMString		s_emptyString;
 
 XalanSourceTreeDOMSupport::XalanSourceTreeDOMSupport() :
 	DOMSupport(),
-	m_domSupportDefault(),
 	m_parserLiaison(0)
 {
 }
@@ -100,15 +99,17 @@ XalanSourceTreeDOMSupport::~XalanSourceTreeDOMSupport()
 void
 XalanSourceTreeDOMSupport::reset()
 {
-	m_domSupportDefault.reset();
 }
 
 
 
 const XalanDOMString&
-XalanSourceTreeDOMSupport::getNamespaceOfNode(const XalanNode&	theNode) const
+XalanSourceTreeDOMSupport::getNamespaceForPrefix(
+			const XalanDOMString&	prefix, 
+			const XalanElement&		namespaceContext) const
 {
-	return theNode.getNamespaceURI();
+	return DOMServices::getNamespaceForPrefix(prefix,
+											  namespaceContext);
 }
 
 
@@ -130,4 +131,16 @@ XalanSourceTreeDOMSupport::getUnparsedEntityURI(
 	}
 
 	return s_emptyString;
+}
+
+
+
+bool
+XalanSourceTreeDOMSupport::isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const
+{
+	assert(node1.isIndexed() == true && node1.isIndexed() == true);
+
+	return node1.getIndex() > node2.getIndex() ? true : false;
 }

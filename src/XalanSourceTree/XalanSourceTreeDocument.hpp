@@ -69,7 +69,6 @@
 
 
 #include <XalanDOM/XalanDocument.hpp>
-#include <XalanDOM/XalanNodeListSurrogate.hpp>
 
 
 
@@ -98,6 +97,8 @@ class Attributes;
 class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeDocument : public XalanDocument
 {
 public:
+
+	typedef XalanSourceTreeElement::AttributesCountType		AttributesCountType;
 
 #if defined (XALAN_NO_NAMESPACES)
 	typedef map<
@@ -363,10 +364,10 @@ public:
 
 	void
 	unparsedEntityDeclaration(
-			const XMLCh*	name,
-			const XMLCh*	publicId,
-			const XMLCh*	systemId,
-			const XMLCh*	notationName);
+			const XalanDOMChar*		name,
+			const XalanDOMChar*		publicId,
+			const XalanDOMChar*		systemId,
+			const XalanDOMChar*		notationName);
 
 	const XalanDOMString&
 	getUnparsedEntityURI(const XalanDOMString&	theName) const;
@@ -394,7 +395,7 @@ private:
 	createElement(
 			const XalanDOMChar*			theTagName,
 			XalanSourceTreeAttr**		theAttributeVector,
-			unsigned int				theAttributeCount,
+			AttributesCountType			theAttributeCount,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling);
@@ -403,13 +404,14 @@ private:
 	createAttributes(
 			const Attributes&			theAttributes,
 			XalanSourceTreeAttr**		theAttributeVector,
-			unsigned int				theAttributeCount,
+			AttributesCountType			theAttributeCount,
 			XalanSourceTreeElement*		theOwnerElement);
 
 	const XalanDOMString&
 	getTextNodeString(
 			const XalanDOMChar*			chars,
 			unsigned int				length);
+
 
 	// Not implemented...
 	XalanSourceTreeDocument(const XalanSourceTreeDocument&	theSource);
@@ -425,8 +427,6 @@ private:
 	XalanNode*										m_firstChild;
 
 	XalanSourceTreeElement*							m_documentElement;
-
-	XalanNodeListSurrogate							m_children;
 
 	XalanSourceTreeAttributeAllocator				m_attributeAllocator;
 

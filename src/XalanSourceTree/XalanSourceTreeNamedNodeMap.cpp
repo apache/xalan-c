@@ -133,7 +133,7 @@ XalanSourceTreeNamedNodeMap::setNamedItem(XalanNode* 	/* arg */)
 XalanNode*
 XalanSourceTreeNamedNodeMap::item(unsigned int	index) const
 {
-	return m_element->item(index);
+	return m_element->getAttributeByIndex(index);
 }
 
 

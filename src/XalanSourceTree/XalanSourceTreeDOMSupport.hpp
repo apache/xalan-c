@@ -65,7 +65,6 @@
 
 
 #include <DOMSupport/DOMSupport.hpp>
-#include <DOMSupport/DOMSupportDefault.hpp>
 
 
 
@@ -77,6 +76,7 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeDOMSupport : public DOMSupport
 {
 public:
 
+	explicit
 	XalanSourceTreeDOMSupport();
 
 	virtual
@@ -88,13 +88,19 @@ public:
 	// These interfaces are inherited from DOMSupport...
 
 	virtual const XalanDOMString&
-	getNamespaceOfNode(const XalanNode&		theNode) const;
+	getNamespaceForPrefix(
+			const XalanDOMString&	prefix, 
+			const XalanElement&		namespaceContext) const;
 
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const;
 
+	virtual bool
+	isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const;
 
 	XalanSourceTreeParserLiaison*
 	getParserLiaison() const
@@ -109,8 +115,6 @@ public:
 	}
 
 private:
-
-	DOMSupportDefault				m_domSupportDefault;
 
 	XalanSourceTreeParserLiaison*	m_parserLiaison;
 };
