@@ -206,14 +206,6 @@ public:
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const;
 
-	virtual XLocator*
-	getXLocatorFromNode(const XalanNode*	node) const;
-
-	virtual void
-	associateXLocatorToNode(
-			const XalanNode*	node,
-			XLocator*			xlocator);
-
 	virtual bool
 	shouldStripSourceNode(
 			XPathExecutionContext&	executionContext,

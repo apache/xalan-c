@@ -82,7 +82,6 @@
 
 
 
-#include "SimpleNodeLocator.hpp"
 #include "XObject.hpp"
 #include "XObjectFactory.hpp"
 #include "XPath.hpp"
@@ -95,7 +94,7 @@ using std::cerr;
 using std::endl;
 using std::for_each;
 #endif
-		
+
 
 
 XPathEnvSupportDefault::NamespaceFunctionTablesType		XPathEnvSupportDefault::s_externalFunctions;
@@ -457,23 +456,6 @@ XPathEnvSupportDefault::extFunction(
 
 		return XObjectPtr();
 	}
-}
-
-
-
-XLocator*
-XPathEnvSupportDefault::getXLocatorFromNode(const XalanNode*	/* node */) const
-{
-	return SimpleNodeLocator::getDefaultInstance();
-}
-
-
-
-void
-XPathEnvSupportDefault::associateXLocatorToNode(
-			const XalanNode*	/* node */,
-			XLocator*			/* xlocator */)
-{
 }
 
 

@@ -203,28 +203,6 @@ public:
 			const XObjectArgVectorType&		argVec) const = 0;
 
 	/**
-	 * Get an XLocator provider keyed by node.  This gets the association
-	 * based on the root of the tree that is the node's parent.
-	 *
-	 * @param node node for locator
-	 * @return pointer to locator
-	 */
-	virtual XLocator*
-	getXLocatorFromNode(const XalanNode*	node) const = 0;
-
-	/**
-	 * Associate an XLocator provider to a node.  This makes the association
-	 * based on the root of the tree that is the node's parent.
-	 *
-	 * @param node     node for association
-	 * @param xlocator locator to associate with node
-	 */
-	virtual void
-	associateXLocatorToNode(
-			const XalanNode*	node,
-			XLocator*			xlocator) = 0;
-
-	/**
 	 * Tells, through the combination of the default-space attribute on
 	 * xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the xml:space
 	 * attribute, whether or not extra whitespace should be stripped from the

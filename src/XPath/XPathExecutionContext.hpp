@@ -298,28 +298,6 @@ public:
 			const XObjectArgVectorType&		argVec) = 0;
 
 	/**
-	 * Get an XLocator provider keyed by node.  This gets the association
-	 * based on the root of the tree that is the node's parent.
-	 *
-	 * @param node node for locator
-	 * @return pointer to locator
-	 */
-	virtual XLocator*
-	getXLocatorFromNode(const XalanNode*	node) const = 0;
-
-	/**
-	 * Associate an XLocator provider to a node.  This makes the association
-	 * based on the root of the tree that is the node's parent.
-	 *
-	 * @param node     node for association
-	 * @param xlocator locator to associate with node
-	 */
-	virtual void
-	associateXLocatorToNode(
-			const XalanNode*	node,
-			XLocator*			xlocator) = 0;
-
-	/**
 	 * Provides support for XML parsing service.
 	 *
 	 * @param urlString location of the XML
