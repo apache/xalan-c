@@ -85,6 +85,7 @@
 #include "XalanSourceTreeDocument.hpp"
 #include "XalanSourceTreeDocumentFragment.hpp"
 #include "XalanSourceTreeElement.hpp"
+#include "XalanSourceTreeHelper.hpp"
 #include "XalanSourceTreeProcessingInstruction.hpp"
 #include "XalanSourceTreeText.hpp"
 
@@ -96,6 +97,8 @@ FormatterToSourceTree::FormatterToSourceTree(XalanSourceTreeDocument*	theDocumen
 	m_documentFragment(0),
 	m_currentElement(0),
 	m_elementStack(),
+	m_lastChild(0),
+	m_lastChildStack(),
 	m_textBuffer()
 {
 }
@@ -110,6 +113,8 @@ FormatterToSourceTree::FormatterToSourceTree(
 	m_documentFragment(theDocumentFragment),
 	m_currentElement(0),
 	m_elementStack(),
+	m_lastChild(0),
+	m_lastChildStack(),
 	m_textBuffer()
 {
 	assert(m_document != 0);
@@ -134,6 +139,23 @@ FormatterToSourceTree::setDocumentLocator(const Locator* const		/* locator */)
 void
 FormatterToSourceTree::startDocument()
 {
+	m_currentElement = 0;
+
+	m_elementStack.clear();
+
+	m_lastChild = 0;
+
+	m_lastChildStack.clear();
+
+	m_lastChildStack.reserve(eDefaultStackSize);
+
+	clear(m_textBuffer);
+
+	reserve(m_textBuffer, eDefaultTextBufferSize);
+
+	// Push a dummy value for the current element, so we
+	// don't have to check for an empty stack in endElement().
+	m_elementStack.push_back(ElementStackType::value_type(0));
 }
 
 
@@ -141,9 +163,73 @@ FormatterToSourceTree::startDocument()
 void
 FormatterToSourceTree::endDocument()
 {
-	assert(m_elementStack.empty() == true);
+	// Pop off the dummy value that we pushed in 
+	// startDocument()...
+	m_elementStack.pop_back();
 
+	assert(m_elementStack.empty() == true);
+	assert(m_lastChildStack.empty() == true);
 	assert(isEmpty(m_textBuffer) == true);
+}
+
+
+
+// A helper function to manage appending the new child.
+template <class ParentNodeType, class ChildNodeType>
+inline void
+doAppendChildNode(
+			ParentNodeType*		theParent,
+			XalanNode*&			theLastChild,
+			ChildNodeType		theNewChild)
+{
+	assert(theParent != 0);
+	assert(theNewChild != 0);
+
+	if (theLastChild == 0)
+	{
+		theParent->appendChildNode(theNewChild);
+	}
+	else
+	{
+		XalanSourceTreeHelper::appendSibling(theLastChild, theNewChild);
+	}
+
+	theLastChild = theNewChild;
+}
+
+
+
+// A helper function to manage appending the new child.
+template <class ChildNodeType>
+inline void
+doAppendChildNode(
+			XalanSourceTreeDocument*			theDocument,
+			XalanSourceTreeDocumentFragment*	theDocumentFragment,
+			XalanSourceTreeElement*				theCurrentElement,
+			XalanNode*&							theLastChild,
+			ChildNodeType						theNewChild)
+{
+	assert(theDocument != 0);
+	assert(theNewChild != 0);
+
+	if (theCurrentElement == 0)
+	{
+		if (theDocumentFragment != 0)
+		{
+			doAppendChildNode(theDocumentFragment, theLastChild, theNewChild);
+		}
+		else
+		{
+			// If there is no current element. it means we haven't
+			// created the document element yet, so always append
+			// to the document, rather than the last child.
+			theDocument->appendChildNode(theNewChild);
+		}
+	}
+	else
+	{
+		doAppendChildNode(theCurrentElement, theLastChild, theNewChild);
+	}
 }
 
 
@@ -153,25 +239,25 @@ FormatterToSourceTree::startElement(
 			const	XMLCh* const	name,
 			AttributeList&			attrs)
 {
+	processAccumulatedText();
+
 	XalanSourceTreeElement* const	theNewElement =
 		createElementNode(name, attrs, m_currentElement);
 
-	if (m_currentElement != 0)
-	{
-		m_currentElement->appendChildNode(theNewElement);
-	}
-	else if(m_documentFragment != 0)
-	{
-		m_documentFragment->appendChildNode(theNewElement);
-	}
-	else
-	{
-		m_document->appendChildNode(theNewElement);
-	}
+	doAppendChildNode(
+			m_document,
+			m_documentFragment,
+			m_currentElement,
+			m_lastChild,
+			theNewElement);
 
 	m_elementStack.push_back(theNewElement);
 
+	m_lastChildStack.push_back(m_lastChild);
+
 	m_currentElement = theNewElement;
+
+	m_lastChild = 0;
 }
 
 
@@ -186,16 +272,18 @@ FormatterToSourceTree::endElement(const	XMLCh* const	/* name */)
 	// Pop the element of the stack...
 	m_elementStack.pop_back();
 
+	assert(m_elementStack.empty() == false);
+
 	// Get the element from the back of the
-	// stack, if any...
-	if (m_elementStack.empty() == false)
-	{
-		m_currentElement = m_elementStack.back();
-	}
-	else
-	{
-		m_currentElement = 0;
-	}
+	// stack.
+	m_currentElement = m_elementStack.back();
+
+	assert(m_lastChildStack.empty() == false);
+
+	m_lastChild = m_lastChildStack.back();
+
+	// Pop the last child stack
+	m_lastChildStack.pop_back();
 }
 
 
@@ -264,10 +352,7 @@ FormatterToSourceTree::ignorableWhitespace(
 		XalanSourceTreeText* const	theNewTextNode =
 			m_document->createTextIWSNode(chars, length, m_currentElement);
 
-		if (m_currentElement != 0)
-		{
-			m_currentElement->appendChildNode(theNewTextNode);
-		}
+		doAppendChildNode(m_currentElement, m_lastChild, theNewTextNode);
 	}
 	else if(m_documentFragment != 0)
 	{
@@ -276,7 +361,7 @@ FormatterToSourceTree::ignorableWhitespace(
 		XalanSourceTreeText* const	theNewTextNode =
 			m_document->createTextIWSNode(chars, length, m_currentElement);
 
-		m_documentFragment->appendChildNode(theNewTextNode);
+		doAppendChildNode(m_currentElement, m_lastChild, theNewTextNode);
 	}
 }
 
@@ -313,18 +398,12 @@ FormatterToSourceTree::comment(const XMLCh* const	data)
 	XalanSourceTreeComment* const	theNewComment =
 		m_document->createCommentNode(data, length(data), m_currentElement);
 
-	if (m_currentElement != 0)
-	{
-		m_currentElement->appendChildNode(theNewComment);
-	}
-	else if(m_documentFragment != 0)
-	{
-		m_documentFragment->appendChildNode(theNewComment);
-	}
-	else
-	{
-		m_document->appendChildNode(theNewComment);
-	}
+	doAppendChildNode(
+			m_document,
+			m_documentFragment,
+			m_currentElement,
+			m_lastChild,
+			theNewComment);
 }
 
 
@@ -358,11 +437,17 @@ FormatterToSourceTree::doCharacters(
 {
 	if (m_currentElement != 0)
 	{
-		m_currentElement->appendChildNode(m_document->createTextNode(chars, length, m_currentElement));
+		doAppendChildNode(
+			m_currentElement,
+			m_lastChild,
+			m_document->createTextNode(chars, length, m_currentElement));
 	}
-	else if(m_documentFragment != 0)
+	else if (m_documentFragment != 0)
 	{
-		m_documentFragment->appendChildNode(m_document->createTextNode(chars, length, m_currentElement));
+		doAppendChildNode(
+			m_documentFragment,
+			m_lastChild,
+			m_document->createTextNode(chars, length, m_currentElement));
 	}
 	else
 	{
@@ -395,19 +480,10 @@ FormatterToSourceTree::doProcessingInstruction(
 			const XMLCh*	target,
 			const XMLCh*	data)
 {
-	XalanSourceTreeProcessingInstruction* const		theNewPI =
-		m_document->createProcessingInstructionNode(target, data);
-
-	if (m_currentElement != 0)
-	{
-		m_currentElement->appendChildNode(m_document->createProcessingInstructionNode(target, data, m_currentElement));
-	}
-	else if(m_documentFragment != 0)
-	{
-		m_documentFragment->appendChildNode(theNewPI);
-	}
-	else
-	{
-		m_document->appendChildNode(theNewPI);
-	}
+	doAppendChildNode(
+			m_document,
+			m_documentFragment,
+			m_currentElement,
+			m_lastChild,
+			m_document->createProcessingInstructionNode(target, data));
 }

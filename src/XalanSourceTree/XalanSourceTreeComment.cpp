@@ -67,6 +67,7 @@
 
 
 #include "XalanSourceTreeDocument.hpp"
+#include "XalanSourceTreeDocumentFragment.hpp"
 #include "XalanSourceTreeElement.hpp"
 #include "XalanSourceTreeProcessingInstruction.hpp"
 #include "XalanSourceTreeText.hpp"
@@ -81,14 +82,14 @@ static const XalanDOMString		s_emptyString;
 XalanSourceTreeComment::XalanSourceTreeComment(
 			const XalanDOMString&		theData,
 			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
 			unsigned int				theIndex) :
 	XalanComment(),
 	m_data(theData),
 	m_ownerDocument(theOwnerDocument),
-	m_parentElement(theParentElement),
+	m_parentNode(theParentNode),
 	m_previousSibling(thePreviousSibling),
 	m_nextSibling(theNextSibling),
 	m_index(theIndex)
@@ -108,7 +109,7 @@ XalanSourceTreeComment::XalanSourceTreeComment(
 			bool							/* deep */) :
 	XalanComment(theSource),
 	m_data(theSource.m_data),
-	m_parentElement(0),
+	m_parentNode(0),
 	m_previousSibling(0),
 	m_nextSibling(0),
 	m_index(0)
@@ -146,9 +147,9 @@ XalanSourceTreeComment::getParentNode() const
 {
 	assert(m_ownerDocument != 0);
 
-	if (m_parentElement != 0)
+	if (m_parentNode != 0)
 	{
-		return m_parentElement;
+		return m_parentNode;
 	}
 	else
 	{
@@ -424,6 +425,22 @@ XalanSourceTreeComment::replaceData(
 			const XalanDOMString&	/* arg */)
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+}
+
+
+
+void
+XalanSourceTreeComment::setParent(XalanSourceTreeElement*	theParent)
+{
+	m_parentNode = theParent;
+}
+
+
+
+void
+XalanSourceTreeComment::setParent(XalanSourceTreeDocumentFragment*	theParent)
+{
+	m_parentNode = theParent;
 }
 
 

@@ -78,7 +78,7 @@ XalanSourceTreeProcessingInstructionAllocator::create(
 			const XalanDOMString&		theTarget,
 			const XalanDOMString&		theData,
 			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
 			unsigned int				theIndex)
@@ -90,7 +90,7 @@ XalanSourceTreeProcessingInstructionAllocator::create(
 						theTarget,
 						theData,
 						theOwnerDocument,
-						theParentElement,
+						theParentNode,
 						thePreviousSibling,
 						theNextSibling,
 						theIndex);

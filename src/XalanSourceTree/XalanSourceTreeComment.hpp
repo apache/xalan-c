@@ -72,6 +72,7 @@
 
 
 class XalanSourceTreeDocument;
+class XalanSourceTreeDocumentFragment;
 class XalanSourceTreeElement;
 class XalanSourceTreeProcessingInstruction;
 class XalanSourceTreeText;
@@ -108,7 +109,7 @@ public:
 	 *
 	 * @param theData The text data of the node.
 	 * @param theOwnerDocument The owner document of the comment node.
-	 * @param theParentElement The parent element, if any.
+	 * @param theParentNode The parent node, if any.
 	 * @param thePreviousSibling The previous sibling, if any.
 	 * @param theNextSibling The next sibling, if any.
 	 * @param theIndex The document-order index of the node.
@@ -116,7 +117,7 @@ public:
 	XalanSourceTreeComment(
 			const XalanDOMString&		theData,
 			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeElement*		theParentElement = 0,
+			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
 			unsigned int				theIndex = 0);
@@ -600,17 +601,11 @@ public:
 
 	// public interfaces not inherited from XalanComment...
 
-	XalanSourceTreeElement*
-	getParentElement() const
-	{
-		return m_parentElement;
-	}
+	void
+	setParent(XalanSourceTreeElement*	theParent);
 
 	void
-	setParentElement(XalanSourceTreeElement*	theParentElement)
-	{
-		m_parentElement = theParentElement;
-	}
+	setParent(XalanSourceTreeDocumentFragment*	theParent);
 
 	void
 	setPreviousSibling(XalanSourceTreeComment*	thePreviousSibling);
@@ -663,7 +658,7 @@ private:
 
 	XalanSourceTreeDocument*		m_ownerDocument;
 
-	XalanSourceTreeElement*			m_parentElement;
+	XalanNode*						m_parentNode;
 
 	XalanNode*						m_previousSibling;
 

@@ -75,18 +75,18 @@ XalanSourceTreeTextIWSAllocator::~XalanSourceTreeTextIWSAllocator()
 
 XalanSourceTreeTextIWSAllocator::ObjectType*
 XalanSourceTreeTextIWSAllocator::create(
-			const XalanDOMString&		theData,
-			XalanSourceTreeElement*		theParentElement,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			unsigned int				theIndex)
+			const XalanDOMString&	theData,
+			XalanNode*				theParentNode,
+			XalanNode*				thePreviousSibling,
+			XalanNode*				theNextSibling,
+			unsigned int			theIndex)
 {
 	ObjectType* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
 	new(theBlock) ObjectType(
 						theData,
-						theParentElement,
+						theParentNode,
 						thePreviousSibling,
 						theNextSibling,
 						theIndex);

@@ -211,7 +211,9 @@ protected:
 
 private:
 
-	XalanSourceTreeElement*	const	m_hostElement;
+	XalanSourceTreeDocument* const	m_ownerDocument;
+
+	XalanNode*						m_firstChild;
 };
 
 

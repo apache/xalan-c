@@ -69,6 +69,7 @@
 
 #include "XalanSourceTreeComment.hpp"
 #include "XalanSourceTreeDocument.hpp"
+#include "XalanSourceTreeDocumentFragment.hpp"
 #include "XalanSourceTreeElement.hpp"
 #include "XalanSourceTreeProcessingInstruction.hpp"
 #include "XalanSourceTreeText.hpp"
@@ -427,9 +428,38 @@ doAppendSiblingToChild(
 	assert(theOwnerElement != 0);
 	assert(theNewSibling != 0);
 
-	if (theNewSibling->getParentElement() != theOwnerElement)
+	if (theNewSibling->getParentNode() != theOwnerElement)
 	{
-		theNewSibling->setParentElement(theOwnerElement);
+		theNewSibling->setParent(theOwnerElement);
+	}
+
+	if (theFirstChildSlot == 0)
+	{
+		append(theFirstChildSlot, theNewSibling);
+	}
+	else
+	{
+		XalanNode* const	theLastSibling = doGetLastSibling(theFirstChildSlot);
+
+		doAppendSibling(theLastSibling, theNewSibling);	
+	}
+}
+
+
+
+template <class NodeType>
+void
+doAppendSiblingToChild(
+			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
+			XalanNode*&							theFirstChildSlot,
+			NodeType*							theNewSibling)
+{
+	assert(theOwnerDocumentFragment != 0);
+	assert(theNewSibling != 0);
+
+	if (theNewSibling->getParentNode() != theOwnerDocumentFragment)
+	{
+		theNewSibling->setParent(theOwnerDocumentFragment);
 	}
 
 	if (theFirstChildSlot == 0)
@@ -488,6 +518,49 @@ XalanSourceTreeHelper::appendSiblingToChild(
 	doAppendSiblingToChild(theOwnerElement, theFirstChildSlot, theNewSibling);
 }
 
+
+
+void
+XalanSourceTreeHelper::appendSiblingToChild(
+			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
+			XalanNode*&							theFirstChildSlot,
+			XalanSourceTreeComment*				theNewSibling)
+{
+	doAppendSiblingToChild(theOwnerDocumentFragment, theFirstChildSlot, theNewSibling);
+}
+
+
+
+void
+XalanSourceTreeHelper::appendSiblingToChild(
+			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
+			XalanNode*&							theFirstChildSlot,
+			XalanSourceTreeElement*				theNewSibling)
+{
+	doAppendSiblingToChild(theOwnerDocumentFragment, theFirstChildSlot, theNewSibling);
+}
+
+
+
+void
+XalanSourceTreeHelper::appendSiblingToChild(
+			XalanSourceTreeDocumentFragment*		theOwnerDocumentFragment,
+			XalanNode*&								theFirstChildSlot,
+			XalanSourceTreeProcessingInstruction*	theNewSibling)
+{
+	doAppendSiblingToChild(theOwnerDocumentFragment, theFirstChildSlot, theNewSibling);
+}
+
+
+
+void
+XalanSourceTreeHelper::appendSiblingToChild(
+			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
+			XalanNode*&							theFirstChildSlot,
+			XalanSourceTreeText*				theNewSibling)
+{
+	doAppendSiblingToChild(theOwnerDocumentFragment, theFirstChildSlot, theNewSibling);
+}
 
 
 

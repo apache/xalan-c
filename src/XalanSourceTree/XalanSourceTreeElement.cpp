@@ -69,6 +69,7 @@
 #include "XalanSourceTreeAttr.hpp"
 #include "XalanSourceTreeComment.hpp"
 #include "XalanSourceTreeDocument.hpp"
+#include "XalanSourceTreeDocumentFragment.hpp"
 #include "XalanSourceTreeProcessingInstruction.hpp"
 #include "XalanSourceTreeText.hpp"
 #include "XalanSourceTreeHelper.hpp"
@@ -84,14 +85,14 @@ XalanSourceTreeElement::XalanSourceTreeElement(
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
 			AttributesCountType			theAttributeCount,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
 			unsigned int				theIndex) :
 	XalanElement(),
 	m_tagName(theTagName),
 	m_ownerDocument(theOwnerDocument),
-	m_parentElement(theParentElement),
+	m_parentNode(theParentNode),
 	m_previousSibling(thePreviousSibling),
 	m_nextSibling(theNextSibling),
 	m_firstChild(0),
@@ -115,7 +116,7 @@ XalanSourceTreeElement::XalanSourceTreeElement(
 	XalanElement(theSource),
 	m_tagName(theSource.m_tagName),
 	m_ownerDocument(theSource.m_ownerDocument),
-	m_parentElement(0),
+	m_parentNode(0),
 	m_previousSibling(0),
 	m_nextSibling(0),
 	m_firstChild(theSource.m_firstChild == 0 ? 0 : theSource.m_firstChild->cloneNode(deep)),
@@ -154,9 +155,9 @@ XalanSourceTreeElement::getNodeType() const
 XalanNode*
 XalanSourceTreeElement::getParentNode() const
 {
-	if (m_parentElement != 0)
+	if (m_parentNode != 0)
 	{
-		return m_parentElement;
+		return m_parentNode;
 	}
 	else
 	{
@@ -522,6 +523,14 @@ XalanSourceTreeElement::getElementsByTagNameNS(
 			const XalanDOMString&	/* localName */) const
 {
 	return 0;
+}
+
+
+
+void
+XalanSourceTreeElement::setParent(XalanSourceTreeDocumentFragment*	theParent)
+{
+	m_parentNode = theParent;
 }
 
 

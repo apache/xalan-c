@@ -103,7 +103,7 @@ public:
 	 * 
 	 * @param theData The data for the comment
 	 * @param theOwnerDocument The owner document of the comment node.
-	 * @param theParentElement The parent element, if any.
+	 * @param theParentNode The parent node, if any.
 	 * @param thePreviousSibling The next sibling, if any.
 	 * @param theNextSibling The next sibling, if any.
 	 * @param theIndex The document-order index of the node.
@@ -114,7 +114,7 @@ public:
 	create(
 			const XalanDOMString&		theData,
 			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeElement*		theParentElement = 0,
+			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
 			unsigned int				theIndex = 0);

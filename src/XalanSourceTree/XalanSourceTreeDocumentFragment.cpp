@@ -69,27 +69,28 @@
 
 #include "XalanSourceTreeDocument.hpp"
 #include "XalanSourceTreeElement.hpp"
+#include "XalanSourceTreeHelper.hpp"
 
 
 
-static const XalanDOMChar		s_nameString[] = { XalanUnicode::charLetter_A, 0 };
-static const AttributeListImpl	s_emptyAttributes;
 static const XalanDOMString		s_emptyString;
 
 
 
 XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(XalanSourceTreeDocument&	theOwnerDocument) :
 	XalanDocumentFragment(),
-	m_hostElement(theOwnerDocument.createElementNode(s_nameString, s_emptyAttributes))
+	m_ownerDocument(&theOwnerDocument),
+	m_firstChild(0)
 {
 }
 
 
 
 XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(
-			const XalanSourceTreeDocumentFragment&		theSource,
-			bool										deep) :
-	m_hostElement(theSource.m_hostElement->clone(deep))
+			const XalanSourceTreeDocumentFragment&	theSource,
+			bool									deep) :
+	m_ownerDocument(theSource.m_ownerDocument),
+	m_firstChild(theSource.m_firstChild == 0 ? 0 : theSource.m_firstChild->cloneNode(deep))
 {
 }
 
@@ -136,7 +137,10 @@ XalanSourceTreeDocumentFragment::getParentNode() const
 const XalanNodeList*
 XalanSourceTreeDocumentFragment::getChildNodes() const
 {
-	return m_hostElement->getChildNodes();
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 
@@ -144,7 +148,7 @@ XalanSourceTreeDocumentFragment::getChildNodes() const
 XalanNode*
 XalanSourceTreeDocumentFragment::getFirstChild() const
 {
-	return m_hostElement->getFirstChild();
+	return m_firstChild;
 }
 
 
@@ -152,7 +156,7 @@ XalanSourceTreeDocumentFragment::getFirstChild() const
 XalanNode*
 XalanSourceTreeDocumentFragment::getLastChild() const
 {
-	return m_hostElement->getLastChild();
+	return XalanSourceTreeHelper::getLastSibling(m_firstChild);
 }
 
 
@@ -184,7 +188,7 @@ XalanSourceTreeDocumentFragment::getAttributes() const
 XalanDocument*
 XalanSourceTreeDocumentFragment::getOwnerDocument() const
 {
-	return m_hostElement->getOwnerDocument();
+	return m_ownerDocument;
 }
 
 
@@ -203,36 +207,48 @@ XalanSourceTreeDocumentFragment::cloneNode(bool deep) const
 
 XalanNode*
 XalanSourceTreeDocumentFragment::insertBefore(
-			XalanNode*	newChild,
-			XalanNode*	refChild)
+			XalanNode*	/* newChild */,
+			XalanNode*	/* refChild */)
 {
-	return m_hostElement->insertBefore(newChild, refChild);
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 
 
 XalanNode*
 XalanSourceTreeDocumentFragment::replaceChild(
-			XalanNode*	newChild,
-			XalanNode*	oldChild)
+			XalanNode*	/* newChild */,
+			XalanNode*	/* oldChild */)
 {
-	return m_hostElement->replaceChild(newChild, oldChild);
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 
 
 XalanNode*
-XalanSourceTreeDocumentFragment::removeChild(XalanNode*	oldChild)
+XalanSourceTreeDocumentFragment::removeChild(XalanNode*		/* oldChild */)
 {
-	return m_hostElement->removeChild(oldChild);
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 
 
 XalanNode*
-XalanSourceTreeDocumentFragment::appendChild(XalanNode*	newChild)
+XalanSourceTreeDocumentFragment::appendChild(XalanNode*		/* newChild */)
 {
-	return m_hostElement->appendChild(newChild);
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 
@@ -240,7 +256,7 @@ XalanSourceTreeDocumentFragment::appendChild(XalanNode*	newChild)
 bool
 XalanSourceTreeDocumentFragment::hasChildNodes() const
 {
-	return m_hostElement->hasChildNodes();
+	return m_firstChild != 0 ? true : false;
 }
 
 
@@ -322,7 +338,7 @@ XalanSourceTreeDocumentFragment::getIndex() const
 void
 XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeComment*	theChild)
 {
-	m_hostElement->appendChildNode(theChild);
+	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }
 
 
@@ -330,7 +346,7 @@ XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeComment*	theChil
 void
 XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeElement*	theChild)
 {
-	m_hostElement->appendChildNode(theChild);
+	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }
 
 
@@ -338,7 +354,7 @@ XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeElement*	theChil
 void
 XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeProcessingInstruction*	theChild)
 {
-	m_hostElement->appendChildNode(theChild);
+	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }
 
 
@@ -346,7 +362,7 @@ XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeProcessingInstru
 void
 XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeText*	theChild)
 {
-	m_hostElement->appendChildNode(theChild);
+	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }
 
 
@@ -354,5 +370,5 @@ XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeText*	theChild)
 void
 XalanSourceTreeDocumentFragment::clearChildren()
 {
-	m_hostElement->clearChildren();
+	m_firstChild = 0;
 }

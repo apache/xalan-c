@@ -70,6 +70,7 @@
 class XalanNode;
 class XalanSourceTreeComment;
 class XalanSourceTreeDocument;
+class XalanSourceTreeDocumentFragment;
 class XalanSourceTreeElement;
 class XalanSourceTreeProcessingInstruction;
 class XalanSourceTreeText;
@@ -138,27 +139,51 @@ public:
 	static void
 	appendSiblingToChild(
 			XalanSourceTreeElement*		theOwnerElement,
-			XalanNode*&					theChildSlot,
+			XalanNode*&					theFirstChildSlot,
 			XalanSourceTreeComment*		theNewSibling);
 
 
 	static void
 	appendSiblingToChild(
 			XalanSourceTreeElement*		theOwnerElement,
-			XalanNode*&					theChildSlot,
+			XalanNode*&					theFirstChildSlot,
 			XalanSourceTreeElement*		theNewSibling);
 
 	static void
 	appendSiblingToChild(
 			XalanSourceTreeElement*					theOwnerElement,
-			XalanNode*&								theChildSlot,
+			XalanNode*&								theFirstChildSlot,
 			XalanSourceTreeProcessingInstruction*	theNewSibling);
 
 	static void
 	appendSiblingToChild(
 			XalanSourceTreeElement*		theOwnerElement,
-			XalanNode*&					theChildSlot,
+			XalanNode*&					theFirstChildSlot,
 			XalanSourceTreeText*		theNewSibling);
+
+	static void
+	appendSiblingToChild(
+			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
+			XalanNode*&							theFirstChildSlot,
+			XalanSourceTreeComment*				theNewSibling);
+
+	static void
+	appendSiblingToChild(
+			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
+			XalanNode*&							theFirstChildSlot,
+			XalanSourceTreeElement*				theNewSibling);
+
+	static void
+	appendSiblingToChild(
+			XalanSourceTreeDocumentFragment*		theOwnerDocumentFragment,
+			XalanNode*&								theFirstChildSlot,
+			XalanSourceTreeProcessingInstruction*	theNewSibling);
+
+	static void
+	appendSiblingToChild(
+			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
+			XalanNode*&							theFirstChildSlot,
+			XalanSourceTreeText*				theNewSibling);
 
 private:
 

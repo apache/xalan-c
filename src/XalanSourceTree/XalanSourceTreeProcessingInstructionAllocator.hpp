@@ -104,7 +104,7 @@ public:
 	 * @param theTarget The target for the processing instruction.
 	 * @param theData The data for the node
 	 * @param theOwnerDocument The document that owns the instance.
-	 * @param theParentElement The parent element, if any.
+	 * @param theParentNode The parent node, if any.
 	 * @param thePreviousSibling The next sibling, if any.
 	 * @param theNextSibling The next sibling, if any.
 	 * @param theIndex The document-order index of the node.
@@ -116,7 +116,7 @@ public:
 			const XalanDOMString&		theTarget,
 			const XalanDOMString&		theData,
 			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeElement*		theParentElement = 0,
+			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
 			unsigned int				theIndex = 0);

@@ -77,7 +77,7 @@ XalanSourceTreeCommentAllocator::ObjectType*
 XalanSourceTreeCommentAllocator::create(
 			const XalanDOMString&		theData,
 			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
 			unsigned int				theIndex)
@@ -88,7 +88,7 @@ XalanSourceTreeCommentAllocator::create(
 	new(theBlock) ObjectType(
 						theData,
 						theOwnerDocument,
-						theParentElement,
+						theParentNode,
 						thePreviousSibling,
 						theNextSibling,
 						theIndex);

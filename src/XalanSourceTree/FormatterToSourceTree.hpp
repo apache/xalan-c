@@ -78,6 +78,7 @@
 
 
 class PrefixResolver;
+class XalanNode;
 class XalanSourceTreeDocument;
 class XalanSourceTreeDocumentFragment;
 class XalanSourceTreeElement;
@@ -91,6 +92,16 @@ class XalanSourceTreeElement;
 class XALAN_XALANSOURCETREE_EXPORT FormatterToSourceTree : public FormatterListener
 {
 public:
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanSourceTreeElement*>			ElementStackType;
+	typedef vector<XalanNode*> 						LastChildStackType;
+#else
+	typedef std::vector<XalanSourceTreeElement*>	ElementStackType;
+	typedef std::vector<XalanNode*> 				LastChildStackType;
+#endif
+
+	enum { eDefaultStackSize = 50, eDefaultTextBufferSize = 100 };
 
 	/**
 	 * Perform static initialization.  See class XalanSourceTreeInit.
@@ -242,21 +253,25 @@ private:
 
 
 	// Data members...
-	XalanSourceTreeDocument*						m_document;
+	XalanSourceTreeDocument*			m_document;
 
-	XalanSourceTreeDocumentFragment*				m_documentFragment;
+	XalanSourceTreeDocumentFragment*	m_documentFragment;
 
-	XalanSourceTreeElement*							m_currentElement;
+	XalanSourceTreeElement*				m_currentElement;
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanSourceTreeElement*>			ElementStackType;
-#else
-	typedef std::vector<XalanSourceTreeElement*>	ElementStackType;
-#endif
+	ElementStackType					m_elementStack;
 
-	ElementStackType								m_elementStack;
+	// The last child appended to the current element.  This is
+	// an important optimization, because XalanSourceTreeElement
+	// does not have a pointer to it's last child.  Without this,
+	// appending a child becomes a linear search.
+	XalanNode* 							m_lastChild;
 
-	XalanDOMString									m_textBuffer;
+	// Stack of last children appended.  There is a ono-to-one
+	// correspondance to the entries in m_elementStack.
+	LastChildStackType					m_lastChildStack;
+
+	XalanDOMString						m_textBuffer;
 };
 
 

@@ -67,6 +67,7 @@
 
 
 #include "XalanSourceTreeComment.hpp"
+#include "XalanSourceTreeDocumentFragment.hpp"
 #include "XalanSourceTreeElement.hpp"
 #include "XalanSourceTreeProcessingInstruction.hpp"
 #include "XalanSourceTreeHelper.hpp"
@@ -78,14 +79,14 @@ static const XalanDOMString		s_emptyString;
 
 
 XalanSourceTreeText::XalanSourceTreeText(
-			const XalanDOMString&		theData,
-			XalanSourceTreeElement*		theParentElement,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			unsigned int				theIndex) :
+			const XalanDOMString&	theData,
+			XalanNode*				theParentNode,
+			XalanNode*				thePreviousSibling,
+			XalanNode*				theNextSibling,
+			unsigned int			theIndex) :
 	XalanText(),
 	m_data(theData),
-	m_parentElement(theParentElement),
+	m_parentNode(theParentNode),
 	m_previousSibling(thePreviousSibling),
 	m_nextSibling(theNextSibling),
 	m_index(theIndex)
@@ -102,10 +103,10 @@ XalanSourceTreeText::~XalanSourceTreeText()
 
 XalanSourceTreeText::XalanSourceTreeText(
 			const XalanSourceTreeText&	theSource,
-			bool							/* deep */) :
+			bool						/* deep */) :
 	XalanText(theSource),
 	m_data(theSource.m_data),
-	m_parentElement(0),
+	m_parentNode(0),
 	m_previousSibling(0),
 	m_nextSibling(0),
 	m_index(0)
@@ -141,7 +142,7 @@ XalanSourceTreeText::getNodeType() const
 XalanNode*
 XalanSourceTreeText::getParentNode() const
 {
-	return m_parentElement;
+	return m_parentNode;
 }
 
 
@@ -200,9 +201,9 @@ XalanSourceTreeText::getAttributes() const
 XalanDocument*
 XalanSourceTreeText::getOwnerDocument() const
 {
-	assert(m_parentElement != 0);
+	assert(m_parentNode != 0);
 
-	return m_parentElement->getOwnerDocument();
+	return m_parentNode->getOwnerDocument();
 }
 
 
@@ -429,6 +430,22 @@ bool
 XalanSourceTreeText::isIgnorableWhitespace() const
 {
 	return false;
+}
+
+
+
+void
+XalanSourceTreeText::setParent(XalanSourceTreeElement*	theParent)
+{
+	m_parentNode = theParent;
+}
+
+
+
+void
+XalanSourceTreeText::setParent(XalanSourceTreeDocumentFragment*	theParent)
+{
+	m_parentNode = theParent;
 }
 
 

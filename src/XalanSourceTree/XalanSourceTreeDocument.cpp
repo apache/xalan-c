@@ -558,7 +558,7 @@ XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
 			const XalanDOMChar*			name,
 			const AttributeList&		attrs,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
 			bool						fAddXMLNamespaceAttribute)
@@ -583,10 +583,11 @@ XalanSourceTreeDocument::createElementNode(
 				this,
 				theAttributeVector,
 				theAttributeCount,
-				theParentElement,
+				theParentNode,
 				thePreviousSibling,
 				theNextSibling,
 				m_nextIndexValue++);
+	assert(theNewElement != 0);
 
 	size_t	theIndex = 0;
 
@@ -650,7 +651,7 @@ XalanSourceTreeDocument::createElementNode(
 			const XalanDOMChar*			tagName,
 			const AttributeList&		attrs,
 			const PrefixResolver&		thePrefixResolver,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
 			bool						fAddXMLNamespaceAttribute)
@@ -670,11 +671,11 @@ XalanSourceTreeDocument::createElementNode(
 		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
 
 	XalanSourceTreeElement* const	theNewElement =
-		createElement(
+		createElementNode(
 			tagName,
 			theAttributeVector,
 			theAttributeCount,
-			theParentElement,
+			theParentNode,
 			thePreviousSibling,
 			theNextSibling,
 			thePrefixResolver);
@@ -765,7 +766,7 @@ XalanSourceTreeDocument::createElementNode(
 			const XalanDOMChar*			localname,
 			const XalanDOMChar*			qname,
 			const Attributes&			attrs,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
 			bool						fAddXMLNamespaceAttribute)
@@ -798,7 +799,7 @@ XalanSourceTreeDocument::createElementNode(
 				this,
 				theAttributeVector,
 				theAttributeCount,
-				theParentElement,
+				theParentNode,
 				thePreviousSibling,
 				theNextSibling,
 				m_nextIndexValue++);
@@ -817,7 +818,7 @@ XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
 			const XalanDOMChar*			name,
 			const Attributes&			attrs,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
 			bool						fAddXMLNamespaceAttribute)
@@ -844,7 +845,7 @@ XalanSourceTreeDocument::createElementNode(
 				this,
 				theAttributeVector,
 				theAttributeCount,
-				theParentElement,
+				theParentNode,
 				thePreviousSibling,
 				theNextSibling,
 				m_nextIndexValue++);
@@ -863,14 +864,14 @@ XalanSourceTreeComment*
 XalanSourceTreeDocument::createCommentNode(
 			const XalanDOMChar*			data,
 			XalanDOMString::size_type	length,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling)
 {
 	return m_commentAllocator.create(
 				m_valuesStringPool.get(data, length),
 				this,
-				theParentElement,
+				theParentNode,
 				thePreviousSibling,
 				theNextSibling,
 				m_nextIndexValue++);
@@ -880,11 +881,11 @@ XalanSourceTreeDocument::createCommentNode(
 
 XalanSourceTreeProcessingInstruction*
 XalanSourceTreeDocument::createProcessingInstructionNode(
-			const XalanDOMChar*			target,
-			const XalanDOMChar*			data,
-			XalanSourceTreeElement*		theParentElement,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling)
+			const XalanDOMChar*		target,
+			const XalanDOMChar*		data,
+			XalanNode*				theParentNode,
+			XalanNode*				thePreviousSibling,
+			XalanNode*				theNextSibling)
 {
 	assert(target != 0);
 	assert(data != 0);
@@ -893,7 +894,7 @@ XalanSourceTreeDocument::createProcessingInstructionNode(
 				m_namesStringPool.get(target),
 				m_valuesStringPool.get(data),
 				this,
-				theParentElement,
+				theParentNode,
 				thePreviousSibling,
 				theNextSibling,
 				m_nextIndexValue++);
@@ -966,7 +967,7 @@ XalanSourceTreeText*
 XalanSourceTreeDocument::createTextNode(
 			const XalanDOMChar*			chars,
 			XalanDOMString::size_type	length,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling)
 {
@@ -978,7 +979,7 @@ XalanSourceTreeDocument::createTextNode(
 
 		return m_textIWSAllocator.create(
 				theString,
-				theParentElement,
+				theParentNode,
 				thePreviousSibling,
 				theNextSibling,
 				m_nextIndexValue++);
@@ -987,7 +988,7 @@ XalanSourceTreeDocument::createTextNode(
 	{
 		return m_textAllocator.create(
 				getTextNodeString(chars, length),
-				theParentElement,
+				theParentNode,
 				thePreviousSibling,
 				theNextSibling,
 				m_nextIndexValue++);
@@ -1000,7 +1001,7 @@ XalanSourceTreeText*
 XalanSourceTreeDocument::createTextIWSNode(
 			const XalanDOMChar*			chars,
 			XalanDOMString::size_type	length,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling)
 {
@@ -1008,7 +1009,7 @@ XalanSourceTreeDocument::createTextIWSNode(
 
 	return m_textIWSAllocator.create(
 			m_valuesStringPool.get(chars, length),
-			theParentElement,
+			theParentNode,
 			thePreviousSibling,
 			theNextSibling,
 			m_nextIndexValue++);
@@ -1103,14 +1104,14 @@ XalanSourceTreeDocument::createAttribute(
 
 
 XalanSourceTreeElement*
-XalanSourceTreeDocument::createElement(
-			const XalanDOMChar*			theTagName,
-			XalanSourceTreeAttr**		theAttributeVector,
-			AttributesCountType			theAttributeCount,
-			XalanSourceTreeElement*		theParentElement,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			const PrefixResolver&		thePrefixResolver)
+XalanSourceTreeDocument::createElementNode(
+			const XalanDOMChar*		theTagName,
+			XalanSourceTreeAttr**	theAttributeVector,
+			AttributesCountType		theAttributeCount,
+			XalanNode*				theParentNode,
+			XalanNode*				thePreviousSibling,
+			XalanNode*				theNextSibling,
+			const PrefixResolver&	thePrefixResolver)
 {
 	const XalanDOMString* const		theNamespace =
 		getNamespaceForPrefix(
@@ -1129,7 +1130,7 @@ XalanSourceTreeDocument::createElement(
 				this,
 				theAttributeVector,
 				theAttributeCount,
-				theParentElement,
+				theParentNode,
 				thePreviousSibling,
 				theNextSibling,
 				m_nextIndexValue++);
@@ -1167,7 +1168,7 @@ XalanSourceTreeDocument::createElement(
 				this,
 				theAttributeVector,
 				theAttributeCount,
-				theParentElement,
+				theParentNode,
 				thePreviousSibling,
 				theNextSibling,
 				m_nextIndexValue++);

@@ -79,7 +79,7 @@ XalanSourceTreeElementAllocator::create(
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
 			AttributesCountType			theAttributeCount,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
 			unsigned int				theIndex)
@@ -92,7 +92,7 @@ XalanSourceTreeElementAllocator::create(
 						theOwnerDocument,
 						theAttributes,
 						theAttributeCount,
-						theParentElement,
+						theParentNode,
 						thePreviousSibling,
 						theNextSibling,
 						theIndex);

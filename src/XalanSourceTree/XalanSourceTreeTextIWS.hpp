@@ -75,17 +75,17 @@ public:
 	 * Constructor.
 	 *
 	 * @param theData The text data of the node
-	 * @param theParentElement The parent element, if any.
+	 * @param theParentNode The parent node, if any.
 	 * @param thePreviousSibling The previous sibling, if any.
 	 * @param theNextSibling The next sibling, if any.
 	 * @param theIndex The document-order index of the node.
 	 */
 	XalanSourceTreeTextIWS(
-			const XalanDOMString&		theData,
-			XalanSourceTreeElement*		theParentElement = 0,
-			XalanNode*					thePreviousSibling = 0,
-			XalanNode*					theNextSibling = 0,
-			unsigned int				theIndex = 0);
+			const XalanDOMString&	theData,
+			XalanNode*				theParentNode = 0,
+			XalanNode*				thePreviousSibling = 0,
+			XalanNode*				theNextSibling = 0,
+			unsigned int			theIndex = 0);
 
 	virtual
 	~XalanSourceTreeTextIWS();
@@ -108,7 +108,6 @@ private:
 
 	bool
 	operator==(const XalanSourceTreeTextIWS&	theRHS) const;
-
 
 	// Data members...
 };

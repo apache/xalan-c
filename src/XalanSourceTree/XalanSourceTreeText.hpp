@@ -72,6 +72,7 @@
 
 
 class XalanSourceTreeComment;
+class XalanSourceTreeDocumentFragment;
 class XalanSourceTreeElement;
 class XalanSourceTreeProcessingInstruction;
 
@@ -98,17 +99,17 @@ public:
 	 *
 	 * @param theData The text data of the node
 	 * @param isIgnorableWhitespace true if the text data is only ignorable whitespace
-	 * @param theParentElement The parent element, if any.
+	 * @param theParentNode The parent node, if any.
 	 * @param thePreviousSibling The previous sibling, if any.
 	 * @param theNextSibling The next sibling, if any.
 	 * @param theIndex The document-order index of the node.
 	 */
 	XalanSourceTreeText(
-			const XalanDOMString&		theData,
-			XalanSourceTreeElement*		theParentElement = 0,
-			XalanNode*					thePreviousSibling = 0,
-			XalanNode*					theNextSibling = 0,
-			unsigned int				theIndex = 0);
+			const XalanDOMString&	theData,
+			XalanNode*				theParentNode = 0,
+			XalanNode*				thePreviousSibling = 0,
+			XalanNode*				theNextSibling = 0,
+			unsigned int			theIndex = 0);
 
 	virtual
 	~XalanSourceTreeText();
@@ -619,17 +620,11 @@ public:
 
 	// public interfaces not inherited from XalanCDATASection...
 
-	XalanSourceTreeElement*
-	getParentElement() const
-	{
-		return m_parentElement;
-	}
+	void
+	setParent(XalanSourceTreeElement*	theParent);
 
 	void
-	setParentElement(XalanSourceTreeElement*	theParentElement)
-	{
-		m_parentElement = theParentElement;
-	}
+	setParent(XalanSourceTreeDocumentFragment*	theParent);
 
 	void
 	setPreviousSibling(XalanSourceTreeComment*	thePreviousSibling);
@@ -680,7 +675,7 @@ private:
 	// Data members...
 	const XalanDOMString&			m_data;
 
-	XalanSourceTreeElement*			m_parentElement;
+	XalanNode*						m_parentNode;
 
 	XalanNode*						m_previousSibling;
 

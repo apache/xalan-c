@@ -81,7 +81,7 @@ public:
 	 * @param theOwnerDocument The document that owns the instance
 	 * @param theAttributes An array of pointers to the attribute instances for the element
 	 * @param theAttributeCount The number of attributes.
-	 * @param theParentElement The parent element, if any.
+	 * @param theParentNode The parent node, if any.
 	 * @param thePreviousSibling The previous sibling, if any.
 	 * @param theNextSibling The next sibling, if any.
 	 * @param theIndex The document-order index of the node.
@@ -94,7 +94,7 @@ public:
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
 			AttributesCountType			theAttributeCount,
-			XalanSourceTreeElement*		theParentElement = 0,
+			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
 			unsigned int				theIndex = 0);

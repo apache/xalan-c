@@ -70,7 +70,7 @@ XalanSourceTreeElementNS::XalanSourceTreeElementNS(
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
 			AttributesCountType			theAttributeCount,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
 			unsigned int				theIndex) :
@@ -79,7 +79,7 @@ XalanSourceTreeElementNS::XalanSourceTreeElementNS(
 		theOwnerDocument,
 		theAttributes,
 		theAttributeCount,
-		theParentElement,
+		theParentNode,
 		thePreviousSibling,
 		theNextSibling,
 		theIndex),

@@ -68,6 +68,7 @@
 
 #include "XalanSourceTreeComment.hpp"
 #include "XalanSourceTreeDocument.hpp"
+#include "XalanSourceTreeDocumentFragment.hpp"
 #include "XalanSourceTreeElement.hpp"
 #include "XalanSourceTreeText.hpp"
 #include "XalanSourceTreeHelper.hpp"
@@ -82,7 +83,7 @@ XalanSourceTreeProcessingInstruction::XalanSourceTreeProcessingInstruction(
 			const XalanDOMString&		theTarget,
 			const XalanDOMString&		theData,
 			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
 			unsigned int				theIndex) :
@@ -90,7 +91,7 @@ XalanSourceTreeProcessingInstruction::XalanSourceTreeProcessingInstruction(
 	m_target(theTarget),
 	m_data(theData),
 	m_ownerDocument(theOwnerDocument),
-	m_parentElement(theParentElement),
+	m_parentNode(theParentNode),
 	m_previousSibling(thePreviousSibling),
 	m_nextSibling(theNextSibling),
 	m_index(theIndex)
@@ -111,7 +112,7 @@ XalanSourceTreeProcessingInstruction::XalanSourceTreeProcessingInstruction(
 	XalanProcessingInstruction(theSource),
 	m_target(theSource.m_target),
 	m_data(theSource.m_data),
-	m_parentElement(0),
+	m_parentNode(0),
 	m_previousSibling(0),
 	m_nextSibling(0),
 	m_index(0)
@@ -147,9 +148,9 @@ XalanSourceTreeProcessingInstruction::getNodeType() const
 XalanNode*
 XalanSourceTreeProcessingInstruction::getParentNode() const
 {
-	if (m_parentElement != 0)
+	if (m_parentNode != 0)
 	{
-		return m_parentElement;
+		return m_parentNode;
 	}
 	else
 	{
@@ -382,6 +383,22 @@ void
 XalanSourceTreeProcessingInstruction::setData(const XalanDOMString&		/* theData */)
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+}
+
+
+
+void
+XalanSourceTreeProcessingInstruction::setParent(XalanSourceTreeElement*	theParent)
+{
+	m_parentNode = theParent;
+}
+
+
+
+void
+XalanSourceTreeProcessingInstruction::setParent(XalanSourceTreeDocumentFragment*	theParent)
+{
+	m_parentNode = theParent;
 }
 
 

@@ -59,12 +59,12 @@
 
 
 XalanSourceTreeTextIWS::XalanSourceTreeTextIWS(
-			const XalanDOMString&		theData,
-			XalanSourceTreeElement*		theParentElement,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			unsigned int				theIndex) :
-	XalanSourceTreeText(theData, theParentElement, thePreviousSibling, theNextSibling, theIndex)
+			const XalanDOMString&	theData,
+			XalanNode*				theParentNode,
+			XalanNode*				thePreviousSibling,
+			XalanNode*				theNextSibling,
+			unsigned int			theIndex) :
+	XalanSourceTreeText(theData, theParentNode, thePreviousSibling, theNextSibling, theIndex)
 {
 }
 
