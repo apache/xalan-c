@@ -113,6 +113,10 @@ XalanStdOutputStream::doFlush()
 
 		if(!m_outputStream)
 		{
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+			using namespace std;
+#endif
+
 			throw XalanStdOutputStreamWriteException(errno);
 		}
 	}
@@ -131,6 +135,10 @@ XalanStdOutputStream::writeData(
 
 	if(!m_outputStream)
 	{
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		using namespace std;
+#endif
+
 		throw XalanStdOutputStreamWriteException(errno);
 	}
 }
