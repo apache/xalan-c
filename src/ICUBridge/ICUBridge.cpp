@@ -65,6 +65,10 @@
 
 
 
+#include <PlatformSupport/DoubleSupport.hpp>
+
+
+
 #include <unicode/coll.h>
 #include <unicode/dcfmtsym.h>
 #include <unicode/decimfmt.h>
@@ -209,48 +213,44 @@ ICUBridge::UnicodeStringToXalanDOMString(
 
 
 
-unsigned long
-ICUBridge::FormatNumber(
+static void
+doFormatNumber(
 			const XalanDOMString&				thePattern,
 			double								theNumber,
-			const XalanDecimalFormatSymbols*	theXalanDFS,
+			const XalanDecimalFormatSymbols&	theXalanDFS,
+			UErrorCode&							theStatus,
 			XalanDOMString&						theResult)
 {
-	UErrorCode				theStatus = U_ZERO_ERROR;
-
-	// Use a XalanAutoPtr, to keep this safe until we construct the DecimalFormat instance.
-	XalanAutoPtr<DecimalFormatSymbols>	theDFS(new DecimalFormatSymbols(theStatus));
-
 	if (theStatus == U_ZERO_ERROR ||
 		theStatus == U_USING_DEFAULT_ERROR)
 	{
-		if (theXalanDFS != 0)
-		{
-			// We got a XalanDecimalFormatSymbols, so set the
-			// corresponding data in the ICU DecimalFormatSymbols.
-			theDFS->setZeroDigit(theXalanDFS->getZeroDigit());
-			theDFS->setGroupingSeparator(theXalanDFS->getGroupingSeparator());
-			theDFS->setDecimalSeparator(theXalanDFS->getDecimalSeparator());
-			theDFS->setPerMill(theXalanDFS->getPerMill());
-			theDFS->setPercent(theXalanDFS->getPercent());
-			theDFS->setDigit(theXalanDFS->getDigit());
-			theDFS->setPatternSeparator(theXalanDFS->getPatternSeparator());
+		// Use a XalanAutoPtr, to keep this safe until we construct the DecimalFormat instance.
+		XalanAutoPtr<DecimalFormatSymbols>	theDFS(new DecimalFormatSymbols(theStatus));
 
-			theDFS->setInfinity(XalanDOMStringToUnicodeString(theXalanDFS->getInfinity()));
-			theDFS->setNaN(XalanDOMStringToUnicodeString(theXalanDFS->getNaN()));
-		//	theDFS->setPlusSign(theZeroDigitChar);
-			theDFS->setMinusSign(theXalanDFS->getMinusSign());
-		//	theDFS->setExponentialSymbol(theZeroDigitChar);
-			theDFS->setCurrencySymbol(XalanDOMStringToUnicodeString(theXalanDFS->getCurrencySymbol()));
-			theDFS->setInternationalCurrencySymbol(XalanDOMStringToUnicodeString(theXalanDFS->getInternationalCurrencySymbol()));
-			theDFS->setMonetaryDecimalSeparator(theXalanDFS->getMonetaryDecimalSeparator());
-		}
+		// We got a XalanDecimalFormatSymbols, so set the
+		// corresponding data in the ICU DecimalFormatSymbols.
+		theDFS->setZeroDigit(theXalanDFS.getZeroDigit());
+		theDFS->setGroupingSeparator(theXalanDFS.getGroupingSeparator());
+		theDFS->setDecimalSeparator(theXalanDFS.getDecimalSeparator());
+		theDFS->setPerMill(theXalanDFS.getPerMill());
+		theDFS->setPercent(theXalanDFS.getPercent());
+		theDFS->setDigit(theXalanDFS.getDigit());
+		theDFS->setPatternSeparator(theXalanDFS.getPatternSeparator());
+
+		theDFS->setInfinity(ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInfinity()));
+		theDFS->setNaN(ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getNaN()));
+	//	theDFS->setPlusSign(theZeroDigitChar);
+		theDFS->setMinusSign(theXalanDFS.getMinusSign());
+	//	theDFS->setExponentialSymbol(theZeroDigitChar);
+		theDFS->setCurrencySymbol(ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getCurrencySymbol()));
+		theDFS->setInternationalCurrencySymbol(ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInternationalCurrencySymbol()));
+		theDFS->setMonetaryDecimalSeparator(theXalanDFS.getMonetaryDecimalSeparator());
 
 		UnicodeString	theUnicodeResult;
 
 		// Construct a DecimalFormat.  Note that we release the XalanAutoPtr, since the
 		// DecimalFormat will adopt the DecimalFormatSymbols instance.
-		DecimalFormat	theFormatter(XalanDOMStringToUnicodeString(thePattern), theDFS.release(), theStatus);
+		DecimalFormat	theFormatter(ICUBridge::XalanDOMStringToUnicodeString(thePattern), theDFS.release(), theStatus);
 
 		if (theStatus == U_ZERO_ERROR ||
 			theStatus == U_USING_DEFAULT_ERROR)
@@ -258,10 +258,43 @@ ICUBridge::FormatNumber(
 			// Do the format...
 			theFormatter.format(theNumber, theUnicodeResult);
 
-			UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
+			ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 
 			theStatus = U_ZERO_ERROR;
 		}
+	}
+}
+
+
+
+unsigned long
+ICUBridge::FormatNumber(
+			const XalanDOMString&				thePattern,
+			double								theNumber,
+			const XalanDecimalFormatSymbols*	theXalanDFS,
+			XalanDOMString&						theResult)
+{
+	UErrorCode	theStatus = U_ZERO_ERROR;
+
+	if (theXalanDFS == 0)
+	{
+		XalanDecimalFormatSymbols	theDefaultSymbols;
+
+		doFormatNumber(
+				thePattern,
+				theNumber,
+				theDefaultSymbols,
+				theStatus,
+				theResult);
+	}
+	else
+	{
+		doFormatNumber(
+				thePattern,
+				theNumber,
+				*theXalanDFS,
+				theStatus,
+				theResult);
 	}
 
 	return theStatus;
