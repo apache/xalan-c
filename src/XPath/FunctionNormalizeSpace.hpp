@@ -102,6 +102,11 @@ public:
 
 private:
 
+	XObject*
+	normalize(
+		XPathExecutionContext&	executionContext,
+		const XalanDOMString&	theString);
+
 	const XalanDOMString
 	NormalizeSpace(
 			const XalanDOMString& theSourceString) const;

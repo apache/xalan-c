@@ -77,12 +77,8 @@ FunctionNormalizeSpace::execute(
 		const XObject*					arg1)
 {
 	assert(arg1 != 0);
-	
-	XalanDOMString	theSourceString;
-
-	theSourceString = arg1->str();
-
-	return executionContext.getXObjectFactory().createString(NormalizeSpace(theSourceString));
+		
+	return normalize(executionContext, arg1->str());
 }
 
 
@@ -115,15 +111,16 @@ FunctionNormalizeSpace::execute(
 		theSourceString = theXObject->str();		
 	}
 
-	return executionContext.getXObjectFactory().createString(NormalizeSpace(theSourceString));
+	return normalize(executionContext, theSourceString);
 }
 
 
-
-const XalanDOMString
-FunctionNormalizeSpace::NormalizeSpace(const XalanDOMString& theSourceString) const
+XObject*
+FunctionNormalizeSpace::normalize(
+		XPathExecutionContext&	executionContext,
+		const XalanDOMString&	theString)
 {
-	const unsigned int		theSourceStringLength = length(theSourceString);
+	const unsigned int		theStringLength = length(theString);
 
 	XalanDOMChar			thePreviousChar = 0;
 
@@ -133,17 +130,23 @@ FunctionNormalizeSpace::NormalizeSpace(const XalanDOMString& theSourceString) co
 	using std::vector;
 #endif
 
-	vector<XalanDOMChar>	theVector;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanDOMChar>		VectorType;
+#else
+	typedef std::vector<XalanDOMChar>	VectorType;
+#endif
+
+	// A vector to contain the result.
+	VectorType				theVector;
 
 	// The result string can only be as large as the source string, so
-	// just reserve the space now.  Also reserve a space for the
-	// terminating 0.
-	theVector.reserve(theSourceStringLength + 1);
+	// just reserve the space now.
+	theVector.reserve(theStringLength);
 
 	// OK, strip out any multiple spaces...
-	for (unsigned int i = 0; i < theSourceStringLength; i++)
+	for (unsigned int i = 0; i < theStringLength; i++)
 	{
-		const XalanDOMChar	theCurrentChar = charAt(theSourceString, i);
+		const XalanDOMChar	theCurrentChar = charAt(theString, i);
 
 		if (isXMLWhitespace(theCurrentChar) == true)
 		{
@@ -163,13 +166,22 @@ FunctionNormalizeSpace::NormalizeSpace(const XalanDOMString& theSourceString) co
 		thePreviousChar = theCurrentChar;
 	}
 
-	if (theVector.empty() == false && isXMLWhitespace(theVector.back()) == true)
-	{
-		// The last character is a space, so remove it
-		theVector.pop_back();
-	}
+	VectorType::size_type	theSize = theVector.size();
 
-	return XalanDOMString(theVector.begin(), theVector.size());
+	if (theSize == 0)
+	{
+		return executionContext.getXObjectFactory().createString(XalanDOMString());
+	}
+	else
+	{
+		if (isXMLWhitespace(theVector.back()) == true)
+		{
+			// The last character is a space, so remove it
+			--theSize;
+		}
+
+		return executionContext.getXObjectFactory().createString(XalanDOMString(theVector.begin(), theSize));
+	}
 }
 
 
