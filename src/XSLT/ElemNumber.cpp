@@ -367,8 +367,8 @@ ElemNumber::getCountMatchPattern(
 XalanDOMString
 ElemNumber::getCountString(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode* const					/* sourceTree */, 
-			XalanNode* const					sourceNode) const
+			XalanNode*							/* sourceTree */, 
+			XalanNode*							sourceNode) const
 {
 	assert(sourceNode != 0);
 	IntArrayType	numberList;
@@ -388,7 +388,7 @@ ElemNumber::getCountString(
 		if(Constants::NUMBERLEVEL_ANY == m_level)
 		{
 			numberList.push_back(ctable.countNode(executionContext, 
-			const_cast<ElemNumber* const>(this), sourceNode));
+			const_cast<ElemNumber*>(this), sourceNode));
 		}
 		else
 		{
@@ -397,20 +397,11 @@ ElemNumber::getCountString(
 			int lastIndex = ancestors.getLength();
 			if(lastIndex > 0)
 			{
-			/*
-				numberList.reserve(lastIndex+1);
-				for(int i = lastIndex; i >= 0; i--)
-				{
-					const XalanNode* target = ancestors.item(i);
-					numberList[lastIndex-i] = ctable.countNode(executionContext,
-							const_cast<ElemNumber* const>(this), target);
-				}
-			*/
 				for(int i = 0; i < lastIndex; i++)
 				{
 					const XalanNode* target = ancestors.item(lastIndex - i -1);
 					numberList.push_back(ctable.countNode(executionContext,
-							const_cast<ElemNumber* const>(this), target));
+							const_cast<ElemNumber*>(this), target));
 				}
 			}
 		}
@@ -1014,13 +1005,13 @@ ElemNumber::NumberFormatStringTokenizer::countTokens() const
  *					CountersTable Class Implementation
  */
 
-ElemNumber::CounterVectorType& ElemNumber::CountersTable::getCounters(ElemNumber* const numberElem)
+ElemNumber::CounterVectorType& ElemNumber::CountersTable::getCounters(ElemNumber* numberElem)
 {
 	Ptr2CounterVectorMapType::iterator it = m_hashTable.find(numberElem);
 	return (m_hashTable.end() == it) ? putElemNumber(numberElem) : (*it).second;
 }
 
-ElemNumber::CounterVectorType& ElemNumber::CountersTable::putElemNumber(ElemNumber* const numberElem)
+ElemNumber::CounterVectorType& ElemNumber::CountersTable::putElemNumber(ElemNumber*	numberElem)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::make_pair;
@@ -1046,7 +1037,7 @@ void ElemNumber::CountersTable::appendBtoFList(MutableNodeRefList& flist, Mutabl
  */
 int ElemNumber::CountersTable::countNode(
 		StylesheetExecutionContext& support,
-		ElemNumber* const numberElem,
+		ElemNumber*		 numberElem,
 		const XalanNode* const node)
 {
 	int count = 0;

@@ -198,8 +198,8 @@ protected:
 	XalanDOMString
 	getCountString(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode* const					sourceTree, 
-			XalanNode* const					sourceNode) const;
+			XalanNode*							sourceTree, 
+			XalanNode*							sourceNode) const;
 
 	/**
 	 * Get the previous node to be counted.
@@ -456,7 +456,7 @@ private:
 			 */
 			int CountersTable::countNode(
 					StylesheetExecutionContext& support,
-					ElemNumber* const numberElem,
+					ElemNumber*		 numberElem,
 					const XalanNode* const node);
 
 		private:
@@ -465,14 +465,14 @@ private:
 			 * Get the list of counters that corresponds to 
 			 * the given ElemNumber object.
 			 */
-			CounterVectorType& getCounters(ElemNumber* const numberElem);
+			CounterVectorType& getCounters(ElemNumber*		 numberElem);
 
 
 			/**
 			 * Put a counter into the table and create an empty 
 			 * vector as it's value.
 			 */
-			CounterVectorType& putElemNumber(ElemNumber* const numberElem);
+			CounterVectorType& putElemNumber(ElemNumber*		 numberElem);
 
 			/**
 			 * Add a list of counted nodes that were built in backwards document 
