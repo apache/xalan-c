@@ -1542,6 +1542,14 @@ SOURCE=..\..\..\..\src\XMLSupport\FormatterTreeWalker.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XMLSupport\XalanHTMLElementsProperties.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\XalanHTMLElementsProperties.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaison.cpp
 # End Source File
 # Begin Source File
@@ -2534,6 +2542,14 @@ SOURCE=..\..\..\..\src\XSLT\ResultTreeFragAllocator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\SelectionEvent.cpp
 # End Source File
 # Begin Source File
@@ -3057,17 +3073,5 @@ SOURCE=..\..\Res\AllInOne\AllInOne.rc
 SOURCE=..\..\Res\AllInOne\resource.h
 # End Source File
 # End Group
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XMLSupport\XalanHTMLElementsProperties.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XMLSupport\XalanHTMLElementsProperties.hpp
-# End Source File
 # End Target
 # End Project
