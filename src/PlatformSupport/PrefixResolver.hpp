@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,7 +85,7 @@ public:
 
 	/**
 	 * Retrieve a namespace corresponding to a prefix.  This assumes that 
-	 * the PrevixResolver hold's its own namespace context, or is a namespace
+	 * the PrevixResolver holds its own namespace context, or is a namespace
 	 * context itself.
 	 *
 	 * @param prefix Prefix to resolve
