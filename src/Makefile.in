@@ -398,6 +398,8 @@ ${ALL_OBJECTS_DIR}/%.o:$(TESTXPATH_DIR)/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
+samples : Samples
+
 Samples: lib  CompileStylesheet  ExternalFunction  SimpleTransform  StreamTransform  TraceListen  UseStylesheetParam  XalanTransform XPathWrapper #  ThreadSafe
 
 ApacheModuleXSLT: lib ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 
