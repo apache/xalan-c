@@ -74,8 +74,11 @@
 
 
 
-class XalanNode;
+class XalanAttr;
+class XalanDocument;
+class XalanDocumentFragment;
 class XalanElement;
+class XalanNode;
 class XalanText;
 
 
@@ -149,11 +152,56 @@ public:
 	/**
 	 * Retrieves data for node
 	 * 
-	 * @param node        DOM node whose data is to be returned
+	 * @param node DOM node whose data is to be returned
 	 * @return a string representation of the node's data
 	 */
 	static XalanDOMString
 	getNodeData(const XalanNode&	node);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param attribute DOM node whose data is to be returned
+	 * @return a string representation of the node's data
+	 */
+	static XalanDOMString
+	getNodeData(const XalanAttr&	attribute);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param document DOM node whose data is to be returned
+	 * @return a string representation of the node's data
+	 */
+	static XalanDOMString
+	getNodeData(const XalanDocument&	document);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param documentFragment DOM node whose data is to be returned
+	 * @return a string representation of the node's data
+	 */
+	static XalanDOMString
+	getNodeData(const XalanDocumentFragment&	documentFragment);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param element DOM node whose data is to be returned
+	 * @return a string representation of the node's data
+	 */
+	static XalanDOMString
+	getNodeData(const XalanElement&		element);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param node DOM node whose data is to be returned
+	 * @return a string representation of the node's data
+	 */
+	static XalanDOMString
+	getNodeData(const XalanText&	text);
 
 	/**
 	 * Retrieve the name of the node, taking into

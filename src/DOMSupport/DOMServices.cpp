@@ -63,7 +63,9 @@
 
 
 #include <XalanDOM/XalanAttr.hpp>
+#include <XalanDOM/XalanCDATASection.hpp>
 #include <XalanDOM/XalanDocument.hpp>
+#include <XalanDOM/XalanDocumentFragment.hpp>
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanNamedNodeMap.hpp>
 #include <XalanDOM/XalanNodeList.hpp>
@@ -156,45 +158,39 @@ DOMServices::getNodeData(const XalanNode&	node)
 	{
 	case XalanNode::DOCUMENT_FRAGMENT_NODE:
 		{
-			const XalanNodeList* const	mnl = node.getChildNodes();
-			assert(mnl != 0);
-
-			const unsigned int	n = mnl->getLength();
-
-			for(unsigned int i = 0; i < n; ++i)
-			{
-				assert(mnl->item(i) != 0);
-
-				const XalanDOMString 	nodeData =
-					getNodeData(*mnl->item(i));
-
-				if(0 < length(nodeData))
-				{
-					data += nodeData;
-				}
-			}
+			const XalanDocumentFragment&		theDocumentFragment =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanDocumentFragment&)node;
+#else
+				static_cast<const XalanDocumentFragment&>(node);
+#endif
+			data = getNodeData(theDocumentFragment);
 		}
 		break;
 
 	case XalanNode::DOCUMENT_NODE:
+		{
+			const XalanDocument&	theDocument =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanDocument&)node;
+#else
+				static_cast<const XalanDocument&>(node);
+#endif
+			data = getNodeData(theDocument);
+		}
+		break;
+
 	case XalanNode::ELEMENT_NODE:
 		{
-			const XalanNode*	child = node.getFirstChild();
-
-			while(child != 0)
-			{
-				const XalanDOMString 	nodeData =
-					getNodeData(*child);
-
-				if(0 < length(nodeData))
-				{
-					data += nodeData;
-				}
-
-				child = child->getNextSibling();
-			}
+			const XalanElement&		theElement =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanElement&)node;
+#else
+				static_cast<const XalanElement&>(node);
+#endif
+			data = getNodeData(theElement);
 		}
-	  break;
+		break;
 
 	case XalanNode::TEXT_NODE:
 	case XalanNode::CDATA_SECTION_NODE:
@@ -206,16 +202,20 @@ DOMServices::getNodeData(const XalanNode&	node)
 				static_cast<const XalanText&>(node);
 #endif
 
-			// This is commented out because it turns out that it's incorrect...
-//			if(theResolver.isIgnorableWhitespace(theTextNode) == false)
-//			{
-				data = theTextNode.getData();
-//			}
+				data = getNodeData(theTextNode);
 		}
 		break;
 
 	case XalanNode::ATTRIBUTE_NODE:
-		data = node.getNodeValue();
+		{
+			const XalanAttr&		theAttr =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanAttr&)node;
+#else
+				static_cast<const XalanAttr&>(node);
+#endif
+			data = getNodeData(theAttr);
+		}
 		break;
 
 	default:
@@ -224,6 +224,100 @@ DOMServices::getNodeData(const XalanNode&	node)
 	}
 
 	return data;
+}
+
+
+
+XalanDOMString
+DOMServices::getNodeData(const XalanAttr&	attribute)
+{
+	return attribute.getNodeValue();
+}
+
+
+
+XalanDOMString
+DOMServices::getNodeData(const XalanDocument&	document)
+{
+	XalanDOMString	data;
+
+	const XalanNode*	child = document.getFirstChild();
+
+	while(child != 0)
+	{
+		const XalanDOMString 	nodeData =
+					getNodeData(*child);
+
+		if(0 < length(nodeData))
+		{
+			data += nodeData;
+		}
+
+		child = child->getNextSibling();
+	}
+
+	return data;
+}
+
+
+
+XalanDOMString
+DOMServices::getNodeData(const XalanDocumentFragment&	documentFragment)
+{
+	XalanDOMString	data;
+
+	const XalanNodeList* const	nl = documentFragment.getChildNodes();
+	assert(nl != 0);
+
+	const unsigned int	n = nl->getLength();
+
+	for(unsigned int i = 0; i < n; ++i)
+	{
+		assert(nl->item(i) != 0);
+
+		const XalanDOMString 	nodeData =
+					getNodeData(*nl->item(i));
+
+		if(0 < length(nodeData))
+		{
+			data += nodeData;
+		}
+	}
+
+	return data;
+}
+
+
+
+XalanDOMString
+DOMServices::getNodeData(const XalanElement&	element)
+{
+	XalanDOMString	data;
+
+	const XalanNode*	child = element.getFirstChild();
+
+	while(child != 0)
+	{
+		const XalanDOMString 	nodeData =
+					getNodeData(*child);
+
+		if(0 < length(nodeData))
+		{
+			data += nodeData;
+		}
+
+		child = child->getNextSibling();
+	}
+
+	return data;
+}
+
+
+
+XalanDOMString
+DOMServices::getNodeData(const XalanText&	text)
+{
+	return text.getData();
 }
 
 
@@ -271,17 +365,11 @@ DOMServices::getNameOfNode(const XalanNode&		n)
 XalanDOMString
 DOMServices::getLocalNameOfNode(const XalanNode&	n)
 {
-	// $$$ ToDo: When Xerces finishes their DOM level 2 stuff, we
-	// can enable this code.
-#if 0
-	return n.getLocalName();
-#else
 	const XalanDOMString	qname = n.getNodeName();
 
 	const unsigned int		index = indexOf(qname, ':');
 
 	return index == length(qname) ? qname : substring(qname, index + 1);
-#endif
 }
 
 
@@ -489,27 +577,20 @@ DOMServices::getNamespaceForPrefix(
 
 
 
-
-
-
 bool
 DOMServices::isNodeAfter(
 			const XalanNode&	node1,
 			const XalanNode&	node2)
 {
-	bool		isNodeAfter = false;
+	assert(node1.getOwnerDocument() == node2.getOwnerDocument());
+	assert(node1.getNodeType() != XalanNode::DOCUMENT_NODE &&
+			node2.getNodeType() != XalanNode::DOCUMENT_NODE);
 
-	// Doesn't matter in this case ...
-	if (XalanNode::DOCUMENT_NODE == node1.getNodeType()
-			&& XalanNode::DOCUMENT_NODE == node2.getNodeType()) return false;
-	
+	bool	isNodeAfter = false;
+
 	const XalanNode*	parent1 = getParentOfNode(node1);
-// @@ Could be document node
-//	assert(parent1 != 0);
 
 	const XalanNode*	parent2 = getParentOfNode(node2);
-// @@ Could be document node
-//	assert(parent2 != 0);
 
 	// Optimize for most common case
 	if(parent1 == parent2) // then we know they are siblings
@@ -525,7 +606,7 @@ DOMServices::isNodeAfter(
 		// first common ancestor, at which point we can do a 
 		// sibling compare.  Edge condition where one is the 
 		// ancestor of the other.
-	  
+
 		// Count parents, so we can see if one of the chains 
 		// needs to be equalized.
 		int nParents1 = 2;
@@ -573,7 +654,7 @@ DOMServices::isNodeAfter(
 		// so we can "back up"
 		const XalanNode*	prevChild1 = 0;
 		const XalanNode*	prevChild2 = 0;
-	  
+		  
 		// Loop up the ancestor chain looking for common parent.
 		while(0 != startNode1)
 		{
@@ -597,17 +678,16 @@ DOMServices::isNodeAfter(
 			}
 
 			prevChild1 = startNode1;
-// @@ Could be document node
-//			assert(prevChild1 != 0);
+			assert(prevChild1 != 0);
 
 			startNode1 = getParentOfNode(*startNode1);
-//			assert(startNode1 != 0);
+			assert(startNode1 != 0);
 
 			prevChild2 = startNode2;
-//			assert(prevChild2 != 0);
+			assert(prevChild2 != 0);
 
 			startNode2 = getParentOfNode(*startNode2);
-//			assert(startNode2 != 0);
+			assert(startNode2 != 0);
 		}
 	}
 
@@ -656,7 +736,7 @@ DOMServices::isNodeAfterSibling(
 			{
 				if(found2 == true)
 				{
-					isNodeAfterSibling = false;
+					isNodeAfterSibling = true;
 					break;
 				}
 		  
@@ -666,7 +746,7 @@ DOMServices::isNodeAfterSibling(
 			{
 				if(found1 == true)
 				{
-					isNodeAfterSibling = true;
+					isNodeAfterSibling = false;
 					break;
 				}
 		  
@@ -687,7 +767,7 @@ DOMServices::isNodeAfterSibling(
 			{
 				if(found2 == true)
 				{
-					isNodeAfterSibling = false;
+					isNodeAfterSibling = true;
 					break;
 				}
 
@@ -697,7 +777,7 @@ DOMServices::isNodeAfterSibling(
 			{
 				if(found1 == true)
 				{
-					isNodeAfterSibling = true;
+					isNodeAfterSibling = false;
 					break;
 				}
 
