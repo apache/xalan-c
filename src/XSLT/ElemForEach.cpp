@@ -169,23 +169,26 @@ ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 {
 	assert(m_selectPattern != 0);
 
-	XalanNode* const	sourceNode = executionContext.getCurrentNode();
-
-	if (sourceNode != 0)
+	if (hasChildren() == true)
 	{
-		transformSelectedChildren(
-			executionContext,
-			this,
-			sourceNode,
-			executionContext.getCurrentStackFrameIndex());
+		XalanNode* const	sourceNode = executionContext.getCurrentNode();
+
+		if (sourceNode != 0)
+		{
+			transformSelectedChildren(
+				executionContext,
+				this,
+				sourceNode,
+				executionContext.getCurrentStackFrameIndex());
+		}
+		else
+		{
+			executionContext.error(
+				"There is no current node in ElemForEach::execute()!",
+				sourceNode, 
+				this);
+		}
 	}
-    else
-    {
-		executionContext.error(
-			"There is no current node in ElemForEach::execute()!",
-			sourceNode, 
-			this);
-    }
 }
 
 
