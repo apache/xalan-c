@@ -370,6 +370,10 @@ SOURCE=..\..\..\..\src\XSLT\ResultTreeFragAllocator.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\SelectionEvent.cpp
 # End Source File
 # Begin Source File
@@ -738,6 +742,10 @@ SOURCE=..\..\..\..\src\XSLT\ResultTreeFrag.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\ResultTreeFragAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.hpp
 # End Source File
 # Begin Source File
 
