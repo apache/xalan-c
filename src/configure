@@ -1309,6 +1309,7 @@ case "${host}" in
                         esac;;
         *-*-mvs*)       platform=OS390 ;;
         *-*-osf*)       platform=TRU64 ;;
+        *-apple-darwin*)       platform=MACOSX ;;
         *)              platform=UNKNOWN ;;
 esac
 

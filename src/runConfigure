@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.5  2001/08/14 16:10:18  dbertoni
+# Changes from James Berry <jberry@criticalpath.com> for Mac OS X support.
+#
 # Revision 1.4  2001/05/18 18:24:12  dbertoni
 # Added $compileroption to CXXFLAGS and CFLAGS.  Bug 1810
 #
@@ -95,7 +98,7 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'irix', 'tru64' )"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'irix', 'tru64', 'macosx' )"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC)"
     echo "       -d (specifies that you want to build debug version)"
@@ -186,7 +189,7 @@ echo "Thread option: $thread"
 #
 
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11 | irix | tru64)
+   aix | linux | solaris | hp-10 | hp-11 | irix | tru64 | macosx)
        # platform has been recognized
        ;;
    *)

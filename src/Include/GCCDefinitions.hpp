@@ -87,6 +87,10 @@
 #define XALAN_BIG_ENDIAN
 #elif defined(__i386__) || defined(__alpha__)
 #define XALAN_LITLE_ENDIAN
+#elif defined(__BIG_ENDIAN__)
+#define XALAN_BIG_ENDIAN
+#elif defined(__LITTLE_ENDIAN__)
+#define XALAN_LITTLE_ENDIAN
 #else
 #error XALAN_BIG_ENDIAN or XALAN_LITTLE_ENDIAN must be defined for this platform!
 #endif
