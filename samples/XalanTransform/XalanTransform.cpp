@@ -43,17 +43,12 @@ main(
     // Create a XalanTransformer.
 	XalanTransformer theXalanTransformer;
 
-	const char* 	theXMLFileName = argv[1];
-	const char* 	theXSLFileName = argv[2];
-
     int				theResult = 0;
 
     if (argc == 4)
 	{
-	    const char* 		theOutFileName = argv[3];
-
         // Do the transform.
-        theResult = theXalanTransformer.transform(theXMLFileName, theXSLFileName, theOutFileName);
+        theResult = theXalanTransformer.transform(argv[1], argv[2], argv[3]);
         
         if(theResult != 0)
 	    {
@@ -62,20 +57,12 @@ main(
     }
     else
     {
-        ostrstream	theOutput;
-
         // Do the transform.
-        theResult = theXalanTransformer.transform(theXMLFileName, theXSLFileName, theOutput);
+        theResult = theXalanTransformer.transform(argv[1], argv[2], cout);
         
         if(theResult != 0)
 	    {
 		    cerr << "XalanError: \n" << theXalanTransformer.getLastError();
-	    }
-	    else
-	    {
-		    theOutput << '\0';
-
-		    cout << theOutput.str();
 	    }
     }
 
