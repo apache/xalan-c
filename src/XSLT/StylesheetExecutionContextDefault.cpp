@@ -122,7 +122,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 			XPathSupport&			theXPathSupport,
 			XObjectFactory&			theXObjectFactory,
 			XalanNode*				theCurrentNode,
-			const NodeRefListBase&	theContextNodeList,
+			const NodeRefListBase*	theContextNodeList,
 			const PrefixResolver*	thePrefixResolver) :
 	StylesheetExecutionContext(),
 	m_xpathExecutionContextDefault(theXPathEnvSupport,

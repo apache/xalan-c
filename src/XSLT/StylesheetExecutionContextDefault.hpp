@@ -103,7 +103,7 @@ public:
 			XPathSupport&			theXPathSupport,
 			XObjectFactory&			theXObjectFactory,
 			XalanNode*				theCurrentNode = 0,
-			const NodeRefListBase&	theContextNodeList = NodeRefList(),
+			const NodeRefListBase*	theContextNodeList = 0,
 			const PrefixResolver*	thePrefixResolver = 0);
 
 	virtual

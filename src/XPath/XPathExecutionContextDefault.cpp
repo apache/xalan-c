@@ -76,19 +76,23 @@
 
 
 
+const NodeRefList	XPathExecutionContextDefault::s_dummyList;
+
+
+
 XPathExecutionContextDefault::XPathExecutionContextDefault(
 			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
 			XObjectFactory&			theXObjectFactory,
 			XalanNode*				theCurrentNode,
-			const NodeRefListBase&	theContextNodeList,
+			const NodeRefListBase*	theContextNodeList,
 			const PrefixResolver*	thePrefixResolver) :
 	XPathExecutionContext(),
 	m_xpathEnvSupport(theXPathEnvSupport),
 	m_xpathSupport(theXPathSupport),
 	m_xobjectFactory(theXObjectFactory),
 	m_currentNode(theCurrentNode),
-	m_contextNodeList(&theContextNodeList),
+	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
 	m_availableCachedNodeLists(),

@@ -82,6 +82,10 @@
 
 
 
+#include <XPath/NodeRefList.hpp>
+
+
+
 class XPathEnvSupport;
 
 
@@ -109,7 +113,7 @@ public:
 			XPathSupport&			theXPathSupport,
 			XObjectFactory&			theXObjectFactory,
 			XalanNode*				theCurrentNode = 0,
-			const NodeRefListBase&	theContextNodeList = NodeRefList(),
+			const NodeRefListBase*	theContextNodeList = 0,
 			const PrefixResolver*	thePrefixResolver = 0);
 
 	virtual
@@ -345,6 +349,8 @@ protected:
 	XObjectArgVectorStackType		m_argVectorsStack;
 
 	ArgVectorStackIteratorType		m_argVectorsStackPosition;
+
+	static const NodeRefList		s_dummyList;
 };
 
 

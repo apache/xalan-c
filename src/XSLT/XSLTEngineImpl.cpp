@@ -764,7 +764,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 															m_xpathSupport,
 															m_xobjectFactory,
 															&fragBase,
-															NodeRefList(),
+															0,
 															&theProxy);
 
 		const XObjectGuard		xobj(
