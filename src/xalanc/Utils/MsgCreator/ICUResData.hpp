@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,7 +70,7 @@ static const char* szApacheLicense[]=
  "//* The Apache Software License, Version 1.1 \n",
  "//*\n",
  "//*\n",
- "//* Copyright (c) 1999-2003 The Apache Software Foundation.  All rights\n", 
+ "//* Copyright (c) 1999-2004 The Apache Software Foundation.  All rights\n", 
  "//* reserved.\n",
  "//*\n",
  "//* Redistribution and use in source and binary forms, with or without\n",
