@@ -59,7 +59,7 @@
 
 
 
-#include <unicode/uversion.h>
+#include <unicode/utypes.h>
 #if (U_ICU_VERSION_MAJOR_NUM >= 2)
 #include <unicode/uclean.h>
 #endif

@@ -63,8 +63,10 @@
 
 
 
+#if U_ICU_VERSION_MAJOR_NUM >= 2
 // this is the ICU's macro for using namespace ...
 U_NAMESPACE_USE
+#endif
 
 
 
