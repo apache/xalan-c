@@ -59,6 +59,11 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+#include "../../Include/XalanVersion.hpp"
+
+#define MAKE_STRING(a) #a
+#define INVK_MAKE_STRING(a) MAKE_STRING(a)
+
 static const char* szApacheLicense[]=
 {
  "///* \n",
@@ -126,10 +131,12 @@ static const char* szApacheLicense[]=
 
  0};
 
+
 static const char* szStartDataFile[]=
 {
  "	{\n",
- "		XalanMsg {\n",
+ INVK_MAKE_STRING(XALAN_PRODUCT),
+ " 		{\n",
  "			\"Dummy data\",\n",
 0};
 static const char* szEndDataFile[]=

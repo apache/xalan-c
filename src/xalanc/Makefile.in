@@ -247,7 +247,7 @@ ${XSL_OBJ_DIR}/%.o:$(TESTXPATH_DIR)/%.cpp
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-lib:	prepare local compile ${BATCH_TARGET}
+lib:	prepare locale compile ${BATCH_TARGET}
 
 ${BATCH_TARGET}: $(ALL_OBJECTS)
 	@echo Building ${BATCH_TARGET}
@@ -255,9 +255,9 @@ ${BATCH_TARGET}: $(ALL_OBJECTS)
 
 else
 
-lib:	prepare local compile $(XSL_LIB_DIR)/$(LIB)
+lib:	prepare locale compile $(XSL_LIB_DIR)/$(LIB)
 
-local:	
+locale:	
 	$(MAKE) -C Utils $@
 
 $(XSL_LIB_DIR)/$(LIB): $(ALL_OBJECTS)

@@ -175,11 +175,6 @@ static const char* szBeginIndexLine[]=
 0
 };
 
-static const char* szEndIndexLine[]=
-{ 
-" \n",
-0
-};
 
 #endif //INDEX_FILE_DATA_1357924680
 

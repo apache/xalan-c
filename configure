@@ -271,7 +271,7 @@ PACKAGE_STRING=
 PACKAGE_BUGREPORT=
 
 ac_unique_file="src/xalanc/PlatformSupport/PlatformSupportDefinitions.hpp"
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA AUTOCONF build build_cpu build_vendor build_os host host_cpu host_vendor host_os CXXCPP EGREP platform cxx cc osver cxxflags cppflags cflags ldflags libs transcoder xalan_local_syst xalan_local wcstombs threads bitstobuild LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA AUTOCONF build build_cpu build_vendor build_os host host_cpu host_vendor host_os CXXCPP EGREP platform cxx cc osver cxxflags cppflags cflags ldflags libs transcoder xalan_locale_system xalan_locale wcstombs threads bitstobuild LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -2692,6 +2692,7 @@ case "${host}" in
         *-*-OS400*)     platform=OS400 ;;
         *)              platform=UNKNOWN ;;
 esac
+
 if test "$platform" != "OS400"; then
 
 echo "$as_me:$LINENO: checking for floor in -lm" >&5
@@ -3339,9 +3340,9 @@ libs=${LIBS}
 transcoder=${TRANSCODER}
 
 
-xalan_local_syst=${XALAN_LOCAL_SYST}
+xalan_locale_system=${XALAN_LOCALE_SYSTEM}
 
-xalan_local=${XALAN_LOCAL}
+xalan_locale=${XALAN_LOCALE}
 
 wcstombs=${WCSTOMBS}
 
@@ -3355,7 +3356,7 @@ bitstobuild=${BITSTOBUILD}
 if test ! -d src; then
   mkdir src
 fi
-                                                            ac_config_files="$ac_config_files Makefile.incl Makefile src/xalanc/Makefile src/xalanc/Utils/Makefile samples/Makefile Tests/Makefile"
+                                                                                ac_config_files="$ac_config_files Makefile.incl Makefile src/xalanc/Makefile src/xalanc/Utils/Makefile src/xalanc/Utils/MsgCreator/Makefile src/xalanc/Utils/XalanMsgLib/Makefile samples/Makefile Tests/Makefile"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -3910,6 +3911,8 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "src/xalanc/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/xalanc/Makefile" ;;
   "src/xalanc/Utils/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/xalanc/Utils/Makefile" ;;
+  "src/xalanc/Utils/MsgCreator/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/xalanc/Utils/MsgCreator/Makefile" ;;
+  "src/xalanc/Utils/XalanMsgLib/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/xalanc/Utils/XalanMsgLib/Makefile" ;;
   "samples/Makefile" ) CONFIG_FILES="$CONFIG_FILES samples/Makefile" ;;
   "Tests/Makefile" ) CONFIG_FILES="$CONFIG_FILES Tests/Makefile" ;;
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
@@ -4029,8 +4032,8 @@ s,@cflags@,$cflags,;t t
 s,@ldflags@,$ldflags,;t t
 s,@libs@,$libs,;t t
 s,@transcoder@,$transcoder,;t t
-s,@xalan_local_syst@,$xalan_local_syst,;t t
-s,@xalan_local@,$xalan_local,;t t
+s,@xalan_locale_system@,$xalan_locale_system,;t t
+s,@xalan_locale@,$xalan_locale,;t t
 s,@wcstombs@,$wcstombs,;t t
 s,@threads@,$threads,;t t
 s,@bitstobuild@,$bitstobuild,;t t
@@ -4270,4 +4273,6 @@ if test "$no_create" != yes; then
   # would make configure fail if this is the last instruction.
   $ac_cs_success || { (exit 1); exit 1; }
 fi
+
+
 

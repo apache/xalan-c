@@ -124,19 +124,6 @@ inline XALAN_STD_QUALIFIER ostream& operator<<(XALAN_STD_QUALIFIER ostream& targ
 }
 
 
-static const char* s_xalanMsgFileName ="XalanMsg_";
-
-static const char* s_xliffExten = ".xlf";
-
-static const char* s_txtExten = ".txt";
-
-static const char* s_msgExten = ".msg";
-
-static const char* s_en = "en_US";
-
-static const char* DATA_FILE_NAME="LocalMsgData.hpp";
-
-
 #endif	//MSG_CREATOR_1357924680
 
 

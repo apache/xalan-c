@@ -210,7 +210,7 @@ private:
 	void printEndOfIndexLine ();
 
 protected :
-	int						 m_numberOfRecords;
+	int	m_numberOfRecords;
 
 	// Name of asked locale. Usially two code points, for example from local
 	// name en_US "XML_lang" will be "en"

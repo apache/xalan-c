@@ -64,7 +64,7 @@
 #include <cassert>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/sax2/Attributes.hpp>
-#include "MsgCreator.h"
+#include "MsgCreator.hpp"
 #include "InMemData.hpp"
 
 

@@ -93,11 +93,6 @@ static const char* szEndDataFile[]=
 0
 };
 
-static const char* szBeginOfLineInDataFile[]=
-{
-"  , {",
-0
-}; 
 
 static const char* szEndOfLineInDataFile[]=
 {

@@ -70,8 +70,8 @@ BITSTOBUILD = @bitstobuild@
 LIBS = @libs@
 TRANSCODER= @transcoder@
 WCSTOMBS = @wcstombs@
-MESSAGELOADER = @xalan_local_syst@
-LOCAL = @xalan_local@
+MESSAGELOADER = @xalan_locale_system@
+LOCALE = @xalan_locale@
 
 SHELL = @SHELL@
 MKINSTALLDIRS = $(MKDIR) -p
@@ -85,8 +85,9 @@ includedir = @includedir@
 XSL_OBJ_DIR = ${OUTDIR}/obj
 XSL_LIB_DIR = ${OUTDIR}/lib
 XSL_BIN_DIR = ${OUTDIR}/bin
+XSL_NLS_DIR = ${OUTDIR}/nls
 
-XSL_INCL = -I$(XALANCROOT)/src -I$(XALANCROOT)/include
+XSL_INCL = -I$(XALANCROOT)/src -I$(XALANCROOT)/include -I${XSL_NLS_DIR}/include
 XSL_INCL += -I$(XERCESCROOT)/src/ -I$(XERCESCROOT)/include/xercesc -I$(XERCESCROOT)/include/
 
 SAMPLES_DIR = $(XALANCROOT)/samples
@@ -123,6 +124,11 @@ LIBRARY_SEARCH_PATH = -L$(XSL_LIB_DIR) -L$(XALANCROOT)/lib
 
 # Localization library names
 LOC_PROJECT_NAME = xalanMsg
+LOC_LIBNAME = lib${LOC_PROJECT_NAME}
+LOC_LIB = ${LOC_LIBNAME}$(SHLIBSUFFIX).${LIB_MAJOR_VER}.${LIB_MINOR_VER}
+LOC_SONAME = ${LOC_LIBNAME}${SHLIBSUFFIX}.${LIB_MAJOR_VER}
+MESSAGELIB = ${XSL_LIB_DIR}/${LOC_LIB}
+
 
 ifeq ($(MESSAGELOADER),NLS)
 LOCAL_LIB =
@@ -174,6 +180,9 @@ ifeq ($(PLATFORM), LINUX)
   MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION}
   LINK_SONAME = -Wl,-soname,$(SO_NAME)
   LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION}
+  
+  export LD_LIBRARY_PATH := $(XERCESCROOT)/lib:$(ICUROOT)/lib:$(LD_LIBRARY_PATH)
+  MAKE_SHARED_LOC = ${CXX} $(CXXFLAGS) -Wl,-soname,$(LOC_SONAME) -D${PLATFORM} -shared ${PIC_OPTION}
 
 endif
 #=============== FREEBSD SPECIFIC OPTIONS ======================
@@ -200,7 +209,9 @@ ifeq ($(PLATFORM), FREEBSD)
   CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
   MAKE_SHARED = $(CXX) $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION}
   LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION}
-
+  
+  MAKE_SHARED_LOC=$(MAKE_SHARED)
+  
 endif
 
 #=============== NETBSD SPECIFIC OPTIONS ======================
@@ -228,6 +239,7 @@ ifeq ($(PLATFORM), NETBSD)
   MAKE_SHARED = $(CXX) $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION}
   LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION}
 
+  MAKE_SHARED_LOC=$(MAKE_SHARED)
 endif
 
 #=============== HPUX SPECIFIC OPTIONS =========================
@@ -246,6 +258,9 @@ ifeq ($(PLATFORM), HPUX)
   LINK_SONAME = -Wl,+h,${SO_NAME}
   LINK = $(CXX) $(CXXFLAGS) ${LDFLAGS} $(PLATFORM_COMPILE_OPTIONS) $(PLATFORM_CXX_COMPILE_OPTIONS) -Wl,+s
 
+  export SHLIB_PATH:=$(XERCESCROOT)/lib:$(ICUROOT)/lib:$(SHLIB_PATH)
+
+  MAKE_SHARED_LOC = $(CXX) -b +Z ${LDFLAGS} -Wl,+s -Wl,+h,${LOC_SONAME}
 endif
 
 #=============== SOLARIS SPECIFIC OPTIONS =========================
@@ -286,6 +301,10 @@ ifeq ($(PLATFORM), SOLARIS)
   endif
 
   SHLIBSUFFIX=.so
+  
+  export LD_LIBRARY_PATH := $(XERCESCROOT)/lib:$(ICUROOT)/lib:$(LD_LIBRARY_PATH)
+
+  MAKE_SHARED_LOC = ${CXX} -D${PLATFORM} -G -ptr$(ALL_OBJECTS_DIR) ${LDFLAGS} -h ${LOC_SONAME}
 
 endif
 
@@ -343,6 +362,10 @@ endif
 
   LIBRARY_LINK_NAME=-l$(PROJECT_NAME)$(LIB_MAJOR_VER)
   
+  export LIBPATH := $(XERCESCROOT)/lib:$(ICUROOT)/lib:$(LIBPATH)
+  MAKE_SHARED_LOC=$(MAKE_SHARED)
+  LOC_LIB = ${LOC_LIBNAME}${LIB_MAJOR_VER}.${LIB_MINOR_VER}${SHLIBSUFFIX}
+  LOC_LIBKEYNAME=${LOC_PROJECT_NAME}${LIB_MAJOR_VER}
 
 endif
 
@@ -383,6 +406,10 @@ ifeq (${OS390BATCH},1)
     LIBRARY_LINK_NAME=  "//'${LOADEXP}(${BATCH_PROJECT_NAME})'" 
 endif  ## OS390BATCH
 
+  MAKE_SHARED_LOC=$(MAKE_SHARED)
+
+  LOC_LIB = ${LOC_LIBNAME}.${VER}$(OS390SIDEDECK)
+
 endif
 
 #============ TRU64 SPECIFIC OPTIONS ============================
@@ -397,7 +424,7 @@ ifeq ($(PLATFORM), TRU64)
   CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
   MAKE_SHARED = ${CXX} ${CXXFLAGS} -shared -D${PLATFORM} -ptr ${XSL_OBJ_DIR}/.cxx_repository -ieee -pthread -std strict_ansi_errors -nocxxstd
   LINK = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-
+  MAKE_SHARED_LOC=$(MAKE_SHARED)
 endif
 
 #============ MacOSX SPECIFIC OPTIONS ============================
@@ -412,7 +439,7 @@ ifeq ($(PLATFORM), MACOSX)
   CC4 = ${CC} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
   MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -dynamiclib
   LINK = ${CXX} $(CXXFLAGS) ${PLATFORM_COMPILE_OPTIONS}
-
+  MAKE_SHARED_LOC=$(MAKE_SHARED)
 endif
 
 #=============== OS400 SPECIFIC OPTIONS =========================

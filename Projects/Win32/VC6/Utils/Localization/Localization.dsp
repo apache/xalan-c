@@ -37,7 +37,7 @@ CFG=Localization - Win32 Release
 # PROP BASE Rebuild_Opt "/a"
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Cmd_Line "nmake /f "Localization.mak"  TYPE=inmem LOCAL=en_US"
+# PROP Cmd_Line "nmake /f "Localization.mak"  TYPE=inmem LOCALE=en_US"
 # PROP Rebuild_Opt "/a"
 # PROP Target_File "Localization"
 
@@ -49,7 +49,7 @@ CFG=Localization - Win32 Release
 # PROP BASE Rebuild_Opt "/a"
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Cmd_Line "nmake    /f "Localization.mak" /NOLOGO CFG=Debug TYPE=inmem LOCAL=en_US"
+# PROP Cmd_Line "nmake    /f "Localization.mak" /NOLOGO CFG=Debug TYPE=inmem LOCALE=en_US"
 # PROP Rebuild_Opt "/a"
 # PROP Target_File "Localization"
 
@@ -57,13 +57,13 @@ CFG=Localization - Win32 Release
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Cmd_Line "nmake /f "Localization.mak"  TYPE=inmem LOCAL=en_US"
+# PROP BASE Cmd_Line "nmake /f "Localization.mak"  TYPE=inmem LOCALE=en_US"
 # PROP BASE Rebuild_Opt "/a"
 # PROP BASE Target_File "Localization"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Cmd_Line "nmake /f "Localization.mak"  TYPE=inmem CFG=Release.symbols LOCAL=en_US"
+# PROP Cmd_Line "nmake /f "Localization.mak"  TYPE=inmem CFG=Release.symbols LOCALE=en_US"
 # PROP Rebuild_Opt "/a"
 # PROP Target_File "Localization"
 
@@ -71,13 +71,13 @@ CFG=Localization - Win32 Release
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Cmd_Line "nmake /f "Localization.mak"  TYPE=inmem LOCAL=en_US"
+# PROP BASE Cmd_Line "nmake /f "Localization.mak"  TYPE=inmem LOCALE=en_US"
 # PROP BASE Rebuild_Opt "/a"
 # PROP BASE Target_File "Localization"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Cmd_Line "nmake /f "Localization.mak"  TYPE=inmem BITS=Win64 LOCAL=en_US"
+# PROP Cmd_Line "nmake /f "Localization.mak"  TYPE=inmem BITS=Win64 LOCALE=en_US"
 # PROP Rebuild_Opt "/a"
 # PROP Target_File "Localization"
 
@@ -85,13 +85,13 @@ CFG=Localization - Win32 Release
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Cmd_Line "nmake    /f "Localization.mak" /NOLOGO CFG=Debug TYPE=inmem LOCAL=en_US"
+# PROP BASE Cmd_Line "nmake    /f "Localization.mak" /NOLOGO CFG=Debug TYPE=inmem LOCALE=en_US"
 # PROP BASE Rebuild_Opt "/a"
 # PROP BASE Target_File "Localization"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Cmd_Line "nmake    /f "Localization.mak" /NOLOGO CFG=Debug TYPE=inmem BITS=Win64 LOCAL=en_US"
+# PROP Cmd_Line "nmake    /f "Localization.mak" /NOLOGO CFG=Debug TYPE=inmem BITS=Win64 LOCALE=en_US"
 # PROP Rebuild_Opt "/a"
 # PROP Target_File "Localization"
 

@@ -62,7 +62,7 @@
 
 #include <xalanc/Utils/XalanMsgLib/XalanMsgLib.hpp>
 
-#include <xalanc/Utils/XalanMsgLib/LocalMsgData.hpp>
+#include <LocalMsgData.hpp>
 
 XALAN_CPP_NAMESPACE_BEGIN
 

@@ -2,7 +2,7 @@
 
 # Check parameters:
 # Should be defined:
-# LOCAL, in form of "en" or "en_US"
+# LOCALE, in form of "en" or "en_US"
 # TYPE, possible values are "inmem" and "icu"
 
 
@@ -18,11 +18,11 @@
 !MESSAGE Used CFG 	= $(CFG)
 !ENDIF
 
-!IF "$(LOCAL)" == ""
-!	MESSAGE Local is not defined. The local can be defined in the command line or in Tools.ini file
-!	ERROR Local must be defined
+!IF "$(LOCALE)" == ""
+!	MESSAGE Locale is not defined. The locale can be defined in the command line or in Tools.ini file
+!	ERROR Locale must be defined
 !ELSE
-!	MESSAGE Used LOCAL 	= $(LOCAL)
+!	MESSAGE Used LOCALE 	= $(LOCALE)
 !ENDIF
 
 !IF "$(TYPE)" == ""
@@ -39,30 +39,47 @@
 !ERROR Please define ICUROOT in xml-xalan\c\Projects\Win32\VC6\Utils\Localization\tools.ini file
 !ENDIF
 
-!IF EXIST ($(NLSDIR)\$(LOCAL)\$(MSGFILENAME)$(LOCAL)$(XIFFEXT))
-!	MESSAGE Used XLIFF file: "$(MSGFILENAME)$(LOCAL)$(XIFFEXT)"
+!IF EXIST ($(NLSDIR)\$(LOCALE)\$(MSGFILENAME)$(LOCALE)$(XIFFEXT))
+!	MESSAGE Used XLIFF file: "$(MSGFILENAME)$(LOCALE)$(XIFFEXT)"
 !ELSE
-!	ERROR File "$(NLSDIR)\$(LOCAL)\$(MSGFILENAME)$(LOCAL)$(XIFFEXT)" is required
+!	ERROR File "$(NLSDIR)\$(LOCALE)\$(MSGFILENAME)$(LOCALE)$(XIFFEXT)" is required
 !ENDIF
 
+
+include ..\..\..\..\..\version.incl
+
+#== Commmon tools
+MKDIR=mkdir
+MOVE=move
+
+!IF "$(CFG)" == "Debug"
+PKGNAME=$(LIBNAME)_$(VER)D
+!ELSEIF "$(CFG)" == "Release.symbols" 
+PKGNAME=$(LIBNAME)_$(VER)S
+!ELSE
+PKGNAME=$(LIBNAME)_$(VER)
+!ENDIF
 
 #====================== INMEM part =================================================================
 
 !IF "$(TYPE)" == "inmem"
 
-ALL :	$(OUTPUTDIR)\$(PKGNAME).dll $(INDEFFILEDIR)\XalanMsgIndex.hpp
+
+ALL :	PREPARE $(TMPINCLUDESDIR)\LocalMsgData.hpp $(OUTPUTDIR)\$(PKGNAME).dll
 
 	
-$(OUTPUTDIR)\$(PKGNAME).dll : $(XALANMSGLIB_SRC)\LocalMsgData.hpp
-	$(MAKE) /$(MAKEFLAGS) /NOLOGO /f ..\XalanMsgLib\XalanMsgLib.mak CFG="XalanMsgLib - $(BITS) $(CFG)" VER=$(VER) $(MAKE_PARAMS)
+$(OUTPUTDIR)\$(PKGNAME).dll : $(TMPINCLUDESDIR)\LocalMsgData.hpp
+	$(MAKE) /$(MAKEFLAGS) /NOLOGO /f ..\XalanMsgLib\XalanMsgLib.mak CFG="XalanMsgLib - $(BITS) $(CFG)" DLLNAME=$(PKGNAME) $(MAKE_PARAMS)
 	
-$(INDEFFILEDIR)\XalanMsgIndex.hpp:
 
-$(XALANMSGLIB_SRC)\LocalMsgData.hpp   : $(NLSDIR)\$(LOCAL)\$(MSGFILENAME)$(LOCAL)$(XIFFEXT) 
+$(TMPINCLUDESDIR)\LocalMsgData.hpp   : $(NLSDIR)\$(LOCALE)\$(MSGFILENAME)$(LOCALE)$(XIFFEXT) 
 	@if not exist $(OUTPUTDIR)\MsgCreator.exe ( $(MAKE) /f ..\MsgCreator\MsgCreator.mak CFG="MsgCreator - $(BITS) $(CFG)" $(MAKE_PARAMS))
-	$(OUTPUTDIR)\MsgCreator.exe $(NLSDIR)\$(LOCAL)\$(MSGFILENAME)$(LOCAL)$(XIFFEXT) -TYPE $(TYPE)
-	@move LocalMsgIndex.hpp $(INDEFFILEDIR)
-	@move LocalMsgData.hpp	$(XALANMSGLIB_SRC)
+	$(OUTPUTDIR)\MsgCreator.exe $(NLSDIR)\$(LOCALE)\$(MSGFILENAME)$(LOCALE)$(XIFFEXT) -TYPE $(TYPE) -LOCALE $(LOCALE)
+	@$(MOVE) LocalMsgIndex.hpp 	$(TMPINCLUDESDIR)
+	@$(MOVE) LocalMsgData.hpp	$(TMPINCLUDESDIR)
+	
+PREPARE:
+	@if not exist $(TMPINCLUDESDIR) ( $(MKDIR) $(TMPINCLUDESDIR) ) 	
 	
 #====================== End of INMEM part =============================================================
 		
@@ -75,36 +92,42 @@ GENRB    = genrb.exe
 PKGDATA  = pkgdata.exe
 
 
-ALL :	$(OUTPUTDIR)\$(PKGNAME).dll $(INDEFFILEDIR)\XalanMsgIndex.hpp
+
+ALL :	PREPARE $(INTDIR)\Icu\$(LOCALE).txt $(OUTPUTDIR)\$(PKGNAME).dll
 
 	
-$(OUTPUTDIR)\$(PKGNAME).dll : $(NLSDIR)\$(LOCAL)\$(LOCAL).txt
-	$(GENRB) --package-name $(PKGNAME) -d $(NLSDIR)\$(LOCAL)  $(NLSDIR)\$(LOCAL)\$(LOCAL).txt
-	echo $(NLSDIR)\$(LOCAL)\$(PKGNAME)_$(LOCAL).res > res-file-list.txt
-	$(PKGDATA) --name $(PKGNAME) -T $(OUTPUTDIR) -v -O R:$(ICUROOT)  --mode dll -d $(OUTPUTDIR) res-file-list.txt	
-
-$(INDEFFILEDIR)\XalanMsgIndex.hpp : $(NLSDIR)\$(LOCAL)\$(LOCAL).txt			
+$(OUTPUTDIR)\$(PKGNAME).dll : $(INTDIR)\Icu\$(LOCALE).txt
+	$(GENRB) --package-name $(PKGNAME) -d $(INTDIR)\Icu $(INTDIR)\Icu\$(LOCALE).txt
+	echo $(INTDIR)\Icu\$(PKGNAME)_$(LOCALE).res > $(INTDIR)\Icu\res-file-list.txt
+	$(PKGDATA) --name $(PKGNAME) -T $(INTDIR)\Icu -v -O R:$(ICUROOT) --mode dll -d $(OUTPUTDIR) $(INTDIR)\Icu\res-file-list.txt	
 			
-$(NLSDIR)\$(LOCAL)\$(LOCAL).txt : $(NLSDIR)\$(LOCAL)\$(MSGFILENAME)$(LOCAL)$(XIFFEXT)
+			
+$(INTDIR)\Icu\$(LOCALE).txt : $(NLSDIR)\$(LOCALE)\$(MSGFILENAME)$(LOCALE)$(XIFFEXT)
 	if not exist $(OUTPUTDIR)\MsgCreator.exe ( $(MAKE) /f ..\MsgCreator\MsgCreator.mak CFG="MsgCreator - $(BITS) $(CFG)" $(MAKE_PARAMS))
-	$(OUTPUTDIR)\MsgCreator.exe $(NLSDIR)\$(LOCAL)\$(MSGFILENAME)$(LOCAL)$(XIFFEXT) -TYPE $(TYPE) -LOCAL $(LOCAL)
-	@move LocalMsgIndex.hpp $(INDEFFILEDIR)
-	if not exist $(NLSDIR)\$(LOCAL) (mkdir $(NLSDIR)\$(LOCAL) )
-	@move $(LOCAL).txt $(NLSDIR)\$(LOCAL)
+	$(OUTPUTDIR)\MsgCreator.exe $(NLSDIR)\$(LOCALE)\$(MSGFILENAME)$(LOCALE)$(XIFFEXT) -TYPE $(TYPE) -LOCALE $(LOCALE)
+	@$(MOVE) LocalMsgIndex.hpp $(TMPINCLUDESDIR)
+	@$(MOVE) $(LOCALE).txt $(INTDIR)\Icu
 	
+PREPARE:
+	@if not exist $(INTDIR)\Icu ( $(MKDIR) $(INTDIR)\Icu )
+	@if not exist $(TMPINCLUDESDIR) ( $(MKDIR) $(TMPINCLUDESDIR) ) 	
 #====================== End of ICU part ==================================================================
 
 !ENDIF
 
 #====================== Commom part =================================================================
 CLEAN : 
-	-@erase $(NLSDIR)\$(LOCAL)\$(LOCAL).txt
-	-@del $(NLSDIR)\ICU\$(PKGNAME)_$(LOCAL).res
-	-@erase res-file-list.txt
-	-@erase $(OUTPUTDIR)\$(PKGNAME)*
 	$(MAKE) /f ..\MsgCreator\MsgCreator.mak CFG="MsgCreator - $(BITS) $(CFG)" CLEAN
 	$(MAKE) /NOLOGO /f ..\XalanMsgLib\XalanMsgLib.mak CFG="XalanMsgLib - $(BITS) $(CFG)" CLEAN	
-	-@erase $(INDEFFILEDIR)\XalanMsgIndex.hpp
-	-@erase	$(XALANMSGLIB_SRC)\LocalMsgData.hpp
+	-@erase $(TMPINCLUDESDIR)\XalanMsgIndex.hpp
+	-@erase	$(TMPINCLUDESDIR)\LocalMsgData.hpp
+!IF "$(TYPE)" == "icu"
+	$(PKGDATA) --name $(PKGNAME) -T $(INTDIR)\Icu -v -O R:$(ICUROOT) -k --mode dll -d $(OUTPUTDIR) $(INTDIR)\Icu\res-file-list.txt
+!ENDIF
+	-@erase $(INTDIR)\Icu\$(LOCALE).txt
+	-@del $(NLSDIR)\ICU\$(PKGNAME)_$(LOCALE).res
+	-@erase $(INTDIR)\Icu\res-file-list.txt
+	-@erase $(OUTPUTDIR)\$(PKGNAME)*
+PREPARE:
 
 #====================== End of commom part ==========================================================

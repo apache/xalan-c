@@ -73,13 +73,52 @@
 
 #include <xercesc/util/XMLString.hpp>
 
+#include "xalanc/Include/XalanVersion.hpp"
+
+
+#define XALAN_MESSAGES_NAME XalanMessages_
+
+#define MAKE_STRING(a) #a
+#define INVK_MAKE_STRING(a) MAKE_STRING(a)
+
 #ifdef WIN32
-extern "C" const char U_IMPORT  xalanMsg_1_7_dat []; 
-static const char* const	sPackageName="xalanMsg_1_7";
-#else
+
+#ifdef  NDEBUG_SYMBOLS // release with symbols
+
+#define ENTRY_POINT_SUFFIX S_dat
+#define PACKAGE_NAME_SUFFIX S
+
+#elif NDEBUG // release
+
+#define ENTRY_POINT_SUFFIX _dat
+#define PACKAGE_NAME_SUFFIX
+
+#elif _DEBUG // debug only 
+
+#define ENTRY_POINT_SUFFIX D_dat
+#define PACKAGE_NAME_SUFFIX D
+
+#endif // NDEBUG_SYMBOLS
+
+
+#define ICUDLL_ENTRYPOINT_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME,\
+									INVK_CAT3_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR,XALAN_VERSION_REVISION),\
+									ENTRY_POINT_SUFFIX)
+
+#define PACKAGE_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME,\
+									INVK_CAT3_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR,XALAN_VERSION_REVISION),\
+									PACKAGE_NAME_SUFFIX)
+
+extern "C" const char U_IMPORT  ICUDLL_ENTRYPOINT_NAME [];
+ 
+static const char* const	sPackageName=INVK_MAKE_STRING(PACKAGE_NAME)	;	
+												   
+#else // NON-WIN32 systems
+
 extern "C" const char U_IMPORT  xalanMsg_dat [];
 static const char* const	sPackageName="xalanMsg";
-#endif
+
+#endif // WIN32
 
 
 
@@ -104,19 +143,19 @@ XALAN_USING_XERCES(XMLString)
  */
 
 
-static const char* domainName = "XalanMsg";
+static const char* domainName = INVK_MAKE_STRING(XALAN_PRODUCT);
 
 
 
 XalanICUMessageLoader::XalanICUMessageLoader():
-	m_localeBundle(0),
-	m_domainBundle(0),
+	fLocaleBundle(0),
+	fDomainBundle(0),
 	m_unknownMessage(XALAN_STATIC_UCODE_STRING("The message was not found in the ICU resource bundle."))
 {
  	UErrorCode err = U_ZERO_ERROR;
 
 #ifdef WIN32
-	udata_setAppData(sPackageName, &xalanMsg_1_7_dat, &err);
+	udata_setAppData(sPackageName, &ICUDLL_ENTRYPOINT_NAME, &err);
 #else
 	udata_setAppData(sPackageName, &xalanMsg_dat, &err);
 #endif
@@ -150,8 +189,8 @@ XalanICUMessageLoader::XalanICUMessageLoader():
 
 XalanICUMessageLoader::~XalanICUMessageLoader()
 {
-	ures_close(m_domainBundle);	
-	ures_close(m_localeBundle);
+	ures_close(fDomainBundle);	
+	ures_close(fLocaleBundle);
 }
 
 

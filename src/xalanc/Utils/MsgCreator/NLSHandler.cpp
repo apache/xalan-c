@@ -61,7 +61,7 @@
 // ---------------------------------------------------------------------------
 #include "NLSHandler.hpp"
 
-#include "NLSData.h"
+#include "NLSData.hpp"
 
 #include <cstdio>
 

@@ -87,10 +87,9 @@ protected:
 	void printToDataFileasASCII( const char* sArrayOfStrins[] );
 
 private:
+	int m_RunningNumber;
 	
 	bool m_bCreateUnicode;
-
-	int m_RunningNumber;
 
 };
 

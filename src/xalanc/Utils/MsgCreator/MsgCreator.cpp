@@ -66,7 +66,7 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
-#include "MsgCreator.h"
+#include "MsgCreator.hpp"
 #include "InMemHandler.hpp"
 #include "ICUResHandler.hpp"
 #include "NLSHandler.hpp"
@@ -80,6 +80,15 @@ XALAN_USING_STD(cerr)
 XALAN_USING_STD(cout)
 XALAN_USING_STD(endl)
 
+static const char* s_xalanMsgFileName ="XalanMsg_";
+
+static const char* s_txtExten = ".txt";
+
+static const char* s_msgExten = ".msg";
+
+static const char* s_en = "en_US";
+
+static const char* DATA_FILE_NAME="LocalMsgData.hpp";
 
 // ---------------------------------------------------------------------------
 //  Local helper methods
@@ -88,18 +97,13 @@ static void usage()
 {
     cout << "\nUsage:\n"
 		"    MsgCreator [options] <XML file>\n\n"
-		"This program reads XML message file, and then creates C++ the " << endl <<
-		" source / data files for message localization (for .dll/.so build) \n"
+		"This program reads XML message file, and then creates C++  " << endl <<
+		" source / data files for message localization (for .dll/.so/.cat build) \n"
 		
 		"Options:\n"
+		"   <XML file>   XLIFF file with messages. Required.  \n"
 		"   -TYPE xxx    Type of localization [ICU | NLS | InMem*]\n"
-		"   -LOCAL       ex: [ fr | fr_FR ]; The default is an 'en' local \n"
-		"                       If your .xlf file doesn't contain translation \n"
-		"                       to 'xx_YY' local, the system will look for\n"
-		"                       'xx' translation; "<< endl <<
-		"   <XML file>   Can be provided optionally. If not provided, the \n"
-		"                       program looks for ${XALANCROOT}/xalanc/NLS directory, \n"
-		"                       and looking for XalanMsg_<given local>.xlf file. \n"
+		"   -LOCALE      Example: [ fr | fr_FR ]; The default value is 'en_US' \n"
 		"  * = Default if not provided explicitly.\n\n"
 		"    -?          Show this help.\n\n"
 		"\n"
@@ -118,27 +122,28 @@ public:
 		INMEM_LOCALMSG,
 		NLS_LOCALMSG
 
-	}TypeOfLocalMsg;
+	}TypeOfLocaleMsg;
 	
 	const char*		inXMLFileName;
 	
-	TypeOfLocalMsg  enTypeOfLocalMsg;
+	TypeOfLocaleMsg  enTypeOfLocaleMsg;
 	
 	const char*      encodingName;
 	
-	char*		localName;
-
-	bool		isLocalGiven;
+	char		localeName[6];
 
 	CmdLineParams():
-	inXMLFileName(0),
-		enTypeOfLocalMsg(INMEM_LOCALMSG),
-		encodingName("LATIN1"),
-		localName(0),
-		isLocalGiven(false){}
+		inXMLFileName(0),
+		enTypeOfLocaleMsg(INMEM_LOCALMSG),
+		encodingName("LATIN1")
+		{  
+			localeName[0] = 0;
+			strcpy( localeName, s_en);
+		}
 
-	~CmdLineParams() { delete[] localName; }
+	~CmdLineParams() {}
 };
+
 
 #if defined(OS390)
 #include <strings.h>                                             
@@ -170,20 +175,24 @@ getArgs(
 		CmdLineParams&	p,
 		const char**	pErrorMsg)
 {
+
 	bool fSuccess = true;
+
 	const char*		errorMessage = 0;
+
 	if ( argc > 7)
 	{
 		fSuccess = false;
 		errorMessage = "Too many parameters\n";
 	}
+
 	for (int i = 1; i < argc && fSuccess == true; ++i)
 	{
 		if (!compareNoCase("-h", argv[i]) || !compareNoCase("-?", argv[i]))
 		{
 			fSuccess = false;
 		}
-		else if (!compareNoCase("-LOCAL", argv[i]) )
+		else if (!compareNoCase("-LOCALE", argv[i]) )
 		{
 			++i;
 			if( i < argc && argv[i][0] != '-' )
@@ -191,28 +200,24 @@ getArgs(
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 				using std::size_t;
 #endif
+				const size_t	localeLen = strlen(argv[i]);
 
-				const size_t	localLen = strlen(argv[i]);
-				if ( localLen != 2 && localLen !=5)
+				if ( localeLen != 2 && localeLen !=5)
 				{
 					fSuccess = false;
-					errorMessage = "Unrecognized local\n";
+					errorMessage = "Unrecognized locale\n";
 				}
 
-				if ( fSuccess  && localLen == 5 && argv[i][2] != '_')
+				if ( fSuccess  && localeLen == 5 && argv[i][2] != '_')
 				{
 					fSuccess = false;
-					errorMessage = "Unrecognized form of local\n";
+					errorMessage = "Unrecognized form of locale\n";
 				}
 				if ( fSuccess )
 				{
-					p.isLocalGiven = true;
+					strcpy(p.localeName,argv[i]);
 					
-					p.localName = new char[10];
-					
-					strcpy(p.localName,argv[i]);
-					
-					p.localName[9]='\0'; // just in case
+					p.localeName[5]='\0'; // just in case
 				}
 			}
 		}
@@ -224,16 +229,16 @@ getArgs(
 			{
 				if( !compareNoCase("ICU",argv[i] ))
 				{
-					p.enTypeOfLocalMsg = CmdLineParams::ICU_LOCALMSG;
+					p.enTypeOfLocaleMsg = CmdLineParams::ICU_LOCALMSG;
 					
 				}else if( !compareNoCase("NLS",argv[i] ))
 				{
-					p.enTypeOfLocalMsg = CmdLineParams::NLS_LOCALMSG;
+					p.enTypeOfLocaleMsg = CmdLineParams::NLS_LOCALMSG;
 					
 				}
 				else if( !compareNoCase("InMem",argv[i] ))
 				{
-					p.enTypeOfLocalMsg = CmdLineParams::INMEM_LOCALMSG;
+					p.enTypeOfLocaleMsg = CmdLineParams::INMEM_LOCALMSG;
 					
 				}else 
 				{ 
@@ -251,6 +256,12 @@ getArgs(
 		}
 	}
 
+	if ( fSuccess && p.inXMLFileName == 0)
+	{
+		fSuccess = false;
+		*pErrorMsg = "Please provide XLIFF file.\n";
+	}
+
 	if ( fSuccess )
 	{
 		*pErrorMsg = 0;
@@ -263,80 +274,38 @@ getArgs(
 	return fSuccess;
 }
 
-static char* buildInputFileName(const CmdLineParams&	p)
-{
-
-	char* result = new char[85];
-	result[0] = '\0';
-
-	// if file name was given expisitly, don't build it
-	if( p.inXMLFileName != 0)
-	{
-		assert(strlen(p.inXMLFileName) < 84);
-		strcpy(result,p.inXMLFileName);
-		return result;
-	}
-
-	strcat(result,s_xalanMsgFileName);
-
-	if( p.isLocalGiven )
-	{
-
-		strncat(result,p.localName,2);
-
-	}
-	else
-	{
-		strcat(result,s_en);
-
-	}
-	strcat(result,s_xliffExten);
-
-	return result;
-}
 
 static char* buildOutputFileName(const CmdLineParams&	p)
 {
 	char* pOutputFileName = new char[80];
 	pOutputFileName[0] = '\0';
 
-	switch(p.enTypeOfLocalMsg){
+	switch(p.enTypeOfLocaleMsg)
+	{
+		
 	case CmdLineParams::ICU_LOCALMSG:
 		{
-			if (p.isLocalGiven )
-			{
-				strcpy(pOutputFileName, p.localName);
-			}
-			else
-			{
-				strcpy(pOutputFileName, s_en);
-			}
-
+			strcpy(pOutputFileName, p.localeName);
+			
 			strcat(pOutputFileName, s_txtExten);
-
+			
 			break;
 		}
 	case CmdLineParams::INMEM_LOCALMSG:
 		{
 			strcpy(pOutputFileName, DATA_FILE_NAME);
+			
 			break;
 		}
-
+		
 	case CmdLineParams::NLS_LOCALMSG:
 		{
 			strcpy(pOutputFileName,s_xalanMsgFileName);
-
-			if (p.isLocalGiven )
-			{
-				strncat(pOutputFileName, p.localName,6);
-			}
-			else
-			{
-				strncat(pOutputFileName, s_en,3);
-			}
-
+			
+			strncat(pOutputFileName, p.localeName,6);
+			
 			strcat(pOutputFileName, s_msgExten);
-
+			
 			break;
 		}
 	default:
@@ -365,8 +334,11 @@ int main(int argC, char* argV[])
 #endif
     
 	CmdLineParams	theParams;
+
 	int iReturnValue = 0;
+
 	const char* errorMessage = 0;
+
 	if (getArgs(argC, argV, theParams, &errorMessage) == false)
 	{
 		if ( errorMessage != 0)
@@ -387,7 +359,7 @@ int main(int argC, char* argV[])
 		
 		catch (const XMLException& toCatch)
 		{
-			cerr << "Error during initialization! :\n"
+			cerr << "Error during initialization! : "
 				<< StrX(toCatch.getMessage()) << endl;
 			iReturnValue = 2;
 		}
@@ -417,14 +389,14 @@ int main(int argC, char* argV[])
 
 				int errorCount = 0;
 
-				char* const		fileName = buildInputFileName(theParams);
+				const char* 		fileName = theParams.inXMLFileName;
 
-				char* const		pOutputFileName = buildOutputFileName(theParams);
+				char * const		pOutputFileName = buildOutputFileName(theParams);
 
 				SAX2Handler* handler = 0;
 				try
 				{
-					switch(theParams.enTypeOfLocalMsg){
+					switch(theParams.enTypeOfLocaleMsg){
 					case CmdLineParams::ICU_LOCALMSG:
 						{
 							handler = new ICUResHandler(pOutputFileName);
@@ -456,7 +428,7 @@ int main(int argC, char* argV[])
 					}
 					else
 					{
-						cerr << "unknown (XalanFileOutputStreamOpenException) " << "\n" << endl;
+						cerr << "unknown (XalanFileOutputStreamOpenException) "  << endl;
 						
 					}
 					
@@ -473,7 +445,7 @@ int main(int argC, char* argV[])
 					}
 					else
 					{
-						cerr << "unknown (XalanFileOutputStreamWriteException) " << "\n" << endl;
+						cerr << "unknown (XalanFileOutputStreamWriteException) " <<  endl;
 						
 					}
 					
@@ -491,11 +463,8 @@ int main(int argC, char* argV[])
 				{
 					try
 					{				
-						if ( theParams.isLocalGiven == true )
-						{
-							handler->setXML_Lang(theParams.localName);
-						}
-						
+						handler->setXML_Lang(theParams.localeName);
+	
 						parser->setContentHandler(handler);
 
 						parser->setErrorHandler(handler);
@@ -508,8 +477,8 @@ int main(int argC, char* argV[])
 					catch (const XMLException& toCatch)
 					{
 						cerr << "\nAn error occurred\n  Error: "
-							<< StrX(toCatch.getMessage())
-							<< "\n" << endl;
+							<< StrX(toCatch.getMessage()) << endl;
+
 						iReturnValue = 7;
 					}
 					catch (...)
@@ -524,7 +493,6 @@ int main(int argC, char* argV[])
 
 				delete[] pOutputFileName;
 
-				delete[] fileName;
 				//
 				//  Delete the parser itself.  Must be done prior to calling Terminate, below.
 				//

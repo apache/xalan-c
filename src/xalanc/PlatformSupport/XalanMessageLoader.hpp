@@ -64,7 +64,7 @@
 
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
 
-#include <xalanc/Include/LocalMsgIndex.hpp>
+#include <LocalMsgIndex.hpp>
 
 
 XALAN_CPP_NAMESPACE_BEGIN

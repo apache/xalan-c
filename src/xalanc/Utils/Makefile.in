@@ -57,7 +57,10 @@
 # Output directory
 OUTDIR := ../../..
 
-
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
 
 include $(XALANCROOT)/version.incl
 include ../../../Makefile.incl
@@ -65,159 +68,48 @@ include ../../../Makefile.incl
 
 ## ----------------------------------------------------------------------------
 
-LOC_LIBNAME = lib${LOC_PROJECT_NAME}
-
-LOC_LIB = ${LOC_LIBNAME}$(SHLIBSUFFIX).${LIB_MAJOR_VER}.${LIB_MINOR_VER}
-
-LOC_SONAME = ${LOC_LIBNAME}${SHLIBSUFFIX}.${LIB_MAJOR_VER}
-
-MESSAGELIB = ${XSL_LIB_DIR}/${LOC_LIB}
-
-XALANMSGLIB_SRC=$(XALANCROOT)/src/xalanc/Utils/XalanMsgLib
-
-MSG_CREATOR_SRC=$(XALANCROOT)/src/xalanc/Utils/MsgCreator
-
-XSL_NLS_DIR=$(XALANCROOT)/src/xalanc/NLS
+XSL_NLS_SRC_DIR=$(XALANCROOT)/src/xalanc/NLS
 
 MSGFILENAME=XalanMsg_
 
-XIFFEXT=.xlf
+CATALOG_NAME=$(MSGFILENAME)$(LOCALE)
+XLIFF_FILE_NAME=$(XSL_NLS_SRC_DIR)/$(LOCALE)/$(MSGFILENAME)$(LOCALE).xlf
 
 MOVE= mv
-
 COPY=cp
 
-MSG_CREATOR_OBJECTS= $(XSL_OBJ_DIR)/MsgFileOutputStream.o $(XSL_OBJ_DIR)/ICUResHandler.o $(XSL_OBJ_DIR)/InMemHandler.o $(XSL_OBJ_DIR)/MsgCreator.o $(XSL_OBJ_DIR)/NLSHandler.o $(XSL_OBJ_DIR)/SAX2Handler.o 
 
-CATALOG_NAME=$(MSGFILENAME)$(LOCAL).cat
-
-LOC_ALLLIBS = $(subst $(LOCAL_LIB), ,$(ALLLIBS))
 
 INCLUDE_DIR = $(XALANCROOT)/src/xalanc/Include
 
-
-.PHONY: local doClean prepare
-## ----------------------------------------------------------------------------
-## Per platform defs
-
-#=============== LINUX SPECIFIC OPTIONS =========================
-ifeq ($(PLATFORM), LINUX)
-
-export LD_LIBRARY_PATH = $(XERCESCROOT)/lib:$(ICUROOT)/lib
-MAKE_SHARED_LOC = ${CXX} $(CXXFLAGS) -Wl,-soname,$(LOC_SONAME) -D${PLATFORM} -shared ${PIC_OPTION}
-
-endif
-
-#=============== FREEBSD SPECIFIC OPTIONS ======================
-
-ifeq ($(PLATFORM), FREEBSD)
-
-MAKE_SHARED_LOC=$(MAKE_SHARED)
-
-endif
-
-#=============== NETBSD SPECIFIC OPTIONS ======================
-
-ifeq ($(PLATFORM), NETBSD)
-
-MAKE_SHARED_LOC=$(MAKE_SHARED)
-
-endif
-
-#=============== HPUX SPECIFIC OPTIONS =========================
-ifeq ($(PLATFORM), HPUX)
-
-export SHLIB_PATH=$(XERCESCROOT)/lib:$(ICUROOT)/lib
-
-MAKE_SHARED_LOC = $(CXX) -b +Z ${LDFLAGS} -Wl,+s -Wl,+h,${LOC_SONAME}
-
-endif
-#=============== SOLARIS SPECIFIC OPTIONS =========================
-ifeq ($(PLATFORM), SOLARIS)
-
-export LD_LIBRARY_PATH = $(XERCESCROOT)/lib:$(ICUROOT)/lib
-
-MAKE_SHARED_LOC = ${CXX} -D${PLATFORM} -G -ptr$(ALL_OBJECTS_DIR) ${LDFLAGS} -h ${LOC_SONAME}
-
-endif
-#=============== AIX SPECIFIC OPTIONS =========================
-ifeq ($(PLATFORM), AIX)
-
-export LIBPATH = $(XERCESCROOT)/lib:$(ICUROOT)/lib
-
-MAKE_SHARED_LOC=$(MAKE_SHARED)
-
-LOC_LIB = ${LOC_LIBNAME}${LIB_MAJOR_VER}.${LIB_MINOR_VER}${SHLIBSUFFIX}
-
-LOC_LIBKEYNAME=${LOC_PROJECT_NAME}${LIB_MAJOR_VER}
-
-endif
-
-#=============== OS390 SPECIFIC OPTIONS =========================
-
-ifeq ($(PLATFORM), OS390)
-
-MAKE_SHARED_LOC=$(MAKE_SHARED)
-
-LOC_LIB = ${LOC_LIBNAME}.${VER}$(OS390SIDEDECK)
+.PHONY: locale doClean prepare install doCommonInstall doCommonPrepare
 
 
-
-endif
-
-#============ TRU64 SPECIFIC OPTIONS ============================
-ifeq ($(PLATFORM), TRU64)
-
-MAKE_SHARED_LOC=$(MAKE_SHARED)
-
-endif
-#============ MacOSX SPECIFIC OPTIONS ============================
-ifeq ($(PLATFORM), MACOSX)
-MAKE_SHARED_LOC=$(MAKE_SHARED)
-endif
-#============ end of Platform SPECIFIC OPTIONS ============================
-##=================== Common for all localization systems area ============
-
-$(XSL_OBJ_DIR)/%.o : $(MSG_CREATOR_SRC)/%.cpp    
-	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
-
-$(XSL_OBJ_DIR)/%.o : $(MSG_CREATOR_SRC)/%.hpp    
-	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
-
-$(XSL_BIN_DIR)/MsgCreator : $(MSG_CREATOR_OBJECTS)
-	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS}  $(LOC_ALLLIBS) $^ -o $@
-
-
+	
+	
 ##=================== End of Common for all localization systems area =====
 ## ----------------------------------------------------------------------------
 ifeq ($(MESSAGELOADER),INMEM)
 
 
 
-local: $(MESSAGELIB)
+locale: $(MESSAGELIB)
 
-${XSL_OBJ_DIR}/XalanMsgLib.o : $(XALANMSGLIB_SRC)/XalanMsgLib.cpp $(XALANMSGLIB_SRC)/XalanMsgLib.hpp $(XALANMSGLIB_SRC)/LocalMsgData.hpp
-	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $(XALANMSGLIB_SRC)/XalanMsgLib.cpp
+$(MESSAGELIB): $(XALANMSGLIB_SRC)/LocalMsgData.hpp
+	$(MAKE) -C XalanMsgLib 
+
+$(XALANMSGLIB_SRC)/LocalMsgData.hpp : $(XSL_BIN_DIR)/MsgCreator $(XLIFF_FILE_NAME)
+	$(XSL_BIN_DIR)/MsgCreator $(XLIFF_FILE_NAME) -TYPE $(MESSAGELOADER) -LOCALE $(LOCALE)
+	@$(MOVE) LocalMsgIndex.hpp $(XSL_NLS_DIR)/include
+	@$(MOVE) LocalMsgData.hpp  $(XSL_NLS_DIR)/include		
+
+install: doCommonInstall
+	$(MAKE) -C XalanMsgLib $@
+
+
+
+prepare: doCommonPrepare
 	
-	
-$(MESSAGELIB) : ${XSL_OBJ_DIR}/XalanMsgLib.o 
-	$(MAKE_SHARED_LOC) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(LOC_ALLLIBS) $^ -o $@
-	$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX)
-ifeq ($(PLATFORM), AIX)
-	$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
-else	
-	$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX).$(LIB_MAJOR_VER)
-endif ## AIX
-
-$(XALANMSGLIB_SRC)/LocalMsgData.hpp : $(XSL_BIN_DIR)/MsgCreator $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL)$(XIFFEXT)
-	$(XSL_BIN_DIR)/MsgCreator $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL)$(XIFFEXT) -TYPE $(MESSAGELOADER)
-	@$(MOVE) LocalMsgIndex.hpp $(INCLUDE_DIR)
-	@$(MOVE) LocalMsgData.hpp  $(XALANMSGLIB_SRC)		
-
-install:
-
-prepare :
 	
 endif  # end of ($(MESSAGELOADER),INMEM))
 
@@ -232,14 +124,14 @@ PKGDATA  = $(ICUROOT)/bin/pkgdata
 
 
 
-##=============================== End of Specific for ICU variables ================================-M 
+##=============================== End of Specific for ICU variables ================================
 
-local: $(MESSAGELIB) $(INCLUDE_DIR)/LocalMsgIndex.hpp
+locale:  $(XSL_NLS_DIR)/icu/$(LOCALE).txt $(MESSAGELIB)
 
-$(MESSAGELIB) : $(XSL_NLS_DIR)/$(LOCAL)/$(LOCAL).txt
-	$(GENRB) --package-name $(LOC_PROJECT_NAME) -d $(XSL_NLS_DIR)/$(LOCAL)  $(XSL_NLS_DIR)/$(LOCAL)/$(LOCAL).txt
-	echo $(XSL_NLS_DIR)/$(LOCAL)/$(LOC_PROJECT_NAME)_$(LOCAL).res >> res-file-list.txt
-	$(PKGDATA) --name $(LOC_PROJECT_NAME) -T . -v -O $(ICUROOT)/lib/icu/Makefile.inc  --mode dll -d $(XSL_LIB_DIR) res-file-list.txt -M "prefix=$(ICUROOT) TARGET=$(LOC_LIB)"   
+$(MESSAGELIB) : $(XSL_NLS_DIR)/icu/$(LOCALE).txt
+	$(GENRB) -p $(LOC_PROJECT_NAME) -d $(XSL_NLS_DIR)/icu -i $(XSL_NLS_DIR)/icu $(XSL_NLS_DIR)/icu/$(LOCALE).txt
+	echo $(XSL_NLS_DIR)/icu/$(LOC_PROJECT_NAME)_$(LOCALE).res > $(XSL_NLS_DIR)/icu/res-file-list.txt
+	$(PKGDATA) --name $(LOC_PROJECT_NAME) -T $(XSL_NLS_DIR)/icu -v -O $(ICUROOT)/lib/icu/Makefile.inc  --mode dll -d $(XSL_LIB_DIR) $(XSL_NLS_DIR)/icu/res-file-list.txt -M "prefix=$(ICUROOT) TARGET=$(LOC_LIB)"   
 	$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX)
 ifeq ($(PLATFORM), AIX)
 	$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
@@ -247,17 +139,27 @@ else
 	$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX).$(LIB_MAJOR_VER)
 endif ## AIX
 
-$(INCLUDE_DIR)/LocalMsgIndex.hpp : $(XSL_NLS_DIR)/$(LOCAL)/$(LOCAL).txt
-
-$(XSL_NLS_DIR)/$(LOCAL)/$(LOCAL).txt : $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL)$(XIFFEXT) $(XSL_BIN_DIR)/MsgCreator
-	$(XSL_BIN_DIR)/MsgCreator $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL)$(XIFFEXT) -TYPE $(MESSAGELOADER) -LOCAL $(LOCAL)
-	$(MOVE) LocalMsgIndex.hpp $(INCLUDE_DIR)
-	$(MOVE) $(LOCAL).txt $(XSL_NLS_DIR)/$(LOCAL)
+$(XSL_NLS_DIR)/icu/$(LOCALE).txt : $(XLIFF_FILE_NAME) $(XSL_BIN_DIR)/MsgCreator
+	$(XSL_BIN_DIR)/MsgCreator $(XLIFF_FILE_NAME) -TYPE $(MESSAGELOADER) -LOCALE $(LOCALE)
+	$(MOVE) LocalMsgIndex.hpp $(XSL_NLS_DIR)/include
+	$(MOVE) $(LOCALE).txt $(XSL_NLS_DIR)/icu
 	
-prepare :
-	-${MKDIR} -p $(XSL_NLS_DIR)/$(LOCAL)
+prepare: doCommonPrepare
+	-${MKDIR} -p $(XSL_NLS_DIR)/icu
 
-install:
+install: doCommonInstall
+	$(MKINSTALLDIRS) $(DESTDIR)/$(libdir)
+	$(INSTALL_PROGRAM) $(XSL_LIB_DIR)/$(LOC_LIB) $(DESTDIR)/$(libdir)
+ifneq ($(PLATFORM), OS390)
+	$(LN) -fs $(LOC_LIB) $(DESTDIR)/$(libdir)/$(LOC_LIBNAME)$(SHLIBSUFFIX)
+ifeq ($(PLATFORM), AIX)
+	$(LN) -fs $(LOC_LIB) $(DESTDIR)/$(libdir)/$(LOC_LIBNAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
+else	
+	$(LN) -fs $(LOC_LIB) $(DESTDIR)/$(libdir)/$(LOC_LIBNAME)$(SHLIBSUFFIX).$(LIB_MAJOR_VER)
+endif ## AIX	
+
+endif ## OS390
+
 	
 endif # end of ($(MESSAGELOADER),ICU)
 
@@ -265,40 +167,52 @@ endif # end of ($(MESSAGELOADER),ICU)
 ifeq ($(MESSAGELOADER),NLS)
 
 
+locale:  $(XSL_NLS_DIR)/$(LOCALE)/$(CATALOG_NAME).cat 
 
-
-install:
-	$(COPY) $(XSL_NLS_DIR)/$(LOCAL)/$(CATALOG_NAME) $(XSL_BIN_DIR)/bin
-
-
-prepare:
-
-local:  $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL).cat $(INCLUDE_DIR)/LocalMsgIndex.hpp
-
-$(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL).cat : $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL)$(XIFFEXT) $(XSL_BIN_DIR)/MsgCreator
-	$(XSL_BIN_DIR)/MsgCreator $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL)$(XIFFEXT) -TYPE $(MESSAGELOADER) -LOCAL $(LOCAL)
-	$(MOVE) LocalMsgIndex.hpp $(INCLUDE_DIR)
-	$(MOVE) $(MSGFILENAME)$(LOCAL).msg $(XSL_NLS_DIR)/$(LOCAL)
-	-rm -f $(MSGFILENAME)$(LOCAL).cat
-	gencat  $(CATALOG_NAME) $(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL).msg
-	$(MOVE)	$(CATALOG_NAME) $(XSL_NLS_DIR)/$(LOCAL)
+$(XSL_NLS_DIR)/$(LOCALE)/$(CATALOG_NAME).cat : $(XLIFF_FILE_NAME) $(XSL_BIN_DIR)/MsgCreator
+	$(XSL_BIN_DIR)/MsgCreator $(XLIFF_FILE_NAME) -TYPE $(MESSAGELOADER) -LOCALE $(LOCALE)
+	$(MOVE) LocalMsgIndex.hpp $(XSL_NLS_DIR)/include
+	$(MOVE) $(CATALOG_NAME).msg $(XSL_NLS_DIR)/nls
+	-rm -f $(CATALOG_NAME).cat
+	gencat  $(CATALOG_NAME).cat $(XSL_NLS_DIR)/nls/$(CATALOG_NAME).msg
+	$(MOVE)	$(CATALOG_NAME).cat $(XSL_NLS_DIR)/nls
 	
-$(INCLUDE_DIR)/LocalMsgIndex.hpp :
+install: doCommonInstall
+	$(MKINSTALLDIRS) $(DESTDIR)/$(libdir)
+	$(MKINSTALLDIRS) $(DESTDIR)/$(libdir)/nls
+	$(MKINSTALLDIRS) $(DESTDIR)/$(libdir)/nls/msg
+	$(MKINSTALLDIRS) $(DESTDIR)/$(libdir)/nls/msg/$(LOCALE)
+	$(COPY) $(XSL_NLS_DIR)/nls/$(CATALOG_NAME).cat $(DESTDIR)/$(libdir)/nls/msg/$(LOCALE)	
 	
-
+prepare: doCommonPrepare
+	-${MKDIR} -p $(XSL_NLS_DIR)/nls
 endif
 ##=============================== END OF NLS SYSTEM ==================================================
 
-doClean:
-	rm -f	$(XSL_BIN_DIR)/MsgCreator
-	rm -f	$(XSL_NLS_DIR)/$(LOCAL)/$(MSGFILENAME)$(LOCAL).msg
-	rm -f	$(XSL_NLS_DIR)/$(LOCAL)/$(CATALOG_NAME)
-	rm -f   $(XSL_NLS_DIR)/$(LOCAL)/$(LOCAL).txt
-	rm -f   $(XSL_NLS_DIR)/$(LOCAL)/$(LOC_PROJECT_NAME)_$(LOCAL).res
-	rm -f   res-file-list.txt
-	rm -f	$(XSL_LIB_DIR)/$(LOC_LIBNAME)*
-	rm -f   $(XALANMSGLIB_SRC)/LocalMsgData.hpp
-	rm -f 	$(INCLUDE_DIR)/XalanMsgIndex.hpp
-	rm -f   $(MESSAGELIB)
 
+##=================== Common for all localization systems area ============
+
+$(XSL_BIN_DIR)/MsgCreator:
+	$(MAKE) -C MsgCreator 
+
+
+
+doCommonPrepare:
+	-${MKDIR} -p $(XSL_NLS_DIR)
+	-${MKDIR} -p $(XSL_NLS_DIR)/include
+
+doCommonInstall:
+	$(INSTALL_PROGRAM) $(XSL_NLS_DIR)/include/LocalMsgIndex.hpp $(XALANCROOT)/src/xalanc/PlatformSupport
+
+doClean:
+	$(MAKE) -C XalanMsgLib $@
+	$(MAKE) -C MsgCreator $@
+	rm -f	$(XSL_NLS_DIR)/nls/*
+	rm -f   $(XSL_NLS_DIR)/icu/*
+	rm -f	$(XSL_LIB_DIR)/$(LOC_LIBNAME)*
+	rm -f   $(XSL_NLS_DIR)/include/LocalMsgData.hpp
+	rm -f 	$(XSL_NLS_DIR)/include/LocalMsgIndex.hpp
+	rm -f   $(MESSAGELIB)
+	
+	
 

@@ -69,7 +69,7 @@
 
 
 
-#include "MsgCreator.h"
+#include "MsgCreator.hpp"
 #include "IndexFileData.hpp"
 
 
@@ -90,10 +90,10 @@ static const char* INDEX_FILE_NAME="LocalMsgIndex.hpp";
 //  SAX2Handler: Constructors and Destructor
 // ---------------------------------------------------------------------------
 SAX2Handler::SAX2Handler( ) :
-							m_fIndexFormatter(INDEX_FILE_NAME),
 							m_numberOfRecords(0),
 							m_XML_lang(0),
-							m_startCollectingCharacters(false)
+							m_startCollectingCharacters(false),
+							m_fIndexFormatter(INDEX_FILE_NAME)
 {
 
 }
