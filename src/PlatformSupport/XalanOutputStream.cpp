@@ -299,6 +299,26 @@ XalanOutputStream::setOutputEncoding(const XalanDOMString&	theEncoding)
 
 
 
+bool
+XalanOutputStream::canTranscodeTo(unsigned int		theChar) const
+{
+	if (m_transcoder != 0)
+	{
+		return m_transcoder->canTranscodeTo(theChar);
+	}
+	else
+	{
+		// We'll always return true here, since an exception will be
+		// thrown when we try to transcode.  We'ed like to enable the
+		// commented out line, if we can ever figure out how to see
+		// if a character can be encoded.
+		return true;
+//		return XalanTranscodingServices::canTranscodeToLocalCodePage(theChar);
+	}
+}
+
+
+
 void
 XalanOutputStream::flushBuffer()
 {

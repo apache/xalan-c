@@ -67,9 +67,9 @@
 
 
 
-XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(XMLTranscoder*	theTranscoder) :
+XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(XMLTranscoder&	theTranscoder) :
 	XalanOutputTranscoder(),
-	m_transcoder(theTranscoder)
+	m_transcoder(&theTranscoder)
 {
 }
 
@@ -165,4 +165,12 @@ XalanToXercesTranscoderWrapper::transcode(
 	}
 
 	return theCode;
+}
+
+
+
+bool
+XalanToXercesTranscoderWrapper::canTranscodeTo(unsigned int		theChar) const
+{
+	return m_transcoder->canTranscodeTo(theChar);
 }

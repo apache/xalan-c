@@ -166,3 +166,11 @@ XalanUTF16Transcoder::transcode(
 
 	return XalanTranscodingServices::OK;
 }
+
+
+
+bool
+XalanUTF16Transcoder::canTranscodeTo(unsigned int	/* theChar */) const
+{
+	return true;
+}

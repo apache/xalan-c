@@ -78,7 +78,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanToXercesTranscoderWrapper : public Xalan
 public:
 
 	explicit
-	XalanToXercesTranscoderWrapper(XMLTranscoder*	theTranscoder);
+	XalanToXercesTranscoderWrapper(XMLTranscoder&	theTranscoder);
    
 	virtual
 	~XalanToXercesTranscoderWrapper();
@@ -101,6 +101,9 @@ public:
 			size_t&					theSourceCharsTranscoded,
 			size_t&					theTargetBytesUsed,
 			unsigned char*			theCharSizes);
+
+	virtual bool
+	canTranscodeTo(unsigned int		theChar) const;
 
 private:
 

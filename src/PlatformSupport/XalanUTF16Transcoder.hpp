@@ -122,6 +122,9 @@ public:
 			size_t&					theTargetBytesUsed,
 			unsigned char*			theCharSizes);
 
+	virtual bool
+	canTranscodeTo(unsigned int		theChar) const;
+
 private:
 
 	// Not implemented...

@@ -235,6 +235,15 @@ public :
 	setOutputEncoding(const XalanDOMString&		theEncoding);
 
 	/**
+	 * Determine if a given value can be represented in
+	 * the output encoding.
+	 *
+	 * @return true if the value can be represented, and false if not.
+	 */
+    bool
+	canTranscodeTo(unsigned int		theChar) const;
+
+	/**
 	 * Set the flag that indicates whether a transcoding
 	 * error should throw an exception.  The default is
 	 * to throw an exception.  If this flag is false, and

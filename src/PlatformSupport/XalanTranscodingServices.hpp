@@ -217,6 +217,9 @@ public:
 
 	/**
 	 * Get the maximum character value for the local code page.
+	 * This is now deprecated, since it's impossibly broken.
+	 *
+	 * @deprecated
 	 *
 	 * @return The maximum character value the local code page supports.
 	 */
@@ -232,6 +235,13 @@ public:
 	 */
 	static bool
 	getBytesEqualChars(const XalanDOMString&	theEncoding);
+
+	static bool
+	canTranscodeToLocalCodePage(unsigned int	theChar)
+	{
+		// Yuck!! See getMaximumCharacterValue() for more details.
+		return theChar <= 0x7fu ? true : false;
+	}
 
 	static const XalanDOMChar 	s_utf8String[];
 
@@ -342,6 +352,9 @@ public:
 			size_t&					theSourceCharsTranscoded,
 			size_t&					theTargetBytesUsed,
 			unsigned char*			theCharSizes) = 0;
+
+	virtual bool
+	canTranscodeTo(unsigned int		theChar) const = 0;
 
 private:
 

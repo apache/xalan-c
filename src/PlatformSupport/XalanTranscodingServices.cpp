@@ -234,7 +234,7 @@ XalanTranscodingServices::makeNewTranscoder(
 
 		if (theResult == XalanTranscodingServices::OK)
 		{
-			theTranscoder = new XalanToXercesTranscoderWrapper(theXercesTranscoder);
+			theTranscoder = new XalanToXercesTranscoderWrapper(*theXercesTranscoder);
 		}
 	}
 
