@@ -1309,7 +1309,7 @@ XSLTEngineImpl::problem(
 
 	const Locator*			locator = getLocatorFromStack();
 
-	if (locator == 0)
+	if (locator == 0 && styleNode != 0)
 	{
 		locator = styleNode->getLocator();
 	}
