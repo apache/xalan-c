@@ -1118,7 +1118,6 @@ Stylesheet::pushTopLevelVariables(
 			StylesheetExecutionContext& 	executionContext,
 			const ParamVectorType&			topLevelParams) const
 {
-#if 1
 	{
 		// First, push any imports...
 		const StylesheetVectorType::const_reverse_iterator	rend = m_imports.rend();
@@ -1131,19 +1130,6 @@ Stylesheet::pushTopLevelVariables(
 			stylesheet->pushTopLevelVariables(executionContext, topLevelParams);
 		}
 	}
-#else
-	{
-		// First, push any imports...
-		const StylesheetVectorType::const_reverse_iterator	nImports = m_imports.size();
-
-		for(StylesheetVectorType::size_type i = 0; i < nImports; ++i)
-		{
-			const Stylesheet* const stylesheet = m_imports[i];
-
-			stylesheet->pushTopLevelVariables(executionContext, topLevelParams);
-		}
-	}
-#endif
 
 	const ParamVectorType::size_type	nVars = m_topLevelVariables.size();
 
