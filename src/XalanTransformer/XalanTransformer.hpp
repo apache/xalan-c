@@ -455,6 +455,21 @@ public:
 	const char*
 	getLastError() const;
 
+	/**
+	 * Get the current number of spaces to indent.
+	 * 
+	 * @return number of spaces
+	 */
+	int
+	getIndent() const;
+
+	/**
+	 * Set the current number of spaces to indent.
+	 * 
+	 * @param indentAmount The number of spaces to indent.  Use -1 for the default amount.
+	 */
+	void
+	setIndent(int	indentAmount);
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const XalanCompiledStylesheet*>		CompiledStylesheetPtrVectorType;

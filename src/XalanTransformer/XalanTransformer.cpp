@@ -1131,6 +1131,22 @@ XalanTransformer::getLastError() const
 
 
 
+int
+XalanTransformer::getIndent() const
+{
+	return m_stylesheetExecutionContext->getIndent();
+}
+
+
+
+void
+XalanTransformer::setIndent(int	indentAmount)
+{
+	m_stylesheetExecutionContext->setIndent(indentAmount);;
+}
+
+
+
 void
 XalanTransformer::reset()
 {
