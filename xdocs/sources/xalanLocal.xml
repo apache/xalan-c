@@ -58,7 +58,7 @@
  * <http://www.apache.org/>.
  -->
 
-<book title="Xalan-C++ XSLT User's Guide" copyright="2001 The Apache Software Foundation">
+<book title="Xalan-C++ XSLT User's Guide" copyright="1999-2004 The Apache Software Foundation">
  
   <resources source="sbk:/sources/xalan/resources.xml"/>
    
