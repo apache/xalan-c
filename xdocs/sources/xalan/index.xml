@@ -83,7 +83,7 @@
        <tr>
          <td>Windows32</td>
         <td><resource-ref idref="xslt4c-win32-download"/></td>
-        <td>MSVC 6.0 SP3</td>
+        <td>MSVC 6.0 SP3 and <jump href="http://www.dinkumware.com/vc_fixes.html">Dinkumware C++ library fixes</jump></td>
       </tr>
       <tr>
         <td>Red Hat Linux 6.1</td>
