@@ -521,7 +521,7 @@ private:
 			 * @return The node count, or 0 if not found.
 			 */
 			int
-			CountersTable::countNode(
+			countNode(
 					StylesheetExecutionContext&		support,
 					const ElemNumber*				numberElem,
 					XalanNode*						node);

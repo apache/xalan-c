@@ -65,7 +65,7 @@
  */
 
 // Base include file.  Must be first.
-#include "XSLTDefinitions.hpp"
+#include <XSLT/XSLTDefinitions.hpp>
 
 
 
@@ -77,7 +77,7 @@
 
 
 
-#include "AVTPart.hpp"
+#include <XSLT/AVTPart.hpp>
 
 
 

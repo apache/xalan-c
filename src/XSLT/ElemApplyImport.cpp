@@ -136,4 +136,5 @@ ElemTemplateElement*
 ElemApplyImport::appendChildElem(ElemTemplateElement*	/* newChild */)
 {
 	throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
+	return 0;
 }
