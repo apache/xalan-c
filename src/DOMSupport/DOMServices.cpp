@@ -792,25 +792,17 @@ DOMServices::getNamespaceForPrefix(
 
 					const XalanDOMString&	aname = attr->getNodeName();
 
-					const XalanDOMString::size_type		len = length(aname);
-
-					const bool isPrefix = len <= s_XMLNamespaceWithSeparatorLength ? false :
-							equals(substring(aname,
-											 0,
-											 s_XMLNamespaceWithSeparatorLength),
-								   s_XMLNamespaceWithSeparator);
-
-					if (equals(aname, s_XMLNamespace) || isPrefix) 
+					if (equals(aname, s_XMLNamespace) == true)
 					{
-						// slightly inefficient for default decl.
-						const XalanDOMString::size_type		index =
-							indexOf(aname, XalanUnicode::charColon);
+						theNamespace = &attr->getNodeValue();
 
-						const XalanDOMString	p = isPrefix ?
-							substring(aname,index + 1,len) 
-							: XalanDOMString();
-
-						if (equals(p, prefix) == true)
+						break;
+					}
+					else if (startsWith(aname, s_XMLNamespaceWithSeparator) == true) 
+					{
+						if (equals(
+								prefix,
+								c_wstr(aname) + s_XMLNamespaceWithSeparatorLength) == true)
 						{
 							theNamespace = &attr->getNodeValue();
 
