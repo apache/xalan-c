@@ -100,6 +100,11 @@ public:
 
 #endif
 
+	static const unsigned int		s_XMLStringLength;
+	static const unsigned int		s_XMLNamespaceURILength;
+	static const unsigned int		s_XMLNamespaceLength;
+	static const unsigned int		s_XMLNamespaceWithSeparatorLength;
+
 	class XALAN_DOMSUPPORT_EXPORT WhitespaceSupport
 	{
 	public:
@@ -151,7 +156,20 @@ public:
 	getNodeData(const XalanNode&	node);
 
 	/**
-	 * Retrieve local name of node
+	 * Retrieve the name of the node, taking into
+	 * account the differences between the DOM and
+	 * XSLT data models.
+	 * 
+	 * @param node	DOM node whose name is returned
+	 * @return name of the node
+	 */
+	static XalanDOMString
+	getNameOfNode(const XalanNode&	n);
+
+	/**
+	 * Retrieve local name of node, taking into
+	 * account the differences between the DOM and
+	 * XSLT data models.
 	 * 
 	 * @param node	DOM node whose name is returned
 	 * @return name of node without namespace

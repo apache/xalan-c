@@ -92,6 +92,11 @@ const XalanDOMString	DOMServices::s_XMLNamespaceWithSeparator(XALAN_STATIC_UCODE
 
 #endif
 
+const unsigned int		DOMServices::s_XMLStringLength = length(s_XMLString);
+const unsigned int		DOMServices::s_XMLNamespaceURILength = length(s_XMLNamespaceURI);
+const unsigned int		DOMServices::s_XMLNamespaceLength = length(s_XMLNamespace);
+const unsigned int		DOMServices::s_XMLNamespaceWithSeparatorLength = length(s_XMLNamespaceWithSeparator);
+
 
 
 DOMServices::WhitespaceSupport::WhitespaceSupport()
@@ -219,6 +224,44 @@ DOMServices::getNodeData(const XalanNode&	node)
 	}
 
 	return data;
+}
+
+
+
+XalanDOMString
+DOMServices::getNameOfNode(const XalanNode&		n)
+{
+	XalanDOMString	theResult;
+
+	const XalanNode::NodeType	theNodeType =
+				n.getNodeType();
+
+	if (theNodeType == XalanNode::ATTRIBUTE_NODE)
+	{
+		const XalanAttr&	theAttributeNode =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanAttr&)(n);
+#else
+				static_cast<const XalanAttr&>(n);
+#endif
+
+		theResult = theAttributeNode.getName();
+
+		if (startsWith(theResult, DOMServices::s_XMLNamespaceWithSeparator) == true)
+		{
+			// Uh oh, it's a namespace node, represented as an attribute in
+			// the DOM.  XSLT says we have to strip off the xmlns: part...
+			theResult = substring(theResult, length(DOMServices::s_XMLNamespaceWithSeparator));
+		}
+
+	}
+	else if (theNodeType == XalanNode::ELEMENT_NODE ||
+			 theNodeType == XalanNode::PROCESSING_INSTRUCTION_NODE)
+	{
+		theResult = n.getNodeName();
+	}
+
+	return theResult;
 }
 
 
@@ -375,10 +418,12 @@ DOMServices::getNamespaceForPrefix(
 
 					const XalanDOMString		aname = attr->getNodeName();
 
-					const bool isPrefix =
+					const unsigned int			len = length(aname);
+
+					const bool isPrefix = len <= s_XMLNamespaceWithSeparatorLength ? false :
 							equals(substring(aname,
 											 0,
-											 length(s_XMLNamespaceWithSeparator)),
+											 s_XMLNamespaceWithSeparatorLength),
 								   s_XMLNamespaceWithSeparator);
 
 					if (equals(aname, s_XMLNamespace) || isPrefix) 
@@ -386,11 +431,11 @@ DOMServices::getNamespaceForPrefix(
 						const unsigned int	index = indexOf(aname,
 															':');
               
-						const XalanDOMString p =
+						const XalanDOMString	p =
 							isPrefix ? substring(aname,
 												 index + 1,
-												 length(aname)) : XalanDOMString();
-              
+												 len) : XalanDOMString();
+
 						if (equals(p, prefix) == true)
 						{
 							theNamespace = attr->getNodeValue();
