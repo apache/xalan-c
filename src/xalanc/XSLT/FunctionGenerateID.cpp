@@ -62,12 +62,9 @@ getSuffix(
 
 	// We're assuming here that each node has an implementation with a 
 	// unique address that we can convert into a string...
-	if (theNode->getOwnerDocument() != 0)
-	{
-		PointerToDOMString(theNode->getOwnerDocument(), theResult);
+	PointerToDOMString(theNode->getOwnerDocument(), theResult);
 
-		append(theResult, XalanDOMChar(XalanUnicode::charFullStop));
-	}
+	append(theResult, XalanDOMChar(XalanUnicode::charLetter_N));
 
 	PointerToDOMString(theNode, theResult);
 }
@@ -85,7 +82,10 @@ FunctionGenerateID::execute(
         XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
 
 		executionContext.error(
-				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,theGuard.get(), "generate-id()"),
+				XalanMessageLoader::getMessage(
+                    XalanMessages::FunctionRequiresNonNullContextNode_1Param,
+                    theGuard.get(),
+                    "generate-id()"),
 				context,
 				locator);
 
