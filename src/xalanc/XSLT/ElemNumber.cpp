@@ -496,18 +496,25 @@ ElemNumber::getCountString(
 
 		m_valueExpr->execute(*this, executionContext, theValue);
 
-		CountType	theNumber = 0;
-
-		if (DoubleSupport::isNaN(theValue) == false)
+		if (DoubleSupport::isNaN(theValue) == true)
+        {
+            DoubleToDOMString(theValue, theResult);
+        }
+        else if (DoubleSupport::lessThan(theValue, 0.5) == true)
+        {
+            DoubleToDOMString(DoubleSupport::getNaN(), theResult);
+        }
+        else
 		{
-			theNumber = CountType(DoubleSupport::round(theValue));
-		}
+		    CountType	theNumber =
+                CountType(DoubleSupport::round(theValue));
 
-		formatNumberList(
-				executionContext,
-				&theNumber,
-				1,
-				theResult);
+		    formatNumberList(
+				    executionContext,
+				    &theNumber,
+				    1,
+				    theResult);
+		}
 	}
 	else
 	{
