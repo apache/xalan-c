@@ -75,8 +75,8 @@ VariablesStack::VariablesStack() :
 	m_stack(),
 	m_globalStackFrameIndex(-1),
 	m_globalStackFrameMarked(false),
-	m_currentStackFrameIndex(0),
-	m_forceGlobalOnlySearch(false)
+	m_forceGlobalOnlySearch(false),
+	m_currentStackFrameIndex(0)
 {
 	m_stack.reserve(eDefaultStackSize);
 }
