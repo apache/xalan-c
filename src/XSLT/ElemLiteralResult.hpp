@@ -182,17 +182,22 @@ private:
 	/**
 	 * The name of the literal result element.
 	 */
-	const XalanDOMString	m_elementName;
+	const XalanDOMString		m_elementName;
 
 	/**
 	 * A vector to keep track of the attribute elements.
 	 */
-	AVTVectorType			m_avts;
+	AVTVectorType				m_avts;
+
+	/**
+	 * The size of m_avts, once the stylesheet is compiled...
+	 */
+	AVTVectorType::size_type	m_attrCount;
 
 	/**
 	 * If true, the literal result element has a namespace prefix...
 	 */
-	const bool				m_hasPrefix;
+	const bool					m_hasPrefix;
 };
 
 

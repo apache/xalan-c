@@ -101,6 +101,7 @@ ElemLiteralResult::ElemLiteralResult(
 			xslToken),
 	m_elementName(name),
 	m_avts(),
+	m_attrCount(0),
 	m_hasPrefix(indexOf(name, XalanUnicode::charColon) < length(name) ? true : false)
 {
 	const unsigned int	nAttrs = atts.getLength();
@@ -212,9 +213,9 @@ ElemLiteralResult::postConstruction(
 	// OK, now check all attribute AVTs to make sure
 	// our NamespacesHandler knows about any prefixes
 	// that will need namespace declarations...
-	const AVTVectorType::size_type	nAttrs = m_avts.size();
+	m_attrCount = m_avts.size();
 
-	for(AVTVectorType::size_type i = 0; i < nAttrs; ++i)
+	for(AVTVectorType::size_type i = 0; i < m_attrCount; ++i)
 	{
 		const AVT* const	avt = m_avts[i];
 
@@ -228,7 +229,7 @@ ElemLiteralResult::postConstruction(
 		}
 	}
 
-	if (nAttrs != 0 ||
+	if (m_attrCount != 0 ||
 		m_namespacesHandler.getNamespaceDeclarationsCount() != 0)
 	{
 		canGenerateAttributes(true);
@@ -320,15 +321,13 @@ ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 		}
 	}
 
-	if(0 != m_avts.size())
+	if(m_attrCount > 0)
 	{
-		const AVTVectorType::size_type	nAttrs = m_avts.size();
-
 		StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
 
 		XalanDOMString&		theStringedValue = theGuard.get();
 
-		for(AVTVectorType::size_type i = 0; i < nAttrs; ++i)
+		for(AVTVectorType::size_type i = 0; i < m_attrCount; ++i)
 		{
 			const AVT* const	avt = m_avts[i];
 
@@ -384,7 +383,12 @@ ElemLiteralResult::isAttrOK(
     {
 		const XalanDOMString::size_type		indexOfNSSep = indexOf(attrName, XalanUnicode::charColon);
 
-		if(indexOfNSSep < length(attrName))
+		if(indexOfNSSep >= length(attrName))
+		{
+			// An empty namespace is OK.
+			isAttrOK = true;
+		}
+		else
 		{
 			const XalanDOMString	prefix(attrName, indexOfNSSep);
 
@@ -394,11 +398,6 @@ ElemLiteralResult::isAttrOK(
 			{
 				isAttrOK = true;
 			}
-		}
-		else
-		{
-			// An empty namespace is OK.
-			isAttrOK = true;
 		}
     }
 
