@@ -178,6 +178,10 @@ SOURCE=..\..\..\..\src\XSLT\ElemEmpty.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\ElementFrameMarker.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\ElementMarker.cpp
 # End Source File
 # Begin Source File
@@ -500,6 +504,10 @@ SOURCE=..\..\..\..\src\XSLT\ElemElement.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\ElemEmpty.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\ElementFrameMarker.hpp
 # End Source File
 # Begin Source File
 
