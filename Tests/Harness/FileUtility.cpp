@@ -433,7 +433,7 @@ FileUtility::getParams(int argc,
 //	Notes:	It builds the searchSpecification by concatenating all the 
 //			necessary components.
 //
-FileNameVectorType
+FileUtility::FileNameVectorType
 FileUtility::getTestFileNames(
 			const XalanDOMString&	baseDir,
 			const XalanDOMString&	relDir,
@@ -466,7 +466,8 @@ FileUtility::getTestFileNames(
 //
 //	Notes:	The searchSpecification in this case is just "*". 
 //																			*/	
-FileNameVectorType FileUtility::getDirectoryNames(const XalanDOMString&		rootDirectory)
+FileUtility::FileNameVectorType
+FileUtility::getDirectoryNames(const XalanDOMString&		rootDirectory)
 {
 	const XalanDOMString	dirSpec(XALAN_STATIC_UCODE_STRING("*"));
 
