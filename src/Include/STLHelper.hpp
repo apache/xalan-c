@@ -185,6 +185,42 @@ struct select2nd : public std::unary_function<PairType, typename PairType::secon
 
 
 /**
+ * Functor to call a clear() member function on its argument.
+ */
+template <class Type>
+#if defined(XALAN_NO_NAMESPACES)
+struct ClearFunctor : public unary_function<Type, void>
+#else
+struct ClearFunctor : public std::unary_function<Type, void>
+#endif
+{
+#if defined(XALAN_NO_NAMESPACES)
+	typedef unary_function<Type, void>		BaseClassType;
+#else
+	typedef std::unary_function<Type, void>	BaseClassType;
+#endif
+
+	typedef typename BaseClassType::result_type		result_type;
+	typedef typename BaseClassType::argument_type	argument_type;
+
+	typedef Type									value_type;
+
+	/**
+	 * Retrieve the value of a key-value pair.
+	 *
+	 * @param thePair key-value pair
+	 * @return value
+	 */
+	result_type
+	operator()(argument_type&	theArg) const
+	{
+		theArg.clear();
+	}
+};
+
+
+
+/**
  * Functor to delete value objects in maps, used in STL iteration algorithms.
  */
 template <class T>
