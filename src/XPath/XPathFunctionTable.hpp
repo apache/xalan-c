@@ -279,7 +279,12 @@ public:
 	}
 
 #if defined(XALAN_NO_MEMBER_TEMPLATES)
-	typedef vector<XalanDOMString>	InstalledFunctionNameVectorType;
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanDOMString>			InstalledFunctionNameVectorType;
+#else
+	typedef std::vector<XalanDOMString>		InstalledFunctionNameVectorType;
+#endif
 
 	/**
 	 * Add a list of the names of installed functions to a vector of names.
