@@ -67,7 +67,6 @@
 #include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/XSLException.hpp>
 
-#include <XSLT/Constants.hpp>
 
 
 #include "NameSpace.hpp"
@@ -75,7 +74,9 @@
 #include "PrefixResolver.hpp"
 #include "XPathSupport.hpp"
 
-const DOMString 	QName::s_XMLNAMESPACEURI("http://www.w3.org/XML/1998/namespace");
+
+const DOMString 	QName::s_XMLNAMESPACEURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace")
+											 );
 
 
 
@@ -198,7 +199,7 @@ DOMString QName::getNamespaceForPrefix(const NamespaceVectorType& namespaces,
 {
 	DOMString nsURI;
 	if(prefix.equals("xml"))
-		nsURI = Constants::S_XMLNAMESPACEURI;
+		nsURI = s_XMLNAMESPACEURI;
 	else
 	{
 		if (reverse)
