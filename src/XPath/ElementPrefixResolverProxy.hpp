@@ -84,7 +84,7 @@ class XALAN_XPATH_EXPORT ElementPrefixResolverProxy : public PrefixResolver
 public:
 
 	/**
-	 * Construct an instance of an element prefix resolver proxy
+	 * Construct an instance of an element prefix resolver proxy.
 	 * 
 	 * @param namespaceContext context object for namespace resolution
 	 * @param envSupport XPath environment support class instance
@@ -98,13 +98,11 @@ public:
 			const DOMSupport& 		domSupport);
 
 	/**
-	 * Construct an instance of an element prefix resolver proxy
+	 * Construct an instance of an element prefix resolver proxy.
 	 * 
 	 * @param namespaceContext context object for namespace resolution
 	 * @param envSupport XPath environment support class instance
-	 * @param domSupport DOMSupport class instance
 	 *
-	 * @deprecated
 	 */
 	ElementPrefixResolverProxy(
 			const XalanElement*		namespaceContext,
@@ -125,7 +123,7 @@ private:
 
 	const XalanElement* const		m_namespaceContext;
 
-	const XPathEnvSupport*			m_envSupport;
+	const XPathEnvSupport* const	m_envSupport;
 
 	mutable XalanDOMString			m_uri;
 };
