@@ -168,7 +168,7 @@ UnimplementedDocumentFragment::	getLastChild()
 }
 
 
-int
+unsigned int
 UnimplementedDocumentFragment::getLength()
 {
 	assert(false);

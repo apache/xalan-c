@@ -176,7 +176,7 @@ UnimplementedElement::	getLastChild()
 }
 
 
-int
+unsigned int
 UnimplementedElement::getLength()
 {
 	assert(false);

@@ -172,7 +172,7 @@ UnimplementedDocument::	getLastChild()
 }
 
 
-int
+unsigned int
 UnimplementedDocument::getLength()
 {
 	assert(false);

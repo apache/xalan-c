@@ -113,7 +113,7 @@ ResultTreeFrag::item(unsigned long	index)
 
 
 
-int
+unsigned int
 ResultTreeFrag::getLength()
 {
 	return m_children.getLength();
@@ -361,7 +361,7 @@ ResultTreeFrag::hasChildNodes() const
 
 
 
-int
+unsigned int
 ResultTreeFrag::getLength() const
 {
 	return m_children.getLength();

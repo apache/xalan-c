@@ -110,7 +110,7 @@ public:
 	virtual NodeImpl*
 	item(unsigned long	index) = 0;
 
-	virtual int
+	virtual unsigned int
 	getLength() = 0;
 
 	// These interfaces are inherited from NodeImpl...
@@ -229,7 +229,7 @@ public:
 	virtual DOM_Node
 	item(unsigned long	index) const = 0;
 
-	virtual int
+	virtual unsigned int
 	getLength() const = 0;
 
 	/**

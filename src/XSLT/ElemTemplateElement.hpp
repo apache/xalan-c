@@ -384,7 +384,7 @@ public:
 	 * 
 	 * @return int
 	 */
-	virtual	int getLength();
+	virtual	unsigned int getLength();
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual NodeImpl*

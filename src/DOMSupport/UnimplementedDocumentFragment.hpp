@@ -104,7 +104,7 @@ public:
 	virtual NodeImpl*
 	item(unsigned long	index);
 
-	virtual int
+	virtual unsigned int
 	getLength();
 
 	// These interfaces are inherited from NodeImpl...

@@ -171,7 +171,7 @@ UnimplementedNode::	getLastChild()
 }
 
 
-int
+unsigned int
 UnimplementedNode::getLength()
 {
 	assert(false);

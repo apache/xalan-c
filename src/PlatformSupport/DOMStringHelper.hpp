@@ -265,6 +265,8 @@ clone(const DOMString&	theString)
 }
 
 
+#if 0
+@@ JMD: no longer needed, exist in base class
 inline DOMString
 operator+(
 			const DOMString&	theLHS,
@@ -295,6 +297,7 @@ operator+=(
 
 	return theLHS;
 }
+#endif // 0
 
 
 

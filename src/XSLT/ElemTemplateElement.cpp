@@ -957,7 +957,7 @@ NodeImpl* ElemTemplateElement::getLastChild()
  * 
  * @return int
  */
-int ElemTemplateElement::getLength()
+unsigned int ElemTemplateElement::getLength()
 {
     // It is assumed that the getChildNodes call synchronized
     // the children. Therefore, we can access the first child
