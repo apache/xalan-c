@@ -1,4 +1,61 @@
 <?xml version="1.0" standalone="no"?>  
+<!-- 
+ * The Apache Software License, Version 1.1
+ *
+ *
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:  
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
+ *
+ * 4. The names "Xalan" and "Apache Software Foundation" must
+ *    not be used to endorse or promote products derived from this
+ *    software without prior written permission. For written 
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache",
+ *    nor may "Apache" appear in their name, without prior written
+ *    permission of the Apache Software Foundation.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation and was
+ * originally based on software copyright (c) 1999, Lotus
+ * Development Corporation., http://www.lotus.com.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ -->
+
 <!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
 
 <s1 title="Getting Started with Xalan-C++">
@@ -11,10 +68,10 @@
 </ul>
 <anchor name="download"/>
 <s2 title="Downloading what you need">
-<p>For &xslt4c-current;, we are distributing a Windows32 Visual C++ build and 7 UNIX builds with makefiles: a Red Hat Linux GNU build, AIX xlC (32 and 64 bit) builds, HP-UX 11 aCC (32 and 64 bit) builds, and Solaris 2.8 (32 and 64 bit) builds. 
+<p>For &xslt4c-current;, we are distributing a Windows32 Visual C++ build and 7 UNIX builds with makefiles: a Red Hat Linux GNU build, AIX xlC (32 and 64 bit) builds, HP-UX 11 aCC (32 and 64 bit) builds, and Solaris 2.7 (32 and 64 bit) builds. 
 Please contact us at <human-resource-ref idref="xalandev"/> if you would like to help provide builds for other platforms.</p>
-<p>If you do not already have it, you must also download the &xml4c; 2.2.0 build as indicated below.</p> 
-<note>The Xalan distribution files are in <resource-ref idref="xslt4c-distdir"/>. The Xerces distribution files are in <resource-ref idref="xml4c-distdir"/>.</note>
+<p>If you do not already have it, you must also download the &xml4c; 2.3.0 build as indicated below.</p> 
+<note>The Xalan distribution files are in <resource-ref idref="xslt4c-distdir"/>. The Xerces distribution files are in <resource-ref idref="xml4c-distdir"/>.  Xalan documentation is provided in a separate package from the binary distribution files.  For Windows, documentation is packaged with the file name Xalan-C_1_6-docs.zip.  For UNIX, documentation is packaged with the file name of Xalan-C_1_6-docs.tar.gz.</note>
 	<table>
 	  <tr>
 		<th>Xalan distribution files</th>
@@ -32,24 +89,24 @@ Please contact us at <human-resource-ref idref="xalandev"/> if you would like to
 		<td>Redhat Linux 7.2</td>
 	  </tr>
 	  <tr>
-		<td>&xslt4c-dist;-AIX51_502.tar.gz</td>
+		<td>&xslt4c-dist;-AIX51_600.tar.gz</td>
 		<td>&xml4c-aixdist;</td>
 		<td>AIX 5.1</td>
 	  </tr>
 	  <tr>
-		<td>&xslt4c-dist;-AIX51_502_64.tar.gz</td>
+		<td>&xslt4c-dist;-AIX51_600_64.tar.gz</td>
 		<td>&xml4c-aix64dist;</td>
 		<td>AIX 5.1 (64 bit)</td>
 	  </tr>
 	  <tr>
-		<td>&xslt4c-dist;-Sol2.8ForCC.tar.gz </td>
+		<td>&xslt4c-dist;-Sol2.7ForCC.tar.gz </td>
 		<td>&xml4c-solarisdist;</td>
-		<td>Solaris 2.8</td>
+		<td>Solaris 2.7</td>
 	  </tr>
 	  <tr>
-		<td>&xslt4c-dist;-Sol2.8ForCC_64.tar.gz </td>
+		<td>&xslt4c-dist;-Sol2.7ForCC_64.tar.gz </td>
 		<td>&xml4c-solaris64dist;</td>
-		<td>Solaris 2.8</td>
+		<td>Solaris 2.7</td>
 	  </tr>
 	  <tr>
 		<td>&xslt4c-dist;-HP11ACC.tar.gz</td>
@@ -62,7 +119,7 @@ Please contact us at <human-resource-ref idref="xalandev"/> if you would like to
 		<td>HP-UX 11.0 (64 bit)</td>
     </tr>    
   </table>
-  <p>The Windows32 distribution was built with MSVC 6.0 SP3 and <jump href="http://www.dinkumware.com/vc_fixes.html">Dinkumware C++ library fixes</jump>. The Red Hat Linux 7.2 32-bit distribution was built with Intel C++ Compiler version 6.0.1. The AIX 5.1 32-bit distribution was built with IBM C and C++ for AIX 5.02. The Solaris 2.8 32-bit and 64-bit distributions were built with Sun Workshop 6, update 2. 
+  <p>The Windows32 distribution was built with MSVC 6.0 SP3 and <jump href="http://www.dinkumware.com/vc_fixes.html">Dinkumware C++ library fixes</jump>. The Red Hat Linux 7.2 32-bit distribution was built with Intel C++ Compiler version 7.0. The AIX 5.1 32-bit and 64-bit distributions were built with IBM C and C++ for AIX 6.00. The Solaris 2.7 32-bit and 64-bit distributions were built with Sun Workshop 6, update 2. 
 The HP-UX 11 32-bit and 64-bit distributions were built with aCC A.03.37.</p>
 <note>Use GNU tar to untar the Solaris distribution file; see <link idref="faq" anchor="gnutar">A tar checksum error on Solaris </link>.</note>
 <anchor name="xalandists"/>

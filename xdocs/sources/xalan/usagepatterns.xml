@@ -4,7 +4,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -125,12 +125,12 @@
 	</note>
 	<s3 title="1. Include the required header files.">
 	  <p>
-		Always start with Include/PlatformDefinitions.hpp, the &xslt4c; base header file. Also include util/PlatformUtils.hpp, XalanTransformer/XalanTransformer.hpp, and any other header files your particular application requires.
+		Always start with xalanc/Include/PlatformDefinitions.hpp, the &xslt4c; base header file. Also include xercesc/util/PlatformUtils.hpp, xalanc/XalanTransformer/XalanTransformer.hpp, and any other header files your particular application requires.
 	  </p>
 	  <source>
-#include &lt;Include/PlatformDefinitions.hpp&gt;
-#include &lt;util/PlatformUtils.hpp&gt;
-#include &lt;XalanTransformer/XalanTransformer.hpp&gt;
+#include &lt;xalanc/Include/PlatformDefinitions.hpp&gt;
+#include &lt;xercesc/util/PlatformUtils.hpp&gt;
+#include &lt;xalanc/XalanTransformer/XalanTransformer.hpp&gt;
 ...
 	  </source>
 	</s3>
@@ -435,8 +435,8 @@ theXalanTransformer.transform(*parsedXML, "foo2.xsl", "foo-xsl2.out");
 #include &lt;xercesc/dom/DOMDocument.hpp&gt;
 #include &lt;xercesc/dom/DOMImplementation.hpp&gt;
 
-#include &lt;XMLSupport/FormatterToXML.hpp&gt;
-#include &lt;XMLSupport/XalanTransformer.hpp&gt;
+#include &lt;xalanc/XMLSupport/FormatterToXML.hpp&gt;
+#include &lt;xalanc/XMLSupport/XalanTransformer.hpp&gt;
 
 XALAN_USING_XERCES(DOMDocument)
 XALAN_USING_XERCES(DOMImplementation)
@@ -496,8 +496,8 @@ XALAN_USING_XALAN(XalanTransformer)
 		You may want to use a Xerces DOM that was created without using the XalanTransformer class. As the following code snippet illustrates, you can use <jump href="apidocs/class_xercesdomwrapperparsedsource.html">XercesDOMWrapperParsedSource</jump> to pass in a Xerces DOM as the source for an XSL transformation.
 	  </p>
 	  <source>
-#include &lt;parsers/DOMParser.hpp&gt;
-#include &lt;XalanTransformer/XercesDOMWrapperParsedSource.hpp&gt;
+#include &lt;xercesc/parsers/DOMParser.hpp&gt;
+#include &lt;xalanc/XalanTransformer/XercesDOMWrapperParsedSource.hpp&gt;
 
 void parseWithXerces(XalanTransformer &amp;xalan, 
                      const XSLTInputSource &amp;xmlInput,
@@ -614,20 +614,19 @@ void parseWithXerces(XalanTransformer &amp;xalan,
 	  <ol>
 		<li>Include the ICUBridge headers.<br/><br/></li>
 		<li>Substitute ICU support for format-number(), xsl:number, and/or xsl:sort.<br/><br/></li>
-		<li>Windows: Provide your application access to the ICUBridge library.<br/>
-		  Linux, AIX, or HP-UX 11: Rebuild the Xalan library to include the ICUBridge.</li>
+		<li>Rebuild the Xalan library to include the ICUBridge.</li>
       </ol>
       <p><em>ICUBridge</em></p>
 	  <p>
 		All &xslt4c; references to ICU are centralized in the ICUBridge module, which supplies the infrastructure for enabling ICU support for number formatting and sorting.
 	  </p>
 	  <source>
-#include &lt;ICUBridge/ICUBridge.hpp&gt;
-#include &lt;ICUBridge/FunctionICUFormatNumber.hpp&gt;
-#include &lt;ICUBridge/ICUXalanNumberFormatFactory.hpp&gt;
-#include &lt;ICUBridge/ICUBridgeCollationCompareFunctor.hpp&gt;
+#include &lt;xalanc/ICUBridge/ICUBridge.hpp&gt;
+#include &lt;xalanc/ICUBridge/FunctionICUFormatNumber.hpp&gt;
+#include &lt;xalanc/ICUBridge/ICUXalanNumberFormatFactory.hpp&gt;
+#include &lt;xalanc/ICUBridge/ICUBridgeCollationCompareFunctor.hpp&gt;
 	  </source>
-	  <p>For Windows be sure &icubridge-win;,the ICUBridge dynamic link library, is on the path.</p>
+	  <p>For Windows, do a clean build of the Xalan library using the "AllInOneWithICU" project.</p>
 	  <p>For UNIX:</p>
 	  <ol>
 		<li>Define the XALAN_USE_ICU environment variable.<br/><br/></li>
