@@ -84,7 +84,10 @@ FormatterToXML_UTF16::~FormatterToXML_UTF16()
 inline void
 FormatterToXML_UTF16::flushBuffer()
 {
-	m_writer->write((const char*)m_buffer, 0, (m_bufferPosition - m_buffer) * sizeof m_buffer[0]);
+	m_writer->write(
+        reinterpret_cast<const char*>(m_buffer),
+        0,
+        (m_bufferPosition - m_buffer) * sizeof m_buffer[0]);
 
 	m_bufferPosition = m_buffer;
 	m_bufferRemaining = kBufferSize;
@@ -97,11 +100,14 @@ FormatterToXML_UTF16::write(
 			const XalanDOMChar*			theChars,
 			XalanDOMString::size_type	theLength)
 {
-	if (theLength > sizeof(m_buffer))
+	if (theLength > XalanDOMString::size_type(kBufferSize))
 	{
 		flushBuffer();
 
-		m_writer->write(theChars, 0, theLength);
+		m_writer->write(
+            reinterpret_cast<const char*>(theChars),
+            0,
+            theLength * sizeof(theChars[0]));
 	}
 	else
 	{
