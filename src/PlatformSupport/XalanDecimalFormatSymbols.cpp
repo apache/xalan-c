@@ -109,7 +109,7 @@ XalanDecimalFormatSymbols::XalanDecimalFormatSymbols() :
 	m_NaN(theNaNDefault),
 	m_patternSeparator(XalanUnicode::charSemicolon),
 	m_percent(XalanUnicode::charPercentSign),
-	m_perMill(0),
+	m_perMill(XalanUnicode::charPerMilleSign),
 	m_zeroDigit(XalanUnicode::charDigit_0)
 {
 }
