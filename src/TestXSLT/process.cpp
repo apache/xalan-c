@@ -66,10 +66,8 @@
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
-#include <strstream.h>
 #else
 #include <iostream>
-#include <strstream>
 #endif
 
 
@@ -107,7 +105,6 @@
 
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
-#include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
@@ -129,7 +126,9 @@
 
 
 
+#include <XalanSourceTree/FormatterToSourceTree.hpp>
 #include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
 #include <XalanSourceTree/XalanSourceTreeInit.hpp>
 #include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
@@ -219,6 +218,8 @@ printArgOptions()
 		 << endl
 		 << " [-DOM (Use DOM formatter.  Formats to DOM, then formats XML for output.)]"
 		 << endl
+		 << " [-XST (Use source tree formatter.  Formats to Xalan source tree, then formats XML for output.)]"
+		 << endl
 		 << " [-PARAM name expression (Sets a stylesheet parameter.)]"
 		 << endl
 		 << " [-XD Use Xerces DOM instead of Xalan source tree.]"
@@ -272,6 +273,7 @@ struct CmdLineParams
 	bool doValidation;
 	bool noIndent;
 	bool formatToNull;
+	bool formatToSourceTree;
 	bool useDOM;
 	int indentAmount;
 	int outputType;
@@ -298,6 +300,7 @@ struct CmdLineParams
 		noIndent(false),
 		formatToNull(false),
 		useDOM(false),
+		formatToSourceTree(false),
 		indentAmount(-1),
 		outputType(-1),
 		outFileName(),
@@ -506,6 +509,17 @@ getArgs(
 
 			p.outputType = FormatterListener::OUTPUT_METHOD_DOM;
 		}
+		else if(!stricmp("-XST", argv[i]))
+		{
+			if (p.outputType != -1)
+			{
+				warnPreviousOutputMethod(p.outputType);
+			}
+
+			p.outputType = FormatterListener::OUTPUT_METHOD_DOM;
+
+			p.formatToSourceTree = true;
+		}
 		else if(!stricmp("-NULL", argv[i]))
 		{
 			p.formatToNull = true;
@@ -555,17 +569,19 @@ getArgs(
 
 FormatterListener*
 createFormatter(
-			int							outputType,
-			bool						shouldWriteXMLHeader,
-			bool						stripCData,
-			bool						escapeCData,
-			bool						noIndent,
-			bool						formatToNull,
-			PrintWriter&				resultWriter,
-			int							indentAmount,
-			const XalanDOMString&		mimeEncoding,
-			const StylesheetRoot*		stylesheet,
-			XMLParserLiaison&			parserLiaison)
+			int								outputType,
+			bool							shouldWriteXMLHeader,
+			bool							stripCData,
+			bool							escapeCData,
+			bool							noIndent,
+			bool							formatToNull,
+			bool							formatToSourceTree,
+			PrintWriter&					resultWriter,
+			int								indentAmount,
+			const XalanDOMString&			mimeEncoding,
+			const StylesheetRoot*			stylesheet,
+			XMLParserLiaison&				parserLiaison,
+			XalanSourceTreeParserLiaison&	sourceTreeParserLiaison)
 {
 	FormatterListener*	formatter = 0;
 
@@ -656,7 +672,14 @@ createFormatter(
 	}
 	else if(FormatterListener::OUTPUT_METHOD_DOM == outputType)
 	{
-		formatter = new FormatterToDOM(parserLiaison.getDOMFactory(), 0);
+		if (formatToSourceTree == true)
+		{
+			formatter = new FormatterToSourceTree(sourceTreeParserLiaison.createXalanSourceTreeDocument());
+		}
+		else
+		{
+			formatter = new FormatterToDOM(parserLiaison.getDOMFactory(), 0);
+		}
 	}
 
 	return formatter;
@@ -795,7 +818,6 @@ xsltMain(const CmdLineParams&	params)
 		theXercesParserLiaison,
 		params);
 
-	XPathSupportDefault				theXPathSupport(theDOMSupport);
 	XSLTProcessorEnvSupportDefault	theXSLProcessorSupport;
 
 	XObjectFactoryDefault	theXObjectFactory;
@@ -809,7 +831,6 @@ xsltMain(const CmdLineParams&	params)
 
 	XSLTEngineImpl processor(
 			xmlParserLiaison,
-			theXPathSupport,
 			theXSLProcessorSupport,
 			theDOMSupport,
 			theXObjectFactory,
@@ -899,11 +920,13 @@ xsltMain(const CmdLineParams&	params)
 				params.escapeCData,
 				params.noIndent,
 				params.formatToNull,
+				params.formatToSourceTree,
 				resultWriter,
 				xmlParserLiaison.getIndent(),
 				mimeEncoding,
 				stylesheet,
-				xmlParserLiaison));
+				xmlParserLiaison,
+				theXalanSourceTreeParserLiaison));
 
 	XSLTResultTarget	rTreeTarget;
 
@@ -921,7 +944,7 @@ xsltMain(const CmdLineParams&	params)
 
 	StylesheetExecutionContextDefault	theExecutionContext(processor,
 			theXSLProcessorSupport,
-			theXPathSupport,
+			theDOMSupport,
 			theXObjectFactory);
 
 #if defined(XALAN_USE_ICU)
@@ -963,25 +986,42 @@ xsltMain(const CmdLineParams&	params)
 			   rTreeTarget.getFormatterListener()->getOutputFormat() ==
 					FormatterListener::OUTPUT_METHOD_DOM);
 
-		// Get the FormatterToDOM that produced the result document...
-		const FormatterToDOM* const	theResultFormatter =
+		const XalanDocument*	theResultDocument = 0;
+
+		if (params.formatToSourceTree == true)
+		{
+			// Get the FormatterToDOM that produced the result document...
+			const FormatterToSourceTree* const	theResultFormatter =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(FormatterToDOM*)rTreeTarget.getFormatterListener();
+				(FormatterToSourceTree*)rTreeTarget.getFormatterListener();
 #else
-			static_cast<FormatterToDOM*>(rTreeTarget.getFormatterListener());
+				static_cast<FormatterToSourceTree*>(rTreeTarget.getFormatterListener());
 #endif
 
-		// Get the document...
-		const XalanDocument* const	theResultDocument =
-			theResultFormatter->getDocument();
-
-		if (theResultDocument == 0)
-		{
-			cerr << endl << "Warning: No DOM document to format!!!" << endl;
+			// Get the document...
+			theResultDocument = theResultFormatter->getDocument();
 		}
 		else
 		{
-			// Create a FormaterToDOM with the required output
+			// Get the FormatterToDOM that produced the result document...
+			const FormatterToDOM* const	theResultFormatter =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(FormatterToDOM*)rTreeTarget.getFormatterListener();
+#else
+				static_cast<FormatterToDOM*>(rTreeTarget.getFormatterListener());
+#endif
+
+			// Get the document...
+			theResultDocument = theResultFormatter->getDocument();
+		}
+
+		if (theResultDocument == 0)
+		{
+			cerr << endl << "Warning: No document to format!!!" << endl;
+		}
+		else
+		{
+			// Create a FormaterToXML with the required output
 			// options...
 			const XalanAutoPtr<FormatterListener>	formatter(
 					createFormatter(
@@ -991,11 +1031,13 @@ xsltMain(const CmdLineParams&	params)
 						params.escapeCData,
 						params.noIndent,
 						false,
+						false,
 						resultWriter,
 						xmlParserLiaison.getIndent(),
 						mimeEncoding,
 						stylesheet,
-						xmlParserLiaison));
+						xmlParserLiaison,
+						theXalanSourceTreeParserLiaison));
 
 			// Create a FormatterTreeWalker with the the
 			// new formatter...
@@ -1016,12 +1058,19 @@ xsltMain(const CmdLineParams&	params)
 	theXPathFactory.reset();
 	theXObjectFactory.reset();
 	theXSLProcessorSupport.reset();
-	theXPathSupport.reset();
+	theDOMSupport.reset();
 
 	xmlParserLiaison.reset();
 
 	return 0;
 }
+
+
+
+//#define XALAN_VQ_SPECIAL_TRACE
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+#include "d:/Rational/Quantify/pure.h"
+#endif
 
 
 
