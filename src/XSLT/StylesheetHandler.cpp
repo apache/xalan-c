@@ -374,8 +374,7 @@ StylesheetHandler::startElement(
 
 		if(length(ns) == 0 && nameLength != length(localName))
 		{
-			// Warn that there is a prefix that was not resolved...
-			m_constructionContext.warn("Could not resolve prefix " + XalanDOMString(name));
+			error("Could not resolve prefix.", locator);
 		}
 
 		ElemTemplateElement* elem = 0;
@@ -690,9 +689,21 @@ StylesheetHandler::startElement(
 		}
 		else
 		{
-			if(!m_inTemplate && !m_foundStylesheet)
+			if(!m_inTemplate)
 			{
-				elem = initWrapperless(name, atts, lineNumber, columnNumber);
+				// If it's a top level 
+				if (!m_foundStylesheet)
+				{
+					elem = initWrapperless(name, atts, lineNumber, columnNumber);
+				}
+				else if (length(ns) == 0 && m_elemStack.size() == 1)
+				{
+					error("Illegal top level element", locator);
+				}
+				else
+				{
+					m_inExtensionElementStack.back() = true;
+				}
 			}
 			else
 			{
