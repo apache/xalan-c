@@ -639,6 +639,103 @@ XalanDOMString::length(const XalanDOMChar*	theString)
 
 
 
+#if defined(XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS)
+
+
+
+#include <util/XMLString.hpp>
+
+
+
+template <class SourceType, class TargetType, class SizeType, class LengthFunctionType>
+bool
+doXercesTranscode(
+			const SourceType*			theSourceString,
+			SizeType					theSourceStringLength,
+			bool						theSourceStringIsNullTerminated,
+#if defined(XALAN_NO_NAMESPACES)
+			vector<TargetType>&			theTargetVector,
+#else
+			std::vector<TargetType>&	theTargetVector,
+#endif
+			bool						terminate,
+			LengthFunctionType			theLengthFunction)
+{
+	const SourceType*	theRealSourceString = theSourceString;
+
+	SizeType			theRealSourceStringLength = theSourceStringLength;
+
+	XalanArrayAutoPtr<SourceType>		theGuard;
+
+	if (theSourceStringIsNullTerminated == true)
+	{
+		theRealSourceStringLength = theLengthFunction(theSourceString);
+	}
+	else
+	{
+		theGuard.reset(new SourceType[theRealSourceStringLength + 1]);
+		assert(theGuard.get() != 0);
+
+		for (SizeType index = 0; index < theRealSourceStringLength; ++index)
+		{
+			theGuard[index] = theSourceString[index];
+		}
+
+		theGuard[theRealSourceStringLength] = SourceType(0);
+
+		theRealSourceString = theGuard.get(); 
+	}
+
+	// Initially, let's guess the the transcoded string will be of the same
+	// length as the UTF-16 string.
+	theTargetVector.resize(theRealSourceStringLength + 1, TargetType(0));
+
+	assert(theRealSourceString != 0);
+
+	unsigned int	theAttempts = 0;
+	bool			fSuccess = false;
+
+	do
+	{
+		fSuccess = XMLString::transcode(
+					theRealSourceString,
+					&*theTargetVector.begin(),
+					theTargetVector.size() - 1);
+
+		if (fSuccess == false)
+		{
+			if (theAttempts > 2)
+			{
+				break;
+			}
+			else
+			{
+				++theAttempts;
+
+				theTargetVector.resize(theTargetVector.size() + 10, TargetType(0));
+			}
+		}
+	} while (fSuccess == false);
+
+	if (fSuccess == false)
+	{
+		theTargetVector.clear();
+	}
+	else if (terminate == false)
+	{
+		while(theTargetVector.back() == TargetType(0))
+		{
+			theTargetVector.pop_back();
+		}
+	}
+
+	return fSuccess;
+}
+
+#endif
+
+
+
 static bool
 doTranscodeToLocalCodePage(
 			const XalanDOMChar*		theSourceString,
@@ -663,7 +760,18 @@ doTranscodeToLocalCodePage(
 
         return true;
 	}
-
+#if defined(XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS)
+	else
+	{
+		return doXercesTranscode(
+					theSourceString,
+					theSourceStringLength,
+					theSourceStringIsNullTerminated,
+					theTargetVector,
+					terminate,
+					length);
+	}
+#else
 	const wchar_t*	theTempSource = 0;
 
 	// If our char sizes are not the same, or the input string is not null-terminated,
@@ -725,6 +833,7 @@ doTranscodeToLocalCodePage(
 			return true;
 		}
 	}
+#endif
 }
 
 
@@ -776,7 +885,18 @@ doTranscodeFromLocalCodePage(
 
         return true;
 	}
-
+#if defined(XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS)
+	else
+	{
+		return doXercesTranscode(
+					theSourceString,
+					theSourceStringLength,
+					theSourceStringIsNullTerminated,
+					theTargetVector,
+					terminate,
+					strlen);
+	}
+#else
 	if (theSourceStringIsNullTerminated == true)
 	{
 		theSourceStringLength = strlen(theSourceString);
@@ -830,6 +950,7 @@ doTranscodeFromLocalCodePage(
 			return true;
 		}
 	}
+#endif
 }
 
 
