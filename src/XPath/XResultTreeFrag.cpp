@@ -257,16 +257,7 @@ XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObje
 XalanNode*
 XResultTreeFrag::item(unsigned int	index) const
 {
-	assert(m_value.get() != 0);
-
-	XalanNode*	theCurrentChild = m_value->getFirstChild();
-
-	for(unsigned int i = 0; i < index && theCurrentChild != 0; ++i)
-	{
-		theCurrentChild = theCurrentChild->getNextSibling();
-	}
-
-	return theCurrentChild;
+	return index == 0 ? m_value.get() : 0;
 }
 
 
@@ -275,20 +266,6 @@ unsigned int
 XResultTreeFrag::getLength() const
 {
 	return 1;
-	assert(m_value.get() != 0);
-
-	unsigned int	theLength = 0;
-
-	XalanNode*	theCurrentChild = m_value->getFirstChild();
-
-	while(theCurrentChild != 0)
-	{
-		++theLength;
-
-		theCurrentChild = theCurrentChild->getNextSibling();
-	}
-
-	return theLength;
 }
 
 
@@ -296,26 +273,7 @@ XResultTreeFrag::getLength() const
 unsigned int
 XResultTreeFrag::indexOf(const XalanNode*	theNode) const
 {
-	unsigned	theIndex = 0;
-	bool		fFound = false;
-
-	XalanNode*	theCurrentChild = m_value->getFirstChild();
-
-	while(theCurrentChild != 0 && fFound == false)
-	{
-		if (theCurrentChild == theNode)
-		{
-			fFound = true;
-		}
-		else
-		{
-			++theIndex;
-
-			theCurrentChild = theCurrentChild->getNextSibling();
-		}
-	}
-
-	return fFound == true ? theIndex : NodeRefListBase::npos;
+	return theNode == m_value.get() ? 0 : NodeRefListBase::npos;
 }
 
 
@@ -337,14 +295,7 @@ XResultTreeFrag::NodeRefListBaseProxy::~NodeRefListBaseProxy()
 XalanNode*
 XResultTreeFrag::NodeRefListBaseProxy::item(unsigned int	index) const
 {
-	if (index == 0)
-	{
-		return m_xresultTreeFrag.m_value.get();
-	}
-	else
-	{
-		return 0;
-	}
+	return m_xresultTreeFrag.item(index);
 }
 
 
@@ -352,7 +303,7 @@ XResultTreeFrag::NodeRefListBaseProxy::item(unsigned int	index) const
 unsigned int
 XResultTreeFrag::NodeRefListBaseProxy::getLength() const
 {
-	return 1;
+	return m_xresultTreeFrag.getLength();
 }
 
 
@@ -360,14 +311,7 @@ XResultTreeFrag::NodeRefListBaseProxy::getLength() const
 unsigned int
 XResultTreeFrag::NodeRefListBaseProxy::indexOf(const XalanNode*	theNode) const
 {
-	if (theNode == m_xresultTreeFrag.m_value.get())
-	{
-		return 0;
-	}
-	else
-	{
-		return NodeRefListBase::npos;
-	}
+	return m_xresultTreeFrag.indexOf(theNode);
 }
 
 
