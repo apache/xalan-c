@@ -530,7 +530,10 @@ public:
 	 * a pointer to the object.
 	 *
 	 * @param theName name of variable
-	 * @return pointer to an XObject if the variable was found, 0 if it was not
+	 * @return An XObjectPtr instance.  Call XObjectPtr::null() on the instance
+     *         to determine if the variable was found.  If XObjectPtr::null()
+     *         returns true, the variable was not found, and no other operations
+     *         on the XObject instance are permitted.
 	 */
 	virtual const XObjectPtr
 	getVariable(
