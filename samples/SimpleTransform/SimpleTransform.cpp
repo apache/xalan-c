@@ -97,8 +97,18 @@ main(
             XalanMemoryManagerImpl memoryManager;
 
 #ifdef XALAN_USE_ICU
-			UErrorCode status;
-			u_setMemoryFunctions(0, icu_malloc, icu_realloc, icu_free, &status);
+            UErrorCode status = U_ZERO_ERROR;
+
+            u_setMemoryFunctions(0, icu_malloc, icu_realloc, icu_free, &status);
+
+            if(U_FAILURE(status))
+            {
+                    cerr << "Initialization of ICU failed! " 
+                         << endl
+                         << endl;
+
+                    return -1;
+            }
 #endif 
 
 			// Call the static initializer for Xerces.
