@@ -182,13 +182,10 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<Counter>					CounterVectorType;
-	typedef map<const ElemNumber*,
-				CounterVectorType,
-				less<const ElemNumber*> >	ElemToCounterVectorMapType;
+	typedef vector<CounterVectorType>		ElemCounterVectorVectorType;
 #else
 	typedef std::vector<Counter>			CounterVectorType;
-	typedef std::map<const ElemNumber*,
-					 CounterVectorType>		ElemToCounterVectorMapType;
+	typedef std::vector<CounterVectorType>	ElemCounterVectorVectorType;
 #endif
 
 	typedef Counter::NodeVectorType			NodeVectorType;
@@ -196,12 +193,26 @@ public:
 	/**
 	 * Construct a CountersTable.
 	 */
-	CountersTable() :
-		m_counterMap(),
+	CountersTable(unsigned long		theSize = 0) :
+		m_countersVector(),
 		m_newFound()
 	{
+		resize(theSize);
 	};
 
+
+	/**
+	 * Resize the table.  The must be done prior
+	 * to using the table, if the size was not past
+	 * in the constructor.
+	 *
+	 * @theSize The new size
+	 */
+	void
+	resize(unsigned long	theSize)
+	{
+		m_countersVector.resize(theSize);
+	}
 
 	/**
 	 * Count forward until the given node is found, or until 
@@ -215,7 +226,7 @@ public:
 	int
 	countNode(
 			StylesheetExecutionContext&		executionContext,
-			const ElemNumber*				numberElem,
+			const ElemNumber&				numberElem,
 			XalanNode*						node);
 
 	/**
@@ -226,21 +237,21 @@ public:
 	{
 		m_newFound.clear();
 
-		m_counterMap.clear();
+		m_countersVector.clear();
 	}
 
 private:
 
 	/**
-	 * A map which holds counters for ElemNumber instances.
+	 * A vector which holds counters for ElemNumber instances.
 	 */
-	ElemToCounterVectorMapType	m_counterMap;
+	ElemCounterVectorVectorType		m_countersVector;
 
 
 	/**
 	 * A vector to use as a temporary buffer.
 	 */
-	NodeVectorType				m_newFound;
+	NodeVectorType					m_newFound;
 };
 
 

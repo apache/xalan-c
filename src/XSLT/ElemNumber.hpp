@@ -132,13 +132,15 @@ public:
 	 * @param atts                list of attributes for element
 	 * @param lineNumber				line number in document
 	 * @param columnNumber			column number in document
+	 * @param id				  The unique ID within the stylesheet for this xsl:number element
 	 */
 	ElemNumber(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeList&			atts,
 			int								lineNumber,
-			int								columnNumber);
+			int								columnNumber,
+			unsigned long					id);
 
 	virtual
 	~ElemNumber();
@@ -150,6 +152,12 @@ public:
 
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
+
+	unsigned long
+	getID() const
+	{
+		return m_id;
+	}
 
 	/**
 	 * Get the previous node to be counted.
@@ -392,6 +400,8 @@ private:
 	const AVT*		m_lettervalue_avt;
 	const AVT*		m_groupingSeparator_avt;
 	const AVT*		m_groupingSize_avt;
+
+	const unsigned long		m_id;
 
 	/**
  	 * The string "@".

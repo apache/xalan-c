@@ -513,9 +513,13 @@ StylesheetHandler::startElement(
 					break;
 
 				case StylesheetConstructionContext::ELEMNAME_NUMBER:
-					elem = new ElemNumber(m_constructionContext,
-										m_stylesheet,
-										atts, lineNumber, columnNumber);
+					elem = new ElemNumber(
+							m_constructionContext,
+							m_stylesheet,
+							atts,
+							lineNumber,
+							columnNumber,
+							m_stylesheet.getStylesheetRoot().getNextElemNumberID());
 					break;
           
 				case StylesheetConstructionContext::ELEMNAME_VARIABLE:

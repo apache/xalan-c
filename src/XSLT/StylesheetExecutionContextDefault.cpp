@@ -297,6 +297,8 @@ StylesheetExecutionContextDefault::setStylesheetRoot(const StylesheetRoot*	theSt
 	{
 		m_xsltProcessor->setExecutionContext(this);
 	}
+
+	m_countersTable.resize(theStylesheet->getElemNumberCount());
 }
 
 

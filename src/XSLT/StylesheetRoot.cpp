@@ -142,7 +142,8 @@ StylesheetRoot::StylesheetRoot(
 	m_needToBuildKeysTable(false),
 	m_outputEscapeURLs(true),
 	m_indentAmount(-1),
-	m_omitMETATag(false)
+	m_omitMETATag(false),
+	m_elemNumberNextID(0)
 {
 	// Our base class has already resolved the URI and pushed it on
 	// the back of the include stack, so get it from there...

@@ -90,16 +90,18 @@ appendBtoFList(
 int
 CountersTable::countNode(
 			StylesheetExecutionContext&		support,
-			const ElemNumber*				numberElem,
+			const ElemNumber&				numberElem,
 			XalanNode*						node)
 {
+	assert(numberElem.getID() < m_countersVector.size());
+
 	int		count = 0;
 
-	CounterVectorType&	counters = m_counterMap[numberElem];
+	CounterVectorType&	counters = m_countersVector[numberElem.getID()];
 
 	const CounterVectorType::size_type	nCounters = counters.size();
 
-	XalanNode*	target = numberElem->getTargetNode(support, node);
+	XalanNode*	target = numberElem.getTargetNode(support, node);
 
 	if(0 != target)
 	{
@@ -121,7 +123,7 @@ CountersTable::countNode(
 		// the backwards list (m_newFound) to the forwards list
 		// (counter.m_countNodes).
 		count = 0;
-		for(; 0 != target; target = numberElem->getPreviousNode(support, target))
+		for(; 0 != target; target = numberElem.getPreviousNode(support, target))
 		{   
 			// First time in, we should not have to check for previous counts, 
 			// since the original target node was already checked in the 
@@ -157,7 +159,7 @@ CountersTable::countNode(
 
 		// If we got to this point, then we didn't find a counter, so make 
 		// one and add it to the list.
-		counters.push_back(Counter(numberElem));
+		counters.push_back(Counter(&numberElem));
 
 		Counter&	counter = counters.back();
 

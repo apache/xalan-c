@@ -443,6 +443,18 @@ public:
 			StylesheetExecutionContext&		executionContext,
 			KeyTablesTableType&				theKeysTable) const;
 
+	unsigned long
+	getNextElemNumberID()
+	{
+		return m_elemNumberNextID++;
+	}
+
+	unsigned long
+	getElemNumberCount() const
+	{
+		return m_elemNumberNextID;
+	}
+
 private:
 
 	/**
@@ -509,6 +521,10 @@ private:
 	 */
 	bool						m_omitMETATag;
 
+	/**
+	 * This is set to true if we should omit the META tag in HTML output (the default is false)
+	 */
+	unsigned long				m_elemNumberNextID;
 
 	// Not implemented...
     StylesheetRoot(const StylesheetRoot&);

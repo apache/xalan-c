@@ -107,7 +107,8 @@ ElemNumber::ElemNumber(
 			Stylesheet&						stylesheetTree,
 			const AttributeList&			atts,
 			int								lineNumber,
-			int								columnNumber) :
+			int								columnNumber,
+			unsigned long					id) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
 						lineNumber,
@@ -121,7 +122,8 @@ ElemNumber::ElemNumber(
 	m_lang_avt(0),
 	m_lettervalue_avt(0),
 	m_groupingSeparator_avt(0),
-	m_groupingSize_avt(0)
+	m_groupingSize_avt(0),
+	m_id(id)
 	
 {
 	const unsigned int	nAttrs = atts.getLength();
@@ -499,7 +501,7 @@ ElemNumber::getCountString(
 
 		numberList[i] = ctable.countNode(
 							executionContext,
-							this,
+							*this,
 							target);
 	}
 
@@ -550,7 +552,7 @@ ElemNumber::getCountString(
 		if(eAny == m_level)
 		{
 			const int	theNumber =
-				ctable.countNode(executionContext, this, sourceNode);
+				ctable.countNode(executionContext, *this, sourceNode);
 
 			formatNumberList(
 				executionContext,
