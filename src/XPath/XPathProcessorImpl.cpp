@@ -166,6 +166,24 @@ XPathProcessorImpl::initMatchPattern(
 
 	nextToken();
 
+	// This is an optimization, but it's mostly a hacky
+	// bug fix. We don't handle match patterns with
+	// leading "//" correctly. Since the semantics
+	// of a match pattern with "//" are identical to
+	// those of one without "//", there's no point
+	// in even encoding them, so we just re-parse
+	// the XPath stripping off the leading "//".
+	// Parsing once _with_ the "//" ensures that
+	// we detect any errors with the unmodified
+	// match pattern.
+	bool	fStripAndReparse = false;
+
+	if (tokenIs(XalanUnicode::charSolidus) == true &&
+		lookahead(XalanUnicode::charSolidus, 1) == true)
+	{
+		fStripAndReparse = true;
+	}
+
 	Pattern();
 
 	if (length(m_token) != 0)
@@ -173,15 +191,26 @@ XPathProcessorImpl::initMatchPattern(
 		error("Extra illegal tokens!");
 	}
 
-	// Terminate for safety.
-	m_expression->appendOpCode(XPathExpression::eENDOP);
+	if (fStripAndReparse == true)
+	{
+		initMatchPattern(
+			pathObj,
+			substring(expression, 2),
+			prefixResolver,
+			locator);
+	}
+	else
+	{
+		// Terminate for safety.
+		m_expression->appendOpCode(XPathExpression::eENDOP);
 
-	m_expression->shrink();
+		m_expression->shrink();
 
-	m_xpath = 0;
-	m_expression = 0;
-	m_prefixResolver = 0;
-	m_locator = 0;
+		m_xpath = 0;
+		m_expression = 0;
+		m_prefixResolver = 0;
+		m_locator = 0;
+	}
 }
 
 
