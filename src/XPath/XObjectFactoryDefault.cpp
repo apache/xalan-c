@@ -350,7 +350,7 @@ XObjectFactoryDefault::createSpan(
 XObject*
 XObjectFactoryDefault::createSpan(
 			const MutableNodeRefList&	theValue,
-			bool						fOptimize)
+			bool						/* fOptimize */)
 {
 	XSpan* const	theXSpan = new XSpan(m_envSupport, m_support, theValue);
 
