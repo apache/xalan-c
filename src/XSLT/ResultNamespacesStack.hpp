@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -132,19 +132,10 @@ public:
 	popContext();
 
 	const XalanDOMString*
-	getNamespaceForPrefix(const XalanDOMString&		thePrefix) const
-	{
-		// Search vector from first element back
-		return XalanQName::getNamespaceForPrefix(m_resultNamespaces, thePrefix, true);
-	}
+	getNamespaceForPrefix(const XalanDOMString&		thePrefix) const;
 
 	const XalanDOMString*
-	getPrefixForNamespace(const XalanDOMString&		theNamespaceURI) const
-	{
-		// Search vector from first element back
-		return XalanQName::getPrefixForNamespace(m_resultNamespaces, theNamespaceURI, true);
-	}
-
+	getPrefixForNamespace(const XalanDOMString&		theNamespaceURI) const;
 
 	/**
 	 * See if the prefix has been mapped to a namespace in the current
@@ -159,13 +150,13 @@ public:
 	size_type
 	size() const
 	{
-		return m_resultNamespaces.size();
+		return m_resultNamespaces.size() - 1;
 	}
 
 	bool
 	empty() const
 	{
-		return m_resultNamespaces.empty();
+		return NamespacesStackType::const_iterator(m_stackPosition) == m_resultNamespaces.begin() ? true : false;
 	}
 
 private:
@@ -179,14 +170,18 @@ private:
 	ResultNamespacesStack&
 	operator=(const ResultNamespacesStack&);
 
-	enum { eDefaultCreateNewContextStackSize = 100 };
+	enum { eDefaultCreateNewContextStackSize = 25 };
 
 	/**
 	 * A stack to keep track of the result tree namespaces.
 	 */
-	NamespacesStackType		m_resultNamespaces;
+	NamespacesStackType				m_resultNamespaces;
 
-	BoolVectorType			m_createNewContextStack;
+	NamespacesStackType::iterator	m_stackBegin;
+
+	NamespacesStackType::iterator	m_stackPosition;
+
+	BoolVectorType					m_createNewContextStack;
 };
 
 

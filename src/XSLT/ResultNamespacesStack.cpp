@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,9 +61,15 @@
 
 
 ResultNamespacesStack::ResultNamespacesStack() :
-	m_resultNamespaces(),
+	m_resultNamespaces(1),
+	m_stackBegin(m_resultNamespaces.begin()),
+	m_stackPosition(m_stackBegin),
 	m_createNewContextStack()
 {
+	// m_resultNamespaces is initialized to a size of
+	// 1, so we always have a dummy entry at the
+	// beginning.  This makes the implementation
+	// much simpler.
 }
 
 
@@ -86,12 +92,20 @@ ResultNamespacesStack::addDeclaration(
 	// Check to see if we need to create a new context and do so if necessary...
 	if (m_createNewContextStack.back() == true)
 	{
-		m_resultNamespaces.resize(m_resultNamespaces.size() + 1);
+		++m_stackPosition;
+
+		if (m_stackPosition == m_resultNamespaces.end())
+		{
+			m_resultNamespaces.resize(m_resultNamespaces.size() + 1);
+
+			m_stackPosition = m_resultNamespaces.end() - 1;
+			m_stackBegin = m_resultNamespaces.begin();
+		}
 
 		m_createNewContextStack.back() = false;
 	}
 
-	NamespaceVectorType&	theCurrentNamespaces = m_resultNamespaces.back();
+	NamespaceVectorType&	theCurrentNamespaces = *m_stackPosition;
 
 	// Add a new namespace at the end of the current namespaces.
 	theCurrentNamespaces.resize(theCurrentNamespaces.size() + 1);
@@ -125,12 +139,51 @@ ResultNamespacesStack::popContext()
 
 	if (m_createNewContextStack.back() == false)
 	{
-		assert(m_resultNamespaces.empty() == false);
+		assert(m_resultNamespaces.empty() == false &&
+			   m_stackPosition != m_resultNamespaces.begin());
 
-		m_resultNamespaces.pop_back();
+		(*m_stackPosition).clear();
+
+		--m_stackPosition;
 	}
 
 	m_createNewContextStack.pop_back();
+}
+
+
+
+const XalanDOMString*
+ResultNamespacesStack::getNamespaceForPrefix(const XalanDOMString&	thePrefix) const
+{
+	if (m_stackPosition == m_stackBegin)
+	{
+		return 0;
+	}
+	else
+	{
+		return XalanQName::getNamespaceForPrefix(
+				m_stackBegin,
+				m_stackPosition + 1,
+				thePrefix);
+	}
+}
+
+
+
+const XalanDOMString*
+ResultNamespacesStack::getPrefixForNamespace(const XalanDOMString&	theNamespaceURI) const
+{
+	if (m_stackPosition == m_stackBegin)
+	{
+		return 0;
+	}
+	else
+	{
+		return XalanQName::getPrefixForNamespace(
+					m_stackBegin,
+					m_stackPosition + 1,
+					theNamespaceURI);
+	}
 }
 
 
@@ -145,7 +198,7 @@ ResultNamespacesStack::prefixIsPresentLocal(const XalanDOMString&	thePrefix)
 	if (m_createNewContextStack.back() == false)
 	{
 		const NamespaceVectorType&	theNamespaces =
-			m_resultNamespaces.back();
+			*m_stackPosition;
 
 		NamespaceVectorType::const_iterator			i = theNamespaces.begin();
 		const NamespaceVectorType::const_iterator	theEnd = theNamespaces.end();
@@ -175,7 +228,13 @@ ResultNamespacesStack::prefixIsPresentLocal(const XalanDOMString&	thePrefix)
 void
 ResultNamespacesStack::clear()
 {
-	m_resultNamespaces.clear();
+	// Since we always keep one dummy entry at the beginning,
+	// swap with an OutputContextStackType instance of size 1.
+	NamespacesStackType(1).swap(m_resultNamespaces);
+
+	m_stackBegin = m_resultNamespaces.begin();
+
+	m_stackPosition = m_stackBegin;
 
 	m_createNewContextStack.clear();
 }
