@@ -106,7 +106,7 @@ public:
 	*                    function
    * @return pointer to result of the query in an XObject
    */
-	virtual XObject*
+	virtual const XObject*
 	connectToNodes(
 			const XPath&					xpath,
 			XPathExecutionContext&			executionContext,
@@ -125,7 +125,7 @@ public:
 	 * @param opPos   current position in the xpath.m_opMap array
 	 * @return result of the query in a pointer to an XObject
 	 */
-	virtual XObject*
+	virtual const XObject*
 	locationPath(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,

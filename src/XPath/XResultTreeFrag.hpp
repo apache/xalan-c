@@ -89,15 +89,9 @@ public:
 	/**
 	 * Construct an XResultTreeFrag object from a result tree fragment
 	 * 
-	 * @param envSupport XPath environment support class instance
-	 * @param support    XPath support class instance
 	 * @param val        source result tree fragment.  The XResultTreeFrag instance will adopt the object.
-	 * @param deepClone  true to copy all subobjects, default is false
 	 */
-	XResultTreeFrag(
-			XPathEnvSupport&		envSupport,
-			XPathSupport&			support,
-			ResultTreeFragBase*		val);
+	XResultTreeFrag(ResultTreeFragBase*		val);
 
 	/**
 	 * Construct an XResultTreeFrag object from another
@@ -137,10 +131,10 @@ public:
 	str() const;
 
 	virtual const ResultTreeFragBase&
-	rtree() const;
+	rtree(XPathExecutionContext&	executionContext) const;
 
-	virtual ResultTreeFragBase&
-	rtree();
+	virtual const ResultTreeFragBase&
+	rtree() const;
 
 	virtual const NodeRefListBase&
 	nodeset() const;
@@ -150,9 +144,6 @@ public:
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
-
-	virtual bool
-	equals(const XObject&	theRHS) const;
 
 private:
 
@@ -166,9 +157,6 @@ private:
 
 	virtual unsigned int
 	indexOf(const XalanNode*	theNode) const;
-
-	virtual XPathSupport*
-	getSupport() const;
 
 	virtual NodeRefListBase*
 	clone() const;

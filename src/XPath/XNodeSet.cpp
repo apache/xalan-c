@@ -71,16 +71,12 @@
 #include "ResultTreeFrag.hpp"
 #include "MutableNodeRefList.hpp"
 #include "XObjectTypeCallback.hpp"
-#include "XPathEnvSupport.hpp"
-#include "XPathSupport.hpp"
+#include "XPathExecutionContext.hpp"
 
 
 
-XNodeSet::XNodeSet(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			NodeRefListBase*	value) :
-	XObject(&envSupport, &support),
+XNodeSet::XNodeSet(NodeRefListBase*		value) :
+	XObject(),
 	m_value(value == 0 ? new NodeRefList : value),
 	m_cachedStringValue(),
 	m_cachedNumberValue(0.0),
@@ -91,32 +87,14 @@ XNodeSet::XNodeSet(
 
 
 
-#if 0
-XNodeSet::XNodeSet(
-			XPathEnvSupport&			envSupport,
-			XPathSupport&				support,
-			const MutableNodeRefList&	value) :
-	XObject(&envSupport, &support),
-	m_value(value),
-	m_resultTreeFrag(),
-	m_cachedStringValue(),
-	m_cachedNumberValue(0.0)
-{
-}
-#endif
-
-
-
 MutableNodeRefList*
-createNodeListWithNode(
-			XPathSupport&		support,
-			XalanNode*			node)
+createNodeListWithNode(XalanNode*	node)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::auto_ptr;
 #endif
 
-	auto_ptr<MutableNodeRefList>	resultNodeList(new MutableNodeRefList(&support));
+	auto_ptr<MutableNodeRefList>	resultNodeList(new MutableNodeRefList);
 
 	resultNodeList->addNode(node);
 
@@ -125,12 +103,9 @@ createNodeListWithNode(
 
 
 
-XNodeSet::XNodeSet(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			XalanNode&			value) :
-	XObject(&envSupport, &support),
-	m_value(createNodeListWithNode(support, &value)),
+XNodeSet::XNodeSet(XalanNode&	value) :
+	XObject(),
+	m_value(createNodeListWithNode(&value)),
 	m_resultTreeFrag(),
 	m_cachedStringValue(),
 	m_cachedNumberValue(0.0)
@@ -215,8 +190,6 @@ XNodeSet::boolean() const
 XalanDOMString
 XNodeSet::str() const
 {
-	assert(m_support != 0);
-
 	if (isEmpty(m_cachedStringValue) == true &&
 		m_value->getLength() > 0)
 	{
@@ -237,9 +210,9 @@ XNodeSet::str() const
 		else
 		{
 #if defined(XALAN_NO_MUTABLE)
-			((XNodeSet*)this)->m_cachedStringValue = m_support->getNodeData(*theNode);
+			((XNodeSet*)this)->m_cachedStringValue = theNode->getXSLTData();
 #else
-			m_cachedStringValue = m_support->getNodeData(*theNode);
+			m_cachedStringValue = theNode->getXSLTData();
 #endif
 		}
 	}
@@ -256,18 +229,15 @@ using std::auto_ptr;
 
 
 const ResultTreeFragBase&
-XNodeSet::rtree() const
+XNodeSet::rtree(XPathExecutionContext&	executionContext) const
 {
-	assert(m_support != 0);
-	assert(m_envSupport != 0);
-
 	if (m_resultTreeFrag.get() == 0)
 	{
-		assert(m_envSupport->getDOMFactory() != 0);
+		XalanDocument* const	theFactory = executionContext.getDOMFactory();
+		assert(theFactory != 0);
 
 		ResultTreeFrag* const	theFrag =
-			new ResultTreeFrag(*m_envSupport->getDOMFactory(),
-							   *m_support);
+			new ResultTreeFrag(*theFactory);
 
 		const int	nNodes = m_value->getLength();
 
@@ -289,39 +259,6 @@ XNodeSet::rtree() const
 	    m_resultTreeFrag.reset(theFrag);
 #endif
 #endif
-	}
-
-	return *m_resultTreeFrag.get();
-}
-
-
-
-ResultTreeFragBase&
-XNodeSet::rtree()
-{
-	assert(m_support != 0);
-	assert(m_envSupport != 0);
-
-	if (m_resultTreeFrag.get() == 0)
-	{
-		assert(m_envSupport->getDOMFactory() != 0);
-
-		ResultTreeFrag* const	theFrag =
-			new ResultTreeFrag(*m_envSupport->getDOMFactory(),
-							   *m_support);
-
-#if defined(XALAN_OLD_AUTO_PTR)
-		m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
-#else
-	    m_resultTreeFrag.reset(theFrag);
-#endif
-
-		const int	nNodes = m_value->getLength();
-
-		for(int i = 0; i < nNodes; i++)
-		{
-			m_resultTreeFrag->appendChild(m_value->item(i)->cloneNode(true));
-		}
 	}
 
 	return *m_resultTreeFrag.get();

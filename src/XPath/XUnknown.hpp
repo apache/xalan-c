@@ -80,13 +80,9 @@ public:
 	/**
 	 * Construct an XUnknown object from a string.
 	 * 
-	 * @param envSupport XPath environment support class instance
 	 * @param name       source string
 	 */
-	XUnknown(
-			XPathEnvSupport&		envSupport,
-			XPathSupport&			support,
-			const XalanDOMString&	name);
+	XUnknown(const XalanDOMString&	name);
 
 	XUnknown(const XUnknown&	source);
 
@@ -117,23 +113,11 @@ public:
 	virtual XalanDOMString
 	str() const;
 
-	virtual const ResultTreeFragBase&
-	rtree() const;
-
-	virtual ResultTreeFragBase&
-	rtree();
-
-	virtual const NodeRefListBase&
-	nodeset() const;
-
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
-
-	virtual bool
-	equals(const XObject&	theRHS) const;
 
 private:
 

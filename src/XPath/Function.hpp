@@ -89,9 +89,9 @@ public:
 	}
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XObject*>		XObjectArgVectorType;
+	typedef vector<const XObject*>			XObjectArgVectorType;
 #else
-	typedef std::vector<XObject*>	XObjectArgVectorType;
+	typedef std::vector<const XObject*>		XObjectArgVectorType;
 #endif
 
 	/**

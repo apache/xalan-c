@@ -68,7 +68,8 @@
 
 
 
-class XPathSupport;
+class XPathExecutionContext;
+class XalanDocument;
 class XalanNodeList;
 
 
@@ -83,11 +84,9 @@ public:
 
 	/**
 	 * Construct an empty mutable node list.
-	 * 
-	 * @param theSupport XPath support class instance
 	 */
 	explicit
-	MutableNodeRefList(XPathSupport*	theSupport = 0);
+	MutableNodeRefList();
 
 	/**
 	 * Construct a mutable node list from another list.
@@ -124,7 +123,7 @@ public:
 	 * 
 	 * @param n node to add
 	 */
-	virtual void
+	void
 	addNode(XalanNode*	n);
 
 	/**
@@ -133,7 +132,7 @@ public:
 	 * @param n   node to insert
 	 * @param pos position of insertion
 	 */
-	virtual void
+	void
 	insertNode(
 			XalanNode*		n,
 			unsigned int	pos);
@@ -143,7 +142,7 @@ public:
 	 * 
 	 * @param n   node to insert
 	 */
-	virtual void
+	void
 	removeNode(const XalanNode*		n);
 
 	/**
@@ -151,13 +150,13 @@ public:
 	 * 
 	 * @param pos position of node in list
 	 */
-	virtual void
+	void
 	removeNode(unsigned int		pos);
 
 	/**
 	 * Remove all nodes.
 	 */
-	virtual void
+	void
 	clear();
 
 	/**
@@ -166,7 +165,7 @@ public:
 	 * @param pos position of node to modify
 	 * @param n   node to insert, default is empty node
 	 */
-	virtual void
+	void
 	setNode(unsigned int	pos,
 			XalanNode*		n = 0);
 
@@ -176,7 +175,7 @@ public:
 	 * 
 	 * @param nodelist node list to add
 	 */
-	virtual void
+	void
 	addNodes(const XalanNodeList&	nodelist);
 
 	/**
@@ -185,44 +184,47 @@ public:
 	 * 
 	 * @param nodelist node list to add
 	 */
-	virtual void
+	void
 	addNodes(const NodeRefListBase&		nodelist);
 
 	/**
 	 * Copy NodeList members into this nodelist, adding in document order.
 	 * 
 	 * @param nodelist node list to add
+	 * @param executionContext the current execution context
 	 */
 	virtual void
-	addNodesInDocOrder(const XalanNodeList&		nodelist);
+	addNodesInDocOrder(
+			const XalanNodeList&	nodelist,
+			XPathExecutionContext&	executionContext);
   
 	/**
 	 * Copy NodeList members into this nodelist, adding in document order.
 	 * 
 	 * @param nodelist node list to add
+	 * @param executionContext the current execution context
 	 */
 	virtual void
-	addNodesInDocOrder(const NodeRefListBase&	nodelist);
+	addNodesInDocOrder(
+			const NodeRefListBase&	nodelist,
+			XPathExecutionContext&	executionContext);
   
 	/**
 	 * Add a node into list where it should occur in document order.
 	 *
 	 * @param node node object to add
-	 * @param test true if we should test for doc order
+	 * @param executionContext the current execution context
 	 */
 	virtual void
 	addNodeInDocOrder(
-			XalanNode*	node,
-			bool		test);
+			XalanNode*				node,
+			XPathExecutionContext&	executionContext);
 
 	/**
-	 * Clear any null entrees in the node list.
+	 * Clear any null entries in the node list.
 	 */
-	virtual void
+	void
 	clearNulls();
-
-	virtual XPathSupport*
-	getSupport() const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual NodeRefListBase*
@@ -231,9 +233,7 @@ public:
 #endif
 	clone() const;
 
-private:
-
-	XPathSupport*	m_support;
+	typedef NodeListVectorType::iterator	NodeListIteratorType;
 };
 
 

@@ -127,6 +127,9 @@ public:
 	virtual XObjectFactory&
 	getXObjectFactory() const;
 
+	virtual bool
+	isIgnorableWhitespace(const XalanText&	node) const;
+
 	virtual XalanDOMString
 	getNamespaceOfNode(const XalanNode&		n) const;
 
@@ -180,7 +183,7 @@ public:
 	virtual void
 	popArgVector();
 
-	virtual XObject*
+	virtual const XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
@@ -232,7 +235,7 @@ public:
 			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver);
 
-	virtual XObject*
+	virtual const XObject*
 	getVariable(
 			const QName&	name) const;
 
@@ -244,6 +247,9 @@ public:
 
 	virtual XalanDOMString
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
+
+	virtual XalanDocument*
+	getDOMFactory() const;
 
 	virtual XalanDOMString
 	findURIFromDoc(const XalanDocument*		owner) const;

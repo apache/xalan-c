@@ -93,8 +93,9 @@ class XMLURL;
 class XObject;
 class XObjectFactory;
 class XalanDocument;
-class XalanNode;
 class XalanElement;
+class XalanNode;
+class XalanText;
 
 
 
@@ -162,6 +163,16 @@ public:
 	 */
 	virtual XObjectFactory&
 	getXObjectFactory() const = 0;
+
+	/**
+	 * Tell if the node is ignorable whitespace. This should be in the DOM.
+	 * Return false if the parser doesn't handle this.
+	 * 
+	 * @param node	text node queried
+	 * @return true if white space can be ignored
+	 */
+	virtual bool
+	isIgnorableWhitespace(const XalanText&	node) const = 0;
 
 	/**
 	 * Retrieve namespace corresponding to a DOM node.
@@ -327,7 +338,7 @@ public:
 	 * @param argVec        vector of arguments to function
 	 * @return pointer to XObject result
 	 */
-	virtual XObject*
+	virtual const XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
@@ -457,6 +468,16 @@ public:
 			return m_mutableNodeRefList;
 		}
 
+		BorrowReturnMutableNodeRefList
+		clone() const
+		{
+			BorrowReturnMutableNodeRefList	theResult(m_xpathExecutionContext);
+
+			*theResult = *m_mutableNodeRefList;
+
+			return theResult;
+		}
+
 	private:
 
 		XPathExecutionContext&	m_xpathExecutionContext;
@@ -545,7 +566,7 @@ public:
 	 * @param theName name of variable
 	 * @return pointer to an XObject if the variable was found, 0 if it was not
 	 */
-	virtual XObject*
+	virtual const XObject*
 	getVariable(const QName&	name) const = 0;
 
 	/**
@@ -606,6 +627,14 @@ public:
 	 */
 	virtual XalanDOMString
 	findURIFromDoc(const XalanDocument*		owner) const = 0;
+
+	/**
+	 * Get a DOM document, primarily for creating result tree fragments.
+	 *
+	 * @return DOM document
+	 */
+	virtual XalanDocument*
+	getDOMFactory() const = 0;
 
 	/**
 	 * The getUnparsedEntityURI function returns the URI of the unparsed

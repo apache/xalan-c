@@ -98,7 +98,7 @@ public:
 
 	// These methods are inherited from XLocator ...
 
-	virtual XObject*
+	virtual const XObject*
 	connectToNodes(
 			const XPath&					xpath,
 			XPathExecutionContext&			executionContext,
@@ -106,7 +106,7 @@ public:
 			int 							opPos,
 			const ConnectArgsVectorType&	connectArgs);
   
-	virtual XObject*
+	virtual const XObject*
 	locationPath(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -298,6 +298,13 @@ protected:
 			int 					opPos,
 			MutableNodeRefList& 	subQueryResults,
 			int&					endPredicatesPos);
+
+	double
+	handleFoundIndex(
+			const XPath&			xpath,
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				localContext,
+			int 					startOpPos);
 
 private:
 

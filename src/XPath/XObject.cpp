@@ -63,6 +63,10 @@
 
 
 
+#include <XalanDOM/XalanNode.hpp>
+
+
+
 #include <PlatformSupport/DoubleSupport.hpp>
 
 
@@ -72,25 +76,16 @@
 
 
 #include "NodeRefListBase.hpp"
-#include "XPathEnvSupport.hpp"
-#include "XPathException.hpp"
-#include "XPathSupport.hpp"
 
 
 
-XObject::XObject(
-			XPathEnvSupport*	envSupport,
-			XPathSupport*		support) :
-	m_envSupport(envSupport),
-	m_support(support)
+XObject::XObject()
 {
 }
 
 
 
-XObject::XObject(const XObject&		source) :
-	m_envSupport(source.m_envSupport),
-	m_support(source.m_support)
+XObject::XObject(const XObject&		/* source */)
 {
 }
 
@@ -102,60 +97,67 @@ XObject::~XObject()
 
 
 
-void
-XObject::error(const XalanDOMString&	msg) const
+double
+XObject::num() const
 {
-	const bool	shouldThrow =
-		m_envSupport->problem(XPathEnvSupport::eXPATHProcessor,
-							  XPathEnvSupport::eError,
-#if defined(XALAN_OLD_STYLE_CASTS)
-							  (XalanNode*)0,
-#else
-							  static_cast<XalanNode*>(0),
-#endif
-							  0,
-							  msg,
-							  0,
-							  0);
+	throw XObjectInvalidCastException(getTypeString(), XALAN_STATIC_UCODE_STRING("number"));
 
-	if(shouldThrow == true)
-	{
-		throw XPathException(msg);
-	}
+	// This is just a dummy value to satisfy the compiler.
+	return 0.0;
 }
 
 
 
-XPathSupport*
-getSupport(const XObject&			theXObject,
-		   const NodeRefListBase&	theNodeList)
+bool
+XObject::boolean() const
 {
-	XPathSupport*	theSupport = theXObject.getSupport();
+	throw XObjectInvalidCastException(getTypeString(), XALAN_STATIC_UCODE_STRING("boolean"));
 
-	if (theSupport == 0)
-	{
-		theNodeList.getSupport();
-	}
-
-	return theSupport;
+	// This is just a dummy value to satisfy the compiler.
+	return false;
 }
 
+
+
+XalanDOMString
+XObject::str() const
+{
+	throw XObjectInvalidCastException(getTypeString(), XALAN_STATIC_UCODE_STRING("string"));
+
+	// This is just a dummy value to satisfy the compiler.
+	return XalanDOMString();
+}
+
+
+
+const ResultTreeFragBase&
+XObject::rtree(XPathExecutionContext&	/* executionContext */) const
+{
+	throw XObjectInvalidCastException(getTypeString(), XALAN_STATIC_UCODE_STRING("result tree fragment"));
+
+	// This is just a dummy value to satisfy the compiler.
+	return *static_cast<ResultTreeFragBase*>(0);
+}
+
+
+
+const NodeRefListBase&
+XObject::nodeset() const
+{
+	throw XObjectInvalidCastException(getTypeString(), XALAN_STATIC_UCODE_STRING("node set"));
+
+	// error will throw, so this is just a dummy
+	// value to satisfy the compiler.
+	return *static_cast<NodeRefListBase*>(0);
+}
 
 
 
 const XalanDOMString
 getStringFromNode(
-			const XalanNode&	theNode,
-			XPathSupport*		theXPathSupport)
+			const XalanNode&		theNode)
 {
-	if (theXPathSupport != 0)
-	{
-		return theXPathSupport->getNodeData(theNode);
-	}
-	else
-	{
-		return DOMServices::getNodeData(theNode);
-	}
+	return theNode.getXSLTData();
 }
 
 
@@ -163,30 +165,24 @@ getStringFromNode(
 struct
 getStringFromNodeFunction
 {
-	getStringFromNodeFunction(XPathSupport*	theSupport = 0) :
-		m_support(theSupport)
+	getStringFromNodeFunction()
 	{
 	}
 
 	const XalanDOMString
 	operator()(const XalanNode&		theNode) const
 	{
-		return getStringFromNode(theNode, m_support);
+		return getStringFromNode(theNode);
 	}
-
-private:
-
-	XPathSupport* const		m_support;
 };
 
 
 
 double
 getNumberFromNode(
-			const XalanNode&	theNode,
-			XPathSupport*		theXPathSupport)
+			const XalanNode&		theNode)
 {
-	return DoubleSupport::toDouble(getStringFromNode(theNode, theXPathSupport));
+	return DoubleSupport::toDouble(getStringFromNode(theNode));
 }
 
 
@@ -194,20 +190,15 @@ getNumberFromNode(
 struct
 getNumberFromNodeFunction
 {
-	getNumberFromNodeFunction(XPathSupport*	theSupport = 0) :
-		m_support(theSupport)
+	getNumberFromNodeFunction()
 	{
 	}
 
 	double
 	operator()(const XalanNode&		theNode) const
 	{
-		return getNumberFromNode(theNode, m_support);
+		return getNumberFromNode(theNode);
 	}
-
-private:
-
-	XPathSupport* const		m_support;
 };
 
 
@@ -300,14 +291,9 @@ bool
 equalNodeSet(
 			const XObject&			theLHS,
 			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType,
-			XPathSupport*			theXPathSupport)
+			XObject::eObjectType	theRHSType)
 {
 	bool	theResult = false;
-
-	XPathSupport* const		theSupport = theXPathSupport != 0 ?
-								theXPathSupport :
-								theRHS.getSupport();
 
 	if(theRHSType == XObject::eTypeNodeSet)
 	{
@@ -315,7 +301,7 @@ equalNodeSet(
 		theResult = doCompareNodeSets(
 				theLHS.nodeset(),
 				theRHS.nodeset(),
-				getStringFromNodeFunction(theSupport),
+				getStringFromNodeFunction(),
 				DOMStringEqualsFunction());
 
 	}
@@ -343,7 +329,7 @@ equalNodeSet(
 
 		theResult = doCompare(
 				theLHS.nodeset(),
-				getNumberFromNodeFunction(theSupport),
+				getNumberFromNodeFunction(),
 				theRHS.num(),
 				DoubleSupport::equalFunction());
 	}
@@ -357,7 +343,7 @@ equalNodeSet(
 			// Compare as number...
 			theResult = doCompare(
 					theLHS.nodeset(),
-					getNumberFromNodeFunction(theSupport),
+					getNumberFromNodeFunction(),
 					theRHS.num(),
 					DoubleSupport::equalFunction());
 		}
@@ -366,7 +352,7 @@ equalNodeSet(
 			// Compare as string...
 			theResult = doCompare(
 					theLHS.nodeset(),
-					getStringFromNodeFunction(theSupport),
+					getStringFromNodeFunction(),
 					theRHS.str(),
 					DOMStringEqualsFunction());
 		}
@@ -381,7 +367,7 @@ equalNodeSet(
 		// string is true. 
 		theResult = doCompare(
 				theLHS.nodeset(),
-				getStringFromNodeFunction(theSupport),
+				getStringFromNodeFunction(),
 				theRHS.str(),
 				DOMStringEqualsFunction());
 	}
@@ -399,14 +385,9 @@ bool
 notEqualNodeSet(
 			const XObject&			theLHS,
 			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType,
-			XPathSupport*			theXPathSupport)
+			XObject::eObjectType	theRHSType)
 {
 	bool	theResult = false;
-
-	XPathSupport* const		theSupport = theXPathSupport != 0 ?
-								theXPathSupport :
-								theRHS.getSupport();
 
 	if(theRHSType == XObject::eTypeNodeSet)
 	{
@@ -414,7 +395,7 @@ notEqualNodeSet(
 		theResult = doCompareNodeSets(
 				theLHS.nodeset(),
 				theRHS.nodeset(),
-				getStringFromNodeFunction(theSupport),
+				getStringFromNodeFunction(),
 				DOMStringNotEqualsFunction());
 
 	}
@@ -442,7 +423,7 @@ notEqualNodeSet(
 
 		theResult = doCompare(
 				theLHS.nodeset(),
-				getNumberFromNodeFunction(theSupport),
+				getNumberFromNodeFunction(),
 				theRHS.num(),
 				DoubleSupport::notEqualFunction());
 	}
@@ -456,7 +437,7 @@ notEqualNodeSet(
 			// Compare as number...
 			theResult = doCompare(
 					theLHS.nodeset(),
-					getNumberFromNodeFunction(theSupport),
+					getNumberFromNodeFunction(),
 					theRHS.num(),
 					DoubleSupport::notEqualFunction());
 		}
@@ -465,7 +446,7 @@ notEqualNodeSet(
 			// Compare as string...
 			theResult = doCompare(
 					theLHS.nodeset(),
-					getStringFromNodeFunction(theSupport),
+					getStringFromNodeFunction(),
 					theRHS.str(),
 					DOMStringNotEqualsFunction());
 		}
@@ -480,7 +461,7 @@ notEqualNodeSet(
 		// string is true. 
 		theResult = doCompare(
 				theLHS.nodeset(),
-				getStringFromNodeFunction(theSupport),
+				getStringFromNodeFunction(),
 				theRHS.str(),
 				DOMStringNotEqualsFunction());
 	}
@@ -498,14 +479,9 @@ bool
 lessThanNodeSet(
 			const XObject&			theLHS,
 			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType,
-			XPathSupport*			theXPathSupport)
+			XObject::eObjectType	theRHSType)
 {
 	bool	theResult = false;
-
-	XPathSupport* const		theSupport = theXPathSupport != 0 ?
-								theXPathSupport :
-								theRHS.getSupport();
 
 	if(theRHSType == XObject::eTypeNodeSet)
 	{
@@ -513,7 +489,7 @@ lessThanNodeSet(
 		theResult = doCompareNodeSets(
 				theLHS.nodeset(),
 				theRHS.nodeset(),
-				getStringFromNodeFunction(theSupport),
+				getStringFromNodeFunction(),
 				DOMStringLessThanFunction());
 
 	}
@@ -541,7 +517,7 @@ lessThanNodeSet(
 
 		theResult = doCompare(
 				theLHS.nodeset(),
-				getNumberFromNodeFunction(theSupport),
+				getNumberFromNodeFunction(),
 				theRHS.num(),
 				DoubleSupport::lessThanFunction());
 	}
@@ -555,7 +531,7 @@ lessThanNodeSet(
 			// Compare as number...
 			theResult = doCompare(
 					theLHS.nodeset(),
-					getNumberFromNodeFunction(theSupport),
+					getNumberFromNodeFunction(),
 					theRHS.num(),
 					DoubleSupport::lessThanFunction());
 		}
@@ -564,7 +540,7 @@ lessThanNodeSet(
 			// Compare as string...
 			theResult = doCompare(
 					theLHS.nodeset(),
-					getStringFromNodeFunction(theSupport),
+					getStringFromNodeFunction(),
 					theRHS.str(),
 					DOMStringLessThanFunction());
 		}
@@ -579,7 +555,7 @@ lessThanNodeSet(
 		// string is true. 
 		theResult = doCompare(
 				theLHS.nodeset(),
-				getStringFromNodeFunction(theSupport),
+				getStringFromNodeFunction(),
 				theRHS.str(),
 				DOMStringLessThanFunction());
 	}
@@ -597,14 +573,9 @@ bool
 lessThanOrEqualNodeSet(
 			const XObject&			theLHS,
 			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType,
-			XPathSupport*			theXPathSupport)
+			XObject::eObjectType	theRHSType)
 {
 	bool	theResult = false;
-
-	XPathSupport* const		theSupport = theXPathSupport != 0 ?
-								theXPathSupport :
-								theRHS.getSupport();
 
 	if(theRHSType == XObject::eTypeNodeSet)
 	{
@@ -612,7 +583,7 @@ lessThanOrEqualNodeSet(
 		theResult = doCompareNodeSets(
 				theLHS.nodeset(),
 				theRHS.nodeset(),
-				getStringFromNodeFunction(theSupport),
+				getStringFromNodeFunction(),
 				DOMStringLessThanOrEqualFunction());
 
 	}
@@ -640,7 +611,7 @@ lessThanOrEqualNodeSet(
 
 		theResult = doCompare(
 				theLHS.nodeset(),
-				getNumberFromNodeFunction(theSupport),
+				getNumberFromNodeFunction(),
 				theRHS.num(),
 				DoubleSupport::lessThanOrEqualFunction());
 	}
@@ -654,7 +625,7 @@ lessThanOrEqualNodeSet(
 			// Compare as number...
 			theResult = doCompare(
 					theLHS.nodeset(),
-					getNumberFromNodeFunction(theSupport),
+					getNumberFromNodeFunction(),
 					theRHS.num(),
 					DoubleSupport::lessThanOrEqualFunction());
 		}
@@ -663,7 +634,7 @@ lessThanOrEqualNodeSet(
 			// Compare as string...
 			theResult = doCompare(
 					theLHS.nodeset(),
-					getStringFromNodeFunction(theSupport),
+					getStringFromNodeFunction(),
 					theRHS.str(),
 					DOMStringLessThanOrEqualFunction());
 		}
@@ -678,7 +649,7 @@ lessThanOrEqualNodeSet(
 		// string is true. 
 		theResult = doCompare(
 				theLHS.nodeset(),
-				getStringFromNodeFunction(theSupport),
+				getStringFromNodeFunction(),
 				theRHS.str(),
 				DOMStringLessThanOrEqualFunction());
 	}
@@ -696,14 +667,9 @@ bool
 greaterThanNodeSet(
 			const XObject&			theLHS,
 			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType,
-			XPathSupport*			theXPathSupport)
+			XObject::eObjectType	theRHSType)
 {
 	bool	theResult = false;
-
-	XPathSupport* const		theSupport = theXPathSupport != 0 ?
-								theXPathSupport :
-								theRHS.getSupport();
 
 	if(theRHSType == XObject::eTypeNodeSet)
 	{
@@ -711,7 +677,7 @@ greaterThanNodeSet(
 		theResult = doCompareNodeSets(
 				theLHS.nodeset(),
 				theRHS.nodeset(),
-				getStringFromNodeFunction(theSupport),
+				getStringFromNodeFunction(),
 				DOMStringGreaterThanFunction());
 
 	}
@@ -739,7 +705,7 @@ greaterThanNodeSet(
 
 		theResult = doCompare(
 				theLHS.nodeset(),
-				getNumberFromNodeFunction(theSupport),
+				getNumberFromNodeFunction(),
 				theRHS.num(),
 				DoubleSupport::greaterThanFunction());
 	}
@@ -753,7 +719,7 @@ greaterThanNodeSet(
 			// Compare as number...
 			theResult = doCompare(
 					theLHS.nodeset(),
-					getNumberFromNodeFunction(theSupport),
+					getNumberFromNodeFunction(),
 					theRHS.num(),
 					DoubleSupport::greaterThanFunction());
 		}
@@ -762,7 +728,7 @@ greaterThanNodeSet(
 			// Compare as string...
 			theResult = doCompare(
 					theLHS.nodeset(),
-					getStringFromNodeFunction(theSupport),
+					getStringFromNodeFunction(),
 					theRHS.str(),
 					DOMStringGreaterThanFunction());
 		}
@@ -777,7 +743,7 @@ greaterThanNodeSet(
 		// string is true. 
 		theResult = doCompare(
 				theLHS.nodeset(),
-				getStringFromNodeFunction(theSupport),
+				getStringFromNodeFunction(),
 				theRHS.str(),
 				DOMStringGreaterThanFunction());
 	}
@@ -795,14 +761,9 @@ bool
 greaterThanOrEqualNodeSet(
 			const XObject&			theLHS,
 			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType,
-			XPathSupport*			theXPathSupport)
+			XObject::eObjectType	theRHSType)
 {
 	bool	theResult = false;
-
-	XPathSupport* const		theSupport = theXPathSupport != 0 ?
-								theXPathSupport :
-								theRHS.getSupport();
 
 	if(theRHSType == XObject::eTypeNodeSet)
 	{
@@ -810,7 +771,7 @@ greaterThanOrEqualNodeSet(
 		theResult = doCompareNodeSets(
 				theLHS.nodeset(),
 				theRHS.nodeset(),
-				getStringFromNodeFunction(theSupport),
+				getStringFromNodeFunction(),
 				DOMStringGreaterThanOrEqualFunction());
 
 	}
@@ -838,7 +799,7 @@ greaterThanOrEqualNodeSet(
 
 		theResult = doCompare(
 				theLHS.nodeset(),
-				getNumberFromNodeFunction(theSupport),
+				getNumberFromNodeFunction(),
 				theRHS.num(),
 				DoubleSupport::greaterThanOrEqualFunction());
 	}
@@ -852,7 +813,7 @@ greaterThanOrEqualNodeSet(
 			// Compare as number...
 			theResult = doCompare(
 					theLHS.nodeset(),
-					getNumberFromNodeFunction(theSupport),
+					getNumberFromNodeFunction(),
 					theRHS.num(),
 					DoubleSupport::greaterThanOrEqualFunction());
 		}
@@ -861,7 +822,7 @@ greaterThanOrEqualNodeSet(
 			// Compare as string...
 			theResult = doCompare(
 					theLHS.nodeset(),
-					getStringFromNodeFunction(theSupport),
+					getStringFromNodeFunction(),
 					theRHS.str(),
 					DOMStringGreaterThanOrEqualFunction());
 		}
@@ -876,7 +837,7 @@ greaterThanOrEqualNodeSet(
 		// string is true. 
 		theResult = doCompare(
 				theLHS.nodeset(),
-				getStringFromNodeFunction(theSupport),
+				getStringFromNodeFunction(),
 				theRHS.str(),
 				DOMStringGreaterThanOrEqualFunction());
 	}
@@ -911,11 +872,11 @@ XObject::equals(const XObject&	theRHS) const
 		}
 		else if (theLHSType == eTypeNodeSet)
 		{
-			return equalNodeSet(*this, theRHS, theRHS.getType(), m_support);
+			return equalNodeSet(*this, theRHS, theRHS.getType());
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return equalNodeSet(theRHS, *this, theLHSType, m_support);
+			return equalNodeSet(theRHS, *this, theLHSType);
 		}
 		else
 		{
@@ -940,7 +901,8 @@ XObject::equals(const XObject&	theRHS) const
 
 
 bool
-XObject::notEquals(const XObject&	theRHS) const
+XObject::notEquals(
+			const XObject&	theRHS) const
 {
 	if (this == &theRHS)
 	{
@@ -960,11 +922,11 @@ XObject::notEquals(const XObject&	theRHS) const
 		}
 		else if (theLHSType == eTypeNodeSet)
 		{
-			return notEqualNodeSet(*this, theRHS, theRHS.getType(), m_support);
+			return notEqualNodeSet(*this, theRHS, theRHS.getType());
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return notEqualNodeSet(theRHS, *this, theLHSType, m_support);
+			return notEqualNodeSet(theRHS, *this, theLHSType);
 		}
 		else
 		{
@@ -1005,11 +967,11 @@ XObject::lessThan(const XObject&	theRHS) const
 		}
 		else if (theLHSType == eTypeNodeSet)
 		{
-			return lessThanNodeSet(*this, theRHS, theRHS.getType(), m_support);
+			return lessThanNodeSet(*this, theRHS, theRHS.getType());
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return greaterThanNodeSet(theRHS, *this, theLHSType, theRHS.getSupport());
+			return greaterThanNodeSet(theRHS, *this, theLHSType);
 		}
 		else
 		{
@@ -1021,7 +983,7 @@ XObject::lessThan(const XObject&	theRHS) const
 
 
 bool
-XObject::lessThanOrEqual(const XObject&	theRHS) const
+XObject::lessThanOrEqual(const XObject&		theRHS) const
 {
 	if (this == &theRHS)
 	{
@@ -1037,11 +999,11 @@ XObject::lessThanOrEqual(const XObject&	theRHS) const
 		}
 		else if (theLHSType == eTypeNodeSet)
 		{
-			return lessThanOrEqualNodeSet(*this, theRHS, theRHS.getType(), m_support);
+			return lessThanOrEqualNodeSet(*this, theRHS, theRHS.getType());
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return greaterThanOrEqualNodeSet(theRHS, *this, theLHSType, theRHS.getSupport());
+			return greaterThanOrEqualNodeSet(theRHS, *this, theLHSType);
 		}
 		else
 		{
@@ -1053,7 +1015,7 @@ XObject::lessThanOrEqual(const XObject&	theRHS) const
 
 
 bool
-XObject::greaterThan(const XObject&	theRHS) const
+XObject::greaterThan(const XObject&		theRHS) const
 {
 	if (this == &theRHS)
 	{
@@ -1069,11 +1031,11 @@ XObject::greaterThan(const XObject&	theRHS) const
 		}
 		else if (theLHSType == eTypeNodeSet)
 		{
-			return greaterThanNodeSet(*this, theRHS, theRHS.getType(), m_support);
+			return greaterThanNodeSet(*this, theRHS, theRHS.getType());
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return lessThanNodeSet(theRHS, *this, theLHSType, theRHS.getSupport());
+			return lessThanNodeSet(theRHS, *this, theLHSType);
 		}
 		else
 		{
@@ -1101,15 +1063,60 @@ XObject::greaterThanOrEqual(const XObject&	theRHS) const
 		}
 		else if (theLHSType == eTypeNodeSet)
 		{
-			return greaterThanOrEqualNodeSet(*this, theRHS, theRHS.getType(), m_support);
+			return greaterThanOrEqualNodeSet(*this, theRHS, theRHS.getType());
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return lessThanOrEqualNodeSet(theRHS, *this, theLHSType, theRHS.getSupport());
+			return lessThanOrEqualNodeSet(theRHS, *this, theLHSType);
 		}
 		else
 		{
 			return DoubleSupport::greaterThanOrEqual(num(), theRHS.num());
 		}
 	}
+}
+
+
+
+XObject::XObjectException::XObjectException(
+				const XalanDOMString&	message,
+				const XalanNode*		styleNode) :
+	XPathException(message, styleNode)
+{
+}
+
+
+
+XObject::XObjectException::~XObjectException()
+{
+}
+
+
+
+XObject::XObjectInvalidCastException::XObjectInvalidCastException(
+				const XalanDOMString&	fromType,
+				const XalanDOMString&	toType) :
+	m_fromType(fromType),
+	m_toType(toType)
+{
+}
+
+
+
+XObject::XObjectInvalidCastException::~XObjectInvalidCastException()
+{
+}
+
+
+
+const XalanDOMString
+XObject::XObjectInvalidCastException::formatErrorString(
+				const XalanDOMString&	fromType,
+				const XalanDOMString&	toType)
+{
+	return XalanDOMString(XALAN_STATIC_UCODE_STRING("Cannot cast an ")) +
+		   fromType +
+		   XalanDOMString(XALAN_STATIC_UCODE_STRING(" to a ")) +
+		   toType +
+		   XalanDOMString(XALAN_STATIC_UCODE_STRING("."));
 }

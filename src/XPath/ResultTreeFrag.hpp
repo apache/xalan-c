@@ -64,12 +64,15 @@
 
 
 
+#include <vector>
+
+
+
+#include <XalanDOM/XalanNodeList.hpp>
 #include <XalanDOM/XalanDocument.hpp>
 
 
 
-#include <XPath/MutableNodeRefList.hpp>
-#include <XPath/NodeListImplSurrogate.hpp>
 #include <XPath/ResultTreeFragBase.hpp>
 
 
@@ -81,7 +84,7 @@ class XPathSupport;
 /**
  * The holder of result tree fragments.
  */
-class XALAN_XPATH_EXPORT ResultTreeFrag : public ResultTreeFragBase
+class XALAN_XPATH_EXPORT ResultTreeFrag : public ResultTreeFragBase, private XalanNodeList
 {
 public:
 
@@ -89,11 +92,8 @@ public:
 	 * Construct a result tree fragment object from a DOM document.
 	 * 
 	 * @param theOwnerDocument The document used to construct result tree fragment
-	 * @param theSupport The XPathSupport instance
 	 */
-	ResultTreeFrag(
-			XalanDocument&	theOwnerDocument,
-			XPathSupport&	theSupport);
+	ResultTreeFrag(XalanDocument&	theOwnerDocument);
 
 	/**
 	 * Construct a result tree fragment object from another.
@@ -191,6 +191,14 @@ public:
 	virtual void
 	setPrefix(const XalanDOMString&		prefix);
 
+	virtual bool
+	isIndexed() const;
+
+	virtual unsigned long
+	getIndex() const;
+
+	virtual XalanDOMString
+	getXSLTData() const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual ResultTreeFragBase*
@@ -201,6 +209,14 @@ public:
 
 private:
 
+	// These methods are inherited from XalanNodeList...
+
+	virtual XalanNode*
+	item(unsigned int	index) const;
+
+	virtual unsigned int
+	getLength() const;
+
 	// Not defined
 	ResultTreeFrag&
 	operator=(const ResultTreeFrag&		theRHS);
@@ -209,10 +225,15 @@ private:
 	operator==(const ResultTreeFrag&	theRHS) const;
 
 
-	XalanDocument*			m_document;
-	MutableNodeRefList		m_children;
+	XalanDocument*	m_document;
 
-	NodeListImplSurrogate	m_surrogate;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanNode*>			NodeVectorType;
+#else
+	typedef std::vector<XalanNode*>		NodeVectorType;
+#endif
+
+	NodeVectorType	m_children;
 };
 
 

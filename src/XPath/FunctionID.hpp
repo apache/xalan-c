@@ -192,7 +192,7 @@ public:
 
 						if (theNode != 0)
 						{
-							theNodeList->addNodeInDocOrder(theNode, true);
+							theNodeList->addNodeInDocOrder(theNode, executionContext);
 						}
 					}
 				}

@@ -75,8 +75,6 @@
 
 
 class XNull;
-class XPathEnvSupport;
-class XPathSupport;
 
 
 
@@ -89,14 +87,9 @@ public:
 
 	/**
 	 * Construct a factory for creating XObjects.
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param theEnvSupport XPath environment support class instance
-	 * @param theSupport XPath support class instance
 	 */
-	XObjectFactoryDefault(
-			XPathEnvSupport&	theEnvSupport,
-			XPathSupport&		theSupport);
+	explicit
+	XObjectFactoryDefault();
 
 	virtual
 	~XObjectFactoryDefault();
@@ -249,9 +242,6 @@ private:
 
 
 	// Data members...
-	XPathEnvSupport&	m_envSupport;
-	XPathSupport&		m_support;
-
 	CollectionType		m_xobjects;
 
 #if defined(XALAN_NO_NAMESPACES)

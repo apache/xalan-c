@@ -67,22 +67,8 @@
 
 
 
-XBoolean::XBoolean(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			bool				val) :
-	XObject(&envSupport, &support),
-	m_value(val)
-{
-}
-
-
-
-XBoolean::XBoolean(
-			XPathEnvSupport*	envSupport,
-			XPathSupport*		support,
-			bool				val) :
-	XObject(envSupport, support),
+XBoolean::XBoolean(bool		val) :
+	XObject(),
 	m_value(val)
 {
 }
@@ -152,47 +138,6 @@ XBoolean::str() const
 {
 	return m_value == true ? XALAN_STATIC_UCODE_STRING("true") :
 							 XALAN_STATIC_UCODE_STRING("false");
-}
-
-
-
-// dummy object for casts after throw statements.
-static int	dummy;
-
-
-
-const ResultTreeFragBase&
-XBoolean::rtree() const
-{
-	error("Can't cast XBoolean to ResultTreeFragBase");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return reinterpret_cast<ResultTreeFragBase&>(dummy);
-}
-
-
-
-ResultTreeFragBase&
-XBoolean::rtree()
-{
-	error("Can't cast XBoolean to ResultTreeFragBase");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return reinterpret_cast<ResultTreeFragBase&>(dummy);
-}
-
-
-
-const NodeRefListBase&
-XBoolean::nodeset() const
-{
-	error("Can't cast XBoolean to NodeRefListBase");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return reinterpret_cast<NodeRefListBase&>(dummy);
 }
 
 

@@ -66,34 +66,32 @@
 
 
 #include <XalanDOM/XalanNamedNodeMap.hpp>
+#include <XalanDOM/XalanDocument.hpp>
 #include <XalanDOM/XalanNode.hpp>
 #include <XalanDOM/XalanNodeList.hpp>
 
 
 
-#include "XPathSupport.hpp"
+#include "XPathExecutionContext.hpp"
 
 
 
-MutableNodeRefList::MutableNodeRefList(XPathSupport*	theSupport) :
-	NodeRefList(),
-	m_support(theSupport)
+MutableNodeRefList::MutableNodeRefList() :
+	NodeRefList()
 {
 }
 
 
 
 MutableNodeRefList::MutableNodeRefList(const MutableNodeRefList&	theSource) :
-	NodeRefList(theSource),
-	m_support(theSource.m_support)
+	NodeRefList(theSource)
 {
 }
 
 
 
 MutableNodeRefList::MutableNodeRefList(const NodeRefListBase&	theSource) :
-	NodeRefList(theSource),
-	m_support(theSource.getSupport())
+	NodeRefList(theSource)
 {
 }
 
@@ -180,7 +178,7 @@ MutableNodeRefList::insertNode(
 			XalanNode*		n,
 			unsigned int	pos)
 {
- 	assert(getLength() >= pos);
+ 	assert(m_nodeList.size() >= pos);
 
 	if (n != 0)
 	{
@@ -215,7 +213,7 @@ MutableNodeRefList::removeNode(const XalanNode*		n)
 void
 MutableNodeRefList::removeNode(unsigned int		pos)
 {
-	assert(pos < getLength());
+	assert(pos < m_nodeList.size());
 
 	m_nodeList.erase(m_nodeList.begin() + pos);
 }
@@ -235,7 +233,7 @@ MutableNodeRefList::setNode(
 			unsigned int	pos,
 			XalanNode*		theNode)
 {
-	assert(pos < getLength());
+	assert(pos < m_nodeList.size());
 
 	m_nodeList[pos] = theNode;
 }
@@ -250,8 +248,8 @@ MutableNodeRefList::addNodes(const XalanNodeList&	nodelist)
 	// Reserve the space at the start.  We may end up reserving
 	// more space than necessary, but it's a small price to
 	// pay for the increased speed.  We can always shrink by
-	// swapping if we have way to much space.
-	ensureAllocation(getLength() + theLength);
+	// swapping if we have way too much space.
+	ensureAllocation(m_nodeList.size() + theLength);
 
 	for (unsigned int i = 0; i < theLength; i++)
 	{
@@ -269,8 +267,8 @@ MutableNodeRefList::addNodes(const NodeRefListBase&		nodelist)
 	// Reserve the space at the start.  We may end up reserving
 	// more space than necessary, but it's a small price to
 	// pay for the increased speed.  We can always shrink by
-	// swapping if we have way to much space.
-	ensureAllocation(getLength() + theLength);
+	// swapping if we have way too much space.
+	ensureAllocation(m_nodeList.size() + theLength);
 
 	for (unsigned int i = 0; i < theLength; i++)
 	{
@@ -281,84 +279,336 @@ MutableNodeRefList::addNodes(const NodeRefListBase&		nodelist)
 
 
 void
-MutableNodeRefList::addNodesInDocOrder(const XalanNodeList&		nodelist)
+MutableNodeRefList::addNodesInDocOrder(
+			const XalanNodeList&	nodelist,
+			XPathExecutionContext&	executionContext)
 {
 	const unsigned int	theLength = nodelist.getLength();
 
 	// Reserve the space at the start.  We may end up reserving
 	// more space than necessary, but it's a small price to
 	// pay for the increased speed.  We can always shrink by
-	// swapping if we have way to much space.
-	ensureAllocation(getLength() + theLength);
+	// swapping if we have way too much space.
+	ensureAllocation(m_nodeList.size() + theLength);
 
 	for(unsigned int i = 0; i < theLength; i++)
 	{
-		addNodeInDocOrder(nodelist.item(i), true);
+		addNodeInDocOrder(nodelist.item(i), executionContext);
 	}
 }
 
 
 
 void
-MutableNodeRefList::addNodesInDocOrder(const NodeRefListBase&	nodelist)
+MutableNodeRefList::addNodesInDocOrder(
+			const NodeRefListBase&	nodelist,
+			XPathExecutionContext&	executionContext)
 {
 	const unsigned int	theLength = nodelist.getLength();
 
 	// Reserve the space at the start.  We may end up reserving
 	// more space than necessary, but it's a small price to
 	// pay for the increased speed.  We can always shrink by
-	// swapping if we have way to much space.
-	ensureAllocation(getLength() + theLength);
+	// swapping if we have way too much space.
+	ensureAllocation(m_nodeList.size() + theLength);
 
 	for(unsigned int i = 0; i < theLength; i++)
 	{
-		addNodeInDocOrder(nodelist.item(i), true);
+		addNodeInDocOrder(nodelist.item(i), executionContext);
 	}
 }
+
+
+
+MutableNodeRefList::NodeListIteratorType
+findInsertionPointBinarySearch(
+			XalanNode*									node,
+			MutableNodeRefList::NodeListIteratorType	begin,
+			MutableNodeRefList::NodeListIteratorType	end)
+{
+	assert(node != 0);
+	assert(node->getNodeType() == XalanNode::DOCUMENT_NODE ||
+		   (node->getOwnerDocument() != 0 && node->getOwnerDocument()->isIndexed() == true));
+
+	typedef MutableNodeRefList::NodeListIteratorType	NodeListIteratorType;
+
+	NodeListIteratorType	insertionPoint = 0;
+
+	// At this point, we are guaranteed that the range is only for this
+	// document, and that the range is indexed...
+	const unsigned long		theIndex = node->getIndex();
+
+	// End points to one past the last valid point,
+	// so subtract 1.
+	NodeListIteratorType	last = end - 1;
+	assert(*last != 0);
+
+	// Do a quick check to see if we just need to append...
+	if ((*last)->getIndex() < theIndex)
+	{
+		insertionPoint = end;
+	}
+	else
+	{
+		// Do a binary search for the insertion point...
+		NodeListIteratorType	first = begin;
+		NodeListIteratorType	current = 0;
+
+		unsigned long			theCurrentIndex = 0;
+
+		while (first <= last)
+		{
+			current = first + (last - first) / 2;
+			assert(*current != 0);
+
+			theCurrentIndex = (*current)->getIndex();
+
+			if (theIndex < theCurrentIndex)
+			{
+				last = current - 1;
+			}
+			else if (theIndex > theCurrentIndex)
+			{
+				first = current + 1;
+			}
+			else if (theIndex == theCurrentIndex)
+			{
+				// Duplicate, don't insert...
+				break;
+			}
+		}
+
+		if (theIndex != theCurrentIndex)
+		{
+			if (current == 0 || first == end)
+			{
+				// We either didn't search, or we're
+				// at the end...
+				insertionPoint = end;
+			}
+			else if (theCurrentIndex < theIndex)
+			{
+				// We're inserting after the current position...
+				assert((*current)->getIndex() < theIndex &&
+					   (current + 1 == end || (*(current + 1))->getIndex() > theIndex));
+
+				insertionPoint = current + 1;
+			}
+			else
+			{
+				// We're inserting before the current position...
+				assert(theCurrentIndex > theIndex);
+				assert((*current)->getIndex() > theIndex &&
+					   (current == begin || (*(current))->getIndex() > theIndex));
+
+				insertionPoint = current;
+			}
+		}
+	}
+
+	return insertionPoint;
+}
+
+
+
+template<class PredicateType>
+MutableNodeRefList::NodeListIteratorType
+findInsertionPointLinearSearch(
+			XalanNode*									node,
+			MutableNodeRefList::NodeListIteratorType	begin,
+			MutableNodeRefList::NodeListIteratorType	end,
+			const PredicateType&						isNodeAfterPredicate)
+{
+	assert(node != 0);
+
+	typedef MutableNodeRefList::NodeListIteratorType	NodeListIteratorType;
+
+	NodeListIteratorType	current = begin;
+
+	// Loop, looking for the node, or for a
+	// node that's before the one we're adding...
+	while(current != end)
+	{
+		const XalanNode*	child = *current;
+		assert(child != 0);
+
+		if(child == node)
+		{
+			// Duplicate, don't insert...
+			current = 0;
+
+			break;
+		}
+		else if (isNodeAfterPredicate(*node, *child) == false)
+		{
+			// We found the insertion point...
+			break;
+		}
+		else
+		{
+			++current;
+		}
+	}
+
+	return current;
+}
+
+
+
+struct DocumentPredicate
+{
+	bool
+	operator()(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const
+	{
+		// Always order a document node, or a node from another
+		// document after another node...
+		return node1.getNodeType() == XalanNode::DOCUMENT_NODE &&
+			   node2.getNodeType() == XalanNode::DOCUMENT_NODE ? true :
+					node1.getOwnerDocument() != node2.getOwnerDocument() ? true : false;
+	}
+};
+
+
+
+struct IndexPredicate
+{
+	bool
+	operator()(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const
+	{
+		assert(node1.getOwnerDocument() == node2.getOwnerDocument());
+
+		return m_documentPredicate(node1, node2) == true ? true : node1.getIndex() > node2.getIndex() ? true : false;
+	}
+
+	DocumentPredicate	m_documentPredicate;
+};
+
+
+
+
+struct ExecutionContextPredicate
+{
+	ExecutionContextPredicate(XPathExecutionContext&	executionContext) :
+		m_executionContext(executionContext)
+	{
+	}
+
+	bool
+	operator()(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const
+	{
+		if (m_documentPredicate(node1, node2) == true)
+		{
+			return true;
+		}
+		else
+		{
+			assert(node1.getOwnerDocument() == node2.getOwnerDocument());
+			assert(node1.getNodeType() != XalanNode::DOCUMENT_NODE &&
+				   node2.getNodeType() != XalanNode::DOCUMENT_NODE);
+
+			return  m_executionContext.isNodeAfter(node1, node2);
+		}
+	}
+
+	XPathExecutionContext&	m_executionContext;
+
+	DocumentPredicate		m_documentPredicate;
+};
+
 
 
 
 void
 MutableNodeRefList::addNodeInDocOrder(
-			XalanNode*	node,
-			bool		test)
+			XalanNode*				node,
+			XPathExecutionContext&	executionContext)
 {
 	if (node != 0)
 	{
 		ensureAllocation();
 
-		const unsigned int	size = getLength();
+		const unsigned int	size = m_nodeList.size();
 
-		if (test == false || m_support == 0 || size == 0)
+		if (size == 0)
 		{
 			addNode(node);
 		}
-		else if (indexOf(node) == npos)
+		else
 		{
-			unsigned int	i = size - 1;
+			assert(m_nodeList[0] != 0);
 
-			// When wrap-around happens, i will be > than size...
-			for(; i < size; i--)
+			// Do some quick optimizations, since we tend to append
+			// the same node a lot.
+			const XalanNode* const	theLastNode = m_nodeList.back();
+			assert(theLastNode != 0);
+
+			// Is it a duplicate?
+			if (theLastNode != node)
 			{
-				const XalanNode*	child = m_nodeList[i];
-				assert(child != 0);
+				NodeListIteratorType	insertionPoint = 0;
 
-				if(child == node)
+				const XalanNode* const	theFirstNode = m_nodeList.front();
+				assert(theFirstNode != 0);
+
+				// Normalize so that if we have a document node, it owns
+				// itself, which is not how DOM works...
+				const XalanNode* const	theFirstNodeOwner =
+					theFirstNode->getNodeType() == XalanNode::DOCUMENT_NODE ?
+							theFirstNode : theFirstNode->getOwnerDocument();
+				assert(theFirstNodeOwner != 0);
+
+				if (node->isIndexed() == true &&
+					node->getOwnerDocument() == theFirstNodeOwner)
 				{
-					// Duplicate, don't insert...
-					i = size;
+					// If it's indexed, then see if the entire list consists of
+					// nodes from the same document.
+					// Normalize so that if we have a document node, it owns
+					// itself, which is not how DOM works...
+					const XalanNode* const	theLastNodeOwner =
+						theLastNode->getNodeType() == XalanNode::DOCUMENT_NODE ?
+								theLastNode : theLastNode->getOwnerDocument();
+					assert(theLastNodeOwner != 0);
 
-					break;
+					// If the owner document is 0, then it's a document node, so there's not
+					// much we can do except a linear search...
+					if (theFirstNodeOwner == theLastNodeOwner)
+					{
+						insertionPoint =
+							findInsertionPointBinarySearch(
+									node,
+									m_nodeList.begin(),
+									m_nodeList.end());
+					}
+					else
+					{
+						insertionPoint =
+							findInsertionPointLinearSearch(
+									node,
+									m_nodeList.begin(),
+									m_nodeList.end(),
+									IndexPredicate());
+					}
 				}
-				else if (m_support->isNodeAfter(*node, *child) == false)
+				else
 				{
-					break;
+					insertionPoint =
+							findInsertionPointLinearSearch(
+									node,
+									m_nodeList.begin(),
+									m_nodeList.end(),
+									ExecutionContextPredicate(executionContext));
 				}
-			}
 
-			if (i != size)
-			{
-				insertNode(node, i + 1);
+				if (insertionPoint != 0)
+				{
+					m_nodeList.insert(insertionPoint, node);
+				}
 			}
 		}
 	}
@@ -410,14 +660,6 @@ MutableNodeRefList::clearNulls()
 
 
 
-XPathSupport*
-MutableNodeRefList::getSupport() const
-{
-	return m_support;
-}
-
-
-
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 NodeRefListBase*
 #else
@@ -427,6 +669,3 @@ MutableNodeRefList::clone() const
 {
 	return new MutableNodeRefList(*this);
 }
-
-
-

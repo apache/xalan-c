@@ -85,13 +85,6 @@ public:
 	virtual
 	~XBooleanStatic();
 
-protected:
-
-	// We have to override this because there is not XPathEnvSupport
-	// for this class, so an error always throws an exception.
-	virtual void
-	error(const XalanDOMString&		msg) const;
-
 private:
 };
 

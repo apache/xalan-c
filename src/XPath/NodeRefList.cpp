@@ -183,14 +183,6 @@ NodeRefList::indexOf(const XalanNode*	theNode) const
 
 
 
-XPathSupport*
-NodeRefList::getSupport() const
-{
-	return 0;
-}
-
-
-
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 NodeRefListBase*
 #else

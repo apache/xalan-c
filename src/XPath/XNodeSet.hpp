@@ -73,9 +73,6 @@
 
 
 
-class NodeRefListBase;
-class ResultTreeFragBase;
-class XPathSupport;
 class XalanNode;
 
 
@@ -90,26 +87,16 @@ public:
 	/**
 	 * Create an XNodeSet from a node list.
 	 *
-	 * @param envSupport XPath environment support class instance
-	 * @param support XPath support class instance
 	 * @param value Pointer to source node list.  The XNodeSet will adopt the pointer.
 	 */
-	XNodeSet(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			NodeRefListBase*	value = 0);
+	XNodeSet(NodeRefListBase*	value);
 
 	/**
 	 * Create an XNodeSet from a node.
 	 *
-	 * @param envSupport XPath environment support class instance
-	 * @param support    XPath support class instance
 	 * @param value source node
 	 */
-	XNodeSet(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			XalanNode&			value);
+	XNodeSet(XalanNode&		value);
 
 	/**
 	 * Create an XNodeSet from another.
@@ -149,10 +136,7 @@ public:
 	str() const;
 
 	virtual const ResultTreeFragBase&
-	rtree() const;
-
-	virtual ResultTreeFragBase&
-	rtree();
+	rtree(XPathExecutionContext&	executionContext) const;
 
 	virtual const NodeRefListBase&
 	nodeset() const;
@@ -170,6 +154,7 @@ private:
 	operator=(const XNodeSet&);
 
 	// Data members...
+
 #if defined(XALAN_NO_NAMESPACES)
 	auto_ptr<NodeRefListBase>					m_value;
 

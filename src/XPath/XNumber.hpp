@@ -80,13 +80,9 @@ public:
 	/**
 	 * Create an XNumber from a number.
 	 *
-	 * @param envSupport XPath environment support class instance
 	 * @param val        numeric value to use
 	 */
-	XNumber(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			double				val);
+	XNumber(double	val);
 
 	XNumber(const XNumber&	source);
 
@@ -116,15 +112,6 @@ public:
 
 	virtual XalanDOMString
 	str() const;
-
-	virtual const ResultTreeFragBase&
-	rtree() const;
-
-	virtual ResultTreeFragBase&
-	rtree();
-
-	virtual const NodeRefListBase&
-	nodeset() const;
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);

@@ -154,7 +154,7 @@ XPath::createXLocatorHandler() const
 
 
 
-XObject*
+const XObject*
 XPath::execute(XPathExecutionContext&	executionContext) const
 {
 	assert(executionContext.getPrefixResolver() != 0);
@@ -164,7 +164,7 @@ XPath::execute(XPathExecutionContext&	executionContext) const
 
 
 
-XObject*
+const XObject*
 XPath::execute(
 			XalanNode*				context,
 			const PrefixResolver&	prefixResolver,
@@ -180,7 +180,7 @@ XPath::execute(
 									executionContext,
 									context);
 
-	XObject*	theResult = 0;
+	const XObject*	theResult = 0;
 
 	theResult = execute(executionContext);
 
@@ -189,7 +189,7 @@ XPath::execute(
 
 
 
-XObject*
+const XObject*
 XPath::execute(
 			XalanNode*				context,
 			const PrefixResolver&	prefixResolver,
@@ -201,7 +201,7 @@ XPath::execute(
 									executionContext,
 									contextNodeList);
 
-	XObject*	theResult = 0;
+	const XObject*	theResult = 0;
 
 	theResult = execute(context, prefixResolver, executionContext);
 
@@ -210,13 +210,13 @@ XPath::execute(
 
 
 
-XObject*
+const XObject*
 XPath::executeMore(
 			XalanNode* 				context,
 			int 					opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	XObject*	result = 0;
+	const XObject*	result = 0;
 
 	switch(m_expression.m_opMap[opPos])
 	{
@@ -589,7 +589,7 @@ XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings) co
 								if(tokenIndex >= 0)
 								{
 									const XalanDOMString	targetName =
-										m_expression.m_tokenQueue[tokenIndex]->str();
+										m_expression.m_tokenQueue[tokenIndex].str();
 
 									if(::equals(targetName, PSEUDONAME_ANY) == true)
 									{
@@ -625,7 +625,7 @@ XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings) co
 
 
 
-XObject*
+const XObject*
 XPath::xpath(
 			XalanNode*				context,
 			int						opPos,
@@ -636,14 +636,14 @@ XPath::xpath(
 
 
 
-XObject*
+const XObject*
 XPath::matchPattern(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 
 {
-	XObject*	score = 0;
+	const XObject*	score = 0;
 
 	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
 
@@ -693,7 +693,7 @@ XPath::step(
 
 
 
-XObject*
+const XObject*
 XPath::Or(
 			XalanNode*				context,
 			int						opPos,
@@ -723,7 +723,7 @@ XPath::Or(
 
 
 
-XObject*
+const XObject*
 XPath::And(
 			XalanNode*				context,
 			int						opPos,
@@ -756,7 +756,7 @@ XPath::And(
 
 
 
-XObject*
+const XObject*
 XPath::notequals(
 			XalanNode*				context,
 			int						opPos,
@@ -779,7 +779,7 @@ XPath::notequals(
 
 
 
-XObject*
+const XObject*
 XPath::equals(
 			XalanNode*				context,
 			int						opPos,
@@ -802,7 +802,7 @@ XPath::equals(
 
 
 
-XObject*
+const XObject*
 XPath::lte(
 			XalanNode*				context,
 			int						opPos,
@@ -825,7 +825,7 @@ XPath::lte(
 
 
 
-XObject*
+const XObject*
 XPath::lt(
 			XalanNode*				context,
 			int						opPos,
@@ -848,7 +848,7 @@ XPath::lt(
 
 
 
-XObject*
+const XObject*
 XPath::gte(
 			XalanNode*				context,
 			int						opPos,
@@ -871,7 +871,7 @@ XPath::gte(
 
 
 
-XObject*
+const XObject*
 XPath::gt(
 			XalanNode*				context,
 			int						opPos,
@@ -894,7 +894,7 @@ XPath::gt(
 
 
 
-XObject*
+const XObject*
 XPath::plus(
 			XalanNode*				context,
 			int						opPos,
@@ -917,7 +917,7 @@ XPath::plus(
 
 
 
-XObject*
+const XObject*
 XPath::minus(
 			XalanNode*				context,
 			int						opPos,
@@ -940,7 +940,7 @@ XPath::minus(
 
 
 
-XObject*
+const XObject*
 XPath::mult(
 			XalanNode*				context,
 			int						opPos,
@@ -963,7 +963,7 @@ XPath::mult(
 
 
 
-XObject*
+const XObject*
 XPath::div(
 			XalanNode*				context,
 			int						opPos,
@@ -986,7 +986,7 @@ XPath::div(
 
 
 
-XObject*
+const XObject*
 XPath::mod(
 			XalanNode*				context,
 			int						opPos,
@@ -1009,7 +1009,7 @@ XPath::mod(
 
 
 
-XObject*
+const XObject*
 XPath::quo(
 			XalanNode*				context,
 			int						opPos,
@@ -1023,7 +1023,7 @@ XPath::quo(
 
 
 
-XObject*
+const XObject*
 XPath::neg(
 			XalanNode*				context,
 			int						opPos,
@@ -1039,7 +1039,7 @@ XPath::neg(
 
 
 
-XObject*
+const XObject*
 XPath::string(
 			XalanNode*				context,
 			int						opPos,
@@ -1064,7 +1064,7 @@ XPath::string(
 
 
 
-XObject*
+const XObject*
 XPath::boolean(
 			XalanNode*				context,
 			int						opPos,
@@ -1089,7 +1089,7 @@ XPath::boolean(
 
 
  
-XObject*
+const XObject*
 XPath::number(
 			XalanNode*				context,
 			int						opPos,
@@ -1114,7 +1114,7 @@ XPath::number(
 
 
 
-XObject*
+const XObject*
 XPath::Union(
 			XalanNode*				context,
 			int						opPos,
@@ -1134,12 +1134,12 @@ XPath::Union(
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		XObject*	expr = executeMore(context, opPos, executionContext);
+		const XObject*	expr = executeMore(context, opPos, executionContext);
 
 		const NodeRefListBase&	nl =
 				expr->nodeset();
 
-		resultNodeList->addNodesInDocOrder(nl);
+		resultNodeList->addNodesInDocOrder(nl, executionContext);
 
 		theFactory.returnObject(expr);
 
@@ -1151,7 +1151,7 @@ XPath::Union(
 
 
 
-XObject*
+const XObject*
 XPath::literal(
 			XalanNode*				/* context */,
 			int						opPos,
@@ -1160,15 +1160,14 @@ XPath::literal(
 	assert(m_expression.m_opMap.size() > static_cast<unsigned>(opPos + 2));
 	assert(m_expression.m_tokenQueue.size() > static_cast<unsigned>(m_expression.m_opMap[opPos + 2]));
 
-	XObject* const	theToken = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
-	assert(theToken != 0 && theToken->getType() == XObject::eTypeString);
+	const XObject&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
 
-	return executionContext.getXObjectFactory().clone(*theToken);
+	return executionContext.getXObjectFactory().createString(theLiteral.str());
 }
 
 
 
-XObject*
+const XObject*
 XPath::variable(
 			XalanNode*				context,
 			int						opPos,
@@ -1176,13 +1175,13 @@ XPath::variable(
 {
 	assert(executionContext.getPrefixResolver() != 0);
 
-	XObject* const	varName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
+	const XObject&	varName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
 
 	// $$$ ToDo: I don't this will be parsed right in the first place...
-	const QName		qname(varName->str(),
+	const QName		qname(varName.str(),
 						  *executionContext.getPrefixResolver());
 
-	XObject*	result = 0;
+	const XObject*	result = 0;
 
 	try
 	{
@@ -1190,7 +1189,7 @@ XPath::variable(
 	}
 	catch(...)
 	{
-		executionContext.error(XalanDOMString("Could not get variable named ") + varName->str());
+		executionContext.error(XalanDOMString("Could not get variable named ") + varName.str());
 
 		throw;
 	}
@@ -1199,7 +1198,7 @@ XPath::variable(
 	{
 		executionContext.warn(XalanDOMString("VariableReference given for variable out ") +
 								XalanDOMString("of context or without definition!  Name = ") +
-							    varName->str(),
+							    varName.str(),
 							  context);
 	}
 
@@ -1208,7 +1207,7 @@ XPath::variable(
 
 
 
-XObject*
+const XObject*
 XPath::group(
 			XalanNode*				context,
 			int						opPos,
@@ -1219,7 +1218,7 @@ XPath::group(
 
 
 
-XObject*
+const XObject*
 XPath::numberlit(
 			XalanNode*				/* context */,
 			int						opPos,
@@ -1228,15 +1227,14 @@ XPath::numberlit(
 	assert(m_expression.m_opMap.size() > static_cast<unsigned>(opPos + 2));
 	assert(m_expression.m_tokenQueue.size() > static_cast<unsigned>(m_expression.m_opMap[opPos + 2]));
 
-	XObject* const	theToken = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
-	assert(theToken != 0 && theToken->getType() == XObject::eTypeNumber);
+	const XObject&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
 
-	return executionContext.getXObjectFactory().clone(*theToken);
+	return executionContext.getXObjectFactory().createNumber(theLiteral.num());
 }
   
 
 
-XObject*
+const XObject*
 XPath::arg(
 			XalanNode*				context,
 			int						opPos,
@@ -1247,7 +1245,7 @@ XPath::arg(
 
 
 
-XObject*
+const XObject*
 XPath::locationPath(
 			XalanNode*				context,
 			int						opPos,
@@ -1294,13 +1292,13 @@ XPath::locationPath(
 
 
 
-XObject*
+const XObject*
 XPath::predicate(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	XObject* const	expr1 = executeMore(context, opPos + 2, executionContext);
+	const XObject* const	expr1 = executeMore(context, opPos + 2, executionContext);
 
 	// $$$ ToDo: This appears to be just an optimization, but is it really?
 /*
@@ -1316,7 +1314,7 @@ XPath::predicate(
 
 
 
-XObject*
+const XObject*
 XPath::locationPathPattern(
 			XalanNode*				context,
 			int						opPos,
@@ -1338,7 +1336,7 @@ XPath::locationPathPattern(
 
 
 
-XObject*
+const XObject*
 XPath::runExtFunction(
 			XalanNode*				context,
 			int						opPos,
@@ -1348,11 +1346,11 @@ XPath::runExtFunction(
 
 	opPos += 2;
 
-	const XObject* const	ns = m_expression.m_tokenQueue[m_expression.m_opMap[opPos]];
+	const XalanDOMString	ns = m_expression.m_tokenQueue[m_expression.m_opMap[opPos]].str();
 
 	opPos++;
 
-	const XObject* const	funcName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos]];
+	const XalanDOMString	funcName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos]].str();
 
 	opPos++;
 
@@ -1372,8 +1370,8 @@ XPath::runExtFunction(
 		opPos = nextOpPos;
 	}
 
-	XObject* const		theResult =
-		extfunction(context, opPos, ns->str(), funcName->str(), args, executionContext);
+	const XObject* const		theResult =
+		extfunction(context, opPos, ns, funcName, args, executionContext);
 
 	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
 
@@ -1390,7 +1388,7 @@ XPath::runExtFunction(
 
 
 
-XObject*
+const XObject*
 XPath::extfunction(
 			XalanNode*								context,
 			int										/* opPos */,
@@ -1407,7 +1405,7 @@ XPath::extfunction(
 
 
 
-XObject*
+const XObject*
 XPath::runFunction(
 			XalanNode*				context,
 			int						opPos,
@@ -1423,8 +1421,8 @@ XPath::runFunction(
 
 	opPos++;
 
-	// Number of args is next...
-	const int	argCount = m_expression.m_opMap[opPos];
+	// Number of args is next, not used for now...
+//	const int	argCount = m_expression.m_opMap[opPos];
 
 	opPos++;
 
@@ -1444,7 +1442,7 @@ XPath::runFunction(
 		opPos = nextOpPos;
 	}
 
-	XObject* const		theResult =
+	const XObject* const		theResult =
 		function(context, opPos, funcID, args, executionContext);
 
 	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
@@ -1462,7 +1460,7 @@ XPath::runFunction(
 
 
 
-XObject*
+const XObject*
 XPath::function(
 			XalanNode*								context,
 			int										opPos,

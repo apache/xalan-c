@@ -71,7 +71,6 @@
 
 class Function;
 class PrefixResolver;
-class XObjectFactory;
 class XPath;
 class XPathEnvSupport;
 
@@ -102,7 +101,6 @@ public:
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
 			const PrefixResolver&	resolver,
-			XObjectFactory&			xobjectFactory,
 			const XPathEnvSupport&	envSupport) = 0;
 
 	/**
@@ -119,7 +117,6 @@ public:
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
 			const PrefixResolver&	resolver,
-			XObjectFactory&			xobjectFactory,
 			const XPathEnvSupport&	envSupport) = 0;
 
 	/**

@@ -108,7 +108,7 @@ SimpleNodeLocator::~SimpleNodeLocator()
 
 
 
-XObject*
+const XObject*
 SimpleNodeLocator::connectToNodes(
 			const XPath&					/* xpath */,
 			XPathExecutionContext&			executionContext,
@@ -205,7 +205,7 @@ SimpleNodeLocator::connectToNodes(
 
 
 
-XObject*
+const XObject*
 SimpleNodeLocator::locationPath(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -382,13 +382,16 @@ SimpleNodeLocator::step(
 
 				step(xpath, executionContext, node, opPos, *mnl);
 
-				if(queryResults.getLength() == 0)
+				if (mnl->getLength() > 0)
 				{
-					queryResults = *mnl;
-				}
-				else
-				{
-					queryResults.addNodesInDocOrder(*mnl);
+					if(queryResults.getLength() == 0)
+					{
+						queryResults = *mnl;
+					}
+					else
+					{
+						queryResults.addNodesInDocOrder(*mnl, executionContext);
+					}
 				}
 			}
 		}
@@ -397,7 +400,7 @@ SimpleNodeLocator::step(
 	{
 		if (shouldReorder == true)
 		{
-			queryResults.addNodesInDocOrder(*subQueryResults);
+			queryResults.addNodesInDocOrder(*subQueryResults, executionContext);
 		}
 		else
 		{
@@ -626,7 +629,7 @@ SimpleNodeLocator::stepPattern(
 
 				if(XObject::eTypeNumber == pred->getType())
 				{
-					throw FoundIndex();
+					score = handleFoundIndex(xpath, executionContext, localContext, startOpPos);
 				}
 				else if(pred->boolean() == false)
 				{
@@ -643,30 +646,7 @@ SimpleNodeLocator::stepPattern(
 		}
 		catch(const FoundIndex&)
 		{
-			// We have an index somewhere in our pattern.  So, we have 
-			// to do a full search for our step, using the parent as 
-			// localContext, then see if the current localContext is found in the 
-			// node set.  Seems crazy, but, so far, it seems like the 
-			// easiest way.
-			executionContext.setThrowFoundIndex(false);
-
-			XalanNode* const	parentContext =
-				executionContext.getParentOfNode(*localContext);
-
-			typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
-
-			BorrowReturnMutableNodeRefList	mnl(executionContext);
-
-			step(xpath, executionContext, parentContext, startOpPos, *mnl);
-
-			if (mnl->indexOf(localContext) == MutableNodeRefList::npos)
-			{
-				score = xpath.s_MatchScoreNone;
-			}
-			else
-			{
-				score = xpath.s_MatchScoreOther;
-			}
+			score = handleFoundIndex(xpath, executionContext, localContext, startOpPos);
 		}
 	}
 
@@ -677,6 +657,41 @@ SimpleNodeLocator::stepPattern(
 	}
 
 	return score == xpath.s_MatchScoreNone ? 0 : localContext;
+}
+
+
+
+double
+SimpleNodeLocator::handleFoundIndex(
+			const XPath&			xpath,
+			XPathExecutionContext&	executionContext,
+			XalanNode* 				localContext, 
+			int 					startOpPos)
+{
+			// We have an index somewhere in our pattern.  So, we have 
+			// to do a full search for our step, using the parent as 
+			// localContext, then see if the current localContext is found in the 
+			// node set.  Seems crazy, but, so far, it seems like the 
+			// easiest way.
+	executionContext.setThrowFoundIndex(false);
+
+	XalanNode* const	parentContext =
+				executionContext.getParentOfNode(*localContext);
+
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+	BorrowReturnMutableNodeRefList	mnl(executionContext);
+
+	step(xpath, executionContext, parentContext, startOpPos, *mnl);
+
+	if (mnl->indexOf(localContext) == MutableNodeRefList::npos)
+	{
+		return XPath::s_MatchScoreNone;
+	}
+	else
+	{
+		return XPath::s_MatchScoreOther;
+	}
 }
 
 
@@ -1139,7 +1154,7 @@ SimpleNodeLocator::findFollowing(
 
 			if(xpath.s_MatchScoreNone != score)
 			{
-				subQueryResults.addNodeInDocOrder(pos, true);
+				subQueryResults.addNodeInDocOrder(pos, executionContext);
 			}
 
 			nextNode = pos->getFirstChild();
@@ -1714,7 +1729,7 @@ SimpleNodeLocator::predicates(
 					i + 1 != pred->num() ||
 			   pred->boolean() == false)
 			{
-				// Set the node to null.  Later on,
+				// Set the node to 0.  After we're done,
 				// we'll clear it out.
 				subQueryResults.setNode(i, 0);
 			}

@@ -64,24 +64,8 @@
 
 
 
-#include <memory>
-
-
-
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
 // Base class header file.
 #include <XPath/XObject.hpp>
-
-
-
-#include <XPath/ResultTreeFragBase.hpp>
-
-
-
-class XPathSupport;
 
 
 
@@ -92,12 +76,9 @@ public:
 	/**
 	 * Create an XNull.
 	 *
-	 * @param envSupport XPath environment support class instance
-	 * @param support    XPath support class instance
 	 */
-	XNull(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support);
+	explicit
+	XNull();
 
 	/**
 	 * Create an XNull from another.
@@ -105,9 +86,7 @@ public:
 	 * @param source    object to copy
 	 * @param deepClone true to copy all children on nodeset nodes
 	 */
-	XNull(
-			const XNull&	source,
-			bool			deepClone = false);
+	XNull(const XNull&	source);
 
 	virtual
 	~XNull();
@@ -126,7 +105,7 @@ public:
 
 	virtual XalanDOMString
 	getTypeString() const;
-  
+
 	virtual double
 	num() const;
 
@@ -136,15 +115,6 @@ public:
 	virtual XalanDOMString
 	str() const;
 
-	virtual const ResultTreeFragBase&
-	rtree() const;
-
-	virtual ResultTreeFragBase&
-	rtree();
-
-	virtual const NodeRefListBase&
-	nodeset() const;
-
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 
@@ -152,8 +122,6 @@ public:
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
 private:
-
-	const std::auto_ptr<ResultTreeFragBase>		m_resultTreeFrag;
 
 	// not implemented
 	XNull& operator=(const XNull &);

@@ -64,6 +64,7 @@
 
 
 
+#include <deque>
 #include <map>
 #include <set>
 #include <vector>
@@ -81,11 +82,6 @@
 
 #include <XPath/XObject.hpp>
 #include <XPath/XPathException.hpp>
-
-
-
-class XObject;
-class XObjectFactory;
 
 
 
@@ -736,6 +732,75 @@ public:
 		FormatErrorMessage(int	theOffset);
 	};
 
+	class XToken : public XObject
+	{
+	public:
+
+		XToken(const XalanDOMString&	theString);
+
+		XToken(double	theNumber);
+
+		XToken(const XToken&	theSource);
+
+		virtual
+		~XToken();
+
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+		virtual XObject*
+#else
+		virtual XToken*
+#endif
+		clone(void*		theAddress = 0) const;
+
+		virtual XalanDOMString
+		getTypeString() const;
+
+		virtual double
+		num() const;
+
+		virtual XalanDOMString
+		str() const;
+
+		virtual void
+		ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
+
+		virtual void
+		ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
+
+		virtual	eObjectType
+		getType() const;
+
+		XToken&
+		operator=(const XToken&		theRHS)
+		{
+			if (&theRHS != this)
+			{
+				m_stringValue = theRHS.m_stringValue;
+
+				m_numberValue = theRHS.m_numberValue;
+			}
+
+			return *this;
+		}
+
+		XToken&
+		operator=(const XalanDOMString&		theString);
+
+		XToken&
+		operator=(double	theNumber);
+
+	private:
+
+		// Not defined...
+		bool
+		operator==(const XToken&) const;
+
+		// Data members...
+		XalanDOMString	m_stringValue;
+
+		double			m_numberValue;
+	};
+
 
 #if defined(XALAN_NO_NAMESPACES)
 #	define XALAN_STD
@@ -745,9 +810,7 @@ public:
 
 	typedef XALAN_STD vector<int>				OpCodeMapType;
 
-	// $$$ ToDo: I really think that the queue should just contain strings, not
-	// XObjects, since they're always used as strings...
-	typedef XALAN_STD vector<XObject*>			TokenQueueType;
+	typedef XALAN_STD deque<XToken>				TokenQueueType;
 	typedef XALAN_STD vector<int>				PatternMapType;
 	typedef XALAN_STD map<int, int>				OpCodeLengthMapType;
 
@@ -762,7 +825,7 @@ public:
 	typedef XALAN_STD vector<OpCodeMapValueType> OpCodeMapValueVectorType;
 
 #undef XALAN_STD
-	
+
 	explicit
 	XPathExpression();
 
@@ -1056,12 +1119,12 @@ public:
 	 * @param thePosition position in queue
 	 * @return pointer to XObject token
 	 */
-	XObject*
+	const XObject*
 	getToken(TokenQueueSizeType		thePosition) const
 	{
 		assert(thePosition < tokenQueueSize());
 
-		return m_tokenQueue[thePosition];
+		return &m_tokenQueue[thePosition];
 	}
 
 	/**
@@ -1069,7 +1132,7 @@ public:
 	 * 
 	 * @return pointer to XObject token
 	 */
-	XObject*
+	const XObject*
 	getNextToken()
 	{
 		if (hasMoreTokens() == true)
@@ -1087,7 +1150,7 @@ public:
 	 * 
 	 * @return pointer to XObject token
 	 */
-	XObject*
+	const XObject*
 	getPreviousToken()
 	{
 		if (m_currentPosition > 0)
@@ -1107,7 +1170,7 @@ public:
 	 * @param theOffset offset from current position
 	 * @return pointer to XObject token
 	 */
-	XObject*
+	const XObject*
 	getRelativeToken(int	theOffset) const
 	{
 		const int	thePosition =
@@ -1127,27 +1190,35 @@ public:
 	/**
 	 * Push a token onto the token queue.
 	 * 
-	 * @param theToken pointer to XObject token to push
+	 * @param theToken the string value to push
 	 */
 	void
-	pushToken(XObject*	theToken)
+	pushToken(const XalanDOMString&		theToken)
 	{
-		assert(theToken != 0);
+		m_tokenQueue.push_back(XToken(theToken));
+	}
 
-		m_tokenQueue.push_back(theToken);
+	/**
+	 * Push a token onto the token queue.
+	 * 
+	 * @param theToken the number value to push
+	 */
+	void
+	pushToken(double	theToken)
+	{
+		m_tokenQueue.push_back(XToken(theToken));
 	}
 
 	/**
 	 * Replace a token in the token queue.
 	 * 
 	 * @param theOffset the offset at which to replace the token.
-	 * @param theToken pointer to new XObject token
-	 * @return a pointer to the old token
+	 * @param theToken string value for the new token
 	 */
-	XObject*
+	void
 	replaceRelativeToken(
-			int			theOffset,
-			XObject*	theToken)
+			int						theOffset,
+			const XalanDOMString&	theToken)
 	{
 		assert(theToken != 0);
 
@@ -1160,11 +1231,32 @@ public:
 			throw InvalidRelativeTokenPosition(theOffset);
 		}
 
-		XObject* const	theOldToken = m_tokenQueue[thePosition];
+		m_tokenQueue[thePosition] = theToken;
+	}
+
+	/**
+	 * Replace a token in the token queue.
+	 * 
+	 * @param theOffset the offset at which to replace the token.
+	 * @param theToken double value for the new token
+	 */
+	void
+	replaceRelativeToken(
+			int		theOffset,
+			double	theToken)
+	{
+		assert(theToken != 0);
+
+		const int	thePosition =
+			static_cast<int>(m_currentPosition) + theOffset;
+
+		if (thePosition < 0 ||
+			thePosition >= static_cast<int>(tokenQueueSize()))
+		{
+			throw InvalidRelativeTokenPosition(theOffset);
+		}
 
 		m_tokenQueue[thePosition] = theToken;
-
-		return theOldToken;
 	}
 
 	/**
@@ -1199,10 +1291,19 @@ public:
 	 * Push a token onto the token queue and its index onto the operations code
 	 * map.
 	 *
-	 * @param theToken pointer to XObject token to push
+	 * @param theToken string value of the token to push
 	 */
 	void
-	pushArgumentOnOpCodeMap(XObject*	theToken);
+	pushArgumentOnOpCodeMap(const XalanDOMString&	theToken);
+
+	/**
+	 * Push a token onto the token queue and its index onto the operations code
+	 * map.
+	 *
+	 * @param theToken number value of the token to push
+	 */
+	void
+	pushArgumentOnOpCodeMap(double	theToken);
 
 	/**
 	 * Push the current position in the token queue onto the operations code
@@ -1329,35 +1430,14 @@ public:
 	 */
 	XalanDOMString			m_currentPattern;
 
-	XObjectFactory*
-	getXObjectFactory() const
-	{
-		return m_xobjectFactory;
-	}
-
-	void
-	setXObjectFactory(XObjectFactory*	theFactory)
-	{
-		m_xobjectFactory = theFactory;
-	}
-
 private:
 
 	// Default vector allocation sizes.
 	enum
 	{
-		eDefaultTokenQueueSize = 100,
 		eDefaultOpMapSize = 100,
 		eDefaultPatternMapSize = 100
 	};
-
-	/**
-	 *
-	 * This is the factory that was used to create any internal XObjects.
-	 *
-	 */
-
-	XObjectFactory*						m_xobjectFactory;
 
 	// A map of Op codes to op code lengths.
 	const static OpCodeLengthMapType	s_opCodeLengths;

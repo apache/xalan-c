@@ -68,11 +68,8 @@
 
 
 
-XNumber::XNumber(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			double				val) :
-	XObject(&envSupport, &support),
+XNumber::XNumber(double		val) :
+	XObject(),
 	m_value(val),
 	m_cachedStringValue()
 {
@@ -152,42 +149,6 @@ XNumber::str() const
 	}
 
 	return m_cachedStringValue;
-}
-
-
-
-const ResultTreeFragBase&
-XNumber::rtree() const
-{
-	error("Can't cast XNumber to ResultTreeFragBase");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<ResultTreeFragBase*>(0);
-}
-
-
-
-ResultTreeFragBase&
-XNumber::rtree()
-{
-	error("Can't cast XNumber to ResultTreeFragBase");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<ResultTreeFragBase*>(0);
-}
-
-
-
-const NodeRefListBase&
-XNumber::nodeset() const
-{
-	error("Can't cast XNumber to NodeRefListBase");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<NodeRefListBase*>(0);
 }
 
 

@@ -59,17 +59,19 @@
 
 
 
+#include <algorithm>
 #include <cassert>
 
 
 
-ResultTreeFrag::ResultTreeFrag(
-			XalanDocument&	theOwnerDocument,
-			XPathSupport&	theSupport) :
+#include <DOMSupport/DOMServices.hpp>
+
+
+
+ResultTreeFrag::ResultTreeFrag(XalanDocument&	theOwnerDocument) :
 	ResultTreeFragBase(),
-	m_document(&theOwnerDocument),
-	m_children(&theSupport),
-	m_surrogate(m_children)
+	XalanNodeList(),
+	m_document(&theOwnerDocument)
 {
 }
 
@@ -78,17 +80,21 @@ ResultTreeFrag::ResultTreeFrag(
 ResultTreeFrag::ResultTreeFrag(const ResultTreeFrag&	theSource,
 							   bool						deepClone) :
 	ResultTreeFragBase(theSource),
+	XalanNodeList(),
 	m_document(theSource.m_document),
-	m_children(deepClone == false ? theSource.m_children : MutableNodeRefList()),
-	m_surrogate(m_children)
+	m_children(deepClone == false ? theSource.m_children : NodeVectorType())
 {
 	if (deepClone == true)
 	{
-		const int	theLength = theSource.m_children.getLength();
+		const unsigned int	theLength = theSource.m_children.size();
 
-		for (int i = 0; i < theLength; i++)
+		m_children.reserve(theLength);
+
+		for (unsigned int i = 0; i < theLength; ++i)
 		{
-			m_children.addNode(theSource.m_children.item(i)->cloneNode(true));
+			assert(theSource.m_children[i] != 0);
+
+			m_children.push_back(theSource.m_children[i]->cloneNode(true));
 		}
 	}
 }
@@ -136,7 +142,7 @@ ResultTreeFrag::getParentNode() const
 const XalanNodeList*
 ResultTreeFrag::getChildNodes() const
 {
-	return &m_surrogate;
+	return this;
 }
 
 
@@ -144,7 +150,7 @@ ResultTreeFrag::getChildNodes() const
 XalanNode*
 ResultTreeFrag::getFirstChild() const
 {
-	return m_children.getLength() == 0 ? 0 : m_children.item(0);
+	return m_children.size() == 0 ? 0 : m_children[0];
 }
 
 
@@ -152,10 +158,10 @@ ResultTreeFrag::getFirstChild() const
 XalanNode*
 ResultTreeFrag::getLastChild() const
 {
-	const unsigned int	theLength = m_children.getLength();
+	const unsigned int	theLength = m_children.size();
 	
 
-	return theLength == 0 ? 0 : m_children.item(theLength - 1);
+	return theLength == 0 ? 0 : m_children.back();
 }
 
 
@@ -214,12 +220,19 @@ ResultTreeFrag::insertBefore(
 			XalanNode*	newChild,
 			XalanNode*	refChild)
 {
-	const unsigned int	refIndex = 0 == refChild ? m_children.getLength() :
-										   m_children.indexOf(refChild);
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
 
-	assert(refIndex != m_children.npos);
+	const NodeVectorType::iterator	i =
+		0 == refChild ? m_children.end() :
+						find(m_children.begin(),
+							 m_children.end(),
+							 refChild);
 
-	m_children.insertNode(newChild, refIndex);
+	assert(0 == refChild || i != m_children.end());
+
+	m_children.insert(i, newChild);
 
 	return newChild;
 }
@@ -233,21 +246,49 @@ ResultTreeFrag::replaceChild(
 {
 	assert(newChild != 0);
 
-	const unsigned int	refIndex =
-		0 == oldChild ? m_children.npos : m_children.indexOf(oldChild);
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
 
-	if(refIndex != m_children.npos)
+	// Look for the old child...
+	NodeVectorType::iterator	i =
+		0 == oldChild ? m_children.end() :
+						find(m_children.begin(),
+							 m_children.end(),
+							 oldChild);
+
+	// Did we find it?
+	if(i != m_children.end())
 	{
-		const unsigned int	newChildIndex = m_children.indexOf(newChild);
+		// First, look for an occurrence of the
+		// new child, because we'll have to remove
+		// it if it's there...
+		const NodeVectorType::iterator	j =
+				find(m_children.begin(),
+					 m_children.end(),
+					 newChild);
 
-		// Set the new child first, then erase it from
-		// the old position. if it's there.
-		m_children.setNode(refIndex, newChild);
-
-		if(newChildIndex != m_children.npos)
+		// OK, if the newChild is already in the list,
+		// and it's after the new position, then we
+		// can just erase and set the newChild.  If it's
+		// not, then we have to erase and set the new
+		// child at the previous iterator position, since
+		// we've erased a node from the vector, and the indices
+		// are now off...
+		if(j != m_children.end())
 		{
-			m_children.removeNode(newChildIndex);
+			if (j < i)
+			{
+				// It's less, so decrement...
+				--i;
+			}
+
+			m_children.erase(j);
 		}
+
+		assert((*i) == oldChild);
+
+		(*i) = newChild;
 	}
 
 	return oldChild;
@@ -260,8 +301,7 @@ ResultTreeFrag::appendChild(XalanNode*	newChild)
 {
 	assert(newChild != 0);
 
-	m_children.addNode(newChild);
-	assert(m_children.item(m_children.getLength() - 1) == newChild);
+	m_children.push_back(newChild);
 
 	return newChild;
 }
@@ -271,8 +311,17 @@ ResultTreeFrag::appendChild(XalanNode*	newChild)
 XalanNode*
 ResultTreeFrag::removeChild(XalanNode*	oldChild)
 {
-	m_children.removeNode(oldChild);
-	assert(m_children.indexOf(oldChild) == m_children.npos);
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+
+	// Look for the old child...
+	const NodeVectorType::iterator	i =
+		find(m_children.begin(),
+			 m_children.end(),
+			 oldChild);
+
+	m_children.erase(i);
 
 	return oldChild;
 }
@@ -281,7 +330,7 @@ ResultTreeFrag::removeChild(XalanNode*	oldChild)
 bool
 ResultTreeFrag::hasChildNodes() const
 {
-	return m_children.getLength() > 0 ? true : false;
+	return m_children.size() > 0 ? true : false;
 }
 
 
@@ -317,11 +366,13 @@ ResultTreeFrag::getNamespaceURI() const
 }
 
 
+
 XalanDOMString
 ResultTreeFrag::getPrefix() const
 {
 	return XalanDOMString();
 }
+
 
 
 XalanDOMString
@@ -331,9 +382,34 @@ ResultTreeFrag::getLocalName() const
 }
 
 
+
 void
 ResultTreeFrag::setPrefix(const XalanDOMString&		/* prefix */)
 {
+}
+
+
+
+bool
+ResultTreeFrag::isIndexed() const
+{
+	return false;
+}
+
+
+
+unsigned long
+ResultTreeFrag::getIndex() const
+{
+	return 0;
+}
+
+
+
+XalanDOMString
+ResultTreeFrag::getXSLTData() const
+{
+	return DOMServices::getNodeData(*this);
 }
 
 
@@ -346,4 +422,22 @@ ResultTreeFrag*
 ResultTreeFrag::clone(bool	deep) const
 {
 	return new ResultTreeFrag(*this, deep);
+}
+
+
+
+XalanNode*
+ResultTreeFrag::item(unsigned int	index) const
+{
+	assert(index < m_children.size());
+
+	return m_children[index];
+}
+
+
+
+unsigned int
+ResultTreeFrag::getLength() const
+{
+	return m_children.size();
 }

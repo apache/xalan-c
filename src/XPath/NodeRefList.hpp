@@ -119,9 +119,6 @@ public:
 	virtual unsigned int
 	indexOf(const XalanNode*	theNode) const;
 
-	virtual XPathSupport*
-	getSupport() const;
-
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual NodeRefListBase*
 #else

@@ -69,7 +69,6 @@
 
 
 #include "PrefixResolver.hpp"
-#include "XObjectFactory.hpp"
 #include "XPathEnvSupport.hpp"
 #include "XPathExecutionContext.hpp"
 #include "XPathParserException.hpp"
@@ -125,7 +124,6 @@ XPathProcessorImpl::XPathProcessorImpl() :
 	m_xpath(0),
 	m_expression(0),
 	m_prefixResolver(0),
-	m_xobjectFactory(0),
 	m_envSupport(0)
 {
 	// $$$ ToDo: This is not thread-safe!!!
@@ -145,16 +143,12 @@ XPathProcessorImpl::initXPath(
 			XPath&						pathObj,
 			const XalanDOMString&		expression,
 			const PrefixResolver&		prefixResolver,
-			XObjectFactory&				xobjectFactory,
 			const XPathEnvSupport&		envSupport)
 {
 	m_xpath = &pathObj;
 	m_expression = &m_xpath->getExpression();
 
-	m_expression->setXObjectFactory(&xobjectFactory);
-
 	m_prefixResolver = &prefixResolver;
-	m_xobjectFactory = &xobjectFactory;
 	m_envSupport = &envSupport;
 
 	tokenize(expression);
@@ -168,7 +162,6 @@ XPathProcessorImpl::initXPath(
 	m_xpath = 0;
 	m_expression = 0;
 	m_prefixResolver = 0;
-	m_xobjectFactory = 0;
 	m_envSupport = 0;
 }
 
@@ -179,16 +172,12 @@ XPathProcessorImpl::initMatchPattern(
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
 			const PrefixResolver&	prefixResolver,
-			XObjectFactory&			xobjectFactory,
 			const XPathEnvSupport&	envSupport)
 {
 	m_xpath = &pathObj;
 	m_expression = &m_xpath->getExpression();
 
-	m_expression->setXObjectFactory(&xobjectFactory);
-
 	m_prefixResolver = &prefixResolver;
-	m_xobjectFactory = &xobjectFactory;
 	m_envSupport = &envSupport;
 	m_expression->reset();
 
@@ -208,7 +197,6 @@ XPathProcessorImpl::initMatchPattern(
 	m_xpath = 0;
 	m_expression = 0;
 	m_prefixResolver = 0;
-	m_xobjectFactory = 0;
 	m_envSupport = 0;
 }
 
@@ -596,9 +584,8 @@ XPathProcessorImpl::addToTokenQueue(const XalanDOMString&	s) const
 {
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
-	assert(m_xobjectFactory != 0);
 
-	m_expression->pushToken(m_xobjectFactory->createString(s));
+	m_expression->pushToken(s);
 }
 
 
@@ -1996,7 +1983,7 @@ XPathProcessorImpl::NodeTest(int	axisType)
 
 					m_expression->replaceRelativeToken(
 									-1,
-									m_xobjectFactory->createString(theNamespace));
+									theNamespace);
 				}
 
 				m_expression->pushCurrentTokenOnOpCodeMap();
@@ -2099,7 +2086,6 @@ XPathProcessorImpl::Literal()
 {
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
-	assert(m_xobjectFactory != 0);
 
 	const int last = length(m_token) - 1;
 
@@ -2111,8 +2097,7 @@ XPathProcessorImpl::Literal()
 	if((c0 == '\"' && cX == '\"') ||
 	   (c0 == '\'' && cX == '\''))
 	{
-		XObject* const	theArgument =
-			m_xobjectFactory->createString(substring(m_token, 1, last));
+		const XalanDOMString	theArgument = substring(m_token, 1, last);
 
 		m_expression->pushArgumentOnOpCodeMap(theArgument);
 
@@ -2133,18 +2118,12 @@ XPathProcessorImpl::Number()
 {
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
-	assert(m_xobjectFactory != 0);
 
 	if(0 != length(m_token))
 	{
-		// Mutate the token to remove the quotes and have the XNumber object
-		// already made.
 		const double	num = DoubleSupport::toDouble(m_token);
 
-		XObject* const	theArgument =
-			m_xobjectFactory->createNumber(num);
-
-		m_expression->pushArgumentOnOpCodeMap(theArgument);
+		m_expression->pushArgumentOnOpCodeMap(num);
 
 		nextToken();
 	}

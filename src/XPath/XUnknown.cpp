@@ -67,11 +67,8 @@
 
 
 
-XUnknown::XUnknown(
-			XPathEnvSupport&		envSupport,
-			XPathSupport&			support,
-			const XalanDOMString&	name) :
-	XObject(&envSupport, &support),
+XUnknown::XUnknown(const XalanDOMString&	name) :
+	XObject(),
 	m_name(name)
 {
 }
@@ -144,42 +141,6 @@ XUnknown::str() const
 
 
 
-const ResultTreeFragBase&
-XUnknown::rtree() const
-{
-	error("Can't cast XUnknown to ResultTreeFragBase");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<ResultTreeFragBase*>(0);
-}
-
-
-
-ResultTreeFragBase&
-XUnknown::rtree()
-{
-	error("Can't cast XUnknown to ResultTreeFragBase");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<ResultTreeFragBase*>(0);
-}
-
-
-
-const NodeRefListBase&
-XUnknown::nodeset() const
-{
-	error("Can't cast XUnknown to NodeRefListBase");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<NodeRefListBase*>(0);
-}
-
-
-
 void
 XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
@@ -194,13 +155,4 @@ XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) con
 {
 	theCallbackObject.Unknown(*this,
 							  m_name);
-}
-
-
-
-bool
-XUnknown::equals(const XObject&	theRHS) const
-{
-	return theRHS.getType() == eUnknown &&
-		   ::equals(m_name, static_cast<const XUnknown&>(theRHS).m_name);
 }

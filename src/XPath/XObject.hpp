@@ -68,12 +68,15 @@
 
 
 
+#include <XPath/XPathException.hpp>
+
+
+
 class MutableNodeRefList;
 class NodeRefListBase;
 class ResultTreeFragBase;
 class XObjectTypeCallback;
-class XPathSupport;
-class XPathEnvSupport;
+class XPathExecutionContext;
 
 
 
@@ -87,12 +90,9 @@ public:
 	/**
 	 * Create an XObject.
 	 *
-	 * @param envSupport XPath environment support class instance
 	 */
 	explicit
-	XObject(
-			XPathEnvSupport*	envSupport,
-			XPathSupport*		support);
+	XObject();
 
 	XObject(const XObject&	source);
 
@@ -120,7 +120,7 @@ public:
 	 * @return numeric value
 	 */
 	virtual double
-	num() const = 0;
+	num() const;
 
 	/**
 	 * Cast result object to a boolean.
@@ -128,7 +128,7 @@ public:
 	 * @return boolean value
 	 */
 	virtual bool
-	boolean() const = 0;
+	boolean() const;
 
 	/**
 	 * Cast result object to a string.
@@ -136,23 +136,16 @@ public:
 	 * @return string value
 	 */
 	virtual XalanDOMString
-	str() const = 0;
+	str() const;
 
 	/**
 	 * Cast result object to a result tree fragment.
 	 *
+	 * @param executionContext the current execution context
 	 * @return result tree fragment
 	 */
 	virtual const ResultTreeFragBase&
-	rtree() const = 0;
-
-	/**
-	 * Cast result object to a result tree fragment.
-	 *
-	 * @return result tree fragment
-	 */
-	virtual ResultTreeFragBase&
-	rtree() = 0;
+	rtree(XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Cast result object to a nodelist.
@@ -160,7 +153,7 @@ public:
 	 * @return node list
 	 */
 	virtual const NodeRefListBase&
-	nodeset() const = 0;
+	nodeset() const;
 
 	/**
 	 * Process a callback request for preferred type information.
@@ -182,6 +175,7 @@ public:
 	 * Tell if two objects are functionally equal.
 	 *
 	 * @param theRHS object to compare
+	 * @param executionContext the current execution context
 	 * @return true if they are equal
 	 */
 	bool
@@ -191,6 +185,7 @@ public:
 	 * Tell if two objects are functionally not equal.
 	 *
 	 * @param theRHS object to compare
+	 * @param executionContext the current execution context
 	 * @return true if they are equal
 	 */
 	bool
@@ -237,14 +232,16 @@ public:
 	/**
 	 * Enumeration of possible object types
 	 */
-	enum	eObjectType { eTypeNull = -1,
-						  eTypeUnknown = 0,
-						  eTypeBoolean = 1,
-						  eTypeNumber = 2,
-						  eTypeString = 3,
-						  eTypeNodeSet = 4,
-						  eTypeResultTreeFrag = 5,
-						  eUnknown = 6};
+	enum	eObjectType { eTypeNull = 0,
+						  eTypeUnknown = 1,
+						  eTypeBoolean = 2,
+						  eTypeNumber = 3,
+						  eTypeString = 4,
+						  eTypeNodeSet = 5,
+						  eTypeResultTreeFrag = 6,
+						  eTypeUserDefined = 7,
+						  eUnknown
+						};
 
 	/**
 	 * Tell what kind of class this is.
@@ -254,37 +251,63 @@ public:
 	virtual	eObjectType
 	getType() const = 0;
 
-	XPathEnvSupport*
-	getEnvSupport() const
-	{
-		return m_envSupport;
-	}
-
-	XPathSupport*
-	getSupport() const
-	{
-		return m_support;
-	}
-
 	// All XObject instances are controlled by an instance of an XObjectFactory.
 	friend class XObjectFactory;
+
+	// Base class for all XObject exceptions...
+	class XObjectException : public XPathException
+	{
+	public:
+
+		explicit
+		XObjectException(
+				const XalanDOMString&	message = XalanDOMString(),
+				const XalanNode*		styleNode = 0);
+
+		virtual
+		~XObjectException();
+	};
+
+	class XObjectInvalidCastException : public XObjectException
+	{
+	public:
+
+		explicit
+		XObjectInvalidCastException(
+				const XalanDOMString&	fromType,
+				const XalanDOMString&	toType);
+
+		virtual
+		~XObjectInvalidCastException();
+
+		const XalanDOMString&
+		getFromType() const
+		{
+			return m_fromType;
+		}
+
+		const XalanDOMString&
+		getToType() const
+		{
+			return m_toType;
+		}
+
+	private:
+
+		static const XalanDOMString
+		formatErrorString(
+				const XalanDOMString&	fromType,
+				const XalanDOMString&	toType);
+
+		const XalanDOMString	m_fromType;
+
+		const XalanDOMString	m_toType;
+	};
 
 protected:
 
 	virtual
 	~XObject();
-
-	/**
-	 * Tell the user of an error, and probably throw an 
-	 * exception.
-	 */
-	virtual void
-	error(const XalanDOMString&		msg) const;
-
-	// Data members...
-	XPathEnvSupport* const	m_envSupport;
-
-	XPathSupport* const		m_support;
 
 private:
 

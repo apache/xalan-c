@@ -148,7 +148,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to union of node-set operands
 	 */
-	virtual XObject*
+	virtual const XObject*
 	execute(
 			XalanNode*				context,
 			const PrefixResolver&	prefixResolver,
@@ -163,7 +163,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to union of node-set operands
 	 */
-	virtual XObject*
+	virtual const XObject*
 	execute(
 			XalanNode*				context,
 			const PrefixResolver&	prefixResolver,
@@ -178,7 +178,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to result XObject
 	 */
-	virtual XObject*
+	virtual const XObject*
 	execute(XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -189,7 +189,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to union of node-set operands
 	 */
-	virtual XObject*
+	virtual const XObject*
 	executeMore(
 			XalanNode* 				context,
 			int 					opPos,
@@ -203,7 +203,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return node-set
 	 */
-	virtual XObject*
+	virtual const XObject*
 	locationPath(
 			XalanNode*				context,
 			int						opPos,
@@ -328,7 +328,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to either a boolean or a number
 	 */
-	virtual XObject*
+	virtual const XObject*
 	predicate(
 			XalanNode*				context,
 			int						opPos,
@@ -429,7 +429,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return The result of the expression.
 	 */
-	virtual XObject*
+	virtual const XObject*
 	xpath(
 			XalanNode*				context,
 			int						opPos,
@@ -441,7 +441,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return the match score in the form of an XObject.
 	 */
-	virtual XObject*
+	virtual const XObject*
 	matchPattern(
 			XalanNode*				context,
 			int						opPos,
@@ -469,7 +469,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if the one of the two arguments are true.
 	 */
-	virtual XObject*
+	const XObject*
 	Or(
 			XalanNode*				context,
 			int						opPos,
@@ -481,7 +481,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if the two arguments are both true.
 	 */
-	virtual XObject*
+	const XObject*
 	And(
 			XalanNode*				context,
 			int						opPos,
@@ -493,7 +493,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if the two arguments are not equal.
 	 */
-	virtual XObject*
+	const XObject*
 	notequals(
 			XalanNode*				context,
 			int						opPos,
@@ -505,7 +505,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if the two arguments are equal.
 	 */
-	virtual XObject*
+	const XObject*
 	equals(
 			XalanNode*				context,
 			int						opPos,
@@ -517,7 +517,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if arg 1 is less than or equal to arg 2.
 	 */
-	virtual XObject*
+	const XObject*
 	lte(
 			XalanNode*				context,
 			int						opPos,
@@ -529,7 +529,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if arg 1 is less than arg 2.
 	 */
-	virtual XObject*
+	const XObject*
 	lt(
 			XalanNode*				context,
 			int						opPos,
@@ -541,7 +541,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if arg 1 is greater than or equal to arg 2.
 	 */
-	virtual XObject*
+	const XObject*
 	gte(
 			XalanNode*				context,
 			int						opPos,
@@ -553,7 +553,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if arg 1 is greater than arg 2.
 	 */
-	virtual XObject*
+	const XObject*
 	gt(
 			XalanNode*				context,
 			int						opPos,
@@ -565,7 +565,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return sum of arg1 and arg2.
 	 */
-	virtual XObject*
+	const XObject*
 	plus(
 			XalanNode*				context,
 			int						opPos,
@@ -577,7 +577,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return difference of arg1 and arg2.
 	 */
-	virtual XObject*
+	const XObject*
 	minus(
 			XalanNode*				context,
 			int						opPos,
@@ -589,7 +589,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg1 * arg2.
 	 */
-	virtual XObject*
+	const XObject*
 	mult(
 			XalanNode*				context,
 			int						opPos,
@@ -601,7 +601,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg1 / arg2.
 	 */
-	virtual XObject*
+	const XObject*
 	div(
 			XalanNode*				context,
 			int						opPos,
@@ -613,7 +613,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg1 mod arg2.
 	 */
-	virtual XObject*
+	const XObject*
 	mod(
 			XalanNode*				context,
 			int						opPos,
@@ -626,7 +626,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg1 mod arg2.
 	 */
-	virtual XObject*
+	const XObject*
 	quo(
 			XalanNode*				context,
 			int						opPos,
@@ -638,7 +638,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return -arg.
 	 */
-	virtual XObject*
+	const XObject*
 	neg(
 			XalanNode*				context,
 			int						opPos,
@@ -650,7 +650,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg cast to a string.
 	 */
-	virtual XObject*
+	const XObject*
 	string(
 			XalanNode*				context,
 			int						opPos,
@@ -662,7 +662,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg cast to a boolean.
 	 */
-	virtual XObject*
+	const XObject*
 	boolean(
 			XalanNode*				context,
 			int						opPos,
@@ -674,7 +674,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg cast to a number.
 	 */
-	virtual XObject*
+	const XObject*
 	number(
 			XalanNode*				context,
 			int						opPos,
@@ -686,7 +686,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return the union of node-set operands.
 	 */
-	virtual XObject*
+	const XObject*
 	Union(
 			XalanNode*				context,
 			int						opPos,
@@ -698,7 +698,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return an XObject object.
 	 */
-	virtual XObject*
+	const XObject*
 	literal(
 			XalanNode*				context,
 			int						opPos,
@@ -710,7 +710,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return an XObject object.
 	 */
-	virtual XObject*
+	const XObject*
 	variable(
 			XalanNode*				context,
 			int						opPos,
@@ -722,7 +722,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg.
 	 */
-	virtual XObject*
+	const XObject*
 	group(
 			XalanNode*				context,
 			int						opPos,
@@ -734,7 +734,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return an XObject object.
 	 */
-	virtual XObject*
+	const XObject*
 	numberlit(
 			XalanNode*				context,
 			int						opPos,
@@ -746,7 +746,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return the result of the argument expression.
 	 */
-	virtual XObject*
+	const XObject*
 	arg(
 			XalanNode*				context,
 			int						opPos,
@@ -759,7 +759,7 @@ protected:
 	 * @return score in an XNumber, one of MATCH_SCORE_NODETEST, 
 	 * MATCH_SCORE_NONE, MATCH_SCORE_OTHER, MATCH_SCORE_QNAME.
 	 */
-	virtual XObject*
+	const XObject*
 	locationPathPattern(
 			XalanNode*				context,
 			int						opPos,
@@ -768,7 +768,7 @@ protected:
 	/**
 	 * Setup for and run an extension function.
 	 */
-	virtual XObject*
+	const XObject*
 	runExtFunction(
 			XalanNode*				context,
 			int						opPos,
@@ -777,7 +777,7 @@ protected:
 	/**
 	 * Handle an extension function.
 	 */
-	virtual XObject*
+	const XObject*
 	extfunction(
 			XalanNode*								context,
 			int										opPos,
@@ -789,7 +789,7 @@ protected:
 	/**
 	 * Setup for and run a function.
 	 */
-	virtual XObject*
+	const XObject*
 	runFunction(
 			XalanNode*				context,
 			int						opPos,
@@ -798,7 +798,7 @@ protected:
 	/**
 	 * Handle a built-in function.
 	 */
-	virtual XObject*
+	const XObject*
 	function(
 			XalanNode*								context,
 			int										opPos,

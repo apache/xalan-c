@@ -76,26 +76,16 @@ public:
 	/**
 	 * Construct an XSpan object from a node list.
 	 * 
-	 * @param envSupport XPath environment support class instance
-	 * @param support    XPath support class instance
 	 * @param value      source node list.  The instance will adopt the value instance.
 	 */
-	XSpan(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			NodeRefListBase*	value = 0);
+	XSpan(NodeRefListBase*	value);
 
 	/**
 	 * Construct an XSpan object from a DOM node.
 	 * 
-	 * @param envSupport XPath environment support class instance
-	 * @param support    XPath support class instance
 	 * @param value      source node
 	 */
-	XSpan(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			XalanNode&			value);
+	XSpan(XalanNode&	value);
 
 	XSpan(const XSpan&	source);
 

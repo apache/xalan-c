@@ -149,6 +149,14 @@ XPathExecutionContextDefault::getXObjectFactory() const
 
 
 
+bool
+XPathExecutionContextDefault::isIgnorableWhitespace(const XalanText&	node) const
+{
+	return m_xpathSupport.isIgnorableWhitespace(node);
+}
+
+
+
 XalanDOMString
 XPathExecutionContextDefault::getNamespaceOfNode(const XalanNode&	n) const
 {
@@ -322,7 +330,7 @@ XPathExecutionContextDefault::popArgVector()
 
 
 
-XObject*
+const XObject*
 XPathExecutionContextDefault::extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName, 
@@ -369,7 +377,7 @@ XPathExecutionContextDefault::borrowMutableNodeRefList()
 	// that's the cheapest thing.
 	if (m_availableCachedNodeLists.size() == 0)
 	{
-		m_busyCachedNodeLists.push_back(new MutableNodeRefList(&m_xpathSupport));
+		m_busyCachedNodeLists.push_back(new MutableNodeRefList);
 	}
 	else
 	{
@@ -415,7 +423,7 @@ XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	theLi
 MutableNodeRefList*
 XPathExecutionContextDefault::createMutableNodeRefList() const
 {
-	return new MutableNodeRefList(&m_xpathSupport);
+	return new MutableNodeRefList;
 }
 
 
@@ -475,7 +483,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
 
 
 
-XObject*
+const XObject*
 XPathExecutionContextDefault::getVariable(const QName&	name) const
 {
 	return m_xobjectFactory.createUnknown(name.getLocalPart());
@@ -505,6 +513,14 @@ XPathExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	prefix
 	assert(m_prefixResolver != 0);
 
 	return m_prefixResolver->getNamespaceForPrefix(prefix);
+}
+
+
+
+XalanDocument*
+XPathExecutionContextDefault::getDOMFactory() const
+{
+	return m_xpathEnvSupport.getDOMFactory();
 }
 
 

@@ -121,8 +121,8 @@ public:
 	 * @param theValue
 	 */
 	virtual void
-	String(const XObject&		theXObject,
-		   const XalanDOMString&		theValue) = 0;
+	String(const XObject&			theXObject,
+		   const XalanDOMString&	theValue) = 0;
 
 	/**
 	 * Call back the XObject with a result tree fragment value.

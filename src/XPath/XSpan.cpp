@@ -58,13 +58,8 @@
 
 
 
-XSpan::XSpan(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			NodeRefListBase*	value) :
-	XNodeSet(envSupport,
-			 support,
-			 value),
+XSpan::XSpan(NodeRefListBase*	value) :
+	XNodeSet(value),
 	m_start(-1),
 	m_end(-1)
 {
@@ -72,29 +67,8 @@ XSpan::XSpan(
 
 
 
-#if 0
-XSpan::XSpan(
-			XPathEnvSupport&			envSupport,
-			XPathSupport&				support,
-			const MutableNodeRefList&	value) :
-	XNodeSet(envSupport,
-			 support,
-			 value),
-	m_start(-1),
-	m_end(-1)
-{
-}
-#endif
-
-
-
-XSpan::XSpan(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			XalanNode&			value) :
-	XNodeSet(envSupport,
-			 support,
-			 value),
+XSpan::XSpan(XalanNode&		value) :
+	XNodeSet(value),
 	m_start(-1),
 	m_end(-1)
 {

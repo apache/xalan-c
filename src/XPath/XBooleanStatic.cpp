@@ -82,11 +82,3 @@ XBooleanStatic::XBooleanStatic(const XBooleanStatic&	source) :
 XBooleanStatic::~XBooleanStatic()
 {
 }
-
-
-
-void
-XBooleanStatic::error(const XalanDOMString&		msg) const
-{
-	throw XPathException(msg);
-}

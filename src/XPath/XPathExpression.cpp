@@ -60,15 +60,16 @@
 
 
 #include <algorithm>
-
-
-
-#include "XObjectFactory.hpp"
-
-
-
 #include <cstdio>
 #include <strstream>
+
+
+
+#include <PlatformSupport/DoubleSupport.hpp>
+
+
+
+#include "XObjectTypeCallback.hpp"
 
 
 
@@ -248,17 +249,129 @@ XPathExpression::InvalidRelativeTokenPosition::FormatErrorMessage(int	theOffset)
 
 
 
+XPathExpression::XToken::XToken(const XalanDOMString&	theString) :
+	m_stringValue(theString),
+	m_numberValue(DoubleSupport::toDouble(theString))
+{
+}
+
+
+
+	XPathExpression::XToken::XToken(double	theNumber) :
+	m_stringValue(DoubleToDOMString(theNumber)),
+	m_numberValue(theNumber)
+{
+}
+
+
+
+XPathExpression::XToken::XToken(const XToken&	theSource) :
+	m_stringValue(theSource.m_stringValue),
+	m_numberValue(theSource.m_numberValue)
+{
+}
+
+
+
+XPathExpression::XToken::~XToken()
+{
+}
+
+
+
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+XObject*
+#else
+XPathExpression::XToken*
+#endif
+XPathExpression::XToken::clone(void*	theAddress) const
+{
+	return theAddress == 0 ? new XToken(*this) : new (theAddress) XToken(*this);
+}
+
+
+
+XalanDOMString
+XPathExpression::XToken::getTypeString() const
+{
+	return XALAN_STATIC_UCODE_STRING("#TOKEN");
+}
+
+
+
+double
+XPathExpression::XToken::num() const
+{
+	return m_numberValue;
+}
+
+
+
+XalanDOMString
+XPathExpression::XToken::str() const
+{
+	return m_stringValue;
+}
+
+
+
+void
+XPathExpression::XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
+{
+	theCallbackObject.String(*this, m_stringValue);
+}
+
+
+
+void
+XPathExpression::XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
+{
+	theCallbackObject.String(*this, m_stringValue);
+}
+
+
+
+XPathExpression::XToken::eObjectType
+XPathExpression::XToken::getType() const
+{
+	return eTypeString;
+}
+
+
+
+XPathExpression::XToken&
+XPathExpression::XToken::operator=(const XalanDOMString&	theString)
+{
+	m_stringValue = theString;
+
+	m_numberValue = DoubleSupport::toDouble(theString);
+
+	return *this;
+}
+
+
+
+XPathExpression::XToken&
+XPathExpression::XToken::operator=(double	theNumber)
+{
+	m_stringValue = DoubleToDOMString(theNumber);
+
+	m_numberValue = theNumber;
+
+	return *this;
+}
+
+
+
 XPathExpression::XPathExpression() :
 	m_opMap(),
 	m_lastOpCodeIndex(0),
 	m_tokenQueue(),
 	m_currentPosition(0),
 	m_patternMap(100),
-	m_currentPattern(),
-	m_xobjectFactory(0)
+	m_currentPattern()
 {
 	m_opMap.reserve(eDefaultOpMapSize);
-	m_tokenQueue.reserve(eDefaultTokenQueueSize);
 }
 
 
@@ -278,14 +391,6 @@ XPathExpression::reset()
 		using std::for_each;
 #endif
 
-	if (m_xobjectFactory != 0)
-	{
-		for_each(
-			m_tokenQueue.begin(),
-			m_tokenQueue.end(),
-			XObjectFactory::DeleteXObjectFunctor(*m_xobjectFactory));
-	}
-
 	m_opMap.clear();
 	m_tokenQueue.clear();
 
@@ -300,11 +405,6 @@ XPathExpression::shrink()
 	if (m_opMap.capacity() > m_opMap.size())
 	{
 		OpCodeMapType(m_opMap).swap(m_opMap);
-	}
-
-	if (m_tokenQueue.capacity() > m_tokenQueue.size())
-	{
-		TokenQueueType(m_tokenQueue).swap(m_tokenQueue);
 	}
 
 	if (m_patternMap.capacity() > m_patternMap.size())
@@ -678,9 +778,8 @@ XPathExpression::dumpRemainingTokenQueue(PrintWriter&	thePrintWriter) const
 
 
 void
-XPathExpression::pushArgumentOnOpCodeMap(XObject*	theToken)
+XPathExpression::pushArgumentOnOpCodeMap(const XalanDOMString&	theToken)
 {
-	assert(theToken != 0);
 	assert(m_currentPosition != 0);
 
 	const TokenQueueSizeType	thePosition = m_currentPosition - 1;
@@ -688,15 +787,28 @@ XPathExpression::pushArgumentOnOpCodeMap(XObject*	theToken)
 	assert(thePosition < tokenQueueSize());
 
 	// Set the entry in the token queue to the XObject.
-	XObject* const	thePreviousToken = m_tokenQueue[thePosition];
-	assert(thePreviousToken != 0);
-
 	m_tokenQueue[thePosition] = theToken;
 
-	if (m_xobjectFactory != 0)
-	{
-		m_xobjectFactory->returnObject(thePreviousToken);
-	}
+	// Push the index onto the op map.
+	m_opMap.push_back(thePosition);
+
+	// Update the op map length.
+	m_opMap[s__opCodeMapLengthIndex]++;
+}
+
+
+
+void
+XPathExpression::pushArgumentOnOpCodeMap(double		theToken)
+{
+	assert(m_currentPosition != 0);
+
+	const TokenQueueSizeType	thePosition = m_currentPosition - 1;
+
+	assert(thePosition < tokenQueueSize());
+
+	// Set the entry in the token queue to the XObject.
+	m_tokenQueue[thePosition] = theToken;
 
 	// Push the index onto the op map.
 	m_opMap.push_back(thePosition);

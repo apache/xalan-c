@@ -70,16 +70,12 @@
 
 #include "ResultTreeFrag.hpp"
 #include "XObjectTypeCallback.hpp"
-#include "XPathEnvSupport.hpp"
-#include "XPathSupport.hpp"
+#include "XPathExecutionContext.hpp"
 
 
 
-XString::XString(
-			XPathEnvSupport&		envSupport,
-			XPathSupport&			support,
-			const XalanDOMString&	val) :
-	XObject(&envSupport, &support),
+XString::XString(const XalanDOMString&	val) :
+	XObject(),
 	m_value(val),
 	m_cachedNumberValue(0.0),
 	m_resultTreeFrag(0)
@@ -168,20 +164,15 @@ XString::str() const
 
 
 const ResultTreeFragBase&
-XString::rtree() const
+XString::rtree(XPathExecutionContext&	executionContext) const
 {
-	assert(m_support != 0);
-	assert(m_envSupport != 0);
-
 	if (m_resultTreeFrag.get() == 0)
 	{
-		XalanDocument* const	theFactory =
-				m_envSupport->getDOMFactory();
+		XalanDocument* const	theFactory = executionContext.getDOMFactory();
 		assert(theFactory != 0);
 
 		ResultTreeFrag* const	theFrag =
-			new ResultTreeFrag(*theFactory,
-							   *m_support);
+			new ResultTreeFrag(*theFactory);
 
 		XalanNode* const	textNode =
 			theFactory->createTextNode(str());
@@ -213,68 +204,6 @@ XString::rtree() const
 	}
 
 	return *m_resultTreeFrag.get();
-}
-
-
-
-ResultTreeFragBase&
-XString::rtree()
-{
-	assert(m_support != 0);
-	assert(m_envSupport != 0);
-
-	if (m_resultTreeFrag.get() == 0)
-	{
-		XalanDocument* const	theFactory =
-				m_envSupport->getDOMFactory();
-		assert(theFactory != 0);
-
-		ResultTreeFrag* const	theFrag =
-			new ResultTreeFrag(*theFactory,
-							   *m_support);
-
-		XalanNode* const	textNode =
-			theFactory->createTextNode(str());
-		assert(textNode != 0);
-
-		theFrag->appendChild(textNode);
-
-#if defined(XALAN_OLD_AUTO_PTR)
-
-#if !defined (XALAN_NO_NAMESPACES)
-		using std::auto_ptr;
-#endif
-
-#if defined(XALAN_NO_MUTABLE)
-		((XString*)this)->m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
-#else
-		m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
-#endif
-
-#else
-
-#if defined(XALAN_NO_MUTABLE)
-		((XString*)this)->m_resultTreeFrag.reset(theFrag);
-#else
-		m_resultTreeFrag.reset(theFrag);
-#endif
-
-#endif
-	}
-
-	return *m_resultTreeFrag.get();
-}
-
-
-
-const NodeRefListBase&
-XString::nodeset() const
-{
-	error("Can't cast XString to NodeRefListBase");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<NodeRefListBase*>(0);
 }
 
 

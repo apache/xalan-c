@@ -59,32 +59,19 @@
 
 
 
-#include "ResultTreeFrag.hpp"
 #include "XObjectTypeCallback.hpp"
-#include "XPathEnvSupport.hpp"
 
 
 
-XNull::XNull(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support) :
-	XObject(&envSupport, &support),
-	m_resultTreeFrag(new ResultTreeFrag(*envSupport.getDOMFactory(),
-										support))
+XNull::XNull() :
+	XObject()
 {
 }
 
 
 
-XNull::XNull(
-			const XNull&	source,
-			bool			deepClone) :
-	XObject(source),
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	m_resultTreeFrag(static_cast<ResultTreeFragBase*>(source.m_resultTreeFrag->cloneNode(deepClone)))
-#else
-	m_resultTreeFrag(source.m_resultTreeFrag->clone(deepClone))
-#endif
+XNull::XNull(const XNull&	source) :
+	XObject(source)
 {
 }
 
@@ -144,34 +131,6 @@ XalanDOMString
 XNull::str() const
 {
 	return XalanDOMString();
-}
-
-
-
-const ResultTreeFragBase&
-XNull::rtree() const
-{
-	return *m_resultTreeFrag.get();
-}
-
-
-
-ResultTreeFragBase&
-XNull::rtree()
-{
-	return *m_resultTreeFrag.get();
-}
-
-
-
-const NodeRefListBase&
-XNull::nodeset() const
-{
-	error("Can't cast XNull to NodeRefListBase");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<NodeRefListBase*>(0);
 }
 
 

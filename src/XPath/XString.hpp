@@ -79,7 +79,7 @@
 
 
 class ResultTreeFragBase;
-class XPathSupport;
+class XPathEnvSupport;
 
 
 
@@ -91,13 +91,9 @@ public:
 	 * Construct an XString object from a string.
 	 * 
 	 * @param envSupport XPath environment support class instance
-	 * @param support    XPath support class instance
 	 * @param value      source string
 	 */
-	XString(
-			XPathEnvSupport&		envSupport,
-			XPathSupport&			support,
-			const XalanDOMString&	val);
+	XString(const XalanDOMString&	val);
 
 	XString(const XString&	source);
 
@@ -130,13 +126,7 @@ public:
 	str() const;
   
 	virtual const ResultTreeFragBase&
-	rtree() const;
-
-	virtual ResultTreeFragBase&
-	rtree();
-
-	virtual const NodeRefListBase&
-	nodeset() const;
+	rtree(XPathExecutionContext&	executionContext) const;
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);

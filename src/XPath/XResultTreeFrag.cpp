@@ -76,11 +76,8 @@
 
 
 
-XResultTreeFrag::XResultTreeFrag(
-			XPathEnvSupport&		envSupport,
-			XPathSupport&			support,
-			ResultTreeFragBase*		val) :
-	XObject(&envSupport, &support),
+XResultTreeFrag::XResultTreeFrag(ResultTreeFragBase*	val) :
+	XObject(),
 	NodeRefListBase(),
 	m_value(val),
 	m_cachedStringValue(),
@@ -168,13 +165,14 @@ XResultTreeFrag::boolean() const
 			const XalanText* const	theTextNode =
 				static_cast<const XalanText*>(theCurrentNode);
 
-			if (m_support->isIgnorableWhitespace(*theTextNode) ||
+			if (theTextNode->isIgnorableWhitespace() ||
 			    length(trim(theTextNode->getData())) == 0)
 			{
 				continue;
 			}
       
 			fResult = true;
+
 			break;
 		}
 
@@ -192,9 +190,9 @@ XResultTreeFrag::str() const
 	if (isEmpty(m_cachedStringValue) == true)
 	{
 #if defined(XALAN_NO_MUTABLE)
-		((XResultTreeFrag*)this)->m_cachedStringValue = m_support->getNodeData(*m_value.get());
+		((XResultTreeFrag*)this)->m_cachedStringValue = m_value->getXSLTData();
 #else
-		m_cachedStringValue = m_support->getNodeData(*m_value.get());
+		m_cachedStringValue = m_value->getXSLTData();
 #endif
 	}
 
@@ -204,15 +202,15 @@ XResultTreeFrag::str() const
 
 
 const ResultTreeFragBase&
-XResultTreeFrag::rtree() const
+XResultTreeFrag::rtree(XPathExecutionContext&	/* executionContext */) const
 {
 	return *m_value.get();
 }
 
 
 
-ResultTreeFragBase&
-XResultTreeFrag::rtree()
+const ResultTreeFragBase&
+XResultTreeFrag::rtree() const
 {
 	return *m_value.get();
 }
@@ -241,14 +239,6 @@ XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObje
 {
 	theCallbackObject.ResultTreeFragment(*this,
 										 rtree());
-}
-
-
-
-bool
-XResultTreeFrag::equals(const XObject&	theRHS) const
-{
-	return ::equals(str(), theRHS.str());
 }
 
 
@@ -307,19 +297,12 @@ XResultTreeFrag::indexOf(const XalanNode*	theNode) const
 		else
 		{
 			theIndex++;
+
 			theCurrentChild = theCurrentChild->getNextSibling();
 		}
 	}
 
 	return fFound == true ? theIndex : NodeRefListBase::npos;
-}
-
-
-
-XPathSupport*
-XResultTreeFrag::getSupport() const
-{
-	return m_support;
 }
 
 

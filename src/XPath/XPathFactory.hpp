@@ -206,7 +206,7 @@ public:
 	 */
 	XPathGuard(
 			XPathFactory&	theFactory,
-			XPath*			theXPath) :
+			const XPath*	theXPath) :
 		m_factory(&theFactory),
 		m_object(theXPath)
 	{
@@ -239,7 +239,7 @@ public:
 	 * 
 	 * @return pointer to XPath
 	 */
-	XPath*
+	const XPath*
 	operator->() const
 	{
 		assert(m_object != 0);
@@ -252,7 +252,7 @@ public:
 	 * 
 	 * @return pointer to XPath
 	 */
-	XPath*
+	const XPath*
 	get() const
 	{
 		return m_object;
@@ -281,10 +281,10 @@ public:
 	 * 
 	 * @return pointer to XPath
 	 */
-	XPath*
+	const XPath*
 	release()
 	{
-		XPath* const	theTemp = m_object;
+		const XPath* const	theTemp = m_object;
 
 		m_object = 0;
 
@@ -301,8 +301,8 @@ private:
 
 
 	// Data members...
-	XPathFactory*		m_factory;
-    XPath*			m_object;
+	XPathFactory*	m_factory;
+    const XPath*	m_object;
 };
 
 #endif	// XPATHFACTORY_HEADER_GUARD_1357924680

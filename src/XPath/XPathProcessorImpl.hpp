@@ -122,7 +122,6 @@ public:
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
 			const PrefixResolver&	prefixResolver,
-			XObjectFactory&			xobjectFactory,
 			const XPathEnvSupport&	envSupport);
 
 	virtual void
@@ -130,7 +129,6 @@ public:
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
 			const PrefixResolver&	prefixResolver,
-			XObjectFactory&			xobjectFactory,
 			const XPathEnvSupport&	envSupport);
 
 private:
@@ -779,8 +777,6 @@ private:
 	 * A pointer to the current executionContext.
 	 */
 	const PrefixResolver*			m_prefixResolver;
-
-	XObjectFactory*					m_xobjectFactory;
 
 	const XPathEnvSupport*			m_envSupport;
 

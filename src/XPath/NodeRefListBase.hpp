@@ -119,9 +119,6 @@ public:
 	virtual unsigned int
 	indexOf(const XalanNode*	theNode) const = 0;
 
-	virtual XPathSupport*
-	getSupport() const = 0;
-
 	virtual NodeRefListBase*
 	clone() const = 0;
 

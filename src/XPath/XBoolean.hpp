@@ -76,16 +76,14 @@ public:
 	/**
 	 * Construct an XBoolean object from a boolean value
 	 * 
-	 * @param support XPath support class instance
-	 * @param envSupport XPath environment support class instance
 	 * @param val		boolean value to initialize object
 	 */
-	XBoolean(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			bool				val);
+	XBoolean(bool	val);
 
 	XBoolean(const XBoolean&	source);
+
+	virtual
+	~XBoolean();
 
 	// These methods are inherited from XObject ...
 
@@ -111,30 +109,11 @@ public:
 	virtual XalanDOMString
 	str() const;
 
-	virtual const ResultTreeFragBase&
-	rtree() const;
-
-	virtual ResultTreeFragBase&
-	rtree();
-
-	virtual const NodeRefListBase&
-	nodeset() const;
-
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
-
-protected:
-
-	virtual
-	~XBoolean();
-
-	XBoolean(
-			XPathEnvSupport*	envSupport,
-			XPathSupport*		support,
-			bool				val);
 
 private:
 

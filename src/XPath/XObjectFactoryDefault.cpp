@@ -65,12 +65,9 @@
 
 
 #include "XBoolean.hpp"
-#include "XBooleanStatic.hpp"
 #include "XNodeSet.hpp"
 #include "XNull.hpp"
 #include "XNumber.hpp"
-#include "XPathEnvSupport.hpp"
-#include "XPathSupport.hpp"
 #include "XResultTreeFrag.hpp"
 #include "XSpan.hpp"
 #include "XString.hpp"
@@ -78,19 +75,15 @@
 
 
 
-static XBooleanStatic		theTrueBoolean(true);
-static XBooleanStatic		theFalseBoolean(false);
+static XBoolean		theTrueBoolean(true);
+static XBoolean		theFalseBoolean(false);
 
 
 
-XObjectFactoryDefault::XObjectFactoryDefault(
-			XPathEnvSupport&	theEnvSupport,
-			XPathSupport&		theSupport) :
+XObjectFactoryDefault::XObjectFactoryDefault() :
 	XObjectFactory(),
-	m_envSupport(theEnvSupport),
-	m_support(theSupport),
 	m_xobjects(),
-	m_XNull(new XNull(theEnvSupport, theSupport))
+	m_XNull(new XNull)
 #if !defined(NDEBUG)
 	, m_totalBooleanInstanceCount(0),
 	m_totalNodeSetInstanceCount(0),
@@ -189,7 +182,7 @@ XObjectFactoryDefault::createBoolean(
 	}
 	else
 	{
-		XBoolean* const		theBoolean = new XBoolean(m_envSupport, m_support, theValue);
+		XBoolean* const		theBoolean = new XBoolean(theValue);
 
 		m_xobjects.insert(theBoolean);
 
@@ -207,7 +200,7 @@ XObjectFactoryDefault::createNodeSet(
 			NodeRefListBase*	value,
 			bool				/* fOptimize */)
 {
-	XNodeSet* const		theXNodeSet = new XNodeSet(m_envSupport, m_support, value);
+	XNodeSet* const		theXNodeSet = new XNodeSet(value);
 
 	m_xobjects.insert(theXNodeSet);
 
@@ -225,7 +218,7 @@ XObjectFactoryDefault::createNodeSet(
 			XalanNode&	value,
 			bool		/* fOptimize */)
 {
-	XNodeSet* const		theXNodeSet = new XNodeSet(m_envSupport, m_support, value);
+	XNodeSet* const		theXNodeSet = new XNodeSet(value);
 
 	m_xobjects.insert(theXNodeSet);
 
@@ -247,7 +240,7 @@ XObjectFactoryDefault::createNull(bool		fOptimize)
 	}
 	else
 	{
-		XNull* const	theXNull = new XNull(m_envSupport, m_support);
+		XNull* const	theXNull = new XNull();
 
 		m_xobjects.insert(theXNull);
 
@@ -266,7 +259,7 @@ XObjectFactoryDefault::createNumber(
 			double	theValue,
 			bool	/* fOptimize */)
 {
-	XNumber*	theXNumber = new XNumber(m_envSupport, m_support, theValue);
+	XNumber*	theXNumber = new XNumber(theValue);
 
 	m_xobjects.insert(theXNumber);
 
@@ -284,7 +277,7 @@ XObjectFactoryDefault::createString(
 			const XalanDOMString&	theValue,
 			bool					/* fOptimize */)
 {
-	XString* const	theXString = new XString(m_envSupport, m_support, theValue);
+	XString* const	theXString = new XString(theValue);
 
 	m_xobjects.insert(theXString);
 
@@ -302,7 +295,7 @@ XObjectFactoryDefault::createUnknown(
 			const XalanDOMString&	theValue,
 			bool					/* fOptimize */)
 {
-	XUnknown* const	theXUnknown = new XUnknown(m_envSupport, m_support, theValue);
+	XUnknown* const	theXUnknown = new XUnknown(theValue);
 
 	m_xobjects.insert(theXUnknown);
 
@@ -320,7 +313,7 @@ XObjectFactoryDefault::createResultTreeFrag(
 			ResultTreeFragBase*		theValue,
 			bool					/* fOptimize */)
 {
-	XResultTreeFrag* const	theResultTreeFrag = new XResultTreeFrag(m_envSupport, m_support, theValue);
+	XResultTreeFrag* const	theResultTreeFrag = new XResultTreeFrag(theValue);
 
 	m_xobjects.insert(theResultTreeFrag);
 
@@ -338,7 +331,7 @@ XObjectFactoryDefault::createSpan(
 			NodeRefListBase*	theValue,
 			bool				/* fOptimize */)
 {
-	XSpan* const	theXSpan = new XSpan(m_envSupport, m_support, theValue);
+	XSpan* const	theXSpan = new XSpan(theValue);
 
 	m_xobjects.insert(theXSpan);
 
@@ -356,7 +349,7 @@ XObjectFactoryDefault::createSpan(
 			XalanNode&		theValue,
 			bool			/* fOptimize */)
 {
-	XSpan* const	theXSpan = new XSpan(m_envSupport, m_support, theValue);
+	XSpan* const	theXSpan = new XSpan(theValue);
 
 	m_xobjects.insert(theXSpan);
 

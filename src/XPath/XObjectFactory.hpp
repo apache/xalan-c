@@ -363,7 +363,7 @@ public:
 	 */
 	XObjectGuard(
 			XObjectFactory&		theFactory,
-			XObject*			theXObject) :
+			const XObject*		theXObject) :
 		m_factory(&theFactory),
 		m_object(theXObject)
 	{
@@ -426,7 +426,7 @@ public:
 	 * 
 	 * @return pointer to XObject
 	 */
-	XObject*
+	const XObject*
 	operator->() const
 	{
 		assert(m_object != 0);
@@ -439,7 +439,7 @@ public:
 	 * 
 	 * @return pointer to XObject
 	 */
-	XObject*
+	const XObject*
 	get() const
 	{
 		return m_object;
@@ -470,7 +470,7 @@ public:
 	void
 	reset(
 			XObjectFactory&		theFactory,
-			XObject*			theXObject)
+			const XObject*		theXObject)
 	{
 		if (m_object != 0)
 		{
@@ -488,10 +488,10 @@ public:
 	 * 
 	 * @return pointer to XObject
 	 */
-	XObject*
+	const XObject*
 	release()
 	{
-		XObject* const	theTemp = m_object;
+		const XObject* const	theTemp = m_object;
 
 		m_object = 0;
 
@@ -506,7 +506,7 @@ private:
 
 	// Data members...
 	XObjectFactory*		m_factory;
-    XObject*			m_object;
+    const XObject*		m_object;
 };
 
 
