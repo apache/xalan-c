@@ -62,14 +62,16 @@
 const XalanDOMString	XPathException::s_emptyString;
 
 
+
 XPathException::XPathException(
 			const XalanDOMString&	message,
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
 			int						theColumnNumber,
+			const XalanNode*		styleNode,
 			const XalanDOMString&	theType) :
 	XSLException(message, theURI, theLineNumber, theColumnNumber, theType),
-	m_styleNode(0)
+	m_styleNode(styleNode)
 {
 }
 
@@ -87,10 +89,12 @@ XPathException::XPathException(
 
 
 XPathException::XPathException(
-			const XalanDOMString&	message,
+			const Locator&			theLocator,
+			const XalanDOMString&	theMessage,
+			const XalanNode*		styleNode,
 			const XalanDOMString&	theType) :
-	XSLException(message, theType),
-	m_styleNode(0)
+	XSLException(theLocator, theMessage, theType),
+	m_styleNode(styleNode)
 {
 }
 

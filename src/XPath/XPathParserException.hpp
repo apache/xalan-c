@@ -94,6 +94,18 @@ public:
 	/**
 	 * Constructor
 	 * 
+	 * @param theLocator The locator instance for error reporting.
+	 * @param theMessage message to write when exception thrown
+	 * @param theType type of exception, default is "XPathParserException"
+	 */
+	XPathParserException(
+			const Locator&			theLocator,
+			const XalanDOMString&	theMessage,
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathParserException")));
+
+	/**
+	 * Constructor
+	 * 
 	 * @param theMessage message to write when exception thrown
 	 * @param theType type of exception, default is "XPathParserException"
 	 */
