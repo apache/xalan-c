@@ -182,7 +182,7 @@ public:
 	 * @param theValue The new value.
 	 */
 	void
-	set(ResultTreeFragBase*		theValue);
+	set(ResultTreeFragBase&		theValue);
 
 protected:
 
@@ -194,7 +194,7 @@ private:
 	// Data members...
 	ResultTreeFragBase*				m_value;	
 
-	const bool						m_hasSingleTextChild;
+	const XalanDOMString*			m_singleTextChildValue;
 
 	StylesheetExecutionContext*		m_executionContext;
 

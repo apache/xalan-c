@@ -84,8 +84,8 @@
 
 
 
-inline bool
-hasSingleTextChild(const ResultTreeFragBase&	theRTreeFrag)
+inline const XalanDOMString*
+getSingleTextChildValue(const ResultTreeFragBase&	theRTreeFrag)
 {
 	const XalanNode* const	theFirstChild = theRTreeFrag.getFirstChild();
 
@@ -93,11 +93,11 @@ hasSingleTextChild(const ResultTreeFragBase&	theRTreeFrag)
 		theFirstChild->getNodeType() == XalanNode::TEXT_NODE &&
 		theFirstChild->getNextSibling() == 0)
 	{
-		return true;
+		return &theFirstChild->getNodeValue();
 	}
 	else
 	{
-		return false;
+		return 0;
 	}
 }
 
@@ -106,7 +106,7 @@ hasSingleTextChild(const ResultTreeFragBase&	theRTreeFrag)
 XResultTreeFrag::XResultTreeFrag(ResultTreeFragBase&	value) :
 	XObject(eTypeResultTreeFrag),
 	m_value(&value),
-	m_hasSingleTextChild(hasSingleTextChild(value)),
+	m_singleTextChildValue(getSingleTextChildValue(value)),
 	m_executionContext(0),
 	m_cachedStringValue(),
 	m_cachedNumberValue(0.0)
@@ -120,7 +120,7 @@ XResultTreeFrag::XResultTreeFrag(
 			bool					/* deepClone */) :
 	XObject(source),
 	m_value(source.m_value),
-	m_hasSingleTextChild(source.m_hasSingleTextChild),
+	m_singleTextChildValue(source.m_singleTextChildValue),
 	m_executionContext(0),
 	m_cachedStringValue(source.m_cachedStringValue),
 	m_cachedNumberValue(source.m_cachedNumberValue)
@@ -185,12 +185,12 @@ XResultTreeFrag::boolean() const
 const XalanDOMString&
 XResultTreeFrag::str() const
 {
-	if (m_hasSingleTextChild == true)
+	if (m_singleTextChildValue != 0)
 	{
 		assert(m_value->getFirstChild() != 0 &&
 				m_value->getFirstChild()->getNodeType() == XalanNode::TEXT_NODE);
 
-		return m_value->getFirstChild()->getNodeValue();
+		return *m_singleTextChildValue;
 	}
 	else if (isEmpty(m_cachedStringValue) == true)
 	{
@@ -211,7 +211,16 @@ XResultTreeFrag::str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const
 {
-	if (isEmpty(m_cachedStringValue) == false)
+	if (m_singleTextChildValue != 0)
+	{
+		assert(m_value->getFirstChild() != 0 &&
+				m_value->getFirstChild()->getNodeType() == XalanNode::TEXT_NODE);
+
+		assert(length(*m_singleTextChildValue) == FormatterListener::size_type(length(*m_singleTextChildValue)));
+
+		(formatterListener.*function)(c_wstr(*m_singleTextChildValue), FormatterListener::size_type(length(*m_singleTextChildValue)));
+	}
+	else if (isEmpty(m_cachedStringValue) == false)
 	{
 		assert(length(m_cachedStringValue) == FormatterListener::size_type(length(m_cachedStringValue)));
 
@@ -228,7 +237,11 @@ XResultTreeFrag::str(
 void
 XResultTreeFrag::str(XalanDOMString&	theBuffer) const
 {
-	if (isEmpty(m_cachedStringValue) == false)
+	if (m_singleTextChildValue != 0)
+	{
+		append(theBuffer, *m_singleTextChildValue);
+	}
+	else if (isEmpty(m_cachedStringValue) == false)
 	{
 		append(theBuffer, m_cachedStringValue);
 	}
@@ -243,7 +256,11 @@ XResultTreeFrag::str(XalanDOMString&	theBuffer) const
 double
 XResultTreeFrag::stringLength() const
 {
-	if (isEmpty(m_cachedStringValue) == false)
+	if (m_singleTextChildValue != 0)
+	{
+		return m_singleTextChildValue->length();
+	}
+	else if (isEmpty(m_cachedStringValue) == false)
 	{
 		return length(m_cachedStringValue);
 	}
@@ -298,6 +315,8 @@ XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObje
 ResultTreeFragBase*
 XResultTreeFrag::release()
 {
+	m_singleTextChildValue = 0;
+
 	clear(m_cachedStringValue);
 
 	m_cachedNumberValue = 0.0;
@@ -312,11 +331,13 @@ XResultTreeFrag::release()
 
 
 void
-XResultTreeFrag::set(ResultTreeFragBase*	theValue)
+XResultTreeFrag::set(ResultTreeFragBase&	theValue)
 {
 	release();
 
-	m_value = theValue;
+	m_value = &theValue;
+
+	m_singleTextChildValue = getSingleTextChildValue(*m_value);
 }
 
 
