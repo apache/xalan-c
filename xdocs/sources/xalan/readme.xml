@@ -203,7 +203,7 @@
 <p>The make files that come with the UNIX distributions include targets for rebuilding one or all of the sample applications (with the exception of the ThreadSafe sample, which in its current form only runs under Windows). To rebuild one or more sample applications, go to the xml-xalan/c/src directory and run<br/><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make <ref>targ</ref></code><br/><br/>
 where <ref>targ</ref> is <code>Samples</code> (all the samples), <code>XalanTransform</code>, <code>SimpleTransform</code>,  <code>StreamTransform</code>, <code>UseStylesheetParam</code>, <code>TraceListen</code>, <code>CompileStylesheet</code>, (Windows only) <code>ThreadSafe</code>  <code>XPathWrapper</code>, <code>ExternalFunctions</code>,or <code>ApacheModuleXSLT</code>.</p>
-<note>For information on rebuilding ApacheModuleXSLT, see <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link></note>
+<note>For information on building Apache Module, see <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link></note>
    </s3>
  </s2><anchor name="contact"/>
  <s2 title="Getting in Touch">
