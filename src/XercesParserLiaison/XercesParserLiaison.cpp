@@ -613,7 +613,7 @@ XercesParserLiaison::CreateSAXParser()
 {
 	SAXParser* const	theParser = new SAXParser;
 
-	theParser->setDoValidation(m_useValidation);
+	theParser->setDoValidation(false);
 
 	theParser->setDoNamespaces(false);
 
