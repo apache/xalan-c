@@ -534,13 +534,13 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 
 	if(0 == sourceTree)
 	{
-        const CCGetAndReleaseCachedString   theGuard(m_xpathConstructionContext);
-	
-		XalanDOMString&     xmlIdentifier = theGuard.get();
+        const CCGetAndReleaseCachedString   theGuard1(m_xpathConstructionContext);
+
+		XalanDOMString&     xmlIdentifier = theGuard1.get();
 
         if (0 != inputSource.getSystemId())
 		{
-			inputSource.getSystemId();
+			xmlIdentifier = inputSource.getSystemId();
 		}
 		else
 		{
@@ -551,14 +551,16 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 
 		if(m_diagnosticsPrintWriter != 0)
 		{
+            const CCGetAndReleaseCachedString   theGuard2(m_xpathConstructionContext);
+
 			// In case we have a fragment identifier, go ahead and 
 			// try to parse the XML here.
 			diag(
                 XalanMessageLoader::getMessage(
                     XalanMessages::Parsing_1Param,
-                    theGuard.get(),
+                    theGuard2.get(),
                     xmlIdentifier,
-                    theGuard.get()));
+                    theGuard1.get()));
 
 			pushTime(&xmlIdentifier);
 		}
@@ -579,12 +581,12 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 
         if(0 != m_diagnosticsPrintWriter)
 		{
-            const CCGetAndReleaseCachedString   theGuard(m_xpathConstructionContext);
+            const CCGetAndReleaseCachedString   theGuard3(m_xpathConstructionContext);
 
 			displayDuration(
 				XalanMessageLoader::getMessage(
                     XalanMessages::ParseOf_1Param,
-                    theGuard.get(),
+                    theGuard3.get(),
                     xmlIdentifier),
 				&xmlIdentifier);
 		}
