@@ -147,18 +147,12 @@ will be provided in a separate distribution.</p>
   <tr>
   <td>
   &xslt4c-winnt-dist;<br/>
-  &xslt4c-win2k-dist;<br/>
-  &xslt4c-winxp-dist;<br/>		
   </td>
   <td>
   &xml4c-winnt-dist;<br/>
-  &xml4c-win2k-dist;<br/>
-  &xml4c-winxp-dist;<br/>
   </td>
   <td>
   Windows NT<br/>
-  Windows 2000<br/>
-  Windows XP<br/>
   </td>
   </tr>
 </table>
