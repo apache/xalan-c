@@ -221,3 +221,59 @@ XalanQName::getPrefixForNamespace(
 
 	return thePrefix;
 }
+
+
+
+bool
+XalanQName::isValidNCName(const XalanDOMString&		theNCName)
+{
+	return isValidNCName(c_wstr(theNCName), length(theNCName));
+}
+
+
+
+bool
+XalanQName::isValidNCName(
+			const XalanDOMChar*			theNCName,
+			XalanDOMString::size_type	theLength)
+{
+	assert(theNCName != 0);
+
+	if (theLength == XalanDOMString::npos)
+	{
+		theLength = length(theNCName);
+	}
+
+	if (theLength == 0)
+	{
+		return false;
+	}
+	else
+	{
+		XalanDOMChar	c = theNCName[0];
+
+		if(!(XalanXMLChar::isLetter(c) || c == XalanUnicode::charLowLine))
+		  return false;
+
+		if(theLength > 1)
+		{
+			for(XalanDOMString::size_type i = 1; i < theLength; i++)
+			{
+				c = theNCName[i]; 
+
+				if(!(XalanXMLChar::isLetter(c) ||
+					 XalanXMLChar::isDigit(c) ||
+					 XalanXMLChar::isExtender(c) ||
+					 XalanXMLChar::isCombiningChar(c) ||
+					 c == XalanUnicode::charLowLine ||
+					 c == XalanUnicode::charHyphenMinus ||
+					 c == XalanUnicode::charFullStop))
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+}

@@ -70,6 +70,7 @@
 
 
 class DOMSupport;
+class Locator;
 
 
 
@@ -117,7 +118,8 @@ public:
 	 */
 	XalanQNameByValue(
 			const XalanDOMString&		qname,
-			const NamespacesStackType&	namespaces);
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator = 0);
 
 	/**
 	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
@@ -128,7 +130,8 @@ public:
 	 */
 	XalanQNameByValue(
 			const XalanDOMChar*			qname,
-			const NamespacesStackType&	namespaces);
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator = 0);
 
 	/**
 	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
@@ -143,7 +146,8 @@ public:
 			const XalanDOMString&	qname,
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
-			const DOMSupport& 		domSupport);
+			const DOMSupport& 		domSupport,
+			const Locator*			locator = 0);
 
 	/**
 	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
@@ -154,7 +158,8 @@ public:
 	 */
 	XalanQNameByValue(
 			const XalanDOMString&	qname,
-			const PrefixResolver*	theResolver = 0);
+			const PrefixResolver*	theResolver = 0,
+			const Locator*			locator = 0);
 
 	virtual
 	~XalanQNameByValue();
@@ -212,13 +217,17 @@ private:
 	void
 	initialize(
 			const XalanDOMChar*			qname,
-			const NamespacesStackType&	namespaces);
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator);
 
 	void
 	resolvePrefix(
 			const XalanDOMString&	qname,
-			const PrefixResolver*	theResolver);
+			const PrefixResolver*	theResolver,
+			const Locator*			locator);
 
+
+	// Data members...
 	XalanDOMString	m_namespace;
 
 	XalanDOMString	m_localpart;

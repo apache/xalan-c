@@ -141,6 +141,17 @@ public:
 	getNamespace() const = 0;
 
 	/**
+	 * Determine if the qualified name is valid.
+	 * 
+	 * @return true if the instance is a valid QName, false if not.
+	 */
+	bool
+	isValid() const
+	{
+		return isValidNCName(getLocalPart());
+	}
+
+	/**
 	 * Whether the qualified name is empty.
 	 * 
 	 * @return true if namespace and local part are both empty
@@ -224,6 +235,14 @@ public:
 			const NamespacesStackType&	nsStack,
 			const XalanDOMString&		uri,
 			bool						reverse = true);
+
+	static bool
+	isValidNCName(const XalanDOMString&		theNCName);
+
+	static bool
+	isValidNCName(
+			const XalanDOMChar*			theNCName,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos);
 
 protected:
 
