@@ -618,13 +618,13 @@ FormatterToXML::accumContentString(const XalanDOMChar*	chars)
 
 void
 FormatterToXML::accumNameArray(
-			const XalanDOMChar	chars[],
-			unsigned int		start,
-			unsigned int		length)
+			const XalanDOMChar			chars[],
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length)
 {
-	const DOMCharBufferType::size_type	n = start + length;
+	const XalanDOMString::size_type		n = start + length;
 
-	for(DOMCharBufferType::size_type i = start; i < n; ++i)
+	for(XalanDOMString::size_type i = start; i < n; ++i)
 	{
 		accumName(chars[i]);
 	}
@@ -634,13 +634,13 @@ FormatterToXML::accumNameArray(
 
 void
 FormatterToXML::accumContentArray(
-			const XalanDOMChar	chars[],
-			unsigned int		start,
-			unsigned int		length)
+			const XalanDOMChar			chars[],
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length)
 {
-	const DOMCharBufferType::size_type	n = start + length;
+	const XalanDOMString::size_type		n = start + length;
 
-	for(DOMCharBufferType::size_type i = start; i < n; ++i)
+	for(XalanDOMString::size_type i = start; i < n; ++i)
 	{
 		accumContent(chars[i]);
 	}
@@ -650,13 +650,13 @@ FormatterToXML::accumContentArray(
 
 void
 FormatterToXML::accumArrayUTF(
-			const XalanDOMChar	chars[],
-			unsigned int		start,
-			unsigned int		length)
+			const XalanDOMChar			chars[],
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length)
 {
-	const DOMCharBufferType::size_type	n = start + length;
+	const XalanDOMString::size_type		n = start + length;
 
-	for(DOMCharBufferType::size_type i = start; i < n; ++i)
+	for(XalanDOMString::size_type i = start; i < n; ++i)
 	{
 		accumCharUTF(chars[i]);
 	}
@@ -666,9 +666,9 @@ FormatterToXML::accumArrayUTF(
 
 void
 FormatterToXML::accumArrayUTFDirect(
-			const XalanDOMChar	chars[],
-			unsigned int		start,
-			unsigned int		length)
+			const XalanDOMChar			chars[],
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length)
 {
 	assert(m_maxCharacter >= 65535);
 	assert(m_stream != 0);

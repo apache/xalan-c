@@ -89,10 +89,14 @@ public:
 
 #if defined (XALAN_NO_NAMESPACES)
 	typedef ostream		StreamType;
-	typedef int			StreamSizeType;
+	typedef long		StreamSizeType;
 #else
 	typedef std::ostream		StreamType;
+#if defined(XALAN_NO_STD_STREAMSIZE)
+	typedef long				StreamSizeType;
+#else
 	typedef std::streamsize		StreamSizeType;
+#endif
 #endif
 
 	/**
