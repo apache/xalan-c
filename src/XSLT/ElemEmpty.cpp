@@ -97,6 +97,7 @@ ElemEmpty::ElemEmpty(
 
 ElemEmpty::~ElemEmpty()
 {
+	assert(getNextSiblingElem() == 0 && getFirstChildElem() == 0);
 }
 
 
