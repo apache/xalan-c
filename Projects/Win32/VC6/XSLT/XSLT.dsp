@@ -186,6 +186,10 @@ SOURCE=..\..\..\..\src\XSLT\ElemExtensionCall.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\ElemFallback.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\ElemForEach.cpp
 # End Source File
 # Begin Source File
@@ -500,6 +504,10 @@ SOURCE=..\..\..\..\src\XSLT\ElemEmpty.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\ElemExtensionCall.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\ElemFallback.hpp
 # End Source File
 # Begin Source File
 
