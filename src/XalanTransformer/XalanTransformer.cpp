@@ -54,6 +54,10 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+#include "XalanTransformer.hpp"
+
+
+
 #include <algorithm>
 
 
@@ -68,10 +72,6 @@
 
 #include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
-
-
-
-#include <XalanTransformer/XalanTransformer.hpp>
 
 
 
