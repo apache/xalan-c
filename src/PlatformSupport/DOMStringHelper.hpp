@@ -2619,6 +2619,31 @@ struct DOMStringLessThanFunction : public std::binary_function<const XalanDOMStr
 
 
 /**
+ * Less than functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the theLHS is less than theRHSl
+ */
+#if defined(XALAN_NO_NAMESPACES)
+struct DOMStringPointerLessThanFunction : public binary_function<const XalanDOMString*, const XalanDOMString*, bool>
+#else
+struct DOMStringPointerLessThanFunction : public std::binary_function<const XalanDOMString*, const XalanDOMString*, bool>
+#endif
+{
+	result_type
+	operator() (first_argument_type		theLHS,
+				second_argument_type	theRHS) const
+	{
+		assert(theLHS != 0 && theRHS != 0);
+
+		return compare(*theLHS, *theRHS) < 0 ? true : false;
+	}
+};
+
+
+
+/**
  * Less than functor for DOMStrings which ignores case for the characters a-z and A-Z
  * 
  * @param theLHS first string to compare
