@@ -938,15 +938,15 @@ public:
 	};
     template <class T>
 #if defined(XALAN_NO_STD_NAMESPACE)
-    struct DeleteParamPairFunctor : public unary_function<const T&, void>
+    struct DeleteParamPairFunctor : public unary_function<T&, void>
 #else
-    struct DeleteParamPairFunctor : public std::unary_function<const T&, void>
+    struct DeleteParamPairFunctor : public std::unary_function<T&, void>
 #endif
     {
 #if defined(XALAN_NO_STD_NAMESPACE)
-        typedef unary_function<const T&, void>	BaseClassType;
+        typedef unary_function<T&, void>	BaseClassType;
 #else
-        typedef std::unary_function<const T&, void>	BaseClassType;
+        typedef std::unary_function<T&, void>	BaseClassType;
 #endif
 
         typedef typename BaseClassType::result_type		result_type;
@@ -957,10 +957,11 @@ public:
         {
         }
 
-        template<class T>
-        deletePtr(T* ptr)const
+        template<class PtrT>
+	void
+        deletePtr(PtrT* ptr)const
         {
-            ptr->~T();
+            ptr->~PtrT();
         }
 
         /**

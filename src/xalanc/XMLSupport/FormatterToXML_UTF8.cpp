@@ -22,7 +22,12 @@
 
 #include <xercesc/sax/AttributeList.hpp>
 
+
+
 #include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+#include <xalanc/Include/XalanMemoryManagement.hpp>
+
+
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
@@ -1012,7 +1017,8 @@ FormatterToXML_UTF8::initialize(MemoryManagerType& theManager)
 void
 FormatterToXML_UTF8::terminate()
 {
-	XalanDOMString(XalanMemMgrs::getDummyMemMgr()).swap(s_localUTF8String);
+	XalanDOMString   temp(XalanMemMgrs::getDummyMemMgr());
+        temp.swap(s_localUTF8String);
 }
 
 

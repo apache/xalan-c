@@ -54,10 +54,10 @@ public:
 	explicit
 	XalanObjectStackCache(MemoryManagerType& theManager, 
                           unsigned int	initialListSize = 0) :
-		m_stack(theManager),
-        m_numObjectsOnStack(0),
         m_createFunctor(),
-        m_deleteFunctor(theManager)
+        m_deleteFunctor(theManager),
+	m_stack(theManager),
+        m_numObjectsOnStack(0)
 	{
 		m_stack.reserve(initialListSize);
 

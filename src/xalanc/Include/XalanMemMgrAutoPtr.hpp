@@ -68,7 +68,7 @@ public:
 		bool
 		isInitilized()const
 		{
-			return ( (first != 0) && (second != 0) )? true : false;
+			return ( (this->first != 0) && (this->second != 0) )? true : false;
 		}
 	
 		void
@@ -80,10 +80,10 @@ public:
 			{		
 				if ( toCallDestructor ) 
 				{
-					second->~Type();
+					this->second->~Type();
 				}
 
-				first->deallocate(second);
+				this->first->deallocate(this->second);
 			}
 		}
 		
@@ -93,9 +93,9 @@ public:
 		{	
 			invariants();
 
-			first = m_memoryManager;
+			this->first = m_memoryManager;
 			
-			second = m_dataPointer;
+			this->second = m_dataPointer;
 
 			invariants();
 		}	

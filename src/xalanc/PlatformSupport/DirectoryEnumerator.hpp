@@ -149,8 +149,9 @@ public:
  
 		if ( retCode == -1 )
 		{
+			XalanDOMString theBuffer(XalanMemMgrs::getDefaultXercesMemMgr());
 			typedef	XalanFileOutputStream::XalanFileOutputStreamOpenException XalanStatDirectoryException;
-			throw	XalanStatDirectoryException( XalanDOMString(d_name), errno );
+			throw	XalanStatDirectoryException( XalanDOMString(d_name, XalanMemMgrs::getDefaultXercesMemMgr()), errno , theBuffer);
 		}
 
 		return S_ISDIR(stat_Info.st_mode);
@@ -240,6 +241,7 @@ EnumerateDirectory(
 			bool						fIncludeSelfAndParent = false)
 #endif
 {
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 #if defined(_MSC_VER)
 	FindFileStruct 		theFindData;
 	
@@ -254,7 +256,6 @@ EnumerateDirectory(
 	theHandleType	theSearchHandle = _wfindfirst(const_cast<wchar_t*>(theConversionFunction(theFullSearchSpec)),
 										  &theFindData);
 #pragma warning(pop)
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
 	if (theSearchHandle != -1)
 	{
@@ -338,8 +339,8 @@ EnumerateDirectory(
 #endif
 
 			int lenSpec = strlen(theSpec); 
-			theFullSearchSpec.substr(lenSpec, indexName, theName); 
-			theFullSearchSpec.substr(lenSpec+indexName+1, indexSuffix, theSuffix);
+			theFullSearchSpec.substr(theName, lenSpec, indexName); 
+			theFullSearchSpec.substr(theSuffix, lenSpec+indexName+1, indexSuffix);
 		}
 
 		DIR* const	theDirectory = opendir(theSpec);
@@ -360,18 +361,18 @@ EnumerateDirectory(
 						{
 							if( target_Dir )
 							{
-								*theOutputIterator = StringType(theEntry->getName());
+								*theOutputIterator = StringType(theEntry->getName(), theManager);
 							}
 							else
 							{
-								XalanDOMString	Getname(StringType(theEntry->getName(), theManager));
+								XalanDOMString	Getname(theEntry->getName(), theManager);
 								int	Check_1 = Getname.compare(theName);
 								XalanDOMString	GetnameSuffix(theManager);
-                                Getname.substr(length(Getname)-indexSuffix, indexSuffix, GetnameSuffix);            
+                                Getname.substr(GetnameSuffix, Getname.size() -indexSuffix, indexSuffix);            
 								int Check_2 = GetnameSuffix.compare(theSuffix);
 								if ( Check_1 == 1 && (!Check_2) )
 								{
-									*theOutputIterator = Getname;
+								*theOutputIterator = StringType(theEntry->getName(), theManager);
 								}
 							}
 						}

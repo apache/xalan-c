@@ -120,7 +120,7 @@ private:
 
 	// Not implemented...
     XNodeSetBase();
-    XNodeSetBase(const& XNodeSetBase);
+    XNodeSetBase(const XNodeSetBase&);
 	XNodeSetBase&
 	operator=(const XNodeSetBase&);
 

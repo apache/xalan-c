@@ -193,7 +193,8 @@ ResultNamespacesStack::clear()
 {
 	// Since we always keep one dummy entry at the beginning,
 	// swap with an OutputContextStackType instance of size 1.
- 	NamespacesStackType(XalanMemMgrs::getDummyMemMgr(), 1).swap(m_resultNamespaces);
+ 	NamespacesStackType temp(XalanMemMgrs::getDummyMemMgr(), 1);
+	temp.swap(m_resultNamespaces);
 
 	m_stackBegin = m_resultNamespaces.begin();
 

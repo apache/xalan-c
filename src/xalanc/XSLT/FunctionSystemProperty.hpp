@@ -73,6 +73,8 @@ protected:
 
 private:
 
+	FunctionSystemProperty(const FunctionSystemProperty&);
+
 	// Not implemented...
 	FunctionSystemProperty&
 	operator=(const FunctionSystemProperty&);

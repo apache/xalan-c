@@ -163,7 +163,7 @@ XPathFunctionTable::InstallFunction(
 
 			m_functionTable[theFunctionID] = theFunction.clone(*m_memoryManager);
 
-            theOldFunction->~Function();
+            const_cast<Function*>(theOldFunction)->~Function();
 
             m_memoryManager->deallocate((void*)theOldFunction);
 		}
@@ -190,7 +190,7 @@ XPathFunctionTable::UninstallFunction(const XalanDOMChar*	theFunctionName)
 
         if( theFunction!=0 )
         {
-            theFunction->~Function();
+            const_cast<Function*>(theFunction)->~Function();
 
              m_memoryManager->deallocate((void*)theFunction);
         }

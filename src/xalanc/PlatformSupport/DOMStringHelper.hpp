@@ -69,8 +69,7 @@ class XalanOutputStream;
 
 #else
 
-#define XALAN_STATIC_UCODE_STRING(str) XALAN_CPP_NAMESPACE_QUALIFIER TranscodeFromLocalCodePage(str)
-
+#define XALAN_STATIC_UCODE_STRING(str) str
 
 
 #endif

@@ -29,6 +29,7 @@
 
 
 #include <xalanc/Include/XalanMemoryManagement.hpp>
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 
 #include <cstddef>

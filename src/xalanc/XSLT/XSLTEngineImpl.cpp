@@ -515,11 +515,16 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 	if(0 == sourceTree)
 	{
         XPathConstructionContextDefault::GetAndReleaseCachedString theGuard(m_xpathConstructionContext);
-
-		const XalanDOMString	xmlIdentifier( 0 != inputSource.getSystemId() ?
-												XalanDOMString(inputSource.getSystemId(), getMemoryManager()) :
-												XalanMessageLoader::getMessage(XalanMessages::InputXML, theGuard.get()),
-                                                getMemoryManager());
+	
+		XalanDOMString	xmlIdentifier(getMemoryManager());
+		if (0 != inputSource.getSystemId())
+		{
+			xmlIdentifier = inputSource.getSystemId();
+		}
+		else
+		{
+			xmlIdentifier = XalanMessageLoader::getMessage(XalanMessages::InputXML, theGuard.get());
+		}
 
 		if(m_diagnosticsPrintWriter != 0)
 		{
@@ -732,7 +737,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
         ds.append("id(");
 
 		ds += fragID;
-		ds += XALAN_STATIC_UCODE_STRING(")");
+		ds += XalanDOMString(XALAN_STATIC_UCODE_STRING(")"),getMemoryManager());
 
 		ElementPrefixResolverProxy		theProxy( getMemoryManager(), nsNode, m_xpathEnvSupport, m_domSupport);
 
@@ -1416,9 +1421,9 @@ XSLTEngineImpl::traceSelect(
 
 		if(mode != 0 && mode->isEmpty() == false)
 		{
-			msg += XALAN_STATIC_UCODE_STRING(", mode = {");
+			msg += XalanDOMString(XALAN_STATIC_UCODE_STRING(", mode = {"), executionContext.getMemoryManager());
 			msg += mode->getNamespace();
-			msg += XALAN_STATIC_UCODE_STRING("}");
+			msg += XalanDOMString(XALAN_STATIC_UCODE_STRING("}"), executionContext.getMemoryManager());
 			msg += mode->getLocalPart();
 		}
 

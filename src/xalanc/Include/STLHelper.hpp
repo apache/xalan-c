@@ -67,12 +67,11 @@ struct DeleteFunctor : public std::unary_function<const T*, void>
 	result_type
 	operator()(argument_type	thePointer) const
 	{
-        if( thePointer == 0 )
-            return;
-
-		thePointer->~T();
-        
-        m_memoryManager.deallocate((void*)thePointer);
+        if( thePointer != 0 )
+	{
+		const_cast<T*>(thePointer)->~T();
+        	m_memoryManager.deallocate((void*)thePointer);
+	}
 	}
 
 private:

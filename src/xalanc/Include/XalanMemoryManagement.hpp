@@ -18,7 +18,12 @@
 
 
 // Base include file.  Must be first.
+#include <new>
+
+
 #include <xalanc/Include/PlatformDefinitions.hpp>
+
+
 
 #include <xercesc/framework/MemoryManager.hpp>
 
@@ -106,8 +111,6 @@ struct MemoryManagedConstructionTraits
 };
 
 #define  XALAN_USES_MEMORY_MANAGER(Type)  \
-XALAN_USING_XALAN(MemoryManagedConstructionTraits) \
-XALAN_USING_XALAN(ConstructWithMemoryManager) \
 template<> \
 struct MemoryManagedConstructionTraits<Type> \
     { \

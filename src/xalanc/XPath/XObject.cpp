@@ -478,7 +478,7 @@ equalsDOMString
         return DOMStringEqualsFunction()(theLHS, theRHS.str());
 	}
 private:
-   mutable MemoryManagerType& m_memoryManager;
+   	MemoryManagerType& m_memoryManager;
 };
 
 
@@ -515,7 +515,7 @@ notEqualsDOMString
 		return DOMStringNotEqualsFunction()(theLHS, theRHS.str());
 	}
 private:
-   mutable MemoryManagerType& m_memoryManager;
+   	MemoryManagerType& m_memoryManager;
 };
 
 
@@ -558,7 +558,7 @@ lessThanDOMString
                 theRHS.num());
 	}
 private:
-   mutable MemoryManagerType& m_memoryManager;
+   	MemoryManagerType& m_memoryManager;
 };
 
 
@@ -601,7 +601,7 @@ lessThanOrEqualDOMString
                 theRHS.num());
 	}
 private:
-   mutable MemoryManagerType& m_memoryManager;
+   	MemoryManagerType& m_memoryManager;
 };
 
 
@@ -644,7 +644,7 @@ greaterThanDOMString
                 theRHS.num());
 	}
 private:
-  mutable  MemoryManagerType& m_memoryManager;
+  	MemoryManagerType& m_memoryManager;
 };
 
 
@@ -687,7 +687,7 @@ greaterThanOrEqualDOMString
                 theRHS.num());
 	}
 private:
-    mutable MemoryManagerType& m_memoryManager;
+    	MemoryManagerType& m_memoryManager;
 };
 
 
@@ -1126,7 +1126,7 @@ XObject::notEquals(
 			{
 				if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
 				{
-					return boolean(executionContext.getMemoryManager()) != theRHS.boolean(executionContext.getMemoryManager());
+					return boolean() != theRHS.boolean();
 				}
 				else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
 				{

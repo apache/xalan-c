@@ -438,12 +438,12 @@ protected:
     	m_memoryManager->deallocate(pointer);
     }
 
-    BlockIndexType     m_blockIndex; 
-    BlockIndexType     m_freeBlockVector;
-    
     MemoryManagerType*  m_memoryManager;
     const size_type     m_blockSize;
 
+    BlockIndexType     m_blockIndex; 
+    BlockIndexType     m_freeBlockVector;
+    
 private:
 	// Not implemented
 	XalanDeque();

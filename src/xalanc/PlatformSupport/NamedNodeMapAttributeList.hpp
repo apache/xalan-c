@@ -87,7 +87,7 @@ private:
 
 	static const XalanDOMChar	s_typeString[];
 
-    mutable MemoryManagerType&  m_memoryManager;
+    	MemoryManagerType&  m_memoryManager;
 };
 
 

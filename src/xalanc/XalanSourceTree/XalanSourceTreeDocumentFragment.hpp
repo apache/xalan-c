@@ -185,7 +185,7 @@ protected:
 	operator==(const XalanSourceTreeDocumentFragment&		theRHS) const;
 
 private:
-    mutable MemoryManagerType&      m_manager;
+    	MemoryManagerType&      m_manager;
 
 	XalanSourceTreeDocument* const	m_ownerDocument;
 

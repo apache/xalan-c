@@ -1957,7 +1957,7 @@ XalanFileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& 
         pathStatus=false;
     
     char buffer5[PATH_MAX];
-    XalanDOMString resultPath(getcwd(buffer5, PATH_MAX));
+    XalanDOMString resultPath(getcwd(buffer5, PATH_MAX), XalanMemMgrs::getDefaultXercesMemMgr());
     append(resultPath, s_pathSep);
 #endif
     

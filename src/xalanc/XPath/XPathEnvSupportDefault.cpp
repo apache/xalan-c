@@ -82,7 +82,8 @@ XPathEnvSupportDefault::terminate()
 			 s_externalFunctions.end(),
 			 NamespaceFunctionTableDeleteFunctor(s_externalFunctions.getMemoryManager()));
 
-	NamespaceFunctionTablesType(XalanMemMgrs::getDummyMemMgr()).swap(s_externalFunctions);
+	NamespaceFunctionTablesType temp(XalanMemMgrs::getDummyMemMgr());
+	temp.swap(s_externalFunctions);
 }
 
 
@@ -105,7 +106,8 @@ XPathEnvSupportDefault::~XPathEnvSupportDefault()
 			 m_externalFunctions.end(),
 			 NamespaceFunctionTableDeleteFunctor(m_externalFunctions.getMemoryManager()));
 
-	NamespaceFunctionTablesType(XalanMemMgrs::getDummyMemMgr()).swap(m_externalFunctions);
+	NamespaceFunctionTablesType temp(XalanMemMgrs::getDummyMemMgr());
+	temp.swap(m_externalFunctions);
 }
 
 
@@ -150,7 +152,7 @@ XPathEnvSupportDefault::updateFunctionTable(
 		else
 		{
 			// Found it, so delete the function...
-            (*j).second->~Function();
+            const_cast<Function*>((*j).second)->~Function();
 
             MemoryManagerType& theManager = theTable.getMemoryManager();
 
@@ -488,7 +490,7 @@ XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const Na
 
 	while(i != thePair.second.end())
 	{
-        (*i).second->~Function();
+        const_cast<Function*>((*i).second)->~Function();
 
         m_memMgr.deallocate((void*)(*i).second);
 

@@ -21,6 +21,11 @@
 #include <xalanc/PlatformSupport/ArenaBlockBase.hpp>
 
 
+
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 template<bool> struct CompileTimeError;

@@ -266,9 +266,11 @@ XalanFileOutputStream::doFlush()
 #if !defined(WIN32)
 	if (fflush(m_handle) != 0)
 	{
+        	XalanDOMString theBuffer(getMemoryManager());
 		throw XalanFileOutputStreamWriteException(
 			m_fileName,
-			errno);
+			errno,
+			theBuffer);
 	}
 #endif
 }
@@ -304,7 +306,7 @@ XalanFileOutputStream::writeData(
 
 	if (theBytesWritten != theBufferLength)
 	{
-       XalanDOMString theBuffer(theManager);
+       XalanDOMString theBuffer(getMemoryManager());
 
 		throw XalanFileOutputStreamWriteException(
 			m_fileName,

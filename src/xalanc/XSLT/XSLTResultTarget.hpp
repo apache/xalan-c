@@ -304,6 +304,8 @@ public:
 
 private:
 
+	XSLTResultTarget(const XSLTResultTarget&);
+
 	XalanDOMString			m_fileName;
 
 	StreamType*				m_byteStream;

@@ -290,7 +290,7 @@ public:
 	void
 	getInstalledFunctionNames(OutputIteratorType	theIterator) const
 	{
-		XalanDOMString	theString;
+		XalanDOMString	theString(XalanMemMgrs::getDefaultXercesMemMgr());
 
 		for (int i = 0; i < TableSize; ++i)
 		{

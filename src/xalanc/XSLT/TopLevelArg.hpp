@@ -156,7 +156,7 @@ private:
 	const XObjectPtr	m_xobject;
 };
 
-XALAN_USES_MEMORY_MANAGER(TopLevelArg);
+XALAN_USES_MEMORY_MANAGER(TopLevelArg)
 
 XALAN_CPP_NAMESPACE_END
 

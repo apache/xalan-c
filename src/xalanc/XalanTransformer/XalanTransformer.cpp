@@ -250,6 +250,7 @@ ICUStartUp(MemoryManagerType&  theManager)
     ICUBridgeCleanup::startup(theManager);
 }
 #else
+void
 ICUStartUp(MemoryManagerType&  /*theManager*/)
 {
 }
@@ -438,7 +439,7 @@ FormatSAXParseException(
 				theSystemID == 0 ? &theDummy : theSystemID,
 				theException.getLineNumber(),
 				theException.getColumnNumber(),
-				c_wstr(XALAN_STATIC_UCODE_STRING("SAXParseException")),
+				c_wstr(XalanDOMString(XALAN_STATIC_UCODE_STRING("SAXParseException"), theErrorMessage.getMemoryManager())),
 				theErrorMessage);
 }
 
@@ -679,7 +680,7 @@ XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet
 	{
 		m_compiledStylesheets.erase(i);
 
-		theStylesheet ->~XalanCompiledStylesheet() ;
+		const_cast<XalanCompiledStylesheet*>(theStylesheet) ->~XalanCompiledStylesheet() ;
 
         m_memoryManager.deallocate((void*) theStylesheet);
 		return 0;

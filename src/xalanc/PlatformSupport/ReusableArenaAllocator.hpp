@@ -191,7 +191,7 @@ public:
 		if( this->m_blocks.empty() 
 			|| !this->m_blocks.front()->blockAvailable() )
 		{
-            this->m_blocks.push_front(ReusableArenaBlockType::create(getMemoryManager(), this->m_blockSize));
+            this->m_blocks.push_front(ReusableArenaBlockType::create(this->getMemoryManager(), this->m_blockSize));
 			
 			assert( this->m_blocks.front() != 0 );
 		}

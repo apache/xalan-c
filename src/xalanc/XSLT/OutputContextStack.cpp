@@ -87,7 +87,8 @@ OutputContextStack::clear()
 {
 	// Since we always keep one dummy entry at the beginning,
 	// swap with an OutputContextStackType instance of size 1.
-	OutputContextStackType( XalanMemMgrs::getDummyMemMgr(), 1).swap(m_stack);
+	OutputContextStackType	temp( XalanMemMgrs::getDummyMemMgr(), 1);
+	temp.swap(m_stack);
 
 	m_stackPosition = m_stack.begin();
 

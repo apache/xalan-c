@@ -26,6 +26,7 @@
 
 
 
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 #include <xalanc/Include/XalanVector.hpp>
 
 
@@ -63,6 +64,7 @@ public:
 #endif
 
 	XalanDOMString(MemoryManagerType&  theManager);
+
 
 	explicit
 	XalanDOMString(
@@ -1061,6 +1063,7 @@ TranscodeFromLocalCodePage(const CharVectorType&	theSourceString,
 
 
 XALAN_USES_MEMORY_MANAGER(XalanDOMString)
+
 
 
 XALAN_CPP_NAMESPACE_END

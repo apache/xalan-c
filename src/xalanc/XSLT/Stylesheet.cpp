@@ -562,14 +562,20 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 				(*i)->m_keyDeclarations.begin(),
 				(*i)->m_keyDeclarations.end());
 
-			KeyDeclarationVectorType(getMemoryManager()).swap((*i)->m_keyDeclarations);
+			{
+				KeyDeclarationVectorType temp(getMemoryManager());
+				temp.swap((*i)->m_keyDeclarations);
+			}
 
 			m_whitespaceElements.insert(
 				m_whitespaceElements.end(),
 				(*i)->m_whitespaceElements.begin(),
 				(*i)->m_whitespaceElements.end());
 
-			WhitespaceElementsVectorType(getMemoryManager()).swap((*i)->m_whitespaceElements);
+			{
+				WhitespaceElementsVectorType temp(getMemoryManager());
+				temp.swap((*i)->m_whitespaceElements);
+			}
 
 			++i;
 		}
@@ -1365,7 +1371,7 @@ Stylesheet::findTemplate(
 
 					bestMatchedRule = bestMatchedPattern->getTemplate();
 
-					conflictsString += XALAN_STATIC_UCODE_STRING(" ");
+					conflictsString += XalanDOMString(XALAN_STATIC_UCODE_STRING(" "), executionContext.getMemoryManager());
 
                     StylesheetExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
 

@@ -69,7 +69,7 @@ public:
 
     ~XalanArrayAllocator()
     {        
-        ListType::iterator iter = m_list.begin();
+        typename ListType::iterator iter = m_list.begin();
 
         MemoryManagerType& theManager = m_list.getMemoryManager();
 
@@ -77,8 +77,11 @@ public:
         {
             if( (*iter).second != 0)
             {
-                (*iter).second->VectorType::~VectorType();
-                
+#if defined(XALAN_REQUIRES_QUALIFIED_DESTRUCTOR)
+				(*iter).second->VectorType::~VectorType();
+#else
+                (*iter).second->~VectorType();
+#endif               
                 theManager.deallocate((void*)(*iter).second);
             }
         }

@@ -642,6 +642,7 @@ XalanDOMString::compare(
 }
 
 template<class Type>
+void
 reset_func(XalanDOMString& obj, MemoryManagerType&    theManager, Type string)
 {
     assert( string != 0 );
@@ -1124,7 +1125,7 @@ doTranscodeFromLocalCodePage(
 #if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 		typedef XalanDOMString::WideCharVectorType	WideCharVectorType;
 
-		WideCharVectorType	theTempResult;
+		WideCharVectorType	theTempResult(theTargetVector.getMemoryManager());
 
 		theTempResult.resize(terminate == true ? theTargetLength + 1 : theTargetLength);
 

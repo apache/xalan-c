@@ -191,6 +191,7 @@ public:
 	}	
 
 private:
+	NameSpace(const NameSpace&);
 
 	XalanDOMString	m_prefix;
 
