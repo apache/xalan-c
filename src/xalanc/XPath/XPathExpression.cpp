@@ -502,9 +502,9 @@ XPathExpression::appendOpCode(eOpCodes	theOpCode)
 		}
 	}
 
-	return m_lastOpCodeIndex;
-
 	assert(opCodeMapSize() == OpCodeMapSizeType(opCodeMapLength()));
+
+	return m_lastOpCodeIndex;
 }
 
 
