@@ -109,6 +109,8 @@ public:
 				less<XalanDOMString> >		NodeTypesMapType;
 
 	typedef vector<XalanDOMString>			DOMStringVectorType;
+
+	typedef vector<bool>					BoolVectorType;
 #else
 	typedef std::map<XalanDOMString,
 					 int>							KeywordsMapType;
@@ -120,6 +122,8 @@ public:
 					 XPathExpression::eOpCodes>		NodeTypesMapType;
 
 	typedef std::vector<XalanDOMString>				DOMStringVectorType;
+
+	typedef std::vector<bool>						BoolVectorType;
 #endif
 
 	/**
@@ -819,6 +823,8 @@ private:
 
 	const Locator*					m_locator;
 
+	BoolVectorType					m_positionPredicateStack;
+
 	enum eDummy
 	{
 		TARGETEXTRA = 10000
@@ -853,6 +859,8 @@ private:
 	static const XalanDOMString&	s_attributeString;
 
 	static const XalanDOMString&	s_childString;
+
+	static const XalanDOMString&	s_positionString;
 
 	/**
 	 * Map of keyword names to token values.

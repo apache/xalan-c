@@ -166,7 +166,8 @@ static const int	theOpCodeLengthArray[] =
 	XPathExpression::s_opCodeMapLengthIndex + 1,
 	XPathExpression::s_opCodeMapLengthIndex + 1,
 	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 1
 };
 
 static const int	theOpCodeLengthArraySize =
@@ -537,6 +538,26 @@ XPathExpression::appendOpCode(eOpCodes	theOpCode)
 	}
 
 	assert(opCodeMapSize() == OpCodeMapSizeType(opCodeMapLength()));
+}
+
+
+
+void
+XPathExpression::replaceOpCode(
+			OpCodeMapSizeType	theIndex,
+			eOpCodes			theOldOpCode,
+			eOpCodes			theNewOpCode)
+{
+	if (theIndex >= m_opMap.size() ||
+		m_opMap[theIndex] != theOldOpCode ||
+		getOpCodeLength(theOldOpCode) != getOpCodeLength(theNewOpCode))
+	{
+		throw InvalidOpCodeException(theNewOpCode);
+	}
+	else
+	{
+		m_opMap[theIndex] = theNewOpCode;
+	}
 }
 
 

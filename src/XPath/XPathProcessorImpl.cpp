@@ -91,7 +91,8 @@ XPathProcessorImpl::XPathProcessorImpl() :
 	m_xpath(0),
 	m_expression(0),
 	m_prefixResolver(0),
-	m_requireLiterals(false)
+	m_requireLiterals(false),
+	m_positionPredicateStack()
 {
 }
 
@@ -139,6 +140,7 @@ XPathProcessorImpl::initXPath(
 	m_expression = 0;
 	m_prefixResolver = 0;
 	m_locator = 0;
+	m_positionPredicateStack.clear();
 }
 
 
@@ -210,6 +212,7 @@ XPathProcessorImpl::initMatchPattern(
 		m_expression = 0;
 		m_prefixResolver = 0;
 		m_locator = 0;
+		m_positionPredicateStack.clear();
 	}
 }
 
@@ -1579,16 +1582,6 @@ XPathProcessorImpl::FilterExpr()
 		m_expression->updateOpCodeLength(XPathExpression::eOP_LOCATIONPATH,
 										 opPos);
 	}
-
-	/*
-	if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
-	{
-		Predicate();
-
-		m_expression->updateOpCodeLength(XPathExpression::eOP_LOCATIONPATH,
-										 opPos);
-	}  
-	*/
 }
   
 
@@ -1778,6 +1771,16 @@ XPathProcessorImpl::FunctionCall()
 
 				int		theFunctionID =
 					XPath::getFunctionTable().nameToID(m_token);
+
+				// This code is disabled for the time being, as
+				// it needs more testing.
+#if 0
+				if (equals(m_token, s_positionString) == true &&
+					m_positionPredicateStack.empty() == false)
+				{
+					m_positionPredicateStack.back() = true;
+				}
+#endif
 
 				XPathExpression::OpCodeMapValueVectorType	theArgs(2, 0);
 		
@@ -2142,6 +2145,8 @@ XPathProcessorImpl::PredicateExpr()
 
 	m_expression->appendOpCode(XPathExpression::eOP_PREDICATE);
 
+	m_positionPredicateStack.push_back(false);
+
 	Expr();
 
 	// Terminate for safety.
@@ -2149,6 +2154,18 @@ XPathProcessorImpl::PredicateExpr()
 
 	m_expression->updateOpCodeLength(XPathExpression::eOP_PREDICATE,
 									 opPos);
+
+	assert(m_positionPredicateStack.empty() == false);
+
+	if (m_positionPredicateStack.back() == true)
+	{
+		m_expression->replaceOpCode(
+			opPos,
+			XPathExpression::eOP_PREDICATE,
+			XPathExpression::eOP_PREDICATE_WITH_POSITION);
+	}
+
+	m_positionPredicateStack.pop_back();
 }
 
 
@@ -2271,8 +2288,6 @@ XPathProcessorImpl::LocationPathPattern()
 
 	m_expression->appendOpCode(XPathExpression::eOP_LOCATIONPATHPATTERN);
 
-	// These token s_functionKeyString should not be here, as it is really
-	// part of the XSLT standard, and not the XPATH standard.
 	if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true &&
 				(tokenIs(s_functionIDString) == true ||
 				 tokenIs(s_functionKeyString) == true))
@@ -2653,6 +2668,8 @@ static XalanDOMString	s_attributeString;
 
 static XalanDOMString	s_childString;
 
+static XalanDOMString	s_positionString;
+
 
 
 const XalanDOMString	XPathProcessorImpl::s_emptyString;
@@ -2683,6 +2700,8 @@ const XalanDOMString&	XPathProcessorImpl::s_axisString = ::s_axisString;
 const XalanDOMString&	XPathProcessorImpl::s_attributeString = ::s_attributeString;
 
 const XalanDOMString&	XPathProcessorImpl::s_childString = ::s_childString;
+
+const XalanDOMString&	XPathProcessorImpl::s_positionString = ::s_positionString;
 
 
 
@@ -2719,6 +2738,7 @@ XPathProcessorImpl::initialize()
 	::s_axisString = XALAN_STATIC_UCODE_STRING("::");
 	::s_attributeString = XALAN_STATIC_UCODE_STRING("attribute");
 	::s_childString = XALAN_STATIC_UCODE_STRING("child");
+	::s_positionString = XALAN_STATIC_UCODE_STRING("position");
 }
 
 
@@ -2742,4 +2762,5 @@ XPathProcessorImpl::terminate()
 	releaseMemory(::s_axisString);
 	releaseMemory(::s_attributeString);
 	releaseMemory(::s_childString);
+	releaseMemory(::s_positionString);
 }

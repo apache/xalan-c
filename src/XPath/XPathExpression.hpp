@@ -438,7 +438,7 @@ public:
 		 *	XBoolean or XNumber
 		 */
 		eOP_PREDICATE = 26,
-  
+
 		/**
 		 * [NODETYPE_COMMENT]
 		 * No size or arguments.
@@ -555,6 +555,17 @@ public:
 		eMATCH_ANY_ANCESTOR_WITH_PREDICATE = 53,
 		eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL = 54,
 
+		/**
+		 * [OP_PREDICATE_WITH_POSITION]
+		 * [length]
+		 *	{expression}
+		 * [ENDOP] (For safety)
+		 * 
+		 * returns: 
+		 *	XBoolean or XNumber
+		 */
+		eOP_PREDICATE_WITH_POSITION = 55,
+  
 		// Always add _before_ this one and update
 		// s_opCodeLengthArray.
 		eOpCodeNextAvailable
@@ -896,6 +907,19 @@ public:
 					  m_lastOpCodeIndex,
 					  theArgs);
 	}
+
+	/**
+	 * Replace an operation code with supplied code.
+	 * 
+	 * @param theIndex  The index of the old operation code
+	 * @param theOldOpCode The old operation code
+	 * @param theNewOpCode The new operation code
+	 */
+	void
+	replaceOpCode(
+			OpCodeMapSizeType	theIndex,
+			eOpCodes			theOldOpCode,
+			eOpCodes			theNewOpCode);
 
 	/**
 	 * Insert an operation code at a specified index in the list.

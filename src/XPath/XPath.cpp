@@ -391,6 +391,7 @@ XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings) co
 			const int	nextOp = m_expression.m_opMap[nextStepPos];
 
 			if(nextOp == XPathExpression::eOP_PREDICATE ||
+			   nextOp == XPathExpression::eOP_PREDICATE_WITH_POSITION ||
 			   nextOp == XPathExpression::eENDOP)
 			{
 				const int	stepType = m_expression.m_opMap[opPos];
@@ -1270,7 +1271,8 @@ XPath::step(
 
 	int		nextStepType = currentExpression.getOpCodeMapValue(opPos);
 
-	if(XPathExpression::eOP_PREDICATE == nextStepType)
+	if(XPathExpression::eOP_PREDICATE == nextStepType ||
+	   XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
 	{
 		predicates(executionContext,
 				   context,
@@ -1631,7 +1633,8 @@ XPath::stepPattern(
 
 	nextStepType = currentExpression.getOpCodeMapValue(opPos);
 
-	if(score != eMatchScoreNone && XPathExpression::eOP_PREDICATE == nextStepType)
+	if(score != eMatchScoreNone &&
+	   (XPathExpression::eOP_PREDICATE == nextStepType || XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType))
 	{
 		score = eMatchScoreOther;
 
@@ -1642,11 +1645,13 @@ XPath::stepPattern(
 		{
 			executionContext.setThrowFoundIndex(true);
 
-			while(XPathExpression::eOP_PREDICATE == nextStepType)
+			while(XPathExpression::eOP_PREDICATE == nextStepType ||
+				  XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
 			{
 				// This is a quick hack to look ahead and see if we have
 				// number literal as the predicate, i.e. match="foo[1]".
-				if (m_expression.getOpCodeMapValue(opPos + 2) == XPathExpression::eOP_NUMBERLIT)
+				if (m_expression.getOpCodeMapValue(opPos + 2) == XPathExpression::eOP_NUMBERLIT,
+					XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
 				{
 					score = handleFoundIndex(executionContext, context, startOpPos);
 				}
@@ -2923,7 +2928,8 @@ XPath::predicates(
 	int 	nextStepType =
 			currentExpression.getOpCodeMapValue(opPos);
 
-	while(XPathExpression::eOP_PREDICATE == nextStepType)
+	while(XPathExpression::eOP_PREDICATE == nextStepType ||
+		  XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
 	{
 		const NodeRefListBase::size_type	theLength = subQueryResults.getLength();
 
@@ -3007,7 +3013,8 @@ XPath::predicates(
 
 		nextStepType = currentExpression.getOpCodeMapValue(opPos);
 
-		if(XPathExpression::eOP_PREDICATE == nextStepType)
+		if(XPathExpression::eOP_PREDICATE == nextStepType ||
+		   XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
 		{
 			executionContext.setContextNodeList(subQueryResults);
 		}
