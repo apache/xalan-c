@@ -166,10 +166,6 @@ SOURCE=..\..\..\..\src\XMLSupport\FormatterTreeWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\NSInfo.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaison.hpp
 # End Source File
 # Begin Source File
