@@ -311,16 +311,6 @@ ParseXML(
 }
 
 
-template<class Source, class Target>
-const Target*
-XalanStaticCast(
-	const Source*	theSource,
-	const Target*	/* theTarget */)
-{
-	return static_cast<const Target*>(theSource);
-}
-
-
 
 XalanDOMString
 GetAttributeFromNode(
@@ -332,13 +322,9 @@ GetAttributeFromNode(
 	if (theNode->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
 		const XalanElement*		theElement =
-					XalanStaticCast(theNode, theElement);
+					static_cast<const XalanElement*>(theNode);
 
 		theResult = theElement->getAttribute(theAttributeName);
-
-		if (0 == theElement)
-		{
-		}
 	}
 
 	return theResult;
