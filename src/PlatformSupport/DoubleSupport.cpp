@@ -579,7 +579,7 @@ convertHelper(
 	// string is less than n characters, we'll convert
 	// it as a long and coerce that to a double.  This
 	// is _much_ cheaper...
-	const unsigned int	theLongHackThreshold = 11;
+	const unsigned int	theLongHackThreshold = 10;
 
 	const unsigned int	theLength = length(theString);
 
