@@ -648,13 +648,6 @@ public:
 		virtual
 		~CollationCompareFunctor();
 
-		// Non-const version is suitable for use by
-		// a singe thread.
-		virtual int
-		operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) = 0;
-
 		// Const version is suitable for use by
 		// multiple threads.
 		virtual int
@@ -683,11 +676,6 @@ public:
 		virtual int
 		operator()(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS);
-
-		virtual int
-		operator()(
-			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) const;
 
 		virtual int
@@ -697,8 +685,8 @@ public:
 			const XalanDOMChar*		theLocale) const;
 	};
 
-	CollationCompareFunctor*
-	installCollationCompareFunctor(CollationCompareFunctor*		theFunctor);
+	const CollationCompareFunctor*
+	installCollationCompareFunctor(const CollationCompareFunctor*	theFunctor);
 
 	virtual	bool
 	getInConstruction(const KeyDeclaration&		keyDeclaration) const;
@@ -1040,7 +1028,7 @@ private:
 
 	OutputStreamVectorType				m_outputStreams;
 
-	CollationCompareFunctor*			m_collationCompareFunctor;
+	const CollationCompareFunctor*		m_collationCompareFunctor;
 
 	/**
 	 * Holds all information about variables during execution.

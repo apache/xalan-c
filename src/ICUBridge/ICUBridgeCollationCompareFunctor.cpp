@@ -218,13 +218,3 @@ ICUBridgeCollationCompareFunctor::operator()(
 		return s_defaultFunctor(theLHS, theRHS);
 	}
 }
-
-
-
-int
-ICUBridgeCollationCompareFunctor::operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	return doDefaultCompare(theLHS, theRHS);
-}

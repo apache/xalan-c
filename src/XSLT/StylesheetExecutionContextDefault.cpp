@@ -1353,16 +1353,6 @@ StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::~DefaultColla
 int
 StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	return ::collationCompare(theLHS, theRHS);
-}
-
-
-
-int
-StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
-			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) const
 {
 	return ::collationCompare(theLHS, theRHS);
@@ -1381,12 +1371,12 @@ StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
 
 
 
-StylesheetExecutionContextDefault::CollationCompareFunctor*
-StylesheetExecutionContextDefault::installCollationCompareFunctor(CollationCompareFunctor*	theFunctor)
+const StylesheetExecutionContextDefault::CollationCompareFunctor*
+StylesheetExecutionContextDefault::installCollationCompareFunctor(const CollationCompareFunctor*	theFunctor)
 {
 	assert(theFunctor != 0);
 
-	CollationCompareFunctor* const	temp = m_collationCompareFunctor;
+	const CollationCompareFunctor* const	temp = m_collationCompareFunctor;
 
 	m_collationCompareFunctor = theFunctor;
 
