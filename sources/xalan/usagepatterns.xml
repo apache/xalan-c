@@ -357,9 +357,9 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
     <p>For Linux, rebuild &xslt4c-linuxlib; with XALAN_USE_ICU defined, and place it on the shared library path
     (LD_LIBRARY_PATH for Red Hat Linux 6.1) or copy it to /usr/lib.</p> 
     <p>For AIX, rebuild &xslt4c-aixlib; with XALAN_USE_ICU defined, and place it on the load library
-    path (LIB_PATH) or copy it to /usr/lib.</p>
+    path (LIBPATH) or copy it to /usr/lib.</p>
     <p>For HP-UX 11, rebuild &xslt4c-hplib; with XALAN_USE_ICU defined, and place it on the shared library
-    path (LIB_PATH) or copy it to /usr/lib.</p>
+    path (LIBPATH) or copy it to /usr/lib.</p>
     
     <p><em>Number formatting</em></p>
     <p>To enable ICU support for the xsl:number element and the XSLT format-number() function, do
