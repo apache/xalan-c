@@ -79,6 +79,9 @@
 
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
+#if defined(XALAN_ALLINONE_BUILD_DLL)
+#include <XPath/XPathConstructionContextDefault.hpp>
+#endif
 #include <XPath/XPathEvaluator.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
