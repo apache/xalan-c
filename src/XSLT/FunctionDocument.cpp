@@ -87,12 +87,16 @@ FunctionDocument::~FunctionDocument()
 }
 
 
+typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
-static XalanDocument*
+
+
+static void
 getDoc(
-			XPathExecutionContext&	executionContext,
-			const XalanDOMString&	uri,
-			const XalanDOMString&	base)
+			XPathExecutionContext&				executionContext,
+			const XalanDOMString&				uri,
+			const XalanDOMString&				base,
+			BorrowReturnMutableNodeRefList&		mnl)
 {
 	XalanDOMString	localURI(uri);
 
@@ -110,11 +114,9 @@ getDoc(
 		try
 		{
 			newDoc = executionContext.parseXML(localURI, base);
-
 		}
 		catch(...)
 		{
-			newDoc = 0;
 		}
 
 		if(newDoc == 0)
@@ -134,9 +136,44 @@ getDoc(
 		}
     }
 
-	return newDoc;
+	if(newDoc != 0)
+	{
+		mnl->addNodeInDocOrder(newDoc, executionContext);
+	}
 }
 
+
+
+inline void
+getDoc(
+			XPathExecutionContext&				executionContext,
+			const XalanDOMString&				uri,
+			BorrowReturnMutableNodeRefList&		mnl)
+{
+	getDoc(executionContext, uri, XalanDOMString(), mnl);
+}
+
+
+
+inline void
+getDoc(
+			XPathExecutionContext&				executionContext,
+			const XalanDOMString&				uri,
+			const XalanNode*					resolver,
+			BorrowReturnMutableNodeRefList&		mnl)
+{
+	assert(resolver != 0);
+
+ 	const XalanDocument* const	ownerDocument = XalanNode::DOCUMENT_NODE == resolver->getNodeType() ?
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(const XalanDocument*)resolver :
+#else
+			static_cast<const XalanDocument*>(resolver) :
+#endif
+			resolver->getOwnerDocument();
+
+	getDoc(executionContext, uri, executionContext.findURIFromDoc(ownerDocument), mnl);
+}
 
 
 
@@ -145,10 +182,25 @@ FunctionDocument::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
 			const XObjectPtr		arg1,
-			const Locator*			locator) const
+			const Locator*			/* locator */) const
 {
 	assert(arg1.null() == false);
 
+	if (arg1->getType() == XObject::eTypeNodeSet)
+	{
+		return doExecute(executionContext, context, arg1, 0, 1);
+	}
+	else
+	{
+		XalanDOMString				base;
+
+		assert(executionContext.getPrefixResolver() != 0);
+
+		base = executionContext.getPrefixResolver()->getURI();
+
+		return doExecute(executionContext, context, arg1, &base, 1);
+	}
+#if 0
 	if (context == 0)
 	{
 		executionContext.error(
@@ -166,8 +218,9 @@ FunctionDocument::execute(
 
 		base = executionContext.getPrefixResolver()->getURI();
 
-		return doExecute(executionContext, context, arg1, &base, 1);
+		return doExecute(executionContext, context, arg1, 0, 1);
 	}
+#endif
 }
 
 
@@ -238,7 +291,7 @@ FunctionDocument::execute(
 XObjectPtr
 FunctionDocument::doExecute(
 		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
+		XalanNode*						/* context */,
 		const XObjectPtr				arg,
 		XalanDOMString*					base,
 		int								argCount) const
@@ -250,14 +303,6 @@ FunctionDocument::doExecute(
 
 	const XObject::eObjectType	theType = arg->getType();
 
-	XalanDocument* const	docContext = XalanNode::DOCUMENT_NODE == context->getNodeType() ?
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(XalanDocument*)context :
-#else
-			static_cast<XalanDocument*>(context) :
-#endif
-			context->getOwnerDocument();
-
 	const unsigned int		nRefs = XObject::eTypeNodeSet == theType ?
 												arg->nodeset().getLength()
 												: 1;
@@ -267,25 +312,36 @@ FunctionDocument::doExecute(
 		assert(XObject::eTypeNodeSet != theType ||
 							arg->nodeset().item(i) != 0);
 
-		XalanDOMString	ref = XObject::eTypeNodeSet == theType ?
-												DOMServices::getNodeData(*arg->nodeset().item(i)) :
-												arg->str();	
+		const XalanNode*	resolver = 0;
+
+		XalanDOMString		ref;
+
+		if (theType != XObject::eTypeNodeSet)
+		{
+			ref = arg->str();
+		}
+		else
+		{
+			resolver = arg->nodeset().item(i);
+			assert(resolver != 0);
+
+			ref = DOMServices::getNodeData(*resolver);
+		}
 
 		// This is the case where the function was called with
 		// an empty string, which refers to the stylesheet itself.
 		if (nRefs == 1 && isEmpty(ref) == true && argCount == 1)
 		{
-			ref = *base;
+			if (base != 0)
+			{
+				clear(*base);
+			}
+
+			ref = executionContext.getPrefixResolver()->getURI();
 		}
 
 		if(!isEmpty(ref))
 		{
-
-			if(docContext == 0)
-			{
-				executionContext.error("The context node does not have an owner document!");
-			}
-
 			// From http://www.ics.uci.edu/pub/ietf/uri/rfc1630.txt
 			// A partial form can be distinguished from an absolute form in that the
 			// latter must have a colon and that colon must occur before any slash
@@ -306,17 +362,34 @@ FunctionDocument::doExecute(
 			}
 #endif				
 
-			if(indexOfColon < theLength && indexOfSlash < theLength && indexOfColon < indexOfSlash)
+			if(indexOfColon < theLength &&
+			   indexOfSlash < theLength &&
+			   indexOfColon < indexOfSlash)
 			{
-				// The url (or filename, for that matter) is absolute.
-				clear(*base);
+				// The ref is absolute...
+				getDoc(executionContext, ref, mnl);
 			}
-
-			XalanDocument* const	newDoc = getDoc(executionContext, ref, *base);
-
-			if(newDoc != 0)
+			else
 			{
-				mnl->addNodeInDocOrder(newDoc, executionContext);
+				// The ref is relative.  If there was a base URI
+				// provided, use that...
+				if (base != 0)
+				{
+					getDoc(executionContext, ref, *base, mnl);
+				}
+				else
+				{
+					// If there's no resolver, then try using the
+					// relative ref...
+					if (resolver == 0)
+					{
+						getDoc(executionContext, ref, mnl);
+					}
+					else
+					{
+						getDoc(executionContext, ref, resolver, mnl);
+					}
+				}
 			}
 		}
 	}
