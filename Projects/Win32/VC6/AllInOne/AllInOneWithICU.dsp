@@ -2993,6 +2993,206 @@ SOURCE=..\..\Res\AllInOne\resource.h
 # Begin Group "XercesParserLiaison"
 
 # PROP Default_Filter ""
+# Begin Group "Deprecated"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\FormatterToDeprecatedXercesDOM.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\FormatterToDeprecatedXercesDOM.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesAttrBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesAttrBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesAttributeBridgeAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesAttributeBridgeAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesBridgeHelper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesBridgeHelper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesBridgeNavigator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesBridgeNavigator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesBridgeTypes.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesCDATASectionBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesCDATASectionBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesCommentBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesCommentBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesDocumentBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesDocumentBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesDocumentFragmentBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesDocumentFragmentBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesDocumentTypeBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesDocumentTypeBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesDOM_NodeHack.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesDOM_NodeHack.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesDOMImplementationBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesDOMImplementationBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesElementBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesElementBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesElementBridgeAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesElementBridgeAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesEntityBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesEntityBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesEntityReferenceBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesEntityReferenceBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesNamedNodeMapBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesNamedNodeMapBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesNodeListBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesNodeListBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesNotationBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesNotationBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesProcessingInstructionBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesProcessingInstructionBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesTextBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesTextBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesTextBridgeAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesTextBridgeAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesToXalanNodeMap.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesToXalanNodeMap.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesTreeWalker.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesTreeWalker.hpp
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToXercesDOM.cpp
