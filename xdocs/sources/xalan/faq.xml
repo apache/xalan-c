@@ -131,6 +131,7 @@
     <q>Is &xslt4c; thread-safe?</q>
        
     <a>
+    <p>Instances of XalanTransformer are not thread-safe; each thread should use its own instance.</p>
     <p>In order to support very efficient use in multi-threaded applications, &xslt4c; is designed to avoid synchronization as much as
      possible. Each thread of execution is required to have its own set of "support" objects that contain the state of the
      transformation.  Accordingly, no synchronization is required when multiple threads are executing.</p>
