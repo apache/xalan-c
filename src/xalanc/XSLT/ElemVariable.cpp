@@ -221,13 +221,13 @@ ElemVariable::setParentNodeElem(ElemTemplateElement*	theParent)
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemVariable::startElement(StylesheetExecutionContext& executionContext) const
+ElemVariable::startElement(StylesheetExecutionContext&  executionContext) const
 {
 	assert(m_qname != 0);
 
 	ParentType::startElement(executionContext);
 
-	XObjectPtr theValue;
+	XObjectPtr  theValue;
 
 	if(m_selectPattern == 0)
 	{
@@ -238,6 +238,7 @@ ElemVariable::startElement(StylesheetExecutionContext& executionContext) const
 		else
 		{
 			executionContext.beginCreateXResultTreeFrag(executionContext.getCurrentNode());
+
 			return beginExecuteChildren(executionContext);
 		}
 	}
@@ -259,50 +260,30 @@ ElemVariable::startElement(StylesheetExecutionContext& executionContext) const
 
 	}
 
-	if (theValue.null() == false)
-	{
-		executionContext.pushVariable(
-				*m_qname,
-				theValue,
-				getParentNodeElem());
-	}
-	else
-	{
-		executionContext.pushVariable(
-				*m_qname,
-				this,
-				getParentNodeElem());
-	}
+    assert(theValue.null() == false);
+
+    executionContext.pushVariable(
+			*m_qname,
+			theValue,
+			getParentNodeElem());
 
 	return 0;
 }
 
 
-void
-ElemVariable::endElement(StylesheetExecutionContext& executionContext) const
-{
-	XObjectPtr theValue;
 
+void
+ElemVariable::endElement(StylesheetExecutionContext&    executionContext) const
+{
 	if (0 == m_selectPattern && 0 != getFirstChildElem())
 	{
-		theValue = executionContext.endCreateXResultTreeFrag();
-		if (theValue.null() == false)
-		{
-			executionContext.pushVariable(
-					*m_qname,
-					theValue,
-					getParentNodeElem());
-		}
-		else
-		{
-			executionContext.pushVariable(
-					*m_qname,
-					this,
-					getParentNodeElem());
-		}
-	}
+        endExecuteChildren(executionContext);
 
-	
+		executionContext.pushVariable(
+				*m_qname,
+				executionContext.endCreateXResultTreeFrag(),
+				getParentNodeElem());
+	}
 }
 
 
@@ -357,10 +338,11 @@ ElemVariable::getValue(
 		}
 		else
 		{
-			
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 			executionContext.beginCreateXResultTreeFrag(sourceNode);
-			this->executeChildren(executionContext);
+
+			executeChildren(executionContext);
+
 			return executionContext.endCreateXResultTreeFrag();
 #else
 			return executionContext.createXResultTreeFrag(*this, sourceNode);

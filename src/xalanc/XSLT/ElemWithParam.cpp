@@ -134,13 +134,13 @@ ElemWithParam::getXPath(unsigned int	index) const
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 
 const ElemTemplateElement* 
-ElemWithParam::startElement(StylesheetExecutionContext& executionContext) const
+ElemWithParam::startElement(StylesheetExecutionContext&     executionContext) const
 {
 	assert(m_qname != 0);
 
 	ElemTemplateElement::startElement(executionContext);
 
-	XObjectPtr theValue;
+	XObjectPtr  theValue;
 
 	if(m_selectPattern == 0)
 	{
@@ -151,7 +151,8 @@ ElemWithParam::startElement(StylesheetExecutionContext& executionContext) const
 		else
 		{
 			executionContext.beginCreateXResultTreeFrag(executionContext.getCurrentNode());
-			return beginExecuteChildren(executionContext);
+
+            return beginExecuteChildren(executionContext);
 		}
 	}
 	else
@@ -172,46 +173,31 @@ ElemWithParam::startElement(StylesheetExecutionContext& executionContext) const
 
 	}
 
-	if (theValue.null() == false)
-	{
-		executionContext.pushParam(
-				*m_qname,
-				theValue);
-	}
-	else
-	{
-		executionContext.pushParam(
-				*m_qname,
-				theValue);
-	}
+    assert(theValue.null() == false);
+
+    executionContext.pushParam(
+			*m_qname,
+			theValue);
 
 	return 0;
 }
 
 
-void
-ElemWithParam::endElement(StylesheetExecutionContext& executionContext) const
-{
-	XObjectPtr theValue;
 
+void
+ElemWithParam::endElement(StylesheetExecutionContext&   executionContext) const
+{
 	if (0 == m_selectPattern && 0 != getFirstChildElem())
 	{
-		theValue = executionContext.endCreateXResultTreeFrag();
-		if (theValue.null() == false)
-		{
-			executionContext.pushParam(
+        endExecuteChildren(executionContext);
+
+        executionContext.pushParam(
 					*m_qname,
-					theValue);
-		}
-		else
-		{
-			executionContext.pushParam(
-					*m_qname,
-					theValue);
-		}
+					executionContext.endCreateXResultTreeFrag());
 	}
 }
 #endif
+
 
 
 XALAN_CPP_NAMESPACE_END
