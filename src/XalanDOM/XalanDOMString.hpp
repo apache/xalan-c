@@ -358,7 +358,7 @@ public:
 		using std::swap;
 #endif
 
-		swap(m_size, theOther.m_size);
+		::swap(m_size, theOther.m_size);
 #endif
 	}
 
