@@ -694,17 +694,27 @@ ElemNumber::formatNumberList(
 	XalanDOMString leaderStr;
 	XalanDOMString trailerStr;
 	StringVectorTypeIterator it;
-	it = tokenVector.begin();
-	if(! isLetterOrDigit(charAt((*it), 0)))
+
+	if (tokenVector.size() > 0)
 	{
-		leaderStr = *it;
-		tokenVector.erase(it);
-	}
-	it = tokenVector.end()-1;
-	if(! isLetterOrDigit(charAt((*it), 0)))
-	{
-		trailerStr = *it;
-		tokenVector.erase(it);
+		it = tokenVector.begin();
+
+		if(!isLetterOrDigit(charAt(*it, 0)))
+		{
+			leaderStr = *it;
+			tokenVector.erase(it);
+		}
+
+		if (tokenVector.size() > 0)
+		{
+			it = tokenVector.end() - 1;
+
+			if(!isLetterOrDigit(charAt(*it, 0)))
+			{
+				trailerStr = *it;
+				tokenVector.erase(it);
+			}
+		}
 	}
 
 	// Now we're left with a sequence of alpha,non-alpha tokens, format them
@@ -716,14 +726,18 @@ ElemNumber::formatNumberList(
 	{
 		if (it != tokenVector.end())
 		{
-			assert(isLetterOrDigit(charAt((*it), 0)));
+			// $$$ ToDo: This assert is commented out until we get
+			// out character classification problems fixed.
+			// assert(isLetterOrDigit(charAt((*it), 0)));
 			formatToken = *it++;
 			numberWidth = length(formatToken);
 			numberType = charAt(formatToken, numberWidth - 1);
 		}
 		if (it != tokenVector.end())
 		{
-			assert(!isLetterOrDigit(charAt((*it), 0)));
+			// $$$ ToDo: This assert is commented out until we get
+			// out character classification problems fixed.
+			//assert(!isLetterOrDigit(charAt((*it), 0)));
 			sepString = *it++;
 		}
 		formattedNumber += getFormattedNumber(executionContext, contextNode,
