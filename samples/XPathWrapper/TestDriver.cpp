@@ -17,13 +17,14 @@
 #include "XPathWrapper.hpp"
 
 
-
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLException.hpp>
 
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
 #if defined(XALAN_CLASSIC_IOSTREAMS)
@@ -65,38 +66,70 @@ main(
 		return -1;
 	}
 
-	XPathWrapper::ChVectorType	theXML;
+    
+    XALAN_USING_XERCES(XMLPlatformUtils)
+    XALAN_USING_XERCES(XMLException)
+	XALAN_USING_XALAN(XalanTransformer)
 
-	ifstream	in(argv[1]);
+        //initialize Xerces...
+    try
+    {
+        XMLPlatformUtils::Initialize();
+    }
+    catch(const XMLException&)
+    {
+        cerr << "XMLPlatformUtils::Initialize() failed!" << endl;
+        
+        return -1;
+    }
+    
+    // Initialize Xalan.
+	XalanTransformer::initialize();
 
-	// slow and dirty dump of the xml file into a buffer
-	char c;
-	while(in.get(c))
-		theXML.push_back(c);
-	theXML.push_back('\0');
+    {
+        XPathWrapper::ChVectorType	theXML;
+        
+        ifstream	in(argv[1]);
+        
+        // slow and dirty dump of the xml file into a buffer
+        char c;
+        while(in.get(c))
+            theXML.push_back(c);
+        theXML.push_back('\0');
+        
+        ///////////////////////////////////////////..
+        
+        // create your XPath helper object
+        XPathWrapper helper;
+        
+        try
+        {
+            // call evaluate, passing in the XML string, the context string and the xpath string
+            XPathWrapper::CharVectorTypeVectorType	result;
 
-	///////////////////////////////////////////..
+            helper.evaluate(&*theXML.begin(), argv[2], argv[3], result);
+            
+            // take the resulting string vector	and do whatever you want with it:
+            size_t len = result.size();
+            
+            cout << "the result set has " << len << " strings\n";
+            
+            for (size_t i=0; i<len; i++)
+                cout << "item " << (i+1) << "= \"" << &*result[i].begin() << "\"" << endl;
+        }
+        catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
+        {
+            cerr << "Exception caught!  Exiting..." << endl;
+        }
+    }
+	// Terminate Xalan...
+	XalanTransformer::terminate();
 
-	// create your XPath helper object
-	XPathWrapper helper;
+    // Shut down Xerces...
+	XMLPlatformUtils::Terminate();
 
-	try
-	{
-		// call evaluate, passing in the XML string, the context string and the xpath string
-		const XPathWrapper::CharVectorTypeVectorType	result = helper.evaluate(&*theXML.begin(), argv[2], argv[3]);
-
-		// take the resulting string vector	and do whatever you want with it:
-		size_t len = result.size();
-
-		cout << "the result set has " << len << " strings\n";
-
-		for (size_t i=0; i<len; i++)
-			cout << "item " << (i+1) << "= \"" << &*result[i].begin() << "\"" << endl;
-	}
-	catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
-	{
-		cerr << "Exception caught!  Exiting..." << endl;
-	}
+	// Clean up the ICU, if it's integrated...
+	XalanTransformer::ICUCleanUp();
 
 	return 0;
 }

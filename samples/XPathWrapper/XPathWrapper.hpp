@@ -20,13 +20,11 @@
 
 #include <xalanc/Include/PlatformDefinitions.hpp>
 
+#include <xalanc/Include/XalanVector.hpp>
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
-
-
-#include <vector>
 
 
 
@@ -47,11 +45,9 @@ public:
 
 	typedef XALAN_CPP_NAMESPACE_QUALIFIER CharVectorType	ChVectorType;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<ChVectorType>		CharVectorTypeVectorType;	
-#else
-	typedef std::vector<ChVectorType>	CharVectorTypeVectorType;	
-#endif	
+
+	typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanVector<ChVectorType>		CharVectorTypeVectorType;	
+
 
 	XPathWrapper();
 
@@ -61,11 +57,12 @@ public:
 	// Given an xml document and an xpath context and expression in the form of (ascii) string objects,
 	// this function parses the XML document, evaluates the xpath and returns the result, as a list of 
 	// string objects
-	CharVectorTypeVectorType
+	void
 	evaluate(
 		const char*		xml, 
 		const char*		context, 
-		const char*		path);
+		const char*		path,
+                CharVectorTypeVectorType& theResult);
 
 private:
 

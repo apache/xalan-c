@@ -30,7 +30,6 @@
 
 
 #include <xercesc/framework/MemBufInputSource.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
 
 
 
@@ -82,33 +81,20 @@ class XPathWrapperImpl
 {
 public:
 
-	XPathWrapper::CharVectorTypeVectorType
+    typedef 	XPathWrapper::CharVectorTypeVectorType CharVectorTypeVectorType;
+
+    void
 	evaluate(
 		const char*		xml,
 		const char*		context, 
 		const char*		expr,
-		ostream&		errorStream)
+		ostream&		errorStream,
+        CharVectorTypeVectorType& theResultList)
 	{
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 		using std::strlen;
 #endif
 
-		XALAN_USING_XERCES(XMLPlatformUtils)
-		XALAN_USING_XERCES(XMLException)
-
-		//initialize Xerces...
-		try
-		{
-			XMLPlatformUtils::Initialize();
-		}
-		catch(const XMLException&)
-		{
-			errorStream << "XMLPlatformUtils::Initialize() failed!" << endl;
-
-			throw;
-		}
-
-		XPathWrapper::CharVectorTypeVectorType	theResultList;
 
 		{
 			// Just hoist everything...
@@ -125,6 +111,8 @@ public:
 			theDOMSupport.setParserLiaison(&theLiaison);
 
 			XalanElement*	rootElem = 0;
+
+            XALAN_USING_XERCES(XMLException)
 
 			try
 			{
@@ -254,11 +242,7 @@ public:
 				throw;
 			}
 
-			// Shut down Xerces...
-			XMLPlatformUtils::Terminate();
 		}
-
-		return theResultList;
 	}
 };
 
@@ -281,17 +265,19 @@ XPathWrapper::~XPathWrapper()
 
 
 
-XPathWrapper::CharVectorTypeVectorType
+void
 XPathWrapper::evaluate(
 		const char*		xml, 
 		const char*		context, 
-		const char*		path)
+		const char*		path,
+        CharVectorTypeVectorType& theResult)
 {
-	return pImpl->evaluate(
+	pImpl->evaluate(
 			xml,
 			context,
 			path,
-			cerr);
+			cerr,
+            theResult);
 }
 
 
