@@ -135,10 +135,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\AttributesImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ConfigurablePrefixResolver.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\PlatformSupport\DOMStringHelper.cpp
 # End Source File
 # Begin Source File
@@ -304,10 +300,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\AttributeVectorEntry.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\AttributeVectorEntryExtended.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\ConfigurablePrefixResolver.hpp
 # End Source File
 # Begin Source File
 
