@@ -2753,6 +2753,7 @@ XSLTEngineImpl::addResultNamespace(
 		if(desturi == 0 || equals(srcURI, *desturi) == false)
 		{
 			addResultAttribute(thePendingAttributes, theName, srcURI);
+			addResultNamespaceDecl(thePrefix, srcURI);
 		}
 	}
 }
