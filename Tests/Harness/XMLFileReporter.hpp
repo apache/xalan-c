@@ -79,18 +79,20 @@
 #define HARNESS_API __declspec(dllimport)
 #endif
 
-// This class is exported from the Harness.dll
-class HARNESS_API XMLFileReporter 
-{
-
-
-public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
 #else
 	typedef std::map<XalanDOMString, XalanDOMString>	Hashtable;
 #endif
+
+
+// This class is exported from the Harness.dll
+class HARNESS_API XMLFileReporter 
+{
+
+
+public:
 
 
 	/** Simple constructor, does not perform initialization.  */
