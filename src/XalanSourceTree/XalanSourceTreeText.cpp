@@ -415,6 +415,7 @@ XalanText*
 XalanSourceTreeText::splitText(unsigned int		/* offset */)
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	return 0;
 }
 
 
