@@ -52,7 +52,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release\*.lib /nologo /stack:0x1f4000 /subsystem:console /pdb:none /machine:I386
+# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /stack:0x1f4000 /subsystem:console /pdb:none /machine:I386
 
 !ELSEIF  "$(CFG)" == "Errortests - Win32 Debug"
 
@@ -76,7 +76,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1D.lib ..\..\Build\Win32\VC6\Debug\*.lib /nologo /stack:0x1f4000 /subsystem:console /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1D.lib /nologo /stack:0x1f4000 /subsystem:console /debug /machine:I386 /pdbtype:sept
 
 !ELSEIF  "$(CFG)" == "Errortests - Win32 Release with symbols"
 
@@ -102,7 +102,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 ..\..\Build\Win32\VC6\Release\Harness.lib ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release\*.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386 /out:"..\..\Build\Win32\VC6\Release/perft.exe"
-# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release.symbols\*.lib /nologo /stack:0x1f4000 /subsystem:console /debug /machine:I386 /fixed:no
+# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /stack:0x1f4000 /subsystem:console /debug /machine:I386 /fixed:no
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
