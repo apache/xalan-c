@@ -143,10 +143,6 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributesVector.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttrNS.cpp
 # End Source File
 # Begin Source File
@@ -248,10 +244,6 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeAllocator.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributesVector.hpp
 # End Source File
 # Begin Source File
 
