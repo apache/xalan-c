@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.10  2000/08/31 19:41:49  dbertoni
+# Updated Xerces library version number.
+#
 # Revision 1.9  2000/08/25 21:13:38  auriemma
 # Added support for building samples.
 #
@@ -170,7 +173,7 @@ nogood:
 endif
 
 # We need the Xerces library
-ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_2
+ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_3
 
 # We need the ICU library if we are using the ICUBridge
 ifdef XALAN_USE_ICU
