@@ -113,14 +113,14 @@ ElemCopy::getElementName() const
 
 
 void
-ElemCopy::execute(
-			StylesheetExecutionContext&		executionContext,		
-			XalanNode*						sourceNode) const
+ElemCopy::execute(StylesheetExecutionContext&		executionContext) const
 {
+	XalanNode* sourceNode = executionContext.getCurrentNode();
+
 	assert(sourceNode != 0);
 
-	const XalanNode::NodeType	nodeType = sourceNode->getNodeType();
-	
+	const XalanNode::NodeType	nodeType = executionContext.getCurrentNode()->getNodeType();
+
 	if(XalanNode::DOCUMENT_NODE != nodeType)
 	{
 		executionContext.cloneToResultTree(
@@ -133,14 +133,11 @@ ElemCopy::execute(
 		{
 			assert(sourceNode != 0);
 
-			ElemUse::execute(
-				executionContext,			
-				sourceNode);
+			ElemUse::execute(executionContext);
 
 			executionContext.copyNamespaceAttributes(*sourceNode);
 
-			executeChildren(executionContext,				
-				sourceNode);
+			executeChildren(executionContext);
 
 			const XalanDOMString&	s = DOMServices::getNameOfNode(*sourceNode);
 
@@ -150,8 +147,7 @@ ElemCopy::execute(
 		{
 			if(0 != executionContext.getTraceListeners())
 			{
-				executionContext.fireTraceEvent(TracerEvent(executionContext,				
-					sourceNode,
+				executionContext.fireTraceEvent(TracerEvent(executionContext,
 					*this));
 			}
 		}
@@ -161,14 +157,12 @@ ElemCopy::execute(
 		if(0 != executionContext.getTraceListeners())
 		{
 			executionContext.fireTraceEvent(TracerEvent(executionContext, 				
-				sourceNode,
 				*this));
 		}
 
 		ElemUse::execute(
-			executionContext, 			
-			sourceNode);
+			executionContext);
 
-		executeChildren(executionContext, sourceNode);
+		executeChildren(executionContext);
 	}  
 }

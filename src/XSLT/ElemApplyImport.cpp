@@ -116,15 +116,11 @@ ElemApplyImport::getElementName() const
 
 
 void
-ElemApplyImport::execute(
-			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode) const
+ElemApplyImport::execute(StylesheetExecutionContext&		executionContext) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode);
+	ElemTemplateElement::execute(executionContext);
 
-	// This will have to change to current template, (which will have 
-	// to be the top of a current template stack).
-	assert(sourceNode != 0);
+	XalanNode* sourceNode = executionContext.getCurrentNode();
 
 	transformChild(executionContext,
 				   getStylesheet(),

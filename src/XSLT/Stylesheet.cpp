@@ -1494,7 +1494,7 @@ Stylesheet::applyAttrSets(
 
 				if(qname.equals(attrSet->getQName()))
 				{
-					attrSet->execute(executionContext, sourceNode);
+					attrSet->execute(executionContext);
 				}
 			}
 		}

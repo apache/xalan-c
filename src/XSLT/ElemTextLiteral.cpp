@@ -112,11 +112,9 @@ ElemTextLiteral::getElementName() const
 
 
 void
-ElemTextLiteral::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const
+ElemTextLiteral::execute(StylesheetExecutionContext&		executionContext) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode);
+	ElemTemplateElement::execute(executionContext);
 
     if(!m_disableOutputEscaping)
     {

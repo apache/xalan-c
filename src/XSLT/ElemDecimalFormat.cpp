@@ -281,9 +281,7 @@ ElemDecimalFormat::getElementName() const
 
 
 void
-ElemDecimalFormat::execute(
-			StylesheetExecutionContext& 	executionContext,		
-			XalanNode*						sourceNode) const
+ElemDecimalFormat::execute(StylesheetExecutionContext&		executionContext) const
 {	
-	ElemTemplateElement::execute(executionContext, sourceNode);
+	ElemTemplateElement::execute(executionContext);
 }

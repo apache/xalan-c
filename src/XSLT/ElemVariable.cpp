@@ -153,13 +153,11 @@ ElemVariable::getElementName() const
 
 
 void
-ElemVariable::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const
+ElemVariable::execute(StylesheetExecutionContext&		executionContext) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode);
+	ElemTemplateElement::execute(executionContext);
 
-	const XObjectPtr	theValue(getValue(executionContext, sourceNode));
+	const XObjectPtr	theValue(getValue(executionContext, executionContext.getCurrentNode()));
 
 	if (theValue.null() == false)
 	{

@@ -130,13 +130,12 @@ ElemPI::getElementName() const
 
 
 void
-ElemPI::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const
+ElemPI::execute(StylesheetExecutionContext&		executionContext) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode);
+	ElemTemplateElement::execute(executionContext);
 	
 	XalanDOMString	piName;
+	XalanNode* sourceNode = executionContext.getCurrentNode();
 	
 	m_nameAVT->evaluate(piName, sourceNode, *this, executionContext);
 
@@ -153,7 +152,6 @@ ElemPI::execute(
 
 	childrenToString(
 			executionContext,
-			sourceNode,
 			theResult.get());
 
 	executionContext.processingInstruction(c_wstr(piName), c_wstr(theResult.get()));

@@ -114,11 +114,11 @@ ElemChoose::getElementName() const
 
 
 void
-ElemChoose::execute(
-			StylesheetExecutionContext&		executionContext,		
-			XalanNode*						sourceNode) const
+ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode);
+	ElemTemplateElement::execute(executionContext);
+
+	XalanNode* sourceNode = executionContext.getCurrentNode();
 
     for (const ElemTemplateElement* node = getFirstChildElem();
 			node != 0;
@@ -154,7 +154,7 @@ ElemChoose::execute(
 
 			if(test->boolean() == true)
 			{
-				node->executeChildren(executionContext, sourceNode);
+				node->executeChildren(executionContext);
 
 				break;
 			}
@@ -162,7 +162,7 @@ ElemChoose::execute(
 		else
 		{
 			// xsl:otherwise
-			node->executeChildren(executionContext, sourceNode);
+			node->executeChildren(executionContext);
 		}
     }
 }

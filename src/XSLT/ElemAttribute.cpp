@@ -154,17 +154,17 @@ ElemAttribute::getElementName() const
 
 
 void
-ElemAttribute::execute(
-			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode) const
+ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 {
 	assert(m_pNameAVT != 0);
 
-	ElemTemplateElement::execute(executionContext, sourceNode);
+	ElemTemplateElement::execute(executionContext);
 
 	StylesheetExecutionContext::GetAndReleaseCachedString	attrNameGuard(executionContext);
 
 	XalanDOMString&		attrName = attrNameGuard.get();
+
+	XalanNode* sourceNode = executionContext.getCurrentNode();
 
 	m_pNameAVT->evaluate(attrName, sourceNode, *this, executionContext);
 
@@ -344,8 +344,7 @@ ElemAttribute::execute(
 			StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
 			childrenToString(
-					executionContext,					
-					sourceNode,
+					executionContext,
 					theResult.get());
 
 			executionContext.addResultAttribute(attrName, theResult.get());

@@ -124,9 +124,7 @@ public:
 	getElementName() const;
 
 	virtual void
-	execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const;
+	execute(StylesheetExecutionContext&		executionContext) const;
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<QNameByValue>		QNameVectorType;

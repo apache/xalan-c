@@ -109,9 +109,7 @@ public:
 	getElementName() const;
 
 	virtual void
-	execute(
-			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode) const;
+	execute(StylesheetExecutionContext&		executionContext) const;
 
 protected:
 

@@ -139,14 +139,14 @@ ElemApplyTemplates::getElementName() const
 
 
 void
-ElemApplyTemplates::execute(
-			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode) const
+ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 {
+	XalanNode* sourceNode = executionContext.getCurrentNode();
+
 	if(0 != executionContext.getTraceListeners())
 	{
 		executionContext.fireTraceEvent(TracerEvent(
-		  executionContext, sourceNode, *this));
+		  executionContext, *this));
 	}
 	if (0 != sourceNode)
 	{

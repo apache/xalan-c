@@ -94,7 +94,6 @@ public:
 	 */
 	TracerEvent(
 			const StylesheetExecutionContext&	executionContext,
-			const XalanNode*					sourceNode,
 			const ElemTemplateElement&			styleNode);
 
 	virtual
@@ -128,12 +127,7 @@ public:
 	 * The XSLT processor instance.
 	 */
 	const StylesheetExecutionContext&		m_executionContext;
-
-	/**
-	 * The current context node.
-	 */
-	const XalanNode*						m_sourceNode;
-  
+ 
 	/**
 	 * The node in the style tree where the event occurs.
 	 */

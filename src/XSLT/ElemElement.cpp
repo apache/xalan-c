@@ -148,13 +148,13 @@ ElemElement::getElementName() const
 
 
 void
-ElemElement::execute(
-			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode) const
+ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 {
 	StylesheetExecutionContext::GetAndReleaseCachedString	elemNameGuard(executionContext);
 
 	XalanDOMString&		elemName = elemNameGuard.get();
+
+	XalanNode* sourceNode = executionContext.getCurrentNode();
 
 	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext);
 
@@ -257,7 +257,7 @@ ElemElement::execute(
 		}
 	}
 
-	ElemUse::execute(executionContext, sourceNode);
+	ElemUse::execute(executionContext);
 
 	doExecuteChildren(executionContext, sourceNode, isIllegalElement);
 
@@ -279,7 +279,7 @@ ElemElement::doExecuteChildren(
 	{
 		// If we should execute all children, then just call
 		// executeChildren()...
-		executeChildren(executionContext, sourceNode);
+		executeChildren(executionContext);
 	}
 	else
 	{
@@ -289,7 +289,7 @@ ElemElement::doExecuteChildren(
 		{
 			if (node->getXSLToken() != Constants::ELEMNAME_ATTRIBUTE)
 			{
-				node->execute(executionContext, sourceNode);
+				node->execute(executionContext);
 			}
 		}
 	}

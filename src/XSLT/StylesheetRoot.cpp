@@ -224,9 +224,14 @@ StylesheetRoot::process(
 
 	executionContext.startDocument();
 
+	// why
+	//executionContext.setCurrentNode(sourceTree);
+
+	XPathExecutionContext::CurrentNodeSetAndRestore theCurrentNodeSetAndRestore(executionContext, sourceTree);
+
 	// Output the action of the found root rule.  All processing
 	// occurs from here.
-	rootRule->execute(executionContext, sourceTree);
+	rootRule->execute(executionContext);
 
 	// At this point, anything transient during the tranformation
 	// may have been deleted, so we may not refer to anything the

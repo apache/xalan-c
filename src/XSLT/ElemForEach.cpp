@@ -155,10 +155,10 @@ ElemForEach::getElementName() const
 
 
 void
-ElemForEach::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const
+ElemForEach::execute(StylesheetExecutionContext&		executionContext) const
 {
+	XalanNode* sourceNode = executionContext.getCurrentNode();
+
 	if (sourceNode != 0)
 	{
 		assert(m_pSelectPattern != 0);

@@ -194,13 +194,11 @@ ElemLiteralResult::getElementName() const
 
 
 void
-ElemLiteralResult::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const
+ElemLiteralResult::execute(StylesheetExecutionContext&		executionContext) const
 {
 	executionContext.startElement(c_wstr(getElementName()));
 
-	ElemUse::execute(executionContext, sourceNode);
+	ElemUse::execute(executionContext);
 
 	m_namespacesHandler.outputResultNamespaces(executionContext);
 
@@ -227,7 +225,7 @@ ElemLiteralResult::execute(
 
 			StylesheetExecutionContext::GetAndReleaseCachedString	theGuard2(executionContext);
 
-			avt->evaluate(theStringedValue, sourceNode, *this, executionContext);
+			avt->evaluate(theStringedValue, executionContext.getCurrentNode(), *this, executionContext);
 
 			if (isEmpty(thePrefix) == true ||
 			    shouldExcludeResultNamespaceNode(
@@ -244,7 +242,7 @@ ElemLiteralResult::execute(
 		}
 	}
 
-	executeChildren(executionContext, sourceNode);
+	executeChildren(executionContext);
 
 	executionContext.endElement(c_wstr(getElementName()));
 }

@@ -165,18 +165,18 @@ ElemValueOf::getElementName() const
 
 
 void
-ElemValueOf::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const
+ElemValueOf::execute(StylesheetExecutionContext&		executionContext) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode);
+	ElemTemplateElement::execute(executionContext);
+
+	XalanNode* sourceNode = executionContext.getCurrentNode();
 
 	if (m_isDot == true)
 	{
 		StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
 		DOMServices::getNodeData(*sourceNode, theResult.get());
-
+	
 		outputValue(executionContext, theResult.get());
 
 		if(0 != executionContext.getTraceListeners())

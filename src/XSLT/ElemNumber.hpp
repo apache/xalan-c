@@ -150,9 +150,7 @@ public:
 	getElementName() const;
 
 	virtual void
-	execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const;
+	execute(StylesheetExecutionContext&		executionContext) const;
 
 	/**
 	 * Get the previous node to be counted.
@@ -187,15 +185,15 @@ protected:
 			XalanNode*						context,
 			const XalanElement*				namespaceContext) const;
 
-	  /**
-	   * Given a 'from' pattern (ala xsl:number), a match pattern 
-	   * and a context, find the first ancestor that matches the 
-	   * pattern (including the context handed in).
-	   * @param matchPatternString The match pattern.
-	   * @param node The node that "." expresses.
-	   * @param namespaceContext The context in which namespaces in the 
-	   * queries are supposed to be expanded.
-	   */
+	/**
+	* Given a 'from' pattern (ala xsl:number), a match pattern 
+	* and a context, find the first ancestor that matches the 
+	* pattern (including the context handed in).
+	* @param matchPatternString The match pattern.
+	* @param node The node that "." expresses.
+	* @param namespaceContext The context in which namespaces in the 
+	* queries are supposed to be expanded.
+	*/
 	XalanNode*
 	findPrecedingOrAncestorOrSelf(
 			StylesheetExecutionContext&		executionContext,
@@ -217,9 +215,7 @@ protected:
 	 * parameters set up by the xsl:number attributes.
 	 */
 	XalanDOMString
-	getCountString(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const;
+	getCountString(StylesheetExecutionContext&		executionContext) const;
 
 	/**
 	 * Get the ancestors, up to the root, that match the

@@ -89,6 +89,7 @@
 
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/XObjectFactory.hpp>
+#include <XPath/XPathExecutionContext.hpp>
 #include <XPath/XPath.hpp>
 
 
@@ -271,37 +272,45 @@ ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 
 void
 ElemTemplateElement::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const
+			StylesheetExecutionContext&		executionContext) const
 {
 	if(0 != executionContext.getTraceListeners())
     {
 		executionContext.fireTraceEvent(
-			TracerEvent(executionContext, sourceNode, *this));
+			TracerEvent(executionContext, *this));
 	}    
 }
 
 
 
 void
-ElemTemplateElement::executeChildren(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const
+ElemTemplateElement::executeChildren(StylesheetExecutionContext&		executionContext) const
 {
 	StylesheetExecutionContext::PushAndPopElementFrame	thePushAndPop(executionContext, this);
 
     for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
     {
-		node->execute(executionContext, sourceNode);
+		node->execute(executionContext);
     }
 }
 
 
 
 void
+ElemTemplateElement::executeChildren(
+		StylesheetExecutionContext&		executionContext,
+		XalanNode*						sourceNode) const
+{
+	XPathExecutionContext::CurrentNodeSetAndRestore theCurrentNodeSetAndRestore(executionContext, sourceNode);
+
+	executeChildren(executionContext);
+}
+
+
+
+void
 ElemTemplateElement::childrenToString(
-			StylesheetExecutionContext&		executionContext, 
-			XalanNode*						sourceNode,
+			StylesheetExecutionContext&		executionContext,			
 			XalanDOMString&					result) const
 {
 	reserve(result, length(result) + 1024);
@@ -319,7 +328,7 @@ ElemTemplateElement::childrenToString(
 					executionContext,
 					&theFormatter);
 
-	executeChildren(executionContext, sourceNode);
+	executeChildren(executionContext);
 }
 
 
@@ -973,8 +982,7 @@ ElemTemplateElement::transformChild(
 		{
 			if(0 != executionContext.getTraceListeners())
 			{
-				TracerEvent te(executionContext,
-							   child,
+				TracerEvent te(executionContext,							   
 								*theTemplate);
 
 				executionContext.fireTraceEvent(te);

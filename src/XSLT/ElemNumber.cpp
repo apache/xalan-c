@@ -213,14 +213,11 @@ ElemNumber::getElementName() const
 
 
 void
-ElemNumber::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const
+ElemNumber::execute(StylesheetExecutionContext&		executionContext) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode);
+	ElemTemplateElement::execute(executionContext);
 
-	const XalanDOMString	countString =
-		getCountString(executionContext, sourceNode);
+	const XalanDOMString	countString = getCountString(executionContext);
 
 	if (!isEmpty(countString))
 	{
@@ -375,10 +372,10 @@ ElemNumber::getCountMatchPattern(
 
 
 XalanDOMString
-ElemNumber::getCountString(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*							sourceNode) const
+ElemNumber::getCountString(StylesheetExecutionContext&		executionContext) const
 {
+	XalanNode* sourceNode = executionContext.getCurrentNode();
+
 	assert(sourceNode != 0);
 
 	IntArrayType	numberList;

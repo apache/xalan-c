@@ -151,9 +151,7 @@ public:
 
 	// These methods are inherited from ElemTemplateElement ...
 	virtual void
-	execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const;
+	execute(StylesheetExecutionContext&		executionContext) const;
 
 private:
 

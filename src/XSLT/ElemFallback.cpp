@@ -126,9 +126,7 @@ ElemFallback::~ElemFallback()
 
 
 void
-ElemFallback::execute(
-			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						sourceNode) const
+ElemFallback::execute(StylesheetExecutionContext&		executionContext) const
 {
 	const ElemTemplateElement* const	parent =
 			getParentNodeElem();
@@ -145,16 +143,14 @@ ElemFallback::execute(
 
 		if(extensionParent->elementAvailable(executionContext) == false)
 		{
-			ElemTemplateElement::execute(executionContext, sourceNode);
+			ElemTemplateElement::execute(executionContext);
 
-			executeChildren(
-				executionContext,
-				sourceNode);
+			executeChildren(executionContext);
 		}
 	}
 	else
 	{
 		// Should never happen
-		executionContext.error("Error!  parent of xsl:fallback must be an extension element!", sourceNode, this);
+		executionContext.error("Error!  parent of xsl:fallback must be an extension element!", executionContext.getCurrentNode(), this);
 	}
 }

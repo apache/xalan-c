@@ -198,18 +198,23 @@ public:
 	 * recursively execute down the element tree.
 	 * 
 	 * @param executionContext  The current execution context
-	 * @param sourceNode current context node
 	 */
 	virtual	void
-	execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const;
+	execute(StylesheetExecutionContext&		executionContext) const;
 
 	/** 
 	 * Process the children of a template.
 	 * 
 	 * @param processor  XSLT processor instance
-	 * @param sourceNode current context node	
+	 */
+	void
+	executeChildren(StylesheetExecutionContext&		executionContext) const;
+
+	/** 
+	 * Set the current node and process the children of a template.
+	 * 
+	 * @param processor  XSLT processor instance
+	 * @param sourceNode current node
 	 */
 	void
 	executeChildren(
@@ -221,13 +226,11 @@ public:
 	 * convert it to a string.
 	 * 
 	 * @param executionContext  The current execution context
-	 * @param sourceNode current source node context
 	 * @param result result of executing the elements children
 	 */
 	void
 	childrenToString(
 			StylesheetExecutionContext&		executionContext, 
-			XalanNode*						sourceNode,
 			XalanDOMString&					result) const;
 
 
@@ -768,8 +771,6 @@ protected:
 	 */
 	virtual bool
 	childTypeAllowed(int	xslToken) const;
-
-protected:
 
 	bool					m_finishedConstruction;
 

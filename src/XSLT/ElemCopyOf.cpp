@@ -119,13 +119,13 @@ ElemCopyOf::getElementName() const
 
 
 void
-ElemCopyOf::execute(
-			StylesheetExecutionContext&		executionContext,			
-			XalanNode*						sourceNode) const
+ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 {
-	ElemTemplateElement::execute(executionContext, sourceNode);
+	ElemTemplateElement::execute(executionContext);
 
 	assert(m_pSelectPattern != 0);
+
+	XalanNode* sourceNode = executionContext.getCurrentNode();
 
 	const XObjectPtr	value(m_pSelectPattern->execute(sourceNode, *this, executionContext));
 	assert(value.null() == false);
