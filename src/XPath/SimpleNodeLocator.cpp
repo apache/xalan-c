@@ -110,22 +110,23 @@ SimpleNodeLocator::~SimpleNodeLocator()
 
 XObject*
 SimpleNodeLocator::connectToNodes(
-			const XPath&					xpath,
+			const XPath&					/* xpath */,
 			XPathExecutionContext&			executionContext,
 			XalanNode&						/* context */, 
-			int 							opPos,
+			int 							/* opPos */,
 			const ConnectArgsVectorType&	connectArgs)
 {
 	assert(connectArgs.size() > 0 && connectArgs.size() < 3);
-
-	const XPathExpression&	currentExpression =
-		xpath.getExpression();
 
 	XObjectFactory& 		theFactory =
 		executionContext.getXObjectFactory();
 
 	XObjectGuard			results(theFactory,
-									theFactory.createNodeSet(MutableNodeRefList()));
+									theFactory.createNodeSet(executionContext.createMutableNodeRefList()));
+
+#if 0
+	const XPathExpression&	currentExpression =
+		xpath.getExpression();
 
 	const XalanDOMString	theFileSpec = connectArgs[0]->str();
 
@@ -197,6 +198,7 @@ SimpleNodeLocator::connectToNodes(
 	{
 		executionContext.warn("No files matched the file specification!");
 	}
+#endif
 
 	return results.release();
 }
@@ -210,11 +212,15 @@ SimpleNodeLocator::locationPath(
 			XalanNode&				context, 
 			int 					opPos)
 {
-	MutableNodeRefList	mnl(executionContext.createMutableNodeRefList());
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::auto_ptr;
+#endif
 
-	step(xpath, executionContext, &context, opPos + 2, mnl);
+	auto_ptr<MutableNodeRefList>	mnl(executionContext.createMutableNodeRefList());
 
-	return executionContext.getXObjectFactory().createNodeSet(mnl);
+	step(xpath, executionContext, &context, opPos + 2, *mnl.get());
+
+	return executionContext.getXObjectFactory().createNodeSet(mnl.release());
 }
 
 
@@ -252,8 +258,9 @@ SimpleNodeLocator::step(
 
 	int 				argLen = 0;
 
-	MutableNodeRefList	subQueryResults(executionContext.createMutableNodeRefList());
-//	MutableNodeRefList	queryResults(subQueryResults);
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+	BorrowReturnMutableNodeRefList	subQueryResults(executionContext);
 
 	bool				shouldReorder = false;
 	bool				continueStepRecursion = true;
@@ -265,28 +272,28 @@ SimpleNodeLocator::step(
 	case XPathExpression::eOP_FUNCTION:
 	case XPathExpression::eOP_GROUP:
 		argLen = findNodeSet(xpath, executionContext, context, opPos, 
-							  stepType, subQueryResults);
+							  stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_ROOT:
-		argLen = findRoot(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findRoot(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_PARENT:
-		argLen = findParent(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findParent(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_SELF:
-		argLen = findSelf(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findSelf(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_ANCESTORS:
-		argLen = findAncestors(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findAncestors(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		shouldReorder = true;
 		break;
 
 	case XPathExpression::eFROM_ANCESTORS_OR_SELF:
-		argLen = findAncestorsOrSelf(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findAncestorsOrSelf(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		shouldReorder = true;
 		break;
 
@@ -295,7 +302,7 @@ SimpleNodeLocator::step(
 		// fall-through on purpose.
 
 	case XPathExpression::eFROM_ATTRIBUTES:
-		argLen = findAttributes(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findAttributes(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eMATCH_ANY_ANCESTOR:
@@ -305,45 +312,45 @@ SimpleNodeLocator::step(
 		// fall-through on purpose.
 
 	case XPathExpression::eFROM_CHILDREN:
-		argLen = findChildren(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findChildren(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_DESCENDANTS:
 	case XPathExpression::eFROM_DESCENDANTS_OR_SELF:
-		argLen = findDescendants(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findDescendants(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_FOLLOWING:
-		argLen = findFollowing(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findFollowing(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_FOLLOWING_SIBLINGS:
-		argLen = findFollowingSiblings(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findFollowingSiblings(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_PRECEDING:
-		argLen = findPreceeding(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findPreceeding(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		shouldReorder = true;
 		break;
 
 	case XPathExpression::eFROM_PRECEDING_SIBLINGS:
-		argLen = findPreceedingSiblings(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findPreceedingSiblings(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		shouldReorder = true;
 		break;
 
 	case XPathExpression::eFROM_NAMESPACE:
-		argLen = findNamespace(xpath, executionContext, context, opPos,  stepType, subQueryResults);
+		argLen = findNamespace(xpath, executionContext, context, opPos,  stepType, *subQueryResults);
 		break;
 
 	default:
-		argLen = findNodesOnUnknownAxis(xpath, executionContext, context, opPos, stepType, subQueryResults);
+		argLen = findNodesOnUnknownAxis(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 	}
 
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
 									executionContext,
-									subQueryResults);
+									*subQueryResults);
 
 	opPos += argLen;
 
@@ -355,7 +362,7 @@ SimpleNodeLocator::step(
 				   executionContext,
 				   context,
 				   opPos, 
-				   subQueryResults,
+				   *subQueryResults,
 				   opPos);
 
 		nextStepType = currentExpression.getOpCodeMapValue(opPos);
@@ -363,25 +370,25 @@ SimpleNodeLocator::step(
 
 	if(XPathExpression::eENDOP != nextStepType && continueStepRecursion == true)
 	{
-		const unsigned int	nContexts = subQueryResults.getLength();
+		const unsigned int	nContexts = subQueryResults->getLength();
 
 		for(unsigned int i = 0; i < nContexts; i++)
 		{
-			XalanNode* const	node = subQueryResults.item(i);
+			XalanNode* const	node = subQueryResults->item(i);
 
 			if(0 != node)
 			{
-				MutableNodeRefList	mnl(executionContext.createMutableNodeRefList());
+				BorrowReturnMutableNodeRefList	mnl(executionContext);
 
-				step(xpath, executionContext, node, opPos, mnl);
+				step(xpath, executionContext, node, opPos, *mnl);
 
 				if(queryResults.getLength() == 0)
 				{
-					queryResults = mnl;
+					queryResults = *mnl;
 				}
 				else
 				{
-					queryResults.addNodesInDocOrder(mnl);
+					queryResults.addNodesInDocOrder(*mnl);
 				}
 			}
 		}
@@ -390,11 +397,11 @@ SimpleNodeLocator::step(
 	{
 		if (shouldReorder == true)
 		{
-			queryResults.addNodesInDocOrder(subQueryResults);
+			queryResults.addNodesInDocOrder(*subQueryResults);
 		}
 		else
 		{
-			queryResults = subQueryResults;
+			queryResults = *subQueryResults;
 		}
 	}
 }
@@ -646,11 +653,13 @@ SimpleNodeLocator::stepPattern(
 			XalanNode* const	parentContext =
 				executionContext.getParentOfNode(*localContext);
 
-			MutableNodeRefList		mnl(executionContext.createMutableNodeRefList());
+			typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
-			step(xpath, executionContext, parentContext, startOpPos, mnl);
+			BorrowReturnMutableNodeRefList	mnl(executionContext);
 
-			if (mnl.indexOf(localContext) == MutableNodeRefList::npos)
+			step(xpath, executionContext, parentContext, startOpPos, *mnl);
+
+			if (mnl->indexOf(localContext) == MutableNodeRefList::npos)
 			{
 				score = xpath.s_MatchScoreNone;
 			}

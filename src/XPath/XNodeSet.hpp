@@ -73,16 +73,10 @@
 
 
 
-#include <XPath/ResultTreeFragBase.hpp>
-#include <XPath/MutableNodeRefList.hpp>
-
-
-
 class NodeRefListBase;
-
-
-
+class ResultTreeFragBase;
 class XPathSupport;
+class XalanNode;
 
 
 
@@ -98,24 +92,12 @@ public:
 	 *
 	 * @param envSupport XPath environment support class instance
 	 * @param support XPath support class instance
-	 * @param value source node list 
+	 * @param value Pointer to source node list.  The XNodeSet will adopt the pointer.
 	 */
 	XNodeSet(
-			XPathEnvSupport&		envSupport,
-			XPathSupport&			support,
-			const NodeRefListBase&	value = MutableNodeRefList());
-
-	/**
-	 * Create an XNodeSet from a node list.
-	 *
-	 * @param envSupport XPath environment support class instance
-	 * @param support XPath support class instance
-	 * @param value source node list 
-	 */
-	XNodeSet(
-			XPathEnvSupport&			envSupport,
-			XPathSupport&				support,
-			const MutableNodeRefList&	value = MutableNodeRefList());
+			XPathEnvSupport&	envSupport,
+			XPathSupport&		support,
+			NodeRefListBase*	value = 0);
 
 	/**
 	 * Create an XNodeSet from a node.
@@ -175,12 +157,6 @@ public:
 	virtual const NodeRefListBase&
 	nodeset() const;
 
-	virtual const MutableNodeRefList&
-	mutableNodeset() const;
-
-	virtual MutableNodeRefList&
-	mutableNodeset();
-
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 
@@ -194,17 +170,19 @@ private:
 	operator=(const XNodeSet&);
 
 	// Data members...
-	MutableNodeRefList							m_value;
+#if defined(XALAN_NO_NAMESPACES)
+	auto_ptr<NodeRefListBase>					m_value;
+
+	mutable auto_ptr<ResultTreeFragBase>		m_resultTreeFrag;
+#else
+	std::auto_ptr<NodeRefListBase>				m_value;
+
+	mutable std::auto_ptr<ResultTreeFragBase>	m_resultTreeFrag;
+#endif
 
 	mutable XalanDOMString						m_cachedStringValue;
 
 	mutable double								m_cachedNumberValue;
-
-#if defined(XALAN_NO_NAMESPACES)
-	mutable auto_ptr<ResultTreeFragBase>		m_resultTreeFrag;
-#else
-	mutable std::auto_ptr<ResultTreeFragBase>	m_resultTreeFrag;
-#endif
 };
 
 

@@ -126,12 +126,6 @@ public:
 	virtual const NodeRefListBase&
 	nodeset() const;
 
-	virtual const MutableNodeRefList&
-	mutableNodeset() const;
-
-	virtual MutableNodeRefList&
-	mutableNodeset();
-
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 

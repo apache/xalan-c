@@ -1115,7 +1115,11 @@ XPath::Union(
 {
 	opPos += 2;
 
-	XObject*	resultNodeSet = 0;
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::auto_ptr;
+#endif
+
+	auto_ptr<MutableNodeRefList>	resultNodeList(executionContext.createMutableNodeRefList());
 
 	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
 
@@ -1125,24 +1129,17 @@ XPath::Union(
 
 		XObject*	expr = executeMore(context, opPos, executionContext);
 
-		if(0 == resultNodeSet)
-		{
-			resultNodeSet = expr;
-		}
-		else
-		{
-			MutableNodeRefList&		nl =
-				resultNodeSet->mutableNodeset();
+		const NodeRefListBase&	nl =
+				expr->nodeset();
 
-			nl.addNodesInDocOrder(expr->nodeset());
+		resultNodeList->addNodesInDocOrder(nl);
 
-			theFactory.returnObject(expr);
-		}
+		theFactory.returnObject(expr);
 
 		opPos = nextOpPos;
 	}
 
-	return resultNodeSet;
+	return theFactory.createNodeSet(resultNodeList.release());
 }
 
 
@@ -1352,9 +1349,12 @@ XPath::runExtFunction(
 
 	opPos++;
 
-	Function::XObjectArgVectorType	args;
+	typedef XPathExecutionContext::XObjectArgVectorType		XObjectArgVectorType;
+	typedef XPathExecutionContext::PushPopArgVector			PushPopArgVector;
 
-	args.reserve(eDefaultArgVectorSize);
+	PushPopArgVector	thePushPop(executionContext);
+
+	XObjectArgVectorType&	args = thePushPop.getVector();
 
 	while(opPos < endExtFunc)
 	{
@@ -1416,9 +1416,12 @@ XPath::runFunction(
 
 	opPos++;
 
-	Function::XObjectArgVectorType	args;
+	typedef XPathExecutionContext::XObjectArgVectorType		XObjectArgVectorType;
+	typedef XPathExecutionContext::PushPopArgVector			PushPopArgVector;
 
-	args.reserve(eDefaultArgVectorSize);
+	PushPopArgVector	thePushPop(executionContext);
+
+	XObjectArgVectorType&	args = thePushPop.getVector();
 
 	while(opPos < endFunc)
 	{

@@ -204,26 +204,8 @@ XObjectFactoryDefault::createBoolean(
 
 XObject*
 XObjectFactoryDefault::createNodeSet(
-			const NodeRefListBase&	value,
-			bool					/* fOptimize */)
-{
-	XNodeSet* const		theXNodeSet = new XNodeSet(m_envSupport, m_support, value);
-
-	m_xobjects.insert(theXNodeSet);
-
-#if !defined(NDEBUG)
-	++m_totalNodeSetInstanceCount;
-#endif
-
-	return theXNodeSet;
-}
-
-
-
-XObject*
-XObjectFactoryDefault::createNodeSet(
-			const MutableNodeRefList&	value,
-			bool					/* fOptimize */)
+			NodeRefListBase*	value,
+			bool				/* fOptimize */)
 {
 	XNodeSet* const		theXNodeSet = new XNodeSet(m_envSupport, m_support, value);
 
@@ -335,8 +317,8 @@ XObjectFactoryDefault::createUnknown(
 
 XObject*
 XObjectFactoryDefault::createResultTreeFrag(
-			const ResultTreeFragBase&	theValue,
-			bool						/* fOptimize */)
+			ResultTreeFragBase*		theValue,
+			bool					/* fOptimize */)
 {
 	XResultTreeFrag* const	theResultTreeFrag = new XResultTreeFrag(m_envSupport, m_support, theValue);
 
@@ -353,26 +335,8 @@ XObjectFactoryDefault::createResultTreeFrag(
 
 XObject*
 XObjectFactoryDefault::createSpan(
-			const NodeRefListBase&	theValue,
-			bool					/* fOptimize */)
-{
-	XSpan* const	theXSpan = new XSpan(m_envSupport, m_support, theValue);
-
-	m_xobjects.insert(theXSpan);
-
-#if !defined(NDEBUG)
-	++m_totalSpanInstanceCount;
-#endif
-
-	return theXSpan;
-}
-
-
-
-XObject*
-XObjectFactoryDefault::createSpan(
-			const MutableNodeRefList&	theValue,
-			bool						/* fOptimize */)
+			NodeRefListBase*	theValue,
+			bool				/* fOptimize */)
 {
 	XSpan* const	theXSpan = new XSpan(m_envSupport, m_support, theValue);
 

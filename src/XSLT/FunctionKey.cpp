@@ -142,8 +142,11 @@ FunctionKey::execute(
 		const bool				argIsNodeSet =
 				XObject::eTypeNodeSet == arg->getType() ? true : false;
 
-		MutableNodeRefList	theNodeRefList =
-				executionContext.createMutableNodeRefList();
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::auto_ptr;
+#endif
+
+		auto_ptr<MutableNodeRefList>	theNodeRefList(executionContext.createMutableNodeRefList());
 
 		if(argIsNodeSet == true)
 		{
@@ -180,7 +183,7 @@ FunctionKey::execute(
 											*executionContext.getPrefixResolver());
 							assert(nl != 0);
 
-							theNodeRefList.addNodesInDocOrder(*nl);
+							theNodeRefList->addNodesInDocOrder(*nl);
 						}
 					}
 				}
@@ -198,11 +201,11 @@ FunctionKey::execute(
 
 			if (nl != 0)
 			{
-				theNodeRefList.addNodesInDocOrder(*nl);
+				theNodeRefList->addNodesInDocOrder(*nl);
 			}
 		}
 
-		return executionContext.getXObjectFactory().createNodeSet(theNodeRefList);
+		return executionContext.getXObjectFactory().createNodeSet(theNodeRefList.release());
 	}
 }
 

@@ -176,30 +176,6 @@ XNull::nodeset() const
 
 
 
-const MutableNodeRefList&
-XNull::mutableNodeset() const
-{
-	error("Can't cast XNull to MutableNodeRefList");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<MutableNodeRefList*>(0);
-}
-
-
-
-MutableNodeRefList&
-XNull::mutableNodeset()
-{
-	error("Can't cast XNull to MutableNodeRefList");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<MutableNodeRefList*>(0);
-}
-
-
-
 void
 XNull::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {

@@ -139,26 +139,14 @@ public:
 	/**
 	 * Create a node set XObject from a node list.
 	 * 
-	 * @param theValue  value used to create object
+	 * @param theValue  value used to create object.  theValue will be owned by the new XObject.
 	 * @param fOptimize not used
 	 * @return pointer to new object
 	 */
 	virtual XObject*
 	createNodeSet(
-			const NodeRefListBase&	theValue,
-			bool					fOptimize = true) = 0;
-
-	/**
-	 * Create a node set XObject from a mutable node list.
-	 * 
-	 * @param theValue  value used to create object
-	 * @param fOptimize not used
-	 * @return pointer to new object
-	 */
-	virtual XObject*
-	createNodeSet(
-			const MutableNodeRefList&	theValue,
-			bool						fOptimize = true) = 0;
+			NodeRefListBase*	theValue,
+			bool				fOptimize = true) = 0;
 
 	/**
 	 * Create a node set XObject from a DOM node.
@@ -222,38 +210,26 @@ public:
 	/**
 	 * Create a result tree fragment XObject from a result tree fragment.
 	 * 
-	 * @param theValue  value used to create object
+	 * @param theValue  value used to create object.  theValue will be owned by the new XObject.
 	 * @param fOptimize not used
 	 * @return pointer to new object
 	 */
 	virtual XObject*
 	createResultTreeFrag(
-			const ResultTreeFragBase&	theValue,
-			bool						fOptimize = true) = 0;
+			ResultTreeFragBase*		theValue,
+			bool					fOptimize = true) = 0;
 
 	/**
 	 * Create a span XObject from a node list.
 	 * 
-	 * @param theValue  value used to create object
+	 * @param theValue  value used to create object.  The new object will own the pointer.
 	 * @param fOptimize not used
 	 * @return pointer to new object
 	 */
 	virtual XObject*
 	createSpan(
-			const NodeRefListBase&	theValue,
-			bool					fOptimize = true) = 0;
-
-	/**
-	 * Create a span XObject from a mutable node list.
-	 * 
-	 * @param theValue  value used to create object
-	 * @param fOptimize not used
-	 * @return pointer to new object
-	 */
-	virtual XObject*
-	createSpan(
-			const MutableNodeRefList&	theValue,
-			bool						fOptimize = true) = 0;
+			NodeRefListBase*	theValue,
+			bool				fOptimize = true) = 0;
 
 	/**
 	 * Create a span XObject from a DOM node.

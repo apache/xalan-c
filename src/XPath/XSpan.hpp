@@ -78,24 +78,12 @@ public:
 	 * 
 	 * @param envSupport XPath environment support class instance
 	 * @param support    XPath support class instance
-	 * @param value      source node list
+	 * @param value      source node list.  The instance will adopt the value instance.
 	 */
 	XSpan(
-			XPathEnvSupport&		envSupport,
-			XPathSupport&			support,
-			const NodeRefListBase&	value = MutableNodeRefList());
-
-	/**
-	 * Construct an XSpan object from a node list.
-	 * 
-	 * @param envSupport XPath environment support class instance
-	 * @param support    XPath support class instance
-	 * @param value      source node list
-	 */
-	XSpan(
-			XPathEnvSupport&			envSupport,
-			XPathSupport&				support,
-			const MutableNodeRefList&	value = MutableNodeRefList());
+			XPathEnvSupport&	envSupport,
+			XPathSupport&		support,
+			NodeRefListBase*	value = 0);
 
 	/**
 	 * Construct an XSpan object from a DOM node.

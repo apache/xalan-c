@@ -69,6 +69,10 @@
 
 
 
+#include <deque>
+
+
+
 #include <XalanDOM/XalanDOMString.hpp>
 
 
@@ -170,6 +174,12 @@ public:
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	functionName) const;
 
+	virtual XObjectArgVectorType&
+	pushArgVector();
+
+	virtual void
+	popArgVector();
+
 	virtual XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
@@ -190,7 +200,13 @@ public:
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) const;
 
-	virtual MutableNodeRefList
+	virtual MutableNodeRefList*
+	borrowMutableNodeRefList();
+
+	virtual bool
+	returnMutableNodeRefList(MutableNodeRefList*	theList);
+
+	virtual MutableNodeRefList*
 	createMutableNodeRefList() const;
 
 	virtual bool
@@ -286,6 +302,20 @@ public:
 
 protected:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<MutableNodeRefList*>			NodeRefListCacheType;
+	typedef deque<XObjectArgVectorType>			XObjectArgVectorStackType;
+#else
+	typedef std::vector<MutableNodeRefList*>	NodeRefListCacheType;
+	typedef std::deque<XObjectArgVectorType>	XObjectArgVectorStackType;
+#endif
+
+	typedef XObjectArgVectorStackType::iterator		ArgVectorStackIteratorType;
+
+	enum { eMutableNodeRefListCacheMax = 50,
+		   eArgVectorStackMax = 25,
+		   eCachedArgVectorDefaultSize = 10 };
+
 	XPathEnvSupport&				m_xpathEnvSupport;
 
 	XPathSupport&					m_xpathSupport;
@@ -301,6 +331,14 @@ protected:
 	bool							m_throwFoundIndex;
 
 	XalanDOMString					m_currentPattern;
+
+	NodeRefListCacheType			m_availableCachedNodeLists;
+
+	NodeRefListCacheType			m_busyCachedNodeLists;
+
+	XObjectArgVectorStackType		m_argVectorsStack;
+
+	ArgVectorStackIteratorType		m_argVectorsStackPosition;
 };
 
 

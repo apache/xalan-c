@@ -180,30 +180,6 @@ XUnknown::nodeset() const
 
 
 
-const MutableNodeRefList&
-XUnknown::mutableNodeset() const
-{
-	error("Can't cast XUnknown to MutableNodeRefList");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<MutableNodeRefList*>(0);
-}
-
-
-
-MutableNodeRefList&
-XUnknown::mutableNodeset()
-{
-	error("Can't cast XUnknown to MutableNodeRefList");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<MutableNodeRefList*>(0);
-}
-
-
-
 void
 XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {

@@ -198,7 +198,11 @@ FunctionDocument::execute(
 			base = executionContext.getPrefixResolver()->getURI();
 		}
 
-		MutableNodeRefList		mnl(executionContext.createMutableNodeRefList());
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::auto_ptr;
+#endif
+
+		auto_ptr<MutableNodeRefList>	mnl(executionContext.createMutableNodeRefList());
 
 		const unsigned int		nRefs = XObject::eTypeNodeSet == arg->getType() ?
 													arg->nodeset().getLength()
@@ -257,14 +261,14 @@ FunctionDocument::execute(
 
 				if(newDoc != 0)
 				{
-					mnl.addNodeInDocOrder(newDoc, true);
+					mnl->addNodeInDocOrder(newDoc, true);
 				}
 			}
 		}
 
-		assert(mnl.checkForDuplicates() == false);
+		assert(mnl->checkForDuplicates() == false);
 
-		return executionContext.getXObjectFactory().createNodeSet(mnl);
+		return executionContext.getXObjectFactory().createNodeSet(mnl.release());
 	}
 }
 

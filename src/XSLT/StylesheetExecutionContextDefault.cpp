@@ -969,7 +969,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 														 sourceNode,
 														 mode));
 
-	return m_xsltProcessor.createXResultTreeFrag(*theFragment.get());
+	return getXObjectFactory().createResultTreeFrag(theFragment.release());
 }
 
 
@@ -977,8 +977,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 bool
 StylesheetExecutionContextDefault::destroyXObject(XObject*	theXObject) const
 {
-
-	return m_xsltProcessor.destroyXObject(theXObject);
+	return getXObjectFactory().returnObject(theXObject);
 }
 
 
@@ -1454,6 +1453,22 @@ StylesheetExecutionContextDefault::functionAvailable(
 
 
 
+StylesheetExecutionContextDefault::XObjectArgVectorType&
+StylesheetExecutionContextDefault::pushArgVector()
+{
+	return m_xpathExecutionContextDefault.pushArgVector();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::popArgVector()
+{
+	m_xpathExecutionContextDefault.popArgVector();
+}
+
+
+
 XObject*
 StylesheetExecutionContextDefault::extFunction(
 			const XalanDOMString&			theNamespace,
@@ -1494,7 +1509,23 @@ StylesheetExecutionContextDefault::parseXML(
 
 
 
-MutableNodeRefList
+MutableNodeRefList*
+StylesheetExecutionContextDefault::borrowMutableNodeRefList()
+{
+	return m_xpathExecutionContextDefault.borrowMutableNodeRefList();
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*		theList)
+{
+	return m_xpathExecutionContextDefault.returnMutableNodeRefList(theList);
+}
+
+
+
+MutableNodeRefList*
 StylesheetExecutionContextDefault::createMutableNodeRefList() const
 {
 	return m_xpathExecutionContextDefault.createMutableNodeRefList();

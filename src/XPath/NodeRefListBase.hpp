@@ -122,6 +122,9 @@ public:
 	virtual XPathSupport*
 	getSupport() const = 0;
 
+	virtual NodeRefListBase*
+	clone() const = 0;
+
 #if defined(XALAN_INLINE_INITIALIZATION)
 	static const unsigned int	npos = UINT_MAX;
 #else

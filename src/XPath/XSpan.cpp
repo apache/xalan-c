@@ -59,9 +59,9 @@
 
 
 XSpan::XSpan(
-			XPathEnvSupport&		envSupport,
-			XPathSupport&			support,
-			const NodeRefListBase&	value) :
+			XPathEnvSupport&	envSupport,
+			XPathSupport&		support,
+			NodeRefListBase*	value) :
 	XNodeSet(envSupport,
 			 support,
 			 value),
@@ -72,6 +72,7 @@ XSpan::XSpan(
 
 
 
+#if 0
 XSpan::XSpan(
 			XPathEnvSupport&			envSupport,
 			XPathSupport&				support,
@@ -83,6 +84,7 @@ XSpan::XSpan(
 	m_end(-1)
 {
 }
+#endif
 
 
 

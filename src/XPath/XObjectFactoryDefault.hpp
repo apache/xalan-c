@@ -117,13 +117,8 @@ public:
 
 	virtual XObject*
 	createNodeSet(
-			const NodeRefListBase&	value,
-			bool					fOptimize = true);
-
-	virtual XObject*
-	createNodeSet(
-			const MutableNodeRefList&	value,
-			bool						fOptimize = true);
+			NodeRefListBase*	value,
+			bool				fOptimize = true);
 
 	virtual XObject*
 	createNodeSet(
@@ -150,18 +145,13 @@ public:
 
 	virtual XObject*
 	createResultTreeFrag(
-			const ResultTreeFragBase&	theValue,
-			bool						fOptimize = true);
-
-	virtual XObject*
-	createSpan(
-			const NodeRefListBase&	value,
+			ResultTreeFragBase*		theValue,
 			bool					fOptimize = true);
 
 	virtual XObject*
 	createSpan(
-			const MutableNodeRefList&	value,
-			bool						fOptimize = true);
+			NodeRefListBase*	value,
+			bool				fOptimize = true);
 
 	virtual XObject*
 	createSpan(

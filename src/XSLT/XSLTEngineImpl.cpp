@@ -3359,24 +3359,6 @@ XSLTEngineImpl::setFormatterListener(FormatterListener*		flistener)
 
 
 
-XObject*
-XSLTEngineImpl::createXResultTreeFrag(const ResultTreeFragBase&  r) const
-{
-	return m_xobjectFactory.createResultTreeFrag(r);
-}
-
-
-
-bool
-XSLTEngineImpl::destroyXObject(XObject*		theXObject) const
-{
-	assert(theXObject != 0);
-
-	return m_xobjectFactory.returnObject(theXObject);
-}
-
-
-
 void
 XSLTEngineImpl::InstallFunctions()
 {

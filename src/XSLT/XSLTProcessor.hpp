@@ -72,24 +72,15 @@
 
 
 
-class Arg;
-class DispatcherFactory;
 class ElemTemplateElement;
-class Formatter;
 class FormatterListener;
 class GenerateEvent;
-class InputSource;
-class Locator;
 class NodeRefListBase;
 class PrefixResolver;
 class PrintWriter;
-class ProblemListener;
 class QName;
-class ResultTreeFrag;
 class ResultTreeFragBase;
 class SelectionEvent;
-class StackEntry;
-class Stylesheet;
 class StylesheetConstructionContext;
 class StylesheetExecutionContext;
 class StylesheetRoot;
@@ -100,10 +91,7 @@ class XalanElement;
 class XalanNode;
 class XMLParserLiaison;
 class XObject;
-class XObjectFactory;
 class XPathExecutionContext;
-class XPathFactory;
-class XPathProcessor;
 class XSLTInputSource;
 class XSLTResultTarget;
 
@@ -331,27 +319,6 @@ public:
 	 */
    virtual const XalanDOMString
    getUniqueNSValue() const = 0;
-
-	/**
-	 * Function to create an XObject that represents a Result tree
-	 * fragment.
-	 *
-	 * @param r result tree fragment to use
-	 * @return pointer to XObject
-	 */
-   virtual XObject*
-   createXResultTreeFrag(const ResultTreeFragBase&	r) const = 0;
-
-	/**
-	 * Function to destroy an XObject that was returned
-	 * by executing.  It is safe to call this function
-	 * with any XObject.
-	 *
-	 * @param theXObject pointer to the XObject.
-	 * @return true if the object was destroyed.
-	 */
-   virtual bool
-   destroyXObject(XObject*	theXObject) const = 0;
 
   /**
 	* Push a top-level stylesheet parameter.  This value can be evaluated via

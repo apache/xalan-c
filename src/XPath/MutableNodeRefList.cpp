@@ -369,10 +369,19 @@ MutableNodeRefList::addNodeInDocOrder(
 void
 MutableNodeRefList::clearNulls()
 {
+#if 1
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::remove;
 #endif
 
+	m_nodeList.erase(
+		remove(
+			m_nodeList.begin(),
+			m_nodeList.end(), 
+			NodeListVectorType::value_type(0)),
+		m_nodeList.end());
+
+#else
 	NodeListVectorType::iterator	i =
 		m_nodeList.begin();
 
@@ -394,6 +403,7 @@ MutableNodeRefList::clearNulls()
 			++i;
 		}
 	}
+#endif
 
 	assert(checkForDuplicates() == false);
 }
@@ -405,3 +415,18 @@ MutableNodeRefList::getSupport() const
 {
 	return m_support;
 }
+
+
+
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+NodeRefListBase*
+#else
+MutableNodeRefList*
+#endif
+MutableNodeRefList::clone() const
+{
+	return new MutableNodeRefList(*this);
+}
+
+
+

@@ -163,22 +163,6 @@ public:
 	nodeset() const = 0;
 
 	/**
-	 * Cast result object to a nodelist that is mutable.
-	 *
-	 * @return mutable node list
-	 */
-	virtual const MutableNodeRefList&
-	mutableNodeset() const = 0;
-
-	/**
-	 * Cast result object to a nodelist that is mutable.
-	 *
-	 * @return mutable node list
-	 */
-	virtual MutableNodeRefList&
-	mutableNodeset() = 0;
-
-	/**
 	 * Process a callback request for preferred type information.
 	 *
 	 * @param theCallbackObject object to call back

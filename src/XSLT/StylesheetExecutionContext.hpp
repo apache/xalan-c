@@ -1538,6 +1538,12 @@ public:
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	functionName) const = 0;
 
+	virtual XObjectArgVectorType&
+	pushArgVector() = 0;
+
+	virtual void
+	popArgVector() = 0;
+
 	virtual XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
@@ -1558,7 +1564,13 @@ public:
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) const = 0;
 
-	virtual MutableNodeRefList
+	virtual MutableNodeRefList*
+	borrowMutableNodeRefList() = 0;
+
+	virtual bool
+	returnMutableNodeRefList(MutableNodeRefList*	theList) = 0;
+
+	virtual MutableNodeRefList*
 	createMutableNodeRefList() const = 0;
 
 	virtual bool

@@ -122,6 +122,13 @@ public:
 	virtual XPathSupport*
 	getSupport() const;
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual NodeRefListBase*
+#else
+	virtual NodeRefList*
+#endif
+	clone() const;
+
 #if !defined(NDEBUG)
 	bool
 	checkForDuplicates() const;

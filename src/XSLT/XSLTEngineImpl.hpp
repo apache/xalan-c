@@ -263,20 +263,6 @@ public:
 
 	virtual const XalanDOMString
 	getUniqueNSValue() const;
-	
-	virtual XObject*
-	createXResultTreeFrag(const ResultTreeFragBase&		r) const;
-
-	/**
-	 * Function to destroy an XObject that was returned
-	 * by executing.  It is safe to call this function
-	 * with any XObject.
-	 *
-	 * @param theXObject pointer to the XObject.
-	 * @return true if the object was destroyed.
-	 */
-	virtual bool
-	destroyXObject(XObject*		theXObject) const;
 
 	virtual void
 	setStylesheetParam(	

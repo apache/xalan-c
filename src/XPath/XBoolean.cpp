@@ -197,30 +197,6 @@ XBoolean::nodeset() const
 
 
 
-const MutableNodeRefList&
-XBoolean::mutableNodeset() const
-{
-	error("Can't cast XBoolean to MutableNodeRefList");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return reinterpret_cast<MutableNodeRefList&>(dummy);
-}
-
-
-
-MutableNodeRefList&
-XBoolean::mutableNodeset()
-{
-	error("Can't cast XBoolean to MutableNodeRefList");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return reinterpret_cast<MutableNodeRefList&>(dummy);
-}
-
-
-
 void
 XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {

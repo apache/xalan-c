@@ -146,7 +146,11 @@ public:
 		assert(theDocContext != 0);
 
 		// This list will hold the nodes we find.
-		MutableNodeRefList	theNodeList(executionContext.createMutableNodeRefList());
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::auto_ptr;
+#endif
+
+		auto_ptr<MutableNodeRefList>	theNodeList(executionContext.createMutableNodeRefList());
 
 		// If there is no context, we cannot continue.
 		if(0 == theDocContext)
@@ -188,14 +192,14 @@ public:
 
 						if (theNode != 0)
 						{
-							theNodeList.addNodeInDocOrder(theNode, true);
+							theNodeList->addNodeInDocOrder(theNode, true);
 						}
 					}
 				}
 			}
 		}
 
-		return executionContext.getXObjectFactory().createNodeSet(theNodeList);
+		return executionContext.getXObjectFactory().createNodeSet(theNodeList.release());
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

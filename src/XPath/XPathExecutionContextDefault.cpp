@@ -62,6 +62,10 @@
 
 
 
+#include <PlatformSupport/STLHelper.hpp>
+
+
+
 #include "ElementPrefixResolverProxy.hpp"
 #include "FoundIndex.hpp"
 #include "XObjectFactory.hpp"
@@ -86,14 +90,37 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_currentNode(theCurrentNode),
 	m_contextNodeList(&theContextNodeList),
 	m_prefixResolver(thePrefixResolver),
-	m_throwFoundIndex(false)
+	m_throwFoundIndex(false),
+	m_availableCachedNodeLists(),
+	m_busyCachedNodeLists(),
+	m_argVectorsStack(),
+	m_argVectorsStackPosition(m_argVectorsStack.end())
 {
+	m_availableCachedNodeLists.reserve(eMutableNodeRefListCacheMax);
+
+	m_busyCachedNodeLists.reserve(eMutableNodeRefListCacheMax);
 }
 
 
 
 XPathExecutionContextDefault::~XPathExecutionContextDefault()
 {
+	assert(m_busyCachedNodeLists.size() == 0);
+	assert(m_argVectorsStackPosition == m_argVectorsStack.begin() ||
+		   m_argVectorsStack.size() == 0);
+
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	for_each(
+		m_availableCachedNodeLists.begin(),
+		m_availableCachedNodeLists.end(),
+		DeleteFunctor<MutableNodeRefList>());
+
+	m_argVectorsStack.clear();
+
+	m_argVectorsStackPosition = m_argVectorsStack.end();
 }
 
 
@@ -248,6 +275,53 @@ XPathExecutionContextDefault::functionAvailable(
 
 
 
+XPathExecutionContextDefault::XObjectArgVectorType&
+XPathExecutionContextDefault::pushArgVector()
+{
+	// m_argVectorsStackPosition always points one past
+	// the current top of the stack.
+	if (m_argVectorsStackPosition != m_argVectorsStack.end())
+	{
+		return *m_argVectorsStackPosition++;
+	}
+	else
+	{
+		m_argVectorsStack.push_back(XObjectArgVectorType());
+
+		m_argVectorsStackPosition = m_argVectorsStack.end();
+
+		XObjectArgVectorType&	theResult =
+			m_argVectorsStack.back();
+
+		theResult.reserve(eCachedArgVectorDefaultSize);
+
+		return theResult;
+	}
+}
+
+
+
+void
+XPathExecutionContextDefault::popArgVector()
+{
+	assert(m_argVectorsStackPosition != m_argVectorsStack.begin());
+
+	if (m_argVectorsStack.size() > eArgVectorStackMax)
+	{
+		m_argVectorsStack.pop_back();
+
+		m_argVectorsStackPosition = m_argVectorsStack.end();
+	}
+	else
+	{
+		m_argVectorsStackPosition->clear();
+
+		--m_argVectorsStackPosition;
+	}
+}
+
+
+
 XObject*
 XPathExecutionContextDefault::extFunction(
 			const XalanDOMString&			theNamespace,
@@ -288,10 +362,60 @@ XPathExecutionContextDefault::parseXML(
 
 
 
-MutableNodeRefList
+MutableNodeRefList*
+XPathExecutionContextDefault::borrowMutableNodeRefList()
+{
+	// We'll always return the back of the free list, since
+	// that's the cheapest thing.
+	if (m_availableCachedNodeLists.size() == 0)
+	{
+		m_busyCachedNodeLists.push_back(new MutableNodeRefList(&m_xpathSupport));
+	}
+	else
+	{
+		m_busyCachedNodeLists.push_back(m_availableCachedNodeLists.back());
+
+		m_availableCachedNodeLists.pop_back();
+	}
+
+	return m_busyCachedNodeLists.back();
+}
+
+
+
+bool
+XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	theList)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+
+	// Search from the back to the front, since we push the latest borrowed on the back.
+	const NodeRefListCacheType::reverse_iterator	i =
+		find(m_busyCachedNodeLists.rbegin(), m_busyCachedNodeLists.rend(), theList);
+
+	if (i == m_busyCachedNodeLists.rend())
+	{
+		return false;
+	}
+	else
+	{
+		theList->clear();
+
+		m_availableCachedNodeLists.push_back(*i);
+
+		m_busyCachedNodeLists.erase(&*i);
+
+		return true;
+	}
+}
+
+
+
+MutableNodeRefList*
 XPathExecutionContextDefault::createMutableNodeRefList() const
 {
-	return MutableNodeRefList(&m_xpathSupport);
+	return new MutableNodeRefList(&m_xpathSupport);
 }
 
 

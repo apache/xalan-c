@@ -676,7 +676,7 @@ ElemTemplateElement::transformSelectedChildren(
 					executionContext.getXObjectFactory(),
 					theXObject);
 
-			const NodeRefListBase* const	sourceNodes = &result->mutableNodeset();
+			const NodeRefListBase&	sourceNodes = result->nodeset();
 
 			if(0 != executionContext.getTraceListeners())
 			{
@@ -689,7 +689,7 @@ ElemTemplateElement::transformSelectedChildren(
 							result.get()));
 			}
 
-			const unsigned int	nNodes = sourceNodes->getLength();
+			const unsigned int	nNodes = sourceNodes.getLength();
 
 			if (nNodes > 0)
 			{
@@ -704,7 +704,7 @@ ElemTemplateElement::transformSelectedChildren(
 						xslToken,
 						selectStackFrameIndex,
 						keys,
-						*sourceNodes,
+						sourceNodes,
 						nNodes);
 			}
 		}
@@ -756,10 +756,11 @@ ElemTemplateElement::doTransformSelectedChildren(
 
 	if (keys.size() > 0)
 	{
-		MutableNodeRefList	sortedSourceNodes =
-				executionContext.createMutableNodeRefList();
+		typedef StylesheetExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
-		sortedSourceNodes = sourceNodes;
+		BorrowReturnMutableNodeRefList	sortedSourceNodes(executionContext);
+
+		*sortedSourceNodes = sourceNodes;
 
 		{
 			NodeSorter	sorter;
@@ -768,7 +769,7 @@ ElemTemplateElement::doTransformSelectedChildren(
 					executionContext,
 					selectStackFrameIndex);
 
-			sorter.sort(executionContext, sortedSourceNodes, keys);
+			sorter.sort(executionContext, *sortedSourceNodes, keys);
 		}
 
 		doTransformSelectedChildren(
@@ -780,7 +781,7 @@ ElemTemplateElement::doTransformSelectedChildren(
 			sourceNodeContext,
 			mode,
 			xslToken,
-			sortedSourceNodes,
+			*sortedSourceNodes,
 			sourceNodesCount);
 	}
 	else
@@ -816,9 +817,11 @@ ElemTemplateElement::doTransformSelectedChildren(
 			const XalanNodeList&						childNodes,
 			unsigned int								childNodeCount) const
 {
-	MutableNodeRefList	sourceNodes = executionContext.createMutableNodeRefList();
+	typedef StylesheetExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
-	sourceNodes = &childNodes;
+	BorrowReturnMutableNodeRefList	sourceNodes(executionContext);
+
+	*sourceNodes = &childNodes;
 
 	doTransformSelectedChildren(
 			executionContext,
@@ -831,7 +834,7 @@ ElemTemplateElement::doTransformSelectedChildren(
 			xslToken,
 			selectStackFrameIndex,
 			keys,
-			sourceNodes,
+			*sourceNodes,
 			childNodeCount);
 }
 

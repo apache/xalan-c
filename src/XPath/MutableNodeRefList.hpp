@@ -224,6 +224,13 @@ public:
 	virtual XPathSupport*
 	getSupport() const;
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual NodeRefListBase*
+#else
+	virtual MutableNodeRefList*
+#endif
+	clone() const;
+
 private:
 
 	XPathSupport*	m_support;

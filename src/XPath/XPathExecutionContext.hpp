@@ -66,6 +66,7 @@
 
 
 
+#include <cassert>
 #include <vector>
 
 
@@ -334,6 +335,50 @@ public:
 			const XObjectArgVectorType&		argVec) = 0;
 
 	/**
+	 * Push an arg vector on the execution context and
+	 * return a reference to it.  Must be followed by
+	 * a pop.
+	 * 
+	 * @return a reference to an arg vector.
+	 */
+	virtual XObjectArgVectorType&
+	pushArgVector() = 0;
+
+	/**
+	 * Pop the arg vector from the execution context.
+	 */
+	virtual void
+	popArgVector() = 0;
+
+	class PushPopArgVector
+	{
+	public:
+
+		PushPopArgVector(XPathExecutionContext&		executionContext) :
+			m_xpathExecutionContext(executionContext),
+			m_argVector(executionContext.pushArgVector())
+		{
+		}
+
+		~PushPopArgVector()
+		{
+			m_xpathExecutionContext.popArgVector();
+		}
+
+		XObjectArgVectorType&
+		getVector()
+		{
+			return m_argVector;
+		}
+
+	private:
+
+		XPathExecutionContext&	m_xpathExecutionContext;
+
+		XObjectArgVectorType&	m_argVector;
+	};
+
+	/**
 	 * Get an XLocator provider keyed by node.  This gets the association
 	 * based on the root of the tree that is the node's parent.
 	 *
@@ -368,11 +413,63 @@ public:
 			const XalanDOMString&	base) const = 0;
 
 	/**
+	 * Borrow a cached MutableNodeRefList.
+	 *
+	 * @return A pointer the to node list.
+	 */
+	virtual MutableNodeRefList*
+	borrowMutableNodeRefList() = 0;
+
+	/**
+	 * Return a previously borrowed MutableNodeRefList.
+	 *
+	 * @param theList A pointer the to previously borrowed node list.
+	 * @return true if the list was borrowed (at therefore, destroyed), false if not.
+	 */
+	virtual bool
+	returnMutableNodeRefList(MutableNodeRefList*	theList) = 0;
+
+	class BorrowReturnMutableNodeRefList
+	{
+	public:
+
+		BorrowReturnMutableNodeRefList(XPathExecutionContext&	executionContext) :
+			m_xpathExecutionContext(executionContext),
+			m_mutableNodeRefList(executionContext.borrowMutableNodeRefList())
+		{
+			assert(m_mutableNodeRefList != 0);
+		}
+
+		~BorrowReturnMutableNodeRefList()
+		{
+			m_xpathExecutionContext.returnMutableNodeRefList(m_mutableNodeRefList);
+		}
+
+		MutableNodeRefList&
+		operator*() const
+		{
+			return *m_mutableNodeRefList;
+		}
+
+		MutableNodeRefList*
+		operator->() const
+		{
+			return m_mutableNodeRefList;
+		}
+
+	private:
+
+		XPathExecutionContext&	m_xpathExecutionContext;
+
+		MutableNodeRefList*		m_mutableNodeRefList;
+	};
+
+	/**
 	 * Create a MutableNodeRefList with the appropriate context.
 	 *
-	 * @return node list created
+	 * @return pointer to node list created
 	 */
-	virtual MutableNodeRefList
+	virtual MutableNodeRefList*
 	createMutableNodeRefList() const = 0;
 
 	/**

@@ -77,13 +77,12 @@
 
 
 XResultTreeFrag::XResultTreeFrag(
-			XPathEnvSupport&			envSupport,
-			XPathSupport&				support,
-			const ResultTreeFragBase&	val,
-			bool						deepClone) :
+			XPathEnvSupport&		envSupport,
+			XPathSupport&			support,
+			ResultTreeFragBase*		val) :
 	XObject(&envSupport, &support),
 	NodeRefListBase(),
-	m_value(val.clone(deepClone)),
+	m_value(val),
 	m_cachedStringValue(),
 	m_cachedNumberValue(0.0)
 {
@@ -228,30 +227,6 @@ XResultTreeFrag::nodeset() const
 
 
 
-const MutableNodeRefList&
-XResultTreeFrag::mutableNodeset() const
-{
-	error("Can't cast XResultTreeFrag to MutableNodeRefList");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<MutableNodeRefList*>(0);
-}
-
-
-
-MutableNodeRefList&
-XResultTreeFrag::mutableNodeset()
-{
-	error("Can't cast XResultTreeFrag to MutableNodeRefList");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<MutableNodeRefList*>(0);
-}
-
-
-
 void
 XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
@@ -345,4 +320,12 @@ XPathSupport*
 XResultTreeFrag::getSupport() const
 {
 	return m_support;
+}
+
+
+
+NodeRefListBase*
+XResultTreeFrag::clone() const
+{
+	return new XResultTreeFrag(*this);
 }

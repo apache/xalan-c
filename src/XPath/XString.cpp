@@ -279,30 +279,6 @@ XString::nodeset() const
 
 
 
-const MutableNodeRefList&
-XString::mutableNodeset() const
-{
-	error("Can't cast XString to MutableNodeRefList");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<MutableNodeRefList*>(0);
-}
-
-
-
-MutableNodeRefList&
-XString::mutableNodeset()
-{
-	error("Can't cast XString to MutableNodeRefList");
-
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return *static_cast<MutableNodeRefList*>(0);
-}
-
-
-
 void
 XString::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
