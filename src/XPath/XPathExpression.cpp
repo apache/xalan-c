@@ -859,6 +859,7 @@ XPathExpression::IntializeOpCodeLengthMap()
 	theMap[eMATCH_IMMEDIATE_ANCESTOR] = 1 + s__opCodeMapLengthIndex;
 	theMap[eMATCH_ANY_ANCESTOR_WITH_PREDICATE] = 2 + s__opCodeMapLengthIndex;
 	theMap[eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL] = 2 + s__opCodeMapLengthIndex;
+	theMap[eOP_INLINE_NUMBERLIT] = 1 + s__opCodeMapLengthIndex;
 
 	return theMap;
 }

@@ -1611,12 +1611,39 @@ XPathProcessorImpl::PrimaryExpr()
 				XalanXMLChar::isDigit(charAt(m_token, 1)) == true) ||
 				XalanXMLChar::isDigit(m_tokenChar) == true)
 	{
-		m_expression->appendOpCode(XPathExpression::eOP_NUMBERLIT);
+		// We're going to try to save as much time as possible by encoding
+		// some things directly into the op map, instead of encoding the
+		// index into the token queue.
+		const double	num = DoubleSupport::toDouble(m_token);
 
-		Number();
+		const XPathExpression::OpCodeMapType::value_type	numAsValue =
+			XPathExpression::OpCodeMapType::value_type(num);
 
-		m_expression->updateOpCodeLength(XPathExpression::eOP_NUMBERLIT,
-										 opPos);
+		if (numAsValue == num)
+		{
+			// The value will fit directly into the token queue, so
+			// put it there.
+			m_expression->appendOpCode(XPathExpression::eOP_INLINE_NUMBERLIT);
+
+			m_expression->pushValueOnOpCodeMap(numAsValue);
+
+			m_expression->updateOpCodeLength(XPathExpression::eOP_INLINE_NUMBERLIT,
+											 opPos);
+		}
+		else
+		{
+			// Won't fit, so use the token to represent the number.  One way
+			// to avoid this would be to use a union for the entries in the
+			// token queue, so that we can represent all numbers in-line.
+			m_expression->appendOpCode(XPathExpression::eOP_NUMBERLIT);
+
+			m_expression->pushArgumentOnOpCodeMap(num);
+
+			m_expression->updateOpCodeLength(XPathExpression::eOP_NUMBERLIT,
+											 opPos);
+		}
+
+		nextToken();
 	}
 	else if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true ||
 			(lookahead(XalanUnicode::charColon, 1) == true && lookahead(XalanUnicode::charLeftParenthesis, 3) == true))
@@ -2114,7 +2141,7 @@ XPathProcessorImpl::QName()
 	assert(m_expression != 0);
 
 	// If there is no prefix, we have to fake things out...
-	if (lookahead(':', 1) == false)
+	if (lookahead(XalanUnicode::charColon, 1) == false)
 	{
 		m_expression->insertToken(XalanDOMString());
 

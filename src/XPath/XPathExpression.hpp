@@ -598,6 +598,14 @@ public:
 		eMATCH_ANY_ANCESTOR_WITH_PREDICATE = 97,
 		eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL = 98,
 
+		/**
+		 * [OP_INLINE_NUMBERLIT] (Number literal.)
+		 * [3]
+		 * [value]
+		 * 
+		 */
+		eOP_INLINE_NUMBERLIT = 99,
+
 		// Always add _before_ this one.
 		eOpCodeNextAvailable
 	};	// enum eOpCodes
@@ -745,7 +753,7 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 
 	typedef vector<int>						OpCodeMapType;
-	typedef deque<XToken>					TokenQueueType;
+	typedef vector<XToken>					TokenQueueType;
 	typedef vector<int>						PatternMapType;
 
 	typedef map<int, int, less<int> >		OpCodeLengthMapType;
@@ -760,7 +768,7 @@ public:
 #else
 
 	typedef std::vector<int>				OpCodeMapType;
-	typedef std::deque<XToken>				TokenQueueType;
+	typedef std::vector<XToken>				TokenQueueType;
 	typedef std::vector<int>				PatternMapType;
 	typedef std::map<int, int>				OpCodeLengthMapType;
 
@@ -1299,6 +1307,22 @@ public:
 #else
 	dumpRemainingTokenQueue(std::ostream&	theStream) const;
 #endif
+
+	/**
+	 * Push a value onto the operations code
+	 * map.
+	 *
+	 * @param theToken string value of the token to push
+	 */
+	void
+	pushValueOnOpCodeMap(const OpCodeMapType::value_type&	theValue)
+	{
+		// Push the index onto the op map.
+		m_opMap.push_back(theValue);
+
+		// Update the op map length.
+		m_opMap[s__opCodeMapLengthIndex]++;
+	}
 
 	/**
 	 * Push a token onto the token queue and its index onto the operations code

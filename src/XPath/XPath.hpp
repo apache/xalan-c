@@ -772,7 +772,20 @@ protected:
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
-  
+
+	/**
+	 * Get a literal value that has been placed directly in
+	 * the op code map of the expression
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @return an XObject object.
+	 */
+	const XObjectPtr
+	inlineNumberlit(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
+
 	/**
 	 * Execute a function argument.
 	 * @param context The current source tree context node.
@@ -838,6 +851,12 @@ protected:
 			int										funcID,
 			const Function::XObjectArgVectorType&	argVec,
 			XPathExecutionContext&					executionContext) const;
+
+	double
+	getNumericOperand(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 private:
 
