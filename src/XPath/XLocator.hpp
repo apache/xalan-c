@@ -87,7 +87,7 @@ public:
 
 	virtual XObject*
 	connectToNodes(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node&			context, 
             int						opPos,
@@ -106,7 +106,7 @@ public:
 	 */
 	virtual XObject*
 	locationPath(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node&			context, 
             int						opPos) = 0;
@@ -123,7 +123,7 @@ public:
 	 */
 	virtual double
 	locationPathPattern(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node&			context, 
             int						opPos) = 0;

@@ -111,11 +111,8 @@ class XPathSupport;
  * where strings are represented within the array as 
  * indexes into the token tree.
  */
-// $$$ ToDo: I'm only having XPath derive from XPathExecutionContext for convenience,
-// and because we really haven't broken XPath into an abstract base class, and an
-// implementation class.  But for now, XPathProcessorImpl has intimate knowledge of
-// XPath, so this is necessary.
-class XALAN_XPATH_EXPORT XPath : public FactoryObject, public XPathExecutionContext
+
+class XALAN_XPATH_EXPORT XPath : public FactoryObject
 {
 public:
 
@@ -139,187 +136,11 @@ public:
 
 #endif
 
-	XPath(
-			XObjectFactory&		theXObjectFactory,
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport& 		theXPathSupport);
-
-	// These interfaces are inherited from XPathExecutionContext
-	virtual DOM_Node
-	getCurrentNode() const;
-
-	virtual void
-	setCurrentNode(const DOM_Node&	theCurrentNode);
-
-	virtual XObjectFactory&
-	getXObjectFactory() const;
-
-	/**
-	 * Returns the namespace of the given node.
-	 */
-	virtual DOMString
-	getNamespaceOfNode(const DOM_Node&	n) const;
-
-	/**
-	 * Returns the local name of the given node.
-	 */
-	virtual DOMString
-	getLocalNameOfNode(const DOM_Node&	n) const;
-
-	/**
-	 * Returns the parent of the given node.
-	 */
-	virtual DOM_Node
-	getParentOfNode(const DOM_Node&	n) const;
-
-	/**
-	 * Get node data recursively.
-	 * (Note whitespace issues.)
-	 */
-	virtual DOMString
-	getNodeData(const DOM_Node&	n) const;
-
-	/**
-	 * Get an element from an ID.
-	 */
-	virtual DOM_Element
-	getElementByID(
-			const DOMString&		id,
-			const DOM_Document&		doc) const;
-
-	/*
-	 * Get the current context node list.
-	 *
-	 */
-	virtual const NodeRefListBase&
-	getContextNodeList() const;
-
-	/*
-	 * Set the current context node list.
-	 *
-	 */
-	virtual void	
-	setContextNodeList(const NodeRefListBase&	theList);
-
-	/*
-	 * Get the count of nodes in the current context node list.
-	 *
-	 */
-	virtual int
-	getContextNodeListLength() const;
-
-	/*
-	 * Get the current position in the current context node list.
-	 *
-	 */
-	virtual int
-	getContextNodeListPosition(const DOM_Node&	contextNode) const;
-
-	virtual void
-	associateXLocatorToNode(
-			const DOM_Node&		node,
-			XLocator*			xlocator) const;
-
-	/**
-	 * Provides support for XML parsing service.
-	 */
-	virtual DOM_Document
-	parseXML(
-			const DOMString&	urlString,
-			const DOMString&	base) const;
-
-	/**
-	 * Create a MutableNodeRefList with the appropriate context.
-	 */
-	virtual MutableNodeRefList
-	createMutableNodeRefList() const;
-
-	/**
-	 * Tells if namespaces should be supported.  For optimization purposes.
-	 */
-	virtual bool
-	getProcessNamespaces() const;
-
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
-			const PrefixResolver&	resolver) const;
-
-	virtual const PrefixResolver&
-	getPrefixResolver() const;
-
-	virtual void
-	setPrefixResolver(const PrefixResolver&		thePrefixResolver);
-
-	virtual DOMString
-	getNamespaceForPrefix(const DOMString&	prefix) const;
-
-	/**
-	 * Given a DOM Document, tell what URI was used to parse it.
-	 * Needed for relative resolution.
-	 */
-	virtual DOMString
-	findURIFromDoc(const DOM_Document&	owner) const;
-
-	/**
-	 * The getUnparsedEntityURI function returns the URI of the unparsed
-	 * entity with the specified name in the same document as the context
-	 * node (see [3.3 Unparsed Entities]). It returns the empty string if
-	 * there is no such entity.
-	 */
-	virtual DOMString
-	getUnparsedEntityURI(
-			const DOMString&		theName,
-			const DOM_Document&		theDocument) const;
-
-	/**
-	 * Tells, through the combination of the default-space attribute
-	 * on xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the
-	 * xml:space attribute, whether or not extra whitespace should be stripped
-	 * from the node.  Literal elements from template elements should
-	 * <em>not</em> be tested with this function.
-	 * @param textNode A text node from the source tree.
-	 * @return true if the text node should be stripped of extra whitespace.
-	 */
-	virtual bool
-	shouldStripSourceNode(const DOM_Node&	node) const;
-
-	/**
-	 * Tell the user of an error, and probably throw an 
-	 * exception.
-	 */
-	virtual void
-	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node()) const;
-
-	/**
-	 * Tell the user of an warning, and probably throw an 
-	 * exception.
-	 */
-	virtual void
-	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node()) const;
-
-	// These interfaces are new...
+	explicit
+	XPath(bool	createDefaultLocator = true);
 
 	virtual void
 	shrink();
-
-	bool
-	getThrowFoundIndex() const
-	{
-		return m_throwFoundIndex;
-	}
-
-	void
-	setThrowFoundIndex(bool 	fThrow)
-	{
-		m_throwFoundIndex = fThrow;
-	}
 
 	/**
 	 * Given an expression and a context, return the result.
@@ -331,21 +152,47 @@ public:
 	 * the error condition is severe enough to halt processing.
 	 */
 	virtual XObject*
-	execute(
-			const DOM_Node& 		contextNode, 
-			const PrefixResolver&	resolver,
-			const NodeRefListBase& 	contextNodeList);
+	execute(XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Execute the XPath from the provided context.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext The current execution context.
 	 * @returns the union of node-set operands.
 	 */
 	virtual XObject*
 	execute(
-			const DOM_Node& 	context,
-			int 				opPos);
+			const DOM_Node& 		context,
+			int 					opPos,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Execute the XPath from the provided context.
+	 * @param context The current source tree context node.
+	 * @param prefixResolver The prefix resolver ti use.
+	 * @param executionContext The current execution context.
+	 * @returns the union of node-set operands.
+	 */
+	virtual XObject*
+	execute(
+			const DOM_Node&			context,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Execute the XPath from the provided context.
+	 * @param context The current source tree context node.
+	 * @param prefixResolver The prefix resolver ti use.
+	 * @param executionContext The current execution context.
+	 * @returns the union of node-set operands.
+	 */
+	virtual XObject*
+	execute(
+			const DOM_Node&			context,
+			const PrefixResolver&	prefixResolver,
+			const NodeRefListBase&	contextNodeList,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Execute a location path.
@@ -355,12 +202,20 @@ public:
 	 */
 	virtual XObject*
 	locationPath(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	// Get a reference to the current expression.
 	XPathExpression&
 	getExpression()
+	{
+		return m_expression;
+	}
+
+	// Get a reference to the current expression.
+	const XPathExpression&
+	getExpression() const
 	{
 		return m_expression;
 	}
@@ -428,7 +283,8 @@ public:
 	 * @returns the union of node-set operands.
 	 */
 	virtual double
-	getMatchScore(const DOM_Node&	context);
+	getMatchScore(const DOM_Node&			context,
+				  XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Test a node.  This should be implemented by a derived class.
@@ -437,10 +293,11 @@ public:
 	 */
 	virtual double
 	nodeTest(
-			const DOM_Node&		context,
-			int					opPos,
-			int					argLen,
-			int					stepType);
+			const DOM_Node&			context,
+			int						opPos,
+			int						argLen,
+			int						stepType,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Evaluate a predicate.
@@ -450,13 +307,14 @@ public:
 	 */
 	virtual XObject*
 	predicate(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	typedef std::vector<DOMString>	TargetElementStringsVectorType;
 
 	virtual void
-	getTargetElementStrings(TargetElementStringsVectorType&		targetStrings);
+	getTargetElementStrings(TargetElementStringsVectorType&		targetStrings) const;
 
 	/**
 	 * Install a built-in function.
@@ -503,12 +361,6 @@ public:
 
 protected:
 
-	XPath(
-			XObjectFactory&		theXObjectFactory,
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport&		theXPathSupport,
-			bool				createDefaultLocator);
-
 	virtual
 	~XPath();
 
@@ -526,8 +378,9 @@ protected:
 	 */
 	virtual XObject*
 	xpath(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Computes the union of its operands which must be node-sets.
@@ -537,8 +390,9 @@ protected:
 	 */
 	virtual XObject*
 	matchPattern(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Execute a step in a location path.  This must be implemented 
@@ -550,8 +404,9 @@ protected:
 	 */
 	MutableNodeRefList*
 	step(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * OR two expressions and return the boolean result.
@@ -561,8 +416,9 @@ protected:
 	 */
 	virtual XObject*
 	or(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * OR two expressions and return the boolean result.
@@ -572,8 +428,9 @@ protected:
 	 */
 	virtual XObject*
 	and(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if two expressions are functionally not equal.
@@ -583,8 +440,9 @@ protected:
 	 */
 	virtual XObject*
 	notequals(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if two expressions are functionally equal.
@@ -594,8 +452,9 @@ protected:
 	 */
 	virtual XObject*
 	equals(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if one argument is less than or equal to the other argument.
@@ -605,8 +464,9 @@ protected:
 	 */
 	virtual XObject*
 	lte(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if one argument is less than the other argument.
@@ -616,8 +476,9 @@ protected:
 	 */
 	virtual XObject*
 	lt(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if one argument is greater than or equal to the other argument.
@@ -627,8 +488,9 @@ protected:
 	 */
 	virtual XObject*
 	gte(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if one argument is greater than the other argument.
@@ -638,8 +500,9 @@ protected:
 	 */
 	virtual XObject*
 	gt(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Give the sum of two arguments.
@@ -649,8 +512,9 @@ protected:
 	 */
 	virtual XObject*
 	plus(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Give the difference of two arguments.
@@ -660,8 +524,9 @@ protected:
 	 */
 	virtual XObject*
 	minus(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Multiply two arguments.
@@ -671,8 +536,9 @@ protected:
 	 */
 	virtual XObject*
 	mult(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Divide a number.
@@ -682,8 +548,9 @@ protected:
 	 */
 	virtual XObject*
 	div(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Return the remainder from a truncating division.
@@ -693,8 +560,9 @@ protected:
 	 */
 	virtual XObject*
 	mod(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Return the remainder from a truncating division.
@@ -705,8 +573,9 @@ protected:
 	 */
 	virtual XObject*
 	quo(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 	
 	/**
 	 * Return the negation of a number.
@@ -716,8 +585,9 @@ protected:
 	 */
 	virtual XObject*
 	neg(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Cast an expression to a string.
@@ -727,8 +597,9 @@ protected:
 	 */
 	virtual XObject*
 	string(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Cast an expression to a boolean.
@@ -738,8 +609,9 @@ protected:
 	 */
 	virtual XObject*
 	boolean(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
  
 	/**
 	 * Cast an expression to a number.
@@ -749,8 +621,9 @@ protected:
 	 */
 	virtual XObject*
 	number(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Computes the union of its operands which must be node-sets.
@@ -760,8 +633,9 @@ protected:
 	 */
 	virtual XObject*
 	Union(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Get a literal value.
@@ -771,8 +645,9 @@ protected:
 	 */
 	virtual XObject*
 	literal(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
   
 	/**
 	 * Get a literal value.
@@ -782,8 +657,9 @@ protected:
 	 */
 	virtual XObject*
 	variable(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Execute an expression as a group.
@@ -793,8 +669,9 @@ protected:
 	 */
 	virtual XObject*
 	group(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Get a literal value.
@@ -804,8 +681,9 @@ protected:
 	 */
 	virtual XObject*
 	numberlit(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
   
 	/**
 	 * Execute a function argument.
@@ -815,8 +693,9 @@ protected:
 	 */
 	virtual XObject*
 	arg(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Execute a location path.
@@ -827,16 +706,18 @@ protected:
 	 */
 	virtual XObject*
 	locationPathPattern(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Setup for and run an extension function.
 	 */
 	virtual XObject*
 	runExtFunction(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Handle an extension function.
@@ -847,15 +728,17 @@ protected:
 			int								opPos,
 			const DOMString&				theNamespace,
 			const DOMString&				extensionName, 
-			const std::vector<XObject*>&	argVec);
+			const std::vector<XObject*>&	argVec,
+			XPathExecutionContext&			executionContext) const;
 
 	/**
 	 * Setup for and run a function.
 	 */
 	virtual XObject*
 	runFunction(
-			const DOM_Node&		context,
-			int					opPos);
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Handle a built-in function.
@@ -865,7 +748,8 @@ protected:
 			const DOM_Node&					context,
 			int								opPos,
 			int								funcID,
-			const std::vector<XObject*>&	argVec);
+			const std::vector<XObject*>&	argVec,
+			XPathExecutionContext&			executionContext) const;
 
 #if 0
   public Vector getTargetElementStrings()
@@ -978,43 +862,24 @@ protected:
 
 private:
 
-	// Not implemented...
+	// These are not implemented...
 	XPath(const XPath&);
 
+	XPath&
+	operator=(const XPath&);
+
+	bool
+	operator==(const XPath&) const;
 
 	// Data members...
-	XObjectFactory&						m_xobjectFactory;
 
-	XPathEnvSupport&					m_XPathEnvSupport;
-
-	XPathSupport& 						m_XPathSupport;
-
+	/**
+	 *
+	 * The default XLocator to use if a custom one is not
+	 * available.
+	 *
+	 */
 	XLocator*							m_defaultXLocator;
-
-	/**
-	 * The current node at the beginning of the pattern, in other words, 
-	 * the value returned by the current() function.
-	 */
-	DOM_Node							m_currentNode;
-
-	/**
-	 * The PrefixResolver that determines which namespaces in the
-	 * queries are supposed to be expanded.
-	 */
-	const PrefixResolver* 				m_prefixResolver;
-
-	/**
-	 * The current step node.  This and m_stepMark can be 
-	 * used to call Step(...) in order to arrive at the 
-	 * current context list.
-	 */
-	MutableNodeRefList					m_contextNodeList;
-
-	/**
-	 * Tells if FoundIndex should be thrown if index is found.
-	 * This is an optimization for match patterns.
-	 */
-	bool								m_throwFoundIndex;
 
 	/**
 	 *
@@ -1025,8 +890,8 @@ private:
 
 	/**
 	 *
-	 * This is the table of functions.  It's range starts where
-	 * the opcodes end.
+	 * This is the table of installed functions.
+	 *
 	 */
 	static FunctionTableType			s_functions;
 };

@@ -79,20 +79,12 @@
 
 
 
-class XObjectFactory;
-class XPathEnvSupport;
-class XPathSupport;
-
-
-
 class XALAN_XPATH_EXPORT XPathFactoryDefault : public XPathFactory
 {
 public:
 
-	XPathFactoryDefault(
-			XObjectFactory&		theXObjectFactory,
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport& 		theXPathSupport);
+	explicit
+	XPathFactoryDefault();
 
 	virtual
 	~XPathFactoryDefault();
@@ -127,10 +119,6 @@ private:
 #else
 	typedef std::vector<const FactoryObject*>		CollectionType;
 #endif
-
-	XObjectFactory&		m_XObjectFactory;
-	XPathEnvSupport&	m_XPathEnvSupport;
-	XPathSupport& 		m_XPathSupport;
 
 	CollectionType		m_xpaths;
 };

@@ -64,21 +64,28 @@
 
 
 
+#include <vector>
+
+
+
 #include <dom/DOMString.hpp>
 #include <dom/DOM_Node.hpp>
 #include <dom/DOM_Element.hpp>
 
 
 
+// Base class header file...
+#include <PlatformSupport/ExecutionContext.hpp>
+
 #include <XPath/MutableNodeRefList.hpp>
 
 
 
-class XLocator;
-class NodeRefListBase;
 class PrefixResolver;
+class QName;
+class XLocator;
+class XObject;
 class XObjectFactory;
-class XPathSupport;
 
 
 
@@ -87,7 +94,7 @@ class XPathSupport;
 // and extension functions.
 //
 
-class XALAN_XPATH_EXPORT XPathExecutionContext
+class XALAN_XPATH_EXPORT XPathExecutionContext : public ExecutionContext
 {
 public:
 
@@ -96,6 +103,39 @@ public:
 
 	virtual
 	~XPathExecutionContext();
+
+	// These interfaces are inherited from ExecutionContext...
+
+	/**
+	 * Tell the user of an error, and probably throw an 
+	 * exception.
+	 */
+	virtual void
+	error(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+
+	/**
+	 * Tell the user of an warning, and probably throw an 
+	 * exception.
+	 */
+	virtual void
+	warn(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+
+	/**
+	 * Output a message.
+	 */
+	virtual void
+	message(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+
+	// These interfaces are new to XPathExecutionContext...
 
 	virtual DOM_Node
 	getCurrentNode() const = 0;
@@ -163,10 +203,30 @@ public:
 	virtual int
 	getContextNodeListPosition(const DOM_Node&	contextNode) const = 0;
 
+	/**
+	 * Determine if an external function is available.
+	 */
+	virtual bool
+	functionAvailable(
+			const DOMString&	theNamespace, 
+			const DOMString&	extensionName) const = 0;
+
+	/**
+	 * Handle an extension function.
+	 */
+	virtual XObject*
+	extFunction(
+			const DOMString&				theNamespace,
+			const DOMString&				extensionName, 
+			const std::vector<XObject*>&	argVec) = 0;
+
+	virtual XLocator*
+	getXLocatorFromNode(const DOM_Node&		node) const = 0;
+
 	virtual void
 	associateXLocatorToNode(
 			const DOM_Node&		node,
-			XLocator*			xlocator) const = 0;
+			XLocator*			xlocator) = 0;
 
 	/**
 	 * Provides support for XML parsing service.
@@ -190,16 +250,37 @@ public:
 
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
+			const DOM_Node&		doc,
+			const DOMString&	name,
+			const DOMString&	ref,
+			const DOM_Element&	nscontext) = 0;
+
+	virtual const NodeRefListBase*
+	getNodeSetByKey(
+			const DOM_Node&			doc,
+			const DOMString&		name,
+			const DOMString&		ref) = 0;
+
+	virtual const NodeRefListBase*
+	getNodeSetByKey(
 			const DOM_Node&			doc,
 			const DOMString&		name,
 			const DOMString&		ref,
-			const PrefixResolver&	resolver) const = 0;
+			const PrefixResolver&	resolver) = 0;
 
-	virtual const PrefixResolver&
+	/**
+	 * Given a name, locate a variable in the current context, and return 
+	 * the Object.
+	 */
+	virtual XObject*
+	getVariable(
+			const QName&			name) const = 0;
+
+	virtual const PrefixResolver*
 	getPrefixResolver() const = 0;
 
 	virtual void
-	setPrefixResolver(const PrefixResolver&		thePrefixResolver) = 0;
+	setPrefixResolver(const PrefixResolver*		thePrefixResolver) = 0;
 
 	virtual DOMString
 	getNamespaceForPrefix(const DOMString&	prefix) const = 0;
@@ -235,23 +316,19 @@ public:
 	shouldStripSourceNode(const DOM_Node&	node) const = 0;
 
 	/**
-	 * Tell the user of an error, and probably throw an 
-	 * exception.
+	 * These get and set a state to optimize certain XPath operations.
 	 */
-	virtual void
-	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node()) const = 0;
+	virtual bool
+	getThrowFoundIndex() const = 0;
 
-	/**
-	 * Tell the user of an warning, and probably throw an 
-	 * exception.
-	 */
 	virtual void
-	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node()) const = 0;
+	setThrowFoundIndex(bool 	fThrow) = 0;
 
+	virtual void
+	setCurrentPattern(const DOMString&	thePattern) = 0;
+
+	virtual DOMString
+	getCurrentPattern() const = 0;
 };
 
 

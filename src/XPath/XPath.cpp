@@ -104,39 +104,9 @@ XPath::FunctionTableType		XPath::s_functions;
 
 
 
-XPath::XPath(
-			XObjectFactory&		theXObjectFactory,
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport&		theXPathSupport) :
-	XPathExecutionContext(),
-	m_xobjectFactory(theXObjectFactory),
-	m_XPathEnvSupport(theXPathEnvSupport),
-	m_XPathSupport(theXPathSupport),
-	m_defaultXLocator(createXLocatorHandler()),
-	m_currentNode(),
-	m_prefixResolver(0),
-	m_contextNodeList(),
-	m_throwFoundIndex(false),
-	m_expression()
-{
-}
-
-
-
-XPath::XPath(
-			XObjectFactory&		theXObjectFactory,
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport&		theXPathSupport,
-			bool				createDefaultLocator) :
-	XPathExecutionContext(),
-	m_xobjectFactory(theXObjectFactory),
-	m_XPathEnvSupport(theXPathEnvSupport),
-	m_XPathSupport(theXPathSupport),
+XPath::XPath(bool	createDefaultLocator) :
+	FactoryObject(),
 	m_defaultXLocator(createDefaultLocator == false ? 0 : createXLocatorHandler()),
-	m_currentNode(),
-	m_prefixResolver(0),
-	m_contextNodeList(),
-	m_throwFoundIndex(false),
 	m_expression()
 {
 }
@@ -145,8 +115,6 @@ XPath::XPath(
 
 XPath::~XPath()
 {
-	m_defaultXLocator = 0;
-	m_prefixResolver = 0;
 }
 
 
@@ -159,322 +127,10 @@ XPath::shrink()
 
 
 
-DOM_Node
-XPath::getCurrentNode() const
-{
-	return m_currentNode;
-}
-
-
-
-void
-XPath::setCurrentNode(const DOM_Node&	theCurrentNode)
-{
-	m_currentNode = theCurrentNode;
-}
-
-
-
-XObjectFactory&
-XPath::getXObjectFactory() const
-{
-	return m_xobjectFactory;
-}
-
-
-
-DOMString
-XPath::getNamespaceOfNode(const DOM_Node&	n) const
-{
-	return m_XPathSupport.getNamespaceOfNode(n);
-}
-
-
-
-DOMString
-XPath::getLocalNameOfNode(const DOM_Node&	n) const
-{
-	return m_XPathSupport.getLocalNameOfNode(n);
-}
-
-
-
-DOM_Node
-XPath::getParentOfNode(const DOM_Node&	n) const
-{
-	return m_XPathSupport.getParentOfNode(n);
-}
-
-
-
-DOMString
-XPath::getNodeData(const DOM_Node&	n) const
-{
-	return m_XPathSupport.getNodeData(n);
-}
-
-
-
-DOM_Element
-XPath::getElementByID(
-			const DOMString&		id,
-			const DOM_Document&		doc) const
-{
-	return m_XPathSupport.getElementByID(id, doc);
-}
-
-
-
-const NodeRefListBase&
-XPath::getContextNodeList() const
-{
-	return m_contextNodeList;
-}
-
-
-
-void	
-XPath::setContextNodeList(const NodeRefListBase&	theList)
-{
-	m_contextNodeList = theList;
-}
-
-
-
-int
-XPath::getContextNodeListLength() const
-{
-	if (m_throwFoundIndex == true)
-	{
-		throw FoundIndex();
-	}
-
-	return m_contextNodeList.getLength();
-}
-
-
-
-int
-XPath::getContextNodeListPosition(const DOM_Node&	contextNode) const
-{
-	assert(0 != contextNode);
-
-	if (m_throwFoundIndex == true)
-	{
-		throw FoundIndex();
-	}
-
-	int pos = 0;
-
-	const int	nNodes = m_contextNodeList.getLength();
-
-	for(int i = 0; i < nNodes; i++)
-	{
-		if(m_contextNodeList.item(i) == contextNode)
-		{
-			pos = i + 1; // for 1-based XSL count.
-
-			break;
-		}
-	}
-
-	return pos;
-}
-
-
-
-void
-XPath::associateXLocatorToNode(
-			const DOM_Node&		node,
-			XLocator*			xlocator) const
-{
-	m_XPathEnvSupport.associateXLocatorToNode(node, xlocator);
-}
-
-
-
-DOM_Document
-XPath::parseXML(
-			const DOMString&	urlString,
-			const DOMString&	base) const
-{
-	return m_XPathSupport.parseXML(urlString, base);
-}
-
-
-
-MutableNodeRefList
-XPath::createMutableNodeRefList() const
-{
-	return MutableNodeRefList(&m_XPathSupport);
-}
-
-
-
-bool
-XPath::getProcessNamespaces() const
-{
-	return m_XPathSupport.getProcessNamespaces();
-}
-
-
-
-const NodeRefListBase*
-XPath::getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
-			const PrefixResolver&	resolver) const
-{
-	return m_XPathEnvSupport.getNodeSetByKey(doc,
-											 name,
-											 ref,
-											 resolver);
-}
-
-
-
-const PrefixResolver&
-XPath::getPrefixResolver() const
-{
-	return *m_prefixResolver;
-}
-
-
-
-void
-XPath::setPrefixResolver(const PrefixResolver&	thePrefixResolver)
-{
-	m_prefixResolver = &thePrefixResolver;
-}
-
-
-
-DOMString
-XPath::getNamespaceForPrefix(const DOMString&	prefix) const
-{
-	assert(m_prefixResolver != 0);
-
-	return m_prefixResolver->getNamespaceForPrefix(prefix);
-}
-
-
-
-DOMString
-XPath::findURIFromDoc(const DOM_Document&	owner) const
-{
-	return m_XPathEnvSupport.findURIFromDoc(owner);
-}
-
-
-
-DOMString
-XPath::getUnparsedEntityURI(
-			const DOMString&		theName,
-			const DOM_Document&		theDocument) const
-{
-	return m_XPathSupport.getUnparsedEntityURI(theName, theDocument);
-}
-
-
-
-bool
-XPath::shouldStripSourceNode(const DOM_Node&	node) const
-{
-	return m_XPathEnvSupport.shouldStripSourceNode(node);
-}
-
-
-
-void
-XPath::error(
-			const DOMString&	msg,
-			const DOM_Node&		sourceNode) const
-{
-	assert(m_prefixResolver != 0);
-
-	DOMString	emsg;
-
-	const DOMString&	theCurrentPattern =
-		m_expression.getCurrentPattern();
-
-	if (length(theCurrentPattern) != 0)
-	{
-	   emsg = DOMString("pattern = '") +
-			  theCurrentPattern +
-			  DOMString("'\n");
-	}
-
-	emsg += msg;
-
-	if (m_XPathEnvSupport.problem(XPathEnvSupport::eXPATHProcessor, 
-								  XPathEnvSupport::eError,
-								  *m_prefixResolver, 
-								  sourceNode,
-								  emsg,
-								  0,
-								  0) == true)
-	{
-		// $$$ ToDo: Do something with the PrefixResolver here...
-		throw XPathException(msg, DOM_Node());
-	}
-}
-
-
-
-void
-XPath::warn(
-			const DOMString&	msg,
-			const DOM_Node&		sourceNode) const
-{
-	assert(m_prefixResolver != 0);
-
-	DOMString	emsg;
-
-	const DOMString&	theCurrentPattern =
-		m_expression.getCurrentPattern();
-
-	if (length(theCurrentPattern) != 0)
-	{
-	   emsg = DOMString("pattern = '") +
-			  theCurrentPattern +
-			  DOMString("'\n");
-	}
-
-	emsg += msg;
-
-	if (m_XPathEnvSupport.problem(XPathEnvSupport::eXPATHProcessor, 
-								  XPathEnvSupport::eWarning,
-								  *m_prefixResolver, 
-								  sourceNode,
-								  emsg,
-								  0,
-								  0) == true)
-	{
-		// $$$ ToDo: Do something with the PrefixResolver here...
-		throw XPathException(msg, DOM_Node());
-	}
-}
-
-
-
 XObject*
-XPath::execute(
-			const DOM_Node& 		contextNode, 
-			const PrefixResolver&	resolver,
-			const NodeRefListBase& 	contextNodeList)
+XPath::execute(XPathExecutionContext&	executionContext) const
 {
-	m_prefixResolver = &resolver;
-	m_contextNodeList = contextNodeList;
-	m_currentNode = contextNode;
-
-	XObject* const	xobj = execute(contextNode, 0);
-
-	m_currentNode = 0;
-	m_contextNodeList.clear();
-	m_prefixResolver = 0;
-
-	return xobj;
+	return execute(executionContext.getCurrentNode(), 0, executionContext);
 }
 
 
@@ -500,19 +156,88 @@ XPath::createXLocatorHandler() const
 
 XObject*
 XPath::execute(
-			const DOM_Node& 	context,
-			int 				opPos)
+			const DOM_Node&			context,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const
+{
+	const PrefixResolver* const		theSavedResolver =
+			executionContext.getPrefixResolver();
+
+	const DOM_Node					theSavedCurrentNode =
+			executionContext.getCurrentNode();
+
+	XObject*	theResult = 0;
+
+	try
+	{
+		executionContext.setPrefixResolver(&prefixResolver);
+		executionContext.setCurrentNode(context);
+
+		theResult = execute(executionContext);
+	}
+	catch(...)
+	{
+		executionContext.setPrefixResolver(theSavedResolver);
+		executionContext.setCurrentNode(theSavedCurrentNode);
+
+		throw;
+	}
+
+	executionContext.setPrefixResolver(theSavedResolver);
+	executionContext.setCurrentNode(theSavedCurrentNode);
+
+	return theResult;
+}
+
+
+
+XObject*
+XPath::execute(
+			const DOM_Node&			context,
+			const PrefixResolver&	prefixResolver,
+			const NodeRefListBase&	contextNodeList,
+			XPathExecutionContext&	executionContext) const
+{
+	const MutableNodeRefList	theSavedContextNodeList(executionContext.getContextNodeList());
+
+	XObject*	theResult = 0;
+
+	try
+	{
+		executionContext.setContextNodeList(contextNodeList);
+
+		theResult = execute(executionContext);
+	}
+	catch(...)
+	{
+		executionContext.setContextNodeList(theSavedContextNodeList);
+
+		throw;
+	}
+
+	executionContext.setContextNodeList(theSavedContextNodeList);
+
+	return theResult;
+}
+
+
+
+XObject*
+XPath::execute(
+			const DOM_Node& 		context,
+			int 					opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	XObject*	result = 0;
 
 	switch(m_expression.m_opMap[opPos])
 	{
 	case XPathExpression::eOP_XPATH:
-		result = execute(context, opPos + 2);
+		result = execute(context, opPos + 2, executionContext);
 		break;
 
 	case XPathExpression::eOP_MATCHPATTERN:
-		result = matchPattern(context, opPos + 2);
+		result = matchPattern(context, opPos + 2, executionContext);
 		break;
 
 	case XPathExpression::eEMPTY:
@@ -520,115 +245,115 @@ XPath::execute(
 		break;
 
 	case XPathExpression::eOP_OR:
-		result = or(context, opPos);
+		result = or(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_AND:
-		result = and(context, opPos);
+		result = and(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_NOTEQUALS:
-		result = notequals(context, opPos);
+		result = notequals(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_EQUALS:
-		result = equals(context, opPos);
+		result = equals(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_LTE:
-		result = lte(context, opPos);
+		result = lte(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_LT:
-		result = lt(context, opPos);
+		result = lt(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_GTE:
-		result = gte(context, opPos);
+		result = gte(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_GT:
-		result = gt(context, opPos);
+		result = gt(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_PLUS:
-		result = plus(context, opPos);
+		result = plus(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_MINUS:
-	  result = minus(context, opPos);
+	  result = minus(context, opPos, executionContext);
 	  break;
 
 	case XPathExpression::eOP_MULT:
-		result = mult(context, opPos);
+		result = mult(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_DIV:
-		result = div(context, opPos);
+		result = div(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_MOD:
-		result = mod(context, opPos);
+		result = mod(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_QUO:
-		result = quo(context, opPos);
+		result = quo(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_NEG:
-		result = neg(context, opPos);
+		result = neg(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_STRING:
-		result = string(context, opPos);
+		result = string(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_BOOL:
-		result = boolean(context, opPos);
+		result = boolean(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_NUMBER:
-		result = number(context, opPos);
+		result = number(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_UNION:
-		result = Union(context, opPos);
+		result = Union(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_LITERAL:
-		result = literal(context, opPos);
+		result = literal(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_VARIABLE:
-	  result = variable(context, opPos);
+	  result = variable(context, opPos, executionContext);
 	  break;
 
 	case XPathExpression::eOP_GROUP:
-		result = group(context, opPos);
+		result = group(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_NUMBERLIT:
-		result = numberlit(context, opPos);
+		result = numberlit(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_ARGUMENT:
-		result = arg(context, opPos);
+		result = arg(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_EXTFUNCTION:
-		result = runExtFunction(context, opPos);
+		result = runExtFunction(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_FUNCTION:
-		result = runFunction(context, opPos);
+		result = runFunction(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_LOCATIONPATH:
-		result = locationPath(context, opPos);
+		result = locationPath(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_LOCATIONPATHPATTERN:
-		result = locationPathPattern(context, opPos);
+		result = locationPathPattern(context, opPos, executionContext);
 		break;
 
 /*
@@ -714,8 +439,8 @@ XPath::execute(
 */
 
 	default:
-		error(DOMString("ERROR! Unknown op code: ") + static_cast<int>(m_expression.m_opMap[opPos]),
-			  context);
+		executionContext.error(DOMString("ERROR! Unknown op code: ") + static_cast<int>(m_expression.m_opMap[opPos]),
+							   context);
 		break;
 	}
 
@@ -725,7 +450,8 @@ XPath::execute(
 
 
 double
-XPath::getMatchScore(const DOM_Node&	context) 
+XPath::getMatchScore(const DOM_Node&			context,
+					 XPathExecutionContext&		executionContext) const
 {
 	double	score = s_MatchScoreNone;
 
@@ -735,7 +461,7 @@ XPath::getMatchScore(const DOM_Node&	context)
 	{
 		opPos += 2;
 
-		XLocator*	locator = m_XPathEnvSupport.getXLocatorFromNode(context);
+		XLocator*	locator = executionContext.getXLocatorFromNode(context);
 
 		if(0 == locator)
 		{
@@ -749,7 +475,7 @@ XPath::getMatchScore(const DOM_Node&	context)
 			const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
 			// opPos+=2;		
-			score = locator->locationPathPattern(*this, *this, context, opPos);
+			score = locator->locationPathPattern(*this, executionContext, context, opPos);
 
 			if(score == s_MatchScoreNone)
 			{
@@ -760,8 +486,8 @@ XPath::getMatchScore(const DOM_Node&	context)
 	}
 	else
 	{
-		error("Expected match pattern in getMatchScore!",
-			  context);
+		executionContext.error("Expected match pattern in getMatchScore!",
+							   context);
 	}
 	
 	return score;
@@ -771,13 +497,14 @@ XPath::getMatchScore(const DOM_Node&	context)
 
 double
 XPath::nodeTest(
-			const DOM_Node&		context,
-			int					/* opPos */,
-			int					/* argLen */,
-			int					/* stepType */)
+			const DOM_Node&			context,
+			int						/* opPos */,
+			int						/* argLen */,
+			int						/* stepType */,
+			XPathExecutionContext&	executionContext) const
 {
-	warn("XPath needs a derived object to implement nodeTest!",
-		 context);
+	executionContext.warn("XPath needs a derived object to implement nodeTest!",
+						  context);
 
     return s_MatchScoreNone;
 }
@@ -785,7 +512,7 @@ XPath::nodeTest(
 
 
 void
-XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings)
+XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings) const
 {
 	int opPos = 2;
 
@@ -899,18 +626,20 @@ XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings)
 
 XObject*
 XPath::xpath(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
-	return execute(context, opPos + 2);
+	return execute(context, opPos + 2, executionContext);
 }
 
 
 
 XObject*
 XPath::matchPattern(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 
 {
 	XObject*	score = 0;
@@ -919,7 +648,7 @@ XPath::matchPattern(
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		score = execute(context, opPos);
+		score = execute(context, opPos, executionContext);
 
 		if(score->num() != s_MatchScoreNone)
 		{
@@ -931,7 +660,7 @@ XPath::matchPattern(
 
 	if(0 == score)
 	{
-		score = m_xobjectFactory.createNumber(s_MatchScoreNone);
+		score = executionContext.getXObjectFactory().createNumber(s_MatchScoreNone);
 	}
 
 	return score;
@@ -941,11 +670,12 @@ XPath::matchPattern(
 
 MutableNodeRefList*
 XPath::step(
-			const DOM_Node&		context,
-			int					/* opPos */)
+			const DOM_Node&			context,
+			int						/* opPos */,
+			XPathExecutionContext&	executionContext) const
 {    
-	warn("XPath needs a derived object to implement step!",
-		 context);
+	executionContext.warn("XPath needs a derived object to implement step!",
+						  context);
 
 	return 0;
 }
@@ -954,12 +684,13 @@ XPath::step(
 
 XObject*
 XPath::or(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	bool	fResult = expr1->boolean();
@@ -968,34 +699,35 @@ XPath::or(
 	{
 		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-		XObject* const	expr2 = execute(context, expr2Pos);
+		XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 		assert(expr2 != 0);
 
 		fResult = expr2->boolean();
 	}
 
-	return m_xobjectFactory.createBoolean(fResult);
+	return executionContext.getXObjectFactory().createBoolean(fResult);
 }
 
 
 
 XObject*
 XPath::and(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	bool	fResult = false;
 
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	if (expr1->boolean() == true)
 	{
 		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-		XObject* const	expr2 = execute(context, expr2Pos);
+		XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 		assert(expr2 != 0);
 
 		if (expr2->boolean() == true)
@@ -1004,61 +736,64 @@ XPath::and(
 		}
 	}
 
-	return m_xobjectFactory.createBoolean(fResult);
+	return executionContext.getXObjectFactory().createBoolean(fResult);
 }
 
 
 
 XObject*
 XPath::notequals(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = execute(context, expr2Pos);
+	XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return m_xobjectFactory.createBoolean(!expr1->equals(*expr2));
+	return executionContext.getXObjectFactory().createBoolean(!expr1->equals(*expr2));
 }
 
 
 
 XObject*
 XPath::equals(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = execute(context, expr2Pos);
+	XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return m_xobjectFactory.createBoolean(expr1->equals(*expr2));
+	return executionContext.getXObjectFactory().createBoolean(expr1->equals(*expr2));
 }
 
 
 
 XObject*
 XPath::lte(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	bool	fResult = false;
 
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	const double	expr1Value = expr1->num();
@@ -1067,7 +802,7 @@ XPath::lte(
 	{
 		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-		XObject* const	expr2 = execute(context, expr2Pos);
+		XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 		assert(expr2 != 0);
 
 		const double	expr2Value = expr2->num();
@@ -1081,21 +816,22 @@ XPath::lte(
 		}
 	}
 
-	return m_xobjectFactory.createBoolean(fResult);
+	return executionContext.getXObjectFactory().createBoolean(fResult);
 }
 
 
 
 XObject*
 XPath::lt(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	bool	fResult = false;
 
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	const double	expr1Value = expr1->num();
@@ -1104,7 +840,7 @@ XPath::lt(
 	{
 		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-		XObject* const	expr2 = execute(context, expr2Pos);
+		XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 		assert(expr2 != 0);
 
 		const double	expr2Value = expr2->num();
@@ -1118,21 +854,22 @@ XPath::lt(
 		}
 	}
 
-	return m_xobjectFactory.createBoolean(fResult);
+	return executionContext.getXObjectFactory().createBoolean(fResult);
 }
 
 
 
 XObject*
 XPath::gte(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	bool	fResult = false;
 
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	const double	expr1Value = expr1->num();
@@ -1141,7 +878,7 @@ XPath::gte(
 	{
 		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-		XObject* const	expr2 = execute(context, expr2Pos);
+		XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 		assert(expr2 != 0);
 
 		const double	expr2Value = expr2->num();
@@ -1155,21 +892,22 @@ XPath::gte(
 		}
 	}
 
-	return m_xobjectFactory.createBoolean(fResult);
+	return executionContext.getXObjectFactory().createBoolean(fResult);
 }
 
 
 
 XObject*
 XPath::gt(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	bool	fResult = false;
 
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	const double	expr1Value = expr1->num();
@@ -1178,7 +916,7 @@ XPath::gt(
 	{
 		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-		XObject* const	expr2 = execute(context, expr2Pos);
+		XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 		assert(expr2 != 0);
 
 		const double	expr2Value = expr2->num();
@@ -1192,181 +930,192 @@ XPath::gt(
 		}
 	}
 
-	return m_xobjectFactory.createBoolean(fResult);
+	return executionContext.getXObjectFactory().createBoolean(fResult);
 }
 
 
 
 XObject*
 XPath::plus(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = execute(context, expr2Pos);
+	XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return m_xobjectFactory.createNumber(expr1->num() + expr2->num());
+	return executionContext.getXObjectFactory().createNumber(expr1->num() + expr2->num());
 }
 
 
 
 XObject*
 XPath::minus(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = execute(context, expr2Pos);
+	XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return m_xobjectFactory.createNumber(expr1->num() - expr2->num());
+	return executionContext.getXObjectFactory().createNumber(expr1->num() - expr2->num());
 }
 
 
 
 XObject*
 XPath::mult(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = execute(context, expr2Pos);
+	XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return m_xobjectFactory.createNumber(expr1->num() * expr2->num());
+	return executionContext.getXObjectFactory().createNumber(expr1->num() * expr2->num());
 }
 
 
 
 XObject*
 XPath::div(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = execute(context, expr2Pos);
+	XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return m_xobjectFactory.createNumber(expr1->num() / expr2->num());
+	return executionContext.getXObjectFactory().createNumber(expr1->num() / expr2->num());
 }
 
 
 
 XObject*
 XPath::mod(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
 
-	XObject* const	expr1 = execute(context, opPos);
+	XObject* const	expr1 = execute(context, opPos, executionContext);
 	assert(expr1 != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = execute(context, expr2Pos);
+	XObject* const	expr2 = execute(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return m_xobjectFactory.createNumber(static_cast<int>(expr1->num()) %
-										  static_cast<int>(expr2->num()));
+	return executionContext.getXObjectFactory().createNumber(static_cast<int>(expr1->num()) %
+															 static_cast<int>(expr2->num()));
 }
 
 
 
 XObject*
 XPath::quo(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	// Actually, this is no longer supported by xpath...
-	warn("Old syntax: quo(...) is no longer defined in XPath.");
+	executionContext.warn("Old syntax: quo(...) is no longer defined in XPath.");
 
-	return div(context, opPos);
+	return div(context, opPos, executionContext);
 }
 
 
 
 XObject*
 XPath::neg(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
-	XObject* const	expr1 = execute(context, opPos + 2);
+	XObject* const	expr1 = execute(context, opPos + 2, executionContext);
 	assert(expr1 != 0);
 
-	return m_xobjectFactory.createNumber(-expr1->num());
+	return executionContext.getXObjectFactory().createNumber(-expr1->num());
 }
 
 
 
 XObject*
 XPath::string(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
-	XObject* const	expr1 = execute(context, opPos + 2);
+	XObject* const	expr1 = execute(context, opPos + 2, executionContext);
 	assert(expr1 != 0);
 
-	return m_xobjectFactory.createString(expr1->str());
+	return executionContext.getXObjectFactory().createString(expr1->str());
 }
 
 
 
 XObject*
 XPath::boolean(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
-	XObject* const	expr1 = execute(context, opPos + 2);
+	XObject* const	expr1 = execute(context, opPos + 2, executionContext);
 	assert(expr1 != 0);
 
-	return m_xobjectFactory.createBoolean(expr1->boolean());
+	return executionContext.getXObjectFactory().createBoolean(expr1->boolean());
 }
 
 
  
 XObject*
 XPath::number(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
-	XObject* const	expr1 = execute(context, opPos + 2);
+	XObject* const	expr1 = execute(context, opPos + 2, executionContext);
 	assert(expr1 != 0);
 
-	return m_xobjectFactory.createNumber(expr1->num());
+	return executionContext.getXObjectFactory().createNumber(expr1->num());
 }
 
 
 
 XObject*
 XPath::Union(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
 
@@ -1376,7 +1125,7 @@ XPath::Union(
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		XObject*	expr = execute(context, opPos);
+		XObject*	expr = execute(context, opPos, executionContext);
 
 		if(0 == resultNodeSet)
 		{
@@ -1400,46 +1149,48 @@ XPath::Union(
 
 XObject*
 XPath::literal(
-			const DOM_Node&		/* context */,
-			int					opPos)
+			const DOM_Node&			/* context */,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	assert(m_expression.m_opMap.size() > static_cast<unsigned>(opPos + 2));
 	assert(m_expression.m_tokenQueue.size() > static_cast<unsigned>(m_expression.m_opMap[opPos + 2]));
 
-	return m_xobjectFactory.createString(m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]]->str());
+	return executionContext.getXObjectFactory().createString(m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]]->str());
 }
-  
+
 
 
 XObject*
 XPath::variable(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
-	assert(m_prefixResolver != 0);
+	assert(executionContext.getPrefixResolver() != 0);
 
 	XObject* const	varName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
 
 	// $$$ ToDo: I don't this will be parsed right in the first place...
 	const QName		qname(varName->str(),
-						  *m_prefixResolver);
+						  *executionContext.getPrefixResolver());
 
 	XObject*	result = 0;
 
 	try
 	{
-		result = m_XPathEnvSupport.getVariable(*this, qname);
+		result = executionContext.getVariable(qname);
 	}
 	catch(...)
 	{
-		error(DOMString("Could not get variable named ") + varName->str());
+		executionContext.error(DOMString(L"Could not get variable named ") + varName->str());
 	}
 
 	if(0 == result)
 	{
-		warn(DOMString("VariableReference given for variable out ") +
-				DOMString("of context or without definition!  Name = ") +
-				varName->str(),
+		executionContext.warn(DOMString(L"VariableReference given for variable out ") +
+								DOMString(L"of context or without definition!  Name = ") +
+							  varName->str(),
 			 context);
 	}
 
@@ -1450,41 +1201,45 @@ XPath::variable(
 
 XObject*
 XPath::group(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {    
-	return execute(context, opPos + 2);
+	return execute(context, opPos + 2, executionContext);
 }
 
 
 
 XObject*
 XPath::numberlit(
-			const DOM_Node&		/* context */,
-			int					opPos)
+			const DOM_Node&			/* context */,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	assert(m_expression.m_opMap.size() > static_cast<unsigned>(opPos + 2));
 	assert(m_expression.m_tokenQueue.size() > static_cast<unsigned>(m_expression.m_opMap[opPos + 2]));
 
-	return m_xobjectFactory.createNumber(m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]]->num());
+	return executionContext.getXObjectFactory().createNumber(m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]]->num());
 }
   
 
 
 XObject*
 XPath::arg(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {    
-	return execute(context, opPos + 2);
+	return execute(context, opPos + 2, executionContext);
 }
 
 
 
 XObject*
 XPath::locationPath(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {    
 /*
 	const int	stepType = m_expression.m_opMap[opPos + 2];
@@ -1513,24 +1268,25 @@ XPath::locationPath(
 	}
 */
 
-	XLocator*	xlocator = m_XPathEnvSupport.getXLocatorFromNode(context);
+	XLocator*	xlocator = executionContext.getXLocatorFromNode(context);
 
 	if(0 == xlocator)
 	{
 		xlocator = m_defaultXLocator;
 	}
 
-	return xlocator->locationPath(*this, *this, context, opPos);
+	return xlocator->locationPath(*this, executionContext, context, opPos);
 }
 
 
 
 XObject*
 XPath::predicate(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
-	XObject* const	expr1 = execute(context, opPos + 2);
+	XObject* const	expr1 = execute(context, opPos + 2, executionContext);
 
 	// $$$ ToDo: This appears to be just an optimization, but is it really?
 /*
@@ -1548,27 +1304,29 @@ XPath::predicate(
 
 XObject*
 XPath::locationPathPattern(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
-	XLocator*	locator = m_XPathEnvSupport.getXLocatorFromNode(context);
+	XLocator*	locator = executionContext.getXLocatorFromNode(context);
 
 	if(0 == locator)
 	{
 		locator = m_defaultXLocator;
 	}
 
-	const double	result = locator->locationPathPattern(*this, *this, context, opPos);
+	const double	result = locator->locationPathPattern(*this, executionContext, context, opPos);
 
-	return m_xobjectFactory.createNumber(result);
+	return executionContext.getXObjectFactory().createNumber(result);
 }
 
 
 
 XObject*
 XPath::runExtFunction(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	const int	endExtFunc = opPos + m_expression.m_opMap[opPos + 1] - 1;
 
@@ -1588,12 +1346,12 @@ XPath::runExtFunction(
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		args.push_back(execute(context, opPos));
+		args.push_back(execute(context, opPos, executionContext));
 
 		opPos = nextOpPos;
 	}
 
-	return extfunction(context, opPos, ns->str(), funcName->str(), args);
+	return extfunction(context, opPos, ns->str(), funcName->str(), args, executionContext);
 }
 
 
@@ -1604,20 +1362,21 @@ XPath::extfunction(
 			int								/* opPos */,
 			const DOMString&				theNamespace,
 			const DOMString&				extensionName, 
-			const std::vector<XObject*>&	argVec)
+			const std::vector<XObject*>&	argVec,
+			XPathExecutionContext&			executionContext) const
 {
-	return 	m_XPathEnvSupport.extFunction(*this,
-										  theNamespace,
-										  extensionName, 
-										  argVec);
+	return 	executionContext.extFunction(theNamespace,
+										 extensionName, 
+										 argVec);
 }
 
 
 
 XObject*
 XPath::runFunction(
-			const DOM_Node&		context,
-			int					opPos)
+			const DOM_Node&			context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
 {
 	const int	endFunc = opPos + m_expression.m_opMap[opPos + 1] - 1;
 
@@ -1635,12 +1394,12 @@ XPath::runFunction(
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		args.push_back(execute(context, opPos));
+		args.push_back(execute(context, opPos, executionContext));
 
 		opPos = nextOpPos;
 	}
 
-	return function(context, opPos, funcID, args);
+	return function(context, opPos, funcID, args, executionContext);
 }
 
 
@@ -1650,12 +1409,13 @@ XPath::function(
 			const DOM_Node&					context,
 			int								opPos,
 			int								funcID,
-			const std::vector<XObject*>&	argVec)
+			const std::vector<XObject*>&	argVec,
+			XPathExecutionContext&			executionContext) const
  
 {
 	assert(m_expression.getToken(funcID) != 0);
 
 	const DOMString		theFunctionName(m_expression.getToken(funcID)->str());
 
-	return s_functions[theFunctionName].execute(*this, context, opPos, argVec);
+	return s_functions[theFunctionName].execute(executionContext, context, opPos, argVec);
 }

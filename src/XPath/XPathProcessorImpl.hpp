@@ -84,11 +84,6 @@
 
 
 
-class XPathEnvSupport;
-class XPathSupport;
-
-
-
 /**
  * The XPathProcessorImpl class responsibilities include 
  * tokenizing and parsing the XPath expression, and acting 
@@ -107,9 +102,8 @@ public:
 	/**
 	 * The parser constructor.
 	 */
-	XPathProcessorImpl(
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport&		theXPathSupport);
+	explicit
+	XPathProcessorImpl();
 
 	virtual
 	~XPathProcessorImpl();
@@ -125,7 +119,9 @@ public:
 	initXPath(
 			XPath&					pathObj,
 			const DOMString&		expression,
-			const PrefixResolver&	resolver);
+			const PrefixResolver&	prefixResolver,
+			XObjectFactory&			xobjectFactory,
+			const XPathEnvSupport&	envSupport);
 
 	/**
 	 * Given a string, make an XSLT Match Pattern object.
@@ -134,7 +130,9 @@ public:
 	initMatchPattern(
 			XPath&					pathObj,
 			const DOMString&		expression,
-			const PrefixResolver&	resolver);
+			const PrefixResolver&	prefixResolver,
+			XObjectFactory&			xobjectFactory,
+			const XPathEnvSupport&	envSupport);
 
 	// The rest of these interfaces are new...
 
@@ -1718,11 +1716,9 @@ private:
 	static void
 	initializeNodeTypesTable();
 
-	XPathEnvSupport&				m_envSupport;
-	XPathSupport&					m_support;
-
-	XPath*							m_xpath;
-
+	/**
+	 * The current input token.
+	 */
 	DOMString						m_token;
   
 	/**
@@ -1733,9 +1729,23 @@ private:
 	XMLCh							m_tokenChar;
 
 	/**
+	 * A pointer to the current XPath.
+	 */
+	XPath*							m_xpath;
+
+	/**
 	 * A pointer to the current XPath's expression.
 	 */
 	XPathExpression*				m_expression;
+
+	/**
+	 * A pointer to the current executionContext.
+	 */
+	const PrefixResolver*			m_prefixResolver;
+
+	XObjectFactory*					m_xobjectFactory;
+
+	const XPathEnvSupport*			m_envSupport;
 
 	enum eDummy
 	{

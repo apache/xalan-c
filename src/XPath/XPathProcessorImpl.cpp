@@ -67,6 +67,7 @@
 #include "PrefixResolver.hpp"
 #include "XObjectFactory.hpp"
 #include "XPathEnvSupport.hpp"
+#include "XPathExecutionContext.hpp"
 #include "XPathParserException.hpp"
 #include "XPathSupport.hpp"
 
@@ -170,15 +171,14 @@ XPathProcessorImpl::NodeTypesMapType			XPathProcessorImpl::s_nodeTypes;
 
 
 
-XPathProcessorImpl::XPathProcessorImpl(
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport&		theXPathSupport) :
-	m_envSupport(theXPathEnvSupport),
-	m_support(theXPathSupport),
-	m_xpath(0),
+XPathProcessorImpl::XPathProcessorImpl() :
 	m_token(),
 	m_tokenChar(0),
-	m_expression(0)
+	m_xpath(0),
+	m_expression(0),
+	m_prefixResolver(0),
+	m_xobjectFactory(0),
+	m_envSupport(0)
 {
 	// $$$ ToDo: This is not thread-safe!!!
 	static StaticInitializer	theInitializer;
@@ -188,23 +188,23 @@ XPathProcessorImpl::XPathProcessorImpl(
 
 XPathProcessorImpl::~XPathProcessorImpl()
 {
-	m_expression = 0;
-	m_xpath = 0;
 }
 
 
 
 void
 XPathProcessorImpl::initXPath(
-			XPath&					pathObj,
-			const DOMString&		expression,
-			const PrefixResolver&	resolver)
+			XPath&						pathObj,
+			const DOMString&			expression,
+			const PrefixResolver&		prefixResolver,
+			XObjectFactory&				xobjectFactory,
+			const XPathEnvSupport&		envSupport)
 {
 	m_xpath = &pathObj;
-
 	m_expression = &m_xpath->getExpression();
-
-	m_xpath->setPrefixResolver(resolver);
+	m_prefixResolver = &prefixResolver;
+	m_xobjectFactory = &xobjectFactory;
+	m_envSupport = &envSupport;
 
 	tokenize(expression);
 
@@ -216,23 +216,27 @@ XPathProcessorImpl::initXPath(
 
 	m_xpath = 0;
 	m_expression = 0;
+	m_prefixResolver = 0;
+	m_xobjectFactory = 0;
+	m_envSupport = 0;
 }
 
 
 
 void
 XPathProcessorImpl::initMatchPattern(
-			XPath&					pathObj,
-			const DOMString&		expression,
-			const PrefixResolver&	resolver)
+			XPath&				pathObj,
+			const DOMString&	expression,
+			const PrefixResolver&		prefixResolver,
+			XObjectFactory&		xobjectFactory,
+			const XPathEnvSupport&	envSupport)
 {
 	m_xpath = &pathObj;
-
 	m_expression = &m_xpath->getExpression();
-
+	m_prefixResolver = &prefixResolver;
+	m_xobjectFactory = &xobjectFactory;
+	m_envSupport = &envSupport;
 	m_expression->reset();
-
-	m_xpath->setPrefixResolver(resolver);
 
 	tokenize(expression);
 
@@ -249,6 +253,9 @@ XPathProcessorImpl::initMatchPattern(
 
 	m_xpath = 0;
 	m_expression = 0;
+	m_prefixResolver = 0;
+	m_xobjectFactory = 0;
+	m_envSupport = 0;
 }
 
 
@@ -628,12 +635,13 @@ XPathProcessorImpl::recordTokenString(std::vector<DOMString>&	targetStrings)
 
 
 void
-XPathProcessorImpl::addToTokenQueue(const DOMString&	s) const
+XPathProcessorImpl::addToTokenQueue(const DOMString&		s) const
 {
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
+	assert(m_xobjectFactory != 0);
 
-	m_expression->pushToken(m_xpath->getXObjectFactory().createString(s));
+	m_expression->pushToken(m_xobjectFactory->createString(s));
 }
 
 
@@ -645,12 +653,12 @@ XPathProcessorImpl::mapNSTokens(
 			int 				posOfNSSep,
 			int 				posOfScan) const
 {
-	assert(m_xpath != 0);
+	assert(m_prefixResolver != 0);
 
 	const DOMString 	prefix = substring(pat, startSubstring, posOfNSSep);
 
 	const DOMString 	uName =
-				m_xpath->getPrefixResolver().getNamespaceForPrefix(prefix);
+				m_prefixResolver->getNamespaceForPrefix(prefix);
 
 	if(length(uName) > 0)
 	{
@@ -892,16 +900,17 @@ XPathProcessorImpl::warn(
 			const DOMString&	msg,
 			const DOM_Node& 	sourceNode) const
 {
-	assert(m_xpath != 0);
+	assert(m_envSupport != 0);
+	assert(m_prefixResolver != 0);
 
 	const bool	shouldThrow =
-		m_envSupport.problem(XPathEnvSupport::eXPATHParser, 
-							 XPathEnvSupport::eWarning,
-							 m_xpath->getPrefixResolver(), 
-							 sourceNode,
-							 msg,
-							 0,
-							 0);
+		m_envSupport->problem(XPathEnvSupport::eXPATHParser, 
+							  XPathEnvSupport::eWarning,
+							  *m_prefixResolver, 
+							  sourceNode,
+							  msg,
+							  0,
+							  0);
 
 	if(shouldThrow == true)
 	{
@@ -914,7 +923,7 @@ XPathProcessorImpl::warn(
 void
 XPathProcessorImpl::error(
 			const DOMString&	msg,
-			const DOM_Node& sourceNode) const
+			const DOM_Node&		sourceNode) const
 {
 	DOMString	emsg;
 
@@ -942,20 +951,22 @@ XPathProcessorImpl::error(
 		emsg = thePrintWriter.getString();
 	}
 
-	assert(m_xpath != 0);
+	assert(m_envSupport != 0);
+	assert(m_prefixResolver != 0);
+
 
 	const bool	shouldThrow =
-		m_envSupport.problem(XPathEnvSupport::eXPATHParser, 
-							 XPathEnvSupport::eError,
-							 m_xpath->getPrefixResolver(), 
-							 sourceNode,
-							 emsg,
-							 0,
-							 0);
+		m_envSupport->problem(XPathEnvSupport::eXPATHParser, 
+							  XPathEnvSupport::eError,
+							  *m_prefixResolver, 
+							  sourceNode,
+							  emsg,
+							  0,
+							  0);
 
 	if(shouldThrow == true)
 	{
-	  throw XPathParserException(emsg);
+		throw XPathParserException(emsg);
 	}
 }
   
@@ -2216,6 +2227,7 @@ XPathProcessorImpl::Literal()
 {
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
+	assert(m_xobjectFactory != 0);
 
 	const int last = length(m_token) - 1;
 
@@ -2228,7 +2240,7 @@ XPathProcessorImpl::Literal()
 	   (c0 == '\'' && cX == '\''))
 	{
 		XObject* const	theArgument =
-			m_xpath->getXObjectFactory().createString(substring(m_token, 1, last));
+			m_xobjectFactory->createString(substring(m_token, 1, last));
 
 		m_expression->pushArgumentOnOpCodeMap(theArgument);
 
@@ -2249,6 +2261,7 @@ XPathProcessorImpl::Number()
 {
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
+	assert(m_xobjectFactory != 0);
 
 	if(0 != length(m_token))
 	{
@@ -2257,7 +2270,7 @@ XPathProcessorImpl::Number()
 		const double	num = DOMStringToDouble(m_token);
 
 		XObject* const	theArgument =
-			m_xpath->getXObjectFactory().createNumber(num);
+			m_xobjectFactory->createNumber(num);
 
 		m_expression->pushArgumentOnOpCodeMap(theArgument);
 

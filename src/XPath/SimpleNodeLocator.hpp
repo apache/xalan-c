@@ -99,7 +99,7 @@ public:
 
 	virtual XObject*
 	connectToNodes(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context, 
 			int 					opPos,
@@ -118,7 +118,7 @@ public:
 	 */
 	virtual XObject*
 	locationPath(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context, 
 			int 					opPos);
@@ -135,19 +135,20 @@ public:
 	 */
 	virtual double
 	locationPathPattern(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context, 
 			int 					opPos);
 
 protected:
 
-	MutableNodeRefList
+	void
 	step(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context, 
-			int 					opPos);
+			int 					opPos,
+			MutableNodeRefList&		queryResults);
 
 	/**
 	 * Execute a step in a location path.
@@ -158,7 +159,7 @@ protected:
 	 */
 	DOM_Node
 	stepPattern(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context, 
 			int 					opPos,
@@ -166,7 +167,7 @@ protected:
 
 	int
 	findNodeSet(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -175,7 +176,7 @@ protected:
 
 	int
 	findRoot(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -184,7 +185,7 @@ protected:
 
 	int
 	findParent(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -193,7 +194,7 @@ protected:
 
 	int
 	findSelf(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -202,7 +203,7 @@ protected:
 
 	int
 	findAncestors(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -211,7 +212,7 @@ protected:
 
 	int
 	findAncestorsOrSelf(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -220,7 +221,7 @@ protected:
 
 	int
 	findAttributes(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -229,7 +230,7 @@ protected:
 
 	int
 	findChildren(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -238,7 +239,7 @@ protected:
 
 	int
 	findDescendants(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -247,7 +248,7 @@ protected:
 
 	int
 	findFollowing(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -256,7 +257,7 @@ protected:
 
 	int
 	findFollowingSiblings(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -265,7 +266,7 @@ protected:
 
 	int
 	findPreceeding(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -274,7 +275,7 @@ protected:
 
 	int
 	findPreceedingSiblings(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -283,7 +284,7 @@ protected:
 
 	int
 	findNamespace(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -292,7 +293,7 @@ protected:
 
 	int
 	findNodesOnUnknownAxis(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -301,7 +302,7 @@ protected:
 
 	double
 	nodeTest(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -310,7 +311,7 @@ protected:
 
 	void
 	predicates(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,

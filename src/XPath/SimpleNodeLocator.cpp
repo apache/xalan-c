@@ -105,7 +105,7 @@ SimpleNodeLocator::~SimpleNodeLocator()
 
 XObject*
 SimpleNodeLocator::connectToNodes(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		/* context */, 
 			int 					opPos,
@@ -155,7 +155,7 @@ SimpleNodeLocator::connectToNodes(
 
 						if(XPathExpression::eOP_LOCATIONPATH == value)
 						{
-							XObject* const	xnl = xpath.locationPath(doc, opPos);
+							XObject* const	xnl = xpath.locationPath(doc, opPos, executionContext);
 
 							if(0 != xnl)
 							{
@@ -191,12 +191,14 @@ SimpleNodeLocator::connectToNodes(
 
 XObject*
 SimpleNodeLocator::locationPath(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context, 
 			int 					opPos)
 {
-	MutableNodeRefList	mnl = step(xpath, executionContext, context, opPos + 2);
+	MutableNodeRefList	mnl(executionContext.createMutableNodeRefList());
+
+	step(xpath, executionContext, context, opPos + 2, mnl);
 
 	return executionContext.getXObjectFactory().createNodeSet(mnl);
 }
@@ -205,7 +207,7 @@ SimpleNodeLocator::locationPath(
 
 double
 SimpleNodeLocator::locationPathPattern(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos)
@@ -219,12 +221,13 @@ SimpleNodeLocator::locationPathPattern(
 
 
 
-MutableNodeRefList
+void
 SimpleNodeLocator::step(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context, 
-			int 					opPos)
+			int 					opPos,
+			MutableNodeRefList&		queryResults)
 {
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
@@ -236,7 +239,7 @@ SimpleNodeLocator::step(
 	int 				argLen = 0;
 
 	MutableNodeRefList	subQueryResults(executionContext.createMutableNodeRefList());
-	MutableNodeRefList	queryResults(subQueryResults);
+//	MutableNodeRefList	queryResults(subQueryResults);
 
 	bool				shouldReorder = false;
 	bool				continueStepRecursion = true;
@@ -325,9 +328,9 @@ SimpleNodeLocator::step(
 
 	MutableNodeRefList	savedContextNodeList = executionContext.createMutableNodeRefList();
 
-	savedContextNodeList = xpath.getContextNodeList();
+	savedContextNodeList = executionContext.getContextNodeList();
 
-	xpath.setContextNodeList(subQueryResults);
+	executionContext.setContextNodeList(subQueryResults);
 
 	try
 	{
@@ -358,7 +361,9 @@ SimpleNodeLocator::step(
 
 				if(0 != node)
 				{
-					MutableNodeRefList	mnl = step(xpath, executionContext, node, opPos);
+					MutableNodeRefList	mnl(executionContext.createMutableNodeRefList());
+
+					step(xpath, executionContext, node, opPos, mnl);
 
 					if(queryResults.getLength() == 0)
 					{
@@ -367,13 +372,14 @@ SimpleNodeLocator::step(
 					else
 					{
 						queryResults.addNodesInDocOrder(mnl);
+//						queryResults.addNodes(mnl);
 					}
 				}
 			}
 		}
 		else
 		{
-			if(shouldReorder == true)
+			if (shouldReorder == true)
 			{
 				queryResults.addNodesInDocOrder(subQueryResults);
 			}
@@ -385,21 +391,21 @@ SimpleNodeLocator::step(
 	}
 	catch(...)
 	{
-		xpath.setContextNodeList(savedContextNodeList);
+		executionContext.setContextNodeList(savedContextNodeList);
 
 		throw;
 	}
 
-	xpath.setContextNodeList(savedContextNodeList);
+	executionContext.setContextNodeList(savedContextNodeList);
 
-	return queryResults;
+//	return queryResults;
 }
 
 
 
 DOM_Node
 SimpleNodeLocator:: stepPattern(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context, 
 			int 					opPos,
@@ -452,7 +458,7 @@ SimpleNodeLocator:: stepPattern(
 		{
 			argLen = currentExpression.getOpCodeLength(opPos);
 
-			const XObject*	const	obj = xpath.execute(localContext, opPos);
+			const XObject*	const	obj = xpath.execute(localContext, opPos, executionContext);
 
 			const NodeRefListBase&	nl = obj->nodeset();
 
@@ -579,7 +585,7 @@ SimpleNodeLocator:: stepPattern(
 		// if I could sense this condition earlier...
 		try
 		{
-			xpath.setThrowFoundIndex(true);
+			executionContext.setThrowFoundIndex(true);
 
 			// $$$ ToDo: Why is this variable introduced?
 			int startPredicates = opPos;
@@ -588,7 +594,7 @@ SimpleNodeLocator:: stepPattern(
 			while(XPathExpression::eOP_PREDICATE == nextStepType)
 			{
 				const XObject* const	pred =
-					xpath.predicate(localContext, opPos);
+					xpath.predicate(localContext, opPos, executionContext);
 
 				if(XObject::eTypeNumber == pred->getType())
 				{
@@ -605,7 +611,7 @@ SimpleNodeLocator:: stepPattern(
 				nextStepType = currentExpression.getOpCodeMapValue(opPos);
 			}
 
-			xpath.setThrowFoundIndex(false);
+			executionContext.setThrowFoundIndex(false);
 		}
 		catch(const FoundIndex&)
 		{
@@ -614,12 +620,14 @@ SimpleNodeLocator:: stepPattern(
 			// localContext, then see if the current localContext is found in the 
 			// node set.  Seems crazy, but, so far, it seems like the 
 			// easiest way.
-			xpath.setThrowFoundIndex(false);
+			executionContext.setThrowFoundIndex(false);
 
 			const DOM_Node		parentContext =
 				executionContext.getParentOfNode(localContext);
 
-			MutableNodeRefList	mnl = step(xpath, executionContext, parentContext, startOpPos);
+			MutableNodeRefList	mnl(executionContext.createMutableNodeRefList());
+
+			step(xpath, executionContext, parentContext, startOpPos, mnl);
 
 			const int			nNodes = mnl.getLength();
 
@@ -644,8 +652,8 @@ SimpleNodeLocator:: stepPattern(
 
 int
 SimpleNodeLocator::findNodeSet(
-			XPath&					xpath,
-			XPathExecutionContext&	/* executionContext */,
+			const XPath&			xpath,
+			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
 			int 					/* stepType */,
@@ -654,7 +662,7 @@ SimpleNodeLocator::findNodeSet(
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
-	const XObject* const	obj = xpath.execute(context, opPos);
+	const XObject* const	obj = xpath.execute(context, opPos, executionContext);
 
 	const NodeRefListBase&	nl = obj->nodeset();
 
@@ -672,7 +680,7 @@ SimpleNodeLocator::findNodeSet(
 
 int
 SimpleNodeLocator::findRoot(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	/* executionContext */,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -700,7 +708,7 @@ SimpleNodeLocator::findRoot(
 
 int
 SimpleNodeLocator::findParent(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -748,7 +756,7 @@ SimpleNodeLocator::findParent(
 
 int
 SimpleNodeLocator::findSelf(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -791,7 +799,7 @@ SimpleNodeLocator::findSelf(
 
 int
 SimpleNodeLocator::findAncestors(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -835,7 +843,7 @@ SimpleNodeLocator::findAncestors(
 
 int
 SimpleNodeLocator::findAncestorsOrSelf(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -881,7 +889,7 @@ SimpleNodeLocator::findAncestorsOrSelf(
 
 int
 SimpleNodeLocator::findAttributes(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -936,7 +944,7 @@ SimpleNodeLocator::findAttributes(
 
 int
 SimpleNodeLocator::findChildren(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -979,7 +987,7 @@ SimpleNodeLocator::findChildren(
 
 int
 SimpleNodeLocator::findDescendants(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -1059,7 +1067,7 @@ SimpleNodeLocator::findDescendants(
 
 int
 SimpleNodeLocator::findFollowing(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -1133,7 +1141,7 @@ SimpleNodeLocator::findFollowing(
 
 int
 SimpleNodeLocator::findFollowingSiblings(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -1176,7 +1184,7 @@ SimpleNodeLocator::findFollowingSiblings(
 
 int
 SimpleNodeLocator::findPreceeding(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -1262,7 +1270,7 @@ SimpleNodeLocator::findPreceeding(
 
 int
 SimpleNodeLocator::findPreceedingSiblings(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -1305,7 +1313,7 @@ SimpleNodeLocator::findPreceedingSiblings(
 
 int
 SimpleNodeLocator::findNamespace(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -1329,7 +1337,7 @@ SimpleNodeLocator::findNamespace(
 
 int
 SimpleNodeLocator::findNodesOnUnknownAxis(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -1353,7 +1361,7 @@ SimpleNodeLocator::findNodesOnUnknownAxis(
 
 double
 SimpleNodeLocator::nodeTest(
-			XPath&					xpath,
+			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		context,
 			int 					opPos,
@@ -1596,8 +1604,8 @@ SimpleNodeLocator::nodeTest(
 
 void
 SimpleNodeLocator::predicates(
-			XPath&					xpath,
-			XPathExecutionContext&	/* executionContext */,
+			const XPath&			xpath,
+			XPathExecutionContext&	executionContext,
 			const DOM_Node& 		/* context */,
 			int 					opPos,
 			MutableNodeRefList& 	subQueryResults,
@@ -1628,7 +1636,7 @@ SimpleNodeLocator::predicates(
 		{
 			const DOM_Node	theNode = subQueryResults.item(i);
 
-			XObject* const	pred = xpath.predicate(theNode, opPos);
+			XObject* const	pred = xpath.predicate(theNode, opPos, executionContext);
 
 			// Remove any node that doesn't satisfy the predicate.
 			if(XObject::eTypeNumber == pred->getType() &&
@@ -1660,7 +1668,7 @@ SimpleNodeLocator::predicates(
 
 		if(XPathExpression::eOP_PREDICATE == nextStepType)
 		{
-			xpath.setContextNodeList(subQueryResults);
+			executionContext.setContextNodeList(subQueryResults);
 
 			// Don't break, loop 'till end so that opPos will be set to end.
 			// if(0 == subQueryResults.getLength())

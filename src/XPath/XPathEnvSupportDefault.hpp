@@ -72,10 +72,6 @@
 
 
 
-class XUnknown;
-
-
-
 /**
  * Dummy class in order to make the XPath object happy 
  * for diagnostic purposes.
@@ -104,10 +100,11 @@ public:
 	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const DOM_Node&		doc,
-			const DOMString&	name,
-			const DOMString&	ref,
-			const DOM_Element&	nscontext) const;
+			const DOM_Node&			doc,
+			const DOMString&		name,
+			const DOMString&		ref,
+			const DOM_Element&		nscontext,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Given a valid element key, return the corresponding node list.
@@ -117,16 +114,17 @@ public:
 			const DOM_Node&			doc,
 			const DOMString&		name,
 			const DOMString&		ref,
-			const PrefixResolver&	nscontext) const;
+			const PrefixResolver&	resolver,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Given a name, locate a variable in the current context, and return 
 	 * the Object.
 	 */
-	XObject*
+	virtual XObject*
 	getVariable(
-			XPathExecutionContext&	executionContext,
-			const QName&			name) const;
+			XObjectFactory&		factory,
+			const QName&		name) const;
 
 	/**
 	 * Get table of source tree documents.

@@ -64,20 +64,11 @@
 
 
 #include "XPath.hpp"
-#include "XPathEnvSupport.hpp"
-#include "XPathSupport.hpp"
 
 
 
-
-XPathFactoryDefault::XPathFactoryDefault(
-			XObjectFactory&		theXObjectFactory,
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport& 		theXPathSupport) :
+XPathFactoryDefault::XPathFactoryDefault() :
 	XPathFactory(),
-	m_XObjectFactory(theXObjectFactory),
-	m_XPathEnvSupport(theXPathEnvSupport),
-	m_XPathSupport(theXPathSupport),
 	m_xpaths()
 {
 }
@@ -132,9 +123,7 @@ XPathFactoryDefault::returnObject(const FactoryObject*	theFactoryObject)
 XPath*
 XPathFactoryDefault::create(bool	/* fOptimize */)
 {
-	XPath* const	theXPath = new XPath(m_XObjectFactory,
-										 m_XPathEnvSupport,
-										 m_XPathSupport);
+	XPath* const	theXPath = new XPath;
 
 #if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
 	m_xpaths.insert(theXPath);

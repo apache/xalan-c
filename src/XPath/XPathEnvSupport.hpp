@@ -86,6 +86,7 @@ class PrefixResolver;
 class XLocator;
 class XObject;
 class XPathExecutionContext;
+class XObjectFactory;
 class QName;
 
 
@@ -114,10 +115,11 @@ public:
 	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const DOM_Node&		doc,
-			const DOMString&	name,
-			const DOMString&	ref,
-			const DOM_Element&	nscontext) const = 0;
+			const DOM_Node&			doc,
+			const DOMString&		name,
+			const DOMString&		ref,
+			const DOM_Element&		nscontext,
+			XPathExecutionContext&	executionContext) const = 0;
 
 	/**
 	 * Given a valid element key, return the corresponding node list.
@@ -127,7 +129,8 @@ public:
 			const DOM_Node&			doc,
 			const DOMString&		name,
 			const DOMString&		ref,
-			const PrefixResolver&	nscontext) const = 0;
+			const PrefixResolver&	resolver,
+			XPathExecutionContext&	executionContext) const = 0;
 
 	/**
 	 * Given a name, locate a variable in the current context, and return 
@@ -135,8 +138,8 @@ public:
 	 */
 	virtual XObject*
 	getVariable(
-			XPathExecutionContext&	executionContext,
-			const QName&			name) const = 0;
+			XObjectFactory&		factory,
+			const QName&		name) const = 0;
 
 	// Table for storing source tree documents, which are keyed by
 	// URL.
@@ -229,7 +232,8 @@ public:
 				   eXPATHProcessor	= 4,
 				   eDataSource		= 5 };
 
-	enum eClassification { eWarning = 1,
+	enum eClassification { eMessage = 0,
+						   eWarning = 1,
 						   eError = 2 };
 
 	virtual bool

@@ -64,10 +64,12 @@
 
 
 
-class PrefixResolver;
 class DOMString;
 class Function;
+class PrefixResolver;
+class XObjectFactory;
 class XPath;
+class XPathEnvSupport;
 
 
 
@@ -89,7 +91,9 @@ public:
 	initXPath(
 			XPath&					pathObj,
 			const DOMString&		expression,
-			const PrefixResolver&	resolver) = 0;
+			const PrefixResolver&	resolver,
+			XObjectFactory&			xobjectFactory,
+			const XPathEnvSupport&	envSupport) = 0;
 
 	/**
 	 * Given a string, make an XSLT Match Pattern object.
@@ -98,7 +102,9 @@ public:
 	initMatchPattern(
 			XPath&					pathObj,
 			const DOMString&		expression,
-			const PrefixResolver&	resolver) = 0;
+			const PrefixResolver&	resolver,
+			XObjectFactory&			xobjectFactory,
+			const XPathEnvSupport&	envSupport) = 0;
 
 	/**
 	 * Given a string, and a reference to a function object, install

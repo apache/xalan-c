@@ -107,17 +107,19 @@ XPathEnvSupportDefault::reset()
 
 const NodeRefListBase*
 XPathEnvSupportDefault::getNodeSetByKey(
-			const DOM_Node&		doc,
-			const DOMString&	name,
-			const DOMString&	ref,
-			const DOM_Element&	nscontext) const
+			const DOM_Node&			doc,
+			const DOMString&		name,
+			const DOMString&		ref,
+			const DOM_Element&		nscontext,
+			XPathExecutionContext&	executionContext) const
 {
 	if (m_extendedSupport != 0)
 	{
 		return m_extendedSupport->getNodeSetByKey(doc,
 												  name,
 												  ref,
-												  nscontext);
+												  nscontext,
+												  executionContext);
 	}
 	else
 	{
@@ -132,14 +134,16 @@ XPathEnvSupportDefault::getNodeSetByKey(
 			const DOM_Node&			doc,
 			const DOMString&		name,
 			const DOMString&		ref,
-			const PrefixResolver&	resolver) const
+			const PrefixResolver&	resolver,
+			XPathExecutionContext&	executionContext) const
 {
 	if (m_extendedSupport != 0)
 	{
 		return m_extendedSupport->getNodeSetByKey(doc,
 												  name,
 												  ref,
-												  resolver);
+												  resolver,
+												  executionContext);
 	}
 	else
 	{
@@ -151,18 +155,18 @@ XPathEnvSupportDefault::getNodeSetByKey(
 
 XObject*
 XPathEnvSupportDefault::getVariable(
-			XPathExecutionContext&	executionContext,
-			const QName&			name) const
+			XObjectFactory&		xobjectFactory,
+			const QName&		name) const
 
 {
 	if (m_extendedSupport != 0)
 	{
-		return m_extendedSupport->getVariable(executionContext,
+		return m_extendedSupport->getVariable(xobjectFactory,
 											  name);
 	}
 	else
 	{
-		return executionContext.getXObjectFactory().createUnknown(name.getLocalPart());
+		return xobjectFactory.createUnknown(name.getLocalPart());
 	}
 }
 
@@ -358,7 +362,7 @@ XPathEnvSupportDefault::problem(
 	}
 	else
 	{
-		return classification == XPathEnvSupport::eWarning ? false : true;
+		return classification == XPathEnvSupport::eError ? true :false;
 	}
 }
 
