@@ -54,7 +54,6 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-/* Patch from Trevor Smigiel                                   */
 #if !defined(TRU64DEFINITIONS_HEADER_GUARD_1357924680)
 #define TRU64DEFINITIONS_HEADER_GUARD_1357924680
 

@@ -80,7 +80,7 @@
 #define XALAN_NO_STD_ALLOCATORS
 #define XALAN_POSIX2_AVAILABLE
 #define XALAN_INLINE_INITIALIZATION
-
+#define XALAN_NO_STD_NUMERIC_LIMITS
 
 
 // This will change, depending upon the target platform.
