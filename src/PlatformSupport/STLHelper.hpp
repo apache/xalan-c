@@ -82,8 +82,8 @@ struct DeleteFunctor : public std::unary_function<const T*, void>
 	 *
 	 * @param thePointer pointer to object to be deleted
 	 */
-	result_type
-	operator()(argument_type	thePointer) const
+	typename result_type
+	operator()(typename argument_type	thePointer) const
 	{
 		delete thePointer;
 	}
@@ -142,7 +142,7 @@ struct select1st : public unary_function<PairType, PairType::first_type>
 struct select1st : public std::unary_function<PairType, PairType::first_type>
 #endif
 {
-	typedef PairType	value_type;
+	typedef typename PairType	value_type;
 
 	/**
 	 * Retrieve the key of a key-value pair.
@@ -150,8 +150,8 @@ struct select1st : public std::unary_function<PairType, PairType::first_type>
 	 * @param thePair key-value pair
 	 * @return key
 	 */
-	result_type
-	operator()(const argument_type&		thePair) const
+	typename result_type
+	operator()(const typename argument_type&	thePair) const
 	{
 		return thePair.first;
 	}
@@ -170,7 +170,7 @@ struct select2nd : public unary_function<PairType, PairType::second_type>
 struct select2nd : public std::unary_function<PairType, PairType::second_type>
 #endif
 {
-	typedef PairType	value_type;
+	typedef typename PairType	value_type;
 
 	/**
 	 * Retrieve the value of a key-value pair.
@@ -178,101 +178,14 @@ struct select2nd : public std::unary_function<PairType, PairType::second_type>
 	 * @param thePair key-value pair
 	 * @return value
 	 */
-	result_type
-	operator()(const argument_type&		thePair)
+	typename result_type
+	operator()(const typename argument_type&	thePair)
 	{
 		return thePair.second;
 	}
 };
 
 #endif
-
-/*
-$$$ What's it all mean ???
-*/
-template <class OutputIteratorType, class PairMemberSelectType>
-struct PairIsolatorOutputIterator
-{
-
-/*
-#if defined(XALAN_NO_NAMESPACES)
-	typedef output_iterator_tag					iterator_category;
-#else
-	typedef std::output_iterator_tag			iterator_category;
-#endif
-*/
-
-	typedef typename PairMemberSelectType::value_type        value_type;
-
-/*
-	typedef void								difference_type;
-	typedef void								pointer;
-	typedef void								reference;
-*/
-
-	PairIsolatorOutputIterator(
-			OutputIteratorType		theOutputIterator,
-			PairMemberSelectType	thePairMemberSelector) :
-		m_OutputIterator(theOutputIterator),
-		m_PairMemberSelector(thePairMemberSelector)
-	{
-	}
-
-	/**
-	 * Changes the output iterator member based on a value.
-	 *
-	 * @param theValue value to use
-	 * @return this object
-	 */
-	PairIsolatorOutputIterator&
-	operator=(const value_type&		theValue)
-	{ 
-		m_OutputIterator = m_PairMemberSelector(theValue);
-    
-		return *this;
-	}
-
-	/**
-	 * Retrieve the object.
-	 *
-	 * @return this object
-	 */
-	PairIsolatorOutputIterator&
-	operator*()
-	{
-		return *this;
-	}
-
-	/**
-	 * Increments the output iterator member.
-	 *
-	 * @return this object
-	 */
-	PairIsolatorOutputIterator&
-	operator++()
-	{
-		++m_OutputIterator;
-
-		return *this;
-	} 
-
-	/**
-	 * Increments the output iterator member.
-	 *
-	 * @return this object
-	 */
-	PairIsolatorOutputIterator& operator++(int)
-	{
-		m_OutputIterator++;
-
-		return *this;
-	} 
-
-private:
-
-	OutputIteratorType		m_OutputIterator;
-	PairMemberSelectType	m_PairMemberSelector;
-};
 
 
 
@@ -292,8 +205,8 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
 	 *
 	 * @param thePair key-value pair
 	 */
-	result_type
-	operator()(argument_type	thePair)
+	typename result_type
+	operator()(typename argument_type	thePair)
 	{
 		delete thePair.second;
 	}
@@ -323,8 +236,8 @@ struct MapKeyDeleteFunctor : public std::unary_function<const typename T::value_
 	 *
 	 * @param thePair key-value pair
 	 */
-	result_type
-	operator()(argument_type	thePair)
+	typename result_type
+	operator()(typename argument_type	thePair)
 	{
 		delete thePair.first;
 	}
@@ -370,7 +283,7 @@ struct nested_for_each_functor : public std::unary_function<const typename T::va
 	 * @param theContainer container object
 	 */
  	typename T::result_type
-	operator()(argument_type	theContainer)
+	operator()(typename argument_type	theContainer)
 	{
 		return for_each(theContainer.begin(),
 						theContainer.end(),
@@ -382,21 +295,6 @@ private:
 	Functor		m_functor;
 };
 
-
-
-// $$$ ???
-/*
-template <class InputIterator, class Function>
-Function
-nested_for_each(
-			InputIterator	first,
-			InputIterator	last,
-			Function		function)
-{
-
-	return function;
-}
-*/
 
 
 /**
@@ -423,9 +321,9 @@ struct less_null_terminated_arrays : public std::binary_function<const T*, const
 	 * @param theRHS second object to compare
 	 * @return true if objects are the same
 	 */
-	result_type
-	operator()(first_argument_type		theLHS,
-			   second_argument_type		theRHS) const
+	typename result_type
+	operator()(typename first_argument_type		theLHS,
+			   typename second_argument_type	theRHS) const
 	{
 		while(*theLHS && *theRHS)
 		{
