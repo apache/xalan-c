@@ -174,7 +174,7 @@ ElemCallTemplate::childTypeAllowed(int	xslToken) const
 	switch(xslToken)
 	{
 	// char-instructions 
-	case Constants::ELEMNAME_PARAM:
+	case Constants::ELEMNAME_WITHPARAM:
 		fResult = true;
 		break;
 		
