@@ -130,7 +130,6 @@ XalanDOMStringPool::get(const XalanDOMChar*		theString)
 		}
 		else
 		{
-#if 1
 			// Not found, so insert the string...
 			const XalanDOMStringCollectionType::iterator	theIterator =
 				m_strings.insert(m_strings.end(), XalanDOMString());
@@ -138,13 +137,7 @@ XalanDOMStringPool::get(const XalanDOMChar*		theString)
 			XalanDOMString&		theNewString = *theIterator;
 
 			theNewString = theString;
-#else
-			// Not found, so insert the string...
-			const XalanDOMStringCollectionType::const_iterator	theIterator =
-				m_strings.insert(m_strings.end(), XalanDOMString(theString));
 
-			const XalanDOMString&	theNewString = *theIterator;
-#endif
 			// Add an index entry...
 			m_index.insert(IteratorMapType::value_type(c_wstr(theNewString), theIterator));
 
