@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -474,6 +474,19 @@ XalanSetStylesheetParam(
 			const char*		key,
 			const char*		expression,
 			XalanHandle		theXalanHandle)
+{
+	getTransformer(theXalanHandle)->setStylesheetParam(
+		key,
+		expression);
+}
+
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+XalanSetStylesheetParamUTF(
+				const XalanUTF16Char*	key,
+				const XalanUTF16Char*	expression,
+				XalanHandle				theXalanHandle)
 {
 	getTransformer(theXalanHandle)->setStylesheetParam(
 		XalanDOMString(key),

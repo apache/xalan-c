@@ -100,6 +100,11 @@ extern "C"
 	typedef const char*		XalanCCharPtr;
 
 	/**
+	 * This is a typedef for characters encoded in UTF-16.
+	 */
+	typedef unsigned short	XalanUTF16Char;
+
+	/**
 	 * Initialize Xerces and Xalan.
 	 *
 	 * Should be called only once per process before making
@@ -399,6 +404,21 @@ extern "C"
 				const char*		key,
 				const char*		expression,
 				XalanHandle		theXalanHandle);
+
+	/**
+	 * Set a top-level stylesheet parameter.  This value can be evaluated via
+	 * xsl:param-variable.  The key and expression parameters must be
+	 * encoded in UTF-16.
+	 *
+	 * @param key name of the param
+	 * @param expression expression that will be evaluated
+	 * @param theXalanHandle	handle of XalanTransformer instance.
+	 */
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+	XalanSetStylesheetParamUTF(
+				const XalanUTF16Char*	key,
+				const XalanUTF16Char*	expression,
+				XalanHandle				theXalanHandle);
 
 	/**
 	 * Returns the last error that occurred as a 
