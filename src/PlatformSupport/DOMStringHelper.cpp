@@ -117,20 +117,6 @@ using std::vector;
 
 
 
-#if defined(OS390)
-//                                                                       
-//  Cannot use the OS/390 c/c++ towupper and towlower functions in the   
-//  Unicode environment. We will use mytowupper and mytowlower here.     
-//                                                                       
-#undef towupper                                                          
-#undef towlower                                                          
-#define towupper mytowupper                                              
-#define towlower mytowlower                                              
-
-#endif
-
-
-
 // The maximum number of digits that sprintf can put in a buffer.
 // 100 for now.  We're using this because we want to avoid transcoding
 // number strings when we don't have to,
