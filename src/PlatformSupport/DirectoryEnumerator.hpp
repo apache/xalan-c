@@ -74,15 +74,14 @@
 
 #include <functional>
 #include <iterator>
-#include <vector>
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+//#include <XalanDOM/XalanDOMString.hpp>
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
+//#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
@@ -150,7 +149,7 @@ public:
 	 */
 	bool isDirectory() const
 	{
-#if defined(AIX) || defined(HPUX)	
+#if defined(AIX) || defined(HPUX) || defined(SOLARIS)
 		return false;
 #else		
 		return d_type == DT_DIR;		
@@ -201,19 +200,15 @@ template<class OutputIteratorType,
 		 class StringConversionFunction>
 void
 EnumerateDirectory(
-			const StringType&			theDirectory,
+			const StringType&			theFullSearchSpec,
 			OutputIteratorType			theOutputIterator,
 			FilterPredicateType			theFilterPredicate,
 			StringConversionFunction	theConversionFunction)
 {
 #if defined(_MSC_VER)
-	StringType	theSearchSpec(theDirectory);
-
-	append(theSearchSpec, "\\*");
-
 	FindFileStruct 		theFindData;
 
-	long	theSearchHandle = _wfindfirst(const_cast<wchar_t*>(theConversionFunction(theSearchSpec)),
+	long	theSearchHandle = _wfindfirst(const_cast<wchar_t*>(theConversionFunction(theFullSearchSpec)),
 										  &theFindData);
 
 	if (theSearchHandle != -1)
@@ -224,7 +219,7 @@ EnumerateDirectory(
 			{
 				if (theFilterPredicate(theFindData) == true)
 				{
-					*theOutputIterator = XalanDOMString(theFindData.getName());
+					*theOutputIterator = StringType(theFindData.getName());
 				}
 			}
 			while(_wfindnext(theSearchHandle,
@@ -245,6 +240,27 @@ EnumerateDirectory(
 	// Do nothing for now...
 	// Unsupported platform!!!
 #endif
+}
+
+
+
+template<class OutputIteratorType,
+		 class FilterPredicateType,
+		 class StringType,
+		 class StringConversionFunction>
+void
+EnumerateDirectory(
+			const StringType&			theDirectory,
+			const StringType&			theSearchSpec,
+			OutputIteratorType			theOutputIterator,
+			FilterPredicateType			theFilterPredicate,
+			StringConversionFunction	theConversionFunction)
+{
+	StringType	theFullSearchSpec(theDirectory);
+
+	theFullSearchSpec += theSearchSpec;
+
+	EnumerateDirectory(theFullSearchSpec, theOutputIterator, theFilterPredicate, theConversionFunction);
 }
 
 
@@ -291,29 +307,64 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
 	typedef typename BaseClassType::result_type		result_type;
 	typedef typename BaseClassType::argument_type	argument_type;
 
-	result_type
-	operator()(const argument_type&		theDirectory) const
-	{
-		result_type		theCollection;
-
-		operator()(theDirectory,
-				   theCollection);
-
-		return theCollection;
-	}
-
 	void
-	operator()(const argument_type&		theDirectory,
-			   CollectionType&			theCollection) const
+	operator()(
+			const argument_type&	theFullSearchSpec,
+			CollectionType&			theCollection) const
 	{
 #if !defined(XALAN_NO_NAMESPACES)
 		using std::back_inserter;
 #endif
 
-		EnumerateDirectory(theDirectory,
+		EnumerateDirectory(theFullSearchSpec,
 						   back_inserter(theCollection),
 						   m_filterPredicate,
 						   m_conversionFunction);
+	}
+
+	result_type
+	operator()(const argument_type&		theFullSearchSpec) const
+	{
+		result_type		theCollection;
+
+		operator()(
+				theFullSearchSpec,
+				theCollection);
+
+		return theCollection;
+	}
+
+	void
+	operator()(
+			const argument_type&	theDirectory,
+			const argument_type&	theSearchSpec,
+			CollectionType&			theCollection) const
+	{
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::back_inserter;
+#endif
+
+		EnumerateDirectory(
+				theDirectory,
+				theSearchSpec,
+				back_inserter(theCollection),
+				m_filterPredicate,
+				m_conversionFunction);
+	}
+
+	result_type
+	operator()(
+			const argument_type&	theDirectory,
+			const argument_type&	theSearchSpec) const
+	{
+		result_type		theCollection;
+
+		operator()(
+				theDirectory,
+				theSearchSpec,
+				theCollection);
+
+		return theCollection;
 	}
 
 private:
