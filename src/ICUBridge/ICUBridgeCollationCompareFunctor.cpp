@@ -114,8 +114,8 @@ ICUBridgeCollationCompareFunctor::operator()(
 
 #if defined(XALAN_ICU_BRIDGE_UCHAR_MISMATCH)
 		return m_collator->compare(
-					ICUBridge::XalanDOMCharStringToUnicodeString(lhs),
-					ICUBridge::XalanDOMCharStringToUnicodeString(rhs));
+					ICUBridge::XalanDOMCharStringToUnicodeString(theLHS),
+					ICUBridge::XalanDOMCharStringToUnicodeString(theRHS));
 #else
 		// $$$ ToDo: This code is necessary because DOMStrings can
 		// have a null representation.
