@@ -758,8 +758,9 @@ StylesheetExecutionContextDefault::endDocument()
 	// resolveTopLevelParams().
 	popContextMarker();
 
-	// Clear any cached XPaths...
-	clearXPathCache();
+	cleanUpTransients();
+
+	setFormatterListener(0);
 }
 
 
@@ -1290,49 +1291,15 @@ StylesheetExecutionContextDefault::endConstruction(const KeyDeclaration&	keyDecl
 void
 StylesheetExecutionContextDefault::reset()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
 	assert(m_elementRecursionStack.size() == 0);
 
 	m_variablesStack.reset();
 
 	m_xsltProcessor.reset();
 
-	for_each(m_formatterListeners.begin(),
-			 m_formatterListeners.end(),
-			 DeleteFunctor<FormatterListener>());
-
-	m_formatterListeners.clear();
-
-	for_each(m_printWriters.begin(),
-			 m_printWriters.end(),
-			 DeleteFunctor<PrintWriter>());
-
-	m_printWriters.clear();
-
-	for_each(m_outputStreams.begin(),
-			 m_outputStreams.end(),
-			 DeleteFunctor<XalanOutputStream>());
-
-	m_outputStreams.clear();
-
-	// Clean up the key table vector
-	for_each(m_keyTables.begin(),
-			 m_keyTables.end(),
-			 makeMapValueDeleteFunctor(m_keyTables));
-
-	m_keyTables.clear();
-
-	assert(m_matchPatternCache.size() == 0);
-
-	// Destroy the source tree factory, which
-	// will destroy all result tree fragment nodes
-	// that were generated...
-	m_sourceTreeResultTreeFactory.reset();
-
-	m_countersTable.reset();
+	// Just in case endDocument() was not called,
+	// clean things up...
+	cleanUpTransients();
 
 	// Reset the default execution context...
 	m_xpathExecutionContextDefault.reset();
@@ -1955,4 +1922,51 @@ StylesheetExecutionContextDefault::addToXPathCache(
 
 	// Add the XPath with the current clock
 	m_matchPatternCache.insert(XPathCacheMapType::value_type(pattern, XPathCacheEntry(theXPath, addClock)));
+}
+
+
+
+void
+StylesheetExecutionContextDefault::cleanUpTransients()
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	for_each(m_formatterListeners.begin(),
+			 m_formatterListeners.end(),
+			 DeleteFunctor<FormatterListener>());
+
+	m_formatterListeners.clear();
+
+	for_each(m_printWriters.begin(),
+			 m_printWriters.end(),
+			 DeleteFunctor<PrintWriter>());
+
+	m_printWriters.clear();
+
+	for_each(m_outputStreams.begin(),
+			 m_outputStreams.end(),
+			 DeleteFunctor<XalanOutputStream>());
+
+	m_outputStreams.clear();
+
+	// Clean up the key table vector
+	for_each(m_keyTables.begin(),
+			 m_keyTables.end(),
+			 makeMapValueDeleteFunctor(m_keyTables));
+
+	m_keyTables.clear();
+
+	// Destroy the source tree factory, which
+	// will destroy all result tree fragment nodes
+	// that were generated...
+	m_sourceTreeResultTreeFactory.reset();
+
+	m_countersTable.reset();
+
+	// Clear any cached XPaths...
+	clearXPathCache();
+
+	assert(m_matchPatternCache.size() == 0);
 }

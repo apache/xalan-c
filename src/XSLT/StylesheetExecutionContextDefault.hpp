@@ -856,6 +856,12 @@ private:
 			const XPath*			theXPath);
 
 
+	/**
+	 * Clean up anything that was created for use only during the transformation.
+	 */
+	void
+	cleanUpTransients();
+
 	XPathExecutionContextDefault	m_xpathExecutionContextDefault;
 
 	// $$ ToDo: Try to remove this dependency, and rely only on XSLTProcessor...

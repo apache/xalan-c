@@ -201,7 +201,7 @@ StylesheetRoot::process(
 	executionContext.resetCurrentState(sourceTree, sourceTree);
 
 	executionContext.setRootDocument(sourceTree);
-		
+
 	if(executionContext.doDiagnosticsOutput())
 	{
 		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("=============================")));
@@ -229,6 +229,9 @@ StylesheetRoot::process(
 	// occurs from here.
 	rootRule->execute(executionContext, sourceTree, sourceTree, QNameByReference());
 
+	// At this point, anything transient during the tranformation
+	// may have been deleted, so we may not refer to anything the
+	// execution context may have created for us.
 	executionContext.endDocument();
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)
@@ -349,7 +352,7 @@ StylesheetRoot::setupFormatterListener(
 	{
 		if (outputTarget.getDocument() != 0)
 		{
-				flistener = executionContext.createFormatterToDOM(outputTarget.getDocument(), 0);
+			flistener = executionContext.createFormatterToDOM(outputTarget.getDocument(), 0);
 		}
 		else if (outputTarget.getDocumentFragment() != 0)
 		{
