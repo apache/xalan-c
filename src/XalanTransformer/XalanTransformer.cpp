@@ -411,8 +411,9 @@ XalanTransformer::transform(
 		{
 			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
 			
-			append(theMessage,	LongToDOMString(long(e.getExceptionCode())));
-			append(theMessage,	XalanUnicode::charFullStop);
+			append(theMessage, LongToDOMString(long(e.getExceptionCode())));
+
+			append(theMessage, XalanDOMChar(XalanUnicode::charFullStop));
 
 			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 		}
@@ -586,8 +587,8 @@ XalanTransformer::transform(
 		{
 			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
 			
-			append(theMessage,	LongToDOMString(long(e.getExceptionCode())));
-			append(theMessage,	XalanUnicode::charFullStop);
+			append(theMessage, LongToDOMString(long(e.getExceptionCode())));
+			append(theMessage, XalanDOMChar(XalanUnicode::charFullStop));
 
 			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 		}
@@ -857,9 +858,9 @@ XalanTransformer::compileStylesheet(
 		{
 			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
 
-			append(theMessage,	LongToDOMString(long(e.getExceptionCode())));
+			append(theMessage, LongToDOMString(long(e.getExceptionCode())));
 
-			append(theMessage,	XalanUnicode::charFullStop);
+			append(theMessage, XalanDOMChar(XalanUnicode::charFullStop));
 
 			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 		}
@@ -968,7 +969,7 @@ XalanTransformer::parseSource(
 			
 		append(theMessage, LongToDOMString(long(e.getExceptionCode())));
 
-		append(theMessage, XalanUnicode::charFullStop);
+		append(theMessage, XalanDOMChar(XalanUnicode::charFullStop));
 
 		TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 
