@@ -95,10 +95,6 @@ FunctionSystemProperty::execute(
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::string;
-#endif
-
 	if (args.size() != 1)
 	{
 		executionContext.error("The system-property() function takes a single argument!", context);
