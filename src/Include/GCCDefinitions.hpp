@@ -82,20 +82,6 @@
 #define XALAN_INLINE_INITIALIZATION
 #define XALAN_NO_STD_NUMERIC_LIMITS
 
-
-// This will change, depending upon the target platform.
-#if defined(__BIG_ENDIAN__)
-#define XALAN_BIG_ENDIAN
-#elif defined(__LITTLE_ENDIAN__)
-#define XALAN_LITTLE_ENDIAN
-#elif defined(SOLARIS) || defined(powerpc) || defined(__sparc__) || defined(AIX)
-#define XALAN_BIG_ENDIAN
-#elif defined(__i386__) || defined(__alpha__)
-#define XALAN_LITTLE_ENDIAN
-#else
-#error XALAN_BIG_ENDIAN or XALAN_LITTLE_ENDIAN must be defined for this platform!
-#endif
-
 #define XALAN_UNALIGNED
 
 #endif	// GCCDEFINITIONS_HEADER_GUARD_1357924680
