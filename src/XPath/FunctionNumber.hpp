@@ -97,7 +97,11 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context);	
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
+#else
+	virtual FunctionNumber*
+#endif
 	clone() const;
 
 private:
