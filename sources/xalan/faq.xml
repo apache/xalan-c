@@ -181,6 +181,24 @@
 		</a>
 	</faq>
     
+        <faq title="What does the XalanDOMException HIERARCHY_REQUEST_ERR mean?">
+      <q>What does the XalanDOMException HIERARCHY_REQUEST_ERR mean?</q>
+      <a>
+        <p>It means that an attempt was made to add a node to a DOM that would create
+          an invalid structure.  For example, text nodes are not allowed as children
+          of the document node.</p>
+
+          <p>This is also a very common error when attempting to transform to DOM.
+          Source documents and stylesheets that might produce valid serialized XML
+          might not produce value DOM.  The usual suspect is text nodes being
+          generated before the document element is generated.</p>
+          <p>If you think you have seen this error because of a bug in Xalan-C++'s source tree
+          implementation, please post a bug report on Bugzilla, and attach a minimal source document 
+          and stylesheet that produce the problem to the bug report.</p>
+      </a>
+    </faq>
+
+    
 <faq title="Patches">
 <q>Who do I submit patches to?</q>
 <a><p>Your contributions are much appreciated! Please e-mail your patches to <human-resource-ref idref="xalandev"/>.</p></a>
