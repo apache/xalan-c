@@ -83,6 +83,10 @@
 
 
 
+class XPath;
+
+
+
 class ElemVariable : public ElemTemplateElement
 {
 public:

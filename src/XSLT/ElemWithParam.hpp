@@ -73,6 +73,10 @@
 
 
 
+class XPath;
+
+
+
 class ElemWithParam : public ElemTemplateElement
 {
 public:

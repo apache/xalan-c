@@ -70,11 +70,20 @@
 
 // Base class header file.
 #include "ElemTemplateElement.hpp"
+
+
+
+#include <XPath/NodeRefListBase.hpp>
+
+
+
 #include "Constants.hpp"
 
 
 
 class ElemSort;
+class ElemTemplate;
+class NodeSorter;
 class XPath;
 
 
@@ -121,10 +130,21 @@ public:
 		return m_sortElems;
 	}
 
+	const XPath*
+	getSelectExpression() const
+	{
+		return m_selectPattern;
+	}
+
 	// These methods are inherited from ElemTemplateElement ...
 
 	virtual const XalanDOMString&
 	getElementName() const;
+
+	virtual void
+	postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler);
 
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
@@ -163,11 +183,46 @@ protected:
 			XalanNode*						sourceNodeContext,
 			int								selectStackFrameIndex) const;
 
+	/**
+	 * Perform a query if needed, and call transformChild for each child.
+	 * 
+	 * @param executionContext	The current execution context
+	 * @param template The owning template context.
+	 * @param sourceNodeContext The current source node context.
+	 * @param selectStackFrameIndex stack frame context for executing the
+	 *								select statement
+	 */
+	void
+	transformSelectedChildren(
+			StylesheetExecutionContext& 	executionContext,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						sourceNodeContext,
+			NodeSorter* 					sorter,
+			int 							selectStackFrameIndex) const;
+
+	/**
+	 * Perform a query if needed, and call transformChild for each child.
+	 * 
+	 * @param executionContext The current execution context
+	 * @param theTemplate The owning template context.
+	 * @param sourceNodes The source nodes to transform.
+	 * @param sourceNodesCount The count of source nodes to transform.
+	 */
+	void
+	transformSelectedChildren(
+			StylesheetExecutionContext& 	executionContext,
+			const ElemTemplateElement*		theTemplate,
+			const NodeRefListBase&			sourceNodes,
+			NodeRefListBase::size_type		sourceNodesCount) const;
+
 	const XPath*			m_selectPattern;
 
 private:
 
-	SortElemsVectorType		m_sortElems;
+	SortElemsVectorType				m_sortElems;
+
+	SortElemsVectorType::size_type	m_sortElemsCount;
+
 };
 
 

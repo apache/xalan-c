@@ -82,10 +82,6 @@
 
 
 
-#include <XPath/NodeRefListBase.hpp>
-
-
-
 #include <XSLT/NamespacesHandler.hpp>
 
 
@@ -93,11 +89,9 @@
 class AttributeList;
 class ElemTemplate;
 class NamespacesHandler;
-class NodeSorter;
 class Stylesheet;
 class StylesheetConstructionContext;
 class StylesheetExecutionContext;
-class XPath;
 
 
 
@@ -729,45 +723,6 @@ protected:
 	 */
 	const XalanDOMString*
 	getNamespaceForPrefixInternal(const XalanDOMString& 	prefix) const;
-
-	/**
-	 * Perform a query if needed, and call transformChild for each child.
-	 * 
-	 * @param executionContext	The current execution context
-	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
-	 *		not think we need this).
-	 * @param template The owning template context.
-	 * @param sourceNodeContext The current source node context.
-	 * @param selectPattern The XPath with which to perform the selection.
-	 * @param selectStackFrameIndex stack frame context for executing the
-	 *								select statement
-	 */
-	void
-	transformSelectedChildren(
-			StylesheetExecutionContext& 	executionContext,
-			const ElemTemplateElement&		xslInstruction,
-			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceNodeContext,
-			const XPath&					selectPattern,
-			NodeSorter* 					sorter,
-			int 							selectStackFrameIndex) const;
-
-	/**
-	 * Perform a query if needed, and call transformChild for each child.
-	 * 
-	 * @param executionContext The current execution context
-	 * @param xslInstruction The stylesheet element context
-	 * @param theTemplate The owning template context.
-	 * @param sourceNodes The source nodes to transform.
-	 * @param sourceNodesCount The count of source nodes to transform.
-	 */
-	void
-	transformSelectedChildren(
-			StylesheetExecutionContext& 		executionContext,
-			const ElemTemplateElement&			xslInstruction,
-			const ElemTemplateElement*			theTemplate,
-			const NodeRefListBase&				sourceNodes,
-			NodeRefListBase::size_type			sourceNodesCount) const;
 
 	/**
 	 * Given an element, find the corresponding

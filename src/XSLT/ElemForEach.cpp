@@ -75,8 +75,13 @@
 
 
 
+#include <XPath/XPath.hpp>
+
+
+
 #include "ElemSort.hpp"
 #include "NodeSorter.hpp"
+#include "SelectionEvent.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
@@ -93,7 +98,9 @@ ElemForEach::ElemForEach(
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_FOREACH),
-	m_selectPattern(0)
+	m_selectPattern(0),
+	m_sortElems(),
+	m_sortElemsCount(0)
 {
 	const unsigned int	nAttrs = atts.getLength();
 		
@@ -137,7 +144,9 @@ ElemForEach::ElemForEach(
 						lineNumber,
 						columnNumber,
 						xslToken),
-	m_selectPattern(0)
+	m_selectPattern(0),
+	m_sortElems(),
+	m_sortElemsCount(0)
 {
 }
 
@@ -165,6 +174,18 @@ ElemForEach::getElementName() const
 
 
 void
+ElemForEach::postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler)
+{
+	ElemTemplateElement::postConstruction(constructionContext, theParentHandler);
+
+	m_sortElemsCount = m_sortElems.size();
+}
+
+
+
+void
 ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 {
 	assert(m_selectPattern != 0);
@@ -186,7 +207,7 @@ ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 		else
 		{
 			executionContext.error(
-				"There is no current node in ElemForEach::execute()!",
+				"There is no current node in ElemForEach::execute()",
 				sourceNode, 
 				this);
 		}
@@ -202,17 +223,15 @@ ElemForEach::transformSelectedChildren(
 			XalanNode*						sourceNodeContext,
 			int								selectStackFrameIndex) const
 {
-	const SortElemsVectorType&				sortElements = getSortElems();
-	const SortElemsVectorType::size_type	nChildren = sortElements.size();
+	assert(m_selectPattern != 0);
+	assert(m_sortElemsCount == m_sortElems.size());
 
-	if (nChildren == 0)
+	if (m_sortElemsCount == 0)
 	{
-		ElemTemplateElement::transformSelectedChildren(
+		transformSelectedChildren(
 					executionContext,
-					*this,
 					theTemplate,
 					sourceNodeContext,
-					*m_selectPattern,
 					0,
 					selectStackFrameIndex);
 	}
@@ -229,7 +248,7 @@ ElemForEach::transformSelectedChildren(
 		CollectionClearGuard<NodeSortKeyVectorType>		guard(keys);
 
 		// Reserve the space now...
-		keys.reserve(nChildren);
+		keys.reserve(m_sortElemsCount);
 
 		// Get some temporary strings to use for evaluting the AVTs...
 		XPathExecutionContext::GetAndReleaseCachedString	theTemp1(executionContext);
@@ -242,9 +261,9 @@ ElemForEach::transformSelectedChildren(
 
 		// March backwards, performing a sort on each xsl:sort child.
 		// Probably not the most efficient method.
-		for(SortElemsVectorType::size_type	i = 0; i < nChildren; i++)
+		for(SortElemsVectorType::size_type	i = 0; i < m_sortElemsCount; i++)
 		{
-			const ElemSort* const	sort = sortElements[i];
+			const ElemSort* const	sort = m_sortElems[i];
 			assert(sort != 0);
 
 			const AVT* avt = sort->getLangAVT();
@@ -361,13 +380,134 @@ ElemForEach::transformSelectedChildren(
 						*this));
 		}
 
-		ElemTemplateElement::transformSelectedChildren(
+		transformSelectedChildren(
 					executionContext,
-					*this,
 					theTemplate,
 					sourceNodeContext,
-					*m_selectPattern,
 					sorter.get(),
 					selectStackFrameIndex);
+	}
+}
+
+
+
+void
+ElemForEach::transformSelectedChildren(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						sourceNodeContext,
+			NodeSorter*						sorter,
+			int								selectStackFrameIndex) const
+{
+	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
+
+	assert(m_selectPattern != 0);
+
+	XObjectPtr	theXObject;
+
+	{
+		SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
+					executionContext,
+					selectStackFrameIndex);
+
+		theXObject = m_selectPattern->execute(
+						sourceNodeContext,
+						*this,
+						executionContext);
+	}
+
+	if (theXObject.null() == false)
+	{
+		const NodeRefListBase&	sourceNodes = theXObject->nodeset();
+
+		if(0 != executionContext.getTraceListeners())
+		{
+			executionContext.fireSelectEvent(
+					SelectionEvent(executionContext, 
+						sourceNodeContext,
+						*this,
+						StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+						*m_selectPattern,
+						theXObject));
+		}
+
+		const NodeRefListBase::size_type	nNodes = sourceNodes.getLength();
+
+		if (nNodes > 0)
+		{
+			// If there's not NodeSorter, or we've only selected one node,
+			// then just do the transform...
+			if (sorter == 0 || nNodes == 1)
+			{
+				transformSelectedChildren(
+					executionContext,
+					theTemplate,
+					sourceNodes,
+					nNodes);
+			}
+			else
+			{
+				typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
+				typedef StylesheetExecutionContext::ContextNodeListSetAndRestore			ContextNodeListSetAndRestore;
+				typedef StylesheetExecutionContext::BorrowReturnMutableNodeRefList			BorrowReturnMutableNodeRefList;
+
+				BorrowReturnMutableNodeRefList	sortedSourceNodes(executionContext);
+
+				*sortedSourceNodes = sourceNodes;
+
+				{
+					SetAndRestoreCurrentStackFrameIndex		theStackFrameSetAndRestore(
+							executionContext,
+							selectStackFrameIndex);
+
+					ContextNodeListSetAndRestore			theContextNodeListSetAndRestore(
+							executionContext,
+							sourceNodes);
+
+					sorter->sort(executionContext, *sortedSourceNodes);
+				}
+
+				transformSelectedChildren(
+					executionContext,
+					theTemplate,
+					*sortedSourceNodes,
+					nNodes);
+			}
+		}
+	}
+}
+
+
+
+void
+ElemForEach::transformSelectedChildren(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement*		theTemplate,
+			const NodeRefListBase&			sourceNodes,
+			NodeRefListBase::size_type		sourceNodesCount) const
+{
+	if(executionContext.getTraceSelects() == true)
+	{
+		executionContext.traceSelect(
+			*this,
+			sourceNodes,
+			m_selectPattern);
+	}
+
+	// Create an object to set and restore the context node list...
+	StylesheetExecutionContext::ContextNodeListSetAndRestore	theSetAndRestore(
+				executionContext,
+				sourceNodes);
+
+	for(unsigned int i = 0; i < sourceNodesCount; i++) 
+	{
+		XalanNode* const		childNode = sourceNodes.item(i);
+		assert(childNode != 0);
+
+		transformChild(
+				executionContext,
+				*this,
+				theTemplate,
+				childNode);
 	}
 }

@@ -156,7 +156,14 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 
 	XalanNode* const	sourceNode = executionContext.getCurrentNode();
 
-	if (0 != sourceNode)
+	if (sourceNode == 0)
+	{
+		executionContext.error(
+			"There is no current node in ElemApplyTemplates::execute()",
+			sourceNode,
+			this);
+	}
+    else
 	{
 		// Dragons here.  Push the params & stack frame, but then execute the
 		// select statement inside transformSelectedChildren, which must be
@@ -168,9 +175,8 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 			sourceNode,
 			this);
 
-		assert(executionContext.getCurrentMode() != 0);
-
 		const XalanQName* const		currentMode = executionContext.getCurrentMode();
+		assert(currentMode != 0);
 
 		if (m_isDefaultTemplate == false &&
 			!m_mode.equals(*currentMode))
@@ -194,13 +200,6 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 				thePushPop.getStackFrameIndex());
 		}
 	}
-    else
-	{
-		executionContext.error(
-			"There is no current node in ElemApplyTemplates::execute()",
-			sourceNode,
-			this);
-	}
 }
 
 
@@ -212,7 +211,6 @@ ElemApplyTemplates::childTypeAllowed(int	xslToken) const
 
 	switch(xslToken)
 	{
-	// char-instructions 
 	case Constants::ELEMNAME_SORT:
 	case Constants::ELEMNAME_WITHPARAM:
 		fResult = true;

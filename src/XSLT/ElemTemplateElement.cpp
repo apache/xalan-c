@@ -95,6 +95,7 @@
 
 #include "Constants.hpp"
 #include "ElemCallTemplate.hpp"
+#include "ElemForEach.hpp"
 #include "ElemTemplate.hpp"
 #include "NamespacesHandler.hpp"
 #include "NodeSorter.hpp"
@@ -670,132 +671,6 @@ ElemTemplateElement::replaceChildElem(
 	oldChild->setNextSiblingElem(0);
 
 	return oldChild;
-}
-
-
-
-void
-ElemTemplateElement::transformSelectedChildren(
-			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement&		xslInstruction,
-			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceNodeContext,
-			const XPath&					selectPattern,
-			NodeSorter*						sorter,
-			int								selectStackFrameIndex) const
-{
-	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
-
-	XObjectPtr	theXObject;
-
-	{
-		SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
-					executionContext,
-					selectStackFrameIndex);
-
-		theXObject = selectPattern.execute(
-						sourceNodeContext,
-						xslInstruction,
-						executionContext);
-	}
-
-	if (theXObject.null() == false)
-	{
-		const NodeRefListBase&	sourceNodes = theXObject->nodeset();
-
-		if(0 != executionContext.getTraceListeners())
-		{
-			executionContext.fireSelectEvent(
-					SelectionEvent(executionContext, 
-						sourceNodeContext,
-						*this,
-						StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
-						selectPattern,
-						theXObject));
-		}
-
-		const NodeRefListBase::size_type	nNodes = sourceNodes.getLength();
-
-		if (nNodes > 0)
-		{
-			// If there's not NodeSorter, or we've only selected one node,
-			// then just do the transform...
-			if (sorter == 0 || nNodes == 1)
-			{
-				transformSelectedChildren(
-					executionContext,
-					xslInstruction,
-					theTemplate,
-					sourceNodes,
-					nNodes);
-			}
-			else
-			{
-				typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
-				typedef StylesheetExecutionContext::ContextNodeListSetAndRestore			ContextNodeListSetAndRestore;
-				typedef StylesheetExecutionContext::BorrowReturnMutableNodeRefList			BorrowReturnMutableNodeRefList;
-
-				BorrowReturnMutableNodeRefList	sortedSourceNodes(executionContext);
-
-				*sortedSourceNodes = sourceNodes;
-
-				{
-					SetAndRestoreCurrentStackFrameIndex		theStackFrameSetAndRestore(
-							executionContext,
-							selectStackFrameIndex);
-
-					ContextNodeListSetAndRestore			theContextNodeListSetAndRestore(
-							executionContext,
-							sourceNodes);
-
-					sorter->sort(executionContext, *sortedSourceNodes);
-				}
-
-				transformSelectedChildren(
-					executionContext,
-					xslInstruction,
-					theTemplate,
-					*sortedSourceNodes,
-					nNodes);
-			}
-		}
-	}
-}
-
-
-
-void
-ElemTemplateElement::transformSelectedChildren(
-			StylesheetExecutionContext&			executionContext,
-			const ElemTemplateElement&			xslInstruction,
-			const ElemTemplateElement*			theTemplate,
-			const NodeRefListBase&				sourceNodes,
-			NodeRefListBase::size_type			sourceNodesCount) const
-{
-	if(executionContext.getTraceSelects() == true)
-	{
-		executionContext.traceSelect(
-			xslInstruction,
-			sourceNodes,
-			0);
-	}
-
-	// Create an object to set and restore the context node list...
-	StylesheetExecutionContext::ContextNodeListSetAndRestore	theSetAndRestore(
-				executionContext,
-				sourceNodes);
-
-	for(unsigned int i = 0; i < sourceNodesCount; i++) 
-	{
-		XalanNode* const		childNode = sourceNodes.item(i);
-		assert(childNode != 0);
-
-		transformChild(
-				executionContext,
-				xslInstruction,
-				theTemplate,
-				childNode);
-	}
 }
 
 
