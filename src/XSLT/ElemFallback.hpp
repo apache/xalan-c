@@ -54,7 +54,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XALAN_ELEMTEXTLITERAL_HEADER_GUARD)
+#if !defined(XALAN_FALLBACK_HEADER_GUARD)
 #define XALAN_FALLBACK_HEADER_GUARD
 
 
