@@ -220,6 +220,8 @@ printArgOptions()
 		 << endl
 		 << " [-XST (Use source tree formatter.  Formats to Xalan source tree, then formats XML for output.)]"
 		 << endl
+		 << " [-DRTF (Use the Xerces DOM for generating Result Tree Fragments, instead of the Xalan source tree.]"
+		 << endl
 		 << " [-PARAM name expression (Sets a stylesheet parameter.)]"
 		 << endl
 		 << " [-XD Use Xerces DOM instead of Xalan source tree.]"
@@ -275,6 +277,7 @@ struct CmdLineParams
 	bool formatToNull;
 	bool formatToSourceTree;
 	bool useDOM;
+	bool useDOMForRTFs;
 	int indentAmount;
 	int outputType;
 	CharVectorType outFileName;
@@ -300,6 +303,7 @@ struct CmdLineParams
 		noIndent(false),
 		formatToNull(false),
 		useDOM(false),
+		useDOMForRTFs(false),
 		formatToSourceTree(false),
 		indentAmount(-1),
 		outputType(-1),
@@ -520,6 +524,10 @@ getArgs(
 
 			p.formatToSourceTree = true;
 		}
+		else if(!stricmp("-DRTF", argv[i]))
+		{
+			p.useDOMForRTFs = true;
+		}
 		else if(!stricmp("-NULL", argv[i]))
 		{
 			p.formatToNull = true;
@@ -678,7 +686,7 @@ createFormatter(
 		}
 		else
 		{
-			formatter = new FormatterToDOM(parserLiaison.getDOMFactory(), 0);
+			formatter = new FormatterToDOM(parserLiaison.createDOMFactory(), 0);
 		}
 	}
 
@@ -947,6 +955,8 @@ xsltMain(const CmdLineParams&	params)
 			theDOMSupport,
 			theXObjectFactory);
 
+	theExecutionContext.setUseDOMResultTreeFactory(params.useDOMForRTFs);
+
 #if defined(XALAN_USE_ICU)
 	ICUBridgeCollationCompareFunctor	theICUFunctor;
 
@@ -1096,7 +1106,6 @@ main(
 
 	CmdLineParams	theParams;
 	
-
 	/*
 	 *		Get command line arguments
 	 */
