@@ -123,6 +123,14 @@ XTokenStringAdapter::str(
 
 
 
+void
+XTokenStringAdapter::str(XalanDOMString&	theBuffer) const
+{
+	m_value.str(theBuffer);
+}
+
+
+
 XTokenStringAdapter::eObjectType
 XTokenStringAdapter::getRealType() const
 {

@@ -107,6 +107,9 @@ public:
 			MemberFunctionPtr	function) const;
 
 	virtual void
+	str(XalanDOMString&	theBuffer) const;
+
+	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 
 	virtual void

@@ -156,6 +156,14 @@ XToken::str(
 
 
 void
+XToken::str(XalanDOMString&		theBuffer) const
+{
+	append(theBuffer, m_stringValue);
+}
+
+
+
+void
 XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
 	theCallbackObject.String(*this, m_stringValue);
@@ -186,7 +194,9 @@ XToken::operator=(const XalanDOMString&	theString)
 XToken&
 XToken::operator=(double	theNumber)
 {
-	m_stringValue = DoubleToDOMString(theNumber);
+	clear(m_stringValue);
+
+	DoubleToDOMString(theNumber, m_stringValue);
 
 	m_numberValue = theNumber;
 

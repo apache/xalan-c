@@ -113,6 +113,9 @@ public:
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const;
 
+	virtual void
+	str(XalanDOMString&	theBuffer) const;
+
 protected:
 
 	virtual eObjectType
