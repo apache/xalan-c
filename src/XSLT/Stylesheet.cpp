@@ -1407,13 +1407,14 @@ Stylesheet::processNSAliasElement(
 
 	// Build a table of aliases, the key is the stylesheet uri and the
 	// value is the result uri
-	if (length(*stylesheetNamespace) == 0 ||
-		length(*resultNamespace) == 0)
+	if (stylesheetNamespace == 0 || resultNamespace == 0)
 	{
-		constructionContext.error("Missing namespace URI for specified prefix");
+		constructionContext.error("Undeclared namespace prefix");
 	}
 	else
 	{
+		assert(length(*stylesheetNamespace) != 0  && length(*resultNamespace) != 0);
+
 		m_namespacesHandler.setNamespaceAlias(
 				constructionContext,
 				*stylesheetNamespace,
