@@ -88,7 +88,7 @@ FunctionUnparsedEntityURI::execute(
 		executionContext.error("The unparsed-entity-uri() function requires a non-null context node!",
 							   context);
 
-		return 0;
+		return XObjectPtr();
 	}
 
 	const XalanDOMString&	name = arg1->str();

@@ -82,7 +82,7 @@ FunctionCurrent::execute(
 		executionContext.error("The current() function is not allowed in patterns!",
 							   context);
 
-		return 0;
+		return XObjectPtr();
 	}
 	else
 	{

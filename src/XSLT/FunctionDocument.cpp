@@ -154,7 +154,7 @@ FunctionDocument::execute(
 		executionContext.error("The document() function requires a non-null context node!",
 							   context);
 
-		return 0;
+		return XObjectPtr();
 	}
 	else
 	{
@@ -211,7 +211,7 @@ FunctionDocument::execute(
 		executionContext.error("The document() function requires a non-null context node!",
 							   context);
 
-		return 0;
+		return XObjectPtr();
 	}
 
 	XalanDOMString				base;

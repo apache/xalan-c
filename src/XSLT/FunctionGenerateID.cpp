@@ -145,7 +145,7 @@ FunctionGenerateID::execute(
 	{
 		executionContext.error("The function generate-id requires a non-null node!");
 
-		return 0;
+		return XObjectPtr();
 	}
 	else
 	{

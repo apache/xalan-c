@@ -114,7 +114,7 @@ FunctionKey::execute(
 		executionContext.error("The key() function requires a non-null context node!",
 							   context);
 
-		return 0;
+		return XObjectPtr();
 	}
 	else
 	{
