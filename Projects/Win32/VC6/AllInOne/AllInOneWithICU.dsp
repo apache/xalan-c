@@ -56,7 +56,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 xerces-c_2.lib icuuc.lib icuin.lib /nologo /dll /pdb:none /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1_5_1.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib"
+# ADD LINK32 xerces-c_2.lib icuuc.lib icuin.lib /nologo /dll /pdb:none /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1_6_0.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib"
 
 !ELSEIF  "$(CFG)" == "AllInOneWithICU - Win32 Debug"
 
@@ -82,7 +82,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2D.lib icuucd.lib icuind.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1_5_1D.dll" /implib:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug" /libpath:"..\..\..\..\..\..\icu\lib"
+# ADD LINK32 xerces-c_2D.lib icuucd.lib icuind.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1_6_0D.dll" /implib:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug" /libpath:"..\..\..\..\..\..\icu\lib"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "AllInOneWithICU - Win32 Release with symbols"
@@ -111,7 +111,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /debug /machine:I386
-# ADD LINK32 xerces-c_2.lib icuuc.lib icuin.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release.symbols/Xalan-C_1_5_1S.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release.symbols/Xalan-C_1S.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib"
+# ADD LINK32 xerces-c_2.lib icuuc.lib icuin.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release.symbols/Xalan-C_1_6_0S.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release.symbols/Xalan-C_1S.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "AllInOneWithICU - Win64 Release"
@@ -139,7 +139,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 xerces-c_2.lib icuuc.lib icuin.lib /nologo /dll /pdb:none /machine:IX86 /out:"..\..\..\..\Build\Win64\VC6\Release/Xalan-C_1_5_1.dll" /implib:"..\..\..\..\Build\Win64\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib" /machine:IA64
+# ADD LINK32 xerces-c_2.lib icuuc.lib icuin.lib /nologo /dll /pdb:none /machine:IX86 /out:"..\..\..\..\Build\Win64\VC6\Release/Xalan-C_1_6_0.dll" /implib:"..\..\..\..\Build\Win64\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib" /machine:IA64
 
 !ELSEIF  "$(CFG)" == "AllInOneWithICU - Win64 Debug"
 
@@ -165,7 +165,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2D.lib icuucd.lib icuind.lib /nologo /dll /debug /machine:IX86 /out:"..\..\..\..\Build\Win64\VC6\Debug/Xalan-C_1_5_1D.dll" /implib:"..\..\..\..\Build\Win64\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug" /libpath:"..\..\..\..\..\..\icu\lib" /machine:IA64
+# ADD LINK32 xerces-c_2D.lib icuucd.lib icuind.lib /nologo /dll /debug /machine:IX86 /out:"..\..\..\..\Build\Win64\VC6\Debug/Xalan-C_1_6_0D.dll" /implib:"..\..\..\..\Build\Win64\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug" /libpath:"..\..\..\..\..\..\icu\lib" /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
