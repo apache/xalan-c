@@ -118,6 +118,7 @@ public:
 	typedef map<XalanDOMString,
 				XPathCacheEntry,
 				less<XalanDOMString> >					XPathCacheMapType;
+	typedef vector<FormatterToText*>					FormatterToTextCacheType;
 #else
 	typedef std::deque<const ElemTemplateElement*>		ElementRecursionStackType;
 	typedef std::set<FormatterListener*>				FormatterListenerSetType;
@@ -126,6 +127,7 @@ public:
 	typedef std::set<const KeyDeclaration*>				KeyDeclarationSetType;
 	typedef std::pair<const XPath*, clock_t>			XPathCacheEntry;
 	typedef std::map<XalanDOMString, XPathCacheEntry>	XPathCacheMapType;
+	typedef std::vector<FormatterToText*>				FormatterToTextCacheType;
 #endif
 
 	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;
@@ -562,6 +564,12 @@ public:
 	createFormatterToText(
 			Writer&					writer,
 			const XalanDOMString&	encoding);
+
+	virtual FormatterToText*
+	borrowFormatterToText();
+
+	virtual bool
+	returnFormatterToText(FormatterToText*	theFormatter);
 
 	virtual XalanNumberFormatAutoPtr
 	createXalanNumberFormat();
@@ -1020,6 +1028,10 @@ private:
 
 	// Holds the current mode.
 	const QName*	                    m_mode;
+
+	FormatterToTextCacheType			m_availableCachedFormattersToText;
+
+	FormatterToTextCacheType			m_busyCachedFormattersToText;
 
 	/**
 	 * The factory that will be used to create result tree fragments based on our

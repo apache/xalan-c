@@ -1162,6 +1162,69 @@ public:
 			Writer&					writer,
 			const XalanDOMString&	encoding) = 0;
 
+	/**
+	 * Borrow a cached FormatterToText instance.
+	 *
+	 * @return A pointer to the instance.
+	 */
+	virtual FormatterToText*
+	borrowFormatterToText() = 0;
+
+	/**
+	 * Return a previously borrowed FormatterToText instance.
+	 *
+	 * @param theFormatter A pointer the to previously borrowed instance.
+	 * @return true if the formatter was borrowed (at therefore, destroyed), false if not.
+	 */
+	virtual bool
+	returnFormatterToText(FormatterToText*	theFormatter) = 0;
+
+	class BorrowReturnFormatterToText
+	{
+	public:
+
+		BorrowReturnFormatterToText(
+				StylesheetExecutionContext&		executionContext,
+				Writer&							writer,
+				bool							normalizeLinefeed = true,
+				bool							handleIgnorableWhitespace = true);
+
+		~BorrowReturnFormatterToText()
+		{
+			assert(m_formatter != 0);
+
+			m_executionContext.returnFormatterToText(m_formatter);
+		}
+
+		FormatterToText&
+		operator*() const
+		{
+			assert(m_formatter != 0);
+
+			return *m_formatter;
+		}
+
+		FormatterToText*
+		get() const
+		{
+			assert(m_formatter != 0);
+
+			return m_formatter;
+		}
+
+		FormatterToText*
+		operator->() const
+		{
+			return get();
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_executionContext;
+
+		FormatterToText*				m_formatter;
+	};
+
 
 	typedef XalanAutoPtr<XalanNumberFormat>		XalanNumberFormatAutoPtr;
 

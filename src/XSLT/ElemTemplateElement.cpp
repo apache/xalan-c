@@ -327,16 +327,25 @@ ElemTemplateElement::childrenToString(
 	// a string.
 	DOMStringPrintWriter		thePrintWriter(result);
 
-	// Create a FormatterToText, and don't normalize CR/LF, since we don't want
-	// this text to be normalized.  Finally, handle any ignorable whitespace events.
-	FormatterToText				theFormatter(thePrintWriter, false, true);
+	// Borrow a FormatterToText, and don't normalize CR/LF, since we don't want
+	// this text to be normalized.  Finally, have the formatter handle any ignorable
+	// whitespace events.
+	StylesheetExecutionContext::BorrowReturnFormatterToText	theFormatter(
+				executionContext,
+				thePrintWriter,
+				false,
+				true);
 
 	// Create an object to set and restore the execution state.
 	StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
 					executionContext,
-					&theFormatter);
+					theFormatter.get());
+
+	theFormatter->startDocument();
 
 	executeChildren(executionContext);
+
+	theFormatter->endDocument();
 }
 
 

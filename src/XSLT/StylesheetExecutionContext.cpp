@@ -59,6 +59,10 @@
 
 
 
+#include <XMLSupport/FormatterToText.hpp>
+
+
+
 #include "ElemTemplateElement.hpp"
 
 
@@ -104,4 +108,22 @@ StylesheetExecutionContext::ParamsPushPop::~ParamsPushPop()
 	m_executionContext.popContextMarker();
 
 	m_executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
+}
+
+
+
+StylesheetExecutionContext::BorrowReturnFormatterToText::BorrowReturnFormatterToText(
+			StylesheetExecutionContext&		executionContext,
+			Writer&							writer,
+			bool							normalizeLinefeed,
+			bool							handleIgnorableWhitespace)  :
+	m_executionContext(executionContext),
+	m_formatter(executionContext.borrowFormatterToText())
+{
+	assert(m_formatter != 0);
+
+	m_formatter->setNormalizeLinefeed(normalizeLinefeed);
+	m_formatter->setHandleIgnorableWhitespace(handleIgnorableWhitespace);
+	m_formatter->clearEncoding();
+	m_formatter->setWriter(&writer);
 }

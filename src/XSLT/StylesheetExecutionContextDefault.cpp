@@ -148,7 +148,9 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_useDOMResultTreeFactory(false),
 	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory(),
-	m_mode(0)
+	m_mode(0),
+	m_availableCachedFormattersToText(),
+	m_busyCachedFormattersToText()
 {
 }
 
@@ -179,7 +181,9 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_useDOMResultTreeFactory(false),
 	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory(),
-	m_mode(0)
+	m_mode(0),
+	m_availableCachedFormattersToText(),
+	m_busyCachedFormattersToText()
 {
 }
 
@@ -188,6 +192,15 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 StylesheetExecutionContextDefault::~StylesheetExecutionContextDefault()
 {
 	reset();
+
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	for_each(
+		m_availableCachedFormattersToText.begin(),
+		m_availableCachedFormattersToText.end(),
+		DeleteFunctor<FormatterToText>());
 }
 
 
@@ -1202,6 +1215,56 @@ StylesheetExecutionContextDefault::createFormatterToText(
 
 
 
+FormatterToText*
+StylesheetExecutionContextDefault::borrowFormatterToText()
+{
+	// We'll always return the back of the free list, since
+	// that's the cheapest thing.
+	if (m_availableCachedFormattersToText.size() == 0)
+	{
+		m_busyCachedFormattersToText.push_back(new FormatterToText);
+	}
+	else
+	{
+		m_busyCachedFormattersToText.push_back(m_availableCachedFormattersToText.back());
+
+		m_availableCachedFormattersToText.pop_back();
+	}
+
+	return m_busyCachedFormattersToText.back();
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::returnFormatterToText(FormatterToText*	theFormatter)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+
+	const FormatterToTextCacheType::iterator	i =
+		find(
+			m_busyCachedFormattersToText.begin(),
+			m_busyCachedFormattersToText.end(),
+			theFormatter);
+
+	if (i == m_busyCachedFormattersToText.end())
+	{
+		return false;
+	}
+	else
+	{
+		m_availableCachedFormattersToText.push_back(theFormatter);
+
+		m_busyCachedFormattersToText.erase(i);
+
+		return true;
+	}
+}
+
+
+
 StylesheetExecutionContextDefault::XalanNumberFormatAutoPtr
 StylesheetExecutionContextDefault::createXalanNumberFormat()
 {
@@ -1430,6 +1493,13 @@ StylesheetExecutionContextDefault::reset()
 	}
 
 	m_mode = 0;
+
+	while (m_busyCachedFormattersToText.size() != 0)
+	{
+		m_availableCachedFormattersToText.push_back(m_busyCachedFormattersToText.back());
+
+		m_busyCachedFormattersToText.pop_back();
+	}
 
 	// Just in case endDocument() was not called,
 	// clean things up...
