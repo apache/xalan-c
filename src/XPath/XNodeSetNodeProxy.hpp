@@ -117,13 +117,6 @@ public:
 	virtual size_type
 	getLength() const;
 
-protected:
-
-	virtual eObjectType
-	getRealType() const;
-
-private:
-
 	// A proxy class to implement NodeRefListBase...
 	class Proxy : public NodeRefListBase
 	{
@@ -146,6 +139,12 @@ private:
 		XalanNode*	m_node;
 	};
 
+protected:
+
+	virtual eObjectType
+	getRealType() const;
+
+private:
 
 	// Not implemented...
 	XNodeSetNodeProxy&
