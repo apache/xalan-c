@@ -97,7 +97,14 @@ XStringCached*
 #endif
 XStringCached::clone(void*	theAddress) const
 {
-	return theAddress == 0 ? new XStringCached(*this) : new (theAddress) XStringCached(*this);
+	if (theAddress == 0)
+	{
+		return new XStringCached(*this);
+	}
+	else
+	{
+		return new (theAddress) XStringCached(*this);
+	}
 }
 
 

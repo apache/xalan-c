@@ -124,7 +124,14 @@ XToken*
 #endif
 XToken::clone(void*	theAddress) const
 {
-	return theAddress == 0 ? new XToken(*this) : new (theAddress) XToken(*this);
+	if (theAddress == 0)
+	{
+		return new XToken(*this);
+	}
+	else
+	{
+		return new (theAddress) XToken(*this);
+	}
 }
 
 

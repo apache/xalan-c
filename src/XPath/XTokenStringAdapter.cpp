@@ -96,7 +96,14 @@ XTokenStringAdapter*
 #endif
 XTokenStringAdapter::clone(void*	theAddress) const
 {
-	return theAddress == 0 ? new XTokenStringAdapter(*this) : new (theAddress) XTokenStringAdapter(*this);
+	if (theAddress == 0)
+	{
+		return new XTokenStringAdapter(*this);
+	}
+	else
+	{
+		return new (theAddress) XTokenStringAdapter(*this);
+	}
 }
 
 

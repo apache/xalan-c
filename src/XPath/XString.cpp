@@ -110,7 +110,14 @@ XString*
 #endif
 XString::clone(void*	theAddress) const
 {
-	return theAddress == 0 ? new XString(*this) : new (theAddress) XString(*this);
+	if (theAddress == 0)
+	{
+		return new XString(*this);
+	}
+	else
+	{
+		return new (theAddress) XString(*this);
+	}
 }
 
 

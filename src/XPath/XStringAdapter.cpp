@@ -92,7 +92,14 @@ XStringAdapter*
 #endif
 XStringAdapter::clone(void*	theAddress) const
 {
-	return theAddress == 0 ? new XStringAdapter(*this) : new (theAddress) XStringAdapter(*this);
+	if (theAddress == 0)
+	{
+		return new XStringAdapter(*this);
+	}
+	else
+	{
+		return new (theAddress) XStringAdapter(*this);
+	}
 }
 
 
