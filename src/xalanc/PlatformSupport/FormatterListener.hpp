@@ -85,6 +85,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 class PrefixResolver;
+class Writer;
 
 
 
@@ -246,6 +247,24 @@ public:
 			const	XMLCh* const	name,
 			AttributeListType&		attrs) = 0;
 
+	virtual Writer*
+	getWriter() const;
+
+	virtual const XalanDOMString&
+	getDoctypeSystem() const;
+
+	virtual const XalanDOMString&
+	getDoctypePublic() const;
+
+	virtual const XalanDOMString&
+	getEncoding() const;
+
+	virtual const XalanDOMString&
+	getMediaType() const;
+
+	virtual int
+	getIndent() const;
+
 
 	// Used when creating PI to work around limitations of
 	// our interfaces...
@@ -265,6 +284,8 @@ protected:
 
 	// Data membmers...
 	const PrefixResolver*	m_prefixResolver;
+
+	static const XalanDOMString		s_emptyString;
 
 private:
 

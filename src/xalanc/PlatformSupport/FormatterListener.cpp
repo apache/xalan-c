@@ -94,6 +94,58 @@ FormatterListener::~FormatterListener()
 
 
 
+Writer*
+FormatterListener::getWriter() const
+{
+	return 0;
+}
+
+
+
+const XalanDOMString	FormatterListener::s_emptyString;
+
+
+
+const XalanDOMString&
+FormatterListener::getDoctypeSystem() const
+{
+	return s_emptyString;
+}
+
+
+
+const XalanDOMString&
+FormatterListener::getDoctypePublic() const
+{
+	return s_emptyString;
+}
+
+
+
+const XalanDOMString&
+FormatterListener::getEncoding() const
+{
+	return s_emptyString;
+}
+
+
+
+const XalanDOMString&
+FormatterListener::getMediaType() const
+{
+	return s_emptyString;
+}
+
+
+
+int
+FormatterListener::getIndent() const
+{
+	return 0;
+}
+
+
+
 const XalanDOMChar	FormatterListener::s_piTarget[] =
 {
 	XalanUnicode::charLetter_X,
