@@ -444,6 +444,8 @@ private:
 
 	bool					m_isScriptOrStyleElem;
 
+	BoolStackType			m_inScriptElemStack;
+
 	bool					m_escapeURLs;
 
 	/**

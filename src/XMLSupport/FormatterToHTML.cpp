@@ -67,8 +67,7 @@
 
 
 #include <cassert>
-//#include <climits>
-#include <map>
+//#include <map>
 
 
 
@@ -120,6 +119,7 @@ FormatterToHTML::FormatterToHTML(
 	m_inBlockElem(false),
 	m_isRawStack(),
 	m_isScriptOrStyleElem(false),
+	m_inScriptElemStack(),
 	m_escapeURLs(true),
 	m_isFirstElement(false),
 	m_isUTF8(XalanTranscodingServices::encodingIsUTF8(m_encoding)),
@@ -216,6 +216,11 @@ FormatterToHTML::startDocument()
 	m_isFirstElement = true;
     m_startNewLine = false;
 	m_shouldWriteXMLHeader = false;
+	m_isScriptOrStyleElem = false;
+
+	m_isRawStack.clear();
+	m_inScriptElemStack.push_back(false);
+	m_hasNamespaceStack.clear();
 
 	const bool	isEmptySystem = isEmpty(m_doctypeSystem);
 
@@ -263,6 +268,8 @@ FormatterToHTML::endDocument()
 {
 	assert(m_elementLevel == 0);
 
+	m_inScriptElemStack.pop_back();
+
 	FormatterToXML::endDocument();
 }
 
@@ -279,7 +286,6 @@ FormatterToHTML::startElement(
 	}
 	else
 	{
-
 		writeParentTagEnd();
 
 		const ElemDesc&		elemDesc =
@@ -287,9 +293,21 @@ FormatterToHTML::startElement(
 
 		const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
 
-		m_isScriptOrStyleElem = 
-				equalsIgnoreCaseASCII(name, c_wstr(s_scriptString)) ||
-				equalsIgnoreCaseASCII(name, c_wstr(s_styleString));
+		if (equalsIgnoreCaseASCII(name, c_wstr(s_scriptString)) == true)
+		{
+			m_isScriptOrStyleElem = true;
+
+			m_inScriptElemStack.push_back(true);
+		}
+		else
+		{
+			if (equalsIgnoreCaseASCII(name, c_wstr(s_styleString)) == true)
+			{
+				m_isScriptOrStyleElem = true;
+			}
+
+			m_inScriptElemStack.push_back(m_inScriptElemStack.back());
+		}
 
 		// Increment the level...
 		++m_elementLevel;
@@ -367,7 +385,11 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 
 		const bool	hasChildNodes = childNodesWereAdded();
 
+		assert(m_isRawStack.empty() == false);
+		assert(m_inScriptElemStack.empty() == false);
+
 		m_isRawStack.pop_back();
+		m_inScriptElemStack.pop_back();
     
 		const ElemDesc&		elemDesc =
 				getElemDesc(name);
@@ -455,6 +477,10 @@ FormatterToHTML::characters(
 		{
 			m_nextIsRaw = false;
 
+			charactersRaw(chars, length);
+		}
+		else if (m_inScriptElemStack.back() == true)
+		{
 			charactersRaw(chars, length);
 		}
 		else if (m_isRawStack.empty() == false &&
