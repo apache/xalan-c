@@ -764,7 +764,7 @@ void
 ElemNumber::formatNumberList(
 			StylesheetExecutionContext&		executionContext,
 			const int						theList[],
-			unsigned int					theListLength,
+			NodeRefListBase::size_type		theListLength,
 			XalanNode*						contextNode,
 			XalanDOMString&					theResult) const
 {
