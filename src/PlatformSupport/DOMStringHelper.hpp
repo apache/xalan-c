@@ -78,7 +78,9 @@
 #include <cwchar>
 #endif
 
-#if defined(__GNUC__)
+#if defined(AIX)
+#include <wchar.h>
+#elif defined(__GNUC__)
 #include <wctype.h>
 #endif
 
@@ -856,11 +858,13 @@ toUpperCase(const XalanDOMString&	theString);
 
 
 
+#if !defined(XALAN_AMBIGUOUS_EVEN_IF_NOT_CALLED)
 // These two function are specifically not defined, and
 // should produce ambiguity during compilation.  This
 // is necessary because the Xerces XalanDOMString class
 // defines == as referring to the same underlying
-// handle, not identical strings, as in Java.
+// handle, not identical strings, as C++ programmers
+// would expect.
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 operator==(
 			const XalanDOMString&	theLHS,
@@ -872,7 +876,7 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 operator!=(
 			const XalanDOMString&	theLHS,
 			const XalanDOMString&	theRHS);
-
+#endif
 
 
 
@@ -1453,7 +1457,7 @@ struct DOMStringHashFunction : public std::unary_function<const XalanDOMString&,
 			}
 		}
 
-		return static_cast<result_type>(theHashValue++);
+		return result_type(theHashValue++);
 	}
 };
 
