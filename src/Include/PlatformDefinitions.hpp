@@ -96,6 +96,11 @@
 	namespace XALAN_CPP_NAMESPACE { }
 	namespace xalanc = XALAN_CPP_NAMESPACE;
 #else
+	#if defined(XALAN_CPP_NAMESPACE)
+	#undef XALAN_CPP_NAMESPACE
+	#endif
+
+	#define XALAN_CPP_NAMESPACE
 	#define XALAN_CPP_NAMESPACE_BEGIN
 	#define XALAN_CPP_NAMESPACE_END
 	#define XALAN_CPP_NAMESPACE_USE
