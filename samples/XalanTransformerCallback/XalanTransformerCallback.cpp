@@ -29,10 +29,10 @@ public:
 		assert(m_file != 0);
 	}
 
-	unsigned long
+	CallbackSizeType
 	write(
-			const char*		theData,
-			unsigned long	theLength)
+			const char*			theData,
+			CallbackSizeType	theLength)
 	{
 		return fwrite(theData, sizeof(char), theLength, m_file);
 	}
@@ -57,11 +57,11 @@ extern "C"
 // This is the write callback function, which casts the handle
 // to the appropriate type, then calls the write() member function
 // on the CallbackHandler class.
-unsigned long
+CallbackSizeType
 writeCallback(
-			const char*		theData,
-			unsigned long	theLength,
-			void*			theHandle)
+			const char*			theData,
+			CallbackSizeType	theLength,
+			void*				theHandle)
 {
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return ((CallbackHandler*)theHandle)->write(theData, theLength);
