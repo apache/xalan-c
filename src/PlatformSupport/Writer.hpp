@@ -64,6 +64,10 @@
 
 
 
+#include <cstddef>
+
+
+
 #include <XalanDOM/XalanDOMString.hpp>
 
 
