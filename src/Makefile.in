@@ -467,7 +467,7 @@ samples : Samples
 
 tests : ThreadTest
 
-Samples: lib CompileStylesheet DocumentBuilder ExternalFunction SimpleTransform SerializeNodeSet SimpleXPathAPI SimpleXPathCAPI StreamTransform TraceListen UseStylesheetParam XalanTransform XalanTransformerCallback XPathWrapper
+Samples: lib CompileStylesheet DocumentBuilder ExternalFunction ParsedSourceWrapper SimpleTransform SerializeNodeSet SimpleXPathAPI SimpleXPathCAPI StreamTransform TraceListen UseStylesheetParam XalanTransform XalanTransformerCallback XPathWrapper
 
 ApacheModuleXSLT: lib ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 
 
