@@ -499,6 +499,77 @@ doValidate(const XalanDOMChar*	theString)
 
 
 
+#if defined(XALAN_NON_ASCII_PLATFORM)
+void
+translateWideString(
+			const XalanDOMChar*		theWideString,
+			char*					theNarrowString,
+			unsigned int			theStringLength)
+{
+	for(unsigned int i = 0; i < theStringLength; ++i)
+	{
+		switch(theWideString[i])
+		{
+		case XalanUnicode::charHyphenMinus:
+			theNarrowString[i] = '-';
+			break;
+
+		case XalanUnicode::charFullStop:
+			theNarrowString[i] = '.';
+			break;
+
+		case XalanUnicode::charDigit_0:
+			theNarrowString[i] = '0';
+			break;
+
+		case XalanUnicode::charDigit_1:
+			theNarrowString[i] = '1';
+			break;
+
+		case XalanUnicode::charDigit_2:
+			theNarrowString[i] = '2';
+			break;
+
+		case XalanUnicode::charDigit_3:
+			theNarrowString[i] = '3';
+			break;
+
+		case XalanUnicode::charDigit_4:
+			theNarrowString[i] = '4';
+			break;
+
+		case XalanUnicode::charDigit_5:
+			theNarrowString[i] = '5';
+			break;
+
+		case XalanUnicode::charDigit_6:
+			theNarrowString[i] = '6';
+			break;
+
+		case XalanUnicode::charDigit_7:
+			theNarrowString[i] = '7';
+			break;
+
+		case XalanUnicode::charDigit_8:
+			theNarrowString[i] = '8';
+			break;
+
+		case XalanUnicode::charDigit_9:
+			theNarrowString[i] = '9';
+			break;
+
+		default:
+			theNarrowString[i] = char(0);
+			break;
+		}
+	}
+	
+	theNarrowString[theStringLength] = char(0);
+}
+#endif
+
+
+
 inline double
 convertHelper(
 			const XalanDOMChar*		theString,
@@ -525,80 +596,31 @@ convertHelper(
 		{
 			char	theBuffer[theBufferSize];
 
+#if !defined(XALAN_NON_ASCII_PLATFORM)
 			for(unsigned int i = 0; i < theLength; ++i)
 			{
-#if !defined(XALAN_NON_ASCII_PLATFORM)
 				theBuffer[i] = char(theString[i]);
-#else
-				switch(theChar)
-				{
-				case XalanUnicode::charHyphenMinus:
-					theBuffer[i] = '-';
-					break;
-
-				case XalanUnicode::charFullStop:
-					theBuffer[i] = '.';
-					break;
-
-				case XalanUnicode::charDigit_0:
-					theBuffer[i] = '0';
-					break;
-
-				case XalanUnicode::charDigit_1:
-					theBuffer[i] = '1';
-					break;
-
-				case XalanUnicode::charDigit_2:
-					theBuffer[i] = '2';
-					break;
-
-				case XalanUnicode::charDigit_3:
-					theBuffer[i] = '3';
-					break;
-
-				case XalanUnicode::charDigit_4:
-					theBuffer[i] = '4';
-					break;
-
-				case XalanUnicode::charDigit_5:
-					theBuffer[i] = '5';
-					break;
-
-				case XalanUnicode::charDigit_6:
-					theBuffer[i] = '6';
-					break;
-
-				case XalanUnicode::charDigit_7:
-					theBuffer[i] = '7';
-					break;
-
-				case XalanUnicode::charDigit_8:
-					theBuffer[i] = '8';
-					break;
-
-				case XalanUnicode::charDigit_9:
-					theBuffer[i] = '9';
-					break;
-
-				default:
-					theBuffer[i] = 'Z';
-					break;
-				}
-#endif
 			}
 
 			theBuffer[theLength] = '\0';
-
+#else
+			translateWideString(theString, theBuffer, theLength);
+#endif
 			return atof(theBuffer);
 		}
 		else
 		{
 			CharVectorType	theVector;
 
+#if !defined(XALAN_NON_ASCII_PLATFORM)
 			theVector.reserve(theLength + 1);
 
 			CopyWideStringToVector(theString, theVector);
+#else
+			theVector.resize(theLength + 1, CharVectorType::value_type(0));
 
+			translateWideString(theString, &*theVector.begin(), theLength);
+#endif
 			return atof(&*theVector.begin());
 		}
 	}
