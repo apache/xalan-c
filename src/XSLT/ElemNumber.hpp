@@ -98,7 +98,7 @@ public:
 	{
 		eSingle,
 		eMultiple,
-		eAny,
+		eAny
 	};
 
 #if defined(XALAN_NO_NAMESPACES)
