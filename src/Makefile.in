@@ -162,7 +162,7 @@ ifeq ($(PLATFORM), LINUX)
   else
 
     PIC_OPTION=-fPIC
-    PLATFORM_COMPILE_OPTIONS = -Wall
+    PLATFORM_COMPILE_OPTIONS = -Wall -fno-elide-constructors
 
   endif
 
@@ -206,7 +206,7 @@ ifeq ($(PLATFORM), SOLARIS)
 
   ifeq (${CXX}, g++)
 
-	PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
+	PLATFORM_COMPILE_OPTIONS = -Wall -fPIC -D${PLATFORM} -D_REENTRANT  -fno-elide-constructors
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
 
 	ifdef XALAN_USE_ICU
@@ -246,7 +246,7 @@ ifeq ($(PLATFORM), AIX)
 
   ifeq (${CXX}, g++)
 
-	PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
+	PLATFORM_COMPILE_OPTIONS = -Wall -fPIC -D${PLATFORM} -D_REENTRANT -fno-elide-constructors
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
 
 	EXTRA_LINK_OPTIONS=-lc
@@ -325,7 +325,7 @@ endif
 ifeq ($(PLATFORM), MACOSX)
 
   SUPPORTED = TRUE
-  PLATFORM_COMPILE_OPTIONS = -Wall -D${PLATFORM} -D_REENTRANT -DXALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
+  PLATFORM_COMPILE_OPTIONS = -Wall -fno-elide-constructors -D${PLATFORM} -D_REENTRANT -DXALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
   ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib
   SHLIBSUFFIX=.dylib
   CC1 = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
