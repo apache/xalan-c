@@ -154,7 +154,6 @@ protected:
     bool
 	operator==(const AttributeListImpl&) const;
 
-
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XMLCh>		XMLChVectorType;
 #else
@@ -197,6 +196,10 @@ protected:
 					 AttributeVectorEntry*,
 					 less_null_terminated_arrays<XMLCh> >	AttributeKeyMapType;
 #endif
+
+	// Helper function to delete entries...
+	static void
+	deleteEntries(AttributeVectorType&	theVector);
 
 	AttributeKeyMapType		m_AttributeKeyMap;
 	AttributeVectorType		m_AttributeVector;

@@ -113,11 +113,26 @@ AttributeListImpl::AttributeListImpl(const AttributeList&	theSource) :
 
 
 
+void
+AttributeListImpl::deleteEntries(AttributeVectorType&	theVector)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	// Delete all of the objects in the temp vector.
+	for_each(theVector.begin(),
+			 theVector.end(),
+			 DeleteFunctor<AttributeVectorEntry>());
+}
+
+
+
 AttributeListImpl&
 AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 {
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::make_pair;
+	using std::auto_ptr;
 #endif
 
 	if (this != &theRHS)
@@ -125,29 +140,52 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 		// Note that we can't chain up to our base class operator=()
 		// because it's private.
 
-		// Clear everything out...
-		clear();
+		// Some temporary structures to hold everything
+		// until we're done.
+		AttributeKeyMapType		tempMap;
+		AttributeVectorType		tempVector;
 
 		const unsigned int	theLength = theRHS.getLength();
 
 		// Reserve the appropriate capacity right now...
-		m_AttributeVector.reserve(theLength);
+		tempVector.reserve(theLength);
 
-		// Copy the vector entries, and build the index map...
-		for(unsigned int i = 0; i < theLength; i++)
+		try
 		{
-			assert(theRHS.m_AttributeVector[i] != 0);
+			// Copy the vector entries, and build the index map...
+			for(unsigned int i = 0; i < theLength; i++)
+			{
+				assert(theRHS.m_AttributeVector[i] != 0);
 
-			AttributeVectorEntry* const	theEntry =
-				new AttributeVectorEntry(*theRHS.m_AttributeVector[i]);
+				auto_ptr<AttributeVectorEntry>	theEntry(
+					new AttributeVectorEntry(*theRHS.m_AttributeVector[i]));
 
-			// Add the item...
-			m_AttributeVector.push_back(theEntry);
+				// Add the item...
+				tempVector.push_back(theEntry.get());
 
-			// Create an entry in the index map...
-			m_AttributeKeyMap.insert(make_pair(theEntry->m_Name.begin(),
-											   theEntry));
+				// The entry is now safely in the vector, so release the
+				// auto_ptr...
+				AttributeVectorEntry* const		entry = theEntry.release();
+
+				// Create an entry in the index map...
+				tempMap.insert(AttributeKeyMapType::value_type(theEntry->m_Name.begin(),
+															   entry));
+			}
 		}
+		catch(...)
+		{
+			deleteEntries(tempVector);
+
+			throw;
+		}
+
+		// OK, we're safe, so swap the contents of the
+		// containers.  This is guaranteed not to throw.
+		m_AttributeKeyMap.swap(tempMap);
+		m_AttributeVector.swap(tempVector);
+
+		// This will delete all of the old entries.
+		deleteEntries(tempVector);
 
 		assert(getLength() == theLength);
 		assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
@@ -166,20 +204,42 @@ AttributeListImpl::operator=(const AttributeList&	theRHS)
 		// Note that we can't chain up to our base class operator=()
 		// because it's private.
 
-		// Clear everything out.
-		clear();
-
 		const unsigned int	theLength = theRHS.getLength();
 
-		// Reserve the appropriate capacity right now...
-		m_AttributeVector.reserve(theLength);
+		// Some temporary structures to hold everything
+		// until we're done.
+		AttributeKeyMapType		tempMap;
+		AttributeVectorType		tempVector;
 
-		// Add each attribute.
-		for(unsigned int i = 0; i < theLength; i++)
+		// Keep our old entries, in case something
+		// bad happens.
+		tempMap.swap(m_AttributeKeyMap);
+		tempVector.swap(m_AttributeVector);
+
+		try
 		{
-			addAttribute(theRHS.getName(i),
-						 theRHS.getType(i),
-						 theRHS.getValue(i));
+			// Reserve the appropriate capacity right now...
+			m_AttributeVector.reserve(theLength);
+
+			// Add each attribute.
+			for(unsigned int i = 0; i < theLength; i++)
+			{
+				addAttribute(theRHS.getName(i),
+							 theRHS.getType(i),
+							 theRHS.getValue(i));
+			}
+		}
+		catch(...)
+		{
+			// Swap everything back...
+			tempMap.swap(m_AttributeKeyMap);
+			tempVector.swap(m_AttributeVector);
+
+			// This will delete anything new we've
+			// created.
+			deleteEntries(tempVector);
+
+			throw;
 		}
 
 		assert(getLength() == theLength);
@@ -296,10 +356,7 @@ AttributeListImpl::clear()
 	using std::for_each;
 #endif
 
-	// Delete all of the objects in the vector.
-	for_each(m_AttributeVector.begin(),
-			 m_AttributeVector.end(),
-			 DeleteFunctor<AttributeVectorEntry>());
+	deleteEntries(m_AttributeVector);
 
 	// Clear everything out.
 	m_AttributeVector.clear();
@@ -332,7 +389,7 @@ AttributeListImpl::addAttribute(
 			const XMLCh*	value)
 {
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::make_pair;
+	using std::auto_ptr;
 #endif
 
 	assert(name != 0);
@@ -342,7 +399,7 @@ AttributeListImpl::addAttribute(
 
 	bool	fResult = false;
 
-	// Update the attribute, if it's already there
+	// Update the attribute, if it's already there...
 	const AttributeKeyMapType::iterator		i =
 		m_AttributeKeyMap.find(name);
 
@@ -357,16 +414,20 @@ AttributeListImpl::addAttribute(
 	}
 	else
 	{
-		AttributeVectorEntry*	const	theEntry =
-						new AttributeVectorEntry(XMLChVectorType(name, endArray(name) + 1),
-												 XMLChVectorType(value, endArray(value) + 1),
-												 XMLChVectorType(type, endArray(type) + 1));
+		auto_ptr<AttributeVectorEntry>	theEntry(
+					new AttributeVectorEntry(XMLChVectorType(name, endArray(name) + 1),
+											 XMLChVectorType(value, endArray(value) + 1),
+											 XMLChVectorType(type, endArray(type) + 1)));
 
 		// Add the new one.
-		m_AttributeVector.push_back(theEntry);
+		m_AttributeVector.push_back(theEntry.get());
+
+		// The entry is now safely in the vector, so release the
+		// auto_ptr...
+		AttributeVectorEntry* const		entry = theEntry.release();
 
 		// Create an entry in the index map.
-		m_AttributeKeyMap.insert(make_pair(theEntry->m_Name.begin(), theEntry));
+		m_AttributeKeyMap.insert(AttributeKeyMapType::value_type(theEntry->m_Name.begin(), entry));
 
 		fResult = true;
 	}
@@ -386,29 +447,31 @@ AttributeListImpl::removeAttribute(const XMLCh* const name)
 	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::find_if;
-	using std::equal_to;
+	using std::auto_ptr;
 	using std::bind1st;
+	using std::equal_to;
+	using std::find_if;
 #endif
 
 	bool	fResult = false;
 
 	// Find it in the key map.
-	AttributeKeyMapType::iterator	i =
+	const AttributeKeyMapType::iterator		i =
 				m_AttributeKeyMap.find(name);
 
 	if (i != m_AttributeKeyMap.end())
 	{
 		// Found it, so now find the entry in the
 		// vector.
-		AttributeVectorType::iterator	j =
+		const AttributeVectorType::iterator		j =
 			find_if(m_AttributeVector.begin(),
 					m_AttributeVector.end(),
 					bind1st(equal_to<const AttributeVectorEntry*>(), (*i).second));
 		assert(j != m_AttributeVector.end());
 
-		// Delete it...
-		delete *j;
+		// This will delete the entry, even if something
+		// bad happens updating the containers.
+		auto_ptr<const AttributeVectorEntry>	theGuard(*j);
 
 		// Erase it from the vector.
 		m_AttributeVector.erase(j);
