@@ -239,10 +239,14 @@ XPathExecutionContextDefault::setContextNodeList(const NodeRefListBase&		theList
 XPathExecutionContextDefault::size_type
 XPathExecutionContextDefault::getContextNodeListLength() const
 {
+#if 1
+	assert(m_throwFoundIndex == false);
+#else
 	if (m_throwFoundIndex == true)
 	{
 		throw FoundIndex();
 	}
+#endif
 
 	return m_contextNodeList->getLength();
 }
@@ -252,15 +256,19 @@ XPathExecutionContextDefault::getContextNodeListLength() const
 XPathExecutionContextDefault::size_type
 XPathExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contextNode) const
 {
+#if 1
+	assert(m_throwFoundIndex == false);
+#else
 	if (m_throwFoundIndex == true)
 	{
 		throw FoundIndex();
 	}
+#endif
 
 	if (m_cachedPosition.m_node == &contextNode)
 	{
 		assert((m_cachedPosition.m_index == 0 && m_contextNodeList->indexOf(&contextNode) == NodeRefListBase::npos) ||
-				(m_contextNodeList->indexOf(&contextNode) + 1 == m_cachedPosition.m_index));
+			   (m_contextNodeList->indexOf(&contextNode) + 1 == m_cachedPosition.m_index));
 	}
 	else
 	{

@@ -841,6 +841,8 @@ private:
 
 	static const XalanDOMChar		s_childString[];
 
+	static const XalanDOMChar		s_lastString[];
+
 	static const XalanDOMChar		s_positionString[];
 
 	static const XalanDOMChar		s_asteriskString[];

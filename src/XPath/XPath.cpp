@@ -1671,7 +1671,9 @@ XPath::stepPattern(
 		// if I could sense this condition earlier...
 		try
 		{
+#if 0
 			executionContext.setThrowFoundIndex(true);
+#endif
 
 			while(XPathExpression::eOP_PREDICATE == nextStepType ||
 				  XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
@@ -1716,10 +1718,14 @@ XPath::stepPattern(
 				nextStepType = currentExpression.getOpCodeMapValue(opPos);
 			}
 
+#if 0
 			executionContext.setThrowFoundIndex(false);
+#endif
 		}
 		catch(const FoundIndex&)
 		{
+			executionContext.setThrowFoundIndex(false);
+
 			score = handleFoundIndex(executionContext, context, startOpPos);
 		}
 	}
@@ -1746,8 +1752,6 @@ XPath::handleFoundIndex(
 	// localContext, then see if the current localContext is found in the 
 	// node set.  Seems crazy, but, so far, it seems like the 
 	// easiest way.
-	executionContext.setThrowFoundIndex(false);
-
 	XalanNode* const	parentContext =
 				DOMServices::getParentOfNode(*localContext);
 

@@ -1611,6 +1611,7 @@ XPathProcessorImpl::FunctionCallArguments()
 }
 
 
+
 void
 XPathProcessorImpl::FunctionCall()
 {
@@ -1674,7 +1675,8 @@ XPathProcessorImpl::FunctionCall()
 				int		theFunctionID =
 					XPath::getFunctionTable().nameToID(m_token);
 
-				if (equals(m_token, s_positionString) == true &&
+				if ((equals(m_token, s_positionString) == true ||
+					 equals(m_token, s_lastString) == true) &&
 					m_positionPredicateStack.empty() == false)
 				{
 					m_positionPredicateStack.back() = true;
@@ -2650,6 +2652,15 @@ const XalanDOMChar	XPathProcessorImpl::s_childString[] =
 	XalanUnicode::charLetter_i,
 	XalanUnicode::charLetter_l,
 	XalanUnicode::charLetter_d,
+	0
+};
+
+const XalanDOMChar	XPathProcessorImpl::s_lastString[] =
+{
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
 	0
 };
 
