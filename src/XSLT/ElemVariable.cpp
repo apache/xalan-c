@@ -186,14 +186,3 @@ ElemVariable::execute(
 				sourceNode);
 	}
 }
-
-
-
-void
-ElemVariable::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
-			XalanNode*						sourceNode) const
-{
-	execute(executionContext, sourceTree, sourceNode, s_emptyMode);
-}

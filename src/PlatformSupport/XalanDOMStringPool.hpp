@@ -84,7 +84,7 @@ public:
 	typedef map<
 				const XalanDOMChar*,
 				XalanDOMStringCollectionType::const_iterator,
-				less_null_terminated_arrays<const XalanDOMChar*> >	IteratorMapType;
+				less_null_terminated_arrays<const XalanDOMChar> >	IteratorMapType;
 #else
 	typedef std::deque<XalanDOMString>								XalanDOMStringCollectionType;
 

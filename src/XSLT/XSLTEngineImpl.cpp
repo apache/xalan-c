@@ -167,10 +167,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_resultNameSpacePrefix(),
 	m_resultNameSpaceURL(),
 	m_currentNode(),
-//	m_pendingElementName(),
-//	m_pendingAttributes(),
-//	m_hasPendingStartDocument(false),
-//	m_mustFlushPendingStartDocument(false),
 	m_resultNameSpaces(),
 	m_emptyNamespace(),
 	m_xpathFactory(xpathFactory),
@@ -192,7 +188,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_xpathSupport(xpathSupport),
 	m_xpathEnvSupport(xpathEnvSupport),
 	m_domSupport(domSupport),
-//	m_flistener(0),
 	m_executionContext(0),
 	m_outputContextStack(1),
 	m_outputContextStackPosition(m_outputContextStack.begin())
@@ -207,14 +202,9 @@ XSLTEngineImpl::reset()
 	m_topLevelParams.clear();
 	m_durationsTable.clear();
 	m_stylesheetLocatorStack.clear();
-//	clear(m_pendingElementName);
-//	m_pendingAttributes.clear();
 	m_cdataStack.clear();
 	m_resultTreeFactory = 0;
 	m_currentNode = 0;
-
-//	setHasPendingStartDocument(false);
-//	setMustFlushPendingStartDocument(false);
 
 	m_outputContextStack.clear();
 
@@ -1315,7 +1305,7 @@ XSLTEngineImpl::displayDuration(
 
 		if(0 != m_diagnosticsPrintWriter)
 		{
-			const double	millis = (1000.0 * theDuration) / CLOCKS_PER_SEC;
+			const double	millis = (theDuration / CLOCKS_PER_SEC) * 1000.0L;
 
 			XalanDOMString	msg(info);
 

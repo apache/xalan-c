@@ -98,7 +98,6 @@
 #include <XalanDOM/XalanNode.hpp>
 
 
-
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/PrintWriter.hpp>
@@ -134,6 +133,7 @@
 
 
 #include <XercesParserLiaison/XercesDocumentBridge.hpp>
+#include <XercesParserLiaison/XercesNamedNodeListCache.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
 
@@ -172,7 +172,6 @@ static vector<XalanDOMString> theDOMStringVector;
 static vector<char> theCharVector;
 static vector<unsigned char> theUnsignedCharVector;
 static AttributeListImpl::AttributeVectorType theAttributeVectorEntryVector;
-static AttributeListImpl::AttributeKeyMapType theAttributeVectorEntryMap;
 static allocator<DOMString> theAllocator;
 static vector<pair<const XalanNode*,NSInfo> > theXalanNodeVector;
 static FormatterToHTML::ElemDesc theElemDesc;
@@ -289,7 +288,7 @@ foo()
 	}
 
 	{
-		XercesNamedNodeListCache::NodeListCacheType	theCache;
+		XercesNamedNodeListCache::NodeListCacheType		theCache;
 		
 		for_each(theCache.begin(),
 			 theCache.end(),

@@ -117,12 +117,14 @@ public:
 		const XalanDOMString&	theSourceString = args[0]->str();
 		const unsigned int		theSourceStringLength = length(theSourceString);
 
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::vector;
+#if defined(XALAN_NO_NAMESPACES)
+		typedef vector<XalanDOMChar>		VectorType;
+#else
+		typedef std::vector<XalanDOMChar>	VectorType;
 #endif
 
 		// This buffer will hold the output characters.
-		vector<XalanDOMChar>	theBuffer;
+		VectorType	theBuffer;
 
 		if (theSourceStringLength > 0)
 		{
@@ -171,7 +173,16 @@ public:
 			}
 		}
 
-		return executionContext.getXObjectFactory().createString(XalanDOMString(theBuffer.begin(), theBuffer.size()));
+		const VectorType::size_type		theSize = theBuffer.size();
+
+		if (theSize == 0)
+		{
+			return executionContext.getXObjectFactory().createString(XalanDOMString());
+		}
+		else
+		{
+			return executionContext.getXObjectFactory().createString(XalanDOMString(theBuffer.begin(), theSize));
+		}
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

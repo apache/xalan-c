@@ -163,14 +163,3 @@ ElemTemplate::execute(
 
 	executeChildren(executionContext, sourceTree, sourceNode, mode);
 }
-
-
-
-void
-ElemTemplate::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
-			XalanNode*						sourceNode) const
-{
-	execute(executionContext, sourceTree, sourceNode, s_emptyMode);
-}

@@ -156,12 +156,6 @@ public:
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
-	virtual	void
-	execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
-			XalanNode*						sourceNode) const;
-
 private:
 
 	// not implemented

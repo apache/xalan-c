@@ -106,7 +106,6 @@
 
 
 
-const QName				ElemTemplateElement::s_emptyMode;
 const XalanDOMString	ElemTemplateElement::s_emptyString;
 
 
@@ -286,17 +285,6 @@ ElemTemplateElement::execute(
 		executionContext.fireTraceEvent(
 			TracerEvent(executionContext, sourceTree, sourceNode, mode, *this));
 	}    
-}
-
-
-
-void
-ElemTemplateElement::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
-			XalanNode*						sourceNode) const
-{
-	execute(executionContext, sourceTree, sourceNode, s_emptyMode);
 }
 
 

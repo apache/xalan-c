@@ -96,23 +96,29 @@ public:
 	typedef MapType::const_reverse_iterator		const_reverse_iterator;
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef pair<iterator, bool>				insert_pair_type;
-	typedef pair<iterator, iterator>			range_pair_type;
+	typedef pair<iterator, bool>					insert_pair_type;
+	typedef pair<iterator, iterator>				range_pair_type;
+	typedef pair<const_iterator, const_iterator>	const_range_pair_type;
 #else
-	typedef std::pair<iterator, bool>			insert_pair_type;
-	typedef std::pair<iterator, iterator>		range_pair_type;
+	typedef std::pair<iterator, bool>					insert_pair_type;
+	typedef std::pair<iterator, iterator>				range_pair_type;
+	typedef std::pair<const_iterator, const_iterator>	const_range_pair_type;
 #endif
 
 	explicit
-	XalanArrayKeyMap<KeyType, ValueType, CompareType>() :
+	XalanArrayKeyMap() :
 		m_map(),
 		m_keyData()
 	{
 	}
 
-	XalanArrayKeyMap<KeyType, ValueType, CompareType>(const XalanArrayKeyMap<KeyType, ValueType, CompareType>&	theOther)
+	XalanArrayKeyMap(const XalanArrayKeyMap<KeyType, ValueType, CompareType>&	theOther)
 	{
 		*this = theOther;
+	}
+
+	~XalanArrayKeyMap()
+	{
 	}
 
 	XalanArrayKeyMap<KeyType, ValueType, CompareType>&
@@ -277,12 +283,31 @@ public:
 		return m_map.equal_range(theKey);
 	}
 
-	range_pair_type
+	const_range_pair_type
 	equal_range(const key_type&		theKey) const
 	{
 		return m_map.equal_range(theKey);
 	}
 
+#if defined(XALAN_STLPORT_STL) && !defined(__STL_MEMBER_TEMPLATES)
+	void
+	erase(iterator	theIterator)
+	{
+		// $$$ ToDo: Does not empty vector in the
+		// deque!!!
+		m_map.erase(theIterator);
+	}
+
+	void
+	erase(
+			iterator	theFirst,
+			iterator	theLast)
+	{
+		// $$$ ToDo: Does not empty vector in the
+		// deque!!!
+		m_map.erase(theFirst, theLast);
+	}
+#else
 	iterator
 	erase(iterator	theIterator)
 	{
@@ -300,6 +325,7 @@ public:
 		// deque!!!
 		return m_map.erase(theFirst, theLast);
 	}
+#endif
 
 	size_type
 	erase(const key_type&	theKey)

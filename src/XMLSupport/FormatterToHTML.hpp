@@ -219,6 +219,12 @@ public:
 		}
 
 		bool
+		operator==(const ElemDesc&	theRHS) const
+		{
+			return m_flags == theRHS.m_flags && m_attrs == theRHS.m_attrs;
+		}
+
+		bool
 		is(unsigned int		flags) const
 		{
 			return m_flags & flags ? true : false;
@@ -349,9 +355,6 @@ private:
 
 	void
 	copyEntityIntoBuffer(const XalanDOMChar*	s);
-
-	void
-	copyEntityIntoBuffer(const char*	s);
 
 	void
 	copyEntityIntoBuffer(const XalanDOMString&	s);

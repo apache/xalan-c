@@ -208,7 +208,7 @@ StylesheetRoot::process(
 
 	// Output the action of the found root rule.  All processing
 	// occurs from here.
-	rootRule->execute(executionContext, sourceTree, sourceTree);
+	rootRule->execute(executionContext, sourceTree, sourceTree, QName());
 
 	executionContext.endDocument();
 

@@ -303,17 +303,6 @@ FormatterToXML::accum(XalanDOMChar	ch)
 
 
 void
-FormatterToXML::accum(const char*	chars)
-{
-	for(; *chars!= 0; ++chars)
-	{
-		accum(XalanDOMChar(*chars));
-	}
-}
-
-
-
-void
 FormatterToXML::accum(const XalanDOMChar*	chars)
 {
 	for(; *chars!= 0; ++chars)

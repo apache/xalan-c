@@ -285,7 +285,7 @@ private:
 			{
 				m_executionContext.getNodeData(*theValue.item(i), m_resultString);
 
-				append(m_resultString, XalanUnicode::charSpace);
+				append(m_resultString, XalanDOMChar(XalanUnicode::charSpace));
 			}
 		}
 

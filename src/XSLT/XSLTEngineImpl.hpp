@@ -1515,41 +1515,6 @@ protected:
 			AttributeListImpl&		attList);
 
 	/**
-	 * The pending element.  We have to delay the call to 
-	 * m_flistener.startElement(name, atts) because of the 
-	 * xsl:attribute and xsl:copy calls.	In other words, 
-	 * the attributes have to be fully collected before you 
-	 * can call startElement.
-	 */
-
-//	XalanDOMString		m_pendingElementName;
-
-	/**
-	 * The stack of pending attribute lists.	We have to
-	 * delay the output of the current element because of the 
-	 * xsl:attribute and xsl:copy calls.  In other words, 
-	 * the attributes have to be fully collected before you 
-	 * can call startElement.
-	 */
-//	AttributeListImpl	m_pendingAttributes;
-
-	/*
-	 * true if a startDocument() event has been fired, but we
-	 * haven't yet calld startDocument() on our formatter.
-	 */
-//	bool				m_hasPendingStartDocument;
-
-	/*
-	 * true if a pending startDocument() must be flushed.
-	 */
-//	bool				m_mustFlushPendingStartDocument;
-
-	/**
-	 * NOTE: This replaces the ResultNameSpace class in java, since it is the
-	 * same as the NameSpace class
-	 */
-
-	/**
 	 * A stack to keep track of the result tree namespaces.
 	 */
 	NamespacesStackType m_resultNameSpaces;
@@ -1775,12 +1740,6 @@ private:
 	XPathEnvSupport&	m_xpathEnvSupport;
 
 	DOMSupport&			m_domSupport;
-
-	/**
-	 * The listener for formatting events.	This should be 
-	 * supplied by the Formatter object.
-	 */
-//	FormatterListener*	m_flistener;
 
 	/**
 	 * Current execution context...

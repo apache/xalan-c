@@ -579,47 +579,53 @@ substring(
 	{
 		const unsigned int	theLength = theEndIndex == UINT_MAX ? theStringLength - theStartIndex :
 													theEndIndex - theStartIndex;
-		assert(theStartIndex + theLength <= theStringLength);
 
-		// @@ JMD:
-		// If this is the case, the DOMString class doesn't create a new string,
-		// and in any case, does not null terminate the string, just points to
-		// the beginning, so we have to manually extract 'theLength' characters
-		// and create a new buffer
-		if (0 == theStartIndex)
+		if (theLength == 0)
 		{
-			vector<XalanDOMChar>	theBuffer;
-
-			// Reserve the buffer now.  We don't have to null-terminate,
-			// because the XalanDOMString constructor will take a size
-			// parameter.
-			theBuffer.reserve(theLength);
-
-			const XalanDOMChar* const	ptr = toCharArray(theString);
-
-#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-			XalanCopy(
-				ptr,
-				ptr + theLength,
-				back_inserter(theBuffer));
-#else
-			copy(
-				ptr,
-				ptr + theLength,
-				back_inserter(theBuffer));
-#endif
-
-			return XalanDOMString(theBuffer.begin(), theBuffer.size());
+			return XalanDOMString();
 		}
 		else
 		{
-#if defined(XALAN_USE_CUSTOM_STRING)
-			return theString.substr(theStartIndex, theLength);
-#elif defined(XALAN_USE_STD_STRING)
-			return theString.substr(theStartIndex, theLength);
-#else
-			return theString.substringData(theStartIndex, theLength);
-#endif
+			assert(theStartIndex + theLength <= theStringLength);
+
+			// @@ JMD:
+			// If this is the case, the DOMString class doesn't create a new string,
+			// and in any case, does not null terminate the string, just points to
+			// the beginning, so we have to manually extract 'theLength' characters
+			// and create a new buffer
+			if (0 == theStartIndex)
+			{
+				vector<XalanDOMChar>	theBuffer;
+
+				// Reserve the buffer now.  We don't have to null-terminate,
+				// because the XalanDOMString constructor will take a size
+				// parameter.
+				theBuffer.reserve(theLength);
+
+				const XalanDOMChar* const	ptr = toCharArray(theString);
+
+	#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+				XalanCopy(
+					ptr,
+					ptr + theLength,
+					back_inserter(theBuffer));
+	#else
+				copy(
+					ptr,
+					ptr + theLength,
+					back_inserter(theBuffer));
+	#endif
+
+				return XalanDOMString(theBuffer.begin(), theBuffer.size());
+			}
+			else
+			{
+	#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
+				return theString.substr(theStartIndex, theLength);
+	#else
+				return theString.substringData(theStartIndex, theLength);
+	#endif
+			}
 		}
 	}
 }
@@ -673,7 +679,7 @@ TransformXalanDOMString(
 		const XalanDOMChar* const	theBuffer = c_wstr(theInputString);
 		assert(theBuffer != 0);
 
-		return TransformString(theBuffer, theStringLength, theFunction);
+		return TransformString(theBuffer, unsigned(theStringLength), theFunction);
 	}
 }
 
@@ -799,7 +805,7 @@ doEqualsIgnoreCase(
 	// If they are equal, then compare
 	if (theLength == length(theRHS))
 	{
-		fResult = doEqualsIgnoreCase(theLHS, theRHS, theLength, theUpperCaseFunction);
+		fResult = doEqualsIgnoreCase(theLHS, theRHS, unsigned(theLength), theUpperCaseFunction);
 	}
 
 	return fResult;
@@ -837,7 +843,7 @@ doEqualsIgnoreCase(
 
 		if (theLHSLength == length(theRHS))
 		{
-			return doEqualsIgnoreCase(c_wstr(theLHS), c_wstr(theRHS), theLHSLength, theUpperCaseFunction);
+			return doEqualsIgnoreCase(c_wstr(theLHS), c_wstr(theRHS), unsigned(theLHSLength), theUpperCaseFunction);
 		}
 		else
 		{

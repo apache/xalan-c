@@ -154,12 +154,6 @@ public:
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
-	void
-	execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
-			XalanNode*						sourceNode) const;
-
 protected:
 
 	QName			m_qname;

@@ -102,6 +102,7 @@ class XPath;
 class ElemTemplateElement : public XalanElement, public PrefixResolver
 {
 public:
+
 	/**
 	 * Construct a template element instance.
 	 * 
@@ -208,20 +209,6 @@ public:
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
-
-	/** 
-	 * Execute the element's primary function.  Subclasses of this function may
-	 * recursively execute down the element tree.
-	 * 
-	 * @param executionContext  The current execution context
-	 * @param sourceTree input source tree
-	 * @param sourceNode current context node
-	 */
-	virtual	void
-	execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
-			XalanNode*						sourceNode) const;
 
 	/** 
 	 * Process the children of a template.
@@ -816,9 +803,6 @@ protected:
 protected:
 
 	bool					m_finishedConstruction;
-
-
-	static const QName		s_emptyMode;
 
 private:
 

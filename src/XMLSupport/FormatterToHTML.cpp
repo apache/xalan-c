@@ -90,7 +90,16 @@
 
 
 #if !defined(XALAN_LSTRSUPPORT)
-static const char* const	theHTMLSymbols1[] = 
+
+#include <vector>
+
+#if defined(XALAN_NO_NAMESPACES)
+typedef vector<XalanDOMString>			XalanDOMStringVectorType;
+#else
+typedef std::vector<XalanDOMString>		XalanDOMStringVectorType;
+#endif
+
+static const char* const	theHTMLSymbols1Narrow[] = 
 {
 	"Alpha",    "Beta",
 	"Gamma",    "Delta",    "Epsilon",    "Zeta",
@@ -98,10 +107,10 @@ static const char* const	theHTMLSymbols1[] =
 	"Lambda",    "Mu",    "Nu",    "Xi",
 	"Omicron",    "Pi",    "Rho",    "",  "Sigma",
 	"Tau",    "Upsilon",    "Phi",    "Chi",
-	"Psi",    "Omega", 0
+	"Psi",    "Omega"
 };
 
-static const char* const	theHTMLSymbols2[] = 
+static const char* const	theHTMLSymbols2Narrow[] = 
 {
 	"alpha",    "beta",
 	"gamma",    "delta",    "epsilon",    "zeta",
@@ -110,8 +119,12 @@ static const char* const	theHTMLSymbols2[] =
 	"omicron",    "pi",    "rho",    "sigmaf",
 	"sigma",    "tau",    "upsilon",    "phi",
 	"chi",    "psi",    "omega",    "thetasym",
-	"upsih",    "piv", 0
+	"upsih",    "piv"
 };
+
+static XalanDOMStringVectorType		theHTMLSymbols1;
+static XalanDOMStringVectorType		theHTMLSymbols2;
+
 #else
 static const XalanDOMChar* const	theHTMLSymbols1[] =
 {
@@ -121,7 +134,7 @@ static const XalanDOMChar* const	theHTMLSymbols1[] =
 	L"Lambda",    L"Mu",    L"Nu",    L"Xi",
 	L"Omicron",    L"Pi",    L"Rho",   L"",   L"Sigma",
 	L"Tau",    L"Upsilon",    L"Phi",    L"Chi",
-	L"Psi",    L"Omega", 0
+	L"Psi",    L"Omega"
 };
 
 static const XalanDOMChar* const	theHTMLSymbols2[] = 
@@ -133,13 +146,14 @@ static const XalanDOMChar* const	theHTMLSymbols2[] =
 	L"omicron",    L"pi",    L"rho",    L"sigmaf",
 	L"sigma",    L"tau",    L"upsilon",    L"phi",
 	L"chi",    L"psi",    L"omega",    L"thetasym",
-	L"upsih",    L"piv", 0
+	L"upsih",    L"piv"
 };
 #endif
 
 
 #if !defined(XALAN_LSTRSUPPORT)
-static const char* const	theHTMLLatin1Symbols[] = 
+
+static const char* const	theHTMLLatin1SymbolsNarrow[] = 
 {
 	"nbsp",    "iexcl",    "cent",    "pound",
 	"curren",    "yen",    "brvbar",    "sect",
@@ -167,6 +181,11 @@ static const char* const	theHTMLLatin1Symbols[] =
 	"ucirc",    "uuml",    "yacute",    "thorn",
 	"yuml"
 };
+
+
+static XalanDOMStringVectorType		theHTMLLatin1Symbols;
+
+
 #else
 static const XMLCh* const	theHTMLLatin1Symbols[] = 
 {
@@ -875,23 +894,6 @@ FormatterToHTML::copyEntityIntoBuffer(const XalanDOMChar*	s)
 
 
 void
-FormatterToHTML::copyEntityIntoBuffer(const char*	s)
-{
-	const unsigned int	len = strlen(s);
-
-    accum(XalanUnicode::charAmpersand);
-
-    for(unsigned int i = 0; i < len; ++i)
-    {
-		accum(s[i]);
-    }
-
-    accum(XalanUnicode::charSemicolon);
-}
-
-
-
-void
 FormatterToHTML::copyEntityIntoBuffer(const XalanDOMString&		s)
 {
 	const unsigned int	len = length(s);
@@ -1568,6 +1570,23 @@ const XalanDOMCharVectorType&	FormatterToHTML::s_fnofString =
 
 
 
+#if !defined(XALAN_LSTRSUPPORT)
+void
+pushStringsOnVector(
+			const char*					theStrings[],
+			size_t						theStringsSize,
+			XalanDOMStringVectorType&	theVector)
+{
+	theVector.reserve(theStringsSize);
+
+	for(size_t i = 0; i < theStringsSize; ++i)
+	{
+		theVector.push_back(XalanDOMString(theStrings[i]));
+	}
+}
+#endif
+
+
 void
 FormatterToHTML::initialize()
 {
@@ -1590,6 +1609,23 @@ FormatterToHTML::initialize()
 	::s_ampString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("amp")));
 
 	::s_fnofString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("fnof")));
+
+#if !defined(XALAN_LSTRSUPPORT)
+	pushStringsOnVector(
+			theHTMLSymbols1Narrow,
+			sizeof(theHTMLSymbols1Narrow) / sizeof(theHTMLSymbols1Narrow[0]),
+			theHTMLSymbols1);
+
+	pushStringsOnVector(
+			theHTMLSymbols2Narrow,
+			sizeof(theHTMLSymbols2Narrow) / sizeof(theHTMLSymbols2Narrow[0]),
+			theHTMLSymbols2);
+
+	pushStringsOnVector(
+			theHTMLLatin1SymbolsNarrow,
+			sizeof(theHTMLLatin1SymbolsNarrow) / sizeof(theHTMLLatin1SymbolsNarrow[0]),
+			theHTMLLatin1Symbols);
+#endif
 }
 
 
@@ -1616,4 +1652,12 @@ FormatterToHTML::terminate()
 	XalanDOMCharVectorType().swap(::s_ampString);
 
 	XalanDOMCharVectorType().swap(::s_fnofString);
+
+#if !defined(XALAN_LSTRSUPPORT)
+	XalanDOMStringVectorType().swap(theHTMLSymbols1);
+
+	XalanDOMStringVectorType().swap(theHTMLSymbols2);
+
+	XalanDOMStringVectorType().swap(theHTMLLatin1Symbols);
+#endif
 }

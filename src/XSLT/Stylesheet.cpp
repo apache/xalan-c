@@ -1111,7 +1111,8 @@ Stylesheet::pushTopLevelVariables(
 
 			var->execute(executionContext,
 						 doc,
-						 doc);
+						 doc,
+						 QName());
 		}
 	}
 
