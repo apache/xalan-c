@@ -19,6 +19,7 @@ CFG=TestXPath - Win32 Debug
 !MESSAGE 
 !MESSAGE "TestXPath - Win32 Release" (based on "Win32 (x86) Console Application")
 !MESSAGE "TestXPath - Win32 Debug" (based on "Win32 (x86) Console Application")
+!MESSAGE "TestXPath - Win32 Release with symbols" (based on "Win32 (x86) Console Application")
 !MESSAGE 
 
 # Begin Project
@@ -77,12 +78,40 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1D.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
 
+!ELSEIF  "$(CFG)" == "TestXPath - Win32 Release with symbols"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "TestXPath___Win32_Release_with_symbols"
+# PROP BASE Intermediate_Dir "TestXPath___Win32_Release_with_symbols"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "..\..\..\..\Build\Win32\VC6\Release.symbols"
+# PROP Intermediate_Dir "..\..\..\..\Build\Win32\VC6\Release.symbols\TestXPath"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MD /W4 /GX /O2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "NDEBUG" /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "XALAN_XERCES" /YX /FD /c
+# ADD CPP /nologo /MD /W4 /GX /Zi /O2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "NDEBUG" /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "XALAN_XERCES" /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /subsystem:console /pdb:none /machine:I386
+# SUBTRACT BASE LINK32 /map /debug
+# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /subsystem:console /pdb:none /debug /machine:I386
+# SUBTRACT LINK32 /map
+
 !ENDIF 
 
 # Begin Target
 
 # Name "TestXPath - Win32 Release"
 # Name "TestXPath - Win32 Debug"
+# Name "TestXPath - Win32 Release with symbols"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"

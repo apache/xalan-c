@@ -19,6 +19,7 @@ CFG=TestXSLT - Win32 Debug
 !MESSAGE 
 !MESSAGE "TestXSLT - Win32 Release" (based on "Win32 (x86) Console Application")
 !MESSAGE "TestXSLT - Win32 Debug" (based on "Win32 (x86) Console Application")
+!MESSAGE "TestXSLT - Win32 Release with symbols" (based on "Win32 (x86) Console Application")
 !MESSAGE 
 
 # Begin Project
@@ -77,12 +78,38 @@ LINK32=link.exe
 # ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1D.lib /nologo /incremental:no /debug /machine:I386 /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 
+!ELSEIF  "$(CFG)" == "TestXSLT - Win32 Release with symbols"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "TestXSLT___Win32_Release_with_symbols"
+# PROP BASE Intermediate_Dir "TestXSLT___Win32_Release_with_symbols"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "..\..\..\..\Build\Win32\VC6\Release.symbols"
+# PROP Intermediate_Dir "..\..\..\..\Build\Win32\VC6\Release.symbols\TestXSLT"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MD /W4 /GR /GX /O2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XERCES" /D "_CONSOLE" /FD /c
+# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XERCES" /D "_CONSOLE" /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /pdb:none /machine:I386
+# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /pdb:none /debug /machine:I386
+
 !ENDIF 
 
 # Begin Target
 
 # Name "TestXSLT - Win32 Release"
 # Name "TestXSLT - Win32 Debug"
+# Name "TestXSLT - Win32 Release with symbols"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"

@@ -19,6 +19,7 @@ CFG=XPath - Win32 Debug
 !MESSAGE 
 !MESSAGE "XPath - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "XPath - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "XPath - Win32 Release with symbols" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -83,12 +84,42 @@ LINK32=link.exe
 # ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1D.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 
+!ELSEIF  "$(CFG)" == "XPath - Win32 Release with symbols"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "XPath___Win32_Release_with_symbols"
+# PROP BASE Intermediate_Dir "XPath___Win32_Release_with_symbols"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "..\..\..\..\Build\Win32\VC6\Release.symbols"
+# PROP Intermediate_Dir "..\..\..\..\Build\Win32\VC6\Release.symbols\XPath"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MD /W4 /GR /GX /O2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XERCES" /D "WIN32" /D "_MBCS" /FD /c
+# SUBTRACT BASE CPP /YX
+# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XERCES" /D "WIN32" /D "_MBCS" /FD /c
+# SUBTRACT CPP /YX
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /debug /machine:I386
+# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /debug /machine:I386
+
 !ENDIF 
 
 # Begin Target
 
 # Name "XPath - Win32 Release"
 # Name "XPath - Win32 Debug"
+# Name "XPath - Win32 Release with symbols"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -382,7 +413,35 @@ SOURCE=..\..\..\..\src\XPath\XString.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XStringAdapter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringAdapterAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XStringAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringBase.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringCached.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringCachedAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringReference.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringReferenceAllocator.cpp
 # End Source File
 # Begin Source File
 
@@ -698,7 +757,31 @@ SOURCE=..\..\..\..\src\XPath\XString.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XStringAdapter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringAdapterAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XStringAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringBase.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringCachedAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringReference.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringReferenceAllocator.hpp
 # End Source File
 # Begin Source File
 

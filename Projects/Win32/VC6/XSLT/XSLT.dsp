@@ -19,6 +19,7 @@ CFG=XSLT - Win32 Debug
 !MESSAGE 
 !MESSAGE "XSLT - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "XSLT - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "XSLT - Win32 Release with symbols" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -83,12 +84,42 @@ LINK32=link.exe
 # ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1D.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 
+!ELSEIF  "$(CFG)" == "XSLT - Win32 Release with symbols"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "XSLT___Win32_Release_with_symbols"
+# PROP BASE Intermediate_Dir "XSLT___Win32_Release_with_symbols"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "..\..\..\..\Build\Win32\VC6\Release.symbols"
+# PROP Intermediate_Dir "..\..\..\..\Build\Win32\VC6\Release.symbols\XSLT"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MD /W4 /GR /GX /O2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_XERCES" /FD /c
+# SUBTRACT BASE CPP /YX
+# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_XERCES" /FD /c
+# SUBTRACT CPP /YX
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /debug /machine:I386
+# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /debug /machine:I386
+
 !ENDIF 
 
 # Begin Target
 
 # Name "XSLT - Win32 Release"
 # Name "XSLT - Win32 Debug"
+# Name "XSLT - Win32 Release with symbols"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -111,6 +142,10 @@ SOURCE=..\..\..\..\src\XSLT\AVTPartXPath.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\Constants.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\CountersTable.cpp
 # End Source File
 # Begin Source File
 
@@ -390,6 +425,8 @@ SOURCE=..\..\..\..\src\XSLT\XSLTEngineImpl.cpp
 
 # ADD CPP /YX
 
+!ELSEIF  "$(CFG)" == "XSLT - Win32 Release with symbols"
+
 !ENDIF 
 
 # End Source File
@@ -444,6 +481,10 @@ SOURCE=..\..\..\..\src\XSLT\AVTPartXPath.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\Constants.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\CountersTable.hpp
 # End Source File
 # Begin Source File
 
