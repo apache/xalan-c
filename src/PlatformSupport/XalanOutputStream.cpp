@@ -63,6 +63,10 @@
 
 
 
+#include "Include/STLHelper.hpp"
+
+
+
 #include "XalanTranscodingServices.hpp"
 
 
@@ -142,6 +146,8 @@ XalanOutputStream::write(
 
 	if (theBufferLength > m_bufferSize)
 	{
+		assert(m_buffer.size() == 0);
+
 		doWrite(theBuffer, theBufferLength);
 	}
 	else
@@ -354,10 +360,12 @@ XalanOutputStream::flushBuffer()
 {
 	if (m_buffer.empty() == false)
 	{
-		doWrite(&*m_buffer.begin(), m_buffer.size());
+		CollectionClearGuard<BufferType>	theGuard(m_buffer);
 
-		m_buffer.clear();
+		doWrite(&*m_buffer.begin(), m_buffer.size());
 	}
+
+	assert(m_buffer.empty() == true);
 }
 
 
@@ -369,36 +377,27 @@ XalanOutputStream::doWrite(
 {
 	assert(theBuffer != 0);
 
-	try
+	if (m_writeAsUTF16 == true)
 	{
-		if (m_writeAsUTF16 == true)
-		{
-			assert(sizeof(XalanDOMChar) == sizeof(char) * 2);
+		assert(sizeof(XalanDOMChar) == sizeof(char) * 2);
 
-			// This is a hack to write UTF-16 through as if it
-			// were just chars.  Saves lots of time "transcoding."
+		// This is a hack to write UTF-16 through as if it
+		// were just chars.  Saves lots of time "transcoding."
 #if defined(XALAN_OLD_STYLE_CASTS)
-			writeData((const char*)theBuffer, theBufferLength * 2);
+		writeData((const char*)theBuffer, theBufferLength * 2);
 #else
-			writeData(reinterpret_cast<const char*>(theBuffer), theBufferLength * 2);
+		writeData(reinterpret_cast<const char*>(theBuffer), theBufferLength * 2);
 #endif
-		}
-		else
-		{
-			transcode(theBuffer, theBufferLength, m_transcodingBuffer);
-
-			assert(&m_transcodingBuffer[0] != 0);
-
-			writeData(&m_transcodingBuffer[0],
-					  m_transcodingBuffer.size());
-		}
 	}
-	catch(const XalanOutputStreamException&)
+	else
 	{
-		// Have to catch this error and flush any output remaining...
-		m_buffer.clear();
+		transcode(theBuffer, theBufferLength, m_transcodingBuffer);
 
-		throw;
+		assert(&m_transcodingBuffer[0] != 0);
+
+		writeData(
+			&m_transcodingBuffer[0],
+			m_transcodingBuffer.size());
 	}
 }
 
