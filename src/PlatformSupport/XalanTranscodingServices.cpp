@@ -73,11 +73,11 @@
 
 
 
-const XalanDOMChar 	XalanTranscodingServices::s_UTF8String[] =
+const XalanDOMChar 	XalanTranscodingServices::s_utf8String[] =
 {
 	XalanUnicode::charLetter_U,
 	XalanUnicode::charLetter_T,
-	XalanUnicode::charLetter_F, 
+	XalanUnicode::charLetter_F,
 	XalanUnicode::charHyphenMinus,
 	XalanUnicode::charDigit_8,
 	0
@@ -85,7 +85,7 @@ const XalanDOMChar 	XalanTranscodingServices::s_UTF8String[] =
 
 
 
-const XalanDOMChar 	XalanTranscodingServices::s_UTF16String[] =
+const XalanDOMChar 	XalanTranscodingServices::s_utf16String[] =
 {
 	XalanUnicode::charLetter_U,
 	XalanUnicode::charLetter_T,
@@ -94,6 +94,51 @@ const XalanDOMChar 	XalanTranscodingServices::s_UTF16String[] =
 	XalanUnicode::charDigit_1,
 	XalanUnicode::charDigit_6,
 	0
+};
+
+
+
+const XalanDOMChar 	XalanTranscodingServices::s_asciiString[] =
+{
+	XalanUnicode::charLetter_A,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_C, 
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_I,
+	0
+};
+
+
+
+const XalanDOMChar 	XalanTranscodingServices::s_usASCIIString[] =
+{
+	XalanUnicode::charLetter_U,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_A,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_C, 
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_I,
+	0
+};
+
+
+
+const XalanDOMChar 	XalanTranscodingServices::s_windows1250String[] =
+{
+	XalanUnicode::charLetter_W,
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_N,
+	XalanUnicode::charLetter_D,
+	XalanUnicode::charLetter_O, 
+	XalanUnicode::charLetter_W,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charDigit_1,
+	XalanUnicode::charDigit_2,
+	XalanUnicode::charDigit_5,
+	XalanUnicode::charDigit_0,
 };
 
 
@@ -173,9 +218,24 @@ XalanTranscodingServices::destroyTranscoder(XalanOutputTranscoder*	theTranscoder
 
 
 bool
+XalanTranscodingServices::encodingIsUTF8(const XalanDOMChar*	theEncodingName)
+{
+	return compareIgnoreCase(c_wstr(theEncodingName), s_utf8String) == 0 ? true : false;
+}
+
+
+bool
+XalanTranscodingServices::encodingIsUTF8(const XalanDOMString&		theEncodingName)
+{
+	return encodingIsUTF8(c_wstr(theEncodingName));
+}
+
+
+
+bool
 XalanTranscodingServices::encodingIsUTF16(const XalanDOMChar*	theEncodingName)
 {
-	return compareIgnoreCase(c_wstr(theEncodingName), s_UTF16String) == 0 ? true : false;
+	return compareIgnoreCase(c_wstr(theEncodingName), s_utf16String) == 0 ? true : false;
 }
 
 
@@ -198,13 +258,13 @@ static XalanTranscodingServices::XalanXMLByteVectorType			s_UTF16Vector;
 const XalanTranscodingServices::XalanXMLByteVectorType&
 XalanTranscodingServices::getStreamProlog(const XalanDOMString&		theEncodingName)
 {
-	if (compareIgnoreCase(c_wstr(theEncodingName), s_UTF16String) == 0)
+	if (compareIgnoreCase(c_wstr(theEncodingName), s_utf16String) == 0)
 	{
 		return s_UTF16Vector;
 	}
 #if 0
 	// We won't do this for now...
-	else if (compareIgnoreCase(c_wstr(theEncodingName), s_UTF8String) == 0)
+	else if (compareIgnoreCase(c_wstr(theEncodingName), s_utf8String) == 0)
 	{
 		return s_UTF8Vector;
 	}
@@ -217,6 +277,65 @@ XalanTranscodingServices::getStreamProlog(const XalanDOMString&		theEncodingName
 
 
 
+XalanDOMChar
+XalanTranscodingServices::getMaximumCharacterValue(const XalanDOMString&	theEncoding)
+{
+	const MaximumCharacterValueMapType::const_iterator	i =
+		s_maximumCharacterValues.find(toUpperCase(theEncoding));
+
+	if (i == s_maximumCharacterValues.end())
+	{
+		return XalanDOMChar(0x7fu);
+	}
+	else
+	{
+		return (*i).second;
+	}
+}
+
+
+
+XalanDOMChar
+XalanTranscodingServices::getMaximumCharacterValue()
+{
+	// $$$ ToDo: We need to set this according to the local
+	// code page, but how?  Perhaps try to transcode various
+	// strings with increasingly larger character values, using
+	// DOMStringHelper's TranscodeToLocalCodePage()?  Not exactly
+	// what we need, but it may do.
+	return XalanDOMChar(0x7fu);
+}
+
+
+
+bool
+XalanTranscodingServices::getBytesEqualChars(const XalanDOMString&	theEncoding)
+{
+	return equals(theEncoding, s_asciiString) ||
+		   equals(theEncoding, s_usASCIIString) ||
+		   equals(theEncoding, s_windows1250String);
+}
+
+
+
+XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableCharacterException(
+			XalanDOMChar			theCharacter,
+			const XalanDOMString&	theEncoding) :
+	XSLException(XalanDOMString("Unable to represent a character in the specified encoding"),
+				 XalanDOMString("UnrepresentableCharacterException")),
+	m_badCharacter(theCharacter),
+	m_encoding(theEncoding)
+{
+}
+
+
+
+XalanTranscodingServices::UnrepresentableCharacterException::~UnrepresentableCharacterException()
+{
+}
+
+
+
 XalanOutputTranscoder::XalanOutputTranscoder()
 {
 }
@@ -225,6 +344,60 @@ XalanOutputTranscoder::XalanOutputTranscoder()
 
 XalanOutputTranscoder::~XalanOutputTranscoder()
 {
+}
+
+
+
+static XalanTranscodingServices::MaximumCharacterValueMapType	s_maximumCharacterValues;
+
+const XalanTranscodingServices::MaximumCharacterValueMapType&	XalanTranscodingServices::s_maximumCharacterValues =
+			::s_maximumCharacterValues;
+
+
+
+static void
+initMaximumCharacterValueMap(XalanTranscodingServices::MaximumCharacterValueMapType&	theMap)
+{
+	typedef XalanTranscodingServices::MaximumCharacterValueMapType::value_type	value_type;
+
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("WINDOWS-1250")),	 0xFF)); // Windows 1250 Peter Smolik
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("UTF-8")),			 0xFFFF)); // Universal Transformation Format 8
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("US-ASCII")),		 0x7F));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1")), 	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2")), 	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-3")), 	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-4")), 	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-5")), 	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-6")), 	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-7")), 	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-8")), 	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-9")), 	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-JP")),	 0xFFFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("SHIFT_JIS")),		 0xFFFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EUC-JP")), 		 0xFFFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("GB2312")), 		 0xFFFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("BIG5")),			 0xFFFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EUC-KR")), 		 0xFFFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-KR")),	 0xFFFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("KOI8-R")), 		 0xFFFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-US")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CA")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NL")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-DK")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NO")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FI")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-SE")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IT")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ES")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-GB")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FR")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR1")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-HE")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CH")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ROECE")), 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-YU")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IS")),	 0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR2")),	 0xFF));
 }
 
 
@@ -253,6 +426,8 @@ XalanTranscodingServices::initialize()
 #else
 #error The platform must define the byte order!
 #endif
+
+	initMaximumCharacterValueMap(::s_maximumCharacterValues);
 }
 
 
@@ -262,4 +437,6 @@ XalanTranscodingServices::terminate()
 {
 	XalanXMLByteVectorType().swap(s_UTF16Vector);
 	XalanXMLByteVectorType().swap(s_UTF8Vector);
+
+	MaximumCharacterValueMapType().swap(::s_maximumCharacterValues);
 }

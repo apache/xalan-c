@@ -64,11 +64,16 @@
 
 
 
+#include <map>
 #include <vector>
 
 
 
 #include <XalanDOM/XalanDOMString.hpp>
+
+
+
+#include <PlatformSupport/XSLException.hpp>
 
 
 
@@ -83,8 +88,13 @@ public:
 	typedef unsigned char	XalanXMLByte;
 
 #if defined(XALAN_NO_NAMESPACES)
+	typedef map<XalanDOMString,
+				XalanDOMChar,
+				less<XalanDOMString> >	MaximumCharacterValueMapType;
 	typedef vector<XalanXMLByte>		XalanXMLByteVectorType;
 #else
+	typedef std::map<XalanDOMString,
+					 XalanDOMChar>		MaximumCharacterValueMapType;
 	typedef std::vector<XalanXMLByte>	XalanXMLByteVectorType;
 #endif
 
@@ -133,7 +143,25 @@ public:
 	destroyTranscoder(XalanOutputTranscoder*	theTranscoder);
 
 	/**
-	 * Determine if the encoding name supplied is equuvalent to UTF-16.
+	 * Determine if the encoding name supplied is equivalent to UTF-8.
+	 * 
+	 * @param theEncodingName The name of the desired output encoding.
+	 * @return true or false
+	 */
+	static bool
+	encodingIsUTF8(const XalanDOMChar*		theEncodingName);
+
+	/**
+	 * Determine if the encoding name supplied is equivalent to UTF-8.
+	 * 
+	 * @param theEncodingName The name of the desired output encoding.
+	 * @return true or false
+	 */
+	static bool
+	encodingIsUTF8(const XalanDOMString&	theEncodingName);
+
+	/**
+	 * Determine if the encoding name supplied is equivalent to UTF-16.
 	 * 
 	 * @param theEncodingName The name of the desired output encoding.
 	 * @return true or false
@@ -142,7 +170,7 @@ public:
 	encodingIsUTF16(const XalanDOMChar*		theEncodingName);
 
 	/**
-	 * Determine if the encoding name supplied is equuvalent to UTF-16.
+	 * Determine if the encoding name supplied is equivalent to UTF-16.
 	 * 
 	 * @param theEncodingName The name of the desired output encoding.
 	 * @return true or false
@@ -164,10 +192,76 @@ public:
 	static const XalanXMLByteVectorType&
 	getStreamProlog(const XalanDOMString&	theEncodingName);
 
+	/**
+	 * Get the maximum character value for the encoding.
+	 *
+	 * @param theEncoding The encoding name.
+	 * @return The maximum character value the encoding supports.
+	 */
+	static XalanDOMChar
+	getMaximumCharacterValue(const XalanDOMString&	theEncoding);
+
+	/**
+	 * Get the maximum character value for the local code page.
+	 *
+	 * @return The maximum character value the local code page supports.
+	 */
+	static XalanDOMChar
+	getMaximumCharacterValue();
+
+	/**
+	 * Determine if the output stage can safely skip transcoding
+	 * by truncating.
+	 *
+	 * @param theEncoding The encoding name.
+	 * @return true if truncation is possible, false if not.
+	 */
+	static bool
+	getBytesEqualChars(const XalanDOMString&	theEncoding);
+
+	static const XalanDOMChar 	s_utf8String[];
+
+	static const XalanDOMChar 	s_utf16String[];
+
+	static const XalanDOMChar 	s_asciiString[];
+
+	static const XalanDOMChar 	s_usASCIIString[];
+
+	static const XalanDOMChar 	s_windows1250String[];
+
+	class XALAN_PLATFORMSUPPORT_EXPORT UnrepresentableCharacterException : public XSLException
+	{
+	public:
+
+		UnrepresentableCharacterException(
+			XalanDOMChar			theCharacter,
+			const XalanDOMString&	theEncoding);
+
+		virtual
+		~UnrepresentableCharacterException();
+
+		XalanDOMChar
+		getCharacter() const
+		{
+			return m_badCharacter;
+		}
+
+		const XalanDOMString&
+		getEncoding() const
+		{
+			return m_encoding;
+		}
+
+	private:
+
+		const XalanDOMChar		m_badCharacter;
+
+		const XalanDOMString	m_encoding;
+	};
+
 private:
 
-	static const XalanDOMChar 	s_UTF8String[];
-	static const XalanDOMChar 	s_UTF16String[];
+	static const MaximumCharacterValueMapType&	s_maximumCharacterValues;
 };
 
 
