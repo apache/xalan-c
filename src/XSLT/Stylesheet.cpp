@@ -67,6 +67,7 @@
 
 
 #include <xercesc/sax/AttributeList.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 
@@ -174,7 +175,7 @@ Stylesheet::Stylesheet(
 				m_baseIdent = urlString;
 			}
 		}
-		catch(const XMLException&)
+		catch(const XMLPlatformUtilsException&)
 		{
 			// Assume that any exception here relates to get the urlString from
 			// m_baseIdent.  We'll assume that it's just a fake base identifier
@@ -904,7 +905,6 @@ Stylesheet::findTemplate(
 			{
 				const XalanDOMString*	prevPat = 0;
 				const MatchPattern2*	prevMatchPat = 0;
-				double					prevMatchPatPriority = matchScoreNoneValue;
 
 				do
 				{
@@ -939,7 +939,6 @@ Stylesheet::findTemplate(
 						{
 							prevPat = patterns;
 							prevMatchPat = matchPat;
-							prevMatchPatPriority = matchPatPriority;
 							matchPatPriority = matchScoreNoneValue;
 
 							const XPath* const	xpath = matchPat->getExpression();
