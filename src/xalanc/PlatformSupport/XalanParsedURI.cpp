@@ -172,8 +172,13 @@ void XalanParsedURI::resolve(
 	const XalanParsedURI &base
 )
 {
+    if (base.isSchemeDefined() == false)
+    {
+        // Protect against a base URI that is relative...
+        // This might become an assert or an exception.
+    }
 	// Handle references to the current document (step 2)
-	if ((m_defined & (d_scheme | d_authority | d_query)) == 0 &&
+	else if ((m_defined & (d_scheme | d_authority | d_query)) == 0 &&
 		m_path.empty())
 	{
 		m_scheme	= base.m_scheme;
@@ -190,26 +195,24 @@ void XalanParsedURI::resolve(
 		}
 
 		m_defined |= base.m_defined;
-		return;
 	}
-
 	// A defined scheme component implies that this is an absolute URI (step 3)
 	// Also allow a scheme without authority that matches the base scheme to be 
 	// interpreted as a relative URI
-	if (!(m_defined & d_scheme) || ( 
+	else if (!(m_defined & d_scheme) || ( 
 			(base.m_defined & d_scheme) && !(m_defined & d_authority) 
 			&& equalsIgnoreCaseASCII(m_scheme, base.m_scheme)))
 	{
 		// Inherit the base scheme
 		m_scheme = base.m_scheme;
-		m_defined |= d_scheme;
+	    m_defined |= d_scheme;
 
 		// Step 4: If the authority is unm_defined then inherit it, otherwise skip to step 7
 		if (!(m_defined & d_authority))
 		{
 			// Inherit the base authority
 			m_authority = base.m_authority;
-			m_defined |= d_authority;
+            m_defined |= d_authority;
 
 			// Step 5: if the path starts with a / then it is absolute
 			if (!(m_path.length() > 0 && m_path[0] == XalanUnicode::charSolidus))
