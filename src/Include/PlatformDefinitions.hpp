@@ -69,7 +69,7 @@
 #include "SolarisDefinitions.hpp"
 #elif defined(OS390)
 #include "OS390Definitions.hpp"
-#elif defined(TRU64)
+#elif defined(__DECCXX)
 #include "TRU64Definitions.hpp"
 #else
 #endif
