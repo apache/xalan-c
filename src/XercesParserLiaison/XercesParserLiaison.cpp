@@ -156,7 +156,11 @@ XercesParserLiaison::parseXMLStream(
 			DocumentHandler&		handler,
 			const XalanDOMString&	/* identifier */)
 {
-	std::auto_ptr<SAXParser>	theParser(CreateSAXParser(m_fUseValidatingParser));
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::auto_ptr;
+#endif
+
+	auto_ptr<SAXParser>		theParser(CreateSAXParser(m_fUseValidatingParser));
 
 	theParser->setDocumentHandler(&handler);
 	theParser->setErrorHandler(this);
@@ -171,7 +175,11 @@ XercesParserLiaison::parseXMLStream(
 			InputSource&			reader,
 			const XalanDOMString&	/* identifier */)
 {
-	std::auto_ptr<DOMParser>	theParser(CreateDOMParser(m_fUseValidatingParser));
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::auto_ptr;
+#endif
+
+	auto_ptr<DOMParser>		theParser(CreateDOMParser(m_fUseValidatingParser));
 
 	theParser->setErrorHandler(this);
 	theParser->parse(reader);
@@ -199,6 +207,14 @@ XercesParserLiaison::createDocument()
 	const DOM_Document	theXercesDocument =
 		DOM_Document::createDocument();
 
+	return createDocument(theXercesDocument);
+}
+
+
+
+XalanDocument*
+XercesParserLiaison::createDocument(const DOM_Document&		theXercesDocument)
+{
 	XercesDocumentBridge* const		theNewDocument =
 		new XercesDocumentBridge(theXercesDocument);
 
@@ -222,29 +238,44 @@ XercesParserLiaison::mapXalanDocument(const XalanDocument*	theDocument) const
 
 void XercesParserLiaison::fatalError(const SAXParseException& e)
 {
-	std::cerr << "\nFatal Error at (file " << DOMStringToStdString(e.getSystemId())
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::cerr;
+	using std::endl;
+#endif
+
+	cerr << "\nFatal Error at (file " << DOMStringToStdString(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << DOMStringToStdString(e.getMessage()) << std::endl;
+         << "): " << DOMStringToStdString(e.getMessage()) << endl;
 
 	throw e;
 }
 
 void XercesParserLiaison::error(const SAXParseException& e)
 {
-	std::cerr << "\nError at (file " << DOMStringToStdString(e.getSystemId())
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::cerr;
+	using std::endl;
+#endif
+
+	cerr << "\nError at (file " << DOMStringToStdString(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << DOMStringToStdString(e.getMessage()) << std::endl;
+         << "): " << DOMStringToStdString(e.getMessage()) << endl;
 }
 
 
 void XercesParserLiaison::warning(const SAXParseException& e)
 {
-	std::cerr << "\nWarning at (file " << DOMStringToStdString(e.getSystemId())
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::cerr;
+	using std::endl;
+#endif
+
+	cerr << "\nWarning at (file " << DOMStringToStdString(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << DOMStringToStdString(e.getMessage()) << std::endl;
+         << "): " << DOMStringToStdString(e.getMessage()) << endl;
 }
 
 

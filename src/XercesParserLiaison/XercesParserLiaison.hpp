@@ -73,11 +73,13 @@
 #include <sax/ErrorHandler.hpp>
 
 
+
 // Base class header file.
 #include <XMLSupport/XMLParserLiaisonDefault.hpp>
 
 
 
+class DOM_Document;
 class DOMSupport;
 class InputSource;
 class XercesDocumentBridge;
@@ -124,6 +126,29 @@ public:
 	virtual XalanDocument*
 	createDocument();
 
+	// These interfaces are new to XercesParserLiaison...
+
+	/** 
+	 * Create a XalanDocument proxy for an existing Xerces document.
+	 * The parser liaison owns the instance, and you must not delete
+	 * it.  The liaison will delete it when reset() is called, or the
+	 * liaison is destroyed.
+	 *
+	 * @param theXercesDocument The Xerces document.
+	 * @return a pointer to a new XalanDocument-derived instance.
+	 */
+	virtual XalanDocument*
+	createDocument(const DOM_Document&	theXercesDocument);
+
+	/** 
+	 * Map a pointer to a XalanDocument instance to its implementation
+	 * class pointer.  Normally, you should have no reason for doing
+	 * this.  The liaison will return a null pointer if it did not
+	 * create the instance passed.
+	 *
+	 * @param theDocument A pointer to a XalanDocument instance.
+	 * @return A pointer to the XercesDocumentBridge instance.
+	 */
 	XercesDocumentBridge*
 	mapXalanDocument(const XalanDocument*	theDocument) const;
 
