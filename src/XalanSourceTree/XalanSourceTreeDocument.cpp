@@ -576,6 +576,27 @@ XalanSourceTreeDocument::createElementNode(
 
 
 
+inline const XalanDOMString&
+getElementNodePrefix(
+			const XalanDOMChar*		qname,
+			XalanDOMStringPool*		theStringPool,
+			unsigned int			theLength,			
+			unsigned int			theColonIndex)
+{
+	if(theColonIndex == theLength)
+	{
+		return  theStringPool->get(XalanDOMString()); 
+	}
+	else
+	{
+		return  theStringPool->get(qname, theColonIndex);
+	}
+	
+
+}
+
+
+
 XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
 			const XalanDOMChar*			uri,
@@ -586,6 +607,7 @@ XalanSourceTreeDocument::createElementNode(
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling)
 {
+
 	const unsigned int	theAttributeCount = attrs.getLength();
 
 	XalanSourceTreeAttr** const		theAttributeVector =
@@ -594,13 +616,17 @@ XalanSourceTreeDocument::createElementNode(
 	const unsigned int	theColonIndex = indexOf(qname, XalanUnicode::charColon);
 	const unsigned int	theLength = length(qname);
 
+	theColonIndex == theLength ?
+			m_stringPool.get(XalanDOMString()) :
+			m_stringPool.get(qname, theColonIndex);
+
 	XalanSourceTreeElement* const	theNewElement =
 		m_elementNSAllocator.create(
 				m_stringPool.get(qname),
 				m_stringPool.get(localname),
 				m_stringPool.get(uri),
 				// This is the prefix...
-				theColonIndex == theLength ? m_stringPool.get(XalanDOMString()) : m_stringPool.get(qname, theColonIndex),
+				getElementNodePrefix(qname, &m_stringPool, theLength, theColonIndex),
 				this,
 				theAttributeVector,
 				theAttributeCount,

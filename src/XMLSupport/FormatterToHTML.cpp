@@ -86,7 +86,7 @@
 
 
 
-#if !defined(XALAN_LSTRSUPPORT)
+#if !defined(XALAN_LSTRSUPPORT) || defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 
 #include <vector>
 
@@ -148,7 +148,7 @@ static const XalanDOMChar* const	theHTMLSymbols2[] =
 #endif
 
 
-#if !defined(XALAN_LSTRSUPPORT)
+#if !defined(XALAN_LSTRSUPPORT) || defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 
 static const char* const	theHTMLLatin1SymbolsNarrow[] = 
 {
@@ -184,7 +184,7 @@ static XalanDOMStringVectorType		theHTMLLatin1Symbols;
 
 
 #else
-static const XMLCh* const	theHTMLLatin1Symbols[] = 
+static const XalanDOMChar* const	theHTMLLatin1Symbols[] = 
 {
 	L"nbsp",    L"iexcl",    L"cent",    L"pound",
 	L"curren",    L"yen",    L"brvbar",    L"sect",
