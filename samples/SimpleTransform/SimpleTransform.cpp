@@ -36,6 +36,38 @@
 #include "XalanMemoryManagerImpl.hpp"
 
 
+/**
+ *  Example of the ICU's customizable memory management which can
+ *  be used conjunction with Xalan's pluggable memory management feature.
+ */
+#if defined(XALAN_USE_ICU)
+
+#include "unicode/uclean.h"
+
+static XalanMemoryManagerImpl  s_memoryManager;
+
+void*
+icu_malloc(const void * /* context */, size_t size)
+{
+    return s_memoryManager.allocate(size);
+}
+
+void*
+icu_realloc(const void * /* context */, void * mem, size_t size)
+{
+    s_memoryManager.deallocate(mem);
+    return s_memoryManager.allocate(size);
+}
+
+void icu_free(const void * /* context */, void * mem)
+{
+    s_memoryManager.deallocate(mem);
+}
+
+#endif
+
+
+
 int
 main(
 			int		argc,
@@ -64,11 +96,17 @@ main(
 
             XalanMemoryManagerImpl memoryManager;
 
+#ifdef XALAN_USE_ICU
+			UErrorCode status;
+			u_setMemoryFunctions(0, icu_malloc, icu_realloc, icu_free, &status);
+#endif 
+
 			// Call the static initializer for Xerces.
 			XMLPlatformUtils::Initialize( 
                                     XMLUni::fgXercescDefaultLocale,
                                     0,
                                     0,
+
                                     &memoryManager );
 
 			// Initialize Xalan.
