@@ -220,12 +220,15 @@ ElemForEach::getNextChildElemToExecute(
 				   StylesheetExecutionContext& executionContext,
 				   const ElemTemplateElement* currentElem) const
 {
-	ElemTemplateElement* nextElement = currentElem->getNextSiblingElem();
+    if (hasDirectTemplate() != true)
+    {
+        ElemTemplateElement* nextElement = currentElem->getNextSiblingElem();
 
-	if (nextElement != 0)
-	{
-		return nextElement;
-	}
+        if (nextElement != 0)
+        {
+	        return nextElement;
+        }
+    }
 
 	executionContext.popCurrentNode();
 
@@ -303,14 +306,16 @@ ElemForEach::createSelectedAndSortedNodeList(
 	}
 
 	if (m_sortElemsCount > 0) 
-		//&& nodesToTransform->getLength() > 1)
 	{
 		MutableNodeRefList& sortedNodeList = executionContext.createAndPushMutableNodeRefList();
 
-		nodesToTransform = sortChildren(
-				executionContext,
-				*nodesToTransform,
-				sortedNodeList);
+        if (nodesToTransform->getLength() > 1)
+        {
+		    nodesToTransform = sortChildren(
+				    executionContext,
+				    *nodesToTransform,
+				    sortedNodeList);
+        }
 	}
 
 	return nodesToTransform;
