@@ -1046,6 +1046,11 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Invalid URI.</target>
 </trans-unit>
 
+<trans-unit id="ExpectedToken">
+		<source>Expected a token but reached the end of the expression instead.</source>
+		<target>Expected a token but reached the end of the expression instead.</target>
+</trans-unit>
+
     </body>
   </file>
 </xliff>
