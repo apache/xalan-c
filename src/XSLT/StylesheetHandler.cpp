@@ -819,6 +819,8 @@ StylesheetHandler::initWrapperless(
 							   c_wstr(Constants::ATTRTYPE_CDATA),
 							   c_wstr(Constants::ATTRVAL_SIMPLE));
 
+	assert(m_pTemplate == 0);
+
 	m_pTemplate = new ElemTemplate(m_constructionContext,
 								   m_stylesheet,
 								   templateAttrs,
@@ -917,6 +919,8 @@ StylesheetHandler::processTopLevelElement(
 	switch(xslToken)
 	{
 	case Constants::ELEMNAME_TEMPLATE:
+		assert(m_pTemplate == 0);
+
 		m_pTemplate = new ElemTemplate(
 				m_constructionContext,
 				m_stylesheet,
@@ -927,7 +931,6 @@ StylesheetHandler::processTopLevelElement(
 		m_elemStack.push_back(m_pTemplate);
 		m_elemStackParentedElements.insert(m_pTemplate);
 		m_inTemplate = true;
-		m_stylesheet.addTemplate(m_pTemplate, m_constructionContext);
 		break;
 
 	case Constants::ELEMNAME_EXTENSION:
@@ -1611,6 +1614,8 @@ StylesheetHandler::endElement(const XMLCh* const name)
 	if(Constants::ELEMNAME_TEMPLATE == tok)
 	{
 		m_inTemplate = false;
+		m_stylesheet.addTemplate(m_pTemplate, m_constructionContext);
+		m_pTemplate = 0;
 	}
 	else if((Constants::ELEMNAME_PARAMVARIABLE == tok) ||
 		Constants::ELEMNAME_VARIABLE == tok)
