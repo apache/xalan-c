@@ -58,8 +58,7 @@
 
 
 
-#include <sax/AttributeList.hpp>
-#include <sax/SAXException.hpp>
+#include <xercesc/sax/AttributeList.hpp>
 
 
 

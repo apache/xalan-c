@@ -62,7 +62,7 @@
 
 
 
-#include <sax/Locator.hpp>
+#include <xercesc/sax/Locator.hpp>
 
 
 

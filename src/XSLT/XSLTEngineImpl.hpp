@@ -78,10 +78,6 @@
 
 
 
-#include <sax/DocumentHandler.hpp>
-
-
-
 #include <XalanDOM/XalanDOMString.hpp>
 
 
@@ -117,6 +113,7 @@
 
 
 // Forward declarations...
+class DocumentHandler;
 class DOMSupport;
 class GenerateEvent;
 class InputSource;

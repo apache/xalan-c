@@ -94,10 +94,10 @@ using std::vector;
 
 
 // Xerces header files
-#include <util/XMLString.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 #if !defined(XML_LSTRSUPPORT)
-#include <util/PlatformUtils.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #endif
 
 

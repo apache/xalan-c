@@ -67,10 +67,10 @@
 
 
 
-#include <sax/DocumentHandler.hpp>
-#include <sax/DTDHandler.hpp>
-#include <sax2/ContentHandler.hpp>
-#include <sax2/LexicalHandler.hpp>
+#include <xercesc/sax/DocumentHandler.hpp>
+#include <xercesc/sax/DTDHandler.hpp>
+#include <xercesc/sax2/ContentHandler.hpp>
+#include <xercesc/sax2/LexicalHandler.hpp>
 
 
 

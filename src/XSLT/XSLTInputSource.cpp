@@ -66,8 +66,7 @@
 
 
 
-#include <framework/URLInputSource.hpp>
-#include <util/BinFileInputStream.hpp>
+#include <xercesc/framework/URLInputSource.hpp>
 
 
 

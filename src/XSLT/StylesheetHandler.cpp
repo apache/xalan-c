@@ -62,9 +62,9 @@
 
 
 
-#include <sax/Locator.hpp>
-#include <sax/SAXParseException.hpp>
-#include <util/XMLURL.hpp>
+#include <xercesc/sax/Locator.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
+#include <xercesc/util/XMLURL.hpp>
 
 
 

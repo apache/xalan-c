@@ -62,8 +62,8 @@
 
 
 
-#include <util/PlatformUtils.hpp>
-#include <util/TransService.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/TransService.hpp>
 
 
 

@@ -76,11 +76,8 @@
 
 
 
-#include <sax/SAXException.hpp>
-
-
-
-#include <util/XMLURL.hpp>
+#include <xercesc/sax/SAXException.hpp>
+#include <xercesc/util/XMLURL.hpp>
 
 
 

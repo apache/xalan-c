@@ -59,7 +59,7 @@
 
 
 
-#include <sax/SAXException.hpp>
+#include <xercesc/sax/SAXException.hpp>
 
 
 

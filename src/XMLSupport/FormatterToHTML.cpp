@@ -67,11 +67,10 @@
 
 
 #include <cassert>
-//#include <map>
 
 
 
-#include <sax/AttributeList.hpp>
+#include <xercesc/sax/AttributeList.hpp>
 
 
 

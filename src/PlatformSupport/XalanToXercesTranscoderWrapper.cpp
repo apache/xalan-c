@@ -62,8 +62,8 @@
 
 
 
-#include <util/TransService.hpp>
-#include <util/XMLException.hpp>
+#include <xercesc/util/TransService.hpp>
+#include <xercesc/util/XMLException.hpp>
 
 
 

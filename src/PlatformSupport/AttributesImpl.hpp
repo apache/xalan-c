@@ -68,7 +68,7 @@
 
 
 
-#include <sax2/Attributes.hpp>
+#include <xercesc/sax2/Attributes.hpp>
 
 
 

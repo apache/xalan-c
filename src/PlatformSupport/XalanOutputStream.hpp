@@ -243,6 +243,12 @@ public :
     bool
 	canTranscodeTo(unsigned int		theChar) const;
 
+	const XalanOutputTranscoder*
+	getTranscoder() const
+	{
+		return m_transcoder;
+	}
+
 	/**
 	 * Set the flag that indicates whether a transcoding
 	 * error should throw an exception.  The default is

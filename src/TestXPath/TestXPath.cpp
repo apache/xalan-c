@@ -79,8 +79,8 @@
 
 
 
-#include <framework/URLInputSource.hpp>
-#include <util/PlatformUtils.hpp>
+#include <xercesc/framework/URLInputSource.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 

@@ -76,7 +76,7 @@
 
 
 
-#include <sax/InputSource.hpp>
+#include <xercesc/sax/InputSource.hpp>
 
 
 

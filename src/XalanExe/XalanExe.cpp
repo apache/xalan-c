@@ -73,8 +73,8 @@
 
 
 
-#include <util/PlatformUtils.hpp>
-#include <sax/SAXException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/sax/SAXException.hpp>
 
 
 
