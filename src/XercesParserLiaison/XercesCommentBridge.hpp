@@ -63,7 +63,7 @@
 
 
 
-#include <xercesc/dom/DOM_Comment.hpp>
+#include <dom/DOM_Comment.hpp>
 
 
 
