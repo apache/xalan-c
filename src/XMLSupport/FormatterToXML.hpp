@@ -67,7 +67,6 @@
 
 #include <stack>
 #include <vector>
-//#include <map>
 
 
 
@@ -96,6 +95,11 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToXML : public FormatterListener
 {
 public:
 
+	enum eDummy
+	{
+		eDefaultIndentAmount = 4
+	};
+
 	/**
 	 * Constructor for customized encoding and doctype.
 	 *
@@ -120,7 +124,7 @@ public:
 			Writer&					writer,
 			const XalanDOMString&	version = XalanDOMString(),
 			bool					doIndent = false,
-			int						indent = 0,
+			int						indent = eDefaultIndentAmount,
 			const XalanDOMString&	encoding = XalanDOMString(),
 			const XalanDOMString&	mediaType = XalanDOMString(),
 			const XalanDOMString&	doctypeSystem = XalanDOMString(),
@@ -499,7 +503,7 @@ protected:
 			XalanDOMChar	ch,
 			unsigned int	next);
 
-	enum eDummy { SPECIALSSIZE = 256};
+	enum eDummyTwo { SPECIALSSIZE = 256};
 
 	/**
 	 * The maximum character size before we have to resort 
@@ -668,6 +672,17 @@ private:
 			accum(' ');
 		}
 	}
+
+	/**
+	 * Normalize the data in a PI, to replace any
+	 * "?>" pairs with "? >"
+	 * @param theData the data to normalize.
+	 */
+	void
+	accumNormalizedPIData(
+			const XalanDOMChar*		theData,
+			unsigned int			theLength);
+
 
 	// Data members...
 	bool		m_shouldFlush;

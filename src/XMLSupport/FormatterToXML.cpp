@@ -71,7 +71,7 @@
 
 
 
-static XalanDOMChar 		theDefaultAttrSpecialChars[] = {'<', '>', '&', '"', '\r', '\n' };
+static const XalanDOMChar 	theDefaultAttrSpecialChars[] = {'<', '>', '&', '"', '\r', '\n', 0 };
 
 
 const XalanDOMCharVectorType	FormatterToXML::s_xsltNextIsRawString =
@@ -805,12 +805,14 @@ FormatterToXML::processingInstruction(
 			accum('?');
 			accum(target);
 
-			if (length(data) > 0 && !isSpace(data[0]))
+			const unsigned int	len = length(data);
+
+			if ( len > 0 && !isSpace(data[0]))
 			{
 				accum(' ');
 			}
 
-			accum(data);
+			accumNormalizedPIData(data, len);
 
 			accum('?');
 			accum('>');
@@ -1241,6 +1243,33 @@ FormatterToXML::indent(int 	n)
 	if(m_doIndent == true)
 	{
 		printSpace(n);
+	}
+}
+
+
+
+void
+FormatterToXML::accumNormalizedPIData(
+			const XalanDOMChar*		theData,
+			unsigned int			theLength)
+{
+	// If there are any "?>" pairs in the string,
+	// we have to normalize them to "? >", so they
+	// won't be confused with the end tag.
+
+	for (unsigned int i = 0; i < theLength; ++i)
+	{
+		const XalanDOMChar	theChar = theData[i];
+
+		if (theChar == '?' && i + 1 < theLength && theData[i + 1] == '>')
+		{
+			accum('?');
+			accum(' ');
+		}
+		else
+		{
+			accum(theChar);
+		}
 	}
 }
 
