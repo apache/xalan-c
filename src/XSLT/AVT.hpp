@@ -82,6 +82,7 @@ class Locator;
 class PrefixResolver;
 class XPathExecutionContext;
 class XalanNode;
+class StringTokenizer;
 class StylesheetConstructionContext;
 
 
@@ -175,6 +176,13 @@ public:
 #endif
 
 private:
+
+	void
+	nextToken(
+			StylesheetConstructionContext&	constructionContext,
+			const Locator*					locator,
+			StringTokenizer&				tokenizer,
+			XalanDOMString&					token);
 
 	/**
 	 * Get the prefix from theName, if any.

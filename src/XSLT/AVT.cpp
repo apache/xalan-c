@@ -156,7 +156,7 @@ AVT::AVT(
 			}
 			else
 			{
-				tokenizer.nextToken(t);
+				nextToken(constructionContext, locator, tokenizer, t);
 			}
 
 			if(length(t) == 1)
@@ -168,7 +168,7 @@ AVT::AVT(
 					case(XalanUnicode::charLeftCurlyBracket):
 					{
 						// Attribute Value Template start
-						tokenizer.nextToken(lookahead);
+						nextToken(constructionContext, locator, tokenizer, lookahead);
 
 						if(equals(lookahead, theLeftCurlyBracketString))
 						{
@@ -205,13 +205,13 @@ AVT::AVT(
 											const XalanDOMString	quote = lookahead;
 
 											// Consume stuff 'till next quote
-											tokenizer.nextToken(lookahead);
+											nextToken(constructionContext, locator, tokenizer, lookahead);
 
 											while(!equals(lookahead, quote))
 											{
 												append(exprBuffer, lookahead);
 
-												 tokenizer.nextToken(lookahead);
+												 nextToken(constructionContext, locator, tokenizer, lookahead);
 											}
 
 											append(exprBuffer,lookahead);
@@ -238,7 +238,7 @@ AVT::AVT(
 									append(exprBuffer,lookahead);
 								}
 
-								tokenizer.nextToken(lookahead);
+								nextToken(constructionContext, locator, tokenizer, lookahead);
 							} // end while(!equals(lookahead, "}"))
 							assert(equals(lookahead, theRightCurlyBracketString));
 
@@ -266,7 +266,7 @@ AVT::AVT(
 					}
 					case(XalanUnicode::charRightCurlyBracket):
 					{
-						tokenizer.nextToken(lookahead);
+						nextToken(constructionContext, locator, tokenizer, lookahead);
 
 						if(equals(lookahead, theRightCurlyBracketString))
 						{
@@ -371,6 +371,28 @@ AVT::evaluate(
 				m_parts[i]->evaluate(buf, contextNode, prefixResolver, executionContext);
 			}
 		}
+	}
+}
+
+
+
+void
+AVT::nextToken(
+			StylesheetConstructionContext&	constructionContext,
+			const Locator*					locator,
+			StringTokenizer&				tokenizer,
+			XalanDOMString&					token)
+{
+	if (tokenizer.hasMoreTokens() == false)
+	{
+		constructionContext.error(
+			"The attribute value template has a missing a '}'",
+			0,
+			locator);
+	}
+	else
+	{
+		tokenizer.nextToken(token);
 	}
 }
 
