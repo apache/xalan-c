@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -95,7 +95,7 @@ public:
 	 *
 	 * @return 0 if the traversal completes, or the next node if the traversal doesn't complete.
 	 */
-	virtual const DOMNodeType*
+	const DOMNodeType*
 	traverse(const DOMNodeType*		pos);
 
 	/**
@@ -113,7 +113,7 @@ public:
 	 *
 	 * @return 0 if the traversal completes, or the next node if the traversal doesn't complete.
 	 */
-	virtual DOMNodeType*
+	DOMNodeType*
 	traverse(DOMNodeType*	pos);
 
 	/**
@@ -133,7 +133,7 @@ public:
 	 *
 	 * @return parent if the traversal completes, or the next node if the traversal doesn't complete.
 	 */
-	virtual const DOMNodeType*
+	const DOMNodeType*
 	traverse(
 			const DOMNodeType*	pos,
 			const DOMNodeType*	parent);
@@ -155,25 +155,25 @@ public:
 	 *
 	 * @return parent if the traversal completes, or the next node if the traversal doesn't complete.
 	 */
-	virtual DOMNodeType*
+	DOMNodeType*
 	traverse(
 			DOMNodeType*	pos,
 			DOMNodeType*	parent);
 
 	/**
-	 * Perform a pre-order traversal non-recursive style.
+	 * Perform a pre-order traversal.
 	 * 
 	 * @param pos starting node
 	 */
-	virtual void
+	void
 	traverseSubtree(const DOMNodeType*	pos);
 
 	/**
-	 * Perform a document-order traversal non-recursive style.
+	 * Perform a document-order traversal.
 	 * 
 	 * @param pos starting node
 	 */
-	virtual void
+	void
 	traverseSubtree(DOMNodeType*	pos);
 
 protected:
@@ -183,7 +183,7 @@ protected:
 	 * 
 	 * @param node The node
 	 *
-	 * @return return false if the walk should continue, or true if it should not.
+	 * @return return false if traversal should continue, or true if it should not.
 	 */
 	virtual bool
 	startNode(const DOMNodeType*	node) = 0;
@@ -193,7 +193,7 @@ protected:
 	 * 
 	 * @param node The node
 	 *
-	 * @return return false if the walk should continue, or true if it should not.
+	 * @return return false if traversal should continue, or true if it should not.
 	 */
 	virtual bool
 	startNode(DOMNodeType*	node);
@@ -203,7 +203,7 @@ protected:
 	 * 
 	 * @param node The node
 	 *
-	 * @return return false if the walk should continue, or true if it should not.
+	 * @return return false if traversal should continue, or true if it should not.
 	 */
 	virtual bool
 	endNode(const DOMNodeType*	node) = 0;
@@ -213,7 +213,7 @@ protected:
 	 * 
 	 * @param node The node
 	 *
-	 * @return return false if the walk should continue, or true if it should not.
+	 * @return return false if traversal should continue, or true if it should not.
 	 */
 	virtual bool
 	endNode(DOMNodeType*	node);
