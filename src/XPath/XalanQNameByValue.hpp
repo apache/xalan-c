@@ -113,34 +113,41 @@ public:
 	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
 	 * namespace vector stack. The default namespace is not resolved.
 	 *
-	 * @param qname      XalanQName string
-	 * @param namespaces namespace vector stack to use
+	 * @param qname       QName string
+	 * @param namespaces  namespace vector stack to use
+	 * @param locator     The Locator instance for error reporting, if any
+	 * @param fUseDefault If true, then elements with no prefix will have the default namespace URI, if there is one.
 	 */
 	XalanQNameByValue(
 			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator = 0);
+			const Locator*				locator = 0,
+			bool						fUseDefault = false);
 
 	/**
 	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
 	 * namespace vector stack. The default namespace is not resolved.
 	 *
-	 * @param qname      XalanQName string
-	 * @param namespaces namespace vector stack to use
+	 * @param qname       QName string
+	 * @param namespaces  namespace vector stack to use
+	 * @param locator     The Locator instance for error reporting, if any
+	 * @param fUseDefault If true, then elements with no prefix will have the default namespace URI, if there is one.
 	 */
 	XalanQNameByValue(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator = 0);
+			const Locator*				locator = 0,
+			bool						fUseDefault = false);
 
 	/**
 	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
 	 * namespace context. The default namespace is not resolved.
 	 *
-	 * @param qname XalanQName string
+	 * @param qname            QName string
 	 * @param namespaceContext context object for namespace resolution
-	 * @param envSupport XPathEnvSupport class instance
-	 * @param domSupport DOMSupport class instance
+	 * @param envSupport       XPathEnvSupport class instance
+	 * @param domSupport       DOMSupport class instance
+	 * @param locator          The Locator instance for error reporting, if any
 	 */
 	XalanQNameByValue(
 			const XalanDOMString&	qname,
@@ -153,8 +160,9 @@ public:
 	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
 	 * prefix resolver. The default namespace is not resolved.
 	 *
-	 * @param qname XalanQName string
+	 * @param qname       QName string
 	 * @param theResolver prefix resolver to use
+	 * @param locator     The Locator instance for error reporting, if any
 	 */
 	XalanQNameByValue(
 			const XalanDOMString&	qname,
@@ -218,7 +226,8 @@ private:
 	initialize(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator);
+			const Locator*				locator,
+			bool						fUseDefault);
 
 	void
 	resolvePrefix(

@@ -114,11 +114,12 @@ XalanQNameByValue::XalanQNameByValue(
 XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator) :
+			const Locator*				locator,
+			bool						fUseDefault) :
 	m_namespace(),
 	m_localpart()
 {
-	initialize(c_wstr(qname), namespaces, locator);
+	initialize(c_wstr(qname), namespaces, locator, fUseDefault);
 }
 
 
@@ -126,13 +127,14 @@ XalanQNameByValue::XalanQNameByValue(
 XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator) :
+			const Locator*				locator,
+			bool						fUseDefault) :
 	m_namespace(),
 	m_localpart()
 {
 	assert(qname != 0);
 
-	initialize(qname, namespaces, locator);
+	initialize(qname, namespaces, locator, fUseDefault);
 }
 
 
@@ -209,7 +211,8 @@ void
 XalanQNameByValue::initialize(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator)
+			const Locator*				locator,
+			bool						fUseDefault)
 {
 	const XalanDOMString::size_type		indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
 
@@ -240,6 +243,17 @@ XalanQNameByValue::initialize(
 	}
 	else
 	{
+		if (fUseDefault == true)
+		{
+			const XalanDOMString* const		theNamespace = 
+					getNamespaceForPrefix(namespaces, s_emptyString);
+
+			if(theNamespace != 0 && 0 != length(*theNamespace))
+			{
+				m_namespace = *theNamespace;
+			}
+		}
+
 		m_localpart = qname;
 	}
 }
