@@ -805,6 +805,23 @@ public:
 		return index < m_attributeCount ? m_attributes[index] : 0;
 	}
 
+	/**
+	  * Removes all of the children.  Since the owner document controls the
+	  * lifetime of all nodes in the document, this just sets the first child
+	  * to 0.
+	  */
+	void
+	clearChildren()
+	{
+		m_firstChild = 0;
+	}
+
+	XalanSourceTreeElement*
+	clone(bool	deep) const
+	{
+		return new XalanSourceTreeElement(*this, deep);
+	}
+
 protected:
 
 	XalanSourceTreeElement(

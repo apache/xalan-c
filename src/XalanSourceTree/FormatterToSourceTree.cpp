@@ -83,6 +83,7 @@
 
 #include "XalanSourceTreeComment.hpp"
 #include "XalanSourceTreeDocument.hpp"
+#include "XalanSourceTreeDocumentFragment.hpp"
 #include "XalanSourceTreeElement.hpp"
 #include "XalanSourceTreeProcessingInstruction.hpp"
 #include "XalanSourceTreeText.hpp"
@@ -102,8 +103,8 @@ FormatterToSourceTree::FormatterToSourceTree(XalanSourceTreeDocument*	theDocumen
 
 
 FormatterToSourceTree::FormatterToSourceTree(
-			XalanSourceTreeDocument*	theDocument,
-			XalanDocumentFragment*		theDocumentFragment) :
+			XalanSourceTreeDocument*			theDocument,
+			XalanSourceTreeDocumentFragment*	theDocumentFragment) :
 	FormatterListener(OUTPUT_METHOD_DOM),
 	m_document(theDocument),
 	m_documentFragment(theDocumentFragment),
@@ -161,7 +162,7 @@ FormatterToSourceTree::startElement(
 	}
 	else if(m_documentFragment != 0)
 	{
-		m_documentFragment->appendChild(theNewElement);
+		m_documentFragment->appendChildNode(theNewElement);
 	}
 	else
 	{
@@ -275,7 +276,7 @@ FormatterToSourceTree::ignorableWhitespace(
 		XalanSourceTreeText* const	theNewTextNode =
 			m_document->createTextIWSNode(chars, length, m_currentElement);
 
-		m_documentFragment->appendChild(theNewTextNode);
+		m_documentFragment->appendChildNode(theNewTextNode);
 	}
 }
 
@@ -318,7 +319,7 @@ FormatterToSourceTree::comment(const XMLCh* const	data)
 	}
 	else if(m_documentFragment != 0)
 	{
-		m_documentFragment->appendChild(theNewComment);
+		m_documentFragment->appendChildNode(theNewComment);
 	}
 	else
 	{
@@ -361,7 +362,7 @@ FormatterToSourceTree::doCharacters(
 	}
 	else if(m_documentFragment != 0)
 	{
-		m_documentFragment->appendChild(m_document->createTextNode(chars, length, m_currentElement));
+		m_documentFragment->appendChildNode(m_document->createTextNode(chars, length, m_currentElement));
 	}
 	else
 	{
@@ -403,7 +404,7 @@ FormatterToSourceTree::doProcessingInstruction(
 	}
 	else if(m_documentFragment != 0)
 	{
-		m_documentFragment->appendChild(theNewPI);
+		m_documentFragment->appendChildNode(theNewPI);
 	}
 	else
 	{

@@ -111,14 +111,14 @@ XalanSourceTreeElement::~XalanSourceTreeElement()
 
 XalanSourceTreeElement::XalanSourceTreeElement(
 			const XalanSourceTreeElement&	theSource,
-			bool							/* deep */) :
+			bool							deep) :
 	XalanElement(theSource),
 	m_tagName(theSource.m_tagName),
 	m_ownerDocument(theSource.m_ownerDocument),
 	m_parentElement(0),
 	m_previousSibling(0),
 	m_nextSibling(0),
-	m_firstChild(0),
+	m_firstChild(theSource.m_firstChild == 0 ? 0 : theSource.m_firstChild->cloneNode(deep)),
 	m_index(0),
 	m_attributes(theSource.m_attributes),
 	m_attributeCount(theSource.m_attributeCount)
@@ -232,7 +232,7 @@ XalanSourceTreeElement*
 #endif
 XalanSourceTreeElement::cloneNode(bool	deep) const
 {
-	return new XalanSourceTreeElement(*this, deep);
+	return clone(deep);
 }
 
 

@@ -78,11 +78,8 @@
 
 
 class PrefixResolver;
-class XalanDocument;
-class XalanDocumentFragment;
-class XalanElement;
-class XalanNode;
 class XalanSourceTreeDocument;
+class XalanSourceTreeDocumentFragment;
 class XalanSourceTreeElement;
 
 
@@ -125,8 +122,8 @@ public:
 	 * @param theDocumentFragment The document fragment for nodes
 	 */
 	FormatterToSourceTree(
-			XalanSourceTreeDocument*	theDocument,
-			XalanDocumentFragment*		theDocumentFragment);
+			XalanSourceTreeDocument*			theDocument,
+			XalanSourceTreeDocumentFragment*	theDocumentFragment);
 
 	virtual
 	~FormatterToSourceTree();
@@ -144,14 +141,14 @@ public:
 		m_document = theDocument;
 	}
 
-	XalanDocumentFragment*
+	XalanSourceTreeDocumentFragment*
 	getDocumentFragment() const
 	{
 		return m_documentFragment;
 	}
 
 	void
-	setDocumentFragment(XalanDocumentFragment*	theDocumentFragment)
+	setDocumentFragment(XalanSourceTreeDocumentFragment*	theDocumentFragment)
 	{
 		m_documentFragment = theDocumentFragment;
 	}
@@ -247,7 +244,7 @@ private:
 	// Data members...
 	XalanSourceTreeDocument*						m_document;
 
-	XalanDocumentFragment*							m_documentFragment;
+	XalanSourceTreeDocumentFragment*				m_documentFragment;
 
 	XalanSourceTreeElement*							m_currentElement;
 
