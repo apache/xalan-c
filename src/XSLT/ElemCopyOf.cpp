@@ -139,23 +139,7 @@ ElemCopyOf::getElementName() const
 
 
 inline void
-ElemCopyOf::cloneNodeSet(
-			StylesheetExecutionContext&		executionContext,
-			const NodeRefListBase&			theNodeList) const
-{
-	unsigned int	nChildren = theNodeList.getLength();
-
-	for(unsigned int i = 0; i < nChildren; i++)
-	{
-		assert(theNodeList.item(i) != 0);
-		cloneNode(executionContext, *theNodeList.item(i));
-	}
-}
-
-
-
-inline void
-ElemCopyOf::cloneNode(
+ElemCopyOf::doCloneNode(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode&						theNode) const
 {
@@ -211,6 +195,23 @@ ElemCopyOf::cloneNode(
 
 
 
+inline void
+ElemCopyOf::doCloneNodeSet(
+			StylesheetExecutionContext&		executionContext,
+			const NodeRefListBase&			theNodeList) const
+{
+	unsigned int	nChildren = theNodeList.getLength();
+
+	for(unsigned int i = 0; i < nChildren; i++)
+	{
+		assert(theNodeList.item(i) != 0);
+
+		doCloneNode(executionContext, *theNodeList.item(i));
+	}
+}
+
+
+
 void
 ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 {
@@ -235,7 +236,7 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 					XObjectPtr()));
 		}
 
-		cloneNode(executionContext, *sourceNode);
+		doCloneNode(executionContext, *sourceNode);
 	}
 	else
 	{
@@ -265,7 +266,7 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 			break;
 
 		case XObject::eTypeNodeSet:
-			cloneNodeSet(executionContext, value->nodeset());
+			doCloneNodeSet(executionContext, value->nodeset());
 			break;
 
 		case XObject::eTypeResultTreeFrag:
