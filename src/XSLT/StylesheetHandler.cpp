@@ -89,6 +89,7 @@
 #include "ElemElement.hpp"
 #include "ElemEmpty.hpp"
 #include "ElemExtensionCall.hpp"
+#include "ElemFallback.hpp"
 #include "ElemForEach.hpp"
 #include "ElemIf.hpp"
 #include "ElemLiteralResult.hpp"
@@ -684,6 +685,16 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 								name, atts, lineNumber, columnNumber);
 				break;
 
+			case Constants::ELEMNAME_FALLBACK:
+				elem = new ElemFallback(
+						m_constructionContext,
+						m_stylesheet,
+						name,
+						atts,
+						lineNumber,
+						columnNumber);
+				break;
+
 			case Constants::ELEMNAME_CHOOSE:
 				elem = new ElemChoose(m_constructionContext,
 									m_stylesheet,
@@ -882,9 +893,10 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 
 				if (nsh == 0) 
 				{
-					XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + " extension namespace prefix '" + prefix + "' unknown");
+					// The extension namespace might not yet be known...
+					nsh = new ExtensionNSHandler(m_processor, extns);
 
-					throw SAXException(toCharArray(msg));
+					m_stylesheet.addExtensionNamespace(extns, nsh);
 				}
 
 				if (!isEmpty(elements)) 
