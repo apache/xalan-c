@@ -152,8 +152,11 @@ StylesheetHandler::StylesheetHandler(
 	m_LXSLTScriptLang(),
 	m_LXSLTScriptSrcURL(),
 	m_pLXSLTExtensionNSH(0),
-	m_locatorsPushed(0)
+	m_locatorsPushed(0),
+	m_globalVariableNames(),
+	m_inScopeVariableNamesStack()
 {
+	m_inScopeVariableNamesStack.reserve(eVariablesStackDefault);
 }
 
 
@@ -200,6 +203,12 @@ StylesheetHandler::~StylesheetHandler()
 	for_each(m_strayElements.begin(),
 			 m_strayElements.end(),
 			 DeleteFunctor<ElemTemplateElement>());
+
+	// Clean up any template that's left over...
+	if (m_pTemplate != m_stylesheet.getWrapperlessTemplate())
+	{
+		delete m_pTemplate;
+	}
 
 	m_elemStackParentedElements.clear();
 }
@@ -511,9 +520,19 @@ StylesheetHandler::startElement(
 					break;
           
 				case Constants::ELEMNAME_VARIABLE:
-					elem = new ElemVariable(m_constructionContext,
-										  m_stylesheet,
-										  atts, lineNumber, columnNumber);
+					{
+						XalanAutoPtr<ElemVariable>	newVar(
+							new ElemVariable(
+									m_constructionContext,
+									m_stylesheet,
+									atts,
+									lineNumber,
+									columnNumber));
+
+						checkForOrAddVariableName(newVar->getName(), locator);
+
+						elem = newVar.release();
+					}
 					break;
 
 				case Constants::ELEMNAME_PARAMVARIABLE:
@@ -690,6 +709,8 @@ StylesheetHandler::startElement(
 						}
 					}
 				}
+
+				m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
 			}
 		}
 		else if (!m_inTemplate && startsWith(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
@@ -716,6 +737,8 @@ StylesheetHandler::startElement(
 			}
 			else
 			{
+				m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
+
 				// BEGIN SANJIVA CODE
 				// is this an extension element call?
 				ExtensionNSHandler*		nsh = 0;
@@ -837,7 +860,9 @@ StylesheetHandler::initWrapperless(
 
 	m_pTemplate->appendChildElem(pElem);
 	m_inTemplate = true;
-	
+
+	m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
+
 	m_stylesheet.setWrapperlessTemplate(m_pTemplate);
 
 	m_foundStylesheet = true;
@@ -931,6 +956,7 @@ StylesheetHandler::processTopLevelElement(
 		m_elemStack.push_back(m_pTemplate);
 		m_elemStackParentedElements.insert(m_pTemplate);
 		m_inTemplate = true;
+		m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
 		break;
 
 	case Constants::ELEMNAME_EXTENSION:
@@ -953,10 +979,18 @@ StylesheetHandler::processTopLevelElement(
 															atts, 
 															lineNumber, columnNumber);
 
+			XalanAutoPtr<ElemVariable>	newVar(varelem);
+
+			checkForOrAddVariableName(varelem->getName(), locator);
+
 			m_elemStack.push_back(varelem);
 			m_inTemplate = true; // fake it out
+			m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
 			m_stylesheet.setTopLevelVariable(varelem);
 			m_elemStackParentedElements.insert(varelem);
+
+			newVar.release();
+
 			varelem->setTopLevel(true);
 		}
 	break;
@@ -981,6 +1015,7 @@ StylesheetHandler::processTopLevelElement(
 	case Constants::ELEMNAME_DEFINEATTRIBUTESET:
 		{
 			m_inTemplate = true; // fake it out
+			m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
 
 			ElemAttributeSet* attrSet = new ElemAttributeSet(m_constructionContext,
 															   m_stylesheet,
@@ -1266,6 +1301,53 @@ StylesheetHandler::processExtensionElement(
 	else 
 	{
 		// other xslt4j: element. Not my business.
+	}
+}
+
+
+
+void
+StylesheetHandler::checkForOrAddVariableName(
+			const XalanQName&	theVariableName,
+			const Locator*		theLocator)
+{
+	XalanQNameByValue	theLocalVariableName(theVariableName);
+
+	if (m_inTemplate == false)
+	{
+		assert(m_inScopeVariableNamesStack.empty() == true);
+
+		if (m_globalVariableNames.find(theLocalVariableName) != m_globalVariableNames.end())
+		{
+			error("A global variable with this name has already been declared", theLocator);
+		}
+		else
+		{
+			m_globalVariableNames.insert(theLocalVariableName);
+		}
+	}
+	else
+	{
+		assert(m_inScopeVariableNamesStack.empty() == false);
+
+		QNameSetVectorType::iterator		theCurrent = m_inScopeVariableNamesStack.begin();
+		const QNameSetVectorType::iterator	theEnd = m_inScopeVariableNamesStack.end();
+
+		while(theCurrent != theEnd)
+		{
+			QNameSetVectorType::value_type	theLocalScope = *theCurrent;
+
+			if (theLocalScope.find(theLocalVariableName) != theLocalScope.end())
+			{
+				error("A variable with this name has already been declared in this template", theLocator);
+			}
+
+			++theCurrent;
+		}
+
+		assert(theCurrent == theEnd);
+
+		m_inScopeVariableNamesStack.back().insert(theLocalVariableName);
 	}
 }
 
@@ -1611,6 +1693,13 @@ StylesheetHandler::endElement(const XMLCh* const name)
 
 	const int tok = m_lastPopped->getXSLToken();
 
+	if (m_inTemplate == true)
+	{
+		assert(m_inScopeVariableNamesStack.empty() == false);
+
+		m_inScopeVariableNamesStack.pop_back();
+	}
+
 	if(Constants::ELEMNAME_TEMPLATE == tok)
 	{
 		m_inTemplate = false;
@@ -1817,15 +1906,12 @@ StylesheetHandler::processText(
 		{
 			while(!m_whiteSpaceElems.empty())
 			{
-#if 1
 				assert(m_whiteSpaceElems.back() != 0);
 
 				appendChildElementToParent(
 					parent,
 					m_whiteSpaceElems.back());
-#else
-				parent->appendChildElem(m_whiteSpaceElems.back());
-#endif
+
 				m_whiteSpaceElems.pop_back();
 			}
 
@@ -1852,14 +1938,9 @@ StylesheetHandler::processText(
 
 				if(isPrevCharData && ! isLastPoppedXSLText)
 				{
-#if 1
 					appendChildElementToParent(
 						parent,
 						elem.get());
-
-#else
-					parent->appendChildElem(elem.get());
-#endif
 
 					elem.release();
 

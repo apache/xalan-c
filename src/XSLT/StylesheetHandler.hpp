@@ -79,6 +79,10 @@
 
 
 
+#include <XPath/XalanQNameByValue.hpp>
+
+
+
 #include <XSLT/NamespacesHandler.hpp>
 #include <XSLT/Stylesheet.hpp>
 
@@ -89,7 +93,6 @@ class ElemTemplateElement;
 class ElemTextLiteral;
 class ExtensionNSHandler;
 class StylesheetConstructionContext;
-class XalanQName;
 
 
 
@@ -110,11 +113,16 @@ public:
 	typedef set<ElemTemplateElement*,
 				less<ElemTemplateElement*> >	ElemTemplateSetType;
 	typedef vector<bool>						BoolStackType;
+	typedef set<XalanQNameByValue,
+				less<XalanQNameByValue> >		QNameSetType;
+	typedef vector<QNameSetType>				QNameSetVectorType;
 #else
 	typedef std::vector<ElemTemplateElement*>	ElemTemplateStackType;
 	typedef std::vector<ElemTextLiteral*>		ElemTextLiteralStackType;
 	typedef std::set<ElemTemplateElement*>		ElemTemplateSetType;
 	typedef std::vector<bool>					BoolStackType;
+	typedef std::set<XalanQNameByValue>			QNameSetType;
+	typedef std::vector<QNameSetType>			QNameSetVectorType;
 #endif
 
 	/**
@@ -517,6 +525,11 @@ private:
 			const AttributeList&	atts,
 			const Locator*			locator);
 
+	void
+	checkForOrAddVariableName(
+			const XalanQName&	theVariableName,
+			const Locator*		theLocator);
+
 	// Data members...
 
 	/**
@@ -601,9 +614,15 @@ private:
 	XalanDOMString			m_LXSLTScriptSrcURL;
 	ExtensionNSHandler*		m_pLXSLTExtensionNSH;
 
-	// Note that this variable must not be saved by
+	// Note that these variables must not be saved by
 	// PushPopIncludeState...
 	unsigned long	m_locatorsPushed;
+
+	QNameSetType		m_globalVariableNames;
+
+	enum { eVariablesStackDefault = 20 };
+
+	QNameSetVectorType	m_inScopeVariableNamesStack;
 
 	/**
 	 * Init the wrapperless template
