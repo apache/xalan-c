@@ -111,10 +111,7 @@ static const XalanDOMChar	theDefaultSpecialCharacters[] =
 
 
 
-XercesParserLiaison::XercesParserLiaison(
-			XercesDOMSupport&	/* theSupport */,
-			DocumentNumberType	theStartingNumber) :
-	m_documentNumber(theStartingNumber),
+XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
 	m_indent(-1),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),
@@ -131,8 +128,7 @@ XercesParserLiaison::XercesParserLiaison(
 
 
 
-XercesParserLiaison::XercesParserLiaison(DocumentNumberType		theStartingNumber) :
-	m_documentNumber(theStartingNumber),
+XercesParserLiaison::XercesParserLiaison() :
 	m_indent(-1),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),
@@ -262,14 +258,6 @@ XercesParserLiaison::destroyDocument(XalanDocument*		theDocument)
 
 		delete theDocument;
 	}
-}
-
-
-
-XercesParserLiaison::DocumentNumberType
-XercesParserLiaison::getNextDocumentNumber()
-{
-	return m_documentNumber++;
 }
 
 
@@ -599,7 +587,7 @@ XercesParserLiaison::doCreateDocument(
 			bool					buildBridge)
 {
 	XercesDocumentBridge* const		theNewDocument =
-		new XercesDocumentBridge(theXercesDocument, getNextDocumentNumber(), threadSafe, buildBridge);
+		new XercesDocumentBridge(theXercesDocument, threadSafe, buildBridge);
 
 	m_documentMap[theNewDocument] = theNewDocument;
 

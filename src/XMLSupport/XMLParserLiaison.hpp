@@ -88,8 +88,6 @@ class XALAN_XMLSUPPORT_EXPORT XMLParserLiaison : public Resettable
 {
 public:
 
-	typedef unsigned long	DocumentNumberType;
-
 	XMLParserLiaison();
 
 	virtual
@@ -179,15 +177,6 @@ public:
 	 */
 	virtual void
 	destroyDocument(XalanDocument*	theDocument) = 0;
-
-	/**
-	 * Get a unique number for identifying the document.  The number need
-	 * only be unique to the parser liaison instance.
-	 *
-	 * @return The unique number
-	 */
-	virtual DocumentNumberType
-	getNextDocumentNumber() = 0;
 
 	/**
 	 * Get the amount to indent when indent-result="yes".

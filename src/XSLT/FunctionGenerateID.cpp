@@ -99,24 +99,13 @@ getSuffix(
 	assert(theNode != 0);
 	assert(theNode->getOwnerDocument() != 0);
 
-	const unsigned long		theNumber = theNode->getOwnerDocument()->getNumber();
-
-	UnsignedLongToHexDOMString(theNumber, theResult);
+	PointerToDOMString(theNode->getOwnerDocument(), theResult);
 
 	append(theResult, XalanDOMChar(XalanUnicode::charFullStop));
 
-	const unsigned long		theIndex = theNode->getIndex();
-
-	if (theIndex == 0)
-	{
-		// We're assuming here that each node has an implementation with a 
-		// unique address that we can convert into a string...
-		PointerToDOMString(theNode, theResult);
-	}
-	else
-	{
-		UnsignedLongToHexDOMString(theIndex, theResult);
-	}
+	// We're assuming here that each node has an implementation with a 
+	// unique address that we can convert into a string...
+	PointerToDOMString(theNode, theResult);
 }
 
 

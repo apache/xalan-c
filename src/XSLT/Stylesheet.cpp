@@ -1791,17 +1791,6 @@ Stylesheet::isIndexed() const
 
 
 
-unsigned long
-Stylesheet::getNumber() const
-{
-	// This member functionshould not be called
-	assert(false);	
-
-	return 0;
-}
-
-
-
 const XalanDOMString*
 Stylesheet::getNamespaceForPrefix(const XalanDOMString& 	prefix) const
 {

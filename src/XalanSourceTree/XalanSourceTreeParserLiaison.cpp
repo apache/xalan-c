@@ -226,9 +226,7 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::namespacePrefixesString[] = {
 
 
 XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(
-			XalanSourceTreeDOMSupport&	/* theSupport */,
-			DocumentNumberType			theStartingNumber) :
-	m_documentNumber(theStartingNumber),
+			XalanSourceTreeDOMSupport&	/* theSupport */) :
 	m_xercesParserLiaison(),
 	m_documentMap(),
 	m_persistentDocumentMap(),
@@ -238,8 +236,7 @@ XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(
 
 
 
-XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(DocumentNumberType	theStartingNumber) :
-	m_documentNumber(theStartingNumber),
+XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison() :
 	m_xercesParserLiaison(),
 	m_documentMap(),
 	m_persistentDocumentMap(),
@@ -389,14 +386,6 @@ XalanSourceTreeParserLiaison::destroyDocument(XalanDocument*	theDocument)
 	{
 		m_xercesParserLiaison.destroyDocument(theDocument);
 	}
-}
-
-
-
-XalanSourceTreeParserLiaison::DocumentNumberType
-XalanSourceTreeParserLiaison::getNextDocumentNumber()
-{
-	return m_documentNumber++;
 }
 
 
@@ -595,7 +584,7 @@ XalanSourceTreeDocument*
 XalanSourceTreeParserLiaison::createXalanSourceTreeDocument()
 {
 	XalanSourceTreeDocument* const	theNewDocument =
-		new XalanSourceTreeDocument(getNextDocumentNumber(), m_poolAllText);
+		new XalanSourceTreeDocument(m_poolAllText);
 
 	m_documentMap[theNewDocument] = theNewDocument;
 

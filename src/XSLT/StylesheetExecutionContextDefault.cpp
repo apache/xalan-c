@@ -2215,7 +2215,7 @@ StylesheetExecutionContextDefault::getSourceTreeFactory() const
 #else
 		m_sourceTreeResultTreeFactory.reset(
 #endif
-			new XalanSourceTreeDocument(m_xsltProcessor->getXMLParserLiaison().getNextDocumentNumber()));
+			new XalanSourceTreeDocument);
 	}
 
 	return m_sourceTreeResultTreeFactory.get();

@@ -76,7 +76,7 @@ public:
 
 	XercesDOMParsedSourceHelper(const XercesParserLiaison&	theXercesParserLiaison) :
 		m_domSupport(),
-		m_parserLiaison(theXercesParserLiaison.getDocumentNumber())
+		m_parserLiaison()
 	{
 	}
 

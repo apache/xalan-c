@@ -134,14 +134,12 @@ public:
 	 * an unbuilt node at the same time.
 	 *
 	 * @param theXercesDocument The Xerces document to bridge
-	 * @param theNumber The number of the document.
 	 * @param threadSafe If true, the tree can safely be shared amongst multiple threads.  (Also implies buildBridge == true)
 	 * @param buildBridge If true, all of the bridge nodes will be built during construction.
 	 *
 	 */
 	XercesDocumentBridge(
 			const DOM_Document&		theXercesDocument,
-			unsigned long			theNumber = ~0UL,
 			bool					threadSafe = true,
 			bool					buildBridge = true);
 
@@ -298,9 +296,6 @@ public:
 
 	virtual XalanElement*
 	getElementById(const XalanDOMString&	elementId) const;
-
-	virtual unsigned long
-	getNumber() const;
 
 	// These are some special interfaces to manage relationships between
 	// our nodes and Xerces nodes.
@@ -562,8 +557,6 @@ private:
 
 	// This is a private helper class for building the tree...
 	friend class BuildBridgeTreeWalker;
-
-	const unsigned long						m_number;
 
 	// $$$ ToDo: This is because DOM_Document::getElementById() is not
 	// const...

@@ -99,20 +99,15 @@ public:
 	 * Construct a XercesParserLiaison instance.
 	 *
 	 * @param theSupport instance of DOMSupport object
-	 * @param theStartingNumber the starting number for documents
 	 *
 	 * @deprecated This constructor is deprecated.  Use the next constructor instead.
 	 */
-	XercesParserLiaison(
-			XercesDOMSupport&	theSupport,
-			DocumentNumberType	theStartingNumber = 0);
+	XercesParserLiaison(XercesDOMSupport&	theSupport);
 
 	/**
 	 * Construct a XercesParserLiaison instance.
-	 *
-	 * @param theStartingNumber the starting number for documents
 	 */
-	XercesParserLiaison(DocumentNumberType	theStartingNumber = 0);
+	XercesParserLiaison();
 
 	virtual
 	~XercesParserLiaison();
@@ -149,9 +144,6 @@ public:
 
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
-
-	virtual DocumentNumberType
-	getNextDocumentNumber();
 
 	virtual int
 	getIndent() const;
@@ -424,12 +416,6 @@ public:
 		}
 	}
 
-	DocumentNumberType
-	getDocumentNumber() const
-	{
-		return m_documentNumber;
-	}
-
 protected:
 
 	static void
@@ -460,8 +446,6 @@ protected:
 private:
 
 	// Data members...
-	unsigned long		m_documentNumber;
-
 	int 				m_indent;
 
 	bool				m_useValidation;

@@ -89,20 +89,15 @@ public:
 	 * Construct a XalanSourceTreeParserLiaison instance.
 	 *
 	 * @param theSupport instance of DOMSupport object
-	 * @param theStartingNumber the starting number for documents
 	 *
 	 * @deprecated This constructor is deprecated.  Use the next constructor instead.
 	 */
-	XalanSourceTreeParserLiaison(
-			XalanSourceTreeDOMSupport&	theSupport,
-			DocumentNumberType			theStartingNumber = 0);
+	XalanSourceTreeParserLiaison(XalanSourceTreeDOMSupport&		theSupport);
 
 	/**
 	 * Construct a XalanSourceTreeParserLiaison instance.
-	 *
-	 * @param theStartingNumber the starting number for documents
 	 */
-	XalanSourceTreeParserLiaison(DocumentNumberType		theStartingNumber = 0);
+	XalanSourceTreeParserLiaison();
 
 	virtual
 	~XalanSourceTreeParserLiaison();
@@ -161,9 +156,6 @@ public:
 
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
-
-	virtual DocumentNumberType
-	getNextDocumentNumber();
 
 	virtual int
 	getIndent() const;
@@ -358,12 +350,6 @@ public:
 					 XalanSourceTreeDocument*>	DocumentMapType;
 #endif
 
-	DocumentNumberType
-	getDocumentNumber() const
-	{
-		return m_documentNumber;
-	}
-
 private:
 
 	// Not implemented...
@@ -374,8 +360,6 @@ private:
 
 
 	// Data members...
-	DocumentNumberType			m_documentNumber;
-
 	XercesParserLiaison			m_xercesParserLiaison;
 
 	DocumentMapType 			m_documentMap;

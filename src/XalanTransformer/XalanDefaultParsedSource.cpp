@@ -152,7 +152,7 @@ XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(
 			const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
 			const XalanSourceTreeParserLiaison&		theSourceParserLiaison) :
 	m_domSupport(theSourceDOMSupport),
-	m_parserLiaison(theSourceParserLiaison.getDocumentNumber())
+	m_parserLiaison()
 {
 	m_domSupport.setParserLiaison(&m_parserLiaison);
 }
@@ -182,7 +182,7 @@ XalanDefaultParsedSource::XalanDefaultParsedSource(
 			EntityResolver*		theEntityResolver) :
 	XalanParsedSource(),
 	m_domSupport(),
-	m_parserLiaison(m_domSupport),
+	m_parserLiaison(),
 	m_parsedSource(0)
 {
 	m_parserLiaison.setUseValidation(fValidate);
