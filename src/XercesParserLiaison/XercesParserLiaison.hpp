@@ -407,8 +407,6 @@ private:
 
 	bool				m_exitOnFirstFatalError;
 
-	XalanDocument*		m_factory;
-
 	EntityResolver* 	m_entityResolver;
 
 	ErrorHandler*		m_errorHandler;

@@ -98,7 +98,6 @@ XercesParserLiaison::XercesParserLiaison(DOMSupport&	theSupport) :
 	m_includeIgnorableWhitespace(true),
 	m_doNamespaces(false),
 	m_exitOnFirstFatalError(true),
-	m_factory(0),
 	m_entityResolver(0),
 	m_errorHandler(this),
 	m_documentMap()
@@ -204,12 +203,7 @@ XercesParserLiaison::createDocument()
 XalanDocument*
 XercesParserLiaison::getDOMFactory()
 {
-	if (m_factory == 0)
-	{
-		m_factory = createDocument();
-	}
-
-	return m_factory;
+	return createDocument();
 }
 
 
