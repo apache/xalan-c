@@ -89,15 +89,17 @@
         <td>AIX</td>
         <td><resource-ref idref="xslt4c-aix-download"/></td>
       </tr>
+      <tr>
+        <td>HP-UX 11</td>
+        <td><resource-ref idref="xslt4c-hp-download"/></td>
+      </tr>      
      </table>
   <p>Volunteers are more than welcome to help develop builds for other platforms!</p>
   </s2>
   
   <s2 title="Where do I get Xerces?">
-    <p>The distributions include the Xerces runtime environment for Xalan: &xml4c-windll; for
-     Windows, &xml4c-linuxlib; for Linux, and &xml4c-aixlib; for AIX.</p>
-     <p>To build applications with Xalan and Xerces, you also need the &xml4c; binary distribution
-     for your platform, which you can download from the <resource-ref idref="xml4c-distdir"/>.</p>
+    <p>Right here! The distributions include everything you need to build and run applications that use Xalan and Xerces. Each distribution file includes the Xerces source tree along with the appropriate Xerces runtime environment for Xalan: &xml4c-windll; for
+     Windows, &xml4c-linuxlib; for Linux, &xml4c-aixlib; for AIX, and &xml4c-hplib; for HP-UX 11.</p>
   </s2>
   <s2 title="How about support for internationalization?">
     <p>To extend Unicode support for encoding, number formatting, and sorting, you can download,

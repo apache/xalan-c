@@ -11,14 +11,21 @@
 </ul>
 <anchor name="download"/>
 <s2 title="Downloading what you need">
-<p>For &xslt4c-current;, we are distributing a Windows32 Visual C++ build, a Red Hat Linux GNU build, and an AIX xlC_r build. Please contact us at <human-resource-ref idref="xalandev"/> if you would like to help provide builds for other platforms.</p>
-<s3 title="&xslt4c; Distributions">
-<p><img src="xalan-cdist.gif" alt="xalan-cdist.gif"/></p>
+<p>For &xslt4c-current;, we are distributing a Windows32 Visual C++ build and three UNIX builds with a makefile: a Red Hat Linux GNU build, an AIX xlC_r build, and an HP-UX 11 aCC build. 
+Please contact us at <human-resource-ref idref="xalandev"/> if you would like to help provide builds for other platforms.</p>
+<anchor name="xalandists"/>
+<s3 title="&xslt4c; Windows Distribution">
+<p><img src="xalan-c-windist.gif" alt="xalan-cdist.gif"/></p>
 </s3>
 <p>For the Windows32 build, download <resource-ref idref="xslt4c-win32-download"/>.</p>
+<s3 title="&xslt4c; UNIX Distributions">
+<p><img src="xalan-c-unixdist.gif" alt="xalan-cdist.gif"/></p>
+</s3>
 <p>For the Linux build, download <resource-ref idref="xslt4c-linux-download"/></p>
 <p>For the AIX build, download <resource-ref idref="xslt4c-aix-download"/></p>
-<p>Each distribution contains all you need to run the Xalan command-line utility for performing transformations. To build your own applications, you also need a compatible &xml4c; binary distribution. If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also download and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
+<p>For the HP-UX 11 build, download <resource-ref idref="xslt4c-hp-download"/></p>
+<p>Each distribution contains all you need to run the Xalan command-line transformations utility and to build your own applications. 
+If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also download and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
 <s3 title="What you need to run the Xalan command-line utility">
 <p>To run the Xalan executable for performing transformations, you need the following:</p>
 <p><em>Windows32</em></p>
@@ -40,19 +47,26 @@
   <li>The Xalan-C++ load library: &xslt4c-aixlib;</li>
   <li>The Xerces-C++ load library: &xml4c-aixlib;</li>
 </ul>
-<p>If you want to enable ICU support for the command-line utility, you must build the ICU and rebuild the Xalan-C++ shared/load library (Linux/AIX) and TestXSLT (all platforms) with the ICUBridge. See <link idref="usagepatterns" anchor="icu">Using the ICU</link> and <link idref="commandline" anchor="icu">Enabling ICU support for TestXSLT</link>.</p>
+<p><em>HP-UX 11</em></p>
+<ul>
+  <li>The executable: TestXSLT</li>
+  <li>The Xalan-C++ shared library: &xslt4c-hplib;</li>
+  <li>The Xerces-C++ shared library: &xml4c-hplib;</li>
+</ul>
+<p>If you want to enable ICU support for the command-line utility, you must build the ICU and rebuild the Xalan-C++ shared/load library (Linux/AIX/HP-UX 11) and TestXSLT (all platforms) with the ICUBridge. See <link idref="usagepatterns" anchor="icu">Using the ICU</link> and <link idref="commandline" anchor="icu">Enabling ICU support for TestXSLT</link>.</p>
 <p>For information about using the command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
 <note>If you want to do your own AIX build, you must download <resource-ref idref="stlport"/> and set the STLPORTROOT
 environment variable to the complete path to the STLPort distribution (see the <link idref="readme" anchor="build">Build notes</link>)</note>
 </s3>
-<s3 title="What you need to build applications">
+<s3 title="What you need to build and run applications">
 <p>To build your own applications with Xalan and Xerces, you also need need the
-Xalan-C++ and Xerces-C++ header (.hpp) files and (for Windows) the &xslt4c; and &xml4c; libraries (.lib files).</p>
-<p>The Xalan-C++ header files are in the src directory tree in both distributions.</p> 
-<p>In the Windows32 distribution (built with Microsoft&reg; Visual C++&reg; 6.0), the dlls and libraries are in the Build - Win32 -V6 - Release subdirectory.</p> 
-<p>In the Linux distribution (built with a make file and the GNU C++ compiler on Red Hat Linux 6.1), the shared object library is in the lib subdirectory.</p>
-<p>In the AIX distribution (built with the make file and xlC_r), the load library is in the lib subdirectory.</p>
-<p>To get the Xerces-C++ header and (for Windows) .lib files, download and expand the &xml4c; binary distribution for your platform from the <resource-ref idref="xml4c-distdir"/>. For information about which &xml4c; distribution has been tested with this &xslt4c; release, see <link idref="readme" anchor="status">Version of &xml4c; to use</link>.</p>
+Xalan-C++ and Xerces-C++ header (.hpp) files and (for Windows) the &xslt4c; and &xml4c; libraries (.lib files). To run your applications, you need the &xslt4c; and &xml4c; library files (.dll files for Windows, shared or load libraries for the UNIX platforms).</p>
+<p>The Xalan-C++ and Xerces-C++ header files are in the src directory trees in both distributions.</p> 
+<p>In the Windows32 distribution (built with Microsoft&reg; Visual C++&reg; 6.0), the .dlls and libraries are in the Build\Win32\V6 Debug and Release subdirectories.</p> 
+<p>In the Linux distribution (built with a make file and the GNU C++ compiler on Red Hat Linux 6.1), the shared object libraries are in the lib subdirectories.</p>
+<p>In the AIX distribution (built with the make file and xlC_r), the load libraries are in the lib subdirectories.</p>
+<p>In the HP-UX 11 distribution (built with the make file and aCC), the shared libraries are in the lib subdirectories.</p>
+<note>For your convenience, both the Xalan and Xerces libraries are placed together in the pertinent xml-xalan directory, whereas the corresponding xml-xerces directory only contains Xerces libraries.</note>
 <p>If you want to enable ICU support in your applications, you must rebuild the Xalan-C++ shared/load library (Linux/AIX) and include the ICUBridge headers (all platforms).</p>
 <p>For the requirements for rebuilding &xslt4c;, see the <link idref="readme" anchor="build">Build notes</link>.</p>
 </s3>
@@ -60,7 +74,8 @@ Xalan-C++ and Xerces-C++ header (.hpp) files and (for Windows) the &xslt4c; and 
 <s2 title="Setting up the path">
 <p>For the Xalan-C++ Windows32 distribution, place xml-xalan\c\Build\Win32\VC6\Release on the path.</p>
 <p>For the Xalan-C++ Linux distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (LD_LIBRARY_PATH for Red Hat Linux 6.1), or copy &xslt4c-linuxlib; to /usr/lib.</p>
-<p>For the Xalan-C++ AIX distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the load library path (LIB_PATH for AIX), or copy &xslt4c-aixlib; to /usr/lib.</p>
+<p>For the Xalan-C++ AIX distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the load library path (LIB_PATH), or copy &xslt4c-aixlib; to /usr/lib.</p>
+<p>For the Xalan-C++ HP-UX 11 distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (SHLIB_PATH), or copy &xslt4c-aixlib; to /usr/lib.</p>
 
 <p>If you do your own Xalan, ICU, and Xerces builds, be sure to include the directories that contain the libraries and the TextXSLT executable on your path.</p>
 </s2><anchor name="samples"/>
@@ -69,7 +84,7 @@ Xalan-C++ and Xerces-C++ header (.hpp) files and (for Windows) the &xslt4c; and 
 <p>To run the samples, do the following:</p>
 <ol>
 <li>Set up your path (see above). In the Windows32 distribution, the sample executables are in
-xml-xalan\c\Build\Win32\VC6\Release. In the Linux and AIX distributions, the executables are in xml-xalan/c/bin.</li>
+xml-xalan\c\Build\Win32\VC6\Release. In the UNIX distributions, the executables are in xml-xalan/c/bin.</li>
 <li>Go to the samples subdirectory containing the sample.</li>
 <li>Run the sample from the command line (in Windows, use the DOS shell).</li>
 <li>Examine the application source files.</li>
