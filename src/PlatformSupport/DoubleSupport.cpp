@@ -527,7 +527,64 @@ convertHelper(
 
 			for(unsigned int i = 0; i < theLength; ++i)
 			{
+#if !defined(XALAN_NON_ASCII_PLATFORM)
 				theBuffer[i] = char(theString[i]);
+#else
+				switch(theChar)
+				{
+				case XalanUnicode::charHyphenMinus:
+					theBuffer[i] = '-';
+					break;
+
+				case XalanUnicode::charFullStop:
+					theBuffer[i] = '.';
+					break;
+
+				case XalanUnicode::charDigit_0:
+					theBuffer[i] = '0';
+					break;
+
+				case XalanUnicode::charDigit_1:
+					theBuffer[i] = '1';
+					break;
+
+				case XalanUnicode::charDigit_2:
+					theBuffer[i] = '2';
+					break;
+
+				case XalanUnicode::charDigit_3:
+					theBuffer[i] = '3';
+					break;
+
+				case XalanUnicode::charDigit_4:
+					theBuffer[i] = '4';
+					break;
+
+				case XalanUnicode::charDigit_5:
+					theBuffer[i] = '5';
+					break;
+
+				case XalanUnicode::charDigit_6:
+					theBuffer[i] = '6';
+					break;
+
+				case XalanUnicode::charDigit_7:
+					theBuffer[i] = '7';
+					break;
+
+				case XalanUnicode::charDigit_8:
+					theBuffer[i] = '8';
+					break;
+
+				case XalanUnicode::charDigit_9:
+					theBuffer[i] = '9';
+					break;
+
+				default:
+					theBuffer[i] = 'Z';
+					break;
+				}
+#endif
 			}
 
 			theBuffer[theLength] = '\0';

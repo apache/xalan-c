@@ -81,7 +81,7 @@
 #include <cwchar>
 #endif
 
-#if defined(AIX)
+#if defined(AIX) || defined(OS390)
 #include <wchar.h>
 #elif defined(__GNUC__)
 #include <wctype.h>

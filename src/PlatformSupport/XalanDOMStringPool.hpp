@@ -77,7 +77,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanDOMStringPool
 {
 public:
 
-	class StringKey
+	class XALAN_PLATFORMSUPPORT_EXPORT StringKey
 	{
 	public:
 
