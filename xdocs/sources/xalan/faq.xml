@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="no"?> 
-<!DOCTYPE faqs SYSTEM "sbk:/style/dtd/faqs.dtd">
+<!DOCTYPE faqs SYSTEM "../../style/dtd/faqs.dtd">
 
 <faqs title="Frequently asked questions">
 

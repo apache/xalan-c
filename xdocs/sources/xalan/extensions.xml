@@ -55,7 +55,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  -->
-<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
 
 <s1 title="&xslt4c; Extension Functions">
 <ul>
@@ -71,7 +71,7 @@ XPath functions, an extension function returns an XObject, which may contain a v
 data types: node-set, result-tree-fragment, string, boolean, or number.</p> 
 <p>You can send arguments to an extension function in the form of XPath expressions, literals (for string, boolean, and number), the values returned by other functions, and XSL variables or parameters set to any of the preceding.</p>
 <p>For an example that implements, installs, and uses three extension functions, see the 
-<link idref="samples" anchor="externalfunc">External Functions</link> sample.</p>
+<link idref="samples" anchor="externalfunctions">External Functions</link> sample.</p>
 <note>&xslt4c; does not yet support extension elements. Support for extension elements will be added soon.</note>
 </s2><anchor name="implement"/>
 <s2 title="Implementing an extension function">
@@ -199,7 +199,7 @@ XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
 <note>We do not recommend this, but you can also install a function directly into the XPath function table, in which
 case it is not really an extension function. The XPath parser treats it like any other XPath function, and no namespace declaration or prefix is involved.</note>
 <p>For an example that installs a global extension function, a local extension function, and adds a function to the
- XPath function table, see the <link idref="samples" anchor="externalfunc">External Functions</link> sample.</p>
+ XPath function table, see the <link idref="samples" anchor="externalfunctions">External Functions</link> sample.</p>
 </s2><anchor name="use"/>
 <s2 title="Using an extension function">
 <p>To use the extension function in a stylesheet, you must do the following:</p>
@@ -243,7 +243,7 @@ the square root of //area/@value:</p>
   19.9249 units.
 &lt;/out&gt;</source>
 <p>For a slightly more complex variation on this example,  
-see the <link idref="samples" anchor="externalfunc">External Functions</link> sample.</p>
+see the <link idref="samples" anchor="externalfunctions">External Functions</link> sample.</p>
 <s3 title="Passing Nodes to a function">
 <p>Please keep in mind that <em>all</em> LocationPath expressions return a node-set, even if the expression only 
 returns a single attribute or a text node (node-sets with one member). You can use the XSLT string() function 

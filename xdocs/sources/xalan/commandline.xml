@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
 
 <!--
  * The Apache Software License, Version 1.1
@@ -74,7 +74,7 @@
  		<ol>
     <li><link idref="getstarted" anchor="download">Download &xslt4c;</link>.<br/><br/></li> 
     <li><link idref="getstarted"
-     anchor="classpath">Set the path</link> to include the build directory.<br/><br/></li>
+     anchor="path">Set the path</link> to include the build directory.<br/><br/></li>
     <li>Call the TestXSLT executable with the appropriate flags and
     arguments (described below). The following command line, for example, includes the -IN, -XSL,
     and -OUT flags with their accompanying arguments -- the XML source document, the XSL
