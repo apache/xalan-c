@@ -327,10 +327,10 @@ thePreparsedThreadRoutine(void*		param)
 		// from same directory as the input files.
 
 		// Generate the output file name.
-		const XalanDOMString	theOutputFile(
-				XalanDOMString("birds") +
-				LongToDOMString(theInfo->m_threadNumber) +
-				XalanDOMString(".out"));
+		XalanDOMString	theOutputFile(XALAN_STATIC_UCODE_STRING("birds"));
+
+		LongToDOMString(theInfo->m_threadNumber, theOutputFile);
+        theOutputFile.append(".out");
 
 		// Create a transformer...
 		XalanTransformer	theTransformer;
@@ -391,10 +391,10 @@ theUnparsedThreadRoutine(void*		param)
 		// from same directory as the input files.
 
 		// Generate the output file name.
-		const XalanDOMString	theOutputFile(
-				XalanDOMString("birds") +
-				LongToDOMString(theInfo->m_threadNumber) +
-				XalanDOMString(".out"));
+		XalanDOMString	theOutputFile(XALAN_STATIC_UCODE_STRING("birds"));
+
+		LongToDOMString(theInfo->m_threadNumber, theOutputFile);
+        theOutputFile.append(".out");
 
 		// Create a transformer...
 		XalanTransformer	theTransformer;
