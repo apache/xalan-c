@@ -242,11 +242,6 @@ ifeq ($(PLATFORM), AIX)
 
   else
 
-	ifndef STLPORTROOT 
-	nostlportroot:
-		@echo STLPORTROOT must be defined
-	endif
-
 	PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -D_THREAD_SAFE
 	ALLLIBS = ${LIBS} -L/usr/lib 
 	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) -I${STLPORTROOT}/stlport
@@ -264,11 +259,6 @@ endif
 #=============== OS390 SPECIFIC OPTIONS =========================
 
 ifeq ($(PLATFORM), OS390)
-
-  ifndef STLPORTROOT
-  nostlportroot:
-	  @echo STLPORTROOT must be defined
-  endif
 
   SUPPORTED = TRUE
   PLATFORM_COMPILE_OPTIONS =-Wc,dll -W0,"langlvl(extended),float(ieee)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
