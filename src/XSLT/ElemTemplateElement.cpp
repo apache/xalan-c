@@ -792,12 +792,7 @@ ElemTemplateElement::transformChild(
 					theTemplate = getStylesheet().getStylesheetRoot().getDefaultRootRule();
 					break;
 
-				case XalanNode::COMMENT_NODE:
-				case XalanNode::PROCESSING_INSTRUCTION_NODE:
-					break;
-
 				default:
-					assert(false);
 					break;
 
 				}     
