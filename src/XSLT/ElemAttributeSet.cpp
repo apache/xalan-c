@@ -93,7 +93,7 @@ ElemAttributeSet::ElemAttributeSet(
 		{
 			m_QName = QNameByValue(atts.getValue(i), stylesheetTree.getNamespaces());
 
-			stylesheetTree.addAttributeSet(m_QName, this);
+			stylesheetTree.addAttributeSet(this);
 		}
 		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
 					isAttrOK(aname, atts, i, constructionContext)))

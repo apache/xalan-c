@@ -98,10 +98,7 @@
 
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
-#include <DOMSupport/PrefixResolver.hpp>
+#include <PlatformSupport/PrefixResolver.hpp>
 
 
 
@@ -1727,6 +1724,11 @@ private:
 	 * Stack of current result namespaces...
 	 */
 	ResultNamespacesStack			m_resultNamespacesStack;
+
+	/*
+	 * Dummy AttributeListImpl
+	 */
+	AttributeListImpl				m_dummyAttributesList;
 
 	static void
 	installFunctions();

@@ -124,9 +124,8 @@ ElemApplyImport::execute(StylesheetExecutionContext&		executionContext) const
 	assert(sourceNode != 0);
 
 	transformChild(executionContext,
-				   *this, 
-				   0,                    
-				   DOMServices::getParentOfNode(*sourceNode), 
+				   *this,
+				   0,
 				   sourceNode);   
 }
 

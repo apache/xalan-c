@@ -111,7 +111,11 @@ const Stylesheet::NamespaceVectorType	Stylesheet::s_emptyNamespace;
 
 
 
-const XalanDOMString	Stylesheet::s_emptyString;
+const XalanDOMString			Stylesheet::s_emptyString;
+
+const QNameByReference			Stylesheet::s_emptyQName;
+
+const XalanEmptyNamedNodeMap	Stylesheet::s_fakeAttributes;
 
 
 
@@ -122,22 +126,20 @@ Stylesheet::Stylesheet(
 	XalanDocument(),
 	PrefixResolver(),
 	m_stylesheetRoot(root),
-	m_needToBuildKeysTable(false),
 	m_baseIdent(baseIdentifier),
 	m_keyDeclarations(),
 	m_XSLTNamespaceURI(constructionContext.getXSLTNamespaceURI()),
 	m_whitespacePreservingElements(),
 	m_whitespaceStrippingElements(),	
 	m_imports(),
+	m_importsSize(0),
 	m_namespaces(),
 	m_namespaceDecls(),
-	m_tablesAreInvalid(true),
 	m_isWrapperless(false),
 	m_wrapperlessTemplate(0),
 	m_extensionNamespaces(),
 	m_firstTemplate(0),
 	m_includeStack(),
-	m_defaultSpace(true),
 	m_namedTemplates(),
 	m_topLevelVariables(),
 	m_XSLTVerDeclared(1.0L),
@@ -150,13 +152,11 @@ Stylesheet::Stylesheet(
 	m_piPatternList(),
 	m_nodePatternList(),
 	m_anyPatternList(),
-	m_anyPatternBegin(m_anyPatternList.begin()),
-	m_anyPatternEnd(m_anyPatternList.end()),
 	m_matchPattern2Container(),
 	m_patternCount(0),
 	m_attributeSets(),
+	m_attributeSetsSize(0),
 	m_surrogateChildren(*this),
-	m_fakeAttributes(),
 	m_elemDecimalFormats(),
 	m_prefixAliases(),
 	m_namespacesHandler()
@@ -271,17 +271,15 @@ Stylesheet::processKeyElement(
 	}
 
 	if(0 == nameAttr)
-		constructionContext.error(TranscodeFromLocalCodePage("xsl:key	requires a ") + Constants::ATTRNAME_NAME + " attribute!");
+		constructionContext.error(TranscodeFromLocalCodePage("xsl:key requires a ") + Constants::ATTRNAME_NAME + " attribute!");
 
 	if(0 == matchAttr)
-		constructionContext.error(TranscodeFromLocalCodePage("xsl:key	requires a ") + Constants::ATTRNAME_MATCH + " attribute!");
+		constructionContext.error(TranscodeFromLocalCodePage("xsl:key requires a ") + Constants::ATTRNAME_MATCH + " attribute!");
 
 	if(0 == useAttr)
-		constructionContext.error(TranscodeFromLocalCodePage("xsl:key	requires a ") + Constants::ATTRNAME_USE + " attribute!");
+		constructionContext.error(TranscodeFromLocalCodePage("xsl:key requires a ") + Constants::ATTRNAME_USE + " attribute!");
 
 	m_keyDeclarations.push_back(KeyDeclaration(XalanDOMString(nameAttr), *matchAttr, *useAttr));
-
-	m_needToBuildKeysTable = true;
 }
 
 
@@ -309,16 +307,6 @@ Stylesheet::pushNamespaces(const AttributeList&		atts)
 	}
 
 	m_namespaces.push_back(namespaces);
-}
-
-
-
-void
-Stylesheet::popNamespaces() 
-{
-	assert(m_namespaces.empty() == false);
-
-	m_namespaces.pop_back(); 
 }
 
 
@@ -351,6 +339,8 @@ void
 Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext)
 {
 	{
+		m_importsSize = m_imports.size();
+
 		// Call postConstruction() on any imported stylesheets, the get any aliases
 		// in reverse order, to preserve import precedence. Also, get any key declarations.
 		const StylesheetVectorType::reverse_iterator	theEnd = m_imports.rend();
@@ -371,13 +361,6 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 
 			++i;
 		}
-	}
-
-	// We may need to build keys, since we may have inherited them from
-	// our imports.
-	if (m_needToBuildKeysTable == false && m_keyDeclarations.size() > 0)
-	{
-		m_needToBuildKeysTable = true;
 	}
 
 	// Call postConstruction() on our own namespaces handler...
@@ -447,38 +430,61 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 
 			theCurrent->postConstruction(constructionContext, m_namespacesHandler);
 		}
+
+		// Now that we're done with removing duplicates, cache the size...
+		m_attributeSetsSize = m_attributeSets.size();
 	}
 
-	const PatternTableListType::iterator	theNodeBegin = m_nodePatternList.begin();
-	const PatternTableListType::iterator	theNodeEnd = m_nodePatternList.end();
+	// OK, now we need to add everything template that matches "node()"
+	// to the end of the text, comment, and PI template lists.
+	PatternTableListType::iterator	theBegin = m_nodePatternList.begin();
+	PatternTableListType::iterator	theEnd = m_nodePatternList.end();
 
-	m_textPatternList.insert(
-		m_textPatternList.end(),
-		theNodeBegin,
-		theNodeEnd);
+	if (theBegin != theEnd)
+	{
+		m_textPatternList.insert(
+			m_textPatternList.end(),
+			theBegin,
+			theEnd);
 
-	m_commentPatternList.insert(
-		m_commentPatternList.end(),
-		theNodeBegin,
-		theNodeEnd);
+		m_commentPatternList.insert(
+			m_commentPatternList.end(),
+			theBegin,
+			theEnd);
 
-	m_piPatternList.insert(
-		m_piPatternList.end(),
-		theNodeBegin,
-		theNodeEnd);
+		m_piPatternList.insert(
+			m_piPatternList.end(),
+			theBegin,
+			theEnd);
+	}
 
-	m_anyPatternList.insert(
-		m_anyPatternList.end(),
-		theNodeBegin,
-		theNodeEnd);
+	m_nodePatternList.insert(
+			theEnd,
+			m_anyPatternList.begin(),
+			m_anyPatternList.end());
 
-	m_anyPatternBegin = m_anyPatternList.begin();
-	m_anyPatternEnd = m_anyPatternList.end();
+	theBegin = m_nodePatternList.begin();
+	theEnd = m_nodePatternList.end();
+
+	if (theBegin != theEnd)
+	{
+		PatternTableMapType::iterator	i =
+				m_patternTable.begin();
+
+		while(i != m_patternTable.end())
+		{
+			PatternTableListType&	theTable = (*i).second;
+
+			theTable.insert(
+				theTable.end(),
+				theBegin,
+				theEnd);
+
+			++i;
+		}
+	}
 
 	m_patternCount = m_matchPattern2Container.size();
-
-	// We don't need this any more, so clear it out...
-	PatternTableListType().swap(m_nodePatternList);
 }
 
 
@@ -519,14 +525,6 @@ Stylesheet::isAttrOK(
 
 
 const XalanDOMString*
-Stylesheet::getNamespaceFromStack(const XalanDOMString&		nodeName) const
-{
-	return getNamespaceFromStack(c_wstr(nodeName));
-}
-
-
-
-const XalanDOMString*
 Stylesheet::getNamespaceFromStack(const XalanDOMChar* 	nodeName) const
 {
 	assert(nodeName != 0);
@@ -539,32 +537,6 @@ Stylesheet::getNamespaceFromStack(const XalanDOMChar* 	nodeName) const
 				XalanDOMString();
 
 	return getNamespaceForPrefixFromStack(prefix);
-}
-
-
-
-const XalanDOMString*
-Stylesheet::getNamespaceForPrefix(const XalanDOMString& 	prefix) const
-{
-	return QName::getNamespaceForPrefix(m_namespaceDecls, prefix);
-}
-
-
-
-const XalanDOMString*
-Stylesheet::getNamespaceForPrefixFromStack(const XalanDOMString&	prefix) const
-{
-	return QName::getNamespaceForPrefix(m_namespaces, prefix);
-}
-
-
-
-const XalanDOMString*
-Stylesheet::getNamespaceForPrefixFromStack(const XalanDOMChar*	prefix) const
-{
-	assert(prefix != 0);
-
-	return QName::getNamespaceForPrefix(m_namespaces, XalanDOMString(prefix));
 }
 
 
@@ -688,11 +660,11 @@ Stylesheet::addTemplate(
 						*theTemplate,
 						pos,
 						target,
-						*this,
 						*xp,
 						xp->getExpression().getCurrentPattern()));
 
-				MatchPattern2* newMatchPat = &m_matchPattern2Container.back();
+				const MatchPattern2* const	newMatchPat =
+					&m_matchPattern2Container.back();
 
 				// Always put things on the front of the list, so
 				// templates later in the stylesheet are always
@@ -753,13 +725,17 @@ Stylesheet::addTemplate(
 const ElemTemplate*
 Stylesheet::findNamedTemplate(const QName&	qname) const
 {
-	const ElemTemplate*		namedTemplate = 0;
-
 	ElemTemplateMapType::const_iterator it = m_namedTemplates.find(qname);
 
-	// Look for the template in the imports
-	if(it == m_namedTemplates.end())
+	if(it != m_namedTemplates.end())
 	{
+		return (*it).second;
+	}
+	else
+	{
+		const ElemTemplate*		namedTemplate = 0;
+
+		// Look for the template in the imports
 		const StylesheetVectorType::size_type	nImports = m_imports.size();
 
 		for(StylesheetVectorType::size_type i = 0; i < nImports; ++i)
@@ -771,27 +747,11 @@ Stylesheet::findNamedTemplate(const QName&	qname) const
 			if(0 != namedTemplate)
 				break;
 		}
-	}
-	else
-	{
-		namedTemplate = (*it).second;
-	}
 
-	return namedTemplate;
+		return namedTemplate;
+	}
 }
 	
-
-
-const ElemTemplate*
-Stylesheet::findTemplate(
-			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						targetNode) const
-{
-	const Stylesheet*	theDummy;
-
-	return findTemplate(executionContext, targetNode, QNameByReference(), false, theDummy);
-}
-
 
 
 void
@@ -818,7 +778,7 @@ Stylesheet::addObjectIfNotFound(
 
 
 
-void
+inline void
 Stylesheet::addObjectIfNotFound(
 			const MatchPattern2*	thePattern,
 			const MatchPattern2* 	thePatternArray[],
@@ -856,9 +816,7 @@ Stylesheet::addObjectIfNotFound(
 
 
 inline const Stylesheet::PatternTableListType* 
-Stylesheet::locateMatchPatternList2(
-			const XalanDOMString&	theName,
-			bool&					usedWildcard) const
+Stylesheet::locateMatchPatternList2(const XalanDOMString&	theName) const
 {
 	assert(m_patternTableEnd == m_patternTable.end());
 
@@ -866,17 +824,53 @@ Stylesheet::locateMatchPatternList2(
 		m_patternTable.find(theName);
 
 	if (i != m_patternTableEnd)
-	{		
-		usedWildcard = false;
-
+	{
 		return &(*i).second;
 	}
 	else
 	{
-		usedWildcard = true;
-
-		return &m_anyPatternList;
+		return &m_nodePatternList;
 	}
+}
+
+
+
+inline const Stylesheet::PatternTableListType*
+Stylesheet::locateMatchPatternList2(const XalanNode&	theNode) const
+{
+	switch(theNode.getNodeType())
+	{
+	case XalanNode::ELEMENT_NODE:
+		return locateMatchPatternList2(DOMServices::getLocalNameOfNode(theNode));
+		break;
+
+	case XalanNode::PROCESSING_INSTRUCTION_NODE:
+		return &m_piPatternList;
+		break;
+
+	case XalanNode::ATTRIBUTE_NODE:
+		return locateMatchPatternList2(DOMServices::getLocalNameOfNode(theNode));
+		break;
+
+	case XalanNode::CDATA_SECTION_NODE:
+	case XalanNode::TEXT_NODE:
+		return &m_textPatternList;
+		break;
+
+	case XalanNode::COMMENT_NODE:
+		return &m_commentPatternList;
+		break;
+
+	case XalanNode::DOCUMENT_NODE:
+		return &m_rootPatternList;
+		break;
+
+	case XalanNode::DOCUMENT_FRAGMENT_NODE:
+		return &m_anyPatternList;
+		break;
+	}
+
+	return locateMatchPatternList2(theNode.getNodeName());
 }
 
 
@@ -886,22 +880,19 @@ Stylesheet::findTemplate(
 			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						targetNode, 
 			const QName&					mode,
-			bool							onlyUseImports,
-			const Stylesheet*&				foundStylesheet) const
+			bool							onlyUseImports) const
 {
 	assert(targetNode != 0);
 	assert(m_patternCount == m_matchPattern2Container.size());
-	assert(m_anyPatternBegin == m_anyPatternList.begin());
-	assert(m_anyPatternEnd == m_anyPatternList.end());
 
-	const ElemTemplate*		theResult = 0;
-
-	if(m_isWrapperless)
+	if(m_isWrapperless == true)
 	{
-		theResult = m_wrapperlessTemplate;
+		return m_wrapperlessTemplate;
 	}
 	else
 	{
+		const ElemTemplate*		theResult = 0;
+
 		const ElemTemplate*		bestMatchedRule = 0;
 		const MatchPattern2*	bestMatchedPattern = 0; // Syncs with bestMatchedRule
 		double					bestMatchPatPriority = XPath::s_MatchScoreNone;
@@ -919,194 +910,127 @@ Stylesheet::findTemplate(
 		{
 			// Points to the current list of match patterns.  Note
 			// that this may point to more than one table.
-			const PatternTableListType* 	matchPatternList = 0;
-			const XalanNode::NodeType		targetNodeType = targetNode->getNodeType();
-
-			// Assume we'll match a wildcard.  This will only change
-			// for elements, attributes, and for our default catch-all,
-			// but it will keep us from checking m_anyPatternList.
-			bool							usedWildcard = true;
-
-			switch(targetNodeType)
-			{
-			case XalanNode::ELEMENT_NODE:
-				matchPatternList =
-					locateMatchPatternList2(
-							DOMServices::getLocalNameOfNode(*targetNode),
-							usedWildcard);
-				break;
-
-			case XalanNode::PROCESSING_INSTRUCTION_NODE:
-				matchPatternList = &m_piPatternList;
-				break;
-
-			case XalanNode::ATTRIBUTE_NODE:
-				matchPatternList = locateMatchPatternList2(
-							DOMServices::getLocalNameOfNode(*targetNode),
-							usedWildcard);
-				break;
-
-			case XalanNode::CDATA_SECTION_NODE:
-			case XalanNode::TEXT_NODE:
-				matchPatternList = &m_textPatternList;
-				break;
-
-			case XalanNode::COMMENT_NODE:
-				matchPatternList = &m_commentPatternList;
-				break;
-
-			case XalanNode::DOCUMENT_NODE:
-				matchPatternList = &m_rootPatternList;
-				break;
-
-			case XalanNode::DOCUMENT_FRAGMENT_NODE:
-				matchPatternList = &m_anyPatternList;
-				break;
-
-			default:
-				matchPatternList = locateMatchPatternList2(
-							targetNode->getNodeName(),
-							usedWildcard);
-				break;
-			}
-
+			const PatternTableListType* 	matchPatternList =
+				locateMatchPatternList2(*targetNode);
 			assert(matchPatternList != 0);
 
-			const XalanDOMString*	prevPat = 0;
-			const MatchPattern2*	prevMatchPat = 0;
-			double					prevMatchPatPriority = XPath::s_MatchScoreNone;
-
-			// These are iterators into the current table.
-			// Note that we may re-seat these iterators to
-			// point into a different table, if we have
-			// to match wildcards.
-			PatternTableListType::const_iterator	theCurrentEntry =
+			PatternTableListType::const_iterator		theCurrentEntry =
 				matchPatternList->begin();
 
-			PatternTableListType::const_iterator	theTableEnd =
+			const PatternTableListType::const_iterator	theTableEnd =
 				matchPatternList->end();
 
-			while(theCurrentEntry != theTableEnd)
+			if (theCurrentEntry != theTableEnd)
 			{
-				const MatchPattern2*	matchPat = *theCurrentEntry;
-				double					matchPatPriority = XPath::s_MatchScoreNone;
-				assert(matchPat != 0);
+				const XalanDOMString*	prevPat = 0;
+				const MatchPattern2*	prevMatchPat = 0;
+				double					prevMatchPatPriority = XPath::s_MatchScoreNone;
 
-				const ElemTemplate*		rule = matchPat->getTemplate();
-
-				// We'll be needing to match rules according to what 
-				// mode we're in.
-				const QName&			ruleMode =
-						rule->getMode();
-
-				// The logic here should be that if we are not in a mode AND
-				// the rule does not have a node, then go ahead.
-				// OR if we are in a mode, AND the rule has a node, 
-				// AND the rules match, then go ahead.
-				bool haveMode = !mode.isEmpty();
-				bool haveRuleMode = !ruleMode.isEmpty();
-
-				if ( (!haveMode && !haveRuleMode) || (haveMode && haveRuleMode && ruleMode.equals(mode)))
+				do
 				{
-					const XalanDOMString*	patterns = matchPat->getPattern();
-					assert(patterns != 0);
+					const MatchPattern2*	matchPat = *theCurrentEntry;
+					double					matchPatPriority = XPath::s_MatchScoreNone;
+					assert(matchPat != 0);
 
-					if(!isEmpty(*patterns) &&
-					   !(prevMatchPat != 0 &&
-					     (prevPat != 0 && equals(*prevPat, *patterns)) &&
-						 prevMatchPat->getTemplate()->getPriority() == matchPat->getTemplate()->getPriority()))
+					const ElemTemplate*	const	rule = matchPat->getTemplate();
+					assert(rule != 0);
+
+					// We'll be needing to match rules according to what 
+					// mode we're in.
+					const QName&	ruleMode = rule->getMode();
+
+					// The logic here should be that if we are not in a mode AND
+					// the rule does not have a node, then go ahead.
+					// OR if we are in a mode, AND the rule has a node, 
+					// AND the rules match, then go ahead.
+					const bool	haveMode = !mode.isEmpty();
+					const bool	haveRuleMode = !ruleMode.isEmpty();
+
+					if ((!haveMode && !haveRuleMode) ||
+						(haveMode && haveRuleMode && ruleMode.equals(mode)))
 					{
-						prevPat = patterns;
-						prevMatchPat = matchPat;
-						prevMatchPatPriority = matchPatPriority;
-						matchPatPriority = XPath::s_MatchScoreNone;
+						const XalanDOMString*	patterns = matchPat->getPattern();
+						assert(patterns != 0);
 
-						const XPath* const	xpath = matchPat->getExpression();
-
-						double score =
-								xpath->getMatchScore(targetNode, *this, executionContext);
-
-						if(XPath::s_MatchScoreNone != score)
+						if(!isEmpty(*patterns) &&
+						   !(prevMatchPat != 0 &&
+							 (prevPat != 0 && equals(*prevPat, *patterns)) &&
+							 prevMatchPat->getTemplate()->getPriority() == matchPat->getTemplate()->getPriority()))
 						{
-							const double priorityVal = rule->getPriority();
-							const double priorityOfRule 
-									  = (XPath::s_MatchScoreNone != priorityVal) 
-															  ? priorityVal : score;
+							prevPat = patterns;
+							prevMatchPat = matchPat;
+							prevMatchPatPriority = matchPatPriority;
+							matchPatPriority = XPath::s_MatchScoreNone;
 
-							matchPatPriority = priorityOfRule;
-							const double priorityOfBestMatched =
-										(0 != bestMatchedPattern) ?
-												bestMatchPatPriority : 
-												XPath::s_MatchScoreNone;
+							const XPath* const	xpath = matchPat->getExpression();
 
-							if(priorityOfRule > priorityOfBestMatched)
+							double score =
+									xpath->getMatchScore(targetNode, *this, executionContext);
+
+							if(XPath::s_MatchScoreNone != score)
 							{
-								nConflicts = 0;
+								const double priorityVal = rule->getPriority();
+								const double priorityOfRule 
+										  = (XPath::s_MatchScoreNone != priorityVal) 
+																  ? priorityVal : score;
 
-								bestMatchedRule = rule;
-								bestMatchedPattern = matchPat;
-								bestMatchPatPriority = matchPatPriority;
-							}
-							else if(priorityOfRule == priorityOfBestMatched)
-							{
-								if (conflicts == 0)
+								matchPatPriority = priorityOfRule;
+								const double priorityOfBestMatched =
+											(0 != bestMatchedPattern) ?
+													bestMatchPatPriority : 
+													XPath::s_MatchScoreNone;
+
+								if(priorityOfRule > priorityOfBestMatched)
 								{
-									if (m_patternCount > sizeof(conflictsArray) / sizeof(conflictsArray[0]))
-									{
-										conflictsVector.reset(new const MatchPattern2*[m_patternCount]);
+									nConflicts = 0;
 
-										conflicts = conflictsVector.get();
-									}
-									else
-									{
-										conflicts = conflictsArray;
-									}
+									bestMatchedRule = rule;
+									bestMatchedPattern = matchPat;
+									bestMatchPatPriority = matchPatPriority;
 								}
+								else if(priorityOfRule == priorityOfBestMatched)
+								{
+									if (conflicts == 0)
+									{
+										if (m_patternCount > sizeof(conflictsArray) / sizeof(conflictsArray[0]))
+										{
+											conflictsVector.reset(new const MatchPattern2*[m_patternCount]);
 
-								assert(conflicts != 0);
+											conflicts = conflictsVector.get();
+										}
+										else
+										{
+											conflicts = conflictsArray;
+										}
+									}
 
-								// Add the best matched pattern so far.
-								addObjectIfNotFound(bestMatchedPattern, conflicts, nConflicts);
+									assert(conflicts != 0);
 
-								// Add the pattern that caused the conflict...
-								conflicts[nConflicts++] = matchPat;
+									// Add the best matched pattern so far.
+									addObjectIfNotFound(bestMatchedPattern, conflicts, nConflicts);
 
-								bestMatchedRule = rule;
-								bestMatchedPattern = matchPat;
-								bestMatchPatPriority = matchPatPriority;
+									// Add the pattern that caused the conflict...
+									conflicts[nConflicts++] = matchPat;
+
+									bestMatchedRule = rule;
+									bestMatchedPattern = matchPat;
+									bestMatchPatPriority = matchPatPriority;
+								}
 							}
 						}
 					}
-				}
 
-				theCurrentEntry++;
+					++theCurrentEntry;
 
-				// We also have to consider wildcard matches.
-				if(theCurrentEntry == theTableEnd &&
-				   usedWildcard == false &&
-				   m_anyPatternBegin != m_anyPatternEnd)
-				{
-					assert(targetNodeType != XalanNode::TEXT_NODE &&
-						   targetNodeType != XalanNode::CDATA_SECTION_NODE &&
-						   targetNodeType != XalanNode::DOCUMENT_NODE &&
-						   targetNodeType != XalanNode::PROCESSING_INSTRUCTION_NODE &&
-						   targetNodeType != XalanNode::COMMENT_NODE);
-
-					usedWildcard = true;
-
-					// Re-seat the iterators...
-					theCurrentEntry = m_anyPatternBegin;
-
-					theTableEnd = m_anyPatternEnd;
-				}
-			}	// end while
+				} while(theCurrentEntry != theTableEnd);
+			}
 		} // end if(useImports == false)
 
 		if(0 == bestMatchedRule)
 		{
-			const unsigned int	nImports = m_imports.size();
+			assert(m_importsSize == m_imports.size());
 
-			for(unsigned int i = 0; i < nImports; i++)
+			for(unsigned int i = 0; i < m_importsSize; i++)
 			{
 				const Stylesheet* const 	stylesheet =
 					m_imports[i];
@@ -1114,8 +1038,7 @@ Stylesheet::findTemplate(
 				bestMatchedRule = stylesheet->findTemplate(executionContext,
 														   targetNode,
 														   mode, 
-														   false,
-														   foundStylesheet);
+														   false);
 				if(0 != bestMatchedRule)
 					break;
 			}
@@ -1174,15 +1097,8 @@ Stylesheet::findTemplate(
 			}
 		}
 
-		if((0 != bestMatchedPattern) && (0 != foundStylesheet))
-		{
-			foundStylesheet = bestMatchedPattern->getStylesheet();
-		}
-
-		theResult = bestMatchedRule;
+		return bestMatchedRule;
 	}
-
-	return theResult;
 }
 
 
@@ -1272,21 +1188,6 @@ Stylesheet::pushTopLevelVariables(
 
 
 
-const XalanDOMString&
-Stylesheet::getCurrentIncludeBaseIdentifier() const
-{
-	if (m_includeStack.size() == 0)
-	{
-		return getBaseIdentifier();
-	}
-	else
-	{
-		return m_includeStack.back();
-	}
-}
-
-
-
 void
 Stylesheet::processNSAliasElement(
 			const XalanDOMChar*				name,
@@ -1337,8 +1238,12 @@ Stylesheet::processNSAliasElement(
 
 	// Build a table of aliases, the key is the stylesheet uri and the
 	// value is the result uri
-	if (length(*stylesheetNamespace) != 0 &&
-		length(*resultNamespace) != 0)
+	if (length(*stylesheetNamespace) == 0 ||
+		length(*resultNamespace) == 0)
+	{
+		constructionContext.error("Missing namespace URI for specified prefix");
+	}
+	else
 	{
 #if 1
 		// $$$ ToDo: Enable other code.  Perhaps an error?
@@ -1360,10 +1265,6 @@ Stylesheet::processNSAliasElement(
 		}
 #endif
 	}
-	else
-	{
-		constructionContext.error("Missing namespace URI for specified prefix");
-	}
 }
 
 
@@ -1381,83 +1282,34 @@ Stylesheet::getAliasNamespaceURI(const XalanDOMChar*	uri) const
 XalanDOMString
 Stylesheet::getAliasNamespaceURI(const XalanDOMString&	uri) const
 {
-	XalanDOMString	result;
-
 	const StringToStringMapType::const_iterator	i =
 		m_prefixAliases.find(uri);
 
 	if (i != m_prefixAliases.end())
 	{
-		result = (*i).second;
+		assert(length((*i).second) > 0);
 
-		assert(length(result) > 0);
+		return (*i).second;
 	}
 	else
 	{
+		XalanDOMString	theResult;
+
 		const StylesheetVectorType::size_type	nImports =
 			m_imports.size();
 
 		for(StylesheetVectorType::size_type i = 0; i < nImports; ++i)
 		{
-			result = m_imports[i]->getAliasNamespaceURI(uri);
+			theResult = m_imports[i]->getAliasNamespaceURI(uri);
 
-			if(length(result) != 0)
+			if(length(theResult) != 0)
 			{
 				break;
 			}
 		}
+
+		return theResult;
 	}
-
-	return result;
-}
-
-
-
-void
-Stylesheet::processExcludeResultPrefixes(
-		const XalanDOMChar*				theValue,
-		StylesheetConstructionContext&	theConstructionContext)
-{
-	m_namespacesHandler.processExcludeResultPrefixes(theValue, m_namespaces, theConstructionContext);
-}
-
-
-
-const Stylesheet*
-Stylesheet::getPreviousImport(const Stylesheet*		stylesheet) const
-{
-	const Stylesheet*	previous = 0;
-
-	const StylesheetVectorType::size_type	nImports =
-			m_imports.size();
-
-	for(StylesheetVectorType::size_type i = 0; i < nImports; ++i)
-	{
-		if (m_imports[i] == stylesheet)
-		{
-			if (i + 1 < nImports)
-			{
-				previous = m_imports[i + 1];
-
-				break;
-			}
-		}
-	}
-
-	return previous;
-}
-
-
-
-void
-Stylesheet::processDecimalFormatElement(
-			ElemDecimalFormat*				elemDecimalFormat,
-			const AttributeList&			/* atts */,
-			StylesheetConstructionContext&	/* constructionContext */)
-{
-	assert(elemDecimalFormat != 0);
-
-	m_elemDecimalFormats.push_back(elemDecimalFormat);
 }
 
 
@@ -1493,10 +1345,7 @@ Stylesheet::getDecimalFormatSymbols(const XalanDOMString&	name) const
 	// it.
 	if(dfs == 0)
 	{
-		const StylesheetVectorType::size_type	nImports =
-			m_imports.size();
-
-		for(StylesheetVectorType::size_type i = 0; i < nImports; ++i)
+		for(StylesheetVectorType::size_type i = 0; i < m_importsSize; ++i)
 		{
 			dfs = m_imports[i]->getDecimalFormatSymbols(name);
 
@@ -1512,43 +1361,20 @@ Stylesheet::getDecimalFormatSymbols(const XalanDOMString&	name) const
 
 
 
-/**
- * Add an attribute set to the list.
- */
-void
-Stylesheet::addAttributeSet(
-		const QName&		/* qname */, 
-		ElemAttributeSet*	attrSet)
-{
-	assert(attrSet != 0);
-
-	m_attributeSets.push_back(attrSet);
-}		
-
-
-
-/**
- * Add the attributes from the named attribute sets to the attribute list.
- * TODO: Error handling for: "It is an error if there are two attribute sets 
- * with the same expanded-name and with equal import precedence and that both 
- * contain the same attribute unless there is a definition of the attribute 
- * set with higher import precedence that also contains the attribute."
- */
 void
 Stylesheet::applyAttrSets(
-			const QNameVectorType&			attributeSetsNames, 
-			StylesheetExecutionContext& 	executionContext, 			
+			const QNameVectorType&			attributeSetsNames,
+			StylesheetExecutionContext& 	executionContext,			
 			XalanNode*						sourceNode) const
 {
 	const QNameVectorType::size_type	nNames = attributeSetsNames.size();
 
 	if(0 != nNames)
 	{
-		// Process up the import chain...
-		const StylesheetVectorType::size_type	nImports =
-			m_imports.size();
+		assert(m_importsSize == m_imports.size());
 
-		for(StylesheetVectorType::size_type i = 0; i < nImports; i++)
+		// Process up the import chain...
+		for(StylesheetVectorType::size_type i = 0; i < m_importsSize; i++)
 		{
 			const Stylesheet* const 	stylesheet = m_imports[i];
 
@@ -1561,9 +1387,10 @@ Stylesheet::applyAttrSets(
 		for(QNameVectorType::size_type j = 0; j < nNames; j++)
 		{
 			const QName&							qname = attributeSetsNames[j];
-			const StylesheetVectorType::size_type	nSets = m_attributeSets.size();
 
-			for(StylesheetVectorType::size_type k = 0; k < nSets; k++)
+			assert(m_attributeSetsSize == m_attributeSets.size());
+
+			for(StylesheetVectorType::size_type k = 0; k < m_attributeSetsSize; k++)
 			{
 				const ElemAttributeSet* const	attrSet = m_attributeSets[k];
 				assert(attrSet != 0);
@@ -1574,21 +1401,6 @@ Stylesheet::applyAttrSets(
 				}
 			}
 		}
-	}
-}
-
-
-
-const Stylesheet::NamespaceVectorType&
-Stylesheet::getCurrentNamespace() const
-{
-	if (m_namespaces.size() > 0)
-	{
-		return m_namespaces.back();
-	}
-	else
-	{
-		return s_emptyNamespace;
 	}
 }
 
@@ -1669,7 +1481,7 @@ Stylesheet::getNextSibling() const
 const XalanNamedNodeMap*
 Stylesheet::getAttributes() const
 {
-	return &m_fakeAttributes;
+	return &s_fakeAttributes;
 }
 
 
@@ -2017,6 +1829,14 @@ Stylesheet::isIndexed() const
 	assert(false);	
 
 	return false;
+}
+
+
+
+const XalanDOMString*
+Stylesheet::getNamespaceForPrefix(const XalanDOMString& 	prefix) const
+{
+	return QName::getNamespaceForPrefix(m_namespaceDecls, prefix);
 }
 
 

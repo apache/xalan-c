@@ -77,10 +77,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
-#include <DOMSupport/PrefixResolver.hpp>
+#include <PlatformSupport/PrefixResolver.hpp>
 
 
 
@@ -695,7 +692,30 @@ public:
 		return m_optimizationFlags & eHasDirectTemplate ? true : false;
 	}
 
+	/**
+	 *
+	 * Determine whether or not the instance can generate
+	 */
+	bool
+	canGenerateAttributes() const
+	{
+		return m_optimizationFlags & eCanGenerateAttributes ? true : false;
+	}
+
 protected:
+
+	void
+	canGenerateAttributes(bool	value)
+	{
+		if (value == true)
+		{
+			m_optimizationFlags |= eCanGenerateAttributes;
+		}
+		else
+		{
+			m_optimizationFlags &= ~eCanGenerateAttributes;
+		}
+	}
 
 	/**
 	 * Get the namespace for a given prefix.
@@ -738,7 +758,6 @@ protected:
 	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
 	 *      not think we need this).
 	 * @param theTemplate The owning template context.
-	 * @param sourceNodeContext The current source node context.
 	 * @param sourceNodes The source nodes to transform.
 	 * @param sourceNodesCount The count of source nodes to transform.
 	 */
@@ -747,7 +766,6 @@ protected:
 			StylesheetExecutionContext&			executionContext,
 			const ElemTemplateElement&			xslInstruction,
 			const ElemTemplateElement*			theTemplate,
-			XalanNode*							sourceNodeContext,
 			const NodeRefListBase&				sourceNodes,
 			unsigned int						sourceNodesCount) const;
 
@@ -759,7 +777,6 @@ protected:
 	 * @param xslInstruction The calling element (deprecated -- I dont think we 
 	 *      need this).
 	 * @param template The template to use if xsl:for-each, or null.
-	 * @param selectContext The selection context.
 	 * @param child The source context node.
 	 * @return true if applied a template, false if not.
 	 */
@@ -768,7 +785,6 @@ protected:
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement&		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
-			XalanNode*						selectContext,
 			XalanNode*						child) const;
 
 	/**
@@ -831,13 +847,17 @@ private:
 
 	XalanNodeListSurrogate	m_surrogateChildren;
 
-	XalanEmptyNamedNodeMap	m_fakeAttributes;
-
 	const XalanDOMString	m_baseIndentifier;
 
-	enum { eHasParams = 1, eHasSingleTextChild = 2, eHasVariables = 4, eHasDirectTemplate = 8 };
+	enum { eHasParams = 1,
+		   eHasSingleTextChild = 2,
+		   eHasVariables = 4,
+		   eHasDirectTemplate = 8,
+		   eCanGenerateAttributes = 16 };
 
 	unsigned				m_optimizationFlags;
+
+	static const XalanEmptyNamedNodeMap		s_fakeAttributes;
 };
 
 

@@ -107,7 +107,9 @@
 
 
 
-const XalanDOMString	ElemTemplateElement::s_emptyString;
+const XalanDOMString			ElemTemplateElement::s_emptyString;
+
+const XalanEmptyNamedNodeMap	ElemTemplateElement::s_fakeAttributes;
 
 
 
@@ -126,16 +128,15 @@ ElemTemplateElement::ElemTemplateElement(
 	m_stylesheet(stylesheetTree),
 	m_lineNumber(lineNumber),
 	m_columnNumber(columnNumber),
-	m_defaultSpace(true),	
+	m_defaultSpace(true),
 	m_xslToken(xslToken),
 	m_parentNode(0),
 	m_nextSibling(0),
 	m_previousSibling(0),
 	m_firstChild(0),
 	m_surrogateChildren(*this),
-	m_fakeAttributes(),
 	m_baseIndentifier(stylesheetTree.getCurrentIncludeBaseIdentifier()),
-	m_optimizationFlags(0)
+	m_optimizationFlags(eCanGenerateAttributes)
 {
 }
 
@@ -743,7 +744,6 @@ ElemTemplateElement::transformSelectedChildren(
 					executionContext,
 					xslInstruction,
 					theTemplate,
-					sourceNodeContext,
 					sourceNodes,
 					nNodes);
 			}
@@ -773,7 +773,6 @@ ElemTemplateElement::transformSelectedChildren(
 					executionContext,
 					xslInstruction,
 					theTemplate,
-					sourceNodeContext,
 					*sortedSourceNodes,
 					nNodes);
 			}
@@ -788,7 +787,6 @@ ElemTemplateElement::transformSelectedChildren(
 			StylesheetExecutionContext&			executionContext,
 			const ElemTemplateElement&			xslInstruction,
 			const ElemTemplateElement*			theTemplate,
-			XalanNode*							sourceNodeContext,
 			const NodeRefListBase&				sourceNodes,
 			unsigned int						sourceNodesCount) const
 {
@@ -813,7 +811,6 @@ ElemTemplateElement::transformSelectedChildren(
 				executionContext,
 				xslInstruction,
 				theTemplate,
-				sourceNodeContext, 
 				childNode);
 	}
 }
@@ -825,7 +822,6 @@ ElemTemplateElement::transformChild(
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement&		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
-			XalanNode*						selectContext,
 			XalanNode*						child) const
 {
 	const XalanNode::NodeType	nodeType = child->getNodeType();
@@ -834,8 +830,6 @@ ElemTemplateElement::transformChild(
 	{
 		// Find the XSL template that is the best match for the 
 		// element...
-		const Stylesheet*	foundStylesheet = 0;
-
 		const bool			isApplyImports = xslInstruction.getXSLToken() == Constants::ELEMNAME_APPLY_IMPORTS;
 
 		const Stylesheet*	stylesheetTree = isApplyImports ?
@@ -846,8 +840,7 @@ ElemTemplateElement::transformChild(
 						executionContext,
 						child,
 						*executionContext.getCurrentMode(),
-						isApplyImports,
-						foundStylesheet);
+						isApplyImports);
 	}
 
 	if(0 == theTemplate)
@@ -1021,7 +1014,7 @@ ElemTemplateElement::getNextSibling() const
 const XalanNamedNodeMap*
 ElemTemplateElement::getAttributes() const
 {
-	return &m_fakeAttributes;
+	return &s_fakeAttributes;
 }
 
 
@@ -1262,39 +1255,41 @@ ElemTemplateElement::postConstruction(
 {
 	m_namespacesHandler.postConstruction(getElementName(), &theParentHandler);
 
-    for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
-    {
-		node->postConstruction(constructionContext, m_namespacesHandler);
-
-		const int	theToken = node->getXSLToken();
-
-		if (hasVariables() == false &&
-			(theToken == Constants::ELEMNAME_VARIABLE ||
-			 theToken == Constants::ELEMNAME_PARAMVARIABLE))
-		{
-			m_optimizationFlags |= eHasVariables;
-		}
-
-		if (hasParams() == false &&
-			theToken == Constants::ELEMNAME_WITHPARAM)
-		{
-			m_optimizationFlags |= eHasParams;
-		}
-	}
-
 	if (hasChildren() == true)
 	{
+		for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
+		{
+			node->postConstruction(constructionContext, m_namespacesHandler);
+
+			const int	theToken = node->getXSLToken();
+
+			if (hasVariables() == false &&
+				(theToken == Constants::ELEMNAME_VARIABLE ||
+				 theToken == Constants::ELEMNAME_PARAMVARIABLE))
+			{
+				m_optimizationFlags |= eHasVariables;
+			}
+
+			if (hasParams() == false &&
+				theToken == Constants::ELEMNAME_WITHPARAM)
+			{
+				m_optimizationFlags |= eHasParams;
+			}
+		}
+
 		assert(m_firstChild != 0);
+
+		const int	theToken = m_firstChild->getXSLToken();
 
 		// There are opportunities for optimization if there's only one
 		// xsl:text child node.  See childrenToString()...
-		if (m_firstChild->getXSLToken() == Constants::ELEMNAME_TEXTLITERALRESULT &&
+		if (theToken == Constants::ELEMNAME_TEXTLITERALRESULT &&
 			m_firstChild->getNextSibling() == 0)
 		{
 			m_optimizationFlags |= eHasSingleTextChild;
 		}
-		else if (m_firstChild->getXSLToken() == Constants::ELEMNAME_CALLTEMPLATE &&
-			m_firstChild->getNextSibling() == 0)
+		else if (theToken == Constants::ELEMNAME_CALLTEMPLATE &&
+				 m_firstChild->getNextSibling() == 0)
 		{
 			// Just a single xsl:call-template child, so we don't need to
 			// execute it if it has no params -- we can just execute the
@@ -1314,6 +1309,11 @@ ElemTemplateElement::postConstruction(
 
 				delete theCallTemplateChild;
 			}
+		}
+		else if (canGenerateAttributes() == false &&
+				 theToken != Constants::ELEMNAME_LITERALRESULT)
+		{
+			m_optimizationFlags |= eCanGenerateAttributes;
 		}
 	}
 }

@@ -77,7 +77,6 @@
 
 
 class StylesheetConstructionContext;
-class XMLURL;
 class XSLTResultTarget;
 
 
@@ -103,6 +102,12 @@ public:
 
 	virtual 
 	~StylesheetRoot();
+
+	/**
+	 * Called after construction is completed.
+	 */
+	virtual void
+	postConstruction(StylesheetConstructionContext&		constructionContext);
 
 	/**
 	 * Transform the source tree to the output in the given result tree target.
@@ -187,15 +192,6 @@ public:
 	{
 		return m_encoding;
 	}
-
-	/**
-	 * Get the java output encoding string that was specified in the
-	 * xsl:output element
-	 *
-	 * @return encoding string
-	 */
-	XalanDOMString 
-	getJavaOutputEncoding() const;
 
 	/**
 	 * Get the media-type string that was specified in the 
@@ -406,16 +402,24 @@ public:
 		m_outputMethod = meth;
 	}
 
-	/**
-	 * Retrieve list of CDATA section elements.
-	 * 
-	 * @return vector of elements
-	 */
-	const QNameVectorType&
-	getCDATASectionElems() const
+	bool
+	hasCDATASectionElements() const
 	{
-		return m_cdataSectionElems;
+		assert(m_hasCdataSectionElems == false && m_cdataSectionElems.size() == 0 ||
+			   m_hasCdataSectionElems == true && m_cdataSectionElems.size() != 0);
+
+		return m_hasCdataSectionElems;
 	}
+
+	/**
+	 * Determine if a QName is in the list of CDATA section
+	 * element QNames.
+	 * 
+	 * @param theQName The QName of the element to check.
+	 * @return true or false
+	 */
+	bool
+	isCDATASectionElementName(const QName&	theQName) const;
 
 	/**
 	 * Given a valid element key, return the corresponding node list.
@@ -445,7 +449,7 @@ private:
 	 * The URL that belongs to the result namespace.
 	 * @serial
 	 */
-	XalanDOMString	m_resultNameSpaceURL;
+	XalanDOMString				m_resultNameSpaceURL;
 
 	/**
 	 * The output method as specified in xsl:output.
@@ -456,33 +460,39 @@ private:
 	 * List of qnames that specifies elements that should be formatted 
 	 * as CDATA.
 	 */
-	QNameVectorType		m_cdataSectionElems;
+	QNameVectorType				m_cdataSectionElems;
+
+	bool						m_hasCdataSectionElems;
 
 	/**
 	 * A stack of who's importing whom is needed in order to detect 
 	 * a recursive include or import, which is an error.
 	 */
-	URLStackType	m_importStack;
+	URLStackType				m_importStack;
 
 
 	/**
 	 * The default template to use for text nodes if we don't find 
 	 * anything else.  This is initialized in initDefaultRule().
 	 */
-	ElemTemplate*	m_defaultTextRule;
+	ElemTemplate*				m_defaultTextRule;
 
 	/**
 	 * The default template to use if we don't find anything
 	 * else.  This is initialized in initDefaultRule().
 	 */
-	ElemTemplate*	m_defaultRule;
+	ElemTemplate*				m_defaultRule;
 
 	/**
 	 * The default template to use for the root if we don't find 
 	 * anything else.  This is initialized in initDefaultRule().
 	 */
-	ElemTemplate*	m_defaultRootRule;
+	ElemTemplate*				m_defaultRootRule;
 
+	/**
+	 * This is set to true if an xsl:key directive is found.
+	 */
+	bool						m_needToBuildKeysTable;
 };
 
 

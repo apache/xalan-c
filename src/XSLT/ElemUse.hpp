@@ -138,6 +138,11 @@ public:
 	getElementName() const;
 
 	virtual void
+	postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler);
+
+	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
 
 private:

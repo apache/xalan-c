@@ -79,7 +79,7 @@
 #include <XalanDOM/XalanNodeListSurrogate.hpp>
 
 
-#include <DOMSupport/PrefixResolver.hpp>
+#include <PlatformSupport/PrefixResolver.hpp>
 
 
 
@@ -292,7 +292,10 @@ public:
 	 * there is nothing on the stack.
 	 */
 	const NamespaceVectorType&
-	getCurrentNamespace() const;
+	getCurrentNamespace() const
+	{
+		return m_namespaces.size() > 0 ? m_namespaces.back() : s_emptyNamespace;
+	}
 
 	/** 
 	 * Push the namespace declarations from the current attribute 
@@ -307,7 +310,12 @@ public:
 	 * Pop a namespace declaration from the namespace stack.
 	 */
 	void
-	popNamespaces();
+	popNamespaces()
+	{
+		assert(m_namespaces.empty() == false);
+
+		m_namespaces.pop_back(); 
+	}
 
 	/**
 	 * Called after construction is completed.
@@ -338,7 +346,10 @@ public:
 	 * @return namespace string for node, or null if not found.
 	 */
 	const XalanDOMString*
-	getNamespaceFromStack(const XalanDOMString& 	nodeName) const;
+	getNamespaceFromStack(const XalanDOMString& 	nodeName) const
+	{
+		return getNamespaceFromStack(c_wstr(nodeName));
+	}
 
 	/**
 	 * Get the namespace from a qualified name.
@@ -357,7 +368,10 @@ public:
 	 * @return namespace corresponding to prefix, or null if not found.
 	 */
 	const XalanDOMString*
-	getNamespaceForPrefixFromStack(const XalanDOMString&	prefix) const;
+	getNamespaceForPrefixFromStack(const XalanDOMString&	prefix) const
+	{
+		return QName::getNamespaceForPrefix(m_namespaces, prefix);
+	}
 
 	/**
 	 * Get the namespace from a prefix by searching the stack of namespace
@@ -367,7 +381,12 @@ public:
 	 * @return namespace corresponding to prefix, or null if not found.
 	 */
 	const XalanDOMString*
-	getNamespaceForPrefixFromStack(const XalanDOMChar*	prefix) const;
+	getNamespaceForPrefixFromStack(const XalanDOMChar*	prefix) const
+	{
+		assert(prefix != 0);
+
+		return QName::getNamespaceForPrefix(m_namespaces, XalanDOMString(prefix));
+	}
 
 	/**
 	 * See if there is a namespace alias.
@@ -397,19 +416,13 @@ public:
 	void
 	processExcludeResultPrefixes(
 		const XalanDOMChar*				theValue,
-		StylesheetConstructionContext&	theConstructionContext);
-
-	/**
-	 * This recursive function is called starting from the
-	 * stylesheet root, and tries to find a match for the
-	 * passed stylesheet, and then will return the previous
-	 * sibling, or 0 if there was no previous sibling.
-	 *
-	 * @param stylesheet the stylesheet to search
-	 * @return the stylesheet's previous import if found, or 0 not found.
-	 */
-	const Stylesheet*
-	getPreviousImport(const Stylesheet*		stylesheet) const;
+		StylesheetConstructionContext&	theConstructionContext)
+	{
+		m_namespacesHandler.processExcludeResultPrefixes(
+				theValue,
+				m_namespaces,
+				theConstructionContext);
+	}
 
 	/**
 	 * Add a template to the list of names templates
@@ -430,7 +443,7 @@ public:
 	 * @param constructionContext context for construction
 	 * @return true if value equals string constant for "yes," false otherwise
 	 */
-	virtual bool
+	bool
 	getYesOrNo(
 			const XalanDOMChar*				aname,
 			const XalanDOMChar*				val,
@@ -478,7 +491,10 @@ public:
 	 * @return string for base identifier
 	 */
 	const XalanDOMString&
-	getCurrentIncludeBaseIdentifier() const;
+	getCurrentIncludeBaseIdentifier() const
+	{
+		return m_includeStack.size() == 0 ? getBaseIdentifier() : m_includeStack.back();
+	}
 
 	/**
 	 * Process an xsl:namespace-alias element.
@@ -497,14 +513,14 @@ public:
 	 * Process an xsl:decimal-format element.
 	 *
 	 * @param elemDecimalFormat   the element
-	 * @param attrs	 the current attribute list
-	 * @param constructionContext  the active construction context
 	 */
 	void
-	processDecimalFormatElement(
-			ElemDecimalFormat*				elemDecimalFormat,
-			const AttributeList&			atts,
-			StylesheetConstructionContext&	constructionContext);
+	processDecimalFormatElement(ElemDecimalFormat*	elemDecimalFormat)
+	{
+		assert(elemDecimalFormat != 0);
+
+		m_elemDecimalFormats.push_back(elemDecimalFormat);
+	}
 
 	/**
 	 * Retrieve the XalanDecimalFormatSymbols instance associated with
@@ -519,13 +535,15 @@ public:
 	/**
 	 * Add an attribute set to the list.
 	 *
-	 * @param qname   qualified name of attribute set
 	 * @param attrSet pointer to attribute set to add
 	 */
 	void
-	addAttributeSet(
-		const QName&		qname, 
-		ElemAttributeSet*	attrSet);
+	addAttributeSet(ElemAttributeSet*	attrSet)
+	{
+		assert(attrSet != 0);
+
+		m_attributeSets.push_back(attrSet);
+	}
 
 	/**
 	 * Apply the set of named attributes to a node in a given context with a
@@ -540,28 +558,6 @@ public:
 			const QNameVectorType&			attributeSetsNames,
 			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						sourceNode) const;
-  
-	/**
-	 * Determine whether default whitespace processing is in effect
-	 * 
-	 * @return true if default whitespace processing is in effect
-	 */
-	bool
-	isDefaultSpaceProcessing() const
-	{
-		return m_defaultSpace;
-	}
-
-	/**
-	 * Set whether default whitespace processing is in effect
-	 * 
-	 * @param bEnabled true if default processing should be enabled
-	 */
-	void
-	setDefaultSpaceProcessing(bool bEnabled)
-	{
-		m_defaultSpace = bEnabled;
-	}
 
 	/**
 	 * Add an imported stylesheet.
@@ -678,7 +674,10 @@ public:
 	const ElemTemplate*
 	findTemplate(
 			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						targetNode) const;
+			XalanNode*						targetNode) const
+	{
+		return findTemplate(executionContext, targetNode, s_emptyQName, false);
+	}
 
 	/**
 	 * Given a target element, find the template that best matches in the given
@@ -695,8 +694,7 @@ public:
 			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						targetNode, 
 			const QName&					mode,
-			bool							onlyUseImports,
-			const Stylesheet*&				foundStylesheet) const;
+			bool							onlyUseImports) const;
 
 	/**
 	 * A class to contain a match pattern and it's corresponding template.
@@ -712,7 +710,6 @@ public:
 		 * @param theTemplate node that contains the template for this pattern
 		 * @param posInStylesheet position in stylesheet
 		 * @param targetString target string
-		 * @param stylesheet stylesheet for pattern
 		 * @param matchPattern the match pattern
 		 * @param pattern the pattern string
 		 */
@@ -720,13 +717,11 @@ public:
 				const ElemTemplate&		theTemplate,
 				int 					posInStylesheet,
 				const XalanDOMString&	targetString,
-				const Stylesheet& 		stylesheet,
 				const XPath&			matchPattern,
 				const XalanDOMString&	pattern) :
 			m_template(&theTemplate),
 			m_posInStylesheet(posInStylesheet),
 			m_targetString(targetString),
-			m_stylesheet(&stylesheet),
 			m_matchPattern(&matchPattern),
 			m_pattern(&pattern)
 		{
@@ -736,7 +731,6 @@ public:
 			m_template(0),
 			m_posInStylesheet(0),
 			m_targetString(),
-			m_stylesheet(0),
 			m_matchPattern(0),
 			m_pattern(0)
 		{
@@ -744,17 +738,6 @@ public:
 
 		~MatchPattern2()
 		{
-		}
-
-		/**
-		 * Retrieve stylesheet associated with pattern.
-		 * 
-		 * @return stylesheet for pattern
-		 */
-		const Stylesheet*
-		getStylesheet() const
-		{
-			return m_stylesheet;
 		}
 
 		/**
@@ -817,13 +800,12 @@ public:
 		const ElemTemplate*		m_template;
 		int						m_posInStylesheet;
 		XalanDOMString			m_targetString;
-		const Stylesheet*		m_stylesheet;
 		const XPath*			m_matchPattern;
 		const XalanDOMString*	m_pattern;
 	};
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<MatchPattern2*>				PatternTableListType;
+	typedef vector<const MatchPattern2*>		PatternTableListType;
 
 	typedef vector<const MatchPattern2*>		PatternTableVectorType;
 
@@ -833,7 +815,7 @@ public:
 
 	typedef deque<MatchPattern2>				MatchPattern2Container;
 #else
-	typedef std::vector<MatchPattern2*>			PatternTableListType;
+	typedef std::vector<const MatchPattern2*>	PatternTableListType;
 
 	typedef std::vector<const MatchPattern2*>	PatternTableVectorType;
 
@@ -870,17 +852,23 @@ public:
 			unsigned int&			theArraySize);
 
 	/**
-	 * Given a name, , locate the start of a list of 
-	 * possible templates that match that name, also
-	 * trying wild card matches.
+	 * Given a name, locate the start of a list of 
+	 * possible templates that match that name.  If
+	 * none match, then use the default list.
 	 *
 	 * @param theName The name to match
-	 * @param usedWildCard Set to true if wild card matching was used, false if not.
 	 */
 	const PatternTableListType*
-	locateMatchPatternList2(
-			const XalanDOMString&	theName,
-			bool&					usedWildcard) const;
+	locateMatchPatternList2(const XalanDOMString&	theName) const;
+
+	/**
+	 * Given a XalanNode, locate the start of a list of 
+	 * possible templates that match it.
+	 *
+	 * @param XalanNode The node to match
+	 */
+	const PatternTableListType*
+	locateMatchPatternList2(const XalanNode&	theNode) const;
 
 	/**
 	 * Add an extension namespace handler. This provides methods for calling
@@ -1138,11 +1126,6 @@ protected:
 	StylesheetRoot& 					m_stylesheetRoot;
 
 	/**
-	 * This is set to true if an xsl:key directive is found.
-	 */
-	bool								m_needToBuildKeysTable;
-
-	/**
 	 * The base URL of the XSL document.
 	 */
 	XalanDOMString						m_baseIdent;
@@ -1185,6 +1168,8 @@ private:
 	 */
 	StylesheetVectorType					m_imports;
 
+	StylesheetVectorType::size_type			m_importsSize;
+
 	/**
 	 * A stack to keep track of the result tree namespaces.
 	 */
@@ -1201,11 +1186,6 @@ private:
 	 * found.
 	 */
 	static const NamespaceVectorType		s_emptyNamespace;
-
-	/**
-	 * Tells if the stylesheet tables need to be rebuilt.
-	 */
-	bool									m_tablesAreInvalid;
 
 	/**
 	 * Tells if the stylesheet is without an xsl:stylesheet and xsl:template
@@ -1235,25 +1215,17 @@ private:
 	 */
 	URLStackType							m_includeStack;
 
-	/** 
-	 * Tell if this stylesheet has the default space handling
-	 * turned off or on according to the xml:space attribute.
-	 * @serial
-	 */
-	bool									m_defaultSpace;
-  
 	/**
 	 * Keyed on string macro names, and holding values that are macro elements
 	 * in the XSL DOM tree. Initialized in initMacroLookupTable, and used in
 	 * findNamedTemplate.
 	 */
 	ElemTemplateMapType						m_namedTemplates;
-  
+
 	/**
 	 * Table for defined constants, keyed on the names.
 	 */
 	ElemVariableVectorType					m_topLevelVariables;
-
 
 	/**
 	 * The version of XSL that was declared.
@@ -1267,12 +1239,12 @@ private:
 	 * lists of the actual patterns that match the target element to some degree
 	 * of specifity.
 	 */
-	PatternTableMapType 					m_patternTable;
+	PatternTableMapType 						m_patternTable;
 
-	PatternTableMapType::const_iterator		m_patternTableEnd;
+	const PatternTableMapType::const_iterator	m_patternTableEnd;
 
 	/**
-	 * These tables are for text, comment, and root node templates.
+	 * These tables are for text, comment, root, and PI node templates.
 	 */
 	PatternTableListType					m_textPatternList;
 
@@ -1282,16 +1254,18 @@ private:
 
 	PatternTableListType					m_piPatternList;
 
+	/**
+	 * This table is for patterns that match "node()".  Once
+	 * all of the templates have been processed, we'll combine
+	 * this list with m_anyPatternList, and use that for Element
+	 * and Attribute nodes which don't have a specific template.
+	 */
 	PatternTableListType					m_nodePatternList;
 
 	/**
 	 * This table is for patterns that match "*"
 	 */
 	PatternTableListType					m_anyPatternList;
-
-	PatternTableListType::const_iterator	m_anyPatternBegin;
-
-	PatternTableListType::const_iterator	m_anyPatternEnd;
 
 	/**
 	 * This will hold all of the MatchPattern2 instances for the
@@ -1306,9 +1280,9 @@ private:
 
 	AttributeSetVectorType 					m_attributeSets;
 
-	XalanNodeListSurrogate					m_surrogateChildren;
+	AttributeSetVectorType::size_type		m_attributeSetsSize;
 
-	XalanEmptyNamedNodeMap					m_fakeAttributes;
+	XalanNodeListSurrogate					m_surrogateChildren;
 
 	ElemDecimalFormatVectorType				m_elemDecimalFormats;
 
@@ -1317,6 +1291,10 @@ private:
 	NamespacesHandler						m_namespacesHandler;
 
 	static const XalanDOMString				s_emptyString;
+
+	static const QNameByReference			s_emptyQName;
+
+	static const XalanEmptyNamedNodeMap		s_fakeAttributes;
 };
 
 

@@ -112,13 +112,35 @@ ElemUse::getElementName() const
 
 
 void
+ElemUse::postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler)
+{
+	if (m_attributeSetsNames.size() != 0)
+	{
+		canGenerateAttributes(true);
+	}
+
+	// OK, now we can chain-up...
+	ElemTemplateElement::postConstruction(constructionContext, theParentHandler);
+}
+
+
+
+void
 ElemUse::execute(StylesheetExecutionContext&		executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
 	if(0 != m_attributeSetsNames.size())
-		getStylesheet().getStylesheetRoot().applyAttrSets(m_attributeSetsNames, 
-				executionContext, executionContext.getCurrentNode());
+	{
+		assert(canGenerateAttributes() == true);
+
+		getStylesheet().getStylesheetRoot().applyAttrSets(
+				m_attributeSetsNames, 
+				executionContext,
+				executionContext.getCurrentNode());
+	}
 }
 
 

@@ -220,8 +220,40 @@ ElemLiteralResult::postConstruction(
 		}
 	}
 
+	if (nAttrs != 0 ||
+		m_namespacesHandler.getNamespaceDeclarationsCount() != 0)
+	{
+		canGenerateAttributes(true);
+	}
+	else
+	{
+		// OK, let's turn this off and see what our
+		// base classes say about it when we chain up...
+		canGenerateAttributes(false);
+	}
+
 	// OK, now we can chain-up...
 	ElemUse::postConstruction(constructionContext, theParentHandler);
+
+	// OK, now let's do some more checking to see if we'll
+	// generate attributes...
+	if (canGenerateAttributes() == false)
+	{
+		// If there are no children, we can't generate any attributes...
+		if (hasChildren() == true)
+		{
+			assert(getFirstChildElem() != 0);
+
+			// If there's a single text child, or the first child
+			// is another LRE, then we won't generate any attributes.
+			// Otherwise, we might...
+			if (hasSingleTextChild() == false &&
+				getFirstChildElem()->getXSLToken() != Constants::ELEMNAME_LITERALRESULT)
+			{
+				canGenerateAttributes(true);
+			}
+		}
+	}
 }
 
 
@@ -247,7 +279,7 @@ ElemLiteralResult::doAddResultAttribute(
 
 
 void
-ElemLiteralResult::execute(StylesheetExecutionContext&		executionContext) const
+ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 {
 	executionContext.startElement(c_wstr(getElementName()));
 
@@ -255,14 +287,14 @@ ElemLiteralResult::execute(StylesheetExecutionContext&		executionContext) const
 
 	m_namespacesHandler.outputResultNamespaces(executionContext);
 
-	// OK, now let's check to make sure we don't have to change the default namespace...
+	// OK, let's check to make sure we don't have to change the default namespace...
 	const XalanDOMString* const		theCurrentDefaultNamespace =
 				executionContext.getResultNamespaceForPrefix(s_emptyString);
 
 	if (theCurrentDefaultNamespace != 0)
 	{
 		const XalanDOMString* const		theElementDefaultNamespace =
-					m_namespacesHandler.getNamespace(s_emptyString);
+						m_namespacesHandler.getNamespace(s_emptyString);
 
 		if (theElementDefaultNamespace == 0)
 		{

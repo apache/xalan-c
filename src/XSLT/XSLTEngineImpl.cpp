@@ -65,18 +65,6 @@
 
 
 
-#include <XalanDOM/XalanDOMException.hpp>
-#include <XalanDOM/XalanNode.hpp>
-#include <XalanDOM/XalanAttr.hpp>
-#include <XalanDOM/XalanComment.hpp>
-#include <XalanDOM/XalanCDATASection.hpp>
-#include <XalanDOM/XalanNodeList.hpp>
-#include <XalanDOM/XalanNamedNodeMap.hpp>
-#include <XalanDOM/XalanProcessingInstruction.hpp>
-#include <XalanDOM/XalanText.hpp>
-
-
-
 #include <sax/DocumentHandler.hpp>
 #include <sax/EntityResolver.hpp>
 #include <sax/Locator.hpp>
@@ -87,6 +75,18 @@
 
 
 #include <Include/STLHelper.hpp>
+
+
+
+#include <XalanDOM/XalanDOMException.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanAttr.hpp>
+#include <XalanDOM/XalanComment.hpp>
+#include <XalanDOM/XalanCDATASection.hpp>
+#include <XalanDOM/XalanNodeList.hpp>
+#include <XalanDOM/XalanNamedNodeMap.hpp>
+#include <XalanDOM/XalanProcessingInstruction.hpp>
+#include <XalanDOM/XalanText.hpp>
 
 
 
@@ -147,6 +147,7 @@
 #include "TraceListener.hpp"
 #include "XSLTInputSource.hpp"
 #include "XSLTProcessorException.hpp"
+#include "XSLTResultTarget.hpp"
 
 
 
@@ -200,7 +201,8 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_domSupport(domSupport),
 	m_executionContext(0),
 	m_outputContextStack(),
-	m_resultNamespacesStack()
+	m_resultNamespacesStack(),
+	m_dummyAttributesList()
 {
 	m_outputContextStack.pushContext();
 }
@@ -409,6 +411,14 @@ XSLTEngineImpl::process(
 		else if(0 != sourceTree)
 		{
 			executionContext.setStylesheetRoot(m_stylesheetRoot);
+
+			FormatterListener* const	theFormatter =
+				outputTarget.getDocumentHandler();
+
+			if (theFormatter != 0)
+			{
+				theFormatter->setPrefixResolver(this);
+			}
 
 			m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
 
@@ -1699,7 +1709,7 @@ XSLTEngineImpl::flushPending()
 		assert(getFormatterListener() != 0);
 		assert(m_executionContext != 0);
 
-		m_cdataStack.push_back(isCDataResultElem(thePendingElementName)? true : false);
+		m_cdataStack.push_back(isCDataResultElem(thePendingElementName) ? true : false);
 
 		AttributeListImpl&	thePendingAttributes =
 				getPendingAttributesImpl();
@@ -1794,10 +1804,7 @@ XSLTEngineImpl::endElement(const XMLCh* const 	name)
 
 	m_resultNamespacesStack.popContext();
 
-	const Stylesheet::QNameVectorType&	cdataElems =
-		m_stylesheetRoot->getCDATASectionElems();
-
-	if(0 != cdataElems.size())
+	if(m_stylesheetRoot->hasCDATASectionElements() == true)
 	{
 		m_cdataStack.pop_back();
 	}
@@ -2073,10 +2080,8 @@ XSLTEngineImpl::cdata(
 
 	flushPending();
 
-	const Stylesheet::QNameVectorType&	cdataElems =
-		m_stylesheetRoot->getCDATASectionElems();
-
-	if(0 != cdataElems.size() && 0 != m_cdataStack.size())
+	if(m_stylesheetRoot->hasCDATASectionElements() == true &&
+	   0 != m_cdataStack.size())
 	{
 		getFormatterListener()->cdata(ch, length);
 
@@ -2343,55 +2348,60 @@ XSLTEngineImpl::outputResultTreeFragment(
 bool
 XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 {
-	typedef Stylesheet::QNameVectorType		QNameVectorType;
+	assert(m_executionContext != 0);
 
-	bool is = false;
-	const QNameVectorType&				cdataElems = m_stylesheetRoot->getCDATASectionElems();
-	const QNameVectorType::size_type	theSize = cdataElems.size();
-
-	if(0 != theSize)
+	if(m_stylesheetRoot->hasCDATASectionElements() == false)
 	{
-		const XalanDOMString*	elemNS = 0;
-		XalanDOMString			elemLocalName;
+		return false;
+	}
+	else
+	{
+		bool	fResult = false;
 
 		const unsigned int	indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
 
 		if(indexOfNSSep == length(elementName))
 		{
-			elemLocalName = elementName;
+			fResult =
+				m_stylesheetRoot->isCDATASectionElementName(QNameByReference(s_emptyString, elementName));
 		}
 		else
 		{
-			const XalanDOMString	prefix = substring(elementName, 0, indexOfNSSep);
+			typedef StylesheetExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
+			GetAndReleaseCachedString	elemLocalNameGuard(*m_executionContext);
+			GetAndReleaseCachedString	prefixGuard(*m_executionContext);
+
+			XalanDOMString&		elemLocalName = elemLocalNameGuard.get();
+			XalanDOMString&		prefix = prefixGuard.get();
+
+			substring(elementName, prefix, 0, indexOfNSSep);
+			substring(elementName, elemLocalName, indexOfNSSep + 1);
 
 			if(equals(prefix, DOMServices::s_XMLString))
 			{
-				elemNS = &DOMServices::s_XMLNamespaceURI;
+				fResult =
+					m_stylesheetRoot->isCDATASectionElementName(QNameByReference(DOMServices::s_XMLNamespaceURI, elementName));
 			}
 			else
 			{
-				elemNS = getResultNamespaceForPrefix(prefix);
-			}
+				const XalanDOMString* const		elemNS =
+					getResultNamespaceForPrefix(prefix);
 
-			if(elemNS == 0)
-			{
-				error("Prefix must resolve to a namespace: " + prefix);
+				if(elemNS == 0)
+				{
+					error("Prefix must resolve to a namespace: " + prefix);
+				}
+				else
+				{
+					fResult =
+						m_stylesheetRoot->isCDATASectionElementName(QNameByReference(*elemNS, elementName));
+				}
 			}
-
-			elemLocalName = substring(elementName, indexOfNSSep + 1);
 		}
 
-		const QNameByReference	theQName(elemNS != 0 ? *elemNS : s_emptyString, elemLocalName);
-
-		for(Stylesheet::QNameVectorType::size_type i = 0; i < theSize && is == false; i++)
-		{
-			const QName&	qname = cdataElems[i];
-
-			is = qname.equals(theQName);
-		}
+		return fResult;
 	}
-
-	return is;
 }
 	
 

@@ -118,19 +118,13 @@
 
 
 
-//#define XALAN_VQ_SPECIAL_TRACE
+#define XALAN_VQ_SPECIAL_TRACE
 #if defined(XALAN_VQ_SPECIAL_TRACE)
 #include "C:/Program Files/Rational/Quantify/pure.h"
 #endif
 
 
 
-/**
- * Constructor for a Stylesheet needs a Document.
- * @exception XSLProcessorException thrown if the active ProblemListener and
- *            XMLParserLiaison decide the error condition is severe enough to
- *            halt processing.
- */
 StylesheetRoot::StylesheetRoot(
         const XalanDOMString&			baseIdentifier,
 		StylesheetConstructionContext&	constructionContext) :
@@ -148,10 +142,12 @@ StylesheetRoot::StylesheetRoot(
 	m_resultNameSpaceURL(),
 	m_outputMethod(FormatterListener::OUTPUT_METHOD_NONE),
 	m_cdataSectionElems(),
+	m_hasCdataSectionElems(false),
 	m_importStack(),
 	m_defaultTextRule(0),
 	m_defaultRule(0),
-	m_defaultRootRule(0)
+	m_defaultRootRule(0),
+	m_needToBuildKeysTable(false)
 
 {
 	// Our base class has already resolved the URI and pushed it on
@@ -177,6 +173,37 @@ StylesheetRoot::~StylesheetRoot()
 
 
 void
+StylesheetRoot::postConstruction(StylesheetConstructionContext&		constructionContext)
+{
+	// Chain-up first...
+	Stylesheet::postConstruction(constructionContext);
+
+	// We may need to build keys, since we may have inherited them from
+	// our imports.
+	if (m_needToBuildKeysTable == false && m_keyDeclarations.size() > 0)
+	{
+		m_needToBuildKeysTable = true;
+	}
+
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::sort;
+	using std::less;
+#endif
+
+	sort(
+			m_cdataSectionElems.begin(),
+			m_cdataSectionElems.end(),
+			less<QName>());
+
+	if (m_cdataSectionElems.size() != 0)
+	{
+		m_hasCdataSectionElems = true;
+	}
+}
+
+
+
+void
 StylesheetRoot::process(
 			XalanNode*						sourceTree, 
 			XSLTResultTarget&				outputTarget,
@@ -189,8 +216,8 @@ StylesheetRoot::process(
 	if(0 == rootRule)
 	{
 		rootRule = m_defaultRootRule;
-		assert(rootRule);
 	}
+	assert(rootRule);
 
 	executionContext.setStylesheetRoot(this);
 
@@ -250,14 +277,10 @@ StylesheetRoot::setupFormatterListener(
 			XSLTResultTarget&				outputTarget,
 			StylesheetExecutionContext&		executionContext) const
 {
-	FormatterListener*	flistener = outputTarget.getFormatterListener();;
+	FormatterListener*	flistener = outputTarget.getFormatterListener();
 
 	if(flistener == 0)
 	{
-		// $$$ ToDo: For right now, XSLTResultTarget::getDocumentHandler()
-		// and XSLTResultTarget::getFormatterListener() both return a
-		// FormatterListener*.  When we have RTTI on all platforms, that
-		// may change...
 		flistener = outputTarget.getDocumentHandler();
 	}
 
@@ -265,13 +288,13 @@ StylesheetRoot::setupFormatterListener(
 	{
 		// Do encoding stuff here...
 	}
-	/*
-	 * Output target has a character or byte stream or file
-	 */
 	else if(0 != outputTarget.getCharacterStream() ||
 			0 != outputTarget.getByteStream() ||
 			0 != length(outputTarget.getFileName()))
 	{
+		/*
+		 * Output target has a character or byte stream or file
+		 */
 		Writer*		pw = 0;
 
 		if(0 != outputTarget.getCharacterStream())
@@ -339,11 +362,11 @@ StylesheetRoot::setupFormatterListener(
 
 		executionContext.setFormatterListener(flistener);
 	}
-	/*
-	 * Output target has a node
-	 */
 	else if(outputTarget.hasDOMTarget() == true)
 	{
+		/*
+		 * Output target has a node
+		 */
 		if (outputTarget.getDocument() != 0)
 		{
 			flistener = executionContext.createFormatterToDOM(outputTarget.getDocument(), 0);
@@ -372,11 +395,11 @@ StylesheetRoot::setupFormatterListener(
 			assert(0);
 		}
 	}
-	/*
-	 * Create an empty document and set the output target node to this
-	 */
 	else
 	{
+		/*
+		 * Create an empty document and set the output target node to this
+		 */
 		XalanDocument* const	theDocument = executionContext.createDocument();
 
 		outputTarget.setDocument(theDocument);
@@ -387,28 +410,6 @@ StylesheetRoot::setupFormatterListener(
 	executionContext.setFormatterListener(flistener);
 
 	return flistener;
-}
-
-
-
-XalanDOMString 
-StylesheetRoot::getJavaOutputEncoding() const 
-{ 
-    XalanDOMString	encoding;
-
-    if(isEmpty(m_encoding))
-	{
-		encoding  = StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("UTF8"));
-	}
-    else if(equalsIgnoreCase(m_encoding, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("UTF-16"))))
-	{
-		encoding  = StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Unicode"));
-	}
-
-// @@ JMD: do we need this ??
-//    else
-// @@ to do       encoding = FormatterToXML.convertMime2JavaEncoding( m_encoding ); 
-    return encoding;
 }
 
 
@@ -499,8 +500,8 @@ StylesheetRoot::processOutputSpec(
 		}
 	}
 
-	if((FormatterListener::OUTPUT_METHOD_HTML == m_outputMethod) &&
-		 (false == didSpecifyIndent))
+	if(FormatterListener::OUTPUT_METHOD_HTML == m_outputMethod &&
+	   false == didSpecifyIndent)
 	{
 		m_indentResult = true;
 	}
@@ -601,6 +602,21 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 	assert(m_defaultRule != 0);
 	assert(m_defaultTextRule != 0);
 	assert(m_defaultRootRule != 0);
+}
+
+
+
+bool
+StylesheetRoot::isCDATASectionElementName(const QName&	theQName) const
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+
+	return find(
+			m_cdataSectionElems.begin(),
+			m_cdataSectionElems.end(),
+			theQName) != m_cdataSectionElems.end() ? true : false;
 }
 
 
