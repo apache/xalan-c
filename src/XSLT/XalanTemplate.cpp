@@ -91,7 +91,7 @@
 #include <string>
 #include <stl/_string.c>
 #include <stl/_string_fwd.c>
-#endif
+
 
 
 #include <XalanDOM/XalanNode.hpp>
