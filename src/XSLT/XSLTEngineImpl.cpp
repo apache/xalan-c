@@ -110,7 +110,7 @@
 
 #include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/XalanQNameByReference.hpp>
-#include <XPath/ResultTreeFrag.hpp>
+#include <XPath/ResultTreeFragBase.hpp>
 #include <XPath/XObject.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPathEnvSupport.hpp>
@@ -291,9 +291,12 @@ XSLTEngineImpl::process(
 
 		vector<XalanDOMString>	hrefs;
 
-		// $$$ ToDo: is this first one style valid?
-		const XalanDOMString	stylesheetNodeName1(XALAN_STATIC_UCODE_STRING("xml-stylesheet"));
-		const XalanDOMString	stylesheetNodeName2(XALAN_STATIC_UCODE_STRING("xml:stylesheet"));
+		const XalanDOMString	stylesheetNodeName(XALAN_STATIC_UCODE_STRING("xml-stylesheet"));
+		const XalanDOMString	typeString(XALAN_STATIC_UCODE_STRING("type"));
+		const XalanDOMString	typeValueString1(XALAN_STATIC_UCODE_STRING("text/xml"));
+		const XalanDOMString	typeValueString2(XALAN_STATIC_UCODE_STRING("text/xsl"));
+		const XalanDOMString	typeValueString3(XALAN_STATIC_UCODE_STRING("application/xml"));
+		const XalanDOMString	typeValueString4(XALAN_STATIC_UCODE_STRING("application/xml+xslt"));
 
 		// $$$ ToDo: This code is much like that in getStyleSheetURIFromDoc().
 		// Why is it repeated???
@@ -307,28 +310,30 @@ XSLTEngineImpl::process(
 			{
 				const XalanDOMString	nodeName(child->getNodeName());
 
-				if(equals(nodeName, stylesheetNodeName1) ||
-				   equals(nodeName, stylesheetNodeName2))
+				if(equals(nodeName, stylesheetNodeName))
 				{
-					bool isOK = true;
+					bool isOK = false;
 
 					StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="));
 
 					while(tokenizer.hasMoreTokens())
 					{
-						if(equals(tokenizer.nextToken(), XALAN_STATIC_UCODE_STRING("type")))
+						if(equals(tokenizer.nextToken(), typeString)) // "type"
 						{
 							XalanDOMString	typeVal = tokenizer.nextToken();
 
 							typeVal = substring(typeVal, 1, length(typeVal) - 1);
 
-							if(!equals(typeVal, XALAN_STATIC_UCODE_STRING("text/xsl")))
+							if(equals(typeVal, typeValueString1) ||
+								equals(typeVal, typeValueString2) ||
+								equals(typeVal, typeValueString3) ||
+								equals(typeVal, typeValueString4))
 							{
-								isOK = false;
+								isOK = true;
 							}
 						}
-					}	
-						
+					}
+
 					if(isOK)
 					{
 						StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="));
@@ -2267,6 +2272,7 @@ XSLTEngineImpl::cloneToResultTree(
 			bool					shouldCloneAttributes)
 {
 	assert(nodeType == node.getNodeType());
+	assert(m_executionContext != 0);
 
 	switch(nodeType)
 	{
@@ -2279,7 +2285,7 @@ XSLTEngineImpl::cloneToResultTree(
 			if(!overrideStrip)
 			{
 				stripWhiteSpace = isLiteral ? true : false;
-			  // was: stripWhiteSpace = isLiteral ? true : shouldStripSourceNode(node);
+				// stripWhiteSpace = isLiteral ? true : shouldStripSourceNode(*m_executionContext, node);
 			}
 
 			const XalanText& 	tx =
