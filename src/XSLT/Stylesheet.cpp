@@ -835,6 +835,10 @@ Stylesheet::locateMatchPatternList2(const XalanNode&	theNode) const
 	case XalanNode::DOCUMENT_FRAGMENT_NODE:
 		return &m_anyPatternList;
 		break;
+
+	default:
+		return &m_nodePatternList;
+		break;
 	}
 
 	return locateMatchPatternList2(theNode.getNodeName());
