@@ -98,12 +98,10 @@
 
 
 XPathFunctionTable::XPathFunctionTable(bool		fCreateTable) :
-	m_FunctionCollection(),
-	m_FunctionNameIndex(),
 	m_functionTable(),
 	m_functionTableEnd(m_functionTable + (sizeof(m_functionTable) / sizeof(m_functionTable[0])) - 1)
 {
-	assert(int(s_functionNamesSize) == eTableSize);
+	assert(int(s_functionNamesSize) == TableSize);
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 	std::memset(m_functionTable, 0, sizeof(m_functionTable));
@@ -128,74 +126,65 @@ XPathFunctionTable::~XPathFunctionTable()
 
 void
 XPathFunctionTable::InstallFunction(
-			const XalanDOMString&	theFunctionName,
+			const XalanDOMChar*		theFunctionName,
 			const Function&			theFunction)
 {
-	assert(length(theFunctionName) != 0);
+	const int	theFunctionID =
+			getFunctionIndex(theFunctionName);
 
-	// See if a function of that name is already installed...
-	const FunctionNameIndexMapType::iterator	i =
-		m_FunctionNameIndex.find(theFunctionName);
-
-	if (i != m_FunctionNameIndex.end())
+	if (theFunctionID == InvalidFunctionNumberID)
 	{
-		assert(CollectionType::size_type((*i).second) < m_FunctionCollection.size());
-
-		// It is, so delete the old one, and add the new one...
-#if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (Function*)m_FunctionCollection[(*i).second];
-#else
-		delete m_FunctionCollection[(*i).second];
-#endif
-
-		m_FunctionCollection[(*i).second] = theFunction.clone();
+		throw XPathExceptionFunctionNotSupported(theFunctionName);
 	}
 	else
 	{
-		const CollectionType::size_type		theIndex = m_FunctionCollection.size();
+		if (m_functionTable[theFunctionID] == 0)
+		{
+			m_functionTable[theFunctionID] = theFunction.clone();
+		}
+		else
+		{
+			const Function* const	theOldFunction = m_functionTable[theFunctionID];
 
-		m_FunctionCollection.push_back(theFunction.clone());
+			m_functionTable[theFunctionID] = theFunction.clone();
 
-		m_FunctionNameIndex[theFunctionName] = int(theIndex);
+#if defined(XALAN_CANNOT_DELETE_CONST)
+			delete (Function*)theOldFunction;
+#else
+			delete theOldFunction;
+#endif
+		}
 	}
 }
 
 
 
 bool
-XPathFunctionTable::UninstallFunction(const XalanDOMString&		theFunctionName)
+XPathFunctionTable::UninstallFunction(const XalanDOMChar*	theFunctionName)
 {
-	assert(length(theFunctionName) != 0);
+	const int	theFunctionID =
+			getFunctionIndex(theFunctionName);
 
-	// See if a function of that name is installed...
-	const FunctionNameIndexMapType::iterator	i =
-		m_FunctionNameIndex.find(theFunctionName);
-
-	if (i == m_FunctionNameIndex.end())
+	if (theFunctionID == InvalidFunctionNumberID)
 	{
 		return false;
 	}
 	else
 	{
-		assert(CollectionType::size_type((*i).second) < m_FunctionCollection.size());
+		const Function* const	theFunction = m_functionTable[theFunctionID];
 
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::find;
-#endif
+		m_functionTable[theFunctionID] = 0;
 
-		// Delete the function...
 #if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (Function*)m_FunctionCollection[(*i).second];
+		delete (Function*)theFunction;
 #else
-		delete m_FunctionCollection[(*i).second];
+		delete theFunction;
 #endif
-
-		// Set the entry in the table to 0...
-		m_FunctionCollection[(*i).second] = 0;
 
 		return true;
 	}
 }
+
 
 
 #if 0
@@ -285,172 +274,112 @@ XPathFunctionTable::CreateTable()
 {
 	try
 	{
-		m_FunctionCollection.reserve(eTableSize);
-
-		// Start with the longest function name, so we only have
-		// one allocation for this string.
-		XalanDOMString	theFunctionName;
-
-		theFunctionName = s_substringBefore;
-
 		InstallFunction(
-				theFunctionName,
+				s_substringBefore,
 				FunctionSubstringBefore());
 
-		theFunctionName = s_last;
-
 		InstallFunction(
-				theFunctionName,
+				s_last,
 				FunctionLast());
 
-		theFunctionName = s_position;
-
 		InstallFunction(
-				theFunctionName,
+				s_position,
 				FunctionPosition());
 
-		theFunctionName = s_count;
-
 		InstallFunction(
-				theFunctionName,
+				s_count,
 				FunctionCount());
 
-		theFunctionName = s_id;
-
 		InstallFunction(
-				theFunctionName,
+				s_id,
 				FunctionID());
 
-		theFunctionName = s_localName;
-
 		InstallFunction(
-				theFunctionName,
+				s_localName,
 				FunctionLocalName());
 
-		theFunctionName = s_namespaceUri;
-
 		InstallFunction(
-				theFunctionName,
+				s_namespaceUri,
 				FunctionNamespaceURI());
 
-		theFunctionName = s_name;
-
 		InstallFunction(
-				theFunctionName,
+				s_name,
 				FunctionName());
 
-		theFunctionName = s_string;
-
 		InstallFunction(
-				theFunctionName,
+				s_string,
 				FunctionString());
 
-		theFunctionName = s_concat;
-
 		InstallFunction(
-				theFunctionName,
+				s_concat,
 				FunctionConcat());
 
-		theFunctionName = s_startsWith;
-
 		InstallFunction(
-				theFunctionName,
+				s_startsWith,
 				FunctionStartsWith());
 
-		theFunctionName = s_contains;
-
 		InstallFunction(
-				theFunctionName,
+				s_contains,
 				FunctionContains());
 
-		theFunctionName = s_substringAfter;
-
 		InstallFunction(
-				theFunctionName,
+				s_substringAfter,
 				FunctionSubstringAfter());
 
-		theFunctionName = s_substring;
-
 		InstallFunction(
-				theFunctionName,
+				s_substring,
 				FunctionSubstring());
 
-		theFunctionName = s_stringLength;
-
 		InstallFunction(
-				theFunctionName,
+				s_stringLength,
 				FunctionStringLength());
 
-		theFunctionName = s_normalizeSpace;
-
 		InstallFunction(
-				theFunctionName,
+				s_normalizeSpace,
 				FunctionNormalizeSpace());
 
-		theFunctionName = s_translate;
-
 		InstallFunction(
-				theFunctionName,
+				s_translate,
 				FunctionTranslate());
 
-		theFunctionName = s_boolean;
-
 		InstallFunction(
-				theFunctionName,
+				s_boolean,
 				FunctionBoolean());
 
-		theFunctionName = s_not;
-
 		InstallFunction(
-				theFunctionName,
+				s_not,
 				FunctionNot());
 
-		theFunctionName = s_true;
-
 		InstallFunction(
-				theFunctionName,
+				s_true,
 				FunctionTrue());
 
-		theFunctionName = s_false;
-
 		InstallFunction(
-				theFunctionName,
+				s_false,
 				FunctionFalse());
 
-		theFunctionName = s_lang;
-
 		InstallFunction(
-				theFunctionName,
+				s_lang,
 				FunctionLang());
 
-		theFunctionName = s_number;
-
 		InstallFunction(
-				theFunctionName,
+				s_number,
 				FunctionNumber());
 
-		theFunctionName = s_sum;
-
 		InstallFunction(
-				theFunctionName,
+				s_sum,
 				FunctionSum());
 
-		theFunctionName = s_floor;
-
 		InstallFunction(
-				theFunctionName,
+				s_floor,
 				FunctionFloor());
 
-		theFunctionName = s_ceiling;
-
 		InstallFunction(
-				theFunctionName,
+				s_ceiling,
 				FunctionCeiling());
 
-		theFunctionName = s_round;
-
 		InstallFunction(
-				theFunctionName,
+				s_round,
 				FunctionRound());
 
 #if 0
@@ -479,13 +408,10 @@ XPathFunctionTable::DestroyTable()
 		using std::for_each;
 #endif
 
-		for_each(m_FunctionCollection.begin(),
-				 m_FunctionCollection.end(),
-				 DeleteFunctorType());
-
-		CollectionType().swap(m_FunctionCollection);
-
-		FunctionNameIndexMapType().swap(m_FunctionNameIndex);
+		for_each(
+			m_functionTable,
+			m_functionTable + TableSize,
+			DeleteFunctorType());
 	}
 	catch(...)
 	{
@@ -495,8 +421,12 @@ XPathFunctionTable::DestroyTable()
 
 
 int
-XPathFunctionTable::getFunctionIndex(const XalanDOMString&	theName)
+XPathFunctionTable::getFunctionIndex(
+			const XalanDOMChar*		theName,
+			StringSizeType			theNameLength)
 {
+	assert(theName != 0);
+
 	// Do a binary search...
 	const FunctionNameTableEntry*	theFirst = s_functionNames;
 	const FunctionNameTableEntry*	theLast = s_lastFunctionName;
@@ -508,8 +438,8 @@ XPathFunctionTable::getFunctionIndex(const XalanDOMString&	theName)
 		assert(theCurrent->m_size == length(theCurrent->m_name));
 
 		const int	theResult = compare(
-				theName.c_str(),
-				theName.length(),
+				theName,
+				theNameLength,
 				theCurrent->m_name,
 				theCurrent->m_size);
 
@@ -571,6 +501,21 @@ XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 XPathExceptionFunctionNotAvailable::~XPathExceptionFunctionNotAvailable()
 {
 }
+
+
+
+
+XPathExceptionFunctionNotSupported::XPathExceptionFunctionNotSupported(const XalanDOMChar*	theFunctionName) :
+	XalanXPathException(TranscodeFromLocalCodePage("The specified function is not supported: ") + theFunctionName)
+{
+}
+
+
+
+XPathExceptionFunctionNotSupported::~XPathExceptionFunctionNotSupported()
+{
+}
+
 
 
 

@@ -65,9 +65,6 @@
 
 
 #include <algorithm>
-#if !defined(XPATH_FUNCTION_TABLE_NEW)
-#include <map>
-#endif
 
 
 
@@ -113,25 +110,28 @@ public:
 
 
 /**
+ * Exception class thrown when an installFunction() is called with a 
+ * function name that is not supported.
+ */
+class XALAN_XPATH_EXPORT XPathExceptionFunctionNotSupported : public XalanXPathException
+{
+public:
+
+	XPathExceptionFunctionNotSupported(const XalanDOMChar*	theFunctionName);
+
+	~XPathExceptionFunctionNotSupported();
+};
+
+
+
+/**
  * Class defines a table of functions that can be called in XPath expresions.
  */
 class XALAN_XPATH_EXPORT XPathFunctionTable
 {
 public:
 
-#if !defined(XPATH_FUNCTION_TABLE_NEW)
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<const Function*>			CollectionType;
-	typedef map<XalanDOMString,
-				int,
-				less<XalanDOMString> >		FunctionNameIndexMapType;
-#else
-	typedef std::vector<const Function*>	CollectionType;
-	typedef std::map<XalanDOMString, int>	FunctionNameIndexMapType;
-#endif
-#endif
-
-	enum { InvalidFunctionNumberID = -1, eTableSize = 36 };
+	enum { InvalidFunctionNumberID = -1, TableSize = 36 };
 
 	typedef size_t						SizeType;
 	typedef XalanDOMString::size_type	StringSizeType;
@@ -167,7 +167,6 @@ public:
 	const Function&
 	operator[](const XalanDOMString&	theFunctionName) const
 	{
-#if defined(XPATH_FUNCTION_TABLE_NEW)
 		const int	theFunctionID =
 			getFunctionIndex(theFunctionName);
 
@@ -175,15 +174,6 @@ public:
 		{
 			return *m_functionTable[theFunctionID];
 		}
-#else
-		FunctionNameIndexMapType::const_iterator	i =
-			m_FunctionNameIndex.find(theFunctionName);
-
-		if (i != m_FunctionNameIndex.end())
-		{
-			return *m_FunctionCollection[(*i).second];
-		}
-#endif
 		else
 		{
 			throw XPathExceptionFunctionNotAvailable(theFunctionName);
@@ -199,16 +189,10 @@ public:
 	const Function&
 	operator[](int	theFunctionID) const
 	{
-#if defined(XPATH_FUNCTION_TABLE_NEW)
-		assert(theFunctionID >= 0 && theFunction < eTableSize);
+		assert(theFunctionID >= 0 && theFunctionID < TableSize);
+		assert(m_functionTable[theFunctionID] != 0);
 
 		return *m_functionTable[theFunctionID];
-#else
-		assert(theFunctionID >= 0 &&
-			   CollectionType::size_type(theFunctionID) < m_FunctionCollection.size());
-
-		return *m_FunctionCollection[theFunctionID];
-#endif
 	}
 
 	/**
@@ -222,29 +206,12 @@ public:
 	{
 		XalanDOMString	theName;
 
-#if defined(XPATH_FUNCTION_TABLE_NEW)
-		if (theFunctionID >= 0 && theFunction < eTableSize)
+		if (theFunctionID >= 0 && theFunctionID < TableSize)
 		{
-			theName = s_functionNames[theFunctionID];
+			theName.assign(
+				s_functionNames[theFunctionID].m_name,
+				s_functionNames[theFunctionID].m_size);
 		}
-#else
-		if (theFunctionID >= 0 &&
-			CollectionType::size_type(theFunctionID) < m_FunctionCollection.size())
-		{
-			FunctionNameIndexMapType::const_iterator	i =
-				m_FunctionNameIndex.begin();
-
-			while (i != m_FunctionNameIndex.end())
-			{
-				if ((*i).second == theFunctionID)
-				{
-					theName = (*i).first;
-
-					break;
-				}
-			}
-		}
-#endif
 
 		return theName;
 	}
@@ -258,21 +225,7 @@ public:
 	int
 	nameToID(const XalanDOMString&	theName) const
 	{
-#if defined(XPATH_FUNCTION_TABLE_NEW)
 		return getFunctionIndex(theName);
-#else
-		const FunctionNameIndexMapType::const_iterator	i =
-			m_FunctionNameIndex.find(theName);
-
-		if (i != m_FunctionNameIndex.end())
-		{
-			return (*i).second;
-		}
-		else
-		{
-			return InvalidFunctionNumberID;
-		}
-#endif
 	}
 
 	/**
@@ -284,6 +237,32 @@ public:
 	void
 	InstallFunction(
 			const XalanDOMString&	theFunctionName,
+			const Function&			theFunction)
+	{
+		InstallFunction(theFunctionName.c_str(), theFunction);
+	}
+
+	/**
+	 * Remove a named function from the function table.
+	 * 
+	 * @param theFunctionName name of function
+	 * @return true if the function was found and removed.
+	 */
+	bool
+	UninstallFunction(const XalanDOMString&		theFunctionName)
+	{
+		return UninstallFunction(theFunctionName.c_str());
+	}
+
+	/**
+	 * Insert a named function into the function table.
+	 * 
+	 * @param theFunctionName name of function
+	 * @param theFunction     function object corresponding to name
+	 */
+	void
+	InstallFunction(
+			const XalanDOMChar*		theFunctionName,
 			const Function&			theFunction);
 
 	/**
@@ -293,7 +272,7 @@ public:
 	 * @return true if the function was found and removed.
 	 */
 	bool
-	UninstallFunction(const XalanDOMString&		theFunctionName);
+	UninstallFunction(const XalanDOMChar*	theFunctionName);
 
 	/**
 	 * Whether a named function is in the function table.
@@ -304,18 +283,7 @@ public:
 	bool
 	isInstalledFunction(const XalanDOMString&	theFunctionName) const
 	{
-#if defined(XPATH_FUNCTION_TABLE_NEW)
-		if (getFunctionIndex(theFunctionName) != InvalidFunctionNumberID)
-#else
-		if (m_FunctionNameIndex.find(theFunctionName) != m_FunctionNameIndex.end())
-#endif
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return getFunctionIndex(theFunctionName) != InvalidFunctionNumberID ? true : false;
 	}
 
 #if defined(XALAN_NO_MEMBER_TEMPLATES)
@@ -334,7 +302,6 @@ public:
 	void
 	getInstalledFunctionNames(InstalledFunctionNameVectorType&	theVector) const
 	{
-#if defined(XPATH_FUNCTION_TABLE_NEW)
 		XalanDOMString	theString;
 
 		for (int i = 0; i < TableSize; ++i)
@@ -349,18 +316,6 @@ public:
 			}
 		}
 #else
-		FunctionNameIndexMapType::const_iterator	i =
-			m_FunctionNameIndex.begin();
-
-		while(i != m_FunctionNameIndex.end())
-		{
-			theVector.push_back((*i).first);
-
-			++i;
-		}
-	}
-#endif
-#else
 
 	/**
 	 * Add a list of the names of installed functions to a vector of names.
@@ -371,7 +326,6 @@ public:
 	void
 	getInstalledFunctionNames(OutputIteratorType	theIterator) const
 	{
-#if defined(XPATH_FUNCTION_TABLE_NEW)
 		XalanDOMString	theString;
 
 		for (int i = 0; i < TableSize; ++i)
@@ -387,18 +341,6 @@ public:
 				++theIterator;
 			}
 		}
-#else
-		FunctionNameIndexMapType::const_iterator	i =
-			m_FunctionNameIndex.begin();
-
-		while(i != m_FunctionNameIndex.end())
-		{
-			*theIterator = (*i).first;
-
-			++i;
-			++theIterator;
-		}
-#endif
 	}
 #endif
 
@@ -408,21 +350,6 @@ public:
 
 		StringSizeType			m_size;
 	};
-
-private:
-
-	static int
-	getFunctionIndex(const XalanDOMString&	theName);
-
-#if !defined(XPATH_FUNCTION_TABLE_NEW)
-	CollectionType				m_FunctionCollection;
-
-	FunctionNameIndexMapType	m_FunctionNameIndex;
-#endif
-
-	const Function*				m_functionTable[eTableSize];
-
-	const Function** const		m_functionTableEnd;
 
 	// These are static strings for the functions supported.
 	// Note that the XSLT functions are also here, since it's
@@ -539,11 +466,39 @@ private:
 	// A table of function names.
 	static const FunctionNameTableEntry			s_functionNames[];
 
-	// The last one in the table of function names.
-	static const FunctionNameTableEntry* const	s_lastFunctionName;
-
 	// The size of the table.
 	static const SizeType						s_functionNamesSize;
+
+private:
+
+	static int
+	getFunctionIndex(const XalanDOMString&	theName)
+	{
+		return getFunctionIndex(
+				theName.c_str(),
+				theName.length());
+	}
+
+	static int
+	getFunctionIndex(const XalanDOMChar*	theName)
+	{
+		return getFunctionIndex(
+				theName,
+				XalanDOMString::length(theName));
+	}
+
+	static int
+	getFunctionIndex(
+			const XalanDOMChar*		theName,
+			StringSizeType			theNameLength);
+
+
+	const Function*				m_functionTable[TableSize];
+
+	const Function** const		m_functionTableEnd;
+
+	// The last one in the table of function names.
+	static const FunctionNameTableEntry* const	s_lastFunctionName;
 };
 
 
