@@ -84,6 +84,7 @@
 
 
 
+#include "FormatterStringLengthCounter.hpp"
 #include "FoundIndex.hpp"
 #include "MutableNodeRefList.hpp"
 #include "XalanQNameByReference.hpp"
@@ -464,6 +465,14 @@ XPath::executeMore(
 //		return functionString(context, opPos, executionContext);
 //		break;
 
+	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+		return executionContext.getXObjectFactory().createNumber(functionStringLength(context));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
+		return executionContext.getXObjectFactory().createNumber(functionStringLength(context, opPos, executionContext));
+		break;
+
 	default:
 		unknownOpCodeError(context, executionContext, opPos);
 		break;
@@ -639,6 +648,14 @@ XPath::executeMore(
 		result = XObject::boolean(functionNumber(context, opPos, executionContext));
 		break;
 
+	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+		result = XObject::boolean(functionStringLength(context));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
+		result = XObject::boolean(functionStringLength(context, opPos, executionContext));
+		break;
+
 	default:
 		unknownOpCodeError(context, executionContext, opPos);
 		break;
@@ -812,6 +829,14 @@ XPath::executeMore(
 		result = functionNumber(context, opPos, executionContext);
 		break;
 
+	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+		result = functionStringLength(context);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
+		result = functionStringLength(context, opPos, executionContext);
+		break;
+
 	default:
 		unknownOpCodeError(context, executionContext, opPos);
 		break;
@@ -983,6 +1008,14 @@ XPath::executeMore(
 
 	case XPathExpression::eOP_FUNCTION_NUMBER_1:
 		XObject::string(functionNumber(context, opPos, executionContext), result);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+		XObject::string(functionStringLength(context), result);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
+		XObject::string(functionStringLength(context, opPos, executionContext), result);
 		break;
 
 	default:
@@ -1192,6 +1225,14 @@ XPath::executeMore(
 
 	case XPathExpression::eOP_FUNCTION_NUMBER_1:
 		XObject::string(functionNumber(context, opPos, executionContext), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+		XObject::string(functionStringLength(context), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
+		XObject::string(functionStringLength(context, opPos, executionContext), formatterListener, function);
 		break;
 
 	default:
@@ -2649,6 +2690,37 @@ XPath::functionLocalName(
 
 
 
+double
+XPath::functionStringLength(XalanNode*	context) const
+{
+	assert(context != 0);
+
+	FormatterStringLengthCounter	theCounter;
+
+	DOMServices::getNodeData(*context, theCounter, &FormatterListener::characters);
+
+	return theCounter.getCount();
+}
+
+
+
+double
+XPath::functionStringLength(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
+{
+	assert(context != 0);
+
+	FormatterStringLengthCounter	theCounter;
+
+	executeMore(context, opPos + 2, executionContext, theCounter, &FormatterListener::characters);
+
+	return theCounter.getCount();
+}
+
+
+
 XPath::eMatchScore
 XPath::locationPathPattern(
 			XPathExecutionContext&	executionContext,
@@ -2803,12 +2875,6 @@ XPath::step(
 
 						queryResults.setDocumentOrder();
 					}
-//					else if (mnl->getReverseDocumentOrder() == true)
-//					{
-//						queryResults.swap(*mnl);
-//
-//						queryResults.reverse();
-//					}
 					else
 					{
 						assert(mnl->getDocumentOrder() == true);

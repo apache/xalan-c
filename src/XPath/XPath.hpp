@@ -1938,6 +1938,29 @@ protected:
 	}
 
 	/**
+	 * Handle the built-in function "string-length".
+	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @return the result of the function.
+	 */
+	double
+	functionStringLength(XalanNode*		context) const;
+
+	/**
+	 * Handle the built-in function "string-length".
+	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	double
+	functionStringLength(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
 	 * Get a numeric operand for an expression.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.

@@ -3330,6 +3330,7 @@ const XPathProcessorImpl::TableEntry	XPathProcessorImpl::s_functionTable[] =
 	{ XPathProcessorImpl::s_commentString, XPathExpression::eNODETYPE_COMMENT },
 	{ XPathProcessorImpl::s_positionString, XPathExpression::eOP_FUNCTION_POSITION },
 	{ XPathFunctionTable::s_localName, XPathExpression::eOP_FUNCTION_LOCALNAME_0 },
+	{ XPathFunctionTable::s_stringLength, XPathExpression::eOP_FUNCTION_STRINGLENGTH_0 },
 	{ XPathProcessorImpl::s_piString, XPathExpression::eNODETYPE_PI },
 };
 
