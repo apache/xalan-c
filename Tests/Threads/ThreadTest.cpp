@@ -156,9 +156,9 @@ public:
 
 private:
 
-	mutable XMLMutexType	m_mutex;
+	XMLMutexType	m_mutex;
 
-	long					m_counter;
+	long			m_counter;
 };
 
 
@@ -180,7 +180,7 @@ SynchronizedCounter::~SynchronizedCounter()
 void
 SynchronizedCounter::increment()
 {
-	XMLMutexLockType	theLock(&m_mutex);
+	const XMLMutexLockType	theLock(&m_mutex);
 
 	if (m_counter < LONG_MAX)
 	{
@@ -193,7 +193,7 @@ SynchronizedCounter::increment()
 void
 SynchronizedCounter::decrement()
 {
-	XMLMutexLockType	theLock(&m_mutex);
+	const XMLMutexLockType	theLock(&m_mutex);
 
 	if (m_counter > 0)
 	{
@@ -215,7 +215,7 @@ struct
 ThreadInfo
 {
 	ThreadInfo(
-			unsigned int			theThreadNumber = 0,
+			long					theThreadNumber = 0L,
 			SynchronizedCounter*	theCounter = 0) :
 		m_threadNumber(theThreadNumber),
 		m_counter(theCounter),
