@@ -321,9 +321,6 @@ SimpleNodeLocator::stepPattern(
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
-	const int	startOpPos = opPos;
-	const int	stepType = currentExpression.getOpCodeMapValue(opPos);
-
 	const int	endStep = currentExpression.getNextOpCodePosition(opPos);
 	int 		nextStepType = currentExpression.getOpCodeMapValue(endStep);
 
@@ -368,6 +365,9 @@ SimpleNodeLocator::stepPattern(
 	int			argLen = 0;
 
 	double		score = xpath.s_MatchScoreNone;
+
+	const int	startOpPos = opPos;
+	const int	stepType = currentExpression.getOpCodeMapValue(opPos);
 
 	switch(stepType)
 	{
