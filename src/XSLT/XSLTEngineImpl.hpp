@@ -713,7 +713,7 @@ public:
 	static const XalanDOMString&
 	getXalanXSLNameSpaceURL()
 	{
-		return s_XSLT4JNameSpaceURL;
+		return s_XalanNamespaceURL;
 	}
 
 	/**
@@ -1564,7 +1564,7 @@ private:
 	/**
 	 * Special Xalan namespace for built-in extensions.
 	 */
-	static const XalanDOMString&		s_XSLT4JNameSpaceURL; // "http://xml.apache.org/xslt"
+	static const XalanDOMString&		s_XalanNamespaceURL; // "http://xml.apache.org/xalan"
 
 	/**
 	 * Prefix to use when generating unique namespaces.

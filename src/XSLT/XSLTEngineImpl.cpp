@@ -3586,7 +3586,7 @@ XSLTEngineImpl::initializeElementKeysTable(ElementKeysMapType&	theElementKeys)
 
 static XalanDOMString	s_XSLNameSpaceURL;
 
-static XalanDOMString	s_XSLT4JNameSpaceURL;
+static XalanDOMString	s_XalanNamespaceURL;
 
 static XalanDOMString	s_uniqueNamespacePrefix;
 
@@ -3617,7 +3617,7 @@ const double			XSLTEngineImpl::s_XSLTVerSupported(1.0);
 
 const XalanDOMString&	XSLTEngineImpl::s_XSLNameSpaceURL = ::s_XSLNameSpaceURL;
 
-const XalanDOMString&	XSLTEngineImpl::s_XSLT4JNameSpaceURL = ::s_XSLT4JNameSpaceURL;
+const XalanDOMString&	XSLTEngineImpl::s_XalanNamespaceURL = ::s_XalanNamespaceURL;
 
 const XalanDOMString&	XSLTEngineImpl::s_uniqueNamespacePrefix = ::s_uniqueNamespacePrefix;
 
@@ -3648,7 +3648,7 @@ XSLTEngineImpl::initialize()
 {
 	::s_XSLNameSpaceURL = XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform");
 
-	::s_XSLT4JNameSpaceURL = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt");
+	::s_XalanNamespaceURL = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan");
 
 	::s_uniqueNamespacePrefix = XALAN_STATIC_UCODE_STRING("ns");
 
@@ -3688,7 +3688,7 @@ XSLTEngineImpl::terminate()
 
 	releaseMemory(::s_uniqueNamespacePrefix);
 
-	releaseMemory(::s_XSLT4JNameSpaceURL);
+	releaseMemory(::s_XalanNamespaceURL);
 
 	releaseMemory(::s_XSLNameSpaceURL);
 
