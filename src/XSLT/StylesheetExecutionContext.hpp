@@ -721,6 +721,51 @@ public:
 	getParamVariable(const QName&	theName) const = 0;
 
 	/**
+	 * Push a frame marker for an element.
+	 *
+	 * @param elem the element
+	 */
+	virtual void
+	pushElementFrame(const ElemTemplateElement*		elem) = 0;
+
+	/**
+	 * Pop a frame marker for an element.
+	 *
+	 * @param elem the element
+	 */
+	virtual void
+	popElementFrame(const ElemTemplateElement*	elem) = 0;
+
+	/*
+	 * A class to manage pushing and popping an element's stack
+	 * frame context.
+	 */
+	class PushAndPopElementFrame
+	{
+	public:
+
+		PushAndPopElementFrame(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement*		element) :
+			m_executionContext(executionContext),
+			m_element(element)
+		{
+			executionContext.pushElementFrame(element);
+		}
+
+		~PushAndPopElementFrame()
+		{
+			m_executionContext.popElementFrame(m_element);
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_executionContext;
+
+		const ElemTemplateElement*		m_element;
+	};
+
+	/**
 	 * Get the top of the stack frame from where a search 
 	 * for a variable or param should take place.
 	 *
@@ -737,6 +782,40 @@ public:
 	 */
 	virtual void
 	setCurrentStackFrameIndex(int	currentStackFrameIndex = -1) = 0;
+
+	/*
+	 * A class to manage the state of the variable stacks frame index.
+	 */
+	class SetAndRestoreCurrentStackFrameIndex
+	{
+	public:
+
+		SetAndRestoreCurrentStackFrameIndex(
+			StylesheetExecutionContext&		executionContext,
+			int								newIndex) :
+			m_executionContext(executionContext),
+			m_savedIndex(executionContext.getCurrentStackFrameIndex())
+		{
+			executionContext.setCurrentStackFrameIndex(newIndex);
+		}
+
+		~SetAndRestoreCurrentStackFrameIndex()
+		{
+			m_executionContext.setCurrentStackFrameIndex(m_savedIndex);
+		}
+
+		int
+		getStackFrameIndex() const
+		{
+			return m_savedIndex;
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_executionContext;
+
+		const int						m_savedIndex;
+	};
 
 	/*
 	 * A class to manage stack state during execution.

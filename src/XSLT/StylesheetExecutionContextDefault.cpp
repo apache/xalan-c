@@ -547,6 +547,22 @@ StylesheetExecutionContextDefault::getParamVariable(const QName&	theName) const
 
 
 
+void
+StylesheetExecutionContextDefault::pushElementFrame(const ElemTemplateElement*	elem)
+{
+	m_xsltProcessor.getVariableStacks().pushElementFrame(elem);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::popElementFrame(const ElemTemplateElement*	elem)
+{
+	m_xsltProcessor.getVariableStacks().popElementFrame(elem);
+}
+
+
+
 int
 StylesheetExecutionContextDefault::getCurrentStackFrameIndex() const
 {

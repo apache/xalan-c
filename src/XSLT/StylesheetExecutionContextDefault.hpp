@@ -257,6 +257,12 @@ public:
 	virtual XObject*
 	getParamVariable(const QName&	theName) const;
 
+	virtual void
+	pushElementFrame(const ElemTemplateElement*		elem);
+
+	virtual void
+	popElementFrame(const ElemTemplateElement*	elem);
+
 	virtual int
 	getCurrentStackFrameIndex() const;
 

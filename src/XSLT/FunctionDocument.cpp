@@ -119,8 +119,14 @@ getDoc(
 		{
 			XalanDOMString	theMessage("Cannot load requested doc: ");
 
-			theMessage += base;
 			theMessage += localURI;
+
+			if (length(base) > 0)
+			{
+				theMessage += " (Base URI: ";
+				theMessage += base;
+				theMessage += ")";
+			}
 
 			executionContext.warn(theMessage);
 		}
@@ -203,11 +209,18 @@ FunctionDocument::execute(
 			assert(XObject::eTypeNodeSet != arg->getType() ||
 								arg->nodeset().item(i) != 0);
 
-			const XalanDOMString		ref = XObject::eTypeNodeSet == arg->getType() ?
+			XalanDOMString	ref = XObject::eTypeNodeSet == arg->getType() ?
 													executionContext.getNodeData(*arg->nodeset().item(i)) :
 													arg->str();
 
-			if(! isEmpty(ref))
+			// This is the case where the function was called with
+			// an empty string, which refers to the stylesheet itself.
+			if (nRefs == 1 && isEmpty(ref) == true && args.size() == 1)
+			{
+				ref = base;
+			}
+
+			if(!isEmpty(ref))
 			{
 				if(docContext == 0)
 				{
@@ -237,7 +250,7 @@ FunctionDocument::execute(
 				if(indexOfColon < theLength && indexOfSlash < theLength && indexOfColon < indexOfSlash)
 				{
 					// The url (or filename, for that matter) is absolute.
-					base = XalanDOMString();
+					clear(base);
 				}
 
 				XalanDocument* const	newDoc = getDoc(executionContext, ref, base);
@@ -248,6 +261,8 @@ FunctionDocument::execute(
 				}
 			}
 		}
+
+		assert(mnl.checkForDuplicates() == false);
 
 		return executionContext.getXObjectFactory().createNodeSet(mnl);
 	}
