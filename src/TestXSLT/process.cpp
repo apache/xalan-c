@@ -792,26 +792,33 @@ int main(int argc, const char* argv[]) throw()
 			for(unsigned int i = 0; i < theInstanceCount; ++i)
 			{
 				const XalanNode* const	theInstance = theNodes[i];
-				assert(theInstance != 0);
 
-				cout << "("
-					 << hex
-					 << theInstance
-					 << ")  Node name: \""
-					 << theInstance->getNodeName()
-					 << "\"  Node value: \""
-					 << theInstance->getNodeValue()
-					 << "\""
-#if defined(XALAN_RTTI_AVAILABLE)
-					 << "  Type: \""
-					 << typeid(*theInstance).name()
-					 << "\""
-#endif
-					 << endl
-					 << endl;
+				if(theInstance == 0)
+				{
+					cout << "No instance information is available..."
+						 << endl;
+				}
+				else
+				{
+					cout << "("
+						 << hex
+						 << theInstance
+						 << ")  Node name: \""
+						 << theInstance->getNodeName()
+						 << "\"  Node value: \""
+						 << theInstance->getNodeValue()
+						 << "\""
+	#if defined(XALAN_RTTI_AVAILABLE)
+						 << "  Type: \""
+						 << typeid(*theInstance).name()
+						 << "\""
+	#endif
+						 << endl
+						 << endl;
+				}
 			}
 
-#if defined(INTERACTIVE)
+#if defined(XALAN_DEBUG_INTERACTIVE)
 			cout << "Hit <Enter> to continue..."
 				 << endl
 				 << endl;
