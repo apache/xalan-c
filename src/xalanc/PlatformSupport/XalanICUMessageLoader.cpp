@@ -215,7 +215,7 @@ bool XalanICUMessageLoader::loadMsg(XalanMessages::Codes    msgToLoad
 	   return false;
    }
 
-   const unsigned int	retStrLen = strLen > maxChars ? maxChars : strLen;
+   const unsigned int	retStrLen = (strLen + 1 ) > maxChars ? maxChars : (strLen + 1);
 
    XalanCopy(name, name + retStrLen, toFill);
   
