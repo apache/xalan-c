@@ -112,11 +112,7 @@ ICUBridgeCollationCompareFunctor::operator()(
 	{
 		assert(m_collator != 0);
 
-#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-		return m_collator->compare(
-					ICUBridge::XalanDOMCharStringToUnicodeString(theLHS),
-					ICUBridge::XalanDOMCharStringToUnicodeString(theRHS));
-#else
+#if defined(XALAN_USE_XERCES_DOMSTRING)
 		// $$$ ToDo: This code is necessary because DOMStrings can
 		// have a null representation.
 		const XalanDOMChar* const	lhs = theLHS == 0 ? &dummy : theLHS;
@@ -127,6 +123,12 @@ ICUBridgeCollationCompareFunctor::operator()(
 					length(lhs),
 					rhs,
 					length(rhs));
+#else
+		return m_collator->compare(
+					theLHS,
+					length(theLHS),
+					theRHS,
+					length(theRHS));
 #endif
 	}
 }
