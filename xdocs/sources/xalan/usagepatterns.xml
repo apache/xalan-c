@@ -113,11 +113,15 @@ function, which means you can begin processing the output while the transformati
 an integer code, 0 for success. If an error occurs, you can use the getLastError() method to return a pointer to the error message. 
 For the details, see XalanTransormer/XalanTransformer.hpp in the source tree. For an example, see the 
 <link idref="samples" anchor="xalantransform">XalanTransform</link> sample.</p>
-
+<p>Transform an XML file to an output file. The XML file contains a stylesheeet processing instruction.</p>
+<source>int
+transform(
+const  char*  xmlInFile, 
+const  char*  xmlOutFile);</source>
 <p>Transform from files to an output stream:</p>
 <source>int
 transform(const char* xmlInFile,
-*          const char* xslFile,
+          const char* xslFile,
           ostream&amp;    resultOutStream);</source>
 <p>Transform from input streams to an output stream:</p>
 <source>int
