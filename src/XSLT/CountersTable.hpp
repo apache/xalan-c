@@ -163,7 +163,7 @@ struct Counter
 	XalanNode*
 	getLast() const
 	{
-		return m_countNodes.size() == 0 ? 0 : m_countNodes.back();
+		return m_countNodes.empty() == true ? 0 : m_countNodes.back();
 	}
 };
 

@@ -204,7 +204,7 @@ NamespacesHandler::copyNamespaceAliases(const NamespacesHandler&	parentNamespace
 const XalanDOMString*
 NamespacesHandler::getNamespaceAlias(const XalanDOMString&		theStylesheetNamespace) const
 {
-	if (m_namespaceAliases.size() == 0)
+	if (m_namespaceAliases.empty() == true)
 	{
 		return 0;
 	}
@@ -394,7 +394,7 @@ NamespacesHandler::outputResultNamespaces(
 			bool							supressDefault) const
 {
 	// Write out the namespace declarations...
-	if (m_namespaceDeclarations.size() > 0)
+	if (m_namespaceDeclarations.empty() == false)
 	{
 		const NamespacesMapType::const_iterator	theEnd =
 				m_namespaceDeclarations.end();
@@ -519,7 +519,7 @@ NamespacesHandler::createResultAttributeNames()
 	// Go through all of the result namespaces and create the attribute
 	// name that will be used when they're written to the result tree.
 	// This is more efficient if the stylesheet is used multiple times.
-	if (m_namespaceDeclarations.size() > 0)
+	if (m_namespaceDeclarations.empty() == false)
 	{
 		const NamespacesMapType::iterator	theEnd =
 				m_namespaceDeclarations.end();
@@ -561,7 +561,7 @@ NamespacesHandler::createResultAttributeNames()
 void
 NamespacesHandler::processExcludeResultPrefixes(const XalanDOMString&	theElementPrefix)
 {
-	if (m_excludedResultPrefixes.size() > 0)
+	if (m_excludedResultPrefixes.empty() == false)
 	{
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<NamespacesMapType::iterator> 		IteratorVectorType;
@@ -606,7 +606,7 @@ NamespacesHandler::processExcludeResultPrefixes(const XalanDOMString&	theElement
 			++i;
 		}
 
-		while(theDeadEntries.size() > 0)
+		while(theDeadEntries.empty() == false)
 		{
 			m_namespaceDeclarations.erase(theDeadEntries.back());
 
@@ -620,7 +620,7 @@ NamespacesHandler::processExcludeResultPrefixes(const XalanDOMString&	theElement
 void
 NamespacesHandler::processNamespaceAliases()
 {
-	if (m_processAliases == true && m_namespaceDeclarations.size() > 0)
+	if (m_processAliases == true && m_namespaceDeclarations.empty() == false)
 	{
 		const NamespacesMapType::iterator	theEnd =
 				m_namespaceDeclarations.end();
@@ -655,9 +655,9 @@ NamespacesHandler::processNamespaceAliases()
 void
 NamespacesHandler::copyNamespaceAliases(const NamespaceAliasesMapType&	theNamespaceAliases)
 {
-	if (theNamespaceAliases.size() > 0)
+	if (theNamespaceAliases.empty() == false)
 	{
-		if (m_namespaceAliases.size() == 0)
+		if (m_namespaceAliases.empty() == true)
 		{
 			m_namespaceAliases = theNamespaceAliases;
 		}
@@ -685,9 +685,9 @@ NamespacesHandler::copyNamespaceAliases(const NamespaceAliasesMapType&	theNamesp
 void
 NamespacesHandler::copyExtensionNamespaceURIs(const ExtensionNamespaceURISetType&	theExtensionNamespaceURIs)
 {
-	if (theExtensionNamespaceURIs.size() > 0)
+	if (theExtensionNamespaceURIs.empty() == false)
 	{
-		if (m_extensionNamespaceURIs.size() == 0)
+		if (m_extensionNamespaceURIs.empty() == true)
 		{
 			m_extensionNamespaceURIs = theExtensionNamespaceURIs;
 		}
@@ -715,9 +715,9 @@ NamespacesHandler::copyExtensionNamespaceURIs(const ExtensionNamespaceURISetType
 void
 NamespacesHandler::copyExcludeResultPrefixes(const ExcludedResultPrefixesMapType&	theExcludeResultPrefixes)
 {
-	if (theExcludeResultPrefixes.size() > 0)
+	if (theExcludeResultPrefixes.empty() == false)
 	{
-		if (m_excludedResultPrefixes.size() == 0)
+		if (m_excludedResultPrefixes.empty() == true)
 		{
 			m_excludedResultPrefixes = theExcludeResultPrefixes;
 		}

@@ -243,7 +243,7 @@ ElemForEach::transformSelectedChildren(
 		BorrowReturnNodeSorter	sorter(executionContext);
 
 		NodeSortKeyVectorType&	keys = sorter->getSortKeys();
-		assert(keys.size() == 0);
+		assert(keys.empty() == true);
 
 		CollectionClearGuard<NodeSortKeyVectorType>		guard(keys);
 

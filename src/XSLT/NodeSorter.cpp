@@ -100,7 +100,7 @@ NodeSorter::~NodeSorter()
 void
 NodeSorter::sort(StylesheetExecutionContext&	executionContext)
 {
-	assert(m_scratchVector.size() > 0);
+	assert(m_scratchVector.empty() == false);
 
 	// Make sure the caches are cleared when we're done...
 	CollectionClearGuard<NumberResultsCacheType>	guard1(m_numberResultsCache);
@@ -131,12 +131,12 @@ NodeSorter::sort(
 			StylesheetExecutionContext&		executionContext,
 			MutableNodeRefList&				theList)
 {
-	if (m_keys.size() > 0)
+	if (m_keys.empty() == false)
 	{
 		const NodeRefListBase::size_type	theLength = theList.getLength();
 
 		// Copy the nodes to a vector...
-		assert(m_scratchVector.size() == 0);
+		assert(m_scratchVector.empty() == true);
 
 		// Make sure the scratch vector is cleared when we're done...
 		CollectionClearGuard<NodeVectorType>	guard(m_scratchVector);
@@ -312,7 +312,7 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 	NumberResultsCacheType&		theCache =
 			m_sorter.m_numberResultsCache;
 
-	if (theCache.size() == 0)
+	if (theCache.empty() == true)
 	{
 		theCache.resize(m_nodeSortKeys.size());
 	}
@@ -324,7 +324,7 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 	// is just a not-so-random number...
 	const double	theDummyValue = 135792468.0L;
 
-	if (theCache[theKeyIndex].size() != 0)
+	if (theCache[theKeyIndex].empty() == false)
 	{
 		if (DoubleSupport::equal(theCache[theKeyIndex][theEntry.m_position], theDummyValue) == true)
 		{
@@ -377,12 +377,12 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 	StringResultsCacheType&		theCache =
 			m_sorter.m_stringResultsCache;
 
-	if (theCache.size() == 0)
+	if (theCache.empty() == true)
 	{
 		theCache.resize(m_nodeSortKeys.size());
 	}
 
-	if (theCache[theKeyIndex].size() != 0)
+	if (theCache[theKeyIndex].empty() == false)
 	{
 		if (theCache[theKeyIndex][theEntry.m_position].null() == true)
 		{

@@ -1470,7 +1470,7 @@ StylesheetHandler::processImport(
 			const XalanDOMString	href(atts.getValue(i));
 
 			Stylesheet::URLStackType&	includeStack = m_stylesheet.getIncludeStack();
-			assert(includeStack.size() > 0);
+			assert(includeStack.empty() == false);
 
 			const XalanDOMString	hrefUrl = m_constructionContext.getURLStringFromString(href, includeStack.back());
 			assert(length(hrefUrl) != 0);

@@ -465,7 +465,7 @@ public:
 	const XalanDOMString&
 	getCurrentIncludeBaseIdentifier() const
 	{
-		return m_includeStack.size() == 0 ? getBaseIdentifier() : m_includeStack.back();
+		return m_includeStack.empty() == true ? getBaseIdentifier() : m_includeStack.back();
 	}
 
 	/**

@@ -92,7 +92,7 @@ VariablesStack::~VariablesStack()
 void
 VariablesStack::reset()
 {
-	while(m_stack.size() > 0)
+	while(m_stack.empty() == false)
 	{
 		pop();
 	}

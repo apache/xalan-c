@@ -768,7 +768,7 @@ StylesheetExecutionContextDefault::pushParams(
 	// We have a params vector that we reuse, but occasionally, a
 	// param will result in recursive execution, so we'll use a
 	// temporary when we detect such a situation.
-	if(m_paramsVector.size() == 0)
+	if(m_paramsVector.empty() == true)
 	{
 		// This will ensure that the contents of m_paramsVector are
 		// cleared.
@@ -1588,7 +1588,7 @@ StylesheetExecutionContextDefault::endConstruction(const KeyDeclaration&	keyDecl
 void
 StylesheetExecutionContextDefault::reset()
 {
-	assert(m_elementRecursionStack.size() == 0);
+	assert(m_elementRecursionStack.empty() == true);
 
 	m_variablesStack.reset();
 
@@ -2252,7 +2252,7 @@ StylesheetExecutionContextDefault::getParams(
 			XalanNode*					sourceNode,
 			ParamsVectorType&			params)
 {
-	assert(params.size() == 0);
+	assert(params.empty() == true);
 
 	const ElemTemplateElement*	child =
 			xslCallTemplateElement.getFirstChildElem();
@@ -2369,7 +2369,7 @@ StylesheetExecutionContextDefault::clearXPathCache()
 	using std::for_each;
 #endif
 
-	assert(m_matchPatternCache.size() == 0 || m_xsltProcessor != 0);
+	assert(m_matchPatternCache.empty() == true || m_xsltProcessor != 0);
 
 	if (m_xsltProcessor != 0)
 	{
@@ -2481,5 +2481,5 @@ StylesheetExecutionContextDefault::cleanUpTransients()
 	// Clear any cached XPaths...
 	clearXPathCache();
 
-	assert(m_matchPatternCache.size() == 0);
+	assert(m_matchPatternCache.empty() == true);
 }

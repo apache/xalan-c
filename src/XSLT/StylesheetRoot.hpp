@@ -405,8 +405,8 @@ public:
 	bool
 	hasCDATASectionElements() const
 	{
-		assert(m_hasCdataSectionElems == false && m_cdataSectionElems.size() == 0 ||
-			   m_hasCdataSectionElems == true && m_cdataSectionElems.size() != 0);
+		assert(m_hasCdataSectionElems == false && m_cdataSectionElems.empty() == true ||
+			   m_hasCdataSectionElems == true && m_cdataSectionElems.empty() == false);
 
 		return m_hasCdataSectionElems;
 	}

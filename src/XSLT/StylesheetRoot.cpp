@@ -168,7 +168,7 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&		constructionCon
 
 	// We may need to build keys, since we may have inherited them from
 	// our imports.
-	if (m_needToBuildKeysTable == false && m_keyDeclarations.size() > 0)
+	if (m_needToBuildKeysTable == false && m_keyDeclarations.empty() == false)
 	{
 		m_needToBuildKeysTable = true;
 	}
@@ -183,7 +183,7 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&		constructionCon
 			m_cdataSectionElems.end(),
 			less<XalanQName>());
 
-	if (m_cdataSectionElems.size() != 0)
+	if (m_cdataSectionElems.empty() == false)
 	{
 		m_hasCdataSectionElems = true;
 	}
@@ -629,7 +629,7 @@ StylesheetRoot::getNodeSetByKey(
 {
 	if(m_needToBuildKeysTable == true)
 	{
-		assert(0 != m_keyDeclarations.size());
+		assert(m_keyDeclarations.empty() == false);
 
 		const KeyTablesTableType::const_iterator	i =
 			theKeysTable.find(doc);

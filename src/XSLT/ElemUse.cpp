@@ -116,7 +116,7 @@ ElemUse::postConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler)
 {
-	if (m_attributeSetsNames.size() != 0)
+	if (m_attributeSetsNames.empty() == false)
 	{
 		canGenerateAttributes(true);
 	}
@@ -142,7 +142,7 @@ ElemUse::doExecute(
 {
 	ElemTemplateElement::execute(executionContext);
 
-	if(applyAttributeSets == true && 0 != m_attributeSetsNames.size())
+	if(applyAttributeSets == true && m_attributeSetsNames.empty() == false)
 	{
 		assert(canGenerateAttributes() == true);
 
