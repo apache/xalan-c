@@ -151,6 +151,10 @@ SOURCE=..\..\..\..\src\XMLSupport\FormatterTreeWalker.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XMLSupport\XalanHTMLElementsProperties.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaison.cpp
 # End Source File
 # Begin Source File
@@ -188,6 +192,10 @@ SOURCE=..\..\..\..\src\XMLSupport\FormatterToXML.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XMLSupport\FormatterTreeWalker.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\XalanHTMLElementsProperties.hpp
 # End Source File
 # Begin Source File
 
