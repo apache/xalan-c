@@ -145,13 +145,10 @@ public:
 	 * Retrieves data for node
 	 * 
 	 * @param node        DOM node whose data is to be returned
-	 * @param theResolver prefix resolver to use
 	 * @return a string representation of the node's data
 	 */
 	static XalanDOMString
-	getNodeData(
-			const XalanNode&			node,
-			const WhitespaceSupport&	theResolver);
+	getNodeData(const XalanNode&	node);
 
 	/**
 	 * Retrieve local name of node

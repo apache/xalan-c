@@ -142,9 +142,7 @@ DOMServices::WhitespaceSupportDefault::isIgnorableWhitespace(const XalanText&	no
 
 
 XalanDOMString
-DOMServices::getNodeData(
- 			const XalanNode&			node,
-			const WhitespaceSupport&	theResolver)
+DOMServices::getNodeData(const XalanNode&	node)
 {
 	XalanDOMString	data;
 
@@ -159,8 +157,7 @@ DOMServices::getNodeData(
 			while(child != 0)
 			{
 				const XalanDOMString 	nodeData =
-					getNodeData(*child,
-								theResolver);
+					getNodeData(*child);
 
 				if(0 < length(nodeData))
 				{
@@ -182,10 +179,11 @@ DOMServices::getNodeData(
 				static_cast<const XalanText&>(node);
 #endif
 
-			if(theResolver.isIgnorableWhitespace(theTextNode) == false)
-			{
+			// This is commented out because it turns out that it's incorrect...
+//			if(theResolver.isIgnorableWhitespace(theTextNode) == false)
+//			{
 				data = theTextNode.getData();
-			}
+//			}
 		}
 		break;
 
