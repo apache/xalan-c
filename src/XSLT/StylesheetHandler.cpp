@@ -1041,13 +1041,10 @@ ElemTemplateElement* StylesheetHandler::initWrapperless (const DOMString& name,
 
 
 
-namespace
-{
-
 /**
  * Test to see if the stack contains the given URL.
  */
-bool 
+static bool 
 stackContains(
 			const Stylesheet::URLStackType&		stack, 
 			const XMLURL&						url)
@@ -1066,8 +1063,6 @@ stackContains(
 
 	return contains;	
 }
-
-};
 
 
 

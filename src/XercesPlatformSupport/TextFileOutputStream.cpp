@@ -196,15 +196,12 @@ TextFileOutputStream::writeData(
 
 
 
-namespace
-{
-
-const DOMString		theOpenExceptionType(XALAN_STATIC_UCODE_STRING("TextFileOutputStreamOpenException"));
-const DOMString		theWriteExceptionType(XALAN_STATIC_UCODE_STRING("TextFileOutputStreamWriteException"));
+static const DOMString	theOpenExceptionType(XALAN_STATIC_UCODE_STRING("TextFileOutputStreamOpenException"));
+static const DOMString	theWriteExceptionType(XALAN_STATIC_UCODE_STRING("TextFileOutputStreamWriteException"));
 
 
 
-DOMString
+static DOMString
 FormatMessageLocal(
 			const DOMString&	theMessage,
 			const DOMString&	theFileName,
@@ -224,10 +221,6 @@ FormatMessageLocal(
 
 	return theResult;
 }
-
-};
-
-
 
 
 

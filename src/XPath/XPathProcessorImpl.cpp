@@ -73,94 +73,39 @@
 
 
 
-namespace
-{
-
-const char* const	FROM_ANCESTORS_STRING = "ancestor";
-const char* const	FROM_ANCESTORS_OR_SELF_STRING = "ancestor-or-self";
-const char* const	FROM_ATTRIBUTES_STRING = "attribute";
-const char* const	FROM_CHILDREN_STRING = "child";
-const char* const	FROM_DESCENDANTS_STRING = "descendant";
-const char* const	FROM_DESCENDANTS_OR_SELF_STRING = "descendant-or-self";
-const char* const	FROM_FOLLOWING_STRING = "following";
-const char* const	FROM_FOLLOWING_SIBLINGS_STRING = "following-sibling";
-const char* const	FROM_PARENT_STRING = "parent";
-const char* const	FROM_PRECEDING_STRING = "preceding";
-const char* const	FROM_PRECEDING_SIBLINGS_STRING = "preceding-sibling";
-const char* const	FROM_SELF_STRING = "self";
-const char* const	FROM_SELF_ABBREVIATED_STRING = ".";
-const char* const	FROM_NAMESPACE_STRING = "namespace";
+static const char* const	FROM_ANCESTORS_STRING = "ancestor";
+static const char* const	FROM_ANCESTORS_OR_SELF_STRING = "ancestor-or-self";
+static const char* const	FROM_ATTRIBUTES_STRING = "attribute";
+static const char* const	FROM_CHILDREN_STRING = "child";
+static const char* const	FROM_DESCENDANTS_STRING = "descendant";
+static const char* const	FROM_DESCENDANTS_OR_SELF_STRING = "descendant-or-self";
+static const char* const	FROM_FOLLOWING_STRING = "following";
+static const char* const	FROM_FOLLOWING_SIBLINGS_STRING = "following-sibling";
+static const char* const	FROM_PARENT_STRING = "parent";
+static const char* const	FROM_PRECEDING_STRING = "preceding";
+static const char* const	FROM_PRECEDING_SIBLINGS_STRING = "preceding-sibling";
+static const char* const	FROM_SELF_STRING = "self";
+static const char* const	FROM_SELF_ABBREVIATED_STRING = ".";
+static const char* const	FROM_NAMESPACE_STRING = "namespace";
 
 // This shouldn't really be here, since it duplicates a string that is part
 // of the information that is maintained by the class XPathFunctionTable,
 // but this is a reasonable optimization.
-const char* const	FUNC_ID_STRING = "id";
+static const char* const	FUNC_ID_STRING = "id";
 
 
 // These shouldn't really be here, since they are not part of the XPath standard,
 // but rather a part ofthe XSLT standard.
-const char* const	FUNC_KEY_STRING = "key";
-const char* const	FUNC_DOC_STRING = "doc";
-const char* const	FUNC_DOCUMENT_STRING = "document";
+static const char* const	FUNC_KEY_STRING = "key";
+static const char* const	FUNC_DOC_STRING = "doc";
+static const char* const	FUNC_DOCUMENT_STRING = "document";
 
 
-const char* const	NODETYPE_COMMENT_STRING = "comment";
-const char* const	NODETYPE_TEXT_STRING = "text";
-const char* const	NODETYPE_PI_STRING = "processing-instruction";
-const char* const	NODETYPE_NODE_STRING = "node";
-const char* const	NODETYPE_ANYELEMENT_STRING = "*";
-
-
-#if 0  
-const string	XPathProcessorImpl::FROM_SELF_ABBREVIATED_STRING = ".";
-const string	XPathProcessorImpl::FROM_ATTRIBUTE_STRING = "@";
-const string	XPathProcessorImpl::FROM_DOC_STRING = "document";
-const string	XPathProcessorImpl::FROM_DOCREF_STRING = "document";
-const string	XPathProcessorImpl::FROM_ID_STRING = "id";
-const string	XPathProcessorImpl::FROM_IDREF_STRING = "idref";
-const string	XPathProcessorImpl::FUNC_CURRENT_STRING = "current";
-const string	XPathProcessorImpl::FUNC_LAST_STRING = "last";
-const string	XPathProcessorImpl::FUNC_POSITION_STRING = "position";
-const string	XPathProcessorImpl::FUNC_COUNT_STRING = "count";
-const string	XPathProcessorImpl::FUNC_ID_STRING = "id";
-const string	XPathProcessorImpl::FUNC_IDREF_STRING = "idref";
-const string	XPathProcessorImpl::FUNC_KEY_STRING = "key";
-const string	XPathProcessorImpl::FUNC_KEYREF_STRING = "keyref";
-const string	XPathProcessorImpl::FUNC_DOCUMENT_STRING = "document";
-const string	XPathProcessorImpl::FUNC_DOCREF_STRING = "docref";
-const string	XPathProcessorImpl::FUNC_LOCAL_PART_STRING = "local-name";
-const string	XPathProcessorImpl::FUNC_NAMESPACE_STRING = "namespace-uri";
-const string	XPathProcessorImpl::FUNC_NAME_STRING = "name";
-const string	XPathProcessorImpl::FUNC_GENERATE_ID_STRING = "generate-id";
-const string	XPathProcessorImpl::FUNC_NOT_STRING = "not";
-const string	XPathProcessorImpl::FUNC_TRUE_STRING = "true";
-const string	XPathProcessorImpl::FUNC_FALSE_STRING = "false";
-const string	XPathProcessorImpl::FUNC_BOOLEAN_STRING = "boolean";
-const string	XPathProcessorImpl::FUNC_LANG_STRING = "lang";
-const string	XPathProcessorImpl::FUNC_NUMBER_STRING = "number";
-const string	XPathProcessorImpl::FUNC_FLOOR_STRING = "floor";
-const string	XPathProcessorImpl::FUNC_CEILING_STRING = "ceiling";
-const string	XPathProcessorImpl::FUNC_ROUND_STRING = "round";
-const string	XPathProcessorImpl::FUNC_SUM_STRING = "sum";
-const string	XPathProcessorImpl::FUNC_STRING_STRING = "string";
-const string	XPathProcessorImpl::FUNC_STARTS_WITH_STRING = "starts-with";
-const string	XPathProcessorImpl::FUNC_CONTAINS_STRING = "contains";
-const string	XPathProcessorImpl::FUNC_SUBSTRING_BEFORE_STRING = "substring-before";
-const string	XPathProcessorImpl::FUNC_SUBSTRING_AFTER_STRING = "substring-after";
-const string	XPathProcessorImpl::FUNC_NORMALIZE_STRING = "normalize";
-const string	XPathProcessorImpl::FUNC_TRANSLATE_STRING = "translate";
-const string	XPathProcessorImpl::FUNC_CONCAT_STRING = "concat";
-const string	XPathProcessorImpl::FUNC_FORMAT_NUMBER_STRING = "format-number";
-const string	XPathProcessorImpl::FUNC_SYSTEM_PROPERTY_STRING = "system-property";
-const string	XPathProcessorImpl::FUNC_EXT_FUNCTION_AVAILABLE_STRING = "extension-function-available";
-const string	XPathProcessorImpl::FUNC_EXT_ELEM_AVAILABLE_STRING = "extension-element-available";
-const string	XPathProcessorImpl::FUNC_SUBSTRING_STRING = "substring";
-const string	XPathProcessorImpl::FUNC_STRING_LENGTH_STRING = "string-length";
-const string	XPathProcessorImpl::FUNC_DOCLOCATION_STRING = "document-location";
-#endif
-
-
-};
+static const char* const	NODETYPE_COMMENT_STRING = "comment";
+static const char* const	NODETYPE_TEXT_STRING = "text";
+static const char* const	NODETYPE_PI_STRING = "processing-instruction";
+static const char* const	NODETYPE_NODE_STRING = "node";
+static const char* const	NODETYPE_ANYELEMENT_STRING = "*";
 
 
 
@@ -225,10 +170,10 @@ XPathProcessorImpl::initXPath(
 
 void
 XPathProcessorImpl::initMatchPattern(
-			XPath&				pathObj,
-			const DOMString&	expression,
-			const PrefixResolver&		prefixResolver,
-			XObjectFactory&		xobjectFactory,
+			XPath&					pathObj,
+			const DOMString&		expression,
+			const PrefixResolver&	prefixResolver,
+			XObjectFactory&			xobjectFactory,
 			const XPathEnvSupport&	envSupport)
 {
 	m_xpath = &pathObj;

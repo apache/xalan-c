@@ -88,15 +88,12 @@ NamespaceResolver::reset()
 
 
 
-namespace
-{
-	NSInfo	theNSInfoUnProcWithXMLNS(false, true);
-	NSInfo	theNSInfoUnProcWithoutXMLNS(false, false);
-	NSInfo	theNSInfoUnProcNoAncestorXMLNS(false, false, NSInfo::ANCESTORNOXMLNS);
-	NSInfo	theNSInfoNullWithXMLNS(true, true);
-	NSInfo	theNSInfoNullWithoutXMLNS(true, false);
-	NSInfo	theNSInfoNullNoAncestorXMLNS(true, false, NSInfo::ANCESTORNOXMLNS);
-}
+static NSInfo	theNSInfoUnProcWithXMLNS(false, true);
+static NSInfo	theNSInfoUnProcWithoutXMLNS(false, false);
+static NSInfo	theNSInfoUnProcNoAncestorXMLNS(false, false, NSInfo::ANCESTORNOXMLNS);
+static NSInfo	theNSInfoNullWithXMLNS(true, true);
+static NSInfo	theNSInfoNullWithoutXMLNS(true, false);
+static NSInfo	theNSInfoNullNoAncestorXMLNS(true, false, NSInfo::ANCESTORNOXMLNS);
 
 
 
@@ -183,7 +180,7 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode)
 
 		if(equals(prefix, "xml") == true)
 		{
-			namespaceOfPrefix = DOMServices::theXMLNamespaceURI;
+			namespaceOfPrefix = DOMServices::s_XMLNamespaceURI;
 		}
 		else
 		{

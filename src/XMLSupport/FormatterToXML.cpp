@@ -72,12 +72,11 @@
 #include <string>
 
 
-namespace
-{
-const char* const	theDefaultAttrSpecialChars = "<>&\"\'\r\n";
-}
+static const char* const	theDefaultAttrSpecialChars = "<>&\"\'\r\n";
+
 
 const DOMString FormatterToXML::DEFAULT_MIME_ENCODING = XALAN_STATIC_UCODE_STRING("UTF-8");
+
 
 XMLCh				FormatterToXML::m_charBuf[MAXCHARBUF];
 // This should be OK on all platforms ??

@@ -65,7 +65,9 @@
 XSpan*
 XPointer::getNode(const DOMString&	/* xpointer */)
 {
+#if !defined(XALAN_NO_NAMESPACES)
 	using namespace std;
+#endif
 
 	cerr << "Error!  XPointer.getNode not yet implemented!"
 		 << endl;
@@ -79,7 +81,9 @@ XPointer::getNode(const DOMString&	/* xpointer */)
 XSpan*
 XPointer::getNode(XPath&	/* xpath */)
 {
+#if !defined(XALAN_NO_NAMESPACES)
 	using namespace std;
+#endif
 
 	cerr << "Error!  XPointer.getNode not yet implemented!"
 		 << endl;

@@ -98,10 +98,7 @@ XercesParserLiaison::supportsSAX() const
 
 
 
-namespace
-{
-
-inline DOMParser*
+static inline DOMParser*
 CreateDOMParser(bool	fValidating)
 {
 	DOMParser *parser = new DOMParser;
@@ -112,7 +109,7 @@ CreateDOMParser(bool	fValidating)
 
 
 
-inline SAXParser*
+static inline SAXParser*
 CreateSAXParser(bool	fValidating)
 {
 	SAXParser *parser = new SAXParser;
@@ -120,7 +117,7 @@ CreateSAXParser(bool	fValidating)
 
 	return parser;
 }
-};
+
 
 
 DOM_Document

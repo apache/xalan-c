@@ -107,13 +107,11 @@ NamedNodeMapAttributeList::getName(const unsigned int index) const
 }
 
 
+
 // This is out here so we don't have to worry about multithreading issues.
-namespace
-{
+static const DOMString	theType(XALAN_STATIC_UCODE_STRING("CDATA"));
 
-const DOMString	theType(XALAN_STATIC_UCODE_STRING("CDATA"));
 
-}
 
 const XMLCh*
 NamedNodeMapAttributeList::getType(const unsigned int /* index */) const

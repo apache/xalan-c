@@ -69,14 +69,30 @@
 
 
 
+#if defined(XALAN_INLINE_INITIALIZATION)
+#include <PlatformSupport/DOMStringHelper.hpp>
+#endif
+
+
+
 class DOM_Element;
 class DOM_Text;
 
 
 
-namespace DOMServices
+class XALAN_DOMSUPPORT_EXPORT DOMServices
 {
-	const char* const	theXMLNamespaceURI = "http://www.w3.org/XML/1998/namespace";
+public:
+
+#if defined(XALAN_INLINE_INITIALIZATION)
+
+	static const DOMString	s_XMLNamespaceURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace"));
+
+#else
+
+	static const DOMString	s_XMLNamespaceURI;
+
+#endif
 
 	class XALAN_DOMSUPPORT_EXPORT WhitespaceSupport
 	{
@@ -96,12 +112,12 @@ namespace DOMServices
 		isIgnorableWhitespace(const DOM_Text&	node) const = 0;
 	};
 
-	XALAN_DOMSUPPORT_EXPORT_FUNCTION(DOMString)
+	static DOMString
 	getNodeData(
 			const DOM_Node&				node,
 			const WhitespaceSupport&	theResolver);
 
-	XALAN_DOMSUPPORT_EXPORT_FUNCTION(DOMString)
+	static DOMString
 	getLocalNameOfNode(const DOM_Node&		n);
 
 	/**
@@ -110,15 +126,15 @@ namespace DOMServices
 	 * have parents.  If this function is used with a DOM implementation
 	 * that reuses attribute nodes, this will not work correctly.
 	 */
-	XALAN_DOMSUPPORT_EXPORT_FUNCTION(DOM_Node)
+	static DOM_Node
 	getParentOfNode(const DOM_Node&		node);
 
-	XALAN_DOMSUPPORT_EXPORT_FUNCTION(DOMString)
+	static DOMString
 	getNamespaceForPrefix(
 			const DOMString&	prefix,
 			const DOM_Element&	namespaceContext);
 
-}	// namespace DOMServices
+};	// class DOMServices
 
 
 

@@ -82,17 +82,10 @@
 
 
 
-namespace
-{
-
-XBooleanStatic		theTrueBoolean(true);
-XBooleanStatic		theFalseBoolean(false);
-};
+static XBooleanStatic		theTrueBoolean(true);
+static XBooleanStatic		theFalseBoolean(false);
 
 
-
-namespace
-{
 
 template<class ValueType, class CollectionType>
 void
@@ -135,8 +128,6 @@ RemoveObjectFromCollection(
 	}
 #endif
 }
-
-};
 
 
 

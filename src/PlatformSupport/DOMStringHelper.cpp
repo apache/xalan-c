@@ -505,10 +505,7 @@ compare(
 
 
 
-namespace
-{
-
-void
+static void
 CopyDOMStringToVector(const DOMString&		theString,
 					  std::vector<char>&	theVector)
 {
@@ -536,9 +533,6 @@ CopyDOMStringToVector(const DOMString&		theString,
 	}
 }
 
-
-
-}
 
 
 
@@ -678,7 +672,9 @@ DoubleToDOMString(double	theDouble)
 	}
 	else
 	{
+#if !defined(XALAN_NO_NAMESPACES)
 		using namespace std;
+#endif
 
 		stringstream	theFormatter;
 
@@ -731,7 +727,9 @@ DoubleToDOMString(double	theDouble)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 LongToHexDOMString(long		theLong)
 {
+#if !defined(XALAN_NO_NAMESPACES)
 	using namespace std;
+#endif
 
 	stringstream	theFormatter;
 
@@ -745,7 +743,9 @@ LongToHexDOMString(long		theLong)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 LongToDOMString(long	theLong)
 {
+#if !defined(XALAN_NO_NAMESPACES)
 	using namespace std;
+#endif
 
 	stringstream	theFormatter;
 
@@ -759,7 +759,9 @@ LongToDOMString(long	theLong)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 {
+#if !defined(XALAN_NO_NAMESPACES)
 	using namespace std;
+#endif
 
 	stringstream	theFormatter;
 

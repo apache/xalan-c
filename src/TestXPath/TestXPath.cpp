@@ -92,10 +92,6 @@
 
 
 
-namespace
-{
-
-
 const XObject*
 ExecuteXPath(
 			XPathProcessor&			theXPathProcessor,
@@ -1193,8 +1189,6 @@ RunTests(
 			 XMLStrL("/testsuite/conf/Axes/"),
 			 thePrintWriter);
 }
-
-};
 
 
 

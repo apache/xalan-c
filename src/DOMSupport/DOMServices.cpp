@@ -76,6 +76,18 @@
 
 
 
+#if defined(XALAN_INLINE_INITIALIZATION)
+
+const DOMString		DOMServices::s_XMLNamespaceURI;
+
+#else
+
+const DOMString		DOMServices::s_XMLNamespaceURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace"));
+
+#endif
+
+
+
 DOMServices::WhitespaceSupport::WhitespaceSupport()
 {
 }
@@ -88,7 +100,7 @@ DOMServices::WhitespaceSupport::~WhitespaceSupport()
 
 
 
-XALAN_DOMSUPPORT_EXPORT_FUNCTION(DOMString)
+DOMString
 DOMServices::getNodeData(
  			const DOM_Node&				node,
 			const WhitespaceSupport&	theResolver)
@@ -147,7 +159,7 @@ DOMServices::getNodeData(
 
 
 
-XALAN_DOMSUPPORT_EXPORT_FUNCTION(DOMString)
+DOMString
 DOMServices::getLocalNameOfNode(const DOM_Node&		n)
 {
 	const DOMString		qname = n.getNodeName();
@@ -162,9 +174,7 @@ DOMServices::getLocalNameOfNode(const DOM_Node&		n)
 /**
  * Support for getParentOfNode.
  */
-namespace {
-
-DOM_Node
+static DOM_Node
 locateAttrParent(
 			const DOM_Element&	elem,
 			const DOM_Node&		attr)
@@ -212,11 +222,10 @@ locateAttrParent(
 	return parent;
 }
 
-}	// namespace
 
 
 
-XALAN_DOMSUPPORT_EXPORT_FUNCTION(DOM_Node)
+DOM_Node
 DOMServices::getParentOfNode(const DOM_Node&	node)
 {
 	DOM_Node		parent;
@@ -253,7 +262,7 @@ DOMServices::getParentOfNode(const DOM_Node&	node)
 
 
 
-XALAN_DOMSUPPORT_EXPORT_FUNCTION(DOMString)
+DOMString
 DOMServices::getNamespaceForPrefix(
 			const DOMString&	prefix,
 			const DOM_Element&	namespaceContext)
@@ -262,7 +271,7 @@ DOMServices::getNamespaceForPrefix(
 
 	if(equals(prefix, "xml") == true)
 	{
-		theNamespace = theXMLNamespaceURI;
+		theNamespace = s_XMLNamespaceURI;
 	}
 	else
 	{

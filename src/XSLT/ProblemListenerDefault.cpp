@@ -79,21 +79,17 @@
 
 
 
-namespace
-{
+static const char* const	errorHeader = "Error: ";
+static const char* const	warningHeader = "Warning: ";
 
-	const char* const	errorHeader = "Error: ";
-	const char* const	warningHeader = "Warning: ";
+static const char* const	xslHeader = "XSL ";
+static const char* const	xmlHeader = "XML ";
+static const char* const	queryHeader = "PATTERN ";
 
-	const char* const	xslHeader = "XSL ";
-	const char* const	xmlHeader = "XML ";
-	const char* const	queryHeader = "PATTERN ";
-
-	const char* const	styleTreeNodeHeader = ", style tree node: ";
-	const char* const	sourceTreeNodeHeader = ", source tree node: ";
-	const char* const	lineNoHeader = ", line ";
-	const char* const	charOffsetHeader = ", offset ";
-};
+static const char* const	styleTreeNodeHeader = ", style tree node: ";
+static const char* const	sourceTreeNodeHeader = ", source tree node: ";
+static const char* const	lineNoHeader = ", line ";
+static const char* const	charOffsetHeader = ", offset ";
 
 
 
