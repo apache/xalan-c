@@ -116,6 +116,12 @@ struct DecimalFormatCacheStruct
 
         const XalanDecimalFormatSymbols * const	m_DFS;
     };
+
+private:
+
+    DecimalFormatCacheStruct();
+    DecimalFormatCacheStruct(const DecimalFormatCacheStruct& other);
+    
 };
 
 
@@ -202,7 +208,7 @@ public:
 	bool
 	operator==(const ICUFormatNumberFunctor&) const;
 private:
-    mutable MemoryManagerType& m_memoryManager;
+    		 MemoryManagerType& m_memoryManager;
 };
 
 XALAN_CPP_NAMESPACE_END
