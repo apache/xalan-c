@@ -1,4 +1,4 @@
-#include <xercesc/util/PlatformUtils.hpp>
+#include <util/PlatformUtils.hpp>
 
 
 
