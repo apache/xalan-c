@@ -69,7 +69,7 @@ writeCallback(
 #endif
 }
 
-// This is the fluxh callback function, which casts the handle
+// This is the flush callback function, which casts the handle
 // to the appropriate type, then calls the flush() member function
 // on the CallbackHandler class.
 void
