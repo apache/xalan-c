@@ -206,7 +206,7 @@ XPath::execute(
 	{
 		executionContext.setContextNodeList(contextNodeList);
 
-		theResult = execute(executionContext);
+		theResult = execute(context, prefixResolver, executionContext);
 	}
 	catch(...)
 	{
