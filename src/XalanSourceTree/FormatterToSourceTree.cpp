@@ -76,6 +76,10 @@
 
 
 
+#include <DOMSupport/PrefixResolver.hpp>
+
+
+
 #include <XMLSupport/FormatterToDOM.hpp>
 
 
@@ -94,7 +98,8 @@ FormatterToSourceTree::FormatterToSourceTree(XalanSourceTreeDocument*	theDocumen
 	m_documentFragment(0),
 	m_currentElement(0),
 	m_elementStack(),
-	m_textBuffer()
+	m_textBuffer(),
+	m_prefixResolver(0)
 {
 	assert(m_document != 0);
 }
@@ -109,7 +114,8 @@ FormatterToSourceTree::FormatterToSourceTree(
 	m_documentFragment(theDocumentFragment),
 	m_currentElement(0),
 	m_elementStack(),
-	m_textBuffer()
+	m_textBuffer(),
+	m_prefixResolver(0)
 {
 	assert(m_document != 0);
 	assert(m_documentFragment != 0);
@@ -153,7 +159,7 @@ FormatterToSourceTree::startElement(
 			AttributeList&			attrs)
 {
 	XalanSourceTreeElement* const	theNewElement =
-		m_document->createElementNode(name, attrs, m_currentElement);
+		createElementNode(name, attrs, m_currentElement);
 
 	if (m_currentElement != 0)
 	{
@@ -366,6 +372,24 @@ FormatterToSourceTree::doCharacters(
 	else
 	{
 		throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
+	}
+}
+
+
+
+XalanSourceTreeElement*
+FormatterToSourceTree::createElementNode(
+			const XalanDOMChar*			name,
+			AttributeList&				attrs,
+			XalanSourceTreeElement*		theParentElement)
+{
+	if (m_prefixResolver != 0)
+	{
+		return m_document->createElementNode(name, attrs, *m_prefixResolver, theParentElement);
+	}
+	else
+	{
+		return m_document->createElementNode(name, attrs, theParentElement);
 	}
 }
 

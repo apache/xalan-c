@@ -77,6 +77,7 @@
 
 
 
+class PrefixResolver;
 class XalanDocument;
 class XalanDocumentFragment;
 class XalanElement;
@@ -119,6 +120,18 @@ public:
 	virtual
 	~FormatterToDOM();
 
+
+	const PrefixResolver*
+	getPrefixResolver() const
+	{
+		return m_prefixResolver;
+	}
+
+	void
+	setPrefixResolver(const PrefixResolver*		thePrefixResolver)
+	{
+		m_prefixResolver = thePrefixResolver;
+	}
 
 	// These methods are inherited from DocumentHandler ...
 
@@ -217,6 +230,29 @@ private:
 	void
 	append(XalanNode* 	newNode);
 
+	/**
+	 * Create the appropriate element, complete with attributes set.
+	 *
+	 * @param theElementName The name for the new element
+	 * @param attrs The SAX AttributeList for the new attributes.
+	 * @return A pointer to the new instance.
+	 */
+	XalanElement*
+	createElement(
+			const XalanDOMChar*		theElementName,
+			AttributeList&			attrs);
+
+	void
+	addAttributes(
+			XalanElement*	theElement,
+			AttributeList&	attrs);
+
+	const XalanDOMString&
+	getNamespaceForPrefix(
+			const XalanDOMChar*		theName,
+			const PrefixResolver&	thePrefixResolver,
+			XalanDOMString&			thePrefix);
+
 
 	// Data members...
 	XalanDocument*					m_doc;
@@ -233,7 +269,13 @@ private:
 
 	ElementStackType				m_elemStack;
 
-	XalanDOMString					m_buffer;
+	XalanDOMString					m_buffer1;
+
+	XalanDOMString					m_buffer2;
+
+	const PrefixResolver*			m_prefixResolver;
+
+	static const XalanDOMString		s_emptyString;
 };
 
 

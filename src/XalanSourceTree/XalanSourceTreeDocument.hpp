@@ -91,6 +91,7 @@
 
 class AttributeList;
 class Attributes;
+class PrefixResolver;
 
 
 
@@ -324,6 +325,15 @@ public:
 
 	XalanSourceTreeElement*
 	createElementNode(
+			const XalanDOMChar*			tagName,
+			const AttributeList&		attrs,
+			const PrefixResolver&		thePrefixResolver,
+			XalanSourceTreeElement*		theParentElement = 0,
+			XalanNode*					thePreviousSibling = 0,
+			XalanNode*					theNextSibling = 0);
+
+	XalanSourceTreeElement*
+	createElementNode(
 			const XalanDOMChar*			name,
 			const Attributes&			attrs,
 			XalanSourceTreeElement*		theParentElement = 0,
@@ -389,6 +399,13 @@ private:
 	createAttribute(
 			const XalanDOMChar*			theName,
 			const XalanDOMChar*			theValue,
+			XalanSourceTreeElement*		theOwnerElement,
+			const PrefixResolver&		thePrefixResolver);
+
+	XalanSourceTreeAttr*
+	createAttribute(
+			const XalanDOMChar*			theName,
+			const XalanDOMChar*			theValue,
 			XalanSourceTreeElement*		theOwnerElement);
 
 	XalanSourceTreeElement*
@@ -400,6 +417,16 @@ private:
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling);
 
+	XalanSourceTreeElement*
+	createElement(
+			const XalanDOMChar*			theTagName,
+			XalanSourceTreeAttr**		theAttributeVector,
+			AttributesCountType			theAttributeCount,
+			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					thePreviousSibling,
+			XalanNode*					theNextSibling,
+			const PrefixResolver&		thePrefixResolver);
+
 	void
 	createAttributes(
 			const Attributes&			theAttributes,
@@ -409,9 +436,14 @@ private:
 
 	const XalanDOMString&
 	getTextNodeString(
-			const XalanDOMChar*			chars,
-			unsigned int				length);
+			const XalanDOMChar*		chars,
+			unsigned int			length);
 
+	const XalanDOMString&
+	getNamespaceForPrefix(
+			const XalanDOMChar*		theName,
+			const PrefixResolver&	thePrefixResolver,
+			XalanDOMString&			thePrefix);
 
 	// Not implemented...
 	XalanSourceTreeDocument(const XalanSourceTreeDocument&	theSource);
@@ -457,6 +489,8 @@ private:
 	UnparsedEntityURIMapType						m_unparsedEntityURIs;
 
 	StringCollectionType							m_nonPooledStrings;
+
+	XalanDOMString									m_stringBuffer;
 
 	static const XalanDOMString&					s_nameString;
 };

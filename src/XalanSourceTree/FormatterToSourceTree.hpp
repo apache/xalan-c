@@ -77,6 +77,7 @@
 
 
 
+class PrefixResolver;
 class XalanDocument;
 class XalanDocumentFragment;
 class XalanElement;
@@ -129,6 +130,18 @@ public:
 	virtual
 	~FormatterToSourceTree();
 
+
+	const PrefixResolver*
+	getPrefixResolver() const
+	{
+		return m_prefixResolver;
+	}
+
+	void
+	setPrefixResolver(const PrefixResolver*		thePrefixResolver)
+	{
+		m_prefixResolver = thePrefixResolver;
+	}
 
 	// These methods are inherited from DocumentHandler ...
 
@@ -225,15 +238,21 @@ private:
 	void
 	processAccumulatedText();
 
+	XalanSourceTreeElement*
+	createElementNode(
+			const XalanDOMChar*			name,
+			AttributeList&				attrs,
+			XalanSourceTreeElement*		theParentElement);
+
 	void
 	doCharacters(
-			const XMLCh*	chars,
-			unsigned int	length);
+			const XalanDOMChar*		chars,
+			unsigned int			length);
 
 	void
 	doProcessingInstruction(
-			const XMLCh*	target,
-			const XMLCh*	data);
+			const XalanDOMChar*		target,
+			const XalanDOMChar*		data);
 
 
 	// Data members...
@@ -252,6 +271,8 @@ private:
 	ElementStackType								m_elementStack;
 
 	XalanDOMString									m_textBuffer;
+
+	const PrefixResolver*							m_prefixResolver;
 };
 
 

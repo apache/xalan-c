@@ -83,6 +83,14 @@
 
 
 
+#include <DOMSupport/PrefixResolver.hpp>
+
+
+
+const XalanDOMString	FormatterToDOM::s_emptyString;
+
+
+
 FormatterToDOM::FormatterToDOM(
 			XalanDocument*			doc,
 			XalanDocumentFragment*	docFrag,
@@ -91,7 +99,10 @@ FormatterToDOM::FormatterToDOM(
 	m_doc(doc),
 	m_docFrag(docFrag),
 	m_currentElem(currentElement),
-	m_elemStack()
+	m_elemStack(),
+	m_buffer1(),
+	m_buffer2(),
+	m_prefixResolver(0)
 {
 	assert(m_doc != 0 && m_docFrag != 0);
 }
@@ -105,7 +116,10 @@ FormatterToDOM::FormatterToDOM(
 	m_doc(doc),
 	m_docFrag(0),
 	m_currentElem(elem),
-	m_elemStack()
+	m_elemStack(),
+	m_buffer1(),
+	m_buffer2(),
+	m_prefixResolver(0)
 {
 	assert(m_doc != 0);
 }
@@ -147,14 +161,8 @@ FormatterToDOM::startElement(
 			const	XMLCh* const	name,
 			AttributeList&			attrs)
 {
-	XalanElement* const		elem = m_doc->createElement(XalanDOMString(name));
-
-	const int				nAtts = attrs.getLength();
-
-	for(int i = 0; i < nAtts; i++)
-	{
-		elem->setAttribute(XalanDOMString(attrs.getName(i)), XalanDOMString(attrs.getValue(i)));
-	}
+	XalanElement* const		elem = createElement(name, attrs);
+	assert(elem != 0);
 
 	append(elem);
 
@@ -188,9 +196,9 @@ FormatterToDOM::characters(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	assign(m_buffer, chars, length);
+	assign(m_buffer1, chars, length);
 
-	append(m_doc->createTextNode(m_buffer));
+	append(m_doc->createTextNode(m_buffer1));
 }
 
 
@@ -212,7 +220,9 @@ FormatterToDOM::charactersRaw(
 void
 FormatterToDOM::entityReference(const XMLCh* const	name)
 {
-	append(m_doc->createEntityReference(XalanDOMString(name)));
+	assign(m_buffer1, name);
+
+	append(m_doc->createEntityReference(m_buffer1));
 }
 
 
@@ -222,9 +232,9 @@ FormatterToDOM::ignorableWhitespace(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	assign(m_buffer, chars, length);
+	assign(m_buffer1, chars, length);
 
-	append(m_doc->createTextNode(m_buffer));
+	append(m_doc->createTextNode(m_buffer1));
 }
 
 
@@ -234,7 +244,10 @@ FormatterToDOM::processingInstruction(
 			const XMLCh* const	target,
 			const XMLCh* const	data)
 {
-	append(m_doc->createProcessingInstruction(XalanDOMString(target), XalanDOMString(data)));
+	assign(m_buffer1, target);
+	assign(m_buffer2, data);
+
+	append(m_doc->createProcessingInstruction(m_buffer1, m_buffer2));
 }
 
 
@@ -249,7 +262,9 @@ FormatterToDOM::resetDocument()
 void
 FormatterToDOM::comment(const XMLCh* const	data)
 {
-	append(m_doc->createComment(XalanDOMString(data)));
+	assign(m_buffer1, data);
+
+	append(m_doc->createComment(m_buffer1));
 }
 
 
@@ -259,9 +274,9 @@ FormatterToDOM::cdata(
 			const XMLCh* const	ch,
 			const unsigned int 	length)
 {
-	assign(m_buffer, ch, length);
+	assign(m_buffer1, ch, length);
 
-	append(m_doc->createCDATASection(m_buffer));
+	append(m_doc->createCDATASection(m_buffer1));
 }
 
 
@@ -282,5 +297,115 @@ FormatterToDOM::append(XalanNode*	newNode)
 	else
 	{
 		m_doc->appendChild(newNode);
+	}
+}
+
+
+
+XalanElement*
+FormatterToDOM::createElement(
+			const XalanDOMChar*		theElementName,
+			AttributeList&			attrs)
+{
+	XalanElement*	theElement = 0;
+
+	assign(m_buffer1, theElementName);
+
+	if (m_prefixResolver == 0)
+	{
+		theElement = m_doc->createElement(m_buffer1);
+
+		addAttributes(theElement, attrs);
+	}
+	else
+	{
+		// Check for the namespace...
+		const XalanDOMString&	theNamespace =
+					getNamespaceForPrefix(theElementName, *m_prefixResolver, m_buffer2);
+
+		if (length(theNamespace) == 0)
+		{
+			theElement = m_doc->createElement(m_buffer1);
+		}
+		else
+		{
+			theElement = m_doc->createElementNS(theNamespace, m_buffer1);
+		}
+
+		addAttributes(theElement, attrs);
+	}
+
+	return theElement;
+}
+
+
+
+void
+FormatterToDOM::addAttributes(
+			XalanElement*	theElement,
+			AttributeList&	attrs)
+{
+	const unsigned int	nAtts = attrs.getLength();
+
+	if (m_prefixResolver == 0)
+	{
+		for(unsigned int i = 0; i < nAtts; i++)
+		{
+			assign(m_buffer1, attrs.getName(i));
+			assign(m_buffer2, attrs.getValue(i));
+
+			theElement->setAttribute(m_buffer1, m_buffer2);
+		}
+	}
+	else
+	{
+		for(unsigned int i = 0; i < nAtts; i++)
+		{
+			const XalanDOMChar* const	theName = attrs.getName(i);
+			assert(theName != 0);
+
+			// Check for the namespace...
+			const XalanDOMString&	theNamespace =
+					getNamespaceForPrefix(theName, *m_prefixResolver, m_buffer2);
+
+			assign(m_buffer1, theName);
+			assign(m_buffer2, attrs.getValue(i));
+
+			if (length(theNamespace) == 0)
+			{
+				theElement->setAttribute(m_buffer1, m_buffer2);
+			}
+			else
+			{
+				theElement->setAttributeNS(theNamespace, m_buffer1, m_buffer2);
+			}
+		}
+	}
+}
+
+
+
+const XalanDOMString&
+FormatterToDOM::getNamespaceForPrefix(
+			const XalanDOMChar*		theName,
+			const PrefixResolver&	thePrefixResolver,
+			XalanDOMString&			thePrefix)
+{
+	const unsigned int	theLength = length(theName);
+	const unsigned int	theColonIndex = indexOf(theName, XalanUnicode::charColon);
+
+	if (theColonIndex == theLength)
+	{
+		clear(thePrefix);
+
+		return thePrefixResolver.getNamespaceForPrefix(s_emptyString);
+	}
+	else
+	{
+		// Get the prefix from theName...
+		assign(thePrefix, theName, theColonIndex);
+		assert(length(thePrefix) != 0);
+
+		return thePrefixResolver.getNamespaceForPrefix(thePrefix);
 	}
 }

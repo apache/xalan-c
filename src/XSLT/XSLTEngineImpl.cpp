@@ -122,11 +122,6 @@
 
 
 
-#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
-#include <XalanSourceTree/FormatterToSourceTree.hpp>
-
-
-
 #include "Constants.hpp"
 #include "ElemWithParam.hpp"
 #include "FunctionCurrent.hpp"

@@ -855,6 +855,8 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 					theResultTreeFrag.get(),
 					0);
 
+		tempFormatter.setPrefixResolver(&m_xsltProcessor);
+
 		theResultTreeFrag->setOwnerDocument(theDocument);
 
 		StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
@@ -870,6 +872,8 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 		FormatterToSourceTree	tempFormatter(
 					theDocument,
 					theResultTreeFrag.get());
+
+		tempFormatter.setPrefixResolver(&m_xsltProcessor);
 
 		theResultTreeFrag->setOwnerDocument(theDocument);
 
@@ -1072,6 +1076,8 @@ StylesheetExecutionContextDefault::createFormatterToDOM(
 
 	m_formatterListeners.insert(theFormatter);
 
+	theFormatter->setPrefixResolver(&m_xsltProcessor);
+
 	return theFormatter;
 }
 
@@ -1088,6 +1094,8 @@ StylesheetExecutionContextDefault::createFormatterToDOM(
 			elem);
 
 	m_formatterListeners.insert(theFormatter);
+
+	theFormatter->setPrefixResolver(&m_xsltProcessor);
 
 	return theFormatter;
 }

@@ -71,6 +71,10 @@
 
 
 
+#include <DOMSupport/PrefixResolver.hpp>
+
+
+
 #include "XalanSourceTreeHelper.hpp"
 
 
@@ -97,7 +101,8 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(bool	fPoolAllText) :
 	m_poolAllText(fPoolAllText),
 	m_elementsByID(),
 	m_unparsedEntityURIs(),
-	m_nonPooledStrings()
+	m_nonPooledStrings(),
+	m_stringBuffer()
 {
 }
 
@@ -582,6 +587,61 @@ XalanSourceTreeDocument::createElementNode(
 
 
 
+XalanSourceTreeElement*
+XalanSourceTreeDocument::createElementNode(
+			const XalanDOMChar*			tagName,
+			const AttributeList&		attrs,
+			const PrefixResolver&		thePrefixResolver,
+			XalanSourceTreeElement*		theParentElement,
+			XalanNode*					thePreviousSibling,
+			XalanNode*					theNextSibling)
+{
+	// We might have typedef'ed this to something smaller than unsigned int.
+	const AttributesCountType	theAttributeCount = AttributesCountType(attrs.getLength());
+
+	// assert that we didn't lose anything...
+	assert(theAttributeCount == attrs.getLength());
+
+	XalanSourceTreeAttr** const		theAttributeVector =
+		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
+
+	XalanSourceTreeElement* const	theNewElement =
+		createElement(
+			tagName,
+			theAttributeVector,
+			theAttributeCount,
+			theParentElement,
+			thePreviousSibling,
+			theNextSibling,
+			thePrefixResolver);
+	assert(theNewElement != 0);
+
+	// Now, create the attributes...
+	for(AttributesCountType i = 0; i < theAttributeCount; ++i)
+	{
+		const XalanDOMChar* const	theName =
+			attrs.getName(i);
+		assert(theName != 0);
+
+		const XalanDOMChar* const	theValue =
+			attrs.getValue(i);
+		assert(theValue != 0);
+
+		theAttributeVector[i] =
+			createAttribute(
+				theName,
+				theValue,
+				theNewElement,
+				thePrefixResolver);
+
+		assert(theAttributeVector[i] != 0);
+	}
+
+	return theNewElement;
+}
+
+
+
 inline const XalanDOMString&
 getElementNodePrefix(
 			const XalanDOMChar*		qname,
@@ -759,6 +819,33 @@ XalanSourceTreeDocument::getTextNodeString(
 
 
 
+const XalanDOMString&
+XalanSourceTreeDocument::getNamespaceForPrefix(
+			const XalanDOMChar*		theName,
+			const PrefixResolver&	thePrefixResolver,
+			XalanDOMString&			thePrefix)
+{
+	const unsigned int	theLength = length(theName);
+	const unsigned int	theColonIndex = indexOf(theName, XalanUnicode::charColon);
+
+	if (theColonIndex == theLength)
+	{
+		clear(thePrefix);
+
+		return thePrefixResolver.getNamespaceForPrefix(s_emptyString);
+	}
+	else
+	{
+		// Get the prefix from theName...
+		assign(thePrefix, theName, theColonIndex);
+		assert(length(thePrefix) != 0);
+
+		return thePrefixResolver.getNamespaceForPrefix(thePrefix);
+	}
+}
+
+
+
 XalanSourceTreeText*
 XalanSourceTreeDocument::createTextNode(
 			const XalanDOMChar*			chars,
@@ -843,19 +930,21 @@ XalanSourceTreeDocument::getUnparsedEntityURI(const XalanDOMString&		theName) co
 
 
 
-#if 0
-// Commented out for now, since we need a way to get namespace URIs.  (Like Stylesheet does).
 XalanSourceTreeAttr*
 XalanSourceTreeDocument::createAttribute(
 			const XalanDOMChar*			theName,
 			const XalanDOMChar*			theValue,
-			XalanSourceTreeElement*		theOwnerElement)
+			XalanSourceTreeElement*		theOwnerElement,
+			const PrefixResolver&		thePrefixResolver)
 {
-	const unsigned int	theLength = length(theName);
-	const unsigned int	theColonIndex = indexOf(theName, XalanUnicode::charColon);
+	const XalanDOMString&	theNamespace =
+		getNamespaceForPrefix(theName, thePrefixResolver, m_stringBuffer);
 
-	if (theColonIndex == theLength)
+	if (length(theNamespace) == 0)
 	{
+		// the prefix was returned by getNamespaceForPrefix()...
+		assert(length(m_stringBuffer) == 0);
+
 		return m_attributeAllocator.create(
 				m_stringPool.get(theName),
 				m_stringPool.get(theValue),
@@ -875,10 +964,11 @@ XalanSourceTreeDocument::createAttribute(
 		// index
 		//
 		return m_attributeNSAllocator.create(
-				m_stringPool.get(theName, theLength),
-				m_stringPool.get(theName, theColonIndex),
-				m_stringPool.get(XalanDOMString()),
-				m_stringPool.get(theName + theColonIndex, theLength - theColonIndex),
+				m_stringPool.get(theName),
+				m_stringPool.get(theName + length(m_stringBuffer) + 1),
+				m_stringPool.get(theNamespace),
+				// This is the prefix...
+				m_stringPool.get(m_stringBuffer),
 				m_stringPool.get(theValue),
 				theOwnerElement,
 				m_nextIndexValue++);
@@ -889,7 +979,6 @@ XalanSourceTreeDocument::createAttribute(
 
 
 
-// Commented out for now, since we need a way to get namespace URIs.  (Like Stylesheet does).
 XalanSourceTreeElement*
 XalanSourceTreeDocument::createElement(
 			const XalanDOMChar*			theTagName,
@@ -897,13 +986,17 @@ XalanSourceTreeDocument::createElement(
 			AttributesCountType			theAttributeCount,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling)
+			XalanNode*					theNextSibling,
+			const PrefixResolver&		thePrefixResolver)
 {
-	const unsigned int	theLength = length(theTagName);
-	const unsigned int	theColonIndex = indexOf(theTagName, XalanUnicode::charColon);
+	const XalanDOMString&	theNamespace =
+		getNamespaceForPrefix(theTagName, thePrefixResolver, m_stringBuffer);
 
-	if (theColonIndex == theLength)
+	if (length(theNamespace) == 0)
 	{
+		// the prefix was returned by getNamespaceForPrefix()...
+		assert(length(m_stringBuffer) == 0);
+
 		return m_elementAllocator.create(
 				m_stringPool.get(theTagName),
 				this,
@@ -931,11 +1024,11 @@ XalanSourceTreeDocument::createElement(
 		// index
 		//
 		return m_elementNSAllocator.create(
-				m_stringPool.get(theTagName, theLength),
-				m_stringPool.get(theTagName + theColonIndex + 1, theColonIndex),
-				// How do we get the namespace for the prefix?
-				m_stringPool.get(XalanDOMString()),
-				m_stringPool.get(theTagName,),
+				m_stringPool.get(theTagName),
+				m_stringPool.get(theTagName + length(m_stringBuffer) + 1),
+				m_stringPool.get(theNamespace),
+				// This is the prefix...
+				m_stringPool.get(m_stringBuffer),
 				this,
 				theAttributeVector,
 				theAttributeCount,
@@ -947,7 +1040,6 @@ XalanSourceTreeDocument::createElement(
 
 	return 0;
 }
-#endif
 
 
 
