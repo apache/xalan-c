@@ -94,8 +94,9 @@ public:
 protected:
 
 	virtual void
-	writeData(const char*		theBuffer,
-			  unsigned long		theBufferLength);
+	writeData(
+			const char*		theBuffer,
+			size_type		theBufferLength);
 
 	virtual void
 	doFlush();

@@ -891,7 +891,7 @@ XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet
 		const char* const	theStylesheetErrorMessage =
 				"An invalid compiled stylesheet was provided.";
 
-		const unsigned int	theLength =
+		const XalanDOMString::size_type		theLength =
 			length(theStylesheetErrorMessage);
 
 		m_errorMessage.resize(theLength + 1, '\0');
@@ -999,7 +999,7 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 		const char* const	theParsedSourceErrorMessage =
 				"An invalid parsed source was provided.";
 
-		const unsigned int	theLength =
+		const XalanDOMString::size_type		theLength =
 			length(theParsedSourceErrorMessage);
 
 		m_errorMessage.resize(theLength + 1, '\0');

@@ -90,7 +90,7 @@ XalanTransformerOutputStream::doFlush()
 void
 XalanTransformerOutputStream::writeData(
 			const char*		theBuffer,
-			unsigned long	theBufferLength)
+			size_type		theBufferLength)
 {
 	const size_t theBytesWritten = m_outputHandler(theBuffer, theBufferLength, m_outputHandle);		
 

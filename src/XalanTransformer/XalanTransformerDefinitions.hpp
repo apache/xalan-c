@@ -63,6 +63,10 @@
 
 
 
+#include <stddef.h>
+
+
+
 #if defined(XALAN_TRANSFORMER_BUILD_DLL)
 
 #define XALAN_TRANSFORMER_EXPORT XALAN_PLATFORM_EXPORT
@@ -82,6 +86,8 @@ extern "C"
 {
 #endif
 
+	typedef size_t	CallbackSizeType;
+
 /**
  * Callback function passed to the XalanTransformer APIs.
  * Used to process transformation output in blocks of data.
@@ -100,7 +106,7 @@ extern "C"
  * @param handle	handle of XalanTransformer instance.
  * @return number of bytes written
  */
-typedef unsigned long (*XalanOutputHandlerType) (const char*, unsigned long, void*);
+typedef CallbackSizeType (*XalanOutputHandlerType) (const char*, CallbackSizeType, void*);
 	
 /**
  * Callback function passed to the XalanTransformer APIs.
