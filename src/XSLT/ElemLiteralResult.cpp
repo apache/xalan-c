@@ -222,6 +222,8 @@ ElemLiteralResult::execute(
 
 	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
 
+	m_namespacesHandler.outputResultNamespaces(executionContext);
+
 	if(0 != m_avts.size())
 	{
 		const AVTVectorType::size_type	nAttrs = m_avts.size();
@@ -263,8 +265,6 @@ ElemLiteralResult::execute(
 			clear(theStringedValue);
 		}
 	}
-
-	m_namespacesHandler.outputResultNamespaces(executionContext);
 
 	executeChildren(executionContext, sourceTree, sourceNode, mode);
 
