@@ -372,7 +372,7 @@ XalanOutputStream::setOutputEncoding(const XalanDOMString&	theEncoding)
 	if (theSize > 0)
 	{
 #if defined(XALAN_OLD_STYLE_CASTS)
-		write((const char*)theProlog[0], theProlog.size());
+		write((const char*)&theProlog[0], theProlog.size());
 #else
 		write(reinterpret_cast<const char*>(&theProlog[0]), theProlog.size());
 #endif
