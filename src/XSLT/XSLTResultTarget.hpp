@@ -182,6 +182,24 @@ public:
 	 * @param fileName system identifier as a string
 	 */
 	void
+	setFileName(const char*		fileName)
+	{
+		if (fileName == 0)
+		{
+			m_fileName.clear();
+		}
+		else
+		{
+			m_fileName = fileName;
+		}
+	}
+
+	/**
+	 * Set the file name where the results will be written.
+	 *
+	 * @param fileName system identifier as a string
+	 */
+	void
 	setFileName(const XalanDOMString&	fileName)
 	{
 		m_fileName = fileName;
