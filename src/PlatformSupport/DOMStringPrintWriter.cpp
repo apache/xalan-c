@@ -154,7 +154,7 @@ DOMStringPrintWriter::write(
 	}
 	else
 	{
-		m_outputString += substring(s, theOffset, theOffset + theLength);
+		m_outputString.append(s, theOffset, theLength);
 	}
 }
 
