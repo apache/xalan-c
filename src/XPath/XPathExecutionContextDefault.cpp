@@ -71,6 +71,7 @@
 
 
 #include <PlatformSupport/PrefixResolver.hpp>
+#include <PlatformSupport/XalanLocator.hpp>
 
 
 
@@ -454,8 +455,8 @@ XPathExecutionContextDefault::error(
 {
 	assert(m_xpathEnvSupport != 0);
 
-	int				lineNumber = -1;
-	int				columnNumber = -1;
+	XalanLocator::size_type		lineNumber = -1;
+	XalanLocator::size_type		columnNumber = -1;
 
 	XalanDOMString	uri;
 

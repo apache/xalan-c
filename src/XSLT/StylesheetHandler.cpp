@@ -79,6 +79,7 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
+#include <PlatformSupport/XalanLocator.hpp>
 
 
 
@@ -358,8 +359,8 @@ StylesheetHandler::startElement(
 
 		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
 
-		const int	lineNumber = getLineNumber(locator);
-		const int	columnNumber = getColumnNumber(locator);
+		const XalanLocator::size_type	lineNumber = getLineNumber(locator);
+		const XalanLocator::size_type	columnNumber = getColumnNumber(locator);
 
 		// First push namespaces
 		m_stylesheet.pushNamespaces(atts);
@@ -1791,8 +1792,8 @@ StylesheetHandler::processText(
 
 		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
 
-		const int	lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
-		const int	columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
+		const XalanLocator::size_type	lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
+		const XalanLocator::size_type	columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
 
 		XalanAutoPtr<ElemTextLiteral>	elem(new ElemTextLiteral(m_constructionContext,
 			m_stylesheet,
