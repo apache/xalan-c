@@ -107,7 +107,15 @@ The -XML or -HTML flag must be set:
 &nbsp;&nbsp;-ESCAPECDATA (Strip CDATA sections of their brackets, and escape)
 -TEXT (Use simple Text formatter)
 -DOM (Test for well-formed output --format to DOM then to XML for output)
--PARAM name expression (Set a stylesheet parameter)</source>
+-XST (Format to Xalan source tree, then to XML for output)
+-XD (Use Xerces DOM instead of Xalan source tree)
+-DE Disable built-in <link idref="extensionslib">extension functions</link>)
+-EN (Specify the namespace URI for Xalan extension functions; the default
+     is 'http://xml.apache.org/xslt')
+-PARAM name expression (Set a stylesheet parameter)
+
+
+</source>
       <p>Use -IN to specify the XML source document.</p> 
       <p>Use -XSL to specify the XSL stylesheet file.</p>
       <p>Use -TEXT if you want the output to include only text nodes without any escaping.</p>
