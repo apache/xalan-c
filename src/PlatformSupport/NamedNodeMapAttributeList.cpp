@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMChar	NamedNodeMapAttributeList::s_typeString[] = 
 {
 	XalanUnicode::charLetter_C,
@@ -81,6 +85,7 @@ const XalanDOMChar	NamedNodeMapAttributeList::s_typeString[] =
 
 
 NamedNodeMapAttributeList::NamedNodeMapAttributeList(const XalanNamedNodeMap&	theMap) :
+	ParentType(),
 	m_nodeMap(theMap),
 	m_lastIndex(theMap.getLength() - 1)
 {
@@ -191,3 +196,7 @@ NamedNodeMapAttributeList::getValue(const char* const name) const
 {
 	return getValue(c_wstr(TranscodeFromLocalCodePage(name)));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

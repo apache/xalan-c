@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanNullOutputStream::XalanNullOutputStream() :
 	XalanOutputStream(1)
 {
@@ -85,3 +89,7 @@ void
 XalanNullOutputStream::doFlush()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

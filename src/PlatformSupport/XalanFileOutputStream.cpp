@@ -71,6 +71,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static  XalanFileOutputStream::HandleType
 openFile(const XalanDOMString&	theFileName)
 {
@@ -288,3 +292,7 @@ XalanFileOutputStream::XalanFileOutputStreamWriteException::XalanFileOutputStrea
 XalanFileOutputStream::XalanFileOutputStreamWriteException::~XalanFileOutputStreamWriteException()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * This class takes SAX events (in addition to some extra events 
  * that SAX doesn't handle yet) and produces absolutely nothing.
@@ -92,7 +96,7 @@ public:
 	// These methods are inherited from FormatterListener ...
 
 	virtual void
-	setDocumentLocator(const Locator* const		locator);
+	setDocumentLocator(const LocatorType* const		locator);
 
 	virtual void
 	startDocument();
@@ -102,8 +106,8 @@ public:
 
 	virtual void
 	startElement(
-			const	XMLCh* const	name,
-			AttributeList&			attrs);
+			const XMLCh* const	name,
+			AttributeListType&	attrs);
 
     virtual void
 	endElement(const XMLCh* const	name);
@@ -154,6 +158,10 @@ private:
 	bool
 	operator==(const FormatterToNull&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

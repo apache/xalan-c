@@ -69,12 +69,16 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
 #include <PlatformSupport/PrefixResolver.hpp>
 #include <PlatformSupport/XalanNamespace.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+class XalanDOMString;
 
 
 
@@ -419,6 +423,10 @@ private:
 
 	BoolVectorType					m_createNewContextStack;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -68,13 +68,19 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * This class defines a base class for Locator derivations in Xalan.  It was defined
  * because Xerces made changes in their Locator class which caused turbulence.
  */
-class XALAN_PLATFORMSUPPORT_EXPORT XalanLocator : public Locator
+class XALAN_PLATFORMSUPPORT_EXPORT XalanLocator : public XERCES_CPP_NAMESPACE_QUALIFIER Locator
 {
 public:
+
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	ParentType;
 
 #if XERCES_VERSION_MAJOR >= 2
 	typedef XMLSSize_t	size_type;
@@ -108,6 +114,10 @@ private:
 	operator=(const XalanLocator&);
 
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

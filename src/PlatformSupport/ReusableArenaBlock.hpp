@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,6 +63,10 @@
 #include <PlatformSupport/XalanBitmap.hpp>
 #include <PlatformSupport/ArenaBlock.hpp>
 
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -316,6 +320,10 @@ private:
 	// The number of blocks on the free list.)
 	size_type		m_freeBlockCount;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

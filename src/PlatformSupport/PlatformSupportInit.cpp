@@ -63,6 +63,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 unsigned long	PlatformSupportInit::s_initCounter = 0;
 
 
@@ -105,3 +109,7 @@ PlatformSupportInit::terminate()
 {
 	XalanTranscodingServices::terminate();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

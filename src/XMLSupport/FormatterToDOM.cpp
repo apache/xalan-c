@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,6 +84,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString	FormatterToDOM::s_emptyString;
 
 
@@ -128,7 +132,7 @@ FormatterToDOM::~FormatterToDOM()
 
 
 void
-FormatterToDOM::setDocumentLocator(const Locator* const		/* locator */)
+FormatterToDOM::setDocumentLocator(const LocatorType* const		/* locator */)
 {
 	// No action for the moment.
 }
@@ -154,7 +158,7 @@ FormatterToDOM::endDocument()
 void
 FormatterToDOM::startElement(
 			const	XMLCh* const	name,
-			AttributeList&			attrs)
+			AttributeListType&		attrs)
 {
 	XalanElement* const		elem = createElement(name, attrs);
 	assert(elem != 0);
@@ -303,7 +307,7 @@ FormatterToDOM::append(XalanNode*	newNode)
 XalanElement*
 FormatterToDOM::createElement(
 			const XalanDOMChar*		theElementName,
-			AttributeList&			attrs)
+			AttributeListType&		attrs)
 {
 	XalanElement*	theElement = 0;
 
@@ -340,8 +344,8 @@ FormatterToDOM::createElement(
 
 void
 FormatterToDOM::addAttributes(
-			XalanElement*	theElement,
-			AttributeList&	attrs)
+			XalanElement*		theElement,
+			AttributeListType&	attrs)
 {
 	const unsigned int	nAtts = attrs.getLength();
 
@@ -407,3 +411,7 @@ FormatterToDOM::getNamespaceForPrefix(
 		return thePrefixResolver.getNamespaceForPrefix(thePrefix);
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

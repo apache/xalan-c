@@ -85,6 +85,10 @@ class ostream;
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanOutputStream;
 
 
@@ -178,11 +182,7 @@ XalanCopy(
 			InputIteratorType	end,
 			OutputIteratorType	iterator)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::copy;
-#endif
-
-	return copy(begin, end, iterator);
+	return XALAN_STD_QUALIFIER copy(begin, end, iterator);
 }
 
 
@@ -195,11 +195,7 @@ XalanTransform(
 			OutputIteratorType	iterator,
 			UnaryFunction		function)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::transform;
-#endif
-
-	return transform(begin, end, iterator);
+	return XALAN_STD_QUALIFIER transform(begin, end, iterator);
 }
 
 #endif
@@ -1025,7 +1021,7 @@ OutputString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 			ostream&				theStream,
 #else
 			std::ostream&			theStream,
@@ -1057,7 +1053,7 @@ OutputString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 			ostream&				theStream,
 #else
 			std::ostream&			theStream,
@@ -1095,7 +1091,7 @@ OutputString(
  */
 inline void
 OutputString(
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 			ostream&				theStream,
 #else
 			std::ostream&			theStream,
@@ -1133,7 +1129,7 @@ operator<<(
  * @param theString the string to output
  * @see OutputString
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 inline ostream&
 operator<<(
 			ostream&				theStream,
@@ -1178,7 +1174,7 @@ operator<<(
  * @param theString target string
  * @see OutputString
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 inline ostream&
 operator<<(
 			ostream&				theStream,
@@ -1224,7 +1220,7 @@ operator<<(
  * @param theString target string
  * @see OutputString
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 inline ostream&
 operator<<(
 			ostream&				theStream,
@@ -2499,7 +2495,7 @@ MakeXalanDOMCharVector(const XalanDOMString&	data)
 
 
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct c_wstr_functor : public unary_function<XalanDOMString, const XalanDOMChar*>
 #else
 struct c_wstr_functor : public std::unary_function<XalanDOMString, const XalanDOMChar*>
@@ -2520,7 +2516,7 @@ struct c_wstr_functor : public std::unary_function<XalanDOMString, const XalanDO
  * @param theKey XalanDOMString to be hashed
  * @return hash value for XalanDOMString
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct DOMStringHashFunction : public unary_function<const XalanDOMString&, size_t>
 #else
 struct DOMStringHashFunction : public std::unary_function<const XalanDOMString&, size_t>
@@ -2556,7 +2552,7 @@ struct DOMStringHashFunction : public std::unary_function<const XalanDOMString&,
  * @param theRHS second string to compare
  * @return true if the contents of both strings are identical
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct DOMStringEqualsFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
 #else
 struct DOMStringEqualsFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
@@ -2579,7 +2575,7 @@ struct DOMStringEqualsFunction : public std::binary_function<const XalanDOMStrin
  * @param theRHS second string to compare
  * @return true if the contents of both strings are identical
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct DOMStringNotEqualsFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
 #else
 struct DOMStringNotEqualsFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
@@ -2602,7 +2598,7 @@ struct DOMStringNotEqualsFunction : public std::binary_function<const XalanDOMSt
  * @param theRHS second string to compare
  * @return true if the theLHS is less than theRHSl
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct DOMStringLessThanFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
 #else
 struct DOMStringLessThanFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
@@ -2625,7 +2621,7 @@ struct DOMStringLessThanFunction : public std::binary_function<const XalanDOMStr
  * @param theRHS second string to compare
  * @return true if the theLHS is less than theRHSl
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct DOMStringPointerLessThanFunction : public binary_function<const XalanDOMString*, const XalanDOMString*, bool>
 #else
 struct DOMStringPointerLessThanFunction : public std::binary_function<const XalanDOMString*, const XalanDOMString*, bool>
@@ -2650,7 +2646,7 @@ struct DOMStringPointerLessThanFunction : public std::binary_function<const Xala
  * @param theRHS second string to compare
  * @return true if the theLHS is less than theRHS, without respect to case.
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct DOMStringLessThanIgnoreCaseASCIIFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
 #else
 struct DOMStringLessThanIgnoreCaseASCIIFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
@@ -2673,7 +2669,7 @@ struct DOMStringLessThanIgnoreCaseASCIIFunction : public std::binary_function<co
  * @param theRHS second string to compare
  * @return true if the theLHS is less than or equal to theRHS
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct DOMStringLessThanOrEqualFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
 #else
 struct DOMStringLessThanOrEqualFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
@@ -2696,7 +2692,7 @@ struct DOMStringLessThanOrEqualFunction : public std::binary_function<const Xala
  * @param theRHS second string to compare
  * @return true if the theLHS is greater than theRHS
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct DOMStringGreaterThanFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
 #else
 struct DOMStringGreaterThanFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
@@ -2719,7 +2715,7 @@ struct DOMStringGreaterThanFunction : public std::binary_function<const XalanDOM
  * @param theRHS second string to compare
  * @return true if the theLHS is greater than or equal to theRHS
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct DOMStringGreaterThanOrEqualFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
 #else
 struct DOMStringGreaterThanOrEqualFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
@@ -2740,7 +2736,7 @@ struct DOMStringGreaterThanOrEqualFunction : public std::binary_function<const X
  * manner.  It substitutes for the default less<type*> so that the contents of wide strings
  * can be compared, rather than just the pointers.
  */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct less_no_case_ascii_wide_string : public binary_function<const XalanDOMChar*, const XalanDOMChar*, bool>
 #else
 struct less_no_case_ascii_wide_string : public std::binary_function<const XalanDOMChar*, const XalanDOMChar*, bool>
@@ -2805,6 +2801,10 @@ isXMLWhitespace(const XalanDOMChar*		theString)
 
 	return isXMLWhitespace(theString, 0, length(theString));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

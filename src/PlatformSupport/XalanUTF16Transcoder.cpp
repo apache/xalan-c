@@ -62,6 +62,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanUTF16Transcoder::XalanUTF16Transcoder() :
 	XalanOutputTranscoder()
 {
@@ -161,3 +165,7 @@ XalanUTF16Transcoder::canTranscodeTo(unsigned int	/* theChar */) const
 {
 	return true;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

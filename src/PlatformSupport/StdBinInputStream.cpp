@@ -71,16 +71,12 @@
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-using std::cin;
-using std::istream;
-#endif
+XALAN_CPP_NAMESPACE_BEGIN
 
 
-StdBinInputStream::StdBinInputStream(
-			istream&	theStream,
-			bool		fBlockingRead) :
-	BinInputStream(),
+
+StdBinInputStream::StdBinInputStream(StreamType&	theStream) :
+	ParentType(),
 	m_stream(theStream)
 {
 }
@@ -127,3 +123,7 @@ StdBinInputStream::readBytes(
 		return m_stream.gcount();
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

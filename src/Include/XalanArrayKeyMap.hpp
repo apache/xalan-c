@@ -65,6 +65,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 template<class KeyType, class ValueType, class CompareType>
 class XalanArrayKeyMap
 {
@@ -363,6 +367,10 @@ private:
 
 	VectorHolderType	m_keyData;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

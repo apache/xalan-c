@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 PrefixResolver::PrefixResolver()
 {
 }
@@ -74,3 +78,7 @@ PrefixResolver::PrefixResolver(const PrefixResolver&)
 PrefixResolver::~PrefixResolver()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

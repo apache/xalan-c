@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_PLATFORMSUPPORT_EXPORT StringTokenizer
 {
 public:
@@ -193,6 +197,10 @@ private:
 
 	const XalanDOMString::size_type		m_tokensLength;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -77,6 +77,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanDocument;
 class XalanDocumentFragment;
 class XalanElement;
@@ -139,7 +143,7 @@ public:
 	entityReference(const XMLCh* const	name);
 
 	virtual void
-	setDocumentLocator(const Locator* const		locator);
+	setDocumentLocator(const LocatorType* const		locator);
 
 	virtual void
 	startDocument();
@@ -150,7 +154,7 @@ public:
 	virtual void
 	startElement(
 				const	XMLCh* const	name,
-				AttributeList&			attrs);
+				AttributeListType&		attrs);
 
 	virtual void
 	endElement(const XMLCh* const	name);
@@ -227,12 +231,12 @@ private:
 	XalanElement*
 	createElement(
 			const XalanDOMChar*		theElementName,
-			AttributeList&			attrs);
+			AttributeListType&		attrs);
 
 	void
 	addAttributes(
-			XalanElement*	theElement,
-			AttributeList&	attrs);
+			XalanElement*		theElement,
+			AttributeListType&	attrs);
 
 	const XalanDOMString*
 	getNamespaceForPrefix(
@@ -262,6 +266,10 @@ private:
 
 	static const XalanDOMString		s_emptyString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

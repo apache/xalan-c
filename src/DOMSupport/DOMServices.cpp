@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,6 +85,8 @@
 
 
 
+XALAN_USING_XALAN(XalanDOMString)
+
 // These XalanDOMString instances will hold the actual
 // data.  This way, the DOMSupport references can be const,
 // but we can initialize the data when we want to.
@@ -99,18 +101,6 @@ static XalanDOMString	s_XMLNamespacePrefixURI;
 
 
 
-const XalanDOMString&	DOMServices::s_XMLString = ::s_XMLString;
-const XalanDOMString&	DOMServices::s_XMLStringWithSeparator = ::s_XMLStringWithSeparator;
-const XalanDOMString&	DOMServices::s_XMLNamespacePrefix = ::s_XMLNamespacePrefix;
-const XalanDOMString&	DOMServices::s_XMLNamespaceURI = ::s_XMLNamespaceURI;
-const XalanDOMString&	DOMServices::s_XMLNamespace = ::s_XMLNamespace;
-const XalanDOMString&	DOMServices::s_XMLNamespaceWithSeparator = ::s_XMLNamespaceWithSeparator;
-const XalanDOMString&	DOMServices::s_XMLNamespaceSeparatorString  = ::s_XMLNamespaceSeparatorString;
-const XalanDOMString&	DOMServices::s_XMLNamespacePrefixURI = ::s_XMLNamespacePrefixURI;
-const XalanDOMString	DOMServices::s_emptyString;
-
-
-
 // These four unsigned ints will hold the actual
 // data.  This way, the DOMSupport references can be const,
 // but we can initialize the data when we want to.
@@ -122,6 +112,22 @@ static XalanDOMString::size_type	s_XMLNamespaceLength = 0;
 static XalanDOMString::size_type	s_XMLNamespaceWithSeparatorLength = 0;
 static XalanDOMString::size_type	s_XMLNamespaceSeparatorStringLength = 0;
 static XalanDOMString::size_type	s_XMLNamespacePrefixURILength = 0;
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+const XalanDOMString&	DOMServices::s_XMLString = ::s_XMLString;
+const XalanDOMString&	DOMServices::s_XMLStringWithSeparator = ::s_XMLStringWithSeparator;
+const XalanDOMString&	DOMServices::s_XMLNamespacePrefix = ::s_XMLNamespacePrefix;
+const XalanDOMString&	DOMServices::s_XMLNamespaceURI = ::s_XMLNamespaceURI;
+const XalanDOMString&	DOMServices::s_XMLNamespace = ::s_XMLNamespace;
+const XalanDOMString&	DOMServices::s_XMLNamespaceWithSeparator = ::s_XMLNamespaceWithSeparator;
+const XalanDOMString&	DOMServices::s_XMLNamespaceSeparatorString  = ::s_XMLNamespaceSeparatorString;
+const XalanDOMString&	DOMServices::s_XMLNamespacePrefixURI = ::s_XMLNamespacePrefixURI;
+const XalanDOMString	DOMServices::s_emptyString;
 
 
 
@@ -1104,3 +1110,7 @@ DOMServices::findOwnerElement(
 
 	return parent;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

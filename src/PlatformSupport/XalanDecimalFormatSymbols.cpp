@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static XalanDOMChar		theNaNDefault[] =
 {
 	XalanUnicode::charLetter_N,
@@ -180,3 +184,7 @@ XalanDecimalFormatSymbols::operator==(const XalanDecimalFormatSymbols&	theRHS) c
 		m_perMill == theRHS.m_perMill &&
 		m_zeroDigit == theRHS.m_zeroDigit;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -64,7 +64,11 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+class XalanDOMString;
 
 
 
@@ -102,6 +106,10 @@ public:
 	virtual const XalanDOMString&
 	getURI() const = 0;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

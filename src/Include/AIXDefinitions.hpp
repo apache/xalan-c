@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,12 +82,13 @@
 
 #define XALAN_EXPLICIT_SCOPE_IN_TEMPLATE_BUG
 #define XALAN_NEW_STD_ALLOCATOR
+#define XALAN_HAS_CPP_NAMESPACE
 
 #else
 
 #define XALAN_OLD_STYLE_CASTS
 #define XALAN_CLASSIC_IOSTREAMS
-#define XALAN_NO_NAMESPACES
+#define XALAN_NO_STD_NAMESPACE
 #define XALAN_NO_MUTABLE
 #define XALAN_SGI_BASED_STL
 #define XALAN_NO_MEMBER_TEMPLATES

@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 #if !defined(XALAN_INLINE_INITIALIZATION)
 const size_t	Writer::npos = ~0u;
 #elif !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
@@ -92,3 +96,7 @@ Writer::getStream() const
 {
 	return 0;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

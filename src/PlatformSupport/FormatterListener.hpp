@@ -80,6 +80,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class PrefixResolver;
 
 
@@ -88,9 +92,14 @@ class PrefixResolver;
  * A SAX-based formatter interface for the XSL processor.  This interface 
  * will be called as result tree elements are constructed.
  */
-class XALAN_PLATFORMSUPPORT_EXPORT FormatterListener : public DocumentHandler
+class XALAN_PLATFORMSUPPORT_EXPORT FormatterListener : public XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler
 {
 public:
+
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler	ParentType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator			LocatorType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	AttributeListType;
+
 
 	// A handy typedef...  Must match DocumentHandler's type for characters(), etc...
 	typedef unsigned int	size_type;
@@ -225,7 +234,7 @@ public:
 	resetDocument() = 0;
 
 	virtual void
-	setDocumentLocator(const Locator* const		locator) = 0;
+	setDocumentLocator(const LocatorType* const		locator) = 0;
 
 	virtual void
 	startDocument() = 0;
@@ -233,7 +242,7 @@ public:
 	virtual void
 	startElement(
 			const	XMLCh* const	name,
-			AttributeList&			attrs) = 0;
+			AttributeListType&		attrs) = 0;
 
 
 	// Used when creating PI to work around limitations of
@@ -267,8 +276,12 @@ private:
 	operator==(const FormatterListener&) const;
 
 	// Data membmers...
-	const eFormat			m_outputFormat;
+	const eFormat	m_outputFormat;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

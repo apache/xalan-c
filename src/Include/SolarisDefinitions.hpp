@@ -73,6 +73,7 @@
 
 #if __SUNPRO_CC >= 0x520
 
+#define XALAN_HAS_CPP_NAMESPACE
 #define XALAN_STRICT_ANSI_HEADERS
 
 #else
@@ -81,10 +82,10 @@
 // broken with extra cv-qualifiers, so we'll use old-style casts.
 #define XALAN_OLD_STYLE_CASTS
 
+#define XALAN_NO_STD_NAMESPACE
 #define XALAN_STLPORT_STL
 #define XALAN_NO_DEFAULT_BUILTIN_ARRAY_INITIALIZATION
 #define XALAN_CLASSIC_IOSTREAMS
-#define XALAN_NO_NAMESPACES
 #define XALAN_NO_MUTABLE
 #define XALAN_SGI_BASED_STL
 #define XALAN_NO_MEMBER_TEMPLATES

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,7 @@
 
 
 
-#include <PlatformSupport/Resettable.hpp>
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -80,7 +80,7 @@ class XalanText;
 
 
 
-class XALAN_DOMSUPPORT_EXPORT DOMSupport : public Resettable
+class XALAN_DOMSUPPORT_EXPORT DOMSupport
 {
 public:
 
@@ -121,6 +121,10 @@ public:
 			const XalanNode&	node1,
 			const XalanNode&	node2) const = 0;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -71,6 +71,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMChar	XalanDOMString::s_empty = 0;
 
 #if defined(XALAN_INLINE_INITIALIZATION) && !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
@@ -721,7 +725,7 @@ XalanDOMString::equals(
 XalanDOMString::size_type
 XalanDOMString::length(const XalanDOMChar*	theString)
 {
-	return ::length(theString);
+	return XALAN_CPP_NAMESPACE_QUALIFIER length(theString);
 }
 
 
@@ -1112,3 +1116,7 @@ TranscodeFromLocalCodePage(
 {
 	return doTranscodeFromLocalCodePage(theSourceString, 0, true, theTargetVector, terminate);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

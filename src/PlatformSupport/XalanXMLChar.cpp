@@ -58,6 +58,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static const char XML_XX = XalanXMLChar::XML_XX;
 static const char XML_BC = XalanXMLChar::XML_BC;
 static const char XML_ID = XalanXMLChar::XML_ID;
@@ -8263,3 +8267,7 @@ const char XalanXMLChar::theUnicodeTable[] = {
 	/* FFF0 - FFF7 */ XML_XX, XML_XX, XML_XX, XML_XX, XML_XX, XML_XX, XML_XX, XML_XX, 
 	/* FFF8 - FFFF */ XML_XX, XML_XX, XML_XX, XML_XX, XML_XX, XML_XX, XML_XX, XML_XX, 
 };
+
+
+
+XALAN_CPP_NAMESPACE_END

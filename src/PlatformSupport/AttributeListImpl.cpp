@@ -73,8 +73,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 AttributeListImpl::AttributeListImpl() :
-	AttributeList(),
+	ParentType(),
 	m_AttributeVector(),
 	m_cacheVector()
 {
@@ -106,7 +110,7 @@ AttributeListImpl::AttributeListImpl(const AttributeListImpl&	theSource) :
 
 
 
-AttributeListImpl::AttributeListImpl(const AttributeList&	theSource) :
+AttributeListImpl::AttributeListImpl(const ParentType&	theSource) :
 	AttributeList(),
 	m_AttributeVector()
 {
@@ -121,14 +125,11 @@ AttributeListImpl::AttributeListImpl(const AttributeList&	theSource) :
 void
 AttributeListImpl::deleteEntries(AttributeVectorType&	theVector)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
 	// Delete all of the objects in the vector.
-	for_each(theVector.begin(),
-			 theVector.end(),
-			 DeleteFunctor<AttributeVectorEntry>());
+	XALAN_STD_QUALIFIER for_each(
+		theVector.begin(),
+		theVector.end(),
+		DeleteFunctor<AttributeVectorEntry>());
 }
 
 
@@ -189,7 +190,7 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 
 
 AttributeListImpl&
-AttributeListImpl::operator=(const AttributeList&	theRHS)
+AttributeListImpl::operator=(const ParentType&	theRHS)
 {
 	if (this != &theRHS)
 	{
@@ -298,12 +299,8 @@ AttributeListImpl::getType(const XMLCh* const name) const
 {
 	assert(name != 0);
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find_if;
-#endif
-
 	const AttributeVectorType::const_iterator	i =
-		find_if(
+		XALAN_STD_QUALIFIER find_if(
 			m_AttributeVector.begin(),
 			m_AttributeVector.end(),
 			NameCompareFunctor(name));
@@ -334,12 +331,8 @@ AttributeListImpl::getValue(const XMLCh* const name) const
 {
 	assert(name != 0);
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find_if;
-#endif
-
 	const AttributeVectorType::const_iterator	i =
-		find_if(
+		XALAN_STD_QUALIFIER find_if(
 			m_AttributeVector.begin(),
 			m_AttributeVector.end(),
 			NameCompareFunctor(name));
@@ -380,10 +373,8 @@ AttributeListImpl::addAttribute(
 
 	bool	fResult = false;
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find_if;
-	using std::copy;
-#endif
+	XALAN_USING_STD(find_if)
+	XALAN_USING_STD(copy)
 
 	typedef AttributeVectorEntry::XMLChVectorType	XMLChVectorType;
 
@@ -490,15 +481,11 @@ AttributeListImpl::removeAttribute(const XMLCh*		name)
 {
 	assert(name != 0);
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find_if;
-#endif
-
 	bool	fResult = false;
 
 	// Update the attribute, if it's already there...
 	const AttributeVectorType::iterator		i =
-		find_if(
+		XALAN_STD_QUALIFIER find_if(
 			m_AttributeVector.begin(),
 			m_AttributeVector.end(),
 			NameCompareFunctor(name));
@@ -514,3 +501,7 @@ AttributeListImpl::removeAttribute(const XMLCh*		name)
 
 	return fResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

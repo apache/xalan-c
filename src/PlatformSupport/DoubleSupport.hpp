@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,6 +69,10 @@
 
 
 #include <XalanDOM/XalanDOMString.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -373,7 +377,7 @@ public:
 
 	// Some functors to do the same thing.  This is for
 	// STL integration...
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	struct equalFunction : public binary_function<const double&, const double&, bool>
 	#else
 	struct equalFunction : public std::binary_function<const double&, const double&, bool>
@@ -388,7 +392,7 @@ public:
 		}
 	};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	struct notEqualFunction : public binary_function<const double&, const double&, bool>
 	#else
 	struct notEqualFunction : public std::binary_function<const double&, const double&, bool>
@@ -403,7 +407,7 @@ public:
 		}
 	};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	struct lessThanFunction : public binary_function<const double&, const double&, bool>
 	#else
 	struct lessThanFunction : public std::binary_function<const double&, const double&, bool>
@@ -418,7 +422,7 @@ public:
 		}
 	};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	struct lessThanOrEqualFunction : public binary_function<const double&, const double&, bool>
 	#else
 	struct lessThanOrEqualFunction : public std::binary_function<const double&, const double&, bool>
@@ -433,7 +437,7 @@ public:
 		}
 	};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	struct greaterThanFunction : public binary_function<const double&, const double&, bool>
 	#else
 	struct greaterThanFunction : public std::binary_function<const double&, const double&, bool>
@@ -448,7 +452,7 @@ public:
 		}
 	};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	struct greaterThanOrEqualFunction : public binary_function<const double&, const double&, bool>
 	#else
 	struct greaterThanOrEqualFunction : public std::binary_function<const double&, const double&, bool>
@@ -463,7 +467,7 @@ public:
 		}
 	};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	struct addFunction : public binary_function<const double&, const double&, double>
 	#else
 	struct addFunction : public std::binary_function<const double&, const double&, double>
@@ -478,7 +482,7 @@ public:
 		}
 	};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	struct subtractFunction : public binary_function<const double&, const double&, double>
 	#else
 	struct subtractFunction : public std::binary_function<const double&, const double&, double>
@@ -493,7 +497,7 @@ public:
 		}
 	};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	struct multiplyFunction : public binary_function<const double&, const double&, double>
 	#else
 	struct multiplyFunction : public std::binary_function<const double&, const double&, double>
@@ -508,7 +512,7 @@ public:
 		}
 	};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	struct divideFunction : public binary_function<const double&, const double&, double>
 	#else
 	struct divideFunction : public std::binary_function<const double&, const double&, double>
@@ -523,7 +527,7 @@ public:
 		}
 	};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	struct modulusFunction : public binary_function<const double&, const double&, double>
 	#else
 	struct modulusFunction : public std::binary_function<const double&, const double&, double>
@@ -538,7 +542,7 @@ public:
 		}
 	};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	struct negativeFunction : public unary_function<const double&, double>
 	#else
 	struct negativeFunction : public std::unary_function<const double&, double>
@@ -623,6 +627,10 @@ private:
 	static const DWORDPointerType			s_negativeZeroFirstDWORD;
 	static const UnalignedDWORDPointerType	s_negativeZeroSecondDWORD;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

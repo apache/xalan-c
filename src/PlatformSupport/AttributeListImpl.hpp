@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,13 +72,20 @@
 
 
 
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class AttributeVectorEntry;
 
 
 
-class XALAN_PLATFORMSUPPORT_EXPORT AttributeListImpl : public AttributeList
+class XALAN_PLATFORMSUPPORT_EXPORT AttributeListImpl : public XERCES_CPP_NAMESPACE_QUALIFIER AttributeList
 {
 public:
+
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	ParentType;
 
 	explicit
 	AttributeListImpl();
@@ -88,13 +95,13 @@ public:
 
     AttributeListImpl(const AttributeListImpl&	theSource);
 
-    AttributeListImpl(const AttributeList&	theSource);
+    AttributeListImpl(const ParentType&		theSource);
 
     AttributeListImpl&
 	operator=(const AttributeListImpl&	theRHS);
 
 	AttributeListImpl&
-	operator=(const AttributeList&	theRHS);
+	operator=(const ParentType&		theRHS);
 
 	// These are inherited from AttributeList
     virtual unsigned int
@@ -171,7 +178,7 @@ public:
 		m_AttributeVector.reserve(theCount);
 	}
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	// This vector will hold the entries.
 	typedef vector<AttributeVectorEntry*>			AttributeVectorType;
 #else
@@ -222,6 +229,10 @@ private:
 
 	AttributeVectorType		m_cacheVector;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

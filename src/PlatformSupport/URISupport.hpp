@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,11 +80,17 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_PLATFORMSUPPORT_EXPORT URISupport
 {
 public:
 
-	typedef XalanAutoPtr<XMLURL>	URLAutoPtrType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLURL	XMLURLType;
+
+	typedef XalanAutoPtr<XMLURLType>	URLAutoPtrType;
 
 	/**
 	 * Determine the fully qualified URI for a string.
@@ -107,7 +113,7 @@ public:
 	static void
 	getURLFromString(
 			const XalanDOMString&	urlString,
-			XMLURL&					url)
+			XMLURLType&				url)
 	{
 		getURLFromString(urlString.c_str(), url);
 	}
@@ -130,7 +136,7 @@ public:
 	static void
 	getURLFromString(
 			const XalanDOMChar*		urlString,
-			XMLURL&					url)
+			XMLURLType&				url)
 	{
 		url.setURL(getURLStringFromString(urlString).c_str());
 	}
@@ -378,6 +384,10 @@ public:
 
 	static const XalanDOMChar	s_fileProtocolString2[];
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

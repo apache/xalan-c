@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 DOMStringPrintWriter::DOMStringPrintWriter(XalanDOMString&	theString) :
 	PrintWriter(true),
 	m_outputString(theString)
@@ -119,11 +123,6 @@ DOMStringPrintWriter::write(
 			XalanDOMString::size_type	theOffset,
 			XalanDOMString::size_type	theLength)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::vector;
-	using std::copy;
-#endif
-
 	assert(s != 0);
 
 	append(m_outputString, (s + theOffset), theLength);
@@ -306,7 +305,7 @@ DOMStringPrintWriter::println(double	d)
 
 
 void
-DOMStringPrintWriter::println(int		i)
+DOMStringPrintWriter::println(int	i)
 {
 	print(i);
 
@@ -326,9 +325,13 @@ DOMStringPrintWriter::println(long	l)
 
 
 void
-DOMStringPrintWriter::println(const XalanDOMString&	s)
+DOMStringPrintWriter::println(const XalanDOMString&		s)
 {
 	print(s);
 
 	println();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

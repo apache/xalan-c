@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMChar	StringTokenizer::s_defaultTokens[] =
 {
 	XalanUnicode::charSpace,
@@ -317,3 +321,7 @@ StringTokenizer::FindNextDelimiterIndex(XalanDOMString::size_type	theStartIndex)
 
 	return theIndex;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

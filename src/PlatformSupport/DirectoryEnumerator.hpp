@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,6 +79,10 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -186,7 +190,7 @@ public:
 
 
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct DirectoryFilterPredicate : public unary_function<FindFileStruct, bool>
 #else
 struct DirectoryFilterPredicate : public std::unary_function<FindFileStruct, bool>
@@ -201,7 +205,7 @@ struct DirectoryFilterPredicate : public std::unary_function<FindFileStruct, boo
 
 
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct FilesOnlyFilterPredicate : public unary_function<FindFileStruct, bool>
 #else
 struct FilesOnlyFilterPredicate : public std::unary_function<FindFileStruct, bool>
@@ -328,13 +332,13 @@ template<class CollectionType,
   	 class StringType = XalanDOMString,
   	 class FilterPredicateType = FilesOnlyFilterPredicate,
   	 class StringConversionFunction = c_wstr_functor>
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct DirectoryEnumeratorFunctor : public unary_function<StringType, CollectionType>
 #else
 struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, CollectionType>
 #endif
 {
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef unary_function<StringType, CollectionType>	BaseClassType;
 #else
 	typedef std::unary_function<StringType, CollectionType>	BaseClassType;
@@ -354,15 +358,14 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
 			const argument_type&	theFullSearchSpec,
 			CollectionType&			theCollection) const
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::back_inserter;
-#endif
+		XALAN_USING_STD(back_inserter)
 
-		EnumerateDirectory(theFullSearchSpec,
-						   back_inserter(theCollection),
-						   m_filterPredicate,
-						   m_conversionFunction,
-						   m_includeSelfAndParent);
+		EnumerateDirectory(
+				theFullSearchSpec,
+				XALAN_STD_QUALIFIER back_inserter(theCollection),
+				m_filterPredicate,
+				m_conversionFunction,
+				m_includeSelfAndParent);
 	}
 
 	result_type
@@ -383,14 +386,10 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
 			const argument_type&	theSearchSpec,
 			CollectionType&			theCollection) const
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::back_inserter;
-#endif
-
 		EnumerateDirectory(
 				theDirectory,
 				theSearchSpec,
-				back_inserter(theCollection),
+				XALAN_STD_QUALIFIER back_inserter(theCollection),
 				m_filterPredicate,
 				m_conversionFunction,
 				m_includeSelfAndParent);
@@ -420,6 +419,11 @@ private:
 	const bool					m_includeSelfAndParent;
 };
 #endif
+
+
+
+XALAN_CPP_NAMESPACE_END
+
 
 
 #endif	// DIRECTORY_ENUMERATOR_HEADER_GUARD_1357924680

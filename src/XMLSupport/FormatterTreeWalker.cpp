@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,10 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/FormatterListener.hpp>
 #include <PlatformSupport/NamedNodeMapAttributeList.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -245,3 +249,7 @@ FormatterTreeWalker::endNode(XalanNode*		node)
 	endNode(const_cast<const XalanNode*>(node));
 #endif
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

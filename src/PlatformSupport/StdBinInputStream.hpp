@@ -80,19 +80,24 @@
 
 
 
-class XALAN_PLATFORMSUPPORT_EXPORT StdBinInputStream : public BinInputStream
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+class XALAN_PLATFORMSUPPORT_EXPORT StdBinInputStream : public XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
-	StdBinInputStream(
-			istream&		theStream,
-#else
-	StdBinInputStream(
-			std::istream&	theStream,
-#endif
-			bool			fBlockingRead = false);
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream	ParentType;
 
+#if defined(XALAN_NO_STD_NAMESPACE)
+	typedef istream			StreamType;
+#else
+	typedef std::istream	StreamType;
+#endif
+
+
+	StdBinInputStream(StreamType&	theStream);
 
 	virtual
 	~StdBinInputStream();
@@ -118,12 +123,12 @@ private:
 
 
 	// Data members...
-#if defined(XALAN_NO_NAMESPACES)
-	istream&		m_stream;
-#else
-	std::istream&	m_stream;
-#endif
+	StreamType&		m_stream;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanOutputStreamPrintWriter::XalanOutputStreamPrintWriter(
 			XalanOutputStream&	theOutputStream,
 			bool				fAutoFlush) :
@@ -390,3 +394,7 @@ XalanOutputStreamPrintWriter::println(const XalanDOMString&		s)
 
 	println();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

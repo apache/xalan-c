@@ -71,6 +71,11 @@
 #include "XalanUnicode.hpp"
 
 
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 #if defined(XALAN_NO_STD_NUMERIC_LIMITS)
 // To circumvent an OS/390 problem
 #if !defined(OS390)
@@ -819,3 +824,7 @@ DoubleSupport::round(double		theValue)
 		}
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

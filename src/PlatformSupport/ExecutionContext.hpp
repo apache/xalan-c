@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,14 +64,16 @@
 
 
 
-// $$$ ToDo:  Needed for now, since XalanDOMString is still a typedef...
-#include <XalanDOM/XalanDOMString.hpp>
+XALAN_DECLARE_XERCES_CLASS(Locator)
 
 
 
-class Locator;
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanNode;
-
+class XalanDOMString;
 
 
 //
@@ -80,6 +82,8 @@ class XalanNode;
 class XALAN_PLATFORMSUPPORT_EXPORT ExecutionContext
 {
 public:
+
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
 	explicit
 	ExecutionContext();
@@ -98,7 +102,7 @@ public:
 	error(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const Locator* 			locator = 0) const = 0;
+			const LocatorType* 		locator = 0) const = 0;
 
 	/**
 	 * Report an error and throw an exception.
@@ -111,7 +115,7 @@ public:
 	error(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const Locator* 		locator = 0) const = 0;
+			const LocatorType* 	locator = 0) const = 0;
 
 	/**
 	 * Report a warning
@@ -124,7 +128,7 @@ public:
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const Locator* 			locator = 0) const = 0;
+			const LocatorType* 		locator = 0) const = 0;
 
 	/**
 	 * Report a warning
@@ -137,7 +141,7 @@ public:
 	warn(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const Locator* 		locator = 0) const = 0;
+			const LocatorType* 	locator = 0) const = 0;
 
 	/**
 	 * Output a message.
@@ -150,7 +154,7 @@ public:
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const Locator* 			locator = 0) const = 0;
+			const LocatorType* 		locator = 0) const = 0;
 
 	/**
 	 * Output a message.
@@ -163,8 +167,12 @@ public:
 	message(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const Locator* 		locator = 0) const = 0;
+			const LocatorType* 	locator = 0) const = 0;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

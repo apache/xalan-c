@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XSLException::XSLException(
 		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theURI,
@@ -85,7 +89,7 @@ XSLException::XSLException(
 
 
 XSLException::XSLException(
-			const Locator&			theLocator,
+			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theType) :
 	m_message(theMessage),
@@ -200,3 +204,7 @@ XSLException::defaultFormat(
 	LongToDOMString(theColumnNumber, theBuffer);
 	theBuffer += XalanDOMChar(XalanUnicode::charRightParenthesis);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FormatterToText::FormatterToText() :
 	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_writer(0),
@@ -134,7 +138,7 @@ FormatterToText::clearEncoding()
 
 
 void
-FormatterToText::setDocumentLocator(const Locator* const	/* locator */)
+FormatterToText::setDocumentLocator(const LocatorType* const	/* locator */)
 {
 	// No action for the moment.
 }
@@ -164,7 +168,7 @@ FormatterToText::endDocument()
 void
 FormatterToText::startElement(
 			const	XMLCh* const	/* name */,
-			AttributeList&			/* attrs */)
+			AttributeListType&		/* attrs */)
 {
 	// No action for the moment.
 }
@@ -319,3 +323,7 @@ FormatterToText::update()
 		m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue(theStream->getOutputEncoding());
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

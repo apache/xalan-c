@@ -64,6 +64,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMChar	PrintWriter::s_trueString[] =
 {
 	XalanUnicode::charLetter_t,
@@ -104,3 +108,7 @@ PrintWriter::PrintWriter(bool	fAutoFlush) :
 PrintWriter::~PrintWriter()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,13 +68,17 @@
 
 
 
-#if defined(XALAN_NO_NAMESPACES)
-struct XALAN_PLATFORMSUPPORT_EXPORT XalanUnicode
-#else
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+#if defined(XALAN_HAS_CPP_NAMESPACE)
 namespace XalanUnicode
+#else
+struct XALAN_PLATFORMSUPPORT_EXPORT XalanUnicode
 #endif
 {
-#if defined(XALAN_NO_NAMESPACES)
+#if !defined(XALAN_HAS_CPP_NAMESPACE)
 
 	enum
 	{
@@ -343,7 +347,7 @@ namespace XalanUnicode
 
 
 
-#if defined(XALAN_NO_NAMESPACES)
+#if !defined(XALAN_HAS_CPP_NAMESPACE)
 
 private:
 
@@ -361,6 +365,10 @@ private:
 #else
 }
 #endif
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

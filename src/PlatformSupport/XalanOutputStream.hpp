@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,6 +76,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanOutputTranscoder;
 
 
@@ -87,7 +91,7 @@ public :
 	enum { eDefaultBufferSize = 512, eDefaultTranscoderBlockSize = 1024 };
 
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XalanDOMChar>		BufferType;
 
 	typedef vector<char>				TranscodeVectorType;
@@ -168,6 +172,8 @@ public :
 	{
 		assert(theBuffer != 0);
 
+		XALAN_USING_XALAN(length)
+
 		write(theBuffer, length(theBuffer));
 	}
 
@@ -180,6 +186,8 @@ public :
     void
 	write(const XalanDOMChar*	theBuffer)
 	{
+		XALAN_USING_XALAN(length)
+
 		write(theBuffer, length(theBuffer));
 	}
 
@@ -422,6 +430,10 @@ private:
 
 	TranscodeVectorType						m_transcodingBuffer;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,6 +76,10 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/FormatterListener.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -694,6 +698,10 @@ private:
 		(formatterListener.*function)(c_wstr(data), FormatterListener::size_type(length(data)));
 	}
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

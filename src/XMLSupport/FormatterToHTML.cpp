@@ -91,6 +91,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString	FormatterToHTML::s_emptyString;
 
 
@@ -273,7 +277,7 @@ FormatterToHTML::endDocument()
 void
 FormatterToHTML::startElement(
 			const XMLCh* const	name,
-			AttributeList&		attrs)
+			AttributeListType&	attrs)
 {
 	if (pushHasNamespace(name) == true)
 	{
@@ -1537,3 +1541,7 @@ const XalanDOMChar						FormatterToHTML::s_metaString[] =
 
 const FormatterToHTML::size_type		FormatterToHTML::s_metaStringLength =
 		FHTML_SIZE(s_metaString);
+
+
+
+XALAN_CPP_NAMESPACE_END

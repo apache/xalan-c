@@ -71,6 +71,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanOutputTranscoder;
 
 
@@ -108,6 +112,10 @@ private:
 
 	mutable XalanBitmap				m_valueBitmap;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

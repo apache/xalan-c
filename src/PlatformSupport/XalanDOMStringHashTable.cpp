@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanDOMStringHashTable::XalanDOMStringHashTable(
 			size_t		theBucketCount,
 			size_t		theBucketSize) :
@@ -216,9 +220,7 @@ XalanDOMStringHashTable::find(
 		*theBucketIndex = theLocalBucketIndex;
 	}
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find_if;
-#endif
+	XALAN_USING_STD(find_if)
 
 	const BucketType::const_iterator	i =
 		find_if(
@@ -288,3 +290,7 @@ XalanDOMStringHashTable::insert(
 
 	++m_count;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

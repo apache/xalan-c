@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,13 +76,19 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanNamedNodeMap;
 
 
 
-class XALAN_PLATFORMSUPPORT_EXPORT NamedNodeMapAttributeList : public AttributeList
+class XALAN_PLATFORMSUPPORT_EXPORT NamedNodeMapAttributeList : public XERCES_CPP_NAMESPACE_QUALIFIER AttributeList
 {
 public:
+
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	ParentType;
 
 	explicit
 	NamedNodeMapAttributeList(const XalanNamedNodeMap&	theMap);
@@ -128,6 +134,10 @@ private:
 
 	static const XalanDOMChar	s_typeString[];
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanReferenceCountedObject::XalanReferenceCountedObject() :
 	m_referenceCount(0)
 {
@@ -111,3 +115,7 @@ XalanReferenceCountedObject::removeReference(XalanReferenceCountedObject*	theIns
 		}
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -81,6 +81,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * FormatterToHTML formats SAX-style events into HTML.
  */
@@ -135,7 +139,7 @@ public:
 	virtual void
 	startElement(
 			const	XMLCh* const	name,
-			AttributeList&			attrs);
+			AttributeListType&		attrs);
 
     virtual void
 	endElement(const XMLCh* const	name);
@@ -365,6 +369,10 @@ private:
 
 	static const Entity* const		s_lastEntity;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -64,6 +64,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanAttr;
 class XalanCDATASection;
 class XalanComment;
@@ -740,6 +744,10 @@ protected:
 
 private:
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FormatterToNull::FormatterToNull() :
 	FormatterListener(OUTPUT_METHOD_NONE)
 {
@@ -73,7 +77,7 @@ FormatterToNull::~FormatterToNull()
 
 
 void
-FormatterToNull::setDocumentLocator(const Locator* const	/* locator */)
+FormatterToNull::setDocumentLocator(const LocatorType* const	/* locator */)
 {
 }
 
@@ -95,8 +99,8 @@ FormatterToNull::endDocument()
 
 void
 FormatterToNull::startElement(
-			const	XMLCh* const	/* name */,
-			AttributeList&			/* attrs */)
+			const XMLCh* const	/* name */,
+			AttributeListType&	/* attrs */)
 {
 }
 
@@ -172,3 +176,7 @@ FormatterToNull::cdata(
 			const unsigned int 	/* length */)
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

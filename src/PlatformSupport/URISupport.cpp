@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMChar	URISupport::s_fileProtocolString1[] =
 {
 	XalanUnicode::charLetter_f,
@@ -107,7 +111,7 @@ const XalanDOMChar	URISupport::s_fileProtocolString2[] =
 URISupport::URLAutoPtrType
 URISupport::getURLFromString(const XalanDOMChar*	urlString)
 {
-	URLAutoPtrType	url(new XMLURL);
+	URLAutoPtrType	url(new XMLURLType);
 
 	url->setURL(getURLStringFromString(urlString).c_str());
 
@@ -136,10 +140,10 @@ URISupport::getURLStringFromString(
 			const XalanDOMString	theProtocolString(urlString, index);
 
 			// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
-			const XMLURL::Protocols		theProtocol =
-					XMLURL().lookupByName(c_wstr(theProtocolString));
+			const XMLURLType::Protocols		theProtocol =
+				XMLURLType().lookupByName(c_wstr(theProtocolString));
 
-			if (theProtocol != XMLURL::Unknown)
+			if (theProtocol != XMLURLType::Unknown)
 			{
 				protocolPresent = true;
 			}
@@ -153,6 +157,8 @@ URISupport::getURLStringFromString(
 		}
 		else
 		{
+			XALAN_USING(xercesc, XMLPlatformUtils)
+
 			// Assume it's a file specification...
 			const XalanArrayAutoPtr<XalanDOMChar>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
 
@@ -198,6 +204,8 @@ URISupport::getURLStringFromString(
 			XalanDOMString::size_type	baseLen,
 			XalanDOMString&				theNormalizedURI)
 {
+	XALAN_USING(xercesc, XMLURL)
+
 	XalanDOMString	context(base, baseLen);
 
 	NormalizeURIText(context);
@@ -295,10 +303,6 @@ URISupport::getURLStringFromString(
 XalanDOMString&
 URISupport::NormalizeURIText(XalanDOMString&	uriString)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::replace;
-#endif
-
 	// OK, look for a quick, cheap exit...
 	const XalanDOMString::size_type		len = length(uriString);
 	const XalanDOMString::size_type		index = indexOf(uriString, XalanUnicode::charReverseSolidus);
@@ -307,7 +311,7 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 	{
 		// Start replacing at the index point, since that's the
 		// first one...
-		replace(
+		XALAN_STD_QUALIFIER replace(
 				uriString.begin() + index,
 				uriString.end(),
 				XalanDOMChar(XalanUnicode::charReverseSolidus),
@@ -342,3 +346,7 @@ URISupport::InvalidURIException::InvalidURIException(const XalanDOMString&	theMe
 URISupport::InvalidURIException::~InvalidURIException()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,10 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanDOMStringAllocator.hpp>
 #include <PlatformSupport/XalanDOMStringHashTable.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -174,6 +178,10 @@ private:
 
 	static const XalanDOMString		s_emptyString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

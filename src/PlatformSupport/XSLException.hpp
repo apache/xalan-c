@@ -69,11 +69,17 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_PLATFORMSUPPORT_EXPORT XSLException
 {
 public:
 
-	typedef XalanLocator::size_type		size_type;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
+
+	typedef XalanLocator::size_type					size_type;
 
 	/**
 	 * Constructor
@@ -99,7 +105,7 @@ public:
 	 * @param theType type of exception, default is "XSLException"
 	 */
 	XSLException(
-			const Locator&			theLocator,
+			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLException")));
 
@@ -196,6 +202,10 @@ private:
 
 	const XalanDOMString	m_type;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -100,6 +100,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // The maximum number of digits that sprintf can put in a buffer.
 // 100 for now.  We're using this because we want to avoid transcoding
 // number strings when we don't have to,
@@ -372,13 +376,11 @@ OutputString(XalanOutputStream&		theStream,
 
 
 
+XALAN_USING_STD(ostream)
+
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-#if defined(XALAN_NO_NAMESPACES)
 			ostream&				theStream,
-#else
-			std::ostream&			theStream,
-#endif
 			const CharVectorType&	theString)
 {
 	if (theString.empty() == false)
@@ -403,11 +405,7 @@ OutputString(XalanOutputStream&		theStream,
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-#if defined(XALAN_NO_NAMESPACES)
 			ostream&				theStream,
-#else
-			std::ostream&			theStream,
-#endif
 			const XalanDOMChar*		theString)
 {
 	OutputString(theStream, TranscodeToLocalCodePage(theString));
@@ -526,8 +524,6 @@ substring(
 {
 	const XalanDOMString::size_type		theStringLength = length(theString);
 
-	// $$$ ToDo: In Java-land, any failing of this
-	// assertion would result in an exception being thrown.
 	assert(theStartIndex <= theStringLength);
 
 	if (theStartIndex == theStringLength)
@@ -570,11 +566,7 @@ TransformString(
 			theOutputIterator,
 			theFunction);
 #else
-#if defined(XALAN_NO_NAMESPACES)
-	return transform(
-#else
-	return std::transform(
-#endif
+	return XALAN_STD_QUALIFIER transform(
 			theInputBegin,
 			theInputEnd,
 			theOutputIterator,
@@ -595,14 +587,10 @@ TransformString(
 
 	XalanDOMString	theConvertedString;
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::back_inserter;
-#endif
-
 	TransformString(
 			theInputString,
 			theInputString + theInputStringLength,
-			back_inserter(theConvertedString),
+			XALAN_STD_QUALIFIER back_inserter(theConvertedString),
 			theFunction);
 
 	return theConvertedString;
@@ -992,25 +980,14 @@ MakeXalanDOMCharVector(
 
 		theResult.reserve(theLength);
 
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::back_inserter;
-#endif
-
 #if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
 		XalanCopy(
-			data,
-			data + theLength,
-			back_inserter(theResult));
 #else
-#if defined(XALAN_NO_NAMESPACES)
-		copy(
-#else
-		std::copy(
+		XALAN_STD_QUALIFIER copy(
 #endif
 			data,
 			data + theLength,
-			back_inserter(theResult));
-#endif
+			XALAN_STD_QUALIFIER back_inserter(theResult));
 	}
 
 	return theResult;
@@ -1397,7 +1374,7 @@ PointerToDOMString(
 	char			theBuffer[MAX_PRINTF_DIGITS + 1];
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-        using std::sprintf;
+	XALAN_USING_STD(sprintf);
 #endif
 
 	unsigned int	theCharsWritten = sprintf(theBuffer, "%p", theValue);
@@ -1405,14 +1382,10 @@ PointerToDOMString(
 
 	reserve(theResult, length(theResult) + theCharsWritten);
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::back_inserter;
-#endif
-
 	TranscodeNumber(
 			theBuffer,
 			theBuffer + theCharsWritten,
-			back_inserter(theResult));
+			XALAN_STD_QUALIFIER back_inserter(theResult));
 
 	return theResult;
 }
@@ -1468,9 +1441,9 @@ DoubleToDOMString(
 		char			theBuffer[MAX_PRINTF_DIGITS + 1];
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-		using std::sprintf;
-		using std::atof;
-		using std::isdigit;
+		XALAN_USING_STD(sprintf)
+		XALAN_USING_STD(atof)
+		XALAN_USING_STD(isdigit)
 #endif
 
 		const char* const *		thePrintfString = thePrintfStrings;
@@ -1533,14 +1506,10 @@ DoubleToDOMString(
 
 		reserve(theResult, length(theResult) + theCharsWritten);
 
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::back_inserter;
-#endif
-
 		TranscodeNumber(
 				theBuffer,
 				theBuffer + theCharsWritten,
-				back_inserter(theResult));
+				XALAN_STD_QUALIFIER back_inserter(theResult));
 	}
 
 	return theResult;
@@ -1755,3 +1724,7 @@ isXMLWhitespace(
 
 	return true;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

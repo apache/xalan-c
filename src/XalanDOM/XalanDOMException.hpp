@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,6 +60,10 @@
 
 
 #include <XalanDOM/XalanDOMDefinitions.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -155,6 +159,10 @@ private:
     // Data members...
 	const ExceptionCode		m_code;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

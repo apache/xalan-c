@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString	XalanDecimalFormat::s_defaultPatternString;
 
 
@@ -228,3 +232,7 @@ XalanDecimalFormat::getNormalizedPattern(const XalanDOMString&	thePattern)
 		return theNewPattern;
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

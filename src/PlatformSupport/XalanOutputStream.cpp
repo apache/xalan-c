@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanOutputStream::XalanOutputStream(
 			BufferType::size_type			theBufferSize,
 			TranscodeVectorType::size_type	theTranscoderBlockSize,
@@ -486,3 +490,7 @@ XalanOutputStream::TranscodingException::TranscodingException() :
 XalanOutputStream::TranscodingException::~TranscodingException()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,6 +70,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 template<class ObjectType>
 class ReusableArenaAllocator : public ArenaAllocator<ObjectType,
 													 ReusableArenaBlock<ObjectType> >
@@ -83,8 +87,7 @@ public:
 	typedef ArenaAllocator<ObjectType,
 						   ReusableArenaBlockType>		BaseClassType;
 
-	// $$$ ToDo: This typedef is here because of a bug in gcc.
-#if defined (XALAN_NO_NAMESPACES)
+#if defined (XALAN_NO_STD_NAMESPACE)
 	typedef	vector<ReusableArenaBlockType*>				ArenaBlockListType;
 #else
 	typedef	std::vector<ReusableArenaBlockType*>		ArenaBlockListType;
@@ -262,6 +265,10 @@ private:
 	// Data members...
 	ReusableArenaBlockType*		m_lastBlockReferenced;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

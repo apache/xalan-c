@@ -64,6 +64,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanNode;
 
 
@@ -259,6 +263,10 @@ protected:
 
 private:
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -58,6 +58,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanCDATASection::XalanCDATASection() :
 	XalanText()
 {
@@ -93,3 +97,7 @@ XalanCDATASection::operator==(const XalanCDATASection&	/* theRHS */) const
 {
 	return false;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

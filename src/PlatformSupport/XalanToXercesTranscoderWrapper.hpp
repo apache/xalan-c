@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,7 +69,11 @@
 
 
 
-class XMLTranscoder;
+XALAN_DECLARE_XERCES_CLASS(XMLTranscoder)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -77,8 +81,10 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanToXercesTranscoderWrapper : public Xalan
 {
 public:
 
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLTranscoder	XMLTranscoderType;
+
 	explicit
-	XalanToXercesTranscoderWrapper(XMLTranscoder&	theTranscoder);
+	XalanToXercesTranscoderWrapper(XMLTranscoderType&	theTranscoder);
    
 	virtual
 	~XalanToXercesTranscoderWrapper();
@@ -114,11 +120,15 @@ private:
 	operator=(const XalanToXercesTranscoderWrapper&);
 
 	// A handy typedef...
-	typedef unsigned int	XercesSizeType;
+	typedef unsigned int		XercesSizeType;
 
 	// Data members...
-	XMLTranscoder* const	m_transcoder;
+	XMLTranscoderType* const	m_transcoder;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

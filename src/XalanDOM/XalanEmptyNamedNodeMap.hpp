@@ -63,6 +63,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /*
  * <meta name="usage" content="experimental"/>
  *
@@ -120,6 +124,10 @@ public:
 
 private:
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

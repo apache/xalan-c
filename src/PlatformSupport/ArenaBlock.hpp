@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,6 +70,10 @@
 #if defined(XALAN_NO_STD_ALLOCATORS) && !defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
 #include <PlatformSupport/XalanAllocator.hpp>
 #endif
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -276,13 +280,9 @@ public:
 	virtual bool
 	ownsObject(const ObjectType*	theObject) const
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::less;
-#endif
-
 		// Use less<>, since it's guaranteed to do pointer
 		// comparisons correctly...
-		less<const ObjectType*>		functor;
+		XALAN_STD_QUALIFIER less<const ObjectType*>		functor;
 
 		if (functor(theObject, m_objectBlock) == false &&
 			functor(theObject, m_objectBlock + m_objectCount) == true)
@@ -306,13 +306,9 @@ public:
 	bool
 	ownsBlock(const ObjectType*		theObject) const
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::less;
-#endif
-
 		// Use less<>, since it's guaranteed to do pointer
 		// comparisons correctly...
-		less<const ObjectType*>		functor;
+		XALAN_STD_QUALIFIER less<const ObjectType*>		functor;
 
 		if (functor(theObject, m_objectBlock) == false &&
 			functor(theObject, m_objectBlock + m_blockSize) == true)
@@ -332,12 +328,8 @@ public:
 	void
 	destroyAll()
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::for_each;
-#endif
-
 		// Destroy all existing objects...
-		for_each(m_objectBlock,
+		XALAN_STD_QUALIFIER for_each(m_objectBlock,
 				 m_objectBlock + m_objectCount,
 				 DeleteFunctor(*this, m_destroyFunction));
 
@@ -444,6 +436,10 @@ private:
 
 	AllocatorType		m_allocator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

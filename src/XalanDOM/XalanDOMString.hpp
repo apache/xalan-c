@@ -71,6 +71,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 #if defined(XALAN_USE_NATIVE_WCHAR_T)
 typedef wchar_t			XalanDOMChar;
 #else
@@ -1135,6 +1139,10 @@ TranscodeFromLocalCodePage(const CharVectorType&	theSourceString)
 		return TranscodeFromLocalCodePage(&*theSourceString.begin(), size_type(theSize));
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

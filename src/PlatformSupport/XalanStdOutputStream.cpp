@@ -75,19 +75,16 @@
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-using std::ostream;
-using std::cerr;
-#endif
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanStdOutputStream::XalanStdOutputStream(ostream&	theOutputStream) :
+XalanStdOutputStream::XalanStdOutputStream(StreamType&	theOutputStream) :
 	XalanOutputStream(),
 	m_outputStream(theOutputStream)
 {
 	// This will make sure that cerr is not buffered...
-	if (&m_outputStream == &cerr)
+	if (&m_outputStream == &XALAN_STD_QUALIFIER cerr)
 	{
 		setBufferSize(0);
 	}
@@ -174,3 +171,7 @@ XalanStdOutputStream::XalanStdOutputStreamWriteException::XalanStdOutputStreamWr
 XalanStdOutputStream::XalanStdOutputStreamWriteException::~XalanStdOutputStreamWriteException()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

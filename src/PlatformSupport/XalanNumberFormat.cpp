@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMChar	XalanNumberFormat::s_defaultGroupingSeparator[] = 
 {
 	XalanUnicode::charComma,
@@ -308,3 +312,7 @@ XalanNumberFormat::setGroupingSeparator(const XalanDOMString&	s)
 {
 	m_groupingSeparator = s;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

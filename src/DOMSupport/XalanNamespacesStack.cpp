@@ -64,6 +64,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanNamespacesStack::PrefixResolverProxy::PrefixResolverProxy(
 			const XalanNamespacesStack&		theStack,
 			const XalanDOMString&			theURI) :
@@ -334,11 +338,11 @@ XalanNamespacesStack::findEntry(
 const XalanDOMString*
 XalanNamespacesStack::getNamespaceForPrefix(const XalanDOMString&	thePrefix) const
 {
-	if(::equals(thePrefix, DOMServices::s_XMLString))
+	if(thePrefix == DOMServices::s_XMLString)
 	{
 		return &DOMServices::s_XMLNamespaceURI;
 	}
-	else if (::equals(thePrefix, DOMServices::s_XMLNamespace))
+	else if (thePrefix == DOMServices::s_XMLNamespace)
 	{
 		return &DOMServices::s_XMLNamespacePrefixURI;
 	}
@@ -380,3 +384,7 @@ XalanNamespacesStack::clear()
 
 	m_createNewContextStack.clear();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

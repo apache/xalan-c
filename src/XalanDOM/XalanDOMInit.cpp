@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 unsigned long	XalanDOMInit::s_initCounter = 0;
 
 
@@ -98,3 +102,7 @@ void
 XalanDOMInit::terminate()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

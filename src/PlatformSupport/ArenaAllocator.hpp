@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,6 +66,10 @@
 
 
 #include "ArenaBlock.hpp"
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -220,13 +224,11 @@ public:
 	virtual void
 	reset()
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::for_each;
-#endif
-
-		for_each(m_blocks.begin(),
-				 m_blocks.end(),
-				 ArenaDeleteFunctor<ArenaBlockType>());
+		
+		XALAN_STD_QUALIFIER for_each(
+			m_blocks.begin(),
+			m_blocks.end(),
+			ArenaDeleteFunctor<ArenaBlockType>());
 
 		m_blocks.clear();
 	}
@@ -234,7 +236,7 @@ public:
 protected:
 
 	// data members...
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<ArenaBlockType*>			ArenaBlockListType;
 #else
 	typedef std::vector<ArenaBlockType*>	ArenaBlockListType;
@@ -252,6 +254,10 @@ private:
 	ArenaAllocator<ObjectType, ArenaBlockType>&
 	operator=(const ArenaAllocator<ObjectType, ArenaBlockType>&);
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

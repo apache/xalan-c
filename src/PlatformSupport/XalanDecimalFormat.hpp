@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,6 +71,10 @@
 // Base class header file.
 #include <PlatformSupport/XalanDecimalFormatSymbols.hpp>
 #include <PlatformSupport/XalanNumberFormat.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -189,6 +193,11 @@ private:
 
 	static const XalanDOMString			s_defaultPatternString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
+
 
 
 #endif	// XALANDECIMALFORMAT_HEADER_GUARD_1357924680

@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanDOMStringAllocator::XalanDOMStringAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -139,3 +143,7 @@ XalanDOMStringAllocator::create(
 
 	return theResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -59,6 +59,14 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanSimplePrefixResolver::XalanSimplePrefixResolver(
 			const XalanDOMString&	thePrefix,
 			const XalanDOMString&	theNamespaceURI,
@@ -97,3 +105,7 @@ XalanSimplePrefixResolver::getURI() const
 {
 	return m_uri;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

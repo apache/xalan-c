@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ExecutionContext::ExecutionContext()
 {
 }
@@ -68,3 +72,7 @@ ExecutionContext::ExecutionContext()
 ExecutionContext::~ExecutionContext()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

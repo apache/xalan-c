@@ -64,6 +64,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanHTMLElementsProperties::XalanHTMLElementsProperties()
 {
 }
@@ -1280,3 +1284,7 @@ const XalanHTMLElementsProperties::InternalElementProperties* const		XalanHTMLEl
 
 const XalanHTMLElementsProperties::InternalElementProperties* const		XalanHTMLElementsProperties::s_dummyProperties =
 			s_lastProperties + 1;
+
+
+
+XALAN_CPP_NAMESPACE_END

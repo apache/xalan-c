@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString	XalanDOMStringPool::s_emptyString;
 
 
@@ -155,3 +159,7 @@ XalanDOMStringPool::get(
 		}
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

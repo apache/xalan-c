@@ -70,12 +70,16 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 template<class Type>
 class XALAN_PLATFORMSUPPORT_EXPORT XalanArrayAllocator
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<Type>					VectorType;
 	typedef typename VectorType::size_type	size_type;
 	typedef pair<size_type, VectorType>		ListEntryType;
@@ -290,6 +294,10 @@ private:
 
 	ListEntryType*		m_lastEntryFound;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

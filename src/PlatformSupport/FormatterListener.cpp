@@ -73,8 +73,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FormatterListener::FormatterListener(eFormat	theFormat) :
-	DocumentHandler(),
+	ParentType(),
 	m_prefixResolver(0),
 	m_outputFormat(theFormat)
 {
@@ -115,3 +119,7 @@ const XalanDOMString::size_type		FormatterListener::s_piDataLength = 3;
 const XalanDOMString::size_type		FormatterListener::s_piTargetLength;
 const XalanDOMString::size_type		FormatterListener::s_piDataLength;
 #endif
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,12 +78,16 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // A base class for all text output streams.
 class XALAN_PLATFORMSUPPORT_EXPORT XalanStdOutputStream : public XalanOutputStream
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef ostream				StreamType;
 #else
 	typedef std::ostream		StreamType;
@@ -92,7 +96,7 @@ public:
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 	typedef int					StreamSizeType;
 #else
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef streamsize			StreamSizeType;
 #else
 	typedef std::streamsize		StreamSizeType;
@@ -141,6 +145,10 @@ private:
 	// Data members...
 	StreamType&		m_outputStream;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

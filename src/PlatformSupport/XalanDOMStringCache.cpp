@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanDOMStringCache::XalanDOMStringCache(unsigned int	theMaximumSize) :
 	m_availableList(),
 	m_busyList(),
@@ -106,9 +110,7 @@ XalanDOMStringCache::get()
 bool
 XalanDOMStringCache::release(XalanDOMString&	theString)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
+	XALAN_USING_STD(find)
 
 	StringListType::iterator	i =
 		find(m_busyList.begin(),
@@ -127,7 +129,7 @@ XalanDOMStringCache::release(XalanDOMString&	theString)
 		}
 		else
 		{
-			::clear(theString);
+			theString.erase();
 
 			m_availableList.push_back(*i);
 		}
@@ -143,9 +145,7 @@ XalanDOMStringCache::release(XalanDOMString&	theString)
 void
 XalanDOMStringCache::clear()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	for_each(m_busyList.begin(),
 			 m_busyList.end(),
@@ -178,7 +178,7 @@ XalanDOMStringCache::reset()
 		}
 		else
 		{
-			::clear(*m_busyList.back());
+			m_busyList.back()->clear();
 
 			m_availableList.push_back(m_busyList.back());
 		}
@@ -186,3 +186,7 @@ XalanDOMStringCache::reset()
 		m_busyList.pop_back();
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMChar 	XalanTranscodingServices::s_utf8String[] =
 {
 	XalanUnicode::charLetter_U,
@@ -245,6 +249,10 @@ const XalanDOMChar	XalanTranscodingServices::s_UTF16ByteOrderMark[] =
 
 
 
+
+XALAN_USING(xercesc, XMLTransService)
+
+
 static XalanTranscodingServices::eCode
 translateCode(XMLTransService::Codes	theCode)
 {
@@ -276,6 +284,8 @@ XalanTranscodingServices::makeNewTranscoder(
 			eCode&					theResult,
 			size_t					theBlockSize)
 {
+	XALAN_USING(xercesc, XMLPlatformUtils)
+
 	assert(XMLPlatformUtils::fgTransService != 0);
 
 	XalanOutputTranscoder*	theTranscoder = 0;
@@ -290,6 +300,8 @@ XalanTranscodingServices::makeNewTranscoder(
 	}
 	else
 	{
+		XALAN_USING(xercesc, XMLTranscoder)
+
 		XMLTranscoder*	theXercesTranscoder = 
 			XMLPlatformUtils::fgTransService->makeNewTranscoderFor(
 					c_wstr(theEncodingName),
@@ -483,3 +495,7 @@ void
 XalanTranscodingServices::terminate()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

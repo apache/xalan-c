@@ -83,7 +83,10 @@
 
 
 
-class AttributeList;
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class Writer;
 class XalanOutputStream;
 
@@ -143,7 +146,7 @@ public:
 	// These methods are inherited from FormatterListener ...
 
 	virtual void
-	setDocumentLocator(const Locator* const		locator);
+	setDocumentLocator(const LocatorType* const		locator);
 
 	virtual void
 	startDocument();
@@ -154,7 +157,7 @@ public:
 	virtual void
 	startElement(
 			const XMLCh* const	name,
-			AttributeList&		attrs);
+			AttributeListType&	attrs);
 
     virtual void
 	endElement(const XMLCh* const	name);
@@ -1198,6 +1201,10 @@ private:
 	 */
 	FlushFunctionType			m_flushFunction;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 NullPrintWriter::NullPrintWriter() :
 	PrintWriter(false)
 {
@@ -259,3 +263,7 @@ void
 NullPrintWriter::println(const XalanDOMString&	/* s */)
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

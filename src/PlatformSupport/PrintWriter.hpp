@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,6 +66,10 @@
 
 // Base class header file.
 #include <PlatformSupport/Writer.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -210,6 +214,10 @@ private:
 	bool
 	operator==(const PrintWriter&);
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanNamespace
 {
 public:
@@ -203,6 +207,10 @@ private:
 
 	XalanDOMString	m_uri;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

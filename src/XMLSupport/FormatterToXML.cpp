@@ -77,6 +77,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static const XalanDOMChar 	theDefaultAttrSpecialChars[] =
 {
 	XalanUnicode::charLessThanSign,
@@ -733,6 +737,8 @@ FormatterToXML::accumDOMStringUTFDirect(const XalanDOMString&	str)
 
 
 
+XALAN_USING_XERCES(SAXException)
+
 void
 FormatterToXML::throwInvalidUTF16SurrogateException(XalanDOMChar	ch)
 {
@@ -915,7 +921,7 @@ FormatterToXML::flushWriter()
 
 
 void
-FormatterToXML::setDocumentLocator(const Locator* const 	/* locator */)
+FormatterToXML::setDocumentLocator(const LocatorType* const 	/* locator */)
 {
 	// I don't do anything with this yet.
 }
@@ -987,7 +993,7 @@ FormatterToXML::endDocument()
 void
 FormatterToXML::startElement(
 			const XMLCh* const	name,
-			AttributeList&		attrs)
+			AttributeListType&	attrs)
 {
     if(m_inEntityRef == false)
 	{
@@ -1890,3 +1896,7 @@ const FormatterToXML::size_type		FormatterToXML::s_xhtmlDocTypeStringLength =
 
 
 const FormatterToXML::DOMCharBufferType::size_type	FormatterToXML::s_maxBufferSize = 512;
+
+
+
+XALAN_CPP_NAMESPACE_END

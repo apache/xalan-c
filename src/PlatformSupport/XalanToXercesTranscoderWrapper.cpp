@@ -67,7 +67,15 @@
 
 
 
-XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(XMLTranscoder&	theTranscoder) :
+typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLException		XMLExceptionType;
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(XMLTranscoderType&	theTranscoder) :
 	XalanOutputTranscoder(),
 	m_transcoder(&theTranscoder)
 {
@@ -109,12 +117,12 @@ XalanToXercesTranscoderWrapper::transcode(
 			// $$$ ToDo: Eventually, we're going to want to
 			// replace this with UnRep_Throw, and let the
 			// caller try to recover.
-//			XMLTranscoder::UnRep_Throw);
-			XMLTranscoder::UnRep_RepChar);
+//			XMLTranscoderType::UnRep_Throw);
+			XMLTranscoderType::UnRep_RepChar);
 
 		theSourceCharsTranscoded = theXercesSourceCharsTranscoded;
 	}
-	catch(const XMLException&)
+	catch(const XMLExceptionType&)
 	{
 		theSourceCharsTranscoded = 0;
 		theTargetBytesUsed = 0;
@@ -157,7 +165,7 @@ XalanToXercesTranscoderWrapper::transcode(
 		theSourceCharsTranscoded = theXercesSourceCharsTranscoded;
 		theTargetBytesUsed = theXercesTargetBytesUsed;
 	}
-	catch(const XMLException&)
+	catch(const XMLExceptionType&)
 	{
 		theSourceCharsTranscoded = 0;
 		theTargetBytesUsed = 0;
@@ -174,3 +182,7 @@ XalanToXercesTranscoderWrapper::canTranscodeTo(unsigned int		theChar) const
 {
 	return m_transcoder->canTranscodeTo(theChar);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

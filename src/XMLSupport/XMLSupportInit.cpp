@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 unsigned long	XMLSupportInit::s_initCounter = 0;
 
 
@@ -100,3 +104,7 @@ void
 XMLSupportInit::terminate()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

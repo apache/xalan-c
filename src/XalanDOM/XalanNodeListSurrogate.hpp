@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanNode;
 
 
@@ -116,6 +120,10 @@ private:
 
 	const XalanNode*	m_node;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

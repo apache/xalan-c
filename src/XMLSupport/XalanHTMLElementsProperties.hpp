@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XMLSUPPORT_EXPORT XalanHTMLElementsProperties
 {
 public:
@@ -299,6 +303,10 @@ private:
 	operator=(const XalanHTMLElementsProperties&);
 
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

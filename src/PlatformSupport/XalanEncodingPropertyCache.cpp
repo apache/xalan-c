@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanEncodingPropertyCache::XalanEncodingPropertyCache(
 			size_t							theCacheSize,
 			const XalanOutputTranscoder*	theTranscoder) :
@@ -117,3 +121,7 @@ XalanEncodingPropertyCache::canEncodeCharacter(unsigned int 	theChar) const
 		}
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

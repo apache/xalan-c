@@ -75,6 +75,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanOutputTranscoder;
 
 
@@ -381,6 +385,10 @@ private:
 	XalanOutputTranscoder&
 	operator=(const XalanOutputTranscoder&	theRHS);
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 
