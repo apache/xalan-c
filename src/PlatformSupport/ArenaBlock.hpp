@@ -173,8 +173,6 @@ public:
 		return m_blockCount;
 	}
 
-protected:
-
 	bool
 	ownsObject(const ObjectType*	theObject) const
 	{
@@ -196,6 +194,8 @@ protected:
 			return false;
 		}
 	}
+
+protected:
 
 	DestroyFunctionType		m_destroyFunction;
 

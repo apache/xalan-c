@@ -111,7 +111,23 @@ public:
 	{
 		assert(m_blocks.size() != 0);
 
-		m_blocks.back()->destroyObject(theObject);
+		const ArenaBlockListType::iterator	theEnd = m_blocks.end();
+
+		ArenaBlockListType::iterator	i = m_blocks.begin();
+
+		while(i != theEnd)
+		{
+			if (i->ownsObject(theObject) == true)
+			{
+				i->destroyObject(theObject);
+
+				break;
+			}
+			else
+			{
+				++i;
+			}
+		}
 	}
 };
 
