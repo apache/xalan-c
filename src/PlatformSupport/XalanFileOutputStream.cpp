@@ -256,7 +256,7 @@ using std::ostrstream;
 
 	ostrstream	theFormatter;
 
-	theFormatter << ".  The error code was "
+	theFormatter << ".  The C++ run-time error code (errno) is "
 				 << theErrorCode << "." << '\0';
 
 	append(theResult, theFormatter.str());
