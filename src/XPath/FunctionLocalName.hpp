@@ -117,7 +117,10 @@ public:
 
 		if (theSize == 0)
 		{
-			assert(context != 0);
+			if (context == 0)
+			{
+				executionContext.error("The local-name() function requires a non-null context node!");
+			}
 
 			theData = executionContext.getLocalNameOfNode(*context);
 		}
