@@ -375,7 +375,7 @@ StylesheetConstructionContextDefault::reset()
 StylesheetRoot*
 StylesheetConstructionContextDefault::create(const XalanDOMString&	theBaseIdentifier)
 {
-	m_stylesheets.resize(m_stylesheets.size() + 1);
+	m_stylesheets.reserve(m_stylesheets.size() + 1);
 
 	StylesheetRoot* const	theStylesheetRoot =
 		new StylesheetRoot(theBaseIdentifier, *this);
