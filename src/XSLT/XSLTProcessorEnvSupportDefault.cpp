@@ -61,12 +61,13 @@
 #include <iostream>
 
 
-
+#include <util/XMLURL.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <XMLSupport/XMLParserLiaison.hpp>
 
 #include "StylesheetRoot.hpp"
 #include "XSLTProcessor.hpp"
-
+#include "XSLTInputSource.hpp"
 
 
 XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(XSLTProcessor*	theProcessor) :
@@ -106,6 +107,29 @@ XSLTProcessorEnvSupportDefault::getNodeSetByKey(
 											ref,
 											resolver,
 											executionContext);
+	}
+}
+
+DOM_Document
+XSLTProcessorEnvSupportDefault::parseXML(
+		const DOMString&	urlString,
+		const DOMString&	base) const
+{
+	if (m_processor == 0)
+	{
+		return XPathEnvSupportDefault::parseXML(urlString, base);
+	}
+	else
+	{
+		XMLParserLiaison& parserLiaison = m_processor->getXMLParserLiaison() ;
+		if (0 != m_processor)
+		{
+			XMLURL xslURL(c_wstr(base), c_wstr(urlString));
+			XSLTInputSource		inputSource(xslURL.getURLText());
+			return parserLiaison.parseXMLStream(inputSource);
+		}
+		else
+			return DOM_Document();
 	}
 }
 

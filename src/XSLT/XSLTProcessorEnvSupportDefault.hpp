@@ -105,6 +105,11 @@ public:
 			const PrefixResolver&	resolver,
 			XPathExecutionContext&	executionContext) const;
 
+	virtual DOM_Document
+	parseXML(
+			const DOMString&	urlString,
+			const DOMString&	base) const;
+
 	XObject*
 	getVariable(
 			XObjectFactory&		factory,
