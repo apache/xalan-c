@@ -342,7 +342,7 @@ XPathExecutionContextDefault::pushArgVector()
 void
 XPathExecutionContextDefault::popArgVector()
 {
-	assert(m_argVectorsStackPosition != m_argVectorsStack.begin());
+	assert(m_argVectorsStackPosition != m_argVectorsStack.begin());	
 
 	if (m_argVectorsStack.size() > eArgVectorStackMax)
 	{
@@ -352,9 +352,9 @@ XPathExecutionContextDefault::popArgVector()
 	}
 	else
 	{
-		(*m_argVectorsStackPosition).clear();
-
 		--m_argVectorsStackPosition;
+
+		(*m_argVectorsStackPosition).clear();
 	}
 }
 
