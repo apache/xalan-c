@@ -67,9 +67,7 @@
 
 
 #include <XPath/XObjectFactory.hpp>
-#include <XPath/ResultTreeFrag.hpp>
 #include <XPath/XPath.hpp>
-#include <XPath/XResultTreeFrag.hpp>
 
 
 
@@ -77,7 +75,6 @@
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
-#include "StylesheetRoot.hpp"
 
 
 
