@@ -132,7 +132,7 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-const XSLTInputSource	XalanTransformer::s_emptyInputSource;
+const XSLTInputSource*	XalanTransformer::s_emptyInputSource = 0;
 
 const XSLTInit*			XalanTransformer::s_xsltInit = 0;
 
@@ -204,6 +204,7 @@ void
 XalanTransformer::initialize()
 {
 	// Initialize Xalan. 
+	s_emptyInputSource = new XSLTInputSource;
 	s_xsltInit = new XSLTInit;
 
 	XalanExtensionsInstaller::installGlobal();
@@ -227,8 +228,10 @@ XalanTransformer::terminate()
 {
 	// Terminate Xalan and release memory.
 #if defined(XALAN_CANNOT_DELETE_CONST)
+	delete (XSLTInputSource*) s_emptyInputSource
 	delete (XSLTInit*) s_xsltInit;
 #else
+	delete s_emptyInputSource;
 	delete s_xsltInit;
 #endif
 
@@ -402,6 +405,8 @@ XalanTransformer::transform(
 			XalanOutputHandlerType		theOutputHandler,
 			XalanFlushHandlerType		theFlushHandler)
 {
+	assert(s_emptyInputSource != 0);
+
 	// Set to output target to the callback 
 	XalanTransformerOutputStream	theOutputStream(theOutputHandle, theOutputHandler, theFlushHandler);
 
@@ -412,7 +417,7 @@ XalanTransformer::transform(
 	// Do the transformation...
 	return transform(
 					theInputSource, 
-					s_emptyInputSource,
+					*s_emptyInputSource,
 					theResultTarget);
 }
 

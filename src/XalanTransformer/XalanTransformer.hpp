@@ -231,8 +231,9 @@ public:
 			const XalanParsedSource&	theParsedXML, 		 		 
 			const XSLTResultTarget&		theResultTarget)
 	{
+		assert(s_emptyInputSource != 0);
 
-		return transform(theParsedXML, s_emptyInputSource, theResultTarget);
+		return transform(theParsedXML, *s_emptyInputSource, theResultTarget);
 	}
 
 	/**
@@ -267,9 +268,11 @@ public:
 			const XSLTInputSource&		theInputSource,
 			const XSLTResultTarget& 	theResultTarget)
 	{
+		assert(s_emptyInputSource != 0);
+
 		return transform(
 						theInputSource, 
-						s_emptyInputSource,
+						*s_emptyInputSource,
 						theResultTarget);
 	}
 
@@ -957,7 +960,7 @@ private:
 	// This should always be the latest data member!!!
 	StylesheetExecutionContextDefault*		m_stylesheetExecutionContext;
 
-	static const XSLTInputSource			s_emptyInputSource;
+	static const XSLTInputSource*			s_emptyInputSource;
 
 	static const XSLTInit*					s_xsltInit;
 };
