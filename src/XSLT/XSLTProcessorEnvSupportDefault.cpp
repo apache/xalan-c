@@ -170,7 +170,7 @@ bool
 XSLTProcessorEnvSupportDefault::problem(
 			eSource					/* where */,
 			eClassification			classification,
-			const PrefixResolver&	/* resolver */,
+			const PrefixResolver*	/* resolver */,
 			const DOM_Node&			/* sourceNode */,
 			const DOMString&		msg,
 			int						lineNo,
