@@ -324,7 +324,7 @@ ParseXML(
 			XMLParserLiaison&		theLiaison,
 			const XalanDOMString&	theFileName)
 {
-	URLInputSource	theURLInputSource(c_wstr(theFileName));
+	const URLInputSource	theURLInputSource(c_wstr(theFileName));
 
 	return theLiaison.parseXMLStream(theURLInputSource);
 }
@@ -340,7 +340,7 @@ GetAttributeFromNode(
 
 	if (theNode->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
-		const XalanElement*		theElement =
+		const XalanElement*	const	theElement =
 #if defined(XALAN_OLD_STYLE_CASTS)
 					(const XalanElement*)theNode;
 #else
@@ -441,18 +441,19 @@ FindContextNode(
 			PrintWriter&			thePrintWriter,
 			XPathExecutionContext&	theExecutionContext)
 {
-	XalanNode*							theResult = 0;
+	XalanNode*		theResult = 0;
 
 	XPath* const	theXPath = theXPathFactory.create();
 
-	XPathGuard	theGuard(theXPathFactory,
-						 theXPath);
+	XPathGuard		theGuard(
+						theXPathFactory,
+						theXPath);
 
 	XalanElement*				theNamespaceContext = 0;
 	ElementPrefixResolverProxy	thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theDOMSupport);
 	NodeRefList					theContextNodeList;
 
-	const XObjectPtr theXObject =
+	const XObjectPtr	theXObject =
 		ExecuteXPath(theXPathProcessor,
 					 *theXPath,
 					 theContextNodeMatchPattern,
@@ -578,7 +579,11 @@ TestAxisResult(
 
 					const unsigned int	theLength = theResultList.getLength();
 
-					if (theLength > 0)
+					if (theLength == 0)
+					{
+						thePrintWriter.println(XALAN_STATIC_UCODE_STRING("<out/>"));
+					}
+					else
 					{
 						thePrintWriter.print(XALAN_STATIC_UCODE_STRING("<out>"));
 
@@ -587,9 +592,9 @@ TestAxisResult(
 							thePrintWriter.print(theResultList.item(i)->getNodeName());
 							thePrintWriter.print(XALAN_STATIC_UCODE_STRING(" "));
 						}
-					}
 
-					thePrintWriter.println(XALAN_STATIC_UCODE_STRING("</out>"));
+						thePrintWriter.println(XALAN_STATIC_UCODE_STRING("</out>"));
+					}
 				}
 				catch(...)
 				{
@@ -1168,10 +1173,14 @@ TestAxes(
 			PrintWriter&			thePrintWriter,
 			XPathExecutionContext&	theExecutionContext)
 {
-	const XalanDOMString		theProtocol(XALAN_STATIC_UCODE_STRING("file://"));
-	const XalanDOMString		theBaseURL = theProtocol + theDirectory;
-	const XalanDOMString		theSearchSpecification(theDirectory);
-	const XalanDOMString		theXMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
+	const XalanDOMString	theProtocol(XALAN_STATIC_UCODE_STRING("file://"));
+	const XalanDOMString	theBaseURL = theProtocol + theDirectory;
+#if defined(WIN32)
+	const XalanDOMString	theSearchSpecification(theDirectory + "\\*");
+#else
+	const XalanDOMString	theSearchSpecification(theDirectory + "/*");
+#endif
+	const XalanDOMString	theXMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanDOMString>		FileNameVectorType;
@@ -1195,10 +1204,10 @@ TestAxes(
 			try
 			{
 				// Create a fully qualified URL specification...
-				const XalanDOMString		theXMLFileName = theBaseURL + theFiles[i];
+				const XalanDOMString	theXMLFileName = theBaseURL + theFiles[i];
 
 				// Get the name of the corresponding XSL file...
-				const XalanDOMString		theXSLFileName = GetXSLFileName(theXMLFileName);
+				const XalanDOMString	theXSLFileName = GetXSLFileName(theXMLFileName);
 
 				XPathGuard	theXPath(theXPathFactory,
 									 theXPathFactory.create());
