@@ -147,6 +147,12 @@ class XALAN_XSLT_EXPORT StylesheetExecutionContext : public XPathExecutionContex
 {
 public:
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	typedef std::size_t		size_t;
+#else
+	typedef size_t			size_t;
+#endif
+
 #if defined(XALAN_NO_STD_NAMESPACE)
 	typedef ostream			StreamType;
 #else
@@ -1561,7 +1567,7 @@ public:
 	 * 
 	 * @return number of listeners
 	 */
-	virtual unsigned long
+	virtual size_t
 	getTraceListeners() const = 0;
 
 	/**

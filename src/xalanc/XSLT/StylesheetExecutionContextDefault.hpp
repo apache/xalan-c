@@ -691,7 +691,7 @@ public:
 	installXalanNumberFormatFactory(XalanNumberFormatFactory*	theFactory);
 
 
-	virtual unsigned long
+	virtual size_t
 	getTraceListeners() const;
 
 	virtual void
