@@ -142,6 +142,14 @@ public:
 	terminate();
 
 
+	enum { eDefaultNamesStringPoolBlockSize = XalanDOMStringPool::eDefaultBlockSize,
+		   eDefaultNamesStringPoolBucketCount = XalanDOMStringPool::eDefaultBucketCount,
+		   eDefaultNamesStringPoolBucketSize = XalanDOMStringPool::eDefaultBucketSize,
+		   eDefaultValuesStringPoolBlockSize = XalanDOMStringPool::eDefaultBlockSize,
+		   eDefaultValuesStringPoolBucketCount = 997,
+		   eDefaultValuesStringPoolBucketSize = XalanDOMStringPool::eDefaultBucketSize };
+
+
 	/**
 	 *
 	 * Constructor for XalanSourceTreeDocument.
@@ -149,7 +157,14 @@ public:
 	 * @param fPoolAllText If false, text node data that is not whitespace will not be pooled.
 	 *
 	 */
-	XalanSourceTreeDocument(bool	fPoolAllText = true);
+	XalanSourceTreeDocument(
+			bool			fPoolAllText = true,
+			unsigned int	theNamesStringPoolBlockSize = eDefaultNamesStringPoolBlockSize,
+			unsigned int	theNamesStringPoolBucketCount = eDefaultNamesStringPoolBucketCount,
+			unsigned int	theNamesStringPoolBucketSize = eDefaultNamesStringPoolBucketSize,
+			unsigned int	theValuesStringPoolBlockSize = eDefaultValuesStringPoolBlockSize,
+			unsigned int	theValuesStringPoolBucketCount = eDefaultValuesStringPoolBucketCount,
+			unsigned int	theValuesStringPoolBucketSize = eDefaultValuesStringPoolBucketSize);
 
 	virtual
 	~XalanSourceTreeDocument();

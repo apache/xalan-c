@@ -83,7 +83,14 @@ static const XalanDOMString		s_emptyString;
 
 
 
-XalanSourceTreeDocument::XalanSourceTreeDocument(bool	fPoolAllText) :
+XalanSourceTreeDocument::XalanSourceTreeDocument(
+			bool			fPoolAllText,
+			unsigned int	theNamesStringPoolBlockSize,
+			unsigned int	theNamesStringPoolBucketCount,
+			unsigned int	theNamesStringPoolBucketSize,
+			unsigned int	theValuesStringPoolBlockSize,
+			unsigned int	theValuesStringPoolBucketCount,
+			unsigned int	theValuesStringPoolBucketSize) :
 	XalanDocument(),
 	m_firstChild(0),
 	m_documentElement(0),
@@ -95,8 +102,8 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(bool	fPoolAllText) :
 	m_piAllocator(25),
 	m_textAllocator(200),
 	m_textIWSAllocator(400),
-	m_namesStringPool(),
-	m_valuesStringPool(),
+	m_namesStringPool(theNamesStringPoolBlockSize, theNamesStringPoolBucketCount, theNamesStringPoolBucketSize),
+	m_valuesStringPool(theValuesStringPoolBlockSize, theValuesStringPoolBucketCount, theValuesStringPoolBucketSize),
 	m_attributesVector(),
 	m_nextIndexValue(2),
 	m_poolAllText(fPoolAllText),
