@@ -68,6 +68,10 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 // A class to help us support IEEE 754.
 class XALAN_PLATFORMSUPPORT_EXPORT DoubleSupport
 {
@@ -506,6 +510,12 @@ public:
 			return negative(theDouble);
 		}
 	};
+
+	static double
+	toDouble(const XalanDOMString&	theString);
+
+	static double
+	toDouble(const XalanDOMChar*	theString);
 
 private:
 

@@ -948,6 +948,9 @@ WideStringToUnsignedLong(const XalanDOMChar*	theString)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(double)
 WideStringToDouble(const XalanDOMChar*	theString)
 {
+#if 1
+	return DoubleSupport::toDouble(theString);
+#else
 	double	theResult = DoubleSupport::getNaN();
 
 	// This extra test is here because of all the difficulties
@@ -995,6 +998,7 @@ WideStringToDouble(const XalanDOMChar*	theString)
 	}
 
 	return theResult;
+#endif
 }
 
 

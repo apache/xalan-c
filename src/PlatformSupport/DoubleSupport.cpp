@@ -69,6 +69,9 @@
 #endif
 
 
+#include "DOMStringHelper.hpp"
+
+
 
 #if defined(NO_STD_LIMITS)
 #if defined(__GNUC__)
@@ -325,5 +328,197 @@ DoubleSupport::negative(double	theDouble)
 	else
 	{
 		return -theDouble;
+	}
+}
+
+
+
+double
+DoubleSupport::toDouble(const XalanDOMString&	theString)
+{
+	return toDouble(c_wstr(theString));
+}
+
+
+
+void
+processWhitespace(const XalanDOMChar*&	theString)
+{
+	while(*theString != 0 && isSpace(*theString) == true)
+	{
+		++theString;
+	}
+}
+
+
+
+void
+accumulateNumbers(
+			const XalanDOMChar*&	theString,
+			double&					theResult,
+			bool					fAfterDecimal)
+{
+	if (fAfterDecimal == false)
+	{
+		assert(theResult == 0.0);
+
+		// accumulate as an integer, to avoid
+		// rounding issues.  It's also much
+		// faster...
+		unsigned long	temp = 0;
+
+		while(*theString && isDigit(*theString) == true)
+		{
+			temp *= 10;
+			temp += char(*theString) - '0';
+
+			++theString;
+		}
+
+		theResult = temp;
+	}
+	else
+	{
+		// Accumulate a divisor, so we can divide at the end.
+		unsigned long	theDivisor = 1;
+
+		// accumulate as an integer, to avoid
+		// rounding issues.  It's also much
+		// faster...
+		unsigned long	temp = 0;
+
+		while(*theString && isDigit(*theString) == true)
+		{
+			theDivisor *= 10;
+
+			temp *= 10;
+			temp += char(*theString) - '0';
+
+			++theString;
+		}
+
+		if (temp > 0 && theDivisor > 1)
+		{
+			const double	theFactionalPart =
+				double(temp) / double(theDivisor);
+
+			theResult += theFactionalPart;
+		}
+	}
+}
+
+
+
+double
+doConvert(const XalanDOMChar*	theString)
+{
+	assert(theString != 0);
+	assert(*theString != 0);
+
+	double	theResult = 0.0;
+
+	bool	fError = false;
+	bool	fGotDecimalPoint = false;
+	bool	fGotDigit = false;
+	bool	fGotMinus = false;
+	bool	fGotWhitespace = false;
+
+	const XalanDOMChar*		theCurrent = theString;
+
+	// trim any whitespace
+	processWhitespace(theCurrent);
+
+	while(*theCurrent != 0 && fError == false)
+	{
+		switch(*theCurrent)
+		{
+		case '.':
+			if (fGotDecimalPoint == true ||	// can't have more than one...
+				fGotWhitespace == true)	// can't have one after whitespace...
+			{
+				fError = true;
+			}
+			else
+			{
+				fGotDecimalPoint = true;
+
+				++theCurrent;
+			}
+			break;
+
+		case '-':
+			if (fGotDecimalPoint == true ||
+				fGotMinus == true ||
+				fGotDigit == true ||
+				fGotWhitespace == true)
+			{
+				// Error -- more than one, or in bad position.
+				fError = true;
+			}
+			else
+			{
+				fGotMinus = true;
+
+				++theCurrent;
+			}
+			break;
+
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			if (fGotWhitespace == true)
+			{
+				fError = true;
+			}
+			else
+			{
+				fGotDigit = true;
+
+				accumulateNumbers(theCurrent, theResult, fGotDecimalPoint);
+			}
+			break;
+
+		case ' ':
+		case '\t':
+			fGotWhitespace = true;
+			processWhitespace(theCurrent);
+			break;
+
+		default:
+			fError = true;
+			break;
+		}
+	}
+
+	if (fError == true || fGotDigit == false)
+	{
+		return DoubleSupport::getNaN();
+	}
+	else
+	{
+		return fGotMinus == true ? -theResult : theResult;
+	}
+}
+
+
+
+double
+DoubleSupport::toDouble(const XalanDOMChar*		theString)
+{
+	if (theString == 0 ||
+		*theString == 0)
+	{
+		return getNaN();
+	}
+	else
+	{
+		return doConvert(theString);
 	}
 }
