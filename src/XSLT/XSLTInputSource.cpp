@@ -225,6 +225,15 @@ XSLTInputSource::XSLTInputSource(StreamType*	stream) :
 
 
 
+XSLTInputSource::XSLTInputSource(StreamType&	stream) :
+	InputSource(),
+	m_stream(&stream),
+	m_node(0)
+{
+}
+
+
+
 BinInputStreamType*
 XSLTInputSource::makeStream() const
 {

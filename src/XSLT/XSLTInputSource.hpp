@@ -193,6 +193,17 @@ public:
 	XSLTInputSource(StreamType*		stream);
 
 	/**
+	 * Create a new input source with std stream.
+	 *
+	 * <p>Application writers may use setSystemId() to provide a base for
+	 * resolving relative URIs, and setPublicId to include a public
+	 * identifier.</p>
+	 *
+	 * @param stream the input stream...
+	 */
+	XSLTInputSource(StreamType&		stream);
+
+	/**
 	 * Makes the byte stream for this input source.
 	 *
 	 * <p>The SAX parser will ignore this if there is also a character
