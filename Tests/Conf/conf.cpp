@@ -95,6 +95,7 @@
 
 const char* const 	excludeStylesheets[] =
 {
+	"output22.xsl",
 	0
 };
 
@@ -282,9 +283,8 @@ main(
 			XalanSourceTreeParserLiaison parserLiaison(domSupport);
 			domSupport.setParserLiaison(&parserLiaison);
 
-
 			// Generate Unique Run id and processor info
-			const XalanDOMString UniqRunid = futil.GenerateUniqRunid();
+			const XalanDOMString& UniqRunid = futil.GenerateUniqRunid();
 
 
 			// Defined basic constants for file manipulation and open results file
@@ -296,13 +296,9 @@ main(
 			logFile.logTestFileInit("Conformance Testing:");
 
 
-			// Create run entry that contains runid and number of iterations used for averages.
-			runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
-			runAttrs.insert(Hashtable::value_type(XalanDOMString("Xerces-Version "), futil.getXercesVersion()));
-			logFile.logElementWAttrs(10, "RunAttrs", runAttrs, "xxx");
-
 			// Get the list of Directories that are below conf
 			const FileNameVectorType	dirs = futil.getDirectoryNames(baseDir);
+
 
 			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 			{
@@ -355,7 +351,7 @@ main(
 						// Report the failure and be sure to increment fail count.
 						cout << "Failed to PARSE stylesheet for " << currentFile << endl;
 						futil.data.fail += 1;
-						logFile.logCheckFail(currentFile);
+						logFile.logErrorResult(currentFile, XalanDOMString("Failed to PARSE stylesheet."));
 						continue;
 					}
 
@@ -369,7 +365,7 @@ main(
 						// Report the failure and be sure to increment fail count.
 						cout << "Failed to PARSE source document for " << currentFile << endl;
 						futil.data.fail += 1;
-						logFile.logCheckFail(currentFile);
+						logFile.logErrorResult(currentFile, XalanDOMString("Failed to PARSE source document."));
 						continue;
 					}
 
@@ -392,7 +388,7 @@ main(
 
 			}		//for directories
 
-			futil.reportPassFail(logFile);
+			futil.reportPassFail(logFile, UniqRunid);
 			logFile.logTestFileClose("Conformance ", "Done");
 			logFile.close();
 
