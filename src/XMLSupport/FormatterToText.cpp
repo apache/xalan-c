@@ -74,13 +74,15 @@
 
 FormatterToText::FormatterToText(
 			Writer&		writer,
-			bool		normalizeLinefeed) :
+			bool		normalizeLinefeed,
+			bool		handleIgnorableWhitespace) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_writer(writer),
 	m_maxCharacter(XalanDOMChar(~0)),
 	m_encoding(),
 	m_haveEncoding(false),
-	m_normalize(normalizeLinefeed)
+	m_normalize(normalizeLinefeed),
+	m_handleIgnorableWhitespace(handleIgnorableWhitespace)
 {
 }
 
@@ -89,13 +91,15 @@ FormatterToText::FormatterToText(
 FormatterToText::FormatterToText(
 			Writer&					writer,
 			const XalanDOMString&	encoding,
-			bool					normalizeLinefeed) :
+			bool					normalizeLinefeed,
+			bool					handleIgnorableWhitespace) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_writer(writer),
 	m_maxCharacter(0),
 	m_encoding(isEmpty(encoding) == false ? encoding : XalanDOMString(XalanTranscodingServices::s_utf8String)),
 	m_haveEncoding(true),
-	m_normalize(normalizeLinefeed)
+	m_normalize(normalizeLinefeed),
+	m_handleIgnorableWhitespace(handleIgnorableWhitespace)
 {
 	XalanOutputStream* const	theStream = m_writer.getStream();
 
@@ -233,10 +237,13 @@ FormatterToText::entityReference(const XMLCh* const	/* name */)
 
 void
 FormatterToText::ignorableWhitespace(
-			const XMLCh* const	/* chars */,
-			const unsigned int	/* length */)
+			const XMLCh* const	chars,
+			const unsigned int	length)
 {
-	// No action for the moment.
+	if (m_handleIgnorableWhitespace == true)
+	{
+		characters(chars, length);
+	}
 }
 
 

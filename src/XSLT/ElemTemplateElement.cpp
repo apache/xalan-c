@@ -320,9 +320,9 @@ ElemTemplateElement::childrenToString(
 	// a string.
 	DOMStringPrintWriter		thePrintWriter(result);
 
-	// Create a FormatterToText, and don't normalize CR/LF, since we dont' want
-	// this text to be normalized.
-	FormatterToText				theFormatter(thePrintWriter, false);
+	// Create a FormatterToText, and don't normalize CR/LF, since we don't want
+	// this text to be normalized.  Finally, handle any ignorable whitespace events.
+	FormatterToText				theFormatter(thePrintWriter, false, true);
 
 	// Create an object to set and restore the execution state.
 	StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(

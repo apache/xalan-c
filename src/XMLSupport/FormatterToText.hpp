@@ -91,10 +91,12 @@ public:
 	 *
 	 * @param writer writer for output
 	 * @param normalizeLindefeed Normalize \n or \r\n (on certain platforms).
+	 * @param handleIgnorableWhitespace If true ignorableWhitespace() will write data to the Writer
 	 */
 	FormatterToText(
 			Writer&		writer,
-			bool		normalizeLinefeed = true);
+			bool		normalizeLinefeed = true,
+			bool		handleIgnorableWhitespace = true);
 
 	/**
 	 * FormatterToText instance constructor.
@@ -102,11 +104,13 @@ public:
 	 * @param writer writer for output
 	 * @param encoding character encoding for the writer
 	 * @param normalizeLindefeed Normalize \n or \r\n on certain platforms.
+	 * @param handleIgnorableWhitespace If true ignorableWhitespace() will write data to the Writer
 	 */
 	FormatterToText(
 			Writer&					writer,
 			const XalanDOMString&	encoding,
-			bool					normalizeLinefeed = true);
+			bool					normalizeLinefeed = true,
+			bool					handleIgnorableWhitespace = false);
 
 	virtual
 	~FormatterToText();
@@ -187,6 +191,8 @@ private:
 	const bool		m_haveEncoding;
 
 	const bool		m_normalize;
+
+	const bool		m_handleIgnorableWhitespace;
 };
 
 
