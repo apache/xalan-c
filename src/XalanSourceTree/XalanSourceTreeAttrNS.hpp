@@ -106,7 +106,7 @@ public:
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XalanNode*
 #else
-	virtual XalanSourceTreeAttr*
+	virtual XalanSourceTreeAttrNS*
 #endif
 	cloneNode(bool deep) const;
 
