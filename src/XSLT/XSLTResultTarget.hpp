@@ -221,6 +221,24 @@ public:
 	 * @param encoding new encoding string
 	 */
 	void
+	setEncoding(const XalanDOMChar*		encoding)
+	{
+		if (encoding == 0)
+		{
+			m_encoding.clear();
+		}
+		else
+		{
+			m_encoding = encoding;
+		}
+	}
+
+	/** 
+	 * Set the character encoding, if known.
+	 *
+	 * @param encoding new encoding string
+	 */
+	void
 	setEncoding(const XalanDOMString&	encoding)
 	{
 		m_encoding = encoding;
