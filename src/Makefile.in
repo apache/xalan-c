@@ -255,7 +255,7 @@ endif
 ifeq ($(PLATFORM), TRU64)
 
 SUPPORTED = TRUE
-PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -error_limit 10 -ieee -pthread
+PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -ieee -pthread
 ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc -lrt -lm
 SHLIBSUFFIX = .so
 CC1 = ${CXX} ${CXXFLAGS} $(PLATFORM_COMPILE_OPTIONS)
@@ -561,6 +561,9 @@ endif
 
 clean:
 	rm -rf $(ALL_OBJECTS_DIR)/*
+ifeq ($(PLATFORM), TRU64)
+	rm -rf $(ALL_OBJECTS_DIR)/.cxx_repository
+endif
 	rm -f $(THISLIB)$(VER)$(SHLIBSUFFIX)
 	rm -f $(BINTARGETDIR)/testXSLT
 	rm -f $(BINTARGETDIR)/testXPath
