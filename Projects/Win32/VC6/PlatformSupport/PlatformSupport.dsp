@@ -294,6 +294,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanNumberFormat.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanUnicode.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XSLException.hpp
 # End Source File
 # End Group
