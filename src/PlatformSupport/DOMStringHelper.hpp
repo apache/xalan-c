@@ -481,7 +481,18 @@ DoubleToDOMString(double	theDouble);
  * @return hexadecimal string representation of the number
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-LongToHexDOMString(long		theInt);
+LongToHexDOMString(long		theLong);
+
+
+
+/**
+ * Converts a long value into a XalanDOMString
+ * 
+ * @param theInt number to be converted
+ * @return hexadecimal string representation of the number
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
+UnsignedLongToHexDOMString(unsigned long	theUnsignedLong);
 
 
 
@@ -492,7 +503,7 @@ LongToHexDOMString(long		theInt);
  * @return decimal string representation of the number
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-LongToDOMString(long	theInt);
+LongToDOMString(long	theLong);
 
 
 
@@ -1203,6 +1214,166 @@ typedef std::vector<XalanDOMChar>	XalanDOMCharVectorType;
 #endif
 
 
+
+/**
+ * Get a pointer to the first element of the vector as
+ * a null-terminated string
+ *
+ * @param theSVector target vector
+ * @return null-terminated string of XalanDOMChar
+ */
+inline const XalanDOMChar*
+c_wstr(const XalanDOMCharVectorType&	theVector)
+{
+	return &theVector[0];
+}
+
+
+
+/**
+ * Compare the contents of two vectors for equality
+ * 
+ * @param theLHS first vector to compare
+ * @param theRHS second vector to compare
+ * @return true if the contents of both vectors are identical
+ */
+inline bool
+equals(
+			const XalanDOMCharVectorType&	theLHS,
+			const XalanDOMCharVectorType&	theRHS)
+{
+	return theLHS == theRHS;
+}
+
+
+
+/**
+ * Compare the contents of two strings for equality
+ * 
+ * @param theLHS XalanDOMCharVectorType to compare
+ * @param theRHS string to compare
+ * @return true if the contents of are identical
+ */
+inline bool
+equals(
+			const XalanDOMCharVectorType&	theLHS,
+			const XalanDOMChar*				theRHS)
+{
+	return equals(c_wstr(theLHS), theRHS);
+}
+
+
+
+/**
+ * Compare the contents of two strings for equality
+ * 
+ * @param theLHS string to compare
+ * @param theRHS XalanDOMCharVectorType to compare
+ * @return true if the contents are identical
+ */
+inline bool
+equals(
+			const XalanDOMChar*				theLHS,
+			const XalanDOMCharVectorType&	theRHS)
+{
+	return equals(theLHS, c_wstr(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of a XalanDOMCharVectorType
+ * and a XalanDOMString for equality
+ * 
+ * @param theLHS XalanDOMCharVectorType to compare
+ * @param theRHS XalanDOMString to compare
+ * @return true if the contents of both are identical
+ */
+inline bool
+equals(
+			const XalanDOMCharVectorType&	theLHS,
+			const XalanDOMString&			theRHS)
+{
+	return equals(c_wstr(theLHS), c_wstr(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of a XalanDOMString and a
+ * XalanDOMCharVectorType for equality
+ * 
+ * @param theLHS XalanDOMString to compare
+ * @param theRHS XalanDOMCharVectorType to compare
+ * @return true if the contents of both are identical
+ */
+inline bool
+equals(
+			const XalanDOMString&			theLHS,
+			const XalanDOMCharVectorType&	theRHS)
+{
+	return equals(c_wstr(theLHS), c_wstr(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two XalanDOMCharVectorTypes.
+ * 
+ * @param theLHS first vector to compare
+ * @param theRHS second vector to compare
+ * @return Returns 0 for equal vectors, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ * @see operator<
+ * @see collationCompare
+ */
+inline int
+compare(
+			const XalanDOMCharVectorType&	theLHS,
+			const XalanDOMCharVectorType&	theRHS)
+{
+	return compare(&theLHS[0], &theRHS[0]);
+}
+
+
+
+/**
+ * Compare the contents of two vectors using the
+ * the collation settings of the current code page.
+ * 
+ * @param theLHS first vector to compare
+ * @param theRHS second vector to compare
+ * @return Returns 0 for equal vectors, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ * @see operator<()
+ * @see compare()
+ */
+inline int
+collationCompare(
+			const XalanDOMCharVectorType&	theLHS,
+			const XalanDOMCharVectorType&	theRHS)
+{
+	return collationCompare(&theLHS[0], &theRHS[0]);
+}
+
+
+
+/**
+ * Implements operator< for XalanDOMCharVectorType.
+ * 
+ * @param theLHS first vector to compare
+ * @param theRHS second vector to compare
+ * @return Returns true if theLHS is lexically
+ * less than theRHS
+ * @see compare
+ */
+inline bool
+operator<(
+			const XalanDOMCharVectorType&	theLHS,
+			const XalanDOMCharVectorType&	theRHS)
+{
+	return compare(theLHS, theRHS) < 0 ? true : false;
+}
 
 
 

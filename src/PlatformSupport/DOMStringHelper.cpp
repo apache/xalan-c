@@ -844,7 +844,7 @@ MakeXalanDOMCharVector(const XalanDOMChar*	data)
 	unsigned int	theLength = length(data);
 
 	// Create a vector which includes the terminating 0.
-	return XalanDOMCharVectorType(data, data + theLength);
+	return XalanDOMCharVectorType(data, data + theLength + 1);
 }
 
 
@@ -967,14 +967,15 @@ WideStringToDouble(const XalanDOMChar*	theString)
 			// localization as well.
 			bool	fError = false;
 
-			VectorType::const_iterator	i = theVector.begin();
+			VectorType::const_iterator	begin = theVector.begin();
+			VectorType::const_iterator	i = begin;
 			VectorType::const_iterator	j = theVector.end();
 
 			j--;
 
 			do
 			{
-				if ((*i < '0' || *i > '9') && !(*i == '.' || *i == 'e' || *i == 'E' || *i == 'f' || *i == 'F' || *i == '-'))
+				if ((*i < '0' || *i > '9') && !(*i == '.' || *i == 'e' || *i == 'E' || *i == 'f' || *i == 'F' || (*i == '-' && i == begin)))
 				{
 					fError = true;
 				}
@@ -1122,6 +1123,22 @@ LongToHexDOMString(long		theLong)
 	return theString;
 
 #endif
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
+UnsignedLongToHexDOMString(unsigned long	theUnsignedLong)
+{
+	ostrstream	theFormatter;
+
+	theFormatter << hex << theUnsignedLong << '\0';
+
+	const XalanDOMString	theString = theFormatter.str();
+
+	theFormatter.freeze(false);
+
+	return theString;
 }
 
 
