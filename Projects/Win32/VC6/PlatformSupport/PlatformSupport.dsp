@@ -339,10 +339,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\StdBinInputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\STLHelper.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\PlatformSupport\StringTokenizer.hpp
 # End Source File
 # Begin Source File
