@@ -264,6 +264,9 @@ XalanSourceTreeDocument*
 #endif
 XalanSourceTreeDocument::cloneNode(bool		/* deep */) const
 {
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+
+	// Dummy return value...
 	return 0;
 }
 
@@ -514,7 +517,7 @@ XalanSourceTreeDocument::getDocumentElement() const
 
 
 XalanNodeList*
-XalanSourceTreeDocument::getElementsByTagName(const XalanDOMString&	/* tagname */) const
+XalanSourceTreeDocument::getElementsByTagName(const XalanDOMString&		/* tagname */) const
 {
 	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
