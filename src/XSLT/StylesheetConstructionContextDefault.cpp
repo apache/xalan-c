@@ -299,7 +299,19 @@ StylesheetConstructionContextDefault::reset()
 
 	m_xpathFactory.reset();
 
+	m_stringPool.clear();
+
 	m_stringCache.reset();
+
+	m_avtAllocator.reset();
+
+	m_avtPartSimpleAllocator.reset();
+
+	m_avtPartXPathAllocator.reset();
+
+	m_xalanQNameByValueAllocator.reset();
+
+	m_pointerVectorAllocator.reset();
 }
 
 
