@@ -131,7 +131,6 @@ ExecuteXPath(
 			XPathProcessor&			theXPathProcessor,
 			XPath&					theXPath,
 			const XalanDOMString&	theXPathString,
-			XPathEnvSupport&		theXPathEnvSupport,
 			XalanNode* 				theContextNode,
 			const PrefixResolver&	thePrefixResolver,
 			const NodeRefListBase& 	theContextNodeList,
@@ -139,8 +138,7 @@ ExecuteXPath(
 {
 	theXPathProcessor.initXPath(theXPath,
 								theXPathString,
-								thePrefixResolver,
-								theXPathEnvSupport);
+								thePrefixResolver);
 
 	const XObjectPtr theResult =
 		theXPath.execute(theContextNode, thePrefixResolver, theContextNodeList, theExecutionContext);
@@ -157,7 +155,6 @@ TestNumericResult(
 			const XalanDOMString&	theXPathString,
 			PrintWriter&			thePrintWriter,
 			double					theExpectedResult,
-			XPathEnvSupport&		theXPathEnvSupport,
 			XalanNode* 				theContextNode,
 			const PrefixResolver&	thePrefixResolver,
 			const NodeRefListBase& 	theContextNodeList,
@@ -169,7 +166,6 @@ TestNumericResult(
 		ExecuteXPath(theXPathProcessor,
 					 theXPath,
 					 theXPathString,
-					 theXPathEnvSupport,
 					 theContextNode,
 					 thePrefixResolver,
 					 theContextNodeList,
@@ -207,7 +203,6 @@ TestStringResult(
 			const XalanDOMString&	theXPathString,
 			PrintWriter&			thePrintWriter,
 			const XalanDOMString&	theExpectedResult,
-			XPathEnvSupport&		theXPathEnvSupport,
 			XalanNode* 				theContextNode,
 			const PrefixResolver&	thePrefixResolver,
 			const NodeRefListBase& 	theContextNodeList,
@@ -219,7 +214,6 @@ TestStringResult(
 		ExecuteXPath(theXPathProcessor,
 					 theXPath,
 					 theXPathString,
-					 theXPathEnvSupport,
 					 theContextNode,
 					 thePrefixResolver,
 					 theContextNodeList,
@@ -260,7 +254,6 @@ TestBooleanResult(
 			const XalanDOMString&		theXPathString,
 			PrintWriter&			thePrintWriter,
 			bool					theExpectedResult,
-			XPathEnvSupport&		theXPathEnvSupport,
 			XalanNode* 		theContextNode,
 			const PrefixResolver&	thePrefixResolver,
 			const NodeRefListBase& 	theContextNodeList,
@@ -272,7 +265,6 @@ TestBooleanResult(
 		ExecuteXPath(theXPathProcessor,
 					 theXPath,
 					 theXPathString,
-					 theXPathEnvSupport,
 					 theContextNode,
 					 thePrefixResolver,
 					 theContextNodeList,
@@ -457,7 +449,6 @@ FindContextNode(
 		ExecuteXPath(theXPathProcessor,
 					 *theXPath,
 					 theContextNodeMatchPattern,
-					 theXPathEnvSupport,
 					 theDocument,
 					 thePrefixResolver,
 					 theContextNodeList,
@@ -551,8 +542,7 @@ TestAxisResult(
 
 				theXPathProcessor.initXPath(*theXPath,
 											theXPathString,
-											thePrefixResolver,
-											theXPathEnvSupport);
+											thePrefixResolver);
 
 				bool	fDump = false;
 
@@ -664,8 +654,7 @@ TestPredicateResult(
 
 				theXPathProcessor.initXPath(*theXPath1,
 											TranscodeFromLocalCodePage("following-sibling::*"),
-											thePrefixResolver,
-											theXPathEnvSupport);
+											thePrefixResolver);
 
 				XPath* const	theXPath2 = theXPathFactory.create();
 
@@ -674,8 +663,7 @@ TestPredicateResult(
 
 				theXPathProcessor.initXPath(*theXPath2,
 											TranscodeFromLocalCodePage("descendant::*"),
-											thePrefixResolver,
-											theXPathEnvSupport);
+											thePrefixResolver);
 
 				bool	fDump = false;
 
@@ -846,7 +834,6 @@ TestNumericResults(
 							  TranscodeFromLocalCodePage(theNumericTestInput[i]),
 							  thePrintWriter,
 							  theNumericTestExpectedOutput[i],
-							  theXPathEnvSupport,
 							  0,
 							  ElementPrefixResolverProxy(0, theXPathEnvSupport, theDOMSupport),
 							  NodeRefList(),
@@ -977,7 +964,6 @@ TestStringResults(
 							 TranscodeFromLocalCodePage(theStringTestInput[i]),
 							 thePrintWriter,
 							 TranscodeFromLocalCodePage(theStringTestExpectedOutput[i]),
-							 theXPathEnvSupport,
 							 0,
 							 ElementPrefixResolverProxy(0, theXPathEnvSupport, theDOMSupport),
 							 NodeRefList(),
@@ -1112,7 +1098,6 @@ TestBooleanResults(
 							  TranscodeFromLocalCodePage(theBooleanTestInput[i]),
 							  thePrintWriter,
 							  theBooleanTestExpectedOutput[i],
-							  theXPathEnvSupport,
 							  0,
 							  ElementPrefixResolverProxy(0, theXPathEnvSupport, theDOMSupport),
 							  NodeRefList(),
