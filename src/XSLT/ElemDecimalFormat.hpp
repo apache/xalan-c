@@ -116,6 +116,12 @@ public:
 		return m_decimalFormatSymbols;
 	}
 
+	const XalanDOMString&
+	getName() const
+	{
+		return m_name_avt;
+	}
+
 private:
 
 	const XPath*			m_countMatchPattern;
