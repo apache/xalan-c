@@ -70,6 +70,7 @@
 #endif
 
 
+
 #include <Include/XalanAutoPtr.hpp>
 
 
@@ -93,7 +94,7 @@ openFile(const XalanDOMString&	theFileName)
 			FILE_ATTRIBUTE_NORMAL,
 			0);
 
-	if (theFileHandle != INVALID_HANDLE_VALUE)
+	if (theFileHandle != INVALID_HANDLE_VALUE && theFileHandle != 0)
 	{
 		return theFileHandle;
 	}
