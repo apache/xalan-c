@@ -138,7 +138,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 xerces-c_2.lib /nologo /dll /pdb:none /machine:IA64 /out:"..\..\Build\Win64\VC6\Release/Harness_1_5_0.dll" /implib:"..\..\Build\Win64\VC6\Release/Harness_1.lib" /libpath:"..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release"
+# ADD LINK32 xerces-c_2.lib /nologo /dll /pdb:none /machine:IA64 /out:"..\..\Build\Win64\VC6\Release/Harness_1_6_0.dll" /implib:"..\..\Build\Win64\VC6\Release/Harness_1.lib" /libpath:"..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release"
 
 !ELSEIF  "$(CFG)" == "Harness - Win64 Debug"
 
@@ -164,7 +164,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2D.lib /nologo /dll /debug /machine:IA64 /out:"..\..\Build\Win64\VC6\Debug/Harness_1_5_0D.dll" /implib:"..\..\Build\Win64\VC6\Debug/Harness_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug"
+# ADD LINK32 xerces-c_2D.lib /nologo /dll /debug /machine:IA64 /out:"..\..\Build\Win64\VC6\Debug/Harness_1_6_0D.dll" /implib:"..\..\Build\Win64\VC6\Debug/Harness_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug"
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
