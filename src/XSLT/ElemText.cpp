@@ -116,6 +116,7 @@ ElemText::ElemText(
 
 ElemText::~ElemText()
 {
+	assert(getNextSiblingElem() == 0 && getFirstChildElem() == 0);
 }
 
 
@@ -129,20 +130,7 @@ ElemText::getElementName() const
 
 
 bool
-ElemText::childTypeAllowed(int	xslToken) const
+ElemText::childTypeAllowed(int	/* xslToken */) const
 {
-	bool	fResult = false;
-
-	switch(xslToken)
-	{
-	// char-instructions 
-	case StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT:
-		fResult = true;
-		break;
-
-	default:
-		break;
-	}
-
-	return fResult;
+	return false;
 }
