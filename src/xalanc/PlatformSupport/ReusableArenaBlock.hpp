@@ -27,8 +27,7 @@ template<bool> struct CompileTimeError;
 
 template<> struct CompileTimeError<true>{};
 
-#define STATIC_CHECK(expr) \
-	CompileTimeError<(expr) != 0 >()
+#define XALAN_STATIC_CHECK(expr) CompileTimeError<bool(expr)>()
 
 
 template <class ObjectType,
@@ -41,16 +40,16 @@ template <class ObjectType,
 class ReusableArenaBlock : public ArenaBlockBase<ObjectType, size_Type>
 {
 
-#define VALID_OBJECT_STAMP 0xffddffdd
-
 public:
 
-	typedef ArenaBlockBase<ObjectType, size_Type>				BaseClassType;
+	typedef ArenaBlockBase<ObjectType, size_Type>	BaseClassType;
 
 	typedef typename BaseClassType::size_type		size_type;
 
 	struct NextBlock
 	{
+        enum { VALID_OBJECT_STAMP = 0xffddffdd };
+
 		size_type		next;
 		const int		verificationStamp;
 		
@@ -63,7 +62,7 @@ public:
 		bool
 		isValidFor( size_type  rightBorder ) const
 		{
-			return ( ( verificationStamp == (int)VALID_OBJECT_STAMP ) &&
+			return ( ( verificationStamp == VALID_OBJECT_STAMP ) &&
 				( next <= rightBorder ) ) ? true : false ;
 		}
 	};
@@ -82,10 +81,9 @@ public:
 		m_nextFreeBlock(0)
 
 	{
-		STATIC_CHECK(sizeof(ObjectType) >= sizeof(NextBlock));
+		XALAN_STATIC_CHECK(sizeof(ObjectType) >= sizeof(NextBlock));
 		
-		for( size_type i = 0; i < this->
-		m_blockSize ; ++i )
+		for( size_type i = 0; i < this->m_blockSize; ++i )
 		{
 			new ( reinterpret_cast<NextBlock*>(&(this->m_objectBlock[i])) ) NextBlock( (size_type)(i + 1) );
 		}
@@ -120,7 +118,6 @@ public:
 	ObjectType*
 	allocateBlock()
 	{
-		
 		if ( this->m_objectCount == this->m_blockSize )
 		{
 			assert ( this->m_firstFreeBlock == (this->m_blockSize + 1) );
@@ -157,9 +154,7 @@ public:
 			}
 
 			return theResult;
-
 		}
-		
 	}
 
 	/*
@@ -189,9 +184,9 @@ public:
 		if ( this->m_firstFreeBlock != this->m_nextFreeBlock )
 		{
 			// return it to pull of the free blocks
-			NextBlock* p = reinterpret_cast<NextBlock*>( this->m_objectBlock + this->m_firstFreeBlock );
+			void* const     p = this->m_objectBlock + this->m_firstFreeBlock;
 
-			p = new (p) NextBlock(this->m_nextFreeBlock);
+			new (p) NextBlock(this->m_nextFreeBlock);
 
 			this->m_nextFreeBlock = this->m_firstFreeBlock;
 		}
@@ -201,16 +196,13 @@ public:
 
 		theObject->~ObjectType();
 
-		NextBlock* newFreeBlock = reinterpret_cast<NextBlock*>(theObject);
-
-		newFreeBlock = new (newFreeBlock) NextBlock(this->m_firstFreeBlock);
+		new (theObject) NextBlock(this->m_firstFreeBlock);
 
 		m_firstFreeBlock = this->m_nextFreeBlock = size_type(theObject - this->m_objectBlock);
 
 		assert (this->m_firstFreeBlock <= this->m_blockSize);
 
 		--this->m_objectCount;
-
 	}
 
 	/*
@@ -245,16 +237,18 @@ protected:
 	shouldDestroyBlock(const ObjectType*	theObject) const
 	{
 		assert( size_type(theObject - this->m_objectBlock) < this->m_blockSize);
-		return !isOnFreeList(theObject);
+
+        return !isOnFreeList(theObject);
 	}
 
 	bool
-	isOccupiedBlock(const NextBlock* block)const
+	isOccupiedBlock(const NextBlock*    block)const
 	{
 		assert( block !=0 );
 
 		return !( ownsBlock(reinterpret_cast<const ObjectType*>(block)) && block->isValidFor(this->m_blockSize) );
 	}
+
 private:
 
 	// Not implemented...
@@ -284,9 +278,9 @@ private:
 		}
 		else
 		{
-			ObjectType* pRunPtr = this->m_objectBlock + this->m_firstFreeBlock;
+			ObjectType*     pRunPtr = this->m_objectBlock + this->m_firstFreeBlock;
 
-			for ( int i = 0; i < (this->m_blockSize - this->m_objectCount); i++)
+			for ( size_type i = 0; i < (this->m_blockSize - this->m_objectCount); ++i)
 			{
 				assert ( ownsBlock( pRunPtr ) );
 
@@ -296,11 +290,11 @@ private:
 				}
 				else
 				{
-					NextBlock* p = reinterpret_cast<NextBlock*>(pRunPtr);
+					NextBlock* const    p = reinterpret_cast<NextBlock*>(pRunPtr);
 
 					assert( p->isValidFor( this->m_blockSize ) );
 
-					pRunPtr = this->m_objectBlock + p->next ;
+					pRunPtr = this->m_objectBlock + p->next;
 				}
 			}
 
@@ -309,11 +303,12 @@ private:
 	}
 
 
-	size_type		m_firstFreeBlock;
+    // Data members...
+	size_type   m_firstFreeBlock;
 
-	size_type		m_nextFreeBlock;
-
+	size_type	m_nextFreeBlock;
 };
+
 
 
 XALAN_CPP_NAMESPACE_END
