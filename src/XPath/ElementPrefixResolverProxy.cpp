@@ -79,7 +79,7 @@
 ElementPrefixResolverProxy::ElementPrefixResolverProxy(
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
-			const DOMSupport& 		domSupport) :
+			const DOMSupport& 		/* domSupport */) :
 	m_namespaceContext(namespaceContext),
 	m_envSupport(&envSupport),
 	m_uri()
