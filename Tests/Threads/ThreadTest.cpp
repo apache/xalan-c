@@ -1,9 +1,13 @@
 #include <cassert>
+#include <climits>
 #include <fstream>
 #include <iostream>
 #include <strstream>
 
+#include <process.h>
+
 #include <util/PlatformUtils.hpp>
+#include <util/Mutexes.hpp>
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanFileOutputStream.hpp>
@@ -29,7 +33,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winbase.h>
-#define THREADFUNCTIONRETURN DWORD WINAPI
+
 
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
@@ -49,106 +53,227 @@
 // Used to hold compiled stylesheet
 StylesheetRoot* glbStylesheetRoot;
 
+extern "C" void theThreadRoutine(void* param);
 
-THREADFUNCTIONRETURN theThread(LPVOID	param)
+
+class SynchronizedCounter
+{
+public:
+
+	SynchronizedCounter();
+
+	~SynchronizedCounter();
+
+	void
+	increment();
+
+	void
+	decrement();
+
+	unsigned long
+	getCounter() const;
+
+private:
+
+	mutable XMLMutex	m_mutex;
+
+	unsigned long		m_counter;
+};
+
+
+
+SynchronizedCounter::SynchronizedCounter() :
+	m_mutex(),
+	m_counter(0)
+{
+}
+
+
+
+SynchronizedCounter::~SynchronizedCounter()
+{
+}
+
+
+
+void
+SynchronizedCounter::increment()
+{
+	XMLMutexLock	theLock(&m_mutex);
+
+	if (m_counter < ULONG_MAX)
+	{
+		++m_counter;
+	}
+}
+
+
+
+void
+SynchronizedCounter::decrement()
+{
+	XMLMutexLock	theLock(&m_mutex);
+
+	if (m_counter > 0)
+	{
+		--m_counter;
+	}
+}
+
+
+
+unsigned long
+SynchronizedCounter::getCounter() const
+{
+	XMLMutexLock	theLock(&m_mutex);
+
+	return m_counter;
+}
+
+
+
+struct
+ThreadInfo
+{
+	ThreadInfo(
+			unsigned int			theThreadNumber,
+			SynchronizedCounter*	theCounter) :
+		m_threadNumber(theThreadNumber),
+		m_counter(theCounter)
+	{
+	}
+
+	unsigned int			m_threadNumber;
+
+	SynchronizedCounter*	m_counter;
+};
+
+
+
+void
+theThreadRoutine(void*		param)
 {
 // This routine uses compiled stylesheet (glbStylesheetRoot), which is set using the 
 // theProcessor.setStylesheetRoot method. The transform is done using the theProcessor's
 // process() method.
 
-	const int	number = reinterpret_cast<int>(param);
-	const DWORD		theThreadID = GetCurrentThreadId();
+	const ThreadInfo*	theInfo = reinterpret_cast<const ThreadInfo*>(param);
 
-	// Create the support objects that are necessary for running the processor...
-	XalanSourceTreeDOMSupport		theDOMSupport;
-	XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport);
+	assert(theInfo != 0);
 
-	theDOMSupport.setParserLiaison(&theParserLiaison);
-	// The default is that documents are not thread-safe.  Set this to
-	// true so they are.
-	//theParserLiaison.setThreadSafe(true);
+	theInfo->m_counter->increment();
 
-	XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-	XObjectFactoryDefault			theXObjectFactory;
-	XPathFactoryDefault				theXPathFactory;
+	try
+	{
+		// Create the support objects that are necessary for running the processor...
+		XalanSourceTreeDOMSupport		theDOMSupport;
+		XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport);
 
-	// Create a processor...and output start message.
-	XSLTEngineImpl	theProcessor(
-					theParserLiaison,
-					theXSLTProcessorEnvSupport,
-					theDOMSupport,
-					theXObjectFactory,
-					theXPathFactory);
+		theDOMSupport.setParserLiaison(&theParserLiaison);
+		// The default is that documents are not thread-safe.  Set this to
+		// true so they are.
+		//theParserLiaison.setThreadSafe(true);
 
-	// Connect the processor to the support object...
-	theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
+		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
+		XObjectFactoryDefault			theXObjectFactory;
+		XPathFactoryDefault				theXPathFactory;
 
-	// The execution context uses the same factory support objects as
-	// the processor, since those objects have the same lifetime as
-	// other objects created as a result of the execution.
-	StylesheetExecutionContextDefault	ssExecutionContext(
-						theProcessor,
+		// Create a processor...and output start message.
+		XSLTEngineImpl	theProcessor(
+						theParserLiaison,
 						theXSLTProcessorEnvSupport,
 						theDOMSupport,
-						theXObjectFactory);
+						theXObjectFactory,
+						theXPathFactory);
 
-	// Our input files.  The assumption is that the executable will be run
-	// from same directory as the input files.
+		// Connect the processor to the support object...
+		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
-	// Generate the input and output file names.
-	char buffer[10];
-	const XalanDOMString theXMLfile("birds.xml");
-	const XalanDOMString outPutfile(XalanDOMString("birds") + XalanDOMString(itoa(number,buffer,10)) + XalanDOMString(".out"));
+		// The execution context uses the same factory support objects as
+		// the processor, since those objects have the same lifetime as
+		// other objects created as a result of the execution.
+		StylesheetExecutionContextDefault	ssExecutionContext(
+							theProcessor,
+							theXSLTProcessorEnvSupport,
+							theDOMSupport,
+							theXObjectFactory);
 
+		// Our input files.  The assumption is that the executable will be run
+		// from same directory as the input files.
 
-	//Generate the XML input and output objects.
-	XSLTInputSource		theInputSource(c_wstr(theXMLfile));
-	XSLTResultTarget	theResultTarget(outPutfile);
+		// Generate the input and output file names.
+		const XalanDOMString	theXMLfile("birds.xml");
 
-	// Set the stylesheet to be the compiled stylesheet. Then do the transform. 
-	// Report both the start of the transform and end of the thread.
-	theProcessor.setStylesheetRoot(glbStylesheetRoot);
-	theProcessor.process(theInputSource,theResultTarget,ssExecutionContext);
+		const XalanDOMString	theOutputFile(
+				XalanDOMString("birds") +
+				UnsignedLongToDOMString(theInfo->m_threadNumber) +
+				XalanDOMString(".out"));
 
-	return (0);
+		//Generate the XML input and output objects.
+		XSLTInputSource		theInputSource(c_wstr(theXMLfile));
+		XSLTResultTarget	theResultTarget(theOutputFile);
+
+		// Set the stylesheet to be the compiled stylesheet. Then do the transform. 
+		// Report both the start of the transform and end of the thread.
+		theProcessor.setStylesheetRoot(glbStylesheetRoot);
+		theProcessor.process(theInputSource,theResultTarget,ssExecutionContext);
+	}
+	catch(...)
+	{
+	}
+
+	// Decrement the counter because we're done...
+	theInfo->m_counter->decrement();
 }
-void doThreads(int x)
+
+
+
+void
+doThreads(long	theThreadCount)
 {
-	cout << endl << "Starting " << x << " threads." << endl;
+	cout << endl << "Starting " << theThreadCount << " threads." << endl;
 
-	DWORD dwStackSize = 4096;              	// initial thread stack size
-	LPTHREAD_START_ROUTINE lpStartAddress = (LPTHREAD_START_ROUTINE)theThread;
-	DWORD dwCreationFlags = 0;             	// creation flags
- 	int nThreads = x;
+	typedef std::vector<ThreadInfo>		ThreadInfoVectorType;
 
-	std::vector<HANDLE> hThreads;
-	hThreads.reserve(nThreads);
- 	int i=0;
-	
+	ThreadInfoVectorType	theThreadInfo;
+
+	theThreadInfo.reserve(theThreadCount);
+
 	try
 	{
 		cout << endl << "Clock before starting threads: " << clock() << endl;
 
-		for (i=0; i< nThreads; i++)
-			{
-				HANDLE hThread;
-				DWORD  threadID;
+		SynchronizedCounter		theCounter;
 
-				hThread = CreateThread(
-					0, dwStackSize,
-					lpStartAddress,					// pointer to thread function
-					reinterpret_cast<LPVOID>(i),	// argument for new thread
-					dwCreationFlags,				// creation flags
-					&threadID);
-				assert(hThread != 0);
-				hThreads.push_back(hThread);
+		for (long i = 0; i < theThreadCount; i++)
+		{
+			theThreadInfo.push_back(ThreadInfoVectorType::value_type(i, &theCounter));
+
+			const unsigned long		theThreadID =
+					_beginthread(theThreadRoutine, 4096, reinterpret_cast<LPVOID>(&theThreadInfo.back()));
+
+			if (theThreadID == unsigned(-1))
+			{
+				cerr << endl << "Unable to create thread number " << i + 1 << "." << endl;
 			}
-		WaitForMultipleObjects(hThreads.size(), &hThreads[0], TRUE, INFINITE);
+		}
+
+		if (theThreadInfo.size() == 0)
+		{
+			cerr << endl << "No threads were created!" << endl;
+		}
+		else
+		{
+			do
+			{
+				Sleep(2000);
+			}
+			while(theCounter.getCounter() != 0);
+
+			Sleep(2000);
+		}
 
 		cout << endl << "Clock after threads: " << clock() << endl;
-
-		for (i=0; i< nThreads; i++)
-			CloseHandle(hThreads[i]);
 	}
 	catch(...)
 	{
