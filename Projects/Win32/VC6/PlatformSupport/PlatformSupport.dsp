@@ -154,6 +154,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\TextOutputStream.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\URISupport.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\Writer.cpp
 # End Source File
 # Begin Source File
@@ -247,6 +251,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\StringTokenizer.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\TextOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\URISupport.hpp
 # End Source File
 # Begin Source File
 
