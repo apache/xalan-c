@@ -1,3 +1,6 @@
+// Base header file.  Must be first.
+#include <Include/PlatformDefinitions.hpp>
+
 #include <cassert>
 #include <fstream>
 #include <iostream>
@@ -36,7 +39,6 @@ main(
 	using std::cerr;
 	using std::endl;
 	using std::ifstream;
-	using std::ios_base;
 	using std::ostrstream;
 	using std::string;
 #endif

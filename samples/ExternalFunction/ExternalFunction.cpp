@@ -1,3 +1,8 @@
+// Base header file.  Must be first.
+#include <Include/PlatformDefinitions.hpp>
+
+
+
 #include <cmath>
 #include <ctime>
 #include <iostream>
