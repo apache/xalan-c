@@ -1930,24 +1930,6 @@ const XalanDOMString&	FormatterToHTML::s_metaString =
 
 
 
-#if !defined(XALAN_LSTRSUPPORT)
-void
-pushStringsOnVector(
-			const char*	const			theStrings[],
-			size_t						theStringsSize,
-			XalanDOMStringVectorType&	theVector)
-{
-	theVector.reserve(theStringsSize);
-
-	for(size_t i = 0; i < theStringsSize; ++i)
-	{
-		theVector.push_back(XalanDOMString(theStrings[i]));
-	}
-}
-#endif
-
-
-
 void
 FormatterToHTML::initialize()
 {
