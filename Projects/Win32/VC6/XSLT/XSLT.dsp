@@ -322,10 +322,6 @@ SOURCE=..\..\..\..\src\XSLT\ProblemListenerDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=D:\Rational\Quantify\pure_api.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\ResultNamespacesStack.cpp
 # End Source File
 # Begin Source File
