@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -460,9 +460,9 @@ ElemNumber::getCountMatchPattern(
 		{
 			StylesheetExecutionContext::GetAndReleaseCachedString	theMatchPatternString(executionContext);
 
-			assign(theMatchPatternString.get(), s_piString);
+			theMatchPatternString.get() = s_piString;
 			append(theMatchPatternString.get(), contextNode->getNodeName());
-			append(theMatchPatternString.get(), s_leftParenString);
+			append(theMatchPatternString.get(), XalanUnicode::charRightParenthesis);
 
 			countMatchPattern = executionContext.createMatchPattern(
 					theMatchPatternString.get(),
@@ -1013,7 +1013,7 @@ ElemNumber::formatNumberList(
 			}
 			else
 			{
-				theResult += s_defaultSeparatorString;
+				theResult += XalanUnicode::charFullStop;
 			}
 
 			clear(theIntermediateResult);
@@ -1328,11 +1328,11 @@ ElemNumber::getFormattedNumber(
 	switch(numberType)
 	{
 		case XalanUnicode::charLetter_A:
-			int2alphaCount(listElement, s_alphaCountTable, theResult);
+			int2alphaCount(listElement, s_alphaCountTable, s_alphaCountTableSize, theResult);
 			break;
 
 		case XalanUnicode::charLetter_a:
-			int2alphaCount(listElement, s_alphaCountTable, theResult);
+			int2alphaCount(listElement, s_alphaCountTable, s_alphaCountTableSize, theResult);
 
 			theResult = toLowerCaseASCII(theResult);
 			break;
@@ -1384,7 +1384,7 @@ ElemNumber::getFormattedNumber(
 				}
 				else if (equals(letterVal, s_alphabeticString) == true)
 				{
-					int2alphaCount(listElement, s_elalphaCountTable, theResult);
+					int2alphaCount(listElement, s_elalphaCountTable, s_elalphaCountTableSize, theResult);
 				}
 				else
 				{
@@ -1454,13 +1454,14 @@ ElemNumber::int2singlealphaCount(
 
 void
 ElemNumber::int2alphaCount(
-			int						val,
-			const XalanDOMString&	table,
-			XalanDOMString&			theResult)
+			int							val,
+			const XalanDOMChar			table[],
+			XalanDOMString::size_type	length,
+			XalanDOMString&				theResult)
 {
-	assert(int(length(table)) == length(table));
+	assert(int(length) == length);
 
-	const int	radix = int(length(table));
+	const int	radix = int(length);
 
 	// Create a buffer to hold the result
 	// TODO:  size of the table can be determined by computing
@@ -1529,7 +1530,7 @@ ElemNumber::int2alphaCount(
 			break;
 
 		// put out the next character of output
-		buf[charPos--] = charAt(table, lookupIndex);
+		buf[charPos--] = table[lookupIndex];
 	}
 	while (val > 0);
 
@@ -1743,8 +1744,10 @@ ElemNumber::NumberFormatStringTokenizer::countTokens() const
 }
 
 
+#define ELEMNUMBER_SIZE(str)	((sizeof(str) / sizeof(str[0]) - 1))
 
-static const XalanDOMChar	alphaCountTable[] =
+
+const XalanDOMChar	ElemNumber::s_alphaCountTable[] =
 {
 	XalanUnicode::charLetter_Z,
 	XalanUnicode::charLetter_A,
@@ -1775,9 +1778,12 @@ static const XalanDOMChar	alphaCountTable[] =
 	0
 };
 
+const XalanDOMString::size_type		ElemNumber::s_alphaCountTableSize =
+		ELEMNUMBER_SIZE(s_alphaCountTable);
 
 
-static const XalanDOMChar	elalphaCountTable[] =
+
+const XalanDOMChar	ElemNumber::s_elalphaCountTable[] =
 {
 	0x03c9,
 	0x03b1,
@@ -1808,28 +1814,15 @@ static const XalanDOMChar	elalphaCountTable[] =
 };
 
 
+const XalanDOMString::size_type		ElemNumber::s_elalphaCountTableSize =
+		ELEMNUMBER_SIZE(s_elalphaCountTable);
 
-static XalanDOMString								s_atString;
 
 static XalanDOMString								s_textString;
 
 static XalanDOMString								s_commentString;
 
 static XalanDOMString								s_slashString;
-
-static XalanDOMString								s_piString;
-
-static XalanDOMString								s_leftParenString;
-
-static XalanDOMString								s_dotString;
-
-static XalanDOMString								s_oneString;
-
-static XalanDOMString								s_defaultSeparatorString;
-
-static XalanDOMString								s_alphaCountTable;
-
-static XalanDOMString								s_elalphaCountTable;
 
 
 
@@ -1838,7 +1831,11 @@ static ElemNumber::DecimalToRomanVectorType			s_romanConvertTable;
 static ElemNumber::NumberingResourceBundleMapType	s_resourceBundles;
 
 
-const XalanDOMString&	ElemNumber::s_atString = ::s_atString;
+const XalanDOMChar		ElemNumber::s_atString[] =
+{
+	XalanUnicode::charAmpersand,
+	0
+};
 
 const XalanDOMString&	ElemNumber::s_textString = ::s_textString;
 
@@ -1846,19 +1843,33 @@ const XalanDOMString&	ElemNumber::s_commentString = ::s_commentString;
 
 const XalanDOMString&	ElemNumber::s_slashString = ::s_slashString;
 
-const XalanDOMString&	ElemNumber::s_piString = ::s_piString;
-
-const XalanDOMString&	ElemNumber::s_leftParenString = ::s_leftParenString;
-
-const XalanDOMString&	ElemNumber::s_dotString = ::s_dotString;
-
-const XalanDOMString&	ElemNumber::s_oneString = ::s_oneString;
-
-const XalanDOMString&	ElemNumber::s_defaultSeparatorString = ::s_defaultSeparatorString;
-
-const XalanDOMString&	ElemNumber::s_alphaCountTable = ::s_alphaCountTable;
-
-const XalanDOMString&	ElemNumber::s_elalphaCountTable = ::s_elalphaCountTable;
+const XalanDOMChar		ElemNumber::s_piString[] =
+{
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLeftParenthesis,
+	0
+};
 
 const XalanDOMChar		ElemNumber::s_levelString[] =
 {
@@ -2022,7 +2033,8 @@ addTraditionalElalphaBundle(ElemNumber::NumberingResourceBundleMapType&		theBund
 
 	const XalanDOMString	theLanguageString("el");
 
-	const XalanNumberingResourceBundle	theElaphaBundle(
+	// Create an instance...
+	XalanNumberingResourceBundle	theElaphaBundle(
 		theLanguageString,
 		theLanguageString,
 		theLanguageString,
@@ -2039,9 +2051,8 @@ addTraditionalElalphaBundle(ElemNumber::NumberingResourceBundleMapType&		theBund
 		theElalphaDigitsTable,
 		theDigitsTableTable);
 
-	typedef ElemNumber::NumberingResourceBundleMapType::value_type	value_type;
-
-	theBundleMap[elalphaNumberType] = theElaphaBundle;
+	// Swap it with the one in the map (this avoids making a copy...)
+	theBundleMap[elalphaNumberType].swap(theElaphaBundle);
 }
 
 
@@ -2049,27 +2060,11 @@ addTraditionalElalphaBundle(ElemNumber::NumberingResourceBundleMapType&		theBund
 void
 ElemNumber::initialize()
 {
-	::s_atString = XALAN_STATIC_UCODE_STRING("@");
-
 	::s_textString = XALAN_STATIC_UCODE_STRING("text()");
 
 	::s_commentString = XALAN_STATIC_UCODE_STRING("comment()");
 
 	::s_slashString = XALAN_STATIC_UCODE_STRING("/");
-
-	::s_piString = XALAN_STATIC_UCODE_STRING("pi(");
-
-	::s_leftParenString = XALAN_STATIC_UCODE_STRING(")");
-
-	::s_dotString = XALAN_STATIC_UCODE_STRING(".");
-
-	::s_oneString = XALAN_STATIC_UCODE_STRING("1");
-
-	::s_defaultSeparatorString = XALAN_STATIC_UCODE_STRING(".");
-
-	::s_alphaCountTable = alphaCountTable;
-
-	::s_elalphaCountTable = elalphaCountTable;
 
 	::s_romanConvertTable.reserve(7);
 
@@ -2130,18 +2125,9 @@ ElemNumber::initialize()
 void
 ElemNumber::terminate()
 {
-	releaseMemory(::s_atString);
 	releaseMemory(::s_textString);
 	releaseMemory(::s_commentString);
 	releaseMemory(::s_slashString);
-	releaseMemory(::s_piString);
-	releaseMemory(::s_leftParenString);
-	releaseMemory(::s_dotString);
-	releaseMemory(::s_oneString);
-	releaseMemory(::s_defaultSeparatorString);
-
-	releaseMemory(::s_alphaCountTable);
-	releaseMemory(::s_elalphaCountTable);
 
 	DecimalToRomanVectorType().swap(::s_romanConvertTable);
 

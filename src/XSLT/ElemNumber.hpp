@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -297,6 +297,7 @@ protected:
 	 * count using the sequence A B C ... Z AA AB AC.... etc.
 	 * @param val Value to convert -- must be greater than zero.
 	 * @param table a table containing one character for each digit in the radix
+	 * @param length the table length
 	 * @param result returns the stringrepresenting alpha count of number.
 	 * @see XSLTEngineImpl#DecimalToRoman
 	 * 
@@ -305,9 +306,10 @@ protected:
 	 */
 	static void
 	int2alphaCount(
-			int						val,
-			const XalanDOMString&	table,
-			XalanDOMString&			theResult);
+			int							val,
+			const XalanDOMChar			table[],
+			XalanDOMString::size_type	length,
+			XalanDOMString&				theResult);
 
 	/**
 	 * Convert a long integer into traditional alphabetic counting, in other words
@@ -396,7 +398,7 @@ private:
 	/**
  	 * The string "@".
  	 */
- 	static const XalanDOMString&			s_atString;
+ 	static const XalanDOMChar				s_atString[];
 
 		/**
  	 * The string "text()".
@@ -414,29 +416,9 @@ private:
  	static const XalanDOMString&			s_slashString;
 
 	/**
- 	 * The string "pi(".
+ 	 * The string "processing-instruction(".
  	 */
- 	static const XalanDOMString&			s_piString;
-
-	/**
- 	 * The string ")".
- 	 */
- 	static const XalanDOMString&			s_leftParenString;
-
-	/**
- 	 * The string ".".
- 	 */
- 	static const XalanDOMString&			s_dotString;
-
-	/**
- 	 * The string "1".
- 	 */
- 	static const XalanDOMString&			s_oneString;
-
-	/**
- 	 * The string ".".
- 	 */
- 	static const XalanDOMString&			s_defaultSeparatorString;
+ 	static const XalanDOMChar				s_piString[];
 
 	/**
  	 * The string "level".
@@ -470,11 +452,14 @@ private:
 
 	/**
 	* Chars for converting integers into alpha counts.
-	* @see XSLTEngineImpl#int2alphaCount
 	*/
-	static const XalanDOMString&			s_alphaCountTable;
+	static const XalanDOMChar				s_alphaCountTable[];
 
-	static const XalanDOMString&			s_elalphaCountTable;
+	static const XalanDOMString::size_type	s_alphaCountTableSize;
+
+	static const XalanDOMChar				s_elalphaCountTable[];
+
+	static const XalanDOMString::size_type	s_elalphaCountTableSize;
 
 	/**
 	 * Table to help in converting decimals to roman numerals.
