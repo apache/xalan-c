@@ -714,6 +714,10 @@ SOURCE=..\..\..\..\src\XPath\XStringBase.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XStringCached.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XStringCachedAllocator.hpp
 # End Source File
 # Begin Source File
