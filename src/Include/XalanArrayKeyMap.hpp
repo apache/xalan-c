@@ -74,7 +74,7 @@ class XalanArrayKeyMap
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<KeyType>									VectorType;
 	typedef map<const KeyType*, ValueType, CompareType>		MapType;
 	typedef deque<VectorType>								VectorHolderType;
@@ -100,7 +100,7 @@ public:
 	typedef typename MapType::reverse_iterator			reverse_iterator;
 	typedef typename MapType::const_reverse_iterator	const_reverse_iterator;
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef pair<iterator, bool>					insert_pair_type;
 	typedef pair<iterator, iterator>				range_pair_type;
 	typedef pair<const_iterator, const_iterator>	const_range_pair_type;

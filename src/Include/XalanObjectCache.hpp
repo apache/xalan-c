@@ -131,7 +131,7 @@ class XalanObjectCache
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<ObjectType*>			VectorType;
 #else
 	typedef std::vector<ObjectType*>	VectorType;
@@ -153,7 +153,7 @@ public:
 	{
 		reset();
 
-#if !defined(XALAN_NO_NAMESPACES)
+#if !defined(XALAN_NO_STD_NAMESPACE)
 		using std::for_each;
 #endif
 
@@ -191,7 +191,7 @@ public:
 	bool
 	release(ObjectType*		theInstance)
 	{
-#if !defined(XALAN_NO_NAMESPACES)
+#if !defined(XALAN_NO_STD_NAMESPACE)
 		using std::find;
 #endif
 
@@ -277,7 +277,7 @@ class XalanObjectCache
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<ObjectType*>			VectorType;
 #else
 	typedef std::vector<ObjectType*>	VectorType;
@@ -296,7 +296,7 @@ public:
 	{
 		reset();
 
-#if !defined(XALAN_NO_NAMESPACES)
+#if !defined(XALAN_NO_STD_NAMESPACE)
 		using std::for_each;
 #endif
 

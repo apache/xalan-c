@@ -92,7 +92,7 @@ class XALAN_DOM_EXPORT XalanDOMString
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XalanDOMChar>		XalanDOMCharVectorType;
 	typedef vector<char>				CharVectorType;
 	typedef vector<wchar_t>				WideCharVectorType;
@@ -374,7 +374,7 @@ public:
 
 		m_data.swap(theOther.m_data);
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 		::swap(m_size, theOther.m_size);
 #else
 		std::swap(m_size, theOther.m_size);
@@ -950,7 +950,7 @@ operator+(
 
 
 // Standard vector of XalanDOMChars and chars
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 typedef vector<XalanDOMChar>		XalanDOMCharVectorType;
 
 typedef vector<char>				CharVectorType;

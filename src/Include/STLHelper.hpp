@@ -77,13 +77,13 @@ XALAN_CPP_NAMESPACE_BEGIN
  * Functor to delete objects, used in STL iteration algorithms.
  */
 template <class T>
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct DeleteFunctor : public unary_function<const T*, void>
 #else
 struct DeleteFunctor : public std::unary_function<const T*, void>
 #endif
 {
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef unary_function<const T*, void>	BaseClassType;
 #else
 	typedef std::unary_function<const T*, void>	BaseClassType;
@@ -117,13 +117,13 @@ struct DeleteFunctor : public std::unary_function<const T*, void>
  * iteration algorithms.
  */
 template <class PairType>
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct select1st : public unary_function<PairType, PairType::first_type>
 #else
 struct select1st : public std::unary_function<PairType, typename PairType::first_type>
 #endif
 {
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef unary_function<PairType, PairType::first_type>	BaseClassType;
 #else
 	typedef std::unary_function<PairType, typename PairType::first_type>	BaseClassType;
@@ -154,13 +154,13 @@ struct select1st : public std::unary_function<PairType, typename PairType::first
  * iteration algorithms.
  */
 template <class PairType>
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct select2nd : public unary_function<PairType, PairType::second_type>
 #else
 struct select2nd : public std::unary_function<PairType, typename PairType::second_type>
 #endif
 {
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef unary_function<PairType, PairType::second_type>	BaseClassType;
 #else
 	typedef std::unary_function<PairType, typename PairType::second_type>	BaseClassType;
@@ -192,13 +192,13 @@ struct select2nd : public std::unary_function<PairType, typename PairType::secon
  * Functor to call a clear() member function on its argument.
  */
 template <class Type>
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct ClearFunctor : public unary_function<Type, void>
 #else
 struct ClearFunctor : public std::unary_function<Type, void>
 #endif
 {
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef unary_function<Type, void>		BaseClassType;
 #else
 	typedef std::unary_function<Type, void>	BaseClassType;
@@ -228,13 +228,13 @@ struct ClearFunctor : public std::unary_function<Type, void>
  * Functor to delete value objects in maps, used in STL iteration algorithms.
  */
 template <class T>
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct MapValueDeleteFunctor : public unary_function<const typename T::value_type&, void>
 #else
 struct MapValueDeleteFunctor : public std::unary_function<const typename T::value_type&, void>
 #endif
 {
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef unary_function<const typename T::value_type&, void>		BaseClassType;
 #else
 	typedef std::unary_function<const typename T::value_type&, void>	BaseClassType;
@@ -277,13 +277,13 @@ makeMapValueDeleteFunctor(const T&	/* theMap */)
  * the default will allow the map to work as expected.
  */
 template<class T>
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct less_null_terminated_arrays : public binary_function<const T*, const T*, bool>
 #else
 struct less_null_terminated_arrays : public std::binary_function<const T*, const T*, bool>
 #endif
 {
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef binary_function<const T*, const T*, bool>			BaseClassType;
 #else
 	typedef std::binary_function<const T*, const T*, bool>		BaseClassType;
@@ -377,7 +377,7 @@ public:
 	{
 		if (m_collection != 0)
 		{
-#if !defined(XALAN_NO_NAMESPACES)
+#if !defined(XALAN_NO_STD_NAMESPACE)
 			using std::for_each;
 #endif
 
@@ -409,13 +409,13 @@ private:
 
 
 template<class T>
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct pointer_equals : public binary_function<const T*, const T*, bool>
 #else
 struct pointer_equals : public std::binary_function<const T*, const T*, bool>
 #endif
 {
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef binary_function<const T*, const T*, bool>			BaseClassType;
 #else
 	typedef std::binary_function<const T*, const T*, bool>		BaseClassType;
@@ -439,13 +439,13 @@ struct pointer_equals : public std::binary_function<const T*, const T*, bool>
 
 
 template<class T>
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct pointer_equals_predicate : public unary_function<const T*, bool>
 #else
 struct pointer_equals_predicate : public std::unary_function<const T*, bool>
 #endif
 {
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef unary_function<const T*, bool>			BaseClassType;
 #else
 	typedef std::unary_function<const T*, bool>		BaseClassType;
@@ -476,13 +476,13 @@ private:
 
 
 template<class T>
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 struct pointer_less : public binary_function<const T*, const T*, bool>
 #else
 struct pointer_less : public std::binary_function<const T*, const T*, bool>
 #endif
 {
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef binary_function<const T*, const T*, bool>			BaseClassType;
 #else
 	typedef std::binary_function<const T*, const T*, bool>		BaseClassType;
@@ -499,7 +499,7 @@ struct pointer_less : public std::binary_function<const T*, const T*, bool>
 	{
 		assert(theLHS != 0 && theRHS != 0);
 
-#if !defined(XALAN_NO_NAMESPACES)
+#if !defined(XALAN_NO_STD_NAMESPACE)
 		using std::less;
 #endif
 

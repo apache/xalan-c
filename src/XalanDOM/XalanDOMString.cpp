@@ -763,7 +763,7 @@ doXercesTranscode(
 			const SourceType*			theSourceString,
 			XalanDOMString::size_type	theSourceStringLength,
 			bool						theSourceStringIsNullTerminated,
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 			vector<TargetType>&			theTargetVector,
 #else
 			std::vector<TargetType>&	theTargetVector,
