@@ -63,12 +63,12 @@
 
 
 
-#include <util/TextOutputStream.hpp>
 #include <dom/DOMString.hpp>
 
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/TextOutputStream.hpp>
 
 
 
@@ -135,11 +135,11 @@ XercesDOMPrintWriter::write(
 	{
 		if (theOffset == 0)
 		{
-			m_OutputStream << s;
+			m_OutputStream.write(s);
 		}
 		else
 		{
-			m_OutputStream << s + theOffset;
+			m_OutputStream.write(s + theOffset);
 		}
 	}
 	else
@@ -148,7 +148,7 @@ XercesDOMPrintWriter::write(
 
 		for (long i = theOffset; i < theStopIndex; i++)
 		{
-			m_OutputStream << s[i];
+			m_OutputStream.write(s[i]);
 		}
 	}
 }
@@ -158,7 +158,7 @@ XercesDOMPrintWriter::write(
 void
 XercesDOMPrintWriter::write(XMLCh	c)
 {
-	m_OutputStream << c;
+	m_OutputStream.write(c);
 }
 
 
@@ -173,6 +173,9 @@ XercesDOMPrintWriter::write(
 	assert(theLength >= 0 || theLength == -1);
 	assert(theLength == -1 && length(s) > theOffset || length(s) >= theOffset + theLength);
 
+#if 1
+	write(c_wstr(s), theOffset, theLength);
+#else
 	if (theOffset == 0 && theLength == -1)
 	{
 		m_OutputStream << s;
@@ -187,6 +190,7 @@ XercesDOMPrintWriter::write(
 			m_OutputStream << s.charAt(i);
 		}
 	}
+#endif
 }
 
 
@@ -244,7 +248,7 @@ XercesDOMPrintWriter::print(
 void
 XercesDOMPrintWriter::print(double	d)
 {
-	m_OutputStream << d;
+	m_OutputStream.write(c_wstr(DoubleToDOMString(d)));
 }
 
 
@@ -252,7 +256,7 @@ XercesDOMPrintWriter::print(double	d)
 void
 XercesDOMPrintWriter::print(int	i)
 {
-	m_OutputStream << static_cast<long>(i);
+	m_OutputStream.write(c_wstr(LongToDOMString(i)));
 }
 
 
@@ -260,7 +264,7 @@ XercesDOMPrintWriter::print(int	i)
 void
 XercesDOMPrintWriter::print(long	l)
 {
-	m_OutputStream << l;
+	m_OutputStream.write(c_wstr(LongToDOMString(l)));
 }
 
 
@@ -268,7 +272,7 @@ XercesDOMPrintWriter::print(long	l)
 void
 XercesDOMPrintWriter::print(const DOMString&	s)
 {
-	m_OutputStream << s;
+	m_OutputStream.write(c_wstr(s));
 }
 
 
@@ -276,7 +280,7 @@ XercesDOMPrintWriter::print(const DOMString&	s)
 void
 XercesDOMPrintWriter::println()
 {
-	m_OutputStream << TextOutputStream::EndLine;	
+	m_OutputStream.write("\n");
 }
 
 

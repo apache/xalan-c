@@ -65,7 +65,7 @@
 
 
 // Base class header file.
-#include <util/TextOutputStream.hpp>
+#include <PlatformSupport/TextOutputStream.hpp>
 
 
 
@@ -84,10 +84,26 @@ public :
 	flush();
 
     virtual void
-	write(const XMLCh* const	theBuffer);
+	write(char	theChar);
 
     virtual void
-	write(const char* const		theBuffer);
+	write(XalanDOMChar	theChar);
+
+    virtual void
+	write(const XalanDOMChar*	theBuffer);
+
+    virtual void
+	write(const char*	theBuffer);
+
+    virtual void
+	write(
+			const char*		theBuffer,
+			unsigned long	theBufferLength);
+
+    virtual void
+	write(
+			const XalanDOMChar*		theBuffer,
+			unsigned long			theBufferLength);
 
 private:
 

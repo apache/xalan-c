@@ -59,24 +59,12 @@
 
 
 
-
-
-#if defined(_MSC_VER)
-#include "windows.h"
-#else
-#define INVALID_HANDLE_VALUE 0
-#endif
-
-
-
-#include <util/Janitor.hpp>
 #include <util/XMLString.hpp>
 
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-
-
+#include <PlatformSupport/STLHelper.hpp>
 
 
 
@@ -84,8 +72,7 @@ const XercesTextOutputStream::BufferType::size_type	XercesTextOutputStream::s_bu
 
 
 
-XercesTextOutputStream::XercesTextOutputStream() :
-	TextOutputStream()
+XercesTextOutputStream::XercesTextOutputStream()
 {
 }
 
@@ -108,19 +95,34 @@ XercesTextOutputStream::flush()
 
 
 void
-XercesTextOutputStream::write(const XMLCh* const	theBuffer)
+XercesTextOutputStream::write(char	theChar)
+{
+	write(&theChar, 1);
+}
+
+
+
+void
+XercesTextOutputStream::write(XalanDOMChar	theChar)
+{
+	write(&theChar, 1);
+}
+
+
+
+void
+XercesTextOutputStream::write(
+			const XalanDOMChar*		theBuffer,
+			unsigned long			theBufferLength)
 {
 	assert(theBuffer != 0);
 
-	const BufferType::size_type		theLength =
-		static_cast<BufferType::size_type>(length(theBuffer));
-
-	if (theLength + m_buffer.size() > s_bufferSize)
+	if (theBufferLength + m_buffer.size() > s_bufferSize)
 	{
 		flushBuffer();
 	}
 
-	if (theLength > s_bufferSize)
+	if (theBufferLength > s_bufferSize)
 	{
 		doWrite(theBuffer);
 	}
@@ -128,14 +130,25 @@ XercesTextOutputStream::write(const XMLCh* const	theBuffer)
 	{
 		m_buffer.insert(m_buffer.end(),
 						theBuffer,
-						theBuffer + theLength);
+						theBuffer + theBufferLength);
 	}
 }
 
 
 
 void
-XercesTextOutputStream::write(const char* const	theBuffer)
+XercesTextOutputStream::write(const XalanDOMChar*	theBuffer)
+{
+	if (theBuffer != 0)
+	{
+		write(theBuffer, length(theBuffer));
+	}
+}
+
+
+
+void
+XercesTextOutputStream::write(const char*	theBuffer)
 {
 	assert(theBuffer != 0);
 
@@ -178,16 +191,14 @@ XercesTextOutputStream::flushBuffer()
 
 
 void
-XercesTextOutputStream::doWrite(const XMLCh*	theBuffer)
+XercesTextOutputStream::doWrite(const XalanDOMChar*		theBuffer)
 {
 	assert(theBuffer != 0);
 
-    char* const	tmpVal = XMLString::transcode(theBuffer);
+    array_auto_ptr<char>	theTranscodedString(XMLString::transcode(theBuffer));
 
-    ArrayJanitor<char> janTmp(tmpVal);
-
-	writeData(tmpVal,
-			  strlen(tmpVal));
+	writeData(theTranscodedString.get(),
+			  strlen(theTranscodedString.get()));
 }
 
 

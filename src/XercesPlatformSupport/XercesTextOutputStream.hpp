@@ -63,15 +63,17 @@
 #include <XercesPlatformSupport/XercesPlatformSupportDefinitions.hpp>
 
 
-#if !defined(_MSC_VER)
+
 #include <cstdio>
-#endif
 #include <vector>
 
 
 
 // Base class header file.
-#include <util/TextOutputStream.hpp>
+#include <PlatformSupport/TextOutputStream.hpp>
+
+
+
 #include <XercesPlatformSupport/XercesPlatformSupportException.hpp>
 
 
@@ -84,30 +86,32 @@ public :
     virtual
 	~XercesTextOutputStream();
 
-
-    // These are inherited from TextOutputStream...
+	// These interfaces are inherited from TextOutputStream...
 
     virtual void
 	flush();
 
     virtual void
-	write(const XMLCh* const	theBuffer);
+	write(char	theChar);
 
     virtual void
-	write(const char* const		theBuffer);
+	write(XalanDOMChar	theChar);
 
-    // This is new...
+    virtual void
+	write(const char*	theBuffer);
 
-	/**
-	 * Write a specified number of characters to the output stream.
-	 *
-	 * @param theBuffer       character buffer to write from
-	 * @param theBufferLength number of characters to write
-	 */
+    virtual void
+	write(const XalanDOMChar*	theBuffer);
+
     virtual void
 	write(
 			const char*		theBuffer,
 			unsigned long	theBufferLength);
+
+    virtual void
+	write(
+			const XalanDOMChar*		theBuffer,
+			unsigned long			theBufferLength);
 
 protected:
 
@@ -134,10 +138,10 @@ private:
 	flushBuffer();
 
 	void
-	doWrite(const XMLCh*	theBuffer);
+	doWrite(const XalanDOMChar*		theBuffer);
 
 	// Data members...
-	typedef std::vector<XMLCh>	BufferType;
+	typedef std::vector<XalanDOMChar>	BufferType;
 
 	BufferType							m_buffer;
 

@@ -84,7 +84,7 @@ public:
 	 */
 	XercesDOMPrintWriter(
 			TextOutputStream&	theOutputStream,
-			bool	fAutoFlush = false);
+			bool				fAutoFlush = false);
 
 	virtual
 	~XercesDOMPrintWriter();

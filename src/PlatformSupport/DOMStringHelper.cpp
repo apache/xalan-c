@@ -86,7 +86,6 @@ using std::vector;
 
 
 // Xerces header files
-#include <util/TextOutputStream.hpp>
 #include <util/XMLString.hpp>
 
 #if !defined(XML_LSTRSUPPORT)
@@ -94,8 +93,10 @@ using std::vector;
 #endif
 
 
+
 #include "DoubleSupport.hpp"
 #include "STLHelper.hpp"
+#include "TextOutputStream.hpp"
 
 
 

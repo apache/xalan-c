@@ -80,13 +80,45 @@ NullTextOutputStream::flush()
 
 
 void
-NullTextOutputStream::write(const XMLCh* const	/* theBuffer */)
+NullTextOutputStream::write(char	/* theChar */)
 {
 }
 
 
 
 void
-NullTextOutputStream::write(const char* const	/* theBuffer */)
+NullTextOutputStream::write(XalanDOMChar	/* theChar */)
+{
+}
+
+
+
+void
+NullTextOutputStream::write(const XalanDOMChar*		/* theBuffer */)
+{
+}
+
+
+
+void
+NullTextOutputStream::write(const char*		/* theBuffer */)
+{
+}
+
+
+
+void
+NullTextOutputStream::write(
+			const char*		/* theBuffer */,
+			unsigned long	/* theBufferLength */)
+{
+}
+
+
+
+void
+NullTextOutputStream::write(
+			const XalanDOMChar*		/* theBuffer */,
+			unsigned long			/* theBufferLength */)
 {
 }
