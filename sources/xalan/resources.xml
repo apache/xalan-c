@@ -58,6 +58,6 @@
 
   <resource id="bugsfixedforthisrelease"
             title="XalanC bugs fixed for this release"
-            location="http://nagoya.apache.org/bugzilla/buglist.cgi?resolution=FIXED&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;chfield=resolution&amp;chfieldfrom=01%2F10%2F2002&amp;chfieldto=09%2F11%2F2002&amp;chfieldvalue=FIXED&amp;product=XalanC&amp;short_desc=&amp;short_desc_type=allwordssubstr"/>
+            location="http://nagoya.apache.org/bugzilla/buglist.cgi?resolution=FIXED&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;chfield=resolution&amp;chfieldfrom=01%2F10%2F2002&amp;chfieldto=09%2F20%2F2002&amp;chfieldvalue=FIXED&amp;product=XalanC&amp;short_desc=&amp;short_desc_type=allwordssubstr"/>
 
 </resources>
