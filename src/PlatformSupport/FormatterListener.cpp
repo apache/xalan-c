@@ -69,7 +69,7 @@
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
+#include "DOMStringHelper.hpp"
 
 
 

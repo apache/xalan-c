@@ -69,7 +69,7 @@
 
 
 // Base class header file.
-#include <XMLSupport/FormatterListener.hpp>
+#include <PlatformSupport/FormatterListener.hpp>
 
 
 

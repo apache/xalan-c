@@ -68,7 +68,7 @@
 
 
 // Base include file.  Must be first.
-#include <XMLSupport/XMLSupportDefinitions.hpp>
+#include <PlatformSupport/PlatformSupportDefinitions.hpp>
 
 
 
@@ -84,7 +84,7 @@
  * A SAX-based formatter interface for the XSL processor.  This interface 
  * will be called as result tree elements are constructed.
  */
-class XALAN_XMLSUPPORT_EXPORT FormatterListener : public DocumentHandler
+class XALAN_PLATFORMSUPPORT_EXPORT FormatterListener : public DocumentHandler
 {
 public:
 
