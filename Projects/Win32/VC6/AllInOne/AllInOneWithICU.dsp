@@ -578,6 +578,14 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringPool.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanEncodingPropertyCache.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanEncodingPropertyCache.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.cpp
 # End Source File
 # Begin Source File
@@ -1019,14 +1027,6 @@ SOURCE=..\..\..\..\src\XPath\MutableNodeRefList.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\NameSpace.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\NodeListImplSurrogate.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\NodeListImplSurrogate.hpp
 # End Source File
 # Begin Source File
 
@@ -1634,10 +1634,6 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapperAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeCommon.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeHelper.cpp
 # End Source File
 # Begin Source File
@@ -1651,6 +1647,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeNavigator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeNavigator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeTypes.hpp
 # End Source File
 # Begin Source File
 
@@ -2023,6 +2023,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperTypes.hpp
 # End Source File
 # End Group
 # Begin Group "XalanSourceTree"
@@ -2742,14 +2746,6 @@ SOURCE=..\..\..\..\src\XSLT\SelectionEvent.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StackEntry.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XSLT\StackEntry.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\Stylesheet.cpp
 # End Source File
 # Begin Source File
@@ -2887,6 +2883,10 @@ SOURCE=..\..\..\..\src\XSLT\XalanElemAttributeAllocator.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\XalanElemAttributeSetAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemAttributeSetAllocator.hpp
 # End Source File
 # Begin Source File
 

@@ -354,10 +354,6 @@ SOURCE=..\..\..\..\src\XSLT\ProblemListenerDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE="C:\Program Files\Rational\Quantify\pure_api.c"
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\ResultNamespacesStack.cpp
 # End Source File
 # Begin Source File
@@ -629,10 +625,6 @@ SOURCE=..\..\..\..\src\XSLT\ElemEmpty.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElementFrameMarker.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\ElemExtensionCall.hpp
 # End Source File
 # Begin Source File
@@ -670,10 +662,6 @@ SOURCE=..\..\..\..\src\XSLT\ElemParam.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\ElemPI.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XSLT\ElemPriv.hpp
 # End Source File
 # Begin Source File
 
