@@ -383,13 +383,13 @@ public:
 	{
 	public:
 
-		typedef XercesDocumentBridge::NavigatorBridgeVectorType	NavigatorBridgeVectorType;
+		typedef NavigatorBridgeVectorType	NavigatorBridgeVectorInnerType;
 
 		BuildBridgeTreeWalker(
-				XercesDocumentBridge*		theDocument,
-				XercesBridgeNavigator*		theDocumentNavigator,
-				NavigatorBridgeVectorType&	theNavigators,
-				unsigned long				theStartIndex);
+				XercesDocumentBridge*			theDocument,
+				XercesBridgeNavigator*			theDocumentNavigator,
+				NavigatorBridgeVectorInnerType&	theNavigators,
+				unsigned long					theStartIndex);
 
 		virtual
 		~BuildBridgeTreeWalker();
@@ -410,7 +410,7 @@ public:
 		};
 
 	#if defined(XALAN_NO_NAMESPACES)
-		typedef vector<NavigatorStackEntryType>		NavigatorStackType;
+		typedef vector<NavigatorStackEntryType>			NavigatorStackType;
 	#else
 		typedef std::vector<NavigatorStackEntryType>	NavigatorStackType;
 	#endif
@@ -425,15 +425,15 @@ public:
 
 	private:
 
-		XercesDocumentBridge*		m_document;
+		XercesDocumentBridge*			m_document;
 
-		NavigatorBridgeVectorType&	m_navigators;
+		NavigatorBridgeVectorInnerType&	m_navigators;
 
-		unsigned long				m_currentIndex;
+		unsigned long					m_currentIndex;
 
-		NavigatorStackType	m_parentNavigatorStack;
+		NavigatorStackType				m_parentNavigatorStack;
 
-		NavigatorStackType	m_siblingNavigatorStack;
+		NavigatorStackType				m_siblingNavigatorStack;
 	};
 
 private:
