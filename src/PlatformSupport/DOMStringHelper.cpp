@@ -63,13 +63,23 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
-#include <iosfwd>
 
 
 
 #include <algorithm>
-#include <strstream>
 #include <vector>
+
+
+
+#if !defined(XALAN_NO_IOSFWD)
+#include <iosfwd>
+#endif
+
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <strstream.h>
+#else
+#include <strstream>
+#endif
 
 
 
