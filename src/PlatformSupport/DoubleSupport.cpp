@@ -80,9 +80,17 @@ const double	DoubleSupport::s_negativeInfinity = -HUGE_VAL;
 #error Unsupported platform!!!
 #endif
 #else
-const double	DoubleSupport::s_NaN = std::numeric_limits<double>::quiet_NaN();
-const double	DoubleSupport::s_positiveInfinity = std::numeric_limits<double>::infinity();
-const double	DoubleSupport::s_negativeInfinity = std::numeric_limits<double>::signaling_NaN();
+
+#if defined(XALAN_NO_NAMESPACES)
+typedef numeric_limits<double>			NumericLimitsType;
+#else
+typedef std::numeric_limits<double>		NumericLimitsType;
+#endif
+
+const double	DoubleSupport::s_NaN = NumericLimitsType::quiet_NaN();
+const double	DoubleSupport::s_positiveInfinity = NumericLimitsType::infinity();
+const double	DoubleSupport::s_negativeInfinity = NumericLimitsType::signaling_NaN();
+
 #endif
 
 

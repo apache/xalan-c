@@ -273,8 +273,12 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
 	operator()(const argument_type&		theDirectory,
 			   CollectionType&			theCollection) const
 	{
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::back_inserter;
+#endif
+
 		EnumerateDirectory(theDirectory,
-						   std::back_inserter(theCollection),
+						   back_inserter(theCollection),
 						   m_filterPredicate,
 						   m_conversionFunction);
 	}

@@ -638,11 +638,13 @@ operator<<(
  */
 #if defined(XALAN_NO_NAMESPACES)
 inline ostream&
+operator<<(
+			ostream&				theStream,
 #else
 inline std::ostream&
-#endif
 operator<<(
 			std::ostream&			theStream,
+#endif
 			const XalanDOMString&	theString)
 {
 	OutputString(theStream,
@@ -1246,7 +1248,7 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(string)
 #else
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(std::string)
 #endif
-DOMStringToStdString(const XalanDOMString& domString);
+DOMStringToStdString(const XalanDOMString&	domString);
 
 
 

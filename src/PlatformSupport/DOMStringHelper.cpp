@@ -299,18 +299,21 @@ startsWith(
 	const unsigned int	theStringLength = length(theString);
 	assert(theStringLength >= 0);
 
-	const unsigned int	theSubStringLength = length(theSubstring);
-	assert(theSubStringLength >= 0);
+	const unsigned int	theSubstringLength = length(theSubstring);
+	assert(theSubstringLength >= 0);
 
-	// If either string is of length 0, or if the substring
-	// is longer, there's no point in continuing.
-	if (theStringLength >= theSubStringLength)
+	if (theSubstringLength == 0)
+	{
+		// Make this work like Java...
+		return true;
+	}
+	else if (theStringLength >= theSubstringLength)
 	{
 		unsigned int	i = 0;
 
 		// Compare each character...
 		for (;
-				i < theSubStringLength &&
+				i < theSubstringLength &&
 						theString[i] == theSubstring[i];
 					i++)
 		{
@@ -319,7 +322,7 @@ startsWith(
 
 		// If we've gotten to the end of the substring, then
 		// return true.
-		if (i == theSubStringLength)
+		if (i == theSubstringLength)
 		{
 			fResult = true;
 		}
@@ -353,7 +356,8 @@ startsWith(
 	}
 	else if (isEmpty(theSubstring) == true)
 	{
-		return false;
+		// Apparently, Java believes this to be true;
+		return true;
 	}
 	else
 	{
