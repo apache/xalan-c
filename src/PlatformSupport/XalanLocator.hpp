@@ -105,6 +105,24 @@ public:
 	virtual size_type
 	getColumnNumber() const = 0;
 
+	static size_type
+	getLineNumber(const ParentType*		theLocator)
+	{
+		return theLocator == 0 ? size_type(-1) : theLocator->getLineNumber();
+	}
+
+	static size_type
+	getColumnNumber(const ParentType*	theLocator)
+	{
+		return theLocator == 0 ? size_type(-1) : theLocator->getColumnNumber();
+	}
+
+	static size_type
+	getUnknownValue()
+	{
+		return size_type(-1);
+	}
+
 private:
 
 	// Not defined...
