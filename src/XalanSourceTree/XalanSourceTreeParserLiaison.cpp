@@ -221,6 +221,10 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 
 	XalanAutoPtr<SAX2XMLReader>		theReader(XMLReaderFactory::createXMLReader());
 
+	theReader->setFeature(
+		validationString,
+		m_xercesParserLiaison.getUseValidation());
+
 	theReader->setContentHandler(&theContentHandler);
 
 	theReader->setDTDHandler(&theContentHandler);
