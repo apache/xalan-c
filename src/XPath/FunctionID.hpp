@@ -179,7 +179,7 @@ public:
 					TokenSetType::const_iterator	i =
 						thePreviousTokens.find(theToken);
 
-					if (i != thePreviousTokens.end())
+					if (i == thePreviousTokens.end())
 					{
 						thePreviousTokens.insert(theToken);
 
