@@ -158,6 +158,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\StringTokenizer.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\TextOutputStream.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\Writer.cpp
 # End Source File
 # Begin Source File
@@ -238,11 +242,19 @@ SOURCE=..\..\..\..\src\PlatformSupport\Resettable.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\StdBinInputStream.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\STLHelper.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\StringTokenizer.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\TextOutputStream.hpp
 # End Source File
 # Begin Source File
 
