@@ -144,6 +144,41 @@ XObject::referenced()
 
 
 
+double
+XObject::number(
+			XPathExecutionContext&	executionContext,
+			const XalanNode&		theNode)
+{
+	XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+	XalanDOMString&		theString = theGuard.get();
+
+	XObject::string(theNode, theString);
+
+	return XObject::number(theString);
+}
+
+
+
+double
+XObject::number(
+			XPathExecutionContext&	executionContext,
+			const NodeRefListBase&	theNodeList)
+{
+	if (theNodeList.getLength() == 0)
+	{
+		return number(s_nullString);
+	}
+	else
+	{
+		assert(theNodeList.item(0) != 0);
+
+		return number(executionContext, *theNodeList.item(0));
+	}
+}
+
+
+
 void 
 XObject::dereferenced()
 {

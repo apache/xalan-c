@@ -340,7 +340,7 @@ public:
 	static bool
 	boolean(double	theNumber)
 	{
-		return DoubleSupport::isNaN(theNumber) || DoubleSupport::isPositiveZero(theNumber) ? false : true;
+		return !DoubleSupport::isNaN(theNumber) && !DoubleSupport::equal(theNumber, 0.0);
 	}
 
 	/**
@@ -392,20 +392,6 @@ public:
 		}
 	}
 
-	static void
-	string(
-			const NodeRefListBase&	theNodeList,
-			FormatterListener&		formatterListener,
-			MemberFunctionPtr		function)
-	{
-		if (theNodeList.getLength() > 0)
-		{
-			assert(theNodeList.item(0) != 0);
-
-			DOMServices::getNodeData(*theNodeList.item(0), formatterListener, function);
-		}
-	}
-
 	/**
 	 * Static conversion function.
 	 *
@@ -417,6 +403,37 @@ public:
 			XalanDOMString&		theString)
 	{
 		DoubleToDOMString(theNumber, theString);
+	}
+
+	static void
+	string(
+			double				theNumber,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
+	{
+		DOMStringHelper::DoubleToCharacters(theNumber, formatterListener, function);
+	}
+
+	/**
+	 * Static conversion function.
+	 *
+	 * @return The string value of the node
+	 */
+	static void
+	string(
+			const XalanNode&	theNode,
+			XalanDOMString&		theString)
+	{
+		DOMServices::getNodeData(theNode, theString);
+	}
+
+	static void
+	string(
+			const XalanNode&	theNode,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
+	{
+		DOMServices::getNodeData(theNode, formatterListener, function);
 	}
 
 	/**
@@ -433,17 +450,22 @@ public:
 		{
 			assert(theNodeList.item(0) != 0);
 
-			DOMServices::getNodeData(*theNodeList.item(0), theString);
+			string(*theNodeList.item(0), theString);
 		}
 	}
 
 	static void
 	string(
-			double				theNumber,
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function)
+			const NodeRefListBase&	theNodeList,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function)
 	{
-		DOMStringHelper::DoubleToCharacters(theNumber, formatterListener, function);
+		if (theNodeList.getLength() > 0)
+		{
+			assert(theNodeList.item(0) != 0);
+
+			DOMServices::getNodeData(*theNodeList.item(0), formatterListener, function);
+		}
 	}
 
 	/**
@@ -470,8 +492,18 @@ public:
 	 */
 	static double
 	number(
-			XPathExecutionContext&		executionContext,
-			const MutableNodeRefList&	theNodeList);
+			XPathExecutionContext&	executionContext,
+			const NodeRefListBase&	theNodeList);
+
+	/**
+	 * Static conversion function.
+	 *
+	 * @return The number value of the node
+	 */
+	static double
+	number(
+			XPathExecutionContext&	executionContext,
+			const XalanNode&		theNode);
 
 
 	// All XObject instances are controlled by an instance of an XObjectFactory.
