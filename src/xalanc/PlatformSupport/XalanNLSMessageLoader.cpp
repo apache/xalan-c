@@ -48,8 +48,9 @@ XalanNLSMessageLoader::~XalanNLSMessageLoader()
 	}
 }
 
-XalanNLSMessageLoader::XalanNLSMessageLoader() :
-	m_catalogHandle(nl_catd(-1))
+XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManagerType& theManager) :
+	m_catalogHandle(nl_catd(-1)),
+	m_memoryManager(theManager)
 {
 
     char fileName[50];
@@ -97,7 +98,7 @@ bool XalanNLSMessageLoader::loadMsg(XalanMessages::Codes    msgToLoad
     if ((int)m_catalogHandle == -1)
     {
     	// for transcoding to Unicode
-    	const XalanDOMString	errorMsg("Message can't be retrieved: the message catalog is not open.");
+    	const XalanDOMString	errorMsg("Message can't be retrieved: the message catalog is not open.", m_memoryManager );
     	
     	if(errorMsg.length() < maxChars)
     	{
@@ -112,7 +113,7 @@ bool XalanNLSMessageLoader::loadMsg(XalanMessages::Codes    msgToLoad
 		// from the message catalog
     	if (catMessage != 0)
     	{
-        	const XalanDOMString	errorMsg(catMessage);
+        	const XalanDOMString	errorMsg(catMessage, m_memoryManager);
         	
         	if(errorMsg.length() < maxChars)
     		{
