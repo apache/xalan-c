@@ -470,14 +470,17 @@ Stylesheet::addWhitespaceElement(const XalanSpaceNodeTester&	theTester)
 void
 Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext)
 {
+	KeyDeclarationVectorType::size_type			theKeyDeclarationsCount = 0;
+	WhitespaceElementsVectorType::size_type		theWhitespaceElementsCount = 0;
+
 	{
 		m_importsSize = m_imports.size();
 
-		// Call postConstruction() on any imported stylesheets, the get things
-		// in reverse order, to preserve import precedence. Also, get any key
+		// Call postConstruction() on any imported stylesheets, in reverse order,
+		// so namespace aliases are processed properly. Also, get any key
 		// declarations and preserve/strip space information.
 		const StylesheetVectorType::reverse_iterator	theEnd = m_imports.rend();
-		StylesheetVectorType::reverse_iterator	i = m_imports.rbegin();
+		StylesheetVectorType::reverse_iterator			i = m_imports.rbegin();
 
 		while(i != theEnd)
 		{
@@ -485,6 +488,27 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 
 			m_namespacesHandler.copyNamespaceAliases((*i)->getNamespacesHandler());
 
+			theKeyDeclarationsCount += (*i)->m_keyDeclarations.size();
+			theWhitespaceElementsCount += (*i)->m_whitespaceElements.size();
+
+			++i;
+		}
+	}
+
+	{
+		// Call postConstruction() on any imported stylesheets, in import order,
+		// and process preserve/strip space information.
+		const StylesheetVectorType::iterator	theEnd = m_imports.end();
+		StylesheetVectorType::iterator			i = m_imports.begin();
+
+		m_keyDeclarations.reserve(
+			m_keyDeclarations.size() + theKeyDeclarationsCount);
+
+		m_whitespaceElements.reserve(
+			m_whitespaceElements.size() + theWhitespaceElementsCount);
+
+		while(i != theEnd)
+		{
 			m_keyDeclarations.insert(
 				m_keyDeclarations.end(),
 				(*i)->m_keyDeclarations.begin(),
@@ -718,7 +742,7 @@ Stylesheet::addTemplate(
 		{
 			// This is an error...
 			constructionContext.error(
-				XalanMessageLoader::getMessage(XalanMessages::LastFoundStylesheetWillBeUsed),
+				XalanMessageLoader::getMessage(XalanMessages::StylesheetHasDuplicateNamedTemplate),
 				0,
 				theTemplate);
 		}
