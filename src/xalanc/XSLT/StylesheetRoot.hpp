@@ -154,7 +154,8 @@ public:
 	bool 
 	getOutputIndent() const
 	{
-		return m_indentResult;
+        return m_indentResult == eIndentNoImplicit ||
+               m_indentResult == eIndentNoExplicit ? false : true;
 	}
 
 	/**
@@ -304,7 +305,7 @@ public:
 	void
 	setIndentResult(bool bIndent)
 	{
-		m_indentResult = bIndent;
+        m_indentResult = bIndent == true ? eIndentYesExplicit : eIndentNoExplicit;
 	}
 
 	/**
@@ -435,11 +436,13 @@ private:
 	 */
 	XalanDOMString	m_version;
 
+    enum eIndentType { eIndentNoImplicit, eIndentNoExplicit, eIndentYesImplicit, eIndentYesExplicit };
+
 	/**
 	 * indent-result is by default no, which means an XSL processor must not
 	 * change the whitespace on output.
 	 */
-	bool			m_indentResult;
+	eIndentType		m_indentResult;
 
 	/**
 	 * The encoding attribute specifies the preferred encoding to use 

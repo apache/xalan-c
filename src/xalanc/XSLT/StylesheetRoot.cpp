@@ -82,7 +82,7 @@ StylesheetRoot::StylesheetRoot(
 			   baseIdentifier,
 			   constructionContext),	
 	m_version(),
-	m_indentResult(false),
+	m_indentResult(eIndentNoImplicit),
 	m_encoding(),
 	m_mediatype(),
 	m_doctypeSystem(),
@@ -340,7 +340,7 @@ StylesheetRoot::setupFormatterListener(
 			indentAmount = m_indentAmount;
 		}
 
-		const bool	doIndent = (indentAmount > -1) ? true : m_indentResult;
+		const bool	doIndent = (indentAmount > -1) ? true : getOutputIndent();
 
 		const XalanDOMString&	theEncoding = getEncoding(outputTarget);
 
@@ -449,8 +449,6 @@ StylesheetRoot::processOutputSpec(
 {
 	const unsigned int		nAttrs = atts.getLength();
 
-	bool					didSpecifyIndent = false;
-
 	const LocatorType* const	theLocator = constructionContext.getLocatorFromStack();
 
 	for(unsigned int i = 0; i < nAttrs; i++)
@@ -484,9 +482,10 @@ StylesheetRoot::processOutputSpec(
 		}
 		else if(equals(aname,Constants::ATTRNAME_OUTPUT_INDENT))
 		{
-			m_indentResult = getYesOrNo(aname, atts.getValue(i), constructionContext);
-
-			didSpecifyIndent = true;
+			m_indentResult =
+                getYesOrNo(aname, atts.getValue(i), constructionContext) == true ?
+                    eIndentYesExplicit :
+                    eIndentNoExplicit;
 		}
 		else if(equals(aname,Constants::ATTRNAME_OUTPUT_ENCODING))
 		{
@@ -580,10 +579,11 @@ StylesheetRoot::processOutputSpec(
 		}
 	}
 
-	if(FormatterListener::OUTPUT_METHOD_HTML == m_outputMethod &&
-	   false == didSpecifyIndent)
+	if(m_outputMethod == FormatterListener::OUTPUT_METHOD_HTML &&
+	   m_indentResult != eIndentNoExplicit &&
+       m_indentResult != eIndentYesExplicit)
 	{
-		m_indentResult = true;
+		m_indentResult = eIndentYesImplicit;
 	}
 }
 
