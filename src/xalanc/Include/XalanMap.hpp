@@ -436,7 +436,7 @@ public:
 
 		// insert a new entry as the first position in the bucket
         Entry * newEntry = allocate(1);
-        FirstConstructor::construct((key_type*)&newEntry->first, key, *m_memoryManager);
+        FirstConstructor::construct(const_cast<key_type*>(&newEntry->first), key, *m_memoryManager);
         if (data != 0)
         {
             SecondConstructor::construct(&newEntry->second, *data, *m_memoryManager);
