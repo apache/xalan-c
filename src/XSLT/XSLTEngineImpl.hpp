@@ -98,6 +98,10 @@
 
 
 
+#include <DOMSupport/XalanNamespacesStack.hpp>
+
+
+
 #include <XPath/Function.hpp>
 
 
@@ -1720,7 +1724,7 @@ private:
 	/*
 	 * Stack of current result namespaces...
 	 */
-	ResultNamespacesStack			m_resultNamespacesStack;
+	XalanNamespacesStack			m_resultNamespacesStack;
 
 	/*
 	 * Dummy AttributeListImpl
