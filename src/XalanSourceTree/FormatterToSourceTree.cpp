@@ -343,11 +343,13 @@ FormatterToSourceTree::ignorableWhitespace(
 	assert(m_document != 0);
 
 	// Ignore any whitespace reported before the document element has been parsed.
-	if (m_elementStack.empty() == false)
+	if (m_elementStack.size() > 1)
 	{
 		assert(m_documentFragment != 0 || m_document->getDocumentElement() != 0);
 
 		processAccumulatedText();
+
+		assert(m_currentElement != 0);
 
 		doAppendChildNode(
 			m_currentElement,
