@@ -72,7 +72,7 @@
 
 
 #include "XalanUnicode.hpp"
-#include "XalanParsedURI.hpp"
+
 
 
 XALAN_CPP_NAMESPACE_BEGIN
@@ -204,18 +204,98 @@ URISupport::getURLStringFromString(
 			XalanDOMString::size_type	baseLen,
 			XalanDOMString&				theNormalizedURI)
 {
+	XALAN_USING_XERCES(XMLURL)
+
 	XalanDOMString	context(base, baseLen);
-	XalanDOMString	url(urlString, urlStringLen);
 
-	// Flip slashes
 	NormalizeURIText(context);
-	NormalizeURIText(url);
 
-	// Resolve the URI
-	url = XalanParsedURI::resolve(url, context);
+	const XalanDOMString::size_type		indexOfSlash = baseLen == 0 ?
+							0 :
+							lastIndexOf(context, XalanUnicode::charSolidus);
 
-	// Do platform specific stuff
-	getURLStringFromString(url, theNormalizedURI);
+	const bool	hasPath = indexOfSlash < baseLen ? true : false;
+
+	if (hasPath == true)
+	{
+		// Strip off file name from context...
+		substring(context, context, 0, indexOfSlash + 1);
+	}
+
+	// OK, now let's look at the urlString...
+
+	// Is there a colon, indicating some sort of drive spec, or protocol?
+	const XalanDOMString::size_type		theColonIndex = indexOf(urlString, XalanUnicode::charColon);
+
+	if (theColonIndex == urlStringLen)
+	{
+		// No colon, so just use the urlString as is...
+		if (hasPath == true)
+		{
+			context += urlString;
+		}
+		else
+		{
+			context = urlString;
+		}
+	}
+	else
+	{
+		XalanDOMString	theProtocolString;
+		
+		substring(urlString, theProtocolString, 0, theColonIndex);
+
+		// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
+		const XMLURL::Protocols		theProtocol =
+			XMLURL().lookupByName(c_wstr(theProtocolString));
+
+		if (theColonIndex == 1 &&
+			theProtocol == XMLURL::Unknown)
+		{
+			// Ahh, it's a drive letter, so ignore the context...
+			context = urlString;
+		}
+		else
+		{
+			// It's a protocol...
+			if (startsWith(context, theProtocolString) == false)
+			{
+				// OK, not the same protocol, so what can we do???
+				context = urlString;
+			}
+			else
+			{
+				// They share the same protocol...
+
+				// Check if this is an absolute URI (starts with a leading '//')
+				const XalanDOMString::size_type		protoLength = length(theProtocolString);
+
+				if (protoLength + 3 <= urlStringLen &&
+					urlString[protoLength + 1] == XalanUnicode::charSolidus &&
+					urlString[protoLength + 2] == XalanUnicode::charSolidus)
+				{
+					// It's an absolute URI -- use it in full...
+					context = urlString;
+				}
+				else
+				{
+					// Strip off file name from context...
+					if (indexOfSlash < baseLen)
+					{
+						substring(context, context, 0, indexOfSlash + 1);
+					}
+
+					// OK, everything looks good, so strip off the protocol 
+					// and colon...
+					context.append(
+							urlString + theColonIndex + 1,
+							urlStringLen - (theColonIndex + 1));
+				}
+			}
+		}
+	}
+
+	getURLStringFromString(context, theNormalizedURI);
 }
 
 

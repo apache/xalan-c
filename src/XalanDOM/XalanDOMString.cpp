@@ -292,14 +292,14 @@ XalanDOMString::assign(
 {
 	invariants();
 
-#if defined(__SGI_STL_PORT) && __SGI_STL_PORT <= 0x400
+#if __SGI_STL_PORT <= 0x400
 	XalanDOMString  temp;
 
-	temp.m_data.reserve(theLastPosition - theFirstPosition + 1);
+	temp.reserve(theLastPosition - theFirstPosition + 1);
 
 	while(theFirstPosition != theLastPosition)
 	{
-		temp.m_data.push_back(*theFirstPosition);
+		temp.push_back(*theFirstPosition);
 
 		++theFirstPosition;
 	}
@@ -310,8 +310,6 @@ XalanDOMString::assign(
 
 	swap(temp);
 #else
-	m_data.reserve(theLastPosition - theFirstPosition + 1);
-
 	m_data.assign(theFirstPosition, theLastPosition);
 
 	m_data.push_back(XalanDOMChar(0));
@@ -463,20 +461,9 @@ XalanDOMString::insert(
 {
 	invariants();
 
-	if (m_data.empty() == true)
-	{
-		assert(thePosition == 0);
+	m_data.insert(getIteratorForPosition(thePosition), theString, theString + theCount);
 
-		append(theString, theCount);
-
-		assert(length() == theCount);
-	}
-	else
-	{
-		m_data.insert(getIteratorForPosition(thePosition), theString, theString + theCount);
-
-		m_size += theCount;
-	}
+	m_size += theCount;
 
 	invariants();
 
@@ -493,18 +480,9 @@ XalanDOMString::insert(
 {
 	invariants();
 
-	if (m_data.empty() == true)
-	{
-		assert(thePosition == 0);
+	m_data.insert(getIteratorForPosition(thePosition), theCount, theChar);
 
-		assign(theCount, theChar);
-	}
-	else
-	{
-		m_data.insert(getIteratorForPosition(thePosition), theCount, theChar);
-
-		m_size += theCount;
-	}
+	m_size += theCount;
 
 	invariants();
 
@@ -520,20 +498,9 @@ XalanDOMString::insert(
 {
 	invariants();
 
-	if (m_data.empty() == true)
-	{
-		assert(thePosition == m_data.end() || thePosition == m_data.begin());
+	m_data.insert(thePosition, theChar);
 
-		assign(1, theChar);
-
-		assert(length() == 1);
-	}
-	else
-	{
-		m_data.insert(thePosition, theChar);
-
-		++m_size;
-	}
+	++m_size;
 
 	invariants();
 
@@ -550,20 +517,9 @@ XalanDOMString::insert(
 {
 	invariants();
 
-	if (m_data.empty() == true)
-	{
-		assert(thePosition == m_data.end() || thePosition == m_data.begin());
+	m_data.insert(thePosition, theCount, theChar);
 
-		assign(theCount, theChar);
-
-		assert(length() == theCount);
-	} 
-	else
-	{
-		m_data.insert(thePosition, theCount, theChar);
-
-		m_size += theCount;
-	}
+	m_size += theCount;
 
 	invariants();
 }
@@ -578,20 +534,11 @@ XalanDOMString::insert(
 {
 	invariants();
 
-	if (m_data.empty() == true)
-	{
-		assert(theInsertPosition == m_data.end() || theInsertPosition == m_data.begin());
+	m_data.insert(theInsertPosition, theFirstPosition, theLastPosition);
 
-		assign(theFirstPosition, theLastPosition);
-	}
-	else
-	{
-		m_data.insert(theInsertPosition, theFirstPosition, theLastPosition);
+	m_size = m_data.size() - 1;
 
-		m_size = m_data.size() - 1;
-
-		assert(m_size == m_data.size() - 1);
-	}
+	assert(m_size == m_data.size() - 1);
 
 	invariants();
 }
