@@ -203,7 +203,11 @@ main(
 		}
 		catch (const XMLException& toCatch)
 		{
-			 cerr << "Error during Xerces initialization! "<< endl;
+			 cerr << "Error during Xerces initialization.  Error code was "
+                  << toCatch.getCode()
+                  << "."
+                  << endl;
+
 			 theResult = -1;
 		}
 
