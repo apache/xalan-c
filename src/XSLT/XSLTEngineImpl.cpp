@@ -212,14 +212,11 @@ const DOMString	XSLTEngineImpl::s_XSLT4JNameSpaceURL(XALAN_STATIC_UCODE_STRING("
  */
 const bool										XSLTEngineImpl::m_resolveContentsEarly = true;
 
-const XSLTEngineImpl::AttributeKeysMapType		XSLTEngineImpl::s_attributeKeys =
-					XSLTEngineImpl::InitializeAttributeKeysTable();
+const XSLTEngineImpl::AttributeKeysMapType XSLTEngineImpl::s_attributeKeys;
 
-const XSLTEngineImpl::ElementKeysMapType		XSLTEngineImpl::s_elementKeys =
-					XSLTEngineImpl::InitializeElementKeysTable();
+const XSLTEngineImpl::ElementKeysMapType		XSLTEngineImpl::s_elementKeys;
 
-const XSLTEngineImpl::ElementKeysMapType		XSLTEngineImpl::s_XSLT4JElementKeys =
-					XSLTEngineImpl::InitializeXSLT4JElementKeys();
+const XSLTEngineImpl::ElementKeysMapType XSLTEngineImpl::s_XSLT4JElementKeys;
 
 
 
@@ -234,9 +231,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 							XPathEnvSupport&	xpathEnvSupport,
 							XObjectFactory&		xobjectFactory,
 							XPathFactory&		xpathFactory) :
-	/* was:
-XSLTEngineImpl::XSLTEngineImpl(XMLParserLiaison&	parserLiaison, XPathSupport&		xpathSupport)
-	*/
 	XSLTProcessor(),
 	DocumentHandler(),
 	m_stylesheetRoot(0),
@@ -295,9 +289,9 @@ XSLTEngineImpl::XSLTEngineImpl(XMLParserLiaison&	parserLiaison, XPathSupport&		x
 void XSLTEngineImpl::Initialize()
 {
 	InstallFunctions();
-	InitializeAttributeKeysTable();
-	InitializeElementKeysTable();
-	InitializeXSLT4JElementKeys();
+	s_attributeKeys = InitializeAttributeKeysTable();
+	s_elementKeys = InitializeElementKeysTable();
+	s_XSLT4JElementKeys = InitializeXSLT4JElementKeys();
 }
 
 
