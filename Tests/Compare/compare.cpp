@@ -93,12 +93,12 @@
 #include <crtdbg.h>
 #endif
 
-FileUtility		futil;
+FileUtility		h;
 
 void
-printArgOptions()
+setHelp()
 {
-	cerr << endl
+	h.args.help << endl
 		 << "compare dirname [-out -gold]"
 		 << endl
 		 << endl
@@ -110,116 +110,12 @@ printArgOptions()
 		 << endl;
 }
 
-bool
-getParams(int argc, 
-		  const char*	argv[],
-		  FileUtility& f,
-		  XalanDOMString& baseDir,
-		  XalanDOMString& outDir,
-		  XalanDOMString& goldRoot)
-{
-	bool fSuccess = true;	// Used to continue argument loop
-	bool fsetOut = true;	// Set default output directory, set to false if data is provided
-	bool fsetGold = true;	// Set default gold directory, set to false if data is provided
-
-
-	// Insure that required "-base" argument is there.
-	if (argc == 1 || argv[1][0] == '-')
-	{
-		printArgOptions(); 
-		return false;
-	}
-	else
-	{
-		if (f.checkDir(pathSep + XalanDOMString(argv[1])))
-		{
-			assign(baseDir, XalanDOMString(argv[1]));
-			insert(baseDir, 0, pathSep);
-		}
-		else
-		{
-			cout << endl << "Given base directory \"" << argv[1] << "\" does not exist" << endl;
-			printArgOptions();
-			return false;
-		}
-	}
-
-	// Get the rest of the arguments in any order.
-	for (int i = 2; i < argc && fSuccess == true; ++i)
-	{
-		if(!stricmp("-out", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(outDir, XalanDOMString(argv[i]));
-				insert(outDir, 0, XalanDOMString("\\"));
-				append(outDir, XalanDOMString("\\"));
-				f.checkAndCreateDir(outDir);
-				fsetOut = false;
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-		else if(!stricmp("-gold", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(goldRoot, XalanDOMString(argv[i]));
-				fsetGold = false;
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-
-		else
-		{
-			printArgOptions();
-			fSuccess = false;
-		}
-
-	} // End of for-loop
-
-	// Do we need to set the default output directory??
-	if (fsetOut)
-	{
-		unsigned int ii = lastIndexOf(baseDir,charAt(pathSep,0));
-		outDir = substring(baseDir, 0, ii+1);
-		append(outDir,XalanDOMString("DOMCOM-results"));
-		f.checkAndCreateDir(outDir);
-		append(outDir,pathSep);
-	}
-	if (fsetGold)
-	{
-		goldRoot = baseDir;
-		append(goldRoot,XalanDOMString("-gold"));
-		f.checkAndCreateDir(goldRoot);
-		append(goldRoot,pathSep);
-	}
-	
-	// Add the path seperator to the end of the base directory 
-	// here after we've finished using it for all directory creation.
-
-	append(baseDir,pathSep);
-	return fSuccess;
-}
-
-
 int
-main(
-	 int			argc,
+main(int			argc,
 	 const char*	argv[])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
@@ -228,16 +124,15 @@ main(
 	XalanTransformer::initialize();
 
 	{
-		Hashtable runAttrs;		// Attribute list for perfdata element
 		int transResult = 0;
+		bool setGold = true;
+		XalanDOMString fileName;
 
-		XalanDOMString  category;	// Test all of base dir by default
-		XalanDOMString  baseDir, outputRoot, goldRoot, fileName;	
+		// Set the program help string,  then get the command line parameters.
+		//
+		setHelp();
 
-
-		//FileUtility futil;
-
-		if (getParams(argc, argv, futil, baseDir, outputRoot, goldRoot) == true)
+		if (h.getParams(argc, argv, "DOMCOM-RESULTS", setGold) == true)
 		{
 			//
 			// Call the static initializers for xerces and xalan, and create a transformer
@@ -250,94 +145,85 @@ main(
 
 
 			// Generate Unique Run id and processor info
-			const XalanDOMString UniqRunid = futil.generateUniqRunid();
-
-
-			// Defined basic constants for file manipulation and open results file
+			const XalanDOMString UniqRunid = h.generateUniqRunid();
 			const XalanDOMString  resultFilePrefix("cpp");
-			const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+			const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XMLSuffix);
 
 
 			XMLFileReporter	logFile(resultsFile);
 			logFile.logTestFileInit("Comparison Testing:");
-
-
-			// Create run entry that contains runid and number of iterations used for averages.
-			runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
-			runAttrs.insert(Hashtable::value_type(XalanDOMString("Xerces-Version "), futil.getXercesVersion()));
-			logFile.logElementWAttrs(10, "perfdata", runAttrs, "xxx");
 				
 			// Specify the "test" directory for both input and output.
-			const XalanDOMString  xDir("domcomtests");
-			const XalanDOMString  theOutputDir = outputRoot + xDir;
-			futil.checkAndCreateDir(theOutputDir);
+			//
+			const XalanDOMString  currentDir("domcomtests");
+			const XalanDOMString  theOutputDir = h.args.output + currentDir;
+			h.checkAndCreateDir(theOutputDir);
 
 			// Get the files found in the test directory
-			const FileNameVectorType files = futil.getTestFileNames(baseDir, xDir, true);
+			//
+			logFile.logTestCaseInit(currentDir);
+			const FileNameVectorType files = h.getTestFileNames(h.args.base, currentDir, true);
 
-				for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
+			for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
+			{
+				fileName = files[i];
+				h.data.reset();
+				h.data.testOrFile = fileName;
+
+				const XalanDOMString  theXSLFile= h.args.base + currentDir + pathSep + fileName;
+				const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+				XalanDOMString  theGoldFile = h.args.gold + currentDir + pathSep + fileName;
+				theGoldFile = h.generateFileName(theGoldFile, "out");
+
+				const XalanDOMString  outbase =  h.args.output + currentDir + pathSep + fileName; 
+				const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
+
+				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+				const XSLTInputSource	goldInputSource(c_wstr(theGoldFile));
+
+				// Use a XalanSourceTreeDocument to create the XSLTResultTarget. 
+				//
+				XalanSourceTreeDocument* dom = parserLiaison.createXalanSourceTreeDocument();
+				FormatterToSourceTree domOut(dom); 
+				XSLTResultTarget domResultTarget;
+				domResultTarget.setDocumentHandler(&domOut);
+
+				// Parsing(compile) the XSL stylesheet and report the results..
+				//
+				const XalanCompiledStylesheet*	compiledSS = 0;
+				xalan.compileStylesheet(xslInputSource, compiledSS);
+				if (compiledSS == 0 )
+				{  
+					continue;
+				}
+
+				// Parsing the input XML and report the results..
+				//
+				const XalanParsedSource*  parsedSource = 0;
+				xalan.parseSource(xmlInputSource, parsedSource);
+				if (parsedSource == 0)
 				{
-					fileName = files[i];
-					futil.data.reset();
-					futil.data.testOrFile = fileName;
+					continue;
+				}
 
-					const XalanDOMString  theXSLFile= baseDir + xDir + pathSep + fileName;
-					const XalanDOMString  theXMLFile = futil.generateFileName(theXSLFile,"xml");
-					XalanDOMString  theGoldFile = goldRoot +xDir + pathSep + fileName;
-					theGoldFile = futil.generateFileName(theGoldFile, "out");
+				// Perform One transform using parsed stylesheet and unparsed xml source, report results...
+				// 
+				xalan.transform(*parsedSource, compiledSS, domResultTarget);
+				h.checkDOMResults(theOutputFile, compiledSS, dom, goldInputSource, logFile);
 
-					const XalanDOMString  outbase =  outputRoot + xDir + pathSep + fileName; 
-					const XalanDOMString  theOutputFile = futil.generateFileName(outbase, "out");
-					//cout << endl << endl << "Processing: " << fileName << endl;
+				parserLiaison.reset();
+				xalan.destroyParsedSource(parsedSource);
+				xalan.destroyStylesheet(compiledSS);
+			}
 
-					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-					const XSLTInputSource	goldInputSource(c_wstr(theGoldFile));
+		logFile.logTestCaseClose("Done", "Pass");
+		h.reportPassFail(logFile, UniqRunid);
+		logFile.logTestFileClose("DomCom ", "Done");
+		logFile.close();
 
-					// Use a XalanSourceTreeDocument to create the XSLTResultTarget. 
-					XalanSourceTreeDocument* dom = parserLiaison.createXalanSourceTreeDocument();
-					FormatterToSourceTree domOut(dom); 
-					XSLTResultTarget domResultTarget;
-					domResultTarget.setDocumentHandler(&domOut);
-
-					//
-					// Parsing(compile) the XSL stylesheet and report the results..
-					//
-					const XalanCompiledStylesheet*	compiledSS = 0;
-					xalan.compileStylesheet(xslInputSource, compiledSS);
-					if (compiledSS == 0 )
-					{
-						continue;
-					}
-
-					//
-					// Parsing the input XML and report the results..
-					//
-					const XalanParsedSource*	parsedSource = 0;
-					xalan.parseSource(xmlInputSource, parsedSource);
-					if (parsedSource == 0)
-					{
-						continue;
-					}
-
-					//
-					// Perform One transform using parsed stylesheet and unparsed xml source, report results...
-					// 
-					xalan.transform(*parsedSource, compiledSS, domResultTarget);
-					futil.checkDOMResults(theOutputFile, compiledSS, dom, goldInputSource, logFile);
-
-					parserLiaison.reset();
-					xalan.destroyParsedSource(parsedSource);
-					xalan.destroyStylesheet(compiledSS);
-
-				}//for files
-
-			futil.reportPassFail(logFile, UniqRunid);
-			logFile.logTestFileClose("DomCom ", "Done");
-			logFile.close();
-
-
-		} //if getParams
+		h.analyzeResults(xalan, resultsFile);
+		}
 	}
 
 	XalanTransformer::terminate();

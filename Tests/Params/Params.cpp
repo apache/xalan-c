@@ -100,95 +100,7 @@ setHelp()
 		 << "-out dirname	(base directory for output)"
 		 << endl;
 }
-/*
-bool
-getParams(int argc, 
-		  const char*	argv[],
-		  FileUtility&		h,
-		  XalanDOMString&	baseDir,
-		  XalanDOMString&	outDir,
-		  XalanDOMString&	goldRoot)
-{
-	bool fSuccess = true;	// Used to continue argument loop
-	bool fSetOut = true;	// Set default output directory
-	bool fSetGold = true;	// Set default gold directory
 
-	// Insure that required "-base" argument is there.
-	if (argc == 1 || argv[1][0] == '-')
-	{
-		printArgOptions(); 
-		return false;
-	}
-	else
-	{
-		if (h.checkDir(XalanDOMString(argv[1])))
-		{
-			assign(baseDir, XalanDOMString(argv[1]));
-			if ( !endsWith(baseDir, XalanDOMString("capi")) )
-			{
-				cout << endl << "Given base directory \"" << argv[1] << "\" not a valid \'capi\' directory" << endl;
-				printArgOptions();
-				return false;
-			}
-		}
-		else
-		{
-			cout << endl << "Given base directory \"" << argv[1] << "\" does not exist" << endl;
-			printArgOptions();
-			return false;
-		}
-	}
-
-	// Get the rest of the arguments in any order.
-	for (int i = 2; i < argc && fSuccess == true; ++i)
-	{
-		if(!stricmp("-out", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(outDir, XalanDOMString(argv[i]));
-				insert(outDir, 0, XalanDOMString("\\"));
-				append(outDir, XalanDOMString("\\"));
-				h.checkAndCreateDir(outDir);
-				fSetOut = false;
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-		else
-		{
-			printArgOptions();
-			fSuccess = false;
-		}
-
-	} // End of for-loop
-
-	// Do we need to set the default output directory??
-	if (fSetOut)
-	{
-		unsigned int ii = lastIndexOf(baseDir,charAt(pathSep,0));
-		outDir = substring(baseDir, 0, ii+1);
-		append(outDir,XalanDOMString("PARAM-RESULTS\\"));
-		h.checkAndCreateDir(outDir);
-	}
-	
-	if (fSetGold)
-	{
-		goldRoot = baseDir;
-		append(goldRoot,XalanDOMString("-gold"));
-		h.checkAndCreateDir(goldRoot);
-		append(goldRoot,pathSep);
-	}
-
-	// Add the path seperator to the end of the base directory
-	append(baseDir, pathSep);
-	return fSuccess;
-}
-*/
 //	This function returns the testcase number.  All of these tests are called
 //	params0X, and there are only 6 of them,  so we can pick off the
 //	second X to determine what test number we're dealing with.  We need to
@@ -215,12 +127,26 @@ main(int			argc,
 
 	char testCase[15];
 	XalanDOMString fileName, theGoldFile;
+	const XalanDOMString  currentDir("params");
+	
 
-	// Set the program help string,  then get the command line parameters.
+	setHelp();
+
+	// Get the command line parameters.
 	//
-	setHelp();	
 	if (h.getParams(argc, argv, "PARAMS-RESULTS") == true)
 	{
+
+		const XalanDOMString	extDir(h.args.base + currentDir);
+
+		// Check that the base directory is correct.
+		if ( !h.checkDir(extDir) )
+		{
+			cout << "Invalid base directory - " << c_str(TranscodeToLocalCodePage(extDir)) << endl;
+			cout << h.args.help.str();
+			return 0;
+		}
+
 		// Call the static initializers...
 		HarnessInit xmlPlatformUtils;
 		XalanTransformer::initialize();
@@ -242,7 +168,6 @@ main(int			argc,
 			bool embedFlag =  false;
 				
 			// Get the files found in the "params" directory
-			const XalanDOMString  currentDir("params");
 			const XalanDOMString  theOutputDir = h.args.output + currentDir;
 
 			// Check that output directory is there.
@@ -259,7 +184,17 @@ main(int			argc,
 
 				// Set up the input/output files.
 				const XalanDOMString  theXSLFile= h.args.base + currentDir + pathSep + fileName;
-				const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+				XalanDOMString		  theXMLFile;
+				
+				// Neither testcase 7 nor 8 utilize xml source files. Both use fragment identifiers,
+				// so the generation of xml file is unnecessary.
+				// Testcase 7 tests: <?xml-stylesheet type="text/xsl" href="#style1-23.34.123456789_345"?>
+				// Testcase 8 tests: <?xml-stylesheet type="text/xsl" href="foo.xsl"?>
+				if ( i+1 <= 6 )
+				{
+					assign(theXMLFile, h.generateFileName(theXSLFile,"xml"));
+				}
+
 				h.data.xmlFileURL = theXMLFile;
 				h.data.xslFileURL = theXSLFile;
 
