@@ -66,7 +66,7 @@
 
 
 
-#include <xercesc/util/PlatformUtils.hpp>
+#include <util/PlatformUtils.hpp>
 
 
 #if defined(TEST_XALAN_CPP)
