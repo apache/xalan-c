@@ -83,10 +83,19 @@
 
 
 XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(XalanSourceTreeDOMSupport&	theSupport) :
-	m_xercesDOMSupport(),
-	m_xercesParserLiaison(m_xercesDOMSupport),
+	m_xercesParserLiaison(),
 	m_documentMap(),
-	m_domSupport(theSupport),
+	m_persistentDocumentMap(),
+	m_poolAllText(true)
+{
+}
+
+
+
+XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison() :
+	m_xercesParserLiaison(),
+	m_documentMap(),
+	m_persistentDocumentMap(),
 	m_poolAllText(true)
 {
 }
@@ -96,6 +105,17 @@ XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(XalanSourceTreeDOMSup
 XalanSourceTreeParserLiaison::~XalanSourceTreeParserLiaison()
 {
 	reset();
+
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	// Delete any persistent documents.
+	for_each(m_persistentDocumentMap.begin(),
+			 m_persistentDocumentMap.end(),
+			 makeMapValueDeleteFunctor(m_persistentDocumentMap));
+
+	m_persistentDocumentMap.clear();
 }
 
 
@@ -107,18 +127,14 @@ XalanSourceTreeParserLiaison::reset()
 	using std::for_each;
 #endif
 
-	// Delete any live documents.
+	// Delete any documents.
 	for_each(m_documentMap.begin(),
 			 m_documentMap.end(),
 			 makeMapValueDeleteFunctor(m_documentMap));
 
 	m_documentMap.clear();
 
-	m_domSupport.reset();
-
 	m_xercesParserLiaison.reset();
-
-	m_xercesDOMSupport.reset();
 }
 
 
@@ -413,10 +429,26 @@ XalanSourceTreeParserLiaison::setEntityResolver(EntityResolver*	resolver)
 XalanSourceTreeDocument*
 XalanSourceTreeParserLiaison::mapDocument(const XalanDocument*	theDocument) const
 {
-	const DocumentMapType::const_iterator	i =
+	DocumentMapType::const_iterator		i =
 		m_documentMap.find(theDocument);
 
-	return i != m_documentMap.end() ? (*i).second : 0;
+	if (i != m_documentMap.end())
+	{
+		return (*i).second;
+	}
+	else
+	{
+		i =	m_persistentDocumentMap.find(theDocument);
+
+		if (i != m_persistentDocumentMap.end())
+		{
+			return (*i).second;
+		}
+		else
+		{
+			return 0;
+		}
+	}
 }
 
 
@@ -430,4 +462,47 @@ XalanSourceTreeParserLiaison::createXalanSourceTreeDocument()
 	m_documentMap[theNewDocument] = theNewDocument;
 
 	return theNewDocument;
+}
+
+
+
+bool
+XalanSourceTreeParserLiaison::setPersistent(XalanSourceTreeDocument*	theDocument)
+{
+	const DocumentMapType::iterator		i =
+		m_documentMap.find(theDocument);
+
+	if (i != m_documentMap.end())
+	{
+		return false;
+	}
+	else
+	{
+		m_persistentDocumentMap[(*i).first] = (*i).second;
+
+		m_documentMap.erase(i);
+
+		return true;
+	}
+}
+
+
+bool
+XalanSourceTreeParserLiaison::unsetPersistent(XalanSourceTreeDocument*	theDocument)
+{
+	const DocumentMapType::iterator		i =
+		m_persistentDocumentMap.find(theDocument);
+
+	if (i != m_persistentDocumentMap.end())
+	{
+		return false;
+	}
+	else
+	{
+		m_documentMap[(*i).first] = (*i).second;
+
+		m_persistentDocumentMap.erase(i);
+
+		return true;
+	}
 }

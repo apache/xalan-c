@@ -89,8 +89,15 @@ public:
 	 * Construct a XalanSourceTreeParserLiaison instance.
 	 *
 	 * @param theSupport instance of DOMSupport object
+	 *
+	 * @deprecated This constructor is deprecated.  Use the default constructor instead.
 	 */
 	XalanSourceTreeParserLiaison(XalanSourceTreeDOMSupport&		theSupport);
+
+	/**
+	 * Construct a XalanSourceTreeParserLiaison instance.
+	 */
+	XalanSourceTreeParserLiaison();
 
 	virtual
 	~XalanSourceTreeParserLiaison();
@@ -353,6 +360,12 @@ public:
 	XalanSourceTreeDocument*
 	createXalanSourceTreeDocument();
 
+	bool
+	setPersistent(XalanSourceTreeDocument*	theDocument);
+
+	bool
+	unsetPersistent(XalanSourceTreeDocument*	theDocument);
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<const XalanDocument*,
 				XalanSourceTreeDocument*,
@@ -365,15 +378,14 @@ public:
 private:
 
 	// Data members...
-	XercesDOMSupport				m_xercesDOMSupport;	// Must be before m_xercesParserLiaison!!!
 
-	XercesParserLiaison				m_xercesParserLiaison;
+	XercesParserLiaison			m_xercesParserLiaison;
 
-	DocumentMapType 				m_documentMap;
+	DocumentMapType 			m_documentMap;
 
-	XalanSourceTreeDOMSupport&		m_domSupport;
+	DocumentMapType 			m_persistentDocumentMap;
 
-	bool							m_poolAllText;
+	bool						m_poolAllText;
 };
 
 
