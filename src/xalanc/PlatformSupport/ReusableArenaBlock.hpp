@@ -62,7 +62,7 @@ public:
 		bool
 		isValidFor( size_type  rightBorder ) const
 		{
-			return ( ( verificationStamp == VALID_OBJECT_STAMP ) &&
+			return ( ( verificationStamp == size_type(VALID_OBJECT_STAMP)) &&
 				( next <= rightBorder ) ) ? true : false ;
 		}
 	};
