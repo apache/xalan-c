@@ -102,6 +102,10 @@ SOURCE=..\..\..\..\src\XPath\FoundIndex.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\Function.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\FunctionBoolean.cpp
 # End Source File
 # Begin Source File

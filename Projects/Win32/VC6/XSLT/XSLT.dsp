@@ -310,11 +310,23 @@ SOURCE=..\..\..\..\src\XSLT\NodeSortKey.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\OutputContextStack.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\ProblemListener.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\ProblemListenerDefault.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=D:\Rational\Quantify\pure_api.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\ResultNamespacesStack.cpp
 # End Source File
 # Begin Source File
 
@@ -643,11 +655,19 @@ SOURCE=..\..\..\..\src\XSLT\NodeSortKey.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\OutputContextStack.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\ProblemListener.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\ProblemListenerDefault.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\ResultNamespacesStack.hpp
 # End Source File
 # Begin Source File
 
