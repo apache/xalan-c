@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,12 +85,18 @@ XSLTInputSource::XSLTInputSource() :
 
 
 
-#if defined(XALAN_IMPLICIT_CONSTRUCTION_REQUIRES_COPY_CONSTRUCTOR)
-XSLTInputSource::XSLTInputSource(const XSLTInputSource&		theSource) :
+// $$$ ToDo:  Xerces' InputSource class does not yet have a copy
+// constructor or assignment operator.  See bug #7944.
+XSLTInputSource::XSLTInputSource(const XSLTInputSource&	theSource) :
+#if 1
 	InputSource(),
+#else
+	InputSource(theSource)
+#endif
 	m_stream(theSource.m_stream),
 	m_node(theSource.m_node)
 {
+#if 1
 	setIssueFatalErrorIfNotFound(theSource.getIssueFatalErrorIfNotFound());
 
 	const XMLCh*	theValue = theSource.getSystemId();
@@ -113,8 +119,50 @@ XSLTInputSource::XSLTInputSource(const XSLTInputSource&		theSource) :
 	{
 		setEncoding(theValue);
 	}
-}
 #endif
+}
+
+
+
+XSLTInputSource&
+XSLTInputSource::operator=(const XSLTInputSource&	theRHS)
+{
+	if (this != &theRHS)
+	{
+		m_stream = theRHS.m_stream;
+		m_node = theRHS.m_node;
+#if 1
+		setIssueFatalErrorIfNotFound(theRHS.getIssueFatalErrorIfNotFound());
+
+		const XMLCh*	theValue = theRHS.getSystemId();
+
+		if (theValue != 0)
+		{
+			setSystemId(theValue);
+		}
+
+		theValue = theRHS.getPublicId();
+
+		if (theValue != 0)
+		{
+			setPublicId(theValue);
+		}
+
+		theValue = theRHS.getEncoding();
+
+		if (theValue != 0)
+		{
+			setEncoding(theValue);
+		}
+#endif
+	}
+
+#if 1
+	return *this;
+#else
+	return InputSource::operator=(theRHS);
+#endif
+}
 
 
 

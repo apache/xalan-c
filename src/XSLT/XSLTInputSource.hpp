@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -93,9 +93,16 @@ public:
 	explicit
 	XSLTInputSource();
 
-#if defined(XALAN_IMPLICIT_CONSTRUCTION_REQUIRES_COPY_CONSTRUCTOR)
-	XSLTInputSource(const XSLTInputSource&);
-#endif
+	/**
+	 * Copy constructor.
+	 */
+	XSLTInputSource(const XSLTInputSource&	theSource);
+
+	/**
+	 * Assignment operator.
+	 */
+	XSLTInputSource&
+	operator=(const XSLTInputSource&	theRHS);
 
 	/**
 	 * Create a new input source with a system identifier.
@@ -229,14 +236,6 @@ public:
 	}
 
 private:
-
-#if !defined(XALAN_IMPLICIT_CONSTRUCTION_REQUIRES_COPY_CONSTRUCTOR)
-	// Not implemented...
-	XSLTInputSource(const XSLTInputSource&);
-#endif
-
-	void
-	operator=(const XSLTInputSource&);
 
 #if defined(XALAN_NO_NAMESPACES)
 	istream*		m_stream;
