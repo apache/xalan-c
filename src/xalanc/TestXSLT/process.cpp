@@ -143,6 +143,7 @@ XALAN_USING_STD(cout)
 XALAN_USING_STD(endl)
 XALAN_USING_STD(hex)
 XALAN_USING_STD(pair)
+XALAN_USING_STD(vector)
 
 
 
@@ -242,7 +243,7 @@ XALAN_CPP_NAMESPACE_USE
 
 
 
-typedef XalanVector<pair< const char*, const char*> >	StringPairVectorType;
+typedef vector<pair< const char*, const char*> >	StringPairVectorType;
 
 
 
@@ -273,7 +274,7 @@ struct CmdLineParams
 	const char*		inFileName;
 
 	CmdLineParams() :
-		params(XalanMemMgrs::getDefaultXercesMemMgr()),
+		params(),
 		setQuietConflictWarnings(false),
 		setQuietMode(false),
 		versionOnly(false),
