@@ -96,7 +96,10 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 	m_xnumberAllocator(theXNumberBlockSize),
 	m_xnodesetAllocator(theXNodeSetBlockSize),
 	m_xresultTreeFragAllocator(theXResultTreeFragBlockSize),
+	m_xtokenNumberAdapterAllocator(theXNumberBlockSize),
+	m_xtokenStringAdapterAllocator(theXStringBlockSize),
 	m_xobjects(),
+	m_xnumberCache(),
 	m_XNull(new XNull)
 {
 }
@@ -139,6 +142,32 @@ XObjectFactoryDefault::doReturnObject(
 #endif
 
 			bStatus = m_xstringAdapterAllocator.destroy(theXStringAdapter);
+		}
+		break;
+
+	case XObject::eTypeXTokenNumberAdapter:
+		{
+			XTokenNumberAdapter* const	theAdapter =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(XTokenNumberAdapter*)theXObject;
+#else
+				static_cast<XTokenNumberAdapter*>(theXObject);
+#endif
+
+			bStatus = m_xtokenNumberAdapterAllocator.destroy(theAdapter);
+		}
+		break;
+
+	case XObject::eTypeXTokenStringAdapter:
+		{
+			XTokenStringAdapter* const	theAdapter =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(XTokenStringAdapter*)theXObject;
+#else
+				static_cast<XTokenStringAdapter*>(theXObject);
+#endif
+
+			bStatus = m_xtokenStringAdapterAllocator.destroy(theAdapter);
 		}
 		break;
 
@@ -190,7 +219,16 @@ XObjectFactoryDefault::doReturnObject(
 				static_cast<XNumber*>(theXObject);
 #endif
 
-			bStatus = m_xnumberAllocator.destroy(theXNumber);
+			if (m_xnumberCache.size() < eXNumberCacheMax)
+			{
+				m_xnumberCache.push_back(theXNumber);
+
+				bStatus = true;
+			}
+			else
+			{
+				bStatus = m_xnumberAllocator.destroy(theXNumber);
+			}
 		}
 		break;
 
@@ -279,13 +317,13 @@ XObjectFactoryDefault::createUnknown(const XalanDOMString&	theValue)
 const XObjectPtr
 XObjectFactoryDefault::createSpan(BorrowReturnMutableNodeRefList&	theValue)
 {
-	XSpan* const	theXSpan = new XSpan(theValue);
+	XSpan* const	theXObject = new XSpan(theValue);
 
-	m_xobjects.insert(theXSpan);
+	m_xobjects.insert(theXObject);
 
-	theXSpan->setFactory(this);
+	theXObject->setFactory(this);
 
-	return XObjectPtr(theXSpan);
+	return XObjectPtr(theXObject);
 }
 
 
@@ -293,11 +331,38 @@ XObjectFactoryDefault::createSpan(BorrowReturnMutableNodeRefList&	theValue)
 const XObjectPtr
 XObjectFactoryDefault::createNumber(double	theValue)
 {
-	XNumber*	theXNumber = m_xnumberAllocator.createNumber(theValue);
+	if (m_xnumberCache.size() > 0)
+	{
+		XNumber* const	theXNumber = m_xnumberCache.back();
 
-	theXNumber->setFactory(this);
+		m_xnumberCache.pop_back();
 
-	return XObjectPtr(theXNumber);
+		theXNumber->set(theValue);
+
+		return XObjectPtr(theXNumber);
+	}
+	else
+	{
+		m_xnumberCache.reserve(eXNumberCacheMax);
+
+		XObject* const	theXObject = m_xnumberAllocator.createNumber(theValue);
+
+		theXObject->setFactory(this);
+
+		return XObjectPtr(theXObject);
+	}
+}
+
+
+
+const XObjectPtr
+XObjectFactoryDefault::createNumber(const XToken&	theValue)
+{
+	XObject*	theXObject = m_xtokenNumberAdapterAllocator.create(theValue);
+
+	theXObject->setFactory(this);
+
+	return XObjectPtr(theXObject);
 }
 
 
@@ -353,6 +418,18 @@ XObjectFactoryDefault::createString(
 
 
 const XObjectPtr
+XObjectFactoryDefault::createString(const XToken&	theValue)
+{
+	XObject*	theXObject = m_xtokenStringAdapterAllocator.create(theValue);
+
+	theXObject->setFactory(this);
+
+	return XObjectPtr(theXObject);
+}
+
+
+
+const XObjectPtr
 XObjectFactoryDefault::createStringReference(const XalanDOMString&	theValue)
 {
 	XStringReference* const	theXStringReference = m_xstringReferenceAllocator.createString(theValue);
@@ -389,7 +466,7 @@ XObjectFactoryDefault::createString(GetAndReleaseCachedString&	theValue)
 
 
 const XObjectPtr
-XObjectFactoryDefault::createResultTreeFrag(ResultTreeFragBase*		theValue)
+XObjectFactoryDefault::createResultTreeFrag(BorrowReturnResultTreeFrag&		theValue)
 {
 	XResultTreeFrag* const	theResultTreeFrag =  m_xresultTreeFragAllocator.create(theValue);
 
@@ -424,4 +501,6 @@ XObjectFactoryDefault::reset()
 			 DeleteXObjectFunctor(*this, true));
 
 	m_xobjects.clear();
+
+	m_xnumberCache.clear();
 }

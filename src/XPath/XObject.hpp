@@ -110,6 +110,8 @@ public:
 						  eTypeStringReference = 8,
 						  eTypeStringAdapter = 9,
 						  eTypeStringCached = 10,
+						  eTypeXTokenNumberAdapter = 11,
+						  eTypeXTokenStringAdapter = 12,
 						  eUnknown
 						};
 

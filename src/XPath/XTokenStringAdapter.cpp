@@ -54,74 +54,67 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XNUMBER_HEADER_GUARD_1357924680)
-#define XNUMBER_HEADER_GUARD_1357924680
+// Class header file.
+#include "XTokenStringAdapter.hpp"
 
 
 
-// Base header file.  Must be first.
-#include <XPath/XPathDefinitions.hpp>
+#include "XToken.hpp"
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
-// Base class header file.
-#include <XPath/XNumberBase.hpp>
-
-
-
-class XALAN_XPATH_EXPORT XNumber : public XNumberBase
+XTokenStringAdapter::XTokenStringAdapter(const XToken&	theToken) :
+	XStringBase(),
+	m_value(theToken)
 {
-public:
+}
 
-	/**
-	 * Create an XNumber from a number.
-	 *
-	 * @param val numeric value to use
-	 */
-	XNumber(double	val);
 
-	XNumber(const XNumber&	source);
 
-	virtual
-	~XNumber();
+XTokenStringAdapter::XTokenStringAdapter(const XTokenStringAdapter&		source) :
+	XStringBase(source),
+	m_value(source.m_value)
+{
+}
 
-	// These methods are inherited from XObject ...
+
+
+XTokenStringAdapter::~XTokenStringAdapter()
+{
+}
+
+
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
+XObject*
 #else
-	virtual XNumber*
+XTokenStringAdapter*
 #endif
-	clone(void*		theAddress = 0) const;
-
-	virtual double
-	num() const;
-
-	virtual const XalanDOMString&
-	str() const;
-
-	// These methods are new to XNumber...
-
-	/**
-	 * Change the value of an XNumber
-	 *
-	 * @param theValue The new value.
-	 */
-	void
-	set(double	theValue);
-
-private:
-
-	// Value of the number being represented.
-	double					m_value;
-
-	mutable XalanDOMString	m_cachedStringValue;
+XTokenStringAdapter::clone(void*	theAddress) const
+{
+	return theAddress == 0 ? new XTokenStringAdapter(*this) : new (theAddress) XTokenStringAdapter(*this);
 };
 
 
 
-#endif	// XNUMBER_HEADER_GUARD_1357924680
+double
+XTokenStringAdapter::num() const
+{
+	return m_value.num();
+}
+
+
+
+const XalanDOMString&
+XTokenStringAdapter::str() const
+{
+	return m_value.str();
+}
+
+
+
+XTokenStringAdapter::eObjectType
+XTokenStringAdapter::getRealType() const
+{
+	return eTypeXTokenStringAdapter;
+}

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XNUMBER_HEADER_GUARD_1357924680)
-#define XNUMBER_HEADER_GUARD_1357924680
+#if !defined(XNUMBERBASE_HEADER_GUARD_1357924680)
+#define XNUMBERBASE_HEADER_GUARD_1357924680
 
 
 
@@ -69,59 +69,50 @@
 
 
 // Base class header file.
-#include <XPath/XNumberBase.hpp>
+#include <XPath/XObject.hpp>
 
 
 
-class XALAN_XPATH_EXPORT XNumber : public XNumberBase
+class XALAN_XPATH_EXPORT XNumberBase : public XObject
 {
 public:
 
-	/**
-	 * Create an XNumber from a number.
-	 *
-	 * @param val numeric value to use
-	 */
-	XNumber(double	val);
-
-	XNumber(const XNumber&	source);
+	XNumberBase(const XNumberBase&	source);
 
 	virtual
-	~XNumber();
+	~XNumberBase();
 
 	// These methods are inherited from XObject ...
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XNumber*
-#endif
-	clone(void*		theAddress = 0) const;
+	virtual XalanDOMString
+	getTypeString() const;
 
 	virtual double
-	num() const;
+	num() const = 0;
+
+	virtual bool
+	boolean() const;
 
 	virtual const XalanDOMString&
-	str() const;
+	str() const = 0;
 
-	// These methods are new to XNumber...
+	virtual void
+	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
+
+	virtual void
+	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
+
+protected:
 
 	/**
-	 * Change the value of an XNumber
-	 *
-	 * @param theValue The new value.
+	 * Constructor for derived classes
 	 */
-	void
-	set(double	theValue);
+	explicit
+	XNumberBase();
 
 private:
-
-	// Value of the number being represented.
-	double					m_value;
-
-	mutable XalanDOMString	m_cachedStringValue;
 };
 
 
 
-#endif	// XNUMBER_HEADER_GUARD_1357924680
+#endif	// XNUMBERBASE_HEADER_GUARD_1357924680

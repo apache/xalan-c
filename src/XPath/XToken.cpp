@@ -54,74 +54,145 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XNUMBER_HEADER_GUARD_1357924680)
-#define XNUMBER_HEADER_GUARD_1357924680
+// Class header file.
+#include "XToken.hpp"
 
 
 
-// Base header file.  Must be first.
-#include <XPath/XPathDefinitions.hpp>
+#include <PlatformSupport/DoubleSupport.hpp>
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+#include "XObjectTypeCallback.hpp"
 
 
 
-// Base class header file.
-#include <XPath/XNumberBase.hpp>
-
-
-
-class XALAN_XPATH_EXPORT XNumber : public XNumberBase
+XToken::XToken() :
+	XObject(eTypeString),
+	m_stringValue(),
+	m_numberValue(DoubleSupport::getNaN())
 {
-public:
+}
 
-	/**
-	 * Create an XNumber from a number.
-	 *
-	 * @param val numeric value to use
-	 */
-	XNumber(double	val);
 
-	XNumber(const XNumber&	source);
 
-	virtual
-	~XNumber();
+XToken::XToken(const XalanDOMString&	theString) :
+	XObject(eTypeString),
+	m_stringValue(theString),
+	m_numberValue(DoubleSupport::toDouble(theString))
+{
+}
 
-	// These methods are inherited from XObject ...
+
+
+XToken::XToken(double	theNumber) :
+	XObject(eTypeString),
+	m_stringValue(DoubleToDOMString(theNumber)),
+	m_numberValue(theNumber)
+{
+}
+
+
+
+XToken::XToken(const XToken&	theSource) :
+	XObject(theSource),
+	m_stringValue(theSource.m_stringValue),
+	m_numberValue(theSource.m_numberValue)
+{
+}
+
+
+
+XToken::~XToken()
+{
+}
+
+
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
+XObject*
 #else
-	virtual XNumber*
+XToken*
 #endif
-	clone(void*		theAddress = 0) const;
-
-	virtual double
-	num() const;
-
-	virtual const XalanDOMString&
-	str() const;
-
-	// These methods are new to XNumber...
-
-	/**
-	 * Change the value of an XNumber
-	 *
-	 * @param theValue The new value.
-	 */
-	void
-	set(double	theValue);
-
-private:
-
-	// Value of the number being represented.
-	double					m_value;
-
-	mutable XalanDOMString	m_cachedStringValue;
-};
+XToken::clone(void*	theAddress) const
+{
+	return theAddress == 0 ? new XToken(*this) : new (theAddress) XToken(*this);
+}
 
 
 
-#endif	// XNUMBER_HEADER_GUARD_1357924680
+XalanDOMString
+XToken::getTypeString() const
+{
+	return XALAN_STATIC_UCODE_STRING("#TOKEN");
+}
+
+
+
+double
+XToken::num() const
+{
+	return m_numberValue;
+}
+
+
+
+const XalanDOMString&
+XToken::str() const
+{
+	return m_stringValue;
+}
+
+
+
+void
+XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
+{
+	theCallbackObject.String(*this, m_stringValue);
+}
+
+
+
+void
+XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
+{
+	theCallbackObject.String(*this, m_stringValue);
+}
+
+
+
+XToken&
+XToken::operator=(const XalanDOMString&	theString)
+{
+	m_stringValue = theString;
+
+	m_numberValue = DoubleSupport::toDouble(theString);
+
+	return *this;
+}
+
+
+
+XToken&
+XToken::operator=(double	theNumber)
+{
+	m_stringValue = DoubleToDOMString(theNumber);
+
+	m_numberValue = theNumber;
+
+	return *this;
+}
+
+
+
+void 
+XToken::referenced()
+{
+}
+
+
+
+void 
+XToken::dereferenced()
+{
+}

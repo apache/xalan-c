@@ -81,6 +81,7 @@ class NodeRefListBase;
 class ResultTreeFragBase;
 class XObject;
 class XObjectPtr;
+class XToken;
 
 
 
@@ -92,6 +93,7 @@ class XALAN_XPATH_EXPORT XObjectFactory
 public:
 
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+	typedef XPathExecutionContext::BorrowReturnResultTreeFrag		BorrowReturnResultTreeFrag;
 	typedef XPathExecutionContext::GetAndReleaseCachedString		GetAndReleaseCachedString;
 
 
@@ -157,6 +159,17 @@ public:
 	createNumber(double 	theValue) = 0;
 
 	/**
+	 * Create a numeric XObject from an XToken.  The XToken
+	 * instance must be inexistence for the lifetime of the
+	 * object.
+	 *
+	 * @param theValue	value used to create object 
+	 * @return pointer to new object
+	 */
+	virtual const XObjectPtr
+	createNumber(const XToken&	theValue) = 0;
+
+	/**
 	 * Create a string XObject from a string.
 	 * 
 	 * @param theValue	value used to create object  
@@ -185,6 +198,17 @@ public:
 	createString(
 			const XalanDOMChar* 	theValue,
 			unsigned int			theLength) = 0;
+
+	/**
+	 * Create a string XObject from an XToken.  The XToken
+	 * instance must be inexistence for the lifetime of the
+	 * object.
+	 *
+	 * @param theValue	value used to create object 
+	 * @return pointer to new object
+	 */
+	virtual const XObjectPtr
+	createString(const XToken&	theValue) = 0;
 
 	/**
 	 * Create a string XObject from a string.  The XObject
@@ -234,7 +258,7 @@ public:
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
-	createResultTreeFrag(ResultTreeFragBase*	theValue) = 0;
+	createResultTreeFrag(BorrowReturnResultTreeFrag&	theValue) = 0;
 
 	/**
 	 * Create a span XObject from a node list.

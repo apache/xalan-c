@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,74 +54,65 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XNUMBER_HEADER_GUARD_1357924680)
-#define XNUMBER_HEADER_GUARD_1357924680
+
+// Class header file.
+#include "XTokenNumberAdapterAllocator.hpp"
 
 
 
-// Base header file.  Must be first.
-#include <XPath/XPathDefinitions.hpp>
-
-
-
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
-// Base class header file.
-#include <XPath/XNumberBase.hpp>
-
-
-
-class XALAN_XPATH_EXPORT XNumber : public XNumberBase
+XTokenNumberAdapterAllocator::XTokenNumberAdapterAllocator(size_type	theBlockCount) :
+	m_allocator(theBlockCount)
 {
-public:
-
-	/**
-	 * Create an XNumber from a number.
-	 *
-	 * @param val numeric value to use
-	 */
-	XNumber(double	val);
-
-	XNumber(const XNumber&	source);
-
-	virtual
-	~XNumber();
-
-	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XNumber*
-#endif
-	clone(void*		theAddress = 0) const;
-
-	virtual double
-	num() const;
-
-	virtual const XalanDOMString&
-	str() const;
-
-	// These methods are new to XNumber...
-
-	/**
-	 * Change the value of an XNumber
-	 *
-	 * @param theValue The new value.
-	 */
-	void
-	set(double	theValue);
-
-private:
-
-	// Value of the number being represented.
-	double					m_value;
-
-	mutable XalanDOMString	m_cachedStringValue;
-};
+}
 
 
 
-#endif	// XNUMBER_HEADER_GUARD_1357924680
+XTokenNumberAdapterAllocator::~XTokenNumberAdapterAllocator()
+{
+}
+
+
+
+XTokenNumberAdapterAllocator::object_type*
+XTokenNumberAdapterAllocator::create(const XToken&	theXToken) 
+{
+	object_type* const	theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
+
+	object_type* const	theResult = new(theBlock) object_type(theXToken);
+
+	m_allocator.commitAllocation(theBlock);
+
+	return theResult;
+}
+
+
+
+XTokenNumberAdapterAllocator::object_type*
+XTokenNumberAdapterAllocator::clone(const object_type&	theObject)
+{
+	object_type* const		theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
+
+	theObject.clone(theBlock);
+
+	m_allocator.commitAllocation(theBlock);
+
+	return theBlock;
+}
+
+
+
+bool 
+XTokenNumberAdapterAllocator::destroy(object_type*	theObject)
+{
+	return m_allocator.destroyObject(theObject);
+}
+
+
+
+void 
+XTokenNumberAdapterAllocator::reset()
+{
+	m_allocator.reset();
+}

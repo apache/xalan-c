@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,74 +54,119 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XNUMBER_HEADER_GUARD_1357924680)
-#define XNUMBER_HEADER_GUARD_1357924680
+
+#if !defined(XTOKENSTRINGADAPTERALLOCATOR_INCLUDE_GUARD_1357924680)
+#define XTOKENSTRINGADAPTERALLOCATOR_INCLUDE_GUARD_1357924680
 
 
 
-// Base header file.  Must be first.
+// Base include file.  Must be first.
 #include <XPath/XPathDefinitions.hpp>
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+#include <XPath/XTokenStringAdapter.hpp>
 
 
 
-// Base class header file.
-#include <XPath/XNumberBase.hpp>
+#include <PlatformSupport/ReusableArenaAllocator.hpp>
 
 
 
-class XALAN_XPATH_EXPORT XNumber : public XNumberBase
+class XALAN_XPATH_EXPORT XTokenStringAdapterAllocator
 {
 public:
 
-	/**
-	 * Create an XNumber from a number.
-	 *
-	 * @param val numeric value to use
-	 */
-	XNumber(double	val);
+	typedef XTokenStringAdapter						object_type;
 
-	XNumber(const XNumber&	source);
-
-	virtual
-	~XNumber();
-
-	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XNumber*
-#endif
-	clone(void*		theAddress = 0) const;
-
-	virtual double
-	num() const;
-
-	virtual const XalanDOMString&
-	str() const;
-
-	// These methods are new to XNumber...
+	typedef ReusableArenaAllocator<object_type>		ArenaAllocatorType;
+	typedef ArenaAllocatorType::size_type			size_type;
 
 	/**
-	 * Change the value of an XNumber
+	 * Construct an instance that will allocate blocks of the specified size.
 	 *
-	 * @param theValue The new value.
+	 * @param theBlockSize The block size.
 	 */
-	void
-	set(double	theValue);
+	XTokenStringAdapterAllocator(size_type	theBlockCount);
+
+	~XTokenStringAdapterAllocator();
+
+	/**
+	 * Create an XTokenStringAdapter object from an XToken.
+	 * 
+	 * @param theXToken The source XToken
+	 *
+	 * @return a pointer to string
+	 */
+	object_type*
+	create(const XToken&	theXToken);
+
+	/**
+	 * Clone an XTokenStringAdapter object.
+	 * 
+	 * @param value source XTokenStringAdapter
+	 *
+	 * @return pointer to an XTokenStringAdapter
+	 */
+	object_type*
+	clone(const object_type&	value);
+
+	/**
+	 * Delete an XStringAdapter object from allocator.	 
+	 */
+	bool
+	destroy(object_type*	theString);
+
+	/**
+	 * Determine if an object is owned by the allocator...
+	 */
+	bool
+	ownsObject(const object_type*	theObject)
+	{
+		return m_allocator.ownsObject(theObject);
+	}
+
+	/**
+	 * Delete all XStringAdapter objects from allocator.	 
+	 */
+	void 
+	reset();
+
+	/**
+	 * Get size of an ArenaBlock, that is, the number
+	 * of objects in each block.
+	 *
+	 * @return The size of the block
+	 */
+	size_type
+	getBlockCount() const
+	{
+		return m_allocator.getBlockCount();
+	}
+
+	/**
+	 * Get the number of ArenaBlocks currently allocated.
+	 *
+	 * @return The number of blocks.
+	 */
+	size_type
+	getBlockSize() const
+	{
+		return m_allocator.getBlockSize();
+	}
 
 private:
 
-	// Value of the number being represented.
-	double					m_value;
+	// Not implemented...
+	XTokenStringAdapterAllocator(const XTokenStringAdapterAllocator&);
 
-	mutable XalanDOMString	m_cachedStringValue;
+	XTokenStringAdapterAllocator&
+	operator=(const XTokenStringAdapterAllocator&);
+
+	// Data members...
+	ArenaAllocatorType	m_allocator;
 };
 
 
 
-#endif	// XNUMBER_HEADER_GUARD_1357924680
+#endif	// XTOKENSTRINGADAPTERALLOCATOR_INCLUDE_GUARD_1357924680

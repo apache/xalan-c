@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XNUMBER_HEADER_GUARD_1357924680)
-#define XNUMBER_HEADER_GUARD_1357924680
+#if !defined(XTOKEN_HEADER_GUARD_1357924680)
+#define XTOKEN_HEADER_GUARD_1357924680
 
 
 
@@ -64,39 +64,36 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+// Base class...
+#include <XPath/XObject.hpp>
 
 
 
-// Base class header file.
-#include <XPath/XNumberBase.hpp>
-
-
-
-class XALAN_XPATH_EXPORT XNumber : public XNumberBase
+class XALAN_XPATH_EXPORT XToken : public XObject
 {
 public:
 
-	/**
-	 * Create an XNumber from a number.
-	 *
-	 * @param val numeric value to use
-	 */
-	XNumber(double	val);
+	explicit
+	XToken();
 
-	XNumber(const XNumber&	source);
+	XToken(const XalanDOMString&	theString);
+
+	XToken(double	theNumber);
+
+	XToken(const XToken&	theSource);
 
 	virtual
-	~XNumber();
-
-	// These methods are inherited from XObject ...
+	~XToken();
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XObject*
 #else
-	virtual XNumber*
+	virtual XToken*
 #endif
 	clone(void*		theAddress = 0) const;
+
+	virtual XalanDOMString
+	getTypeString() const;
 
 	virtual double
 	num() const;
@@ -104,24 +101,48 @@ public:
 	virtual const XalanDOMString&
 	str() const;
 
-	// These methods are new to XNumber...
+	virtual void
+	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 
-	/**
-	 * Change the value of an XNumber
-	 *
-	 * @param theValue The new value.
-	 */
-	void
-	set(double	theValue);
+	virtual void
+	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
+
+	XToken&
+	operator=(const XToken&		theRHS)
+	{
+		m_stringValue = theRHS.m_stringValue;
+
+		m_numberValue = theRHS.m_numberValue;
+
+		return *this;
+	}
+
+	XToken&
+	operator=(const XalanDOMString&		theString);
+
+	XToken&
+	operator=(double	theNumber);
+
+protected:
+
+	virtual void 
+	referenced();
+
+	virtual void 
+	dereferenced();
 
 private:
 
-	// Value of the number being represented.
-	double					m_value;
+	// Not defined...
+	bool
+	operator==(const XToken&) const;
 
-	mutable XalanDOMString	m_cachedStringValue;
+	// Data members...
+	XalanDOMString	m_stringValue;
+
+	double			m_numberValue;
 };
 
 
 
-#endif	// XNUMBER_HEADER_GUARD_1357924680
+#endif	// XTOKEN_HEADER_GUARD_1357924680

@@ -65,6 +65,7 @@
 
 
 #include <set>
+#include <vector>
 
 
 
@@ -75,11 +76,13 @@
 
 #include <XPath/XNodeSetAllocator.hpp>
 #include <XPath/XNumberAllocator.hpp>
+#include <XPath/XResultTreeFragAllocator.hpp>
 #include <XPath/XStringAllocator.hpp>
 #include <XPath/XStringAdapterAllocator.hpp>
 #include <XPath/XStringCachedAllocator.hpp>
 #include <XPath/XStringReferenceAllocator.hpp>
-#include <XPath/XResultTreeFragAllocator.hpp>
+#include <XPath/XTokenNumberAdapterAllocator.hpp>
+#include <XPath/XTokenStringAdapterAllocator.hpp>
 
 
 
@@ -94,6 +97,7 @@
 
 
 class XNull;
+class XNumber;
 
 
 
@@ -148,6 +152,9 @@ public:
 	createNumber(double		theValue);
 
 	virtual const XObjectPtr
+	createNumber(const XToken&	theValue);
+
+	virtual const XObjectPtr
 	createString(const XalanDOMString&	theValue);
 
 	virtual const XObjectPtr
@@ -157,6 +164,9 @@ public:
 	createString(
 			const XalanDOMChar*		theValue,
 			unsigned int			theLength);
+
+	virtual const XObjectPtr
+	createString(const XToken&	theValue);
 
 	virtual const XObjectPtr
 	createStringReference(const XalanDOMString&		theValue);
@@ -172,15 +182,17 @@ public:
 			const XalanDOMString&	theValue);
 
 	virtual const XObjectPtr
-	createResultTreeFrag(ResultTreeFragBase*	theValue);
+	createResultTreeFrag(BorrowReturnResultTreeFrag&	theValue);
 
 	virtual const XObjectPtr
 	createSpan(BorrowReturnMutableNodeRefList&	theValue);
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef set<XObject*, less<XObject*> >	CollectionType;
+	typedef set<XObject*, less<XObject*> >		CollectionType;
+	typedef vector<XNumber*>, less<XNumber*> >	XNumberCacheType;
 #else
-	typedef std::set<XObject*>				CollectionType;
+	typedef std::set<XObject*>					CollectionType;
+	typedef std::vector<XNumber*>				XNumberCacheType;
 #endif
 
 protected:
@@ -191,6 +203,8 @@ protected:
 			bool		fInReset = false);
 
 private:
+
+	enum { eXNumberCacheMax = 40 };
 
 	// Not implemented...
 	XObjectFactoryDefault(const XObjectFactoryDefault&);
@@ -206,23 +220,29 @@ private:
 
 	// This one's first, since it may be be holding references
 	// to objects in other allocators.
-	XStringAdapterAllocator		m_xstringAdapterAllocator;
+	XStringAdapterAllocator			m_xstringAdapterAllocator;
 
-	XStringAllocator			m_xstringAllocator;
+	XStringAllocator				m_xstringAllocator;
 
-	XStringCachedAllocator		m_xstringCachedAllocator;
+	XStringCachedAllocator			m_xstringCachedAllocator;
 
-	XStringReferenceAllocator	m_xstringReferenceAllocator;
+	XStringReferenceAllocator		m_xstringReferenceAllocator;
 
-	XNumberAllocator			m_xnumberAllocator;
+	XNumberAllocator				m_xnumberAllocator;
 
-	XNodeSetAllocator			m_xnodesetAllocator;
+	XNodeSetAllocator				m_xnodesetAllocator;
 
-	XResultTreeFragAllocator	m_xresultTreeFragAllocator;
+	XResultTreeFragAllocator		m_xresultTreeFragAllocator;
 
-	CollectionType				m_xobjects;
+	XTokenNumberAdapterAllocator	m_xtokenNumberAdapterAllocator;
 
-	const XalanAutoPtr<XNull>	m_XNull;
+	XTokenStringAdapterAllocator	m_xtokenStringAdapterAllocator;
+
+	CollectionType					m_xobjects;
+
+	XNumberCacheType				m_xnumberCache;
+
+	const XalanAutoPtr<XNull>		m_XNull;
 };
 
 

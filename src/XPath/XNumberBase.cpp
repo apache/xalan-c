@@ -54,74 +54,69 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XNUMBER_HEADER_GUARD_1357924680)
-#define XNUMBER_HEADER_GUARD_1357924680
+// Class header file.
+#include "XNumberBase.hpp"
 
 
 
-// Base header file.  Must be first.
-#include <XPath/XPathDefinitions.hpp>
+#include <PlatformSupport/DoubleSupport.hpp>
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+#include "XObjectTypeCallback.hpp"
 
 
 
-// Base class header file.
-#include <XPath/XNumberBase.hpp>
-
-
-
-class XALAN_XPATH_EXPORT XNumber : public XNumberBase
+XNumberBase::XNumberBase() :
+	XObject(eTypeNumber)
 {
-public:
-
-	/**
-	 * Create an XNumber from a number.
-	 *
-	 * @param val numeric value to use
-	 */
-	XNumber(double	val);
-
-	XNumber(const XNumber&	source);
-
-	virtual
-	~XNumber();
-
-	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XNumber*
-#endif
-	clone(void*		theAddress = 0) const;
-
-	virtual double
-	num() const;
-
-	virtual const XalanDOMString&
-	str() const;
-
-	// These methods are new to XNumber...
-
-	/**
-	 * Change the value of an XNumber
-	 *
-	 * @param theValue The new value.
-	 */
-	void
-	set(double	theValue);
-
-private:
-
-	// Value of the number being represented.
-	double					m_value;
-
-	mutable XalanDOMString	m_cachedStringValue;
-};
+}
 
 
 
-#endif	// XNUMBER_HEADER_GUARD_1357924680
+XNumberBase::XNumberBase(const XNumberBase&		source) :
+	XObject(source)
+{
+}
+
+
+
+XNumberBase::~XNumberBase()
+{
+}
+
+
+
+XalanDOMString
+XNumberBase::getTypeString() const
+{
+	return XALAN_STATIC_UCODE_STRING("#NUMBER");
+}
+
+
+
+bool
+XNumberBase::boolean() const
+{
+	const double	theValue = num();
+
+	return DoubleSupport::isNaN(theValue) || DoubleSupport::equal(theValue, 0.0) ? false : true;
+}
+
+
+
+void
+XNumberBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
+{
+	theCallbackObject.Number(*this,
+							 num());
+}
+
+
+
+void
+XNumberBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
+{
+	theCallbackObject.Number(*this,
+							 num());
+}

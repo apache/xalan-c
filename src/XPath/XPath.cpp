@@ -992,7 +992,7 @@ XPath::string(
 	}
 	else
 	{
-		return executionContext.getXObjectFactory().createString(expr1->str());
+		return executionContext.getXObjectFactory().createStringAdapter(expr1);
 	}
 }
 
@@ -1004,7 +1004,7 @@ XPath::boolean(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	XObjectPtr	expr1(executeMore(context, opPos + 2, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos + 2, executionContext));
 	assert(expr1.get() != 0);
 
 	// Try to optimize when the result of the execution is
@@ -1027,7 +1027,7 @@ XPath::number(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	XObjectPtr	expr1(executeMore(context, opPos + 2, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos + 2, executionContext));
 	assert(expr1.get() != 0);
 
 	// Try to optimize when the result of the execution is
@@ -1085,9 +1085,9 @@ XPath::literal(
 	assert(m_expression.m_opMap.size() > unsigned(opPos + 2));
 	assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[opPos + 2]));
 
-	const XObject&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
+	const XToken&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
 
-	return executionContext.getXObjectFactory().createString(theLiteral.str());
+	return executionContext.getXObjectFactory().createString(theLiteral);
 }
 
 
@@ -1146,11 +1146,11 @@ XPath::numberlit(
 	assert(m_expression.m_opMap.size() > unsigned(opPos + 2));
 	assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[opPos + 2]));
 
-	const XObject&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
+	const XToken&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
 
-	return executionContext.getXObjectFactory().createNumber(theLiteral.num());
+	return executionContext.getXObjectFactory().createNumber(theLiteral);
 }
-  
+
 
 
 const XObjectPtr
@@ -1172,33 +1172,6 @@ XPath::locationPath(
 {    
 	assert(context != 0);
 
-/*
-	const int	stepType = m_expression.m_opMap[opPos + 2];
-
-	XLocator xlocator = null;
-	if(OP_VARIABLE == stepType)
-	{
-	  // Bit of a hack here...
-	  XObject obj = execute(context, opPos+2);
-	  NodeList nl = obj.nodeset();
-	  if(nl.getLength() > 0)
-	  {
-		// Use the xlocator of the first node...
-		// I guess we should really loop through the contexts, but things 
-		// will get very nasty quick, so just do this for now.
-		xlocator = m_callbacks.getXLocatorFromNode(nl.item(0));
-	  }
-	  else
-	  {
-		xlocator = m_callbacks.getXLocatorFromNode(context);
-	  }
-	}
-	else
-	{
-	  xlocator = m_callbacks.getXLocatorFromNode(context);
-	}
-*/
-
 	XLocator*	xlocator = executionContext.getXLocatorFromNode(context);
 
 	if(0 == xlocator)
@@ -1217,18 +1190,7 @@ XPath::predicate(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	const XObjectPtr expr1 = executeMore(context, opPos + 2, executionContext);
-
-	// $$$ ToDo: This appears to be just an optimization, but is it really?
-/*
-	int objType = expr1.getType();
-	if((XObject.CLASS_NUMBER != objType) && (XObject.CLASS_BOOLEAN != objType))
-	{
-	  expr1 = expr1.bool() ? m_true : m_false;
-	}
-*/
-
-	return expr1;
+	return executeMore(context, opPos + 2, executionContext);
 }
 
 

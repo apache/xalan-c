@@ -90,8 +90,8 @@
 
 
 
-class XPathEnvSupport;
 class DOMSupport;
+class XPathEnvSupport;
 
 
 
@@ -194,6 +194,12 @@ public:
 	virtual bool
 	returnMutableNodeRefList(MutableNodeRefList*	theList);
 
+	virtual ResultTreeFragBase*
+	borrowResultTreeFrag();
+
+	virtual bool
+	returnResultTreeFrag(ResultTreeFragBase*	theResultTreeFragBase);
+
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const;
 
@@ -295,13 +301,16 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<MutableNodeRefList*>			NodeRefListCacheType;
+	typedef vector<ResultTreeFragBase*>			ResultTreeFragCacheType;
 #else
 	typedef std::vector<MutableNodeRefList*>	NodeRefListCacheType;
+	typedef std::vector<ResultTreeFragBase*>	ResultTreeFragCacheType;
 #endif
 
 protected:
 
 	enum { eMutableNodeRefListCacheMax = 50,
+		   eResultTreeFragListCacheMax = 50,
 		   eCachedArgVectorDefaultSize = 10 };
 
 	XPathEnvSupport&			m_xpathEnvSupport;
@@ -323,6 +332,10 @@ protected:
 	NodeRefListCacheType		m_availableCachedNodeLists;
 
 	NodeRefListCacheType		m_busyCachedNodeLists;
+
+	ResultTreeFragCacheType		m_availableCachedResultTreeFrags;
+
+	ResultTreeFragCacheType		m_busyCachedResultTreeFrags;
 
 	XalanDOMStringCache			m_stringCache;
 

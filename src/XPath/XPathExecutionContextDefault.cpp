@@ -73,6 +73,7 @@
 #include "FoundIndex.hpp"
 #include "XObjectFactory.hpp"
 #include "PrefixResolver.hpp"
+#include "ResultTreeFrag.hpp"
 #include "QName.hpp"
 #include "XPathEnvSupport.hpp"
 
@@ -99,6 +100,8 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_throwFoundIndex(false),
 	m_availableCachedNodeLists(),
 	m_busyCachedNodeLists(),
+	m_availableCachedResultTreeFrags(),
+	m_busyCachedResultTreeFrags(),
 	m_stringCache()
 {
 	m_availableCachedNodeLists.reserve(eMutableNodeRefListCacheMax);
@@ -120,6 +123,11 @@ XPathExecutionContextDefault::~XPathExecutionContextDefault()
 		m_availableCachedNodeLists.begin(),
 		m_availableCachedNodeLists.end(),
 		DeleteFunctor<MutableNodeRefList>());
+
+	for_each(
+		m_availableCachedResultTreeFrags.begin(),
+		m_availableCachedResultTreeFrags.end(),
+		DeleteFunctor<ResultTreeFragBase>());
 }
 
 
@@ -136,6 +144,13 @@ XPathExecutionContextDefault::reset()
 		m_availableCachedNodeLists.push_back(m_busyCachedNodeLists.back());
 
 		m_busyCachedNodeLists.pop_back();
+	}
+
+	while (m_busyCachedResultTreeFrags.size() != 0)
+	{
+		m_availableCachedResultTreeFrags.push_back(m_busyCachedResultTreeFrags.back());
+
+		m_busyCachedResultTreeFrags.pop_back();
 	}
 
 	m_stringCache.reset();
@@ -324,11 +339,10 @@ XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	theLi
 	using std::find;
 #endif
 
-	// Search from the back to the front, since we push the latest borrowed on the back.
-	NodeRefListCacheType::reverse_iterator	i =
-		find(m_busyCachedNodeLists.rbegin(), m_busyCachedNodeLists.rend(), theList);
+	const NodeRefListCacheType::iterator	i =
+		find(m_busyCachedNodeLists.begin(), m_busyCachedNodeLists.end(), theList);
 
-	if (i == m_busyCachedNodeLists.rend())
+	if (i == m_busyCachedNodeLists.end())
 	{
 		return false;
 	}
@@ -336,9 +350,58 @@ XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	theLi
 	{
 		theList->clear();
 
-		m_availableCachedNodeLists.push_back(*i);
+		m_availableCachedNodeLists.push_back(theList);
 
-		m_busyCachedNodeLists.erase(&*i);
+		m_busyCachedNodeLists.erase(i);
+
+		return true;
+	}
+}
+
+
+
+ResultTreeFragBase*
+XPathExecutionContextDefault::borrowResultTreeFrag()
+{
+	// We'll always return the back of the free list, since
+	// that's the cheapest thing.
+	if (m_availableCachedResultTreeFrags.size() == 0)
+	{
+		m_busyCachedResultTreeFrags.push_back(new ResultTreeFrag);
+	}
+	else
+	{
+		m_busyCachedResultTreeFrags.push_back(m_availableCachedResultTreeFrags.back());
+
+		m_availableCachedResultTreeFrags.pop_back();
+	}
+
+	return m_busyCachedResultTreeFrags.back();
+}
+
+
+
+bool
+XPathExecutionContextDefault::returnResultTreeFrag(ResultTreeFragBase*	theResultTreeFragBase)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+
+	const ResultTreeFragCacheType::iterator		i =
+		find(m_busyCachedResultTreeFrags.begin(), m_busyCachedResultTreeFrags.end(), theResultTreeFragBase);
+
+	if (i == m_busyCachedResultTreeFrags.end())
+	{
+		return false;
+	}
+	else
+	{
+		theResultTreeFragBase->clear();
+
+		m_availableCachedResultTreeFrags.push_back(theResultTreeFragBase);
+
+		m_busyCachedResultTreeFrags.erase(i);
 
 		return true;
 	}

@@ -60,16 +60,11 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/DoubleSupport.hpp>
-
-
-
-#include "XObjectTypeCallback.hpp"
 
 
 
 XNumber::XNumber(double		val) :
-	XObject(eTypeNumber),
+	XNumberBase(),
 	m_value(val),
 	m_cachedStringValue()
 {
@@ -78,7 +73,7 @@ XNumber::XNumber(double		val) :
 
 
 XNumber::XNumber(const XNumber&		source) :
-	XObject(source),
+	XNumberBase(source),
 	m_value(source.m_value),
 	m_cachedStringValue(source.m_cachedStringValue)
 {
@@ -104,26 +99,10 @@ XNumber::clone(void*	theAddress) const
 
 
 
-XalanDOMString
-XNumber::getTypeString() const
-{
-	return XALAN_STATIC_UCODE_STRING("#NUMBER");
-}
-
-
-
 double
 XNumber::num() const
 {
 	return m_value;
-}
-
-
-
-bool
-XNumber::boolean() const
-{
-	return DoubleSupport::isNaN(m_value) || DoubleSupport::equal(m_value, 0.0) ? false : true;
 }
 
 
@@ -146,17 +125,9 @@ XNumber::str() const
 
 
 void
-XNumber::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
+XNumber::set(double		theValue)
 {
-	theCallbackObject.Number(*this,
-							 num());
-}
+	m_value = theValue;
 
-
-
-void
-XNumber::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
-{
-	theCallbackObject.Number(*this,
-							 num());
+	clear(m_cachedStringValue);
 }

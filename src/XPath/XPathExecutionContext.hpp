@@ -80,8 +80,8 @@
 
 
 
-//#include <XPath/Function.hpp>
 #include <XPath/MutableNodeRefList.hpp>
+#include <XPath/ResultTreeFragBase.hpp>
 
 
 
@@ -332,17 +332,17 @@ public:
 			const XalanDOMString&	base) const = 0;
 
 	/**
-	 * Borrow a cached MutableNodeRefList.
+	 * Borrow a cached MutableNodeRefList instance.
 	 *
-	 * @return A pointer the to node list.
+	 * @return A pointer to the instance.
 	 */
 	virtual MutableNodeRefList*
 	borrowMutableNodeRefList() = 0;
 
 	/**
-	 * Return a previously borrowed MutableNodeRefList.
+	 * Return a previously borrowed MutableNodeRefList instance.
 	 *
-	 * @param theList A pointer the to previously borrowed node list.
+	 * @param theList A pointer the to previously borrowed instance.
 	 * @return true if the list was borrowed (at therefore, destroyed), false if not.
 	 */
 	virtual bool
@@ -477,6 +477,103 @@ public:
 
 		XalanDOMString*			m_string;
 	};
+
+	/**
+	 * Borrow a cached ResultTreeFragBase instance.
+	 *
+	 * @return A pointer to the instance.
+	 */
+	virtual ResultTreeFragBase*
+	borrowResultTreeFrag() = 0;
+
+	/**
+	 * Return a previously borrowed ResultTreeFragBase instance.
+	 *
+	 * @param theList A pointer the to previously borrowed instance.
+	 * @return true if the list was borrowed (at therefore, destroyed), false if not.
+	 */
+	virtual bool
+	returnResultTreeFrag(ResultTreeFragBase*	theResultTreeFragBase) = 0;
+
+
+	class BorrowReturnResultTreeFrag
+	{
+	public:
+
+		BorrowReturnResultTreeFrag(XPathExecutionContext&	executionContext) :
+			m_xpathExecutionContext(executionContext),
+			m_resultTreeFrag(executionContext.borrowResultTreeFrag())
+		{
+			assert(m_resultTreeFrag != 0);
+		}
+
+		// N.B. Non-const copy constructor semantics (like std::auto_ptr)
+		BorrowReturnResultTreeFrag(const BorrowReturnResultTreeFrag&	theSource) :
+			m_xpathExecutionContext(theSource.m_xpathExecutionContext),
+			m_resultTreeFrag(theSource.m_resultTreeFrag)
+		{
+			assert(m_resultTreeFrag != 0);
+
+			((BorrowReturnResultTreeFrag&)theSource).m_resultTreeFrag = 0;
+		}
+
+		~BorrowReturnResultTreeFrag()
+		{
+			if (m_resultTreeFrag != 0)
+			{
+				if (m_xpathExecutionContext.returnResultTreeFrag(m_resultTreeFrag) == false)
+				{
+					delete m_resultTreeFrag;
+				}
+			}
+		}
+
+		ResultTreeFragBase&
+		operator*() const
+		{
+			return *m_resultTreeFrag;
+		}
+
+		ResultTreeFragBase*
+		get() const
+		{
+			return m_resultTreeFrag;
+		}
+
+		ResultTreeFragBase*
+		operator->() const
+		{
+			return get();
+		}
+
+		BorrowReturnResultTreeFrag
+		clone(bool	deep = false) const
+		{
+			BorrowReturnResultTreeFrag	theResult(
+						m_xpathExecutionContext,
+						m_resultTreeFrag->clone(deep));
+
+			return theResult;
+		}
+
+	private:
+
+		BorrowReturnResultTreeFrag(
+				XPathExecutionContext&	executionContext,
+				ResultTreeFragBase*		resultTreeFrag) :
+			m_xpathExecutionContext(executionContext),
+			m_resultTreeFrag(resultTreeFrag)
+		{
+			assert(m_resultTreeFrag != 0);
+		}
+
+		// Data members...
+		XPathExecutionContext&	m_xpathExecutionContext;
+
+		ResultTreeFragBase*		m_resultTreeFrag;
+	};
+
+	friend class BorrowReturnResultTreeFrag;
 
 	/**
 	 * Create a MutableNodeRefList with the appropriate context.

@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XNUMBER_HEADER_GUARD_1357924680)
-#define XNUMBER_HEADER_GUARD_1357924680
+#if !defined(XTOKENNUMBERADAPTER_HEADER_GUARD_1357924680)
+#define XTOKENNUMBERADAPTER_HEADER_GUARD_1357924680
 
 
 
@@ -73,28 +73,32 @@
 
 
 
-class XALAN_XPATH_EXPORT XNumber : public XNumberBase
+class XToken;
+
+
+
+class XALAN_XPATH_EXPORT XTokenNumberAdapter : public XNumberBase
 {
 public:
 
 	/**
-	 * Create an XNumber from a number.
+	 * Create an XTokenNumberAdapter from an XToken.
 	 *
-	 * @param val numeric value to use
+	 * @param theXToken The XToken instance to adapt
 	 */
-	XNumber(double	val);
+	XTokenNumberAdapter(const XToken&	theToken);
 
-	XNumber(const XNumber&	source);
+	XTokenNumberAdapter(const XTokenNumberAdapter&	source);
 
 	virtual
-	~XNumber();
+	~XTokenNumberAdapter();
 
 	// These methods are inherited from XObject ...
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XObject*
 #else
-	virtual XNumber*
+	virtual XTokenNumberAdapter*
 #endif
 	clone(void*		theAddress = 0) const;
 
@@ -104,24 +108,17 @@ public:
 	virtual const XalanDOMString&
 	str() const;
 
-	// These methods are new to XNumber...
+protected:
 
-	/**
-	 * Change the value of an XNumber
-	 *
-	 * @param theValue The new value.
-	 */
-	void
-	set(double	theValue);
+	virtual eObjectType
+	getRealType() const;
 
 private:
 
-	// Value of the number being represented.
-	double					m_value;
-
-	mutable XalanDOMString	m_cachedStringValue;
+	// XToken instance that we're adapting...
+	const XToken&	m_value;
 };
 
 
 
-#endif	// XNUMBER_HEADER_GUARD_1357924680
+#endif	// XTOKENNUMBERADAPTER_HEADER_GUARD_1357924680

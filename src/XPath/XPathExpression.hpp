@@ -80,7 +80,7 @@
 
 
 
-#include <XPath/XObject.hpp>
+#include <XPath/XToken.hpp>
 #include <XPath/XPathException.hpp>
 
 
@@ -728,80 +728,6 @@ public:
 
 		static XalanDOMString
 		FormatErrorMessage(int	theOffset);
-	};
-
-	class XToken : public XObject
-	{
-	public:
-
-		explicit
-		XToken();
-
-		XToken(const XalanDOMString&	theString);
-
-		XToken(double	theNumber);
-
-		XToken(const XToken&	theSource);
-
-		virtual
-		~XToken();
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-		virtual XObject*
-#else
-		virtual XToken*
-#endif
-		clone(void*		theAddress = 0) const;
-
-		virtual XalanDOMString
-		getTypeString() const;
-
-		virtual double
-		num() const;
-
-		virtual const XalanDOMString&
-		str() const;
-
-		virtual void
-		ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
-
-		virtual void
-		ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
-
-		XToken&
-		operator=(const XToken&		theRHS)
-		{
-			m_stringValue = theRHS.m_stringValue;
-
-			m_numberValue = theRHS.m_numberValue;
-
-			return *this;
-		}
-
-		XToken&
-		operator=(const XalanDOMString&		theString);
-
-		XToken&
-		operator=(double	theNumber);
-
-	protected:
-
-		virtual void 
-		referenced();
-
-		virtual void 
-		dereferenced();
-
-	private:
-
-		// Not defined...
-		bool
-		operator==(const XToken&) const;
-
-		// Data members...
-		XalanDOMString	m_stringValue;
-
-		double			m_numberValue;
 	};
 
 
