@@ -1,0 +1,70 @@
+<?xml version="1.0" standalone="no"?> 
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd"[
+<!ENTITY done-c SYSTEM "DONE">
+<!ENTITY status-c SYSTEM "STATUS">
+<!ENTITY history-c SYSTEM "history.xml">]>
+
+<!--
+ * Copyright 1999-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<s1 title="What's New in this Release">
+<p>Release notes for &xslt4c-current;</p>
+ <ul>
+  <li><link anchor="status">Status</link></li>
+  <li><link anchor="contact">Getting in touch</link></li>
+  <li><link anchor="history">History of software changes</link></li>  
+ </ul>
+<anchor name="status"/>
+<s2 title="Status">
+  <ul>
+    <li><link anchor="done">Changes for &xslt4c; version 1.9</link></li>
+    <li><link anchor="bugs">Bug reporting</link></li>    
+    <li><link anchor="xml4c">Version of &xml4c; to use</link></li>
+    <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
+  </ul>
+
+<anchor name="done"/>
+<s3 title="Changes for &xslt4c; version 1.9">
+<p>Major updates since version 1.8 include:</p>
+<ul>
+  <li>Pluggable Memory Management.  This feature allows applications to maintain precise control over memory allocations.  This 
+      will allow users, with knowledge of their application's characteristics, to provide a more efficient allocation method 
+      than the general purpose procedures provided by the system.</li>
+  <li>Improved performance on stylesheet execution.  Because the current implementation relies on function recursion, certain
+      stylesheets/input documents may cause the program stack to overflow and cause the application to fail.  It also may 
+      inhibit executing stylesheets that are heavily dependent on recursive functions.  This feature will prevent these types 
+      of failure. </li>
+  <li>Upgrade from Xerces-C 2.5 to Xerces-C 2.6. </li>
+  <li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
+ </ul>  
+</s3>  
+
+<anchor name="bugs"/>
+<s3 title="Bug reporting">
+<p>All known &xslt4c; bugs are listed in <resource-ref idref="jira"/>. For a list of open bugs with links to each bug
+   report, see <resource-ref idref="buglist"/>. If you find a new bug, please enter a XalanC bug report in this
+   database.</p>
+<note>Before you can enter your first bug report, you must submit your email address to JIRA and receive a password.</note> 
+<p>We strongly encourage you write patches for problems you find and submit them to
+   xalan-dev@xml.apache.org. We review the patches we receive to make sure they do not break something else, and (assuming they 
+   do not) include them in our next release. In the interest of fixing bugs, adding enhancements, and addressing outstanding design
+   issues, we sincerely want (and need!) your active participation in the ongoing development of Xalan.</p>
+</s3>
+
+<anchor name="xml4c"/>     
+&status-c;     
+</s2>
+
+</s1>

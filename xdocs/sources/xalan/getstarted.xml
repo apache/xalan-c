@@ -44,10 +44,13 @@
 </p>
 -->
 <p>As with previous releases, the documentation build containing this User's Guide and API documentation
-will be provided in a separate distribution.</p>
+   will be provided in a separate distribution.</p> 
 <p>Please contact us at <human-resource-ref idref="xalandev"/> if you would like to help provide builds for other platforms.</p>
 <p>If you do not already have it, you must also download the &xml4c-used; build as indicated below.</p> 
-<note>The Xalan distribution files are in <resource-ref idref="xslt4c-distdir"/>. The Xerces distribution files are in <resource-ref idref="xml4c-distdir"/>.  Xalan documentation is provided in a separate package from the binary distribution files.  For Windows, documentation is packaged with the file name &xslt4c-docs_dist_zip;.  For UNIX, documentation is packaged with the file name of &xslt4c-docs_dist_targz;.</note>
+<note>The Xalan distribution files are in <resource-ref idref="xslt4c-distdir"/>. The Xerces distribution files are in 
+      <resource-ref idref="xml4c-distdir"/>.  Xalan documentation is provided in a separate package from the binary 
+      distribution files.  For Windows, documentation is packaged with the file name &xslt4c-docs_dist_zip;.  For UNIX, 
+      documentation is packaged with the file name of &xslt4c-docs_dist_targz;.</note>
 <table>
   <tr>
   <th>Xalan distribution files</th>
@@ -143,54 +146,64 @@ will be provided in a separate distribution.</p>
        </tr>
     </table>
 </p>
-<note>Use GNU tar to untar the Solaris distribution file; see <link idref="faq" anchor="gnutar">A tar checksum error on Solaris </link>.</note>
+<note>Use GNU tar to untar the Solaris distribution file; see <link idref="faq" anchor="gnutar">A tar checksum error on Solaris</link>.</note>
 <anchor name="xalandists"/>
 
-<p>If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also download and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
-<note>To access previous releases of &xslt4c;, visit the <jump href="http://archive.apache.org/dist/xml/xalan-c/">Xalan-C archive directory</jump>.</note>
-</s2><anchor name="path"/>
+<p>If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also 
+   download and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
+<note>To access previous releases of &xslt4c;, visit the <jump href="http://archive.apache.org/dist/xml/xalan-c/">Xalan-C archive 
+      directory</jump>.</note>
+</s2>
+
+<anchor name="path"/>
 <s2 title="Setting up the path/library path">
 <ul>
   <li><link anchor="windowspath">For Windows</link></li>
   <li><link anchor="unixpath">For UNIX</link></li>  
-</ul><anchor name="windowspath"/>
+</ul>
+
+<anchor name="windowspath"/>
 <s3 title="For Windows">
 <p>To use the Windows binary distribution, you must place the Xalan executables and the Xalan and Xerces libraries on the path:</p>
 <ul>
-<li>Put &xslt4c-dist;-&lt;my_Windows_distribution&gt;\bin and &xml4c-dist;-&lt;my_Windows_distribution&gt;\bin on the path.</li>
+  <li>Put &xslt4c-dist;-&lt;my_Windows_distribution&gt;\bin and &xml4c-dist;-&lt;my_Windows_distribution&gt;\bin on the path.</li>
 </ul>
-<p>The Visual C++ Xalan project included with the Windows release knows the relative paths to the Xalan headers and libraries, but it does not know where you have unzipped the Xerces distribution. If you plan to use Visual C++ to build Xalan applications or <link idref="readme" anchor="jar">rebuild Xalan</link>, you must also provide Visual C++ with access to the Xerces headers and libraries.</p> 
+<p>The Visual C++ Xalan project included with the Windows release knows the relative paths to the Xalan headers and libraries, 
+   but it does not know where you have unzipped the Xerces distribution. If you plan to use Visual C++ to build Xalan applications 
+   or <link idref="readme" anchor="jar">rebuild Xalan</link>, you must also provide Visual C++ with access to the Xerces headers 
+   and libraries.</p> 
 <p>Use the Visual C++ Tools menu to open the Options dialog box, go to the Directories tab, and do the following:</p>
-    <ul>
-      <li>Add the path to &xml4c-dist;-&lt;my_Windows_distribution&gt;\include to the list of directories of Include files.</li>
-      <li>Add the path to &xml4c-dist;-&lt;my_Windows_distribution&gt;\lib to the list of directories of Library files.</li>
-    </ul>
+<ul>
+  <li>Add the path to &xml4c-dist;-&lt;my_Windows_distribution&gt;\include to the list of directories of Include files.</li>
+  <li>Add the path to &xml4c-dist;-&lt;my_Windows_distribution&gt;\lib to the list of directories of Library files.</li>
+</ul>
+</s3>
 
-</s3><anchor name="unixpath"/>
+<anchor name="unixpath"/>
 <s3 title="For UNIX">
-<p>To use one of the UNIX binary distributions, you must place the &xslt4c; executable on the path, and 
-the &xslt4c; and &xml4c; libraries on the library path.</p>
+<p>To use one of the UNIX binary distributions, you must place the &xslt4c; executable on the path, and the &xslt4c; and &xml4c; 
+   libraries on the library path.</p>
 <p>For the &xslt4c; AIX distributions:</p>
 <ul>
-<li>Put &xslt4c-dist;-&lt;my_AIX_distribution&gt;/bin on the path (PATH).</li>
-<li>Put &xslt4c-dist;-&lt;my_AIX_distribution&gt;/lib and &xml4c-dist;-&lt;my_AIX_distribution&gt;/lib 
-on the library path (LIBPATH), or copy the shared libraries to /usr/lib.</li>
+  <li>Put &xslt4c-dist;-&lt;my_AIX_distribution&gt;/bin on the path (PATH).</li>
+  <li>Put &xslt4c-dist;-&lt;my_AIX_distribution&gt;/lib and &xml4c-dist;-&lt;my_AIX_distribution&gt;/lib 
+      on the library path (LIBPATH), or copy the shared libraries to /usr/lib.</li>
 </ul>
 <p>For the &xslt4c; HP-UX 11 distributions:</p>
 <ul>
-<li>Put &xslt4c-dist;-&lt;my_HPUX_distribution&gt;/bin on the path (PATH).<br/><br/></li>
-<li>Put &xslt4c-dist;-&lt;my_HPUX_distribution&gt;/lib and &xml4c-dist;-&lt;my_HPUX_distribution&gt;/lib on the library path (SHLIB_PATH), or copy 
-the shared libraries to /usr/lib.</li>
+  <li>Put &xslt4c-dist;-&lt;my_HPUX_distribution&gt;/bin on the path (PATH).<br/><br/></li>
+  <li>Put &xslt4c-dist;-&lt;my_HPUX_distribution&gt;/lib and &xml4c-dist;-&lt;my_HPUX_distribution&gt;/lib on the library path 
+      SHLIB_PATH), or copy the shared libraries to /usr/lib.</li>
 </ul>
 <p>For the &xslt4c; Solaris distributions:</p>
 <ul>
-<li>Put &xslt4c-dist;-&lt;my_Solaris_distribution&gt;/bin on the path (PATH).<br/><br/></li>
-<li>Put &xslt4c-dist;-&lt;my_Solaris_distribution&gt;/lib and &xml4c-dist;-&lt;my_Solaris_distribution&gt;/lib on the library path 
-(LD_LIBRARY_PATH), or copy the shared libraries to /usr/lib.</li>
+  <li>Put &xslt4c-dist;-&lt;my_Solaris_distribution&gt;/bin on the path (PATH).<br/><br/></li>
+  <li>Put &xslt4c-dist;-&lt;my_Solaris_distribution&gt;/lib and &xml4c-dist;-&lt;my_Solaris_distribution&gt;/lib on the library path 
+     (LD_LIBRARY_PATH), or copy the shared libraries to /usr/lib.</li>
 </ul>
 <p>For the &xslt4c; RedHat and SuSE Linux distributions:</p>
 <ul>
-<li>Put &xslt4c-dist;-&lt;my_Linux_distribution&gt;/bin on the path (PATH).</li>
+  <li>Put &xslt4c-dist;-&lt;my_Linux_distribution&gt;/bin on the path (PATH).</li>
 <li>Put &xslt4c-dist;-&lt;my_Linux_distribution&gt;/lib and &xml4c-dist;-&lt;my_Linux_distribution&gt;/lib on the library path (LD_LIBRARY_PATH), 
 or copy the shared libraries to /usr/lib.</li>
 </ul>

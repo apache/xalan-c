@@ -30,50 +30,90 @@
    ]>     
 <resources>
  	
-  <resource id="xslt4c-current" title="&xslt4c-current;" location="http://xml.apache.org/xalan"/>
-  <resource id="xml4c-used" title="&xml4c-used;" location="http://xml.apache.org/xerces-c/index.html"/>   
-
-  <resource id="xslt4c-distdir" title="Xalan-C downloads" location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c"/>
-  <resource id="xml4c-distdir" title="Xerces-C downloads" location="http://www.apache.org/dyn/closer.cgi/xml/xerces-c/"/>
-  <resource id="xslt4c-win32-download" title="&xslt4c-dist;-win32.zip" location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-win32.zip"/>
-  <resource id="xslt4c-linux-download" title="&xslt4c-dist;-linux.tar.gz" location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-linux.tar.gz"/>
-<resource id="xslt4c-aix-download" title="&xslt4c-dist;-aix.tar.gz" location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-aix.tar.gz"/>
-<resource id="xslt4c-hp-ux-download" title="&xslt4c-dist;-hp-ux.tar.gz" location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-hp-ux.tar.gz"/>
-<resource id="xslt4c-Solaris-download" title="&xslt4c-dist;-solaris.tar.gz" location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-solaris.tar.gz"/>
+<resource id="xslt4c-current" 
+          title="&xslt4c-current;" 
+          location="http://xml.apache.org/xalan"/>
+<resource id="xml4c-used" 
+          title="&xml4c-used;" 
+          location="http://xml.apache.org/xerces-c/index.html"/>   
+<resource id="xslt4c-distdir" 
+          title="Xalan-C downloads" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c"/>
+<resource id="xml4c-distdir" 
+          title="Xerces-C downloads" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xerces-c/"/>
+<resource id="xslt4c-win32-download" 
+          title="&xslt4c-dist;-win32.zip" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-win32.zip"/>
+<resource id="xslt4c-linux-download" 
+          title="&xslt4c-dist;-linux.tar.gz" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-linux.tar.gz"/>
+<resource id="xslt4c-aix-download" 
+          title="&xslt4c-dist;-aix.tar.gz" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-aix.tar.gz"/>
+<resource id="xslt4c-hp-ux-download" 
+          title="&xslt4c-dist;-hp-ux.tar.gz" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-hp-ux.tar.gz"/>
+<resource id="xslt4c-Solaris-download" 
+          title="&xslt4c-dist;-solaris.tar.gz" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-solaris.tar.gz"/>
   
-  <resource id="icu" title="International Components for Unicode (ICU)" location="http://oss.software.ibm.com/icu/index.html"/>
-<resource id="icu-download" title="&icu-used;" location="http://oss.software.ibm.com/icu/download/index.html"/>
-<resource id="xerces-build-icu" title="Building ICU for &xml4c;" location="http://xml.apache.org/xerces-c/build.html#BuildICU"/>
+<resource id="icu" 
+          title="International Components for Unicode (ICU)" 
+          location="http://oss.software.ibm.com/icu/index.html"/>
+<resource id="icu-download" 
+          title="&icu-used;" 
+          location="http://oss.software.ibm.com/icu/download/index.html"/>
+<resource id="xerces-build-icu" 
+          title="Building ICU for &xml4c;" 
+          location="http://xml.apache.org/xerces-c/build.html#BuildICU"/>
+<resource id="stlport" 
+          title="STLport" 
+          location="http://www.stlport.org/"/>
+<resource id="ApacheLicense" 
+          title="The Apache Software License, Version 1.1" 
+          location="http://xml.apache.org/dist/LICENSE.txt"/>
+<resource id="Readme" 
+          title="Xalan Repository Release Notes" 
+          location="http://www.apache.org/websrc/cvsweb.cgi/xml-xalan/README"/>
+<resource id="XSL" 
+          title="Extensible Stylesheet Language (XSL) Version 1.0 W3C Recommendation" 
+          location="http://www.w3.org/TR/xsl"/>
+<resource id="XSLT" 
+          title="W3C Recommendation 16 November 1999 XSL Transformations (XSLT) Version 1.0" 
+          location="http://www.w3.org/TR/xslt"/>
+<resource id="XPath" 
+          title="XML Path Language (XPath) Version 1.0" 
+          location="http://www.w3.org/TR/xpath"/>
+<resource id="DOM" 
+          title="DOM" 
+          location="http://www.w3.org/DOM"/>
+<resource id="dpawsonxslfaq" 
+          title="XSL Frequently Asked Questions" 
+          location="http://www.dpawson.co.uk/xsl/xslfaq.html"/>
 
-  <resource id="stlport" title="STLport" location="http://www.stlport.org/"/>
-	
- <resource id="ApacheLicense" title="The Apache Software License, Version 1.1" location="http://xml.apache.org/dist/LICENSE.txt"/>
-	
-  <resource id="Readme" title="Xalan Repository Release Notes" location="http://www.apache.org/websrc/cvsweb.cgi/xml-xalan/README"/>
-  
-  <resource id="XSL" title="Extensible Stylesheet Language (XSL) Version 1.0 W3C Recommendation"
-   location="http://www.w3.org/TR/xsl"/>
+<resource id="xercesmm" 
+          title="Pluggable Memory Manager" 
+          location="http://xml.apache.org/xerces-c/program-others.html#PluggableMemoryManager"/>
 
-  <resource id="XSLT" title="W3C Recommendation 16 November 1999 XSL Transformations (XSLT) Version 1.0" 
-   location="http://www.w3.org/TR/xslt"/>
+<human-resource id="xalandev" 
+                name="Xalan Development Mailing List" 
+                mailto="xalan-dev@xml.apache.org"/>
   
-  <resource id="XPath" title="XML Path Language (XPath) Version 1.0" location="http://www.w3.org/TR/xpath"/>
+<resource id="bugzilla"
+          title="Bugzilla (the Apache bug database)"
+          location="http://nagoya.apache.org/bugzilla"/>
 
-  <resource id="DOM" title="DOM" location="http://www.w3.org/DOM"/>
-  
-  <resource id="dpawsonxslfaq" title="XSL Frequently Asked Questions" location="http://www.dpawson.co.uk/xsl/xslfaq.html"/>
- 
-  <human-resource id="xalandev" name="Xalan Development Mailing List" mailto="xalan-dev@xml.apache.org"/>
-  
-  <resource id="bugzilla"
-            title="Bugzilla (the Apache bug database)"
-            location="http://nagoya.apache.org/bugzilla"/>
-  <resource id="buglist"
-            title="XalanC open bugs"         
-            location="http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=XalanC&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time"/>
+<resource id="jira"
+          title="JIRA (the Apache bug database)"
+          location="http://nagoya.apache.org/jira"/>
 
-  <resource id="bugsfixedforthisrelease"
-            title="XalanC bugs fixed for this release"
-            location="http://nagoya.apache.org/bugzilla/buglist.cgi?resolution=FIXED&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;chfield=resolution&amp;chfieldfrom=07%2F20%2F2003&amp;chfieldto=12%2F31%2F2003&amp;chfieldvalue=FIXED&amp;product=XalanC&amp;short_desc=&amp;short_desc_type=allwordssubstr"/>
+<resource id="buglist"
+          title="XalanC open bugs"         
+          location="http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=XalanC&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time"/>
+
+<resource id="bugsfixedforthisrelease"
+          title="XalanC bugs fixed for this release"
+          location="http://nagoya.apache.org/bugzilla/buglist.cgi?resolution=FIXED&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;chfield=resolution&amp;chfieldfrom=07%2F20%2F2003&amp;chfieldto=12%2F31%2F2003&amp;chfieldvalue=FIXED&amp;product=XalanC&amp;short_desc=&amp;short_desc_type=allwordssubstr"/>
 
 </resources>
