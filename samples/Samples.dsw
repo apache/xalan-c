@@ -23,6 +23,18 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -35,6 +47,39 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "DOMSupport"="..\Projects\Win32\VC6\DOMSupport\DOMSupport.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -47,6 +92,33 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "PlatformSupport"="..\Projects\Win32\VC6\PlatformSupport\PlatformSupport.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -59,6 +131,18 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -71,6 +155,18 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -86,6 +182,9 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name DLL
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -98,6 +197,18 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -110,6 +221,21 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -122,6 +248,129 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XMLSupport"="..\Projects\Win32\VC6\XMLSupport\XMLSupport.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XPath"="..\Projects\Win32\VC6\XPath\XPath.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XSLT"="..\Projects\Win32\VC6\XSLT\XSLT.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XMLSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XalanDOM"="..\Projects\Win32\VC6\XalanDOM\XalanDOM.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "XalanSourceTree"="..\Projects\Win32\VC6\XalanSourceTree\XalanSourceTree.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XercesParserLiaison
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XMLSupport
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -134,6 +383,69 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XalanTransformer"="..\Projects\Win32\VC6\XalanTransformer\XalanTransformer.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XercesParserLiaison
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XMLSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XercesParserLiaison"="..\Projects\Win32\VC6\XercesParserLiaison\XercesParserLiaison.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XMLSupport
+    End Project Dependency
 }}}
 
 ###############################################################################

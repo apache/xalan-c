@@ -75,7 +75,7 @@ main(
 		for (size_t i=0; i<len; i++)
 			cout << "item " << (i+1) << "= \"" << result[i] << "\"" << endl;
 	}
-	catch(const XMLException& e)
+	catch(const XMLException&)
 	{
 		cerr << "Exception caught!  Exiting..." << endl;
 	}
