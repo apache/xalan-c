@@ -59,7 +59,7 @@
 
 
 
-#include <stdexcept>
+//#include <stdexcept>
 
 
 
@@ -102,6 +102,14 @@ XObject::XObject(const XObject&		source) :
 
 XObject::~XObject()
 {
+}
+
+
+
+XObject::eObjectType
+XObject::getRealType() const
+{
+	return m_objectType;
 }
 
 

@@ -73,9 +73,12 @@
 
 
 
-#include <XPath/XStringAllocator.hpp>
-#include <XPath/XNumberAllocator.hpp>
 #include <XPath/XNodeSetAllocator.hpp>
+#include <XPath/XNumberAllocator.hpp>
+#include <XPath/XStringAllocator.hpp>
+#include <XPath/XStringAdapterAllocator.hpp>
+#include <XPath/XStringCachedAllocator.hpp>
+#include <XPath/XStringReferenceAllocator.hpp>
 #include <XPath/XResultTreeFragAllocator.hpp>
 
 
@@ -133,30 +136,22 @@ public:
 	reset();
 
 	virtual const XObjectPtr
-	clone(const XObject&	theXObject);
+	createBoolean(bool	theValue);
 
 	virtual const XObjectPtr
-	createBoolean(
-			bool	theValue);
-
-	virtual const XObjectPtr
-	createNodeSet(
-			BorrowReturnMutableNodeRefList&		theValue);
+	createNodeSet(BorrowReturnMutableNodeRefList&	theValue);
 
 	virtual const XObjectPtr
 	createNull();
 
 	virtual const XObjectPtr
-	createNumber(
-			double	theValue);
+	createNumber(double		theValue);
 
 	virtual const XObjectPtr
-	createString(
-			const XalanDOMString&	theValue);
+	createString(const XalanDOMString&	theValue);
 
 	virtual const XObjectPtr
-	createString(
-			const XalanDOMChar*		theValue);
+	createString(const XalanDOMChar*	theValue);
 
 	virtual const XObjectPtr
 	createString(
@@ -164,29 +159,36 @@ public:
 			unsigned int			theLength);
 
 	virtual const XObjectPtr
+	createStringReference(const XalanDOMString&		theValue);
+
+	virtual const XObjectPtr
+	createStringAdapter(const XObjectPtr&	theValue);
+
+	virtual const XObjectPtr
+	createString(GetAndReleaseCachedString&		theValue);
+
+	virtual const XObjectPtr
 	createUnknown(
 			const XalanDOMString&	theValue);
 
 	virtual const XObjectPtr
-	createResultTreeFrag(
-			ResultTreeFragBase*		theValue);
+	createResultTreeFrag(ResultTreeFragBase*	theValue);
 
 	virtual const XObjectPtr
-	createSpan(
-			BorrowReturnMutableNodeRefList&		theValue);
+	createSpan(BorrowReturnMutableNodeRefList&	theValue);
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef set<const XObject*, less<const XObject*> >	CollectionType;
+	typedef set<XObject*, less<XObject*> >	CollectionType;
 #else
-	typedef std::set<const XObject*>	CollectionType;
+	typedef std::set<XObject*>				CollectionType;
 #endif
 
 protected:
 
 	virtual bool
 	doReturnObject(
-			const XObject*	theXObject,
-			bool			fInReset = false);
+			XObject*	theXObject,
+			bool		fInReset = false);
 
 private:
 
@@ -201,17 +203,26 @@ private:
 
 
 	// Data members...
-	CollectionType				m_xobjects;
 
-	const XalanAutoPtr<XNull>	m_XNull;
+	// This one's first, since it may be be holding references
+	// to objects in other allocators.
+	XStringAdapterAllocator		m_xstringAdapterAllocator;
 
 	XStringAllocator			m_xstringAllocator;
-	    
+
+	XStringCachedAllocator		m_xstringCachedAllocator;
+
+	XStringReferenceAllocator	m_xstringReferenceAllocator;
+
 	XNumberAllocator			m_xnumberAllocator;
 
 	XNodeSetAllocator			m_xnodesetAllocator;
 
 	XResultTreeFragAllocator	m_xresultTreeFragAllocator;
+
+	CollectionType				m_xobjects;
+
+	const XalanAutoPtr<XNull>	m_XNull;
 };
 
 

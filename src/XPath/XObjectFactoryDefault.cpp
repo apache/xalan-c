@@ -71,6 +71,9 @@
 #include "XResultTreeFrag.hpp"
 #include "XSpan.hpp"
 #include "XString.hpp"
+#include "XStringAdapter.hpp"
+#include "XStringCached.hpp"
+#include "XStringReference.hpp"
 #include "XUnknown.hpp"
 
 
@@ -81,17 +84,20 @@ static XBoolean		theFalseBoolean(false);
 
 
 XObjectFactoryDefault::XObjectFactoryDefault(
-			unsigned int		theXStringBlockSize,
-			unsigned int		theXNumberBlockSize,
-			unsigned int		theXNodeSetBlockSize,
-			unsigned int		theXResultTreeFragBlockSize) :  
+			unsigned int	theXStringBlockSize,
+			unsigned int	theXNumberBlockSize,
+			unsigned int	theXNodeSetBlockSize,
+			unsigned int	theXResultTreeFragBlockSize) :  
 	XObjectFactory(),
-	m_xobjects(),
-	m_XNull(new XNull),
+	m_xstringAdapterAllocator(theXStringBlockSize),
 	m_xstringAllocator(theXStringBlockSize),
+	m_xstringCachedAllocator(theXStringBlockSize),
+	m_xstringReferenceAllocator(theXStringBlockSize),
 	m_xnumberAllocator(theXNumberBlockSize),
 	m_xnodesetAllocator(theXNodeSetBlockSize),
-	m_xresultTreeFragAllocator(theXResultTreeFragBlockSize)
+	m_xresultTreeFragAllocator(theXResultTreeFragBlockSize),
+	m_xobjects(),
+	m_XNull(new XNull)
 {
 }
 
@@ -106,14 +112,14 @@ XObjectFactoryDefault::~XObjectFactoryDefault()
 
 bool
 XObjectFactoryDefault::doReturnObject(
-			const XObject*	theXObject,
-			bool			fInReset)
+			XObject*	theXObject,
+			bool		fInReset)
 {
 	assert(theXObject != 0);
 
 	bool bStatus = false;	
 
-	const XObject::eObjectType	theType = theXObject->getType();
+	const XObject::eObjectType	theType = getRealType(*theXObject);
 
 	switch(theType)
 	{
@@ -123,16 +129,55 @@ XObjectFactoryDefault::doReturnObject(
 			bStatus = true;
 		}
 
+	case XObject::eTypeStringAdapter:
+		{
+			XStringAdapter* const		theXStringAdapter =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(XStringAdapter*)theXObject;
+#else
+				static_cast<XStringAdapter*>(theXObject);
+#endif
+
+			bStatus = m_xstringAdapterAllocator.destroy(theXStringAdapter);
+		}
+		break;
+
 	case XObject::eTypeString:
 		{
 			XString* const	theXString =
 #if defined(XALAN_OLD_STYLE_CASTS)
 				(XString*)theXObject;
 #else
-				static_cast<XString*>(const_cast<XObject*>(theXObject));
+				static_cast<XString*>(theXObject);
 #endif
 
 			bStatus = m_xstringAllocator.destroy(theXString);
+		}
+		break;
+
+	case XObject::eTypeStringCached:
+		{
+			XStringCached* const	theXStringCached =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(XStringCached*)theXObject;
+#else
+				static_cast<XStringCached*>(theXObject);
+#endif
+
+			bStatus = m_xstringCachedAllocator.destroy(theXStringCached);
+		}
+		break;
+
+	case XObject::eTypeStringReference:
+		{
+			XStringReference* const		theXStringReference =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(XStringReference*)theXObject;
+#else
+				static_cast<XStringReference*>(theXObject);
+#endif
+
+			bStatus = m_xstringReferenceAllocator.destroy(theXStringReference);
 		}
 		break;
 
@@ -142,7 +187,7 @@ XObjectFactoryDefault::doReturnObject(
 #if defined(XALAN_OLD_STYLE_CASTS)
 				(XNumber*)theXObject;
 #else
-				static_cast<XNumber*>(const_cast<XObject*>(theXObject));
+				static_cast<XNumber*>(theXObject);
 #endif
 
 			bStatus = m_xnumberAllocator.destroy(theXNumber);
@@ -155,7 +200,7 @@ XObjectFactoryDefault::doReturnObject(
 #if defined(XALAN_OLD_STYLE_CASTS)
 				(XNodeSet*)theXObject;
 #else
-				static_cast<XNodeSet*>(const_cast<XObject*>(theXObject));
+				static_cast<XNodeSet*>(theXObject);
 #endif
 
 			bStatus = m_xnodesetAllocator.destroy(theXNodeSet);
@@ -164,11 +209,11 @@ XObjectFactoryDefault::doReturnObject(
 
 	case XObject::eTypeResultTreeFrag:	
 		{
-			XResultTreeFrag* const	theXResultTreeFrag =	
+			XResultTreeFrag* const	theXResultTreeFrag =
 #if defined(XALAN_OLD_STYLE_CASTS)
 				(XResultTreeFrag*)theXObject;
 #else
-				static_cast<XResultTreeFrag*>(const_cast<XObject*>(theXObject));	
+				static_cast<XResultTreeFrag*>(theXObject);
 #endif
 
 			bStatus = m_xresultTreeFragAllocator.destroy(theXResultTreeFrag);
@@ -201,84 +246,6 @@ XObjectFactoryDefault::doReturnObject(
 
 
 const XObjectPtr
-XObjectFactoryDefault::clone(const XObject&		theXObject)
-{
-	XObject*	theClone = 0;
-
-	if (&theXObject == &theTrueBoolean)
-	{
-		theClone = &theTrueBoolean;
-	}
-	else if (&theXObject == &theFalseBoolean)
-	{
-		theClone = &theFalseBoolean;
-	}
-	else if (&theXObject == m_XNull.get())
-	{
-		theClone = m_XNull.get();
-	}
-	else
-	{
-		const XObject::eObjectType	theType = theXObject.getType();		
-
-		switch(theType)
-		{	
-		case XObject::eTypeString:
-			theClone = m_xstringAllocator.clone(
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(const XString&)theXObject);
-#else			
-			static_cast<const XString&>(theXObject));
-#endif
-
-			break;
-
-		case  XObject::eTypeNumber:
-			theClone = m_xnumberAllocator.clone(
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(const XNumber&)theXObject);
-#else			
-			static_cast<const XNumber&>(theXObject));
-#endif
-
-			break;
-
-		case XObject::eTypeNodeSet:
-			theClone = m_xnodesetAllocator.clone(
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(const XNodeSet&)theXObject);
-#else			
-			static_cast<const XNodeSet&>(theXObject));
-#endif
-
-			break;
-
-		case XObject::eTypeResultTreeFrag:
-			theClone = m_xresultTreeFragAllocator.clone(
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(const XResultTreeFrag&)theXObject);
-#else			
-			static_cast<const XResultTreeFrag&>(theXObject));
-#endif
-
-			break;
-
-		default:
-			theClone = theXObject.clone();
-
-			m_xobjects.insert(theClone);
-			break;
-		}
-	}
-
-	theClone->setFactory(this);
-
-	return XObjectPtr(theClone);
-}
-
-
-
-const XObjectPtr
 XObjectFactoryDefault::createBoolean(
 			bool	theValue)
 {
@@ -296,8 +263,7 @@ XObjectFactoryDefault::createNull()
 
 
 const XObjectPtr
-XObjectFactoryDefault::createUnknown(
-			const XalanDOMString&	theValue)
+XObjectFactoryDefault::createUnknown(const XalanDOMString&	theValue)
 {
 	XUnknown* const	theXUnknown = new XUnknown(theValue);
 
@@ -311,8 +277,7 @@ XObjectFactoryDefault::createUnknown(
 
 
 const XObjectPtr
-XObjectFactoryDefault::createSpan(
-			BorrowReturnMutableNodeRefList&		theValue)
+XObjectFactoryDefault::createSpan(BorrowReturnMutableNodeRefList&	theValue)
 {
 	XSpan* const	theXSpan = new XSpan(theValue);
 
@@ -326,8 +291,7 @@ XObjectFactoryDefault::createSpan(
 
 
 const XObjectPtr
-XObjectFactoryDefault::createNumber(
-			double	theValue)
+XObjectFactoryDefault::createNumber(double	theValue)
 {
 	XNumber*	theXNumber = m_xnumberAllocator.createNumber(theValue);
 
@@ -339,8 +303,7 @@ XObjectFactoryDefault::createNumber(
 
 
 const XObjectPtr
-XObjectFactoryDefault::createNodeSet(
-			BorrowReturnMutableNodeRefList&		theValue)
+XObjectFactoryDefault::createNodeSet(BorrowReturnMutableNodeRefList&	theValue)
 {
 	XNodeSet* const		theXNodeSet = m_xnodesetAllocator.createNodeSet(theValue);
 
@@ -352,8 +315,7 @@ XObjectFactoryDefault::createNodeSet(
 
 
 const XObjectPtr
-XObjectFactoryDefault::createString(
-			const XalanDOMString&	theValue)
+XObjectFactoryDefault::createString(const XalanDOMString&	theValue)
 {
 	XString* const	theXString = m_xstringAllocator.createString(theValue);
 
@@ -365,8 +327,7 @@ XObjectFactoryDefault::createString(
 
 
 const XObjectPtr
-XObjectFactoryDefault::createString(
-			const XalanDOMChar*		theValue)
+XObjectFactoryDefault::createString(const XalanDOMChar*		theValue)
 {
 	XString* const	theXString = m_xstringAllocator.createString(theValue);
 
@@ -392,8 +353,43 @@ XObjectFactoryDefault::createString(
 
 
 const XObjectPtr
-XObjectFactoryDefault::createResultTreeFrag(
-			ResultTreeFragBase*		theValue)
+XObjectFactoryDefault::createStringReference(const XalanDOMString&	theValue)
+{
+	XStringReference* const	theXStringReference = m_xstringReferenceAllocator.createString(theValue);
+
+	theXStringReference->setFactory(this);
+
+	return XObjectPtr(theXStringReference);
+}
+
+
+
+const XObjectPtr
+XObjectFactoryDefault::createStringAdapter(const XObjectPtr&	theValue)
+{
+	XStringAdapter* const	theXStringAdapter = m_xstringAdapterAllocator.createString(theValue);
+
+	theXStringAdapter->setFactory(this);
+
+	return XObjectPtr(theXStringAdapter);
+}
+
+
+
+const XObjectPtr
+XObjectFactoryDefault::createString(GetAndReleaseCachedString&	theValue)
+{
+	XStringCached* const	theXStringCached = m_xstringCachedAllocator.createString(theValue);
+
+	theXStringCached->setFactory(this);
+
+	return XObjectPtr(theXStringCached);
+}
+
+
+
+const XObjectPtr
+XObjectFactoryDefault::createResultTreeFrag(ResultTreeFragBase*		theValue)
 {
 	XResultTreeFrag* const	theResultTreeFrag =  m_xresultTreeFragAllocator.create(theValue);
 
@@ -407,17 +403,21 @@ XObjectFactoryDefault::createResultTreeFrag(
 void
 XObjectFactoryDefault::reset()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	m_xstringAdapterAllocator.reset();
 
 	m_xstringAllocator.reset();
-	    
+
+	m_xstringReferenceAllocator.reset();
+
 	m_xnumberAllocator.reset();
 
 	m_xnodesetAllocator.reset();
 
 	m_xresultTreeFragAllocator.reset();
+
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
 
 	for_each(m_xobjects.begin(),
 			 m_xobjects.end(),

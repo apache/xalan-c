@@ -10,33 +10,33 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *	  notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ *	  notice, this list of conditions and the following disclaimer in
+ *	  the documentation and/or other materials provided with the
+ *	  distribution.
  *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
+ *	  if any, must include the following acknowledgment:  
+ *		 "This product includes software developed by the
+ *		  Apache Software Foundation (http://www.apache.org/)."
+ *	  Alternately, this acknowledgment may appear in the software itself,
+ *	  if and wherever such third-party acknowledgments normally appear.
  *
  * 4. The names "Xalan" and "Apache Software Foundation" must
- *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
- *    permission, please contact apache@apache.org.
+ *	  not be used to endorse or promote products derived from this
+ *	  software without prior written permission. For written 
+ *	  permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache",
- *    nor may "Apache" appear in their name, without prior written
- *    permission of the Apache Software Foundation.
+ *	  nor may "Apache" appear in their name, without prior written
+ *	  permission of the Apache Software Foundation.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * DISCLAIMED.	IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
@@ -92,6 +92,8 @@ class XALAN_XPATH_EXPORT XObjectFactory
 public:
 
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+	typedef XPathExecutionContext::GetAndReleaseCachedString		GetAndReleaseCachedString;
+
 
 	XObjectFactory();
 
@@ -106,13 +108,13 @@ public:
 	 * @return true if the object belongs to the factory, false if not.
 	 */
 	bool
-	returnObject(const XObject*		theXObject)
+	returnObject(XObject* 	theXObject)
 	{
 		return doReturnObject(theXObject);
 	}
 
 	/**
-	 * Reset the instance.  This invalidates all existing instances created
+	 * Reset the instance.	This invalidates all existing instances created
 	 * with this XObjectFactory.
 	 */
 	virtual void
@@ -121,27 +123,25 @@ public:
 	/**
 	 * Create a boolean XObject from a boolean value.
 	 * 
-	 * @param theValue  value used to create object	 
+	 * @param theValue	value used to create object  
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
-	createBoolean(
-			bool	theValue) = 0;
+	createBoolean(bool	theValue) = 0;
 
 	/**
 	 * Create a node set XObject from a node list.
 	 * 
-	 * @param theValue  value used to create object.  theValue will be owned by the new XObject.
+	 * @param theValue	value used to create object.  theValue will be owned by the new XObject.
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
-	createNodeSet(
-			BorrowReturnMutableNodeRefList&		theValue) = 0;
+	createNodeSet(BorrowReturnMutableNodeRefList& 	theValue) = 0;
 
 	/**
 	 * Create a null XObject.
 	 * 
-	 * @param theValue  value used to create object	
+	 * @param theValue	value used to create object 
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
@@ -150,74 +150,100 @@ public:
 	/**
 	 * Create a numeric XObject from a number.
 	 * 
-	 * @param theValue  value used to create object	
+	 * @param theValue	value used to create object 
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
-	createNumber(
-			double	theValue) = 0;
+	createNumber(double 	theValue) = 0;
 
 	/**
 	 * Create a string XObject from a string.
 	 * 
-	 * @param theValue  value used to create object	 
+	 * @param theValue	value used to create object  
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
-	createString(
-			const XalanDOMString&	theValue) = 0;
+	createString(const XalanDOMString&	theValue) = 0;
 
 	/**
 	 * Create a string XObject from a null-terminated array of characters.
 	 * 
-	 * @param theValue  a pointer to the array
+	 * @param theValue	a pointer to the array
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
-	createString(
-			const XalanDOMChar*		theValue) = 0;
+	createString(const XalanDOMChar*	theValue) = 0;
 
 	/**
 	 * Create a string XObject from an array of characters.
 	 * 
-	 * @param theValue  a pointer to the array
+	 * @param theValue	a pointer to the array
 	 * @paran theLength the length of the array
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
 	createString(
-			const XalanDOMChar*		theValue,
+			const XalanDOMChar* 	theValue,
 			unsigned int			theLength) = 0;
+
+	/**
+	 * Create a string XObject from a string.  The XObject
+	 * will hold a reference to the supplied string, so
+	 * the string must be in scope for the lifetime of
+	 * the instance
+	 *
+	 * @param theValue	value used to create object  
+	 * @return pointer to new object
+	 */
+	virtual const XObjectPtr
+	createStringReference(const XalanDOMString&		theValue) = 0;
+
+	/**
+	 * Create a string XObject that will adapt another XObject to
+	 * behave like a string.  The XObject holds a reference to the
+	 * other XObject.
+	 *
+	 * @param theValue	value used to create object  
+	 * @return pointer to new object
+	 */
+	virtual const XObjectPtr
+	createStringAdapter(const XObjectPtr&	theValue) = 0;
+
+	/**
+	 * Create a string XObject from a cached XalanDOMString,
+	 *
+	 * @param theValue	value used to create object  
+	 * @return pointer to new object
+	 */
+	virtual const XObjectPtr
+	createString(GetAndReleaseCachedString&		theValue) = 0;
 
 	/**
 	 * Create an "unknown" XObject from a string.
 	 * 
-	 * @param theValue  value used to create object	 
+	 * @param theValue	value used to create object  
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
-	createUnknown(
-			const XalanDOMString&	theValue) = 0;
+	createUnknown(const XalanDOMString& 	theValue) = 0;
 
 	/**
 	 * Create a result tree fragment XObject from a result tree fragment.
 	 * 
-	 * @param theValue  value used to create object.  theValue will be owned by the new XObject.	
+	 * @param theValue	value used to create object.  theValue will be owned by the new XObject.	
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
-	createResultTreeFrag(
-			ResultTreeFragBase*		theValue) = 0;
+	createResultTreeFrag(ResultTreeFragBase*	theValue) = 0;
 
 	/**
 	 * Create a span XObject from a node list.
 	 * 
-	 * @param theValue  value used to create object.  The new object will own the pointer.
+	 * @param theValue	value used to create object.  The new object will own the pointer.
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
-	createSpan(
-			BorrowReturnMutableNodeRefList&		theValue) = 0;
+	createSpan(BorrowReturnMutableNodeRefList& 	theValue) = 0;
 
 	/**
 	 *
@@ -225,15 +251,15 @@ public:
 	 *
 	 */
 #if defined(XALAN_NO_NAMESPACES)
-	struct DeleteXObjectFunctor : public unary_function<const XObject*, void>
+	struct DeleteXObjectFunctor : public unary_function<XObject*, void>
 #else
-	struct DeleteXObjectFunctor : public std::unary_function<const XObject*, void>
+	struct DeleteXObjectFunctor : public std::unary_function<XObject*, void>
 #endif
 	{
 	public:
 
 		DeleteXObjectFunctor(
-			XObjectFactory&		theFactoryInstance,
+			XObjectFactory& 	theFactoryInstance,
 			bool				fInReset = false) :
 			m_factoryInstance(theFactoryInstance),
 			m_fInReset(fInReset)
@@ -257,7 +283,7 @@ public:
 
 	private:
 
-		XObjectFactory&		m_factoryInstance;
+		XObjectFactory& 	m_factoryInstance;
 
 		const bool			m_fInReset;
 	};
@@ -267,12 +293,23 @@ public:
 protected:
 
 	/**
+	 * Return the actual implementation type of an XObject.
+	 *
+	 * @param theXObject the XObject
+	 */
+	XObject::eObjectType
+	getRealType(const XObject&	theXObject) const
+	{
+		return theXObject.getRealType();
+	}
+
+	/**
 	 * Delete a FactoryObject instance.
 	 *
 	 * @param theXObject the XObject instance to delete.
 	 */
 	void
-	deleteObject(const XObject*		theXObject) const
+	deleteObject(const XObject* 	theXObject) const
 	{
 #if defined(XALAN_CANNOT_DELETE_CONST)
 		delete (XObject*)theXObject;
@@ -290,8 +327,8 @@ protected:
 
 	virtual bool
 	doReturnObject(
-			const XObject*	theXObject,
-			bool			fInReset = false) = 0;
+			XObject*	theXObject,
+			bool		fInReset = false) = 0;
 
 private:
 

@@ -105,6 +105,11 @@ public:
 						  eTypeNodeSet = 5,
 						  eTypeResultTreeFrag = 6,
 						  eTypeUserDefined = 7,
+						  // These next types are implementation-specific, and
+						  // are never returned by getType().
+						  eTypeStringReference = 8,
+						  eTypeStringAdapter = 9,
+						  eTypeStringCached = 10,
 						  eUnknown
 						};
 
@@ -320,6 +325,14 @@ public:
 	};
 
 protected:
+
+	/**
+	 * Tell what kind of class this is.
+	 *
+	 * @return numeric type value
+	 */
+	virtual eObjectType
+	getRealType() const;
 
 	virtual void 
 	referenced();
