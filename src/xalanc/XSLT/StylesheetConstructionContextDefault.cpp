@@ -93,6 +93,7 @@
 #include "ElemDecimalFormat.hpp"
 #include "ElemExtensionCall.hpp"
 #include "ElemFallback.hpp"
+#include "ElemForwardCompatible.hpp"
 #include "ElemForEach.hpp"
 #include "ElemIf.hpp"
 #include "ElemMessage.hpp"
@@ -971,6 +972,7 @@ StylesheetConstructionContextDefault::createElement(
 
 ElemTemplateElement*
 StylesheetConstructionContextDefault::createElement(
+			int							token,
 			Stylesheet&					stylesheetTree,
 			const XalanDOMChar*			name,
 			const AttributeListType&	atts,
@@ -979,13 +981,38 @@ StylesheetConstructionContextDefault::createElement(
 	const XalanLocator::size_type	lineNumber = XalanLocator::getLineNumber(locator);
 	const XalanLocator::size_type	columnNumber = XalanLocator::getColumnNumber(locator);
 
-	return m_elemLiteralResultAllocator.create(
+	ElemTemplateElement*	theElement = 0;
+
+	if (token == ELEMNAME_LITERAL_RESULT)
+	{
+		theElement = m_elemLiteralResultAllocator.create(
 			*this,
 			stylesheetTree,
 			name,
 			atts,
 			lineNumber,
 			columnNumber);
+	}
+	else if (token == ELEMNAME_FORWARD_COMPATIBLE)
+	{
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemForwardCompatible(
+			*this,
+			stylesheetTree,
+			name,
+			atts,
+			lineNumber,
+			columnNumber);
+
+		m_allocatedElements.back() = theElement;
+	}
+	else
+	{
+		error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLTToken_1Param, LongToDOMString(token)), 0, locator);
+	}
+
+	return theElement;
 }
 
 

@@ -133,7 +133,28 @@ ElemFallback::execute(StylesheetExecutionContext&		executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
-	executeChildren(executionContext);
+	int		thePreviousToken = StylesheetConstructionContext::ELEMNAME_UNDEFINED;
+
+	for (const ElemTemplateElement*	child = getFirstChildElem(); child != 0; child = child->getNextSiblingElem())
+	{
+		const int	theCurrentToken = child->getXSLToken();
+
+		if(theCurrentToken == StylesheetConstructionContext::ELEMNAME_FALLBACK)
+		{
+			// Don't execute a fallback if it's preceeded by a forward-compatible
+			// element.
+			if (thePreviousToken != StylesheetConstructionContext::ELEMNAME_FORWARD_COMPATIBLE)
+			{
+				child->execute(executionContext);
+			}
+		}
+		else
+		{
+			child->execute(executionContext);
+		}
+
+		thePreviousToken = theCurrentToken;
+	}
 }
 
 

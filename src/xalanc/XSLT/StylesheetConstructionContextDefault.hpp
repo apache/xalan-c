@@ -456,6 +456,7 @@ public:
 
 	virtual ElemTemplateElement*
 	createElement(
+			int							token,
 			Stylesheet&					stylesheetTree,
 			const XalanDOMChar*			name,
 			const AttributeListType&	atts,

@@ -181,6 +181,11 @@ public:
 		// element.
 		ELEMNAME_TEXT_LITERAL_RESULT,
 
+		// This one doesn't really have a name.
+		// It's used for forward-compatible
+		// processing.
+		ELEMNAME_FORWARD_COMPATIBLE,
+
 		// Extension handling.
 		ELEMNAME_EXTENSION_CALL,
 		ELEMNAME_EXTENSION_HANDLER
@@ -665,10 +670,11 @@ public:
 			const LocatorType*			locator = 0) = 0;
 
 	/**
-	 * Create a literal result element. The instance owns the
-	 * memory and will delete the element when it goes out of
-	 * scope and the containing stylesheet is destroyed.
+	 * Create a elements which have specific names. The instance
+	 * owns the memory and will delete the element when it goes
+	 * out of scope and the containing stylesheet is destroyed.
 	 *
+	 * @param token The enum value of the element to create.
 	 * @param stylesheetTree The stylesheet containing the element
 	 * @param name The name of the element
 	 * @param atts The list of attributes for the element
@@ -678,6 +684,7 @@ public:
 	 */
 	virtual ElemTemplateElement*
 	createElement(
+			int							token,
 			Stylesheet&					stylesheetTree,
 			const XalanDOMChar*			name,
 			const AttributeListType&	atts,

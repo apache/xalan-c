@@ -523,6 +523,13 @@ StylesheetHandler::startElement(
 						if(m_constructionContext.getXSLTVersionSupported() < m_stylesheet.getXSLTVerDeclared())
 						{
 							warn(name, XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement), locator);
+
+							elem = m_constructionContext.createElement(
+										StylesheetConstructionContext::ELEMNAME_FORWARD_COMPATIBLE,
+										m_stylesheet,
+										name,
+										atts,
+										locator);
 						}
 						else
 						{
@@ -580,6 +587,7 @@ StylesheetHandler::startElement(
 				else 
 				{
 					elem = m_constructionContext.createElement(
+												StylesheetConstructionContext::ELEMNAME_LITERAL_RESULT,
 												m_stylesheet,
 												name,
 												atts,
@@ -643,6 +651,7 @@ StylesheetHandler::initWrapperless(
 
 	ElemTemplateElement* const	pElem =
 		m_constructionContext.createElement(
+			StylesheetConstructionContext::ELEMNAME_LITERAL_RESULT,
 			m_stylesheet,
 			name,
 			atts,
@@ -828,7 +837,15 @@ StylesheetHandler::processTopLevelElement(
 	default:
 		if (inExtensionElement() == false)
 		{
-			error(name, XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement), locator);
+			if (m_constructionContext.getXSLTVersionSupported() < m_stylesheet.getXSLTVerDeclared())
+			{
+				// Forward-compatible mode...
+				m_inExtensionElementStack.back() = true;
+			}
+			else
+			{
+				error(name, XalanMessageLoader::getMessage(XalanMessages::UnknownXSLElement), locator);
+			}
 		}
 		break;
 	}

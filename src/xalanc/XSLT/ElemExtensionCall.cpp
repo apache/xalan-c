@@ -97,8 +97,10 @@ ElemExtensionCall::ElemExtensionCall(
 
 
 void
-ElemExtensionCall::execute(StylesheetExecutionContext&		executionContext) const
+ElemExtensionCall::execute(StylesheetExecutionContext&	executionContext) const
 {
+	ElemTemplateElement::execute(executionContext);
+
 	executionContext.warn( 
 		XalanMessageLoader::getMessage(XalanMessages::XalanHandleExtensions),
 		0,
