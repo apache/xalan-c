@@ -126,6 +126,7 @@
 //#define XALAN_USE_ICU
 #if defined(XALAN_USE_ICU)
 #include <xalanc/ICUBridge/ICUBridgeCollationCompareFunctor.hpp>
+#include <xalanc/ICUBridge/ICUBridgeCleanup.hpp>
 #endif
 
 
@@ -1241,6 +1242,10 @@ main(
 
 		XMLPlatformUtils::Terminate();
 	}
+
+#if defined(XALAN_USE_ICU)
+    ICUBridgeCleanup::cleanup();
+#endif
 
 	return theResult;
 }
