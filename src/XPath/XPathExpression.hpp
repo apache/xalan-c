@@ -598,14 +598,6 @@ public:
 		eMATCH_ANY_ANCESTOR_WITH_PREDICATE = 97,
 		eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL = 98,
 
-		/**
-		 * [OP_INLINE_NUMBERLIT] (Number literal.)
-		 * [3]
-		 * [value]
-		 * 
-		 */
-		eOP_INLINE_NUMBERLIT = 99,
-
 		// Always add _before_ this one.
 		eOpCodeNextAvailable
 	};	// enum eOpCodes
@@ -765,6 +757,7 @@ public:
 
 	typedef vector<OpCodeMapValueType>		OpCodeMapValueVectorType;
 
+	typedef vector<double>					NumberLiteralValueVectorType;
 #else
 
 	typedef std::vector<int>				OpCodeMapType;
@@ -778,6 +771,7 @@ public:
 	typedef std::set<OpCodeMapValueType>	NodeTestSetType;
 	typedef std::vector<OpCodeMapValueType> OpCodeMapValueVectorType;
 
+	typedef std::vector<double>				NumberLiteralValueVectorType;
 #endif
 
 	typedef TokenQueueType::value_type		TokenQueueValueType;
@@ -1343,6 +1337,29 @@ public:
 	pushArgumentOnOpCodeMap(double	theToken);
 
 	/**
+	 * Push a number literal onto the vector of number literals and its index onto
+	 * the operations code map.
+	 *
+	 * @param theToken number value of the token to push
+	 */
+	void
+	pushNumberLiteralOnOpCodeMap(double		theNumber);
+
+	/**
+	 * Get a number literal from the vector of number literals.
+	 *
+	 * @param theIndex The index of the desired value.
+	 */
+	double
+	getNumberLiteral(int	theIndex) const
+	{
+		assert(theIndex >= 0 &&
+			   NumberLiteralValueVectorType::size_type(theIndex) < m_numberLiteralValues.size());
+
+		return m_numberLiteralValues[NumberLiteralValueVectorType::size_type(theIndex)];
+	}
+
+	/**
 	 * Push the current position in the token queue onto the operations code
 	 * map.
 	 */
@@ -1475,6 +1492,8 @@ private:
 		eDefaultOpMapSize = 100,
 		eDefaultPatternMapSize = 100
 	};
+
+	NumberLiteralValueVectorType	m_numberLiteralValues;
 
 	// A map of Op codes to op code lengths.
 	const static OpCodeLengthMapType	s_opCodeLengths;

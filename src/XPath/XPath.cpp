@@ -298,10 +298,6 @@ XPath::executeMore(
 		return numberlit(context, opPos, executionContext);
 		break;
 
-	case XPathExpression::eOP_INLINE_NUMBERLIT:
-		return inlineNumberlit(context, opPos, executionContext);
-		break;
-
 	case XPathExpression::eOP_ARGUMENT:
 		return arg(context, opPos, executionContext);
 		break;
@@ -791,18 +787,11 @@ XPath::getNumericOperand(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	if (m_expression.m_opMap[opPos] == XPathExpression::eOP_INLINE_NUMBERLIT)
+	if (m_expression.m_opMap[opPos] == XPathExpression::eOP_NUMBERLIT)
 	{
-		assert(m_expression.m_opMap.size() > unsigned(opPos + 2));
+		assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[opPos + 3]));
 
-		return double(m_expression.m_opMap[opPos + 2]);
-	}
-	else if (m_expression.m_opMap[opPos] == XPathExpression::eOP_NUMBERLIT)
-	{
-		assert(m_expression.m_opMap.size() > unsigned(opPos + 2));
-		assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[opPos + 2]));
-
-		return m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]].num();
+		return m_expression.getNumberLiteral(m_expression.m_opMap[opPos + 2]);
 	}
 	else
 	{
@@ -1112,10 +1101,10 @@ XPath::numberlit(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	assert(m_expression.m_opMap.size() > unsigned(opPos + 2));
-	assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[opPos + 2]));
+	assert(m_expression.m_opMap.size() > unsigned(opPos + 3));
+	assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[opPos + 3]));
 
-	const XToken&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
+	const XToken&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 3]];
 
 	if (m_inStylesheet == true)
 	{
@@ -1125,19 +1114,6 @@ XPath::numberlit(
 	{
 		return executionContext.getXObjectFactory().createNumber(theLiteral.num());
 	}
-}
-
-
-
-const XObjectPtr
-XPath::inlineNumberlit(
-			XalanNode*				/* context */,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const
-{
-	assert(m_expression.m_opMap.size() > unsigned(opPos + 2));
-
-	return executionContext.getXObjectFactory().createNumber(m_expression.m_opMap[opPos + 2]);
 }
 
 

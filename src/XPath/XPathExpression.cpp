@@ -777,6 +777,25 @@ XPathExpression::pushArgumentOnOpCodeMap(double		theToken)
 
 
 void
+XPathExpression::pushNumberLiteralOnOpCodeMap(double	theNumber)
+{
+	// Get the new index for the literal...
+	const OpCodeMapValueType	theIndex = OpCodeMapValueType(m_numberLiteralValues.size());
+
+	assert(NumberLiteralValueVectorType::size_type(theIndex) == m_numberLiteralValues.size());
+
+	// Push the index onto the op map.
+	m_opMap.push_back(theIndex);
+
+	// Update the op map length.
+	m_opMap[s__opCodeMapLengthIndex]++;
+
+	m_numberLiteralValues.push_back(theNumber);
+}
+
+
+
+void
 XPathExpression::pushCurrentTokenOnOpCodeMap()
 {
 	assert(m_currentPosition != 0);
@@ -859,7 +878,6 @@ XPathExpression::IntializeOpCodeLengthMap()
 	theMap[eMATCH_IMMEDIATE_ANCESTOR] = 1 + s__opCodeMapLengthIndex;
 	theMap[eMATCH_ANY_ANCESTOR_WITH_PREDICATE] = 2 + s__opCodeMapLengthIndex;
 	theMap[eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL] = 2 + s__opCodeMapLengthIndex;
-	theMap[eOP_INLINE_NUMBERLIT] = 1 + s__opCodeMapLengthIndex;
 
 	return theMap;
 }
