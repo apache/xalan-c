@@ -801,7 +801,7 @@ ifeq ($(PLATFORM), OS390)
 endif                                
 
 clean:
-	rm -rf $(ALL_OBJECTS_DIR)/*
+	(cd $(ALL_OBJECTS_DIR); rm -rf *)
 ifeq ($(PLATFORM), TRU64)
 	rm -rf $(ALL_OBJECTS_DIR)/.cxx_repository
 	rm -rf $(OUTDIR)/so_locations
@@ -814,6 +814,7 @@ endif
 	rm -f $(BINTARGETDIR)/CompileStylesheet
 	rm -f $(BINTARGETDIR)/DocumentBuilder
 	rm -f $(BINTARGETDIR)/ExternalFunction
+	rm -f $(BINTARGETDIR)/ParsedSourceWrappers
 	rm -f $(BINTARGETDIR)/SerializeNodeSet
 	rm -f $(BINTARGETDIR)/SimpleTransform
 	rm -f $(BINTARGETDIR)/SimpleXPathAPI
