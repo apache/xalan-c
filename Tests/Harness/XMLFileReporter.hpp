@@ -229,13 +229,16 @@ public:
     * caller must ensure they're legal XML
 	* @param msg comment to log out.
 	*/
-	void logElement(int level, const XalanDOMString& element, Hashtable attrs, const XalanDOMString& msg);
+	void logElementWAttrs(int level, const XalanDOMString& element, Hashtable attrs, const XalanDOMString& msg);
 
-	void logElement(int level,  const char* element, Hashtable attrs, const char* msg)
+	void logElementWAttrs(int level,  const char* element, Hashtable attrs, const char* msg)
 	{
-		logElement(level, XalanDOMString(element), attrs, XalanDOMString(msg));
+		logElementWAttrs(level, XalanDOMString(element), attrs, XalanDOMString(msg));
 	}
 
+	void logElement(int level, const XalanDOMString& element, const XalanDOMString& msg);
+
+	void XMLFileReporter::logElement(const XalanDOMString& element, const XalanDOMString& msg);
 	/**
 	* Report an arbitrary XalanDOMString to result file with specified severity.  
 	* <P>Appends and prepends \\n newline characters at the start and 
@@ -285,6 +288,10 @@ public:
 	* @param comment comment to log with the fail record.
 	*/
 	void logCheckFail(const XalanDOMString& comment);
+
+	void logCheckFail(const XalanDOMString& test, Hashtable faildata, Hashtable actexp);
+
+	void logErrorResult(const XalanDOMString& test, const XalanDOMString& reason);
 
 	/**
 	* Writes out a Error record with comment.  
@@ -365,6 +372,7 @@ private:
 	static const XalanDOMString CHECKAMBG_HDR;
 	static const XalanDOMString CHECKERRR_HDR;
 	static const XalanDOMString CHECKFAIL_HDR;
+	static const XalanDOMString CHECKFAIL_FTR;
 
 	/** If we have output anything yet.  */
 	bool m_anyOutput;

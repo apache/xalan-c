@@ -18,9 +18,9 @@ const XalanDOMString  XMLFileReporter::OPT_FILENAME("filename");
 const XalanDOMString  XMLFileReporter::ELEM_RESULTSFILE("resultsfile");
 const XalanDOMString  XMLFileReporter::ELEM_TESTFILE("testfile");
 const XalanDOMString  XMLFileReporter::ELEM_FILERESULT("fileresult");
-const XalanDOMString  XMLFileReporter::ELEM_TESTCASE("testcase");
-const XalanDOMString  XMLFileReporter::ELEM_CASERESULT("caseresult");
-const XalanDOMString  XMLFileReporter::ELEM_CHECKRESULT("checkresult");
+const XalanDOMString  XMLFileReporter::ELEM_TESTCASE("Test_Dir");
+const XalanDOMString  XMLFileReporter::ELEM_CASERESULT("Dir-result");
+const XalanDOMString  XMLFileReporter::ELEM_CHECKRESULT("Testcase");
 const XalanDOMString  XMLFileReporter::ELEM_STATISTIC("statistic");
 const XalanDOMString  XMLFileReporter::ELEM_LONGVAL("longval");
 const XalanDOMString  XMLFileReporter::ELEM_DOUBLEVAL("doubleval");
@@ -41,12 +41,12 @@ const XalanDOMString XMLFileReporter::MESSAGE_HDR("<" + ELEM_MESSAGE + " " + ATT
 const XalanDOMString XMLFileReporter::STATISTIC_HDR("<" + ELEM_STATISTIC + " " + ATTR_LEVEL + "=\"");
 const XalanDOMString XMLFileReporter::ARBITRARY_HDR("<" + ELEM_ARBITRARY + " " + ATTR_LEVEL + "=\"");
 const XalanDOMString XMLFileReporter::HASHTABLE_HDR("<" + ELEM_HASHTABLE + " " + ATTR_LEVEL + "=\"");
-const XalanDOMString XMLFileReporter::HASHITEM_HDR("  <" + ELEM_HASHITEM + " " + ATTR_KEY + "=\"");
+const XalanDOMString XMLFileReporter::HASHITEM_HDR("<" + ELEM_HASHITEM + " " + ATTR_KEY + "=\"");
 const XalanDOMString XMLFileReporter::CHECKPASS_HDR("<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "PASS" + "\" " + ATTR_DESC + "=\"");
 const XalanDOMString XMLFileReporter::CHECKAMBG_HDR("<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "AMBG" + "\" " + ATTR_DESC + "=\"");
 const XalanDOMString XMLFileReporter::CHECKERRR_HDR("<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "ERRR" + "\" " + ATTR_DESC + "=\"");
 const XalanDOMString XMLFileReporter::CHECKFAIL_HDR("<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "FAIL" + "\" " + ATTR_DESC + "=\"");
-
+const XalanDOMString XMLFileReporter::CHECKFAIL_FTR("</" + ELEM_CHECKRESULT + ">");
 
 
 XMLFileReporter::XMLFileReporter():
@@ -217,8 +217,8 @@ XMLFileReporter::logTestFileClose(const XalanDOMString& msg, const XalanDOMStrin
 {
     if (isReady())
     {
-        printToFile("<" + ELEM_FILERESULT 
-                              + " " + ATTR_DESC + "=\"" + escapestring(msg) + "\" " + ATTR_RESULT + "=\"" + result + "\" " + ATTR_TIME + "=\"" + getDateTimeString() + "\"/>");
+//        printToFile("<" + ELEM_FILERESULT 
+//                             + " " + ATTR_DESC + "=\"" + escapestring(msg) + "\" " + ATTR_RESULT + "=\"" + result + "\" " + ATTR_TIME + "=\"" + getDateTimeString() + "\"/>");
         printToFile("</" + ELEM_TESTFILE + ">");
     }
     flush();
@@ -242,7 +242,7 @@ XMLFileReporter::logTestCaseClose(const XalanDOMString& msg, const XalanDOMStrin
 {
     if (isReady())
     {
-        printToFile(TESTCASECLOSE_HDR + escapestring(msg) + "\" " + ATTR_RESULT + "=\"" + result + "\"/>");
+        //printToFile(TESTCASECLOSE_HDR + escapestring(msg) + "\" " + ATTR_RESULT + "=\"" + result + "\"/>");
         printToFile("</" + ELEM_TESTCASE + ">");
     }
     if (getFlushOnCaseClose())
@@ -278,7 +278,7 @@ void XMLFileReporter::addMetricToAttrs(char* desc, double theMetric, Hashtable& 
 }
 
 void 
-XMLFileReporter::logElement(int level, const XalanDOMString& element, Hashtable attrs,const XalanDOMString& msg)
+XMLFileReporter::logElementWAttrs(int level, const XalanDOMString& element, Hashtable attrs, const XalanDOMString& msg)
 {
 	if (isReady()
         && (element.empty() == 0)
@@ -309,7 +309,23 @@ XMLFileReporter::logElement(int level, const XalanDOMString& element, Hashtable 
     }
 }
 
+void 
+XMLFileReporter::logElement(const XalanDOMString& element, const XalanDOMString& msg)
+{
+	if (isReady()
+        && (element.empty() == 0)
+        && (msg.empty() == 0)
+       )
+    {
 
+        printToFile("<" + escapestring(element) + ">");
+
+        if (msg.empty() == 0)
+            //printToFile(escapestring(msg));
+			printToFile(msg);
+        printToFile("</" + escapestring(element) + ">");
+    }
+}
 
 void 
 XMLFileReporter::logStatistic (int level, long lVal, double dVal, const XalanDOMString& msg)
@@ -411,10 +427,46 @@ XMLFileReporter::logCheckFail(const XalanDOMString& comment)
     if (isReady())
     {
         printToFile(CHECKFAIL_HDR + escapestring(comment) + "\"/>");
+
     }
 }
 
 
+void 
+XMLFileReporter::logErrorResult(const XalanDOMString& test, const XalanDOMString& reason)
+{
+    if (isReady())
+    {
+        printToFile(CHECKFAIL_HDR + escapestring(test) + "\" " + XalanDOMString("reason=\"") + escapestring(reason)  + "\"/>");
+
+    }
+}
+
+void 
+XMLFileReporter::logCheckFail(const XalanDOMString& test, Hashtable attrs, Hashtable actexp)
+{
+    if (isReady())
+    {
+        printToFile(CHECKFAIL_HDR + escapestring(test) + "\"");
+
+		Hashtable::iterator fdEnd = attrs.end();	
+       	for(Hashtable::iterator i = attrs.begin(); i != fdEnd; ++i)
+        {            
+            printToFile((*i).first + "=\""
+                                  + (*i).second + "\"");
+        }
+
+		printToFile(XalanDOMString(">"));
+		
+		Hashtable::iterator aeEnd = actexp.end();
+       	for(Hashtable::iterator ii = actexp.begin(); ii != aeEnd; ++ii)
+        {            
+			logElement((*ii).first, (*ii).second);
+        }
+
+		printToFile(CHECKFAIL_FTR);
+    }
+}
 
 void 
 XMLFileReporter::logCheckErr(const XalanDOMString& comment)
