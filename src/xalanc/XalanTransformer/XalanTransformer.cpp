@@ -205,8 +205,8 @@ void
 XalanTransformer::initialize()
 {
 	// Initialize Xalan. 
-	s_emptyInputSource = new XSLTInputSource;
-	s_xsltInit = new XSLTInit;
+	XalanAutoPtr<XSLTInit>			initGuard(new XSLTInit);
+	XalanAutoPtr<XSLTInputSource>	inputSourceGuard(new XSLTInputSource);
 
 	XalanExtensionsInstaller::installGlobal();
 	XalanEXSLTCommonFunctionsInstaller::installGlobal();
@@ -220,6 +220,9 @@ XalanTransformer::initialize()
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")),
 			FunctionICUFormatNumber());
 #endif
+
+	s_xsltInit = initGuard.release();
+	s_emptyInputSource = inputSourceGuard.release();
 }
 
 
@@ -236,6 +239,7 @@ XalanTransformer::terminate()
 	delete s_xsltInit;
 #endif
 
+	s_emptyInputSource = 0;
 	s_xsltInit = 0;
 
 	XalanExtensionsInstaller::uninstallGlobal();
