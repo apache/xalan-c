@@ -91,6 +91,19 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeComment : public XalanComment
 public:
 
 	/**
+	 * Perform static initialization.  See class XalanSourceTreeInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XalanSourceTreeInit.
+	 */
+	static void
+	terminate();
+
+
+	/**
 	 * Constructor.
 	 *
 	 * @param theData The text data of the node.
@@ -646,17 +659,19 @@ private:
 
 
 	// Data members...
-	const XalanDOMString&		m_data;
+	const XalanDOMString&			m_data;
 
-	XalanSourceTreeDocument*	m_ownerDocument;
+	XalanSourceTreeDocument*		m_ownerDocument;
 
-	XalanSourceTreeElement*		m_parentElement;
+	XalanSourceTreeElement*			m_parentElement;
 
-	XalanNode*					m_previousSibling;
+	XalanNode*						m_previousSibling;
 
-	XalanNode*					m_nextSibling;
+	XalanNode*						m_nextSibling;
 
-	unsigned int				m_index;
+	unsigned int					m_index;
+
+	static const XalanDOMString&	s_nameString;
 };
 
 

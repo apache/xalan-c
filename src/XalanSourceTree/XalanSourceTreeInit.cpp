@@ -59,6 +59,7 @@
 
 
 
+#include "XalanSourceTreeComment.hpp"
 #include "XalanSourceTreeDocument.hpp"
 #include "XalanSourceTreeText.hpp"
 
@@ -100,6 +101,8 @@ XalanSourceTreeInit::initialize()
 {
 	XalanSourceTreeDocument::initialize();
 
+	XalanSourceTreeComment::initialize();
+
 	XalanSourceTreeText::initialize();
 }
 
@@ -109,6 +112,8 @@ void
 XalanSourceTreeInit::terminate()
 {
 	XalanSourceTreeText::terminate();
+
+	XalanSourceTreeComment::terminate();
 
 	XalanSourceTreeDocument::terminate();
 }

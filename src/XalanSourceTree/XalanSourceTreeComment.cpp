@@ -120,7 +120,7 @@ XalanSourceTreeComment::XalanSourceTreeComment(
 const XalanDOMString&
 XalanSourceTreeComment::getNodeName() const
 {
-	return s_emptyString;
+	return s_nameString;
 }
 
 
@@ -488,4 +488,28 @@ void
 XalanSourceTreeComment::appendSiblingNode(XalanSourceTreeText*	theSibling)
 {
 	XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
+}
+
+
+
+static XalanDOMString	s_nameString;
+
+
+
+const XalanDOMString&	XalanSourceTreeComment::s_nameString = ::s_nameString;
+
+
+
+void
+XalanSourceTreeComment::initialize()
+{
+	::s_nameString = XALAN_STATIC_UCODE_STRING("#comment");
+}
+
+
+
+void
+XalanSourceTreeComment::terminate()
+{
+	releaseMemory(::s_nameString);
 }
