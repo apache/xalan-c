@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(FUNCTIONID_HEADER_GUARD_1357924680)
 #define FUNCTIONID_HEADER_GUARD_1357924680
@@ -100,14 +102,12 @@
 // These are all inline, even though
 // there are virtual functions, because we expect that they will only be
 // needed by the XPath class.
-class XALAN_XPATH_EXPORT FunctionID : public Function, public XObjectTypeCallback
+class XALAN_XPATH_EXPORT FunctionID : public Function
 {
 public:
 
 	FunctionID() :
-		Function(),
-		XObjectTypeCallback(),
-		m_executionContext(0)
+		Function()
 	{
 	}
 
@@ -131,13 +131,13 @@ public:
 								   context);
 		}
 
-		// OK, reset the data members...
-		m_executionContext = &executionContext;
-
-		clear(m_resultString);
+		assert(args[0] != 0);
 
 		// Do the callback to get the data.
-		args[0]->ProcessXObjectTypeCallback(*this);
+		FunctionIDXObjectTypeCallback	theCallback(executionContext);
+
+		const XalanDOMString	theResultString =
+			theCallback.processCallback(*args[0]);
 
 		// Get the context document, so we can search for nodes.
 		const XalanDocument* const	theDocContext = context->getNodeType() == XalanNode::DOCUMENT_NODE ?
@@ -154,7 +154,7 @@ public:
 			executionContext.error("The context node does not have an owner document!",
 								   context);
         }
-		else if (length(m_resultString) > 0)
+		else if (length(theResultString) > 0)
 		{
 #if !defined(XALAN_NO_NAMESPACES)
 			using std::set;
@@ -166,7 +166,7 @@ public:
 			// we can avoid looking more than once.
 			TokenSetType		thePreviousTokens;
 
-			StringTokenizer		theTokenizer(m_resultString);
+			StringTokenizer		theTokenizer(theResultString);
 
 			// Parse the result string...
 			while(theTokenizer.hasMoreTokens() == true)
@@ -209,71 +209,95 @@ public:
 	}
 
 
-	// These methods are inherited from XObjectTypeCallback ...
-
-	virtual void
-	Number(const XObject&	theXObject,
-		   double			/* theValue */)
-	{
-		m_resultString = theXObject.str();
-	}
-
-	virtual void
-	Boolean(const XObject&	theXObject,
-		    bool			/* theValue */)
-	{
-		m_resultString = theXObject.str();
-	}
-
-	virtual void
-	String(const XObject&			theXObject,
-		   const XalanDOMString&	/* theValue */)
-	{
-		m_resultString = theXObject.str();
-	}
-
-	virtual void
-	ResultTreeFragment(const XObject&				theXObject,
-					   const ResultTreeFragBase&	/* theValue */)
-	{
-		m_resultString = theXObject.str();
-	}
-
-	virtual void
-	ResultTreeFragment(const XObject&		theXObject,
-					   ResultTreeFragBase&	/* theValue */)
-	{
-		m_resultString = theXObject.str();
-	}
-
-	virtual void
-	NodeSet(const XObject&			/* theXObject */,
-			const NodeRefListBase&	theValue)
-	{
-		assert(m_executionContext != 0);
-
-		const unsigned int	theNodeCount = theValue.getLength();
-
-		for (unsigned int i = 0 ; i < theNodeCount; i++)
-		{
-			m_resultString += m_executionContext->getNodeData(*theValue.item(i));
-
-			m_resultString += " ";
-		}
-	}
-
-	virtual void
-	Unknown(const XObject&			/* theObject */,
-			const XalanDOMString&	/* theName */)
-	{
-	}
-
-	virtual void
-	Null(const XObject&		/* theObject */)
-	{
-	}
-
 private:
+
+	class FunctionIDXObjectTypeCallback : public XObjectTypeCallback
+	{
+	public:
+
+		FunctionIDXObjectTypeCallback(XPathExecutionContext&	theExecutionContext) :
+			XObjectTypeCallback(),
+			m_executionContext(theExecutionContext),
+			m_resultString()
+		{
+		}
+
+		const XalanDOMString&
+		processCallback(const XObject&	theXObject)
+		{
+			theXObject.ProcessXObjectTypeCallback(*this);
+
+			return m_resultString;
+		}
+
+		// These methods are inherited from XObjectTypeCallback ...
+
+		virtual void
+		Number(const XObject&	theXObject,
+			   double			/* theValue */)
+		{
+			m_resultString = theXObject.str();
+		}
+
+		virtual void
+		Boolean(const XObject&	theXObject,
+				bool			/* theValue */)
+		{
+			m_resultString = theXObject.str();
+		}
+
+		virtual void
+		String(const XObject&			theXObject,
+			   const XalanDOMString&	/* theValue */)
+		{
+			m_resultString = theXObject.str();
+		}
+
+		virtual void
+		ResultTreeFragment(const XObject&				theXObject,
+						   const ResultTreeFragBase&	/* theValue */)
+		{
+			m_resultString = theXObject.str();
+		}
+
+		virtual void
+		ResultTreeFragment(const XObject&		theXObject,
+						   ResultTreeFragBase&	/* theValue */)
+		{
+			m_resultString = theXObject.str();
+		}
+
+		virtual void
+		NodeSet(const XObject&			/* theXObject */,
+				const NodeRefListBase&	theValue)
+		{
+			const unsigned int	theNodeCount = theValue.getLength();
+
+			for (unsigned int i = 0 ; i < theNodeCount; i++)
+			{
+				m_resultString += m_executionContext.getNodeData(*theValue.item(i));
+
+				m_resultString += " ";
+			}
+		}
+
+		virtual void
+		Unknown(const XObject&			/* theObject */,
+				const XalanDOMString&	/* theName */)
+		{
+		}
+
+		virtual void
+		Null(const XObject&		/* theObject */)
+		{
+		}
+
+	private:
+
+		XalanDOMString			m_resultString;
+
+		XPathExecutionContext&	m_executionContext;
+	};
 
 	// Not implemented...
 	FunctionID&
@@ -281,12 +305,6 @@ private:
 
 	bool
 	operator==(const FunctionID&) const;
-
-
-	// Data members...
-	XPathExecutionContext*	m_executionContext;
-
-	XalanDOMString			m_resultString;
 };
 
 
