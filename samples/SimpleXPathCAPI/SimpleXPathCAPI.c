@@ -170,7 +170,7 @@ main(
 
 				if (theResult == XALAN_XPATH_API_SUCCESS)
 				{
-					fprintf(stdout, "The result of the expression was '%s'.", theBoolean == 0 ? "false" : "true");
+					fprintf(stdout, "The result of the expression was '%s'.\n", theBoolean == 0 ? "false" : "true");
 				}
 
 				theResult = XalanDestroyXPathEvaluator(theXalanHandle);
