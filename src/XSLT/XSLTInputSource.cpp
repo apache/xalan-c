@@ -161,40 +161,9 @@ XSLTInputSource::makeStream() const
 	}
 	else if (m_node == 0)
 	{
-#if 1
 		URISupport::URLAutoPtrType	theURL = URISupport::getURLFromString(getSystemId());
 
 		theResult = theURL->makeNewStream();
-#else
-		const XMLCh* const	theSystemID =
-			getSystemId();
-
-		const unsigned int	theColonIndex = indexOf(theSystemID, ':');
-		const unsigned int	theLength = length(theSystemID);
-
-		if (theColonIndex == theLength)
-		{
-			// No ':', so assume it's a file.
-			theResult = new BinFileInputStream(theSystemID);
-		}
-		else
-		{
-			// It could be a DOS-style file spec...
-			const unsigned int	theBackslashIndex = indexOf(theSystemID, '\\');
-
-			if (theBackslashIndex < theLength && theBackslashIndex == 2)
-			{
-				// OK, another shot at a file...
-				theResult = new BinFileInputStream(theSystemID);
-			}
-			else
-			{
-				URLInputSource inputSource(getSystemId());
-
-				theResult = inputSource.makeStream();
-			}
-		}
-#endif
 	}
 
 	return theResult;
