@@ -2541,7 +2541,7 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 			if(equals(prefix, DOMServices::s_XMLString))
 			{
 				fResult =
-					m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(DOMServices::s_XMLNamespaceURI, elementName));
+					m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(DOMServices::s_XMLNamespaceURI, elemLocalName));
 			}
 			else
 			{
@@ -2555,7 +2555,7 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 				else
 				{
 					fResult =
-						m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elementName));
+						m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elemLocalName));
 				}
 			}
 		}
