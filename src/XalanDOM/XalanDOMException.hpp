@@ -79,6 +79,7 @@ public:
 	//@{
 	enum ExceptionCode
 	{
+		// These are the errors as defined in the W3C DOM recommendation.
 		INDEX_SIZE_ERR				= 1,
 		DOMSTRING_SIZE_ERR			= 2,
 		HIERARCHY_REQUEST_ERR		= 3,
@@ -97,7 +98,11 @@ public:
 
 		// This is the first available number,
 		// according to the spec.
-		UNKNOWN_ERR 				= 201
+		UNKNOWN_ERR 				= 201,
+
+		// Indicates that an error occurred transcoding a
+		// string.
+		TRANSCODING_ERR				= 202
 	};
 	//@}
 
