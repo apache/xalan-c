@@ -123,7 +123,10 @@ ElemVariable::ElemVariable(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error("xsl:variable has an illegal attribute", 0, this);
+				constructionContext.error(
+					"xsl:variable has an illegal attribute",
+					0,
+					this);
 			}
 		}
 	}
@@ -131,7 +134,7 @@ ElemVariable::ElemVariable(
 	if(m_qname.isEmpty())
 	{
 		constructionContext.error(
-			"xsl:variable must have a 'name' attribute.",
+			"xsl:variable must have a 'name' attribute",
 			0,
 			this);
 	}

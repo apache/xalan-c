@@ -123,7 +123,10 @@ ElemSort::ElemSort(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(Constants::ELEMNAME_SORT_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:sort has an illegal attribute",
+				0,
+				this);
 		}
 	}
 

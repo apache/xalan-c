@@ -214,7 +214,10 @@ ElemTemplateElement::processSpaceAttr(
 	}
 	else
 	{
-		constructionContext.error("xml:space has an illegal value");
+		constructionContext.error(
+			"xml:space has an illegal value",
+			0,
+			this);
 	}
 }
 
@@ -243,7 +246,10 @@ ElemTemplateElement::processSpaceAttr(
 		}
 		else
 		{
-			constructionContext.error("xml:space has an illegal value");
+			constructionContext.error(
+				"xml:space has an illegal value",
+				0,
+				this);
 		}
     }
 

@@ -127,7 +127,10 @@ ElemLiteralResult::ElemLiteralResult(
 
 				if(ns == 0)
 				{
-					constructionContext.error("Cannot resolve namespace prefix: " + prefix);
+					constructionContext.error(
+						"Cannot resolve namespace prefix: " + prefix,
+						0,
+						this);
 				}
 				else if(equals(*ns, stylesheetTree.getXSLTNamespaceURI()))
 				{

@@ -117,7 +117,7 @@ ElemWhen::ElemWhen(
 	if(0 == m_pTest)
 	{
 		constructionContext.error(
-			"xsl:when must have a 'test' attribute.",
+			"xsl:when must have a 'test' attribute",
 			0,
 			this);
 	}

@@ -112,14 +112,17 @@ ElemElement::ElemElement(
 			    processSpaceAttr(aname, atts, i, constructionContext) ||
 				isAttrOK(aname, atts, i, constructionContext)))
 		{
-			constructionContext.error(Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:element has an illegal attribute",
+				0,
+				this);
 		}
 	}
 
 	if(0 == m_nameAVT)
 	{
 		constructionContext.error(
-			"xsl:element must have a 'name' attribute.",
+			"xsl:element must have a 'name' attribute",
 			0,
 			this);
 	}
