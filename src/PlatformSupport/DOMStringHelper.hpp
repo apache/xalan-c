@@ -1986,7 +1986,7 @@ append(
 	}
 	else
 	{
-		append(theString, XalanDOMString(theStringToAppend, theStringToAppendLength);
+		append(theString, XalanDOMString(theStringToAppend, theStringToAppendLength));
 	}
 #endif
 
@@ -2018,7 +2018,11 @@ append(
 	}
 	else
 	{
-		append(theString, XalanDOMString(theStringToAppend, theStringToAppendLength);
+		CharVectorType	theTemp(theStringToAppend, theStringToAppend + theStringToAppendLength);
+
+		theTemp.push_back(char(0));
+
+		append(theString, XalanDOMString(&theTemp[0]));
 	}
 #endif
 
