@@ -91,7 +91,7 @@ NamespacesHandler::NamespacesHandler() :
 
 
 NamespacesHandler::NamespacesHandler(
-			const NamespacesHandler&	stylesheetNamespacesHandler,
+			const NamespacesHandler&	/* stylesheetNamespacesHandler */,
 			const NamespacesStackType&	theCurrentNamespaces,
 			const XalanDOMString&		theXSLTNamespaceURI) :
 	m_excludedResultPrefixes(),

@@ -129,7 +129,6 @@ ElemForEach::ElemForEach(
 ElemForEach::ElemForEach(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :

@@ -136,7 +136,6 @@ protected:
 	 * 
 	 * @param constructionContext context for construction of object
 	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
 	 * @param lineNumber			line number in document
 	 * @param columnNumber			column number in document
 	 * @param xslToken             an integer representing the type of instance.
@@ -144,7 +143,6 @@ protected:
 	ElemForEach(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken);

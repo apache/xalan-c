@@ -2318,7 +2318,6 @@ XSLTEngineImpl::cloneToResultTree(
 		if(shouldCloneAttributes == true)
 		{
 			copyAttributesToAttList(
-									m_stylesheetRoot,
 									node,
 									getPendingAttributesImpl());
 
@@ -2872,12 +2871,10 @@ XSLTEngineImpl::copyAttributeToTarget(
 
 void
 XSLTEngineImpl::copyAttributesToAttList(
-			const Stylesheet* 	stylesheetTree,
 			const XalanNode& 	node,
 			AttributeListImpl&	attList)
 {
 	assert(m_stylesheetRoot != 0);
-	assert(stylesheetTree != 0);
 
 	const XalanNamedNodeMap* const	attributes =
 		node.getAttributes();

@@ -79,7 +79,6 @@ ElemApplyTemplates::ElemApplyTemplates(
 			int								columnNumber) :
 	ElemForEach(constructionContext,
 				stylesheetTree,
-				atts,
 				lineNumber,
 				columnNumber,
 				Constants::ELEMNAME_APPLY_TEMPLATES),

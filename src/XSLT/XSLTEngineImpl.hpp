@@ -1480,7 +1480,6 @@ protected:
 	 */
 	void
 	copyAttributesToAttList(
-			const Stylesheet*	stylesheetTree,
 			const XalanNode&	node,
 			AttributeListImpl&	attList);
 
