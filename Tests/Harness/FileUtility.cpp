@@ -11,6 +11,9 @@
 #include <cstdio>
 #include <ctime>
 #include <vector>
+#include <string.h>
+#include <time.h>
+
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
@@ -115,4 +118,28 @@ XalanDOMString FileUtility::GenerateFileName(const XalanDOMString&  theXMLFileNa
 	}
 
 	return theResult;
+}
+
+
+/*	This routine generates a Unique Runid. 
+//	Inputs: None
+//			
+//	Notes: The format is mmddhhmm. For example
+//		   03151046 is "Mar 15 10:46"	
+*/
+
+XalanDOMString FileUtility::GenerateUniqRunid()
+{
+
+		struct tm *newtime;
+		time_t long_time;
+		char tmpbuf[10];
+
+		time( &long_time );                /* Get time as long integer. */
+		newtime = localtime( &long_time ); /* Convert to local time. */
+
+		strftime( tmpbuf, 10,"%m%d%H%M",newtime );
+
+		return(XalanDOMString(tmpbuf));
+
 }

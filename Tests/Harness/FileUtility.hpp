@@ -126,6 +126,13 @@ public:
 
 	XalanDOMString FileUtility::GenerateFileName(const XalanDOMString&  theXMLFileName, char* suffix);
 
+	/** 
+	* Utility method used to generate UniqRunid.
+	* @returns a XalanDOMString.
+	*/
+
+	XalanDOMString FileUtility::GenerateUniqRunid();
+
 };        // end of class FileUtility
 #endif
 
