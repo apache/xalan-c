@@ -131,8 +131,11 @@ ElemTemplateElement::ElemTemplateElement(
 	m_nextSibling(0),
 	m_previousSibling(0),
 	m_firstChild(0),
-	m_surrogateChildren(*this)
+	m_surrogateChildren(*this),
+	m_baseIndentifier(stylesheetTree.getCurrentIncludeBaseIdentifier())
 {
+	assert(length(m_baseIndentifier) > 0);
+
 	/*
 	 * Copy the stylesheet namespaces to the element namespace vector
 	 */
@@ -304,6 +307,8 @@ ElemTemplateElement::executeChildren(
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
+	StylesheetExecutionContext::PushAndPopElementFrame	thePushAndPop(executionContext, this);
+
     for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
     {
       node->execute(executionContext, sourceTree, sourceNode, mode);
@@ -570,6 +575,8 @@ ElemTemplateElement::transformSelectedChildren(
 			int								xslToken,
 			int selectStackFrameIndex) const
 {
+	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
+
 	// Sort the nodes according to the xsl:sort method
 	const int	tok = xslInstruction.getXSLToken();
 
@@ -627,10 +634,12 @@ ElemTemplateElement::transformSelectedChildren(
     NodeCallback callback = (null == keys) ? this : null;
 */
 
-	int savedCurrentStackFrameIndex = executionContext.getCurrentStackFrameIndex();
 	if (0 != selectPattern)
 	{
-		executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
+		SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
+				executionContext,
+				selectStackFrameIndex);
+
 /*
 	@@@ JMD: This is newer java code that is not implemented in C++; the
 	callback mechanism may affect the correct positioning of the stack frame and
@@ -666,8 +675,6 @@ ElemTemplateElement::transformSelectedChildren(
 							result));
 			}
 		}
-
-		executionContext.setCurrentStackFrameIndex(savedCurrentStackFrameIndex);
 	}
 	else if (keys.size() > 0)
 	{
@@ -682,15 +689,12 @@ ElemTemplateElement::transformSelectedChildren(
 		{
 			NodeSorter sorter(executionContext);
 
-			executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
-			sorter.sort(sourceNodes, keys);
-			executionContext.setCurrentStackFrameIndex(savedCurrentStackFrameIndex);
-		}
-
-		// Create an object to set and restore the context node list...
-		StylesheetExecutionContext::ContextNodeListSetAndRestore	theSetAndRestore(
+			SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
 				executionContext,
-				sourceNodes);
+				selectStackFrameIndex);
+
+			sorter.sort(sourceNodes, keys);
+		}
 
 		if(executionContext.getTraceSelects() == true)
 		{
@@ -698,6 +702,11 @@ ElemTemplateElement::transformSelectedChildren(
 				xslInstruction,
 				sourceNodes);
 		}
+
+		// Create an object to set and restore the context node list...
+		StylesheetExecutionContext::ContextNodeListSetAndRestore	theSetAndRestore(
+				executionContext,
+				sourceNodes);
 
 		for(unsigned int i = 0; i < nNodes; i++) 
 		{
@@ -742,7 +751,7 @@ ElemTemplateElement::transformChild(
 	bool				doApplyTemplate = true;
 	bool				shouldStrip = false;
 
-	const const XalanNode::NodeType		nodeType = child->getNodeType();
+	const XalanNode::NodeType	nodeType = child->getNodeType();
 
 	const Stylesheet*	stylesheetTree = &stylesheet_tree;
 
@@ -1397,7 +1406,7 @@ ElemTemplateElement::getNamespaceForPrefixInternal(
 XalanDOMString
 ElemTemplateElement::getURI() const
 {
-	return getStylesheet().getBaseIdentifier();
+	return m_baseIndentifier;
 }
 
 

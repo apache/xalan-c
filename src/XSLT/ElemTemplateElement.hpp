@@ -767,6 +767,8 @@ private:
 	ElemTemplateElement*	m_firstChild;
 
 	XalanNodeListSurrogate	m_surrogateChildren;
+
+	const XalanDOMString	m_baseIndentifier;
 };
 
 
