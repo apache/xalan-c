@@ -491,12 +491,10 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 			theStylesheetXObjectFactory,
 			theStylesheetXPathFactory);
 
-	XPathExecutionContextDefault			theXPathExecutionContext(theXSLProcessorSupport,
+	StylesheetExecutionContextDefault		theExecutionContext(processor,
+			theXSLProcessorSupport,
 			theXPathSupport,
 			theXObjectFactory);
-
-	StylesheetExecutionContextDefault		theExecutionContext(theXPathExecutionContext,
-			processor);
 
 	/*
 	 * Set specified processor flags
@@ -559,7 +557,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 		string theInputFileName = params.inFileNames[i];
 		string outputFileName;
 		XSLTInputSource theInputSource(theInputFileName.c_str());
-		XalanNode* const	sourceTree = processor.getSourceTreeFromInput(&theInputSource);
+		XalanNode* const	sourceTree = processor.getSourceTreeFromInput(theInputSource);
 
 	/*
 	 * If no output file specified, and multiple input files, generate an
