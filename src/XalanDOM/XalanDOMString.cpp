@@ -966,7 +966,7 @@ doTranscodeToLocalCodePage(
     // See how many chars we need to transcode.
     const size_t	targetLen = wcstombs(0, theTempSource, 0);
 
-	if (targetLen == size_t(-1))
+	if (targetLen == ~size_t(0))
 	{
 		return false;
 	}
@@ -1087,7 +1087,7 @@ doTranscodeFromLocalCodePage(
 	const size_t	theTargetLength =
 			mbstowcs(0, theSourceString, size_t(theSourceStringLength));
 
-	if (theTargetLength == size_t(-1))
+	if (theTargetLength == ~size_t(0))
 	{
 		return false;
 	}
@@ -1107,7 +1107,7 @@ doTranscodeFromLocalCodePage(
 		wchar_t* const	theTargetPointer = &theTargetVector[0];
 #endif
 
-		if (mbstowcs(theTargetPointer, theSourceString, size_t(theSourceStringLength)) == size_t(-1))
+		if (mbstowcs(theTargetPointer, theSourceString, size_t(theSourceStringLength)) == ~size_t(0))
 		{
 			theTargetVector.clear();
 

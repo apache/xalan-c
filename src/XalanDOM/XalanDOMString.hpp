@@ -251,7 +251,7 @@ public:
 	{
 		invariants();
 
-		return size_type(~0);
+		return ~size_type(0);
 	}
 
 	void
