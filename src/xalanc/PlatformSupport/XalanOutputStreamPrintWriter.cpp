@@ -81,7 +81,8 @@ XalanOutputStreamPrintWriter::XalanOutputStreamPrintWriter(
 			bool				fAutoFlush) :
 	PrintWriter(fAutoFlush),
 	m_outputStream(theOutputStream),
-	m_buffer()
+	m_buffer(),
+	m_flushWideChars(false)
 {
 }
 
@@ -90,6 +91,19 @@ XalanOutputStreamPrintWriter::XalanOutputStreamPrintWriter(
 XalanOutputStreamPrintWriter::~XalanOutputStreamPrintWriter()
 {
 	flush();
+}
+
+
+
+void
+XalanOutputStreamPrintWriter::flushWideChars()
+{
+	if (m_flushWideChars == true)
+	{
+		m_outputStream.flushBuffer();
+
+		m_flushWideChars = false;
+	}
 }
 
 
@@ -141,6 +155,8 @@ XalanOutputStreamPrintWriter::write(
 {
 	assert(s != 0);
 
+	flushWideChars();
+
 	if (theLength == npos)
 	{
 		if (theOffset == 0)
@@ -183,6 +199,8 @@ XalanOutputStreamPrintWriter::write(
 	{
 		m_outputStream.write(s + theOffset, theLength);
 	}
+
+	m_flushWideChars = true;
 }
 
 
@@ -191,6 +209,8 @@ void
 XalanOutputStreamPrintWriter::write(XalanDOMChar	c)
 {
 	m_outputStream.write(c);
+
+	m_flushWideChars = true;
 }
 
 
@@ -264,7 +284,7 @@ XalanOutputStreamPrintWriter::print(double	d)
 
 	DoubleToDOMString(d, m_buffer);
 
-	m_outputStream.write(c_wstr(m_buffer), length(m_buffer));
+	print(m_buffer);
 }
 
 
@@ -276,7 +296,7 @@ XalanOutputStreamPrintWriter::print(int		i)
 
 	LongToDOMString(i, m_buffer);
 
-	m_outputStream.write(c_wstr(m_buffer), length(m_buffer));
+	print(m_buffer);
 }
 
 
@@ -288,7 +308,7 @@ XalanOutputStreamPrintWriter::print(long	l)
 
 	LongToDOMString(l, m_buffer);
 
-	m_outputStream.write(c_wstr(m_buffer), length(m_buffer));
+	print(m_buffer);
 }
 
 
@@ -296,7 +316,7 @@ XalanOutputStreamPrintWriter::print(long	l)
 void
 XalanOutputStreamPrintWriter::print(const XalanDOMString&	s)
 {
-	m_outputStream.write(c_wstr(s), length(s));
+	write(c_wstr(s), 0, length(s));
 }
 
 
@@ -304,7 +324,7 @@ XalanOutputStreamPrintWriter::print(const XalanDOMString&	s)
 void
 XalanOutputStreamPrintWriter::println()
 {
-	m_outputStream.write(c_wstr(s_newlineString), length(s_newlineString));
+	write(c_wstr(s_newlineString), 0, length(s_newlineString));
 
 	flush();
 }

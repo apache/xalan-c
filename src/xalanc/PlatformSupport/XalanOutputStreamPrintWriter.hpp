@@ -200,6 +200,10 @@ public:
 
 private:
 
+	void
+	flushWideChars();
+
+
 	// Not implemented
 	XalanOutputStreamPrintWriter(const XalanOutputStreamPrintWriter&);
 
@@ -209,11 +213,12 @@ private:
 	bool
 	operator==(const XalanOutputStreamPrintWriter&);
 
-
 	// Data members...
 	XalanOutputStream&	m_outputStream;
 
 	XalanDOMString		m_buffer;
+
+	bool				m_flushWideChars;
 };
 
 

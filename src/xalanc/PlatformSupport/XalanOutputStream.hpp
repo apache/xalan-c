@@ -142,6 +142,14 @@ public :
 	getNewlineString() const;
 
 	/**
+	 * Flush the stream's transcoding buffer, but do not request
+	 * the implementation class to flush its buffer.
+	 * .
+	 */
+	void
+	flushBuffer();
+
+	/**
 	 * Flush the stream's buffer.
 	 */
 	void
@@ -438,10 +446,6 @@ private:
 
 	bool
 	operator==(const XalanOutputStream&) const;
-
-	// Utility functions...
-	void
-	flushBuffer();
 
 	void
 	doWrite(
