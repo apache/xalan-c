@@ -224,33 +224,31 @@ CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS)
 MAKE_SHARED = makeC++SharedLib_r -p 5000 
 LINK = $(CXX) -qnotempinc $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
 
-
 endif
 
-#=============== OS390 SPECIFIC OPTIONS =========================               
-                                                                                
-ifeq ($(PLATFORM), OS390)                                                       
-                                                                                
-                                                                                
-ifndef STLPORTROOT                                                              
-nostlportroot:                                                                  
-	@echo STLPORTROOT must be defined                                       
-endif                                                                           
-                                                                                
-SUPPORTED = TRUE                                                                
+#=============== OS390 SPECIFIC OPTIONS =========================
+
+ifeq ($(PLATFORM), OS390)
+
+ifndef STLPORTROOT
+nostlportroot:
+	@echo STLPORTROOT must be defined
+endif
+
+SUPPORTED = TRUE
 PLATFORM_COMPILE_OPTIONS =-Wc,dll -W0,"langlvl(extended),float(ieee)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -I ${STLPORTROOT}/stlport
 PLATFORM_COMPILE_OPTIONS2 =-Wc,dll -W0,"langlvl(extended),notempinc,float(ieee)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -I ${STLPORTROOT}/stlport
-ALLLIBS =                                                                       
-SHLIBSUFFIX=.dll                                                                
-OS390SIDEDECK=.x                                                                
-                                                                                
-CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)                            
-CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS2)                            
-CC3 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS2)                            
-MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -Wl,dll                          
-LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)                           
-                                                                                
-endif                                                                           
+ALLLIBS =
+SHLIBSUFFIX=.dll
+OS390SIDEDECK=.x
+
+CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS2)
+CC3 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS2)
+MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -Wl,dll
+LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+
+endif
 
 #============ TRU64 SPECIFIC OPTIONS ============================
 ifeq ($(PLATFORM), TRU64)
@@ -402,7 +400,7 @@ samples : Samples
 
 tests : ThreadTest
 
-Samples: lib CompileStylesheet DocumentBuilder ExternalFunction SimpleTransform SimpleXPathAPI StreamTransform ThreadSafe TraceListen UseStylesheetParam XalanTransform XalanTransformerCallback XPathWrapper
+Samples: lib CompileStylesheet DocumentBuilder ExternalFunction SimpleTransform SimpleXPathAPI StreamTransform TraceListen UseStylesheetParam XalanTransform XalanTransformerCallback XPathWrapper
 
 ApacheModuleXSLT: lib ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 
 
@@ -506,21 +504,6 @@ else
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/StreamTransform/%.cpp
-	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
-endif
-
-ThreadSafe: lib $(BINTARGETDIR)/ThreadSafe
-
-$(BINTARGETDIR)/ThreadSafe: ${ALL_OBJECTS_DIR}/ThreadSafe.o
-ifeq ($(PLATFORM), OS390)                                                       
-	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
-${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ThreadSafe/%.cpp
-	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
-else
-	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
-${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ThreadSafe/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
 endif
 
