@@ -177,7 +177,7 @@ public:
 		destroyAll();
 
 		// Release the memory...
-		m_allocator.deallocate(m_objectBlock, 0);
+		m_allocator.deallocate(m_objectBlock, m_blockSize);
 	}
 
 	/*
