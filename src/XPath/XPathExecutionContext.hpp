@@ -279,15 +279,17 @@ public:
 	 *
 	 * @return length of list
 	 */
-	virtual int
+	virtual unsigned int
 	getContextNodeListLength() const = 0;
 
 	/*
 	 * Get the position of the node in the current context node list.
+	 * Note that this is 1-based indexing (XPath/XSLT-style), not 0-based.
+	 * Thus, 0 will be returned if the node was not found.
 	 *
 	 * @return position in list
 	 */
-	virtual int
+	virtual unsigned int
 	getContextNodeListPosition(const XalanNode&		contextNode) const = 0;
 
 	/**
