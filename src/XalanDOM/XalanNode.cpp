@@ -57,14 +57,12 @@
 #include "XalanNode.hpp"
 
 
-#define XALAN_NODE_SPECIAL_DEBUG
 
 #if !defined(NDEBUG)
 unsigned long	XalanNode::s_instanceCount = 0;
 
 #if defined(XALAN_NODE_SPECIAL_DEBUG)
 
-#include <iostream>
 #include <set>
 
 #if defined(XALAN_NO_NAMESPACES)
@@ -74,8 +72,6 @@ typedef set<XalanNode*>			InstanceSetType;
 #else
 
 typedef std::set<XalanNode*>	InstanceSetType;
-using std::cerr;
-using std::endl;
 
 #endif
 
@@ -156,7 +152,11 @@ XalanNode::operator==(const XalanNode&	/* theRHS */) const
 #if !defined(NDEBUG)
 
 void
+#if defined(XALAN_NODE_SPECIAL_DEBUG)
 XalanNode::getLiveInstances(XalanNode*	theNodes[])
+#else
+XalanNode::getLiveInstances(XalanNode*	/* theNodes*/ [])
+#endif
 {
 #if defined(XALAN_NODE_SPECIAL_DEBUG)
 
