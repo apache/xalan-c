@@ -568,10 +568,21 @@ XMLFileReporter::closeResultsFile()
 bool 
 XMLFileReporter::printToFile(const XalanDOMString&	output) 
 {
+	CharVectorType	theResult(TranscodeToLocalCodePage(output));
+
     if (isReady())
     {
-        fprintf(m_fileHandle, &output.transcode().front());
-		fprintf(m_fileHandle, "\n");
+		if(!theResult.size())
+		{
+			fprintf(m_fileHandle, "Error transcoding text to local codepage");
+			fprintf(m_fileHandle, "\n");
+		}
+		else 
+		{
+			fprintf(m_fileHandle, c_str(theResult));
+			fprintf(m_fileHandle, "\n");
+		}
+
         return true;
     }
     else
