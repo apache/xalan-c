@@ -35,7 +35,7 @@
 !	MESSAGE Used TYPE 	= $(TYPE)
 !ENDIF
 
-!IF "$(TYPE)" == "icu" && "$(ICUROOT)"=="UNDEFINED"
+!IF "$(TYPE)" == "icu" && "$(ICUROOT)"==""
 !ERROR Please define ICUROOT in xml-xalan\c\Projects\Win32\VC6\Utils\Localization\tools.ini file
 !ENDIF
 
