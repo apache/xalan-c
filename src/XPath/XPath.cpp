@@ -1609,18 +1609,27 @@ XPath::stepPattern(
 
 			while(XPathExpression::eOP_PREDICATE == nextStepType)
 			{
-				const XObjectPtr		pred(predicate(context, opPos, executionContext));
-				assert(pred.get() != 0);
-
-				if(XObject::eTypeNumber == pred->getType())
+				// This is a quick hack to look ahead and see if we have
+				// number literal as the predicate, i.e. match="foo[1]".
+				if (m_expression.getOpCodeMapValue(opPos + 2) == XPathExpression::eOP_NUMBERLIT)
 				{
 					score = handleFoundIndex(executionContext, context, startOpPos);
 				}
-				else if(pred->boolean() == false)
+				else
 				{
-					score = eMatchScoreNone;
+					const XObjectPtr	pred(predicate(context, opPos, executionContext));
+					assert(pred.get() != 0);
 
-					break;
+					if(XObject::eTypeNumber == pred->getType())
+					{
+						score = handleFoundIndex(executionContext, context, startOpPos);
+					}
+					else if(pred->boolean() == false)
+					{
+						score = eMatchScoreNone;
+
+						break;
+					}
 				}
 
 				opPos = currentExpression.getNextOpCodePosition(opPos);
@@ -2877,32 +2886,83 @@ XPath::predicates(
 
 	while(XPathExpression::eOP_PREDICATE == nextStepType)
 	{
-		NodeRefListBase::size_type 			i = 0;
-
 		const NodeRefListBase::size_type	theLength = subQueryResults.getLength();
 
-		while(i < theLength)
+		// If we have no nodes left, then there's no point in executing any
+		// predicates.  However, we will continue to loop, since we need to
+		// update endPredicatePos.
+		if (theLength > 0)
 		{
-			XalanNode* const	theNode = subQueryResults.item(i);
-			assert(theNode != 0);
+			const int predOpPos = opPos + 2;
 
-			const XObjectPtr		pred(predicate(theNode, opPos, executionContext));
-			assert(pred.get() != 0);
-
-			// Remove any node that doesn't satisfy the predicate.
-			if((XObject::eTypeNumber == pred->getType() && i + 1 != pred->num()) ||
-			   pred->boolean() == false)
+			// OK, this is a huge hack/optimization.  If the predicate is
+			// simple a number, such as [2], we can just get the
+			// numeric value from the expression, and not bother executing
+			// the predicate.  Furthermore, we don't need to execute the
+			// predicate for each node, since the evaluation is no dependent
+			// on the context node.  All we really have to do is remove all
+			// nodes from subQueryResults, _except_ for the node at that
+			// position.  The only trick is that XPath indexes from 1, while
+			// our node lists index from 0.
+			if (m_expression.getOpCodeMapValue(predOpPos) == XPathExpression::eOP_NUMBERLIT)
 			{
-				// Set the node to 0.  After we're done,
-				// we'll clear it out.
-				subQueryResults.setNode(i, 0);
+				assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[predOpPos + 3]));
+
+				// Get the value of the number...
+				const double	theIndex =
+					m_expression.getNumberLiteral(m_expression.getOpCodeMapValue(predOpPos + 2));
+
+				// If the index is out of range, or not an integer, just clear subQueryResults...
+				if (theIndex <= 0.0 ||
+					NodeRefListBase::size_type(theIndex) > theLength ||
+					double(NodeRefListBase::size_type(theIndex)) != theIndex)
+				{
+					subQueryResults.clear();
+				}
+				else if (theLength > 1)
+				{
+					// Save the matching node...
+					XalanNode* const	theNode =
+						subQueryResults.item(NodeRefListBase::size_type(theIndex) - 1);
+
+					// Clear the list...
+					subQueryResults.clear();
+
+					// Add the node back in...
+					subQueryResults.addNode(theNode);
+				}
+				else
+				{
+					// OK, if there's only 1 node in the list, then
+					// we don't need to bother modifying the list.
+					// Just assert that theIndex == 1.0...
+					assert(theIndex == 1.0);
+				}
 			}
+			else
+			{
+				for(NodeRefListBase::size_type i = 0; i < theLength; ++i)
+				{
+					XalanNode* const	theNode = subQueryResults.item(i);
+					assert(theNode != 0);
 
-			++i;
+					const XObjectPtr		pred(predicate(theNode, opPos, executionContext));
+					assert(pred.get() != 0);
+
+					// Remove any node that doesn't satisfy the predicate.
+					if((XObject::eTypeNumber == pred->getType() && i + 1 != pred->num()) ||
+					   pred->boolean() == false)
+					{
+						// Set the node to 0.  After we're done,
+						// we'll clear it out.
+						subQueryResults.setNode(i, 0);
+					}
+				}
+
+				// Clear out any null entries...
+				subQueryResults.clearNulls();
+			}
 		}
-
-		// Clear out any null entries...
-		subQueryResults.clearNulls();
 
 		opPos = currentExpression.getNextOpCodePosition(opPos);
 
@@ -2911,10 +2971,6 @@ XPath::predicates(
 		if(XPathExpression::eOP_PREDICATE == nextStepType)
 		{
 			executionContext.setContextNodeList(subQueryResults);
-
-			// Don't break, loop 'till end so that opPos will be set to end.
-			// if(0 == subQueryResults.getLength())
-			//	break;
 		}
 	}
 
