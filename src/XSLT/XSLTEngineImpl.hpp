@@ -171,10 +171,6 @@ public:
 
 
 	typedef XALAN_STD map<const XalanNode*, int>	XSLDirectiveMapType;
-	typedef XALAN_STD map<XalanDOMString,
-						 const XalanNode*>			NamedTemplatesMapType;
-	typedef XALAN_STD map<XalanDOMString,
-						 Stylesheet*>		StylesheetMapType;
 #undef XALAN_STD
 
 	typedef Function::XObjectArgVectorType	XObjectArgVectorType;
@@ -241,7 +237,8 @@ public:
 	 * Perform initialization of statics -- must be called before any
 	 * processing occurs
 	 */
-	static void Initialize();
+	static void
+	Initialize();
 
 	// These methods are inherited from XSLTProcessor ...
 	
@@ -626,23 +623,6 @@ public:
 	 */
 	virtual void
 	setExecutionContext(StylesheetExecutionContext*		theExecutionContext);
-
-	/**
-	 * Table of stylesheet documents. Document objects are keyed by URL string.
-	 */
-	StylesheetMapType	m_stylesheets;
-
-	/**
-	 * Get table of stylesheet documents. Document objects are keyed by URL
-	 * string.
-	 *
-	 * @return stylesheets table
-	 */
-	StylesheetMapType&
-	getStylesheetsTable()
-	{
-		return m_stylesheets;
-	}
 
 	/**
 	 * Retrieve the URI for the current XSL namespace, for example,
@@ -1194,32 +1174,6 @@ public:
 	getNormalizedText(const XalanText&	tx) const;
 
 	/**
-	 * Get the filename of the output document, if it was set. This is for use
-	 * by multiple output documents, to determine the base directory for the
-	 * output document.  It needs to be set by the caller.
-	 * 
-	 * @return name of output document
-	 */
-	const XalanDOMString&
-	getOutputFileName() const
-	{
-		return m_outputFileName;
-	}
-
-	/**
-	 * Set the filename of the output document. This is for use by multiple
-	 * output documents, to determine the base directory for the output
-	 * document.  It needs to be set by the caller.
-	 * 
-	 * @param filename name of output document
-	 */
-	void
-	setOutputFileName(const XalanDOMString&		filename)
-	{
-		m_outputFileName = filename;
-	}
-
-	/**
 	 * Get the factory for making xpaths.
 	 *
 	 * @return XPath factory object
@@ -1240,17 +1194,6 @@ public:
 	{
 		return *m_xpathProcessor.get();
 	}
-
-	/**
-	 * Given a document, get the default stylesheet URI from the xsl:stylesheet
-	 * PI.  However, this will only get you the first URL, and there may be
-	 * many.
-	 *
-	 * @param sourceTree node for source tree
-	 * @deprecated
-	 */
-	const XalanDOMString
-	getStyleSheetURIFromDoc(const XalanNode&	sourceTree);
 
 	/**
 	 * Given a classID and codetype, try to register a code dispatcher.
@@ -1315,41 +1258,6 @@ public:
 	setContextNodeList(const MutableNodeRefList&	ref)
 	{
 		m_contextNodeList = ref;		
-	}
-
-	/**
-	 * Add a named template to the table of template name and value pairs.
-	 *
-	 * @param theName name of template
-	 * @param theNode template node
-	 */
-	void
-	addNamedTemplate(const XalanDOMString&	theName,
-					 const XalanNode*		theNode)
-	{
-		m_namedTemplates[theName] = theNode;
-	}
-
-	/**
-	 * Find a named template in the table of template name and value pairs.
-	 *
-	 * @param theName name of template
-	 * @return template node if found, empty node otherwise
-	 */
-	const XalanNode*
-	getNamedTemplate(const XalanDOMString&	theName) const
-	{
-		const NamedTemplatesMapType::const_iterator 	i =
-			m_namedTemplates.find(theName);
-
-		if(i != m_namedTemplates.end())
-		{
-			return (*i).second;
-		}
-		else
-		{
-			return 0;
-		}
 	}
 
 	/**
@@ -1427,8 +1335,10 @@ public:
 	class XSLInfiniteLoopException : public XSLTProcessorException
 	{
 	public:
-		XSLInfiniteLoopException() : XSLTProcessorException("XSLT infinite loop occurred!")
-		{ }
+		XSLInfiniteLoopException();
+
+		virtual
+		~XSLInfiniteLoopException();
 	};
 
 	/**
@@ -2082,13 +1992,6 @@ private:
 			const XalanNode*					styleNode = 0,
 			const XalanNode*					sourceNode = 0) const;
 
-	/**
-	 * This is for use by multiple output documents, to determine 
-	 * the base directory for the output document.	It needs to 
-	 * be set by the caller.
-	 */
-	XalanDOMString m_outputFileName;
-
 
   //==========================================================
   // SECTION: Function to do with attribute handling
@@ -2097,7 +2000,7 @@ private:
 	/**
 	 * This is used whenever a unique namespace is needed.
 	 */
-	mutable int m_uniqueNSValue;	// 0
+	mutable unsigned long	m_uniqueNSValue;	// 0
   
 	/**
 	 * This should probably be in the XMLParserLiaison interface.
@@ -2106,8 +2009,6 @@ private:
 	getPrefixForNamespace(
 			const XalanDOMString&	theNamespace,
 			const XalanElement&		namespaceContext) const;
-
-	bool	m_useATVsInSelects;
 
 	/**
 	 * Translate CSS attributes and put them in a style tag.
@@ -2266,16 +2167,9 @@ private:
 	MutableNodeRefList	m_contextNodeList;
 
 	/**
-	 * Keyed on string macro names, and holding values that are macro elements
-	 * in the XSL DOM tree. Initialized in initMacroLookupTable, and used in
-	 * findNamedTemplate.
-	 */
-	NamedTemplatesMapType	m_namedTemplates;
-
-	/**
 	 * Table for defined constants, keyed on the names.
 	 */
-	TopLevelVariablesMapType	m_topLevelVariables;
+	TopLevelVariablesMapType		m_topLevelVariables;
 
 	StylesheetExecutionContext*		m_executionContext;
 

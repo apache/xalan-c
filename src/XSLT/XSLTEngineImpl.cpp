@@ -196,7 +196,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_resultTreeFactory(0),
 	m_resultNameSpacePrefix(),
 	m_resultNameSpaceURL(),
-	m_stylesheets(),
 	m_currentNode(),
 	m_pendingElementName(),
 	m_pendingAttributes(),
@@ -218,9 +217,7 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_diagnosticsPrintWriter(0),
 	m_durationsTable(),
 	m_traceListeners(),
-	m_outputFileName(),
 	m_uniqueNSValue(0),
-	m_useATVsInSelects(false),
 	m_stripWhiteSpace(false),
 	m_topLevelParams(),
 	m_parserLiaison(parserLiaison),
@@ -228,7 +225,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_xpathEnvSupport(xpathEnvSupport),
 	m_flistener(0),
 	m_contextNodeList(&xpathSupport),
-	m_namedTemplates(),
 	m_topLevelVariables(),
 	m_executionContext(0),
 	m_needToCheckForInfiniteLoops(false),
@@ -382,7 +378,20 @@ XSLTEngineImpl::process(
 			// Didn't get a stylesheet from the input source, so look for a
 			// stylesheet processing instruction...
 			XalanDOMString			stylesheetURI = 0;
+
+			// Find the first element, and assume that it's the document element.
 			XalanNode*				child = sourceTree->getFirstChild();
+
+			while(child != 0 && child->getNodeType() != XalanNode::ELEMENT_NODE)
+			{
+				child = child->getNextSibling();
+			}
+
+			// OK, if we found a document element, start with the first child.
+			if(child != 0)
+			{
+				child = child->getFirstChild();
+			}
 
 #if !defined(XALAN_NO_NAMESPACES)
 			using std::vector;
@@ -539,7 +548,7 @@ XSLTEngineImpl::process(
 
 StylesheetRoot*
 XSLTEngineImpl::processStylesheet(
-			const XalanDOMString&				xsldocURLString,
+			const XalanDOMString&			xsldocURLString,
 			StylesheetConstructionContext&	constructionContext)
 {
 	try
@@ -565,56 +574,62 @@ XSLTEngineImpl::processStylesheet(
   			XSLTInputSource&				stylesheetSource,
 			StylesheetConstructionContext&	constructionContext)
 {
-	const XalanDOMString	ds(XALAN_STATIC_UCODE_STRING("Input XSL"));
-	const XalanDOMString	xslIdentifier(0 == stylesheetSource.getSystemId() ? 
-									 ds : stylesheetSource.getSystemId());
-
 	StylesheetRoot*		theStylesheet = 0;
 
-	// In case we have a fragment identifier, go ahead and 
-	// try to parse the XML here.
-	try
+	const XalanDOMChar* const	systemID = stylesheetSource.getSystemId();
+	XalanNode* const			stylesheetNode = stylesheetSource.getNode();
+
+	if (systemID != 0 || stylesheetNode != 0)
 	{
-		theStylesheet = constructionContext.create(stylesheetSource);
+		XalanDOMString	xslIdentifier;
 
-		StylesheetHandler	stylesheetProcessor(*theStylesheet, constructionContext);
-
-		if(0 != stylesheetSource.getNode())
+		try
 		{
-			FormatterTreeWalker tw(stylesheetProcessor);
+			theStylesheet = constructionContext.create(stylesheetSource);
 
-			tw.traverse(stylesheetSource.getNode());
+			StylesheetHandler	stylesheetProcessor(*theStylesheet, constructionContext);
+
+			if(stylesheetNode != 0)
+			{
+				xslIdentifier = XALAN_STATIC_UCODE_STRING("Input XSL");
+
+				FormatterTreeWalker tw(stylesheetProcessor);
+
+				tw.traverse(stylesheetSource.getNode());
+			}
+			else
+			{
+				assert(systemID != 0);
+
+				xslIdentifier = systemID;
+
+				diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") + xslIdentifier + XALAN_STATIC_UCODE_STRING(" =========="));
+				pushTime(&xslIdentifier);
+				m_parserLiaison.parseXMLStream(stylesheetSource,
+											   stylesheetProcessor);
+				if(0 != m_diagnosticsPrintWriter)
+					displayDuration(XALAN_STATIC_UCODE_STRING("Parse of ") + xslIdentifier, &xslIdentifier);
+			}
 		}
-		else
+		catch(const XSLException&)
 		{
-			diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") + xslIdentifier + XALAN_STATIC_UCODE_STRING(" =========="));
-			pushTime(&xslIdentifier);
-			m_parserLiaison.parseXMLStream(stylesheetSource,
-										   stylesheetProcessor);
-			if(0 != m_diagnosticsPrintWriter)
-				displayDuration(XALAN_STATIC_UCODE_STRING("Parse of ") + xslIdentifier, &xslIdentifier);
+			message("Error parsing " + xslIdentifier);
+
+			throw;
+		}
+		catch(const SAXException&)
+		{
+			message("Error parsing " + xslIdentifier);
+
+			throw;
+		}
+		catch(const XMLException&)
+		{
+			message("Error parsing " + xslIdentifier);
+
+			throw;
 		}
 	}
-	catch(const XSLException&)
-	{
-		message("Error parsing " + xslIdentifier);
-
-		throw;
-	}
-	catch(const SAXException&)
-	{
-		message("Error parsing " + xslIdentifier);
-
-		throw;
-	}
-	catch(const XMLException&)
-	{
-		message("Error parsing " + xslIdentifier);
-
-		throw;
-	}
-
-	m_stylesheetRoot = theStylesheet;
 
 	return theStylesheet;
 }
@@ -3158,7 +3173,15 @@ XSLTEngineImpl::getXMLParserLiaison() const
 const XalanDOMString
 XSLTEngineImpl::getUniqueNSValue() const
 {
-	return XALAN_STATIC_UCODE_STRING("ns") + LongToDOMString(m_uniqueNSValue++);
+#if defined(XALAN_NO_MUTABLE)
+	const unsigned long		temp = m_uniqueNSValue;
+
+	((XSLTEngineImpl*)this)->m_uniqueNSValue++;
+
+	return XALAN_STATIC_UCODE_STRING("ns") + UnsignedLongToDOMString(temp);
+#else
+	return XALAN_STATIC_UCODE_STRING("ns") + UnsignedLongToDOMString(m_uniqueNSValue++);
+#endif
 }
 
 
@@ -3282,81 +3305,6 @@ XSLTEngineImpl::createResultTreeFrag() const
 
 
 
-const XalanDOMString
-XSLTEngineImpl::getStyleSheetURIFromDoc(const XalanNode&	sourceTree)
-{
-	XalanDOMString		stylesheetURI;
-
-	const XalanNode*	child = sourceTree.getFirstChild();
-
-	// $$$ ToDo: is this first one still valid?
-	const XalanDOMString	stylesheetNodeName1(XALAN_STATIC_UCODE_STRING("xml-stylesheet"));
-	const XalanDOMString	stylesheetNodeName2(XALAN_STATIC_UCODE_STRING("xml:stylesheet"));
-
-	// $$$ ToDo: This code is much like that in process().
-	// Why is it repeated???
-	// $$$ ToDo: Move these embedded strings from inside these loops
-	// out here...
-	// $$$ ToDo: These loops are a mess of repeated use of the
-	// same data values.
-	while(child != 0)
-	{
-		if(XalanNode::PROCESSING_INSTRUCTION_NODE == child->getNodeType())
-		{
-			const XalanDOMString	nodeName(child->getNodeName());
-
-			if(equals(nodeName, stylesheetNodeName1) ||
-				equals(nodeName, stylesheetNodeName2))
-			{
-				bool	isOK = true;
-
-				const XalanDOMString	nodeValue(child->getNodeValue());
-
-				StringTokenizer 		tokenizer(nodeValue, XALAN_STATIC_UCODE_STRING(" \t="));
-
-				while(tokenizer.hasMoreTokens() == true)
-				{
-					const XalanDOMString	nextToken(tokenizer.nextToken());
-
-					if(equals(nextToken, XALAN_STATIC_UCODE_STRING("type")) == true)
-					{
-						const XalanDOMString	typeVal =
-							substring(nextToken, 1, length(nextToken) - 1);
-
-						if(equals(typeVal, XALAN_STATIC_UCODE_STRING("text/xsl")) == false)
-						{
-							isOK = false;
-						}
-					}
-				}  
-
-				if(isOK == true)
-				{
-					StringTokenizer 	tokenizer(nodeValue, XALAN_STATIC_UCODE_STRING(" \t="));
-
-					while(tokenizer.hasMoreTokens() == true)
-					{
-						const XalanDOMString	nextToken(tokenizer.nextToken());
-
-						if(equals(nextToken, XALAN_STATIC_UCODE_STRING("href")))
-						{
-							stylesheetURI =
-								substring(nextToken, 1, nextToken.length() - 1);
-						}
-					}
-					break;
-				}
-			}
-		}
-
-		child = child->getNextSibling();
-	}
-
-	return stylesheetURI;
-}
-
-
-
 void
 XSLTEngineImpl::setStylesheetParam(
 			const XalanDOMString&	theName,
@@ -3413,7 +3361,7 @@ XSLTEngineImpl::registerExtensionHandlerByName(
 			const XalanDOMString&	/* codetype */)
 {
 #if 1
-	error("Xalan does not support extensions at this time!");
+	error("Xalan C++ does not support extensions at this time!");
 #else
 	try
 	{
@@ -3459,7 +3407,7 @@ XSLTEngineImpl::registerExtensionHandler(
 			DispatcherFactory*	/* factory */)
 {
 #if 1
-	error("Xalan does not support extensions at this time!");
+	error("Xalan C++ does not support extensions at this time!");
 #else
 	if(0 != m_diagnosticsPrintWriter)
 	{
@@ -3620,9 +3568,13 @@ XSLTEngineImpl::StackGuard::print(PrintWriter&	pw) const
 
 	if(theType == XalanNode::TEXT_NODE)
 	{
+#if defined(XALAN_OLD_STYLE_CASTS)
+		const XalanText* const	tx =
+			(const XalanText*)m_sourceXML;
+#else
 		const XalanText* const	tx =
 			static_cast<const XalanText*>(m_sourceXML);
-
+#endif
 		pw.println(tx->getData());
 	}
 	else if(theType == XalanNode::ELEMENT_NODE)
@@ -3701,6 +3653,19 @@ XSLTEngineImpl::StackGuard::pop()
 	m_stack.pop_back();
 }
 
+
+
+
+XSLTEngineImpl::XSLInfiniteLoopException::XSLInfiniteLoopException() :
+	XSLTProcessorException("XSLT infinite loop occurred!")
+{
+}
+
+
+
+XSLTEngineImpl::XSLInfiniteLoopException::~XSLInfiniteLoopException()
+{
+}
 
 
 
