@@ -675,7 +675,7 @@ TransformString(
 {
 	assert(theInputString != 0);
 
-#if defined(XALAN_USE_XERCES_DOMSTRING)
+#if defined(XALAN_USE_STD_STRING) && defined(XALAN_OLD_STD_STRING)
 	vector<XalanDOMChar>	theConvertedString;
 
 	TransformString(
@@ -787,211 +787,99 @@ toUpperCaseASCII(const XalanDOMString&	theString)
 
 
 
+template <class InputCharType, class OutputCharType>
+class IdentityTransform
+{
+public:
+
+	OutputCharType
+	operator()(InputCharType	theChar) const
+	{
+		return OutputCharType(theChar);
+	}
+};
+
+
+
+template<class InputCharType, class OutputCharType>
+IdentityTransform<InputCharType, OutputCharType>
+makeIdentityTransform(
+			const InputCharType*,
+			const OutputCharType*)
+{
+	return IdentityTransform<InputCharType, OutputCharType>();
+}
+
+
+
+IdentityTransform<char, char>
+makeCharIdentityTransform()
+{
+	char	theDummy;
+
+	return makeIdentityTransform(&theDummy, &theDummy);
+}
+
+
+IdentityTransform<XalanDOMChar, XalanDOMChar>
+makeXalanDOMCharIdentityTransform()
+{
+	XalanDOMChar	theDummy;
+
+	return makeIdentityTransform(&theDummy, &theDummy);
+}
+
+
 template <class Type, class SizeType, class FunctionType>
-bool
-doEqualsIgnoreCase(
-			const Type*		theLHS,
-			const Type*		theRHS,
-			SizeType		theLength,
-			FunctionType	theToUpperFunction)
-{
-	// Check each character, converting to uppercase
-	// for the test.
-	SizeType	i = 0;
-
-	for(; i < theLength; i++)
-	{
-		const Type	charLHS = theLHS[i];
-		const Type	charRHS = theRHS[i];
-
-		if (charLHS != charRHS &&
-			Type(theToUpperFunction(charLHS)) != charRHS &&
-			charLHS != Type(theToUpperFunction(charRHS)))
-		{
-			break;
-		}
-	}
-
-	// Did we reach the end of the string?
-	if (i == theLength)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-
-
-template <class FunctionType>
-bool
-doEqualsIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			FunctionType			theUpperCaseFunction)
-{
-	assert(theLHS != 0);
-	assert(theRHS != 0);
-
-	bool				fResult = false;
-
-	const unsigned int	theLength = length(theLHS);
-
-	// If they are equal, then compare
-	if (theLength == length(theRHS))
-	{
-		fResult = doEqualsIgnoreCase(theLHS, theRHS, unsigned(theLength), theUpperCaseFunction);
-	}
-
-	return fResult;
-}
-
-
-
-template <class FunctionType>
-bool
-doEqualsIgnoreCase(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS,
-			FunctionType			theUpperCaseFunction)
-{
-	const bool	fLHSIsEmpty = isEmpty(theLHS);
-	const bool	fRHSIsEmpty = isEmpty(theRHS);
-
-	if (fLHSIsEmpty == true)
-	{
-		// If theRHS is empty, then they're equal, or if the
-		// length of theRHS is 0, they're equal as well.
-		return fRHSIsEmpty == true ? true : length(theRHS) == 0 ? true : false;
-	}
-	else if (fRHSIsEmpty == true)
-	{
-		// It the length of theRHS is 0, they're equal.
-		return length(theLHS) == 0 ? true : false;
-	}
-	else
-	{
-		assert(c_wstr(theLHS) != 0);
-		assert(c_wstr(theRHS) != 0);
-
-		unsigned const int	theLHSLength = length(theLHS);
-
-		if (theLHSLength == length(theRHS))
-		{
-			return doEqualsIgnoreCase(c_wstr(theLHS), c_wstr(theRHS), unsigned(theLHSLength), theUpperCaseFunction);
-		}
-		else
-		{
-			return false;
-		}
-	}
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	return doEqualsIgnoreCase(theLHS, theRHS, towupper);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS)
-{
-	const XalanDOMChar*	const	theBuffer =
-		c_wstr(theRHS);
-
-	return equalsIgnoreCase(theLHS, theBuffer == 0 ? &theDummyEmptyString : theBuffer);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCase(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	const XalanDOMChar*	const	theBuffer =
-		c_wstr(theLHS);
-
-	return equalsIgnoreCase(theBuffer == 0 ? &theDummyEmptyString : theBuffer, theRHS);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCase(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
-{
-	return doEqualsIgnoreCase(theLHS, theRHS, towupper);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCaseASCII(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	return doEqualsIgnoreCase(theLHS, theRHS, toUpperASCII);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCaseASCII(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS)
-{
-	const XalanDOMChar*	const	theBuffer =
-		c_wstr(theRHS);
-
-	return equalsIgnoreCaseASCII(theLHS, theBuffer == 0 ? &theDummyEmptyString : theBuffer);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCaseASCII(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	const XalanDOMChar*	const	theBuffer =
-		c_wstr(theLHS);
-
-	return equalsIgnoreCaseASCII(theBuffer == 0 ? &theDummyEmptyString : theBuffer, theRHS);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCaseASCII(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
-{
-	return doEqualsIgnoreCase(theLHS, theRHS, toUpperASCII);
-}
-
-
-
-template <class Type, class SizeType>
 int
 doCompare(
 			const Type*		theLHS,
 			SizeType		theLHSLength,
 			const Type*		theRHS,
-			SizeType		theRHSLength)
+			SizeType		theRHSLength,
+			FunctionType	theTransformFunction)
 {
-	int					theResult = 0;
+	// We don't really have to order, so save some time...
+	if (theLHSLength < theRHSLength)
+	{
+		return -1;
+	}
+	else if (theRHSLength < theLHSLength)
+	{
+		return 1;
+	}
+	else
+	{
+		Type	theLHSChar = Type(0);
+		Type	theRHSChar = Type(0);
+
+		for(SizeType i = 0; i < theLHSLength; i++)
+		{
+			theLHSChar = theTransformFunction(theLHS[i]);
+			theRHSChar = theTransformFunction(theRHS[i]);
+
+			if (theLHSChar != theRHSChar)
+			{
+				break;
+			}
+		}
+
+		return int(theLHSChar - theRHSChar);
+	}
+}
+
+
+
+template <class Type, class SizeType, class FunctionType>
+int
+doCollationCompare(
+			const Type*		theLHS,
+			SizeType		theLHSLength,
+			const Type*		theRHS,
+			SizeType		theRHSLength,
+			FunctionType	theTransformFunction)
+{
+	int		theResult = 0;
 
 	if (theLHSLength != 0 || theRHSLength != 0)
 	{
@@ -1002,8 +890,8 @@ doCompare(
 
 		for(; i < theLHSLength && i < theRHSLength; i++)
 		{
-			theLHSChar = theLHS[i];
-			theRHSChar = theRHS[i];
+			theLHSChar = theTransformFunction(theLHS[i]);
+			theRHSChar = theTransformFunction(theRHS[i]);
 
 			if (theLHSChar != theRHSChar)
 			{
@@ -1048,7 +936,12 @@ compare(
 			const CharVectorType&	theLHS,
 			const CharVectorType&	theRHS)
 {
-	return doCompare(c_str(theLHS), theLHS.size(), c_str(theRHS), theRHS.size());
+	return doCompare(
+				toCharArray(theLHS),
+				theLHS.size(),
+				toCharArray(theRHS),
+				theRHS.size(),
+				makeCharIdentityTransform());
 }
 
 
@@ -1056,70 +949,16 @@ compare(
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compare(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
+			unsigned int			theLHSLength,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theRHSLength)
 {
-	return doCompare(theLHS, length(theLHS), theRHS, length(theRHS));
-}
-
-
-
-template <class Type, class SizeType, class FunctionType>
-int
-doCompareIgnoreCase(
-			const Type*		theLHS,
-			SizeType		theLHSLength,
-			const Type*		theRHS,
-			SizeType		theRHSLength,
-			FunctionType	theToUpperFunction)
-{
-	int					theResult = 0;
-
-	if (theLHSLength != 0 || theRHSLength != 0)
-	{
-		Type	theLHSChar = 0;
-		Type	theRHSChar = 0;
-
-		SizeType	i = 0;
-
-		for(; i < theLHSLength && i < theRHSLength; i++)
-		{
-			theLHSChar = theToUpperFunction(theLHS[i]);
-			theRHSChar = theToUpperFunction(theRHS[i]);
-
-			if (theLHSChar != theRHSChar)
-			{
-				break;
-			}
-		}
-
-		if (i == theLHSLength)
-		{
-			// We reached the end of theLHS...
-			if (i != theRHSLength)
-			{
-				// but not the end of theRHS.
-				theResult = -1;
-			}
-		}
-		else if (i == theRHSLength)
-		{
-			// We reached the end of theRHS string...
-			if (i != theLHSLength)
-			{
-				// but not the end of theLHS string.
-				theResult = 1;
-			}
-		}
-		else
-		{
-			// We didn't reach the end of _either_ string, so
-			// return the difference between the two characters
-			// that caused the problem.
-			theResult = int(theLHSChar - theRHSChar);
-		}
-	}
-
-	return theResult;
+	return doCompare(
+				theLHS,
+				theLHSLength,
+				theRHS,
+				theRHSLength,
+				makeXalanDOMCharIdentityTransform());
 }
 
 
@@ -1127,35 +966,16 @@ doCompareIgnoreCase(
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compareIgnoreCase(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
+			unsigned int			theLHSLength,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theRHSLength)
 {
-	return doCompareIgnoreCase(theLHS, length(theLHS), theRHS, length(theRHS), towupper);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS)
-{
-	const XalanDOMChar*	const	theBuffer =
-		c_wstr(theRHS);
-
-	return compareIgnoreCase(theLHS, theBuffer == 0 ? &theDummyEmptyString : theBuffer);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCase(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	const XalanDOMChar*	const	theBuffer =
-		c_wstr(theLHS);
-
-	return compareIgnoreCase(theBuffer == 0 ? &theDummyEmptyString : theBuffer, theRHS);
+	return doCompare(
+				theLHS,
+				theLHSLength,
+				theRHS,
+				theRHSLength,
+				towupper);
 }
 
 
@@ -1163,170 +983,114 @@ compareIgnoreCase(
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compareIgnoreCaseASCII(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
+			unsigned int			theLHSLength,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theRHSLength)
 {
-	return doCompareIgnoreCase(theLHS, length(theLHS), theRHS, length(theRHS), toUpperASCII);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCaseASCII(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS)
-{
-	const XalanDOMChar*	const	theBuffer =
-		c_wstr(theRHS);
-
-	return compareIgnoreCaseASCII(theLHS, theBuffer == 0 ? &theDummyEmptyString : theBuffer);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCaseASCII(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	const XalanDOMChar*	const	theBuffer =
-		c_wstr(theLHS);
-
-	return compareIgnoreCaseASCII(theBuffer == 0 ? &theDummyEmptyString : theBuffer, theRHS);
-}
-
-
-
-struct WideStringLexicalCompare
-{
-	int
-	operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const
-	{
-		return compare(theLHS, theRHS);
-	}
-};
-
-
-
-struct WideStringIgnoreCaseCompare
-{
-	int
-	operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const
-	{
-		return compareIgnoreCase(theLHS, theRHS);
-	}
-};
-
-
-
-struct WideStringIgnoreCaseCompareASCII
-{
-	int
-	operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const
-	{
-		return compareIgnoreCaseASCII(theLHS, theRHS);
-	}
-};
-
-
-
-struct WideStringCollationCompare
-{
-	int
-	operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const
-	{
-		return collationCompare(theLHS, theRHS);
-	}
-};
-
-
-
-template<class CompareFunctionType>
-int
-DOMStringCompare(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS,
-			CompareFunctionType		theCompareFunction)
-{
-	const bool	fLHSIsEmpty = isEmpty(theLHS);
-	const bool	fRHSIsEmpty = isEmpty(theRHS);
-
-	// correct?
-	if (fLHSIsEmpty == true)
-	{
-		if (fRHSIsEmpty == true || length(theRHS) == 0)
-		{
-			return 0;
-		}
-		else
-		{
-			return 1;
-		}
-	}
-	else if (isEmpty(theRHS) == true)
-	{
-		if (length(theLHS) == 0)
-		{
-			return 0;
-		}
-		else
-		{
-			return -1;
-		}
-	}
-	else
-	{
-		assert(c_wstr(theLHS) != 0 && c_wstr(theRHS) != 0);
-
-		return theCompareFunction(c_wstr(theLHS), c_wstr(theRHS));
-	}
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compare(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
-{
-	return DOMStringCompare(theLHS, theRHS, WideStringLexicalCompare());
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCase(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
-{
-	return DOMStringCompare(theLHS, theRHS, WideStringIgnoreCaseCompare());
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCaseASCII(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
-{
-	return DOMStringCompare(theLHS, theRHS, WideStringIgnoreCaseCompareASCII());
+	return doCompare(
+				theLHS,
+				theLHSLength,
+				theRHS,
+				theRHSLength,
+				toUpperASCII);
 }
 
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 collationCompare(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
+			const XalanDOMChar*		theLHS,
+			unsigned int			theLHSLength,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theRHSLength)
 {
-	return DOMStringCompare(theLHS, theRHS, WideStringCollationCompare());
+	return doCollationCompare(
+				theLHS,
+				theLHSLength,
+				theRHS,
+				theRHSLength,
+				makeXalanDOMCharIdentityTransform());
+}
+
+
+
+template <class Type, class SizeType, class FunctionType>
+bool
+doEquals(
+			const Type*		theLHS,
+			const Type*		theRHS,
+			SizeType		theLength,
+			FunctionType	theTransformFunction)
+{
+	assert(theLHS != 0 && theRHS != 0);
+
+#if 1
+	if (theLength == 0)
+	{
+		return true;
+	}
+	else
+	{
+		const Type* const	theEnd = theLHS + theLength;
+
+		while(theTransformFunction(*theLHS) == theTransformFunction(*theRHS))
+		{
+			++theLHS;
+
+			if (theLHS == theEnd)
+			{
+				return true;
+			}
+			else
+			{
+				++theRHS;
+			}
+		}
+
+		return false;
+	}
+#else
+	for(SizeType i = 0; i < theLength; ++i)
+	{
+		const Type	theLHSChar = theTransformFunction(theLHS[i]);
+		const Type	theRHSChar = theTransformFunction(theRHS[i]);
+
+		if (theLHSChar != theRHSChar)
+		{
+			return false;
+		}
+	}
+
+	return true;
+#endif
+}
+
+
+				   
+template <class Type, class SizeType, class FunctionType>
+bool
+doEqualsIgnoreCase(
+			const Type*		theLHS,
+			const Type*		theRHS,
+			SizeType		theLength,
+			FunctionType	theToUpperFunction)
+{
+	// Check each character, converting to uppercase
+	// for the test.
+	for(SizeType i = 0; i < theLength; i++)
+	{
+		const Type	charLHS = theLHS[i];
+		const Type	charRHS = theRHS[i];
+
+		if (charLHS != charRHS &&
+			Type(theToUpperFunction(charLHS)) != charRHS &&
+			charLHS != Type(theToUpperFunction(charRHS)))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 
@@ -1334,38 +1098,44 @@ collationCompare(
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 equals(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
+			const XalanDOMChar*		theRHS,
+			unsigned int			theLength)
 {
-	assert(theLHS != 0 && theRHS != 0);
+	return doEquals(
+				theLHS,
+				theRHS,
+				theLength,
+				makeXalanDOMCharIdentityTransform());
+}
 
-	for(;;)
-	{
-		const XalanDOMChar	theLHSChar = *theLHS;
-		const XalanDOMChar	theRHSChar = *theRHS;
 
-		if (theLHSChar == 0)
-		{
-			return theRHSChar == 0 ? true : false;
-		}
-		else if (theRHSChar == 0)
-		{
-			return theLHSChar == 0 ? true : false;
-		}
-		else if (theLHSChar != theRHSChar)
-		{
-			return false;
-		}
-		else
-		{
-			++theLHS;
-			++theRHS;
-		}
-	}
 
-	assert(false);
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+equalsIgnoreCase(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theLength)
+{
+	return doEqualsIgnoreCase(
+				theLHS,
+				theRHS,
+				theLength,
+				towupper);
+}
 
-	// Dummy return value...
-	return false;
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+equalsIgnoreCaseASCII(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theLength)
+{
+	return doEqualsIgnoreCase(
+				theLHS,
+				theRHS,
+				theLength,
+				toUpperASCII);
 }
 
 
@@ -1568,31 +1338,6 @@ trim(const XalanDOMString&	theString)
 
 
 
-template <class InputCharType, class OutputCharType>
-class IdentityTransform
-{
-public:
-
-	OutputCharType
-	operator()(InputCharType	theChar) const
-	{
-		return OutputCharType(theChar);
-	}
-};
-
-
-
-template<class InputCharType, class OutputCharType>
-IdentityTransform<InputCharType, OutputCharType>
-makeIdentityTransform(
-			const InputCharType*,
-			const OutputCharType*)
-{
-	return IdentityTransform<InputCharType, OutputCharType>();
-}
-
-
-
 // A very cheap decimal number transcoder...
 template <class InputCharType, class OutputCharType>
 class DecimalNumberTranscodeTransform
@@ -1762,30 +1507,30 @@ TranscodeNumber(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 DoubleToDOMString(
 			double				theDouble,
-			XalanDOMString&		theString)
+			XalanDOMString&		theResult)
 {
 	if (DoubleSupport::isNaN(theDouble) == true)
 	{
-		theString = theNaNString;
+		theResult = theNaNString;
 	}
 	else if (DoubleSupport::isPositiveInfinity(theDouble) == true)
 	{
-		theString = thePositiveInfinityString;
+		theResult = thePositiveInfinityString;
 	}
 	else if (DoubleSupport::isNegativeInfinity(theDouble) == true)
 	{
-		theString = theNegativeInfinityString;
+		theResult = theNegativeInfinityString;
 	}
 	else if (DoubleSupport::isNegativeZero(theDouble) == true)
 	{
-		theString = theNegativeZeroString;
+		theResult = theNegativeZeroString;
 	}
 	else if (DoubleSupport::isPositiveZero(theDouble) == true)
 	{
-		theString = thePositiveZeroString;
+		theResult = thePositiveZeroString;
 	}
 	else
 	{
@@ -1816,24 +1561,26 @@ DoubleToDOMString(
 			++theCharsWritten;
 		}
 
-#if defined(XALAN_USE_XERCES_DOMSTRING)
-		XalanDOMChar	theResult[sizeof(theBuffer)];
+#if defined(XALAN_USE_STD_STRING) && defined(XALAN_OLD_STD_STRING)
+		XalanDOMChar	theTemp[sizeof(theBuffer)];
 
 		TranscodeNumber(
 				theBuffer,
 				theBuffer + theCharsWritten,
-				theResult);
+				theTemp);
 
-		theString = XalanDOMString(theResult, theCharsWritten);
+		theResult = XalanDOMString(theTemp, theCharsWritten);
 #else
-		reserve(theString, theCharsWritten);
+		reserve(theResult, theCharsWritten + 1);
 
 		TranscodeNumber(
 				theBuffer,
 				theBuffer + theCharsWritten,
-				back_inserter(theString));
+				back_inserter(theResult));
 #endif
 	}
+
+	return theResult;
 }
 
 
@@ -1959,42 +1706,50 @@ UnsignedScalarToHexadecimalString(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 LongToHexDOMString(
 			long				theValue,
 			XalanDOMString&		theResult)
 {
 	UnsignedScalarToHexadecimalString(theValue, theResult);
+
+	return theResult;
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 UnsignedLongToHexDOMString(
 			unsigned long		theValue,
 			XalanDOMString&		theResult)
 {
 	UnsignedScalarToHexadecimalString(theValue, theResult);
+
+	return theResult;
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 LongToDOMString(
 			long				theValue,
 			XalanDOMString&		theResult)
 {
 	ScalarToDecimalString(theValue, theResult);
+
+	return theResult;
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 UnsignedLongToDOMString(
 			unsigned long		theValue,
 			XalanDOMString&		theResult)
 {
 	ScalarToDecimalString(theValue, theResult);
+
+	return theResult;
 }
 
 

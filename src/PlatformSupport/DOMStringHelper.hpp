@@ -174,15 +174,7 @@ DOMStringHelperTerminate();
 inline const XalanDOMChar*
 c_wstr(const XalanDOMString&	theString)
 {
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 	return theString.c_str();
-#else
-	const XalanDOMChar* const	ptr = theString.rawBuffer();
-
-	assert(!ptr || ptr[theString.length()] == '\0');
-
-	return ptr;
-#endif
 }
 
 
@@ -197,11 +189,18 @@ c_wstr(const XalanDOMString&	theString)
 inline const char*
 c_str(const CharVectorType&		theString)
 {
-	const char* const	ptr = &theString[0];
+	if (theString.size() == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		const char* const	ptr = &theString[0];
 
-	assert(!ptr || ptr[theString.size() - 1] == '\0');
+		assert(ptr[theString.size() - 1] == '\0');
 
-	return ptr;
+		return ptr;
+	}
 }
 
 
@@ -239,11 +238,36 @@ c_wstr(const XalanDOMChar*	theString)
 inline const XalanDOMChar*
 toCharArray(const XalanDOMString&	theString)
 {
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 	return theString.c_str();
-#else
-	return theString.rawBuffer();
-#endif
+}
+
+
+
+/**
+ * Get the underlying representation of a XalanDOMChar.
+ * 
+ * @param theString target string
+ * @return array of XalanDOMChar
+ */
+inline const XalanDOMChar*
+toCharArray(const XalanDOMChar*		theString)
+{
+	return theString;
+}
+
+
+
+/**
+ * Get the underlying representation of the target CharVectorType as a
+ * pointer to an array of characters
+ * 
+ * @param theString target string
+ * @return the pointer
+ */
+inline const char*
+toCharArray(const CharVectorType&	theString)
+{
+	return theString.size() == 0 ? 0 : &theString[0];
 }
 
 
@@ -280,25 +304,41 @@ length(const XalanDOMString&	theString)
 
 
 /**
- * Get the length of a null-terminated buffer of
+ * Get the length of a null-terminated string of
  * XalanDOMChar characters
  * 
- * @param theBuffer target string
+ * @param theString target string
  * @return the length of the target string
  */
 inline unsigned int
-length(const XalanDOMChar*	theBuffer)
+length(const XalanDOMChar*	theString)
 {
-	assert(theBuffer != 0);
+	assert(theString != 0);
 
-	const XalanDOMChar*		theBufferPointer = theBuffer;
+	const XalanDOMChar*		theBufferPointer = theString;
 
 	while(*theBufferPointer != 0)
 	{
 		theBufferPointer++;
 	}
 
-	return theBufferPointer - theBuffer;
+	return theBufferPointer - theString;
+}
+
+
+
+/**
+ * Get the length of a null-terminated string.
+ * 
+ * @param theString target string
+ * @return the length of the target string
+ */
+inline unsigned int
+length(const char*	theString)
+{
+	assert(theString != 0);
+
+	return strlen(theString);
 }
 
 
@@ -551,8 +591,9 @@ endsWith(
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 DoubleToDOMString(
 			double				theValue,
 			XalanDOMString&		theResult);
@@ -583,8 +624,9 @@ DoubleToDOMString(double	theValue)
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 LongToHexDOMString(
 			long				theValue,
 			XalanDOMString&		theResult);
@@ -616,8 +658,9 @@ LongToHexDOMString(long		theValue)
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 UnsignedLongToHexDOMString(
 			unsigned long		theValue,
 			XalanDOMString&		theResult);
@@ -648,8 +691,9 @@ UnsignedLongToHexDOMString(unsigned long	theValue)
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 LongToDOMString(
 			long				theValue,
 			XalanDOMString&		theResult);
@@ -680,8 +724,9 @@ LongToDOMString(long	theValue)
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 UnsignedLongToDOMString(
 			unsigned long		theValue,
 			XalanDOMString&		theResult);
@@ -1048,24 +1093,6 @@ operator<<(
 
 
 /**
- * Creates a copy of the target string
- * 
- * @param theString target string
- * @return copy of string
- */
-inline XalanDOMString
-clone(const XalanDOMString&	theString)
-{
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
-	return theString;
-#else
-	return theString.clone();
-#endif
-}
-
-
-
-/**
  * Retrieves a character at a specified index in the target string
  * 
  * @param theString target string
@@ -1077,11 +1104,7 @@ charAt(
 			const XalanDOMString&	theString,
 			unsigned int			theIndex)
 {
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 	return theString[theIndex];
-#else
-	return theString.charAt(theIndex);
-#endif
 }
 
 
@@ -1313,31 +1336,12 @@ toUpperCaseASCII(const XalanDOMString&	theString);
 
 
 
-#if defined(XALAN_USE_XERCES_DOMSTRING) && !defined(XALAN_AMBIGUOUS_EVEN_IF_NOT_CALLED)
-// These two function are specifically not defined, and
-// should produce ambiguity during compilation.  This
-// is necessary because the Xerces XalanDOMString class
-// defines == as referring to the same underlying
-// handle, not identical strings, as C++ programmers
-// would expect.
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-operator==(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS);
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-operator!=(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS);
-#endif
-
-
-
 /**
  * Compare the contents of two strings.
  * 
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
  * @param theLHS first string to compare
  * @param theRHS second string to compare
  * @return Returns 0 for equal strings, less than 0 if theLHS is less
@@ -1352,137 +1356,44 @@ compare(
 
 
 /**
- * Compare the contents of two strings.
+ * Compare the contents of two character arrays.
  * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
+ * @param theLHS first array to compare
+ * @param theLHSLength the length of the first array
+ * @param theRHS second array to compare
+ * @param theRHSLength the length of the second array
+ * @return Returns 0 for equal arrays, less than 0 if theLHS is less
  * than theRHS, or greater than 0 if theRHS is greater than theLHS.
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compare(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS);
+			unsigned int			theLHSLength,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theRHSLength);
 
 
 
 /**
- * Compare the contents of two strings, in a case insensitive
- * manner
+ * Compare the contents of two null-terminated strings.
  * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS);
-
-
-
-/**
- * Compare the contents of two strings, in a case insensitive
- * manner
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS);
-
-
-
-/**
- * Compare the contents of two strings, in a case insensitive
- * manner
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCase(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS);
-
-
-
-/**
- * Compare the contents of two strings, in a case insensitive
- * manner.  Only the characters a-z and A-Z are considered for
- * the comparison.
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
  *
  * @param theLHS first string to compare
  * @param theRHS second string to compare
  * @return Returns 0 for equal strings, less than 0 if theLHS is less
  * than theRHS, or greater than 0 if theRHS is greater than theLHS.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCaseASCII(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS);
-
-
-
-/**
- * Compare the contents of two strings, in a case insensitive
- * manner.  Only the characters a-z and A-Z are considered for
- * the comparison.
- *
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCaseASCII(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS);
-
-
-
-/**
- * Compare the contents of two strings, in a case insensitive
- * manner.  Only the characters a-z and A-Z are considered for
- * the comparison.
- *
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCaseASCII(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS);
-
-
-
-/**
- * Compare the contents of two strings using the
- * the collation settings of the current code page.
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- * @see operator<()
- * @see compare()
- */
-// Can't really do it, so just call compare...
 inline int
-collationCompare(
+compare(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS)
 {
-	return compare(theLHS, theRHS);
+	return compare(theLHS, length(theLHS), theRHS, length(theRHS));
 }
 
 
@@ -1497,10 +1408,101 @@ collationCompare(
  * @see operator<()
  * @see collationCompare()
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+inline int
 compare(
 			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS);
+			const XalanDOMString&	theRHS)
+{
+	return compare(toCharArray(theLHS), length(theLHS), toCharArray(theRHS), length(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two strings.
+ * 
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+inline int
+compare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMString&	theRHS)
+{
+	return compare(theLHS, length(theLHS), toCharArray(theRHS), length(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two strings.
+ * 
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+inline int
+compare(
+			const XalanDOMString&	theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	return compare(toCharArray(theLHS), length(theLHS), theRHS, length(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two strings, in a case insensitive
+ * manner.
+ * 
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
+ * @param theLHS first string to compare
+ * @param theLHSLength the length of the first array
+ * @param theRHS second string to compare
+ * @param theRHSLength the length of the second array
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+compareIgnoreCase(
+			const XalanDOMChar*		theLHS,
+			unsigned int			theLHSLength,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theRHSLength);
+
+
+
+/**
+ * Compare the contents of two strings, in a case insensitive
+ * manner.
+ * 
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+inline int
+compareIgnoreCase(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	return compareIgnoreCase(theLHS, length(theLHS), theRHS, length(theRHS));
+}
+
 
 
 /**
@@ -1514,17 +1516,105 @@ compare(
  * @see operator<
  * @see collationCompare
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+inline int
 compareIgnoreCase(
 			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS);
+			const XalanDOMString&	theRHS)
+{
+	return compareIgnoreCase(toCharArray(theLHS), length(theLHS), toCharArray(theRHS), length(theRHS));
+}
 
 
 
 /**
  * Compare the contents of two strings, in a case insensitive
- * manner.  Only the characters a-z and A-Z are considered for
- * the comparison.
+ * manner
+ * 
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+inline int
+compareIgnoreCase(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMString&	theRHS)
+{
+	return compareIgnoreCase(theLHS, length(theLHS), toCharArray(theRHS), length(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two strings, in a case insensitive
+ * manner
+ * 
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+inline int
+compareIgnoreCase(
+			const XalanDOMString&	theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	return compareIgnoreCase(toCharArray(theLHS), length(theLHS), theRHS, length(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two arrays in a case insensitive
+ * manner.  Only the characters a-z and A-Z are considered as
+ * characters with "case".
+ *
+ * @param theLHS first array to compare
+ * @param theLHSLength the length of the first array
+ * @param theRHS second array to compare
+ * @param theRHSLength the length of the second array
+ * @return Returns 0 for equal arrays, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+compareIgnoreCaseASCII(
+			const XalanDOMChar*		theLHS,
+			unsigned int			theLHSLength,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theRHSLength);
+
+
+
+/**
+ * Compare the contents of two strings, in a case insensitive
+ * manner.  Only the characters a-z and A-Z are considered as
+ * characters with "case".
+ *
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+inline int
+compareIgnoreCaseASCII(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	return compareIgnoreCaseASCII(theLHS, length(theLHS), theRHS, length(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two strings, in a case insensitive
+ * manner.  Only the characters a-z and A-Z are considered as
+ * characters with "case".
  *
  * @param theLHS first string to compare
  * @param theRHS second string to compare
@@ -1533,16 +1623,83 @@ compareIgnoreCase(
  * @see operator<
  * @see collationCompare
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+inline int
 compareIgnoreCaseASCII(
 			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS);
+			const XalanDOMString&	theRHS)
+{
+	return compareIgnoreCaseASCII(toCharArray(theLHS), length(theLHS), toCharArray(theRHS), length(theRHS));
+}
 
 
 
 /**
- * Compare the contents of two strings using the
- * the collation settings of the current code page.
+ * Compare the contents of two strings, in a case insensitive
+ * manner.  Only the characters a-z and A-Z are considered as
+ * characters with "case".
+ *
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+inline int
+compareIgnoreCaseASCII(
+			const XalanDOMString&	theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	return compareIgnoreCaseASCII(toCharArray(theLHS), length(theLHS), theRHS, length(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two strings, in a case insensitive
+ * manner.  Only the characters a-z and A-Z are considered for
+ * the comparison.
+ *
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+inline int
+compareIgnoreCaseASCII(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMString&	theRHS)
+{
+	return compareIgnoreCaseASCII(theLHS, length(theLHS), toCharArray(theRHS), length(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two character arrays.
+ * 
+ * @param theLHS first array to compare
+ * @param theLHSLength the length of the first array
+ * @param theRHS second array to compare
+ * @param theRHSLength the length of the second array
+ * @return Returns 0 for equal arrays, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+collationCompare(
+			const XalanDOMChar*		theLHS,
+			unsigned int			theLHSLength,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theRHSLength);
+
+ 
+ 
+/**
+ * Compare the contents of two strings.
  * 
  * @param theLHS first string to compare
  * @param theRHS second string to compare
@@ -1551,10 +1708,85 @@ compareIgnoreCaseASCII(
  * @see operator<()
  * @see compare()
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+inline int
+collationCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	return collationCompare(theLHS, length(theLHS), theRHS, length(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two strings.
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ * @see operator<()
+ * @see compare()
+ */
+inline int
 collationCompare(
 			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS);
+			const XalanDOMString&	theRHS)
+{
+	return collationCompare(toCharArray(theLHS), length(theLHS), toCharArray(theRHS), length(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two strings.
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+inline int
+collationCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMString&	theRHS)
+{
+	return collationCompare(theLHS, length(theLHS), toCharArray(theRHS), length(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two strings.
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ */
+inline int
+collationCompare(
+			const XalanDOMString&	theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	return collationCompare(toCharArray(theLHS), length(theLHS), theRHS, length(theRHS));
+}
+
+
+
+/**
+ * Compare the contents of two arrays for equality
+ * 
+ * @param theLHS first array to compare
+ * @param theRHS second array to compare
+ * @param theLength the length of the arrays
+ * @return true if the contents of both arrays are identical
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+equals(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theLength);
 
 
 
@@ -1565,10 +1797,39 @@ collationCompare(
  * @param theRHS second string to compare
  * @return true if the contents of both strings are identical
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+inline bool
 equals(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS);
+			const XalanDOMChar*		theRHS)
+{
+	const unsigned int	theLHSLength = length(theLHS);
+
+	return theLHSLength != length(theRHS) ? false : equals(theLHS, theRHS, theLHSLength);
+}
+
+
+
+/**
+ * Compare the contents of two strings for equality
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
+inline bool
+equals(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS)
+{
+#if defined(XALAN_USE_STD_STRING)
+	const unsigned int	theLHSLength = length(theLHS);
+
+	return theLHSLength != length(theRHS) ? false :
+		equals(toCharArray(theLHS), toCharArray(theRHS), theLHSLength);
+#else
+	return theLHS == theRHS;
+#endif
+}
 
 
 
@@ -1586,10 +1847,11 @@ equals(
 {
 	assert(theLHS != 0);
 
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
-	return theLHS == theRHS;
+#if defined(XALAN_USE_STD_STRING)
+	return equals(theLHS, c_wstr(theRHS));
 #else
-	return theRHS.equals(theLHS);
+	// Swap them...
+	return theRHS == theLHS;
 #endif
 }
 
@@ -1606,15 +1868,7 @@ inline bool
 equals(const XalanDOMString&	theLHS,
 	   const XalanDOMChar*		theRHS)
 {
-	assert(theRHS != 0);
-
-#if defined(XALAN_USE_CUSTOM_STRING)
-	return theLHS == theRHS;
-#elif defined(XALAN_USE_STD_STRING)
-	return equals(c_wstr(theLHS), theRHS);
-#else
-	return theLHS.equals(theRHS);
-#endif
+	return equals(theRHS, theLHS);
 }
 
 
@@ -1632,13 +1886,36 @@ equals(const XalanDOMString&	theLHS,
 {
 	assert(theRHS != 0);
 
-#if defined(XALAN_USE_CUSTOM_STRING)
-	return theLHS == XalanDOMString(theRHS);
-#elif defined(XALAN_USE_STD_STRING)
-	return theLHS == TranscodeFromLocalCodePage(theRHS);
+	const unsigned int	theRHSLength = length(theRHS);
+
+	if (theRHSLength != length(theLHS))
+	{
+		return false;
+	}
+	else
+	{
+#if defined(XALAN_USE_STD_STRING)
+		return theLHS == TranscodeFromLocalCodePage(theRHS);
 #else
-	return theLHS.equals(theRHS) ? true : false;
+		return theLHS == XalanDOMString(theRHS, theRHSLength);
 #endif
+	}
+}
+
+
+
+/**
+ * Compare the contents of two strings for equality
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
+inline bool
+equals(const char*				theLHS,
+	   const XalanDOMString&	theRHS)
+{
+	return equals(theRHS, theLHS);
 }
 
 
@@ -1654,11 +1931,23 @@ inline bool
 equals(const XalanDOMChar*	theLHS,
 	   const char*			theRHS)
 {
+	assert(theLHS != 0);
+	assert(theRHS != 0);
+
+	const unsigned int	theRHSLength = length(theRHS);
+
+	if (theRHSLength != length(theLHS))
+	{
+		return false;
+	}
+	else
+	{
 #if defined(XALAN_USE_STD_STRING)
-	return equals(theLHS, TranscodeFromLocalCodePage(theRHS));
+		return equals(TranscodeFromLocalCodePage(theRHS), theLHS);
 #else
-	return equals(theLHS, XalanDOMString(theRHS));
+		return equals(XalanDOMString(theRHS, theRHSLength), theLHS);
 #endif
+	}
 }
 
 
@@ -1674,37 +1963,62 @@ inline bool
 equals(const char*			theLHS,
 	   const XalanDOMChar*	theRHS)
 {
-	assert(theLHS != 0);
-	assert(theRHS != 0);
-
-#if defined(XALAN_USE_STD_STRING)
-	return equals(TranscodeFromLocalCodePage(theLHS), theRHS);
-#else
-	return equals(XalanDOMString(theLHS), theRHS);
-#endif
+	return equals(theRHS, theLHS);
 }
 
 
 
 /**
- * Compare the contents of two strings for equality
+ * Compare the contents of two arrays for equality, without regard for case
+ *
+ * @param theLHS first array to compare
+ * @param theRHS second array to compare
+ * @param theLength the length of the arrays
+ * @return true if the contents of both arrays are identical
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+equalsIgnoreCase(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theLength);
+
+
+
+/**
+ * Compare the contents of two strings for equality, without regard for case
  * 
  * @param theLHS first string to compare
  * @param theRHS second string to compare
- * @return true if the contents of both strings are identical
+ * @return true if the case-insensitive contents of both strings are identical
+ */
+inline bool 
+equalsIgnoreCase(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	const unsigned int	theLength = length(theLHS);
+
+	return theLength != length(theRHS) ? false : equalsIgnoreCase(theLHS, theRHS, theLength);
+}
+
+
+
+/**
+ * Compare the contents of two strings for equality, without regard for case
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the case-insensitive contents of both strings are identical
  */
 inline bool
-equals(
+equalsIgnoreCase(
 			const XalanDOMString&	theLHS,
 			const XalanDOMString&	theRHS)
 {
-#if defined(XALAN_USE_CUSTOM_STRING)
-	return theLHS == theRHS;
-#elif defined(XALAN_USE_STD_STRING)
-	return equals(c_wstr(theLHS), c_wstr(theRHS));
-#else
-	return theLHS.equals(theRHS) ? true : false;
-#endif
+	const unsigned int	theLHSLength = length(theLHS);
+
+	return theLHSLength != length(theRHS) ? false :
+		equalsIgnoreCase(toCharArray(theLHS), toCharArray(theRHS), theLHSLength);
 }
 
 
@@ -1716,10 +2030,16 @@ equals(
  * @param theRHS second string to compare
  * @return true if the case-insensitive contents of both strings are identical
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+inline bool
 equalsIgnoreCase(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS);
+			const XalanDOMString&	theRHS)
+{
+	const unsigned int	theRHSLength = length(theRHS);
+
+	return theRHSLength != length(theLHS) ? false :
+		equalsIgnoreCase(theLHS, toCharArray(theRHS), theRHSLength);
+}
 
 
 
@@ -1730,38 +2050,92 @@ equalsIgnoreCase(
  * @param theRHS second string to compare
  * @return true if the case-insensitive contents of both strings are identical
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+inline bool
 equalsIgnoreCase(
+			const XalanDOMString&	theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	return equalsIgnoreCase(theRHS, theLHS);
+}
+
+
+
+/**
+ * Compare the contents of two arrays for equality, without regard for case.
+ * Only the characters a-z and A-Z are considered characters with "case".
+ *
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the case-insensitive contents of both strings are identical
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+equalsIgnoreCaseASCII(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS);
+			const XalanDOMChar*		theRHS,
+			unsigned int			theLength);
+
+
+
+/**
+ * Compare the contents of two strings for equality, without regard for case.
+ * Only the characters a-z and A-Z are considered characters with "case".
+ *
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if both strings are identical
+ */
+inline bool
+equalsIgnoreCaseASCII(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	const unsigned int	theLength = length(theLHS);
+
+	return theLength != length(theRHS) ? false :
+		equalsIgnoreCaseASCII(theLHS, theRHS, theLength);
+}
 
 
 
 /**
  * Compare the contents of two strings for equality, without regard for case
+ * Only the characters A-Z and a-z are considered.
  * 
  * @param theLHS first string to compare
  * @param theRHS second string to compare
  * @return true if the case-insensitive contents of both strings are identical
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCase(
+inline bool
+equalsIgnoreCaseASCII(
 			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS);
+			const XalanDOMString&	theRHS)
+{
+	const unsigned int	theLength = length(theLHS);
+
+	return theLength != length(theRHS) ? false :
+		equalsIgnoreCaseASCII(toCharArray(theLHS), toCharArray(theRHS), theLength);
+}
 
 
 
 /**
- * Compare the contents of two strings for equality, without regard for case
- * 
+ * Compare the contents of two strings for equality, without regard for case.
+ * Only the characters a-z and A-Z are considered characters with "case".
+ *
  * @param theLHS first string to compare
  * @param theRHS second string to compare
  * @return true if the case-insensitive contents of both strings are identical
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCase(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS);
+inline bool
+equalsIgnoreCaseASCII(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMString&	theRHS)
+{
+	const unsigned int	theRHSLength = length(theRHS);
+
+	return theRHSLength != length(theLHS) ? false :
+		equalsIgnoreCaseASCII(theLHS, toCharArray(theRHS), theRHSLength);
+}
 
 
 
@@ -1773,55 +2147,13 @@ equalsIgnoreCase(
  * @param theRHS second string to compare
  * @return true if the case-insensitive contents of both strings are identical
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCaseASCII(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS);
-
-
-
-/**
- * Compare the contents of two strings for equality, without regard for case.
- * Only the characters A-Z and a-z are considered.
- *
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the case-insensitive contents of both strings are identical
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCaseASCII(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS);
-
-
-
-/**
- * Compare the contents of two strings for equality, without regard for case.
- * Only the characters A-Z and a-z are considered.
- *
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the case-insensitive contents of both strings are identical
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+inline bool
 equalsIgnoreCaseASCII(
 			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS);
-
-
-
-/**
- * Compare the contents of two strings for equality, without regard for case
- * Only the characters A-Z and a-z are considered.
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the case-insensitive contents of both strings are identical
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCaseASCII(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS);
+			const XalanDOMChar*		theRHS)
+{
+	return equalsIgnoreCaseASCII(theRHS, theLHS);
+}
 
 
 
@@ -1919,11 +2251,7 @@ assign(
 			XalanDOMString&			theString,
 			const XalanDOMString&	theStringToAssign)
 {
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 	theString = theStringToAssign;
-#else
-	theString = theStringToAssign.clone();
-#endif
 
 	return theString;
 }
@@ -1944,7 +2272,6 @@ assign(
 			const XalanDOMChar*		theStringToAssign,
 			unsigned int			theStringToAssignLength = unsigned(-1))
 {
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 	if (theStringToAssignLength == unsigned(-1))
 	{
 		theString.assign(theStringToAssign);
@@ -1953,16 +2280,6 @@ assign(
 	{
 		theString.assign(theStringToAssign, theStringToAssignLength);
 	}
-#else
-	if (theStringToAssignLength == unsigned(-1))
-	{
-		theString = XalanDOMString(theStringToAssign);
-	}
-	else
-	{
-		theString = XalanDOMString(theStringToAssign, theStringToAssignLength);
-	}
-#endif
 
 	return theString;
 }
@@ -1981,11 +2298,7 @@ append(
 			XalanDOMString&			theString,
 			const XalanDOMString&	theStringToAppend)
 {
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 	theString.append(theStringToAppend);
-#else
-	theString = theString + theStringToAppend;
-#endif
 
 	return theString;
 }
@@ -2008,7 +2321,6 @@ append(
 {
 	assert(theStringToAppend != 0);
 
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 	if (theStringToAppendLength == unsigned(-1))
 	{
 		theString.append(theStringToAppend);
@@ -2017,16 +2329,6 @@ append(
 	{
 		theString.append(theStringToAppend, theStringToAppendLength);
 	}
-#else
-	if (theStringToAppendLength == unsigned(-1))
-	{
-		theString.appendData(theStringToAppend);
-	}
-	else
-	{
-		append(theString, XalanDOMString(theStringToAppend, theStringToAppendLength));
-	}
-#endif
 
 	return theString;
 }
@@ -2047,22 +2349,7 @@ append(
 			const char*			theStringToAppend,
 			unsigned int		theStringToAppendLength = unsigned(-1))
 {
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
-		theString.append(TranscodeFromLocalCodePage(theStringToAppend, theStringToAppendLength));
-#else
-	if (theStringToAppendLength == unsigned(-1))
-	{
-		theString.appendData(theStringToAppend);
-	}
-	else
-	{
-		CharVectorType	theTemp(theStringToAppend, theStringToAppend + theStringToAppendLength);
-
-		theTemp.push_back(char(0));
-
-		append(theString, XalanDOMString(&theTemp[0], theTemp.size() - 1));
-	}
-#endif
+	theString.append(TranscodeFromLocalCodePage(theStringToAppend, theStringToAppendLength));
 
 	return theString;
 }
@@ -2081,11 +2368,7 @@ append(
 			XalanDOMString&		theString,
 			const XalanDOMChar	theCharToAppend)
 {
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 	theString.append(1, theCharToAppend);
-#else
-	theString.appendData(theCharToAppend);
-#endif
 
 	return theString;
 }
@@ -2118,11 +2401,7 @@ insert(
 			unsigned int			thePosition,
 			const XalanDOMString&	theStringToInsert)
 {
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 	theString.insert(thePosition, theStringToInsert);
-#else
-	theString.insertData(thePosition, theStringToInsert);
-#endif
 
 	return theString;
 }
@@ -2148,15 +2427,7 @@ trim(const XalanDOMString&	theString);
 inline void
 clear(XalanDOMString&	theString)
 {
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 	theString.erase();
-#else
-#if defined(XALAN_OLD_STYLE_CASTS)
-	theString = (DOM_NullPtr*)0;
-#else
-	theString = static_cast<DOM_NullPtr*>(0);
-#endif
-#endif
 }
 
 
@@ -2172,190 +2443,6 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 CopyStringToVector(
 			const char*			theString,
 			CharVectorType&		theVector);
-
-
-
-/**
- * Get a pointer to the first element of the vector as
- * a null-terminated string
- *
- * @param theSVector target vector
- * @return null-terminated string of XalanDOMChar
- */
-inline const XalanDOMChar*
-c_wstr(const XalanDOMCharVectorType&	theVector)
-{
-	return &theVector[0];
-}
-
-
-
-/**
- * Compare the contents of two vectors for equality
- * 
- * @param theLHS first vector to compare
- * @param theRHS second vector to compare
- * @return true if the contents of both vectors are identical
- */
-inline bool
-equals(
-			const XalanDOMCharVectorType&	theLHS,
-			const XalanDOMCharVectorType&	theRHS)
-{
-	return theLHS == theRHS;
-}
-
-
-
-/**
- * Compare the contents of two strings for equality
- * 
- * @param theLHS XalanDOMCharVectorType to compare
- * @param theRHS string to compare
- * @return true if the contents of are identical
- */
-inline bool
-equals(
-			const XalanDOMCharVectorType&	theLHS,
-			const XalanDOMChar*				theRHS)
-{
-	return equals(c_wstr(theLHS), theRHS);
-}
-
-
-
-/**
- * Compare the contents of two strings for equality
- * 
- * @param theLHS string to compare
- * @param theRHS XalanDOMCharVectorType to compare
- * @return true if the contents are identical
- */
-inline bool
-equals(
-			const XalanDOMChar*				theLHS,
-			const XalanDOMCharVectorType&	theRHS)
-{
-	return equals(theLHS, c_wstr(theRHS));
-}
-
-
-
-/**
- * Compare the contents of a XalanDOMCharVectorType
- * and a XalanDOMString for equality
- * 
- * @param theLHS XalanDOMCharVectorType to compare
- * @param theRHS XalanDOMString to compare
- * @return true if the contents of both are identical
- */
-inline bool
-equals(
-			const XalanDOMCharVectorType&	theLHS,
-			const XalanDOMString&			theRHS)
-{
-	return equals(c_wstr(theLHS), c_wstr(theRHS));
-}
-
-
-
-/**
- * Compare the contents of a XalanDOMString and a
- * XalanDOMCharVectorType for equality
- * 
- * @param theLHS XalanDOMString to compare
- * @param theRHS XalanDOMCharVectorType to compare
- * @return true if the contents of both are identical
- */
-inline bool
-equals(
-			const XalanDOMString&			theLHS,
-			const XalanDOMCharVectorType&	theRHS)
-{
-	return equals(c_wstr(theLHS), c_wstr(theRHS));
-}
-
-
-
-/**
- * Compare the contents of two XalanDOMCharVectorTypes.
- * 
- * @param theLHS first vector to compare
- * @param theRHS second vector to compare
- * @return Returns 0 for equal vectors, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- * @see operator<
- * @see collationCompare
- */
-inline int
-compare(
-			const XalanDOMCharVectorType&	theLHS,
-			const XalanDOMCharVectorType&	theRHS)
-{
-	return compare(&theLHS[0], &theRHS[0]);
-}
-
-
-
-/**
- * Compare the contents of two XalanDOMCharVectorTypes, in a case insensitive
- * manner
- * 
- * @param theLHS first vector to compare
- * @param theRHS second vector to compare
- * @return Returns 0 for equal vectors, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- * @see operator<
- * @see collationCompare
- */
-inline int
-compareIgnoreCase(
-
-			const XalanDOMCharVectorType&	theLHS,
-			const XalanDOMCharVectorType&	theRHS)
-{
-	return compareIgnoreCase(&theLHS[0], &theRHS[0]);
-}
-
-
-
-/**
- * Compare the contents of two vectors using the
- * the collation settings of the current code page.
- * 
- * @param theLHS first vector to compare
- * @param theRHS second vector to compare
- * @return Returns 0 for equal vectors, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- * @see operator<()
- * @see compare()
- */
-inline int
-collationCompare(
-			const XalanDOMCharVectorType&	theLHS,
-			const XalanDOMCharVectorType&	theRHS)
-{
-	return collationCompare(&theLHS[0], &theRHS[0]);
-}
-
-
-
-/**
- * Implements operator< for XalanDOMCharVectorType.
- * 
- * @param theLHS first vector to compare
- * @param theRHS second vector to compare
- * @return Returns true if theLHS is lexically
- * less than theRHS
- * @see compare
- */
-inline bool
-operator<(
-			const XalanDOMCharVectorType&	theLHS,
-			const XalanDOMCharVectorType&	theRHS)
-{
-	return compare(theLHS, theRHS) < 0 ? true : false;
-}
 
 
 
