@@ -240,8 +240,25 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 					    fPrefixIsXMLNS == false)
 					{
 						newPrefix = substring(origAttrName, 0, indexOfNSSep);
+
+						// OK, make sure that the prefix provided maps to
+						// the same namespace as the one the user requested...
+						const XalanDOMString* const	theNamespace =
+							executionContext.getResultNamespaceForPrefix(newPrefix);
+
+						if (theNamespace != 0 &&
+							equals(*theNamespace, attrNameSpace) == false)
+						{
+							// It doesn't, so we'll need to manufacture a
+							// prefix.
+							clear(newPrefix);
+
+							// Strip the user-supplied prefix from the name...
+							attrName = substring(origAttrName, indexOfNSSep + 1);
+						}
 					}
-					else
+
+					if (length(newPrefix) == 0)
 					{
 						// If there's a prefix, and it's xmlns, then strip it
 						// off...
