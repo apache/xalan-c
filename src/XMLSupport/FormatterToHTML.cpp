@@ -902,7 +902,7 @@ FormatterToHTML::copyEntityIntoBuffer(const XalanDOMString&		s)
 
     for(unsigned int i = 0; i < len; ++i)
     {
-		accum(s[i]);
+		accum(charAt(s, i));
     }
 
     accum(XalanUnicode::charSemicolon);
