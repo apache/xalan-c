@@ -69,16 +69,13 @@
 
 
 
-#include <XSLT/XSLTInputSource.hpp>
-
-
-
 #include <XalanTransformer/XalanParsedSource.hpp>
 
 
 
 class EntityResolver;
 class ErrorHandler;
+class InputSource;
 
 
 
@@ -91,10 +88,10 @@ class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSource : public XalanParsedSource
 public:
 	
 	XercesDOMParsedSource(
-			const XSLTInputSource&	theInputSource,
-			bool					fValidate = false,
-			ErrorHandler*			theErrorHandler = 0,
-			EntityResolver*			theEntityResolver = 0);
+			const InputSource&	theInputSource,
+			bool				fValidate = false,
+			ErrorHandler*		theErrorHandler = 0,
+			EntityResolver*		theEntityResolver = 0);
 
 	virtual
 	~XercesDOMParsedSource();

@@ -58,6 +58,10 @@
 
 
 
+#include <xercesc/sax/InputSource.hpp>
+
+
+
 #include <XalanDOM/XalanDocument.hpp>
 
 
@@ -98,10 +102,10 @@ private:
 
 
 XercesDOMParsedSource::XercesDOMParsedSource(
-			const XSLTInputSource&	theInputSource,
-			bool					fValidate,
-			ErrorHandler*			theErrorHandler,
-			EntityResolver*			theEntityResolver):
+			const InputSource&	theInputSource,
+			bool				fValidate,
+			ErrorHandler*		theErrorHandler,
+			EntityResolver*		theEntityResolver):
 	XalanParsedSource(),
 	m_parserLiaison(),
 	m_parsedSource(0)

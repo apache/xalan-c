@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,16 +69,13 @@
 
 
 
-#include <XSLT/XSLTInputSource.hpp>
-
-
-
 #include <XalanTransformer/XalanParsedSource.hpp>
 
 
 
 class EntityResolver;
 class ErrorHandler;
+class XSLTInputSource;
 class XalanSourceTreeDocument;
 
 
@@ -159,10 +156,10 @@ class XALAN_TRANSFORMER_EXPORT XalanDefaultParsedSource : public XalanParsedSour
 public:
 
 	XalanDefaultParsedSource(
-			const XSLTInputSource&	theInputSource,
-			bool					fValidate = false,
-			ErrorHandler*			theErrorHandler = 0,
-			EntityResolver*			theEntityResolver = 0);
+			const InputSource&	theInputSource,
+			bool				fValidate = false,
+			ErrorHandler*		theErrorHandler = 0,
+			EntityResolver*		theEntityResolver = 0);
 
 	virtual
 	~XalanDefaultParsedSource();
