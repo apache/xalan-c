@@ -83,7 +83,9 @@ XResultTreeFrag::XResultTreeFrag(
 			bool						deepClone) :
 	XObject(&envSupport, &support),
 	NodeRefListBase(),
-	m_value(val.clone(deepClone))
+	m_value(val.clone(deepClone)),
+	m_cachedStringValue(),
+	m_cachedNumberValue(0.0)
 {
 }
 
@@ -94,7 +96,9 @@ XResultTreeFrag::XResultTreeFrag(
 			bool					deepClone) :
 	XObject(source),
 	NodeRefListBase(source),
-	m_value(source.m_value->clone(deepClone))
+	m_value(source.m_value->clone(deepClone)),
+	m_cachedStringValue(source.m_cachedStringValue),
+	m_cachedNumberValue(source.m_cachedNumberValue)
 {
 }
 
@@ -137,9 +141,16 @@ XResultTreeFrag::getTypeString() const
 double
 XResultTreeFrag::num() const
 {
-	const XalanDOMString	theValue = m_support->getNodeData(*m_value.get());
+	if (m_cachedNumberValue == 0.0)
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((XNodeSet*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str());
+#else
+		m_cachedNumberValue = DoubleSupport::toDouble(str());
+#endif
+	}
 
-	return DoubleSupport::toDouble(theValue);
+	return m_cachedNumberValue;
 }
 
 
@@ -179,7 +190,16 @@ XResultTreeFrag::boolean() const
 XalanDOMString
 XResultTreeFrag::str() const
 {
-	return m_support->getNodeData(*m_value.get());
+	if (isEmpty(m_cachedStringValue) == true)
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((XResultTreeFrag*)this)->m_cachedStringValue = m_support->getNodeData(*m_value.get());
+#else
+		m_cachedStringValue = m_support->getNodeData(*m_value.get());
+#endif
+	}
+
+	return m_cachedStringValue;
 }
 
 

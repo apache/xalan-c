@@ -182,6 +182,10 @@ private:
 #else
 	std::auto_ptr<ResultTreeFragBase>	m_value;
 #endif
+
+	mutable XalanDOMString				m_cachedStringValue;
+
+	mutable double						m_cachedNumberValue;
 };
 
 
