@@ -63,7 +63,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -179,11 +179,11 @@ XercesDOMPrintWriter::print(bool	b)
 {
 	if (b == true)
 	{
-		print(DOMString("true"));
+		print(XALAN_STATIC_UCODE_STRING("true"));
 	}
 	else
 	{
-		print(DOMString("false"));
+		print(XALAN_STATIC_UCODE_STRING("false"));
 	}
 }
 
@@ -259,7 +259,7 @@ XercesDOMPrintWriter::print(const DOMString&	s)
 void
 XercesDOMPrintWriter::println()
 {
-	m_OutputStream.write("\n");
+	m_OutputStream.write(XMLCh('\n'));
 }
 
 
