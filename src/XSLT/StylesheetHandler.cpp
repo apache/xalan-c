@@ -268,7 +268,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 
 		const XalanDOMString	localName = index == nameLength ? XalanDOMString(name) : substring(name, index + 1);
 
-		if(length(ns) == 0 && nameLength == length(localName))
+		if(length(ns) == 0 && nameLength != length(localName))
 		{
 			// Warn that there is a prefix that was not resolved...
 			m_constructionContext.warn(XalanDOMString("Could not resolve prefix ") + name);
