@@ -96,6 +96,10 @@
 
 
 
+#include <XalanExtensions/XalanExtensions.hpp>
+
+
+
 //#define XALAN_USE_ICU
 #if defined(XALAN_USE_ICU)
 #include <ICUBridge/ICUBridge.hpp>
@@ -169,6 +173,38 @@ XalanTransformer::initialize()
 {
 	// Initialize Xalan. 
 	s_xsltInit = new XSLTInit;
+
+	const XalanDOMString	theXalanNamespace(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan")));
+
+	XalanTransformer::installExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("difference")),
+			FunctionDifference());
+
+	XalanTransformer::installExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("distinct")),
+			FunctionDistinct());
+
+	XalanTransformer::installExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("evaluate")),
+			FunctionEvaluate());
+
+	XalanTransformer::installExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("hasSameNodes")),
+			FunctionHasSameNodes());
+
+	XalanTransformer::installExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("intersection")),
+			FunctionIntersection());
+
+	XalanTransformer::installExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("nodeset")),
+			FunctionNodeSet());
 
 #if defined(XALAN_USE_ICU)
 	theICUFunctor = new ICUBridgeCollationCompareFunctor;
@@ -255,11 +291,11 @@ XalanTransformer::transform(
 
 		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
-		const XalanDOMString&	theURI = theParsedXML.getURI();
+		const XalanDOMString&	theSourceURI = theParsedXML.getURI();
 
-		if (length(theURI) > 0)
+		if (length(theSourceURI) > 0)
 		{
-			theXSLTProcessorEnvSupport.setSourceDocument(theURI, theSourceDocument);
+			theXSLTProcessorEnvSupport.setSourceDocument(theSourceURI, theSourceDocument);
 		}
 
 		// Create a problem listener and send output to a XalanDOMString.
@@ -309,9 +345,15 @@ XalanTransformer::transform(
 					*(m_functionPairs[f].second));
 		}
 
+		// Create an input source for the source document...
+		XSLTInputSource		theDocumentInputSource(theSourceDocument);
+
+		// Set the system ID, so relative URIs are resolved properly...
+		theDocumentInputSource.setSystemId(c_wstr(theSourceURI));
+
 		// Do the transformation...
 		theProcessor.process(
-					theSourceDocument,
+					theDocumentInputSource,
 					theStylesheetSource,
 					tempResultTarget,
 					theStylesheetConstructionContext,
@@ -428,11 +470,11 @@ XalanTransformer::transform(
 
 		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
-		const XalanDOMString&	theURI = theParsedXML.getURI();
+		const XalanDOMString&	theSourceURI = theParsedXML.getURI();
 
-		if (length(theURI) > 0)
+		if (length(theSourceURI) > 0)
 		{
-			theXSLTProcessorEnvSupport.setSourceDocument(theURI, theSourceDocument);
+			theXSLTProcessorEnvSupport.setSourceDocument(theSourceURI, theSourceDocument);
 		}
 
 		// Create a problem listener and send output to a XalanDOMString.
@@ -478,9 +520,15 @@ XalanTransformer::transform(
 					*(m_functionPairs[f].second));
 		}
 
+		// Create an input source for the source document...
+		XSLTInputSource		theDocumentInputSource(theSourceDocument);
+
+		// Set the system ID, so relative URIs are resolved properly...
+		theDocumentInputSource.setSystemId(c_wstr(theSourceURI));
+
 		// Do the transformation...
 		theProcessor.process(
-					theSourceDocument,
+					theDocumentInputSource,
 					tempResultTarget,					
 					*m_stylesheetExecutionContext);
 	}
