@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAbs : public Function
 {
 public:
@@ -87,7 +91,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -136,7 +140,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -185,7 +189,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -234,7 +238,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -283,7 +287,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -332,7 +336,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -349,7 +353,7 @@ protected:
 	const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXLT function constant() function accepts two arguments"));
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function constant() function accepts two arguments"));
 	}
 
 private:
@@ -401,7 +405,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -450,7 +454,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -499,7 +503,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -548,7 +552,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -597,7 +601,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -646,7 +650,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -695,7 +699,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -744,7 +748,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -793,7 +797,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -842,7 +846,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -891,7 +895,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -917,6 +921,10 @@ private:
 	bool
 	operator==(const XalanEXSLTFunctionTan&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

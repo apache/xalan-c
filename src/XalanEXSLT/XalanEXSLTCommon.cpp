@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMChar	XalanEXSLTFunctionObjectType::s_booleanString[] =
 {
 	XalanUnicode::charLetter_b,
@@ -153,7 +157,7 @@ XalanEXSLTFunctionObjectType::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	// Make sure nothing's happened to our strings and that
 	// they were actually initialized...
@@ -209,7 +213,7 @@ XalanEXSLTFunctionObjectType::execute(
 const XalanDOMString
 XalanEXSLTFunctionObjectType::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT object-type() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function object-type() accepts one argument"));
 }
 
 
@@ -323,3 +327,7 @@ XalanEXSLTCommonFunctionsInstaller::uninstallGlobal()
 {
 	doUninstallGlobal(s_commonNamespace, theFunctionTable);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

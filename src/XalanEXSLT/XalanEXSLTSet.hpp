@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_EXSLT_EXPORT XalanEXSLTSetFunctionsInstaller : public XalanExtensionsInstaller
 {
 public:
@@ -83,6 +87,10 @@ public:
 	static void
 	uninstallGlobal();
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

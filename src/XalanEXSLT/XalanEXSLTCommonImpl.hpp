@@ -71,6 +71,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_EXSLT_EXPORT XalanEXSLTFunctionNodeSet : public FunctionNodeSet
 {
 public:
@@ -100,13 +104,13 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXLT function node-set() accepts one argument"));
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function node-set() accepts one argument"));
 	}
 
 	virtual const XalanDOMString
 	getInvalidArgumentTypeError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Invalid argument type in EXSLT function node-set()!"));
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Invalid argument type in EXSLT function node-set()"));
 	}
 
 private:
@@ -160,7 +164,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -202,6 +206,10 @@ private:
 	static const XalanDOMChar	s_rtfString[];
 	static const XalanDOMChar	s_stringString[];
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMChar	XalanEXSLTFunctionAlign::s_centerString[] =
 {
 	XalanUnicode::charLetter_c,
@@ -103,7 +107,7 @@ XalanEXSLTFunctionAlign::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	const XObjectArgVectorType::size_type	theSize = args.size();
 
@@ -204,7 +208,7 @@ XalanEXSLTFunctionConcat::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -252,7 +256,7 @@ XalanEXSLTFunctionPadding::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	assert(m_space.length() == 1);
 
@@ -431,3 +435,7 @@ XalanEXSLTStringFunctionsInstaller::uninstallGlobal()
 {
 	doUninstallGlobal(s_stringNamespace, theFunctionTable);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

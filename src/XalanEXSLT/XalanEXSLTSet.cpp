@@ -68,12 +68,16 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XObjectPtr
 XalanEXSLTFunctionHasSameNode::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 2)
 	{
@@ -191,7 +195,7 @@ XalanEXSLTFunctionLeading::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 2)
 	{
@@ -232,7 +236,7 @@ XalanEXSLTFunctionTrailing::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 2)
 	{
@@ -422,3 +426,7 @@ XalanEXSLTSetFunctionsInstaller::uninstallGlobal()
 {
 	doUninstallGlobal(s_setNamespace, theFunctionTable);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

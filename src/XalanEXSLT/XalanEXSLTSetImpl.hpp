@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_EXSLT_EXPORT XalanEXSLTFunctionDifference : public FunctionDifference
 {
 public:
@@ -102,7 +106,7 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXLT function difference() function accepts two arguments"));
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function difference() accepts two arguments"));
 	}
 
 private:
@@ -146,7 +150,7 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXLT function distinct() function accepts one argument"));
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function distinct() accepts one argument"));
 	}
 
 private:
@@ -182,7 +186,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -199,7 +203,7 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXLT function has-same-node() function accepts two arguments"));
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function has-same-node() accepts two arguments"));
 	}
 
 private:
@@ -243,7 +247,7 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXLT function distinct() function accepts two arguments"));
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function distinct() function accepts two arguments"));
 	}
 
 private:
@@ -279,7 +283,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -296,7 +300,7 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXLT function leading() function accepts two arguments"));
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function leading() function accepts two arguments"));
 	}
 
 private:
@@ -332,7 +336,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -349,7 +353,7 @@ protected:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXLT function trailing() function accepts two arguments"));
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function trailing() function accepts two arguments"));
 	}
 
 private:
@@ -361,6 +365,10 @@ private:
 	bool
 	operator==(const XalanEXSLTFunctionTrailing&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

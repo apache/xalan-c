@@ -77,6 +77,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 template<class FunctionType>
 XObjectPtr
 findNodes(
@@ -147,7 +151,7 @@ XalanEXSLTFunctionHighest::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -164,7 +168,7 @@ XalanEXSLTFunctionHighest::execute(
 const XalanDOMString
 XalanEXSLTFunctionHighest::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT highest() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function highest() accepts one argument"));
 }
 
 
@@ -174,7 +178,7 @@ XalanEXSLTFunctionLowest::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -191,7 +195,7 @@ XalanEXSLTFunctionLowest::execute(
 const XalanDOMString
 XalanEXSLTFunctionLowest::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT lowest() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function lowest() accepts one argument"));
 }
 
 
@@ -254,7 +258,7 @@ XalanEXSLTFunctionMin::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -271,7 +275,7 @@ XalanEXSLTFunctionMin::execute(
 const XalanDOMString
 XalanEXSLTFunctionMin::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT min() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function min() accepts one argument"));
 }
 
 
@@ -281,7 +285,7 @@ XalanEXSLTFunctionMax::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -298,7 +302,7 @@ XalanEXSLTFunctionMax::execute(
 const XalanDOMString
 XalanEXSLTFunctionMax::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT max() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function max() accepts one argument"));
 }
 
 
@@ -308,7 +312,7 @@ XalanEXSLTFunctionAbs::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -329,7 +333,7 @@ XalanEXSLTFunctionAbs::execute(
 const XalanDOMString
 XalanEXSLTFunctionAbs::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT abs() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function abs() accepts one argument"));
 }
 
 
@@ -339,7 +343,7 @@ XalanEXSLTFunctionAcos::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -360,7 +364,7 @@ XalanEXSLTFunctionAcos::execute(
 const XalanDOMString
 XalanEXSLTFunctionAcos::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT acos() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function acos() accepts one argument"));
 }
 
 
@@ -370,7 +374,7 @@ XalanEXSLTFunctionAsin::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -391,7 +395,7 @@ XalanEXSLTFunctionAsin::execute(
 const XalanDOMString
 XalanEXSLTFunctionAsin::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT asin() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function asin() accepts one argument"));
 }
 
 
@@ -401,7 +405,7 @@ XalanEXSLTFunctionAtan::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -422,7 +426,7 @@ XalanEXSLTFunctionAtan::execute(
 const XalanDOMString
 XalanEXSLTFunctionAtan::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT atan() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function atan() accepts one argument"));
 }
 
 
@@ -432,7 +436,7 @@ XalanEXSLTFunctionAtan2::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 2)
 	{
@@ -453,7 +457,7 @@ XalanEXSLTFunctionAtan2::execute(
 const XalanDOMString
 XalanEXSLTFunctionAtan2::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT atan2() function accepts two arguments"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function atan2() accepts two arguments"));
 }
 
 
@@ -701,7 +705,7 @@ const double	XalanEXSLTFunctionConstant::s_piValues[] =
 	3.1415926535L,
 	3.14159265358L,
 	3.141592653589L,
-	3.1415926535897L, //
+	3.1415926535897L,
 	3.14159265358979L,
 	3.141592653589793L,
 	3.1415926535897932L,
@@ -836,7 +840,7 @@ XalanEXSLTFunctionConstant::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 2)
 	{
@@ -921,7 +925,7 @@ XalanEXSLTFunctionCos::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -942,7 +946,7 @@ XalanEXSLTFunctionCos::execute(
 const XalanDOMString
 XalanEXSLTFunctionCos::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT cos() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function cos() accepts one argument"));
 }
 
 
@@ -952,7 +956,7 @@ XalanEXSLTFunctionExp::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -973,7 +977,7 @@ XalanEXSLTFunctionExp::execute(
 const XalanDOMString
 XalanEXSLTFunctionExp::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT exp() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function exp() accepts one argument"));
 }
 
 
@@ -983,7 +987,7 @@ XalanEXSLTFunctionLog::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -1004,7 +1008,7 @@ XalanEXSLTFunctionLog::execute(
 const XalanDOMString
 XalanEXSLTFunctionLog::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT log() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function log() accepts one argument"));
 }
 
 
@@ -1014,7 +1018,7 @@ XalanEXSLTFunctionPower::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 2)
 	{
@@ -1035,7 +1039,7 @@ XalanEXSLTFunctionPower::execute(
 const XalanDOMString
 XalanEXSLTFunctionPower::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT power() function accepts two arguments"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function power() accepts two arguments"));
 }
 
 
@@ -1045,7 +1049,7 @@ XalanEXSLTFunctionSin::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -1066,7 +1070,7 @@ XalanEXSLTFunctionSin::execute(
 const XalanDOMString
 XalanEXSLTFunctionSin::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT sin() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function sin() accepts one argument"));
 }
 
 
@@ -1076,7 +1080,7 @@ XalanEXSLTFunctionSqrt::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -1097,7 +1101,7 @@ XalanEXSLTFunctionSqrt::execute(
 const XalanDOMString
 XalanEXSLTFunctionSqrt::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT sqrt() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function sqrt() accepts one argument"));
 }
 
 
@@ -1107,7 +1111,7 @@ XalanEXSLTFunctionTan::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 1)
 	{
@@ -1128,7 +1132,7 @@ XalanEXSLTFunctionTan::execute(
 const XalanDOMString
 XalanEXSLTFunctionTan::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT tan() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function tan() accepts one argument"));
 }
 
 
@@ -1422,3 +1426,7 @@ XalanEXSLTMathFunctionsInstaller::uninstallGlobal()
 {
 	doUninstallGlobal(s_mathNamespace, theFunctionTable);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

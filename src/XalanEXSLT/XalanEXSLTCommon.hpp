@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_EXSLT_EXPORT XalanEXSLTCommonFunctionsInstaller : public XalanExtensionsInstaller
 {
 public:
@@ -78,11 +82,15 @@ public:
 	installGlobal();
 
 	static void
-	uninstallLocal(XPathEnvSupportDefault&		theSupport);
+	uninstallLocal(XPathEnvSupportDefault&	theSupport);
 
 	static void
 	uninstallGlobal();
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 
