@@ -746,8 +746,10 @@ public:
 
 	/**
 	 * Set the ostream instance for reporting warnings and messages.  The default
-	 * is std::cerr.  If set to null, no warnings or messages will be written.
-	 * 
+	 * is std::cerr.  If set to 0, no warnings or messages will be written.  If
+	 * there is a user-installed ProblemListener instance, this is not used, as
+	 * all such warnings and messages are handled by the user's ProblemListener.
+	 *
 	 * @param theStream A pointer to the ostream instance.
 	 */
 	void
@@ -757,9 +759,9 @@ public:
 	}
 
 	/**
-	 * Get the current warning stream ostream instance
+	 * Get the current warning stream ostream instance.
 	 *
-	 * @return A pointer to the instance.  Can be null.
+	 * @return A pointer to the instance.  Can be 0.
 	 */
 	StreamType*
 	getWarningStream() const
