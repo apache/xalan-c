@@ -366,8 +366,14 @@ public:
 
 private:
 
-	// Data members...
+	// Not implemented...
+	XalanSourceTreeParserLiaison(const XalanSourceTreeParserLiaison&);
 
+	XalanSourceTreeParserLiaison&
+	operator=(const XalanSourceTreeParserLiaison&);
+
+
+	// Data members...
 	DocumentNumberType			m_documentNumber;
 
 	XercesParserLiaison			m_xercesParserLiaison;
