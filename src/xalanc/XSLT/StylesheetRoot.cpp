@@ -709,6 +709,50 @@ StylesheetRoot::isCDATASectionElementName(const XalanQName&		theQName) const
 
 
 
+inline XalanNode*
+getKeyNode(
+			XalanNode*						startNode,
+			StylesheetExecutionContext&		executionContext)
+{
+	// This is a big hack for dealing with result tree fragments coerced to node-sets using the
+	// node-set extension function.  For such cases, the "document" is really the
+	// XalanDocumentFragment instance that owns the nodes, not the owner document.
+	if (startNode->getFirstChild() == 0)
+	{
+		XalanNode*	currentNode = executionContext.getCurrentNode();
+		assert(currentNode != 0);
+
+		if (currentNode->getOwnerDocument() == startNode)
+		{
+			// OK, the current node belongs to the document, but the document
+			// is just a factory for fragments...
+			for(;;)
+			{
+				XalanNode*	parentNode = DOMServices::getParentOfNode(*currentNode);
+
+				if (parentNode == 0)
+				{
+					break;
+				}
+				else if (parentNode->getNodeType() == XalanNode::DOCUMENT_FRAGMENT_NODE)
+				{
+					startNode = parentNode;
+
+					break;
+				}
+				else
+				{
+					currentNode = parentNode;
+				}
+			}
+		}
+	}
+
+	return startNode;
+}
+
+
+
 void
 StylesheetRoot::getNodeSetByKey(
 			XalanDocument*					doc,
@@ -721,12 +765,15 @@ StylesheetRoot::getNodeSetByKey(
 {
 	assert(nodelist.empty() == true || nodelist.getDocumentOrder() == true);
 
+	XalanNode* const	theKeyNode = getKeyNode(doc, executionContext);
+	assert(theKeyNode != 0);
+
 	if(m_needToBuildKeysTable == true)
 	{
 		assert(m_keyDeclarations.empty() == false);
 
 		const KeyTablesTableType::const_iterator	i =
-			theKeysTable.find(doc);
+			theKeysTable.find(theKeyNode);
 
 		if (i != theKeysTable.end())
 		{
@@ -745,12 +792,12 @@ StylesheetRoot::getNodeSetByKey(
 		{
 			KeyTable* const kt =
 				new KeyTable(
-							 doc,
+							 theKeyNode,
 							 resolver,
 							 m_keyDeclarations,
 							 executionContext);
 
-			theKeysTable[doc] = kt;
+			theKeysTable[theKeyNode] = kt;
 
 			const MutableNodeRefList&	nl = kt->getNodeSetByKey(qname, ref);
 
