@@ -166,6 +166,10 @@ SOURCE=..\..\..\..\src\XSLT\ElemCopyOf.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\ElemDecimalFormat.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\ElemElement.cpp
 # End Source File
 # Begin Source File
@@ -379,6 +383,10 @@ SOURCE=..\..\..\..\src\XSLT\XSLTProcessor.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\XSLTProcessorEnvSupport.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\XSLTProcessorEnvSupportDefault.cpp
 # End Source File
 # Begin Source File
@@ -464,6 +472,10 @@ SOURCE=..\..\..\..\src\XSLT\ElemCopy.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\ElemCopyOf.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\ElemDecimalFormat.hpp
 # End Source File
 # Begin Source File
 
@@ -571,7 +583,15 @@ SOURCE=..\..\..\..\src\XSLT\FunctionFormatNumber.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\FunctionGenerateID.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\FunctionKey.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\FunctionSystemProperty.hpp
 # End Source File
 # Begin Source File
 
@@ -580,10 +600,6 @@ SOURCE=..\..\..\..\src\XSLT\FunctionUnparsedEntityURI.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\GenerateEvent.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XSLT\Java2STL.hpp
 # End Source File
 # Begin Source File
 
@@ -664,6 +680,10 @@ SOURCE=..\..\..\..\src\XSLT\XSLTInputSource.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\XSLTProcessor.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XSLTProcessorEnvSupport.hpp
 # End Source File
 # Begin Source File
 
