@@ -60,6 +60,14 @@
 
 
 
+#include <cassert>
+
+#if !defined(NDEBUG)
+#include <climits>
+#endif
+
+
+
 XalanReferenceCountedObject::XalanReferenceCountedObject() :
 	m_referenceCount(0)
 {
@@ -69,6 +77,7 @@ XalanReferenceCountedObject::XalanReferenceCountedObject() :
 
 XalanReferenceCountedObject::~XalanReferenceCountedObject()
 {
+	assert(m_referenceCount == 0);
 }	
 
 
@@ -78,6 +87,8 @@ XalanReferenceCountedObject::addReference(XalanReferenceCountedObject*		theInsta
 {
 	if (theInstance != 0)
 	{
+		assert(theInstance->m_referenceCount < UINT_MAX);
+
 		if (++theInstance->m_referenceCount == 1)
 		{
 			theInstance->referenced();
@@ -92,6 +103,8 @@ XalanReferenceCountedObject::removeReference(XalanReferenceCountedObject*	theIns
 {
 	if (theInstance != 0)
 	{
+		assert(theInstance->m_referenceCount > 0);
+
 		if (--theInstance->m_referenceCount == 0)
 		{
 			theInstance->dereferenced();
