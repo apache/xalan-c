@@ -63,7 +63,7 @@
 
 
 
-#include <xercesc/dom/DOM_NamedNodeMap.hpp>
+#include <dom/DOM_NamedNodeMap.hpp>
 
 
 

@@ -63,7 +63,7 @@
 
 
 
-#include <xercesc/dom/DOM_NodeList.hpp>
+#include <dom/DOM_NodeList.hpp>
 
 
 
