@@ -57,8 +57,8 @@ If you want to take advantage of the support for number formatting, sorting, and
 <p><em>Solaris</em></p>
 <ul>
   <li>The executable: TestXSLT</li>
-  <li>The Xalan-C++ XXX library: &xslt4c-solarislib;</li>
-  <li>The Xerces-C++ XXX library: &xml4c-solarislib;</li>
+  <li>The Xalan-C++ shared library: &xslt4c-solarislib;</li>
+  <li>The Xerces-C++ shared library: &xml4c-solarislib;</li>
 </ul>
 <p>If you want to enable ICU support for the command-line utility, you must build the ICU and rebuild the Xalan-C++ shared/load library (Linux/AIX/HP-UX 11) and TestXSLT (all platforms) with the ICUBridge. See <link idref="usagepatterns" anchor="icu">Using the ICU</link> and <link idref="commandline" anchor="icu">Enabling ICU support for TestXSLT</link>.</p>
 <p>For information about using the command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
@@ -73,6 +73,7 @@ Xalan-C++ and Xerces-C++ header (.hpp) files and (for Windows) the &xslt4c; and 
 <p>In the Linux distribution (built with a make file and the GNU C++ compiler on Red Hat Linux 6.1), the shared object libraries are in the lib subdirectories.</p>
 <p>In the AIX distribution (built with the make file and xlC_r), the load libraries are in the lib subdirectories.</p>
 <p>In the HP-UX 11 distribution (built with the make file and aCC), the shared libraries are in the lib subdirectories.</p>
+<p>In the Solaris distribution (built with the make file and CC), the shared libraries are in the lib subdirectories.</p>
 <note>For your convenience, both the Xalan and Xerces libraries are placed together in the pertinent xml-xalan directory, whereas the corresponding xml-xerces directory only contains Xerces libraries.</note>
 <p>If you want to enable ICU support in your applications, you must rebuild the Xalan-C++ shared/load library (Linux/AIX) and include the ICUBridge headers (all platforms).</p>
 <p>For the requirements for rebuilding &xslt4c;, see the <link idref="readme" anchor="build">Build notes</link>.</p>
@@ -83,7 +84,7 @@ Xalan-C++ and Xerces-C++ header (.hpp) files and (for Windows) the &xslt4c; and 
 <p>For the Xalan-C++ Linux distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (LD_LIBRARY_PATH for Red Hat Linux 6.1), or copy &xslt4c-linuxlib; to /usr/lib.</p>
 <p>For the Xalan-C++ AIX distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the load library path (LIBPATH), or copy &xslt4c-aixlib; to /usr/lib.</p>
 <p>For the Xalan-C++ HP-UX 11 distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (SHLIB_PATH), or copy &xslt4c-aixlib; to /usr/lib.</p>
-
+<p>For the Xalan-C++ Solaris distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (LD_LIBRARY_PATH), or copy &xslt4c-solarislib; to /usr/lib.</p>
 <p>If you do your own Xalan, ICU, and Xerces builds, be sure to include the directories that contain the libraries and the TextXSLT executable on your path.</p>
 </s2><anchor name="samples"/>
 <s2 title="Trying out the samples">

@@ -1,11 +1,17 @@
 <s3 title="Changes since &xslt4c; version 1.0">
-<p>In addition to adding a build for HP-UX 11, our focus for this release has been on bug fixes and performance enhancements. Major updates since version 0.40.0 include:</p>
+<p>In addition to adding to the list of platforms on which &xslt4c; builds, our focus for this release has been on bug fixes, performance enhancements, 
+and providing a simplified C++ and C API for performing standard transformations. Major updates since version 1.0 include:</p>
 <ul>
-<li>Added a build for HP-UX 11<br/><br/></li>
+<li>Added builds for HP-UX 11 and Solaris.<br/><br/></li>
+<li>Simplified the C++ API and provided a C API for performing standard transformations with the <link idref="usagepatterns" 
+anchor="xalantransformer">XalanTransformer</link> class and associated header files.<br/><br/></li>
+<li>Added samples illustrating the new C++ API (<link idref="samples" anchor="xalantransform">XalanTransform</link>) and C API
+(<link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link>). ApacheModuleXSLT also shows how to run &xslt4c; on an
+Apache Web server.<br/><br/></li>
 <li>Added the <link idref="samples" anchor="streamtransform">StreamTransform</link> sample.<br/><br/></li>
-<li><br/><br/></li>
-<li><br/><br/></li>
-<li></li>
+<li>xxxxxxxxxx<br/><br/></li>
+<li>yyyyyyyyyy<br/><br/></li>
+<li>zzzzzzzzzzzzzz</li>
 </ul>
 </s3>
 	

@@ -78,7 +78,18 @@
 command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
 </s2><anchor name="xalantransformer"/>
 <s2 title="Using the XalanTransformer class">
-<p>&xslt4c; 1.2 introduces a new class designed to take care of configuration and setup under the covers and provide a simpler API for performing standard transformations. Using XalanTransformer, you can perform one or more transformations as follows:</p>
+<p>&xslt4c; 1.2 introduces XalanTransformer, a new class designed to package the basic Xalan infrastructure and provide a simpler C++ 
+and C API for performing standard transformations.</p>
+<note>As we expand the functionality of the XalanTransformer, we will revise the remainder of this chapter and the samples to indicate 
+how to take advantage of the API it provides.</note>
+<ul>
+  <li><link anchor="cpp">Basic XalanTransformer pattern with the C++ API</link></li>
+  <li><link anchor="cppvar">Variations with the XalanTransformer C++ API</link></li>  
+  <li><link anchor="c">Basic pattern with the XalanTransformer C API</link></li>
+  <li><link anchor="cvar">Variations with the XalanTransformer C API</link></li>  
+</ul><anchor name="cpp"/>
+<s3 title="Basic XalanTransformer patten with C++ API">
+<p>Using XalanTransformer and the C++ API, you can perform one or more transformations as follows:</p>
 <ol>
   <li>Include the XalanTransformer header file.<br/>
   <code>#include &lt;XalanTransformer/XalanTransformer.hpp</code><br/><br/></li>
@@ -95,11 +106,88 @@ command-line utility, see <link idref="commandline">Command-Line Utility</link>.
   <li>Shut down Xalan and Xerces.<br/>
   <code>XalanTransformer::terminate();</code></li>
 </ol>
-<p>The XalanTransformer transform() methods also allow you to process and output streams, and to send the output to a callback 
-function. Each transform() method returns an integer code, 0 for success. For the details, see XalanTransormer/XalanTransformer.hpp in the source tree. For an example, see the <link idref="samples" anchor="xalantransform">XalanTransform</link> sample.</p>
+</s3><anchor name="cppvar"/>
+<s3 title="Variations with the XalanTransformer C++ API">
+<p>The XalanTransformer transform() methods also allow you to process and produce streams, and to send the output in blocks to a callback 
+function, which means you can begin processing the output while the transformation is still in progress. Each transform() method returns 
+an integer code, 0 for success. If an error occurs, you can use the getLastError() method to return a pointer to the error message. 
+For the details, see XalanTransormer/XalanTransformer.hpp in the source tree. For an example, see the 
+<link idref="samples" anchor="xalantransform">XalanTransform</link> sample.</p>
+
+<p>Transform from files to an output stream:</p>
+<source>int
+transform(const char* xmlInFile,
+*          const char* xslFile,
+          ostream&amp;    resultOutStream);</source>
+<p>Transform from input streams to an output stream:</p>
+<source>int
+transform(istream&amp; xmlInStream,
+          istream&amp; xslInStram,
+          ostream&amp; resultOutStream);</source>
+<p>Transform from files to an output handler that receives the output in blocks. </p>          
+<source>int
+transform(const char* xmlInFile
+          const char* xslFile,
+          XalanOutputHandlerType theOutputHandler
+          XalanFlushHanderType theFlushHandler = 0);</source>
+<p>The transform() method that the other transform() methods all call:</p>
+<source>int
+transform( const XSLTInputSource&amp; xmlInput,
+           const XSLTInputSource&amp; xslStylesheet,
+           const XSLTResultTarget&amp; transformResult);</source>
+                                            
+</s3><anchor name="c"/>
+<s3 title="Basic XalanTransformer pattern with the C API">
 <p>We also include a simple C interface for using the XalanTransformer class. See XalanTransformer/XalanCAPI.h in the source tree. 
 The <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> sample illustrates the use of this C API.</p>
-<note>As we expand the functionality of the XalanTransformer, we will revise the sections below to indicate how to take advantage of the API it provides.</note>
+<p>Basic strategy:</p>
+<ol>
+  <li>Include the XalanTransformer C API header.<br/>
+  <code>#include &lt;XalanTransformer/XalanCAPI.h&gt;</code><br/><br/></li>
+  <li>Initialize Xalan and Xerces<br/>
+  <code>XalanInitialize();</code><br/><br/></li>  
+  <li>Create a Xalan transformer<br/>
+  <code>XalanHandle xalan = NULL;</code><br/>
+  <code>xalan = CreateXalanTransformer();</code><br/><br/></li>
+  <li>Perform each transformation. For example:<br/>
+  <code>char * xmlfilename = "foo.xml";</code><br/>
+  <code>char xslfilename = "foo.xsl";</code><br/>
+  <code>char outfilename = "foo.out";</code><br/>  
+  <code>int theResult = 0;</code><br/>
+  <code>theResult = XalanTransformToFile(xmlfilename,</code><br/>
+  <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xslfilename,</code><br/>
+  <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outfilename,</code><br/>
+  <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xalan);</code><br/><br/></li>
+  <li>Shut down Xalan and Xerces<br/>
+  <code>XalanTerminate();</code></li>
+</ol>
+</s3><anchor name="cvar"/>
+<s3 title="Variations with the XalanTransformer C API">
+<p>The C API supports basically the same options as the C++ API.</p>
+<p>Transform from files to a character array:</p>
+<source>int
+XalanTransformToData(const char*  xmlInFile,
+                     const char*  xslFile,
+                     const char** transformOutput,
+                     XalanHandle  xalan);</source>
+<p>Transform from files to a character array:</p>
+<source>int
+XalanTransformToData(const char*  xmlInFile,
+                     const char*  xslFile,
+                     const char** transformOutput,
+                     XalanHandle  xalan);</source>
+<p>After calling XalanTransformToData(), call XalanFreeData() with the address of the pointer to the character array:</p>
+<p><code>XalanFreeData(transformOutput);</code></p>
+<p>Transform to a callback function that receives the output in blocks (see the <link idref="samples" 
+anchor="apachemodulexslt">ApacheModuleXSLT</link> sample).</p>
+<source>int
+XalanTransformToHandler(const char*  xmlInFile,
+                        const char*  xslFile,
+                        XalanHandle xalan,
+                        const void* outputHandle,
+                        XalanOutputHandlerType outputHandler,
+                        XalanFlushHandlerType flushHandler);</source>
+</s3>
 </s2><anchor name="basic"/>
 <s2 title="Basic procedure for performing an XSL transformation">
 <p>When you are setting up your application to use XSL stylesheets to transform XML documents, you must do the following:</p>
@@ -384,6 +472,8 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
     path (LIBPATH) or copy it to /usr/lib.</p>
     <p>For HP-UX 11, rebuild &xslt4c-hplib; with XALAN_USE_ICU defined, and place it on the shared library
     path (SHLIB_PATH) or copy it to /usr/lib.</p>
+    <p>For Solaris, rebuild &xslt4c-solarislib; with XALAN_USE_ICU defined, and place it on the shared library
+    path (LD_LIBRARY_PATH) or copy it to /usr/lib.</p>
     
     <p><em>Number formatting</em></p>
     <p>To enable ICU support for the xsl:number element and the XSLT format-number() function, do
