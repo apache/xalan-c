@@ -79,8 +79,12 @@
 
 
 // Base class header file.
-#include <XPath/XObject.hpp>
 #include <XPath/NodeRefListBase.hpp>
+#include <XPath/XObject.hpp>
+
+
+
+#include <XPath/XPathExecutionContext.hpp>
 
 
 
@@ -92,12 +96,15 @@ class XALAN_XPATH_EXPORT XResultTreeFrag : public XObject
 {
 public:
 
+	typedef XPathExecutionContext::BorrowReturnResultTreeFrag	BorrowReturnResultTreeFrag;
+
+
 	/**
 	 * Construct an XResultTreeFrag object from a result tree fragment
 	 * 
-	 * @param val        source result tree fragment.  The XResultTreeFrag instance will adopt the object.
+	 * @param val source result tree fragment.  The XResultTreeFrag instance will adopt the object.
 	 */
-	XResultTreeFrag(ResultTreeFragBase*		val);
+	XResultTreeFrag(BorrowReturnResultTreeFrag&		val);
 
 	/**
 	 * Construct an XResultTreeFrag object from another
@@ -187,13 +194,13 @@ private:
 	};
 
 	// Data members...
-	XalanAutoPtr<ResultTreeFragBase>	m_value;	
+	BorrowReturnResultTreeFrag		m_value;	
 
-	mutable XalanDOMString				m_cachedStringValue;
+	mutable XalanDOMString			m_cachedStringValue;
 
-	mutable double						m_cachedNumberValue;
+	mutable double					m_cachedNumberValue;
 
-	const NodeRefListBaseProxy			m_nodeRefListBaseProxy;
+	const NodeRefListBaseProxy		m_nodeRefListBaseProxy;
 };
 
 

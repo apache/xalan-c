@@ -76,9 +76,6 @@
 
 // Base class header file.
 #include <XPath/XObject.hpp>
-
-
-
 #include <XPath/XPathExecutionContext.hpp>
 
 

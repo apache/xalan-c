@@ -75,12 +75,12 @@ XResultTreeFragAllocator::~XResultTreeFragAllocator()
 
 
 XResultTreeFragAllocator::data_type*
-XResultTreeFragAllocator::create(ResultTreeFragBase*	thenResultTreeFragBase)
+XResultTreeFragAllocator::create(BorrowReturnResultTreeFrag&	theValue)
 {
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-	data_type* const	theResult = new(theBlock) data_type(thenResultTreeFragBase);
+	data_type* const	theResult = new(theBlock) data_type(theValue);
 
 	m_allocator.commitAllocation(theBlock);
 

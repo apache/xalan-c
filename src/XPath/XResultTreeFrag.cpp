@@ -79,7 +79,7 @@
 
 
 
-XResultTreeFrag::XResultTreeFrag(ResultTreeFragBase*	val) :
+XResultTreeFrag::XResultTreeFrag(BorrowReturnResultTreeFrag&	val) :
 	XObject(eTypeResultTreeFrag),
 	m_value(val),
 	m_cachedStringValue(),
@@ -94,7 +94,7 @@ XResultTreeFrag::XResultTreeFrag(
 			const XResultTreeFrag&	source,
 			bool					deepClone) :
 	XObject(source),	
-	m_value(source.m_value->clone(deepClone)),
+	m_value(source.m_value.clone(deepClone)),
 	m_cachedStringValue(source.m_cachedStringValue),
 	m_cachedNumberValue(source.m_cachedNumberValue),	
 	m_nodeRefListBaseProxy(*this)

@@ -185,13 +185,13 @@ XNodeSet::rtree(XPathExecutionContext&	executionContext) const
 		assert(theFactory != 0);
 
 		ResultTreeFrag* const	theFrag =
-			new ResultTreeFrag(*theFactory);
+			new ResultTreeFrag(theFactory);
 
 		const int	nNodes = m_value->getLength();
 
 		for(int i = 0; i < nNodes; i++)
 		{
-			theFrag->appendChild(m_value->item(i)->cloneNode(true));
+			theFrag->appendChild(m_value->item(i));
 		}
 
 #if defined(XALAN_NO_MUTABLE)

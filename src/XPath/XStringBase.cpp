@@ -143,7 +143,7 @@ XStringBase::rtree(XPathExecutionContext&	executionContext) const
 		assert(theFactory != 0);
 
 		ResultTreeFrag* const	theFrag =
-			new ResultTreeFrag(*theFactory);
+			new ResultTreeFrag(theFactory);
 
 		XalanNode* const	textNode =
 			theFactory->createTextNode(str());

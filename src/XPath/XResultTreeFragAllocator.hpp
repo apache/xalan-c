@@ -77,6 +77,8 @@ class XALAN_XPATH_EXPORT XResultTreeFragAllocator
 {
 public:
 
+	typedef XPathExecutionContext::BorrowReturnResultTreeFrag	BorrowReturnResultTreeFrag;
+
 	typedef XResultTreeFrag						data_type;
 
 	typedef ReusableArenaAllocator<data_type>	ArenaAllocatorType;
@@ -92,21 +94,19 @@ public:
 	~XResultTreeFragAllocator();
 	
 	/**
-	 * Create an XResultTreeFrag object using allocator from a string.
+	 * Create an XResultTreeFrag object using the allocator.
 	 * 
-	 * @param value			source NodeRefListBase
+	 * @param value	source value
 	 *
 	 * @return pointer to a node
 	 */
 	data_type*
-	create(ResultTreeFragBase*	value);
+	create(BorrowReturnResultTreeFrag&	value);
 
 	/**
-	 * Create an XResultTreeFrag object using allocator from a string.
+	 * Create an XResultTreeFrag object using allocator the allocator.
 	 * 
-	 * @param theEnvSupport XPath environment support class instance
-	 * @param theSupport    XPath support class instance
-	 * @param value			source MutableNodeRefList
+	 * @param value			source XResultTreeFrag
 	 *
 	 * @return pointer to a node
 	 */
@@ -116,7 +116,7 @@ public:
 	/**
 	 * Clone an XResultTreeFrag object.
 	 * 
-	 * @param value			source XResultTreeFrag
+	 * @param value	source XResultTreeFrag
 	 *
 	 * @return pointer to an XResultTreeFrag
 	 */
