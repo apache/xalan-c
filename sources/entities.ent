@@ -7,8 +7,7 @@
 <!ENTITY xslt4c-linuxlib "libxalan-c1_3.so">
 <!ENTITY xslt4c-aixlib "libxalan-c1_3.a">
 <!ENTITY xslt4c-hplib "libxalan-c1_3.sl">
-<!--ENTITY xslt4c-solarislib "libxalan-c1_3.so"-->
-<!ENTITY xslt4c-solarislib "[This release does not include a Solaris build]">
+<!ENTITY xslt4c-solarislib "libxalan-c1_3.so">
 <!ENTITY xml4c "Xerces-C++">
 <!ENTITY xml4c-used "Xerces-C++ version 1.6.0">
 <!ENTITY xml4c-windll "xerces-c_1_6_0.dll">
@@ -16,9 +15,7 @@
 <!ENTITY xml4c-linuxlib "libxerces-c1_6_0.so">
 <!ENTITY xml4c-aixlib "libxerces-c1_6_0.a">
 <!ENTITY xml4c-hplib "libxerces-c1_6_0.sl">
-<!--ENTITY xml4c-solarislib "libxerces-c1_6_0.so"-->
-<!ENTITY xml4c-solarislib "[This release does not include a Solaris build]">
-<!ENTITY solarisbuild " [We do not have the resources to include a Solaris build with this release.]">
+<!ENTITY xml4c-solarislib "libxerces-c1_6_0.so">
 <!ENTITY xslt4j "Xalan-Java">
 <!ENTITY icu-used "International Components for Unicode(ICU) 2.0 source files">
 <!ENTITY icu-windlls "icui18n.dll, icuuc.dll">

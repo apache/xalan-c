@@ -160,7 +160,7 @@ The -XML or -HTML flag must be set:
      </ol>     
      </s3>
      <s3 title="Rebuilding Xalan and/or testXSLT in UNIX">
-     <p>In the Linux, AIX, HP-UX 11, and Solaris builds &solarisbuild;, the ICUBridge is in the core Xalan library (&xslt4c-linuxlib; in Linux; &xslt4c-aixlib; in
+     <p>In the Linux, AIX, HP-UX 11, and Solaris builds, the ICUBridge is in the core Xalan library (&xslt4c-linuxlib; in Linux; &xslt4c-aixlib; in
      AIX; &xslt4c-hplib; in HP-UX 11; &xslt4c-solarislib; in Solaris ), so you must rebuild this library along with Xalan and/or testXSLT.</p>
      <p>Before you do the build, define the XALAN_USE_ICU environment variable.  For information about defining this
      environment variable and doing a build, see <link idref="readme" anchor="unix">Steps for doing a

@@ -360,7 +360,7 @@ executing XPath expressions.</p>
     path (LIBPATH) or copy it to /usr/lib.</p>
     <p>For HP-UX 11, rebuild &xslt4c-hplib; with XALAN_USE_ICU defined, and place it on the shared library
     path (SHLIB_PATH) or copy it to /usr/lib.</p>
-    <p>For Solaris &solarisbuild;, rebuild &xslt4c-solarislib; with XALAN_USE_ICU defined, and place it on the shared library
+    <p>For Solaris, rebuild &xslt4c-solarislib; with XALAN_USE_ICU defined, and place it on the shared library
     path (LD_LIBRARY_PATH) or copy it to /usr/lib.</p>
     
     <p><em>Number formatting</em></p>

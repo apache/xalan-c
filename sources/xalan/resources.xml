@@ -23,8 +23,7 @@
   <resource id="xslt4c-linux-download" title="&xslt4c-dist;-linux.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-linux.tar.gz"/>
 <resource id="xslt4c-aix-download" title="&xslt4c-dist;-aix.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-aix.tar.gz"/>
 <resource id="xslt4c-hp-ux-download" title="&xslt4c-dist;-hp-ux.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-hp-ux.tar.gz"/>
-<!--resource id="xslt4c-Solaris-download" title="&xslt4c-dist;-solaris.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-solaris.tar.gz"/-->
-<resource id="xslt4c-Solaris-download" title="&solarisbuild;" location="NONE"/>
+<resource id="xslt4c-Solaris-download" title="&xslt4c-dist;-solaris.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-solaris.tar.gz"/>
   
   <resource id="icu" title="International Components for Unicode (ICU)" location="http://oss.software.ibm.com/developerworks/opensource/icu/project/index.html"/>
 <resource id="icu-download" title="International Components for Unicode (ICU) 2.0 source files" location="http://oss.software.ibm.com/developerworks/opensource/icu/project/download/index.html"/>

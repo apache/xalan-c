@@ -85,7 +85,6 @@
        <li>A new <link idref="usagepatterns" anchor="xercesdomwrapperparsedsource">wrapper class</link> that lets you pass in a Xerces DOM as input for a transformation</li>
 <li>Bug fixes.</li>
       </ul>
-      <note>&solarisbuild;</note>
    </s3>  
      <anchor name="bugs"/>
    <s3 title="Bug reporting">
@@ -158,9 +157,9 @@
       <li>Set the XERCESCROOT environment variable to the root of xml-xerces.<br/><br/></li>    
       <li>Set the XALANCROOT environment variable to the complete path to the root of the &xslt4c;
        distribution.<br/><br/></li>
-      <li>Solaris only &solarisbuild; : Download <resource-ref idref="stlport"/> and set the STLPORTROOT environment
+      <li>Solaris only: Download <resource-ref idref="stlport"/> and set the STLPORTROOT environment
        variable to the complete path to the STLPort distribution. <br/>
-       (This step is not required for Linux, AIX, or HP-UX 11 because The Linux GNU compiler, AIX xlC compiler, and 
+       (This step is not required for Linux, AIX, or HP-UX 11 because the Linux GNU compiler, AIX xlC compiler, and 
        HP aCC compiler include the STL (Standard Template Library.)<br/><br/></li>
       <li>(Optional) If you are including the ICUBridge, install the ICU (see <link idref="usagepatterns"
       anchor="icu">Using the ICU</link>) and use the shell to define XALAN_USE_ICU.<br/><br/>
@@ -176,7 +175,7 @@
       <ref>Linux:</ref>&nbsp;&nbsp;<code>runConfigure -p linux</code><br/>
       <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc -x xlC</code><br/><br/>
       <ref>HP-UX 11:</ref>&nbsp;&nbsp;<code>runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>
-      <ref>Solaris &solarisbuild;:</ref>&nbsp;&nbsp;<code>runConfigure -p Solaris -c cc -x CC</code><br/><br/>            
+      <ref>Solaris:</ref>&nbsp;&nbsp;<code>runConfigure -p Solaris -c cc -x CC</code><br/><br/>            
       To see the other runConfigure flags you may include, use the help flag:<br/><br/>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -h</code><br/><br/></li>
       <li>Purge the previous build:<br/><br/>
@@ -209,6 +208,7 @@ where <ref>targ</ref> is <code>Samples</code> (all the samples), <code>XalanTran
 <p>Please email your comments, questions, suggestions, bug reports, and offers to help to <human-resource-ref idref="xalandev"/>.</p>
  </s2><anchor name="history"/>
  <s2 title="Cumulative history of software changes">
+   <p>The following sections list the changes in each release since &xslt4c; version 0.40.0.</p>
    &history-c;
  </s2> 
 </s1>
