@@ -87,6 +87,8 @@ public:
 	typedef std::list<ListEntryType>			ListType;
 #endif
 
+	typedef Type							value_type;
+
 	typedef typename ListType::iterator		ListIteratorType;
 
     // Default size for vector allocation.
