@@ -682,9 +682,6 @@ doCompareNumber(
 			const double			theRHS,
 			const CompareFunction&	theCompareFunction)
 {
-	// Note that if the node-set is empty, we always return false.  This is
-	// because an empty node-set converted to a number is NaN and _any_
-	// comparison with NaN is always false.
 	bool	theResult = false;
 
 	const NodeRefListBase::size_type	len1 = theLHSNodeSet.getLength();
