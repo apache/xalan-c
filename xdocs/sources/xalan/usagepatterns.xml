@@ -238,7 +238,7 @@ Xalan bridge for the Xerces DOM does not support this non-standard node type. Ac
 your application may crash.</p>
 </s3><anchor name="xercesdomwrapperparsedsource"/>
 <s3 title="Passing in a Xerces DOM to a transformation">
-<p>You may want to use a Xerces DOM that was created without using the XalanTransformer class. As the following code snippet illustrates, you can use XercesDOMWrapperParsedSource to pass in a Xerces DOM as the source for an XSL transformation.</p>
+<p>You may want to use a Xerces DOM that was created without using the XalanTransformer class. As the following code snippet illustrates, you can use <jump href="apidocs/class_xercesdomwrapperparsedsource.html">XercesDOMWrapperParsedSource</jump> to pass in a Xerces DOM as the source for an XSL transformation.</p>
 <source>#include &lt;parsers/DOMParser.hpp&gt;
 #include &lt;XalanTransformer/XercesDOMWrapperParsedSource.hpp&gt;
 
