@@ -349,21 +349,14 @@ XPathEnvSupportDefault::functionAvailable(
 	}
 	else
 	{
-		// See if there's a table for that namespace...
-		const NamespaceFunctionTablesType::const_iterator	i =
-			m_externalFunctions.find(theNamespace);
+		const Function* const	theFunction =
+			findFunction(
+				theNamespace,
+				functionName);
 
-		if (i != m_externalFunctions.end())
+		if (theFunction != 0)
 		{
-			// There is a table for the namespace,
-			// so look for the function...
-			const FunctionTableType::const_iterator		j =
-				(*i).second.find(functionName);
-
-			if (j != (*i).second.end())
-			{
-				theResult = true;
-			}
+			theResult = true;
 		}
 	}
 
