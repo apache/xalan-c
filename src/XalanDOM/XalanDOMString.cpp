@@ -291,20 +291,21 @@ static inline void
 doTranscode(
 			const char*					theString,
 			XalanDOMString::size_type	theCount,
-			XalanDOMCharVectorType&		theVector)
+			XalanDOMCharVectorType&		theVector,
+			bool						fTerminate)
 {
 	assert(theString != 0);
 
 	if (theCount == XalanDOMString::size_type(XalanDOMString::npos))
 	{
-		if (TranscodeFromLocalCodePage(theString, theVector, true) == false)
+		if (TranscodeFromLocalCodePage(theString, theVector, fTerminate) == false)
 		{
 			throw XalanDOMString::TranscodingError();
 		}
 	}
 	else
 	{
-		if (TranscodeFromLocalCodePage(theString, theCount, theVector, true) == false)
+		if (TranscodeFromLocalCodePage(theString, theCount, theVector, fTerminate) == false)
 		{
 			throw XalanDOMString::TranscodingError();
 		}
@@ -327,13 +328,13 @@ XalanDOMString::append(
 	{
 		if (size() == 0)
 		{
-			doTranscode(theString, theLength, m_data);
+			doTranscode(theString, theLength, m_data, true);
 		}
 		else
 		{
 			XalanDOMCharVectorType	theTempVector;
 
-			doTranscode(theString, theLength, theTempVector);
+			doTranscode(theString, theLength, theTempVector, false);
 
 			append(&*theTempVector.begin(), size_type(theTempVector.size()));
 		}
