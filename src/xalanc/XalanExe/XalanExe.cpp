@@ -98,6 +98,7 @@
 
 #if defined(XALAN_USE_WINDOWS_TIMING)
 #include "windows.h"
+#include "largeint.h"
 #else
 #include <ctime>
 #if defined(XALAN_STRICT_ANSI_HEADERS)
