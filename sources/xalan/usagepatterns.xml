@@ -80,17 +80,17 @@ command-line utility, see <link idref="commandline">Command-Line Utility</link>.
 <s2 title="Basic procedure for performing an XSL transformation">
 <p>When you are setting up your application to use XSL stylesheets to transform XML documents, you must do the following:</p>
 <s3 title="1. Include the required header files">
-<p>Along with any required &xslt4c; and other header files, include utils/PlatformUtils.hpp from the &xml4c; distribution.</p>
+<p>Always start with Include/PlatformDefinitions.hpp, the &xslt4c; base header file. Along with any additional &xslt4c; and other header files that are required for the particular application, be sure to include utils/PlatformUtils.hpp from the &xml4c; distribution.</p>
 </s3>
 <s3 title="2. Initialize Xalan and Xerces">
 <p>Use the static initializers to initialize the &xslt4c; and &xml4c; platforms. You only need to do this once per session.</p>
 <source>XMLPlatformUtils::Initialize();
-XSLTEngineImpl::Initialize();</source>
+XSLTInit  theInit;</source>
 </s3><anchor name="step3"/>
 <s3 title="3. Set up an XSLT processor with its support objects">
 <p>The XSLT processor interacts with several support objects that you must set up before you can perform transformations.</p>
 <source>// Create the support objects.
-DOMSupportDefault          theDOMSupport;
+XercesDOMSupport           theDOMSupport;
 XercesParserLiaison        theParserLiaison(theDOMSupport);
 XPathSupportDefault        theXPathSupport(theDOMSupport);
 XSLTProcessorEnvSupportDefault  theXSLTProcessorEnvSupport;
@@ -102,6 +102,7 @@ XSLTEngineImpl  theProcessor(
           theParserLiaison,
           theXPathSupport,
           theXSLTProcessorEnvSupport,
+          theDOMSupport,
           theXObjectFactory,
           theXPathFactory);
 
@@ -134,9 +135,8 @@ XSLTInputSource    theInputSource(c_wstr(theXMLFileName));
 XSLTInputSource    theStylesheetSource(c_wstr(theXSLFileName));
 
 // For the output, create an XSLTResultTarget object.
-TextFileOutputStream  theOutputStream("foo.out");
-XercesDOMPrintWriter  theResultWriter(theOutputStream);
-XSLTResultTarget    theResultTarget(&amp;theResultWriter);
+const XalanDOMString  theOutputFile("foo.out");
+XSLTResultTarget		theResultTarget(theOutputFile);
 </source>
 <p>For the other constructors you can use to set up input and output objects (with input and output streams, for example), see <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump> and <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>. See also <link anchor="dom">Working with
 DOM input and output</link>.</p>
@@ -153,6 +153,12 @@ theProcessor.process(
 <p>The XSLTResultTarget object receives the transformation output.</p>
 <p>XSLTEngineImpl stores running state information, so it is not thread-safe. To perform multiple transformations, create a new instance for each transformation, or call the XSLTProcessor reset() method between each transformation.</p> 
 <p>If you are using the same stylesheet to perform multiple transformations, for efficiency you should compile the stylesheet and use the appropriate XSLTEngineImpl process() method. Compiled stylesheet (StylesheetRoot) objects are also thread-safe. A single StylesheetRoot object may be called concurrently from multiple threads. For more information, see <link anchor="compiled">Compiling stylesheets</link>.</p>
+</s3>
+<s3 title="7. Shut down Xerces.">
+<p>When you are done performing transformationsw, shut down Xerces.</p>
+<source>// Call the static terminator for Xerces.
+XMLPlatformUtils::Terminate();
+</source>
 <p>For a sample application that performs a transformation, see <link idref="samples" anchor="simpletransform">SimpleTransform</link>.</p> 
 </s3>
 </s2><anchor name="dom"/>
@@ -204,7 +210,7 @@ DOM_Document domOut = theParserLiaison.mapXercesDocument(docOut)</source>
 <p>A compiled stylesheet requires its own XPath and XObject factory support objects, independent of the support objects for an XSLT processor. So after you have set up the XSLT processor with its support objects, set up other
 factory support objects and use them to create a construction context for the stylesheet:</p>
 <source>// Set up the XSLT processor with its support objects
-DOMSupportDefault          theDOMSupport;
+XercesDOMSupport           theDOMSupport;
 XercesParserLiaison        theParserLiaison(theDOMSupport);
 XPathSupportDefault        theXPathSupport(theDOMSupport);
 XSLTProcessorEnvSupportDefault  theXSLTProcessorEnvSupport;
@@ -217,6 +223,7 @@ XSLTEngineImpl  theProcessor(
           theParserLiaison,
           theXPathSupport,
           theXSLTProcessorEnvSupport,
+          theDOMSupport;
           theXObjectFactory,
           theXPathFactory);
 theXSLTProcessorEnvSupport.setProcessor(&amp;theProcessor);
@@ -247,6 +254,7 @@ StylesheetRoot* const	theStylesheetRoot =
           theProcessor.processStylesheet(
                 theStylesheetSource,
                 theConstructionContext);
+          assert(theStylesheetRoot != 0);
 
 // Set the execution context object to use the compiled stylesheet.
 theExecutionContext.setStylesheetRoot(theStylesheetRoot)
@@ -315,7 +323,7 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
     <ol>
       <li>Download and unzip the <resource-ref idref="icu-download"/> from the IBM
       developerWorks open source zone.<br/><br/></li>
-      <li>Do a build -- see the Windows NT or Unix build instructions in the readme.html that
+      <li>Do an ICU build -- see the Windows NT or Unix build instructions in the readme.html that
        accompanies the download. 
       <br/><em>Important</em> For Windows, be sure to install the ICU on the same drive and at 
       the same level as &xslt4c; and &xml4c;.<br/><br/></li>
@@ -325,7 +333,7 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
     <p>If you want to enable ICU support for encoding, you must integrate ICU with
     your &xml4c; build. &xml4c; uses ICU for input encoding. See
     <resource-ref idref="xerces-build-icu"/>.</p>
-    <p>Once you have integreated the ICU with &xml4c;, &xslt4c; automatically uses ICU support 
+    <p>Once you have integrated the ICU with &xml4c;, &xslt4c; automatically uses ICU support 
     for output encoding (the xsl:output encoding attribute).</p>
      </s3>
     <s3 title="Enabling ICU support for number formatting and sorting"> 
@@ -333,9 +341,10 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
     integrate the ICU with &xslt4c;, but you must do the following in the application where you
     want to enable ICU support:</p>
     <ol>
-      <li>Include the ICUBridge headers.</li>
-      <li>Substitue ICU support for format-number(), xsl:number, and/or xsl:sort.</li>
-      <li>Provide your application access to the ICUBridge library.</li>
+      <li>Include the ICUBridge headers.<br/><br/></li>
+      <li>Substitue ICU support for format-number(), xsl:number, and/or xsl:sort.<br/><br/></li>
+      <li>Windows: Provide your application access to the ICUBridge library.<br/>
+      Linux or AIX: Rebuild the Xalan library to include the ICUBridge.</li>
       </ol>
       <p><em>ICUBridge</em></p>
      <p>All &xslt4c; references to ICU are centralized in the ICUBridge module, which supplies the
@@ -344,10 +353,11 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
 #include &lt;ICUBridge/FunctionICUFormatNumber.hpp&gt;
 #include &lt;ICUBridge/ICUXalanNumberFormatFactory.hpp&gt;
 #include &lt;ICUBridge/ICUBridgeCollationCompareFunctor.hpp&gt;</source>
-    <p>Put the ICUBridge library on the library path. For Windows, put &icubridge-win; on the path. For Linux, put 
-       &icubridge-linux; on the shared library path (LD_LIBRARY_PATH for Red Hat Linux 6.1) or copy it to /usr/lib. 
-       For AIX, put &icubridge-aix; on the load library path (LIB_PATH) or copy it to /usr/lib.</p>
-    <p><em>Number formatting</em></p>
+    <p>For Windows be sure &icubridge-win;,the ICUBridge library, is on the path.</p>
+    <p>For Linux, rebuild &xslt4c-linuxlib; with XALAN_USE_ICU defined, and place it on the shared library path
+    (LD_LIBRARY_PATH for Red Hat Linux 6.1) or copy it to /usr/lib.</p> 
+    <p>For AIX, rebuild &xslt4c-linuxlib;/&xslt4c-aixlib; with XALAN_USE_ICU defined, and place it on the load library
+    path (LIB_PATH) or copy it to /usr/lib.</p>
     <p>To enable ICU support for the xsl:number element and the XSLT format-number() function, do
      the following:</p>
 <source>// Install ICU support for the format-number() function.

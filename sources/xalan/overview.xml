@@ -72,14 +72,15 @@
      Transformation vocabulary and XPath, a language for addressing parts of XML documents. For links to background materials, 
     discussion groups, frequently asked questions, and tutorials on XSLT, see <link anchor="uptospeed">Getting up
     to speed with XSLT</link>.</p> 
-    <note>XSL also includes a vocabulary for formatting documents, which is still under design and is not part of &xslt4c;. 
+    <note>XSL also includes a vocabulary for formatting documents, which is not part of &xslt4c;. 
     For more information, see <jump href="http://www.w3.org/TR/xsl/">W3C XSL Working Draft</jump> and the <jump
     href="http://xml.apache.org/fop">Apache XML FOP (Formatting Objects Project)</jump>.</note>
     <p>You use the XSLT language to compose XSL stylesheets. An XSL stylesheet contains instructions for
      transforming XML documents from one document type to another document type (XML, HTML, or other). In structural
      terms, an XSL stylesheet specifies the transformation of one tree of nodes (the XML input) into another tree of nodes 
      (the output or transformation result).</p>
-    <note>The XSL stylesheet may generate and refer to cascading style sheets (CSS) as part of its output.</note>  
+    <note>The XSL stylesheet may generate and refer to cascading style sheets (<jump
+    href="http://www.w3.org/Style/CSS/">CSS</jump>) as part of its output.</note>  
     <p>In the following example, the foo.xsl stylesheet is used to transform foo.xml into foo.out:</p>
 <p>foo.xml:</p>
 <source>&lt;?xml version="1.0"?>
@@ -118,6 +119,10 @@
     <p>If you are still working through the details of the XSLT spec (the W3C 1.0 Recommendation), you may want 
     to consult one or more of the following:</p>
     <ul>
+    <li>Michael Kay's <jump href="http://www.wrox.com/Consumer/Store/Details.asp?ISBN=1861003129">XSLT Programmer's
+    Reference</jump>, Wrox Press, 2000<br/><br/></li>
+    <li>Neil Bradley's <jump href="http://cseng.aw.com/bookpage.taf?ISBN=0-201-67487-4">XSL Companion</jump>,
+    Addison-Wesley, 2000<br/><br/></li>    
     <li>Elliotte Rusty Harold's <jump href="http://metalab.unc.edu/xml/books/bible/updates/14.html">Chapter 14 of 
     the XML Bible: XSL Transformations</jump> (the online version is more current than the version in the printed
     book)<br/><br/></li>
@@ -136,11 +141,7 @@
      <jump href="http://www.oasis-open.org/cover/xsl.html">Extensible Stylesheet Language (XSL)</jump> by Robin
      Cover<br/><br/></li>
      <li>Donald Ball's <jump href="http://www.webslingerZ.com/balld/xsl/designer_manual.xml">A Guide to XML and XSL for
-      Designers</jump><br/><br/></li>
-      <li>Michael Kay's <jump href="http://www.wrox.com/Consumer/Store/Details.asp?ISBN=1861003129">XSLT Programmer's
-       Reference</jump>, Wrox Press, 2000<br/><br/></li>
-       <li>Neil Bradley's <jump href="http://cseng.aw.com/bookpage.taf?ISBN=0-201-67487-4">XSL Companion</jump>,
-       Addison-Wesley, 2000</li>
+      Designers</jump></li>
     </ul>
     <p>When you come across other useful introductory or background materials, please email <human-resource-ref
      idref="dleslie"/>, so he can add them to this list.</p>

@@ -40,7 +40,7 @@
   <li>The Xalan-C++ load library: &xslt4c-aixlib;</li>
   <li>The Xerces-C++ load library: &xml4c-aixlib;</li>
 </ul>
-<p>If you want to enable ICU support for the command-line utility, you must build the ICU and rebuild TestXSLT with the ICUBridge. See <link idref="usagepatterns" anchor="icu">Using the ICU</link> and <link idref="commandline" anchor="icu">Enabling ICU support for TestXSLT</link>.</p>
+<p>If you want to enable ICU support for the command-line utility, you must build the ICU and rebuild the Xal-C++ shared/load library and TestXSLT with the ICUBridge. See <link idref="usagepatterns" anchor="icu">Using the ICU</link> and <link idref="commandline" anchor="icu">Enabling ICU support for TestXSLT</link>.</p>
 <p>For information about using the command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
 </s3>
 <s3 title="What you need to build applications">
@@ -51,7 +51,7 @@ Xalan-C++ and Xerces-C++ header (.hpp) files and (for Windows) the &xslt4c; and 
 <p>In the Linux distribution (built on Red Hat Linux 6.1 with a make file and the GNU C++ compiler), the shared object library is in the lib subdirectory.</p>
 <p>In the AIX distribution (built with the make file and xlC_r), the load library is in the lib subdirectory.</p>
 <p>To get the Xerces-C++ header and (for Windows) .lib files, download and expand the &xml4c; binary distribution for your platform from the <resource-ref idref="xml4c-distdir"/>. For information about which &xml4c; distribution has been tested with this &xslt4c; release, see <link idref="readme" anchor="status">Version of &xml4c; to use</link>.</p>
-<p>If you want to enable ICU support in your applications, you must include the ICUBridge headers</p>
+<p>If you want to enable ICU support in your applications, you must rebuild the Xalan-C++ shared/load library (Linux/AIX) and include the ICUBridge headers (all platforms).</p>
 <p>For information about rebuilding &xslt4c;, see the <link idref="readme" anchor="build">Build notes</link>.</p>
 </s3>
 </s2><anchor name="path"/>
