@@ -38,7 +38,7 @@
 
 
 
-#include <xercesc/framework/MemoryManager.hpp>
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 
 
@@ -54,8 +54,6 @@ template <class Type>
 class XalanVector
 {
 public:
-
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager    MemoryManagerType;
 
     typedef Type                value_type;
     typedef value_type*         pointer;
@@ -107,6 +105,8 @@ public:
     typedef const_reverse_iterator_     const_reverse_iterator;
 
     typedef XalanVector<value_type>     ThisType;
+
+    typedef typename MemoryManagedConstructionTraits<value_type>::Constructor Constructor;
 
     XalanVector(
             MemoryManagerType*  theManager = 0,
@@ -274,7 +274,7 @@ public:
 
             while (theFirst != theLast)
             {
-                construct(thePointer, *theFirst);
+                Constructor::construct(thePointer, *theFirst, *m_memoryManager);
 
                 ++thePointer;
                 ++m_size;
@@ -390,7 +390,7 @@ public:
 
             for (size_type index = 0; index < theCount; ++index)
             {
-                construct(thePointer, theData);
+                Constructor::construct(thePointer, theData, *m_memoryManager);
 
                 ++thePointer;
                 ++m_size;
@@ -573,7 +573,7 @@ public:
                     data != theEnd;
                         ++data, ++m_size)
             {
-                construct(data, theValue);
+                Constructor::construct(data, theValue, *m_memoryManager);
             }
         }
 
@@ -914,26 +914,6 @@ private:
     }
 
     static void
-    construct(
-            value_type*         theAddress,
-            const value_type&   theValue)
-    {
-        new (theAddress) value_type(theValue);
-    }
-
-    static void
-    construct(
-            value_type*         theFirst,
-            value_type*         theLast,
-            const value_type*   values)
-    {
-        for(; theFirst != theLast; ++theFirst, ++values)
-        {
-            construct(*values);
-        }
-    }
-
-    static void
     destroy(value_type&     theValue)
     {
         theValue.~Type();
@@ -951,13 +931,13 @@ private:
     }
 
     void
-    doPushBack(value_type   data)
+    doPushBack(const value_type&   data)
     {
         invariants();
 
         if (m_size < m_allocation)
         {
-            construct(endPointer(), data);
+            Constructor::construct(endPointer(), data, *m_memoryManager);
 
             ++m_size;
         }

@@ -28,63 +28,54 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
+
+
 typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager		MemoryManagerType;
 
 
 
-class XalanMemoryManagement
+template <class C>
+struct ConstructWithNoMemoryManager
 {
-public:
-	static void*
-	allocate(  	size_t 				size, 
-				MemoryManagerType* 	memoryManager )
-	{
-		void* theResult = 0;
-		
-		if ( memoryManager == 0 )
-		{
-			theResult =  ::operator new ( size );
-		}
-		else
-		{
-			theResult = memoryManager->allocate( size );
-		}
+    static C* construct(C* address, MemoryManagerType& /* mgr */)
+    {
+        return (C*) new (address) C();
+    }
 
-		return theResult;
-	}
-	
-	static void
-	deallocate(  void* 				pDataPointer, 
-				MemoryManagerType* 	memoryManager )
-	{
-		if ( memoryManager == 0 )
-		{
-			::operator delete ( pDataPointer );
-		}
-		else
-		{
-			memoryManager->deallocate( pDataPointer );
-		}		
-		
-	}	
-	
-	static MemoryManagerType*
-	chooseMemMgrForXerces(  MemoryManagerType* 	memoryManager )
-	{
-		if ( memoryManager == 0 )
-		{
-            XALAN_USING_XERCES(XMLPlatformUtils)
-
-			return 	XMLPlatformUtils::fgMemoryManager;
-		}
-		else
-		{
-			return memoryManager;
-		}
-	}
-	
-	
+    static C* construct(C* address, const C& theRhs, MemoryManagerType& /* mgr */)
+    {
+        return (C*) new (address) C(theRhs);
+    }
 };
+
+template <class C>
+struct ConstructWithMemoryManager
+{
+    static C* construct(C* address, MemoryManagerType& mgr)
+    {
+        return (C*) new (address) C();
+    }
+
+    static C* construct(C* address, const C& theRhs, MemoryManagerType& mgr)
+    {
+        return (C*) new (address) C(theRhs, mgr);
+    }
+};
+
+template <class C>
+struct MemoryManagedConstructionTraits
+{
+    typedef ConstructWithNoMemoryManager<C> Constructor;
+};
+
+#define  XALAN_USES_MEMORY_MANAGER(Type)  \
+XALAN_USING_XALAN(MemoryManagedConstructionTraits) \
+XALAN_USING_XALAN(ConstructWithMemoryManager) \
+template<> \
+struct MemoryManagedConstructionTraits<Type> \
+    { \
+        typedef ConstructWithMemoryManager<Type> Constructor; \
+    };
 
 
 

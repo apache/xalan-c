@@ -29,10 +29,7 @@
 
 
 #include <xalanc/Include/XalanVector.hpp>
-
-
-
-#include <xercesc/framework/MemoryManager.hpp>
+#include <xalanc/Include/XalanMemoryManagement.hpp> 
 
 
 

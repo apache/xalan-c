@@ -29,7 +29,7 @@
 
 
 
-#include <xercesc/framework/MemoryManager.hpp>
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 
 
@@ -93,8 +93,6 @@ template <class Value>
 class XalanSet
 {
 public:
-
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager    MemoryManagerType;
 
     typedef Value	value_type;
 

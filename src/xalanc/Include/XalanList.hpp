@@ -37,7 +37,7 @@
 
 
 
-#include <xercesc/framework/MemoryManager.hpp>
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 
 
@@ -158,8 +158,6 @@ class XalanList
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager    MemoryManagerType;
-
     typedef Type                value_type;
     typedef value_type*         pointer;
     typedef const value_type*   const_pointer;
@@ -209,6 +207,8 @@ public:
 
 	typedef reverse_iterator_			reverse_iterator;
 	typedef const_reverse_iterator_		const_reverse_iterator;
+
+    typedef typename MemoryManagedConstructionTraits<value_type>::Constructor Constructor;
 
     XalanList(
             MemoryManagerType*  theManager = 0) :
@@ -437,22 +437,28 @@ protected:
 	Node& constructNode(const value_type& data, iterator pos)
 	{
 		Node * newNode = 0;
-
-		if (m_freeListHeadPtr != 0)
-		{
-			newNode = m_freeListHeadPtr;
-			m_freeListHeadPtr = m_freeListHeadPtr->next;
-		}
-		else
-		{
-			newNode = allocate(1);
-		}
-
-        new (&*newNode) Node(data, *pos.node().prev, pos.node());
+        Node * nextFreeNode = 0;
+        
+        if (m_freeListHeadPtr != 0)
+        {
+            newNode = m_freeListHeadPtr;
+            nextFreeNode = m_freeListHeadPtr->next;
+        }
+        else
+        {
+           m_freeListHeadPtr = allocate(1);
+           newNode = m_freeListHeadPtr;
+         }
+		
+        Constructor::construct(&newNode->value, data, *m_memoryManager);
+        new (&newNode->prev) Node*(pos.node().prev);
+        new (&newNode->next) Node*(&(pos.node()));
 
 		pos.node().prev->next = newNode;
 		pos.node().prev = newNode;
 		
+        m_freeListHeadPtr = nextFreeNode;
+
 		return *newNode;
 	}
 

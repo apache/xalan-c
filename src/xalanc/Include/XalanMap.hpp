@@ -30,7 +30,7 @@
 
 
 
-#include <xercesc/framework/MemoryManager.hpp>
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 
 
@@ -111,6 +111,7 @@ struct XalanMapEntry : public Value
 	}
 };
 
+
 /**
   * Xalan implementation of a hashtable.
   *
@@ -129,8 +130,6 @@ public:
 	 * A non-empty bucket will point to its first entry.  Remaining
 	 * entries in the chain follow the first and have the same index value.
 	 */
-
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager    MemoryManagerType;
 
 	typedef Key					key_type;
 	typedef Value				data_type;
