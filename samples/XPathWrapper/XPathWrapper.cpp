@@ -4,7 +4,13 @@
 
 #include <vector>
 #include <cassert>
+
+
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <iostream.h>
+#else
 #include <iostream>
+#endif
 
 
 
