@@ -131,7 +131,7 @@ openFile(const XalanDOMString&	theFileName)
 
 	if (theResult.size() == 0)
 	{
-		return false;
+		return 0;
 	}
 	else
 	{
