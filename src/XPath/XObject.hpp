@@ -68,10 +68,6 @@
 
 
 
-#include <PlatformSupport/FactoryObject.hpp>
-
-
-
 class MutableNodeRefList;
 class NodeRefListBase;
 class ResultTreeFragBase;
@@ -84,7 +80,7 @@ class XPathEnvSupport;
 /**
  * Class to hold XPath return types.
  */
-class XALAN_XPATH_EXPORT XObject : public FactoryObject
+class XALAN_XPATH_EXPORT XObject
 {
 public:
 
@@ -284,6 +280,9 @@ public:
 	{
 		return m_support;
 	}
+
+	// All XObject instances are controlled by an instance of an XObjectFactory.
+	friend class XObjectFactory;
 
 protected:
 

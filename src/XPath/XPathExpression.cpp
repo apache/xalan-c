@@ -283,7 +283,7 @@ XPathExpression::reset()
 		for_each(
 			m_tokenQueue.begin(),
 			m_tokenQueue.end(),
-			DeleteFactoryObjectFunctor(*m_xobjectFactory));
+			XObjectFactory::DeleteXObjectFunctor(*m_xobjectFactory));
 	}
 
 	m_opMap.clear();

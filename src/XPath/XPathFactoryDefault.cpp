@@ -94,7 +94,7 @@ XPathFactoryDefault::reset()
 
 	for_each(m_xpaths.begin(),
 			 m_xpaths.end(),
-			 ProtectedDeleteFactoryObjectFunctor(*this, true));
+			 ProtectedDeleteXPathFunctor(*this, true));
 
 	m_xpaths.clear();
 }
@@ -103,11 +103,11 @@ XPathFactoryDefault::reset()
 
 bool
 XPathFactoryDefault::doReturnObject(
-			const FactoryObject*	theFactoryObject,
-			bool					fInReset)
+			const XPath*	theXPath,
+			bool			fInReset)
 {
 	const CollectionType::iterator	i =
-		m_xpaths.find(theFactoryObject);
+		m_xpaths.find(theXPath);
 
 	if (i != m_xpaths.end())
 	{
@@ -116,7 +116,9 @@ XPathFactoryDefault::doReturnObject(
 			m_xpaths.erase(i);
 		}
 
-		return deleteObject(theFactoryObject);
+		delete theXPath;
+
+		return true;
 	}
 	else
 	{

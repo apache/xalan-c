@@ -86,6 +86,7 @@ static XBooleanStatic		theFalseBoolean(false);
 XObjectFactoryDefault::XObjectFactoryDefault(
 			XPathEnvSupport&	theEnvSupport,
 			XPathSupport&		theSupport) :
+	XObjectFactory(),
 	m_envSupport(theEnvSupport),
 	m_support(theSupport),
 	m_xobjects(),
@@ -108,27 +109,25 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 XObjectFactoryDefault::~XObjectFactoryDefault()
 {
 	reset();
-
-	deleteObject(m_XNull);
 }
 
 
 
 bool
 XObjectFactoryDefault::doReturnObject(
-			const FactoryObject*	theFactoryObject,
-			bool					fInReset)
+			const XObject*	theXObject,
+			bool			fInReset)
 {
-	if (theFactoryObject == &theTrueBoolean ||
-		theFactoryObject == &theFalseBoolean ||
-		theFactoryObject == m_XNull)
+	if (theXObject == &theTrueBoolean ||
+		theXObject == &theFalseBoolean ||
+		theXObject == m_XNull.get())
 	{
 		return true;
 	}
 	else
 	{
 		const CollectionType::iterator	i =
-				m_xobjects.find(theFactoryObject);
+				m_xobjects.find(theXObject);
 
 		if (i != m_xobjects.end())
 		{
@@ -137,7 +136,9 @@ XObjectFactoryDefault::doReturnObject(
 				m_xobjects.erase(i);
 			}
 
-			return deleteObject(theFactoryObject);
+			deleteObject(theXObject);
+
+			return true;
 		}
 		else
 		{
@@ -159,9 +160,9 @@ XObjectFactoryDefault::clone(const XObject&		theXObject)
 	{
 		return &theFalseBoolean;
 	}
-	else if (&theXObject == m_XNull)
+	else if (&theXObject == m_XNull.get())
 	{
-		return m_XNull;
+		return m_XNull.get();
 	}
 	else
 	{
@@ -258,7 +259,7 @@ XObjectFactoryDefault::createNull(bool		fOptimize)
 {
 	if (fOptimize == true)
 	{
-		return m_XNull;
+		return m_XNull.get();
 	}
 	else
 	{
@@ -411,7 +412,7 @@ XObjectFactoryDefault::reset()
 
 	for_each(m_xobjects.begin(),
 			 m_xobjects.end(),
-			 ProtectedDeleteFactoryObjectFunctor(*this, true));
+			 ProtectedDeleteXObjectFunctor(*this, true));
 
 	m_xobjects.clear();
 }

@@ -64,6 +64,7 @@
 
 
 
+#include <memory>
 #include <set>
 
 
@@ -73,6 +74,7 @@
 
 
 
+class XNull;
 class XPathEnvSupport;
 class XPathSupport;
 
@@ -100,12 +102,10 @@ public:
 	~XObjectFactoryDefault();
 
 
-	// These methods are inherited from Factory...
+	// These methods are inherited from XObjectFactory ...
 
 	virtual void
 	reset();
-
-	// These methods are inherited from XObjectFactory ...
 
 	virtual XObject*
 	clone(const XObject&	theXObject);
@@ -169,9 +169,9 @@ public:
 			bool		fOptimize = true);
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef set<const FactoryObject*>		CollectionType;
+	typedef set<const XObject*>		CollectionType;
 #else
-	typedef std::set<const FactoryObject*>	CollectionType;
+	typedef std::set<const XObject*>	CollectionType;
 #endif
 
 	/**
@@ -243,8 +243,8 @@ protected:
 
 	virtual bool
 	doReturnObject(
-			const FactoryObject*	theFactoryObject,
-			bool					fInReset = false);
+			const XObject*	theXObject,
+			bool			fInReset = false);
 
 private:
 
@@ -264,7 +264,11 @@ private:
 
 	CollectionType		m_xobjects;
 
-	XObject* const 		m_XNull;
+#if defined(XALAN_NO_NAMESPACES)
+	const auto_ptr<XNull>		m_XNull;
+#else
+	const std::auto_ptr<XNull>	m_XNull;
+#endif
 
 #if !defined(NDEBUG)
 

@@ -64,8 +64,8 @@
 
 
 
-// Base class header file...
-#include <PlatformSupport/Factory.hpp>
+#include <cassert>
+#include <functional>
 
 
 
@@ -73,7 +73,7 @@ class XPath;
 
 
 
-class XALAN_XPATH_EXPORT XPathFactory : public Factory
+class XALAN_XPATH_EXPORT XPathFactory
 {
 public:
 
@@ -83,11 +83,24 @@ public:
 	virtual
 	~XPathFactory();
 
-	// Inherited from Factory...
+	/**
+	 * Return an XPath to the factory.
+	 * 
+	 * @param theXPath The XPath to be returned
+	 * @return true if the object belongs to the factory, false if not.
+	 */
+	bool
+	returnObject(const XPath*	theXPath)
+	{
+		return doReturnObject(theXPath);
+	}
+
+	/**
+	 * Reset the instance.  This invalidates all existing instances created
+	 * with this XPathFactory.
+	 */
 	virtual void
 	reset() = 0;
-
-	// New to XPathFactory...
 
 	/**
 	 * Create an XPath.  The XPath instance is owned by the factory, and should
@@ -100,15 +113,164 @@ public:
 
 protected:
 
-	// Inherited from Factory...
-
 	virtual bool
 	doReturnObject(
-			const FactoryObject*	theFactoryObject,
-			bool					fInReset = false) = 0;
+			const XPath*	theXPath,
+			bool			fInReset = false) = 0;
+
+	/**
+	 *
+	 * A functor for use with stl algorithms.
+	 *
+	 */
+#if defined(XALAN_NO_NAMESPACES)
+	struct ProtectedDeleteXPathFunctor : public unary_function<const XPath*, void>
+#else
+	struct ProtectedDeleteXPathFunctor : public std::unary_function<const XPath*, void>
+#endif
+	{
+	public:
+
+		ProtectedDeleteXPathFunctor(
+			XPathFactory&		theFactoryInstance,
+			bool				fInReset) :
+			m_factoryInstance(theFactoryInstance),
+			m_fInReset(fInReset)
+		{
+		}
+
+		result_type
+		operator()(argument_type	theXPath) const
+		{
+			m_factoryInstance.doReturnObject(theXPath,
+											 m_fInReset);
+		}
+
+	private:
+
+		XPathFactory&		m_factoryInstance;
+
+		const bool			m_fInReset;
+	};
+
+	friend struct ProtectedDeleteXPathFunctor;
 
 };
 
 
+
+/**
+ * Manages the lifetime of an XPath instance.
+ */
+class XPathGuard
+{
+public:
+
+	/**
+	 * Construct an XPathGuard instance from a factory object and an XPath.
+	 * 
+	 * @param theFactory object that manages lifetime of XPaths
+	 * @param theXPath pointer to XPath managed
+	 */
+	XPathGuard(
+			XPathFactory&	theFactory,
+			XPath*			theXPath) :
+		m_factory(&theFactory),
+		m_object(theXPath)
+	{
+	}
+
+	// Note that copy construction transfers ownership, just
+	// as std::auto_ptr.
+	XPathGuard(XPathGuard&	theRHS)
+	{
+		// Release the current object...
+		release();
+
+		// Copy the factory and object pointers...
+		m_factory = theRHS.m_factory;
+		m_object = theRHS.m_object;
+
+		// The source object no longer points to
+		// the object...
+		theRHS.m_factory = 0;
+		theRHS.m_object = 0;
+	}
+
+	~XPathGuard()
+	{
+		reset();
+	}
+
+	/**
+	 * Retrieve the object pointer (must not be null)
+	 * 
+	 * @return pointer to XPath
+	 */
+	XPath*
+	operator->() const
+	{
+		assert(m_object != 0);
+
+		return m_object;
+	}
+
+	/**
+	 * Retrieve the object pointer (may be null)
+	 * 
+	 * @return pointer to XPath
+	 */
+	XPath*
+	get() const
+	{
+		return m_object;
+	}
+
+	/**
+	 * Return the referenced object to the factory and set pointers to null.
+	 */
+	void
+	reset()
+	{
+		if (m_object != 0)
+		{
+			assert(m_factory != 0);
+
+			m_factory->returnObject(m_object);
+
+			m_object = 0;
+		}
+
+		m_factory = 0;
+	}
+
+	/**
+	 * Transfers ownership of XPath to caller
+	 * 
+	 * @return pointer to XPath
+	 */
+	XPath*
+	release()
+	{
+		XPath* const	theTemp = m_object;
+
+		m_object = 0;
+
+		return theTemp;
+	}
+
+private:
+
+	XPathGuard&
+	operator=(const XPathGuard&);
+
+	bool
+	operator==(const XPathGuard&) const;
+
+
+	// Data members...
+	XPathFactory*		m_factory;
+    XPath*			m_object;
+};
 
 #endif	// XPATHFACTORY_HEADER_GUARD_1357924680

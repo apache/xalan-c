@@ -107,7 +107,6 @@ XPath::FunctionTableType		XPath::s_functions;
 
 
 XPath::XPath(bool	createDefaultLocator) :
-	FactoryObject(),
 	m_defaultXLocator(createDefaultLocator == false ? 0 : createXLocatorHandler()),
 	m_expression()
 {

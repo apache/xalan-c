@@ -129,8 +129,8 @@ public:
 			// we're done.
 
 			// An XObject that contains the context node.
-			FactoryObjectAutoPointer<XObject>		theXObject(&executionContext.getXObjectFactory(),
-															   executionContext.getXObjectFactory().createNodeSet(*context));
+			XObjectGuard	theXObject(executionContext.getXObjectFactory(),
+									   executionContext.getXObjectFactory().createNodeSet(*context));
 
 
 			theNamespace = getNamespaceFromNodeSet(*theXObject.get(),

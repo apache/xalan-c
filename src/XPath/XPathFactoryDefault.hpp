@@ -84,7 +84,8 @@ public:
 	virtual
 	~XPathFactoryDefault();
 
-	// Inherited from Factory...
+
+	// Inherited from XPathFactory...
 	virtual void
 	reset();
 
@@ -95,9 +96,9 @@ public:
 
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef set<const FactoryObject*>			CollectionType;
+	typedef set<const XPath*>		CollectionType;
 #else
-	typedef std::set<const FactoryObject*>		CollectionType;
+	typedef std::set<const XPath*>	CollectionType;
 #endif
 
 	CollectionType::size_type
@@ -116,12 +117,12 @@ public:
 
 protected:
 
-	// Inherited from Factory...
+	// Inherited from XPathFactory...
 
 	virtual bool
 	doReturnObject(
-			const FactoryObject*	theFactoryObject,
-			bool					fInReset = false);
+			const XPath*	theXPath,
+			bool			fInReset = false);
 
 private:
 

@@ -110,7 +110,7 @@ class XalanNode;
  * where strings are represented within the array as indices into the token
  * tree.
  */
-class XALAN_XPATH_EXPORT XPath : public FactoryObject
+class XALAN_XPATH_EXPORT XPath
 {
 public:
 
@@ -145,6 +145,9 @@ public:
 	 */
 	explicit
 	XPath(bool	createDefaultLocator = true);
+
+	virtual
+	~XPath();
 
 	/**
 	 * Shrink internal tables.
@@ -419,9 +422,6 @@ public:
 #endif
 
 protected:
-
-	virtual
-	~XPath();
 
 	/**
 	 * createXLocatorHandler.

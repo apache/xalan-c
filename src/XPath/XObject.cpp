@@ -81,7 +81,6 @@
 XObject::XObject(
 			XPathEnvSupport*	envSupport,
 			XPathSupport*		support) :
-	FactoryObject(),
 	m_envSupport(envSupport),
 	m_support(support)
 {
@@ -90,7 +89,6 @@ XObject::XObject(
 
 
 XObject::XObject(const XObject&		source) :
-	FactoryObject(),
 	m_envSupport(source.m_envSupport),
 	m_support(source.m_support)
 {

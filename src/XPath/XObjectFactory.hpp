@@ -64,13 +64,9 @@
 
 
 
+#include <algorithm>
 #include <cassert>
 #include <set>
-
-
-
-// Base class header file...
-#include <PlatformSupport/Factory.hpp>
 
 
 
@@ -89,7 +85,7 @@ class XObject;
 /**
  * This class handles the creation of XObjects and manages their lifetime.
  */
-class XALAN_XPATH_EXPORT XObjectFactory : public Factory
+class XALAN_XPATH_EXPORT XObjectFactory
 {
 public:
 
@@ -99,16 +95,24 @@ public:
 	~XObjectFactory();
 
 
-	// These interfaces are inherited from Resetable...
+	/**
+	 * Return an XObject to the factory.
+	 * 
+	 * @param theXObject The XObject to be returned
+	 * @return true if the object belongs to the factory, false if not.
+	 */
+	bool
+	returnObject(const XObject*		theXObject)
+	{
+		return doReturnObject(theXObject);
+	}
 
 	/**
-	 * Reset the instance.  This invalidates all existing FactoryObject
-	 * instances created with this Factory.
+	 * Reset the instance.  This invalidates all existing instances created
+	 * with this XObjectFactory.
 	 */
 	virtual void
 	reset() = 0;
-
-	// These interfaces are new to XObjectFactory...
 
 	/**
 	 * Clone an XObject instance, and hold in the factory.
@@ -263,21 +267,96 @@ public:
 			XalanNode&	theValue,
 			bool		fOptimize = true) = 0;
 
+	/**
+	 *
+	 * A public functor for use with stl algorithms.
+	 *
+	 */
+#if defined(XALAN_NO_NAMESPACES)
+	struct DeleteXObjectFunctor : public unary_function<const XObject*, void>
+#else
+	struct DeleteXObjectFunctor : public std::unary_function<const XObject*, void>
+#endif
+	{
+	public:
+
+		DeleteXObjectFunctor(XObjectFactory&	theFactoryInstance) :
+			m_factoryInstance(theFactoryInstance)
+		{
+		}
+
+		result_type
+		operator()(argument_type	theXObject) const
+		{
+			m_factoryInstance.returnObject(theXObject);
+		}
+
+	private:
+
+		XObjectFactory&		m_factoryInstance;
+	};
+
 protected:
 
-	// These interfaces are inherited from Factory...
+	/**
+	 * Delete a FactoryObject instance.
+	 *
+	 * @param theXObject the XObject instance to delete.
+	 */
+	void
+	deleteObject(const XObject*		theXObject) const
+	{
+		delete theXObject;
+	}
 
 	/**
-	 * Return an object to the factory.
+	 * Return an XObject to the factory.
 	 * 
-	 * @param theFactoryObject object to be returned
+	 * @param theXObject XObject to be returned
 	 * @param fInReset true when called during reset().
 	 */
 
 	virtual bool
 	doReturnObject(
-			const FactoryObject*	theFactoryObject,
-			bool					fInReset = false) = 0;
+			const XObject*	theXObject,
+			bool			fInReset = false) = 0;
+
+	/**
+	 *
+	 * A functor for use with stl algorithms.
+	 *
+	 */
+#if defined(XALAN_NO_NAMESPACES)
+	struct ProtectedDeleteXObjectFunctor : public unary_function<const XObject*, void>
+#else
+	struct ProtectedDeleteXObjectFunctor : public std::unary_function<const XObject*, void>
+#endif
+	{
+	public:
+
+		ProtectedDeleteXObjectFunctor(
+			XObjectFactory&		theFactoryInstance,
+			bool				fInReset) :
+			m_factoryInstance(theFactoryInstance),
+			m_fInReset(fInReset)
+		{
+		}
+
+		result_type
+		operator()(argument_type	theXObject) const
+		{
+			m_factoryInstance.doReturnObject(theXObject,
+											 m_fInReset);
+		}
+
+	private:
+
+		XObjectFactory&		m_factoryInstance;
+
+		const bool			m_fInReset;
+	};
+
+	friend struct ProtectedDeleteXObjectFunctor;
 
 private:
 
@@ -294,7 +373,7 @@ private:
 
 
 /**
- * Manages the ownership of an objected pointed to by an XObject pointer
+ * Manages the lifetime of an XObject instance.
  */
 class XObjectGuard
 {
@@ -306,8 +385,9 @@ public:
 	 * @param theFactory object that manages lifetime of XObjects
 	 * @param theXObject pointer to XObject managed
 	 */
-	XObjectGuard(XObjectFactory&	theFactory,
-			     XObject*			theXObject) :
+	XObjectGuard(
+			XObjectFactory&		theFactory,
+			XObject*			theXObject) :
 		m_factory(&theFactory),
 		m_object(theXObject)
 	{

@@ -124,8 +124,8 @@ protected:
 		// do the real work in turning themselves into strings.
 
 		// A node set that contains the context node.
-		FactoryObjectAutoPointer<XObject>		theArg(&executionContext.getXObjectFactory(),
-													   executionContext.getXObjectFactory().createNodeSet(context));
+		XObjectGuard	theArg(executionContext.getXObjectFactory(),
+							   executionContext.getXObjectFactory().createNodeSet(context));
 
 		// Now, get the string from the XObject.
 		return theArg->str();
