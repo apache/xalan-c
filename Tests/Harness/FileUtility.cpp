@@ -56,7 +56,7 @@
 FileNameVectorType FileUtility::getTestFileNames(XalanDOMString baseDir, XalanDOMString relDir)
 {
 	const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
-	const XalanDOMString	searchSuffix(XALAN_STATIC_UCODE_STRING("*.xml"));
+	const XalanDOMString	searchSuffix(XALAN_STATIC_UCODE_STRING("*.xsl"));
 	const XalanDOMString	searchSpecification(baseDir + relDir + pathSep + relDir + searchSuffix);
 
 	DirectoryEnumeratorFunctor<FileNameVectorType, XalanDOMString>	theEnumerator;

@@ -122,7 +122,7 @@
 const char* const 	excludeStylesheets[] =
 {
 //	"basic-all_well.xml",
-	"large-evans_large.xml",
+	"large-evans_large.xsl",
 //	"sort-cem-big.xml",
 //	"large-cem10k.xml",
 	0
@@ -323,7 +323,7 @@ main(
 		// Get the list of Directories that are below perf
 		const FileNameVectorType dirs = f.getDirectoryNames(perfDir);
 
-		XMLFileReporter	logFile("cpp.xml");
+		XMLFileReporter	logFile("d:\\xslt\\cperf-results\\cpp.xml");
 		logFile.logTestFileInit("Performance Testing - Reports performance times for single transform, and average for multiple transforms using compiled stylesheet");
 
 
@@ -342,6 +342,7 @@ main(
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 				{
+					logFile.logTestCaseInit(XalanDOMString("Performance Directory: ") + dirs[j] ); 
 					const FileNameVectorType files = f.getTestFileNames(perfDir, dirs[j]);
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
@@ -350,7 +351,7 @@ main(
 						double timeinMilliseconds, theAverage;
 						Hashtable attrs;
 
-						attrs.insert(Hashtable::value_type(XalanDOMString("File"), files[i]));
+						attrs.insert(Hashtable::value_type(XalanDOMString("idref"), files[i]));
 
 						if (skip)
 						{
@@ -358,8 +359,8 @@ main(
 								continue;
 						}
 
-						const XalanDOMString  theXMLFile= perfDir + dirs[j] + pathSep + files[i];
-						const XalanDOMString  theXSLFile = f.GenerateFileName(theXMLFile,"xsl");
+						const XalanDOMString  theXSLFile= perfDir + dirs[j] + pathSep + files[i];
+						const XalanDOMString  theXMLFile = f.GenerateFileName(theXSLFile,"xml");
 						const XalanDOMString  theOutput =  outputRoot + dirs[j] + pathSep + files[i]; 
 						const XalanDOMString  theOutputFile = f.GenerateFileName(theOutput, "out");
 
@@ -543,12 +544,15 @@ main(
 						// Output average transform time to console and result log
 						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's of eToe" << endl;
 
-						addMetricToAttrs("Avg_etoe: ",theAverage, attrs);
+						addMetricToAttrs("Avg_eTOe",theAverage, attrs);
 
 
-						logFile.logElement(10, "Metric", attrs, "xxx");
+						logFile.logElement(10, "perf", attrs, "xxx");
 					}//for files
+
+					logFile.logTestCaseClose(XalanDOMString("Performance Directory: ") + dirs[j], XalanDOMString("Done") );
 				}//for dirs
+
 			}//xsltinit
 
 
