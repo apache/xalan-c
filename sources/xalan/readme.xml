@@ -270,7 +270,7 @@
    <table>
    <tr><th>Localization Build Type</th><th>File Name</th></tr>
    <tr><td><ref>ICU or "in memory" method:</ref></td><td>libxalanMsg17.so (for UNIX)<br/>
-   XalanMessages_1_7_0.dll and XalanMessages_1_7_0.lib (for Windows)
+   XalanMessages_1_8_0.dll and XalanMessages_1_8_0.lib (for Windows)
    </td></tr>
    <tr><td><ref>NLS method:</ref></td><td>xalanMsg1_7.cat can be found in $XALANCROOT/nls/&lt;locale_name&gt;/ directory</td></tr>
    </table>

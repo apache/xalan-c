@@ -57,11 +57,11 @@
  -->
 
 <!ENTITY xslt4c "Xalan-C++">
-<!ENTITY xslt4c-dist "Xalan-C_1_7_0">
+<!ENTITY xslt4c-dist "Xalan-C_1_8_0">
 <!ENTITY xslt4c-win_root "xml-xalan\c">
 <!ENTITY xslt4c-unix_root "xml-xalan/c">
 <!ENTITY xslt4c-current "Xalan-C++ version 1.7">
-<!ENTITY xslt4c-windll "Xalan-C_1_7_0.dll">
+<!ENTITY xslt4c-windll "Xalan-C_1_8_0.dll">
 <!ENTITY xslt4c-linuxlib "libxalan-c1_7.so">
 <!ENTITY xslt4c-aixlib "libxalan-c1_7.so">
 <!ENTITY xslt4c-hplib "libxalan-c1_7.sl">
