@@ -578,7 +578,10 @@ XPathExpression::insertOpCode(
 	else
 	{
 		// Insert -1 for each element of the opcode.
-		m_opMap.insert(m_opMap.begin() + theIndex, theOpCodeLength, -1);
+		m_opMap.insert(
+			m_opMap.begin() + theIndex,
+			OpCodeMapSizeType(theOpCodeLength),
+			-1);
 
 		// Set the member that contains the last insert/appended
 		// index.
