@@ -229,6 +229,46 @@ XercesDOMWalker::traverse(
 
 
 void
+XercesDOMWalker::traverseSubtree(const DOMNodeType*		pos)
+{
+	if (pos != 0)
+	{
+		startNode(pos);
+
+		const DOMNodeType* const	theFirstChild = pos->getFirstChild();
+
+		if (theFirstChild != 0)
+		{
+			traverse(theFirstChild, pos);
+		}
+
+		endNode(pos);
+	}
+}
+
+
+
+void
+XercesDOMWalker::traverseSubtree(DOMNodeType*	pos)
+{
+	if (pos != 0)
+	{
+		startNode(pos);
+
+		DOMNodeType* const	theFirstChild = pos->getFirstChild();
+
+		if (theFirstChild != 0)
+		{
+			traverse(theFirstChild, pos);
+		}
+
+		endNode(pos);
+	}
+}
+
+
+
+void
 XercesDOMWalker::startNode(DOMNodeType*		node)
 {
 #if defined(XALAN_OLD_STYLE_CASTS)

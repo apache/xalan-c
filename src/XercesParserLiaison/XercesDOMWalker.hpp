@@ -108,6 +108,22 @@ public:
 			DOMNodeType*	pos,
 			DOMNodeType*	parent);
 
+	/**
+	 * Perform a pre-order traversal non-recursive style.
+	 * 
+	 * @param pos starting node
+	 */
+	virtual void
+	traverseSubtree(const DOMNodeType*	pos);
+
+	/**
+	 * Perform a pre-order traversal non-recursive style.
+	 * 
+	 * @param pos starting node
+	 */
+	virtual void
+	traverseSubtree(DOMNodeType*	pos);
+
 protected:
 
 	virtual void
