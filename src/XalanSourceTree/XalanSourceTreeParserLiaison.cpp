@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -122,6 +122,62 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::validationString[] = {
 	XalanUnicode::charLetter_i,
 	XalanUnicode::charLetter_o,
 	XalanUnicode::charLetter_n,
+	0
+};
+
+
+
+// http://apache.org/xml/features/validation/dynamic
+const XalanDOMChar	XalanSourceTreeParserLiaison::dynamicValidationString[] = {
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charColon,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charFullStop,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_y,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_c,
 	0
 };
 
@@ -319,9 +375,20 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 
 	XalanAutoPtr<SAX2XMLReader>		theReader(XMLReaderFactory::createXMLReader());
 
-	theReader->setFeature(
-		validationString,
-		m_xercesParserLiaison.getUseValidation());
+	const bool	fValidate = m_xercesParserLiaison.getUseValidation();
+
+	if (fValidate == false)
+	{
+		theReader->setFeature(
+			validationString,
+			false);
+	}
+	else
+	{
+		theReader->setFeature(
+			dynamicValidationString,
+			true);
+	}
 
 	theReader->setFeature(
 		namespacesString,
