@@ -107,7 +107,10 @@ public:
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
-	
+
+	bool
+	elementAvailable(StylesheetExecutionContext&	executionContext) const;
+
 private:
 
 	ExtensionNSHandler&		m_nsh;

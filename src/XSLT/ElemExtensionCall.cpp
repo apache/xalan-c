@@ -99,3 +99,11 @@ ElemExtensionCall::execute(
 */
 	executionContext.warn("Xalan C++ does not yet handle extensions!");
 }
+
+
+
+bool
+ElemExtensionCall::elementAvailable(StylesheetExecutionContext&		executionContext) const
+{
+	return executionContext.elementAvailable(XalanDOMString(), m_localPart);
+}
