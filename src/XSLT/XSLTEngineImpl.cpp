@@ -1589,7 +1589,7 @@ XSLTEngineImpl::setQuietConflictWarnings(bool	b)
 
 
 void
-XSLTEngineImpl::setDocumentLocator(const Locator* const		/* locator */)
+XSLTEngineImpl::setDocumentLocator(const Locator*	/* locator */)
 {
 	// Do nothing for now
 }
@@ -1882,7 +1882,7 @@ XSLTEngineImpl::flushPending()
 
 
 void
-XSLTEngineImpl::startElement(const XMLCh* const	name)
+XSLTEngineImpl::startElement(const XalanDOMChar*	name)
 {
 	assert(getFormatterListener() != 0);
 	assert(name != 0);
@@ -1900,8 +1900,8 @@ XSLTEngineImpl::startElement(const XMLCh* const	name)
 
 void
 XSLTEngineImpl::startElement(
-			const XMLCh* const	name,
-			AttributeList&		atts)
+			const XalanDOMChar*		name,
+			AttributeList&			atts)
 {
 	assert(getFormatterListener() != 0);
 	assert(name != 0);
@@ -1933,7 +1933,7 @@ XSLTEngineImpl::startElement(
 
 
 void
-XSLTEngineImpl::endElement(const XMLCh* const 	name)
+XSLTEngineImpl::endElement(const XalanDOMChar*	name)
 {
 	assert(getFormatterListener() != 0);
 	assert(name != 0);
@@ -1961,8 +1961,8 @@ XSLTEngineImpl::endElement(const XMLCh* const 	name)
 
 void
 XSLTEngineImpl::characters(
-			const XMLCh* const	ch,
-			const unsigned int 	length)
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type 	length)
 {
 	characters(ch,
 			   0,
