@@ -218,6 +218,8 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 
 			CandidateNoAncestorVectorType	candidateNoAncestorXMLNS;
 
+			candidateNoAncestorXMLNS.reserve(eDefaultVectorSize);
+
 			// Hunt upward until resolve namespace or fail to do so.
 			while (0 != parent && length(namespaceOfPrefix) == 0)
 			{
@@ -333,7 +335,7 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 			}
 
 			// Anotation pass over the "any other node" queue
-			const int	nCandidates = candidateNoAncestorXMLNS.size();
+			const unsigned int	nCandidates = candidateNoAncestorXMLNS.size();
 
 			if(nCandidates > 0)
 			{
@@ -343,7 +345,7 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 				// ????? This feels overcomplicated, somehow... 
 				if(false == ancestorsHaveXMLNS && 0 == parent)
 				{
-					for(int i = 0; i < nCandidates; i++)
+					for(unsigned int i = 0; i < nCandidates; i++)
 					{
 						const NSInfo&	candidateInfo = candidateNoAncestorXMLNS[i].second;
 

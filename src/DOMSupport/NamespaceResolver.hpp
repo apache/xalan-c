@@ -120,6 +120,14 @@ protected:
 			const XalanNode*	theNode,
 			const NSInfo&		theNamespace) const;
 
+protected:
+
+	// Default vector allocation size.
+	enum
+	{
+		eDefaultVectorSize = 10
+	};
+
 	// Cached namespace information...
 	mutable NSInfoMapType	m_NSInfos;
 };
