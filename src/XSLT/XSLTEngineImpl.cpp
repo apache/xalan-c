@@ -2346,11 +2346,7 @@ XSLTEngineImpl::cloneToResultTree(
 		{
 			addResultAttribute(
 					getPendingAttributesImpl(),
-#if defined(XALAN_OLD_STYLE_CASTS)
-					DOMServices::getNameOfNode((const XalanAttr&)node),
-#else
-					DOMServices::getNameOfNode(static_cast<const XalanAttr&>(node)),
-#endif
+					node.getNodeName(),
 					node.getNodeValue());
 		}
 		else
