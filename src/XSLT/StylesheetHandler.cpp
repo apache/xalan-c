@@ -129,6 +129,7 @@ StylesheetHandler::StylesheetHandler(
 	m_stylesheet(stylesheetTree),
 	m_constructionContext(constructionContext),
 	m_elemStack(),
+	m_elemStackParentedElements(),
 	m_strayElements(),
 	m_whiteSpaceElems(),
 	m_pTemplate(0),
@@ -152,10 +153,30 @@ StylesheetHandler::~StylesheetHandler()
 	using std::for_each;
 #endif
 
-	// Clean up the element stack vector
-	for_each(m_elemStack.begin(),
-			 m_elemStack.end(),
-			 DeleteFunctor<ElemTemplateElement>());
+	// Clean up the element stack vector...
+	ElemTemplateStackType::const_iterator	i = m_elemStack.begin();
+
+	while(i != m_elemStack.end())
+	{
+		// See if the element is in the set of elements that have
+		// already been parented, so we don't try to delete it after
+		// it's parent has already deleted it...
+		const ElemTemplateSetType::iterator		j =
+				m_elemStackParentedElements.find(*i);
+
+		if (j == m_elemStackParentedElements.end())
+		{
+			// Not found, so delete it...
+			delete *i;
+		}
+		else
+		{
+			// Found, so erase it from the set...
+			m_elemStackParentedElements.erase(j);
+		}
+
+		++i;
+	}
 
 	// Clean up the whitespace elements.
 	for_each(m_whiteSpaceElems.begin(),
@@ -166,6 +187,8 @@ StylesheetHandler::~StylesheetHandler()
 	for_each(m_strayElements.begin(),
 			 m_strayElements.end(),
 			 DeleteFunctor<ElemTemplateElement>());
+
+	m_elemStackParentedElements.clear();
 }
 
 
@@ -309,6 +332,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 												m_stylesheet,
 												name, atts, lineNumber, columnNumber);
 					m_elemStack.push_back(m_pTemplate);
+					m_elemStackParentedElements.insert(m_pTemplate);
 					m_inTemplate = true;
 					m_stylesheet.addTemplate(m_pTemplate, m_constructionContext);
 					break;
@@ -318,7 +342,6 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 					{
 						m_constructionContext.warn("Old syntax: the functions instruction should use a url of " + m_constructionContext.getXalanXSLNameSpaceURL());
 					}
-					// m_constructionContext.handleFunctionsInstruction((Element)child);
 				break;
 
 				case Constants::ELEMNAME_VARIABLE:
@@ -337,6 +360,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 					m_elemStack.push_back(varelem);
 					m_inTemplate = true; // fake it out
 					m_stylesheet.setTopLevelVariable(varelem);
+					m_elemStackParentedElements.insert(varelem);
 					varelem->setTopLevel(true);
 				}
 				break;
@@ -651,6 +675,8 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 					foreach->getSortElems().push_back(sortElem);
 
 					sortElem->setParentNodeElem(foreach);
+
+					m_elemStackParentedElements.insert(foreach);
 				}
 				break;
 
@@ -997,6 +1023,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 			{
 				ElemTemplateElement* const	parent = m_elemStack.back();
 				parent->appendChildElem(elem);
+				m_elemStackParentedElements.insert(elem);
 			}
 
 			m_elemStack.push_back(elem);
@@ -1013,6 +1040,8 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 			if (elem != 0)
 			{
 				delete elem;
+
+				m_elemStackParentedElements.erase(elem);
 			}
 		}
 	} // end try
@@ -1029,6 +1058,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 		while(m_elemStack.empty() == false &&
 			  m_elemStack.back()->getXSLToken() != Constants::ELEMNAME_UNDEFINED)
 		{
+			m_elemStackParentedElements.erase(m_elemStack.back());
 			m_elemStack.pop_back();
 		}
 
@@ -1043,6 +1073,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 		while(m_elemStack.empty() == false &&
 			  m_elemStack.back()->getXSLToken() != Constants::ELEMNAME_UNDEFINED)
 		{
+			m_elemStackParentedElements.erase(m_elemStack.back());
 			m_elemStack.pop_back();
 		}
 
@@ -1171,12 +1202,8 @@ StylesheetHandler::processImport(
 
 			m_constructionContext.parseXML(hrefUrl, &tp, importedStylesheet.get());
 
-			// Add it to the front of the imports
-			m_stylesheet.addImport(importedStylesheet.get(), true);
-
-			// The imported stylesheet is now owned by the stylesheet, so
-			// release the XalanAutoPtr.
-			importedStylesheet.release();
+			// Add it to the front of the imports, releasing the XalanAutoPtr...
+			m_stylesheet.addImport(importedStylesheet.release(), true);
 
 			assert(equals(importStack.back(), hrefUrl));
 			importStack.pop_back();		
@@ -1262,6 +1289,7 @@ StylesheetHandler::endElement(const XMLCh* const name)
 
 	m_lastPopped = m_elemStack.back();
 	m_elemStack.pop_back();
+	m_elemStackParentedElements.erase(m_lastPopped);
 	m_lastPopped->setFinishedConstruction(true);
 
 	const int tok = m_lastPopped->getXSLToken();
@@ -1592,6 +1620,7 @@ StylesheetHandler::charactersRaw(
 StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	theHandler) :
 	m_handler(theHandler),
 	m_elemStack(theHandler.m_elemStack),
+	m_elemStackParentedElements(theHandler.m_elemStackParentedElements),
 	m_pTemplate(theHandler.m_pTemplate),
 	m_lastPopped(theHandler.m_lastPopped),
 	m_inTemplate(theHandler.m_inTemplate),
@@ -1629,6 +1658,7 @@ StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 			 DeleteFunctor<ElemTemplateElement>());
 
 	m_handler.m_elemStack = m_elemStack;
+	m_handler.m_elemStackParentedElements = m_elemStackParentedElements;
 	m_handler.m_pTemplate = m_pTemplate;
 	m_handler.m_lastPopped = m_lastPopped;
 	m_handler.m_inTemplate = m_inTemplate;

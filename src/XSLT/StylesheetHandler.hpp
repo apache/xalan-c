@@ -67,6 +67,7 @@
 
 
 #include <vector>
+#include <set>
 
 
 
@@ -104,9 +105,11 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<ElemTemplateElement*>		ElemTemplateStackType;
 	typedef vector<ElemTextLiteral*>			ElemTextLiteralStackType;
+	typedef set<ElemTemplateElement*>			ElemTemplateSetType;
 #else
 	typedef std::vector<ElemTemplateElement*>	ElemTemplateStackType;
 	typedef std::vector<ElemTextLiteral*>		ElemTextLiteralStackType;
+	typedef std::set<ElemTemplateElement*>		ElemTemplateSetType;
 #endif
 
 	/**
@@ -419,6 +422,13 @@ private:
 	ElemTemplateStackType	m_elemStack;
 
 	/**
+	 * The set of elements in m_elemStack which have already
+	 * been parented.  This prevents us from deleting them
+	 * twice if an exception is thrown.
+	 */
+	ElemTemplateSetType		m_elemStackParentedElements;
+
+	/**
 	 * The stack of stray elements, to be delete when finished.
 	 */
 	ElemTemplateStackType	m_strayElements;
@@ -491,6 +501,8 @@ private:
 		StylesheetHandler&					m_handler;
 
 		ElemTemplateStackType				m_elemStack;
+
+		ElemTemplateSetType					m_elemStackParentedElements;
 
 		ElemTemplate* const					m_pTemplate;
 
