@@ -233,28 +233,38 @@ ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 {
     const unsigned int	len = length(s);
 
-    XalanDOMChar		c = charAt(s, 0);
+	if (len == 0)
+	{
+		return false;
+	}
+	else
+	{
+		XalanDOMChar	c = charAt(s, 0);
 
-    if(!(isXMLLetterOrDigit(c) || (c == XalanUnicode::charLowLine)))
-      return false;
+		if(!(XalanXMLChar::isLetter(c) || (c == XalanUnicode::charLowLine)))
+		  return false;
 
-    if(len > 0)
-    {
-		for(unsigned int i = 1; i < len; i++)
+		if(len > 1)
 		{
-			c = charAt(s, i); 
-
-			if(!(isXMLLetterOrDigit(c) ||
-				 c == XalanUnicode::charLowLine ||
-				 c == XalanUnicode::charHyphenMinus ||
-				 c == XalanUnicode::charFullStop))
+			for(unsigned int i = 1; i < len; i++)
 			{
-				return false;
+				c = charAt(s, i); 
+
+				if(!(XalanXMLChar::isLetter(c) ||
+					 XalanXMLChar::isDigit(c) ||
+					 XalanXMLChar::isExtender(c) ||
+					 XalanXMLChar::isCombiningChar(c) ||
+					 c == XalanUnicode::charLowLine ||
+					 c == XalanUnicode::charHyphenMinus ||
+					 c == XalanUnicode::charFullStop))
+				{
+					return false;
+				}
 			}
 		}
-    }
 
-    return true;
+		return true;
+	}
 }
 
 
