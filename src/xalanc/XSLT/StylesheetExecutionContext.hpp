@@ -2077,8 +2077,7 @@ public:
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument,
-            XalanDOMString&         theResult) const = 0;
+			const XalanDocument&	theDocument) const = 0;
 
 	virtual bool
 	shouldStripSourceNode(const XalanText&	node) = 0;

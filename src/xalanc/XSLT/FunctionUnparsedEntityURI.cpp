@@ -79,11 +79,7 @@ FunctionUnparsedEntityURI::execute(
 					context->getOwnerDocument();
 		assert(doc != 0);
 
-        const XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
-
-		XalanDOMString&	uri = theGuard.get();
-
-        executionContext.getUnparsedEntityURI(name, *doc, uri);
+        const XalanDOMString& uri = executionContext.getUnparsedEntityURI(name, *doc);
 
 		return executionContext.getXObjectFactory().createStringReference(uri);
 	}

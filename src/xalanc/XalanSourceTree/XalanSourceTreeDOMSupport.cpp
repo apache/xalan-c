@@ -77,8 +77,7 @@ XalanSourceTreeDOMSupport::reset()
 const XalanDOMString&
 XalanSourceTreeDOMSupport::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument,
-            XalanDOMString&         /*theResult*/) const
+			const XalanDocument&	theDocument) const
 {
 	if (m_parserLiaison != 0)
 	{
@@ -88,10 +87,11 @@ XalanSourceTreeDOMSupport::getUnparsedEntityURI(
 		if (theXSTDocument != 0)
 		{
 			return theXSTDocument->getUnparsedEntityURI(theName);
+            
 		}
 	}
 
-	return s_emptyString;
+    return s_emptyString;
 }
 
 

@@ -61,10 +61,9 @@ XercesDOMSupport::reset()
 const XalanDOMString&
 XercesDOMSupport::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument,
-            XalanDOMString&	        theURI) const
+			const XalanDocument&	theDocument) const
 {
-	return m_domSupportDefault.getUnparsedEntityURI(theName, theDocument, theURI);
+	return m_domSupportDefault.getUnparsedEntityURI(theName, theDocument);
 }
 
 

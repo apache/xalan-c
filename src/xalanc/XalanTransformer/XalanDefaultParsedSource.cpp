@@ -67,15 +67,13 @@ XalanDefaultParsedSourceDOMSupport::reset()
 const XalanDOMString&
 XalanDefaultParsedSourceDOMSupport::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument,
-            XalanDOMString&         theResult ) const
+			const XalanDocument&	theDocument) const
 {
 	// Check the wrapped XalanSourceTreeDOMSupport instance...
 	const XalanDOMString&	theURI =
 			m_domSupport.getUnparsedEntityURI(
 					theName,
-					theDocument,
-                    theResult);
+					theDocument);
 
 	if (length(theURI) != 0)
 	{
@@ -86,8 +84,7 @@ XalanDefaultParsedSourceDOMSupport::getUnparsedEntityURI(
 		// Chain up to our parent...
 		return XalanSourceTreeDOMSupport::getUnparsedEntityURI(
 					theName,
-					theDocument,
-                    theResult);
+					theDocument);
 	}
 }
 

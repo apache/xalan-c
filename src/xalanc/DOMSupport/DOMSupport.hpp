@@ -63,8 +63,7 @@ public:
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument,
-            XalanDOMString&         theURI) const = 0;
+			const XalanDocument&	theDocument) const = 0;
 
 	/**
 	 * Determine if a node is after another node, in document order.

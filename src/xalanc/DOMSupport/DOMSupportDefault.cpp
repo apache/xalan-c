@@ -61,9 +61,9 @@ DOMSupportDefault::reset()
 const XalanDOMString&
 DOMSupportDefault::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument,
-            XalanDOMString&			theURI) const
+			const XalanDocument&	theDocument) const
 {
+    XalanDOMString theURI(m_pool.getMemoryManager());
 
 	const XalanDocumentType* const	theDoctype =
 		theDocument.getDoctype();

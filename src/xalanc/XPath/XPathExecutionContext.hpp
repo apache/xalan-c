@@ -621,8 +621,7 @@ public:
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument,
-            XalanDOMString&         theResult) const = 0;
+			const XalanDocument&	theDocument) const = 0;
 
 	/**
 	 * Tells, through the combination of the default-space attribute

@@ -2303,12 +2303,9 @@ StylesheetExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner,
 const XalanDOMString&
 StylesheetExecutionContextDefault::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument,
-            XalanDOMString&         theResult) const
+			const XalanDocument&	theDocument) const
 {
-    m_xpathExecutionContextDefault.getUnparsedEntityURI(theName, theDocument, theResult);
-
-	return theResult;
+    return m_xpathExecutionContextDefault.getUnparsedEntityURI(theName, theDocument);
 }
 
 
