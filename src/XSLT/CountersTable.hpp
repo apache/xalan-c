@@ -196,9 +196,9 @@ public:
 	/**
 	 * Construct a CountersTable.
 	 */
-	CountersTable() : 
-		m_newFound(),
-		m_counterMap()
+	CountersTable() :
+		m_counterMap(),
+		m_newFound()
 	{
 	};
 
