@@ -364,7 +364,7 @@ protected:
 	size_type
 	getBlockOffset(const ObjectType*	theObject) const
 	{
-		assert(theObject - m_objectBlock < m_blockSize);
+		assert(size_type(theObject - m_objectBlock) < m_blockSize);
 
 		return theObject - m_objectBlock;
 	}

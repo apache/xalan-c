@@ -79,7 +79,7 @@
 
 
 
-#include <XercesParserLiaison/XercesElementNamedNodeListCache.hpp>
+#include <XercesParserLiaison/XercesDOM_NodeHack.hpp>
 #include <XercesParserLiaison/XercesNamedNodeMapBridge.hpp>
 #include <XercesParserLiaison/XercesNodeListBridge.hpp>
 
@@ -104,13 +104,13 @@ public:
 	/**
 	 * Gets the name of this node.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeName() const;
 
 	/**
 	 * Gets the value of this node, depending on its type.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeValue() const;
 
 	/**
@@ -384,14 +384,14 @@ public:
 	 * such as <CODE>createElement</CODE> from the <CODE>Document</CODE>
 	 * interface, this is always <CODE>null</CODE>.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
 	/**
 	 * Get the <em>namespace prefix</em>
 	 * of this node, or <code>null</code> if it is unspecified.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getPrefix() const;
 
 	/**
@@ -401,7 +401,7 @@ public:
 	 * <code>createElement</code> from the <code>DOM_Document</code> interface,
 	 * it is null.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalName() const;
 
 	/**
@@ -442,9 +442,6 @@ public:
 	virtual unsigned long
 	getIndex() const;
 
-	virtual XalanDOMString
-	getXSLTData() const;
-
 	//@}
 
 	// These interfaces are inherited from XalanElement...
@@ -457,7 +454,7 @@ public:
 	 * the value <code>"elementExample"</code>. Note that this is 
 	 * case-preserving in XML, as are all of the operations of the DOM. 
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getTagName() const;
 
 	/**
@@ -467,7 +464,7 @@ public:
 	 * @return The <code>DOM_Attr</code> value as a string, or the empty  string if 
 	 *   that attribute does not have a specified or default value.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getAttribute(const XalanDOMString&		name) const;
 
 	/**
@@ -596,7 +593,7 @@ public:
 	 * @return The <code>DOM_Attr</code> value as a string, or an empty string if
 	*    that attribute does not have a specified or default value.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getAttributeNS(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const;
@@ -737,15 +734,13 @@ private:
 	operator==(const XercesElementBridge&	theRHS) const;
 
 	// Data members...
-	DOM_Element							m_xercesNode;
+	XercesDOM_ElementHack				m_xercesNode;
 
 	const XercesBridgeNavigator&		m_navigator;
 
 	XercesNodeListBridge				m_children;
 
 	XercesNamedNodeMapBridge			m_attributes;
-
-	XercesElementNamedNodeListCache		m_cachedNodeLists;
 };
 
 

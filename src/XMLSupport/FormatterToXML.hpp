@@ -356,7 +356,16 @@ protected:
 	accum(XalanDOMChar	ch);
 
 	/**
-	 * Append a mull-termiated array of wide character to
+	 * Append a null-terminated array of characters to
+	 * the buffer.
+	 *
+	 * @chars the array to append
+	 */
+	void
+	accum(const char*	chars);
+
+	/**
+	 * Append a null-terminated array of wide characters to
 	 * the buffer.
 	 *
 	 * @chars the array to append
@@ -654,7 +663,7 @@ private:
 	 * @param name the name of the doctype.
 	 */
 	void
-	outputDocTypeDecl(const XalanDOMString&		name);
+	outputDocTypeDecl(const XalanDOMChar*	name);
 
 	/**
 	 * Process an attribute.

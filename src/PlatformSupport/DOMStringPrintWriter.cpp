@@ -67,9 +67,9 @@
 
 
 
-DOMStringPrintWriter::DOMStringPrintWriter(const XalanDOMString&	theBaseString) :
+DOMStringPrintWriter::DOMStringPrintWriter(XalanDOMString&	theString) :
 	PrintWriter(true),
-	m_outputString(theBaseString)
+	m_outputString(theString)
 {
 }
 
@@ -108,7 +108,7 @@ DOMStringPrintWriter::write(
 			unsigned int	theOffset,
 			unsigned int	theLength)
 {
-	write(XalanDOMString(s), theOffset, theLength);
+	write(TranscodeFromLocalCodePage(s), theOffset, theLength);
 }
 
 
@@ -171,7 +171,7 @@ DOMStringPrintWriter::write(
 			unsigned int			theOffset,
 			unsigned int			theLength)
 {
-	assert(s != 0);
+	assert(c_wstr(s) != 0);
 	assert(theLength == UINT_MAX || length(s) >= theOffset + theLength);
 
 	if (theOffset == 0 && theLength == UINT_MAX)

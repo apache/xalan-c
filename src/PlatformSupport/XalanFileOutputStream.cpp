@@ -64,8 +64,11 @@
 
 
 
+#include <Include/XalanAutoPtr.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -75,9 +78,13 @@ XalanFileOutputStream::XalanFileOutputStream(const XalanDOMString&		theFileName)
 	m_fileName(theFileName),
 	m_handle(0)
 {
-	const XalanArrayAutoPtr<char>	tmpName(theFileName.transcode());
+	const CharVectorType	theResult(TranscodeToLocalCodePage(theFileName));
 
-	m_handle = fopen(tmpName.get(), "wb");
+	assert(theResult.size() > 0);
+
+	const char* const	tmpName = &theResult[0];
+
+	m_handle = fopen(tmpName, "wb");
 
     if (m_handle == 0)
 	{
@@ -128,11 +135,11 @@ XalanFileOutputStream::writeData(
 
 static XalanDOMString
 FormatMessageLocal(
-			const XalanDOMString&	theMessage,
+			const char*				theMessage,
 			const XalanDOMString&	theFileName,
-			int					theErrorCode)
+			int						theErrorCode)
 {
-	XalanDOMString	theResult(clone(theMessage));
+	XalanDOMString	theResult(TranscodeFromLocalCodePage(theMessage));
 
 	theResult += theFileName;
 
@@ -145,9 +152,10 @@ using std::ostrstream;
 	theFormatter << ".  The error code was "
 				 << theErrorCode << "." << '\0';
 
-	theResult += theFormatter.str();
+	append(theResult, theFormatter.str());
 
 	delete theFormatter.str();
+
 	return theResult;
 }
 
@@ -160,7 +168,7 @@ XalanFileOutputStream::XalanFileOutputStreamOpenException::XalanFileOutputStream
 				"Error opening file: ",
 				theFileName,
 				theErrorCode),
-			XALAN_STATIC_UCODE_STRING("XalanFileOutputStreamOpenException"))
+			TranscodeFromLocalCodePage("XalanFileOutputStreamOpenException"))
 {
 }
 
@@ -179,7 +187,7 @@ XalanFileOutputStream::XalanFileOutputStreamWriteException::XalanFileOutputStrea
 				"Error writing file: ",
 				theFileName,
 				theErrorCode),
-			XALAN_STATIC_UCODE_STRING("XalanFileOutputStreamWriteException"))
+			TranscodeFromLocalCodePage("XalanFileOutputStreamWriteException"))
 {
 }
 

@@ -93,10 +93,6 @@
 
 
 
-#include <DOMSupport/DOMSupportDefault.hpp>
-
-
-
 #include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/XPathInit.hpp>
 #include <XPath/XObjectFactoryDefault.hpp>
@@ -115,6 +111,7 @@
 
 
 
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
 
@@ -655,7 +652,7 @@ TestPredicateResult(
 									  theXPath1);
 
 				theXPathProcessor.initXPath(*theXPath1,
-											"following-sibling::*",
+											TranscodeFromLocalCodePage("following-sibling::*"),
 											thePrefixResolver,
 											theXPathEnvSupport);
 
@@ -665,7 +662,7 @@ TestPredicateResult(
 									  theXPath2);
 
 				theXPathProcessor.initXPath(*theXPath2,
-											"descendant::*",
+											TranscodeFromLocalCodePage("descendant::*"),
 											thePrefixResolver,
 											theXPathEnvSupport);
 
@@ -835,7 +832,7 @@ TestNumericResults(
 
 			TestNumericResult(theXPathProcessor,
 							  *theXPath,
-							  theNumericTestInput[i],
+							  TranscodeFromLocalCodePage(theNumericTestInput[i]),
 							  thePrintWriter,
 							  theNumericTestExpectedOutput[i],
 							  theXPathEnvSupport,
@@ -966,9 +963,9 @@ TestStringResults(
 
 			TestStringResult(theXPathProcessor,
 							 *theXPath,
-							 theStringTestInput[i],
+							 TranscodeFromLocalCodePage(theStringTestInput[i]),
 							 thePrintWriter,
-							 theStringTestExpectedOutput[i],
+							 TranscodeFromLocalCodePage(theStringTestExpectedOutput[i]),
 							 theXPathEnvSupport,
 							 0,
 							 ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
@@ -1101,7 +1098,7 @@ TestBooleanResults(
 
 			TestBooleanResult(theXPathProcessor,
 							  *theXPath,
-							  theBooleanTestInput[i],
+							  TranscodeFromLocalCodePage(theBooleanTestInput[i]),
 							  thePrintWriter,
 							  theBooleanTestExpectedOutput[i],
 							  theXPathEnvSupport,
@@ -1257,7 +1254,7 @@ RunTests(
 		     theXPathEnvSupport,
 			 theXPathSupport,
 			 theLiaison,
-			 XALAN_STATIC_UCODE_STRING("/xsl-test/conf/Axes/"),
+			 StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("/xsl-test/conf/Axes/")),
 			 thePrintWriter,
 		     theExecutionContext);
 }
@@ -1286,7 +1283,7 @@ main(int			/* argc */,
 		XPathInit						theXPathInit;
 
 		XPathEnvSupportDefault			theXPathEnvSupport;
-		DOMSupportDefault				theDOMSupport;
+		XercesDOMSupport				theDOMSupport;
 		XPathSupportDefault				theXPathSupport(theDOMSupport);
 		XObjectFactoryDefault			theXObjectFactory;
 		XPathFactoryDefault				theXPathFactory;
@@ -1310,6 +1307,9 @@ main(int			/* argc */,
 	}
 
 	XMLPlatformUtils::Terminate();
+
+	const unsigned short	foo1 = '\f';
+	const unsigned short	foo2 = '\v';
 
 	return 0;
 }

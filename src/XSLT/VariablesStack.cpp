@@ -568,8 +568,8 @@ VariablesStack::StackEntry::operator==(const StackEntry&	theRHS) const
 
 
 VariablesStack::InvalidStackContextException::InvalidStackContextException() :
-	XSLTProcessorException(XALAN_STATIC_UCODE_STRING("Invalid stack context"),
-						   XALAN_STATIC_UCODE_STRING("InvalidStackContextException"))
+	XSLTProcessorException(TranscodeFromLocalCodePage("Invalid stack context"),
+						   TranscodeFromLocalCodePage("InvalidStackContextException"))
 {
 }
 

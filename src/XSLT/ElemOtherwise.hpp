@@ -57,13 +57,6 @@
 #if !defined(XALAN_ELEMOTHERWISE_HEADER_GUARD)
 #define XALAN_ELEMOTHERWISE_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
 
 
 // Base include file.  Must be first.
@@ -93,7 +86,7 @@ public:
 	ElemOtherwise(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);

@@ -85,6 +85,7 @@ class DOMSupport;
 class EntityResolver;
 class InputSource;
 class SAXParser;
+class XercesDOMSupport;
 class XercesDocumentBridge;
 class XSLProcessor;
 
@@ -99,7 +100,7 @@ public:
 	 *
 	 * @param theSupport		   instance of DOMSupport object
 	 */
-	XercesParserLiaison(DOMSupport&		theSupport);
+	XercesParserLiaison(XercesDOMSupport&	theSupport);
 
 	virtual
 	~XercesParserLiaison();
@@ -114,12 +115,12 @@ public:
 
 	virtual XalanDocument*
 	parseXMLStream(
-			InputSource&			reader,
+			const InputSource&		reader,
 			const XalanDOMString&	identifier = XalanDOMString());
 
 	virtual void
 	parseXMLStream(
-			InputSource&			urlInputSource,
+			const InputSource&		urlInputSource,
 			DocumentHandler&		handler,
 			const XalanDOMString&	identifier = XalanDOMString());
 
@@ -129,10 +130,10 @@ public:
 	virtual XalanDocument*
 	getDOMFactory();
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getExpandedElementName(const XalanElement&	elem) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getExpandedAttributeName(const XalanAttr&	attr) const;
 
 	virtual void
@@ -406,7 +407,7 @@ protected:
 private:
 
 	// Data members...
-	DOMSupport& 		m_DOMSupport;
+	XercesDOMSupport& 	m_DOMSupport;
 
 	XalanDOMString		m_specialCharacters;
 

@@ -72,10 +72,6 @@
 
 
 
-#include <XPath/QName.hpp>
-
-
-
 #include "Constants.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
@@ -250,7 +246,7 @@ NamespacesHandler::processExcludeResultPrefixes(
 
 		if(length(theNamespace) == 0)
 		{
-			XalanDOMString	theMessage("Invalid prefix in exclude-result-prefixes: ");
+			XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid prefix in exclude-result-prefixes: "));
 
 			theMessage += thePrefix;
 
@@ -287,7 +283,7 @@ NamespacesHandler::processExtensionElementPrefixes(
 
 		if(length(theNamespace) == 0)
 		{
-			XalanDOMString	theMessage("Invalid prefix in extension-element-prefixes: ");
+			XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid prefix in extension-element-prefixes: "));
 
 			theMessage += thePrefix;
 

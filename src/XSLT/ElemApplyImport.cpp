@@ -79,7 +79,7 @@
 ElemApplyImport::ElemApplyImport(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber, 
 			int								columnNumber) :

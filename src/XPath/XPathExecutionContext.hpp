@@ -197,7 +197,7 @@ public:
 	 * @param n DOM node queried
 	 * @return namespace string corresponding to 'n'
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceOfNode(const XalanNode&		n) const = 0;
 
 	/**
@@ -208,7 +208,7 @@ public:
 	 * @param node	DOM node whose name is returned
 	 * @return name of the node
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNameOfNode(const XalanNode&	n) const = 0;
 
 	/**
@@ -217,7 +217,7 @@ public:
 	 * @param n node queried
 	 * @return local name string corresponding to 'n'
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalNameOfNode(const XalanNode&		n) const = 0;
 
 	/**
@@ -243,13 +243,14 @@ public:
 
 	/**
 	 * Get node data recursively.
-	 * (Note whitespace issues.)
 	 * 
 	 * @param n DOM node queried
-	 * @return string of data for node 'n'
+	 * @param s string to which the node's data will be appended.
 	 */
-	virtual XalanDOMString
-	getNodeData(const XalanNode&	n) const = 0;
+	virtual void
+	getNodeData(
+			const XalanNode&	n,
+			XalanDOMString&		s) const = 0;
 
 	/**
 	 * Given a valid element id, return the corresponding element.
@@ -260,8 +261,8 @@ public:
 	 */
 	virtual XalanElement*
 	getElementByID(
-			const XalanDOMString&		id,
-			const XalanDocument&		doc) const = 0;
+			const XalanDOMString&	id,
+			const XalanDocument&	doc) const = 0;
 
 	/**
 	 * Retrieve node list for current context.
@@ -612,7 +613,7 @@ public:
 	 * @param prefix prefix for a namespace
 	 * @return URI corresponding to namespace
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const = 0;
 
 	/**
@@ -681,22 +682,6 @@ public:
 	virtual void
 	setThrowFoundIndex(bool 	fThrow) = 0;
 
-	/**
-	 * Sets the current match pattern.
-	 *
-	 * @param thePattern new match pattern
-	 */
-	virtual void
-	setCurrentPattern(const XalanDOMString&		thePattern) = 0;
-
-	/**
-	 * Retrieve the current match pattern.
-	 *
-	 * @return current match pattern
-	 */
-	virtual XalanDOMString
-	getCurrentPattern() const = 0;
-
 	virtual XalanDocument*
 	getSourceDocument(const XalanDOMString&		theURI) const = 0;
 
@@ -731,16 +716,34 @@ public:
 			const XalanNode*		styleNode = 0) const = 0;
 
 	virtual void
+	error(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const = 0;
+
+	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const = 0;
+			const XalanNode* 		styleNode = 0) const = 0;
+
+	virtual void
+	warn(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const = 0;
 
 	virtual void
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const = 0;
+			const XalanNode* 		styleNode = 0) const = 0;
+
+	virtual void
+	message(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const = 0;
 };
 
 

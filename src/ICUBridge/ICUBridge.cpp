@@ -60,7 +60,6 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/XalanAutoPtr.hpp>
 #include <PlatformSupport/XalanDecimalFormatSymbols.hpp>
 
 
@@ -72,6 +71,10 @@
 #include <unicode/coll.h>
 #include <unicode/dcfmtsym.h>
 #include <unicode/decimfmt.h>
+
+
+
+#include <Include/XalanAutoPtr.hpp>
 
 
 

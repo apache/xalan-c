@@ -69,6 +69,7 @@
 
 
 
+class XObject;
 class XPath;
 
 
@@ -90,7 +91,7 @@ public:
 	ElemValueOf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
@@ -119,6 +120,18 @@ private:
 	outputValue(
 			StylesheetExecutionContext&		executionContext,
 			const XalanDOMString&			theValue) const;
+
+	void
+	fireSelectionEvent(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceNode,
+			const XalanDOMString&			theValue) const;
+
+	void
+	fireSelectionEvent(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceNode,
+			const XObject*					theValue) const;
 
 	/**
 	 * The select pattern used to locate the value.

@@ -70,7 +70,7 @@
 
 
 
-#include <PlatformSupport/XalanAutoPtr.hpp>
+#include <Include/XalanAutoPtr.hpp>
 
 
 

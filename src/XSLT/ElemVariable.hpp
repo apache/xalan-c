@@ -103,7 +103,7 @@ public:
 	ElemVariable(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber,
@@ -111,19 +111,6 @@ public:
 
 	virtual
 	~ElemVariable();
-
-	/**
-	 * Get the XObject representation of the variable.
-	 * 
-	 * @param executionContext current execution context
-	 * @param sourceTree       input source tree
-	 * @param sourceNode       current context node
-	 */
-//	XObject*
-//	getValue(
-//			StylesheetExecutionContext&		executionContext,
-//			XalanNode*						sourceTree, 
-//			XalanNode*						sourceNode) const;
 
 	/**
 	 * Determines if this is a top level variable.
@@ -166,6 +153,12 @@ public:
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
+
+	void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode) const;
 
 protected:
 

@@ -94,7 +94,7 @@ public:
 	ElemLiteralResult(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber,
@@ -159,8 +159,8 @@ private:
 	processPrefixControl(
 			StylesheetConstructionContext&	constructionContext,
 			const Stylesheet&				stylesheetTree,
-			const XalanDOMString&			localName, 
-			const XalanDOMString&			attrValue);
+			const XalanDOMString&			localName,
+			const XalanDOMChar*				attrValue);
 
 	/**
 	 * Determine if the namespace node should be excluded.

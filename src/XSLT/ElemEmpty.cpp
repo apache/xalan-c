@@ -68,7 +68,7 @@
 ElemEmpty::ElemEmpty(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,

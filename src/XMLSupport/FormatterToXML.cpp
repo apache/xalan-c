@@ -158,7 +158,7 @@ FormatterToXML::FormatterToXML(
 		catch(const XalanOutputStream::UnsupportedEncodingException&)
 		{
 			// Default to UTF-8 if the requested encoding is not supported...
-			theStream->setOutputEncoding(XalanTranscodingServices::s_utf8String);
+			theStream->setOutputEncoding(XalanDOMString(XalanTranscodingServices::s_utf8String));
 
 			m_encoding = XalanTranscodingServices::s_utf8String;
 		}
@@ -242,7 +242,7 @@ FormatterToXML::initCharsMap()
 
 
 void
-FormatterToXML::outputDocTypeDecl(const XalanDOMString& 	name)
+FormatterToXML::outputDocTypeDecl(const XalanDOMChar* 	name)
 {
 	accum(s_doctypeHeaderStartString);	// "<!DOCTYPE "
 
@@ -303,11 +303,22 @@ FormatterToXML::accum(XalanDOMChar	ch)
 
 
 void
+FormatterToXML::accum(const char*	chars)
+{
+	for(; *chars!= 0; ++chars)
+	{
+		accum(XalanDOMChar(*chars));
+	}
+}
+
+
+
+void
 FormatterToXML::accum(const XalanDOMChar*	chars)
 {
-	for(const XalanDOMChar*	current = chars; *current != 0; ++current)
+	for(; *chars!= 0; ++chars)
 	{
-		accum(*current);
+		accum(*chars);
 	}
 }
 
@@ -348,9 +359,9 @@ FormatterToXML::accum(const XalanDOMCharVectorType& 	theVector)
 void
 FormatterToXML::throwInvalidUTF16SurrogateException(XalanDOMChar	ch)
 {
-	const XalanDOMString	theMessage("Invalid UTF-16 surrogate detected: " +
+	const XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid UTF-16 surrogate detected: ") +
 									   UnsignedLongToHexDOMString(ch) +
-									   " ?");
+									   TranscodeFromLocalCodePage(" ?"));
 
 	throw SAXException(c_wstr(theMessage));
 }
@@ -362,10 +373,10 @@ FormatterToXML::throwInvalidUTF16SurrogateException(
 			XalanDOMChar	ch,
 			unsigned int	next)
 {
-	const XalanDOMString	theMessage("Invalid UTF-16 surrogate detected: " +
+	const XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid UTF-16 surrogate detected: ") +
 									   UnsignedLongToHexDOMString(ch) +
 									   UnsignedLongToHexDOMString(next) +
-									   " ?");
+									   TranscodeFromLocalCodePage(" ?"));
 
 	throw SAXException(c_wstr(theMessage));
 }
@@ -572,25 +583,6 @@ FormatterToXML::startDocument()
 
 		if(m_shouldWriteXMLHeader == true)
 		{
-			XalanDOMString	encoding = m_encoding;
-
-			if(isEmpty(encoding) == true)
-			{
-				/*
-				java:
-				try
-				{
-					encoding = System.getProperty("file.encoding");
-					encoding = FormatterToXML.convertJava2MimeEncoding( encoding ); 
-				}
-				catch(SecurityException se)
-				{
-					encoding = "ISO-8859-1";
-				}
-				 */
-				encoding = XALAN_STATIC_UCODE_STRING("ISO-8859-1");
-			}
-
 			accum(s_xmlHeaderStartString);	// "<?xml version=\""
 
 			if (length(m_version) != 0)
@@ -603,7 +595,15 @@ FormatterToXML::startDocument()
 			}
 
 			accum(s_xmlHeaderEncodingString);	// "\" encoding=\""
-			accum(encoding);
+
+			if (isEmpty(m_encoding) == true)
+			{
+				accum(XALAN_STATIC_UCODE_STRING("ISO-8859-1"));
+			}
+			else
+			{
+				accum(m_encoding);
+			}
 
 			if (length(m_standalone) != 0)
 			{
@@ -940,7 +940,16 @@ FormatterToXML::writeNormalizedChars(
 
 			if(i != 0 && i < end - 1)
 			{
-				accum(XALAN_STATIC_UCODE_STRING("<![CDATA["));
+				// "<![CDATA["
+				accum(XalanUnicode::charLessThanSign);
+				accum(XalanUnicode::charExclamationMark);
+				accum(XalanUnicode::charLeftSquareBracket);
+				accum(XalanUnicode::charLetter_C);
+				accum(XalanUnicode::charLetter_D);
+				accum(XalanUnicode::charLetter_A);
+				accum(XalanUnicode::charLetter_T);
+				accum(XalanUnicode::charLetter_A);
+				accum(XalanUnicode::charLeftSquareBracket);
 			}
 		}
 		else if(isCData == true &&
@@ -949,7 +958,22 @@ FormatterToXML::writeNormalizedChars(
                 XalanUnicode::charRightSquareBracket == ch[i + 1] &&
 				XalanUnicode::charGreaterThanSign == ch[ i + 2])
 		{
-			accum(XALAN_STATIC_UCODE_STRING("]]]]><![CDATA[>"));
+			// "]]]]><![CDATA[>"
+			accum(XalanUnicode::charRightSquareBracket);
+			accum(XalanUnicode::charRightSquareBracket);
+			accum(XalanUnicode::charRightSquareBracket);
+			accum(XalanUnicode::charRightSquareBracket);
+			accum(XalanUnicode::charGreaterThanSign);
+			accum(XalanUnicode::charLessThanSign);
+			accum(XalanUnicode::charExclamationMark);
+			accum(XalanUnicode::charLeftSquareBracket);
+			accum(XalanUnicode::charLetter_C);
+			accum(XalanUnicode::charLetter_D);
+			accum(XalanUnicode::charLetter_A);
+			accum(XalanUnicode::charLetter_T);
+			accum(XalanUnicode::charLetter_A);
+			accum(XalanUnicode::charLeftSquareBracket);
+			accum(XalanUnicode::charGreaterThanSign);
 
 			i += 2;
 		}

@@ -109,10 +109,10 @@ public:
 
 
 	// These interfaces are inherited from XalanDocumentFragment...
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeName() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeValue() const;
 
 	virtual NodeType
@@ -179,13 +179,13 @@ public:
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getPrefix() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalName() const;
 
 	virtual void
@@ -196,9 +196,6 @@ public:
 
 	virtual unsigned long
 	getIndex() const;
-
-	virtual XalanDOMString
-	getXSLTData() const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual ResultTreeFragBase*
@@ -234,6 +231,8 @@ private:
 #endif
 
 	NodeVectorType	m_children;
+
+	static const XalanDOMString		s_emptyString;
 };
 
 

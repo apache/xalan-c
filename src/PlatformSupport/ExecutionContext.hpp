@@ -100,6 +100,19 @@ public:
 			const XalanNode* 		styleNode = 0) const = 0;
 
 	/**
+	 * Tell the user of an error, and probably throw an exception.
+	 * 
+	 * @param msg        text of message to output
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
+	 */
+	virtual void
+	error(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const = 0;
+
+	/**
 	 * Tell the user of an warning, and probably throw an exception.
 	 * 
 	 * @param msg        text of message to output
@@ -113,6 +126,19 @@ public:
 			const XalanNode* 		styleNode = 0) const = 0;
 
 	/**
+	 * Tell the user of an warning, and probably throw an exception.
+	 * 
+	 * @param msg        text of message to output
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
+	 */
+	virtual void
+	warn(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const = 0;
+
+	/**
 	 * Output a message.
 	 * 
 	 * @param msg        text of message to output
@@ -124,6 +150,19 @@ public:
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
 			const XalanNode* 		styleNode = 0) const = 0;
+
+	/**
+	 * Output a message.
+	 * 
+	 * @param msg        text of message to output
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
+	 */
+	virtual void
+	message(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const = 0;
 };
 
 

@@ -119,7 +119,11 @@ public:
 
 		for (unsigned int i = 0; i < count; i++)
 		{
-			sum += DoubleSupport::toDouble(executionContext.getNodeData(*nl.item(i)));
+			XalanDOMString	theData;
+
+			executionContext.getNodeData(*nl.item(i), theData);
+
+			sum += DoubleSupport::toDouble(theData);
 		}
 
 		return executionContext.getXObjectFactory().createNumber(sum);

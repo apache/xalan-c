@@ -70,6 +70,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include <XPath/XPath.hpp>
 
 
@@ -139,8 +143,8 @@ KeyTable::KeyTable(
 					if (executionContext.getInConstruction(kd) == true)			
 					{
 						throw XSLTProcessorException(
-							"The use of the key() function in the \"match\" or \"use\" attribute of xsl:key is illegal!",
-							"XSLTKeyIllegalKeyFunctionException");
+							TranscodeFromLocalCodePage("The use of the key() function in the \"match\" or \"use\" attribute of xsl:key is illegal!"),
+							TranscodeFromLocalCodePage("XSLTKeyIllegalKeyFunctionException"));
 					}
 					else
 					{
@@ -195,7 +199,7 @@ KeyTable::KeyTable(
 									XalanNode* const	useNode = nl->item(k);
 									assert(useNode != 0);
 
-									exprResult = useNode->getXSLTData();
+									exprResult = DOMServices::getNodeData(*useNode);
 								}
 
 								MutableNodeRefList&		keyNodes =

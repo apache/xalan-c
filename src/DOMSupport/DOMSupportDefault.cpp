@@ -77,7 +77,8 @@
 
 DOMSupportDefault::DOMSupportDefault() :
 	DOMSupport(),
-	m_resolver()
+	m_resolver(),
+	m_pool()
 {
 }
 
@@ -97,7 +98,7 @@ DOMSupportDefault::reset()
 
 
 
-XalanDOMString
+const XalanDOMString&
 DOMSupportDefault::getNamespaceOfNode(const XalanNode&	theNode) const
 {
 	return m_resolver.getNamespaceOfNode(theNode);
@@ -105,22 +106,53 @@ DOMSupportDefault::getNamespaceOfNode(const XalanNode&	theNode) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 DOMSupportDefault::getExpandedElementName(const XalanElement&	elem) const
 {
-	const XalanDOMString	theNamespace = getNamespaceOfNode(elem);
-
-	return (0 != length(theNamespace)) ? theNamespace + DOMServices::s_XMLNamespaceSeparatorString + DOMServices::getLocalNameOfNode(elem) 
-									: DOMServices::getLocalNameOfNode(elem);
+	return getExpandedName(elem);
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 DOMSupportDefault::getExpandedAttributeName(const XalanAttr&	attr) const
 {
-	const XalanDOMString	theNamespace = getNamespaceOfNode(attr);
+	return getExpandedName(attr);
+}
 
-	return (0 != length(theNamespace)) ? theNamespace + DOMServices::s_XMLNamespaceSeparatorString + DOMServices::getLocalNameOfNode(attr) 
-                                 : DOMServices::getLocalNameOfNode(attr);
+
+
+const XalanDOMString&
+DOMSupportDefault::getExpandedName(const XalanNode&		node) const
+{
+	const XalanDOMString&	theNamespace = getNamespaceOfNode(node);
+
+	const unsigned int		theNamespaceLength = length(theNamespace);
+
+	if (0 == theNamespaceLength)
+	{
+		return DOMServices::getLocalNameOfNode(node);
+	}
+	else
+	{
+		const XalanDOMString&	theLocalName = DOMServices::getLocalNameOfNode(node);
+
+		XalanDOMString	theResult;
+
+		reserve(
+				theResult,
+				theNamespaceLength + DOMServices::s_XMLNamespaceSeparatorStringLength + length(theLocalName) + 1);
+
+		theResult = theNamespace;
+
+		append(theResult, DOMServices::s_XMLNamespaceSeparatorString);
+
+		append(theResult, theLocalName);
+
+#if defined(XALAN_NO_MUTABLE)
+		return ((DOMSupportDefault*)this)->m_pool.get(theResult);
+#else
+		return m_pool.get(theResult);
+#endif
+	}
 }

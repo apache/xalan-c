@@ -122,9 +122,9 @@ public:
      */
 	virtual XalanDocumentType*
 	createDocumentType(
-			const DOMString&	qualifiedName,
-			const DOMString&	publicId,
-			const DOMString&	systemId);
+			const XalanDOMString&	qualifiedName,
+			const XalanDOMString&	publicId,
+			const XalanDOMString&	systemId);
 
     /**
      * Creates an XML <code>DOM_Document</code> object of the specified type

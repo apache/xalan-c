@@ -77,7 +77,7 @@
 ElemElement::ElemElement(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -112,13 +112,13 @@ ElemElement::ElemElement(
 		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) || processSpaceAttr(aname, atts, i) ||
 			isAttrOK(aname, atts, i, constructionContext)))
 		{
-			constructionContext.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 		}
 	}
 
 	if(0 == m_nameAVT)
 	{
-		constructionContext.error(name + " must have a name attribute.");
+		constructionContext.error(XalanDOMString(name) + " must have a name attribute.");
 	}
 	
 }
@@ -171,15 +171,15 @@ ElemElement::execute(
 
 	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext);
 
-	bool				isIllegalElement = false;
+	bool					isIllegalElement = false;
 
-	unsigned int		len = length(elemName);
+	unsigned int			len = length(elemName);
 
-	const unsigned int	indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
+	const unsigned int		indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
 
-	const bool			haveNamespace = indexOfNSSep == len ? false : true;
+	const bool				haveNamespace = indexOfNSSep == len ? false : true;
 
-	XalanDOMString	ns;
+	const XalanDOMString*	ns = 0;
 
 	if(haveNamespace == true)
 	{
@@ -196,21 +196,20 @@ ElemElement::execute(
 
 	if (isIllegalElement == true)
 	{
-		XalanDOMString	msg("Illegal element name!");
-
-		executionContext.warn(msg, sourceNode, this);
+		executionContext.warn("Illegal element name!", sourceNode, this);
 
 		clear(elemName);
+
 		len = 0;
 	}
 	else if (haveNamespace == true)
 	{
 		const XalanDOMString	nsprefix = substring(elemName, 0, indexOfNSSep);
 
-		ns = getNamespaceForPrefixInternal(nsprefix, false);
+		ns = &getNamespaceForPrefixInternal(nsprefix, false);
 	}
 
-	const unsigned int	nsLength = length(ns);
+	const unsigned int	nsLength = ns == 0 ? 0 : length(*ns);
 
 	if (len != 0 && (haveNamespace == false || nsLength != 0))
 	{
@@ -222,24 +221,51 @@ ElemElement::execute(
 
 			if(!isEmpty(elemNameSpace))
 			{
-				XalanDOMString		prefix = executionContext.getResultPrefixForNamespace(elemNameSpace);
-
-				if(isEmpty(prefix))
-				{
-					prefix = executionContext.getUniqueNameSpaceValue();
-
-					const XalanDOMString	nsDecl =
-						DOMServices::s_XMLNamespaceWithSeparator + prefix;
-
-					executionContext.addResultAttribute(nsDecl, elemNameSpace);
-				}
-
 				if(indexOfNSSep < len)
 				{
 					elemName = substring(elemName, indexOfNSSep + 1);
 				}
 
-				elemName = prefix + DOMServices::s_XMLNamespaceSeparatorString + elemName;
+				const XalanDOMString&	prefix = executionContext.getResultPrefixForNamespace(elemNameSpace);
+
+				if(isEmpty(prefix) == false)
+				{
+#if defined(XALAN_USE_XERCES_DOMSTRING)
+					elemName = prefix + DOMServices::s_XMLNamespaceSeparatorString + elemName;
+#else
+					reserve(
+						elemName,
+						length(elemName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(prefix) + 1);
+
+					insert(elemName, 0, DOMServices::s_XMLNamespaceSeparatorString);
+					insert(elemName, 0, prefix);
+#endif
+				}
+				else
+				{
+					const XalanDOMString	newPrefix(executionContext.getUniqueNameSpaceValue());
+
+					XalanDOMString			nsDecl;
+
+					reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
+
+					nsDecl = XalanDOMString(DOMServices::s_XMLNamespaceWithSeparator);
+
+					append(nsDecl, newPrefix);
+
+					executionContext.addResultAttribute(nsDecl, elemNameSpace);
+
+#if defined(XALAN_USE_XERCES_DOMSTRING)
+					elemName = newPrefix + DOMServices::s_XMLNamespaceSeparatorString + elemName;
+#else
+					reserve(
+						elemName,
+						length(elemName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
+
+					insert(elemName, 0, DOMServices::s_XMLNamespaceSeparatorString);
+					insert(elemName, 0, newPrefix);
+#endif
+				}
 			}
 		}
 

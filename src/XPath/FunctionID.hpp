@@ -84,6 +84,7 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -282,9 +283,9 @@ private:
 
 			for (unsigned int i = 0 ; i < theNodeCount; i++)
 			{
-				m_resultString += m_executionContext.getNodeData(*theValue.item(i));
+				m_executionContext.getNodeData(*theValue.item(i), m_resultString);
 
-				m_resultString += " ";
+				append(m_resultString, XalanUnicode::charSpace);
 			}
 		}
 

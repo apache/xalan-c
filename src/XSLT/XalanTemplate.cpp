@@ -168,7 +168,7 @@
 
 static numeric_limits<double> theDoubleLimits;
 static string theString;
-static vector<DOMString> theDOMStringVector;
+static vector<XalanDOMString> theDOMStringVector;
 static vector<char> theCharVector;
 static vector<unsigned char> theUnsignedCharVector;
 static AttributeListImpl::AttributeVectorType theAttributeVectorEntryVector;

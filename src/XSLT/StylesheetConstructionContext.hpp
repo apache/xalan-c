@@ -135,7 +135,7 @@ public:
 	 * @return A pointer to a new StylesheetRoot instance.
 	 */
 	virtual StylesheetRoot*
-	create(XSLTInputSource&		theInputSource) = 0;
+	create(const XSLTInputSource&	theInputSource) = 0;
 
 	/**
 	 * Create a new Stylesheet instance.  The StylesheetConstructionContext
@@ -170,6 +170,17 @@ public:
 	 */
 	virtual int
 	getAttrTok(const XalanDOMString&	name) const = 0;
+
+	/**
+	 * Given an XSL tag name, return an integer token that corresponds to
+	 * ELEMNAME_XXX constants defined in Constants.hpp.
+	 *
+	 * @param name a probable xsl:xxx element name
+	 * @return Constants.ELEMNAME_XXX token, or -1 if in xsl or Xalan namespace,
+	 * -2 if not in known namespace
+	 */
+	virtual int
+	getAttrTok(const XalanDOMChar*	name) const = 0;
 
 	/**
 	 * Determine the fully qualified URI for a string.
@@ -237,6 +248,20 @@ public:
 			const PrefixResolver&	resolver) = 0;
 
 	/**
+	 * Create and initialize an xpath for a match pattern and return it. This
+	 * is to be used by stylesheet elements that need an XPath that is
+	 * guaranteed to persist while it lives.
+	 *
+	 * @param str      string to match
+	 * @param resolver resolver for namespace resolution
+	 * @return XPath for match pattern
+	 */
+	virtual XPath*
+	createMatchPattern(
+			const XalanDOMChar*		str,
+			const PrefixResolver&	resolver) = 0;
+
+	/**
 	 * Create and initialize an xpath and return it. This is to be used by
 	 * stylesheet elements that need an XPath that is guaranteed to persist
 	 * while it lives.
@@ -248,6 +273,20 @@ public:
 	virtual XPath*
 	createXPath(
 			const XalanDOMString&	str,
+			const PrefixResolver&	resolver) = 0;
+
+	/**
+	 * Create and initialize an xpath and return it. This is to be used by
+	 * stylesheet elements that need an XPath that is guaranteed to persist
+	 * while it lives.
+	 *
+	 * @param str      string to match
+	 * @param resolver resolver for namespace resolution
+	 * @return XPath for string matched
+	 */
+	virtual XPath*
+	createXPath(
+			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver) = 0;
 
 	/**
@@ -326,17 +365,34 @@ public:
 			const XalanNode*		styleNode = 0) const = 0;
 
 	virtual void
+	error(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const = 0;
+
+	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const = 0;
+			const XalanNode* 		styleNode = 0) const = 0;
+
+	virtual void
+	warn(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const = 0;
 
 	virtual void
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const = 0;
+			const XalanNode* 		styleNode = 0) const = 0;
 
+	virtual void
+	message(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const = 0;
 };
 
 

@@ -176,14 +176,8 @@ public:
 			const XalanDOMString&	theMessage,
 			const void*				theKey);
 
-	virtual const AttributeList&
-	getPendingAttributes() const;
-
-	virtual XalanDOMString
-	getPendingElementName() const;
-
-	virtual void
-	setPendingAttributes(const AttributeList&	pendingAttributes);
+	virtual bool
+	isElementPending() const;
 
 	virtual void
 	replacePendingAttribute(
@@ -192,7 +186,10 @@ public:
 			const XalanDOMChar*		theNewValue);
 
 	virtual void
-	setPendingElementName(const XalanDOMString&		elementName);
+	pushOutputContext(FormatterListener*	flistener = 0);
+
+	virtual void
+	popOutputContext();
 
 	virtual void
 	addResultAttribute(
@@ -218,18 +215,6 @@ public:
 
 	virtual void
 	setFormatterListener(FormatterListener*		flistener);
-
-	virtual bool
-	getHasPendingStartDocument() const;
-
-	virtual void
-	setHasPendingStartDocument(bool	b);
-
-	virtual bool
-	getMustFlushPendingStartDocument() const;
-
-	virtual void
-	setMustFlushPendingStartDocument(bool	b);
 
 	virtual int
 	getIndent() const;
@@ -604,13 +589,13 @@ public:
 	virtual bool
 	isIgnorableWhitespace(const XalanText&	node) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceOfNode(const XalanNode&		n) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNameOfNode(const XalanNode&	n) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalNameOfNode(const XalanNode&		n) const;
 
 	virtual XalanNode*
@@ -621,13 +606,15 @@ public:
 			const XalanNode&	node1,
 			const XalanNode&	node2) const;
 
-	virtual XalanDOMString
-	getNodeData(const XalanNode&	n) const;
+	virtual void
+	getNodeData(
+			const XalanNode&	n,
+			XalanDOMString&		s) const;
 
 	virtual XalanElement*
 	getElementByID(
-			const XalanDOMString&		id,
-			const XalanDocument&		doc) const;
+			const XalanDOMString&	id,
+			const XalanDocument&	doc) const;
 
 	virtual const NodeRefListBase&
 	getContextNodeList() const;
@@ -706,7 +693,7 @@ public:
 	virtual void
 	setPrefixResolver(const PrefixResolver*		thePrefixResolver);
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
 
 	virtual XalanDOMString
@@ -729,12 +716,6 @@ public:
 	virtual void
 	setThrowFoundIndex(bool 	fThrow);
 
-	virtual void
-	setCurrentPattern(const XalanDOMString&		thePattern);
-
-	virtual XalanDOMString
-	getCurrentPattern() const;
-
 	virtual XalanDocument*
 	getSourceDocument(const XalanDOMString&		theURI) const;
 
@@ -753,16 +734,34 @@ public:
 			const XalanNode*		styleNode = 0) const;
 
 	virtual void
+	error(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const;
+
+	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const;
+			const XalanNode* 		styleNode = 0) const;
+
+	virtual void
+	warn(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const;
 
 	virtual void
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const;
+			const XalanNode* 		styleNode = 0) const;
+
+	virtual void
+	message(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const;
 
 
 	class XPathCacheReturnFunctor

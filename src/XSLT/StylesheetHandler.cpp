@@ -77,7 +77,7 @@
 #include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
 #include <PlatformSupport/STLHelper.hpp>
-#include <PlatformSupport/XalanAutoPtr.hpp>
+
 
 
 
@@ -116,6 +116,10 @@
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetRoot.hpp"
+
+
+
+#include <Include/XalanAutoPtr.hpp>
 
 
 
@@ -290,7 +294,7 @@ StylesheetHandler::startElement(
 		// First push namespaces
 		m_stylesheet.pushNamespaces(atts);
 
-		const XalanDOMString	ns = m_stylesheet.getNamespaceFromStack(name);
+		const XalanDOMString&	ns = m_stylesheet.getNamespaceFromStack(name);
 
 		const unsigned int		nameLength = length(name);
 		const unsigned int		index = indexOf(name, XalanUnicode::charColon);
@@ -300,7 +304,7 @@ StylesheetHandler::startElement(
 		if(length(ns) == 0 && nameLength != length(localName))
 		{
 			// Warn that there is a prefix that was not resolved...
-			m_constructionContext.warn(XalanDOMString("Could not resolve prefix ") + name);
+			m_constructionContext.warn("Could not resolve prefix " + XalanDOMString(name));
 		}
 
 		ElemTemplateElement* elem = 0;
@@ -368,7 +372,7 @@ StylesheetHandler::startElement(
 				break;
 
 				case Constants::ELEMNAME_LOCALE:
-					m_constructionContext.warn(XALAN_STATIC_UCODE_STRING("xsl:locale not yet supported!"));
+					m_constructionContext.warn(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("xsl:locale not yet supported!")));
 					break;
 
 				case Constants::ELEMNAME_PRESERVESPACE:
@@ -603,9 +607,7 @@ StylesheetHandler::startElement(
 
 					if (fVersionFound == false)
 					{
-						const XalanDOMString		msg("The stylesheet element did not specify a version attribute!");
-
-						throw SAXException(toCharArray(msg));
+						throw SAXException(c_wstr(TranscodeFromLocalCodePage("The stylesheet element did not specify a version attribute!")));
 					}
 				}
 				break;
@@ -614,7 +616,7 @@ StylesheetHandler::startElement(
 				{
 					XalanDOMString msg("Unknown XSL element: " + localName);
 
-					throw SAXException(toCharArray(msg));
+					throw SAXException(c_wstr(TranscodeFromLocalCodePage("Unknown XSL element: ") + localName));
 				}
 				break;
 
@@ -1071,12 +1073,16 @@ StylesheetHandler::startElement(
 }
 
 
-ElemTemplateElement* StylesheetHandler::initWrapperless (const XalanDOMString& name,
-	const AttributeList& atts, int lineNumber, int columnNumber)
+ElemTemplateElement*
+StylesheetHandler::initWrapperless (
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			int						lineNumber,
+			int						columnNumber)
 {
 	m_stylesheet.getStylesheetRoot().initDefaultRule(m_constructionContext);
 
-	AttributeListImpl templateAttrs;
+	AttributeListImpl	templateAttrs;
 
 	templateAttrs.addAttribute(c_wstr(Constants::ATTRNAME_NAME),
 							   c_wstr(Constants::ATTRTYPE_CDATA),
@@ -1084,7 +1090,7 @@ ElemTemplateElement* StylesheetHandler::initWrapperless (const XalanDOMString& n
 
 	m_pTemplate = new ElemTemplate(m_constructionContext,
 								   m_stylesheet,
-								   Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING,
+								   c_wstr(Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING),
 								   templateAttrs,
 								   lineNumber,
 								   columnNumber);
@@ -1161,7 +1167,7 @@ StylesheetHandler::processImport(
 			
 			const XalanDOMString	saved_XSLNameSpaceURL = m_stylesheet.getXSLTNamespaceURI();
 
-			const XalanDOMString	href = atts.getValue(i);
+			const XalanDOMString	href(atts.getValue(i));
 
 			Stylesheet::URLStackType& includeStack = m_stylesheet.getIncludeStack();
 			assert(includeStack.size() > 0);
@@ -1232,9 +1238,9 @@ StylesheetHandler::processInclude(
 
 			PushPopIncludeState		theStateHandler(*this);
 
-			const XalanDOMString	href = atts.getValue(i);
+			const XalanDOMString	href(atts.getValue(i));
 		
-			assert(m_stylesheet.getIncludeStack().back() != 0);
+			assert(c_wstr(m_stylesheet.getIncludeStack().back()) != 0);
 			const XalanDOMString	hrefUrl = m_constructionContext.getURLStringFromString(href, m_stylesheet.getIncludeStack().back());
 
 			if(stackContains(m_stylesheet.getIncludeStack(), hrefUrl))
@@ -1336,9 +1342,9 @@ StylesheetHandler::endElement(const XMLCh* const name)
 		
 		// reset state
 		m_inLXSLTScript = false;
-		m_LXSLTScriptLang = 0;
-		m_LXSLTScriptSrcURL = 0;
-		m_LXSLTScriptBody = 0;
+		clear(m_LXSLTScriptLang);
+		clear(m_LXSLTScriptSrcURL);
+		clear(m_LXSLTScriptBody);
 		m_pLXSLTExtensionNSH = 0;
 	}
 	// END SANJIVA CODE
@@ -1385,7 +1391,7 @@ StylesheetHandler::characters(
 			false, preserveSpace, 
 			disableOutputEscaping);
 
-		const bool isWhite = isWhitespace(chars, 0, length);
+		const bool isWhite = isXMLWhitespace(chars, 0, length);
 
 		if(preserveSpace || (!preserveSpace && !isWhite))
 		{
@@ -1477,7 +1483,7 @@ StylesheetHandler::cdata(
 			true, preserveSpace, 
 			disableOutputEscaping);
 
-		bool isWhite = isWhitespace(chars, 0, length);
+		const bool	isWhite = isXMLWhitespace(chars, 0, length);
 
 		if(preserveSpace || (!preserveSpace && !isWhite))
 		{
@@ -1499,9 +1505,10 @@ StylesheetHandler::cdata(
 			if(0 != last)
 			{
 				// If it was surrounded by xsl:text, it will count as an element.
-				bool isPrevCharData =
+				const bool	isPrevCharData =
 					Constants::ELEMNAME_TEXTLITERALRESULT == last->getXSLToken();
-				bool isLastPoppedXSLText = (m_lastPopped != 0) &&
+
+				const bool	isLastPoppedXSLText = (m_lastPopped != 0) &&
 						(Constants::ELEMNAME_TEXT == m_lastPopped->getXSLToken());
 
 				if(isPrevCharData && ! isLastPoppedXSLText)

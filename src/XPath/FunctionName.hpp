@@ -79,6 +79,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include <XPath/NodeRefListBase.hpp>
 #include <XPath/XObject.hpp>
 #include <XPath/XObjectFactory.hpp>
@@ -108,7 +112,7 @@ public:
 	{
 		const XObjectArgVectorType::size_type	theSize = args.size();
 
-		XalanDOMString							theResult;
+		XObject*	theResult = 0;
 
 		if(theSize == 0)
 		{
@@ -119,7 +123,7 @@ public:
 			}
 			else
 			{
-				theResult = executionContext.getNameOfNode(*context);
+				theResult = getName(executionContext, *context);
 			}
 		}
 		else if (theSize == 1)
@@ -128,11 +132,15 @@ public:
 
 			const NodeRefListBase&	theNodeList = args[0]->nodeset();
 
-			if (theNodeList.getLength() != 0)
+			if (theNodeList.getLength() == 0)
+			{
+				theResult = executionContext.getXObjectFactory().createString(XalanDOMString());
+			}
+			else
 			{
 				assert(theNodeList.item(0) != 0);
 
-				theResult = executionContext.getNameOfNode(*theNodeList.item(0));
+				theResult = getName(executionContext, *theNodeList.item(0));
 			}
 		}
 		else
@@ -141,7 +149,9 @@ public:
 								   context);
 		}
 
-		return executionContext.getXObjectFactory().createString(theResult);
+		assert(theResult != 0);
+
+		return theResult;
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
@@ -155,6 +165,29 @@ public:
 	}
 
 private:
+
+	XObject*
+	getName(
+			XPathExecutionContext&	executionContext,
+			const XalanNode&		node)
+	{
+//		if (node.getNodeType() == XalanNode::ATTRIBUTE_NODE)
+//		{
+//			const XalanDOMString&	theName = executionContext.getNameOfNode(node);
+
+//			if (startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true)
+//			{
+//			}
+//			else
+//			{
+//				return executionContext.getXObjectFactory().createString();
+//			}
+//		}
+//		else
+		{
+			return executionContext.getXObjectFactory().createString(executionContext.getNameOfNode(node));
+		}
+	}
 
 	// Not implemented...
 	FunctionName&

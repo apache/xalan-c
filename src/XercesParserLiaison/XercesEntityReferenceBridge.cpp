@@ -62,7 +62,7 @@
 
 
 
-#include "XercesDOMException.hpp"
+#include "XercesBridgeHelper.hpp"
 #include "XercesDocumentBridge.hpp"
 
 
@@ -86,18 +86,18 @@ XercesEntityReferenceBridge::~XercesEntityReferenceBridge()
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesEntityReferenceBridge::getNodeName() const
 {
-	return m_xercesNode.getNodeName();
+	return m_navigator.getPooledString(m_xercesNode.getNodeName().rawBuffer());
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesEntityReferenceBridge::getNodeValue() const
 {
-	return m_xercesNode.getNodeValue();
+	return m_navigator.getPooledString(m_xercesNode.getNodeValue().rawBuffer());
 }
 
 
@@ -240,14 +240,7 @@ XercesEntityReferenceBridge::hasChildNodes() const
 void
 XercesEntityReferenceBridge::setNodeValue(const XalanDOMString&	nodeValue)
 {
-	try
-	{
-		m_xercesNode.setNodeValue(nodeValue);
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
 }
 
 
@@ -255,14 +248,7 @@ XercesEntityReferenceBridge::setNodeValue(const XalanDOMString&	nodeValue)
 void
 XercesEntityReferenceBridge::normalize()
 {
-	try
-	{
-		m_xercesNode.normalize();
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::normalize(m_xercesNode);
 }
 
 
@@ -272,31 +258,33 @@ XercesEntityReferenceBridge::supports(
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version) const
 {
-	return m_xercesNode.supports(feature, version);
+	return m_xercesNode.supports(
+				XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
+				XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesEntityReferenceBridge::getNamespaceURI() const
 {
-	return m_xercesNode.getNamespaceURI();
+	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI().rawBuffer());
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesEntityReferenceBridge::getPrefix() const
 {
-	return m_xercesNode.getPrefix();
+	return m_navigator.getPooledString(m_xercesNode.getPrefix().rawBuffer());
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesEntityReferenceBridge::getLocalName() const
 {
-	return m_xercesNode.getLocalName();
+	return m_navigator.getPooledString(m_xercesNode.getLocalName().rawBuffer());
 }
 
 
@@ -304,14 +292,7 @@ XercesEntityReferenceBridge::getLocalName() const
 void
 XercesEntityReferenceBridge::setPrefix(const XalanDOMString&	prefix)
 {
-	try
-	{
-		m_xercesNode.setPrefix(prefix);
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
 }
 
 
@@ -328,12 +309,4 @@ unsigned long
 XercesEntityReferenceBridge::getIndex() const
 {
 	return m_navigator.getIndex();
-}
-
-
-
-XalanDOMString
-XercesEntityReferenceBridge::getXSLTData() const
-{
-	return DOMServices::getNodeData(*this);
 }

@@ -124,7 +124,7 @@ XPathExpression::InvalidOpCodeException::FormatErrorMessage(int		theOpCode)
 				 << " was detected."
 				 << '\0';
 
-	return theFormatter.str();
+	return TranscodeFromLocalCodePage(theFormatter.str());
 }
 
 
@@ -169,7 +169,7 @@ XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
 				 << " arguments(s) were supplied."
 				 << '\0';
 
-	return theFormatter.str();
+	return TranscodeFromLocalCodePage(theFormatter.str());
 }
 
 
@@ -209,7 +209,7 @@ XPathExpression::InvalidArgumentException::FormatErrorMessage(
 				 << "."
 				 << '\0';
 
-	return theFormatter.str();
+	return TranscodeFromLocalCodePage(theFormatter.str());
 }
 
 
@@ -244,7 +244,7 @@ XPathExpression::InvalidRelativeTokenPosition::FormatErrorMessage(int	theOffset)
 				 << "."
 				 << '\0';
 
-	return theFormatter.str();
+	return TranscodeFromLocalCodePage(theFormatter.str());
 }
 
 

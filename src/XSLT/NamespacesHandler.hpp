@@ -79,6 +79,7 @@
 
 
 #include <XPath/NameSpace.hpp>
+#include <XPath/QName.hpp>
 
 
 
@@ -159,6 +160,9 @@ public:
 		XalanDOMString	m_resultAttributeName;
 	};
 
+	typedef QName::NamespaceVectorType					NamespaceVectorType;
+	typedef QName::NamespacesStackType					NamespacesStackType;
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
 				XalanDOMString,
@@ -172,9 +176,6 @@ public:
 				XalanDOMString,
 				less<XalanDOMString> >					NamespaceAliasesMapType;
 
-	typedef vector<NameSpace> 							NamespaceVectorType;
-	typedef vector<NamespaceVectorType>					NamespacesStackType;
-
 	typedef set<XalanDOMString,
 				less<XalanDOMString> >					ExtensionNamespaceURISetType;
 #else
@@ -184,9 +185,6 @@ public:
 					 NameSpaceExtended>					NamespacesMapType;
 
 	typedef std::map<XalanDOMString, XalanDOMString>	NamespaceAliasesMapType;
-
-	typedef std::vector<NameSpace> 						NamespaceVectorType;
-	typedef std::vector<NamespaceVectorType>			NamespacesStackType;
 
 	typedef std::set<XalanDOMString>					ExtensionNamespaceURISetType;
 #endif

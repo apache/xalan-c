@@ -75,6 +75,14 @@
 URISupport::URLAutoPtrType
 URISupport::getURLFromString(const XalanDOMString&	urlString)
 {
+	return getURLFromString(c_wstr(urlString));
+}
+
+
+
+URISupport::URLAutoPtrType
+URISupport::getURLFromString(const XalanDOMChar*	urlString)
+{
 	URLAutoPtrType	url(new XMLURL);
 
 	url->setURL(c_wstr(getURLStringFromString(urlString)));
@@ -87,7 +95,17 @@ URISupport::getURLFromString(const XalanDOMString&	urlString)
 XalanDOMString
 URISupport::getURLStringFromString(const XalanDOMString&	urlString)
 {
-	XalanDOMString	theNormalizedURI(clone(urlString));
+	return getURLStringFromString(c_wstr(urlString));
+}
+
+
+
+XalanDOMString
+URISupport::getURLStringFromString(const XalanDOMChar*	urlString)
+{
+	assert(urlString != 0);
+
+	XalanDOMString	theNormalizedURI(urlString);
 
 	// Let's see what sort of URI we have...
 	const unsigned int	len = length(theNormalizedURI);
@@ -154,7 +172,17 @@ URISupport::getURLStringFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base)
 {
-	XalanDOMString	context(clone(base));
+	return getURLStringFromString(c_wstr(urlString), c_wstr(base));
+}
+
+
+
+XalanDOMString
+URISupport::getURLStringFromString(
+			const XalanDOMChar*		urlString,
+			const XalanDOMChar*		base)
+{
+	XalanDOMString	context(base);
 
 	NormalizeURIText(context);
 
@@ -202,7 +230,7 @@ URISupport::getURLStringFromString(
 	}
 	else
 	{
-		const XalanDOMString		theProtocolString(substring(urlString, 0, theColonIndex));
+		const XalanDOMString	theProtocolString(substring(urlString, 0, theColonIndex));
 
 		// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
 		const XMLURL::Protocols		theProtocol =
@@ -277,7 +305,7 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 
 URISupport::InvalidURIException::InvalidURIException(const XalanDOMString&	theMessage) :
 	XSLException(theMessage,
-				 XALAN_STATIC_UCODE_STRING("InvalidURIException"))
+				 TranscodeFromLocalCodePage("InvalidURIException"))
 {
 }
 

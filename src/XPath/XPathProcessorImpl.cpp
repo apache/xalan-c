@@ -626,6 +626,39 @@ XPathProcessorImpl::tokenIs(const XalanDOMChar*		s) const
 
 
 bool
+XPathProcessorImpl::tokenIs(const char*		s) const
+{
+	const unsigned int	theTokenLength = length(m_token);
+
+	const unsigned int	theStringLength = strlen(s);
+
+	if (theTokenLength != theStringLength)
+	{
+		return false;
+	}
+	else
+	{
+		unsigned int	i = 0;
+
+		while(i < theStringLength)
+		{
+			if (charAt(m_token, i ) != s[i])
+			{
+				break;
+			}
+			else
+			{
+				++i;
+			}
+		}
+
+		return i == theStringLength ? true : false;
+	}
+}
+
+
+
+bool
 XPathProcessorImpl::tokenIs(char	c) const
 {
 	return m_tokenChar == c ? true : false;
@@ -792,9 +825,9 @@ XPathProcessorImpl::consumeExpected(const char* 	expected)
 	}
 	else
 	{
-		error(XalanDOMString("Expected ") +
-			  XalanDOMString(expected) +
-			  XalanDOMString(", but found: ") +
+		error(TranscodeFromLocalCodePage("Expected ") +
+			  TranscodeFromLocalCodePage(expected) +
+			  TranscodeFromLocalCodePage(", but found: ") +
 			  m_token);
 	}
 }
@@ -810,11 +843,11 @@ XPathProcessorImpl::consumeExpected(char	expected)
 	}
 	else
 	{
-		XalanDOMString	theMsg("Expected ");
+		XalanDOMString	theMsg(TranscodeFromLocalCodePage("Expected "));
 
-		theMsg += expected;
-		theMsg += ", but found: ";
-		theMsg += m_token;
+		append(theMsg, expected);
+		append(theMsg, ", but found: ");
+		append(theMsg, m_token);
 
 		error(theMsg);
 	}
@@ -847,6 +880,16 @@ XPathProcessorImpl::warn(
 
 
 void
+XPathProcessorImpl::warn(
+			const char*		msg,
+			XalanNode*		sourceNode) const
+{
+	warn(TranscodeFromLocalCodePage(msg), sourceNode);
+}
+
+
+
+void
 XPathProcessorImpl::error(
 			const XalanDOMString&	msg,
 			XalanNode*				sourceNode) const
@@ -862,7 +905,7 @@ XPathProcessorImpl::error(
 		const XalanDOMString&	theCurrentPattern =
 				m_expression->getCurrentPattern();
 
-		DOMStringPrintWriter	thePrintWriter;
+		DOMStringPrintWriter	thePrintWriter(emsg);
 
 		if (length(theCurrentPattern) != 0)
 		{
@@ -873,8 +916,6 @@ XPathProcessorImpl::error(
 		thePrintWriter.print(msg);
 
 		m_expression->dumpRemainingTokenQueue(thePrintWriter);
-
-		emsg = thePrintWriter.getString();
 	}
 
 	assert(m_envSupport != 0);
@@ -893,9 +934,19 @@ XPathProcessorImpl::error(
 		throw XPathParserException(emsg);
 	}
 }
-  
 
-  
+
+
+void
+XPathProcessorImpl::error(
+			const char*		msg,
+			XalanNode*		sourceNode) const
+{
+	error(TranscodeFromLocalCodePage(msg), sourceNode);
+}
+
+
+
 int
 XPathProcessorImpl::getKeywordToken(const XalanDOMString&	key) const
 {
@@ -1622,9 +1673,9 @@ XPathProcessorImpl::FunctionCall()
 	{
 		if (isValidFunction(m_token) == false)
 		{
-			warn(XalanDOMString("Could not find function: ") +
+			warn(TranscodeFromLocalCodePage("Could not find function: ") +
 				 m_token +
-				 XalanDOMString("()"));
+				 TranscodeFromLocalCodePage("()"));
 		}
 
 		// $$$ ToDo: I believe that this is XSLT functionality.  We
@@ -1872,7 +1923,7 @@ XPathProcessorImpl::AxisName()
 
 	if (i == s_axisNames.end())
 	{
-		error(XalanDOMString("illegal axis name: ") +
+		error(TranscodeFromLocalCodePage("illegal axis name: ") +
 			  m_token);
 	}
 	else
@@ -1898,7 +1949,7 @@ XPathProcessorImpl::NodeTest(int	axisType)
 
 		if (i == s_nodeTypes.end())
 		{
-			error(XalanDOMString("Unknown nodetype: ") +
+			error(TranscodeFromLocalCodePage("Unknown nodetype: ") +
 				  m_token);
 		}
 		else
@@ -2079,9 +2130,9 @@ XPathProcessorImpl::Literal()
 	}
 	else
 	{
-		error(XalanDOMString("Pattern literal (") +
+		error(TranscodeFromLocalCodePage("Pattern literal (") +
 			  m_token +
-			  XalanDOMString(") needs to be quoted!"));
+			  TranscodeFromLocalCodePage(") needs to be quoted!"));
 	}
 }
 
@@ -2368,10 +2419,10 @@ XPathProcessorImpl::initializeKeywordsTable(KeywordsMapType&	/* theKeywords */)
 void
 XPathProcessorImpl::initializeFunctionTable(FunctionNameMapType&	theFunctions)
 {
-	theFunctions[XALAN_STATIC_UCODE_STRING("processing-instruction")] = XPathExpression::eNODETYPE_PI;
-	theFunctions[XALAN_STATIC_UCODE_STRING("comment")] = XPathExpression::eNODETYPE_COMMENT;
-	theFunctions[XALAN_STATIC_UCODE_STRING("text")] = XPathExpression::eNODETYPE_TEXT;
-	theFunctions[XALAN_STATIC_UCODE_STRING("node")] = XPathExpression::eNODETYPE_NODE;
+	theFunctions[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("processing-instruction"))] = XPathExpression::eNODETYPE_PI;
+	theFunctions[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("comment"))] = XPathExpression::eNODETYPE_COMMENT;
+	theFunctions[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("text"))] = XPathExpression::eNODETYPE_TEXT;
+	theFunctions[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("node"))] = XPathExpression::eNODETYPE_NODE;
 }
 
 
@@ -2379,19 +2430,19 @@ XPathProcessorImpl::initializeFunctionTable(FunctionNameMapType&	theFunctions)
 void
 XPathProcessorImpl::initializeAxisNamesTable(AxisNamesMapType&		theAxisNames)
 {
-	theAxisNames[XALAN_STATIC_UCODE_STRING("ancestor")] = XPathExpression::eFROM_ANCESTORS;
-	theAxisNames[XALAN_STATIC_UCODE_STRING("ancestor-or-self")] = XPathExpression::eFROM_ANCESTORS_OR_SELF;
-	theAxisNames[XALAN_STATIC_UCODE_STRING("attribute")] = XPathExpression::eFROM_ATTRIBUTES;
-	theAxisNames[XALAN_STATIC_UCODE_STRING("child")] = XPathExpression::eFROM_CHILDREN;
-	theAxisNames[XALAN_STATIC_UCODE_STRING("descendant")] = XPathExpression::eFROM_DESCENDANTS;
-	theAxisNames[XALAN_STATIC_UCODE_STRING("descendant-or-self")] = XPathExpression::eFROM_DESCENDANTS_OR_SELF;
-	theAxisNames[XALAN_STATIC_UCODE_STRING("following")] = XPathExpression::eFROM_FOLLOWING;
-	theAxisNames[XALAN_STATIC_UCODE_STRING("following-sibling")] = XPathExpression::eFROM_FOLLOWING_SIBLINGS;
-	theAxisNames[XALAN_STATIC_UCODE_STRING("parent")] = XPathExpression::eFROM_PARENT;
-	theAxisNames[XALAN_STATIC_UCODE_STRING("preceding")] = XPathExpression::eFROM_PRECEDING;
-	theAxisNames[XALAN_STATIC_UCODE_STRING("preceding-sibling")] = XPathExpression::eFROM_PRECEDING_SIBLINGS;
-	theAxisNames[XALAN_STATIC_UCODE_STRING("self")] = XPathExpression::eFROM_SELF;
-	theAxisNames[XALAN_STATIC_UCODE_STRING("namespace")] = XPathExpression::eFROM_NAMESPACE;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ancestor"))] = XPathExpression::eFROM_ANCESTORS;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ancestor-or-self"))] = XPathExpression::eFROM_ANCESTORS_OR_SELF;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("attribute"))] = XPathExpression::eFROM_ATTRIBUTES;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("child"))] = XPathExpression::eFROM_CHILDREN;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("descendant"))] = XPathExpression::eFROM_DESCENDANTS;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("descendant-or-self"))] = XPathExpression::eFROM_DESCENDANTS_OR_SELF;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("following"))] = XPathExpression::eFROM_FOLLOWING;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("following-sibling"))] = XPathExpression::eFROM_FOLLOWING_SIBLINGS;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("parent"))] = XPathExpression::eFROM_PARENT;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("preceding"))] = XPathExpression::eFROM_PRECEDING;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("preceding-sibling"))] = XPathExpression::eFROM_PRECEDING_SIBLINGS;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("self"))] = XPathExpression::eFROM_SELF;
+	theAxisNames[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("namespace"))] = XPathExpression::eFROM_NAMESPACE;
 }
 
 
@@ -2399,11 +2450,11 @@ XPathProcessorImpl::initializeAxisNamesTable(AxisNamesMapType&		theAxisNames)
 void
 XPathProcessorImpl::initializeNodeTypesTable(NodeTypesMapType&		theNodeTypes)
 {
-	theNodeTypes[XALAN_STATIC_UCODE_STRING("comment")] = XPathExpression::eNODETYPE_COMMENT;
-	theNodeTypes[XALAN_STATIC_UCODE_STRING("text")] = XPathExpression::eNODETYPE_TEXT;
-	theNodeTypes[XALAN_STATIC_UCODE_STRING("processing-instruction")] = XPathExpression::eNODETYPE_PI;
-	theNodeTypes[XALAN_STATIC_UCODE_STRING("node")] = XPathExpression::eNODETYPE_NODE;
-	theNodeTypes[XALAN_STATIC_UCODE_STRING("*")] = XPathExpression::eNODETYPE_ANYELEMENT;
+	theNodeTypes[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("comment"))] = XPathExpression::eNODETYPE_COMMENT;
+	theNodeTypes[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("text"))] = XPathExpression::eNODETYPE_TEXT;
+	theNodeTypes[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("processing-instruction"))] = XPathExpression::eNODETYPE_PI;
+	theNodeTypes[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("node"))] = XPathExpression::eNODETYPE_NODE;
+	theNodeTypes[StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("*"))] = XPathExpression::eNODETYPE_ANYELEMENT;
 }
 
 

@@ -101,7 +101,7 @@ public:
 	 * @param theNode DOM node whose namespace is queried
 	 * @return namespace corresponding to 'theNode'
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceOfNode(const XalanNode&	theNode) const = 0;
 
 	/**
@@ -110,7 +110,7 @@ public:
 	 * @param elem	DOM element queried
 	 * @return expanded name corresponding to 'elem'
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getExpandedElementName(const XalanElement&	elem) const = 0;
 
 	/**
@@ -119,7 +119,7 @@ public:
 	 * @param attr DOM attribute queried
 	 * @return expanded name corresponding to 'attr'
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getExpandedAttributeName(const XalanAttr&	attr) const = 0;
 };
 

@@ -106,19 +106,15 @@
 
 
 
-/** 
- * @param processor The XSLT Processor.
- * @param stylesheetTree The owning stylesheet.
- * @param name The name of the element.
- * @param atts The element attributes.
- * @param lineNumber The line in the XSLT file that the element occurs on.
- * @param columnNumber The column index in the XSLT file that the element occurs on.
- * @exception SAXException Never.
- */
+const QName				ElemTemplateElement::s_emptyMode;
+const XalanDOMString	ElemTemplateElement::s_emptyString;
+
+
+
 ElemTemplateElement::ElemTemplateElement(
 			StylesheetConstructionContext&	/* constructionContext */,
-			Stylesheet&						stylesheetTree, 
-			const XalanDOMString&			name,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMChar*				name,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :
@@ -129,7 +125,7 @@ ElemTemplateElement::ElemTemplateElement(
 	m_lineNumber(lineNumber),
 	m_columnNumber(columnNumber),
 	m_defaultSpace(true),	
-	m_elemName(name),
+	m_elemName(XalanDOMString(name)),
 	m_xslToken(xslToken),
 	m_parentNode(0),
 	m_nextSibling(0),
@@ -210,7 +206,7 @@ ElemTemplateElement::processSpaceAttr(
 	}
 	else
 	{
-		error(XalanDOMString("xml:space has an illegal value: ") + spaceVal);
+		error(TranscodeFromLocalCodePage("xml:space has an illegal value: ") + spaceVal);
 	}
 }
 
@@ -238,7 +234,7 @@ ElemTemplateElement::processSpaceAttr(
 		}
 		else
 		{
-			error(XalanDOMString("xml:space has an illegal value: ") + spaceVal);
+			error(TranscodeFromLocalCodePage("xml:space has an illegal value: ") + spaceVal);
 		}
     }
 
@@ -295,6 +291,17 @@ ElemTemplateElement::execute(
 
 
 void
+ElemTemplateElement::execute(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode) const
+{
+	execute(executionContext, sourceTree, sourceNode, s_emptyMode);
+}
+
+
+
+void
 ElemTemplateElement::executeChildren(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceTree, 
@@ -311,28 +318,29 @@ ElemTemplateElement::executeChildren(
 
 
 
-XalanDOMString
+void
 ElemTemplateElement::childrenToString(
 			StylesheetExecutionContext&		executionContext, 
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
-			const QName&					mode) const
+			const QName&					mode,
+			XalanDOMString&					result) const
 {
+	reserve(result, length(result) + 1024);
+
 	// Create a print writer and formatter to generate the children as
 	// a string.
-	DOMStringPrintWriter		thePrintWriter;
+	DOMStringPrintWriter		thePrintWriter(result);
 
 	// Create a FormatterToText.
 	FormatterToText				theFormatter(thePrintWriter);
 
 	// Create an object to set and restore the execution state.
-	StylesheetExecutionContext::ExecutionStateSetAndRestore		theStateSetAndRestore(
+	StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
 					executionContext,
 					&theFormatter);
 
 	executeChildren(executionContext, sourceTree, sourceNode, mode);
-
-	return thePrintWriter.getString();
 }
 
 
@@ -680,7 +688,7 @@ ElemTemplateElement::transformSelectedChildren(
 						SelectionEvent(executionContext, 
 							sourceNodeContext,
 							*this,
-							XALAN_STATIC_UCODE_STRING("select"),
+							StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
 							*selectPattern,
 							result.get()));
 			}
@@ -874,7 +882,7 @@ ElemTemplateElement::doTransformSelectedChildren(
 
 		if(XalanNode::DOCUMENT_NODE != childNode->getNodeType() && ownerDoc == 0)
 		{
-			error(XalanDOMString("Child node does not have an owner document!"));
+			error("Child node does not have an owner document!");
 		}
 
 		transformChild(
@@ -1024,7 +1032,15 @@ ElemTemplateElement::error(const XalanDOMString&	msg) const
 
 
 
-XalanDOMString
+void
+ElemTemplateElement::error(const char*	msg) const
+{
+	error(TranscodeFromLocalCodePage(msg));
+}
+
+
+
+const XalanDOMString&
 ElemTemplateElement::getNodeName() const
 {
 	return m_elemName;
@@ -1032,10 +1048,10 @@ ElemTemplateElement::getNodeName() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 ElemTemplateElement::getNodeValue() const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
@@ -1260,27 +1276,27 @@ ElemTemplateElement::supports(
 
 
 
-XalanDOMString
+const XalanDOMString&
 ElemTemplateElement::getNamespaceURI() const
 {
 	// $$ ToDo: Is this the same value as PrefixResolver::getURI()?
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 ElemTemplateElement::getPrefix() const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 ElemTemplateElement::getLocalName() const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
@@ -1309,15 +1325,7 @@ ElemTemplateElement::getIndex() const
 
 
 
-XalanDOMString
-ElemTemplateElement::getXSLTData() const
-{
-	return DOMString();
-}
-
-
-
-XalanDOMString
+const XalanDOMString&
 ElemTemplateElement::getTagName() const
 {
 	return m_elemName;
@@ -1325,10 +1333,10 @@ ElemTemplateElement::getTagName() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 ElemTemplateElement::getAttribute(const XalanDOMString&		/* name */) const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
@@ -1398,12 +1406,12 @@ ElemTemplateElement::removeAttribute(const XalanDOMString&	/* name */)
 
 
 
-XalanDOMString
+const XalanDOMString&
 ElemTemplateElement::getAttributeNS(
 			const XalanDOMString&	/* namespaceURI */,
 			const XalanDOMString&	/* localName */) const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
@@ -1459,7 +1467,7 @@ ElemTemplateElement::getElementsByTagNameNS(
 
 
 
-XalanDOMString
+const XalanDOMString&
 ElemTemplateElement::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
 	return getNamespaceForPrefixInternal(prefix, true);
@@ -1467,12 +1475,12 @@ ElemTemplateElement::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 ElemTemplateElement::getNamespaceForPrefixInternal(
 			const XalanDOMString&	prefix,
 			bool					fReportError) const
 {
-    XalanDOMString	nameSpace;
+    const XalanDOMString*	nameSpace = &DOMServices::s_emptyString;
 
 	if (isEmpty(prefix) == false)
 	{
@@ -1482,7 +1490,7 @@ ElemTemplateElement::getNamespaceForPrefixInternal(
 		{
 			 if (equals(prefix, DOMServices::s_XMLString) == true)
 			 {
-				 nameSpace = DOMServices::s_XMLNamespaceURI;
+				 nameSpace = &DOMServices::s_XMLNamespaceURI;
 			 }
 			 else if (equals(prefix, DOMServices::s_XMLNamespace) == true)
 			 {
@@ -1490,34 +1498,34 @@ ElemTemplateElement::getNamespaceForPrefixInternal(
 			 }
 			 else
 			 {
-				 nameSpace = getNamespacesHandler().getNamespace(prefix);
+				 nameSpace = &getNamespacesHandler().getNamespace(prefix);
 
-				if(isEmpty(nameSpace) == true)
+				if(isEmpty(*nameSpace) == true)
 				{
 					 if (m_parentNode != 0)
 					 {
-						nameSpace = m_parentNode->getNamespaceForPrefixInternal(prefix, false);
+						nameSpace = &m_parentNode->getNamespaceForPrefixInternal(prefix, false);
 					 }
 				}
 			}
 		}
 		else
 		{
-			nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
+			nameSpace = &getStylesheet().getNamespaceForPrefixFromStack(prefix);
 		}
 
-		if(fReportError == true && fEmptyIsError == true && isEmpty(nameSpace) == true)
+		if(fReportError == true && fEmptyIsError == true && isEmpty(*nameSpace) == true)
 		{
 			error("Cannot resolve namespace prefix: " + prefix);
 		}
 	}
 
-    return nameSpace;
+    return *nameSpace;
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 ElemTemplateElement::getURI() const
 {
 	return m_baseIndentifier;

@@ -61,6 +61,11 @@
 
 
 
+#include <dom/ElementImpl.hpp>
+#include <dom/TextImpl.hpp>
+
+
+
 XercesDOM_NodeHack::XercesDOM_NodeHack(NodeImpl*	theImpl) :
 	DOM_Node(theImpl)
 {
@@ -81,6 +86,167 @@ XercesDOM_AttrHack::XercesDOM_AttrHack(AttrImpl*	theImpl) :
 
 
 
+XercesDOM_AttrHack::XercesDOM_AttrHack(const DOM_Attr&	theSource) :
+	DOM_Attr(theSource)
+{
+}
+
+
+
 XercesDOM_AttrHack::~XercesDOM_AttrHack()
 {
+}
+
+
+
+XercesDOM_ElementHack::XercesDOM_ElementHack(ElementImpl*	theImpl) :
+	DOM_Element(theImpl)
+{
+}
+
+
+
+XercesDOM_ElementHack::XercesDOM_ElementHack(const DOM_Element&		theSource) :
+	DOM_Element(theSource)
+{
+}
+
+
+
+XercesDOM_ElementHack::~XercesDOM_ElementHack()
+{
+}
+
+
+
+const DOMString
+XercesDOM_ElementHack::getNodeNameImpl() const
+{
+	return getImpl()->getNodeName();
+}
+
+
+
+const DOMString
+XercesDOM_ElementHack::getNodeValueImpl() const
+{
+	return getImpl()->getNodeValue();
+}
+
+
+
+const DOMString
+XercesDOM_ElementHack::	getNamespaceURIImpl() const
+{
+	return getImpl()->getNamespaceURI();
+}
+
+
+
+const DOMString
+XercesDOM_ElementHack::getPrefixImpl() const
+{
+	return getImpl()->getPrefix();
+}
+
+
+
+const DOMString
+XercesDOM_ElementHack::getLocalNameImpl() const
+{
+	return getImpl()->getLocalName();
+}
+
+
+
+const DOMString
+XercesDOM_ElementHack::getTagNameImpl() const
+{
+	return getImpl()->getTagName();
+}
+
+
+
+const DOMString
+XercesDOM_ElementHack::getAttributeImpl(const DOMString&	name) const
+{
+	return getImpl()->getAttribute(name);
+}
+
+
+
+const DOMString
+XercesDOM_ElementHack::getAttributeNSImpl(
+			const DOMString&	namespaceURI,
+			const DOMString&	localName) const
+{
+	return getImpl()->getAttributeNS(namespaceURI, localName);
+}
+
+
+
+XercesDOM_TextHack::XercesDOM_TextHack(TextImpl*	theImpl) :
+	DOM_Text(theImpl)
+{
+}
+
+
+
+XercesDOM_TextHack::XercesDOM_TextHack(const DOM_Text&	theSource) :
+	DOM_Text(theSource)
+{
+}
+
+
+
+XercesDOM_TextHack::~XercesDOM_TextHack()
+{
+}
+
+
+
+const DOMString
+XercesDOM_TextHack::getNodeNameImpl() const
+{
+	return getImpl()->getNodeName();
+}
+
+
+
+const DOMString
+XercesDOM_TextHack::getNodeValueImpl() const
+{
+	return getImpl()->getNodeValue();
+}
+
+
+
+const DOMString
+XercesDOM_TextHack::getNamespaceURIImpl() const
+{
+	return getImpl()->getNamespaceURI();
+}
+
+
+
+const DOMString
+XercesDOM_TextHack::getPrefixImpl() const
+{
+	return getImpl()->getPrefix();
+}
+
+
+
+const DOMString
+XercesDOM_TextHack::getLocalNameImpl() const
+{
+	return getImpl()->getLocalName();
+}
+
+
+
+const DOMString
+XercesDOM_TextHack::getDataImpl() const
+{
+	return getImpl()->getData();
 }

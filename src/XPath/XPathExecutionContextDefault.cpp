@@ -187,7 +187,7 @@ XPathExecutionContextDefault::isIgnorableWhitespace(const XalanText&	node) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XPathExecutionContextDefault::getNamespaceOfNode(const XalanNode&	n) const
 {
 	return m_xpathSupport.getNamespaceOfNode(n);
@@ -195,7 +195,7 @@ XPathExecutionContextDefault::getNamespaceOfNode(const XalanNode&	n) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XPathExecutionContextDefault::getNameOfNode(const XalanNode&	n) const
 {
 	return m_xpathSupport.getNameOfNode(n);
@@ -203,7 +203,7 @@ XPathExecutionContextDefault::getNameOfNode(const XalanNode&	n) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XPathExecutionContextDefault::getLocalNameOfNode(const XalanNode&	n) const
 {
 	return m_xpathSupport.getLocalNameOfNode(n);
@@ -229,10 +229,12 @@ XPathExecutionContextDefault::isNodeAfter(
 
 
 
-XalanDOMString
-XPathExecutionContextDefault::getNodeData(const XalanNode&	n) const
+void
+XPathExecutionContextDefault::getNodeData(
+			const XalanNode&	n,
+			XalanDOMString&		s) const
 {
-	return m_xpathSupport.getNodeData(n);
+	m_xpathSupport.getNodeData(n, s);
 }
 
 
@@ -502,7 +504,7 @@ XPathExecutionContextDefault::setPrefixResolver(const PrefixResolver*	thePrefixR
 
 
 
-XalanDOMString
+const XalanDOMString&
 XPathExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
 	assert(m_prefixResolver != 0);
@@ -552,58 +554,11 @@ XPathExecutionContextDefault::error(
 			const XalanNode*		sourceNode,
 			const XalanNode*		/* styleNode */) const
 {
-	XalanDOMString			emsg;
-
-	const XalanDOMString		theCurrentPattern(getCurrentPattern());
-
-	if (length(theCurrentPattern) != 0)
-	{
-	   emsg = XalanDOMString("pattern = '") +
-			  theCurrentPattern +
-			  XalanDOMString("'\n");
-	}
-
-	emsg += msg;
-
 	if (m_xpathEnvSupport.problem(XPathEnvSupport::eXPATHProcessor, 
 								  XPathEnvSupport::eError,
 								  m_prefixResolver, 
 								  sourceNode,
-								  emsg,
-								  0,
-								  0) == true)
-	{
-		// $$$ ToDo: Do something with the PrefixResolver here...
-		throw XPathException(emsg, 0);
-	}
-}
-
-
-
-void
-XPathExecutionContextDefault::warn(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode,
-			const XalanNode*		/* styleNode */) const
-{
-	XalanDOMString	emsg;
-
-	const XalanDOMString		theCurrentPattern(getCurrentPattern());
-
-	if (length(theCurrentPattern) != 0)
-	{
-	   emsg = XalanDOMString("pattern = '") +
-			  theCurrentPattern +
-			  XalanDOMString("'\n");
-	}
-
-	emsg += msg;
-
-	if (m_xpathEnvSupport.problem(XPathEnvSupport::eXPATHProcessor, 
-								  XPathEnvSupport::eWarning,
-								  m_prefixResolver, 
-								  sourceNode,
-								  emsg,
+								  msg,
 								  0,
 								  0) == true)
 	{
@@ -615,35 +570,76 @@ XPathExecutionContextDefault::warn(
 
 
 void
+XPathExecutionContextDefault::error(
+			const char*			msg,
+			const XalanNode*	sourceNode,
+			const XalanNode*	styleNode) const
+{
+	error(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+void
+XPathExecutionContextDefault::warn(
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode,
+			const XalanNode*		/* styleNode */) const
+{
+	if (m_xpathEnvSupport.problem(XPathEnvSupport::eXPATHProcessor, 
+								  XPathEnvSupport::eWarning,
+								  m_prefixResolver, 
+								  sourceNode,
+								  msg,
+								  0,
+								  0) == true)
+	{
+		// $$$ ToDo: Do something with the PrefixResolver here...
+		throw XPathException(msg, 0);
+	}
+}
+
+
+
+void
+XPathExecutionContextDefault::warn(
+			const char*			msg,
+			const XalanNode*	sourceNode,
+			const XalanNode*	styleNode) const
+{
+	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+void
 XPathExecutionContextDefault::message(
 			const XalanDOMString&	msg,
 			const XalanNode*		sourceNode,
 			const XalanNode*		/* styleNode */) const
 {
-	XalanDOMString	emsg;
-
-	const XalanDOMString		theCurrentPattern(getCurrentPattern());
-
-	if (length(theCurrentPattern) != 0)
-	{
-	   emsg = XalanDOMString("pattern = '") +
-			  theCurrentPattern +
-			  XalanDOMString("'\n");
-	}
-
-	emsg += msg;
-
 	if (m_xpathEnvSupport.problem(XPathEnvSupport::eXPATHProcessor, 
 								  XPathEnvSupport::eMessage,
 								  m_prefixResolver, 
 								  sourceNode,
-								  emsg,
+								  msg,
 								  0,
 								  0) == true)
 	{
 		// $$$ ToDo: Do something with the PrefixResolver here...
 		throw XPathException(msg);
 	}
+}
+
+
+
+void
+XPathExecutionContextDefault::message(
+			const char*			msg,
+			const XalanNode*	sourceNode,
+			const XalanNode*	styleNode) const
+{
+	message(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
 }
 
 
@@ -660,20 +656,6 @@ void
 XPathExecutionContextDefault::setThrowFoundIndex(bool 	fThrow)
 {
 	m_throwFoundIndex = fThrow;
-}
-
-
-void
-XPathExecutionContextDefault::setCurrentPattern(const XalanDOMString&	thePattern)
-{
-	m_currentPattern = thePattern;
-}
-
-
-XalanDOMString
-XPathExecutionContextDefault::getCurrentPattern() const
-{
-	return m_currentPattern;
 }
 
 

@@ -175,8 +175,9 @@ FunctionFormatNumber::doFormat(
 	}
 	else
 	{
-		executionContext.warn(XALAN_STATIC_UCODE_STRING("format-number() is not fully implemented!"),
-							  context);
+		executionContext.warn(
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number() is not fully implemented!")),
+			context);
 
 		XalanDecimalFormat	theFormatter;
 

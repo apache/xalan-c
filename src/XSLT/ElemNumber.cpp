@@ -68,9 +68,12 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DoubleSupport.hpp>
-#include <PlatformSupport/XalanAutoPtr.hpp>
 #include <PlatformSupport/XalanNumberFormat.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
+
+
+
+#include <Include/XalanAutoPtr.hpp>
 
 
 
@@ -95,7 +98,7 @@ using std::vector;
 ElemNumber::ElemNumber(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -133,7 +136,7 @@ ElemNumber::ElemNumber(
 			else if(equals(levelValue,Constants::ATTRVAL_SINGLE))
 				m_level = Constants::NUMBERLEVEL_SINGLE;
 			else
-				error(XalanDOMString("Bad value on level attribute: ") + levelValue);
+				error("Bad value on level attribute." + XalanDOMString(levelValue));
 		}
 		else if(equals(aname, Constants::ATTRNAME_COUNT))
 		{
@@ -177,7 +180,7 @@ ElemNumber::ElemNumber(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 		}
 	}
 }
@@ -370,8 +373,8 @@ ElemNumber::getCountString(
 			XalanNode*							sourceNode) const
 {
 	assert(sourceNode != 0);
+
 	IntArrayType	numberList;
-	CountersTable ctable;
 
 	if(0 != m_valueExpr)
 	{
@@ -393,6 +396,8 @@ ElemNumber::getCountString(
 	}
 	else
 	{
+		CountersTable	ctable;
+
 		if(Constants::NUMBERLEVEL_ANY == m_level)
 		{
 			numberList.push_back(ctable.countNode(
@@ -402,7 +407,7 @@ ElemNumber::getCountString(
 		}
 		else
 		{
-			MutableNodeRefList ancestors = getMatchingAncestors(executionContext, sourceNode,
+			const MutableNodeRefList	ancestors = getMatchingAncestors(executionContext, sourceNode,
 				Constants::NUMBERLEVEL_SINGLE == m_level);
 
 			const unsigned int	lastIndex = ancestors.getLength();
@@ -412,6 +417,7 @@ ElemNumber::getCountString(
 				for(unsigned int i = 0; i < lastIndex; i++)
 				{
 					XalanNode* const target = ancestors.item(lastIndex - i - 1);
+
 					numberList.push_back(ctable.countNode(
 						executionContext,
 						this,
@@ -603,7 +609,7 @@ ElemNumber::getMatchingAncestors(
 		}
 
 		if(0 == countMatchPattern)
-			error(XalanDOMString("Programmers error! countMatchPattern should never be 0!"));
+			error(TranscodeFromLocalCodePage("Programmer error! countMatchPattern should never be 0!"));
 
 		if(countMatchPattern->getMatchScore(node, *this, executionContext) !=
 				XPath::s_MatchScoreNone)
@@ -1035,24 +1041,22 @@ ElemNumber::getFormattedNumber(
 			int								numberWidth,
 			int								listElement) const
 {
-	XalanDOMString	formattedNumber;
-
 	switch(numberType)
 	{
 		case XalanUnicode::charLetter_A:
-			formattedNumber += int2alphaCount(listElement, s_alphaCountTable);
+			return int2alphaCount(listElement, s_alphaCountTable);
 			break;
 
 		case XalanUnicode::charLetter_a:
-			formattedNumber += toLowerCase(int2alphaCount(listElement, s_alphaCountTable));
+			return toLowerCase(int2alphaCount(listElement, s_alphaCountTable));
 			break;
 
 		case XalanUnicode::charLetter_I:
-			formattedNumber += long2roman(listElement, true);
+			return long2roman(listElement, true);
 			break;
 
 		case XalanUnicode::charLetter_i:
-			formattedNumber += toLowerCase(long2roman(listElement, true));
+			return toLowerCase(long2roman(listElement, true));
 			break;
 
 		case 0x3042:
@@ -1066,11 +1070,12 @@ ElemNumber::getFormattedNumber(
 		case 0x10D0:
 		case 0x0430:
 			executionContext.error(LongToDOMString(numberType) + " format not supported yet!");
+			return XalanDOMString();
 			break;
 
 		// Handle the special case of Greek letters for now
 		case 0x03B1:
-			formattedNumber += int2alphaCount(listElement, s_elalphaCountTable);
+			return int2alphaCount(listElement, s_elalphaCountTable);
 			break;
 
 		default: // "1"
@@ -1078,24 +1083,29 @@ ElemNumber::getFormattedNumber(
 				StylesheetExecutionContext::XalanNumberFormatAutoPtr	formatter(
 						getNumberFormatter(executionContext, contextNode));
 
-				XalanDOMString	padString = formatter->format(0);
-
-				const XalanDOMString		numString =
+				XalanDOMString	numString =
 					formatter->format(listElement);
 
-				const int	nPadding = numberWidth - length(numString);
+				const unsigned int	lengthNumString = length(numString);
 
-				for(int i = 0; i < nPadding; i++)
+				const int	nPadding = numberWidth - lengthNumString;
+
+				if (nPadding > 0)
 				{
-					formattedNumber += padString;
+					const XalanDOMString	padString = formatter->format(0);
+
+					reserve(numString, nPadding * length(padString) + lengthNumString + 1);
+
+					for(int i = 0; i < nPadding; i++)
+					{
+						insert(numString, 0, padString);
+					}
 				}
 
-				formattedNumber += numString;
+				return numString;
 			}
 			break;
 	}
-
-	return formattedNumber;  
 }
 
 
@@ -1116,9 +1126,10 @@ ElemNumber::int2singlealphaCount(
 	}
 	else
 	{
-		return XalanDOMString(charAt(table, val - 1));
-	}
+		const XalanDOMChar	theChar = charAt(table, val - 1);
 
+		return XalanDOMString(&theChar, 1);
+	}
 }
 
 
@@ -1574,13 +1585,54 @@ ElemNumber::initialize()
 
 	::s_romanConvertTable.reserve(7);
 
-	::s_romanConvertTable.push_back(DecimalToRoman(1000, XALAN_STATIC_UCODE_STRING("M"), 900, XALAN_STATIC_UCODE_STRING("CM")));
-	::s_romanConvertTable.push_back(DecimalToRoman(500, XALAN_STATIC_UCODE_STRING("D"), 400, XALAN_STATIC_UCODE_STRING("CD")));
-	::s_romanConvertTable.push_back(DecimalToRoman(100L, XALAN_STATIC_UCODE_STRING("C"), 90L, XALAN_STATIC_UCODE_STRING("XC")));
-	::s_romanConvertTable.push_back(DecimalToRoman(50L, XALAN_STATIC_UCODE_STRING("L"), 40L, XALAN_STATIC_UCODE_STRING("XL")));
-	::s_romanConvertTable.push_back(DecimalToRoman(10L, XALAN_STATIC_UCODE_STRING("X"), 9L, XALAN_STATIC_UCODE_STRING("IX")));
-	::s_romanConvertTable.push_back(DecimalToRoman(5L, XALAN_STATIC_UCODE_STRING("V"), 4L, XALAN_STATIC_UCODE_STRING("IV")));
-	::s_romanConvertTable.push_back(DecimalToRoman(1L, XALAN_STATIC_UCODE_STRING("I"), 1L, XALAN_STATIC_UCODE_STRING("I")));
+	::s_romanConvertTable.push_back(
+		DecimalToRoman(
+			1000L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("M")),
+			900L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("CM"))));
+
+	::s_romanConvertTable.push_back(
+		DecimalToRoman(
+			500L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("D")),
+			400,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("CD"))));
+
+	::s_romanConvertTable.push_back(
+		DecimalToRoman(
+			100L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("C")),
+			90L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("XC"))));
+
+	::s_romanConvertTable.push_back(
+		DecimalToRoman(
+			50L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("L")),
+			40L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("XL"))));
+
+	::s_romanConvertTable.push_back(
+		DecimalToRoman(
+			10L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("X")),
+			9L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("IX"))));
+
+	::s_romanConvertTable.push_back(
+		DecimalToRoman(
+			5L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("V")),
+			4L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("IV"))));
+
+	::s_romanConvertTable.push_back(
+		DecimalToRoman(
+			1L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("I")),
+			1L,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("I"))));
 }
 
 

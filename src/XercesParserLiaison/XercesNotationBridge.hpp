@@ -63,10 +63,6 @@
 
 
 
-#include <cassert>
-
-
-
 #include <dom/DOM_Notation.hpp>
 
 
@@ -93,13 +89,13 @@ public:
 
 	// These interfaces are inherited from XalanNode...
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeName() const;
 
 	/**
 	 * Gets the value of this node, depending on its type.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeValue() const;
 
 	/**
@@ -373,14 +369,14 @@ public:
 	 * such as <CODE>createElement</CODE> from the <CODE>Document</CODE>
 	 * interface, this is always <CODE>null</CODE>.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
 	/**
 	 * Get the <em>namespace prefix</em>
 	 * of this node, or <code>null</code> if it is unspecified.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getPrefix() const;
 
 	/**
@@ -390,7 +386,7 @@ public:
 	 * <code>createElement</code> from the <code>DOM_Document</code> interface,
 	 * it is null.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalName() const;
 
 	/**
@@ -431,9 +427,6 @@ public:
 	virtual unsigned long
 	getIndex() const;
 
-	virtual XalanDOMString
-	getXSLTData() const;
-
 	//@}
 
 	// These interfaces are inherited from XalanNotation...
@@ -445,7 +438,7 @@ public:
 	 * specified, this is <code>null</code>.
 	 * @return Returns the public identifier of the notation
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getPublicId() const;
 
 	/**
@@ -455,7 +448,7 @@ public:
 	 * specified, this is <code>null</code>.
 	 * @return Returns the system identifier of the notation
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getSystemId() const;
 
 private:

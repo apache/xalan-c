@@ -493,7 +493,8 @@ SimpleNodeLocator::stepPattern(
 
 		score = xpath.s_MatchScoreNone;
 	  
-		executionContext.error("unknown match operation!", localContext);
+		executionContext.error(TranscodeFromLocalCodePage("unknown match operation!"), localContext);
+
 		break;
 	}
 
@@ -1364,7 +1365,7 @@ SimpleNodeLocator::findNodesOnUnknownAxis(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
 
-	executionContext.error("unknown axis: " + stepType, context);
+	executionContext.error(TranscodeFromLocalCodePage("Unknown axis!"), context);
 
 	return argLen + 3;
 }
@@ -1432,7 +1433,7 @@ SimpleNodeLocator::nodeTest(
 			}
 			else
 			{
-				executionContext.error("Arg length of processing-instruction() node test is incorrect!");
+				executionContext.error(TranscodeFromLocalCodePage("Arg length of processing-instruction() node test is incorrect!"));
 			}
 		}
 
@@ -1497,7 +1498,7 @@ SimpleNodeLocator::nodeTest(
 
 				if(isTotallyWild == false && processNamespaces == true)
 				{
-					const XalanDOMString	contextNS = executionContext.getNamespaceOfNode(*context);
+					const XalanDOMString&	contextNS = executionContext.getNamespaceOfNode(*context);
 
 					if(0 != length(targetNS) && 0 != length(contextNS))
 					{
@@ -1531,7 +1532,7 @@ SimpleNodeLocator::nodeTest(
 						{
 							assert(context->getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
-							const XalanDOMString	attrName =
+							const XalanDOMString&	attrName =
 										context->getNodeName();
 
 							const bool				isNamespace =
@@ -1561,7 +1562,7 @@ SimpleNodeLocator::nodeTest(
 								{
 									if (isNamespace == false)
 									{
-										const XalanDOMString	localAttrName =
+										const XalanDOMString&	localAttrName =
 											executionContext.getLocalNameOfNode(*context);
 
 										if (equals(localAttrName, targetLocalName) == true)
@@ -1582,7 +1583,7 @@ SimpleNodeLocator::nodeTest(
 #endif
 										assert(theAttrNode != 0);
 
-										const XalanDOMString	theNamespace =
+										const XalanDOMString&	theNamespace =
 													theAttrNode->getValue();
 
 										if (equals(theNamespace, targetLocalName) == true)

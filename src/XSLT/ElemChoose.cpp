@@ -81,7 +81,7 @@
 ElemChoose::ElemChoose(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -100,7 +100,7 @@ ElemChoose::ElemChoose(
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false  || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 		}
 	}	
 }
@@ -145,7 +145,7 @@ ElemChoose::execute(
 					SelectionEvent(executionContext,
 					sourceNode,
 					*when,
-					XalanDOMString(XALAN_STATIC_UCODE_STRING("test")),
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("test")),
 					*theXPath,
 					test.get()));
 			}

@@ -106,7 +106,7 @@ XObject::~XObject()
 double
 XObject::num() const
 {
-	throw XObjectInvalidCastException(getTypeString(), XALAN_STATIC_UCODE_STRING("number"));
+	throw XObjectInvalidCastException(getTypeString(), TranscodeFromLocalCodePage("number"));
 
 	// This is just a dummy value to satisfy the compiler.
 	return 0.0;
@@ -117,7 +117,7 @@ XObject::num() const
 bool
 XObject::boolean() const
 {
-	throw XObjectInvalidCastException(getTypeString(), XALAN_STATIC_UCODE_STRING("boolean"));
+	throw XObjectInvalidCastException(getTypeString(), TranscodeFromLocalCodePage("boolean"));
 
 	// This is just a dummy value to satisfy the compiler.
 	return false;
@@ -128,7 +128,7 @@ XObject::boolean() const
 const XalanDOMString&
 XObject::str() const
 {
-	throw XObjectInvalidCastException(getTypeString(), XALAN_STATIC_UCODE_STRING("string"));
+	throw XObjectInvalidCastException(getTypeString(), TranscodeFromLocalCodePage("string"));
 
 	// This is just a dummy value to satisfy the compiler.
 	return s_nullString;
@@ -139,7 +139,7 @@ XObject::str() const
 const ResultTreeFragBase&
 XObject::rtree(XPathExecutionContext&	/* executionContext */) const
 {
-	throw XObjectInvalidCastException(getTypeString(), XALAN_STATIC_UCODE_STRING("result tree fragment"));
+	throw XObjectInvalidCastException(getTypeString(), TranscodeFromLocalCodePage("result tree fragment"));
 
 	// This is just a dummy value to satisfy the compiler.
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -158,7 +158,7 @@ static const NodeRefList	s_dummyList;
 const NodeRefListBase&
 XObject::nodeset() const
 {
-	throw XObjectInvalidCastException(getTypeString(), XALAN_STATIC_UCODE_STRING("node set"));
+	throw XObjectInvalidCastException(getTypeString(), TranscodeFromLocalCodePage("node set"));
 
 	// error will throw, so this is just a dummy
 	// value to satisfy the compiler.
@@ -167,10 +167,12 @@ XObject::nodeset() const
 
 
 
-const XalanDOMString
-getStringFromNode(const XalanNode&	theNode)
+void
+getStringFromNode(
+			const XalanNode&	theNode,
+			XalanDOMString&		theString)
 {
-	return theNode.getXSLTData();
+	DOMServices::getNodeData(theNode, theString);
 }
 
 
@@ -185,7 +187,19 @@ getStringFromNodeFunction
 	const XalanDOMString
 	operator()(const XalanNode&		theNode) const
 	{
-		return getStringFromNode(theNode);
+		XalanDOMString	theString;
+
+		getStringFromNode(theNode, theString);
+
+		return theString;
+	}
+
+	void
+	operator()(
+			const XalanNode&	theNode,
+			XalanDOMString&		theString) const
+	{
+		getStringFromNode(theNode, theString);
 	}
 };
 
@@ -194,7 +208,25 @@ getStringFromNodeFunction
 double
 getNumberFromNode(const XalanNode&	theNode)
 {
-	return DoubleSupport::toDouble(getStringFromNode(theNode));
+	XalanDOMString	theString;
+
+	getStringFromNode(theNode, theString);
+
+	return DoubleSupport::toDouble(theString);
+}
+
+
+
+void
+getNumberFromNode(
+			const XalanNode&	theNode,
+			double&				theNumber)
+{
+	XalanDOMString	theString;
+
+	getStringFromNode(theNode, theString);
+
+	theNumber = DoubleSupport::toDouble(theString);
 }
 
 
@@ -210,6 +242,14 @@ getNumberFromNodeFunction
 	operator()(const XalanNode&		theNode) const
 	{
 		return getNumberFromNode(theNode);
+	}
+
+	void
+	operator()(
+			const XalanNode&	theNode,
+			double&				theNumber) const
+	{
+		getNumberFromNode(theNode, theNumber);
 	}
 };
 
@@ -246,16 +286,18 @@ doCompareNodeSets(
 		const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
 		assert(theLHSNode != 0);
 
-		const XalanDOMString	s1 =
-				theTypeFunction(*theLHSNode);
+		XalanDOMString	s1;
+
+		theTypeFunction(*theLHSNode, s1);
 
 		for(unsigned int k = 0; k < len2 && theResult == false; k++)
 		{
 			const XalanNode* const	theRHSNode = theRHSNodeSet.item(k);
 			assert(theRHSNode != 0);
 
-			const XalanDOMString	s2 =
-					theTypeFunction(*theRHSNode);
+			XalanDOMString	s2;
+
+			theTypeFunction(*theRHSNode, s2);
 
 			if(theCompareFunction(s1, s2) == true)
 			{
@@ -286,7 +328,9 @@ doCompare(
 		const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
 		assert(theLHSNode != 0);
 
-		const Type	theLHS = theTypeFunction(*theLHSNode);
+		Type	theLHS;
+
+		theTypeFunction(*theLHSNode, theLHS);
 
 		if (theCompareFunction(theLHS, theRHS) == true)
 		{

@@ -62,6 +62,10 @@
 
 
 
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include "XercesDOMException.hpp"
 
 
@@ -93,16 +97,16 @@ XercesDOMImplementationBridge::hasFeature(
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version)
 {
-	return m_xercesNode.hasFeature(feature, version);
+	return m_xercesNode.hasFeature(c_wstr(feature), c_wstr(version));
 }
 
 
 
 XalanDocumentType*
 XercesDOMImplementationBridge::createDocumentType(
-			const DOMString&	qualifiedName,
-			const DOMString&	publicId,
-			const DOMString&	systemId)
+			const XalanDOMString&	qualifiedName,
+			const XalanDOMString&	publicId,
+			const XalanDOMString&	systemId)
 {
 	// $$$ ToDo: Fix this!!!
 	throw XercesDOMException(XercesDOMException::NO_MODIFICATION_ALLOWED_ERR);

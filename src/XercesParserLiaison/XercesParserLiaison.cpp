@@ -71,8 +71,11 @@
 
 
 
+#include <Include/XalanAutoPtr.hpp>
+
+
+
 #include <PlatformSupport/STLHelper.hpp>
-#include <PlatformSupport/XalanAutoPtr.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 
 
@@ -81,6 +84,7 @@
 
 
 
+#include "XercesDOMSupport.hpp"
 #include "XercesDocumentBridge.hpp"
 
 
@@ -99,11 +103,11 @@ static const XalanDOMChar	theDefaultSpecialCharacters[] =
 
 
 
-XercesParserLiaison::XercesParserLiaison(DOMSupport&	theSupport) :
+XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	theSupport) :
 	m_DOMSupport(theSupport),
 	m_specialCharacters(theDefaultSpecialCharacters),
 	m_indent(-1),
-	m_shouldExpandEntityRefs(false),
+	m_shouldExpandEntityRefs(true),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),
 	m_doNamespaces(true),
@@ -152,7 +156,7 @@ XercesParserLiaison::supportsSAX() const
 
 void
 XercesParserLiaison::parseXMLStream(
-			InputSource&			urlInputSource,
+			const InputSource&		urlInputSource,
 			DocumentHandler&		handler,
 			const XalanDOMString&	/* identifier */)
 {
@@ -167,7 +171,7 @@ XercesParserLiaison::parseXMLStream(
 
 XalanDocument*
 XercesParserLiaison::parseXMLStream(
-			InputSource&			reader,
+			const InputSource&		reader,
 			const XalanDOMString&	/* identifier */)
 {
 	XalanAutoPtr<DOMParser>		theParser(CreateDOMParser());
@@ -213,7 +217,7 @@ XercesParserLiaison::getDOMFactory()
 /**
  * Returns the element name with the namespace expanded.
  */
-XalanDOMString
+const XalanDOMString&
 XercesParserLiaison::getExpandedElementName(const XalanElement&		elem) const
 {
 	return m_DOMSupport.getExpandedElementName(elem);
@@ -224,7 +228,7 @@ XercesParserLiaison::getExpandedElementName(const XalanElement&		elem) const
 /**
  * Returns the attribute name with the namespace expanded.
  */
-XalanDOMString
+const XalanDOMString&
 XercesParserLiaison::getExpandedAttributeName(const XalanAttr&	attr) const
 {
 	return m_DOMSupport.getExpandedAttributeName(attr);

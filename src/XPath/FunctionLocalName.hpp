@@ -113,13 +113,17 @@ public:
 								   context);
 		}
 
-		XalanDOMString	theData;
+		XObject*	theResult = 0;
 
 		if (theSize == 0)
 		{
 			if (context == 0)
 			{
 				executionContext.error("The local-name() function requires a non-null context node!");
+			}
+			else
+			{
+				theResult = getLocalName(executionContext, *context);
 			}
 		}
 		else
@@ -128,25 +132,17 @@ public:
 
 			const NodeRefListBase&	theNodeList = args[0]->nodeset();
 
-			if (theNodeList.getLength() > 0)
+			if (theNodeList.getLength() == 0)
 			{
-				context = theNodeList.item(0);
+				theResult = executionContext.getXObjectFactory().createString(XalanDOMString());
+			}
+			else
+			{
+				theResult = getLocalName(executionContext, *theNodeList.item(0));
 			}
 		}
 
-		if (context != 0)
-		{
-			const XalanNode::NodeType	theType = context->getNodeType();
-
-			if(theType == XalanNode::ATTRIBUTE_NODE ||
-				theType == XalanNode::ELEMENT_NODE ||
-				theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
-			{
-				theData = executionContext.getLocalNameOfNode(*context);
-			}
-		}
-
-		return executionContext.getXObjectFactory().createString(theData);
+		return theResult;
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
@@ -160,6 +156,25 @@ public:
 	}
 
 private:
+
+	XObject*
+	getLocalName(
+			XPathExecutionContext&	executionContext,
+			const XalanNode&		node)
+	{
+		const XalanNode::NodeType	theType = node.getNodeType();
+
+		if(theType == XalanNode::ATTRIBUTE_NODE ||
+			theType == XalanNode::ELEMENT_NODE ||
+			theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
+		{
+			return executionContext.getXObjectFactory().createString(executionContext.getLocalNameOfNode(node));
+		}
+		else
+		{
+			return executionContext.getXObjectFactory().createString(XalanDOMString());
+		}
+	}
 
 	// Not implemented...
 	FunctionLocalName&

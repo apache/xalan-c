@@ -83,11 +83,11 @@
 
 
 
+#include <Include/XalanArrayKeyMap.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
-#include <XPath/QName.hpp>
 
 
 
@@ -142,6 +142,9 @@ public:
 
 	virtual void
 	startDocument();
+
+	virtual void
+	endDocument();
 
 	virtual void
 	startElement(
@@ -223,7 +226,7 @@ public:
 
 		void
 		setAttr(
-				const XalanDOMString&	name,
+				const XalanDOMChar*		name,
 				unsigned int			flags)
 		{
 			m_attrs.insert(AttributeMapType::value_type(name, flags));
@@ -231,7 +234,7 @@ public:
 
 		bool
 		isAttrFlagSet(
-				const XalanDOMString&	name,
+				const XalanDOMChar*		name,
 				unsigned int			flags) const
 		{
 			const AttributeMapType::const_iterator	i =
@@ -249,11 +252,10 @@ public:
 
 	private:
 
-	#if defined(XALAN_NO_NAMESPACES)
-		typedef map<XalanDOMString, unsigned int, less<XalanDOMString> >	AttributeMapType;
-	#else
-		typedef std::map<XalanDOMString, unsigned int>	AttributeMapType;
-	#endif
+		typedef XalanArrayKeyMap<
+					XalanDOMChar,
+					unsigned int,
+					less_no_case_ascii_wide_string>		AttributeMapType;
 
 		const unsigned int	m_flags;
 
@@ -261,13 +263,10 @@ public:
 	};
 
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString,
+	typedef XalanArrayKeyMap<
+				XalanDOMChar,
 				ElemDesc,
-				less<XalanDOMString> >			ElementFlagsMapType;
-#else
-	typedef std::map<XalanDOMString, ElemDesc>	ElementFlagsMapType;
-#endif
+				less_no_case_ascii_wide_string>		ElementFlagsMapType;
 
 protected:
 
@@ -348,26 +347,17 @@ private:
 	void
 	initCharsMap();
 
-	unsigned int
-	copyEntityIntoBuffer(
-			const XalanDOMChar*		s,
-			unsigned int			pos);
+	void
+	copyEntityIntoBuffer(const XalanDOMChar*	s);
 
-	unsigned int
-	copyEntityIntoBuffer(
-			const XalanDOMString&	s,
-			unsigned int			pos)
-	{
-		return copyEntityIntoBuffer(c_wstr(s), pos);
-	}
+	void
+	copyEntityIntoBuffer(const char*	s);
 
-	unsigned int
-	copyEntityIntoBuffer(
-			const XalanDOMCharVectorType&	s,
-			unsigned int					pos)
-	{
-		return copyEntityIntoBuffer(c_wstr(s), pos);
-	}
+	void
+	copyEntityIntoBuffer(const XalanDOMString&	s);
+
+	void
+	copyEntityIntoBuffer(const XalanDOMCharVectorType&	s);
 
 	/**
 	 * Get an ElemDesc instance for the specified name.
@@ -376,7 +366,7 @@ private:
 	 * @return a const reference to the ElemDesc instance.
 	 */
 	static const ElemDesc&
-	getElemDesc(const XalanDOMString&	name);
+	getElemDesc(const XalanDOMChar*		name);
 
 	/**
 	 * Initialize the map of element flags.
@@ -415,6 +405,10 @@ private:
 	bool			m_inBlockElem;
 
 	BoolStackType	m_isRawStack;
+
+	bool			m_isScriptOrStyleElem;
+
+	bool			m_isFirstElem;
 };
 
 

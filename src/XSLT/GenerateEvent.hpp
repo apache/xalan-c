@@ -155,9 +155,21 @@ public:
 	*/
 	GenerateEvent(
 			EventType				eventType,
-			const XalanDOMString&	name,
+			const XalanDOMChar*		name,
 			AttributeList*			atts);
-	
+
+	/** 
+	* Constructor for startElement, endElement events.
+	* 
+	* @param eventType one of the EVENTTYPE_XXX constants
+	* @param name      name of the element
+	* @param atts      SAX attribute list
+	*/
+	GenerateEvent(
+			EventType				eventType,
+			const XalanDOMString&	name,
+			const AttributeList*	atts = 0);
+
 	/** 
 	* Constructor for characters, cdate events.
 	*
@@ -181,8 +193,8 @@ public:
 	*/
 	GenerateEvent(
 			EventType				eventType,
-			const XalanDOMString&	name,
-			const XalanDOMString&	data);
+			const XalanDOMChar*		name,
+			const XalanDOMChar*		data);
 	
 	/** 
 	* Constructor for comment and entity ref events.
@@ -193,44 +205,43 @@ public:
 	*/
 	GenerateEvent(
 			EventType				eventType,
-			const XalanDOMString&	data);
+			const XalanDOMChar*		data);
 
 	/** 
 	 * The type of SAX event that was generated, as enumerated in the
 	 * EVENTTYPE_XXX constants above.
 	 */
-	EventType			m_eventType;
-
+	EventType				m_eventType;
 
 	/** 
 	 * Character data from a character or cdata event.
 	 */
-	XalanDOMString		m_characters;
+	XalanDOMString			m_characters;
 
 	/** 
 	 * The start position of the current data in m_characters.
 	 */
-	unsigned int		m_start;
+	unsigned int			m_start;
 
 	/** 
 	 * The length of the current data in m_characters.
 	 */
-	unsigned int		m_length;
+	unsigned int			m_length;
 
 	/** 
 	 * The name of the element or PI.
 	 */
-	XalanDOMString		m_name;
+	XalanDOMString			m_name;
 
 	/** 
 	 * The string data in the element (comments and PIs).
 	 */
-	XalanDOMString		m_data;
+	XalanDOMString			m_data;
 
 	/** 
 	 * The current attribute list.
 	 */
-	AttributeList*		m_pAtts;
+	const AttributeList*	m_pAtts;
 };
 
 

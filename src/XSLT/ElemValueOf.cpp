@@ -66,6 +66,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
 
@@ -83,7 +87,7 @@
 ElemValueOf::ElemValueOf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -135,14 +139,14 @@ ElemValueOf::ElemValueOf(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 			} 
 		}
 	}
 
 	if(0 == m_selectPattern)
 	{
-		constructionContext.error(name + " requires a select attribute.");
+		constructionContext.error(XalanDOMString(name) + " requires a select attribute.");
 	}
 }
 
@@ -165,32 +169,29 @@ ElemValueOf::execute(
 
 	if (m_isDot == true)
 	{
-		XalanDOMString	theValue;
+//		const XalanNode::NodeType	type = sourceNode->getNodeType();
 
-		const XalanNode::NodeType	type = sourceNode->getNodeType();
+//		if(type == XalanNode::COMMENT_NODE ||
+//         type == XalanNode::PROCESSING_INSTRUCTION_NODE)
+//		{
+//			outputValue(executionContext, sourceNode->getNodeValue());
 
-		if(type == XalanNode::COMMENT_NODE ||
-           type == XalanNode::PROCESSING_INSTRUCTION_NODE)
+//			if(0 != executionContext.getTraceListeners())
+//			{
+//				fireSelectionEvent(executionContext, sourceNode, theValue);
+//			}
+//		}
+//		else
 		{
-			theValue = sourceNode->getNodeValue();
-		}
-		else
-		{
-			theValue = sourceNode->getXSLTData();
-		}
+			const XalanDOMString	theValue = DOMServices::getNodeData(*sourceNode);
 
-		if(0 != executionContext.getTraceListeners())
-		{
-			executionContext.fireSelectEvent(
-				SelectionEvent(executionContext,
-							   sourceNode,
-							   *this,
-							   XalanDOMString(XALAN_STATIC_UCODE_STRING("select")),
-							   *m_selectPattern,
-							   executionContext.getXObjectFactory().createString(theValue)));       
-		}
+			outputValue(executionContext, theValue);
 
-		outputValue(executionContext, theValue);
+			if(0 != executionContext.getTraceListeners())
+			{
+				fireSelectionEvent(executionContext, sourceNode, theValue);
+			}
+		}
 	}
 	else
 	{
@@ -200,13 +201,7 @@ ElemValueOf::execute(
 
 		if(0 != executionContext.getTraceListeners())
 		{
-			executionContext.fireSelectEvent(
-				SelectionEvent(executionContext,
-							   sourceNode,
-							   *this,
-							   XalanDOMString(XALAN_STATIC_UCODE_STRING("select")),
-							   *m_selectPattern,
-							   value.get()));       
+			fireSelectionEvent(executionContext, sourceNode, value.get());
 		}
 
 		if(0 != value.get())
@@ -241,4 +236,37 @@ ElemValueOf::outputValue(
 			executionContext.charactersRaw(toCharArray(theValue), 0, len);
 		}
 	}
+}
+
+
+
+void
+ElemValueOf::	fireSelectionEvent(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceNode,
+			const XalanDOMString&			theValue) const
+{
+	const XObjectGuard		value(
+			executionContext.getXObjectFactory(),
+			executionContext.getXObjectFactory().createString(theValue));
+
+	fireSelectionEvent(executionContext, sourceNode, value.get());
+}
+
+
+
+void
+ElemValueOf::fireSelectionEvent(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceNode,
+			const XObject*					theValue) const
+{
+	executionContext.fireSelectEvent(
+				SelectionEvent(
+					executionContext,
+					sourceNode,
+					*this,
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+					*m_selectPattern,
+					theValue));
 }

@@ -170,7 +170,7 @@ StylesheetRoot::process(
 			StylesheetExecutionContext&		executionContext) const
 {
 	// Find the root pattern in the XSL.
-	const ElemTemplate* rootRule =
+	const ElemTemplate*		rootRule =
 			findTemplate(executionContext, sourceTree, sourceTree);
 
 	if(0 == rootRule)
@@ -189,8 +189,8 @@ StylesheetRoot::process(
 		
 	if(executionContext.doDiagnosticsOutput())
 	{
-		executionContext.diag(XALAN_STATIC_UCODE_STRING("============================="));
-		executionContext.diag(XALAN_STATIC_UCODE_STRING("Transforming..."));
+		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("=============================")));
+		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Transforming...")));
 		executionContext.pushTime(&sourceTree);
 	}
 
@@ -206,9 +206,9 @@ StylesheetRoot::process(
 
 	executionContext.startDocument();
 
-	// Output the action of the found root rule.	All processing
-	// occurs from here.	buildResultFromTemplate is highly recursive.
-	rootRule->execute(executionContext, sourceTree, sourceTree, QName());
+	// Output the action of the found root rule.  All processing
+	// occurs from here.
+	rootRule->execute(executionContext, sourceTree, sourceTree);
 
 	executionContext.endDocument();
 
@@ -217,9 +217,9 @@ StylesheetRoot::process(
 
 	if(executionContext.doDiagnosticsOutput())
 	{
-		executionContext.diag(XALAN_STATIC_UCODE_STRING(""));
-		executionContext.displayDuration(XALAN_STATIC_UCODE_STRING("transform"), &sourceTree);
-		executionContext.diag(XALAN_STATIC_UCODE_STRING(""));
+		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("")));
+		executionContext.displayDuration(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("transform")), &sourceTree);
+		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("")));
 	}
 }
 
@@ -230,11 +230,7 @@ StylesheetRoot::setupFormatterListener(
 			XSLTResultTarget&				outputTarget,
 			StylesheetExecutionContext&		executionContext) const
 {
-	FormatterListener*	flistener = 0;
-
-	Writer*				pw = 0;
-
-	flistener = outputTarget.getFormatterListener();
+	FormatterListener*	flistener = outputTarget.getFormatterListener();;
 
 	if(flistener == 0)
 	{
@@ -256,26 +252,14 @@ StylesheetRoot::setupFormatterListener(
 			(0 != outputTarget.getByteStream()) ||
 			(0 != outputTarget.getFileName().length()))
 	{
+		Writer*		pw = 0;
+
 		if(0 != outputTarget.getCharacterStream())
 		{
 			pw = outputTarget.getCharacterStream();
 		}
 		else
 		{
-/*
-				java:
-				XalanDOMString mimeEncoding;
-				XalanDOMString encoding;
-				mimeEncoding = getOutputEncoding();
-				encoding = getJavaOutputEncoding();
-				if(0 == encoding)
-				{
-					m_processor->m_diagnosticsPrintWriter.println("Encoding not supported: "+mimeEncoding);
-					mimeEncoding = "UTF-8";
-					encoding = FormatterToXML.convertMime2JavaEncoding(mimeEncoding);
-				}
-*/
-
 			if(0 != outputTarget.getByteStream())
 			{
 				pw = executionContext.createPrintWriter(*outputTarget.getByteStream());
@@ -297,8 +281,9 @@ StylesheetRoot::setupFormatterListener(
 		}
 
 		int			indentAmount = executionContext.getIndent();
+
 		const bool	doIndent = (indentAmount > -1) ? true : m_indentResult;
-			
+
 		switch(m_outputMethod)
 		{
 		case FormatterListener::OUTPUT_METHOD_HTML:
@@ -393,11 +378,11 @@ StylesheetRoot::getJavaOutputEncoding() const
 
     if(isEmpty(m_encoding))
 	{
-		encoding  = XALAN_STATIC_UCODE_STRING("UTF8");
+		encoding  = StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("UTF8"));
 	}
-    else if(equalsIgnoreCase(m_encoding, XALAN_STATIC_UCODE_STRING("UTF-16")))
+    else if(equalsIgnoreCase(m_encoding, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("UTF-16"))))
 	{
-		encoding  = XALAN_STATIC_UCODE_STRING("Unicode");
+		encoding  = StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Unicode"));
 	}
 
 // @@ JMD: do we need this ??
@@ -481,7 +466,7 @@ StylesheetRoot::processOutputSpec(
 		}
 		else if (isAttrOK(aname, atts, i, constructionContext) == false)
 		{
-			constructionContext.error(name + XalanDOMString(" has an illegal attribute: ")+aname);
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 		}
 	}
 
@@ -513,7 +498,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 
 		m_defaultRule = new ElemTemplate(constructionContext,
 										 *this,
-										 Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING, 
+										 c_wstr(Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING), 
 										 attrs,
 										 lineNumber,
 										 columnNumber);
@@ -523,7 +508,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		ElemApplyTemplates* childrenElement 
 		  = new ElemApplyTemplates(constructionContext,
 								   *this,
-								   Constants::ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING,
+								   c_wstr(Constants::ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING),
 								   attrs,
 								   lineNumber,
 								   columnNumber);
@@ -540,7 +525,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 
 		m_defaultTextRule = new ElemTemplate(constructionContext,
 											 *this,
-											 Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING,
+											 c_wstr(Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING),
 											 attrs,
 											 lineNumber,
 											 columnNumber);
@@ -553,7 +538,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		ElemValueOf* elemValueOf =
 			new ElemValueOf(constructionContext,
 							*this,
-							Constants::ELEMNAME_VALUEOF_WITH_PREFIX_STRING,
+							c_wstr(Constants::ELEMNAME_VALUEOF_WITH_PREFIX_STRING),
 							attrs,
 							lineNumber,
 							columnNumber);
@@ -570,7 +555,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		m_defaultRootRule =
 			new ElemTemplate(constructionContext,
 							 *this,
-							 Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING,
+							 c_wstr(Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING),
 							 attrs,
 							 lineNumber,
 							 columnNumber);
@@ -580,7 +565,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		childrenElement =
 			new ElemApplyTemplates(constructionContext,
 								   *this,
-								   Constants::ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING,
+								   c_wstr(Constants::ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING),
 								   attrs,
 								   lineNumber,
 								   columnNumber);

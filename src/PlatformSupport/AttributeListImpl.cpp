@@ -64,17 +64,18 @@
 
 
 
-#include "DOMStringHelper.hpp"
-#include "XalanAutoPtr.hpp"
+#include <Include/XalanAutoPtr.hpp>
+
+
+
+#include "STLHelper.hpp"
 
 
 
 AttributeListImpl::AttributeListImpl() :
 	AttributeList(),
-	m_AttributeKeyMap(),
 	m_AttributeVector()
 {
-	m_AttributeVector.reserve(eDefaultVectorSize);
 }
 
 
@@ -89,28 +90,24 @@ AttributeListImpl::~AttributeListImpl()
 
 AttributeListImpl::AttributeListImpl(const AttributeListImpl&	theSource) :
 	AttributeList(),
-	m_AttributeKeyMap(),
 	m_AttributeVector()
 {
 	// Use the assignment operator to do the dirty work...
 	*this = theSource;
 
 	assert(getLength() == theSource.getLength());
-	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 }
 
 
 
 AttributeListImpl::AttributeListImpl(const AttributeList&	theSource) :
 	AttributeList(),
-	m_AttributeKeyMap(),
 	m_AttributeVector()
 {
 	// Use the assignment operator to do the dirty work...
 	*this = theSource;
 
 	assert(getLength() == theSource.getLength());
-	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 }
 
 
@@ -122,7 +119,7 @@ AttributeListImpl::deleteEntries(AttributeVectorType&	theVector)
 	using std::for_each;
 #endif
 
-	// Delete all of the objects in the temp vector.
+	// Delete all of the objects in the vector.
 	for_each(theVector.begin(),
 			 theVector.end(),
 			 DeleteFunctor<AttributeVectorEntry>());
@@ -140,47 +137,38 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 
 		// Some temporary structures to hold everything
 		// until we're done.
-		AttributeKeyMapType		tempMap;
 		AttributeVectorType		tempVector;
 
 		const unsigned int	theLength = theRHS.getLength();
 
-		// Reserve the appropriate capacity right now...
-		tempVector.reserve(theLength);
-
+		if (theLength > 0)
 		{
+			// Reserve the appropriate capacity right now...
+			tempVector.reserve(theLength);
+
 			// This will delete everything in tempVector when we're done...
 			CollectionDeleteGuard<AttributeVectorType,
 								  DeleteFunctor<AttributeVectorEntry> >		theGuard(tempVector);
 
-			// Copy the vector entries, and build the index map...
-			for(unsigned int i = 0; i < theLength; i++)
-			{
-				assert(theRHS.m_AttributeVector[i] != 0);
+			typedef AttributeVectorType::const_iterator		const_iterator;
 
-				XalanAutoPtr<AttributeVectorEntry>	theEntry(
-						new AttributeVectorEntry(*theRHS.m_AttributeVector[i]));
+			const const_iterator	theEnd = theRHS.m_AttributeVector.begin();
+
+			// Copy the vector entries, and build the index map...
+			for(const_iterator i = theRHS.m_AttributeVector.end(); i != theEnd; ++i)
+			{
+				assert(*i != 0);
 
 				// Add the item...
-				tempVector.push_back(theEntry.get());
-
-				// The entry is now safely in the vector, so release the
-				// XalanAutoPtr...
-				AttributeVectorEntry* const		entry = theEntry.release();
-
-				// Create an entry in the index map...
-				tempMap.insert(AttributeKeyMapType::value_type(entry->m_Name.begin(),
-																   entry));
+				tempVector.push_back(new AttributeVectorEntry(**i));
 			}
 
 			// OK, we're safe, so swap the contents of the
 			// containers.  This is guaranteed not to throw.
-			m_AttributeKeyMap.swap(tempMap);
 			m_AttributeVector.swap(tempVector);
 		}
 
 		assert(getLength() == theLength);
-		assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 	}
 
 	return *this;
@@ -227,8 +215,6 @@ AttributeListImpl::operator=(const AttributeList&	theRHS)
 unsigned int
 AttributeListImpl::getLength() const
 {
-	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
-
 	return m_AttributeVector.size();
 }
 
@@ -238,7 +224,6 @@ const XMLCh*
 AttributeListImpl::getName(const unsigned int index) const
 {
 	assert(index < getLength());
-	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 
 	return m_AttributeVector[index]->m_Name.begin();
 }
@@ -249,7 +234,6 @@ const XMLCh*
 AttributeListImpl::getType(const unsigned int index) const
 {
 	assert(index < getLength());
-	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 
 	return m_AttributeVector[index]->m_Type.begin();
 }
@@ -260,10 +244,29 @@ const XMLCh*
 AttributeListImpl::getValue(const unsigned int index) const
 {
 	assert(index < getLength());
-	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 
 	return m_AttributeVector[index]->m_Value.begin();
 }
+
+
+
+struct NameCompareFunctor
+{
+	NameCompareFunctor(const XMLCh*		theName) :
+		m_name(theName)
+	{
+	}
+
+	bool
+	operator()(const AttributeListImpl::AttributeVectorEntry*	theEntry) const
+	{
+		return equals(theEntry->m_Name.begin(), m_name);
+	}
+
+private:
+
+	const XMLCh* const	m_name;
+};
 
 
 
@@ -271,16 +274,21 @@ const XMLCh*
 AttributeListImpl::getType(const XMLCh* const name) const
 {
 	assert(name != 0);
-	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 
-	// Find the name in the key map.
-	const AttributeKeyMapType::const_iterator	i =
-				m_AttributeKeyMap.find(name);
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find_if;
+#endif
 
-	if (i != m_AttributeKeyMap.end())
+	const AttributeVectorType::const_iterator	i =
+		find_if(
+			m_AttributeVector.begin(),
+			m_AttributeVector.end(),
+			NameCompareFunctor(name));
+
+	if (i != m_AttributeVector.end())
 	{
 		// Found it, so return a pointer to the type.
-		return (*i).second->m_Type.begin();
+		return (*i)->m_Type.begin();
 	}
 	else
 	{
@@ -302,16 +310,21 @@ const XMLCh*
 AttributeListImpl::getValue(const XMLCh* const name) const
 {
 	assert(name != 0);
-	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 
-	// Find the name in the key map.
-	const AttributeKeyMapType::const_iterator	i =
-				m_AttributeKeyMap.find(name);
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find_if;
+#endif
 
-	if (i != m_AttributeKeyMap.end())
+	const AttributeVectorType::const_iterator	i =
+		find_if(
+			m_AttributeVector.begin(),
+			m_AttributeVector.end(),
+			NameCompareFunctor(name));
+
+	if (i != m_AttributeVector.end())
 	{
 		// Found it, so return a pointer to the value.
-		return (*i).second->m_Value.begin();
+		return (*i)->m_Value.begin();
 	}
 	else
 	{
@@ -332,24 +345,24 @@ AttributeListImpl::clear()
 
 	// Clear everything out.
 	m_AttributeVector.clear();
-	m_AttributeKeyMap.clear();
 }
+
 
 
 
 // A convenience function to find the length of a null-terminated
 // array of XMLChs
-static const XMLCh*
+inline const XMLCh*
 endArray(const XMLCh*	data)
 {
-	const XMLCh*	theEnd = data;
+	assert(data != 0);
 
-	while(*theEnd)
+	while(*data)
 	{
-		++theEnd;
+		++data;
 	}
 
-	return theEnd;
+	return data;
 }
 
 
@@ -360,39 +373,42 @@ AttributeListImpl::addAttribute(
 			const XMLCh*	type,
 			const XMLCh*	value)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::copy;
-#endif
-
 	assert(name != 0);
 	assert(type != 0);
 	assert(value != 0);
-	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 
 	bool	fResult = false;
 
-	// Update the attribute, if it's already there...
-	const AttributeKeyMapType::iterator		i =
-		m_AttributeKeyMap.find(name);
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find_if;
+	using std::copy;
+#endif
 
-	if (i != m_AttributeKeyMap.end())
+	// Update the attribute, if it's already there...
+	const AttributeVectorType::const_iterator	i =
+		find_if(
+			m_AttributeVector.begin(),
+			m_AttributeVector.end(),
+			NameCompareFunctor(name));
+
+	if (i != m_AttributeVector.end())
 	{
 		// This is a special optimization for type, since it's (almost) always "CDATA".
-		if (equals(type, (*i).second->m_Type.begin()) == false)
+		if (equals(type, (*i)->m_Type.begin()) == false)
 		{
 			// If necessary, create the a new vector and swap them.  Otherwise,
 			// just copy the new data in.
 			const XMLCh* const	theNewTypeEnd = endArray(type) + 1;
 
-			if ((*i).second->m_Type.capacity() < XMLChVectorType::size_type(theNewTypeEnd - type))
+			if ((*i)->m_Type.capacity() < XMLChVectorType::size_type(theNewTypeEnd - type))
 			{
 				XMLChVectorType		theNewType(type, theNewTypeEnd);
 
-				theNewType.swap((*i).second->m_Type);
+				theNewType.swap((*i)->m_Type);
 			}
 			else
 			{
-				copy(type, theNewTypeEnd, (*i).second->m_Type.begin());
+				copy(type, theNewTypeEnd, (*i)->m_Type.begin());
 			}
 		}
 
@@ -400,39 +416,35 @@ AttributeListImpl::addAttribute(
 
 		// If necessary, create the a new vector and swap them.  Otherwise,
 		// just copy the new data in.
-		if ((*i).second->m_Value.capacity() < XMLChVectorType::size_type(theNewValueEnd - value))
+		if ((*i)->m_Value.capacity() < XMLChVectorType::size_type(theNewValueEnd - value))
 		{
 			XMLChVectorType		theNewValue(value, theNewValueEnd);
 
-			theNewValue.swap((*i).second->m_Value); 
+			theNewValue.swap((*i)->m_Value); 
 		}
 		else
 		{
-			copy(value, theNewValueEnd, (*i).second->m_Value.begin());
+			copy(value, theNewValueEnd, (*i)->m_Value.begin());
 		}
 	}
 	else
 	{
-		XalanAutoPtr<AttributeVectorEntry>	theEntry(
-					new AttributeVectorEntry(XMLChVectorType(name, endArray(name) + 1),
-											 XMLChVectorType(value, endArray(value) + 1),
-											 XMLChVectorType(type, endArray(type) + 1)));
+		if (m_AttributeVector.capacity() == 0)
+		{
+			m_AttributeVector.reserve(eDefaultVectorSize);
+		}
+
+		XalanAutoPtr<AttributeVectorEntry>	theEntry(new AttributeVectorEntry(name, value, type));
 
 		// Add the new one.
 		m_AttributeVector.push_back(theEntry.get());
 
 		// The entry is now safely in the vector, so release the
 		// XalanAutoPtr...
-		AttributeVectorEntry* const		entry = theEntry.release();
-
-		// Create an entry in the index map.
-		m_AttributeKeyMap.insert(AttributeKeyMapType::value_type(entry->m_Name.begin(), entry));
+		theEntry.release();
 
 		fResult = true;
 	}
-
-	assert(m_AttributeKeyMap.find(name) != m_AttributeKeyMap.end());
-	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 
 	return fResult;
 }
@@ -443,46 +455,25 @@ bool
 AttributeListImpl::removeAttribute(const XMLCh*		name)
 {
 	assert(name != 0);
-	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::bind1st;
-	using std::equal_to;
 	using std::find_if;
 #endif
 
 	bool	fResult = false;
 
-	// Find it in the key map.
-	const AttributeKeyMapType::iterator		i =
-				m_AttributeKeyMap.find(name);
+	// Update the attribute, if it's already there...
+	const AttributeVectorType::iterator		i =
+		find_if(
+			m_AttributeVector.begin(),
+			m_AttributeVector.end(),
+			NameCompareFunctor(name));
 
-	if (i != m_AttributeKeyMap.end())
+	if (i != m_AttributeVector.end())
 	{
-		// Found it, so now find the entry in the
-		// vector.
-		const AttributeVectorType::iterator		j =
-			find_if(m_AttributeVector.begin(),
-					m_AttributeVector.end(),
-					bind1st(equal_to<AttributeVectorEntry*>(), (*i).second));
-		assert(j != m_AttributeVector.end());
+		delete *i;
 
-		// This will delete the entry, even if something
-		// bad happens updating the containers.
-		XalanAutoPtr<AttributeVectorEntry>	theGuard(*j);
-
-		// Erase it from the vector.
-		m_AttributeVector.erase(j);
-
-		assert(m_AttributeVector.size() ==
-					m_AttributeKeyMap.size() - 1);
-
-		// Erase it from the key map.
-		m_AttributeKeyMap.erase(i);
-
-		assert(m_AttributeVector.size() ==
-					m_AttributeKeyMap.size());
-
+		m_AttributeVector.erase(i);
 		fResult = true;
 	}
 

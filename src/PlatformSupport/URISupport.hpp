@@ -72,8 +72,11 @@
 
 
 
+#include <Include/XalanAutoPtr.hpp>
+
+
+
 #include <PlatformSupport/XSLException.hpp>
-#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -111,11 +114,28 @@ public:
 	 * Determine the fully qualified URI for a string.
 	 *
 	 * @param urlString string to qualify
+	 * @return auto pointer to fully qualified URI
+	 */
+	static URLAutoPtrType
+	getURLFromString(const XalanDOMChar*	urlString);
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
 	 * @return string to fully qualified URI
 	 */
 	static XalanDOMString
-	getURLStringFromString(
-			const XalanDOMString&	urlString);
+	getURLStringFromString(const XalanDOMString&	urlString);
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @return string to fully qualified URI
+	 */
+	static XalanDOMString
+	getURLStringFromString(const XalanDOMChar*	urlString);
 
 	/**
 	 * Determine the fully qualified URI for a string.
@@ -134,12 +154,36 @@ public:
 	 *
 	 * @param urlString string to qualify
 	 * @param base base location for URI
+	 * @return auto pointer to fully qualified URI
+	 */
+	static URLAutoPtrType
+	getURLFromString(
+			const XalanDOMChar*		urlString,
+			const XalanDOMChar*		base);
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @param base base location for URI
 	 * @return string to fully qualified URI
 	 */
 	static XalanDOMString
 	getURLStringFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base);
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @param base base location for URI
+	 * @return string to fully qualified URI
+	 */
+	static XalanDOMString
+	getURLStringFromString(
+			const XalanDOMChar*		urlString,
+			const XalanDOMChar*		base);
 
 	/**
 	 * Normalizes the string passed in, replacing
@@ -150,6 +194,7 @@ public:
 	 */
 	static XalanDOMString&
 	NormalizeURIText(XalanDOMString&	uriString);
+
 
 	class InvalidURIException : public XSLException
 	{

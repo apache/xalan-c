@@ -75,7 +75,7 @@
 ElemPI::ElemPI(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -99,13 +99,13 @@ ElemPI::ElemPI(
 		}
 		else if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 		}
 	}
 
 	if(isEmpty(m_name_atv) == true)
 	{
-		constructionContext.error(name + " must have a name attribute.");
+		constructionContext.error(XalanDOMString(name) + " must have a name attribute.");
 	}
 }
 
@@ -140,7 +140,9 @@ ElemPI::execute(
 		error("processing-instruction name must be a valid NCName: " + piName);
 	}
 
-	const XalanDOMString	data = childrenToString(executionContext, sourceTree, sourceNode, mode);
+	XalanDOMString	data;
+
+	childrenToString(executionContext, sourceTree, sourceNode, mode, data);
 
 	executionContext.processingInstruction(toCharArray(piName), toCharArray(data));
 }

@@ -64,8 +64,11 @@
 
 
 
-#include <XPath/XPathSupport.hpp>
 #include <DOMSupport/DOMServices.hpp>
+
+
+
+#include <XPath/XPathSupport.hpp>
 
 
 
@@ -88,22 +91,24 @@ public:
 	virtual bool
 	isIgnorableWhitespace(const XalanText&	node) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceForPrefix(
 			const XalanDOMString&	prefix, 
 			const XalanElement&		namespaceContext) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceOfNode(const XalanNode&		n) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNameOfNode(const XalanNode&	n) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalNameOfNode(const XalanNode&		n) const;
 
-	virtual XalanDOMString
-	getNodeData(const XalanNode&		n) const;
+	virtual void
+	getNodeData(
+			const XalanNode&	n,
+			XalanDOMString&		s) const;
 
 	virtual XalanNode*
 	getParentOfNode(const XalanNode&	node) const;

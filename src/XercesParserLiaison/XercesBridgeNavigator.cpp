@@ -365,3 +365,19 @@ XercesBridgeNavigator::splitText(
 
 	return theXalanText;
 }
+
+
+
+const XalanDOMString&
+XercesBridgeNavigator::getPooledString(const XalanDOMString&	theString) const
+{
+	return m_ownerDocument->getPooledString(theString);
+}
+
+
+
+const XalanDOMString&
+XercesBridgeNavigator::	getPooledString(const XalanDOMChar*		theString) const
+{
+	return m_ownerDocument->getPooledString(theString);
+}

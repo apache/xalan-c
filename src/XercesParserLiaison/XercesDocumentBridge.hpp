@@ -83,7 +83,11 @@
 
 
 
-#include <PlatformSupport/XalanAutoPtr.hpp>
+#include <Include/XalanAutoPtr.hpp>
+
+
+
+#include <PlatformSupport/XalanDOMStringPool.hpp>
 
 
 
@@ -93,18 +97,11 @@
 
 #include <XercesParserLiaison/XercesToXalanNodeMap.hpp>
 #include <XercesParserLiaison/XercesBridgeNavigator.hpp>
-#include <XercesParserLiaison/XercesDocumentNamedNodeListCache.hpp>
 #include <XercesParserLiaison/XercesNodeListBridge.hpp>
 #include <XercesParserLiaison/XercesTreeWalker.hpp>
-
-
-#define XALAN_USE_BLOCK_ALLOCATORS
-
-#if defined(XALAN_USE_BLOCK_ALLOCATORS)
 #include <XercesParserLiaison/XercesElementBridgeAllocator.hpp>
 #include <XercesParserLiaison/XercesTextBridgeAllocator.hpp>
 #include <XercesParserLiaison/XercesAttributeBridgeAllocator.hpp>
-#endif
 
 
 
@@ -151,10 +148,10 @@ public:
 
 	// These interfaces are inherited from XalanNode...
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeName() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeValue() const;
 
 	virtual NodeType
@@ -221,13 +218,13 @@ public:
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getPrefix() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalName() const;
 
 	virtual void
@@ -238,9 +235,6 @@ public:
 
 	virtual unsigned long
 	getIndex() const;
-
-	virtual XalanDOMString
-	getXSLTData() const;
 
 	virtual XalanElement*
 	createElement(const XalanDOMString& tagName);
@@ -358,9 +352,6 @@ public:
 	}
 
 	/**
-	 *
-	 * Constructor for XercesDocumentBridge.
-	 *
 	 * Build the entire bridge structure.  This should be done before any
 	 * processing begins, if the tree will be shared amongst multiple
 	 * threads.
@@ -435,6 +426,27 @@ public:
 
 		NavigatorStackType				m_siblingNavigatorStack;
 	};
+
+
+	/**
+	 * Get a pooled string.  If the string is not in the pool,
+	 * add it.
+	 *
+	 * @param theString The string to pool.
+	 * @return A const reference to the pooled string.
+	 */
+	const XalanDOMString&
+	getPooledString(const XalanDOMString&	theString) const;
+
+	/**
+	 * Get a pooled string.  If the string is not in the pool,
+	 * add it.
+	 *
+	 * @param theString The string to pool.
+	 * @return A const reference to the pooled string.
+	 */
+	const XalanDOMString&
+	getPooledString(const XalanDOMChar*		theString) const;
 
 private:
 
@@ -552,8 +564,6 @@ private:
 
 	XercesNodeListBridge					m_children;
 
-	XercesDocumentNamedNodeListCache		m_cachedNodeLists;
-
 	mutable XercesToXalanNodeMap			m_nodeMap;
 
 	XalanAutoPtr<XalanDOMImplementation>	m_domImplementation;
@@ -572,13 +582,13 @@ private:
 
 	bool									m_indexValid;
 
-#if defined(XALAN_USE_BLOCK_ALLOCATORS)
 	mutable XercesElementBridgeAllocator	m_elementAllocator;
 
 	mutable XercesTextBridgeAllocator		m_textAllocator;
 
 	mutable XercesAttributeBridgeAllocator	m_attributeAllocator;
-#endif
+
+	mutable	XalanDOMStringPool				m_stringPool;
 };
 
 

@@ -63,8 +63,16 @@
 
 
 
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include "XPathEnvSupport.hpp"
 #include "XPathSupport.hpp"
+
+
+
+const XalanDOMString	ElementPrefixResolverProxy::s_emptyString;
 
 
 
@@ -74,7 +82,8 @@ ElementPrefixResolverProxy::ElementPrefixResolverProxy(
 			const XPathSupport& 	support) :
 	m_namespaceContext(namespaceContext),
 	m_envSupport(envSupport),
-	m_support(support)
+	m_support(support),
+	m_uri()
 {
 }
 
@@ -86,12 +95,12 @@ ElementPrefixResolverProxy::~ElementPrefixResolverProxy()
 
 
 
-XalanDOMString
+const XalanDOMString&
 ElementPrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&		prefix) const
 {
 	if (m_namespaceContext == 0)
 	{
-		return XalanDOMString();
+		return s_emptyString;
 	}
 	else
 	{
@@ -101,15 +110,18 @@ ElementPrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&		prefix)
 
 
 
-XalanDOMString
+const XalanDOMString&
 ElementPrefixResolverProxy::getURI() const
 {
-	if (m_namespaceContext == 0)
+	if (m_namespaceContext != 0 && length(m_uri) == 0)
 	{
-		return XalanDOMString();
+#if defined(XALAN_NO_MUTABLE)
+		((ElementPrefixResolverProxy*)this)->m_uri =
+#else
+		m_uri =
+#endif
+				m_envSupport.findURIFromDoc(m_namespaceContext->getOwnerDocument());
 	}
-	else
-	{
-		return m_envSupport.findURIFromDoc(m_namespaceContext->getOwnerDocument());
-	}
+
+	return m_uri;
 }

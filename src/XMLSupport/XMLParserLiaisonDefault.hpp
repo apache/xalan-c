@@ -103,12 +103,12 @@ public:
 
 	virtual XalanDocument*
 	parseXMLStream(
-			InputSource&			inputSource,
+			const InputSource&		inputSource,
 			const XalanDOMString&	identifier = XalanDOMString());
 
 	virtual void
 	parseXMLStream(
-			InputSource&			inputSource,
+			const InputSource&		inputSource,
 			DocumentHandler&		handler,
 			const XalanDOMString&	identifier = XalanDOMString());
 
@@ -118,10 +118,10 @@ public:
 	virtual XalanDocument*
 	getDOMFactory();
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getExpandedElementName(const XalanElement&	elem) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getExpandedAttributeName(const XalanAttr&	attr) const;
 
 	virtual const XalanDOMString&

@@ -410,7 +410,7 @@ XPath::executeMore(
 		{
 			const XalanDOMString	theOpCode = LongToDOMString(m_expression.m_opMap[opPos]);
 
-			executionContext.error(XalanDOMString("ERROR! Unknown op code: ") + theOpCode,
+			executionContext.error(TranscodeFromLocalCodePage("ERROR! Unknown op code: ") + theOpCode,
 								   context);
 		}
 		break;
@@ -465,7 +465,7 @@ XPath::getMatchScore(XalanNode*					context,
 	}
 	else
 	{
-		executionContext.error("Expected match pattern in getMatchScore!",
+		executionContext.error(TranscodeFromLocalCodePage("Expected match pattern in getMatchScore!"),
 							   context);
 	}
 	
@@ -482,7 +482,7 @@ XPath::nodeTest(
 			int						/* stepType */,
 			XPathExecutionContext&	executionContext) const
 {
-	executionContext.warn("XPath needs a derived object to implement nodeTest!",
+	executionContext.warn(TranscodeFromLocalCodePage("XPath needs a derived object to implement nodeTest!"),
 						  context);
 
     return s_MatchScoreNone;
@@ -665,7 +665,7 @@ XPath::step(
 			int						/* opPos */,
 			XPathExecutionContext&	executionContext) const
 {    
-	executionContext.warn("XPath needs a derived object to implement step!",
+	executionContext.warn(TranscodeFromLocalCodePage("XPath needs a derived object to implement step!"),
 						  context);
 
 	return 0;
@@ -996,7 +996,7 @@ XPath::quo(
 			XPathExecutionContext&	executionContext) const
 {
 	// Actually, this is no longer supported by xpath...
-	executionContext.warn("Old syntax: quo(...) is no longer defined in XPath.");
+	executionContext.warn(TranscodeFromLocalCodePage("Old syntax: quo(...) is no longer defined in XPath."));
 
 	return div(context, opPos, executionContext);
 }
@@ -1169,15 +1169,15 @@ XPath::variable(
 	}
 	catch(...)
 	{
-		executionContext.error(XalanDOMString("Could not get variable named ") + varName.str());
+		executionContext.error(TranscodeFromLocalCodePage("Could not get variable named ") + varName.str());
 
 		throw;
 	}
 
 	if(0 == result)
 	{
-		executionContext.warn(XalanDOMString("VariableReference given for variable out ") +
-								XalanDOMString("of context or without definition!  Name = ") +
+		executionContext.warn(TranscodeFromLocalCodePage("VariableReference given for variable out ") +
+								TranscodeFromLocalCodePage("of context or without definition!  Name = ") +
 							    varName.str(),
 							  context);
 	}

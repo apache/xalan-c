@@ -71,7 +71,7 @@ SelectionEvent::SelectionEvent(
 			StylesheetExecutionContext&		executionContext,
 			const XalanNode*				sourceNode,
 			const ElemTemplateElement&		styleNode,
-			const DOMString&				attributeName,
+			const XalanDOMString&			attributeName,
 			const XPath&					xpath,
 			const XObject*					selection) :
 	m_executionContext(executionContext),

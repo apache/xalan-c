@@ -74,7 +74,7 @@
 ElemCopy::ElemCopy(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -95,7 +95,7 @@ ElemCopy::ElemCopy(
 				processSpaceAttr(aname, atts, i) ||
 				isAttrOK(aname, atts, i, constructionContext)))
 		{
-			constructionContext.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 		}
 	}
 }
@@ -139,7 +139,7 @@ ElemCopy::execute(
 				sourceNode, 
 				mode);
 
-			const XalanDOMString		s = sourceNode->getNodeName();
+			const XalanDOMString&	s = sourceNode->getNodeName();
 
 			executionContext.endElement(toCharArray(s)); 
 		}

@@ -76,7 +76,8 @@ XalanOutputStream::XalanOutputStream(
 	m_bufferSize(theBufferSize),
 	m_buffer(),
 	m_encoding(),
-	m_writeAsUTF16(false)
+	m_writeAsUTF16(false),
+	m_transcodingBuffer()
 {
 }
 
@@ -324,7 +325,7 @@ XalanOutputStream::getOutputEncoding() const
 void
 XalanOutputStream::setOutputEncoding(const XalanDOMString&	theEncoding)
 {
-	// Flush, just in case.  This should problably be an error...
+	// Flush, just in case.  This should probably be an error...
 	flushBuffer();
 
 	XalanTranscodingServices::destroyTranscoder(m_transcoder);
@@ -415,14 +416,12 @@ XalanOutputStream::doWrite(const XalanDOMChar*	theBuffer)
 		}
 		else
 		{
-			TranscodeVectorType		theTranscodedData;
+			transcode(theBuffer, m_transcodingBuffer);
 
-			transcode(theBuffer, theTranscodedData);
+			assert(&m_transcodingBuffer[0] != 0);
 
-			assert(&theTranscodedData[0] != 0);
-
-			writeData(&theTranscodedData[0],
-					  theTranscodedData.size());
+			writeData(&m_transcodingBuffer[0],
+					  m_transcodingBuffer.size());
 		}
 	}
 	catch(const XalanOutputStreamException&)
@@ -498,8 +497,8 @@ XalanOutputStream::XalanOutputStreamException::~XalanOutputStreamException()
 
 XalanOutputStream::UnknownEncodingException::UnknownEncodingException() :
 	XalanOutputStreamException(
-			XALAN_STATIC_UCODE_STRING("Unknown error occurred while transcoding!"),
-			XALAN_STATIC_UCODE_STRING("UnknownEncodingException"))
+			TranscodeFromLocalCodePage("Unknown error occurred while transcoding!"),
+			TranscodeFromLocalCodePage("UnknownEncodingException"))
 {
 }
 
@@ -513,8 +512,8 @@ XalanOutputStream::UnknownEncodingException::~UnknownEncodingException()
 
 XalanOutputStream::UnsupportedEncodingException::UnsupportedEncodingException(const XalanDOMString&	theEncoding) :
 	XalanOutputStreamException(
-			XALAN_STATIC_UCODE_STRING("Unsupported encoding: ") + theEncoding,
-			XALAN_STATIC_UCODE_STRING("UnsupportedEncodingException")),
+			TranscodeFromLocalCodePage("Unsupported encoding: ") + theEncoding,
+			TranscodeFromLocalCodePage("UnsupportedEncodingException")),
 	m_encoding(theEncoding)
 {
 }
@@ -529,10 +528,10 @@ XalanOutputStream::UnsupportedEncodingException::~UnsupportedEncodingException()
 
 XalanOutputStream::TranscoderInternalFailureException::TranscoderInternalFailureException(const XalanDOMString&	theEncoding) :
 	XalanOutputStreamException(
-			XALAN_STATIC_UCODE_STRING("Unknown error occurred while transcoding to ") +
+			TranscodeFromLocalCodePage("Unknown error occurred while transcoding to ") +
 					theEncoding +
-					XALAN_STATIC_UCODE_STRING("!"),
-			XALAN_STATIC_UCODE_STRING("TranscoderInternalFailureException")),
+					TranscodeFromLocalCodePage("!"),
+			TranscodeFromLocalCodePage("TranscoderInternalFailureException")),
 	m_encoding(theEncoding)
 {
 }
@@ -547,8 +546,8 @@ XalanOutputStream::TranscoderInternalFailureException::~TranscoderInternalFailur
 
 XalanOutputStream::TranscodingException::TranscodingException() :
 	XalanOutputStreamException(
-			XALAN_STATIC_UCODE_STRING("An error occurred while transcoding!"),
-			XALAN_STATIC_UCODE_STRING("TranscodingException"))
+			TranscodeFromLocalCodePage("An error occurred while transcoding!"),
+			TranscodeFromLocalCodePage("TranscodingException"))
 {
 }
 

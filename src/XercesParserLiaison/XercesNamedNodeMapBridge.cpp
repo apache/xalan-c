@@ -139,7 +139,7 @@ XercesNamedNodeMapBridge::item(unsigned int	index) const
 XalanNode*
 XercesNamedNodeMapBridge::getNamedItem(const XalanDOMString& 	name) const
 {
-	return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItem(name));
+	return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItem(c_wstr(name)));
 }
 
 
@@ -160,7 +160,7 @@ XercesNamedNodeMapBridge::removeNamedItem(const XalanDOMString&		name)
 	try
 	{
 		const DOM_Node		theXercesNode =
-			m_xercesNamedNodeMap.removeNamedItem(name);
+			m_xercesNamedNodeMap.removeNamedItem(c_wstr(name));
 
 		// A node was removed, so get it corresponding XalanNode...
 		theXalanNode = m_navigator.mapNode(theXercesNode);
@@ -182,9 +182,9 @@ XercesNamedNodeMapBridge::getNamedItemNS(
 			const XalanDOMString&	localName) const
 {
 #if defined(XALAN_NO_MUTABLE)
-	return m_navigator.mapNode(((XercesNamedNodeMapBridge*)this)->m_xercesNamedNodeMap.getNamedItemNS(namespaceURI, localName));
+	return m_navigator.mapNode(((XercesNamedNodeMapBridge*)this)->m_xercesNamedNodeMap.getNamedItemNS(c_wstr(namespaceURI), c_wstr(localName)));
 #else
-	return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItemNS(namespaceURI, localName));
+	return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItemNS(c_wstr(namespaceURI), c_wstr(localName)));
 #endif
 }
 
@@ -238,7 +238,7 @@ XercesNamedNodeMapBridge::removeNamedItemNS(
 	try
 	{
 		const DOM_Node		theXercesNode =
-			m_xercesNamedNodeMap.removeNamedItemNS(namespaceURI, localName);
+			m_xercesNamedNodeMap.removeNamedItemNS(c_wstr(namespaceURI), c_wstr(localName));
 
 		// A node was removed, so get it corresponding XalanNode...
 		theXalanNode = m_navigator.mapNode(theXercesNode);

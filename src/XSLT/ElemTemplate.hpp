@@ -57,13 +57,7 @@
 #if !defined(XALAN_ELEMTEMPLATE_HEADER_GUARD)
 #define XALAN_ELEMTEMPLATE_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
+
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
@@ -100,12 +94,12 @@ public:
 	 * @param columnNumber			column number in document
 	 */
 	ElemTemplate(
-		StylesheetConstructionContext&	constructionContext,
-		Stylesheet&						stylesheetTree,
-		const XalanDOMString&			name,
-		const AttributeList&			atts,
-		int								lineNumber,
-		int								columnNumber);
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMChar*				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 
 	virtual
 	~ElemTemplate();
@@ -155,13 +149,18 @@ public:
 	}
 
 	// These methods are inherited from ElemTemplateElement ...
-	
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
+
+	virtual	void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode) const;
 
 private:
 

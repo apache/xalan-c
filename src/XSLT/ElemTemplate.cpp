@@ -78,12 +78,12 @@
 
 
 ElemTemplate::ElemTemplate(
-		StylesheetConstructionContext&	constructionContext,
-		Stylesheet&						stylesheetTree,
-		const XalanDOMString&			name,
-		const AttributeList&			atts,
-		int								lineNumber,
-		int								columnNumber) :
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMChar*				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
 						name,
@@ -116,8 +116,9 @@ ElemTemplate::ElemTemplate(
 
 		case Constants::TATTRNAME_PRIORITY:
 			{
-				const XalanDOMString priorityVal = atts.getValue(i);
-				m_priority = DoubleSupport::toDouble(priorityVal);
+				assert(atts.getValue(i) != 0);
+
+				m_priority = DoubleSupport::toDouble(atts.getValue(i));
 			}
 			break;
 
@@ -132,14 +133,14 @@ ElemTemplate::ElemTemplate(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 			}
 		}
 	}
 
 	if(0 == m_matchPattern && m_name.isEmpty() == true)
 	{
-		constructionContext.error(name + " requires either a name or a match attribute.");
+		constructionContext.error(XalanDOMString(name) + " requires either a name or a match attribute.");
 	}
 }
 
@@ -161,4 +162,15 @@ ElemTemplate::execute(
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
 	executeChildren(executionContext, sourceTree, sourceNode, mode);
+}
+
+
+
+void
+ElemTemplate::execute(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode) const
+{
+	execute(executionContext, sourceTree, sourceNode, s_emptyMode);
 }

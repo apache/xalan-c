@@ -79,7 +79,7 @@
 ElemCallTemplate::ElemCallTemplate(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -103,13 +103,13 @@ ElemCallTemplate::ElemCallTemplate(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 		}
 	}
 
 	if (m_templateName.isEmpty() == true)
 	{
-		constructionContext.error(name + " requires a name attribute!");
+		constructionContext.error(XalanDOMString(name) + " requires a name attribute!");
 	}
 }
 

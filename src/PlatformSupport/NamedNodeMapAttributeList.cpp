@@ -157,7 +157,7 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 	// DOM classes return strings by value, so we have to get
 	// the value from the node and store the XalanDOMString somewhere
 	// safe, so we have a vector of XalanDOMStrings to hold everything.
-	const XalanNode*	theNode = m_nodeMap.getNamedItem(name);
+	const XalanNode*	theNode = m_nodeMap.getNamedItem(XalanDOMString(name));
 
 	if (theNode == 0)
 	{

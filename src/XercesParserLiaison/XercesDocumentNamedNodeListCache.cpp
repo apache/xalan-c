@@ -88,7 +88,7 @@ XercesDocumentNamedNodeListCache::~XercesDocumentNamedNodeListCache()
 DOM_NodeList
 XercesDocumentNamedNodeListCache::getXercesNodeList(const XalanDOMString&		tagname) const
 {
-	return m_xercesDocument.getElementsByTagName(tagname);
+	return m_xercesDocument.getElementsByTagName(c_wstr(tagname));
 }
 
 
@@ -98,5 +98,5 @@ XercesDocumentNamedNodeListCache::getXercesNodeList(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const
 {
-	return m_xercesDocument.getElementsByTagNameNS(namespaceURI, localName);
+	return m_xercesDocument.getElementsByTagNameNS(c_wstr(namespaceURI), c_wstr(localName));
 }

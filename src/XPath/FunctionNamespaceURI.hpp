@@ -100,7 +100,7 @@ public:
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
-		XalanDOMString	theNamespace;
+		const XalanDOMString*	theNamespace = 0;
 
 		if (args.size() > 1)
 		{
@@ -137,7 +137,7 @@ public:
 												   executionContext);
 		}
 
-		return executionContext.getXObjectFactory().createString(theNamespace);
+		return executionContext.getXObjectFactory().createString(theNamespace == 0 ? XalanDOMString() : *theNamespace);
 	}
 
 	virtual Function*
@@ -148,20 +148,22 @@ public:
 
 private:
 
-	static XalanDOMString
+	static const XalanDOMString*
 	getNamespaceFromNodeSet(const XObject&			theXObject,
 							XPathExecutionContext&	theContext)
 	{
-		XalanDOMString	theNamespace;
-
 		const NodeRefListBase&	theList = theXObject.nodeset();
 
-		if (theList.getLength() > 0)
+		if (theList.getLength() == 0)
 		{
-			theNamespace = theContext.getNamespaceOfNode(*theList.item(0));
+			return 0;
 		}
+		else
+		{
+			assert(theList.item(0) != 0);
 
-		return theNamespace;
+			return &theContext.getNamespaceOfNode(*theList.item(0));
+		}
 	}
 
 	// Not implemented...

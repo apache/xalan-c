@@ -120,7 +120,7 @@ public:
 	 */
 	virtual XalanDocument*
 	parseXMLStream(
-			InputSource&			inputSource,
+			const InputSource&		inputSource,
 			const XalanDOMString&	identifier = XalanDOMString()) = 0;
 
 	/**
@@ -136,7 +136,7 @@ public:
 	 */
 	virtual void
 	parseXMLStream(
-			InputSource&			inputSource,
+			const InputSource&		inputSource,
 			DocumentHandler&		handler,
 			const XalanDOMString&	identifier = XalanDOMString()) = 0;
 
@@ -163,7 +163,7 @@ public:
 	 * @param elem DOM element queried
 	 * @return string for expanded name of element
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getExpandedElementName(const XalanElement&	elem) const = 0;
 
 	/**
@@ -172,7 +172,7 @@ public:
 	 * @param attr attribute queried
 	 * @return string for expanded name of attribute
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getExpandedAttributeName(const XalanAttr&	attr) const = 0;
 
 	/**

@@ -181,11 +181,11 @@ ExtensionNSHandler::setElements(const XalanDOMString&	elemNames)
 {
     if (length(elemNames) != 0)
 	{
-		StringTokenizer		st(elemNames, " \t\n\r", false);
+		StringTokenizer		st(elemNames, s_tokenDelimiterCharacters, false);
 
 		while (st.hasMoreTokens() == true)
 		{
-		  m_elements.insert(st.nextToken()); // just stick it in there basically
+			m_elements.insert(st.nextToken()); // just stick it in there basically
 		}
 	
 		m_componentDescLoaded = true;

@@ -75,7 +75,7 @@
 FunctionICUFormatNumber::FunctionICUFormatNumberInstaller::FunctionICUFormatNumberInstaller()
 {
 	XPath::installFunction(
-			XALAN_STATIC_UCODE_STRING("format-number"),
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")),
 			FunctionICUFormatNumber());
 }
 
@@ -85,7 +85,7 @@ FunctionICUFormatNumber::FunctionICUFormatNumberInstaller::~FunctionICUFormatNum
 {
 	// Reinstall the standard function to overwrite the ICU version...
 	XPath::installFunction(
-			XALAN_STATIC_UCODE_STRING("format-number"),
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")),
 			FunctionFormatNumber());
 }
 

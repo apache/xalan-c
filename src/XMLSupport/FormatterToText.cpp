@@ -188,6 +188,7 @@ FormatterToText::characters(
 #endif
 		if (chars[i] > m_maxCharacter)
 		{
+			//$$$ ToDo: Figure out what we're going to do here...
 		}
 
 		m_writer.write(chars[i]);

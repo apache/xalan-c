@@ -338,6 +338,8 @@ private:
 	XalanDOMString							m_encoding;
 
 	bool									m_writeAsUTF16;
+
+	TranscodeVectorType						m_transcodingBuffer;
 };
 
 

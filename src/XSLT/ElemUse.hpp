@@ -96,7 +96,7 @@ public:
 	ElemUse(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken = Constants::ELEMNAME_USE);
@@ -116,7 +116,7 @@ public:
 	bool
 	processUseAttributeSets(
 			StylesheetConstructionContext&	constructionContext,
-			const XalanDOMString&			attrName,
+			const XalanDOMChar*				attrName,
 			const AttributeList&			atts,
 			int								which);
 

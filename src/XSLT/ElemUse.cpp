@@ -83,7 +83,7 @@
 ElemUse::ElemUse(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :
@@ -124,7 +124,7 @@ ElemUse::execute(
 bool
 ElemUse::processUseAttributeSets(
 			StylesheetConstructionContext&	constructionContext,
-			const XalanDOMString&			attrName,
+			const XalanDOMChar*				attrName,
 			const AttributeList&			atts,
 			int								which)
 {
@@ -148,7 +148,7 @@ ElemUse::processUseAttributeSets(
 		const XalanDOMChar* const	qnames = atts.getValue(which);
 
 		StringTokenizer				tokenizer(qnames,
-											  XALAN_STATIC_UCODE_STRING(" \t\n\r"),
+											  c_wstr(XALAN_STATIC_UCODE_STRING(" \t\n\r")),
 											  false);
 
 		const unsigned int			numTokens = tokenizer.countTokens();

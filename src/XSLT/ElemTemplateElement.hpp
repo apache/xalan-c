@@ -98,14 +98,6 @@ class StylesheetExecutionContext;
 class XPath;
 
 
-/** 
- * An instance of this class represents an element inside
- * an xsl:template class.  It has a single "execute" method
- * which is expected to perform the given action on the
- * result tree.
- *
- * @see class Stylesheet
- */
 
 class ElemTemplateElement : public XalanElement, public PrefixResolver
 {
@@ -113,7 +105,7 @@ public:
 	/**
 	 * Construct a template element instance.
 	 * 
-	 * @param constructionContext  context when object consructed
+	 * @param constructionContext  context when object constructed
 	 * @param stylesheetTree       owning stylesheet
 	 * @param name                 name of the element
 	 * @param lineNumber           line in the XSLT file where the element occurs
@@ -124,7 +116,7 @@ public:
 	ElemTemplateElement(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken);
@@ -218,6 +210,20 @@ public:
 			const QName&					mode) const;
 
 	/** 
+	 * Execute the element's primary function.  Subclasses of this function may
+	 * recursively execute down the element tree.
+	 * 
+	 * @param executionContext  The current execution context
+	 * @param sourceTree input source tree
+	 * @param sourceNode current context node
+	 */
+	virtual	void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode) const;
+
+	/** 
 	 * Process the children of a template.
 	 * 
 	 * @param processor  XSLT processor instance
@@ -240,14 +246,15 @@ public:
 	 * @param sourceTree primary source tree
 	 * @param sourceNode current source node context
 	 * @param mode       current mode
-	 * @return stringized result of executing the elements children
+	 * @param result result of executing the elements children
 	 */
-	XalanDOMString
+	void
 	childrenToString(
 			StylesheetExecutionContext&		executionContext, 
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
-			const QName&					mode) const;
+			const QName&					mode,
+			XalanDOMString&					result) const;
 
 
 	/** 
@@ -282,6 +289,15 @@ public:
 	error(const XalanDOMString&		msg) const;
 
 	/** 
+	 * Throw a template element runtime error.  
+	 * (Note: should we throw a SAXException instead?)
+	 * 
+	 * @param msg Description of the error that occurred
+	 */
+	virtual	void
+	error(const char*	msg) const;
+
+	/** 
 	 * Get the line number where the element occurs in the xsl file.
 	 * 
 	 * @return line number
@@ -303,7 +319,7 @@ public:
 		return m_columnNumber;
 	}
 
-	const XalanDOMString
+	const XalanDOMString&
 	getElementName() const
 	{
 		return m_elemName;
@@ -474,10 +490,10 @@ public:
 
 	// These interfaces are inherited from XalanElement ...
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeName() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeValue() const;
 
 	virtual NodeType
@@ -550,13 +566,13 @@ public:
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getPrefix() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalName() const;
 
 	virtual void
@@ -568,13 +584,10 @@ public:
 	virtual unsigned long
 	getIndex() const;
 
-	virtual XalanDOMString
-	getXSLTData() const;
-
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getTagName() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getAttribute(const XalanDOMString&	name) const;
 
 	virtual XalanAttr*
@@ -597,7 +610,7 @@ public:
 	virtual void
 	removeAttribute(const XalanDOMString&	name);
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getAttributeNS(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const;
@@ -629,10 +642,10 @@ public:
 
 	// These interfaces are inherited from PrefixResolver...
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceForPrefix(const XalanDOMString& prefix) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getURI() const;
 
 protected:
@@ -644,7 +657,7 @@ protected:
 	 * @param fReportError If true, and exception will be thrown to report the error.
 	 * @return The namespace string.
 	 */
-	XalanDOMString
+	const XalanDOMString&
 	getNamespaceForPrefixInternal(
 			const XalanDOMString&	prefix,
 			bool					fReportError) const;
@@ -804,6 +817,9 @@ protected:
 
 	bool					m_finishedConstruction;
 
+
+	static const QName		s_emptyMode;
+
 private:
 
 	Stylesheet&				m_stylesheet;
@@ -826,6 +842,8 @@ private:
 	XalanEmptyNamedNodeMap	m_fakeAttributes;
 
 	const XalanDOMString	m_baseIndentifier;
+
+	static const XalanDOMString		s_emptyString;
 };
 
 

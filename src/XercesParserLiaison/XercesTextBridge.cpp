@@ -66,6 +66,7 @@
 
 
 
+#include "XercesBridgeHelper.hpp"
 #include "XercesBridgeNavigator.hpp"
 #include "XercesDOMException.hpp"
 #include "XercesDocumentBridge.hpp"
@@ -90,18 +91,18 @@ XercesTextBridge::~XercesTextBridge()
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesTextBridge::getNodeName() const
 {
-	return m_xercesNode.getNodeName();
+	return m_navigator.getPooledString(m_xercesNode.getNodeNameImpl().rawBuffer());
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesTextBridge::getNodeValue() const
 {
-	return m_xercesNode.getNodeValue();
+	return m_navigator.getPooledString(m_xercesNode.getNodeValueImpl().rawBuffer());
 }
 
 
@@ -248,18 +249,10 @@ XercesTextBridge::hasChildNodes() const
 }
 
 
-
 void
 XercesTextBridge::setNodeValue(const XalanDOMString&	nodeValue)
 {
-	try
-	{
-		m_xercesNode.setNodeValue(nodeValue);
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
 }
 
 
@@ -267,14 +260,7 @@ XercesTextBridge::setNodeValue(const XalanDOMString&	nodeValue)
 void
 XercesTextBridge::normalize()
 {
-	try
-	{
-		m_xercesNode.normalize();
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::normalize(m_xercesNode);
 }
 
 
@@ -284,31 +270,33 @@ XercesTextBridge::supports(
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version) const
 {
-	return m_xercesNode.supports(feature, version);
+	return m_xercesNode.supports(
+				XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
+				XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesTextBridge::getNamespaceURI() const
 {
-	return m_xercesNode.getNamespaceURI();
+	return m_navigator.getPooledString(m_xercesNode.getNamespaceURIImpl().rawBuffer());
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesTextBridge::getPrefix() const
 {
-	return m_xercesNode.getPrefix();
+	return m_navigator.getPooledString(m_xercesNode.getPrefixImpl().rawBuffer());
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesTextBridge::getLocalName() const
 {
-	return m_xercesNode.getLocalName();
+	return m_navigator.getPooledString(m_xercesNode.getLocalNameImpl().rawBuffer());
 }
 
 
@@ -316,14 +304,7 @@ XercesTextBridge::getLocalName() const
 void
 XercesTextBridge::setPrefix(const XalanDOMString&	prefix)
 {
-	try
-	{
-		m_xercesNode.setPrefix(prefix);
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
 }
 
 
@@ -344,18 +325,10 @@ XercesTextBridge::getIndex() const
 
 
 
-XalanDOMString
-XercesTextBridge::getXSLTData() const
-{
-	return DOMServices::getNodeData(*this);
-}
-
-
-
-XalanDOMString
+const XalanDOMString&
 XercesTextBridge::getData() const
 {
-	return m_xercesNode.getData();
+	return m_navigator.getPooledString(m_xercesNode.getDataImpl().rawBuffer());
 }
 
 
@@ -373,14 +346,7 @@ XercesTextBridge::substringData(
 			unsigned int	offset, 
 			unsigned int	count) const
 {
-	try
-	{
-		return m_xercesNode.substringData(offset, count);
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	return XercesBridgeHelper::substringData(m_xercesNode, offset, count);
 }
 
 
@@ -388,14 +354,7 @@ XercesTextBridge::substringData(
 void
 XercesTextBridge::appendData(const XalanDOMString&	arg)
 {
-	try
-	{
-		m_xercesNode.appendData(arg);
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::appendData(m_xercesNode, arg);
 }
 
 
@@ -403,16 +362,9 @@ XercesTextBridge::appendData(const XalanDOMString&	arg)
 void
 XercesTextBridge::insertData(
 			unsigned int			offset,
-			const  XalanDOMString& 	arg)
+			const XalanDOMString& 	arg)
 {
-	try
-	{
-		m_xercesNode.insertData(offset, arg);
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::insertData(m_xercesNode, offset, arg);
 }
 
 
@@ -422,14 +374,7 @@ XercesTextBridge::deleteData(
 			unsigned int	offset, 
 			unsigned int	count)
 {
-	try
-	{
-		m_xercesNode.deleteData(offset, count);
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::deleteData(m_xercesNode, offset, count);
 }
 
 
@@ -440,14 +385,7 @@ XercesTextBridge::replaceData(
 			unsigned int			count, 
 			const XalanDOMString&	arg)
 {
-	try
-	{
-		m_xercesNode.replaceData(offset, count, arg);
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::replaceData(m_xercesNode, offset, count, arg);
 }
 
 
@@ -463,5 +401,5 @@ XercesTextBridge::splitText(unsigned int	offset)
 bool
 XercesTextBridge::isIgnorableWhitespace() const
 {
-	return isWhitespace(m_xercesNode.getData());
+	return isXMLWhitespace(getData());
 }

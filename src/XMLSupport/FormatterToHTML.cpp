@@ -100,7 +100,7 @@ static const char* const	theHTMLSymbols1[] =
 	"Tau",    "Upsilon",    "Phi",    "Chi",
 	"Psi",    "Omega", 0
 };
-	
+
 static const char* const	theHTMLSymbols2[] = 
 {
 	"alpha",    "beta",
@@ -223,7 +223,10 @@ FormatterToHTML::FormatterToHTML(
 			standalone,
 			OUTPUT_METHOD_HTML),
 	m_currentElementName(),
-	m_inBlockElem(false)
+	m_inBlockElem(false),
+	m_isRawStack(),
+	m_isScriptOrStyleElem(false),
+	m_isFirstElem(true)
 {
 	initCharsMap();
 }
@@ -286,7 +289,7 @@ FormatterToHTML::initCharsMap()
 
 
 const FormatterToHTML::ElemDesc&
-FormatterToHTML::getElemDesc(const XalanDOMString&	name)
+FormatterToHTML::getElemDesc(const XalanDOMChar*	name)
 {
 	const ElementFlagsMapType::const_iterator	i =
 		s_elementFlags.find(name);
@@ -353,27 +356,37 @@ FormatterToHTML::startDocument()
 
 
 void
+FormatterToHTML::endDocument()
+{
+	m_isFirstElem = true;
+
+	FormatterToXML::endDocument();
+}
+
+
+
+void
 FormatterToHTML::startElement(
 			const XMLCh* const	name,
 			AttributeList&		attrs)
 {
-	const bool	savedDoIndent = m_doIndent;
-
 	writeParentTagEnd();
 
-	const XalanDOMString	nameUpper = toUpperCase(name);
-
 	const ElemDesc&		elemDesc =
-		getElemDesc(nameUpper);
+		getElemDesc(name);
 
     bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
+
+	m_isScriptOrStyleElem = 
+		equalsIgnoreCaseASCII(name, c_wstr(s_scriptString)) ||
+		equalsIgnoreCaseASCII(name, c_wstr(s_styleString));
 
 	if(m_ispreserve == true)
 	{
 		m_ispreserve = false;
 	}
     else if(m_doIndent &&
-			length(m_currentElementName) != 0 &&
+			m_isFirstElem == false &&
 			(m_inBlockElem == false || isBlockElement == true))
     {
 		m_startNewLine = true;
@@ -384,8 +397,6 @@ FormatterToHTML::startElement(
 	m_inBlockElem = !isBlockElement;
 
 	m_isRawStack.push_back(elemDesc.is(ElemDesc::RAW));
-
-	m_currentElementName = nameUpper;
 
 	accum(XalanUnicode::charLessThanSign);
 
@@ -405,7 +416,7 @@ FormatterToHTML::startElement(
     
     m_isprevtext = false;
 
-    m_doIndent = savedDoIndent;
+	m_isFirstElem = false;
 }
 
 
@@ -419,10 +430,8 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 
     m_isRawStack.pop_back();
     
-    const XalanDOMString	nameUpper = toUpperCase(name);
-
     const ElemDesc&		elemDesc =
-		getElemDesc(nameUpper);
+		getElemDesc(name);
 
     const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
 
@@ -452,8 +461,6 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 		accum(XalanUnicode::charSolidus);
 		accum(name);
 		accum(XalanUnicode::charGreaterThanSign);
-
-		m_currentElementName = name;
     }
     else
     {
@@ -489,6 +496,8 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 			m_preserves.pop_back();
 		}
     }
+
+	m_isFirstElem = false;
 
     m_isprevtext = false;
 }
@@ -532,8 +541,6 @@ FormatterToHTML::characters(
 
 			m_ispreserve = true;
 
-			unsigned int	pos = 0;
-
 			for (unsigned int i = 0; i < length; ++i) 
 			{
 				const XalanDOMChar	ch = chars[i];
@@ -569,15 +576,15 @@ FormatterToHTML::characters(
 				}
 				else if (XalanUnicode::charLessThanSign == ch) 
 				{
-					pos = copyEntityIntoBuffer(s_ltString, pos);
+					copyEntityIntoBuffer(s_ltString);
 				}
 				else if (XalanUnicode::charGreaterThanSign == ch) 
 				{
-					pos = copyEntityIntoBuffer(s_gtString, pos);
+					copyEntityIntoBuffer(s_gtString);
 				}
 				else if (XalanUnicode::charAmpersand == ch) 
 				{
-					pos = copyEntityIntoBuffer(s_ampString, pos);
+					copyEntityIntoBuffer(s_ampString);
 				}
 				else if(ch >= 9 && ch <= 126)
 				{
@@ -585,29 +592,29 @@ FormatterToHTML::characters(
 				}
 				else if(ch >= 160 && ch <= 255)
 				{
-					pos = copyEntityIntoBuffer(theHTMLLatin1Symbols[ch - 160], pos);
+					copyEntityIntoBuffer(theHTMLLatin1Symbols[ch - 160]);
 				}
 				else if(ch >= 913 && ch <= 937 && ch != 930)
 				{
-					pos = copyEntityIntoBuffer(theHTMLSymbols1[ch - 913], pos);
+					copyEntityIntoBuffer(theHTMLSymbols1[ch - 913]);
 				}
 				else if(ch >= 945 && ch <= 969)
 				{
-					pos = copyEntityIntoBuffer(theHTMLSymbols2[ch - 945], pos);
+					copyEntityIntoBuffer(theHTMLSymbols2[ch - 945]);
 				}
 				else if(ch >= 977 && ch <= 978)
 				{
 					// subtract the unused characters 
-					pos = copyEntityIntoBuffer(theHTMLSymbols2[ch - 945 - 7], pos);
+					copyEntityIntoBuffer(theHTMLSymbols2[ch - 945 - 7]);
 				}
 				else if(ch == 982)
 				{
 					// subtract the unused characters
-					pos = copyEntityIntoBuffer(theHTMLSymbols2[ch - 945 - 10], pos);
+					copyEntityIntoBuffer(theHTMLSymbols2[ch - 945 - 10]);
 				}
 				else if (402 == ch) 
 				{
-					pos = copyEntityIntoBuffer(s_fnofString, pos);
+					copyEntityIntoBuffer(s_fnofString);
 				}
 				else if (m_isUTF8 == true && 0xd800 <= ch && ch < 0xdc00)
 				{
@@ -668,8 +675,7 @@ FormatterToHTML::cdata(
 			const XMLCh* const	ch,
 			const unsigned int 	length)
 {
-	if(equalsIgnoreCase(m_currentElementName, c_wstr(s_scriptString)) == true ||
-		equalsIgnoreCase(m_currentElementName, c_wstr(s_styleString)) == true)
+	if(m_isScriptOrStyleElem == true)
 	{
 		writeParentTagEnd();
 
@@ -851,23 +857,71 @@ FormatterToHTML::writeAttrString(
 
 
 
-unsigned int
-FormatterToHTML::copyEntityIntoBuffer(
-			const XalanDOMChar*		s,
-			unsigned int			pos)
+void
+FormatterToHTML::copyEntityIntoBuffer(const XalanDOMChar*	s)
 {
 	const unsigned int	len = length(s);
 
     accum(XalanUnicode::charAmpersand);
 
-    for(unsigned int i= 0; i < len; ++i)
+    for(unsigned int i = 0; i < len; ++i)
     {
 		accum(s[i]);
     }
 
     accum(XalanUnicode::charSemicolon);
+}
 
-    return pos;
+
+
+void
+FormatterToHTML::copyEntityIntoBuffer(const char*	s)
+{
+	const unsigned int	len = strlen(s);
+
+    accum(XalanUnicode::charAmpersand);
+
+    for(unsigned int i = 0; i < len; ++i)
+    {
+		accum(s[i]);
+    }
+
+    accum(XalanUnicode::charSemicolon);
+}
+
+
+
+void
+FormatterToHTML::copyEntityIntoBuffer(const XalanDOMString&		s)
+{
+	const unsigned int	len = length(s);
+
+    accum(XalanUnicode::charAmpersand);
+
+    for(unsigned int i = 0; i < len; ++i)
+    {
+		accum(s[i]);
+    }
+
+    accum(XalanUnicode::charSemicolon);
+}
+
+
+
+void
+FormatterToHTML::copyEntityIntoBuffer(const XalanDOMCharVectorType&		s)
+{
+
+	;
+
+    accum(XalanUnicode::charAmpersand);
+
+    for(XalanDOMCharVectorType::const_iterator i = s.begin(); (*i) != 0; ++i)
+    {
+		accum(*i);
+    }
+
+    accum(XalanUnicode::charSemicolon);
 }
 
 
@@ -878,12 +932,10 @@ FormatterToHTML::processAttribute(
 			const XalanDOMChar*		value,
 			const ElemDesc&			elemDesc)
 {
-	const XalanDOMString	nameUpper = toUpperCase(name);
-
     accum(XalanUnicode::charSpace);
 
-    if(elemDesc.isAttrFlagSet(nameUpper, ElemDesc::ATTREMPTY) == true &&
-       (length(value) == 0) || equalsIgnoreCase(value, name) == true)
+    if(elemDesc.isAttrFlagSet(name, ElemDesc::ATTREMPTY) == true &&
+       (length(value) == 0) || equalsIgnoreCaseASCII(value, name) == true)
     {
 		accum(name);
     }
@@ -893,7 +945,7 @@ FormatterToHTML::processAttribute(
 		accum(XalanUnicode::charEqualsSign);
 		accum(XalanUnicode::charQuoteMark);
 
-		if(elemDesc.isAttrFlagSet(nameUpper, ElemDesc::ATTRURL) == true)
+		if(elemDesc.isAttrFlagSet(name, ElemDesc::ATTRURL) == true)
 		{
 			writeAttrURI(value, m_encoding);
 		}
@@ -956,503 +1008,503 @@ FormatterToHTML::initializeElementFlagsMap(ElementFlagsMapType&		theElementFlags
 	// HTML 4.0 loose DTD
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("BASEFONT"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("BASEFONT")),
 			ElemDesc(0|ElemDesc::EMPTY)));
 
 	PairType	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("FRAME"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("FRAME")),
 			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("SRC")), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("FRAMESET"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("FRAMESET")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("NOFRAMES"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("NOFRAMES")),
 			ElemDesc(0|ElemDesc::BLOCK)));
  
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("ISINDEX"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("ISINDEX")),
 			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("APPLET"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("APPLET")),
 			ElemDesc(0|ElemDesc::WHITESPACESENSITIVE)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("CENTER"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("CENTER")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("DIR"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("DIR")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("MENU"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("MENU")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 
 
 	// HTML 4.0 strict DTD
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("TT"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("TT")),
 			ElemDesc(0|ElemDesc::FONTSTYLE)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("I"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("I")),
 			ElemDesc(0|ElemDesc::FONTSTYLE)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("B"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("B")),
 			ElemDesc(0|ElemDesc::FONTSTYLE)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("BIG"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("BIG")),
 			ElemDesc(0|ElemDesc::FONTSTYLE)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("SMALL"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("SMALL")),
 			ElemDesc(0|ElemDesc::FONTSTYLE)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("EM"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("EM")),
 			ElemDesc(0|ElemDesc::PHRASE)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("STRONG"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("STRONG")),
 			ElemDesc(0|ElemDesc::PHRASE)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("DFN"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("DFN")),
 			ElemDesc(0|ElemDesc::PHRASE)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("CODE"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("CODE")),
 			ElemDesc(0|ElemDesc::PHRASE)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("SAMP"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("SAMP")),
 			ElemDesc(0|ElemDesc::PHRASE)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("KBD"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("KBD")),
 			ElemDesc(0|ElemDesc::PHRASE)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("VAR"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("VAR")),
 			ElemDesc(0|ElemDesc::PHRASE)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("CITE"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("CITE")),
 			ElemDesc(0|ElemDesc::PHRASE)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("ABBR"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("ABBR")),
 			ElemDesc(0|ElemDesc::PHRASE)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("ACRONYM"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("ACRONYM")),
 			ElemDesc(0|ElemDesc::PHRASE)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("SUP"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("SUP")),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("SUB"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("SUB")),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("SPAN"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("SPAN")),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("BDO"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("BDO")),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("BR"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("BR")),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::EMPTY|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("BODY"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("BODY")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("ADDRESS"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("ADDRESS")),
 			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("DIV"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("DIV")),
 			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("A"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("A")),
 			ElemDesc(0|ElemDesc::SPECIAL)));
 	
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("HREF"), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("NAME"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("HREF")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("NAME")), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("MAP"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("MAP")),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("AREA"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("AREA")),
 			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("LINK"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("LINK")),
 			ElemDesc(0|ElemDesc::HEADMISC|ElemDesc::EMPTY|ElemDesc::BLOCK)));
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("IMG"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("IMG")),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::EMPTY|ElemDesc::WHITESPACESENSITIVE)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("LONGDESC"), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("USEMAP"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("SRC")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("LONGDESC")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("USEMAP")), ElemDesc::ATTRURL);
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("OBJECT"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("OBJECT")),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::HEADMISC|ElemDesc::WHITESPACESENSITIVE)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CLASSID"), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CODEBASE"), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("DATA"), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("ARCHIVE"), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("USEMAP"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CLASSID")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CODEBASE")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DATA")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("ARCHIVE")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("USEMAP")), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("PARAM"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("PARAM")),
 			ElemDesc(0|ElemDesc::EMPTY)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("HR"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("HR")),
 			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET|ElemDesc::EMPTY)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("P"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("P")),
 			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("H1"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("H1")),
 			ElemDesc(0|ElemDesc::HEAD|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("H2"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("H2")),
 			ElemDesc(0|ElemDesc::HEAD|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("H3"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("H3")),
 			ElemDesc(0|ElemDesc::HEAD|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("H4"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("H4")),
 			ElemDesc(0|ElemDesc::HEAD|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("H5"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("H5")),
 			ElemDesc(0|ElemDesc::HEAD|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("H6"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("H6")),
 			ElemDesc(0|ElemDesc::HEAD|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("PRE"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("PRE")),
 			ElemDesc(0|ElemDesc::PREFORMATTED|ElemDesc::BLOCK)));
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("Q"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("Q")),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CITE"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CITE")), ElemDesc::ATTRURL);
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("BLOCKQUOTE"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("BLOCKQUOTE")),
 			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CITE"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CITE")), ElemDesc::ATTRURL);
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("INS"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("INS")),
 			ElemDesc(0)));
 	
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CITE"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CITE")), ElemDesc::ATTRURL);
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("DEL"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("DEL")),
 			ElemDesc(0)));
 	
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CITE"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CITE")), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("DL"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("DL")),
 			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("DT"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("DT")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("DD"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("DD")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("OL"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("OL")),
 			ElemDesc(0|ElemDesc::LIST|ElemDesc::BLOCK)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("UL"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("UL")),
 			ElemDesc(0|ElemDesc::LIST|ElemDesc::BLOCK)));
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("LI"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("LI")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("FORM"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("FORM")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("ACTION"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("ACTION")), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("LABEL"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("LABEL")),
 			ElemDesc(0|ElemDesc::FORMCTRL)));
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("INPUT"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("INPUT")),
 			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL|ElemDesc::EMPTY)));
 	
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("USEMAP"), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("CHECKED"), ElemDesc::ATTREMPTY);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("READONLY"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("SRC")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("USEMAP")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CHECKED")), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("READONLY")), ElemDesc::ATTREMPTY);
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("SELECT"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("SELECT")),
 			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("READONLY"), ElemDesc::ATTREMPTY);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("MULTIPLE"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("READONLY")), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("MULTIPLE")), ElemDesc::ATTREMPTY);
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("OPTGROUP"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("OPTGROUP")),
 			ElemDesc(0)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("OPTION"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("OPTION")),
 			ElemDesc(0)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("SELECTED"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("SELECTED")), ElemDesc::ATTREMPTY);
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("TEXTAREA"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("TEXTAREA")),
 			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("READONLY"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("READONLY")), ElemDesc::ATTREMPTY);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("FIELDSET"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("FIELDSET")),
 			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("LEGEND"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("LEGEND")),
 			ElemDesc(0)));
 	
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("BUTTON"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("BUTTON")),
 			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("DISABLED"), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("TABLE"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("TABLE")),
 			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("CAPTION"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("CAPTION")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("THEAD"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("THEAD")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("TFOOT"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("TFOOT")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("TBODY"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("TBODY")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("COLGROUP"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("COLGROUP")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("COL"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("COL")),
 			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("TR"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("TR")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("TH"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("TH")),
 			ElemDesc(0)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("TD"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("TD")),
 			ElemDesc(0)));
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("HEAD"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("HEAD")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("PROFILE"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("PROFILE")), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("TITLE"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("TITLE")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("BASE"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("BASE")),
 			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("HREF"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("HREF")), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("META"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("META")),
 			ElemDesc(0|ElemDesc::HEADMISC|ElemDesc::EMPTY|ElemDesc::BLOCK)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("STYLE"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("STYLE")),
 			ElemDesc(0|ElemDesc::HEADMISC|ElemDesc::RAW|ElemDesc::BLOCK)));
 
 	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("SCRIPT"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("SCRIPT")),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::HEADMISC|ElemDesc::RAW)));
 
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("SRC"), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(XALAN_STATIC_UCODE_STRING("FOR"), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("SRC")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("FOR")), ElemDesc::ATTRURL);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("NOSCRIPT"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("NOSCRIPT")),
 			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
 	
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
-			XALAN_STATIC_UCODE_STRING("HTML"),
+			c_wstr(XALAN_STATIC_UCODE_STRING("HTML")),
 			ElemDesc(0|ElemDesc::BLOCK)));
 }
 

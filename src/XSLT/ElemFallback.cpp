@@ -76,7 +76,7 @@
 ElemFallback::ElemFallback(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet& 					stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int 							lineNumber,
 			int 							columnNumber) :
@@ -105,7 +105,7 @@ ElemFallback::ElemFallback(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 			}
 		}
 	}

@@ -165,7 +165,7 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 				static_cast<const XalanText*>(node);
 #endif
 
-			const XalanDOMString	data = theTextNode->getData();
+			const XalanDOMString&	data = theTextNode->getData();
 
 			m_formatterListener.cdata(c_wstr(data),
 									  length(data));
@@ -181,7 +181,7 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 				static_cast<const XalanText*>(node);
 #endif
 
-			const XalanDOMString	data = theTextNode->getData();
+			const XalanDOMString&	data = theTextNode->getData();
 
 			m_formatterListener.characters(c_wstr(data), length(data));
 		}

@@ -76,7 +76,6 @@
 
 
 NamespaceResolver::NamespaceResolver() :
-	Resettable(),
 	m_NSInfos()
 {
 }
@@ -128,7 +127,7 @@ NamespaceResolver::updateNamespace(
 //
 // Note that DOM Level 2 binds this value at the time the node is built, which should
 // be considerably more efficient.
-XalanDOMString
+const XalanDOMString&
 NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 {
 #if !defined(XALAN_NO_NAMESPACES)
@@ -170,19 +169,19 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 		hasProcessedNS = false;
     }
 
-	XalanDOMString	namespaceOfPrefix;
+	const XalanDOMString*	namespaceOfPrefix = &DOMServices::s_emptyString;
 
 	if(hasProcessedNS)
 	{
-		namespaceOfPrefix = nsInfo.m_namespace;
+		namespaceOfPrefix = &nsInfo.m_namespace;
 	}
 	else
 	{
-		XalanDOMString	nodeName = theLocalNode->getNodeName();
+		const XalanDOMString&	nodeName = theLocalNode->getNodeName();
 
-		unsigned int	indexOfNSSep = indexOf(nodeName, XalanUnicode::charColon);
+		unsigned int			indexOfNSSep = indexOf(nodeName, XalanUnicode::charColon);
 
-		XalanDOMString	prefix;
+		XalanDOMString			prefix;
 
 		// JKESS CHANGE: Attributes which have no prefix have no namespace,
 		// per standard Namespaces In XML behavior. They should not inherit from
@@ -195,7 +194,7 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 			// this result via updateNamespace.
 
 			// BIG UGLY RETURN HERE!!!!!!!
-			return namespaceOfPrefix;
+			return *namespaceOfPrefix;
 		}
 
 		prefix = (indexOfNSSep < length(nodeName))
@@ -210,7 +209,7 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 		// not specified by the NS spec.)
 		if(equals(prefix, DOMServices::s_XMLString) == true)
 		{
-			namespaceOfPrefix = DOMServices::s_XMLNamespaceURI;
+			namespaceOfPrefix = &DOMServices::s_XMLNamespaceURI;
 		}
 		else
 		{
@@ -225,7 +224,7 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 			candidateNoAncestorXMLNS.reserve(eDefaultVectorSize);
 
 			// Hunt upward until resolve namespace or fail to do so.
-			while (0 != parent && length(namespaceOfPrefix) == 0)
+			while (0 != parent && length(*namespaceOfPrefix) == 0)
 			{
 				if(theIterator != m_NSInfos.end()
 				   && nsInfo.m_ancestorHasXMLNSAttrs == nsInfo.ANCESTORNOXMLNS)
@@ -254,7 +253,7 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 						{
 							const XalanNode*		attr = nnm->item(i);
 
-							const XalanDOMString	aname = attr->getNodeName();
+							const XalanDOMString&	aname = attr->getNodeName();
 
 							// Quick test of first character, to reduce cost of startsWith.
 							if(charAt(aname, 0) == charAt(DOMServices::s_XMLNamespaceWithSeparator, 0))
@@ -283,7 +282,7 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 									// If it's the one we're looking for, resolve to NS
 									if (equals(p, prefix) == true) 
 									{
-										namespaceOfPrefix = attr->getNodeValue();
+										namespaceOfPrefix = &attr->getNodeValue();
 										break;
 									}
 								}
@@ -373,8 +372,10 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 		// bit-masks...
 		if(XalanNode::ATTRIBUTE_NODE != ntype)
 		{
+			assert(namespaceOfPrefix != 0);
+
 			// If Attribute's prefix wasn't resolved
-			if(0 == length(namespaceOfPrefix))
+			if(0 == length(*namespaceOfPrefix))
 			{
 				// In context where other prefixes are defined
 				if(ancestorsHaveXMLNS == true)
@@ -400,10 +401,10 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 			}
 			else // Attribute's prefix was resolved, at least that one is declared
 			{
-				updateNamespace(theLocalNode, NSInfo(namespaceOfPrefix, nHasXMLNS));
+				updateNamespace(theLocalNode, NSInfo(*namespaceOfPrefix, nHasXMLNS));
 			}
 		}
 	}
 
-	return namespaceOfPrefix;
+	return *namespaceOfPrefix;
 }

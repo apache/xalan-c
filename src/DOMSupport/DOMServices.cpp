@@ -65,6 +65,7 @@
 #include <XalanDOM/XalanAttr.hpp>
 #include <XalanDOM/XalanCDATASection.hpp>
 #include <XalanDOM/XalanComment.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 #include <XalanDOM/XalanDocument.hpp>
 #include <XalanDOM/XalanDocumentFragment.hpp>
 #include <XalanDOM/XalanElement.hpp>
@@ -100,6 +101,7 @@ const XalanDOMString&	DOMServices::s_XMLNamespaceURI = ::s_XMLNamespaceURI;
 const XalanDOMString&	DOMServices::s_XMLNamespace = ::s_XMLNamespace;
 const XalanDOMString&	DOMServices::s_XMLNamespaceWithSeparator = ::s_XMLNamespaceWithSeparator;
 const XalanDOMString&	DOMServices::s_XMLNamespaceSeparatorString  = ::s_XMLNamespaceSeparatorString;
+const XalanDOMString	DOMServices::s_emptyString;
 
 
 
@@ -209,6 +211,18 @@ DOMServices::getNodeData(const XalanNode&	node)
 {
 	XalanDOMString	data;
 
+	getNodeData(node, data);
+
+	return data;
+}
+
+
+
+void
+DOMServices::getNodeData(
+			const XalanNode&	node,
+			XalanDOMString&		data)
+{
 	switch(node.getNodeType())
 	{
 	case XalanNode::DOCUMENT_FRAGMENT_NODE:
@@ -219,7 +233,7 @@ DOMServices::getNodeData(const XalanNode&	node)
 #else
 				static_cast<const XalanDocumentFragment&>(node);
 #endif
-			data = getNodeData(theDocumentFragment);
+			getNodeData(theDocumentFragment, data);
 		}
 		break;
 
@@ -231,7 +245,7 @@ DOMServices::getNodeData(const XalanNode&	node)
 #else
 				static_cast<const XalanDocument&>(node);
 #endif
-			data = getNodeData(theDocument);
+			getNodeData(theDocument, data);
 		}
 		break;
 
@@ -243,7 +257,7 @@ DOMServices::getNodeData(const XalanNode&	node)
 #else
 				static_cast<const XalanElement&>(node);
 #endif
-			data = getNodeData(theElement);
+			getNodeData(theElement, data);
 		}
 		break;
 
@@ -257,7 +271,7 @@ DOMServices::getNodeData(const XalanNode&	node)
 				static_cast<const XalanText&>(node);
 #endif
 
-				data = getNodeData(theTextNode);
+				getNodeData(theTextNode, data);
 		}
 		break;
 
@@ -269,7 +283,7 @@ DOMServices::getNodeData(const XalanNode&	node)
 #else
 				static_cast<const XalanAttr&>(node);
 #endif
-			data = getNodeData(theAttr);
+			getNodeData(theAttr, data);
 		}
 		break;
 
@@ -281,7 +295,7 @@ DOMServices::getNodeData(const XalanNode&	node)
 #else
 				static_cast<const XalanComment&>(node);
 #endif
-			data = getNodeData(theComment);
+			getNodeData(theComment, data);
 		}
 		break;
 
@@ -293,7 +307,7 @@ DOMServices::getNodeData(const XalanNode&	node)
 #else
 				static_cast<const XalanProcessingInstruction&>(node);
 #endif
-			data = getNodeData(thePI);
+			getNodeData(thePI, data);
 		}
 		break;
 
@@ -301,8 +315,6 @@ DOMServices::getNodeData(const XalanNode&	node)
 		// ignore
 		break;
 	}
-
-	return data;
 }
 
 
@@ -315,10 +327,30 @@ DOMServices::getNodeData(const XalanAttr&	attribute)
 
 
 
+void
+DOMServices::getNodeData(
+			const XalanAttr&	attribute,
+			XalanDOMString&		data)
+{
+	append(data, attribute.getNodeValue());
+}
+
+
+
 XalanDOMString
 DOMServices::getNodeData(const XalanComment&	comment)
 {
 	return comment.getData();
+}
+
+
+
+void
+DOMServices::getNodeData(
+			const XalanComment&		comment,
+			XalanDOMString&			data)
+{
+	append(data, comment.getData());
 }
 
 
@@ -328,6 +360,18 @@ DOMServices::getNodeData(const XalanDocument&	document)
 {
 	XalanDOMString	data;
 
+	getNodeData(document, data);
+
+	return data;
+}
+
+
+
+void
+DOMServices::getNodeData(
+			const XalanDocument&	document,
+			XalanDOMString&			data)
+{
 	const XalanNode*	child = document.getFirstChild();
 
 	while(child != 0)
@@ -338,19 +382,11 @@ DOMServices::getNodeData(const XalanDocument&	document)
 			theType == XalanNode::TEXT_NODE ||
 			theType == XalanNode::CDATA_SECTION_NODE)
 		{
-			const XalanDOMString 	nodeData =
-						getNodeData(*child);
-
-			if(0 < length(nodeData))
-			{
-				data += nodeData;
-			}
+			getNodeData(*child, data);
 		}
 
 		child = child->getNextSibling();
 	}
-
-	return data;
 }
 
 
@@ -360,6 +396,18 @@ DOMServices::getNodeData(const XalanDocumentFragment&	documentFragment)
 {
 	XalanDOMString	data;
 
+	getNodeData(documentFragment, data);
+
+	return data;
+}
+
+
+
+void
+DOMServices::getNodeData(
+			const XalanDocumentFragment&	documentFragment,
+			XalanDOMString&					data)
+{
 	const XalanNodeList* const	nl = documentFragment.getChildNodes();
 	assert(nl != 0);
 
@@ -376,17 +424,9 @@ DOMServices::getNodeData(const XalanDocumentFragment&	documentFragment)
 			theType == XalanNode::TEXT_NODE ||
 			theType == XalanNode::CDATA_SECTION_NODE)
 		{
-			const XalanDOMString 	nodeData =
-						getNodeData(*child);
-
-			if(0 < length(nodeData))
-			{
-				data += nodeData;
-			}
+			getNodeData(*child, data);
 		}
 	}
-
-	return data;
 }
 
 
@@ -396,6 +436,18 @@ DOMServices::getNodeData(const XalanElement&	element)
 {
 	XalanDOMString	data;
 
+	getNodeData(element, data);
+
+	return data;
+}
+
+
+
+void
+DOMServices::getNodeData(
+			const XalanElement&		element,
+			XalanDOMString&			data)
+{
 	const XalanNode*	child = element.getFirstChild();
 
 	while(child != 0)
@@ -406,19 +458,11 @@ DOMServices::getNodeData(const XalanElement&	element)
 			theType == XalanNode::TEXT_NODE ||
 			theType == XalanNode::CDATA_SECTION_NODE)
 		{
-			const XalanDOMString 	nodeData =
-						getNodeData(*child);
-
-			if(0 < length(nodeData))
-			{
-				data += nodeData;
-			}
+			getNodeData(*child, data);
 		}
 
 		child = child->getNextSibling();
 	}
-
-	return data;
 }
 
 
@@ -431,6 +475,16 @@ DOMServices::getNodeData(const XalanProcessingInstruction&	pi)
 
 
 
+void
+DOMServices::getNodeData(
+			const XalanProcessingInstruction&	pi,
+			XalanDOMString&						data)
+{
+	append(data, pi.getData());
+}
+
+
+
 XalanDOMString
 DOMServices::getNodeData(const XalanText&	text)
 {
@@ -439,54 +493,66 @@ DOMServices::getNodeData(const XalanText&	text)
 
 
 
-XalanDOMString
+void
+DOMServices::getNodeData(
+			const XalanText&	text,
+			XalanDOMString&		data)
+{
+	append(data, text.getData());
+}
+
+
+
+const XalanDOMString&
 DOMServices::getNameOfNode(const XalanNode&		n)
 {
-	XalanDOMString	theResult;
-
 	const XalanNode::NodeType	theNodeType =
 				n.getNodeType();
 
 	if (theNodeType == XalanNode::ATTRIBUTE_NODE)
 	{
-		const XalanAttr&	theAttributeNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanAttr&)(n);
-#else
-				static_cast<const XalanAttr&>(n);
-#endif
+		const XalanDOMString&	theName = n.getNodeName();
 
-		theResult = theAttributeNode.getName();
-
-		if (startsWith(theResult, DOMServices::s_XMLNamespaceWithSeparator) == true)
+		if (startsWith(theName, s_XMLNamespaceWithSeparator) == true)
 		{
-			// Uh oh, it's a namespace node, represented as an attribute in
-			// the DOM.  XSLT says we have to strip off the xmlns: part...
-			theResult = substring(theResult, length(DOMServices::s_XMLNamespaceWithSeparator));
+			// Special case for namespace nodes...
+			return n.getLocalName();
 		}
-
+		else
+		{
+			return theName;
+		}
 	}
 	else if (theNodeType == XalanNode::ELEMENT_NODE ||
 			 theNodeType == XalanNode::PROCESSING_INSTRUCTION_NODE)
 	{
-		theResult = n.getNodeName();
+		return n.getNodeName();
 	}
-
-	return theResult;
+	else
+	{
+		return s_emptyString;
+	}
 }
 
 
 
 // Note: This may be inefficient in a Level 2 DOM, where localname
 // and prefix may (or may not) have been stored in separate fields
-XalanDOMString
+const XalanDOMString&
 DOMServices::getLocalNameOfNode(const XalanNode&	n)
 {
-	const XalanDOMString	qname = n.getNodeName();
+	const XalanDOMString&	theLocalName = n.getLocalName();
 
-	const unsigned int		index = indexOf(qname, XalanUnicode::charColon);
+	if (length(theLocalName) != 0)
+	{
+		return theLocalName;
+	}
+	else
+	{
+		assert(length(n.getNodeName()) != 0);
 
-	return index == length(qname) ? qname : substring(qname, index + 1);
+		return n.getNodeName();
+	}
 }
 
 
@@ -572,7 +638,7 @@ DOMServices::getParentOfNode(const XalanNode&	node)
 
 		if(doc == 0)
 		{
-			throw DOMSupportException("Attribute child does not have an owner document!");
+			throw DOMSupportException(TranscodeFromLocalCodePage("Attribute child does not have an owner document!"));
 		}
 		else
 		{
@@ -588,7 +654,7 @@ DOMServices::getParentOfNode(const XalanNode&	node)
 
 		if(nodeType != XalanNode::DOCUMENT_NODE && parent == 0)
 		{
-			throw DOMSupportException("Child does not have parent!");
+			throw DOMSupportException(TranscodeFromLocalCodePage("Child does not have parent!"));
 		}
 	}
 
@@ -617,17 +683,17 @@ DOMServices::getParentOfNode(const XalanNode&	node)
 // than the parser, we need to decide between demanding a 
 // namespace-normalized DOM as input, doing a normalize pass
 // (full treewalk, expensive), or recognizing implicit declarations.
-XalanDOMString
+const XalanDOMString&
 DOMServices::getNamespaceForPrefix(
 			const XalanDOMString&	prefix,
 			const XalanElement&		namespaceContext)
 {
-	XalanDOMString theNamespace;
+	const XalanDOMString*	theNamespace = &s_emptyString;
 
 	// Reserved xml: is hardcoded
 	if(equals(prefix, s_XMLString) == true)
 	{
-		theNamespace = s_XMLNamespaceURI;
+		theNamespace = &s_XMLNamespaceURI;
 	}
 	else
 	{
@@ -637,7 +703,7 @@ DOMServices::getNamespaceForPrefix(
 		// Consider elements until NS is resolved, or we run out of
 		// ancestors, or we hit something other than an Element or 
 		// EntityReference node (ie, Document or DocumentFragment)
-		while (parent != 0 && length(theNamespace) == 0
+		while (parent != 0 && length(*theNamespace) == 0
 			&& ((type = parent->getNodeType()) == XalanNode::ELEMENT_NODE
 				|| type == XalanNode::ENTITY_REFERENCE_NODE)) 
 		{
@@ -655,7 +721,7 @@ DOMServices::getNamespaceForPrefix(
 					const XalanNode* const	attr = nnm->item(i);
 					assert(attr != 0);
 
-					const XalanDOMString		aname = attr->getNodeName();
+					const XalanDOMString&		aname = attr->getNodeName();
 
 					const unsigned int			len = length(aname);
 
@@ -670,14 +736,14 @@ DOMServices::getNamespaceForPrefix(
 						// slightly inefficient for default decl.
 						const unsigned int	index = indexOf(aname,
 															XalanUnicode::charColon);
-              
+
 						const XalanDOMString	p = (isPrefix)
 							? substring(aname,index + 1,len) 
 							: XalanDOMString();
 
 						if (equals(p, prefix) == true)
 						{
-							theNamespace = attr->getNodeValue();
+							theNamespace = &attr->getNodeValue();
 
 							break;
 						}
@@ -689,7 +755,9 @@ DOMServices::getNamespaceForPrefix(
 		}
 	}
 
-	return theNamespace;
+	assert(theNamespace != 0);
+
+	return *theNamespace;
 }
 
 

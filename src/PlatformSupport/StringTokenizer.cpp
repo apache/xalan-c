@@ -64,6 +64,19 @@
 
 
 #include "DOMStringHelper.hpp"
+#include "XalanUnicode.hpp"
+
+
+
+const XalanDOMChar	StringTokenizer::s_defaultTokens[] =
+{
+	XalanUnicode::charSpace,
+	XalanUnicode::charHTab,
+	XalanUnicode::charLF,
+	XalanUnicode::charCR,
+	XalanUnicode::charFF,
+	0,
+};
 
 
 
@@ -82,13 +95,41 @@ StringTokenizer::StringTokenizer(
 
 
 
-#if defined(XALAN_LSTRSUPPORT)
+StringTokenizer::StringTokenizer(
+			const XalanDOMString&	theString,
+			const XalanDOMChar*		theTokens,
+			bool					fReturnTokens) :
+	m_String(theString),
+	m_Tokens(XalanDOMString(theTokens)),
+	m_fReturnTokens(fReturnTokens),
+	m_CurrentIndex(0),
+	m_StringLength(length(theString)),
+	m_tokensLength(length(theTokens))
+{
+}
+
+
 
 StringTokenizer::StringTokenizer(
 			const XalanDOMChar*		theString,
 			const XalanDOMChar*		theTokens,
 			bool					fReturnTokens) :
-	m_String(theString),
+	m_String(XalanDOMString(theString)),
+	m_Tokens(XalanDOMString(theTokens)),
+	m_fReturnTokens(fReturnTokens),
+	m_CurrentIndex(0),
+	m_StringLength(length(theString)),
+	m_tokensLength(length(theTokens))
+{
+}
+
+
+
+StringTokenizer::StringTokenizer(
+			const XalanDOMChar*		theString,
+			const XalanDOMString&	theTokens,
+			bool					fReturnTokens) :
+	m_String(XalanDOMString(theString)),
 	m_Tokens(theTokens),
 	m_fReturnTokens(fReturnTokens),
 	m_CurrentIndex(0),
@@ -97,7 +138,6 @@ StringTokenizer::StringTokenizer(
 {
 }
 
-#endif
 
 
 StringTokenizer::~StringTokenizer()

@@ -89,7 +89,7 @@ public:
 	ElemEmpty(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMChar*				name,
 			int								lineNumber,
 			int								columnNumber);
 

@@ -209,7 +209,7 @@ EnumerateDirectory(
 #if defined(_MSC_VER)
 	StringType	theSearchSpec(clone(theDirectory));
 
-	theSearchSpec += "\\*";
+	append(theSearchSpec, "\\*");
 
 	FindFileStruct 		theFindData;
 
@@ -224,7 +224,7 @@ EnumerateDirectory(
 			{
 				if (theFilterPredicate(theFindData) == true)
 				{
-					*theOutputIterator = theFindData.getName();
+					*theOutputIterator = XalanDOMString(theFindData.getName());
 				}
 			}
 			while(_wfindnext(theSearchHandle,

@@ -69,6 +69,10 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 class XPathEnvSupport;
 class XPathSupport;
 class XalanElement;
@@ -96,17 +100,24 @@ public:
 
 	// These methods are inherited from PrefixResolver ...
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getURI() const;
 
 private:
 
-	const XalanElement* const	m_namespaceContext;
-	const XPathEnvSupport&		m_envSupport;
-	const XPathSupport&			m_support;
+	const XalanElement* const		m_namespaceContext;
+
+	const XPathEnvSupport&			m_envSupport;
+
+	const XPathSupport&				m_support;
+
+	mutable XalanDOMString			m_uri;
+
+	// A dummy string to return when we need an emtpy string...
+	static const XalanDOMString		s_emptyString;
 };
 
 

@@ -79,7 +79,6 @@
 
 
 #include <PlatformSupport/STLHelper.hpp>
-#include <PlatformSupport/StringTokenizer.hpp>
 
 
 
@@ -108,6 +107,10 @@
 
 
 const Stylesheet::NamespaceVectorType	Stylesheet::s_emptyNamespace;
+
+
+
+const XalanDOMString	Stylesheet::s_emptyString;
 
 
 
@@ -246,22 +249,22 @@ Stylesheet::processKeyElement(
 		else if (isAttrOK(aname, atts, i, constructionContext) == false)
 		{
 			constructionContext.error(
-				XalanDOMString("xsl:key, unrecognized keyword '") +
-					aname + 
-					XalanDOMString("'!"));
+				TranscodeFromLocalCodePage("xsl:key, unrecognized keyword '") +
+					aname +
+					TranscodeFromLocalCodePage("'!"));
 		}
 	}
 
 	if(0 == nameAttr)
-		constructionContext.error(XalanDOMString("xsl:key	requires a ") + Constants::ATTRNAME_NAME+" attribute!");
+		constructionContext.error(TranscodeFromLocalCodePage("xsl:key	requires a ") + Constants::ATTRNAME_NAME + " attribute!");
 
 	if(0 == matchAttr)
-		constructionContext.error(XalanDOMString("xsl:key	requires a ") + Constants::ATTRNAME_MATCH+XalanDOMString(" attribute!"));
+		constructionContext.error(TranscodeFromLocalCodePage("xsl:key	requires a ") + Constants::ATTRNAME_MATCH + " attribute!");
 
 	if(0 == useAttr)
-		constructionContext.error(XalanDOMString("xsl:key	requires a ") + Constants::ATTRNAME_USE+XalanDOMString(" attribute!"));
+		constructionContext.error(TranscodeFromLocalCodePage("xsl:key	requires a ") + Constants::ATTRNAME_USE + " attribute!");
 
-	m_keyDeclarations.push_back(KeyDeclaration(nameAttr, *matchAttr, *useAttr));
+	m_keyDeclarations.push_back(KeyDeclaration(XalanDOMString(nameAttr), *matchAttr, *useAttr));
 
 	m_needToBuildKeysTable = true;
 }
@@ -269,16 +272,11 @@ Stylesheet::processKeyElement(
 
 
 void
-Stylesheet::pushNamespaces(const AttributeList& atts)
+Stylesheet::pushNamespaces(const AttributeList&		atts)
 {
 	const unsigned int		nAttrs = atts.getLength();
 
 	NamespaceVectorType 	namespaces;
-
-	// Reserve the maximum space.  Any extra will not
-	// be copied to m_namespaces, since we're pushing
-	// a copy.
-	namespaces.reserve(nAttrs);
 
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
@@ -289,9 +287,9 @@ Stylesheet::pushNamespaces(const AttributeList& atts)
 
 		if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix) 
 		{
-			XalanDOMString p = isPrefix ? substring(aname, 6) : XalanDOMString();
+			const XalanDOMString	p = isPrefix ? substring(aname, 6) : XalanDOMString();
 
-			namespaces.push_back(NameSpace(p, value));
+			namespaces.push_back(NameSpace(p, XalanDOMString(value)));
 		}
 	}
 
@@ -379,7 +377,7 @@ Stylesheet::isAttrOK(
 		if(indexOfNSSep < length(attrName))
 		{
 			const XalanDOMString	prefix = substring(attrName, 0, indexOfNSSep);
-			const XalanDOMString	ns = getNamespaceForPrefixFromStack(prefix);
+			const XalanDOMString&	ns = getNamespaceForPrefixFromStack(prefix);
 
 			attrOK = ! ::isEmpty(ns) && !equals(ns,constructionContext.getXSLTNamespaceURI());
 		}
@@ -394,9 +392,19 @@ Stylesheet::isAttrOK(
 
 
 
-XalanDOMString
-Stylesheet::getNamespaceFromStack(const XalanDOMString& nodeName) const
+const XalanDOMString&
+Stylesheet::getNamespaceFromStack(const XalanDOMString&		nodeName) const
 {
+	return getNamespaceFromStack(c_wstr(nodeName));
+}
+
+
+
+const XalanDOMString&
+Stylesheet::getNamespaceFromStack(const XalanDOMChar* 	nodeName) const
+{
+	assert(nodeName != 0);
+
 	const unsigned int		indexOfNSSep = indexOf(nodeName, XalanUnicode::charColon);
 
 	const XalanDOMString	prefix =
@@ -408,8 +416,8 @@ Stylesheet::getNamespaceFromStack(const XalanDOMString& nodeName) const
 }
 
 
-  
-XalanDOMString
+
+const XalanDOMString&
 Stylesheet::getNamespaceForPrefix(const XalanDOMString& 	prefix) const
 {
 	return QName::getNamespaceForPrefix(m_namespaceDecls, prefix);
@@ -417,10 +425,20 @@ Stylesheet::getNamespaceForPrefix(const XalanDOMString& 	prefix) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 Stylesheet::getNamespaceForPrefixFromStack(const XalanDOMString&	prefix) const
 {
 	return QName::getNamespaceForPrefix(m_namespaces, prefix);
+}
+
+
+
+const XalanDOMString&
+Stylesheet::getNamespaceForPrefixFromStack(const XalanDOMChar*	prefix) const
+{
+	assert(prefix != 0);
+
+	return QName::getNamespaceForPrefix(m_namespaces, XalanDOMString(prefix));
 }
 
 
@@ -441,9 +459,7 @@ Stylesheet::getYesOrNo(
 	}
 	else
 	{
-		constructionContext.error(XalanDOMString(val) +
-									XalanDOMString(" is unknown value for ") +
-									aname);
+		constructionContext.error(XalanDOMString(val) + " is unknown value for " + aname);
 
 		return false;
 	}
@@ -496,7 +512,7 @@ Stylesheet::addTemplate(
 		else
 		{
 			// This is an error...
-			XalanDOMString	theMessage("The stylesheet already has a template with the name ");
+			XalanDOMString	theMessage(TranscodeFromLocalCodePage("The stylesheet already has a template with the name "));
 
 			const XalanDOMString&	theNamespace = theName.getNamespace();
 
@@ -595,8 +611,7 @@ Stylesheet::findNamedTemplate(
 
 	if(0 == namedTemplate)
 	{
-		executionContext.warn(XalanDOMString("Could not find xsl:template named: ") +
-											  qname.getLocalPart());
+		executionContext.warn("Could not find xsl:template named: " + qname.getLocalPart());
 	}
 
 	return namedTemplate;
@@ -656,7 +671,7 @@ Stylesheet::findTemplate(
 			{
 			case XalanNode::ELEMENT_NODE:
 				{
-					const XalanDOMString	targetName = DOMServices::getLocalNameOfNode(*targetNode);
+					const XalanDOMString&	targetName = DOMServices::getLocalNameOfNode(*targetNode);
 
 					matchPatternList = locateMatchPatternList2(targetName, true);
 				}
@@ -692,7 +707,7 @@ Stylesheet::findTemplate(
 
 			if (matchPatternList != 0)
 			{
-				XalanDOMString			prevPat;
+				const XalanDOMString*	prevPat = 0;
 				const MatchPattern2*	prevMatchPat = 0;
 				double					prevMatchPatPriority = XPath::s_MatchScoreNone;
 
@@ -729,14 +744,14 @@ Stylesheet::findTemplate(
 
 					if ( (!haveMode && !haveRuleMode) || (haveMode && haveRuleMode && ruleMode.equals(mode)))
 					{
-						const XalanDOMString	patterns = matchPat->getPattern();
+						const XalanDOMString&	patterns = matchPat->getPattern();
 
 						if(!isEmpty(patterns) &&
 						   !(prevMatchPat != 0 &&
-						     equals(prevPat, patterns) &&
+						     (prevPat != 0 && equals(*prevPat, patterns)) &&
 							 prevMatchPat->getTemplate()->getPriority() == matchPat->getTemplate()->getPriority()))
 						{
-							prevPat = patterns;
+							prevPat = &patterns;
 							prevMatchPat = matchPat;
 							prevMatchPatPriority = matchPatPriority;
 							matchPatPriority = XPath::s_MatchScoreNone;
@@ -904,19 +919,18 @@ Stylesheet::addObjectIfNotFound(
 			const MatchPattern2*		thePattern,
 			PatternTableVectorType& 	theVector)
 {
-	const PatternTableVectorType::size_type 	n =
-		theVector.size();
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
 
-	for(PatternTableVectorType::size_type i = 0; i < n; i++)
-	{
-		if(theVector[i] == thePattern)
-		{
-			break;
-		}
-	}
+	const PatternTableVectorType::const_iterator 	theResult =
+		find(
+				theVector.begin(),
+				theVector.end(),
+				thePattern);
 
 	// Did we find it?
-	if(i == n)
+	if(theResult == theVector.end())
 	{
 		theVector.push_back(thePattern);
 	}
@@ -935,9 +949,9 @@ Stylesheet::locateMatchPatternList2(XalanNode*	sourceNode) const
 	{
 	case XalanNode::ELEMENT_NODE:
 		{
-			// String targetName = m_parserLiaison.getExpandedElementName((Element)targetNode);
-			const XalanDOMString	targetName =
+			const XalanDOMString&	targetName =
 				DOMServices::getLocalNameOfNode(*sourceNode);
+
 			matchPatternList = locateMatchPatternList2(targetName, true);
 		}
 		break;
@@ -975,7 +989,7 @@ Stylesheet::locateMatchPatternList2(XalanNode*	sourceNode) const
 const Stylesheet::PatternTableListType* 
 Stylesheet::locateMatchPatternList2(
 			const XalanDOMString&	sourceElementType,
-			bool				tryWildCard) const
+			bool					tryWildCard) const
 {
 	const PatternTableListType* 	theMatchList = 0;
 
@@ -1003,20 +1017,13 @@ Stylesheet::locateMatchPatternList2(
 
 
 
-/**
- * Construct a match pattern from a pattern and template.
- * @param pat For now a Nodelist that contains old-style element patterns.
- * @param template The node that contains the template for this pattern.
- * @param isMatchPatternsOnly tells if pat param contains only match 
- * patterns (for compatibility with old syntax).
- */
 Stylesheet::MatchPattern2::MatchPattern2(
 			const XalanDOMString&	pat,
 			const XPath*			exp,
 			const ElemTemplate*		theTemplate,
 			int 					posInStylesheet, 
 			const XalanDOMString&	targetString,
-			const Stylesheet* 	stylesheet) :
+			const Stylesheet* 		stylesheet) :
 	m_stylesheet(stylesheet),
 	m_targetString(targetString),
 	m_expression(exp),
@@ -1104,8 +1111,7 @@ Stylesheet::pushTopLevelVariables(
 
 			var->execute(executionContext,
 						 doc,
-						 doc,
-						 QName());
+						 doc);
 		}
 	}
 
@@ -1122,7 +1128,7 @@ Stylesheet::pushTopLevelVariables(
 
 
 
-const XalanDOMString
+const XalanDOMString&
 Stylesheet::getCurrentIncludeBaseIdentifier() const
 {
 	if (m_includeStack.size() == 0)
@@ -1139,15 +1145,15 @@ Stylesheet::getCurrentIncludeBaseIdentifier() const
 
 void
 Stylesheet::processNSAliasElement(
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			StylesheetConstructionContext&	constructionContext)
 {
-	const unsigned int	nAttrs = atts.getLength();
+	const unsigned int		nAttrs = atts.getLength();
 
-	XalanDOMString	stylesheetNamespace;
-	XalanDOMString	resultNamespace;
-	XalanDOMString	dummy;
+	const XalanDOMString*	stylesheetNamespace = &DOMServices::s_emptyString;
+	const XalanDOMString*	resultNamespace = &DOMServices::s_emptyString;
+	const XalanDOMString	dummy;
 
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
@@ -1159,11 +1165,11 @@ Stylesheet::processNSAliasElement(
 
 			if (equals(value, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 			{
-				stylesheetNamespace = getNamespaceForPrefix(dummy);
+				stylesheetNamespace = &getNamespaceForPrefix(dummy);
 			}
 			else
 			{
-				stylesheetNamespace = getNamespaceForPrefix(value);
+				stylesheetNamespace = &getNamespaceForPrefix(XalanDOMString(value));
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_RESULT_PREFIX))
@@ -1172,41 +1178,41 @@ Stylesheet::processNSAliasElement(
 
 			if (equals(value, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 			{
-				resultNamespace = getNamespaceForPrefix(dummy);
+				resultNamespace = &getNamespaceForPrefix(dummy);
 			}
 			else
 			{
-				resultNamespace = getNamespaceForPrefix(value);
+				resultNamespace = &getNamespaceForPrefix(XalanDOMString(value));
 			}
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 		}
 	}
 
 	// Build a table of aliases, the key is the stylesheet uri and the
 	// value is the result uri
-	if (length(stylesheetNamespace) != 0 &&
-		length(resultNamespace) != 0)
+	if (length(*stylesheetNamespace) != 0 &&
+		length(*resultNamespace) != 0)
 	{
 #if 1
 		// $$$ ToDo: Enable other code.  Perhaps an error?
-		m_prefixAliases[stylesheetNamespace] = resultNamespace;
+		m_prefixAliases[*stylesheetNamespace] = *resultNamespace;
 
-		m_namespacesHandler.setNamespaceAlias(stylesheetNamespace, resultNamespace);
+		m_namespacesHandler.setNamespaceAlias(*stylesheetNamespace, *resultNamespace);
 #else
 		const PrefixAliasesMapType::iterator	i =
-			m_prefixAliases.find(stylesheetNamespace);
+			m_prefixAliases.find(*stylesheetNamespace);
 
 		if (i != m_prefixAliases.end())
 		{
 			// $$$ ToDo: This could also be an error?
-			(*i).second = resultNamespace;
+			(*i).second = *resultNamespace;
 		}
 		else
 		{
-			m_prefixAliases.insert(PrefixAliasesMapType::value_type(stylesheetNamespace, resultNamespace));
+			m_prefixAliases.insert(PrefixAliasesMapType::value_type(*stylesheetNamespace, *resultNamespace));
 		}
 #endif
 	}
@@ -1214,6 +1220,16 @@ Stylesheet::processNSAliasElement(
 	{
 		constructionContext.error("Missing namespace URI for specified prefix");
 	}
+}
+
+
+
+XalanDOMString
+Stylesheet::getAliasNamespaceURI(const XalanDOMChar*	uri) const
+{
+	assert(uri != 0);
+
+	return getAliasNamespaceURI(XalanDOMString(uri));
 }
 
 
@@ -1407,7 +1423,9 @@ Stylesheet::applyAttrSets(
 				assert(attrSet != 0);
 
 				if(qname.equals(attrSet->getQName()))
+				{
 					attrSet->execute(executionContext, sourceTree, sourceNode, mode);
+				}
 			}
 		}
 	}
@@ -1430,18 +1448,18 @@ Stylesheet::getCurrentNamespace() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 Stylesheet::getNodeName() const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 Stylesheet::getNodeValue() const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
@@ -1615,27 +1633,27 @@ Stylesheet::supports(
 
 
 
-XalanDOMString
+const XalanDOMString&
 Stylesheet::getNamespaceURI() const
 {
 	// $$ ToDo: Is this the same value as PrefixResolver::getURI()?
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 Stylesheet::getPrefix() const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 Stylesheet::getLocalName() const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
@@ -1652,14 +1670,6 @@ unsigned long
 Stylesheet::getIndex() const
 {
 	return 0;
-}
-
-
-
-XalanDOMString
-Stylesheet::getXSLTData() const
-{
-	return DOMString();
 }
 
 
@@ -1865,7 +1875,7 @@ Stylesheet::isIndexed() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 Stylesheet::getURI() const
 {
 	return m_baseIdent;

@@ -101,6 +101,9 @@ public:
 	static const unsigned int&		s_XMLNamespaceWithSeparatorLength;
 	static const unsigned int&		s_XMLNamespaceSeparatorStringLength;
 
+	// A dummy string to return when we need an emtpy string...
+	static const XalanDOMString		s_emptyString;
+
 
 	class XALAN_DOMSUPPORT_EXPORT WhitespaceSupport
 	{
@@ -169,11 +172,33 @@ public:
 	/**
 	 * Retrieves data for node
 	 * 
+	 * @param node DOM node whose data is to be returned
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanNode&	node,
+			XalanDOMString&		data);
+
+	/**
+	 * Retrieves data for node
+	 * 
 	 * @param attribute DOM node whose data is to be returned
 	 * @return a string representation of the node's data
 	 */
 	static XalanDOMString
 	getNodeData(const XalanAttr&	attribute);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param attribute DOM node whose data is to be returned
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanAttr&	attribute,
+			XalanDOMString&		data);
 
 	/**
 	 * Retrieves data for node
@@ -187,11 +212,33 @@ public:
 	/**
 	 * Retrieves data for node
 	 * 
+	 * @param attribute DOM node whose data is to be returned
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanComment&		comment,
+			XalanDOMString&			data);
+
+	/**
+	 * Retrieves data for node
+	 * 
 	 * @param document DOM node whose data is to be returned
 	 * @return a string representation of the node's data
 	 */
 	static XalanDOMString
 	getNodeData(const XalanDocument&	document);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param document DOM node whose data is to be returned
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanDocument&	document,
+			XalanDOMString&			data);
 
 	/**
 	 * Retrieves data for node
@@ -205,11 +252,33 @@ public:
 	/**
 	 * Retrieves data for node
 	 * 
+	 * @param documentFragment DOM node whose data is to be returned
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanDocumentFragment&	documentFragment,
+			XalanDOMString&					data);
+
+	/**
+	 * Retrieves data for node
+	 * 
 	 * @param element DOM node whose data is to be returned
 	 * @return a string representation of the node's data
 	 */
 	static XalanDOMString
 	getNodeData(const XalanElement&		element);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param element DOM node whose data is to be returned
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanElement&		element,
+			XalanDOMString&			data);
 
 	/**
 	 * Retrieves data for node
@@ -223,11 +292,33 @@ public:
 	/**
 	 * Retrieves data for node
 	 * 
+	 * @param pi DOM node whose data is to be returned
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanProcessingInstruction&	pi,
+			XalanDOMString&						data);
+
+	/**
+	 * Retrieves data for node
+	 * 
 	 * @param node DOM node whose data is to be returned
 	 * @return a string representation of the node's data
 	 */
 	static XalanDOMString
 	getNodeData(const XalanText&	text);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param node DOM node whose data is to be returned
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanText&	text,
+			XalanDOMString&		data);
 
 	/**
 	 * Retrieve the name of the node, taking into
@@ -237,7 +328,7 @@ public:
 	 * @param node	DOM node whose name is returned
 	 * @return name of the node
 	 */
-	static XalanDOMString
+	static const XalanDOMString&
 	getNameOfNode(const XalanNode&	n);
 
 	/**
@@ -248,7 +339,7 @@ public:
 	 * @param node	DOM node whose name is returned
 	 * @return name of node without namespace
 	 */
-	static XalanDOMString
+	static const XalanDOMString&
 	getLocalNameOfNode(const XalanNode&		n);
 
 	/**
@@ -268,7 +359,7 @@ public:
 	 * @param namespaceContext DOM element representing the context for namespace
 	 * @return URI corresponding to namespace
 	 */
-	static XalanDOMString
+	static const XalanDOMString&
 	getNamespaceForPrefix(
 			const XalanDOMString&	prefix,
 			const XalanElement&		namespaceContext);
@@ -298,8 +389,7 @@ public:
 			const XalanNode&	parent,
 			const XalanNode&	child1,
 			const XalanNode&	child2);
-
-};	// class DOMServices
+};
 
 
 

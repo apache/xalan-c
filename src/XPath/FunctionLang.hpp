@@ -133,7 +133,7 @@ public:
 #endif
 
 				const XalanDOMString		langVal =
-					theElementNode->getAttribute(XALAN_STATIC_UCODE_STRING("xml:lang"));
+					theElementNode->getAttribute(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("xml:lang")));
 
 				if(0 != length(langVal))
 				{

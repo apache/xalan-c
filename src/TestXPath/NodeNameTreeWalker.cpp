@@ -119,7 +119,7 @@ NodeNameTreeWalker::findMatchingNodes(
 void
 NodeNameTreeWalker::startNode(XalanNode*	node)
 {
-	const XalanDOMString		theNodeName = node->getNodeName();
+	const XalanDOMString&	theNodeName = node->getNodeName();
 
 	if (equals(theNodeName, m_nodeName) == true)
 	{

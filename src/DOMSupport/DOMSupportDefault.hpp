@@ -64,6 +64,10 @@
 
 
 
+#include <PlatformSupport/XalanDOMStringPool.hpp>
+
+
+
 #include <DOMSupport/DOMSupport.hpp>
 #include <DOMSupport/NamespaceResolver.hpp>
 
@@ -84,18 +88,23 @@ public:
 	reset();
 
 	// These interfaces are inherited from DOMSupport...
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceOfNode(const XalanNode&	theNode) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getExpandedElementName(const XalanElement&	elem) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getExpandedAttributeName(const XalanAttr&	attr) const;
 
 private:
 
-	NamespaceResolver	m_resolver;
+	const XalanDOMString&
+	getExpandedName(const XalanNode&	node) const;
+
+	NamespaceResolver			m_resolver;
+
+	mutable XalanDOMStringPool	m_pool;
 };
 
 

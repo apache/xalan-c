@@ -72,6 +72,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NodeRefListBase.hpp>
 #include <XPath/XObject.hpp>
@@ -171,7 +175,7 @@ FunctionKey::execute(
 				{
 					assert(theNodeSet.item(i) != 0);
 
-					const XalanDOMString		ref = theNodeSet.item(i)->getXSLTData();
+					const XalanDOMString		ref = DOMServices::getNodeData(*theNodeSet.item(i));
 
 					if(0 != length(ref))
 					{

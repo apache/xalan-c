@@ -57,14 +57,6 @@
 #if !defined(XALAN_ELEMCHOOSE_HEADER_GUARD)
 #define XALAN_ELEMCHOOSE_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
 
 
 // Base include file.  Must be first.
@@ -98,7 +90,7 @@ public:
 	ElemChoose(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);

@@ -478,16 +478,16 @@ private:
 	XalanDOMString m_LXSLTScriptSrcURL;
 	ExtensionNSHandler* m_pLXSLTExtensionNSH;
 	// END SANJIVA CODE
-	
+
 	/**
 	 * Init the wrapperless template
 	 */
 	ElemTemplateElement*
 	initWrapperless(
-			const XalanDOMString& name,
-			const AttributeList& atts,
-			int lineNumber,
-			int columnNumber);
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			int						lineNumber,
+			int						columnNumber);
 
 
 	class PushPopIncludeState

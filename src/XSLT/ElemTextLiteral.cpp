@@ -84,7 +84,7 @@ ElemTextLiteral::ElemTextLiteral(
             bool							disableOutputEscaping) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						Constants::PSEUDONAME_TEXT,
+						c_wstr(Constants::PSEUDONAME_TEXT),
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_TEXTLITERALRESULT),

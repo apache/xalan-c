@@ -64,8 +64,8 @@
 
 
 XSLTProcessorException::XSLTProcessorException(
-		const DOMString&	theMessage,
-		const DOMString&	theType) :
+		const XalanDOMString&	theMessage,
+		const XalanDOMString&	theType) :
 	XSLException(theMessage, theType)
 {
 }

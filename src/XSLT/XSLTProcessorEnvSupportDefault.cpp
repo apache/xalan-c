@@ -178,10 +178,11 @@ XSLTProcessorEnvSupportDefault::parseXML(
 
 		// $$$ ToDo: we should re-work this code to only use
 		// XMLRUL when necessary.
-		URLAutoPtrType	xslURL =
+		const URLAutoPtrType	xslURL =
 			URISupport::getURLFromString(urlString, base);
 
-		const XMLCh* const	urlText = xslURL->getURLText();
+		// $$$ ToDo: Explicit XalanDOMString constructor
+		const XalanDOMString	urlText(XalanDOMString(xslURL->getURLText()));
 
 		// First see if it's already been parsed...
 		XalanDocument*		theDocument =
@@ -192,7 +193,7 @@ XSLTProcessorEnvSupportDefault::parseXML(
 			XMLParserLiaison&	parserLiaison =
 				m_processor->getXMLParserLiaison();
 
-			XSLTInputSource		inputSource(urlText);
+			XSLTInputSource		inputSource(c_wstr(urlText));
 
 			theDocument = parserLiaison.parseXMLStream(inputSource);
 

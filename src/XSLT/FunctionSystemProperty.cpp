@@ -116,7 +116,7 @@ FunctionSystemProperty::execute(
 	{
 		const XalanDOMString	prefix = substring(fullName, 0, indexOfNSSep);
 
-		const XalanDOMString	nspace = executionContext.getNamespaceForPrefix(prefix);
+		const XalanDOMString&	nspace = executionContext.getNamespaceForPrefix(prefix);
 
 		const XalanDOMString	propName = substring(fullName, indexOfNSSep + 1);
 
@@ -145,12 +145,12 @@ FunctionSystemProperty::execute(
 		{
 			executionContext.warn("Don't currently do anything with namespace " + nspace + " in property: " + fullName);
 
-			result = ::getenv(c_str(TranscodeToLocalCodePage(propName)));
+			result = TranscodeFromLocalCodePage(::getenv(c_str(TranscodeToLocalCodePage(propName))));
 		}
 	}
 	else
 	{
-		result = ::getenv(c_str(TranscodeToLocalCodePage(fullName)));
+		result = TranscodeFromLocalCodePage(::getenv(c_str(TranscodeToLocalCodePage(fullName))));
 	}
 
 	if (fNumberResult == true)

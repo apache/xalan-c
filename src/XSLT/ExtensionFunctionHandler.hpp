@@ -216,6 +216,8 @@ protected:
 	 */
 	virtual void
 	startupComponent();
+
+	static const XalanDOMChar	s_tokenDelimiterCharacters[];
 };
  
 

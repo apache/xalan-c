@@ -103,10 +103,10 @@ XMLParserLiaisonDefault::supportsSAX() const
 
 XalanDocument*
 XMLParserLiaisonDefault::parseXMLStream(
-			InputSource&			/* inputSource */,
+			const InputSource&		/* inputSource */,
 			const XalanDOMString&	/* identifier */)
 {
-	throw XMLSupportException("parseXMLStream() not supported in XMLParserLiaisonDefault!");
+	throw XMLSupportException(TranscodeFromLocalCodePage("parseXMLStream() not supported in XMLParserLiaisonDefault!"));
 
 	return 0;
 }
@@ -115,11 +115,11 @@ XMLParserLiaisonDefault::parseXMLStream(
 
 void
 XMLParserLiaisonDefault::parseXMLStream(
-			InputSource&			/* inputSource */,
+			const InputSource&		/* inputSource */,
 			DocumentHandler&		/* handler */,
 			const XalanDOMString&	/* identifier */)
 {
-	throw XMLSupportException("parseXMLStream() not supported in XMLParserLiaisonDefault!");
+	throw XMLSupportException(TranscodeFromLocalCodePage("parseXMLStream() not supported in XMLParserLiaisonDefault!"));
 }
 
 
@@ -127,7 +127,7 @@ XMLParserLiaisonDefault::parseXMLStream(
 XalanDocument*
 XMLParserLiaisonDefault::createDocument()
 {
-	throw XMLSupportException("createDocument() not supported in XMLParserLiaisonDefault!");
+	throw XMLSupportException(TranscodeFromLocalCodePage("createDocument() not supported in XMLParserLiaisonDefault!"));
 
 	return 0;
 }
@@ -145,7 +145,7 @@ XMLParserLiaisonDefault::getDOMFactory()
 /**
  * Returns the element name with the namespace expanded.
  */
-XalanDOMString
+const XalanDOMString&
 XMLParserLiaisonDefault::getExpandedElementName(const XalanElement&		elem) const
 {
 	return m_DOMSupport.getExpandedElementName(elem);
@@ -156,7 +156,7 @@ XMLParserLiaisonDefault::getExpandedElementName(const XalanElement&		elem) const
 /**
  * Returns the attribute name with the namespace expanded.
  */
-XalanDOMString
+const XalanDOMString&
 XMLParserLiaisonDefault::getExpandedAttributeName(const XalanAttr&	attr) const
 {
 	return m_DOMSupport.getExpandedAttributeName(attr);

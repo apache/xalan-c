@@ -74,7 +74,8 @@
 
 
 XercesDOMSupport::XercesDOMSupport() :
-	DOMSupport()
+	DOMSupport(),
+	m_domSupportDefault()
 {
 }
 
@@ -89,11 +90,12 @@ XercesDOMSupport::~XercesDOMSupport()
 void
 XercesDOMSupport::reset()
 {
+	m_domSupportDefault.reset();
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesDOMSupport::getNamespaceOfNode(const XalanNode&	theNode) const
 {
 	return theNode.getNamespaceURI();
@@ -101,22 +103,16 @@ XercesDOMSupport::getNamespaceOfNode(const XalanNode&	theNode) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesDOMSupport::getExpandedElementName(const XalanElement&	elem) const
 {
-	const XalanDOMString	theNamespace = getNamespaceOfNode(elem);
-
-	return 0 != length(theNamespace) ? theNamespace + DOMServices::s_XMLNamespaceSeparatorString + elem.getLocalName() 
-									: elem.getLocalName();
+	return m_domSupportDefault.getExpandedElementName(elem);
 }
 
 
 
-XalanDOMString
-XercesDOMSupport::getExpandedAttributeName(const XalanAttr&	attr) const
+const XalanDOMString&
+XercesDOMSupport::getExpandedAttributeName(const XalanAttr&		attr) const
 {
-	const XalanDOMString	theNamespace = getNamespaceOfNode(attr);
-
-	return 0 != length(theNamespace) ? theNamespace + DOMServices::s_XMLNamespaceSeparatorString + attr.getLocalName() 
-                                 : attr.getLocalName();
+	return m_domSupportDefault.getExpandedAttributeName(attr);
 }

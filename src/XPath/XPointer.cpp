@@ -65,7 +65,7 @@
 XSpan*
 XPointer::getNode(const XalanDOMString&		/* xpointer */)
 {
-	throw XPathException("Error!  XPointer::getNode not yet implemented!");
+	throw XPathException(TranscodeFromLocalCodePage("Error!  XPointer::getNode not yet implemented!"));
 
 	return 0;
 }
@@ -75,7 +75,7 @@ XPointer::getNode(const XalanDOMString&		/* xpointer */)
 XSpan*
 XPointer::getNode(XPath&	/* xpath */)
 {
-	throw XPathException("Error!  XPointer::getNode not yet implemented!");
+	throw XPathException(TranscodeFromLocalCodePage("Error!  XPointer::getNode not yet implemented!"));
 
 	return 0;
 }

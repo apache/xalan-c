@@ -80,6 +80,7 @@ namespace XalanUnicode
 	{
 		charHTab				= 0x09,
 		charLF					= 0x0A,
+		charFF					= 0x0C,
 		charCR					= 0x0D,
 		charSpace				= 0x20,
 
@@ -187,6 +188,7 @@ namespace XalanUnicode
 		charLetter_t			= 0x74,
 		charLetter_u			= 0x75,
 		charLetter_y			= 0x79,
+		charLetter_z			= 0x7A,
 
 		charLeftCurlyBracket	= 0x7B,
 
@@ -200,6 +202,7 @@ namespace XalanUnicode
 	static const XalanDOMChar	charHTab				= 0x09;
 	static const XalanDOMChar	charLF					= 0x0A;
 	static const XalanDOMChar	charCR					= 0x0D;
+	static const XalanDOMChar	charFF					= 0x0C;
 	static const XalanDOMChar	charSpace				= 0x20;
 
 	static const XalanDOMChar	charExclamationMark		= 0x21;
@@ -306,6 +309,7 @@ namespace XalanUnicode
 	static const XalanDOMChar	charLetter_t			= 0x74;
 	static const XalanDOMChar	charLetter_u			= 0x75;
 	static const XalanDOMChar	charLetter_y			= 0x79;
+	static const XalanDOMChar	charLetter_z			= 0x7A;
 
 	static const XalanDOMChar	charLeftCurlyBracket	= 0x7B;
 

@@ -71,14 +71,18 @@
 
 
 
-/**
- * Class handling an extension namespace for XPath. Provides functions
- * to test a function's existence and call a function
- *
- * @author Sanjiva Weerawarana (sanjiva@watson.ibm.com)
- */
+const XalanDOMChar	ExtensionFunctionHandler::s_tokenDelimiterCharacters[] =
+{
+		XalanUnicode::charSpace,
+		XalanUnicode::charHTab,
+		XalanUnicode::charLF,
+		XalanUnicode::charCR,
+		0
+};
 
-ExtensionFunctionHandler::ExtensionFunctionHandler(const XalanDOMString&		namespaceUri) :
+
+
+ExtensionFunctionHandler::ExtensionFunctionHandler(const XalanDOMString&	namespaceUri) :
 	m_namespaceUri(namespaceUri),
 	m_scriptLang(),
 	m_scriptSrc(),
@@ -124,7 +128,7 @@ ExtensionFunctionHandler::setFunctions(const XalanDOMString&	funcNames)
 		return;
 	}
 
-	StringTokenizer		st(funcNames, " \t\n\r", false);
+	StringTokenizer		st(funcNames, s_tokenDelimiterCharacters, false);
 
 	while (st.hasMoreTokens() == true)
 	{

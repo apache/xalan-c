@@ -73,8 +73,24 @@ GenerateEvent::GenerateEvent(EventType	eventType) :
 
 GenerateEvent::GenerateEvent(
 			EventType				eventType,
-			const XalanDOMString&	name,
+			const XalanDOMChar*		name,
 			AttributeList*			atts) :
+	m_eventType(eventType),
+	m_characters(),
+	m_start(0),
+	m_length(0),
+	m_name(XalanDOMString(name)),
+	m_data(),
+	m_pAtts(atts)
+{
+}
+
+
+
+GenerateEvent::GenerateEvent(
+			EventType				eventType,
+			const XalanDOMString&	name,
+			const AttributeList*	atts) :
 	m_eventType(eventType),
 	m_characters(),
 	m_start(0),
@@ -84,7 +100,6 @@ GenerateEvent::GenerateEvent(
 	m_pAtts(atts)
 {
 }
-
 
 
 GenerateEvent::GenerateEvent(
@@ -106,14 +121,14 @@ GenerateEvent::GenerateEvent(
 
 GenerateEvent::GenerateEvent(
 			EventType				eventType,
-			const XalanDOMString&	name,
-			const XalanDOMString&	data) :
+			const XalanDOMChar*		name,
+			const XalanDOMChar*		data) :
 	m_eventType(eventType),
 	m_characters(),
 	m_start(0),
 	m_length(0),
-	m_name(name),
-	m_data(data),
+	m_name(XalanDOMString(name)),
+	m_data(XalanDOMString(data)),
 	m_pAtts(0)
 {
 }
@@ -122,13 +137,13 @@ GenerateEvent::GenerateEvent(
 
 GenerateEvent::GenerateEvent(
 			EventType				eventType,
-			const XalanDOMString&	data) :
+			const XalanDOMChar*		data) :
 	m_eventType(eventType),
 	m_characters(),
 	m_start(0),
 	m_length(0),
 	m_name(),
-	m_data(data),
+	m_data(XalanDOMString(data)),
 	m_pAtts(0)
 {
 }

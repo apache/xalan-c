@@ -88,7 +88,7 @@
 ElemLiteralResult::ElemLiteralResult(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber,
@@ -123,11 +123,11 @@ ElemLiteralResult::ElemLiteralResult(
 
 			if(!equals(prefix, DOMServices::s_XMLNamespace))
 			{
-				const XalanDOMString	ns = getNamespaceForPrefix(prefix);
+				const XalanDOMString&	ns = getNamespaceForPrefix(prefix);
 
 				if(equals(ns, stylesheetTree.getXSLTNamespaceURI()))
 				{
-					const XalanDOMString localName = substring(aname,indexOfNSSep + 1);
+					const XalanDOMString localName = substring(aname, indexOfNSSep + 1);
 
 					if(processPrefixControl(constructionContext, stylesheetTree, localName, atts.getValue(i)) == true)
 					{
@@ -296,7 +296,7 @@ ElemLiteralResult::isAttrOK(
 		{
 			const XalanDOMString	prefix = substring(attrName, 0, indexOfNSSep);
 
-			const XalanDOMString	ns = getStylesheet().getNamespaceForPrefixFromStack(prefix);
+			const XalanDOMString&	ns = getStylesheet().getNamespaceForPrefixFromStack(prefix);
 
 			if (equals(ns, constructionContext.getXSLTNamespaceURI()) == false)
 			{
@@ -321,17 +321,17 @@ ElemLiteralResult::processPrefixControl(
 			StylesheetConstructionContext&	constructionContext,
 			const Stylesheet&				stylesheetTree,
 			const XalanDOMString&			localName,
-			const XalanDOMString&			attrValue)
+			const XalanDOMChar*				attrValue)
 {
 	if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
 	{
-		m_namespacesHandler.processExtensionElementPrefixes(c_wstr(attrValue), stylesheetTree.getNamespaces(), constructionContext);
+		m_namespacesHandler.processExtensionElementPrefixes(attrValue, stylesheetTree.getNamespaces(), constructionContext);
 
 		return true;
 	}
 	else if (equals(localName, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
 	{
-		m_namespacesHandler.processExcludeResultPrefixes(c_wstr(attrValue), stylesheetTree.getNamespaces(), constructionContext);
+		m_namespacesHandler.processExcludeResultPrefixes(attrValue, stylesheetTree.getNamespaces(), constructionContext);
 
 		return true;
 	}

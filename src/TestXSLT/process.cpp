@@ -83,10 +83,13 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
-#include <PlatformSupport/XalanAutoPtr.hpp>
 #include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
 #include <PlatformSupport/XalanFileOutputStream.hpp>
 #include <PlatformSupport/XalanStdOutputStream.hpp>
+
+
+
+#include <Include/XalanAutoPtr.hpp>
 
 
 
@@ -111,6 +114,7 @@
 
 #include <XMLSupport/FormatterToDOM.hpp>
 #include <XMLSupport/FormatterToHTML.hpp>
+#include <XMLSupport/FormatterToNull.hpp>
 #include <XMLSupport/FormatterToText.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
 #include <XMLSupport/FormatterTreeWalker.hpp>
@@ -212,6 +216,11 @@ printArgOptions()
 		 << " [-ESCAPECDATA (Strip CDATA sections of their brackets, but escape.)"
 		 << endl
 		 << endl
+		 << "The following option is valid only with -HTML."
+		 << endl
+		 << endl
+		 << " [-NOINDENT (Turns off HTML indenting..]"
+		 << endl
 		 << "The following option is valid only with -XML."
 		 << endl
 		 << endl
@@ -246,6 +255,8 @@ struct CmdLineParams
 	bool traceTemplateChildren;
 	bool shouldWriteXMLHeader;
 	bool doValidation;
+	bool noIndent;
+	bool formatToNull;
 	int indentAmount;
 	int outputType;
 	CharVectorType outFileName;
@@ -268,10 +279,12 @@ struct CmdLineParams
 		traceTemplateChildren(false),
 		shouldWriteXMLHeader(true),
 		doValidation(false),
-		indentAmount(0),
+		noIndent(false),
+		formatToNull(false),
+		indentAmount(-1),
 		outputType(-1),
-		specialCharacters(),
 		outFileName(),
+		specialCharacters(),
 		xslFileName(),
 		inFileName()
 	{
@@ -371,6 +384,10 @@ getArgs(
 				fSuccess = false;
 			}
 		}
+		else if (!stricmp("-NOINDENT", argv[i]))
+		{
+			p.noIndent = true;
+		} 
 		else if (!stricmp("-INDENT", argv[i]))
 		{
 			++i;
@@ -383,7 +400,7 @@ getArgs(
 			{
 				fSuccess = false;
 			}
-		} 
+		}
 		else if(!stricmp("-VALIDATE", argv[i]))
 		{
 			p.doValidation = true;
@@ -472,6 +489,10 @@ getArgs(
 
 			p.outputType = FormatterListener::OUTPUT_METHOD_DOM;
 		}
+		else if(!stricmp("-NULL", argv[i]))
+		{
+			p.formatToNull = true;
+		}
 		else if(!stricmp("-STRIPCDATA", argv[i]))
 		{
 			p.stripCData = true;
@@ -517,6 +538,8 @@ createFormatter(
 			bool						shouldWriteXMLHeader,
 			bool						stripCData,
 			bool						escapeCData,
+			bool						noIndent,
+			bool						formatToNull,
 			PrintWriter&				resultWriter,
 			int							indentAmount,
 			const XalanDOMString&		mimeEncoding,
@@ -525,7 +548,11 @@ createFormatter(
 {
 	FormatterListener*	formatter = 0;
 
-	if(FormatterListener::OUTPUT_METHOD_XML == outputType)
+	if (formatToNull == true)
+	{
+		formatter = new FormatterToNull;
+	}
+	else if(FormatterListener::OUTPUT_METHOD_XML == outputType)
 	{
 		XalanDOMString	version;
 		bool			outputIndent = false;
@@ -537,7 +564,7 @@ createFormatter(
 		if (stylesheet != 0)
 		{
 			version = stylesheet->m_version;
-			outputIndent = stylesheet->getOutputIndent();
+
 			mediatype = stylesheet->m_mediatype;
 			doctypeSystem = stylesheet->getOutputDoctypeSystem();
 			doctypePublic = stylesheet->getOutputDoctypePublic();
@@ -563,12 +590,12 @@ createFormatter(
 	}
 	else if(FormatterListener::OUTPUT_METHOD_TEXT == outputType)
 	{
-		formatter = new FormatterToText(resultWriter);
+		formatter = new FormatterToText(resultWriter, mimeEncoding);
 	}
 	else if(FormatterListener::OUTPUT_METHOD_HTML == outputType)
 	{
 		XalanDOMString	version;
-		bool			outputIndent = false;
+		bool			outputIndent = !noIndent;
 		XalanDOMString	mediatype;
 		XalanDOMString	doctypeSystem;
 		XalanDOMString	doctypePublic;
@@ -577,7 +604,12 @@ createFormatter(
 		if (stylesheet != 0)
 		{
 			version = stylesheet->m_version;
-			outputIndent = stylesheet->getOutputIndent();
+
+			if (noIndent == false)
+			{
+				outputIndent = stylesheet->getOutputIndent();
+			}
+
 			mediatype = stylesheet->m_mediatype;
 			doctypeSystem = stylesheet->getOutputDoctypeSystem();
 			doctypePublic = stylesheet->getOutputDoctypePublic();
@@ -620,7 +652,7 @@ createOutputStream(const CmdLineParams&		params)
 	}
 	else
 	{
-		return new XalanFileOutputStream(c_str(params.outFileName));
+		return new XalanFileOutputStream(TranscodeFromLocalCodePage(c_str(params.outFileName)));
 	}
 }
 
@@ -728,8 +760,8 @@ xsltMain(const CmdLineParams&	params)
 		for ( ; it != params.paramsMap.end(); ++it)
 		{
 			processor.setStylesheetParam(
-					c_str((*it).first),
-					c_str((*it).second));
+					TranscodeFromLocalCodePage(c_str((*it).first)),
+					TranscodeFromLocalCodePage(c_str((*it).second)));
 		}
 	}
 
@@ -741,7 +773,11 @@ xsltMain(const CmdLineParams&	params)
 		xmlParserLiaison.setIndent(params.indentAmount);
 	}
 
-	xmlParserLiaison.setSpecialCharacters(c_str(params.specialCharacters));
+	if (params.specialCharacters.size() != 0)
+	{
+		xmlParserLiaison.setSpecialCharacters(TranscodeFromLocalCodePage(c_str(params.specialCharacters)));
+	}
+
 	xmlParserLiaison.SetShouldExpandEntityRefs(params.shouldExpandEntityRefs);
 	xmlParserLiaison.setUseValidation(params.doValidation);
 
@@ -756,7 +792,7 @@ xsltMain(const CmdLineParams&	params)
 
 	if(0 != params.xslFileName.size())
 	{
-		xslFileName = c_str(params.xslFileName);
+		xslFileName = TranscodeFromLocalCodePage(c_str(params.xslFileName));
 	}
 
 	const StylesheetRoot*	stylesheet = 0;
@@ -777,6 +813,8 @@ xsltMain(const CmdLineParams&	params)
 				params.shouldWriteXMLHeader,
 				params.stripCData,
 				params.escapeCData,
+				params.noIndent,
+				params.formatToNull,
 				resultWriter,
 				xmlParserLiaison.getIndent(),
 				mimeEncoding,
@@ -868,6 +906,8 @@ xsltMain(const CmdLineParams&	params)
 						params.shouldWriteXMLHeader,
 						params.stripCData,
 						params.escapeCData,
+						params.noIndent,
+						false,
 						resultWriter,
 						xmlParserLiaison.getIndent(),
 						mimeEncoding,
@@ -1028,7 +1068,7 @@ main(
 			{
 				cout << endl
 					 << "XalanDOMException caught.  The code is "
-					 << e.getExceptionCode()
+					 << int(e.getExceptionCode())
 					 << "."
 					 << endl;
 
@@ -1042,7 +1082,7 @@ main(
 			}
 
 #if !defined(NDEBUG)
-			const unsigned long		theInstanceCount =
+			const size_t	theInstanceCount =
 				XalanNode::getInstanceCount();
 
 			if (theInstanceCount > 0)

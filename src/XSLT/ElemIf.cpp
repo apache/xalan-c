@@ -83,7 +83,7 @@
 ElemIf::ElemIf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -117,14 +117,14 @@ ElemIf::ElemIf(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 			}
 		}
 	}
 
 	if(0 == m_test)
 	{
-		constructionContext.error(name + " must have a 'test' attribute.");
+		constructionContext.error(XalanDOMString(name) + " must have a 'test' attribute.");
 	}
 }
 
@@ -152,7 +152,7 @@ ElemIf::execute(
 			SelectionEvent(executionContext,
 			sourceNode,
 			*this, 
-			XALAN_STATIC_UCODE_STRING("test"), 
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("test")),
 			*m_test, 
 			test.get()));
 	}

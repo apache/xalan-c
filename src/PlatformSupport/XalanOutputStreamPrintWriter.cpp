@@ -136,7 +136,7 @@ XalanOutputStreamPrintWriter::write(
 {
 	assert(s != 0);
 
-	if (theLength == -1)
+	if (theLength == UINT_MAX)
 	{
 		if (theOffset == 0)
 		{
@@ -163,7 +163,7 @@ XalanOutputStreamPrintWriter::write(
 {
 	assert(s != 0);
 
-	if (theLength == -1)
+	if (theLength == UINT_MAX)
 	{
 		if (theOffset == 0)
 		{
@@ -192,9 +192,9 @@ XalanOutputStreamPrintWriter::write(XMLCh	c)
 
 void
 XalanOutputStreamPrintWriter::write(
-			const DOMString&	s,
-			unsigned int		theOffset,
-			unsigned int		theLength)
+			const XalanDOMString&	s,
+			unsigned int			theOffset,
+			unsigned int			theLength)
 {
 	write(c_wstr(s), theOffset, theLength);
 }
@@ -244,7 +244,7 @@ XalanOutputStreamPrintWriter::print(
 			unsigned int	theLength)
 {
 	assert(s != 0);
-	assert(theLength >= 0 || theLength == -1);
+	assert(theLength >= 0 || theLength == UINT_MAX);
 
 	write(s,
 		  0,
@@ -278,7 +278,7 @@ XalanOutputStreamPrintWriter::print(long	l)
 
 
 void
-XalanOutputStreamPrintWriter::print(const DOMString&	s)
+XalanOutputStreamPrintWriter::print(const XalanDOMString&	s)
 {
 	m_OutputStream.write(c_wstr(s));
 }
@@ -372,7 +372,7 @@ XalanOutputStreamPrintWriter::println(long	l)
 
 
 void
-XalanOutputStreamPrintWriter::println(const DOMString&	s)
+XalanOutputStreamPrintWriter::println(const XalanDOMString&		s)
 {
 	print(s);
 

@@ -83,7 +83,7 @@
 ElemVariable::ElemVariable(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber,
@@ -127,14 +127,14 @@ ElemVariable::ElemVariable(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 			}
 		}
 	}
 
 	if(m_qname.isEmpty())
 	{
-		constructionContext.error(name + " must have a 'name' attribute.");
+		constructionContext.error(XalanDOMString(name) + " must have a 'name' attribute.");
 	}
 }
 
@@ -171,7 +171,7 @@ ElemVariable::execute(
 					executionContext,
 					sourceNode,
 					*this,
-					XalanDOMString(XALAN_STATIC_UCODE_STRING("select")),
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
 					*m_selectPattern,
 					executionContext.getVariable(m_qname)));
 		}
@@ -185,4 +185,15 @@ ElemVariable::execute(
 				sourceTree,
 				sourceNode);
 	}
+}
+
+
+
+void
+ElemVariable::execute(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode) const
+{
+	execute(executionContext, sourceTree, sourceNode, s_emptyMode);
 }

@@ -81,7 +81,7 @@
 ElemAttribute::ElemAttribute(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -113,7 +113,7 @@ ElemAttribute::ElemAttribute(
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 			processSpaceAttr(aname, atts, i)))
 		{
-			constructionContext.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 		}
 	}
 
@@ -125,7 +125,7 @@ ElemAttribute::ElemAttribute(
 		delete m_pNamespaceAVT;
 #endif
 
-		constructionContext.error(name + " must have a name attribute.");
+		constructionContext.error(XalanDOMString(name) + " must have a name attribute.");
 	} 
 	
 }
@@ -164,7 +164,7 @@ ElemAttribute::execute(
 
 	if(!isEmpty(attrName))
 	{
-		const XalanDOMString	origAttrName = attrName;      // save original attribute name
+		const XalanDOMString	origAttrName(attrName);      // save original attribute name
 
 		const unsigned int		origAttrNameLength = length(origAttrName);
 
@@ -182,17 +182,6 @@ ElemAttribute::execute(
 			}
 			else
 			{
-				XalanDOMString	prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
-
-				if(isEmpty(prefix))
-				{
-					prefix = executionContext.getUniqueNameSpaceValue();
-
-					const XalanDOMString	nsDecl = XalanDOMString(DOMServices::s_XMLNamespaceWithSeparator) + prefix;
-
-					executionContext.addResultAttribute(nsDecl, attrNameSpace);
-				}
-
 				indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 
 				if(indexOfNSSep < origAttrNameLength)
@@ -200,11 +189,54 @@ ElemAttribute::execute(
 					attrName = substring(attrName, indexOfNSSep + 1);
 				}
 
-				attrName = prefix + DOMServices::s_XMLNamespaceSeparatorString + attrName;
+				const XalanDOMString&	prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
+
+				if(isEmpty(prefix) == false)
+				{
+#if defined(XALAN_USE_XERCES_DOMSTRING)
+					attrName = prefix + DOMServices::s_XMLNamespaceSeparatorString + attrName;
+#else
+					reserve(
+						attrName,
+						length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(prefix) + 1);
+
+					insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
+					insert(attrName, 0, prefix);
+#endif
+				}
+				else
+				{
+					const XalanDOMString	newPrefix(executionContext.getUniqueNameSpaceValue());
+
+#if defined(XALAN_USE_XERCES_DOMSTRING)
+					const XalanDOMString	nsDecl = DOMServices::s_XMLNamespaceWithSeparator + newPrefix;
+#else
+					XalanDOMString			nsDecl;
+
+					reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
+
+					nsDecl = XalanDOMString(DOMServices::s_XMLNamespaceWithSeparator);
+					
+					append(nsDecl, newPrefix);
+#endif
+					executionContext.addResultAttribute(nsDecl, attrNameSpace);
+
+// $$$ ToDo: Move these blocks (and those in ElemElement.cpp) into a common set of functions...
+#if defined(XALAN_USE_XERCES_DOMSTRING)
+					attrName = newPrefix + DOMServices::s_XMLNamespaceSeparatorString + attrName;
+#else
+					reserve(
+						attrName,
+						length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
+
+					insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
+					insert(attrName, 0, newPrefix);
+#endif
+				}
 			}
 		}
       // Note we are using original attribute name for these tests. 
-		else if(!isEmpty(executionContext.getPendingElementName())
+		else if(executionContext.isElementPending() == true
 				&& !equals(origAttrName, DOMServices::s_XMLNamespace))
 		{
 			// make sure that if a prefix is specified on the attribute name, it is valid
@@ -219,13 +251,12 @@ ElemAttribute::execute(
 				if (isEmpty(attrNameSpace))
 				{
 					// Could not resolve prefix
-					executionContext.warn(XalanDOMString("Warning: Could not resolve prefix ") + nsprefix, sourceNode, this);
+					executionContext.warn("Warning: Could not resolve prefix " + nsprefix, sourceNode, this);
 				}
 			}
 		}
 		else
 		{
-			//warn(templateChild, sourceNode, "Trying to add attribute after element child has been added, ignoring...");
 			executionContext.warn("Warning: Trying to add attribute after element child has been added, ignoring...", sourceNode, this);
 		}
 
@@ -233,11 +264,14 @@ ElemAttribute::execute(
 		// the result attribute.
 		if (indexOfNSSep == origAttrNameLength || !isEmpty(attrNameSpace))
 		{  
-			const XalanDOMString	val =
-				childrenToString(executionContext,
-								 sourceTree,
-								 sourceNode,
-								 mode);
+			XalanDOMString	val;
+
+			childrenToString(
+					executionContext,
+					sourceTree,
+					sourceNode,
+					mode,
+					val);
 
 			executionContext.addResultAttribute(attrName, val);
 		}

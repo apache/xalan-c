@@ -63,10 +63,6 @@
 
 
 
-#include <cassert>
-
-
-
 #include <dom/DOM_DocumentType.hpp>
 
 
@@ -98,13 +94,13 @@ public:
 
 	// These interfaces are inherited from XalanNode...
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeName() const;
 
 	/**
 	 * Gets the value of this node, depending on its type.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeValue() const;
 
 	/**
@@ -378,14 +374,14 @@ public:
 	 * such as <CODE>createElement</CODE> from the <CODE>Document</CODE>
 	 * interface, this is always <CODE>null</CODE>.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
 	/**
 	 * Get the <em>namespace prefix</em>
 	 * of this node, or <code>null</code> if it is unspecified.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getPrefix() const;
 
 	/**
@@ -395,7 +391,7 @@ public:
 	 * <code>createElement</code> from the <code>DOM_Document</code> interface,
 	 * it is null.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalName() const;
 
 	/**
@@ -436,9 +432,6 @@ public:
 	virtual unsigned long
 	getIndex() const;
 
-	virtual XalanDOMString
-	getXSLTData() const;
-
 	//@}
 
 	// These interfaces are inherited from XalanDocumentType...
@@ -450,7 +443,7 @@ public:
 	 * The name of DTD; i.e., the name immediately following the 
 	 * <code>DOCTYPE</code> keyword in an XML source document.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getName() const;
 
 	/**
@@ -475,21 +468,21 @@ public:
      * Get the public identifier of the external subset.
      * @return The public identifier of the external subset.
      */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getPublicId() const;
 
     /**
      * Get the system identifier of the external subset.
      * @return The system identifier of the external subset.
      */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getSystemId() const;
 
     /**
      * Get the internal subset as a string.
      * @return The internal subset as a string.
      */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getInternalSubset() const;
     //@}
 

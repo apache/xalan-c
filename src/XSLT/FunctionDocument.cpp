@@ -67,6 +67,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include <XPath/PrefixResolver.hpp>
 #include <XPath/XObject.hpp>
 #include <XPath/XObjectFactory.hpp>
@@ -117,15 +121,15 @@ getDoc(
 
 		if(newDoc == 0)
 		{
-			XalanDOMString	theMessage("Cannot load requested doc: ");
+			XalanDOMString	theMessage(TranscodeFromLocalCodePage("Cannot load requested doc: "));
 
 			theMessage += localURI;
 
 			if (length(base) > 0)
 			{
-				theMessage += " (Base URI: ";
+				theMessage += TranscodeFromLocalCodePage(" (Base URI: ");
 				theMessage += base;
-				theMessage += ")";
+				theMessage += TranscodeFromLocalCodePage(")");
 			}
 
 			executionContext.warn(theMessage);
@@ -237,7 +241,7 @@ FunctionDocument::execute(
 								arg->nodeset().item(i) != 0);
 
 			XalanDOMString	ref = XObject::eTypeNodeSet == theType ?
-													arg->nodeset().item(i)->getXSLTData() :
+													DOMServices::getNodeData(*arg->nodeset().item(i)) :
 													arg->str();
 
 			// This is the case where the function was called with

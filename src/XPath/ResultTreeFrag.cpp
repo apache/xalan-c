@@ -68,6 +68,10 @@
 
 
 
+const XalanDOMString	ResultTreeFrag::s_emptyString;
+
+
+
 ResultTreeFrag::ResultTreeFrag(XalanDocument&	theOwnerDocument) :
 	ResultTreeFragBase(),
 	XalanNodeList(),
@@ -107,18 +111,18 @@ ResultTreeFrag::~ResultTreeFrag()
 
 
 
-XalanDOMString
+const XalanDOMString&
 ResultTreeFrag::getNodeName() const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 ResultTreeFrag::getNodeValue() const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
@@ -359,26 +363,26 @@ ResultTreeFrag::supports(
 
 
 
-XalanDOMString
+const XalanDOMString&
 ResultTreeFrag::getNamespaceURI() const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 ResultTreeFrag::getPrefix() const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 ResultTreeFrag::getLocalName() const
 {
-	return XalanDOMString();
+	return s_emptyString;
 }
 
 
@@ -402,14 +406,6 @@ unsigned long
 ResultTreeFrag::getIndex() const
 {
 	return 0;
-}
-
-
-
-XalanDOMString
-ResultTreeFrag::getXSLTData() const
-{
-	return DOMServices::getNodeData(*this);
 }
 
 

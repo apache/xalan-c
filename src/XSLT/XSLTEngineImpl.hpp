@@ -73,6 +73,7 @@
 // Standard library headers
 #include <cassert>
 #include <ctime>
+#include <deque>
 #include <map>
 #include <set>
 
@@ -93,9 +94,12 @@
 
 
 
+#include <Include/XalanAutoPtr.hpp>
+
+
+
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -149,6 +153,35 @@ class XALAN_XSLT_EXPORT XSLTEngineImpl : public XSLTProcessor, private DocumentH
 {
 public:
 
+	typedef QName::NamespaceVectorType		NamespaceVectorType;
+	typedef QName::NamespacesStackType		NamespacesStackType;
+
+	struct OutputContext
+	{
+		OutputContext(FormatterListener*	theListener = 0) :
+			m_flistener(theListener),
+			m_pendingAttributes(),
+			m_pendingElementName(),
+			m_hasPendingStartDocument(false),
+			m_mustFlushPendingStartDocument(false)
+		{
+		}
+
+		~OutputContext()
+		{
+		}
+
+		FormatterListener*	m_flistener;
+
+		AttributeListImpl	m_pendingAttributes;
+
+		XalanDOMString		m_pendingElementName;
+
+		bool				m_hasPendingStartDocument;
+
+		bool				m_mustFlushPendingStartDocument;
+	};
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
 				int,
@@ -160,19 +193,17 @@ public:
 				clock_t,
 				less<const void*> >			DurationsTableMapType;
 	typedef vector<const Locator*>			LocatorStack;
-	typedef vector<NameSpace> 				NamespaceVectorType;
-	typedef vector<NamespaceVectorType>		NamespacesStackType;
 	typedef vector<TraceListener*>			TraceListenerVectorType;
 	typedef vector<bool>					BoolVectorType;
+	typedef deque<OutputContext>			OutputContextStackType;
 #else
 	typedef std::map<XalanDOMString, int>		AttributeKeysMapType;
 	typedef std::map<XalanDOMString, int>		ElementKeysMapType;
 	typedef std::map<const void*, clock_t>		DurationsTableMapType;
 	typedef std::vector<const Locator*>			LocatorStack;
-	typedef std::vector<NameSpace> 				NamespaceVectorType;
-	typedef std::vector<NamespaceVectorType>	NamespacesStackType;
 	typedef std::vector<TraceListener*>			TraceListenerVectorType;
 	typedef std::vector<bool>					BoolVectorType;
+	typedef std::deque<OutputContext>			OutputContextStackType;
 #endif
 
 	typedef XalanAutoPtr<XPathProcessor>				XPathProcessorPtrType;
@@ -422,7 +453,9 @@ public:
 			const XalanDOMString&	aname,
 			const XalanDOMString&	value)
 	{
-		addResultAttribute(m_pendingAttributes,
+		assert(m_outputContextStack.size() > 0);
+
+		addResultAttribute(getPendingAttributesImpl(),
 						   aname,
 						   value);
 	}
@@ -710,6 +743,12 @@ public:
 			const XalanNode*		styleNode = 0,
 			const XalanNode*		sourceNode = 0) const;
 
+	virtual void
+	message(
+			const char*			msg,
+			const XalanNode*	styleNode = 0,
+			const XalanNode*	sourceNode = 0) const;
+
 	/**
 	 * Tell the user of an warning, and probably throw an exception.
 	 * 
@@ -725,6 +764,20 @@ public:
 			const XalanNode*		sourceNode = 0) const;
 
 	/**
+	 * Tell the user of an warning, and probably throw an exception.
+	 * 
+	 * @param msg		 text of message to output
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
+	 * @exception XSLProcessorException
+	 */
+	virtual void
+	warn(
+			const char*			msg,
+			const XalanNode*	styleNode = 0,
+			const XalanNode*	sourceNode = 0) const;
+
+	/**
 	 * Tell the user of an error, and probably throw an exception.
 	 * 
 	 * @param msg		 text of message to output
@@ -737,6 +790,20 @@ public:
 			const XalanDOMString&	msg,
 			const XalanNode*		styleNode = 0,
 			const XalanNode*		sourceNode = 0) const;
+
+	/**
+	 * Tell the user of an error, and probably throw an exception.
+	 * 
+	 * @param msg		 text of message to output
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
+	 * @exception XSLProcessorException
+	 */
+	virtual void
+	error(
+			const char*			msg,
+			const XalanNode*	styleNode = 0,
+			const XalanNode*	sourceNode = 0) const;
 
 	/**
 	 * Mark the time, so that displayDuration can later display the elapsed
@@ -766,7 +833,7 @@ public:
 	void
 	displayDuration(
 			const XalanDOMString&	info,
-			const void* 		key) const;
+			const void* 			key) const;
 
 
 	/**
@@ -784,7 +851,15 @@ public:
 	 */
 	void
 	diag(const XalanDOMString&	s) const;
-  
+
+	/**
+	 * Print a diagnostics string to the output device
+	 * 
+	 * @param s string to print
+	 */
+	void
+	diag(const char*	s) const;
+
 	/**
 	 * Tell if a given element name should output it's text 
 	 * as cdata.
@@ -928,32 +1003,6 @@ public:
 			const XalanDocument& 	doc) const;
 
 	/**
-	 * Given an element, return an attribute value in the form of a string.
-	 *
-	 * @param el		  element from where to get the attribute
-	 * @param key		  name of the attribute
-	 * @param contextNode context to evaluate the attribute value template
-	 * @return string for attribute value
-	 */
-	XalanDOMString
-	getAttrVal(
-			const XalanElement&		el,
-			const XalanDOMString&	key,
-			const XalanNode& 		contextNode);
-  
-	/**
-	 * Given an element, return an attribute value in the form of a string.
-	 *
-	 * @param el		  element from where to get the attribute
-	 * @param key		  name of the attribute
-	 * @return string for attribute value
-	 */
-	static XalanDOMString
-	getAttrVal(
-			const XalanElement&		el,
-			const XalanDOMString&	key);
-
-	/**
 	 * Copy an attribute to the created output element, executing attribute
 	 * templates as need be, and processing the 'xsl:use' attribute.
 	 *
@@ -971,87 +1020,6 @@ public:
 			const Stylesheet*		stylesheetTree,
 			AttributeListImpl&		attrList, 
 			const XalanElement&		namespaceContext);
-
-	/**
-	 * Determine the value of the default-space attribute.
-	 *
-	 * @return true if the default-space attribute is "strip," false  if
-	 *			the attribute is "preserve"
-	 */
-	bool
-	getStripWhiteSpace() const
-	{
-		return m_stripWhiteSpace;
-	}
-
-	/**
-	 * Change the value of the default-space attribute.
-	 *
-	 * @param b sets the default of the default-space attribute to "strip" if
-	 *			true, or "preserve" if false.
-	 */
-	void
-	setStripWhiteSpace(bool fStrip)
-	{
-		m_stripWhiteSpace = fStrip;
-	}
-
-  /**
-	* Conditionally trim all leading and trailing whitespace in the specified
-	* String.  All strings of white space are replaced by a single space
-	* character (#x20), except spaces after punctuation which receive double
-	* spaces if doublePunctuationSpaces is true. This function may be useful to
-	* a formatter, but to get first class results, the formatter should
-	* probably do its own white space handling based on the semantics of the
-	* formatting object.
-	*
-   * @param   string	  string to be trimmed
-   * @param   trimHead	  whether to trim leading whitespace
-   * @param   trimTail	  whether to trim trailing whitespace
-   * @param   doublePunctuationSpaces true to use double spaces for punctuation
-   * @return trimmed string
-   */
-	XalanDOMString fixWhitespace(
-			const XalanDOMString&	string, 
-			bool				trimHead, 
-			bool				trimTail, 
-			bool				doublePunctuationSpaces);
-  
-  /**
-	* Control if carriage returns are put in the result tree. Default is to
-	* output carriage returns.
-	*
-   * @param b true to output carriage returns
-   */
-	void setOutputCarriageReturns(bool	b)
-	{
-		m_outputCarriageReturns = b;
-	}
-
-	/**
-	 * Control if linefeeds are put in the result tree. Default is to output
-	 * linefeeds.
-	 *
-	 * @param b true to output linefeeds
-	 */
-	void
-	setOutputLinefeeds(bool		b)
-	{
-		m_outputLinefeeds = b;
-	}
-
-	/**
-	 * Normalize the linefeeds and/or carriage returns to be consistently 0x0D
-	 * 0x0A. 
-	 *
-	 * @param   tx DOM text node to normalize
-	 * @return normalized string
-	 */
-	/* $$$ ToDo:  This should almost certainly be done somewhere else... like in the XML
-	 * parser.
-	 */
-	const XalanDOMString
-	getNormalizedText(const XalanText&	tx) const;
 
 	/**
 	 * Get the factory for making xpaths.
@@ -1133,13 +1101,41 @@ public:
 	}
 
 	/*
+	 * Push a new output context using the provided FormatterListener.
+	 *
+	 * @param A pointer to the FormatterListener instance for the new context.
+	 */
+	void
+	pushOutputContext(FormatterListener*	theListener)
+	{
+		m_outputContextStack.resize(m_outputContextStack.size() + 1);
+
+		++m_outputContextStackPosition;
+
+		(*m_outputContextStackPosition).m_flistener = theListener;
+	}
+
+	/*
+	 * Pop the current output context.
+	 */
+	void
+	popOutputContext()
+	{
+		assert(m_outputContextStack.empty() == false);
+
+		m_outputContextStack.pop_back();
+
+		m_outputContextStackPosition--;
+	}
+
+	/*
 	 * See if there is a pending start document event waiting.
 	 * @return true if there is a start document event waiting.
 	 */
 	bool
 	getHasPendingStartDocument() const
 	{
-		return m_hasPendingStartDocument;
+		return getHasPendingStartDocumentImpl();
 	}
 
 	/*
@@ -1149,7 +1145,7 @@ public:
 	void
 	setHasPendingStartDocument(bool	b)
 	{
-		m_hasPendingStartDocument = b;
+		setHasPendingStartDocumentImpl(b);
 	}
 
 	/*
@@ -1159,7 +1155,7 @@ public:
 	bool
 	getMustFlushPendingStartDocument() const
 	{
-		return m_mustFlushStartDocument;
+		return getMustFlushPendingStartDocumentImpl();
 	}
 
 	/*
@@ -1169,7 +1165,7 @@ public:
 	void
 	setMustFlushPendingStartDocument(bool	b)
 	{
-		m_hasPendingStartDocument = b;
+		setMustFlushPendingStartDocumentImpl(b);
 	}
 
 	/**
@@ -1181,28 +1177,61 @@ public:
 	createDocFrag() const;
 
 	/**
-	 * Retrieve list of attributes yet to be processed
+	 * Get the list of attributes yet to be processed
 	 * 
 	 * @return attribute list
 	 */
-	AttributeListImpl&
-	getPendingAttributes();
+	const AttributeList&
+	getPendingAttributes() const
+	{
+		return getPendingAttributesImpl();
+	}
+
+	/**
+	 * Set the list of attributes yet to be processed
+	 * 
+	 * @param pendingAttributes The attribute list
+	 */
+	void
+	setPendingAttributes(const AttributeList&	pendingAttributes)
+	{
+		getPendingAttributesImpl() = pendingAttributes;
+	}
+
+	/**
+	 * Replace the contents of a pending attribute.
+	 * 
+	 * @param theName           name of attribute
+	 * @param theNewType        type of attribute
+	 * @param theNewValue       new value of attribute
+	 */
+	void
+	replacePendingAttribute(
+			const XalanDOMChar*		theName,
+			const XalanDOMChar*		theNewType,
+			const XalanDOMChar*		theNewValue)
+	{
+		// Remove the old attribute, then add the new one.  AttributeListImpl::addAttribute()
+		// does this for us.
+		getPendingAttributesImpl().addAttribute(theName, theNewType, theNewValue);
+	}
+
+	bool
+	isElementPending() const
+	{
+		return length(getPendingElementNameImpl()) != 0 ? true : false;
+	}
 
 	/**
 	 * Retrieve name of the pending element currently being processed.
 	 * 
 	 * @return element name
 	 */
-	const XalanDOMString
-	getPendingElementName() const;
-
-	/**
-	 * Sets a list of attributes yet to be processed.
-	 * 
-	 * @param pendingAttributes attribute list
-	 */
-	void
-	setPendingAttributes(const AttributeList&	pendingAttributes);
+	const XalanDOMString&
+	getPendingElementName() const
+	{
+		return getPendingElementNameImpl();
+	}
 
 	/**
 	 * Changes the currently pending element name.
@@ -1210,7 +1239,16 @@ public:
 	 * @param elementName new name of element
 	 */
 	void
-	setPendingElementName(const XalanDOMString&		elementName);
+	setPendingElementName(const XalanDOMString&		elementName)
+	{
+		setPendingElementNameImpl(elementName);
+	}
+
+	void
+	setPendingElementName(const XalanDOMChar*	elementName)
+	{
+		setPendingElementNameImpl(elementName);
+	}
 
 	/**
 	 * Get the locator from the top of the locator stack.
@@ -1286,6 +1324,137 @@ public:
 protected:
 
 	/**
+	 * Get the list of attributes yet to be processed
+	 * 
+	 * @return attribute list
+	 */
+	const AttributeListImpl&
+	getPendingAttributesImpl() const
+	{
+		return (*m_outputContextStackPosition).m_pendingAttributes;
+	}
+
+	/**
+	 * Get the list of attributes yet to be processed
+	 * 
+	 * @return attribute list
+	 */
+	AttributeListImpl&
+	getPendingAttributesImpl()
+	{
+		return (*m_outputContextStackPosition).m_pendingAttributes;
+	}
+
+	/**
+	 * Set the list of attributes yet to be processed
+	 * 
+	 * @param pendingAttributes The attribute list
+	 */
+	void
+	setPendingAttributesImpl(const AttributeList&	pendingAttributes)
+	{
+		getPendingAttributesImpl() = pendingAttributes;
+	}
+
+	/**
+	 * Retrieve name of the pending element currently being processed.
+	 * 
+	 * @return element name
+	 */
+	const XalanDOMString&
+	getPendingElementNameImpl() const
+	{
+		return (*m_outputContextStackPosition).m_pendingElementName;
+	}
+
+	/**
+	 * Retrieve name of the pending element currently being processed.
+	 * 
+	 * @return element name
+	 */
+	XalanDOMString&
+	getPendingElementNameImpl()
+	{
+		return (*m_outputContextStackPosition).m_pendingElementName;
+	}
+
+	/**
+	 * Changes the currently pending element name.
+	 * 
+	 * @param elementName new name of element
+	 */
+	void
+	setPendingElementNameImpl(const XalanDOMString&		elementName)
+	{
+		(*m_outputContextStackPosition).m_pendingElementName = elementName;
+	}
+
+	/**
+	 * Changes the currently pending element name.
+	 * 
+	 * @param elementName new name of element
+	 */
+	void
+	setPendingElementNameImpl(const XalanDOMChar*	elementName)
+	{
+		assert(elementName != 0);
+
+		(*m_outputContextStackPosition).m_pendingElementName = elementName;
+	}
+
+	/*
+	 * See if there is a pending start document event waiting.
+	 * @return true if there is a start document event waiting.
+	 */
+	bool
+	getHasPendingStartDocumentImpl() const
+	{
+		return (*m_outputContextStackPosition).m_hasPendingStartDocument;
+	}
+
+	/*
+	 * Set the pending start document event state.
+	 * @param the new value
+	 */
+	void
+	setHasPendingStartDocumentImpl(bool	b)
+	{
+		(*m_outputContextStackPosition).m_hasPendingStartDocument = b;
+	}
+
+	/*
+	 * See if a pending start document event must be flushed.
+	 * @return true if the event must be flushed.
+	 */
+	bool
+	getMustFlushPendingStartDocumentImpl() const
+	{
+		return (*m_outputContextStackPosition).m_mustFlushPendingStartDocument;
+	}
+
+	/*
+	 * Set the pending start document event flush state.
+	 * @param the new value
+	 */
+	void
+	setMustFlushPendingStartDocumentImpl(bool	b)
+	{
+		(*m_outputContextStackPosition).m_mustFlushPendingStartDocument = b;
+	}
+
+	FormatterListener*
+	getFormatterListenerImpl() const
+	{
+		return (*m_outputContextStackPosition).m_flistener;
+	}
+
+	void
+	setFormatterListenerImpl(FormatterListener*		flistener)
+	{
+		(*m_outputContextStackPosition).m_flistener = flistener;
+	}
+
+	/**
 	 * If true, output carriage returns.
 	 */
 	bool	m_outputCarriageReturns;
@@ -1353,27 +1522,27 @@ protected:
 	 * can call startElement.
 	 */
 
-	XalanDOMString		m_pendingElementName;
+//	XalanDOMString		m_pendingElementName;
 
 	/**
-	 * The pending attributes.	We have to delay the call to 
-	 * m_flistener.startElement(name, atts) because of the 
+	 * The stack of pending attribute lists.	We have to
+	 * delay the output of the current element because of the 
 	 * xsl:attribute and xsl:copy calls.  In other words, 
 	 * the attributes have to be fully collected before you 
 	 * can call startElement.
 	 */
-	AttributeListImpl	m_pendingAttributes;
+//	AttributeListImpl	m_pendingAttributes;
 
 	/*
 	 * true if a startDocument() event has been fired, but we
 	 * haven't yet calld startDocument() on our formatter.
 	 */
-	bool				m_hasPendingStartDocument;
+//	bool				m_hasPendingStartDocument;
 
 	/*
 	 * true if a pending startDocument() must be flushed.
 	 */
-	bool				m_mustFlushStartDocument;
+//	bool				m_mustFlushPendingStartDocument;
 
 	/**
 	 * NOTE: This replaces the ResultNameSpace class in java, since it is the
@@ -1518,14 +1687,6 @@ private:
 	mutable unsigned long	m_uniqueNSValue;	// 0
   
 	/**
-	 * This should probably be in the XMLParserLiaison interface.
-	 */
-	XalanDOMString
-	getPrefixForNamespace(
-			const XalanDOMString&	theNamespace,
-			const XalanElement&		namespaceContext) const;
-
-	/**
 	 * Translate CSS attributes and put them in a style tag.
 	 * @deprecated
 	 */
@@ -1553,13 +1714,6 @@ private:
 	 associateXLocatorToNode(
 			const XalanNode* 	node,
 			XLocator*			xlocator);
-
-	/**
-	 * If this is true, the processor will do the best it can to strip 
-	 * unwanted white space. This is set in the stylesheet via the default-space 
-	 * attribute on xsl:stylesheet.
-	 */
-	bool	m_stripWhiteSpace; // default default-space="preserve"
 
 	/**
 	 * Control if the xsl:variable is resolved early or 
@@ -1612,11 +1766,8 @@ public:
 		return m_currentNode;
 	}
 
-  /**
-   * The liason to the XML parser, so the XSL processor 
-   * can handle included files, and the like, and do the 
-   * initial parse of the XSL document.
-   */
+private:
+
 	XMLParserLiaison&	m_parserLiaison;
 
 	XPathSupport&		m_xpathSupport;
@@ -1629,19 +1780,20 @@ public:
 	 * The listener for formatting events.	This should be 
 	 * supplied by the Formatter object.
 	 */
-	FormatterListener*	m_flistener;
-
-	/**
-	 * This holds the current context node list.  This should arguably be 
-	 * passed by parameter.
-	 */
-	MutableNodeRefList	m_contextNodeList;
+//	FormatterListener*	m_flistener;
 
 	/**
 	 * Current execution context...
 	 */
 	StylesheetExecutionContext*		m_executionContext;
 
+
+	/*
+	 * Stack of current output contexts...
+	 */
+	OutputContextStackType				m_outputContextStack;
+
+	OutputContextStackType::iterator	m_outputContextStackPosition;
 
 	static void
 	installFunctions();

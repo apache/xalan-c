@@ -67,6 +67,10 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 class DOM_Attr;
 class DOM_Node;
 class XercesDocumentBridge;
@@ -116,8 +120,6 @@ public:
 
 	DOM_Attr
 	mapNode(const XalanAttr*	theXercesNode) const;
-
-public:
 
 	unsigned long
 	getIndex() const
@@ -241,6 +243,26 @@ public:
 	splitText(
 			DOM_Text&		theXercesText,
 			unsigned int	offset) const;
+
+	/**
+	 * Get a pooled string.  If the string is not in the pool,
+	 * add it.
+	 *
+	 * @param theString The string to pool.
+	 * @return A const reference to the pooled string.
+	 */
+	const XalanDOMString&
+	getPooledString(const XalanDOMString&	theString) const;
+
+	/**
+	 * Get a pooled string.  If the string is not in the pool,
+	 * add it.
+	 *
+	 * @param theString The string to pool.
+	 * @return A const reference to the pooled string.
+	 */
+	const XalanDOMString&
+	getPooledString(const XalanDOMChar*		theString) const;
 
 private:
 

@@ -81,7 +81,7 @@
 ElemForEach::ElemForEach(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber,
@@ -108,13 +108,13 @@ ElemForEach::ElemForEach(
 			}
 			else if(!(isAttrOK(aname, atts, i, constructionContext) || processSpaceAttr(aname, atts, i)))
 			{
-				constructionContext.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 			}
 		}
 
 		if(0 == m_pSelectPattern)
 		{
-			constructionContext.error(name + " requires attribute: " + Constants::ATTRNAME_SELECT);
+			constructionContext.error(XalanDOMString(name) + " requires attribute: " + Constants::ATTRNAME_SELECT);
 		}
 	}
 }

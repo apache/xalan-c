@@ -79,15 +79,12 @@ class XALAN_PLATFORMSUPPORT_EXPORT DOMStringPrintWriter : public PrintWriter
 {
 public:
 
-	// If a string is passed in, a copy will be made, and all
-	// output will be appended to that string.
-	explicit
-	DOMStringPrintWriter(const XalanDOMString&	theBaseString = XalanDOMString());
+	DOMStringPrintWriter(XalanDOMString&	theString);
 
 	virtual
 	~DOMStringPrintWriter();
 
-	const XalanDOMString&
+	XalanDOMString&
 	getString() const
 	{
 		return m_outputString;
@@ -191,7 +188,7 @@ public:
 
 protected:
 
-	XalanDOMString	m_outputString;
+	XalanDOMString&		m_outputString;
 
 private:
 

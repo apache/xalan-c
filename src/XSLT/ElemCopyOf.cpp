@@ -81,7 +81,7 @@
 ElemCopyOf::ElemCopyOf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -105,7 +105,7 @@ ElemCopyOf::ElemCopyOf(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 		}
 	}
 }
@@ -131,8 +131,13 @@ ElemCopyOf::execute(
 	if(0 != executionContext.getTraceListeners())
 	{
 		executionContext.fireSelectEvent(
-			SelectionEvent(executionContext, sourceNode,
-				*this, XalanDOMString(XALAN_STATIC_UCODE_STRING("select")), *m_pSelectPattern, value.get()));
+			SelectionEvent(
+				executionContext,
+				sourceNode,
+				*this,
+				StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+				*m_pSelectPattern,
+				value.get()));
 	}
 
 	const XObject::eObjectType	type = value->getType();

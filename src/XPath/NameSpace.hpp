@@ -76,6 +76,13 @@ class XALAN_XPATH_EXPORT NameSpace
 {
 public:
 
+	explicit
+	NameSpace() :
+		m_prefix(),
+		m_uri()
+	{
+	}
+
 	/**
 	 * Construct a namespace for placement on the 
 	 * result tree namespace stack.
@@ -84,10 +91,14 @@ public:
 	 * @param uri    URI of namespace
 	 */
 	NameSpace(
-			const XalanDOMString&	prefix = XalanDOMString(),
-			const XalanDOMString&	uri = XalanDOMString()) :
-    m_prefix(prefix),
-    m_uri(uri)
+			const XalanDOMString&	prefix,
+			const XalanDOMString&	uri) :
+		m_prefix(prefix),
+		m_uri(uri)
+	{
+	}
+
+	~NameSpace()
 	{
 	}
 

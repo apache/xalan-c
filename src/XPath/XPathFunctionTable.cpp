@@ -181,85 +181,85 @@ XPathFunctionTable::CreateTable()
 {
 	try
 	{
-		InstallFunction(XALAN_STATIC_UCODE_STRING("last"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("last")),
 						FunctionLast());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("position"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("position")),
 						FunctionPosition());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("count"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("count")),
 						FunctionCount());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("id"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("id")),
 						FunctionID());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("local-name"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("local-name")),
 						FunctionLocalName());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("namespace-uri"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("namespace-uri")),
 						FunctionNamespaceURI());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("name"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("name")),
 						FunctionName());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("string"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("string")),
 						FunctionString());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("concat"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("concat")),
 						FunctionConcat());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("starts-with"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("starts-with")),
 						FunctionStartsWith());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("contains"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("contains")),
 						FunctionContains());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("substring-before"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("substring-before")),
 						FunctionSubstringBefore());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("substring-after"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("substring-after")),
 						FunctionSubstringAfter());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("substring"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("substring")),
 						FunctionSubstring());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("string-length"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("string-length")),
 						FunctionStringLength());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("normalize-space"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("normalize-space")),
 						FunctionNormalizeSpace());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("translate"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("translate")),
 						FunctionTranslate());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("boolean"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("boolean")),
 						FunctionBoolean());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("not"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("not")),
 						FunctionNot());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("true"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("true")),
 						FunctionTrue());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("false"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("false")),
 						FunctionFalse());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("lang"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("lang")),
 						FunctionLang());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("number"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("number")),
 						FunctionNumber());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("sum"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sum")),
 						FunctionSum());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("floor"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("floor")),
 						FunctionFloor());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("ceiling"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ceiling")),
 						FunctionCeiling());
 
-		InstallFunction(XALAN_STATIC_UCODE_STRING("round"),
+		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("round")),
 						FunctionRound());
 
 	}
@@ -300,7 +300,7 @@ XPathFunctionTable::DestroyTable()
 XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 		int					theFunctionNumber,
 		const XalanNode*	styleNode) :
-	XPathException(XALAN_STATIC_UCODE_STRING("The specified function ID is not available: ") + LongToDOMString(theFunctionNumber),
+	XPathException(TranscodeFromLocalCodePage("The specified function ID is not available: ") + LongToDOMString(theFunctionNumber),
 				   styleNode)
 {
 }
@@ -310,7 +310,7 @@ XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 			const XalanDOMString&	theFunctionName,
 			const XalanNode*		styleNode) :
-	XPathException(XALAN_STATIC_UCODE_STRING("The specified function is not available: ") + theFunctionName,
+	XPathException(TranscodeFromLocalCodePage("The specified function is not available: ") + theFunctionName,
 				   styleNode)
 {
 }

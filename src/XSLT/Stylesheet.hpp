@@ -138,9 +138,6 @@ public:
 	typedef vector<ElemAttributeSet*> 				AttributeSetMapType;
 	typedef vector<ElemVariable*> 					ElemVariableVectorType;
 	typedef vector<KeyDeclaration>					KeyDeclarationVectorType;
-//	typedef map<XalanDOMString,
-//				KeyTable*,
-//				less<XalanDOMString> >				KeysMapType;
 	typedef map<const XalanNode*,
 				KeyTable*,
 				less<const XalanNode*> >			KeyTablesTableType;
@@ -156,7 +153,6 @@ public:
 	typedef std::vector<ElemAttributeSet*> 					AttributeSetMapType;
 	typedef std::vector<ElemVariable*> 						ElemVariableVectorType;
 	typedef std::vector<KeyDeclaration>						KeyDeclarationVectorType;
-//	typedef std::map<XalanDOMString, KeyTable*>				KeysMapType;
 	typedef std::map<const XalanNode*, KeyTable*>			KeyTablesTableType;
 	typedef std::vector<QName> 								QNameVectorType;
 	typedef std::vector<Stylesheet*>						StylesheetVectorType;
@@ -339,8 +335,17 @@ public:
 	 * @param nodeName name of node
 	 * @return namespace string for node
 	 */
-	XalanDOMString
+	const XalanDOMString&
 	getNamespaceFromStack(const XalanDOMString& 	nodeName) const;
+
+	/**
+	 * Get the namespace from a qualified name.
+	 * 
+	 * @param nodeName name of node
+	 * @return namespace string for node
+	 */
+	const XalanDOMString&
+	getNamespaceFromStack(const XalanDOMChar* 	nodeName) const;
 
 	/**
 	 * Get the namespace from a prefix by searching the stack of namespace
@@ -349,8 +354,27 @@ public:
 	 * @param prefix prefix to search
 	 * @return namespace corresponding to prefix
 	 */
-	XalanDOMString
+	const XalanDOMString&
 	getNamespaceForPrefixFromStack(const XalanDOMString&	prefix) const;
+
+	/**
+	 * Get the namespace from a prefix by searching the stack of namespace
+	 * lists.
+	 * 
+	 * @param prefix prefix to search
+	 * @return namespace corresponding to prefix
+	 */
+	const XalanDOMString&
+	getNamespaceForPrefixFromStack(const XalanDOMChar*	prefix) const;
+
+	/**
+	 * See if there is a namespace alias.
+	 * 
+	 * @param uri the URI of the namespace.
+	 * @return the alias URI, if found.
+	 */
+	XalanDOMString
+	getAliasNamespaceURI(const XalanDOMChar*	uri) const;
 
 	/**
 	 * See if there is a namespace alias.
@@ -426,7 +450,7 @@ public:
 	 * 
 	 * @return string for base identifier
 	 */
-	const XalanDOMString
+	const XalanDOMString&
 	getBaseIdentifier() const
 	{
 		return m_baseIdent;
@@ -438,7 +462,7 @@ public:
 	 * @param str string for base identifier
 	 */
 	void
-	setBaseIdentifier(const XalanDOMString& str)
+	setBaseIdentifier(const XalanDOMString&		str)
 	{
 		m_baseIdent = str;
 	}
@@ -451,7 +475,7 @@ public:
 	 * 
 	 * @return string for base identifier
 	 */
-	const XalanDOMString
+	const XalanDOMString&
 	getCurrentIncludeBaseIdentifier() const;
 
 	/**
@@ -463,7 +487,7 @@ public:
 	 */
 	void
 	processNSAliasElement(
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			StylesheetConstructionContext&	constructionContext);
 
@@ -930,10 +954,10 @@ public:
 
 	// These interfaces are inherited from XalanDocument...
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeName() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeValue() const;
 
 	virtual NodeType
@@ -1000,13 +1024,13 @@ public:
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getPrefix() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalName() const;
 
 	virtual void
@@ -1014,9 +1038,6 @@ public:
 
 	virtual unsigned long
 	getIndex() const;
-
-	virtual XalanDOMString
-	getXSLTData() const;
 
 	virtual XalanElement*
 	createElement(const XalanDOMString& tagName);
@@ -1084,10 +1105,10 @@ public:
 
 	// These interfaces are inherited from PrefixResolver...
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceForPrefix(const XalanDOMString& 	prefix) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getURI() const;
 
 	const XalanDOMString&
@@ -1255,6 +1276,8 @@ private:
 	StringToStringMapType					m_prefixAliases;
 
 	NamespacesHandler						m_namespacesHandler;
+
+	static const XalanDOMString				s_emptyString;
 };
 
 

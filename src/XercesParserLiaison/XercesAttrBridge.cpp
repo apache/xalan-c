@@ -66,6 +66,7 @@
 
 
 
+#include "XercesBridgeHelper.hpp"
 #include "XercesDOMException.hpp"
 #include "XercesDocumentBridge.hpp"
 #include "XercesElementBridge.hpp"
@@ -91,18 +92,18 @@ XercesAttrBridge::~XercesAttrBridge()
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesAttrBridge::getNodeName() const
 {
-	return m_xercesNode.getNodeName();
+	return m_navigator.getPooledString(m_xercesNode.getNodeName().rawBuffer());
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesAttrBridge::getNodeValue() const
 {
-	return m_xercesNode.getNodeValue();
+	return m_navigator.getPooledString(m_xercesNode.getNodeValue().rawBuffer());
 }
 
 
@@ -247,14 +248,7 @@ XercesAttrBridge::hasChildNodes() const
 void
 XercesAttrBridge::setNodeValue(const XalanDOMString&	nodeValue)
 {
-	try
-	{
-		m_xercesNode.setNodeValue(nodeValue);
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
 }
 
 
@@ -262,14 +256,7 @@ XercesAttrBridge::setNodeValue(const XalanDOMString&	nodeValue)
 void
 XercesAttrBridge::normalize()
 {
-	try
-	{
-		m_xercesNode.normalize();
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::normalize(m_xercesNode);
 }
 
 
@@ -279,31 +266,33 @@ XercesAttrBridge::supports(
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version) const
 {
-	return m_xercesNode.supports(feature, version);
+	return m_xercesNode.supports(
+				XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
+				XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesAttrBridge::getNamespaceURI() const
 {
-	return m_xercesNode.getNamespaceURI();
+	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI().rawBuffer());
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesAttrBridge::getPrefix() const
 {
-	return m_xercesNode.getPrefix();
+	return m_navigator.getPooledString(m_xercesNode.getPrefix().rawBuffer());
 }
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesAttrBridge::getLocalName() const
 {
-	return m_xercesNode.getLocalName();
+	return m_navigator.getPooledString(m_xercesNode.getLocalName().rawBuffer());
 }
 
 
@@ -311,16 +300,8 @@ XercesAttrBridge::getLocalName() const
 void
 XercesAttrBridge::setPrefix(const XalanDOMString&	prefix)
 {
-	try
-	{
-		m_xercesNode.setPrefix(prefix);
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
 }
-
 
 
 
@@ -340,18 +321,10 @@ XercesAttrBridge::getIndex() const
 
 
 
-XalanDOMString
-XercesAttrBridge::getXSLTData() const
-{
-	return DOMServices::getNodeData(*this);
-}
-
-
-
-XalanDOMString
+const XalanDOMString&
 XercesAttrBridge::getName() const
 {
-	return m_xercesNode.getName();
+	return m_navigator.getPooledString(m_xercesNode.getName().rawBuffer());
 }
 
 
@@ -364,10 +337,10 @@ XercesAttrBridge::getSpecified() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XercesAttrBridge::getValue() const
 {
-	return m_xercesNode.getValue();
+	return m_navigator.getPooledString(m_xercesNode.getValue().rawBuffer());
 }
 
 
@@ -377,7 +350,7 @@ XercesAttrBridge::setValue(const XalanDOMString&	value)
 {
 	try
 	{
-		m_xercesNode.setValue(value);
+		m_xercesNode.setValue(c_wstr(value));
 	}
 	catch(const DOM_DOMException&	theException)
 	{

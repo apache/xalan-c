@@ -270,6 +270,14 @@ private:
 	 * if s is also null).
 	 */
 	bool
+	tokenIs(const char*		s) const;
+
+	/**
+	 * Check if m_token==s. If m_token is null, this won't throw
+	 * an exception, instead it just returns false (or true
+	 * if s is also null).
+	 */
+	bool
 	tokenIs(char	c) const;
 
 	/**
@@ -363,7 +371,7 @@ private:
 	 */
 	void
 	resetTokenMark(int	mark);
-  
+
 	/**
 	 * Consume an expected token, throwing an exception if it 
 	 * isn't there.
@@ -387,6 +395,14 @@ private:
 			XalanNode*				sourceNode = 0) const;
 
 	/**
+	 * Warn the user of an problem.
+	 */
+	void
+	warn(
+			const char*		msg,
+			XalanNode*		sourceNode = 0) const;
+
+	/**
 	 * Tell the user of an error, and probably throw an 
 	 * exception.
 	 */
@@ -394,6 +410,15 @@ private:
 	error(
 			const XalanDOMString&	msg,
 			XalanNode*				sourceNode = 0) const;
+
+	/**
+	 * Tell the user of an error, and probably throw an 
+	 * exception.
+	 */
+	void
+	error(
+			const char*		msg,
+			XalanNode*		sourceNode = 0) const;
 
 	/**
 	 * Given a string, return the corresponding token.

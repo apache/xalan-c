@@ -105,23 +105,46 @@ public:
 		{
 			executionContext.error("The normalize-space() function takes zero arguments or one argument!",
 								   context);
+
+			// Dummy return...
+			return 0;
 		}
 		else if (args.size() == 1)
 		{
-			theSourceString = args[0]->str();
+			return normalize(executionContext, args[0]->str());
 		}
 		else if (context == 0)
 		{
 			executionContext.error("The normalize-space() function requires a non-null context node!",
 								   context);
+
+			// Dummy return...
+			return 0;
 		}
 		else
 		{
-			theSourceString = getDefaultStringArgument(executionContext,
-													   *context);
+			return normalize(executionContext, getDefaultStringArgument(executionContext, *context));
 		}
+	}
 
-		const unsigned int		theSourceStringLength = length(theSourceString);
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual Function*
+#else
+	virtual FunctionNormalizeSpace*
+#endif
+	clone() const
+	{
+		return new FunctionNormalizeSpace(*this);
+	}
+
+private:
+
+	XObject*
+	normalize(
+			XPathExecutionContext&	executionContext,
+			const XalanDOMString&	theString)
+	{
+		const unsigned int		theStringLength = length(theString);
 
 		XalanDOMChar			thePreviousChar = 0;
 
@@ -134,14 +157,13 @@ public:
 		vector<XalanDOMChar>	theVector;
 
 		// The result string can only be as large as the source string, so
-		// just reserve the space now.  Also reserve a space for the
-		// terminating 0.
-		theVector.reserve(theSourceStringLength + 1);
+		// just reserve the space now.
+		theVector.reserve(theStringLength);
 
 		// OK, strip out any multiple spaces...
-		for (unsigned int i = 0; i < theSourceStringLength; i++)
+		for (unsigned int i = 0; i < theStringLength; i++)
 		{
-			const XalanDOMChar	theCurrentChar = charAt(theSourceString, i);
+			const XalanDOMChar	theCurrentChar = charAt(theString, i);
 
 			if (isXMLWhitespace(theCurrentChar) == true)
 			{
@@ -169,18 +191,6 @@ public:
 
 		return executionContext.getXObjectFactory().createString(XalanDOMString(theVector.begin(), theVector.size()));
 	}
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
-#else
-	virtual FunctionNormalizeSpace*
-#endif
-	clone() const
-	{
-		return new FunctionNormalizeSpace(*this);
-	}
-
-private:
 
 	// Not implemented...
 	FunctionNormalizeSpace&

@@ -76,6 +76,8 @@ class XALAN_PLATFORMSUPPORT_EXPORT StringTokenizer
 {
 public:
 
+	static const XalanDOMChar	s_defaultTokens[];
+
 	/**
 	 * Constructs a tokenizer for the target string
 	 * 
@@ -86,24 +88,47 @@ public:
 	 *                      as tokens, default is false
 	 */
 	StringTokenizer(const XalanDOMString&	theString,
-					const XalanDOMString&	theTokens = XalanDOMString(XALAN_STATIC_UCODE_STRING(" \t\n\r\f")),
+					const XalanDOMString&	theTokens = XalanDOMString(s_defaultTokens),
 					bool					fReturnTokens = false);
 
-#if defined(XALAN_LSTRSUPPORT)
 	/**
-	 * Constructs a tokenizer for the target string.  This version constructs
-	 * from null-terminated wide strings, like those we get from SAX-like APIs.
-	 *
+	 * Constructs a tokenizer for the target string
+	 * 
 	 * @param theString     string to tokenize
 	 * @param theTokens     string of delimiters used to parse target, default
 	 *                      is "\t\n\r\f"
 	 * @param fReturnTokens if true, delimiter characters are also returned
 	 *                      as tokens, default is false
 	 */
-	StringTokenizer(const XalanDOMChar*		theString,
-					const XalanDOMChar*		theTokens = XALAN_STATIC_UCODE_STRING(" \t\n\r\f"),
+	StringTokenizer(const XalanDOMString&	theString,
+					const XalanDOMChar*		theTokens,
 					bool					fReturnTokens = false);
-#endif
+
+	/**
+	 * Constructs a tokenizer for the target string.  This version constructs
+	 * from null-terminated wide strings, like those we get from SAX-like APIs.
+	 *
+	 * @param theString     string to tokenize
+	 * @param theTokens     string of delimiters used to parse target.
+	 * @param fReturnTokens if true, delimiter characters are also returned
+	 *                      as tokens, default is false
+	 */
+	StringTokenizer(const XalanDOMChar*		theString,
+					const XalanDOMChar*		theTokens = s_defaultTokens,
+					bool					fReturnTokens = false);
+
+	/**
+	 * Constructs a tokenizer for the target string.  This version constructs
+	 * from null-terminated wide strings, like those we get from SAX-like APIs.
+	 *
+	 * @param theString     string to tokenize
+	 * @param theTokens     string of delimiters used to parse target.
+	 * @param fReturnTokens if true, delimiter characters are also returned
+	 *                      as tokens, default is false
+	 */
+	StringTokenizer(const XalanDOMChar*		theString,
+					const XalanDOMString&	theTokens,
+					bool					fReturnTokens = false);
 
 	virtual
 	~StringTokenizer();

@@ -72,7 +72,7 @@
 
 
 
-#include <PlatformSupport/XalanAutoPtr.hpp>
+#include <Include/XalanAutoPtr.hpp>
 
 
 
@@ -132,16 +132,34 @@ public:
 			const XalanNode*		styleNode = 0) const;
 
 	virtual void
+	error(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const;
+
+	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const;
-	
+			const XalanNode* 		styleNode = 0) const;
+
+	virtual void
+	warn(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const;
+
 	virtual void
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const;
+			const XalanNode* 		styleNode = 0) const;
+
+	virtual void
+	message(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const;
 
 	// These interfaces are inherited from StylesheetConstructionContext...
 
@@ -152,7 +170,7 @@ public:
 	create(const XalanDOMString&	theBaseIdentifier);
 
 	virtual StylesheetRoot*
-	create(XSLTInputSource&		theInputSource);
+	create(const XSLTInputSource&	theInputSource);
 
 	virtual Stylesheet*
 	create(
@@ -164,6 +182,9 @@ public:
 
 	virtual int
 	getAttrTok(const XalanDOMString&	name) const;
+
+	virtual int
+	getAttrTok(const XalanDOMChar*	name) const;
 
 	virtual URLAutoPtrType
 	getURLFromString(const XalanDOMString&	urlString);
@@ -190,8 +211,18 @@ public:
 			const PrefixResolver&	resolver);
 
 	virtual XPath*
+	createMatchPattern(
+			const XalanDOMChar*		str,
+			const PrefixResolver&	resolver);
+
+	virtual XPath*
 	createXPath(
 			const XalanDOMString&	str,
+			const PrefixResolver&	resolver);
+
+	virtual XPath*
+	createXPath(
+			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver);
 
 	virtual const Locator*

@@ -93,13 +93,13 @@ public:
 	/**
 	 * Gets the name of this node.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeName() const = 0;
 
 	/**
 	 * Gets the value of this node, depending on its type.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNodeValue() const = 0;
 
 	/**
@@ -369,14 +369,14 @@ public:
 	 * such as <CODE>createElement</CODE> from the <CODE>Document</CODE>
 	 * interface, this is always <CODE>null</CODE>.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceURI() const = 0;
 
 	/**
 	 * Get the <em>namespace prefix</em>
 	 * of this node, or <code>null</code> if it is unspecified.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getPrefix() const = 0;
 
 	/**
@@ -386,7 +386,7 @@ public:
 	 * <code>createElement</code> from the <code>Document</code> interface,
 	 * it is null.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalName() const = 0;
 
 	/**
@@ -438,15 +438,6 @@ public:
 	virtual unsigned long
 	getIndex() const = 0;
 
-	/**
-	 * Returns the character data of the node that implements this interface,
-	 * according to the XSLT specification.
-	 *
-	 * @return a string containing the data.
-	 */
-	virtual XalanDOMString
-	getXSLTData() const = 0;
-
 	//@}
 
 	// These interfaces are new to XalanDocumentType...
@@ -458,7 +449,7 @@ public:
 	 * The name of DTD; i.e., the name immediately following the 
 	 * <code>DOCTYPE</code> keyword in an XML source document.
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getName() const = 0;
 
 	/**
@@ -483,21 +474,21 @@ public:
      * Get the public identifier of the external subset.
      * @return The public identifier of the external subset.
      */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getPublicId() const = 0;
 
     /**
      * Get the system identifier of the external subset.
      * @return The system identifier of the external subset.
      */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getSystemId() const = 0;
 
     /**
      * Get the internal subset as a string.
      * @return The internal subset as a string.
      */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getInternalSubset() const = 0;
     //@}
 

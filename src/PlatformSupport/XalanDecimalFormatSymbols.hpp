@@ -64,6 +64,10 @@
 
 
 
+#include <cassert>
+
+
+
 #include <XalanDOM/XalanDOMString.hpp>
 
 
@@ -236,8 +240,21 @@ public:
 	 * @param theCurrencySymbol symbol used for local currency
 	 */
 	void
-	setCurrencySymbol(const XalanDOMString&	theCurrencySymbol)
+	setCurrencySymbol(const XalanDOMString&		theCurrencySymbol)
 	{
+		m_currencySymbol = theCurrencySymbol;
+	}
+
+	/**
+	 * Sets the string denoting the local currency, "$", for example
+	 * 
+	 * @param theCurrencySymbol symbol used for local currency
+	 */
+	void
+	setCurrencySymbol(const XalanDOMChar*	theCurrencySymbol)
+	{
+		assert(theCurrencySymbol != 0);
+
 		m_currencySymbol = theCurrencySymbol;
 	}
 
@@ -286,14 +303,41 @@ public:
 	}
 
 	/**
+	 * Sets the string used to represent infinity
+	 * 
+	 * @param theInfinity string used to represent infinity
+	 */
+	void
+	setInfinity(const XalanDOMChar*		theInfinity)
+	{
+		assert(theInfinity != 0);
+
+		m_infinity = theInfinity;
+	}
+
+	/**
 	 * Sets the international string denoting the local currency
 	 * 
 	 * @param theInternationalCurrencySymbol international string denoting the
 	 *                                       local currency
 	 */
 	void
-	setInternationalCurrencySymbol(const XalanDOMString&		theInternationalCurrencySymbol)
+	setInternationalCurrencySymbol(const XalanDOMString&	theInternationalCurrencySymbol)
 	{
+		m_internationalCurrencySymbol = theInternationalCurrencySymbol;
+	}
+
+	/**
+	 * Sets the international string denoting the local currency
+	 * 
+	 * @param theInternationalCurrencySymbol international string denoting the
+	 *                                       local currency
+	 */
+	void
+	setInternationalCurrencySymbol(const XalanDOMChar*	theInternationalCurrencySymbol)
+	{
+		assert(theInternationalCurrencySymbol != 0);
+
 		m_internationalCurrencySymbol = theInternationalCurrencySymbol;
 	}
 
@@ -331,7 +375,21 @@ public:
 	{
 		m_NaN = theNaN;
 	}
-				   
+
+	/**
+	 * Sets the string used for a numeric value that cannot be represented
+	 * as a number
+	 * 
+	 * @param theNaN string representing "not a number" value
+	 */
+	void
+	setNaN(const XalanDOMChar*	theNaN)
+	{
+		assert(theNaN != 0);
+
+		m_NaN = theNaN;
+	}
+
 	/**
 	 * Sets the character used to separate positive and negative subpatterns in
 	 * a pattern

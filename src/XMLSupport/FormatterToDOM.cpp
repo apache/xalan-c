@@ -147,13 +147,13 @@ FormatterToDOM::startElement(
 			const	XMLCh* const	name,
 			AttributeList&			attrs)
 {
-	XalanElement* const		elem = m_doc->createElement(name);
+	XalanElement* const		elem = m_doc->createElement(XalanDOMString(name));
 
 	const int				nAtts = attrs.getLength();
 
 	for(int i = 0; i < nAtts; i++)
 	{
-		elem->setAttribute(attrs.getName(i), attrs.getValue(i));
+		elem->setAttribute(XalanDOMString(attrs.getName(i)), XalanDOMString(attrs.getValue(i)));
 	}
 
 	append(elem);
@@ -210,7 +210,7 @@ FormatterToDOM::charactersRaw(
 void
 FormatterToDOM::entityReference(const XMLCh* const	name)
 {
-	append(m_doc->createEntityReference(name));
+	append(m_doc->createEntityReference(XalanDOMString(name)));
 }
 
 

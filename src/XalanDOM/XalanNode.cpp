@@ -59,7 +59,7 @@
 
 
 #if !defined(NDEBUG)
-unsigned long	XalanNode::s_instanceCount = 0;
+size_t	XalanNode::s_instanceCount = 0;
 
 #if defined(XALAN_NODE_SPECIAL_DEBUG)
 

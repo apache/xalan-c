@@ -75,7 +75,7 @@
 ElemComment::ElemComment(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -94,7 +94,7 @@ ElemComment::ElemComment(
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 		}
 	}	
 }
@@ -124,7 +124,9 @@ ElemComment::execute(
     // | xsl:element
     // | xsl:attribute
     // ">
-    const XalanDOMString		data = childrenToString(executionContext, sourceTree, sourceNode, mode);
+    XalanDOMString	data;
+
+	childrenToString(executionContext, sourceTree, sourceNode, mode, data);
 
     executionContext.comment(toCharArray(data));
 }

@@ -68,6 +68,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "ResultTreeFrag.hpp"
 #include "MutableNodeRefList.hpp"
 #include "XObjectTypeCallback.hpp"
@@ -174,9 +178,9 @@ XNodeSet::str() const
 		else
 		{
 #if defined(XALAN_NO_MUTABLE)
-			((XNodeSet*)this)->m_cachedStringValue = theNode->getXSLTData();
+			DOMServices::getNodeData(*theNode, ((XNodeSet*)this)->m_cachedStringValue);
 #else
-			m_cachedStringValue = theNode->getXSLTData();
+			DOMServices::getNodeData(*theNode, m_cachedStringValue);
 #endif
 		}
 	}

@@ -75,7 +75,7 @@
 ElemMessage::ElemMessage(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -103,15 +103,13 @@ ElemMessage::ElemMessage(
 			}
 			else if (equals(avalue, Constants::ATTRVAL_NO) == false)
 			{
-				constructionContext.error(XalanDOMString("Attribute terminate has an illegal value: ") +
+				constructionContext.error("Attribute terminate has an illegal value: " +
 										  XalanDOMString(avalue));
 			}
 		}
 		else if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(XalanDOMString(name) +
-										" has an illegal attribute: " +
-										XalanDOMString(aname));
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + XalanDOMString(aname));
 		}
 	}
 }
@@ -127,7 +125,9 @@ ElemMessage::execute(
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
-    const XalanDOMString	data = childrenToString(executionContext, sourceTree, sourceNode, mode);
+    XalanDOMString	data;
+
+	childrenToString(executionContext, sourceTree, sourceNode, mode, data);
 
     executionContext.message(data, sourceNode, this);
 
@@ -139,9 +139,9 @@ ElemMessage::execute(
 
 
 
-ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(const DOMString&	theMessage) :
+ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(const XalanDOMString&		theMessage) :
 	XSLTProcessorException(theMessage,
-						   XALAN_STATIC_UCODE_STRING("ElemMessageTerminateException"))
+						   TranscodeFromLocalCodePage("ElemMessageTerminateException"))
 {
 }
 

@@ -64,7 +64,7 @@
 
 
 
-#include <vector>
+#include <deque>
 
 
 
@@ -104,12 +104,19 @@ class XALAN_XPATH_EXPORT QName
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef	vector<NameSpace>                NamespaceVectorType;
-	typedef	vector<NamespaceVectorType>      NamespacesStackType;
+	typedef	deque<NameSpace>					NamespaceVectorType;
+	typedef	deque<NamespaceVectorType>			NamespacesStackType;
 #else
-	typedef	std::vector<NameSpace>           NamespaceVectorType;
-	typedef	std::vector<NamespaceVectorType> NamespacesStackType;
+	typedef	std::deque<NameSpace>				NamespaceVectorType;
+	typedef	std::deque<NamespaceVectorType>		NamespacesStackType;
 #endif
+
+	/**
+	 * Construct an empty QName.
+	 *
+	 */
+	explicit
+	QName();
 
 	/**
 	 * Construct a QName, with the supplied namespace and local part.
@@ -118,8 +125,8 @@ public:
 	 * @param theLocalPart local part string
 	 */
 	QName(
-			const XalanDOMString&	theNamespace = XalanDOMString(),
-			const XalanDOMString&	theLocalPart = XalanDOMString());
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	theLocalPart);
 
 	/**
 	 * Construct a QName from a string, resolving the prefix using the given
@@ -130,6 +137,17 @@ public:
 	 */
 	QName(
 			const XalanDOMString&		qname,
+			const NamespacesStackType&	namespaces);
+
+	/**
+	 * Construct a QName from a string, resolving the prefix using the given
+	 * namespace vector stack. The default namespace is not resolved.
+	 *
+	 * @param qname      QName string
+	 * @param namespaces namespace vector stack to use
+	 */
+	QName(
+			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces);
 
 	/**
@@ -272,8 +290,13 @@ public:
 private:
 
 	void
+	initialize(
+			const XalanDOMChar*			qname,
+			const NamespacesStackType&	namespaces);
+
+	void
 	resolvePrefix(
-			const XalanDOMString&		qname,
+			const XalanDOMString&	qname,
 			const PrefixResolver&	theResolver);
 
 	XalanDOMString	m_namespace;

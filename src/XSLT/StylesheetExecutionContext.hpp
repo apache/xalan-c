@@ -96,8 +96,11 @@
 
 
 
+#include <Include/XalanAutoPtr.hpp>
+
+
+
 #include <PlatformSupport/AttributeListImpl.hpp>
-#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 
@@ -244,41 +247,14 @@ public:
 			const void*				theKey) = 0;
 
 	/**
-	 * Retrieve name of the pending element currently being processed.
-	 * 
-	 * @return element name
+	 * See if there is an element pending.
 	 */
-	virtual XalanDOMString
-	getPendingElementName() const = 0;
-
-	/**
-	 * Changes the currently pending element name.
-	 * 
-	 * @param elementName new name of element
-	 */
-	virtual void
-	setPendingElementName(const XalanDOMString&		elementName) = 0;
-
-	/**
-	 * Retrieve list of attributes yet to be processed
-	 * 
-	 * @return attribute list
-	 */
-	virtual const AttributeList&
-	getPendingAttributes() const = 0;
-
-	/**
-	 * Sets a list of attributes yet to be processed.
-	 * 
-	 * @param pendingAttributes attribute list
-	 */
-	virtual void
-	setPendingAttributes(const AttributeList&	pendingAttributes) = 0;
+	virtual bool
+	isElementPending() const = 0;
 
 	/**
 	 * Replace the contents of a pending attribute.
 	 * 
-	 * @param pendingAttributes attribute list
 	 * @param theName           name of attribute
 	 * @param theNewType        type of attribute
 	 * @param theNewValue       new value of attribute
@@ -305,240 +281,38 @@ public:
 	virtual void
 	setFormatterListener(FormatterListener*		flistener) = 0;
 
-	/*
-	 * See if there is a pending start document event waiting.
-	 * @return true if there is a start document event waiting.
-	 */
-	virtual bool
-	getHasPendingStartDocument() const = 0;
-
-	/**
-	 * Set the pending start document event state.
-	 * @param the new value
-	 */
 	virtual void
-	setHasPendingStartDocument(bool	b) = 0;
+	pushOutputContext(FormatterListener*	flistener = 0) = 0;
 
-	/**
-	 * See if a pending start document event must be flushed.
-	 * @return true if the event must be flushed.
-	 */
-	virtual bool
-	getMustFlushPendingStartDocument() const = 0;
-
-	/**
-	 * Set the pending start document event flush state.
-	 * @param the new value
-	 */
 	virtual void
-	setMustFlushPendingStartDocument(bool	b) = 0;
+	popOutputContext() = 0;
 
-	// This next group of classes are used to save and restore
-	// the execution state in an automated, and exception-safe
-	// manner.
-
-	class HasPendingStartDocumentSetAndRestore
+	class OutputContextPushPop
 	{
 	public:
 
 		/**
-		 * Construct an object to set and restore the current pending start.
-		 * document state.
-		 * @param theExecutionContext a reference to the current execution context
-		 * @param theNewState the new state to set.
-		 */
-		HasPendingStartDocumentSetAndRestore(
-			StylesheetExecutionContext&		theExecutionContext,
-			bool							theNewState) :
-				m_executionContext(theExecutionContext),
-				m_savedState(theExecutionContext.getHasPendingStartDocument())
-		{
-			theExecutionContext.setHasPendingStartDocument(theNewState);
-		}
-
-		~HasPendingStartDocumentSetAndRestore()
-		{
-			m_executionContext.setHasPendingStartDocument(m_savedState);
-		}
-
-	private:
-
-		StylesheetExecutionContext&		m_executionContext;
-
-		const bool						m_savedState;
-	};
-
-	class MustFlushPendingStartDocumentSetAndRestore
-	{
-	public:
-
-		/**
-		 * Construct an object to set and restore the current flush pending start.
-		 * document state.
-		 * @param theExecutionContext a reference to the current execution context
-		 * @param theNewState the new state to set.
-		 */
-		MustFlushPendingStartDocumentSetAndRestore(
-			StylesheetExecutionContext&		theExecutionContext,
-			bool							theNewState) :
-				m_executionContext(theExecutionContext),
-				m_savedState(theExecutionContext.getMustFlushPendingStartDocument())
-		{
-			theExecutionContext.setMustFlushPendingStartDocument(theNewState);
-		}
-
-		~MustFlushPendingStartDocumentSetAndRestore()
-		{
-			m_executionContext.setMustFlushPendingStartDocument(m_savedState);
-		}
-
-	private:
-
-		StylesheetExecutionContext&		m_executionContext;
-
-		const bool						m_savedState;
-	};
-
-	class FormatterListenerSetAndRestore
-	{
-	public:
-
-		/**
-		 * Construct an object to set and restore the current formatter listener.
+		 * Construct an object to push and pop the current output context.
 		 *
 		 * @param theExecutionContext a reference to the current execution context
-		 * @param theNewListener the new listener to set.
+		 * @param theNewListener the new FormatterListener to set.
 		 */
-		FormatterListenerSetAndRestore(
+		OutputContextPushPop(
 			StylesheetExecutionContext&		theExecutionContext,
 			FormatterListener*				theNewListener = 0) :
-				m_executionContext(theExecutionContext),
-				m_savedListener(theExecutionContext.getFormatterListener())
+			m_executionContext(theExecutionContext)
 		{
-			theExecutionContext.setFormatterListener(theNewListener);
+			m_executionContext.pushOutputContext(theNewListener);
 		}
 
-		~FormatterListenerSetAndRestore()
+		~OutputContextPushPop()
 		{
-			m_executionContext.setFormatterListener(m_savedListener);
-		}
-
-	private:
-
-		StylesheetExecutionContext&		m_executionContext;
-
-		FormatterListener* const		m_savedListener;
-	};
-
-	class PendingElementNameSetAndRestore
-	{
-	public:
-
-		/**
-		 * Construct an object to set and restore the current pending element name.
-		 *
-		 * @param theExecutionContext a reference to the current execution context
-		 * @param theNewPendingElementName the new pending element name to set.
-		 */
-		PendingElementNameSetAndRestore(
-			StylesheetExecutionContext&		theExecutionContext,
-			const XalanDOMString&			theNewPendingElementName = XalanDOMString()) :
-				m_executionContext(theExecutionContext),
-				m_savedPendingElementName(theExecutionContext.getPendingElementName())
-		{
-			theExecutionContext.setPendingElementName(theNewPendingElementName);
-		}
-
-		~PendingElementNameSetAndRestore()
-		{
-			m_executionContext.setPendingElementName(m_savedPendingElementName);
+			m_executionContext.popOutputContext();
 		}
 
 	private:
 
 		StylesheetExecutionContext&		m_executionContext;
-
-		const DOMString					m_savedPendingElementName;
-	};
-
-	class PendingAttributesSetAndRestore
-	{
-	public:
-
-		/**
-		 * Construct an object to set and restore the current pending attributes.
-		 *
-		 * @param theExecutionContext a reference to the current execution context
-		 * @param theNewPendingAttributes the new pending attributes to set.
-		 */
-		PendingAttributesSetAndRestore(
-			StylesheetExecutionContext&		theExecutionContext,
-			const AttributeListImpl&		theNewPendingAttributes = AttributeListImpl()) :
-				m_executionContext(theExecutionContext),
-				m_savedPendingAttributes(theExecutionContext.getPendingAttributes())
-		{
-			theExecutionContext.setPendingAttributes(theNewPendingAttributes);
-		}
-
-		~PendingAttributesSetAndRestore()
-		{
-			m_executionContext.setPendingAttributes(m_savedPendingAttributes);
-		}
-
-	private:
-
-		StylesheetExecutionContext&		m_executionContext;
-
-		const AttributeListImpl			m_savedPendingAttributes;
-	};
-
-	class ExecutionStateSetAndRestore
-	{
-	public:
-
-		/**
-		 * Construct an object to set and restore the current execution state.
-		 *
-		 * @param theExecutionContext a reference to the current execution context
-		 * @param theNewListener the new listener to set.
-		 * @param theNewPendingElementName the new pending element name to set.
-		 * @param theNewPendingAttributes the new pending attributes to set.
-		 */
-		ExecutionStateSetAndRestore(
-			StylesheetExecutionContext&		theExecutionContext,
-			FormatterListener*				theNewListener = 0,
-			bool							hasPendingStartDocument = false,
-			bool							mustFlushPendingStartDocument = false,
-			const XalanDOMString&			theNewPendingElementName = XalanDOMString(),
-			const AttributeListImpl&		theNewPendingAttributes = AttributeListImpl()) :
-				m_hasPendingSetAndRestore(theExecutionContext,
-										  hasPendingStartDocument),
-				m_flushPendingSetAndRestore(theExecutionContext,
-											mustFlushPendingStartDocument),
-				m_formatterListenerSetAndRestore(theExecutionContext,
-												 theNewListener),
-				m_pendingElementNameSetAndRestore(theExecutionContext,
-												  theNewPendingElementName),
-				m_pendingAttributesSetAndRestore(theExecutionContext,
-												 theNewPendingAttributes)
-		{
-		}
-
-		~ExecutionStateSetAndRestore()
-		{
-		}
-
-	private:
-
-		const HasPendingStartDocumentSetAndRestore			m_hasPendingSetAndRestore;
-
-		const MustFlushPendingStartDocumentSetAndRestore	m_flushPendingSetAndRestore;
-
-		const FormatterListenerSetAndRestore				m_formatterListenerSetAndRestore;
-
-		const PendingElementNameSetAndRestore				m_pendingElementNameSetAndRestore;
-
-		const PendingAttributesSetAndRestore				m_pendingAttributesSetAndRestore;
 	};
 
 	/**
@@ -1572,13 +1346,13 @@ public:
 	virtual bool
 	isIgnorableWhitespace(const XalanText&	node) const = 0;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceOfNode(const XalanNode&		n) const = 0;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNameOfNode(const XalanNode&	n) const = 0;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalNameOfNode(const XalanNode&		n) const = 0;
 
 	virtual XalanNode*
@@ -1589,13 +1363,15 @@ public:
 			const XalanNode&	node1,
 			const XalanNode&	node2) const = 0;
 
-	virtual XalanDOMString
-	getNodeData(const XalanNode&	n) const = 0;
+	virtual void
+	getNodeData(
+			const XalanNode&	n,
+			XalanDOMString&		s) const = 0;
 
 	virtual XalanElement*
 	getElementByID(
-			const XalanDOMString&		id,
-			const XalanDocument&		doc) const = 0;
+			const XalanDOMString&	id,
+			const XalanDocument&	doc) const = 0;
 
 	virtual const NodeRefListBase&
 	getContextNodeList() const = 0;
@@ -1674,7 +1450,7 @@ public:
 	virtual void
 	setPrefixResolver(const PrefixResolver*		thePrefixResolver) = 0;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const = 0;
 
 	virtual XalanDOMString
@@ -1696,12 +1472,6 @@ public:
 
 	virtual void
 	setThrowFoundIndex(bool 	fThrow) = 0;
-
-	virtual void
-	setCurrentPattern(const XalanDOMString&		thePattern) = 0;
-
-	virtual XalanDOMString
-	getCurrentPattern() const = 0;
 
 	virtual XalanDocument*
 	getSourceDocument(const XalanDOMString&		theURI) const = 0;
@@ -1725,16 +1495,34 @@ public:
 			const XalanNode*		styleNode = 0) const = 0;
 
 	virtual void
+	error(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const = 0;
+
+	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const = 0;
+			const XalanNode* 		styleNode = 0) const = 0;
+
+	virtual void
+	warn(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const = 0;
 
 	virtual void
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const = 0;
+			const XalanNode* 		styleNode = 0) const = 0;
+
+	virtual void
+	message(
+			const char*			msg,
+			const XalanNode* 	sourceNode = 0,
+			const XalanNode* 	styleNode = 0) const = 0;
 };
 
 

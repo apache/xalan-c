@@ -110,7 +110,7 @@ XPathSupportDefault::isIgnorableWhitespace(const XalanText&		node) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XPathSupportDefault::getNamespaceForPrefix(
 			const XalanDOMString&	prefix, 
 			const XalanElement&		namespaceContext) const
@@ -121,7 +121,7 @@ XPathSupportDefault::getNamespaceForPrefix(
 
 
 
-XalanDOMString
+const XalanDOMString&
 XPathSupportDefault::getNamespaceOfNode(const XalanNode&	n) const
 {
 	return m_DOMSupport.getNamespaceOfNode(n);
@@ -129,7 +129,7 @@ XPathSupportDefault::getNamespaceOfNode(const XalanNode&	n) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XPathSupportDefault::getNameOfNode(const XalanNode&		n) const
 {
 	return DOMServices::getNameOfNode(n);
@@ -137,7 +137,7 @@ XPathSupportDefault::getNameOfNode(const XalanNode&		n) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XPathSupportDefault::getLocalNameOfNode(const XalanNode&	n) const
 {
 	return DOMServices::getLocalNameOfNode(n);
@@ -145,10 +145,12 @@ XPathSupportDefault::getLocalNameOfNode(const XalanNode&	n) const
 
 
 
-XalanDOMString
-XPathSupportDefault::getNodeData(const XalanNode&	node) const
+void
+XPathSupportDefault::getNodeData(
+			const XalanNode&	n,
+			XalanDOMString&		s) const
 {
-	return DOMServices::getNodeData(node);
+	DOMServices::getNodeData(n, s);
 }
 
 

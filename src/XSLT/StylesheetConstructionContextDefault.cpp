@@ -117,6 +117,17 @@ StylesheetConstructionContextDefault::error(
 
 
 void
+StylesheetConstructionContextDefault::error(
+			const char*			msg,
+			const XalanNode*	sourceNode,
+			const XalanNode*	styleNode) const
+{
+	error(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+void
 StylesheetConstructionContextDefault::warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
@@ -128,12 +139,34 @@ StylesheetConstructionContextDefault::warn(
 
 
 void
+StylesheetConstructionContextDefault::warn(
+			const char*			msg,
+			const XalanNode*	sourceNode,
+			const XalanNode*	styleNode) const
+{
+	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+void
 StylesheetConstructionContextDefault::message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
 			const XalanNode*		styleNode) const
 {
 	m_processor.message(msg, styleNode, sourceNode);
+}
+
+
+
+void
+StylesheetConstructionContextDefault::message(
+			const char*			msg,
+			const XalanNode*	sourceNode,
+			const XalanNode*	styleNode) const
+{
+	message(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
 }
 
 
@@ -170,14 +203,14 @@ StylesheetConstructionContextDefault::create(const XalanDOMString&	theBaseIdenti
 
 
 StylesheetRoot*
-StylesheetConstructionContextDefault::create(XSLTInputSource&	theInputSource)
+StylesheetConstructionContextDefault::create(const XSLTInputSource&		theInputSource)
 {
 	const XMLCh* const	theSystemID =
 				theInputSource.getSystemId();
 
 	const XalanDOMString	theBaseIdentifier =
-				theSystemID == 0 ? XALAN_STATIC_UCODE_STRING("") :
-				theSystemID;
+				theSystemID == 0 ? XalanDOMString() :
+				XalanDOMString(theSystemID);
 
 	return create(theBaseIdentifier);
 }
@@ -219,7 +252,18 @@ StylesheetConstructionContextDefault::destroy(StylesheetRoot*	theStylesheetRoot)
 int
 StylesheetConstructionContextDefault::getAttrTok(const XalanDOMString&	name) const
 {
-	return m_processor.getAttrTok(name);
+	return m_processor.getAttrTok(XalanDOMString(name));
+}
+
+
+
+int
+StylesheetConstructionContextDefault::getAttrTok(const XalanDOMChar*	name) const
+{
+	assert(name != 0);
+
+	// $$$ ToDo: Explicit XalanDOMString constructor
+	return m_processor.getAttrTok(XalanDOMString(name));
 }
 
 
@@ -286,18 +330,45 @@ StylesheetConstructionContextDefault::createMatchPattern(
 
 
 XPath*
+StylesheetConstructionContextDefault::createMatchPattern(
+			const XalanDOMChar*		str,
+			const PrefixResolver&	resolver)
+{
+	assert(str != 0);
+
+		// $$$ ToDo: Explicit XalanDOMString constructor
+	return createMatchPattern(XalanDOMString(str), resolver);
+}
+
+
+
+XPath*
 StylesheetConstructionContextDefault::createXPath(
-			const XalanDOMString&		str,
+			const XalanDOMString&	str,
 			const PrefixResolver&	resolver)
 {
 	XPath* const	xpath = m_xpathFactory.create();
 
+		// $$$ ToDo: Explicit XalanDOMString constructor
 	m_xpathProcessor->initXPath(*xpath,
 								str,
 								resolver,
 								m_xpathEnvSupport);
 
 	return xpath;
+}
+
+
+
+XPath*
+StylesheetConstructionContextDefault::createXPath(
+			const XalanDOMChar*		str,
+			const PrefixResolver&	resolver)
+{
+	assert(str != 0);
+
+	// $$$ ToDo: Explicit XalanDOMString constructor
+	return createXPath(XalanDOMString(str), resolver);
 }
 
 

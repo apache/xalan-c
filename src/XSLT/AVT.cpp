@@ -108,14 +108,16 @@ static const XalanDOMChar	theRightCurlyBracketString[] =
  * on to the string if the AVT is simple.
  */
 AVT::AVT(
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const XalanDOMChar*				type,
 			const XalanDOMChar*				stringedValue,
 			const PrefixResolver&			resolver,
 			StylesheetConstructionContext&	constructionContext) :
 		AVTPart(),
+		m_parts(),
 		m_simpleString(),
-		m_name(name),		
+		// $$$ ToDo: Explicit XalanDOMString constructor
+		m_name(XalanDOMString(name)),
 		m_pcType(type)
 {
 	StringTokenizer		tokenizer(stringedValue, theTokenDelimiterCharacters, true);
@@ -210,7 +212,7 @@ AVT::AVT(
 										case XalanUnicode::charLeftCurlyBracket:
 										{
 											// What's another curly doing here?
-											error = "Error: Can not have \"{\" within expression.";
+											error = TranscodeFromLocalCodePage("Error: Can not have \"{\" within expression.");
 
 											break;
 										}
@@ -271,10 +273,7 @@ AVT::AVT(
 					}
 					default:
 					{
-						// @@ Just to make sure we're not getting the whole string
-						// There seemed to be a problem with single character
-						// strings
-						const DOMString		s(&theChar, 1);
+						const XalanDOMString	s(&theChar, 1);
 
 						// Anything else just add to string.
 						append(buffer, s);

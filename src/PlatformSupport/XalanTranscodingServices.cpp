@@ -321,8 +321,8 @@ XalanTranscodingServices::getBytesEqualChars(const XalanDOMString&	theEncoding)
 XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableCharacterException(
 			XalanDOMChar			theCharacter,
 			const XalanDOMString&	theEncoding) :
-	XSLException(XalanDOMString("Unable to represent a character in the specified encoding"),
-				 XalanDOMString("UnrepresentableCharacterException")),
+	XSLException(TranscodeFromLocalCodePage("Unable to represent a character in the specified encoding"),
+				 TranscodeFromLocalCodePage("UnrepresentableCharacterException")),
 	m_badCharacter(theCharacter),
 	m_encoding(theEncoding)
 {
@@ -362,6 +362,7 @@ initMaximumCharacterValueMap(XalanTranscodingServices::MaximumCharacterValueMapT
 
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("WINDOWS-1250")),	 0xFF)); // Windows 1250 Peter Smolik
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("UTF-8")),			 0xFFFF)); // Universal Transformation Format 8
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("UTF-16")),			 0xFFFF));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("US-ASCII")),		 0x7F));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1")), 	 0xFF));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2")), 	 0xFF));

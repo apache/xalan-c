@@ -107,7 +107,7 @@ public:
 	 * @param namespaceContext DOM element representing the context for namespace
 	 * @return URI corresponding to namespace
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceForPrefix(
 			const XalanDOMString&	prefix, 
 			const XalanElement&		namespaceContext) const = 0;
@@ -118,7 +118,7 @@ public:
 	 * @param node	DOM node whose namespace is returned
 	 * @return namespace of node
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceOfNode(const XalanNode&		n) const = 0;
 
 	/**
@@ -129,7 +129,7 @@ public:
 	 * @param node	DOM node whose name is returned
 	 * @return name of the node
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNameOfNode(const XalanNode&	n) const = 0;
 
 	/**
@@ -138,20 +138,19 @@ public:
 	 * @param node	DOM node whose name is returned
 	 * @return name of node without namespace
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getLocalNameOfNode(const XalanNode&		n) const = 0;
 
 	/**
-	 * Retrieves data for node recursively.
-	 * (Note whitespace issues.)
+	 * Get node data recursively.
 	 * 
-	 * @param node        DOM node whose data is to be returned
-	 * @param theResolver prefix resolver to use
-
-	 * @return a string representation of the node's data
+	 * @param n DOM node queried
+	 * @param s string to which the node's data will be appended.
 	 */
-	virtual XalanDOMString
-	getNodeData(const XalanNode&	n) const = 0;
+	virtual void
+	getNodeData(
+			const XalanNode&	n,
+			XalanDOMString&		s) const = 0;
 
 	/**
 	 * Retrieve the parent of a node. This function has to be implemented,

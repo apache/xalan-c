@@ -118,16 +118,16 @@ XalanStdOutputStream::writeData(
 
 
 
-static DOMString
+static XalanDOMString
 FormatMessageLocal(
-			const DOMString&	theMessage,
-			int					theErrorCode)
+			const char*		theMessage,
+			int				theErrorCode)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 using std::ostrstream;
 #endif
 
-	DOMString	theResult(clone(theMessage));
+	XalanDOMString	theResult(TranscodeFromLocalCodePage(theMessage));
 
 	ostrstream   theFormatter;
 
@@ -135,9 +135,10 @@ using std::ostrstream;
 				 << theErrorCode
 				 << "." << '\0';
 
-	theResult += theFormatter.str();
+	append(theResult, theFormatter.str());
 
 	delete theFormatter.str();
+
 	return theResult;
 }
 
@@ -147,7 +148,7 @@ XalanStdOutputStream::XalanStdOutputStreamWriteException::XalanStdOutputStreamWr
 		int					theErrorCode) :
 	XalanOutputStreamException(FormatMessageLocal("Error writing to standard stream!",
 													   theErrorCode),
-								    XALAN_STATIC_UCODE_STRING("XercesStdTextOutputStreamWriteException"))
+								    TranscodeFromLocalCodePage("XercesStdTextOutputStreamWriteException"))
 {
 }
 

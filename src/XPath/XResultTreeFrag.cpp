@@ -69,6 +69,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "NodeRefListBase.hpp"
 #include "ResultTreeFragBase.hpp"
 #include "XObjectTypeCallback.hpp"
@@ -146,36 +150,8 @@ XResultTreeFrag::num() const
 bool
 XResultTreeFrag::boolean() const
 {
-    bool					fResult = false;
-
-	const XalanNode*	theCurrentNode = m_value->getFirstChild();
-
-    while(theCurrentNode != 0)
-    {
-		if(XalanNode::TEXT_NODE == theCurrentNode->getNodeType())
-		{
-			const XalanText* const	theTextNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanText*)theCurrentNode;
-#else
-				static_cast<const XalanText*>(theCurrentNode);
-#endif
-
-			if (theTextNode->isIgnorableWhitespace() ||
-			    length(trim(theTextNode->getData())) == 0)
-			{
-				continue;
-			}
-      
-			fResult = true;
-
-			break;
-		}
-
-		theCurrentNode = theCurrentNode->getNextSibling();
-	}
-
-    return fResult;
+	// Result tree fragments always evaluate to true.
+	return true;
 }
 
 
@@ -186,9 +162,9 @@ XResultTreeFrag::str() const
 	if (isEmpty(m_cachedStringValue) == true)
 	{
 #if defined(XALAN_NO_MUTABLE)
-		((XResultTreeFrag*)this)->m_cachedStringValue = m_value->getXSLTData();
+		DOMServices::getNodeData(*m_value, ((XResultTreeFrag*)this)->m_cachedStringValue);
 #else
-		m_cachedStringValue = m_value->getXSLTData();
+		DOMServices::getNodeData(*m_value, m_cachedStringValue);
 #endif
 	}
 

@@ -64,7 +64,6 @@
 
 
 
-#include <map>
 #include <vector>
 
 
@@ -74,7 +73,6 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/STLHelper.hpp>
 
 
 
@@ -157,8 +155,6 @@ public:
 	void
 	swap(AttributeListImpl&		theOther)
 	{
-		m_AttributeKeyMap.swap(theOther.m_AttributeKeyMap);
-
 		m_AttributeVector.swap(theOther.m_AttributeVector);
 	}
 
@@ -192,9 +188,18 @@ public:
 		{
 		}
 
-		const XMLChVectorType	m_Name;
-		XMLChVectorType			m_Value;
-		XMLChVectorType			m_Type;
+		AttributeVectorEntry(const XMLCh*	theName,
+							 const XMLCh*	theValue,
+							 const XMLCh*	theType) :
+			m_Name(theName, theName + length(theName) + 1),
+			m_Value(theValue, theValue + length(theValue) + 1),
+			m_Type(theType, theType + length(theType) + 1)
+		{
+		}
+
+		XMLChVectorType		m_Name;
+		XMLChVectorType		m_Value;
+		XMLChVectorType		m_Type;
 	};
 
 	typedef AttributeVectorEntry::XMLChVectorType	XMLChVectorType;
@@ -202,21 +207,9 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 	// This vector will hold the entries.
 	typedef vector<AttributeVectorEntry*>				AttributeVectorType;
-
-	// This map will associate a name with a pointer to the entry that corresponds
-	// to that name.
-	typedef map<const XMLCh*,
-				AttributeVectorEntry*,
-				less_null_terminated_arrays<XMLCh> >	AttributeKeyMapType;
 #else
 	// This vector will hold the entries.
 	typedef std::vector<AttributeVectorEntry*>				AttributeVectorType;
-
-	// This map will associate a name with a pointer to the entry that corresponds
-	// to that name.
-	typedef std::map<const XMLCh*,
-					 AttributeVectorEntry*,
-					 less_null_terminated_arrays<XMLCh> >	AttributeKeyMapType;
 #endif
 
 private:
@@ -235,7 +228,6 @@ private:
 	static void
 	deleteEntries(AttributeVectorType&	theVector);
 
-	AttributeKeyMapType		m_AttributeKeyMap;
 	AttributeVectorType		m_AttributeVector;
 };
 

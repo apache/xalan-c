@@ -78,12 +78,11 @@
 
 
 
-#include <PlatformSupport/Resettable.hpp>
 #include <DOMSupport/NSInfo.hpp>
 
 
 
-class XALAN_DOMSUPPORT_EXPORT NamespaceResolver : public Resettable
+class XALAN_DOMSUPPORT_EXPORT NamespaceResolver
 {
 public:
 
@@ -104,7 +103,7 @@ public:
 	 * @param theNode DOM node
 	 * @return namespace of 'theNode'
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getNamespaceOfNode(const XalanNode&	theNode) const;
 
 #if defined(XALAN_NO_NAMESPACES)

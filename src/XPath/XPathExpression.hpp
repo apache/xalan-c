@@ -1249,7 +1249,7 @@ public:
 			int						theOffset,
 			const XalanDOMString&	theToken)
 	{
-		assert(theToken != 0);
+		assert(c_wstr(theToken) != 0);
 
 		const int	thePosition = int(m_currentPosition) + theOffset;
 

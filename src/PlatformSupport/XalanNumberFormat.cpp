@@ -58,9 +58,12 @@
 
 
 
+#include <Include/XalanAutoPtr.hpp>
+
+
+
 #include "DOMStringHelper.hpp"
 #include "STLHelper.hpp"
-#include "XalanAutoPtr.hpp"
 
 
 

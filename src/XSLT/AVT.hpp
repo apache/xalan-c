@@ -105,7 +105,7 @@ public:
 	 * @param constructionContext context for construction of AVT
 	 */
 	AVT(
-			const XalanDOMString&			name,
+			const XalanDOMChar*				name,
 			const XalanDOMChar*				type,
 			const XalanDOMChar*				stringedValue,
 			const PrefixResolver&			resolver,
