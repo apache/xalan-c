@@ -70,10 +70,7 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
+#include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XSLException.hpp>
 
 
@@ -118,10 +115,11 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
 				XalanDOMChar,
-				less<XalanDOMString> >	MaximumCharacterValueMapType;
+				DOMStringLessThanIgnoreCaseASCIIFunction>	MaximumCharacterValueMapType;
 #else
 	typedef std::map<XalanDOMString,
-					 XalanDOMChar>		MaximumCharacterValueMapType;
+					 XalanDOMChar,
+					 DOMStringLessThanIgnoreCaseASCIIFunction>	MaximumCharacterValueMapType;
 #endif
 
     enum eCode
