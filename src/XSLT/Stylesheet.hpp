@@ -104,6 +104,7 @@ class ElemTemplate;
 class ElemTemplateElement;
 class ElemVariable;
 class KeyTable;
+class Locator;
 class NodeRefListBase;
 class PrefixResolver;
 class StylesheetConstructionContext;
@@ -490,12 +491,10 @@ public:
 	 * @param elemDecimalFormat   the element
 	 */
 	void
-	processDecimalFormatElement(ElemDecimalFormat*	elemDecimalFormat)
-	{
-		assert(elemDecimalFormat != 0);
-
-		m_elemDecimalFormats.push_back(elemDecimalFormat);
-	}
+	processDecimalFormatElement(
+			StylesheetConstructionContext&	constructionContext,
+			const AttributeList&			atts,
+			const Locator*					locator = 0);
 
 	/**
 	 * Retrieve the XalanDecimalFormatSymbols instance associated with
@@ -551,17 +550,6 @@ public:
 	}
 
 	/**
-	 * Retrieve the manufactured template to use if there is no wrapper.
-	 * 
-	 * @return pointer to template
-	 */
-	const ElemTemplate*
-	getWrapperlessTemplate()
-	{
-		return m_wrapperlessTemplate;
-	}
-
-	/**
 	 * whether there is a wrapper template
 	 * 
 	 * @return true is there is a wrapper
@@ -572,16 +560,10 @@ public:
 		return m_isWrapperless;
 	}
 
-	/**
-	 * Set whether there is a wrapper template
-	 * 
-	 * @param b true is there is a wrapper
-	 */
-	void
-	setWrapperless(bool b)
-	{
-		m_isWrapperless = b;
-	}
+	ElemTemplateElement*
+	initWrapperless(
+			StylesheetConstructionContext&	constructionContext,
+			const Locator*					locator);
 
 	/**
 	 * Retrieve the stack of who's including who
@@ -856,14 +838,13 @@ public:
 	 * an element extension as well as for function calls (which is passed
 	 * on to XPath).
 	 *
-	 * @param uri the URI of the extension namespace
-	 * @param nsh handler
+	 * @param constructionContext The current construction context.
+	 * @param uri The namespace URI of the extension.
 	 */
 	void
-	addExtensionNamespace(
+	processExtensionNamespace(
 			StylesheetConstructionContext&	theConstructionContext,
-			const XalanDOMString&			uri,
-			ExtensionNSHandler* 			nsh);
+			const XalanDOMString&			uri);
 
 	/**
 	 * Return the handler for a given extension namespace.
@@ -1187,21 +1168,15 @@ private:
 	bool									m_isWrapperless;
 
 	/**
-	 * The manufactured template if there is no wrapper.
-	 */
-	ElemTemplate*							m_wrapperlessTemplate;
-  
-	/**
 	 * The table of extension namespaces.
 	 */
 	ExtensionNamespacesMapType				m_extensionNamespaces;
 
-  
 	/**
 	 * The first template of the template children.
 	 */
-	ElemTemplateElement*					m_firstTemplate;
-  
+	ElemTemplate*							m_firstTemplate;
+
 	/**
 	 * A stack of who's including who is needed in order to support "It is an
 	 * error if a stylesheet directly or indirectly includes itself."

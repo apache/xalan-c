@@ -133,7 +133,6 @@ Stylesheet::Stylesheet(
 	m_namespaces(),
 	m_namespaceDecls(),
 	m_isWrapperless(false),
-	m_wrapperlessTemplate(0),
 	m_extensionNamespaces(),
 	m_firstTemplate(0),
 	m_includeStack(),
@@ -201,16 +200,6 @@ Stylesheet::~Stylesheet()
 			 m_imports.end(),
 			 DeleteFunctor<Stylesheet>());
 
-	// Clean up the atribute sets vector
-	for_each(m_attributeSets.begin(),
-			 m_attributeSets.end(),
-			 DeleteFunctor<ElemAttributeSet>());
-
-	// Clean up the top-level variables vector
-	for_each(m_topLevelVariables.begin(),
-			 m_topLevelVariables.end(),
-			 DeleteFunctor<ElemVariable>());
-
 	// Clean up the decimal formats vector
 	for_each(m_elemDecimalFormats.begin(),
 			 m_elemDecimalFormats.end(),
@@ -220,10 +209,46 @@ Stylesheet::~Stylesheet()
 	for_each(m_extensionNamespaces.begin(),
 			 m_extensionNamespaces.end(),
 			 MapValueDeleteFunctor<ExtensionNamespacesMapType>());
+}
 
-	delete m_wrapperlessTemplate;
 
-	delete m_firstTemplate;
+
+ElemTemplateElement*
+Stylesheet::initWrapperless(
+			StylesheetConstructionContext&	constructionContext,
+			const Locator*					locator)
+{
+	if (m_isWrapperless == true)
+	{
+		constructionContext.error(
+			"The stylesheet already has a wrapperless template",
+			0,
+			locator);
+	}
+
+	assert(m_firstTemplate == 0);
+
+	m_isWrapperless = true;
+
+
+	AttributeListImpl	templateAttrs;
+
+	templateAttrs.addAttribute(c_wstr(Constants::ATTRNAME_NAME),
+							   c_wstr(Constants::ATTRTYPE_CDATA),
+							   c_wstr(Constants::ATTRVAL_SIMPLE));
+
+	ElemTemplateElement* const	theNewTemplate =
+		constructionContext.createElement(
+			StylesheetConstructionContext::ELEMNAME_TEMPLATE,
+			*this,
+			templateAttrs,
+			locator);
+
+	theNewTemplate->addToStylesheet(constructionContext, *this);
+
+	assert(m_firstTemplate == theNewTemplate);
+
+	return theNewTemplate;
 }
 
 
@@ -494,15 +519,6 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 		}
 	}
 
-	{
-		for (ElemTemplateElement* node = m_wrapperlessTemplate;
-			 node != 0;
-			 node = node->getNextSiblingElem())
-		{
-			node->postConstruction(constructionContext, m_namespacesHandler);
-		}
-	}
-
 	// Cache the size...
 	m_attributeSetsSize = m_attributeSets.size();
 
@@ -619,7 +635,7 @@ Stylesheet::addTemplate(
 
 	if (m_isWrapperless == true)
 	{
-		if (m_wrapperlessTemplate != 0)
+		if (m_firstTemplate != 0)
 		{
 			constructionContext.error(
 				"The stylesheet already has a wrapperless template",
@@ -628,7 +644,7 @@ Stylesheet::addTemplate(
 		}
 		else
 		{
-			m_wrapperlessTemplate = theTemplate;
+			m_firstTemplate = theTemplate;
 		}
 	}
 	else if(0 == m_firstTemplate)
@@ -995,7 +1011,7 @@ Stylesheet::findTemplate(
 
 	if(m_isWrapperless == true)
 	{
-		return m_wrapperlessTemplate;
+		return m_firstTemplate;
 	}
 	else if (onlyUseImports == true)
 	{
@@ -1243,12 +1259,15 @@ Stylesheet::findTemplate(
 
 
 void
-Stylesheet::addExtensionNamespace(
+Stylesheet::processExtensionNamespace(
 			StylesheetConstructionContext&	theConstructionContext,
-			const XalanDOMString&			uri,
-			ExtensionNSHandler*				nsh)
+			const XalanDOMString&			uri)
 {
-	m_extensionNamespaces.insert(ExtensionNamespacesMapType::value_type(uri, nsh));
+	XalanAutoPtr<ExtensionNSHandler>	theGuard(new ExtensionNSHandler(uri));
+
+	m_extensionNamespaces.insert(ExtensionNamespacesMapType::value_type(uri, theGuard.get()));
+
+	theGuard.release();
 
 	m_namespacesHandler.addExtensionNamespaceURI(theConstructionContext, uri);
 }
@@ -1391,6 +1410,29 @@ Stylesheet::processNSAliasElement(
 				*stylesheetNamespace,
 				*resultNamespace);
 	}
+}
+
+
+
+
+void
+Stylesheet::processDecimalFormatElement(
+			StylesheetConstructionContext&	constructionContext,
+			const AttributeList&			atts,
+			const Locator*					locator)
+{
+	const int	lineNumber = locator != 0 ? locator->getLineNumber() : -1;
+	const int	columnNumber = locator != 0 ? locator->getColumnNumber() : -1;
+
+	m_elemDecimalFormats.reserve(m_elemDecimalFormats.size() + 1);
+
+	m_elemDecimalFormats.push_back(
+					new ElemDecimalFormat(
+							constructionContext,
+							*this,
+							atts,
+							lineNumber,
+							columnNumber));
 }
 
 
@@ -1822,7 +1864,7 @@ Stylesheet::getImplementation() const
 XalanElement*
 Stylesheet::getDocumentElement() const
 {
-	return m_wrapperlessTemplate != 0 ? m_wrapperlessTemplate : m_firstTemplate;
+	return m_firstTemplate;
 }
 
 

@@ -118,28 +118,17 @@ public:
 #endif
 
 
-	const SortElemsVectorType&
-	getSortElems() const
-	{
-		return m_sortElems;
-	}
-
-	SortElemsVectorType&
-	getSortElems()
-	{
-		return m_sortElems;
-	}
-
-	const XPath*
-	getSelectExpression() const
-	{
-		return m_selectPattern;
-	}
-
 	// These methods are inherited from ElemTemplateElement ...
 
 	virtual const XalanDOMString&
 	getElementName() const;
+
+	virtual void
+	processSortElement(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						theStylesheet,
+			const AttributeList&			atts,
+			const Locator*					locator = 0);
 
 	virtual void
 	postConstruction(

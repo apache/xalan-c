@@ -54,61 +54,122 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include "ElemExtensionCall.hpp"
+
+#if !defined(XALANELEMTEMPLATEALLOCATOR_INCLUDE_GUARD_12455133)
+#define XALANELEMTEMPLATEALLOCATOR_INCLUDE_GUARD_12455133
 
 
 
-#include "Constants.hpp"
-#include "Stylesheet.hpp"
-#include "StylesheetConstructionContext.hpp"
-#include "StylesheetExecutionContext.hpp"
+// Base include file.  Must be first.
+#include <XSLT/XSLTDefinitions.hpp>
 
 
 
-ElemExtensionCall::ElemExtensionCall(
+#include <XSLT/ElemTemplate.hpp>
+
+
+
+#include <PlatformSupport/ArenaAllocator.hpp>
+
+
+
+class XALAN_XSLT_EXPORT XalanElemTemplateAllocator
+{
+public:
+
+	typedef ElemTemplate						data_type;
+
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+	typedef ArenaBlock<data_type>				ArenaBlockType;
+	typedef ArenaAllocator<data_type,
+						   ArenaBlockType>		ArenaAllocatorType;
+#else
+	typedef ArenaAllocator<data_type>			ArenaAllocatorType;
+#endif
+
+	typedef ArenaAllocatorType::size_type		size_type;
+
+	/**
+	 * Construct an instance that will allocate blocks of the specified size.
+	 *
+	 * @param theBlockSize The block size.
+	 */
+	XalanElemTemplateAllocator(size_type		theBlockCount);
+
+	~XalanElemTemplateAllocator();
+	
+	/**
+	 * Construct an instance
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 *
+	 * @return A pointer to the new instance.
+	 */
+	data_type*
+	create(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
-			int								columnNumber,
-			ExtensionNSHandler&				ns) :
-	ElemLiteralResult(constructionContext,
-					  stylesheetTree,
-					  name,
-					  atts,
-					  lineNumber,
-					  columnNumber,
-					  StylesheetConstructionContext::ELEMNAME_EXTENSION_CALL),
-	m_qname(constructionContext.createXalanQName(name, getStylesheet().getNamespaces(), getLocator())),
-	m_nsh(ns)
-{
-	assert(m_qname != 0);
-}
+			int								columnNumber);
 
-
-
-void
-ElemExtensionCall::execute(StylesheetExecutionContext&		executionContext) const
-{
-	executionContext.warn(
-		"Xalan C++ does not yet handle extensions!",
-		0,
-		getLocator());
-
-	for (const ElemTemplateElement*	child = getFirstChildElem(); child != 0; child = child->getNextSiblingElem())
+	/**
+	 * Determine if an object is owned by the allocator...
+	 */
+	bool
+	ownsObject(const data_type*		theObject)
 	{
-		if(child->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK)
-		{
-			child->execute(executionContext);
-		}
+		return m_allocator.ownsObject(theObject);
 	}
-}
+
+	/**
+	 * Delete all objects from the allocator.	 
+	 */	
+	void
+	reset()
+	{
+		m_allocator.reset();
+	}
+
+	/**
+	 * Get the number of ArenaBlocks currently allocated.
+	 *
+	 * @return The number of blocks.
+	 */
+	size_type
+	getBlockCount() const
+	{
+		return m_allocator.getBlockCount();
+	}
+
+	/**
+	 * Get size of an ArenaBlock, that is, the number
+	 * of objects in each block.
+	 *
+	 * @return The size of the block
+	 */
+	size_type
+	getBlockSize() const
+	{
+		return m_allocator.getBlockSize();
+	}
+
+private:
+
+	// Not implemented...
+	XalanElemTemplateAllocator(const XalanElemTemplateAllocator&);
+
+	XalanElemTemplateAllocator&
+	operator=(const XalanElemTemplateAllocator&);
+
+	// Data members...
+	ArenaAllocatorType	m_allocator;
+};
 
 
 
-bool
-ElemExtensionCall::elementAvailable(StylesheetExecutionContext&		executionContext) const
-{
-	return executionContext.elementAvailable(m_qname->getNamespace(), m_qname->getLocalPart());
-}
+#endif	// XALANELEMTEMPLATEALLOCATOR_INCLUDE_GUARD_12455133

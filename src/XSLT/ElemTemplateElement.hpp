@@ -127,14 +127,17 @@ public:
 	 * Special constructor used by dummy elements which do not exist in the
 	 * final stylesheet.
 	 * 
-	 * @param constructionContext  The current construction context
 	 * @param stylesheetTree	   owning stylesheet
+	 * @param lineNumber		   line in the XSLT file where the element occurs
+	 * @param columnNumber		   column index in the XSLT file where the
+	 *							   element occurs
 	 * @param xslToken			   an integer representing the type of instance.
 	 */
 	ElemTemplateElement(
-			StylesheetConstructionContext&	constructionContext,
 			Stylesheet& 					stylesheetTree,
-			int 							xslToken);
+			int 							xslToken,
+			int 							lineNumber = -1,
+			int 							columnNumber = -1);
 
 	virtual
 	~ElemTemplateElement();
@@ -346,6 +349,32 @@ public:
 	addToStylesheet(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						theStylesheet);
+
+	/** 
+	 * Called during compilation to process xsl:sort elements in
+	 * the stylesheet.
+	 * 
+	 * @param constructionContext  The current construction context
+	 * @param theStylesheet The owning stylesheet
+	 * @param atts The list of attributes for the sort element
+	 * @param locator A Locator instance for error reporting, if available.
+	 *
+	 * @return nothing
+	 */
+	virtual void
+	processSortElement(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						theStylesheet,
+			const AttributeList&			atts,
+			const Locator*					locator = 0);
+
+	/**
+	 * Sets a flag indicating this is the default template
+	 *
+	 * @param value The value of flag.
+	 */
+	virtual void
+	setDefaultTemplate(bool		value);
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,

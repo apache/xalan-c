@@ -70,6 +70,7 @@
 
 
 class ExtensionNSHandler;
+class XalanQName;
 
 
 
@@ -87,7 +88,6 @@ public:
 	 * @param lineNumber				line number in document
 	 * @param columnNumber			column number in document
 	 * @param ns                  handler for the extension
-	 * @param localPart			   element name's local part
 	 */
 	ElemExtensionCall(
 			StylesheetConstructionContext&	constructionContext,
@@ -96,13 +96,9 @@ public:
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber,
-			ExtensionNSHandler&				ns,
-			const XalanDOMString&			localpart);
+			ExtensionNSHandler&				ns);
 	
 	// These methods are inherited from ElemLiteralResult ...
-
-	virtual const XalanDOMString&
-	getElementName() const;
 
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
@@ -112,11 +108,9 @@ public:
 
 private:
 
-	const XalanDOMString&	m_name;
+	const XalanQName* const		m_qname;
 
-	ExtensionNSHandler&		m_nsh;
-
-	const XalanDOMString&	m_localPart;
+	ExtensionNSHandler&			m_nsh;
 };
 
 

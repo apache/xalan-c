@@ -111,17 +111,14 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<ElemTemplateElement*>		ElemTemplateStackType;
-	typedef vector<ElemTextLiteral*>			ElemTextLiteralStackType;
-	typedef set<ElemTemplateElement*,
-				less<ElemTemplateElement*> >	ElemTemplateSetType;
+	typedef vector<ElemTemplateElement*>		ElemTextLiteralStackType;
 	typedef vector<bool>						BoolStackType;
 	typedef set<XalanQNameByReference,
 				less<XalanQName> >				QNameSetType;
 	typedef vector<QNameSetType>				QNameSetVectorType;
 #else
 	typedef std::vector<ElemTemplateElement*>	ElemTemplateStackType;
-	typedef std::vector<ElemTextLiteral*>		ElemTextLiteralStackType;
-	typedef std::set<ElemTemplateElement*>		ElemTemplateSetType;
+	typedef std::vector<ElemTemplateElement*>	ElemTextLiteralStackType;
 	typedef std::vector<bool>					BoolStackType;
 	typedef std::set<XalanQNameByReference,
 					 std::less<XalanQName> >	QNameSetType;
@@ -603,13 +600,6 @@ private:
 	ElemTemplateStackType	m_elemStack;
 
 	/**
-	 * The set of elements in m_elemStack which have already
-	 * been parented.  This prevents us from deleting them
-	 * twice if an exception is thrown.
-	 */
-	ElemTemplateSetType		m_elemStackParentedElements;
-
-	/**
 	 * Need to keep a stack of found whitespace elements so that 
 	 * whitespace elements next to non-whitespace elements can 
 	 * be merged.  For instance: &lt;out> &lt;![CDATA[test]]> &lt;/out>
@@ -619,7 +609,7 @@ private:
 	/**
 	 * The current template.
 	 */
-	ElemTemplate* m_pTemplate;
+	ElemTemplateElement*	m_pTemplate;
 
 	class LastPoppedHolder
 	{
@@ -766,8 +756,7 @@ private:
 	initWrapperless(
 			const XalanDOMChar*		name,
 			const AttributeList&	atts,
-			int						lineNumber,
-			int						columnNumber);
+			const Locator*			locator);
 
 	const XalanDOMString&
 	getNamespaceFromStack(const XalanDOMChar*	theName) const;
@@ -793,9 +782,7 @@ private:
 
 		ElemTemplateStackType				m_elemStack;
 
-		ElemTemplateSetType					m_elemStackParentedElements;
-
-		ElemTemplate* const					m_pTemplate;
+		ElemTemplateElement* const			m_pTemplate;
 
 		LastPoppedHolder					m_lastPopped;		
 

@@ -79,10 +79,12 @@
 
 
 
+class AttributeList;
 class AVT;
 class AVTPart;
 class DocumentHandler;
 class ElemTemplateElement;
+class ExtensionNSHandler;
 class Locator;
 class PrefixResolver;
 class Stylesheet;
@@ -466,7 +468,7 @@ public:
 	 * @param name a probable xsl:xxx element
 	 * @return The enum value for that token, or ELEMNAME_UNDEFINED
 	 */
-	virtual int
+	virtual eElementToken
 	getElementToken(const XalanDOMString&	name) const = 0;
 
 	/**
@@ -631,6 +633,94 @@ public:
 			const NamespacesStackType&	namespaces,
 			const Locator*				locator = 0,
 			bool						fUseDefault = false) = 0;
+
+	/**
+	 * Create a stylesheet element for the provided type.   The
+	 * instance owns the memory and will delete the element when
+	 * it goes out of scope and the containing stylesheet is
+	 * destroyed.
+	 *
+	 * @param token The enum value of the element to create.
+	 * @param stylesheetTree The stylesheet containing the element
+	 * @param atts The list of attributes for the element
+	 * @param locator The Locator instance for error reporting.  May be 0.
+	 *
+	 * @return A pointer to the new instance.
+	 */
+	virtual ElemTemplateElement*
+	createElement(
+			int						token,
+			Stylesheet&				stylesheetTree,
+			const AttributeList&	atts,
+			const Locator*			locator = 0) = 0;
+
+	/**
+	 * Create a literal result element. The instance owns the
+	 * memory and will delete the element when it goes out of
+	 * scope and the containing stylesheet is destroyed.
+	 *
+	 * @param stylesheetTree The stylesheet containing the element
+	 * @param name The name of the element
+	 * @param atts The list of attributes for the element
+	 * @param locator The Locator instance for error reporting.  May be 0.
+	 *
+	 * @return A pointer to the new instance.
+	 */
+	virtual ElemTemplateElement*
+	createElement(
+			Stylesheet&				stylesheetTree,
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			const Locator*			locator = 0) = 0;
+
+	/**
+	 * Create a an element for literal text. The instance owns the
+	 * memory and will delete the element when it goes out of
+	 * scope and the containing stylesheet is destroyed.
+	 *
+	 * @param stylesheetTree The stylesheet containing the element
+	 * @param chars The pointer to character string for element
+	 * @param length length of the chars parameter.
+	 * @param isCData true if a CDATA element
+	 * @param preserveSpace true is space should be preserved
+	 * @param disableOutputEscaping true if output escaping should be disabled
+	 * @param locator The Locator instance for error reporting.  May be 0.
+	 *
+	 * @return A pointer to the new instance.
+	 */
+	virtual ElemTemplateElement*
+	createElement(
+			Stylesheet&					stylesheetTree,
+            const XalanDOMChar*			chars,
+			XalanDOMString::size_type	length,
+            bool						isCData,
+			bool						preserveSpace,
+            bool						disableOutputEscaping,
+			const Locator*				locator = 0) = 0;
+
+	/**
+	 * Create an element to handle an extension element.   The
+	 * instance owns the memory and will delete the element when
+	 * it goes out of scope and the containing stylesheet is
+	 * destroyed.
+	 *
+	 * @param stylesheetTree The stylesheet containing the element
+	 * @param name The name of the element
+	 * @param atts The list of attributes for the element
+	 * @param handler The handler for elements in the extension namespace
+	 * @param locator The Locator instance for error reporting.  May be 0.
+	 *
+	 * @return A pointer to the new instance.
+	 */
+	virtual ElemTemplateElement*
+	createElement(
+			Stylesheet&				stylesheetTree,
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			ExtensionNSHandler&		handler,
+			const Locator*			locator = 0) = 0;
+
+	// These are inherited from XPathConstructionContext...
 
 	virtual void
 	error(

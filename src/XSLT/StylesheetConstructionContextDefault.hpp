@@ -107,6 +107,11 @@
 #include <XSLT/XalanAVTPartSimpleAllocator.hpp>
 #include <XSLT/AVTPartXPath.hpp>
 #include <XSLT/XalanAVTPartXPathAllocator.hpp>
+#include <XSLT/XalanElemLiteralResultAllocator.hpp>
+#include <XSLT/XalanElemTemplateAllocator.hpp>
+#include <XSLT/XalanElemTextLiteralAllocator.hpp>
+#include <XSLT/XalanElemValueOfAllocator.hpp>
+#include <XSLT/XalanElemVariableAllocator.hpp>
 
 
 
@@ -138,7 +143,12 @@ public:
 			eDefaultAVTPartSimpleBlockSize = 128,
 			eDefaultAVTPartXPathBlockSize = 128,
 			eDefaultXalanQNameByValueBlockSize = 32,
-			eDefaultPointerVectorBlockSize = 512 };
+			eDefaultPointerVectorBlockSize = 512,
+			eDefaultElemLiteralResultBlockSize = 20,
+			eDefaultElemTemplateBlockSize = 10,
+			eDefaultElemTextLiteralBlockSize = 20,
+			eDefaultElemValueOfBlockSize = 10,
+			eDefaultElemVariableBlockSize = 10 };
 
 	/*
 	 * Construct an instance.  If the stylesheet(s) constructed is/are meant to be reused (a.k.a. "compiled"),
@@ -347,7 +357,7 @@ public:
 			const Stylesheet&		theStylesheet,
 			const Locator*			theLocator = 0);
 
-	virtual int
+	virtual eElementToken
 	getElementToken(const XalanDOMString&	name) const;
 
 	virtual double
@@ -423,13 +433,47 @@ public:
 			const Locator*				locator = 0,
 			bool						fUseDefault = false);
 
-	static int
+	virtual ElemTemplateElement*
+	createElement(
+			int						token,
+			Stylesheet&				stylesheetTree,
+			const AttributeList&	atts,
+			const Locator*			locator = 0);
+
+	virtual ElemTemplateElement*
+	createElement(
+			Stylesheet&				stylesheetTree,
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			const Locator*			locator = 0);
+
+	virtual ElemTemplateElement*
+	createElement(
+			Stylesheet&					stylesheetTree,
+            const XalanDOMChar*			chars,
+			XalanDOMString::size_type	length,
+            bool						isCData,
+			bool						preserveSpace,
+            bool						disableOutputEscaping,
+			const Locator*				locator = 0);
+
+	virtual ElemTemplateElement*
+	createElement(
+			Stylesheet&				stylesheetTree,
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			ExtensionNSHandler&		handler,
+			const Locator*			locator = 0);
+
+	static eElementToken
 	getElementNameToken(const XalanDOMString&	name);
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<StylesheetRoot*>			StylesheetVectorType;
+	typedef vector<ElemTemplateElement*>	ElemTemplateElementVectorType;
 #else
-	typedef std::vector<StylesheetRoot*>	StylesheetVectorType;
+	typedef std::vector<StylesheetRoot*>		StylesheetVectorType;
+	typedef std::vector<ElemTemplateElement*>	ElemTemplateElementVectorType;
 #endif
 
 private:
@@ -502,6 +546,18 @@ private:
 	const XalanQNameByReference				m_useAttributeSetsQName;
 
 	PointerVectorAllocatorType				m_pointerVectorAllocator;
+
+	ElemTemplateElementVectorType			m_allocatedElements;
+
+	XalanElemLiteralResultAllocator			m_elemLiteralResultAllocator;
+
+	XalanElemTemplateAllocator				m_elemTemplateAllocator;
+
+	XalanElemTextLiteralAllocator			m_elemTextLiteralAllocator;
+
+	XalanElemValueOfAllocator				m_elemValueOfAllocator;
+
+	XalanElemVariableAllocator				m_elemVariableAllocator;
 
 	static const XalanQNameByReference	s_spaceAttrQName;
 

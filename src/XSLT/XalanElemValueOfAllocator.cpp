@@ -54,61 +54,45 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include "ElemExtensionCall.hpp"
+
+// Class header file.
+#include "XalanElemValueOfAllocator.hpp"
 
 
 
-#include "Constants.hpp"
-#include "Stylesheet.hpp"
-#include "StylesheetConstructionContext.hpp"
-#include "StylesheetExecutionContext.hpp"
+XalanElemValueOfAllocator::XalanElemValueOfAllocator(size_type	theBlockCount) :
+	m_allocator(theBlockCount)
+{
+}
 
 
 
-ElemExtensionCall::ElemExtensionCall(
+XalanElemValueOfAllocator::~XalanElemValueOfAllocator()
+{
+}
+
+
+
+XalanElemValueOfAllocator::data_type*
+XalanElemValueOfAllocator::create(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
-			int								columnNumber,
-			ExtensionNSHandler&				ns) :
-	ElemLiteralResult(constructionContext,
-					  stylesheetTree,
-					  name,
-					  atts,
-					  lineNumber,
-					  columnNumber,
-					  StylesheetConstructionContext::ELEMNAME_EXTENSION_CALL),
-	m_qname(constructionContext.createXalanQName(name, getStylesheet().getNamespaces(), getLocator())),
-	m_nsh(ns)
+			int								columnNumber)
 {
-	assert(m_qname != 0);
-}
+	data_type* const	theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
 
+	data_type* const	theResult =
+		new(theBlock) data_type(
+				constructionContext,
+				stylesheetTree,
+				atts,
+				lineNumber,
+				columnNumber);
 
+	m_allocator.commitAllocation(theBlock);
 
-void
-ElemExtensionCall::execute(StylesheetExecutionContext&		executionContext) const
-{
-	executionContext.warn(
-		"Xalan C++ does not yet handle extensions!",
-		0,
-		getLocator());
-
-	for (const ElemTemplateElement*	child = getFirstChildElem(); child != 0; child = child->getNextSiblingElem())
-	{
-		if(child->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK)
-		{
-			child->execute(executionContext);
-		}
-	}
-}
-
-
-
-bool
-ElemExtensionCall::elementAvailable(StylesheetExecutionContext&		executionContext) const
-{
-	return executionContext.elementAvailable(m_qname->getNamespace(), m_qname->getLocalPart());
+	return theResult;
 }

@@ -165,6 +165,30 @@ ElemForEach::~ElemForEach()
 
 
 
+void
+ElemForEach::processSortElement(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						theStylesheet,
+			const AttributeList&			atts,
+			const Locator*					locator)
+{
+	const int	lineNumber = locator != 0 ? locator->getLineNumber() : -1;
+	const int	columnNumber = locator != 0 ? locator->getColumnNumber() : -1;
+
+	m_sortElems.reserve(m_sortElems.size() + 1);
+
+	ElemSort* sortElem = new ElemSort(
+		constructionContext,
+		theStylesheet,
+		atts,
+		lineNumber,
+		columnNumber);
+
+	m_sortElems.push_back(sortElem);
+}
+
+
+
 const XalanDOMString&
 ElemForEach::getElementName() const
 {

@@ -85,11 +85,12 @@ ElemApplyTemplates::ElemApplyTemplates(
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
-	ElemForEach(constructionContext,
-				stylesheetTree,
-				lineNumber,
-				columnNumber,
-				StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES),
+	ParentType(
+		constructionContext,
+		stylesheetTree,
+		lineNumber,
+		columnNumber,
+		StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES),
 	m_isDefaultTemplate(false),
 	m_mode(0)
 {
@@ -151,6 +152,16 @@ const XalanDOMString&
 ElemApplyTemplates::getElementName() const
 {
 	return Constants::ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING;
+}
+
+
+
+void
+ElemApplyTemplates::setDefaultTemplate(bool		value)
+{
+	m_isDefaultTemplate = value;
+
+	ParentType::setDefaultTemplate(value);
 }
 
 

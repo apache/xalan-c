@@ -150,16 +150,17 @@ ElemTemplateElement::ElemTemplateElement(
 
 
 ElemTemplateElement::ElemTemplateElement(
-			StylesheetConstructionContext&	/* constructionContext */,
 			Stylesheet&						stylesheetTree,
+			int								lineNumber,
+			int								columnNumber,
 			int								xslToken) :
 	XalanElement(),
 	PrefixResolver(),
 	m_finishedConstruction(false),
 	m_namespacesHandler(),
 	m_stylesheet(stylesheetTree),
-	m_lineNumber(-1),
-	m_columnNumber(-1),
+	m_lineNumber(lineNumber),
+	m_columnNumber(columnNumber),
 	m_defaultSpace(true),
 	m_xslToken(xslToken),
 	m_parentNode(0),
@@ -177,12 +178,6 @@ ElemTemplateElement::ElemTemplateElement(
 
 ElemTemplateElement::~ElemTemplateElement()
 {
-	delete m_nextSibling;
-
-	if (hasDirectTemplate() == false)
-	{
-		delete m_firstChild;
-	}
 }
 
 
@@ -342,6 +337,32 @@ ElemTemplateElement::addToStylesheet(
 		"An illegal call to addToStylesheet() was made during compilation of the stylesheet.",
 		0,
 		this);
+}
+
+
+
+void
+ElemTemplateElement::processSortElement(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						/* theStylesheet */,
+			const AttributeList&			/* atts */,
+			const Locator*					locator)
+{
+	constructionContext.error(
+		"xsl:sort is not allowed at this position in the stylesheet",
+		0,
+		locator);
+}
+
+
+
+void
+ElemTemplateElement::setDefaultTemplate(bool	value)
+{
+	for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
+	{
+		node->setDefaultTemplate(value);
+	}
 }
 
 
@@ -1116,7 +1137,7 @@ ElemTemplateElement::postConstruction(
 
 				m_directTemplate = theCallTemplateChild->getTemplate();
 
-				delete theCallTemplateChild;
+//				delete theCallTemplateChild;
 			}
 		}
 		else if (canGenerateAttributes() == false &&

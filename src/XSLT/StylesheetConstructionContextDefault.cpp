@@ -86,7 +86,33 @@
 
 
 #include "Constants.hpp"
-#include "ElemTemplateElement.hpp"
+#include "ElemApplyImport.hpp"
+#include "ElemApplyTemplates.hpp"
+#include "ElemAttribute.hpp"
+#include "ElemAttributeSet.hpp"
+#include "ElemCallTemplate.hpp"
+#include "ElemChoose.hpp"
+#include "ElemComment.hpp"
+#include "ElemCopy.hpp"
+#include "ElemCopyOf.hpp"
+#include "ElemDecimalFormat.hpp"
+#include "ElemElement.hpp"
+#include "ElemExtensionCall.hpp"
+#include "ElemFallback.hpp"
+#include "ElemForEach.hpp"
+#include "ElemIf.hpp"
+#include "ElemLiteralResult.hpp"
+#include "ElemMessage.hpp"
+#include "ElemNumber.hpp"
+#include "ElemOtherwise.hpp"
+#include "ElemParam.hpp"
+#include "ElemPI.hpp"
+#include "ElemSort.hpp"
+#include "ElemTemplate.hpp"
+#include "ElemTextLiteral.hpp"
+#include "ElemValueOf.hpp"
+#include "ElemWhen.hpp"
+#include "ElemWithParam.hpp"
 #include "StylesheetRoot.hpp"
 #include "XSLTEngineImpl.hpp"
 #include "XSLTInputSource.hpp"
@@ -117,7 +143,13 @@ StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
 	m_avtPartXPathAllocator(theAVTPartXPathAllocatorBlockSize),
 	m_xalanQNameByValueAllocator(theXalanQNameByValueAllocatorBlockSize),
 	m_useAttributeSetsQName(XSLTEngineImpl::getXSLNameSpaceURL(), Constants::ATTRNAME_USEATTRIBUTESETS),
-	m_pointerVectorAllocator(thePointerVectorAllocatorBlockSize)
+	m_pointerVectorAllocator(thePointerVectorAllocatorBlockSize),
+	m_allocatedElements(),
+	m_elemLiteralResultAllocator(eDefaultElemLiteralResultBlockSize),
+	m_elemTemplateAllocator(eDefaultElemTemplateBlockSize),
+	m_elemTextLiteralAllocator(eDefaultElemTextLiteralBlockSize),
+	m_elemValueOfAllocator(eDefaultElemValueOfBlockSize),
+	m_elemVariableAllocator(eDefaultElemVariableBlockSize)
 {
 }
 
@@ -297,6 +329,13 @@ StylesheetConstructionContextDefault::reset()
 
 	m_stylesheets.clear();
 
+	for_each(
+			m_allocatedElements.begin(),
+			m_allocatedElements.end(),
+			DeleteFunctor<ElemTemplateElement>());
+
+	m_allocatedElements.clear();
+
 	m_xpathFactory.reset();
 
 	m_stringPool.clear();
@@ -312,6 +351,16 @@ StylesheetConstructionContextDefault::reset()
 	m_xalanQNameByValueAllocator.reset();
 
 	m_pointerVectorAllocator.reset();
+
+	m_elemLiteralResultAllocator.reset();
+
+	m_elemTemplateAllocator.reset();
+
+	m_elemTextLiteralAllocator.reset();
+
+	m_elemValueOfAllocator.reset();
+
+	m_elemVariableAllocator.reset();
 }
 
 
@@ -380,6 +429,11 @@ StylesheetConstructionContextDefault::destroy(StylesheetRoot*	theStylesheetRoot)
 		m_stylesheets.erase(i);
 
 		delete theStylesheetRoot;
+	}
+
+	if (m_stylesheets.size() == 0)
+	{
+		reset();
 	}
 }
 
@@ -621,7 +675,397 @@ StylesheetConstructionContextDefault::isValidQName(
 
 
 
-int
+inline XMLSSize_t
+getLineNumber(const Locator*	theLocator)
+{
+	return theLocator == 0 ? -1 : theLocator->getLineNumber();
+}
+
+
+
+inline XMLSSize_t
+getColumnNumber(const Locator*	theLocator)
+{
+	return theLocator == 0 ? -1 : theLocator->getColumnNumber();
+}
+
+
+
+ElemTemplateElement*
+StylesheetConstructionContextDefault::createElement(
+			int						token,
+			Stylesheet&				stylesheetTree,
+			const AttributeList&	atts,
+			const Locator*			locator)
+{
+	const XMLSSize_t	lineNumber = getLineNumber(locator);
+	const XMLSSize_t	columnNumber = getColumnNumber(locator);
+
+	ElemTemplateElement*	theElement = 0;
+
+	switch(token)
+	{
+	case ELEMNAME_APPLY_IMPORTS:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemApplyImport(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_APPLY_TEMPLATES:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemApplyTemplates(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_ATTRIBUTE:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemAttribute(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_ATTRIBUTE_SET:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemAttributeSet(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_CALL_TEMPLATE:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemCallTemplate(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_CHOOSE:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemChoose(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_COMMENT:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemComment(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+	  break;
+
+	case ELEMNAME_COPY:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemCopy(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_COPY_OF:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemCopyOf(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_DECIMAL_FORMAT:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemDecimalFormat(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_ELEMENT:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemElement(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+	  break;
+
+	case ELEMNAME_FALLBACK:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemFallback(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_FOR_EACH:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemForEach(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_IF:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemIf(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_MESSAGE:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemMessage(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_NUMBER:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemNumber(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber,
+			stylesheetTree.getStylesheetRoot().getNextElemNumberID());
+		break;
+
+	case ELEMNAME_OTHERWISE:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemOtherwise(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_PARAM:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemParam(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_PI:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemPI(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+	  break;
+
+	case ELEMNAME_SORT:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemSort(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_TEMPLATE:
+		return m_elemTemplateAllocator.create(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_VALUE_OF:
+		return m_elemValueOfAllocator.create(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_VARIABLE:
+		return m_elemVariableAllocator.create(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_WITH_PARAM:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemWithParam(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	case ELEMNAME_WHEN:
+		m_allocatedElements.push_back(0);
+
+		theElement = new ElemWhen(
+			*this,
+			stylesheetTree,
+			atts,
+			lineNumber,
+			columnNumber);
+		break;
+
+	default:
+		error("Unsupported XSLT element requested", 0, locator);
+		break;
+	};
+
+	assert(theElement != 0 && m_allocatedElements.back() == 0);
+
+	m_allocatedElements.back() = theElement;
+
+	return theElement;
+}
+
+
+
+ElemTemplateElement*
+StylesheetConstructionContextDefault::createElement(
+			Stylesheet&				stylesheetTree,
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			const Locator*			locator)
+{
+	const XMLSSize_t	lineNumber = getLineNumber(locator);
+	const XMLSSize_t	columnNumber = getColumnNumber(locator);
+
+	return m_elemLiteralResultAllocator.create(
+			*this,
+			stylesheetTree,
+			name,
+			atts,
+			lineNumber,
+			columnNumber);
+}
+
+
+
+ElemTemplateElement*
+StylesheetConstructionContextDefault::createElement(
+			Stylesheet&				stylesheetTree,
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			ExtensionNSHandler&		handler,
+			const Locator*			locator)
+{
+	const XMLSSize_t	lineNumber = getLineNumber(locator);
+	const XMLSSize_t	columnNumber = getColumnNumber(locator);
+
+	m_allocatedElements.push_back(0);
+
+	m_allocatedElements.back() = new ElemExtensionCall(
+			*this,
+			stylesheetTree,
+			name,
+			atts,
+			lineNumber,
+			columnNumber,
+			handler);
+
+	return m_allocatedElements.back();
+}
+
+
+
+ElemTemplateElement*
+StylesheetConstructionContextDefault::createElement(
+			Stylesheet&					stylesheetTree,
+            const XalanDOMChar*			chars,
+			XalanDOMString::size_type	length,
+            bool						isCData,
+			bool						preserveSpace,
+            bool						disableOutputEscaping,
+			const Locator*				locator)
+{
+	const XMLSSize_t	lineNumber = getLineNumber(locator);
+	const XMLSSize_t	columnNumber = getColumnNumber(locator);
+
+	return m_elemTextLiteralAllocator.create(
+			*this,
+			stylesheetTree,
+			lineNumber,
+			columnNumber,
+			chars,
+			0,
+			length,
+			isCData,
+			preserveSpace, 
+			disableOutputEscaping);
+}
+
+
+
+StylesheetConstructionContextDefault::eElementToken
 StylesheetConstructionContextDefault::getElementToken(const XalanDOMString&		name) const
 {
 	return getElementNameToken(name);
@@ -629,7 +1073,7 @@ StylesheetConstructionContextDefault::getElementToken(const XalanDOMString&		nam
 
 
 
-int
+StylesheetConstructionContextDefault::eElementToken
 StylesheetConstructionContextDefault::getElementNameToken(const XalanDOMString&		name)
 {
 	// Find the entity, if any...

@@ -88,37 +88,8 @@
 
 
 #include "Constants.hpp"
-#include "ElemApplyImport.hpp"
-#include "ElemApplyTemplates.hpp"
-#include "ElemAttribute.hpp"
-#include "ElemAttributeSet.hpp"
-#include "ElemCallTemplate.hpp"
-#include "ElemChoose.hpp"
-#include "ElemComment.hpp"
-#include "ElemCopy.hpp"
-#include "ElemCopyOf.hpp"
-#include "ElemDecimalFormat.hpp"
-#include "ElemElement.hpp"
-#include "ElemEmpty.hpp"
-#include "ElemExtensionCall.hpp"
-#include "ElemFallback.hpp"
-#include "ElemForEach.hpp"
-#include "ElemIf.hpp"
-#include "ElemLiteralResult.hpp"
-#include "ElemMessage.hpp"
-#include "ElemNumber.hpp"
-#include "ElemOtherwise.hpp"
-#include "ElemParam.hpp"
-#include "ElemPI.hpp"
-#include "ElemSort.hpp"
-#include "ElemTemplate.hpp"
-#include "ElemText.hpp"
+#include "ElemTemplateElement.hpp"
 #include "ElemTextLiteral.hpp"
-#include "ElemUse.hpp"
-#include "ElemValueOf.hpp"
-#include "ElemWhen.hpp"
-#include "ElemWithParam.hpp"
-#include "ExtensionNSHandler.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetRoot.hpp"
@@ -142,7 +113,6 @@ StylesheetHandler::StylesheetHandler(
 	m_elemEmptyAllocator(eElemEmptyAllocatorBlockSize),
 	m_elemTextAllocator(eElemTextBlockSize),
 	m_elemStack(),
-	m_elemStackParentedElements(),
 	m_whiteSpaceElems(),
 	m_pTemplate(0),
 	m_lastPopped(*this),
@@ -164,51 +134,7 @@ StylesheetHandler::StylesheetHandler(
 
 StylesheetHandler::~StylesheetHandler()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
-	// Clean up the element stack vector...
-	ElemTemplateStackType::const_iterator	i = m_elemStack.begin();
-
-	while(i != m_elemStack.end())
-	{
-		// See if the element is in the set of elements that have
-		// already been parented, so we don't try to delete it after
-		// it's parent has already deleted it...
-		const ElemTemplateSetType::iterator		j =
-				m_elemStackParentedElements.find(*i);
-
-		if (j == m_elemStackParentedElements.end())
-		{
-			if ((*i)->getXSLToken() != StylesheetConstructionContext::ELEMNAME_UNDEFINED &&
-				(*i)->getXSLToken() != StylesheetConstructionContext::ELEMNAME_TEXT)
-			{
-				// Not found, so delete it...
-				delete *i;
-			}
-		}
-		else
-		{
-			// Found, so erase it from the set...
-			m_elemStackParentedElements.erase(j);
-		}
-
-		++i;
-	}
-
 	doCleanup();
-
-	// Clean up the whitespace elements.
-	for_each(m_whiteSpaceElems.begin(),
-			 m_whiteSpaceElems.end(),
-			 DeleteFunctor<ElemTextLiteral>());
-
-	// Clean up any template that's left over...
-	if (m_pTemplate != m_stylesheet.getWrapperlessTemplate())
-	{
-		delete m_pTemplate;
-	}
 }
 
 
@@ -358,16 +284,13 @@ StylesheetHandler::startElement(
 		processAccumulatedText();
 
 		// Clean up the whitespace elements.
-		for_each(m_whiteSpaceElems.begin(),
-				 m_whiteSpaceElems.end(),
-				 DeleteFunctor<ElemTextLiteral>());
-
+//		for_each(m_whiteSpaceElems.begin(),
+//				 m_whiteSpaceElems.end(),
+//				 DeleteFunctor<ElemTemplateElement>());
+//
 		m_whiteSpaceElems.clear();
 
 		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
-
-		const XalanLocator::size_type	lineNumber = getLineNumber(locator);
-		const XalanLocator::size_type	columnNumber = getColumnNumber(locator);
 
 		// First push namespaces
 		m_stylesheet.pushNamespaces(atts);
@@ -400,13 +323,8 @@ StylesheetHandler::startElement(
 			if(!isEmpty(m_stylesheet.getXSLTNamespaceURI()))
 				m_stylesheet.setXSLTNamespaceURI(ns);
 
-			if(false == m_foundStylesheet)
-			{
-				m_stylesheet.getStylesheetRoot().initDefaultRule(m_constructionContext);
-				m_stylesheet.setWrapperless(false);
-			}
-
-			const int	xslToken = m_constructionContext.getElementToken(m_elementLocalName);
+			const StylesheetConstructionContext::eElementToken	xslToken =
+				m_constructionContext.getElementToken(m_elementLocalName);
 
 			if(!m_inTemplate)
 			{
@@ -417,65 +335,46 @@ StylesheetHandler::startElement(
 				switch(xslToken)
 				{            
 				case StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES:
-					elem = new ElemApplyTemplates(m_constructionContext,
-												m_stylesheet,
-												atts, lineNumber, columnNumber);
-					break;
-          
+				case StylesheetConstructionContext::ELEMNAME_ATTRIBUTE:
 				case StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE:
-					elem = new ElemCallTemplate(m_constructionContext,
-											  m_stylesheet,
-											  atts, lineNumber, columnNumber);
-					break;
-          
-				case StylesheetConstructionContext::ELEMNAME_WITH_PARAM:
-					elem = new ElemWithParam(m_constructionContext,
-										   m_stylesheet,
-										   atts, lineNumber, columnNumber);
-					break;
-          
+				case StylesheetConstructionContext::ELEMNAME_CHOOSE:
+				case StylesheetConstructionContext::ELEMNAME_COMMENT:
+				case StylesheetConstructionContext::ELEMNAME_COPY:
+				case StylesheetConstructionContext::ELEMNAME_COPY_OF:
+				case StylesheetConstructionContext::ELEMNAME_ELEMENT:
+				case StylesheetConstructionContext::ELEMNAME_FALLBACK:
 				case StylesheetConstructionContext::ELEMNAME_FOR_EACH:
-					elem = new ElemForEach(m_constructionContext,
-										 m_stylesheet,
-										 atts, lineNumber, columnNumber);
+				case StylesheetConstructionContext::ELEMNAME_IF:
+				case StylesheetConstructionContext::ELEMNAME_MESSAGE:
+				case StylesheetConstructionContext::ELEMNAME_NUMBER:
+				case StylesheetConstructionContext::ELEMNAME_VALUE_OF:
+				case StylesheetConstructionContext::ELEMNAME_WITH_PARAM:
+				case StylesheetConstructionContext::ELEMNAME_PARAM:
+				case StylesheetConstructionContext::ELEMNAME_PI:
+					elem = m_constructionContext.createElement(
+												xslToken,
+												m_stylesheet,
+												atts,
+												locator);
+					assert(elem != 0);
 					break;
           
 				case StylesheetConstructionContext::ELEMNAME_SORT:
 					{
 						if (m_elemStack.empty() == true)
 						{
-							error("Misplaced xsl:sort.", locator);
+							error("xsl:sort is not allowed at this position in the stylesheet", locator);
 						}
 
 						ElemTemplateElement* const	theElement =
 								m_elemStack.back();
 						assert(theElement != 0);
 
-						const int	xslToken = theElement->getXSLToken();
-
-						if (xslToken != StylesheetConstructionContext::ELEMNAME_FOR_EACH &&
-							xslToken != StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES)
-						{
-							error("Misplaced xsl:sort.", locator);
-						}
-
-						ElemForEach* foreach =
-#if defined(XALAN_OLD_STYLE_CASTS)
-								(ElemForEach*)theElement;
-#else
-								static_cast<ElemForEach*>(theElement);
-#endif
-
-						ElemSort* sortElem = new ElemSort(m_constructionContext,
-														 m_stylesheet,
-														 atts, lineNumber, columnNumber);
-
-						// Note: deleted in ElemForEach destructor
-						foreach->getSortElems().push_back(sortElem);
-
-						sortElem->setParentNodeElem(foreach);
-
-						m_elemStackParentedElements.insert(foreach);
+						theElement->processSortElement(
+							m_constructionContext,
+							m_stylesheet,
+							atts,
+							locator);
 
 						m_elemStack.push_back(
 							m_elemEmptyAllocator.create(
@@ -496,78 +395,37 @@ StylesheetHandler::startElement(
 								m_elemStack.back();
 						assert(theElement != 0);
 
-						const int	xslToken = theElement->getXSLToken();
+						const int	parentToken =
+							theElement->getXSLToken();
 
-						if (xslToken == StylesheetConstructionContext::ELEMNAME_FOR_EACH)
+						if (parentToken == StylesheetConstructionContext::ELEMNAME_FOR_EACH)
 						{
 							error("xsl:apply-imports is not allowed at this position in the stylesheet", locator);
 						}
 
-						elem = new ElemApplyImport(m_constructionContext,
-												 m_stylesheet,
-												 atts, lineNumber, columnNumber);
+						elem = m_constructionContext.createElement(
+													xslToken,
+													m_stylesheet,
+													atts,
+													locator);
+						assert(elem != 0);
 					}
-					break;
-          
-				case StylesheetConstructionContext::ELEMNAME_VALUE_OF:
-					elem = new ElemValueOf(m_constructionContext,
-										 m_stylesheet,
-										 atts, lineNumber, columnNumber);
-					break;
-
-				case StylesheetConstructionContext::ELEMNAME_NUMBER:
-					elem = new ElemNumber(
-							m_constructionContext,
-							m_stylesheet,
-							atts,
-							lineNumber,
-							columnNumber,
-							m_stylesheet.getStylesheetRoot().getNextElemNumberID());
 					break;
           
 				case StylesheetConstructionContext::ELEMNAME_VARIABLE:
 					{
-						XalanAutoPtr<ElemTemplateElement>	newVar(
-							new ElemVariable(
-									m_constructionContext,
-									m_stylesheet,
-									atts,
-									lineNumber,
-									columnNumber));
+						elem =
+							m_constructionContext.createElement(
+												xslToken,
+												m_stylesheet,
+												atts,
+												locator);
+						assert(elem != 0);
 
-						checkForOrAddVariableName(newVar->getNameAttribute(), locator);
-
-						elem = newVar.release();
+						checkForOrAddVariableName(elem->getNameAttribute(), locator);
 					}
 					break;
 
-				case StylesheetConstructionContext::ELEMNAME_PARAM:
-					elem = new ElemParam(m_constructionContext,
-									   m_stylesheet,
-									   atts, lineNumber, columnNumber);
-					break;
-          
-				case StylesheetConstructionContext::ELEMNAME_IF:
-					elem = new ElemIf(m_constructionContext,
-									m_stylesheet,
-									atts, lineNumber, columnNumber);
-					break;
-
-				case StylesheetConstructionContext::ELEMNAME_FALLBACK:
-					elem = new ElemFallback(
-							m_constructionContext,
-							m_stylesheet,
-							atts,
-							lineNumber,
-							columnNumber);
-					break;
-
-				case StylesheetConstructionContext::ELEMNAME_CHOOSE:
-					elem = new ElemChoose(m_constructionContext,
-										m_stylesheet,
-										atts, lineNumber, columnNumber);
-					break;
-          
 				case StylesheetConstructionContext::ELEMNAME_WHEN:
 					{
 						ElemTemplateElement* const	parent = m_elemStack.back();
@@ -584,9 +442,12 @@ StylesheetHandler::startElement(
 								StylesheetConstructionContext::ELEMNAME_WHEN == lastChild->getXSLToken() ||
 								lastChild->isWhitespace() == true)
 							{
-								elem = new ElemWhen(m_constructionContext,
-											m_stylesheet,
-											atts, lineNumber, columnNumber);
+								elem = m_constructionContext.createElement(
+															xslToken,
+															m_stylesheet,
+															atts,
+															locator);
+								assert(elem != 0);
 							}
 							else
 							{
@@ -612,9 +473,12 @@ StylesheetHandler::startElement(
 								StylesheetConstructionContext::ELEMNAME_WHEN == lastChild->getXSLToken() ||
 								lastChild->isWhitespace() == true)
 							{
-								elem = new ElemOtherwise(m_constructionContext,
-												 m_stylesheet,
-												 atts, lineNumber, columnNumber);
+								elem = m_constructionContext.createElement(
+															xslToken,
+															m_stylesheet,
+															atts,
+															locator);
+								assert(elem != 0);
 							}
 							else
 							{
@@ -624,59 +488,16 @@ StylesheetHandler::startElement(
 					}
 					break;
 
-				case StylesheetConstructionContext::ELEMNAME_COPY_OF:
-					elem = new ElemCopyOf(m_constructionContext,
-										m_stylesheet,
-										atts, lineNumber, columnNumber);
-					break;
-
-				case StylesheetConstructionContext::ELEMNAME_COPY:
-					elem = new ElemCopy(m_constructionContext,
-									  m_stylesheet,
-									  atts, lineNumber, columnNumber);
-					break;
-
 				case StylesheetConstructionContext::ELEMNAME_TEXT:
 					m_elemStack.push_back(
 						m_elemTextAllocator.create(
 							m_constructionContext,
 							m_stylesheet,
 							atts,
-							lineNumber,
-							columnNumber));
+							getLineNumber(locator),
+							getColumnNumber(locator)));
 					break;
 
-				case StylesheetConstructionContext::ELEMNAME_ATTRIBUTE:
-					elem = new ElemAttribute(m_constructionContext,
-										   m_stylesheet,
-										   atts, lineNumber, columnNumber);
-					break;
-
-				case StylesheetConstructionContext::ELEMNAME_ELEMENT:
-					elem = new ElemElement(m_constructionContext,
-										 m_stylesheet,
-										 atts, lineNumber, columnNumber);
-				  break;
-          
-				case StylesheetConstructionContext::ELEMNAME_PI:
-					elem = new ElemPI(m_constructionContext,
-									m_stylesheet,
-									atts, lineNumber, columnNumber);
-				  break;
-
-				case StylesheetConstructionContext::ELEMNAME_COMMENT:
-					elem = new ElemComment(m_constructionContext,
-										 m_stylesheet,
-										 atts, lineNumber, columnNumber);
-				  break;
-          
-				case StylesheetConstructionContext::ELEMNAME_MESSAGE:
-					elem = new ElemMessage(m_constructionContext,
-										 m_stylesheet,
-										 atts, lineNumber, columnNumber);
-
-					break;
-          
 				case StylesheetConstructionContext::ELEMNAME_TEMPLATE:
 				case StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET:
 				case StylesheetConstructionContext::ELEMNAME_EXTENSION:
@@ -720,7 +541,7 @@ StylesheetHandler::startElement(
 				// If it's a top level 
 				if (!m_foundStylesheet)
 				{
-					elem = initWrapperless(name, atts, lineNumber, columnNumber);
+					elem = initWrapperless(name, atts, locator);
 				}
 				else if (length(ns) == 0 && m_elemStack.size() == 1)
 				{
@@ -739,31 +560,29 @@ StylesheetHandler::startElement(
 				// is this an extension element call?
 				ExtensionNSHandler*		nsh = 0;
 
-				if (!isEmpty(ns) && 
-					((nsh = m_stylesheet.lookupExtensionNSHandler(ns)) != 0)) 
+				if (!isEmpty(ns) &&
+					((nsh = m_stylesheet.lookupExtensionNSHandler(ns)) != 0))
 				{
-					elem = new ElemExtensionCall (m_constructionContext,
-											m_stylesheet,
-											name,
-											atts,
-											lineNumber,
-											columnNumber,
-											*nsh,
-											m_elementLocalName);
-
+					elem = m_constructionContext.createElement(
+												m_stylesheet,
+												name,
+												atts,
+												*nsh,
+												locator);
 					assert(m_inExtensionElementStack.empty() == false);
 
 					m_inExtensionElementStack.back() = true;
 				}
 				else 
 				{
-					elem = new ElemLiteralResult(m_constructionContext,
-										   m_stylesheet,
-										   name,
-										   atts,
-										   lineNumber,
-										   columnNumber);
+					elem = m_constructionContext.createElement(
+												m_stylesheet,
+												name,
+												atts,
+												locator);
 				}
+
+				assert(elem != 0);
 			}
 		}
 
@@ -771,14 +590,7 @@ StylesheetHandler::startElement(
 		{
 			if(!m_elemStack.empty())
 			{
-				// Guard against an exception in appendChildElem()...
-				XalanAutoPtr<ElemTemplateElement>	theGuard(elem);
-
 				appendChildElementToParent(elem, locator);
-
-				// The element is parented and will now be
-				// deleted when the parent is delete...
-				theGuard.release();
 			}
 
 			m_elemStack.push_back(elem);
@@ -802,13 +614,6 @@ StylesheetHandler::startElement(
 		if(origStackSize == m_elemStack.size())
 		{
 			m_elemStack.push_back(m_elemEmptyAllocator.create(m_constructionContext, m_stylesheet));
-
-			if (elem != 0)
-			{
-				delete elem;
-
-				m_elemStackParentedElements.erase(elem);
-			}
 		}
 	} // end try
 	catch(...)
@@ -825,32 +630,19 @@ ElemTemplateElement*
 StylesheetHandler::initWrapperless(
 			const XalanDOMChar*		name,
 			const AttributeList&	atts,
-			int						lineNumber,
-			int						columnNumber)
+			const Locator*			locator)
 {
-	m_stylesheet.getStylesheetRoot().initDefaultRule(m_constructionContext);
-
-	AttributeListImpl	templateAttrs;
-
-	templateAttrs.addAttribute(c_wstr(Constants::ATTRNAME_NAME),
-							   c_wstr(Constants::ATTRTYPE_CDATA),
-							   c_wstr(Constants::ATTRVAL_SIMPLE));
-
 	assert(m_pTemplate == 0);
 
-	m_pTemplate = new ElemTemplate(m_constructionContext,
-								   m_stylesheet,
-								   templateAttrs,
-								   lineNumber,
-								   columnNumber);
+	m_pTemplate = m_stylesheet.initWrapperless(m_constructionContext, locator);
+	assert(m_pTemplate != 0);
 
 	ElemTemplateElement* const	pElem =
-				new ElemLiteralResult(m_constructionContext,
-									  m_stylesheet,
-									  name,
-									  atts,
-									  lineNumber,
-									  columnNumber);
+		m_constructionContext.createElement(
+			m_stylesheet,
+			name,
+			atts,
+			locator);
 
 	m_pTemplate->appendChildElem(pElem);
 	m_inTemplate = true;
@@ -858,9 +650,6 @@ StylesheetHandler::initWrapperless(
 	m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
 
 	m_foundStylesheet = true;
-	m_stylesheet.setWrapperless(true);
-
-	m_pTemplate->addToStylesheet(m_constructionContext, m_stylesheet);
 
 	// This attempts to optimize for a literal result element with
 	// the name HTML, so we don't have to switch on-the-fly.
@@ -930,23 +719,19 @@ StylesheetHandler::processTopLevelElement(
 		m_foundNotImport = true;
 	}
 
-	const int	lineNumber = getLineNumber(locator);
-	const int	columnNumber = getColumnNumber(locator);
-
 	switch(xslToken)
 	{
 	case StylesheetConstructionContext::ELEMNAME_TEMPLATE:
 		assert(m_pTemplate == 0);
 
-		m_pTemplate = new ElemTemplate(
-				m_constructionContext,
-				m_stylesheet,
-				atts,
-				lineNumber,
-				columnNumber);
+		m_pTemplate =
+			m_constructionContext.createElement(
+									StylesheetConstructionContext::ELEMNAME_TEMPLATE,
+									  m_stylesheet,
+									  atts,
+									  locator);
 	
 		m_elemStack.push_back(m_pTemplate);
-		m_elemStackParentedElements.insert(m_pTemplate);
 		m_inTemplate = true;
 		m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
 		break;
@@ -954,17 +739,12 @@ StylesheetHandler::processTopLevelElement(
 	case StylesheetConstructionContext::ELEMNAME_VARIABLE:
 	case StylesheetConstructionContext::ELEMNAME_PARAM:
 		{
-			ElemTemplateElement* const	elem = (StylesheetConstructionContext::ELEMNAME_PARAM == xslToken) 
-									   ? new ElemParam(m_constructionContext,
-													   m_stylesheet,
-													   atts, 
-													   lineNumber, columnNumber)
-										 : new ElemVariable(m_constructionContext,
-															m_stylesheet,
-															atts, 
-															lineNumber, columnNumber);
-
-			XalanAutoPtr<ElemTemplateElement>	newVar(elem);
+			ElemTemplateElement* const	elem = m_constructionContext.createElement(
+												xslToken,
+												m_stylesheet,
+												atts,
+												locator);
+			assert(elem != 0);
 
 			checkForOrAddVariableName(elem->getNameAttribute(), locator);
 
@@ -972,9 +752,6 @@ StylesheetHandler::processTopLevelElement(
 			m_inTemplate = true; // fake it out
 			m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
 			elem->addToStylesheet(m_constructionContext, m_stylesheet);
-			m_elemStackParentedElements.insert(elem);
-
-			newVar.release();
 		}
 	break;
 
@@ -998,13 +775,12 @@ StylesheetHandler::processTopLevelElement(
 			m_inTemplate = true; // fake it out
 			m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
 
-			ElemAttributeSet* attrSet = new ElemAttributeSet(m_constructionContext,
-															   m_stylesheet,
-															   atts,
-															   lineNumber,
-															   columnNumber);
-		
-			m_elemStack.push_back(attrSet);
+			m_elemStack.push_back(
+				m_constructionContext.createElement(
+					xslToken,
+					m_stylesheet,
+					atts,
+					locator));
 		}
 		break;
 
@@ -1022,12 +798,9 @@ StylesheetHandler::processTopLevelElement(
 
 	case StylesheetConstructionContext::ELEMNAME_DECIMAL_FORMAT:
 		m_stylesheet.processDecimalFormatElement(
-					new ElemDecimalFormat(
 							m_constructionContext,
-							m_stylesheet,
 							atts,
-							lineNumber,
-							columnNumber));
+							locator);
 		break;
 
 	case StylesheetConstructionContext::ELEMNAME_NAMESPACE_ALIAS:
@@ -1082,7 +855,6 @@ StylesheetHandler::processStylesheet(
 			bool&					fPreserveSpace,
 			bool&					fSpaceAttrProcessed)
 {
-	m_stylesheet.setWrapperless(false);
 	m_foundStylesheet = true;
 
 	const unsigned int	nAttrs = atts.getLength();
@@ -1112,9 +884,7 @@ StylesheetHandler::processStylesheet(
 
 				const XalanDOMString&	extns = getNamespaceForPrefixFromStack(prefix);
 
-				ExtensionNSHandler* const	nsh = new ExtensionNSHandler(extns);
-
-				m_stylesheet.addExtensionNamespace(m_constructionContext, extns, nsh);
+				m_stylesheet.processExtensionNamespace(m_constructionContext, extns);
 			}
 		}
  		else if(equals(aname, Constants::ATTRNAME_ID))
@@ -1323,8 +1093,6 @@ StylesheetHandler::appendChildElementToParent(
 				locator);
 		}
 	}
-
-	m_elemStackParentedElements.insert(elem);
 }
 
 
@@ -1337,14 +1105,6 @@ StylesheetHandler::doCleanup()
 		m_constructionContext.popLocatorStack();
 
 		--m_locatorsPushed;
-	}
-
-	// Pop anything that's not an empty element...
-	while(m_elemStack.empty() == false &&
-		  m_elemStack.back()->getXSLToken() != StylesheetConstructionContext::ELEMNAME_UNDEFINED)
-	{
-		m_elemStackParentedElements.erase(m_elemStack.back());
-		m_elemStack.pop_back();
 	}
 
 	m_lastPopped = 0;
@@ -1524,9 +1284,9 @@ StylesheetHandler::endElement(const XMLCh* const /* name */)
 	processAccumulatedText();
 
 	// Clean up the whitespace elements.
-	for_each(m_whiteSpaceElems.begin(),
-			 m_whiteSpaceElems.end(),
-			 DeleteFunctor<ElemTextLiteral>());
+//	for_each(m_whiteSpaceElems.begin(),
+//			 m_whiteSpaceElems.end(),
+//			 DeleteFunctor<ElemTemplateElement>());
 
 	m_whiteSpaceElems.clear();
 
@@ -1539,7 +1299,6 @@ StylesheetHandler::endElement(const XMLCh* const /* name */)
 	assert(m_lastPopped != 0);
 
 	m_elemStack.pop_back();
-	m_elemStackParentedElements.erase(m_lastPopped.get());
 	m_lastPopped->finishedConstruction();
 
 	const int tok = m_lastPopped->getXSLToken();
@@ -1663,7 +1422,6 @@ StylesheetHandler::charactersRaw(
 			const XMLCh* const	/* chars */,
 			const unsigned int	/* length */)
 {
-  // No action for the moment.
 }
 
 
@@ -1697,19 +1455,16 @@ StylesheetHandler::processText(
 
 		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
 
-		const XalanLocator::size_type	lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
-		const XalanLocator::size_type	columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
-
-		XalanAutoPtr<ElemTextLiteral>	elem(new ElemTextLiteral(m_constructionContext,
-			m_stylesheet,
-			lineNumber,
-			columnNumber,
-			chars,
-			0,
-			length,
-			true,
-			preserveSpace, 
-			disableOutputEscaping));
+		ElemTemplateElement* const	elem =
+			m_constructionContext.createElement(
+				m_stylesheet,
+				chars,
+				length,
+				true,
+				preserveSpace, 
+				disableOutputEscaping,
+				locator);
+		assert(elem != 0);
 
 		const bool	isWhite = elem->isWhitespace();
 
@@ -1728,13 +1483,11 @@ StylesheetHandler::processText(
 
 			appendChildElementToParent(
 				parent,
-				elem.get());
-
-			elem.release();
+				elem);
 		}
 		else if(isWhite)
 		{
-			bool						shouldPush = true;
+			bool	shouldPush = true;
 
 			ElemTemplateElement* const	last = parent->getLastChildElem();
 
@@ -1751,9 +1504,7 @@ StylesheetHandler::processText(
 				{
 					appendChildElementToParent(
 						parent,
-						elem.get());
-
-					elem.release();
+						elem);
 
 					shouldPush = false;
 				}
@@ -1761,9 +1512,7 @@ StylesheetHandler::processText(
 
 			if(shouldPush)
 			{
-				m_whiteSpaceElems.push_back(elem.get());
-
-				elem.release();
+				m_whiteSpaceElems.push_back(elem);
 			}
 		}
 	}
@@ -1947,7 +1696,6 @@ StylesheetHandler::illegalAttributeError(
 StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	theHandler) :
 	m_handler(theHandler),
 	m_elemStack(theHandler.m_elemStack),
-	m_elemStackParentedElements(theHandler.m_elemStackParentedElements),
 	m_pTemplate(theHandler.m_pTemplate),
 	m_lastPopped(theHandler),
 	m_inTemplate(theHandler.m_inTemplate),
@@ -1995,7 +1743,6 @@ StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 
 	clear(m_handler.m_accumulateText);
 	m_handler.m_elemStack = m_elemStack;
-	m_handler.m_elemStackParentedElements = m_elemStackParentedElements;
 	m_handler.m_pTemplate = m_pTemplate;
 
 	m_lastPopped.swap(m_handler.m_lastPopped);

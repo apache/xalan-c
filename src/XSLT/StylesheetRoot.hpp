@@ -263,7 +263,7 @@ public:
 	 *
 	 * @return pointer to template rule for text
 	 */
-	ElemTemplate* 
+	ElemTemplateElement*
 	getDefaultTextRule() const
 	{
 		return m_defaultTextRule;
@@ -274,7 +274,7 @@ public:
 	 *
 	 * @return pointer to default template rule
 	 */
-	ElemTemplate* 
+	ElemTemplateElement*
 	getDefaultRule() const
 	{
 		return m_defaultRule;
@@ -285,7 +285,7 @@ public:
 	 *
 	 * @return pointer to default root template rule
 	 */
-	ElemTemplate* 
+	ElemTemplateElement*
 	getDefaultRootRule() const
 	{
 		return m_defaultRootRule;
@@ -303,65 +303,6 @@ public:
 			const XalanDOMChar*				name, 
 			const AttributeList&			atts,
 			StylesheetConstructionContext&	constructionContext);
-
-	/**
-	 * Create the default rule if needed.
-	 *
-	 * @param constructionContext context for construction of object
-	 */
-	void 
-	initDefaultRule(StylesheetConstructionContext&	constructionContext);
-
-	/**
-	 * The version tells the version of XML to be used for outputting the result tree,
-	 * as specified in xsl:output.
-	 */
-	XalanDOMString	m_version;
-
-	/**
-	 * indent-result is by default no, which means an XSL processor must not
-	 * change the whitespace on output.
-	 */
-	bool			m_indentResult;
-
-	/**
-	 * The encoding attribute specifies the preferred encoding to use 
-	 * for outputting the result tree. 
-	 */
-	XalanDOMString	m_encoding;
-
-	/**
-	 * The media-type attribute is applicable for the xml output method. 
-	 * The default value for the media-type attribute is text/xml.
-	 */
-	XalanDOMString	m_mediatype;
-
-	/**
-	 * If the doctype-system-id attribute is specified, the xml output method should 
-	 * output a document type declaration immediately before the first element. 
-	 * The name following <!DOCTYPE should be the name of the first element. 
-	 */
-	XalanDOMString	m_doctypeSystem;
-
-	/**
-	 * If doctype-public-id attribute is also specified, then the xml output 
-	 * method should output PUBLIC followed by the public identifier and then 
-	 * the system identifier; otherwise, it should output SYSTEM followed by 
-	 * the system identifier. The internal subset should be empty. The 
-	 * doctype-public-id attribute should be ignored unless the doctype-system-id 
-	 * attribute is specified.
-	 */
-	XalanDOMString	m_doctypePublic;
-
-	/**
-	 * Tells whether or not to output an XML declaration.
-	 */
-	bool			m_omitxmlDecl;
-
-	/**
-	 * Tells what the xmldecl should specify for the standalone value.
-     */
-	XalanDOMString	m_standalone;
 
 	/**
 	 * Retrieve the stack of imported stylesheets.
@@ -464,6 +405,65 @@ public:
 private:
 
 	/**
+	 * Create the default rule if needed.
+	 *
+	 * @param constructionContext context for construction of object
+	 */
+	void 
+	initDefaultRule(StylesheetConstructionContext&	constructionContext);
+
+	/**
+	 * The version tells the version of XML to be used for outputting the result tree,
+	 * as specified in xsl:output.
+	 */
+	XalanDOMString	m_version;
+
+	/**
+	 * indent-result is by default no, which means an XSL processor must not
+	 * change the whitespace on output.
+	 */
+	bool			m_indentResult;
+
+	/**
+	 * The encoding attribute specifies the preferred encoding to use 
+	 * for outputting the result tree. 
+	 */
+	XalanDOMString	m_encoding;
+
+	/**
+	 * The media-type attribute is applicable for the xml output method. 
+	 * The default value for the media-type attribute is text/xml.
+	 */
+	XalanDOMString	m_mediatype;
+
+	/**
+	 * If the doctype-system-id attribute is specified, the xml output method should 
+	 * output a document type declaration immediately before the first element. 
+	 * The name following <!DOCTYPE should be the name of the first element. 
+	 */
+	XalanDOMString	m_doctypeSystem;
+
+	/**
+	 * If doctype-public-id attribute is also specified, then the xml output 
+	 * method should output PUBLIC followed by the public identifier and then 
+	 * the system identifier; otherwise, it should output SYSTEM followed by 
+	 * the system identifier. The internal subset should be empty. The 
+	 * doctype-public-id attribute should be ignored unless the doctype-system-id 
+	 * attribute is specified.
+	 */
+	XalanDOMString	m_doctypePublic;
+
+	/**
+	 * Tells whether or not to output an XML declaration.
+	 */
+	bool			m_omitxmlDecl;
+
+	/**
+	 * Tells what the xmldecl should specify for the standalone value.
+     */
+	XalanDOMString	m_standalone;
+
+	/**
 	 * The URL that belongs to the result namespace.
 	 * @serial
 	 */
@@ -493,19 +493,19 @@ private:
 	 * The default template to use for text nodes if we don't find 
 	 * anything else.  This is initialized in initDefaultRule().
 	 */
-	ElemTemplate*				m_defaultTextRule;
+	ElemTemplateElement*		m_defaultTextRule;
 
 	/**
 	 * The default template to use if we don't find anything
 	 * else.  This is initialized in initDefaultRule().
 	 */
-	ElemTemplate*				m_defaultRule;
+	ElemTemplateElement*		m_defaultRule;
 
 	/**
 	 * The default template to use for the root if we don't find 
 	 * anything else.  This is initialized in initDefaultRule().
 	 */
-	ElemTemplate*				m_defaultRootRule;
+	ElemTemplateElement*		m_defaultRootRule;
 
 	/**
 	 * This is set to true if an xsl:key directive is found.

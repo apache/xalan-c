@@ -83,11 +83,11 @@ ElemTextLiteral::ElemTextLiteral(
             bool							isCData,
 			bool							preserveSpace,
             bool							disableOutputEscaping) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT),
+	ElemTemplateElement(
+		stylesheetTree,
+		lineNumber,
+		columnNumber,
+		StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT),
 	m_isCData(isCData),
 	m_preserveSpace(preserveSpace),	
 	m_disableOutputEscaping(disableOutputEscaping),

@@ -55,8 +55,8 @@
  * <http://www.apache.org/>.
  */
 
-#if !defined(XALANELEMEMPTYALLOCATOR_INCLUDE_GUARD_12455133)
-#define XALANELEMEMPTYALLOCATOR_INCLUDE_GUARD_12455133
+#if !defined(XALANELEMTEXTLITERALALLOCATOR_INCLUDE_GUARD_12455133)
+#define XALANELEMTEXTLITERALALLOCATOR_INCLUDE_GUARD_12455133
 
 
 
@@ -65,7 +65,7 @@
 
 
 
-#include <XSLT/ElemEmpty.hpp>
+#include <XSLT/ElemTextLiteral.hpp>
 
 
 
@@ -73,13 +73,19 @@
 
 
 
-class XALAN_XSLT_EXPORT XalanElemEmptyAllocator
+class XALAN_XSLT_EXPORT XalanElemTextLiteralAllocator
 {
 public:
 
-	typedef ElemEmpty							data_type;
+	typedef ElemTextLiteral						data_type;
 
-	typedef ReusableArenaAllocator<data_type>	ArenaAllocatorType;
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+	typedef ArenaBlock<data_type>				ArenaBlockType;
+	typedef ArenaAllocator<data_type,
+						   ArenaBlockType>		ArenaAllocatorType;
+#else
+	typedef ArenaAllocator<data_type>			ArenaAllocatorType;
+#endif
 
 	typedef ArenaAllocatorType::size_type		size_type;
 
@@ -88,18 +94,23 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanElemEmptyAllocator(size_type		theBlockCount);
+	XalanElemTextLiteralAllocator(size_type		theBlockCount);
 
-	~XalanElemEmptyAllocator();
+	~XalanElemTextLiteralAllocator();
 	
 	/**
 	 * Construct an instance
 	 * 
-	 * @param constructionContext The current construction context
-	 * @param stylesheetTree The stylesheet containing element
-	 * @param lineNumber The line number in the document
-	 * @param columnNumber The column number in the document
-	 * @param elementName The name of element.  Can be 0.
+	 * @param constructionContext   context for construction of object
+	 * @param stylesheetTree        stylesheet containing element
+	 * @param lineNumber            line number in document
+	 * @param columnNumber          column number in document
+	 * @param ch                    pointer to character string for element
+	 * @param start                 starting offset of element
+	 * @param length                number of characters in element
+	 * @param isCData               true if a CDATA element
+	 * @param preserveSpace         true is space should be preserved
+	 * @param disableOutputEscaping true if output escaping should be disabled
 	 *
 	 * @return A pointer to the new instance.
 	 */
@@ -109,33 +120,12 @@ public:
 			Stylesheet&						stylesheetTree,
 			int								lineNumber,
 			int								columnNumber,
-			const XalanDOMString*			elementName = 0);
-
-	/**
-	 * Construct an instance
-	 * 
-	 * @param constructionContext The current construction context
-	 * @param stylesheetTree The stylesheet containing element
-	 * @param elementName The name of element.  Can be 0.
-	 */
-	data_type*
-	create(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMString*			elementName = 0);
-
-	/**
-	 * Destroy an instance previously created.
-	 *
-	 * @param theObject A pointer to the instance to destroy.
-	 *
-	 * @return true if the instance was destroyed, false if not.
-	 */
-	bool
-	destroy(data_type*	theObject)
-	{
-		return m_allocator.destroyObject(theObject);
-	}
+            const XalanDOMChar*				ch,
+			XalanDOMString::size_type		start,
+			XalanDOMString::size_type		length,
+            bool							isCData,
+			bool							preserveSpace,
+            bool							disableOutputEscaping);
 
 	/**
 	 * Determine if an object is owned by the allocator...
@@ -181,10 +171,10 @@ public:
 private:
 
 	// Not implemented...
-	XalanElemEmptyAllocator(const XalanElemEmptyAllocator&);
+	XalanElemTextLiteralAllocator(const XalanElemTextLiteralAllocator&);
 
-	XalanElemEmptyAllocator&
-	operator=(const XalanElemEmptyAllocator&);
+	XalanElemTextLiteralAllocator&
+	operator=(const XalanElemTextLiteralAllocator&);
 
 	// Data members...
 	ArenaAllocatorType	m_allocator;
@@ -192,4 +182,4 @@ private:
 
 
 
-#endif	// XALANELEMEMPTYALLOCATOR_INCLUDE_GUARD_12455133
+#endif	// XALANELEMTEXTLITERALALLOCATOR_INCLUDE_GUARD_12455133

@@ -83,6 +83,8 @@ class ElemApplyTemplates : public ElemForEach
 {
 public:
 
+	typedef ElemForEach		ParentType;
+
 	/**
 	 * Construct an object corresponding to an "xsl:apply-template" element
 	 * 
@@ -113,16 +115,8 @@ public:
 		return m_isDefaultTemplate;
 	}
 
-	/**
-	 * Sets a flag indicating this is the default template
-	 *
-	 * @param def value of flag to set
-	 */
-	void
-	setDefaultTemplate(bool def)
-	{
-		m_isDefaultTemplate = def;
-	}
+	virtual void
+	setDefaultTemplate(bool		value);
 
 	// These methods are inherited from ElemTemplateElement ...
 	

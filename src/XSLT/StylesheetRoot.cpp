@@ -156,9 +156,6 @@ StylesheetRoot::StylesheetRoot(
 
 StylesheetRoot::~StylesheetRoot()
 {
-	delete m_defaultRule;
-	delete m_defaultTextRule;
-	delete m_defaultRootRule;
 }
 
 
@@ -168,6 +165,8 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&		constructionCon
 {
 	// Chain-up first...
 	Stylesheet::postConstruction(constructionContext);
+
+	initDefaultRule(constructionContext);
 
 	// We may need to build keys, since we may have inherited them from
 	// our imports.
@@ -199,8 +198,12 @@ StylesheetRoot::process(
 			XSLTResultTarget&				outputTarget,
 			StylesheetExecutionContext&		executionContext) const
 {
+	assert(m_defaultRule != 0);
+	assert(m_defaultTextRule != 0);
+	assert(m_defaultRootRule != 0);
+
 	// Find the root pattern in the XSL.
-	const ElemTemplate*		rootRule =
+	const ElemTemplateElement*		rootRule =
 			findTemplate(executionContext, sourceTree);
 
 	if(0 == rootRule)
@@ -615,32 +618,31 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		assert(m_defaultTextRule == 0);
 		assert(m_defaultRootRule == 0);
 
-		const int				lineNumber = 0;
-		const int				columnNumber = 0;
-
 		AttributeListImpl		attrs;
 
 		attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
 	 					   c_wstr(Constants::ATTRTYPE_CDATA),
 						   XPath::PSEUDONAME_ANY);
 
-		m_defaultRule = new ElemTemplate(constructionContext,
-										 *this,
-										 attrs,
-										 lineNumber,
-										 columnNumber);
+		m_defaultRule =
+			constructionContext.createElement(
+				StylesheetConstructionContext::ELEMNAME_TEMPLATE,
+				*this,
+				attrs);
+		assert(m_defaultRule != 0);
 
 		attrs.clear();
 
-		ElemApplyTemplates* childrenElement 
-		  = new ElemApplyTemplates(constructionContext,
-								   *this,
-								   attrs,
-								   lineNumber,
-								   columnNumber);
+		ElemTemplateElement*	childrenElement =
+			constructionContext.createElement(
+				StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES,
+				*this,
+				attrs);
+		assert(childrenElement != 0);
 
-		childrenElement->setDefaultTemplate(true);
 		m_defaultRule->appendChildElem(childrenElement);
+
+		m_defaultRule->setDefaultTemplate(true);
 
 		// -----------------------------
 
@@ -649,25 +651,28 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 	 					   c_wstr(Constants::ATTRTYPE_CDATA),
 						   c_wstr(Constants::ATTRVAL_DEFAULT_TEXT_RULE));
 
-		m_defaultTextRule = new ElemTemplate(constructionContext,
-											 *this,
-											 attrs,
-											 lineNumber,
-											 columnNumber);
+		m_defaultTextRule =
+			constructionContext.createElement(
+				StylesheetConstructionContext::ELEMNAME_TEMPLATE,
+				*this,
+				attrs);
+		assert(m_defaultTextRule != 0);
 
 		attrs.clear();
 		attrs.addAttribute(c_wstr(Constants::ATTRNAME_SELECT),
 	 					   c_wstr(Constants::ATTRTYPE_CDATA),
 						   c_wstr(Constants::ATTRVAL_THIS));
 
-		ElemValueOf* elemValueOf =
-			new ElemValueOf(constructionContext,
-							*this,
-							attrs,
-							lineNumber,
-							columnNumber);
+		childrenElement =
+			constructionContext.createElement(
+				StylesheetConstructionContext::ELEMNAME_VALUE_OF,
+				*this,
+				attrs);
+		assert(childrenElement != 0);
 
-		m_defaultTextRule->appendChildElem(elemValueOf);
+		m_defaultTextRule->appendChildElem(childrenElement);
+
+		m_defaultTextRule->setDefaultTemplate(true);
 
 		//--------------------------------
     
@@ -677,24 +682,24 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 						   XPath::PSEUDONAME_ROOT);
 
 		m_defaultRootRule =
-			new ElemTemplate(constructionContext,
-							 *this,
-							 attrs,
-							 lineNumber,
-							 columnNumber);
+			constructionContext.createElement(
+				StylesheetConstructionContext::ELEMNAME_TEMPLATE,
+				*this,
+				attrs);
+		assert(m_defaultRootRule != 0);
 
 		attrs.clear();
 
 		childrenElement =
-			new ElemApplyTemplates(constructionContext,
-								   *this,
-								   attrs,
-								   lineNumber,
-								   columnNumber);
-
-		childrenElement->setDefaultTemplate(true);
+			constructionContext.createElement(
+				StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES,
+				*this,
+				attrs);
+		assert(childrenElement != 0);
 
 		m_defaultRootRule->appendChildElem(childrenElement);
+
+		m_defaultRootRule->setDefaultTemplate(true);
 	}
 
 	assert(m_defaultRule != 0);

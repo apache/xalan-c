@@ -100,6 +100,8 @@ public:
 	 * @param atts The list of attributes for the element
 	 * @param lineNumber The line number in the document
 	 * @param columnNumber The column number in the document
+	 *
+	 * @return A pointer to the new instance.
 	 */
 	data_type*
 	create(
