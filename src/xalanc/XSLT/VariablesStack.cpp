@@ -394,13 +394,21 @@ VariablesStack::findXObject(
 
 				m_guardStack.push_back(var);
 
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
+                executionContext.pushContextMarker();
+#else
 				// We need to set up a stack frame for the variable's execution...
 				typedef StylesheetExecutionContext::PushAndPopContextMarker	PushAndPopContextMarker;
 
 				const PushAndPopContextMarker	theContextMarkerPushPop(executionContext);
+#endif
 
 				theNewValue = var->getValue(executionContext, doc);
 				assert(theNewValue.null() == false);
+
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
+                executionContext.popContextMarker();
+#endif
 
 				assert(m_guardStack.empty() == false);
 

@@ -354,6 +354,7 @@ public:
 	virtual	void
 	popCurrentTemplate() = 0;
 
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/*
 	 * A class to manage pushing and popping the current
 	 * template instance.
@@ -380,6 +381,7 @@ public:
 		// Data members...
 		StylesheetExecutionContext&		m_executionContext;
 	};
+#endif
 
 	/**
 	 * Whether diagnostic output is to be generated
@@ -794,6 +796,7 @@ public:
 	virtual void
 	popContextMarker() = 0;
 
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/*
 	 * A class to manage pushing and popping an element's stack
 	 * frame context.
@@ -833,6 +836,7 @@ public:
 
 		StylesheetExecutionContext&		m_executionContext;
 	};
+#endif
 
 	/**
 	 * Resolve the params that were pushed by the caller.
@@ -846,6 +850,7 @@ public:
 	virtual void
 	clearTopLevelParams() = 0;
 
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	class ResolveAndClearTopLevelParams
 	{
 	public:
@@ -866,7 +871,17 @@ public:
 		StylesheetExecutionContext&		m_executionContext;
 	};
 
-#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
+	/**
+	 * Given a template, search for the arguments and push them on the stack.
+	 * Also, push default arguments on the stack.
+	 *
+	 * @param xslCallTemplateElement "call-template" element
+	 */
+	virtual	void
+	pushParams(const ElemTemplateElement&	xslCallTemplateElement) = 0;
+
+#else
+
 	/**
 	 *  Initiate context to accept a new set of parameters
 	 */
@@ -883,15 +898,6 @@ public:
 	 * @param theValue	the value of the parameter
 	 */
 	virtual void pushParam(const XalanQName& qName,const XObjectPtr& theValue) = 0;
-#else
-	/**
-	 * Given a template, search for the arguments and push them on the stack.
-	 * Also, push default arguments on the stack.
-	 *
-	 * @param xslCallTemplateElement "call-template" element
-	 */
-	virtual	void
-	pushParams(const ElemTemplateElement&	xslCallTemplateElement) = 0;
 #endif
 
 	/**
@@ -923,6 +929,7 @@ public:
 	virtual void
 	popElementFrame() = 0;
 
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/*
 	 * A class to manage pushing and popping an element's stack
 	 * frame context.
@@ -948,6 +955,7 @@ public:
 
 		StylesheetExecutionContext&		m_executionContext;
 	};
+#endif
 
 	/**
 	 * Get the top of the global stack frame.
@@ -1009,6 +1017,7 @@ public:
 		const int						m_savedIndex;
 	};
 
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/*
 	 * A class to manage stack state during execution.
 	 */
@@ -1049,6 +1058,7 @@ public:
 		void
 		doPush(const ElemTemplateElement&	xslCallTemplateElement);
 	};
+#endif
 
 	/**
 	 * Receive notification of the beginning of a document.
