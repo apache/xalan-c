@@ -144,16 +144,16 @@ public:
 	bool isDirectory() const
 	{
 
-	struct	stat stat_Info;
-	int	retCode = stat (d_name, &stat_Info);
+		struct	stat stat_Info;
+		int	retCode = stat (d_name, &stat_Info);
  
-	if ( retCode == -1 )
-	{
-		typedef	XalanFileOutputStream::XalanFileOutputStreamOpenException XalanStatDirectoryException;
-		throw	XalanStatDirectoryException( XalanDOMString(d_name), errno );
-	}
+		if ( retCode == -1 )
+		{
+			typedef	XalanFileOutputStream::XalanFileOutputStreamOpenException XalanStatDirectoryException;
+			throw	XalanStatDirectoryException( XalanDOMString(d_name), errno );
+		}
 
-	return S_ISDIR(stat_Info.st_mode);
+		return S_ISDIR(stat_Info.st_mode);
 		
 	}
 
