@@ -149,7 +149,7 @@
  */
 
 // ---------------------------------------------------------------------------
-// X E R C E S   V E R S I O N   S P E C I F I C A T I O N
+// X A L A N   V E R S I O N   S P E C I F I C A T I O N
 
 /**
  * MODIFY THESE NUMERIC VALUES TO COINCIDE WITH XALAN VERSION
@@ -207,7 +207,7 @@
 #define CALC_EXPANDED_FORM(a,b,c) ( MULTIPLY(10000,a) + MULTIPLY(100,b) + MULTIPLY(1,c) )
 
 // ---------------------------------------------------------------------------
-// X E R C E S   V E R S I O N   I N F O R M A T I O N
+// X A L A N   V E R S I O N   I N F O R M A T I O N
 
 // Xalan version strings; these particular macros cannot be used for
 // conditional compilation as they are not numeric constants
