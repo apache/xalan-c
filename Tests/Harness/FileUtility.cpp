@@ -73,6 +73,9 @@
 #define getcwd _getcwd
 #define mkdir _mkdir
 #else
+#if !defined(PATH_MAX)
+#define PATH_MAX 2000
+#endif
 #define DIR_MODE_BITS 509
 #include <dirent.h>
 #include <unistd.h>
@@ -602,6 +605,13 @@ FileUtility::generateFileName(
 XalanDOMString
 FileUtility::generateUniqRunid()
 {
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	using std::tm;
+	using std::time;
+	using std::localtime;
+	using std::strftime;
+#endif
+
 	struct tm *newtime;
 	time_t long_time;
 	char tmpbuf[10];
