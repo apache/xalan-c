@@ -229,6 +229,8 @@ findValue(
 		{
 			assert(theNodeSet.item(i) != 0);
 
+			theStringValue.clear();
+
 			DOMServices::getNodeData(*theNodeSet.item(i), theStringValue);
 
 			const double	theCurrent = DOMStringToDouble(theStringValue);
@@ -243,8 +245,6 @@ findValue(
 			{
 				theResult = theCurrent;
 			}
-
-			theStringValue.clear();
 		}
 
 		return executionContext.getXObjectFactory().createNumber(theResult);

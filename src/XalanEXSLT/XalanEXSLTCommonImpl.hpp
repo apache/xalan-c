@@ -135,7 +135,7 @@ public:
 		m_external(s_externalString),
 		m_nodeSet(s_nodeSetString),
 		m_number(s_numberString),
-		m_rtf(s_stringString),
+		m_rtf(s_rtfString),
 		m_string(s_stringString)
 	{
 	}
@@ -173,7 +173,7 @@ public:
 #endif
 	clone() const
 	{
-		return new XalanEXSLTFunctionObjectType(*this);
+		return new XalanEXSLTFunctionObjectType;
 	}
 
 protected:
@@ -184,6 +184,8 @@ protected:
 private:
 
 	// Not implemented...
+	XalanEXSLTFunctionObjectType(const XalanEXSLTFunctionObjectType&);
+
 	XalanEXSLTFunctionObjectType&
 	operator=(const XalanEXSLTFunctionObjectType&);
 

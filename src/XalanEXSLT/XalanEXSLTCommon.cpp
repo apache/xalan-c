@@ -282,6 +282,7 @@ static const XalanDOMChar	s_objectTypeFunctionName[] =
 
 
 static const XalanEXSLTFunctionNodeSet		s_nodesetFunction;
+
 // Note this is a special constructor of XalanEXSLTFunctionObjectType which
 // allocates no memory.  It is only used here, so we can have table-based
 // initialization, but not have any memory allocation.

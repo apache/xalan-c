@@ -90,7 +90,7 @@ XalanEXSLTFunctionHasSameNode::execute(
 	const NodeRefListBase&	nodeset2 = args[1]->nodeset();
 
 	const NodeRefListBase::size_type	theLength1 = nodeset1.getLength();
-	const NodeRefListBase::size_type	theLength2 = nodeset1.getLength();
+	const NodeRefListBase::size_type	theLength2 = nodeset2.getLength();
 
 	bool	fResult = false;
 
@@ -129,7 +129,7 @@ findNodes(
 	const NodeRefListBase&	nodeset2 = args[1]->nodeset();
 
 	const NodeRefListBase::size_type	theLength1 = nodeset1.getLength();
-	const NodeRefListBase::size_type	theLength2 = nodeset1.getLength();
+	const NodeRefListBase::size_type	theLength2 = nodeset2.getLength();
 
 	if (theLength1 == 0 || theLength2 == 0)
 	{
