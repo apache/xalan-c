@@ -410,11 +410,19 @@ initMaximumCharacterValueMap(XalanTranscodingServices::MaximumCharacterValueMapT
 {
 	typedef XalanTranscodingServices::MaximumCharacterValueMapType::value_type	value_type;
 
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("UTF-8")),		0xFFFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("UTF-16")),		0xFFFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("US-ASCII")),		0x7F));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1")), 	0xFF));
+	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("SHIFT_JIS")),	0xFFFF));
+
+	// These are commented out, mostly because the notion of a "maximum" character value, the
+	// way we're using it, is broken.  We cannot assume a Unicode character can be represented
+	// in a particular encoding by knowing the width of the encoding.
+	// The previous values are acceptable, since they are UTF encodings, or ASCII, or, in the case
+	// of ISO-8859-1, they map exactly to their corresponding Unicode characters.
+#if 0
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("WINDOWS-1250")),	 0xFF)); // Windows 1250 Peter Smolik
-	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("UTF-8")),			 0xFFFF)); // Universal Transformation Format 8
-	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("UTF-16")),			 0xFFFF));
-	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("US-ASCII")),		 0x7F));
-	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1")), 	 0xFF));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2")), 	 0xFF));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-3")), 	 0xFF));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-4")), 	 0xFF));
@@ -424,7 +432,6 @@ initMaximumCharacterValueMap(XalanTranscodingServices::MaximumCharacterValueMapT
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-8")), 	 0xFF));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-9")), 	 0xFF));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-JP")),	 0xFFFF));
-	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("SHIFT_JIS")),		 0xFFFF));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EUC-JP")), 		 0xFFFF));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("GB2312")), 		 0xFFFF));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("BIG5")),			 0xFFFF));
@@ -449,6 +456,7 @@ initMaximumCharacterValueMap(XalanTranscodingServices::MaximumCharacterValueMapT
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-YU")),	 0xFF));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IS")),	 0xFF));
 	theMap.insert(value_type(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR2")),	 0xFF));
+#endif
 }
 
 
