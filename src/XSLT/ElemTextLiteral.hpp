@@ -124,7 +124,7 @@ public:
 		return m_ch;
 	}
 
-	const XalanDOMString::size_type
+	XalanDOMString::size_type
 	getLength() const
 	{
 		return m_length;
