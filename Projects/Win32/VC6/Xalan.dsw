@@ -26,6 +26,42 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "TestCompile"=".\TestCompile\TestCompile.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XercesParserLiaison
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XMLSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -52,6 +88,12 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XercesPlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
     End Project Dependency
 }}}
 
@@ -82,6 +124,33 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "TestXercesParserLiaison"=".\TestXercesParserLiaison\TestXercesParserLiaison.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XercesParserLiaison
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
     End Project Dependency
 }}}
 
@@ -119,6 +188,9 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name DOMSupport
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -146,6 +218,21 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name XercesPlatformSupport
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XalanDOM"=".\XalanDOM\XalanDOM.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
 }}}
 
 ###############################################################################
@@ -163,6 +250,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
     End Project Dependency
 }}}
 
