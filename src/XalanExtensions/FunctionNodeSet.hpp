@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * XPath implementation of "node-set" function.
  */
@@ -97,7 +101,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const;
+			const LocatorType*				locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -127,6 +131,10 @@ private:
 	// Data members...
 	const bool	m_convertString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

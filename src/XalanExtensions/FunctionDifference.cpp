@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,6 +63,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FunctionDifference::FunctionDifference()
 {
 }
@@ -80,7 +84,7 @@ FunctionDifference::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	if (args.size() != 2)
 	{
@@ -136,3 +140,7 @@ FunctionDifference::getError() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The difference() function accepts two arguments"));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

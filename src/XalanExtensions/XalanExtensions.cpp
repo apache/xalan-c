@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static const XalanDOMChar	s_extensionsNamespace[] =
 {
 	XalanUnicode::charLetter_h,
@@ -355,3 +359,7 @@ XalanExtensionsInstaller::doUninstallGlobal(
 		XPathEnvSupportDefault::uninstallExternalFunctionGlobal(theNamespaceString, theFunctionName);
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END
