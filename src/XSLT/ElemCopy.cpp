@@ -62,6 +62,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "Constants.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
@@ -138,9 +142,9 @@ ElemCopy::execute(
 				sourceNode,
 				mode);
 
-			const XalanDOMString&	s = sourceNode->getNodeName();
+			const XalanDOMString&	s = DOMServices::getNameOfNode(*sourceNode);
 
-			executionContext.endElement(toCharArray(s));
+			executionContext.endElement(c_wstr(s));
 		}
 		else
 		{
