@@ -191,13 +191,13 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 
 		const XalanDOMString::size_type		indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
 
-		const bool	haveNamespace = indexOfNSSep == len ? false : true;
+		const bool	havePrefix = indexOfNSSep == len ? false : true;
 
 		StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(executionContext);
 
 		XalanDOMString&		prefix = prefixGuard.get();
 
-		if (haveNamespace == true)
+		if (havePrefix == true)
 		{
 			substring(elemName, prefix, 0, indexOfNSSep);
 
@@ -250,7 +250,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 			executionContext.startElement(c_wstr(elemName));   
 
 			if(0 == m_namespaceAVT &&
-			   (haveNamespace == false || foundResultNamespaceForPrefix == true))
+			   (havePrefix == false || foundResultNamespaceForPrefix == true))
 			{
 				outputResultNamespaces(executionContext, hasUnresolvedPrefix);
 			}
@@ -265,7 +265,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 				}
 				else
 				{
-					if(haveNamespace == false)
+					if(havePrefix == false)
 					{
 						if (namespaceLen > 0)
 						{
