@@ -366,7 +366,8 @@ NamespacesHandler::shouldExcludeResultNamespaceNode(
 			|| m_extensionNamespaceURIs.find(theURI) != m_extensionNamespaceURIs.end()
 			|| equals(theURI, s_ApacheXSLTNamespaceURI)
 			|| equals(theURI, s_LotusXSLTNamespaceURIWithSeparator)
-			|| equals(theURI, s_LotusXSLTNamespaceURI))
+			|| equals(theURI, s_LotusXSLTNamespaceURI)
+			|| equals(theURI, DOMServices::s_XMLNamespaceURI))
 	{
 		return true;
 	}
