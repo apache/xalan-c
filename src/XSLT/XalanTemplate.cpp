@@ -59,7 +59,7 @@
 
 
 // Base include file.  Must be first.
-#include <XercesPlatformSupport/XercesPlatformSupportDefinitions.hpp>
+#include <PlatformSupport/PlatformSupportDefinitions.hpp>
 
 #if !defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
 
