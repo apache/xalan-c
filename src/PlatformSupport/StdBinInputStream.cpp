@@ -63,6 +63,8 @@
 
 
 
+#include <cassert>
+
 #if !defined(XALAN_OLD_STREAMS)
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
@@ -104,13 +106,15 @@ StdBinInputStream::readBytes(
 			XMLByte* const      toFill,
 			const unsigned int	maxToRead)
 {
+	assert(sizeof(XMLByte) == sizeof(char));
+
 	if (!m_stream)
 	{
 		return 0;
 	}
 	else
 	{
-		unsigned long	i = 0;
+		unsigned int	i = 0;
 
 		while(i < maxToRead)
 		{
