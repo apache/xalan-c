@@ -60,6 +60,7 @@
 
 
 #include <xalanc/PlatformSupport/PrintWriter.hpp>
+#include <xalanc/PlatformSupport/XalanLocator.hpp>
 
 
 
@@ -236,7 +237,7 @@ TraceListenerDefault::selected(const SelectionEvent&	ev)
     {
 		const ElemTemplateElement&	ete = ev.m_styleNode;
 
-		if(ev.m_styleNode.getLineNumber() == 0)
+		if(ev.m_styleNode.getLineNumber() == XalanLocator::getUnknownValue())
 		{
 			// You may not have line numbers if the selection is occuring from a
 			// default template.
