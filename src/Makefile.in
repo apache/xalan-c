@@ -101,7 +101,7 @@ TESTS_DIR = ${XALANCROOT}/Tests
 PROJECT_NAME = xalan-c
 LIBNAME = lib${PROJECT_NAME}
 THISLIB = ${LIB_DIR}/${LIBNAME}
-VER = 1_1
+VER = 1_2
 
 PRODUCTNAME=xalan
 PRODUCTVERSION=${VER}
@@ -272,9 +272,9 @@ endif
 
 # We need the Xerces library
 ifeq ($(PLATFORM), OS390)                             
-ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_4.x        
+ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_5_1.x
 else                                                  
-ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_4
+ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_5_1
 endif
 
 # We need the ICU library if we are using the ICUBridge
