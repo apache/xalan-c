@@ -952,16 +952,13 @@ StylesheetHandler::processTopLevelElement(
 		break;
 
 	case Constants::ELEMNAME_DECIMALFORMAT:
-		{
-			ElemDecimalFormat* const	edf =
-							new ElemDecimalFormat(m_constructionContext,
-												  m_stylesheet,
-												  atts,
-												  lineNumber,
-												  columnNumber);
-
-			m_stylesheet.processDecimalFormatElement(edf, atts, m_constructionContext);
-		}
+		m_stylesheet.processDecimalFormatElement(
+					new ElemDecimalFormat(
+							m_constructionContext,
+							m_stylesheet,
+							atts,
+							lineNumber,
+							columnNumber));
 		break;
 
 	case Constants::ELEMNAME_NSALIAS:
@@ -1044,15 +1041,7 @@ StylesheetHandler::processStylesheet(
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
 
-		if(equals(aname, Constants::ATTRNAME_RESULTNS))
-		{
-			throw SAXException("result-ns no longer supported!  Use xsl:output instead.");
-		}
-		else if(equals(aname, Constants::ATTRNAME_DEFAULTSPACE))
-		{
-			throw SAXException("default-space no longer supported!  Use xsl:strip-space or xsl:preserve-space instead.");
-		}
-		else if(equals(aname, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
+		if(equals(aname, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
 		{
 			m_stylesheet.processExcludeResultPrefixes(atts.getValue(i), m_constructionContext);
 		}
@@ -1077,13 +1066,10 @@ StylesheetHandler::processStylesheet(
 		{
 			//
 		}
-		else if(equals(aname, Constants::ATTRNAME_INDENTRESULT))
-		{
-			throw SAXException("indent-result no longer supported!  Use xsl:output instead.");
-		}
 		else if(equals(aname, Constants::ATTRNAME_VERSION))
 		{
 			const XalanDOMChar* const	versionStr = atts.getValue(i);
+			assert(versionStr != 0);
 
 			m_stylesheet.setXSLTVerDeclared(DoubleSupport::toDouble(versionStr));
 
@@ -1097,8 +1083,11 @@ StylesheetHandler::processStylesheet(
 		{
 			if(false == m_stylesheet.isWrapperless())
 			{
-				XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + 
-											  " has an illegal attribute: " + aname);
+				const XalanDOMString	msg(
+					"(StylesheetHandler) " +
+					XalanDOMString(name) + 
+					" has an illegal attribute: " +
+					aname);
 
 				throw SAXException(c_wstr(msg));
 			}
@@ -1114,17 +1103,6 @@ StylesheetHandler::processStylesheet(
 	{
 		throw SAXException(c_wstr(TranscodeFromLocalCodePage("The stylesheet element did not specify a version attribute!")));
 	}
-	else
-	{
-		if (fPreserveSpace == false)
-		{
-			m_stylesheet.setDefaultSpaceProcessing(true);
-		}
-		else
-		{
-			m_stylesheet.setDefaultSpaceProcessing(false);
-		}
-	}
 }
 
 
@@ -1137,9 +1115,9 @@ StylesheetHandler::processExtensionElement(
 {
 	if (equals(localName, Constants::ATTRNAME_COMPONENTS))
 	{
-		XalanDOMString prefix;
-		XalanDOMString elements;
-		XalanDOMString functions;
+		XalanDOMString	prefix;
+		XalanDOMString	elements;
+		XalanDOMString	functions;
 
 		const int nAttrs = atts.getLength();
 
