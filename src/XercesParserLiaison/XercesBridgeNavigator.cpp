@@ -328,7 +328,7 @@ XercesBridgeNavigator::appendChild(
 XalanElement*
 XercesBridgeNavigator::getOwnerElement(const DOM_Attr&	theXercesAttr) const
 {
-	if (m_parentNode != 0)
+	if (m_parentNode != invalidNodeAddress)
 	{
 		assert(m_parentNode->getNodeType() == XalanNode::ELEMENT_NODE);
 
