@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -96,6 +96,8 @@ class XALAN_XSLT_EXPORT FunctionFormatNumber : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	/**
 	 * Perform static initialization.  See class XSLTInit.
 	 */
@@ -131,6 +133,10 @@ public:
 			const XObjectPtr		arg2,
 			const XObjectPtr		arg3,
 			const LocatorType*		locator) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -88,6 +88,8 @@ class XALAN_XSLT_EXPORT FunctionElementAvailable : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	FunctionElementAvailable();
 
 	virtual
@@ -101,6 +103,10 @@ public:
 			XalanNode*				context,
 			const XObjectPtr		arg,
 			const LocatorType*		locator) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
