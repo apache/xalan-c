@@ -256,7 +256,7 @@ public:
 	void
 	pushVariable(
 			const QName&				name,
-			const XObjectPtr			val,
+			const XObjectPtr&			val,
 			const ElemTemplateElement*	e);
 
 	/**
@@ -399,7 +399,7 @@ private:
 		 */
 		StackEntry(
 			const QName*		name,
-			const XObjectPtr	val);
+			const XObjectPtr&	val);
 
 		/**
 		 * Construct a variable that has not been evaluated yet.
@@ -451,7 +451,7 @@ private:
 		 * 
 		 * @return pointer to XObject
 		 */
-		const XObjectPtr
+		const XObjectPtr&
 		getValue() const
 		{
 			return m_value;

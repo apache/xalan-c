@@ -301,7 +301,7 @@ VariablesStack::pushVariable(
 void
 VariablesStack::pushVariable(
 			const QName&				name,
-			const XObjectPtr			val,
+			const XObjectPtr&			val,
 			const ElemTemplateElement*	e)
 {
 	if(elementFrameAlreadyPushed(e) == false)
@@ -380,11 +380,17 @@ VariablesStack::findXObject(
 
 		assert(theEntry->getType() == StackEntry::eVariable);
 
-		XObjectPtr	theValue(theEntry->getValue());
+		const XObjectPtr&	theValue = theEntry->getValue();
 
-		if (theValue.null() == true)
+		if (theValue.null() == false)
+		{
+			return theValue;
+		}
+		else
 		{
 			const ElemVariable* const	var = theEntry->getVariable();
+
+			XObjectPtr					theNewValue;
 
 			if (var != 0)
 			{
@@ -393,14 +399,14 @@ VariablesStack::findXObject(
 
 				SetAndRestoreForceGlobalSearch	theGuard(*this);
 
-				theValue = var->getValue(executionContext, doc, doc);
-				assert(theValue.null() == false);
+				theNewValue = var->getValue(executionContext, doc, doc);
+				assert(theNewValue.null() == false);
 
-				theEntry->setValue(theValue);
+				theEntry->setValue(theNewValue);
 			}
-		}
 
-		return theValue;
+			return theNewValue;
+		}
 	}
 }
 
@@ -547,7 +553,7 @@ VariablesStack::StackEntry::StackEntry() :
 
 VariablesStack::StackEntry::StackEntry(
 		const QName*		name,
-		const XObjectPtr	val) :
+		const XObjectPtr&	val) :
 	m_type(eVariable),
 	m_qname(name),
 	m_value(val),
