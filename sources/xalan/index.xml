@@ -61,15 +61,15 @@
 <s1 title="&xslt4c-current;">
       
   <s2 title="What is it?">
-    <p>Xalan is an XSL processor for transforming XML documents into HTML, text, or other XML document types. &xslt4c-current;
-     represents an almost complete and a robust C++ reference implementation of the W3C Recommendations for XSL
-     Transformations (XSLT) and the XML Path Language (XPath).</p>
-    <p>Xalan-C uses the Xerces-C XML parser.</p>
+    <p>Xalan is an XSLT processor for transforming XML documents into HTML, text, or other XML document types.</p>
+    <p>&xslt4c-current; represents a robust and an almost complete C++ reference implementation of the W3C Recommendations 
+    for XSL Transformations (XSLT) and the XML Path Language (XPath). It uses the latest release of the &xml4c; XML parser
+    (&xml4c-used;).</p>
 	</s2>
   
   <s2 title="How do I get it?">
     <p>Download and unzip the distribution file for your platform. In addition to the platform-specific binaries,
-    documentation, and sample applications, both distributions also include the complete Xalan-C source tree.</p>
+    documentation, and sample applications, both distributions also include the complete &xslt4c; source tree.</p>
      <table>
        <tr>
          <td><em>Platform</em></td>
