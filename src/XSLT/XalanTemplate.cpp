@@ -89,10 +89,6 @@
 #include <deque>
 #include <stl/_deque.c>
 
-#include <string>
-#include <stl/_string.c>
-#include <stl/_string_fwd.c>
-
 
 
 #include <XalanDOM/XalanNode.hpp>
@@ -186,38 +182,6 @@
 
 
 
-static string theString;
-static vector<XalanDOMString> theDOMStringVector;
-static vector<char> theCharVector;
-static vector<wchar_t> theWCharVector;
-static vector<unsigned char> theUnsignedCharVector;
-static AttributeListImpl::AttributeVectorType theAttributeVectorEntryVector;
-static AttributesImpl::AttributesVectorType theAttributesVectorEntryVector;
-static allocator<DOMString> theAllocator;
-static vector<pair<const XalanNode*,NSInfo> > theXalanNodeVector;
-static FormatterToHTML::ElemDesc theElemDesc;
-static FormatterToHTML::ElementFlagsMapType theElementFlagsMapType;
-static XPathExpression::TokenQueueType theTokenQueueType;
-static set<const XalanNode*,less<const XalanNode*> > theXalanNodeSet;
-static XPathExecutionContext::XObjectArgVectorType theVector;
-static XPathProcessorImpl::NodeTypesMapType theNodeTypesMapType;
-static Stylesheet::PatternTableListType	thePatternTableList;
-static Stylesheet::PatternTableVectorType thePatternTableVector;
-static map<int,int,less<int> > theIntMap;
-static ElemNumber::DecimalToRomanVectorType theDecimalToRomanVector;
-static vector<NamespacesHandler::NamespacesMapType::iterator> theNamespacesMapTypeIteratorVector;
-static VariablesStack::ParamsVectorType	theParamsVector;
-static ElemNumber::NumberingResourceBundleMapType theNumberingResourceBundleMapType;
-static XalanTranscodingServices::MaximumCharacterValueMapType theMaximumCharacterValueMapType;
-static set<XalanNode*, less<XalanNode*> >	theInstanceSetType;
-static XalanTransformer::CompiledStylesheetPtrVectorType	theCompiledStylesheetVector;
-static XalanTransformer::ParsedSourcePtrVectorType			theParsedSourceVector;
-static XalanTransformer::ParamPairVectorType				theParamsPairVector;
-static XalanDOMStringHashTable::BucketCountsType			theBucketCountsVector;
-static vector<pair<const char*, const char*> >				theStringPairVector;
-
-
-
 static void
 foo(XPathExecutionContext&	theExecutionContext)
 {
@@ -225,6 +189,37 @@ foo(XPathExecutionContext&	theExecutionContext)
 	using std::for_each;
 	using std::replace;
 #endif
+
+	{
+		vector<XalanDOMString> theDOMStringVector;
+		vector<char> theCharVector;
+		vector<wchar_t> theWCharVector;
+		vector<unsigned char> theUnsignedCharVector;
+		AttributeListImpl::AttributeVectorType theAttributeVectorEntryVector;
+		AttributesImpl::AttributesVectorType theAttributesVectorEntryVector;
+		allocator<DOMString> theAllocator;
+		vector<pair<const XalanNode*,NSInfo> > theXalanNodeVector;
+		FormatterToHTML::ElemDesc theElemDesc;
+		FormatterToHTML::ElementFlagsMapType theElementFlagsMapType;
+		XPathExpression::TokenQueueType theTokenQueueType;
+		set<const XalanNode*,less<const XalanNode*> > theXalanNodeSet;
+		XPathExecutionContext::XObjectArgVectorType theVector;
+		XPathProcessorImpl::NodeTypesMapType theNodeTypesMapType;
+		Stylesheet::PatternTableListType	thePatternTableList;
+		Stylesheet::PatternTableVectorType thePatternTableVector;
+		map<int,int,less<int> > theIntMap;
+		ElemNumber::DecimalToRomanVectorType theDecimalToRomanVector;
+		vector<NamespacesHandler::NamespacesMapType::iterator> theNamespacesMapTypeIteratorVector;
+		VariablesStack::ParamsVectorType	theParamsVector;
+		ElemNumber::NumberingResourceBundleMapType theNumberingResourceBundleMapType;
+		XalanTranscodingServices::MaximumCharacterValueMapType theMaximumCharacterValueMapType;
+		set<XalanNode*, less<XalanNode*> >	theInstanceSetType;
+		XalanTransformer::CompiledStylesheetPtrVectorType	theCompiledStylesheetVector;
+		XalanTransformer::ParsedSourcePtrVectorType			theParsedSourceVector;
+		XalanTransformer::ParamPairVectorType				theParamsPairVector;
+		XalanDOMStringHashTable::BucketCountsType			theBucketCountsVector;
+		vector<pair<const char*, const char*> >				theStringPairVector;
+	}
 
 	{		
 		XObjectFactoryDefault::XObjectCollectionType 	theVector;
@@ -283,26 +278,12 @@ foo(XPathExecutionContext&	theExecutionContext)
 		typedef NamespaceFunctionTableDeleteFunctor::NamespaceFunctionTablesInnerType 	NamespaceFunctionTablesType;
 	
 		NamespaceFunctionTablesType	theTable;
-		
-		const NamespaceFunctionTablesType::value_type		theValue;
-		
+
 		for_each(theTable.begin(),
 			 theTable.end(),
 			 NamespaceFunctionTableDeleteFunctor());
-
-		for_each(theValue.second.begin(),
-			 theValue.second.end(),
-			 MapValueDeleteFunctor<FunctionTableType>());
 	}
-	
-	{
-		XPathEnvSupportDefault::FunctionTableType	theTable;
 
-		for_each(theTable.begin(),
-			 theTable.end(),
-			 makeMapValueDeleteFunctor(theTable));
-	}
-	
 	{
 		XercesDocumentBridge::NodeVectorType	theVector;
 		
