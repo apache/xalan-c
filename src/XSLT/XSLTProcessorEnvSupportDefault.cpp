@@ -296,6 +296,7 @@ XSLTProcessorEnvSupportDefault::problem(
 			const XalanNode*		styleNode,
 			const XalanNode*		sourceNode,
 			const XalanDOMString&	msg,
+			const XalanDOMChar*		/* uri */,
 			int						/* lineNo */,
 			int						/* charOffset */) const
 {
@@ -337,6 +338,7 @@ XSLTProcessorEnvSupportDefault::problem(
 			const PrefixResolver*	/* resolver */,
 			const XalanNode*		sourceNode,
 			const XalanDOMString&	msg,
+			const XalanDOMChar*		/* uri */,
 			int						/* lineNo */,
 			int						/* charOffset */) const
 {

@@ -672,6 +672,26 @@ public:
 	virtual void
 	clearTopLevelParams() = 0;
 
+	class ResolveAndClearTopLevelParams
+	{
+	public:
+
+		ResolveAndClearTopLevelParams(StylesheetExecutionContext&	executionContext) :
+			m_executionContext(executionContext)
+		{
+			m_executionContext.resolveTopLevelParams();
+		}
+
+		~ResolveAndClearTopLevelParams()
+		{
+			m_executionContext.clearTopLevelParams();
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_executionContext;
+	};
+
 	/**
 	 * Given a template, search for the arguments and push them on the stack.
 	 * Also, push default arguments on the stack.
@@ -1689,9 +1709,21 @@ public:
 
 	virtual void
 	error(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const Locator* 			locator) const = 0;
+
+	virtual void
+	error(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
 			const XalanNode* 	styleNode = 0) const = 0;
+
+	virtual void
+	error(
+			const char*			msg,
+			const XalanNode* 	sourceNode,
+			const Locator* 		locator) const = 0;
 
 	virtual void
 	warn(
@@ -1701,9 +1733,21 @@ public:
 
 	virtual void
 	warn(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const Locator* 			locator) const = 0;
+
+	virtual void
+	warn(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
 			const XalanNode* 	styleNode = 0) const = 0;
+
+	virtual void
+	warn(
+			const char*			msg,
+			const XalanNode* 	sourceNode,
+			const Locator* 		locator) const = 0;
 
 	virtual void
 	message(
@@ -1713,9 +1757,21 @@ public:
 
 	virtual void
 	message(
+			const XalanDOMString&	msg,
+			const XalanNode* 	sourceNode,
+			const Locator* 		locator) const = 0;
+
+	virtual void
+	message(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
 			const XalanNode* 	styleNode = 0) const = 0;
+
+	virtual void
+	message(
+			const char*			msg,
+			const XalanNode* 	sourceNode,
+			const Locator* 		locator) const = 0;
 };
 
 

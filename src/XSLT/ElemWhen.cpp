@@ -96,7 +96,7 @@ ElemWhen::ElemWhen(
 		switch(tok)
 		{
 		case Constants::TATTRNAME_TEST:
-			m_pTest = constructionContext.createXPath(this, atts.getValue(i), *this);
+			m_pTest = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
 			break;
 
 		case Constants::TATTRNAME_XMLSPACE:
@@ -106,14 +106,20 @@ ElemWhen::ElemWhen(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+				constructionContext.error(
+					"xsl:when has an illegal attribute",
+					0,
+					this);
 			}
 		}
 	}
 
 	if(0 == m_pTest)
 	{
-		constructionContext.error("xsl:when must have a 'test' attribute.");
+		constructionContext.error(
+			"xsl:when must have a 'test' attribute.",
+			0,
+			this);
 	}
 }
 

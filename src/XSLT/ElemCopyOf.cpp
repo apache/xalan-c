@@ -108,7 +108,7 @@ ElemCopyOf::ElemCopyOf(
 				m_isDot = true;
 			}
 
-			m_selectPattern = constructionContext.createXPath(this, avalue, *this);
+			m_selectPattern = constructionContext.createXPath(getLocator(), avalue, *this);
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
@@ -122,7 +122,7 @@ ElemCopyOf::ElemCopyOf(
 	if (m_selectPattern == 0)
 	{
 		constructionContext.error(
-			"xsl:copy-of must have a \"select\" attribute",
+			"xsl:copy-of must have a 'select' attribute",
 			0,
 			this);
 	}

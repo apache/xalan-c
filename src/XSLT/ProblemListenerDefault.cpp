@@ -75,15 +75,20 @@
 
 
 
+#include <XSLT/ElemTemplateElement.hpp>
+
+
+
 static const char* const	errorHeader = "Error: ";
 static const char* const	warningHeader = "Warning: ";
 
 static const char* const	xslHeader = "XSL ";
 static const char* const	xmlHeader = "XML ";
-static const char* const	queryHeader = "PATTERN ";
+static const char* const	xpathHeader = "XPATH ";
 
 static const char* const	styleTreeNodeHeader = ", style tree node: ";
 static const char* const	sourceTreeNodeHeader = ", source tree node: ";
+static const char* const	uriHeader = ", document ";
 static const char* const	lineNoHeader = ", line ";
 static const char* const	charOffsetHeader = ", offset ";
 
@@ -112,14 +117,14 @@ ProblemListenerDefault::setPrintWriter(PrintWriter*		pw)
 
 
 
-bool
+void
 ProblemListenerDefault::problem(
 			eProblemSource			where,
 			eClassification			classification, 
-			const XalanNode*		styleNode,
 			const XalanNode*		sourceNode,
+			const XalanNode*		styleNode,
 			const XalanDOMString&	msg,
-			const XalanDOMChar*		/* id */,
+			const XalanDOMChar*		uri,
 			int						lineNo,
 			int						charOffset)
 {
@@ -129,9 +134,9 @@ ProblemListenerDefault::problem(
 		{
 			m_pw->print(xmlHeader);
 		}
-		else if (eQUERYENGINE == where)
+		else if (eXPATH == where)
 		{
-			m_pw->print(queryHeader);
+			m_pw->print(xpathHeader);
 		}
 		else
 		{
@@ -161,6 +166,12 @@ ProblemListenerDefault::problem(
 			m_pw->print(sourceNode->getNodeName());
 		}
 
+		if (0 != uri)
+		{
+			m_pw->print(uriHeader);
+			m_pw->print(uri);
+		}
+
 		if (0 != lineNo)
 		{
 			m_pw->print(lineNoHeader);
@@ -175,6 +186,4 @@ ProblemListenerDefault::problem(
 
 		m_pw->println();
 	}
-
-	return classification == eERROR ? true : false;
 }

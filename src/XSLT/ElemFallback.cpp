@@ -103,7 +103,10 @@ ElemFallback::ElemFallback(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(Constants::ELEMNAME_FALLBACK_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+				constructionContext.error(
+					"xsl:fallback has an illegal attribute",
+					0,
+					this);
 			}
 		}
 	}
@@ -151,6 +154,9 @@ ElemFallback::execute(StylesheetExecutionContext&		executionContext) const
 	else
 	{
 		// Should never happen
-		executionContext.error("Error!  parent of xsl:fallback must be an extension element!", executionContext.getCurrentNode(), this);
+		executionContext.error(
+			"Parent of xsl:fallback must be an extension element",
+			executionContext.getCurrentNode(),
+			this);
 	}
 }

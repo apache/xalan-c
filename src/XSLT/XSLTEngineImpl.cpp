@@ -1238,8 +1238,8 @@ XSLTEngineImpl::problem(
 		m_problemListener->problem(
 					ProblemListener::eXSLPROCESSOR,
 					classification,
-					styleNode,
 					sourceNode,
+					styleNode,
 					msg,
 					id,
 					lineNumber,
@@ -1261,14 +1261,19 @@ XSLTEngineImpl::problem(
 			const XalanNode*					sourceNode,
 			const ElemTemplateElement*			styleNode) const
 {
-	const Locator* const	locator = getLocatorFromStack();
-
 	const XalanDOMChar*		id = 0;
 
 	XalanDOMString			uri;
 
 	int						lineNumber = -1;
 	int 					columnNumber = -1;
+
+	const Locator*			locator = getLocatorFromStack();
+
+	if (locator == 0)
+	{
+		locator = styleNode->getLocator();
+	}
 
 	if (locator != 0)
 	{

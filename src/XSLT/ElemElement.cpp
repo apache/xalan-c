@@ -100,12 +100,12 @@ ElemElement::ElemElement(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_nameAVT = new AVT(this, aname,	atts.getType(i), atts.getValue(i),
+			m_nameAVT = new AVT(getLocator(), aname,	atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_NAMESPACE))
 		{
-			m_namespaceAVT = new AVT(this, aname, atts.getType(i), atts.getValue(i),
+			m_namespaceAVT = new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext); 
 		}
 		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) || processSpaceAttr(aname, atts, i) ||
@@ -117,7 +117,10 @@ ElemElement::ElemElement(
 
 	if(0 == m_nameAVT)
 	{
-		constructionContext.error(Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING + " must have a name attribute.");
+		constructionContext.error(
+			"xsl:element must have a 'name' attribute.",
+			0,
+			this);
 	}
 	
 }

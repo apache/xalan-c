@@ -98,7 +98,7 @@ ElemApplyTemplates::ElemApplyTemplates(
 		switch(tok)
 		{
 		case Constants::TATTRNAME_SELECT:
-			m_selectPattern = constructionContext.createXPath(this, atts.getValue(i), *this);
+			m_selectPattern = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
 			break;
 
 		case Constants::TATTRNAME_MODE:
@@ -120,7 +120,7 @@ ElemApplyTemplates::ElemApplyTemplates(
 	if(0 == m_selectPattern)
 	{
 		m_selectPattern = constructionContext.createXPath(
-			this,
+			getLocator(),
 			Constants::PSEUDONAME_NODE,
 			*this);
 	}

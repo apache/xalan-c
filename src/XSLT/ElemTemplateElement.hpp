@@ -102,7 +102,7 @@ class XPath;
 
 
 
-class XALAN_XSLT_EXPORT ElemTemplateElement : public XalanElement, public PrefixResolver, public Locator
+class XALAN_XSLT_EXPORT ElemTemplateElement : public XalanElement, public PrefixResolver
 {
 public:
 
@@ -125,6 +125,14 @@ public:
 
 	virtual
 	~ElemTemplateElement();
+
+	/** 
+	 * Get the Locator for the node.  This may return 0.
+	 * 
+	 * @return The Locator for the node.
+	 */
+	virtual const Locator*
+	getLocator() const;
 
 	/** 
 	* See if this is a xmlns attribute, and, if so, process it.
@@ -287,6 +295,30 @@ public:
 	getXSLToken() const
 	{
 		return m_xslToken;
+	}
+
+	/** 
+	 * Get the line number in the stylesheet where the element appears.
+	 * Returns -1 if the information is not available.
+	 *
+	 * @return the line number in the stylesheet
+	 */
+	int
+	getLineNumber() const
+	{
+		return m_lineNumber;
+	}
+
+	/** 
+	 * Get the column number in the stylesheet where the element appears.
+	 * Returns -1 if the information is not available.
+	 *
+	 * @return the column number in the stylesheet
+	 */
+	int
+	getColumnNumber() const
+	{
+		return m_columnNumber;
 	}
 
 	/** 
@@ -645,21 +677,6 @@ public:
 	getURI() const;
 
 
-	// These interfaces are inherited from Locator...
-
-	virtual const XMLCh*
-	getPublicId() const;
-
-	virtual const XMLCh*
-	getSystemId() const;
-
-	virtual int
-	getLineNumber() const;
-
-	virtual int
-	getColumnNumber() const;
-
-
 	// These optimization interfaces are new to ElemTemplateElement...
 	bool
 	hasParams() const
@@ -812,6 +829,32 @@ protected:
 
 private:
 
+	class LocatorProxy : public Locator
+	{
+	public:
+
+		LocatorProxy(const ElemTemplateElement&		theElement);
+
+		virtual
+		~LocatorProxy();
+
+		virtual const XMLCh*
+		getPublicId() const;
+
+		virtual const XMLCh*
+		getSystemId() const;
+
+		virtual int
+		getLineNumber() const;
+
+		virtual int
+		getColumnNumber() const;
+
+	private:
+
+		const ElemTemplateElement&	m_element;
+	};
+
 	/** 
 	 * Take the contents of a template element, process it, and
 	 * convert it to a string.
@@ -855,6 +898,8 @@ private:
 		   eCanGenerateAttributes = 16 };
 
 	unsigned				m_optimizationFlags;
+
+	LocatorProxy			m_locatorProxy;
 
 	static const XalanEmptyNamedNodeMap		s_fakeAttributes;
 };

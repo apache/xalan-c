@@ -101,13 +101,18 @@ ElemMessage::ElemMessage(
 			}
 			else if (equals(avalue, Constants::ATTRVAL_NO) == false)
 			{
-				constructionContext.error("Attribute terminate has an illegal value: " +
-										  XalanDOMString(avalue));
+				constructionContext.error(
+					"The attribute 'terminate' has an illegal value",
+					0,
+					this);
 			}
 		}
 		else if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(Constants::ELEMNAME_MESSAGE_WITH_PREFIX_STRING + " has an illegal attribute: " + XalanDOMString(aname));
+			constructionContext.error(
+				"xsl:message has an illegal attribute",
+				0,
+				this);
 		}
 	}
 }

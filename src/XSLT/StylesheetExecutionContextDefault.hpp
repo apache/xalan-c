@@ -62,7 +62,7 @@
 
 
 // Base class include file.
-#include "StylesheetExecutionContext.hpp"
+#include <XSLT/StylesheetExecutionContext.hpp>
 
 
 
@@ -878,9 +878,21 @@ public:
 
 	virtual void
 	error(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const Locator* 			locator) const;
+
+	virtual void
+	error(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
 			const XalanNode* 	styleNode = 0) const;
+
+	virtual void
+	error(
+			const char*			msg,
+			const XalanNode* 	sourceNode,
+			const Locator* 		locator) const;
 
 	virtual void
 	warn(
@@ -890,9 +902,21 @@ public:
 
 	virtual void
 	warn(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const Locator* 			locator) const;
+
+	virtual void
+	warn(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
 			const XalanNode* 	styleNode = 0) const;
+
+	virtual void
+	warn(
+			const char*			msg,
+			const XalanNode* 	sourceNode,
+			const Locator* 		locator) const;
 
 	virtual void
 	message(
@@ -902,9 +926,21 @@ public:
 
 	virtual void
 	message(
+			const XalanDOMString&	msg,
+			const XalanNode* 	sourceNode,
+			const Locator* 		locator) const;
+
+	virtual void
+	message(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
 			const XalanNode* 	styleNode = 0) const;
+
+	virtual void
+	message(
+			const char*			msg,
+			const XalanNode* 	sourceNode,
+			const Locator* 		locator) const;
 
 
 	class XPathCacheReturnFunctor

@@ -63,15 +63,16 @@
 
 
 // Base include file.  Must be first.
-#include "XSLTDefinitions.hpp"
+#include <XSLT/XSLTDefinitions.hpp>
 
 
 
-// $$$ ToDo: This is necessary while XalanDOMString is still a typedef.
 #include <XalanDOM/XalanDOMString.hpp>
 
 
 
+
+class ElemTemplateElement;
 class XalanNode;
 class PrintWriter;
 
@@ -88,14 +89,14 @@ class XALAN_XSLT_EXPORT ProblemListener
 public:
 
 	/// Sources of problem
-	enum eProblemSource { eXMLPARSER       = 1,
-						  eXSLPROCESSOR    = 2,
-						  eQUERYENGINE     = 3 };
+	enum eProblemSource { eXMLPARSER		= 1,
+						  eXSLPROCESSOR		= 2,
+						  eXPATH			= 3 };
 
 	/// Severity of problem
-	enum eClassification {	eMESSAGE = 0,
-							eWARNING = 1,
-							eERROR   = 2 };
+	enum eClassification {	eMESSAGE	= 0,
+							eWARNING	= 1,
+							eERROR		= 2 };
 
 	ProblemListener();
 
@@ -115,26 +116,25 @@ public:
      * 
      * @param   where          either in XMLPARSER, XSLPROCESSOR, or QUERYENGINE
      * @param   classification either MESSAGE, ERROR or WARNING
-	 * @param   styleNode      style tree node where the problem occurred
-	 *                         (may be null)
 	 * @param   sourceNode     source tree node where the problem occurred
-	 *                         (may be null)
+	 *                         (may be 0)
+	 * @param   styleNode      style tree node where the problem occurred
+	 *                         (may be 0)
 	 * @param   msg            string message explaining the problem.
+	 * @param   uri            the URI of the document where the problem occurred.  May be 0.
 	 * @param   lineNo         line number where the problem occurred,  
-	 *                         if it is known, else zero
+	 *                         if it is known, else -1
 	 * @param   charOffset     character offset where the problem,  
-	 *                         occurred if it is known, else zero
-	 * @return  true if the return is an ERROR, in which case exception will be
-	 *          thrown.  Otherwise the processor will continue to process.
+	 *                         occurred if it is known, else -1
 	 */
-	virtual bool
+	virtual void
 	problem(
 			eProblemSource			where,
-			eClassification			classification, 
-			const XalanNode*		styleNode,
+			eClassification			classification,
 			const XalanNode*		sourceNode,
+			const XalanNode*		styleNode,
 			const XalanDOMString&	msg,
-			const XalanDOMChar*		id,
+			const XalanDOMChar*		uri,
 			int						lineNo,
 			int						charOffset) = 0;
 

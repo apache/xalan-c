@@ -1814,9 +1814,6 @@ StylesheetExecutionContextDefault::createPrintWriter(ostream&	theStream)
 StylesheetExecutionContextDefault::createPrintWriter(std::ostream&	theStream)
 #endif
 {
-	// $$$ ToDo: We need to either remove these explicit dependencies on the
-	// Xerces classes, or make the Xerces classes more generic. (I prefer the
-	// latter...)
 	XalanOutputStream* const		theOutputStream =
 		new XalanStdOutputStream(theStream);
 
@@ -1921,11 +1918,35 @@ StylesheetExecutionContextDefault::error(
 
 void
 StylesheetExecutionContextDefault::error(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const Locator*			locator) const
+{
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->error(msg, sourceNode);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::error(
 			const char*			msg,
 			const XalanNode*	sourceNode,
 			const XalanNode*	styleNode) const
 {
 	error(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::error(
+			const char*			msg,
+			const XalanNode*	sourceNode,
+			const Locator*		locator) const
+{
+	error(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
 
 
@@ -1945,11 +1966,35 @@ StylesheetExecutionContextDefault::warn(
 
 void
 StylesheetExecutionContextDefault::warn(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const Locator*			locator) const
+{
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->warn(msg, sourceNode);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::warn(
 			const char*			msg,
 			const XalanNode*	sourceNode,
 			const XalanNode*	styleNode) const
 {
 	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::warn(
+			const char*			msg,
+			const XalanNode*	sourceNode,
+			const Locator*		locator) const
+{
+	warn(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
 
 
@@ -1969,11 +2014,35 @@ StylesheetExecutionContextDefault::message(
 
 void
 StylesheetExecutionContextDefault::message(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const Locator*			locator) const
+{
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->message(msg, sourceNode);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::message(
 			const char*			msg,
 			const XalanNode*	sourceNode,
 			const XalanNode*	styleNode) const
 {
 	message(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::message(
+			const char*			msg,
+			const XalanNode*	sourceNode,
+			const Locator*		locator) const
+{
+	message(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
 
 

@@ -94,7 +94,7 @@ ElemWithParam::ElemWithParam(
 
 		if(equals(aname, Constants::ATTRNAME_SELECT))
 		{
-			m_selectPattern = constructionContext.createXPath(this, atts.getValue(i), *this);
+			m_selectPattern = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_NAME))
 		{

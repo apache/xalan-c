@@ -121,7 +121,6 @@ ElemTemplateElement::ElemTemplateElement(
 			int								xslToken) :
 	XalanElement(),
 	PrefixResolver(),
-	Locator(),
 	m_finishedConstruction(false),
 	m_namespacesHandler(stylesheetTree.getNamespacesHandler(),
 						stylesheetTree.getNamespaces(),
@@ -137,7 +136,8 @@ ElemTemplateElement::ElemTemplateElement(
 	m_firstChild(0),
 	m_surrogateChildren(*this),
 	m_baseIndentifier(stylesheetTree.getCurrentIncludeBaseIdentifier()),
-	m_optimizationFlags(eCanGenerateAttributes)
+	m_optimizationFlags(eCanGenerateAttributes),
+	m_locatorProxy(*this)
 {
 }
 
@@ -151,6 +151,14 @@ ElemTemplateElement::~ElemTemplateElement()
 	{
 		delete m_firstChild;
 	}
+}
+
+
+
+const Locator*
+ElemTemplateElement::getLocator() const
+{
+	return &m_locatorProxy;
 }
 
 
@@ -206,7 +214,7 @@ ElemTemplateElement::processSpaceAttr(
 	}
 	else
 	{
-		error(TranscodeFromLocalCodePage("xml:space has an illegal value: ") + spaceVal);
+		error("xml:space has an illegal value");
 	}
 }
 
@@ -234,7 +242,7 @@ ElemTemplateElement::processSpaceAttr(
 		}
 		else
 		{
-			error(TranscodeFromLocalCodePage("xml:space has an illegal value: ") + spaceVal);
+			error("xml:space has an illegal value");
 		}
     }
 
@@ -1502,24 +1510,37 @@ ElemTemplateElement::getURI() const
 
 
 
-int
-ElemTemplateElement::getLineNumber() const
+ElemTemplateElement::LocatorProxy::LocatorProxy(const ElemTemplateElement&	theElement) :
+	m_element(theElement)
 {
-	return m_lineNumber;
+}
+
+
+
+ElemTemplateElement::LocatorProxy::~LocatorProxy()
+{
 }
 
 
 
 int
-ElemTemplateElement::getColumnNumber() const
+ElemTemplateElement::LocatorProxy::getLineNumber() const
 {
-	return m_columnNumber;
+	return m_element.getLineNumber();
+}
+
+
+
+int
+ElemTemplateElement::LocatorProxy::getColumnNumber() const
+{
+	return m_element.getColumnNumber();
 }
 
 
 
 const XMLCh*
-ElemTemplateElement::getPublicId() const
+ElemTemplateElement::LocatorProxy::getPublicId() const
 {
 	return 0;
 }
@@ -1527,9 +1548,19 @@ ElemTemplateElement::getPublicId() const
 
 
 const XMLCh*
-ElemTemplateElement::getSystemId() const
+ElemTemplateElement::LocatorProxy::getSystemId() const
 {
-	return c_wstr(m_baseIndentifier);
+	const XalanDOMString&	theURI =
+		m_element.getURI();
+
+	if (length(theURI) == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return c_wstr(theURI);
+	}
 }
 
 

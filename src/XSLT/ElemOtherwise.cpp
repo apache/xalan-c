@@ -91,7 +91,10 @@ ElemOtherwise::ElemOtherwise(
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:otherwise has an illegal attribute",
+				0,
+				this);
 		}
 	}
 }

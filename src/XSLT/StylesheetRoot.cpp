@@ -230,6 +230,7 @@ StylesheetRoot::process(
 
 	typedef StylesheetExecutionContext::PushAndPopContextMarker	PushAndPopContextMarker;
 	typedef StylesheetExecutionContext::PushAndPopElementFrame	PushAndPopElementFrame;
+	typedef StylesheetExecutionContext::ResolveAndClearTopLevelParams	ResolveAndClearTopLevelParams;
 
 	PushAndPopContextMarker		thePushAndPopContextMarker(executionContext);
 
@@ -237,7 +238,7 @@ StylesheetRoot::process(
 				executionContext,
 				0);
 
-	executionContext.resolveTopLevelParams();
+	ResolveAndClearTopLevelParams	theResolveAndClearTopLevelParams(executionContext);
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)
 	QuantifyStartRecordingData();
@@ -263,9 +264,6 @@ StylesheetRoot::process(
 #if defined(XALAN_VQ_SPECIAL_TRACE)
 	QuantifyStopRecordingData();
 #endif
-
-	// Reset the top-level params for the next round.
-	executionContext.clearTopLevelParams();
 
 	if(executionContext.doDiagnosticsOutput())
 	{

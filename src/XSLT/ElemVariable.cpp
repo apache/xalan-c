@@ -108,7 +108,7 @@ ElemVariable::ElemVariable(
 		switch(tok)
 		{
 		case Constants::TATTRNAME_SELECT:
-			m_selectPattern = constructionContext.createXPath(this, atts.getValue(i),
+			m_selectPattern = constructionContext.createXPath(getLocator(), atts.getValue(i),
 				*this);
 			break;
 

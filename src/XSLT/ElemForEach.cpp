@@ -103,17 +103,23 @@ ElemForEach::ElemForEach(
 
 		if(equals(aname, Constants::ATTRNAME_SELECT))
 		{
-			m_selectPattern = constructionContext.createXPath(this, atts.getValue(i), *this);
+			m_selectPattern = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || processSpaceAttr(aname, atts, i)))
 		{
-			constructionContext.error(Constants::ELEMNAME_FOREACH_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:for-each has an illegal attribute",
+				0,
+				this);
 		}
 	}
 
 	if(0 == m_selectPattern)
 	{
-		constructionContext.error(Constants::ELEMNAME_FOREACH_WITH_PREFIX_STRING + " requires attribute: " + Constants::ATTRNAME_SELECT);
+		constructionContext.error(
+			"xsl:for-each must have a 'select' attribute",
+			0,
+			this);
 	}
 }
 

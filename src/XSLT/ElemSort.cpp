@@ -97,28 +97,28 @@ ElemSort::ElemSort(
 		if(equals(aname, Constants::ATTRNAME_SELECT))
 		{
 			m_selectPattern 
-				= constructionContext.createXPath(this, atts.getValue(i), *this);
+				= constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_LANG))
 		{			
-			m_langAVT = new AVT(this, aname, atts.getType(i), atts.getValue(i),
+			m_langAVT = new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_DATATYPE))
 		{
-			m_dataTypeAVT = new AVT(this, aname, atts.getType(i), atts.getValue(i),
+			m_dataTypeAVT = new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_ORDER))
 		{
-			m_orderAVT = new AVT(this, aname, atts.getType(i), atts.getValue(i),
+			m_orderAVT = new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_CASEORDER))
 		{
-			constructionContext.warn("Xalan C++ does not yet handle the " + Constants::ATTRNAME_CASEORDER + " attribute!");
+			constructionContext.warn("Xalan C++ does not yet handle the 'case-order' attribute!");
 
-			m_caseOrderAVT = new AVT(this, aname, atts.getType(i), atts.getValue(i),
+			m_caseOrderAVT = new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
@@ -129,19 +129,19 @@ ElemSort::ElemSort(
 
 	if(0 == m_dataTypeAVT)
 	{
-		m_dataTypeAVT = new AVT(this, c_wstr(Constants::ATTRNAME_DATATYPE), c_wstr(Constants::ATTRTYPE_CDATA), c_wstr(Constants::ATTRVAL_DATATYPE_TEXT), 
+		m_dataTypeAVT = new AVT(getLocator(), c_wstr(Constants::ATTRNAME_DATATYPE), c_wstr(Constants::ATTRTYPE_CDATA), c_wstr(Constants::ATTRVAL_DATATYPE_TEXT), 
 			*this, constructionContext);
 	}
 
 	if(0 == m_orderAVT)
 	{
-		m_orderAVT = new AVT(this, c_wstr(Constants::ATTRNAME_ORDER),	c_wstr(Constants::ATTRTYPE_CDATA), c_wstr(Constants::ATTRVAL_ORDER_ASCENDING),
+		m_orderAVT = new AVT(getLocator(), c_wstr(Constants::ATTRNAME_ORDER),	c_wstr(Constants::ATTRTYPE_CDATA), c_wstr(Constants::ATTRVAL_ORDER_ASCENDING),
 			*this, constructionContext);
 	}
 
 	if(0 == m_selectPattern)
 	{
-		m_selectPattern = constructionContext.createXPath(this, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING(".")), *this);
+		m_selectPattern = constructionContext.createXPath(getLocator(), StaticStringToDOMString(XALAN_STATIC_UCODE_STRING(".")), *this);
 	}
 }
 

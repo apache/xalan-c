@@ -122,7 +122,7 @@ ElemValueOf::ElemValueOf(
 
 				m_selectPattern =
 					constructionContext.createXPath(
-						this,
+						getLocator(),
 						avalue,
 						*this);
 			}

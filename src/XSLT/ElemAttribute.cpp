@@ -100,12 +100,12 @@ ElemAttribute::ElemAttribute(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_pNameAVT = new AVT(this, aname, atts.getType(i), atts.getValue(i),
+			m_pNameAVT = new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
 		}
 		else if(equals(aname,Constants::ATTRNAME_NAMESPACE))
 		{
-			m_pNamespaceAVT = new AVT(this, aname, atts.getType(i), atts.getValue(i),
+			m_pNamespaceAVT = new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
@@ -127,7 +127,7 @@ ElemAttribute::ElemAttribute(
 #endif
 
 		constructionContext.error(
-			"xsl:attribute must have a \"name\" attribute",
+			"xsl:attribute must have a 'name' attribute",
 			0,
 			this);
 	} 

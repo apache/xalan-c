@@ -93,18 +93,24 @@ ElemPI::ElemPI(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{			
-			m_nameAVT = new AVT(this, aname, atts.getType(i), atts.getValue(i),
+			m_nameAVT = new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
 		}
 		else if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(Constants::ELEMNAME_PI_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:processing-instruction has an illegal attribute",
+				0,
+				this);
 		}
 	}
 
 	if(0 == m_nameAVT)
 	{
-		constructionContext.error(Constants::ELEMNAME_PI_WITH_PREFIX_STRING + " must have a name attribute.");
+		constructionContext.error(
+			"xsl:processing-instruction must have a 'name' attribute",
+			0,
+			this);
 	}
 }
 
@@ -141,14 +147,12 @@ ElemPI::execute(StylesheetExecutionContext&		executionContext) const
 
 	if(equalsIgnoreCase(piName, Constants::ATTRVAL_OUTPUT_METHOD_XML))
 	{
-		error("processing-instruction name can not be 'xml'");
+		executionContext.error("processing-instruction name can not be 'xml'", 0, this);
 	}
 	else if(!isValidNCName(piName))
 	{
-		error("processing-instruction name must be a valid NCName: " + piName);
+		executionContext.error("processing-instruction name must be a valid NCName", 0, this);
 	}
-
-	StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
 	childrenToResultPI(
 			executionContext,

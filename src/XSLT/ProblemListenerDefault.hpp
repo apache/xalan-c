@@ -71,7 +71,7 @@
 
 
 // Xalan header files.
-#include "ProblemListener.hpp"
+#include <XSLT/ProblemListener.hpp>
 
 
 
@@ -92,14 +92,14 @@ public:
 	virtual void
 	setPrintWriter(PrintWriter*		pw);
 
-	virtual bool
+	virtual void
 	problem(
 			eProblemSource			where,
 			eClassification			classification, 
-			const XalanNode*		styleNode,
 			const XalanNode*		sourceNode,
+			const XalanNode*		styleNode,
 			const XalanDOMString&	msg,
-			const XalanDOMChar*		id,
+			const XalanDOMChar*		uri,
 			int						lineNo,
 			int						charOffset);
 

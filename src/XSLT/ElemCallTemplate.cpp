@@ -112,7 +112,7 @@ ElemCallTemplate::ElemCallTemplate(
 	if (m_templateName.isEmpty() == true)
 	{
 		constructionContext.error(
-			"xsl:call-template must have a \"name\" attribute",
+			"xsl:call-template must have a 'name' attribute",
 			0,
 			this);
 	}

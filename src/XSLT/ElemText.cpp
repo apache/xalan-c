@@ -104,7 +104,10 @@ ElemText::ElemText(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(Constants::ELEMNAME_TEXT_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:text has an illegal attribute",
+				0,
+				this);
 		}
 	}
 }

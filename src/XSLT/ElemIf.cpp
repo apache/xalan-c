@@ -105,7 +105,7 @@ ElemIf::ElemIf(
 		switch(tok)
 		{
 		case Constants::TATTRNAME_TEST:
-			m_test = constructionContext.createXPath(this, atts.getValue(i), *this);
+			m_test = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
 			break;
 
 		case Constants::TATTRNAME_XMLSPACE:
@@ -116,7 +116,7 @@ ElemIf::ElemIf(
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
 				constructionContext.error(
-					XalanDOMString("xsl:if has an illegal attribute"),
+					"xsl:if has an illegal attribute",
 					0,
 					this);
 			}
@@ -126,9 +126,9 @@ ElemIf::ElemIf(
 	if(0 == m_test)
 	{
 		constructionContext.error(
-			Constants::ELEMNAME_IF_WITH_PREFIX_STRING + " must have a 'test' attribute.",
-					0,
-					this);
+				"xsl:if must have a 'test' attribute",
+				0,
+				this);
 	}
 }
 
@@ -159,9 +159,9 @@ ElemIf::execute(StylesheetExecutionContext&		executionContext) const
 		executionContext.fireSelectEvent(
 			SelectionEvent(executionContext,
 			sourceNode,
-			*this, 
+			*this,
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("test")),
-			*m_test, 
+			*m_test,
 			test));
 	}
 

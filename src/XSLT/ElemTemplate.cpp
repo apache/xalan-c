@@ -105,7 +105,7 @@ ElemTemplate::ElemTemplate(
 		switch(tok)
 		{
 		case Constants::TATTRNAME_MATCH:
-			m_matchPattern = constructionContext.createMatchPattern(this, atts.getValue(i), *this);
+			m_matchPattern = constructionContext.createMatchPattern(getLocator(), atts.getValue(i), *this);
 			break; 
 
 		case Constants::TATTRNAME_NAME:

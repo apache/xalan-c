@@ -108,7 +108,7 @@ ElemAttributeSet::ElemAttributeSet(
 	if(isEmpty(m_QName.getLocalPart()))
 	{
 		constructionContext.error(
-			"xsl:attribute-set must have a \"name\" attribute",
+			"xsl:attribute-set must have a 'name' attribute",
 			0,
 			this);
 	}
