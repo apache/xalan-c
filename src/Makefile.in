@@ -322,7 +322,7 @@ $(BINTARGETDIR)/testXPath: ${ALL_OBJECTS_DIR}/TestXPath.o ${ALL_OBJECTS_DIR}/Nod
 ${ALL_OBJECTS_DIR}/%.o:$(TESTXPATH_DIR)/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
-Samples: lib  CompileStylesheet  ExternalFunction  SimpleTransform  TraceListen  UseStylesheetParam  XalanTransform XPathWrapper #  ThreadSafe
+Samples: lib  CompileStylesheet  ExternalFunction  SimpleTransform  StreamTransform  TraceListen  UseStylesheetParam  XalanTransform XPathWrapper #  ThreadSafe
 
 ApacheModuleXSLT: lib ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 
 
@@ -334,7 +334,7 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ApacheModuleXSLT/%.c
 
 CompileStylesheet: lib $(SAMPLES_DIR)/CompileStylesheet/CompileStylesheet 
 
-$(SAMPLES_DIR)/CompileStylesheet/CompileStylesheet: ${ALL_OBJECTS_DIR}/CompileStylesheet.o
+$(BINTARGETDIR)/CompileStylesheet: ${ALL_OBJECTS_DIR}/CompileStylesheet.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/CompileStylesheet/%.cpp
@@ -342,7 +342,7 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/CompileStylesheet/%.cpp
 
 ExternalFunction: lib $(SAMPLES_DIR)/ExternalFunction/ExternalFunction 
 
-$(SAMPLES_DIR)/ExternalFunction/ExternalFunction: ${ALL_OBJECTS_DIR}/ExternalFunction.o
+$(BINTARGETDIR)/ExternalFunction: ${ALL_OBJECTS_DIR}/ExternalFunction.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ExternalFunction/%.cpp
@@ -350,15 +350,23 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ExternalFunction/%.cpp
 
 SimpleTransform: lib $(SAMPLES_DIR)/SimpleTransform/SimpleTransform 
 
-$(SAMPLES_DIR)/SimpleTransform/SimpleTransform: ${ALL_OBJECTS_DIR}/SimpleTransform.o
+$(BINTARGETDIR)/SimpleTransform: ${ALL_OBJECTS_DIR}/SimpleTransform.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SimpleTransform/%.cpp
-	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<	
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+	
+StreamTransform: lib $(SAMPLES_DIR)/StreamTransform/StreamTransform
+
+$(BINTARGETDIR)/StreamTransform: ${ALL_OBJECTS_DIR}/StreamTransform.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/StreamTransform/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
 
 TraceListen: lib $(SAMPLES_DIR)/TraceListen/TraceListen 
 	
-$(SAMPLES_DIR)/TraceListen/TraceListen: ${ALL_OBJECTS_DIR}/TraceListen.o
+$(BINTARGETDIR)/TraceListen: ${ALL_OBJECTS_DIR}/TraceListen.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/TraceListen/%.cpp
@@ -366,7 +374,7 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/TraceListen/%.cpp
 
 UseStylesheetParam: lib $(SAMPLES_DIR)/UseStylesheetParam/UseStylesheetParam 
 
-$(SAMPLES_DIR)/UseStylesheetParam/UseStylesheetParam: ${ALL_OBJECTS_DIR}/UseStylesheetParam.o
+$(BINTARGETDIR)/UseStylesheetParam: ${ALL_OBJECTS_DIR}/UseStylesheetParam.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/UseStylesheetParam/%.cpp
@@ -374,7 +382,7 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/UseStylesheetParam/%.cpp
 
 XalanTransform: lib $(SAMPLES_DIR)/XalanTransform/XalanTransform
 
-$(SAMPLES_DIR)/XalanTransform/XalanTransform: ${ALL_OBJECTS_DIR}/XalanTransform.o
+$(BINTARGETDIR)/XalanTransform: ${ALL_OBJECTS_DIR}/XalanTransform.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XalanTransform/%.cpp
@@ -382,7 +390,7 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XalanTransform/%.cpp
 	
 XPathWrapper: lib $(SAMPLES_DIR)/XPathWrapper/XPathWrapper 
 
-$(SAMPLES_DIR)/XPathWrapper/XPathWrapper: ${ALL_OBJECTS_DIR}/XPathWrapper.o ${ALL_OBJECTS_DIR}/TestDriver.o
+$(BINTARGETDIR)/XPathWrapper: ${ALL_OBJECTS_DIR}/XPathWrapper.o ${ALL_OBJECTS_DIR}/TestDriver.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XPathWrapper/%.cpp
@@ -399,11 +407,12 @@ clean:
 	rm -f $(BINTARGETDIR)/testXSLT
 	rm -f $(BINTARGETDIR)/testXPath
 	rm -f ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 	
-	rm -f $(SAMPLES_DIR)/CompileStylesheet/CompileStylesheet
-	rm -f $(SAMPLES_DIR)/ExternalFunction/ExternalFunction
-	rm -f $(SAMPLES_DIR)/SimpleTransform/SimpleTransform
-	rm -f $(SAMPLES_DIR)/TraceListen/TraceListen
-	rm -f $(SAMPLES_DIR)/UseStylesheetParam/UseStylesheetParam
-	rm -f $(SAMPLES_DIR)/XalanTransform/XalanTransform
-	rm -f $(SAMPLES_DIR)/XPathWrapper/XPathWrapper
+	rm -f $(BINTARGETDIR)/CompileStylesheet
+	rm -f $(BINTARGETDIR)/ExternalFunction
+	rm -f $(BINTARGETDIR)/SimpleTransform
+	rm -f $(BINTARGETDIR)/StreamTransform
+	rm -f $(BINTARGETDIR)/TraceListen
+	rm -f $(BINTARGETDIR)/UseStylesheetParam
+	rm -f $(BINTARGETDIR)/XalanTransform
+	rm -f $(BINTARGETDIR)/XPathWrapper
 
