@@ -2070,13 +2070,13 @@ XSLTEngineImpl::checkDefaultNamespace(
 
 void
 XSLTEngineImpl::warnCopyTextNodesOnly(
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const
+			const XalanNode*	sourceNode,
+			const LocatorType*	locator)
 {
 	warn(
 			"Only text nodes can be copied in this context.  The node is ignored",
-			sourceNode,
-			styleNode);
+			locator,
+			sourceNode);
 }
 
 
@@ -2123,9 +2123,9 @@ XSLTEngineImpl::cloneToResultTree(
 
 void
 XSLTEngineImpl::cloneToResultTree(
-			const XalanNode&			node,
-			bool						cloneTextNodesOnly,
-			const ElemTemplateElement*	styleNode)
+			const XalanNode&	node,
+			bool				cloneTextNodesOnly,
+			const LocatorType*	locator)
 {
 	XalanNode::NodeType		posNodeType = node.getNodeType();
 
@@ -2138,14 +2138,14 @@ XSLTEngineImpl::cloneToResultTree(
 				static_cast<const XalanDocumentFragment&>(node),
 #endif
 			cloneTextNodesOnly,
-			styleNode);
+			locator);
 	}
 	else if (cloneTextNodesOnly == true &&
 		posNodeType != XalanNode::TEXT_NODE)
 	{
 		warnCopyTextNodesOnly(
 			&node,
-			styleNode);
+			locator);
 	}
 	else
 	{
@@ -2165,7 +2165,7 @@ XSLTEngineImpl::cloneToResultTree(
 							false,
 							true,
 							false,
-							styleNode);
+							locator);
 
 			const XalanNode*	nextNode = pos->getFirstChild();
 
@@ -2219,13 +2219,13 @@ XSLTEngineImpl::cloneToResultTree(
 
 void
 XSLTEngineImpl::cloneToResultTree(
-			const XalanNode&			node,
-			XalanNode::NodeType			nodeType,
-			bool						isLiteral,
-			bool						overrideStrip,
-			bool						shouldCloneAttributes,
-			bool						cloneTextNodesOnly,
-			const ElemTemplateElement*	styleNode)
+			const XalanNode&		node,
+			XalanNode::NodeType		nodeType,
+			bool					isLiteral,
+			bool					overrideStrip,
+			bool					shouldCloneAttributes,
+			bool					cloneTextNodesOnly,
+			const LocatorType*		locator)
 {
 	assert(nodeType == node.getNodeType());
 	assert(m_executionContext != 0);
@@ -2236,7 +2236,7 @@ XSLTEngineImpl::cloneToResultTree(
 		{
 			warnCopyTextNodesOnly(
 					&node,
-					styleNode);
+					locator);
 		}
 		else
 		{
@@ -2307,8 +2307,8 @@ XSLTEngineImpl::cloneToResultTree(
 			{
 				warn(
 					"Attempting to add an attribute when there is no open element.  The attribute will be ignored",
-					&node,
-					styleNode);
+					locator,
+					&node);
 			}
 			break;
 
@@ -2337,7 +2337,7 @@ XSLTEngineImpl::cloneToResultTree(
 		break;
 
 		default:
-			error("Cannot create item in result tree: " + node.getNodeName());
+			error("Cannot create item in result tree", locator, &node);
 		break;
 		}
 	}
@@ -2347,9 +2347,9 @@ XSLTEngineImpl::cloneToResultTree(
 
 void
 XSLTEngineImpl::outputToResultTree(
-			const XObject& 				value,
-			bool						outputTextNodesOnly,
-			const ElemTemplateElement*	styleNode)
+			const XObject& 		value,
+			bool				outputTextNodesOnly,
+			const LocatorType*	locator)
 {
 	const XObject::eObjectType	type = value.getType();
 
@@ -2383,7 +2383,7 @@ XSLTEngineImpl::outputToResultTree(
 				{
 					warnCopyTextNodesOnly(
 							pos,
-							styleNode);
+							locator);
 				}
 				else
 				{
@@ -2395,7 +2395,7 @@ XSLTEngineImpl::outputToResultTree(
 
 						XalanNode::NodeType		posNodeType = pos->getNodeType();
 
-						cloneToResultTree(*pos, posNodeType, false, false, false, false, styleNode);
+						cloneToResultTree(*pos, posNodeType, false, false, false, false, locator);
 
 						XalanNode*	nextNode = pos->getFirstChild();
 
@@ -2444,7 +2444,7 @@ XSLTEngineImpl::outputToResultTree(
 		break;
 		
 	case XObject::eTypeResultTreeFrag:
-		outputResultTreeFragment(value, outputTextNodesOnly, styleNode);
+		outputResultTreeFragment(value, outputTextNodesOnly, locator);
 		break;
 
 	case XObject::eTypeNull:
@@ -2462,7 +2462,7 @@ void
 XSLTEngineImpl::outputResultTreeFragment(
 			const XalanDocumentFragment& 	theTree,
 			bool							outputTextNodesOnly,
-			const ElemTemplateElement*		styleNode)
+			const LocatorType*				locator)
 {
 	for(XalanNode* child = theTree.getFirstChild(); child != 0; child = child->getNextSibling())
 	{
@@ -2475,7 +2475,7 @@ XSLTEngineImpl::outputResultTreeFragment(
 		{
 			warnCopyTextNodesOnly(
 					pos,
-					styleNode);
+					locator);
 		}
 		else
 		{
@@ -2485,7 +2485,7 @@ XSLTEngineImpl::outputResultTreeFragment(
 			{
 				flushPending();
 
-				cloneToResultTree(*pos, posNodeType, false, false, true, false, styleNode);
+				cloneToResultTree(*pos, posNodeType, false, false, true, false, locator);
 
 				XalanNode*	nextNode = pos->getFirstChild();
 
@@ -3204,6 +3204,50 @@ XSLTEngineImpl::fireCharacterGenerateEvent(
 		length);
 
 	fireGenerateEvent(ge);
+}
+
+
+
+void
+XSLTEngineImpl::error(
+			const char*			theMessage,
+			const LocatorType*	theLocator,
+			const XalanNode*	theSourceNode)
+{
+	assert(theMessage != 0);
+
+	m_scratchString = theMessage;
+
+	if (theLocator != 0)
+	{
+		error(m_scratchString, *theLocator, theSourceNode);
+	}
+	else
+	{
+		error(m_scratchString, theSourceNode);
+	}
+}
+
+
+
+void
+XSLTEngineImpl::warn(
+			const char*			theMessage,
+			const LocatorType*	theLocator,
+			const XalanNode*	theSourceNode)
+{
+	assert(theMessage != 0);
+
+	m_scratchString = theMessage;
+
+	if (theLocator != 0)
+	{
+		warn(m_scratchString, *theLocator, theSourceNode);
+	}
+	else
+	{
+		warn(m_scratchString, theSourceNode);
+	}
 }
 
 

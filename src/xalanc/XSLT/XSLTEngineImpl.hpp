@@ -714,13 +714,13 @@ public:
 	 *
 	 * @param node      node to clone
 	 * @param cloneTextNodesOnly    if true, only text nodes will be cloned
-	 * @param styleNode	the stylesheet element that generated the clone.
+	 * @param locator	the Locator for the event, if any.
 	 */
 	void
 	cloneToResultTree(
-			const XalanNode&			node,
-			bool						cloneTextNodesOnly,
-			const ElemTemplateElement*	styleNode);
+			const XalanNode&	node,
+			bool				cloneTextNodesOnly,
+			const LocatorType*	locator);
 
 	/**
 	 * Clone a node to the result tree
@@ -731,29 +731,30 @@ public:
 	 * @param overrideStrip 		false if white space stripping should be done
 	 * @param shouldCloneAttributes true if attributes should be cloned
 	 * @param cloneTextNodesOnly    if true, only text nodes will be cloned
-	 * @param styleNode				the stylesheet element that generated the clone.
+	 * @param locator				the Locator for the event, if any.
 	 */
 	void
 	cloneToResultTree(
-			const XalanNode& 			node,
-			XalanNode::NodeType			nodeType,
-			bool						isLiteral,
-			bool						overrideStrip,
-			bool						shouldCloneAttributes,
-			bool						cloneTextNodesOnly,
-			const ElemTemplateElement*	styleNode);
+			const XalanNode& 		node,
+			XalanNode::NodeType		nodeType,
+			bool					isLiteral,
+			bool					overrideStrip,
+			bool					shouldCloneAttributes,
+			bool					cloneTextNodesOnly,
+			const LocatorType*		locator);
 
    /**
 	* Output an object to the result tree by doing the right conversions.
 	*
 	* @param value the XObject to output
 	* @param outputTextNodesOnly if true, only text nodes will be copied
+	 * @param locator				the Locator for the event, if any.
 	*/
 	void
 	outputToResultTree(
-			const XObject& 				value,
-			bool						outputTextNodesOnly,
-			const ElemTemplateElement*	styleNode);
+			const XObject& 		value,
+			bool				outputTextNodesOnly,
+			const LocatorType*	locator);
 
 	/**
 	 * Given a result tree fragment, walk the tree and output it to the result
@@ -761,15 +762,15 @@ public:
 	 *
 	 * @param theTree result tree fragment
 	 * @param outputTextNodesOnly if true, only text nodes will be copied
-	 * @param styleNode	the stylesheet element that generate the fragment.
+	 * @param locator the Locator for the event, if any.
 	 */
 	void
 	outputResultTreeFragment(
-			const XObject& 				theTree,
-			bool						outputTextNodesOnly,
-			const ElemTemplateElement*	styleNode)
+			const XObject& 		theTree,
+			bool				outputTextNodesOnly,
+			const LocatorType*	locator)
 	{
-		outputResultTreeFragment(theTree.rtree(), outputTextNodesOnly, styleNode);
+		outputResultTreeFragment(theTree.rtree(), outputTextNodesOnly, locator);
 	}
 
 	/**
@@ -778,13 +779,13 @@ public:
 	 *
 	 * @param theTree result tree fragment
 	 * @param outputTextNodesOnly if true, only text nodes will be copied
-	 * @param styleNode	the stylesheet element that generate the fragment.
+	 * @param locator the Locator for the event, if any.
 	 */
 	void
 	outputResultTreeFragment(
 			const XalanDocumentFragment& 	theTree,
 			bool							outputTextNodesOnly,
-			const ElemTemplateElement*		styleNode);
+			const LocatorType*				locator);
 
 	/**
 	 * Retrieve the root stylesheet.
@@ -1494,12 +1495,12 @@ private:
 	 * Issue a warning that only text nodes can be copied.
 	 *
 	 * @param sourceNode node in source where error occurred
-	 * @param styleNode  node in stylesheet where error occurred
+	 * @param locator The Locator to use, if any.
 	 */
 	void
 	warnCopyTextNodesOnly(
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const;
+			const XalanNode*	sourceNode,
+			const LocatorType*	locator);
 
 	/**
 	 * Clone a text node to the result tree
@@ -1694,6 +1695,20 @@ private:
 			const XalanDOMString&	theElementName,
 			const XalanDOMString&	theElementNamespaceURI);
 
+	void
+	error(
+			const char*			theMessage,
+			const LocatorType*	theLocator,
+			const XalanNode*	theSourceNode);
+
+	void
+	warn(
+			const char*			theMessage,
+			const LocatorType*	theLocator,
+			const XalanNode*	theSourceNode);
+
+
+	// Data members...
 	XMLParserLiaison&	m_parserLiaison;
 
 	XPathEnvSupport&	m_xpathEnvSupport;

@@ -1147,13 +1147,13 @@ public:
 	/**
 	 * Clone a node to the result tree
 	 *
-	 * @param node      node to clone
-	 * @param styleNode	the stylesheet element that generated the clone.
+	 * @param node node to clone
+	 * @param locator The Locator, if any
 	 */
 	virtual void
 	cloneToResultTree(
-			const XalanNode&			node,
-			const ElemTemplateElement*	styleNode) = 0;
+			const XalanNode&	node,
+			const LocatorType*	locator) = 0;
 
 	/**
 	 * Clone a node to the result tree
@@ -1163,16 +1163,16 @@ public:
 	 * @param isLiteral             true if a literal element
 	 * @param overrideStrip         false if white space stripping should be done
 	 * @param shouldCloneAttributes true if attributes should be cloned
-	 * @param styleNode				the stylesheet element that generated the clone.
+	 * @param locator				The Locator, if any
 	 */
 	virtual void
 	cloneToResultTree(
-			const XalanNode&			node,
-			XalanNode::NodeType			nodeType,
-			bool						isLiteral,
-			bool						overrideStrip,
-			bool						shouldCloneAttributes,
-			const ElemTemplateElement*	styleNode) = 0;
+			const XalanNode&		node,
+			XalanNode::NodeType		nodeType,
+			bool					isLiteral,
+			bool					overrideStrip,
+			bool					shouldCloneAttributes,
+			const LocatorType*		locator) = 0;
 
 	/**
 	 * Create an XObject that represents a Result tree fragment.
@@ -1191,24 +1191,24 @@ public:
 	 * This is public for access by extensions.
 	 *
 	 * @param obj the XObject to output
-	 * @param styleNode	the stylesheet element that generate the fragment.
+	 * @param locator The Locator, if any
 	 */
 	virtual void
 	outputToResultTree(
-			const XObject&				xobj,
-			const ElemTemplateElement*	styleNode) = 0;
+			const XObject&		xobj,
+			const LocatorType*	locator) = 0;
 
 	/**
 	 * Given a result tree fragment, walk the tree and
 	 * output it to the result stream.
 	 *
 	 * @param theTree result tree fragment
-	 * @param styleNode	the stylesheet element that generate the fragment.
+	 * @param locator The Locator, if any
 	 */
 	virtual void
 	outputResultTreeFragment(
-			const XObject&				theTree,
-			const ElemTemplateElement*	styleNode) = 0;
+			const XObject&		theTree,
+			const LocatorType*	locator) = 0;
 
 	/**
 	 * Determine the full XSLT Namespace URI.

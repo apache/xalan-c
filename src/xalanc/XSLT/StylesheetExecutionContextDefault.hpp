@@ -559,17 +559,17 @@ public:
 
 	virtual void
 	cloneToResultTree(
-			const XalanNode&			node,
-			const ElemTemplateElement*	styleNode);
+			const XalanNode&	node,
+			const LocatorType*	locator);
 
 	virtual void
 	cloneToResultTree(
-			const XalanNode&			node,
-			XalanNode::NodeType			nodeType,
-			bool						isLiteral,
-			bool						overrideStrip,
-			bool						shouldCloneAttributes,
-			const ElemTemplateElement*	styleNode);
+			const XalanNode&		node,
+			XalanNode::NodeType		nodeType,
+			bool					isLiteral,
+			bool					overrideStrip,
+			bool					shouldCloneAttributes,
+			const LocatorType*		locator);
 
 	virtual const XObjectPtr
 	createXResultTreeFrag(
@@ -578,13 +578,13 @@ public:
 
 	virtual void
 	outputToResultTree(
-			const XObject&				xobj,
-			const ElemTemplateElement*	styleNode);
+			const XObject&		xobj,
+			const LocatorType*	locator);
 
 	virtual void
 	outputResultTreeFragment(
-			const XObject&				theTree,
-			const ElemTemplateElement*	styleNode);
+			const XObject&		theTree,
+			const LocatorType*	locator);
 
 	virtual const XalanDOMString&
 	getXSLNameSpaceURL() const;

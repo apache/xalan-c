@@ -136,7 +136,7 @@ ElemCopy::execute(StylesheetExecutionContext&	executionContext) const
 			false,
 			false,
 			false,
-			this);
+			getLocator());
 
 		if(XalanNode::ELEMENT_NODE == nodeType)
 		{

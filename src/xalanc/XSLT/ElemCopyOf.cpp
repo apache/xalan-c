@@ -171,7 +171,7 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 					executionContext.getXObjectFactory().createNodeSet(theNodeList)));
 		}
 
-		executionContext.cloneToResultTree(*sourceNode, this);
+		executionContext.cloneToResultTree(*sourceNode, getLocator());
 	}
 	else
 	{
@@ -209,13 +209,13 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 				{
 					assert(theNodeList.item(i) != 0);
 
-					executionContext.cloneToResultTree(*theNodeList.item(i), this);
+					executionContext.cloneToResultTree(*theNodeList.item(i), getLocator());
 				}
 			}
 			break;
 
 		case XObject::eTypeResultTreeFrag:
-			executionContext.outputResultTreeFragment(*value.get(), this);
+			executionContext.outputResultTreeFragment(*value.get(), getLocator());
 			break;
 
 		default:
