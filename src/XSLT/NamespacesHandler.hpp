@@ -352,6 +352,18 @@ public:
 	void
 	swap(NamespacesHandler&		theOther);
 
+	bool
+	getProcessNamespaceAliaises() const
+	{
+		return m_processAliases;
+	}
+
+	void
+	setProcessNamespaceAliaises(bool	fValue)
+	{
+		m_processAliases = fValue;
+	}
+
 private:
 
 	/**
@@ -425,6 +437,9 @@ private:
 	ExtensionNamespaceURISetType	m_extensionNamespaceURIs;
 
 	NamespaceAliasesMapType			m_namespaceAliases;
+
+	// If true namespace aliases will be processed.  If false, they will not.
+	bool							m_processAliases;
 
 	const static XalanDOMString		s_dummyEmptyString;
 };

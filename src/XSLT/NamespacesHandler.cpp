@@ -82,7 +82,8 @@ NamespacesHandler::NamespacesHandler() :
 	m_excludedResultPrefixes(),
 	m_namespaceDeclarations(),
 	m_extensionNamespaceURIs(),
-	m_namespaceAliases()
+	m_namespaceAliases(),
+	m_processAliases(true)
 {
 }
 
@@ -95,7 +96,8 @@ NamespacesHandler::NamespacesHandler(
 	m_excludedResultPrefixes(),
 	m_namespaceDeclarations(),
 	m_extensionNamespaceURIs(),
-	m_namespaceAliases()
+	m_namespaceAliases(),
+	m_processAliases(true)
 {
 	// Go through the namespaces stack in reverse order...
 	const NamespacesStackType::const_reverse_iterator	theEnd =
@@ -118,7 +120,6 @@ NamespacesHandler::NamespacesHandler(
 			const NameSpace&		theNamespace = *j;
 
 			const XalanDOMString&	theURI = theNamespace.getURI();
-			assert(length(theURI) > 0);
 
 			const XalanDOMString&	thePrefix = theNamespace.getPrefix();
 
@@ -147,7 +148,8 @@ NamespacesHandler::NamespacesHandler(const NamespacesHandler&	theSource) :
 	m_excludedResultPrefixes(theSource.m_excludedResultPrefixes),
 	m_namespaceDeclarations(theSource.m_namespaceDeclarations),
 	m_extensionNamespaceURIs(theSource.m_extensionNamespaceURIs),
-	m_namespaceAliases(theSource.m_namespaceAliases)
+	m_namespaceAliases(theSource.m_namespaceAliases),
+	m_processAliases(theSource.m_processAliases)
 {
 }
 
@@ -392,7 +394,6 @@ NamespacesHandler::outputResultNamespaces(StylesheetExecutionContext&	theExecuti
 			const NameSpaceExtended&	theNamespace = (*i).second;
 
 			const XalanDOMString&		theResultURI = theNamespace.getURI();
-			assert(length(theResultURI) > 0);
 			assert(length(theNamespace.getResultAttributeName()) > 0);
 
 			const XalanDOMString&		thePrefix = theNamespace.getPrefix();
@@ -566,7 +567,7 @@ NamespacesHandler::processExcludeResultPrefixes(const XalanDOMString&	theElement
 void
 NamespacesHandler::processNamespaceAliases()
 {
-	if (m_namespaceDeclarations.size() > 0)
+	if (m_processAliases == true && m_namespaceDeclarations.size() > 0)
 	{
 		const NamespacesMapType::iterator	theEnd =
 				m_namespaceDeclarations.end();
