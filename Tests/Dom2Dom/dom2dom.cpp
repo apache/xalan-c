@@ -69,8 +69,8 @@
 #endif
 
 #include <sax/SAXException.hpp>
-
 #include <util/PlatformUtils.hpp>
+
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
@@ -86,12 +86,10 @@
 #include <XalanTransformer/XalanTransformer.hpp>
 #include <XalanTransformer/XalanCompiledStylesheetDefault.hpp>
 
-#include <XMLFileReporter.hpp>
-#include <FileUtility.hpp>
-#include <HarnessInit.hpp>
+#include <Harness/XMLFileReporter.hpp>
+#include <Harness/FileUtility.hpp>
+#include <Harness/HarnessInit.hpp>
 
-//#include <parsers/DOMParser.hpp>
-//#include <dom/DOM_Node.hpp>
 
 #include <XercesParserLiaison/XercesDOMSupport.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
@@ -117,12 +115,15 @@ printArgOptions()
 		 << endl;
 }
 
+
+
 bool
-getParams(int argc, 
-		  const char*	argv[],
-		  FileUtility& f,
-		  XalanDOMString& basedir,
-		  XalanDOMString& outdir)
+getParams(
+			int					argc, 
+			const char*			argv[],
+			FileUtility&		f,
+			XalanDOMString&		basedir,
+			XalanDOMString&		outdir)
 {
 	bool fSuccess = true;	// Used to continue argument loop
 	bool fSetOut = true;	// Set default output directory
@@ -135,10 +136,10 @@ getParams(int argc,
 	}
 	else
 	{
-		if (f.checkDir(pathSep + XalanDOMString(argv[1])))
+		if (f.checkDir(FileUtility::s_pathSep + XalanDOMString(argv[1])))
 		{
 			assign(basedir, XalanDOMString(argv[1]));
-			insert(basedir, 0, pathSep);
+			insert(basedir, 0, FileUtility::s_pathSep);
 		}
 		else
 		{
@@ -179,16 +180,19 @@ getParams(int argc,
 	// Do we need to set the default output directory??
 	if (fSetOut)
 	{
-		unsigned int ii = lastIndexOf(basedir,charAt(pathSep,0));
+		unsigned int ii = lastIndexOf(basedir,charAt(FileUtility::s_pathSep,0));
 		outdir = substring(basedir, 0, ii+1);
 		append(outdir,XalanDOMString("Dom2Dom-RESULTS\\"));
 		f.checkAndCreateDir(outdir);
 	}
 	
 	// Add the path seperator to the end of the base directory
-	append(basedir, pathSep);
+	append(basedir, FileUtility::s_pathSep);
+
 	return fSuccess;
 }
+
+
 
 FormatterListener* 
 getXMLFormatter(bool					shouldWriteXMLHeader,
@@ -240,6 +244,8 @@ getXMLFormatter(bool					shouldWriteXMLHeader,
 		return formatter;
 }
 
+
+
 int
 main(
 		  int			argc,
@@ -252,15 +258,14 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
+	HarnessInit		xmlPlatformUtils;
+
 	FileUtility		f;
 
 	XalanDOMString  category;	// Test all of base dir by default
 	XalanDOMString  baseDir;	
 	XalanDOMString  outputRoot;
 	
-	const XalanDOMString mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
-	const XalanDOMString encoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
-
 	if (getParams(argc, argv, f, baseDir, outputRoot) == true)
 	{
 
@@ -273,7 +278,7 @@ main(
 		// Defined basic constants for file manipulation 
 
 		const XalanDOMString  resultFilePrefix("dom2dom");
-		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
 		
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("Dom2Dom Testing: Treating all inputs and outputs as DOM's. ");
@@ -281,7 +286,6 @@ main(
 		try
 		{
 			// Call the static initializers...
-			HarnessInit xmlPlatformUtils;
 			XalanTransformer::initialize();
 
 			{
@@ -305,9 +309,9 @@ main(
 					cout << files[i] << endl;
 
 					// Set up the input/output files.
-					const XalanDOMString  theXSLFile= baseDir + xMan + pathSep + files[i];
+					const XalanDOMString  theXSLFile= baseDir + xMan + FileUtility::s_pathSep + files[i];
 					const XalanDOMString  theXMLFile = f.generateFileName(theXSLFile,"xml");
-					const XalanDOMString  theOutput =  outputRoot + xMan + pathSep + files[i]; 
+					const XalanDOMString  theOutput =  outputRoot + xMan + FileUtility::s_pathSep + files[i]; 
 					const XalanDOMString  theOutputFile = f.generateFileName(theOutput, "out");
 
 					// Use a Xerces Dom document to create the XSLTResultTarget. 
@@ -341,6 +345,9 @@ main(
 						}
 						else
 						{
+							const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
+							const XalanDOMString	encoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
+
 							XalanFileOutputStream myOutput(theOutputFile);
 							XalanOutputStreamPrintWriter myResultWriter(myOutput);
 							FormatterListener* theFormatter = getXMLFormatter(true,true,true,false,

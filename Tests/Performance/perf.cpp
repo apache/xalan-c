@@ -89,19 +89,15 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>  
 
-#include <XMLFileReporter.hpp>
-#include <FileUtility.hpp>
-#include <HarnessInit.hpp>
+#include <Harness/XMLFileReporter.hpp>
+#include <Harness/FileUtility.hpp>
+#include <Harness/HarnessInit.hpp>
+
 
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::cout;
-	using std::cin;
 	using std::endl;
-	using std::ifstream;
-	using std::ios_base;
-	using std::ostrstream;
-	using std::string;
 #endif
 
 
@@ -112,10 +108,8 @@
 #endif
 
 
-FileUtility h;
 
-
-const char* const 	excludeStylesheets[] =
+	const char* const 	excludeStylesheets[] =
 {
 	"large-evans_large.xsl",
 	0
@@ -123,7 +117,7 @@ const char* const 	excludeStylesheets[] =
 
 
 inline bool
-checkForExclusion(XalanDOMString currentFile)
+checkForExclusion(const XalanDOMString&		currentFile)
 {
 
 		for (int i=0; excludeStylesheets[i] != 0; i++)
@@ -170,6 +164,7 @@ calculateElapsedTime(
 }
 
 
+
 inline double
 calculateAvgTime(
 			clock_t		accTime,
@@ -179,6 +174,8 @@ calculateAvgTime(
 
 	return double(accTime) / theIterationCount;
 }
+
+
 
 inline double
 calculateAverageElapsedTime( 
@@ -191,6 +188,8 @@ calculateAverageElapsedTime(
 	return calculateElapsedTime(theStartTime, theEndTime) / theIterationCount;
 }
 
+
+
 inline clock_t
 transformWUnparsedSource(const XalanDOMString&	theFileName,
 				 XSLTProcessor&			theProcessor,
@@ -198,36 +197,43 @@ transformWUnparsedSource(const XalanDOMString&	theFileName,
 				 XSLTResultTarget&	theResults,
 				 StylesheetExecutionContextDefault&  theExecutionContext)
 {
-	const XSLTInputSource	csSourceXML(c_wstr(theFileName));	// Creates source document
+	const XSLTInputSource	csSourceXML(c_wstr(theFileName));
+
 	theProcessor.setStylesheetRoot(theStylesheetRoot);
 
 	const clock_t startTime = clock();
-	theProcessor.process(csSourceXML, theResults, theExecutionContext);
-	const clock_t endTime = clock();
 
-	return endTime - startTime;
+	theProcessor.process(csSourceXML, theResults, theExecutionContext);
+
+	return clock() - startTime;
 
 }
 
+
+
 inline clock_t
-transformWParsedSource(XalanNode*		theParsedSource,
-				 XSLTProcessor&			theProcessor,
-				 const StylesheetRoot*	theStylesheetRoot,
-				 XSLTResultTarget&		theResults,
-				 StylesheetExecutionContextDefault&  theExecutionContext)
+transformWParsedSource(
+			XalanNode*							theParsedSource,
+			XSLTProcessor&						theProcessor,
+			const StylesheetRoot*				theStylesheetRoot,
+			XSLTResultTarget&					theResults,
+			StylesheetExecutionContextDefault&	theExecutionContext)
 {
 	// Put the parsed document into an XSLTInputSource, 
 	// and set stylesheet root in the processor
 	const XSLTInputSource	csSourceDocument(theParsedSource);
+
 	theProcessor.setStylesheetRoot(theStylesheetRoot);
 
 	const clock_t startTime = clock();
-	theProcessor.process(csSourceDocument, theResults, theExecutionContext);
-	const clock_t endTime = clock();
-	
-	return endTime - startTime;
 
+	theProcessor.process(csSourceDocument, theResults, theExecutionContext);
+	
+	return clock() - startTime;
 }
+
+
+
 inline long
 eTOeTransform(const XSLTInputSource&		inputSource, 
 	        const XSLTInputSource&			stylesheetSource,
@@ -248,10 +254,11 @@ eTOeTransform(const XSLTInputSource&		inputSource,
 }
 
 
+
 void
-setHelp()
+setHelp(FileUtility&	h)
 {
-	h.args.help << endl
+	h.args.getHelpStream() << endl
 		 << "Perf dir [-out -sub -i -iter]"
 		 << endl
 		 << endl
@@ -277,14 +284,19 @@ main(int			argc,
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
+
 	const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
 	long iterCount;			// Default number of iterations
 	bool skip = true;		// Default will skip long tests
 	bool setGold = false;
 
+	HarnessInit		xmlPlatformUtils;
+
+	FileUtility		h;
+
 	// Set the program help string,  then get the command line parameters.
 	//
-	setHelp();
+	setHelp(h);
 
 	if (h.getParams(argc, argv, "PERF-RESULTS", setGold) == true)
 	{
@@ -292,7 +304,7 @@ main(int			argc,
 		// Generate Unique Run id and processor info
 		const XalanDOMString UniqRunid = h.generateUniqRunid();
 		const XalanDOMString  resultFilePrefix(XalanDOMString("cpp"));
-		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XMLSuffix);
+		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
 
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("Performance Testing - Reports performance times for single transform, and average for multiple transforms using compiled stylesheet");
@@ -303,7 +315,6 @@ main(int			argc,
 			// Having xmlplatformutils in it's own class like this means that if there are
 			// exceptions then terminate() is sure to run because it will automatically get
 			// cleaned up when this instance goes out of scope.
-			HarnessInit xmlPlatformUtils;
 			bool foundDir = false;	// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
 			{
 				XSLTInit	theInit;  
@@ -342,10 +353,10 @@ main(int			argc,
 								continue;
 						}
 
-						const XalanDOMString  theXSLFile= h.args.base + dirs[j] + pathSep + files[i];
+						const XalanDOMString  theXSLFile= h.args.base + dirs[j] + FileUtility::s_pathSep + files[i];
 						const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
 
-						const XalanDOMString  theOutput =  h.args.output + dirs[j] + pathSep + files[i]; 
+						const XalanDOMString  theOutput =  h.args.output + dirs[j] + FileUtility::s_pathSep + files[i]; 
 						const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
 
 

@@ -57,7 +57,7 @@
 #include <iostream>
 #include <strstream>
 #include <stdio.h>
-#include <direct.h>
+//#include <direct.h>
 
 // This is here for memory leak testing. 
 #if !defined(NDEBUG) && defined(_MSC_VER)
@@ -68,14 +68,14 @@
 
 #include <util/PlatformUtils.hpp>
 
-#include <XSLT/XSLTInputSource.hpp>
-#include <XSLT/XSLTResultTarget.hpp>
+//#include <XSLT/XSLTInputSource.hpp>
+//#include <XSLT/XSLTResultTarget.hpp>
 
 #include <XalanTransformer/XalanTransformer.hpp>
 
-#include <XMLFileReporter.hpp>
-#include <FileUtility.hpp>
-#include <HarnessInit.hpp>
+#include <Harness/XMLFileReporter.hpp>
+#include <Harness/FileUtility.hpp>
+#include <Harness/HarnessInit.hpp>
 
 
 
@@ -85,8 +85,8 @@
 	using std::endl;
 #endif
 
-FileUtility			h;
-	
+
+
 static const char* const	excludeStylesheets[] =
 {
 //	"impincl16.xml",
@@ -94,8 +94,9 @@ static const char* const	excludeStylesheets[] =
 };
 
 
+
 inline bool
-checkForExclusion(XalanDOMString currentFile)
+checkForExclusion(const XalanDOMString&		currentFile)
 {
 	for (int i = 0; excludeStylesheets[i] != 0; ++i)
 	{	
@@ -108,10 +109,12 @@ checkForExclusion(XalanDOMString currentFile)
 	return false;
 }
 
+
+
 void
-setHelp()
+setHelp(FileUtility&	h)
 {
-	h.args.help << endl
+	h.args.getHelpStream() << endl
 		 << "stressmem dirname [-out -sub]"
 		 << endl
 		 << endl
@@ -122,6 +125,8 @@ setHelp()
 		 << "-sub dirname (run files only from a specific directory)"
 		 << endl;
 }
+
+
 
 int
 main(int			argc,
@@ -135,32 +140,40 @@ main(int			argc,
 
 	// Set the program help string,  then get the command line parameters.
 	//
-	setHelp();
-	bool setGold = false;
-	bool foundDir = false;
-
-	if (h.getParams(argc, argv, "MEM-RESULTS", setGold) == true)
+	try
 	{
-		// Get the list of Directories that are below perf
-		const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
+		HarnessInit		xmlPlatformUtils;
 
-		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString UniqRunid = h.generateUniqRunid();
+		FileUtility		h;
 
-		// Defined basic constants for file manipulation 
+		setHelp(h);
 
-		const XalanDOMString  resultFilePrefix(XalanDOMString("cpp-mem"));
-		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XMLSuffix);
-		
-		XMLFileReporter	logFile(resultsFile);
-		logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
+		bool setGold = false;
 
-		try
+		if (h.getParams(argc, argv, "MEM-RESULTS", setGold) == true)
 		{
+			// Get the list of Directories that are below perf
+			const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
+
+			// Generate Unique Run id. (Only used to name the result logfile.)
+			const XalanDOMString		UniqRunid = h.generateUniqRunid();
+
+			// Defined basic constants for file manipulation 
+
+			const XalanDOMString  resultFilePrefix(XalanDOMString("cpp-mem"));
+			const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+
+			XMLFileReporter		logFile(resultsFile);
+
+			logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
+
 			// Call the static initializers...
-			HarnessInit xmlPlatformUtils;
 			XalanTransformer::initialize();
+
+			try
 			{
+				bool foundDir = false;
+
 				XalanTransformer		transformEngine;
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
@@ -171,7 +184,7 @@ main(int			argc,
 					{
 						continue;
 					}					
-					
+						
 					// Check that output directory is there.
 					const XalanDOMString  theOutputDir = h.args.output + dirs[j];
 					h.checkAndCreateDir(theOutputDir);
@@ -187,20 +200,19 @@ main(int			argc,
 							logFile.logTestCaseInit(files[i]);
 							cout << files[i] << endl;
 
-
-							const XalanDOMString  theXSLFile= h.args.base + dirs[j] + pathSep + files[i];
+							const XalanDOMString  theXSLFile = h.args.base + dirs[j] + FileUtility::s_pathSep + files[i];
 							const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
-							const XalanDOMString  theOutput =  h.args.output + dirs[j] + pathSep + files[i]; 
+							const XalanDOMString  theOutput =  h.args.output + dirs[j] + FileUtility::s_pathSep + files[i]; 
 							const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
 
 							// Do a total end to end transform with no pre parsing of either xsl or xml files.
-							XSLTResultTarget		theResultTarget(theOutputFile);
+							const XSLTResultTarget	theResultTarget(theOutputFile);
 
 							const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 							const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
 
-							int	theResult =
-								transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+							const int	theResult =
+									transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
 
 							if(theResult != 0)
 							{
@@ -214,22 +226,27 @@ main(int			argc,
 						}
 					}
 				}
-			}
 
-			// Check to see if -sub cmd-line directory was processed correctly.
-			if (!foundDir)
+				// Check to see if -sub cmd-line directory was processed correctly.
+				if (!foundDir)
+				{
+					cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
+				}
+
+				logFile.logTestFileClose("Memory Testing: ", "Done");
+				logFile.close();
+			}
+			catch(...)
 			{
-				cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
+				cerr << "Exception caught!!!" << endl << endl;
 			}
-			XalanTransformer::terminate();
-			logFile.logTestFileClose("Memory Testing: ", "Done");
-			logFile.close();
+		}
 
-		}
-		catch(...)
-		{
-			cerr << "Exception caught!!!" << endl << endl;
-		}
+		XalanTransformer::terminate();
+	}
+	catch(...)
+	{
+		cerr << "Initialization failed!!!" << endl << endl;
 	}
 
 	return 0;

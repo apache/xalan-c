@@ -55,38 +55,52 @@
  * <http://www.apache.org/>.
  */
 
+#include <cstdio>
+
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <iostream.h>
+#include <strstream.h>
+#else
 #include <iostream>
 #include <strstream>
-#include <stdio.h>
-#include <direct.h>
+#endif
 
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::cout;
-	using std::cin;
+//	using std::cin;
 	using std::endl;
-	using std::ifstream;
-	using std::ios_base;
-	using std::ostrstream;
-	using std::string;
 #endif
 
-// XERCES HEADERS...
-//	Are included by HarnessInit.hpp
+
 
 // XALAN HEADERS...
-//	Are included by FileUtility.hpp
+#include <PlatformSupport/DOMStringHelper.hpp>
 
-// HARNESS HEADERS...
-#include <XMLFileReporter.hpp>
-#include <FileUtility.hpp>
-#include <HarnessInit.hpp>
+
+
+#include <XalanSourceTree/FormatterToSourceTree.hpp>
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+
+
+
+#include <XalanTransformer/XalanTransformer.hpp>
+
+
+
+#include <Harness/XMLFileReporter.hpp>
+#include <Harness/FileUtility.hpp>
+#include <Harness/HarnessInit.hpp>
+
+
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
+typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
 #else
-	typedef std::map<XalanDOMString, XalanDOMString>  Hashtable;
+typedef std::map<XalanDOMString, XalanDOMString>  Hashtable;
 #endif
+
 
 // This is here for memory leak testing. 
 #if !defined(NDEBUG) && defined(_MSC_VER)
@@ -98,12 +112,12 @@ const char* const 	excludeStylesheets[] =
 	0
 };
 
-FileUtility		h;
+
 
 void
-setHelp()
+setHelp(FileUtility&	h)
 {
-	h.args.help << endl
+	h.args.getHelpStream() << endl
 		 << "errortests dir [-sub -out]"
 		 << endl
 		 << endl
@@ -115,10 +129,12 @@ setHelp()
 		 << endl;
 }
 
+
+
 inline bool
 checkForExclusion(XalanDOMString currentFile)
 {
-	for (int i=0; excludeStylesheets[i] != 0; i++)
+	for (int i = 0; excludeStylesheets[i] != 0; i++)
 	{	
 		if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
 		{
@@ -128,6 +144,8 @@ checkForExclusion(XalanDOMString currentFile)
 
 	return false;
 }
+
+
 
 int
 main(int			argc,
@@ -140,16 +158,19 @@ main(int			argc,
 #endif
 
 	HarnessInit xmlPlatformUtils;
-	XalanTransformer::initialize();
 
+	FileUtility		h;
+
+	// Set the program help string,  then get the command line parameters.
+	//
+	setHelp(h);
+
+	bool	setGold = false;
+
+	if (h.getParams(argc, argv, "ERR-RESULTS", setGold) == true)
 	{
-		int theResult;	
-		bool setGold = false;
+		XalanTransformer::initialize();
 
-		// Set the program help string,  then get the command line parameters.
-		//
-		setHelp();
-		if (h.getParams(argc, argv, "ERR-RESULTS", setGold) == true)
 		{
 			//
 			// Call the static initializers for xerces and xalan, and create a transformer
@@ -167,7 +188,7 @@ main(int			argc,
 
 			// Defined basic constants for file manipulation and open results file
 			const XalanDOMString  resultFilePrefix("cpperr");
-			const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XMLSuffix);
+			const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
 
 
 			XMLFileReporter	logFile(resultsFile);
@@ -212,12 +233,12 @@ main(int			argc,
 					if (checkForExclusion(currentFile))
 						continue;
 
-					const XalanDOMString  theXSLFile= h.args.base + currentDir + pathSep + currentFile;
+					const XalanDOMString  theXSLFile= h.args.base + currentDir + FileUtility::s_pathSep + currentFile;
 					const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
-					XalanDOMString  theGoldFile = h.args.gold + currentDir + pathSep + currentFile;
+					XalanDOMString  theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + currentFile;
 					theGoldFile = h.generateFileName(theGoldFile, "out");
 
-					const XalanDOMString  outbase =  h.args.output + currentDir + pathSep + currentFile; 
+					const XalanDOMString  outbase =  h.args.output + currentDir + FileUtility::s_pathSep + currentFile; 
 					const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
 
 					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
@@ -259,9 +280,10 @@ main(int			argc,
 
 					// Perform One transform using parsed stylesheet and parsed xml source, report results...
 					// 
-					theResult = 0;
 					cout << "TRANSFORMING: " << currentFile << endl;
-					theResult = xalan.transform(*parsedSource, compiledSS, resultFile);
+
+					const int	theResult = xalan.transform(*parsedSource, compiledSS, resultFile);
+
 					if (theResult != 0)
 					{
 						cout << "FAILED to transform stylesheet for " << currentFile << endl;

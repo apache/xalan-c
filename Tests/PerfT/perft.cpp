@@ -68,7 +68,6 @@
 	using std::ifstream;
 	using std::ios_base;
 	using std::ostrstream;
-	using std::string;
 #endif
 
 // XALAN HEADERS...
@@ -137,7 +136,7 @@ calculateAvgTime(
 void
 setHelp()
 {
-	h.args.help << endl
+	h.args.getHelpStream() << endl
 		 << "Perft dir [-out -sub -i -iter]"
 		 << endl
 		 << endl
