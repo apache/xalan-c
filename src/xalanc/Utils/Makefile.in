@@ -162,7 +162,7 @@ doCommonPrepare:
 	-${MKDIR} -p $(XSL_NLS_DIR)/include
 
 doCommonInstall:
-	$(INSTALL_PROGRAM) $(XSL_NLS_DIR)/include/LocalMsgIndex.hpp $(XALANCROOT)/src/xalanc/PlatformSupport
+	$(INSTALL_DATA) $(XSL_NLS_DIR)/include/LocalMsgIndex.hpp $(XALANCROOT)/src/xalanc/PlatformSupport
 
 doClean:
 	$(MAKE) -C XalanMsgLib $@
