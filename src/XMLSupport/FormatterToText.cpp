@@ -64,23 +64,65 @@
 
 
 #include <PlatformSupport/Writer.hpp>
+#include <PlatformSupport/XalanOutputStream.hpp>
+#include <PlatformSupport/XalanTranscodingServices.hpp>
 #if defined(XALAN_NEWLINE_IS_CRLF)
 #include <PlatformSupport/XalanUnicode.hpp>
 #endif
 
 
 
-FormatterToText::FormatterToText(Writer&	pw) :
+FormatterToText::FormatterToText(Writer&	writer) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
-	m_pw(pw)
+	m_writer(writer),
+	m_maxCharacter(~0),
+	m_encoding()
 {
+}
+
+
+
+FormatterToText::FormatterToText(
+			Writer&					writer,
+			const XalanDOMString&	encoding) :
+	FormatterListener(OUTPUT_METHOD_TEXT),
+	m_writer(writer),
+	m_maxCharacter(0),
+	m_encoding(isEmpty(encoding) == false ? encoding : XalanDOMString(XalanTranscodingServices::s_utf8String))
+{
+	XalanOutputStream* const	theStream = m_writer.getStream();
+
+	if (theStream == 0)
+	{
+		// We're pretty much screwed here, since we can't transcode, so get the
+		// maximum character for the local code page.
+		m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue();
+	}
+	else
+	{
+		try
+		{
+			theStream->setOutputEncoding(m_encoding);
+		}
+		catch(const XalanOutputStream::UnsupportedEncodingException&)
+		{
+			const XalanDOMString	theUTF8String(XalanTranscodingServices::s_utf8String);
+
+			// Default to UTF-8 if the requested encoding is not supported...
+			theStream->setOutputEncoding(theUTF8String);
+
+			m_encoding = theUTF8String;
+		}
+
+		m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue(theStream->getOutputEncoding());
+	}
 }
 
 
 
 FormatterToText::~FormatterToText()
 {
-	m_pw.flush();
+	m_writer.flush();
 }
 
 
@@ -104,7 +146,7 @@ FormatterToText::startDocument()
 void
 FormatterToText::endDocument()
 {
-	m_pw.close();
+	m_writer.close();
 }
 
 
@@ -133,22 +175,23 @@ FormatterToText::characters(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-#if defined(XALAN_NEWLINE_IS_CRLF)
 	for (unsigned int i = 0; i < length; ++i)
 	{
+#if defined(XALAN_NEWLINE_IS_CRLF)
 		// Normalize LF to CR/LF...
 		if (chars[i] == XalanUnicode::charLF &&
 			(i == 0 ||
 			 chars[i - 1] != XalanUnicode::charCR))
 		{
-			m_pw.write(XalanUnicode::charCR);
+			m_writer.write(XalanUnicode::charCR);
+		}
+#endif
+		if (chars[i] > m_maxCharacter)
+		{
 		}
 
-		m_pw.write(chars[i]);
+		m_writer.write(chars[i]);
 	}
-#else
-	m_pw.write(chars, 0, length);
-#endif
 }
 
 

@@ -64,6 +64,10 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 // Base class header file.
 #include <XMLSupport/FormatterListener.hpp>
 
@@ -85,9 +89,19 @@ public:
 	/**
 	 * FormatterToText instance constructor.
 	 *
-	 * @param pw print writer for output
+	 * @param writer writer for output
 	 */
-	FormatterToText(Writer&		pw);
+	FormatterToText(Writer&		writer);
+
+	/**
+	 * FormatterToText instance constructor.
+	 *
+	 * @param writer writer for output
+	 * @param encoding character encoding for the writer
+	 */
+	FormatterToText(
+			Writer&					writer,
+			const XalanDOMString&	encoding);
 
 	virtual
 	~FormatterToText();
@@ -149,7 +163,11 @@ public:
 
 private:
 
-	Writer&		m_pw;
+	Writer&			m_writer;
+
+	XalanDOMChar	m_maxCharacter;
+
+	XalanDOMString	m_encoding;
 
 	// These are not implemented.
 	FormatterToText(const FormatterToText&);

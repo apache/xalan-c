@@ -65,7 +65,6 @@
 
 
 
-#include <map>
 #include <vector>
 
 
@@ -329,15 +328,10 @@ public:
 	typedef vector<bool>				BoolStackType;
 	typedef vector<XalanDOMChar>		DOMCharBufferType;
 	typedef vector<char>				ByteBufferType;
-	typedef map<XalanDOMString,
-				XalanDOMChar,
-				less<XalanDOMString> >	MaximumCharacterValueMapType;
 #else
 	typedef std::vector<bool>			BoolStackType;
 	typedef std::vector<XalanDOMChar>	DOMCharBufferType;
 	typedef std::vector<char>			ByteBufferType;
-	typedef std::map<XalanDOMString,
-					 XalanDOMChar>		MaximumCharacterValueMapType;
 #endif
 
 protected:
@@ -528,16 +522,6 @@ protected:
 	throwInvalidUTF16SurrogateException(
 			XalanDOMChar	ch,
 			unsigned int	next);
-
-	/**
-	 * Get the maximum character value for the encoding.
-	 *
-	 * @param theEncoding The encoding name.
-	 * @return The maximum character value that the
-	 * encoding supports.
-	 */
-	static XalanDOMChar
-	getMaximumCharacterValue(const XalanDOMString&	theEncoding);
 
 	enum eDummyTwo { SPECIALSSIZE = 256};
 
@@ -795,26 +779,6 @@ private:
 	 */
 	static const XalanDOMCharVectorType&	s_defaultVersionString;
 
-	/**
-	 * The string "WINDOWS-1250".
-	 */
-	static const XalanDOMCharVectorType&	s_windows1250EncodingString;
-
-	/**
-	 * The string "US-ASCII".
-	 */
-	static const XalanDOMCharVectorType&	s_usASCIIEncodingString;
-
-	/**
-	 * The string "ASCII".
-	 */
-	static const XalanDOMCharVectorType&	s_asciiEncodingString;
-
-	/**
-	 * The string "UTF-8".
-	 */
-	static const XalanDOMString&	s_utf8EncodingString;
-
 
 	DOMCharBufferType				m_charBuf;
 
@@ -823,8 +787,6 @@ private:
 	ByteBufferType					m_byteBuf;
 
 	static const DOMCharBufferType::size_type	s_maxBufferSize;
-
-	static const MaximumCharacterValueMapType&	s_maximumCharacterValues;
 
 	/**
 	 * Current level of indent.
