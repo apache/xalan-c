@@ -1131,6 +1131,7 @@ FormatterToHTML::pushHasNamespace(const XalanDOMChar*	theElementName)
 
 
 
+// Some of these are now commented out to match Xalan-J, which claims that Netscape cannot handle many of these entities.
 const FormatterToHTML::Entity	FormatterToHTML::s_entities[] =
 {
 	// These must always be in order by the character.
@@ -1236,9 +1237,12 @@ const FormatterToHTML::Entity	FormatterToHTML::s_entities[] =
 	{ 352, 6, { XalanUnicode::charLetter_S, XalanUnicode::charLetter_c, XalanUnicode::charLetter_a, XalanUnicode::charLetter_r, XalanUnicode::charLetter_o, XalanUnicode::charLetter_n, 0 } },
 	{ 353, 6, { XalanUnicode::charLetter_s, XalanUnicode::charLetter_c, XalanUnicode::charLetter_a, XalanUnicode::charLetter_r, XalanUnicode::charLetter_o, XalanUnicode::charLetter_n, 0 } },
 	{ 376, 4, { XalanUnicode::charLetter_Y, XalanUnicode::charLetter_u, XalanUnicode::charLetter_m, XalanUnicode::charLetter_l, 0 } },
+#if 0
 	{ 402, 4, { XalanUnicode::charLetter_f, XalanUnicode::charLetter_n, XalanUnicode::charLetter_o, XalanUnicode::charLetter_f, 0 } },
+#endif
 	{ 710, 4, { XalanUnicode::charLetter_c, XalanUnicode::charLetter_i, XalanUnicode::charLetter_r, XalanUnicode::charLetter_c, 0 } },
 	{ 732, 5, { XalanUnicode::charLetter_t, XalanUnicode::charLetter_i, XalanUnicode::charLetter_l, XalanUnicode::charLetter_d, XalanUnicode::charLetter_e, 0 } },
+#if 0
 	{ 913, 5, { XalanUnicode::charLetter_A, XalanUnicode::charLetter_l, XalanUnicode::charLetter_p, XalanUnicode::charLetter_h, XalanUnicode::charLetter_a, 0 } },
 	{ 914, 4, { XalanUnicode::charLetter_B, XalanUnicode::charLetter_e, XalanUnicode::charLetter_t, XalanUnicode::charLetter_a, 0 } },
 	{ 915, 5, { XalanUnicode::charLetter_G, XalanUnicode::charLetter_a, XalanUnicode::charLetter_m, XalanUnicode::charLetter_m, XalanUnicode::charLetter_a, 0 } },
@@ -1291,6 +1295,7 @@ const FormatterToHTML::Entity	FormatterToHTML::s_entities[] =
 	{ 977, 8, { XalanUnicode::charLetter_t, XalanUnicode::charLetter_h, XalanUnicode::charLetter_e, XalanUnicode::charLetter_t, XalanUnicode::charLetter_a, XalanUnicode::charLetter_s, XalanUnicode::charLetter_y, XalanUnicode::charLetter_m, 0 } },
 	{ 978, 5, { XalanUnicode::charLetter_u, XalanUnicode::charLetter_p, XalanUnicode::charLetter_s, XalanUnicode::charLetter_i, XalanUnicode::charLetter_h, 0 } },
 	{ 982, 3, { XalanUnicode::charLetter_p, XalanUnicode::charLetter_i, XalanUnicode::charLetter_v, 0 } },
+#endif
 	{ 8194, 4, { XalanUnicode::charLetter_e, XalanUnicode::charLetter_n, XalanUnicode::charLetter_s, XalanUnicode::charLetter_p, 0 } },
 	{ 8195, 4, { XalanUnicode::charLetter_e, XalanUnicode::charLetter_m, XalanUnicode::charLetter_s, XalanUnicode::charLetter_p, 0 } },
 	{ 8201, 6, { XalanUnicode::charLetter_t, XalanUnicode::charLetter_h, XalanUnicode::charLetter_i, XalanUnicode::charLetter_n, XalanUnicode::charLetter_s, XalanUnicode::charLetter_p, 0 } },
