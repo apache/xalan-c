@@ -81,7 +81,7 @@ class XPathWrapperImpl
 {
 public:
 
-    typedef 	XPathWrapper::CharVectorTypeVectorType CharVectorTypeVectorType;
+    typedef XPathWrapper::CharVectorTypeVectorType  CharVectorTypeVectorType;
 
     void
 	evaluate(
@@ -99,6 +99,8 @@ public:
 		{
 			// Just hoist everything...
 			XALAN_CPP_NAMESPACE_USE
+
+            typedef XPathConstructionContext::GetAndReleaseCachedString     GetAndReleaseCachedString;
 
 			// Initialize the XPath subsystem...
 			XPathInit						theInit;
@@ -147,15 +149,25 @@ public:
 				// first get the context nodeset
 				XPath* const	contextXPath = theXPathFactory.create();
 
-				theXPathProcessor.initXPath(*contextXPath,
-											theXPathConstructionContext,
-											XalanDOMString(context),
-											ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport));
+                const ElementPrefixResolverProxy    thePrefixResolver(rootElem, theEnvSupport, theDOMSupport);
+
+                const GetAndReleaseCachedString     theGuard(theXPathConstructionContext);
+
+                XalanDOMString&     theString = theGuard.get();
+
+                theString = context;
+
+				theXPathProcessor.initXPath(
+                    *contextXPath,
+					theXPathConstructionContext,
+					theString,
+					thePrefixResolver);
 
 	   			XObjectPtr	xObj =
-					contextXPath->execute(rootElem,
-										  ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport),
-										  theExecutionContext);
+					contextXPath->execute(
+                        rootElem,
+						thePrefixResolver,
+						theExecutionContext);
 
 				const NodeRefListBase&	contextNodeList = xObj->nodeset();
 
@@ -187,14 +199,19 @@ public:
 
 					// and now get the result of the primary xpath expression
 					XPath* const	xpath = theXPathFactory.create();
-					theXPathProcessor.initXPath(*xpath,
-												theXPathConstructionContext,
-												TranscodeFromLocalCodePage(expr),
-												ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport));
 
-					xObj = xpath->execute(contextNodeList.item(0),
-										  ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport),
-										  theExecutionContext);
+                    theString = expr;
+
+					theXPathProcessor.initXPath(
+                        *xpath,
+						theXPathConstructionContext,
+						theString,
+						thePrefixResolver);
+
+					xObj = xpath->execute(
+                        contextNodeList.item(0),
+						thePrefixResolver,
+						theExecutionContext);
 
 					// now encode the results.  For all types but nodelist, we'll just convert it to a string
 					// but, for nodelist, we'll convert each node to a string and return a list of them
