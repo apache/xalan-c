@@ -286,8 +286,9 @@ setHelp(FileUtility&	h)
 }
 
 int
-main(int			argc,
-	 const char*	argv[])
+main(
+			int		argc,
+			char*	argv[])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);

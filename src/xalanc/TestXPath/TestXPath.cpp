@@ -1301,8 +1301,9 @@ RunTests(
 
 
 int
-main(int			/* argc */,
-	 const char*	/* argv */ [])
+main(
+			int		/* argc */,
+			char*	/* argv */ [])
 {
 	XALAN_USING_STD(cout)
 

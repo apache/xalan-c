@@ -190,8 +190,8 @@ EvaluateXPath(
 
 int
 main(
-			int				argc,
-			const char*		argv[])
+			int		argc,
+			char*	argv[])
 {
 	int		theResult = 0;
 

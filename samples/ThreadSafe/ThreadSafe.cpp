@@ -220,8 +220,8 @@ doThreads(int	nThreads)
 
 int
 main(
-			int				argc,
-			const char*		/* argv */[])
+			int		argc,
+			char*	/* argv */[])
 {
 	if (argc != 1)
 	{

@@ -104,8 +104,8 @@
 
 int
 main(
-			int				argc,
-			const char*		argv[])
+			int		argc,
+			char*	argv[])
 {
 	XALAN_USING_STD(cerr)
 	XALAN_USING_STD(cout)
