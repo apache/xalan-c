@@ -23,28 +23,7 @@
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
-#include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathFactoryDefault.hpp>
-
-
-
-#include <XSLT/StylesheetConstructionContextDefault.hpp>
-#include <XSLT/StylesheetExecutionContextDefault.hpp>
-#include <XSLT/StylesheetRoot.hpp>
-#include <XSLT/XSLTEngineImpl.hpp>
-#include <XSLT/XSLTInit.hpp>
-#include <XSLT/XSLTInputSource.hpp>
-#include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
-#include <XSLT/XSLTResultTarget.hpp>
-
-
-
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include <XalanTransformer/XalanTransformer.hpp>
 
 
 
@@ -60,6 +39,8 @@ main(
 	using std::ostrstream;
 #endif
 
+	int	theResult = 0;
+
 	if (argc != 1)
 	{
 		cerr << "Usage: CompileStylesheet"
@@ -68,121 +49,58 @@ main(
 	}
 	else
 	{
-		try
-		{
-			// Call the static initializer for Xerces...
-			XMLPlatformUtils::Initialize();
+		// Call the static initializer for Xerces.
+		XMLPlatformUtils::Initialize();
 
+		// Initialize Xalan.
+		XalanTransformer::initialize();
+
+		// Create a XalanTransformer.
+		XalanTransformer theXalanTransformer;
+
+		// Our input files...The assumption is that the executable will be run
+		// from same directory as the input files.
+		const char*		theXSLFileName = "foo.xsl";
+		
+		// Compile the stylesheet.
+		const XalanCompiledStylesheet* const	theCompiledStylesheet = 
+			theXalanTransformer.compileStylesheet(theXSLFileName);
+
+		assert(theCompiledStylesheet != 0);
+
+		for (unsigned int i = 0; i < 10; i++)
+		{		
+			// Buffers passed in to ostrstream.
+			char		inBuffer[10];
+			char		outBuffer[10];	
+
+			// Generate the input and output file names.
+			ostrstream	theFormatterIn(inBuffer, sizeof(inBuffer));
+			ostrstream	theFormatterOut(outBuffer, sizeof(outBuffer));
+
+			theFormatterIn << "foo" << i + 1 << ".xml" << '\0';
+			theFormatterOut << "foo" << i + 1 << ".out" << '\0';
+
+			char*		theXMLFileName = theFormatterIn.str();
+			char*		theOutputFileName = theFormatterOut.str();
+
+			// Do the transform.
+			theResult = theXalanTransformer.transform(theXMLFileName, theCompiledStylesheet, theOutputFileName);
+    
+			if(theResult != 0)
 			{
-				// Initialize the Xalan XSLT subsystem...
-				XSLTInit						theInit;
-
-				// Create some support objects that are necessary for running the processor...
-				XalanSourceTreeDOMSupport		theDOMSupport;
-				XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport);
-
-				// Hook the two together...
-				theDOMSupport.setParserLiaison(&theParserLiaison);
-
-				// Create some more support objects.
-				XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-				XObjectFactoryDefault			theXObjectFactory;
-				XPathFactoryDefault				theXPathFactory;
-
-				// Create a processor...
-				XSLTEngineImpl	theProcessor(
-						theParserLiaison,
-						theXSLTProcessorEnvSupport,
-						theDOMSupport,
-						theXObjectFactory,
-						theXPathFactory);
-
-				// Connect the processor to the support object...
-				theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
-
-				// Create separate factory support objects so the stylesheet's
-				// factory-created XPath instances are independent from the
-				// processor's.
-				XPathFactoryDefault				theStylesheetXPathFactory;
-
-				// Create a stylesheet construction context, using the
-				// stylesheet's factory support objects.
-				StylesheetConstructionContextDefault	theConstructionContext(
-							theProcessor,
-							theXSLTProcessorEnvSupport,
-							theStylesheetXPathFactory);
-
-				// The execution context uses the same factory support objects as
-				// the processor, since those objects have the same lifetime as
-				// other objects created as a result of the execution.
-				StylesheetExecutionContextDefault		theExecutionContext(
-							theProcessor,
-							theXSLTProcessorEnvSupport,
-							theDOMSupport,
-							theXObjectFactory);
-
-				// Our input file.  The assumption is that the executable will be run
-				// from same directory as the input files.
-				const XalanDOMString	theXSLFileName("foo.xsl");
-
-				// Our stylesheet input source...
-				XSLTInputSource			theStylesheetSource(c_wstr(theXSLFileName));
-
-				// Ask the processor to create a StylesheetRoot for the specified
-				// input XSL.  This is the compiled stylesheet.  We don't have to
-				// delete it, since it is owned by the StylesheetConstructionContext
-				// instance.
-				StylesheetRoot* const	theStylesheetRoot =
-					theProcessor.processStylesheet(
-								theStylesheetSource,
-								theConstructionContext);
-				assert(theStylesheetRoot != 0);
-
-				for (unsigned int i = 0; i < 10; i++)
-				{
-					theExecutionContext.setStylesheetRoot(theStylesheetRoot);
-
-					// Buffers passed in to ostrstream.
-					char		inBuffer[10];
-					char		outBuffer[10];
-
-					// Generate the input and output file names.
-					ostrstream	theFormatterIn(inBuffer, sizeof(inBuffer));
-					ostrstream	theFormatterOut(outBuffer, sizeof(outBuffer));
-					
-					theFormatterIn << "foo" << i + 1 << ".xml" << '\0';
-					theFormatterOut << "foo" << i + 1 << ".out" << '\0';
-
-					//Generate the XML input and output objects.
-					XSLTInputSource		theInputSource(theFormatterIn.str());
-					XSLTResultTarget	theResultTarget(XalanDOMString(theFormatterOut.str()));
-
-					// Do the tranformation...
-					theProcessor.process(
-						 theInputSource,
-						 theResultTarget,
-						 theExecutionContext);
-
-					// Reset the processor and the execution context
-					// so we can perform the next transformation.
-					// Reset the parser liaison to clear out the
-					// source document we just transformed.
-					theProcessor.reset();
-					theExecutionContext.reset();
-					theParserLiaison.reset();
-				}
+				cerr << "CompileStylesheet Error: \n" << theXalanTransformer.getLastError()
+					 << endl
+					 << endl;
 			}
+		}
 
-			// Call the static terminator for Xerces...
-			XMLPlatformUtils::Terminate();
-		}
-		catch(...)
-		{
-			cerr << "Exception caught!!!"
-				 << endl
-				 << endl;
-		}
+		// Terminate Xalan.
+		XalanTransformer::terminate();
+
+		// Call the static terminator for Xerces.
+		XMLPlatformUtils::Terminate();
 	}
 
-	return 0;
+	return theResult;
 }

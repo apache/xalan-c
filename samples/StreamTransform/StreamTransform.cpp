@@ -19,31 +19,7 @@
 
 
 
-#include <Include/XalanAutoPtr.hpp>
-
-
-
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
-#include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathFactoryDefault.hpp>
-
-
-
-#include <XSLT/StylesheetConstructionContextDefault.hpp>
-#include <XSLT/StylesheetExecutionContextDefault.hpp>
-#include <XSLT/XSLTEngineImpl.hpp>
-#include <XSLT/XSLTInit.hpp>
-#include <XSLT/XSLTInputSource.hpp>
-#include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
-#include <XSLT/XSLTResultTarget.hpp>
-
-
-
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include <XalanTransformer/XalanTransformer.hpp>
 
 
 
@@ -61,6 +37,8 @@ main(
 	using std::ostrstream;
 #endif
 
+	int	theResult = 0;
+
 	if (argc != 1)
 	{
 		cerr << "Usage: StreamTransform"
@@ -69,63 +47,27 @@ main(
 	}
 	else
 	{
-		try
-		{
-			// Call the static initializer for Xerces...
-			XMLPlatformUtils::Initialize();
+		// Call the static initializer for Xerces.
+		XMLPlatformUtils::Initialize();
 
-			{
-				// Initialize the Xalan XSLT subsystem...
-				XSLTInit						theInit;
+		// Initialize Xalan.
+		XalanTransformer::initialize();
 
-				// Create some support objects that are necessary for running the processor...
-				XalanSourceTreeDOMSupport		theDOMSupport;
-				XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport);
+		// Create a XalanTransformer.
+		XalanTransformer theXalanTransformer;
 
-				// Hook the two together...
-				theDOMSupport.setParserLiaison(&theParserLiaison);
-
-				// Create some more support objects...
-				XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-				XObjectFactoryDefault			theXObjectFactory;
-				XPathFactoryDefault				theXPathFactory;
-
-				// Create a processor...
-				XSLTEngineImpl	theProcessor(
-						theParserLiaison,
-						theXSLTProcessorEnvSupport,
-						theDOMSupport,
-						theXObjectFactory,
-						theXPathFactory);
-
-				// Connect the processor to the support object...
-				theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
-
-				// Create a stylesheet construction context, and a stylesheet
-				// execution context...
-				StylesheetConstructionContextDefault	theConstructionContext(
-							theProcessor,
-							theXSLTProcessorEnvSupport,
-							theXPathFactory);
-
-				StylesheetExecutionContextDefault		theExecutionContext(
-							theProcessor,
-							theXSLTProcessorEnvSupport,
-							theDOMSupport,
-							theXObjectFactory);
-
-				// A simple input document...
+		// A simple input document...
 #if defined(XALAN_NON_ASCII_PLATFORM)
-				const char* const  theInputDocument = "<?xml version='1.0' encoding='EBCDIC-CP-US' ?><doc>Hello world!</doc>";
+		const char* const  theInputDocument = "<?xml version='1.0' encoding='EBCDIC-CP-US' ?><doc>Hello world!</doc>";
 #else
-				const char* const  theInputDocument = "<?xml version='1.0' encoding='ISO-8859-1' ?><doc>Hello world!</doc>";
+		const char* const  theInputDocument = "<?xml version='1.0' encoding='ISO-8859-1' ?><doc>Hello world!</doc>";
 #endif
 
-				// A "hello world" stylesheet.  Note that the encoding for the output is platform-dependent,
-				// since we're writing to a string.  It could be any encoding, but "binary" encodings,
-				// or encodings that could produce multi-byte characters would require transcoding on
-				// some platforms.
-				const char* const  theStylesheet =
+		// A "hello world" stylesheet.  Note that the encoding for the output is platform-dependent,
+		// since we're writing to a string.  It could be any encoding, but "binary" encodings,
+		// or encodings that could produce multi-byte characters would require transcoding on
+		// some platforms.
+		const char* const  theStylesheet =
 #if defined(XALAN_NON_ASCII_PLATFORM)
 "<?xml version='1.0' encoding='EBCDIC-CP-US'?>\
 <xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='1.0'>\
@@ -144,67 +86,26 @@ main(
 </xsl:stylesheet>";
 #endif
 
-				// Our input streams...
-				istrstream	theInputDocumentStream(theInputDocument, strlen(theInputDocument));
-				istrstream	theStylesheetStream(theStylesheet, strlen(theStylesheet));
+		// Our input streams...
+		istrstream	theXMLStream(theInputDocument, strlen(theInputDocument));
+		istrstream	theXSLStream(theStylesheet, strlen(theStylesheet));
 
-				// Our input sources...
-				XSLTInputSource		theInputSource(&theInputDocumentStream);
-				XSLTInputSource		theStylesheetSource(&theStylesheetStream);
-
-				// A fake system ID for the input sources...
-				const XalanDOMString	theSystemID("Memory buffer");
-
-				// Set the system IDs...
-				theInputSource.setSystemId(c_wstr(theSystemID));
-				theStylesheetSource.setSystemId(c_wstr(theSystemID));
-
-				// Our output target.  By default, we'll use an ostrstream that will allocate
-				// memory dynamically, although we could also use a static buffer since we 
-				// know the size of the output.
-#if defined(SIMPLE_STREAM_USE_STATIC_BUFFER)
-				char				theData[100];
-
-				ostrstream			theOutputStream(theData, sizeof(theData));
-#else
-				ostrstream			theOutputStream;
-#endif
-
-				XSLTResultTarget	theResultTarget(&theOutputStream);
-
-				theProcessor.process(
-							theInputSource,
-							theStylesheetSource,
-							theResultTarget,
-							theConstructionContext,
-							theExecutionContext);
-
-				// OK, we'll now write the data from the string buffer to cout.
-
-				// Null-terminate the data first, to make things easier...
-				theOutputStream << '\0';
-
-#if !defined(SIMPLE_STREAM_USE_STATIC_BUFFER)
-				// Get a pointer to the string, and store it in a XalanArrayAutoPtr,
-				// since it will need to be deleted.
-				const XalanArrayAutoPtr<char>	theGuard(theOutputStream.str());
-
-				const char* const	theData = theGuard.get();
-#endif
-
-				cout << theData;
-			}
-
-			// Call the static terminator for Xerces...
-			XMLPlatformUtils::Terminate();
-		}
-		catch(...)
+		// Do the transform.
+		theResult = theXalanTransformer.transform(&theXMLStream, &theXSLStream, cout);
+    
+		if(theResult != 0)
 		{
-			cerr << "Exception caught!!!"
+			cerr << "StreamTransform Error: \n" << theXalanTransformer.getLastError()
 				 << endl
 				 << endl;
 		}
+
+		// Terminate Xalan.
+		XalanTransformer::terminate();
+
+		// Call the static terminator for Xerces.
+		XMLPlatformUtils::Terminate();
 	}
 
-	return 0;
+	return theResult;
 }
