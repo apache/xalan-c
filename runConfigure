@@ -1,0 +1,473 @@
+#!/bin/sh
+
+
+#
+# The Apache Software License, Version 1.1
+# 
+# Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
+# reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer. 
+# 
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:  
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+# 
+# 4. The names "Xalan" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written 
+#    permission, please contact apache\@apache.org.
+# 
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+# 
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+# 
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+# 
+#
+# $Log$
+# Revision 1.1  2003/11/12 20:42:18  dbertoni
+# Patches for bug 13238.
+#
+# Revision 1.4  2003/11/06 01:28:34  dbertoni
+# Patch for bugzilla 13238.
+#
+# Revision 1.3  2003/09/19 20:33:04  dbertoni
+# Massive copyright update.
+#
+# Revision 1.2  2003/07/22 10:59:40  blautenb
+# FreeBSD and Install patch from Bjoern Zeeb - Bugzilla 13238
+#
+# Revision 1.1  2003/06/29 03:57:53  blautenb
+# Moved source for sane includes
+#
+# Revision 1.19  2003/04/05 05:21:56  blautenb
+# Fix for bug 18675
+#
+# Revision 1.18  2003/03/20 16:38:32  dbertoni
+# Updates for Intel compiler on Linux.
+#
+# Revision 1.17  2003/02/08 01:39:33  dbertoni
+# Don't add bitstobuildLink on AIX.
+#
+# Revision 1.16  2003/01/05 18:29:54  dbertoni
+# Bump optimization level on Linux.
+#
+# Revision 1.15  2002/12/12 20:58:06  dbertoni
+# Changes to build outside of the source tree.  Fixes Bugzilla 4627.
+#
+# Revision 1.14  2002/11/05 05:15:59  dbertoni
+# Add extra hint about using GNU make.
+#
+# Revision 1.13  2002/10/04 23:42:48  dbertoni
+# Fixed getop problem.
+#
+# Revision 1.12  2002/08/05 21:21:02  dbertoni
+# Fixed statement termination problem.
+#
+# Revision 1.11  2002/08/05 20:41:24  dbertoni
+# Merge in HP changes.
+#
+# Revision 1.10  2002/08/05 20:33:54  dbertoni
+# Changes to implement 32 and 64-bit builds.
+#
+# Revision 1.9  2002/08/01 18:36:38  dbertoni
+# Added support for Intel compiler.
+#
+# Revision 1.8  2002/05/06 05:34:06  dbertoni
+# Implemented multiple compiler options.
+#
+# Revision 1.7  2001/11/27 14:29:43  dbertoni
+# Reverted previous changes.
+#
+# Revision 1.5  2001/08/14 16:10:18  dbertoni
+# Changes from James Berry <jberry@criticalpath.com> for Mac OS X support.
+#
+# Revision 1.4  2001/05/18 18:24:12  dbertoni
+# Added $compileroption to CXXFLAGS and CFLAGS.  Bug 1810
+#
+# Revision 1.3  2001/04/13 02:53:20  dbertoni
+# Changes for the TRU64 port.
+#
+# Revision 1.2  2001/03/15 15:56:36  dbertoni
+# Add -D NDEBUG to release builds to disable assertions.
+#
+# Revision 1.1  2000/01/27 19:57:43  jdonohue
+# Preliminary based on Xerces
+#
+# Revision 1.1  1999/12/21 01:13:53  jdonohue
+# Make for linux, etc
+#
+
+#
+#
+
+#
+# runConfigure:
+#    This script will run the "configure" script for the appropriate
+#    platform. Only supported platforms are recognized.
+#
+# The following variables are defined and exported at the end of this
+# script.
+#
+# LIBS
+# LDFLAGS
+# CXXFLAGS
+#
+
+usage()
+{
+    echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
+    echo "Usage: runConfigure \"options\""
+    echo "       where options may be any of the following:"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'netbsd', 'solaris',
+            'hp-10', 'hp-11', 'irix', 'tru64', 'macosx')"
+    echo "       -c <C compiler name> (e.g. gcc, cc, xlc)"
+    echo "       -x <C++ compiler name> (e.g. g++, CC, xlC)"
+    echo "       -d (specifies that you want to build debug version)"
+    echo "       -t <transcoder> can be 'icu' (everything else means default)"
+    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
+    echo "       -b <bitsToBuild> (accepts '64', '32')"
+    echo "       -P <install-prefix>"
+    echo "       -l <extra linker options>"
+    echo "       -z <extra compiler options>"
+    echo "       -C <any one extra configure options>"
+    echo "       -h (to get help on the above commands)"
+}
+
+ERROR_EXIT_CODE=1
+
+if test ${1}o = "o"; then
+   usage
+   exit ${ERROR_EXIT_CODE}
+fi
+
+if test ${XALANCROOT}o = "o"; then
+   echo ERROR : You have not set your XALANCROOT environment variable
+   echo Though this environment variable has nothing to do with creating makefiles,
+   echo this is just a general warning to prevent you from pitfalls in future. Please
+   echo set an environment variable called XALANCROOT to indicate where you installed
+   echo the XALAN-C files, and run this command again to proceed. See the documentation
+   echo for an example if you are still confused.
+   exit ${ERROR_EXIT_CODE}
+fi
+
+if test $1 = "-h"; then
+   usage
+   exit ${ERROR_EXIT_CODE}
+fi
+
+# Get the command line parameters
+if test -x /bin/getopt -o -x /usr/bin/getopt; then
+set -- `getopt C:p:P:c:x:dm:n:t:r:b:l:z:h $*`
+else
+set -- `getopts C:p:P:c:x:dm:n:t:r:b:l:z:h $*`
+fi
+
+if [ $? != 0 ]
+   then
+   usage
+   exit ${ERROR_EXIT_CODE}
+fi
+
+# Set up the default values for each parameter
+debug=off                # by default debug is off
+bitsToBuild=32           # by default 32 bit build assumed
+transcoder=default       # by default use default transcoder
+
+while [ $# -gt 0 ]
+   do
+   case $1 in
+   -p) 
+        platform=$2; shift 2;;
+
+   -c) 
+        ccompiler=$2; shift 2;;
+
+   -x) 
+        cppcompiler=$2; shift 2;;
+
+   -d) 
+        debug=on; shift;;
+
+   -t)
+        transcoder=$2; shift 2;;
+
+   -r) 
+        thread=$2; shift 2;;
+
+   -b)
+        bitsToBuild=$2; shift 2;;
+  
+   -P)
+        configureoptions="$configureoptions --prefix=$2"; shift 2;;
+
+   -l)
+        linkeroptions="$linkeroptions $2"; shift 2;;
+
+   -z) 
+        compileroptions="$compileroptions $2"; shift 2;;
+
+   -C)
+        configureoptions="$configureoptions $2"; shift 2;;
+
+   -h) 
+        usage
+        exit ${ERROR_EXIT_CODE};; 
+
+   --) 
+        shift; break;; 
+
+   *)
+       echo "unknown option $1"
+       usage
+       exit ${ERROR_EXIT_CODE};;
+   esac
+done
+
+echo "Generating makefiles with the following options ..."
+echo "Platform: $platform"
+echo "C Compiler: $ccompiler"
+echo "C++ Compiler: $cppcompiler"
+echo "Extra compile options: $compileroptions"
+echo "Extra link options: $linkeroptions"
+echo "Transcoder: $transcoder"
+echo "Thread option: $thread"
+echo "bitsToBuild option: $bitsToBuild"
+echo "Extra configure options: $configureoptions"
+
+
+#
+# Now check if the options are correct or not, bail out if incorrect
+#
+
+case $platform in
+   aix | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | irix | tru64 | macosx)
+       # platform has been recognized
+       ;;
+   *)
+      echo "I do not recognize the platform '$platform'. Please type '${0} -h' for help."
+      exit ${ERROR_EXIT_CODE};;
+esac
+
+
+#
+# Enable debugging or not...
+#
+
+if test $debug = "off"; then
+    echo "Debug is OFF"
+    if test $platform = "linux"; then
+		if test $cppcompiler = "icpc"; then
+			debugflag="-O3 -DNDEBUG";
+		else
+			debugflag="-O2 -DNDEBUG";
+		fi
+    else
+        debugflag="-O -DNDEBUG";
+    fi
+else
+    echo "Debug is ON"
+    debugflag="-g";
+fi
+
+
+
+#
+# Check for the bitsToBuild option
+#
+
+#
+#  aix | linux | hp-11 | solaris |
+#  hp-10 | freebsd | netbsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
+#
+if test $bitsToBuild = 64; then
+    bitstobuildDefines=" -DXML_BITSTOBUILD_64 "
+    bitstobuildLink=" "
+    if test $platform; then
+        case $platform in
+           solaris)
+              bitstobuildDefines=" $bitstobuildDefines -xarch=v9 "
+              bitstobuildLink=" -xarch=v9 " ;;
+           aix)
+              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " ;;
+           hp-11)
+              bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
+              bitstobuildLink=" +DA2.0W " ;;
+           linux)
+              bitstobuildDefines=" $bitstobuildDefines " ;;
+           *)
+            ;;
+        esac
+    fi
+elif test $bitsToBuild = 32; then
+    bitstobuildDefines=" "
+    bitstobuildLink=" "
+    if test $platform; then
+        case $platform in
+           solaris)
+		      ;;
+           aix)
+		      ;;
+           hp-11)
+              bitstobuildDefines=" $bitstobuildDefines +DAportable "
+			  ;;
+           linux)
+              ;;
+           *)
+            ;;
+        esac
+    fi
+else
+    echo "I do not recognize the bitsToBuild '$bitsToBuild'. Please type '${0} -h' for help."
+    exit ${ERROR_EXIT_CODE};
+fi
+
+#
+# to export in case it is needed in Makefile.in/Makefine.incl
+#
+BITSTOBUILD=$bitsToBuild
+export BITSTOBUILD
+
+#
+# Now check whether to use 'icu' as transcoder
+#
+TRANSCODER=
+if test $transcoder; then
+    case $transcoder in
+        icu)
+	    if test ${ICUROOT}o = "o"; then
+		    echo '***Error*** ICUROOT environment variable not defined. Exiting...';
+		    exit ${ERROR_EXIT_CODE};
+            fi
+	    transcodingDefines="-I${ICUROOT}/include";
+	    transcodingLibs="-L${ICUROOT} -L${ICUROOT}/lib -L${ICUROOT}/data";
+	    TRANSCODER=ICU;;
+
+	default)
+	    ;;
+	*)
+	    echo "Unknown transcoder '$transcoder'. Using default."
+	    ;;
+    esac
+fi
+
+export TRANSCODER
+
+
+#
+# Check for the threading option
+#
+
+threadingLibs="-lpthread"
+if test $platform = "hp-11"; then
+    if test $thread; then
+    case $thread in
+       pthread)
+           ;;
+    
+       dce)
+           threadingLibs="-lcma";
+           threadingDefines="-D_PTHREADS_DRAFT4 -DXML_USE_DCE" ;;
+    
+       *)
+           echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+           exit ${ERROR_EXIT_CODE};;
+    esac
+    fi
+elif test $platform = "aix"; then
+    threadingLibs="-lpthreads"
+elif test $platform = "freebsd"; then
+    threadingLibs="-pthread -lc_r"
+elif test $platform = "netbsd"; then
+    threadingLibs="-pthread -lpthread"
+elif test $platform = "hp-10"; then
+    threadingLibs="-lcma"
+    threadingDefines="-DXML_USE_DCE"
+fi
+
+
+
+
+#
+# Set the C compiler and C++ compiler environment variables
+#
+
+case $cppcompiler in
+   xlC | xlc | xlC_r | xlc_r | g++ | c++ | cc | CC | aCC | cxx | icpc)
+      ;;
+
+   *)
+      echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..." 
+      ;;
+esac
+
+CC="$ccompiler"
+export CC
+
+CXX="$cppcompiler"
+export CXX
+
+
+#
+# Set the extra C and C++ compiler flags
+#
+
+CXXFLAGS="$compileroptions $debugflag $transcodingDefines $threadingDefines $bitstobuildDefines "
+export CXXFLAGS
+
+CFLAGS="$compileroptions $debugflag $transcodingDefines $threadingDefines $bitstobuildDefines "
+export CFLAGS
+
+LDFLAGS="$LDFLAGS $linkeroptions $bitstobuildLink"
+export LDFLAGS
+
+LIBS="$transcodingLibs $threadingLibs "
+export LIBS
+
+
+echo
+rm -f config.cache
+rm -f config.log
+rm -f config.status
+`dirname $0`/configure $configureoptions
+
+echo
+echo If the result of the above commands look OK to you, go to the directory
+echo ${XALANCROOT} and type \"gmake\" or \"make\" to make the XALAN-C system.
+echo
+echo Note: You must use GNU make to use the Xalan Makefile.
+
+exit  0;
