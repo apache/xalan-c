@@ -77,7 +77,7 @@ extensions in an extensions library distributed with &xslt4c;. If you have ideas
 </s2><anchor name="exslt"/>
 <s2 title="EXSLT extensions">
  <p>&xslt4c; supports the <jump href="http://exslt.org/">EXSLT</jump> initiative to provide a set of
-standard extension functions to XSLT users. &xslt4c; 1.5 includes beta implementations for 
+standard extension functions to XSLT users. &xslt4c; includes beta implementations for 
 functions in four of the EXSLT namespaces (some are calls to extension already in the Xalan namespace).</p> 
 <p>The source files for the implementations are in the XalanEXSLT subdirectory of the source tree.
 See</p> 
@@ -86,6 +86,8 @@ See</p>
 <li><jump href="apidocs/XalanEXSLTMathImpl.hpp.html">XalanEXSLTMathImpl</jump></li>
 <li><jump href="apidocs/XalanEXSLTSetImpl.hpp.html">XalanEXSLTSetImpl</jump></li>
 <li><jump href="apidocs/XalanEXSLTStringImpl.hpp.html">XalanEXSLTStringImpl</jump></li>
+<li><jump href="apidocs/XalanEXSLTDynamicImpl.hpp.html">XalanEXSLTDynamicImpl</jump></li>
+<li><jump href="apidocs/XalanEXSLTDateTimeImpl.hpp.html">XalanEXSLTDateTimeImpl</jump></li>
 </ul>
 <p>For the function specifications, see:</p>
 <ul>
@@ -93,6 +95,8 @@ See</p>
 <li><jump href="http://www.exslt.org/math/math.html">EXSLT math functions</jump></li>
 <li><jump href="http://www.exslt.org/set/set.html">EXSLT set functions</jump></li>
 <li><jump href="http://www.exslt.org/str/str.html">EXSLT string functions</jump></li>
+<li><jump href="http://www.exslt.org/dyn/dyn.html">EXSLT dynamic functions</jump></li>
+<li><jump href="http://www.exslt.org/date/date.html">EXSLT date-time functions</jump></li>
 </ul>
 <p>Anyone who would like to participate in the &xslt4c; initiative to support EXSLT by testing these implementations or implementating other EXSLT functions is more than welcome. Please email us 
 at the <human-resource-ref idref="xalandev"/>.</p>
