@@ -313,7 +313,7 @@ endif
 ifeq ($(PLATFORM), OS390)
   ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_5_1.x
 else
-  ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_5
+  ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_5_1
 endif
 
 # We need the ICU library if we are using the ICUBridge
