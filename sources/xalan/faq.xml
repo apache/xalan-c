@@ -62,7 +62,7 @@
 <faq title="Building on UNIX">
 <q>What do I need to rebuild &xslt4c; on UNIX?</q>
 
-<a><p>To build &xslt4c; on supported UNIX platforms, you need &xml4c; and a supported C++ compilers (see the table below).</p>
+<a><p>To build &xslt4c; on supported UNIX platforms, you need &xml4c;, the GNU make utility, and a supported C++ compilers (see the table below).</p>
 <p>For more details see: http://xml.apache.org/xalan-c/readme.html#unix</p>
      <table>
        <tr>
@@ -88,6 +88,12 @@
     </table>
  <p>For more details see: <link idref="readme" anchor="unix">Steps for doing a UNIX build</link>.</p>
 </a></faq>
+
+<faq title="Make errors on UNIX platforms">
+<q>I get errors in the Makefile when running the make utility.  What's wrong?</q>
+
+<a><p>You must use the GNU make utility.  Other make utilities may not work with the Xalan Makefile</p>
+</faq>
 
 <faq title="ICU">
 <q>What is ICU and why do I need it?</q>
