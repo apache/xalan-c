@@ -61,6 +61,7 @@
 
 #include <util/PlatformUtils.hpp>
 #include <framework/MemBufInputSource.hpp>
+#include <sax/SAXException.hpp>
 
 
 
@@ -82,10 +83,6 @@
 #include <XalanSourceTree/XalanSourceTreeInit.hpp>
 #include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
 #include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
-
-
-
-class SAXException;
 
 
 
@@ -232,7 +229,7 @@ getEvaluator(XalanXPathEvaluatorHandle	theHandle)
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return (XPathEvaluator*)theHandle;
 #else
-	return static_cast<XPathEvaluator*>(theHandle);
+	return reinterpret_cast<XPathEvaluator*>(theHandle);
 #endif
 }
 
@@ -246,7 +243,7 @@ getXPath(XalanXPathHandle	theHandle)
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return (XPath*)theHandle;
 #else
-	return static_cast<XPath*>(theHandle);
+	return reinterpret_cast<XPath*>(theHandle);
 #endif
 }
 
