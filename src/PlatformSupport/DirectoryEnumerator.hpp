@@ -150,7 +150,7 @@ public:
 	 */
 	bool isDirectory() const
 	{
-#if defined(AIX)	
+#if defined(AIX) || defined(HPUX)	
 		return false;
 #else		
 		return d_type == DT_DIR;		
@@ -282,6 +282,15 @@ struct DirectoryEnumeratorFunctor : public unary_function<StringType, Collection
 struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, CollectionType>
 #endif
 {
+#if defined(XALAN_NO_NAMESPACES)
+	typedef unary_function<StringType, CollectionType>	BaseClassType;
+#else
+	typedef std::unary_function<StringType, CollectionType>	BaseClassType;
+#endif
+
+	typedef typename BaseClassType::result_type		result_type;
+	typedef typename BaseClassType::argument_type	argument_type;
+
 	result_type
 	operator()(const argument_type&		theDirectory) const
 	{
