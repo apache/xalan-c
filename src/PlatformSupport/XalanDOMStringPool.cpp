@@ -83,11 +83,14 @@ XalanDOMStringPool::StringKey::operator<(const StringKey&	theRHS) const
 
 		while(i < m_length)
 		{
-			if (m_string[i] < theRHS.m_string[i])
+			const XalanDOMChar	theLHSChar = m_string[i];
+			const XalanDOMChar	theRHSChar = theRHS.m_string[i];
+
+			if (theLHSChar < theRHSChar)
 			{
 				return true;
 			}
-			else if (m_string[i] > theRHS.m_string[i])
+			else if (theLHSChar > theRHSChar)
 			{
 				return false;
 			}
@@ -96,8 +99,6 @@ XalanDOMStringPool::StringKey::operator<(const StringKey&	theRHS) const
 				++i;
 			}
 		}
-
-		assert(i == m_length && m_string[i] == 0 && theRHS.m_string[i] == 0);
 
 		// They're equal, so return false...
 		return false;
