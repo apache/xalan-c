@@ -63,8 +63,21 @@
 
 
 
-#include <string>
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 #include <vector>
+
+
+
+#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
+#include <stl/_vector.c>
+#endif
 
 
 
@@ -89,6 +102,12 @@ class XALAN_XPATHWRAPPER_EXPORT XPathWrapper
 
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<CharVectorType> CharVectorTypeVectorType;	
+#else
+	typedef std::vector<CharVectorType> CharVectorTypeVectorType;	
+#endif	
+
 	XPathWrapper();
 
 	virtual
@@ -97,20 +116,11 @@ public:
 	// Given an xml document and an xpath context and expression in the form of (ascii) string objects,
 	// this function parses the XML document, evaluates the xpath and returns the result, as a list of 
 	// string objects
-
-#if defined(XALAN_NO_NAMESPACES)
-	vector<string>
+	CharVectorTypeVectorType
 	evaluate(
-		const string&	xml, 
-		const string&	context, 
-		const string&	path);
-#else
-	std::vector<std::string>
-	evaluate(
-		const std::string&	xml, 
-		const std::string&	context, 
-		const std::string&	path);
-#endif
+		const CharVectorType&	xml, 
+		const CharVectorType&	context, 
+		const CharVectorType&	path);
 
 private:
 
@@ -122,7 +132,6 @@ private:
 
 	bool
 	operator==(const XPathWrapper&) const;
-
 
 	XPathWrapperImpl* const		pImpl;
 };

@@ -2,7 +2,6 @@
 
 
 
-#include <string>
 #include <vector>
 #include <cassert>
 #include <iostream>
@@ -50,7 +49,6 @@
 #if !defined(XALAN_NO_NAMESPACES)
 using std::cerr;
 using std::endl;
-using std::string;
 using std::vector;
 #endif
 
@@ -63,11 +61,11 @@ class XPathWrapperImpl
 {
 public:
 
-	vector<string>
+	XPathWrapper::CharVectorTypeVectorType
 	evaluate(
-		const string&	xml, 
-		const string&	context, 
-		const string&	expr)
+		const CharVectorType&	xml, 
+		const CharVectorType&	context, 
+		const CharVectorType&	expr)
 	{
 		//initialize Xerces...
 		try
@@ -81,7 +79,7 @@ public:
 			throw;
 		}
 
-		vector<string>	theResultList;
+		XPathWrapper::CharVectorTypeVectorType	theResultList;
 
 		{
 			// Initialize the XPath subsystem...
@@ -96,8 +94,7 @@ public:
 			try
 			{
 				// parse XML and get root element
-				MemBufInputSource inStream((const XMLByte*)xml.c_str(), 
-					xml.length(), "foo", false);
+				MemBufInputSource inStream((XMLByte*)c_str(xml), xml.size(), "foo", false);
 
 				XalanDocument* const	doc = theLiaison.parseXMLStream(inStream);
 				assert(doc != 0);
@@ -125,7 +122,7 @@ public:
 				// first get the context nodeset
 				XPath* const	contextXPath = theXPathFactory.create();
 				theXPathProcessor.initXPath(*contextXPath,
-											XalanDOMString(context.c_str()),
+											c_str(context),
 											ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
 											theEnvSupport);
 
@@ -165,7 +162,7 @@ public:
 					// and now get the result of the primary xpath expression
 					XPath* const	xpath = theXPathFactory.create();
 					theXPathProcessor.initXPath(*xpath,
-												XalanDOMString(expr.c_str()),
+												c_str(expr),
 												ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
 												theEnvSupport);
 
@@ -197,7 +194,7 @@ public:
 								else
 									str = theSupport.getNodeData(*node);
 
-								theResultList.push_back(DOMStringToStdString(str));
+								theResultList.push_back(TranscodeToLocalCodePage(str));
 							}
 
 							break;
@@ -205,7 +202,7 @@ public:
 
 						default:
 						{
-							theResultList.push_back(DOMStringToStdString(xObj->str()));
+							theResultList.push_back(TranscodeToLocalCodePage(xObj->str()));
 
 							break;
 						}
@@ -246,11 +243,13 @@ XPathWrapper::~XPathWrapper()
 
 
 
-vector<string>
+XPathWrapper::CharVectorTypeVectorType
 XPathWrapper::evaluate(
-	const string&	xml, 
-	const string&	context, 
-	const string&	path)
+		const CharVectorType&	xml, 
+		const CharVectorType&	context, 
+		const CharVectorType&	path)
 {
-	return pImpl->evaluate(xml,context,path);
+	return pImpl->evaluate(xml, context, path);
 }
+
+
