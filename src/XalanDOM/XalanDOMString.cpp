@@ -292,14 +292,14 @@ XalanDOMString::assign(
 {
 	invariants();
 
-#if __SGI_STL_PORT <= 0x400
+#if defined(__SGI_STL_PORT) && __SGI_STL_PORT <= 0x400
 	XalanDOMString  temp;
 
-	temp.reserve(theLastPosition - theFirstPosition + 1);
+	temp.m_data.reserve(theLastPosition - theFirstPosition + 1);
 
 	while(theFirstPosition != theLastPosition)
 	{
-		temp.push_back(*theFirstPosition);
+		temp.m_data.push_back(*theFirstPosition);
 
 		++theFirstPosition;
 	}
@@ -310,6 +310,8 @@ XalanDOMString::assign(
 
 	swap(temp);
 #else
+	m_data.reserve(theLastPosition - theFirstPosition + 1);
+
 	m_data.assign(theFirstPosition, theLastPosition);
 
 	m_data.push_back(XalanDOMChar(0));
@@ -461,9 +463,20 @@ XalanDOMString::insert(
 {
 	invariants();
 
-	m_data.insert(getIteratorForPosition(thePosition), theString, theString + theCount);
+	if (m_data.empty() == true)
+	{
+		assert(thePosition == 0);
 
-	m_size += theCount;
+		append(theString, theCount);
+
+		assert(length() == theCount);
+	}
+	else
+	{
+		m_data.insert(getIteratorForPosition(thePosition), theString, theString + theCount);
+
+		m_size += theCount;
+	}
 
 	invariants();
 
@@ -480,9 +493,18 @@ XalanDOMString::insert(
 {
 	invariants();
 
-	m_data.insert(getIteratorForPosition(thePosition), theCount, theChar);
+	if (m_data.empty() == true)
+	{
+		assert(thePosition == 0);
 
-	m_size += theCount;
+		assign(theCount, theChar);
+	}
+	else
+	{
+		m_data.insert(getIteratorForPosition(thePosition), theCount, theChar);
+
+		m_size += theCount;
+	}
 
 	invariants();
 
@@ -498,9 +520,20 @@ XalanDOMString::insert(
 {
 	invariants();
 
-	m_data.insert(thePosition, theChar);
+	if (m_data.empty() == true)
+	{
+		assert(thePosition == m_data.end() || thePosition == m_data.begin());
 
-	++m_size;
+		assign(1, theChar);
+
+		assert(length() == 1);
+	}
+	else
+	{
+		m_data.insert(thePosition, theChar);
+
+		++m_size;
+	}
 
 	invariants();
 
@@ -517,9 +550,20 @@ XalanDOMString::insert(
 {
 	invariants();
 
-	m_data.insert(thePosition, theCount, theChar);
+	if (m_data.empty() == true)
+	{
+		assert(thePosition == m_data.end() || thePosition == m_data.begin());
 
-	m_size += theCount;
+		assign(theCount, theChar);
+
+		assert(length() == theCount);
+	} 
+	else
+	{
+		m_data.insert(thePosition, theCount, theChar);
+
+		m_size += theCount;
+	}
 
 	invariants();
 }
@@ -534,11 +578,20 @@ XalanDOMString::insert(
 {
 	invariants();
 
-	m_data.insert(theInsertPosition, theFirstPosition, theLastPosition);
+	if (m_data.empty() == true)
+	{
+		assert(theInsertPosition == m_data.end() || theInsertPosition == m_data.begin());
 
-	m_size = m_data.size() - 1;
+		assign(theFirstPosition, theLastPosition);
+	}
+	else
+	{
+		m_data.insert(theInsertPosition, theFirstPosition, theLastPosition);
 
-	assert(m_size == m_data.size() - 1);
+		m_size = m_data.size() - 1;
+
+		assert(m_size == m_data.size() - 1);
+	}
 
 	invariants();
 }

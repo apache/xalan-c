@@ -187,7 +187,7 @@ public:
 	{
 		invariants();
 
-		return m_data.end();
+		return m_data.empty() == true ? m_data.end() : m_data.end() - 1;
 	}
 
 	const_iterator
@@ -195,7 +195,7 @@ public:
 	{
 		invariants();
 
-		return m_data.end();
+		return m_data.empty() == true ? m_data.end() : m_data.end() - 1;
 	}
 
 	reverse_iterator
@@ -203,7 +203,14 @@ public:
 	{
 		invariants();
 
-		return m_data.rbegin();
+		reverse_iterator	i = m_data.rbegin();
+
+		if (m_data.empty() == false)
+		{
+			++i;
+		}
+
+		return i;
 	}
 
 	const_reverse_iterator
@@ -211,7 +218,14 @@ public:
 	{
 		invariants();
 
-		return m_data.rbegin();
+		const_reverse_iterator	i = m_data.rbegin();
+
+		if (m_data.empty() == false)
+		{
+			++i;
+		}
+
+		return i;
 	}
 
 	reverse_iterator
