@@ -198,7 +198,7 @@ theProcessor.addTraceListener(&amp;theTraceListener);
   <p>You can run it from the DocumentBuilder subdirectory with</p>
   <p><code>DocumentBuilder</code></p>
   </s2><anchor name="threadsafe"/>
-  <s2 title="ThreadSafe (Windows32 Only)">
+  <s2 title="ThreadSafe">
   <p>What it does: Multiple threads use a single compiled stylesheet (StylesheetRoot) and DOM source tree (XalanNode) to perform
   transformations concurrently. The application tracks the progress of the threads in messages to the console, and each thread
   writes its own output file. Imagine a server application responding to multiple clients who happen to request the same

@@ -104,6 +104,7 @@
       <li>Implementation of EXSLT string extension functions encode-uri() and decode-uri(). </li>
       <li>Implementation of EXSLT dynamic extension function evaluate(). </li>
       <li>Implementation of EXSLT date-time extension function date-time().</li>
+      <li>Porting of ThreadSafe example to UNIX platform.</li>
      </ul>  
    </s3>  
 
