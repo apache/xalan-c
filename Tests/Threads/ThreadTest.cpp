@@ -16,8 +16,8 @@
 
 
 
-#include <util/PlatformUtils.hpp>
-#include <util/Mutexes.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/Mutexes.hpp>
 
 
 
@@ -39,6 +39,11 @@
 #elif defined(XALAN_POSIX2_AVAILABLE)
 
 #include <csignal>
+
+// This is a workaround for a Tru64 compiler bug...
+#if defined(XALAN_STRICT_ANSI_HEADERS) && defined(TRU64)
+#include <setjmp.h>
+#endif
 #include <pthread.h>
 #include <unistd.h>
 
@@ -52,6 +57,11 @@
 	using std::cerr;
 	using std::cout;
 	using std::endl;
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	using std::atoi;
+	using std::signal;
+	using std::strcmp;
+#endif
 #endif
 
 
@@ -188,7 +198,7 @@ signalHandler(int)
 {
 	fContinue = false;
 }
-};
+}
 #else
 #error Unsupported platform!
 #endif

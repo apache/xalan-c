@@ -78,9 +78,9 @@
 //	Are included by FileUtility.hpp
 
 // HARNESS HEADERS...
-#include <XMLFileReporter.hpp>
-#include <FileUtility.hpp>
-#include <HarnessInit.hpp>
+#include <Harness/XMLFileReporter.hpp>
+#include <Harness/FileUtility.hpp>
+#include <Harness/HarnessInit.hpp>
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;

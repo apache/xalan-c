@@ -66,7 +66,7 @@
 
 
 
-#include <util/PlatformUtils.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 #if defined(TEST_XALAN_CPP)
@@ -91,7 +91,7 @@ using std::cout;
 
 #include <XalanTransformer/XalanCAPI.h>
 
-#include <stdio.h>
+#include <cstdio>
 
 #endif
 

@@ -68,8 +68,8 @@
 #include <crtdbg.h>
 #endif
 
-#include <sax/SAXException.hpp>
-#include <util/PlatformUtils.hpp>
+#include <xercesc/sax/SAXException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
