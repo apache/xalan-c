@@ -956,28 +956,6 @@ FormatterToHTML::writeAttrURI(
 				accumContent(XalanUnicode::charSemicolon);
 			}
 		}
-		else if(ch == XalanUnicode::charPercentSign)
-		{
-			// If the character is a '%' number number, try to avoid double-escaping.
-			// There is a question if this is legal behavior.
-			if (i + 2 < len &&
-				XalanXMLChar::isDigit(string[i + 1]) == true &&
-				XalanXMLChar::isDigit(string[i + 2]) == true)
-			{
-				accumContent(ch);
-			}
-			else
-			{
-				if (m_escapeURLs == true)
-				{
-					accumHexNumber(ch);
-				}
-				else
-				{
-					accumContent(ch);
-				}
-			}
-		} 
 		// Since http://www.ietf.org/rfc/rfc2396.txt refers to the URI grammar as
 		// not allowing quotes in the URI proper syntax, nor in the fragment 
 		// identifier, we believe that double quotes should be escaped.
