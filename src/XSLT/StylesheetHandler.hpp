@@ -756,6 +756,10 @@ private:
 	const XalanDOMString&
 	getNamespaceForPrefixFromStack(const XalanDOMString&	thePrefix) const;
 
+	class PushPopIncludeState;
+
+	friend class StylesheetHandler::PushPopIncludeState;
+
 	class PushPopIncludeState
 	{
 	public:
@@ -794,8 +798,6 @@ private:
 
 		BoolStackType						m_preserveSpaceStack;
 	};
-
-	friend class PushPopIncludeState;
 
 	static const XalanDOMString				s_emptyString;
 };
