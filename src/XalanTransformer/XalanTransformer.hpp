@@ -110,11 +110,11 @@
 
 /**
  * This is a simple C++ interface for some common usage patterns. It's 
- * the responsibility of the caller to call initialize and terminate 
+ * the user's responsibility to call initialize and terminate 
  * before creating and after deleting any XalanTransformer instances 
- * respectively. As well, releasing any memory allocated from calling   
- * XalanTransformToData by calling XalanFreeData.
- */
+ * respectively. After calling XalanTransformToData, the user should   
+ * call XalanFreeData to release the memory allocated by that operation.
+*/
 class XALAN_TRANSFORMER_EXPORT XalanTransformer
 {
 public:
@@ -140,8 +140,8 @@ public:
 	terminate();
 
 	/**
-	 * Returns the last error that occured as a 
-	 * result of callaing transform.	
+	 * Returns the last error that occurred as a 
+	 * result of calling transform.	
 	 *
 	 * @return	error message const character pointer.
 	 */
@@ -149,10 +149,10 @@ public:
 	getLastError() const;
 
 	/**
-	 * Transform the source tree to the output in the given result tree target.
-	 * The processor will process the input source, the stylesheet source,
-	 * and transform to the output target. Call internally by all transform
-	 * overloads.
+	 * Transform the source tree to output in the given result tree target.
+	 * The processor will apply the the stylesheet source to the input source
+	 * and write the transformation output to the target. Called internally by 
+	 * all transform methods.
 	 *
 	 * @param inputSource		input source
 	 * @param stylesheetSource	stylesheet source
@@ -167,12 +167,12 @@ public:
 
 	/**
 	 * Transform the XML source tree to the given result file.
-	 * The processor will process the input file, the stylesheet file,
-	 * and transform to new output file.
+	 * The processor will apply the the stylesheet source to the input source
+	 * and write the transformation output to the output file.
 	 *
-	 * @param theXMLFileName	filename of XML input source
-	 * @param theXSLFileName	filename of stylesheet source
-	 * @param theOutFileName	filename of output source
+	 * @param theXMLFileName	filename of XML input file
+	 * @param theXSLFileName	filename of stylesheet file
+	 * @param theOutFileName	filename of output file
 	 * @return	0 for success
 	 */
 	int
@@ -183,8 +183,8 @@ public:
 
 	/**
 	 * Transform the XML source tree to an output stream.
-	 * The processor will process the input file, the stylesheet file,
-	 * and transform to an output stream.
+	 * The processor will apply the the stylesheet file to the input file
+	 * and write the transformation output to the output stream.
 	 *
 	 * @param theXMLFileName	filename of XML input source
 	 * @param theXSLFileName	filename of stylesheet source
@@ -199,8 +199,8 @@ public:
 
 	/**
 	 * Transform the XML source tree to an output stream.
-	 * The processor will process the input stream, the stylesheet input 
-	 * stream, and transform to an output stream.
+	 * The processor will apply the the stylesheet stream to the input stream
+	 * and write the transformation output to the output stream.
 	 *
 	 * @param theXMLInStream	a std istream for the input
 	 * @param theXSLInStream	a std istream for the input
@@ -215,12 +215,14 @@ public:
 
 	/**
 	 * Transform the XML source tree to a callback function.
-	 * The processor will process the input file, the stylesheet file,
-	 * and transform to output to a callback function in allocated 
-	 * blocks. Xalan will release any memory allocated upon 
-	 * termination. Data passed to the callback is not guaranteed to 
-	 * be null terminated. - See XalanTransformerOutputStream and 
-	 * XalanOutputHandlerType for more details.
+	 * The processor will apply the stylesheet file to the input file
+	 * and allocate the transformation result to a callback function  
+	 * in pre-allocated blocks. Upon termination, Xalan releases any 
+	 * allocated memory. Data passed to the callback is not guaranteed to 
+	 * be null terminated.
+	 *
+	 * - See XalanTransformerOutputStream and XalanOutputHandlerType 
+	 * for more details.
 	 * 
 	 * @param theXMLFileName	filename of XML input source
 	 * @param theXSLFileName	filename of stylesheet source	 

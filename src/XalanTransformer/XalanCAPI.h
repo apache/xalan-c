@@ -82,15 +82,15 @@ extern "C"
 
 	/**
 	 * Callback function passed to XalanTransformToHandler. 
-	 * Used to process transform output in blocks of data.
+	 * Used to process transformation output in blocks of data.
 	 * Caller is responsible for streaming or copying data to a user  
 	 * allocated buffer. Caller should not attempt to write to or  
-	 * free this data. Xalan will reuse the same buffer and free it 
-	 * upon termination.
+	 * free this data. Upon termination, Xalan reuses the same buffer 
+	 * and frees it.
 	 *
 	 * The callback should return the number of bytes written, and
 	 * this number should match the length received. Otherwise the
-	 * XalanTransformToHandler function terminates and returns a error status.	
+	 * XalanTransformToHandler function terminates and returns an error status.	
 	 *
 	 * static unsigned long xalanOutputHandler(const void* data, unsigned long length, const void *handle);
 	 *

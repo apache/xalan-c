@@ -95,7 +95,7 @@ XalanTransformerOutputStream::writeData(
 	const size_t theBytesWritten = m_outputHandler(theBuffer, theBufferLength, m_outputHandle);		
 
 	// We validate that the number of bytes written equals the number of bytes sent to
-	// the output handler. Otherwise we will stop processing  and throw and exception. 
+	// the output handler. Otherwise we will stop processing  and throw an exception. 
 	// Thus the callback can alert us of memory allocation issues or buffer overflows.
 	if(theBytesWritten != theBufferLength)
 	{
