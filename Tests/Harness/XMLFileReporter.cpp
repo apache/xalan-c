@@ -91,21 +91,25 @@ XMLFileReporter::initialize()
         // We don't have a valid file, so bail
         m_error = true;
         m_ready = false;
-        fprintf(stderr, "XMLFileReporter.initialize() ERROR: file name is blank");
+        fprintf(stderr, "XMLFileReporter.initialize() ERROR: No file name specified");
         return(false);
     }
 
+	// Transcode down the file name...
+	const CharVectorType	theTranscodedFileName(m_fileName.transcode());
+	const char* const		theTranscodedFileNamePointer = &theTranscodedFileName.front();
+
     // Create a file and ensure it has a place to live
-	m_fileHandle = fopen(&m_fileName.transcode().front(), "w");
+	m_fileHandle = fopen(theTranscodedFileNamePointer, "w");
 	if (m_fileHandle == 0)
 	{
         // Couldn't create or find the directory for the file to live in, so bail
         m_error = true;
         m_ready = false;
-        fprintf(stderr, "XMLFileReporter.initialize() ERROR: unble to open file, %s", m_fileName);
+        fprintf(stderr, "XMLFileReporter.initialize() ERROR: unble to open file, %s", theTranscodedFileNamePointer);
         return(false);
-	}	        
-    
+	}
+
     m_ready = true;
     startResultsFile();
     // fprintf(stderr, "DEBUG:XMLFileReporter.initialize() complete with " + fileName);
