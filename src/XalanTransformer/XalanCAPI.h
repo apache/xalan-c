@@ -65,8 +65,10 @@
 
 /**
  * This is a simple C interface for the class XalanTransformer. It's 
- * the user's responsibility to call initialize and terminate before
- * creating and after deleting any XalanTransformer instances respectively.
+ * the user's responsibility to call XalanInitialize() before making
+ * any other API calls, and to call XalanTerminate() when finished
+ * with the API.
+ *
  * After calling XalanTransformToData or XalanTransformToDataCSS, the user   
  * should call XalanFreeData to release the memory allocated by that 
  * operation.
@@ -99,16 +101,20 @@ extern "C"
 
 	/**
 	 * Initialize Xerces and Xalan.
-	 * Should be called only once per process before creating any
-	 * instances of XalanTransformer.
+	 *
+	 * Should be called only once per process before making
+	 * any other API calls.
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 	XalanInitialize();
 
 	/**
 	 * Terminate Xalan and Xerces.
+	 *
 	 * Should be called only once per process after deleting all
-	 * instances of XalanTransformer.
+	 * instances of XalanTransformer.  Once a process has called
+	 * this function, it cannot use the API for the remaining
+	 * lifetime of the process.
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 	XalanTerminate();
@@ -224,8 +230,7 @@ extern "C"
 	 * will release any memory allocated upon termination, and data passed 
 	 * to the callback is not guaranteed to be null terminated. 
 	 * 
-	 * - See XalanOutputHandlerType and XalanFlushHandlerType for more 
-	 * details.
+	 * See XalanTransformerDefinitions.hpp for more details.
 	 * 
 	 * @param theXMLFileName	filename of XML input source
 	 * @param theXSLFileName	filename of stylesheet source
@@ -254,8 +259,7 @@ extern "C"
 	 * will release any memory allocated upon termination, and data passed 
 	 * to the callback is not guaranteed to be null terminated. 
 	 * 
-	 * - See XalanOutputHandlerType and XalanFlushHandlerType for more 
-	 * details.
+	 * See XalanTransformerDefinitions.hpp for more details.
 	 *
 	 * @param thePSHandle		handle of parsed source
 	 * @param theCSSHandle		handle of compiled stylesheet 
