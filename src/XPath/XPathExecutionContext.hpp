@@ -84,7 +84,7 @@
 
 
 
-class DecimalFormatSymbols;
+class XalanDecimalFormatSymbols;
 class PrefixResolver;
 class QName;
 class XLocator;
@@ -575,13 +575,13 @@ public:
 
 
 	/**
-	 * Retrieve the DecimalFormatSymbols instance associated with
+	 * Retrieve the XalanDecimalFormatSymbols instance associated with
 	 * the name.
 	 *
 	 * @param name the name for the lookup
 	 * @return a pointer to the matching instance, or 0 if none was found
 	 */
-	virtual const DecimalFormatSymbols*
+	virtual const XalanDecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanDOMString&	name) = 0;
 
 	// These interfaces are inherited from ExecutionContext...

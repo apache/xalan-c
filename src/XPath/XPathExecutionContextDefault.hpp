@@ -263,7 +263,7 @@ public:
 			XalanDocument*			theDocument);
 
 
-	virtual const DecimalFormatSymbols*
+	virtual const XalanDecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanDOMString&	name);
 
 	// These interfaces are inherited from ExecutionContext...
