@@ -440,6 +440,18 @@ XercesParserLiaison::fatalError(const SAXParseException&	e)
 	using std::endl;
 #endif
 
+#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
+	cerr << endl
+		 << "Fatal Error at (file ";
+	OutputString(cerr, e.getSystemId());
+	cerr << ", line "
+		 << e.getLineNumber()
+		 << ", char"
+		 << e.getColumnNumber()
+         	 << "): ";
+        OutputString(cerr, e.getMessage());		 
+	cerr <<  endl;
+#else
 	cerr << endl
 		 << "Fatal Error at (file "
 		 << e.getSystemId()
@@ -447,9 +459,10 @@ XercesParserLiaison::fatalError(const SAXParseException&	e)
 		 << e.getLineNumber()
 		 << ", char"
 		 << e.getColumnNumber()
-         << "): "
+         	 << "): "
 		 << e.getMessage()
 		 << endl;
+#endif			 
 
 	throw e;
 }
@@ -464,6 +477,18 @@ XercesParserLiaison::error(const SAXParseException&		e)
 	using std::endl;
 #endif
 
+#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
+	cerr << endl
+		 << "Error at (file ";
+	OutputString(cerr, e.getSystemId());
+	cerr << ", line "
+		 << e.getLineNumber()
+		 << ", char"
+		 << e.getColumnNumber()
+         	 << "): ";
+        OutputString(cerr, e.getMessage());		 
+	cerr <<  endl;
+#else
 	cerr << endl
 		 << "Error at (file "
 		 << e.getSystemId()
@@ -471,9 +496,11 @@ XercesParserLiaison::error(const SAXParseException&		e)
 		 << e.getLineNumber()
 		 << ", char"
 		 << e.getColumnNumber()
-         << "): "
+         	 << "): "
 		 << e.getMessage()
 		 << endl;
+#endif
+
 }
 
 
@@ -486,6 +513,18 @@ XercesParserLiaison::warning(const SAXParseException&	e)
 	using std::endl;
 #endif
 
+#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
+	cerr << endl
+		 << "Warning at (file ";
+	OutputString(cerr, e.getSystemId());
+	cerr << ", line "
+		 << e.getLineNumber()
+		 << ", char"
+		 << e.getColumnNumber()
+         	 << "): ";
+        OutputString(cerr, e.getMessage());		 
+	cerr <<  endl;
+#else
 	cerr << endl
 		 << "Warning at (file "
 		 << e.getSystemId()
@@ -493,9 +532,11 @@ XercesParserLiaison::warning(const SAXParseException&	e)
 		 << e.getLineNumber()
 		 << ", char"
 		 << e.getColumnNumber()
-         << "): "
+         	 << "): "
 		 << e.getMessage()
 		 << endl;
+#endif
+	
 }
 
 
