@@ -4313,11 +4313,13 @@ XPath::findNamespace(
 
 			if(attributeList != 0) 
 			{
-				const unsigned int	nAttrs = attributeList->getLength();
+				unsigned int	nAttrs = attributeList->getLength();
 
-				for(unsigned int i = 0; i < nAttrs; ++i)
+				while(nAttrs > 0)
 				{
-					XalanNode* const	attr = attributeList->item(i);
+					--nAttrs;
+
+					XalanNode* const	attr = attributeList->item(nAttrs);
 					assert(attr != 0 && attr->getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
 					const XalanDOMString&	theNodeName = attr->getNodeName();
@@ -4342,6 +4344,8 @@ XPath::findNamespace(
 			theCurrentNode = theCurrentNode->getParentNode();
 		} while (theCurrentNode != theOwnerDocument && theCurrentNode != 0);
 	}
+
+	subQueryResults.reverse();
 
 	subQueryResults.setDocumentOrder();
 
