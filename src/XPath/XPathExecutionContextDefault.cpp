@@ -81,7 +81,7 @@
 #include "FoundIndex.hpp"
 #include "XObjectFactory.hpp"
 #include "ResultTreeFrag.hpp"
-#include "QName.hpp"
+#include "XalanQName.hpp"
 #include "XPathEnvSupport.hpp"
 
 
@@ -388,7 +388,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
 
 
 const XObjectPtr
-XPathExecutionContextDefault::getVariable(const QName&	name)
+XPathExecutionContextDefault::getVariable(const XalanQName&		name)
 {
 	assert(m_xobjectFactory != 0);
 

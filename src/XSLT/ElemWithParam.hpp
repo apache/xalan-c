@@ -69,7 +69,7 @@
 
 
 
-#include <XPath/QNameByValue.hpp>
+#include <XPath/XalanQNameByValue.hpp>
 
 
 
@@ -101,7 +101,7 @@ public:
 	 *
 	 * @return qualified name
 	 */
-	const QName&
+	const XalanQName&
 	getQName() const
 	{
 		return m_qname;
@@ -130,9 +130,9 @@ private:
 	operator=(const ElemWithParam&);
 
 	// Data members...
-	const XPath*	m_selectPattern;
+	const XPath*		m_selectPattern;
 
-	QNameByValue	m_qname;
+	XalanQNameByValue	m_qname;
 };
 
 

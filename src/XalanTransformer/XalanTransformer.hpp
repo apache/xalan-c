@@ -68,7 +68,7 @@
 
 
 
-#include <XPath/QNameByValue.hpp>
+#include <XPath/XalanQNameByValue.hpp>
 
 
 
@@ -429,14 +429,14 @@ public:
 	typedef vector<const XalanParsedSource*>			ParsedSourcePtrVectorType;
 	typedef pair<XalanDOMString, XalanDOMString>		ParamPairType;
 	typedef vector<ParamPairType>						ParamPairVectorType;
-	typedef pair<QNameByValue, Function*>				FunctionPairType;
+	typedef pair<XalanQNameByValue, Function*>			FunctionPairType;
 	typedef vector<FunctionPairType>					FunctionParamPairVectorType;
 #else
 	typedef std::vector<const XalanCompiledStylesheet*> CompiledStylesheetPtrVectorType;
 	typedef std::vector<const XalanParsedSource*>		ParsedSourcePtrVectorType;
 	typedef std::pair<XalanDOMString, XalanDOMString>	ParamPairType;
 	typedef std::vector<ParamPairType>					ParamPairVectorType;
-	typedef std::pair<QNameByValue, Function*>			FunctionPairType;
+	typedef std::pair<XalanQNameByValue, Function*>		FunctionPairType;
 	typedef std::vector<FunctionPairType>				FunctionParamPairVectorType;
 #endif
 

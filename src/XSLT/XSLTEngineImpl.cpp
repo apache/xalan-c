@@ -109,7 +109,7 @@
 
 
 #include <XPath/ElementPrefixResolverProxy.hpp>
-#include <XPath/QNameByReference.hpp>
+#include <XPath/XalanQNameByReference.hpp>
 #include <XPath/ResultTreeFrag.hpp>
 #include <XPath/XObject.hpp>
 #include <XPath/XObjectFactory.hpp>
@@ -2372,7 +2372,7 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 
 		if(indexOfNSSep == length(elementName))
 		{
-			fResult = m_stylesheetRoot->isCDATASectionElementName(QNameByReference(s_emptyString, elementName));
+			fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(s_emptyString, elementName));
 		}
 		else
 		{
@@ -2390,7 +2390,7 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 			if(equals(prefix, DOMServices::s_XMLString))
 			{
 				fResult =
-					m_stylesheetRoot->isCDATASectionElementName(QNameByReference(DOMServices::s_XMLNamespaceURI, elementName));
+					m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(DOMServices::s_XMLNamespaceURI, elementName));
 			}
 			else
 			{
@@ -2404,7 +2404,7 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 				else
 				{
 					fResult =
-						m_stylesheetRoot->isCDATASectionElementName(QNameByReference(*elemNS, elementName));
+						m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elementName));
 				}
 			}
 		}
@@ -2980,7 +2980,7 @@ XSLTEngineImpl::setStylesheetParam(
 			const XalanDOMString&	theName,
 			const XalanDOMString&	expression)
 {
-	const QNameByValue	qname(theName, 0, m_xpathEnvSupport, m_domSupport);
+	const XalanQNameByValue		qname(theName, 0, m_xpathEnvSupport, m_domSupport);
 
 	m_topLevelParams.push_back(ParamVectorType::value_type(qname, expression));
 }
@@ -2992,7 +2992,7 @@ XSLTEngineImpl::setStylesheetParam(
 			const XalanDOMString&	theName,
 			XObjectPtr				theValue)
 {
-	const QNameByValue	qname(theName, 0, m_xpathEnvSupport, m_domSupport);
+	const XalanQNameByValue		qname(theName, 0, m_xpathEnvSupport, m_domSupport);
 
 	m_topLevelParams.push_back(ParamVectorType::value_type(qname, theValue));
 }

@@ -63,7 +63,7 @@
 
 
 TopLevelArg::TopLevelArg(
-		const QName&			name,
+		const XalanQName&		name,
 		const XalanDOMString&	expr) :
 	m_qname(name),
 	m_expression(expr),
@@ -74,7 +74,7 @@ TopLevelArg::TopLevelArg(
 
 
 TopLevelArg::TopLevelArg(
-		const QName&		name,
+		const XalanQName&	name,
 		const XObjectPtr	variable) :
 	m_qname(name),
 	m_expression(),

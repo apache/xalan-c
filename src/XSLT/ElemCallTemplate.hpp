@@ -64,7 +64,7 @@
 
 
 
-#include <XPath/QNameByValue.hpp>
+#include <XPath/XalanQNameByValue.hpp>
 
 
 
@@ -133,7 +133,7 @@ private:
 	operator=(const ElemCallTemplate&);
 
 	// Data members...
-	QNameByValue			m_templateName;
+	XalanQNameByValue		m_templateName;
 
 	const ElemTemplate*		m_template;
 };

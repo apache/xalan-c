@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(QNAMEBYREFERENCE_HEADER_GUARD_1357924680)
-#define QNAMEBYREFERENCE_HEADER_GUARD_1357924680
+#if !defined(XALANQNAMEBYVALUE_HEADER_GUARD_1357924680)
+#define XALANQNAMEBYVALUE_HEADER_GUARD_1357924680
 
 
 
@@ -65,42 +65,99 @@
 
 
 // Base class header file...
-#include <XPath/QName.hpp>
+#include <XPath/XalanQName.hpp>
 
 
 
-class XALAN_XPATH_EXPORT QNameByReference : public QName
+class DOMSupport;
+
+
+
+class XALAN_XPATH_EXPORT XalanQNameByValue : public XalanQName
 {
 public:
 
 	/**
-	 * Construct an empty QNameByReference.
+	 * Construct an empty XalanQNameByValue.
 	 */
 	explicit
-	QNameByReference();
+	XalanQNameByValue();
 
 	/**
-	 * Construct a QNameByReference, with the supplied namespace and local part.
-	 * The instance keeps only a _reference_ to the string, to avoid making a
-	 * copy.
+	 * Copy constructor.
+	 *
+	 * @param theSource The source of the copy.
+	 */
+	XalanQNameByValue(const XalanQNameByValue&	theSource);
+
+	/**
+	 * Construct an instance from another XalanQName.
+	 *
+	 * @param theSource The source of the copy.
+	 */
+	explicit
+	XalanQNameByValue(const XalanQName&	theSource);
+
+	/**
+	 * Construct a XalanQNameByValue, with the supplied namespace and local part.
 	 *
 	 * @param theNamespace namespace string
 	 * @param theLocalPart local part string
 	 */
-	QNameByReference(
+	XalanQNameByValue(
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	theLocalPart);
 
 	/**
-	 * Construct a QNameByReference, from the supplied QName.  The instance
-	 * keeps only a _reference_ to the string, to avoid making a copy.
+	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
+	 * namespace vector stack. The default namespace is not resolved.
 	 *
-	 * @param theQName The source QName
+	 * @param qname      XalanQName string
+	 * @param namespaces namespace vector stack to use
 	 */
-	QNameByReference(const QName&	theQName);
+	XalanQNameByValue(
+			const XalanDOMString&		qname,
+			const NamespacesStackType&	namespaces);
+
+	/**
+	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
+	 * namespace vector stack. The default namespace is not resolved.
+	 *
+	 * @param qname      XalanQName string
+	 * @param namespaces namespace vector stack to use
+	 */
+	XalanQNameByValue(
+			const XalanDOMChar*			qname,
+			const NamespacesStackType&	namespaces);
+
+	/**
+	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
+	 * namespace context. The default namespace is not resolved.
+	 *
+	 * @param qname XalanQName string
+	 * @param namespaceContext context object for namespace resolution
+	 * @param envSupport XPathEnvSupport class instance
+	 * @param domSupport DOMSupport class instance
+	 */
+	XalanQNameByValue(
+			const XalanDOMString&	qname,
+			const XalanElement*		namespaceContext,
+			const XPathEnvSupport&	envSupport,
+			const DOMSupport& 		domSupport);
+
+	/**
+	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
+	 * prefix resolver. The default namespace is not resolved.
+	 *
+	 * @param qname XalanQName string
+	 * @param theResolver prefix resolver to use
+	 */
+	XalanQNameByValue(
+			const XalanDOMString&	qname,
+			const PrefixResolver&	theResolver);
 
 	virtual
-	~QNameByReference();
+	~XalanQNameByValue();
 
 	/**
 	 * Retrieve the local part of qualified name.
@@ -120,13 +177,21 @@ public:
 
 private:
 
-	// OK, we said reference, but using pointers
-	// allows for copy and assignment semantics.
-	const XalanDOMString*	m_namespace;
+	void
+	initialize(
+			const XalanDOMChar*			qname,
+			const NamespacesStackType&	namespaces);
 
-	const XalanDOMString*	m_localpart;
+	void
+	resolvePrefix(
+			const XalanDOMString&	qname,
+			const PrefixResolver&	theResolver);
+
+	XalanDOMString	m_namespace;
+
+	XalanDOMString	m_localpart;
 };
 
 
 
-#endif	// QNAMEBYREFERENCE_HEADER_GUARD_1357924680
+#endif	// XALANQNAMEBYVALUE_HEADER_GUARD_1357924680

@@ -76,11 +76,11 @@
 
 
 
-class QName;
 class Stylesheet;
+class StylesheetExecutionContext;
 class XalanElement;
 class XalanNode;
-class StylesheetExecutionContext;
+class XalanQName;
 
 
 
@@ -186,7 +186,7 @@ public:
 			Stylesheet&						stylesheetTree, 
 			const XalanNode*				sourceTree,
 			const XalanNode*				sourceNode,
-			const QName&					mode);
+			const XalanQName&				mode);
 
 protected:
 

@@ -78,7 +78,7 @@
 
 #include "FoundIndex.hpp"
 #include "MutableNodeRefList.hpp"
-#include "QNameByReference.hpp"
+#include "XalanQNameByReference.hpp"
 #include "SimpleNodeLocator.hpp"
 #include "XLocator.hpp"
 #include "XPathException.hpp"
@@ -914,10 +914,7 @@ XPath::variable(
 
 	const XObject&	varName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 3]];
 
-	const QNameByReference	qname(ns.str(),
-								  varName.str());	
-
-	return executionContext.getVariable(qname);
+	return executionContext.getVariable(XalanQNameByReference(ns.str(), varName.str()));
 }
 
 

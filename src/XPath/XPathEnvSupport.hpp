@@ -94,7 +94,7 @@ class XObjectFactory;
 class XalanDocument;
 class XalanElement;
 class XalanNode;
-class QName;
+class XalanQName;
 
 
 

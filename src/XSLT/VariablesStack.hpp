@@ -69,7 +69,7 @@
 
 
 
-#include <XPath/QName.hpp>
+#include <XPath/XalanQName.hpp>
 #include <XPath/XObject.hpp>
 
 
@@ -150,7 +150,7 @@ public:
 		}
 
 		ParamsVectorEntry(
-				const QName*		qname,
+				const XalanQName*	qname,
 				const XObjectPtr	value) :
 			m_qname(qname),
 			m_value(value),
@@ -159,7 +159,7 @@ public:
 		}
 
 		ParamsVectorEntry(
-				const QName*			qname,
+				const XalanQName*		qname,
 				const ElemVariable*		variable) :
 			m_qname(qname),
 			m_value(),
@@ -167,7 +167,7 @@ public:
 		{
 		}
 
-		const QName*			m_qname;
+		const XalanQName*		m_qname;
 
 		XObjectPtr				m_value;
 
@@ -204,7 +204,7 @@ public:
 	 */
 	const XObjectPtr
 	getParamVariable(
-			const QName&					qname,
+			const XalanQName&				qname,
 			StylesheetExecutionContext&		executionContext,
 			bool&							fNameFound)
 	{
@@ -224,7 +224,7 @@ public:
 	 */
 	const XObjectPtr
 	getVariable(
-			const QName& 					qname,
+			const XalanQName& 				qname,
 			StylesheetExecutionContext&		executionContext,
 			bool&							fNameFound)
 	{
@@ -242,7 +242,7 @@ public:
 	 */
 	void
 	pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemVariable*			var,
 			const ElemTemplateElement*	e);
 
@@ -257,7 +257,7 @@ public:
 	 */
 	void
 	pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const XObjectPtr&			val,
 			const ElemTemplateElement*	e);
 
@@ -425,7 +425,7 @@ private:
 		 * Construct a variable that is already evaluated.
 		 */
 		StackEntry(
-			const QName*		name,
+			const XalanQName*	name,
 			const XObjectPtr&	val,
 			bool				isParam = false);
 
@@ -433,7 +433,7 @@ private:
 		 * Construct a variable that has not been evaluated yet.
 		 */
 		StackEntry(
-			const QName*			name,
+			const XalanQName*		name,
 			const ElemVariable*		var,
 			bool					isParam = false);
 
@@ -469,7 +469,7 @@ private:
 		 * 
 		 * @return qualified name of object
 		 */
-		const QName*
+		const XalanQName*
 		getName() const
 		{
 			return m_qname;
@@ -536,7 +536,7 @@ private:
 		// Data members...
 		eType						m_type;
 
-		const QName*				m_qname;
+		const XalanQName*			m_qname;
 
 		XObjectPtr					m_value;
 
@@ -556,7 +556,7 @@ private:
 
 	const XObjectPtr
 	findXObject(
-			const QName&					name,
+			const XalanQName&				name,
 			StylesheetExecutionContext&		executionContext,
 			bool							fIsParam,
 			bool							fSearchGlobalSpace,
@@ -564,9 +564,9 @@ private:
 
 	StackEntry*
 	findEntry(
-			const QName&	name,
-			bool			fIsParam,
-			bool			fSearchGlobalSpace);
+			const XalanQName&	name,
+			bool				fIsParam,
+			bool				fSearchGlobalSpace);
 
 
 	VariableStackStackType	m_stack;

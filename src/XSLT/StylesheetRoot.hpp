@@ -419,7 +419,7 @@ public:
 	 * @return true or false
 	 */
 	bool
-	isCDATASectionElementName(const QName&	theQName) const;
+	isCDATASectionElementName(const XalanQName&		theQName) const;
 
 	/**
 	 * Given a valid element key, return the corresponding node list.

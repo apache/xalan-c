@@ -75,7 +75,7 @@
 
 
 
-#include <XPath/QNameByValue.hpp>
+#include <XPath/XalanQNameByValue.hpp>
 
 
 
@@ -139,9 +139,9 @@ protected:
 
 private:
 
-	bool			m_isDefaultTemplate;
+	bool				m_isDefaultTemplate;
 
-	QNameByValue	m_mode;
+	XalanQNameByValue	m_mode;
 };
 
 

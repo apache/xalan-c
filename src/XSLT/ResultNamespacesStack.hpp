@@ -72,7 +72,7 @@
 
 
 
-#include <XPath/QName.hpp>
+#include <XPath/XalanQName.hpp>
 
 
 
@@ -86,10 +86,10 @@ public:
 	typedef std::vector<bool>				BoolVectorType;
 #endif
 
-	typedef QName::NamespaceVectorType		NamespaceVectorType;
-	typedef QName::NamespacesStackType		NamespacesStackType;
+	typedef XalanQName::NamespaceVectorType		NamespaceVectorType;
+	typedef XalanQName::NamespacesStackType		NamespacesStackType;
 
-	typedef NamespacesStackType::size_type	size_type;
+	typedef NamespacesStackType::size_type		size_type;
 
 
 	explicit

@@ -461,7 +461,7 @@ foo(XPathExecutionContext&	theExecutionContext)
 		sort(
 				theVector.begin(),
 				theVector.end(),
-				less<QName>());
+				less<XalanQName>());
 	}
 
 	{

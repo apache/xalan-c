@@ -247,7 +247,7 @@ NamespacesHandler::processExcludeResultPrefixes(
 		}
 
 		const XalanDOMString* const		theNamespace =
-			QName::getNamespaceForPrefix(theCurrentNamespaces, thePrefix);
+			XalanQName::getNamespaceForPrefix(theCurrentNamespaces, thePrefix);
 
 		if(theNamespace == 0)
 		{
@@ -284,7 +284,7 @@ NamespacesHandler::processExtensionElementPrefixes(
 		}
 
 		const XalanDOMString* const		theNamespace =
-			QName::getNamespaceForPrefix(theCurrentNamespaces, thePrefix);
+			XalanQName::getNamespaceForPrefix(theCurrentNamespaces, thePrefix);
 
 		if(theNamespace == 0)
 		{

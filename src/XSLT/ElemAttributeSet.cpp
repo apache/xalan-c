@@ -91,7 +91,7 @@ ElemAttributeSet::ElemAttributeSet(
 
 		if(equals(aname,Constants::ATTRNAME_NAME))
 		{
-			m_QName = QNameByValue(atts.getValue(i), stylesheetTree.getNamespaces());
+			m_QName = XalanQNameByValue(atts.getValue(i), stylesheetTree.getNamespaces());
 
 			stylesheetTree.addAttributeSet(this);
 		}

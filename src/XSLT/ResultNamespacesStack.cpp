@@ -147,7 +147,7 @@ const XalanDOMString*
 ResultNamespacesStack::getNamespaceForPrefix(const XalanDOMString&	thePrefix) const
 {
 	// Search vector from first element back
-	return QName::getNamespaceForPrefix(m_resultNamespaces, thePrefix, true);
+	return XalanQName::getNamespaceForPrefix(m_resultNamespaces, thePrefix, true);
 }
 
 
@@ -156,7 +156,7 @@ const XalanDOMString*
 ResultNamespacesStack::getPrefixForNamespace(const XalanDOMString&	theNamespaceURI) const
 {
 	// Search vector from first element back
-	return QName::getPrefixForNamespace(m_resultNamespaces, theNamespaceURI, true);
+	return XalanQName::getPrefixForNamespace(m_resultNamespaces, theNamespaceURI, true);
 }
 
 

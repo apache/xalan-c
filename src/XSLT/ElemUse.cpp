@@ -156,7 +156,7 @@ ElemUse::processUseAttributeSets(
 
 	if(Constants::ELEMNAME_LITERALRESULT == getXSLToken())
 	{
-		const QNameByValue	qname(attrName, getStylesheet().getNamespaces());
+		const XalanQNameByValue	qname(attrName, getStylesheet().getNamespaces());
 
 		isUAS = ((equals(qname.getNamespace(),
 			constructionContext.getXSLTNamespaceURI())) &&

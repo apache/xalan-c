@@ -129,7 +129,7 @@ class PrefixResolver;
 class NodeRefListBase;
 class NodeSorter;
 class PrintWriter;
-class QName;
+class XalanQName;
 class SelectionEvent;
 class Stylesheet;
 class StylesheetRoot;
@@ -211,7 +211,7 @@ public:
 	 * 
 	 * @return QName for mode
 	 */
-	virtual const QName*
+	virtual const XalanQName*
 	getCurrentMode() const = 0;
 
 	/**
@@ -220,7 +220,7 @@ public:
 	 * @param QName for mode
 	 */
 	virtual	void
-	setCurrentMode(const QName* theMode) = 0; 
+	setCurrentMode(const XalanQName* theMode) = 0; 
 
 	/**
 	 * Whether diagnostic output is to be generated
@@ -554,7 +554,7 @@ public:
 	 */
 	virtual void
 	pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemTemplateElement*	element,
 			const XalanDOMString&		str,
 			XalanNode*					contextNode,
@@ -573,7 +573,7 @@ public:
 	 */
 	virtual void
 	pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemTemplateElement*	element,
 			const XPath&				xpath,
 			XalanNode*					contextNode,
@@ -590,7 +590,7 @@ public:
 	 */
 	virtual void
 	pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode) = 0;
@@ -605,7 +605,7 @@ public:
 	 */
 	virtual void
 	pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const XObjectPtr			val,
 			const ElemTemplateElement*	element) = 0;
 
@@ -619,7 +619,7 @@ public:
 	 */
 	virtual void
 	pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemVariable*			var,
 			const ElemTemplateElement*	element) = 0;
 
@@ -714,7 +714,7 @@ public:
 	 * @return pointer to XObject for variable
 	 */
 	virtual const XObjectPtr
-	getParamVariable(const QName&	theName) = 0;
+	getParamVariable(const XalanQName&	theName) = 0;
 
 	/**
 	 * Push a frame marker for an element.
@@ -1658,7 +1658,7 @@ public:
 			MutableNodeRefList&		nodelist) = 0;
 
 	virtual const XObjectPtr
-	getVariable(const QName&	name) = 0;
+	getVariable(const XalanQName&	name) = 0;
 
 	virtual const PrefixResolver*
 	getPrefixResolver() const = 0;

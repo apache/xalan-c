@@ -69,7 +69,7 @@
 
 
 
-#include <XPath/QNameByValue.hpp>
+#include <XPath/XalanQNameByValue.hpp>
 
 
 
@@ -101,7 +101,7 @@ public:
 	 *
 	 * @return qualified name
 	 */
-	const QName&
+	const XalanQName&
 	getQName() const
 	{
 		return m_QName;
@@ -132,7 +132,7 @@ protected:
 
 private:
 
-	QNameByValue	m_QName;
+	XalanQNameByValue	m_QName;
 };
 
 

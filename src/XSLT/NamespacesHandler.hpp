@@ -79,7 +79,7 @@
 
 
 #include <XPath/NameSpace.hpp>
-#include <XPath/QName.hpp>
+#include <XPath/XalanQName.hpp>
 
 
 
@@ -160,8 +160,8 @@ public:
 		XalanDOMString	m_resultAttributeName;
 	};
 
-	typedef QName::NamespaceVectorType					NamespaceVectorType;
-	typedef QName::NamespacesStackType					NamespacesStackType;
+	typedef XalanQName::NamespaceVectorType				NamespaceVectorType;
+	typedef XalanQName::NamespacesStackType				NamespacesStackType;
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,

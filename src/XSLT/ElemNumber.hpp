@@ -80,7 +80,6 @@
 
 class AVT;
 class CountersTable;
-class QName;
 class XalanNumberFormat;
 class XPath;
 class XPathExecutionContext;

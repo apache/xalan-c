@@ -71,7 +71,7 @@
 
 
 
-#include <XPath/QNameByValue.hpp>
+#include <XPath/XalanQNameByValue.hpp>
 
 
 
@@ -107,7 +107,7 @@ public:
 	 * 
 	 * @return QName for element
 	 */
-	const QName&
+	const XalanQName&
 	getName() const
 	{
 		return m_name;
@@ -118,7 +118,7 @@ public:
 	 * 
 	 * @return QName for mode
 	 */
-	const QName&
+	const XalanQName&
 	getMode() const
 	{
 		return m_mode;
@@ -162,12 +162,12 @@ private:
 	operator=(const ElemTemplate &);
 
 	// Data members...
-	const XPath*	m_matchPattern;
+	const XPath*		m_matchPattern;
 
-	QNameByValue	m_name;
-	QNameByValue	m_mode;
+	XalanQNameByValue	m_name;
+	XalanQNameByValue	m_mode;
 
-	double			m_priority;
+	double				m_priority;
 };
 
 

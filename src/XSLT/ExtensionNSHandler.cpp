@@ -88,14 +88,14 @@ struct XSLProcessorContext
 	const Stylesheet&		m_stylesheetTree;
 	const XalanNode*		m_sourceTree;
 	const XalanNode*		m_sourceNode;
-	const QName&			m_mode;
+	const XalanQName&		m_mode;
 
 	XSLProcessorContext(
 			const XSLTProcessor&	processor,
 			const Stylesheet&		stylesheetTree, 
 			const XalanNode*		sourceTree,
 			const XalanNode*		sourceNode,
-			const QName&			mode) :
+			const XalanQName&		mode) :
 		m_processor(processor),
 		m_stylesheetTree(stylesheetTree),
 		m_sourceTree(sourceTree),
@@ -210,7 +210,7 @@ ExtensionNSHandler::processElement(
 			Stylesheet&						/* stylesheetTree */, 
 			const XalanNode*				/* sourceTree */,
 			const XalanNode*				/* sourceNode */,
-			const QName&					/* mode */)
+			const XalanQName&				/* mode */)
 {
 	XObjectPtr	result;
 

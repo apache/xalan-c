@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(QNAME_HEADER_GUARD_1357924680)
-#define QNAME_HEADER_GUARD_1357924680
+#if !defined(XALANQNAME_HEADER_GUARD_1357924680)
+#define XALANQNAME_HEADER_GUARD_1357924680
 
 
 
@@ -98,7 +98,7 @@ class XPathEnvSupport;
  * is used as the name of the object. The default namespace is not used for 
  * unprefixed names."
  */
-class XALAN_XPATH_EXPORT QName
+class XALAN_XPATH_EXPORT XalanQName
 {
 public:
 
@@ -111,16 +111,16 @@ public:
 #endif
 
 	/**
-	 * Construct an empty QName.
+	 * Construct an empty XalanQName.
 	 *
 	 */
 	explicit
-	QName()
+	XalanQName()
 	{
 	}
 
 	virtual
-	~QName()
+	~XalanQName()
 	{
 	}
 
@@ -159,7 +159,7 @@ public:
 	 * @return true if namespace and local part are both empty
 	 */
 	bool
-	equals(const QName&		theRHS) const
+	equals(const XalanQName&		theRHS) const
 	{
 		// Note that we do not use our member variables here.  See
 		// class QNameReference for details...
@@ -234,8 +234,8 @@ protected:
 
 inline bool
 operator==(
-			const QName&	theLHS,
-			const QName&	theRHS)
+			const XalanQName&	theLHS,
+			const XalanQName&	theRHS)
 {
 	return theLHS.equals(theRHS);
 }
@@ -244,8 +244,8 @@ operator==(
 
 inline bool
 operator!=(
-			const QName&	theLHS,
-			const QName&	theRHS)
+			const XalanQName&	theLHS,
+			const XalanQName&	theRHS)
 {
 	return !(theLHS == theRHS);
 }
@@ -254,8 +254,8 @@ operator!=(
 
 inline bool
 operator<(
-			const QName&	theLHS,
-			const QName&	theRHS)
+			const XalanQName&	theLHS,
+			const XalanQName&	theRHS)
 {
 	if (theLHS.getNamespace() < theRHS.getNamespace())
 	{
@@ -273,4 +273,4 @@ operator<(
 
 
 
-#endif	// QNAME_HEADER_GUARD_1357924680
+#endif	// XALANQNAME_HEADER_GUARD_1357924680

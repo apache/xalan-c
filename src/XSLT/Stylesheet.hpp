@@ -84,7 +84,7 @@
 
 
 #include <XPath/NameSpace.hpp>
-#include <XPath/QNameByReference.hpp>
+#include <XPath/XalanQNameByReference.hpp>
 
 
 
@@ -134,16 +134,16 @@ public:
 	typedef map<XalanDOMString,
 				ExtensionNSHandler*,
 				less<XalanDOMString> >				ExtensionNamespacesMapType;
-	typedef map<QNameByReference,
+	typedef map<XalanQNameByReference,
 				ElemTemplate*,
-				less<QName> >						ElemTemplateMapType;
+				less<XalanQName> >					ElemTemplateMapType;
 	typedef vector<ElemAttributeSet*> 				AttributeSetVectorType;
 	typedef vector<ElemVariable*> 					ElemVariableVectorType;
 	typedef vector<KeyDeclaration>					KeyDeclarationVectorType;
 	typedef map<const XalanNode*,
 				KeyTable*,
 				less<const XalanNode*> >			KeyTablesTableType;
-	typedef vector<QNameByValue> 					QNameVectorType;
+	typedef vector<XalanQNameByValue> 				QNameVectorType;
 	typedef vector<Stylesheet*>						StylesheetVectorType;
 	typedef vector<XalanDOMString>					URLStackType;
 	typedef vector<const XPath*>					XPathVectorType;
@@ -151,12 +151,12 @@ public:
 #else
 	typedef std::map<XalanDOMString, XalanDOMString>		StringToStringMapType;
 	typedef std::map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
-	typedef std::map<QNameByReference, ElemTemplate*>		ElemTemplateMapType;
+	typedef std::map<XalanQNameByReference, ElemTemplate*>	ElemTemplateMapType;
 	typedef std::vector<ElemAttributeSet*> 					AttributeSetVectorType;
 	typedef std::vector<ElemVariable*> 						ElemVariableVectorType;
 	typedef std::vector<KeyDeclaration>						KeyDeclarationVectorType;
 	typedef std::map<const XalanNode*, KeyTable*>			KeyTablesTableType;
-	typedef std::vector<QNameByValue> 						QNameVectorType;
+	typedef std::vector<XalanQNameByValue> 					QNameVectorType;
 	typedef std::vector<Stylesheet*>						StylesheetVectorType;
 	typedef std::vector<XalanDOMString>						URLStackType;
 	typedef std::vector<const XPath*>						XPathVectorType;
@@ -370,7 +370,7 @@ public:
 	const XalanDOMString*
 	getNamespaceForPrefixFromStack(const XalanDOMString&	prefix) const
 	{
-		return QName::getNamespaceForPrefix(m_namespaces, prefix);
+		return XalanQName::getNamespaceForPrefix(m_namespaces, prefix);
 	}
 
 	/**
@@ -385,7 +385,7 @@ public:
 	{
 		assert(prefix != 0);
 
-		return QName::getNamespaceForPrefix(m_namespaces, XalanDOMString(prefix));
+		return XalanQName::getNamespaceForPrefix(m_namespaces, XalanDOMString(prefix));
 	}
 
 	/**
@@ -661,7 +661,7 @@ public:
 	 * @return pointer to template found or 0 if none found
 	 */
 	const ElemTemplate*
-	findNamedTemplate(const QName&	qname) const;
+	findNamedTemplate(const XalanQName&		qname) const;
 
 	/**
 	 * Given a target element, find the template that best matches in the given
@@ -693,7 +693,7 @@ public:
 	findTemplate(
 			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						targetNode, 
-			const QName&					mode,
+			const XalanQName&				mode,
 			bool							onlyUseImports) const;
 
 	/**
@@ -1139,6 +1139,8 @@ protected:
 	 */
 	KeyDeclarationVectorType			m_keyDeclarations;
 
+	static const XalanQNameByReference	s_emptyQName;
+
 private:	
 
 	// Not defined...
@@ -1294,8 +1296,6 @@ private:
 	NamespacesHandler						m_namespacesHandler;
 
 	static const XalanDOMString				s_emptyString;
-
-	static const QNameByReference			s_emptyQName;
 
 	static const XalanEmptyNamedNodeMap		s_fakeAttributes;
 };

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,12 +55,12 @@
  * <http://www.apache.org/>.
  */
 // Class header file...
-#include "QNameByReference.hpp"
+#include "XalanQNameByReference.hpp"
 
 
 
-QNameByReference::QNameByReference() :
-	QName(),
+XalanQNameByReference::XalanQNameByReference() :
+	XalanQName(),
 	m_namespace(&s_emptyString),
 	m_localpart(&s_emptyString)
 {
@@ -68,10 +68,10 @@ QNameByReference::QNameByReference() :
 
 
 
-QNameByReference::QNameByReference(
+XalanQNameByReference::XalanQNameByReference(
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	theLocalPart) :
-	QName(),
+	XalanQName(),
 	m_namespace(&theNamespace),
 	m_localpart(&theLocalPart)
 {
@@ -79,8 +79,8 @@ QNameByReference::QNameByReference(
 
 
 
-QNameByReference::QNameByReference(const QName&		theQName) :
-	QName(),
+XalanQNameByReference::XalanQNameByReference(const XalanQName&	theQName) :
+	XalanQName(),
 	m_namespace(&theQName.getNamespace()),
 	m_localpart(&theQName.getLocalPart())
 {
@@ -88,14 +88,14 @@ QNameByReference::QNameByReference(const QName&		theQName) :
 
 
 
-QNameByReference::~QNameByReference()
+XalanQNameByReference::~XalanQNameByReference()
 {
 }
 
 
 
 const XalanDOMString&
-QNameByReference::getLocalPart() const
+XalanQNameByReference::getLocalPart() const
 {
 	assert(m_localpart != 0);
 
@@ -105,7 +105,7 @@ QNameByReference::getLocalPart() const
 
 
 const XalanDOMString&
-QNameByReference::getNamespace() const
+XalanQNameByReference::getNamespace() const
 {
 	assert(m_namespace != 0);
 

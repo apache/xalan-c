@@ -270,11 +270,11 @@ public:
 	virtual void
 	setStylesheetRoot(const StylesheetRoot*		theStylesheet);
 
-	virtual const QName*
+	virtual const XalanQName*
 	getCurrentMode() const;
 
 	virtual	void
-	setCurrentMode(const QName* theMode); 
+	setCurrentMode(const XalanQName*	theMode); 
 
 	virtual bool
 	doDiagnosticsOutput() const;
@@ -370,7 +370,7 @@ public:
 
 	virtual void
 	pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemTemplateElement*	element,
 			const XalanDOMString&		str,
 			XalanNode*					contextNode,
@@ -378,19 +378,19 @@ public:
 
 	virtual void
 	pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const XObjectPtr			val,
 			const ElemTemplateElement*	element);
 
 	virtual void
 	pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemVariable*			var,
 			const ElemTemplateElement*	element);
 
 	virtual void
 	pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemTemplateElement*	element,
 			const XPath&				xpath,
 			XalanNode*					contextNode,
@@ -398,7 +398,7 @@ public:
 
 	virtual void
 	pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode);
@@ -422,7 +422,7 @@ public:
 			const ElemTemplateElement*	targetTemplate);
 
 	virtual const XObjectPtr
-	getParamVariable(const QName&	theName);
+	getParamVariable(const XalanQName&	theName);
 
 	virtual void
 	pushElementFrame(const ElemTemplateElement*		elem);
@@ -829,7 +829,7 @@ public:
 			MutableNodeRefList&		nodelist);
 
 	virtual const XObjectPtr
-	getVariable(const QName&	name);
+	getVariable(const XalanQName&	name);
 
 	virtual const PrefixResolver*
 	getPrefixResolver() const;
@@ -1069,7 +1069,7 @@ private:
 	mutable XalanAutoPtr<XalanSourceTreeDocument>	m_sourceTreeResultTreeFactory;
 
 	// Holds the current mode.
-	const QName*	                    m_mode;
+	const XalanQName*					m_mode;
 
 	typedef XalanObjectCacheDefault<FormatterToText>		FormatterToTextCacheType;
 	typedef XalanObjectCacheDefault<FormatterToSourceTree>	FormatterToSourceTreeCacheType;

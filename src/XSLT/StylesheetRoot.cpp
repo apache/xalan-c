@@ -94,7 +94,7 @@
 
 
 
-#include <XPath/QNameByReference.hpp>
+#include <XPath/XalanQNameByReference.hpp>
 #include <XPath/XPathFactory.hpp>
 #include <XPath/XPathProcessor.hpp>
 
@@ -189,7 +189,7 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&		constructionCon
 	sort(
 			m_cdataSectionElems.begin(),
 			m_cdataSectionElems.end(),
-			less<QName>());
+			less<XalanQName>());
 
 	if (m_cdataSectionElems.size() != 0)
 	{
@@ -246,9 +246,7 @@ StylesheetRoot::process(
 
 	executionContext.startDocument();
 
-	const QNameByValue	theDefaultMode;
-
-	executionContext.setCurrentMode(&theDefaultMode);
+	executionContext.setCurrentMode(&s_emptyQName);
 
 	XPathExecutionContext::CurrentNodeSetAndRestore theCurrentNodeSetAndRestore(executionContext, sourceTree);
 
@@ -492,7 +490,7 @@ StylesheetRoot::processOutputSpec(
 
 				--theTokenCount;
 
-				m_cdataSectionElems.push_back(QNameByValue(theToken, getNamespaces()));
+				m_cdataSectionElems.push_back(XalanQNameByValue(theToken, getNamespaces()));
 			}
 
 			assert(theTokenizer.hasMoreTokens() == false);
@@ -610,7 +608,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 
 
 bool
-StylesheetRoot::isCDATASectionElementName(const QName&	theQName) const
+StylesheetRoot::isCDATASectionElementName(const XalanQName&		theQName) const
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::find;

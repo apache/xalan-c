@@ -69,7 +69,7 @@
 
 
 
-#include <XPath/QNameByValue.hpp>
+#include <XPath/XalanQNameByValue.hpp>
 
 
 
@@ -148,9 +148,9 @@ public:
 private:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<QNameByValue>		QNameVectorType;
+	typedef vector<XalanQNameByValue>		QNameVectorType;
 #else
-	typedef std::vector<QNameByValue>	QNameVectorType;
+	typedef std::vector<XalanQNameByValue>	QNameVectorType;
 #endif
 
 private:

@@ -89,7 +89,7 @@
 #include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/XObject.hpp>
 #include <XPath/XPath.hpp>
-#include <XPath/QNameByReference.hpp>
+#include <XPath/XalanQNameByReference.hpp>
 
 
 
@@ -113,7 +113,7 @@ const Stylesheet::NamespaceVectorType	Stylesheet::s_emptyNamespace;
 
 const XalanDOMString			Stylesheet::s_emptyString;
 
-const QNameByReference			Stylesheet::s_emptyQName;
+const XalanQNameByReference		Stylesheet::s_emptyQName;
 
 const XalanEmptyNamedNodeMap	Stylesheet::s_fakeAttributes;
 
@@ -603,7 +603,7 @@ Stylesheet::addTemplate(
 
 	// If it's a named template, then we need to
 	// and it to the map of named templates.
-	const QName&	theName = theTemplate->getName();
+	const XalanQName&	theName = theTemplate->getName();
 
 	if(theName.isEmpty() == false)
 	{
@@ -725,7 +725,7 @@ Stylesheet::addTemplate(
 
 
 const ElemTemplate*
-Stylesheet::findNamedTemplate(const QName&	qname) const
+Stylesheet::findNamedTemplate(const XalanQName&		qname) const
 {
 	ElemTemplateMapType::const_iterator it = m_namedTemplates.find(qname);
 
@@ -881,7 +881,7 @@ const ElemTemplate*
 Stylesheet::findTemplate(
 			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						targetNode, 
-			const QName&					mode,
+			const XalanQName&				mode,
 			bool							onlyUseImports) const
 {
 	assert(targetNode != 0);
@@ -941,7 +941,7 @@ Stylesheet::findTemplate(
 
 					// We'll be needing to match rules according to what 
 					// mode we're in.
-					const QName&	ruleMode = rule->getMode();
+					const XalanQName&	ruleMode = rule->getMode();
 
 					// The logic here should be that if we are not in a mode AND
 					// the rule does not have a node, then go ahead.
@@ -1391,7 +1391,7 @@ Stylesheet::applyAttrSets(
 
 		for(QNameVectorType::size_type j = 0; j < nNames; j++)
 		{
-			const QName&							qname = attributeSetsNames[j];
+			const XalanQName&	qname = attributeSetsNames[j];
 
 			assert(m_attributeSetsSize == m_attributeSets.size());
 
@@ -1852,7 +1852,7 @@ Stylesheet::getNumber() const
 const XalanDOMString*
 Stylesheet::getNamespaceForPrefix(const XalanDOMString& 	prefix) const
 {
-	return QName::getNamespaceForPrefix(m_namespaceDecls, prefix);
+	return XalanQName::getNamespaceForPrefix(m_namespaceDecls, prefix);
 }
 
 

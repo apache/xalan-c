@@ -94,7 +94,6 @@ class ElemTemplate;
 class NamespacesHandler;
 class NodeRefListBase;
 class NodeSorter;
-class QName;
 class Stylesheet;
 class StylesheetConstructionContext;
 class StylesheetExecutionContext;

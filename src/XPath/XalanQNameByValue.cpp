@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,7 +55,7 @@
  * <http://www.apache.org/>.
  */
 // Class header file...
-#include "QNameByValue.hpp"
+#include "XalanQNameByValue.hpp"
 
 
 
@@ -73,8 +73,8 @@
 
 
 
-QNameByValue::QNameByValue() :
-	QName(),
+XalanQNameByValue::XalanQNameByValue() :
+	XalanQName(),
 	m_namespace(),
 	m_localpart()
 {
@@ -82,8 +82,8 @@ QNameByValue::QNameByValue() :
 
 
 
-QNameByValue::QNameByValue(const QNameByValue&	theSource) :
-	QName(),
+XalanQNameByValue::XalanQNameByValue(const XalanQNameByValue&	theSource) :
+	XalanQName(),
 	m_namespace(theSource.m_namespace),
 	m_localpart(theSource.m_localpart)
 {
@@ -91,8 +91,8 @@ QNameByValue::QNameByValue(const QNameByValue&	theSource) :
 
 
 
-QNameByValue::QNameByValue(const QName&		theSource) :
-	QName(),
+XalanQNameByValue::XalanQNameByValue(const XalanQName&	theSource) :
+	XalanQName(),
 	m_namespace(theSource.getNamespace()),
 	m_localpart(theSource.getLocalPart())
 {
@@ -100,10 +100,10 @@ QNameByValue::QNameByValue(const QName&		theSource) :
 
 
 
-QNameByValue::QNameByValue(
+XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	theLocalPart) :
-	QName(),
+	XalanQName(),
 	m_namespace(theNamespace),
 	m_localpart(theLocalPart)
 {
@@ -111,7 +111,7 @@ QNameByValue::QNameByValue(
 
 
 
-QNameByValue::QNameByValue(
+XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces) :
 	m_namespace(),
@@ -122,7 +122,7 @@ QNameByValue::QNameByValue(
 
 
 
-QNameByValue::QNameByValue(
+XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces) :
 	m_namespace(),
@@ -135,7 +135,7 @@ QNameByValue::QNameByValue(
 
 
 
-QNameByValue::QNameByValue(
+XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMString&	qname,
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
@@ -150,7 +150,7 @@ QNameByValue::QNameByValue(
 
 
 
-QNameByValue::QNameByValue(
+XalanQNameByValue::XalanQNameByValue(
 			const XalanDOMString&	qname,
 			const PrefixResolver&	theResolver) :
 	m_namespace(),
@@ -161,14 +161,14 @@ QNameByValue::QNameByValue(
 
 
 
-QNameByValue::~QNameByValue()
+XalanQNameByValue::~XalanQNameByValue()
 {
 }
 
 
 
 const XalanDOMString&
-QNameByValue::getLocalPart() const
+XalanQNameByValue::getLocalPart() const
 {
 	return m_localpart;
 }
@@ -176,7 +176,7 @@ QNameByValue::getLocalPart() const
 
 
 const XalanDOMString&
-QNameByValue::getNamespace() const
+XalanQNameByValue::getNamespace() const
 {
 	return m_namespace;
 }
@@ -184,7 +184,7 @@ QNameByValue::getNamespace() const
 
 
 void
-QNameByValue::initialize(
+XalanQNameByValue::initialize(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces)
 {
@@ -220,7 +220,7 @@ QNameByValue::initialize(
 
 
 void
-QNameByValue::resolvePrefix(
+XalanQNameByValue::resolvePrefix(
 			const XalanDOMString&	qname,
 			const PrefixResolver&	theResolver)
 {

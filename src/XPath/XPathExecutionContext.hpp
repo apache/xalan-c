@@ -87,7 +87,7 @@
 
 class XalanDecimalFormatSymbols;
 class PrefixResolver;
-class QName;
+class XalanQName;
 class XLocator;
 class XMLURL;
 class XObject;
@@ -640,7 +640,7 @@ public:
 	 * @return pointer to an XObject if the variable was found, 0 if it was not
 	 */
 	virtual const XObjectPtr
-	getVariable(const QName&	name) = 0;
+	getVariable(const XalanQName&	name) = 0;
 
 	/**
 	 * Retrieve the resolver for namespaces.

@@ -78,7 +78,6 @@ class GenerateEvent;
 class NodeRefListBase;
 class PrefixResolver;
 class PrintWriter;
-class QName;
 class ResultTreeFragBase;
 class SelectionEvent;
 class StylesheetConstructionContext;

@@ -71,7 +71,7 @@
 
 class XalanNode;
 class XalanNodeList;
-class QName;
+class XalanQName;
 class StylesheetExecutionContext;
 class ElemTemplateElement;
 

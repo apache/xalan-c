@@ -74,7 +74,7 @@
 
 
 
-#include <XPath/QNameByValue.hpp>
+#include <XPath/XalanQNameByValue.hpp>
 #include <XPath/XObject.hpp>
 
 
@@ -134,7 +134,7 @@ public:
 	 * 
 	 * @return qualified name of object
 	 */
-	const QName&
+	const XalanQName&
 	getName() const
 	{ 
 		return m_qname;
@@ -155,7 +155,7 @@ public:
 
 protected:
 
-	QNameByValue	m_qname;
+	XalanQNameByValue	m_qname;
 
 private:
 

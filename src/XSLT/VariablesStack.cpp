@@ -284,7 +284,7 @@ VariablesStack::pushParams(
 
 void
 VariablesStack::pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemVariable*			var,
 			const ElemTemplateElement*	e)
 {
@@ -300,7 +300,7 @@ VariablesStack::pushVariable(
 
 void
 VariablesStack::pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const XObjectPtr&			val,
 			const ElemTemplateElement*	e)
 {
@@ -372,7 +372,7 @@ VariablesStack::unmarkGlobalStackFrame()
 
 const XObjectPtr
 VariablesStack::findXObject(
-			const QName&					name,
+			const XalanQName&				name,
 			StylesheetExecutionContext&		executionContext,
 			bool							fIsParam,
 			bool							fSearchGlobalSpace,
@@ -433,9 +433,9 @@ VariablesStack::findXObject(
 
 VariablesStack::StackEntry*
 VariablesStack::findEntry(
-			const QName&	qname,
-			bool			fIsParam,
-			bool			fSearchGlobalSpace)
+			const XalanQName&	qname,
+			bool				fIsParam,
+			bool				fSearchGlobalSpace)
 {
 	StackEntry*		theResult = 0;
 
@@ -588,7 +588,7 @@ VariablesStack::StackEntry::StackEntry() :
 
 
 VariablesStack::StackEntry::StackEntry(
-			const QName*		name,
+			const XalanQName*	name,
 			const XObjectPtr&	val,
 			bool				isParam) :
 	m_type(isParam == true ? eParam : eVariable),
@@ -602,7 +602,7 @@ VariablesStack::StackEntry::StackEntry(
 
 
 VariablesStack::StackEntry::StackEntry(
-			const QName*			name,
+			const XalanQName*		name,
 			const ElemVariable*		var,
 			bool					isParam) :
 	m_type(isParam == true ? eParam : eVariable),

@@ -941,7 +941,7 @@ XalanTransformer::installExternalFunction(
 			const XalanDOMString&	functionName,
 			const Function& 		function)
 {
-	m_functionPairs.push_back(FunctionPairType(QNameByValue(theNamespace, functionName), function.clone()));
+	m_functionPairs.push_back(FunctionPairType(XalanQNameByValue(theNamespace, functionName), function.clone()));
 }
 
 
@@ -967,7 +967,7 @@ XalanTransformer::uninstallExternalFunction(
 {
 	for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
 	{
-		if(QNameByReference(theNamespace, functionName).equals(m_functionPairs[i].first))
+		if(XalanQNameByReference(theNamespace, functionName).equals(m_functionPairs[i].first))
 		{
 			delete m_functionPairs[i].second;
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,7 +55,7 @@
  * <http://www.apache.org/>.
  */
 // Class header file...
-#include "QName.hpp"
+#include "XalanQName.hpp"
 
 
 
@@ -72,12 +72,12 @@
 
 
 
-const XalanDOMString	QName::s_emptyString;
+const XalanDOMString	XalanQName::s_emptyString;
 
 
 
 const XalanDOMString*
-QName::getNamespaceForPrefix(
+XalanQName::getNamespaceForPrefix(
 			const NamespaceVectorType&	namespaces,
 			const XalanDOMString&		prefix,
 			bool						reverse)
@@ -134,7 +134,7 @@ QName::getNamespaceForPrefix(
 
 
 const XalanDOMString*
-QName::getNamespaceForPrefix(
+XalanQName::getNamespaceForPrefix(
 			const NamespacesStackType&	nsStack,
 			const XalanDOMString&		prefix,
 			bool						reverse)
@@ -159,7 +159,7 @@ QName::getNamespaceForPrefix(
 
 
 const XalanDOMString*
-QName::getPrefixForNamespace(
+XalanQName::getPrefixForNamespace(
 			const NamespaceVectorType&	namespaces,
 			const XalanDOMString&		uri,
 			bool						/* reverse */)
@@ -185,7 +185,7 @@ QName::getPrefixForNamespace(
 
 
 const XalanDOMString*
-QName::getPrefixForNamespace(
+XalanQName::getPrefixForNamespace(
 			const NamespacesStackType&	nsStack,
 			const XalanDOMString&		uri,
 			bool						reverse)

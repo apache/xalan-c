@@ -102,7 +102,7 @@ ElemApplyTemplates::ElemApplyTemplates(
 			break;
 
 		case Constants::TATTRNAME_MODE:
-			m_mode = QNameByValue(atts.getValue(i), getStylesheet().getNamespaces());
+			m_mode = XalanQNameByValue(atts.getValue(i), getStylesheet().getNamespaces());
 			break;
 
 		default:
@@ -171,7 +171,7 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 
 		assert(executionContext.getCurrentMode() != 0);
 
-		const QName* const	currentMode = executionContext.getCurrentMode();
+		const XalanQName* const		currentMode = executionContext.getCurrentMode();
 
 		if (m_isDefaultTemplate == false &&
 			!m_mode.equals(*currentMode))

@@ -113,7 +113,7 @@ ElemVariable::ElemVariable(
 			break;
 
 		case Constants::TATTRNAME_NAME:
-			m_qname = QNameByValue(atts.getValue(i), stylesheetTree.getNamespaces());
+			m_qname = XalanQNameByValue(atts.getValue(i), stylesheetTree.getNamespaces());
 			break;
 
 		case Constants::TATTRNAME_XMLSPACE:

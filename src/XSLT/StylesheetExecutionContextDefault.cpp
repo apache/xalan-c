@@ -79,7 +79,7 @@
 
 
 
-#include <XPath/QNameByReference.hpp>
+#include <XPath/XalanQNameByReference.hpp>
 #include <XPath/ResultTreeFragBase.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
@@ -256,7 +256,7 @@ StylesheetExecutionContextDefault::setStylesheetRoot(const StylesheetRoot*	theSt
 
 
 
-const QName*
+const XalanQName*
 StylesheetExecutionContextDefault::getCurrentMode() const
 {
 	return m_mode;
@@ -265,7 +265,7 @@ StylesheetExecutionContextDefault::getCurrentMode() const
 
 
 void
-StylesheetExecutionContextDefault::setCurrentMode(const QName*	theMode)
+StylesheetExecutionContextDefault::setCurrentMode(const XalanQName*		theMode)
 {		
 	m_mode = theMode;
 }
@@ -574,7 +574,7 @@ StylesheetExecutionContextDefault::createVariable(
 
 void
 StylesheetExecutionContextDefault::pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemTemplateElement*	element,
 			const XalanDOMString&		str,
 			XalanNode*					contextNode,
@@ -599,7 +599,7 @@ StylesheetExecutionContextDefault::pushVariable(
 
 void
 StylesheetExecutionContextDefault::pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const XObjectPtr			val,
 			const ElemTemplateElement*	element)
 {
@@ -610,7 +610,7 @@ StylesheetExecutionContextDefault::pushVariable(
 
 void
 StylesheetExecutionContextDefault::pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemVariable*			var,
 			const ElemTemplateElement*	element)
 {
@@ -621,7 +621,7 @@ StylesheetExecutionContextDefault::pushVariable(
 
 void
 StylesheetExecutionContextDefault::pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemTemplateElement*	element,
 			const XPath&				xpath,
 			XalanNode*					contextNode,
@@ -634,7 +634,7 @@ StylesheetExecutionContextDefault::pushVariable(
 
 void
 StylesheetExecutionContextDefault::pushVariable(
-			const QName&				name,
+			const XalanQName&			name,
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode)
@@ -727,7 +727,7 @@ StylesheetExecutionContextDefault::pushParams(
 
 
 const XObjectPtr
-StylesheetExecutionContextDefault::getParamVariable(const QName&	theName)
+StylesheetExecutionContextDefault::getParamVariable(const XalanQName&	theName)
 {
 	bool				fFound;
 
@@ -1642,7 +1642,7 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
 
 
 const XObjectPtr
-StylesheetExecutionContextDefault::getVariable(const QName&		name)
+StylesheetExecutionContextDefault::getVariable(const XalanQName&	name)
 {
 	bool				fFound;
 
