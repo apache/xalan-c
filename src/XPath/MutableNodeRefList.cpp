@@ -230,7 +230,7 @@ MutableNodeRefList::clear()
 {
 	m_nodeList.clear();
 
-	m_order = eDocumentOrder;
+	m_order = eUnknownOrder;
 }
 
 
@@ -694,6 +694,11 @@ MutableNodeRefList::clearNulls()
 			m_nodeList.end(), 
 			NodeListVectorType::value_type(0)),
 		m_nodeList.end());
+
+	if (m_nodeList.empty() == true)
+	{
+		m_order = eUnknownOrder;
+	}
 
 	assert(checkForDuplicates() == false);
 }

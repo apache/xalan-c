@@ -281,6 +281,12 @@ public:
 		return m_order == eUnknownOrder ? true : false;
 	}
 
+	void
+	setUnknownOrder()
+	{
+		m_order = eUnknownOrder;
+	}
+
 	/**
 	 * See if the order of the nodes is document order.
 	 */
