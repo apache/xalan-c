@@ -123,6 +123,7 @@
 &xslt4c-current; has been tested with &icu-used;. You may be able to use newer ICU releases as they appear.</note>
   </s3><anchor name="win32"/>
   <s3 title="Steps for doing a Windows build">
+  <p>To build &xslt4c; on Windows, you need &xml4c; and MS Visual C++ 6.0 installed with Service Pack 3 for Visual C++ and Visual Studio. You should also apply the bug fixes for the C++ standard library that shipped with Visual C++ 6.0. These fixes are available from the Dinkumware site: <jump href="http://www.dinkumware.com/vc_fixes.html">http://www.dinkumware.com/vc_fixes.html</jump>.</p>
   <ol>
      <li>(Optional) If you are rebuilding the ICUBridge, install the ICU so the icu root directory
       is at the same level as the xml-xerces root directory (see <link 
@@ -133,7 +134,6 @@
       anchor="icu">Enabling ICU support for TestXSLT</link>).<br/><br/></li>
     <li>Use Visual C++ to open the Xalan workspace from the xml-xalan\c\Projects\Win32\VC6.
     <br/><br/></li>
-    <li>Select Project Dependencies and check <br/><br/></li>
     <li>Use Visual C++ to rebuild everything or specific dynamic link libraries and executables of
     interest.<br/><br/></li>
   </ol>

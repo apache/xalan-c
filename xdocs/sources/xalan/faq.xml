@@ -45,7 +45,7 @@
 <faq title="Building on Windows">
 <q>What do I need to rebuild &xslt4c; on Windows?</q>
 
-<a><p>To build &xslt4c; on Windows, you need &xml4c; and MS Visual C++ 6.0 installed with Service Pack 3 for Visual C++ and Visual Studio. You should also apply the bug fixes for the C++ standard library that shipped with Visual C++ 6.0. These fixes are available from the Dinkumware site:<jump href="http://www.dinkumware.com/vc_fixes.html">http://www.dinkumware.com/vc_fixes.html</jump>.</p>
+<a><p>To build &xslt4c; on Windows, you need &xml4c; and MS Visual C++ 6.0 installed with Service Pack 3 for Visual C++ and Visual Studio. You should also apply the bug fixes for the C++ standard library that shipped with Visual C++ 6.0. These fixes are available from the Dinkumware site: <jump href="http://www.dinkumware.com/vc_fixes.html">http://www.dinkumware.com/vc_fixes.html</jump>.</p>
 <p>For more details, see <link idref="readme" anchor="win32">Steps for doing a Windows build</link>.</p></a>
 </faq>
 
