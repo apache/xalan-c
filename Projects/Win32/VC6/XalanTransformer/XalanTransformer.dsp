@@ -134,6 +134,10 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheet.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultDocumentBuilder.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultParsedSource.cpp
 # End Source File
 # Begin Source File
@@ -166,7 +170,15 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheet.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultDocumentBuilder.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultParsedSource.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanTransformer\XalanDocumentBuilder.hpp
 # End Source File
 # Begin Source File
 
