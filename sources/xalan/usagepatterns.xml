@@ -78,7 +78,7 @@
 command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
 </s2><anchor name="xalantransformer"/>
 <s2 title="Using the XalanTransformer class">
-<p>&xslt4c; 1.2 introduces XalanTransformer, a new class designed to package the basic Xalan infrastructure and provide a simpler C++ 
+<p>&xslt4c; 1.1 introduces XalanTransformer, a new class designed to package the basic Xalan infrastructure and provide a simpler C++ 
 and C API for performing standard transformations.</p>
 <note>As we expand the functionality of the XalanTransformer, we will revise the remainder of this chapter and the samples to indicate 
 how to take advantage of the API it provides.</note>
