@@ -466,6 +466,14 @@ XSLTEngineImpl::process(
 			error("No stylesheet is available to process!");
 		}
 
+		FormatterListener* const	theFormatter =
+				outputTarget.getDocumentHandler();
+
+		if (theFormatter != 0)
+		{
+			theFormatter->setPrefixResolver(this);
+		}
+
 		m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
 	}
 
