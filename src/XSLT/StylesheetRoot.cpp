@@ -126,7 +126,7 @@ StylesheetRoot::StylesheetRoot(
 	m_importStack(),
 	m_resultNameSpaceURL(),
 	m_outputmethod(Formatter::OUTPUT_METH_XML),
-	m_version(baseIdentifier),
+	m_version(),
 	m_indentResult(false),
 	m_encoding(),
 	m_mediatype(),

@@ -133,15 +133,17 @@ public:
 	getOutputMethod() const;
 
 	/**
-	 * Get the version string that was specified in the stylesheet.
+	 * Get the output version string that was specified in the
+	 * xsl:output element
 	 *
-	 * @return version string
+	 * @return output version string
 	 */
 	XalanDOMString
 	getOutputVersion() const;
 
 	/**
-	 * Determine if output indenting was specified in the stylesheet.
+	 * Determine if output indenting was specified in the
+	 * xsl:output element
 	 *
 	 * @return true to indent
 	 */
@@ -149,7 +151,8 @@ public:
 	getOutputIndent() const;
 
 	/**
-	 * Get the output encoding string that was specified in the stylesheet.
+	 * Get the output encoding string that was specified in the
+	 * xsl:output element
 	 *
 	 * @return encoding string
 	 */
@@ -157,7 +160,8 @@ public:
 	getOutputEncoding() const;
 
 	/**
-	 * Get the java output encoding string that was specified in the stylesheet.
+	 * Get the java output encoding string that was specified in the
+	 * xsl:output element
 	 *
 	 * @return encoding string
 	 */
@@ -165,7 +169,8 @@ public:
 	getJavaOutputEncoding() const;
 
 	/**
-	 * Get the doctype-system-id string that was specified in the stylesheet.
+	 * Get the doctype-system-id string that was specified in the 
+	 * xsl:output element
 	 *
 	 * @return document type string
 	 */
@@ -173,7 +178,8 @@ public:
 	getOutputDoctypeSystem() const;
 
 	/**
-	 * Get the media-type string that was specified in the stylesheet.
+	 * Get the media-type string that was specified in the 
+	 * xsl:output element
 	 *
 	 * @return media type string
 	 */
@@ -181,7 +187,8 @@ public:
 	getOutputMediaType() const;
 	
 	/**
-	 * Get the doctype-public-id string that was specified in the stylesheet.
+	 * Get the doctype-public-id string that was specified in the 
+	 * xsl:output element
 	 *
 	 * @return document type public id string
 	 */
@@ -200,8 +207,8 @@ public:
 	}
 
 	/**
-	 * Get the standalone string that was specified in the stylesheet, either
-	 * "yes" or "no."
+	 * Get the standalone string that was specified in the 
+	 * xsl:output element.(either "yes" or "no")
 	 *
 	 * @return standalone string
 	 */
