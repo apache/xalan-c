@@ -1136,7 +1136,7 @@ clear(XalanDOMString&	theString)
 {
 	if (length(theString) > 0)
 	{
-		theString.deleteData(0, length(theString));
+		theString = DOMString();
 	}
 }
 
