@@ -271,7 +271,7 @@ private:
 	// appending a child becomes a linear search.
 	XalanNode* 							m_lastChild;
 
-	// Stack of last children appended.  There is a ono-to-one
+	// Stack of last children appended.  There is a one-to-one
 	// correspondance to the entries in m_elementStack.
 	LastChildStackType					m_lastChildStack;
 
