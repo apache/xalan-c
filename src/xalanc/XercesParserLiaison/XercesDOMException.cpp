@@ -66,6 +66,84 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+template<class ExceptionType>
+static XercesDOMException::ExceptionCode
+translateErrorCode(ExceptionType	theException)
+{
+	XercesDOMException::ExceptionCode	theXalanCode = XercesDOMException::UNKNOWN_ERR;
+
+	switch(theException.code)
+	{
+	case ExceptionType::INDEX_SIZE_ERR:
+		theXalanCode = XercesDOMException::INDEX_SIZE_ERR;
+		break;
+
+	case ExceptionType::DOMSTRING_SIZE_ERR:
+		theXalanCode = XercesDOMException::DOMSTRING_SIZE_ERR;
+		break;
+
+	case ExceptionType::HIERARCHY_REQUEST_ERR:
+		theXalanCode = XercesDOMException::HIERARCHY_REQUEST_ERR;
+		break;
+
+	case ExceptionType::WRONG_DOCUMENT_ERR:
+		theXalanCode = XercesDOMException::WRONG_DOCUMENT_ERR;
+		break;
+
+	case ExceptionType::INVALID_CHARACTER_ERR:
+		theXalanCode = XercesDOMException::INVALID_CHARACTER_ERR;
+		break;
+
+	case ExceptionType::NO_DATA_ALLOWED_ERR:
+		theXalanCode = XercesDOMException::NO_DATA_ALLOWED_ERR;
+		break;
+
+	case ExceptionType::NO_MODIFICATION_ALLOWED_ERR:
+		theXalanCode = XercesDOMException::NO_MODIFICATION_ALLOWED_ERR;
+		break;
+
+	case ExceptionType::NOT_FOUND_ERR:
+		theXalanCode = XercesDOMException::NOT_FOUND_ERR;
+		break;
+
+	case ExceptionType::NOT_SUPPORTED_ERR:
+		theXalanCode = XercesDOMException::INDEX_SIZE_ERR;
+		break;
+
+	case ExceptionType::INUSE_ATTRIBUTE_ERR:
+		theXalanCode = XercesDOMException::INUSE_ATTRIBUTE_ERR;
+		break;
+
+	case ExceptionType::INVALID_STATE_ERR:
+		theXalanCode = XercesDOMException::INVALID_STATE_ERR;
+		break;
+
+	case ExceptionType::SYNTAX_ERR:
+		theXalanCode = XercesDOMException::SYNTAX_ERR;
+		break;
+
+	case ExceptionType::INVALID_MODIFICATION_ERR:
+		theXalanCode = XercesDOMException::INVALID_MODIFICATION_ERR;
+		break;
+
+	case ExceptionType::NAMESPACE_ERR:
+		theXalanCode = XercesDOMException::NAMESPACE_ERR;
+		break;
+
+	case ExceptionType::INVALID_ACCESS_ERR:
+		theXalanCode = XercesDOMException::INVALID_ACCESS_ERR;
+		break;
+
+	default:
+		assert(false);
+		break;
+	};
+
+	return theXalanCode;
+}
+
+
+
 XercesDOMException::XercesDOMException(ExceptionCode 	code) :
 	XalanDOMException(code)
 {
@@ -74,9 +152,18 @@ XercesDOMException::XercesDOMException(ExceptionCode 	code) :
 
 
 XercesDOMException::XercesDOMException(const DOM_DOMExceptionType&	theException) :
-	XalanDOMException(translateErrorCode(theException.code))
+	XalanDOMException(translateErrorCode(theException))
 {
 }
+
+
+
+#if XERCES_VERSION_MAJOR >= 2
+XercesDOMException::XercesDOMException(const DOMExceptionType&	theException) :
+	XalanDOMException(translateErrorCode(theException))
+{
+}
+#endif
 
 
 
@@ -89,83 +176,6 @@ XercesDOMException::XercesDOMException(const XercesDOMException&	theSource) :
 
 XercesDOMException::~XercesDOMException()
 {
-}
-
-
-
-XercesDOMException::ExceptionCode
-XercesDOMException::translateErrorCode(DOM_DOMExceptionType::ExceptionCode	theCode)
-{
-	ExceptionCode	theXalanCode = UNKNOWN_ERR;
-
-	switch(theCode)
-	{
-	case DOM_DOMExceptionType::INDEX_SIZE_ERR:
-		theXalanCode = INDEX_SIZE_ERR;
-		break;
-
-	case DOM_DOMExceptionType::DOMSTRING_SIZE_ERR:
-		theXalanCode = DOMSTRING_SIZE_ERR;
-		break;
-
-	case DOM_DOMExceptionType::HIERARCHY_REQUEST_ERR:
-		theXalanCode = HIERARCHY_REQUEST_ERR;
-		break;
-
-	case DOM_DOMExceptionType::WRONG_DOCUMENT_ERR:
-		theXalanCode = WRONG_DOCUMENT_ERR;
-		break;
-
-	case DOM_DOMExceptionType::INVALID_CHARACTER_ERR:
-		theXalanCode = INVALID_CHARACTER_ERR;
-		break;
-
-	case DOM_DOMExceptionType::NO_DATA_ALLOWED_ERR:
-		theXalanCode = NO_DATA_ALLOWED_ERR;
-		break;
-
-	case DOM_DOMExceptionType::NO_MODIFICATION_ALLOWED_ERR:
-		theXalanCode = NO_MODIFICATION_ALLOWED_ERR;
-		break;
-
-	case DOM_DOMExceptionType::NOT_FOUND_ERR:
-		theXalanCode = NOT_FOUND_ERR;
-		break;
-
-	case DOM_DOMExceptionType::NOT_SUPPORTED_ERR:
-		theXalanCode = INDEX_SIZE_ERR;
-		break;
-
-	case DOM_DOMExceptionType::INUSE_ATTRIBUTE_ERR:
-		theXalanCode = INUSE_ATTRIBUTE_ERR;
-		break;
-
-	case DOM_DOMExceptionType::INVALID_STATE_ERR:
-		theXalanCode = INVALID_STATE_ERR;
-		break;
-
-	case DOM_DOMExceptionType::SYNTAX_ERR:
-		theXalanCode = SYNTAX_ERR;
-		break;
-
-	case DOM_DOMExceptionType::INVALID_MODIFICATION_ERR:
-		theXalanCode = INVALID_MODIFICATION_ERR;
-		break;
-
-	case DOM_DOMExceptionType::NAMESPACE_ERR:
-		theXalanCode = NAMESPACE_ERR;
-		break;
-
-	case DOM_DOMExceptionType::INVALID_ACCESS_ERR:
-		theXalanCode = INVALID_ACCESS_ERR;
-		break;
-
-	default:
-		assert(false);
-		break;
-	};
-
-	return theXalanCode;
 }
 
 

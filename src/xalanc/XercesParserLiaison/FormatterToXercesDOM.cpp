@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,8 +82,16 @@
 
 
 
+#include <xalanc/DOMSupport/DOMServices.hpp>
+
+
+
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
+
+
+
+#include "XercesDOMException.hpp"
 
 
 
@@ -163,16 +171,23 @@ FormatterToXercesDOM::startElement(
 			const	XMLCh* const	name,
 			AttributeListType&		attrs)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	DOMElementType* const	elem = createElement(name, attrs);
-	assert(elem != 0);
+		DOMElementType* const	elem = createElement(name, attrs);
+		assert(elem != 0);
 
-	append(elem);
+		append(elem);
 
-	m_elemStack.push_back(m_currentElem);
+		m_elemStack.push_back(m_currentElem);
 
-	m_currentElem = elem;
+		m_currentElem = elem;
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
@@ -180,17 +195,24 @@ FormatterToXercesDOM::startElement(
 void
 FormatterToXercesDOM::endElement(const	XMLCh* const	/* name */)
 {
-	processAccumulatedText();
-
-	if(m_elemStack.empty() == false)
+	try
 	{
-		m_currentElem = m_elemStack.back();
+		processAccumulatedText();
 
-		m_elemStack.pop_back();
+		if(m_elemStack.empty() == false)
+		{
+			m_currentElem = m_elemStack.back();
+
+			m_elemStack.pop_back();
+		}
+		else
+		{
+			m_currentElem = 0;
+		}
 	}
-	else
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
 	{
-		m_currentElem = 0;
+		throw XercesDOMException(theException);
 	}
 }
 
@@ -211,9 +233,16 @@ FormatterToXercesDOM::charactersRaw(
 		const XMLCh* const	chars,
 		const unsigned int	length)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	cdata(chars, length);
+		cdata(chars, length);
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }		
 
 
@@ -221,9 +250,16 @@ FormatterToXercesDOM::charactersRaw(
 void
 FormatterToXercesDOM::entityReference(const XMLCh* const	name)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	append(m_doc->createEntityReference(name));
+		append(m_doc->createEntityReference(name));
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
@@ -233,11 +269,18 @@ FormatterToXercesDOM::ignorableWhitespace(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	assign(m_buffer, chars, length);
+		assign(m_buffer, chars, length);
 
-	append(m_doc->createTextNode(m_buffer.c_str()));
+		append(m_doc->createTextNode(m_buffer.c_str()));
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
@@ -247,9 +290,16 @@ FormatterToXercesDOM::processingInstruction(
 			const XMLCh* const	target,
 			const XMLCh* const	data)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	append(m_doc->createProcessingInstruction(target, data));
+		append(m_doc->createProcessingInstruction(target, data));
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
@@ -264,9 +314,16 @@ FormatterToXercesDOM::resetDocument()
 void
 FormatterToXercesDOM::comment(const XMLCh* const	data)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	append(m_doc->createComment(data));
+		append(m_doc->createComment(data));
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
@@ -276,11 +333,18 @@ FormatterToXercesDOM::cdata(
 			const XMLCh* const	ch,
 			const unsigned int 	length)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	assign(m_buffer, ch, length);
+		assign(m_buffer, ch, length);
 
-	append(m_doc->createCDATASection(m_buffer.c_str()));
+		append(m_doc->createCDATASection(m_buffer.c_str()));
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
@@ -323,7 +387,7 @@ FormatterToXercesDOM::createElement(
 	{
 		// Check for the namespace...
 		const XalanDOMString* const		theNamespace =
-					getNamespaceForPrefix(theElementName, *m_prefixResolver, m_buffer);
+				DOMServices::getNamespaceForPrefix(theElementName, *m_prefixResolver, false, m_buffer);
 
 		if (theNamespace == 0 || length(*theNamespace) == 0)
 		{
@@ -365,7 +429,7 @@ FormatterToXercesDOM::addAttributes(
 
 			// Check for the namespace...
 			const XalanDOMString* const		theNamespace =
-					getNamespaceForPrefix(theName, *m_prefixResolver, m_buffer);
+					DOMServices::getNamespaceForPrefix(theName, *m_prefixResolver, true, m_buffer);
 
 			if (theNamespace == 0 || length(*theNamespace) == 0)
 			{
@@ -376,33 +440,6 @@ FormatterToXercesDOM::addAttributes(
 				theElement->setAttributeNS(theNamespace->c_str(), theName, attrs.getValue(i));
 			}
 		}
-	}
-}
-
-
-
-const XalanDOMString*
-FormatterToXercesDOM::getNamespaceForPrefix(
-			const XalanDOMChar*		theName,
-			const PrefixResolver&	thePrefixResolver,
-			XalanDOMString&			thePrefix)
-{
-	const XalanDOMString::size_type		theLength = length(theName);
-	const XalanDOMString::size_type		theColonIndex = indexOf(theName, XalanUnicode::charColon);
-
-	if (theColonIndex == theLength)
-	{
-		clear(thePrefix);
-
-		return thePrefixResolver.getNamespaceForPrefix(s_emptyString);
-	}
-	else
-	{
-		// Get the prefix from theName...
-		assign(thePrefix, theName, theColonIndex);
-		assert(length(thePrefix) != 0);
-
-		return thePrefixResolver.getNamespaceForPrefix(thePrefix);
 	}
 }
 

@@ -266,12 +266,6 @@ private:
 			DOM_ElementType 		&theElement,
 			AttributeListType&	attrs);
 
-	const XalanDOMString*
-	getNamespaceForPrefix(
-			const XalanDOMChar*		theName,
-			const PrefixResolver&	thePrefixResolver,
-			XalanDOMString&			thePrefix);
-
 
 	// Data members...
 	DOM_Document_Type				m_doc;

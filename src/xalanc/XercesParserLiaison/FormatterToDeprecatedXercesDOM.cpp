@@ -91,6 +91,14 @@
 
 
 
+#include <xalanc/DOMSupport/DOMServices.hpp>
+
+
+
+#include "XercesDOMException.hpp"
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
@@ -180,15 +188,22 @@ FormatterToDeprecatedXercesDOM::startElement(
 			const	XMLCh* const	name,
 			AttributeListType&		attrs)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	DOM_ElementType elem = createElement(name, attrs);
+		DOM_ElementType elem = createElement(name, attrs);
 
-	append(elem);
+		append(elem);
 
-	m_elemStack.push_back(m_currentElem);
+		m_elemStack.push_back(m_currentElem);
 
-	m_currentElem = elem;
+		m_currentElem = elem;
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
@@ -196,17 +211,24 @@ FormatterToDeprecatedXercesDOM::startElement(
 void
 FormatterToDeprecatedXercesDOM::endElement(const	XMLCh* const	/* name */)
 {
-	processAccumulatedText();
-
-	if(m_elemStack.empty() == false)
+	try
 	{
-		m_currentElem = m_elemStack.back();
+		processAccumulatedText();
 
-		m_elemStack.pop_back();
+		if(m_elemStack.empty() == false)
+		{
+			m_currentElem = m_elemStack.back();
+
+			m_elemStack.pop_back();
+		}
+		else
+		{
+			m_currentElem = 0;
+		}
 	}
-	else
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
 	{
-		m_currentElem = 0;
+		throw XercesDOMException(theException);
 	}
 }
 
@@ -227,9 +249,16 @@ FormatterToDeprecatedXercesDOM::charactersRaw(
 		const XMLCh* const	chars,
 		const unsigned int	length)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	cdata(chars, length);
+		cdata(chars, length);
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }		
 
 
@@ -237,14 +266,21 @@ FormatterToDeprecatedXercesDOM::charactersRaw(
 void
 FormatterToDeprecatedXercesDOM::entityReference(const XMLCh* const	name)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	DOM_EntityReferenceType  theXercesNode =
-		m_doc.createEntityReference(name);
+		DOM_EntityReferenceType  theXercesNode =
+			m_doc.createEntityReference(name);
 
-	assert(theXercesNode.isNull() == false);
+		assert(theXercesNode.isNull() == false);
 
-	append(theXercesNode);
+		append(theXercesNode);
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
@@ -254,16 +290,23 @@ FormatterToDeprecatedXercesDOM::ignorableWhitespace(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	assign(m_buffer, chars, length);
+		assign(m_buffer, chars, length);
 
-	DOM_TextType theXercesNode = 
-		m_doc.createTextNode(m_buffer.c_str());
+		DOM_TextType theXercesNode = 
+			m_doc.createTextNode(m_buffer.c_str());
 
-	assert(theXercesNode.isNull() == false);
+		assert(theXercesNode.isNull() == false);
 
-	append(theXercesNode);
+		append(theXercesNode);
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
@@ -273,14 +316,21 @@ FormatterToDeprecatedXercesDOM::processingInstruction(
 			const XMLCh* const	target,
 			const XMLCh* const	data)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	DOM_ProcessingInstructionType theXercesNode = 
-		m_doc.createProcessingInstruction(target, data);
+		DOM_ProcessingInstructionType theXercesNode = 
+			m_doc.createProcessingInstruction(target, data);
 
-	assert(theXercesNode.isNull() == false);
+		assert(theXercesNode.isNull() == false);
 
-	append(theXercesNode);
+		append(theXercesNode);
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
@@ -295,16 +345,21 @@ FormatterToDeprecatedXercesDOM::resetDocument()
 void
 FormatterToDeprecatedXercesDOM::comment(const XMLCh* const	data)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	DOM_CommentType theXercesNode =
-		m_doc.createComment(data);
+		DOM_CommentType theXercesNode =
+			m_doc.createComment(data);
 
-	assert(theXercesNode.isNull() == false);
+		assert(theXercesNode.isNull() == false);
 
-	append(theXercesNode);
-
-
+		append(theXercesNode);
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
@@ -314,17 +369,23 @@ FormatterToDeprecatedXercesDOM::cdata(
 			const XMLCh* const	ch,
 			const unsigned int 	length)
 {
-	processAccumulatedText();
+	try
+	{
+		processAccumulatedText();
 
-	assign(m_buffer, ch, length);
+		assign(m_buffer, ch, length);
 
-	DOM_CDATASectionType theXercesNode = 
-		m_doc.createCDATASection(m_buffer.c_str());
+		DOM_CDATASectionType theXercesNode = 
+			m_doc.createCDATASection(m_buffer.c_str());
 
-	assert(theXercesNode.isNull() == false);
+		assert(theXercesNode.isNull() == false);
 
-	append(theXercesNode);
-
+		append(theXercesNode);
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
@@ -367,7 +428,7 @@ FormatterToDeprecatedXercesDOM::createElement(
 	{
 		// Check for the namespace...
 		const XalanDOMString* const		theNamespace =
-					getNamespaceForPrefix(theElementName, *m_prefixResolver, m_buffer);
+				DOMServices::getNamespaceForPrefix(theElementName, *m_prefixResolver, false , m_buffer);
 
 		if (theNamespace == 0 || length(*theNamespace) == 0)
 		{
@@ -409,7 +470,7 @@ FormatterToDeprecatedXercesDOM::addAttributes(
 
 			// Check for the namespace...
 			const XalanDOMString* const		theNamespace =
-					getNamespaceForPrefix(theName, *m_prefixResolver, m_buffer);
+					DOMServices::getNamespaceForPrefix(theName, *m_prefixResolver, true, m_buffer);
 
 			if (theNamespace == 0 || length(*theNamespace) == 0)
 			{
@@ -420,33 +481,6 @@ FormatterToDeprecatedXercesDOM::addAttributes(
 				theElement.setAttributeNS(theNamespace->c_str(), theName, attrs.getValue(i));
 			}
 		}
-	}
-}
-
-
-
-const XalanDOMString*
-FormatterToDeprecatedXercesDOM::getNamespaceForPrefix(
-			const XalanDOMChar*		theName,
-			const PrefixResolver&	thePrefixResolver,
-			XalanDOMString&			thePrefix)
-{
-	const XalanDOMString::size_type		theLength = length(theName);
-	const XalanDOMString::size_type		theColonIndex = indexOf(theName, XalanUnicode::charColon);
-
-	if (theColonIndex == theLength)
-	{
-		clear(thePrefix);
-
-		return thePrefixResolver.getNamespaceForPrefix(s_emptyString);
-	}
-	else
-	{
-		// Get the prefix from theName...
-		assign(thePrefix, theName, theColonIndex);
-		assert(length(thePrefix) != 0);
-
-		return thePrefixResolver.getNamespaceForPrefix(thePrefix);
 	}
 }
 

@@ -65,6 +65,7 @@
 
 #if XERCES_VERSION_MAJOR >= 2
 #include <xercesc/dom/deprecated/DOM_DOMException.hpp>
+#include <xercesc/dom/DOMException.hpp>
 #else
 #include <xercesc/dom/DOM_DOMException.hpp>
 #endif
@@ -107,6 +108,17 @@ public:
 	  */
 	XercesDOMException(const DOM_DOMExceptionType&	theException);
 
+#if XERCES_VERSION_MAJOR >= 2
+	/**
+	  * Constructor which takes a Xerces exception and
+	  * translates it into a XercesDOMException.
+	  *
+	  * @param code The Xerces DOM_DOMException instance.
+	  */
+	XercesDOMException(const DOMExceptionType&	theException);
+
+#endif
+
 	/**
 	  * Copy constructor.
 	  *
@@ -126,9 +138,6 @@ public:
 	//@}
 
 private:
-
-	static ExceptionCode
-	translateErrorCode(DOM_DOMExceptionType::ExceptionCode	theCode);
 };
 
 
