@@ -145,7 +145,7 @@ ElemTemplateElement::ElemTemplateElement(
 	for(int i = (n-1); i >= 0; i--)
 	{
 		const Stylesheet::NamespaceVectorType& nsVector = stylesheetNamespaces[i];
-		for(int j = 0; j < nsVector.size(); j++)
+		for(unsigned int j = 0; j < nsVector.size(); j++)
 		{
 			NameSpace ns = nsVector[j];
 			if(isEmpty(ns.getURI()))
