@@ -350,7 +350,11 @@ endif
 ifeq ($(PLATFORM), OS390)
   ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_7_0.x
 else
-  ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c
+  ifeq ($(PLATFORM), AIX)
+    ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c22
+  else
+    ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c
+  endif
 endif
 
 # We need the ICU library if we are using the ICUBridge
@@ -358,8 +362,13 @@ ifdef XALAN_USE_ICU
   ifeq ($(PLATFORM), OS390)
     ALLLIBS += ${ICUROOT}/lib/libicuuc.x ${ICUROOT}/lib/libicui18n.x
   else
-    ALLLIBS += -L${ICUROOT}/lib -licuuc
-    ALLLIBS += -L${ICUI18NROOT}/lib -licui18n
+    ifeq ($(PLATFORM), AIX)
+      ALLLIBS += -L${ICUROOT}/lib -licuuc24
+      ALLLIBS += -L${ICUI18NROOT}/lib -licui18n24
+	else
+      ALLLIBS += -L${ICUROOT}/lib -licuuc
+      ALLLIBS += -L${ICUI18NROOT}/lib -licui18n
+    endif
   endif
 endif
 
