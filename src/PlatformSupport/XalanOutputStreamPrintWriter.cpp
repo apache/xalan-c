@@ -136,7 +136,7 @@ XalanOutputStreamPrintWriter::write(
 {
 	assert(s != 0);
 
-	if (theLength == UINT_MAX)
+	if (theLength == npos)
 	{
 		if (theOffset == 0)
 		{
@@ -163,7 +163,7 @@ XalanOutputStreamPrintWriter::write(
 {
 	assert(s != 0);
 
-	if (theLength == UINT_MAX)
+	if (theLength == XalanDOMString::npos)
 	{
 		if (theOffset == 0)
 		{

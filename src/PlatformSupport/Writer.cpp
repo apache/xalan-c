@@ -59,6 +59,12 @@
 
 
 
+#if !defined(XALAN_INLINE_INITIALIZATION)
+const Writer::size_t	npos = ~0u;
+#endif
+
+
+
 Writer::Writer()
 {
 }

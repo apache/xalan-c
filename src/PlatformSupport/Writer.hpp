@@ -108,18 +108,24 @@ public:
 
 	// Output functions
 
+#if defined(XALAN_INLINE_INITIALIZATION)
+	static const size_t		npos = ~0u;
+#else
+	static const size_t		npos;
+#endif
+
 	/**
 	 * Writes a string
 	 * 
 	 * @param 	s         string to write
 	 * @param 	theOffset starting offset in string to begin writing, default 0
-	 * @param 	theLength number of characters to write. If the length is -1, then the array is assumed to be null-terminated.
+	 * @param 	theLength number of characters to write. If the length is npos, then the array is assumed to be null-terminated.
 	 */
 	virtual void
 	write(
 			const char*		s,
 			size_t			theOffset = 0,
-			size_t			theLength = size_t(-1)) = 0;
+			size_t			theLength = npos) = 0;
 
 	/**
 	 * Writes a string

@@ -106,7 +106,7 @@ public:
 	write(
 			const char*		s,
 			size_t			theOffset = 0,
-			size_t			theLength = size_t(-1)) = 0;
+			size_t			theLength = npos) = 0;
 
 	virtual void
 	write(
@@ -136,7 +136,7 @@ public:
 	virtual void
 	print(
 			const char*		s,
-			size_t			theLength = size_t(-1)) = 0;
+			size_t			theLength = npos) = 0;
 
 	virtual void
 	print(
@@ -169,7 +169,7 @@ public:
 	virtual void
 	println(
 			const char*		s,
-		    size_t			theLength = size_t(-1)) = 0;
+		    size_t			theLength = npos) = 0;
 
 	virtual void
 	println(

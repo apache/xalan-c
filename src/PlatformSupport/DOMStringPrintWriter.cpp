@@ -146,9 +146,9 @@ DOMStringPrintWriter::write(
 			XalanDOMString::size_type	theLength)
 {
 	assert(c_wstr(s) != 0);
-	assert(theLength == UINT_MAX || length(s) >= theOffset + theLength);
+	assert(theLength == npos || length(s) >= theOffset + theLength);
 
-	if (theOffset == 0 && theLength == UINT_MAX)
+	if (theOffset == 0 && theLength == npos)
 	{
 		m_outputString += s;
 	}

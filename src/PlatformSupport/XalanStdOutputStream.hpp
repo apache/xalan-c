@@ -72,6 +72,7 @@
 #include <ostream>
 #else
 #include <iosfwd>
+#include <ios>
 #endif
 #endif
 
@@ -88,15 +89,11 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanStdOutputStream : public XalanOutputStre
 public:
 
 #if defined (XALAN_NO_NAMESPACES)
-	typedef ostream		StreamType;
-	typedef long		StreamSizeType;
+	typedef ostream					StreamType;
+	typedef iosbase::streamsize		StreamSizeType;
 #else
 	typedef std::ostream		StreamType;
-#if defined(XALAN_NO_STD_STREAMSIZE)
-	typedef long				StreamSizeType;
-#else
 	typedef std::streamsize		StreamSizeType;
-#endif
 #endif
 
 	/**

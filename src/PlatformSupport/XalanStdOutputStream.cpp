@@ -164,7 +164,7 @@ XalanStdOutputStream::XalanStdOutputStreamWriteException::XalanStdOutputStreamWr
 		int					theErrorCode) :
 	XalanOutputStreamException(FormatMessageLocal("Error writing to standard stream!",
 													   theErrorCode),
-								    TranscodeFromLocalCodePage("XercesStdTextOutputStreamWriteException"))
+								    TranscodeFromLocalCodePage("XercesStdOutputStreamWriteException"))
 {
 }
 
