@@ -72,7 +72,6 @@
 
 
 
-class DOM_Node;
 class XObject;
 class XPathExecutionContext;
 
