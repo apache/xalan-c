@@ -81,7 +81,7 @@ NodeListImplSurrogate::~NodeListImplSurrogate()
 
 
 NodeImpl*
-NodeListImplSurrogate::item(int index)
+NodeListImplSurrogate::item(unsigned long	index)
 {
 	return XALAN_DOM_NodeHack(m_nodeRefList.item(index)).getImplementationObject();
 }
