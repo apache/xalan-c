@@ -80,8 +80,8 @@
 
 
 
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/sax/SAXParseException.hpp>
+#include <util/PlatformUtils.hpp>
+#include <sax/SAXParseException.hpp>
 
 
 

@@ -63,7 +63,7 @@
 
 
 
-#include <xercesc/dom/DOM_DocumentType.hpp>
+#include <dom/DOM_DocumentType.hpp>
 
 
 

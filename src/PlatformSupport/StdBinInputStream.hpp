@@ -76,7 +76,7 @@
 
 
 
-#include <xercesc/util/BinInputStream.hpp>
+#include <util/BinInputStream.hpp>
 
 
 

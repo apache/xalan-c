@@ -67,7 +67,7 @@
 	using std::endl;
 #endif
 
-#include <xercesc/util/PlatformUtils.hpp>
+#include <util/PlatformUtils.hpp>
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <XalanTransformer/XalanTransformer.hpp>

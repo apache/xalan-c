@@ -64,7 +64,7 @@
 
 
 
-#include <xercesc/util/XMLURL.hpp>
+#include <util/XMLURL.hpp>
 
 
 

@@ -62,9 +62,9 @@
 
 
 
-#include <xercesc/sax/DocumentHandler.hpp>
-#include <xercesc/sax/EntityResolver.hpp>
-#include <xercesc/sax/Locator.hpp>
+#include <sax/DocumentHandler.hpp>
+#include <sax/EntityResolver.hpp>
+#include <sax/Locator.hpp>
 
 
 

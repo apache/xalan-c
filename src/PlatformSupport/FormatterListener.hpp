@@ -72,7 +72,7 @@
 
 
 
-#include <xercesc/sax/DocumentHandler.hpp>
+#include <sax/DocumentHandler.hpp>
 
 
 

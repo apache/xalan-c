@@ -62,8 +62,8 @@
 
 
 
-#include <xercesc/sax/Locator.hpp>
-#include <xercesc/sax/SAXParseException.hpp>
+#include <sax/Locator.hpp>
+#include <sax/SAXParseException.hpp>
 
 
 

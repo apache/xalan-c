@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,7 +71,10 @@
 #include "OS390Definitions.hpp"
 #elif defined(__DECCXX)
 #include "TRU64Definitions.hpp"
+#elif defined(__INTEL_COMPILER)
+#include "IntelDefinitions.hpp"
 #else
+#error Unknown compiler!
 #endif
 
 #endif	// PLATFORMDEFINITIONS_HEADER_GUARD_1357924680

@@ -60,7 +60,7 @@
 
 
 // Xerces header files...
-#include <xercesc/dom/DOM_Node.hpp>
+#include <dom/DOM_Node.hpp>
 
 
 

@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.9  2002/08/01 18:36:38  dbertoni
+# Added support for Intel compiler.
+#
 # Revision 1.8  2002/05/06 05:34:06  dbertoni
 # Implemented multiple compiler options.
 #
@@ -258,7 +261,7 @@ fi
 #
 
 case $cppcompiler in
-   xlC | xlc | xlC_r | xlc_r | g++ | c++ | cc | CC | aCC | cxx)
+   xlC | xlc | xlC_r | xlc_r | g++ | c++ | cc | CC | aCC | cxx | icpc)
       ;;
 
    *)

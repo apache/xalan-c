@@ -68,7 +68,7 @@
 #endif
 
 // XERCES HEADERS...
-#include <xercesc/parsers/DOMParser.hpp>
+#include <parsers/DOMParser.hpp>
 
 
 // XALAN HEADERS...

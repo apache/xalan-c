@@ -2,7 +2,7 @@
 
 
 
-#include <xercesc/util/XMLException.hpp>
+#include <util/XMLException.hpp>
 
 
 
