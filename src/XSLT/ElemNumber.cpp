@@ -245,9 +245,9 @@ ElemNumber::findAncestor(
 		if(0 != fromMatchPattern)
 		{
 			if(fromMatchPattern->getMatchScore(contextCopy,
-											   executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
+						executionContext.getXPathExecutionContext()) !=
+							XPath::s_MatchScoreNone)
 			{
-				contextCopy = 0;
 				break;
 			}
 		}
@@ -255,7 +255,8 @@ ElemNumber::findAncestor(
 		if(0 != countMatchPattern)
 		{
 			if(countMatchPattern->getMatchScore(context,
-												executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
+						executionContext.getXPathExecutionContext()) !=
+							XPath::s_MatchScoreNone)
 			{
 				break;
 			}
@@ -380,7 +381,7 @@ ElemNumber::getCountString(
 			const DOM_Node&					/* sourceTree */, 
 			const DOM_Node&					sourceNode) const
 {
-	IntArrayType	list;
+	IntArrayType	numberList;
 
 	if(0 != m_valueExpr)
 	{
@@ -389,7 +390,7 @@ ElemNumber::getCountString(
 								 *this,
 								 executionContext.getXPathExecutionContext());
 
-		list.push_back(static_cast<int>(countObj->num()));
+		numberList.push_back(static_cast<int>(countObj->num()));
 	}
 	else
 	{      
@@ -399,8 +400,6 @@ ElemNumber::getCountString(
 		if((Constants::NUMBERLEVEL_ANY == m_level) || 
 			(Constants::NUMBERLEVEL_SINGLE == m_level))
 		{
-			list.push_back(0);
-
 			if(Constants::NUMBERLEVEL_SINGLE == m_level)
 			{
 				DOM_Node target = findAncestor(executionContext, m_fromMatchPattern, 
@@ -411,7 +410,7 @@ ElemNumber::getCountString(
 
 				if(target != 0)
 				{
-					list[0] = getSiblingNumber(executionContext, countMatchPattern, target);
+					numberList.push_back(getSiblingNumber(executionContext, countMatchPattern, target));
 				}
 				else
 				{
@@ -427,7 +426,11 @@ ElemNumber::getCountString(
 
 				if(0 != m_fromMatchPattern)
 				{
-					from = findPrecedingOrAncestorOrSelf(executionContext, 0, m_fromMatchPattern, 
+// @@ JMD: was as below, which looked wrong to me based on java code and the
+// meaning of the arguments. The sad fact is that the number of tests we
+// passed went DOWN after this change
+// 					from = findPrecedingOrAncestorOrSelf(executionContext, 0, m_fromMatchPattern, 
+					from = findPrecedingOrAncestorOrSelf(executionContext, m_fromMatchPattern, countMatchPattern,
 						sourceNode, DOM_UnimplementedElement(const_cast<ElemNumber*>(this)));
 
 					if(from == 0)
@@ -442,17 +445,17 @@ ElemNumber::getCountString(
 
 				DOM_Node fromPos = (from != sourceNode) ? getNextInTree(from, from) : from;
 
-				list[0] = getNumberInTree(executionContext.getXPathExecutionContext(), countMatchPattern, fromPos, from, sourceNode, 0);
+				numberList.push_back(getNumberInTree(executionContext.getXPathExecutionContext(), countMatchPattern, fromPos, from, sourceNode, 0));
 			}
 		}
 		else // if NUMBERLEVEL_MULTI
 		{
-			list = getAncestorNumbers(executionContext, m_fromMatchPattern,
-				countMatchPattern, sourceNode);
+			 numberList = getAncestorNumbers(executionContext, m_fromMatchPattern,
+			 	countMatchPattern, sourceNode);
 		}
 	}
 
-	return list.size() > 0 ? formatNumberList(executionContext, list, sourceNode) : DOMString();
+	return numberList.size() > 0 ? formatNumberList(executionContext, numberList, sourceNode) : DOMString();
 }
 
 
