@@ -239,62 +239,53 @@ void generateFiles(const XalanDOMString &fileName,
 //		This test verifies that the Nodeset function was properly installed with the transformer.  All 
 //		functions are preinstalled globally.  Output file should contain data. 
 //		 
-void TestCase1(XalanTransformer &transformEngine, const XalanDOMString &fileName, XMLFileReporter &log)
+void TestCase1(XalanTransformer &transformEngine, const XalanDOMString &fileName, XMLFileReporter &logFile)
 {
 	
-	XalanDOMString	xml, xsl, result, gold;
+	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 		
-	generateFiles(fileName, xml, xsl, result, gold, "TestCase1");
+	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "TestCase1");
 	futil.data.testOrFile = XalanDOMString("TestCase1");
 
 	// Create the InputSources and ResultTraget.
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
 	const XSLTInputSource	xslInputSource(c_wstr(xsl));
-	const XSLTResultTarget	theResultTarget(result);
+	const XSLTResultTarget	theResultTarget(theOutputFile);
 
 	// Perform the transform and check the results.
-	int	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-	if (!theResult)
-	{
-		futil.checkResults(result, gold, log);
-	}
-	else
-	{
-		cout << endl << "Failed: TestCase1" ;
-	}
+	int	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);	
+	
+	futil.checkResults(theOutputFile, theGoldFile, logFile);
+
 }
 
 //	TestCase2
 //  API Call: 
 //		None. Verfies default behavior of XalanTransformer.
 //	Comments:
-//		This test verifies that the following functions: difference, distinct, evaluate, hasSameNodes, 
+//		This test verifies that the following functions: 
+//			difference, distinct, 
+//			evaluate, hasSameNodes, 
 //		and intersection are defined and working.  Output file should contain data.
 //
-void TestCase2(XalanTransformer &transformEngine, const XalanDOMString &fileName, XMLFileReporter &log)
+void TestCase2(XalanTransformer &transformEngine, const XalanDOMString &fileName, XMLFileReporter &logFile)
 {
 	
-	XalanDOMString	xml, xsl, result, gold;
+	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 
-	generateFiles(fileName, xml, xsl, result, gold, "TestCase2");
+	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "TestCase2");
 	futil.data.testOrFile = XalanDOMString("TestCase2");
 
 	// Create the InputSources and ResultTraget.
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
 	const XSLTInputSource	xslInputSource(c_wstr(xsl));
-	const XSLTResultTarget	theResultTarget(result);
+	const XSLTResultTarget	theResultTarget(theOutputFile);
 
 
 	// Perform the transform and check the results.
-	int	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-	if (!theResult)
-	{
-		futil.checkResults(result, gold, log);
-	}
-	else
-	{
-		cout << endl << "Failed: TestCase2" ;
-	}
+	transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+
+	futil.checkResults(theOutputFile, theGoldFile, logFile);
 
 }
 
@@ -305,18 +296,18 @@ void TestCase2(XalanTransformer &transformEngine, const XalanDOMString &fileName
 //		This test verifies that the 'nodeset' function is properly uninstalled via the api.
 //		Output file should NOT contain data. 
 //
-void TestCase3(XalanTransformer &transformEngine, const XalanDOMString &fileName, XMLFileReporter &log)
+void TestCase3(XalanTransformer &transformEngine, const XalanDOMString &fileName, XMLFileReporter &logFile)
 {	
 
-	XalanDOMString	xml, xsl, result, gold;
+	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 	
-	generateFiles(fileName, xml, xsl, result, gold, "TestCase3");
+	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "TestCase3");
 	futil.data.testOrFile = XalanDOMString("TestCase3");
 
 	// Create the InputSources and ResultTraget.
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
 	const XSLTInputSource	xslInputSource(c_wstr(xsl));
-	const XSLTResultTarget	theResultTarget(result);
+	const XSLTResultTarget	theResultTarget(theOutputFile);
 
 	// UnInstall the external Global function "nodeset"
 	transformEngine.uninstallExternalFunctionGlobal(
@@ -326,20 +317,16 @@ void TestCase3(XalanTransformer &transformEngine, const XalanDOMString &fileName
 	int theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
 	if (theResult == -1)
 	{
-		if (!strcmp(resultString, transformEngine.getLastError()))
-		{
-			cout << endl << "Passed: TestCase3" ;
-		}
-		else 
-		{
-			cout << endl << "Failed: TestCase3" ;
-		}
+		futil.checkAPIErrorResults(transformEngine.getLastError(), 
+								   resultString,
+							       "transformer.uninstallExternalFunctionGlobal()",
+							       logFile);
 	}
 	else
 	{
-		cout << endl << "Failed: TestCase3" ;
+		cout << endl << "Failedxxx: TestCase3" ;
 	}
-
+	
 }
 
 
@@ -351,19 +338,18 @@ void TestCase3(XalanTransformer &transformEngine, const XalanDOMString &fileName
 //		This tests the installExternalFunction method of XalanTransformer using the nodeset function.
 //		Output file should NOT contain data.
 //
-void TestCase4(XalanTransformer &transformEngine, const XalanDOMString &fileName, XMLFileReporter &log)
+void TestCase4(XalanTransformer &transformEngine, const XalanDOMString &fileName, XMLFileReporter &logFile)
 {
 	
-	XalanDOMString	xml, xsl, result, gold;
-
-
-	generateFiles(fileName, xml, xsl, result, gold, "TestCase4");
-	futil.data.testOrFile = XalanDOMString("TestCase4");
+	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
+	
+	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "TestCase4");
+	futil.data.testOrFile = XalanDOMString("TestCase4a");
 
 	// Create the InputSources and ResultTraget.
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
 	const XSLTInputSource	xslInputSource(c_wstr(xsl));
-	const XSLTResultTarget	theResultTarget(result);
+	const XSLTResultTarget	theResultTarget(theOutputFile);
 
 	// Install the external function "nodeset"
 	transformEngine.installExternalFunction(
@@ -372,30 +358,22 @@ void TestCase4(XalanTransformer &transformEngine, const XalanDOMString &fileName
 		FunctionNodeSet());
 
 	// Perform the transform and check the results.
-	int	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-	if (!theResult)
-	{
-		futil.checkResults(result, gold, log);
-	}			
-	else
-	{
-		cout << endl << "Failed: TestCase4a" ;
-	}
+	transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+
+	futil.checkResults(theOutputFile, theGoldFile, logFile);
 
 	// Because we install the function locally, this second instance of the transformer should not run the
 	// test successfully.
 	XalanTransformer newEngine;
-	theResult = newEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+	futil.data.testOrFile = XalanDOMString("TestCase4b");
+
+	int theResult = newEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
 	if (theResult == -1)
 	{
-		if (!strcmp(resultString, newEngine.getLastError()))
-		{
-			cout << endl << "Passed: TestCase4b" ;
-		}
-		else 
-		{
-			cout << endl << "Failed: TestCase4b" ;
-		}
+		futil.checkAPIErrorResults(newEngine.getLastError(), 
+								   resultString,
+							       "transformer.installExternalFunction()",
+							       logFile);
 	}
 	else
 	{
@@ -408,17 +386,14 @@ void TestCase4(XalanTransformer &transformEngine, const XalanDOMString &fileName
 		XalanDOMString("nodeset"));
 
 	// Perform the transform and check the results.
+	futil.data.testOrFile = XalanDOMString("TestCase4c");
 	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
 	if (theResult == -1)
 	{
-		if (!strcmp(resultString, newEngine.getLastError()))
-		{
-			cout << endl << "Passed: TestCase4c" ;
-		}
-		else 
-		{
-			cout << endl << "Failed: TestCase4c" ;
-		}
+		futil.checkAPIErrorResults(transformEngine.getLastError(), 
+								   resultString,
+							       "transformer.uninstallExternalFunction()",
+							       logFile);
 	}
 	else
 	{
@@ -434,18 +409,18 @@ void TestCase4(XalanTransformer &transformEngine, const XalanDOMString &fileName
 //		This tests uses transformer method installExternalFunctionGlobal to add the nodeset function. 
 //		The output file should contain data.
 //
-void TestCase5(XalanTransformer &transformEngine, const XalanDOMString &fileName, XMLFileReporter &log)
+void TestCase5(XalanTransformer &transformEngine, const XalanDOMString &fileName, XMLFileReporter &logFile)
 {
 	
-	XalanDOMString	xml, xsl, result, gold;
+	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 
-	generateFiles(fileName, xml, xsl, result, gold, "TestCase5");
-	futil.data.testOrFile = XalanDOMString("TestCase5");
+	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "TestCase5");
+	futil.data.testOrFile = XalanDOMString("TestCase5a");
 
 	// Create the InputSources and ResultTraget.
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
 	const XSLTInputSource	xslInputSource(c_wstr(xsl));
-	const XSLTResultTarget	theResultTarget(result);
+	const XSLTResultTarget	theResultTarget(theOutputFile);
 
 	// Install the external function "nodeset" Globally
 	transformEngine.installExternalFunctionGlobal(
@@ -454,26 +429,16 @@ void TestCase5(XalanTransformer &transformEngine, const XalanDOMString &fileName
 		FunctionNodeSet());
 
 	// Perform the transform and check the results.
-	int	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-	if (!theResult)
-	{
-		futil.checkResults(result, gold, log);
-	}
-	else
-	{
-		cout << endl << "Failed: TestCase5a" ;
-	}
+	transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+	futil.checkResults(theOutputFile, theGoldFile, logFile);
 
+	// Create a second transformer and verify that it can 'see' the extension as well...
 	XalanTransformer newEngine;
-	int secondResult = newEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-	if (!theResult)
-	{
-		futil.checkResults(result, gold, log);
-	}
-	else
-	{
-		cout << endl << "Failed: TestCase5b" ;
-	}
+	futil.data.testOrFile = XalanDOMString("TestCase5b");
+
+	newEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+	futil.checkResults(theOutputFile, theGoldFile, logFile);
+
 }
 
 int
@@ -518,8 +483,8 @@ main(
 			// Get the files found in the "cextension" directory
 			const FileNameVectorType	files = futil.getTestFileNames(baseDir, testDir, true);
 
-			TestCase1(transformEngine, files[0], logFile);
-			TestCase2(transformEngine, files[1], logFile);
+			TestCase1(transformEngine, files[0], logFile);  // Nodeset function
+			TestCase2(transformEngine, files[1], logFile);	// All others
 			TestCase3(transformEngine, files[0], logFile);
 			TestCase4(transformEngine, files[0], logFile);
 			TestCase5(transformEngine, files[0], logFile);
@@ -527,7 +492,8 @@ main(
 			cout << endl;
 
 			XalanTransformer::terminate();
-
+			
+			futil.reportPassFail(logFile);
 			logFile.logTestFileClose("C++ Extension Testing: ", "Done");
 			logFile.close();
 
