@@ -191,6 +191,8 @@ ifeq ($(PLATFORM), SOLARIS)
 
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
 
+    PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib $(LD_RPATH_PRE)${ICUI18NROOT}/lib
+
   else
 
 	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -ptr$(ALL_OBJECTS_DIR) -features=rtti -D${PLATFORM} -D_REENTRANT
@@ -200,15 +202,10 @@ ifeq ($(PLATFORM), SOLARIS)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
 	LINK = ${CXX} -D${PLATFORM} -ptr$(ALL_OBJECTS_DIR) ${LDFLAGS}
 
-	ifdef XALAN_USE_ICU
-	LD_RPATH_PRE=  -Wl,-rpath,
-	endif
-
     ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
                   -lc -lgen
   endif
 
-  PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib $(LD_RPATH_PRE)${ICUI18NROOT}/lib
   SHLIBSUFFIX=.so
 
 endif
