@@ -62,8 +62,9 @@
 
 
 
-#include <XPath/XPath.hpp>
 #include <XPath/XObject.hpp>
+#include <XPath/XObjectFactory.hpp>
+#include <XPath/XPath.hpp>
 
 
 
@@ -122,18 +123,19 @@ ElemCopyOf::execute(
 
 	assert(m_pSelectPattern != 0);
 
-	const XObject* const	pValue =
-		m_pSelectPattern->execute(sourceNode, *this, executionContext);
-	assert(pValue != 0);
+	const XObjectGuard		value(
+								executionContext.getXObjectFactory(),
+								m_pSelectPattern->execute(sourceNode, *this, executionContext));
+	assert(value.get() != 0);
 
 	if(0 != executionContext.getTraceListeners())
 	{
 		executionContext.fireSelectEvent(
 			SelectionEvent(executionContext, sourceNode,
-				*this, XalanDOMString(XALAN_STATIC_UCODE_STRING("select")), *m_pSelectPattern, pValue));
+				*this, XalanDOMString(XALAN_STATIC_UCODE_STRING("select")), *m_pSelectPattern, value.get()));
 	}
 
-	const int	type = pValue->getType();
+	const int	type = value->getType();
 
 	XalanDOMString s;
 
@@ -142,13 +144,13 @@ ElemCopyOf::execute(
 	case XObject::eTypeBoolean:
 	case XObject::eTypeNumber:
 	case XObject::eTypeString:
-		s = pValue->str();
+		s = value->str();
 		executionContext.characters(toCharArray(s), 0, length(s));
 			break;
 
 	case XObject::eTypeNodeSet:
 	{
-		const NodeRefListBase&	nl = pValue->nodeset();
+		const NodeRefListBase&	nl = value->nodeset();
 
 		unsigned int			nChildren = nl.getLength();
 
@@ -209,11 +211,11 @@ ElemCopyOf::execute(
 	}
 
 	case XObject::eTypeResultTreeFrag:
-		executionContext.outputResultTreeFragment(*pValue);
+		executionContext.outputResultTreeFragment(*value.get());
 		break;
 
 	default:
-		s = pValue->str();
+		s = value->str();
 
 		if (!isEmpty(s))
 		{

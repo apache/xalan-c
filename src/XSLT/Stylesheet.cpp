@@ -145,7 +145,8 @@ Stylesheet::Stylesheet(
 	m_attributeSets(),
 	m_surrogateChildren(*this),
 	m_fakeAttributes(),
-	m_elemDecimalFormats()
+	m_elemDecimalFormats(),
+	m_prefixAliases()
 {
 	if (length(m_baseIdent) != 0)
 	{
@@ -295,12 +296,17 @@ Stylesheet::pushNamespaces(const AttributeList& atts)
 
 	NamespaceVectorType 	namespaces;
 
+	// Reserve the maximum space.  Any extra will not
+	// be copied to m_namespaces, since we're pushing
+	// a copy.
+	namespaces.reserve(nAttrs);
+
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
 		const XalanDOMChar* const	value = atts.getValue(i);
 
-		bool isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
+		const bool	isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
 
 		if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix) 
 		{
@@ -318,7 +324,8 @@ Stylesheet::pushNamespaces(const AttributeList& atts)
 void
 Stylesheet::popNamespaces() 
 { 
-	assert(m_namespaces.size());
+	assert(m_namespaces.empty() == false);
+
 	m_namespaces.pop_back(); 
 }
 
@@ -331,11 +338,14 @@ Stylesheet::isAttrOK(
 			int 							/* which */,
 			StylesheetConstructionContext&	constructionContext) const
 {
+	// Namespace declarations are OK by definition
 	bool attrOK = equals(attrName, DOMServices::s_XMLNamespace) ||
 						 startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator);
 
 	if(!attrOK)
 	{
+		// Others are OK if their prefix has been
+		// bound to a non-null Namespace URI other than XSLT's
 		const unsigned int	indexOfNSSep = indexOf(attrName, ':');
 
 		if(indexOfNSSep < length(attrName))
@@ -343,10 +353,12 @@ Stylesheet::isAttrOK(
 			const XalanDOMString	prefix = substring(attrName, 0, indexOfNSSep);
 			const XalanDOMString	ns = getNamespaceForPrefixFromStack(prefix);
 
-			attrOK = indexOf(ns, constructionContext.getXSLTNamespaceURI()) < length(ns);
+			attrOK = ! ::isEmpty(ns) && !equals(ns,constructionContext.getXSLTNamespaceURI());
 		}
 		else
-			attrOK = true;
+		{
+			attrOK = false;
+		}
 	}
 
 	return attrOK;
@@ -1208,15 +1220,14 @@ Stylesheet::processNSAliasElement(
 {
 	const unsigned int	nAttrs = atts.getLength();
 
-	XalanDOMString		stylesheetPrefix;
-	XalanDOMString		resultPrefix;
+	XalanDOMString	stylesheetNamespace;
+	XalanDOMString	resultNamespace;
+	XalanDOMString	dummy;
 
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
 
 		const XalanDOMChar* const	aname = atts.getName(i);
-
-		XalanDOMString				prefix;
 
 		if(equals(aname, Constants::ATTRNAME_STYLESHEET_PREFIX) == true)
 		{
@@ -1224,7 +1235,11 @@ Stylesheet::processNSAliasElement(
 
 			if (equals(value, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 			{
-				stylesheetPrefix = getNamespaceForPrefix(value);
+				stylesheetNamespace = getNamespaceForPrefix(dummy);
+			}
+			else
+			{
+				stylesheetNamespace = getNamespaceForPrefix(value);
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_RESULT_PREFIX))
@@ -1233,7 +1248,11 @@ Stylesheet::processNSAliasElement(
 
 			if (equals(value, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 			{
-				resultPrefix = getNamespaceForPrefix(value);
+				resultNamespace = getNamespaceForPrefix(dummy);
+			}
+			else
+			{
+				resultNamespace = getNamespaceForPrefix(value);
 			}
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
@@ -1244,14 +1263,92 @@ Stylesheet::processNSAliasElement(
 
 	// Build a table of aliases, the key is the stylesheet uri and the
 	// value is the result uri
-	if (length(stylesheetPrefix) != 0 && length(resultPrefix) != 0 )
+	if (length(stylesheetNamespace) != 0 &&
+		length(resultNamespace) != 0)
 	{
-		// $$$ ToDo: Fix this!!!
+#if 1
+		// $$$ ToDo: Enable other code.  Perhaps an error?
+		m_prefixAliases[stylesheetNamespace] = resultNamespace;
+#else
+		const PrefixAliasesMapType::iterator	i =
+			m_prefixAliases.find(stylesheetNamespace);
+
+		if (i != m_prefixAliases.end())
+		{
+			// $$$ ToDo: This could also be an error?
+			i->second = resultNamespace;
+		}
+		else
+		{
+			m_prefixAliases.insert(PrefixAliasesMapType::value_type(stylesheetNamespace, resultNamespace));
+		}
+#endif
 	}
 	else
 	{
 		constructionContext.error("Missing namespace URI for specified prefix");
 	}
+}
+
+
+
+XalanDOMString
+Stylesheet::getAliasNamespaceURI(const XalanDOMString&	uri) const
+{
+	XalanDOMString	result;
+
+	const PrefixAliasesMapType::const_iterator	i =
+		m_prefixAliases.find(uri);
+
+	if (i != m_prefixAliases.end())
+	{
+		result = i->second;
+
+		assert(length(result) > 0);
+	}
+	else
+	{
+		const StylesheetVectorType::size_type	nImports =
+			m_imports.size();
+
+		for(StylesheetVectorType::size_type i = 0; i < nImports; ++i)
+		{
+			result = m_imports[i]->getAliasNamespaceURI(uri);
+
+			if(length(result) != 0)
+			{
+				break;
+			}
+		}
+	}
+
+	return result;
+}
+
+
+
+const Stylesheet*
+Stylesheet::getPreviousImport(const Stylesheet*		stylesheet) const
+{
+	const Stylesheet*	previous = 0;
+
+	const StylesheetVectorType::size_type	nImports =
+			m_imports.size();
+
+	for(StylesheetVectorType::size_type i = 0; i < nImports; ++i)
+	{
+		if (m_imports[i] == stylesheet)
+		{
+			if (i + 1 < nImports)
+			{
+				previous = m_imports[i + 1];
+
+				break;
+			}
+		}
+	}
+
+	return previous;
 }
 
 
@@ -1324,7 +1421,7 @@ Stylesheet::getDecimalFormatSymbols(const XalanDOMString&	name) const
  */
 void
 Stylesheet::addAttributeSet(
-		const QName&				/*qname */, 
+		const QName&		/* qname */, 
 		ElemAttributeSet*	attrSet)
 {
 	m_attributeSets.push_back(attrSet);

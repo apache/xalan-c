@@ -69,9 +69,10 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DoubleSupport.hpp>
+#include <DOMSupport/DOMServices.hpp>
 
 
-
+#include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
 
 
@@ -92,6 +93,7 @@ NodeSorter::~NodeSorter()
 
 void
 NodeSorter::sort(
+				const MutableNodeRefList&		theList,
 				NodeVectorType&					v,
 				const NodeSortKeyVectorType&	keys)
 {
@@ -102,6 +104,7 @@ NodeSorter::sort(
 	m_keys = keys;
 
 	NodeSortKeyCompare	theComparer(m_executionContext,
+									theList,
 									v,
 									keys);
 
@@ -133,11 +136,15 @@ NodeSorter::sort(
 		theNodes.push_back(theList.item(i));
 	}
 
-	sort(theNodes,
-		 keys);
+	// Do the sort...
+	sort(
+			theList, 
+			theNodes,
+			keys);
 	assert(theNodes.size() ==
 				static_cast<NodeVectorType::size_type>(theLength));
 
+	// Copy the nodes back to the list in sorted order.
 	theList.clear();
 
 	for (i = 0; i < theLength; ++i)
@@ -156,21 +163,30 @@ NodeSorter::NodeSortKeyCompare::operator()(
 			second_argument_type	theRHS,
 			unsigned int			theKeyIndex) const
 {
-	assert(theKeyIndex < UINT_MAX);
 	result_type			theResult = false;
 
 	const NodeSortKey&	theKey = m_nodeSortKeys[theKeyIndex];
 
 	const XPath&		xpath = theKey.getSelectPattern();
 
-	XObject* r1 = xpath.execute(theLHS, theKey.getPrefixResolver(), NodeRefList(), m_executionContext);
-	XObject* r2 = xpath.execute(theRHS, theKey.getPrefixResolver(), NodeRefList(), m_executionContext);
+	const XObjectGuard	r1(
+		m_executionContext.getXObjectFactory(),
+		xpath.execute(theLHS, theKey.getPrefixResolver(), NodeRefList(), m_executionContext));
+	assert(r1.get() != 0);
+
+	const XObjectGuard	r2(
+		m_executionContext.getXObjectFactory(),
+		xpath.execute(theRHS, theKey.getPrefixResolver(), NodeRefList(), m_executionContext));
+	assert(r2.get() != 0);
 
 	// Compare as numbers
 	if(theKey.getTreatAsNumbers() == true)
 	{
 		double	n1Num = r1->num();
 		double	n2Num = r2->num();
+
+		const XalanDOMString	r1str(r1->str());
+		const XalanDOMString	r2str(r2->str());
 
 		if (DoubleSupport::isNaN(n1Num))
 			n1Num = 0.0;
@@ -187,11 +203,19 @@ NodeSorter::NodeSortKeyCompare::operator()(
 		{
 			const double	diff = n1Num - n2Num;
 
-			theResult =  diff <= 0.0 ? true : false;
-
-			if (theKey.getDescending() == true)
+			if (diff == 0.0)
 			{
-				theResult = !theResult;
+				// The nodes are equal, so if theLHS is
+				// before theRHS, return true.
+				theResult = isNodeBefore(theLHS, theRHS);
+			}
+			else if (theKey.getDescending() == true)
+			{
+				theResult =  diff < 0.0 ? false : true;
+			}
+			else
+			{
+				theResult =  diff < 0.0 ? true : false;
 			}
 		}
 	}
@@ -209,12 +233,50 @@ NodeSorter::NodeSortKeyCompare::operator()(
 		}
 		else
 		{
-			theResult = theCompareResult <= 0 ? true : false;
-
-			if (theKey.getDescending() == true)
+			if (theCompareResult == 0)
 			{
-				theResult = !theResult;
+				// The nodes are equal, so if theLHS is
+				// before theRHS, return true.
+				theResult = isNodeBefore(theLHS, theRHS);
 			}
+			else if (theKey.getDescending() == true)
+			{
+				theResult = theCompareResult < 0 ? false : true;
+			}
+			else
+			{
+				theResult = theCompareResult < 0 ? true : false;
+			}
+		}
+	}
+
+	return theResult;
+}
+
+
+
+bool
+NodeSorter::NodeSortKeyCompare::isNodeBefore(
+			const XalanNode*	node1,
+			const XalanNode*	node2) const
+{
+	bool	theResult = true;
+
+	const unsigned int	theLength = m_list.getLength();
+
+	for(unsigned int i = 0; i < theLength; ++i)
+	{
+		const XalanNode* const	theCurrentNode = m_list.item(i);
+
+		if (theCurrentNode == node1)
+		{
+			break;
+		}
+		else if (theCurrentNode == node2)
+		{
+			theResult = false;
+
+			break;
 		}
 	}
 

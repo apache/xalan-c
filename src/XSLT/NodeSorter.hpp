@@ -112,22 +112,10 @@ public:
 	~NodeSorter();
 
 	/**
-	 * Given a vector of nodes, sort each node according to the criteria in the
-	 * keys.
+	 * Given a list of nodes, sort each node according to the criteria in the
+	 * keys.  The list is assumed to be in document order.
 	 *
-	 * @param v    vector of Nodes
-	 * @param keys vector of NodeSortKeys
-	 */
-	void
-	sort(
-			NodeVectorType&					v,
-			const NodeSortKeyVectorType&	keys);
-
-	/**
-	 * Given a vector of nodes, sort each node according to the criteria in the
-	 * keys.
-	 *
-	 * @param v    vector of Nodes
+	 * @param v    list of Nodes
 	 * @param keys vector of NodeSortKeys
 	 */
 	void
@@ -158,10 +146,13 @@ public:
 	 * @param theNodes        vector or nodes to be sorted
 	 * @param theNodeSortKeys vector of keys upon which to sort
 	 */
-		NodeSortKeyCompare(XPathExecutionContext&			executionContext,
-						   const NodeVectorType&			theNodes,
-						   const NodeSortKeyVectorType&		theNodeSortKeys) :
+		NodeSortKeyCompare(
+				XPathExecutionContext&			executionContext,
+				const MutableNodeRefList&		theList,
+				const NodeVectorType&			theNodes,
+				const NodeSortKeyVectorType&	theNodeSortKeys) :
 			m_executionContext(executionContext),
+			m_list(theList),
 			m_nodes(theNodes),
 			m_nodeSortKeys(theNodeSortKeys)
 		{
@@ -180,21 +171,41 @@ public:
 				   unsigned int				theKeyIndex = 0) const;
 
 		XPathExecutionContext&			m_executionContext;
+		const MutableNodeRefList&		m_list;
 		const NodeVectorType&			m_nodes;
 		const NodeSortKeyVectorType&	m_nodeSortKeys;
+
+		bool
+		isNodeBefore(
+				const XalanNode*	node1,
+				const XalanNode*	node2) const;
 	};
 
 private:
 
+	/**
+	 * Given a vector of nodes, sort each node according to the criteria in the
+	 * keys.
+	 *
+	 * @param theList the original node list.
+	 * @param v    vector of Nodes
+	 * @param keys vector of NodeSortKeys
+	 */
+	void
+	sort(
+			const MutableNodeRefList&		theList,
+			NodeVectorType&					v,
+			const NodeSortKeyVectorType&	keys);
+
 	XPathExecutionContext&	m_executionContext;
 
 	NodeSortKeyVectorType	m_keys; // vector of NodeSortKeys
-  /**
-   * @@ TODO: Adjust this for locale.
-	* JMD: java: not used yet, placeholder
-   */
-  // NumberFormat m_formatter = NumberFormat.getNumberInstance();
-  
+
+	/**
+	 * @@ TODO: Adjust this for locale.
+	 * JMD: java: not used yet, placeholder
+     */
+  // NumberFormat m_formatter = NumberFormat.getNumberInstance();  
 };
 
 

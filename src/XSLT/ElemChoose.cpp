@@ -63,6 +63,7 @@
 
 
 
+#include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
 
 
@@ -128,11 +129,10 @@ ElemChoose::execute(
 			const XPath* const		theXPath = when->getXPath();
 			assert(theXPath != 0);
 
-			const XObject* const	test =
-				theXPath ->execute(sourceNode,
-								   *this,
-								   executionContext);
-			assert(test != 0);
+			const XObjectGuard		test(
+								executionContext.getXObjectFactory(),
+								theXPath->execute(sourceNode, *this, executionContext));
+			assert(test.get() != 0);
 
 			if(0 != executionContext.getTraceListeners())
 			{
@@ -142,7 +142,7 @@ ElemChoose::execute(
 					*when,
 					XalanDOMString(XALAN_STATIC_UCODE_STRING("test")),
 					*theXPath,
-					test));
+					test.get()));
 			}
 
 			if(test->boolean() == true)

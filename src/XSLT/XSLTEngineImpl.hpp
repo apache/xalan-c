@@ -898,6 +898,15 @@ public:
 			const PrefixResolver&	resolver);
 
 	/**
+	 * Return the xpath created by createXPath() or
+	 * createMatchPattern().
+	 *
+	 * @param xpath	   The XPath to return.
+	 */
+	void
+	returnXPath(XPath*	xpath);
+
+	/**
 	 * Copy XMLNS: attributes in if not already in scope.
 	 *
 	 * @param src				  source node
@@ -951,22 +960,6 @@ public:
 			XalanNode* 				contextNode,
 			const XalanElement&		prefixResolver,
 			XPathExecutionContext&	executionContext);
-
-	/**
-	 * Create an XPath whose lifetime can end after transforming
-	 * is complete.  Do not use this to create an XPath to be
-	 * held by a stylesheet.
-	 *
-	 * @param str			   string to evaluate
-	 * @param executionContext current execution context
-	 * @param resolver		   resolver for namespace resolution
-	 * @return pointer to XPath created
-	 */
-	virtual XPath*
-	createProcessingXPath(
-		const XalanDOMString&	str,
-		XPathExecutionContext&	executionContext,
-		const PrefixResolver&	resolver);
 
 	/**
 	 * Given a valid element id, return the corresponding element.
@@ -1032,20 +1025,6 @@ public:
 									mode,
 									targetTemplate);
 	}
-
-	/**
-	 * Get an Expression object from a select node.  Does not cache!
-	 *
-	 * @param attrs    attribute list to search
-	 * @param key	   key value to search for
-	 * @param resolver resolver for namespace resolution
-	 * @return pointer to XPath for expression
-	 */
-	XPath*
-	getExpression(
-			const AttributeList&	attrs,
-			const XalanDOMString&	key,
-			const PrefixResolver&	resolver);
 
 	/**
 	 * Given an element, return an attribute value in the form of a string.
@@ -1590,6 +1569,12 @@ public:
 
 	private:
 
+		// Default stack vector allocation size.
+		enum
+		{
+			eDefaultVectorSize = 200
+		};
+
 		XObject*
 		findXObject(
 				const QName&	name,
@@ -2016,15 +2001,6 @@ private:
 	 */
 	void
 	translateCSSAttrsToStyleAttr(AttributeListImpl&		attList);
-
-	// $$$ ToDo:  This must go!!!!!!
-	/**
-	 * Evaluate an xpath string and return the result.
-	 */
-	virtual XPath*
-	createXPath(
-		const XalanDOMString&	str,
-		const PrefixResolver&	resolver);
 
 	/**
 	 * Given a name, locate a variable in the current context, and return 

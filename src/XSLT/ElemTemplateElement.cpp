@@ -87,6 +87,7 @@
 
 
 #include <XPath/MutableNodeRefList.hpp>
+#include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
 
 
@@ -316,7 +317,7 @@ ElemTemplateElement::executeChildren(
 
     for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
     {
-      node->execute(executionContext, sourceTree, sourceNode, mode);
+		node->execute(executionContext, sourceTree, sourceNode, mode);
     }
 }
 
@@ -593,7 +594,10 @@ ElemTemplateElement::transformSelectedChildren(
 	{
 		const ElemForEach* foreach = static_cast<const ElemForEach *>(&xslInstruction);
 		const unsigned int nChildren = foreach->getSortElems().size();
-		
+
+		// Reserve the space now...
+		keys.reserve(nChildren);
+
 		// March backwards, performing a sort on each xsl:sort child.
 		// Probably not the most efficient method.
 		for(unsigned int i = 0; i < nChildren; i++)
@@ -659,13 +663,15 @@ ElemTemplateElement::transformSelectedChildren(
 					 savedCurrentStackFrameIndex) : null;
 */
 
-		XObject* const	result = selectPattern->execute(
-			sourceNodeContext,
-			xslInstruction,
-			executionContext);
+		const XObjectGuard	result(
+				executionContext.getXObjectFactory(),
+				selectPattern->execute(
+					sourceNodeContext,
+					xslInstruction,
+					executionContext));
 
 		// @@ JMD: Should this be an assert ??
-		if (0 != result)
+		if (0 != result.get())
 		{
 			sourceNodes = result->mutableNodeset();
 
@@ -677,7 +683,7 @@ ElemTemplateElement::transformSelectedChildren(
 							*this,
 							XALAN_STATIC_UCODE_STRING("select"),
 							*selectPattern,
-							result));
+							result.get()));
 			}
 		}
 	}

@@ -807,7 +807,10 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 															NodeRefList(),
 															&theProxy);
 
-		const XObject*	xobj = evalXPathStr(ds, theExecutionContext);
+		const XObjectGuard		xobj(
+						m_xobjectFactory,
+						evalXPathStr(ds, theExecutionContext));
+		assert(xobj.get() != 0);
 
 		const NodeRefListBase* nl = &xobj->nodeset();
 
@@ -821,7 +824,10 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 			theExecutionContext.setContextNodeList(theEmptyList);
 
-			xobj = evalXPathStr(ds, theExecutionContext);
+			const XObjectGuard		xobj(
+						m_xobjectFactory,
+						evalXPathStr(ds, theExecutionContext));
+			assert(xobj.get() != 0);
 
 			nl = &xobj->nodeset();
 
@@ -833,7 +839,10 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 				theExecutionContext.setContextNodeList(theEmptyList);
 
-				xobj = evalXPathStr(ds, theExecutionContext);
+				const XObjectGuard		xobj(
+							m_xobjectFactory,
+							evalXPathStr(ds, theExecutionContext));
+				assert(xobj.get() != 0);
 
 				nl = &xobj->nodeset();
 
@@ -842,7 +851,10 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 					// Well, hell, maybe it's an XPath...
 					theExecutionContext.setContextNodeList(theEmptyList);
 
-					xobj = evalXPathStr(fragID, theExecutionContext);
+					const XObjectGuard		xobj(
+								m_xobjectFactory,
+								evalXPathStr(fragID, theExecutionContext));
+					assert(xobj.get() != 0);
 
 					nl = &xobj->nodeset();
 				}
@@ -2478,72 +2490,6 @@ XSLTEngineImpl::evalXPathStr(
 
 
 
-// $$$ ToDo:  This really should not be here...
-XPath*
-XSLTEngineImpl::createProcessingXPath(
-		const XalanDOMString&		str,
-		XPathExecutionContext&	executionContext,
-		const PrefixResolver&	resolver)
-{
-	XPath* const	xpath = m_xpathFactory.create();
-
-	m_xpathProcessor->initXPath(*xpath,
-								str,
-								resolver,
-								executionContext.getXObjectFactory(),
-								m_xpathEnvSupport);
-
-	return xpath;
-}
-
-
-
-/**
- * Evaluate an xpath string and return the result.
- */
-XPath*
-XSLTEngineImpl::createXPath(
-		const XalanDOMString&	str, 
-		const PrefixResolver&	resolver)
-{
-	XPath* const	xpath = m_xpathFactory.create();
-
-	m_xpathProcessor->initXPath(*xpath,
-								str,
-								resolver,
-								m_xobjectFactory,
-								m_xpathEnvSupport);
-
-	return xpath;
-}
-
-/**
- * Evaluate an xpath string and return the result.
- */
-double
-XSLTEngineImpl::evalMatchPatternStr(
-			const XalanDOMString&	str,
-			XalanNode*				context,
-			XPathExecutionContext&	executionContext)
-{
-	FactoryObjectAutoPointer<XPath>		theXPath(&m_xpathFactory,
-												 m_xpathFactory.create());
-
-	const PrefixResolver* const		theResolver =
-					executionContext.getPrefixResolver();
-	assert(theResolver != 0);
-
-	// This needs to use a factory method of some sort.
-	m_xpathProcessor->initMatchPattern(*theXPath.get(),
-									   str,
-									   *theResolver,
-									   executionContext.getXObjectFactory(),
-									   m_xpathEnvSupport);
-
-	return theXPath->getMatchScore(context, *theResolver, executionContext);
-}
-
-
 
 /**
  * Create and initialize an xpath and return it.
@@ -2562,14 +2508,10 @@ XSLTEngineImpl::createMatchPattern(
 
 
 
-XPath* XSLTEngineImpl::getExpression(
-					const AttributeList&	attrs,
-					const XalanDOMString&	key,
-					const PrefixResolver&	resolver)
+void
+XSLTEngineImpl::returnXPath(XPath*	xpath)
 {
-    const XMLCh* const	val = attrs.getValue(c_wstr(key));
-
-    return 0 != val ? createXPath(XalanDOMString(val), resolver) : 0;
+	m_xpathFactory.returnObject(xpath);
 }
 
 
@@ -3682,6 +3624,8 @@ XSLTEngineImpl::VariableStack::VariableStack(XSLTEngineImpl&	theProcessor) :
 	m_globalStackFrameIndex(-1),
 	m_currentStackFrameIndex(0)
 {
+	m_stack.reserve(eDefaultVectorSize);
+
 	pushContextMarker(0, 0);	
 }
 
@@ -3709,6 +3653,17 @@ XSLTEngineImpl::VariableStack::reset()
 			 DeleteFunctor<StackEntry>());
 
 	m_stackEntries.clear();
+
+	// If the stack has grown past the default size,
+	// shrink it down...
+	if (m_stack.capacity() > eDefaultVectorSize)
+	{
+		VariableStackStackType	temp;
+
+		temp.reserve(eDefaultVectorSize);
+
+		m_stack.swap(temp);
+	}
 
 	pushContextMarker(0, 0);	
 }

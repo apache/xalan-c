@@ -220,6 +220,9 @@ public:
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver);
 
+	virtual void
+	returnXPath(XPath*	xpath);
+
 	virtual const XalanDOMString
 	evaluateAttrVal(
 			XalanNode*				contextNode,

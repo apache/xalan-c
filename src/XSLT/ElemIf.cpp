@@ -66,6 +66,7 @@
 
 
 
+#include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
 
 
@@ -140,8 +141,10 @@ ElemIf::execute(
 
 	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
 
-	const XObject* const	test =
-		m_test->execute(sourceNode, *this, executionContext);
+	const XObjectGuard		test(
+								executionContext.getXObjectFactory(),
+								m_test->execute(sourceNode, *this, executionContext));
+	assert(test.get() != 0);
 
 	if(0 != executionContext.getTraceListeners())
 	{
@@ -151,7 +154,7 @@ ElemIf::execute(
 			*this, 
 			XALAN_STATIC_UCODE_STRING("test"), 
 			*m_test, 
-			test));
+			test.get()));
 	}
 
 	if(test->boolean())

@@ -59,6 +59,7 @@
 
 
 #include <XPath/XObject.hpp>
+#include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XPathFactory.hpp>
 #include <XPath/XPathProcessor.hpp>
@@ -121,9 +122,11 @@ AVTPartXPath::	evaluate(
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const
 {
-	const XObject* const	xobj = m_pXPath->execute(contextNode, prefixResolver, executionContext);
+	const XObjectGuard		xobj(
+								executionContext.getXObjectFactory(),
+								m_pXPath->execute(contextNode, prefixResolver, executionContext));
 
-	if(0 != xobj)
+	if(0 != xobj.get())
 	{
 		append(buf, xobj->str());
 	}

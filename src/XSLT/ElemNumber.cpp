@@ -72,6 +72,7 @@
 
 
 #include <XPath/XPath.hpp>
+#include <XPath/XObjectFactory.hpp>
 
 
 
@@ -323,54 +324,53 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 
 
 
-const XPath*
+XPath*
 ElemNumber::getCountMatchPattern(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						contextNode) const
 {
-	const XPath*	countMatchPattern = m_countMatchPattern;
-	if(0 == countMatchPattern)
-	{
-		switch(contextNode->getNodeType())
-		{
-		case XalanNode::ELEMENT_NODE:
-			countMatchPattern =
-				executionContext.createMatchPattern(contextNode->getNodeName(), *this);
-			break;
+	XPath*	countMatchPattern = 0;
 
-		case XalanNode::ATTRIBUTE_NODE:
-			countMatchPattern = executionContext.createMatchPattern(
+	switch(contextNode->getNodeType())
+	{
+	case XalanNode::ELEMENT_NODE:
+		countMatchPattern =
+				executionContext.createMatchPattern(contextNode->getNodeName(), *this);
+		break;
+
+	case XalanNode::ATTRIBUTE_NODE:
+		countMatchPattern = executionContext.createMatchPattern(
 						XalanDOMString(XALAN_STATIC_UCODE_STRING("@")) + contextNode->getNodeName(),
 						*this);
-			break;
+		break;
 
-		case XalanNode::CDATA_SECTION_NODE:
-		case XalanNode::TEXT_NODE:
-			countMatchPattern = executionContext.createMatchPattern(
+	case XalanNode::CDATA_SECTION_NODE:
+	case XalanNode::TEXT_NODE:
+		countMatchPattern = executionContext.createMatchPattern(
 					XalanDOMString(XALAN_STATIC_UCODE_STRING("text()")), *this);
-			break;
+		break;
 
-		case XalanNode::COMMENT_NODE:
-			countMatchPattern = executionContext.createMatchPattern(
+	case XalanNode::COMMENT_NODE:
+		countMatchPattern = executionContext.createMatchPattern(
 					XalanDOMString(XALAN_STATIC_UCODE_STRING("comment()")), *this);
-			break;
+		break;
 
-		case XalanNode::DOCUMENT_NODE:
-			countMatchPattern = executionContext.createMatchPattern(
+	case XalanNode::DOCUMENT_NODE:
+		countMatchPattern = executionContext.createMatchPattern(
 					XalanDOMString(XALAN_STATIC_UCODE_STRING("/")), *this);
-			break;
+		break;
 
-		case XalanNode::PROCESSING_INSTRUCTION_NODE:
-			countMatchPattern = executionContext.createMatchPattern(
+	case XalanNode::PROCESSING_INSTRUCTION_NODE:
+		countMatchPattern = executionContext.createMatchPattern(
 				XalanDOMString(XALAN_STATIC_UCODE_STRING("pi(")) + 
 				contextNode->getNodeName() +
 				XalanDOMString(XALAN_STATIC_UCODE_STRING(")")), *this);
-			break;
+		break;
 
-		default:
-			break;
-		}
+	default:
+		break;
 	}
+
 	return countMatchPattern;
 }
 
@@ -388,10 +388,10 @@ ElemNumber::getCountString(
 
 	if(0 != m_valueExpr)
 	{
-		const XObject* const	countObj =
-			m_valueExpr->execute(sourceNode,
-								 *this,
-								 executionContext);
+		const XObjectGuard		countObj(
+				executionContext.getXObjectFactory(),
+				m_valueExpr->execute(sourceNode, *this, executionContext));
+		assert(countObj.get() != 0);
 
 		numberList.push_back(static_cast<int>(countObj->num()));
 	}
@@ -415,7 +415,7 @@ ElemNumber::getCountString(
 			{
 				for(unsigned int i = 0; i < lastIndex; i++)
 				{
-					XalanNode* const target = ancestors.item(lastIndex - i -1);
+					XalanNode* const target = ancestors.item(lastIndex - i - 1);
 					numberList.push_back(ctable.countNode(
 						executionContext,
 						this,
@@ -432,8 +432,22 @@ XalanNode*
 ElemNumber::getPreviousNode(
 		StylesheetExecutionContext&		executionContext,
 		XalanNode* pos) const
-{    
-	const XPath* countMatchPattern = getCountMatchPattern(executionContext, pos);
+{
+	// Create an XPathGuard, since we may need to
+	// create a new XPath...
+	StylesheetExecutionContext::XPathGuard	xpathGuard(
+			executionContext);
+
+	const XPath*	countMatchPattern = m_countMatchPattern;
+
+	if (countMatchPattern == 0)
+	{
+		// Get the XPath...
+		xpathGuard.reset(getCountMatchPattern(executionContext, pos));
+
+		countMatchPattern = xpathGuard.get();
+	}
+
 	if(Constants::NUMBERLEVEL_ANY == m_level)
 	{
 		const XPath* fromMatchPattern = m_fromMatchPattern;
@@ -506,18 +520,41 @@ ElemNumber::getTargetNode(
 		XalanNode*						sourceNode) const
 {
 	XalanNode* target = 0;
-	const XPath* countMatchPattern =
-		getCountMatchPattern(executionContext, sourceNode);
+
+	// Create an XPathGuard, since we may need to
+	// create a new XPath...
+	StylesheetExecutionContext::XPathGuard	xpathGuard(
+			executionContext);
+
+	const XPath*	countMatchPattern = m_countMatchPattern;
+
+	if (countMatchPattern == 0)
+	{
+		// Get the XPath...
+		xpathGuard.reset(getCountMatchPattern(executionContext, sourceNode));
+
+		countMatchPattern = xpathGuard.get();
+	}
+
 	if(Constants::NUMBERLEVEL_ANY == m_level)
 	{
-		target = findPrecedingOrAncestorOrSelf(executionContext,
-				m_fromMatchPattern, countMatchPattern, sourceNode, this);
+		target = findPrecedingOrAncestorOrSelf(
+				executionContext,
+				m_fromMatchPattern,
+				countMatchPattern,
+				sourceNode,
+				this);
 	}
 	else
 	{
-		target = findAncestor(executionContext, m_fromMatchPattern,
-				countMatchPattern, sourceNode, this);
+		target = findAncestor(
+				executionContext,
+				m_fromMatchPattern,
+				countMatchPattern,
+				sourceNode,
+				this);
 	}
+
 	return target;
 }
 
@@ -537,13 +574,28 @@ ElemNumber::getMatchingAncestors(
 		bool stopAtFirstFound) const
 {
 	MutableNodeRefList ancestors;
-	const XPath* countMatchPattern = getCountMatchPattern(executionContext, node);
+
+	// Create an XPathGuard, since we may need to
+	// create a new XPath...
+	StylesheetExecutionContext::XPathGuard	xpathGuard(
+			executionContext);
+
+	const XPath*	countMatchPattern = m_countMatchPattern;
+
+	if (countMatchPattern == 0)
+	{
+		// Get the XPath...
+		xpathGuard.reset(getCountMatchPattern(executionContext, node));
+
+		countMatchPattern = xpathGuard.get();
+	}
+
 	while( 0 != node )
 	{
 		if((0 != m_fromMatchPattern) &&
 				(m_fromMatchPattern->getMatchScore(node, *this, executionContext) !=
 				 XPath::s_MatchScoreNone))
-		{ 
+		{
 			// The following if statement gives level="single" different 
 			// behavior from level="multiple", which seems incorrect according 
 			// to the XSLT spec.  For now we are leaving this in to replicate 
@@ -552,7 +604,7 @@ ElemNumber::getMatchingAncestors(
 			// that we still don't understand.
 			if(!stopAtFirstFound)
 				break;
-		}  
+		}
 
 		if(0 == countMatchPattern)
 			error(XalanDOMString("Programmers error! countMatchPattern should never be 0!"));
@@ -899,7 +951,7 @@ ElemNumber::long2roman(
 	// Make this match the conformance test
 	else if(val == 0)
 	{
-		return XalanDOMString("0");
+		return XalanDOMString(XALAN_STATIC_UCODE_STRING("0"));
 	}
 
 
@@ -1040,7 +1092,7 @@ ElemNumber::CountersTable::appendBtoFList(MutableNodeRefList& flist, MutableNode
 {
 	const int n = blist.getLength();
 
-	for(int i = (n-1); i >= 0; i--)
+	for(int i = n - 1; i >= 0; i--)
 	{
 		flist.addNode(blist.item(i));
 	}

@@ -464,6 +464,14 @@ StylesheetExecutionContextDefault::createMatchPattern(
 
 
 
+void
+StylesheetExecutionContextDefault::returnXPath(XPath*	xpath)
+{
+	m_xsltProcessor.returnXPath(xpath);
+}
+
+
+
 const XalanDOMString
 StylesheetExecutionContextDefault::evaluateAttrVal(
 			XalanNode*				contextNode,

@@ -127,6 +127,7 @@ public:
 #	define XALAN_STD std::
 #endif
 
+typedef XALAN_STD map<XalanDOMString, XalanDOMString> PrefixAliasesMapType;
 typedef XALAN_STD map<XalanDOMString, ExtensionNSHandler*> ExtensionNamespacesMapType;
 typedef XALAN_STD map<QName, ElemTemplateElement*>	  ElemTemplateElementMapType;
 typedef XALAN_STD vector<Arg>						  ParamVectorType;
@@ -308,6 +309,27 @@ typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
 	 */
 	XalanDOMString
 	getNamespaceForPrefixFromStack(const XalanDOMString&	prefix) const;
+
+	/**
+	 * See if there is a namespace alias.
+	 * 
+	 * @param uri the URI of the namespace.
+	 * @return the alias URI, if found.
+	 */
+	XalanDOMString
+	getAliasNamespaceURI(const XalanDOMString&	uri) const;
+
+	/**
+	 * This recursive function is called starting from the
+	 * stylesheet root, and tries to find a match for the
+	 * passed stylesheet, and then will return the previous
+	 * sibling, or 0 if there was no previous sibling.
+	 *
+	 * @param stylesheet the stylesheet to search
+	 * @return the stylesheet's previous import if found, or 0 not found.
+	 */
+	const Stylesheet*
+	getPreviousImport(const Stylesheet*		stylesheet) const;
 
 	/**
 	 * Add a template to the list of names templates
@@ -1249,6 +1271,8 @@ private:
 	XalanEmptyNamedNodeMap	m_fakeAttributes;
 
 	ElemDecimalFormatVectorType		m_elemDecimalFormats;
+
+	PrefixAliasesMapType	m_prefixAliases;
 };
 
 

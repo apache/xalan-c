@@ -636,6 +636,69 @@ public:
 			const PrefixResolver&	resolver) = 0;
 
 	/**
+	 * Return the XPath created by createMatchPattern().
+	 *
+	 * @param xpath The XPath to return.
+	 */
+	virtual void
+	returnXPath(XPath*	xpath) = 0;
+
+	// A helper class to automatically return an XPath instance.
+	class XPathGuard
+	{
+	public:
+
+		XPathGuard(
+				StylesheetExecutionContext&		context,
+				XPath*							xpath = 0) :
+			m_context(context),
+			m_xpath(xpath)
+		{
+		}
+
+		~XPathGuard()
+		{
+			if (m_xpath != 0)
+			{
+				m_context.returnXPath(m_xpath);
+			}
+		}
+
+		XPath*
+		get() const
+		{
+			return m_xpath;
+		}
+
+		XPath*
+		release()
+		{
+			XPath* const	temp = m_xpath;
+
+			m_xpath = 0;
+
+			return temp;
+		}
+
+		void
+		reset(XPath*	xpath)
+		{
+			if (m_xpath != 0)
+			{
+				m_context.returnXPath(m_xpath);
+			}
+
+			m_xpath = xpath;
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_context;
+
+		XPath*							m_xpath;
+	};
+
+	/**
 	 * Evaluate the value of an attribute within the context of a specified
 	 * context node and namespace
 	 *

@@ -97,8 +97,7 @@ ElemLiteralResult::ElemLiteralResult(
 			name,
 			lineNumber,
 			columnNumber,
-			xslToken),
-	m_QName(name)
+			xslToken)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -194,7 +193,7 @@ void ElemLiteralResult::execute(
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	executionContext.startElement(toCharArray(m_QName));
+	executionContext.startElement(toCharArray(getElementName()));
 	
 	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
 
@@ -248,6 +247,13 @@ void ElemLiteralResult::execute(
 
 				XalanDOMString srcURI = ns.getURI();
 
+				const XalanDOMString	alias = getStylesheet().getAliasNamespaceURI(srcURI);
+
+				if (length(alias) != 0)
+				{
+					srcURI = alias;
+				}
+
 				bool isXSLNS = equals(srcURI, executionContext.getXSLNameSpaceURL())
 					|| 0 != getStylesheet().lookupExtensionNSHandler(srcURI)
 					|| equalsIgnoreCase(srcURI,executionContext.getXalanXSLNameSpaceURL());
@@ -292,7 +298,7 @@ void ElemLiteralResult::execute(
 
 	executeChildren(executionContext, sourceTree, sourceNode, mode);
 
-	executionContext.endElement(toCharArray(m_QName));
+	executionContext.endElement(toCharArray(getElementName()));
 }
 
 

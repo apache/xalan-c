@@ -164,7 +164,13 @@ ElemCopy::execute(
 				sourceNode,
 				mode,
 				*this));
-		} 
+		}
+
+		ElemUse::execute(
+			executionContext, 
+			sourceTree, 
+			sourceNode, 
+			mode);
 
 		executeChildren(executionContext, sourceTree, sourceNode, mode);
 	}  

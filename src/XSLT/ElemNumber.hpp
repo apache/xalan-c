@@ -186,7 +186,7 @@ protected:
 	/**
 	 * Get the count match pattern, or a default value.
 	 */
-	const XPath*
+	XPath*
 	getCountMatchPattern(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						contextNode) const;

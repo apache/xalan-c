@@ -192,10 +192,9 @@ ElemValueOf::execute(
 	}
 	else
 	{
-		const XObject* const	value =
-			m_selectPattern->execute(sourceNode,
-									 *this,
-									 executionContext);
+		const XObjectGuard		value(
+								executionContext.getXObjectFactory(),
+								m_selectPattern->execute(sourceNode, *this, executionContext));
 
 		if(0 != executionContext.getTraceListeners())
 		{
@@ -205,10 +204,10 @@ ElemValueOf::execute(
 							   *this,
 							   XalanDOMString(XALAN_STATIC_UCODE_STRING("select")),
 							   *m_selectPattern,
-							   value));       
+							   value.get()));       
 		}
 
-		if(0 != value)
+		if(0 != value.get())
 		{
 			const XObject::eObjectType	type = value->getType();
 

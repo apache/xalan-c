@@ -58,6 +58,10 @@
 
 
 
+#include <XPath/XObjectFactory.hpp>
+
+
+
 #include "Constants.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetExecutionContext.hpp"
