@@ -214,7 +214,7 @@ FormatterToText::characters(
 #if defined(XALAN_NEWLINE_IS_CRLF)
 			if (m_normalize == false)
 			{
-				m_writer->write(XalanUnicode::charLF);
+				m_writer->write(chars[i]);
 			}
 			else
 			{
