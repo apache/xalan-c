@@ -425,7 +425,7 @@ public:
 
 	/**
 	 * Set a top-level stylesheet parameter.  This value can be evaluated via
-	 * xsl:param-variable.
+	 * xsl:param-variable.  These values are cleared after a call to transform().
 	 *
 	 * @param key name of the param
 	 * @param expression expression that will be evaluated
