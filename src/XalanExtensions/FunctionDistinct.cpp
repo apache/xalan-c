@@ -119,17 +119,19 @@ FunctionDistinct::execute(
 	}
 	else if (theLength > 1)
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::set;
-#endif
-
 		typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
 
 		GetAndReleaseCachedString	theGuard(executionContext);
 
 		XalanDOMString&				theCachedString = theGuard.get();
 
-		set<XalanDOMString>	theStrings;
+#if defined(XALAN_NO_NAMESPACES)
+		typedef set<XalanDOMString, less<XalanDOMString> >	SetType;
+#else
+		typedef std::set<XalanDOMString>					SetType;
+#endif
+
+		SetType		theStrings;
 
 		// Check to make sure each node has a unique
 		// string value.

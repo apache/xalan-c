@@ -69,7 +69,11 @@ public:
 
 	XResultTreeFragNodeSetProxy(const XObjectPtr&	theXObject) :
 		m_xobject(theXObject),
+#if defined(XALAN_OLD_STYLE_CASTS)
+		m_proxy(*(const XResultTreeFrag*)theXObject.get())
+#else
 		m_proxy(*static_cast<const XResultTreeFrag*>(theXObject.get()))
+#endif
 	{
 		assert(theXObject.null() == false);
 		assert(theXObject->getType() == XObject::eTypeResultTreeFrag);
@@ -77,7 +81,11 @@ public:
 
 	XResultTreeFragNodeSetProxy(const XResultTreeFragNodeSetProxy&	theSource) :
 		m_xobject(theSource.m_xobject),
+#if defined(XALAN_OLD_STYLE_CASTS)
+		m_proxy(*(const XResultTreeFrag*)m_xobject.get())
+#else
 		m_proxy(*static_cast<const XResultTreeFrag*>(m_xobject.get()))
+#endif
 	{
 	}
 
@@ -208,7 +216,7 @@ XObjectPtr
 FunctionNodeSet::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
-			int								opPos,
+			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 {
 	if (args.size() != 1)
