@@ -102,6 +102,114 @@ SOURCE=..\..\..\..\src\XPath\FoundIndex.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\FunctionBoolean.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionCeiling.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionConcat.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionContains.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionCount.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionFalse.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionFloor.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionID.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionLang.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionLast.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionLocalName.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionName.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionNamespaceURI.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionNormalizeSpace.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionNot.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionNumber.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionPosition.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionRound.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionStartsWith.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionString.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionStringLength.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionSubstring.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionSubstringAfter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionSubstringBefore.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionSum.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionTranslate.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FunctionTrue.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\MutableNodeRefList.cpp
 # End Source File
 # Begin Source File
