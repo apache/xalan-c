@@ -107,14 +107,6 @@ public:
 		return m_xpaths.size();
 	}
 
-#if !defined(NDEBUG)
-	unsigned long
-	getTotalInstanceCount() const
-	{
-		return m_totalInstanceCount;
-	}
-#endif
-
 protected:
 
 	// Inherited from XPathFactory...
@@ -126,11 +118,7 @@ protected:
 
 private:
 
-	CollectionType		m_xpaths;
-
-#if !defined(NDEBUG)
-	unsigned long		m_totalInstanceCount;
-#endif
+	CollectionType	m_xpaths;
 };
 
 

@@ -70,9 +70,6 @@
 XPathFactoryDefault::XPathFactoryDefault() :
 	XPathFactory(),
 	m_xpaths()
-#if !defined(NDEBUG)
-	, m_totalInstanceCount(0)
-#endif
 {
 }
 
@@ -138,10 +135,6 @@ XPathFactoryDefault::create()
 	XPath* const	theXPath = new XPath;
 
 	m_xpaths.insert(theXPath);
-
-#if !defined(NDEBUG)
-	++m_totalInstanceCount;
-#endif
 
 	return theXPath;
 }
