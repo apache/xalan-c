@@ -85,7 +85,7 @@ install-package: install-extras
 
 install-extras:
 	$(MKINSTALLDIRS) $(DESTDIR)/$(prefix)
-	$(INSTALL_PROGRAM) $(XALANCROOT)/../KEYS.txt $(DESTDIR)/$(prefix)
+	$(INSTALL_PROGRAM) $(XALANCROOT)/KEYS        $(DESTDIR)/$(prefix)
 	$(INSTALL_PROGRAM) $(XALANCROOT)/License     $(DESTDIR)/$(prefix)
 
 	
