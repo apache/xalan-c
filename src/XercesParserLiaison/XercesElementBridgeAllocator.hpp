@@ -72,11 +72,16 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesElementBridgeAllocator
 {
 public:
 
-	typedef XercesElementBridge						ObjectType;
+	typedef XercesElementBridge				ObjectType;
+
 
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
 	typedef ArenaBlock<ObjectType>					ArenaBlockType;
@@ -108,7 +113,7 @@ public:
 	 */
 	ObjectType*
 	create(
-			const DOM_Element&				theXercesElement,
+			const DOM_ElementType&			theXercesElement,
 			const XercesBridgeNavigator&	theNavigator);
 
 	/**
@@ -152,6 +157,10 @@ private:
 	// Data members...
 	ArenaAllocatorType	m_allocator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

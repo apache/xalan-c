@@ -70,8 +70,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesNodeListWrapper::XercesNodeListWrapper(
-			const DOMNodeList*				theXercesNodeList,
+			const DOMNodeListType*			theXercesNodeList,
 			const XercesWrapperNavigator&	theNavigator) :
 	XalanNodeList(),
 	m_xercesNodeList(theXercesNodeList),
@@ -114,3 +118,7 @@ XercesNodeListWrapper::getLength() const
 
 	return m_xercesNodeList->getLength();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

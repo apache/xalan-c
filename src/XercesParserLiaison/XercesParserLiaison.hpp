@@ -78,27 +78,40 @@
 
 
 
-class DOM_Document;
-class DOMDocument;
+#include <XercesParserLiaison/XercesBridgeTypes.hpp>
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
 #if XERCES_VERSION_MAJOR >= 2
-class XercesDOMParser;
+XALAN_DECLARE_XERCES_CLASS(XercesDOMParser);
 #else
-class DOMParser;
+XALAN_DECLARE_XERCES_CLASS(DOMParser);
 #endif
+XALAN_DECLARE_XERCES_CLASS(SAXParser);
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class DOMSupport;
-class EntityResolver;
-class InputSource;
-class SAXParser;
 class XercesDOMSupport;
 class XercesDocumentBridge;
 class XercesDocumentWrapper;
 class XSLProcessor;
 
+typedef XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException	SAXParseExceptionType;
 
 
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison : public XMLParserLiaison, public ErrorHandler
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison :
+	public XMLParserLiaison,
+	public ErrorHandlerType
 {
 public:
+
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER SAXParser			SAXParserType;
 
 	/**
 	 * Construct a XercesParserLiaison instance.
@@ -130,13 +143,13 @@ public:
 
 	virtual XalanDocument*
 	parseXMLStream(
-			const InputSource&		reader,
+			const InputSourceType&	reader,
 			const XalanDOMString&	identifier = XalanDOMString());
 
 	virtual void
 	parseXMLStream(
-			const InputSource&		urlInputSource,
-			DocumentHandler&		handler,
+			const InputSourceType&	urlInputSource,
+			DocumentHandlerType&	handler,
 			const XalanDOMString&	identifier = XalanDOMString());
 
 	// Create a non-thread safe document, with no synchronization and no bridge...
@@ -165,11 +178,11 @@ public:
 	virtual const XalanDOMString
 	getParserDescription() const;
 
-	virtual EntityResolver*
+	virtual EntityResolverType*
 	getEntityResolver() const;
 
 	virtual void
-	setEntityResolver(EntityResolver*	resolver);
+	setEntityResolver(EntityResolverType*	resolver);
 
 
 	// These interfaces are new to XercesParserLiaison...
@@ -213,7 +226,7 @@ public:
 	  *
 	  * @return A pointer to the installed error handler object.
 	  */
-	virtual ErrorHandler*
+	virtual ErrorHandlerType*
 	getErrorHandler() const;
 
 	/**
@@ -225,7 +238,7 @@ public:
 	  * 			   as per the SAX specification.
 	  */
 	virtual void
-	setErrorHandler(ErrorHandler*	handler);
+	setErrorHandler(ErrorHandlerType*	handler);
 
 	/**
 	  * This method returns the state of the parser's namespace
@@ -338,7 +351,7 @@ public:
 	 * @return a pointer to a new XalanDocument-derived instance.
 	 */
 	XalanDocument*
-	createDocument(const DOM_Document&	theXercesDocument)
+	createDocument(const DOM_DocumentType&	theXercesDocument)
 	{
 		return createDocument(theXercesDocument, m_threadSafe, m_buildBridge);
 	}
@@ -359,9 +372,9 @@ public:
 	 */
 	XalanDocument*
 	createDocument(
-			const DOM_Document& 	theXercesDocument,
-			bool					threadSafe,
-			bool					buildBridge);
+			const DOM_DocumentType& 	theXercesDocument,
+			bool						threadSafe,
+			bool						buildBridge);
 
 	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.
@@ -373,7 +386,7 @@ public:
 	 * @return a pointer to a new XalanDocument-derived instance.
 	 */
 	XalanDocument*
-	createDocument(const DOMDocument*	theXercesDocument)
+	createDocument(const DOMDocumentType*	theXercesDocument)
 	{
 		return createDocument(theXercesDocument, m_threadSafe, m_buildWrapper);
 	}
@@ -391,9 +404,9 @@ public:
 	 */
 	XalanDocument*
 	createDocument(
-			const DOMDocument*	theXercesDocument,
-			bool				threadSafe,
-			bool				buildWrapper);
+			const DOMDocumentType*	theXercesDocument,
+			bool					threadSafe,
+			bool					buildWrapper);
 
 	/**
 	 * This API is deprecated.
@@ -434,7 +447,7 @@ public:
 	 * @param theDocument A pointer to a XalanDocument instance.
 	 * @return A pointer to the XercesDocumentBridge instance.
 	 */
-	DOM_Document
+	DOM_DocumentType
 	mapXercesDocument(const XalanDocument*	theDocument) const;
 
 	/** 
@@ -446,19 +459,19 @@ public:
 	 * @param theDocument A pointer to a XalanDocument instance.
 	 * @return A pointer to the XercesDocumentBridge instance.
 	 */
-	const DOMDocument*
+	const DOMDocumentType*
 	mapToXercesDocument(const XalanDocument*	theDocument) const;
 
 	// Implementations for SAX ErrorHandler
 
 	virtual void
-	warning(const SAXParseException& exception);
+	warning(const SAXParseExceptionType&	exception);
 
 	virtual void
-	error(const SAXParseException& exception);
+	error(const SAXParseExceptionType&	exception);
    
 	virtual void
-	fatalError(const SAXParseException& exception);
+	fatalError(const SAXParseExceptionType&		exception);
 
 	virtual void
 	resetErrors();
@@ -499,7 +512,7 @@ public:
 		}
 	};
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef map<const XalanDocument*,
 				DocumentEntry,
 				less<const XalanDocument*> >	DocumentMapType;
@@ -616,22 +629,22 @@ public:
 	}
 
 #if XERCES_VERSION_MAJOR >= 2
-	typedef XercesDOMParser 	DOMParserType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER XercesDOMParser 	DOMParserType;
 #else
-	typedef DOMParser	DOMParserType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMParser		DOMParserType;
 #endif
 
 protected:
 
 	static void
 	formatErrorMessage(
-			const SAXParseException&	e,
-			XalanDOMString& 			theMessage);
+			const SAXParseExceptionType&	e,
+			XalanDOMString& 				theMessage);
 
 	DOMParserType*
 	CreateDOMParser();
 
-	virtual SAXParser*
+	virtual SAXParserType*
 	CreateSAXParser();
 
 	/**
@@ -644,9 +657,9 @@ protected:
 	 */
 	XercesDocumentBridge*
 	doCreateDocument(
-			const DOM_Document& 	theXercesDocument,
-			bool					threadSafe,
-			bool					buildBridge);
+			const DOM_DocumentType& 	theXercesDocument,
+			bool						threadSafe,
+			bool						buildBridge);
 
 	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.
@@ -658,10 +671,10 @@ protected:
 	 */
 	XercesDocumentWrapper*
 	doCreateDocument(
-			const DOMDocument*	theXercesDocument,
-			bool				threadSafe,
-			bool				buildWrapper,
-			bool				isOwned);
+			const DOMDocumentType*	theXercesDocument,
+			bool					threadSafe,
+			bool					buildWrapper,
+			bool					isOwned);
 
 private:
 
@@ -676,9 +689,9 @@ private:
 
 	bool				m_exitOnFirstFatalError;
 
-	EntityResolver* 	m_entityResolver;
+	EntityResolverType* m_entityResolver;
 
-	ErrorHandler*		m_errorHandler;
+	ErrorHandlerType*	m_errorHandler;
 
 	XalanDOMString		m_externalSchemaLocation;
 
@@ -694,6 +707,10 @@ private:
 
 	ExecutionContext*	m_executionContext;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -78,6 +78,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesBridgeNavigator;
 
 
@@ -86,8 +90,10 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesTextBridge : public XalanText
 {
 public:
 
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text		DOM_TextType;
+
 	XercesTextBridge(
-			const DOM_Text&					theXercesText,
+			const DOM_TextType&				theXercesText,
 			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
@@ -601,7 +607,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	DOM_Text
+	DOM_TextType
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -623,6 +629,10 @@ private:
 
 	const XercesBridgeNavigator&	m_navigator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesBridgeNavigator;
 class XercesNodeBridge;
 
@@ -84,8 +88,10 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesNamedNodeMapBridge : public XalanNa
 {
 public:
 
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_NamedNodeMap		DOM_NamedNodeMapType;
+
 	XercesNamedNodeMapBridge(
-			const DOM_NamedNodeMap&			theXercesNamedNodeMap,
+			const DOM_NamedNodeMapType&		theXercesNamedNodeMap,
 			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
@@ -266,10 +272,14 @@ private:
 
 
 	// $$$ ToDo:  Eventually, this will not need to be mutable.
-	mutable DOM_NamedNodeMap		m_xercesNamedNodeMap;
+	mutable DOM_NamedNodeMapType	m_xercesNamedNodeMap;
 
 	const XercesBridgeNavigator&	m_navigator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

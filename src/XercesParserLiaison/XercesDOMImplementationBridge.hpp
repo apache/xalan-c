@@ -67,7 +67,14 @@
 
 
 
-class DOM_DOMImplementation;
+#include <XercesParserLiaison/XercesBridgeTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesBridgeNavigator;
 
 
@@ -76,7 +83,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMImplementationBridge : public Xa
 {
 public:
 
-	XercesDOMImplementationBridge(DOM_DOMImplementation&	theXercesDOMImplementation);
+	XercesDOMImplementationBridge(DOM_DOMImplementationType&	theXercesDOMImplementation);
 
 	virtual
 	~XercesDOMImplementationBridge();
@@ -153,7 +160,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	DOM_DOMImplementation&
+	DOM_DOMImplementationType&
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -175,8 +182,12 @@ private:
 
 	// Data members...
 
-	DOM_DOMImplementation&			m_xercesNode;
+	DOM_DOMImplementationType&	m_xercesNode;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

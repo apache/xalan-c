@@ -60,10 +60,11 @@
 
 
 #include <XercesParserLiaison/XercesParserLiaisonDefinitions.hpp>
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
 
 
 
-class DOMNode;
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -83,24 +84,28 @@ public:
 	 * Perform a pre-order traversal non-recursive style.
 	 */
 	virtual void
-	traverse(const DOMNode*		pos);
+	traverse(const DOMNodeType*		pos);
 
 	/**
 	 * Perform a pre-order traversal non-recursive style.
 	 */
 	virtual void
 	traverse(
-			const DOMNode*		pos,
-			const DOMNode*		parent);
+			const DOMNodeType*	pos,
+			const DOMNodeType*	parent);
 
 protected:
 
 	virtual void
-	startNode(const DOMNode*	node) = 0;
+	startNode(const DOMNodeType*	node) = 0;
 
 	virtual void
-	endNode(const DOMNode*	node) = 0;
+	endNode(const DOMNodeType*	node) = 0;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

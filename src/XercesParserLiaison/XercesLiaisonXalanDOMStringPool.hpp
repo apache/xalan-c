@@ -72,12 +72,18 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // A version of XalanDOMStringPool which is synchronized using a Xerces Mutex.
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesLiaisonXalanDOMStringPool : public XalanDOMStringPool
 {
 public:
 
-	typedef XalanDOMStringPool	BaseClassType;
+	typedef XalanDOMStringPool	ParentType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutex			XMLMutexType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutexLock		XMLMutexLockType;
 
 	explicit
 	XercesLiaisonXalanDOMStringPool();
@@ -113,8 +119,12 @@ private:
 	operator==(const XercesLiaisonXalanDOMStringPool&) const;
 
 	// Data members...
-	mutable XMLMutex	m_mutex;
+	mutable XMLMutexType	m_mutex;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -72,8 +72,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesDocumentNamedNodeListCache::XercesDocumentNamedNodeListCache(
-			const DOM_Document&				theXercesDocument,
+			const DOM_DocumentType&			theXercesDocument,
 			const XercesBridgeNavigator&	theNavigator) :
 	XercesNamedNodeListCache(theNavigator),
 	m_xercesDocument(theXercesDocument)
@@ -88,7 +92,7 @@ XercesDocumentNamedNodeListCache::~XercesDocumentNamedNodeListCache()
 
 
 
-DOM_NodeList
+DOM_NodeListType
 XercesDocumentNamedNodeListCache::getXercesNodeList(const XalanDOMString&		tagname) const
 {
 	return m_xercesDocument.getElementsByTagName(c_wstr(tagname));
@@ -96,10 +100,14 @@ XercesDocumentNamedNodeListCache::getXercesNodeList(const XalanDOMString&		tagna
 
 
 
-DOM_NodeList
+DOM_NodeListType
 XercesDocumentNamedNodeListCache::getXercesNodeList(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const
 {
 	return m_xercesDocument.getElementsByTagNameNS(c_wstr(namespaceURI), c_wstr(localName));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

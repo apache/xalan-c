@@ -73,8 +73,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesNamedNodeMapWrapper::XercesNamedNodeMapWrapper(
-			const DOMNamedNodeMap*			theXercesNamedNodeMap,
+			const DOMNamedNodeMapType*		theXercesNamedNodeMap,
 			const XercesWrapperNavigator&	theNavigator) :
 	m_xercesNamedNodeMap(theXercesNamedNodeMap),
 	m_navigator(theNavigator)
@@ -166,3 +170,7 @@ XercesNamedNodeMapWrapper::removeNamedItemNS(
 
 	return 0;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

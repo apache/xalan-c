@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,8 +73,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesElementBridge::XercesElementBridge(
-			const DOM_Element&				theXercesElement,
+			const DOM_ElementType&			theXercesElement,
 			const XercesBridgeNavigator&	theNavigator) :
 	XalanElement(),
 	m_xercesNode(theXercesElement),
@@ -366,7 +370,7 @@ XercesElementBridge::setAttribute(
 	{
 		m_xercesNode.setAttribute(c_wstr(name), c_wstr(value));
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -379,7 +383,7 @@ XercesElementBridge::setAttributeNode(XalanAttr*	newAttr)
 {
 	assert(newAttr != 0);
 
-	const DOM_Attr	theXercesAttrNode =
+	const DOM_AttrType	theXercesAttrNode =
 			m_navigator.mapNode(newAttr);
 	assert(theXercesAttrNode.isNull() == false);
 
@@ -387,12 +391,12 @@ XercesElementBridge::setAttributeNode(XalanAttr*	newAttr)
 
 	try
 	{
-		const DOM_Attr	theXercesAttrResult =
+		const DOM_AttrType	theXercesAttrResult =
 			m_xercesNode.setAttributeNode(theXercesAttrNode);
 
 		theXalanAttrResult = m_navigator.mapNode(theXercesAttrResult);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -407,7 +411,7 @@ XercesElementBridge::removeAttributeNode(XalanAttr*		oldAttr)
 {
 	assert(oldAttr != 0);
 
-	const DOM_Attr	theXercesAttrNode =
+	const DOM_AttrType	theXercesAttrNode =
 			m_navigator.mapNode(oldAttr);
 	assert(theXercesAttrNode.isNull() == false);
 
@@ -415,12 +419,12 @@ XercesElementBridge::removeAttributeNode(XalanAttr*		oldAttr)
 
 	try
 	{
-		const DOM_Attr	theXercesAttrResult =
+		const DOM_AttrType	theXercesAttrResult =
 			m_xercesNode.removeAttributeNode(theXercesAttrNode);
 
 		theXalanAttrResult = m_navigator.mapNode(theXercesAttrResult);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -437,7 +441,7 @@ XercesElementBridge::removeAttribute(const XalanDOMString&	name)
 	{
 		m_xercesNode.removeAttribute(c_wstr(name));
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -465,7 +469,7 @@ XercesElementBridge::setAttributeNS(
 	{
 		m_xercesNode.setAttributeNS(c_wstr(namespaceURI), c_wstr(qualifiedName), c_wstr(value));
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -482,7 +486,7 @@ XercesElementBridge::removeAttributeNS(
 	{
 		m_xercesNode.removeAttributeNS(c_wstr(namespaceURI), c_wstr(localName));
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -495,10 +499,17 @@ XercesElementBridge::getAttributeNodeNS(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const
 {
-	const DOM_Attr	theAttrNode =
+	const DOM_AttrType	theAttrNode =
 		m_xercesNode.getAttributeNodeNS(c_wstr(namespaceURI), c_wstr(localName));
 
-	return m_navigator.mapNode(theAttrNode);
+	if (theAttrNode.isNull() == true)
+	{
+		return 0;
+	}
+	else
+	{
+		return m_navigator.mapNode(theAttrNode);
+	}
 }
 
 
@@ -509,7 +520,7 @@ XercesElementBridge::setAttributeNodeNS(XalanAttr*	newAttr)
 	assert(newAttr != 0);
 
 
-	const DOM_Attr	theXercesAttrNode =
+	const DOM_AttrType	theXercesAttrNode =
 			m_navigator.mapNode(newAttr);
 	assert(theXercesAttrNode.isNull() == false);
 
@@ -517,12 +528,12 @@ XercesElementBridge::setAttributeNodeNS(XalanAttr*	newAttr)
 
 	try
 	{
-		const DOM_Attr	theXercesAttrResult =
+		const DOM_AttrType	theXercesAttrResult =
 			m_xercesNode.setAttributeNodeNS(theXercesAttrNode);
 
 		theXalanAttrResult = m_navigator.mapNode(theXercesAttrResult);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -540,3 +551,7 @@ XercesElementBridge::getElementsByTagNameNS(
 	// Not supported...
 	return 0;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

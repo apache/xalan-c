@@ -77,8 +77,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesCDATASectionWrapper::XercesCDATASectionWrapper(
-			const DOMCDATASection*			theXercesCDATASection,
+			const DOMCDATASectionType*		theXercesCDATASection,
 			const XercesWrapperNavigator&	theNavigator) :
 	XalanCDATASection(),
 	m_xercesNode(theXercesCDATASection),
@@ -278,8 +282,6 @@ XercesCDATASectionWrapper::isSupported(
 const XalanDOMString&
 XercesCDATASectionWrapper::getNamespaceURI() const
 {
-	const DOMString		theString();
-
 	return m_navigator.getPooledString(m_xercesNode->getNamespaceURI());
 }
 
@@ -405,3 +407,7 @@ XercesCDATASectionWrapper::isIgnorableWhitespace() const
 {
 	return isXMLWhitespace(getData());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

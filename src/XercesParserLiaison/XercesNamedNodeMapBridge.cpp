@@ -77,13 +77,17 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesNamedNodeMapBridge::XercesNamedNodeMapBridge(
-			const DOM_NamedNodeMap&			theXercesNamedNodeMap,
+			const DOM_NamedNodeMapType&		theXercesNamedNodeMap,
 			const XercesBridgeNavigator&	theNavigator) :
 	m_xercesNamedNodeMap(theXercesNamedNodeMap),
 	m_navigator(theNavigator)
 {
-	assert(m_xercesNamedNodeMap != (const DOM_NullPtr*)0);
+	assert(m_xercesNamedNodeMap != (const XERCES_CPP_NAMESPACE_QUALIFIER DOM_NullPtr*)0);
 }
 
 
@@ -102,7 +106,7 @@ XercesNamedNodeMapBridge::setNamedItem(XalanNode* 	arg)
 	XalanNode*	theXalanNode = 0;
 
 	// Find the DOM_Node that corresponds to the bridge node...
-	const DOM_Node	theNode = m_navigator.mapNode(arg);
+	const DOM_NodeType	theNode = m_navigator.mapNode(arg);
 
 	if (theNode.isNull() == true)
 	{
@@ -112,7 +116,7 @@ XercesNamedNodeMapBridge::setNamedItem(XalanNode* 	arg)
 
 	try
 	{
-		const DOM_Node	theOldXercesNode =
+		const DOM_NodeType	theOldXercesNode =
 			m_xercesNamedNodeMap.setNamedItem(theNode);
 
 		if (theNode.isNull() == false)
@@ -122,7 +126,7 @@ XercesNamedNodeMapBridge::setNamedItem(XalanNode* 	arg)
 			assert(theXalanNode != 0);
 		}
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -163,14 +167,14 @@ XercesNamedNodeMapBridge::removeNamedItem(const XalanDOMString&		name)
 
 	try
 	{
-		const DOM_Node		theXercesNode =
+		const DOM_NodeType	theXercesNode =
 			m_xercesNamedNodeMap.removeNamedItem(c_wstr(name));
 
 		// A node was removed, so get it corresponding XalanNode...
 		theXalanNode = m_navigator.mapNode(theXercesNode);
 		assert(theXalanNode != 0);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -202,7 +206,7 @@ XercesNamedNodeMapBridge::setNamedItemNS(XalanNode*		arg)
 	XalanNode*	theXalanNode = 0;
 
 	// Find the DOM_Node that corresponds to the bridge node...
-	const DOM_Node	theNode = m_navigator.mapNode(arg);
+	const DOM_NodeType	theNode = m_navigator.mapNode(arg);
 
 	if (theNode.isNull() == true)
 	{
@@ -212,7 +216,7 @@ XercesNamedNodeMapBridge::setNamedItemNS(XalanNode*		arg)
 
 	try
 	{
-		const DOM_Node	theOldXercesNode =
+		const DOM_NodeType	theOldXercesNode =
 			m_xercesNamedNodeMap.setNamedItemNS(theNode);
 
 		if (theNode.isNull() == false)
@@ -222,7 +226,7 @@ XercesNamedNodeMapBridge::setNamedItemNS(XalanNode*		arg)
 			assert(theXalanNode != 0);
 		}
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -241,17 +245,21 @@ XercesNamedNodeMapBridge::removeNamedItemNS(
 
 	try
 	{
-		const DOM_Node		theXercesNode =
+		const DOM_NodeType	theXercesNode =
 			m_xercesNamedNodeMap.removeNamedItemNS(c_wstr(namespaceURI), c_wstr(localName));
 
 		// A node was removed, so get it corresponding XalanNode...
 		theXalanNode = m_navigator.mapNode(theXercesNode);
 		assert(theXalanNode != 0);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
 
 	return theXalanNode;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -77,8 +77,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesAttrWrapper::XercesAttrWrapper(
-			const DOMAttr*					theXercesAttr,
+			const DOMAttrType*				theXercesAttr,
 			const XercesWrapperNavigator&	theNavigator) :
 	XalanAttr(),
 	m_xercesNode(theXercesAttr),
@@ -366,3 +370,7 @@ XercesAttrWrapper::getOwnerElement() const
 {
 	return m_navigator.getOwnerElement(m_xercesNode);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

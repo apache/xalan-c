@@ -72,6 +72,11 @@
 
 
 #include <XercesParserLiaison/XercesNamedNodeListCache.hpp>
+#include <XercesParserLiaison/XercesBridgeTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -80,7 +85,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesElementNamedNodeListCache : public 
 public:
 
 	XercesElementNamedNodeListCache(
-			const DOM_Element&				theXercesElement,
+			const DOM_ElementType&			theXercesElement,
 			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
@@ -88,18 +93,22 @@ public:
 
 protected:
 
-	virtual DOM_NodeList
+	virtual DOM_NodeListType
 	getXercesNodeList(const XalanDOMString&		tagname) const;
 
-	virtual DOM_NodeList
+	virtual DOM_NodeListType
 	getXercesNodeList(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const;
 
 private:
 
-	const DOM_Element	m_xercesElement;
+	const DOM_ElementType	m_xercesElement;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

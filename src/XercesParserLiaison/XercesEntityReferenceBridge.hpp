@@ -75,7 +75,12 @@
 
 
 
+#include <XercesParserLiaison/XercesBridgeTypes.hpp>
 #include <XercesParserLiaison/XercesNodeListBridge.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -88,7 +93,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesEntityReferenceBridge : public Xala
 public:
 
 	XercesEntityReferenceBridge(
-			const DOM_EntityReference&		theXercesDOMEntityReference,
+			const DOM_EntityReferenceType&	theXercesDOMEntityReference,
 			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
@@ -440,7 +445,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	DOM_EntityReference
+	DOM_EntityReferenceType
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -460,12 +465,16 @@ private:
 	operator==(const XercesEntityReferenceBridge&		theRHS) const;
 
 	// Data members...
-	DOM_EntityReference				m_xercesNode;
+	DOM_EntityReferenceType			m_xercesNode;
 
 	const XercesBridgeNavigator&	m_navigator;
 
 	XercesNodeListBridge			m_children;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -73,8 +73,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesEntityReferenceWrapper::XercesEntityReferenceWrapper(
-			const DOMEntityReference*		theXercesDOMEntityReference,
+			const DOMEntityReferenceType*	theXercesDOMEntityReference,
 			const XercesWrapperNavigator&	theNavigator) :
 	XalanEntityReference(),
 	m_xercesNode(theXercesDOMEntityReference),
@@ -318,3 +322,7 @@ XercesEntityReferenceWrapper::getIndex() const
 {
 	return m_navigator.getIndex();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

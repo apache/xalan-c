@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,12 +75,19 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesDocumentNamedNodeListCache : public XercesNamedNodeListCache
 {
 public:
 
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Document		DOM_DocumentType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_NodeList		DOM_NodeListType;
+
 	XercesDocumentNamedNodeListCache(
-			const DOM_Document&				theXercesDocument,
+			const DOM_DocumentType&			theXercesDocument,
 			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
@@ -88,18 +95,22 @@ public:
 
 protected:
 
-	virtual DOM_NodeList
+	virtual DOM_NodeListType
 	getXercesNodeList(const XalanDOMString&		tagname) const;
 
-	virtual DOM_NodeList
+	virtual DOM_NodeListType
 	getXercesNodeList(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const;
 
 private:
 
-	const DOM_Document	m_xercesDocument;
+	const DOM_DocumentType	m_xercesDocument;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -73,8 +73,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesEntityWrapper::XercesEntityWrapper(
-			const DOMEntity*				theXercesDOMEntity,
+			const DOMEntityType*			theXercesDOMEntity,
 			const XercesWrapperNavigator&	theNavigator) :
 	XalanEntity(),
 	m_xercesNode(theXercesDOMEntity),
@@ -342,3 +346,7 @@ XercesEntityWrapper::getNotationName() const
 {
 	return m_navigator.getPooledString(m_xercesNode->getNotationName());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

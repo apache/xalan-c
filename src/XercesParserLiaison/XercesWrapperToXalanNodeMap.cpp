@@ -71,6 +71,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesWrapperToXalanNodeMap::XercesWrapperToXalanNodeMap() :
 	m_xalanMap(),
 	m_xercesMap()
@@ -87,8 +91,8 @@ XercesWrapperToXalanNodeMap::~XercesWrapperToXalanNodeMap()
 
 void
 XercesWrapperToXalanNodeMap::addAssociation(
-			const DOMNode*	theXercesNode,
-			XalanNode*		theXalanNode)
+			const DOMNodeType*	theXercesNode,
+			XalanNode*			theXalanNode)
 {
 	m_xercesMap.insert(XercesNodeMapType::value_type(theXercesNode, theXalanNode));
 	m_xalanMap.insert(XalanNodeMapType::value_type(theXalanNode, theXercesNode));
@@ -106,7 +110,7 @@ XercesWrapperToXalanNodeMap::clear()
 
 
 XalanNode*
-XercesWrapperToXalanNodeMap::getNode(const DOMNode*		theXercesNode) const
+XercesWrapperToXalanNodeMap::getNode(const DOMNodeType*		theXercesNode) const
 {
 	const XercesNodeMapType::const_iterator		i =
 				m_xercesMap.find(theXercesNode);
@@ -123,7 +127,7 @@ XercesWrapperToXalanNodeMap::getNode(const DOMNode*		theXercesNode) const
 
 
 
-const DOMNode*
+const DOMNodeType*
 XercesWrapperToXalanNodeMap::getNode(XalanNode*		theXalanNode) const
 {
 	const XalanNodeMapType::const_iterator		i =
@@ -138,3 +142,7 @@ XercesWrapperToXalanNodeMap::getNode(XalanNode*		theXalanNode) const
 		return 0;
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

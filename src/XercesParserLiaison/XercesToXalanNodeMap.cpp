@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -77,6 +77,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesToXalanNodeMap::XercesToXalanNodeMap() :
 	m_xalanMap(),
 	m_xercesMap()
@@ -93,10 +97,10 @@ XercesToXalanNodeMap::~XercesToXalanNodeMap()
 
 void
 XercesToXalanNodeMap::addAssociation(
-			const DOM_Node&		theXercesNode,
-			XalanNode*			theXalanNode)
+			const DOM_NodeType&		theXercesNode,
+			XalanNode*				theXalanNode)
 {
-	NodeImpl* const		theImpl = XercesDOM_NodeHack::getImpl(theXercesNode);
+	NodeImplType* const		theImpl = XercesDOM_NodeHack::getImpl(theXercesNode);
 
 	m_xercesMap.insert(XercesNodeMapType::value_type(theImpl, theXalanNode));
 }
@@ -112,17 +116,16 @@ XercesToXalanNodeMap::clear()
 
 
 
-NodeImpl*
+XercesToXalanNodeMap::NodeImplType*
 XercesToXalanNodeMap::getNodeImpl(const XalanNode*	theXalanNode) const
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find_if;
-#endif
+	XALAN_USING_STD(find_if)
 
 	const XercesNodeMapType::const_iterator		i =
-		find_if(m_xercesMap.begin(),
-				m_xercesMap.end(),
-				NameMapEqualsFunctor(theXalanNode));
+		find_if(
+			m_xercesMap.begin(),
+			m_xercesMap.end(),
+			NameMapEqualsFunctor(theXalanNode));
 
 	if (i != m_xercesMap.end())
 	{
@@ -133,3 +136,7 @@ XercesToXalanNodeMap::getNodeImpl(const XalanNode*	theXalanNode) const
 		return 0;
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

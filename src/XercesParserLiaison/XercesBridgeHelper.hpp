@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,10 +80,15 @@
 
 
 #include <XercesParserLiaison/XercesBridgeNavigator.hpp>
+#include <XercesParserLiaison/XercesBridgeTypes.hpp>
 
 
 
-class DOM_CharacterData;
+XALAN_DECLARE_XERCES_CLASS(DOM_CharacterData)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -93,59 +98,59 @@ public:
 
 	typedef unsigned int	XercesStringLengthType;
 
-	static const DOMString
+	static const DOMStringType
 	XalanDOMStringToXercesDOMString(const XalanDOMString&	theString)
 	{
 		assert(XercesStringLengthType(theString.length()) == theString.length());
 
-		return DOMString(&theString[0], XercesStringLengthType(theString.length()));
+		return DOMStringType(&theString[0], XercesStringLengthType(theString.length()));
 	}
 
 	static void
 	setNodeValue(
-			DOM_Node&				theXercesNode,
+			DOM_NodeType&			theXercesNode,
 			const XalanDOMString&	nodeValue);
 
 	static void
-	normalize(DOM_Node&		theXercesNode);
+	normalize(DOM_NodeType&		theXercesNode);
 
 	static bool
 	isSupported(
-			const DOM_Node&			theXercesNode,
+			const DOM_NodeType&		theXercesNode,
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version);
 
 	static void
 	setPrefix(
-			DOM_Node&				theXercesNode,
+			DOM_NodeType&			theXercesNode,
 			const XalanDOMString&	prefix);
 
 	static const XalanDOMString
 	substringData(
-			const DOM_CharacterData&	theXercesNode,
-			unsigned int				offset, 
-			unsigned int				count);
+			const DOM_CharacterDataType&	theXercesNode,
+			unsigned int					offset, 
+			unsigned int					count);
 
 	static void
 	appendData(
-			DOM_CharacterData&		theXercesNode,
+			DOM_CharacterDataType&	theXercesNode,
 			const XalanDOMString&	arg);
 
 	static void
 	insertData(
-			DOM_CharacterData&		theXercesNode,
+			DOM_CharacterDataType&	theXercesNode,
 			unsigned int			offset,
 			const  XalanDOMString& 	arg);
 
 	static void
 	deleteData(
-			DOM_CharacterData&	theXercesNode,
-			unsigned int		offset, 
-			unsigned int		count);
+			DOM_CharacterDataType&	theXercesNode,
+			unsigned int			offset, 
+			unsigned int			count);
 
 	static void
 	replaceData(
-			DOM_CharacterData&		theXercesNode,
+			DOM_CharacterDataType&	theXercesNode,
 			unsigned int			offset, 
 			unsigned int			count, 
 			const XalanDOMString&	arg);
@@ -156,6 +161,10 @@ private:
 
 	XercesBridgeHelper(const XercesBridgeHelper&);
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

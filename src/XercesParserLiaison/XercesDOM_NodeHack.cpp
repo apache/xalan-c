@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,8 +55,6 @@
  * <http://www.apache.org/>.
  */
 
-
-
 #include "XercesDOM_NodeHack.hpp"
 
 
@@ -68,7 +66,11 @@
 
 
 
-XercesDOM_NodeHack::XercesDOM_NodeHack(NodeImpl*	theImpl) :
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+XercesDOM_NodeHack::XercesDOM_NodeHack(NodeImplType*	theImpl) :
 	DOM_Node(theImpl)
 {
 }
@@ -81,15 +83,15 @@ XercesDOM_NodeHack::~XercesDOM_NodeHack()
 
 
 
-XercesDOM_AttrHack::XercesDOM_AttrHack(AttrImpl*	theImpl) :
-	DOM_Attr(theImpl)
+XercesDOM_AttrHack::XercesDOM_AttrHack(AttrImplType*	theImpl) :
+	ParentType(theImpl)
 {
 }
 
 
 
-XercesDOM_AttrHack::XercesDOM_AttrHack(const DOM_Attr&	theSource) :
-	DOM_Attr(theSource)
+XercesDOM_AttrHack::XercesDOM_AttrHack(const ParentType&	theSource) :
+	ParentType(theSource)
 {
 }
 
@@ -101,15 +103,15 @@ XercesDOM_AttrHack::~XercesDOM_AttrHack()
 
 
 
-XercesDOM_ElementHack::XercesDOM_ElementHack(ElementImpl*	theImpl) :
-	DOM_Element(theImpl)
+XercesDOM_ElementHack::XercesDOM_ElementHack(ElementImplType*	theImpl) :
+	ParentType(theImpl)
 {
 }
 
 
 
-XercesDOM_ElementHack::XercesDOM_ElementHack(const DOM_Element&		theSource) :
-	DOM_Element(theSource)
+XercesDOM_ElementHack::XercesDOM_ElementHack(const ParentType&	theSource) :
+	ParentType(theSource)
 {
 }
 
@@ -121,7 +123,7 @@ XercesDOM_ElementHack::~XercesDOM_ElementHack()
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_ElementHack::getNodeNameImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
@@ -133,7 +135,7 @@ XercesDOM_ElementHack::getNodeNameImpl() const
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_ElementHack::getNodeValueImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
@@ -145,7 +147,7 @@ XercesDOM_ElementHack::getNodeValueImpl() const
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_ElementHack::	getNamespaceURIImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
@@ -157,7 +159,7 @@ XercesDOM_ElementHack::	getNamespaceURIImpl() const
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_ElementHack::getPrefixImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
@@ -169,7 +171,7 @@ XercesDOM_ElementHack::getPrefixImpl() const
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_ElementHack::getLocalNameImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
@@ -181,7 +183,7 @@ XercesDOM_ElementHack::getLocalNameImpl() const
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_ElementHack::getTagNameImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
@@ -193,8 +195,8 @@ XercesDOM_ElementHack::getTagNameImpl() const
 
 
 
-const DOMString
-XercesDOM_ElementHack::getAttributeImpl(const DOMString&	name) const
+const DOMStringType
+XercesDOM_ElementHack::getAttributeImpl(const DOMStringType&	name) const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
 	return getImpl()->getAttribute(name);
@@ -205,10 +207,10 @@ XercesDOM_ElementHack::getAttributeImpl(const DOMString&	name) const
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_ElementHack::getAttributeNSImpl(
-			const DOMString&	namespaceURI,
-			const DOMString&	localName) const
+			const DOMStringType&	namespaceURI,
+			const DOMStringType&	localName) const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
 	return getImpl()->getAttributeNS(namespaceURI, localName);
@@ -219,15 +221,15 @@ XercesDOM_ElementHack::getAttributeNSImpl(
 
 
 
-XercesDOM_TextHack::XercesDOM_TextHack(TextImpl*	theImpl) :
-	DOM_Text(theImpl)
+XercesDOM_TextHack::XercesDOM_TextHack(TextImplType*	theImpl) :
+	ParentType(theImpl)
 {
 }
 
 
 
-XercesDOM_TextHack::XercesDOM_TextHack(const DOM_Text&	theSource) :
-	DOM_Text(theSource)
+XercesDOM_TextHack::XercesDOM_TextHack(const ParentType&	theSource) :
+	ParentType(theSource)
 {
 }
 
@@ -239,7 +241,7 @@ XercesDOM_TextHack::~XercesDOM_TextHack()
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_TextHack::getNodeNameImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
@@ -251,7 +253,7 @@ XercesDOM_TextHack::getNodeNameImpl() const
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_TextHack::getNodeValueImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
@@ -263,7 +265,7 @@ XercesDOM_TextHack::getNodeValueImpl() const
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_TextHack::getNamespaceURIImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
@@ -275,7 +277,7 @@ XercesDOM_TextHack::getNamespaceURIImpl() const
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_TextHack::getPrefixImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
@@ -287,7 +289,7 @@ XercesDOM_TextHack::getPrefixImpl() const
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_TextHack::getLocalNameImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
@@ -299,7 +301,7 @@ XercesDOM_TextHack::getLocalNameImpl() const
 
 
 
-const DOMString
+const DOMStringType
 XercesDOM_TextHack::getDataImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
@@ -308,3 +310,7 @@ XercesDOM_TextHack::getDataImpl() const
 	return getData();
 #endif
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

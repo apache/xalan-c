@@ -97,6 +97,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
 	m_indent(-1),
 	m_useValidation(false),
@@ -146,10 +150,6 @@ XercesParserLiaison::~XercesParserLiaison()
 void
 XercesParserLiaison::reset()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
 	// Delete any live documents...
 	for(DocumentMapType::iterator i = m_documentMap.begin();
 		i != m_documentMap.end();
@@ -197,11 +197,11 @@ XercesParserLiaison::setExecutionContext(ExecutionContext&	theContext)
 
 void
 XercesParserLiaison::parseXMLStream(
-			const InputSource&		urlInputSource,
-			DocumentHandler&		handler,
+			const InputSourceType&	urlInputSource,
+			DocumentHandlerType&	handler,
 			const XalanDOMString&	/* identifier */)
 {
-	XalanAutoPtr<SAXParser> 	theParser(CreateSAXParser());
+	XalanAutoPtr<SAXParserType> 	theParser(CreateSAXParser());
 
 	theParser->setDocumentHandler(&handler);
 
@@ -221,14 +221,10 @@ XercesParserLiaison::parseXMLStream(
 
 XalanDocument*
 XercesParserLiaison::parseXMLStream(
-			const InputSource&		reader,
+			const InputSourceType&	reader,
 			const XalanDOMString&	/* identifier */)
 {
-#if XERCES_VERSION_MAJOR >= 2
-	XalanAutoPtr<XercesDOMParser>	theParser(CreateDOMParser());
-#else
-	XalanAutoPtr<DOMParser> 	theParser(CreateDOMParser());
-#endif
+	XalanAutoPtr<DOMParserType> 		theParser(CreateDOMParser());
 
 	if (m_errorHandler == 0)
 	{
@@ -242,12 +238,12 @@ XercesParserLiaison::parseXMLStream(
 	theParser->parse(reader);
 
 #if XERCES_VERSION_MAJOR >= 2
-	DOMDocument* const	theXercesDocument =
+	DOMDocumentType* const	theXercesDocument =
 		theParser->getDocument();
 
 	theXercesDocument->normalize();
 #else
-	DOM_Document	theXercesDocument =
+	DOM_DocumentType	theXercesDocument =
 		theParser->getDocument();
 
 	theXercesDocument.normalize();
@@ -278,8 +274,8 @@ XercesParserLiaison::parseXMLStream(
 XalanDocument*
 XercesParserLiaison::createDocument()
 {
-	const DOM_Document	theXercesDocument =
-		DOM_Document::createDocument();
+	const DOM_DocumentType	theXercesDocument =
+		DOM_DocumentType::createDocument();
 
 	return createDocument(theXercesDocument, false, false);
 }
@@ -363,7 +359,7 @@ XercesParserLiaison::setIncludeIgnorableWhitespace(bool include)
 
 
 
-ErrorHandler*
+ErrorHandlerType*
 XercesParserLiaison::getErrorHandler() const
 {
 	return m_errorHandler;
@@ -372,7 +368,7 @@ XercesParserLiaison::getErrorHandler() const
 
 
 void
-XercesParserLiaison::setErrorHandler(ErrorHandler*	handler)
+XercesParserLiaison::setErrorHandler(ErrorHandlerType*	handler)
 {
 	m_errorHandler = handler;
 }
@@ -411,7 +407,7 @@ XercesParserLiaison::setExitOnFirstFatalError(bool	newState)
 
 
 
-EntityResolver*
+EntityResolverType*
 XercesParserLiaison::getEntityResolver() const
 {
 	return m_entityResolver;
@@ -420,7 +416,7 @@ XercesParserLiaison::getEntityResolver() const
 
 
 void
-XercesParserLiaison::setEntityResolver(EntityResolver*	resolver)
+XercesParserLiaison::setEntityResolver(EntityResolverType*	resolver)
 {
 	m_entityResolver = resolver;
 }
@@ -475,9 +471,9 @@ XercesParserLiaison::setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	lo
 
 XalanDocument*
 XercesParserLiaison::createDocument(
-			const DOM_Document& 	theXercesDocument,
-			bool					threadSafe,
-			bool					buildBridge)
+			const DOM_DocumentType& 	theXercesDocument,
+			bool						threadSafe,
+			bool						buildBridge)
 {
 	return doCreateDocument(theXercesDocument, threadSafe, buildBridge);
 }
@@ -486,9 +482,9 @@ XercesParserLiaison::createDocument(
 
 XalanDocument*
 XercesParserLiaison::createDocument(
-			const DOMDocument*	theXercesDocument,
-			bool				threadSafe,
-			bool				buildWrapper)
+			const DOMDocumentType*	theXercesDocument,
+			bool					threadSafe,
+			bool					buildWrapper)
 {
 	// As we did not create the underlying DOMDocument - ensure we don't
 	// delete it later.
@@ -519,18 +515,18 @@ XercesParserLiaison::mapDocumentToWrapper(const XalanDocument*	theDocument) cons
 
 
 
-DOM_Document
+DOM_DocumentType
 XercesParserLiaison::mapXercesDocument(const XalanDocument* 	theDocument) const
 {
 	const DocumentMapType::const_iterator	i =
 		m_documentMap.find(theDocument);
 
-	return i != m_documentMap.end() ? (*i).second.m_isDeprecated == true ? (*i).second.m_bridge->getXercesDocument() : DOM_Document() : DOM_Document();
+	return i != m_documentMap.end() ? (*i).second.m_isDeprecated == true ? (*i).second.m_bridge->getXercesDocument() : DOM_DocumentType() : DOM_DocumentType();
 }
 
 
 
-const DOMDocument*
+const DOMDocumentType*
 XercesParserLiaison::mapToXercesDocument(const XalanDocument*	theDocument) const
 {
 	const DocumentMapType::const_iterator	i =
@@ -542,7 +538,7 @@ XercesParserLiaison::mapToXercesDocument(const XalanDocument*	theDocument) const
 
 
 void
-XercesParserLiaison::fatalError(const SAXParseException&	e)
+XercesParserLiaison::fatalError(const SAXParseExceptionType&	e)
 {
 	XalanDOMString	theMessage("Fatal Error");
 
@@ -556,10 +552,8 @@ XercesParserLiaison::fatalError(const SAXParseException&	e)
 	}
 	else
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::cerr;
-		using std::endl;
-#endif
+		XALAN_USING_STD(cerr)
+		XALAN_USING_STD(endl)
 
 		cerr << endl << theMessage << endl;
 	}
@@ -570,7 +564,7 @@ XercesParserLiaison::fatalError(const SAXParseException&	e)
 
 
 void
-XercesParserLiaison::error(const SAXParseException& 	e)
+XercesParserLiaison::error(const SAXParseExceptionType& 	e)
 {
 	XalanDOMString	theMessage("Error ");
 
@@ -584,10 +578,8 @@ XercesParserLiaison::error(const SAXParseException& 	e)
 	}
 	else
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::cerr;
-		using std::endl;
-#endif
+		XALAN_USING_STD(cerr)
+		XALAN_USING_STD(endl)
 
 		cerr << endl << theMessage << endl;
 	}
@@ -601,7 +593,7 @@ XercesParserLiaison::error(const SAXParseException& 	e)
 
 
 void
-XercesParserLiaison::warning(const SAXParseException&	e)
+XercesParserLiaison::warning(const SAXParseExceptionType&	e)
 {
 	XalanDOMString	theMessage("Warning ");
 
@@ -613,10 +605,8 @@ XercesParserLiaison::warning(const SAXParseException&	e)
 	}
 	else
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::cerr;
-		using std::endl;
-#endif
+		XALAN_USING_STD(cerr)
+		XALAN_USING_STD(endl)
 
 		cerr << endl << theMessage << endl;
 	}
@@ -626,8 +616,8 @@ XercesParserLiaison::warning(const SAXParseException&	e)
 
 void
 XercesParserLiaison::formatErrorMessage(
-			const SAXParseException&	e,
-			XalanDOMString& 			theMessage)
+			const SAXParseExceptionType&	e,
+			XalanDOMString& 				theMessage)
 {
 	append(theMessage, " at (file ");
 
@@ -702,10 +692,10 @@ XercesParserLiaison::CreateDOMParser()
 
 
 
-SAXParser*
+XercesParserLiaison::SAXParserType*
 XercesParserLiaison::CreateSAXParser()
 {
-	SAXParser* const	theParser = new SAXParser;
+	SAXParserType* const	theParser = new SAXParserType;
 
 	theParser->setDoValidation(false);
 
@@ -727,9 +717,9 @@ XercesParserLiaison::CreateSAXParser()
 
 XercesDocumentBridge*
 XercesParserLiaison::doCreateDocument(
-			const DOM_Document& 	theXercesDocument,
-			bool					threadSafe,
-			bool					buildBridge)
+			const DOM_DocumentType& 	theXercesDocument,
+			bool						threadSafe,
+			bool						buildBridge)
 {
 	XercesDocumentBridge* const 	theNewDocument =
 		new XercesDocumentBridge(theXercesDocument, threadSafe, buildBridge);
@@ -743,10 +733,10 @@ XercesParserLiaison::doCreateDocument(
 
 XercesDocumentWrapper*
 XercesParserLiaison::doCreateDocument(
-			const DOMDocument*	theXercesDocument,
-			bool				threadSafe,
-			bool				buildWrapper,
-			bool				isOwned)
+			const DOMDocumentType*	theXercesDocument,
+			bool					threadSafe,
+			bool					buildWrapper,
+			bool					isOwned)
 {
 	XercesDocumentWrapper* const		theNewDocument =
 		new XercesDocumentWrapper(theXercesDocument, threadSafe, buildWrapper);
@@ -758,3 +748,7 @@ XercesParserLiaison::doCreateDocument(
 
 	return theNewDocument;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

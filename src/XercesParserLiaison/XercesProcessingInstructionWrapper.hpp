@@ -67,7 +67,14 @@
 
 
 
-class DOMProcessingInstruction;
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesWrapperNavigator;
 
 
@@ -77,8 +84,8 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesProcessingInstructionWrapper : publ
 public:
 
 	XercesProcessingInstructionWrapper(
-			const DOMProcessingInstruction*		theXercesDOMProcessingInstruction,
-			const XercesWrapperNavigator&		theNavigator);
+			const DOMProcessingInstructionType*		theXercesDOMProcessingInstruction,
+			const XercesWrapperNavigator&			theNavigator);
 
 	virtual
 	~XercesProcessingInstructionWrapper();
@@ -472,7 +479,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	const DOMProcessingInstruction*
+	const DOMProcessingInstructionType*
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -490,10 +497,14 @@ private:
 	operator==(const XercesProcessingInstructionWrapper&		theRHS) const;
 
 	// Data members...
-	const DOMProcessingInstruction* const	m_xercesNode;
+	const DOMProcessingInstructionType* const	m_xercesNode;
 
-	const XercesWrapperNavigator&			m_navigator;
+	const XercesWrapperNavigator&				m_navigator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -67,11 +67,14 @@
 
 
 
-#include <XercesParserLiaison/XercesDOM_NodeHack.hpp>
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
 
 
 
-class DOMText;
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesWrapperNavigator;
 
 
@@ -81,7 +84,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesTextWrapper : public XalanText
 public:
 
 	XercesTextWrapper(
-			const DOMText*					theXercesText,
+			const DOMTextType*				theXercesText,
 			const XercesWrapperNavigator&	theNavigator);
 
 	virtual
@@ -595,7 +598,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	const DOMText*
+	const DOMTextType*
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -613,10 +616,14 @@ private:
 	operator==(const XercesTextWrapper&	theRHS) const;
 
 	// Data members...
-	const DOMText* const			m_xercesNode;
+	const DOMTextType* const		m_xercesNode;
 
 	const XercesWrapperNavigator&	m_navigator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

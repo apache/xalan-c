@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,16 +71,20 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 void
 XercesBridgeHelper::setNodeValue(
-			DOM_Node&				theXercesNode,
+			DOM_NodeType&			theXercesNode,
 			const XalanDOMString&	nodeValue)
 {
 	try
 	{
 		theXercesNode.setNodeValue(XalanDOMStringToXercesDOMString(nodeValue));
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -89,13 +93,13 @@ XercesBridgeHelper::setNodeValue(
 
 
 void
-XercesBridgeHelper::normalize(DOM_Node&		theXercesNode)
+XercesBridgeHelper::normalize(DOM_NodeType&		theXercesNode)
 {
 	try
 	{
 		theXercesNode.normalize();
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -105,7 +109,7 @@ XercesBridgeHelper::normalize(DOM_Node&		theXercesNode)
 
 bool
 XercesBridgeHelper::isSupported(
-			const DOM_Node&			theXercesNode,
+			const DOM_NodeType&		theXercesNode,
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version)
 {
@@ -118,14 +122,14 @@ XercesBridgeHelper::isSupported(
 
 void
 XercesBridgeHelper::setPrefix(
-			DOM_Node&				theXercesNode,
+			DOM_NodeType&			theXercesNode,
 			const XalanDOMString&	prefix)
 {
 	try
 	{
 		theXercesNode.setPrefix(XalanDOMStringToXercesDOMString(prefix));
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -135,17 +139,17 @@ XercesBridgeHelper::setPrefix(
 
 const XalanDOMString
 XercesBridgeHelper::substringData(
-			const DOM_CharacterData&	theXercesNode,
-			unsigned int				offset,
-			unsigned int				count)
+			const DOM_CharacterDataType&	theXercesNode,
+			unsigned int					offset,
+			unsigned int					count)
 {
 	try
 	{
-		const DOMString		theString(theXercesNode.substringData(offset, count));
+		const DOMStringType		theString(theXercesNode.substringData(offset, count));
 
 		return XalanDOMString(theString.rawBuffer(), theString.length());
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -155,14 +159,14 @@ XercesBridgeHelper::substringData(
 
 void
 XercesBridgeHelper::appendData(
-			DOM_CharacterData&		theXercesNode,
+			DOM_CharacterDataType&	theXercesNode,
 			const XalanDOMString&	arg)
 {
 	try
 	{
 		theXercesNode.appendData(XalanDOMStringToXercesDOMString(arg));
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -172,7 +176,7 @@ XercesBridgeHelper::appendData(
 
 void
 XercesBridgeHelper::insertData(
-			DOM_CharacterData&		theXercesNode,
+			DOM_CharacterDataType&	theXercesNode,
 			unsigned int			offset,
 			const  XalanDOMString& 	arg)
 {
@@ -180,7 +184,7 @@ XercesBridgeHelper::insertData(
 	{
 		theXercesNode.insertData(offset, XalanDOMStringToXercesDOMString(arg));
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -190,15 +194,15 @@ XercesBridgeHelper::insertData(
 
 void
 XercesBridgeHelper::deleteData(
-			DOM_CharacterData&	theXercesNode,
-			unsigned int		offset, 
-			unsigned int		count)
+			DOM_CharacterDataType&	theXercesNode,
+			unsigned int			offset, 
+			unsigned int			count)
 {
 	try
 	{
 		theXercesNode.deleteData(offset, count);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -208,7 +212,7 @@ XercesBridgeHelper::deleteData(
 
 void
 XercesBridgeHelper::replaceData(
-			DOM_CharacterData&		theXercesNode,
+			DOM_CharacterDataType&	theXercesNode,
 			unsigned int			offset, 
 			unsigned int			count, 
 			const XalanDOMString&	arg)
@@ -217,8 +221,12 @@ XercesBridgeHelper::replaceData(
 	{
 		theXercesNode.replaceData(offset, count, XalanDOMStringToXercesDOMString(arg));
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

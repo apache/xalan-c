@@ -67,7 +67,14 @@
 
 
 
-class DOMNamedNodeMap;
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesWrapperNavigator;
 class XercesNodeBridge;
 
@@ -78,7 +85,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesNamedNodeMapWrapper : public XalanN
 public:
 
 	XercesNamedNodeMapWrapper(
-			const DOMNamedNodeMap*			theXercesNamedNodeMap,
+			const DOMNamedNodeMapType*		theXercesNamedNodeMap,
 			const XercesWrapperNavigator&	theNavigator);
 
 	virtual
@@ -258,10 +265,14 @@ private:
 	operator==(const XercesNamedNodeMapWrapper&	theRHS) const;
 
 
-	const DOMNamedNodeMap* const	m_xercesNamedNodeMap;
+	const DOMNamedNodeMapType* const	m_xercesNamedNodeMap;
 
-	const XercesWrapperNavigator&	m_navigator;
+	const XercesWrapperNavigator&		m_navigator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

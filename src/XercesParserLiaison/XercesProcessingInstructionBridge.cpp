@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,9 +68,13 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesProcessingInstructionBridge::XercesProcessingInstructionBridge(
-			const DOM_ProcessingInstruction&	theXercesDOMProcessingInstruction,
-			const XercesBridgeNavigator&		theNavigator) :
+			const DOM_ProcessingInstructionType&	theXercesDOMProcessingInstruction,
+			const XercesBridgeNavigator&			theNavigator) :
 	XalanProcessingInstruction(),
 	m_xercesNode(theXercesDOMProcessingInstruction),
 	m_navigator(theNavigator)
@@ -338,12 +342,9 @@ XercesProcessingInstructionBridge::getData() const
 void
 XercesProcessingInstructionBridge::setData(const XalanDOMString&	data)
 {
-	try
-	{
-		m_xercesNode.setData(c_wstr(data));
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::setNodeValue(m_xercesNode, data);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -96,17 +96,13 @@
 
 
 
-class DOMComment;
-class DOMEntity;
-class DOMEntityReference;
-class DOMDocument;
-class DOMDocumentType;
-class DOMAttr;
-class DOMElement;
-class DOMCDATASection;
-class DOMNotation;
-class DOMText;
-class DOMProcessingInstruction;
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
 
 class XalanDOMStringPool;
 class XercesCommentWrapper;
@@ -142,9 +138,9 @@ public:
 	 *
 	 */
 	XercesDocumentWrapper(
-			const DOMDocument*	theXercesDocument,
-			bool				threadSafe = true,
-			bool				buildWrapper = true);
+			const DOMDocumentType*	theXercesDocument,
+			bool					threadSafe = true,
+			bool					buildWrapper = true);
 
 	virtual
 	~XercesDocumentWrapper();
@@ -323,18 +319,18 @@ public:
 	rebuildWrapper();
 
 	XalanNode*
-	mapNode(const DOMNode* 	theXercesNode) const;
+	mapNode(const DOMNodeType* 	theXercesNode) const;
 
 	XalanAttr*
-	mapNode(const DOMAttr* 		theXercesNode) const;
+	mapNode(const DOMAttrType* 	theXercesNode) const;
 
 	XalanElement*
-	mapNode(const DOMElement* 	theXercesNode) const;
+	mapNode(const DOMElementType* 	theXercesNode) const;
 
-	const DOMNode*
+	const DOMNodeType*
 	mapNode(XalanNode* 	theXalanNode) const;
 
-	const DOMAttr*
+	const DOMAttrType*
 	mapNode(XalanAttr* 	theXalanNode) const;
 
 	/**
@@ -344,7 +340,7 @@ public:
 	 * @return the Xerces DOMDocument instance.
 	 *
 	 */
-	const DOMDocument*
+	const DOMDocumentType*
 	getXercesDocument() const
 	{
 		return m_xercesDocument;
@@ -358,7 +354,7 @@ public:
 	void
 	buildWrapperNodes();
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef deque<XercesWrapperNavigator>	WrapperNavigatorVectorType;
 
 	typedef deque<XalanNode*>				NodeVectorType;
@@ -399,7 +395,7 @@ public:
 			XalanNode*				m_node;
 		};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 		typedef vector<NavigatorStackEntryType>			NavigatorStackType;
 	#else
 		typedef std::vector<NavigatorStackEntryType>	NavigatorStackType;
@@ -408,10 +404,10 @@ public:
 	protected:
 
 		virtual void
-		startNode(const DOMNode*	node);
+		startNode(const DOMNodeType*	node);
 
 		virtual void
-		endNode(const DOMNode*		node);
+		endNode(const DOMNodeType*	node);
 
 	private:
 
@@ -474,67 +470,67 @@ private:
 	// Factory methods for our implementation nodes...
 	XalanNode*
 	createWrapperNode(
-			const DOMNode*	theXercesNode,
-			unsigned long	theIndex,
-			bool			mapNode) const;
-
-	XercesDocumentTypeWrapper*
-	createWrapperNode(
-			const DOMDocumentType*	theDoctype,
-			unsigned long			theIndex,
-			bool					mapNode) const;
-
-	XercesElementWrapper*
-	createWrapperNode(
-			const DOMElement* 	theXercesNode,
+			const DOMNodeType*	theXercesNode,
 			unsigned long		theIndex,
 			bool				mapNode) const;
 
+	XercesDocumentTypeWrapper*
+	createWrapperNode(
+			const DOMDocumentTypeType*	theDoctype,
+			unsigned long				theIndex,
+			bool						mapNode) const;
+
+	XercesElementWrapper*
+	createWrapperNode(
+			const DOMElementType* 	theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const;
+
 	XercesTextWrapper*
 	createWrapperNode(
-			const DOMText*		theXercesNode,
+			const DOMTextType*	theXercesNode,
 			unsigned long		theIndex,
 			bool				mapNode) const;
 
 	XercesCommentWrapper*
 	createWrapperNode(
-			const DOMComment*	theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const;
+			const DOMCommentType*	theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const;
 
 	XercesCDATASectionWrapper*
 	createWrapperNode(
-			const DOMCDATASection*		theXercesNode,
+			const DOMCDATASectionType*	theXercesNode,
 			unsigned long				theIndex,
 			bool						mapNode) const;
 
 	XercesProcessingInstructionWrapper*
 	createWrapperNode(
-			const DOMProcessingInstruction*		theXercesNode,
-			unsigned long						theIndex,
-			bool								mapNode) const;
+			const DOMProcessingInstructionType*		theXercesNode,
+			unsigned long							theIndex,
+			bool									mapNode) const;
 
 	XercesAttrWrapper*
 	createWrapperNode(
-			const DOMAttr*		theXercesNode,
+			const DOMAttrType*	theXercesNode,
 			unsigned long		theIndex,
 			bool				mapNode) const;
 
 	XercesEntityWrapper*
 	createWrapperNode(
-			const DOMEntity*	theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const;
+			const DOMEntityType*	theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const;
 
 	XercesEntityReferenceWrapper*
 	createWrapperNode(
-			const DOMEntityReference*	theXercesNode,
-			unsigned long				theIndex,
-			bool						mapNode) const;
+			const DOMEntityReferenceType*	theXercesNode,
+			unsigned long					theIndex,
+			bool							mapNode) const;
 
 	XercesNotationWrapper*
 	createWrapperNode(
-			const DOMNotation*		theXercesNode,
+			const DOMNotationType*	theXercesNode,
 			unsigned long			theIndex,
 			bool					mapNode) const;
 
@@ -544,7 +540,7 @@ private:
 	// This is a private helper class for building the tree...
 	friend class BuildWrapperTreeWalker;
 
-	const DOMDocument* const				m_xercesDocument;
+	const DOMDocumentType* const			m_xercesDocument;
 
 	XalanElement*							m_documentElement;
 
@@ -576,6 +572,10 @@ private:
 
 	const XalanAutoPtr<XalanDOMStringPool>	m_stringPool;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

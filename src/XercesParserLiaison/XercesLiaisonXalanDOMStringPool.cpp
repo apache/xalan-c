@@ -60,8 +60,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesLiaisonXalanDOMStringPool::XercesLiaisonXalanDOMStringPool() :
-	XalanDOMStringPool(),
+	ParentType(),
 	m_mutex()
 {
 }
@@ -77,9 +81,9 @@ XercesLiaisonXalanDOMStringPool::~XercesLiaisonXalanDOMStringPool()
 void
 XercesLiaisonXalanDOMStringPool::clear()
 {
-	XMLMutexLock	theLock(&m_mutex);
+	XMLMutexLockType	theLock(&m_mutex);
 
-	BaseClassType::clear();
+	ParentType::clear();
 }
 
 
@@ -88,12 +92,12 @@ size_t
 XercesLiaisonXalanDOMStringPool::size() const
 {
 #if defined(XALAN_NO_MUTABLE)
-	XMLMutexLock	theLock(&((XercesLiaisonXalanDOMStringPool*)this)->m_mutex);
+	XMLMutexLockType	theLock(&((XercesLiaisonXalanDOMStringPool*)this)->m_mutex);
 #else
-	XMLMutexLock	theLock(&m_mutex);
+	XMLMutexLockType	theLock(&m_mutex);
 #endif
 
-	return BaseClassType::size();
+	return ParentType::size();
 }
 
 
@@ -101,9 +105,9 @@ XercesLiaisonXalanDOMStringPool::size() const
 const XalanDOMString&
 XercesLiaisonXalanDOMStringPool::get(const XalanDOMString&	theString)
 {
-	XMLMutexLock	theLock(&m_mutex);
+	XMLMutexLockType	theLock(&m_mutex);
 
-	return BaseClassType::get(theString);
+	return ParentType::get(theString);
 }
 
 
@@ -113,7 +117,11 @@ XercesLiaisonXalanDOMStringPool::get(
 			const XalanDOMChar*			theString,
 			XalanDOMString::size_type	theLength)
 {
-	XMLMutexLock	theLock(&m_mutex);
+	XMLMutexLockType	theLock(&m_mutex);
 
-	return BaseClassType::get(theString, theLength);
+	return ParentType::get(theString, theLength);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

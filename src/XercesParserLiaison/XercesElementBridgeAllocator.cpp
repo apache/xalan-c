@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesElementBridgeAllocator::XercesElementBridgeAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -75,7 +79,7 @@ XercesElementBridgeAllocator::~XercesElementBridgeAllocator()
 
 XercesElementBridgeAllocator::ObjectType*
 XercesElementBridgeAllocator::create(
-			const DOM_Element&				theXercesElement,
+			const DOM_ElementType&			theXercesElement,
 			const XercesBridgeNavigator&	theNavigator)
 {
 	ObjectType* const	theBlock = m_allocator.allocateBlock();
@@ -95,3 +99,7 @@ XercesElementBridgeAllocator::reset()
 {
 	m_allocator.reset();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

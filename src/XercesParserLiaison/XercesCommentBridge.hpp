@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,14 @@
 
 
 
+#include <XercesParserLiaison/XercesBridgeTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesBridgeNavigator;
 
 
@@ -84,7 +92,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesCommentBridge : public XalanComment
 public:
 
 	XercesCommentBridge(
-			const DOM_Comment&				theXercesComment,
+			const DOM_CommentType&			theXercesComment,
 			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
@@ -566,7 +574,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	DOM_Comment
+	DOM_CommentType
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -586,10 +594,14 @@ private:
 	operator==(const XercesCommentBridge&	theRHS) const;
 
 	// Data members...
-	DOM_Comment						m_xercesNode;
+	DOM_CommentType					m_xercesNode;
 
 	const XercesBridgeNavigator&	m_navigator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

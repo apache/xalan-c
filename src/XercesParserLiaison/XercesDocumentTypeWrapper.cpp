@@ -73,8 +73,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesDocumentTypeWrapper::XercesDocumentTypeWrapper(
-			const DOMDocumentType*			theXercesDOMDocumentType,
+			const DOMDocumentTypeType*		theXercesDOMDocumentType,
 			const XercesWrapperNavigator&	theNavigator) :
 	XalanDocumentType(),
 	m_xercesNode(theXercesDOMDocumentType),
@@ -368,3 +372,7 @@ XercesDocumentTypeWrapper::getInternalSubset() const
 {
 	return m_navigator.getPooledString(m_xercesNode->getInternalSubset());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

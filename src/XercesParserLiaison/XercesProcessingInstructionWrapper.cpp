@@ -73,9 +73,13 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesProcessingInstructionWrapper::XercesProcessingInstructionWrapper(
-			const DOMProcessingInstruction*		theXercesDOMProcessingInstruction,
-			const XercesWrapperNavigator&		theNavigator) :
+			const DOMProcessingInstructionType*		theXercesDOMProcessingInstruction,
+			const XercesWrapperNavigator&			theNavigator) :
 	XalanProcessingInstruction(),
 	m_xercesNode(theXercesDOMProcessingInstruction),
 	m_navigator(theNavigator)
@@ -340,3 +344,7 @@ XercesProcessingInstructionWrapper::setData(const XalanDOMString&	/* data */)
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

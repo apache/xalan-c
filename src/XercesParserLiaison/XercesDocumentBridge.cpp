@@ -96,10 +96,14 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesDocumentBridge::XercesDocumentBridge(
-			const DOM_Document&		theXercesDocument,
-			bool					threadSafe,
-			bool					buildBridge) :
+			const DOM_DocumentType&		theXercesDocument,
+			bool						threadSafe,
+			bool						buildBridge) :
 	XalanDocument(),
 	m_xercesDocument(theXercesDocument),
 	m_documentElement(0),
@@ -118,10 +122,6 @@ XercesDocumentBridge::XercesDocumentBridge(
 	m_attributeAllocator(25),
 	m_stringPool(threadSafe == true ? new XercesLiaisonXalanDOMStringPool : new XalanDOMStringPool)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::make_pair;
-#endif
-
 	if (m_mappingMode == false)
 	{
 		// The document index is always 1...
@@ -147,7 +147,7 @@ XercesDocumentBridge::~XercesDocumentBridge()
 
 
 XalanNode*
-XercesDocumentBridge::mapNode(const DOM_Node&	theXercesNode) const
+XercesDocumentBridge::mapNode(const DOM_NodeType&	theXercesNode) const
 {
 	return mapNode(XercesDOM_NodeHack::getImpl(theXercesNode));
 }
@@ -155,7 +155,7 @@ XercesDocumentBridge::mapNode(const DOM_Node&	theXercesNode) const
 
 
 XalanNode*
-XercesDocumentBridge::mapNode(NodeImpl*		theXercesNodeImpl) const
+XercesDocumentBridge::mapNode(NodeImplType*		theXercesNodeImpl) const
 {
 	XalanNode*	theXalanNode = 0;
 
@@ -188,10 +188,10 @@ XercesDocumentBridge::mapNode(NodeImpl*		theXercesNodeImpl) const
 
 
 
-DOM_Node
+DOM_NodeType
 XercesDocumentBridge::mapNode(const XalanNode*	theXalanNode) const
 {
-	DOM_Node	theXercesNode;
+	DOM_NodeType	theXercesNode;
 
 	if (theXalanNode != 0)
 	{
@@ -208,25 +208,25 @@ XercesDocumentBridge::mapNode(const XalanNode*	theXalanNode) const
 
 
 
-DOM_Attr
+DOM_AttrType
 XercesDocumentBridge::mapNode(const XalanAttr* 	theXalanNode) const
 {
-	NodeImpl* const		theXercesNodeImpl =
+	NodeImplType* const		theXercesNodeImpl =
 		mapNodeToImpl(theXalanNode);
 
 #if defined(XALAN_OLD_STYLE_CASTS)
-	return XercesDOM_AttrHack((AttrImpl*)theXercesNodeImpl);
+	return XercesDOM_AttrHack((AttrImplType*)theXercesNodeImpl);
 #else
-	return XercesDOM_AttrHack(reinterpret_cast<AttrImpl*>(theXercesNodeImpl));
+	return XercesDOM_AttrHack(reinterpret_cast<AttrImplType*>(theXercesNodeImpl));
 #endif
 }
 
 
 
-NodeImpl*
+NodeImplType*
 XercesDocumentBridge::mapNodeToImpl(const XalanNode* 	theXalanNode) const
 {
-	NodeImpl*	theXercesNodeImpl = 0;
+	NodeImplType*	theXercesNodeImpl = 0;
 
 	if (theXalanNode != 0)
 	{
@@ -244,7 +244,7 @@ XercesDocumentBridge::mapNodeToImpl(const XalanNode* 	theXalanNode) const
 
 
 XalanAttr*
-XercesDocumentBridge::mapNode(const DOM_Attr& 	theXercesNode) const
+XercesDocumentBridge::mapNode(const DOM_AttrType& 	theXercesNode) const
 {
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return (XercesAttrBridge*)mapNode(XercesDOM_NodeHack::getImpl(theXercesNode));
@@ -256,7 +256,7 @@ XercesDocumentBridge::mapNode(const DOM_Attr& 	theXercesNode) const
 
 
 XalanElement*
-XercesDocumentBridge::mapNode(const DOM_Element& 	theXercesNode) const
+XercesDocumentBridge::mapNode(const DOM_ElementType& 	theXercesNode) const
 {
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return (XercesElementBridge*)mapNode(XercesDOM_NodeHack::getImpl(theXercesNode));
@@ -270,9 +270,7 @@ XercesDocumentBridge::mapNode(const DOM_Element& 	theXercesNode) const
 void
 XercesDocumentBridge::destroyBridge()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	// Set this to null, since it will be deleted
 	// by the next for_each...
@@ -280,9 +278,10 @@ XercesDocumentBridge::destroyBridge()
 
 	// m_bridgeMap contains all of the nodes that
 	// are still alive...
-	for_each(m_nodes.begin(),
-			 m_nodes.end(),
-			 DeleteFunctor<XalanNode>());
+	for_each(
+			m_nodes.begin(),
+			m_nodes.end(),
+			DeleteFunctor<XalanNode>());
 
 	// Clear everything out, since we just delete everything...
 	m_nodes.clear();
@@ -333,9 +332,9 @@ XercesDocumentBridge::pushNavigator(bool	mappingMode) const
 
 XercesDocumentTypeBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_DocumentType&		theDoctype,
-			unsigned long				theIndex,
-			bool						mapNode) const
+			const DOM_DocumentTypeType&		theDoctype,
+			unsigned long					theIndex,
+			bool							mapNode) const
 {
 	// This is a special case, since there is only one
 	// doctype node allowed...
@@ -373,9 +372,9 @@ XercesDocumentBridge::createBridgeNode(
 
 XercesElementBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_Element& 	theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const
+			const DOM_ElementType& 	theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const
 {
 	// Create a navigator...
 	XercesBridgeNavigator&	theNavigator = pushNavigator(mapNode);
@@ -408,9 +407,9 @@ XercesDocumentBridge::createBridgeNode(
 
 XercesDocumentFragmentBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_DocumentFragment&		theXercesNode,
-			unsigned long					theIndex,
-			bool							mapNode) const
+			const DOM_DocumentFragmentType&		theXercesNode,
+			unsigned long						theIndex,
+			bool								mapNode) const
 {
 	// Create a navigator...
 	XercesBridgeNavigator&	theNavigator = pushNavigator(mapNode);
@@ -444,9 +443,9 @@ XercesDocumentBridge::createBridgeNode(
 
 XercesTextBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_Text&		theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const
+			const DOM_TextType&		theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const
 {
 	// Create a navigator...
 	XercesBridgeNavigator&	theNavigator = pushNavigator(mapNode);
@@ -478,9 +477,9 @@ XercesDocumentBridge::createBridgeNode(
 
 XercesCommentBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_Comment&	theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const
+			const DOM_CommentType&	theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const
 {
 	// Create a navigator...
 	XercesBridgeNavigator&	theNavigator = pushNavigator(mapNode);
@@ -514,9 +513,9 @@ XercesDocumentBridge::createBridgeNode(
 
 XercesCDATASectionBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_CDATASection&		theXercesNode,
-			unsigned long				theIndex,
-			bool						mapNode) const
+			const DOM_CDATASectionType&		theXercesNode,
+			unsigned long					theIndex,
+			bool							mapNode) const
 {
 	// Create a navigator...
 	XercesBridgeNavigator&	theNavigator = pushNavigator(mapNode);
@@ -550,9 +549,9 @@ XercesDocumentBridge::createBridgeNode(
 
 XercesProcessingInstructionBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_ProcessingInstruction&	theXercesNode,
-			unsigned long						theIndex,
-			bool								mapNode) const
+			const DOM_ProcessingInstructionType&	theXercesNode,
+			unsigned long							theIndex,
+			bool									mapNode) const
 {
 	// Create a navigator...
 	XercesBridgeNavigator&	theNavigator = pushNavigator(mapNode);
@@ -586,9 +585,9 @@ XercesDocumentBridge::createBridgeNode(
 
 XercesAttrBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_Attr&		theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const
+			const DOM_AttrType&		theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const
 {
 	// Create a navigator...
 	XercesBridgeNavigator&	theNavigator = pushNavigator(mapNode);
@@ -618,9 +617,9 @@ XercesDocumentBridge::createBridgeNode(
 
 XercesEntityBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_Entity&	theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const
+			const DOM_EntityType&	theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const
 {
 	// Create a navigator...
 	XercesBridgeNavigator&	theNavigator = pushNavigator(mapNode);
@@ -652,9 +651,9 @@ XercesDocumentBridge::createBridgeNode(
 
 XercesEntityReferenceBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_EntityReference& 	theXercesNode,
-			unsigned long				theIndex,
-			bool						mapNode) const
+			const DOM_EntityReferenceType& 	theXercesNode,
+			unsigned long					theIndex,
+			bool							mapNode) const
 {
 	// Create a navigator...
 	XercesBridgeNavigator&	theNavigator = pushNavigator(mapNode);
@@ -688,8 +687,8 @@ XercesDocumentBridge::createBridgeNode(
 
 XercesNotationBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_Notation&		theXercesNode,
-			unsigned long			theIndex,
+			const DOM_NotationType&		theXercesNode,
+			unsigned long				theIndex,
 			bool					mapNode) const
 {
 	// Create a navigator...
@@ -722,21 +721,21 @@ XercesDocumentBridge::createBridgeNode(
 
 XalanNode*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_Node&		theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const
+			const DOM_NodeType&		theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const
 {
 	XalanNode*				theNewNode = 0;
 
 	switch(theXercesNode.getNodeType())
 	{
-	case DOM_Node::ATTRIBUTE_NODE:
+	case DOM_NodeType::ATTRIBUTE_NODE:
 		{
-			const DOM_Attr&		theAttrNode =
+			const DOM_AttrType&		theAttrNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_Attr&)theXercesNode;
+						(const DOM_AttrType&)theXercesNode;
 #else
-						static_cast<const DOM_Attr&>(theXercesNode);
+						static_cast<const DOM_AttrType&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(theAttrNode, theIndex, mapNode);
@@ -744,13 +743,13 @@ XercesDocumentBridge::createBridgeNode(
 		}
 		break;
 
-	case DOM_Node::CDATA_SECTION_NODE:
+	case DOM_NodeType::CDATA_SECTION_NODE:
 		{
-			const DOM_CDATASection&		theCDATASectionNode =
+			const DOM_CDATASectionType&		theCDATASectionNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_CDATASection&)theXercesNode;
+						(const DOM_CDATASectionType&)theXercesNode;
 #else
-						static_cast<const DOM_CDATASection&>(theXercesNode);
+						static_cast<const DOM_CDATASectionType&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(theCDATASectionNode, theIndex, mapNode);
@@ -759,13 +758,13 @@ XercesDocumentBridge::createBridgeNode(
 		}
 		break;
 
-	case DOM_Node::COMMENT_NODE:
+	case DOM_NodeType::COMMENT_NODE:
 		{
-			const DOM_Comment&	theCommentNode =
+			const DOM_CommentType&	theCommentNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_Comment&)theXercesNode;
+						(const DOM_CommentType&)theXercesNode;
 #else
-						static_cast<const DOM_Comment&>(theXercesNode);
+						static_cast<const DOM_CommentType&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(theCommentNode, theIndex, mapNode);
@@ -773,13 +772,13 @@ XercesDocumentBridge::createBridgeNode(
 		}
 		break;
 
-	case DOM_Node::DOCUMENT_FRAGMENT_NODE:
+	case DOM_NodeType::DOCUMENT_FRAGMENT_NODE:
 		{
-			const DOM_DocumentFragment&		theDocumentFragmentNode =
+			const DOM_DocumentFragmentType&		theDocumentFragmentNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_DocumentFragment&)theXercesNode;
+						(const DOM_DocumentFragmentType&)theXercesNode;
 #else
-						static_cast<const DOM_DocumentFragment&>(theXercesNode);
+						static_cast<const DOM_DocumentFragmentType&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(theDocumentFragmentNode, theIndex, mapNode);
@@ -788,13 +787,13 @@ XercesDocumentBridge::createBridgeNode(
 		}
 		break;
 
-	case DOM_Node::ELEMENT_NODE:
+	case DOM_NodeType::ELEMENT_NODE:
 		{
-			const DOM_Element&	theElementNode =
+			const DOM_ElementType&	theElementNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_Element&)theXercesNode;
+						(const DOM_ElementType&)theXercesNode;
 #else
-						static_cast<const DOM_Element&>(theXercesNode);
+						static_cast<const DOM_ElementType&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(theElementNode, theIndex, mapNode);
@@ -802,13 +801,13 @@ XercesDocumentBridge::createBridgeNode(
 		}
 		break;
 
-	case DOM_Node::ENTITY_NODE:
+	case DOM_NodeType::ENTITY_NODE:
 		{
-			const DOM_Entity&	theEntityNode =
+			const DOM_EntityType&	theEntityNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_Entity&)theXercesNode;
+						(const DOM_EntityType&)theXercesNode;
 #else
-						static_cast<const DOM_Entity&>(theXercesNode);
+						static_cast<const DOM_EntityType&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(theEntityNode, theIndex, mapNode);
@@ -816,13 +815,13 @@ XercesDocumentBridge::createBridgeNode(
 		}
 		break;
 
-	case DOM_Node::ENTITY_REFERENCE_NODE:
+	case DOM_NodeType::ENTITY_REFERENCE_NODE:
 		{
-			const DOM_EntityReference&	theEntityReferenceNode =
+			const DOM_EntityReferenceType&	theEntityReferenceNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_EntityReference&)theXercesNode;
+						(const DOM_EntityReferenceType&)theXercesNode;
 #else
-						static_cast<const DOM_EntityReference&>(theXercesNode);
+						static_cast<const DOM_EntityReferenceType&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(theEntityReferenceNode, theIndex, mapNode);
@@ -830,13 +829,13 @@ XercesDocumentBridge::createBridgeNode(
 		}
 		break;
 
-	case DOM_Node::NOTATION_NODE:
+	case DOM_NodeType::NOTATION_NODE:
 		{
-			const DOM_Notation&		theNotationNode =
+			const DOM_NotationType&		theNotationNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_Notation&)theXercesNode;
+						(const DOM_NotationType&)theXercesNode;
 #else
-						static_cast<const DOM_Notation&>(theXercesNode);
+						static_cast<const DOM_NotationType&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(theNotationNode, theIndex, mapNode);
@@ -844,13 +843,13 @@ XercesDocumentBridge::createBridgeNode(
 		}
 		break;
 
-	case DOM_Node::PROCESSING_INSTRUCTION_NODE:
+	case DOM_NodeType::PROCESSING_INSTRUCTION_NODE:
 		{
-			const DOM_ProcessingInstruction&	thePINode =
+			const DOM_ProcessingInstructionType&	thePINode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_ProcessingInstruction&)theXercesNode;
+						(const DOM_ProcessingInstructionType&)theXercesNode;
 #else
-						static_cast<const DOM_ProcessingInstruction&>(theXercesNode);
+						static_cast<const DOM_ProcessingInstructionType&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(thePINode, theIndex, mapNode);
@@ -858,13 +857,13 @@ XercesDocumentBridge::createBridgeNode(
 		}
 		break;
 
-	case DOM_Node::TEXT_NODE:
+	case DOM_NodeType::TEXT_NODE:
 		{
-			const DOM_Text&		theTextNode =
+			const DOM_TextType&		theTextNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_Text&)theXercesNode;
+						(const DOM_TextType&)theXercesNode;
 #else
-						static_cast<const DOM_Text&>(theXercesNode);
+						static_cast<const DOM_TextType&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(theTextNode, theIndex, mapNode);
@@ -872,13 +871,13 @@ XercesDocumentBridge::createBridgeNode(
 		}
 		break;
 
-	case DOM_Node::DOCUMENT_TYPE_NODE:
+	case DOM_NodeType::DOCUMENT_TYPE_NODE:
 		{
-			const DOM_DocumentType&		theDoctypeNode =
+			const DOM_DocumentTypeType&		theDoctypeNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_DocumentType&)theXercesNode;
+						(const DOM_DocumentTypeType&)theXercesNode;
 #else
-						static_cast<const DOM_DocumentType&>(theXercesNode);
+						static_cast<const DOM_DocumentTypeType&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(theDoctypeNode, theIndex, mapNode);
@@ -900,9 +899,7 @@ XercesDocumentBridge::createBridgeNode(
 void
 XercesDocumentBridge::destroyNode(XalanNode*	theNode)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
+	XALAN_USING_STD(find)
 
 	const NodeVectorType::iterator 	i =
 		find(m_nodes.begin(), m_nodes.end(), theNode);
@@ -926,9 +923,9 @@ XercesDocumentBridge::destroyNode(XalanNode*	theNode)
 
 XalanNode*
 XercesDocumentBridge::internalCloneNode(
-			const XalanNode*	theXalanNode,
-			const DOM_Node&		theXercesNode,
-			bool				deep)
+			const XalanNode*		theXalanNode,
+			const DOM_NodeType&		theXercesNode,
+			bool					deep)
 {
 	XalanNode*	theNewNode = 0;
 
@@ -939,12 +936,12 @@ XercesDocumentBridge::internalCloneNode(
 
 	try
 	{
-		const DOM_Node	theNewXercesNode = 
+		const DOM_NodeType	theNewXercesNode = 
 			theXercesNode.cloneNode(deep);
 
 		theNewNode = createBridgeNode(theNewXercesNode, 0, true);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -1061,16 +1058,16 @@ XercesDocumentBridge::cloneNode(bool	deep) const
 
 	try
 	{
-		const DOM_Node	theNewDocument = m_xercesDocument.cloneNode(deep);
+		const DOM_NodeType	theNewDocument = m_xercesDocument.cloneNode(deep);
 
 		theBridge =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			new XercesDocumentBridge((const DOM_Document&)theNewDocument);
+			new XercesDocumentBridge((const DOM_DocumentType&)theNewDocument);
 #else
-			new XercesDocumentBridge(static_cast<const DOM_Document&>(theNewDocument));
+			new XercesDocumentBridge(static_cast<const DOM_DocumentType&>(theNewDocument));
 #endif
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -1223,14 +1220,14 @@ XercesDocumentBridge::createElement(const XalanDOMString&	tagName)
 
 	try
 	{
-		const DOM_Element	theXercesNode =
+		const DOM_ElementType	theXercesNode =
 			m_xercesDocument.createElement(c_wstr(tagName));
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
 		assert(mapNode(theXercesNode) == theBridgeNode);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -1247,14 +1244,14 @@ XercesDocumentBridge::createDocumentFragment()
 
 	try
 	{
-		const DOM_DocumentFragment	theXercesNode =
+		const DOM_DocumentFragmentType	theXercesNode =
 			m_xercesDocument.createDocumentFragment();
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
 		assert(mapNode(theXercesNode) == theBridgeNode);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -1271,14 +1268,14 @@ XercesDocumentBridge::createTextNode(const XalanDOMString&	data)
 
 	try
 	{
-		const DOM_Text	theXercesNode =
+		const DOM_TextType	theXercesNode =
 			m_xercesDocument.createTextNode(c_wstr(data));
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
 		assert(mapNode(theXercesNode) == theBridgeNode);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -1295,14 +1292,14 @@ XercesDocumentBridge::createComment(const XalanDOMString&	data)
 
 	try
 	{
-		const DOM_Comment	theXercesNode =
+		const DOM_CommentType	theXercesNode =
 			m_xercesDocument.createComment(c_wstr(data));
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
 		assert(mapNode(theXercesNode) == theBridgeNode);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -1319,14 +1316,14 @@ XercesDocumentBridge::createCDATASection(const XalanDOMString&	data)
 
 	try
 	{
-		const DOM_CDATASection	theXercesNode =
+		const DOM_CDATASectionType	theXercesNode =
 			m_xercesDocument.createCDATASection(c_wstr(data));
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
 		assert(mapNode(theXercesNode) == theBridgeNode);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -1345,14 +1342,14 @@ XercesDocumentBridge::createProcessingInstruction(
 
 	try
 	{
-		const DOM_ProcessingInstruction	theXercesNode =
+		const DOM_ProcessingInstructionType		theXercesNode =
 			m_xercesDocument.createProcessingInstruction(c_wstr(target), c_wstr(data));
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
 		assert(mapNode(theXercesNode) == theBridgeNode);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -1369,14 +1366,14 @@ XercesDocumentBridge::createAttribute(const XalanDOMString&		name)
 
 	try
 	{
-		const DOM_Attr	theXercesNode =
+		const DOM_AttrType	theXercesNode =
 			m_xercesDocument.createAttribute(c_wstr(name));
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
 		assert(mapNode(theXercesNode) == theBridgeNode);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -1393,14 +1390,14 @@ XercesDocumentBridge::createEntityReference(const XalanDOMString&	name)
 
 	try
 	{
-		const DOM_EntityReference	theXercesNode =
+		const DOM_EntityReferenceType	theXercesNode =
 			m_xercesDocument.createEntityReference(c_wstr(name));
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
 		assert(mapNode(theXercesNode) == theBridgeNode);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -1471,14 +1468,14 @@ XercesDocumentBridge::createElementNS(
 
 	try
 	{
-		const DOM_Element	theXercesNode =
+		const DOM_ElementType	theXercesNode =
 			m_xercesDocument.createElementNS(c_wstr(namespaceURI), c_wstr(qualifiedName));
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
 		assert(mapNode(theXercesNode) == theBridgeNode);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -1497,14 +1494,14 @@ XercesDocumentBridge::createAttributeNS(
 
 	try
 	{
-		const DOM_Attr	theXercesNode =
+		const DOM_AttrType	theXercesNode =
 			m_xercesDocument.createAttributeNS(c_wstr(namespaceURI), c_wstr(qualifiedName));
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
 		assert(mapNode(theXercesNode) == theBridgeNode);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -1533,9 +1530,9 @@ XercesDocumentBridge::getElementById(const XalanDOMString&	elementId) const
 	// $$$ ToDo: This is because DOM_Document::getElementById() is not
 	// const...
 #if defined(XALAN_NO_MUTABLE)
-	const DOM_Node	theXercesNode(((DOM_Document&)m_xercesDocument).getElementById(c_wstr(elementId)));
+	const DOM_NodeType	theXercesNode(((DOM_DocumentType&)m_xercesDocument).getElementById(c_wstr(elementId)));
 #else
-	const DOM_Node	theXercesNode(m_xercesDocument.getElementById(c_wstr(elementId)));
+	const DOM_NodeType	theXercesNode(m_xercesDocument.getElementById(c_wstr(elementId)));
 #endif
 
 	return theXercesNode.isNull() == true ? 0 :
@@ -1551,7 +1548,7 @@ XercesDocumentBridge::getElementById(const XalanDOMString&	elementId) const
 void
 XercesDocumentBridge::buildBridgeNodes()
 {
-	const DOM_Node	theStartChild = m_xercesDocument.getFirstChild();
+	const DOM_NodeType	theStartChild = m_xercesDocument.getFirstChild();
 
 	if (theStartChild.isNull() == false)
 	{
@@ -1624,7 +1621,7 @@ XercesDocumentBridge::BuildBridgeTreeWalker::~BuildBridgeTreeWalker()
 
 
 void
-XercesDocumentBridge::BuildBridgeTreeWalker::startNode(const DOM_Node&	node)
+XercesDocumentBridge::BuildBridgeTreeWalker::startNode(const DOM_NodeType&	node)
 {
 	XalanNode* const	theBridgeNode = m_document->createBridgeNode(node, m_currentIndex, false);
 
@@ -1678,17 +1675,17 @@ XercesDocumentBridge::BuildBridgeTreeWalker::startNode(const DOM_Node&	node)
 
 	const short		theType = node.getNodeType();
 
-	if (theType == DOM_Node::DOCUMENT_TYPE_NODE)
+	if (theType == DOM_NodeType::DOCUMENT_TYPE_NODE)
 	{
 		// Special case for doctype -- we have to build its entities...
-		const DOM_DocumentType&		theDoctype =
+		const DOM_DocumentTypeType&		theDoctype =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(const DOM_DocumentType&)node;
+			(const DOM_DocumentTypeType&)node;
 #else
-			static_cast<const DOM_DocumentType&>(node);
+			static_cast<const DOM_DocumentTypeType&>(node);
 #endif
 
-		const DOM_NamedNodeMap	theEntities =
+		const DOM_NamedNodeMapType	theEntities =
 			theDoctype.getEntities();
 
 		const unsigned int	theLength =
@@ -1700,17 +1697,17 @@ XercesDocumentBridge::BuildBridgeTreeWalker::startNode(const DOM_Node&	node)
 			m_document->createBridgeNode(theEntities.item(i), m_currentIndex++, true);
 		}
 	}
-	else if (theType == DOM_Node::ELEMENT_NODE)
+	else if (theType == DOM_NodeType::ELEMENT_NODE)
 	{
 	// Special case for element nodes -- we have to build the attributes...
-		const DOM_Element&	theElement =
+		const DOM_ElementType&	theElement =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(const DOM_Element&)node;
+			(const DOM_ElementType&)node;
 #else
-			static_cast<const DOM_Element&>(node);
+			static_cast<const DOM_ElementType&>(node);
 #endif
 
-		const DOM_NamedNodeMap	theAttributes =
+		const DOM_NamedNodeMapType	theAttributes =
 			theElement.getAttributes();
 
 		const unsigned int	theLength =
@@ -1722,7 +1719,7 @@ XercesDocumentBridge::BuildBridgeTreeWalker::startNode(const DOM_Node&	node)
 		for (unsigned int i = 0; i < theLength; ++i)
 		{
 			// Get the attribute from the node map...
-			const DOM_Node	theAttr = theAttributes.item(i);
+			const DOM_NodeType	theAttr = theAttributes.item(i);
 			assert(theAttr.isNull() == false);
 
 			// Create a bridge node.
@@ -1760,7 +1757,7 @@ XercesDocumentBridge::BuildBridgeTreeWalker::startNode(const DOM_Node&	node)
 
 
 void
-XercesDocumentBridge::BuildBridgeTreeWalker::endNode(const DOM_Node&	/* node */)
+XercesDocumentBridge::BuildBridgeTreeWalker::endNode(const DOM_NodeType&	/* node */)
 {
 	assert(m_parentNavigatorStack.empty() == false);
 	assert(m_siblingNavigatorStack.empty() == false);
@@ -1801,3 +1798,7 @@ XercesDocumentBridge::getPooledString(
 {
 	return m_stringPool->get(theString, theLength);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,15 +71,19 @@
 
 
 
-class DOM_Attr;
-class DOM_Node;
+#include <XercesParserLiaison/XercesBridgeTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesDocumentBridge;
 class XalanAttr;
 class XalanElement;
 class XalanNode;
 class XalanText;
-class DOM_Text;
-class DOMString;
 
 
 
@@ -111,15 +115,15 @@ public:
 	}
 
 	XalanNode*
-	mapNode(const DOM_Node&		theXercesNode) const;
+	mapNode(const DOM_NodeType&		theXercesNode) const;
 
 	XalanAttr*
-	mapNode(const DOM_Attr&		theXercesNode) const;
+	mapNode(const DOM_AttrType&		theXercesNode) const;
 
-	DOM_Node
+	DOM_NodeType
 	mapNode(const XalanNode*	theXalanNode) const;
 
-	DOM_Attr
+	DOM_AttrType
 	mapNode(const XalanAttr*	theXercesNode) const;
 
 	unsigned long
@@ -135,7 +139,7 @@ public:
 	}
 
 	XalanNode*
-	getParentNode(const DOM_Node&	theXercesNode) const;
+	getParentNode(const DOM_NodeType&	theXercesNode) const;
 
 	XalanNode*
 	getParentNode() const
@@ -150,7 +154,7 @@ public:
 	}
 
 	XalanNode*
-	getPreviousSibling(const DOM_Node&	theXercesNode) const;
+	getPreviousSibling(const DOM_NodeType&	theXercesNode) const;
 
 	XalanNode*
 	getPreviousSibling() const
@@ -165,7 +169,7 @@ public:
 	}
 
 	XalanNode*
-	getNextSibling(const DOM_Node&	theXercesNode) const;
+	getNextSibling(const DOM_NodeType&	theXercesNode) const;
 
 	XalanNode*
 	getNextSibling() const
@@ -180,7 +184,7 @@ public:
 	}
 
 	XalanNode*
-	getFirstChild(const DOM_Node&	theXercesNode) const;
+	getFirstChild(const DOM_NodeType&	theXercesNode) const;
 
 	XalanNode*
 	getFirstChild() const
@@ -195,7 +199,7 @@ public:
 	}
 
 	XalanNode*
-	getLastChild(const DOM_Node&	theXercesNode) const;
+	getLastChild(const DOM_NodeType&	theXercesNode) const;
 
 	XalanNode*
 	getLastChild() const
@@ -211,38 +215,38 @@ public:
 
 	XalanNode*
 	insertBefore(
-			DOM_Node&	theXercesParent,
-			XalanNode*	newChild,
-			XalanNode*	refChild) const;
+			DOM_NodeType&	theXercesParent,
+			XalanNode*		newChild,
+			XalanNode*		refChild) const;
 
 	XalanNode*
 	replaceChild(
-			DOM_Node&	theXercesParent,
-			XalanNode*	newChild,
-			XalanNode*	oldChild) const;
+			DOM_NodeType&	theXercesParent,
+			XalanNode*		newChild,
+			XalanNode*		oldChild) const;
 
 	XalanNode*
 	removeChild(
-			DOM_Node&	theXercesParent,
-			XalanNode*	oldChild) const;
+			DOM_NodeType&	theXercesParent,
+			XalanNode*		oldChild) const;
 
 	XalanNode*
 	appendChild(
-			DOM_Node&	theXercesParent,
-			XalanNode*	newChild) const;
+			DOM_NodeType&	theXercesParent,
+			XalanNode*		newChild) const;
 
 	XalanElement*
-	getOwnerElement(const DOM_Attr&		theXercesAttr) const;
+	getOwnerElement(const DOM_AttrType&		theXercesAttr) const;
 
 	XalanNode*
 	cloneNode(
-			const XalanNode*	theXalanNode,
-			const DOM_Node&		theXercesNode,
-			bool				deep) const;
+			const XalanNode*		theXalanNode,
+			const DOM_NodeType&		theXercesNode,
+			bool					deep) const;
 
 	XalanText*
 	splitText(
-			DOM_Text&		theXercesText,
+			DOM_TextType&	theXercesText,
 			unsigned int	offset) const;
 
 	/**
@@ -253,7 +257,7 @@ public:
 	 * @return A const reference to the pooled string.
 	 */
 	const XalanDOMString&
-	getPooledString(const DOMString&	theString) const;
+	getPooledString(const DOMStringType&	theString) const;
 
 private:
 
@@ -276,6 +280,10 @@ private:
 
 	unsigned long			m_index;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,8 +72,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesCDATASectionBridge::XercesCDATASectionBridge(
-			const DOM_CDATASection&			theXercesCDATASection,
+			const DOM_CDATASectionType&		theXercesCDATASection,
 			const XercesBridgeNavigator&	theNavigator) :
 	XalanCDATASection(),
 	m_xercesNode(theXercesCDATASection),
@@ -279,8 +283,6 @@ XercesCDATASectionBridge::isSupported(
 const XalanDOMString&
 XercesCDATASectionBridge::getNamespaceURI() const
 {
-	const DOMString		theString();
-
 	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
 }
 
@@ -405,3 +407,7 @@ XercesCDATASectionBridge::isIgnorableWhitespace() const
 {
 	return isXMLWhitespace(getData());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

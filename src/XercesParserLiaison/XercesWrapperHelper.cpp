@@ -68,9 +68,13 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 bool
 XercesWrapperHelper::isSupported(
-			const DOMNode*			theXercesNode,
+			const DOMNodeType*		theXercesNode,
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version)
 {
@@ -85,9 +89,9 @@ XercesWrapperHelper::isSupported(
 
 const XalanDOMString
 XercesWrapperHelper::substringData(
-			const DOMCharacterData*		theXercesNode,
-			unsigned int				offset,
-			unsigned int				count)
+			const DOMCharacterDataType*		theXercesNode,
+			unsigned int					offset,
+			unsigned int					count)
 {
 	assert(theXercesNode != 0);
 
@@ -97,8 +101,12 @@ XercesWrapperHelper::substringData(
 
 		return XalanDOMString(theString, XalanDOMString::length(theString));
 	}
-	catch(const DOMException&	theException)
+	catch(const DOMExceptionType&	theException)
 	{
 		throw XercesDOMWrapperException(theException);
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

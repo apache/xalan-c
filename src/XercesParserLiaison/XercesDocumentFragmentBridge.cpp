@@ -71,9 +71,13 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesDocumentFragmentBridge::XercesDocumentFragmentBridge(
-			const DOM_DocumentFragment&		theXercesDOMDocumentFragment,
-			const XercesBridgeNavigator&	theNavigator) :
+			const DOM_DocumentFragmentType&		theXercesDOMDocumentFragment,
+			const XercesBridgeNavigator&		theNavigator) :
 	XalanDocumentFragment(),
 	m_xercesNode(theXercesDOMDocumentFragment),
 	m_children(theXercesDOMDocumentFragment.getChildNodes(),
@@ -319,3 +323,7 @@ XercesDocumentFragmentBridge::getIndex() const
 
 //	return m_navigator.getIndex();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -62,6 +62,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesDOMWrapperException::XercesDOMWrapperException(ExceptionCode 	code) :
 	XalanDOMException(code)
 {
@@ -69,7 +73,7 @@ XercesDOMWrapperException::XercesDOMWrapperException(ExceptionCode 	code) :
 
 
 
-XercesDOMWrapperException::XercesDOMWrapperException(const DOMException&	theException) :
+XercesDOMWrapperException::XercesDOMWrapperException(const DOMExceptionType&	theException) :
 	XalanDOMException(translateErrorCode(theException.code))
 {
 }
@@ -90,69 +94,69 @@ XercesDOMWrapperException::~XercesDOMWrapperException()
 
 
 XercesDOMWrapperException::ExceptionCode
-XercesDOMWrapperException::translateErrorCode(DOMException::ExceptionCode	theCode)
+XercesDOMWrapperException::translateErrorCode(DOMExceptionType::ExceptionCode	theCode)
 {
 	ExceptionCode	theXalanCode = UNKNOWN_ERR;
 
 	switch(theCode)
 	{
-	case DOMException::INDEX_SIZE_ERR:
+	case DOMExceptionType::INDEX_SIZE_ERR:
 		theXalanCode = INDEX_SIZE_ERR;
 		break;
 
-	case DOMException::DOMSTRING_SIZE_ERR:
+	case DOMExceptionType::DOMSTRING_SIZE_ERR:
 		theXalanCode = DOMSTRING_SIZE_ERR;
 		break;
 
-	case DOMException::HIERARCHY_REQUEST_ERR:
+	case DOMExceptionType::HIERARCHY_REQUEST_ERR:
 		theXalanCode = HIERARCHY_REQUEST_ERR;
 		break;
 
-	case DOMException::WRONG_DOCUMENT_ERR:
+	case DOMExceptionType::WRONG_DOCUMENT_ERR:
 		theXalanCode = WRONG_DOCUMENT_ERR;
 		break;
 
-	case DOMException::INVALID_CHARACTER_ERR:
+	case DOMExceptionType::INVALID_CHARACTER_ERR:
 		theXalanCode = INVALID_CHARACTER_ERR;
 		break;
 
-	case DOMException::NO_DATA_ALLOWED_ERR:
+	case DOMExceptionType::NO_DATA_ALLOWED_ERR:
 		theXalanCode = NO_DATA_ALLOWED_ERR;
 		break;
 
-	case DOMException::NO_MODIFICATION_ALLOWED_ERR:
+	case DOMExceptionType::NO_MODIFICATION_ALLOWED_ERR:
 		theXalanCode = NO_MODIFICATION_ALLOWED_ERR;
 		break;
 
-	case DOMException::NOT_FOUND_ERR:
+	case DOMExceptionType::NOT_FOUND_ERR:
 		theXalanCode = NOT_FOUND_ERR;
 		break;
 
-	case DOMException::NOT_SUPPORTED_ERR:
+	case DOMExceptionType::NOT_SUPPORTED_ERR:
 		theXalanCode = INDEX_SIZE_ERR;
 		break;
 
-	case DOMException::INUSE_ATTRIBUTE_ERR:
+	case DOMExceptionType::INUSE_ATTRIBUTE_ERR:
 		theXalanCode = INUSE_ATTRIBUTE_ERR;
 		break;
 
-	case DOMException::INVALID_STATE_ERR:
+	case DOMExceptionType::INVALID_STATE_ERR:
 		theXalanCode = INVALID_STATE_ERR;
 		break;
 
-	case DOMException::SYNTAX_ERR:
+	case DOMExceptionType::SYNTAX_ERR:
 		theXalanCode = SYNTAX_ERR;
 		break;
 
-	case DOMException::INVALID_MODIFICATION_ERR:
+	case DOMExceptionType::INVALID_MODIFICATION_ERR:
 		theXalanCode = INVALID_MODIFICATION_ERR;
 		break;
 
-	case DOMException::NAMESPACE_ERR:
+	case DOMExceptionType::NAMESPACE_ERR:
 		theXalanCode = NAMESPACE_ERR;
 		break;
 
-	case DOMException::INVALID_ACCESS_ERR:
+	case DOMExceptionType::INVALID_ACCESS_ERR:
 		theXalanCode = INVALID_ACCESS_ERR;
 		break;
 
@@ -163,3 +167,7 @@ XercesDOMWrapperException::translateErrorCode(DOMException::ExceptionCode	theCod
 
 	return theXalanCode;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

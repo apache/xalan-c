@@ -71,6 +71,14 @@
 
 
 
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMWrapperException : public XalanDOMException
 {
 public:
@@ -90,9 +98,9 @@ public:
 	  * Constructor which takes a Xerces exception and
 	  * translates it into a XercesDOMException.
 	  *
-	  * @param code The Xerces DOM_DOMException instance.
+	  * @param code The Xerces DOMException instance.
 	  */
-	XercesDOMWrapperException(const DOMException&	theException);
+	XercesDOMWrapperException(const DOMExceptionType&	theException);
 
 	/**
 	  * Copy constructor.
@@ -115,8 +123,12 @@ public:
 private:
 
 	static ExceptionCode
-	translateErrorCode(DOMException::ExceptionCode	theCode);
+	translateErrorCode(DOMExceptionType::ExceptionCode	theCode);
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

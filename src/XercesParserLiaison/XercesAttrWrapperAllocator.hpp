@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesAttrWrapperAllocator
 {
 public:
@@ -108,7 +112,7 @@ public:
 	 */
 	ObjectType*
 	create(
-			const DOMAttr*					theXercesAttr,
+			const DOMAttrType*				theXercesAttr,
 			const XercesWrapperNavigator&	theNavigator);
 
 	/**
@@ -151,6 +155,10 @@ private:
 	// Data members...
 	ArenaAllocatorType	m_allocator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -68,10 +68,14 @@
 
 
 #include <XercesParserLiaison/XercesNodeListWrapper.hpp>
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
 
 
 
-class DOMEntityReference;
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesWrapperNavigator;
 
 
@@ -81,7 +85,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesEntityReferenceWrapper : public Xal
 public:
 
 	XercesEntityReferenceWrapper(
-			const DOMEntityReference*		theXercesDOMEntityReference,
+			const DOMEntityReferenceType*	theXercesDOMEntityReference,
 			const XercesWrapperNavigator&	theNavigator);
 
 	virtual
@@ -433,7 +437,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	const DOMEntityReference*
+	const DOMEntityReferenceType*
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -453,12 +457,16 @@ private:
 	operator==(const XercesEntityReferenceWrapper&		theRHS) const;
 
 	// Data members...
-	const DOMEntityReference* const	m_xercesNode;
+	const DOMEntityReferenceType* const		m_xercesNode;
 
-	const XercesWrapperNavigator&	m_navigator;
+	const XercesWrapperNavigator&			m_navigator;
 
-	XercesNodeListWrapper			m_children;
+	XercesNodeListWrapper					m_children;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

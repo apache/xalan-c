@@ -73,8 +73,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesCommentWrapper::XercesCommentWrapper(
-			const DOMComment*				theXercesComment,
+			const DOMCommentType*			theXercesComment,
 			const XercesWrapperNavigator&	theNavigator) :
 	XalanComment(),
 	m_xercesNode(theXercesComment),
@@ -381,3 +385,7 @@ XercesCommentWrapper::replaceData(
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -64,6 +64,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesDOMWalker::XercesDOMWalker()
 {
 }
@@ -77,15 +81,15 @@ XercesDOMWalker::~XercesDOMWalker()
 
 
 void
-XercesDOMWalker::traverse(const DOMNode*	pos)
+XercesDOMWalker::traverse(const DOMNodeType*	pos)
 {
-	const DOMNode*	thePos = pos;
+	const DOMNodeType*	thePos = pos;
 
 	while(thePos != 0)
 	{
 		startNode(thePos);
 
-		const DOMNode*	nextNode = thePos->getFirstChild();
+		const DOMNodeType*	nextNode = thePos->getFirstChild();
 
 		while(nextNode == 0)
 		{
@@ -114,16 +118,16 @@ XercesDOMWalker::traverse(const DOMNode*	pos)
 
 void
 XercesDOMWalker::traverse(
-			const DOMNode*	pos,
-			const DOMNode*	parent)
+			const DOMNodeType*	pos,
+			const DOMNodeType*	parent)
 {
-	const DOMNode*	thePos = pos;
+	const DOMNodeType*	thePos = pos;
 
 	while(parent != thePos)
 	{	  
 		startNode(thePos);
 	  
-		const DOMNode*	nextNode = thePos->getFirstChild();
+		const DOMNodeType*	nextNode = thePos->getFirstChild();
 
 		while(nextNode == 0)
 		{
@@ -147,3 +151,7 @@ XercesDOMWalker::traverse(
 		thePos = nextNode;
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

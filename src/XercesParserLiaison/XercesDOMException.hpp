@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,15 @@
 
 
 
+#include <XercesParserLiaison/XercesBridgeTypes.hpp>
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMException : public XalanDOMException
 {
 public:
@@ -96,7 +105,7 @@ public:
 	  *
 	  * @param code The Xerces DOM_DOMException instance.
 	  */
-	XercesDOMException(const DOM_DOMException&	theException);
+	XercesDOMException(const DOM_DOMExceptionType&	theException);
 
 	/**
 	  * Copy constructor.
@@ -119,8 +128,12 @@ public:
 private:
 
 	static ExceptionCode
-	translateErrorCode(DOM_DOMException::ExceptionCode	theCode);
+	translateErrorCode(DOM_DOMExceptionType::ExceptionCode	theCode);
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

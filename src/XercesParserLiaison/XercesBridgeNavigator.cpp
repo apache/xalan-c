@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // I'm using this to distinguish between null nodes, which are valid, and
 // an uninitialized cached node address.  This is probably bogus, and I'll
 // probably just change this to 0, but this is experimental anyway...
@@ -115,7 +119,7 @@ XercesBridgeNavigator::~XercesBridgeNavigator()
 
 
 XalanNode*
-XercesBridgeNavigator::mapNode(const DOM_Node&		theXercesNode) const
+XercesBridgeNavigator::mapNode(const DOM_NodeType&	theXercesNode) const
 {
 	return m_ownerDocument->mapNode(theXercesNode);
 }
@@ -123,14 +127,14 @@ XercesBridgeNavigator::mapNode(const DOM_Node&		theXercesNode) const
 
 
 XalanAttr*
-XercesBridgeNavigator::mapNode(const DOM_Attr&		theXercesNode) const
+XercesBridgeNavigator::mapNode(const DOM_AttrType&	theXercesNode) const
 {
 	return m_ownerDocument->mapNode(theXercesNode);
 }
 
 
 
-DOM_Node
+DOM_NodeType
 XercesBridgeNavigator::mapNode(const XalanNode*		theXalanNode) const
 {
 	return m_ownerDocument->mapNode(theXalanNode);
@@ -138,7 +142,7 @@ XercesBridgeNavigator::mapNode(const XalanNode*		theXalanNode) const
 
 
 
-DOM_Attr
+DOM_AttrType
 XercesBridgeNavigator::mapNode(const XalanAttr*		theXalanNode) const
 {
 	return m_ownerDocument->mapNode(theXalanNode);
@@ -147,7 +151,7 @@ XercesBridgeNavigator::mapNode(const XalanAttr*		theXalanNode) const
 
 
 XalanNode*
-XercesBridgeNavigator::getParentNode(const DOM_Node&	theXercesNode) const
+XercesBridgeNavigator::getParentNode(const DOM_NodeType&	theXercesNode) const
 {
 	if (m_parentNode == invalidNodeAddress)
 	{
@@ -164,7 +168,7 @@ XercesBridgeNavigator::getParentNode(const DOM_Node&	theXercesNode) const
 
 
 XalanNode*
-XercesBridgeNavigator::getPreviousSibling(const DOM_Node&	theXercesNode) const
+XercesBridgeNavigator::getPreviousSibling(const DOM_NodeType&	theXercesNode) const
 {
 	if (m_previousSibling == invalidNodeAddress)
 	{
@@ -181,7 +185,7 @@ XercesBridgeNavigator::getPreviousSibling(const DOM_Node&	theXercesNode) const
 
 
 XalanNode*
-XercesBridgeNavigator::getNextSibling(const DOM_Node&	theXercesNode) const
+XercesBridgeNavigator::getNextSibling(const DOM_NodeType&	theXercesNode) const
 {
 	if (m_nextSibling == invalidNodeAddress)
 	{
@@ -198,7 +202,7 @@ XercesBridgeNavigator::getNextSibling(const DOM_Node&	theXercesNode) const
 
 
 XalanNode*
-XercesBridgeNavigator::getFirstChild(const DOM_Node&	theXercesNode) const
+XercesBridgeNavigator::getFirstChild(const DOM_NodeType&	theXercesNode) const
 {
 	if (m_firstChild == invalidNodeAddress)
 	{
@@ -215,7 +219,7 @@ XercesBridgeNavigator::getFirstChild(const DOM_Node&	theXercesNode) const
 
 
 XalanNode*
-XercesBridgeNavigator::getLastChild(const DOM_Node&	theXercesNode) const
+XercesBridgeNavigator::getLastChild(const DOM_NodeType&		theXercesNode) const
 {
 	if (m_lastChild == invalidNodeAddress)
 	{
@@ -233,23 +237,23 @@ XercesBridgeNavigator::getLastChild(const DOM_Node&	theXercesNode) const
 
 XalanNode*
 XercesBridgeNavigator::insertBefore(
-			DOM_Node&		theXercesParent,
+			DOM_NodeType&	theXercesParent,
 			XalanNode*		newChild,
 			XalanNode*		refChild) const
 {
 	assert(newChild != 0);
 
 	// Get the corresponding Xerces nodes...
-	const DOM_Node	theNewChild = m_ownerDocument->mapNode(newChild);
-	const DOM_Node	theRefChild = m_ownerDocument->mapNode(refChild);
+	const DOM_NodeType	theNewChild = m_ownerDocument->mapNode(newChild);
+	const DOM_NodeType	theRefChild = m_ownerDocument->mapNode(refChild);
 
 	try
 	{
-		const DOM_Node	theXercesResult =
+		const DOM_NodeType	theXercesResult =
 			theXercesParent.insertBefore(theNewChild, theRefChild);
 		assert(m_ownerDocument->mapNode(theXercesResult) == newChild);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -261,24 +265,24 @@ XercesBridgeNavigator::insertBefore(
 
 XalanNode*
 XercesBridgeNavigator::	replaceChild(
-			DOM_Node&	theXercesParent,
-			XalanNode*	newChild,
-			XalanNode*	oldChild) const
+			DOM_NodeType&	theXercesParent,
+			XalanNode*		newChild,
+			XalanNode*		oldChild) const
 {
 	assert(newChild != 0);
 	assert(oldChild != 0);
 
 	// Get the corresponding Xerces nodes...
-	const DOM_Node	theNewChild = m_ownerDocument->mapNode(newChild);
-	const DOM_Node	theOldChild = m_ownerDocument->mapNode(oldChild);
+	const DOM_NodeType	theNewChild = m_ownerDocument->mapNode(newChild);
+	const DOM_NodeType	theOldChild = m_ownerDocument->mapNode(oldChild);
 
 	try
 	{
-		const DOM_Node	theXercesResult =
+		const DOM_NodeType	theXercesResult =
 			theXercesParent.replaceChild(theNewChild, theOldChild);
 		assert(m_ownerDocument->mapNode(theXercesResult) == oldChild);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -290,21 +294,21 @@ XercesBridgeNavigator::	replaceChild(
 
 XalanNode*
 XercesBridgeNavigator::removeChild(
-			DOM_Node&	theXercesParent,
-			XalanNode*	oldChild) const
+			DOM_NodeType&	theXercesParent,
+			XalanNode*		oldChild) const
 {
 	assert(oldChild != 0);
 
 	// Get the corresponding Xerces nodes...
-	const DOM_Node	theOldChild = m_ownerDocument->mapNode(oldChild);
+	const DOM_NodeType	theOldChild = m_ownerDocument->mapNode(oldChild);
 
 	try
 	{
-		const DOM_Node	theXercesResult =
+		const DOM_NodeType	theXercesResult =
 			theXercesParent.removeChild(theOldChild);
 		assert(m_ownerDocument->mapNode(theXercesResult) == oldChild);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -316,8 +320,8 @@ XercesBridgeNavigator::removeChild(
 
 XalanNode*
 XercesBridgeNavigator::appendChild(
-			DOM_Node&	theXercesParent,
-			XalanNode*	newChild) const
+			DOM_NodeType&	theXercesParent,
+			XalanNode*		newChild) const
 {
 	return insertBefore(theXercesParent, newChild, 0);
 }
@@ -326,7 +330,7 @@ XercesBridgeNavigator::appendChild(
 
 
 XalanElement*
-XercesBridgeNavigator::getOwnerElement(const DOM_Attr&	theXercesAttr) const
+XercesBridgeNavigator::getOwnerElement(const DOM_AttrType&	theXercesAttr) const
 {
 	if (m_parentNode != invalidNodeAddress)
 	{
@@ -348,9 +352,9 @@ XercesBridgeNavigator::getOwnerElement(const DOM_Attr&	theXercesAttr) const
 
 XalanNode*
 XercesBridgeNavigator::cloneNode(
-			const XalanNode*	theXalanNode,
-			const DOM_Node&		theXercesNode,
-			bool				deep) const
+			const XalanNode*		theXalanNode,
+			const DOM_NodeType&		theXercesNode,
+			bool					deep) const
 {
 	return m_ownerDocument->internalCloneNode(theXalanNode, theXercesNode, deep);
 }
@@ -359,19 +363,19 @@ XercesBridgeNavigator::cloneNode(
 
 XalanText*
 XercesBridgeNavigator::splitText(
-			DOM_Text&		theXercesText,
+			DOM_TextType&	theXercesText,
 			unsigned int	offset) const
 {
 	XalanText*	theXalanText = 0;
 
 	try
 	{
-		DOM_Text	theNewXercesText = theXercesText.splitText(offset);
+		DOM_TextType	theNewXercesText = theXercesText.splitText(offset);
 		assert(theXercesText.isNull() == false);
 
 		theXalanText = m_ownerDocument->createBridgeNode(theNewXercesText, 0, true);
 	}
-	catch(const DOM_DOMException&	theException)
+	catch(const DOM_DOMExceptionType&	theException)
 	{
 		throw XercesDOMException(theException);
 	}
@@ -382,7 +386,11 @@ XercesBridgeNavigator::splitText(
 
 
 const XalanDOMString&
-XercesBridgeNavigator::	getPooledString(const DOMString&	theString) const
+XercesBridgeNavigator::	getPooledString(const DOMStringType&	theString) const
 {
 	return m_ownerDocument->getPooledString(theString.rawBuffer(), theString.length());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -70,6 +70,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString	XercesWrapperNavigator::s_emptyString;
 
 
@@ -110,7 +114,7 @@ XercesWrapperNavigator::~XercesWrapperNavigator()
 
 
 XalanNode*
-XercesWrapperNavigator::mapNode(const DOMNode*	theXercesNode) const
+XercesWrapperNavigator::mapNode(const DOMNodeType*	theXercesNode) const
 {
 	return m_ownerDocument->mapNode(theXercesNode);
 }
@@ -118,14 +122,14 @@ XercesWrapperNavigator::mapNode(const DOMNode*	theXercesNode) const
 
 
 XalanAttr*
-XercesWrapperNavigator::mapNode(const DOMAttr*	theXercesNode) const
+XercesWrapperNavigator::mapNode(const DOMAttrType*	theXercesNode) const
 {
 	return m_ownerDocument->mapNode(theXercesNode);
 }
 
 
 
-const DOMNode*
+const DOMNodeType*
 XercesWrapperNavigator::mapNode(XalanNode*	theXalanNode) const
 {
 	return m_ownerDocument->mapNode(theXalanNode);
@@ -133,7 +137,7 @@ XercesWrapperNavigator::mapNode(XalanNode*	theXalanNode) const
 
 
 
-const DOMAttr*
+const DOMAttrType*
 XercesWrapperNavigator::mapNode(XalanAttr*	theXalanNode) const
 {
 	return m_ownerDocument->mapNode(theXalanNode);
@@ -142,7 +146,7 @@ XercesWrapperNavigator::mapNode(XalanAttr*	theXalanNode) const
 
 
 XalanNode*
-XercesWrapperNavigator::getParentNode(const DOMNode*	theXercesNode) const
+XercesWrapperNavigator::getParentNode(const DOMNodeType*	theXercesNode) const
 {
 	if (m_parentNode == 0)
 	{
@@ -157,7 +161,7 @@ XercesWrapperNavigator::getParentNode(const DOMNode*	theXercesNode) const
 
 
 XalanNode*
-XercesWrapperNavigator::getPreviousSibling(const DOMNode*	theXercesNode) const
+XercesWrapperNavigator::getPreviousSibling(const DOMNodeType*	theXercesNode) const
 {
 	if (m_previousSibling == 0)
 	{
@@ -172,7 +176,7 @@ XercesWrapperNavigator::getPreviousSibling(const DOMNode*	theXercesNode) const
 
 
 XalanNode*
-XercesWrapperNavigator::getNextSibling(const DOMNode*	theXercesNode) const
+XercesWrapperNavigator::getNextSibling(const DOMNodeType*	theXercesNode) const
 {
 	if (m_nextSibling == 0)
 	{
@@ -187,7 +191,7 @@ XercesWrapperNavigator::getNextSibling(const DOMNode*	theXercesNode) const
 
 
 XalanNode*
-XercesWrapperNavigator::getFirstChild(const DOMNode*	theXercesNode) const
+XercesWrapperNavigator::getFirstChild(const DOMNodeType*	theXercesNode) const
 {
 	if (m_firstChild == 0)
 	{
@@ -202,7 +206,7 @@ XercesWrapperNavigator::getFirstChild(const DOMNode*	theXercesNode) const
 
 
 XalanNode*
-XercesWrapperNavigator::getLastChild(const DOMNode*	theXercesNode) const
+XercesWrapperNavigator::getLastChild(const DOMNodeType*		theXercesNode) const
 {
 	if (m_lastChild == 0)
 	{
@@ -217,7 +221,7 @@ XercesWrapperNavigator::getLastChild(const DOMNode*	theXercesNode) const
 
 
 XalanElement*
-XercesWrapperNavigator::getOwnerElement(const DOMAttr*	theXercesAttr) const
+XercesWrapperNavigator::getOwnerElement(const DOMAttrType*	theXercesAttr) const
 {
 	assert(theXercesAttr != 0);
 
@@ -251,3 +255,7 @@ XercesWrapperNavigator::getPooledString(const XMLCh*	theString) const
 		return m_ownerDocument->getPooledString(theString, XalanDOMString::length(theString));
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

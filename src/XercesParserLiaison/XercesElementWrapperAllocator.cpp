@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesElementWrapperAllocator::XercesElementWrapperAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -75,7 +79,7 @@ XercesElementWrapperAllocator::~XercesElementWrapperAllocator()
 
 XercesElementWrapperAllocator::ObjectType*
 XercesElementWrapperAllocator::create(
-			const DOMElement*				theXercesElement,
+			const DOMElementType*			theXercesElement,
 			const XercesWrapperNavigator&	theNavigator)
 {
 	ObjectType* const	theBlock = m_allocator.allocateBlock();
@@ -95,3 +99,7 @@ XercesElementWrapperAllocator::reset()
 {
 	m_allocator.reset();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,6 +79,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesBridgeNavigator;
 class XercesDocumentBridge;
 
@@ -88,8 +92,10 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDocumentTypeBridge : public XalanDo
 {
 public:
 
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentType		DOM_DocumentTypeType;
+
 	XercesDocumentTypeBridge(
-			const DOM_DocumentType&			theXercesDOMDocumentType,
+			const DOM_DocumentTypeType&		theXercesDOMDocumentType,
 			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
@@ -494,7 +500,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	DOM_DocumentType
+	DOM_DocumentTypeType
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -511,10 +517,10 @@ private:
 	operator=(const XercesDocumentTypeBridge&	theSource);
 
 	bool
-	operator==(const XercesDocumentTypeBridge&		theRHS) const;
+	operator==(const XercesDocumentTypeBridge&	theRHS) const;
 
 	// Data members...
-	DOM_DocumentType				m_xercesNode;
+	DOM_DocumentTypeType			m_xercesNode;
 
 	XercesNamedNodeMapBridge		m_entities;
 	
@@ -522,6 +528,10 @@ private:
 
 	const XercesBridgeNavigator&	m_navigator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

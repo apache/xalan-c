@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,14 @@
 
 
 
+#include <XercesParserLiaison/XercesBridgeTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesBridgeNavigator;
 
 
@@ -84,7 +92,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesNodeListBridge : public XalanNodeLi
 public:
 
 	XercesNodeListBridge(
-			const DOM_NodeList&				theXercesNodeList,
+			const DOM_NodeListType&			theXercesNodeList,
 			const XercesBridgeNavigator&	theNavigator);
 
 	XercesNodeListBridge(const XercesNodeListBridge&	theSource);
@@ -130,10 +138,14 @@ private:
 
 
 	// Data members...
-	DOM_NodeList					m_xercesNodeList;
+	DOM_NodeListType				m_xercesNodeList;
 
 	const XercesBridgeNavigator&	m_navigator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

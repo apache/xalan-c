@@ -67,7 +67,14 @@
 
 
 
-class DOMNode;
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanNode;
 
 
@@ -76,14 +83,14 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesWrapperToXalanNodeMap
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanNode*, const DOMNode*, less<XalanNode*> >	XalanNodeMapType;
+#if defined(XALAN_NO_STD_NAMESPACE)
+	typedef map<XalanNode*, const DOMNodeType*, less<XalanNode*> >			XalanNodeMapType;
 
-	typedef map<const DOMNode*, XalanNode*, less<const DOMNode*> >	XercesNodeMapType;
+	typedef map<const DOMNodeType*, XalanNode*, less<const DOMNodeType*> >	XercesNodeMapType;
 #else
-	typedef std::map<XalanNode*, const DOMNode*>	XalanNodeMapType;
+	typedef std::map<XalanNode*, const DOMNodeType*>	XalanNodeMapType;
 
-	typedef std::map<const DOMNode*, XalanNode*>	XercesNodeMapType;
+	typedef std::map<const DOMNodeType*, XalanNode*>	XercesNodeMapType;
 #endif
 
 	XercesWrapperToXalanNodeMap();
@@ -92,16 +99,16 @@ public:
 
 	void
 	addAssociation(
-			const DOMNode*	theXercesNode,
-			XalanNode*		theXalanNode);
+			const DOMNodeType*	theXercesNode,
+			XalanNode*			theXalanNode);
 
 	void
 	clear();
 
 	XalanNode*
-	getNode(const DOMNode*	theXercesNode) const;
+	getNode(const DOMNodeType*	theXercesNode) const;
 
-	const DOMNode*
+	const DOMNodeType*
 	getNode(XalanNode*	theXalanNode) const;
 
 private:
@@ -110,6 +117,10 @@ private:
 
 	XercesNodeMapType	m_xercesMap;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -1,3 +1,60 @@
+/*
+ * The Apache Software License, Version 1.1
+ *
+ *
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:  
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
+ *
+ * 4. The names "Xalan" and "Apache Software Foundation" must
+ *    not be used to endorse or promote products derived from this
+ *    software without prior written permission. For written 
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache",
+ *    nor may "Apache" appear in their name, without prior written
+ *    permission of the Apache Software Foundation.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation and was
+ * originally based on software copyright (c) 1999, International
+ * Business Machines, Inc., http://www.ibm.com.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ */
+
 #if !defined(XERCESDOM_NODEHACK_HEADER_GUARD_1357924680)
 #define XERCESDOM_NODEHACK_HEADER_GUARD_1357924680
 
@@ -20,24 +77,35 @@
 #endif
 
 
+
+#include <XercesParserLiaison/XercesBridgeTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // An evil class to hack the Xerces smart-pointer class.  I'm
 // only doing this because I have to...
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_NodeHack : public DOM_Node
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_NodeHack : public XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node
 {
 public:
 
-	XercesDOM_NodeHack(NodeImpl*	theImpl = 0);
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node		ParentType;
+
+	XercesDOM_NodeHack(NodeImplType*	theImpl = 0);
 
 	~XercesDOM_NodeHack();
 
-	NodeImpl*
+	NodeImplType*
 	getImpl() const
 	{
 		return fImpl;
 	}
 
-	static NodeImpl*
-	getImpl(const DOM_Node&		theNode)
+	static NodeImplType*
+	getImpl(const ParentType&		theNode)
 	{
 #if defined(XALAN_OLD_STYLE_CASTS)
 		return ((const XercesDOM_NodeHack&)theNode).getImpl();
@@ -49,68 +117,72 @@ public:
 
 
 
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_AttrHack : public DOM_Attr
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_AttrHack : public XERCES_CPP_NAMESPACE_QUALIFIER DOM_Attr
 {
 public:
 
-	XercesDOM_AttrHack(AttrImpl*	theImpl = 0);
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Attr		ParentType;
 
-	XercesDOM_AttrHack(const DOM_Attr&	theSource);
+	XercesDOM_AttrHack(AttrImplType*	theImpl = 0);
+
+	XercesDOM_AttrHack(const ParentType&	theSource);
 
 	~XercesDOM_AttrHack();
 };
 
 
 
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_ElementHack : public DOM_Element
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_ElementHack : public XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element
 {
 public:
 
-	XercesDOM_ElementHack(ElementImpl*	theImpl = 0);
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element	ParentType;
 
-	XercesDOM_ElementHack(const DOM_Element&	theSource);
+	XercesDOM_ElementHack(ElementImplType*	theImpl = 0);
+
+	XercesDOM_ElementHack(const ParentType&		theSource);
 
 	~XercesDOM_ElementHack();
 
 
-	const DOMString
+	const DOMStringType
 	getNodeNameImpl() const;
 
-	const DOMString
+	const DOMStringType
 	getNodeValueImpl() const;
 
-	const DOMString
+	const DOMStringType
 	getNamespaceURIImpl() const;
 
-	const DOMString
+	const DOMStringType
 	getPrefixImpl() const;
 
-	const DOMString
+	const DOMStringType
 	getLocalNameImpl() const;
 
-	const DOMString
+	const DOMStringType
 	getTagNameImpl() const;
 
-	const DOMString
-	getAttributeImpl(const DOMString&	name) const;
+	const DOMStringType
+	getAttributeImpl(const DOMStringType&	name) const;
 
-	const DOMString
+	const DOMStringType
 	getAttributeNSImpl(
-			const DOMString&	namespaceURI,
-			const DOMString&	localName) const;
+			const DOMStringType&	namespaceURI,
+			const DOMStringType&	localName) const;
 
-	ElementImpl*
+	ElementImplType*
 	getImpl() const
 	{
 #if defined(XALAN_OLD_STYLE_CASTS)
-		return (ElementImpl*)fImpl;
+		return (ElementImplType*)fImpl;
 #else
-		return reinterpret_cast<ElementImpl*>(fImpl);
+		return reinterpret_cast<ElementImplType*>(fImpl);
 #endif
 	}
 
-	static ElementImpl*
-	getImpl(const DOM_Element&	theNode)
+	static ElementImplType*
+	getImpl(const ParentType&	theNode)
 	{
 #if defined(XALAN_OLD_STYLE_CASTS)
 		return ((const XercesDOM_ElementHack&)theNode).getImpl();
@@ -122,47 +194,49 @@ public:
 
 
 
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_TextHack : public DOM_Text
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_TextHack : public XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text
 {
 public:
 
-	XercesDOM_TextHack(TextImpl*	theImpl = 0);
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text		ParentType;
 
-	XercesDOM_TextHack(const DOM_Text&	theSource);
+	XercesDOM_TextHack(TextImplType*	theImpl = 0);
+
+	XercesDOM_TextHack(const ParentType&	theSource);
 
 	~XercesDOM_TextHack();
 
 
-	const DOMString
+	const DOMStringType
 	getNodeNameImpl() const;
 
-	const DOMString
+	const DOMStringType
 	getNodeValueImpl() const;
 
-	const DOMString
+	const DOMStringType
 	getNamespaceURIImpl() const;
 
-	const DOMString
+	const DOMStringType
 	getPrefixImpl() const;
 
-	const DOMString
+	const DOMStringType
 	getLocalNameImpl() const;
 
-	const DOMString
+	const DOMStringType
 	getDataImpl() const;
 
-	TextImpl*
+	TextImplType*
 	getImpl() const
 	{
 #if defined(XALAN_OLD_STYLE_CASTS)
-		return (TextImpl*)fImpl;
+		return (TextImplType*)fImpl;
 #else
-		return reinterpret_cast<TextImpl*>(fImpl);
+		return reinterpret_cast<TextImplType*>(fImpl);
 #endif
 	}
 
-	static TextImpl*
-	getImpl(const DOM_Text&	theNode)
+	static TextImplType*
+	getImpl(const ParentType&	theNode)
 	{
 #if defined(XALAN_OLD_STYLE_CASTS)
 		return ((const XercesDOM_TextHack&)theNode).getImpl();
@@ -171,6 +245,10 @@ public:
 #endif
 	}
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

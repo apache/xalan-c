@@ -73,8 +73,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesNotationWrapper::XercesNotationWrapper(
-			const DOMNotation*				theXercesDOMNotation,
+			const DOMNotationType*			theXercesDOMNotation,
 			const XercesWrapperNavigator&	theNavigator) :
 	XalanNotation(),
 	m_xercesNode(theXercesDOMNotation),
@@ -332,3 +336,7 @@ XercesNotationWrapper::getSystemId() const
 {
 	return m_navigator.getPooledString(m_xercesNode->getSystemId());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

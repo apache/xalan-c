@@ -67,7 +67,14 @@
 
 
 
-class DOMCDATASection;
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesWrapperNavigator;
 
 
@@ -77,7 +84,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesCDATASectionWrapper : public XalanC
 public:
 
 	XercesCDATASectionWrapper(
-			const DOMCDATASection*			theXercesCDATASection,
+			const DOMCDATASectionType*		theXercesCDATASection,
 			const XercesWrapperNavigator&	theNavigator);
 
 	virtual
@@ -591,7 +598,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	const DOMCDATASection*
+	const DOMCDATASectionType*
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -609,10 +616,14 @@ private:
 	operator==(const XercesCDATASectionWrapper&	theRHS) const;
 
 	// Data members...
-	const DOMCDATASection*			m_xercesNode;
+	const DOMCDATASectionType*		m_xercesNode;
 
 	const XercesWrapperNavigator&	m_navigator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,7 +79,14 @@
 
 
 
-class NodeImpl;
+XALAN_DECLARE_XERCES_CLASS(NodeImpl)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanNode;
 
 
@@ -88,14 +95,17 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesToXalanNodeMap
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanNode*, NodeImpl*, less<XalanNode*> >	XalanNodeMapType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node		DOM_NodeType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER NodeImpl		NodeImplType;
 
-	typedef map<NodeImpl*, XalanNode*, less<NodeImpl*> >	XercesNodeMapType;
+#if defined(XALAN_NO_STD_NAMESPACE)
+	typedef map<XalanNode*, NodeImplType*, less<XalanNode*> >	XalanNodeMapType;
+
+	typedef map<NodeImplType*, XalanNode*, less<NodeImplType*> >	XercesNodeMapType;
 #else
-	typedef std::map<XalanNode*, NodeImpl*>	XalanNodeMapType;
+	typedef std::map<XalanNode*, NodeImplType*>		XalanNodeMapType;
 
-	typedef std::map<NodeImpl*, XalanNode*>	XercesNodeMapType;
+	typedef std::map<NodeImplType*, XalanNode*>		XercesNodeMapType;
 #endif
 
 	XercesToXalanNodeMap();
@@ -104,20 +114,20 @@ public:
 
 	void
 	addAssociation(
-			const DOM_Node&		theXercesNode,
-			XalanNode*			theXalanNode);
+			const DOM_NodeType&		theXercesNode,
+			XalanNode*				theXalanNode);
 
 	void
 	clear();
 
 	XalanNode*
-	getNode(const DOM_Node&		theXercesNode) const
+	getNode(const DOM_NodeType&		theXercesNode) const
 	{
 		return getNode(XercesDOM_NodeHack::getImpl(theXercesNode));
 	}
 
 	XalanNode*
-	getNode(NodeImpl*	theXercesNodeImpl) const
+	getNode(NodeImplType*	theXercesNodeImpl) const
 	{
 		const XercesNodeMapType::const_iterator		i =
 				m_xercesMap.find(theXercesNodeImpl);
@@ -132,13 +142,13 @@ public:
 		}
 	}
 
-	DOM_Node
+	DOM_NodeType
 	getNode(const XalanNode*	theXalanNode) const
 	{
 		return XercesDOM_NodeHack(getNodeImpl(theXalanNode));
 	}
 
-	NodeImpl*
+	NodeImplType*
 	getNodeImpl(const XalanNode*	theXalanNode) const;
 
 	class NameMapEqualsFunctor
@@ -161,8 +171,8 @@ public:
 		const XalanNode*	m_value;
 	};
 
-	NodeImpl*
-	getNodeImpl(const DOM_Node&		theXercesNode) const
+	NodeImplType*
+	getNodeImpl(const DOM_NodeType&		theXercesNode) const
 	{
 		return XercesDOM_NodeHack::getImpl(theXercesNode);
 	}
@@ -173,6 +183,10 @@ private:
 
 	XercesNodeMapType	m_xercesMap;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -82,6 +82,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesNamedNodeListCache::XercesNamedNodeListCache(const XercesBridgeNavigator&		theNavigator) :
 	m_navigator(theNavigator),
 	m_cachedNodeLists(),
@@ -93,17 +97,17 @@ XercesNamedNodeListCache::XercesNamedNodeListCache(const XercesBridgeNavigator&	
 
 XercesNamedNodeListCache::~XercesNamedNodeListCache()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
-	for_each(m_cachedNodeLists.begin(),
-			 m_cachedNodeLists.end(),
-			 makeMapValueDeleteFunctor(m_cachedNodeLists));
+	for_each(
+			m_cachedNodeLists.begin(),
+			m_cachedNodeLists.end(),
+			makeMapValueDeleteFunctor(m_cachedNodeLists));
 
-	for_each(m_cachedNodeListsNS.begin(),
-			 m_cachedNodeListsNS.end(),
-			 makeMapValueDeleteFunctor(m_cachedNodeListsNS));
+	for_each(
+			m_cachedNodeListsNS.begin(),
+			m_cachedNodeListsNS.end(),
+			makeMapValueDeleteFunctor(m_cachedNodeListsNS));
 }
 
 
@@ -173,3 +177,7 @@ XercesNamedNodeListCache::getElementsByTagNameNS(
 #endif
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesTextWrapperAllocator::XercesTextWrapperAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -75,7 +79,7 @@ XercesTextWrapperAllocator::~XercesTextWrapperAllocator()
 
 XercesTextWrapperAllocator::ObjectType*
 XercesTextWrapperAllocator::create(
-			const DOMText*					theXercesText,
+			const DOMTextType*				theXercesText,
 			const XercesWrapperNavigator&	theNavigator)
 {
 	ObjectType* const	theBlock = m_allocator.allocateBlock();
@@ -95,3 +99,7 @@ XercesTextWrapperAllocator::reset()
 {
 	m_allocator.reset();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

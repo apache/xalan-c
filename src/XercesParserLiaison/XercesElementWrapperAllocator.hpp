@@ -69,10 +69,11 @@
 
 
 #include <XercesParserLiaison/XercesElementWrapper.hpp>
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
 
 
 
-class DOMElement;
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -80,7 +81,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesElementWrapperAllocator
 {
 public:
 
-	typedef XercesElementWrapper						ObjectType;
+	typedef XercesElementWrapper					ObjectType;
 
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
 	typedef ArenaBlock<ObjectType>					ArenaBlockType;
@@ -112,7 +113,7 @@ public:
 	 */
 	ObjectType*
 	create(
-			const DOMElement*				theXercesElement,
+			const DOMElementType*			theXercesElement,
 			const XercesWrapperNavigator&	theNavigator);
 
 	/**
@@ -156,6 +157,10 @@ private:
 	// Data members...
 	ArenaAllocatorType	m_allocator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

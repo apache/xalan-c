@@ -68,8 +68,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesDocumentTypeBridge::XercesDocumentTypeBridge(
-			const DOM_DocumentType&			theXercesDOMDocumentType,
+			const DOM_DocumentTypeType&		theXercesDOMDocumentType,
 			const XercesBridgeNavigator&	theNavigator) :
 	XalanDocumentType(),
 	m_xercesNode(theXercesDOMDocumentType),
@@ -372,3 +376,7 @@ XercesDocumentTypeBridge::getInternalSubset() const
 {
 	return m_navigator.getPooledString(m_xercesNode.getInternalSubset());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

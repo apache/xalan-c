@@ -77,8 +77,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesElementWrapper::XercesElementWrapper(
-			const DOMElement*				theXercesElement,
+			const DOMElementType*			theXercesElement,
 			const XercesWrapperNavigator&	theNavigator) :
 	XalanElement(),
 	m_xercesNode(theXercesElement),
@@ -336,7 +340,7 @@ XercesElementWrapper::getTagName() const
 
 
 const XalanDOMString&
-XercesElementWrapper::getAttribute(const XalanDOMString&		name) const
+XercesElementWrapper::getAttribute(const XalanDOMString&	name) const
 {
 	return m_navigator.getPooledString(m_xercesNode->getAttribute(c_wstr(name)));
 }
@@ -344,7 +348,7 @@ XercesElementWrapper::getAttribute(const XalanDOMString&		name) const
 
 
 XalanAttr*
-XercesElementWrapper::getAttributeNode(const XalanDOMString&		name) const
+XercesElementWrapper::getAttributeNode(const XalanDOMString&	name) const
 {
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return (XalanAttr*)m_attributes.getNamedItem(name);
@@ -439,10 +443,17 @@ XercesElementWrapper::getAttributeNodeNS(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const
 {
-	DOMAttr* const	theAttrNode =
+	DOMAttrType* const	theAttrNode =
 		m_xercesNode->getAttributeNodeNS(c_wstr(namespaceURI), c_wstr(localName));
 
-	return m_navigator.mapNode(theAttrNode);
+	if (theAttrNode == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return m_navigator.mapNode(theAttrNode);
+	}
 }
 
 
@@ -466,3 +477,7 @@ XercesElementWrapper::getElementsByTagNameNS(
 
 	return 0;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

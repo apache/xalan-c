@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,8 +67,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesEntityReferenceBridge::XercesEntityReferenceBridge(
-			const DOM_EntityReference&		theXercesDOMEntityReference,
+			const DOM_EntityReferenceType&	theXercesDOMEntityReference,
 			const XercesBridgeNavigator&	theNavigator) :
 	XalanEntityReference(),
 	m_xercesNode(theXercesDOMEntityReference),
@@ -310,3 +314,7 @@ XercesEntityReferenceBridge::getIndex() const
 {
 	return m_navigator.getIndex();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

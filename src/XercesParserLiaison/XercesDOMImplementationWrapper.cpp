@@ -70,7 +70,11 @@
 
 
 
-XercesDOMImplementationWrapper::XercesDOMImplementationWrapper(DOMImplementation*	theXercesDOMImplementation) :
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+XercesDOMImplementationWrapper::XercesDOMImplementationWrapper(DOMImplementationType*	theXercesDOMImplementation) :
 	XalanDOMImplementation(),
 	m_xercesNode(theXercesDOMImplementation)
 {
@@ -126,3 +130,7 @@ XercesDOMImplementationWrapper::createDocument(
 
 	return 0;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -79,6 +79,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesBridgeNavigator;
 
 
@@ -87,8 +91,10 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesEntityBridge : public XalanEntity
 {
 public:
 
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Entity			DOM_EntityType;
+
 	XercesEntityBridge(
-			const DOM_Entity&				theXercesDOMEntity,
+			const DOM_EntityType&			theXercesDOMEntity,
 			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
@@ -472,7 +478,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	DOM_Entity
+	DOM_EntityType
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -497,12 +503,16 @@ private:
 	// constructor parameter.  I have no idea why MSVC
 	// generate bogus code when using the parameter, but
 	// it does...
-	DOM_Entity						m_xercesNode;
+	DOM_EntityType					m_xercesNode;
 
 	const XercesBridgeNavigator&	m_navigator;
 
 	XercesNodeListBridge			m_children;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

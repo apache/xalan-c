@@ -69,6 +69,11 @@
 
 
 #include <XercesParserLiaison/XercesTextWrapper.hpp>
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -108,7 +113,7 @@ public:
 	 */
 	ObjectType*
 	create(
-			const DOMText*					theXercesText,
+			const DOMTextType*				theXercesText,
 			const XercesWrapperNavigator&	theNavigator);
 
 	/**
@@ -151,6 +156,10 @@ private:
 	// Data members...
 	ArenaAllocatorType	m_allocator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -75,14 +75,19 @@
 
 
 
-class DOMAttr;
-class DOMNode;
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesDocumentWrapper;
 class XalanAttr;
 class XalanElement;
 class XalanNode;
 class XalanText;
-class DOMText;
 
 
 
@@ -114,15 +119,15 @@ public:
 	}
 
 	XalanNode*
-	mapNode(const DOMNode*		theXercesNode) const;
+	mapNode(const DOMNodeType*	theXercesNode) const;
 
 	XalanAttr*
-	mapNode(const DOMAttr*		theXercesNode) const;
+	mapNode(const DOMAttrType*	theXercesNode) const;
 
-	const DOMNode*
+	const DOMNodeType*
 	mapNode(XalanNode*	theXalanNode) const;
 
-	const DOMAttr*
+	const DOMAttrType*
 	mapNode(XalanAttr*	theXercesNode) const;
 
 	unsigned long
@@ -138,7 +143,7 @@ public:
 	}
 
 	XalanNode*
-	getParentNode(const DOMNode*	theXercesNode) const;
+	getParentNode(const DOMNodeType*	theXercesNode) const;
 
 	XalanNode*
 	getParentNode() const
@@ -153,7 +158,7 @@ public:
 	}
 
 	XalanNode*
-	getPreviousSibling(const DOMNode*	theXercesNode) const;
+	getPreviousSibling(const DOMNodeType*	theXercesNode) const;
 
 	XalanNode*
 	getPreviousSibling() const
@@ -168,7 +173,7 @@ public:
 	}
 
 	XalanNode*
-	getNextSibling(const DOMNode*	theXercesNode) const;
+	getNextSibling(const DOMNodeType*	theXercesNode) const;
 
 	XalanNode*
 	getNextSibling() const
@@ -183,7 +188,7 @@ public:
 	}
 
 	XalanNode*
-	getFirstChild(const DOMNode*	theXercesNode) const;
+	getFirstChild(const DOMNodeType*	theXercesNode) const;
 
 	XalanNode*
 	getFirstChild() const
@@ -198,7 +203,7 @@ public:
 	}
 
 	XalanNode*
-	getLastChild(const DOMNode*	theXercesNode) const;
+	getLastChild(const DOMNodeType*		theXercesNode) const;
 
 	XalanNode*
 	getLastChild() const
@@ -213,7 +218,7 @@ public:
 	}
 
 	XalanElement*
-	getOwnerElement(const DOMAttr*	theXercesAttr) const;
+	getOwnerElement(const DOMAttrType*	theXercesAttr) const;
 
 	/**
 	 * Get a pooled string.  If the string is not in the pool,
@@ -248,6 +253,10 @@ private:
 
 	static const XalanDOMString		s_emptyString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,8 +66,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesNodeListBridge::XercesNodeListBridge(
-			const DOM_NodeList&				theXercesNodeList,
+			const DOM_NodeListType&			theXercesNodeList,
 			const XercesBridgeNavigator&	theNavigator) :
 	XalanNodeList(),
 	m_xercesNodeList(theXercesNodeList),
@@ -105,3 +109,7 @@ XercesNodeListBridge::getLength() const
 {
 	return m_xercesNodeList.getLength();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

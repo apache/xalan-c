@@ -77,8 +77,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesTextWrapper::XercesTextWrapper(
-			const DOMText*					theXercesText,
+			const DOMTextType*				theXercesText,
 			const XercesWrapperNavigator&	theNavigator) :
 	XalanText(),
 	m_xercesNode(theXercesText),
@@ -402,3 +406,7 @@ XercesTextWrapper::isIgnorableWhitespace() const
 {
 	return isXMLWhitespace(getData());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

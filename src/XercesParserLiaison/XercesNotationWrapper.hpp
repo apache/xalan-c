@@ -67,7 +67,14 @@
 
 
 
-class DOMNotation;
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesWrapperNavigator;
 
 
@@ -77,7 +84,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesNotationWrapper : public XalanNotat
 public:
 
 	XercesNotationWrapper(
-			const DOMNotation*				theXercesDOMNotation,
+			const DOMNotationType*			theXercesDOMNotation,
 			const XercesWrapperNavigator&	theNavigator);
 
 	virtual
@@ -453,7 +460,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	const DOMNotation*
+	const DOMNotationType*
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -471,10 +478,14 @@ private:
 	operator==(const XercesNotationWrapper&		theRHS) const;
 
 	// Data members...
-	const DOMNotation* const		m_xercesNode;
+	const DOMNotationType* const	m_xercesNode;
 
 	const XercesWrapperNavigator&	m_navigator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

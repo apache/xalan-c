@@ -67,7 +67,14 @@
 
 
 
-class DOMNodeList;
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesWrapperNavigator;
 
 
@@ -77,7 +84,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesNodeListWrapper : public XalanNodeL
 public:
 
 	XercesNodeListWrapper(
-			const DOMNodeList*				theXercesNodeList,
+			const DOMNodeListType*			theXercesNodeList,
 			const XercesWrapperNavigator&	theNavigator);
 
 	XercesNodeListWrapper(const XercesNodeListWrapper&	theSource);
@@ -123,10 +130,14 @@ private:
 
 
 	// Data members...
-	const DOMNodeList*				m_xercesNodeList;
+	const DOMNodeListType*			m_xercesNodeList;
 
 	const XercesWrapperNavigator&	m_navigator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

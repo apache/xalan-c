@@ -73,8 +73,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesTextBridge::XercesTextBridge(
-			const DOM_Text&					theXercesText,
+			const DOM_TextType&				theXercesText,
 			const XercesBridgeNavigator&	theNavigator) :
 	XalanText(),
 	m_xercesNode(theXercesText),
@@ -403,3 +407,7 @@ XercesTextBridge::isIgnorableWhitespace() const
 {
 	return isXMLWhitespace(getData());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

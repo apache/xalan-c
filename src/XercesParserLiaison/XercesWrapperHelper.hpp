@@ -76,11 +76,11 @@
 
 
 #include <XercesParserLiaison/XercesBridgeNavigator.hpp>
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
 
 
 
-class DOMCharacterData;
-class DOMNode;
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -100,15 +100,15 @@ public:
 
 	static bool
 	isSupported(
-			const DOMNode*			theXercesNode,
+			const DOMNodeType*		theXercesNode,
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version);
 
 	static const XalanDOMString
 	substringData(
-			const DOMCharacterData*		theXercesNode,
-			unsigned int				offset, 
-			unsigned int				count);
+			const DOMCharacterDataType*		theXercesNode,
+			unsigned int					offset, 
+			unsigned int					count);
 
 private:
 
@@ -117,6 +117,10 @@ private:
 
 	XercesWrapperHelper(const XercesWrapperHelper&);
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

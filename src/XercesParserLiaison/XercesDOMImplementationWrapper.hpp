@@ -67,7 +67,14 @@
 
 
 
-class DOMImplementation;
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesWrapperNavigator;
 
 
@@ -76,7 +83,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMImplementationWrapper : public X
 {
 public:
 
-	XercesDOMImplementationWrapper(DOMImplementation*	theXercesDOMImplementation);
+	XercesDOMImplementationWrapper(DOMImplementationType*	theXercesDOMImplementation);
 
 	virtual
 	~XercesDOMImplementationWrapper();
@@ -153,7 +160,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	DOMImplementation*
+	DOMImplementationType*
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -175,8 +182,12 @@ private:
 
 	// Data members...
 
-	DOMImplementation* const	m_xercesNode;
+	DOMImplementationType* const	m_xercesNode;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -106,6 +106,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanDOMStringPool;
 class XercesAttrBridge;
 class XercesCommentBridge;
@@ -125,6 +129,22 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDocumentBridge : public XalanDocume
 {
 public:
 
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Attr				DOM_AttrType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Comment			DOM_CommentType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_CDATASection		DOM_CDATASectionType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Document			DOM_DocumentType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentFragment	DOM_DocumentFragmentType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element			DOM_ElementType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Entity			DOM_EntityType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_EntityReference	DOM_EntityReferenceType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node				DOM_NodeType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text				DOM_TextType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Notation			DOM_NotationType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_ProcessingInstruction	DOM_ProcessingInstructionType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text				DOM_TextType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentType		DOM_DocumentTypeType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER NodeImpl				NodeImplType;
+
 	friend class XercesBridgeNavigator;
 
 	/**
@@ -143,9 +163,9 @@ public:
 	 *
 	 */
 	XercesDocumentBridge(
-			const DOM_Document&		theXercesDocument,
-			bool					threadSafe = true,
-			bool					buildBridge = true);
+			const DOM_DocumentType&		theXercesDocument,
+			bool						threadSafe = true,
+			bool						buildBridge = true);
 
 	virtual
 	~XercesDocumentBridge();
@@ -324,21 +344,21 @@ public:
 	rebuildBridge();
 
 	XalanNode*
-	mapNode(const DOM_Node& 	theXercesNode) const;
+	mapNode(const DOM_NodeType& 	theXercesNode) const;
 
 	XalanAttr*
-	mapNode(const DOM_Attr& 	theXercesNode) const;
+	mapNode(const DOM_AttrType& 	theXercesNode) const;
 
 	XalanElement*
-	mapNode(const DOM_Element& 	theXercesNode) const;
+	mapNode(const DOM_ElementType& 	theXercesNode) const;
 
-	DOM_Node
+	DOM_NodeType
 	mapNode(const XalanNode* 	theXalanNode) const;
 
-	DOM_Attr
+	DOM_AttrType
 	mapNode(const XalanAttr* 	theXalanNode) const;
 
-	NodeImpl*
+	NodeImplType*
 	mapNodeToImpl(const XalanNode* 	theXalanNode) const;
 
 	/**
@@ -348,7 +368,7 @@ public:
 	 * @return the Xerces DOM_Document instance.
 	 *
 	 */
-	DOM_Document
+	DOM_DocumentType
 	getXercesDocument() const
 	{
 		return m_xercesDocument;
@@ -362,7 +382,7 @@ public:
 	void
 	buildBridgeNodes();
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
 
 	typedef deque<XalanNode*>				NodeVectorType;
@@ -403,7 +423,7 @@ public:
 			XalanNode*				m_node;
 		};
 
-	#if defined(XALAN_NO_NAMESPACES)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 		typedef vector<NavigatorStackEntryType>			NavigatorStackType;
 	#else
 		typedef std::vector<NavigatorStackEntryType>	NavigatorStackType;
@@ -412,10 +432,10 @@ public:
 	protected:
 
 		virtual void
-		startNode(const DOM_Node&	node);
+		startNode(const DOM_NodeType&	node);
 
 		virtual void
-		endNode(const DOM_Node&	node);
+		endNode(const DOM_NodeType&		node);
 
 	private:
 
@@ -457,7 +477,7 @@ public:
 private:
 
 	XalanNode*
-	mapNode(NodeImpl* 	theXercesNodeImpl) const;
+	mapNode(NodeImplType* 	theXercesNodeImpl) const;
 
 	// Destruction API...
 	void
@@ -479,82 +499,82 @@ private:
 	// More internal implementation stuff...
 	XalanNode*
 	internalCloneNode(
-			const XalanNode*	theXalanNode,
-			const DOM_Node&		theXercesNode,
-			bool				deep);
+			const XalanNode*		theXalanNode,
+			const DOM_NodeType&		theXercesNode,
+			bool					deep);
 
 	// Factory methods for our implementation nodes...
 	XalanNode*
 	createBridgeNode(
-			const DOM_Node&	theXercesNode,
-			unsigned long	theIndex,
-			bool			mapNode) const;
+			const DOM_NodeType&		theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const;
 
 	XercesDocumentTypeBridge*
 	createBridgeNode(
-			const DOM_DocumentType&		theDoctype,
-			unsigned long				theIndex,
-			bool						mapNode) const;
-
-	XercesElementBridge*
-	createBridgeNode(
-			const DOM_Element& 	theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const;
-
-	XercesDocumentFragmentBridge*
-	createBridgeNode(
-			const DOM_DocumentFragment&		theXercesNode,
+			const DOM_DocumentTypeType&		theDoctype,
 			unsigned long					theIndex,
 			bool							mapNode) const;
 
-	XercesTextBridge*
+	XercesElementBridge*
 	createBridgeNode(
-			const DOM_Text&		theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const;
+			const DOM_ElementType& 	theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const;
 
-	XercesCommentBridge*
+	XercesDocumentFragmentBridge*
 	createBridgeNode(
-			const DOM_Comment&	theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const;
-
-	XercesCDATASectionBridge*
-	createBridgeNode(
-			const DOM_CDATASection&		theXercesNode,
-			unsigned long				theIndex,
-			bool						mapNode) const;
-
-	XercesProcessingInstructionBridge*
-	createBridgeNode(
-			const DOM_ProcessingInstruction&	theXercesNode,
+			const DOM_DocumentFragmentType&		theXercesNode,
 			unsigned long						theIndex,
 			bool								mapNode) const;
 
+	XercesTextBridge*
+	createBridgeNode(
+			const DOM_TextType&		theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const;
+
+	XercesCommentBridge*
+	createBridgeNode(
+			const DOM_CommentType&	theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const;
+
+	XercesCDATASectionBridge*
+	createBridgeNode(
+			const DOM_CDATASectionType&		theXercesNode,
+			unsigned long					theIndex,
+			bool							mapNode) const;
+
+	XercesProcessingInstructionBridge*
+	createBridgeNode(
+			const DOM_ProcessingInstructionType&	theXercesNode,
+			unsigned long							theIndex,
+			bool									mapNode) const;
+
 	XercesAttrBridge*
 	createBridgeNode(
-			const DOM_Attr&		theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const;
+			const DOM_AttrType&		theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const;
 
 	XercesEntityBridge*
 	createBridgeNode(
-			const DOM_Entity&	theXercesNode,
-			unsigned long		theIndex,
-			bool				mapNode) const;
+			const DOM_EntityType&	theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const;
 
 	XercesEntityReferenceBridge*
 	createBridgeNode(
-			const DOM_EntityReference&	theXercesNode,
-			unsigned long				theIndex,
-			bool						mapNode) const;
+			const DOM_EntityReferenceType&	theXercesNode,
+			unsigned long					theIndex,
+			bool							mapNode) const;
 
 	XercesNotationBridge*
 	createBridgeNode(
-			const DOM_Notation&		theXercesNode,
-			unsigned long			theIndex,
-			bool					mapNode) const;
+			const DOM_NotationType&		theXercesNode,
+			unsigned long				theIndex,
+			bool						mapNode) const;
 
 	XercesBridgeNavigator&
 	pushNavigator(bool	mappingMode) const;
@@ -564,7 +584,7 @@ private:
 
 	// $$$ ToDo: This is because DOM_Document::getElementById() is not
 	// const...
-	mutable DOM_Document					m_xercesDocument;
+	mutable DOM_DocumentType				m_xercesDocument;
 
 	XalanElement*							m_documentElement;
 
@@ -596,6 +616,10 @@ private:
 
 	const XalanAutoPtr<XalanDOMStringPool>	m_stringPool;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

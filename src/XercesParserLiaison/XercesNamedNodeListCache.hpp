@@ -75,7 +75,14 @@
 
 
 
-class DOM_NodeList;
+#include <XercesParserLiaison/XercesBridgeTypes.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesBridgeNavigator;
 class XercesNodeListBridge;
 
@@ -98,7 +105,7 @@ public:
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const;
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef map<XalanDOMString,
 				XercesNodeListBridge*,
 				less<XalanDOMString> >			NodeListCacheType;
@@ -109,10 +116,10 @@ public:
 
 protected:
 
-	virtual DOM_NodeList
+	virtual DOM_NodeListType
 	getXercesNodeList(const XalanDOMString&		tagname) const = 0;
 
-	virtual DOM_NodeList
+	virtual DOM_NodeListType
 	getXercesNodeList(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const = 0;
@@ -129,6 +136,10 @@ private:
 	mutable NodeListCacheType	m_cachedNodeListsNS;
 #endif
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

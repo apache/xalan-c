@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,8 +73,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesAttrBridge::XercesAttrBridge(
-			const DOM_Attr&					theXercesAttr,
+			const DOM_AttrType&				theXercesAttr,
 			const XercesBridgeNavigator&	theNavigator) :
 	XalanAttr(),
 	m_xercesNode(theXercesAttr),
@@ -348,14 +352,7 @@ XercesAttrBridge::getValue() const
 void
 XercesAttrBridge::setValue(const XalanDOMString&	value)
 {
-	try
-	{
-		m_xercesNode.setValue(c_wstr(value));
-	}
-	catch(const DOM_DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+	XercesBridgeHelper::setNodeValue(m_xercesNode, value);
 }
 
 
@@ -365,3 +362,7 @@ XercesAttrBridge::getOwnerElement() const
 {
 	return m_navigator.getOwnerElement(m_xercesNode);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

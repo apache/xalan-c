@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesTreeWalker::XercesTreeWalker()
 {
 }
@@ -81,15 +85,15 @@ XercesTreeWalker::~XercesTreeWalker()
 
 
 void
-XercesTreeWalker::traverse(const DOM_Node&	pos)
+XercesTreeWalker::traverse(const DOM_NodeType&	pos)
 {
-	DOM_Node	thePos(pos);
+	DOM_NodeType	thePos(pos);
 
 	while(thePos != 0)
 	{
 		startNode(thePos);
 
-		DOM_Node	nextNode = thePos.getFirstChild();
+		DOM_NodeType	nextNode = thePos.getFirstChild();
 
 		while(nextNode == 0)
 		{
@@ -118,16 +122,16 @@ XercesTreeWalker::traverse(const DOM_Node&	pos)
 
 void
 XercesTreeWalker::traverse(
-			const DOM_Node&		pos,
-			const DOM_Node&		parent)
+			const DOM_NodeType&		pos,
+			const DOM_NodeType&		parent)
 {
-	DOM_Node	thePos(pos);
+	DOM_NodeType	thePos(pos);
 
 	while(parent != thePos)
 	{	  
 		startNode(thePos);
 	  
-		DOM_Node	nextNode = thePos.getFirstChild();
+		DOM_NodeType	nextNode = thePos.getFirstChild();
 
 		while(nextNode == 0)
 		{
@@ -151,3 +155,7 @@ XercesTreeWalker::traverse(
 		thePos = nextNode;
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

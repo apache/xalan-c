@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,8 +68,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesCommentBridge::XercesCommentBridge(
-			const DOM_Comment&				theXercesComment,
+			const DOM_CommentType&			theXercesComment,
 			const XercesBridgeNavigator&	theNavigator) :
 	XalanComment(),
 	m_xercesNode(theXercesComment),
@@ -381,3 +385,7 @@ XercesCommentBridge::replaceData(
 {
 	XercesBridgeHelper::replaceData(m_xercesNode, offset, count, arg);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

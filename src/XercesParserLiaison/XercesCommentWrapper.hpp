@@ -64,10 +64,14 @@
 
 
 #include <XalanDOM/XalanComment.hpp>
+#include <XercesParserLiaison/XercesWrapperTypes.hpp>
 
 
 
-class DOMComment;
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XercesWrapperNavigator;
 
 
@@ -77,7 +81,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesCommentWrapper : public XalanCommen
 public:
 
 	XercesCommentWrapper(
-			const DOMComment*				theXercesComment,
+			const DOMCommentType*			theXercesComment,
 			const XercesWrapperNavigator&	theNavigator);
 
 	virtual
@@ -559,7 +563,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	const DOMComment*
+	const DOMCommentType*
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -579,11 +583,14 @@ private:
 	operator==(const XercesCommentWrapper&	theRHS) const;
 
 	// Data members...
-	const DOMComment* const			m_xercesNode;
+	const DOMCommentType* const		m_xercesNode;
 
 	const XercesWrapperNavigator&	m_navigator;
 };
 
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 #endif	// !defined(XERCESCOMMENTWRAPPER_HEADER_GUARD_1357924680)
