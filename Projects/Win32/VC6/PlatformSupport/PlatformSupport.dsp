@@ -72,7 +72,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "PlatformSupport_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /Gi /GR /GX /Zi /Od /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "_WINDOWS" /D "_USRDLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_XERCES" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "XML_DEBUG" /YX /FD /I /xml4c/include" /I /lotusxsl4c/stl" /I /lotusxsl4c/src/include" /I /xml4c/include" /GZ " " " " " " /c
+# ADD CPP /nologo /MDd /W4 /Gm /Gi- /GR /GX /Zi /Od /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "_WINDOWS" /D "_USRDLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_XERCES" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "XML_DEBUG" /YX /FD /I /xml4c/include" /I /lotusxsl4c/stl" /I /lotusxsl4c/src/include" /I /xml4c/include" /GZ " " " " " " /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
