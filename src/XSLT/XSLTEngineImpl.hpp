@@ -1577,30 +1577,6 @@ typedef XALAN_STD runtime_error               RuntimeError;
 		m_contextNodeList = ref;		
 	}
 
-	// $$$ ToDO: Are these next two really needed?
-	/**
-	 * Set the table of KeyDeclaration objects, which are set by the 
-	 * xsl:key element.
-	 *
-	 * @param table new table of KeyDeclaration objects
-	 */
-	void
-	setKeyDeclarationsTable(const KeyDeclarationVectorType&		table)
-	{
-		m_keyDeclarations = table;
-	}
-
-	/**
-	 * Accessor method for the table of KeyDeclaration objects.
-	 *
-	 * @return table of KeyDeclaration objects
-	 */
-	const KeyDeclarationVectorType&
-	getKeyDeclarations() const
-	{
-		return m_keyDeclarations;
-	}
-
 	/**
 	 * Set the table of keys.  This will be used by the key() and keyref()
 	 * functions for lookup of a nodelist.
@@ -2499,12 +2475,6 @@ private:
 	 * passed by parameter.
 	 */
 	MutableNodeRefList	m_contextNodeList;
-
-	/**
-	 * Table of KeyDeclaration objects, which are set by the 
-	 * xsl:key element.
-	 */
-	KeyDeclarationVectorType	m_keyDeclarations;
 
 	/**
 	 * Table of element keys.  The table will be built on demand, 
