@@ -1,9 +1,9 @@
-<s3 title="Changes since &xslt4c; version 0.30.0">
+<s3 title="Changes since &xslt4c; version 0.40.0">
 <p>Major updates since version 0.40.0 include:</p>
 <ul>
 <li>Full support for namespace handling<br/><br/></li>
 <li>Full implementation of the format-number() function and support for the decimal-format element<br/><br/></li>
-<li>Integration with the <resource-ref idref="icu"/>for number formatting, sorting, and output encoding<br/><br/></li>
+<li>Integration with the <resource-ref idref="icu"/> for number formatting, sorting, and output encoding<br/><br/></li>
 <li>Support for the exclude-result-prefixes attribute<br/><br/></li>
 <li>Support for the output encoding attribute</li>
 </ul>
