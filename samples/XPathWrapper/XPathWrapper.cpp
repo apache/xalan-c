@@ -15,7 +15,6 @@
 
 
 #include <xercesc/framework/MemBufInputSource.hpp>
-#include <xercesc/parsers/DOMParser.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
 
