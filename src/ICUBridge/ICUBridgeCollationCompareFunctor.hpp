@@ -84,6 +84,11 @@ public:
 	virtual int
 	operator()(
 			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS);
+
+	virtual int
+	operator()(
+			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) const;
 
 	bool

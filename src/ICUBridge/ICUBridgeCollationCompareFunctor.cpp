@@ -60,6 +60,10 @@
 
 
 
+#include <Include/XalanAutoPtr.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
@@ -95,14 +99,45 @@ ICUBridgeCollationCompareFunctor::~ICUBridgeCollationCompareFunctor()
 
 
 
-static UChar	dummy = 0;
+int
+ICUBridgeCollationCompareFunctor::operator()(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS) const
+{
+	UErrorCode	theStatus = U_ZERO_ERROR;
+
+	XalanAutoPtr<Collator>	theCollator(Collator::createInstance(theStatus));
+
+	if (theStatus == U_ZERO_ERROR || theStatus == U_USING_DEFAULT_ERROR)
+	{
+		assert(theCollator.get() != 0);
+
+#if U_SIZEOF_WCHAR_T==2
+		return theCollator->compare(
+					(wchar_t*)theLHS,
+					length(theLHS),
+					(wchar_t*)theRHS,
+					length(theRHS));
+#else
+		return theCollator->compare(
+					theLHS,
+					length(theLHS),
+					theRHS,
+					length(theRHS));
+#endif
+	}
+	else
+	{
+		return s_defaultFunctor(theLHS, theRHS);
+	}
+}
 
 
 
 int
 ICUBridgeCollationCompareFunctor::operator()(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const
+			const XalanDOMChar*		theRHS)
 {
 	if (isValid() == false)
 	{
