@@ -64,12 +64,16 @@
 
 
 
+#include <vector>
+
+
+
 // Base class header file.
 #include <XSLT/ElemTemplateElement.hpp>
 
 
 
-#include <XPath/MutableNodeRefList.hpp>
+#include <XPath/NodeRefListBase.hpp>
 
 
 
@@ -80,6 +84,7 @@
 
 class AVT;
 class CountersTable;
+class MutableNodeRefList;
 class XalanNumberFormat;
 class XPath;
 class XPathExecutionContext;
@@ -467,9 +472,9 @@ private:
 	static const DecimalToRoman				s_romanConvertTable[];
 
 	/**
-	 * A map of supported numbering resource bundles.
+	 * numbering resource bundle for Greek numbering.
 	 */
-	static const NumberingResourceBundleMapType&	s_resourceBundles;
+	static const XalanNumberingResourceBundle&	s_elalphaResourceBundle;
 
 
 public:

@@ -1375,12 +1375,7 @@ ElemNumber::getFormattedNumber(
 
 				if (equals(letterVal, s_traditionalString) == true)
 				{
-					NumberingResourceBundleMapType::const_iterator	i = s_resourceBundles.find(0x03B1);
-
-					if (i != s_resourceBundles.end())
-					{
-						traditionalAlphaCount(listElement, (*i).second, theResult);
-					}
+					traditionalAlphaCount(listElement, s_elalphaResourceBundle, theResult);
 				}
 				else if (equals(letterVal, s_alphabeticString) == true)
 				{
@@ -1995,13 +1990,15 @@ const DecimalToRoman	ElemNumber::s_romanConvertTable[] =
 };
 
 
-const ElemNumber::NumberingResourceBundleMapType&	ElemNumber::s_resourceBundles =
-				::s_resourceBundles;
+static XalanNumberingResourceBundle		s_elalphaResourceBundle;
+
+const XalanNumberingResourceBundle&	ElemNumber::s_elalphaResourceBundle =
+		::s_elalphaResourceBundle;
 
 
 
 static void
-addTraditionalElalphaBundle(ElemNumber::NumberingResourceBundleMapType&		theBundleMap)
+initializeTraditionalElalphaBundle(XalanNumberingResourceBundle&	theBundle)
 {
 
 	// The following are a bunch of static data the comprise the contents of the bundle.
@@ -2099,8 +2096,8 @@ addTraditionalElalphaBundle(ElemNumber::NumberingResourceBundleMapType&		theBund
 		theElalphaDigitsTable,
 		theDigitsTableTable);
 
-	// Swap it with the one in the map (this avoids making a copy...)
-	theBundleMap[elalphaNumberType].swap(theElaphaBundle);
+	// Swap it with the one (this avoids making a copy...)
+	theBundle.swap(theElaphaBundle);
 }
 
 
@@ -2114,7 +2111,7 @@ ElemNumber::initialize()
 
 	::s_slashString = XALAN_STATIC_UCODE_STRING("/");
 
-	addTraditionalElalphaBundle(::s_resourceBundles);
+	initializeTraditionalElalphaBundle(::s_elalphaResourceBundle);
 }
 
 
@@ -2126,5 +2123,5 @@ ElemNumber::terminate()
 	releaseMemory(::s_commentString);
 	releaseMemory(::s_slashString);
 
-	NumberingResourceBundleMapType().swap(::s_resourceBundles);
+	XalanNumberingResourceBundle().swap(::s_elalphaResourceBundle);
 }
