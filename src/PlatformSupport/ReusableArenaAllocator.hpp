@@ -77,12 +77,9 @@ template<class ObjectType,
 #else
 		 class AllocatorType = std::allocator<ObjectType>,
 #endif
-		 class ReusableDestroyFunctionType = ReusableArenaBlockDestroy<ObjectType,
-																	   DestroyFunctionType>,
 		 class ReusableArenaBlockType = ReusableArenaBlock<ObjectType,
 														   DestroyFunctionType,
-														   AllocatorType,
-														   ReusableDestroyFunctionType> >
+														   AllocatorType> >
 class ReusableArenaAllocator : public ArenaAllocator<ObjectType,
 													 DestroyFunctionType,
 													 AllocatorType,

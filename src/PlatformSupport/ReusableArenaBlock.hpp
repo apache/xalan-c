@@ -60,10 +60,11 @@
 
 
 
-#include "ArenaBlock.hpp"
+#include <PlatformSupport/XalanBitmap.hpp>
+#include <PlatformSupport/ArenaBlock.hpp>
 
 
-
+#if 0
 template<class ObjectType,
 		 class DestroyFunctionType = ArenaBlockDestroy<ObjectType> >
 class ReusableArenaBlockDestroy
@@ -147,34 +148,35 @@ private:
 	// Destroy function to call.
 	DestroyFunctionType		m_destroyFunction;
 
-	// Set which contains pointers to all objects
+	// Bitmap which tracks which blocks are in use
 	// that should not be destroyed.
 	FreeListSetType			m_freeListSet;
 };
+#endif
 
 
 
 template<class ObjectType,
 		 class DestroyFunctionType = ArenaBlockDestroy<ObjectType>,
 #if defined(XALAN_NO_NAMESPACES)
-		 class AllocatorType = allocator<ObjectType>,
+		 class AllocatorType = allocator<ObjectType> >
 #else
-		 class AllocatorType = std::allocator<ObjectType>,
+		 class AllocatorType = std::allocator<ObjectType> >
 #endif
-		 class ReusableDestroyFunctionType = ReusableArenaBlockDestroy<ObjectType,
-																	   DestroyFunctionType> >
 class ReusableArenaBlock : public ArenaBlock<ObjectType,
-											 ReusableDestroyFunctionType,
+											 DestroyFunctionType,
 											 AllocatorType>
 {
 public:
 
 	typedef ArenaBlock<ObjectType,
-					   ReusableDestroyFunctionType,
+					   DestroyFunctionType,
 					   AllocatorType>				BaseClassType;
 
 	ReusableArenaBlock(size_type	theBlockCount) :
-		BaseClassType(theBlockCount)
+		BaseClassType(theBlockCount),
+		m_freeList(theBlockCount),
+		m_freeListSize(0)
 	{
 	}
 
@@ -185,50 +187,58 @@ public:
 	virtual ObjectType*
 	allocateBlock()
 	{
-		if (m_destroyFunction.freeListSize() == 0)
+		if (m_freeListSize == 0)
 		{
 			return BaseClassType::allocateBlock();
 		}
 		else
 		{
-			return m_destroyFunction.getNextFromFreeList();
+			return getNextFromFreeList();
 		}
 	}
 
-	// $$$ ToDo: How much error checking, etc. do we do here?  Is
-	// it worth trying to throw exceptions when things are not
-	// what they should be?
 	virtual void
 	commitAllocation(ObjectType*	theBlock)
 	{
 		assert(theBlock != 0);
-		assert(m_destroyFunction.freeListSize() == 0 ||
-			   theBlock == m_destroyFunction.getNextFromFreeList());
+		assert(m_freeListSize == 0 ||
+			   theBlock == getNextFromFreeList());
 
-		if (m_destroyFunction.freeListSize() == 0)
+		if (m_freeListSize == 0)
 		{
 			BaseClassType::commitAllocation(theBlock);
 		}
 		else
 		{
-			m_destroyFunction.removeFromFreeList(theBlock);
+			removeFromFreeList(theBlock);
 		}
 	}
 
 	virtual bool
 	blockAvailable() const
 	{
-		return m_destroyFunction.freeListSize() != 0 ? true : BaseClassType::blockAvailable();
+		return m_freeListSize != 0 ? true : BaseClassType::blockAvailable();
 	}
 
 	void
 	destroyObject(ObjectType*	theObject)
 	{
-		if (ownsObject(theObject) == true &&
-			m_destroyFunction.isOnFreeList(theObject) == false)
-		{
-			m_destroyFunction.destroyObject(theObject);
-		}
+		assert(ownsObject(theObject) == true &&
+			   isOnFreeList(theObject) == false);
+
+		m_destroyFunction(*theObject);
+
+		addToFreeList(theObject);
+	}
+
+protected:
+
+	virtual bool
+	shouldDestroyBlock(const ObjectType*	theObject) const
+	{
+		assert(ownsObject(theObject) == true);
+
+		return !isOnFreeList(theObject);
 	}
 
 private:
@@ -241,6 +251,63 @@ private:
 
 	bool
 	operator==(const ReusableArenaBlock&) const;
+
+	bool
+	isOnFreeList(const ObjectType*	theObject) const
+	{
+		assert(ownsObject(theObject) == true);
+
+		const size_type		theOffset =
+				getBlockOffset(theObject);
+
+		return m_freeList.isSet(theOffset);
+	}
+
+	void
+	addToFreeList(const ObjectType*		theObject)
+	{
+		const size_type		theOffset =
+				getBlockOffset(theObject);
+
+		m_freeList.set(theOffset);
+
+		++m_freeListSize;
+	}
+
+	void
+	removeFromFreeList(const ObjectType*	theObject)
+	{
+		const size_type		theOffset =
+				getBlockOffset(theObject);
+
+		m_freeList.clear(theOffset);
+
+		--m_freeListSize;
+	}
+
+	ObjectType*
+	getNextFromFreeList()
+	{
+		ObjectType*		theResult = 0;
+
+		const unsigned long	theFreeListSize = m_freeList.getSize();
+
+		for(unsigned long i = 0; i < theFreeListSize; ++i)
+		{
+			if (m_freeList.isSet(i) == false)
+			{
+				theResult = getBlockAddress(i);
+			}
+		}
+
+		return theResult;
+	}
+
+	// Bitmap which tracks which blocks are not in use
+	// and that should not be destroyed.
+	XalanBitmap		m_freeList;
+
+	unsigned long	m_freeListSize;
 };
 
 

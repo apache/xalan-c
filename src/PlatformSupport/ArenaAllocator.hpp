@@ -70,7 +70,7 @@
 
 
 template<class Type>
-class DeleteFunctor
+class ArenaDeleteFunctor
 {
 public:
 
@@ -111,7 +111,7 @@ public:
 
 		for_each(m_blocks.begin(),
 				 m_blocks.end(),
-				 DeleteFunctor<ArenaBlockType>());
+				 ArenaDeleteFunctor<ArenaBlockType>());
 	}
 
 	/*

@@ -112,7 +112,7 @@ public:
 		// Destroy all existing objects...
 		for_each(m_objectBlock,
 				 m_objectBlock + m_objectCount,
-				 m_destroyFunction);
+				 DeleteFunctor(*this, m_destroyFunction));
 
 		// Release the memory...
 		m_allocator.deallocate(m_objectBlock, 0);
@@ -197,7 +197,56 @@ public:
 
 protected:
 
-	DestroyFunctionType		m_destroyFunction;
+	virtual bool
+	shouldDestroyBlock(const ObjectType*	/* theObject */) const
+	{
+		return true;
+	}
+
+	size_type
+	getBlockOffset(const ObjectType*	theObject) const
+	{
+		assert(ownsObject(theObject) == true);
+
+		return theObject - m_objectBlock;
+	}
+
+	ObjectType*
+	getBlockAddress(size_type	theOffset) const
+	{
+		assert(ownsObject(m_objectBlock + theOffset) == true);
+
+		return m_objectBlock + theOffset;
+	}
+
+	struct DeleteFunctor
+	{
+		DeleteFunctor(
+				const ArenaBlock&			theArenaBlock,
+				const DestroyFunctionType&	theDestroyFunction) :
+			m_arenaBlock(theArenaBlock),
+			m_destroyFunction(theDestroyFunction)
+		{
+		}
+
+		void
+		operator()(ObjectType&	theObject) const
+		{
+			if (m_arenaBlock.shouldDestroyBlock(&theObject) == true)
+			{
+				m_destroyFunction(theObject);
+			}
+		}
+
+	private:
+
+		const ArenaBlock&			m_arenaBlock;
+		const DestroyFunctionType&	m_destroyFunction;
+	};
+
+	friend struct DeleteFunctor;
+
+	const DestroyFunctionType		m_destroyFunction;
 
 private:
 
@@ -211,13 +260,13 @@ private:
 	operator==(const ArenaBlock&) const;
 
 	// data members...
-	size_type			m_objectCount;
+	size_type				m_objectCount;
 
-	const size_type		m_blockCount;
+	const size_type			m_blockCount;
 
-	ObjectType*			m_objectBlock;
+	ObjectType*				m_objectBlock;
 
-	AllocatorType		m_allocator;
+	AllocatorType			m_allocator;
 };
 
 
