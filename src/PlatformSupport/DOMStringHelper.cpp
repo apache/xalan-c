@@ -503,42 +503,75 @@ substring(
 
 
 
-#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-
-template<class InputIteratorType, class OutputIteratorType>
-inline OutputIteratorType
-XalanCopy(
-			InputIteratorType	begin,
-			InputIteratorType	end,
-			OutputIteratorType	iterator)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+substring(
+			const XalanDOMChar*		theString,
+			XalanDOMString&			theSubstring,
+			unsigned int			theStartIndex,
+			unsigned int			theEndIndex)
 {
-	for(; begin != end; ++iterator, ++begin)
+	assert(theString != 0);
+
+	const unsigned int	theStringLength = length(theString);
+
+	// $$$ ToDo: In Java-land, any failing of this
+	// assertion would result in an exception being thrown.
+	assert(theStartIndex <= theStringLength);
+
+	if (theStartIndex == theStringLength)
 	{
-		*iterator = *begin;
+		// This is allowed, and should return an empty string.
+		clear(theSubstring);
+	}
+	else
+	{
+		const unsigned int	theLength = theEndIndex == UINT_MAX ? theStringLength - theStartIndex :
+													theEndIndex - theStartIndex;
+		assert(theStartIndex + theLength <= theStringLength);
+
+		theSubstring.assign(theString + theStartIndex, theLength);
 	}
 
-	return iterator;
+	return theSubstring;
 }
 
 
 
-template<class InputIteratorType, class OutputIteratorType, class UnaryFunction>
-inline OutputIteratorType
-XalanTransform(
-			InputIteratorType	begin,
-			InputIteratorType	end,
-			OutputIteratorType	iterator,
-			UnaryFunction		function)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+substring(
+			const XalanDOMString&	theString,
+			XalanDOMString&			theSubstring,
+			unsigned int			theStartIndex,
+			unsigned int			theEndIndex)
 {
-	for(; begin != end; ++iterator, ++begin)
+	const unsigned int	theStringLength = length(theString);
+
+	// $$$ ToDo: In Java-land, any failing of this
+	// assertion would result in an exception being thrown.
+	assert(theStartIndex <= theStringLength);
+
+	if (theStartIndex == theStringLength)
 	{
-		*iterator = function(*begin);
+		// This is allowed, and should return an empty string.
+		clear(theSubstring);
 	}
+	else
+	{
+		const unsigned int	theLength = theEndIndex == UINT_MAX ? theStringLength - theStartIndex :
+													theEndIndex - theStartIndex;
 
-	return iterator;
+		if (theLength == 0)
+		{
+			clear(theSubstring);
+		}
+		else
+		{
+			assert(theStartIndex + theLength <= theStringLength);
+
+			theString.substr(theSubstring, theStartIndex, theLength);
+		}
+	}
 }
-
-#endif
 
 
 
@@ -576,6 +609,45 @@ substring(
 		}
 	}
 }
+
+
+
+#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+
+template<class InputIteratorType, class OutputIteratorType>
+inline OutputIteratorType
+XalanCopy(
+			InputIteratorType	begin,
+			InputIteratorType	end,
+			OutputIteratorType	iterator)
+{
+	for(; begin != end; ++iterator, ++begin)
+	{
+		*iterator = *begin;
+	}
+
+	return iterator;
+}
+
+
+
+template<class InputIteratorType, class OutputIteratorType, class UnaryFunction>
+inline OutputIteratorType
+XalanTransform(
+			InputIteratorType	begin,
+			InputIteratorType	end,
+			OutputIteratorType	iterator,
+			UnaryFunction		function)
+{
+	for(; begin != end; ++iterator, ++begin)
+	{
+		*iterator = function(*begin);
+	}
+
+	return iterator;
+}
+
+#endif
 
 
 

@@ -1152,9 +1152,9 @@ isXMLLetterOrDigit(XalanDOMChar		theChar)
  * Simulates the java String method substring(). Returns a new string that is
  * a substring of this string. The substring begins at the specified
  * theStartIndex and extends to the character at index theEndIndex - 1. Thus
- * the length of the substring is theEndIndex-theStartIndex.
+ * the length of the substring is theEndIndex - theStartIndex.
  * 
- * @param theString     target string
+ * @param theString     source string
  * @param theStartIndex starting index, inclusive
  * @param theEndIndex   ending index, exclusive
  * @return string containing the specified range of characters from target
@@ -1171,9 +1171,50 @@ substring(
  * Simulates the java String method substring(). Returns a new string that is
  * a substring of this string. The substring begins at the specified
  * theStartIndex and extends to the character at index theEndIndex - 1. Thus
+ * the length of the substring is theEndIndex - theStartIndex.
+ * 
+ * @param theString     source string
+ * @param theSubstring  target string
+ * @param theStartIndex starting index, inclusive
+ * @param theEndIndex   ending index, exclusive
+ * @return Returns a reference to theSubstring
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+substring(
+			const XalanDOMChar*		theString,
+			XalanDOMString&			theSubstring,
+			unsigned int			theStartIndex,
+			unsigned int			theEndIndex = unsigned(-1));
+
+
+
+/**
+ * Simulates the java String method substring(). Returns a new string that is
+ * a substring of this string. The substring begins at the specified
+ * theStartIndex and extends to the character at index theEndIndex - 1. Thus
+ * the length of the substring is theEndIndex - theStartIndex.
+ * 
+ * @param theString     source string
+ * @param theSubstring  target string
+ * @param theStartIndex starting index, inclusive
+ * @param theEndIndex   ending index, exclusive
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+substring(
+			const XalanDOMString&	theString,
+			XalanDOMString&			theSubstring,
+			unsigned int			theStartIndex,
+			unsigned int			theEndIndex = unsigned(-1));
+
+
+
+/**
+ * Simulates the java String method substring(). Returns a new string that is
+ * a substring of this string. The substring begins at the specified
+ * theStartIndex and extends to the character at index theEndIndex - 1. Thus
  * the length of the substring is theEndIndex-theStartIndex.
  * 
- * @param theString     target string
+ * @param theString     source string
  * @param theStartIndex starting index, inclusive
  * @param theEndIndex   ending index, exclusive
  * @return string containing the specified range of characters from target
