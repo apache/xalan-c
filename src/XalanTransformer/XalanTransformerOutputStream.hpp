@@ -69,11 +69,12 @@
 
 
 
-typedef unsigned long (*XalanOutputHandlerType) (const void*, unsigned long, const void*);
+extern "C"
+{
+	typedef unsigned long (*XalanOutputHandlerType) (const void*, unsigned long, const void*);
 
-
-
-typedef void (*XalanFlushHandlerType) (const void*);
+	typedef void (*XalanFlushHandlerType) (const void*);
+}
 
 
 
