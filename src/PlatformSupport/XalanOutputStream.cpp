@@ -125,33 +125,6 @@ XalanOutputStream::write(
 void
 XalanOutputStream::transcode(
 			const XalanDOMChar*		theBuffer,
-			TranscodeVectorType&	theDestination)
-{
-	// This is a special version that will short-cut when
-	// transocding to the local code page.  On platforms
-	// where XalanDOMChar == wchar_t, it saves copying
-	// to a temporary buffer for the purposes of null-
-	// terminating the string.
-	if (m_transcoder == 0)
-	{
-		if (TranscodeToLocalCodePage(
-				theBuffer,
-				theDestination) == false)
-		{
-			throw TranscodingException();
-		}
-	}
-	else
-	{
-		transcode(theBuffer, length(theBuffer), theDestination);
-	}
-}
-
-
-
-void
-XalanOutputStream::transcode(
-			const XalanDOMChar*		theBuffer,
 			unsigned long			theBufferLength,
 			TranscodeVectorType&	theDestination)
 {
@@ -317,9 +290,7 @@ XalanOutputStream::flushBuffer()
 {
 	if (m_buffer.size() > 0)
 	{
-		m_buffer.push_back(0);
-
-		doWrite(&*m_buffer.begin());
+		doWrite(&*m_buffer.begin(), m_buffer.size());
 
 		m_buffer.clear();
 	}
@@ -328,7 +299,9 @@ XalanOutputStream::flushBuffer()
 
 
 void
-XalanOutputStream::doWrite(const XalanDOMChar*	theBuffer)
+XalanOutputStream::doWrite(
+			const XalanDOMChar*		theBuffer,
+			unsigned long			theBufferLength)
 {
 	assert(theBuffer != 0);
 
@@ -341,14 +314,14 @@ XalanOutputStream::doWrite(const XalanDOMChar*	theBuffer)
 			// This is a hack to write UTF-16 through as if it
 			// were just chars.  Saves lots of time "transcoding."
 #if defined(XALAN_OLD_STYLE_CASTS)
-			writeData((const char*)theBuffer, length(theBuffer) * 2);
+			writeData((const char*)theBuffer, theBufferLength * 2);
 #else
-			writeData(reinterpret_cast<const char*>(theBuffer), length(theBuffer) * 2);
+			writeData(reinterpret_cast<const char*>(theBuffer), theBufferLength * 2);
 #endif
 		}
 		else
 		{
-			transcode(theBuffer, m_transcodingBuffer);
+			transcode(theBuffer, theBufferLength, m_transcodingBuffer);
 
 			assert(&m_transcodingBuffer[0] != 0);
 
@@ -363,21 +336,6 @@ XalanOutputStream::doWrite(const XalanDOMChar*	theBuffer)
 
 		throw;
 	}
-}
-
-
-
-void
-XalanOutputStream::doWrite(
-			const XalanDOMChar*		theBuffer,
-			unsigned long			theBufferLength)
-{
-	// $$$ ToDo: Revisit this!!!
-	BufferType	theLocalBuffer(theBuffer, theBuffer + theBufferLength);
-
-	theLocalBuffer.push_back(0);
-
-	doWrite(&theLocalBuffer[0]);
 }
 
 

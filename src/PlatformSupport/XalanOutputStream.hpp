@@ -273,7 +273,7 @@ public :
 
 	private:
 
-		const XalanDOMString&	m_encoding;
+		const XalanDOMString	m_encoding;
 	};
 
 	class XALAN_PLATFORMSUPPORT_EXPORT TranscoderInternalFailureException : public XalanOutputStreamException
@@ -293,7 +293,7 @@ public :
 
 	private:
 
-		const XalanDOMString&	m_encoding;
+		const XalanDOMString	m_encoding;
 	};
 
 	class XALAN_PLATFORMSUPPORT_EXPORT TranscodingException : public XalanOutputStreamException
@@ -308,17 +308,6 @@ public :
 	};
 
 protected:
-
-	/**
-	 * Transcode a null-terminated wide string.
-	 *
-	 * @param theBuffer The string to transcode.
-	 * @param theDestination The destination vector.
-	 */
-	void
-	transcode(
-			const XalanDOMChar*		theBuffer,
-			TranscodeVectorType&	theDestination);
 
 	/**
 	 * Transcode a wide string.
@@ -354,9 +343,6 @@ private:
 	// Utility functions...
 	void
 	flushBuffer();
-
-	void
-	doWrite(const XalanDOMChar*		theBuffer);
 
 	void
 	doWrite(
