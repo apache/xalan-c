@@ -102,7 +102,7 @@ protected:
 
 private:
 
-	int		m_referenceCount;
+	unsigned int	m_referenceCount;
 
 	// Not implemented...
 	XalanReferenceCountedObject&
