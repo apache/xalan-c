@@ -188,7 +188,7 @@ public:
 
 						if (theNode != 0)
 						{
-							theNodeList.addNodeInDocOrder(theNode);
+							theNodeList.addNodeInDocOrder(theNode, true);
 						}
 					}
 				}

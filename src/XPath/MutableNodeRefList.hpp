@@ -213,7 +213,7 @@ public:
 	virtual void
 	addNodeInDocOrder(
 			XalanNode*	node,
-			bool		test = false);
+			bool		test);
 
 	virtual XPathSupport*
 	getSupport() const;

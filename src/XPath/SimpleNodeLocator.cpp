@@ -1103,7 +1103,7 @@ SimpleNodeLocator::findFollowing(
 
 			if(xpath.s_MatchScoreNone != score)
 			{
-				subQueryResults.addNodeInDocOrder(pos);
+				subQueryResults.addNodeInDocOrder(pos, true);
 			}
 
 			nextNode = pos->getFirstChild();
@@ -1326,6 +1326,8 @@ SimpleNodeLocator::findNamespace(
 	// XPathExpression interface?
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
+
+	opPos += 3;
 
 	if(context != 0 && context->getNodeType() == XalanNode::ELEMENT_NODE)
 	{

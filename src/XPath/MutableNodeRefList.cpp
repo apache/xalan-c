@@ -273,7 +273,7 @@ MutableNodeRefList::addNodesInDocOrder(const XalanNodeList&		nodelist)
 
 	for(unsigned int i = 0; i < nChildren; i++)
 	{
-		addNodeInDocOrder(nodelist.item(i));
+		addNodeInDocOrder(nodelist.item(i), false);
 	}
 }
 
@@ -286,8 +286,7 @@ MutableNodeRefList::addNodesInDocOrder(const NodeRefListBase&	nodelist)
 
 	for(unsigned int i = 0; i < nChildren; i++)
 	{
-		addNodeInDocOrder(nodelist.item(i),
-						  true);
+		addNodeInDocOrder(nodelist.item(i), true);
 	}
 }
 
