@@ -79,7 +79,15 @@ public:
 
 	typedef XPath							object_type;
 
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+	typedef ArenaBlock<object_type>			ArenaBlockType;
+
+	typedef ArenaAllocator<object_type,
+						   ArenaBlockType>	ArenaAllocatorType;
+#else
 	typedef ArenaAllocator<object_type>		ArenaAllocatorType;
+#endif
+
 	typedef ArenaAllocatorType::size_type	size_type;
 
 	/**
