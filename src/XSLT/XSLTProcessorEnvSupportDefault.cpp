@@ -157,6 +157,8 @@ XSLTProcessorEnvSupportDefault::reset()
 	using std::for_each;
 #endif
 
+	m_defaultSupport.reset();
+
 	// Clean up the key table vector
 	for_each(m_keyTables.begin(),
 			 m_keyTables.end(),
@@ -278,9 +280,6 @@ XSLTProcessorEnvSupportDefault::parseXML(
 	}
 	else
 	{
-		XMLParserLiaison&	parserLiaison =
-			m_processor->getXMLParserLiaison();
-
 		typedef URISupport::URLAutoPtrType	URLAutoPtrType;
 
 		// $$$ ToDo: we should re-work this code to only use
@@ -290,12 +289,24 @@ XSLTProcessorEnvSupportDefault::parseXML(
 
 		const XMLCh* const	urlText = xslURL->getURLText();
 
-		XSLTInputSource		inputSource(urlText);
+		// First see if it's already been parsed...
+		XalanDocument*		theDocument =
+			getSourceDocument(urlText);
 
-		XalanDocument*		theDocument = 
-			parserLiaison.parseXMLStream(inputSource);
+		if (theDocument == 0)
+		{
+			XMLParserLiaison&	parserLiaison =
+				m_processor->getXMLParserLiaison();
 
-		setSourceDocument(urlText, theDocument);
+			XSLTInputSource		inputSource(urlText);
+
+			theDocument = parserLiaison.parseXMLStream(inputSource);
+
+			if (theDocument != 0)
+			{
+				setSourceDocument(urlText, theDocument);
+			}
+		}
 
 		return theDocument;
 	}
