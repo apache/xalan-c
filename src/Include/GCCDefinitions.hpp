@@ -81,6 +81,8 @@
 #define XALAN_SGI_BASED_STL
 #define XALAN_XALANDOMCHAR_USHORT_MISMATCH
 #define XALAN_NO_STD_ALLOCATORS
+#define XALAN_POSIX2_AVAILABLE
+
 
 
 // This will change, depending upon the target platform.
