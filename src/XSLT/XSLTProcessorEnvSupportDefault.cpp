@@ -64,6 +64,7 @@
 
 
 
+#include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/util/XMLURL.hpp>
 
 
@@ -195,7 +196,31 @@ XSLTProcessorEnvSupportDefault::parseXML(
 
 			XSLTInputSource		inputSource(c_wstr(urlText));
 
-			theDocument = parserLiaison.parseXMLStream(inputSource);
+			EntityResolver* const	theResolver = 
+				parserLiaison.getEntityResolver();
+
+			if (theResolver == 0)
+			{
+				const XSLTInputSource	inputSource(c_wstr(urlText));
+
+				theDocument = parserLiaison.parseXMLStream(inputSource);
+			}
+			else
+			{
+				const XalanAutoPtr<InputSource>		resolverInputSource =
+					theResolver->resolveEntity(0, c_wstr(urlText));
+
+				if (resolverInputSource.get() != 0)
+				{
+					theDocument = parserLiaison.parseXMLStream(*resolverInputSource.get());
+				}
+				else
+				{
+					const XSLTInputSource	inputSource(c_wstr(urlText));
+
+					theDocument = parserLiaison.parseXMLStream(inputSource);
+				}
+			}
 
 			if (theDocument != 0)
 			{
