@@ -188,7 +188,11 @@ getArgs(
 			++i;
 			if( i < argc && argv[i][0] != '-' )
 			{
-				int localLen = strlen(argv[i]);
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+				using std::size_t;
+#endif
+
+				const size_t	localLen = strlen(argv[i]);
 				if ( localLen != 2 && localLen !=5)
 				{
 					fSuccess = false;
