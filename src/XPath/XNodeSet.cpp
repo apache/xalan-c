@@ -79,12 +79,16 @@
 
 
 
+const double	theBogusNumberValue = 123456789;
+
+
+
 XNodeSet::XNodeSet(BorrowReturnMutableNodeRefList&	value) :
 	XObject(eTypeNodeSet),
 	m_value(value),
 	m_resultTreeFrag(),
 	m_cachedStringValue(),
-	m_cachedNumberValue(0.0)	
+	m_cachedNumberValue(theBogusNumberValue)
 {
 }
 
@@ -133,7 +137,7 @@ XNodeSet::getTypeString() const
 double
 XNodeSet::num() const
 {
-	if (m_cachedNumberValue == 0.0)
+	if (DoubleSupport::equal(m_cachedNumberValue, theBogusNumberValue) == true)
 	{
 #if defined(XALAN_NO_MUTABLE)
 		((XNodeSet*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str());
@@ -228,4 +232,26 @@ XNodeSet::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) con
 {
 	theCallbackObject.NodeSet(*this,
 							  nodeset());
+}
+
+
+
+void
+XNodeSet::release()
+{
+	m_value.release();
+
+	m_cachedNumberValue = theBogusNumberValue;
+
+	clear(m_cachedStringValue);
+}
+
+
+
+void
+XNodeSet::set(BorrowReturnMutableNodeRefList&	value)
+{
+	release();
+
+	m_value = value;
 }

@@ -353,7 +353,7 @@ public:
 	public:
 
 		BorrowReturnMutableNodeRefList(XPathExecutionContext&	executionContext) :
-			m_xpathExecutionContext(executionContext),
+			m_xpathExecutionContext(&executionContext),
 			m_mutableNodeRefList(executionContext.borrowMutableNodeRefList())
 		{
 			assert(m_mutableNodeRefList != 0);
@@ -371,15 +371,14 @@ public:
 
 		~BorrowReturnMutableNodeRefList()
 		{
-			if (m_mutableNodeRefList != 0)
-			{
-				m_xpathExecutionContext.returnMutableNodeRefList(m_mutableNodeRefList);
-			}
+			release();
 		}
 
 		MutableNodeRefList&
 		operator*() const
 		{
+			assert(m_mutableNodeRefList != 0);
+
 			return *m_mutableNodeRefList;
 		}
 
@@ -395,19 +394,49 @@ public:
 			return get();
 		}
 
+		void
+		release()
+		{
+			assert(m_xpathExecutionContext != 0);
+
+			if (m_mutableNodeRefList != 0)
+			{
+				m_xpathExecutionContext->returnMutableNodeRefList(m_mutableNodeRefList);
+
+				m_mutableNodeRefList = 0;
+			}
+		}
+
 		BorrowReturnMutableNodeRefList
 		clone() const
 		{
-			BorrowReturnMutableNodeRefList	theResult(m_xpathExecutionContext);
+			assert(m_xpathExecutionContext != 0);
+
+			BorrowReturnMutableNodeRefList	theResult(*m_xpathExecutionContext);
 
 			*theResult = *m_mutableNodeRefList;
 
 			return theResult;
 		}
 
+		// N.B. Non-const assignment operator semantics.
+		BorrowReturnMutableNodeRefList&
+		operator=(BorrowReturnMutableNodeRefList&	theRHS)
+		{
+			release();
+
+			m_xpathExecutionContext = theRHS.m_xpathExecutionContext;
+
+			m_mutableNodeRefList = theRHS.m_mutableNodeRefList;
+
+			theRHS.m_mutableNodeRefList = 0;
+
+			return *this;
+		}
+
 	private:
 
-		XPathExecutionContext&	m_xpathExecutionContext;
+		XPathExecutionContext*	m_xpathExecutionContext;
 
 		MutableNodeRefList*		m_mutableNodeRefList;
 	};

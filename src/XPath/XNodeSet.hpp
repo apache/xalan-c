@@ -147,6 +147,20 @@ public:
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
+	/**
+	 * Release the node set held by the instance.
+	 */
+	void
+	release();
+
+	/**
+	 * Change the value of an XNodeSet
+	 *
+	 * @param theValue The new value.
+	 */
+	void
+	set(BorrowReturnMutableNodeRefList&		value);
+
 private:
 
 	// Not implemented...
@@ -156,7 +170,7 @@ private:
 	// Data members...
 
 
-	const BorrowReturnMutableNodeRefList		m_value;
+	BorrowReturnMutableNodeRefList				m_value;
 
 	mutable XalanAutoPtr<ResultTreeFragBase>	m_resultTreeFrag;
 

@@ -114,7 +114,9 @@ public:
 		eDefaultXStringBlockSize = 10,
 		eDefaultXNumberBlockSize = 10,
 		eDefaultXNodeSetBlockSize = 10,
-		eDefaultXResultTreeFragBlockSize = 10
+		eDefaultXResultTreeFragBlockSize = 10,
+		eXNumberCacheMax = 40,
+		eXNodeSetCacheMax = 40
 	};
 	
 	/**
@@ -188,11 +190,13 @@ public:
 	createSpan(BorrowReturnMutableNodeRefList&	theValue);
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef set<XObject*, less<XObject*> >		CollectionType;
-	typedef vector<XNumber*>, less<XNumber*> >	XNumberCacheType;
+	typedef set<XObject*, less<XObject*> >	CollectionType;
+	typedef vector<XNumber*>				XNumberCacheType;
+	typedef vector<XNodeSet*>				XNodeSetCacheType;
 #else
-	typedef std::set<XObject*>					CollectionType;
-	typedef std::vector<XNumber*>				XNumberCacheType;
+	typedef std::set<XObject*>			CollectionType;
+	typedef std::vector<XNumber*>		XNumberCacheType;
+	typedef std::vector<XNodeSet*>		XNodeSetCacheType;
 #endif
 
 protected:
@@ -203,8 +207,6 @@ protected:
 			bool		fInReset = false);
 
 private:
-
-	enum { eXNumberCacheMax = 40 };
 
 	// Not implemented...
 	XObjectFactoryDefault(const XObjectFactoryDefault&);
@@ -241,6 +243,8 @@ private:
 	CollectionType					m_xobjects;
 
 	XNumberCacheType				m_xnumberCache;
+
+	XNodeSetCacheType				m_xnodesetCache;
 
 	const XalanAutoPtr<XNull>		m_XNull;
 };

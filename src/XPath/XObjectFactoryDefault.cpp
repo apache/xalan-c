@@ -100,6 +100,7 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 	m_xtokenStringAdapterAllocator(theXStringBlockSize),
 	m_xobjects(),
 	m_xnumberCache(),
+	m_xnodesetCache(),
 	m_XNull(new XNull)
 {
 }
@@ -234,14 +235,25 @@ XObjectFactoryDefault::doReturnObject(
 
 	case XObject::eTypeNodeSet:
 		{
-			XNodeSet* const	theXNodeSet =
+			XNodeSet* const		theXNodeSet =
 #if defined(XALAN_OLD_STYLE_CASTS)
 				(XNodeSet*)theXObject;
 #else
 				static_cast<XNodeSet*>(theXObject);
 #endif
 
-			bStatus = m_xnodesetAllocator.destroy(theXNodeSet);
+			if (m_xnodesetCache.size() < eXNodeSetCacheMax)
+			{
+				theXNodeSet->release();
+
+				m_xnodesetCache.push_back(theXNodeSet);
+
+				bStatus = true;
+			}
+			else
+			{
+				bStatus = m_xnodesetAllocator.destroy(theXNodeSet);
+			}
 		}
 		break;
 
@@ -370,11 +382,26 @@ XObjectFactoryDefault::createNumber(const XToken&	theValue)
 const XObjectPtr
 XObjectFactoryDefault::createNodeSet(BorrowReturnMutableNodeRefList&	theValue)
 {
-	XNodeSet* const		theXNodeSet = m_xnodesetAllocator.createNodeSet(theValue);
+	if (m_xnodesetCache.size() > 0)
+	{
+		XNodeSet* const		theXObject = m_xnodesetCache.back();
 
-	theXNodeSet->setFactory(this);
+		m_xnodesetCache.pop_back();
 
-	return XObjectPtr(theXNodeSet);
+		theXObject->set(theValue);
+
+		return XObjectPtr(theXObject);
+	}
+	else
+	{
+		m_xnodesetCache.reserve(eXNodeSetCacheMax);
+
+		XNodeSet* const		theXObject = m_xnodesetAllocator.createNodeSet(theValue);
+
+		theXObject->setFactory(this);
+
+		return XObjectPtr(theXObject);
+	}
 }
 
 
@@ -503,4 +530,6 @@ XObjectFactoryDefault::reset()
 	m_xobjects.clear();
 
 	m_xnumberCache.clear();
+
+	m_xnodesetCache.clear();
 }
