@@ -1308,8 +1308,5 @@ main(int			/* argc */,
 
 	XMLPlatformUtils::Terminate();
 
-	const unsigned short	foo1 = '\f';
-	const unsigned short	foo2 = '\v';
-
 	return 0;
 }
