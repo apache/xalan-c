@@ -63,10 +63,15 @@
 #include <PlatformSupport/PlatformSupportDefinitions.hpp>
 
 
+#define XALAN_NO_IOSFWD
 
 #include <cassert>
 #include <functional>
+#if defined(XALAN_NO_IOSFWD)
+#include <ostream>
+#else
 #include <iosfwd>
+#endif
 #include <vector>
 #include <string>
 

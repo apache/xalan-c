@@ -1204,9 +1204,9 @@ isWhiteSpace(const XalanDOMString&	string)
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isWhiteSpace(
-			const XalanDOMChar* const	ch,
-			unsigned int				start,
-			unsigned int				length)
+			const XalanDOMChar*		ch,
+			unsigned int			start,
+			unsigned int			length)
 {
 	const unsigned int	end = start + length;
 

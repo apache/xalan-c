@@ -68,7 +68,11 @@
 
 
 
+#if defined(XALAN_NO_IOSFWD)
+#include <istream>
+#else
 #include <iosfwd>
+#endif
 
 
 
