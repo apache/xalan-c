@@ -463,6 +463,7 @@ SimpleNodeLocator::stepPattern(
 			score = nodeTest(xpath,
 							 executionContext,
 							 context,
+							 context->getNodeType(),
 							 opPos,
 							 argLen,
 							 XPathExpression::eFROM_ATTRIBUTES);
@@ -702,6 +703,7 @@ SimpleNodeLocator::findParent(
 			const double	score = nodeTest(xpath,
 											 executionContext,
 											 theParent,
+											 theParent->getNodeType(),
 											 opPos,
 											 argLen,
 											 stepType);
@@ -746,6 +748,7 @@ SimpleNodeLocator::findSelf(
 		const double	score = nodeTest(xpath,
 										 executionContext,
 										 context,
+			 							 context->getNodeType(),
 										 opPos,
 										 argLen,
 										 stepType);
@@ -792,6 +795,7 @@ SimpleNodeLocator::findAncestors(
 		const double	score = nodeTest(xpath,
 										 executionContext,
 										 contextNode,
+										 contextNode->getNodeType(),
 										 opPos,
 										 argLen,
 										 stepType);
@@ -838,6 +842,7 @@ SimpleNodeLocator::findAncestorsOrSelf(
 		const double	score = nodeTest(xpath,
 										 executionContext,
 										 contextNode,
+										 contextNode->getNodeType(),
 										 opPos,
 										 argLen,
 										 stepType);
@@ -941,6 +946,7 @@ SimpleNodeLocator::findChildren(
 		const double	score = nodeTest(xpath,
 										 executionContext,
 										 child,
+										 child->getNodeType(),
 										 opPos,
 										 argLen,
 										 stepType);
@@ -999,6 +1005,7 @@ SimpleNodeLocator::findDescendants(
 			const double	score = nodeTest(xpath,
 											 executionContext,
 											 pos,
+											 pos->getNodeType(),
 											 opPos,
 											 argLen,
 											 stepType);
@@ -1071,6 +1078,7 @@ SimpleNodeLocator::findFollowing(
 			const double	score = nodeTest(xpath,
 											 executionContext,
 											 pos,
+											 pos->getNodeType(),
 											 opPos,
 											 argLen,
 											 stepType);
@@ -1154,6 +1162,7 @@ SimpleNodeLocator::findFollowingSiblings(
 		const double	score = nodeTest(xpath,
 										 executionContext,
 										 pos,
+										 pos->getNodeType(),
 										 opPos,
 										 argLen,
 										 stepType);
@@ -1214,6 +1223,7 @@ SimpleNodeLocator::findPreceeding(
 		const double	score = nodeTest(xpath,
 										 executionContext,
 										 pos,
+										 pos->getNodeType(),
 										 opPos,
 										 argLen,
 										 stepType);
@@ -1306,6 +1316,7 @@ SimpleNodeLocator::findPreceedingSiblings(
 		const double	score = nodeTest(xpath,
 										 executionContext,
 										 pos,
+										 pos->getNodeType(),
 										 opPos,
 										 argLen,
 										 stepType);
@@ -1689,22 +1700,6 @@ SimpleNodeLocator::nodeTest(
 	} // end switch(testType)
 
 	return score;
-}
-
-
-
-inline double
-SimpleNodeLocator::nodeTest(
-			const XPath&			xpath,
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			int 					opPos,
-			int 					argLen,
-			int 					stepType)
-{
-	assert(context != 0);
-
-	return nodeTest(xpath, executionContext, context, context->getNodeType(), opPos, argLen, stepType);
 }
 
 

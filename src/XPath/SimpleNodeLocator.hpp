@@ -287,15 +287,6 @@ protected:
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context,
-			int 					opPos,
-			int 					argLen,
-			int 					stepType);
-
-	double
-	nodeTest(
-			const XPath&			xpath,
-			XPathExecutionContext&	executionContext,
-			XalanNode* 				context,
 			XalanNode::NodeType		nodeType,
 			int 					opPos,
 			int 					argLen,
