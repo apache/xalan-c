@@ -265,16 +265,23 @@ DOMServices::getNameOfNode(const XalanNode&		n)
 }
 
 
+
 // Note: This may be inefficient in a Level 2 DOM, where localname
 // and prefix may (or may not) have been stored in separate fields
 XalanDOMString
 DOMServices::getLocalNameOfNode(const XalanNode&	n)
 {
+	// $$$ ToDo: When Xerces finishes their DOM level 2 stuff, we
+	// can enable this code.
+#if 0
+	return n.getLocalName();
+#else
 	const XalanDOMString	qname = n.getNodeName();
 
 	const unsigned int		index = indexOf(qname, ':');
 
 	return index == length(qname) ? qname : substring(qname, index + 1);
+#endif
 }
 
 
