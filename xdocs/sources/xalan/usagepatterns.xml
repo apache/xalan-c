@@ -104,7 +104,8 @@ how to take advantage of the API it provides.</note>
   <code>const char* xslSheet = "foo.xsl";</code><br/>
   <code>const char* xmlOut = "foo.out";</code><br/>
   <code>int theResult = 0;</code><br/>
-  <code>theResult = theXalanTransformer(xmlIn,xslSheet,xmlOut);</code><br/><br/></li>
+  <code>theResult =</code><br/>
+  <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;theXalanTransformer.transform(xmlIn,xslSheet,xmlOut);</code><br/><br/></li>
   <li>Shut down Xalan and (optionally) Xerces.<br/>
   <code>XalanTransformer::terminate();</code><br/>
   <code>XMLPlatformUtils::Terminate();</code></li>
