@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -77,12 +77,25 @@ class XALAN_XPATH_EXPORT XToken : public XObject
 {
 public:
 
-	explicit
 	XToken();
 
+	/**
+	 * Create an XToken for string in the token queue.
+	 *
+	 * @param theString The string data for the token.  The instance will keep a point to this string, so it must be persistent.
+	 */
+	explicit
 	XToken(const XalanDOMString&	theString);
 
-	XToken(double	theNumber);
+	/**
+	 * Create an XToken for number in the token queue.
+	 *
+	 * @param theNumber The numeric data for the token.  This must be consistent with the lexical value in theString.
+	 * @param theString The string data for the token.  The instance will keep a point to this string, so it must be persistent.
+	 */
+	XToken(
+			double					theNumber,
+			const XalanDOMString&	theString);
 
 	XToken(const XToken&	theSource);
 
@@ -135,11 +148,24 @@ public:
 		return *this;
 	}
 
-	XToken&
-	operator=(const XalanDOMString&		theString);
+	/**
+	 * Set the instance as a string in the token queue.
+	 *
+	 * @param theString The string data for the token.  XToken will keep a point to this string, so it must be persistent.
+	 */
+	void
+	set(const XalanDOMString&	theString);
 
-	XToken&
-	operator=(double	theNumber);
+	/**
+	 * Set the instance as a number in the token queue.
+	 *
+	 * @param theNumber The numeric data for the token.  This must be consistent with the lexical value in theString.
+	 * @param theString The string data for the token.  XToken will keep a point to this string, so it must be persistent.
+	 */
+	void
+	set(
+			double					theNumber,
+			const XalanDOMString&	theString);
 
 protected:
 
@@ -156,11 +182,11 @@ private:
 	operator==(const XToken&) const;
 
 	// Data members...
-	XalanDOMString	m_stringValue;
+	const XalanDOMString*	m_stringValue;
 
-	double			m_numberValue;
+	double					m_numberValue;
 
-	bool			m_isString;
+	bool					m_isString;
 };
 
 

@@ -1166,12 +1166,15 @@ public:
 	/**
 	 * Push a token onto the token queue.
 	 * 
-	 * @param theToken the number value to push
+	 * @param theNumber the number value to push
+	 * @param theString the string value to push
 	 */
 	void
-	pushToken(double	theToken)
+	pushToken(
+			double					theNumber,
+			const XalanDOMString&	theString)
 	{
-		m_tokenQueue.push_back(XToken(theToken));
+		m_tokenQueue.push_back(XToken(theNumber, theString));
 	}
 
 	/**
@@ -1190,12 +1193,15 @@ public:
 	 * Insert a token onto the token queue at the
 	 * current position.
 	 *
-	 * @param theToken the string value to push
+	 * @param theNumber the number value to push
+	 * @param theString the string value to push
 	 */
 	void
-	insertToken(double	theToken)
+	insertToken(
+			double					theNumber,
+			const XalanDOMString&	theString)
 	{
-		m_tokenQueue.insert(m_tokenQueue.begin() + (m_currentPosition - 1), XToken(theToken));
+		m_tokenQueue.insert(m_tokenQueue.begin() + (m_currentPosition - 1), XToken(theNumber, theString));
 	}
 
 	/**
@@ -1221,14 +1227,37 @@ public:
 	}
 
 	/**
+	 * Replace a token in the token queue.
+	 * 
+	 * @param theOffset the offset at which to replace the token.
+	 * @param theString The string data for the token.  The instance will keep a point to this string, so it must be persistent.
+	 */
+	void
+	replaceRelativeToken(
+			int						theOffset,
+			const XalanDOMString&	theString)
+	{
+		const int	thePosition = int(m_currentPosition) + theOffset;
+
+		if (thePosition < 0 ||
+			thePosition >= int(tokenQueueSize()))
+		{
+			throw InvalidRelativeTokenPosition(theOffset);
+		}
+
+		m_tokenQueue[thePosition].set(theString);
+	}
+
+	/**
 	 * Diagnostic function to output the operation code map.
 	 * 
 	 * @param thePrintWriter   output device
 	 * @param theStartPosition starting position in map
 	 */
 	void
-	dumpOpCodeMap(PrintWriter&			thePrintWriter,
-				  OpCodeMapSizeType		theStartPosition = 0) const;
+	dumpOpCodeMap(
+			PrintWriter&		thePrintWriter,
+			OpCodeMapSizeType	theStartPosition = 0) const;
 
 	/**
 	 * Diagnostic function to output the operation code map.
@@ -1308,19 +1337,22 @@ public:
 	 * Push a token onto the token queue and its index onto the operations code
 	 * map.
 	 *
-	 * @param theToken string value of the token to push
+	 * @param theString The string data for the token.  The instance will keep a point to this string, so it must be persistent.
 	 */
 	void
-	pushArgumentOnOpCodeMap(const XalanDOMString&	theToken);
+	pushArgumentOnOpCodeMap(const XalanDOMString&	theString);
 
 	/**
 	 * Push a token onto the token queue and its index onto the operations code
 	 * map.
 	 *
-	 * @param theToken number value of the token to push
+	 * @param theNumber The numeric data for the token.  This must be consistent with the lexical value in theString.
+	 * @param theString The string data for the token.  The instance will keep a point to this string, so it must be persistent.
 	 */
 	void
-	pushArgumentOnOpCodeMap(double	theToken);
+	pushArgumentOnOpCodeMap(
+			double					theNumber,
+			const XalanDOMString&	theString);
 
 	/**
 	 * Push a number literal onto the vector of number literals and its index onto
@@ -1360,7 +1392,7 @@ public:
 	void
 	setCurrentPattern(const XalanDOMString&		thePattern)
 	{
-		m_currentPattern = thePattern;
+		m_currentPattern = &thePattern;
 	}
 
 	/**
@@ -1371,7 +1403,9 @@ public:
 	const XalanDOMString&
 	getCurrentPattern() const
 	{
-		return m_currentPattern;
+		assert(m_currentPattern != 0);
+
+		return *m_currentPattern;
 	}
 
 	/**
@@ -1403,7 +1437,7 @@ public:
 	/**
 	 * The current pattern string, for diagnostics purposes.
 	 */
-	XalanDOMString			m_currentPattern;
+	const XalanDOMString*	m_currentPattern;
 
 private:
 
@@ -1411,7 +1445,7 @@ private:
 	enum
 	{
 		eDefaultOpMapSize = 100,
-		eDefaultTokenQueueSize = 50,
+		eDefaultTokenQueueSize = 30,
 	};
 
 	NumberLiteralValueVectorType	m_numberLiteralValues;

@@ -364,12 +364,16 @@ XPathExpression::InvalidRelativeTokenPosition::FormatErrorMessage(int	theOffset)
 
 
 
+static const XalanDOMString		s_emptyString;
+
+
+
 XPathExpression::XPathExpression() :
 	m_opMap(),
 	m_lastOpCodeIndex(0),
 	m_tokenQueue(),
 	m_currentPosition(0),
-	m_currentPattern()
+	m_currentPattern(&s_emptyString)
 {
 	m_opMap.reserve(eDefaultOpMapSize);
 	m_tokenQueue.reserve(eDefaultTokenQueueSize);
@@ -848,7 +852,7 @@ XPathExpression::pushArgumentOnOpCodeMap(const XalanDOMString&	theToken)
 	assert(thePosition < tokenQueueSize());
 
 	// Set the entry in the token queue to the XObject.
-	m_tokenQueue[thePosition] = theToken;
+	m_tokenQueue[thePosition].set(theToken);
 
 	// Push the index onto the op map.
 	m_opMap.push_back(thePosition);
@@ -860,7 +864,9 @@ XPathExpression::pushArgumentOnOpCodeMap(const XalanDOMString&	theToken)
 
 
 void
-XPathExpression::pushArgumentOnOpCodeMap(double		theToken)
+XPathExpression::pushArgumentOnOpCodeMap(
+			double					theNumber,
+			const XalanDOMString&	theString)
 {
 	assert(m_currentPosition != 0);
 
@@ -869,7 +875,7 @@ XPathExpression::pushArgumentOnOpCodeMap(double		theToken)
 	assert(thePosition < tokenQueueSize());
 
 	// Set the entry in the token queue to the XObject.
-	m_tokenQueue[thePosition] = theToken;
+	m_tokenQueue[thePosition].set(theNumber, theString);
 
 	// Push the index onto the op map.
 	m_opMap.push_back(thePosition);

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,9 +71,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+static const XalanDOMString		s_emptyString;
+
 XToken::XToken() :
 	XObject(eTypeString),
-	m_stringValue(),
+	m_stringValue(&s_emptyString),
 	m_numberValue(DoubleSupport::getNaN()),
 	m_isString(true)
 {
@@ -83,7 +85,7 @@ XToken::XToken() :
 
 XToken::XToken(const XalanDOMString&	theString) :
 	XObject(eTypeString),
-	m_stringValue(theString),
+	m_stringValue(&theString),
 	m_numberValue(DoubleSupport::toDouble(theString)),
 	m_isString(true)
 {
@@ -91,9 +93,11 @@ XToken::XToken(const XalanDOMString&	theString) :
 
 
 
-XToken::XToken(double	theNumber) :
+XToken::XToken(
+			double					theNumber,
+			const XalanDOMString&	theString) :
 	XObject(eTypeString),
-	m_stringValue(DoubleToDOMString(theNumber)),
+	m_stringValue(&theString),
 	m_numberValue(theNumber),
 	m_isString(false)
 {
@@ -107,12 +111,14 @@ XToken::XToken(const XToken&	theSource) :
 	m_numberValue(theSource.m_numberValue),
 	m_isString(theSource.m_isString)
 {
+	assert(m_stringValue != 0);
 }
 
 
 
 XToken::~XToken()
 {
+	assert(m_stringValue != 0);
 }
 
 
@@ -124,6 +130,8 @@ XToken*
 #endif
 XToken::clone(void*	theAddress) const
 {
+	assert(m_stringValue != 0);
+
 	if (theAddress == 0)
 	{
 		return new XToken(*this);
@@ -139,6 +147,8 @@ XToken::clone(void*	theAddress) const
 XalanDOMString
 XToken::getTypeString() const
 {
+	assert(m_stringValue != 0);
+
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("#TOKEN"));
 }
 
@@ -147,6 +157,8 @@ XToken::getTypeString() const
 double
 XToken::num() const
 {
+	assert(m_stringValue != 0);
+
 	return m_numberValue;
 }
 
@@ -155,7 +167,9 @@ XToken::num() const
 bool
 XToken::boolean() const
 {
-	return m_isString == true ? XObject::boolean(m_stringValue) : XObject::boolean(m_numberValue);
+	assert(m_stringValue != 0);
+
+	return m_isString == true ? XObject::boolean(*m_stringValue) : XObject::boolean(m_numberValue);
 }
 
 
@@ -163,7 +177,9 @@ XToken::boolean() const
 const XalanDOMString&
 XToken::str() const
 {
-	return m_stringValue;
+	assert(m_stringValue != 0);
+
+	return *m_stringValue;
 }
 
 
@@ -173,9 +189,10 @@ XToken::str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const
 {
-	assert(length(m_stringValue) == FormatterListener::size_type(length(m_stringValue)));
+	assert(m_stringValue != 0);
+	assert(m_stringValue->length() == FormatterListener::size_type(m_stringValue->length()));
 
-	(formatterListener.*function)(c_wstr(m_stringValue), FormatterListener::size_type(length(m_stringValue)));
+	(formatterListener.*function)(m_stringValue->c_str(), FormatterListener::size_type(m_stringValue->length()));
 }
 
 
@@ -183,7 +200,9 @@ XToken::str(
 void
 XToken::str(XalanDOMString&		theBuffer) const
 {
-	append(theBuffer, m_stringValue);
+	assert(m_stringValue != 0);
+
+	append(theBuffer, *m_stringValue);
 }
 
 
@@ -191,53 +210,71 @@ XToken::str(XalanDOMString&		theBuffer) const
 double
 XToken::stringLength() const
 {
-	return length(m_stringValue);
+	assert(m_stringValue != 0);
+
+	return length(*m_stringValue);
 }
 
 
 
 void
-XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
+XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject)
 {
-	theCallbackObject.String(*this, m_stringValue);
+	assert(m_stringValue != 0);
+
+	if (m_isString == true)
+	{
+		theCallbackObject.String(*this, *m_stringValue);
+	}
+	else
+	{
+		theCallbackObject.Number(*this, m_numberValue);
+	}
 }
 
 
 
 void
-XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
+XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const
 {
-	theCallbackObject.String(*this, m_stringValue);
+	assert(m_stringValue != 0);
+
+	if (m_isString == true)
+	{
+		theCallbackObject.String(*this, *m_stringValue);
+	}
+	else
+	{
+		theCallbackObject.Number(*this, m_numberValue);
+	}
 }
 
 
 
-XToken&
-XToken::operator=(const XalanDOMString&	theString)
+void
+XToken::set(const XalanDOMString&	theString)
 {
-	m_stringValue = theString;
+	m_stringValue = &theString;
 
 	m_numberValue = DoubleSupport::toDouble(theString);
 
 	m_isString = true;
-
-	return *this;
 }
 
 
 
-XToken&
-XToken::operator=(double	theNumber)
+void
+XToken::set(
+			double					theNumber,
+			const XalanDOMString&	theString)
 {
-	clear(m_stringValue);
+	assert(theString == DoubleToDOMString(theNumber));
 
-	DoubleToDOMString(theNumber, m_stringValue);
+	m_stringValue = &theString;
 
 	m_numberValue = theNumber;
 
 	m_isString = false;
-
-	return *this;
 }
 
 

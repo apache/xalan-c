@@ -217,7 +217,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 	assert(m_expression != 0);
 	assert(m_constructionContext != 0);
 
-	m_expression->setCurrentPattern(pat);
+	m_expression->setCurrentPattern(m_constructionContext->getPooledString(pat));
 
 	const int	nChars = length(pat);
 
@@ -484,7 +484,7 @@ XPathProcessorImpl::addToTokenQueue(const XalanDOMString&	s) const
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
 
-	m_expression->pushToken(s);
+	m_expression->pushToken(m_constructionContext->getPooledString(s));
 }
 
 
@@ -504,7 +504,7 @@ XPathProcessorImpl::replaceTokenWithNamespaceToken() const
 
 	m_expression->replaceRelativeToken(
 			-1,
-			*theNamespaceURI);
+			m_constructionContext->getPooledString(*theNamespaceURI));
 }
 
 
@@ -2422,13 +2422,8 @@ XPathProcessorImpl::Literal()
 
 	if(isCurrentLiteral() == true)
 	{
-		const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
-
-		XalanDOMString& 	theArgument = theGuard.get();
-
-		theArgument.assign(m_token, 1, length(m_token) - 2);
-
-		m_expression->pushArgumentOnOpCodeMap(theArgument);
+		m_expression->pushArgumentOnOpCodeMap(
+			m_constructionContext->getPooledString(m_token.c_str() + 1, m_token.length() - 2));
 
 		nextToken();
 	}
@@ -2452,9 +2447,15 @@ XPathProcessorImpl::Number()
 	{
 		const double	num = DoubleSupport::toDouble(m_token);
 
+ 		const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
+ 
+ 		XalanDOMString& 	theStringValue = theGuard.get();
+ 
+		DoubleToDOMString(num, theStringValue);
+
 		m_expression->pushNumberLiteralOnOpCodeMap(num);
 
-		m_expression->pushArgumentOnOpCodeMap(num);
+		m_expression->pushArgumentOnOpCodeMap(num, m_constructionContext->getPooledString(theStringValue));
 
 		nextToken();
 	}
