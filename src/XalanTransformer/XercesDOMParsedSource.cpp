@@ -62,10 +62,34 @@
 
 
 
+class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSourceHelper : public XalanParsedSourceHelper
+{
+public:
+
+	virtual DOMSupport&
+	getDOMSupport()
+	{
+		return m_domSupport;
+	}
+
+	virtual XMLParserLiaison&
+	getParserLiaison()
+	{
+		return m_parserLiaison;
+	}
+
+private:
+
+	XercesDOMSupport		m_domSupport;
+
+	XercesParserLiaison		m_parserLiaison;
+};
+
+
+
 XercesDOMParsedSource::XercesDOMParsedSource(const XSLTInputSource&		theInputSource):
 	XalanParsedSource(),
-	m_domSupport(),
-	m_parserLiaison(m_domSupport),
+	m_parserLiaison(),
 	m_parsedSource(m_parserLiaison.parseXMLStream(theInputSource))
 {
 }
@@ -79,23 +103,15 @@ XercesDOMParsedSource::~XercesDOMParsedSource()
 
 
 XalanDocument*
-XercesDOMParsedSource::getDocument()
+XercesDOMParsedSource::getDocument() const
 {
 	return m_parsedSource;
 }
 
 
 
-XMLParserLiaison*
-XercesDOMParsedSource::getParserLiaison()
+XalanParsedSourceHelper*
+XercesDOMParsedSource::createHelper() const
 {
-	return &m_parserLiaison;
-}
-
-
-
-DOMSupport*
-XercesDOMParsedSource::getDOMSupport()
-{
-	return &m_domSupport;
+	return new XercesDOMParsedSourceHelper;
 }

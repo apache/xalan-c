@@ -88,13 +88,10 @@ public:
 	~XalanDefaultDocumentBuilder();
 
 	virtual XalanDocument*
-	getDocument();
+	getDocument() const;
 
-	virtual XMLParserLiaison*
-	getParserLiaison();
-
-	virtual DOMSupport*
-	getDOMSupport();
+	virtual XalanParsedSourceHelper*
+	createHelper() const;
 
 	virtual ContentHandler*
 	getContentHandler();

@@ -74,7 +74,6 @@ class DOMSupport;
 class DTDHandler;
 class LexicalHandler;
 class XalanDocument;
-class XMLParserLiaison;
 
 
 
@@ -93,13 +92,10 @@ public:
 
 	// These are inherited from XalanParsedSource...
 	virtual XalanDocument*
-	getDocument() = 0;	
+	getDocument() const = 0;	
 
-	virtual XMLParserLiaison*
-	getParserLiaison() = 0;
-
-	virtual DOMSupport*
-	getDOMSupport() = 0;
+	virtual XalanParsedSourceHelper*
+	createHelper() const = 0;
 
 	// These are new to XalanDocumentBuilder...
 	virtual ContentHandler*

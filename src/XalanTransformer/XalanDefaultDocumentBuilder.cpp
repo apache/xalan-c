@@ -63,9 +63,13 @@
 
 
 
+#include "XalanDefaultParsedSource.hpp"
+
+
+
 XalanDefaultDocumentBuilder::XalanDefaultDocumentBuilder() :
 	m_domSupport(),
-	m_parserLiaison(m_domSupport),
+	m_parserLiaison(),
 	m_contentHandler(m_parserLiaison.mapDocument(m_parserLiaison.createDocument()))
 {
 	m_domSupport.setParserLiaison(&m_parserLiaison);
@@ -80,27 +84,18 @@ XalanDefaultDocumentBuilder::~XalanDefaultDocumentBuilder()
 
 
 XalanDocument*
-XalanDefaultDocumentBuilder::getDocument()
+XalanDefaultDocumentBuilder::getDocument() const
 {
 	return m_contentHandler.getDocument();
 }
 
 
 
-XMLParserLiaison*
-XalanDefaultDocumentBuilder::getParserLiaison()
+XalanParsedSourceHelper*
+XalanDefaultDocumentBuilder::createHelper() const
 {
-	return &m_parserLiaison;
+	return new XalanDefaultParsedSourceHelper(m_domSupport);
 }
-
-
-
-DOMSupport*
-XalanDefaultDocumentBuilder::getDOMSupport()
-{
-	return &m_domSupport;
-}
-
 
 
 ContentHandler*

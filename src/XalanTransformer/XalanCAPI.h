@@ -79,17 +79,17 @@ extern "C"
 	/**
 	 * Handle used to store the address of XalanTransformer instance.
 	 */
-	typedef void* XalanHandle;
+	typedef void*			XalanHandle;
 
 	/**
 	 * Handle used to store the address of Compiled Stylesheet instance.
 	 */
-	typedef void* XalanCSSHandle;
+	typedef const void*		XalanCSSHandle;
 
 	/**
 	 * Handle used to store the address of Parsed Source instance.
 	 */
-	typedef void* XalanPSHandle;
+	typedef const void*		XalanPSHandle;
 
 	/**
 	 * Callback function passed to XalanTransformToHandler. 

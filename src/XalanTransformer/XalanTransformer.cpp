@@ -168,7 +168,7 @@ XalanTransformer::terminate()
 
 int
 XalanTransformer::transform(
-	XalanParsedSource&			theParsedXML, 
+	const XalanParsedSource&	theParsedXML, 
 	const XSLTInputSource&		theStylesheetSource,
 	const XSLTResultTarget&		theResultTarget)
 {
@@ -187,11 +187,14 @@ XalanTransformer::transform(
 	XalanDOMString	theErrorMessage;
 
 	try
-	{		
-		// Create some support objects that are necessary for running the processor...
-		DOMSupport&			theDOMSupport = *theParsedXML.getDOMSupport();
+	{
+		// Create the helper object that is necessary for running the processor...
+		XalanAutoPtr<XalanParsedSourceHelper>	theHelper(theParsedXML.createHelper());
+		assert(theHelper.get() != 0);
 
-		XMLParserLiaison&	theParserLiaison = *theParsedXML.getParserLiaison();
+		DOMSupport&						theDOMSupport = theHelper->getDOMSupport();
+
+		XMLParserLiaison&				theParserLiaison = theHelper->getParserLiaison();
 
 		// Create some more support objects...
 		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
@@ -207,6 +210,8 @@ XalanTransformer::transform(
 				theDOMSupport,
 				theXObjectFactory,
 				theXPathFactory);
+
+		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
 		// Create a problem listener and send output to a XalanDOMString.
 		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
@@ -226,6 +231,8 @@ XalanTransformer::transform(
 
 		// Hack used to cast away const.
 		XSLTResultTarget	tempResultTarget(theResultTarget);
+
+		const EnsureReset	theReset(*this);
 
 		// Set up the stylesheet execution context.
 		m_stylesheetExecutionContext.setXPathEnvSupport(&theXSLTProcessorEnvSupport);
@@ -252,8 +259,6 @@ XalanTransformer::transform(
 					m_functionPairs[f].first.getLocalPart(),
 					*(m_functionPairs[f].second));
 		}
-
-		const EnsureReset	theReset(*this);
 
 		// Do the transformation...
 		theProcessor.process(
@@ -328,7 +333,7 @@ XalanTransformer::transform(
 
 int
 XalanTransformer::transform(
-			XalanParsedSource&				theParsedXML, 
+			const XalanParsedSource&		theParsedXML, 
 			const XalanCompiledStylesheet*	theCompiledStylesheet,
 			const XSLTResultTarget&			theResultTarget)
 {
@@ -348,10 +353,13 @@ XalanTransformer::transform(
 
 	try
 	{
-		// Create some support objects that are necessary for running the processor...
-		DOMSupport&			theDOMSupport = *theParsedXML.getDOMSupport();
+		// Create the helper object that is necessary for running the processor...
+		XalanAutoPtr<XalanParsedSourceHelper>	theHelper(theParsedXML.createHelper());
+		assert(theHelper.get() != 0);
 
-		XMLParserLiaison&	theParserLiaison = *theParsedXML.getParserLiaison();
+		DOMSupport&						theDOMSupport = theHelper->getDOMSupport();
+
+		XMLParserLiaison&				theParserLiaison = theHelper->getParserLiaison();
 
 		// Create some more support objects...
 		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
@@ -368,6 +376,8 @@ XalanTransformer::transform(
 				theXObjectFactory,
 				theXPathFactory);
 
+		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
+
 		// Create a problem listener and send output to a XalanDOMString.
 		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
 		
@@ -379,6 +389,8 @@ XalanTransformer::transform(
 		// internal intefaces, we'll pass in a local copy
 		// of the one provided...
 		XSLTResultTarget	tempResultTarget(theResultTarget);
+
+		const EnsureReset	theReset(*this);
 
 		// Set up the stylesheet execution context.
 		m_stylesheetExecutionContext.setXPathEnvSupport(&theXSLTProcessorEnvSupport);
@@ -408,8 +420,6 @@ XalanTransformer::transform(
 					m_functionPairs[f].first.getLocalPart(),
 					*(m_functionPairs[f].second));
 		}
-
-		const EnsureReset	theReset(*this);
 
 		// Do the transformation...
 		theProcessor.process(
@@ -487,7 +497,7 @@ XalanTransformer::transform(
 	const XSLTResultTarget&		theResultTarget)
 {
 	// Parse the source document.
-	XalanParsedSource* const	theParsedXML =
+	const XalanParsedSource* const	theParsedXML =
 		parseSource(theInputSource);
 
 	// Make sure the parsed source is destroyed when
@@ -510,7 +520,7 @@ XalanTransformer::transform(
 			const XSLTResultTarget&			theResultTarget)
 {
 	// Parse the source document.
-	XalanParsedSource* const	theParsedXML =
+	const XalanParsedSource* const	theParsedXML =
 		parseSource(theInputSource);
 
 	// Make sure the parsed source is destroyed when
@@ -611,7 +621,7 @@ XalanTransformer::transform(
 
 
 
-XalanCompiledStylesheet*
+const XalanCompiledStylesheet*
 XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 {
 	// Clear the error message.
@@ -723,7 +733,7 @@ XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 
 
 void
-XalanTransformer::destroyStylesheet(XalanCompiledStylesheet*	theStylesheet)
+XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::find;
@@ -745,7 +755,7 @@ XalanTransformer::destroyStylesheet(XalanCompiledStylesheet*	theStylesheet)
 
 
 
-XalanParsedSource*
+const XalanParsedSource*
 XalanTransformer::parseSource(
 			const XSLTInputSource&	theInputSource, 
 			bool					useXercesDOM)
@@ -758,7 +768,7 @@ XalanTransformer::parseSource(
 	{	
 		XalanParsedSource* theParsedDocument = 0;
 
-		if(useXercesDOM == 1)
+		if(useXercesDOM == true)
 		{
 			theParsedDocument = new XercesDOMParsedSource(theInputSource);
 		}
@@ -801,7 +811,7 @@ XalanTransformer::parseSource(
 
 
 void
-XalanTransformer::destroyParsedSource(XalanParsedSource*	theParsedSource)
+XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::find;

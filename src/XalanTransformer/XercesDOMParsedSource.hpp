@@ -91,17 +91,12 @@ public:
 	~XercesDOMParsedSource();
 
 	virtual XalanDocument*
-	getDocument();
+	getDocument() const;
 
-	virtual XMLParserLiaison*
-	getParserLiaison();
-
-	virtual DOMSupport*
-	getDOMSupport();
+	virtual XalanParsedSourceHelper*
+	createHelper() const;
 
 private:
-
-	XercesDOMSupport		m_domSupport;
 
 	XercesParserLiaison		m_parserLiaison;
 

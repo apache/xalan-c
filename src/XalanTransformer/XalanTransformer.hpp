@@ -141,7 +141,7 @@ public:
 	 */
 	int
 	transform(
-			XalanParsedSource&			theParsedXML, 
+			const XalanParsedSource&	theParsedXML, 
 			const XSLTInputSource&		theStylesheetSource,
 			const XSLTResultTarget&		theResultTarget);
 
@@ -156,7 +156,7 @@ public:
 	 */
 	int
 	transform(
-			XalanParsedSource&				theParsedXML, 
+			const XalanParsedSource&		theParsedXML, 
 			const XalanCompiledStylesheet*	theCompiledStylesheet,
 			const XSLTResultTarget&			theResultTarget);
 
@@ -296,7 +296,7 @@ public:
 	 * @param theStylesheetSource input source
 	 * @return a pointer to a XalanCompiledStylesheet or 0 for failure.
 	 */
-	XalanCompiledStylesheet*
+	const XalanCompiledStylesheet*
 	compileStylesheet(const XSLTInputSource&	theStylesheetSource);
 
 	/**
@@ -307,7 +307,7 @@ public:
 	 * @param theStylesheet	The instance to destroy.
 	 */
 	void
-	destroyStylesheet(XalanCompiledStylesheet*	theStylesheet);
+	destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet);
 
 	/**
 	 * Parse a source XML document.  The input source can be 
@@ -321,7 +321,7 @@ public:
 	 * @param useXercesDOM		input use default or xerces dom source tree
 	 * @return	a pointer to a XalanParsedSource or 0 for failure.
 	 */
-	XalanParsedSource*
+	const XalanParsedSource*
 	parseSource(
 			const XSLTInputSource&	theInputSource, 
 			bool					useXercesDOM = false);
@@ -334,7 +334,7 @@ public:
 	 * @param theParsedSource The XalanParsedSource instance to destroy.
 	 */
 	void
-	destroyParsedSource(XalanParsedSource*	theParsedSource);
+	destroyParsedSource(const XalanParsedSource*	theParsedSource);
 
 	/**
 	 * Create a document builder.  Using the document builder, you
@@ -462,8 +462,8 @@ public:
 	public:
 
 		EnsureDestroyParsedSource(
-				XalanTransformer&	theTransformer,
-				XalanParsedSource*	theParsedSource) :
+				XalanTransformer&			theTransformer,
+				const XalanParsedSource*	theParsedSource) :
 			m_transformer(theTransformer),
 			m_parsedSource(theParsedSource)
 		{
@@ -476,16 +476,16 @@ public:
 
 	private:
 
-		XalanTransformer&			m_transformer;
+		XalanTransformer&				m_transformer;
 
-		XalanParsedSource* const	m_parsedSource;
+		const XalanParsedSource* const	m_parsedSource;
 	};
 
 	struct EnsureDestroyCompiledStylesheet
 	{
 		EnsureDestroyCompiledStylesheet(
-				XalanTransformer&			theTransformer,
-				XalanCompiledStylesheet*	theCompiledStylesheet) :
+				XalanTransformer&				theTransformer,
+				const XalanCompiledStylesheet*	theCompiledStylesheet) :
 			m_transformer(theTransformer),
 			m_compiledStylesheet(theCompiledStylesheet)
 		{
@@ -498,9 +498,9 @@ public:
 
 	private:
 
-		XalanTransformer&				m_transformer;
+		XalanTransformer&						m_transformer;
 
-		XalanCompiledStylesheet* const	m_compiledStylesheet;
+		const XalanCompiledStylesheet* const	m_compiledStylesheet;
 	};
 
 	struct EnsureDestroyDocumentBuilder

@@ -62,12 +62,113 @@
 
 
 
+#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+
+
+
+XalanDefaultParsedSourceDOMSupport::XalanDefaultParsedSourceDOMSupport(const XalanSourceTreeDOMSupport&		theDOMSupport) :
+	XalanSourceTreeDOMSupport(),
+	m_domSupport(theDOMSupport)
+{
+}
+
+
+
+XalanDefaultParsedSourceDOMSupport::~XalanDefaultParsedSourceDOMSupport()
+{
+}
+
+
+
+void
+XalanDefaultParsedSourceDOMSupport::reset()
+{
+}
+
+
+
+const XalanDOMString*
+XalanDefaultParsedSourceDOMSupport::getNamespaceForPrefix(
+			const XalanDOMString&	prefix, 
+			const XalanElement&		namespaceContext) const
+{
+	return m_domSupport.getNamespaceForPrefix(
+					prefix, 
+					namespaceContext);
+}
+
+
+
+const XalanDOMString&
+XalanDefaultParsedSourceDOMSupport::getUnparsedEntityURI(
+			const XalanDOMString&	theName,
+			const XalanDocument&	theDocument) const
+{
+	const XalanDOMString&	theURI =
+			m_domSupport.getUnparsedEntityURI(
+					theName,
+					theDocument);
+
+	if (length(theURI) != 0)
+	{
+		return theURI;
+	}
+	else
+	{
+		return XalanSourceTreeDOMSupport::getUnparsedEntityURI(
+					theName,
+					theDocument);
+	}
+}
+
+
+
+bool
+XalanDefaultParsedSourceDOMSupport::isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const
+{
+	return m_domSupport.isNodeAfter(
+					node1, 
+					node2);
+}
+
+
+
+XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&	theSourceDOMSupport) :
+	m_domSupport(theSourceDOMSupport),
+	m_parserLiaison()
+{
+	m_domSupport.setParserLiaison(&m_parserLiaison);
+}
+
+
+
+DOMSupport&
+XalanDefaultParsedSourceHelper::getDOMSupport()
+{
+	return m_domSupport;
+}
+
+
+
+XMLParserLiaison&
+XalanDefaultParsedSourceHelper::getParserLiaison()
+{
+	return m_parserLiaison;
+}
+
+
+
 XalanDefaultParsedSource::XalanDefaultParsedSource(const XSLTInputSource&	theInputSource):
 	XalanParsedSource(),
 	m_domSupport(),
 	m_parserLiaison(m_domSupport),
-	m_parsedSource(m_parserLiaison.parseXMLStream(theInputSource))
+	m_parsedSource(m_parserLiaison.mapDocument(m_parserLiaison.parseXMLStream(theInputSource)))
 {
+	assert(m_parsedSource != 0);
+
 	m_domSupport.setParserLiaison(&m_parserLiaison);
 }
 
@@ -80,24 +181,15 @@ XalanDefaultParsedSource::~XalanDefaultParsedSource()
 
 
 XalanDocument*	
-XalanDefaultParsedSource::getDocument()
+XalanDefaultParsedSource::getDocument() const
 {
 	return m_parsedSource;
 }
 
 
 
-XMLParserLiaison*
-XalanDefaultParsedSource::getParserLiaison()
+XalanParsedSourceHelper*
+XalanDefaultParsedSource::createHelper() const
 {
-	return &m_parserLiaison;
+	return new XalanDefaultParsedSourceHelper(m_domSupport);
 }
-
-
-
-DOMSupport*
-XalanDefaultParsedSource::getDOMSupport()
-{
-	return &m_domSupport;
-}
-

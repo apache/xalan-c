@@ -77,6 +77,67 @@
 
 
 
+class XalanSourceTreeDocument;
+
+
+
+class XalanDefaultParsedSourceDOMSupport : public XalanSourceTreeDOMSupport
+{
+public:
+
+	XalanDefaultParsedSourceDOMSupport(const XalanSourceTreeDOMSupport&		theDOMSupport);
+
+	virtual
+	~XalanDefaultParsedSourceDOMSupport();
+
+	virtual void
+	reset();
+
+	// These interfaces are inherited from DOMSupport...
+
+	virtual const XalanDOMString*
+	getNamespaceForPrefix(
+			const XalanDOMString&	prefix, 
+			const XalanElement&		namespaceContext) const;
+
+	virtual const XalanDOMString&
+	getUnparsedEntityURI(
+			const XalanDOMString&	theName,
+			const XalanDocument&	theDocument) const;
+
+	virtual bool
+	isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const;
+
+private:
+
+	const XalanSourceTreeDOMSupport&	m_domSupport;
+};
+
+
+
+class XALAN_TRANSFORMER_EXPORT XalanDefaultParsedSourceHelper : public XalanParsedSourceHelper
+{
+public:
+
+	XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&	theSourceDOMSupport);
+
+	virtual DOMSupport&
+	getDOMSupport();
+
+	virtual XMLParserLiaison&
+	getParserLiaison();
+
+private:
+
+	XalanDefaultParsedSourceDOMSupport	m_domSupport;
+
+	XalanSourceTreeParserLiaison		m_parserLiaison;
+};
+
+
+
 /**
  * This is designed to allow a XalanTranfomer object to reuse a parsed
  * document. 
@@ -91,13 +152,10 @@ public:
 	~XalanDefaultParsedSource();
 
 	virtual XalanDocument*
-	getDocument();
+	getDocument() const;
 
-	virtual XMLParserLiaison*
-	getParserLiaison();
-
-	virtual DOMSupport*
-	getDOMSupport();
+	virtual XalanParsedSourceHelper*
+	createHelper() const;
 
 private:
 
@@ -105,7 +163,7 @@ private:
 
 	XalanSourceTreeParserLiaison	m_parserLiaison;
 
-	XalanDocument* const			m_parsedSource;
+	XalanSourceTreeDocument* const	m_parsedSource;
 };
 
 

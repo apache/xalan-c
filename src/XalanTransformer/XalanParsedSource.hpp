@@ -75,6 +75,34 @@ class XMLParserLiaison;
 
 
 
+class XALAN_TRANSFORMER_EXPORT XalanParsedSourceHelper
+{
+public:
+
+	virtual
+	~XalanParsedSourceHelper()
+	{
+	}
+
+	/**
+	 * Get the DOMSupport instance.
+	 *
+	 * @return A reference to a DOMSupport instance.
+	 */
+	virtual DOMSupport&
+	getDOMSupport() = 0;
+
+	/**
+	 * Get the XMLParserLiaison instance.
+	 *
+	 * @return A rerefernce to an XMLParserLiaison instance.
+	 */
+	virtual XMLParserLiaison&
+	getParserLiaison() = 0;
+};
+
+
+
 /**
  * This is abstract base class designed to allow a XalanTranfomer 
  * object to reuse a parsed document. 
@@ -88,16 +116,25 @@ public:
 	virtual
 	~XalanParsedSource();
 
+	/**
+	 * Get a pointer to the XalanDocument instance for the source
+	 * document
+	 *
+	 * @return A pointer to a XalanDocument instance.
+	 */
 	virtual XalanDocument*
-	getDocument() = 0;	
+	getDocument() const = 0;	
 
-	virtual XMLParserLiaison*
-	getParserLiaison() = 0;
-
-	virtual DOMSupport*
-	getDOMSupport() = 0;
-
-private:
+	/**
+	 * Create the appropriate XalanParsedSourceHelper instance to
+	 * use for transforming with the instance.
+	 *
+	 * The caller is responsible for deleting the object when finished.
+	 *
+	 * @return A pointer to a XalanParsedSourceHelper instance.
+	 */
+	virtual XalanParsedSourceHelper*
+	createHelper() const = 0;
 };
 
 
