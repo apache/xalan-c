@@ -412,6 +412,12 @@ XPathFunctionTable::DestroyTable()
 			m_functionTable,
 			m_functionTable + TableSize,
 			DeleteFunctorType());
+
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		std::memset(m_functionTable, 0, sizeof(m_functionTable));
+#else
+		memset(m_functionTable, 0, sizeof(m_functionTable));
+#endif
 	}
 	catch(...)
 	{
