@@ -30,15 +30,8 @@
 
 
 
-#if defined(XALAN_USE_HASH_MAP)
-#include <hash_map>
-#else
-#include <map>
-#endif
-
-
-
 #include <xalanc/Include/XalanVector.hpp>
+#include <xalanc/Include/XalanMap.hpp>
 
 
 
@@ -78,20 +71,21 @@ public:
 
 	typedef XalanVector<KeyDeclaration>			KeyDeclarationVectorType;
 
-#if defined(XALAN_USE_HASH_MAP)
-	typedef std::hash_map<XalanDOMString,
-						  MutableNodeRefList>	NodeListMapType;
+	typedef XalanMap<XalanDOMString,
+					 MutableNodeRefList,
+					 DOMStringHashFunction>	NodeListMapType;
 
-	typedef std::hash_map<XalanQNameByReference,
-						  NodeListMapType>		KeysMapType;
-#else
-	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
-					 MutableNodeRefList>	NodeListMapType;
+	
 
-	typedef XALAN_STD_QUALIFIER map<XalanQNameByReference,
-					 NodeListMapType>		KeysMapType;
-#endif
+	typedef XalanMap<XalanQNameByReference,
+					 NodeListMapType,
+					 XalanHashMemberReference<XalanQNameByReference> >		KeysMapType;
 
+
+	
+	/*typedef std::map<XalanQNameByReference,
+					 NodeListMapType
+					>		KeysMapType;*/
 
 	/**
 	 * Build a keys table.

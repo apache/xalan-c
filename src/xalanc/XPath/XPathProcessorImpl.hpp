@@ -24,11 +24,12 @@
 
 
 #include <cstdlib>
-#include <map>
+
 
 
 
 #include <xalanc/Include/XalanVector.hpp>
+#include <xalanc/Include/XalanMap.hpp>
 
 
 
@@ -61,9 +62,9 @@ class XALAN_XPATH_EXPORT XPathProcessorImpl : public XPathProcessor
 {
 public:
 
-	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
+	typedef XalanMap<XalanDOMString,
 				const XalanDOMString*,
-				XALAN_STD_QUALIFIER less<XalanDOMString> >	StringToStringMapType;
+				DOMStringHashFunction>	StringToStringMapType;
 
 	typedef XalanVector<bool>				BoolVectorType;
 

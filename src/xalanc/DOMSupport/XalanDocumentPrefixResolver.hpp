@@ -23,10 +23,6 @@
 
 
 
-#include <map>
-
-
-
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
 
 
@@ -35,7 +31,9 @@
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
+
 #include <xalanc/Include/XalanVector.hpp>
+#include <xalanc/Include/XalanMap.hpp>
 #include <xalanc/Include/STLHelper.hpp>
 
 
@@ -60,9 +58,10 @@ class XALAN_DOMSUPPORT_EXPORT XalanDocumentPrefixResolver : public PrefixResolve
 public:
 
 	typedef XalanVector<const XalanNode*> 				AttributeVectorType;
-	typedef XALAN_STD_QUALIFIER map<const XalanDOMString*,
+	typedef XalanMap<const XalanDOMString*,
 				AttributeVectorType,
-				pointer_less<XalanDOMString> >			NamespacesMapType;
+				DOMStringPointerHashFunction,
+				pointer_equal<XalanDOMString> >			NamespacesMapType;
 
 	/**
 	 * Constructor.

@@ -31,6 +31,7 @@
 
 
 #include <xalanc/Include/XalanVector.hpp>
+#include <xalanc/Include/XalanMap.hpp>
 #include <xalanc/Include/XalanObjectCache.hpp>
 #include <xalanc/Include/XalanObjectStackCache.hpp>
 
@@ -93,9 +94,9 @@ public:
 	typedef XALAN_STD_QUALIFIER set<const KeyDeclaration*,
 				XALAN_STD_QUALIFIER less<const KeyDeclaration*> >	KeyDeclarationSetType;
 	typedef XALAN_STD_QUALIFIER pair<const XPath*, ClockType>		XPathCacheEntry;
-	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
-				XPathCacheEntry,
-				XALAN_STD_QUALIFIER less<XalanDOMString> >			XPathCacheMapType;
+	typedef XalanMap <XalanDOMString, 
+					  XPathCacheEntry, 
+					  DOMStringHashFunction>			XPathCacheMapType;
 	typedef XALAN_STD_QUALIFIER deque<const ElemTemplate*>			CurrentTemplateStackType;
 
 	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;

@@ -78,7 +78,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 StylesheetRoot::StylesheetRoot(
         const XalanDOMString&			baseIdentifier,
 		StylesheetConstructionContext&	constructionContext) :
-	Stylesheet(*this,
+ 	Stylesheet(*this,
 			   baseIdentifier,
 			   constructionContext),	
 	m_version(),

@@ -58,9 +58,10 @@ public:
 	typedef XalanVector<const XalanQName*> 		XalanQNameVectorType;
 	typedef XalanVector<ElemAttributeSet*> 		AttributeSetVectorType;
 	
-	typedef XALAN_STD_QUALIFIER map<const XalanQName*,
+	typedef XalanMap<const XalanQName*,
 			    AttributeSetVectorType,
-				pointer_less<const XalanQName> >	AttributeSetMapType;
+				XalanHashMemberPointer<XalanQName>,
+				pointer_equal<const XalanQName> >	AttributeSetMapType;
 
 	/**
 	 * Construct a Stylesheet from a Document.

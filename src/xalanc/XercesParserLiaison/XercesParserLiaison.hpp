@@ -23,7 +23,7 @@
 
 
 // Standard Library header files.
-#include <map>
+#include <xalanc/Include/XalanMap.hpp>
 
 
 
@@ -529,14 +529,7 @@ public:
 #endif
 	};
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef map<const XalanDocument*,
-				DocumentEntry,
-				less<const XalanDocument*> >	DocumentMapType;
-#else
-	typedef std::map<const XalanDocument*,
-					 DocumentEntry> 			DocumentMapType;
-#endif
+	typedef XalanMap<const XalanDocument*, DocumentEntry>	DocumentMapType;
 
 	/**
 	 * This API is deprecated.

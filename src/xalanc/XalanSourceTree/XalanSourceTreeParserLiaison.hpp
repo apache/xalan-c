@@ -22,8 +22,7 @@
 
 
 
-// Standard Library header files.
-#include <map>
+#include <xalanc/Include/XalanMap.hpp>
 
 
 
@@ -345,14 +344,9 @@ public:
 	XalanSourceTreeDocument*
 	createXalanSourceTreeDocument();
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef map<const XalanDocument*,
-				XalanSourceTreeDocument*,
-				less<const XalanDocument*> >	DocumentMapType;
-#else
-	typedef std::map<const XalanDocument*,
+	typedef XalanMap<const XalanDocument*,
 					 XalanSourceTreeDocument*>	DocumentMapType;
-#endif
+
 
 protected:
 

@@ -284,6 +284,67 @@ struct less_null_terminated_arrays : public std::binary_function<const T*, const
 
 
 
+template<class T>
+struct equal_null_terminated_arrays : public XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool>
+{
+	/**
+	 * Compare the values of two objects.
+	 *
+	 *
+	 * @param theLHS first object to compare
+	 * @param theRHS second object to compare
+	 * @return true if objects are the same
+	 */
+	result_type
+	operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
+	{
+		while(*theLHS && *theRHS)
+		{
+			if (*theLHS != *theRHS)
+			{
+				return false;
+			}
+			else
+			{
+				++theLHS;
+				++theRHS;
+			}
+		}
+
+		if (*theLHS || *theRHS)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+};
+
+template <class T>
+struct hash_null_terminated_arrays : public XALAN_STD_QUALIFIER unary_function<const T*, size_t>
+{
+	result_type
+	operator() (argument_type	theKey) const
+	{
+		const T*		theRawBuffer = theKey;
+
+		result_type		theHashValue = 0; 
+
+		while (*theRawBuffer)
+		{
+			theHashValue = 5 * theHashValue + *theRawBuffer;
+			++theRawBuffer;
+		}
+
+		return ++theHashValue;
+	}
+};
+
+
 template<class CollectionType>
 class CollectionClearGuard
 {
@@ -465,6 +526,27 @@ struct pointer_less : public std::binary_function<const T*, const T*, bool>
 		return less<T>()(*theLHS, *theRHS);
 	}
 };
+
+
+template<class T>
+struct pointer_equal : public XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool>
+{
+	typedef XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool> BaseClassType;
+
+	typedef typename BaseClassType::result_type				result_type;
+	typedef typename BaseClassType::first_argument_type		first_argument_type;
+	typedef typename BaseClassType::second_argument_type	second_argument_type;
+
+	result_type
+	operator()(
+		first_argument_type		theLHS,
+		second_argument_type	theRHS) const
+	{
+		assert(theLHS != 0 && theRHS != 0);
+		return XALAN_STD_QUALIFIER equal_to<T>()(*theLHS, *theRHS);
+	}
+};
+
 
 
 

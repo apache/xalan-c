@@ -20,14 +20,15 @@
 
 // Base include file.  Must be first.
 #include <xalanc/XPath/XPathDefinitions.hpp>
-
-
-
-#include<map>
-
-
-
 #include <xalanc/XPath/XPathEnvSupport.hpp>
+
+
+
+#include<xalanc/Include/XalanMap.hpp>
+
+
+
+#include<xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
 
@@ -44,15 +45,9 @@ class XALAN_XPATH_EXPORT XPathEnvSupportDefault : public XPathEnvSupport
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef map<XalanDOMString, XalanDocument*, less<XalanDOMString> >		SourceDocsTableType;
-	typedef map<XalanDOMString, const Function*, less<XalanDOMString> >		FunctionTableType;
-	typedef map<XalanDOMString, FunctionTableType, less<XalanDOMString> >	NamespaceFunctionTablesType;
-#else
-	typedef std::map<XalanDOMString, XalanDocument*>	SourceDocsTableType;
-	typedef std::map<XalanDOMString, const Function*>	FunctionTableType;
-	typedef std::map<XalanDOMString, FunctionTableType>	NamespaceFunctionTablesType;
-#endif
+	typedef XalanMap<XalanDOMString, XalanDocument*, DOMStringHashFunction>		SourceDocsTableType;
+	typedef XalanMap<XalanDOMString, const Function*, DOMStringHashFunction>	FunctionTableType;
+	typedef XalanMap<XalanDOMString, FunctionTableType, DOMStringHashFunction>	NamespaceFunctionTablesType;
 
 	/**
 	 * Perform initialization of statics -- must be called before any

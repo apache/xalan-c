@@ -145,7 +145,7 @@ public:
 	XalanDOMString::size_type
 	hash() const
 	{
-		return getLocalPart().hash() % getNamespace().hash();
+		return getLocalPart().hash() % (getNamespace().hash() + 1);
 	}
 
 	class XALAN_XPATH_EXPORT PrefixResolverProxy : public PrefixResolver

@@ -2571,6 +2571,22 @@ struct DOMStringHashFunction : public std::unary_function<const XalanDOMString&,
 	}
 };
 
+/**
+ * Hash functor for DOMStrings
+ * 
+ * @param theKey XalanDOMString to be hashed
+ * @return hash value for XalanDOMString
+ */
+struct DOMStringPointerHashFunction : public XALAN_STD_QUALIFIER unary_function<const XalanDOMString*, size_t>
+{
+	result_type
+	operator() (argument_type	theKey) const
+	{
+		assert (theKey != 0);
+		return DOMStringHashFunction()(*theKey);
+	}
+};
+
 
 
 /**
@@ -2640,6 +2656,25 @@ struct DOMStringLessThanFunction : public std::binary_function<const XalanDOMStr
 	}
 };
 
+
+/**
+ * Equal to functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the theLHS is equal to theRHS
+ */
+struct DOMStringPointerEqualToFunction : public XALAN_STD_QUALIFIER binary_function<const XalanDOMString*, const XalanDOMString*, bool>
+{
+	result_type
+	operator() (first_argument_type		theLHS,
+				second_argument_type	theRHS) const
+	{
+		assert(theLHS != 0 && theRHS != 0);
+
+		return compare(*theLHS, *theRHS) == 0 ? true : false;
+	}
+};
 
 
 /**

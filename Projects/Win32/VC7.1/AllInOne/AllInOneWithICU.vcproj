@@ -254,6 +254,9 @@
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanAutoPtr.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMap.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanObjectCache.hpp">
 			</File>
 			<File

@@ -24,11 +24,12 @@
 
 
 
-#include <map>
+
 
 
 
 #include <xalanc/Include/XalanVector.hpp>
+#include <xalanc/Include/XalanMap.hpp>
 
 
 
@@ -98,21 +99,20 @@ public:
 	typedef XalanVector<XalanSpaceNodeTester>			WhitespaceElementsVectorType;
     typedef XalanVector<const XalanMatchPatternData*>	PatternTableVectorType;
 	
-	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
+	typedef  XalanMap<XalanDOMString,
 				ExtensionNSHandler*,
-				XALAN_STD_QUALIFIER less<XalanDOMString> >		ExtensionNamespacesMapType;
+				DOMStringHashFunction>		ExtensionNamespacesMapType;
 
-    typedef XALAN_STD_QUALIFIER map<XalanQNameByReference,
+    typedef  XalanMap<XalanQNameByReference,
 				const ElemTemplate*,
-				XALAN_STD_QUALIFIER less<XalanQName> >			ElemTemplateMapType;
+				XalanHashMemberReference<XalanQNameByReference> >			ElemTemplateMapType;
 
-    typedef XALAN_STD_QUALIFIER map<const XalanNode*,
-				KeyTable*,
-				XALAN_STD_QUALIFIER less<const XalanNode*> >	KeyTablesTableType;
+    typedef XalanMap<const XalanNode*,
+				KeyTable* >	KeyTablesTableType;
 
-	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
+	typedef XalanMap<XalanDOMString,
 					 PatternTableVectorType,
-                     XALAN_STD_QUALIFIER less<XalanDOMString> > PatternTableMapType;
+                     DOMStringHashFunction> PatternTableMapType;
 
 	/**
 	 * Constructor for a Stylesheet needs a Document.

@@ -22,11 +22,7 @@
 
 
 
-#if defined(XALAN_USE_HASH_MAP)
-#include <hash_map>
-#else
-#include <map>
-#endif
+#include <xalanc/Include/XalanMap.hpp>
 
 
 
@@ -46,15 +42,8 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesWrapperToXalanNodeMap
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef map<const DOMNodeType*, XalanNode*, less<const DOMNodeType*> >	XercesNodeMapType;
-#else
-#if defined(XALAN_USE_HASH_MAP)
-	typedef std::hash_map<const DOMNodeType*, XalanNode*>	XercesNodeMapType;
-#else
-	typedef std::map<const DOMNodeType*, XalanNode*>	XercesNodeMapType;
-#endif
-#endif
+
+	typedef XalanMap<const DOMNodeType*, XalanNode*>	XercesNodeMapType;
 
 
 	XercesWrapperToXalanNodeMap();

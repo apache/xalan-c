@@ -24,12 +24,12 @@
 
 
 
-#include <map>
 #include <set>
 
 
 
 #include <xalanc/Include/XalanVector.hpp>
+#include <xalanc/Include/XalanMap.hpp>
 
 
 
@@ -199,9 +199,11 @@ public:
 	typedef XalanVector<NamespaceExtended>				NamespaceExtendedVectorType;
 	typedef XalanVector<const XalanDOMString*>			XalanDOMStringPointerVectorType;
 
-	typedef XALAN_STD_QUALIFIER map<const XalanDOMString*,
+	typedef XalanMap<const XalanDOMString*,
 				const XalanDOMString*,
-				DOMStringPointerLessThanFunction>		NamespaceAliasesMapType;
+				DOMStringPointerHashFunction,
+				DOMStringPointerEqualToFunction>		NamespaceAliasesMapType;
+
 
 	/**
 	 * Create a default, empty instance.

@@ -22,10 +22,6 @@
 
 
 
-#include <map>
-
-
-
 #if XERCES_VERSION_MAJOR >= 2
 #include <xercesc/dom/deprecated/DOM_Element.hpp>
 #else

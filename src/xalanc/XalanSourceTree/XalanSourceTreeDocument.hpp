@@ -22,7 +22,7 @@
 
 
 
-#include <map>
+#include <xalanc/Include/XalanMap.hpp>
 
 
 
@@ -31,6 +31,7 @@
 
 
 #include <xalanc/Include/STLHelper.hpp>
+#include <xalanc/Include/XalanMap.hpp>
 
 
 
@@ -79,26 +80,17 @@ public:
 	typedef XalanSourceTreeElementA::AttributesCountType	AttributesCountType;
 	typedef XalanArrayAllocator<XalanSourceTreeAttr*>		AttributesArrayAllocatorType;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef map<
+	typedef XalanMap<
 				const XalanDOMChar*,
 				XalanSourceTreeElement*,
-				less_null_terminated_arrays<XalanDOMChar> >		ElementByIDMapType;
+				hash_null_terminated_arrays<XalanDOMChar>,
+				equal_null_terminated_arrays<XalanDOMChar> >		ElementByIDMapType;
 
-	typedef map<
+	typedef XalanMap<
 				XalanDOMString,
 				XalanDOMString,
-				less<XalanDOMString> >							UnparsedEntityURIMapType;
-#else
-	typedef std::map<
-				const XalanDOMChar*,
-				XalanSourceTreeElement*,
-				less_null_terminated_arrays<XalanDOMChar> >		ElementByIDMapType;
+				DOMStringHashFunction>									UnparsedEntityURIMapType;
 
-	typedef std::map<
-				XalanDOMString,
-				XalanDOMString>									UnparsedEntityURIMapType;
-#endif
 
 	/**
 	 * Perform static initialization.  See class XalanSourceTreeInit.

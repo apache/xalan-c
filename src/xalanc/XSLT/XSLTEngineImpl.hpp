@@ -32,7 +32,6 @@
 // Standard library headers
 #include <cassert>
 #include <ctime>
-#include <map>
 #include <set>
 
 
@@ -48,6 +47,7 @@
 
 
 #include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMap.hpp>
 
 
 
@@ -158,9 +158,7 @@ public:
 	typedef XalanVector<TraceListener*>			TraceListenerVectorType;
 	typedef XalanVector<const XalanDOMString*>	XalanDOMStringPointerVectorType;
 
-	typedef XALAN_STD_QUALIFIER map<const void*,
-				ClockType,
-				XALAN_STD_QUALIFIER less<const void*> >	DurationsTableMapType;
+	typedef XalanMap<const void*, ClockType>	DurationsTableMapType;
 
 	typedef XalanVector<bool>							BoolVectorType;
 
