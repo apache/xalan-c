@@ -1152,7 +1152,7 @@ XercesDocumentBridge::isSupported(
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version) const
 {
-	return m_xercesDocument.isSupported(
+	return m_xercesDocument.supports(
 				XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
 				XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
 }

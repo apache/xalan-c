@@ -749,7 +749,7 @@ XalanDOMString::length(const char*	theString)
 
 
 
-#include <xercesc/util/XMLString.hpp>
+#include <util/XMLString.hpp>
 
 
 
