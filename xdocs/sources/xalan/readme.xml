@@ -123,7 +123,7 @@
 
 <note>You can also download &xslt4c; source distributions from <resource-ref idref="xslt4c-distdir"/>: &xslt4c-dist;-src.zip and &xslt4c-dist;-src.tar.gz. &xml4c; source distributions are available from <resource-ref idref="xml4c-distdir"/>: 
 &xml4c-dist;-src.zip and &xml4c-dist;-src.tar.gz.</note>
-<p>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xslt4c; we certify that it is compatible with a given version of &xml4c;. To be safe, stick with Xeres distributions that we certify to be compatible. Reminder: &xslt4c-current; is compatible with &xml4c-used;.</p>
+<p>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xslt4c; we certify that it is compatible with a given version of &xml4c;. To be safe, stick with Xerces distributions that we certify to be compatible. Reminder: &xslt4c-current; is compatible with &xml4c-used;.</p>
    <p>For information on using the <resource-ref idref="icu"/>, see
    <link idref="usagepatterns" anchor="icu">Using the ICU</link>.
    &xslt4c-current; has been tested with &icu-used;. You may be able to use newer ICU releases as they appear.</p>

@@ -65,15 +65,15 @@
       </tr>
        <tr>
          <td>Solaris 2.6</td>
-         <td>[Workshop 4.2]</td>
+         <td>Sun Workshop 6 update 2</td>
       </tr>
        <tr>
          <td>HP/UX 11.0</td>
-         <td>aCC A.03.27</td>
+         <td>aCC A.03.33</td>
       </tr>
        <tr>
-         <td>Red Hat Linux 6.1</td>
-         <td>egcs-2.91.66 and glibc-2.1.2-11</td>
+         <td>Red Hat Linux 7.2</td>
+         <td>gcc 3.1</td>
       </tr>
     </table>
  <p>For more details see: <link idref="readme" anchor="unix">Steps for doing a UNIX build</link>.</p>
