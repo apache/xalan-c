@@ -96,9 +96,10 @@
 
 
 #include "Constants.hpp"
-#include "ElemApplyTemplates.hpp" 
-#include "ElemTemplate.hpp" 
+#include "ElemApplyTemplates.hpp"
+#include "ElemTemplate.hpp"
 #include "ElemValueOf.hpp"
+#include "KeyTable.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 #include "TraceListener.hpp"

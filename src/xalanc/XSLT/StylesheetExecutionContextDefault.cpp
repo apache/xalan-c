@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -104,6 +104,7 @@
 #include "Constants.hpp"
 #include "ElemTemplateElement.hpp"
 #include "ElemWithParam.hpp"
+#include "KeyTable.hpp"
 #include "StylesheetConstructionContextDefault.hpp"
 #include "StylesheetRoot.hpp"
 #include "XSLTEngineImpl.hpp"
@@ -1270,7 +1271,7 @@ StylesheetExecutionContextDefault::setOmitMETATag(eOmitMETATag	value)
 
 
 
-FormatterToXML*
+FormatterListener*
 StylesheetExecutionContextDefault::createFormatterToXML(
 			Writer&					writer,
 			const XalanDOMString&	version,
@@ -1303,7 +1304,7 @@ StylesheetExecutionContextDefault::createFormatterToXML(
 
 
 
-FormatterToHTML*
+FormatterListener*
 StylesheetExecutionContextDefault::createFormatterToHTML(
 			Writer&					writer,
 			const XalanDOMString&	encoding,
@@ -1342,7 +1343,7 @@ StylesheetExecutionContextDefault::createFormatterToHTML(
 
 
 
-FormatterToDOM*
+FormatterListener*
 StylesheetExecutionContextDefault::createFormatterToDOM(
 			XalanDocument*			doc,
 			XalanDocumentFragment*	docFrag,
@@ -1363,7 +1364,7 @@ StylesheetExecutionContextDefault::createFormatterToDOM(
 
 
 
-FormatterToDOM*
+FormatterListener*
 StylesheetExecutionContextDefault::createFormatterToDOM(
 			XalanDocument*	doc,
 			XalanElement*	elem)
@@ -1382,7 +1383,7 @@ StylesheetExecutionContextDefault::createFormatterToDOM(
 
 
 
-FormatterToText*
+FormatterListener*
 StylesheetExecutionContextDefault::createFormatterToText(
 			Writer&					writer,
 			const XalanDOMString&	encoding)

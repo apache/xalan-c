@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -99,7 +99,6 @@
 
 
 
-#include <xalanc/XSLT/KeyTable.hpp>
 #include <xalanc/XSLT/TopLevelArg.hpp>
 
 
@@ -113,12 +112,9 @@ class ElemTemplate;
 class ElemTemplateElement;
 class ElemVariable;
 class FormatterListener;
-class FormatterToDOM;
-class FormatterToHTML;
 class FormatterToText;
-class FormatterToXML;
 class GenerateEvent;
-class KeyTable;
+class KeyDeclaration;
 class PrefixResolver;
 class NodeRefListBase;
 class NodeSorter;
@@ -1386,7 +1382,7 @@ public:
 	 *                          standalone document declaration
 	 * @return a pointer to the new instance.
 	 */
-	virtual FormatterToXML*
+	virtual FormatterListener*
 	createFormatterToXML(
 			Writer&					writer,
 			const XalanDOMString&	version = XalanDOMString(),
@@ -1416,7 +1412,7 @@ public:
 	 * @param omitMetaTag       Whether or not to output a META TAG according to the recommendation.  The default is false.
 	 * @return a pointer to the new instance.
 	 */
-	virtual FormatterToHTML*
+	virtual FormatterListener*
 	createFormatterToHTML(
 			Writer&					writer,
 			const XalanDOMString&	encoding = XalanDOMString(),
@@ -1429,59 +1425,15 @@ public:
 			bool					omitMetaTag = false) = 0;
 
 	/**
-	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 
-	 * to the document fragment.
-	 *
-	 * @param doc            document for nodes
-	 * @param docFrag        document fragment for nodes, default none
-	 * @param currentElement current element for nodes, default none
-	 */
-	virtual FormatterToDOM*
-	createFormatterToDOM(
-			XalanDocument*			doc,
-			XalanDocumentFragment*	docFrag,
-			XalanElement*			currentElement) = 0;
-
-	/**
-	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 
-	 * to the document fragment.
-	 *
-	 * @param doc            document for nodes
-	 * @param docFrag        document fragment for nodes, default none
-	 * @param currentElement current element for nodes, default none
-	 */
-	virtual FormatterToDOM*
-	createFormatterToDOM(
-			XalanDocument*	doc,
-			XalanElement*	elem) = 0;
-
-	/**
 	 * FormatterToText instance constructor.
 	 *
 	 * @param writer writer for output
 	 * @param encoding character encoding for the writer
 	 */
-	virtual FormatterToText*
+	virtual FormatterListener*
 	createFormatterToText(
 			Writer&					writer,
 			const XalanDOMString&	encoding) = 0;
-
-	/**
-	 * Borrow a cached FormatterToText instance.
-	 *
-	 * @return A pointer to the instance.
-	 */
-	virtual FormatterToText*
-	borrowFormatterToText() = 0;
-
-	/**
-	 * Return a previously borrowed FormatterToText instance.
-	 *
-	 * @param theFormatter A pointer the to previously borrowed instance.
-	 * @return true if the instance was previously borrowed, false if not.
-	 */
-	virtual bool
-	returnFormatterToText(FormatterToText*	theFormatter) = 0;
 
 	class BorrowReturnFormatterToText
 	{
@@ -1529,6 +1481,8 @@ public:
 		FormatterToText*				m_formatter;
 	};
 
+
+	friend class BorrowReturnFormatterToText;
 
 	/**
 	 * Borrow a cached NodeSorter instance.
@@ -2025,6 +1979,25 @@ public:
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
 			const LocatorType* 	locator = 0) const = 0;
+
+protected:
+
+	/**
+	 * Borrow a cached FormatterToText instance.
+	 *
+	 * @return A pointer to the instance.
+	 */
+	virtual FormatterToText*
+	borrowFormatterToText() = 0;
+
+	/**
+	 * Return a previously borrowed FormatterToText instance.
+	 *
+	 * @param theFormatter A pointer the to previously borrowed instance.
+	 * @return true if the instance was previously borrowed, false if not.
+	 */
+	virtual bool
+	returnFormatterToText(FormatterToText*	theFormatter) = 0;
 };
 
 

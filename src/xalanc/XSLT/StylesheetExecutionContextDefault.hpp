@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -616,7 +616,7 @@ public:
 	void
 	setOmitMETATag(eOmitMETATag		value);
 
-	virtual FormatterToXML*
+	virtual FormatterListener*
 	createFormatterToXML(
 			Writer&					writer,
 			const XalanDOMString&	version = XalanDOMString(),
@@ -629,7 +629,7 @@ public:
 			bool					xmlDecl = true,
 			const XalanDOMString&	standalone = XalanDOMString());
 
-	virtual FormatterToHTML*
+	virtual FormatterListener*
 	createFormatterToHTML(
 			Writer&					writer,
 			const XalanDOMString&	encoding = XalanDOMString(),
@@ -641,27 +641,21 @@ public:
 			bool					escapeURLs = true,
 			bool					omitMetaTag = false);
 
-	virtual FormatterToDOM*
+	virtual FormatterListener*
 	createFormatterToDOM(
 			XalanDocument*			doc,
 			XalanDocumentFragment*	docFrag,
 			XalanElement*			currentElement);
 
-	virtual FormatterToDOM*
+	virtual FormatterListener*
 	createFormatterToDOM(
 			XalanDocument*	doc,
 			XalanElement*	elem);
 
-	virtual FormatterToText*
+	virtual FormatterListener*
 	createFormatterToText(
 			Writer&					writer,
 			const XalanDOMString&	encoding);
-
-	virtual FormatterToText*
-	borrowFormatterToText();
-
-	virtual bool
-	returnFormatterToText(FormatterToText*	theFormatter);
 
 	virtual NodeSorter*
 	borrowNodeSorter();
@@ -1035,6 +1029,14 @@ public:
 	 */
 	XalanSourceTreeDocument*
 	getSourceTreeFactory() const;
+
+protected:
+
+	virtual FormatterToText*
+	borrowFormatterToText();
+
+	virtual bool
+	returnFormatterToText(FormatterToText*	theFormatter);
 
 private:
 

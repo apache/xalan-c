@@ -96,9 +96,6 @@
 
 
 
-#include <xalanc/XMLSupport/FormatterToDOM.hpp>
-#include <xalanc/XMLSupport/FormatterToText.hpp>
-#include <xalanc/XMLSupport/FormatterToXML.hpp>
 #include <xalanc/XMLSupport/FormatterToHTML.hpp>
 #include <xalanc/XMLSupport/FormatterTreeWalker.hpp>
 #include <xalanc/XMLSupport/XMLParserLiaison.hpp>
@@ -1620,12 +1617,9 @@ XSLTEngineImpl::flushPending()
 				if (getFormatterListener()->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
 				{
 					// Yuck!!! Ugly hack to switch to HTML on-the-fly.
-					FormatterToXML* const	theFormatter =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(FormatterToXML*)getFormatterListener();
-#else
-						static_cast<FormatterToXML*>(getFormatterListener());
-#endif
+					FormatterListener* const	theFormatter =
+							getFormatterListener();
+					assert(theFormatter->getWriter() != 0);
 
 					setFormatterListenerImpl(
 						m_executionContext->createFormatterToHTML(
