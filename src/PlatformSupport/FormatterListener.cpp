@@ -75,8 +75,8 @@
 
 FormatterListener::FormatterListener(eFormat	theFormat) :
 	DocumentHandler(),
-	m_outputFormat(theFormat),
-	m_prefixResolver(0)
+	m_prefixResolver(0),
+	m_outputFormat(theFormat)
 {
 }
 
