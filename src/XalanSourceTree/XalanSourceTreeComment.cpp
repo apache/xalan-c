@@ -385,7 +385,7 @@ XalanSourceTreeComment::substringData(
 			unsigned int	offset,
 			unsigned int	count) const
 {
-	return substring(m_data, offset, count);
+	return m_data.substr(offset, count);
 }
 
 
