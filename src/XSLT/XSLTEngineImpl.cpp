@@ -270,7 +270,10 @@ XSLTEngineImpl::process(
 
 	bool totalTimeID = true;
 
-	pushTime(&totalTimeID);
+	if(m_diagnosticsPrintWriter != 0)
+	{
+		pushTime(&totalTimeID);
+	}
 
 	XalanNode*	sourceTree = getSourceTreeFromInput(inputSource);
 
@@ -382,7 +385,7 @@ XSLTEngineImpl::process(
 		m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
 	}
 
-	if(0 != m_diagnosticsPrintWriter)
+	if(m_diagnosticsPrintWriter != 0)
 	{
 		displayDuration(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Total time")), &totalTimeID);
 	}
@@ -398,7 +401,7 @@ XSLTEngineImpl::process(
 {
 	bool	totalTimeID = true;
 
-	if(0 != m_diagnosticsPrintWriter)
+	if(m_diagnosticsPrintWriter != 0)
 	{
 		pushTime(&totalTimeID);
 	}
@@ -426,7 +429,7 @@ XSLTEngineImpl::process(
 		m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
 	}
 
-	if(0 != m_diagnosticsPrintWriter)
+	if(m_diagnosticsPrintWriter != 0)
 	{
 		displayDuration(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Total time")), &totalTimeID);
 	}
@@ -479,15 +482,20 @@ XSLTEngineImpl::processStylesheet(
 				xslIdentifier = systemID;
 			}
 
-			diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") + xslIdentifier + XALAN_STATIC_UCODE_STRING(" =========="));
+			if(m_diagnosticsPrintWriter != 0)
+			{
+				diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") + xslIdentifier + XALAN_STATIC_UCODE_STRING(" =========="));
 
-			pushTime(&xslIdentifier);
+				pushTime(&xslIdentifier);
+			}
 
 			m_parserLiaison.parseXMLStream(stylesheetSource,
 										   stylesheetProcessor);
 
-			if(0 != m_diagnosticsPrintWriter)
+			if(m_diagnosticsPrintWriter != 0)
+			{
 				displayDuration(XALAN_STATIC_UCODE_STRING("Parse of ") + xslIdentifier, &xslIdentifier);
+			}
 		}
 
 		theStylesheet->postConstruction(constructionContext);
@@ -513,13 +521,16 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 												XalanDOMString(inputSource.getSystemId()) :
 												StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Input XML"));
 
-		// In case we have a fragment identifier, go ahead and 
-		// try to parse the XML here.
-		diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") +
-					xmlIdentifier +
-					XALAN_STATIC_UCODE_STRING(" =========="));
+		if(m_diagnosticsPrintWriter != 0)
+		{
+			// In case we have a fragment identifier, go ahead and 
+			// try to parse the XML here.
+			diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") +
+						xmlIdentifier +
+						XALAN_STATIC_UCODE_STRING(" =========="));
 
-		pushTime(&xmlIdentifier);
+			pushTime(&xmlIdentifier);
+		}
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)
 		QuantifyStartRecordingData();
@@ -771,7 +782,10 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		if(XalanNode::ELEMENT_NODE == frag->getNodeType())
 		{
-			pushTime(frag);
+			if(m_diagnosticsPrintWriter != 0)
+			{
+				pushTime(frag);
+			}
 
 			XalanAutoPtr<Stylesheet>	theGuard;
 
@@ -801,10 +815,12 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 			tw.traverse(frag, frag->getParentNode());
 
-			displayDuration(
-					XalanDOMString(XALAN_STATIC_UCODE_STRING("Setup of ")) +
-					localXSLURLString,
-					frag);
+			if(m_diagnosticsPrintWriter != 0)
+			{
+				displayDuration(
+						XalanDOMString(XALAN_STATIC_UCODE_STRING("Setup of ")) + localXSLURLString,
+						frag);
+			}
 
 			stylesheet->postConstruction(constructionContext);
 
@@ -818,10 +834,13 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 	}
 	else
 	{
-		diag(XalanDOMString(XALAN_STATIC_UCODE_STRING("========= Parsing and preparing ")) +
-				localXSLURLString +
-				XALAN_STATIC_UCODE_STRING(" =========="));
-		pushTime(&localXSLURLString);
+		if(m_diagnosticsPrintWriter != 0)
+		{
+			diag(XalanDOMString(XALAN_STATIC_UCODE_STRING("========= Parsing and preparing ")) +
+					localXSLURLString +
+					XALAN_STATIC_UCODE_STRING(" =========="));
+			pushTime(&localXSLURLString);
+		}
 
 		XalanAutoPtr<Stylesheet>	theGuard;
 
@@ -895,7 +914,10 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		theGuard.release();
 
-		displayDuration("Parsing and init of " + localXSLURLString, &localXSLURLString);
+		if(m_diagnosticsPrintWriter != 0)
+		{
+			displayDuration("Parsing and init of " + localXSLURLString, &localXSLURLString);
+		}
 	}
 
 	return stylesheet;
@@ -1516,7 +1538,7 @@ XSLTEngineImpl::displayDuration(
 	{
 		const ClockType	theDuration = popDuration(key);
 
-		if(0 != m_diagnosticsPrintWriter)
+		if(m_diagnosticsPrintWriter != 0)
 		{
 			const double	millis = (double(theDuration) / CLOCKS_PER_SEC) * 1000.0;
 
