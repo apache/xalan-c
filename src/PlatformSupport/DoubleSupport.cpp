@@ -60,7 +60,6 @@
 #if defined(NO_STD_LIMITS)
 #if defined(__GNUC__)
 #include <math.h>
-// @@ JMD: Shouldn't need this as well ??
 #include <bits/nan.h>
 #else
 #error Unsupported platform!!!
@@ -106,3 +105,105 @@ const unsigned long*	DoubleSupport::s_NaNFirstDWORD =
 const unsigned long*	DoubleSupport::s_NaNSecondDWORD =
 					s_NaNFirstDWORD + 1;
 #endif
+
+
+
+bool
+DoubleSupport::equal(
+			double	theLHS,
+			double	theRHS)
+{
+	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	{
+		return false;
+	}
+	else
+	{
+		return theLHS == theRHS;
+	}
+}
+
+
+
+bool
+DoubleSupport::notEqual(
+			double	theLHS,
+			double	theRHS)
+{
+	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	{
+		return true;
+	}
+	else
+	{
+		return theLHS != theRHS;
+	}
+}
+
+
+
+bool
+DoubleSupport::lessThan(
+			double	theLHS,
+			double	theRHS)
+{
+	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	{
+		return false;
+	}
+	else
+	{
+		return theLHS < theRHS;
+	}
+}
+
+
+
+bool
+DoubleSupport::lessThanOrEqual(
+			double	theLHS,
+			double	theRHS)
+{
+	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	{
+		return false;
+	}
+	else
+	{
+		return theLHS <= theRHS;
+	}
+}
+
+
+
+bool
+DoubleSupport::greaterThan(
+			double	theLHS,
+			double	theRHS)
+{
+	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	{
+		return false;
+	}
+	else
+	{
+		return theLHS > theRHS;
+	}
+}
+
+
+
+bool
+DoubleSupport::greaterThanOrEqual(
+			double	theLHS,
+			double	theRHS)
+{
+	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	{
+		return false;
+	}
+	else
+	{
+		return theLHS >= theRHS;
+	}
+}

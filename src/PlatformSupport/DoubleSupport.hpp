@@ -64,6 +64,10 @@
 
 
 
+#include <functional>
+
+
+
 class XALAN_PLATFORMSUPPORT_EXPORT DoubleSupport
 {
 public:
@@ -166,6 +170,176 @@ public:
 	{
 		return s_negativeInfinity;
 	}
+
+	/**
+	 * Compare two double values, taking into account
+	 * the fact that we must support IEEE 754
+	 *
+	 * *param theLHS a number to compare
+	 * *param theRHS a number to compare
+	 * @return the result of the compare
+	 */
+	static bool
+	equal(
+			double	theLHS,
+			double	theRHS);
+
+	/**
+	 * Compare two double values, taking into account
+	 * the fact that we must support IEEE 754
+	 *
+	 * *param theLHS a number to compare
+	 * *param theRHS a number to compare
+	 * @return the result of the compare
+	 */
+	static bool
+	notEqual(
+			double	theLHS,
+			double	theRHS);
+
+	/**
+	 * Compare two double values, taking into account
+	 * the fact that we must support IEEE 754
+	 *
+	 * *param theLHS a number to compare
+	 * *param theRHS a number to compare
+	 * @return the result of the compare
+	 */
+	static bool
+	lessThan(
+			double	theLHS,
+			double	theRHS);
+
+	/**
+	 * Compare two double values, taking into account
+	 * the fact that we must support IEEE 754
+	 *
+	 * *param theLHS a number to compare
+	 * *param theRHS a number to compare
+	 * @return the result of the compare
+	 */
+	static bool
+	lessThanOrEqual(
+			double	theLHS,
+			double	theRHS);
+
+	/**
+	 * Compare two double values, taking into account
+	 * the fact that we must support IEEE 754
+	 *
+	 * *param theLHS a number to compare
+	 * *param theRHS a number to compare
+	 * @return the result of the compare
+	 */
+	static bool
+	greaterThan(
+			double	theLHS,
+			double	theRHS);
+
+	/**
+	 * Compare two double values, taking into account
+	 * the fact that we must support IEEE 754
+	 *
+	 * *param theLHS a number to compare
+	 * *param theRHS a number to compare
+	 * @return the result of the compare
+	 */
+	static bool
+	greaterThanOrEqual(
+			double	theLHS,
+			double	theRHS);
+
+	// Some functors to do the same thing.  This is for
+	// STL integration...
+	#if defined(XALAN_NO_NAMESPACES)
+	struct equalFunction : public binary_function<const double&, const double&, bool>
+	#else
+	struct equalFunction : public std::binary_function<const double&, const double&, bool>
+	#endif
+	{
+		result_type
+		operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
+		{
+			return equal(theLHS, theRHS);
+		}
+	};
+
+	#if defined(XALAN_NO_NAMESPACES)
+	struct notEqualFunction : public binary_function<const double&, const double&, bool>
+	#else
+	struct notEqualFunction : public std::binary_function<const double&, const double&, bool>
+	#endif
+	{
+		result_type
+		operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
+		{
+			return notEqual(theLHS, theRHS);
+		}
+	};
+
+	#if defined(XALAN_NO_NAMESPACES)
+	struct lessThanFunction : public binary_function<const double&, const double&, bool>
+	#else
+	struct lessThanFunction : public std::binary_function<const double&, const double&, bool>
+	#endif
+	{
+		result_type
+		operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
+		{
+			return lessThan(theLHS, theRHS);
+		}
+	};
+
+	#if defined(XALAN_NO_NAMESPACES)
+	struct lessThanOrEqualFunction : public binary_function<const double&, const double&, bool>
+	#else
+	struct lessThanOrEqualFunction : public std::binary_function<const double&, const double&, bool>
+	#endif
+	{
+		result_type
+		operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
+		{
+			return lessThanOrEqual(theLHS, theRHS);
+		}
+	};
+
+	#if defined(XALAN_NO_NAMESPACES)
+	struct greaterThanFunction : public binary_function<const double&, const double&, bool>
+	#else
+	struct greaterThanFunction : public std::binary_function<const double&, const double&, bool>
+	#endif
+	{
+		result_type
+		operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
+		{
+			return greaterThan(theLHS, theRHS);
+		}
+	};
+
+	#if defined(XALAN_NO_NAMESPACES)
+	struct greaterThanOrEqualFunction : public binary_function<const double&, const double&, bool>
+	#else
+	struct greaterThanOrEqualFunction : public std::binary_function<const double&, const double&, bool>
+	#endif
+	{
+		result_type
+		operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
+		{
+			return greaterThanOrEqual(theLHS, theRHS);
+		}
+	};
 
 private:
 

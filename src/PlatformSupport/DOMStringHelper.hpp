@@ -1285,7 +1285,122 @@ struct DOMStringEqualsFunction : public std::binary_function<const XalanDOMStrin
 	operator() (first_argument_type		theLHS,
 				second_argument_type	theRHS) const
 	{
-		return theLHS.equals(theRHS);
+		return compare(theLHS, theRHS) == 0 ? true : false;
+	}
+};
+
+
+
+/**
+ * Not equals functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
+#if defined(XALAN_NO_NAMESPACES)
+struct DOMStringNotEqualsFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#else
+struct DOMStringNotEqualsFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#endif
+{
+	result_type
+	operator() (first_argument_type		theLHS,
+				second_argument_type	theRHS) const
+	{
+		return compare(theLHS, theRHS) == 0 ? false : true;
+	}
+};
+
+
+
+/**
+ * Less than functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
+#if defined(XALAN_NO_NAMESPACES)
+struct DOMStringLessThanFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#else
+struct DOMStringLessThanFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#endif
+{
+	result_type
+	operator() (first_argument_type		theLHS,
+				second_argument_type	theRHS) const
+	{
+		return compare(theLHS, theRHS) < 0 ? true : false;
+	}
+};
+
+
+
+/**
+ * Less than or equal functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
+#if defined(XALAN_NO_NAMESPACES)
+struct DOMStringLessThanOrEqualFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#else
+struct DOMStringLessThanOrEqualFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#endif
+{
+	result_type
+	operator() (first_argument_type		theLHS,
+				second_argument_type	theRHS) const
+	{
+		return compare(theLHS, theRHS) <= 0 ? true : false;
+	}
+};
+
+
+
+/**
+ * Greater than functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
+#if defined(XALAN_NO_NAMESPACES)
+struct DOMStringGreaterThanFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#else
+struct DOMStringGreaterThanFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#endif
+{
+	result_type
+	operator() (first_argument_type		theLHS,
+				second_argument_type	theRHS) const
+	{
+		return compare(theLHS, theRHS) > 0 ? true : false;
+	}
+};
+
+
+
+/**
+ * Greater than or equal functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
+#if defined(XALAN_NO_NAMESPACES)
+struct DOMStringGreaterThanOrEqualFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#else
+struct DOMStringGreaterThanOrEqualFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#endif
+{
+	result_type
+	operator() (first_argument_type		theLHS,
+				second_argument_type	theRHS) const
+	{
+		return compare(theLHS, theRHS) >= 0 ? true : false;
 	}
 };
 
