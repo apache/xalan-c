@@ -571,7 +571,7 @@ public:
 	 * remain one.
 	 */
 #if defined(XALAN_INLINE_INITIALIZATION)
-	const int	s_opCodeMapLengthIndex = 1;
+	static const int	s_opCodeMapLengthIndex = 1;
 #else
 	enum eDummy
 	{
