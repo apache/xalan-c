@@ -234,34 +234,47 @@ void ElemLiteralResult::execute(
 	{
 		for (NamespaceVectorType::size_type i = 0; i < nsVector->size(); i++)
 		{
-			NameSpace	ns = (*nsVector)[i];
+			const NameSpace&	ns = (*nsVector)[i];
 
-			if(!isEmpty(ns.getURI()) && ns.getResultCandidate())
+			if(ns.getResultCandidate() == true)
 			{
-				const bool		hasPrefix = !isEmpty(ns.getPrefix());
+				const XalanDOMString&	srcURI = ns.getURI();
 
-				XalanDOMString	prefix = hasPrefix ? ns.getPrefix() : XalanDOMString();
-				XalanDOMString	desturi = executionContext.getResultNamespaceForPrefix(prefix);
-				XalanDOMString	attrName = hasPrefix ? 
-					DOMServices::s_XMLNamespaceWithSeparator + prefix :
-							DOMServices::s_XMLNamespace;
-
-				XalanDOMString			srcURI = ns.getURI();
-
-				const XalanDOMString	alias = getStylesheet().getAliasNamespaceURI(srcURI);
-
-				if (length(alias) != 0)
+				if (!isEmpty(srcURI))
 				{
-					srcURI = alias;
-				}
+					const bool		hasPrefix = !isEmpty(ns.getPrefix());
 
-				bool isXSLNS = equals(srcURI, executionContext.getXSLNameSpaceURL())
-					|| 0 != getStylesheet().lookupExtensionNSHandler(srcURI)
-					|| equals(srcURI,executionContext.getXalanXSLNameSpaceURL());
+					const XalanDOMString	prefix = hasPrefix ? ns.getPrefix() : XalanDOMString();
 
-				if(!isXSLNS && !equals(srcURI, desturi)) // TODO: Check for extension namespaces
-				{
-					executionContext.addResultAttribute(attrName, srcURI);
+					XalanDOMString	attrName;
+
+					if (hasPrefix == true)
+					{
+						reserve(attrName, DOMServices::s_XMLNamespaceWithSeparatorLength + length(prefix) + 1);
+
+						attrName += DOMServices::s_XMLNamespaceWithSeparator;
+						attrName += prefix;
+					}
+					else
+					{
+						attrName = DOMServices::s_XMLNamespace;
+					}
+
+					const XalanDOMString	alias = getStylesheet().getAliasNamespaceURI(srcURI);
+
+					const XalanDOMString&	resultURI = length(alias) != 0 ? alias : srcURI;
+
+					const bool	isXSLNS =
+						equals(resultURI, executionContext.getXSLNameSpaceURL()) ||
+							   0 != getStylesheet().lookupExtensionNSHandler(srcURI) ||
+							   equals(resultURI, executionContext.getXalanXSLNameSpaceURL());
+
+					const XalanDOMString	desturi = executionContext.getResultNamespaceForPrefix(prefix);
+
+					if(!isXSLNS && !equals(resultURI, desturi)) // TODO: Check for extension namespaces
+					{
+						executionContext.addResultAttribute(attrName, resultURI);
+					}
 				}
 			}
 		}
