@@ -244,9 +244,8 @@ private:
 
 	void
 	doCharacters(
-			const XMLCh*	chars,
-			unsigned int	length);
-
+			const XMLCh*				chars,
+			XalanDOMString::size_type	length);
 
 	// Data members...
 

@@ -534,8 +534,8 @@ XalanSourceTreeContentHandler::processAccumulatedText()
 
 void
 XalanSourceTreeContentHandler::doCharacters(
-			const XMLCh*	chars,
-			unsigned int	length)
+			const XMLCh*				chars,
+			XalanDOMString::size_type	length)
 {
 	assert(m_inDTD == false);
 
