@@ -213,6 +213,30 @@ Package=<4>
 
 ###############################################################################
 
+Project: "XalanExtensions"=".\XalanExtensions\XalanExtensions.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "XalanSourceTree"=".\XalanSourceTree\XalanSourceTree.dsp" - Package Owner=<4>
 
 Package=<5>
