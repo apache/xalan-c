@@ -1,0 +1,209 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "DOMSupport"=".\DOMSupport\DOMSupport.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "PlatformSupport"=".\PlatformSupport\PlatformSupport.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesInit
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "TestXPath"=".\TestXPath\TestXPath.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XercesParserLiaison
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XMLSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XercesPlatformSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "TestXSLT"=".\TestXSLT\TestXSLT.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XercesParserLiaison
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XercesPlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XMLSupport"=".\XMLSupport\XMLSupport.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XPath"=".\XPath\XPath.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XSLT"=".\XSLT\XSLT.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XMLSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XercesPlatformSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XercesInit"=".\XercesInit\XercesInit.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "XercesParserLiaison"=".\XercesParserLiaison\XercesParserLiaison.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XMLSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "XercesPlatformSupport"=".\XercesPlatformSupport\XercesPlatformSupport.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

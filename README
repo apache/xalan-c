@@ -1,0 +1,13 @@
+README for xml-xalan/C++ project at apache.org
+
+
+Basic Build Instructions for xml-xalan/c:
+
+- We currently have checked in project files for MSVC++ 6.0.  Load and build the "TestXSLT" subproject from
+Projects\Win32\VC6\Xalan.dsw.  Note that the STL headers are very noisy in MSVC with hundreds of warnings that 
+can be safely ignored.  Once you're built, copy the DLL's (8 of them) and the testXSLT.exe executable into a directory
+containing the xerces-c_1_0 DLL from Xerces.  Then run.  The command line is the same as Xalan/J.
+
+
+
+

@@ -1,0 +1,1036 @@
+/*
+ * The Apache Software License, Version 1.1
+ *
+ *
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:  
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
+ *
+ * 4. The names "Xalan" and "Apache Software Foundation" must
+ *    not be used to endorse or promote products derived from this
+ *    software without prior written permission. For written 
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache",
+ *    nor may "Apache" appear in their name, without prior written
+ *    permission of the Apache Software Foundation.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation and was
+ * originally based on software copyright (c) 1999, International
+ * Business Machines, Inc., http://www.ibm.com.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ */
+#if !defined(XPATH_HEADER_GUARD_1357924680)
+#define XPATH_HEADER_GUARD_1357924680
+
+
+
+// Base header file.  Must be first.
+#include <XPath/XPathDefinitions.hpp>
+
+
+
+#include <map>
+#include <memory>
+#include <vector>
+
+
+
+#include <dom/DOM_Node.hpp>
+#include <dom/DOM_Element.hpp>
+#include <dom/DOMString.hpp>
+
+
+
+#include <PlatformSupport/FactoryObject.hpp>
+#include <PlatformSupport/STLHelper.hpp>
+
+
+
+// Base class header files...
+#include <XPath/XPathExecutionContext.hpp>
+
+
+
+#include <XPath/MutableNodeRefList.hpp>
+#include <XPath/XPathExpression.hpp>
+#include <XPath/XPathFunctionTable.hpp>
+
+
+
+class PrefixResolver;
+class XLocator;
+class XObject;
+class XObjectFactory;
+class XPathEnvSupport;
+class XPathSupport;
+
+
+
+/**
+ * The XPath class represents the semantic parse tree of the XPath pattern.
+ * It is the representation of the grammar which filters out
+ * the choice for replacement order of the production rules.
+ * In order to conserve memory and reduce object creation, the 
+ * tree is represented as an array of integers:
+ *	  [op code][length][...]
+ * where strings are represented within the array as 
+ * indexes into the token tree.
+ */
+// $$$ ToDo: I'm only having XPath derive from XPathExecutionContext for convenience,
+// and because we really haven't broken XPath into an abstract base class, and an
+// implementation class.  But for now, XPathProcessorImpl has intimate knowledge of
+// XPath, so this is necessary.
+class XALAN_XPATH_EXPORT XPath : public FactoryObject, public XPathExecutionContext
+{
+public:
+
+#if defined(XALAN_INLINE_INITIALIZATION)
+
+	const char* const	PSEUDONAME_ANY = "*";
+	const char* const	PSEUDONAME_ROOT = "/";
+	const char* const	PSEUDONAME_TEXT = "#text";
+	const char* const	PSEUDONAME_COMMENT = "#comment";
+	const char* const	PSEUDONAME_PI = "#pi";
+	const char* const	PSEUDONAME_OTHER = "*";
+
+#else
+
+	static const char* const	PSEUDONAME_ANY;
+	static const char* const	PSEUDONAME_ROOT;
+	static const char* const	PSEUDONAME_TEXT;
+	static const char* const	PSEUDONAME_COMMENT;
+	static const char* const	PSEUDONAME_PI;
+	static const char* const	PSEUDONAME_OTHER;
+
+#endif
+
+	XPath(
+			XObjectFactory&		theXObjectFactory,
+			XPathEnvSupport&	theXPathEnvSupport,
+			XPathSupport& 		theXPathSupport);
+
+	// These interfaces are inherited from XPathExecutionContext
+	virtual DOM_Node
+	getCurrentNode() const;
+
+	virtual void
+	setCurrentNode(const DOM_Node&	theCurrentNode);
+
+	virtual XObjectFactory&
+	getXObjectFactory() const;
+
+	/**
+	 * Returns the namespace of the given node.
+	 */
+	virtual DOMString
+	getNamespaceOfNode(const DOM_Node&	n) const;
+
+	/**
+	 * Returns the local name of the given node.
+	 */
+	virtual DOMString
+	getLocalNameOfNode(const DOM_Node&	n) const;
+
+	/**
+	 * Returns the parent of the given node.
+	 */
+	virtual DOM_Node
+	getParentOfNode(const DOM_Node&	n) const;
+
+	/**
+	 * Get node data recursively.
+	 * (Note whitespace issues.)
+	 */
+	virtual DOMString
+	getNodeData(const DOM_Node&	n) const;
+
+	/**
+	 * Get an element from an ID.
+	 */
+	virtual DOM_Element
+	getElementByID(
+			const DOMString&		id,
+			const DOM_Document&		doc) const;
+
+	/*
+	 * Get the current context node list.
+	 *
+	 */
+	virtual const NodeRefListBase&
+	getContextNodeList() const;
+
+	/*
+	 * Set the current context node list.
+	 *
+	 */
+	virtual void	
+	setContextNodeList(const NodeRefListBase&	theList);
+
+	/*
+	 * Get the count of nodes in the current context node list.
+	 *
+	 */
+	virtual int
+	getContextNodeListLength() const;
+
+	/*
+	 * Get the current position in the current context node list.
+	 *
+	 */
+	virtual int
+	getContextNodeListPosition(const DOM_Node&	contextNode) const;
+
+	virtual void
+	associateXLocatorToNode(
+			const DOM_Node&		node,
+			XLocator*			xlocator) const;
+
+	/**
+	 * Provides support for XML parsing service.
+	 */
+	virtual DOM_Document
+	parseXML(
+			const DOMString&	urlString,
+			const DOMString&	base) const;
+
+	/**
+	 * Create a MutableNodeRefList with the appropriate context.
+	 */
+	virtual MutableNodeRefList
+	createMutableNodeRefList() const;
+
+	/**
+	 * Tells if namespaces should be supported.  For optimization purposes.
+	 */
+	virtual bool
+	getProcessNamespaces() const;
+
+	virtual const NodeRefListBase*
+	getNodeSetByKey(
+			const DOM_Node&			doc,
+			const DOMString&		name,
+			const DOMString&		ref,
+			const PrefixResolver&	resolver) const;
+
+	virtual const PrefixResolver&
+	getPrefixResolver() const;
+
+	virtual void
+	setPrefixResolver(const PrefixResolver&		thePrefixResolver);
+
+	virtual DOMString
+	getNamespaceForPrefix(const DOMString&	prefix) const;
+
+	/**
+	 * Given a DOM Document, tell what URI was used to parse it.
+	 * Needed for relative resolution.
+	 */
+	virtual DOMString
+	findURIFromDoc(const DOM_Document&	owner) const;
+
+	/**
+	 * The getUnparsedEntityURI function returns the URI of the unparsed
+	 * entity with the specified name in the same document as the context
+	 * node (see [3.3 Unparsed Entities]). It returns the empty string if
+	 * there is no such entity.
+	 */
+	virtual DOMString
+	getUnparsedEntityURI(
+			const DOMString&		theName,
+			const DOM_Document&		theDocument) const;
+
+	/**
+	 * Tells, through the combination of the default-space attribute
+	 * on xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the
+	 * xml:space attribute, whether or not extra whitespace should be stripped
+	 * from the node.  Literal elements from template elements should
+	 * <em>not</em> be tested with this function.
+	 * @param textNode A text node from the source tree.
+	 * @return true if the text node should be stripped of extra whitespace.
+	 */
+	virtual bool
+	shouldStripSourceNode(const DOM_Node&	node) const;
+
+	/**
+	 * Tell the user of an error, and probably throw an 
+	 * exception.
+	 */
+	virtual void
+	error(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node()) const;
+
+	/**
+	 * Tell the user of an warning, and probably throw an 
+	 * exception.
+	 */
+	virtual void
+	warn(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node()) const;
+
+	// These interfaces are new...
+
+	virtual void
+	shrink();
+
+	bool
+	getThrowFoundIndex() const
+	{
+		return m_throwFoundIndex;
+	}
+
+	void
+	setThrowFoundIndex(bool 	fThrow)
+	{
+		m_throwFoundIndex = fThrow;
+	}
+
+	/**
+	 * Given an expression and a context, return the result.
+	 * @param expression The expression.
+	 * @param node The node that "." expresses.
+	 * @param namespaceContext The context in which namespaces in the 
+	 * queries are supposed to be expanded.
+	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
+	 * the error condition is severe enough to halt processing.
+	 */
+	virtual XObject*
+	execute(
+			const DOM_Node& 		contextNode, 
+			const PrefixResolver&	resolver,
+			const NodeRefListBase& 	contextNodeList);
+
+	/**
+	 * Execute the XPath from the provided context.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns the union of node-set operands.
+	 */
+	virtual XObject*
+	execute(
+			const DOM_Node& 	context,
+			int 				opPos);
+
+	/**
+	 * Execute a location path.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns a node-set.
+	 */
+	virtual XObject*
+	locationPath(
+			const DOM_Node&		context,
+			int					opPos);
+
+	// Get a reference to the current expression.
+	XPathExpression&
+	getExpression()
+	{
+		return m_expression;
+	}
+
+#if defined(XALAN_INLINE_INITIALIZATION)
+	/**
+	 * The match score if no match is made.
+	 */
+	const double					s_MatchScoreNone = -9999999999999;
+
+	/**
+	 * The match score if the pattern has the form 
+	 * of a QName optionally preceded by an @ character.
+	 */
+	const double					s_MatchScoreQName = 0.0;
+
+	/**
+	 * The match score if the pattern has the form NCName:*.
+	 */
+	const double					s_MatchScoreNSWild = -0.25;
+
+	/**
+	 * The match score if the pattern consists of just a NodeTest.
+	 */
+	const double					s_MatchScoreNodeTest = -0.5;
+
+	/**
+	 * The match score if the pattern consists of something 
+	 * other than just a NodeTest or just a qname.
+	 */
+	const double					s_MatchScoreOther = 0.5;
+#else
+	/**
+	 * The match score if no match is made.
+	 */
+	static const double					s_MatchScoreNone;
+
+	/**
+	 * The match score if the pattern has the form 
+	 * of a QName optionally preceded by an @ character.
+	 */
+	static const double					s_MatchScoreQName;
+
+	/**
+	 * The match score if the pattern has the form NCName:*.
+	 */
+	static const double					s_MatchScoreNSWild;
+
+	/**
+	 * The match score if the pattern consists of just a NodeTest.
+	 */
+	static const double					s_MatchScoreNodeTest;
+
+	/**
+	 * The match score if the pattern consists of something 
+	 * other than just a NodeTest or just a qname.
+	 */
+	static const double					s_MatchScoreOther;
+#endif
+
+	/**
+	 * Computes the union of its operands which must be node-sets.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns the union of node-set operands.
+	 */
+	virtual double
+	getMatchScore(const DOM_Node&	context);
+
+	/**
+	 * Test a node.  This should be implemented by a derived class.
+	 * The default just returns s_MatchScoreNone.
+	 * @return one of s_MatchScoreNone, s_MatchScoreNodeTest, s_MatchScoreQName
+	 */
+	virtual double
+	nodeTest(
+			const DOM_Node&		context,
+			int					opPos,
+			int					argLen,
+			int					stepType);
+
+	/**
+	 * Evaluate a predicate.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns either a boolean or a number.
+	 */
+	virtual XObject*
+	predicate(
+			const DOM_Node&		context,
+			int					opPos);
+
+	typedef std::vector<DOMString>	TargetElementStringsVectorType;
+
+	virtual void
+	getTargetElementStrings(TargetElementStringsVectorType&		targetStrings);
+
+	/**
+	 * Install a built-in function.
+	 * @param funcName The unqualified name of the function.
+	 * @param func An instance of an XPath function object.
+	 * @return Nothing.
+	 */
+	static void
+	installFunction(
+			const DOMString&	funcName,
+			const Function& 	func);
+
+	static bool
+	isInstalledFunction(const DOMString&	theFunctionName)
+	{
+		return s_functions.isInstalledFunction(theFunctionName);
+	}
+
+	typedef XPathFunctionTable	FunctionTableType;
+
+	static const FunctionTableType&
+	getFunctionTable()
+	{
+		return s_functions;
+	}
+
+#if defined(XALAN_NO_MEMBER_TEMPLATES)
+	typedef XPathFunctionTable::InstalledFunctionNameVectorType
+					InstalledFunctionNameVectorType;
+
+	static void
+	getInstalledFunctionNames(InstalledFunctionNameVectorType&	theVector)
+	{
+		s_functions.getInstalledFunctionNames(theVector);
+	}
+#else
+	template<class OutputIteratorType>
+	static void
+	getInstalledFunctionNames(OutputIteratorType	theIterator)
+	{
+		s_functions.getInstalledFunctionNames(theIterator);
+	}
+#endif
+
+protected:
+
+	XPath(
+			XObjectFactory&		theXObjectFactory,
+			XPathEnvSupport&	theXPathEnvSupport,
+			XPathSupport&		theXPathSupport,
+			bool				createDefaultLocator);
+
+	virtual
+	~XPath();
+
+	/**
+	 * createXLocatorHandler.
+	 */
+	virtual XLocator*
+	createXLocatorHandler() const;
+
+	/**
+	 * Execute from the beginning of the xpath.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns The result of the expression.
+	 */
+	virtual XObject*
+	xpath(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Computes the union of its operands which must be node-sets.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns the match score in the form of an XObject.
+	 */
+	virtual XObject*
+	matchPattern(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Execute a step in a location path.  This must be implemented 
+	 * by a derived class of XPath (or don't call at all 
+	 * from the derived implementation of locationPath()).
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns a node-set.
+	 */
+	MutableNodeRefList*
+	step(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * OR two expressions and return the boolean result.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns XBoolean set to true if the one of the two arguments are true.
+	 */
+	virtual XObject*
+	or(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * OR two expressions and return the boolean result.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns XBoolean set to true if the two arguments are both true.
+	 */
+	virtual XObject*
+	and(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Tell if two expressions are functionally not equal.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns XBoolean set to true if the two arguments are not equal.
+	 */
+	virtual XObject*
+	notequals(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Tell if two expressions are functionally equal.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns XBoolean set to true if the two arguments are equal.
+	 */
+	virtual XObject*
+	equals(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Tell if one argument is less than or equal to the other argument.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns XBoolean set to true if arg 1 is less than or equal to arg 2.
+	 */
+	virtual XObject*
+	lte(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Tell if one argument is less than the other argument.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns XBoolean set to true if arg 1 is less than arg 2.
+	 */
+	virtual XObject*
+	lt(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Tell if one argument is greater than or equal to the other argument.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns XBoolean set to true if arg 1 is greater than or equal to arg 2.
+	 */
+	virtual XObject*
+	gte(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Tell if one argument is greater than the other argument.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns XBoolean set to true if arg 1 is greater than arg 2.
+	 */
+	virtual XObject*
+	gt(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Give the sum of two arguments.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns sum of arg1 and arg2.
+	 */
+	virtual XObject*
+	plus(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Give the difference of two arguments.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns difference of arg1 and arg2.
+	 */
+	virtual XObject*
+	minus(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Multiply two arguments.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns arg1 * arg2.
+	 */
+	virtual XObject*
+	mult(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Divide a number.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns arg1 / arg2.
+	 */
+	virtual XObject*
+	div(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Return the remainder from a truncating division.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns arg1 mod arg2.
+	 */
+	virtual XObject*
+	mod(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Return the remainder from a truncating division.
+	 * (Quo is no longer supported by xpath).
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns arg1 mod arg2.
+	 */
+	virtual XObject*
+	quo(
+			const DOM_Node&		context,
+			int					opPos);
+	
+	/**
+	 * Return the negation of a number.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns -arg.
+	 */
+	virtual XObject*
+	neg(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Cast an expression to a string.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns arg cast to a string.
+	 */
+	virtual XObject*
+	string(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Cast an expression to a boolean.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns arg cast to a boolean.
+	 */
+	virtual XObject*
+	boolean(
+			const DOM_Node&		context,
+			int					opPos);
+ 
+	/**
+	 * Cast an expression to a number.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns arg cast to a number.
+	 */
+	virtual XObject*
+	number(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Computes the union of its operands which must be node-sets.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns the union of node-set operands.
+	 */
+	virtual XObject*
+	Union(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Get a literal value.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns an XObject object.
+	 */
+	virtual XObject*
+	literal(
+			const DOM_Node&		context,
+			int					opPos);
+  
+	/**
+	 * Get a literal value.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns an XObject object.
+	 */
+	virtual XObject*
+	variable(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Execute an expression as a group.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns arg.
+	 */
+	virtual XObject*
+	group(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Get a literal value.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns an XObject object.
+	 */
+	virtual XObject*
+	numberlit(
+			const DOM_Node&		context,
+			int					opPos);
+  
+	/**
+	 * Execute a function argument.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns the result of the argument expression.
+	 */
+	virtual XObject*
+	arg(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Execute a location path.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @returns score in an XNumber, one of MATCH_SCORE_NODETEST, 
+	 * MATCH_SCORE_NONE, MATCH_SCORE_OTHER, MATCH_SCORE_QNAME.
+	 */
+	virtual XObject*
+	locationPathPattern(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Setup for and run an extension function.
+	 */
+	virtual XObject*
+	runExtFunction(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Handle an extension function.
+	 */
+	virtual XObject*
+	extfunction(
+			const DOM_Node&					context,
+			int								opPos,
+			const DOMString&				theNamespace,
+			const DOMString&				extensionName, 
+			const std::vector<XObject*>&	argVec);
+
+	/**
+	 * Setup for and run a function.
+	 */
+	virtual XObject*
+	runFunction(
+			const DOM_Node&		context,
+			int					opPos);
+
+	/**
+	 * Handle a built-in function.
+	 */
+	virtual XObject*
+	function(
+			const DOM_Node&					context,
+			int								opPos,
+			int								funcID,
+			const std::vector<XObject*>&	argVec);
+
+#if 0
+  public Vector getTargetElementStrings()
+  {
+	Vector targetStrings = new Vector();
+
+	int opPos = 2;
+
+	while(m_opMap[opPos] == OP_LOCATIONPATHPATTERN)
+	{
+	  int nextOpPos = getNextOpPos(opPos);
+	  opPos+=2;
+	  
+	  while( m_opMap[opPos] != ENDOP )
+	  {
+		int nextStepPos = getNextOpPos(opPos);
+		int nextOp = m_opMap[nextStepPos];
+		if((nextOp == OP_PREDICATE) || (nextOp == ENDOP))
+		{
+		  int stepType = m_opMap[opPos];
+		  opPos += 3;
+		  switch(stepType)
+		  {
+		  case OP_FUNCTION:
+			targetStrings.addElement(PSEUDONAME_ANY);
+			break;
+		  case FROM_ROOT:
+			targetStrings.addElement(PSEUDONAME_ROOT);
+			break;
+		  case MATCH_ATTRIBUTE:
+		  case MATCH_ANY_ANCESTOR:
+		  case MATCH_IMMEDIATE_ANCESTOR:
+			int tok = m_opMap[opPos];
+			opPos++;
+			switch(tok)
+			{
+			case NODETYPE_COMMENT:
+			  targetStrings.addElement(PSEUDONAME_COMMENT);
+			  break;
+			case NODETYPE_TEXT:
+			  targetStrings.addElement(PSEUDONAME_TEXT);
+			  break;
+			case NODETYPE_NODE:
+			  targetStrings.addElement(PSEUDONAME_ANY);
+			  break;
+			case NODETYPE_ROOT:
+			  targetStrings.addElement(PSEUDONAME_ROOT);
+			  break;
+			case NODETYPE_ANYELEMENT:
+			  targetStrings.addElement(PSEUDONAME_ANY);
+			  break;
+			case NODETYPE_PI:
+			  targetStrings.addElement(PSEUDONAME_ANY);
+			  break;
+			case NODENAME:
+			  // Skip the namespace
+			  int tokenIndex = m_opMap[opPos+1];
+			  if(tokenIndex >= 0)
+			  {
+				String targetName = (String)m_tokenQueue[tokenIndex];
+				if(targetName.equals("*"))
+				{
+				  targetStrings.addElement(PSEUDONAME_ANY);
+				}
+				else
+				{
+				  targetStrings.addElement(targetName);
+				}
+			  }
+			  else
+			  {
+				targetStrings.addElement(PSEUDONAME_ANY);
+			  }
+			  break;
+			default:
+			  targetStrings.addElement(PSEUDONAME_ANY);
+			  break;
+			}
+			break;
+		  }
+		}
+		opPos = nextStepPos;
+	  }
+	  
+	  opPos = nextOpPos;
+	}
+	return targetStrings;
+  }
+  
+  // ============= DIAGNOSTIC & ERROR HANDLINING =================
+  private void ____DIAGNOSTICS_AND_ERRORS____(){}
+  
+  private final void trace(String s)
+  {
+	System.out.println(s);
+  }
+
+  /**
+   * Tell the user of an assertion error, and probably throw an 
+   * exception.
+   */
+  private void assert(boolean b, String msg)
+  {
+	if(!b)
+	  error(null, "Programmer assertion is incorrect! - "+msg);
+  }
+#endif
+
+
+
+private:
+
+	// Not implemented...
+	XPath(const XPath&);
+
+
+	// Data members...
+	XObjectFactory&						m_xobjectFactory;
+
+	XPathEnvSupport&					m_XPathEnvSupport;
+
+	XPathSupport& 						m_XPathSupport;
+
+	XLocator*							m_defaultXLocator;
+
+	/**
+	 * The current node at the beginning of the pattern, in other words, 
+	 * the value returned by the current() function.
+	 */
+	DOM_Node							m_currentNode;
+
+	/**
+	 * The PrefixResolver that determines which namespaces in the
+	 * queries are supposed to be expanded.
+	 */
+	const PrefixResolver* 				m_prefixResolver;
+
+	/**
+	 * The current step node.  This and m_stepMark can be 
+	 * used to call Step(...) in order to arrive at the 
+	 * current context list.
+	 */
+	MutableNodeRefList					m_contextNodeList;
+
+	/**
+	 * Tells if FoundIndex should be thrown if index is found.
+	 * This is an optimization for match patterns.
+	 */
+	bool								m_throwFoundIndex;
+
+	/**
+	 *
+	 * Holds information about the current expression.
+	 *
+	 */
+	XPathExpression						m_expression;
+
+	/**
+	 *
+	 * This is the table of functions.  It's range starts where
+	 * the opcodes end.
+	 */
+	static FunctionTableType			s_functions;
+};
+
+
+
+#endif	// XPATH_HEADER_GUARD_1357924680
