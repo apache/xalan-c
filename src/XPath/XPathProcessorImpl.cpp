@@ -1600,7 +1600,7 @@ XPathProcessorImpl::FunctionCall()
 	{
 		m_expression->appendOpCode(XPathExpression::eOP_EXTFUNCTION);
 
-		XPathExpression::OpCodeMapValueVectorType	theArgs(2);
+		XPathExpression::OpCodeMapValueVectorType	theArgs(2, 0);
 
 		theArgs[0] = m_expression->getTokenPosition() - 1;
 
@@ -1651,7 +1651,7 @@ XPathProcessorImpl::FunctionCall()
 				int		theFunctionID =
 					XPath::getFunctionTable().nameToID(m_token);
 
-				XPathExpression::OpCodeMapValueVectorType	theArgs(2);
+				XPathExpression::OpCodeMapValueVectorType	theArgs(2, 0);
 		
 				theArgs[0] = theFunctionID;
 				theArgs[1] = 0;
@@ -1691,7 +1691,7 @@ XPathProcessorImpl::LocationPath()
 	{
 		const int	newOpPos = m_expression->opCodeMapLength();
 
-		XPathExpression::OpCodeMapValueVectorType	theArgs(1);
+		XPathExpression::OpCodeMapValueVectorType	theArgs(1, 0);
 
 		// Tell how long the step is without the predicate
 		theArgs[0] = 4;
@@ -1750,7 +1750,7 @@ XPathProcessorImpl::Step()
 			error("'..[predicate]' or '.[predicate]' is illegal syntax.  Use 'self::node()[predicate]' instead.");
 		}
 
-		XPathExpression::OpCodeMapValueVectorType	theArgs(1);
+		XPathExpression::OpCodeMapValueVectorType	theArgs(1, 0);
 
 		// Tell how long the step is without the predicate
 		theArgs[0] = 4;
@@ -1764,7 +1764,7 @@ XPathProcessorImpl::Step()
 	{
 		nextToken();
 
-		XPathExpression::OpCodeMapValueVectorType	theArgs(1);
+		XPathExpression::OpCodeMapValueVectorType	theArgs(1, 0);
 
 		// Tell how long the step is without the predicate
 		theArgs[0] = 4;
@@ -1826,7 +1826,7 @@ XPathProcessorImpl::Basis()
 		// by a regular step pattern.
 		// if(lookahead(XalanUnicode::charCommercialAt, 1) == true || lookahead("::", 2) == true)
 		{
-			XPathExpression::OpCodeMapValueVectorType	theArgs(1);
+			XPathExpression::OpCodeMapValueVectorType	theArgs(1, 0);
 
 			// Tell how long the step is without the predicate
 			theArgs[0] = 4;
@@ -2147,7 +2147,7 @@ XPathProcessorImpl::LocationPathPattern()
 		{
 			const int	newOpPos = m_expression->opCodeMapLength();
 
-			XPathExpression::OpCodeMapValueVectorType	theArgs(1);
+			XPathExpression::OpCodeMapValueVectorType	theArgs(1, 0);
 
 			// Tell how long the step is without the predicate
 			theArgs[0] = 4;
@@ -2166,7 +2166,7 @@ XPathProcessorImpl::LocationPathPattern()
 	{
 		const int	newOpPos = m_expression->opCodeMapLength();
 
-		XPathExpression::OpCodeMapValueVectorType	theArgs(1);
+		XPathExpression::OpCodeMapValueVectorType	theArgs(1, 0);
 
 		// Tell how long the step is without the predicate
 		theArgs[0] = 4;
