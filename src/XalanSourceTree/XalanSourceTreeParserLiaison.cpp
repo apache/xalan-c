@@ -86,7 +86,8 @@ XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(XalanSourceTreeDOMSup
 	m_xercesDOMSupport(),
 	m_xercesParserLiaison(m_xercesDOMSupport),
 	m_documentMap(),
-	m_domSupport(theSupport)
+	m_domSupport(theSupport),
+	m_poolAllText(true)
 {
 }
 
@@ -193,7 +194,7 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 XalanDocument*
 XalanSourceTreeParserLiaison::createDocument()
 {
-	return m_xercesParserLiaison.createDocument();
+	return createXalanSourceTreeDocument();
 }
 
 
@@ -432,7 +433,7 @@ XalanSourceTreeDocument*
 XalanSourceTreeParserLiaison::createXalanSourceTreeDocument()
 {
 	XalanSourceTreeDocument* const	theNewDocument =
-		new XalanSourceTreeDocument;
+		new XalanSourceTreeDocument(m_poolAllText);
 
 	m_documentMap[theNewDocument] = theNewDocument;
 

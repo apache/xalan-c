@@ -476,7 +476,9 @@ private:
 
 	XalanSourceTreeTextIWSAllocator					m_textIWSAllocator;
 
-	XalanDOMStringPool								m_stringPool;
+	XalanDOMStringPool								m_namesStringPool;
+
+	XalanDOMStringPool								m_valuesStringPool;
 
 	XalanSourceTreeAttributesVector					m_attributesVector;
 

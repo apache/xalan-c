@@ -93,9 +93,10 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(bool	fPoolAllText) :
 	m_elementAllocator(200),
 	m_elementNSAllocator(200),
 	m_piAllocator(25),
-	m_textAllocator(100),
-	m_textIWSAllocator(100),
-	m_stringPool(),
+	m_textAllocator(200),
+	m_textIWSAllocator(400),
+	m_namesStringPool(),
+	m_valuesStringPool(),
 	m_attributesVector(),
 	m_nextIndexValue(2),
 	m_poolAllText(fPoolAllText),
@@ -554,7 +555,7 @@ XalanSourceTreeDocument::createElementNode(
 
 	XalanSourceTreeElement* const	theNewElement =
 			m_elementAllocator.create(
-				m_stringPool.get(name),
+				m_namesStringPool.get(name),
 				this,
 				theAttributeVector,
 				theAttributeCount,
@@ -576,8 +577,8 @@ XalanSourceTreeDocument::createElementNode(
 
 		theAttributeVector[i] =
 			m_attributeAllocator.create(
-				m_stringPool.get(theName),
-				m_stringPool.get(theValue),
+				m_namesStringPool.get(theName),
+				m_valuesStringPool.get(theValue),
 				theNewElement,
 				m_nextIndexValue++);
 	}
@@ -688,11 +689,11 @@ XalanSourceTreeDocument::createElementNode(
 
 	XalanSourceTreeElement* const	theNewElement =
 		m_elementNSAllocator.create(
-				m_stringPool.get(qname),
-				m_stringPool.get(localname),
-				m_stringPool.get(uri),
+				m_namesStringPool.get(qname),
+				m_namesStringPool.get(localname),
+				m_namesStringPool.get(uri),
 				// This is the prefix...
-				getElementNodePrefix(qname, &m_stringPool, theLength, theColonIndex),
+				getElementNodePrefix(qname, &m_namesStringPool, theLength, theColonIndex),
 				this,
 				theAttributeVector,
 				theAttributeCount,
@@ -732,7 +733,7 @@ XalanSourceTreeDocument::createElementNode(
 
 	XalanSourceTreeElement* const	theNewElement =
 		m_elementAllocator.create(
-				m_stringPool.get(name),
+				m_namesStringPool.get(name),
 				this,
 				theAttributeVector,
 				theAttributeCount,
@@ -760,7 +761,7 @@ XalanSourceTreeDocument::createCommentNode(
 			XalanNode*					theNextSibling)
 {
 	return m_commentAllocator.create(
-				m_stringPool.get(data, length),
+				m_valuesStringPool.get(data, length),
 				this,
 				theParentElement,
 				thePreviousSibling,
@@ -782,8 +783,8 @@ XalanSourceTreeDocument::createProcessingInstructionNode(
 	assert(data != 0);
 
 	return m_piAllocator.create(
-				m_stringPool.get(target),
-				m_stringPool.get(data),
+				m_namesStringPool.get(target),
+				m_valuesStringPool.get(data),
 				this,
 				theParentElement,
 				thePreviousSibling,
@@ -800,7 +801,7 @@ XalanSourceTreeDocument::getTextNodeString(
 {
 	if (m_poolAllText == true)
 	{
-		return m_stringPool.get(chars, length);
+		return m_valuesStringPool.get(chars, length);
 	}
 	else
 	{
@@ -858,7 +859,7 @@ XalanSourceTreeDocument::createTextNode(
 
 	if (isXMLWhitespace(chars, 0, length) == true)
 	{
-		const XalanDOMString&	theString = m_stringPool.get(chars, length);
+		const XalanDOMString&	theString = m_valuesStringPool.get(chars, length);
 
 		return m_textIWSAllocator.create(
 				theString,
@@ -891,7 +892,7 @@ XalanSourceTreeDocument::createTextIWSNode(
 	assert(chars != 0);
 
 	return m_textIWSAllocator.create(
-			m_stringPool.get(chars, length),
+			m_valuesStringPool.get(chars, length),
 			theParentElement,
 			thePreviousSibling,
 			theNextSibling,
@@ -943,8 +944,8 @@ XalanSourceTreeDocument::createAttribute(
 	if (length(theNamespace) == 0)
 	{
 		return m_attributeAllocator.create(
-				m_stringPool.get(theName),
-				m_stringPool.get(theValue),
+				m_namesStringPool.get(theName),
+				m_valuesStringPool.get(theValue),
 				theOwnerElement,
 				m_nextIndexValue++);
 	}
@@ -961,12 +962,12 @@ XalanSourceTreeDocument::createAttribute(
 		// index
 		//
 		return m_attributeNSAllocator.create(
-				m_stringPool.get(theName),
-				m_stringPool.get(theName + length(m_stringBuffer) + 1),
-				m_stringPool.get(theNamespace),
+				m_namesStringPool.get(theName),
+				m_namesStringPool.get(theName + length(m_stringBuffer) + 1),
+				m_namesStringPool.get(theNamespace),
 				// This is the prefix...
-				m_stringPool.get(m_stringBuffer),
-				m_stringPool.get(theValue),
+				m_namesStringPool.get(m_stringBuffer),
+				m_valuesStringPool.get(theValue),
 				theOwnerElement,
 				m_nextIndexValue++);
 	}
@@ -993,7 +994,7 @@ XalanSourceTreeDocument::createElement(
 		assert(length(m_stringBuffer) == 0);
 
 		return m_elementAllocator.create(
-				m_stringPool.get(theTagName),
+				m_namesStringPool.get(theTagName),
 				this,
 				theAttributeVector,
 				theAttributeCount,
@@ -1019,11 +1020,11 @@ XalanSourceTreeDocument::createElement(
 		// index
 		//
 		return m_elementNSAllocator.create(
-				m_stringPool.get(theTagName),
-				m_stringPool.get(theTagName + length(m_stringBuffer) + 1),
-				m_stringPool.get(theNamespace),
+				m_namesStringPool.get(theTagName),
+				m_namesStringPool.get(theTagName + length(m_stringBuffer) + 1),
+				m_namesStringPool.get(theNamespace),
 				// This is the prefix...
-				m_stringPool.get(m_stringBuffer),
+				m_namesStringPool.get(m_stringBuffer),
 				this,
 				theAttributeVector,
 				theAttributeCount,
@@ -1061,8 +1062,8 @@ XalanSourceTreeDocument::createAttributes(
 		{
 			theAttributeVector[i] =
 				m_attributeAllocator.create(
-					m_stringPool.get(theQName),
-					m_stringPool.get(theValue),
+					m_namesStringPool.get(theQName),
+					m_valuesStringPool.get(theValue),
 					theOwnerElement,
 					m_nextIndexValue++);
 		}
@@ -1087,12 +1088,12 @@ XalanSourceTreeDocument::createAttributes(
 			//
 			theAttributeVector[i] =
 				m_attributeNSAllocator.create(
-						m_stringPool.get(theQName),
-						m_stringPool.get(theLocalName),
-						m_stringPool.get(theURI),
+						m_namesStringPool.get(theQName),
+						m_namesStringPool.get(theLocalName),
+						m_namesStringPool.get(theURI),
 						// This is the prefix...
-						m_stringPool.get(theQName, theColonIndex),
-						m_stringPool.get(theValue),
+						m_namesStringPool.get(theQName, theColonIndex),
+						m_valuesStringPool.get(theValue),
 						theOwnerElement,
 						m_nextIndexValue++);
 		}

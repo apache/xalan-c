@@ -95,6 +95,30 @@ public:
 	virtual
 	~XalanSourceTreeParserLiaison();
 
+	/**
+	 * Get the value of the flag which determines if the data of all
+	 * text nodes are pooled, or just whitespace text nodes.
+	 *
+	 * @return true if the data of all text nodes are pooled, false otherwise.
+	 */
+	bool
+	getPoolAllText() const
+	{
+		return m_poolAllText;
+	}
+
+	/**
+	 * Set the value of the flag which determines if the data of all
+	 * text nodes are pooled, or just whitespace text nodes.
+	 *
+	 * @param fValue The new value for the flag.
+	 */
+	void
+	setPoolAllText(bool	fValue)
+	{
+		m_poolAllText = fValue;
+	}
+
 	// These interfaces are inherited from XMLParserLiaison...
 
 	virtual void
@@ -374,6 +398,8 @@ private:
 	DocumentMapType 				m_documentMap;
 
 	XalanSourceTreeDOMSupport&		m_domSupport;
+
+	bool							m_poolAllText;
 };
 
 
