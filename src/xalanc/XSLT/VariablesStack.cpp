@@ -373,7 +373,7 @@ VariablesStack::findXObject(
 	// findEntry() returns an index into the stack.  We should
 	// _never_ take the address of anything in the stack, since
 	// the address could change at unexpected times.
-	size_type	theEntryIndex =
+	const size_type		theEntryIndex =
 		findEntry(name, fIsParam, fSearchGlobalSpace);
 
 	if (theEntryIndex == m_stack.size())
@@ -577,7 +577,7 @@ VariablesStack::popElementFrame()
 		const StackEntry&	theEntry = m_stack[i];
 
 		// Guarantee that it will be popped when we're done.
-		EnsurePop	theEnsurePop(*this);
+		const EnsurePop		theEnsurePop(*this);
 
 		if(theEntry.getType() == StackEntry::eContextMarker)
 		{
