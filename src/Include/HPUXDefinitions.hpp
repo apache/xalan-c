@@ -74,6 +74,9 @@
 #if defined(_HP_NAMESPACE_STD)
 #define XALAN_MODERN_STL
 #else
+#if defined(RWSTD_MULTI_THREAD)
+#define __HPACC_THREAD_SAFE_RB_TREE
+#endif
 #define XALAN_OLD_STREAM_HEADERS
 #define XALAN_OLD_STREAMS
 #define XALAN_NO_NAMESPACES
