@@ -1028,7 +1028,7 @@ DoubleToDOMString(double	theDouble)
 
 		if (fracPart == 0)
 		{
-			return LongToDOMString(theDouble);
+			return LongToDOMString(static_cast<long>(theDouble));
 		}
 		else
 		{
