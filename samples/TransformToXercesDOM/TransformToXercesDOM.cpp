@@ -140,7 +140,7 @@ main(
 
 				XalanTransformer	theTransformer;
 
-				XalanParsedSource*	theParsedSource = 0;
+				const XalanParsedSource*	theParsedSource = 0;
 
 				theResult = theTransformer.parseSource(argv[1], theParsedSource);
 
@@ -154,7 +154,7 @@ main(
 				{
 					assert(theParsedSource != 0);
 
-					XalanCompiledStylesheet*	theCompiledStylesheet = 0;
+					const XalanCompiledStylesheet*	theCompiledStylesheet = 0;
 
 					theResult = theTransformer.compileStylesheet(argv[2], theCompiledStylesheet);
 
