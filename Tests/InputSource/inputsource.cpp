@@ -256,11 +256,13 @@ void testCase3(XalanTransformer &xalan, XMLFileReporter &logFile,
 // TestCase4 will use the following API.  Default constructor of XSLTInputSource will take a string.
 //		- XSLTInputSource(const char*)
 //		- XSLTInputSource(const char*)
-void testCase4(XalanTransformer &xalan, XMLFileReporter& logFile)
+void testCase4(XalanTransformer &xalan, XMLFileReporter& logFile,
+			   const XalanDOMString outBase, XalanDOMString &goldFile)
 {
 
-	const XalanDOMString theOutputFile("\\xml-xalan\\test\\tests\\ISOURCE-results\\smoke\\InputSource-TestCase4.out");
-	const XalanDOMString theGoldFile("\\xml-xalan\\test\\tests\\capi-gold\\smoke\\smoke01.out");
+	const XalanDOMString theOutputFile = outBase + XalanDOMString("\\InputSource-TestCase4.out");
+//	const XalanDOMString theOutputFile("\\xml-xalan\\test\\tests\\INPUTSOURCE-RESULTS\\smoke\\InputSource-TestCase4.out");
+	const XalanDOMString theGoldFile(goldFile);
 
 	XSLTResultTarget theResultTarget(theOutputFile);
 
@@ -379,7 +381,7 @@ main(int		  argc,
 					testCase1(xalan, logFile, theXMLFile, theXSLFile, theOutputDir, theGoldFile);
 					testCase2(xalan, logFile, theOutputDir, theGoldFile);
 					testCase3(xalan, logFile, theOutputDir, theGoldFile);
-					testCase4(xalan, logFile);
+					testCase4(xalan, logFile, theOutputDir, theGoldFile);
 					testCase5(xalan, logFile, theXMLFile, theXSLFile, theOutputDir, theGoldFile);
 				}
 
