@@ -1,3 +1,21 @@
+
+<!--                                                                             
+ Copyright 1999-2004 The Apache Software Foundation.                         
+                                                                            
+ Licensed under the Apache License, Version 2.0 (the "License");            
+ you may not use this file except in compliance with the License.           
+ You may obtain a copy of the License at                                    
+                                                                            
+     http://www.apache.org/licenses/LICENSE-2.0                             
+
+ Unless required by applicable law or agreed to in writing, software        
+ distributed under the License is distributed on an "AS IS" BASIS,          
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   
+ See the License for the specific language governing permissions and        
+ limitations under the License.                                             
+ -->
+
+
 <project name="XalanC" default="docs" basedir=".">
 
   <property name="name" value="xalan"/>
@@ -5,14 +23,14 @@
   <property name="year" value="2004"/>
   
   <property name="version.VERSION" value="1"/>
-  <property name="version.RELEASE" value="7"/>
+  <property name="version.RELEASE" value="8"/>
   <property name="version.MINOR"   value="0"/>
 
   <property name="xdocs.dir" value="./xdocs"/>
   <property name="xdocs.book" value="${xdocs.dir}/sources/xalanLocal.xml"/>
   <property name="xdocs.site" value="${xdocs.dir}/sources/xalan.xml"/>  
   <property name="xdocs.style" value="${xdocs.dir}/style"/>
-  <property name="xdocs.apidocs" value="${xdocs.dir}/html/apiDocs"/>  
+  <property name="xdocs.apidocs" value="${xdocs.dir}/html/apidocs"/>  
 
   <property name="doc.generator" value="org.apache.stylebook.StyleBook"/>
   <property name="doc.generator.styletargz" value="${xdocs.dir}/xml-site-style.tar.gz"/>
