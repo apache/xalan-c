@@ -200,9 +200,7 @@ public:
 	typedef XalanVector<const XalanDOMString*>			XalanDOMStringPointerVectorType;
 
 	typedef XalanMap<const XalanDOMString*,
-				const XalanDOMString*,
-				DOMStringPointerHashFunction,
-				DOMStringPointerEqualToFunction>		NamespaceAliasesMapType;
+					const XalanDOMString*>				NamespaceAliasesMapType;
 
 
 	/**

@@ -45,9 +45,9 @@ class XALAN_XPATH_EXPORT XPathEnvSupportDefault : public XPathEnvSupport
 {
 public:
 
-	typedef XalanMap<XalanDOMString, XalanDocument*, DOMStringHashFunction>		SourceDocsTableType;
-	typedef XalanMap<XalanDOMString, const Function*, DOMStringHashFunction>	FunctionTableType;
-	typedef XalanMap<XalanDOMString, FunctionTableType, DOMStringHashFunction>	NamespaceFunctionTablesType;
+	typedef XalanMap<XalanDOMString, XalanDocument*>	SourceDocsTableType;
+	typedef XalanMap<XalanDOMString, const Function*>	FunctionTableType;
+	typedef XalanMap<XalanDOMString, FunctionTableType>	NamespaceFunctionTablesType;
 
 	/**
 	 * Perform initialization of statics -- must be called before any

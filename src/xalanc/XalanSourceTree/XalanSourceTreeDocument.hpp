@@ -82,14 +82,11 @@ public:
 
 	typedef XalanMap<
 				const XalanDOMChar*,
-				XalanSourceTreeElement*,
-				hash_null_terminated_arrays<XalanDOMChar>,
-				equal_null_terminated_arrays<XalanDOMChar> >		ElementByIDMapType;
+				XalanSourceTreeElement*>		ElementByIDMapType;
 
 	typedef XalanMap<
 				XalanDOMString,
-				XalanDOMString,
-				DOMStringHashFunction>									UnparsedEntityURIMapType;
+				XalanDOMString>									UnparsedEntityURIMapType;
 
 
 	/**

@@ -94,9 +94,7 @@ public:
 	typedef XALAN_STD_QUALIFIER set<const KeyDeclaration*,
 				XALAN_STD_QUALIFIER less<const KeyDeclaration*> >	KeyDeclarationSetType;
 	typedef XALAN_STD_QUALIFIER pair<const XPath*, ClockType>		XPathCacheEntry;
-	typedef XalanMap <XalanDOMString, 
-					  XPathCacheEntry, 
-					  DOMStringHashFunction>			XPathCacheMapType;
+	typedef XalanMap <XalanDOMString, XPathCacheEntry>				XPathCacheMapType;
 	typedef XALAN_STD_QUALIFIER deque<const ElemTemplate*>			CurrentTemplateStackType;
 
 	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;

@@ -28,6 +28,10 @@
 
 
 
+#include <xalanc/Include/XalanMap.hpp>
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
@@ -353,6 +357,16 @@ struct hash_null_terminated_arrays : public XALAN_STD_QUALIFIER unary_function<c
 		return ++theHashValue;
 	}
 };
+
+
+
+template<>
+struct XalanMapKeyTraits<const XalanDOMChar*>
+{
+	typedef hash_null_terminated_arrays<XalanDOMChar>	Hasher;
+	typedef equal_null_terminated_arrays<XalanDOMChar>	Comparator;
+};
+
 
 
 template<class CollectionType>

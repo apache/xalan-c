@@ -27,6 +27,11 @@
 
 
 
+#include <xalanc/Include/XalanMap.hpp>
+#include <xalanc/Include/STLHelper.hpp>
+
+
+
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
 
 
@@ -420,6 +425,20 @@ operator<(
 		return false;
 	}
 }
+
+template<>
+struct XalanMapKeyTraits<XalanQName>
+{
+	typedef XalanHashMemberReference<XalanQName>		Hasher;
+	typedef XALAN_STD_QUALIFIER equal_to<XalanQName>	Comparator;
+};
+
+template<>
+struct XalanMapKeyTraits<const XalanQName*>
+{
+	typedef XalanHashMemberPointer<XalanQName>		Hasher;
+	typedef	pointer_equal<XalanQName>				Comparator;
+};
 
 
 

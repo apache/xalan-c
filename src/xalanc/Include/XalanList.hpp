@@ -44,7 +44,9 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-
+/**
+ * Xalan implementation of a doubly linked list
+ */
 template <class Type>
 class XalanList
 {
@@ -72,32 +74,35 @@ public:
 			next(&nextNode) 
 		{
 		}
-	
+
 		value_type	value;
 		Node*		prev;
 		Node*		next;
 	};
 
-	template<class Value, class Ref, class Ptr, class ListNode>
+
+	template<class Value>
 	struct iterator_base 
 	{
 		typedef Value		value_type;
-		typedef Ref			reference;
-		typedef Ptr			pointer;
+		typedef Value&		reference;
+		typedef Value*		pointer;
+
 		typedef size_type	difference_type;
 		typedef XALAN_STD_QUALIFIER bidirectional_iterator_tag iterator_category;
 		
-		typedef iterator_base<Value, Value&, Value*, Node> iterator;
-		typedef iterator_base<Value, Ref, Ptr, ListNode> ThisType;
+		typedef iterator_base<Type> iterator;
+	
+		typedef iterator_base<value_type> ThisType;
 
-		iterator_base(ListNode& node)
+		iterator_base(Node& node) : 
+			currentNode(&node)
 		{
-			currentNode = &node;
 		}
 
-		iterator_base(const iterator& theRhs)
+		iterator_base(const iterator& theRhs) :
+			currentNode(theRhs.currentNode)
 		{
-			currentNode = theRhs.currentNode;
 		}
 
 		iterator_base operator++()
@@ -108,7 +113,7 @@ public:
 
 		iterator_base operator++(int)
 		{
-			ListNode& origNode = *currentNode;
+			Node& origNode = *currentNode;
 			currentNode = currentNode->next;
 			return iterator_base(origNode);
 		}
@@ -117,6 +122,17 @@ public:
 		{
 			currentNode = currentNode->prev;
 			return *this;
+		}
+
+		iterator_base operator-(difference_type decrement) const 
+		{
+			Node* node = currentNode;
+			while (decrement > 0)
+			{
+				node = node->prev;
+				--decrement;
+			};
+			return iterator_base(*node);
 		}
 
 		reference operator*() const
@@ -145,27 +161,18 @@ public:
 			return currentNode == theRhs.currentNode;
 		}
 
-		ListNode& node()
+		Node& node()
 		{
 			return *currentNode;
 		}
 
-		ListNode*	currentNode;
+		Node*	currentNode;
 	};
 
-
-	typedef iterator_base<
-		value_type, 
-		value_type&, 
-		value_type*, 
-		Node> iterator;
-
-	typedef iterator_base<
-		value_type, 
-		const value_type&, 
-		const value_type*, 
-		const Node> const_iterator;
-
+	typedef iterator_base<value_type>		iterator;
+	
+	typedef iterator_base<const value_type>	const_iterator;
+		
 #if defined(XALAN_HAS_STD_ITERATORS)
 	typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>			reverse_iterator_;
 	typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator>	const_reverse_iterator_;
@@ -372,9 +379,15 @@ public:
 
 	void swap(ThisType& theRHS)
 	{
+	#if defined(XALAN_NO_STD_NAMESPACE)
+		::swap(m_memoryManager, theRHS.m_memoryManager);
+		::swap(m_listHead, theRHS.m_listHead);
+		::swap(m_freeListHeadPtr, theRHS.m_freeListHeadPtr);
+	#else
 		XALAN_STD_QUALIFIER swap(m_memoryManager, theRHS.m_memoryManager);
 		XALAN_STD_QUALIFIER swap(m_listHead, theRHS.m_listHead);
 		XALAN_STD_QUALIFIER swap(m_freeListHeadPtr, theRHS.m_freeListHeadPtr);
+	#endif
 	}
 
 

@@ -65,6 +65,9 @@ class XalanNode;
  * root of the current context.  It contains a table of name mappings 
  * to tables that contain mappings of identifier values to nodes.
  */
+
+
+
 class KeyTable
 {
 public:
@@ -72,20 +75,10 @@ public:
 	typedef XalanVector<KeyDeclaration>			KeyDeclarationVectorType;
 
 	typedef XalanMap<XalanDOMString,
-					 MutableNodeRefList,
-					 DOMStringHashFunction>	NodeListMapType;
-
-	
+					 MutableNodeRefList>	NodeListMapType;
 
 	typedef XalanMap<XalanQNameByReference,
-					 NodeListMapType,
-					 XalanHashMemberReference<XalanQNameByReference> >		KeysMapType;
-
-
-	
-	/*typedef std::map<XalanQNameByReference,
-					 NodeListMapType
-					>		KeysMapType;*/
+					 NodeListMapType	>	KeysMapType;
 
 	/**
 	 * Build a keys table.

@@ -63,8 +63,7 @@ class XALAN_XPATH_EXPORT XPathProcessorImpl : public XPathProcessor
 public:
 
 	typedef XalanMap<XalanDOMString,
-				const XalanDOMString*,
-				DOMStringHashFunction>	StringToStringMapType;
+				const XalanDOMString*>	StringToStringMapType;
 
 	typedef XalanVector<bool>				BoolVectorType;
 

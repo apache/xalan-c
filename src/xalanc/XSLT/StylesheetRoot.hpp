@@ -27,6 +27,11 @@
 
 
 
+#include <xalanc/Include/XalanMap.hpp>
+#include <xalanc/Include/STLHelper.hpp>
+
+
+
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
 
 
@@ -59,9 +64,7 @@ public:
 	typedef XalanVector<ElemAttributeSet*> 		AttributeSetVectorType;
 	
 	typedef XalanMap<const XalanQName*,
-			    AttributeSetVectorType,
-				XalanHashMemberPointer<XalanQName>,
-				pointer_equal<const XalanQName> >	AttributeSetMapType;
+			    AttributeSetVectorType>			AttributeSetMapType;
 
 	/**
 	 * Construct a Stylesheet from a Document.

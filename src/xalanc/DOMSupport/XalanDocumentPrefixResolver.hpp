@@ -59,9 +59,7 @@ public:
 
 	typedef XalanVector<const XalanNode*> 				AttributeVectorType;
 	typedef XalanMap<const XalanDOMString*,
-				AttributeVectorType,
-				DOMStringPointerHashFunction,
-				pointer_equal<XalanDOMString> >			NamespacesMapType;
+					AttributeVectorType>				NamespacesMapType;
 
 	/**
 	 * Constructor.

@@ -44,7 +44,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 typedef size_t	size_type;
 
 template <class Key>
-class XalanHash : public XALAN_STD_QUALIFIER unary_function<Key, size_type>
+class XalanHasher : public XALAN_STD_QUALIFIER unary_function<Key, size_type>
 {
 public:
 	size_type operator()(const Key& key) const
@@ -61,6 +61,14 @@ public:
 		return result;
 	}
 };
+
+template <class Key>
+struct XalanMapKeyTraits
+{
+	typedef XalanHasher<Key>					Hasher;
+	typedef XALAN_STD_QUALIFIER equal_to<Key>	Comparator;
+};
+
 
 template <class Key>
 struct XalanHashMemberPointer
@@ -83,14 +91,44 @@ struct XalanHashMemberReference
 	}
 };
 
+template <class Value>
+struct XalanMapEntry : public Value
+{
+	typedef Value	value_type;
+	typedef size_t	size_type;
+	
+	size_type	bucketIndex;
+
+	XalanMapEntry(const value_type& value, size_type index) : 
+		value_type(value), bucketIndex(index)
+	{
+	}
+
+	XalanMapEntry() : 
+		value_type(),
+        bucketIndex(size_type())
+	{
+	}
+};
+
+/**
+  * Xalan implementation of a hashtable.
+  *
+  */
 template <
 		class Key, 
-		class Value, 
-		class Hash = XalanHash<Key>, 
-		class Comparator = XALAN_STD_QUALIFIER equal_to<Key> >
+		class Value,
+		class KeyTraits = XalanMapKeyTraits<Key> >
 class XalanMap
 {
 public:
+	/**
+	 * Each map entry is stored in a linked list.
+	 * The hash buckets are a vector of pointers into the entry list
+	 * An empty bucket will point to the end of the list,
+	 * A non-empty bucket will point to its first entry.  Remaining
+	 * entries in the chain follow the first and have the same index value.
+	 */
 
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager    MemoryManagerType;
 
@@ -99,129 +137,37 @@ public:
 	typedef size_t				size_type;
 
 	typedef XALAN_STD_QUALIFIER pair<const key_type, data_type>	value_type;
-
-	typedef XalanMap<Key, Value, Hash, Comparator>		ThisType;
-
-	struct Entry : public value_type
-	{
-		typedef value_type Parent;
-		size_type	bucketIndex;
-
-		Entry(const key_type & key, const data_type& data, size_type index) : 
-			value_type(key, data), bucketIndex(index)
-		{
-		}
-
-		Entry() : 
-			value_type(key_type(),
-            data_type()),
-            bucketIndex(size_type())
-		{
-		}
-	};
+	typedef XalanMapEntry<value_type> Entry;
 
 	typedef XalanList<Entry>									EntryListType;
-	typedef typename EntryListType::iterator				EntryListIterator;
-	typedef typename EntryListType::const_iterator			EntryListConstIterator;
 
-	typedef XalanVector<typename EntryListType::iterator>	EntryPosVectorType;
+	typedef typename EntryListType::iterator					iterator;
+	typedef typename EntryListType::const_iterator				const_iterator;
 
-	template<class ValueType, class Ref, class Ptr, class Iterator, class Map>
-	struct iterator_base
-	{	
-		typedef ValueType	value_type;
-		typedef Ref		reference_type;
-		typedef Ptr		pointer_type;
-
-		typedef ThisType MapType;
-
-		typedef iterator_base<value_type, reference_type, pointer_type, Iterator, Map> IteratorType;
-
-		typedef iterator_base<value_type, value_type&, value_type*, EntryListIterator, MapType> iterator;
-
-		iterator_base(
-				Map&								map,
-				Iterator							bucketPos) :
-			m_map(&map),
-			m_bucketPos(bucketPos)
-		{
-		}
-
-		iterator_base(const iterator& theRhs) :
-			m_map(theRhs.m_map),
-			m_bucketPos(theRhs.m_bucketPos)
-		{
-		} 
-		
-		const IteratorType & operator=(const IteratorType& theRhs)
-		{
-			m_map = theRhs.m_map;
-			m_bucketPos = theRhs.m_bucketPos;
-			return *this;
-		}
-
-		reference_type operator*() const
-		{
-			return *m_bucketPos;
-		}
-
-		int operator!=(const IteratorType& theRhs) const 
-		{
-			return !operator==(theRhs);
-		}
-
-		int operator==(const IteratorType& theRhs) const 
-		{
-			return (theRhs.m_map == m_map)
-				&& (theRhs.m_bucketPos == m_bucketPos);
-		}
-
-		IteratorType& operator++()
-		{
-			m_bucketPos++;	
-			return *this;
-		}
-
-		Map*		m_map;
-		Iterator	m_bucketPos;
-	};
-
-	typedef iterator_base<
-		value_type, 
-		value_type&, 
-		value_type*, 
-		EntryListIterator, 
-		ThisType> iterator;
-
-	typedef iterator_base<
-		value_type, 
-		const value_type&, 
-		const value_type*, 
-		EntryListConstIterator,  
-		const ThisType> const_iterator;
+	typedef XalanVector<typename EntryListType::iterator>		EntryPosVectorType;
 
 	XalanMap(
+			MemoryManagerType* theMemoryManager = 0,
 			float loadFactor = 0.75,
-			size_type minBuckets = 10,
-			MemoryManagerType* theMemoryManager = 0) :
+			size_type minBuckets = 10) :
 		m_memoryManager(theMemoryManager),
 		m_loadFactor(loadFactor),
 		m_minBuckets(minBuckets),
 		m_size(0),
-		m_entries(/* m_memoryManager */),
-		m_buckets(m_memoryManager),
-		m_freeList()
+		m_entries(m_memoryManager),
+		m_buckets(m_memoryManager)
 	{
 	}
 
-	XalanMap(const XalanMap &theRhs) :
-		m_memoryManager(theRhs.m_memoryManager),
+	XalanMap(
+			const XalanMap &theRhs,
+			MemoryManagerType*  theManager = 0) :
+        m_memoryManager(theManager != 0 ? theManager : theRhs.m_memoryManager),
 		m_loadFactor(theRhs.m_loadFactor),
 		m_minBuckets(10),
 		m_size(0),
-		m_entries(/* m_memoryManager */),
-		m_buckets(size_type(m_loadFactor * theRhs.size())+ 1, m_entries.end(), m_memoryManager),
-		m_freeList()
+		m_entries(m_memoryManager),
+		m_buckets(size_type(m_loadFactor * theRhs.size())+ 1, m_entries.end(), m_memoryManager)
 	{
 		const_iterator entry = theRhs.begin();
 		while(entry != theRhs.end())
@@ -244,7 +190,6 @@ public:
 		return *this;
 	}
 
-
 	size_type size() const
 	{
 		return m_size;
@@ -256,22 +201,22 @@ public:
 
 	iterator begin()
 	{
-		return iterator(*this, m_entries.begin());
+		return m_entries.begin();
 	}
 
 	const_iterator begin() const
 	{
-		return const_iterator(*this, m_entries.begin());
+		return m_entries.begin();
 	}
 
 	iterator end()
 	{
-		return iterator(*this, m_entries.end());
+		return m_entries.end();
 	}
 
 	const_iterator end() const 
 	{
-		return const_iterator(*this, m_entries.end());
+		return m_entries.end();
 	}
 
 	iterator find(const key_type& key)
@@ -280,14 +225,14 @@ public:
 		{
 			size_type index = doHash(key);
 
-			EntryListIterator bucketPos = m_buckets[index];
+			iterator bucketPos = m_buckets[index];
 
 			while (bucketPos != m_entries.end() &&
 				bucketPos->bucketIndex == index)
 			{
 				if (m_equals(key,bucketPos->first))
 				{
-					return iterator(*this,bucketPos);
+					return bucketPos;
 				}
 				++bucketPos;
 			}
@@ -298,7 +243,7 @@ public:
 
 	const_iterator find(const key_type& key) const 
 	{
-		return const_cast<ThisType *>(this)->find(key);
+		return const_cast<XalanMap *>(this)->find(key);
 	}
 
 	data_type & operator[](const key_type& key)
@@ -331,7 +276,7 @@ public:
 	{
 		if (pos != end())
 		{
-			doRemoveEntry(pos.m_bucketPos);
+			doRemoveEntry(pos);
 		}
 	}
 
@@ -351,14 +296,10 @@ public:
             m_buckets.end(),
             m_entries.end());
 
-		m_freeList.splice(
-            m_freeList.begin(), 
-            m_entries,
-            m_entries.begin(),
-            m_entries.end());
+		m_entries.clear();
 	}
 
-	void swap(ThisType& theRhs)
+	void swap(XalanMap& theRhs)
 	{
 		size_type tempSize = m_size;
 		m_size = theRhs.m_size;
@@ -370,19 +311,19 @@ public:
 
 		m_entries.swap(theRhs.m_entries);
 		m_buckets.swap(theRhs.m_buckets);
-		m_freeList.swap(theRhs.m_freeList);
-
 	}
 
 	protected:
 
 	iterator doCreateEntry(const key_type & key, const data_type&  data)
 	{
+		// if there are no buckets, create initial minimum set of buckets
 		if (m_buckets.empty())
 		{
 			m_buckets.insert(m_buckets.begin(), m_minBuckets, m_entries.end());
 		}
 
+		// if the load factor has been reached, rehash
 		if (size_type(m_loadFactor * size()) > m_buckets.size())
 		{
 			rehash();
@@ -390,39 +331,23 @@ public:
 
 		size_type index = doHash(key);
 
-		EntryListIterator & bucketStartPos = m_buckets[index];
+		iterator & bucketStartPos = m_buckets[index];
 
-		if (m_freeList.empty() == true)
-		{
-			Entry newEntry = Entry(key, data, index);
-
-			if (bucketStartPos == m_entries.end())
-			{
-				bucketStartPos = m_entries.insert(m_entries.end(), newEntry);
-			}
-			else
-			{
-				bucketStartPos = m_entries.insert(bucketStartPos, newEntry);
-			}
-		}
-		else
-		{
-			(*m_freeList.begin()).~Entry();
-			new (&*m_freeList.begin()) Entry(key, data, index);
-		
-			m_entries.splice(bucketStartPos, m_freeList, m_freeList.begin());
-			--bucketStartPos;
-		}
-
+		// insert a new entry as the first position in the bucket
+		bucketStartPos = m_entries.insert(bucketStartPos, Entry(value_type(key, data), index));
+			
 		++m_size;
-		return iterator(*this, bucketStartPos);
+		return bucketStartPos;
 	}
 
-	void doRemoveEntry(const EntryListIterator & toRemovePos)
+	void doRemoveEntry(const iterator & toRemovePos)
 	{
 		size_type index = toRemovePos->bucketIndex;
-		EntryListIterator nextPos = ++(EntryListIterator(toRemovePos));
+		iterator nextPos = ++(iterator(toRemovePos));
 
+		// if the entry to remove is the first in the bucket
+		// set the next entry as the first or,
+		// if there are no more entries set it to the end
 		if (m_buckets[index] == toRemovePos)
 		{
 			if (nextPos->bucketIndex == index)
@@ -435,7 +360,7 @@ public:
 			}
 		}
 
-		m_freeList.splice(m_freeList.begin(), m_entries, toRemovePos, nextPos);
+		m_entries.erase(toRemovePos);
 		--m_size;
 	}
 
@@ -446,20 +371,25 @@ public:
 
 	void rehash()
 	{
+		// grow the number of buckets by 60%
 		EntryPosVectorType temp(size_type(1.6 * size()), m_entries.end(), m_memoryManager);
 		m_buckets.swap(temp);
 	
+		// move current entries into a temporary list
 		EntryListType tempEntryList;
 		tempEntryList.splice(tempEntryList.begin(),m_entries, m_entries.begin(), m_entries.end());
 
-		
+		// rehash each entry assign to bucket and insert into list
 		while (tempEntryList.begin() != tempEntryList.end())
 		{
-			EntryListIterator entry = tempEntryList.begin();
+			iterator entry = tempEntryList.begin();
 
 			entry->bucketIndex = doHash(entry->first);
-			EntryListIterator & bucketStartPos = m_buckets[entry->bucketIndex];
+			iterator & bucketStartPos = m_buckets[entry->bucketIndex];
 
+			// if the bucket is empty assign to the entry and insert 
+			// into the list, otherwise insert into front of the 
+			// current first entry
 			if (bucketStartPos == m_entries.end())
 			{
 				bucketStartPos = entry;
@@ -474,23 +404,21 @@ public:
 	}
 
 	// Data members...
-	Hash				m_hash;
+	typename KeyTraits::Hasher					m_hash;
+		
+	typename KeyTraits::Comparator				m_equals;
 
-	Comparator			m_equals;
+    MemoryManagerType*					m_memoryManager;
 
-    MemoryManagerType*  m_memoryManager;
+	float								m_loadFactor;
 
-	float				m_loadFactor;
+	size_type							m_minBuckets;
 
-	size_type			m_minBuckets;
+	size_type							m_size;
 
-	size_type			m_size;
+	EntryListType						m_entries;
 
-	EntryListType		m_entries;
-
-    EntryPosVectorType	m_buckets;
-
-	EntryListType		m_freeList;
+    EntryPosVectorType					m_buckets;
 
 };
 

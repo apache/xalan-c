@@ -35,6 +35,8 @@ class ostream;
 
 
 #include <xalanc/Include/XalanVector.hpp>
+#include <xalanc/Include/XalanMap.hpp>
+#include <xalanc/Include/STLHelper.hpp>
 
 
 
@@ -2544,32 +2546,29 @@ struct c_wstr_functor : public std::unary_function<XalanDOMString, const XalanDO
  * @param theKey XalanDOMString to be hashed
  * @return hash value for XalanDOMString
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringHashFunction : public unary_function<const XalanDOMString&, size_t>
-#else
-struct DOMStringHashFunction : public std::unary_function<const XalanDOMString&, size_t>
-#endif
+struct DOMStringHashFunction : public XALAN_STD_QUALIFIER unary_function<const XalanDOMString&, size_t>
 {
 	result_type
 	operator() (argument_type	theKey) const
 	{
 		const XalanDOMChar*		theRawBuffer = c_wstr(theKey);
 
-		result_type		theHashValue = 0; 
+		hash_null_terminated_arrays<XalanDOMChar> hasher;
 
-		if (theRawBuffer != 0)
-		{
-			while (*theRawBuffer)
-			{
-				theHashValue = 5 * theHashValue + *theRawBuffer;
-
-				theRawBuffer++;
-			}
-		}
-
-		return theHashValue++;
+		return hasher(theRawBuffer);
 	}
 };
+
+
+
+template<>
+struct XalanMapKeyTraits<XalanDOMString>
+{
+	typedef DOMStringHashFunction							Hasher;
+	typedef XALAN_STD_QUALIFIER equal_to<XalanDOMString>	Comparator;
+};
+
+
 
 /**
  * Hash functor for DOMStrings
@@ -2585,6 +2584,15 @@ struct DOMStringPointerHashFunction : public XALAN_STD_QUALIFIER unary_function<
 		assert (theKey != 0);
 		return DOMStringHashFunction()(*theKey);
 	}
+};
+
+
+
+template<>
+struct XalanMapKeyTraits<XalanDOMString*>
+{
+	typedef DOMStringPointerHashFunction	Hasher;
+	typedef pointer_equal<XalanDOMString>	Comparator;
 };
 
 

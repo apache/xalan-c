@@ -99,20 +99,14 @@ public:
 	typedef XalanVector<XalanSpaceNodeTester>			WhitespaceElementsVectorType;
     typedef XalanVector<const XalanMatchPatternData*>	PatternTableVectorType;
 	
-	typedef  XalanMap<XalanDOMString,
-				ExtensionNSHandler*,
-				DOMStringHashFunction>		ExtensionNamespacesMapType;
+	typedef  XalanMap<XalanDOMString, ExtensionNSHandler*>		ExtensionNamespacesMapType;
 
     typedef  XalanMap<XalanQNameByReference,
-				const ElemTemplate*,
-				XalanHashMemberReference<XalanQNameByReference> >			ElemTemplateMapType;
+						 const ElemTemplate* >		ElemTemplateMapType;
 
-    typedef XalanMap<const XalanNode*,
-				KeyTable* >	KeyTablesTableType;
+    typedef XalanMap<const XalanNode*, KeyTable* >	KeyTablesTableType;
 
-	typedef XalanMap<XalanDOMString,
-					 PatternTableVectorType,
-                     DOMStringHashFunction> PatternTableMapType;
+	typedef XalanMap<XalanDOMString, PatternTableVectorType> PatternTableMapType;
 
 	/**
 	 * Constructor for a Stylesheet needs a Document.

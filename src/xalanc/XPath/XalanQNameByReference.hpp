@@ -133,6 +133,13 @@ private:
 
 
 
+template<>
+struct XalanMapKeyTraits<XalanQNameByReference> : public XalanMapKeyTraits<XalanQName>
+{
+};
+
+
+
 XALAN_CPP_NAMESPACE_END
 
 
