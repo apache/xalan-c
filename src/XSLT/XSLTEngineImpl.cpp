@@ -497,11 +497,14 @@ XSLTEngineImpl::process(
 	catch(SAXException& se)
 	{
 		message("SAX Exception");
+
 		throw se;
 	}
 	catch (...)
 	{
-		assert(0);
+		message("Unknown Exception");
+
+		throw;
 	}
 }
 
