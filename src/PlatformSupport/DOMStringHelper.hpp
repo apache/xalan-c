@@ -352,7 +352,7 @@ length(const char*	theString)
 inline bool 
 isEmpty(const XalanDOMString&	str)
 {
-	return length(str) == 0 ? true : false; 
+	return str.empty(); 
 }
 
 
@@ -430,14 +430,7 @@ indexOf(
 			const XalanDOMString&	theString,
 			XalanDOMChar			theChar)
 {
-	if (theString.length() == 0)
-	{
-		return 0;
-	}
-	else
-	{
-		return indexOf(c_wstr(theString), theChar);
-	}
+	return length(theString) == 0 ? 0 : indexOf(c_wstr(theString), theChar);
 }
 
 
