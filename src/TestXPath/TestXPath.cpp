@@ -66,6 +66,12 @@
 
 
 
+#if !defined(NDEBUG) && defined(_MSC_VER)
+#include <crtdbg.h>
+#endif
+
+
+
 #include <framework/URLInputSource.hpp>
 #include <util/PlatformUtils.hpp>
 
@@ -89,6 +95,7 @@
 
 
 #include <XPath/ElementPrefixResolverProxy.hpp>
+#include <XPath/XPathInit.hpp>
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
@@ -101,6 +108,7 @@
 
 #include <XMLSupport/FormatterTreeWalker.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
+#include <XMLSupport/XMLSupportInit.hpp>
 
 
 
@@ -390,8 +398,8 @@ GetXSLInput(
 
 	if (theDocument != 0)
 	{
-		static const XalanDOMString	theContextNodeName(XALAN_STATIC_UCODE_STRING("xsl:for-each"));
-		static const XalanDOMString	theAttributeName(XALAN_STATIC_UCODE_STRING("select"));
+		const XalanDOMString	theContextNodeName(XALAN_STATIC_UCODE_STRING("xsl:for-each"));
+		const XalanDOMString	theAttributeName(XALAN_STATIC_UCODE_STRING("select"));
 
 		theContextNodeMatchPattern =
 			 FindNodeAndGetAttributeValue(theDocument->getDocumentElement(),
@@ -400,7 +408,7 @@ GetXSLInput(
 
 		if (length(theContextNodeMatchPattern) != 0)
 		{
-			static const XalanDOMString	theSelectNodeName(XALAN_STATIC_UCODE_STRING("xsl:apply-templates"));
+			const XalanDOMString	theSelectNodeName(XALAN_STATIC_UCODE_STRING("xsl:apply-templates"));
 
 			theXPathString =
 				 FindNodeAndGetAttributeValue(theDocument->getDocumentElement(),
@@ -1263,30 +1271,44 @@ main(int			/* argc */,
 	using std::cout;
 #endif
 
+#if !defined(NDEBUG) && defined(_MSC_VER)
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+
+   _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+   _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
 	XMLPlatformUtils::Initialize();
 
-	XPathEnvSupportDefault			theXPathEnvSupport;
-	DOMSupportDefault				theDOMSupport;
-	XPathSupportDefault				theXPathSupport(theDOMSupport);
-	XObjectFactoryDefault			theXObjectFactory;
-	XPathFactoryDefault				theXPathFactory;
-	XPathProcessorImpl				theXPathProcessor;
+	{
+		XMLSupportInit					theXMLSupportInit;
+		XPathInit						theXPathInit;
 
-	XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupport,
-														theXPathSupport,
-														theXObjectFactory);
+		XPathEnvSupportDefault			theXPathEnvSupport;
+		DOMSupportDefault				theDOMSupport;
+		XPathSupportDefault				theXPathSupport(theDOMSupport);
+		XObjectFactoryDefault			theXObjectFactory;
+		XPathFactoryDefault				theXPathFactory;
+		XPathProcessorImpl				theXPathProcessor;
 
-	XercesStdTextOutputStream	theStdOut(cout);
-	XercesDOMPrintWriter		thePrintWriter(theStdOut);
-	XercesParserLiaison			theLiaison(theDOMSupport);
+		XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupport,
+															theXPathSupport,
+															theXObjectFactory);
 
-	RunTests(theXPathFactory,
-			 theXPathProcessor,
-			 theXPathEnvSupport,
-		     theXPathSupport,
-			 theLiaison,
-			 thePrintWriter,
-			 theExecutionContext);
+		XercesStdTextOutputStream	theStdOut(cout);
+		XercesDOMPrintWriter		thePrintWriter(theStdOut);
+		XercesParserLiaison			theLiaison(theDOMSupport);
+
+		RunTests(theXPathFactory,
+				 theXPathProcessor,
+				 theXPathEnvSupport,
+				 theXPathSupport,
+				 theLiaison,
+				 thePrintWriter,
+				 theExecutionContext);
+	}
+
+	XMLPlatformUtils::Terminate();
 
 	return 0;
 }
