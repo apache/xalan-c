@@ -162,12 +162,12 @@ XPath::execute(
 			XPathExecutionContext&	executionContext) const
 {
 	// Push and pop the PrefixResolver...
-	XPathExecutionContext::PrefixResolverPusher		theResolverPusher(
+	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodePusher		theNodePusher(
+	XPathExecutionContext::CurrentNodeSetAndRestore		theNodeSetAndRestore(
 									executionContext,
 									context);
 
@@ -188,7 +188,7 @@ XPath::execute(
 			XPathExecutionContext&	executionContext) const
 {
 	// Push and pop the PrefixResolver...
-	XPathExecutionContext::ContextNodeListPusher	thePusher(
+	XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
 									executionContext,
 									contextNodeList);
 
@@ -446,7 +446,7 @@ XPath::getMatchScore(XalanNode*					context,
 		assert(context != 0);
 
 		// Push and pop the PrefixResolver...
-		XPathExecutionContext::PrefixResolverPusher		thePusher(
+		XPathExecutionContext::PrefixResolverSetAndRestore	theSetAndRestore(
 									executionContext,
 									&resolver);
 

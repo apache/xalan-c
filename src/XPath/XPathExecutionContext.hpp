@@ -128,11 +128,11 @@ public:
 	virtual void
 	setCurrentNode(XalanNode*	theCurrentNode) = 0;
 
-	class CurrentNodePusher
+	class CurrentNodeSetAndRestore
 	{
 	public:
 
-		CurrentNodePusher(
+		CurrentNodeSetAndRestore(
 				XPathExecutionContext&	theExecutionContext,
 				XalanNode*				theNode) :
 			m_executionContext(theExecutionContext),
@@ -141,7 +141,7 @@ public:
 			m_executionContext.setCurrentNode(theNode);
 		}
 
-		~CurrentNodePusher()
+		~CurrentNodeSetAndRestore()
 		{
 			m_executionContext.setCurrentNode(m_savedNode);
 		}
@@ -225,11 +225,11 @@ public:
 	virtual void	
 	setContextNodeList(const NodeRefListBase&	theList) = 0;
 
-	class ContextNodeListPusher
+	class ContextNodeListSetAndRestore
 	{
 	public:
 
-		ContextNodeListPusher(
+		ContextNodeListSetAndRestore(
 				XPathExecutionContext&		theExecutionContext,
 				const NodeRefListBase&		theNodeList) :
 			m_executionContext(theExecutionContext),
@@ -238,7 +238,7 @@ public:
 			m_executionContext.setContextNodeList(theNodeList);
 		}
 
-		~ContextNodeListPusher()
+		~ContextNodeListSetAndRestore()
 		{
 			m_executionContext.setContextNodeList(m_savedNodeList);
 		}
@@ -437,11 +437,11 @@ public:
 	virtual void
 	setPrefixResolver(const PrefixResolver*		thePrefixResolver) = 0;
 
-	class PrefixResolverPusher
+	class PrefixResolverSetAndRestore
 	{
 	public:
 
-		PrefixResolverPusher(
+		PrefixResolverSetAndRestore(
 				XPathExecutionContext&	theExecutionContext,
 				const PrefixResolver*	theResolver) :
 			m_executionContext(theExecutionContext),
@@ -450,7 +450,7 @@ public:
 			m_executionContext.setPrefixResolver(theResolver);
 		}
 
-		~PrefixResolverPusher()
+		~PrefixResolverSetAndRestore()
 		{
 			m_executionContext.setPrefixResolver(m_savedResolver);
 		}

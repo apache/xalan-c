@@ -338,7 +338,7 @@ SimpleNodeLocator::step(
 	}
 
 	// Push and pop the PrefixResolver...
-	XPathExecutionContext::ContextNodeListPusher	thePusher(
+	XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
 									executionContext,
 									subQueryResults);
 
