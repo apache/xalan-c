@@ -333,7 +333,7 @@ public:
 	 * can construct a document using SAX2 interfaces.	The XalanTransformer
 	 * instance owns the document builder and will delete it when the
 	 * XalanTransformer instance goes out of scope, or you explicitly call
-	 * deleteDocumentBuilder().  You must not delete the instance yourself.
+	 * destroyDocumentBuilder().  You must not delete the instance yourself.
 	 *
 	 * @return	a pointer to a XalanDocumentBuilder instance or 0 for failure.
 	 */
