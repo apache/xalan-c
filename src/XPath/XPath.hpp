@@ -212,7 +212,7 @@ public:
 	/**
 	 * Execute the XPath from the provided context.
 	 *
-	 * @param context          current source tree context node
+	 * @param context          current source tree context node, which must not be 0
 	 * @param prefixResolver   prefix resolver to use
 	 * @param executionContext current execution context
 	 * @return smart-pointer to result XObject
@@ -226,7 +226,7 @@ public:
 	/**
 	 * Execute the XPath from the provided context.
 	 *
-	 * @param context          current source tree context node
+	 * @param context          current source tree context node, which must not be 0
 	 * @param prefixResolver   prefix resolver to use
 	 * @param executionContext current execution context
 	 * @param result           the boolean result
@@ -241,7 +241,7 @@ public:
 	/**
 	 * Execute the XPath from the provided context.
 	 *
-	 * @param context          current source tree context node
+	 * @param context          current source tree context node, which must not be 0
 	 * @param prefixResolver   prefix resolver to use
 	 * @param executionContext current execution context
 	 * @param result           the numeric result
@@ -257,7 +257,7 @@ public:
 	 * Execute the XPath from the provided context.  The
 	 * result is appended to the supplied string.
 	 *
-	 * @param context          current source tree context node
+	 * @param context          current source tree context node, which must not be 0
 	 * @param prefixResolver   prefix resolver to use
 	 * @param executionContext current execution context
 	 * @param result           the string result
@@ -274,7 +274,7 @@ public:
 	/**
 	 * Execute the XPath from the provided context.
 	 *
-	 * @param context          current source tree context node
+	 * @param context          current source tree context node, which must not be 0
 	 * @param prefixResolver   prefix resolver to use
 	 * @param executionContext current execution context
 	 * @param formatterListener the FormatterListener instance to receive the result
@@ -301,7 +301,7 @@ public:
 	 * will be empty, and the result will be in the XObject
 	 * instance returned.
 	 *
-	 * @param context          current source tree context node
+	 * @param context          current source tree context node, which must not be 0
 	 * @param prefixResolver   prefix resolver to use
 	 * @param executionContext current execution context
 	 * @param result           the node-set result
@@ -317,7 +317,7 @@ public:
 	/**
 	 * Execute the XPath from the provided context.
 	 *
-	 * @param context          current source tree context node
+	 * @param context          current source tree context node, which must not be 0
 	 * @param prefixResolver   prefix resolver to use
 	 * @param contextNodeList  node list for current context
 	 * @param executionContext current execution context
@@ -341,7 +341,7 @@ public:
 	/**
 	 * Execute the XPath from the provided context.
 	 *
-	 * @param context          current source tree context node
+	 * @param context          current source tree context node, which must not be 0
 	 * @param prefixResolver   prefix resolver to use
 	 * @param contextNodeList  node list for current context
 	 * @param executionContext current execution context
@@ -366,7 +366,7 @@ public:
 	/**
 	 * Execute the XPath from the provided context.
 	 *
-	 * @param context          current source tree context node
+	 * @param context          current source tree context node, which must not be 0
 	 * @param prefixResolver   prefix resolver to use
 	 * @param contextNodeList  node list for current context
 	 * @param executionContext current execution context
@@ -392,7 +392,7 @@ public:
 	 * Execute the XPath from the provided context.  The
 	 * result is appended to the supplied string.
 	 *
-	 * @param context          current source tree context node
+	 * @param context          current source tree context node, which must not be 0
 	 * @param prefixResolver   prefix resolver to use
 	 * @param contextNodeList  node list for current context
 	 * @param executionContext current execution context
@@ -417,7 +417,7 @@ public:
 	/**
 	 * Execute the XPath from the provided context.
 	 *
-	 * @param context          current source tree context node
+	 * @param context          current source tree context node, which must not be 0
 	 * @param prefixResolver   prefix resolver to use
 	 * @param contextNodeList  node list for current context
 	 * @param executionContext current execution context
@@ -454,7 +454,7 @@ public:
 	 * will be empty, and the result will be in the XObject
 	 * instance returned.
 	 *
-	 * @param context          current source tree context node
+	 * @param context          current source tree context node, which must not be 0
 	 * @param prefixResolver   prefix resolver to use
 	 * @param contextNodeList  node list for current context
 	 * @param executionContext current execution context
@@ -478,9 +478,10 @@ public:
 	}
 
 	/**
-	 * Execute the XPath from the provided context.  The
-	 * prefix resolver must already be set in the
-	 * execution context.
+	 * Execute the XPath from the provided context.
+	 *
+	 * The prefix resolver and current node must already
+	 * be set execution context, and must not be 0.
 	 *
 	 * @param executionContext current execution context
 	 * @return smart-pointer to result XObject
@@ -488,15 +489,17 @@ public:
 	const XObjectPtr
 	execute(XPathExecutionContext&	executionContext) const
 	{
+		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
 		return executeMore(executionContext.getCurrentNode(), 0, executionContext);
 	}
 
 	/**
-	 * Execute the XPath from the provided context.  The
-	 * prefix resolver must already be set in the
-	 * execution context.
+	 * Execute the XPath from the provided context.
+	 *
+	 * The prefix resolver and current node must already
+	 * be set execution context, and must not be 0.
 	 *
 	 * @param executionContext current execution context
 	 * @param result           the boolean result
@@ -506,14 +509,16 @@ public:
 			XPathExecutionContext&	executionContext,
 			bool&					result) const
 	{
+		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
 		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
 	}
 
 	/**
-	 * Execute the XPath from the provided context.  The
-	 * prefix resolver must already be set in the
+	 * Execute the XPath from the provided context.
+	 *
+	 * The prefix resolver must already be set in the
 	 * execution context.
 	 *
 	 * @param executionContext current execution context
@@ -524,16 +529,18 @@ public:
 			XPathExecutionContext&	executionContext,
 			double&					result) const
 	{
+		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
 		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
 	}
 
 	/**
-	 * Execute the XPath from the provided context.  The
-	 * prefix resolver must already be set in the
-	 * execution context.  The result is appended to the
-	 * supplied string.
+	 * Execute the XPath from the provided context. The
+	 * result is appended to the supplied string.
+	 *
+	 * The prefix resolver and current node must already
+	 * be set execution context, and must not be 0.
 	 *
 	 * @param executionContext current execution context
 	 * @param result           the string result
@@ -543,15 +550,17 @@ public:
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			result) const
 	{
+		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
 		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
 	}
 
 	/**
-	 * Execute the XPath from the provided context.  The
-	 * prefix resolver must already be set in the
-	 * execution context.
+	 * Execute the XPath from the provided context.
+	 * 
+	 * The prefix resolver and current node must already
+	 * be set execution context, and must not be 0.
 	 *
 	 * @param executionContext current execution context
 	 * @param formatterListener the FormatterListener instance to receive the result
@@ -563,6 +572,7 @@ public:
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
 	{
+		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
 		executeMore(executionContext.getCurrentNode(), 0, executionContext, formatterListener, function);
@@ -581,8 +591,8 @@ public:
 	 * will be empty, and the result will be in the XObject
 	 * instance returned.
 	 * 
-	 * The prefix resolver must already be set in the
-	 * execution context.
+	 * The prefix resolver and current node must already
+	 * be set execution context, and must not be 0.
 	 *
 	 * @param executionContext current execution context
 	 * @return the node-set result, if the result was not returned in the parameter
@@ -592,6 +602,7 @@ public:
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		result) const
 	{
+		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
 		return executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
@@ -866,10 +877,7 @@ protected:
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext,
-			MutableNodeRefList&		theResult) const
-	{
-		step(executionContext, context, opPos + 2, theResult);
-	}
+			bool&					theResult) const;
 
 	/**
 	 * Execute a location path.
@@ -877,7 +885,7 @@ protected:
 	 * @param context          current source tree context node
 	 * @param opPos            current position in the m_opMap array
 	 * @param executionContext current execution context
-	 * @param theResult	       the result as a number
+	 * @param theResult	       the result as a node list
 	 */
 	void
 	locationPath(
@@ -887,13 +895,12 @@ protected:
 			double&					theResult) const;
 
 	/**
-	 * Execute a location path.  The result is appended to the
-	 * supplied string.
+	 * Execute a location path.
 	 *
 	 * @param context          current source tree context node
 	 * @param opPos            current position in the m_opMap array
 	 * @param executionContext current execution context
-	 * @param theResult	       the string
+	 * @param theResult	       the result as a node list
 	 */
 	void
 	locationPath(
@@ -918,6 +925,24 @@ protected:
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
+
+	/**
+	 * Execute a location path.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @param theResult	       the result as a node list
+	 */
+	void
+	locationPath(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			MutableNodeRefList&		theResult) const
+	{
+		step(executionContext, context, opPos + 2, theResult);
+	}
 
 	/**
 	 * Execute the XPath from the provided context.
@@ -1317,6 +1342,68 @@ protected:
 
 	/**
 	 * Computes the union of its operands which must be node-sets.
+	 *
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @result the result of the union of node-set operands.
+	 */
+	void
+	Union(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			bool&					result) const;
+
+	/**
+	 * Computes the union of its operands which must be node-sets.
+	 *
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @result the result of the union of node-set operands.
+	 */
+	void
+	Union(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			double&					result) const;
+
+	/**
+	 * Computes the union of its operands which must be node-sets.
+	 *
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @result the result of the union of node-set operands.
+	 */
+	void
+	Union(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			XalanDOMString&			result) const;
+
+	/**
+	 * Computes the union of its operands which must be node-sets.
+	 *
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	void
+	Union(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const;
+
+	/**
+	 * Computes the union of its operands which must be node-sets.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
 	 * @param executionContext current execution context
@@ -1340,6 +1427,28 @@ protected:
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
   
+	/**
+	 * Get a literal value as a boolean.
+	 *
+	 * @param opPos The current position in the m_opMap array.
+	 * @param theResult The value.
+	 */
+	void
+	literal(
+			int		opPos,
+			bool&	theResult) const;
+
+	/**
+	 * Get a literal value as a number.
+	 *
+	 * @param opPos The current position in the m_opMap array.
+	 * @param theResult The value.
+	 */
+	void
+	literal(
+			int			opPos,
+			double&		theResult) const;
+
 	/**
 	 * Get a literal value.  The value is appended to the
 	 * supplied string.
@@ -1403,6 +1512,77 @@ protected:
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext,
+			bool&					theResult) const
+	{
+		executeMore(context, opPos + 2, executionContext, theResult);
+	}
+
+	/**
+	 * Execute an expression as a group.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @param theResult The result of the execution
+	 */
+	void
+	group(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			double&					theResult) const
+	{
+		executeMore(context, opPos + 2, executionContext, theResult);
+	}
+
+	/**
+	 * Execute an expression as a group.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @param theResult The result of the execution
+	 */
+	void
+	group(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			XalanDOMString&			theResult) const
+	{
+		executeMore(context, opPos + 2, executionContext, theResult);
+	}
+
+	/**
+	 * Execute an expression as a group.
+	 *
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	void
+	group(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const
+	{
+		executeMore(context, opPos + 2, executionContext, formatterListener, function);
+	}
+
+	/**
+	 * Execute an expression as a group.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @param theResult The result of the execution
+	 */
+	void
+	group(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		theResult) const
 	{
 		executeMore(context, opPos + 2, executionContext, theResult);
@@ -1425,6 +1605,17 @@ protected:
 	numberlit(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Get a literal value as a boolean.
+	 *
+	 * @param opPos The current position in the m_opMap array.
+	 * @param theResult The string.
+	 */
+	void
+	numberlit(
+			int		opPos,
+			bool&	theResult) const;
 
 	/**
 	 * Get a literal value.  The value is appended to the
@@ -1450,41 +1641,6 @@ protected:
 			int					opPos,
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const;
-
-	/**
-	 * Execute a function argument.
-	 *
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @param executionContext current execution context
-	 * @return the result of the argument expression.
-	 */
-	const XObjectPtr
-	arg(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const
-	{
-		return executeMore(context, opPos + 2, executionContext);
-	}
-
-	/**
-	 * Execute a function argument.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @param executionContext current execution context
-	 * @param the result of the argument expression.
-	 * @result the result of the argument expression.
-	 */
-	const XObjectPtr
-	arg(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext,
-			MutableNodeRefList&		result) const
-	{
-		return executeMore(context, opPos + 2, executionContext, result);
-	}
 
 	/**
 	 * Setup for and run an extension function.
@@ -1559,26 +1715,19 @@ protected:
 	/**
 	 * Handle the built-in function "position".
 	 *
-	 * @param context The current source tree context node.
+	 * @param context The current source tree context node, which must not be 0.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	double
 	functionPosition(
 			XalanNode*				context,
-			XPathExecutionContext&	executionContext) const;
+			XPathExecutionContext&	executionContext) const
+	{
+		assert(context != 0);
 
-	/**
-	 * Handle the built-in function "position".
-	 *
-	 * @param context The current source tree context node.
-	 * @param executionContext current execution context
-	 * @return the result of the function.
-	 */
-	const XObjectPtr
-	functionPositionGeneric(
-			XalanNode*				context,
-			XPathExecutionContext&	executionContext) const;
+		return executionContext.getContextNodeListPosition(*context);
+	}
 
 	/**
 	 * Handle the built-in function "last".
@@ -1587,20 +1736,16 @@ protected:
 	 * @return the result of the function.
 	 */
 	double
-	functionLast(XPathExecutionContext&		executionContext) const;
-
-	/**
-	 * Handle the built-in function "last".
-	 *
-	 * @param executionContext current execution context
-	 * @return the result of the function.
-	 */
-	const XObjectPtr
-	functionLastGeneric(XPathExecutionContext&	executionContext) const;
+	functionLast(XPathExecutionContext&		executionContext) const
+	{
+		return executionContext.getContextNodeListLength();
+	}
 
 	/**
 	 * Handle the built-in function "count".
 	 *
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
@@ -1611,16 +1756,186 @@ protected:
 			XPathExecutionContext&	executionContext) const;
 
 	/**
-	 * Handle the built-in function "count".
+	 * Handle the built-in function "not".
 	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @param opPos The current position in the m_opMap array.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
-	const XObjectPtr
-	functionCountGeneric(
+	bool
+	functionNot(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
+	{
+		assert(context != 0);
+
+		return !functionBoolean(context, opPos, executionContext);
+	}
+
+	/**
+	 * Handle the built-in function "boolean".
+	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	bool
+	functionBoolean(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
+	{
+		assert(context != 0);
+
+		bool	result;
+
+		executeMore(context, opPos + 2, executionContext, result);
+
+		return result;
+	}
+
+	/**
+	 * Handle the built-in function "name".
+	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @return the result of the function.
+	 */
+	const XalanDOMString&
+	functionName(XalanNode*		context) const
+	{
+		assert(context != 0);
+
+		return DOMServices::getNameOfNode(*context);
+	}
+
+	/**
+	 * Handle the built-in function "name".
+	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	const XalanDOMString&
+	functionName(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Handle the built-in function "local-name".
+	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @return the result of the function.
+	 */
+	const XalanDOMString&
+	functionLocalName(XalanNode*	context) const;
+
+	/**
+	 * Handle the built-in function "local-name".
+	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	const XalanDOMString&
+	functionLocalName(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Handle the built-in function "number".
+	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	double
+	functionNumber(
+			XalanNode*				context,
+			XPathExecutionContext&	executionContext) const
+	{
+		assert(context != 0);
+
+		return XObject::number(executionContext, *context);
+	}
+
+	/**
+	 * Handle the built-in function "number".
+	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	double
+	functionNumber(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
+	{
+		double	result;
+
+		executeMore(context, opPos + 2, executionContext, result);
+
+		return result;
+	}
+
+	/**
+	 * Handle the built-in function "floor".
+	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	double
+	functionFloor(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
+	{
+		return DoubleSupport::floor(functionNumber(context, opPos, executionContext));
+	}
+
+	/**
+	 * Handle the built-in function "ceiling".
+	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	double
+	functionCeiling(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
+	{
+		return DoubleSupport::ceiling(functionNumber(context, opPos, executionContext));
+	}
+
+	/**
+	 * Handle the built-in function "round".
+	 *
+	 * @param context The current source tree context node, which must not be 0.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param executionContext current execution context
+	 * @return the result of the function.
+	 */
+	double
+	functionRound(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
+	{
+		return DoubleSupport::round(functionNumber(context, opPos, executionContext));
+	}
 
 	/**
 	 * Get a numeric operand for an expression.

@@ -883,9 +883,7 @@ XPathProcessorImpl::consumeExpected(XalanDOMChar	expected)
 
 
 void
-XPathProcessorImpl::error(
-			const XalanDOMString&	msg,
-			XalanNode*				/* sourceNode */) const
+XPathProcessorImpl::error(const XalanDOMString&		msg) const
 {
 	const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
 
@@ -919,33 +917,7 @@ XPathProcessorImpl::error(
 
 			thePrintWriter.print(theCurrentPattern);
 
-			thePrintWriter.print("'");
-
-			if (m_locator != 0)
-			{
-				const XalanDOMChar* const	theSystemID =
-					m_locator->getSystemId();
-
-				thePrintWriter.print("(");
-
-				if (theSystemID == 0)
-				{
-					thePrintWriter.print("Unknown URI");
-				}
-				else
-				{
-					thePrintWriter.print(theSystemID);
-				}
-
-				thePrintWriter.print(", ");
-				thePrintWriter.print(m_locator->getLineNumber());
-				thePrintWriter.print(", ");
-				thePrintWriter.print(m_locator->getColumnNumber());
-
-				thePrintWriter.print(")");
-			}
-
-			thePrintWriter.println();
+			thePrintWriter.println("'");
 		}
 
 		// Back up one token, since we've consumed one...
@@ -982,11 +954,9 @@ XPathProcessorImpl::error(
 
 
 void
-XPathProcessorImpl::error(
-			const char*		msg,
-			XalanNode*		sourceNode) const
+XPathProcessorImpl::error(const char*	msg) const
 {
-	error(TranscodeFromLocalCodePage(msg), sourceNode);
+	error(TranscodeFromLocalCodePage(msg));
 }
 
 
@@ -1535,10 +1505,6 @@ XPathProcessorImpl::Argument()
 {
 	assert(m_expression != 0);
 
-	const int	opPos = m_expression->opCodeMapLength();
-
-	m_expression->appendOpCode(XPathExpression::eOP_ARGUMENT);
-
 	if (m_requireLiterals == false ||
 		isCurrentLiteral() == true)
 	{
@@ -1548,9 +1514,6 @@ XPathProcessorImpl::Argument()
 	{
 		error(TranscodeFromLocalCodePage("A literal argument is required."));
 	}
-
-	m_expression->updateOpCodeLength(XPathExpression::eOP_ARGUMENT,
-									 opPos);
 }
 
 
@@ -1655,6 +1618,58 @@ XPathProcessorImpl::FunctionCall()
 
 		case XPathExpression::eOP_FUNCTION_COUNT:
 			FunctionCount();
+			break;
+
+		case XPathExpression::eOP_FUNCTION_NOT:
+			FunctionNot();
+			break;
+
+		case XPathExpression::eOP_FUNCTION_TRUE:
+			FunctionTrue();
+			break;
+
+		case XPathExpression::eOP_FUNCTION_FALSE:
+			FunctionFalse();
+			break;
+
+		case XPathExpression::eOP_FUNCTION_BOOLEAN:
+			FunctionBoolean();
+			break;
+
+		case XPathExpression::eOP_FUNCTION_NAME_0:
+			FunctionName(opPos);
+			break;
+
+		case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+			FunctionLocalName(opPos);
+			break;
+
+		case XPathExpression::eOP_FUNCTION_NUMBER_0:
+			FunctionNumber(opPos);
+			break;
+
+		case XPathExpression::eOP_FUNCTION_FLOOR:
+			FunctionFloor();
+			break;
+
+		case XPathExpression::eOP_FUNCTION_CEILING:
+			FunctionCeiling();
+			break;
+
+		case XPathExpression::eOP_FUNCTION_ROUND:
+			FunctionRound();
+			break;
+
+		case XPathExpression::eOP_FUNCTION_STRING_0:
+			FunctionString(opPos);
+			break;
+
+		case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+			FunctionStringLength(opPos);
+			break;
+
+		case XPathExpression::eOP_FUNCTION_NAMESPACEURI_0:
+			FunctionNamespaceURI(opPos);
 			break;
 
 		default:
@@ -1775,6 +1790,313 @@ XPathProcessorImpl::FunctionCount()
 
 
 void
+XPathProcessorImpl::FunctionNot()
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_NOT);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 1)
+	{
+		error("The not() function takes one arguments");
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionTrue()
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_TRUE);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 0)
+	{
+		error("The true() function does not accept any arguments");
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionFalse()
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_FALSE);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 0)
+	{
+		error("The false() function does not accept any arguments");
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionBoolean()
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_BOOLEAN);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 1)
+	{
+		error("The boolean() function takes one arguments");
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionName(int	opPos)
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_NAME_0);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 0)
+	{
+		if (argCount == 1)
+		{
+			m_expression->replaceOpCode(
+				opPos,
+				XPathExpression::eOP_FUNCTION_NAME_0,
+				XPathExpression::eOP_FUNCTION_NAME_1);
+		}
+		else
+		{
+			error("The name() function takes zero or one argument(s)");
+		}
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionLocalName(int	opPos)
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_LOCALNAME_0);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 0)
+	{
+		if (argCount == 1)
+		{
+			m_expression->replaceOpCode(
+				opPos,
+				XPathExpression::eOP_FUNCTION_LOCALNAME_0,
+				XPathExpression::eOP_FUNCTION_LOCALNAME_1);
+		}
+		else
+		{
+			error("The locale-name() function takes zero or one argument(s)");
+		}
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionNumber(int	opPos)
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_NUMBER_0);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 0)
+	{
+		if (argCount == 1)
+		{
+			m_expression->replaceOpCode(
+				opPos,
+				XPathExpression::eOP_FUNCTION_NUMBER_0,
+				XPathExpression::eOP_FUNCTION_NUMBER_1);
+		}
+		else
+		{
+			error("The number() function takes zero or one argument(s)");
+		}
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionFloor()
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_FLOOR);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 1)
+	{
+		error("The floor() function accepts one argument");
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionCeiling()
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_CEILING);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 1)
+	{
+		error("The ceiling() function accepts one argument");
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionRound()
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_ROUND);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 1)
+	{
+		error("The round() function accepts one argument");
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionString(int	opPos)
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_STRING_0);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 0)
+	{
+		if (argCount == 1)
+		{
+			m_expression->replaceOpCode(
+				opPos,
+				XPathExpression::eOP_FUNCTION_STRING_0,
+				XPathExpression::eOP_FUNCTION_STRING_1);
+		}
+		else
+		{
+			error("The string() function takes zero or one argument(s)");
+		}
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionStringLength(int	opPos)
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_STRINGLENGTH_0);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 0)
+	{
+		if (argCount == 1)
+		{
+			m_expression->replaceOpCode(
+				opPos,
+				XPathExpression::eOP_FUNCTION_STRINGLENGTH_0,
+				XPathExpression::eOP_FUNCTION_STRINGLENGTH_1);
+		}
+		else
+		{
+			error("The string-length() function takes zero or one argument(s)");
+		}
+	}
+}
+
+
+
+void
+XPathProcessorImpl::FunctionNamespaceURI(int	opPos)
+{
+	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_NAMESPACEURI_0);
+
+	// Consume the name...
+	nextToken();
+
+	// Get the arguments, and the argument count...
+	const int	argCount = FunctionCallArguments();
+
+	if (argCount != 0)
+	{
+		if (argCount == 1)
+		{
+			m_expression->replaceOpCode(
+				opPos,
+				XPathExpression::eOP_FUNCTION_NAMESPACEURI_0,
+				XPathExpression::eOP_FUNCTION_NAMESPACEURI_1);
+		}
+		else
+		{
+			error("The namespace-uri() function takes zero or one argument(s)");
+		}
+	}
+}
+
+
+
+void
 XPathProcessorImpl::LocationPath()
 {
 	const int	opPos = m_expression->opCodeMapLength();
@@ -1783,20 +2105,23 @@ XPathProcessorImpl::LocationPath()
 
 	if(tokenIs(XalanUnicode::charSolidus) == true)
 	{
+		nextToken();
+
 		const int	newOpPos = m_expression->opCodeMapLength();
 
-		// Tell how long the step is without the predicate
-		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
+//		if (tokenIs(XalanUnicode::charSolidus) == false)
+		{
+			// Tell how long the step is without the predicate
+			const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
 
-		m_expression->appendOpCode(XPathExpression::eFROM_ROOT,
-								   theArgs);
+			m_expression->appendOpCode(XPathExpression::eFROM_ROOT,
+									   theArgs);
 
-		m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
+			m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
 
-		// Tell how long the entire step is.
-		m_expression->updateOpCodeLength(newOpPos);
-
-		nextToken();
+			// Tell how long the entire step is.
+			m_expression->updateOpCodeLength(newOpPos);
+		}
 	}
 
 	if(length(m_token) != 0)
@@ -1855,6 +2180,11 @@ XPathProcessorImpl::Step()
 	else if(tokenIs(s_dotDotString) == true)
 	{
 		nextToken();
+
+		if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
+		{
+			error("'..[predicate]' or '.[predicate]' is illegal syntax.  Use 'self::node()[predicate]' instead.");
+		}
 
 		// Tell how long the step is without the predicate
 		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
@@ -2984,12 +3314,22 @@ const XalanDOMChar		XPathProcessorImpl::s_namespaceString[] =
 
 const XPathProcessorImpl::TableEntry	XPathProcessorImpl::s_functionTable[] =
 {
+	{ XPathFunctionTable::s_not, XPathExpression::eOP_FUNCTION_NOT },
 	{ XPathProcessorImpl::s_lastString, XPathExpression::eOP_FUNCTION_LAST },
+	{ XPathFunctionTable::s_name, XPathExpression::eOP_FUNCTION_NAME_0 },
 	{ XPathProcessorImpl::s_nodeString, XPathExpression::eNODETYPE_NODE },
 	{ XPathProcessorImpl::s_textString, XPathExpression::eNODETYPE_TEXT },
+	{ XPathFunctionTable::s_true, XPathExpression::eOP_FUNCTION_TRUE },
 	{ XPathFunctionTable::s_count, XPathExpression::eOP_FUNCTION_COUNT  },
+	{ XPathFunctionTable::s_false, XPathExpression::eOP_FUNCTION_FALSE },
+	{ XPathFunctionTable::s_floor, XPathExpression::eOP_FUNCTION_FLOOR },
+	{ XPathFunctionTable::s_round, XPathExpression::eOP_FUNCTION_ROUND },
+	{ XPathFunctionTable::s_number, XPathExpression::eOP_FUNCTION_NUMBER_0 },
+	{ XPathFunctionTable::s_boolean, XPathExpression::eOP_FUNCTION_BOOLEAN },
+	{ XPathFunctionTable::s_ceiling, XPathExpression::eOP_FUNCTION_CEILING },
 	{ XPathProcessorImpl::s_commentString, XPathExpression::eNODETYPE_COMMENT },
 	{ XPathProcessorImpl::s_positionString, XPathExpression::eOP_FUNCTION_POSITION },
+	{ XPathFunctionTable::s_localName, XPathExpression::eOP_FUNCTION_LOCALNAME_0 },
 	{ XPathProcessorImpl::s_piString, XPathExpression::eNODETYPE_PI },
 };
 

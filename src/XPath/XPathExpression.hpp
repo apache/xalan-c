@@ -578,58 +578,31 @@ public:
 		eOP_PREDICATE_WITH_POSITION = 55,
   
 		/**
-		 * [OP_FUNCTION_POSITION]
-		 * [length]
-		 * [FUNC_ID]
-		 * [arg count]
-		 *  {OP_ARGUMENT}*
-		 * [ENDOP]
-		 * 
-		 * returns: 
-		 *  XNodeSet
-		 *  XNumber
-		 *  XString
-		 *  XBoolean
-		 *  XRTree
-		 *  XObject
+		 * These are values for intrinsic functions which
+		 * have been compiled directly into the op map.
 		 */
 		eOP_FUNCTION_POSITION = 56,
-
-		/**
-		 * [OP_FUNCTION_POSITION]
-		 * [length]
-		 * [FUNC_ID]
-		 * [arg count]
-		 *  {OP_ARGUMENT}*
-		 * [ENDOP]
-		 * 
-		 * returns: 
-		 *  XNodeSet
-		 *  XNumber
-		 *  XString
-		 *  XBoolean
-		 *  XRTree
-		 *  XObject
-		 */
 		eOP_FUNCTION_LAST = 57,
-
-		/**
-		 * [OP_FUNCTION_POSITION]
-		 * [length]
-		 * [FUNC_ID]
-		 * [arg count]
-		 *  {OP_ARGUMENT}*
-		 * [ENDOP]
-		 * 
-		 * returns: 
-		 *  XNodeSet
-		 *  XNumber
-		 *  XString
-		 *  XBoolean
-		 *  XRTree
-		 *  XObject
-		 */
 		eOP_FUNCTION_COUNT = 58,
+		eOP_FUNCTION_NOT = 59,
+		eOP_FUNCTION_TRUE = 60,
+		eOP_FUNCTION_FALSE = 61,
+		eOP_FUNCTION_BOOLEAN = 62,
+		eOP_FUNCTION_NAME_0 = 63,
+		eOP_FUNCTION_NAME_1 = 64,
+		eOP_FUNCTION_LOCALNAME_0 = 65,
+		eOP_FUNCTION_LOCALNAME_1 = 66,
+		eOP_FUNCTION_FLOOR = 67,
+		eOP_FUNCTION_CEILING = 68,
+		eOP_FUNCTION_ROUND = 69,
+		eOP_FUNCTION_NUMBER_0 = 70,
+		eOP_FUNCTION_NUMBER_1 = 71,
+		eOP_FUNCTION_STRING_0 = 72,
+		eOP_FUNCTION_STRING_1 = 73,
+		eOP_FUNCTION_STRINGLENGTH_0 = 74,
+		eOP_FUNCTION_STRINGLENGTH_1 = 75,
+		eOP_FUNCTION_NAMESPACEURI_0 = 76,
+		eOP_FUNCTION_NAMESPACEURI_1 = 77,
 
 		// Always add _before_ this one and update
 		// s_opCodeLengthArray.

@@ -303,7 +303,7 @@ private:
 	lookbehind( 
 			char	c,
 			int		n) const;
- 
+
 	/**
 	 * look behind the current token in order to 
 	 * see if there is a useable token.
@@ -377,17 +377,13 @@ private:
 	 * Throw an exception using the provided message text.
 	 */
 	void
-	error(
-			const XalanDOMString&	msg,
-			XalanNode*				sourceNode = 0) const;
+	error(const XalanDOMString&		msg) const;
 
 	/**
 	 * Throw an exception using the provided message text.
 	 */
 	void
-	error(
-			const char*		msg,
-			XalanNode*		sourceNode = 0) const;
+	error(const char*	msg) const;
 
 	/**
 	 * Given a string, return the corresponding token.
@@ -590,6 +586,45 @@ private:
 
 	void
 	FunctionCount();
+
+	void
+	FunctionNot();
+
+	void
+	FunctionTrue();
+
+	void
+	FunctionFalse();
+
+	void
+	FunctionBoolean();
+
+	void
+	FunctionName(int	opPos);
+
+	void
+	FunctionLocalName(int	opPos);
+
+	void
+	FunctionNumber(int	opPos);
+
+	void
+	FunctionFloor();
+
+	void
+	FunctionCeiling();
+
+	void
+	FunctionRound();
+
+	void
+	FunctionString(int	opPos);
+
+	void
+	FunctionStringLength(int	opPos);
+
+	void
+	FunctionNamespaceURI(int	opPos);
 
 	/**
 	 * --------------------------------------------------------------------------------

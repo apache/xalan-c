@@ -153,6 +153,8 @@ XPath::execute(
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const
 {
+	assert(context != 0);
+
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
@@ -175,6 +177,8 @@ XPath::execute(
 			XPathExecutionContext&	executionContext,
 			bool&					result) const
 {
+	assert(context != 0);
+
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
@@ -197,6 +201,8 @@ XPath::execute(
 			XPathExecutionContext&	executionContext,
 			double&					result) const
 {
+	assert(context != 0);
+
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
@@ -219,6 +225,8 @@ XPath::execute(
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			result) const
 {
+	assert(context != 0);
+
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
@@ -242,6 +250,8 @@ XPath::execute(
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
 {
+	assert(context != 0);
+
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
@@ -264,6 +274,9 @@ XPath::execute(
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		result) const
 {
+	assert(context != 0);
+	assert(result.empty() == true);
+
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
@@ -367,10 +380,6 @@ XPath::executeMore(
 		return numberlit(opPos, executionContext);
 		break;
 
-	case XPathExpression::eOP_ARGUMENT:
-		return arg(context, opPos, executionContext);
-		break;
-
 	case XPathExpression::eOP_EXTFUNCTION:
 		return runExtFunction(context, opPos, executionContext);
 		break;
@@ -384,16 +393,76 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_FUNCTION_POSITION:
-		return functionPositionGeneric(context, executionContext);
+		return executionContext.getXObjectFactory().createNumber(functionPosition(context, executionContext));
 		break;
 
 	case XPathExpression::eOP_FUNCTION_LAST:
-		return functionLastGeneric(executionContext);
+		return executionContext.getXObjectFactory().createNumber(functionLast(executionContext));
 		break;
 
 	case XPathExpression::eOP_FUNCTION_COUNT:
-		return functionCountGeneric(context, opPos, executionContext);
+		return executionContext.getXObjectFactory().createNumber(functionCount(context, opPos, executionContext));
 		break;
+
+	case XPathExpression::eOP_FUNCTION_NOT:
+		return executionContext.getXObjectFactory().createBoolean(functionNot(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_TRUE:
+		return executionContext.getXObjectFactory().createBoolean(true);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_FALSE:
+		return executionContext.getXObjectFactory().createBoolean(false);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_BOOLEAN:
+		return executionContext.getXObjectFactory().createBoolean(functionBoolean(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NAME_0:
+		return executionContext.getXObjectFactory().createStringReference(functionName(context));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NAME_1:
+		return executionContext.getXObjectFactory().createStringReference(functionName(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+		return executionContext.getXObjectFactory().createStringReference(functionLocalName(context));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
+		return executionContext.getXObjectFactory().createStringReference(functionLocalName(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_FLOOR:
+		return executionContext.getXObjectFactory().createNumber(functionFloor(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_CEILING:
+		return executionContext.getXObjectFactory().createNumber(functionCeiling(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_ROUND:
+		return executionContext.getXObjectFactory().createNumber(functionRound(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NUMBER_0:
+		return executionContext.getXObjectFactory().createNumber(functionNumber(context, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NUMBER_1:
+		return executionContext.getXObjectFactory().createNumber(functionNumber(context, opPos, executionContext));
+		break;
+
+//	case XPathExpression::eOP_FUNCTION_STRING_0:
+//		return functionString(context);
+//		break;
+
+//	case XPathExpression::eOP_FUNCTION_STRING_1:
+//		return functionString(context, opPos, executionContext);
+//		break;
 
 	default:
 		unknownOpCodeError(context, executionContext, opPos);
@@ -475,11 +544,11 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_UNION:
-		result = Union(context, opPos, executionContext)->boolean();
+		Union(context, opPos, executionContext, result);
 		break;
 
 	case XPathExpression::eOP_LITERAL:
-		result = literal(opPos, executionContext)->boolean();
+		literal(opPos, result);
 		break;
 
 	case XPathExpression::eOP_VARIABLE:
@@ -487,15 +556,11 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_GROUP:
-		result = group(context, opPos, executionContext)->boolean();
+		group(context, opPos, executionContext, result);
 		break;
 
 	case XPathExpression::eOP_NUMBERLIT:
-		result = XObject::boolean(numberlit(opPos));
-		break;
-
-	case XPathExpression::eOP_ARGUMENT:
-		result = arg(context, opPos, executionContext)->boolean();
+		numberlit(opPos, result);
 		break;
 
 	case XPathExpression::eOP_EXTFUNCTION:
@@ -507,7 +572,7 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_LOCATIONPATH:
-		result = locationPath(context, opPos, executionContext)->boolean();
+		locationPath(context, opPos, executionContext, result);
 		break;
 
 	case XPathExpression::eOP_FUNCTION_POSITION:
@@ -520,6 +585,58 @@ XPath::executeMore(
 
 	case XPathExpression::eOP_FUNCTION_COUNT:
 		result = XObject::boolean(functionCount(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NOT:
+		result = functionNot(context, opPos, executionContext);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_TRUE:
+		result = true;
+		break;
+
+	case XPathExpression::eOP_FUNCTION_FALSE:
+		result = false;
+		break;
+
+	case XPathExpression::eOP_FUNCTION_BOOLEAN:
+		result = functionBoolean(context, opPos, executionContext);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NAME_0:
+		result = XObject::boolean(functionName(context));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NAME_1:
+		result = XObject::boolean(functionName(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+		result = XObject::boolean(functionLocalName(context));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
+		result = XObject::boolean(functionLocalName(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_FLOOR:
+		result = XObject::boolean(functionFloor(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_CEILING:
+		result = XObject::boolean(functionCeiling(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_ROUND:
+		result = XObject::boolean(functionRound(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NUMBER_0:
+		result = XObject::boolean(functionNumber(context, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NUMBER_1:
+		result = XObject::boolean(functionNumber(context, opPos, executionContext));
 		break;
 
 	default:
@@ -600,11 +717,11 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_UNION:
-		result = Union(context, opPos, executionContext)->num();
+		Union(context, opPos, executionContext, result);
 		break;
 
 	case XPathExpression::eOP_LITERAL:
-		result = literal(opPos, executionContext)->num();
+		literal(opPos, result);
 		break;
 
 	case XPathExpression::eOP_VARIABLE:
@@ -612,15 +729,11 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_GROUP:
-		result = group(context, opPos, executionContext)->num();
+		group(context, opPos, executionContext, result);
 		break;
 
 	case XPathExpression::eOP_NUMBERLIT:
 		result = numberlit(opPos);
-		break;
-
-	case XPathExpression::eOP_ARGUMENT:
-		result = arg(context, opPos, executionContext)->num();
 		break;
 
 	case XPathExpression::eOP_EXTFUNCTION:
@@ -632,7 +745,7 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_LOCATIONPATH:
-		result = locationPath(context, opPos, executionContext)->num();
+		locationPath(context, opPos, executionContext, result);
 		break;
 
 	case XPathExpression::eOP_FUNCTION_POSITION:
@@ -645,6 +758,58 @@ XPath::executeMore(
 
 	case XPathExpression::eOP_FUNCTION_COUNT:
 		result = functionCount(context, opPos, executionContext);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NOT:
+		result = XObject::number(functionNot(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_TRUE:
+		result = XObject::number(true);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_FALSE:
+		result = XObject::number(false);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_BOOLEAN:
+		result = XObject::number(functionBoolean(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NAME_0:
+		result = XObject::number(functionName(context));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NAME_1:
+		result = XObject::number(functionName(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+		result = XObject::number(functionLocalName(context));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
+		result = XObject::number(functionLocalName(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_FLOOR:
+		result = functionFloor(context, opPos, executionContext);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_CEILING:
+		result = functionCeiling(context, opPos, executionContext);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_ROUND:
+		result = functionRound(context, opPos, executionContext);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NUMBER_0:
+		result = functionNumber(context, executionContext);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NUMBER_1:
+		result = functionNumber(context, opPos, executionContext);
 		break;
 
 	default:
@@ -725,7 +890,7 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_UNION:
-		Union(context, opPos, executionContext)->str(result);
+		Union(context, opPos, executionContext, result);
 		break;
 
 	case XPathExpression::eOP_LITERAL:
@@ -737,15 +902,11 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_GROUP:
-		group(context, opPos, executionContext)->str(result);
+		group(context, opPos, executionContext, result);
 		break;
 
 	case XPathExpression::eOP_NUMBERLIT:
 		numberlit(opPos, result);
-		break;
-
-	case XPathExpression::eOP_ARGUMENT:
-		arg(context, opPos, executionContext)->str(result);
 		break;
 
 	case XPathExpression::eOP_EXTFUNCTION:
@@ -757,7 +918,7 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_LOCATIONPATH:
-		locationPath(context, opPos, executionContext)->str(result);
+		locationPath(context, opPos, executionContext, result);
 		break;
 
 	case XPathExpression::eOP_FUNCTION_POSITION:
@@ -772,10 +933,73 @@ XPath::executeMore(
 		XObject::string(functionCount(context, opPos, executionContext), result);
 		break;
 
+	case XPathExpression::eOP_FUNCTION_NOT:
+		XObject::string(functionNot(context, opPos, executionContext), result);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_TRUE:
+		XObject::string(true, result);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_FALSE:
+		XObject::string(false, result);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_BOOLEAN:
+		XObject::string(functionBoolean(context, opPos, executionContext), result);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NAME_0:
+		result.append(functionName(context));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NAME_1:
+		result.append(functionName(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+		result.append(functionLocalName(context));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
+		result.append(functionLocalName(context, opPos, executionContext));
+		break;
+
+	case XPathExpression::eOP_FUNCTION_FLOOR:
+		XObject::string(functionFloor(context, opPos, executionContext), result);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_CEILING:
+		XObject::string(functionCeiling(context, opPos, executionContext), result);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_ROUND:
+		XObject::string(functionRound(context, opPos, executionContext), result);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NUMBER_0:
+		XObject::string(functionNumber(context, executionContext), result);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NUMBER_1:
+		XObject::string(functionNumber(context, opPos, executionContext), result);
+		break;
+
 	default:
 		unknownOpCodeError(context, executionContext, opPos);
 		break;
 	}
+}
+
+
+
+inline void
+stringToCharacters(
+			const XalanDOMString&		str,
+			FormatterListener&			formatterListener,
+			XPath::MemberFunctionPtr	function)
+{
+	(formatterListener.*function)(str.c_str(), str.length());
 }
 
 
@@ -875,7 +1099,7 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_UNION:
-		Union(context, opPos, executionContext)->str(formatterListener, function);
+		Union(context, opPos, executionContext, formatterListener, function);
 		break;
 
 	case XPathExpression::eOP_LITERAL:
@@ -887,15 +1111,11 @@ XPath::executeMore(
 		break;
 
 	case XPathExpression::eOP_GROUP:
-		group(context, opPos, executionContext)->str(formatterListener, function);
+		group(context, opPos, executionContext, formatterListener, function);
 		break;
 
 	case XPathExpression::eOP_NUMBERLIT:
 		numberlit(opPos, formatterListener, function);
-		break;
-
-	case XPathExpression::eOP_ARGUMENT:
-		arg(context, opPos, executionContext)->str(formatterListener, function);
 		break;
 
 	case XPathExpression::eOP_EXTFUNCTION:
@@ -920,6 +1140,58 @@ XPath::executeMore(
 
 	case XPathExpression::eOP_FUNCTION_COUNT:
 		XObject::string(functionCount(context, opPos, executionContext), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NOT:
+		XObject::string(functionNot(context, opPos, executionContext), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_TRUE:
+		XObject::string(true, formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_FALSE:
+		XObject::string(false, formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_BOOLEAN:
+		XObject::string(functionBoolean(context, opPos, executionContext), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NAME_0:
+		stringToCharacters(functionName(context), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NAME_1:
+		stringToCharacters(functionName(context, opPos, executionContext), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+		stringToCharacters(functionLocalName(context), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
+		stringToCharacters(functionLocalName(context, opPos, executionContext), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_FLOOR:
+		XObject::string(functionFloor(context, opPos, executionContext), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_CEILING:
+		XObject::string(functionCeiling(context, opPos, executionContext), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_ROUND:
+		XObject::string(functionRound(context, opPos, executionContext), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NUMBER_0:
+		XObject::string(functionNumber(context, executionContext), formatterListener, function);
+		break;
+
+	case XPathExpression::eOP_FUNCTION_NUMBER_1:
+		XObject::string(functionNumber(context, opPos, executionContext), formatterListener, function);
 		break;
 
 	default:
@@ -964,6 +1236,25 @@ XPath::executeMore(
 	case XPathExpression::eOP_FUNCTION_POSITION:
 	case XPathExpression::eOP_FUNCTION_LAST:
 	case XPathExpression::eOP_FUNCTION_COUNT:
+	case XPathExpression::eOP_FUNCTION_NOT:
+	case XPathExpression::eOP_FUNCTION_TRUE:
+	case XPathExpression::eOP_FUNCTION_FALSE:
+	case XPathExpression::eOP_FUNCTION_BOOLEAN:
+	case XPathExpression::eOP_FUNCTION_NAME_0:
+	case XPathExpression::eOP_FUNCTION_NAME_1:
+	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
+	case XPathExpression::eOP_FUNCTION_FLOOR:
+	case XPathExpression::eOP_FUNCTION_CEILING:
+	case XPathExpression::eOP_FUNCTION_ROUND:
+	case XPathExpression::eOP_FUNCTION_NUMBER_0:
+	case XPathExpression::eOP_FUNCTION_NUMBER_1:
+	case XPathExpression::eOP_FUNCTION_STRING_0:
+	case XPathExpression::eOP_FUNCTION_STRING_1:
+	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
+	case XPathExpression::eOP_FUNCTION_NAMESPACEURI_0:
+	case XPathExpression::eOP_FUNCTION_NAMESPACEURI_1:
 		notNodeSetError(context, executionContext);
 		break;
 
@@ -977,10 +1268,6 @@ XPath::executeMore(
 
 	case XPathExpression::eOP_GROUP:
 		group(context, opPos, executionContext, result);
-		break;
-
-	case XPathExpression::eOP_ARGUMENT:
-		theXObject = arg(context, opPos, executionContext, result);
 		break;
 
 	case XPathExpression::eOP_EXTFUNCTION:
@@ -1724,6 +2011,79 @@ XPath::Union(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext,
+			bool&					result) const
+{
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
+
+	Union(context, opPos, executionContext, *resultNodeList);
+
+	result = XObject::boolean(*resultNodeList);
+}
+
+
+
+void
+XPath::Union(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			double&					result) const
+{
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
+
+	Union(context, opPos, executionContext, *resultNodeList);
+
+	result = XObject::number(executionContext, *resultNodeList);
+}
+
+
+
+void
+XPath::Union(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			XalanDOMString&			result) const
+{
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
+
+	Union(context, opPos, executionContext, *resultNodeList);
+
+	XObject::string(*resultNodeList, result);
+}
+
+
+
+void
+XPath::Union(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const
+{
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
+
+	Union(context, opPos, executionContext, *resultNodeList);
+
+	XObject::string(*resultNodeList, formatterListener, function);
+}
+
+
+
+void
+XPath::Union(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		result) const
 {
 	assert(result.empty() == true);
@@ -1777,6 +2137,36 @@ XPath::literal(
 	{
 		return executionContext.getXObjectFactory().createString(theLiteral.str());
 	}
+}
+
+
+
+void
+XPath::literal(
+			int		opPos,
+			bool&	theResult) const
+{
+	assert(m_expression.m_opMap.size() > unsigned(opPos + 2));
+	assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[opPos + 2]));
+
+	const XToken&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
+
+	theResult = theLiteral.boolean();
+}
+
+
+
+void
+XPath::literal(
+			int			opPos,
+			double&		theResult) const
+{
+	assert(m_expression.m_opMap.size() > unsigned(opPos + 2));
+	assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[opPos + 2]));
+
+	const XToken&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
+
+	theResult = theLiteral.num();
 }
 
 
@@ -1863,6 +2253,21 @@ XPath::numberlit(int	opPos) const
 
 void
 XPath::numberlit(
+			int		opPos,
+			bool&	theResult) const
+{
+	assert(m_expression.m_opMap.size() > unsigned(opPos + 3));
+	assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[opPos + 3]));
+
+	const XToken&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 3]];
+
+	theResult = theLiteral.boolean();
+}
+
+
+
+void
+XPath::numberlit(
 			int					opPos,
 			XalanDOMString&		theString) const
 {
@@ -1916,6 +2321,26 @@ XPath::locationPath(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext,
+			bool&					theResult) const
+{
+	assert(context != 0);
+
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+	BorrowReturnMutableNodeRefList	mnl(executionContext);
+
+	locationPath(context, opPos, executionContext, *mnl.get());
+
+	theResult = XObject::boolean(*mnl.get());
+}
+
+
+
+void
+XPath::locationPath(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext,
 			double&					theResult) const
 {
 	assert(context != 0);
@@ -1926,14 +2351,7 @@ XPath::locationPath(
 
 	locationPath(context, opPos, executionContext, *mnl.get());
 
-	// $$$ ToDo: Reduce this to a call on XObject...
-	XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
-
-	XalanDOMString&		theString = theGuard.get();
-
-	XObject::string(*mnl.get(), theString);
-
-	theResult = XObject::number(theString);
+	theResult = XObject::number(executionContext, *mnl.get());
 }
 
 
@@ -1985,6 +2403,8 @@ XPath::runExtFunction(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
+	assert(context != 0);
+
 	const int	endExtFunc = opPos + m_expression.m_opMap[opPos + 1] - 1;
 
 	opPos += 2;
@@ -2021,6 +2441,8 @@ XPath::runFunction(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
+	assert(context != 0);
+
 	const int	endFunc = opPos + m_expression.m_opMap[opPos + 1] - 1;
 
 	opPos += 2;
@@ -2107,55 +2529,13 @@ XPath::runFunction(
 
 
 double
-XPath::functionPosition(
-			XalanNode*				context,
-			XPathExecutionContext&	executionContext) const
-{
-	if (context == 0)
-	{
-		executionContext.error(
-				"The position() function requires a non-null context node!",
-				context,
-				m_locator);
-	}
-
-	return executionContext.getContextNodeListPosition(*context);
-}
-
-
-
-const XObjectPtr
-XPath::functionPositionGeneric(
-			XalanNode*				context,
-			XPathExecutionContext&	executionContext) const
-{
-	return executionContext.getXObjectFactory().createNumber(functionPosition(context, executionContext));
-}
-
-
-
-double
-XPath::functionLast(XPathExecutionContext&	executionContext) const
-{
-	return executionContext.getContextNodeListLength();
-}
-
-
-
-const XObjectPtr
-XPath::functionLastGeneric(XPathExecutionContext&	executionContext) const
-{
-	return executionContext.getXObjectFactory().createNumber(functionLast(executionContext));
-}
-
-
-
-double
 XPath::functionCount(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
+	assert(context != 0);
+
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
 	BorrowReturnMutableNodeRefList	result(executionContext);
@@ -2176,13 +2556,95 @@ XPath::functionCount(
 
 
 
-const XObjectPtr
-XPath::functionCountGeneric(
+const XalanDOMString&
+XPath::functionName(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	return executionContext.getXObjectFactory().createNumber(functionCount(context, opPos, executionContext));
+	assert(context != 0);
+
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+	BorrowReturnMutableNodeRefList	result(executionContext);
+
+	const XObjectPtr	nodesetResult(executeMore(context, opPos + 2, executionContext, *result));
+
+	const NodeRefListBase* const	theNodeList = nodesetResult.null() == false ?
+			&nodesetResult->nodeset() : &*result;
+	assert(theNodeList != 0);
+
+	if (theNodeList->getLength() == 0)
+	{
+		return s_emptyString;
+	}
+	else
+	{
+		assert(theNodeList->item(0) != 0);
+
+		return functionName(theNodeList->item(0));
+	}
+}
+
+
+
+const XalanDOMString&
+XPath::functionLocalName(XalanNode*		context) const
+{
+	assert(context != 0);
+
+	const XalanDOMString*		theResult = &s_emptyString;
+
+	const XalanNode::NodeType	theType = context->getNodeType();
+
+	if(theType == XalanNode::ELEMENT_NODE ||
+	   theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
+	{
+		theResult = &DOMServices::getLocalNameOfNode(*context);
+	}
+	else if (theType == XalanNode::ATTRIBUTE_NODE)
+	{
+		const XalanDOMString&	theLocalName = DOMServices::getLocalNameOfNode(*context);
+
+		if (theLocalName != DOMServices::s_XMLNamespace)
+		{
+			theResult = &theLocalName;
+		}
+	}
+
+	return *theResult;
+}
+
+
+
+const XalanDOMString&
+XPath::functionLocalName(
+			XalanNode*				context,
+			int						opPos,
+			XPathExecutionContext&	executionContext) const
+{
+	assert(context != 0);
+
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+	BorrowReturnMutableNodeRefList	result(executionContext);
+
+	const XObjectPtr	nodesetResult(executeMore(context, opPos + 2, executionContext, *result));
+
+	const NodeRefListBase* const	theNodeList = nodesetResult.null() == false ?
+			&nodesetResult->nodeset() : &*result;
+	assert(theNodeList != 0);
+
+	if (theNodeList->getLength() == 0)
+	{
+		return s_emptyString;
+	}
+	else
+	{
+		assert(theNodeList->item(0) != 0);
+
+		return functionLocalName(theNodeList->item(0));
+	}
 }
 
 
@@ -2341,15 +2803,17 @@ XPath::step(
 
 						queryResults.setDocumentOrder();
 					}
-					else if (mnl->getReverseDocumentOrder() == true)
-					{
-						mnl->reverseAssign(queryResults);
-					}
+//					else if (mnl->getReverseDocumentOrder() == true)
+//					{
+//						queryResults.swap(*mnl);
+//
+//						queryResults.reverse();
+//					}
 					else
 					{
 						assert(mnl->getDocumentOrder() == true);
 
-						queryResults = *mnl;
+						queryResults.swap(*mnl);
 					}
 				}
 			}
@@ -2363,13 +2827,15 @@ XPath::step(
 		}
 		else if (subQueryResults->getReverseDocumentOrder() == true)
 		{
-			subQueryResults->reverseAssign(queryResults);
+			queryResults.swap(*subQueryResults);
+
+			queryResults.reverse();
 		}
 		else
 		{
 			assert(subQueryResults->getDocumentOrder() == true);
 
-			queryResults = *subQueryResults;
+			queryResults.swap(*subQueryResults);
 		}
 	}
 }
@@ -2425,12 +2891,12 @@ XPath::stepPattern(
 
 	assert(context != 0);
 
-	int					argLen = 0;
+	int				argLen = 0;
 
-	eMatchScore	score = eMatchScoreNone;
+	eMatchScore		score = eMatchScoreNone;
 
-	const int	startOpPos = opPos;
-	const int	stepType = currentExpression.getOpCodeMapValue(opPos);
+	const int		startOpPos = opPos;
+	const int		stepType = currentExpression.getOpCodeMapValue(opPos);
 
 	switch(stepType)
 	{
