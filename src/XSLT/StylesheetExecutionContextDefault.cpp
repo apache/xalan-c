@@ -73,7 +73,6 @@
 
 
 
-#include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/QName.hpp>
 #include <XPath/ResultTreeFragBase.hpp>
 #include <XPath/XObjectFactory.hpp>
@@ -114,32 +113,7 @@ StylesheetExecutionContextDefault::XalanNumberFormatFactory*		StylesheetExecutio
 
 const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		StylesheetExecutionContextDefault::s_defaultFunctor;
 
-bool
-StylesheetExecutionContextDefault::getInConstruction(const KeyDeclaration& keyDeclaration) const
-{
-	return m_keyDeclarationSet.count(&keyDeclaration)?true:false;
-}
 
-void
-StylesheetExecutionContextDefault::beginConstruction(const KeyDeclaration& keyDeclaration) const
-{	
-#if defined(XALAN_NO_MUTABLE)
-	((StylesheetExecutionContextDefault*)this)->m_keyDeclarationSet.insert(&keyDeclaration);
-#else
-	m_keyDeclarationSet.insert(&keyDeclaration);
-#endif
-}
-
-	
-void
-StylesheetExecutionContextDefault::endConstruction(const KeyDeclaration& keyDeclaration) const
-{
-#if defined(XALAN_NO_MUTABLE)
-	((StylesheetExecutionContextDefault*)this)->m_keyDeclarationSet.erase(&keyDeclaration);
-#else
-	m_keyDeclarationSet.erase(&keyDeclaration);
-#endif	
-}
 
 StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 			XSLTEngineImpl&			xsltProcessor,
@@ -168,7 +142,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_liveVariablesStack(),
 	m_variablesStack(),
 	m_matchPatternCache(),
-	m_keyTables()
+	m_keyTables(),
+	m_keyDeclarationSet()
 {
 	m_liveVariablesStack.reserve(eDefaultVariablesStackSize);
 }
@@ -1348,6 +1323,30 @@ StylesheetExecutionContextDefault::installCollationCompareFunctor(const Collatio
 
 
 
+bool
+StylesheetExecutionContextDefault::getInConstruction(const KeyDeclaration& keyDeclaration) const
+{
+	return m_keyDeclarationSet.count(&keyDeclaration)?true:false;
+}
+
+
+
+void
+StylesheetExecutionContextDefault::beginConstruction(const KeyDeclaration& keyDeclaration)
+{	
+	m_keyDeclarationSet.insert(&keyDeclaration);
+}
+
+	
+
+void
+StylesheetExecutionContextDefault::endConstruction(const KeyDeclaration& keyDeclaration)
+{
+	m_keyDeclarationSet.erase(&keyDeclaration);
+}
+
+
+
 XalanNode*
 StylesheetExecutionContextDefault::getCurrentNode() const
 {
@@ -2043,6 +2042,8 @@ StylesheetExecutionContextDefault::addToXPathCache(
 	// Add the XPath with the current clock
 	m_matchPatternCache.insert(XPathCacheMapType::value_type(pattern, XPathCacheEntry(theXPath, addClock)));
 }
+
+
 
 
 KeyTable*

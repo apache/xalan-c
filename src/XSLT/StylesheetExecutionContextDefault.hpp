@@ -533,10 +533,10 @@ public:
 	getInConstruction(const KeyDeclaration& keyDeclaration) const;
 
 	virtual	void
-	beginConstruction(const KeyDeclaration& keyDeclaration) const;
+	beginConstruction(const KeyDeclaration& keyDeclaration);
 
 	virtual	void
-	endConstruction(const KeyDeclaration& keyDeclaration) const;
+	endConstruction(const KeyDeclaration& keyDeclaration);
 
 	// These interfaces are inherited from XPathExecutionContext...
 
@@ -844,15 +844,15 @@ private:
 
 	XPathCacheMapType					m_matchPatternCache;
 
+	KeyTablesTableType					m_keyTables;
+
+	KeyDeclarationSetType				m_keyDeclarationSet;
+
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 
 	static XalanNumberFormatFactory*	s_xalanNumberFormatFactory;
 
 	const static DefaultCollationCompareFunctor		s_defaultFunctor;
-
-	mutable KeyTablesTableType			m_keyTables;
-
-	mutable KeyDeclarationSetType		m_keyDeclarationSet;
 };
 
 

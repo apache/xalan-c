@@ -1493,29 +1493,29 @@ public:
 			const XalanDOMChar*		theRHS) const = 0;
 
 	/**
-	 * Determine if a keydeclaration is being constructed.
+	 * Determine if a KeyDeclaration is being constructed.
 	 *
-	 * @param id keydeclaration
+	 * @param The KeyDeclaration in question.
 	 * @return true if being constructed
 	 */
 	virtual	bool
-	getInConstruction(const KeyDeclaration& keyDeclaration) const = 0;
+	getInConstruction(const KeyDeclaration&		keyDeclaration) const = 0;
 
 	/**
-	 * Add keydeclaration to construction list.
+	 * Add KeyDeclaration to construction list.
 	 * 
-	 * @param keydeclaration being constructed
+	 * @param KeyDeclaration being constructed
 	 */
 	virtual	void
-	beginConstruction(const KeyDeclaration& keyDeclaration) const = 0; 
+	beginConstruction(const KeyDeclaration& keyDeclaration) = 0; 
 	
 	/**
-	 * Remove keydeclaration from construction list.
+	 * Remove KeyDeclaration from construction list.
 	 * 
-	 * @param constructed keydeclaration
+	 * @param constructed KeyDeclaration
 	 */
 	virtual	void
-	endConstruction(const KeyDeclaration& keyDeclaration) const = 0;
+	endConstruction(const KeyDeclaration& keyDeclaration) = 0;
 
 	// These interfaces are inherited from XPathExecutionContext...
 
