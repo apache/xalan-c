@@ -559,17 +559,6 @@ public:
 			bool					omitMetaTag = false);
 
 	virtual FormatterListener*
-	createFormatterToDOM(
-			XalanDocument*			doc,
-			XalanDocumentFragment*	docFrag,
-			XalanElement*			currentElement);
-
-	virtual FormatterListener*
-	createFormatterToDOM(
-			XalanDocument*	doc,
-			XalanElement*	elem);
-
-	virtual FormatterListener*
 	createFormatterToText(
 			Writer&					writer,
 			const XalanDOMString&	encoding);

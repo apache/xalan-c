@@ -47,7 +47,6 @@
 
 
 
-#include <xalanc/XMLSupport/FormatterToDOM.hpp>
 #include <xalanc/XMLSupport/FormatterToXML.hpp>
 #include <xalanc/XMLSupport/FormatterToXML_UTF8.hpp>
 #include <xalanc/XMLSupport/FormatterToXML_UTF16.hpp>
@@ -1303,46 +1302,6 @@ StylesheetExecutionContextDefault::createFormatterToHTML(
 	m_formatterListeners.push_back(theFormatter);
 
     theFormatter->setPrefixResolver(m_xsltProcessor);
-
-	return theFormatter;
-}
-
-
-
-FormatterListener*
-StylesheetExecutionContextDefault::createFormatterToDOM(
-			XalanDocument*			doc,
-			XalanDocumentFragment*	docFrag,
-			XalanElement*			currentElement)
-{
-	FormatterToDOM* const	theFormatter =
-		new FormatterToDOM(
-			doc,
-			docFrag,
-			currentElement);
-
-	m_formatterListeners.push_back(theFormatter);
-
-	theFormatter->setPrefixResolver(m_xsltProcessor);
-
-	return theFormatter;
-}
-
-
-
-FormatterListener*
-StylesheetExecutionContextDefault::createFormatterToDOM(
-			XalanDocument*	doc,
-			XalanElement*	elem)
-{
-	FormatterToDOM* const	theFormatter =
-		new FormatterToDOM(
-			doc,
-			elem);
-
-	m_formatterListeners.push_back(theFormatter);
-
-	theFormatter->setPrefixResolver(m_xsltProcessor);
 
 	return theFormatter;
 }

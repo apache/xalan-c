@@ -48,7 +48,6 @@
 #include <xalanc/XMLSupport/FormatterToHTML.hpp>
 #include <xalanc/XMLSupport/FormatterToText.hpp>
 #include <xalanc/XMLSupport/FormatterToXML.hpp>
-#include <xalanc/XMLSupport/FormatterToDOM.hpp>
 
 
 

@@ -36,10 +36,6 @@
 
 
 
-#include <xalanc/XMLSupport/FormatterToDOM.hpp>
-
-
-
 #include "XalanSourceTreeComment.hpp"
 #include "XalanSourceTreeDocument.hpp"
 #include "XalanSourceTreeDocumentFragment.hpp"
