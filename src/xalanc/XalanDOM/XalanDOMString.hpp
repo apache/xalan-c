@@ -23,7 +23,10 @@
 
 
 #include <cassert>
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -38,16 +41,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 class XALAN_DOM_EXPORT XalanDOMString
 {
 public:
-
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XalanDOMChar>		XalanDOMCharVectorType;
-	typedef vector<char>				CharVectorType;
-	typedef vector<wchar_t>				WideCharVectorType;
-#else
-	typedef std::vector<XalanDOMChar>	XalanDOMCharVectorType;
-	typedef std::vector<char>			CharVectorType;
-	typedef std::vector<wchar_t>		WideCharVectorType;
-#endif
+	typedef XalanVector<XalanDOMChar>		XalanDOMCharVectorType;
+	typedef XalanVector<char>				CharVectorType;
+	typedef XalanVector<wchar_t>			WideCharVectorType;
 
 	typedef XalanDOMChar				value_type;
 	typedef XalanDOMChar&				reference;
@@ -935,15 +931,11 @@ operator+(
 
 
 // Standard vector of XalanDOMChars and chars
-#if defined(XALAN_NO_STD_NAMESPACE)
-typedef vector<XalanDOMChar>		XalanDOMCharVectorType;
+typedef XalanVector<XalanDOMChar>	XalanDOMCharVectorType;
 
-typedef vector<char>				CharVectorType;
-#else
-typedef std::vector<XalanDOMChar>	XalanDOMCharVectorType;
+typedef XalanVector<char>			CharVectorType;
 
-typedef std::vector<char>			CharVectorType;
-#endif
+
 
 
 
@@ -965,8 +957,6 @@ TranscodeToLocalCodePage(
 			CharVectorType&				targetVector,
 			bool						terminate = false);
 
-
-
 /**
  * Convert a XalanDOMChar string to C++ standard library
  * vector, transcoding to the default local code
@@ -982,8 +972,6 @@ TranscodeToLocalCodePage(
 			const XalanDOMChar*		theSourceString,
 			CharVectorType&			targetVector,
 			bool					terminate = false);
-
-
 
 /**
  * Convert XalanDOMString to C++ standard library
@@ -1081,8 +1069,6 @@ TranscodeFromLocalCodePage(
 			XalanDOMCharVectorType&		theTargetVector,
 			bool						terminate = false);
 
-
-
 /**
  * Convert a string to a C++ standard library
  * vector, transcoding from the default local code
@@ -1098,8 +1084,6 @@ TranscodeFromLocalCodePage(
 			const char*					theSourceString,
 			XalanDOMCharVectorType&		theTargetVector,
 			bool						terminate = false);
-
-
 
 /**
  * Convert a vector of characters to a XalanDOMString,

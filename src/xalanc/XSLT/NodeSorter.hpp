@@ -28,7 +28,10 @@
 
 
 #include <functional>
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -74,13 +77,8 @@ public:
 		unsigned int	m_position;
 	};
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<VectorEntry>			NodeVectorType;
-	typedef vector<NodeSortKey>			NodeSortKeyVectorType;
-#else
-	typedef std::vector<VectorEntry>	NodeVectorType;
-	typedef std::vector<NodeSortKey>	NodeSortKeyVectorType;
-#endif
+	typedef XalanVector<VectorEntry>			NodeVectorType;
+	typedef XalanVector<NodeSortKey>			NodeSortKeyVectorType;
 
 	explicit
 	NodeSorter();
@@ -191,23 +189,13 @@ public:
 
 	friend struct NodeSortKeyCompare;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef	vector<double>			NumberVectorType;
-	typedef	vector<XObjectPtr>		XObjectVectorType;
-	typedef	vector<XalanDOMString>	StringVectorType;
+	typedef	XalanVector<double>			NumberVectorType;
+	typedef	XalanVector<XObjectPtr>		XObjectVectorType;
+	typedef	XalanVector<XalanDOMString>	StringVectorType;
 
-	typedef vector<NumberVectorType>	NumberCacheType;
-	typedef vector<XObjectVectorType>	XObjectCacheType;
-	typedef vector<StringVectorType>	StringCacheType;
-#else
-	typedef	std::vector<double>			NumberVectorType;
-	typedef	std::vector<XObjectPtr>		XObjectVectorType;
-	typedef	std::vector<XalanDOMString>	StringVectorType;
-
-	typedef std::vector<NumberVectorType>	NumberCacheType;
-	typedef std::vector<XObjectVectorType>	XObjectCacheType;
-	typedef std::vector<StringVectorType>	StringCacheType;
-#endif
+	typedef XalanVector<NumberVectorType>	NumberCacheType;
+	typedef XalanVector<XObjectVectorType>	XObjectCacheType;
+	typedef XalanVector<StringVectorType>	StringCacheType;
 
 	typedef NumberCacheType		NumberResultsCacheType;
 

@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -51,11 +51,9 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToHTML : public FormatterToXML
 {  
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XalanHTMLElementsProperties::ElementProperties>	ElementPropertiesStackType;
-#else
-	typedef std::vector<XalanHTMLElementsProperties::ElementProperties>	ElementPropertiesStackType;
-#endif
+
+	typedef XalanVector<XalanHTMLElementsProperties::ElementProperties>	ElementPropertiesStackType;
+
 
 	enum
 	{

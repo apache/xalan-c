@@ -17,7 +17,7 @@
 #define NODENAMETREEWALKER_HEADER_GUARD_1357924680
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -38,11 +38,7 @@ class NodeNameTreeWalker : public TreeWalker
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<const XalanNode*>		NodeVectorType;
-#else
-	typedef std::vector<const XalanNode*>	NodeVectorType;
-#endif
+	typedef XalanVector<const XalanNode*>		NodeVectorType;
 
 	NodeNameTreeWalker();
 

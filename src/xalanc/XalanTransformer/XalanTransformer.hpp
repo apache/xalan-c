@@ -24,13 +24,16 @@
 
 
 #include <cassert>
-#include <vector>
-
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 class ostream;
 #else
 #include <iosfwd>
 #endif
+#include <algorithm>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -797,23 +800,13 @@ public:
 		return m_warningStream;
 	}
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<const XalanCompiledStylesheet*>		CompiledStylesheetPtrVectorType;
-	typedef vector<const XalanParsedSource*>			ParsedSourcePtrVectorType;
-	typedef pair<XalanDOMString, XalanDOMString>		ParamPairType;
-	typedef vector<ParamPairType>						ParamPairVectorType;
-	typedef pair<XalanQNameByValue, Function*>			FunctionPairType;
-	typedef vector<FunctionPairType>					FunctionParamPairVectorType;
-	typedef vector<TraceListener*>						TraceListenerVectorType;
-#else
-	typedef std::vector<const XalanCompiledStylesheet*> CompiledStylesheetPtrVectorType;
-	typedef std::vector<const XalanParsedSource*>		ParsedSourcePtrVectorType;
-	typedef std::pair<XalanDOMString, XalanDOMString>	ParamPairType;
-	typedef std::vector<ParamPairType>					ParamPairVectorType;
-	typedef std::pair<XalanQNameByValue, Function*>		FunctionPairType;
-	typedef std::vector<FunctionPairType>				FunctionParamPairVectorType;
-	typedef std::vector<TraceListener*>					TraceListenerVectorType;
-#endif
+	typedef XalanVector<const XalanCompiledStylesheet*>	CompiledStylesheetPtrVectorType;
+	typedef XalanVector<const XalanParsedSource*>		ParsedSourcePtrVectorType;
+	typedef XALAN_STD_QUALIFIER pair<XalanDOMString, XalanDOMString>		ParamPairType;
+	typedef XalanVector<ParamPairType>					ParamPairVectorType;
+	typedef XALAN_STD_QUALIFIER pair<XalanQNameByValue, Function*>			FunctionPairType;
+	typedef XalanVector<FunctionPairType>				FunctionParamPairVectorType;
+	typedef XalanVector<TraceListener*>					TraceListenerVectorType;
 
 	class EnsureFunctionsInstallation
 	{

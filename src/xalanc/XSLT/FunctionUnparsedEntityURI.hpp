@@ -23,10 +23,6 @@
 
 
 
-#include <vector>
-
-
-
 // Base class header file...
 #include <xalanc/XPath/Function.hpp>
 

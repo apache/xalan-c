@@ -35,7 +35,10 @@
 #else
 #include <map>
 #endif
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -73,18 +76,7 @@ class KeyTable
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<KeyDeclaration>			KeyDeclarationVectorType;
-
-	typedef map<XalanDOMString,
-				MutableNodeRefList,
-				less<XalanDOMString> >		NodeListMapType;
-
-	typedef map<XalanQNameByReference,
-				NodeListMapType,
-				less<XalanQNameByReference> >	KeysMapType;
-#else
-	typedef std::vector<KeyDeclaration>		KeyDeclarationVectorType;
+	typedef XalanVector<KeyDeclaration>			KeyDeclarationVectorType;
 
 #if defined(XALAN_USE_HASH_MAP)
 	typedef std::hash_map<XalanDOMString,
@@ -93,12 +85,11 @@ public:
 	typedef std::hash_map<XalanQNameByReference,
 						  NodeListMapType>		KeysMapType;
 #else
-	typedef std::map<XalanDOMString,
+	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
 					 MutableNodeRefList>	NodeListMapType;
 
-	typedef std::map<XalanQNameByReference,
+	typedef XALAN_STD_QUALIFIER map<XalanQNameByReference,
 					 NodeListMapType>		KeysMapType;
-#endif
 #endif
 
 

@@ -38,6 +38,7 @@
 
 
 #include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -834,9 +835,7 @@ ElemNumber::formatNumberList(
 
 	XalanDOMString::size_type	numberWidth = 1;
 
-	XALAN_USING_STD(vector)
-
-	typedef vector<XalanDOMString>		StringVectorType;
+	typedef XalanVector<XalanDOMString>	StringVectorType;
 	typedef StringVectorType::iterator	StringVectorTypeIterator;
 
 	// Construct an array of tokens.  We need to be able to check if the last

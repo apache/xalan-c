@@ -25,7 +25,10 @@
 
 
 #include <set>
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -125,11 +128,11 @@ public:
 	isFunctionAvailable(const XalanDOMString&	function) const;
 
 	/// Vector of pointers to function arguments
+	typedef XalanVector<void*>							ArgVectorType;
+
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<void*>								ArgVectorType;
 	typedef set<XalanDOMString, less<XalanDOMString> >	StringSetType;
 #else
-	typedef std::vector<void*>			ArgVectorType;
 	typedef std::set<XalanDOMString>	StringSetType;
 #endif
 

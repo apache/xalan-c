@@ -26,7 +26,10 @@
 
 #include <deque>
 #include <map>
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -90,35 +93,22 @@ public:
 	typedef XalanQName::NamespaceVectorType					NamespaceVectorType;
 	typedef XalanQName::NamespacesStackType					NamespacesStackType;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef map<XalanDOMString,
+	typedef XalanVector<ElemVariable*> 					ElemVariableVectorType;
+	typedef XalanVector<KeyDeclaration>					KeyDeclarationVectorType;
+	typedef XalanVector<Stylesheet*>					StylesheetVectorType;
+	typedef XalanVector<XalanDOMString>					URLStackType;
+	typedef XalanVector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
+	typedef XalanVector<XalanSpaceNodeTester>			WhitespaceElementsVectorType;
+	
+	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
 				ExtensionNSHandler*,
-				less<XalanDOMString> >				ExtensionNamespacesMapType;
-	typedef map<XalanQNameByReference,
+				XALAN_STD_QUALIFIER less<XalanDOMString> >		ExtensionNamespacesMapType;
+	typedef XALAN_STD_QUALIFIER map<XalanQNameByReference,
 				const ElemTemplate*,
-				less<XalanQName> >					ElemTemplateMapType;
-	typedef vector<ElemVariable*> 					ElemVariableVectorType;
-	typedef vector<KeyDeclaration>					KeyDeclarationVectorType;
-	typedef map<const XalanNode*,
+				XALAN_STD_QUALIFIER less<XalanQName> >			ElemTemplateMapType;
+	typedef XALAN_STD_QUALIFIER map<const XalanNode*,
 				KeyTable*,
-				less<const XalanNode*> >			KeyTablesTableType;
-	typedef vector<Stylesheet*>						StylesheetVectorType;
-	typedef vector<XalanDOMString>					URLStackType;
-	typedef vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
-	typedef vector<XalanSpaceNodeTester>			WhitespaceElementsVectorType;
-#else
-	typedef std::map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
-	typedef std::map<XalanQNameByReference,
-					 const ElemTemplate*,
-					 std::less<XalanQName> >				ElemTemplateMapType;
-	typedef std::vector<ElemVariable*> 						ElemVariableVectorType;
-	typedef std::vector<KeyDeclaration>						KeyDeclarationVectorType;
-	typedef std::map<const XalanNode*, KeyTable*>			KeyTablesTableType;
-	typedef std::vector<Stylesheet*>						StylesheetVectorType;
-	typedef std::vector<XalanDOMString>						URLStackType;
-	typedef std::vector<ElemDecimalFormat*>					ElemDecimalFormatVectorType;
-	typedef std::vector<XalanSpaceNodeTester>				WhitespaceElementsVectorType;
-#endif
+				XALAN_STD_QUALIFIER less<const XalanNode*> >	KeyTablesTableType;
 
 	/**
 	 * Constructor for a Stylesheet needs a Document.
@@ -692,22 +682,13 @@ public:
 		eMatchScore				m_priority;
 	};
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<const MatchPattern2*>		PatternTableVectorType;
+	typedef XalanVector<const MatchPattern2*>		PatternTableVectorType;
 
-	typedef map<XalanDOMString,
+	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
 			    PatternTableVectorType,
-				less<XalanDOMString> >			PatternTableMapType;
+				XALAN_STD_QUALIFIER less<XalanDOMString> >		PatternTableMapType;
 
-	typedef deque<MatchPattern2>				MatchPattern2Container;
-#else
-	typedef std::vector<const MatchPattern2*>	PatternTableVectorType;
-
-	typedef std::map<XalanDOMString,
-					 PatternTableVectorType>	PatternTableMapType;
-
-	typedef std::deque<MatchPattern2>			MatchPattern2Container;
-#endif
+	typedef XALAN_STD_QUALIFIER deque<MatchPattern2>	MatchPattern2Container;
 
 	/**
 	 * Add object to vector of match patterns if not already there.

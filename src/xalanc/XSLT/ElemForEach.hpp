@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -76,12 +76,7 @@ public:
 	virtual
 	~ElemForEach();
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<ElemSort*>		SortElemsVectorType;
-#else
-	typedef std::vector<ElemSort*>	SortElemsVectorType;
-#endif
-
+	typedef XalanVector<ElemSort*>		SortElemsVectorType;
 
 	// These methods are inherited from ElemTemplateElement ...
 

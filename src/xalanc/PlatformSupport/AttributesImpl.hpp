@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -183,13 +183,8 @@ public:
 		m_attributesVector.reserve(theCount);
 	}
 
-#if defined(XALAN_NO_STD_NAMESPACE)
 	// This vector will hold the entries.
-	typedef vector<AttributeVectorEntryExtended*>		AttributesVectorType;
-#else
-	// This vector will hold the entries.
-	typedef std::vector<AttributeVectorEntryExtended*>	AttributesVectorType;
-#endif
+	typedef XalanVector<AttributeVectorEntryExtended*>		AttributesVectorType;
 
 #if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
 	struct NameCompareFunctor

@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -43,18 +43,15 @@ class XALAN_XSLT_EXPORT ResultNamespacesStack
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
+
 #if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
+	#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef deque<bool>			BoolVectorType;
-#else
-	typedef vector<bool>		BoolVectorType;
-#endif
-#else
-#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
+	#else
 	typedef std::deque<bool>	BoolVectorType;
+	#endif
 #else
-	typedef std::vector<bool>	BoolVectorType;
-#endif
+	typedef XalanVector<bool>		BoolVectorType;
 #endif
 
 	typedef XalanQName::NamespaceVectorType		NamespaceVectorType;

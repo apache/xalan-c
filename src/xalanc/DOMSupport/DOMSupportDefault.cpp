@@ -17,10 +17,6 @@
 
 
 
-#include <vector>
-
-
-
 #include <xalanc/XalanDOM/XalanNode.hpp>
 #include <xalanc/XalanDOM/XalanAttr.hpp>
 #include <xalanc/XalanDOM/XalanDocument.hpp>

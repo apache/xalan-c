@@ -23,11 +23,6 @@
 
 
 
-#include <map>
-#include <vector>
-
-
-
 // $$$ ToDo: Necessary while XalanDOMString is style a typedef.
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
 

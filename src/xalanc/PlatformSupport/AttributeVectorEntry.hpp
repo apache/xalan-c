@@ -20,14 +20,11 @@
 
 // Base include file.  Must be first.
 #include <xalanc/PlatformSupport/PlatformSupportDefinitions.hpp>
-
-
-
-#include <vector>
-
-
-
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -39,11 +36,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT AttributeVectorEntry
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XMLCh>		XMLChVectorType;
-#else
-	typedef std::vector<XMLCh>	XMLChVectorType;
-#endif
+	typedef XalanVector<XMLCh>		XMLChVectorType;
 
 	AttributeVectorEntry(
 			const XMLChVectorType&	theName,

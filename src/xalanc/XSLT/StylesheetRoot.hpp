@@ -55,19 +55,12 @@ class XALAN_XSLT_EXPORT StylesheetRoot : public Stylesheet
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<const XalanQName*> 		XalanQNameVectorType;
-	typedef vector<ElemAttributeSet*> 		AttributeSetVectorType;
-	typedef map<const XalanQName*,
+	typedef XalanVector<const XalanQName*> 		XalanQNameVectorType;
+	typedef XalanVector<ElemAttributeSet*> 		AttributeSetVectorType;
+	
+	typedef XALAN_STD_QUALIFIER map<const XalanQName*,
 			    AttributeSetVectorType,
 				pointer_less<const XalanQName> >	AttributeSetMapType;
-#else
-	typedef std::vector<const XalanQName*>	XalanQNameVectorType;
-	typedef std::vector<ElemAttributeSet*> 	AttributeSetVectorType;
-	typedef std::map<const XalanQName*,
-					 AttributeSetVectorType,
-					 pointer_less<const XalanQName> >	AttributeSetMapType;
-#endif
 
 	/**
 	 * Construct a Stylesheet from a Document.

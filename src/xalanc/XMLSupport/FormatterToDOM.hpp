@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -57,11 +57,7 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToDOM : public FormatterListener
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XalanElement*>		ElementStackType;
-#else
-	typedef std::vector<XalanElement*>	ElementStackType;
-#endif
+	typedef XalanVector<XalanElement*>		ElementStackType;
 
 	/**
 	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 

@@ -136,12 +136,7 @@ public:
 		eTargetType				m_targetType;
 	};
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<TargetData>		TargetDataVectorType;
-#else
-	typedef std::vector<TargetData>	TargetDataVectorType;
-#endif
-
+	typedef XalanVector<TargetData>		TargetDataVectorType;
 
 	/**
 	 * Perform static initialization.  See class XPathInit.

@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -112,11 +112,7 @@ public:
 
 private:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<UnitType>		BitmapVectorType;
-#else
-	typedef std::vector<UnitType>	BitmapVectorType;
-#endif
+	typedef XalanVector<UnitType>		BitmapVectorType;
 
 	const size_type		m_size;
 

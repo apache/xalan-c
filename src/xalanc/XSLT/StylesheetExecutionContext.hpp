@@ -694,11 +694,7 @@ public:
 		const XPath*					m_xpath;
 	};
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<TopLevelArg>			ParamVectorType;
-#else
-	typedef std::vector<TopLevelArg>	ParamVectorType;
-#endif
+	typedef XalanVector<TopLevelArg>			ParamVectorType;
 
 	/**
 	 * Set a list of top level variables in the specified execution context

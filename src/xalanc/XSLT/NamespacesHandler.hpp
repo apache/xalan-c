@@ -26,7 +26,10 @@
 
 #include <map>
 #include <set>
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -192,43 +195,21 @@ public:
 	typedef XalanQName::NamespaceVectorType				NamespaceVectorType;
 	typedef XalanQName::NamespacesStackType				NamespacesStackType;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<Namespace>							NamespacesVectorType;
+	typedef XalanVector<Namespace>						NamespacesVectorType;
+	typedef XalanVector<NamespaceExtended>				NamespaceExtendedVectorType;
+	typedef XalanVector<const XalanDOMString*>			XalanDOMStringPointerVectorType;
 
-	typedef vector<NamespaceExtended>					NamespaceExtendedVectorType;
-
-	typedef map<const XalanDOMString*,
+	typedef XALAN_STD_QUALIFIER map<const XalanDOMString*,
 				const XalanDOMString*,
 				DOMStringPointerLessThanFunction>		ExcludedResultPrefixesMapType;
 
-	typedef map<const XalanDOMString*,
+	typedef XALAN_STD_QUALIFIER map<const XalanDOMString*,
 				NamespaceExtended,
 				DOMStringPointerLessThanFunction>		NamespacesMapType;
 
-	typedef map<const XalanDOMString*,
+	typedef XALAN_STD_QUALIFIER map<const XalanDOMString*,
 				const XalanDOMString*,
 				DOMStringPointerLessThanFunction>		NamespaceAliasesMapType;
-
-	typedef vector<const XalanDOMString*>				XalanDOMStringPointerVectorType;
-#else
-	typedef std::vector<Namespace>						NamespacesVectorType;
-
-	typedef std::vector<NamespaceExtended>				NamespaceExtendedVectorType;
-
-	typedef std::map<const XalanDOMString*,
-					 const XalanDOMString*,
-					 DOMStringPointerLessThanFunction>	ExcludedResultPrefixesMapType;
-
-	typedef std::map<const XalanDOMString*,
-					 NamespaceExtended,
-					 DOMStringPointerLessThanFunction>	NamespacesMapType;
-
-	typedef std::map<const XalanDOMString*,
-					 const XalanDOMString*,
-					 DOMStringPointerLessThanFunction>	NamespaceAliasesMapType;
-
-	typedef std::vector<const XalanDOMString*>			XalanDOMStringPointerVectorType;
-#endif
 
 	/**
 	 * Create a default, empty instance.

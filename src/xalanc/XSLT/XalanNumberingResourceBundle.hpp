@@ -24,7 +24,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -42,13 +42,8 @@ public:
 
 	typedef unsigned long							NumberType;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<NumberType>						NumberTypeVectorType;
-	typedef vector<XalanDOMCharVectorType>			DigitsTableVectorType;
-#else
-	typedef std::vector<unsigned long>				NumberTypeVectorType;
-	typedef std::vector<XalanDOMCharVectorType>		DigitsTableVectorType;
-#endif
+	typedef XalanVector<NumberType>					NumberTypeVectorType;
+	typedef XalanVector<XalanDOMCharVectorType>		DigitsTableVectorType;
 
 	// Enum to describe language orientation.  (English is left-to-right,
 	// Hebrew is right-to-left, etc.)

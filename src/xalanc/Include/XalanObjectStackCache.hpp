@@ -19,10 +19,10 @@
 
 
 #include <algorithm>
-#include <vector>
 
 
 
+#include <xalanc/Include/XalanVector.hpp>
 #include <xalanc/Include/STLHelper.hpp>
 #include <xalanc/Include/XalanAutoPtr.hpp>
 #include <xalanc/Include/XalanObjectCache.hpp>
@@ -47,11 +47,7 @@ class XalanObjectStackCache
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<ObjectType*>			VectorType;
-#else
-	typedef std::vector<ObjectType*>	VectorType;
-#endif
+	typedef XalanVector<ObjectType*>			VectorType;
 
 	typedef ObjectType	CacheObjectType;
 

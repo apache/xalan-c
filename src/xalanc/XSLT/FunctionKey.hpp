@@ -23,10 +23,6 @@
 
 
 
-#include <vector>
-
-
-
 #include <xalanc/XPath/Function.hpp>
 
 

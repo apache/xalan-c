@@ -24,7 +24,10 @@
 
 #include <deque>
 #include <set>
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -395,11 +398,7 @@ public:
 			XalanNode*				m_node;
 		};
 
-	#if defined(XALAN_NO_STD_NAMESPACE)
-		typedef vector<NavigatorStackEntryType>			NavigatorStackType;
-	#else
-		typedef std::vector<NavigatorStackEntryType>	NavigatorStackType;
-	#endif
+		typedef XalanVector<NavigatorStackEntryType>			NavigatorStackType;
 
 	protected:
 

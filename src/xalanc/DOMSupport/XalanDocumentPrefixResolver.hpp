@@ -24,7 +24,6 @@
 
 
 #include <map>
-#include <vector>
 
 
 
@@ -36,7 +35,7 @@
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
-
+#include <xalanc/Include/XalanVector.hpp>
 #include <xalanc/Include/STLHelper.hpp>
 
 
@@ -49,6 +48,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+
+
 class XalanAttr;
 class XalanDocument;
 
@@ -58,19 +59,10 @@ class XALAN_DOMSUPPORT_EXPORT XalanDocumentPrefixResolver : public PrefixResolve
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<const XalanNode*> 					AttributeVectorType;
-
-	typedef map<const XalanDOMString*,
+	typedef XalanVector<const XalanNode*> 				AttributeVectorType;
+	typedef XALAN_STD_QUALIFIER map<const XalanDOMString*,
 				AttributeVectorType,
 				pointer_less<XalanDOMString> >			NamespacesMapType;
-#else
-	typedef std::vector<const XalanNode*> 				AttributeVectorType;
-
-	typedef std::map<const XalanDOMString*,
-					 AttributeVectorType,
-					 pointer_less<XalanDOMString> >		NamespacesMapType;
-#endif
 
 	/**
 	 * Constructor.

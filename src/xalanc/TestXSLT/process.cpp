@@ -20,6 +20,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <algorithm>
 
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
@@ -37,6 +38,10 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -138,7 +143,6 @@ XALAN_USING_STD(cout)
 XALAN_USING_STD(endl)
 XALAN_USING_STD(hex)
 XALAN_USING_STD(pair)
-XALAN_USING_STD(vector)
 
 
 
@@ -225,7 +229,20 @@ printArgOptions()
 
 
 
-typedef vector<pair<const char*, const char*> >	StringPairVectorType;
+// We only need a few things from the Xerces namespace...
+XALAN_USING_XERCES(XMLPlatformUtils)
+XALAN_USING_XERCES(SAXParseException)
+XALAN_USING_XERCES(SAXException)
+XALAN_USING_XERCES(XMLException)
+
+
+
+// We need lots of things from the Xalan namespace, so hoist everything...
+XALAN_CPP_NAMESPACE_USE
+
+
+
+typedef XalanVector<pair< const char*, const char*> >	StringPairVectorType;
 
 
 
@@ -279,19 +296,6 @@ struct CmdLineParams
 	{
 	}
 };
-
-
-
-// We only need a few things from the Xerces namespace...
-XALAN_USING_XERCES(XMLPlatformUtils)
-XALAN_USING_XERCES(SAXParseException)
-XALAN_USING_XERCES(SAXException)
-XALAN_USING_XERCES(XMLException)
-
-
-
-// We need lots of things from the Xalan namespace, so hoist everything...
-XALAN_CPP_NAMESPACE_USE
 
 
 

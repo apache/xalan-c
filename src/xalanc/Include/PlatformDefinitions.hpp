@@ -123,6 +123,7 @@ typedef unsigned short	XalanDOMChar;
 #endif
 XALAN_CPP_NAMESPACE_END
 
+#define ITERATIVE_EXECUTION
 
 
 #endif // __cplusplus

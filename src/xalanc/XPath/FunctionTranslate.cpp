@@ -17,6 +17,9 @@
 
 
 
+#include <xalanc/Include/XalanVector.hpp>
+
+
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
@@ -60,11 +63,7 @@ FunctionTranslate::execute(
 	const XalanDOMString::size_type		theSecondStringLength = length(theSecondString);
 	const XalanDOMString::size_type		theThirdStringLength = length(theThirdString);
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XalanDOMChar>		VectorType;
-#else
-	typedef std::vector<XalanDOMChar>	VectorType;
-#endif
+	typedef XalanVector<XalanDOMChar>		VectorType;
 
 	// A string to hold the result.
 	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);

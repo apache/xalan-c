@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -43,16 +43,9 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanDOMStringHashTable
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<const XalanDOMString*>	BucketType;
-	typedef BucketType::size_type			bucket_size_type;
-	typedef vector<bucket_size_type>		BucketCountsType;
-#else
-	typedef std::vector<const XalanDOMString*>	BucketType;
+	typedef XalanVector<const XalanDOMString*>	BucketType;
 	typedef BucketType::size_type				bucket_size_type;
-	typedef std::vector<bucket_size_type>		BucketCountsType;
-#endif
-
+	typedef XalanVector<bucket_size_type>		BucketCountsType;
 
 	enum { eDefaultBucketCount = 101, eDefaultBucketSize = 15 };
 

@@ -24,7 +24,10 @@
 
 
 #include <cassert>
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -70,11 +73,7 @@ class XALAN_XPATH_EXPORT XPathExecutionContext : public ExecutionContext
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XObjectPtr>			XObjectArgVectorType;
-#else
-	typedef std::vector<XObjectPtr>		XObjectArgVectorType;
-#endif
+	typedef XalanVector<XObjectPtr>			XObjectArgVectorType;
 
 	typedef NodeRefListBase::size_type	size_type;
 

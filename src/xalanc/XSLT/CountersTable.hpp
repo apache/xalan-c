@@ -28,6 +28,8 @@
 
 
 
+//#include <xalanc/Include/XalanVector.hpp>
+
 #include <vector>
 
 
@@ -56,12 +58,7 @@ struct Counter
 {
 	typedef unsigned long	CountType;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XalanNode*>			NodeVectorType;
-#else
-	typedef std::vector<XalanNode*>		NodeVectorType;
-#endif
-
+	typedef XALAN_STD_QUALIFIER vector<XalanNode*>			NodeVectorType;
 
 	/**
 	 * The start count from where m_countNodes counts 
@@ -148,13 +145,8 @@ public:
 
 	typedef Counter::CountType	CountType;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<Counter>					CounterVectorType;
-	typedef vector<CounterVectorType>		ElemCounterVectorVectorType;
-#else
-	typedef std::vector<Counter>			CounterVectorType;
-	typedef std::vector<CounterVectorType>	ElemCounterVectorVectorType;
-#endif
+	typedef XALAN_STD_QUALIFIER vector<Counter>				CounterVectorType;
+	typedef XALAN_STD_QUALIFIER vector<CounterVectorType>	ElemCounterVectorVectorType;
 
 	typedef Counter::NodeVectorType			NodeVectorType;
 
@@ -168,6 +160,12 @@ public:
 		resize(theSize);
 	};
 
+
+	~CountersTable()
+	{
+		int x;
+		x = x & 12;
+	}
 
 	/**
 	 * Resize the table.  The must be done prior

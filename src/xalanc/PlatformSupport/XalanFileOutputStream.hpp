@@ -29,8 +29,6 @@
 #include <cstdio>
 #endif
 
-#include <vector>
-
 
 
 // Base class header file.

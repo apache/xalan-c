@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -50,17 +50,8 @@ public :
 
 	enum { eDefaultBufferSize = 512, eDefaultTranscoderBlockSize = 1024 };
 
-
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XalanDOMChar>		BufferType;
-
-	typedef vector<char>				TranscodeVectorType;
-#else
-	typedef std::vector<XalanDOMChar>	BufferType;
-
-	typedef std::vector<char>			TranscodeVectorType;
-#endif
-
+	typedef XalanVector<XalanDOMChar>		BufferType;
+	typedef XalanVector<char>				TranscodeVectorType;
 	typedef XalanTranscodingServices::size_type	        size_type;
     typedef XalanTranscodingServices::UnicodeCharType   UnicodeCharType;
 

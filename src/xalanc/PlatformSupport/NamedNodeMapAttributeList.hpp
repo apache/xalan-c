@@ -23,10 +23,6 @@
 
 
 
-#include <vector>
-
-
-
 #include <xercesc/sax/AttributeList.hpp>
 
 

@@ -31,7 +31,10 @@ class ostream;
 #else
 #include <iosfwd>
 #endif
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 

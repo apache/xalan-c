@@ -24,7 +24,10 @@
 
 
 #include <deque>
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -42,11 +45,7 @@ public:
 
 	enum { eDefaultMaximumSize = 100 };
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XalanDOMString*>			StringListType;
-#else
-	typedef std::vector<XalanDOMString*>	StringListType;
-#endif
+	typedef XalanVector<XalanDOMString*>			StringListType;
 
 	explicit
 	XalanDOMStringCache(unsigned int	theMaximumSize = eDefaultMaximumSize);

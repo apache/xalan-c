@@ -23,7 +23,9 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
+
+
 
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
@@ -55,31 +57,17 @@ class XALAN_XPATH_EXPORT XPathExpression
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef ostream			                OstreamType;
+	typedef XALAN_STD_QUALIFIER ostream			OstreamType;
 
-    typedef vector<int>						OpCodeMapType;
-	typedef vector<XToken>					TokenQueueType;
+    typedef XalanVector<int>					OpCodeMapType;
+	typedef XalanVector<XToken>					TokenQueueType;
 
-	typedef OpCodeMapType::value_type		OpCodeMapValueType;
-	typedef OpCodeMapValueType		        OpCodeMapSizeType;
+	typedef OpCodeMapType::value_type			OpCodeMapValueType;
+	typedef OpCodeMapValueType					OpCodeMapSizeType;
 
-	typedef vector<OpCodeMapValueType>		OpCodeMapValueVectorType;
+	typedef XalanVector<OpCodeMapValueType>		OpCodeMapValueVectorType;
 
-	typedef vector<double>					NumberLiteralValueVectorType;
-#else
-	typedef std::ostream	                OstreamType;
-
-    typedef std::vector<int>				OpCodeMapType;
-	typedef std::vector<XToken>				TokenQueueType;
-
-	typedef OpCodeMapType::value_type		OpCodeMapValueType;
-	typedef OpCodeMapValueType		        OpCodeMapSizeType;
-
-	typedef std::vector<OpCodeMapValueType> OpCodeMapValueVectorType;
-
-	typedef std::vector<double>				NumberLiteralValueVectorType;
-#endif
+	typedef XalanVector<double>					NumberLiteralValueVectorType;
 
 #define XALAN_XPATH_EXPRESSION_USE_ITERATORS
 

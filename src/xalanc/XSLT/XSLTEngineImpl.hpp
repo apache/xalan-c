@@ -154,29 +154,15 @@ public:
 		}
 	};
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef map<const void*,
+	typedef XalanVector<const LocatorType*>		LocatorStack;
+	typedef XalanVector<TraceListener*>			TraceListenerVectorType;
+	typedef XalanVector<const XalanDOMString*>	XalanDOMStringPointerVectorType;
+
+	typedef XALAN_STD_QUALIFIER map<const void*,
 				ClockType,
-				less<const void*> >			DurationsTableMapType;
-	typedef vector<const LocatorType*>		LocatorStack;
-	typedef vector<TraceListener*>			TraceListenerVectorType;
-#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
-	typedef deque<bool>						BoolVectorType;
-#else
-	typedef vector<bool>					BoolVectorType;
-#endif
-	typedef vector<const XalanDOMString*>	XalanDOMStringPointerVectorType;
-#else
-	typedef std::map<const void*, ClockType>	DurationsTableMapType;
-	typedef std::vector<const LocatorType*>		LocatorStack;
-	typedef std::vector<TraceListener*>			TraceListenerVectorType;
-#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
-	typedef std::deque<bool>					BoolVectorType;
-#else
-	typedef std::vector<bool>					BoolVectorType;
-#endif
-	typedef std::vector<const XalanDOMString*>	XalanDOMStringPointerVectorType;
-#endif
+				XALAN_STD_QUALIFIER less<const void*> >	DurationsTableMapType;
+
+	typedef XalanVector<bool>							BoolVectorType;
 
 	struct FindStringPointerFunctor
 	{

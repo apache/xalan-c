@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -208,11 +208,7 @@ private:
 
 	DOMElementType*					m_currentElem;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<DOMElementType*>			ElementStackType;
-#else
-	typedef std::vector<DOMElementType*>	ElementStackType;
-#endif
+	typedef XalanVector<DOMElementType*>			ElementStackType;
 
 	ElementStackType				m_elemStack;
 

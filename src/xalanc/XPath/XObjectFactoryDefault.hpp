@@ -24,7 +24,10 @@
 
 
 #include <set>
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -155,17 +158,10 @@ public:
 	createUnknown(
 			const XalanDOMString&	theValue);
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XObject*>		XObjectCollectionType;
-	typedef vector<XNumber*>		XNumberCacheType;
-	typedef vector<XNodeSet*>		XNodeSetCacheType;
-	typedef vector<XString*>		XStringCacheType;
-#else
-	typedef std::vector<XObject*>	XObjectCollectionType;
-	typedef std::vector<XNumber*>	XNumberCacheType;
-	typedef std::vector<XNodeSet*>	XNodeSetCacheType;
-	typedef std::vector<XString*>	XStringCacheType;
-#endif
+	typedef XalanVector<XObject*>		XObjectCollectionType;
+	typedef XalanVector<XNumber*>		XNumberCacheType;
+	typedef XalanVector<XNodeSet*>		XNodeSetCacheType;
+	typedef XalanVector<XString*>		XStringCacheType;
 
 protected:
 

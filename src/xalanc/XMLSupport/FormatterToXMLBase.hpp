@@ -24,7 +24,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -171,19 +171,7 @@ public:
 		m_shouldWriteXMLHeader = b;
 	}
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
-	typedef deque<bool>			BoolStackType;
-#else
-	typedef vector<bool>		BoolStackType;
-#endif
-#else
-#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
-	typedef std::deque<bool>	BoolStackType;
-#else
-	typedef std::vector<bool>	BoolStackType;
-#endif
-#endif
+	typedef XalanVector<bool>		BoolStackType;
 
 protected:
 

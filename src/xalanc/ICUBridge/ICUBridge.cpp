@@ -18,6 +18,10 @@
 
 
 
+#include <xalanc/Include/XalanVector.hpp>
+
+
+
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
@@ -30,11 +34,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<UChar>					UCharVectorType;
-#else
-	typedef std::vector<UChar>				UCharVectorType;
-#endif
+typedef XalanVector<UChar>					UCharVectorType;
 
 
 
@@ -223,11 +223,7 @@ ICUBridge::UnicodeStringToXalanDOMString(
 	}
 	else
 	{
-#if defined(XALAN_NO_NAMESPACES)
-		typedef vector<UChar>		UCharVectorType;
-#else
-		typedef std::vector<UChar>	UCharVectorType;
-#endif
+		typedef XalanVector<UChar>		UCharVectorType;
 
 		// Create a buffer to copy out the UnicodeString data...
 		UCharVectorType		theBuffer;

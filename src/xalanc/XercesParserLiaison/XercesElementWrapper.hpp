@@ -22,10 +22,6 @@
 
 
 
-#include <map>
-
-
-
 #include <xalanc/XalanDOM/XalanElement.hpp>
 #include <xalanc/XalanDOM/XalanNodeList.hpp>
 

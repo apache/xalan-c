@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -56,13 +56,8 @@ class XALAN_XALANSOURCETREE_EXPORT FormatterToSourceTree : public FormatterListe
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XalanSourceTreeElement*>			ElementStackType;
-	typedef vector<XalanNode*> 						LastChildStackType;
-#else
-	typedef std::vector<XalanSourceTreeElement*>	ElementStackType;
-	typedef std::vector<XalanNode*> 				LastChildStackType;
-#endif
+	typedef XalanVector<XalanSourceTreeElement*>			ElementStackType;
+	typedef XalanVector<XalanNode*> 						LastChildStackType;
 
 	enum { eDefaultStackSize = 50, eDefaultTextBufferSize = 100 };
 

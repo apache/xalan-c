@@ -20,6 +20,7 @@
 
 #include <cassert>
 #include <ctime>
+#include <vector>
 
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <fstream.h>

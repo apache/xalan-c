@@ -18,10 +18,6 @@
 
 
 
-#include <vector>
-
-
-
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 

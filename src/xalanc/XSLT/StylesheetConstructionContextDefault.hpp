@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -439,13 +439,8 @@ public:
 	static eElementToken
 	getElementNameToken(const XalanDOMString&	name);
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<StylesheetRoot*>			StylesheetVectorType;
-	typedef vector<ElemTemplateElement*>	ElemTemplateElementVectorType;
-#else
-	typedef std::vector<StylesheetRoot*>		StylesheetVectorType;
-	typedef std::vector<ElemTemplateElement*>	ElemTemplateElementVectorType;
-#endif
+	typedef XalanVector<StylesheetRoot*>			StylesheetVectorType;
+	typedef XalanVector<ElemTemplateElement*>	ElemTemplateElementVectorType;
 
 private:
 

@@ -25,7 +25,10 @@
 
 #include <cstdlib>
 #include <map>
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -58,26 +61,11 @@ class XALAN_XPATH_EXPORT XPathProcessorImpl : public XPathProcessor
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef map<XalanDOMString,
+	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
 				const XalanDOMString*,
-				less<XalanDOMString> >	StringToStringMapType;
+				XALAN_STD_QUALIFIER less<XalanDOMString> >	StringToStringMapType;
 
-#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
-	typedef deque<bool>					BoolVectorType;
-#else
-	typedef vector<bool>				BoolVectorType;
-#endif
-#else
-	typedef std::map<XalanDOMString,
-					 const XalanDOMString*>		StringToStringMapType;
-
-#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
-	typedef std::deque<bool>			BoolVectorType;
-#else
-	typedef std::vector<bool>			BoolVectorType;
-#endif
-#endif
+	typedef XalanVector<bool>				BoolVectorType;
 
 	XPathProcessorImpl();
 

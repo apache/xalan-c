@@ -27,10 +27,10 @@
 #include <deque>
 #include <memory>
 #include <set>
-#include <vector>
 
 
 
+#include <xalanc/Include/XalanVector.hpp>
 #include <xalanc/Include/XalanObjectCache.hpp>
 #include <xalanc/Include/XalanObjectStackCache.hpp>
 
@@ -85,28 +85,18 @@ public:
 	typedef clock_t			ClockType;
 #endif
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef deque<const ElemTemplateElement*>			ElementTemplateElementStackType;
-	typedef vector<FormatterListener*>					FormatterListenerVectorType;
-	typedef vector<PrintWriter*>						PrintWriterVectorType;
-	typedef vector<XalanOutputStream*>					OutputStreamVectorType;
-	typedef set<const KeyDeclaration*,
-				less<const KeyDeclaration*> >			KeyDeclarationSetType;
-	typedef pair<const XPath*, ClockType>				XPathCacheEntry;
-	typedef map<XalanDOMString,
+	typedef XalanVector<FormatterListener*>				FormatterListenerVectorType;
+	typedef XalanVector<PrintWriter*>					PrintWriterVectorType;
+	typedef XalanVector<XalanOutputStream*>				OutputStreamVectorType;
+
+	typedef XALAN_STD_QUALIFIER deque<const ElemTemplateElement*>	ElementTemplateElementStackType;
+	typedef XALAN_STD_QUALIFIER set<const KeyDeclaration*,
+				XALAN_STD_QUALIFIER less<const KeyDeclaration*> >	KeyDeclarationSetType;
+	typedef XALAN_STD_QUALIFIER pair<const XPath*, ClockType>		XPathCacheEntry;
+	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
 				XPathCacheEntry,
-				less<XalanDOMString> >					XPathCacheMapType;
-	typedef deque<const ElemTemplate*>					CurrentTemplateStackType;
-#else
-	typedef std::deque<const ElemTemplateElement*>		ElementTemplateElementStackType;
-	typedef std::vector<FormatterListener*>				FormatterListenerVectorType;
-	typedef std::vector<PrintWriter*>					PrintWriterVectorType;
-	typedef std::vector<XalanOutputStream*>				OutputStreamVectorType;
-	typedef std::set<const KeyDeclaration*>				KeyDeclarationSetType;
-	typedef std::pair<const XPath*, ClockType>			XPathCacheEntry;
-	typedef std::map<XalanDOMString, XPathCacheEntry>	XPathCacheMapType;
-	typedef std::deque<const ElemTemplate*>				CurrentTemplateStackType;
-#endif
+				XALAN_STD_QUALIFIER less<XalanDOMString> >			XPathCacheMapType;
+	typedef XALAN_STD_QUALIFIER deque<const ElemTemplate*>			CurrentTemplateStackType;
 
 	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;
 	typedef VariablesStack::ParamsVectorType			ParamsVectorType;
@@ -1208,9 +1198,9 @@ private:
 
 	XalanSourceTreeDocumentAllocator	m_documentAllocator;
 
-	typedef XALAN_STD_QUALIFIER vector<bool>		BooleanStackType;
-	typedef XALAN_STD_QUALIFIER vector<const XalanQName*>	ModeStackType;
-	typedef XALAN_STD_QUALIFIER vector<int>			IntStackType;
+	typedef XalanVector<bool>		BooleanStackType;
+	typedef XalanVector<const XalanQName*>	ModeStackType;
+	typedef XalanVector<int>			IntStackType;
 
 	BooleanStackType					m_copyTextNodesOnlyStack;
 	ModeStackType						m_modeStack;
@@ -1229,10 +1219,9 @@ private:
 #endif
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	typedef XALAN_STD_QUALIFIER vector<XObjectPtr>			XObjectPtrStackType;
-	typedef XALAN_STD_QUALIFIER vector<ParamsVectorType>		ParamsVectorStackType;
-	typedef XALAN_STD_QUALIFIER vector<UseAttributeSetIndexes>  	UseAttributeSetIndexesStackType;
-
+	typedef XalanVector<XObjectPtr>			XObjectPtrStackType;
+	typedef XalanVector<ParamsVectorType>		ParamsVectorStackType;
+	typedef XalanVector<UseAttributeSetIndexes>  	UseAttributeSetIndexesStackType;
 	typedef XalanObjectStackCache<MutableNodeRefList>		MutableNodeRefListStackType;
 	typedef XalanObjectStackCache<XalanDOMString>			StringStackType;
 	typedef XalanObjectStackCache<FormatterToText>			FormatterToTextStackType;
@@ -1274,7 +1263,7 @@ private:
 		NodeRefListBase::size_type  m_index;
 	};
 
-	typedef XALAN_STD_QUALIFIER vector<NodesToTransform>			NodesToTransformStackType;
+	typedef XalanVector<NodesToTransform>			NodesToTransformStackType;
 
 	XObjectPtrStackType					m_xobjectPtrStack;
 	MutableNodeRefListStackType			m_mutableNodeRefListStack;

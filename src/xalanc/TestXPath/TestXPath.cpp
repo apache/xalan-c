@@ -20,7 +20,6 @@
 
 #include <cstdio>
 #include <ctime>
-#include <vector>
 
 
 
@@ -40,6 +39,10 @@
 
 #include <xercesc/framework/URLInputSource.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -1165,11 +1168,7 @@ TestAxes(
 #endif
 	const XalanDOMString	theXMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XalanDOMString>		FileNameVectorType;
-#else
-	typedef std::vector<XalanDOMString>	FileNameVectorType;
-#endif
+	typedef XalanVector<XalanDOMString>		FileNameVectorType;
 
 	DirectoryEnumeratorFunctor<FileNameVectorType, XalanDOMString>	theEnumerator;
 

@@ -24,7 +24,10 @@
 
 
 #include <cassert>
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -138,15 +141,9 @@ public:
 		const ElemVariable*		m_variable;
 	};
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<ParamsVectorEntry>			ParamsVectorType;
-	typedef vector<const ElemVariable*>			RecursionGuardStackType;
-	typedef vector<const ElemTemplateElement*>	ElemTemplateElementStackType;
-#else
-	typedef std::vector<ParamsVectorEntry>			ParamsVectorType;
-	typedef std::vector<const ElemVariable*>		RecursionGuardStackType;
-	typedef std::vector<const ElemTemplateElement*>	ElemTemplateElementStackType;
-#endif
+	typedef XalanVector<ParamsVectorEntry>			ParamsVectorType;
+	typedef XalanVector<const ElemVariable*>			RecursionGuardStackType;
+	typedef XalanVector<const ElemTemplateElement*>	ElemTemplateElementStackType;
 
 	/**
 	 * Push the provided objects as parameters.  You must call
@@ -470,11 +467,7 @@ public:
 		const ElemTemplateElement*	m_element;
 	};
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<StackEntry>			VariableStackStackType;
-#else
-	typedef std::vector<StackEntry>		VariableStackStackType;
-#endif
+	typedef XalanVector<StackEntry>			VariableStackStackType;
 
 	size_type
 	getStackSize() const

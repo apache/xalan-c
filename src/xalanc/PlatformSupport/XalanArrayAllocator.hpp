@@ -25,7 +25,10 @@
 #include <cassert>
 #include <list>
 #include <utility>
-#include <vector>
+
+
+
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -38,17 +41,11 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanArrayAllocator
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<Type>					VectorType;
+	typedef XalanVector<Type>				VectorType;
 	typedef typename VectorType::size_type	size_type;
-	typedef pair<size_type, VectorType>		ListEntryType;
-	typedef list<ListEntryType>				ListType;
-#else
-	typedef std::vector<Type>					VectorType;
-	typedef typename VectorType::size_type		size_type;
-	typedef std::pair<size_type, VectorType>	ListEntryType;
-	typedef std::list<ListEntryType>			ListType;
-#endif
+
+	typedef XALAN_STD_QUALIFIER pair<size_type, VectorType>		ListEntryType;
+	typedef XALAN_STD_QUALIFIER list<ListEntryType>				ListType;
 
 	typedef Type							value_type;
 

@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -92,11 +92,7 @@ public:
 	checkForDuplicates() const;
 #endif
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XalanNode*>			NodeListVectorType;
-#else
-	typedef std::vector<XalanNode*>		NodeListVectorType;
-#endif
+	typedef XalanVector<XalanNode*>			NodeListVectorType;
 
 	void
 	swap(NodeRefList&	theOther)

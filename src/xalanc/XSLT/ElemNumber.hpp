@@ -23,7 +23,7 @@
 
 
 
-#include <vector>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -67,11 +67,7 @@ public:
 		eAny
 	};
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<CountType>		CountTypeArrayType;
-#else
-	typedef std::vector<CountType>	CountTypeArrayType;
-#endif
+	typedef XalanVector<CountType>		CountTypeArrayType;
 
 	/**
 	 * Perform static initialization.  See class XSLTInit.
