@@ -400,7 +400,7 @@ SimpleNodeLocator::step(
 
 
 XalanNode*
-SimpleNodeLocator:: stepPattern(
+SimpleNodeLocator::stepPattern(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
@@ -529,18 +529,21 @@ SimpleNodeLocator:: stepPattern(
 			argLen =
 				currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
 
-			opPos += 3;
-
 			score = xpath.s_MatchScoreNone;
 
-			while(0 != localContext)
+			if(localContext->getNodeType() != XalanNode::ATTRIBUTE_NODE)
 			{
-				score = nodeTest(xpath, executionContext, localContext, opPos, argLen, stepType);
+				opPos += 3;
 
-				if(xpath.s_MatchScoreNone != score)
-					break;
+				while(0 != localContext)
+				{
+					score = nodeTest(xpath, executionContext, localContext, opPos, argLen, stepType);
 
-				localContext = executionContext.getParentOfNode(*localContext);
+					if(xpath.s_MatchScoreNone != score)
+						break;
+
+					localContext = localContext->getParentNode();
+				}
 			}
 		}
 		break;
@@ -551,9 +554,16 @@ SimpleNodeLocator:: stepPattern(
 		argLen =
 				currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
 
-		opPos += 3;
+		if(localContext->getNodeType() == XalanNode::ATTRIBUTE_NODE)
+		{
+			score = xpath.s_MatchScoreNone;
+		}
+		else
+		{
+			opPos += 3;
 
-		score = nodeTest(xpath, executionContext, localContext, opPos, argLen, stepType);
+			score = nodeTest(xpath, executionContext, localContext, opPos, argLen, stepType);
+		}
 		break;
 
 	default:
