@@ -58,7 +58,6 @@
 #include <iostream>
 #include <strstream>
 #include <stdio.h>
-#include <direct.h>
 
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
