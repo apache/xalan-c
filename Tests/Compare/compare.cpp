@@ -99,7 +99,7 @@ void
 printArgOptions()
 {
 	cerr << endl
-		 << "Perf dirname [-out -gold]"
+		 << "compare dirname [-out -gold]"
 		 << endl
 		 << endl
 		 << "dirname		(base directory for testcases)"
@@ -329,17 +329,8 @@ main(
 					//
 					// Perform One transform using parsed stylesheet and unparsed xml source, report results...
 					// 
-					transResult = xalan.transform(*parsedSource, compiledSS, domResultTarget);
-
-					if(!transResult)
-					{
-						futil.compareDOMResults(theOutputFile, compiledSS, dom, goldInputSource);
-					}
-					else
-					{
-						cout << xalan.getLastError();
-						return 0;
-					}
+					xalan.transform(*parsedSource, compiledSS, domResultTarget);
+					futil.checkDOMResults(theOutputFile, compiledSS, dom, goldInputSource, logFile);
 
 					parserLiaison.reset();
 					xalan.destroyParsedSource(parsedSource);
@@ -347,8 +338,10 @@ main(
 
 				}//for files
 
-		logFile.logTestFileClose("Performance", "Done");
-		logFile.close();
+			futil.reportPassFail(logFile, UniqRunid);
+			logFile.logTestFileClose("DomCom ", "Done");
+			logFile.close();
+
 
 		} //if getParams
 	}
