@@ -438,6 +438,16 @@ XalanParseSourceFromStream(
 
 
 
+XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
+XalanDestroyParsedSource(
+			XalanPSHandle	thePSHandle,
+			XalanHandle		theXalanHandle)
+{
+	return getTransformer(theXalanHandle)->destroyParsedSource(getParsedSource(thePSHandle));
+}
+
+
+
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 XalanSetStylesheetParam(
 			const char*		key,
