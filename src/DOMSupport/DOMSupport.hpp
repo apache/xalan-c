@@ -97,17 +97,6 @@ public:
 	// These interfaces are new to DOMSupport...
 
 	/**
-	 * Retrieve the URI corresponding to a namespace prefix
-	 * 
-	 * @param prefix prefix for a namespace
-	 * @return URI corresponding to namespace
-	 */
-//	virtual const XalanDOMString*
-//	getNamespaceForPrefix(
-//			const XalanDOMString&	prefix, 
-//			const XalanElement&		namespaceContext) const = 0;
-
-	/**
 	 * Retrieves the URI of the named unparsed entity
 	 * from the supplied document.
 	 * 
