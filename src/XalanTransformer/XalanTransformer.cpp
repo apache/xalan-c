@@ -102,7 +102,6 @@
 
 //#define XALAN_USE_ICU
 #if defined(XALAN_USE_ICU)
-#include <ICUBridge/ICUBridge.hpp>
 #include <ICUBridge/FunctionICUFormatNumber.hpp>
 #include <ICUBridge/ICUBridgeCollationCompareFunctor.hpp>
 #endif
