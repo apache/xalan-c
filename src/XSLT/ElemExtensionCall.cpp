@@ -89,15 +89,19 @@ ElemExtensionCall::ElemExtensionCall(
 void
 ElemExtensionCall::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						/* sourceTree */,
-			XalanNode*						/* sourceNode */,
-			const QName&					/* mode */) const
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
+			const QName&					mode) const
 {
-/*
-	nsh.processElement(localPart, this, processor, getStylesheet(), 
-		sourceTree, sourceNode, mode);
-*/
 	executionContext.warn("Xalan C++ does not yet handle extensions!");
+
+	for (const ElemTemplateElement*	child = getFirstChildElem(); child != 0; child = child->getNextSiblingElem())
+	{
+		if(child->getXSLToken() == Constants::ELEMNAME_FALLBACK)
+		{
+			child->execute(executionContext, sourceTree, sourceNode, mode);
+		}
+	}
 }
 
 
