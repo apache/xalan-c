@@ -264,7 +264,7 @@ locale:
 	$(MAKE) -C Utils $@
 
 $(XSL_LIB_DIR)/$(LIB): $(ALL_OBJECTS)
-	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS) $^ -o $@ 
+	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(LINK_SONAME) $(ALLLIBS) $^ -o $@ 
 ifeq ($(PLATFORM), OS390)
 	cp -p *.x  ${XSL_LIB_DIR}        
 else
