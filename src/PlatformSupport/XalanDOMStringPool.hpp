@@ -131,10 +131,13 @@ public:
 	 * Get a pooled string.  If the string is not pooled, it is added.
 	 *
 	 * @param theString The string to pool.
+	 * @param theLength The length of the string.  If -1, the string is assumed to be null-terminated.
 	 * @return a const reference to the pooled string.
 	 */
 	virtual const XalanDOMString&
-	get(const XalanDOMChar*		theString);
+	get(
+			const XalanDOMChar*		theString,
+			unsigned int			theLength = unsigned(-1));
 
 private:
 

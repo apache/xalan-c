@@ -109,7 +109,9 @@ XalanDOMStringPool::get(const XalanDOMString&	theString)
 
 
 const XalanDOMString&
-XalanDOMStringPool::get(const XalanDOMChar*		theString)
+XalanDOMStringPool::get(
+			const XalanDOMChar*		theString,
+			unsigned int			/* theLength */)
 {
 	assert(m_strings.size() == m_index.size());
 
