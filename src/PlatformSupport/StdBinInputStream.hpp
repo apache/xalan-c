@@ -119,6 +119,8 @@ private:
 #else
 	std::istream&	m_stream;
 #endif
+
+	const bool		m_cin;
 };
 
 

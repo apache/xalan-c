@@ -69,7 +69,7 @@
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
 #else
-#include <istream>
+#include <iostream>
 #endif
 #endif
 
@@ -81,7 +81,12 @@ StdBinInputStream::StdBinInputStream(istream&		theStream) :
 StdBinInputStream::StdBinInputStream(std::istream&	theStream) :
 #endif
 	BinInputStream(),
-	m_stream(theStream)
+	m_stream(theStream),
+#if defined(XALAN_NO_NAMESPACES)
+	m_cin(&m_stream == &cin ? true : false)
+#else
+	m_cin(&m_stream == &std::cin ? true : false)
+#endif
 {
 }
 
@@ -111,6 +116,28 @@ StdBinInputStream::readBytes(
 	if (!m_stream)
 	{
 		return 0;
+	}
+	else if (m_cin == true)
+	{
+		unsigned int	i = 0;
+
+ 		while(i < maxToRead)
+ 		{
+ 			const int	ch = m_stream.get();
+ 
+ 			if (ch == EOF)
+ 			{
+ 				break;
+ 			}
+ 			else
+ 			{
+ 				toFill[i] = XMLByte(ch);
+ 
+ 				++i;
+ 			}
+ 		}
+ 
+ 		return i;
 	}
 	else
 	{
