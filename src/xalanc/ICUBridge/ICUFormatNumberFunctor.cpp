@@ -275,8 +275,9 @@ ICUFormatNumberFunctor::cacheDecimalFormat(
 		theNonConstCache.pop_back();
 	}
 
+  DecimalFormatCacheListType::value_type emptyDFC(m_memoryManager);
 
-	theNonConstCache.push_front(DecimalFormatCacheListType::value_type(m_memoryManager));
+	theNonConstCache.push_front(emptyDFC);
 
 	DecimalFormatCacheListType::value_type&		theEntry = 
 		theNonConstCache.front();
