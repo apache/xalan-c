@@ -503,11 +503,17 @@ XObjectFactoryDefault::reset()
 
 	m_xstringAllocator.reset();
 
+	m_xstringCachedAllocator.reset();
+
 	m_xstringReferenceAllocator.reset();
 
 	m_xnumberAllocator.reset();
 
 	m_xnodesetAllocator.reset();
+
+	m_xtokenNumberAdapterAllocator.reset();
+
+	m_xtokenStringAdapterAllocator.reset();
 
 #if !defined(XALAN_NO_STD_NAMESPACE)
 	using std::for_each;
