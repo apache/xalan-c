@@ -143,7 +143,7 @@ printArgOptions()
 bool
 getParams(
 			int					argc, 
-			const char*			argv[],
+			char*				argv[],
 			FileUtility&		f,
 			XalanDOMString&		basedir,
 			XalanDOMString&		outdir)
@@ -270,8 +270,8 @@ getXMLFormatter(bool					shouldWriteXMLHeader,
 
 int
 runTests(
-		  int			argc,
-		  const char*	argv [])
+		  int		argc,
+		  char*		argv[])
 {
 
 	HarnessInit		xmlPlatformUtils;

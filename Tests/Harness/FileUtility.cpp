@@ -256,10 +256,11 @@ FileUtility::getDrive()
 
 
 bool
-FileUtility::getParams(int argc, 
-		  const char*	argv[],
-		  char*			outDir,
-		  bool			fsetGold)
+FileUtility::getParams(
+			int				argc,
+			char*			argv[],
+			const char*		outDir,
+			bool			fsetGold)
 {
 	bool fSuccess = true;	// Used to continue argument loop
 	bool fsetOut = true;	// Set default output directory, set to false if data is provided

@@ -118,9 +118,7 @@ static void xalan_flush_handler(void *handle)
 
 
 int
-runTests(
-			int				/* argc */,
-			const char*		/* argv*/ [])
+runTests()
 {
 	const char* const		theXMLFileName = "d:\\xslt\\xsl-test\\perf\\basic\\basic-all_well.xml";
 	const char* const 		theXSLFileName = "d:\\xslt\\xsl-test\\perf\\basic\\basic-all_well.xsl";
@@ -349,8 +347,8 @@ runTests(
 
 int
 main(
-			int		argc,
-			char*	argv[])
+			int		/* argc */,
+			char*	/* argv */ [])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
@@ -373,7 +371,7 @@ main(
 
 		XalanTransformer::initialize();
 
-		theResult = runTests(argc, argv);
+		theResult = runTests();
 
 		// Terminate everything...
 		XalanTransformer::terminate();

@@ -290,9 +290,9 @@ private:
 
 bool
 getArgs(
-			int					argc,
-			const char*			argv[],
-			Params&				params)
+			int			argc,
+			char*		argv[],
+			Params&		params)
 {
 	bool fSuccess = true;
 
@@ -770,8 +770,8 @@ transform(
 
 int
 xsltMain(
-			int				argc,
-			const char*		argv[])
+			int		argc,
+			char*	argv[])
 
 {
 	int	theResult = -1;

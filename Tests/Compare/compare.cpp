@@ -133,8 +133,8 @@ setHelp(FileUtility&	h)
 
 int
 runTests(
-			int				argc,
-			const char*		argv[])
+			int		argc,
+			char*	argv[])
 {
 	XALAN_USING_XALAN(HarnessInit)
 

@@ -391,7 +391,7 @@ compareNoCase(
 bool
 getArgs(
 			int				argc,
-			const char*		argv[],
+			char*			argv[],
 			CmdLineParams&	p)
 {
 	bool fSuccess = true;

@@ -160,8 +160,8 @@ setHelp(XALAN_CPP_NAMESPACE_QUALIFIER FileUtility&	h)
 
 int
 runTests(
-			int				argc,
-			const char*		argv[])
+			int		argc,
+			char*	argv[])
 {
 	// Just hoist everything...
 	XALAN_CPP_NAMESPACE_USE
