@@ -65,6 +65,8 @@
 #include <string>
 #include <strstream>
 
+
+
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
@@ -1022,7 +1024,7 @@ main(
 			int				argc,
 			const char*		argv[])
 {
-#if !defined(XALAN_USE_ICU) && defined(NDEBUG) && defined(_MSC_VER)
+#if !defined(XALAN_USE_ICU) && !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
