@@ -393,6 +393,7 @@ FormatterToHTML::startElement(
 		getElemDesc(name);
 
     bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
+	bool	isHeadElement = elemDesc.is(ElemDesc.HEADELEM);
 
 	m_isScriptOrStyleElem = 
 		equalsIgnoreCaseASCII(name, c_wstr(s_scriptString)) ||
@@ -434,6 +435,19 @@ FormatterToHTML::startElement(
     m_isprevtext = false;
 
 	m_isFirstElem = false;
+
+	if (isHeadElement)
+    {
+      writeParentTagEnd();
+
+      if (m_doIndent)
+        indent(m_currentIndent);
+
+      accumContent(s_metaString);
+      accumContent(getEncoding());      
+      accumContent(XalanUnicode::charQuoteMark);
+      accumContent(XalanUnicode::charGreaterThanSign);
+    }
 }
 
 
@@ -1453,7 +1467,7 @@ FormatterToHTML::initializeElementFlagsMap(ElementFlagsMapType&		theElementFlags
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
 			c_wstr(XALAN_STATIC_UCODE_STRING("HEAD")),
-			ElemDesc(0|ElemDesc::BLOCK)));
+			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::HEADELEM)));
 
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("PROFILE")), ElemDesc::ATTRURL);
 
@@ -1556,6 +1570,8 @@ static XalanDOMCharVectorType	s_fnofString;
 
 static XalanDOMCharVectorType	s_oeligString;
 
+static XalanDOMCharVectorType	s_metaString;
+
 
 const XalanDOMCharVectorType&	FormatterToHTML::s_doctypeHeaderStartString =
 			::s_doctypeHeaderStartString;
@@ -1587,7 +1603,8 @@ const XalanDOMCharVectorType&	FormatterToHTML::s_fnofString =
 const XalanDOMCharVectorType&	FormatterToHTML::s_oeligString =
 			::s_oeligString;
 
-
+const XalanDOMCharVectorType&	FormatterToHTML::s_metaString =
+			::s_metaString;
 
 #if !defined(XALAN_LSTRSUPPORT)
 void
@@ -1631,6 +1648,8 @@ FormatterToHTML::initialize()
 	::s_fnofString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("fnof")));
 
 	::s_oeligString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("OElig")));
+	
+	::s_metaString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("<META http-equiv=\"Content-Type\" content=\"text/html; charset=")));
 
 #if !defined(XALAN_LSTRSUPPORT)
 	pushStringsOnVector(
@@ -1676,6 +1695,8 @@ FormatterToHTML::terminate()
 	XalanDOMCharVectorType().swap(::s_fnofString);
 
 	XalanDOMCharVectorType().swap(::s_oeligString);
+
+	XalanDOMCharVectorType().swap(::s_metaString);		
 
 #if !defined(XALAN_LSTRSUPPORT)
 	XalanDOMStringVectorType().swap(theHTMLSymbols1);

@@ -203,6 +203,7 @@ public:
 			LIST = (1 << 19),
 			PREFORMATTED = (1 << 20),
 			WHITESPACESENSITIVE = (1 << 21),
+			HEADELEM = (1 << 22),
 
 			ATTRURL = (1 << 1),
 			ATTREMPTY = (1 << 2)
@@ -352,6 +353,11 @@ private:
 	 * The string "OElig".
 	 */
 	static const XalanDOMCharVectorType&	s_oeligString;
+
+	/**
+	 * The string "<META http-equiv=\"Content-Type\" content=\"text/html; charset=".
+	 */
+	static const XalanDOMCharVectorType&	s_metaString;
 
 	/**
 	 * Set the attribute characters what will require special mapping.
