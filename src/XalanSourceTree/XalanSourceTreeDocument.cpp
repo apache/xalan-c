@@ -79,7 +79,7 @@ static const XalanDOMString		s_emptyString;
 
 
 
-XalanSourceTreeDocument::XalanSourceTreeDocument(bool	fDynamic) :
+XalanSourceTreeDocument::XalanSourceTreeDocument(bool	fPoolAllText) :
 	XalanDocument(),
 	m_firstChild(0),
 	m_documentElement(0),
@@ -95,9 +95,10 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(bool	fDynamic) :
 	m_stringPool(),
 	m_attributesVector(),
 	m_nextIndexValue(2),
-	m_dynamic(fDynamic),
+	m_poolAllText(fPoolAllText),
 	m_elementsByID(),
-	m_unparsedEntityURIs()
+	m_unparsedEntityURIs(),
+	m_nonPooledStrings()
 {
 }
 
@@ -706,10 +707,10 @@ XalanSourceTreeDocument::createTextNode(
 {
 	assert(chars != 0);
 
-	const XalanDOMString&	theString = m_stringPool.get(chars, length);
-
-	if (isXMLWhitespace(theString) == true)
+	if (isXMLWhitespace(chars, 0, length) == true)
 	{
+		const XalanDOMString&	theString = m_stringPool.get(chars, length);
+
 		return m_textIWSAllocator.create(
 				theString,
 				theParentElement,
@@ -720,7 +721,7 @@ XalanSourceTreeDocument::createTextNode(
 	else
 	{
 		return m_textAllocator.create(
-				theString,
+				getTextNodeString(chars, length),
 				theParentElement,
 				thePreviousSibling,
 				theNextSibling,
@@ -972,6 +973,32 @@ XalanSourceTreeDocument::createAttributes(
 					c_wstr(theAttributeVector[i]->getValue()),
 					theOwnerElement));
 		}
+	}
+}
+
+
+
+inline const XalanDOMString&
+XalanSourceTreeDocument::getTextNodeString(
+			const XalanDOMChar*		chars,
+			unsigned int			length)
+{
+	if (m_poolAllText == true)
+	{
+		return m_stringPool.get(chars, length);
+	}
+	else
+	{
+		const StringCollectionType::iterator	theIterator =
+				m_nonPooledStrings.insert(m_nonPooledStrings.end(), XalanDOMString());
+
+		XalanDOMString&		theString = *theIterator;
+
+		assign(theString, chars, length);
+
+		assert(length == ::length(theString));
+
+		return theString;
 	}
 }
 

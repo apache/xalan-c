@@ -63,6 +63,7 @@
 
 
 
+#include <deque>
 #include <map>
 
 
@@ -108,6 +109,8 @@ public:
 				XalanDOMString,
 				XalanDOMString,
 				less<XalanDOMString> >							UnparsedEntityURIMapType;
+
+	typedef deque<XalanDOMString>								StringCollectionType;
 #else
 	typedef std::map<
 				const XalanDOMChar*,
@@ -117,6 +120,8 @@ public:
 	typedef std::map<
 				XalanDOMString,
 				XalanDOMString>									UnparsedEntityURIMapType;
+
+	typedef std::deque<XalanDOMString>							StringCollectionType;
 #endif
 
 	/**
@@ -136,10 +141,10 @@ public:
 	 *
 	 * Constructor for XalanSourceTreeDocument.
 	 *
-	 * @param fDynamic If true, the document will allow dynamic building through _some_ of the standard DOM APIs
+	 * @param fPoolAllText If false, text node data that is not whitespace will not be pooled.
 	 *
 	 */
-	XalanSourceTreeDocument(bool	fDynamic = false);
+	XalanSourceTreeDocument(bool	fPoolAllText = true);
 
 	virtual
 	~XalanSourceTreeDocument();
@@ -401,6 +406,11 @@ private:
 			unsigned int				theAttributeCount,
 			XalanSourceTreeElement*		theOwnerElement);
 
+	const XalanDOMString&
+	getTextNodeString(
+			const XalanDOMChar*			chars,
+			unsigned int				length);
+
 	// Not implemented...
 	XalanSourceTreeDocument(const XalanSourceTreeDocument&	theSource);
 
@@ -440,11 +450,13 @@ private:
 
 	unsigned int									m_nextIndexValue;
 
-	const bool										m_dynamic;
+	const bool										m_poolAllText;
 
 	ElementByIDMapType								m_elementsByID;
 
 	UnparsedEntityURIMapType						m_unparsedEntityURIs;
+
+	StringCollectionType							m_nonPooledStrings;
 
 	static const XalanDOMString&					s_nameString;
 };
