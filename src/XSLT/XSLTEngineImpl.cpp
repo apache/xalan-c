@@ -702,7 +702,10 @@ XSLTEngineImpl::parseXML(
 			doc = m_parserLiaison.parseXMLStream(inputSource);
 		}
 
-		m_xpathEnvSupport.setSourceDocument(urlString, doc);
+		if (doc != 0)
+		{
+			m_xpathEnvSupport.setSourceDocument(urlString, doc);
+		}
 	}
 
 	return doc;

@@ -1189,7 +1189,7 @@ StylesheetHandler::processImport(
 
 			StylesheetHandler tp(*importedStylesheet.get(), m_constructionContext);
 
-			m_constructionContext.parseXML(hrefUrl, &tp, importedStylesheet.get());
+			m_constructionContext.parseXML(hrefUrl, &tp, 0);
 
 			importedStylesheet->postConstruction();
 
@@ -1248,7 +1248,7 @@ StylesheetHandler::processInclude(
 
 			m_stylesheet.getIncludeStack().push_back(hrefUrl);
 
-			m_constructionContext.parseXML(hrefUrl, this, &m_stylesheet);
+			m_constructionContext.parseXML(hrefUrl, this, 0);
 
 			assert(equals(m_stylesheet.getIncludeStack().back(), hrefUrl));
 			m_stylesheet.getIncludeStack().pop_back();
