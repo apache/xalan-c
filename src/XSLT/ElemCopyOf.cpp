@@ -154,8 +154,6 @@ ElemCopyOf::execute(
 
 	case XObject::eTypeNodeSet:
 	{
-		XalanDOMString			s;
-
 		const NodeRefListBase&	nl = value->nodeset();
 
 		unsigned int			nChildren = nl.getLength();
@@ -167,7 +165,10 @@ ElemCopyOf::execute(
 
 			while(pos != 0)
 			{
-				executionContext.flushPending();
+				if(XalanNode::ELEMENT_NODE == pos->getNodeType())
+				{
+                    executionContext.flushPending();
+                }
 
 				executionContext.cloneToResultTree(
 						*pos,
@@ -181,9 +182,7 @@ ElemCopyOf::execute(
 				{
 					if(XalanNode::ELEMENT_NODE == pos->getNodeType())
 					{
-						s = pos->getNodeName();
-
-						executionContext.endElement(toCharArray(s));
+						executionContext.endElement(c_wstr(pos->getNodeName()));
 					}
 
 					if(top == pos)
@@ -199,9 +198,7 @@ ElemCopyOf::execute(
 						{
 							if(XalanNode::ELEMENT_NODE == pos->getNodeType())
 							{
-								s = pos->getNodeName();
-
-								executionContext.endElement(toCharArray(s));
+								executionContext.endElement(c_wstr(pos->getNodeName()));
 							}
 
 							nextNode = 0;
