@@ -136,7 +136,14 @@ XalanDOMString::XalanDOMString(
 
 	if (*theString != 0)
 	{
-		TranscodeFromLocalCodePage(theString, theCount, m_data, true);
+		if (theCount == size_type(npos))
+		{
+            TranscodeFromLocalCodePage(theString, m_data, true);
+		}
+		else
+		{
+			TranscodeFromLocalCodePage(theString, theCount, m_data, true);
+		}
 
 #if defined(XALAN_DOMSTRING_CACHE_SIZE)
 		m_size = m_data.size() - 1;
