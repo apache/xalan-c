@@ -77,36 +77,14 @@ FunctionHasSameNodes::~FunctionHasSameNodes()
 
 XObjectPtr
 FunctionHasSameNodes::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionHasSameNodes::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				context,
-		const XObjectPtr		arg1)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionHasSameNodes::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,			
+			XalanNode*				/* context */,
 			const XObjectPtr		arg1,
-			const XObjectPtr		arg2)
+			const XObjectPtr		arg2,
+			const Locator*			/* locator */) const
 {
+	assert(arg1.null() == false && arg2.null() == false);
+
 	const NodeRefListBase&	nodeset1 = arg1->nodeset();
 	const NodeRefListBase&	nodeset2 = arg2->nodeset();
 
@@ -137,42 +115,6 @@ FunctionHasSameNodes::execute(
 
 
 
-XObjectPtr
-FunctionHasSameNodes::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionHasSameNodes::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-{
-	if (args.size() != 2)
-	{
-		executionContext.error(getError(), context);
-
-		return XObjectPtr(0);
-	}
-	else
-	{
-		return execute(executionContext, context, args[0], args[1]);
-	}
-}
-
-
-
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 Function*
 #else
@@ -188,5 +130,5 @@ FunctionHasSameNodes::clone() const
 const XalanDOMString
 FunctionHasSameNodes::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The has-same-nodes() function requires two arguments");
+	return XALAN_STATIC_UCODE_STRING("The has-same-nodes() function accepts two arguments");
 }

@@ -37,26 +37,21 @@ public:
 	 * object.
 	 *
 	 * @param executionContext executing context
-	 * @param context          current context node
-	 * @param opPos            current op position
-	 * @param args             vector of pointers to XObject arguments
-	 * @return                 pointer to the result XObject
+	 * @param context current context node
+	 * @param arg The argument for the function
+	 * @param locator A Locator instance for error reporting
+	 * @return pointer to the result XObject
 	 */
 	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,			
+			const XObjectPtr		arg,
+			const Locator*			/* locator */) const
 	{
-		if (args.size() != 1)
-		{
-			executionContext.error("The square-root() function takes one argument!", context);
-		}
+		assert(arg.null() == false);	
 
-		assert(args[0].null() == false);
-
-		return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num()));
+		return executionContext.getXObjectFactory().createNumber(sqrt(arg->num()));
 	}
 
 	/**
@@ -72,6 +67,14 @@ public:
 	clone() const
 	{
 		return new FunctionSquareRoot(*this);
+	}
+
+protected:
+
+	const XalanDOMString
+	getError() const
+	{
+		return XALAN_STATIC_UCODE_STRING("The square-root() function accepts one argument!");
 	}
 
 private:
@@ -104,19 +107,14 @@ public:
 	 */
 	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,			
+			const XObjectPtr		arg,
+			const Locator*			/* locator */) const
 	{
-		if (args.size() != 1)
-		{
-			executionContext.error("The cube() function takes one argument!", context);
-		}
+		assert(arg.null() == false);
 
-		assert(args[0].null() == false);
-
-		return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(), 3));
+		return executionContext.getXObjectFactory().createNumber(pow(arg->num(), 3));
 	}
 
 	/**
@@ -132,6 +130,14 @@ public:
 	clone() const
 	{
 		return new FunctionCube(*this);
+	}
+
+protected:
+
+	const XalanDOMString
+	getError() const
+	{
+		return XALAN_STATIC_UCODE_STRING("The cube() function accepts one argument!");
 	}
 
 private:
@@ -164,10 +170,9 @@ public:
 	 */
 	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,
+			const Locator*			/* locator */) const
 	{
 		time_t	theTime;
 
@@ -198,10 +203,12 @@ public:
 		return new FunctionAsctime(*this);
 	}
 
+protected:
+
 	const XalanDOMString
 	getError() const
 	{
-		return XalanDOMString("The asctime() function takes no arguments!");
+		return XALAN_STATIC_UCODE_STRING("The asctime() function accepts one argument!");
 	}
 
 private:

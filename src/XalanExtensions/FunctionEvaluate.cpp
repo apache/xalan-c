@@ -82,23 +82,12 @@ FunctionEvaluate::~FunctionEvaluate()
 
 XObjectPtr
 FunctionEvaluate::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		arg,
+			const Locator*			locator) const
 {
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionEvaluate::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				context,			
-		const XObjectPtr		arg1)
-{
-	assert(arg1.null() == false);	
+	assert(arg.null() == false);	
 
 	const PrefixResolver* const	theResolver =
 		executionContext.getPrefixResolver();
@@ -107,82 +96,23 @@ FunctionEvaluate::execute(
 	{
 		executionContext.warn(
 			"No prefix resolver available in evaluate()!",
-			context);
+			context,
+			locator);
 
-		return arg1;
+		return arg;
 	}
 	else
 	{
-		const XalanDOMString&	theString =
-			arg1->str();
+		XPathProcessorImpl	theProcessor;
 
-		if (length(theString) == 0)
-		{
-			return XObjectPtr(0);
-		}
-		else
-		{
-			XPathProcessorImpl	theProcessor;
+		XPath				theXPath;
 
-			XPath				theXPath;
-
-			theProcessor.initXPath(
+		theProcessor.initXPath(
 				theXPath,
-				theString,
+				arg->str(),
 				*theResolver);
 
-			return theXPath.execute(context, *theResolver, executionContext);
-		}
-	}
-}
-
-
-
-XObjectPtr
-FunctionEvaluate::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionEvaluate::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionEvaluate::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-{
-	if (args.size() != 1)
-	{
-		executionContext.error(getError(), context);
-
-		return XObjectPtr(0);
-	}
-	else
-	{
-		return execute(executionContext, context, args[0]);
+		return theXPath.execute(context, *theResolver, executionContext);
 	}
 }
 
@@ -203,5 +133,5 @@ FunctionEvaluate::clone() const
 const XalanDOMString
 FunctionEvaluate::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The evaluate() function takes one argument");
+	return XALAN_STATIC_UCODE_STRING("The evaluate() function accepts one argument");
 }

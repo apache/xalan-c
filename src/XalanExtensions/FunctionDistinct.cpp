@@ -89,23 +89,14 @@ FunctionDistinct::~FunctionDistinct()
 
 XObjectPtr
 FunctionDistinct::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,			
+			const XObjectPtr		arg,
+			const Locator*			/* locator */) const
 {
-	executionContext.error(getError(), context);
+	assert(arg.null() == false);
 
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionDistinct::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,
-		const XObjectPtr		arg1)
-{
-	const NodeRefListBase&	nodeset = arg1->nodeset();
+	const NodeRefListBase&	nodeset = arg->nodeset();
 
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
@@ -158,56 +149,6 @@ FunctionDistinct::execute(
 
 
 
-XObjectPtr
-FunctionDistinct::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionDistinct::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionDistinct::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-{
-	if (args.size() != 1)
-	{
-		executionContext.error(getError(), context);
-
-		return XObjectPtr(0);
-	}
-	else
-	{
-		return execute(executionContext, context, args[0]);
-	}
-}
-
-
-
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 Function*
 #else
@@ -223,5 +164,5 @@ FunctionDistinct::clone() const
 const XalanDOMString
 FunctionDistinct::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The distinct() function takes one argument");
+	return XALAN_STATIC_UCODE_STRING("The distinct() function accepts one argument");
 }

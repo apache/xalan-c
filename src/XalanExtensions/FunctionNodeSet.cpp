@@ -112,7 +112,7 @@ public:
 		return m_proxy;
 	}
 
-	virtual void 
+	virtual void
 	dereferenced()
 	{
 		delete this;
@@ -153,81 +153,25 @@ FunctionNodeSet::~FunctionNodeSet()
 
 XObjectPtr
 FunctionNodeSet::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		arg,
+			const Locator*			locator) const
 {
-	executionContext.error(getError(), context);
+	assert(arg.null() == false);	
 
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionNodeSet::execute(
-		XPathExecutionContext&	/* executionContext */,
-		XalanNode*				/* context */,
-		const XObjectPtr		arg1)
-{
-	assert(arg1.null() == false);
-
-	if (arg1->getType() != XObject::eTypeResultTreeFrag)
+	if (arg->getType() != XObject::eTypeResultTreeFrag)
 	{
-		return arg1;
+		executionContext.warn(
+			"Invalid argument type in function nodeset()!",
+			context,
+			locator);
+
+		return arg;
 	}
 	else
 	{
-		return XObjectPtr(new XResultTreeFragNodeSetProxy(arg1));
-	}
-}
-
-
-
-XObjectPtr
-FunctionNodeSet::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionNodeSet::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionNodeSet::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-{
-	if (args.size() != 1)
-	{
-		executionContext.error(getError(), context);
-
-		return XObjectPtr(0);
-	}
-	else
-	{
-		return execute(executionContext, context, args[0]);
+		return XObjectPtr(new XResultTreeFragNodeSetProxy(arg));
 	}
 }
 
@@ -248,5 +192,5 @@ FunctionNodeSet::clone() const
 const XalanDOMString
 FunctionNodeSet::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The node-set() function takes one argument");
+	return XALAN_STATIC_UCODE_STRING("The node-set() function accepts one argument");
 }
