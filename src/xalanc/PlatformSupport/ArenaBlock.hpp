@@ -115,7 +115,7 @@ public:
 	bool
 	ownsObject(const ObjectType*	theObject) const
 	{
-		return isInBorders(theObject, this->m_objectCount);
+		return this->isInBorders(theObject, this->m_objectCount);
 	}
 private:
 

@@ -246,7 +246,7 @@ protected:
 	{
 		assert( block !=0 );
 
-		return !( ownsBlock(reinterpret_cast<const ObjectType*>(block)) && block->isValidFor(this->m_blockSize) );
+		return !( this->ownsBlock(reinterpret_cast<const ObjectType*>(block)) && block->isValidFor(this->m_blockSize) );
 	}
 
 private:
