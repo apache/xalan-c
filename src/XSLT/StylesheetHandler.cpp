@@ -68,6 +68,10 @@
 
 
 
+#include <XalanDOM/XalanDOMException.hpp>
+
+
+
 #include <DOMSupport/DOMServices.hpp>
 
 
@@ -220,13 +224,15 @@ void StylesheetHandler::startDocument()
 void StylesheetHandler::endDocument()
 {
 	m_constructionContext.popLocatorStack();
+
 	m_inExtensionElementStack.clear();
 
 	if (m_exceptionPending == true)
 	{
-		throw SAXException(toCharArray(m_pendingException));
+		throw SAXException(c_wstr(m_pendingException));
 	}
 }
+
 
 
 bool
@@ -479,7 +485,7 @@ StylesheetHandler::startElement(
 						XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) +
 						" requires a " + Constants::ATTRNAME_ELEMENTS + " attribute!");
 
-						throw SAXException(toCharArray(msg));
+						throw SAXException(c_wstr(msg));
 					}
 				}
 				break;
@@ -575,7 +581,7 @@ StylesheetHandler::startElement(
 					{
 						XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + " not allowed inside a stylesheet!");
 
-						throw SAXException(toCharArray(msg));
+						throw SAXException(c_wstr(msg));
 					}
 					break;
 
@@ -648,7 +654,7 @@ StylesheetHandler::startElement(
 								XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + 
 											  " has an illegal attribute: " + aname);
 
-								throw SAXException(toCharArray(msg));
+								throw SAXException(c_wstr(msg));
 							}
 						}
 
@@ -914,7 +920,7 @@ StylesheetHandler::startElement(
 			case Constants::ELEMNAME_STRIPSPACE:
 				{
 					XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + " is not allowed inside a template!");
-					throw SAXException(toCharArray(msg));
+					throw SAXException(c_wstr(msg));
 				}
 				break;
 
@@ -930,7 +936,7 @@ StylesheetHandler::startElement(
 					}
 					else
 					{
-						throw SAXException(toCharArray(msg));
+						throw SAXException(c_wstr(msg));
 					}
 				}
 			}
@@ -973,7 +979,7 @@ StylesheetHandler::startElement(
 				{
 					XalanDOMString msg("StylesheetHandler) " + XalanDOMString(name) + " attribute 'prefix' is missing");
 
-					throw SAXException(toCharArray(msg));
+					throw SAXException(c_wstr(msg));
 				}
 
 				// SCOTT: is the line below correct?
@@ -1091,7 +1097,26 @@ StylesheetHandler::startElement(
 				// Guard against an exception in appendChildElem()...
 				XalanAutoPtr<ElemTemplateElement>	theGuard(elem);
 
-				parent->appendChildElem(elem);
+				try
+				{
+					parent->appendChildElem(elem);
+				}
+				catch(const XalanDOMException&	e)
+				{
+					if (e.getExceptionCode() == XalanDOMException::HIERARCHY_REQUEST_ERR)
+					{
+						XalanDOMString	theMessage(elem->getElementName());
+
+						append(theMessage, " is not a valid child of ");
+						append(theMessage, elem->getElementName());
+
+						error(theMessage, lineNumber, columnNumber);
+					}
+					else
+					{
+						throw;
+					}
+				}
 
 				m_elemStackParentedElements.insert(elem);
 
@@ -1272,7 +1297,7 @@ StylesheetHandler::processImport(
 
 			const XalanDOMString	href(atts.getValue(i));
 
-			Stylesheet::URLStackType& includeStack = m_stylesheet.getIncludeStack();
+			Stylesheet::URLStackType&	includeStack = m_stylesheet.getIncludeStack();
 			assert(includeStack.size() > 0);
 
 			const XalanDOMString	hrefUrl = m_constructionContext.getURLStringFromString(href, includeStack.back());
@@ -1284,7 +1309,7 @@ StylesheetHandler::processImport(
 			{
 				XalanDOMString msg(hrefUrl + " is directly or indirectly importing itself!");
 
-				throw SAXException(toCharArray(msg));
+				throw SAXException(c_wstr(msg));
 			}
 
 			importStack.push_back(hrefUrl);
@@ -1317,7 +1342,8 @@ StylesheetHandler::processImport(
 	if(!foundIt)
 	{
 		XalanDOMString msg("Could not find href attribute for " + XalanDOMString(name));
-		throw SAXException(toCharArray(msg));
+
+		throw SAXException(c_wstr(msg));
 	}
 }
 
@@ -1350,7 +1376,7 @@ StylesheetHandler::processInclude(
 			{
 				XalanDOMString msg(hrefUrl + " is directly or indirectly including itself!");
 
-				throw SAXException(toCharArray(msg));
+				throw SAXException(c_wstr(msg));
 			}
 
 			m_stylesheet.getIncludeStack().push_back(hrefUrl);
@@ -1370,7 +1396,7 @@ StylesheetHandler::processInclude(
 	{
 		XalanDOMString msg("Could not find href attribute for " + XalanDOMString(name));
 
-		throw SAXException(toCharArray(msg));
+		throw SAXException(c_wstr(msg));
 	}
 }
 
@@ -1445,13 +1471,13 @@ StylesheetHandler::endElement(const XMLCh* const name)
 		{
 			XalanDOMString msg(XalanDOMString(name) + " attribute \'lang\' is missing");
 
-			throw SAXException(toCharArray(msg));
+			throw SAXException(c_wstr(msg));
 		}
 		if (m_pLXSLTExtensionNSH == 0) 
 		{
 			XalanDOMString msg("(StylesheetHandler) misplaced " + XalanDOMString(name) + " element?? Missing container element " + "'component'");
 
-			throw SAXException(toCharArray(msg));
+			throw SAXException(c_wstr(msg));
 		}
 
 		m_pLXSLTExtensionNSH->setScript(m_LXSLTScriptLang, m_LXSLTScriptSrcURL, m_LXSLTScriptBody);
@@ -1541,10 +1567,10 @@ void
 StylesheetHandler::comment(const XMLCh* const /*data*/)
 {
 	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
-	clear(m_accumulateText);
+	if (m_exceptionPending == false)
+	{
+		clear(m_accumulateText);
+	}
 }
 
 
@@ -1553,10 +1579,10 @@ void
 StylesheetHandler::entityReference(const XMLCh* const /*name*/)
 {
 	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
-	clear(m_accumulateText);
+	if (m_exceptionPending == false)
+	{
+		clear(m_accumulateText);
+	}
 }
 
 
@@ -1565,10 +1591,10 @@ void
 StylesheetHandler::resetDocument()
 {
 	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
-	clear(m_accumulateText);
+	if (m_exceptionPending == false)
+	{
+		clear(m_accumulateText);
+	}
 }
 
 
@@ -1599,8 +1625,8 @@ StylesheetHandler::processText(
 
 		assert(m_preserveSpaceStack.empty() == false);
 
-		bool		preserveSpace = m_preserveSpaceStack.back();
-		bool		disableOutputEscaping = false;
+		bool	preserveSpace = m_preserveSpaceStack.back();
+		bool	disableOutputEscaping = false;
 
 		if (preserveSpace == false && parent->getXSLToken() == Constants::ELEMNAME_TEXT)
 		{
@@ -1665,12 +1691,11 @@ StylesheetHandler::processText(
 				m_whiteSpaceElems.push_back(elem);
 		}
 	}
-	// BEGIN SANJIVA CODE
 	else if (m_inLXSLTScript)
 	{
 		append(m_LXSLTScriptBody, chars);
 	}
-	// END SANJIVA CODE
+
 	// TODO: Flag error if text inside of stylesheet
 }
 
@@ -1705,29 +1730,41 @@ StylesheetHandler::processAccumulatedText()
 bool
 StylesheetHandler::inExtensionElement() const
 {
-	if (m_inExtensionElementStack.size() == 0)
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+	if (find(
+			m_inExtensionElementStack.rbegin(),
+			m_inExtensionElementStack.rend(),
+			true) != m_inExtensionElementStack.rend())
 	{
-		return false;
+		return true;
 	}
 	else
 	{
-		BoolStackType::const_reverse_iterator			i = m_inExtensionElementStack.rbegin();
-		const BoolStackType::const_reverse_iterator		theEnd = m_inExtensionElementStack.rend();
-
-		while(i != theEnd)
-		{
-			if ((*i) == true)
-			{
-				return true;
-			}
-			else
-			{
-				++i;
-			}
-		}
-
 		return false;
 	}
+}
+
+
+
+void
+StylesheetHandler::error(
+			const XalanDOMString&	theMessage,
+			int						theLineNumber,
+			int						theColumnNumber) const
+{
+	XalanDOMString	theErrorMessage(theMessage);
+	
+	append(theErrorMessage, ", at line ");
+	LongToDOMString(theLineNumber, theErrorMessage);
+
+	append(theErrorMessage, ", offset ");
+	LongToDOMString(theColumnNumber, theErrorMessage);
+
+	append(theErrorMessage, ".");
+
+	throw SAXException(c_wstr(theErrorMessage));
 }
 
 

@@ -415,6 +415,12 @@ protected:
 	processInclude(const XalanDOMChar*		name,
 				   const AttributeList&		atts);
 
+	void
+	error(
+			const XalanDOMString&	theMessage,
+			int						theLineNumber,
+			int						theColumnNumber) const;
+
 private:
 
 	// not implemented
