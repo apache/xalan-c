@@ -372,9 +372,8 @@ void testCase4(XalanTransformer &xalan, XMLFileReporter& logFile)
 	futil.checkResults(theOutputFile, theGoldFile, logFile);
 }
 
-// TestCase5 will use the following API.  Default constructor of XSLTInputSource will take a string.
-//		- XSLTInputSource(const char*)
-//		- XSLTInputSource(const char*)
+// TestCase5 uses XercesDOMWrapperParsedSource class to wrap a xerces generated dom. 
+//
 void testCase5(XalanTransformer &xalan, XMLFileReporter& logFile)
 {
 
@@ -382,8 +381,6 @@ void testCase5(XalanTransformer &xalan, XMLFileReporter& logFile)
 	const XalanDOMString theGoldFile("\\xml-xalan\\test\\tests\\capi-gold\\smoke\\smoke01.out");
 
 	futil.data.testOrFile = "TestCase5";
-
-	//const char* const theURI = "Data/trans_input1.xml";
 	const char* const theURI = "/xml-xalan/test/tests/capi/smoke/smoke01.xml";
 		 
 	DOMParser  theParser;
@@ -391,18 +388,20 @@ void testCase5(XalanTransformer &xalan, XMLFileReporter& logFile)
 	theParser.parse(theURI);
 	const DOM_Document theDOM = theParser.getDocument();
 
-	XercesDOMSupport theDOMSupport;
+	XercesDOMSupport	theDOMSupport;
 	XercesParserLiaison theParserLiaison(theDOMSupport);
-	//	 theDOMSupport.setParserLiaison(&theParserLiaison);
 
 	// This is the new class...
-	const XercesDOMWrapperParsedSource loXMLDocWrapper(theDOM,theParserLiaison, theDOMSupport, XalanDOMString(theURI));
-	const XSLTInputSource loInStyle("/xml-xalan/test/tests/capi/smoke/smoke01.xsl");
-	const XSLTResultTarget loOut(theOutputFile);
+	const XercesDOMWrapperParsedSource xmlDocWrapper(theDOM, 
+													 theParserLiaison, 
+													 theDOMSupport, 
+													 XalanDOMString(theURI));
 
-	XalanTransformer loXalanTransformer;
-	loXalanTransformer.transform(loXMLDocWrapper,	loInStyle, loOut);
+	const XSLTInputSource	xslInputSource("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xsl");
+	const XSLTResultTarget	theResultTarget(theOutputFile);
 
+	// Do the transform and report the results.
+	xalan.transform(xmlDocWrapper, xslInputSource, theResultTarget);
 	futil.checkResults(theOutputFile, theGoldFile, logFile);
 }
 
