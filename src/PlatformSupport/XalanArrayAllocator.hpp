@@ -82,7 +82,7 @@ public:
 	typedef list<ListEntryType>				ListType;
 #else
 	typedef std::vector<Type>					VectorType;
-	typedef VectorType::size_type				size_type;
+	typedef typename VectorType::size_type		size_type;
 	typedef std::pair<size_type, VectorType>	ListEntryType;
 	typedef std::list<ListEntryType>			ListType;
 #endif
