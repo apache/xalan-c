@@ -199,7 +199,7 @@ getParams(int argc,
 	if (fsetGold)
 	{
 		goldRoot = baseDir;
-		append(goldRoot,XalanDOMString("\\xout"));
+		append(goldRoot,XalanDOMString("-gold"));
 		f.checkAndCreateDir(goldRoot);
 		append(goldRoot,pathSep);
 	}
