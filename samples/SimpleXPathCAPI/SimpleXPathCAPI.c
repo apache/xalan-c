@@ -1,4 +1,3 @@
-// Base header file.  Must be first.
 #include <XPathCAPI/XPathCAPI.h>
 
 

@@ -230,4 +230,4 @@ XalanEvaluateXPathExpressionAsBoolean(
 
 
 
-#endif	// XALAN_XPATHCAPI_HEADER_GUARD_1357924680
+#endif
