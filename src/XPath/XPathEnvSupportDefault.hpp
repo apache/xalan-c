@@ -213,6 +213,7 @@ public:
 			const XalanNode*		styleNode,
 			const XalanNode*		sourceNode,
 			const XalanDOMString&	msg,
+			const XalanDOMChar*		uri,
 			int						lineNo,
 			int						charOffset) const;
 
@@ -223,6 +224,7 @@ public:
 			const PrefixResolver*	resolver,
 			const XalanNode*		sourceNode,
 			const XalanDOMString&	msg,
+			const XalanDOMChar*		uri,
 			int						lineNo,
 			int						charOffset) const;
 

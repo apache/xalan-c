@@ -62,6 +62,10 @@
 
 
 
+#include <sax/Locator.hpp>
+
+
+
 #include <Include/STLHelper.hpp>
 
 
@@ -450,7 +454,7 @@ XPathExecutionContextDefault::getUnparsedEntityURI(
 
 
 bool
-XPathExecutionContextDefault::shouldStripSourceNode(const XalanNode&	node)
+XPathExecutionContextDefault::shouldStripSourceNode(const XalanNode&	/* node */)
 {
 	return false;
 }
@@ -465,16 +469,69 @@ XPathExecutionContextDefault::error(
 {
 	assert(m_xpathEnvSupport != 0);
 
-	if (m_xpathEnvSupport->problem(XPathEnvSupport::eXPATHProcessor, 
-								  XPathEnvSupport::eError,
-								  m_prefixResolver, 
-								  sourceNode,
-								  msg,
-								  0,
-								  0) == true)
+	if (m_xpathEnvSupport->problem(
+			XPathEnvSupport::eXPATHProcessor, 
+			XPathEnvSupport::eError,
+			m_prefixResolver, 
+			sourceNode,
+			msg,
+			0,
+			-1,
+			-1) == true)
 	{
-		// $$$ ToDo: Do something with the PrefixResolver here...
 		throw XPathException(msg, 0);
+	}
+}
+
+
+
+void
+XPathExecutionContextDefault::error(
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode,
+			const Locator*			locator) const
+{
+	assert(m_xpathEnvSupport != 0);
+
+	int				lineNumber = -1;
+	int				columnNumber = -1;
+
+	XalanDOMString	uri;
+
+	if (locator != 0)
+	{
+		lineNumber = locator->getLineNumber();
+		columnNumber = locator->getColumnNumber();
+
+		const XalanDOMChar*		id =
+			locator->getPublicId();
+
+		if (id != 0)
+		{
+			uri = id;
+		}
+		else
+		{
+			id = locator->getSystemId();
+
+			if (id != 0)
+			{
+				uri = id;
+			}
+		}
+	}
+
+	if (m_xpathEnvSupport->problem(
+			XPathEnvSupport::eXPATHProcessor, 
+			XPathEnvSupport::eError,
+			m_prefixResolver, 
+			sourceNode,
+			msg,
+			c_wstr(uri),
+			lineNumber,
+			columnNumber) == true)
+	{
+		throw XPathException(msg, uri, lineNumber, columnNumber);
 	}
 }
 
@@ -492,6 +549,17 @@ XPathExecutionContextDefault::error(
 
 
 void
+XPathExecutionContextDefault::error(
+			const char*			msg,
+			const XalanNode* 	sourceNode,
+			const Locator* 		locator) const
+{
+	error(TranscodeFromLocalCodePage(msg), sourceNode, locator);
+}
+
+
+
+void
 XPathExecutionContextDefault::warn(
 			const XalanDOMString&	msg,
 			const XalanNode*		sourceNode,
@@ -499,16 +567,69 @@ XPathExecutionContextDefault::warn(
 {
 	assert(m_xpathEnvSupport != 0);
 
-	if (m_xpathEnvSupport->problem(XPathEnvSupport::eXPATHProcessor, 
-								  XPathEnvSupport::eWarning,
-								  m_prefixResolver, 
-								  sourceNode,
-								  msg,
-								  0,
-								  0) == true)
+	if (m_xpathEnvSupport->problem(
+			XPathEnvSupport::eXPATHProcessor, 
+			XPathEnvSupport::eWarning,
+			m_prefixResolver, 
+			sourceNode,
+			msg,
+			0,
+			-1,
+			-1) == true)
 	{
-		// $$$ ToDo: Do something with the PrefixResolver here...
-		throw XPathException(msg, 0);
+		throw XPathException(msg, sourceNode);
+	}
+}
+
+
+
+void
+XPathExecutionContextDefault::warn(
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode,
+			const Locator* 			locator) const
+{
+	assert(m_xpathEnvSupport != 0);
+
+	int					lineNumber = -1;
+	int					columnNumber = -1;
+
+	XalanDOMString	uri;
+
+	if (locator != 0)
+	{
+		lineNumber = locator->getLineNumber();
+		columnNumber = locator->getColumnNumber();
+
+		const XalanDOMChar*		id =
+			locator->getPublicId();
+
+		if (id != 0)
+		{
+			uri = id;
+		}
+		else
+		{
+			id = locator->getSystemId();
+
+			if (id != 0)
+			{
+				uri = id;
+			}
+		}
+	}
+
+	if (m_xpathEnvSupport->problem(
+			XPathEnvSupport::eXPATHProcessor, 
+			XPathEnvSupport::eWarning,
+			m_prefixResolver, 
+			sourceNode,
+			msg,
+			c_wstr(uri),
+			lineNumber,
+			columnNumber) == true)
+	{
+		throw XPathException(msg, uri, lineNumber, columnNumber);
 	}
 }
 
@@ -526,6 +647,17 @@ XPathExecutionContextDefault::warn(
 
 
 void
+XPathExecutionContextDefault::warn(
+			const char*			msg,
+			const XalanNode*	sourceNode,
+			const Locator* 		locator) const
+{
+	warn(TranscodeFromLocalCodePage(msg), sourceNode, locator);
+}
+
+
+
+void
 XPathExecutionContextDefault::message(
 			const XalanDOMString&	msg,
 			const XalanNode*		sourceNode,
@@ -533,16 +665,70 @@ XPathExecutionContextDefault::message(
 {
 	assert(m_xpathEnvSupport != 0);
 
-	if (m_xpathEnvSupport->problem(XPathEnvSupport::eXPATHProcessor, 
-								  XPathEnvSupport::eMessage,
-								  m_prefixResolver, 
-								  sourceNode,
-								  msg,
-								  0,
-								  0) == true)
+	if (m_xpathEnvSupport->problem(
+			XPathEnvSupport::eXPATHProcessor, 
+			XPathEnvSupport::eMessage,
+			m_prefixResolver, 
+			sourceNode,
+			msg,
+			0,
+			-1,
+			-1) == true)
 	{
 		// $$$ ToDo: Do something with the PrefixResolver here...
 		throw XPathException(msg);
+	}
+}
+
+
+
+void
+XPathExecutionContextDefault::message(
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode,
+			const Locator* 			locator) const
+{
+	assert(m_xpathEnvSupport != 0);
+
+	int					lineNumber = -1;
+	int					columnNumber = -1;
+
+	XalanDOMString	uri;
+
+	if (locator != 0)
+	{
+		lineNumber = locator->getLineNumber();
+		columnNumber = locator->getColumnNumber();
+
+		const XalanDOMChar*		id =
+			locator->getPublicId();
+
+		if (id != 0)
+		{
+			uri = id;
+		}
+		else
+		{
+			id = locator->getSystemId();
+
+			if (id != 0)
+			{
+				uri = id;
+			}
+		}
+	}
+
+	if (m_xpathEnvSupport->problem(
+			XPathEnvSupport::eXPATHProcessor, 
+			XPathEnvSupport::eMessage,
+			m_prefixResolver, 
+			sourceNode,
+			msg,
+			c_wstr(uri),
+			lineNumber,
+			columnNumber) == true)
+	{
+		throw XPathException(msg, uri, lineNumber, columnNumber);
 	}
 }
 
@@ -559,6 +745,17 @@ XPathExecutionContextDefault::message(
 
 
 
+void
+XPathExecutionContextDefault::message(
+			const char*			msg,
+			const XalanNode*	sourceNode,
+			const Locator* 		locator) const
+{
+	message(TranscodeFromLocalCodePage(msg), sourceNode, locator);
+}
+
+			
+			
 bool
 XPathExecutionContextDefault::getThrowFoundIndex() const
 {

@@ -470,11 +470,18 @@ XPathEnvSupportDefault::problem(
 			const XalanNode*		/* styleNode */,
 			const XalanNode*		/* sourceNode */,
 			const XalanDOMString&	msg,
+			const XalanDOMChar*		uri,
 			int						lineNo,
 			int						charOffset) const
 {
-	cerr << msg
-		 << ", at line number "
+	cerr << msg;
+
+	if (uri != 0)
+	{
+		cerr << ",in " << uri;
+	}
+
+	cerr << ", at line number "
 		 << lineNo
 		 << " at offset "
 		 << charOffset
@@ -492,17 +499,24 @@ XPathEnvSupportDefault::problem(
 			const PrefixResolver*	/* resolver */,
 			const XalanNode*		/* sourceNode */,
 			const XalanDOMString&	msg,
+			const XalanDOMChar*		uri,
 			int						lineNo,
 			int						charOffset) const
 {
-	cerr << msg
-		 << ", at line number "
+	cerr << msg;
+
+	if (uri != 0)
+	{
+		cerr << ",in " << uri;
+	}
+
+	cerr << ", at line number "
 		 << lineNo
 		 << " at offset "
 		 << charOffset
 		 << endl;
 
-	return classification == XPathEnvSupport::eError ? true :false;
+	return classification == XPathEnvSupport::eError ? true : false;
 }
 
 
