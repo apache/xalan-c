@@ -809,6 +809,9 @@ protected:
 
 	static const XalanDOMString		s_emptyString;
 
+	// Data members...
+	const XalanDOMString&		m_tagName;
+
 private:
 
 	// Not implemented...
@@ -820,19 +823,17 @@ private:
 
 
 	// Data members...
-	const XalanDOMString&			m_tagName;
+	XalanSourceTreeDocument*	m_ownerDocument;
 
-	XalanSourceTreeDocument*		m_ownerDocument;
+	XalanNode*					m_parentNode;
 
-	XalanNode*						m_parentNode;
+	XalanNode*					m_previousSibling;
 
-	XalanNode*						m_previousSibling;
+	XalanNode*					m_nextSibling;
 
-	XalanNode*						m_nextSibling;
+	XalanNode*					m_firstChild;
 
-	XalanNode*						m_firstChild;
-
-	unsigned long					m_index;
+	unsigned long				m_index;
 };
 
 

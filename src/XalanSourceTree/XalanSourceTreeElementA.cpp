@@ -153,7 +153,7 @@ XalanSourceTreeElementA::getPrefix() const
 const XalanDOMString&
 XalanSourceTreeElementA::getLocalName() const
 {
-	return s_emptyString;
+	return m_tagName;
 }
 
 
