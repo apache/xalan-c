@@ -274,6 +274,10 @@ SOURCE=..\..\..\..\src\XPath\XalanQNameByValue.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XalanXPathException.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XBoolean.cpp
 # End Source File
 # Begin Source File
@@ -362,10 +366,6 @@ SOURCE=..\..\..\..\src\XPath\XPathEvaluator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathException.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\XPathExecutionContext.cpp
 # End Source File
 # Begin Source File
@@ -407,10 +407,6 @@ SOURCE=..\..\..\..\src\XPath\XPathProcessor.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XPathProcessorImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\XPointer.cpp
 # End Source File
 # Begin Source File
 
@@ -646,6 +642,10 @@ SOURCE=..\..\..\..\src\XPath\XalanQNameByValue.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XalanXPathException.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XBoolean.hpp
 # End Source File
 # Begin Source File
@@ -738,10 +738,6 @@ SOURCE=..\..\..\..\src\XPath\XPathEvaluator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathException.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\XPathExecutionContext.hpp
 # End Source File
 # Begin Source File
@@ -783,10 +779,6 @@ SOURCE=..\..\..\..\src\XPath\XPathProcessor.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XPathProcessorImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\XPointer.hpp
 # End Source File
 # Begin Source File
 
