@@ -3327,9 +3327,9 @@ XSLTEngineImpl::terminate()
 
 	uninstallFunctions();
 
-	clear(::s_uniqueNamespacePrefix);
+	releaseMemory(::s_uniqueNamespacePrefix);
 
-	clear(::s_XSLT4JNameSpaceURL);
+	releaseMemory(::s_XSLT4JNameSpaceURL);
 
-	clear(::s_XSLNameSpaceURL);
+	releaseMemory(::s_XSLNameSpaceURL);
 }

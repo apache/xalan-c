@@ -720,7 +720,7 @@ NamespacesHandler::initialize()
 void
 NamespacesHandler::terminate()
 {
-	::clear(::s_ApacheXSLTNamespaceURI);
-	::clear(::s_LotusXSLTNamespaceURI);
-	::clear(::s_LotusXSLTNamespaceURIWithSeparator);
+	::releaseMemory(::s_ApacheXSLTNamespaceURI);
+	::releaseMemory(::s_LotusXSLTNamespaceURI);
+	::releaseMemory(::s_LotusXSLTNamespaceURIWithSeparator);
 }

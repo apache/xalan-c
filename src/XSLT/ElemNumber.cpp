@@ -1697,17 +1697,17 @@ ElemNumber::initialize()
 void
 ElemNumber::terminate()
 {
-	clear(::s_atString);
-	clear(::s_textString);
-	clear(::s_commentString);
-	clear(::s_slashString);
-	clear(::s_piString);
-	clear(::s_leftParenString);
-	clear(::s_dotString);
-	clear(::s_oneString);
+	releaseMemory(::s_atString);
+	releaseMemory(::s_textString);
+	releaseMemory(::s_commentString);
+	releaseMemory(::s_slashString);
+	releaseMemory(::s_piString);
+	releaseMemory(::s_leftParenString);
+	releaseMemory(::s_dotString);
+	releaseMemory(::s_oneString);
 
-	clear(::s_alphaCountTable);
-	clear(::s_elalphaCountTable);
+	releaseMemory(::s_alphaCountTable);
+	releaseMemory(::s_elalphaCountTable);
 
 	DecimalToRomanVectorType().swap(::s_romanConvertTable);
 
