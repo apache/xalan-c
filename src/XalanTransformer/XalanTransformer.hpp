@@ -54,13 +54,17 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XALAN_TRANSFORMER_HEADER_GUARD)
-#define XALAN_TRANSFORMER_HEADER_GUARD
+#if !defined(XALANTRANSFORMER_HEADER_GUARD)
+#define XALANTRANSFORMER_HEADER_GUARD
 
 
 
 // Base include file.  Must be first.
 #include <XalanTransformer/XalanTransformerDefinitions.hpp>
+
+
+
+#include <vector>
 
 
 
@@ -90,6 +94,7 @@
 
 
 
+#include <XalanTransformer/XalanCompiledStylesheet.hpp>
 #include <XalanTransformer/XalanTransformerOutputStream.hpp>
 
 
@@ -111,9 +116,9 @@
 
 /**
  * This is a simple C++ interface for some common usage patterns. It's 
- * the user's responsibility to call initialize and terminate 
- * before creating and after deleting any XalanTransformer instances 
- * respectively.
+ * the user's responsibility to call initialize and terminate for Xerces 
+ * and Xalan before creating and after deleting any XalanTransformer  
+ * instances.
 */
 class XALAN_TRANSFORMER_EXPORT XalanTransformer
 {
@@ -149,141 +154,161 @@ public:
 	getLastError() const;
 
 	/**
-	 * Transform the source tree to output in the given result tree target.
-	 * The processor will apply the the stylesheet source to the input source
-	 * and write the transformation output to the target. Called internally by 
-	 * all transform methods.
+	 * Transform will apply the stylesheet source to the input source
+	 * and write the transformation output to the target. The input 
+	 * source and result target can be a file name, a stream or a root
+	 * node.
 	 *
-	 * @param inputSource		input source
-	 * @param stylesheetSource	stylesheet source
-	 * @param outputTarget		output source tree
+	 * @param theInputSource		input source
+	 * @param theStylesheetSource	stylesheet source
+	 * @param theResultTarget		output source
 	 * @return	0 for success
 	 */
 	int
 	transform(
-			const XSLTInputSource&		inputSource, 
-			const XSLTInputSource&		stylesheetSource,
-			XSLTResultTarget&			outputTarget);
+			const XSLTInputSource&		theInputSource, 
+			const XSLTInputSource&		theStylesheetSource,
+			const XSLTResultTarget&		theResultTarget);
 
 	/**
-	 * Transform the XML source tree to the given result file.
-	 * The processor will apply the the stylesheet source to the input source
-	 * and write the transformation output to the output file.
+	 * Transform will apply the compiled stylesheet to the input source
+	 * and write the transformation output to the target. The input 
+	 * source and result target can be a file name, a stream or a root
+	 * node. 
 	 *
-	 * @param theXMLFileName	filename of XML input file
-	 * @param theXSLFileName	filename of stylesheet file
-	 * @param theOutFileName	filename of output file
+	 * @param theInputSource		input source
+	 * @param theCompiledStylesheet	pointer to a compiled stylesheet
+	 * @param theResultTarget		output source 
 	 * @return	0 for success
 	 */
 	int
 	transform(
-			const char*					theXMLFileName, 
-			const char*					theXSLFileName,
-			const char*					theOutFileName);
+			const XSLTInputSource&			theInputSource, 
+			const XalanCompiledStylesheet*	theCompiledStylesheet,
+			const XSLTResultTarget&			theResultTarget);
 
 	/**
-	 * Transform the XML source tree to the given result file.
-	 * The processor will apply the the stylesheet provided as a PI in the 
-	 * the XML to the input file and write the transformation output to the 
-	 * output file.
+	 * Transform will apply the stylesheet provided as a PI in the 
+	 * XML of the input source and write the transformation output to 
+	 * the target. The input source and result target can be a file 
+	 * name, a stream or a root node.
 	 *
-	 * @param theXMLFileName	filename of XML input file	
-	 * @param theOutFileName	filename of output file
+	 * @param theInputSource		input source
+	 * @param theResultTarget		output source tree
 	 * @return	0 for success
 	 */
 	int
 	transform(
-			const char*					theXMLFileName, 
-			const char*					theOutFileName);
+			const XSLTInputSource&		theInputSource, 		
+			const XSLTResultTarget&		theResultTarget);
 
 	/**
-	 * Transform the XML source tree to an output stream.
-	 * The processor will apply the the stylesheet file to the input file
-	 * and write the transformation output to the output stream.
-	 *
-	 * @param theXMLFileName	filename of XML input source
-	 * @param theXSLFileName	filename of stylesheet source
-	 * @param theOutStream		a std ostream for the output
-	 * @return	0 for success
-	 */
-	int
-	transform(
-			const char*					theXMLFileName, 
-			const char*					theXSLFileName,
-			ostream&					theOutStream);
-
-	/**
-	 * Transform the XML source tree to an output stream.
-	 * The processor will apply the the stylesheet provided as a PI in the
-	 * the XML to the input file and write the transformation output to the 
-	 * output stream.
-	 *
-	 * @param theXMLFileName	filename of XML input source
-	 * @param theXSLFileName	filename of stylesheet source
-	 * @param theOutStream		a std ostream for the output
-	 * @return	0 for success
-	 */
-	int
-	transform(
-			const char*					theXMLFileName, 
-			ostream&					theOutStream);
-
-	/**
-	 * Transform the XML source tree to an output stream.
-	 * The processor will apply the the stylesheet stream to the input stream
-	 * and write the transformation output to the output stream.
-	 *
-	 * @param theXMLInStream	a std istream for the input
-	 * @param theXSLInStream	a std istream for the input
-	 * @param theOutStream		a std ostream for the output
-	 * @return	0 for success
-	 */
-	int
-	transform(
-			istream&					theXMLInStream, 
-			istream&					theXSLInStream,
-			ostream&					theOutStream);
-	
-	/**
-	 * Transform the XML source tree to an output stream.
-	 * The processor will apply the the stylesheet provided as a PI in the 
-	 * XML of the input stream and write the transformation output to the 
-	 * output stream.
-	 *
-	 * @param theXMLInStream	a std istream for the input
-	 * @param theOutStream		a std ostream for the output
-	 * @return	0 for success
-	 */
-	int
-	transform(
-			istream&					theXMLInStream, 
-			ostream&					theOutStream);
-
-	/**
-	 * Transform the XML source tree to a callback function.
-	 * The processor will apply the stylesheet file to the input file
-	 * and allocate the transformation result to a callback function  
-	 * in pre-allocated blocks. Upon termination, Xalan releases any 
+	 * Transform will apply the stylesheet source to the input source
+	 * and write the transformation result to a callback function  
+	 * in pre-allocated blocks. The input source can be a file name, 
+	 * a stream or a root node. Upon termination, Xalan releases any 
 	 * allocated memory. Data passed to the callback is not guaranteed to 
 	 * be null terminated.
 	 *
 	 * - See XalanTransformerOutputStream and XalanOutputHandlerType 
 	 * for more details.
 	 * 
-	 * @param theXMLFileName	filename of XML input source
-	 * @param theXSLFileName	filename of stylesheet source	 
-	 * @param theOutputHandle	void pointer passed through to callback.
-	 * @param theOutputHandler	a user defined (callback) function.
-	 * @param theFlushHandler	(optional) a user defined (callback) function.
+	 * @param theInputSource		input source
+	 * @param theStylesheetSource	stylesheet source	
+	 * @param theOutputHandle		void pointer passed through to callback.
+	 * @param theOutputHandler		a user defined (callback) function.
+	 * @param theFlushHandler		(optional) a user defined (callback) function.
 	 * @return	0 for success 
 	 */
 	int
 	transform(
-			const char*					theXMLFileName, 
-			const char*					theXSLFileName,
+			const XSLTInputSource&		theInputSource, 
+			const XSLTInputSource&		theStylesheetSource,
 			const void*					theOutputHandle, 
 			XalanOutputHandlerType		theOutputHandler,
 			XalanFlushHandlerType		theFlushHandler = 0);
+	
+	/**
+	 * Transform will apply the compiled stylesheet to the input source
+	 * and write the transformation result to a callback function  
+	 * in pre-allocated blocks. The input source can be a file name, 
+	 * a stream or a root node. Upon termination, Xalan releases any 
+	 * allocated memory. Data passed to the callback is not guaranteed to 
+	 * be null terminated.
+	 *
+	 * - See XalanTransformerOutputStream and XalanOutputHandlerType 
+	 * for more details.
+	 * 
+	 * @param theInputSource		input source
+	 * @param theCompiledStylesheet	pointer to a compiled stylesheet
+	 * @param theOutputHandle		void pointer passed through to callback.
+	 * @param theOutputHandler		a user defined (callback) function.
+	 * @param theFlushHandler		(optional) a user defined (callback) function.
+	 * @return	0 for success 
+	 */
+	int
+	transform(
+			const XSLTInputSource&			theInputSource, 
+			const XalanCompiledStylesheet*	theCompiledStylesheet,
+			const void*						theOutputHandle, 
+			XalanOutputHandlerType			theOutputHandler,
+			XalanFlushHandlerType			theFlushHandler = 0);
+
+	/**
+	 * Transform will apply the stylesheet provided as a PI in the 
+	 * XML of the input source and write  the transformation result to a  
+	 * callback function in pre-allocated blocks. The input source can be 
+	 * a file name, a stream or a root node. Upon termination, Xalan 
+	 * releases any allocated memory. Data passed to the callback is not 
+	 * guaranteed to be null terminated.
+	 *
+	 * - See XalanTransformerOutputStream and XalanOutputHandlerType 
+	 * for more details.
+	 * 
+	 * @param theInputSource		input source
+	 * @param theOutputHandle		void pointer passed through to callback.
+	 * @param theOutputHandler		a user defined (callback) function.
+	 * @param theFlushHandler		(optional) a user defined (callback) function.
+	 * @return	0 for success 
+	 */
+	int
+	transform(
+			const XSLTInputSource&		theInputSource, 		
+			const void*					theOutputHandle, 
+			XalanOutputHandlerType		theOutputHandler,
+			XalanFlushHandlerType		theFlushHandler =0);
+
+	/**
+	 * Creates a complied stylesheet.  The input source can be 
+	 * a file name, a stream or a root node.
+	 *
+	 * @param theStylesheetSource	input source
+	 * @return	a pointer to a XalanCompiledStylesheet or 0 for failure.
+	 */
+	XalanCompiledStylesheet*
+	compileStylesheet(const XSLTInputSource&		theStylesheetSource);
+
+	/**
+	 * Set a top-level stylesheet parameter.  This value can be evaluated via
+	 * xsl:param-variable.
+	 *
+	 * @param key name of the param
+	 * @param expression expression that will be evaluated
+	 */
+	void
+	setStylesheetParam(
+			const XalanDOMString&	key,
+			const XalanDOMString&	expression);
+	void
+	setStylesheetParam(
+			const char*				key,
+			const char*				expression);
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<const XalanCompiledStylesheet*>		CompiledStylesheetPtrVectorType;
+#else
+	typedef std::vector<const XalanCompiledStylesheet*>	CompiledStylesheetPtrVectorType;
+#endif
 
 protected:
 
@@ -303,21 +328,17 @@ private:
 	XPathFactoryDefault						m_xpathFactory;
 	
 	XSLTEngineImpl							m_processor;
-	
-	XPathFactoryBlock						m_stylesheetXPathFactory;
-
-	StylesheetConstructionContextDefault	m_stylesheetConstructionContext;
 
 	StylesheetExecutionContextDefault		m_stylesheetExecutionContext;
+
+	CompiledStylesheetPtrVectorType			m_compiledStylesheets;
 
 	CharVectorType							m_errorMessage;
 
 	static XSLTInit*						m_xsltInit;
 };
 
-
-
-#endif	// XALAN_TRANSFORMER_HEADER_GUARD
+#endif	// XALANTRANSFORMER_HEADER_GUARD
 
 
 
