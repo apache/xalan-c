@@ -96,6 +96,15 @@
 
 
 
+//#define XALAN_USE_ICU
+#if defined(XALAN_USE_ICU)
+#include <ICUBridge/ICUBridge.hpp>
+#include <ICUBridge/FunctionICUFormatNumber.hpp>
+#include <ICUBridge/ICUBridgeCollationCompareFunctor.hpp>
+#endif
+
+
+
 #include "XalanCompiledStylesheetDefault.hpp"
 #include "XalanDefaultDocumentBuilder.hpp"
 #include "XalanDefaultParsedSource.hpp"
@@ -105,6 +114,10 @@
 
 
 XSLTInit*	XalanTransformer::s_xsltInit = 0;
+
+#if defined(XALAN_USE_ICU)
+static const ICUBridgeCollationCompareFunctor*	theICUFunctor = 0;
+#endif
 
 
 
@@ -116,6 +129,9 @@ XalanTransformer::XalanTransformer():
 	m_errorMessage(1, '\0'),
 	m_stylesheetExecutionContext(new StylesheetExecutionContextDefault)
 {
+#if defined(XALAN_USE_ICU)
+	m_stylesheetExecutionContext->installCollationCompareFunctor(theICUFunctor);
+#endif
 }
 
 
@@ -153,6 +169,15 @@ XalanTransformer::initialize()
 {
 	// Initialize Xalan. 
 	s_xsltInit = new XSLTInit;
+
+#if defined(XALAN_USE_ICU)
+	theICUFunctor = new ICUBridgeCollationCompareFunctor;
+
+	// Install the ICU version of format-number...
+	XPath::installFunction(
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")),
+			FunctionICUFormatNumber());
+#endif
 }
 
 
@@ -164,6 +189,12 @@ XalanTransformer::terminate()
 	delete s_xsltInit;
 
 	s_xsltInit = 0;
+
+#if defined(XALAN_USE_ICU)
+	delete theICUFunctor;
+
+	theICUFunctor = 0;
+#endif
 }
 
 
