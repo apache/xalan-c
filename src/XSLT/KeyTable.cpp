@@ -191,31 +191,28 @@ KeyTable::KeyTable(
 									exprResult = executionContext.getNodeData(*useNode);
 								}
 
-								if(length(exprResult) != 0)
-								{
-									MutableNodeRefList&		keyNodes =
+								MutableNodeRefList&		keyNodes =
 										m_keys[kd.getName()][exprResult];
 
-									// See if the matched node is already in the 
-									// table set.  If it is there, we're done, otherwise 
-									// add it.
-									bool foundit = false;
+								// See if the matched node is already in the 
+								// table set.  If it is there, we're done, otherwise 
+								// add it.
+								bool foundit = false;
 
-									const unsigned int	nKeyNodes = keyNodes.getLength(); //size();
+								const unsigned int	nKeyNodes = keyNodes.getLength(); //size();
 
-									for(unsigned int j = 0; j < nKeyNodes; j++)
+								for(unsigned int j = 0; j < nKeyNodes; j++)
+								{
+									if(testNode == keyNodes.item(j))
 									{
-										if(testNode == keyNodes.item(j))
-										{
-											foundit = true;
-											break;
-										}
-									} // end for j
-
-									if(foundit == false)
-									{
-										keyNodes.addNode(testNode);
+										foundit = true;
+										break;
 									}
+								} // end for j
+
+								if(foundit == false)
+								{
+									keyNodes.addNode(testNode);
 								}
 							} // end for(int k = 0; k < nUseValues; k++)
 
