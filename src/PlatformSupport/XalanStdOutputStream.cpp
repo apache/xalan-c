@@ -103,11 +103,15 @@ XalanStdOutputStream::~XalanStdOutputStream()
 void
 XalanStdOutputStream::doFlush()
 {
-	m_outputStream.flush();
-
-	if(!m_outputStream)
+	// Don't try to flush if the stream is in a bad state...
+	if(m_outputStream)
 	{
-		throw XalanStdOutputStreamWriteException(errno);
+		m_outputStream.flush();
+
+		if(!m_outputStream)
+		{
+			throw XalanStdOutputStreamWriteException(errno);
+		}
 	}
 }
 
