@@ -566,45 +566,6 @@ substring(
 
 
 
-#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-
-template<class InputIteratorType, class OutputIteratorType>
-inline OutputIteratorType
-XalanCopy(
-			InputIteratorType	begin,
-			InputIteratorType	end,
-			OutputIteratorType	iterator)
-{
-	for(; begin != end; ++iterator, ++begin)
-	{
-		*iterator = *begin;
-	}
-
-	return iterator;
-}
-
-
-
-template<class InputIteratorType, class OutputIteratorType, class UnaryFunction>
-inline OutputIteratorType
-XalanTransform(
-			InputIteratorType	begin,
-			InputIteratorType	end,
-			OutputIteratorType	iterator,
-			UnaryFunction		function)
-{
-	for(; begin != end; ++iterator, ++begin)
-	{
-		*iterator = function(*begin);
-	}
-
-	return iterator;
-}
-
-#endif
-
-
-
 template <class InputIteratorType, class OutputIteratorType, class FunctionType>
 OutputIteratorType
 TransformString(

@@ -133,6 +133,78 @@ StaticStringToDOMString(const XalanDOMString&	theString)
 
 
 
+#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+
+template<class InputIteratorType, class OutputIteratorType>
+inline OutputIteratorType
+XalanCopy(
+			InputIteratorType	begin,
+			InputIteratorType	end,
+			OutputIteratorType	iterator)
+{
+	for(; begin != end; ++iterator, ++begin)
+	{
+		*iterator = *begin;
+	}
+
+	return iterator;
+}
+
+
+
+template<class InputIteratorType, class OutputIteratorType, class UnaryFunction>
+inline OutputIteratorType
+XalanTransform(
+			InputIteratorType	begin,
+			InputIteratorType	end,
+			OutputIteratorType	iterator,
+			UnaryFunction		function)
+{
+	for(; begin != end; ++iterator, ++begin)
+	{
+		*iterator = function(*begin);
+	}
+
+	return iterator;
+}
+
+#else
+
+template<class InputIteratorType, class OutputIteratorType>
+inline OutputIteratorType
+XalanCopy(
+			InputIteratorType	begin,
+			InputIteratorType	end,
+			OutputIteratorType	iterator)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::copy;
+#endif
+
+	return copy(begin, end, iterator);
+}
+
+
+
+template<class InputIteratorType, class OutputIteratorType, class UnaryFunction>
+inline OutputIteratorType
+XalanTransform(
+			InputIteratorType	begin,
+			InputIteratorType	end,
+			OutputIteratorType	iterator,
+			UnaryFunction		function)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::transform;
+#endif
+
+	return transform(begin, end, iterator);
+}
+
+#endif
+
+
+
 /**
  * Get the underlying representation of the target XalanDOMString as a
  * null-terminated string
