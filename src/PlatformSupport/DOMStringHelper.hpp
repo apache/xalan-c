@@ -478,15 +478,41 @@ indexOf(
  * Simulates the java String method indexOf().
  * 
  * @param theString string to search
+ * @param theStringLength length of the string to search
  * @param theSubstring substring searched for
+ * @param theSubstringLength length of the substring searched for
  * @return the index of theSubstring in theString, 
  * or length(theString) if the string is not
  * found.
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
 indexOf(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength,
+			const XalanDOMChar*			theSubstring,
+			XalanDOMString::size_type	theSubstringLength);
+
+
+
+/**
+ * Simulates the java String method indexOf().
+ * 
+ * @param theString string to search
+ * @param theSubstring substring searched for
+ * @return the index of theSubstring in theString, 
+ * or length(theString) if the string is not
+ * found.
+ */
+inline XalanDOMString::size_type
+indexOf(
 			const XalanDOMChar*		theString,
-			const XalanDOMChar*		theSubstring);
+			const XalanDOMChar*		theSubstring)
+{
+	assert(theString != 0 && theSubstring != 0);
+
+	return indexOf(theString, length(theString), theSubstring, length(theSubstring));
+}
+
 
 
 /**

@@ -149,14 +149,7 @@ static const XalanDOMChar	thePositiveInfinityString[] =
 	0
 };
 
-static const XalanDOMChar	theNegativeZeroString[] =
-{
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charDigit_0,
-	0
-};
-
-static const XalanDOMChar	thePositiveZeroString[] =
+static const XalanDOMChar	theZeroString[] =
 {
 	XalanUnicode::charDigit_0,
 	0
@@ -166,14 +159,13 @@ static const XalanDOMChar	thePositiveZeroString[] =
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
 indexOf(
-			const XalanDOMChar*		theString,
-			const XalanDOMChar*		theSubstring)
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength,
+			const XalanDOMChar*			theSubstring,
+			XalanDOMString::size_type	theSubstringLength)
 {
 	assert(theString != 0);
 	assert(theSubstring != 0);
-
-	const XalanDOMString::size_type		theStringLength = length(theString);
-	const XalanDOMString::size_type		theSubstringLength = length(theSubstring);
 
 	// If the substring is longer than the string, then
 	// it's not a substring.
@@ -1418,19 +1410,13 @@ DoubleToDOMString(
 			theNegativeInfinityString,
 			sizeof(theNegativeInfinityString) / sizeof(theNegativeInfinityString[0]) - 1);
 	}
-	else if (DoubleSupport::isPositiveZero(theDouble) == true)
+	else if (DoubleSupport::isPositiveZero(theDouble) == true ||
+			 DoubleSupport::isNegativeZero(theDouble) == true)
 	{
 		append(
 			theResult,
-			thePositiveZeroString,
-			sizeof(thePositiveZeroString) / sizeof(thePositiveZeroString[0]) - 1);
-	}
-	else if (DoubleSupport::isNegativeZero(theDouble) == true)
-	{
-		append(
-			theResult,
-			theNegativeZeroString,
-			sizeof(theNegativeZeroString) / sizeof(theNegativeZeroString[0]) - 1);
+			theZeroString,
+			sizeof(theZeroString) / sizeof(theZeroString[0]) - 1);
 	}
 	else if (long(theDouble) == theDouble)
 	{
@@ -1541,17 +1527,12 @@ DOMStringHelper::DoubleToCharacters(
 			theNegativeInfinityString,
 			sizeof(theNegativeInfinityString) / sizeof(theNegativeInfinityString[0]) - 1);
 	}
-	else if (DoubleSupport::isPositiveZero(theDouble) == true)
+	else if (DoubleSupport::isPositiveZero(theDouble) == true ||
+			 DoubleSupport::isNegativeZero(theDouble) == true)
 	{
 		(formatterListener.*function)(
-			thePositiveZeroString,
-			sizeof(thePositiveZeroString) / sizeof(thePositiveZeroString[0]) - 1);
-	}
-	else if (DoubleSupport::isNegativeZero(theDouble) == true)
-	{
-		(formatterListener.*function)(
-			theNegativeZeroString,
-			sizeof(theNegativeZeroString) / sizeof(theNegativeZeroString[0]) - 1);
+			theZeroString,
+			sizeof(theZeroString) / sizeof(theZeroString[0]) - 1);
 	}
 	else if (long(theDouble) == theDouble)
 	{
