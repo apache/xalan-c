@@ -14,7 +14,7 @@
 
   <property name="build.docs" value="${build.dir}/docs"/>
   <property name="build.apidocs" value="${build.docs}/apidocs"/>  
-  <property name="site.dir" value="./site"/>
+  <property name="site.dir" value="./xml-site"/>
 
   <target name="prepare">
     <gunzip src="${doc.generator.styletargz}"/>
