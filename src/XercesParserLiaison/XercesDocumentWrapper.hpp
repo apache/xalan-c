@@ -135,12 +135,14 @@ public:
 	 * @param theXercesDocument The Xerces document to bridge
 	 * @param threadSafe If true, the tree can safely be shared amongst multiple threads.  (Also implies buildWrapper == true)
 	 * @param buildWrapper If true, all of the bridge nodes will be built during construction.
+	 * @param buildMaps If true, a map of Xerces to Xalan nodes will be built, even if the bridge is built
 	 *
 	 */
 	XercesDocumentWrapper(
 			const DOMDocument_Type*		theXercesDocument,
 			bool						threadSafe = true,
-			bool						buildWrapper = true);
+			bool						buildWrapper = true,
+			bool						buildMaps = false);
 
 	virtual
 	~XercesDocumentWrapper();
@@ -412,7 +414,8 @@ public:
 				XercesDocumentWrapper*				theDocument,
 				XercesWrapperNavigator*				theDocumentNavigator,
 				WrapperNavigatorVectorInnerType&	theNavigators,
-				unsigned long						theStartIndex);
+				unsigned long						theStartIndex,
+				bool								theBuildMapsFlag);
 
 		virtual
 		~BuildWrapperTreeWalker();
@@ -457,6 +460,8 @@ public:
 		NavigatorStackType					m_parentNavigatorStack;
 
 		NavigatorStackType					m_siblingNavigatorStack;
+
+		const bool							m_buildMaps;
 	};
 
 
@@ -600,6 +605,8 @@ private:
 	bool									m_mappingMode;
 
 	bool									m_indexValid;
+
+	const bool								m_buildMaps;
 
 	mutable XercesElementWrapperAllocator	m_elementAllocator;
 

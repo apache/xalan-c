@@ -388,7 +388,7 @@ public:
 	XalanDocument*
 	createDocument(const DOMDocument_Type*	theXercesDocument)
 	{
-		return createDocument(theXercesDocument, m_threadSafe, m_buildWrapper);
+		return createDocument(theXercesDocument, m_threadSafe, m_buildWrapper, m_buildMaps);
 	}
 
 	/**
@@ -400,13 +400,15 @@ public:
 	 * @param theXercesDocument The Xerces document.
 	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
 	 * @param buildWrapper If true, the entire wrapper structure is built.
+	 * @param buildMaps If true, the map of Xerces to Xalan nodes is always built.
 	 * @return a pointer to a new XalanDocument-derived instance.
 	 */
 	XalanDocument*
 	createDocument(
 			const DOMDocument_Type*		theXercesDocument,
 			bool						threadSafe,
-			bool						buildWrapper);
+			bool						buildWrapper,
+			bool						buildMaps = false);
 
 	/**
 	 * This API is deprecated.
@@ -628,6 +630,37 @@ public:
 		}
 	}
 
+	/**
+	 * This functions returns the state of the liaison's buildMaps flag.
+	 * If true, maps will be created to allow mapping of Xalan<->Xerces mapping
+	 * in both directions for XercesWrapper classes.
+	 *
+	 * @return true, if the new documents will be built with Maps
+	 */
+	bool
+	getBuildMaps() const
+	
+	{
+		return m_buildMaps;
+	}
+ 
+	/**
+	 * This functions sets the state of the liaison's buildMaps flag.
+	 * When this flag is true, maps will be built providing Xerces<->Xalan
+	 * mapping in Wrapper classes.
+	 *
+	 * @note The maps created use a large amount of memory.  If only
+	 * Xalan->Xerces node mapping is required, do not set this to true.
+	 *
+	 * @param newState The new state for the flag.
+	 *
+	 */
+	void
+	setBuildMaps(bool	newState)
+	{
+		m_buildMaps = newState;
+	}
+
 #if XERCES_VERSION_MAJOR >= 2
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER XercesDOMParser 	DOMParserType;
 #else
@@ -650,6 +683,8 @@ protected:
 	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.
 	 *
+	 * This API is deprecated.
+	 *
 	 * @param theXercesDocument The Xerces document.
 	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
 	 * @param buildBridge If true, the entire bridge structure is built.
@@ -667,6 +702,7 @@ protected:
 	 * @param theXercesDocument The Xerces document.
 	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
 	 * @param buildWrapper If true, the entire bridge structure is built.
+	 * @param buildMaps If true, the map of Xerces to Xalan nodes is always built.
 	 * @return a pointer to a new XercesDocumentWrapper instance.
 	 */
 	XercesDocumentWrapper*
@@ -674,6 +710,7 @@ protected:
 			const DOMDocument_Type*		theXercesDocument,
 			bool						threadSafe,
 			bool						buildWrapper,
+			bool						buildMaps,
 			bool						isOwned);
 
 private:
@@ -704,6 +741,8 @@ private:
 	bool				m_buildBridge;
 
 	bool				m_threadSafe;
+
+	bool				m_buildMaps;
 
 	ExecutionContext*	m_executionContext;
 };

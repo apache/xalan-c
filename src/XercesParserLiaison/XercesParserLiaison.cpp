@@ -114,6 +114,7 @@ XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
 	m_documentMap(),
 	m_buildBridge(true),
 	m_threadSafe(false),
+	m_buildMaps(false),
 	m_executionContext(0)
 {
 }
@@ -134,6 +135,7 @@ XercesParserLiaison::XercesParserLiaison() :
 	m_buildWrapper(true),
 	m_buildBridge(true),
 	m_threadSafe(false),
+	m_buildMaps(false),
 	m_executionContext(0)
 {
 }
@@ -254,7 +256,7 @@ XercesParserLiaison::parseXMLStream(
 
 	if (theXercesDocument != 0)
 	{
-		theNewDocument = doCreateDocument(theXercesDocument, m_threadSafe, m_buildWrapper, true);
+		theNewDocument = doCreateDocument(theXercesDocument, m_threadSafe, m_buildWrapper, m_buildMaps, true);
 
 		theParser->adoptDocument();
 #else
@@ -484,11 +486,12 @@ XalanDocument*
 XercesParserLiaison::createDocument(
 			const DOMDocument_Type*		theXercesDocument,
 			bool						threadSafe,
-			bool						buildWrapper)
+			bool						buildWrapper,
+			bool						buildMaps)
 {
 	// As we did not create the underlying DOMDocument - ensure we don't
 	// delete it later.
-	return doCreateDocument(theXercesDocument, threadSafe, buildWrapper, false);
+	return doCreateDocument(theXercesDocument, threadSafe, buildWrapper, buildMaps, false);
 }
 
 
@@ -736,10 +739,11 @@ XercesParserLiaison::doCreateDocument(
 			const DOMDocument_Type*		theXercesDocument,
 			bool						threadSafe,
 			bool						buildWrapper,
+			bool						buildMaps,
 			bool						isOwned)
 {
 	XercesDocumentWrapper* const		theNewDocument =
-		new XercesDocumentWrapper(theXercesDocument, threadSafe, buildWrapper);
+		new XercesDocumentWrapper(theXercesDocument, threadSafe, buildWrapper, buildMaps);
 
 	DocumentEntry&	theEntry = m_documentMap[theNewDocument];
 	

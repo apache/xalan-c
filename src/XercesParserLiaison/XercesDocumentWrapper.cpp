@@ -116,7 +116,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 XercesDocumentWrapper::XercesDocumentWrapper(
 			const DOMDocument_Type*		theXercesDocument,
 			bool						threadSafe,
-			bool						buildWrapper) :
+			bool						buildWrapper,
+ 			bool						buildMaps) :
 	XalanDocument(),
 	m_xercesDocument(theXercesDocument),
 	m_documentElement(0),
@@ -130,6 +131,7 @@ XercesDocumentWrapper::XercesDocumentWrapper(
 	m_doctype(0),
 	m_mappingMode(threadSafe == true ? false : !buildWrapper),
 	m_indexValid(false),
+	m_buildMaps(m_mappingMode == true ? true : buildMaps),
 	m_elementAllocator(25),
 	m_textAllocator(25),
 	m_attributeAllocator(25),
@@ -1406,7 +1408,8 @@ XercesDocumentWrapper::buildWrapperNodes()
 				this,
 				&m_navigators.back(),
 				m_navigators,
-				2);
+				2,
+				m_buildMaps);
 
 		theTreeWalker.traverse(theStartChild, m_xercesDocument);
 	}
@@ -1436,12 +1439,14 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::BuildWrapperTreeWalker(
 			XercesDocumentWrapper*			theDocument,
 			XercesWrapperNavigator*			theDocumentNavigator,
 			WrapperNavigatorVectorType&		theNavigators,
-			unsigned long					theStartIndex) :
+			unsigned long					theStartIndex,
+			bool							theBuildMapsFlag) :
 	m_document(theDocument),
 	m_navigators(theNavigators),
 	m_currentIndex(theStartIndex),
 	m_parentNavigatorStack(),
-	m_siblingNavigatorStack()
+	m_siblingNavigatorStack(),
+	m_buildMaps(theBuildMapsFlag)
 {
 	assert(theDocument != 0 && theDocumentNavigator != 0);
 
@@ -1467,7 +1472,8 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::~BuildWrapperTreeWalker()
 void
 XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		node)
 {
-	XalanNode* const	theWrapperNode = m_document->createWrapperNode(node, m_currentIndex, false);
+	XalanNode* const	theWrapperNode =
+		m_document->createWrapperNode(node, m_currentIndex, m_buildMaps);
 
 	XercesWrapperNavigator&	theCurrentNodeNavigator = m_navigators.back();
 
@@ -1569,7 +1575,7 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 
 			// Create a bridge node.
 			XalanNode* const	theCurrentAttr =
-				m_document->createWrapperNode(theAttr, m_currentIndex, false);
+				m_document->createWrapperNode(theAttr, m_currentIndex, m_buildMaps);
 			assert(theCurrentAttr != 0);
 
 			// Get the attribute node's navigator...
