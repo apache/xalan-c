@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# Usage: Set the STYLEBOOK_PATH environment variable to the
+# base directory of the Apache xml-stylebook package (retrieved from
+# cvs.apache.org).
+#
+# unzip/tar the xml-site-style.tar.gz file in the c/xdocs directory.
+#
+# run from the c/xdocs directory in the xml-xalan distribution to create
+# the basic HTML documentation for xalan-c
+
+
+STYLEBOOK_JAR=$STYLEBOOK_PATH/bin/stylebook-1.0-b2.jar
+XALAN_JAR=$STYLEBOOK_PATH/bin/xalan.jar
+XERCES_JAR=$STYLEBOOK_PATH/bin/xerces.jar
+
+CLASSPATH=$STYLEBOOK_JAR:$XALAN_JAR:$XERCES_JAR
+
+java -classpath $CLASSPATH org.apache.stylebook.StyleBook "targetDirectory=html" sources/xalan.xml style
+
