@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,6 +74,7 @@
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
+#include <xalanc/PlatformSupport/XSLException.hpp>
 
 
 
@@ -350,6 +351,62 @@ public:
 	isValidQName(
 			const XalanDOMChar*			theQName,
 			XalanDOMString::size_type	theLength = XalanDOMString::npos);
+
+	class InvalidQNameException : public XSLException
+	{
+	public:
+
+		/**
+		 * Constructor
+		 * 
+		 * @param theQName The QName string that is not valid.
+		 * @param theQNameLength The length of the string.
+		 * @param theURI the URI of the related document, if known
+		 * @param theLineNumber the line number of the related document.
+		 * @param theColumnNumber the column number of the related document.
+		 * @param theType type of exception, default is "XSLException"
+		 */
+		InvalidQNameException(
+				const XalanDOMChar*			theQName,
+				XalanDOMString::size_type	theQNameLength,
+				const XalanDOMString&		theURI,
+				int							theLineNumber,
+				int							theColumnNumber);
+
+		/**
+		 * Constructor
+		 * 
+		 * @param theLocator The locator instance for error reporting.
+		 * @param theQName The QName string that is not valid.
+		 * @param theQNameLength The length of the string.
+		 * @param theType type of exception, default is "XSLException"
+		 */
+		InvalidQNameException(
+				const LocatorType&			theLocator,
+				const XalanDOMChar*			theQName,
+				XalanDOMString::size_type	theQNameLength);
+
+		/**
+		 * Constructor
+		 * 
+		 * @param theQName The QName string that is not valid.
+		 * @param theQNameLength The length of the string.
+		 * @param theType type of exception, default is "XSLException"
+		 */
+		InvalidQNameException(
+				const XalanDOMChar*			theQName,
+				XalanDOMString::size_type	theQNameLength);
+
+		virtual
+		~InvalidQNameException();
+
+	private:
+
+		static const XalanDOMString
+		format(
+				const XalanDOMChar*			theQName,
+				XalanDOMString::size_type	theQNameLength);
+	};
 
 protected:
 

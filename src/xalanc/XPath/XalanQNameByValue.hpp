@@ -327,6 +327,11 @@ private:
 			const PrefixResolver*		theResolver,
 			const LocatorType*			locator);
 
+	void
+	validate(
+			const XalanDOMChar*			qname,
+			XalanDOMString::size_type	theLength,
+			const LocatorType*			locator);
 
 	// Data members...
 	XalanDOMString	m_namespace;

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -319,9 +319,15 @@ XalanQNameByValue::initialize(
 
 		m_localpart.assign(qname, indexOfNSSep);
 
-		if(m_localpart == DOMServices::s_XMLNamespace)
+		if(m_localpart == DOMServices::s_XMLString)
 		{
-			m_localpart.clear();
+			m_namespace = DOMServices::s_XMLNamespaceURI;
+		}
+		else if(m_localpart == DOMServices::s_XMLNamespace)
+		{
+			// The xmlns prefix is not normally bound to a namespace URI, but we're really trying
+			// to form a QName, so we'll do what the DOM does...
+			m_namespace = DOMServices::s_XMLNamespacePrefixURI;
 		}
 		else
 		{
@@ -338,9 +344,9 @@ XalanQNameByValue::initialize(
 			{
 				m_namespace = *theNamespace;
 			}
-
-			m_localpart.assign(qname + indexOfNSSep + 1);
 		}
+
+		m_localpart.assign(qname + indexOfNSSep + 1, len - (indexOfNSSep + 1));
 	}
 	else
 	{
@@ -361,6 +367,8 @@ XalanQNameByValue::initialize(
 
 		m_localpart = qname;
 	}
+
+	validate(qname, len, locator);
 }
 
 
@@ -374,7 +382,11 @@ XalanQNameByValue::resolvePrefix(
 {
 	const XalanDOMString::size_type		indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
 
-	if(indexOfNSSep >= theLength)
+	if (indexOfNSSep == 0)
+	{
+		throwException(TranscodeFromLocalCodePage("A prefix of length 0 was detected"), locator);
+	}
+	else if(indexOfNSSep >= theLength)
 	{
 		m_localpart.assign(qname, theLength);
 
@@ -392,12 +404,11 @@ XalanQNameByValue::resolvePrefix(
 		{
 			m_namespace = DOMServices::s_XMLNamespaceURI;
 		}
-		// The default namespace is not resolved.
 		else if(m_localpart == DOMServices::s_XMLNamespace)
 		{
-			m_localpart.clear();
-
-			return;
+			// The xmlns prefix is not normally bound to a namespace URI, but we're really trying
+			// to form a QName, so we'll do what the DOM does...
+			m_namespace = DOMServices::s_XMLNamespacePrefixURI;
 		}
 		else if (theResolver == 0)
 		{
@@ -429,8 +440,31 @@ XalanQNameByValue::resolvePrefix(
 
 		m_localpart.assign(qname + indexOfNSSep + 1, theLength - (indexOfNSSep + 1));
 	}
+
+	validate(qname, theLength, locator);
 }
 
 
 
+void
+XalanQNameByValue::validate(
+			const XalanDOMChar*			qname,
+			XalanDOMString::size_type	theLength,
+			const LocatorType*			locator)
+{
+	if (isValid() == false)
+	{
+		if (locator != 0)
+		{
+			throw InvalidQNameException(*locator, qname, theLength);
+		}
+		else
+		{
+			throw InvalidQNameException(qname, theLength);
+		}
+	}
+}
+
+
+	
 XALAN_CPP_NAMESPACE_END

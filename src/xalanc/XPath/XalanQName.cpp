@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -354,6 +354,58 @@ XalanQName::isValidQName(
 		return XalanQName::isValidNCName(thePrefix, theIndex) &&
 			   XalanQName::isValidNCName(theLocalName, theLength - theIndex - 1);
 	}
+}
+
+
+
+XalanQName::InvalidQNameException::InvalidQNameException(
+			const XalanDOMChar*			theQName,
+			XalanDOMString::size_type	theQNameLength,
+			const XalanDOMString&		theURI,
+			int							theLineNumber,
+			int							theColumnNumber) :
+	XSLException(format(theQName, theQNameLength), theURI, theLineNumber, theColumnNumber, XalanDOMString("InvalidQNameException"))
+{
+}
+
+
+
+XalanQName::InvalidQNameException::InvalidQNameException(
+			const LocatorType&			theLocator,
+			const XalanDOMChar*			theQName,
+			XalanDOMString::size_type	theQNameLength) :
+	XSLException(theLocator, format(theQName, theQNameLength), XalanDOMString("InvalidQNameException"))
+{
+}
+
+
+
+XalanQName::InvalidQNameException::InvalidQNameException(
+			const XalanDOMChar*			theQName,
+			XalanDOMString::size_type	theQNameLength) :
+	XSLException(format(theQName, theQNameLength), XalanDOMString("InvalidQNameException"))
+{
+}
+
+
+
+XalanQName::InvalidQNameException::~InvalidQNameException()
+{
+}
+
+
+
+const XalanDOMString
+XalanQName::InvalidQNameException::format(
+			const XalanDOMChar*			theQName,
+			XalanDOMString::size_type	theQNameLength)
+{
+	XalanDOMString	theResult("'");
+
+	theResult.append(theQName, theQNameLength);
+	theResult += XalanDOMString("' is not a valid QName");
+
+	return theResult;
 }
 
 
