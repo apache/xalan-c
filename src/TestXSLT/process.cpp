@@ -224,7 +224,7 @@ printArgOptions()
 		 << endl
 		 << " [-XML (Use XML formatter and add XML header.)]"
 		 << endl
-		 << " [-TEXT (Use simple Text formatter.)]"
+		 << " [-TEXT (Use Text formatter.)]"
 		 << endl
 		 << " [-HTML (Use HTML formatter.)]"
 		 << endl
