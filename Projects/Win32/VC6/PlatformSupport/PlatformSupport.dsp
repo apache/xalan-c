@@ -102,14 +102,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\Cloneable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DecimalFormat.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\DecimalFormatSymbols.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\PlatformSupport\DOMStringHelper.cpp
 # End Source File
 # Begin Source File
@@ -142,10 +134,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\NullPrintWriter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\NumberFormat.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\PlatformSupport\PrintWriter.cpp
 # End Source File
 # Begin Source File
@@ -170,6 +158,18 @@ SOURCE=..\..\..\..\src\PlatformSupport\Writer.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormat.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormatSymbols.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanNumberFormat.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XSLException.cpp
 # End Source File
 # End Group
@@ -183,14 +183,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\AttributeListImpl.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\Cloneable.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\DecimalFormat.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\DecimalFormatSymbols.hpp
 # End Source File
 # Begin Source File
 
@@ -230,10 +222,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\NullPrintWriter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\NumberFormat.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportDefinitions.hpp
 # End Source File
 # Begin Source File
@@ -263,6 +251,18 @@ SOURCE=..\..\..\..\src\PlatformSupport\TextOutputStream.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\Writer.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormat.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormatSymbols.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanNumberFormat.hpp
 # End Source File
 # Begin Source File
 
