@@ -175,6 +175,17 @@ calculateElapsedTime(
 	return double(theEndTime - theStartTime) / CLOCKS_PER_SEC * 1000.0;
 }
 
+
+inline double
+calculateAvgTime(
+			clock_t		accTime,
+			long		theIterationCount)
+{
+	assert(theIterationCount > 0);
+
+	return double(accTime) / theIterationCount;
+}
+
 inline double
 calculateAverageElapsedTime(
 			clock_t			theStartTime,
@@ -335,7 +346,7 @@ main(
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
 						// Define  variables used for timing and reporting ...
-						clock_t startTime, endTime, accmTime;
+						clock_t startTime, endTime, accmTime, avgEtoe;
 						double timeinMilliseconds, theAverage;
 						Hashtable attrs;
 
@@ -443,8 +454,8 @@ main(
 													csProcessor);
 	
 						// Output single transform time to console and result log
-						cout << "   eTOe transform: " << etoetran << " milliseconds." << endl;
-						addMetricToAttrs("eTOe", double(etoetran), attrs);
+						cout << "   Single eTOe: " << etoetran << " milliseconds." << endl;
+						addMetricToAttrs("eTOe", etoetran, attrs);
 
 
 						// Perform a single transform using compiled stylesheet and report results...
@@ -464,12 +475,15 @@ main(
 						cout << "   One transform w/Parsed XSL: " << timeinMilliseconds << " milliseconds." << endl;
 						addMetricToAttrs("Single_Transform",timeinMilliseconds, attrs);
 
-						
+
+
 						// Perform multiple transforms and calculate the average time ..
-						accmTime = 0;
+						// These are done 3 different ways.
+						// FIRST: Parsed XSL Stylesheet and Parsed XML Source.
 
 						addMetricToAttrs("Iterations",iterCount, attrs);
 
+						accmTime = 0;
 						for(int j = 0; j < iterCount; ++j)
 						{	
 							accmTime += transformWParsedSource(glbSourceXML,
@@ -480,16 +494,16 @@ main(
 							psExecutionContext.reset();							
 						}
 						csParserLiaison.reset();
-						theAverage = accmTime / iterCount;
+						theAverage = calculateAvgTime(accmTime, iterCount); 
 
 						// Output average transform time to console and result log
 						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Parsed XML" << endl;
 
-						addMetricToAttrs("Ave_Parsed_XML",theAverage, attrs);
+						addMetricToAttrs("Avg_Parsed_XML",theAverage, attrs);
 
-						
-						//	This is currently how the XalanJ 2.0 is performing transforms,
-						//	i.e. with the unparsed XML Source.
+						// SECOND: Parsed Stylesheet and UnParsed XML Source.
+						// This is currently how the XalanJ 2.0 is performing transforms,
+						// i.e. with the unparsed XML Source.
 						
 						accmTime = 0;
 						for(int k = 0; k < iterCount; ++k)
@@ -502,10 +516,34 @@ main(
 							psExecutionContext.reset();		// Resets the execution context
 							csParserLiaison.reset();		// This deletes the document
 						}
-						theAverage = accmTime / iterCount;
+
+						theAverage = calculateAvgTime(accmTime, iterCount);
 						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/UnParsed XML" << endl;
 
-						addMetricToAttrs("Ave_UnParsed_XML",theAverage, attrs);
+						addMetricToAttrs("Avg_UnParsed_XML",theAverage, attrs);
+
+						// THIRD: Neither Stylesheet nor XML Source are parsed.
+						// Perform multiple etoe transforms and calculate the average ...
+		
+						avgEtoe = 0;
+						for(int jj = 0; jj < iterCount; ++jj)
+						{	
+						avgEtoe += eTOeTransform(xmlInputSource, 
+													xslInputSource,
+													theResultTarget,
+													csConstructionContext,
+													psExecutionContext,
+													csProcessor);
+						psExecutionContext.reset();	
+						csParserLiaison.reset();						
+						}
+
+						theAverage = calculateAvgTime(avgEtoe,iterCount);
+
+						// Output average transform time to console and result log
+						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's of eToe" << endl;
+
+						addMetricToAttrs("Avg_etoe: ",theAverage, attrs);
 
 
 						logFile.logElement(10, "Metric", attrs, "xxx");
