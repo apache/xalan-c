@@ -59,8 +59,11 @@
 
 
 
+#include <Include/STLHelper.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 
 

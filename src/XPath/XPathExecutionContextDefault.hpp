@@ -73,6 +73,10 @@
 
 
 
+#include <Include/XalanObjectCache.hpp>
+
+
+
 #include <XalanDOM/XalanDOMString.hpp>
 
 
@@ -86,7 +90,8 @@
 
 
 
-#include <XPath/NodeRefList.hpp>
+#include <XPath/MutableNodeRefList.hpp>
+#include <XPath/ResultTreeFrag.hpp>
 
 
 
@@ -340,19 +345,20 @@ public:
 			const XalanNode* 	sourceNode = 0,
 			const XalanNode* 	styleNode = 0) const;
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<MutableNodeRefList*>			NodeRefListCacheType;
-	typedef vector<ResultTreeFragBase*>			ResultTreeFragCacheType;
-#else
-	typedef std::vector<MutableNodeRefList*>	NodeRefListCacheType;
-	typedef std::vector<ResultTreeFragBase*>	ResultTreeFragCacheType;
-#endif
-
 protected:
 
-	enum { eMutableNodeRefListCacheMax = 50,
-		   eResultTreeFragListCacheMax = 50,
-		   eCachedArgVectorDefaultSize = 10 };
+	class XalanResultTreeFragCache : public XalanObjectCache<ResultTreeFragBase>
+	{
+	protected:
+
+		virtual ResultTreeFragBase*
+		create()
+		{
+			return new ResultTreeFrag;
+		}
+	};
+
+	enum { eCachedArgVectorDefaultSize = 10 };
 
 	XPathEnvSupport*			m_xpathEnvSupport;
 
@@ -370,13 +376,9 @@ protected:
 
 	XalanDOMString				m_currentPattern;
 
-	NodeRefListCacheType		m_availableCachedNodeLists;
+	XalanObjectCacheDefault<MutableNodeRefList>		m_nodeListCache;
 
-	NodeRefListCacheType		m_busyCachedNodeLists;
-
-	ResultTreeFragCacheType		m_availableCachedResultTreeFrags;
-
-	ResultTreeFragCacheType		m_busyCachedResultTreeFrags;
+	XalanResultTreeFragCache	m_resultTreeFragCache;
 
 	XalanDOMStringCache			m_stringCache;
 

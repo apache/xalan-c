@@ -70,15 +70,15 @@
 
 
 
+#include <Include/STLHelper.hpp>
+
+
+
 #include <XalanDOM/XalanDOMException.hpp>
 
 
 
 #include <DOMSupport/DOMServices.hpp>
-
-
-
-#include <PlatformSupport/STLHelper.hpp>
 
 
 

@@ -66,8 +66,11 @@
 
 
 
+#include <Include/STLHelper.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/XalanOutputStream.hpp>
 #include <PlatformSupport/XalanNumberFormat.hpp>
 #include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
@@ -88,7 +91,6 @@
 #include <XMLSupport/FormatterToDOM.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
 #include <XMLSupport/FormatterToHTML.hpp>
-#include <XMLSupport/FormatterToText.hpp>
 #include <XMLSupport/XMLParserLiaison.hpp>
 
 
@@ -149,8 +151,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0),
-	m_availableCachedFormattersToText(),
-	m_busyCachedFormattersToText()
+	m_formatterToTextCache()
 {
 }
 
@@ -182,8 +183,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0),
-	m_availableCachedFormattersToText(),
-	m_busyCachedFormattersToText()
+	m_formatterToTextCache()
 {
 }
 
@@ -192,15 +192,6 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 StylesheetExecutionContextDefault::~StylesheetExecutionContextDefault()
 {
 	reset();
-
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
-	for_each(
-		m_availableCachedFormattersToText.begin(),
-		m_availableCachedFormattersToText.end(),
-		DeleteFunctor<FormatterToText>());
 }
 
 
@@ -272,7 +263,7 @@ StylesheetExecutionContextDefault::getCurrentMode() const
 
 
 void
-StylesheetExecutionContextDefault::setCurrentMode(const QName* theMode) 
+StylesheetExecutionContextDefault::setCurrentMode(const QName*	theMode)
 {		
 	m_mode = theMode;
 }
@@ -280,8 +271,7 @@ StylesheetExecutionContextDefault::setCurrentMode(const QName* theMode)
 
 
 void
-StylesheetExecutionContextDefault::resetCurrentState(
-			XalanNode*	xmlNode)
+StylesheetExecutionContextDefault::resetCurrentState(XalanNode*		xmlNode)
 {
 	assert(m_xsltProcessor != 0);
 
@@ -1218,20 +1208,7 @@ StylesheetExecutionContextDefault::createFormatterToText(
 FormatterToText*
 StylesheetExecutionContextDefault::borrowFormatterToText()
 {
-	// We'll always return the back of the free list, since
-	// that's the cheapest thing.
-	if (m_availableCachedFormattersToText.size() == 0)
-	{
-		m_busyCachedFormattersToText.push_back(new FormatterToText);
-	}
-	else
-	{
-		m_busyCachedFormattersToText.push_back(m_availableCachedFormattersToText.back());
-
-		m_availableCachedFormattersToText.pop_back();
-	}
-
-	return m_busyCachedFormattersToText.back();
+	return m_formatterToTextCache.get();
 }
 
 
@@ -1239,28 +1216,7 @@ StylesheetExecutionContextDefault::borrowFormatterToText()
 bool
 StylesheetExecutionContextDefault::returnFormatterToText(FormatterToText*	theFormatter)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
-
-	const FormatterToTextCacheType::iterator	i =
-		find(
-			m_busyCachedFormattersToText.begin(),
-			m_busyCachedFormattersToText.end(),
-			theFormatter);
-
-	if (i == m_busyCachedFormattersToText.end())
-	{
-		return false;
-	}
-	else
-	{
-		m_availableCachedFormattersToText.push_back(theFormatter);
-
-		m_busyCachedFormattersToText.erase(i);
-
-		return true;
-	}
+	return m_formatterToTextCache.release(theFormatter);
 }
 
 
@@ -1494,12 +1450,7 @@ StylesheetExecutionContextDefault::reset()
 
 	m_mode = 0;
 
-	while (m_busyCachedFormattersToText.size() != 0)
-	{
-		m_availableCachedFormattersToText.push_back(m_busyCachedFormattersToText.back());
-
-		m_busyCachedFormattersToText.pop_back();
-	}
+	m_formatterToTextCache.reset();
 
 	// Just in case endDocument() was not called,
 	// clean things up...

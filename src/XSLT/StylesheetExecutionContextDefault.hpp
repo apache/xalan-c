@@ -74,7 +74,15 @@
 
 
 
+#include <Include/XalanObjectCache.hpp>
+
+
+
 #include <XPath/XPathExecutionContextDefault.hpp>
+
+
+
+#include <XMLSupport/FormatterToText.hpp>
 
 
 
@@ -1029,9 +1037,7 @@ private:
 	// Holds the current mode.
 	const QName*	                    m_mode;
 
-	FormatterToTextCacheType			m_availableCachedFormattersToText;
-
-	FormatterToTextCacheType			m_busyCachedFormattersToText;
+	XalanObjectCacheDefault<FormatterToText>	m_formatterToTextCache;
 
 	/**
 	 * The factory that will be used to create result tree fragments based on our

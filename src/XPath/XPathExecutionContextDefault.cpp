@@ -62,7 +62,7 @@
 
 
 
-#include <PlatformSupport/STLHelper.hpp>
+#include <Include/STLHelper.hpp>
 
 
 
@@ -98,15 +98,10 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
-	m_availableCachedNodeLists(),
-	m_busyCachedNodeLists(),
-	m_availableCachedResultTreeFrags(),
-	m_busyCachedResultTreeFrags(),
+	m_nodeListCache(),
+	m_resultTreeFragCache(),
 	m_stringCache()
 {
-	m_availableCachedNodeLists.reserve(eMutableNodeRefListCacheMax);
-
-	m_busyCachedNodeLists.reserve(eMutableNodeRefListCacheMax);
 }
 
 
@@ -123,15 +118,10 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
-	m_availableCachedNodeLists(),
-	m_busyCachedNodeLists(),
-	m_availableCachedResultTreeFrags(),
-	m_busyCachedResultTreeFrags(),
+	m_nodeListCache(),
+	m_resultTreeFragCache(),
 	m_stringCache()
 {
-	m_availableCachedNodeLists.reserve(eMutableNodeRefListCacheMax);
-
-	m_busyCachedNodeLists.reserve(eMutableNodeRefListCacheMax);
 }
 
 
@@ -139,21 +129,7 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 
 XPathExecutionContextDefault::~XPathExecutionContextDefault()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
 	reset();
-
-	for_each(
-		m_availableCachedNodeLists.begin(),
-		m_availableCachedNodeLists.end(),
-		DeleteFunctor<MutableNodeRefList>());
-
-	for_each(
-		m_availableCachedResultTreeFrags.begin(),
-		m_availableCachedResultTreeFrags.end(),
-		DeleteFunctor<ResultTreeFragBase>());
 }
 
 
@@ -181,19 +157,8 @@ XPathExecutionContextDefault::reset()
 	m_prefixResolver = 0;
 	m_throwFoundIndex = false;
 
-	while (m_busyCachedNodeLists.size() != 0)
-	{
-		m_availableCachedNodeLists.push_back(m_busyCachedNodeLists.back());
-
-		m_busyCachedNodeLists.pop_back();
-	}
-
-	while (m_busyCachedResultTreeFrags.size() != 0)
-	{
-		m_availableCachedResultTreeFrags.push_back(m_busyCachedResultTreeFrags.back());
-
-		m_busyCachedResultTreeFrags.pop_back();
-	}
+	m_nodeListCache.reset(),
+	m_resultTreeFragCache.reset(),
 
 	m_stringCache.reset();
 }
@@ -350,20 +315,7 @@ XPathExecutionContextDefault::parseXML(
 MutableNodeRefList*
 XPathExecutionContextDefault::borrowMutableNodeRefList()
 {
-	// We'll always return the back of the free list, since
-	// that's the cheapest thing.
-	if (m_availableCachedNodeLists.size() == 0)
-	{
-		m_busyCachedNodeLists.push_back(new MutableNodeRefList);
-	}
-	else
-	{
-		m_busyCachedNodeLists.push_back(m_availableCachedNodeLists.back());
-
-		m_availableCachedNodeLists.pop_back();
-	}
-
-	return m_busyCachedNodeLists.back();
+	return m_nodeListCache.get();
 }
 
 
@@ -371,24 +323,13 @@ XPathExecutionContextDefault::borrowMutableNodeRefList()
 bool
 XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	theList)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
-
-	const NodeRefListCacheType::iterator	i =
-		find(m_busyCachedNodeLists.begin(), m_busyCachedNodeLists.end(), theList);
-
-	if (i == m_busyCachedNodeLists.end())
+	if (m_nodeListCache.release(theList) == false)
 	{
 		return false;
 	}
 	else
 	{
 		theList->clear();
-
-		m_availableCachedNodeLists.push_back(theList);
-
-		m_busyCachedNodeLists.erase(i);
 
 		return true;
 	}
@@ -399,20 +340,7 @@ XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	theLi
 ResultTreeFragBase*
 XPathExecutionContextDefault::borrowResultTreeFrag()
 {
-	// We'll always return the back of the free list, since
-	// that's the cheapest thing.
-	if (m_availableCachedResultTreeFrags.size() == 0)
-	{
-		m_busyCachedResultTreeFrags.push_back(new ResultTreeFrag);
-	}
-	else
-	{
-		m_busyCachedResultTreeFrags.push_back(m_availableCachedResultTreeFrags.back());
-
-		m_availableCachedResultTreeFrags.pop_back();
-	}
-
-	return m_busyCachedResultTreeFrags.back();
+	return m_resultTreeFragCache.get();
 }
 
 
@@ -420,27 +348,7 @@ XPathExecutionContextDefault::borrowResultTreeFrag()
 bool
 XPathExecutionContextDefault::returnResultTreeFrag(ResultTreeFragBase*	theResultTreeFragBase)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
-
-	const ResultTreeFragCacheType::iterator		i =
-		find(m_busyCachedResultTreeFrags.begin(), m_busyCachedResultTreeFrags.end(), theResultTreeFragBase);
-
-	if (i == m_busyCachedResultTreeFrags.end())
-	{
-		return false;
-	}
-	else
-	{
-		theResultTreeFragBase->clear();
-
-		m_availableCachedResultTreeFrags.push_back(theResultTreeFragBase);
-
-		m_busyCachedResultTreeFrags.erase(i);
-
-		return true;
-	}
+	return m_resultTreeFragCache.release(theResultTreeFragBase);
 }
 
 

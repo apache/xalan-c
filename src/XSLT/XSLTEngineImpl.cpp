@@ -85,8 +85,11 @@
 
 
 
+#include <Include/STLHelper.hpp>
+
+
+
 #include <PlatformSupport/PrintWriter.hpp>
-#include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 
@@ -144,6 +147,13 @@
 #include "TraceListener.hpp"
 #include "XSLTInputSource.hpp"
 #include "XSLTProcessorException.hpp"
+
+
+
+//#define XALAN_VQ_SPECIAL_TRACE
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+#include "C:/Program Files/Rational/Quantify/pure.h"
+#endif
 
 
 
@@ -577,11 +587,17 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 
 			pushTime(&xmlIdentifier);
 
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+			QuantifyStartRecordingData();
+#endif
 			XalanDocument* const	theDocument =
 						m_parserLiaison.parseXMLStream(inputSource,
 													   xmlIdentifier);
 			assert(theDocument != 0);
 
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+			QuantifyStopRecordingData();
+#endif
 			if(0 != m_diagnosticsPrintWriter)
 				displayDuration(XALAN_STATIC_UCODE_STRING("Parse of ") +
 									xmlIdentifier,

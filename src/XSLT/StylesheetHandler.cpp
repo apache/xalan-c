@@ -68,7 +68,18 @@
 
 
 
+#include <Include/STLHelper.hpp>
+
+
+
 #include <XalanDOM/XalanDOMException.hpp>
+
+
+
+#include <PlatformSupport/AttributeListImpl.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/DoubleSupport.hpp>
+#include <PlatformSupport/StringTokenizer.hpp>
 
 
 
@@ -77,15 +88,6 @@
 
 
 #include <XMLSupport/Formatter.hpp>
-
-
-
-#include <PlatformSupport/AttributeListImpl.hpp>
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/DoubleSupport.hpp>
-#include <PlatformSupport/StringTokenizer.hpp>
-#include <PlatformSupport/STLHelper.hpp>
-
 
 
 

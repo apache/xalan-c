@@ -67,8 +67,11 @@
 
 
 
+#include <Include/STLHelper.hpp>
+
+
+
 #include <PlatformSupport/DoubleSupport.hpp>
-#include <PlatformSupport/STLHelper.hpp>
 
 
 
