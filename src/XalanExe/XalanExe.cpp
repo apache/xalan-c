@@ -87,7 +87,7 @@
 
 
 
-#define XALAN_VQ_SPECIAL_TRACE
+//#define XALAN_VQ_SPECIAL_TRACE
 #if defined(XALAN_VQ_SPECIAL_TRACE)
 #include "C:/Program Files/Rational/Quantify/pure.h"
 #endif
