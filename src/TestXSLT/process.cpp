@@ -125,7 +125,7 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 
 
-
+//#define XALAN_USE_ICU
 #if defined(XALAN_USE_ICU)
 #include <ICUBridge/ICUBridge.hpp>
 #include <ICUBridge/FunctionICUFormatNumber.hpp>
@@ -309,15 +309,15 @@ void getArgs(int argc, const char* argv[], CmdLineParams& p) throw()
 		}
 		else if(!stricmp("-XML", argv[i]))
 		{
-			p.outputType = Formatter::OUTPUT_METH_XML;
+			p.outputType = FormatterListener::OUTPUT_METHOD_XML;
 		}
 		else if(!stricmp("-TEXT", argv[i]))
 		{
-			p.outputType = Formatter::OUTPUT_METH_TEXT;
+			p.outputType = FormatterListener::OUTPUT_METHOD_TEXT;
 		}
 		else if(!stricmp("-HTML", argv[i]))
 		{
-			p.outputType = Formatter::OUTPUT_METH_HTML;
+			p.outputType = FormatterListener::OUTPUT_METHOD_HTML;
 		}
 		else if(!stricmp("-STRIPCDATA", argv[i]))
 		{
@@ -642,7 +642,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 
 		assert(0 != stylesheet);
 
-		if(Formatter::OUTPUT_METH_XML == outputType)
+		if(FormatterListener::OUTPUT_METHOD_XML == outputType)
 		{
 			FormatterToXML* fToXML = new FormatterToXML(resultWriter,
 					stylesheet->m_version,
@@ -654,32 +654,32 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 					stylesheet->getOutputDoctypePublic(),
 					true,	// xmlDecl
 					stylesheet->m_standalone);
-			fToXML->m_shouldWriteXMLHeader = shouldWriteXMLHeader;
-			fToXML->m_attrSpecialChars = xmlParserLiaison.getSpecialCharacters();
-			fToXML->m_stripCData = stripCData;
-			fToXML->m_escapeCData = escapeCData;
+			fToXML->setShouldWriteXMLHeader(shouldWriteXMLHeader);
+			fToXML->setStripCData(stripCData);
+			fToXML->setEscapeCData(escapeCData);
 			formatter = fToXML;
 		}
-		else if(Formatter::OUTPUT_METH_TEXT == outputType)
+		else if(FormatterListener::OUTPUT_METHOD_TEXT == outputType)
 		{
 			FormatterToText* fToText = new FormatterToText(resultWriter);
 			formatter = fToText;
 		}
-		else if(Formatter::OUTPUT_METH_HTML == outputType)
+		else if(FormatterListener::OUTPUT_METHOD_HTML == outputType)
 		{
 			FormatterToHTML* fToHTML
-				= new FormatterToHTML(resultWriter, 
-						stylesheet->m_version,
-						stylesheet->getOutputIndent(),
-						xmlParserLiaison.getIndent(), mimeEncoding,
+				= new FormatterToHTML(
+						resultWriter,
+						mimeEncoding,
 						stylesheet->m_mediatype,
 						stylesheet->getOutputDoctypeSystem(),
 						stylesheet->getOutputDoctypePublic(),
-						false,	// xmlDecl
-						stylesheet->m_standalone);
+						stylesheet->getOutputIndent(),
+						xmlParserLiaison.getIndent(),
+						stylesheet->m_version,
+						stylesheet->m_standalone,
+						false);	// xmlDecl
 
-			fToHTML->m_attrSpecialChars = xmlParserLiaison.getSpecialCharacters();
-			fToHTML->m_stripCData = stripCData;
+			fToHTML->setStripCData(stripCData);
 			formatter = fToHTML;
 		}
 		XSLTResultTarget* rTreeTarget = 0;
