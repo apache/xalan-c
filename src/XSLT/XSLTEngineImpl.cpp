@@ -126,12 +126,13 @@
 #include "ElementMarker.hpp"
 #include "FunctionCurrent.hpp"
 #include "FunctionDocument.hpp"
+#include "FunctionElementAvailable.hpp"
+#include "FunctionFunctionAvailable.hpp"
 #include "FunctionFormatNumber.hpp"
-#include "FunctionKey.hpp"
-#include "FunctionUnparsedEntityURI.hpp"
-#include "FunctionSystemProperty.hpp"
 #include "FunctionGenerateID.hpp"
-#include "FunctionDocument.hpp"
+#include "FunctionKey.hpp"
+#include "FunctionSystemProperty.hpp"
+#include "FunctionUnparsedEntityURI.hpp"
 #include "GenerateEvent.hpp"
 #include "NodeSorter.hpp"
 #include "ProblemListener.hpp"
@@ -523,7 +524,11 @@ XSLTEngineImpl::processStylesheet(
 {
 	try
 	{
-		std::auto_ptr<XMLURL> url(getURLFromString(xsldocURLString));
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::auto_ptr;
+#endif
+
+		auto_ptr<XMLURL> url(getURLFromString(xsldocURLString));
 		assert(url.get() != 0);
 
 		XSLTInputSource		input(url->getURLText(), 0);
@@ -884,8 +889,12 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		addTraceListenersToStylesheet();
 
 		StylesheetHandler stylesheetProcessor(*this, *stylesheet, constructionContext);
-		
-		std::auto_ptr<XMLURL>	xslURL(getURLFromString(localXSLURLString, xmlBaseIdent));
+
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::auto_ptr;
+#endif
+
+		auto_ptr<XMLURL>	xslURL(getURLFromString(localXSLURLString, xmlBaseIdent));
 
 		XSLTInputSource		inputSource(xslURL->getURLText());
 
@@ -1079,7 +1088,7 @@ XSLTEngineImpl::extFunction(
 		XPathExecutionContext&			executionContext,
 		const XalanDOMString&			theNamespace,
 		const XalanDOMString&			extensionName, 
-		const std::vector<XObject*>&	argVec) const
+		const XObjectArgVectorType&		argVec) const
 {
 	return m_xpathEnvSupport.extFunction( executionContext,
 		theNamespace, extensionName, argVec);
@@ -1254,8 +1263,11 @@ XSLTEngineImpl::pushTime(const void*	key) const
 {
 	if(0 != key)
 	{
-		m_durationsTable.insert(std::make_pair<const void* const,
-										  clock_t>(key, clock()));
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::make_pair;
+#endif
+
+		m_durationsTable.insert(make_pair(key, clock()));
 	}
 }
 
@@ -1544,8 +1556,8 @@ XSLTEngineImpl::addResultAttribute(
 {
 	assert(length(value) > 0);
 
-	const bool	isPrefix = startsWith(aname, XALAN_STATIC_UCODE_STRING("xmlns:"));
-	if (equals(aname, XALAN_STATIC_UCODE_STRING("xmlns")) || isPrefix == true) 
+	const bool	isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
+	if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix == true) 
 	{
 		const XalanDOMString		p = isPrefix == true ? substring(aname, 6) : XalanDOMString();
 		addResultNamespaceDecl(p, value);
@@ -2033,7 +2045,11 @@ XSLTEngineImpl::createResultTreeFrag(
 {
 	DocumentHandler* const	savedFormatterListener = m_flistener;
 
-	std::auto_ptr<ResultTreeFragBase> pfrag(createDocFrag());
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::auto_ptr;
+#endif
+
+	auto_ptr<ResultTreeFragBase> pfrag(createDocFrag());
 
 	FormatterToDOM	tempFormatter(m_resultTreeFactory, 
 								  pfrag.get());
@@ -2173,7 +2189,7 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString& elementName)
 		{
 			const XalanDOMString	prefix = substring(elementName, 0, indexOfNSSep);
 
-			if(equals(prefix, XALAN_STATIC_UCODE_STRING("xml")))
+			if(equals(prefix, DOMServices::s_XMLString))
 			{
 				elemNS = DOMServices::s_XMLNamespaceURI;
 			}
@@ -2217,7 +2233,7 @@ bool XSLTEngineImpl::qnameEqualsResultElemName(const QName& qname, const XalanDO
 	{
 		const XalanDOMString	prefix = substring(elementName, 0, indexOfNSSep);
 
-		if(equals(prefix, XALAN_STATIC_UCODE_STRING("xml")))
+		if(equals(prefix, DOMServices::s_XMLString))
 		{
 			elemNS = DOMServices::s_XMLNamespaceURI;
 		}
@@ -2284,9 +2300,9 @@ XSLTEngineImpl::getPrefixForNamespace(
 
 				const XalanDOMString 	aname = attr->getNodeName();
 
-				const bool				isPrefix = startsWith(aname, XALAN_STATIC_UCODE_STRING("xmlns:"));
+				const bool				isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
 
-				if (equals(aname, XALAN_STATIC_UCODE_STRING("xmlns")) || isPrefix) 
+				if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix) 
 				{
 					const unsigned int		index = indexOf(aname, ':');
 					assert(index < length(aname));
@@ -2337,9 +2353,9 @@ XSLTEngineImpl::copyNamespaceAttributes(
 
 				const XalanDOMString 	aname = attr->getNodeName();
 
-				const bool				isPrefix = startsWith(aname, XALAN_STATIC_UCODE_STRING("xmlns:"));
+				const bool				isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
 
-				if (equals(aname, XALAN_STATIC_UCODE_STRING("xmlns")) || isPrefix) 
+				if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix) 
 				{
 					const XalanDOMString 	prefix = isPrefix ? substring(aname, 6) : XalanDOMString();
 					const XalanDOMString 	desturi = getResultNamespaceForPrefix(prefix);
@@ -2746,7 +2762,7 @@ XSLTEngineImpl::copyAttributeToTarget(
 	// TODO: Find out about empty attribute template expression handling.
 	if(0 != length(stringedValue))
 	{
-		if((equals(attrName, XALAN_STATIC_UCODE_STRING("xmlns")) || startsWith(attrName, XALAN_STATIC_UCODE_STRING("xmlns:")))
+		if((equals(attrName, DOMServices::s_XMLNamespace) || startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator))
 		   && startsWith(stringedValue, XALAN_STATIC_UCODE_STRING("quote:")))
 		{
 			stringedValue = substring(stringedValue, 6);
@@ -2804,10 +2820,14 @@ XSLTEngineImpl::translateCSSAttrsToStyleAttr(AttributeListImpl&		attList)
 {
 	if(m_translateCSS == true)
 	{
-		XalanDOMString				styleAttrValueString;
-		std::vector<const XMLCh*>	toBeRemoved;
-		int nAttributes = attList.getLength();
-		for(int i = 0; i < nAttributes; i++)
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::vector;
+#endif
+
+		XalanDOMString			styleAttrValueString;
+		vector<const XMLCh*>	toBeRemoved;
+		const unsigned int nAttributes = attList.getLength();
+		for(unsigned int i = 0; i < nAttributes; i++)
 		{
 			const XMLCh* const	attrName = attList.getName(i);
 			if(isCSSAttribute(attrName) == true)
@@ -2832,8 +2852,8 @@ XSLTEngineImpl::translateCSSAttrsToStyleAttr(AttributeListImpl&		attList)
 				}
 			}
 		}
-		const int	nAttrsToRemove = toBeRemoved.size();
-		for(int j = 0; j < nAttrsToRemove; j++)
+		const unsigned int	nAttrsToRemove = toBeRemoved.size();
+		for(unsigned int j = 0; j < nAttrsToRemove; j++)
 		{
 			attList.removeAttribute(toBeRemoved[j]);
 		}
@@ -3144,7 +3164,14 @@ XSLTEngineImpl::fixWhiteSpace(
 			bool					doublePunctuationSpaces) 
 {
 	const XMLCh* const	theStringData = c_wstr(string);
-	std::vector<XMLCh>		buf(theStringData,
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XMLCh>		XMLChVectorType;
+#else
+	typedef std::vector<XMLCh>	XMLChVectorType;
+#endif
+
+	XMLChVectorType		buf(theStringData,
 							theStringData + length(string));
 	const int			len = buf.size();
 	bool				edit = false;
@@ -3203,7 +3230,7 @@ XSLTEngineImpl::fixWhiteSpace(
 		d --;
 	}
 
-	std::vector<XMLCh>::const_iterator	start = buf.begin();
+	XMLChVectorType::const_iterator	start = buf.begin();
 	if (trimHead  == true && 0 < d && ' ' == buf[0]) 
 	{
 		edit = true;
@@ -3240,7 +3267,11 @@ XSLTEngineImpl::getNormalizedText(const XalanText&	tx) const
 
 	const int				nSrcChars = src.length();
 
-	std::vector<XMLCh>		sb;
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::vector;
+#endif
+
+	vector<XMLCh>		sb;
 
 	XMLCh					prevChar = 0x00;
 
@@ -3738,7 +3769,11 @@ XSLTEngineImpl::findElementByAttribute(
 XMLURL*
 XSLTEngineImpl::getURLFromString (const XalanDOMString&	urlString) const
 {
-	std::auto_ptr<XMLURL>	url(new XMLURL);
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::auto_ptr;
+#endif
+
+	auto_ptr<XMLURL>	url(new XMLURL);
 
 	try 
 	{
@@ -3985,10 +4020,16 @@ XSLTEngineImpl::VariableStack::~VariableStack()
 void
 XSLTEngineImpl::VariableStack::reset()
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
 	// Delete all entries left on the stack
-	std::for_each(m_stack.begin(),
-				  m_stack.end(),
-				  DeleteFunctor<StackEntry>());
+	// $$$ ToDo: Commented out because it's causing
+	// problems.  Fix this!!!
+//	for_each(m_stack.begin(),
+//			 m_stack.end(),
+//			 DeleteFunctor<StackEntry>());
 
 	m_stack.clear();
 
@@ -4165,6 +4206,13 @@ XSLTEngineImpl::VariableStack::pushParams(
 										mode);
 							assert(theDocFragment != 0);
 
+#if !defined(XALAN_NO_NAMESPACES)
+							using std::auto_ptr;
+#endif
+
+							// Make sure this sucker gets cleaned up...
+							auto_ptr<ResultTreeFragBase>	theGuard(theDocFragment);
+
 							XObject* var = m_processor.createXResultTreeFrag(*theDocFragment);
 
 							theArg = new Arg(xslParamElement->getQName(), var, true);
@@ -4200,13 +4248,17 @@ XSLTEngineImpl::VariableStack::pushParams(
 			popElementMarker(targetTemplate);
 			throw;
 		}
-	} 
+	}
 	catch(...)
 	{
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::for_each;
+#endif
+
 		// Delete all temp entries not yet transferred.
 		// Any transferred ones will have been deleted
 		// by popElementMarker();
-		std::for_each(tempStack.begin(),
+		for_each(tempStack.begin(),
 				 tempStack.end(),
 				 DeleteFunctor<StackEntry>());
 
@@ -4259,7 +4311,7 @@ XSLTEngineImpl::VariableStack::findXObject(
 const Arg*
 XSLTEngineImpl::VariableStack::findArg(
 			const QName&	qname,
-			bool				fSearchGlobalSpace) const
+			bool			fSearchGlobalSpace) const
 {
 	const Arg*	theResult = 0;
 
@@ -4323,12 +4375,14 @@ void
 XSLTEngineImpl::InstallFunctions()
 {
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("current"), FunctionCurrent());
-	XPath::installFunction(XALAN_STATIC_UCODE_STRING("format-number"), FunctionFormatNumber());
-	XPath::installFunction(XALAN_STATIC_UCODE_STRING("key"), FunctionKey());
-	XPath::installFunction(XALAN_STATIC_UCODE_STRING("unparsed-entity-uri"), FunctionUnparsedEntityURI());
-	XPath::installFunction(XALAN_STATIC_UCODE_STRING("system-property"), FunctionSystemProperty());
-	XPath::installFunction(XALAN_STATIC_UCODE_STRING("generate-id"), FunctionGenerateID());
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("document"), FunctionDocument());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("element-available"), FunctionElementAvailable());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("function-available"), FunctionFunctionAvailable());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("format-number"), FunctionFormatNumber());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("generate-id"), FunctionGenerateID());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("key"), FunctionKey());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("system-property"), FunctionSystemProperty());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("unparsed-entity-uri"), FunctionUnparsedEntityURI());
 }
 
 

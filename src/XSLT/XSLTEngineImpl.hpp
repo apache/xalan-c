@@ -91,8 +91,11 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
+
+#include <XPath/Function.hpp>
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NameSpace.hpp>
+
 
 
 #include "Arg.hpp"
@@ -165,7 +168,6 @@ public:
 	typedef XALAN_STD vector<NamespaceVectorType> NamespacesStackType;
 	typedef XALAN_STD vector<StackEntry*>		  VariableStackStackType;
 	typedef XALAN_STD vector<TraceListener*>	  TraceListenerVectorType;
-	typedef XALAN_STD vector<XObject*>			  XObjectPtrVectorType;
 	typedef XALAN_STD vector<bool>				  BoolVectorType;
 
 
@@ -175,6 +177,8 @@ public:
 	typedef XALAN_STD map<XalanDOMString,
 						 Stylesheet*>		StylesheetMapType;
 #undef XALAN_STD
+
+	typedef Function::XObjectArgVectorType	XObjectArgVectorType;
 
 	// Public members
 	//---------------------------------------------------------------------
@@ -619,7 +623,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			extensionName, 
-			const XObjectPtrVectorType&		argVec) const;
+			const XObjectArgVectorType&		argVec) const;
 
 	// This is public for class Stylesheet...
 	/**
