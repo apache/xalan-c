@@ -362,7 +362,7 @@ addToList(
 			Stylesheet::PatternTableListType&	theList,
 			const Stylesheet::MatchPattern2*	thePattern)
 {
-	typedef Stylesheet::MatchPattern2::size_type	size_type;
+	typedef Stylesheet::size_type	size_type;
 	assert(thePattern != 0);
 
 	const double		thePatternPriority = thePattern->getPriorityOrDefault();
@@ -1438,7 +1438,7 @@ Stylesheet::applyAttrSets(
 			++i;
 		}
 
-		for(QNameVectorType::size_type j = 0; j < attributeSetsNamesCount; j++)
+		for(size_type j = 0; j < attributeSetsNamesCount; j++)
 		{
 			const XalanQName* const		qname = attributeSetsNames[j];
 			assert(qname != 0);

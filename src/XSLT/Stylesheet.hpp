@@ -164,7 +164,6 @@ public:
 	typedef std::vector<XalanDOMString>						URLStackType;
 	typedef std::vector<const XPath*>						XPathVectorType;
 	typedef std::vector<ElemDecimalFormat*>					ElemDecimalFormatVectorType;
-	typedef std::vector<XalanQNameByValue>					QNameVectorType;
 #endif
 
 	/**
@@ -682,7 +681,6 @@ public:
 	{
 	public:
 
-		typedef unsigned long		size_type;
 		typedef XPath::eMatchScore	eMatchScore;
 
 		/**
