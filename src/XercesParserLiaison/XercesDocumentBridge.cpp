@@ -1155,11 +1155,11 @@ XercesDocumentBridge::normalize()
 
 
 bool
-XercesDocumentBridge::supports(
+XercesDocumentBridge::isSupported(
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version) const
 {
-	return m_xercesDocument.supports(
+	return m_xercesDocument.isSupported(
 				XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
 				XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
 }

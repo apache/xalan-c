@@ -100,12 +100,12 @@ XercesBridgeHelper::normalize(DOM_Node&		theXercesNode)
 
 
 bool
-XercesBridgeHelper::supports(
+XercesBridgeHelper::isSupported(
 			const DOM_Node&			theXercesNode,
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version)
 {
-	return theXercesNode.supports(
+	return theXercesNode.isSupported(
 				XalanDOMStringToXercesDOMString(feature),
 				XalanDOMStringToXercesDOMString(version));
 }

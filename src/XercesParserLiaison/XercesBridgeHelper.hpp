@@ -106,7 +106,7 @@ public:
 	normalize(DOM_Node&		theXercesNode);
 
 	static bool
-	supports(
+	isSupported(
 			const DOM_Node&			theXercesNode,
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version);
