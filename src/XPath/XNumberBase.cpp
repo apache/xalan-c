@@ -102,9 +102,7 @@ XNumberBase::getTypeString() const
 bool
 XNumberBase::boolean() const
 {
-	const double	theValue = num();
-
-	return DoubleSupport::isNaN(theValue) || DoubleSupport::equal(theValue, 0.0) ? false : true;
+	return XObject::boolean(num());
 }
 
 
