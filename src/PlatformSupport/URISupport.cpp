@@ -74,70 +74,81 @@
 URISupport::URLAutoPtrType
 URISupport::getURLFromString(const XalanDOMString&	urlString)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
-
 	URLAutoPtrType	url(new XMLURL);
 
 	try 
 	{
-		XalanDOMString	theNormalizedURI(clone(urlString));
-
-		// Let's see what sort of URI we have...
-		const unsigned int	len = length(theNormalizedURI);
-		const unsigned int	index = indexOf(theNormalizedURI, ':');
-
-		bool				protocolPresent = false;
-
-		if (index != len)
-		{
-			// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
-			const XMLURL::Protocols		theProtocol =
-				XMLURL().lookupByName(c_wstr(substring(theNormalizedURI, 0 , index)));
-
-			if (theProtocol != XMLURL::Unknown)
-			{
-				protocolPresent = true;
-			}
-		}
-
-		if (protocolPresent == true)
-		{
-			NormalizeURIText(theNormalizedURI);
-		}
-		else
-		{
-			// Assume it's a file specification...
-			array_auto_ptr<XMLCh>	theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
-			assert(theFullPath.get() != 0);
-
-			theNormalizedURI = theFullPath.get();
-			assert(length(theNormalizedURI) > 0);
-
-			NormalizeURIText(theNormalizedURI);
-
-			const XalanDOMString	theFilePrefix(indexOf(theNormalizedURI, '/') == 0 ?
-						XALAN_STATIC_UCODE_STRING("file://") :
-						XALAN_STATIC_UCODE_STRING("file:///"));
-
-			theNormalizedURI = theFilePrefix + theNormalizedURI;
-		}
-
-		url->setURL(c_wstr(theNormalizedURI));
+		url->setURL(c_wstr(getURLStringFromString(urlString)));
 	}
 	catch (...)
 	{
 		throw ("Error! Cannot create url for: " + urlString);
 	}
-
 	return url;
+}
+
+XalanDOMString
+URISupport::getURLStringFromString(const XalanDOMString&	urlString)
+{
+	XalanDOMString	theNormalizedURI(clone(urlString));
+
+	// Let's see what sort of URI we have...
+	const unsigned int	len = length(theNormalizedURI);
+	const unsigned int	index = indexOf(theNormalizedURI, ':');
+
+	bool				protocolPresent = false;
+
+	if (index != len)
+	{
+		// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
+		const XMLURL::Protocols		theProtocol =
+			XMLURL().lookupByName(c_wstr(substring(theNormalizedURI, 0 , index)));
+
+		if (theProtocol != XMLURL::Unknown)
+		{
+			protocolPresent = true;
+		}
+	}
+
+	if (protocolPresent == true)
+	{
+		NormalizeURIText(theNormalizedURI);
+	}
+	else
+	{
+		// Assume it's a file specification...
+		array_auto_ptr<XMLCh>	theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
+		assert(theFullPath.get() != 0);
+
+		theNormalizedURI = theFullPath.get();
+		assert(length(theNormalizedURI) > 0);
+
+		NormalizeURIText(theNormalizedURI);
+
+		const XalanDOMString	theFilePrefix(indexOf(theNormalizedURI, '/') == 0 ?
+					XALAN_STATIC_UCODE_STRING("file://") :
+					XALAN_STATIC_UCODE_STRING("file:///"));
+
+		theNormalizedURI = theFilePrefix + theNormalizedURI;
+	}
+
+	return theNormalizedURI;
 }
 
 
 
 URISupport::URLAutoPtrType
 URISupport::getURLFromString(
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base)
+{	
+	return getURLFromString(getURLStringFromString(urlString, base));
+}
+
+
+
+XalanDOMString
+URISupport::getURLStringFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base)
 {
@@ -223,7 +234,7 @@ URISupport::getURLFromString(
 		}
 	}
 
-	return getURLFromString(context);
+	return getURLStringFromString(context);
 }
 
 
@@ -232,7 +243,6 @@ XalanDOMString&
 URISupport::NormalizeURIText(XalanDOMString&	uriString)
 {
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::vector;
 	using std::replace;
 #endif
 
