@@ -430,9 +430,10 @@ XalanSourceTreeContentHandler::endCDATA()
 void
 XalanSourceTreeContentHandler::endDTD()
 {
-	m_inDTD = false;
-
 	assert(m_document != 0);
+	assert(m_inDTD == true);
+
+	m_inDTD = false;
 }
 
 
