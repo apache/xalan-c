@@ -170,10 +170,12 @@ XalanDefaultParsedSourceHelper::getParserLiaison()
 
 
 XalanDefaultParsedSource::XalanDefaultParsedSource(
-			const InputSource&	theInputSource,
-			bool				fValidate,
-			ErrorHandler*		theErrorHandler,
-			EntityResolver*		theEntityResolver) :
+			const InputSource&		theInputSource,
+			bool					fValidate,
+			ErrorHandler*			theErrorHandler,
+			EntityResolver*			theEntityResolver,
+			const XalanDOMChar*		theExternalSchemaLocation,
+			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation) :
 	XalanParsedSource(),
 	m_parserLiaison(),
 	m_domSupport(m_parserLiaison),
@@ -182,6 +184,8 @@ XalanDefaultParsedSource::XalanDefaultParsedSource(
 	m_parserLiaison.setUseValidation(fValidate);
 	m_parserLiaison.setEntityResolver(theEntityResolver);
 	m_parserLiaison.setErrorHandler(theErrorHandler);
+	m_parserLiaison.setExternalSchemaLocation(theExternalSchemaLocation);
+	m_parserLiaison.setExternalNoNamespaceSchemaLocation(theExternalNoNamespaceSchemaLocation);
 
 	m_parsedSource = m_parserLiaison.mapDocument(m_parserLiaison.parseXMLStream(theInputSource));
 	assert(m_parsedSource != 0);

@@ -161,10 +161,12 @@ class XALAN_TRANSFORMER_EXPORT XalanDefaultParsedSource : public XalanParsedSour
 public:
 
 	XalanDefaultParsedSource(
-			const InputSource&	theInputSource,
-			bool				fValidate = false,
-			ErrorHandler*		theErrorHandler = 0,
-			EntityResolver*		theEntityResolver = 0);
+			const InputSource&		theInputSource,
+			bool					fValidate = false,
+			ErrorHandler*			theErrorHandler = 0,
+			EntityResolver*			theEntityResolver = 0,
+			const XalanDOMChar*		theExternalSchemaLocation = 0,
+			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation = 0);
 
 	virtual
 	~XalanDefaultParsedSource();

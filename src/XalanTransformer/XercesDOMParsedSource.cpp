@@ -101,10 +101,12 @@ XercesDOMParsedSourceHelper::getParserLiaison()
 
 
 XercesDOMParsedSource::XercesDOMParsedSource(
-			const InputSource&	theInputSource,
-			bool				fValidate,
-			ErrorHandler*		theErrorHandler,
-			EntityResolver*		theEntityResolver):
+			const InputSource&		theInputSource,
+			bool					fValidate,
+			ErrorHandler*			theErrorHandler,
+			EntityResolver*			theEntityResolver,
+			const XalanDOMChar*		theExternalSchemaLocation,
+			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation) :
 	XalanParsedSource(),
 	m_parserLiaison(),
 	m_parsedSource(0)
@@ -112,6 +114,8 @@ XercesDOMParsedSource::XercesDOMParsedSource(
 	m_parserLiaison.setUseValidation(fValidate);
 	m_parserLiaison.setEntityResolver(theEntityResolver);
 	m_parserLiaison.setErrorHandler(theErrorHandler);
+	m_parserLiaison.setExternalSchemaLocation(theExternalSchemaLocation);
+	m_parserLiaison.setExternalNoNamespaceSchemaLocation(theExternalNoNamespaceSchemaLocation);
 
 	m_parsedSource = m_parserLiaison.parseXMLStream(theInputSource);
 	assert(m_parsedSource != 0);

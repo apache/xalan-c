@@ -144,6 +144,8 @@ XalanTransformer::XalanTransformer():
 	m_useValidation(false),
 	m_entityResolver(0),
 	m_errorHandler(0),
+	m_externalSchemaLocation(),
+	m_externalNoNamespaceSchemaLocation(),
 	m_problemListener(0),
 #if defined(XALAN_NO_NAMESPACES)
 	m_warningStream(&cerr),
@@ -621,7 +623,9 @@ XalanTransformer::parseSource(
 						theInputSource,
 						m_useValidation,
 						m_errorHandler,
-						m_entityResolver);
+						m_entityResolver,
+						getExternalSchemaLocation(),
+						getExternalNoNamespaceSchemaLocation());
 		}
 		else
 		{
@@ -630,7 +634,9 @@ XalanTransformer::parseSource(
 						theInputSource,
 						m_useValidation,
 						m_errorHandler,
-						m_entityResolver);
+						m_entityResolver,
+						getExternalSchemaLocation(),
+						getExternalNoNamespaceSchemaLocation());
 		}
 
 		// Store it in a vector.

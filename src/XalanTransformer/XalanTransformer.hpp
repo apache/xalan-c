@@ -551,6 +551,58 @@ public:
 	}
 
 	/**
+	  * This method returns the location for an external schema document
+	  * for parsing.
+	  *
+	  * @return A string representing the location of the external schema document
+	  */
+	const XalanDOMChar*
+	getExternalSchemaLocation() const
+	{
+		return m_externalSchemaLocation.size() == 0 ? 0 : m_externalSchemaLocation.c_str();
+	}
+
+	/**
+	  * This method sets the location for an external schema document
+	  * for parsing.
+	  *
+	  * @param location A string representing the location of the external schema document
+	  */
+	void
+	setExternalSchemaLocation(const XalanDOMChar*	location)
+	{
+		assert(location != 0);
+
+		m_externalSchemaLocation = location;
+	}
+
+	/**
+	  * This method returns the location for an external schema document
+	  * for parsing.
+	  *
+	  * @return A string representing the location of the external schema document
+	  */
+	const XalanDOMChar*
+	getExternalNoNamespaceSchemaLocation() const
+	{
+		return m_externalNoNamespaceSchemaLocation.size() == 0 ? 0 : m_externalNoNamespaceSchemaLocation.c_str();
+	}
+
+	/**
+	  * This method sets the location for an external schema document
+	  * for parsing.
+	  *
+	  * @param location A string representing the location of the external schema document
+	  */
+	void
+	setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	location)
+	{
+		assert(location != 0);
+
+		m_externalNoNamespaceSchemaLocation = location;
+	}
+
+	/**
 	 * This method returns the installed ProblemListener instance.
 	 *
 	 * @return The pointer to the installed ProblemListener instance.
@@ -817,6 +869,10 @@ private:
 	EntityResolver*							m_entityResolver;
 
 	ErrorHandler*							m_errorHandler;
+
+	XalanDOMString							m_externalSchemaLocation;
+
+	XalanDOMString							m_externalNoNamespaceSchemaLocation;
 
 	ProblemListener*						m_problemListener;
 
