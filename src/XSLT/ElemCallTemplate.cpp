@@ -116,6 +116,13 @@ ElemCallTemplate::ElemCallTemplate(
 			0,
 			this);
 	}
+	else if (isValidNCName(m_templateName.getLocalPart()) == false)
+	{
+		constructionContext.error(
+			"xsl:call-template has an invalid 'name' attribute",
+			0,
+			this);
+	}
 }
 
 

@@ -139,12 +139,21 @@ ElemTemplate::ElemTemplate(
 		}
 	}
 
-	if(0 == m_matchPattern && m_name.isEmpty() == true)
+	const bool	isEmptyName = m_name.isEmpty();
+
+	if(0 == m_matchPattern && isEmptyName == true)
 	{
 		constructionContext.error(
 				"xsl:template requires either a name or a match attribute",
 				0,
 				this);
+	}
+	else if (isEmptyName == false && isValidNCName(m_name.getLocalPart()) == false)
+	{
+		constructionContext.error(
+			"xsl:template has an invalid 'name' attribute",
+			0,
+			this);
 	}
 }
 
