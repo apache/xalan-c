@@ -749,40 +749,39 @@ XalanDOMString::length(const char*	theString)
 
 
 
-#include <util/XMLString.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 
 
-template <class SourceType, class TargetType, class SizeType, class LengthFunctionType>
+template <class SourceType, class TargetType>
 bool
 doXercesTranscode(
 			const SourceType*			theSourceString,
-			SizeType					theSourceStringLength,
+			XalanDOMString::size_type	theSourceStringLength,
 			bool						theSourceStringIsNullTerminated,
 #if defined(XALAN_NO_NAMESPACES)
 			vector<TargetType>&			theTargetVector,
 #else
 			std::vector<TargetType>&	theTargetVector,
 #endif
-			bool						terminate,
-			LengthFunctionType			theLengthFunction)
+			bool						terminate)
 {
 	const SourceType*	theRealSourceString = theSourceString;
 
-	SizeType			theRealSourceStringLength = theSourceStringLength;
+	XalanDOMString::size_type	theRealSourceStringLength = theSourceStringLength;
 
 	XalanArrayAutoPtr<SourceType>		theGuard;
 
 	if (theSourceStringIsNullTerminated == true)
 	{
-		theRealSourceStringLength = theLengthFunction(theSourceString);
+		theRealSourceStringLength = XalanDOMString::length(theSourceString);
 	}
 	else
 	{
 		theGuard.reset(new SourceType[theRealSourceStringLength + 1]);
 		assert(theGuard.get() != 0);
 
-		for (SizeType index = 0; index < theRealSourceStringLength; ++index)
+		for (XalanDOMString::size_type index = 0; index < theRealSourceStringLength; ++index)
 		{
 			theGuard[index] = theSourceString[index];
 		}
@@ -881,8 +880,7 @@ doTranscodeToLocalCodePage(
 					theSourceStringLength,
 					theSourceStringIsNullTerminated,
 					theTargetVector,
-					terminate,
-					length);
+					terminate);
 	}
 #else
 	const wchar_t*	theTempSource = 0;
@@ -1014,8 +1012,7 @@ doTranscodeFromLocalCodePage(
 					theSourceStringLength,
 					theSourceStringIsNullTerminated,
 					theTargetVector,
-					terminate,
-					length);
+					terminate);
 	}
 #else
 	XalanArrayAutoPtr<char>		tempString;
