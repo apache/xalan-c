@@ -259,7 +259,7 @@ XercesDOMPrintWriter::print(const DOMString&	s)
 void
 XercesDOMPrintWriter::println()
 {
-	m_OutputStream.write(XMLCh('\n'));
+	m_OutputStream.write(c_wstr(XALAN_STATIC_UCODE_STRING("\n")));
 
 	flush();
 }
