@@ -670,15 +670,3 @@ MutableNodeRefList::clearNulls()
 
 	assert(checkForDuplicates() == false);
 }
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-NodeRefListBase*
-#else
-MutableNodeRefList*
-#endif
-MutableNodeRefList::clone() const
-{
-	return new MutableNodeRefList(*this);
-}

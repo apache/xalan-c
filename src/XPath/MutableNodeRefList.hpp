@@ -226,13 +226,6 @@ public:
 	void
 	clearNulls();
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual NodeRefListBase*
-#else
-	virtual MutableNodeRefList*
-#endif
-	clone() const;
-
 	typedef NodeListVectorType::iterator	NodeListIteratorType;
 };
 

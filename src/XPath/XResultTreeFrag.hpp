@@ -162,9 +162,6 @@ private:
 	virtual unsigned int
 	indexOf(const XalanNode*	theNode) const;
 
-	virtual NodeRefListBase*
-	clone() const;
-
 	XalanAutoPtr<ResultTreeFragBase>	m_value;
 
 	mutable XalanDOMString				m_cachedStringValue;

@@ -183,18 +183,6 @@ NodeRefList::indexOf(const XalanNode*	theNode) const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-NodeRefListBase*
-#else
-NodeRefList*
-#endif
-NodeRefList::clone() const
-{
-	return new NodeRefList(*this);
-}
-
-
-
 #if !defined(NDEBUG)
 bool
 NodeRefList::checkForDuplicates() const

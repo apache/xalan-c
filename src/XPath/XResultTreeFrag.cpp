@@ -244,6 +244,7 @@ XResultTreeFrag::getLength() const
 	while(theCurrentChild != 0)
 	{
 		++theLength;
+
 		theCurrentChild = theCurrentChild->getNextSibling();
 	}
 
@@ -268,19 +269,11 @@ XResultTreeFrag::indexOf(const XalanNode*	theNode) const
 		}
 		else
 		{
-			theIndex++;
+			++theIndex;
 
 			theCurrentChild = theCurrentChild->getNextSibling();
 		}
 	}
 
 	return fFound == true ? theIndex : NodeRefListBase::npos;
-}
-
-
-
-NodeRefListBase*
-XResultTreeFrag::clone() const
-{
-	return new XResultTreeFrag(*this);
 }
