@@ -489,7 +489,7 @@ MutableNodeRefList::isNodeAfterSibling(
 		bool				found1 = false;
 		bool				found2 = false;
 
-		for(int i = 0; i < nNodes; i++)
+		for(unsigned int i = 0; i < nNodes; i++)
 		{
 			const DOM_Node	child = children.item(i);
 
