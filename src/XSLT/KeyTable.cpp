@@ -183,7 +183,7 @@ KeyTable::KeyTable(
 			}
 		} // for(int nodeIndex = -1; nodeIndex < nNodes;)
 
-		// The rest of this is getting the next prewalk position in 
+		// The rest of this is getting the next pre-walk position in 
 		// the tree.
 		XalanNode*	nextNode = pos->getFirstChild();
 
@@ -290,6 +290,8 @@ addIfNotFound(
 
 
 
+static const NodeRefList	theEmptyList;
+
 void
 KeyTable::processKeyDeclaration(
 			KeysMapType&					theKeys,
@@ -302,7 +304,7 @@ KeyTable::processKeyDeclaration(
 	// use attribute in xsl:key.
 	assert(kd.getUse() != 0);
 
-	const XObjectPtr	xuse(kd.getUse()->execute(testNode, resolver, NodeRefList(), executionContext));
+	const XObjectPtr	xuse(kd.getUse()->execute(testNode, resolver, theEmptyList, executionContext));
 
 	if(xuse->getType() != XObject::eTypeNodeSet)
 	{
