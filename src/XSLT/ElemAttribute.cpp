@@ -272,43 +272,58 @@ ElemAttribute::execute(
 			}
 		}
       // Note we are using original attribute name for these tests. 
-		else if(executionContext.isElementPending() == true
-				&& !equals(origAttrName, DOMServices::s_XMLNamespace))
+		else if(executionContext.isElementPending() == true &&
+				!equals(origAttrName, DOMServices::s_XMLNamespace))
 		{
-			// make sure that if a prefix is specified on the attribute name, it is valid
-			indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
-
-			if(indexOfNSSep < origAttrNameLength)
+			// Don't try to create a namespace declaration for anything that
+			// starts with xml:
+			if (startsWith(origAttrName, DOMServices::s_XMLString) == true)
 			{
-				const XalanDOMString	nsprefix = substring(origAttrName, 0, indexOfNSSep);
+				// This just fakes out the test below.  It would be better if
+				// we had a better way of testing this...
+				indexOfNSSep = origAttrNameLength;
+			}
+			else
+			{
+				// make sure that if a prefix is specified on the attribute name, it is valid
+				indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 
-				assign(attrNameSpace, getNamespaceForPrefix(nsprefix));
-
-				if (isEmpty(attrNameSpace))
+				if(indexOfNSSep < origAttrNameLength)
 				{
-					// Could not resolve prefix
-					executionContext.warn("Warning: Could not resolve prefix " + nsprefix, sourceNode, this);
-				}
-				else
-				{
-					// Check to see if there's already a namespace declaration in scope...
-					const XalanDOMString&	prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
+					StylesheetExecutionContext::GetAndReleaseCachedString	nsprefixGuard(executionContext);
 
-					if (length(prefix) == 0)
+					XalanDOMString&		nsprefix = nsprefixGuard.get();
+
+					nsprefix = substring(origAttrName, 0, indexOfNSSep);
+
+					assign(attrNameSpace, getNamespaceForPrefix(nsprefix));
+
+					if (isEmpty(attrNameSpace))
 					{
-						// We need to generate a namespace declaration...
-						StylesheetExecutionContext::GetAndReleaseCachedString	nsDeclGuard(executionContext);
+						// Could not resolve prefix
+						executionContext.warn("Warning: Could not resolve prefix " + nsprefix, sourceNode, this);
+					}
+					else
+					{
+						// Check to see if there's already a namespace declaration in scope...
+						const XalanDOMString&	prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
 
-						XalanDOMString&		nsDecl = nsDeclGuard.get();
+						if (length(prefix) == 0)
+						{
+							// We need to generate a namespace declaration...
+							StylesheetExecutionContext::GetAndReleaseCachedString	nsDeclGuard(executionContext);
 
-						reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(nsprefix) + 1);
+							XalanDOMString&		nsDecl = nsDeclGuard.get();
 
-						assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
+							reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(nsprefix) + 1);
 
-						append(nsDecl, nsprefix);
+							assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
 
-						// Add the namespace declaration...
-						executionContext.addResultAttribute(nsDecl, attrNameSpace);
+							append(nsDecl, nsprefix);
+
+							// Add the namespace declaration...
+							executionContext.addResultAttribute(nsDecl, attrNameSpace);
+						}
 					}
 				}
 			}
