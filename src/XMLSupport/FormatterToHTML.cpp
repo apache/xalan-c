@@ -1016,6 +1016,10 @@ FormatterToHTML::writeAttrURI(const XalanDOMChar*	theString)
 				accumDefaultEntity(ch, i, theString, len, true);
 			}
 		}
+		else if (ch == XalanUnicode::charAmpersand)
+		{
+			accumDefaultEntity(ch, i, theString, len, true);
+		}
 		else
 		{
 			accumContent(ch);

@@ -61,8 +61,10 @@
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
+#include <fstream.h>
 #else
 #include <iostream>
+#include <fstream>
 #endif
 
 
@@ -85,7 +87,7 @@
 
 
 
-//#define XALAN_VQ_SPECIAL_TRACE
+#define XALAN_VQ_SPECIAL_TRACE
 #if defined(XALAN_VQ_SPECIAL_TRACE)
 #include "C:/Program Files/Rational/Quantify/pure.h"
 #endif
@@ -96,6 +98,7 @@
 using std::cerr;
 using std::cout;
 using std::endl;
+using std::ofstream;
 #endif
 
 
@@ -367,10 +370,12 @@ xsltMain(
 
 			if (theParams.m_outFileName != 0)
 			{
+				ofstream	theOutputStream(theParams.m_outFileName);
+
 				theResult = theTransformer.transform(
 						theParams.m_inFileName,
 						theParams.m_xslFileName,
-						theParams.m_outFileName);
+						theOutputStream);
 			}
 			else
 			{
@@ -412,6 +417,7 @@ main(
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)
 	QuantifyStopRecordingData();
+	QuantifyClearData();
 #endif
 
     if (argc < 2)
