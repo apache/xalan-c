@@ -87,19 +87,11 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesBridgeHelper
 {
 public:
 
-#if defined(XALAN_USE_XERCES_DOMSTRING)
-	static const DOMString&
-	XalanDOMStringToXercesDOMString(const XalanDOMString&	theString)
-	{
-		return theString;
-	}
-#else
 	static const DOMString
 	XalanDOMStringToXercesDOMString(const XalanDOMString&	theString)
 	{
 		return DOMString(&theString[0], theString.length());
 	}
-#endif
 
 	static void
 	setNodeValue(
