@@ -155,12 +155,11 @@ StylesheetRoot::StylesheetRoot(
 	m_defaultRootRule(0)
 
 {
-	const XalanDOMString urlString = constructionContext.getURLStringFromString(m_baseIdent);
+	// Our base class has already resolved the URI and pushed it on
+	// the back of the include stack, so get it from there...
+	assert(getIncludeStack().empty() == false);
 
-	if (length(urlString) != 0)
-	{
-		m_importStack.push_back(urlString);
-	}
+	m_importStack.push_back(getIncludeStack().back());
 }				
 
 
