@@ -8,7 +8,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,22 +71,17 @@
  <anchor name="status"/>
  <s2 title="Status">
    <ul>
-    <li><link anchor="done">Changes since &xslt4c; version 1.4</link></li>
+    <li><link anchor="done">Changes since &xslt4c; version 1.5</link></li>
     <li><link anchor="bugs">Bug reporting</link></li>    
     <li><link anchor="xml4c">Version of &xml4c; to use</link></li>
     <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
    </ul>
      <anchor name="done"/>
-   <s3 title="Changes since &xslt4c; version 1.4">
-     <p>Major updates since version 1.4 include:</p>
+   <s3 title="Changes since &xslt4c; version 1.5">
+     <p>Major updates since version 1.5 include:</p>
      <ul>
 		<li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
-		<li>For Windows, Xalan-C++ is now packaged as a single DLL.  The project files to build separate DLLs are now deprecated and will not be maintained.</li>
-		<li>Support for &xml4c; DOMNode classes.</li>
-		<li>New sample <em>TransformToXercesDOM</em> that illustrates how
-		  to perform a transform resulting in a &xml4c; DOMDocument</li>
-		<li>Usage of the &xml4c; C++ namespace and creation of &xslt4c;
-		  namespace.</li>
+		<li>Directory "sane include" reorganization.  A new sub-directory called &apos;xalanc&apos; has been added to the src directory (for source distribution packages) and include directory (for binary distribution packages).  New source files which include Xalan headers will need to be modified to include the 'xalanc' prefix in the header path.  <p>For example&colon; </p><p><code>#include &lt;XPath/XObject.hpp&gt;</code></p><p>will need to be changed to</p> <code>#include &lt;xalanc/XPath/XObject.hpp&gt;</code><p>For Windows users, all project files have been modified to reflect this change.  For UNIX users, please see <link anchor="unix">Steps for doing a UNIX build</link> for migration considerations.</p></li>
      </ul>  
    </s3>  
      <anchor name="bugs"/>
@@ -116,12 +111,12 @@
    </ul></s3><anchor name="needed"/>
    <s3 title="What you need from the distributions">
    <p>To rebuild &xslt4c;, you need the &xslt4c; source files, the &xml4c; header files, and
-   for Windows the &xml4c; .lib file. If you want to rebuild with the ICU, you also need the ICU header files, and for Windows the ICU .lib file.</p>
+   for Windows the &xml4c; .lib file. If you want to rebuild with the ICU, you will need to download the ICU source package to build the ICU libraries. </p>
   <p>The &xslt4c; source tree is in the src subdirectory of the &xslt4c; <link idref="getstarted" anchor="download">binary distributions</link>. The &xml4c; header files are in the include/xercesc tree of the corresponding &xml4c; binary distributions. The Windows Xerces .lib file is in the lib directory of the &xml4c; Windows binary distribution.</p> 
 
 <note>You can also download &xslt4c; source distributions from <resource-ref idref="xslt4c-distdir"/>: &xslt4c-dist;-src.zip and &xslt4c-dist;-src.tar.gz. &xml4c; source distributions are available from <resource-ref idref="xml4c-distdir"/>: 
 &xml4c-dist;-src.zip and &xml4c-dist;-src.tar.gz.</note>
-<p>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xslt4c; we certify that it is compatible with a given version of &xml4c;. To be safe, stick with Xerces distributions that we certify to be compatible. Reminder: &xslt4c-current; is compatible with &xml4c-used;.</p>
+<p>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xslt4c; we certify that it is compatible with a given version of &xml4c;. To be safe, use the Xerces distributions that we certify as compatible. Reminder: &xslt4c-current; is compatible with &xml4c-used;.</p>
    <p>For information on using the <resource-ref idref="icu"/>, see
    <link idref="usagepatterns" anchor="icu">Using the ICU</link>.
    &xslt4c-current; has been tested with &icu-used;. You may be able to use newer ICU releases as they appear.</p>
@@ -131,18 +126,15 @@
   <p>If you do not want to apply the Dinkumware patches, or you are using a different Service Pack, you must rebuild all of the Xerces and Xalan binaries.</p>
 <p>Before you do the following, be sure you have <link idref="getstarted" anchor="windowspath">provided Visual C++ the paths to the Xerces headers and libraries</link>.</p>
   <ol>    
-     <li>(Optional) If you are rebuilding the ICUBridge, install the ICU so the icu root directory
-      is at the same level as the xml-xerces root directory (see <link 
-      idref="usagepatterns" anchor="icu">Using the ICU</link>.<br/><br/>
-      If you want the Xalan and/or testXSLT executable to use ICU support for number formatting and sorting, install the ICU,
-      uncomment the <code>#define XALAN_USE_ICU</code> statement in process.cpp, and use the Visual C++ 
-      Project Dependencies command to add ICUBridge to the list of XalanTransformer and/or TestXSLT dependencies (see <link idref="commandline"
-      anchor="icu">Enabling ICU support for the Xalan and/or TestXSLT executable</link>).<br/><br/></li>
+     <li>If you want to enable ICU support, install the ICU so the ICU root directory is at the same level as the xml-xerces directory (see <link 
+      idref="usagepatterns" anchor="icu">Using the ICU</link>).<br/><br/></li>
     <li>Use Visual C++ to open the Xalan workspace from the xml-xalan\c\Projects\Win32\VC6.
     <br/><br/></li>
-    <li>Use Visual C++ to rebuild everything or specific dynamic link libraries and executables of
-    interest.</li>
+    <li>Use Visual C++ to build the Xalan library (the "AllInOne" project) and executables of interest.  If you want to enable ICU support for number formatting and sorting, do a clean build of the Xalan library using the AllInOneWithICU project before building any executables.  ICU support for the testXSLT application requires uncommenting of the #define XALAN_USE_ICU statement in process.cpp. (See <link idref="commandline"
+      anchor="icu">Enabling ICU support for the Xalan and/or TestXSLT executable</link>).</li>
   </ol>
+  <note>To recompile existing applications without changing your source code, be sure to modify your Project settings to pick up the Xalan headers in its new location. (see image below)</note>
+  <p><img src="options-sane.gif" alt="Visual C++ 6.0 Include Directories change"/></p>
   </s3><anchor name="unix"/>
 <s3 title="Steps for doing a UNIX build">
     <ol>
@@ -151,8 +143,8 @@
       <li>Set the XALANCROOT environment variable to the path to the c directory in the root of the &xslt4c;
        distribution.  For example, if the distribution is located in "/home/xalan", you would set the XALANCROOT to "/home/xalan/xml-xalan/c". <br/><br/></li>
       <li>(Optional) If you are including the ICUBridge, install the ICU, use the shell to define XALAN_USE_ICU and to set the ICUROOT environment variable to the path to the ICU root. For more information, see (see <link idref="usagepatterns" anchor="icu">Using the ICU</link>)<br/><br/></li>
-      <li>Change directory to xml-xalan/c/src in the &xslt4c; distribution.  You can also build Xalan-C outside of the source tree, but you will need to adjust the path to the runConfigure script in the next step.<br/><br/></li>      
-      <li>Run the runConfigure utility with the platform, C compilier, and C++ compiler flags as indicated below.<br/><br/>
+      <li>Change directory to xml-xalan/c/src/xalanc in the &xslt4c; distribution.  You can also build Xalan-C outside of the source tree, but you will need to adjust the path to the runConfigure script in the next step.<br/><br/></li>      
+      <li>Run the runConfigure utility with the platform, C compiler, and C++ compiler flags as indicated below.<br/><br/>
       <ref>Linux using GCC:</ref>&nbsp;&nbsp;<code>./runConfigure -p linux -c gcc -x c++</code><br/>
       <ref>Linux using the Intel compiler:</ref>&nbsp;&nbsp;<code>./runConfigure -p linux -c icc -x icpc</code><br/>
       <ref>AIX (32 bit):</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc -x xlC</code><br/><br/>
@@ -172,13 +164,15 @@
       where <ref>targ</ref> is omitted or is <code>all</code> (rebuild all), <code>lib</code> (the XSLT library), <code>Xalan</code> (the Xalan executable), or
       <code>testXSLT</code> (the testXSLT executable). ICUBridge is included in the build of Xalan and TestXSLT if XALAN_USE_ICU is
       defined.  You can build the sample applications using the target <code>samples</code>.<br/><br/></li>
-    </ol><anchor name="64"/>
+    </ol>
+    <note>To recompile existing applications without changing your source code, be sure to modify the command line in your Makefile to pick up the Xalan headers from it's new location. e.g:  if your xalan source location is in /home/xml-xalan,</note>
+    <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>CC ... -I/home/xml-xalan/c/src -I/home/xml-xalan/c/src/xalanc mysrc.cpp</code><anchor name="64"/>
    </s3><anchor name="samples"/>
-   <s3 title="Rebuilding a sample application">
-   <p>The Windows32 distribution includes a Visual C++ workspace for the sample applications. This workspace is in the samples directory. If you modify a sample and want to recompile it, you can recompile the .cpp file(s) and rebuild the executable.</p>
-<p>The Makefile that come with the UNIX distributions include targets for rebuilding one or all of the sample applications (with the exception of the ThreadSafe sample, which in its current form only runs under Windows). To rebuild one or more sample applications, go to the xml-xalan/c/src directory and run<br/><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>gmake <ref>targ</ref></code><br/><br/>
-where <ref>targ</ref> is <code>Samples</code> (all the samples), <code>XalanTransform</code>, <code>SimpleTransform</code>,  <code>StreamTransform</code>, <code>UseStylesheetParam</code>, <code>TraceListen</code>, <code>CompileStylesheet</code>, (Windows only) <code>ThreadSafe</code>  <code>XPathWrapper</code>, <code>ExternalFunctions</code>,or <code>ApacheModuleXSLT</code>.</p>
+   <s3 title="Rebuilding a Sample application">
+   <p>In the Windows32 distribution, all of the sample applications can be built from the Xalan.dsw Visual C++ workspace. If you modify a sample and want to recompile it, you can recompile the .cpp file(s) and rebuild the executable.</p>
+<p>The Makefile that come with the UNIX distributions include targets for rebuilding one or all of the sample applications (with the exception of the ThreadSafe sample, which in its current form only runs under Windows). To rebuild one or more sample applications, go to the xml-xalan/c/src/xalanc directory and run<br/><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>gmake <ref>Target</ref></code><br/><br/>
+where <ref>Target</ref> is <code>Samples</code> (all the samples), <code>ApacheModuleXSLT</code>, <code>CompileStylesheet</code>, <code>DocumentBuilder</code>, <code>ExternalFunctions</code>, <code>ParsedSourceWrappers</code>, <code>SerializedNodeSet</code>, <code>SimpleTransform</code>,  <code>SimpleXPathAPI</code>, <code>SimpleXPathCAPI</code>, <code>StreamTransform</code>, <code>ThreadSafe</code> (Windows only), <code>TraceListen</code>, <code>TransformToXercesDOM</code>, <code>UseStylesheetParam</code>, <code>XPathWrapper</code>, <code>XalanTransform</code>, or <code>XalanTransformerCallback</code>.</p>
 <note>For information on building Apache Module, see <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link></note>
    </s3>
  </s2><anchor name="contact"/>

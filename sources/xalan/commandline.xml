@@ -5,7 +5,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,12 +85,18 @@ where <ref>xmlSource</ref> is the XML source document, <ref>xslStylesheet</ref> 
 <table>
  <tr><th>Option</th><th>Description</th></tr>
  <tr><td>-a</td><td>Use stylesheet processing instruction, not the stylesheet argument.</td></tr>
+ <tr><td>-e encoding</td><td>Force the specified encoding for the output.</td></tr>
+ <tr><td>-i integer</td><td>Indent the specified amount.</td></tr>
+ <tr><td>-m</td><td>Omit the META tag in HTML output.</td></tr>
  <tr><td>-o filename</td><td>Write transformation result to this file (rather than to the console).</td></tr>
- <tr><td>-p name expr</td><td>Set a stylesheet parameter with this expression</td></tr> 
+ <tr><td>-p name expr</td><td>Set a stylesheet parameter with this expression.</td></tr> 
+ <tr><td>-t name expr</td><td>Diplay timing information.</td></tr> 
+ <tr><td>-u name expr</td><td>Disable escaping of URLs in HTML output.</td></tr> 
  <tr><td>-v</td><td>Validate the XML source document.</td></tr> 
+ <tr><td>-</td><td>A dash as the 'source' argument reads from stdin.<br/>A dash as the 'stylesheet' argument reads from stdin.<br/>('-' cannot be used for both arguments.)</td></tr> 
  </table>
  <p>To display a list of the options call the Xalan executable as follows:</p>
-<p><code>Xalan ?</code></p>
+<p><code>Xalan -?</code></p>
 </s2><anchor name="testxslt"/>
 <s2 title="Using TestXSLT">
     <p>Call the testXSLT executable with the flags and arguments described below. The following command line, for example, includes the -IN, -XSL, and -OUT flags with their accompanying arguments -- the XML source document, the XSL
@@ -144,8 +150,7 @@ The -XML or -HTML flag must be set:
      formatting, and sorting. For more information, see <link idref="usagepatterns" anchor="icu">Using the ICU</link>.</p>
      <p>If you have built and integrated the ICU with &xml4c;, Xalan and testXSLT (like any &xslt4c; application) automatically uses ICU
      support for output encoding. See <resource-ref idref="xerces-build-icu"/>.</p>     
-     <p>The Xalan and testXSLT executables also conditionally include ICU support for number formatting and sorting. For Xalan, look in XalanTransformer.cpp
-     for the <code>#if defined(XALAN_USE_ICU)</code> blocks. For testXSLT, look in process.cpp for the
+     <p>The Xalan executable depends on the use of an ICU-enabled Xalan library for number formatting and sorting (see below).   The testXSLT executable conditionally includes ICU support for number formatting and sorting. For testXSLT, look in process.cpp for the
      <code>#if defined(XALAN_USE_ICU)</code> blocks. These blocks #include the ICUBridge headers, and
      substitutes ICU support for xsl:number, format-number(), and xsl:sort. To activate this support:</p>
      <ol>
@@ -154,8 +159,8 @@ The -XML or -HTML flag must be set:
      </ol>
      <s3 title="Rebuilding Xalan and/or TestXSLT in Windows">
      <ol>
-       <li>Uncomment the <code>#define XALAN_USE_ICU</code> in XalanTransformer.cpp and/or process.cpp.<br/><br/></li>
-       <li>Add ICUBridge to the Visual C++ list of dependencies for the XalanTransformer and/or TestXSLT project.<br/><br/></li>
+       <li>For Windows, the ICUBridge is part of the Xalan library.    Build an ICU-enabled Xalan library using the AllInOneWithICU project.<br/><br/></li>
+       <li>For TestXSLT, uncomment "#define XALAN_USE_ICU" in process.cpp.<br/><br/></li>
        <li>Build Xalan.exe and/or TestXSLT.exe.</li>     
      </ol>     
      </s3>
