@@ -175,8 +175,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	XSLTProcessor(),
 	DocumentHandler(),
 	PrefixResolver(),
-	m_outputCarriageReturns(false),
-	m_outputLinefeeds(false),
 	m_useDOMResultTreeFactory(false),
 	m_domResultTreeFactory(0),
 	m_resultNameSpacePrefix(),
@@ -684,7 +682,7 @@ XSLTEngineImpl::parseXML(
 			}
 			else
 			{
-				XSLTInputSource		inputSource(c_wstr(urlString));
+				const XSLTInputSource	inputSource(c_wstr(urlString));
 
 				doc = parseXML(inputSource, docHandler, docToRegister);
 			}
@@ -1009,15 +1007,6 @@ XSLTEngineImpl::getXSLToken(const XalanNode&	node) const
 	}
 
 	return tok;
-}
-
-
-
-bool
-XSLTEngineImpl::isXSLTagOfType(const XalanNode&	node,
-							int 		tagType) const
-{
-	return getXSLToken(node) == tagType ? true : false;
 }
 
 
@@ -2414,49 +2403,6 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 	
 
 
-// $$$ ToDo: This should not be here!!!!
-bool
-XSLTEngineImpl::qnameEqualsResultElemName(
-			const QName&			qname,
-			const XalanDOMString&	elementName) const
-{
-	const XalanDOMString*	elemNS = 0;
-	XalanDOMString			elemLocalName;
-
-	const unsigned int	indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
-
-	if(indexOfNSSep < length(elementName))
-	{
-		const XalanDOMString	prefix = substring(elementName, 0, indexOfNSSep);
-
-		if(equals(prefix, DOMServices::s_XMLString))
-		{
-			elemNS = &DOMServices::s_XMLNamespaceURI;
-		}
-		else
-		{
-			elemNS = getResultNamespaceForPrefix(prefix);
-		}
-
-		if(elemNS == 0)
-		{
-			error("Prefix must resolve to a namespace: " + prefix);
-		}
-
-		elemLocalName =  substring(elementName, indexOfNSSep+1);
-	}
-	else
-	{
-		elemLocalName = elementName;
-	}
-
-	assert(elemNS != 0);
-
-	return qname.equals(QNameByReference(*elemNS, elemLocalName));
-}
-
-
-
 const XalanDOMString*
 XSLTEngineImpl::getResultNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
@@ -3336,21 +3282,6 @@ const XalanDOMString&	XSLTEngineImpl::s_XSLT4JNameSpaceURL = ::s_XSLT4JNameSpace
 
 const XalanDOMString&	XSLTEngineImpl::s_uniqueNamespacePrefix = ::s_uniqueNamespacePrefix;
 
-
-/**
- * Control if the xsl:variable is resolved early or 
- * late. Resolving the xsl:variable
- * early is a drag because it means that the fragment 
- * must be created into a DocumentFragment, and then 
- * cloned each time to the result tree.  If we can resolve 
- * late, that means we can evaluate directly into the 
- * result tree.  Right now this must be kept on 'early' 
- * because you would need to set the call stack back to 
- * the point of xsl:invoke... which I can't quite work out 
- * at the moment.  I don't think this is worth fixing 
- * until NodeList variables are implemented.
- */
-const bool										XSLTEngineImpl::s_resolveContentsEarly = true;
 
 const XSLTEngineImpl::AttributeKeysMapType&		XSLTEngineImpl::s_attributeKeys = ::s_attributeKeys;
 

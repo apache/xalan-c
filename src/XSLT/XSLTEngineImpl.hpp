@@ -735,18 +735,6 @@ public:
 	getXSLToken(const XalanNode&	node) const;
 
 	/**
-	 * Find the type of an element using this method.
-	 *
-	 * @param node	a probable xsl:xxx element
-	 * @param tagType Constants.ELEMNAME_XXX token
-	 * @return true if node is of tagType
-	 */
-	bool
-	isXSLTagOfType(
-			const XalanNode& node,
-			int 		tagType) const;
-
-	/**
 	 * Whether to warn about pattern match conflicts.
 	 *
 	 * @return true to not warn about pattern match conflicts
@@ -889,19 +877,7 @@ public:
 	 */
 	bool
 	isCDataResultElem(const XalanDOMString&		elementName) const;
-	
-	/**
-	 * Tell if a qualified name equals the current result tree name.
-	 *
-	 * @param qname 	  QName to compare to
-	 * @param elementName current result tree element
-	 * @return true if names are the same
-	 */
-	bool
-	qnameEqualsResultElemName(
-			const QName&			qname,
-			const XalanDOMString&	elementName) const;
-	
+
 	/**
 	 * Retrieve the result namespace corresponding to a prefix.
 	 * 
@@ -910,7 +886,7 @@ public:
 	 */
 	const XalanDOMString*
 	getResultNamespaceForPrefix(const XalanDOMString&	prefix) const;
-  
+
 	/**
 	 * Retrieve the result prefix corresponding to a namespace.
 	 * 
@@ -1254,7 +1230,7 @@ public:
 	const Locator*
 	getLocatorFromStack() const
 	{
-		return m_stylesheetLocatorStack.size() == 0 ? 0 : m_stylesheetLocatorStack.back();
+		return m_stylesheetLocatorStack.empty() == true ? 0 : m_stylesheetLocatorStack.back();
 	}
 
 	/**
@@ -1274,7 +1250,7 @@ public:
 	void
 	popLocatorStack()
 	{
-		if (m_stylesheetLocatorStack.size() != 0)
+		if (m_stylesheetLocatorStack.empty() == false)
 		{
 			m_stylesheetLocatorStack.pop_back();
 		}
@@ -1452,24 +1428,14 @@ protected:
 	}
 
 	/**
-	 * If true, output carriage returns.
-	 */
-	bool	m_outputCarriageReturns;
-
-	/**
-	 * If true, output linefeeds.
-	 */
-	bool	m_outputLinefeeds;
-
-	/**
 	 * If true, build DOM-based result tree fragments.
 	 */
-	bool											m_useDOMResultTreeFactory;
+	bool					m_useDOMResultTreeFactory;
 
 	/**
 	 * The factory that will be used to create DOM-based result tree fragments.
 	 */
-	mutable XalanDocument*							m_domResultTreeFactory;
+	mutable XalanDocument*	m_domResultTreeFactory;
 
 	/**
 	 * The namespace that the result tree conforms to.  A null value 
@@ -1506,14 +1472,13 @@ protected:
 	XObjectFactory& 		m_xobjectFactory;
 
 	// The query/pattern-matcher object.
-	XPathProcessorPtrType	m_xpathProcessor;
+	const XPathProcessorPtrType		m_xpathProcessor;
 
 	/**
 	 * Stack of Booleans to keep track of if we should be outputting 
 	 * cdata instead of escaped text.
-	 * ## Optimization: use array stack instead of object stack.
 	 */
-	BoolVectorType			m_cdataStack;
+	BoolVectorType	m_cdataStack;
 
 private:
 
@@ -1629,28 +1594,6 @@ private:
 	 */
 	unsigned long	m_uniqueNSValue;
   
-
-	/**
-	 * Control if the xsl:variable is resolved early or 
-	 * late. Resolving the xsl:variable
-	 * early is a drag because it means that the fragment 
-	 * must be created into a DocumentFragment, and then 
-	 * cloned each time to the result tree.  If we can resolve 
-	 * late, that means we can evaluate directly into the 
-	 * result tree.  Right now this must be kept on 'early' 
-	 * because you would need to set the call stack back to 
-	 * the point of xsl:invoke... which I can't quite work out 
-	 * at the moment.  I don't think this is worth fixing 
-	 * until NodeList variables are implemented.
-	 */
-	static const bool	s_resolveContentsEarly;
-
-	bool
-	getResolveContentsEarly() const
-	{
-		return s_resolveContentsEarly;
-	}
-
 	ParamVectorType 	m_topLevelParams;
 
 public:
