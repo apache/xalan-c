@@ -58,6 +58,10 @@
 
 
 
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <DOMSupport/DOMServices.hpp>
 
 
@@ -78,6 +82,10 @@ FunctionNamespaceURI::~FunctionNamespaceURI()
 
 
 
+static const XalanDOMString		theEmptyString;
+
+
+
 XObjectPtr
 FunctionNamespaceURI::execute(
 		XPathExecutionContext&	executionContext,
@@ -92,10 +100,32 @@ FunctionNamespaceURI::execute(
 	}
 	else
 	{
-		// The XPath standard says that if there are no arguments,
-		// the argument defaults to a node set with the context node
-		// as the only member.
-		return executionContext.getXObjectFactory().createStringReference(context->getNamespaceURI());
+		const XalanDOMString*		theResult = &theEmptyString;
+
+		const XalanNode::NodeType	theType = context->getNodeType();
+
+		if (theType == XalanNode::ELEMENT_NODE)
+		{
+			theResult = &context->getNamespaceURI();
+		}
+		else if (theType == XalanNode::ATTRIBUTE_NODE)
+		{
+			const XalanDOMString&	theNodeName = context->getNodeName();
+
+			if (equals(theNodeName, DOMServices::s_XMLNamespace) == false &&
+				startsWith(theNodeName, DOMServices::s_XMLNamespaceWithSeparator) == false)
+			{
+				theResult = &context->getNamespaceURI();
+			}
+		}
+		else
+		{
+			theResult = &context->getNamespaceURI();
+		}
+
+		assert(theResult != 0);
+
+		return executionContext.getXObjectFactory().createStringReference(*theResult);
 	}
 }
 
@@ -113,13 +143,13 @@ FunctionNamespaceURI::execute(
 
 	if (theList.getLength() == 0)
 	{
-		return executionContext.getXObjectFactory().createString(XalanDOMString());
+		return executionContext.getXObjectFactory().createStringReference(theEmptyString);
 	}
 	else
 	{
 		assert(theList.item(0) != 0);
 
-		return executionContext.getXObjectFactory().createStringReference(theList.item(0)->getNamespaceURI());
+		return execute(executionContext, theList.item(0));
 	}
 }
 
@@ -183,6 +213,5 @@ FunctionNamespaceURI::clone() const
 const XalanDOMString
 FunctionNamespaceURI::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The namespace-uri() function takes zero arguments or one argument!");
+	return XALAN_STATIC_UCODE_STRING("The namespace-uri() function takes zero arguments or one argument!");
 }

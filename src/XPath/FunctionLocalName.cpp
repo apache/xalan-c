@@ -58,6 +58,10 @@
 
 
 
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <DOMSupport/DOMServices.hpp>
 
 
@@ -163,23 +167,37 @@ FunctionLocalName::execute(
 
 
 
+static const XalanDOMString		theEmptyString;
+
+
+
 XObjectPtr
 FunctionLocalName::getLocalName(
 		XPathExecutionContext&	executionContext,
 		const XalanNode&		node)
 {
+	const XalanDOMString*		theResult = &theEmptyString;
+
 	const XalanNode::NodeType	theType = node.getNodeType();
 
-	if(theType == XalanNode::ATTRIBUTE_NODE ||
-		theType == XalanNode::ELEMENT_NODE ||
-		theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
+	if(theType == XalanNode::ELEMENT_NODE ||
+	   theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
 	{
-		return executionContext.getXObjectFactory().createStringReference(DOMServices::getLocalNameOfNode(node));
+		theResult = &DOMServices::getLocalNameOfNode(node);
 	}
-	else
+	else if (theType == XalanNode::ATTRIBUTE_NODE)
 	{
-		return executionContext.getXObjectFactory().createString(XalanDOMString());
+		const XalanDOMString&	theLocalName = DOMServices::getLocalNameOfNode(node);
+
+		if (equals(theLocalName, DOMServices::s_XMLNamespace) == false)
+		{
+			theResult = &theLocalName;
+		}
 	}
+
+	assert(theResult != 0);
+
+	return executionContext.getXObjectFactory().createStringReference(*theResult);
 }
 
 
