@@ -97,7 +97,7 @@ Function::execute(
 	{
 		return execute(executionContext, context, args[0], args[1], locator);
 	}
-	else if (theArgCount == 2)
+	else if (theArgCount == 3)
 	{
 		return execute(executionContext, context, args[0], args[1], args[2], locator);
 	}
