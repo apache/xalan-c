@@ -110,7 +110,7 @@ FunctionSystemProperty::execute(
 
 	XalanDOMString	result;
 
-	double			numberResult;
+	double			numberResult = 0.0;
 
 	if(indexOfNSSep < fullNameLength)
 	{
