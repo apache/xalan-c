@@ -280,6 +280,62 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::namespacePrefixesString[] = {
 };
 
 
+// http://apache.org/xml/features/validation/schema
+const XalanDOMChar	XalanSourceTreeParserLiaison::schemaString[] =
+{
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charColon,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charFullStop,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_a,
+	0
+};
+
+
+
 
 XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(
 			XalanSourceTreeDOMSupport&	/* theSupport */) :
@@ -382,11 +438,19 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 		theReader->setFeature(
 			validationString,
 			false);
+
+		theReader->setFeature(
+			schemaString,
+			false);
 	}
 	else
 	{
 		theReader->setFeature(
 			dynamicValidationString,
+			true);
+
+		theReader->setFeature(
+			schemaString,
 			true);
 	}
 

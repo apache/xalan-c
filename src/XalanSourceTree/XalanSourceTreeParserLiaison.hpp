@@ -375,6 +375,8 @@ private:
 	static const XalanDOMChar	namespacesString[];
 
 	static const XalanDOMChar	namespacePrefixesString[];
+
+	static const XalanDOMChar	schemaString[];
 };
 
 
