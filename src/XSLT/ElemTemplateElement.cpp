@@ -178,10 +178,8 @@ ElemTemplateElement::isAttrOK(
 			const AttributeList&	/* atts */,
 			int						/* which */) const
 {
-    bool isXMLNS = (Constants::TATTRNAME_XMLNSDEF == tok) 
-		|| startsWith(attrName, Constants::ATTRNAME_XMLNS);
-
-    return isXMLNS;  
+    return Constants::TATTRNAME_XMLNSDEF == tok	||
+		startsWith(attrName, Constants::ATTRNAME_XMLNS);
 }
 
 
@@ -1182,7 +1180,6 @@ ElemTemplateElement::supports(
 const XalanDOMString&
 ElemTemplateElement::getNamespaceURI() const
 {
-	// $$ ToDo: Is this the same value as PrefixResolver::getURI()?
 	return s_emptyString;
 }
 
