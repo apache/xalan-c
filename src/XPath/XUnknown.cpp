@@ -66,10 +66,14 @@
 #include "XObjectTypeCallback.hpp"
 
 
+XalanDOMString	XUnknown::s_unknownVariableString;
+
+XalanDOMString	XUnknown::s_unknownString;
+
 
 XUnknown::XUnknown(const XalanDOMString&	name) :
 	XObject(eTypeUnknown),
-	m_value(XALAN_STATIC_UCODE_STRING("Unknown variable: ") + name)
+	m_value(s_unknownVariableString + name)
 {
 }
 
@@ -104,7 +108,7 @@ XUnknown::clone(void*	theAddress) const
 XalanDOMString
 XUnknown::getTypeString() const
 {
-	return XALAN_STATIC_UCODE_STRING("#UNKNOWN");
+	return s_unknownString;
 }
 
 
@@ -147,4 +151,22 @@ XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) con
 {
 	theCallbackObject.Unknown(*this,
 							  m_value);
+}
+
+
+
+void
+XUnknown::initialize()
+{
+	s_unknownVariableString = XALAN_STATIC_UCODE_STRING("Unknown variable: ");
+	s_unknownString = XALAN_STATIC_UCODE_STRING("#UNKNOWN");
+}
+
+
+
+void
+XUnknown::terminate()
+{
+	clear(s_unknownVariableString);
+	clear(s_unknownString);
 }

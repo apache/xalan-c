@@ -78,6 +78,18 @@ class XALAN_XPATH_EXPORT XUnknown : public XObject
 public:
 
 	/**
+	 * Perform static initialization.  See class XPathInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XPathInit.
+	 */
+	static void
+	terminate();
+
+	/**
 	 * Construct an XUnknown object from a string.
 	 * 
 	 * @param name       source string
@@ -119,6 +131,10 @@ public:
 private:
 
 	const XalanDOMString	m_value;
+
+	static XalanDOMString	s_unknownVariableString;
+
+	static XalanDOMString	s_unknownString;
 };
 
 
