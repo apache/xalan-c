@@ -139,9 +139,9 @@ public:
 private:
 
 #if defined(XALAN_NO_NAMESPACES)
-	DecimalFormat*				m_decimalFormat;
+	DecimalFormat*						m_decimalFormat;
 #else
-	icu_2_0::DecimalFormat*		m_decimalFormat;
+	U_ICU_NAMESPACE::DecimalFormat*		m_decimalFormat;
 #endif
 };
 

@@ -113,9 +113,9 @@ public:
 	}
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef Collator	CollatorType;
+	typedef Collator					CollatorType;
 #else
-	typedef icu_2_0::Collator	CollatorType;
+	typedef U_ICU_NAMESPACE::Collator	CollatorType;
 #endif
 
 	struct CollationCacheStruct
