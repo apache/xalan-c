@@ -402,10 +402,20 @@ protected:
 private:
 
 	// not implemented
-	StylesheetHandler(const StylesheetHandler &);
-	StylesheetHandler& operator=(const StylesheetHandler &);
+	StylesheetHandler(const StylesheetHandler&);
 
+	StylesheetHandler&
+	operator=(const StylesheetHandler&);
+
+	// Utility function...
+	void
+	processText(
+			const XMLCh* const	chars,
+			const unsigned int	length);
+
+	// Data members...
 	XalanDOMString	m_pendingException;
+
 	bool			m_exceptionPending;
 
 	/**

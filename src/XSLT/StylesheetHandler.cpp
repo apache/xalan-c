@@ -1280,6 +1280,17 @@ StylesheetHandler::endElement(const XMLCh* const name)
 	if (m_exceptionPending == true)
 		return;
 
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	// Clean up the whitespace elements.
+	for_each(m_whiteSpaceElems.begin(),
+			 m_whiteSpaceElems.end(),
+			 DeleteFunctor<ElemTextLiteral>());
+
+	m_whiteSpaceElems.clear();
+
 	m_stylesheet.popNamespaces();
 
 	assert(m_elemStack.empty() == false);
@@ -1361,6 +1372,9 @@ StylesheetHandler::characters(
 	if (m_exceptionPending == true)
 		return;
 
+	processText(chars, length);
+
+#if 0
 	if(m_inTemplate)
 	{
 		ElemTemplateElement*	parent = m_elemStack.back();
@@ -1440,6 +1454,7 @@ StylesheetHandler::characters(
 	}
 	// END SANJIVA CODE
 	// TODO: Flag error if text inside of stylesheet
+#endif
 }
 
 
@@ -1453,83 +1468,7 @@ StylesheetHandler::cdata(
 	if (m_exceptionPending == true)
 		return;
 
-	if(m_inTemplate)
-	{
-		ElemTemplateElement*	parent = m_elemStack.back();
-
-		bool					preserveSpace = false;
-		bool					disableOutputEscaping = false;
-
-		if(Constants::ELEMNAME_TEXT == parent->getXSLToken())
-		{
-#if defined(XALAN_OLD_STYLE_CASTS)
-			disableOutputEscaping = ((ElemText*)parent)->getDisableOutputEscaping();
-#else
-			disableOutputEscaping = static_cast<ElemText*>(parent)->getDisableOutputEscaping();
-#endif
-			parent = m_elemStack[m_elemStack.size()-2];
-			preserveSpace = true;
-		}
-
-		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
-
-		const int lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
-		const int columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
-
-		ElemTextLiteral* elem = new ElemTextLiteral(m_constructionContext,
-			m_stylesheet,
-			lineNumber, columnNumber,
-			chars, 0, length,
-			true, preserveSpace, 
-			disableOutputEscaping);
-
-		const bool	isWhite = isXMLWhitespace(chars, 0, length);
-
-		if(preserveSpace || (!preserveSpace && !isWhite))
-		{
-			while(!m_whiteSpaceElems.empty())
-			{
-				parent->appendChildElem(m_whiteSpaceElems.back());
-
-				m_whiteSpaceElems.pop_back();
-			}
-
-			parent->appendChildElem(elem);
-		}
-		else if(isWhite)
-		{
-			bool						shouldPush = true;
-
-			ElemTemplateElement* const	last = parent->getLastChildElem();
-
-			if(0 != last)
-			{
-				// If it was surrounded by xsl:text, it will count as an element.
-				const bool	isPrevCharData =
-					Constants::ELEMNAME_TEXTLITERALRESULT == last->getXSLToken();
-
-				const bool	isLastPoppedXSLText = (m_lastPopped != 0) &&
-						(Constants::ELEMNAME_TEXT == m_lastPopped->getXSLToken());
-
-				if(isPrevCharData && ! isLastPoppedXSLText)
-				{
-					parent->appendChildElem(elem);
-
-					shouldPush = false;
-				}
-			}
-
-			if(shouldPush)
-				m_whiteSpaceElems.push_back(elem);
-		}
-	}
-	// BEGIN SANJIVA CODE
-	else if (m_inLXSLTScript)
-	{
-		append(m_LXSLTScriptBody, chars);
-	}
-	// END SANJIVA CODE
-	// TODO: Flag error if text inside of stylesheet
+	processText(chars, length);
 
 	m_lastPopped = 0;
 }
@@ -1611,6 +1550,92 @@ StylesheetHandler::charactersRaw(
 		return;
 
   // No action for the moment.
+}
+
+
+
+void
+StylesheetHandler::processText(
+			const XMLCh* const	chars,
+			const unsigned int	length)
+{
+	if(m_inTemplate)
+	{
+		ElemTemplateElement*	parent = m_elemStack.back();
+
+		bool					preserveSpace = false;
+		bool					disableOutputEscaping = false;
+
+		if(Constants::ELEMNAME_TEXT == parent->getXSLToken())
+		{
+#if defined(XALAN_OLD_STYLE_CASTS)
+			disableOutputEscaping = ((ElemText*)parent)->getDisableOutputEscaping();
+#else
+			disableOutputEscaping = static_cast<ElemText*>(parent)->getDisableOutputEscaping();
+#endif
+			parent = m_elemStack[m_elemStack.size()-2];
+			preserveSpace = true;
+		}
+
+		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
+
+		const int lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
+		const int columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
+
+		ElemTextLiteral* elem = new ElemTextLiteral(m_constructionContext,
+			m_stylesheet,
+			lineNumber, columnNumber,
+			chars, 0, length,
+			true, preserveSpace, 
+			disableOutputEscaping);
+
+		const bool	isWhite = isXMLWhitespace(chars, 0, length);
+
+		if(preserveSpace || (!preserveSpace && !isWhite))
+		{
+			while(!m_whiteSpaceElems.empty())
+			{
+				parent->appendChildElem(m_whiteSpaceElems.back());
+
+				m_whiteSpaceElems.pop_back();
+			}
+
+			parent->appendChildElem(elem);
+		}
+		else if(isWhite)
+		{
+			bool						shouldPush = true;
+
+			ElemTemplateElement* const	last = parent->getLastChildElem();
+
+			if(0 != last)
+			{
+				// If it was surrounded by xsl:text, it will count as an element.
+				const bool	isPrevCharData =
+					Constants::ELEMNAME_TEXTLITERALRESULT == last->getXSLToken();
+
+				const bool	isLastPoppedXSLText = (m_lastPopped != 0) &&
+						(Constants::ELEMNAME_TEXT == m_lastPopped->getXSLToken());
+
+				if(isPrevCharData && ! isLastPoppedXSLText)
+				{
+					parent->appendChildElem(elem);
+
+					shouldPush = false;
+				}
+			}
+
+			if(shouldPush)
+				m_whiteSpaceElems.push_back(elem);
+		}
+	}
+	// BEGIN SANJIVA CODE
+	else if (m_inLXSLTScript)
+	{
+		append(m_LXSLTScriptBody, chars);
+	}
+	// END SANJIVA CODE
+	// TODO: Flag error if text inside of stylesheet
 }
 
 
