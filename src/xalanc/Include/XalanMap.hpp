@@ -101,7 +101,7 @@ public:
 	typedef XALAN_STD_QUALIFIER pair<const key_type, data_type>	value_type;
 
 	typedef XalanMap<Key, Value, Hash, Comparator>		ThisType;
-	
+
 	typedef size_t	size_type;
 
 	struct Entry : public value_type
@@ -113,7 +113,13 @@ public:
 			value_type(key, data), bucketIndex(index)
 		{
 		}
-		
+
+		Entry() : 
+			value_type(key_type(),
+            data_type()),
+            bucketIndex(size_type())
+		{
+		}
 	};
 
 	typedef XALAN_STD_QUALIFIER list<Entry>					EntryListType;
@@ -350,9 +356,16 @@ public:
 	{
 		m_size = 0;
 
-		fill(m_buckets.begin(), m_buckets.end(), m_entries.end());
+		XALAN_STD_QUALIFIER fill(
+            m_buckets.begin(),
+            m_buckets.end(),
+            m_entries.end());
 
-		m_freeList.splice(m_freeList.begin(), m_entries, m_entries.begin(), m_entries.end());
+		m_freeList.splice(
+            m_freeList.begin(), 
+            m_entries,
+            m_entries.begin(),
+            m_entries.end());
 	}
 
 	void swap(ThisType& theRhs)
