@@ -2811,6 +2811,18 @@ SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommonImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDateTime.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDateTime.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDateTimeImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDefinitions.hpp
 # End Source File
 # Begin Source File

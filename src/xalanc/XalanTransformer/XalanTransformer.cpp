@@ -110,6 +110,7 @@
 #include <xalanc/XalanEXSLT/XalanEXSLTMath.hpp>
 #include <xalanc/XalanEXSLT/XalanEXSLTSet.hpp>
 #include <xalanc/XalanEXSLT/XalanEXSLTString.hpp>
+#include <xalanc/XalanEXSLT/XalanEXSLTDateTime.hpp>
 
 
 
@@ -216,6 +217,8 @@ XalanTransformer::initialize()
 	XalanEXSLTMathFunctionsInstaller::installGlobal();
 	XalanEXSLTSetFunctionsInstaller::installGlobal();
 	XalanEXSLTStringFunctionsInstaller::installGlobal();
+	XalanEXSLTDateTimeFunctionsInstaller::installGlobal();
+
 
 #if defined(XALAN_USE_ICU)
 	// Install the ICU version of format-number...
@@ -239,6 +242,7 @@ XalanTransformer::terminate()
 	XalanEXSLTMathFunctionsInstaller::uninstallGlobal();
 	XalanEXSLTSetFunctionsInstaller::uninstallGlobal();
 	XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
+	XalanEXSLTDateTimeFunctionsInstaller::uninstallGlobal();
 
 #if defined(XALAN_USE_ICU)
 	XPath::uninstallFunction(XPathFunctionTable::s_formatNumber);
