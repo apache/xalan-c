@@ -50,6 +50,7 @@ private:
 
 
 
+// These functions need to have C linkage, so surround them with an extern C block...
 extern "C"
 {
 
@@ -97,13 +98,14 @@ doTransform(
     using std::endl;
 #endif
 
-    // Create a XalanTransformer.
+    // Create a XalanTransformer...
 	XalanTransformer	theXalanTransformer;
 
-	// Do the transform.
+	// Create an instance of the class we wrote to handle
+	// the callbacks...
 	CallbackHandler		theHandler(theOutputFile);
 
-	// Do the transform.
+	// Do the transform...
 	const int	theResult = theXalanTransformer.transform(
 					theXMLFile,
 					theXSLFile,
