@@ -280,6 +280,8 @@ public:
 	const void
 	operator()(const VariablesStack::ParamsVectorType::value_type&	theEntry)
 	{
+		assert(theEntry.first != 0);
+
 		m_variablesStack.push(VariablesStack::StackEntry(theEntry.first, theEntry.second));
 	}
 
@@ -327,7 +329,7 @@ VariablesStack::pushVariable(
 		pushElementFrame(e);
 	}
 
-	push(StackEntry(name, val));
+	push(StackEntry(&name, val));
 }
 
 
@@ -389,7 +391,9 @@ VariablesStack::findVariable(
 
 		if(theEntry.getType() == StackEntry::eVariable)
 		{
-			if(theEntry.getName().equals(qname))
+			assert(theEntry.getName() != 0);
+
+			if(theEntry.getName()->equals(qname))
 			{
 				theResult = &theEntry;
 
@@ -411,7 +415,9 @@ VariablesStack::findVariable(
 
 			if(theEntry.getType() == StackEntry::eVariable)
 			{
-				if(theEntry.getName().equals(qname))
+				assert(theEntry.getName() != 0);
+
+				if(theEntry.getName()->equals(qname))
 				{
 					theResult = &theEntry;
 
@@ -494,51 +500,36 @@ VariablesStack::popElementFrame(const ElemTemplateElement*	elem)
 
 
 VariablesStack::StackEntry::StackEntry() :
-	m_type(eContextMarker),
-	m_qname(),
-	m_variable(0)
+	m_type(eContextMarker)
 {
 }
 
 
 
 VariablesStack::StackEntry::StackEntry(
-		const QName&	name,
+		const QName*	name,
 		XObject*		val) :
-	m_type(eVariable),
-	m_qname(name),
-	m_variable(val)
+	m_type(eVariable)
 {
+	variable.m_qname = name;
+	variable.m_value = val;
 }
 
 
 
-VariablesStack::StackEntry::StackEntry(const ElemTemplateElement*		elem) :
-	m_type(eElementFrameMarker),
-	m_qname(),
-	m_element(elem)
+VariablesStack::StackEntry::StackEntry(const ElemTemplateElement*	elem) :
+	m_type(eElementFrameMarker)
 {
+	elementMarker.m_element = elem;
 }
 
 
 
 VariablesStack::StackEntry::StackEntry(const StackEntry&	theSource) :
-	m_type(theSource.m_type),
-	m_qname(theSource.m_qname),
-	m_variable(0)
+	m_type(theSource.m_type)
 {
-	if (theSource.m_type == eVariable)
-	{
-		m_variable = theSource.m_variable;
-	}
-	else if (theSource.m_type == eElementFrameMarker)
-	{
-		m_element = theSource.m_element;
-	}
-	else
-	{
-		m_variable = 0;
-	}
+	// Use operator=() to do the work...
+	*this = theSource;
 }
 
 
@@ -552,23 +543,17 @@ VariablesStack::StackEntry::~StackEntry()
 VariablesStack::StackEntry&
 VariablesStack::StackEntry::operator=(const StackEntry&		theRHS)
 {
-	if (&theRHS != this)
-	{
-		m_type = theRHS.m_type;
-		m_qname = theRHS.m_qname;
+	m_type = theRHS.m_type;
 
-		if (m_type == eVariable)
-		{
-			m_variable = theRHS.m_variable;
-		}
-		else if (m_type == eElementFrameMarker)
-		{
-			m_element = theRHS.m_element;
-		}
-		else
-		{
-			m_variable = 0;
-		}
+	if (m_type == eVariable)
+	{
+		variable.m_qname = theRHS.variable.m_qname;
+
+		variable.m_value = theRHS.variable.m_value;
+	}
+	else if (m_type == eElementFrameMarker)
+	{
+		elementMarker.m_element = theRHS.elementMarker.m_element;
 	}
 
 	return *this;
@@ -576,6 +561,8 @@ VariablesStack::StackEntry::operator=(const StackEntry&		theRHS)
 
 
 
+// Equality for StackEntry instances is probably bogus,
+// so it might be worthwhile to just get rid of this.
 bool
 VariablesStack::StackEntry::operator==(const StackEntry&	theRHS) const
 {
@@ -592,15 +579,15 @@ VariablesStack::StackEntry::operator==(const StackEntry&	theRHS) const
 		}
 		else if (m_type == eVariable)
 		{
-			if (m_qname == theRHS.m_qname &&
-				m_variable == theRHS.m_variable)
+			// We only need to compare the variable pointer..
+			if (variable.m_value == theRHS.variable.m_value)
 			{
 				fResult = true;
 			}
 		}
 		else if (m_type == eElementFrameMarker)
 		{
-			if (m_element == theRHS.m_element)
+			if (elementMarker.m_element == theRHS.elementMarker.m_element)
 			{
 				fResult = true;
 			}

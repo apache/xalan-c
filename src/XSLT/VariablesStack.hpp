@@ -140,9 +140,9 @@ public:
 	popContextMarker();
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<pair<QName, XObject*> >				ParamsVectorType;
+	typedef vector<pair<const QName*, XObject*> >				ParamsVectorType;
 #else
-	typedef std::vector<std::pair<QName, XObject*> >	ParamsVectorType;
+	typedef std::vector<std::pair<const QName*, XObject*> >		ParamsVectorType;
 #endif
 
 	/**
@@ -320,7 +320,7 @@ private:
 		 * Construct a variable.
 		 */
 		StackEntry(
-			const QName&	name,
+			const QName*	name,
 			XObject*		val);
 
 		/**
@@ -355,10 +355,10 @@ private:
 		 * 
 		 * @return qualified name of object
 		 */
-		const QName&
+		const QName*
 		getName() const
 		{
-			return m_qname;
+			return variable.m_qname;
 		}
 
 		/**
@@ -369,7 +369,7 @@ private:
 		XObject*
 		getVariable() const
 		{
-			return m_variable;
+			return variable.m_value;
 		}
 
 		/**
@@ -380,7 +380,7 @@ private:
 		const ElemTemplateElement*
 		getElement() const
 		{
-			return m_element;
+			return elementMarker.m_element;
 		}
 
 		StackEntry&
@@ -394,13 +394,19 @@ private:
 		// Data members...
 		eStackEntryType				m_type;
 
-		QName						m_qname;
-
 		union
 		{
-			XObject*					m_variable;
+			struct
+			{
+				const QName*				m_qname;
 
-			const ElemTemplateElement*	m_element;
+				XObject*					m_value;
+			} variable;
+
+			struct
+			{
+				const ElemTemplateElement*	m_element;
+			} elementMarker;
 		};
 	};
 
