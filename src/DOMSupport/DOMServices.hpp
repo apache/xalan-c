@@ -478,6 +478,44 @@ public:
 	getNameOfNode(const XalanNode&	n);
 
 	/**
+	 * Retrieve the name of the node, taking into
+	 * account the differences between the DOM and
+	 * XSLT data models.
+	 * 
+	 * @param attr	DOM attribute node whose name is returned
+	 * @return name of the node
+	 */
+	static const XalanDOMString&
+	getNameOfNode(const XalanAttr&	attr)
+	{
+		const XalanDOMString&	theName = attr.getNodeName();
+
+		if (startsWith(theName, s_XMLNamespaceWithSeparator) == true)
+		{
+			// Special case for namespace nodes...
+			return attr.getLocalName();
+		}
+		else
+		{
+			return theName;
+		}
+	}
+
+	/**
+	 * Retrieve the name of the node, taking into
+	 * account the differences between the DOM and
+	 * XSLT data models.
+	 * 
+	 * @param attr	DOM element node whose name is returned
+	 * @return name of the node
+	 */
+	static const XalanDOMString&
+	getNameOfNode(const XalanElement&	element)
+	{
+		return element.getNodeName();
+	}
+
+	/**
 	 * Retrieve local name of node, taking into
 	 * account the differences between the DOM and
 	 * XSLT data models.

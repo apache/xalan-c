@@ -661,20 +661,23 @@ DOMServices::getNameOfNode(const XalanNode&		n)
 
 	if (theNodeType == XalanNode::ATTRIBUTE_NODE)
 	{
-		const XalanDOMString&	theName = n.getNodeName();
-
-		if (startsWith(theName, s_XMLNamespaceWithSeparator) == true)
-		{
-			// Special case for namespace nodes...
-			return n.getLocalName();
-		}
-		else
-		{
-			return theName;
-		}
+		return getNameOfNode(
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanAttr&)n);
+#else
+				static_cast<const XalanAttr&>(n));
+#endif
 	}
-	else if (theNodeType == XalanNode::ELEMENT_NODE ||
-			 theNodeType == XalanNode::PROCESSING_INSTRUCTION_NODE)
+	else if (theNodeType == XalanNode::ELEMENT_NODE)
+	{
+		return getNameOfNode(
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanElement&)n);
+#else
+				static_cast<const XalanElement&>(n));
+#endif
+	}
+	else if (theNodeType == XalanNode::PROCESSING_INSTRUCTION_NODE)
 	{
 		return n.getNodeName();
 	}
