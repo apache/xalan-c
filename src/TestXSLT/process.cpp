@@ -1056,7 +1056,7 @@ main(
 					 << endl
 					 << endl;
 
-				vector<XalanNode*>	theNodes(theInstanceCount);
+				vector<XalanNode*>	theNodes(theInstanceCount, 0);
 
 				XalanNode::getLiveInstances(theNodes.begin());
 
