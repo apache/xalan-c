@@ -568,15 +568,11 @@ StylesheetConstructionContextDefault::allocateVector(
 	const XalanDOMString::size_type		theActualLength =
 		theLength == XalanDOMString::npos ? XalanDOMString::length(theString) : theLength;
 
-	XalanDOMChar* const		theVector =
+	XalanDOMChar*	theVector =
 		m_xalanDOMCharVectorAllocator.allocate(fTerminate == true ? theActualLength + 1 : theActualLength);
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::copy;
-#endif
-
 	XalanDOMChar* const		theEnd =
-		copy(theString, theString + theActualLength, theVector);
+		XalanCopy(theString, theString + theActualLength, theVector);
 
 	if (fTerminate == true)
 	{
