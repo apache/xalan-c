@@ -204,7 +204,7 @@ URISupport::getURLStringFromString(
 			XalanDOMString::size_type	baseLen,
 			XalanDOMString&				theNormalizedURI)
 {
-	XALAN_USING(xercesc, XMLURL)
+	XALAN_USING_XERCES(XMLURL)
 
 	XalanDOMString	context(base, baseLen);
 

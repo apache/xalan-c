@@ -284,7 +284,7 @@ XalanTranscodingServices::makeNewTranscoder(
 			eCode&					theResult,
 			size_t					theBlockSize)
 {
-	XALAN_USING(xercesc, XMLPlatformUtils)
+	XALAN_USING_XERCES(XMLPlatformUtils)
 
 	assert(XMLPlatformUtils::fgTransService != 0);
 
@@ -300,7 +300,7 @@ XalanTranscodingServices::makeNewTranscoder(
 	}
 	else
 	{
-		XALAN_USING(xercesc, XMLTranscoder)
+		XALAN_USING_XERCES(XMLTranscoder)
 
 		XMLTranscoder*	theXercesTranscoder = 
 			XMLPlatformUtils::fgTransService->makeNewTranscoderFor(
