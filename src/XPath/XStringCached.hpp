@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,6 +81,8 @@ class XALAN_XPATH_EXPORT XStringCached : public XStringBase
 {
 public:
 
+	typedef XStringBase		ParentType;
+
 	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
 
 	/**
@@ -112,6 +114,10 @@ public:
 	str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::str;
+#endif
 
 	virtual double
 	stringLength() const;
