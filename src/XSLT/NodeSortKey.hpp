@@ -163,6 +163,12 @@ public:
 		return m_prefixResolver;
 	}
 
+	const XalanDOMString&
+	getLanguageString() const
+	{
+		return *m_languageString;
+	}
+
 private:
 
 	ExecutionContext*		m_executionContext; // needed for error reporting.
@@ -174,10 +180,7 @@ private:
 
 	const PrefixResolver*	m_prefixResolver;
 
-	// $$$ ToDo:How do we do this in C++?
-//	Collator m_col;
-//	Locale m_locale;
-
+	const XalanDOMString*	m_languageString;
 };
 
 

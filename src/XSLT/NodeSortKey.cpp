@@ -66,47 +66,24 @@
 
 
 
+static const XalanDOMString		s_emptyString;
+
+
 
 NodeSortKey::NodeSortKey(
 			ExecutionContext&		executionContext,
-			const XPath&			selectPat, 
-			bool					treatAsNumbers, 
+			const XPath&			selectPat,
+			bool					treatAsNumbers,
 			bool					descending,
-			const XalanDOMString&	/* langValue */, 
+			const XalanDOMString&	langValue,
 			const PrefixResolver&	resolver) :
 	m_executionContext(&executionContext),
 	m_selectPat(&selectPat),
 	m_treatAsNumbers(treatAsNumbers),
 	m_descending(descending),
-	m_prefixResolver(&resolver)
+	m_prefixResolver(&resolver),
+	m_languageString(&langValue)
 {
-#if 0
-	// $$$ ToDo: What do we do about this?
-	if(0 != length(langValue))
-	{
-		m_locale = new Locale(langValue.toUpperCase(), 
-							Locale.getDefault().getDisplayCountry());
-
-		if(null == m_locale)
-		{
-			// m_processor.warn("Could not find locale for <sort xml:lang="+langValue);
-			m_locale = Locale.getDefault();
-		}
-	}
-	else
-	{
-		m_locale = Locale.getDefault();
-	}
-
-	m_col = Collator.getInstance(m_locale);
-
-	if(null == m_col)
-	{
-		executionContext.warn("Could not find Collator for <sort xml:lang=" + langValue);
-
-		m_col = Collator.getInstance();
-	}
-#endif
 }
 
 
@@ -116,7 +93,8 @@ NodeSortKey::NodeSortKey() :
 	m_selectPat(0),
 	m_treatAsNumbers(false),
 	m_descending(false),
-	m_prefixResolver(0)
+	m_prefixResolver(0),
+	m_languageString(&s_emptyString)
 {
 }
 
@@ -127,7 +105,8 @@ NodeSortKey::NodeSortKey(const NodeSortKey&		theSource) :
 	m_selectPat(theSource.m_selectPat),
 	m_treatAsNumbers(theSource.m_treatAsNumbers),
 	m_descending(theSource.m_descending),
-	m_prefixResolver(theSource.m_prefixResolver)
+	m_prefixResolver(theSource.m_prefixResolver),
+	m_languageString(theSource.m_languageString)
 {
 }
 
@@ -149,6 +128,9 @@ NodeSortKey::operator=(const NodeSortKey&	theRHS)
 		m_treatAsNumbers = theRHS.m_treatAsNumbers;
 		m_descending = theRHS.m_descending;
 		m_prefixResolver = theRHS.m_prefixResolver;
+		m_languageString = theRHS.m_languageString;
+
+		assert(m_languageString != 0);
 	}
 
 	return *this;

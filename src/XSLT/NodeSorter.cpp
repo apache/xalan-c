@@ -159,6 +159,30 @@ NodeSorter::sort(
 
 
 
+static inline int
+doCollationCompare(
+			StylesheetExecutionContext&		executionContext,
+			const XalanDOMString&			theLHS,
+			const XalanDOMString&			theRHS,
+			const XalanDOMString&			theLanguage)
+{
+	if (length(theLanguage) == 0)
+	{
+		return executionContext.collationCompare(
+				theLHS,
+				theRHS);
+	}
+	else
+	{
+		return executionContext.collationCompare(
+				theLHS,
+				theRHS,
+				theLanguage);
+	}
+}
+
+
+
 NodeSorter::NodeSortKeyCompare::result_type
 NodeSorter::NodeSortKeyCompare::operator()(
 			first_argument_type		theLHS,
@@ -209,9 +233,12 @@ NodeSorter::NodeSortKeyCompare::operator()(
 	// Compare as strings
 	else
 	{
-		const int	theCompareResult = m_executionContext.collationCompare(
+
+		const int	theCompareResult = doCollationCompare(
+				m_executionContext,
 				getStringResult(theKey, theLHS),
-				getStringResult(theKey, theRHS));
+				getStringResult(theKey, theRHS),
+				theKey.getLanguageString());
 
 		if(0 == theCompareResult)
 		{
