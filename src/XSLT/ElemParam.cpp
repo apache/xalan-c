@@ -73,18 +73,24 @@
 ElemParam::ElemParam(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemVariable(constructionContext,
 				 stylesheetTree,
-				 name,
 				 atts,
 				 lineNumber,
 				 columnNumber,
 				 Constants::ELEMNAME_PARAMVARIABLE)
 {
+}
+
+
+
+const XalanDOMString&
+ElemParam::getElementName() const
+{
+	return Constants::ELEMNAME_PARAMVARIABLE_WITH_PREFIX_STRING;
 }
 
 

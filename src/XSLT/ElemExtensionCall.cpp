@@ -79,9 +79,18 @@ ElemExtensionCall::ElemExtensionCall(
 					  lineNumber,
 					  columnNumber,
 					  Constants::ELEMNAME_EXTENSIONCALL),
+	m_name(name),
 	m_nsh(ns),
 	m_localPart(localpart)	
 {
+}
+
+
+
+const XalanDOMString&
+ElemExtensionCall::getElementName() const
+{
+	return m_name;
 }
 
 

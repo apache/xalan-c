@@ -192,75 +192,99 @@ public:
 
 	// Result tree counting
 	static const XalanDOMString&	ELEMNAME_ANCHOR_STRING;
-	static const XalanDOMString&	ELEMNAME_ANY_STRING; // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_ANY_STRING;
 	static const XalanDOMString&	ELEMNAME_APPLY_IMPORTS_STRING;
+	static const XalanDOMString&	ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_APPLY_TEMPLATES_STRING;
 	static const XalanDOMString&	ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_ARG_STRING;
 	static const XalanDOMString&	ELEMNAME_ATTRIBUTESET_STRING;
-	static const XalanDOMString&	ELEMNAME_ATTRIBUTE_STRING; // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING;
+	static const XalanDOMString&	ELEMNAME_ATTRIBUTE_STRING;
+	static const XalanDOMString&	ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_CALLTEMPLATEARG_STRING;
 	static const XalanDOMString&	ELEMNAME_CALLTEMPLATE_STRING;
+	static const XalanDOMString&	ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_CALL_STRING;
 	static const XalanDOMString&	ELEMNAME_CHILDREN_STRING;
 	static const XalanDOMString&	ELEMNAME_CHOOSE_STRING;
+	static const XalanDOMString&	ELEMNAME_CHOOSE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_COMMENT_STRING;
-	static const XalanDOMString&	ELEMNAME_CONSTRUCT_STRING; // my own
+	static const XalanDOMString&	ELEMNAME_COMMENT_WITH_PREFIX_STRING;
+	static const XalanDOMString&	ELEMNAME_CONSTRUCT_STRING;
 	static const XalanDOMString&	ELEMNAME_CONTENTS_STRING;
 	static const XalanDOMString&	ELEMNAME_COPY_OF_STRING;
+	static const XalanDOMString&	ELEMNAME_COPY_OF_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_COPY_STRING;
+	static const XalanDOMString&	ELEMNAME_COPY_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_COUNTERINCREMENT_STRING;
 	static const XalanDOMString&	ELEMNAME_COUNTERRESET_STRING;
 	static const XalanDOMString&	ELEMNAME_COUNTERSCOPE_STRING;
 	static const XalanDOMString&	ELEMNAME_COUNTERS_STRING;
 	static const XalanDOMString&	ELEMNAME_COUNTER_STRING;
 	static const XalanDOMString&	ELEMNAME_DECIMALFORMAT_STRING;
-	static const XalanDOMString&	ELEMNAME_DISPLAYIF_STRING; // my own
-	static const XalanDOMString&	ELEMNAME_ELEMENT_STRING;  // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING;
+	static const XalanDOMString&	ELEMNAME_DISPLAYIF_STRING;
+	static const XalanDOMString&	ELEMNAME_ELEMENT_STRING;
+	static const XalanDOMString&	ELEMNAME_ELEMENT_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_EMPTY_STRING;
 	static const XalanDOMString&	ELEMNAME_EVAL_STRING;
 	static const XalanDOMString&	ELEMNAME_EXPECTEDCHILDREN_STRING;
 	static const XalanDOMString&	ELEMNAME_EXTENSIONHANDLER_STRING;
 	static const XalanDOMString&	ELEMNAME_EXTENSION_STRING;
 	static const XalanDOMString&	ELEMNAME_FALLBACK_STRING;
+	static const XalanDOMString&	ELEMNAME_FALLBACK_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_FOREACH_STRING;
+	static const XalanDOMString&	ELEMNAME_FOREACH_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_HTML_STRING;
 	static const XalanDOMString&	ELEMNAME_IF_STRING;
+	static const XalanDOMString&	ELEMNAME_IF_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_IMPORT_STRING;
 	static const XalanDOMString&	ELEMNAME_INCLUDE_STRING;
 	static const XalanDOMString&	ELEMNAME_KEY_STRING;
 	static const XalanDOMString&	ELEMNAME_LOCALE_STRING;
 	static const XalanDOMString&	ELEMNAME_MESSAGE_STRING;
+	static const XalanDOMString&	ELEMNAME_MESSAGE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_NSALIAS_STRING;
 	static const XalanDOMString&	ELEMNAME_NUMBER_STRING;
+	static const XalanDOMString&	ELEMNAME_NUMBER_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_OTHERWISE_STRING;
+	static const XalanDOMString&	ELEMNAME_OTHERWISE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_PRESERVESPACE_STRING;
-	static const XalanDOMString&	ELEMNAME_ROOT_STRING; // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_ROOT_STRING;
 	static const XalanDOMString&	ELEMNAME_SORT_STRING;
+	static const XalanDOMString&	ELEMNAME_SORT_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_STRIPSPACE_STRING;
 	static const XalanDOMString&	ELEMNAME_STYLESHEET_STRING;
-	static const XalanDOMString&	ELEMNAME_TARGETATTRIBUTE_STRING; // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_TARGETATTRIBUTE_STRING;
 	static const XalanDOMString&	ELEMNAME_TARGETCOMMENT_STRING;
-	static const XalanDOMString&	ELEMNAME_TARGETELEMENT_STRING; // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_TARGETELEMENT_STRING;
 	static const XalanDOMString&	ELEMNAME_TARGETPI_STRING;
 	static const XalanDOMString&	ELEMNAME_TARGETTEXT_STRING;
 	static const XalanDOMString&	ELEMNAME_TEMPLATE_STRING;
 	static const XalanDOMString&	ELEMNAME_TEMPLATE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_TEXT_STRING;
+	static const XalanDOMString&	ELEMNAME_TEXT_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_TRANSFORM_STRING;
-	static const XalanDOMString&	ELEMNAME_URL_STRING; // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_URL_STRING;
 	static const XalanDOMString&	ELEMNAME_USE_STRING;
+	static const XalanDOMString&	ELEMNAME_USE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_VALUEOF_STRING;
 	static const XalanDOMString&	ELEMNAME_VALUEOF_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_VARIABLE_STRING;
+	static const XalanDOMString&	ELEMNAME_VARIABLE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_WHEN_STRING;
+	static const XalanDOMString&	ELEMNAME_WHEN_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_COMPONENT_STRING;
 	static const XalanDOMString&	ELEMNAME_OUTPUT_STRING;
 	static const XalanDOMString&	ELEMNAME_PARAMVARIABLE_STRING;
+	static const XalanDOMString&	ELEMNAME_PARAMVARIABLE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_PI_OLD_STRING;
 	static const XalanDOMString&	ELEMNAME_PI_STRING;
+	static const XalanDOMString&	ELEMNAME_PI_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_SCRIPT_STRING;
 	static const XalanDOMString&	ELEMNAME_WITHPARAM_STRING;
+	static const XalanDOMString&	ELEMNAME_WITHPARAM_WITH_PREFIX_STRING;
   
 	/*---------------------------------------------
 	 * Literals for XSL attribute names.

@@ -83,7 +83,6 @@ public:
 	 * 
 	 * @param constructionContext context for construction of object
 	 * @param stylesheetTree      stylesheet containing element
-	 * @param name                name of element
 	 * @param atts                list of attributes for element
 	 * @param lineNumber				line number in document
 	 * @param columnNumber			column number in document
@@ -91,7 +90,6 @@ public:
 	ElemValueOf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
@@ -100,6 +98,9 @@ public:
 	~ElemValueOf();
 
 	// These methods are inherited from ElemTemplateElement ...
+
+	virtual const XalanDOMString&
+	getElementName() const;
 
 	virtual void
 	execute(
@@ -110,12 +111,6 @@ public:
 
 private:
 
-	/**
-	 * Construct an object corresponding to an "xsl:value-of" element
-	 * 
-	 * @param executionContext The current execution context
-	 * @param theValue The value to output
-	 */
 	void
 	outputValue(
 			StylesheetExecutionContext&		executionContext,

@@ -83,13 +83,11 @@
 ElemUse::ElemUse(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						xslToken),
@@ -101,6 +99,14 @@ ElemUse::ElemUse(
 
 ElemUse::~ElemUse()
 {
+}
+
+
+
+const XalanDOMString&
+ElemUse::getElementName() const
+{
+	return Constants::ELEMNAME_USE_WITH_PREFIX_STRING;
 }
 
 

@@ -74,13 +74,11 @@
 ElemSort::ElemSort(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_SORT),
@@ -121,7 +119,7 @@ ElemSort::ElemSort(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			constructionContext.error(Constants::ELEMNAME_SORT_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 		}
 	}
 
@@ -130,3 +128,12 @@ ElemSort::ElemSort(
 		m_selectPattern = constructionContext.createXPath(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING(".")), *this);
 	}
 }
+
+
+
+const XalanDOMString&
+ElemSort::getElementName() const
+{
+	return Constants::ELEMNAME_SORT_WITH_PREFIX_STRING;
+}
+

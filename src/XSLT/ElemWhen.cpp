@@ -74,13 +74,11 @@
 ElemWhen::ElemWhen(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_WHEN),
@@ -108,7 +106,7 @@ ElemWhen::ElemWhen(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+				constructionContext.error(Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 			}
 		}
 	}
@@ -117,4 +115,12 @@ ElemWhen::ElemWhen(
 	{
 		constructionContext.error("xsl:when must have a 'test' attribute.");
 	}
+}
+
+
+
+const XalanDOMString&
+ElemWhen::getElementName() const
+{
+	return Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING;
 }

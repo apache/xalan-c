@@ -80,13 +80,11 @@
 ElemTemplate::ElemTemplate(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_TEMPLATE),
@@ -133,14 +131,14 @@ ElemTemplate::ElemTemplate(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+				constructionContext.error(Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 			}
 		}
 	}
 
 	if(0 == m_matchPattern && m_name.isEmpty() == true)
 	{
-		constructionContext.error(XalanDOMString(name) + " requires either a name or a match attribute.");
+		constructionContext.error(Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING + " requires either a name or a match attribute.");
 	}
 }
 
@@ -148,6 +146,14 @@ ElemTemplate::ElemTemplate(
 
 ElemTemplate::~ElemTemplate()
 {
+}
+
+
+
+const XalanDOMString&
+ElemTemplate::getElementName() const
+{
+	return Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING;
 }
 
 

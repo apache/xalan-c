@@ -95,10 +95,10 @@ ElemLiteralResult::ElemLiteralResult(
 			int								xslToken) :
 	ElemUse(constructionContext,
 			stylesheetTree,
-			name,
 			lineNumber,
 			columnNumber,
 			xslToken),
+	m_elementName(name),
 	m_avts(),
 	m_namespacesHandler(stylesheetTree.getNamespacesHandler(),
 						stylesheetTree.getNamespaces(),
@@ -202,6 +202,14 @@ ElemLiteralResult::postConstruction(const NamespacesHandler&	theParentHandler)
 	m_namespacesHandler.postConstruction(getElementName(), &theParentHandler);
 
 	ElemUse::postConstruction(m_namespacesHandler);
+}
+
+
+
+const XalanDOMString&
+ElemLiteralResult::getElementName() const
+{
+	return m_elementName;
 }
 
 

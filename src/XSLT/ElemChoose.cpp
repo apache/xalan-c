@@ -81,13 +81,11 @@
 ElemChoose::ElemChoose(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_CHOOSE)
@@ -100,9 +98,17 @@ ElemChoose::ElemChoose(
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false  || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			constructionContext.error(Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 		}
 	}	
+}
+
+
+
+const XalanDOMString&
+ElemChoose::getElementName() const
+{
+	return Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING;
 }
 
 

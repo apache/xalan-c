@@ -81,46 +81,58 @@
 ElemForEach::ElemForEach(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						lineNumber,
+						columnNumber,
+						Constants::ELEMNAME_FOREACH),
+	m_pSelectPattern(0)
+{
+	const unsigned int	nAttrs = atts.getLength();
+		
+	for(unsigned int i = 0; i < nAttrs; i++)
+	{
+		const XalanDOMChar*	const	aname = atts.getName(i);
+
+		if(equals(aname, Constants::ATTRNAME_SELECT))
+		{
+			m_pSelectPattern = constructionContext.createXPath(atts.getValue(i), *this);
+		}
+		else if(!(isAttrOK(aname, atts, i, constructionContext) || processSpaceAttr(aname, atts, i)))
+		{
+			constructionContext.error(Constants::ELEMNAME_FOREACH_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+		}
+	}
+
+	if(0 == m_pSelectPattern)
+	{
+		constructionContext.error(Constants::ELEMNAME_FOREACH_WITH_PREFIX_STRING + " requires attribute: " + Constants::ATTRNAME_SELECT);
+	}
+}
+
+
+
+ElemForEach::ElemForEach(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
-						xslToken),	
+						xslToken),
 	m_pSelectPattern(0)
 {
-	if(xslToken == Constants::ELEMNAME_FOREACH)
-	{
-		const unsigned int	nAttrs = atts.getLength();
-		
-		for(unsigned int i = 0; i < nAttrs; i++)
-		{
-			const XalanDOMChar*	const	aname = atts.getName(i);
-
-			if(equals(aname, Constants::ATTRNAME_SELECT))
-			{
-				m_pSelectPattern = constructionContext.createXPath(atts.getValue(i), *this);
-			}
-			else if(!(isAttrOK(aname, atts, i, constructionContext) || processSpaceAttr(aname, atts, i)))
-			{
-				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
-			}
-		}
-
-		if(0 == m_pSelectPattern)
-		{
-			constructionContext.error(XalanDOMString(name) + " requires attribute: " + Constants::ATTRNAME_SELECT);
-		}
-	}
 }
 
 
-	
+
 ElemForEach::~ElemForEach()
 {
 #if !defined(XALAN_NO_NAMESPACES)
@@ -130,6 +142,14 @@ ElemForEach::~ElemForEach()
 	for_each(m_sortElems.begin(),
 			 m_sortElems.end(),
 			 DeleteFunctor<ElemSort>());
+}
+
+
+
+const XalanDOMString&
+ElemForEach::getElementName() const
+{
+	return Constants::ELEMNAME_FOREACH_WITH_PREFIX_STRING;
 }
 
 

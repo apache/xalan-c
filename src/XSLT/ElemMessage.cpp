@@ -75,13 +75,11 @@
 ElemMessage::ElemMessage(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_MESSAGE),
@@ -109,9 +107,17 @@ ElemMessage::ElemMessage(
 		}
 		else if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + XalanDOMString(aname));
+			constructionContext.error(Constants::ELEMNAME_MESSAGE_WITH_PREFIX_STRING + " has an illegal attribute: " + XalanDOMString(aname));
 		}
 	}
+}
+
+
+
+const XalanDOMString&
+ElemMessage::getElementName() const
+{
+	return Constants::ELEMNAME_MESSAGE_WITH_PREFIX_STRING;
 }
 
 

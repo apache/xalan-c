@@ -130,6 +130,9 @@ public:
 
 	// These methods are inherited from ElemTemplateElement ...
 	
+	virtual const XalanDOMString&
+	getElementName() const;
+
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,

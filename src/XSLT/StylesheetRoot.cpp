@@ -524,7 +524,6 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 
 		m_defaultRule = new ElemTemplate(constructionContext,
 										 *this,
-										 c_wstr(Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING), 
 										 attrs,
 										 lineNumber,
 										 columnNumber);
@@ -534,7 +533,6 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		ElemApplyTemplates* childrenElement 
 		  = new ElemApplyTemplates(constructionContext,
 								   *this,
-								   c_wstr(Constants::ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING),
 								   attrs,
 								   lineNumber,
 								   columnNumber);
@@ -551,7 +549,6 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 
 		m_defaultTextRule = new ElemTemplate(constructionContext,
 											 *this,
-											 c_wstr(Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING),
 											 attrs,
 											 lineNumber,
 											 columnNumber);
@@ -564,7 +561,6 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		ElemValueOf* elemValueOf =
 			new ElemValueOf(constructionContext,
 							*this,
-							c_wstr(Constants::ELEMNAME_VALUEOF_WITH_PREFIX_STRING),
 							attrs,
 							lineNumber,
 							columnNumber);
@@ -581,7 +577,6 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		m_defaultRootRule =
 			new ElemTemplate(constructionContext,
 							 *this,
-							 c_wstr(Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING),
 							 attrs,
 							 lineNumber,
 							 columnNumber);
@@ -591,7 +586,6 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		childrenElement =
 			new ElemApplyTemplates(constructionContext,
 								   *this,
-								   c_wstr(Constants::ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING),
 								   attrs,
 								   lineNumber,
 								   columnNumber);

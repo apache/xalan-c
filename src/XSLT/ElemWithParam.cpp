@@ -75,13 +75,11 @@
 ElemWithParam::ElemWithParam(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_WITHPARAM),
@@ -104,7 +102,7 @@ ElemWithParam::ElemWithParam(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			constructionContext.error(Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 		}
 	}
 
@@ -118,4 +116,12 @@ ElemWithParam::ElemWithParam(
 
 ElemWithParam::~ElemWithParam()
 {
+}
+
+
+
+const XalanDOMString&
+ElemWithParam::getElementName() const
+{
+	return Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING;
 }

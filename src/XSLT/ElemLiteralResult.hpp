@@ -105,6 +105,9 @@ public:
 
 	// These methods are inherited from ElemUse ...
 	
+	virtual const XalanDOMString&
+	getElementName() const;
+
 	virtual const NamespacesHandler&
 	getNamespacesHandler() const;
 
@@ -173,6 +176,11 @@ private:
 	shouldExcludeResultNamespaceNode(
 			const XalanDOMString&	thePrefix,
 			const XalanDOMString&	theURI) const;
+
+	/**
+	 * The name of the literal result element.
+	 */
+	const XalanDOMString	m_elementName;
 
 	/**
 	 * A vector to keep track of the attribute elements.

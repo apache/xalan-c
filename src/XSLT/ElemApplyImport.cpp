@@ -83,13 +83,11 @@
 ElemApplyImport::ElemApplyImport(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber, 
 			int								columnNumber) :
 		ElemTemplateElement(constructionContext,
 							stylesheetTree,
-							name,
 							lineNumber,
 							columnNumber,
 							Constants::ELEMNAME_APPLY_IMPORTS)
@@ -102,9 +100,17 @@ ElemApplyImport::ElemApplyImport(
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false)
 		{
-			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			constructionContext.error(Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 		}
     }
+}
+
+
+
+const XalanDOMString&
+ElemApplyImport::getElementName() const
+{
+	return Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING;
 }
 
 
@@ -140,5 +146,6 @@ ElemTemplateElement*
 ElemApplyImport::appendChildElem(ElemTemplateElement*	/* newChild */)
 {
 	throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
+
 	return 0;
 }

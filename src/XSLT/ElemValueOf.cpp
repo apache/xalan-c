@@ -87,13 +87,11 @@
 ElemValueOf::ElemValueOf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_VALUEOF),
@@ -139,14 +137,14 @@ ElemValueOf::ElemValueOf(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+				constructionContext.error(Constants::ELEMNAME_VALUEOF_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 			} 
 		}
 	}
 
 	if(0 == m_selectPattern)
 	{
-		constructionContext.error(XalanDOMString(name) + " requires a select attribute.");
+		constructionContext.error(Constants::ELEMNAME_VALUEOF_WITH_PREFIX_STRING + " requires a select attribute.");
 	}
 }
 
@@ -154,6 +152,14 @@ ElemValueOf::ElemValueOf(
 
 ElemValueOf::~ElemValueOf()
 {
+}
+
+
+
+const XalanDOMString&
+ElemValueOf::getElementName() const
+{
+	return Constants::ELEMNAME_VALUEOF_WITH_PREFIX_STRING;
 }
 
 

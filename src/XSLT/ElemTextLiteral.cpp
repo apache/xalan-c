@@ -84,7 +84,6 @@ ElemTextLiteral::ElemTextLiteral(
             bool							disableOutputEscaping) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						c_wstr(Constants::PSEUDONAME_TEXT),
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_TEXTLITERALRESULT),
@@ -100,6 +99,14 @@ ElemTextLiteral::ElemTextLiteral(
 
 ElemTextLiteral::~ElemTextLiteral()
 {
+}
+
+
+
+const XalanDOMString&
+ElemTextLiteral::getElementName() const
+{
+	return Constants::PSEUDONAME_TEXT;
 }
 
 

@@ -77,7 +77,6 @@ public:
 	 * 
 	 * @param constructionContext   context for construction of object
 	 * @param stylesheetTree        stylesheet containing element
-	 * @param name					the name of the element
 	 * @param atts					the attribute list
 	 * @param lineNumber            line number in document
 	 * @param columnNumber          column number in document
@@ -85,7 +84,6 @@ public:
 	ElemFallback(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
@@ -94,7 +92,10 @@ public:
 	~ElemFallback();
 
 	// These methods are inherited from ElemTemplateElement ...
-	
+
+	virtual const XalanDOMString&
+	getElementName() const;
+
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,

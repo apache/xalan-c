@@ -88,7 +88,6 @@ public:
 	 * 
 	 * @param constructionContext context for construction of object
 	 * @param stylesheetTree      stylesheet containing element
-	 * @param name                name of element
 	 * @param atts                list of attributes for element
 	 * @param lineNumber				line number in document
 	 * @param columnNumber			column number in document
@@ -96,7 +95,6 @@ public:
 	ElemUse(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken = Constants::ELEMNAME_USE);
@@ -122,6 +120,9 @@ public:
 
 	// These methods are inherited from ElemTemplateElement ...
 	
+	virtual const XalanDOMString&
+	getElementName() const;
+
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,

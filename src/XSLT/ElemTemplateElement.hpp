@@ -108,7 +108,6 @@ public:
 	 * 
 	 * @param constructionContext  context when object constructed
 	 * @param stylesheetTree       owning stylesheet
-	 * @param name                 name of the element
 	 * @param lineNumber           line in the XSLT file where the element occurs
 	 * @param columnNumber         column index in the XSLT file where the
 	 *                             element occurs
@@ -117,7 +116,6 @@ public:
 	ElemTemplateElement(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken);
@@ -306,11 +304,8 @@ public:
 		return m_columnNumber;
 	}
 
-	const XalanDOMString&
-	getElementName() const
-	{
-		return m_elemName;
-	}
+	virtual const XalanDOMString&
+	getElementName() const = 0;
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
@@ -804,6 +799,8 @@ protected:
 
 	bool					m_finishedConstruction;
 
+	static const XalanDOMString		s_emptyString;
+
 private:
 
 	Stylesheet&				m_stylesheet;
@@ -812,7 +809,6 @@ private:
 	const int				m_columnNumber;
 
 	bool					m_defaultSpace;
-	const XalanDOMString	m_elemName;
 
 	const int				m_xslToken;
 
@@ -826,8 +822,6 @@ private:
 	XalanEmptyNamedNodeMap	m_fakeAttributes;
 
 	const XalanDOMString	m_baseIndentifier;
-
-	static const XalanDOMString		s_emptyString;
 };
 
 

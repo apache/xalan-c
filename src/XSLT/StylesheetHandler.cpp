@@ -391,7 +391,7 @@ StylesheetHandler::startElement(
 				case Constants::ELEMNAME_TEMPLATE:
 					m_pTemplate = new ElemTemplate(m_constructionContext,
 												m_stylesheet,
-												name, atts, lineNumber, columnNumber);
+												atts, lineNumber, columnNumber);
 					m_elemStack.push_back(m_pTemplate);
 					m_elemStackParentedElements.insert(m_pTemplate);
 					m_inTemplate = true;
@@ -411,11 +411,11 @@ StylesheetHandler::startElement(
 					ElemVariable* varelem = (Constants::ELEMNAME_PARAMVARIABLE == xslToken) 
 									   ? new ElemParam(m_constructionContext,
 													   m_stylesheet,
-													   name, atts, 
+													   atts, 
 													   lineNumber, columnNumber)
 										 : new ElemVariable(m_constructionContext,
 															m_stylesheet,
-															name, atts, 
+															atts, 
 															lineNumber, columnNumber);
 
 					m_elemStack.push_back(varelem);
@@ -434,7 +434,7 @@ StylesheetHandler::startElement(
 				case Constants::ELEMNAME_STRIPSPACE:
 				{
 					// $$$ ToDo: We should move this code into a separate function.
-					ElemEmpty nsNode(m_constructionContext, m_stylesheet, name, lineNumber, columnNumber);
+					ElemEmpty nsNode(m_constructionContext, m_stylesheet, lineNumber, columnNumber);
 
 					const unsigned int	nAttrs = atts.getLength();
 
@@ -492,7 +492,7 @@ StylesheetHandler::startElement(
 
 				case Constants::ELEMNAME_KEY:
 				{
-					ElemEmpty nsContext(m_constructionContext, m_stylesheet, name, lineNumber, columnNumber);
+					ElemEmpty nsContext(m_constructionContext, m_stylesheet, lineNumber, columnNumber);
 
 					m_stylesheet.processKeyElement(&nsContext, atts, m_constructionContext);
 				}
@@ -504,7 +504,6 @@ StylesheetHandler::startElement(
 
 					ElemAttributeSet* attrSet = new ElemAttributeSet(m_constructionContext,
 															   m_stylesheet,
-															   name,
 															   atts,
 															   lineNumber,
 															   columnNumber);
@@ -529,7 +528,6 @@ StylesheetHandler::startElement(
 						ElemDecimalFormat* const	edf =
 							new ElemDecimalFormat(m_constructionContext,
 												  m_stylesheet,
-												  name,
 												  atts,
 												  lineNumber,
 												  columnNumber);
@@ -701,25 +699,25 @@ StylesheetHandler::startElement(
 			case Constants::ELEMNAME_APPLY_TEMPLATES:
 				elem = new ElemApplyTemplates(m_constructionContext,
 											m_stylesheet,
-											name, atts, lineNumber, columnNumber);
+											atts, lineNumber, columnNumber);
 				break;
           
 			case Constants::ELEMNAME_CALLTEMPLATE:
 				elem = new ElemCallTemplate(m_constructionContext,
 										  m_stylesheet,
-										  name, atts, lineNumber, columnNumber);
+										  atts, lineNumber, columnNumber);
 				break;
           
 			case Constants::ELEMNAME_WITHPARAM:
 				elem = new ElemWithParam(m_constructionContext,
 									   m_stylesheet,
-									   name, atts, lineNumber, columnNumber);
+									   atts, lineNumber, columnNumber);
 				break;
           
 			case Constants::ELEMNAME_FOREACH:
 				elem = new ElemForEach(m_constructionContext,
 									 m_stylesheet,
-									 name, atts, lineNumber, columnNumber);
+									 atts, lineNumber, columnNumber);
 				break;
           
 			case Constants::ELEMNAME_SORT:
@@ -733,7 +731,7 @@ StylesheetHandler::startElement(
 
 					ElemSort* sortElem = new ElemSort(m_constructionContext,
 												 m_stylesheet,
-												 name, atts, lineNumber, columnNumber);
+												 atts, lineNumber, columnNumber);
 
 					// Note: deleted in ElemForEach destructor
 					foreach->getSortElems().push_back(sortElem);
@@ -747,44 +745,43 @@ StylesheetHandler::startElement(
 			case Constants::ELEMNAME_APPLY_IMPORTS:
 				elem = new ElemApplyImport(m_constructionContext,
 										 m_stylesheet,
-										 name, atts, lineNumber, columnNumber);
+										 atts, lineNumber, columnNumber);
 				break;
           
 			case Constants::ELEMNAME_VALUEOF:
 				elem = new ElemValueOf(m_constructionContext,
 									 m_stylesheet,
-									 name, atts, lineNumber, columnNumber);
+									 atts, lineNumber, columnNumber);
 				break;
 
 			case Constants::ELEMNAME_NUMBER:
 				elem = new ElemNumber(m_constructionContext,
 									m_stylesheet,
-									name, atts, lineNumber, columnNumber);
+									atts, lineNumber, columnNumber);
 				break;
           
 			case Constants::ELEMNAME_VARIABLE:
 				elem = new ElemVariable(m_constructionContext,
 									  m_stylesheet,
-									  name, atts, lineNumber, columnNumber);
+									  atts, lineNumber, columnNumber);
 				break;
 
 			case Constants::ELEMNAME_PARAMVARIABLE:
 				elem = new ElemParam(m_constructionContext,
 								   m_stylesheet,
-								   name, atts, lineNumber, columnNumber);
+								   atts, lineNumber, columnNumber);
 				break;
           
 			case Constants::ELEMNAME_IF:
 				elem = new ElemIf(m_constructionContext,
 								m_stylesheet,
-								name, atts, lineNumber, columnNumber);
+								atts, lineNumber, columnNumber);
 				break;
 
 			case Constants::ELEMNAME_FALLBACK:
 				elem = new ElemFallback(
 						m_constructionContext,
 						m_stylesheet,
-						name,
 						atts,
 						lineNumber,
 						columnNumber);
@@ -793,7 +790,7 @@ StylesheetHandler::startElement(
 			case Constants::ELEMNAME_CHOOSE:
 				elem = new ElemChoose(m_constructionContext,
 									m_stylesheet,
-									name, atts, lineNumber, columnNumber);
+									atts, lineNumber, columnNumber);
 				break;
           
 			case Constants::ELEMNAME_WHEN:
@@ -809,7 +806,7 @@ StylesheetHandler::startElement(
 						{
 							elem = new ElemWhen(m_constructionContext,
 										m_stylesheet,
-										name, atts, lineNumber, columnNumber);
+										atts, lineNumber, columnNumber);
 						}
 						else
 						{
@@ -836,7 +833,7 @@ StylesheetHandler::startElement(
 						{
 							elem = new ElemOtherwise(m_constructionContext,
 											 m_stylesheet,
-											 name, atts, lineNumber, columnNumber);
+											 atts, lineNumber, columnNumber);
 						}
 						else
 						{
@@ -853,13 +850,13 @@ StylesheetHandler::startElement(
 			case Constants::ELEMNAME_COPY_OF:
 				elem = new ElemCopyOf(m_constructionContext,
 									m_stylesheet,
-									name, atts, lineNumber, columnNumber);
+									atts, lineNumber, columnNumber);
 				break;
 
 			case Constants::ELEMNAME_COPY:
 				elem = new ElemCopy(m_constructionContext,
 								  m_stylesheet,
-								  name, atts, lineNumber, columnNumber);
+								  atts, lineNumber, columnNumber);
 				break;
 
 			case Constants::ELEMNAME_TEXT:
@@ -867,43 +864,43 @@ StylesheetHandler::startElement(
 			  // that space should be preserved.
 				m_elemStack.push_back(new ElemText(m_constructionContext,
 										m_stylesheet,
-										name, atts, lineNumber, columnNumber));
+										atts, lineNumber, columnNumber));
 				break;
 
 			case Constants::ELEMNAME_USE:
 				elem = new ElemUse(m_constructionContext,
 								 m_stylesheet,
-								 name, lineNumber, columnNumber);
+								 lineNumber, columnNumber);
 				break;
 
 			case Constants::ELEMNAME_ATTRIBUTE:
 				elem = new ElemAttribute(m_constructionContext,
 									   m_stylesheet,
-									   name, atts, lineNumber, columnNumber);
+									   atts, lineNumber, columnNumber);
 				break;
 
 			case Constants::ELEMNAME_ELEMENT:
 				elem = new ElemElement(m_constructionContext,
 									 m_stylesheet,
-									 name, atts, lineNumber, columnNumber);
+									 atts, lineNumber, columnNumber);
 			  break;
           
 			case Constants::ELEMNAME_PI:
 				elem = new ElemPI(m_constructionContext,
 								m_stylesheet,
-								name, atts, lineNumber, columnNumber);
+								atts, lineNumber, columnNumber);
 			  break;
 
 			case Constants::ELEMNAME_COMMENT:
 				elem = new ElemComment(m_constructionContext,
 									 m_stylesheet,
-									 name, atts, lineNumber, columnNumber);
+									 atts, lineNumber, columnNumber);
 			  break;
           
 			case Constants::ELEMNAME_MESSAGE:
 				elem = new ElemMessage(m_constructionContext,
 									 m_stylesheet,
-									 name, atts, lineNumber, columnNumber);
+									 atts, lineNumber, columnNumber);
 
 				break;
           
@@ -1147,7 +1144,7 @@ StylesheetHandler::startElement(
 		{
 			m_elemStack.push_back(new ElemEmpty(m_constructionContext,
 									 m_stylesheet,
-									 name, lineNumber, columnNumber));
+									 lineNumber, columnNumber));
 
 			if (elem != 0)
 			{
@@ -1211,7 +1208,6 @@ StylesheetHandler::initWrapperless(
 
 	m_pTemplate = new ElemTemplate(m_constructionContext,
 								   m_stylesheet,
-								   c_wstr(Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING),
 								   templateAttrs,
 								   lineNumber,
 								   columnNumber);

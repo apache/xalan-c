@@ -113,7 +113,6 @@ const XalanDOMString	ElemTemplateElement::s_emptyString;
 ElemTemplateElement::ElemTemplateElement(
 			StylesheetConstructionContext&	/* constructionContext */,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :
@@ -124,7 +123,6 @@ ElemTemplateElement::ElemTemplateElement(
 	m_lineNumber(lineNumber),
 	m_columnNumber(columnNumber),
 	m_defaultSpace(true),	
-	m_elemName(XalanDOMString(name)),
 	m_xslToken(xslToken),
 	m_parentNode(0),
 	m_nextSibling(0),
@@ -1028,7 +1026,7 @@ ElemTemplateElement::error(const char*	msg) const
 const XalanDOMString&
 ElemTemplateElement::getNodeName() const
 {
-	return m_elemName;
+	return getElementName();
 }
 
 
@@ -1313,7 +1311,7 @@ ElemTemplateElement::getIndex() const
 const XalanDOMString&
 ElemTemplateElement::getTagName() const
 {
-	return m_elemName;
+	return getElementName();
 }
 
 

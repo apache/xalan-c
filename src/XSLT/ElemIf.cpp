@@ -83,13 +83,11 @@
 ElemIf::ElemIf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_IF),
@@ -117,15 +115,23 @@ ElemIf::ElemIf(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+				constructionContext.error(Constants::ELEMNAME_IF_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 			}
 		}
 	}
 
 	if(0 == m_test)
 	{
-		constructionContext.error(XalanDOMString(name) + " must have a 'test' attribute.");
+		constructionContext.error(Constants::ELEMNAME_IF_WITH_PREFIX_STRING + " must have a 'test' attribute.");
 	}
+}
+
+
+
+const XalanDOMString&
+ElemIf::getElementName() const
+{
+	return Constants::ELEMNAME_IF_WITH_PREFIX_STRING;
 }
 
 

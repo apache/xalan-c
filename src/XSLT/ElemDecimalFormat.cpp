@@ -75,13 +75,11 @@
 ElemDecimalFormat::ElemDecimalFormat(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet& 					stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int 							lineNumber,
 			int 							columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_DECIMALFORMAT),
@@ -270,6 +268,14 @@ ElemDecimalFormat::ElemDecimalFormat(
 
 ElemDecimalFormat::~ElemDecimalFormat()
 {
+}
+
+
+
+const XalanDOMString&
+ElemDecimalFormat::getElementName() const
+{
+	return Constants::ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING;
 }
 
 

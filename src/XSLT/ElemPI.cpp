@@ -75,13 +75,11 @@
 ElemPI::ElemPI(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_PI),
@@ -99,13 +97,13 @@ ElemPI::ElemPI(
 		}
 		else if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			constructionContext.error(Constants::ELEMNAME_PI_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 		}
 	}
 
 	if(isEmpty(m_name_atv) == true)
 	{
-		constructionContext.error(XalanDOMString(name) + " must have a name attribute.");
+		constructionContext.error(Constants::ELEMNAME_PI_WITH_PREFIX_STRING + " must have a name attribute.");
 	}
 }
 
@@ -113,6 +111,14 @@ ElemPI::ElemPI(
 
 ElemPI::~ElemPI()
 {
+}
+
+
+
+const XalanDOMString&
+ElemPI::getElementName() const
+{
+	return Constants::ELEMNAME_PI_WITH_PREFIX_STRING;
 }
 
 

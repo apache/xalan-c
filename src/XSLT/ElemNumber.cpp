@@ -103,13 +103,11 @@ using std::vector;
 ElemNumber::ElemNumber(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_NUMBER),	
@@ -182,7 +180,7 @@ ElemNumber::ElemNumber(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			constructionContext.error(Constants::ELEMNAME_NUMBER_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 		}
 	}
 }
@@ -204,6 +202,14 @@ ElemNumber::~ElemNumber()
 	delete	m_groupingSize_avt;
 #endif
 }
+
+
+const XalanDOMString&
+ElemNumber::getElementName() const
+{
+	return Constants::ELEMNAME_NUMBER_WITH_PREFIX_STRING;
+}
+
 
 
 void

@@ -100,7 +100,10 @@ public:
 			const XalanDOMString&			localpart);
 	
 	// These methods are inherited from ElemLiteralResult ...
-	
+
+	virtual const XalanDOMString&
+	getElementName() const;
+
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
@@ -113,9 +116,11 @@ public:
 
 private:
 
+	const XalanDOMString	m_name;
+
 	ExtensionNSHandler&		m_nsh;
 
-	XalanDOMString			m_localPart;
+	const XalanDOMString	m_localPart;
 };
 
 

@@ -73,13 +73,11 @@
 ElemAttributeSet::ElemAttributeSet(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemUse(constructionContext,
 			stylesheetTree,
-			name,
 			lineNumber,
 			columnNumber,
 			Constants::ELEMNAME_DEFINEATTRIBUTESET),
@@ -100,13 +98,13 @@ ElemAttributeSet::ElemAttributeSet(
 		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
 					isAttrOK(aname, atts, i, constructionContext)))
 		{
-			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			constructionContext.error(Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 		}
 	}
 
 	if(isEmpty(m_QName.getLocalPart()))
 	{
-		constructionContext.error(XalanDOMString(name) + " must have a name attribute.");
+		constructionContext.error(Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING + " must have a name attribute.");
 	}
 }
 
@@ -114,6 +112,14 @@ ElemAttributeSet::ElemAttributeSet(
 
 ElemAttributeSet::~ElemAttributeSet()
 {
+}
+
+
+
+const XalanDOMString&
+ElemAttributeSet::getElementName() const
+{
+	return Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING;
 }
 
 

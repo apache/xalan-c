@@ -83,14 +83,12 @@
 ElemVariable::ElemVariable(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						name,
 						lineNumber,
 						columnNumber,
 						xslToken),
@@ -127,14 +125,14 @@ ElemVariable::ElemVariable(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+				constructionContext.error(Constants::ELEMNAME_VARIABLE_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 			}
 		}
 	}
 
 	if(m_qname.isEmpty())
 	{
-		constructionContext.error(XalanDOMString(name) + " must have a 'name' attribute.");
+		constructionContext.error(Constants::ELEMNAME_VARIABLE_WITH_PREFIX_STRING + " must have a 'name' attribute.");
 	}
 }
 
@@ -142,6 +140,14 @@ ElemVariable::ElemVariable(
 
 ElemVariable::~ElemVariable()
 {
+}
+
+
+
+const XalanDOMString&
+ElemVariable::getElementName() const
+{
+	return Constants::ELEMNAME_VARIABLE_WITH_PREFIX_STRING;
 }
 
 
