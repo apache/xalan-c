@@ -199,15 +199,7 @@ ElemLiteralResult::getNamespacesHandler() const
 void
 ElemLiteralResult::postConstruction(const NamespacesHandler&	theParentHandler)
 {
-	const XalanDOMString&	theElementName = getElementName();
-	assert(length(theElementName) > 0);
-
-	const unsigned int		indexOfNSSep = indexOf(theElementName, XalanUnicode::charColon);
-
-	const XalanDOMString	thePrefix = indexOfNSSep < length(theElementName) ?
-					substring(theElementName, 0, indexOfNSSep) : XalanDOMString();
-
-	m_namespacesHandler.postConstruction(thePrefix, &theParentHandler);
+	m_namespacesHandler.postConstruction(getElementName(), &theParentHandler);
 
 	ElemUse::postConstruction(m_namespacesHandler);
 }
