@@ -286,10 +286,13 @@ public:
 	 * the instance yourself.
 	 *
 	 * @param theStylesheetSource input source
-	 * @return a pointer to a XalanCompiledStylesheet or 0 for failure.
+	 * @param theCompiledStylesheet a reference to a pointer to a XalanCompileStylesheet.
+	 * @return 0 for success 
 	 */
-	const XalanCompiledStylesheet*
-	compileStylesheet(const XSLTInputSource&	theStylesheetSource);
+	int
+	compileStylesheet(
+			const XSLTInputSource&				theStylesheetSource,
+			const XalanCompiledStylesheet*&		theCompiledStylesheet);
 
 	/**
 	 * Destroy a XalanCompiledStylesheet instance created by a previous
@@ -309,14 +312,16 @@ public:
 	 * or you explicitly call destroyParsedSource().  You must not
 	 * delete the instance yourself.
 	 *
-	 * @param theInputSource	input source
-	 * @param useXercesDOM		input use default or xerces dom source tree
-	 * @return	a pointer to a XalanParsedSource or 0 for failure.
+	 * @param theInputSource input source
+	 * @param theParsedSource a reference to a pointer to a XalanParsedSource.
+	 * @param useXercesDOM input use default or xerces dom source tree
+	 * @return 0 for success 
 	 */
-	const XalanParsedSource*
+	int
 	parseSource(
-			const XSLTInputSource&	theInputSource, 
-			bool					useXercesDOM = false);
+			const XSLTInputSource&		theInputSource,
+			const XalanParsedSource*&	theParsedSource,
+			bool						useXercesDOM = false);
 
 	/**
 	 * Destroy a parsed source created by a previous call to parseSource().

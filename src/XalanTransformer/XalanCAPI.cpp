@@ -329,7 +329,13 @@ XalanCompileStylesheet(
 			const char*		theXSLFileName,
 			XalanHandle		theXalanHandle)
 {
-	return getTransformer(theXalanHandle)->compileStylesheet(theXSLFileName);
+	const XalanCompiledStylesheet*	theCompiledStylesheet = 0;
+
+	getTransformer(theXalanHandle)->compileStylesheet(
+		theXSLFileName,
+		theCompiledStylesheet);
+
+	return theCompiledStylesheet;
 }
 
 
@@ -339,7 +345,13 @@ XalanParseSource(
 			const char*		theXMLFileName,
 			XalanHandle		theXalanHandle)
 {
-	return getTransformer(theXalanHandle)->parseSource(theXMLFileName);
+	const XalanParsedSource*	theParsedSource = 0;
+
+	getTransformer(theXalanHandle)->parseSource(
+		theXMLFileName,
+		theParsedSource);
+
+	return theParsedSource;
 }
 
 
@@ -349,7 +361,14 @@ XalanParseSourceUseXerceDOM(
 			const char*		theXMLFileName,
 			XalanHandle		theXalanHandle)
 {
-	return getTransformer(theXalanHandle)->parseSource(theXMLFileName, true);
+	const XalanParsedSource*	theParsedSource = 0;
+
+	getTransformer(theXalanHandle)->parseSource(
+		theXMLFileName,
+		theParsedSource,
+		true);
+
+	return theParsedSource;
 }
 
 
