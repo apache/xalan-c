@@ -67,7 +67,7 @@
   <separator/>
   
   <document id="index"
-            label="Xalan-C++ 0.40.0"
+            label="Xalan-C++ 1.0"
             source="xalan/index.xml"/>
             
  <separator/>            
@@ -106,7 +106,8 @@
 
   <separator/>
   
-  <external href="http://xml.apache.org/xalan/c-apidocs/index.html"  label="C++ API"/>
+  <external href="http://xml.apache.org/xalan/c-apidocs/index.html"  
+            label="C++ API"/>
    
   <separator/>        
             
@@ -122,7 +123,8 @@
 
 <separator/>
 
-<external href="http://xml.apache.org/bugs/"  label="Bug reporting"/>
+<external href="http://xml.apache.org/bugs/"  
+          label="Bug reporting"/>
 
 <separator/>
 

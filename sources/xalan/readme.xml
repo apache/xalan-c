@@ -90,31 +90,94 @@
 </ul>
 <anchor name="jar"/> 
    <s3 title="Rebuilding &xslt4c;">
+   <ul>
+    <li><link anchor="layout">Layout of Xerces-C and ICU</link></li>      
+    <li><link anchor="win32">Steps for doing a Windows build</link></li>
+    <li><link anchor="linux">Steps for doing a Linux or AIX build</link></li>       
+   </ul>
    <p>If you want to rebuild &xslt4c; (to produce a debug build, for example), you need the following:</p>
    <ul>
      <li>The &xslt4c; source files</li>
      <li>The &xml4c; header and (for Windows) .lib files</li>
-     <li>(<em>NOT FOR THIS RELEASE</em>) The ICU header and (for Windows) .lib files</li>
+     <li>(Optional) The ICU header and (for Windows) .lib files</li>
    </ul>
    <p>The &xslt4c; source files are in the distribution.</p>
    <p>The required &xml4c; files are in the &xml4c; binary distributions.</p>
-   <p>(<em>NOT FOR THIS RELEASE</em>) To get the ICU, download and unzip the <resource-ref idref="icu-download"/> from the IBM developerWorks open source zone,
-   and do a build -- see the Windows NT or Unix build instructions in the readme.html that accompanies the download.</p>
-   <note> If you are not rebuilding ICUBridge, you do not need the ICU header or .lib files.</note>
-   <p>To rebuild the Windows32 release, use the Microsoft Visual C++ 6.0 project files. To rebuild the Linux release, use the make
-    file in the root of the source directory. Both builds look for &xml4c; and ICU in directories parallel to the xml-xalan
-    directory</p>
-   <p><em>Important</em> We have set up the Visual C++ projects and the Linux make file to look for Xerces in a directory structure that results from downloading xml-xerces/c from the <jump href="http://xml.apache.org/websrc/cvsweb.cgi/">Apache XML CVS repository</jump> and building with the Visual C++ project files or the Linux make file. This structure parallels the &xslt4c; source tree and build structure.<br/><br/>
-If you are using a &xml4c; binary distribution, you must either modify the &xslt4c; project files or makefile, or rearrange the build directory structure as indicated in the following illustration.</p>
+   <p>For information on using the <resource-ref idref="icu"/>, see  
+   <link idref="usagepatterns" anchor="icu">Using the ICU</link>.</p>
+   <note>If you are not rebuilding ICUBridge, you do not need the ICU header or .lib files.</note>
+   <p>To rebuild the Windows32 release, use the Microsoft Visual C++ 6.0 project files. To rebuild
+    the Linux or AIX release, use the make file in the root of the source directory. The builds look
+    for &xml4c; and ICU in directories parallel to the
+    xml-xalan directory.</p>
+    </s3><anchor name="layout"/>
+    <s3 title="Layout">
+   <p><em>Important</em> We have set up the Visual C++ projects and the Linux and AIX make files to look for Xerces in a directory structure that results from downloading xml-xerces/c from the <jump href="http://xml.apache.org/websrc/cvsweb.cgi/">Apache XML CVS repository</jump> and building with the Visual C++ project files or the Linux make file. This structure parallels the &xslt4c; source tree and build structure.</p>
+<p>If you are using a &xml4c; binary distribution, you must either modify the &xslt4c; project files or makefile, or rearrange the build directory structure as indicated in the following illustration.</p>
+<p>For Linux and AIX, the XERCESROOT environment variable points to the Xerces-C root directory. For Windows, the Xerces-C root directory must be named xml-xerces, and it must be at the same level as the &xslt4c; root directory. For all environments, the ICU root directory must be named icu, and it must be at the same level as the &xslt4c; root directory.</p>
 <s4 title="&xml4c; and ICU layout for &xslt4c; build">
 <p><img src="xerces-icu.gif" alt="xerces-icu.gif"/></p>
 </s4>
-<note>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xml4c; we certify that it is compabible with a given release of &xslt4c;. To be safe, stick with distributions that we certify to be compatible. (<em>NOT FOR THIS RELEASE</em>) Reminder: &xslt4c-current; is compatible with &xml4c-used;.<br/><br/>
-&xslt4c-current; was built with the &icu-used;. You can probably use newer ICU releases as they appear.</note>
-</s3><anchor name="samples"/>
+<note>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xslt4c; we certify that it is compabible with a given release of &xml4c;. To be safe, stick with distributions that we certify to be compatible. Reminder: &xslt4c-current; is compatible with &xml4c-used;.<br/><br/>
+&xslt4c-current; has been tested with &icu-used;. You may be able to use newer ICU releases as they appear.</note>
+  </s3><anchor name="win32"/>
+  <s3 title="Steps for doing a Windows build">
+  <ol>
+    <li>Rearrange the &xslt4c; binary distribution as indicated above so the headers are in
+     the xml-xerces/c/src tree and xml-xerces is at the same level as the xml-xerces root
+     directory.<br/><br/></li>
+     <li>(Optional) If you are rebuilding the ICUBridge, install the ICU so the icu root directory
+      is at the same level as the xml-xerces root directory (see <link 
+      idref="usagepatterns" anchor="icu">Using the ICU</link> <br/><br/></li>
+    <li>If you want TestXSLT to use ICU support for number formatting and sorting, complete the
+     preceding step, #define XALAN_USE_ICU in process.cpp, and add ICUBridge to the list of
+     dependencies for TestXSLT.<br/><br/></li>
+    <li>Use Visual C++ to open the Xalan workspace from the xml-xalan\c\Projects\Win32\VC6.
+    <br/><br/></li>
+    <li>Use Visual C++ to rebuild everything or specific dynamic link libraries and executables of
+    interest.<br/><br/></li>
+  </ol>
+  </s3><anchor name="unix"/>
+<s3 title="Steps for doing a Linux or AIX build">
+    <ol>
+      <li>Rearrange the &xslt4c; binary distribution as indicated above so the headers are in the
+        <ref>xerces-c_x_y_z-platform</ref>/c/src tree, and set the XERCESCROOT environment variable
+        to the complete path to <ref>xerces-c_x_y_z-platform</ref>.<br/><br/></li>    
+      <li>Set the XALANCROOT environment variable to the complete path to the root of the &xslt4c;
+       distribution.<br/><br/></li>
+      <li>AIX only: Download <resource-ref idref="stlport"/> and set the STLPORTROOT environment
+       variable to the complete path to the STLPort distribution. The Linux GNU compiler includes
+       the STL (Standard Template Library).<br/><br/></li>
+      <li>(Optional) If you are rebuilding the ICUBridge, install the ICU and define XALAN_USE_ICU
+       (see <link idref="usagepatterns" anchor="icu">Using the ICU</link> <br/><br/></li>
+      <li>Change directory to xml-xalan/c/src in the &xslt4c; distribution.<br/><br/></li>      
+      <li>Use the chmod +x command to set the executable flags for conf* and
+       runConfigure.<br/><br/></li>
+      <li>Run the runConfigure utility with at least the platform flag (Linux) or the platform, C compilier, and C++ compiler flags (AIX) as indicated below.<br/><br/>
+      <ref>Linux:</ref>&nbsp;&nbsp;<code>runConfigure -p linux</code><br/>
+      <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;runConfigure -p aix -c xlc_r -x xlC-r<br/><br/>
+      To see the other runConfigure flags you may include, use the help flag:<br/>
+      &nbsp;&nbsp;<code>runConfigure -h</code><br/><br/></li>
+      <li>Run the make file:<br/><br/>
+      &nbsp;&nbsp;<code>make</code> (rebuild all)<br/>
+      or<br/>
+      &nbsp;&nbsp;<code>make <ref>targ</ref></code><br/><br/>
+      where <ref>targ</ref> is all (rebuild all), lib (the XSLT libary), or TestXSLT (the
+      TestSXSLT executable). ICUBridge is included in the build if XALAN_USE_ICU is
+      defined.<br/><br/></li>
+    </ol>
+    <note>The command you use for setting environment variables depends on the shell you are
+     using.<br/>
+     For Bourne Shell, K Shell, or Bash use <em>export</em> ENVAR "val"<br/>
+     For C Shell, use <em>setenv</em> ENVAR="val"<br/>
+     where ENVAR is the environment variable name and val is the environment variable
+     setting.</note>
+   </s3><anchor name="samples"/>
    <s3 title="Rebuilding a sample application">
    <p>The Windows32 distribution includes Visual C++ project files for each of the sample applications. The project files are in the samples subdirectories along with the source files. If you modify a sample and want to recompile it, you can recompile the .cpp file(s) and rebuild the executable.</p>
-<p>The Linux distribution does not yet include make files for the sample applications, so you must construct your own Linux make files and build the sample executables.</p>
+<p>The make files that come with the Linux and AIX distributions include targets for rebuilding one or all of the sample applications (with the exception of the ThreadSafe sample, which in its current form only runs under Windows). To rebuild one or more sample applications, go to the xml-xerces/c/src directory and run<br/><br/>
+&nbsp;&nbsp;<code>make <ref>Targ</ref></code><br/><br/>
+where <ref>Targ</ref> is Samples (all the samples), CompileStylesheet, ExternalFunction, SimpleTransform, TraceListen, UseStylesheetParam, or XPathWrapper.</p>
    </s3>
  </s2><anchor name="contact"/>
  <s2 title="Getting in Touch">

@@ -60,6 +60,10 @@
  
 
 <s1 title="&xslt4c; Command-Line Utility">
+<ul>
+<li><link anchor="use">Using the Command-Line Utility</link></li>
+<li><link anchor="icu">Enabling ICU support for TestXSLT</link></li>
+</ul><anchor name="use"/>
    
    <s2 title="Using the Command-Line Utility">
       <p>To perform a transformation, you can call &xslt4c; from the command line (or script), 
@@ -111,5 +115,34 @@ The -XML or -HTML flag must be set:
       <code>TestXSLT -PARAM <ref>name expression</ref></code><br/>
       To set the parameter to a string value, enclose the string in single quotes (') to
       make it an expression.</p>
+    </s2><anchor name="icu"/>  
+    <s2 title="Enabling ICU support for TestXSLT">
+    <p>You can set up the <resource-ref idref="icu"/> to enhance the support that &xslt4c; provides for encoding, number formatting, and sorting. For more information, see 
+     <link idref="usagepatterns" anchor="icu">Using the ICU</link>.</p>
+    <p>If you have built and integrated the ICU with &xml4c;, TestXSLT (like any &xslt4c;
+     application) automatically uses ICU support for output encoding. See <resource-ref
+     idref="xerces-build-icu"/>.</p>     
+     <p>TestXSLT also conditionally includes ICU support for number formatting and sorting. Look in
+      process.cpp for the <code>#if defined(XALAN_USE_ICU)</code> blocks. In these blocks,
+      process.cpp #includes the ICUBridge headers, and substitues ICU support for xsl:number,
+      format-number(), and xsl:sort. To activate this support:</p>
+      <ol>
+      <li>Download and build the ICU (see <link idref="usagepatterns" anchor="icu">Using the
+      ICU</link>)<br/><br/></li>
+      <li>Activate <code>#define XALAN_USE_ICU</code> (commented out in the shipped version of
+      process.cpp in the XSLTXalan module)<br/><br/>
+      In Windows, turn <code>#define XALAN_USE_ICU</code> from a comment into an active #define
+      statement. In Linux and AIX, you can do the same, or you can define a XALAN_USE_ICU
+      environment  variable. If you do the later, the make file passes in the #define statement when
+      you do a build. If you use this option,keep in mind that the syntax for defining an
+      environmente variable depends on the shell you are using. If you are using the Bourne Shell, K
+      Shell, or Bash, use <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>export XALAN_USE_ICU "1"</code>
+      <br/>If you are using C Shell, use<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>setenv
+      XALAN_USE_ICU="1"</code><br/><br/></li>
+      <li>Rebuild the TestXSLT executable.<br/><br/>
+      For Windows, add ICUBridge to the list Visual C++ list of dependencies for the TestXSLT
+      project, and rebuild the TestXSLT executable. For Linux or AIX, use
+      <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make TestXSLT</code></li>
+     </ol>
    </s2>
 </s1>
