@@ -17,7 +17,7 @@
 </s3>
 <p>For the Windows32 build, download <resource-ref idref="xslt4c-win32-download"/>.</p>
 <p>For the Linux build, download <resource-ref idref="xslt4c-linux-download"/></p> 
-<p>Each distribution contains all you need to run the Xalan command-line utility for performing transformations. To build your own applications, you also need a compatible Xerces-C++ distribution and the <resource-ref idref="icu"/>.</p>
+<p>Each distribution contains all you need to run the Xalan command-line utility for performing transformations. To build your own applications, you also need a compatible Xerces-C++ distribution and (<em>NOT FOR THIS RELEASE</em>)the <resource-ref idref="icu"/>.</p>
 <s3 title="What you need to run the Xalan command-line utility">
 <p>To run the Xalan executable for performing transformations, you need the following:</p>
 <p><em>Windows32</em></p>
@@ -37,7 +37,7 @@
   <li>(<em>NOT FOR THIS RELEASE</em>) The International Components for Unicode (ICU) shared library: &icu-unixlib;</li>
   <li>(<em>NOT FOR THIS RELEASE</em>) The ICU locale data files</li>
 </ul>
-<p>(<em>NOT FOR THIS RELEASE</em>) <em>Important</em> ICU requires you to set the ICU_DATA environment variable to point to the directory containing the ICU locale data files. In the Windows32 distribution, this is xml-xalan\c\Build\Win32\VC6\Release\Data. In the Linux distribution, it is xml-xalan/c/lib/data.</p>
+<p>(<em>NOT FOR THIS RELEASE</em> and we will place the locale data files where they can be found) ICU requires you to set the ICU_DATA environment variable to point to the directory containing the ICU locale data files. In the Windows32 distribution, this is xml-xalan\c\Build\Win32\VC6\Release\Data. In the Linux distribution, it is xml-xalan/c/lib/data.</p>
 <p>For information about using the command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
 </s3>
 <s3 title="What you need to build applications">
@@ -52,7 +52,7 @@ Xalan-C++ and Xerces-C++ header (.hpp) files and (for Windows) the &xslt4c; and 
 </s2><anchor name="path"/>
 <s2 title="Setting up the path">
 <p>For the Xalan-C++ Windows32 distribution, place xml-xalan\c\Build\Win32\VC6\Release on the path.</p>
-<p>For the Xalan-C++ Linux distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (LD_LIBRARY_PATH for Red Hat Linux 6.1).</p>
+<p>For the Xalan-C++ Linux distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (LD_LIBRARY_PATH for Red Hat Linux 6.1), or copy &xslt4c-linuxlib; to /usr/lib..</p>
 <p>If you do your own Xalan, ICU, and Xerces builds, be sure to include the directories that contain the libraries and the TextXSLT executable on your path.</p>
 </s2><anchor name="samples"/>
 <s2 title="Trying out the samples">
@@ -60,7 +60,7 @@ Xalan-C++ and Xerces-C++ header (.hpp) files and (for Windows) the &xslt4c; and 
  and you can review the source files -- all of which are brief -- to see just how they work. In the Windows32 distribution, we have precompiled these samples for you so they are ready to run. In the Linux distribution, you need to build them first.</p>
 <p>To run the samples, do the following:</p>
 <ol>
-<li>(Linux only) Compile the sample sources (you may need to make some minor changes in the header files to accommodate Linux) and build an executable for each sample application.</li>
+<li>(Linux only) Set up make files and compile the sample sources (you may need to make some minor changes in the header files to accommodate Linux) and build an executable for each sample application.</li>
 <li>Set up your path (see above). In the Windows32 distribution, the sample executables are in
 xml-xalan\c\Build\Win32\VC6\Release. For Linux, we suggest you build the executables in xml-xalan/c/bin.</li>
 <li>Go to the samples subdirectory containing the sample (use the DOS shell in Windows).</li>

@@ -67,22 +67,26 @@
   <li><link anchor="build">Build Notes</link></li>
   <li><link anchor="contact">Getting in touch</link></li>
  </ul>
-  <s2 title="Status">
+ <anchor name="status"/>
+ <s2 title="Status">
    <ul>
-    <li><link anchor="bugs">Bug reporting</link></li>
-    <li><link anchor="status">Version of &xml4c; to use</link></li>    
+    <li><link anchor="done">Changes since &xslt4c; version 0.30.0</link></li>    
+    <li><link anchor="bugs">Bug reporting</link></li>    
+    <li><link anchor="xml4j">Version of &xml4c; to use</link></li>
+    <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
    </ul>
+     <anchor name="done"/>
+     &done-c;
      <anchor name="bugs"/>
-     &bugs-c;
-     <anchor name="status"/>
+     &bugs-c;     
+     <anchor name="xml4j"/>
      &status-c;
-  </s2>
-  <anchor name="build"/>
+     
+  </s2><anchor name="build"/>
   <s2 title="Build Notes">
 <ul>
 <li><link anchor="jar">Rebuilding &xslt4c;</link></li>
 <li><link anchor="samples">Rebuilding sample applications</link></li>
-
 </ul>
 <anchor name="jar"/> 
    <s3 title="Rebuilding &xslt4c;">

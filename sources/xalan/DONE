@@ -1,4 +1,15 @@
-<s3 title="Things completed since the last version">
-<p><ref>does not apply</ref></p>
-</s3>    
-
+<s3 title="Changes since &xslt4c; version 0.30.0">
+<p>We continue to work towards the functional completion our implementation of the XSLT and XPath specs. Major updates since version 0.30.0 include:</p>
+<ul>
+<li>Permitting OS file names (as well as URLs) as command-line arguments with TestXSLT<br/><br/></li>
+<li>Stricter compliance for HTML and XML output<br/><br/></li>
+<li>Improved handling of relative URI's<br/><br/></li>
+<li>Improved handling of Import and Include<br/><br/></li>
+<li>Better namespace handling (although there are still problems here)<br/><br/></li>
+<li>Support for Document() function<br/><br/></li>
+<li>Support for XPath predicates<br/><br/></li>
+<li>Better handling of parameters to stylesheet and templates<br/><br/></li>
+<li>Full implementation of axes ( with the exception of namespace:: )<br/><br/></li>
+</ul>
+</s3>
+	
