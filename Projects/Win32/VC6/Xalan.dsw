@@ -120,9 +120,6 @@ Package=<4>
     Project_Dep_Name XalanDOM
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name ICUBridge
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name XMLSupport
     End Project Dependency
 }}}
