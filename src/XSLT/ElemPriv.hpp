@@ -61,7 +61,7 @@
 	A set of headers used in the implementations of
 	most of the Elem* classes.
 */
-#include <sax/SaxException.hpp>
+#include <sax/SAXException.hpp>
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>

@@ -57,7 +57,7 @@
 #if !defined(XSLTDEFINITIONS_HEADER_GUARD_1357924680)
 #define XSLTDEFINITIONS_HEADER_GUARD_1357924680
 
-#include <include/PlatformDefinitions.hpp>
+#include <Include/PlatformDefinitions.hpp>
 
 #if defined(XALAN_XSLT_BUILD_DLL)
 #	define XALAN_XSLT_EXPORT XALAN_PLATFORM_EXPORT

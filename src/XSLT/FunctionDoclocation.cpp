@@ -68,7 +68,9 @@
 
 
 // Base class header file...
-#include <XSLT/FunctionDocLocation.hpp>
+// @@ FIX FILE NAME SPELLING
+#include <XSLT/FunctionDoclocation.hpp>
+//#include <XSLT/FunctionDocLocation.hpp>
 
 
 #include <XPath/XObject.hpp>

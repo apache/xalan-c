@@ -65,7 +65,7 @@
 #include <dom/DOMString.hpp>
 #include <dom/DOM_Node.hpp>
 #include <sax/DocumentHandler.hpp>
-#include <xmlsupport/FormatterListener.hpp>
+#include <XMLSupport/FormatterListener.hpp>
 
 class OutputStream;
 class Writer;

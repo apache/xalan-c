@@ -99,7 +99,7 @@ FunctionUnparsedEntityURI::execute(
 	{
 		executionContext.error("The unparsed-entity-uri function should take one argument!");
 	}
-	DOMString name = (args.at(0))->str();
+	DOMString name = (args[0])->str();
 	DOM_Document doc =
 		(DOM_Node::DOCUMENT_NODE == context.getNodeType()) ?
 		static_cast<const DOM_Document&>(context) :

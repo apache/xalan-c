@@ -1226,7 +1226,7 @@ void XSLTEngineImpl::addTraceListenersToStylesheet()
 		int nListeners = m_traceListeners.size();
 		for(int i = 0; i < nListeners; i++)
 		{
-			TraceListener* tl = m_traceListeners.at(i);
+			TraceListener* tl = m_traceListeners[i];
 			m_stylesheetRoot->addTraceListener(tl);
 		}
 	}
@@ -1246,7 +1246,7 @@ void XSLTEngineImpl::removeTraceListener(TraceListener* tl)
 	int nListeners = m_traceListeners.size();
 	for(int i = 0; i < nListeners; i++)
 	{
-		TraceListener* tli = m_traceListeners.at(i);
+		TraceListener* tli = m_traceListeners[i];
 		if (tli == tl) m_traceListeners.erase(m_traceListeners.begin()+i);
 	}
 	if(0 != m_stylesheetRoot)
@@ -1262,7 +1262,7 @@ void XSLTEngineImpl::fireGenerateEvent(const GenerateEvent& te)
 
 	for(int i = 0; i < nListeners; i++)
 	{
-		TraceListener* const	tl = m_traceListeners.at(i);
+		TraceListener* const	tl = m_traceListeners[i];
 
 		tl->generated(te);
 	}
@@ -3102,7 +3102,7 @@ XSLTEngineImpl::shouldStripSourceNode(const DOM_Node&	textNode) const
 
 					for(int i = 0; i < nTests; i++)
 					{
-						const XPath* const	matchPat = m_stylesheetRoot->m_whitespacePreservingElements.at(i);
+						const XPath* const	matchPat = m_stylesheetRoot->m_whitespacePreservingElements[i];
 						assert(matchPat != 0);
 
 						const double	score = matchPat->getMatchScore(parent, theExecutionContext);
@@ -3124,7 +3124,8 @@ XSLTEngineImpl::shouldStripSourceNode(const DOM_Node&	textNode) const
 
 					for(int i = 0; i < nTests; i++)
 					{
-						const XPath* const	matchPat = m_stylesheetRoot->m_whitespaceStrippingElements.at(i);
+						const XPath* const	matchPat =
+							m_stylesheetRoot->m_whitespaceStrippingElements[i];
 						assert(matchPat != 0);
 
 						const double	score = matchPat->getMatchScore(parent, theExecutionContext);
