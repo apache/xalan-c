@@ -962,11 +962,11 @@ $(THISLIB): $(ALL_OBJECTS)
 ifeq ($(PLATFORM), OS390)
 	cp -p *.x  ${LIB_DIR}        
 else
-	$(LN) -s $(THISLIB) $(LIB_DIR)/$(LIBNAME)$(SHLIBSUFFIX)
+	$(LN) -fs $(LIB) $(LIB_DIR)/$(LIBNAME)$(SHLIBSUFFIX)
 ifeq ($(PLATFORM), AIX)
-	$(LN) -s $(THISLIB) $(LIB_DIR)/$(LIBNAME)$(LIBMAJORVER)$(SHLIBSUFFIX)
+	$(LN) -fs $(LIB) $(LIB_DIR)/$(LIBNAME)$(LIBMAJORVER)$(SHLIBSUFFIX)
 else	
-	$(LN) -s $(THISLIB) $(LIB_DIR)/$(LIBNAME)$(SHLIBSUFFIX).$(LIBMAJORVER)
+	$(LN) -fs $(LIB) $(LIB_DIR)/$(LIBNAME)$(SHLIBSUFFIX).$(LIBMAJORVER)
 endif ## AIX	
 endif ## OS390                                
 endif ## OS390BATCH
@@ -978,8 +978,12 @@ install:	all
 	$(INSTALL_DATA) $(THISLIB) $(PREFIX)/lib
 ifneq ($(PLATFORM), OS390)
 	$(LN) -fs $(LIB) $(PREFIX)/lib/$(LIBNAME)$(SHLIBSUFFIX)
+ifeq ($(PLATFORM), AIX)
+	$(LN) -fs $(LIB) $(PREFIX)/lib/$(LIBNAME)$(LIBMAJORVER)$(SHLIBSUFFIX)
+else
 	$(LN) -fs $(LIB) $(PREFIX)/lib/$(LIBNAME)$(SHLIBSUFFIX).$(LIBMAJORVER)
-endif
+endif ## AIX
+endif ## OS390
 	$(MKINSTALLDIRS) $(PREFIX)/include/xalanc
 	$(foreach hdir,$(ALL_HEADERS_DIRS), $(shell $(MKINSTALLDIRS) $(PREFIX)/include/xalanc/$(hdir)))
 	$(foreach hdir,$(ALL_HEADERS_DIRS), $(shell $(INSTALL_DATA) $(hdir)/*.h $(PREFIX)/include/xalanc/$(hdir) 2>/dev/null))
