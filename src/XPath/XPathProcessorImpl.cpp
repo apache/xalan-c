@@ -265,7 +265,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 
 				for(++i; i < nChars && (c = charAt(pat, i)) != XalanUnicode::charQuoteMark; ++i);
 
-				if(c == XalanUnicode::charQuoteMark)
+				if(c == XalanUnicode::charQuoteMark && i < nChars)
 				{
 					substring(pat, theToken, startSubstring, i + 1);
 
@@ -303,7 +303,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 
 				for(++i; i < nChars && (c = charAt(pat, i)) != XalanUnicode::charApostrophe; ++i);
 
-				if(c == XalanUnicode::charApostrophe)
+				if(c == XalanUnicode::charApostrophe && i < nChars)
 				{
 					substring(pat, theToken, startSubstring, i + 1);
 
