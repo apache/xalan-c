@@ -64,10 +64,6 @@
 
 
 
-#include <XPath/XalanQNameByValue.hpp>
-
-
-
 class XPath;
 
 
@@ -90,7 +86,7 @@ public:
 			const XalanQName&	qname,
 			const XPath&		matchPattern,
 			const XPath&		use) :
-		m_qname(qname),
+		m_qname(&qname),
 		m_match(&matchPattern),
 		m_use(&use)
 	{
@@ -98,7 +94,7 @@ public:
 
 	explicit
 	KeyDeclaration() :
-		m_qname(),
+		m_qname(0),
 		m_match(0),
 		m_use(0)
 	{
@@ -120,7 +116,7 @@ public:
 	 * 
 	 * @return name string
 	 */
-	const XalanQName&
+	const XalanQName*
 	getQName() const
 	{
 		return m_qname;
@@ -150,12 +146,11 @@ public:
 
 private:
 
-	XalanQNameByValue	m_qname;
+	const XalanQName*	m_qname;
 
 	const XPath*		m_match;
 
 	const XPath*		m_use;
-
 };
 
 

@@ -297,9 +297,11 @@ KeyTable::processKeyDeclaration(
 
 	if(xuse->getType() != XObject::eTypeNodeSet)
 	{
+		assert(kd.getQName() != 0);
+
 		addIfNotFound(
 			executionContext,
-			theKeys[kd.getQName()][xuse->str()],
+			theKeys[*kd.getQName()][xuse->str()],
 			testNode);
 	}
 	else
@@ -324,9 +326,11 @@ KeyTable::processKeyDeclaration(
 
 			DOMServices::getNodeData(*nl.item(i), nodeData);
 
+			assert(kd.getQName() != 0);
+
 			addIfNotFound(
 				executionContext,
-				theKeys[kd.getQName()][nodeData],
+				theKeys[*kd.getQName()][nodeData],
 				testNode);
 
 			clear(nodeData);
