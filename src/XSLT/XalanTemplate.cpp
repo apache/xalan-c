@@ -97,11 +97,13 @@
 #include <XalanDOM/XalanNode.hpp>
 
 
+
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/AttributeVectorEntry.hpp>
 #include <PlatformSupport/AttributesImpl.hpp>
 #include <PlatformSupport/AttributeVectorEntryExtended.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanDOMStringHashTable.hpp>
 #include <PlatformSupport/PrintWriter.hpp>
 #include <PlatformSupport/XalanOutputStream.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
@@ -110,13 +112,11 @@
 
 
 
-
 #include <DOMSupport/NamespaceResolver.hpp>
 #include <DOMSupport/NSInfo.hpp>
 
 
 
-#include <XMLSupport/FormatterListener.hpp>
 #include <XMLSupport/FormatterToHTML.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
 #include <XMLSupport/FormatterToDOM.hpp>
@@ -215,7 +215,7 @@ static set<XalanNode*, less<XalanNode*> >	theInstanceSetType;
 static XalanTransformer::CompiledStylesheetPtrVectorType	theCompiledStylesheetVector;
 static XalanTransformer::ParsedSourcePtrVectorType			theParsedSourceVector;
 static XalanTransformer::ParamPairVectorType				theParamsPairVector;
-
+static XalanDOMStringHashTable::BucketCountsType			theBucketCountsVector;
 
 
 static void
@@ -296,14 +296,6 @@ foo()
 	}
 	
 	{
-		XPathExecutionContextDefault::NodeRefListCacheType	theVector;
-		
-		for_each(theVector.begin(),
-			 theVector.end(),
-			 DeleteFunctor<MutableNodeRefList>());
-	}
-
-	{
 		XPathEnvSupportDefault::FunctionTableType	theTable;
 
 		for_each(theTable.begin(),
@@ -349,14 +341,6 @@ foo()
 		for_each(theTable.begin(),
 			 theTable.end(),
 			 MapValueDeleteFunctor<StylesheetExecutionContextDefault::KeyTablesTableType>());
-	}
-
-	{
-		StylesheetExecutionContextDefault::FormatterToTextCacheType		theCache;
-
-		for_each(theCache.begin(),
-				 theCache.end(),
-				 DeleteFunctor<FormatterToText>());
 	}
 
 	{
@@ -455,45 +439,41 @@ foo()
 			 theVector.end(),
 			 DeleteFunctor<AVT>());
 	}
-	
-	{
-		XPathExecutionContextDefault::ResultTreeFragCacheType	theVector;
-		
-		for_each(theVector.begin(),
-			 theVector.end(),
-			 DeleteFunctor<ResultTreeFragBase>());
-	}
-	
+
 	{
 		StylesheetConstructionContextDefault::StylesheetSetType	theSet;
 		
-		for_each(theSet.begin(),
-			 theSet.end(),
-			 DeleteFunctor<StylesheetRoot>());
+		for_each(
+			theSet.begin(),
+			theSet.end(),
+			DeleteFunctor<StylesheetRoot>());
 	}
 
 	{
-		StylesheetExecutionContextDefault::FormatterListenerSetType	theSet;
+		StylesheetExecutionContextDefault::FormatterListenerVectorType	theVector;
 		
-		for_each(theSet.begin(),
-			 theSet.end(),
-			 DeleteFunctor<FormatterListener>());
+		for_each(
+			theVector.begin(),
+			theVector.end(),
+			DeleteFunctor<FormatterListener>());
 	}
 
 	{
-		StylesheetExecutionContextDefault::PrintWriterSetType	theSet;
+		StylesheetExecutionContextDefault::PrintWriterVectorType	theVector;
 		
-		for_each(theSet.begin(),
-			 theSet.end(),
-			 DeleteFunctor<PrintWriter>());
+		for_each(
+			theVector.begin(),
+			theVector.end(),
+			DeleteFunctor<PrintWriter>());
 	}
 
 	{
-		StylesheetExecutionContextDefault::OutputStreamSetType	theSet;
-		
-		for_each(theSet.begin(),
-			 theSet.end(),
-			 DeleteFunctor<XalanOutputStream>());
+		StylesheetExecutionContextDefault::OutputStreamVectorType	theVector;
+
+		for_each(
+			theVector.begin(),
+			theVector.end(),
+			DeleteFunctor<XalanOutputStream>());
 	}
 
 	{
@@ -580,8 +560,8 @@ foo()
 	}
 	
 	{
-		vector<XalanNode*> theVector;
-		NodeSorter::NodeSortKeyCompare* theComparer;
+		NodeVectorType						theVector;
+		NodeSorter::NodeSortKeyCompare*		theComparer;
 		
 		stable_sort(	
 			theVector.begin(),
@@ -603,20 +583,12 @@ foo()
 		for_each(theVector.begin(),
 				 theVector.end(),
 				 DeleteFunctor<XalanParsedSource>());
-	}	
-
-	{
-		ostream* const	theStream = 0;
-		const string	theString;
-
-		*theStream << theString;
 	}
 }
 
 
 
 #include <stl/_alloc.h>
-//#undef __SGI_STL_OWN_IOSTREAMS
 #include <stl/_alloc.c>
 
 
