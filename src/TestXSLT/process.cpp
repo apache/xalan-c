@@ -788,7 +788,7 @@ int main(int argc, const char* argv[]) throw()
 			{
 				const XalanNode* const	theInstance = theNodes[i];
 				assert(theInstance != 0);
-#define XALAN_RTTI_AVAILABLE
+
 				cout << "("
 					 << hex
 					 << theInstance
