@@ -185,15 +185,15 @@ XalanTransformToFile(
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
-XalanTransformToFileCSS(
-			const char*		theXMLFileName, 
+XalanTransformToFilePrebuilt(
+			XalanPSHandle	theParsedSource, 
 			XalanCSSHandle	theCSSHandle,
 			const char*		theOutFileName,
 			XalanHandle		theXalanHandle)
 {
 	// Do the transformation...
 	return getTransformer(theXalanHandle)->transform(
-				theXMLFileName,
+				*getParsedSource(theParsedSource),
 				getStylesheet(theCSSHandle),
 				theOutFileName);
 }
@@ -243,8 +243,8 @@ XalanTransformToData(
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
-XalanTransformToDataCSS(
-			const char*		theXMLFileName, 
+XalanTransformToDataPrebuilt(
+			XalanPSHandle	theParsedSource, 
 			XalanCSSHandle	theCSSHandle,
 			char**			theOutput,
 			XalanHandle		theXalanHandle)
@@ -258,7 +258,7 @@ XalanTransformToDataCSS(
 	// Do the transformation...
 	const int	status =
 		getTransformer(theXalanHandle)->transform(
-			theXMLFileName,
+			*getParsedSource(theParsedSource),
 			getStylesheet(theCSSHandle),
 			theOutputStream);
 
@@ -286,10 +286,10 @@ XalanFreeData(char*	theStream)
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
 XalanTransformToHandler(
-			const char*				theXMLFileName, 
+			const char*				theXMLFileName,
 			const char*				theXSLFileName,
 			XalanHandle				theXalanHandle,
-			void*					theOutputHandle, 
+			void*					theOutputHandle,
 			XalanOutputHandlerType	theOutputHandler,
 			XalanFlushHandlerType	theFlushHandler)
 {
@@ -305,17 +305,17 @@ XalanTransformToHandler(
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
-XalanTransformToHandlerCSS(
-			const char*				theXMLFileName, 
+XalanTransformToHandlerPrebuilt(
+			XalanPSHandle			theParsedSource,
 			XalanCSSHandle			theCSSHandle,
 			XalanHandle				theXalanHandle,
-			void*					theOutputHandle, 
+			void*					theOutputHandle,
 			XalanOutputHandlerType	theOutputHandler,
 			XalanFlushHandlerType	theFlushHandler)
 {
 	// Do the transformation...
 	return getTransformer(theXalanHandle)->transform(
-			theXMLFileName,
+			*getParsedSource(theParsedSource),
 			getStylesheet(theCSSHandle),
 			theOutputHandle,
 			theOutputHandler,
@@ -324,51 +324,58 @@ XalanTransformToHandlerCSS(
 
 
 
-XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanCSSHandle)
+XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 XalanCompileStylesheet(
-			const char*		theXSLFileName,
-			XalanHandle		theXalanHandle)
+			const char*			theXSLFileName,
+			XalanHandle			theXalanHandle,
+			XalanCSSHandle*		theCSSHandle)
 {
 	const XalanCompiledStylesheet*	theCompiledStylesheet = 0;
 
-	getTransformer(theXalanHandle)->compileStylesheet(
-		theXSLFileName,
-		theCompiledStylesheet);
+	const int	theResult =
+		getTransformer(theXalanHandle)->compileStylesheet(
+			theXSLFileName,
+			theCompiledStylesheet);
 
-	return theCompiledStylesheet;
+	if (theResult == 0)
+	{
+		*theCSSHandle = theCompiledStylesheet;
+	}
+
+	return theResult;
 }
 
 
 
-XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanPSHandle)
+XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
+XalanDestroyCompiledStylesheet(
+			XalanCSSHandle	theCSSHandle,
+			XalanHandle		theXalanHandle)
+{
+	return getTransformer(theXalanHandle)->destroyStylesheet(getStylesheet(theCSSHandle));
+}
+
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 XalanParseSource(
 			const char*		theXMLFileName,
-			XalanHandle		theXalanHandle)
+			XalanHandle		theXalanHandle,
+			XalanPSHandle*	thePSHandle)
 {
 	const XalanParsedSource*	theParsedSource = 0;
 
-	getTransformer(theXalanHandle)->parseSource(
-		theXMLFileName,
-		theParsedSource);
+	const int	theResult =
+		getTransformer(theXalanHandle)->parseSource(
+			theXMLFileName,
+			theParsedSource);
 
-	return theParsedSource;
-}
+	if (theResult == 0)
+	{
+		*thePSHandle = theParsedSource;
+	}
 
-
-
-XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanPSHandle)
-XalanParseSourceUseXerceDOM(
-			const char*		theXMLFileName,
-			XalanHandle		theXalanHandle)
-{
-	const XalanParsedSource*	theParsedSource = 0;
-
-	getTransformer(theXalanHandle)->parseSource(
-		theXMLFileName,
-		theParsedSource,
-		true);
-
-	return theParsedSource;
+	return theResult;
 }
 
 

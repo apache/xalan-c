@@ -142,28 +142,28 @@ extern "C"
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 	XalanTransformToFile(
-				const char*				theXMLFileName, 
-				const char*				theXSLFileName,
-				const char*				theOutFileName,
-				XalanHandle				theXalanHandle);
+				const char*		theXMLFileName, 
+				const char*		theXSLFileName,
+				const char*		theOutFileName,
+				XalanHandle		theXalanHandle);
 
 	/**
 	 * Transform the XML source tree to the given result file.
 	 * The processor will apply the compiled stylesheet to the input
 	 * file and write the transformation result to a new output file.
 	 *
-	 * @param theXMLFileName	filename of XML input source
+	 * @param theParsedSource	handle of parsed source
 	 * @param theCSSHandle		handle of compiled stylesheet 
 	 * @param theOutFileName	filename of output source
 	 * @param theXalanHandle	handle of XalanTransformer instance.
 	 * @return	0 for success 
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
-	XalanTransformToFileCSS(
-				const char*				theXMLFileName, 
-				XalanCSSHandle			theCSSHandle,
-				const char*				theOutFileName,
-				XalanHandle				theXalanHandle);
+	XalanTransformToFilePrebuilt(
+			XalanPSHandle	theParsedSource, 
+			XalanCSSHandle	theCSSHandle,
+			const char*		theOutFileName,
+			XalanHandle		theXalanHandle);
 
 	/**
 	 * Transform the XML source tree to a dynamically allocated buffer.
@@ -180,10 +180,10 @@ extern "C"
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
 	XalanTransformToData(
-				const char*				theXMLFileName, 
-				const char*				theXSLFileName,
-				char**					theOutput,
-				XalanHandle				theXalanHandle);
+			const char*		theXMLFileName, 
+			const char*		theXSLFileName,
+			char**			theOutput,
+			XalanHandle		theXalanHandle);
 
 	/**
 	 * Transform the XML source tree to a dynamically allocated buffer.
@@ -199,20 +199,20 @@ extern "C"
 	 * @return	0 for success 
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
-	XalanTransformToDataCSS(
-				const char*				theXMLFileName, 
-				XalanCSSHandle			theCSSHandle,
-				char**					theOutput,
-				XalanHandle				theXalanHandle);
+	XalanTransformToDataPrebuilt(
+				XalanPSHandle	theParsedSource,
+				XalanCSSHandle	theCSSHandle,
+				char**			theOutput,
+				XalanHandle		theXalanHandle);
 
 	/**
 	 * Free memory allocated as a result of calling
 	 * XalanTransformToData.
 	 * 
-	 * @param theStream The address of character data.
+	 * @param theData The address of character data.
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
-	XalanFreeData(char*		theStream);
+	XalanFreeData(char*		theData);
 
 	/**
 	 * Transform the XML source tree to a callback function.
@@ -256,8 +256,8 @@ extern "C"
 	 * 
 	 * - See XalanOutputHandlerType and XalanFlushHandlerType for more 
 	 * details.
-	 * 
-	 * @param theXMLFileName	filename of XML input source
+	 *
+	 * @param thePSHandle		handle of parsed source
 	 * @param theCSSHandle		handle of compiled stylesheet 
 	 * @param theXalanHandle	handle of XalanTransformer instance.
 	 * @param theOutputHandle	void pointer passed through to callback.
@@ -266,26 +266,39 @@ extern "C"
 	 * @return	0 for success 
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
-	XalanTransformToHandlerCSS(
-				const char*				theXMLFileName, 
+	XalanTransformToHandlerPrebuilt(
+				XalanPSHandle			thePSHandle,
 				XalanCSSHandle			theCSSHandle,
 				XalanHandle				theXalanHandle,
-				void*					theOutputHandle, 
+				void*					theOutputHandle,
 				XalanOutputHandlerType	theOutputHandler,
 				XalanFlushHandlerType	theFlushHandler);
 
 	/**
-	 * Creates a complied stylesheet.  The input source can be 
-	 * a file name, a stream or a root node.
+	 * Creates a compiled stylesheet.
 	 *
 	 * @param theXSLFileName	filename of stylesheet source
 	 * @param theXalanHandle	handle of XalanTransformer instance.
-	 * @return	a CSSHandle or 0 for failure.
+	 * @param theCSSHandle		a pointer to a XalanCSSHandle
+	 * @return 0 for success.
 	 */
-	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanCSSHandle)
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 	XalanCompileStylesheet(
-				const char*				theXSLFileName,
-				XalanHandle				theXalanHandle);
+			const char*			theXSLFileName,
+			XalanHandle			theXalanHandle,
+			XalanCSSHandle*		theCSSHandle);
+
+	/**
+	 * Destroys a compiled stylesheet.
+	 *
+	 * @param theCSSHandle		handle of the compiled stylesheet
+	 * @param theXalanHandle	handle of XalanTransformer instance.
+	 * @return 0 for success
+	 */
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
+	XalanDestroyCompiledStylesheet(
+			XalanCSSHandle	theCSSHandle,
+			XalanHandle		theXalanHandle);
 
 	/**
 	 * Parse source document.  The input source can be 
@@ -293,17 +306,27 @@ extern "C"
 	 *
 	 * @param theInputSource	input source	
 	 * @param theXalanHandle	handle of XalanTransformer instance.	 
-	 * @return	a pointer to a XalanParsedSource or 0 for failure.
+	 * @param thePSHandle		a pointer to a XalanPSHandle
+	 * @return 0 for success.
 	 */	
-	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanPSHandle)
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 	XalanParseSource(
-			const char*				theXMLFileName,
-			XalanHandle				theXalanHandle);
+			const char*		theXMLFileName,
+			XalanHandle		theXalanHandle,
+			XalanPSHandle*	thePSHandle);
 
-	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanPSHandle)
-	XalanParseSourceUseXerceDOM(
-			const char*				theXMLFileName,
-			XalanHandle				theXalanHandle);
+	/**
+	 * Destroys a parsed source.
+	 * a file name, a stream or a root node.
+	 *
+	 * @param thePSHandle		handle of parsed source
+	 * @param theXalanHandle	handle of XalanTransformer instance.	 
+	 * @return 0 for success
+	 */	
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
+	XalanDestroyParsedSource(
+			XalanPSHandle	thePSHandle,
+			XalanHandle		theXalanHandle);
 
 	/**
 	 * Set a top-level stylesheet parameter.  This value can be evaluated via
@@ -315,9 +338,9 @@ extern "C"
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 	XalanSetStylesheetParam(
-				const char*				key,
-				const char*				expression,
-				XalanHandle				theXalanHandle);
+				const char*		key,
+				const char*		expression,
+				XalanHandle		theXalanHandle);
 
 	/**
 	 * Returns the last error that occurred as a 

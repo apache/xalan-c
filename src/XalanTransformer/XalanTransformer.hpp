@@ -10,33 +10,33 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *	  notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ *	  notice, this list of conditions and the following disclaimer in
+ *	  the documentation and/or other materials provided with the
+ *	  distribution.
  *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
+ *	  if any, must include the following acknowledgment:  
+ *		 "This product includes software developed by the
+ *		  Apache Software Foundation (http://www.apache.org/)."
+ *	  Alternately, this acknowledgment may appear in the software itself,
+ *	  if and wherever such third-party acknowledgments normally appear.
  *
  * 4. The names "Xalan" and "Apache Software Foundation" must
- *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
- *    permission, please contact apache@apache.org.
+ *	  not be used to endorse or promote products derived from this
+ *	  software without prior written permission. For written 
+ *	  permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache",
- *    nor may "Apache" appear in their name, without prior written
- *    permission of the Apache Software Foundation.
+ *	  nor may "Apache" appear in their name, without prior written
+ *	  permission of the Apache Software Foundation.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * DISCLAIMED.	IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
@@ -135,14 +135,14 @@ public:
 	transform(
 			const XalanParsedSource&	theParsedXML, 
 			const XSLTInputSource&		theStylesheetSource,
-			const XSLTResultTarget&		theResultTarget);
+			const XSLTResultTarget& 	theResultTarget);
 
 	/**
 	 * Transform will apply the compiled stylesheet to the parsed xml source
 	 * and write the transformation output to the target. 
 	 *
 	 * @param theParsedXML			the parsed input source
-	 * @param theCompiledStylesheet	pointer to a compiled stylesheet
+	 * @param theCompiledStylesheet pointer to a compiled stylesheet
 	 * @param theResultTarget		output source 
 	 * @return	0 for success
 	 */
@@ -150,7 +150,7 @@ public:
 	transform(
 			const XalanParsedSource&		theParsedXML, 
 			const XalanCompiledStylesheet*	theCompiledStylesheet,
-			const XSLTResultTarget&			theResultTarget);
+			const XSLTResultTarget& 		theResultTarget);
 
 	/**
 	 * Transform will apply the stylesheet source to the input source
@@ -167,24 +167,7 @@ public:
 	transform(
 			const XSLTInputSource&		theInputSource, 
 			const XSLTInputSource&		theStylesheetSource,
-			const XSLTResultTarget&		theResultTarget);
-
-	/**
-	 * Transform will apply the compiled stylesheet to the input source
-	 * and write the transformation output to the target. The input 
-	 * source and result target can be a file name, a stream or a root
-	 * node. 
-	 *
-	 * @param theInputSource		input source
-	 * @param theCompiledStylesheet	pointer to a compiled stylesheet
-	 * @param theResultTarget		output source 
-	 * @return	0 for success
-	 */
-	int
-	transform(
-			const XSLTInputSource&			theInputSource, 
-			const XalanCompiledStylesheet*	theCompiledStylesheet,
-			const XSLTResultTarget&			theResultTarget);
+			const XSLTResultTarget& 	theResultTarget);
 
 	/**
 	 * Transform will apply the stylesheet provided as a PI in the 
@@ -199,7 +182,7 @@ public:
 	int
 	transform(
 			const XSLTInputSource&		theInputSource, 		
-			const XSLTResultTarget&		theResultTarget);
+			const XSLTResultTarget& 	theResultTarget);
 
 	/**
 	 * Transform will apply the stylesheet source to the input source
@@ -229,6 +212,23 @@ public:
 	
 	/**
 	 * Transform will apply the compiled stylesheet to the input source
+	 * and write the transformation output to the target. The input 
+	 * source and result target can be a file name, a stream or a root
+	 * node. 
+	 *
+	 * @param theInputSource		input source
+	 * @param theCompiledStylesheet pointer to a compiled stylesheet
+	 * @param theResultTarget		output source 
+	 * @return	0 for success
+	 */
+	int
+	transform(
+			const XSLTInputSource&			theInputSource, 
+			const XalanCompiledStylesheet*	theCompiledStylesheet,
+			const XSLTResultTarget& 		theResultTarget);
+ 
+	/**
+	 * Transform will apply the compiled stylesheet to the source
 	 * and write the transformation result to a callback function  
 	 * in pre-allocated blocks. The input source can be a file name, 
 	 * a stream or a root node. Upon termination, Xalan releases any 
@@ -238,8 +238,8 @@ public:
 	 * - See XalanTransformerOutputStream and XalanOutputHandlerType 
 	 * for more details.
 	 * 
-	 * @param theInputSource		input source
-	 * @param theCompiledStylesheet	pointer to a compiled stylesheet
+	 * @param theParsedSource		Parsed source instance
+	 * @param theCompiledStylesheet pointer to a compiled stylesheet
 	 * @param theOutputHandle		void pointer passed through to callback.
 	 * @param theOutputHandler		a user defined callback function.
 	 * @param theFlushHandler		An optional user-defined callback function.
@@ -247,7 +247,7 @@ public:
 	 */
 	int
 	transform(
-			const XSLTInputSource&			theInputSource,
+			const XalanParsedSource&		theParsedSource,
 			const XalanCompiledStylesheet*	theCompiledStylesheet,
 			void*							theOutputHandle,
 			XalanOutputHandlerType			theOutputHandler,
@@ -282,7 +282,7 @@ public:
 	 * a file name, a stream or a root node.   The XalanTransformer
 	 * instance owns the XalanCompiledStylesheet instance and will
 	 * delete it when the XalanTransformer instance goes out of scope,
-	 * or you explicitly call destroyStylesheet().  You must not delete
+	 * or you explicitly call destroyStylesheet().	You must not delete
 	 * the instance yourself.
 	 *
 	 * @param theStylesheetSource input source
@@ -292,16 +292,16 @@ public:
 	int
 	compileStylesheet(
 			const XSLTInputSource&				theStylesheetSource,
-			const XalanCompiledStylesheet*&		theCompiledStylesheet);
+			const XalanCompiledStylesheet*& 	theCompiledStylesheet);
 
 	/**
 	 * Destroy a XalanCompiledStylesheet instance created by a previous
-	 * call to compileStylesheet().  Passing a pointer that is not created
-	 * by a call to createDocumentBuilder() can result in undefined behavior.
+	 * call to compileStylesheet().
 	 *
-	 * @param theStylesheet	The instance to destroy.
+	 * @param theStylesheet The instance to destroy.
+	 * @return 0 for success 
 	 */
-	void
+	int
 	destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet);
 
 	/**
@@ -325,17 +325,16 @@ public:
 
 	/**
 	 * Destroy a parsed source created by a previous call to parseSource().
-	 * Passing a pointer that was not created by a call to parseSource() can
-	 * result in undefined behavior.
 	 *
 	 * @param theParsedSource The XalanParsedSource instance to destroy.
+	 * @return 0 for success 
 	 */
-	void
+	int
 	destroyParsedSource(const XalanParsedSource*	theParsedSource);
 
 	/**
 	 * Create a document builder.  Using the document builder, you
-	 * can construct a document using SAX2 interfaces.  The XalanTransformer
+	 * can construct a document using SAX2 interfaces.	The XalanTransformer
 	 * instance owns the document builder and will delete it when the
 	 * XalanTransformer instance goes out of scope, or you explicitly call
 	 * deleteDocumentBuilder().  You must not delete the instance yourself.
@@ -366,7 +365,7 @@ public:
 	installExternalFunction(
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	functionName,
-			const Function&			function);
+			const Function& 		function);
 
 	/**
 	 * Install an external function in the global space.
@@ -379,7 +378,7 @@ public:
 	installExternalFunctionGlobal(
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	functionName,
-			const Function&			function);
+			const Function& 		function);
 
 	/**
 	 * Uninstall an external local function.
@@ -417,7 +416,7 @@ public:
 
 	/**
 	 * Returns the last error that occurred as a 
-	 * result of calling transform.	
+	 * result of calling transform. 
 	 *
 	 * @return	error message const character pointer.
 	 */
@@ -428,17 +427,17 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanCompiledStylesheet*>			CompiledStylesheetPtrVectorType;
 	typedef vector<XalanParsedSource*>					ParsedSourcePtrVectorType;
-	typedef pair<XalanDOMString, XalanDOMString>    	ParamPairType;
-	typedef vector<ParamPairType>		                ParamPairVectorType;
-	typedef pair<QNameByValue, Function*>    			FunctionPairType;
-	typedef vector<FunctionPairType>		            FunctionParamPairVectorType;
+	typedef pair<XalanDOMString, XalanDOMString>		ParamPairType;
+	typedef vector<ParamPairType>						ParamPairVectorType;
+	typedef pair<QNameByValue, Function*>				FunctionPairType;
+	typedef vector<FunctionPairType>					FunctionParamPairVectorType;
 #else
-	typedef std::vector<const XalanCompiledStylesheet*>	CompiledStylesheetPtrVectorType;
+	typedef std::vector<const XalanCompiledStylesheet*> CompiledStylesheetPtrVectorType;
 	typedef std::vector<const XalanParsedSource*>		ParsedSourcePtrVectorType;
 	typedef std::pair<XalanDOMString, XalanDOMString>	ParamPairType;
-	typedef std::vector<ParamPairType>	                ParamPairVectorType;
-	typedef std::pair<QNameByValue, Function*>    		FunctionPairType;
-	typedef std::vector<FunctionPairType>		        FunctionParamPairVectorType;
+	typedef std::vector<ParamPairType>					ParamPairVectorType;
+	typedef std::pair<QNameByValue, Function*>			FunctionPairType;
+	typedef std::vector<FunctionPairType>				FunctionParamPairVectorType;
 #endif
 
 	class EnsureDestroyParsedSource
@@ -506,7 +505,7 @@ public:
 
 		XalanTransformer&			m_transformer;
 
-		XalanDocumentBuilder* const	m_documentBuilder;
+		XalanDocumentBuilder* const m_documentBuilder;
 	};
 
 protected:
@@ -536,13 +535,13 @@ private:
 
 	StylesheetExecutionContextDefault		m_stylesheetExecutionContext;
 
-	CompiledStylesheetPtrVectorType			m_compiledStylesheets;
+	CompiledStylesheetPtrVectorType 		m_compiledStylesheets;
 
 	ParsedSourcePtrVectorType				m_parsedSources;
 
-    ParamPairVectorType                     m_paramPairs;
+	ParamPairVectorType 					m_paramPairs;
 
-	FunctionParamPairVectorType				m_functionPairs;
+	FunctionParamPairVectorType 			m_functionPairs;
 
 	CharVectorType							m_errorMessage;
 

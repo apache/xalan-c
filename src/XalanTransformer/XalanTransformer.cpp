@@ -10,33 +10,33 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *	  notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ *	  notice, this list of conditions and the following disclaimer in
+ *	  the documentation and/or other materials provided with the
+ *	  distribution.
  *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
+ *	  if any, must include the following acknowledgment:  
+ *		 "This product includes software developed by the
+ *		  Apache Software Foundation (http://www.apache.org/)."
+ *	  Alternately, this acknowledgment may appear in the software itself,
+ *	  if and wherever such third-party acknowledgments normally appear.
  *
  * 4. The names "Xalan" and "Apache Software Foundation" must
- *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
- *    permission, please contact apache@apache.org.
+ *	  not be used to endorse or promote products derived from this
+ *	  software without prior written permission. For written 
+ *	  permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache",
- *    nor may "Apache" appear in their name, without prior written
- *    permission of the Apache Software Foundation.
+ *	  nor may "Apache" appear in their name, without prior written
+ *	  permission of the Apache Software Foundation.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * DISCLAIMED.	IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
@@ -113,7 +113,7 @@ XalanTransformer::XalanTransformer():
 	m_stylesheetExecutionContext(),
 	m_compiledStylesheets(),
 	m_parsedSources(),
-    m_paramPairs(),
+	m_paramPairs(),
 	m_functionPairs(),
 	m_errorMessage(1, '\0')
 {
@@ -171,13 +171,13 @@ int
 XalanTransformer::transform(
 	const XalanParsedSource&	theParsedXML, 
 	const XSLTInputSource&		theStylesheetSource,
-	const XSLTResultTarget&		theResultTarget)
+	const XSLTResultTarget& 	theResultTarget)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::for_each;
 #endif
 
-	int		theResult = 0;
+	int 	theResult = 0;
 
 	// Clear the error message.
 	m_errorMessage.resize(1, '\0');
@@ -191,7 +191,7 @@ XalanTransformer::transform(
 		XalanAutoPtr<XalanParsedSourceHelper>	theHelper(theParsedXML.createHelper());
 		assert(theHelper.get() != 0);
 
-		DOMSupport&						theDOMSupport = theHelper->getDOMSupport();
+		DOMSupport& 					theDOMSupport = theHelper->getDOMSupport();
 
 		XMLParserLiaison&				theParserLiaison = theHelper->getParserLiaison();
 
@@ -200,7 +200,7 @@ XalanTransformer::transform(
 
 		XObjectFactoryDefault			theXObjectFactory;
 
-		XPathFactoryDefault				theXPathFactory;
+		XPathFactoryDefault 			theXPathFactory;
 
 		// Create a processor...
 		XSLTEngineImpl	theProcessor(
@@ -278,7 +278,7 @@ XalanTransformer::transform(
 			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
 		}
 
-		theResult = -1;		
+		theResult = -1; 	
 	}
 	catch (SAXException& e)
 	{
@@ -316,8 +316,8 @@ XalanTransformer::transform(
 		{
 			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
 			
-			append(theMessage,  LongToDOMString(long(e.getExceptionCode())));
-			append(theMessage,  XalanDOMString("."));						 
+			append(theMessage,	LongToDOMString(long(e.getExceptionCode())));
+			append(theMessage,	XalanDOMString("."));						 
 
 			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 		}
@@ -334,13 +334,13 @@ int
 XalanTransformer::transform(
 			const XalanParsedSource&		theParsedXML, 
 			const XalanCompiledStylesheet*	theCompiledStylesheet,
-			const XSLTResultTarget&			theResultTarget)
+			const XSLTResultTarget& 		theResultTarget)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::for_each;
 #endif
 
-	int		theResult = 0;
+	int 	theResult = 0;
 
 	// Clear the error message.
 	m_errorMessage.resize(1, '\0');
@@ -354,7 +354,7 @@ XalanTransformer::transform(
 		XalanAutoPtr<XalanParsedSourceHelper>	theHelper(theParsedXML.createHelper());
 		assert(theHelper.get() != 0);
 
-		DOMSupport&						theDOMSupport = theHelper->getDOMSupport();
+		DOMSupport& 					theDOMSupport = theHelper->getDOMSupport();
 
 		XMLParserLiaison&				theParserLiaison = theHelper->getParserLiaison();
 
@@ -363,7 +363,7 @@ XalanTransformer::transform(
 
 		XObjectFactoryDefault			theXObjectFactory;
 
-		XPathFactoryDefault				theXPathFactory;
+		XPathFactoryDefault 			theXPathFactory;
 
 		// Create a processor...
 		XSLTEngineImpl	theProcessor(
@@ -420,7 +420,7 @@ XalanTransformer::transform(
 
 		// Do the transformation...
 		theProcessor.process(
-					theParsedXML.getDocument(),		
+					theParsedXML.getDocument(), 	
 					tempResultTarget,					
 					m_stylesheetExecutionContext);
 	}
@@ -435,7 +435,7 @@ XalanTransformer::transform(
 			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
 		}
 
-		theResult = -1;		
+		theResult = -1; 	
 	}
 	catch (SAXException& e)
 	{
@@ -473,8 +473,8 @@ XalanTransformer::transform(
 		{
 			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
 			
-			append(theMessage,  LongToDOMString(long(e.getExceptionCode())));
-			append(theMessage,  XalanDOMString("."));						 
+			append(theMessage,	LongToDOMString(long(e.getExceptionCode())));
+			append(theMessage,	XalanDOMString("."));						 
 
 			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 		}
@@ -489,9 +489,39 @@ XalanTransformer::transform(
 
 int
 XalanTransformer::transform(
+			const XSLTInputSource&			theInputSource, 
+			const XalanCompiledStylesheet*	theCompiledStylesheet,
+			const XSLTResultTarget& 		theResultTarget)
+{
+	const XalanParsedSource*	theParsedSource = 0;
+ 
+	const int	theResult = parseSource(theInputSource, theParsedSource);
+ 
+	if (theResult != 0)
+	{
+		return theResult;
+	}
+	else
+	{
+		assert(theParsedSource != 0);
+ 
+		// Make sure the parsed source is destroyed when
+		// the transformation is finished...
+		EnsureDestroyParsedSource	theGuard(*this, theParsedSource);
+
+		// Do the transformation...
+		return transform(
+						*theParsedSource,
+						theCompiledStylesheet,
+						theResultTarget);
+	}
+}
+
+int
+XalanTransformer::transform(
 	const XSLTInputSource&		theInputSource, 
 	const XSLTInputSource&		theStylesheetSource,
-	const XSLTResultTarget&		theResultTarget)
+	const XSLTResultTarget& 	theResultTarget)
 {
 	// Parse the source document.
 	const XalanParsedSource*	theParsedSource = 0;
@@ -522,40 +552,8 @@ XalanTransformer::transform(
 
 int
 XalanTransformer::transform(
-			const XSLTInputSource&			theInputSource, 
-			const XalanCompiledStylesheet*	theCompiledStylesheet,
-			const XSLTResultTarget&			theResultTarget)
-{
-	const XalanParsedSource*	theParsedSource = 0;
-
-	const int	theResult = parseSource(theInputSource, theParsedSource);
-
-	if (theResult != 0)
-	{
-		return theResult;
-	}
-	else
-	{
-		assert(theParsedSource != 0);
-
-		// Make sure the parsed source is destroyed when
-		// the transformation is finished...
-		EnsureDestroyParsedSource	theGuard(*this, theParsedSource);
-
-		// Do the transformation...
-		return transform(
-						*theParsedSource,
-						theCompiledStylesheet,
-						theResultTarget);
-	}
-}
-
-
-
-int
-XalanTransformer::transform(
 			const XSLTInputSource&		theInputSource, 		
-			const XSLTResultTarget&		theResultTarget)
+			const XSLTResultTarget& 	theResultTarget)
 {
 	// Do the transformation...
 	return transform(
@@ -592,7 +590,7 @@ XalanTransformer::transform(
 
 int
 XalanTransformer::transform(
-			const XSLTInputSource&			theInputSource, 
+			const XalanParsedSource&		theParsedSource, 
 			const XalanCompiledStylesheet*	theCompiledStylesheet,
 			void*							theOutputHandle, 
 			XalanOutputHandlerType			theOutputHandler,
@@ -607,7 +605,7 @@ XalanTransformer::transform(
 
 	// Do the transformation...
 	return transform(
-					theInputSource, 
+					theParsedSource,
 					theCompiledStylesheet,
 					theResultTarget);
 }
@@ -640,7 +638,7 @@ XalanTransformer::transform(
 int
 XalanTransformer::compileStylesheet(
 			const XSLTInputSource&				theStylesheetSource,
-			const XalanCompiledStylesheet*&		theCompiledStylesheet)
+			const XalanCompiledStylesheet*& 	theCompiledStylesheet)
 {
 	// Clear the error message.
 	m_errorMessage.resize(1, '\0');
@@ -648,7 +646,7 @@ XalanTransformer::compileStylesheet(
 	// Store error messages from problem listener.
 	XalanDOMString	theErrorMessage;
 
-	int				theResult = 0;
+	int 			theResult = 0;
 
 	try
 	{
@@ -665,7 +663,7 @@ XalanTransformer::compileStylesheet(
 
 		XObjectFactoryDefault			theXObjectFactory;
 
-		XPathFactoryDefault				theXPathFactory;
+		XPathFactoryDefault 			theXPathFactory;
 
 		// Create a processor...
 		XSLTEngineImpl	theProcessor(
@@ -741,9 +739,9 @@ XalanTransformer::compileStylesheet(
 		{
 			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
 
-			append(theMessage,  LongToDOMString(long(e.getExceptionCode())));
+			append(theMessage,	LongToDOMString(long(e.getExceptionCode())));
 
-			append(theMessage,  XalanDOMString("."));
+			append(theMessage,	XalanDOMString("."));
 
 			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 		}
@@ -756,24 +754,40 @@ XalanTransformer::compileStylesheet(
 
 
 
-void
+int
 XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::find;
 #endif
 
-	const CompiledStylesheetPtrVectorType::iterator		i =
+	const CompiledStylesheetPtrVectorType::iterator 	i =
 		find(
 			m_compiledStylesheets.begin(),
 			m_compiledStylesheets.end(),
 			theStylesheet);
 
-	if (i != m_compiledStylesheets.end())
+	if (i == m_compiledStylesheets.end())
+	{
+		const char* const	theStylesheetErrorMessage =
+				"An invalid compiled stylesheet was provided.";
+
+		const unsigned int	theLength =
+			length(theStylesheetErrorMessage);
+
+		m_errorMessage.resize(theLength + 1, CharVectorType::value_type(0));
+
+		strncpy(&*m_errorMessage.begin(), theStylesheetErrorMessage, theLength);
+
+		return -1;
+	}
+	else
 	{
 		m_compiledStylesheets.erase(i);
 
 		delete theStylesheet;
+
+		return 0;
 	}
 }
 
@@ -789,7 +803,7 @@ XalanTransformer::parseSource(
 	m_errorMessage.clear();
 	m_errorMessage.push_back(0);
 
-	int	theResult = 0;
+	int theResult = 0;
 
 	try
 	{
@@ -827,9 +841,9 @@ XalanTransformer::parseSource(
 	{
 		XalanDOMString theMessage("XalanDOMException caught.  The code is ");
 			
-		append(theMessage,  LongToDOMString(long(e.getExceptionCode())));
+		append(theMessage,	LongToDOMString(long(e.getExceptionCode())));
 
-		append(theMessage,  XalanDOMString("."));						 
+		append(theMessage,	XalanDOMString("."));						 
 
 		TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 
@@ -841,7 +855,7 @@ XalanTransformer::parseSource(
 
 
 
-void
+int
 XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 {
 #if !defined(XALAN_NO_NAMESPACES)
@@ -854,11 +868,27 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 			m_parsedSources.end(),
 			theParsedSource);
 
-	if (i != m_parsedSources.end())
+	if (i == m_parsedSources.end())
+	{
+		const char* const	theParsedSourceErrorMessage =
+				"An invalid parsed source was provided.";
+
+		const unsigned int	theLength =
+			length(theParsedSourceErrorMessage);
+
+		m_errorMessage.resize(theLength + 1, CharVectorType::value_type(0));
+
+		strncpy(&*m_errorMessage.begin(), theParsedSourceErrorMessage, theLength);
+
+		return -1;
+	}
+	else
 	{
 		m_parsedSources.erase(i);
 
 		delete theParsedSource;
+
+		return 0;
 	}
 }
 
@@ -880,7 +910,7 @@ XalanTransformer::createDocumentBuilder()
 {
 	m_parsedSources.reserve(m_parsedSources.size() + 1);
 
-	XalanDocumentBuilder* const		theNewBuilder = new XalanDefaultDocumentBuilder;
+	XalanDocumentBuilder* const 	theNewBuilder = new XalanDefaultDocumentBuilder;
 
 	m_parsedSources.push_back(theNewBuilder);
 
@@ -901,7 +931,7 @@ void
 XalanTransformer::installExternalFunction(
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	functionName,
-			const Function&			function)
+			const Function& 		function)
 {
 	m_functionPairs.push_back(FunctionPairType(QNameByValue(theNamespace, functionName), function.clone()));
 }
@@ -912,7 +942,7 @@ void
 XalanTransformer::installExternalFunctionGlobal(
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	functionName,
-			const Function&			function)
+			const Function& 		function)
 {
 	XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
 			theNamespace,
@@ -933,7 +963,7 @@ XalanTransformer::uninstallExternalFunction(
 		{
 			delete m_functionPairs[i].second;
 
-			m_functionPairs.erase(m_functionPairs.begin() + i);		
+			m_functionPairs.erase(m_functionPairs.begin() + i); 	
 		}
 	}	
 }
@@ -977,8 +1007,8 @@ XalanTransformer::reset()
 
 		m_stylesheetExecutionContext.reset();
 
-        // Clear the ParamPairVectorType.
-        m_paramPairs.clear();
+		// Clear the ParamPairVectorType.
+		m_paramPairs.clear();
 	}
 	catch(...)
 	{
