@@ -143,6 +143,9 @@ ElemCopyOf::doCloneNode(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode&						theNode) const
 {
+#if 1
+	executionContext.cloneToResultTree(theNode, this);
+#else
 	XalanNode*				pos = &theNode;
 	XalanNode::NodeType		posNodeType = pos->getNodeType();
 
@@ -202,6 +205,7 @@ ElemCopyOf::doCloneNode(
 			posNodeType = pos->getNodeType();
 		}
 	}
+#endif
 }
 
 
@@ -281,7 +285,7 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 			break;
 
 		case XObject::eTypeResultTreeFrag:
-			executionContext.outputResultTreeFragment(*value.get());
+			executionContext.outputResultTreeFragment(*value.get(), this);
 			break;
 
 		default:

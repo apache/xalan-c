@@ -248,7 +248,7 @@ ExtensionNSHandler::processElement(
 
 	if (result.null() == false) 
 	{
-		executionContext.outputToResultTree(*result);
+		executionContext.outputToResultTree(*result, 0);
 	}
 }
 

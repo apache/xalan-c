@@ -252,9 +252,6 @@ public:
 	getSourceTreeFromInput(const XSLTInputSource&	inputSource);
 
 	virtual void
-	outputToResultTree(const XObject&	xobj);
-
-	virtual void
 	resolveTopLevelParams(StylesheetExecutionContext&	executionContext);
 
 	virtual XMLParserLiaison&
@@ -585,32 +582,64 @@ public:
 			XalanDOMString::size_type	length);
 
 	/**
-	 * Clone an element with or without children.
+	 * Clone a node to the result tree
+	 *
+	 * @param node      node to clone
+	 * @param cloneTextNodesOnly    if true, only text nodes will be cloned
+	 * @param styleNode	the stylesheet element that generated the clone.
+	 */
+	void
+	cloneToResultTree(
+			const XalanNode&			node,
+			bool						cloneTextNodesOnly,
+			const ElemTemplateElement*	styleNode);
+
+	/**
+	 * Clone a node to the result tree
 	 *
 	 * @param node					node to clone
 	 * @param nodeType				the type of the node
 	 * @param isLiteral 			true if a literal element
 	 * @param overrideStrip 		false if white space stripping should be done
 	 * @param shouldCloneAttributes true if attributes should be cloned
+	 * @param cloneTextNodesOnly    if true, only text nodes will be cloned
 	 * @param styleNode				the stylesheet element that generated the clone.
 	 */
 	void
 	cloneToResultTree(
-			XalanNode& 					node,
+			const XalanNode& 			node,
 			XalanNode::NodeType			nodeType,
 			bool						isLiteral,
 			bool						overrideStrip,
 			bool						shouldCloneAttributes,
-			const ElemTemplateElement*	styleNode = 0);
+			bool						cloneTextNodesOnly,
+			const ElemTemplateElement*	styleNode);
+
+   /**
+	* Output an object to the result tree by doing the right conversions.
+	*
+	* @param value the XObject to output
+	* @param outputTextNodesOnly if true, only text nodes will be copied
+	*/
+	void
+	outputToResultTree(
+			const XObject& 				value,
+			bool						outputTextNodesOnly,
+			const ElemTemplateElement*	styleNode);
 
 	/**
 	 * Given a result tree fragment, walk the tree and output it to the result
 	 * stream.
 	 *
 	 * @param theTree result tree fragment
+	 * @param outputTextNodesOnly if true, only text nodes will be copied
+	 * @param styleNode	the stylesheet element that generate the fragment.
 	 */
 	void
-	outputResultTreeFragment(const XObject& 	theTree);
+	outputResultTreeFragment(
+			const XObject& 				theTree,
+			bool						outputTextNodesOnly,
+			const ElemTemplateElement*	styleNode);
 
 	/**
 	 * Retrieve the root stylesheet.
@@ -1438,6 +1467,19 @@ protected:
 	BoolVectorType	m_cdataStack;
 
 private:
+
+	/**
+	 * Clone a text node to the result tree
+	 *
+	 * @param node					node to clone
+	 * @param isLiteral 			true if a literal element
+	 * @param overrideStrip 		false if white space stripping should be done
+	 */
+	void
+	cloneToResultTree(
+			const XalanText&	node,
+			bool				isLiteral,
+			bool				overrideStrip);
 
 	/**
 	 * Determine if any pending attributes is a default

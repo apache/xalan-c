@@ -970,103 +970,6 @@ XSLTEngineImpl::getXSLToken(const XalanNode&	node) const
 
 
 
-void
-XSLTEngineImpl::outputToResultTree(const XObject&	value)
-{
-	const XObject::eObjectType	type = value.getType();
-
-	switch(type)
-	{
-	case XObject::eTypeBoolean:
-	case XObject::eTypeNumber:
-	case XObject::eTypeString:
-		{
-			const XalanDOMString&	s = value.str();
-
-			characters(toCharArray(s), 0, length(s));
-		}
-		break;				
-
-	case XObject::eTypeNodeSet:
-		{
-			const NodeRefListBase&	nl = value.nodeset();
-
-			const NodeRefListBase::size_type	nChildren = nl.getLength();
-
-			for(NodeRefListBase::size_type i = 0; i < nChildren; i++)
-			{
-				XalanNode*			pos = nl.item(i);
-				assert(pos != 0);
-
-				XalanNode* const	top = pos;
-
-				while(0 != pos)
-				{
-					flushPending();
-
-					XalanNode::NodeType		posNodeType = pos->getNodeType();
-
-					cloneToResultTree(*pos, posNodeType, false, false, true);
-
-					XalanNode*	nextNode = pos->getFirstChild();
-
-					while(0 == nextNode)
-					{
-						if(XalanNode::ELEMENT_NODE == posNodeType)
-						{
-							endElement(c_wstr(pos->getNodeName()));
-						}
-
-						if(top == pos)
-							break;
-
-						nextNode = pos->getNextSibling();
-
-						if(0 == nextNode)
-						{
-							pos = pos->getParentNode();
-							assert(pos != 0);
-
-							posNodeType = pos->getNodeType();
-
-							if(top == pos)
-							{
-								if(XalanNode::ELEMENT_NODE == posNodeType)
-								{
-									endElement(c_wstr(pos->getNodeName()));
-								}
-
-								nextNode = 0;
-								break;
-							}
-						}
-					}
-
-					pos = nextNode;
-
-					if (pos != 0)
-					{
-						posNodeType = pos->getNodeType();
-					}
-				}
-			}
-		}
-		break;
-		
-	case XObject::eTypeResultTreeFrag:
-		outputResultTreeFragment(value);
-		break;
-
-	case XObject::eTypeNull:
-	case XObject::eTypeUnknown:
-	case XObject::eUnknown:
-	default:
-		assert(0);
-	}
-}
-
-
-
 const StylesheetRoot*
 XSLTEngineImpl::getStylesheetRoot() const
 {
@@ -2287,102 +2190,166 @@ XSLTEngineImpl::checkDefaultNamespace(
 
 void
 XSLTEngineImpl::cloneToResultTree(
-			XalanNode&					node,
+			const XalanText&	node,
+			bool				isLiteral,
+			bool				overrideStrip)
+{
+	bool	stripWhiteSpace = false;
+
+	// If stripWhiteSpace is false, then take this as an override and 
+	// just preserve the space, otherwise use the XSL whitespace rules.
+	if(!overrideStrip)
+	{
+		stripWhiteSpace = isLiteral ? true : false;
+		// stripWhiteSpace = isLiteral ? true : shouldStripSourceNode(*m_executionContext, node);
+	}
+
+	const bool	isIgnorableWhitespace = node.isIgnorableWhitespace();
+
+	if(stripWhiteSpace == false || isIgnorableWhitespace == false)
+	{
+		assert(node.getParentNode() == 0 ||
+			   node.getParentNode()->getNodeType() != XalanNode::DOCUMENT_NODE);
+
+		const XalanDOMString&	data = node.getData();
+
+		if(0 != length(data))
+		{
+			if(isIgnorableWhitespace == true)
+			{
+				ignorableWhitespace(toCharArray(data), length(data));
+			}
+			else
+			{
+				characters(toCharArray(data), 0, length(data));
+			}
+		}
+	}			
+}
+
+
+
+void
+XSLTEngineImpl::cloneToResultTree(
+			const XalanNode&			node,
+			bool						cloneTextNodesOnly,
+			const ElemTemplateElement*	styleNode)
+{
+	XalanNode::NodeType		posNodeType = node.getNodeType();
+
+	if (cloneTextNodesOnly == true &&
+		posNodeType != XalanNode::TEXT_NODE)
+	{
+		const Locator*		theLocator = 0;
+		const char* const	theErrorMessage =
+					"Only text nodes can be copied in this context.  The node is ignored";
+
+		if (styleNode != 0)
+		{
+			theLocator = styleNode->getLocator();
+		}
+
+		if (theLocator != 0)
+		{
+			warn(
+				XalanDOMString(theErrorMessage),
+				*theLocator,
+				&node);
+		}
+		else
+		{
+			warn(
+				XalanDOMString(theErrorMessage),
+				&node,
+				styleNode);
+		}
+	}
+	else
+	{
+		const XalanNode*	pos = &node;
+
+		while(pos != 0)
+		{
+			if(posNodeType != XalanNode::ATTRIBUTE_NODE)
+			{
+				flushPending();
+			}
+
+			cloneToResultTree(
+							*pos,
+							posNodeType,
+							false,
+							false,
+							true,
+							false,
+							styleNode);
+
+			const XalanNode*	nextNode = pos->getFirstChild();
+
+			while(nextNode == 0)
+			{
+				if(XalanNode::ELEMENT_NODE == posNodeType)
+				{
+					endElement(c_wstr(pos->getNodeName()));
+				}
+
+				if(&node == pos)
+					break;
+
+				nextNode = pos->getNextSibling();
+
+				if(nextNode == 0)
+				{
+					pos = pos->getParentNode();
+					assert(pos != 0);
+
+					posNodeType = pos->getNodeType();
+
+					if(&node == pos)
+					{
+						if(XalanNode::ELEMENT_NODE == posNodeType)
+						{
+							endElement(c_wstr(pos->getNodeName()));
+						}
+
+						nextNode = 0;
+						break;
+					}
+				}
+			}
+
+			pos = nextNode;
+
+			if (pos != 0)
+			{
+				posNodeType = pos->getNodeType();
+			}
+		}
+	}
+}
+
+
+
+void
+XSLTEngineImpl::cloneToResultTree(
+			const XalanNode&			node,
 			XalanNode::NodeType			nodeType,
 			bool						isLiteral,
 			bool						overrideStrip,
 			bool						shouldCloneAttributes,
+			bool						cloneTextNodesOnly,
 			const ElemTemplateElement*	styleNode)
 {
 	assert(nodeType == node.getNodeType());
 	assert(m_executionContext != 0);
 
-	switch(nodeType)
+	if(cloneTextNodesOnly == true)
 	{
-	case XalanNode::TEXT_NODE:
-		{
-			bool	stripWhiteSpace = false;
-
-			// If stripWhiteSpace is false, then take this as an override and 
-			// just preserve the space, otherwise use the XSL whitespace rules.
-			if(!overrideStrip)
-			{
-				stripWhiteSpace = isLiteral ? true : false;
-				// stripWhiteSpace = isLiteral ? true : shouldStripSourceNode(*m_executionContext, node);
-			}
-
-			const XalanText& 	tx =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanText&)node;
-#else
-				static_cast<const XalanText&>(node);
-#endif
-
-			const bool	isIgnorableWhitespace = tx.isIgnorableWhitespace();
-
-			if(stripWhiteSpace == false || isIgnorableWhitespace == false)
-			{
-				assert(tx.getParentNode() == 0 ||
-					   tx.getParentNode()->getNodeType() != XalanNode::DOCUMENT_NODE);
-
-				const XalanDOMString&	data = tx.getData();
-
-				if(0 != length(data))
-				{
-					if(isIgnorableWhitespace == true)
-					{
-						ignorableWhitespace(toCharArray(data), length(data));
-					}
-					else
-					{
-						characters(toCharArray(data), 0, length(data));
-					}
-				}
-			}			
-		}
-		break;
-
-	case XalanNode::ELEMENT_NODE:
-		{
-			const XalanDOMString&	theElementName =
-				node.getNodeName();
-
-			startElement(c_wstr(theElementName));
-
-			if(shouldCloneAttributes == true)
-			{
-				copyAttributesToAttList(
-					node,
-					getPendingAttributesImpl());
-
-				copyNamespaceAttributes(node);
-			}
-
-			checkDefaultNamespace(theElementName, node.getNamespaceURI());
-		}
-		break;
-
-	case XalanNode::CDATA_SECTION_NODE:
-		{
-			const XalanDOMString& 	data = node.getNodeValue();
-
-			cdata(toCharArray(data), 0, length(data));
-		}
-		break;
-
-	case XalanNode::ATTRIBUTE_NODE:
-		if (length(getPendingElementName()) != 0)
-		{
-			addResultAttribute(
-					getPendingAttributesImpl(),
-					node.getNodeName(),
-					node.getNodeValue());
-		}
-		else
+		if (nodeType != XalanNode::TEXT_NODE)
 		{
 			const Locator*		theLocator = 0;
 			const char* const	theErrorMessage =
-				"Attempting to add an attribute when there is no open element.  The attribute will be ignored";
+					"Only text nodes can be copied in this context.  The node is ignored";
 
 			if (styleNode != 0)
 			{
@@ -2404,43 +2371,269 @@ XSLTEngineImpl::cloneToResultTree(
 					styleNode);
 			}
 		}
+		else
+		{
+			const XalanText& 	tx =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanText&)node;
+#else
+				static_cast<const XalanText&>(node);
+#endif
+
+			cloneToResultTree(tx, isLiteral, overrideStrip);
+		}
+	}
+	else
+	{
+		switch(nodeType)
+		{
+		case XalanNode::TEXT_NODE:
+			{
+				const XalanText& 	tx =
+	#if defined(XALAN_OLD_STYLE_CASTS)
+					(const XalanText&)node;
+	#else
+					static_cast<const XalanText&>(node);
+	#endif
+
+				cloneToResultTree(tx, isLiteral, overrideStrip);
+			}
+			break;
+
+		case XalanNode::ELEMENT_NODE:
+			{
+				const XalanDOMString&	theElementName =
+					node.getNodeName();
+
+				startElement(c_wstr(theElementName));
+
+				if(shouldCloneAttributes == true)
+				{
+					copyAttributesToAttList(
+						node,
+						getPendingAttributesImpl());
+
+					copyNamespaceAttributes(node);
+				}
+
+				checkDefaultNamespace(theElementName, node.getNamespaceURI());
+			}
+			break;
+
+		case XalanNode::CDATA_SECTION_NODE:
+			{
+				const XalanDOMString& 	data = node.getNodeValue();
+
+				cdata(toCharArray(data), 0, length(data));
+			}
+			break;
+
+		case XalanNode::ATTRIBUTE_NODE:
+			if (length(getPendingElementName()) != 0)
+			{
+				addResultAttribute(
+						getPendingAttributesImpl(),
+						node.getNodeName(),
+						node.getNodeValue());
+			}
+			else
+			{
+				const Locator*		theLocator = 0;
+				const char* const	theErrorMessage =
+					"Attempting to add an attribute when there is no open element.  The attribute will be ignored";
+
+				if (styleNode != 0)
+				{
+					theLocator = styleNode->getLocator();
+				}
+
+				if (theLocator != 0)
+				{
+					warn(
+						XalanDOMString(theErrorMessage),
+						*theLocator,
+						&node);
+				}
+				else
+				{
+					warn(
+						XalanDOMString(theErrorMessage),
+						&node,
+						styleNode);
+				}
+			}
+			break;
+
+		case XalanNode::COMMENT_NODE:
+			comment(c_wstr(node.getNodeValue()));
+			break;
+
+		case XalanNode::DOCUMENT_FRAGMENT_NODE:
+			error("No clone of a document fragment!");
+			break;
+		
+		case XalanNode::ENTITY_REFERENCE_NODE:
+			entityReference(c_wstr(node.getNodeName()));
+			break;
+
+		case XalanNode::PROCESSING_INSTRUCTION_NODE:
+			processingInstruction(
+					c_wstr(node.getNodeName()),
+					c_wstr(node.getNodeValue()));
+			break;
+
+		// Can't really do this, but we won't throw an error so that copy-of will
+		// work
+		case XalanNode::DOCUMENT_NODE:
+		case XalanNode::DOCUMENT_TYPE_NODE:
 		break;
 
-	case XalanNode::COMMENT_NODE:
-		comment(c_wstr(node.getNodeValue()));
+		default:
+			error("Cannot create item in result tree: " + node.getNodeName());
 		break;
-
-	case XalanNode::DOCUMENT_FRAGMENT_NODE:
-		error("No clone of a document fragment!");
-		break;
-	
-	case XalanNode::ENTITY_REFERENCE_NODE:
-		entityReference(c_wstr(node.getNodeName()));
-		break;
-
-	case XalanNode::PROCESSING_INSTRUCTION_NODE:
-		processingInstruction(
-				c_wstr(node.getNodeName()),
-				c_wstr(node.getNodeValue()));
-		break;
-
-	// Can't really do this, but we won't throw an error so that copy-of will
-	// work
-	case XalanNode::DOCUMENT_NODE:
-	case XalanNode::DOCUMENT_TYPE_NODE:
-	break;
-
-	default:
-		error("Cannot create item in result tree: " + node.getNodeName());
-	break;
-
+		}
 	}
 }
 
 
 
 void
-XSLTEngineImpl::outputResultTreeFragment(const XObject&		theTree)
+XSLTEngineImpl::outputToResultTree(
+			const XObject& 				value,
+			bool						outputTextNodesOnly,
+			const ElemTemplateElement*	styleNode)
+{
+	const XObject::eObjectType	type = value.getType();
+
+	switch(type)
+	{
+	case XObject::eTypeBoolean:
+	case XObject::eTypeNumber:
+	case XObject::eTypeString:
+		{
+			const XalanDOMString&	s = value.str();
+
+			characters(toCharArray(s), 0, length(s));
+		}
+		break;
+
+	case XObject::eTypeNodeSet:
+		{
+			const NodeRefListBase&	nl = value.nodeset();
+
+			const NodeRefListBase::size_type	nChildren = nl.getLength();
+
+			for(NodeRefListBase::size_type i = 0; i < nChildren; i++)
+			{
+				XalanNode*			pos = nl.item(i);
+				assert(pos != 0);
+
+				XalanNode::NodeType		posNodeType = pos->getNodeType();
+
+				if (outputTextNodesOnly == true &&
+					posNodeType != XalanNode::TEXT_NODE)
+				{
+					const Locator*		theLocator = 0;
+					const char* const	theErrorMessage =
+							"Only text nodes can be copied in this context.  The node is ignored";
+
+					if (styleNode != 0)
+					{
+						theLocator = styleNode->getLocator();
+					}
+
+					if (theLocator != 0)
+					{
+						warn(
+							XalanDOMString(theErrorMessage),
+							*theLocator,
+							pos);
+					}
+					else
+					{
+						warn(
+							XalanDOMString(theErrorMessage),
+							pos,
+							styleNode);
+					}
+				}
+				else
+				{
+					XalanNode* const	top = pos;
+
+					while(0 != pos)
+					{
+						flushPending();
+
+						XalanNode::NodeType		posNodeType = pos->getNodeType();
+
+						cloneToResultTree(*pos, posNodeType, false, false, false, false, styleNode);
+
+						XalanNode*	nextNode = pos->getFirstChild();
+
+						while(0 == nextNode)
+						{
+							if(XalanNode::ELEMENT_NODE == posNodeType)
+							{
+								endElement(c_wstr(pos->getNodeName()));
+							}
+
+							if(top == pos)
+								break;
+
+							nextNode = pos->getNextSibling();
+
+							if(0 == nextNode)
+							{
+								pos = pos->getParentNode();
+								assert(pos != 0);
+
+								posNodeType = pos->getNodeType();
+
+								if(top == pos)
+								{
+									if(XalanNode::ELEMENT_NODE == posNodeType)
+									{
+										endElement(c_wstr(pos->getNodeName()));
+									}
+
+									nextNode = 0;
+									break;
+								}
+							}
+						}
+
+						pos = nextNode;
+
+						if (pos != 0)
+						{
+							posNodeType = pos->getNodeType();
+						}
+					}
+				}
+			}
+		}
+		break;
+		
+	case XObject::eTypeResultTreeFrag:
+		outputResultTreeFragment(value, outputTextNodesOnly, styleNode);
+		break;
+
+	case XObject::eTypeNull:
+	case XObject::eTypeUnknown:
+	case XObject::eUnknown:
+	default:
+		assert(0);
+	}
+}
+
+
+
+void
+XSLTEngineImpl::outputResultTreeFragment(
+			const XObject& 				theTree,
+			bool						outputTextNodesOnly,
+			const ElemTemplateElement*	styleNode)
 {
 	const ResultTreeFragBase&	docFrag = theTree.rtree();
 
@@ -2456,64 +2649,94 @@ XSLTEngineImpl::outputResultTreeFragment(const XObject&		theTree)
 
 		XalanNode::NodeType		posNodeType = pos->getNodeType();
 
-		XalanNode* const		top = pos;
-
-		while(0 != pos)
+		if (outputTextNodesOnly == true &&
+			posNodeType != XalanNode::TEXT_NODE)
 		{
-			flushPending();
+			const Locator*		theLocator = 0;
+			const char* const	theErrorMessage =
+					"Only text nodes can be copied in this context.  The node is ignored";
 
-			cloneToResultTree(*pos, posNodeType, false, false, true);
-
-			XalanNode*	nextNode = pos->getFirstChild();
-
-			while(0 == nextNode)
+			if (styleNode != 0)
 			{
-				if(XalanNode::ELEMENT_NODE == posNodeType)
+				theLocator = styleNode->getLocator();
+			}
+
+			if (theLocator != 0)
+			{
+				warn(
+					XalanDOMString(theErrorMessage),
+					*theLocator,
+					pos);
+			}
+			else
+			{
+				warn(
+					XalanDOMString(theErrorMessage),
+					pos,
+					styleNode);
+			}
+		}
+		else
+		{
+			XalanNode* const		top = pos;
+
+			while(0 != pos)
+			{
+				flushPending();
+
+				cloneToResultTree(*pos, posNodeType, false, false, true, false, styleNode);
+
+				XalanNode*	nextNode = pos->getFirstChild();
+
+				while(0 == nextNode)
 				{
-					endElement(c_wstr(pos->getNodeName()));
-				}
-
-				if(top == pos)
-					break;
-
-				nextNode = pos->getNextSibling();
-
-				if(0 == nextNode)
-				{
-					pos = pos->getParentNode();
-
-					if(0 == pos)
+					if(XalanNode::ELEMENT_NODE == posNodeType)
 					{
-						nextNode = 0;
-
-						break;
+						endElement(c_wstr(pos->getNodeName()));
 					}
-					else
+
+					if(top == pos)
+						break;
+
+					nextNode = pos->getNextSibling();
+
+					if(0 == nextNode)
 					{
-						assert(0 != pos);
+						pos = pos->getParentNode();
 
-						posNodeType = pos->getNodeType();
-
-						if(top == pos)
+						if(0 == pos)
 						{
-							if(XalanNode::ELEMENT_NODE == posNodeType)
-							{
-								endElement(c_wstr(pos->getNodeName()));
-							}
-
 							nextNode = 0;
 
 							break;
 						}
+						else
+						{
+							assert(0 != pos);
+
+							posNodeType = pos->getNodeType();
+
+							if(top == pos)
+							{
+								if(XalanNode::ELEMENT_NODE == posNodeType)
+								{
+									endElement(c_wstr(pos->getNodeName()));
+								}
+
+								nextNode = 0;
+
+								break;
+							}
+						}
 					}
 				}
-			}
 
-			pos = nextNode;
+				pos = nextNode;
 
-			if (pos != 0)
-			{
-				posNodeType = pos->getNodeType();
+				if (pos != 0)
+				{
+					posNodeType = pos->getNodeType();
+				}
 			}
 		}
 	}

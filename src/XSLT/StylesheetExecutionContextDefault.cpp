@@ -167,7 +167,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_resultTreeFragAllocator(eResultTreeFragAllocatorBlockSize),
 	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
 	m_documentAllocator(eDocumentAllocatorBlockSize),
-	m_usePerInstanceDocumentFactory(true)
+	m_usePerInstanceDocumentFactory(true),
+	m_cloneTextNodesOnly(false)
 {
 }
 
@@ -207,7 +208,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_resultTreeFragAllocator(eResultTreeFragAllocatorBlockSize),
 	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
 	m_documentAllocator(eDocumentAllocatorBlockSize),
-	m_usePerInstanceDocumentFactory(true)
+	m_usePerInstanceDocumentFactory(true),
+	m_cloneTextNodesOnly(false)
 {
 }
 
@@ -226,6 +228,22 @@ StylesheetExecutionContextDefault::getQuietConflictWarnings() const
 	assert(m_xsltProcessor != 0);
 
 	return m_xsltProcessor->getQuietConflictWarnings();
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::getCopyTextNodesOnly() const
+{
+	return m_cloneTextNodesOnly;
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setCopyTextNodesOnly(bool	fValue)
+{
+	m_cloneTextNodesOnly = fValue;
 }
 
 
@@ -939,7 +957,110 @@ StylesheetExecutionContextDefault::flushPending()
 
 void
 StylesheetExecutionContextDefault::cloneToResultTree(
-			XalanNode&					node,
+			const XalanNode&			node,
+			const ElemTemplateElement*	styleNode)
+{
+#if 1
+	m_xsltProcessor->cloneToResultTree(node, m_cloneTextNodesOnly, styleNode);
+#else
+	XalanNode::NodeType		posNodeType = node.getNodeType();
+
+	if (this->m_cloneTextNodesOnly == true &&
+		posNodeType != XalanNode::TEXT_NODE)
+	{
+		const Locator*		theLocator = 0;
+		const char* const	theErrorMessage =
+					"Only text nodes can be copied in this context.  The node is ignored";
+
+		if (styleNode != 0)
+		{
+			theLocator = styleNode->getLocator();
+		}
+
+		if (theLocator != 0)
+		{
+			warn(
+				theErrorMessage,
+				&node,
+				theLocator);
+		}
+		else
+		{
+			warn(
+				XalanDOMString(theErrorMessage),
+				&node,
+				styleNode);
+		}
+	}
+	else
+	{
+		const XalanNode*	pos = &node;
+
+		while(pos != 0)
+		{
+			if(posNodeType != XalanNode::ATTRIBUTE_NODE)
+			{
+				flushPending();
+			}
+
+			cloneToResultTree(
+							*pos,
+							posNodeType,
+							false,
+							false,
+							true,
+							styleNode);
+
+			const XalanNode*	nextNode = pos->getFirstChild();
+
+			while(nextNode == 0)
+			{
+				if(XalanNode::ELEMENT_NODE == posNodeType)
+				{
+					endElement(c_wstr(pos->getNodeName()));
+				}
+
+				if(&node == pos)
+					break;
+
+				nextNode = pos->getNextSibling();
+
+				if(nextNode == 0)
+				{
+					pos = pos->getParentNode();
+					assert(pos != 0);
+
+					posNodeType = pos->getNodeType();
+
+					if(&node == pos)
+					{
+						if(XalanNode::ELEMENT_NODE == posNodeType)
+						{
+							endElement(c_wstr(pos->getNodeName()));
+						}
+
+						nextNode = 0;
+						break;
+					}
+				}
+			}
+
+			pos = nextNode;
+
+			if (pos != 0)
+			{
+				posNodeType = pos->getNodeType();
+			}
+		}
+	}
+#endif
+}
+
+
+
+void
+StylesheetExecutionContextDefault::cloneToResultTree(
+			const XalanNode&			node,
 			XalanNode::NodeType			nodeType,
 			bool						isLiteral,
 			bool						overrideStrip,
@@ -954,6 +1075,7 @@ StylesheetExecutionContextDefault::cloneToResultTree(
 			isLiteral,
 			overrideStrip,
 			shouldCloneAttributes,
+			m_cloneTextNodesOnly,
 			styleNode);
 }
 
@@ -1019,21 +1141,25 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 
 
 void
-StylesheetExecutionContextDefault::outputToResultTree(const XObject&	xobj)
+StylesheetExecutionContextDefault::outputToResultTree(
+			const XObject&				xobj,
+			const ElemTemplateElement*	styleNode)
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->outputToResultTree(xobj);
+	m_xsltProcessor->outputToResultTree(xobj, m_cloneTextNodesOnly, styleNode);
 }
 
 
 
 void
-StylesheetExecutionContextDefault::outputResultTreeFragment(const XObject&	theTree)
+StylesheetExecutionContextDefault::outputResultTreeFragment(
+			const XObject&				theTree,
+			const ElemTemplateElement*	styleNode)
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->outputResultTreeFragment(theTree);
+	m_xsltProcessor->outputResultTreeFragment(theTree, m_cloneTextNodesOnly, styleNode);
 }
 
 
@@ -1585,6 +1711,8 @@ StylesheetExecutionContextDefault::reset()
 
 	// Reset the default execution context...
 	m_xpathExecutionContextDefault.reset();
+
+	m_cloneTextNodesOnly = false;
 }
 
 

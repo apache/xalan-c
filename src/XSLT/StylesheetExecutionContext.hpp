@@ -172,6 +172,61 @@ public:
 	getQuietConflictWarnings() const = 0;
 
 	/**
+	 * If this function returns true, only text nodes can
+	 * be copied to the result tree.
+	 * 
+	 * @return true or false
+	 */
+	virtual bool
+	getCopyTextNodesOnly() const = 0;
+
+	/**
+	 * Set the flag that determines if only text nodes
+	 * can be copied to the result tree.
+	 * 
+	 * @param fValue The value of the flag
+	 */
+	virtual void
+	setCopyTextNodesOnly(bool	fValue) = 0;
+
+	/*
+	 * A class to manage setting and restoring the flag
+	 * for restricting copying only text nodes to the
+	 * result tree
+	 */
+	class SetAndRestoreCopyTextNodesOnly
+	{
+	public:
+
+		SetAndRestoreCopyTextNodesOnly(
+			StylesheetExecutionContext&		executionContext,
+			bool							fValue) :
+			m_executionContext(executionContext),
+			m_fValue(executionContext.getCopyTextNodesOnly())
+		{
+			executionContext.setCopyTextNodesOnly(fValue);
+		}
+
+		~SetAndRestoreCopyTextNodesOnly()
+		{
+			m_executionContext.setCopyTextNodesOnly(m_fValue);
+		}
+
+	private:
+
+		// Not implemented...
+		SetAndRestoreCopyTextNodesOnly(const SetAndRestoreCopyTextNodesOnly&);
+
+		SetAndRestoreCopyTextNodesOnly&
+		operator=(const SetAndRestoreCopyTextNodesOnly&);
+
+		// Data members...
+		StylesheetExecutionContext&		m_executionContext;
+
+		const bool						m_fValue;
+	};
+
+	/**
 	 * Retrieve root document for stylesheet.  Note that
 	 * this does not have to be a XalanDocument -- it can
 	 * be any node in a document.
@@ -472,11 +527,11 @@ public:
 	 * @param resolver    resolver for namespace resolution
 	 * @return pointer to resulting XObject
 	 */
-	virtual const XObjectPtr
-	executeXPath(
-			const XalanDOMString&	str,
-			XalanNode*				contextNode,
-			const XalanElement&		resolver) = 0;
+//	virtual const XObjectPtr
+//	executeXPath(
+//			const XalanDOMString&	str,
+//			XalanNode*				contextNode,
+//			const XalanElement&		resolver) = 0;
 
 	/**
 	 * Create and initialize an xpath and return it. This is to be used to
@@ -1006,7 +1061,18 @@ public:
 	flushPending() = 0;
 
 	/**
-	 * Clone an element with or without children.
+	 * Clone a node to the result tree
+	 *
+	 * @param node      node to clone
+	 * @param styleNode	the stylesheet element that generated the clone.
+	 */
+	virtual void
+	cloneToResultTree(
+			const XalanNode&			node,
+			const ElemTemplateElement*	styleNode) = 0;
+
+	/**
+	 * Clone a node to the result tree
 	 *
 	 * @param node                  node to clone
 	 * @param nodeType				the type of the node
@@ -1017,12 +1083,12 @@ public:
 	 */
 	virtual void
 	cloneToResultTree(
-			XalanNode&					node,
+			const XalanNode&			node,
 			XalanNode::NodeType			nodeType,
 			bool						isLiteral,
 			bool						overrideStrip,
 			bool						shouldCloneAttributes,
-			const ElemTemplateElement*	styleNode = 0) = 0;
+			const ElemTemplateElement*	styleNode) = 0;
 
 	/**
 	 * Create an XObject that represents a Result tree fragment.
@@ -1041,18 +1107,24 @@ public:
 	 * This is public for access by extensions.
 	 *
 	 * @param obj the XObject to output
+	 * @param styleNode	the stylesheet element that generate the fragment.
 	 */
 	virtual void
-	outputToResultTree(const XObject&	xobj) = 0;
+	outputToResultTree(
+			const XObject&				xobj,
+			const ElemTemplateElement*	styleNode) = 0;
 
 	/**
 	 * Given a result tree fragment, walk the tree and
 	 * output it to the result stream.
 	 *
 	 * @param theTree result tree fragment
+	 * @param styleNode	the stylesheet element that generate the fragment.
 	 */
 	virtual void
-	outputResultTreeFragment(const XObject&		theTree) = 0;
+	outputResultTreeFragment(
+			const XObject&				theTree,
+			const ElemTemplateElement*	styleNode) = 0;
 
 	/**
 	 * Determine the full XSLT Namespace URI.

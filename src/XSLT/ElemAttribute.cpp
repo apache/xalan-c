@@ -403,6 +403,8 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 		// the result attribute.
 		if (indexOfNSSep == origAttrNameLength || !isEmpty(attrNameSpace))
 		{
+			StylesheetExecutionContext::SetAndRestoreCopyTextNodesOnly	theSetAndRestore(executionContext, true);
+
 			childrenToResultAttribute(
 				executionContext,
 				attrName);

@@ -212,14 +212,6 @@ public:
 	virtual XalanNode*
 	getSourceTreeFromInput(const XSLTInputSource& 	inputSource) = 0;
 
-   /**
-	* Output an object to the result tree by doing the right conversions.
-	*
-	* @param obj the XObject to output
-	*/
-	virtual void
-	outputToResultTree(const XObject&	xobj) = 0;
-
 	/**
 	 * Retrieve the root stylesheet.
 	 * 

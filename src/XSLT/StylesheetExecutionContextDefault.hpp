@@ -283,6 +283,12 @@ public:
 	virtual bool
 	getQuietConflictWarnings() const;
 
+	virtual bool
+	getCopyTextNodesOnly() const;
+
+	virtual void
+	setCopyTextNodesOnly(bool	fValue);
+
 	virtual XalanNode*
 	getRootDocument() const;
 
@@ -510,12 +516,17 @@ public:
 
 	virtual void
 	cloneToResultTree(
-			XalanNode&					node,
+			const XalanNode&			node,
+			const ElemTemplateElement*	styleNode);
+
+	virtual void
+	cloneToResultTree(
+			const XalanNode&			node,
 			XalanNode::NodeType			nodeType,
 			bool						isLiteral,
 			bool						overrideStrip,
 			bool						shouldCloneAttributes,
-			const ElemTemplateElement*	styleNode = 0);
+			const ElemTemplateElement*	styleNode);
 
 	virtual const XObjectPtr
 	createXResultTreeFrag(
@@ -523,10 +534,14 @@ public:
 			XalanNode*					sourceNode);
 
 	virtual void
-	outputToResultTree(const XObject&	xobj);
+	outputToResultTree(
+			const XObject&				xobj,
+			const ElemTemplateElement*	styleNode);
 
 	virtual void
-	outputResultTreeFragment(const XObject&		theTree);
+	outputResultTreeFragment(
+			const XObject&				theTree,
+			const ElemTemplateElement*	styleNode);
 
 	virtual const XalanDOMString&
 	getXSLNameSpaceURL() const;
@@ -1132,6 +1147,9 @@ private:
 	// If true, we will use a separate document factory for
 	// result tree fragments.
 	bool								m_usePerInstanceDocumentFactory;
+
+	// If true, only text nodes will be cloned in the output...
+	bool								m_cloneTextNodesOnly;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 

@@ -155,6 +155,8 @@ ElemPI::execute(StylesheetExecutionContext&		executionContext) const
 		executionContext.error("processing-instruction name must be a valid NCName", 0, this);
 	}
 
+	StylesheetExecutionContext::SetAndRestoreCopyTextNodesOnly	theSetAndRestore(executionContext, true);
+
 	childrenToResultPI(
 			executionContext,
 			piName);

@@ -122,6 +122,8 @@ ElemComment::execute(StylesheetExecutionContext&	executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
+	StylesheetExecutionContext::SetAndRestoreCopyTextNodesOnly	theSetAndRestore(executionContext, true);
+
     childrenToResultComment(executionContext);
 }
 
