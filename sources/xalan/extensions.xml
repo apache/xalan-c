@@ -119,7 +119,7 @@ private:
 }</source>   
 </s2><anchor name="install"/>
 <s2 title="Installing an extension function">
-<p><jump href="apiDocs/class_xalantransformer.html">XalanTransformer</jump> provides methods for installing and uninstalling external functions:</p>
+<p><jump href="apidocs/classXalanTransformer.html">XalanTransformer</jump> provides methods for installing and uninstalling external functions:</p>
 <ul>
 <li>installExternalFunction() makes the function available in the current instance of XalanTransformer. Use uninstallExternalFunction() to remove the function.<br/><br/></li>
 <li>installExternalFunctionGlobal() makes the function available globally. Use uninstallExternalFunctionGlobal() to remove the function. The global install and uninstall operations are not thread-safe.  However, all global functions should be thread-safe, because multiple threads could call a particular function instance at the same time.</li>
