@@ -411,6 +411,18 @@ public:
 			const XalanDOMString&	expression);
 
 	/**
+	 * Set a top-level stylesheet parameter.  This value can be evaluated via
+	 * xsl:param-variable.
+	 *
+	 * @param key name of the param
+	 * @param expression expression that will be evaluated
+	 */
+	void
+	setStylesheetParam(
+			const char*		key,
+			const char*		expression);
+
+	/**
 	 * Returns the last error that occurred as a 
 	 * result of calling transform. 
 	 *
@@ -544,7 +556,6 @@ private:
 	static const XSLTInit*					s_xsltInit;
 };
 
+
+
 #endif	// XALANTRANSFORMER_HEADER_GUARD
-
-
-

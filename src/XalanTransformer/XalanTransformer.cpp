@@ -1021,6 +1021,16 @@ XalanTransformer::setStylesheetParam(
 
 
 
+void
+XalanTransformer::setStylesheetParam(
+			const char*		key,
+			const char*		expression)
+{
+	setStylesheetParam(XalanDOMString(key), XalanDOMString(expression));
+}
+
+
+
 XalanDocumentBuilder*
 XalanTransformer::createDocumentBuilder()
 {
