@@ -55,34 +55,27 @@
  * <http://www.apache.org/>.
  */
 #include <iostream>
+#include <strstream>
+#include <stdio.h>
+#include <direct.h>
 
-
-
+// This is here for memory leak testing. 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
 
-
-
 #include <vector>
 
-
-
 #include <util/PlatformUtils.hpp>
-
-
 
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
-
-
 #include <XalanTransformer/XalanTransformer.hpp>
-
-
 
 #include <XMLFileReporter.hpp>
 #include <FileUtility.hpp>
+#include <HarnessInit.hpp>
 
 
 
@@ -92,22 +85,13 @@
 	using std::endl;
 #endif
 
-
-
-// This is here for memory leak testing.
-#if defined(_DEBUG)
-#include <crtdbg.h>
-#endif
-
-
 	
 static const char* const	excludeStylesheets[] =
 {
 //	"impincl16.xml",
 	0
 };
-
-
+const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
 
 inline bool
 checkForExclusion(XalanDOMString currentFile)
@@ -123,25 +107,107 @@ checkForExclusion(XalanDOMString currentFile)
 	return false;
 }
 
-
+void
+printArgOptions()
+{
+	cerr << endl
+		 << "stressmem dirname [-out -category]"
+		 << endl
+		 << endl
+		 << "dirname		(base directory for testcases)"
+		 << endl
+		 << "-out dirname	(base directory for output)"
+		 << endl
+		 << "-category dirname (run files only from a specific directory)"
+		 << endl;
+}
 
 bool
-getParams(int			argc, 
-		  const char*	/* argv */[])
+getParams(int argc, 
+		  const char*	argv[],
+		  FileUtility& f,
+		  XalanDOMString& basedir,
+		  XalanDOMString& outdir,
+		  XalanDOMString& category)
 {
-	// This needs additional work.
-	if (argc != 1)
-	{
-		cerr << "Usage: Stressmem" << endl;
+bool fSuccess = true;	// Used to continue argument loop
+bool fSetOut = true;	// Set default output directory
 
+	// Insure that required "-base" argument is there.
+	if (argc == 1 || argv[1][0] == '-')
+	{
+		printArgOptions(); 
 		return false;
 	}
 	else
 	{
-		return true;
+		if (f.checkDir(pathSep + XalanDOMString(argv[1])))
+		{
+			assign(basedir, XalanDOMString(argv[1]));
+			insert(basedir, 0, pathSep);
+		}
+		else
+		{
+			cout << endl << "Given base directory \"" << argv[1] << "\" does not exist" << endl;
+			printArgOptions();
+			return false;
+		}
 	}
-}
 
+	// Get the rest of the arguments in any order.
+	for (int i = 2; i < argc && fSuccess == true; ++i)
+	{
+		if(!stricmp("-out", argv[i]))
+		{
+			++i;
+			if(i < argc && argv[i][0] != '-')
+			{
+				assign(outdir, XalanDOMString(argv[i]));
+				insert(outdir, 0, XalanDOMString("\\"));
+				append(outdir, XalanDOMString("\\"));
+				f.checkAndCreateDir(outdir);
+				fSetOut = false;
+			}
+			else
+			{
+				printArgOptions();
+				fSuccess = false;
+			}
+		}
+		else if(!stricmp("-category", argv[i]))
+		{
+			++i;
+			if(i < argc && argv[i][0] != '-')
+			{
+				assign(category, XalanDOMString(argv[i]));
+			}
+			else
+			{
+				printArgOptions();
+				fSuccess = false;
+			}
+		}
+		else
+		{
+			printArgOptions();
+			fSuccess = false;
+		}
+
+	} // End of for-loop
+
+	// Do we need to set the default output directory??
+	if (fSetOut)
+	{
+		unsigned int ii = lastIndexOf(basedir,charAt(pathSep,0));
+		outdir = substring(basedir, 0, ii+1);
+		append(outdir,XalanDOMString("MEM-RESULTS\\"));
+		f.checkAndCreateDir(outdir);
+	}
+	
+	// Add the path seperator to the end of the base directory
+	append(basedir,pathSep);
+	return fSuccess;
+}
 
 
 #if defined(XALAN_NO_NAMESPACES)
@@ -165,26 +231,36 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	if (getParams(argc, argv) == true)
-	{
-		// Defined root for performance directory. Based on PD's machine. 
-		const XalanDOMString	confDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\conf\\"));
-		const XalanDOMString	outDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\cplus-mem\\"));
+	FileUtility			f;
 
-		FileUtility			f;
+	XalanDOMString  category;	// Test all of base dir by default
+	XalanDOMString  baseDir;	
+	XalanDOMString  outputRoot;	
+
+
+	if (getParams(argc, argv, f, baseDir, outputRoot, category) == true)
+	{
 
 		// Get the list of Directories that are below perf
-		const FileNameVectorType	dirs = f.getDirectoryNames(confDir);
+		const FileNameVectorType	dirs = f.getDirectoryNames(baseDir);
 
+		// Generate Unique Run id. (Only used to name the result logfile.)
+		const XalanDOMString UniqRunid = f.GenerateUniqRunid();
+
+		// Defined basic constants for file manipulation 
+
+		const XalanDOMString  XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
+		const XalanDOMString  XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
+		const XalanDOMString  resultFilePrefix(XalanDOMString("cpp-mem"));
+		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
 		
-		XMLFileReporter	logFile("d:\\xslt\\xsl-test\\perf-dataxml\\cpp-mem.xml");
+		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
 
 		try
 		{
 			// Call the static initializers...
-			XMLPlatformUtils::Initialize();
-
+			HarnessInit xmlPlatformUtils;
 			XalanTransformer::initialize();
 
 			{
@@ -192,24 +268,34 @@ main(
 
 				const XalanDOMString	theXSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
 				const XalanDOMString	theXMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
-				const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));  
+  
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 				{
-					const FileNameVectorType	files = f.getTestFileNames(confDir, dirs[j],true);
+					// Run specific category of files from given directory
+					if (length(category) > 0 && !equals(dirs[j], category))
+					{
+						continue;
+					}					
+					
+					// Check that output directory is there.
+					const XalanDOMString  theOutputDir = outputRoot + dirs[j];
+					f.checkAndCreateDir(theOutputDir);
+
+					const FileNameVectorType	files = f.getTestFileNames(baseDir, dirs[j],true);
 
 					for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 					{
 						if (checkForExclusion(files[i]) == false)
 						{
-							// Output file name to result log.
+							// Output file name to result log and console.
 							logFile.logTestCaseInit(files[i]);
 							cout << files[i] << endl;
 
 
-							const XalanDOMString  theXSLFile= confDir + dirs[j] + pathSep + files[i];
+							const XalanDOMString  theXSLFile= baseDir + dirs[j] + pathSep + files[i];
 							const XalanDOMString  theXMLFile = f.GenerateFileName(theXSLFile,"xml");
-							const XalanDOMString  theOutput =  outDir + dirs[j] + pathSep + files[i]; 
+							const XalanDOMString  theOutput =  outputRoot + dirs[j] + pathSep + files[i]; 
 							const XalanDOMString  theOutputFile = f.GenerateFileName(theOutput, "out");
 
 							// Do a total end to end transform with no pre parsing of either xsl or xml files.
@@ -236,8 +322,6 @@ main(
 			}
 
 			XalanTransformer::terminate();
-
-			XMLPlatformUtils::Terminate();
 
 			logFile.logTestFileClose("Memory Testing: ", "Done");
 			logFile.close();
