@@ -135,9 +135,18 @@ XMLParserLiaisonDefault::createDocument()
   
 
 XalanDocument*
-XMLParserLiaisonDefault::getDOMFactory()
+XMLParserLiaisonDefault::createDOMFactory()
 {
 	return createDocument();
+}
+
+
+
+void
+XMLParserLiaisonDefault::destroyDocument(XalanDocument*		/* theDocument */)
+{
+	throw XMLSupportException(TranscodeFromLocalCodePage("destroyDocument() not supported in XMLParserLiaisonDefault!"));
+
 }
 
 

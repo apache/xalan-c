@@ -216,9 +216,22 @@ XercesParserLiaison::createDocument()
 
 
 XalanDocument*
-XercesParserLiaison::getDOMFactory()
+XercesParserLiaison::createDOMFactory()
 {
 	return createDocument();
+}
+
+
+
+void
+XercesParserLiaison::destroyDocument(XalanDocument*		theDocument)
+{
+	if (mapDocument(theDocument) != 0)
+	{
+		m_documentMap.erase(theDocument);
+
+		delete theDocument;
+	}
 }
 
 

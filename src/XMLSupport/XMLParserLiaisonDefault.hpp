@@ -116,7 +116,10 @@ public:
 	createDocument();
   
 	virtual XalanDocument*
-	getDOMFactory();
+	createDOMFactory();
+
+	virtual void
+	destroyDocument(XalanDocument*	theDocument);
 
 	virtual const XalanDOMString&
 	getSpecialCharacters() const { return m_SpecialCharacters; }

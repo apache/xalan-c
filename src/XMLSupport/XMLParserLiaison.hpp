@@ -150,12 +150,21 @@ public:
 	createDocument() = 0;
 
 	/**
-	 * Get the factory object required to create DOM nodes in the result tree.
+	 * Get a factory object required to create nodes in the result tree.
 	 *
-	 * @return DOM document factory
+	 * @return A XalanDocument instance.
 	 */
 	virtual XalanDocument*
-	getDOMFactory() = 0;
+	createDOMFactory() = 0;
+
+	/**
+	 * Destroy the supplied XalanDocument instance.  It must be an instance that
+	 * was created by a previous call to createDocument() or getDOMFactory().
+	 *
+	 * @param theDocument The XalanDocument instance to destroy.
+	 */
+	virtual void
+	destroyDocument(XalanDocument*	theDocument) = 0;
 
 	/**
 	 * Get special characters for attributes that will be escaped.

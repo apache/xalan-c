@@ -130,7 +130,10 @@ public:
 
 	// Create a non-thread safe document, with no synchronization and no bridge...
 	virtual XalanDocument*
-	getDOMFactory();
+	createDOMFactory();
+
+	virtual void
+	destroyDocument(XalanDocument*	theDocument);
 
 	virtual void
 	setSpecialCharacters(const XalanDOMString&	str);
