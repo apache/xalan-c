@@ -558,13 +558,13 @@ foo(XPathExecutionContext&	theExecutionContext)
 	}
 
 	{
-		XalanDOMCharVectorType	theVector;
+		XalanDOMString	theString;
 
 		replace(
-			theVector.begin(),
-			theVector.end(),
-			XalanDOMCharVectorType::value_type(XalanUnicode::charReverseSolidus),
-			XalanDOMCharVectorType::value_type(XalanUnicode::charSolidus));
+			theString.begin(),
+			theString.end(),
+			XalanDOMChar(XalanUnicode::charReverseSolidus),
+			XalanDOMChar(XalanUnicode::charSolidus));
 	}
 	
 	{
