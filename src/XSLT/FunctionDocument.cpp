@@ -93,10 +93,10 @@ getDoc(
 {
 	DOMString		localURI(uri);
 
-    DOM_Document	newDoc = executionContext.getSourceDocument(localURI);
+	DOM_Document	newDoc = executionContext.getSourceDocument(localURI);
 
-    if(newDoc == 0)
-    {
+	if(newDoc == 0)
+	{
 		if(length(localURI) == 0)
 		{
 			assert(executionContext.getPrefixResolver() != 0);
@@ -186,6 +186,11 @@ FunctionDocument::execute(
 
 			base = executionContext.getPrefixResolver()->getURI();
 		}
+
+		// Chop off the file name part of the URI, this does not include the
+		// trailing separator
+		int ix = lastIndexOf(base, '/');
+		base = substring(base, 0, ix);
 
 		MutableNodeRefList		mnl(executionContext.createMutableNodeRefList());
 
