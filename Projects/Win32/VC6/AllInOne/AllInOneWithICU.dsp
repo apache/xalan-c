@@ -1546,6 +1546,14 @@ SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXML_UTF8.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLBase.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLBase.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.cpp
 # End Source File
 # Begin Source File
