@@ -5326,6 +5326,14 @@ XPath::NodeTester::testAttributeNCName(
 	}
 }
 
+inline bool
+XPath::NodeTester::matchLocalNameAndNamespaceURI(const XalanNode&	context) const
+{
+	assert(m_targetNamespace != 0 && m_targetLocalName != 0);
+
+	return DOMServices::getLocalNameOfNode(context) == *m_targetLocalName &&
+		   context.getNamespaceURI() == *m_targetNamespace;
+}
 
 
 XPath::eMatchScore
@@ -5613,18 +5621,6 @@ XPath::NodeTester::matchNamespaceURI(const XalanNode&	context) const
 
 	return context.getNamespaceURI() == *m_targetNamespace;
 }
-
-
-
-inline bool
-XPath::NodeTester::matchLocalNameAndNamespaceURI(const XalanNode&	context) const
-{
-	assert(m_targetNamespace != 0 && m_targetLocalName != 0);
-
-	return DOMServices::getLocalNameOfNode(context) == *m_targetLocalName &&
-		   context.getNamespaceURI() == *m_targetNamespace;
-}
-
 
 
 bool
