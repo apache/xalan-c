@@ -132,7 +132,11 @@ ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 
 			doCopyData(theString, theLength, theBuffer);
 
+#if U_SIZEOF_WCHAR_T==2
+			return UnicodeString((wchar_t*)&theBuffer[0], theLength);
+#else
 			return UnicodeString(&theBuffer[0], theLength);
+#endif
 		}
 		else
 		{
@@ -140,9 +144,13 @@ ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 			UCharVectorType		theBuffer;
 
 			// Resize the buffer appropriately...
-			theBuffer.resize(theLength);
+			theBuffer.resize(theLength);		
 
+#if U_SIZEOF_WCHAR_T==2
+			doCopyData(theString, theLength, (XalanDOMChar*)&theBuffer[0]);
+#else
 			doCopyData(theString, theLength, &theBuffer[0]);
+#endif
 
 			assert(theLength == theBuffer.size());
 
