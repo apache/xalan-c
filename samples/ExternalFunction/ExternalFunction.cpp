@@ -294,8 +294,8 @@ main(
 			// Our input files...
 			// WARNING!!! You may need to modify these absolute paths depending on where
 			// you've put the Xalan sources.
-			const DOMString		theXMLFileName("foo.xml");
-			const DOMString		theXSLFileName("foo.xsl");
+			const XalanDOMString		theXMLFileName("foo.xml");
+			const XalanDOMString		theXSLFileName("foo.xsl");
 
 			// Our input sources...
 			XSLTInputSource		theInputSource(c_wstr(theXMLFileName));

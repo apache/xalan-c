@@ -102,8 +102,8 @@ main(
 
 			// Our input files...The assumption is that the executable will be run
 			// from same directory as the input files.
-			const DOMString		theXMLFileName("foo.xml");
-			const DOMString		theXSLFileName("foo.xsl");
+			const XalanDOMString		theXMLFileName("foo.xml");
+			const XalanDOMString		theXSLFileName("foo.xsl");
 
 			// Our input sources...
 			XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
