@@ -258,6 +258,10 @@ SOURCE=..\..\..\..\src\XPath\NodeRefListBase.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\NodeRefListResultTreeFragProxy.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\QName.cpp
 # End Source File
 # Begin Source File
@@ -295,6 +299,14 @@ SOURCE=..\..\..\..\src\XPath\XNodeSet.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XNodeSetAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XNodeSetBase.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XNodeSetResultTreeFragProxy.cpp
 # End Source File
 # Begin Source File
 
@@ -622,6 +634,10 @@ SOURCE=..\..\..\..\src\XPath\NodeRefListBase.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\NodeRefListResultTreeFragProxy.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\QName.hpp
 # End Source File
 # Begin Source File
@@ -659,6 +675,14 @@ SOURCE=..\..\..\..\src\XPath\XNodeSet.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XNodeSetAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XNodeSetBase.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XNodeSetResultTreeFragProxy.hpp
 # End Source File
 # Begin Source File
 
