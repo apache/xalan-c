@@ -60,7 +60,11 @@
 
 
 // Xerces header files...
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_Node.hpp>
+#else
 #include <xercesc/dom/DOM_Node.hpp>
+#endif
 
 
 

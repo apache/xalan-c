@@ -72,7 +72,11 @@
 
 
 #include <xercesc/framework/URLInputSource.hpp>
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOMParser.hpp>
+#else
 #include <xercesc/parsers/DOMParser.hpp>
+#endif
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 

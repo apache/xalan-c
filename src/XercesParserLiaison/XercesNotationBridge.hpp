@@ -63,7 +63,11 @@
 
 
 
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_Notation.hpp>
+#else
 #include <xercesc/dom/DOM_Notation.hpp>
+#endif
 
 
 

@@ -63,7 +63,11 @@
 
 
 
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_EntityReference.hpp>
+#else
 #include <xercesc/dom/DOM_EntityReference.hpp>
+#endif
 
 
 

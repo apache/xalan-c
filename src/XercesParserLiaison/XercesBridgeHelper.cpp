@@ -59,7 +59,11 @@
 
 
 
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_CharacterData.hpp>
+#else
 #include <xercesc/dom/DOM_CharacterData.hpp>
+#endif
 
 
 

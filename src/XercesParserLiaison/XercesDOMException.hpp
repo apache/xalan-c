@@ -63,7 +63,11 @@
 
 
 
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_DOMException.hpp>
+#else
 #include <xercesc/dom/DOM_DOMException.hpp>
+#endif
 
 
 

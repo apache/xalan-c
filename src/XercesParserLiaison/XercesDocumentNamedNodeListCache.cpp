@@ -64,7 +64,11 @@
 
 
 
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_NodeList.hpp>
+#else
 #include <xercesc/dom/DOM_NodeList.hpp>
+#endif
 
 
 

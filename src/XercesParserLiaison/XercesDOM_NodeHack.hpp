@@ -7,11 +7,17 @@
 
 
 
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_Node.hpp>
+#include <xercesc/dom/deprecated/DOM_Attr.hpp>
+#include <xercesc/dom/deprecated/DOM_Element.hpp>
+#include <xercesc/dom/deprecated/DOM_Text.hpp>
+#else
 #include <xercesc/dom/DOM_Node.hpp>
 #include <xercesc/dom/DOM_Attr.hpp>
 #include <xercesc/dom/DOM_Element.hpp>
 #include <xercesc/dom/DOM_Text.hpp>
-
+#endif
 
 
 // An evil class to hack the Xerces smart-pointer class.  I'm
