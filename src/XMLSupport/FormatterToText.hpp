@@ -96,7 +96,7 @@ public:
 	// These methods are inherited from FormatterListener ...
 
 	virtual void
-	setDocumentLocator(Locator* const	locator);
+	setDocumentLocator(const Locator* const		locator);
 
 	virtual void
 	startDocument();

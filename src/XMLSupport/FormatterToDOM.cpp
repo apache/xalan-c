@@ -98,7 +98,7 @@ FormatterToDOM::~FormatterToDOM()
 
 
 void
-FormatterToDOM::setDocumentLocator(Locator* const	/* locator */)
+FormatterToDOM::setDocumentLocator(const Locator* const		/* locator */)
 {
 	// No action for the moment.
 }

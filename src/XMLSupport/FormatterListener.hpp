@@ -179,7 +179,7 @@ public:
 	resetDocument() = 0;
 
 	virtual void
-	setDocumentLocator(Locator* const locator) = 0;
+	setDocumentLocator(const Locator* const		locator) = 0;
 
 	virtual void
 	startDocument() = 0;

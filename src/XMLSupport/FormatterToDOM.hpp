@@ -115,9 +115,9 @@ public:
 	~FormatterToDOM();
 
 
-	// These methods are inherited from FormatterListener ...
+	// These methods are inherited from DocumentHandler ...
 
-   virtual void
+	virtual void
 	charactersRaw(
 			const XMLCh* const	chars,
 			const unsigned int	length);
@@ -133,11 +133,8 @@ public:
 	virtual void
 	entityReference(const XMLCh* const	name);
 
-
-	// These methods are inherited from DocumentHandler ...
-
 	virtual void
-	setDocumentLocator(Locator* const	locator);
+	setDocumentLocator(const Locator* const		locator);
 
 	virtual void
 	startDocument();

@@ -165,7 +165,7 @@ FormatterToXML::~FormatterToXML()
 
 
 void
-FormatterToXML::setDocumentLocator(Locator* const	/* locator */)
+FormatterToXML::setDocumentLocator(const Locator* const	/* locator */)
 {
 	// I don't do anything with this yet.
 }
