@@ -71,24 +71,26 @@
 
 // Base class header file.
 #include "ElemTemplateElement.hpp"
-#include "ElemSort.hpp"
+//#include "ElemSort.hpp"
 
-#include <dom/DOMString.hpp>
+//#include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
+//#include <XPath/NameSpace.hpp>
+//#include <XPath/XObject.hpp>
+//#include <XPath/XPath.hpp>
 
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
-
-#include <memory>
 #include <vector>
+
+
+class ElemSort;
+class XPath;
+
 
 class ElemForEach: public ElemTemplateElement
 {
 public:
 	ElemForEach (
-		XSLTEngineImpl& processor,
+		StylesheetConstructionContext&	constructionContext,
 		Stylesheet& stylesheetTree,
 		const DOMString& name,
 		const AttributeList& atts,
@@ -102,10 +104,10 @@ public:
 	virtual int getXSLToken() const; 
 
 	virtual void execute(
-		XSLTEngineImpl& processor, 
+		StylesheetExecutionContext& executionContext, 
 		const DOM_Node& sourceTree, 
 		const DOM_Node& sourceNode,
-		const QName& mode);
+		const QName& mode) const;
 
 	typedef std::vector<ElemSort*> SortElemsVector;
 
@@ -123,7 +125,7 @@ private:
 	SortElemsVector m_sortElems;
 
 protected:
-	XPath* m_pSelectPattern; // = null;
+	const XPath* m_pSelectPattern; // = null;
 };
 
 #endif	// XALAN_ELEMFOREACH_HEADER_GUARD

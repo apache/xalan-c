@@ -56,7 +56,24 @@
  */
 #include "ElemUse.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <cassert>
+
+
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <PlatformSupport/StringTokenizer.hpp>
+
+
+
+#include "Constants.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+
 
 
 /**
@@ -65,30 +82,43 @@
  * shared behavior the use-attribute-sets attribute.
  */
 ElemUse::ElemUse(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& /*atts*/,
-	int lineNumber, 
-	int	columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name, lineNumber, columnNumber),
-		m_attributeSetsNames(0)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),
+	m_attributeSetsNames()
 {
 }
 
 
-void ElemUse::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
+
+ElemUse::~ElemUse()
 {
-	ElemTemplateElement::execute(processor, sourceTree, sourceNode, mode);
+}
+
+
+
+void
+ElemUse::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
+{
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
 	if(0 != m_attributeSetsNames.size())
 		getStylesheet().applyAttrSets(m_attributeSetsNames, 
-				&processor, sourceTree, sourceNode, mode);
+				executionContext, sourceTree, sourceNode, mode);
 }
+
+
 
 int ElemUse::getXSLToken() const 
 {
@@ -104,37 +134,45 @@ int ElemUse::getXSLToken() const
  * @param which The index into the attribute list (not used at this time).
  * @return True if this is a use-attribute-sets attribute.
  */
-bool ElemUse::processUseAttributeSets(
-	const DOMString& attrName,
-	const AttributeList& atts, 
-	int which)
+bool
+ElemUse::processUseAttributeSets(
+			StylesheetConstructionContext&	constructionContext,
+			const DOMString&				attrName,
+			const AttributeList&			atts,
+			int								which)
 {
 	bool isUAS = false;
+
 	if(Constants::ELEMNAME_LITERALRESULT == getXSLToken())
 	{
-		QName qname(attrName, getStylesheet().getNamespaces());
+		const QName	qname(attrName, getStylesheet().getNamespaces());
+
 		isUAS = ((equals(qname.getNamespace(),
-			getStylesheet().getProcessor()->getXSLNameSpaceURL())) &&
+			constructionContext.getXSLNameSpaceURL())) &&
 			(equals(qname.getLocalPart(),Constants::ATTRNAME_USEATTRIBUTESETS)));
 	}
 	else
 	{
-		isUAS = equals(attrName,Constants::ATTRNAME_USEATTRIBUTESETS);
+		isUAS = equals(attrName, Constants::ATTRNAME_USEATTRIBUTESETS);
 	}
+
 	if(isUAS)
 	{
-		isUAS = true;
-		DOMString qnames = atts.getValue(which);
+		const DOMString qnames = atts.getValue(which);
+
 		StringTokenizer tokenizer(qnames, " \t\n\r", false);
 
-		int numTokens = tokenizer.countTokens();
+		const int	numTokens = tokenizer.countTokens();
 		m_attributeSetsNames.reserve(numTokens);
 
 		while(tokenizer.hasMoreTokens())
 		{
-			DOMString qname = tokenizer.nextToken();
+			const DOMString		qname = tokenizer.nextToken();
+			assert(length(qname) != 0);
+
 			m_attributeSetsNames.push_back(QName(qname, getStylesheet().getNamespaces()));
 		}
 	}
+
 	return isUAS;
 }

@@ -67,15 +67,15 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 #include <dom/DOMString.hpp>
 
-#include <xpath/XPath.hpp>
-#include <xpath/XPathProcessor.hpp>
-#include <xpath/XPathFactory.hpp>
 
-#include <XMLSupport/XMLParserLiaison.hpp>
 
 #include "AVTPart.hpp"
+
+
 
 /**
  * Simple string part of a complex AVT.
@@ -83,30 +83,35 @@
 class AVTPartSimple: public AVTPart
 {
 public:
-  /**
-   * Construct a simple AVT part.
-   * @param val A pure string section of an AVT.
-   */
-  AVTPartSimple(const DOMString& val);
 
- 
-  /**
-   * Write the value into the buffer.
-   * @param buf Buffer to write into.
-   * @param context The current source tree context.
-   * @param resolver The current namespace PrefixResolver.
-   * @param NodeList The current Context Node List.
-   */
-  virtual void evaluate(DOMString& buf, const DOM_Node& context,
-	  const PrefixResolver& resolver, const NodeRefListBase& contextNodeList);
+	/**
+	 * Construct a simple AVT part.
+	 * @param val A pure string section of an AVT.
+	 */
+	AVTPartSimple(const DOMString&	val);
+
+	/**
+	 * Write the value into the buffer.
+	 * @param buf Buffer to write into.
+	 * @param contextNode the current context node.
+	 * @param prefixResolver the prefix resolver to use.
+	 * @param executionContext The execution context.
+	 */
+	virtual void
+	evaluate(
+			DOMString&				buf,
+			const DOM_Node&			contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const;
 
 private:
-  /**
-   * Simple string value;
-   */
-  DOMString m_val;
 
+	/**
+	 * Simple string value;
+	 */
+	const DOMString		m_val;
 };
+
 
 
 #endif	//XALAN_AVTPARTSIMPLE_HEADER_GUARD 

@@ -67,16 +67,20 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
-#include <dom/DOMString.hpp>
+//#include <dom/DOMString.hpp>
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Element.hpp>
+//#include <dom/DOM_Node.hpp>
+//#include <dom/DOM_Element.hpp>
 
-#include <xpath/XPathSupport.hpp>
-#include <xpath/NodeRefListBase.hpp>
+//#include <xpath/XPathSupport.hpp>
+//#include <xpath/NodeRefListBase.hpp>
 
 
+class DOM_Node;
+class DOMString;
 class PrefixResolver;
+class XPathExecutionContext;
+
 
 
 /**
@@ -92,15 +96,19 @@ public:
 	virtual
 	~AVTPart();
 
-  /**
-   * Write the value into the buffer.
-   * @param buf Buffer to write into.
-   * @param context The current source tree context.
-   * @param resolver The current namespace PrefixResolver.
-   * @param NodeList The current Context Node List.
-   */
-  virtual void evaluate(DOMString& buf, const DOM_Node& context,
-	  const PrefixResolver& resolver, const NodeRefListBase& contextNodeList) = 0;
+	/**
+	 * Write the value into the buffer.
+	 * @param buf Buffer to write into.
+	 * @param contextNode the current context node.
+	 * @param prefixResolver the prefix resolver to use.
+	 * @param executionContext The execution context.
+	 */
+	virtual void
+	evaluate(
+			DOMString&				buf,
+			const DOM_Node&			contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const = 0;
 };
 
 

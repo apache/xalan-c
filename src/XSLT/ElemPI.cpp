@@ -56,53 +56,88 @@
  */
 #include "ElemPI.hpp"
 
-#include "ElemPriv.hpp"
 
-ElemPI::ElemPI(XSLTEngineImpl& processor, 
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name, lineNumber, columnNumber),	
-		m_name_atv(DOMString())
+
+#include <sax/AttributeList.hpp>
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include "Constants.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
+
+ElemPI::ElemPI(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),	
+	m_name_atv()
 {
 	const int nAttrs = atts.getLength();
 
 	for(int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const DOMString		aname(atts.getName(i));
 
-		if(equals(aname,Constants::ATTRNAME_NAME))
+		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
 			m_name_atv = atts.getValue(i);
 		}
-		else if(isAttrOK(aname, atts, i)== false || processSpaceAttr(aname, atts, i))
+		else if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
-	if(isEmpty(m_name_atv))
+
+	if(isEmpty(m_name_atv) == true)
 	{
-		processor.error(name + " must have a name attribute.");
+		constructionContext.error(name + " must have a name attribute.");
 	}
 }
 
-int ElemPI::getXSLToken() const 
+
+
+ElemPI::~ElemPI()
+{
+}
+
+
+
+int
+ElemPI::getXSLToken() const 
 {		
 	return Constants::ELEMNAME_PI;		
 }
 
-void ElemPI::execute(XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode, 
-	const QName& mode)
+
+
+void
+ElemPI::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
-	ElemTemplateElement::execute(processor, sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 	
-	DOMString piName = processor.evaluateAttrVal(sourceNode, DOM_UnimplementedElement(this), m_name_atv);
-	
-	if(equalsIgnoreCase(piName,DOMString("xml")))
+	const DOMString		piName =
+		executionContext.evaluateAttrVal(sourceNode,
+										 DOM_UnimplementedElement(const_cast<ElemPI*>(this)),
+										 m_name_atv);
+
+	if(equalsIgnoreCase(piName, DOMString("xml")))
 	{
 		error("processing-instruction name can not be 'xml'");
 	}
@@ -111,31 +146,23 @@ void ElemPI::execute(XSLTEngineImpl& processor,
 		error("processing-instruction name must be a valid NCName: " + piName);
 	}
 	
-	// Note the content model is:
-	// <!ENTITY % instructions "
-	// %char-instructions;
-	// | xsl:processing-instruction
-	// | xsl:comment
-	// | xsl:element
-	// | xsl:attribute
-	// ">
-	DOMString data = childrenToString(processor, sourceTree, sourceNode, mode);
+	const DOMString		data = childrenToString(executionContext, sourceTree, sourceNode, mode);
 
-	processor.processingInstruction(toCharArray(piName), toCharArray(data));
+	executionContext.processingInstruction(toCharArray(piName), toCharArray(data));
 }
 
 
-/**
- * Add a child to the child list.
- * <!ELEMENT xsl:apply-imports EMPTY>
- */
-NodeImpl* ElemPI::appendChild(NodeImpl* newChild)
+
+NodeImpl*
+ElemPI::appendChild(NodeImpl* newChild)
 {
-	int type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
-	
+	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
+
+	const int	type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
+
 	switch(type)
 	{
-		// char-instructions 
+	// char-instructions 
 	case Constants::ELEMNAME_TEXTLITERALRESULT:
 	case Constants::ELEMNAME_APPLY_TEMPLATES:
 	case Constants::ELEMNAME_APPLY_IMPORTS:
@@ -150,17 +177,19 @@ NodeImpl* ElemPI::appendChild(NodeImpl* newChild)
 	case Constants::ELEMNAME_COPY:
 	case Constants::ELEMNAME_VARIABLE:
 	case Constants::ELEMNAME_MESSAGE:
-		
+
 // instructions 
 // case Constants.ELEMNAME_PI:
 // case Constants.ELEMNAME_COMMENT:
 // case Constants.ELEMNAME_ELEMENT:
 // case Constants.ELEMNAME_ATTRIBUTE:
-		
 	break;
-		
+
 	default:
-		error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + getTagName());
+		error("Can not add " +
+					dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() +
+					" to " +
+					getTagName());
 	}
 
 	return ElemTemplateElement::appendChild(newChild);

@@ -69,50 +69,59 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
 
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
+class AVT;
 
-#include "AVT.hpp"
+
 
 class ElemCallTemplate: public ElemTemplateElement
 {
 public:
 	ElemCallTemplate (
-		XSLTEngineImpl&	processor,
-		Stylesheet& stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 
-	virtual ~ElemCallTemplate();
+	virtual
+	~ElemCallTemplate();
 
-	virtual int getXSLToken() const; 
+	virtual int
+	getXSLToken() const; 
 
-	virtual void execute(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode);
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 
 	/**
 	 * Add a child to the child list.
 	 */
-	virtual NodeImpl* appendChild(NodeImpl* newChild);
+	virtual NodeImpl*
+	appendChild(NodeImpl* newChild);
 
 private:
+
 	// not implemented
 	ElemCallTemplate(const ElemCallTemplate &);
-	ElemCallTemplate& operator=(const ElemCallTemplate &);
 
-	AVT* m_pNameAVT;  // = null;
+	ElemCallTemplate&
+	operator=(const ElemCallTemplate &);
+
+	// Data members...
+	const AVT*	m_pNameAVT;
 };
+
+
+
 #endif	// XALAN_ELEMCALLTEMPLATE_HEADER_GUARD

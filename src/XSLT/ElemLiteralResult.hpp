@@ -68,54 +68,68 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
-#include "ElemTemplateElement.hpp"
 #include "ElemUse.hpp"
+
+
 
 #include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
 
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
 
-#include "AVT.hpp"
+class AVT;
+
+
 
 class ElemLiteralResult: public ElemUse
 {
 public:
-	ElemLiteralResult (
-		XSLTEngineImpl& processor,
-		Stylesheet& stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
 
-	virtual ~ElemLiteralResult();
+	ElemLiteralResult(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 
-	virtual int getXSLToken() const; 
+	virtual
+	~ElemLiteralResult();
 
-	virtual void execute(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode);
+	virtual int
+	getXSLToken() const; 
+
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 
 private:
+
 	// not implemented
 	ElemLiteralResult(const ElemLiteralResult &);
-	ElemLiteralResult& operator=(const ElemLiteralResult &);
+
+	ElemLiteralResult&
+	operator=(const ElemLiteralResult &);
 
 	/**
 	 * A stack to keep track of the attribute elements.
 	 */
-	typedef	std::vector<AVT*> AvtsVectorType;
+	typedef	std::vector<const AVT*> AVTsVectorType;
 
-	AvtsVectorType m_avts;
-	DOMString*	m_pExtensionElementPrefixes;
-	DOMString	m_QName;
-	std::vector<DOMString> m_extensionElementPrefixes;
+	AVTsVectorType							m_avts;
+
+	DOMString								m_QName;
+
+	typedef std::vector<DOMString>	ExtensionElementPrefixesVectoryType;
+
+	ExtensionElementPrefixesVectoryType		m_extensionElementPrefixes;
 };
+
+
+
 #endif	// XALAN_ELEMLITERALRESULT_HEADER_GUARD

@@ -69,42 +69,44 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
 
-class AttributeList;
-class Stylesheet;
+
 
 class ElemApplyImport: public ElemTemplateElement
 {
 public:
 
 	ElemApplyImport(
-			XSLTEngineImpl&	processor,
-			Stylesheet& stylesheetTree,
-			const DOMString& name,
-			const AttributeList& atts,
-			int	lineNumber, 
-			int	columnNumber);
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber, 
+			int								columnNumber);
 
-	virtual int	getXSLToken() const; 
+	virtual int
+	getXSLToken() const; 
 
-	virtual void execute(
-		  XSLTEngineImpl& 	processor, 
-		  const DOM_Node&	sourceTree, 
-		  const DOM_Node&	sourceNode,
-		  const QName&		mode);
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 
 	/**
 	 * Add a child to the child list.
 	 * <!ELEMENT xsl:apply-imports EMPTY>
 	 */
-	virtual NodeImpl* appendChild(NodeImpl* newChild);
+	virtual NodeImpl*
+	appendChild(NodeImpl*	newChild);
 
 private:
-	DOMString					m_mode;
-	XPath*						m_pSelectPattern;
 };
 
 

@@ -68,22 +68,27 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+#include <vector>
+
+
 #include <dom/DOMString.hpp>
 #include <dom/DOM_Node.hpp>
 
 
-#include <XPath/PrefixResolver.hpp>
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
-#include <XPath/QName.hpp>
 
 #include <DOMSupport/UnimplementedElement.hpp>
+#include <XPath/PrefixResolver.hpp>
+#include <XPath/NameSpace.hpp>
+
 
 
 class AttributeList;
-class XSLTEngineImpl;
+class QName;
 class Stylesheet;
+class StylesheetConstructionContext;
+class StylesheetExecutionContext;
+class XPath;
 
 
 /** 
@@ -108,33 +113,20 @@ public:
 	 * @param columnNumber The column index in the XSLT file that the element occurs on.
 	 */
 	ElemTemplateElement (
-		const XSLTEngineImpl& processor,
-        Stylesheet& stylesheetTree,
-        const DOMString& name, 
-        int lineNumber,
-		int columnNumber);
+		StylesheetConstructionContext&	constructionContext,
+        Stylesheet&						stylesheetTree,
+        const DOMString&				name, 
+        int								lineNumber,
+		int								columnNumber);
 
-	virtual	~ElemTemplateElement();
+	virtual
+	~ElemTemplateElement();
 
 
 	/** 
 	* Given a namespace, get the corresponding prefix.
 	*/
 	DOMString getNamespaceForPrefix(const DOMString& prefix) const;
-
-    /**
-     * Given an XSL tag name, return an integer token
-     * that corresponds to ELEMNAME_XXX constants defined 
-     * in Constants.java.
-     * Note: I tried to optimize this by caching the node to 
-     * id lookups in a hash table, but it helped not a bit.
-     * I'm not sure that it's spending too much time here anyway.
-     * @param node a probable xsl:xxx element.
-     * @return Constants.ELEMNAME_XXX token, or -1 if in xsl 
-     * or Xalan namespace, -2 if not in known namespace.
-     */
-	int getAttrTok(const DOMString&	name) const;
-	
 
 	/** 
 	* See if this is a xmlns attribute, and, if so, process it.
@@ -145,9 +137,11 @@ public:
 	* @param which The index into the attribute list (not used at this time).
 	* @return True if this is a namespace name.
 	*/
-	bool isAttrOK(int tok, const DOMString& attrName, 
-		const AttributeList& atts, int which) const;
-
+	bool isAttrOK(
+			int						tok,
+			const DOMString&		attrName,
+			const AttributeList&	atts,
+			int						which) const;
 
 	/** 
 	* See if this is a xmlns attribute or in a non-XSLT.
@@ -158,9 +152,12 @@ public:
 	* @param which The index into the attribute list (not used at this time).
 	* @return True if this attribute should not be flagged as an error.
 	*/
-	bool isAttrOK(const DOMString& attrName, 
-		const AttributeList& atts, int which) const;
-
+	bool
+	isAttrOK(
+			const DOMString&				attrName,
+			const AttributeList&			atts,
+			int								which,
+			StylesheetConstructionContext&	constructionContext) const;
 
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
@@ -202,9 +199,12 @@ public:
 	 * @param sourceNode The current context node.
 	 * @param mode The current mode.
 	 */
-	virtual	void execute(XSLTEngineImpl& processor, const DOM_Node& sourceTree, 
-		const DOM_Node&	sourceNode,	const QName& mode);
-
+	virtual	void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 
 	/** 
 	 * Process the children of a template.
@@ -214,9 +214,12 @@ public:
 	 * @param sourceNode The current context node.
 	 * @param mode The current mode.
 	 */
-	void executeChildren(XSLTEngineImpl& processor, const DOM_Node& sourceTree, 
-		const DOM_Node&	sourceNode, const QName& mode);
-
+	void
+	executeChildren(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 
 	/** 
 	 * Take the contents of a template element, process it, and
@@ -238,9 +241,9 @@ public:
 	 * @param mode The current mode.
 	 * @return The stringized result of executing the elements children.
 	 */
-	DOMString childrenToString(XSLTEngineImpl& processor, 
+	DOMString childrenToString(StylesheetExecutionContext& executionContext, 
 		const DOM_Node&	sourceTree, const DOM_Node& sourceNode,
-		const QName& mode);
+		const QName& mode) const;
 
 
 	/** 
@@ -285,14 +288,15 @@ protected:
 	 *     think we want this).
 	 */
 	void transformSelectedChildren(
+		StylesheetExecutionContext& executionContext,
 		const Stylesheet& stylesheetTree, 
-		const ElemTemplateElement* xslInstruction, // xsl:apply-templates or xsl:for-each
-		ElemTemplateElement* theTemplate, // The template to copy to the result tree
+		const ElemTemplateElement& xslInstruction, // xsl:apply-templates or xsl:for-each
+		const ElemTemplateElement* theTemplate, // The template to copy to the result tree
 		const DOM_Node&	sourceTree, 
 		const DOM_Node&	sourceNodeContext, 
 		const QName& mode, 
-		XPath* selectPattern, 
-		int xslToken);
+		const XPath* selectPattern, 
+		int xslToken) const;
 
 
 	/**
@@ -311,24 +315,19 @@ protected:
 	 *      ELEMNAME_FOREACH.
 	 * @return true if applied a template, false if not.
 	 */
-	bool transformChild(const Stylesheet& stylesheetTree,
+	bool transformChild(
+		StylesheetExecutionContext& executionContext,
+		const Stylesheet& stylesheetTree,
 		const ElemTemplateElement* xslInstruction, // xsl:apply-templates or xsl:for-each
-		ElemTemplateElement* theTemplate, // may be null
+		const ElemTemplateElement* theTemplate, // may be null
 		const DOM_Node&	sourceTree, const DOM_Node& selectContext,
 		const DOM_Node&	child, const QName&	mode,
-		int	xslToken);
+		int	xslToken) const;
 
 
   // Implemented DOM Element methods.
 
 public:
-
-	virtual NodeImpl* cloneNode(bool /*deep*/)
-	{
-		//should not be called
-		assert(false);	
-		return 0;
-	}
 
 	/** 
 	 * Add a child to the child list.
@@ -387,6 +386,28 @@ public:
 	 */
 	virtual	int getLength();
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual NodeImpl*
+#else
+	virtual ElemTemplateElement*
+#endif
+	cloneNode(bool deep);
+
+	// Type-safe getters...
+
+	/** Get the first child
+	 */
+	virtual ElemTemplateElement*
+	getFirstChild() const;
+
+	/** Get the next sibling or return null.
+	*/
+	virtual ElemTemplateElement*
+	getNextSibling() const;
+
+	virtual	ElemTemplateElement*
+	getParentNode() const;
+
 	/**
 	 * NodeList method: Return the Nth immediate child of this node, or
 	 * null if the index is out of bounds.
@@ -401,56 +422,62 @@ public:
 #endif
 	item(int i);
 
-	Stylesheet& getStylesheet() const;
-
-	XSLTEngineImpl* getProcessor() const;
-
-	virtual void setXSLProcessor(XSLTEngineImpl* processor) const;
-	
+	const Stylesheet&
+	getStylesheet() const
+	{
+		return m_stylesheet;
+	}
 
 	/** Return the element name.
 	*/
-	virtual DOMString getTagName()
-	{
-		return m_elemName;
-	}
+	virtual DOMString
+	getTagName();
 
 	/** Return the node name.
 	*/
-	virtual DOMString getNodeName()
+	virtual DOMString
+	getNodeName();
+
+	int
+	getLineNumber() const
 	{
-		return m_elemName;
+		return m_lineNumber;
 	}
 
-
-	int	getLineNumber() const;
-
-	int	getColumnNumber() const;
+	int
+	getColumnNumber() const
+	{
+		return m_columnNumber;
+	}
 
 	typedef	std::vector<NameSpace>		NamespaceVectorType;
-	const NamespaceVectorType& getNameSpace() const
+
+	const NamespaceVectorType&
+	getNameSpace() const
 	{
 		return m_namespaces;
 	}
 
-	void setFinishedConstruction(bool bFinished)
+	void
+	setFinishedConstruction(bool bFinished)
 	{
 		m_finishedConstruction = bFinished;
 	}
 
 private:
 
-	Stylesheet&							m_stylesheet;
-	const int							m_lineNumber;
-	const int							m_columnNumber;
-	NamespaceVectorType 				m_namespaces;
-	bool									m_defaultSpace; // = true
-	bool									m_finishedConstruction;  // = false
-	const DOMString					m_elemName;
-	ElemTemplateElement*				m_parentNode;
-	ElemTemplateElement*				m_nextSibling;
-	ElemTemplateElement*				m_firstChild;
+	const Stylesheet&		m_stylesheet;
+	const int				m_lineNumber;
+	const int				m_columnNumber;
+	NamespaceVectorType 	m_namespaces;
+	bool					m_defaultSpace;
+	bool					m_finishedConstruction;
+	const DOMString			m_elemName;
+	ElemTemplateElement*	m_parentNode;
+	ElemTemplateElement*	m_nextSibling;
+	ElemTemplateElement*	m_firstChild;
 };
+
 
 
 #endif	// XALAN_ELEMTEMPLATEELEMENT_HEADER_GUARD

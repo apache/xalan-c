@@ -56,17 +56,40 @@
  */
 #include "ElemCopyOf.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <XPath/XPath.hpp>
+#include <XPath/XObject.hpp>
+
+
+
+#include "Constants.hpp"
+#include "ElemWhen.hpp"
+#include "SelectionEvent.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+#include "StylesheetRoot.hpp"
+
+
 
 ElemCopyOf::ElemCopyOf(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int	columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name,  lineNumber, columnNumber),	
-		m_pSelectPattern(0)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),
+	m_pSelectPattern(0)
 {
 	const int nAttrs = atts.getLength();
 	
@@ -76,123 +99,135 @@ ElemCopyOf::ElemCopyOf(
 
 		if(equals(aname, Constants::ATTRNAME_SELECT))
 		{
-			m_pSelectPattern = processor.createXPath(atts.getValue(i), *this);
+			m_pSelectPattern = constructionContext.createXPath(atts.getValue(i), *this);
 		}
-		else if(!isAttrOK(aname, atts, i))
+		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
 }
 
-int ElemCopyOf::getXSLToken() const 
+
+
+int
+ElemCopyOf::getXSLToken() const 
 {
 	return Constants::ELEMNAME_COPY_OF;
 }
 
-void ElemCopyOf::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
+
+
+void
+ElemCopyOf::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
-	ElemTemplateElement::execute(processor, sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
-	assert(m_pSelectPattern);
+	assert(m_pSelectPattern != 0);
 
-	XObject* pValue = m_pSelectPattern->execute(sourceNode, *this, processor.getContextNodeList());
+	const XObject* const	pValue =
+		m_pSelectPattern->execute(sourceNode, *this, executionContext.getXPathExecutionContext());
+	assert(pValue != 0);
 
-	if(0 != getStylesheet().getStylesheetRoot()->getTraceListeners())
+	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 	{
-		getStylesheet().getStylesheetRoot()->fireSelectedEvent(
-			SelectionEvent(getStylesheet().getProcessor(), sourceNode,
-				this, DOMString("select"), m_pSelectPattern, pValue));
+		getStylesheet().getStylesheetRoot().fireSelectedEvent(
+			SelectionEvent(executionContext, sourceNode,
+				*this, DOMString("select"), *m_pSelectPattern, pValue));
 	}
-	
-	if(0 != pValue)
+
+	const int type = pValue->getType();
+
+	DOMString s;
+
+	switch(type)
 	{
-		const int type = pValue->getType();
-
-		DOMString s;
-
-		switch(type)
-		{
-		case XObject::eTypeBoolean:
-		case XObject::eTypeNumber:
-		case XObject::eTypeString:
-			s = pValue->str();
-			processor.characters(toCharArray(s), 0, length(s));
+	case XObject::eTypeBoolean:
+	case XObject::eTypeNumber:
+	case XObject::eTypeString:
+		s = pValue->str();
+		executionContext.characters(toCharArray(s), 0, length(s));
 			break;
-			
-		case XObject::eTypeNodeSet:
+
+	case XObject::eTypeNodeSet:
+	{
+		NodeRefList nl(pValue->nodeset());
+		int nChildren = nl.getLength();
+
+		for(int i = 0; i < nChildren; i++)
 		{
-			NodeRefList nl(pValue->nodeset());
-			int nChildren = nl.getLength();
+			DOM_Node pos(nl.item(i));
+			DOM_Node top(pos);
 
-			for(int i = 0; i < nChildren; i++)
+			while(pos != 0)
 			{
-				DOM_Node pos(nl.item(i));
-				DOM_Node top(pos);
+				executionContext.flushPending();
 
-				while(0 != pos)
-				{
-					processor.flushPending();
-					processor.cloneToResultTree( 
-						getStylesheet(), 
+				executionContext.cloneToResultTree( 
 						pos, 
-						false, 
 						false, 
 						false, 
 						true); 
 
-					DOM_Node nextNode(pos.getFirstChild());
+				DOM_Node nextNode(pos.getFirstChild());
 
-					while(0 == nextNode)
+				while(nextNode == 0)
+				{
+					if(DOM_Node::ELEMENT_NODE == pos.getNodeType())
 					{
-						if(DOM_Node::ELEMENT_NODE == pos.getNodeType())
-						{
-							s = pos.getNodeName();
-							processor.endElement(toCharArray(s));
-						}
+						s = pos.getNodeName();
+
+						executionContext.endElement(toCharArray(s));
+					}
+
+					if(top == pos)
+						break;
+
+					nextNode = pos.getNextSibling();
+
+					if(nextNode == 0)
+					{
+						pos = pos.getParentNode();
 
 						if(top == pos)
-							break;
-
-						nextNode = pos.getNextSibling();
-
-						if(0 == nextNode)
 						{
-							pos = pos.getParentNode();
-							if(top == pos)
+							if(DOM_Node::ELEMENT_NODE == pos.getNodeType())
 							{
-								if(DOM_Node::ELEMENT_NODE == pos.getNodeType())
-								{
-									s = pos.getNodeName();
-									processor.endElement(toCharArray(s));
-								}
-								nextNode = 0;
-								break;
+								s = pos.getNodeName();
+						
+								executionContext.endElement(toCharArray(s));
 							}
+
+							nextNode = 0;
+							break;
 						}
 					}
-					pos = nextNode;
 				}
+
+				pos = nextNode;
 			}
-			break;
 		}
-			
-		case XObject::eTypeResultTreeFrag:
-			processor.outputResultTreeFragment(pValue);
-			break;
-			
-		default:
-			s = pValue->str();
-			if (!isEmpty(s))
-				processor.characters(toCharArray(s), 0, s.length());
-			break;
+		break;
+	}
+
+	case XObject::eTypeResultTreeFrag:
+		executionContext.outputResultTreeFragment(*pValue);
+		break;
+
+	default:
+		s = pValue->str();
+		if (!isEmpty(s))
+		{
+			executionContext.characters(toCharArray(s), 0, s.length());
 		}
+		break;
 	}
 }
+
 
 
 /**
@@ -200,7 +235,10 @@ void ElemCopyOf::execute(
  */
 NodeImpl* ElemCopyOf::appendChild(NodeImpl* newChild)
 {
-    error("Can not add " +dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + this->getTagName());
+    error("Can not add " +
+			dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() +
+			" to " +
+			getTagName());
 
     return 0;
 }

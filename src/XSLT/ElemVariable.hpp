@@ -72,69 +72,89 @@
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
 
 #include <XPath/QName.hpp>
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
+
+
+
+class XObject;
+
+
 
 class ElemVariable : public ElemTemplateElement
 {
 public:
-	ElemVariable (
-		XSLTEngineImpl& processor,
-		Stylesheet& stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int lineNumber, 
-		int	columnNumber);
 
+	ElemVariable(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 
-	virtual ~ElemVariable();
+	virtual
+	~ElemVariable();
 
-	virtual int	getXSLToken() const;
+	virtual int
+	getXSLToken() const;
 
-	virtual void execute(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode);
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 
 	/**
 	 * Get the XObject representation of the variable.
 	 */
-	XObject* getValue(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode);
+	XObject*
+	getValue(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode) const;
 
-	bool isTopLevel() const
+	bool
+	isTopLevel() const
 	{
 		return m_isTopLevel;
 	}
 
-	void setTopLevel(bool bTopLevel)
+	void
+	setTopLevel(bool bTopLevel)
 	{
 		m_isTopLevel = bTopLevel;
 	}
 
-	QName* getName() { return m_qname; }
+	const QName&
+	getName() const
+	{ 
+		return m_qname;
+	}
 
 protected:
 
-	QName* m_qname; // = null;
+	QName			m_qname;
 
 private:
+
 	// not implemented
 	ElemVariable(const ElemVariable &);
-	ElemVariable& operator=(const ElemVariable &);
 
-	XPath* m_selectPattern; // = null;
-	bool m_isTopLevel; // = false;
-	XObject* m_value; // = null;
-	DOM_Node m_varContext; // = null;
+	ElemVariable&
+	operator=(const ElemVariable &);
+
+	const XPath*	m_selectPattern;
+
+	bool			m_isTopLevel;
+
+	const XObject*	m_value;
+
+	DOM_Node		m_varContext;
 };
+
+
+
 #endif	// XALAN_ELEMVARIABLE_HEADER_GUARD

@@ -104,7 +104,7 @@ class DOM_Node;
 class KeyDeclaration;
 class NodeRefListBase;
 class PrefixResolver;
-class XPathSupport;
+class XPathExecutionContext;
 
 
 
@@ -124,14 +124,14 @@ public:
 	 * @param startNode The node to start itterating from to build the keys index.
 	 * @param nscontext The stylesheet's namespace context.
 	 * @param keyDeclarations The stylesheet's xsl:key declarations.
-	 * @param xpathSupport The support for getNodeData(useNode).
+	 * @param executionContext The current execution context.
 	 */
 	KeyTable(
 			const DOM_Node&						doc,
 			const DOM_Node&						startNode,
 			const PrefixResolver&				resolver,
 			const std::vector<KeyDeclaration>&	keyDeclarations,
-			XPathSupport&						xpathSupport);
+			XPathExecutionContext&				executionContext);
 
 	virtual
 	~KeyTable();

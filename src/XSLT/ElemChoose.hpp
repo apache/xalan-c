@@ -81,26 +81,32 @@
 class ElemChoose: public ElemTemplateElement
 {
 public:
+
 	ElemChoose(
-		XSLTEngineImpl&	processor, 
-		Stylesheet& stylesheetTree,
-		const DOMString& name, 
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 
-	virtual int getXSLToken() const; 
+	virtual int
+	getXSLToken() const; 
 
-	virtual void execute(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode);
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 
 	/**
 	 * Add a child to the child list.
 	 */
-	virtual NodeImpl* appendChild(NodeImpl* newChild);
-
+	virtual NodeImpl*
+	appendChild(NodeImpl*	newChild);
 };
+
+
+
 #endif	// XALAN_ELEMCHOOSE_HEADER_GUARD

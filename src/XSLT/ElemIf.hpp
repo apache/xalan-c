@@ -68,36 +68,44 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
 
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
+class XPath;
+
 
 
 class ElemIf: public ElemTemplateElement
 {
 public:
-	ElemIf (XSLTEngineImpl&	processor, 
-		Stylesheet& stylesheetTree,
-		const DOMString& name, 
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
 
-	virtual int getXSLToken() const;
+	ElemIf(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 
-	virtual void execute(XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode, 
-		const QName& mode);
+	virtual int
+	getXSLToken() const;
+
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 
 private:
-	XPath*	m_pTest;
+
+	const XPath*	m_test;
 };
+
+
+
 #endif	// XALAN_ELEMIF_HEADER_GUARD

@@ -68,59 +68,69 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
+#include <vector>
+
+
+
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
-
-#include <sax/AttributeList.hpp>
-
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
 
 
 class ElemTextLiteral : public ElemTemplateElement
 {
 public:
-	ElemTextLiteral (
-			XSLTEngineImpl&		processor,
-            Stylesheet&	stylesheetTree,
-            const XMLCh* const	ch, 
-			int					start, 
-			int					length, 
-            bool				isCData, 
-			bool				preserveSpace,
-            bool				disableOutputEscaping,
-            int					lineNumber, 
-			int					columnNumber);
 
-	virtual	~ElemTextLiteral();
+	ElemTextLiteral(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			int								lineNumber,
+			int								columnNumber,
+            const XMLCh*					ch,
+			int								start,
+			int								length,
+            bool							isCData,
+			bool							preserveSpace,
+            bool							disableOutputEscaping);
 
-	virtual int getXSLToken() const;
+	virtual
+	~ElemTextLiteral();
 
-	virtual void execute(
-			 XSLTEngineImpl& processor, 
-             const DOM_Node& sourceTree, 
-             const DOM_Node& sourceNode,
-             const QName& mode);
+	virtual int
+	getXSLToken() const;
 
-	bool isPreserveSpace() const
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
+
+	bool
+	isPreserveSpace() const
 	{
 		return m_preserveSpace;
 	}
 
 private:
+
 	// not implemented
-	ElemTextLiteral(const ElemTextLiteral &);
-	ElemTextLiteral& operator=(const ElemTextLiteral &);
+	ElemTextLiteral(const ElemTextLiteral&);
 
-	bool m_isCData;
-	bool m_preserveSpace;
-	bool m_disableOutputEscaping;
-	XMLCh* m_ch;
-	int m_start;
-	int m_length;
+	ElemTextLiteral&
+	operator=(const ElemTextLiteral&);
 
+	const bool				m_isCData;
+	const bool				m_preserveSpace;
+	const bool				m_disableOutputEscaping;
+
+	typedef std::vector<XMLCh>	XMLChVectorType;
+
+	const XMLChVectorType	m_ch;
 };
+
+
+
 #endif	// XALAN_ELEMTEXTLITERAL_HEADER_GUARD

@@ -56,12 +56,29 @@
  */
 #include "ElemNumber.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/NumberFormat.hpp>
+#include <XPath/XPath.hpp>
+
+
+
+#include "Constants.hpp"
 #include "NumeratorFormatter.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
 
-const DOMString ElemNumber::m_alphaCountTable = "ZABCDEFGHIJKLMNOPQRSTUVWXY"; 
 
-const DecimalToRoman ElemNumber::m_romanConvertTable[] = 
+
+const DOMString			ElemNumber::s_alphaCountTable = "ZABCDEFGHIJKLMNOPQRSTUVWXY"; 
+
+
+
+const DecimalToRoman	ElemNumber::s_romanConvertTable[] = 
 {
 	DecimalToRoman(1000, "M", 900, "CM"),        
 	DecimalToRoman(500, "D", 400, "CD"),
@@ -73,36 +90,41 @@ const DecimalToRoman ElemNumber::m_romanConvertTable[] =
 };
 
 
+
 ElemNumber::ElemNumber(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int	columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name, lineNumber, columnNumber),	
-		m_pCountMatchPattern(0),
-		m_pFromMatchPattern(0),
-		m_pValueExpr(0),
-		m_level(Constants::NUMBERLEVEL_SINGLE),
-		m_format_avt(DOMString()),
-		m_lang_avt(DOMString()),  
-		m_lettervalue_avt(DOMString()),
-		m_groupingSeparator_avt(DOMString()),
-		m_groupingSize_avt(DOMString())
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),	
+	m_countMatchPattern(0),
+	m_fromMatchPattern(0),
+	m_valueExpr(0),
+	m_level(Constants::NUMBERLEVEL_SINGLE),
+	m_format_avt(),
+	m_lang_avt(),  
+	m_lettervalue_avt(),
+	m_groupingSeparator_avt(),
+	m_groupingSize_avt()
 	
 {
-	const int nAttrs = atts.getLength();
+	const int	nAttrs = atts.getLength();
 
 	for(int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const DOMString		aname(atts.getName(i));
 
-		if(equals(aname,Constants::ATTRNAME_LEVEL))
+		if(equals(aname, Constants::ATTRNAME_LEVEL))
 		{
 			const DOMString levelValue = atts.getValue(i);
 
-			if(! isEmpty(levelValue))
+			if(!isEmpty(levelValue))
 			{
 				if(equals(Constants::ATTRVAL_MULTI, levelValue))
 					m_level = Constants::NUMBERLEVEL_MULTI;
@@ -114,29 +136,30 @@ ElemNumber::ElemNumber(
 					error("Bad value on level attribute: " + levelValue);
 			}
 		}
-		else if(equals(aname,Constants::ATTRNAME_COUNT))
+		else if(equals(aname, Constants::ATTRNAME_COUNT))
 		{
-			m_pCountMatchPattern = processor.createMatchPattern(atts.getValue(i), *this);
+			m_countMatchPattern = constructionContext.createMatchPattern(atts.getValue(i), *this);
 		}
-		else if(equals(aname,Constants::ATTRNAME_FROM))
+		else if(equals(aname, Constants::ATTRNAME_FROM))
 		{
-			m_pFromMatchPattern = processor.createMatchPattern(atts.getValue(i), *this);
+			m_fromMatchPattern = constructionContext.createMatchPattern(atts.getValue(i), *this);
 		}
-		else if(equals(aname,Constants::ATTRNAME_VALUE))
+		else if(equals(aname, Constants::ATTRNAME_VALUE))
 		{
-			m_pValueExpr = getStylesheet().getProcessor()->createXPath(atts.getValue(i), *this);
+			m_valueExpr = constructionContext.createXPath(atts.getValue(i), *this);
 		}
-		else if(equals(aname,Constants::ATTRNAME_FORMAT))
+		else if(equals(aname, Constants::ATTRNAME_FORMAT))
 		{
 			m_format_avt = atts.getValue(i);
 		}
-		else if(equals(aname,Constants::ATTRNAME_LANG))
+		else if(equals(aname, Constants::ATTRNAME_LANG))
 		{
 			m_lang_avt = atts.getValue(i);
 		}
-		else if(equals(aname,Constants::ATTRNAME_LETTERVALUE))
+		else if(equals(aname, Constants::ATTRNAME_LETTERVALUE))
 		{
-			processor.warn(Constants::ATTRNAME_LETTERVALUE + " not supported yet!");
+			constructionContext.warn(Constants::ATTRNAME_LETTERVALUE + " not supported yet!");
+
 			m_lettervalue_avt = atts.getValue(i);
 		} 
 		else if(equals(aname,Constants::ATTRNAME_GROUPINGSEPARATOR))
@@ -147,33 +170,38 @@ ElemNumber::ElemNumber(
 		{
 			m_groupingSize_avt = atts.getValue(i);
 		}
-		else if(!isAttrOK(aname, atts, i))
+		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
 }
 
 	
-int ElemNumber::getXSLToken() const 
+int
+ElemNumber::getXSLToken() const 
 {
 	return Constants::ELEMNAME_NUMBER;
 }
 	
 
-void ElemNumber::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
-{
-	ElemTemplateElement::execute(processor, sourceTree, sourceNode, mode);
 
-	DOMString countString = getCountString(processor, sourceTree, sourceNode);
+void ElemNumber::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
+{
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
+
+	DOMString countString = getCountString(executionContext, sourceTree, sourceNode);
 	
-	if (! isEmpty(countString))
-	processor.characters(toCharArray(countString), 0, length(countString));
+	if (!isEmpty(countString))
+	{
+		executionContext.characters(toCharArray(countString), 0, length(countString));
+	}
 }
+
 
 
 /**
@@ -187,6 +215,7 @@ NodeImpl* ElemNumber::appendChild(NodeImpl* newChild)
 }
 
 
+
 /**
  * Given a 'from' pattern (ala xsl:number), a match pattern 
  * and a context, find the first ancestor that matches the 
@@ -196,197 +225,207 @@ NodeImpl* ElemNumber::appendChild(NodeImpl* newChild)
  * @param namespaceContext The context in which namespaces in the 
  * queries are supposed to be expanded.
  */
-DOM_Node ElemNumber::findAncestor(
-	XSLTEngineImpl&	processor, 
-	XPath* fromMatchPattern, 
-	XPath* countMatchPattern,
-	const DOM_Node& context, 
-	const DOM_Element& /*namespaceContext*/)
+DOM_Node
+ElemNumber::findAncestor(
+			StylesheetExecutionContext&		executionContext,
+			const XPath*					fromMatchPattern,
+			const XPath*					countMatchPattern,
+			const DOM_Node&					context,
+			const DOM_Element&				/* namespaceContext */) const
 {
 	DOM_Node contextCopy(context);
 
-	while(0 != contextCopy)
+	while(contextCopy != 0)
 	{
 		if(0 != fromMatchPattern)
 		{
-			if(fromMatchPattern->getMatchScore(contextCopy) != XPath::s_MatchScoreNone)
+			if(fromMatchPattern->getMatchScore(contextCopy,
+											   executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
 			{
-				contextCopy = DOM_Node();
+				contextCopy = 0;
 				break;
 			}
 		}
 		
 		if(0 != countMatchPattern)
 		{
-			if(countMatchPattern->getMatchScore(context) != XPath::s_MatchScoreNone)
+			if(countMatchPattern->getMatchScore(context,
+												executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
 			{
 				break;
 			}
 		}
 		
-		contextCopy = processor.getXPathSupport().getParentOfNode(contextCopy);
+		contextCopy = executionContext.getParentOfNode(contextCopy);
 	}
 
 	return contextCopy;
 }					
 
 
-  /**
-   * Given a 'from' pattern (ala xsl:number), a match pattern 
-   * and a context, find the first ancestor that matches the 
-   * pattern (including the context handed in).
-   * @param matchPatternString The match pattern.
-   * @param node The node that "." expresses.
-   * @param namespaceContext The context in which namespaces in the 
-   * queries are supposed to be expanded.
-   */
-DOM_Node ElemNumber::findPrecedingOrAncestorOrSelf(
-	XSLTEngineImpl&	processor, 
-	XPath* fromMatchPattern, 
-	XPath* countMatchPattern,
-	const DOM_Node& context, 
-	const DOM_Element& /*namespaceContext*/)
+
+DOM_Node
+ElemNumber::findPrecedingOrAncestorOrSelf(
+			StylesheetExecutionContext&		executionContext,
+			const XPath*					fromMatchPattern,
+			const XPath*					countMatchPattern,
+			const DOM_Node&					context,
+			const DOM_Element&				/* namespaceContext */) const
 {  
 	DOM_Node contextCopy(context);
     
-	while(0 != contextCopy)
+	while(contextCopy != 0)
 	{
 		if(0 != fromMatchPattern)
 		{
-			if(fromMatchPattern->getMatchScore(contextCopy) != XPath::s_MatchScoreNone)
+			if(fromMatchPattern->getMatchScore(contextCopy,
+											   executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
 			{
-				contextCopy = DOM_Node();
+				contextCopy = 0;
 				break;
 			}
 		}
 		
 		if(0 != countMatchPattern)
 		{
-			if(countMatchPattern->getMatchScore(contextCopy) != XPath::s_MatchScoreNone)
+			if(countMatchPattern->getMatchScore(contextCopy,
+											    executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
 			{
 				break;
 			}
 		}
-		
-		DOM_Node prevSibling = contextCopy.getPreviousSibling();
-		if(0 == prevSibling)
+
+		DOM_Node	prevSibling = contextCopy.getPreviousSibling();
+
+		if(prevSibling == 0)
 		{
-			contextCopy = processor.getXPathSupport().getParentOfNode(contextCopy);
+			contextCopy = executionContext.getParentOfNode(contextCopy);
 		}
 		else
 		{
 			contextCopy = prevSibling;
 		}
 	}
+
 	return contextCopy;
 }
+
 
 
 /**
  * Get the count match pattern, or a default value.
  */
-XPath* ElemNumber::getCountMatchPattern(
-	XSLTEngineImpl&	processor, 
-	const DOM_Node& contextNode)
+const XPath*
+ElemNumber::getCountMatchPattern(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					contextNode) const
 {
-	XPath* countMatchPattern = m_pCountMatchPattern;
+	const XPath*	countMatchPattern = m_countMatchPattern;
 
 	if(0 == countMatchPattern)
 	{
-		switch( contextNode.getNodeType())
+		switch(contextNode.getNodeType())
 		{
 		case DOM_Node::ELEMENT_NODE:
-			countMatchPattern = processor.createMatchPattern(contextNode.getNodeName(),
+			countMatchPattern = executionContext.createMatchPattern(contextNode.getNodeName(),
 				*this);
 			break;
+
 		case DOM_Node::ATTRIBUTE_NODE:
-			countMatchPattern = processor.createMatchPattern(DOMString("@") + contextNode.getNodeName(),
+			countMatchPattern = executionContext.createMatchPattern(DOMString("@") + contextNode.getNodeName(),
 				*this);
 			break;
+
 		case DOM_Node::CDATA_SECTION_NODE:
 		case DOM_Node::TEXT_NODE:
-			countMatchPattern = processor.createMatchPattern(DOMString("text()"), 
+			countMatchPattern = executionContext.createMatchPattern(DOMString("text()"), 
 				*this);
 			break;
+
 		case DOM_Node::COMMENT_NODE:
-			countMatchPattern = processor.createMatchPattern(DOMString("comment()"), 
+			countMatchPattern = executionContext.createMatchPattern(DOMString("comment()"), 
 				*this);
 			break;
+
 		case DOM_Node::DOCUMENT_NODE:
-			countMatchPattern = processor.createMatchPattern(DOMString("/"), 
+			countMatchPattern = executionContext.createMatchPattern(DOMString("/"), 
 				*this);
 			break;
+
 		case DOM_Node::PROCESSING_INSTRUCTION_NODE:
-			countMatchPattern = processor.createMatchPattern(DOMString("pi(") + 
+			countMatchPattern = executionContext.createMatchPattern(DOMString("pi(") + 
 				contextNode.getNodeName() + DOMString(")"),
 				*this);
 			break;
+
 		default:
 			assert(false);
 			break;
 		}
 	}
+
 	return countMatchPattern;
 }
 
 
-/**
- * Given an XML source node, get the count according to the 
- * parameters set up by the xsl:number attributes.
- */
-DOMString ElemNumber::getCountString(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& /*sourceTree*/, 
-	const DOM_Node& sourceNode)
+
+DOMString
+ElemNumber::getCountString(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					/* sourceTree */, 
+			const DOM_Node&					sourceNode) const
 {
-	IntArrayType list;
-	
-	if(0 != m_pValueExpr)
+	IntArrayType	list;
+
+	if(0 != m_valueExpr)
 	{
-		XObject* countObj = m_pValueExpr->execute(sourceNode, *this, processor.getContextNodeList());
+		const XObject* const	countObj =
+			m_valueExpr->execute(sourceNode,
+								 *this,
+								 executionContext.getXPathExecutionContext());
 
-		int count = static_cast<int>(countObj->num());
-
-		list = IntArrayType(1);
-		list[0] = count;
+		list.push_back(static_cast<int>(countObj->num()));
 	}
 	else
 	{      
-		XPath* countMatchPattern = getCountMatchPattern(processor, sourceNode);
-		
+		const XPath* const	countMatchPattern =
+			getCountMatchPattern(executionContext, sourceNode);
+
 		if((Constants::NUMBERLEVEL_ANY == m_level) || 
 			(Constants::NUMBERLEVEL_SINGLE == m_level))
 		{
-			list = IntArrayType(1);
+			list.push_back(0);
 
 			if(Constants::NUMBERLEVEL_SINGLE == m_level)
 			{
-				DOM_Node target = findAncestor(processor, m_pFromMatchPattern, 
-					countMatchPattern, sourceNode, DOM_UnimplementedElement(this));
+				DOM_Node target = findAncestor(executionContext, m_fromMatchPattern, 
+					countMatchPattern, sourceNode, DOM_UnimplementedElement(const_cast<ElemNumber*>(this)));
 
-				if(0 == target) 
-					target = processor.getXPathSupport().getParentOfNode(sourceNode);
+				if(target == 0) 
+					target = executionContext.getParentOfNode(sourceNode);
 
-				if(0 != target)
+				if(target != 0)
 				{
-					list[0] = getSiblingNumber(processor, countMatchPattern, target);
+					list[0] = getSiblingNumber(executionContext, countMatchPattern, target);
 				}
 				else
 				{
-					processor.warn(DOM_Node(), sourceNode,
-						DOMString("Warning: count attribute does not match an ancestor in xsl:number! Target = ") 
-							+ sourceNode.getNodeName());
+					executionContext.warn(DOMString("Warning: count attribute does not match an ancestor in xsl:number! Target = ") 
+													+ sourceNode.getNodeName(),
+										  sourceNode,
+										  DOM_Node());
 				}
 			}
 			else // if NUMBERLEVEL_ANY
 			{
 				DOM_Node from;
-				if(0 != m_pFromMatchPattern)
-				{
-					from= findPrecedingOrAncestorOrSelf(processor, 0, m_pFromMatchPattern, 
-						sourceNode, DOM_UnimplementedElement(this));
 
-					if(0 == from)
+				if(0 != m_fromMatchPattern)
+				{
+					from = findPrecedingOrAncestorOrSelf(executionContext, 0, m_fromMatchPattern, 
+						sourceNode, DOM_UnimplementedElement(const_cast<ElemNumber*>(this)));
+
+					if(from == 0)
 					{
 						from = sourceNode;
 					}
@@ -398,152 +437,141 @@ DOMString ElemNumber::getCountString(
 
 				DOM_Node fromPos = (from != sourceNode) ? getNextInTree(from, from) : from;
 
-				list[0] = getNumberInTree(countMatchPattern, fromPos, from, sourceNode, 0);
+				list[0] = getNumberInTree(executionContext.getXPathExecutionContext(), countMatchPattern, fromPos, from, sourceNode, 0);
 			}
 		}
 		else // if NUMBERLEVEL_MULTI
 		{
-			list = getAncestorNumbers(processor, m_pFromMatchPattern,
+			list = getAncestorNumbers(executionContext, m_fromMatchPattern,
 				countMatchPattern, sourceNode);
 		}
 	}
-	return (list.size()>0) ? formatNumberList(processor, list, sourceNode) : DOMString();
+
+	return list.size() > 0 ? formatNumberList(executionContext, list, sourceNode) : DOMString();
 }
 
-/**
- * from any position in the tree, return the 
- * next node in the tree, assuming preorder 
- * traversal preceded, or null if at the end.
- */
-DOM_Node ElemNumber::getNextInTree(const DOM_Node& pos, const DOM_Node& from)
+
+
+DOM_Node
+ElemNumber::getNextInTree(
+			const DOM_Node&		pos,
+			const DOM_Node&		from)
 {
-	DOM_Node posCopy(pos);
+	DOM_Node	posCopy(pos);
 
-	DOM_Node nextNode(posCopy.getFirstChild());
+	DOM_Node	nextNode(posCopy.getFirstChild());
 
-	while(0 == nextNode)
+	while(nextNode == 0)
 	{
 		nextNode = posCopy.getNextSibling();
-		if(0 == nextNode)
+
+		if(nextNode == 0)
 		{
 			posCopy = posCopy.getParentNode();
+
 			if(posCopy == from)
 			{
 				break;
 			}
 		}
 	}
+
 	return nextNode;
 }
 
 
-/**
- * Get a number that represents a node based on the
- * position of that node among within the document tree,  
- * and taking into account the count and from patterns as 
- * specified in the XSL specification.
- * @param fromMatchPattern if non-null, where to 
- * start counting from.
- * @param countMatchPattern if non-null, count only nodes 
- * that match this pattern.
- * @param target count this node and preceding nodes.
- * @return A number that counts target and preceding 
- * nodes that qualify.
- */
-int ElemNumber::getNumberInTree(	
-	XPath* countMatchPattern, 
-	const DOM_Node& pos, 
-	const DOM_Node&	from, 
-	const DOM_Node&	target,
-	int countFrom)
+
+int
+ElemNumber::getNumberInTree(	
+			XPathExecutionContext&	executionContext,
+			const XPath*			countMatchPattern, 
+			const DOM_Node&			pos, 
+			const DOM_Node&			from, 
+			const DOM_Node&			target,
+			int						countFrom) const
 {
 	DOM_Node posCopy(pos);
 
 	int count = countFrom;
-	if(0 != posCopy)
+
+	if(posCopy != 0)
 	{
 		do
 		{          
 			if( (0 == countMatchPattern) || 
-				(countMatchPattern->getMatchScore(posCopy) != XPath::s_MatchScoreNone))
+				(countMatchPattern->getMatchScore(posCopy,
+												  executionContext) != XPath::s_MatchScoreNone))
 			{
 				count++;
 			}
 		}
 
-		while((posCopy != target) && 
-			(0 != (posCopy = getNextInTree(posCopy, from))));
+		while(posCopy != target && 
+				(posCopy = getNextInTree(posCopy, from)) != 0);
 	}
-	
+
 	return count;
 }
 
 
-/**
- * Get a number that represents a node based on the
- * position of that node among it's siblings, and 
- * taking into account the count and from patterns.
- * @param fromMatchPattern if non-null, where to 
- * start counting from.
- * @param countMatchPattern if non-null, count only nodes 
- * that match this pattern.
- * @param target count this node and preceding siblings.
- * @return A number that counts target and preceding 
- * siblings that qualify.
- */
-int ElemNumber::getSiblingNumber(
-	XSLTEngineImpl&	processor, 
-	XPath* countMatchPattern, 
-	const DOM_Node& target)
+
+int
+ElemNumber::getSiblingNumber(
+			StylesheetExecutionContext&		executionContext,
+			const XPath*					countMatchPattern, 
+			const DOM_Node&					target) const
 {
+	int number = 0;
+
+	const DOM_Node	theParent = executionContext.getParentOfNode(target);
+	assert(theParent != 0);
+
 	// TODO: If target is an Attr, implement special handling. 
-	DOM_NodeList siblings = processor.getXPathSupport().
-		getParentOfNode(target).getChildNodes();
+	DOM_NodeList	siblings = theParent.getChildNodes();
 
-	int nNodes = siblings.getLength();
-	int number = 0; // return val
-
-	for(int i = 0; i < nNodes; i++)
+	if (siblings != 0)
 	{
-		DOM_Node child = siblings.item(i);
-		if(child == target)
+		const int	nNodes = siblings.getLength();
+
+		for(int i = 0; i < nNodes; i++)
 		{
-			number++; // always count the target
-			break;
-		}
-		else if((0 == countMatchPattern) || 
-			countMatchPattern->getMatchScore(child) != 	XPath::s_MatchScoreNone)
-		{
-			number++;
+			const DOM_Node	child = siblings.item(i);
+
+			if(child == target)
+			{
+				number++; // always count the target
+				break;
+			}
+			else if(0 == countMatchPattern || 
+					countMatchPattern->getMatchScore(child,
+													 executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
+			{
+				number++;
+			}
 		}
 	}
-	
+
 	return number;
 }
 
 
-/**
- * Count the ancestors, up to the root, that match the 
- * pattern.
- * @param patterns if non-null, count only nodes 
- * that match this pattern, if null count all ancestors.
- * @param node Count this node and it's ancestors.
- * @return The number of ancestors that match the pattern.
- */
-int ElemNumber::countMatchingAncestors(
-	XSLTEngineImpl& processor, 
-	XPath* patterns, 
-	const DOM_Node& node)
-{
-	int count = 0; // return val
-	
-	DOM_Node nodeCopy(node);
 
-	while( 0 != nodeCopy )
+int
+ElemNumber::countMatchingAncestors(
+			StylesheetExecutionContext&		executionContext,
+			const XPath*					patterns,
+			const DOM_Node&					node) const
+{
+	int			count = 0;
+
+	DOM_Node	nodeCopy(node);
+
+	while(nodeCopy != 0)
 	{
 		if(0 != patterns)
 		{
-			if(patterns->getMatchScore(nodeCopy) != XPath::s_MatchScoreNone)
+			if(patterns->getMatchScore(nodeCopy,
+									   executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
 			{
 				count++;
 			}  
@@ -552,52 +580,43 @@ int ElemNumber::countMatchingAncestors(
 		{
 			count++;
 		}
-		nodeCopy = processor.getXPathSupport().getParentOfNode(nodeCopy);
+
+		nodeCopy = executionContext.getParentOfNode(nodeCopy);
 	}
 
 	return count;
 }
 
 
-/**
- * Climb up the ancestor tree, collecting sibling position 
- * numbers (as modified by the fromMatchPattern and 
- * countMatchPattern patterns).
- * @param fromMatchPattern if non-null, where to 
- * start counting from in each sibling list.
- * @param countMatchPattern if non-null, count only ancestors 
- * and siblings that match this pattern.
- * @param node count this node and ancestors that match the countMatchPattern.
- * @return An array of ints of length that matches exactly the number 
- * of ancestors that match countMatchPattern.
- * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
- * the error condition is severe enough to halt processing.
- */
-ElemNumber::IntArrayType ElemNumber::getAncestorNumbers(
-	XSLTEngineImpl& processor,
-	XPath* fromMatchPattern,
-	XPath* countMatchPattern, 
-	const DOM_Node& node)
+
+ElemNumber::IntArrayType
+ElemNumber::getAncestorNumbers(
+			StylesheetExecutionContext&		executionContext,
+			const XPath*					fromMatchPattern,
+			const XPath*					countMatchPattern, 
+			const DOM_Node&					node) const
 {
-	DOM_Node nodeCopy(node);
+	DOM_Node	nodeCopy(node);
 
-	int nMatchingAncestors = 
-		countMatchingAncestors(	processor, 
-		countMatchPattern, 
-		nodeCopy);
+	const int nMatchingAncestors =
+				countMatchingAncestors(executionContext,
+									   countMatchPattern,
+									   nodeCopy);
 
-	IntArrayType counts;
+	IntArrayType	counts(nMatchingAncestors);
 
 	if(nMatchingAncestors > 0)
 	{
-		counts = IntArrayType(nMatchingAncestors);
-		int countIndex = counts.size() - 1; // position to put count into
-		while( 0 != nodeCopy )
+		int		countIndex = counts.size() - 1; // position to put count into
+
+		while(nodeCopy != 0)
 		{
-			bool countIt = false;
+			bool	countIt = false;
+
 			if(0 != countMatchPattern)
 			{
-				if(countMatchPattern->getMatchScore(nodeCopy) != XPath::s_MatchScoreNone)
+				if(countMatchPattern->getMatchScore(nodeCopy,
+													executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
 				{
 					countIt = true;
 				} 
@@ -606,130 +625,143 @@ ElemNumber::IntArrayType ElemNumber::getAncestorNumbers(
 			{
 				countIt = true;
 			}
-			if(countIt)
-			{
-				DOM_Node target = findAncestor(processor, 
-					fromMatchPattern, 
-					countMatchPattern, 
-					nodeCopy, 
-					DOM_UnimplementedElement(this));
 
-				if(0 == target) 
+			if(countIt == true)
+			{
+				DOM_Node	target =
+						findAncestor(executionContext,
+									 fromMatchPattern,
+									 countMatchPattern,
+									 nodeCopy,
+									 DOM_UnimplementedElement(const_cast<ElemNumber*>(this)));
+
+				if(target == 0) 
 					target = nodeCopy;
-				
-				counts[countIndex] = getSiblingNumber(processor, countMatchPattern, target);
+
+				counts[countIndex] = getSiblingNumber(executionContext, countMatchPattern, target);
 				countIndex--;
 			}
-			nodeCopy = processor.getXPathSupport().getParentOfNode(nodeCopy);
+
+			nodeCopy = executionContext.getParentOfNode(nodeCopy);
 		} // end while
 	} // end if nMatchingAncestors > 0
+
 	return counts;
 }
 
 
-/**
- * Get the locale we should be using.
- */
-std::locale ElemNumber::getLocale(XSLTEngineImpl& /*processor*/, const DOM_Node& /*contextNode*/)
+
+std::locale
+ElemNumber::getLocale(
+			StylesheetExecutionContext&		/* executionContext */,
+			const DOM_Node&					/* contextNode */) const
 {
 	//TODO
 	return std::locale();
 }
 
 
-NumberFormat* ElemNumber::getNumberFormatter(
-	XSLTEngineImpl&	processor, 
-	const DOM_Node&	contextNode)
+
+NumberFormat*
+ElemNumber::getNumberFormatter(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					contextNode) const
 {
-	std::locale loc = getLocale(processor, contextNode);
+	std::locale loc = getLocale(executionContext, contextNode);
     
     // Helper to format local specific numbers to strings.
-    NumberFormat* formatter = new NumberFormat();
-    
+	std::auto_ptr<NumberFormat>		formatter(new NumberFormat);
+
+	DOM_UnimplementedElement	theNamespaceContext(const_cast<ElemNumber*>(this));
+
     DOMString digitGroupSepValue = (!isEmpty(m_groupingSeparator_avt))
-                                  ?  processor.evaluateAttrVal(contextNode, DOM_UnimplementedElement(this), 
-									m_groupingSeparator_avt) : DOMString();
-    
+                                  ?  executionContext.evaluateAttrVal(contextNode,
+																	  theNamespaceContext,
+																	  m_groupingSeparator_avt) :
+										DOMString();
+
     DOMString nDigitsPerGroupValue = (!isEmpty(m_groupingSize_avt))
-                                  ?  processor.evaluateAttrVal(contextNode, DOM_UnimplementedElement(this), 
-									m_groupingSize_avt) : DOMString();
+                                  ?  executionContext.evaluateAttrVal(contextNode,
+																	  theNamespaceContext, 
+																	  m_groupingSize_avt) :
+										DOMString();
 
     // TODO: Handle digit-group attributes
-    if( !isEmpty(digitGroupSepValue) || !isEmpty(nDigitsPerGroupValue) )
+    if(!isEmpty(digitGroupSepValue) || !isEmpty(nDigitsPerGroupValue))
     {
 		formatter->setGroupingUsed(true);
 		formatter->setGroupingSeparator(m_groupingSeparator_avt);
 		formatter->setGroupingSize(m_groupingSize_avt);
     }
     
-    return formatter;
+    return formatter.release();
 }
 
 
-/**
- * Format a vector of numbers into a formatted string.
- * @param xslNumberElement Element that takes %conversion-atts; attributes.
- * @param list Array of one or more integer numbers.
- * @return String that represents list according to 
- * %conversion-atts; attributes.
- * TODO: Optimize formatNumberList so that it caches the last count and
- * reuses that info for the next count.
- */
-DOMString ElemNumber::formatNumberList(
-	XSLTEngineImpl& processor, 
-	IntArrayType theList, 
-	const DOM_Node& contextNode)
-{
-	DOMString formattedNumber;
-	int nNumbers = theList.size();
-	XMLCh numberType = '1';
-	int numberWidth = 1;
-	DOMString formatToken;
-	DOMString sepString;
-	DOMString lastSepString;
 
-	DOMString formatValue = (!isEmpty(m_format_avt)) 
-		? processor.evaluateAttrVal(contextNode, DOM_UnimplementedElement(this), m_format_avt) 
+DOMString
+ElemNumber::formatNumberList(
+			StylesheetExecutionContext&		executionContext,
+			const IntArrayType&				theList, 
+			const DOM_Node&					contextNode) const
+{
+	const int	nNumbers = theList.size();
+	XMLCh		numberType = '1';
+	int			numberWidth = 1;
+
+	DOMString	formattedNumber;
+	DOMString	formatToken;
+	DOMString	sepString;
+	DOMString	lastSepString;
+
+	DOMString	formatValue = !isEmpty(m_format_avt)
+		? executionContext.evaluateAttrVal(contextNode,
+										   DOM_UnimplementedElement(const_cast<ElemNumber*>(this)),
+										   m_format_avt)
 		: DOMString();
 
 	if(isEmpty(formatValue)) 
 		formatValue = DOMString("1");
 	
-	NumeratorFormatter::NumberFormatStringTokenizer formatTokenizer(formatValue);
+	NumeratorFormatter::NumberFormatStringTokenizer		formatTokenizer(formatValue);
 
-	std::locale loc = getLocale(processor, contextNode);
+	std::locale		loc = getLocale(executionContext, contextNode);
 
 	for(int i = 0; i < nNumbers; i++)
 	{
 		while(formatTokenizer.hasMoreTokens())
 		{
 			formatToken = formatTokenizer.nextToken();
-			if(isLetterOrDigit(charAt(formatToken, formatToken.length()-1)))
+
+			if(isLetterOrDigit(charAt(formatToken, length(formatToken) - 1)))
 			{
-				numberWidth = formatToken.length();
-				numberType = charAt(formatToken, numberWidth-1);
+				numberWidth = length(formatToken);
+
+				numberType = charAt(formatToken, numberWidth - 1);
 				break; // from while(tokenizer.hasMoreTokens())
 			}
 			else
 			{
 				sepString = formatToken;
-				formattedNumber += sepString;	
+
+				formattedNumber += sepString;
+
 				if(formatTokenizer.hasMoreTokens())
 				{
 					while(formatTokenizer.hasMoreTokens())
 					{
 						formatToken = formatTokenizer.nextToken();
+
 						if(!isLetterOrDigit(charAt(formatToken, 0)))
 						{
 							lastSepString = sepString + formatToken; // possibly the last separator 				                			
 						}
 						else			
 						{
-							numberWidth = formatToken.length();
-							numberType = charAt(formatToken, numberWidth-1);
+							numberWidth = length(formatToken);
+							numberType = charAt(formatToken, numberWidth - 1);
 							break; // from inner while loop
 						}
-
 					}
 					break; // from while(tokenizer.hasMoreTokens())
 				}
@@ -737,10 +769,10 @@ DOMString ElemNumber::formatNumberList(
 
 		} // end while
 
-		formattedNumber += getFormattedNumber(processor, contextNode,
+		formattedNumber += getFormattedNumber(executionContext, contextNode,
 				numberType, numberWidth, theList[i]);
-
 	}
+
 	// Check to see if we finished up the format string...
 	if(isEmpty(lastSepString))
 		lastSepString = DOMString();
@@ -748,6 +780,7 @@ DOMString ElemNumber::formatNumberList(
 	while(formatTokenizer.hasMoreTokens())
 	{
 		formatToken = formatTokenizer.nextToken();
+
 		if(!isLetterOrDigit(charAt(formatToken, 0)))
 		{
 			lastSepString += formatToken;
@@ -757,31 +790,40 @@ DOMString ElemNumber::formatNumberList(
 			lastSepString = DOMString();
 		}
 	}
-	if(! isEmpty(lastSepString))
+
+	if(!isEmpty(lastSepString))
 	{
 		formattedNumber += lastSepString;
 	}
+
 	return formattedNumber;  
 }
 
-DOMString ElemNumber::getFormattedNumber(
-		XSLTEngineImpl& processor, const DOM_Node& contextNode,
-		XMLCh numberType, int numberWidth, int listElement)
+
+
+DOMString
+ElemNumber::getFormattedNumber(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					contextNode,
+			XMLCh							numberType,
+			int								numberWidth,
+			int								listElement) const
 {
 
-	std::auto_ptr<NumberFormat> formatter(getNumberFormatter(processor, contextNode));
+	std::auto_ptr<NumberFormat> formatter(getNumberFormatter(executionContext, contextNode));
 
-	DOMString padString = formatter->format(0);
-	DOMString lookahead; // next token
-	
-	DOMString formattedNumber;
+	DOMString	padString = formatter->format(0);
+	DOMString	lookahead;
+
+	DOMString	formattedNumber;
+
 	switch(numberType)
 	{
 		case 'A':
-			formattedNumber += int2alphaCount(listElement, m_alphaCountTable);
+			formattedNumber += int2alphaCount(listElement, s_alphaCountTable);
 			break;
 		case 'a':
-			formattedNumber += toLowerCase(int2alphaCount(listElement, m_alphaCountTable));
+			formattedNumber += toLowerCase(int2alphaCount(listElement, s_alphaCountTable));
 			break;
 		case 'I':
 			formattedNumber += long2roman(listElement, true);
@@ -789,17 +831,27 @@ DOMString ElemNumber::getFormattedNumber(
 		case 'i':
 			formattedNumber += toLowerCase(long2roman(listElement, true));
 			break;
+
 		default: // "1"
-			DOMString numString = formatter->format(listElement);
-			int nPadding = numberWidth - numString.length();
-			for(int k = 0; k < nPadding; k++)
 			{
-				formattedNumber += padString;
+				const DOMString		numString =
+					formatter->format(listElement);
+
+				const int	nPadding = numberWidth - length(numString);
+
+				for(int i = 0; i < nPadding; i++)
+				{
+					formattedNumber += padString;
+				}
+
+				formattedNumber += numString;
 			}
-			formattedNumber += numString;
+			break;
 	}
+
 	return formattedNumber;  
 }
+
 
 
 /**
@@ -813,20 +865,23 @@ DOMString ElemNumber::getFormattedNumber(
  * Note that the radix of the conversion is inferred from the size
  * of the table.
  */
-DOMString ElemNumber::int2alphaCount(int val, const DOMString& table)
+DOMString
+ElemNumber::int2alphaCount(
+			int					val,
+			const DOMString&	table)
 {
-	int radix = table.length();
-	
+	const int	radix = length(table);
+
 	// Create a buffer to hold the result
 	// TODO:  size of the table can be determined by computing
 	// logs of the radix.  For now, we fake it.  
-	const int buflen = 100;
-	XMLCh buf[buflen+1];
-	memset(buf,'\0',sizeof(XMLCh)*(buflen+1));
-	
+	const int	buflen = 100;
+
+	std::vector<XMLCh>	buf(buflen + 1, 0);
+
 	// next character to set in the buffer
-	int charPos = buflen-1 ;    // work backward through buf[]
-	
+	int charPos = buflen - 1 ;    // work backward through buf[]
+
 	// index in table of the last character that we stored
 	int lookupIndex = 1;  // start off with anything other than zero to make correction work
 	
@@ -854,11 +909,11 @@ DOMString ElemNumber::int2alphaCount(int val, const DOMString& table)
 	// it can represent either 10 or zero).  In summary, the correction value of
 	// "radix-1" acts like "-1" when run through the mod operator, but with the 
 	// desireable characteristic that it never produces a negative number.
-	
+
 	int correction = 0;
-	
+
 	// TODO:  throw error on out of range input
-	
+
 	do
 	{
 		// most of the correction calculation is explained above,  the reason for the
@@ -866,62 +921,58 @@ DOMString ElemNumber::int2alphaCount(int val, const DOMString& table)
 		// multiple columns.  
 		correction = ((lookupIndex == 0) || 
 			(correction != 0 && lookupIndex == radix-1 )) ? (radix-1) : 0;
-		
+
 		// index in "table" of the next char to emit
-		lookupIndex  = (val+correction) % radix;  
-		
+		lookupIndex  = (val + correction) % radix;  
+
 		// shift input by one "column"
 		val = (val / radix);
-		
+
 		// if the next value we'd put out would be a leading zero, we're done.
 		if (lookupIndex == 0 && val == 0)
 			break;
-		
+
 		// put out the next character of output
-		buf[charPos--] = static_cast<char>(table.charAt(lookupIndex));
+		buf[charPos--] = static_cast<char>(charAt(table, lookupIndex));
 	}
 	while (val > 0);
 
-	DOMString retStr(buf+ charPos+1, (buflen - charPos -1));
+	DOMString retStr(buf.begin() + charPos + 1, (buflen - charPos - 1));
 
 	return retStr;
 }
 
 
-/**
- * Convert a long integer into roman numerals.
- * @param val Value to convert.
- * @param prefixesAreOK true_ to enable prefix notation (e.g. 4 = "IV"),
- * false_ to disable prefix notation (e.g. 4 = "IIII").
- * @return Roman numeral string.
- * @see DecimalToRoman
- * @see m_romanConvertTable
- */
-DOMString ElemNumber::long2roman(long val, bool prefixesAreOK)
+
+DOMString
+ElemNumber::long2roman(
+			long	val,
+			bool	prefixesAreOK)
 {
 	if(val <= 0)
 	{
 		return DOMString( "#E(" + LongToDOMString(val) +")" );
 	}
-	
-	DOMString roman;
-	int place = 0;
+
+	DOMString	roman;
+
+	int			place = 0;
 
 	if (val <= 3999L)
 	{
 		do      
 		{
-			while (val >= m_romanConvertTable[place].m_postValue)            
+			while (val >= s_romanConvertTable[place].m_postValue)            
 			{
-				roman += m_romanConvertTable[place].m_postLetter;
-				val -= m_romanConvertTable[place].m_postValue;
+				roman += s_romanConvertTable[place].m_postLetter;
+				val -= s_romanConvertTable[place].m_postValue;
 			}
 			if (prefixesAreOK)            
 			{
-				if (val >= m_romanConvertTable[place].m_preValue)                  
+				if (val >= s_romanConvertTable[place].m_preValue)                  
 				{
-					roman += m_romanConvertTable[place].m_preLetter;
-					val -= m_romanConvertTable[place].m_preValue;
+					roman += s_romanConvertTable[place].m_preLetter;
+					val -= s_romanConvertTable[place].m_preValue;
 				}
 			} 
 			place++;      
@@ -932,7 +983,6 @@ DOMString ElemNumber::long2roman(long val, bool prefixesAreOK)
 	{
 		roman = "#error";
 	}
+
 	return roman;
 }
-
-

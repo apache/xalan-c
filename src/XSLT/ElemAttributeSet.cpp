@@ -56,19 +56,31 @@
  */
 #include "ElemAttributeSet.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+#include <sax/SAXException.hpp>
+
+
+
+#include "Constants.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
 
 ElemAttributeSet::ElemAttributeSet(
-	XSLTEngineImpl& processor,
+	StylesheetConstructionContext&	constructionContext,
 	Stylesheet& stylesheetTree,
 	const DOMString& name, 
 	const AttributeList& atts,
 	int lineNumber, 
 	int columnNumber) :
-		ElemUse(processor, stylesheetTree, name,  atts, lineNumber, columnNumber),
+		ElemUse(constructionContext, stylesheetTree, name,  lineNumber, columnNumber),
 		m_QName()
 {
-	int nAttrs = atts.getLength();
+	const int	nAttrs = atts.getLength();
 
 	for(int i = 0; i < nAttrs; i++)
 	{
@@ -77,64 +89,66 @@ ElemAttributeSet::ElemAttributeSet(
 		if(equals(aname,Constants::ATTRNAME_NAME))
 		{
 			m_QName = QName(atts.getValue(i), stylesheetTree.getNamespaces());
-			getStylesheet().addAttributeSet(m_QName, this);
+			stylesheetTree.addAttributeSet(m_QName, this);
 		}
-		else if(!(processUseAttributeSets(aname, atts, i) || isAttrOK(aname, atts, i)))
+		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
+					isAttrOK(aname, atts, i, constructionContext)))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
+
 	if(isEmpty(m_QName.getLocalPart()))
 	{
-		processor.error(name + " must have a name attribute.");
+		constructionContext.error(name + " must have a name attribute.");
 	}
 }
+
+
 
 ElemAttributeSet::~ElemAttributeSet()
 {
 }
 
-int ElemAttributeSet::getXSLToken() const 
+
+
+int
+ElemAttributeSet::getXSLToken() const 
 {
 	return Constants::ELEMNAME_DEFINEATTRIBUTESET;
 }
 
-void ElemAttributeSet::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
-{	
-	StylesheetRoot::AttrStackType& stack = 
-		getStylesheet().getStylesheetRoot()->getAttrSetStack();
-	
-	if(stack.empty() == false)
-	{
-		const StylesheetRoot::AttrStackType::const_iterator	loc =
-			std::find(stack.begin(),stack.end(), this);
-		
-		if(loc != stack.end())
-		{
-			DOMString msg("xsl:attribute-set '" 
-				+ m_QName.getLocalPart() + 
-				"' used itself, which will cause an infinite loop.");
 
-			throw SAXException(toCharArray(msg));
-		}
+
+void
+ElemAttributeSet::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
+{	
+	if(executionContext.findOnElementRecursionStack(this) != false)
+	{
+		DOMString msg("xsl:attribute-set '" 
+					  + m_QName.getLocalPart() + 
+					  "' used itself, which will cause an infinite loop.");
+
+		throw SAXException(toCharArray(msg));
 	}
-	
-	stack.push_back(this);
-	
-	ElemTemplateElement* attr = dynamic_cast<ElemTemplateElement*>(getFirstChild());
+
+	// This will push and pop the stack automatically...
+	StylesheetExecutionContext::ElementRecursionStackPusher		thePusher(executionContext, this);
+
+	const ElemTemplateElement* attr = getFirstChild();
+
 	while(0 != attr)
 	{
-		attr->execute(processor, sourceTree, sourceNode, mode);
-		attr = dynamic_cast<ElemTemplateElement*>(attr->getNextSibling());
+		attr->execute(executionContext, sourceTree, sourceNode, mode);
+
+		attr = attr->getNextSibling();
 	}
-	
-	ElemUse::execute(processor, sourceTree, sourceNode, mode);
-	
-	stack.pop_back();
+
+	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
 }
 
 
@@ -146,8 +160,11 @@ void ElemAttributeSet::execute(
    *   use-attribute-sets %qnames; #IMPLIED
    * >
    */
-NodeImpl* ElemAttributeSet::appendChild(NodeImpl* newChild)
+NodeImpl*
+ElemAttributeSet::appendChild(NodeImpl* newChild)
 {
+	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
+
 	int type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
 	
 	switch(type)
@@ -157,8 +174,8 @@ NodeImpl* ElemAttributeSet::appendChild(NodeImpl* newChild)
 		
 	default:
 		error("Can not add " + 
-			dynamic_cast<ElemTemplateElement *>(newChild)->getTagName() + " to " + 
-			dynamic_cast<ElemTemplateElement*>(this)->getTagName());
+			  dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + 
+			  getTagName());
 	}
 
 	return ElemTemplateElement::appendChild(newChild);

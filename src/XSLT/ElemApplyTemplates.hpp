@@ -68,14 +68,22 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
 #include "ElemForEach.hpp"
+
+
+
+#include <XPath/QName.hpp>
+
+
 
 class ElemApplyTemplates : public ElemForEach
 {
 public:
 	ElemApplyTemplates(
-		XSLTEngineImpl&	processor,
+		StylesheetConstructionContext&	constructionContext,
 		Stylesheet& stylesheetTree,
 		const DOMString& name,
 		const AttributeList& atts,
@@ -94,11 +102,13 @@ public:
 		m_isDefaultTemplate = def;
 	}
 
-	virtual void execute(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode);
+	virtual	void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
+
 	/**
 	 * Add a child to the child list.
 	 * <!ELEMENT xsl:apply-templates (xsl:sort|xsl:with-param)*>
@@ -110,7 +120,9 @@ public:
 	virtual NodeImpl* appendChild(NodeImpl* newChild);
 
 private:
+
 	bool	m_isDefaultTemplate;
+
 	QName	m_mode;
 };
 #endif	// XALAN_ELEMAPPLYTEMPLATES_HEADER_GUARD

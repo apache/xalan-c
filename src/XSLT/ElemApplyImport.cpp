@@ -56,18 +56,34 @@
  */
 #include "ElemApplyImport.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include "Constants.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
 
 ElemApplyImport::ElemApplyImport(
-	XSLTEngineImpl& processor, 
-	Stylesheet& stylesheetTree, 
-	const DOMString& name, 
-	const AttributeList& atts, 
-	int lineNumber, 
-	int columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name, lineNumber, columnNumber),	
-		m_mode(), 
-		m_pSelectPattern(0)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber, 
+			int								columnNumber) :
+		ElemTemplateElement(constructionContext,
+							stylesheetTree,
+							name,
+							lineNumber,
+							columnNumber)
 {
 	const int nAttrs = atts.getLength();
 
@@ -75,36 +91,40 @@ ElemApplyImport::ElemApplyImport(
     {
 		const DOMString aname(atts.getName(i));
 
-		if(isAttrOK(aname, atts, i) == false)
+		if(isAttrOK(aname, atts, i, constructionContext) == false)
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
     }
 }
 
 
-int ElemApplyImport::getXSLToken() const 
+
+int
+ElemApplyImport::getXSLToken() const 
 {
 	return Constants::ELEMNAME_APPLY_IMPORTS;
 }
 
 
-void ElemApplyImport::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
+void
+ElemApplyImport::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
-	ElemTemplateElement::execute(processor, sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
 	// This will have to change to current template, (which will have 
 	// to be the top of a current template stack).
-      
-	transformChild(getStylesheet(), 
+
+	transformChild(executionContext,
+				   getStylesheet(),
 				   0, 
 				   0, 
                    sourceTree, 
-                   processor.getXPathSupport().getParentOfNode(sourceNode), 
+                   executionContext.getParentOfNode(sourceNode), 
 				   sourceNode, 
                    mode, 
 				   getXSLToken());
@@ -112,7 +132,8 @@ void ElemApplyImport::execute(
 }
 
 
-NodeImpl* ElemApplyImport::appendChild(NodeImpl* newChild)
+NodeImpl*
+ElemApplyImport::appendChild(NodeImpl* newChild)
 {
 	assert(newChild != 0);
 

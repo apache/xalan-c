@@ -141,9 +141,6 @@ FunctionKey::execute(
 			{
 				std::set<DOMString>		usedrefs;
 
-				const PrefixResolver&	thePrefixResolver =
-											executionContext.getPrefixResolver();
-
 				for(int i = 0; i < nRefs; i++)
 				{
 					const DOMString		ref =
@@ -159,8 +156,7 @@ FunctionKey::execute(
 							const NodeRefListBase* const		nl =
 									executionContext.getNodeSetByKey(docContext, 
 																	 keyname,
-																	 ref, 
-																	 thePrefixResolver);
+																	 ref);
 
 							if (nl != 0)
 							{
@@ -176,10 +172,9 @@ FunctionKey::execute(
 			const DOMString		ref = arg->str();
 
 			const NodeRefListBase* const	nl =
-					executionContext.getNodeSetByKey(docContext, 
+					executionContext.getNodeSetByKey(docContext,
 													 keyname,
-													 ref, 
-													 executionContext.getPrefixResolver());
+													 ref);
 
 			if (nl != 0)
 			{

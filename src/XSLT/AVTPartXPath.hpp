@@ -67,15 +67,20 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
-#include <dom/DOMString.hpp>
 
-#include <xpath/XPath.hpp>
-#include <xpath/XPathProcessor.hpp>
-#include <xpath/XPathFactory.hpp>
-
-#include <XMLSupport/XMLParserLiaison.hpp>
 
 #include "AVTPart.hpp"
+
+
+
+class PrefixResolver;
+class XPath;
+class XPathEnvSupport;
+class XPathFactory;
+class XPathProcessor;
+class XObjectFactory;
+
+
 
 /**
  * Simple string part of a complex AVT.
@@ -83,35 +88,47 @@
 class AVTPartXPath: public AVTPart
 {
 public:
-  /**
-   * Construct a simple AVT part.
-   * @param val A pure string section of an AVT.
-   */
-  AVTPartXPath(XPath* xpath);
-  
 
-  /**
-   * Construct a simple AVT part.
-   * @param val A pure string section of an AVT.
-   */
-	AVTPartXPath(const DOMString& val, const PrefixResolver& resolver, XPathProcessor& xpathProcessor, 
-		XPathFactory& factory, XMLParserLiaison& liaison);
+	/**
+	 * Construct an XPath AVT part.
+	 * @param xpath		The XPath to evaluate.
+	 */
+	AVTPartXPath(const XPath*	xpath);
 
-  /**
-   * Write the value into the buffer.
-   * @param buf Buffer to write into.
-   * @param context The current source tree context.
-   * @param resolver The current namespace PrefixResolver.
-   * @param NodeList The current Context Node List.
-   */
-  virtual void evaluate(DOMString& buf, const DOM_Node& context,
-	  const PrefixResolver& resolver, const NodeRefListBase& contextNodeList);
+	/**
+	 * Construct an XPath AVT part.
+	 * @param val A pure string section of an AVT.
+	 */
+	AVTPartXPath(
+			const DOMString&		val,
+			const PrefixResolver&	resolver,
+			XObjectFactory&			xobjectFactory,
+			XPathEnvSupport&		xpathEnvSupport,
+			XPathProcessor&			xpathProcessor, 
+			XPathFactory&			xpathFactory);
+
+	/**
+	 * Write the value into the buffer.
+	 * @param buf Buffer to write into.
+	 * @param contextNode the current context node.
+	 * @param prefixResolver the prefix resolver to use.
+	 * @param executionContext The execution context.
+	 */
+	virtual void
+	evaluate(
+			DOMString&				buf,
+			const DOM_Node&			contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const;
 
 private:
-  /**
-   * Simple string value;
-   */
-	XPath* m_pXPath;
+
+	/**
+	 * XPath for evaluation;
+	 */
+	const XPath* const	m_pXPath;
 };
+
+
 
 #endif	//XALAN_AVTPARTXPATH_HEADER_GUARD 

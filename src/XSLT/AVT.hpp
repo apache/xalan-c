@@ -67,19 +67,23 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
-#include <dom/DOMString.hpp>
 
-#include <xpath/XPathSupport.hpp>
-
-#include <XMLSupport/XMLParserLiaison.hpp>
-
-#include "AVTPart.hpp"
 
 #include <vector>
 
-class PrefixResolver;
 
-class XSLTEngineImpl;
+
+#include <dom/DOMString.hpp>
+
+
+
+#include "AVTPart.hpp"
+
+
+
+class PrefixResolver;
+class StylesheetConstructionContext;
+
 
 
 /**
@@ -94,30 +98,38 @@ public:
  * constructing a vector of AVTParts, or simply hold 
  * on to the string if the AVT is simple.
  */
-	AVT(const DOMString& name, 
-		const XMLCh* type,
-		const XMLCh* stringedValue,
-		const PrefixResolver&	resolver,
-		XSLTEngineImpl& processor);
+	AVT(
+			const DOMString&				name,
+			const XMLCh*					type,
+			const XMLCh*					stringedValue,
+			const PrefixResolver&			resolver,
+			StylesheetConstructionContext&	constructionContext);
 
-	virtual ~AVT();
+	virtual
+	~AVT();
 
-  /**
-   * Write the value into the buffer.
-   * @param buf Buffer to write into.
-   * @param context The current source tree context.
-   * @param resolver The current namespace PrefixResolver.
-   * @param NodeList The current Context Node List.
-   */
-  virtual void evaluate(DOMString& buf, const DOM_Node& context,
-	  const PrefixResolver& resolver, const NodeRefListBase& contextNodeList);
+	/**
+	 * Write the value into the buffer.
+	 * @param buf Buffer to write into.
+	 * @param contextNode the current context node.
+	 * @param prefixResolver the prefix resolver to use.
+	 * @param executionContext The execution context.
+	 */
+	virtual void
+	evaluate(
+			DOMString&				buf,
+			const DOM_Node&			contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const;
 
-    const DOMString& getName() const
+    const DOMString&
+	getName() const
 	{
 		return m_name;
 	}
 
-	const XMLCh* getType() const
+	const XMLCh*
+	getType() const
 	{
 		return m_pcType;
 	}
@@ -131,24 +143,25 @@ private:
 /**
  * If the AVT is not complex, just hold the simple string.
  */
-	DOMString m_simpleString;
+	DOMString				m_simpleString;
 
 /**
  * If the AVT is complex, hold a Vector of AVTParts.
  */
-	std::vector<AVTPart *> m_parts;
+	std::vector<AVTPart*>	m_parts;
 
 /**
  * The name of the attribute.
  */
-	DOMString m_name;
+	DOMString				m_name;
 
 /**
  * The attribute type;
  */
-	const XMLCh* m_pcType;
-
+	// $$$ ToDO: Is this OK just to hold a pointer?
+	const XMLCh*			m_pcType;
 };
+
 
 
 #endif	// XALAN_AVT_HEADER_GUARD

@@ -58,10 +58,11 @@
 
 
 
-// $$$ ToDo: Xerces-specific code!
-#include <util/StdOut.hpp>
+#include <iostream>
 
 
+
+#include <PlatformSupport/DOMStringHelper.hpp>
 
 #include "StylesheetRoot.hpp"
 #include "XSLTProcessor.hpp"
@@ -78,31 +79,33 @@ XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(XSLTProcessor*	th
 
 XSLTProcessorEnvSupportDefault::~XSLTProcessorEnvSupportDefault()
 {
-	m_processor = 0;
 }
 
 
 
 const NodeRefListBase*
 XSLTProcessorEnvSupportDefault::getNodeSetByKey(
-			const DOM_Node&		doc,
-			const DOMString&	name,
-			const DOMString&	ref,
-			const PrefixResolver&	resolver) const
+			const DOM_Node&			doc,
+			const DOMString&		name,
+			const DOMString&		ref,
+			const PrefixResolver&	resolver,
+			XPathExecutionContext&	executionContext) const
 {
 	if (m_processor == 0)
 	{
 		return XPathEnvSupportDefault::getNodeSetByKey(doc,
 													   name,
 													   ref,
-													   resolver);
+													   resolver,
+													   executionContext);
 	}
 	else
 	{
 		return m_processor->getNodeSetByKey(doc,
 											name,
 											ref,
-											resolver);
+											resolver,
+											executionContext);
 	}
 }
 
@@ -110,13 +113,12 @@ XSLTProcessorEnvSupportDefault::getNodeSetByKey(
 
 XObject*
 XSLTProcessorEnvSupportDefault::getVariable(
-			XPathExecutionContext&	executionContext,
-			const QName&			name) const
-
+			XObjectFactory&		factory,
+			const QName&		name) const
 {
 	if (m_processor == 0)
 	{
-		return XPathEnvSupportDefault::getVariable(executionContext,
+		return XPathEnvSupportDefault::getVariable(factory,
 												   name);
 	}
 	else
@@ -152,17 +154,14 @@ XSLTProcessorEnvSupportDefault::problem(
 			int					lineNo,
 			int					charOffset) const
 {
-	// $$$ ToDo: Xerces-specific code!
-	XMLStdErr	theStdErr;
-
-	theStdErr << msg
+	std::cerr << msg
 			  << ", at line number "
 			  << static_cast<long>(lineNo)
 			  << " at offset "
 			  << static_cast<long>(charOffset)
-			  << XMLStdErr::EndLine;
+			  << std::endl;
 
-	return classification == XPathEnvSupport::eWarning ? false : true;
+	return classification == XPathEnvSupport::eError ? true : false;
 }
 
 
@@ -177,15 +176,12 @@ XSLTProcessorEnvSupportDefault::problem(
 			int						lineNo,
 			int						charOffset) const
 {
-	// $$$ ToDo: Xerces-specific code!
-	XMLStdErr	theStdErr;
-
-	theStdErr << msg
+	std::cerr << msg
 			  << ", at line number "
 			  << static_cast<long>(lineNo)
 			  << " at offset "
 			  << static_cast<long>(charOffset)
-			  << XMLStdErr::EndLine;
+			  << std::endl;
 
-	return classification == XPathEnvSupport::eWarning ? false : true;
+	return classification == XPathEnvSupport::eError ? true : false;
 }

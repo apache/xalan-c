@@ -72,12 +72,10 @@
 
 
 
-#include <dom/DOMString.hpp>
-
-#include "XSLTProcessor.hpp"
 
 
-
+class DOMString;
+class ExecutionContext;
 class PrefixResolver;
 class XPath;
 
@@ -92,11 +90,11 @@ class NodeSortKey
 public:
 
 	NodeSortKey(
-			XSLTProcessor*		processor,
-			const XPath*		selectPat, 
-			bool				treatAsNumbers, 
-			bool				descending,
-			const DOMString&	langValue, 
+			ExecutionContext&		executionContext,
+			const XPath&			selectPat, 
+			bool					treatAsNumbers, 
+			bool					descending,
+			const DOMString&		langValue, 
 			const PrefixResolver&	resolver);
 
 	~NodeSortKey();
@@ -104,10 +102,10 @@ public:
 	NodeSortKey&
 	operator=(const NodeSortKey&	theRHS);
 
-	const XPath*
+	const XPath&
 	getSelectPattern() const
 	{
-		return m_selectPat;
+		return *m_selectPat;
 	}
 
 	bool
@@ -130,11 +128,13 @@ public:
 
 private:
 
-	XSLTProcessor*			m_processor; // needed for error reporting.
+	ExecutionContext*		m_executionContext; // needed for error reporting.
+
 	bool					m_treatAsNumbers;
 	bool					m_descending;
 
 	const XPath*			m_selectPat;
+
 	const PrefixResolver*	m_prefixResolver;
 
 	// $$$ ToDo:How do we do this in C++?

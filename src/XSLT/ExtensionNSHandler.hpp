@@ -60,22 +60,32 @@
 // Base include file.	Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class
 #include "ExtensionFunctionHandler.hpp"
 
-#include "Stylesheet.hpp"
 
-#include <dom/DOMString.hpp>
-#include <dom/DOM_Element.hpp>
 
 #include <set>
 
-class XSLTEngineImpl;
+
+#include <dom/DOMString.hpp>
+
+
+
+class DOM_Node;
+class DOM_Element;
+class QName;
+class Stylesheet;
+class XSLTProcessor;
+
 
 
 class XALAN_XSLT_EXPORT ExtensionNSHandler : public ExtensionFunctionHandler
 {	 
 private:
+
 	XSLTProcessor& m_XSLProcessor;	// xsl processor for whom I'm working
 
 	// Extension elements of this namespace
@@ -97,7 +107,7 @@ public:
 	 * @param xslp				 handle to the XSL processor that I'm working for
 	 * @param namespaceUri the extension namespace URI that I'm implementing
 	 */
-	ExtensionNSHandler(XSLTEngineImpl& xslp, const DOMString& namespaceUri);
+	ExtensionNSHandler(XSLTProcessor& xslp, const DOMString& namespaceUri);
 
 	/**
 	 * Construct a new extension namespace handler given all the information
@@ -114,7 +124,7 @@ public:
 	 * @param scriptSrc		the actual script code (if any)
 	 */
 	ExtensionNSHandler (
-		XSLTEngineImpl& xslp,
+		XSLTProcessor& xslp,
 		const DOMString& namespaceUri,
 		const DOMString& elemNames,
 		const DOMString& funcNames,
@@ -193,7 +203,7 @@ public:
 	void processElement (
 		const DOMString& localPart,
 		const DOM_Element& element,
-		XSLTEngineImpl& processor, 
+		XSLTProcessor& processor, 
 		Stylesheet& stylesheetTree, 
 		const DOM_Node& sourceTree,
 		const DOM_Node& sourceNode,

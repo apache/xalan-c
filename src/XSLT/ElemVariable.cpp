@@ -56,118 +56,143 @@
  */
 #include "ElemVariable.hpp"
 
-#include "ElemPriv.hpp"
 
-#include <XPath/XResultTreeFrag.hpp>
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
 #include <XPath/ResultTreeFrag.hpp>
+#include <XPath/XPath.hpp>
+#include <XPath/XResultTreeFrag.hpp>
+
+
+
+#include "Constants.hpp"
+#include "SelectionEvent.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+#include "StylesheetRoot.hpp"
+
 
 
 ElemVariable::ElemVariable(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name, lineNumber, columnNumber),
-			m_selectPattern(0), 
-			m_qname(0),
-			m_isTopLevel(false),
-			m_value(0),
-			m_varContext(DOM_Node())
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),
+	m_selectPattern(0), 
+	m_qname(),
+	m_isTopLevel(false),
+	m_value(0),
+	m_varContext()
 {
 	const int nAttrs = atts.getLength();
 	
 	for(int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const DOMString		aname(atts.getName(i));
 
-		const int tok = getAttrTok(aname);
+		const int			tok = constructionContext.getAttrTok(aname);
+
 		switch(tok)
 		{
 		case Constants::TATTRNAME_SELECT:
-			m_selectPattern = processor.createXPath(atts.getValue(i),
+			m_selectPattern = constructionContext.createXPath(atts.getValue(i),
 				*this);
 			break;
+
 		case Constants::TATTRNAME_NAME:
-			m_qname = new QName(atts.getValue(i), stylesheetTree.getNamespaces());
+			m_qname = QName(atts.getValue(i), stylesheetTree.getNamespaces());
 			break;
+
 		case Constants::TATTRNAME_XMLSPACE:
 			processSpaceAttr(atts, i);
 			break; 
+
 		default:
 			if(!isAttrOK(tok, aname, atts, i))
 			{
-				processor.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(name + " has an illegal attribute: " + aname);
 			}
 		}
 	}
-	if(0 == m_qname)
+
+	if(m_qname.isEmpty())
 	{
-		processor.error(name + " must have a 'name' attribute.");
+		constructionContext.error(name + " must have a 'name' attribute.");
 	}
 }
 
+
+
 ElemVariable::~ElemVariable()
 {
-	delete m_qname;
-	m_qname=0;
-
-	m_selectPattern = 0;
-	m_value = 0;
-
 }
 
-int ElemVariable::getXSLToken() const
+
+
+int
+ElemVariable::getXSLToken() const
 {
     return Constants::ELEMNAME_VARIABLE;
 }
 
 
-void ElemVariable::execute(
-	XSLTEngineImpl&	processor, 
-	const DOM_Node&	sourceTree, 
-	const DOM_Node&	sourceNode,
-	const QName& mode)
+void
+ElemVariable::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {    
-	ElemTemplateElement::execute(processor, sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
-    XObject* var = getValue(processor, sourceTree, sourceNode);
-	processor.getVariableStacks().pushVariable(*m_qname, var, XALAN_DOM_NodeHack(getParentNode()));
+    XObject* const	var = getValue(executionContext, sourceTree, sourceNode);
+
+	executionContext.pushVariable(m_qname,
+								  var,
+								  DOM_UnimplementedElement(const_cast<ElemTemplateElement*>(getParentNode())));
 }
 
 
-/**
- * Get the XObject representation of the variable.
- */
-XObject* ElemVariable::getValue(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode)
+
+XObject*
+ElemVariable::getValue(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode) const
 {
-	XObject* var;
+	XObject*	var = 0;
+
 	if(0 != m_selectPattern)
 	{
 		var = m_selectPattern->execute(sourceNode, *this, 
-			processor.getContextNodeList());
+			executionContext.getXPathExecutionContext());
 
-		if(0 != getStylesheet().getStylesheetRoot()->getTraceListeners())
+		if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 		{
-			getStylesheet().getStylesheetRoot()->fireSelectedEvent(
-				SelectionEvent(getStylesheet().getProcessor(), sourceNode,
-					this, DOMString("select"), m_selectPattern, var));
+			getStylesheet().getStylesheetRoot().fireSelectedEvent(
+				SelectionEvent(executionContext, sourceNode,
+					*this, DOMString("select"), *m_selectPattern, var));
 		}
 	}
 	else
 	{
-		//  Use result tree fragment
-		std::auto_ptr<ResultTreeFragBase>  
-			df(processor.createResultTreeFrag(&getStylesheet(), *this, 
-			sourceTree, sourceNode, QName()));
-
-		// to do : is this XResultTreeFrag??
-		var = processor.createXResultTreeFrag(*df);
+		var = executionContext.createXResultTreeFrag(*this,
+													 sourceTree,
+													 sourceNode);
 	}
 
 	return var;
 }
+

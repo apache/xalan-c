@@ -56,30 +56,47 @@
  */
 #include "ElemEmpty.hpp"
 
-#include "ElemPriv.hpp"
 
 
-ElemEmpty::ElemEmpty(XSLTEngineImpl& processor, 
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& /*atts*/,
-	int lineNumber, 
-	int columnNumber) :
-		ElemTemplateElement(processor,stylesheetTree, name,  lineNumber, columnNumber)
+#include <cassert>
+
+
+#include "Constants.hpp"
+
+
+
+ElemEmpty::ElemEmpty(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber)
 {
 }
 
-int ElemEmpty::getXSLToken() const 
+
+
+int
+ElemEmpty::getXSLToken() const 
 {
 	return Constants::ELEMNAME_UNDEFINED;
 }
 
-void ElemEmpty::execute(XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode, 
-	const QName& mode)
+
+
+void
+ElemEmpty::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
 	assert(false);	// really shouldn't be executing empty nodes
-	ElemTemplateElement::execute(processor,	sourceTree, sourceNode, mode);
-}
 
+	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
+}

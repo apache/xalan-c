@@ -56,43 +56,62 @@
  */
 #include "ElemParam.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include "Constants.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetExecutionContext.hpp"
+#include "StylesheetRoot.hpp"
+#include "TracerEvent.hpp"
+
+
 
 ElemParam::ElemParam(
-	XSLTEngineImpl&	processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int	lineNumber, 
-	int	columnNumber) :
-		ElemVariable(processor,	stylesheetTree, name, atts, lineNumber, columnNumber)
-{	
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemVariable(constructionContext,
+				 stylesheetTree,
+				 name,
+				 atts,
+				 lineNumber,
+				 columnNumber)
+{
 }
 
-int ElemParam::getXSLToken() const 
+
+
+int
+ElemParam::getXSLToken() const 
 {		
 	return Constants::ELEMNAME_PARAMVARIABLE;		
 }
 
-void ElemParam::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
+
+
+void
+ElemParam::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
-	const XObject* obj = processor.getVariableStacks().getXObjectParamVariable(*m_qname);
-	
+	const XObject* const	obj = executionContext.getParamVariable(m_qname);
+
 	if(0 == obj)
 	{
-		ElemVariable::execute(processor, sourceTree, sourceNode, mode);
+		ElemVariable::execute(executionContext, sourceTree, sourceNode, mode);
 	}
 	else
 	{
-		if(0 != getStylesheet().getStylesheetRoot()->getTraceListeners())
+		if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 		{
-			getStylesheet().getStylesheetRoot()->fireTraceEvent(
-				TracerEvent(	
-					&processor, 
+			getStylesheet().getStylesheetRoot().fireTraceEvent(
+				TracerEvent(
+					executionContext,
 					sourceTree,
 					sourceNode,
 					mode,
@@ -100,4 +119,3 @@ void ElemParam::execute(
 		}
 	}
 }
-

@@ -72,28 +72,18 @@
 
 #include "Stylesheet.hpp"
 
-#include "ElemAttributeSet.hpp"
-#include "ElemTemplate.hpp"
 
 
-#include <util/XMLURL.hpp>
-
-#include <XMLSupport/FormatterToHTML.hpp>
-#include <XMLSupport/FormatterToText.hpp>
-#include <XMLSupport/FormatterToXML.hpp>
-#include <XMLSupport/FormatterToDOM.hpp>
-
-#include <PlatformSupport/PrintWriter.hpp>
-#include <PlatformSupport/DOMStringPrintWriter.hpp>
-
-#include <DOMSupport/UnimplementedDocument.hpp>
-
-#include "TraceListener.hpp"
-#include "TracerEvent.hpp"
-#include "SelectionEvent.hpp"
-#include "XSLTResultTarget.hpp"
+#include <dom/DOMString.hpp>
 
 
+
+class SelectionEvent;
+class StylesheetConstructionContext;
+class TraceListener;
+class TracerEvent;
+class XMLURL;
+class XSLTResultTarget;
 
 
 /**
@@ -111,8 +101,8 @@ public:
 	 * the error condition is severe enough to halt processing.
 	 */
 	StylesheetRoot(
-		XSLTEngineImpl*		processor, 
-        const DOMString&	baseIdentifier);    
+        const DOMString&				baseIdentifier,
+		StylesheetConstructionContext&	constructionContext);    
 /*
     throws XSLProcessorException, 
     MalformedURLException, 
@@ -132,7 +122,11 @@ public:
    * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
    * the error condition is severe enough to halt processing.
    */
-  void process(const DOM_Node& sourceTree, XSLTResultTarget* outputTarget);
+	void
+	process(
+			const DOM_Node&					sourceTree, 
+			XSLTResultTarget&				outputTarget,
+			StylesheetExecutionContext&		executionContext);
   /*
     throws XSLProcessorException, 
            MalformedURLException, 
@@ -142,14 +136,10 @@ public:
   */
   
 	/**
-	 * A stack to keep track of the attribute elements.
+	 * A stack to keep track of URLs.  Used only during import processing, and
+	 * not during transformation!
 	 */
-	typedef	std::vector<ElemAttributeSet*>	AttrStackType;
-
-	/**
-	 * A stack to keep track of URLs.
-	 */
-	typedef	std::vector<XMLURL>				ImportStackType;
+	typedef	std::vector<const XMLURL*>		ImportStackType;
 
 	/** 
 	 * Return the output method that was specified in the stylesheet. 
@@ -193,18 +183,6 @@ public:
 	/** Get the standalone string that was specified in the stylesheet. */
 	DOMString getOutputStandalone() const { return m_standalone; }
 
-	AttrStackType &
-	getAttrSetStack() 
-	{ 
-		return  m_attrSetStack; 
-	}
-
-	void 
-	setAttrSetStack() const 
-	{ 
-		// to do m_AttrSetStack = new AttrStackType(); 
-	}
-
 	ElemTemplate* 
 	getDefaultTextRule() const
 	{
@@ -229,20 +207,15 @@ public:
 	 */
 	void 
 	processOutputSpec(
-					const DOMString&			name, 
-					const AttributeList&	atts);
-
-	/**
-	 * Tell if this is the root of the stylesheet tree.
-	 */
-	virtual bool	
-	isRoot() const;
+			const DOMString&				name, 
+			const AttributeList&			atts,
+			StylesheetConstructionContext&	constructionContext);
 
 	/**
 	 * Create the default rule if needed.
 	 */
 	void 
-	initDefaultRule();
+	initDefaultRule(StylesheetConstructionContext&	constructionContext);
 
 
 private:
@@ -265,14 +238,6 @@ private:
 	 */
 	//java: transient DOMStringBuffer m_stringbuf = new StringBuffer();
   
-	/**
-	 * Stack for the purposes of flagging infinite recursion with 
-	 * attribute sets.
-	 */
-	//transient 
-	// to do 
-	AttrStackType m_attrSetStack; // = null;
-
 	/**
 	 * The output method as specified in xsl:output.
 	 */
@@ -384,6 +349,11 @@ public:
 		return m_importStack;
 	}
 
+	const ImportStackType& getImportStack() const
+	{
+		return m_importStack;
+	}
+
 
 	void setIndentResult(bool bIndent)
 	{
@@ -395,7 +365,8 @@ public:
 		m_outputmethod = meth;
 	}
 
-	int getTraceListeners();
+	int
+	getTraceListeners() const;
 
 	void addTraceListener(TraceListener *tl);
 			 // throws TooManyListenersException
@@ -415,5 +386,7 @@ public:
 	// void readObject(ObjectInputStream stream);
 
 };
+
+
 
 #endif	// XALAN_STYLESHEETROOT_HEADER_GUARD

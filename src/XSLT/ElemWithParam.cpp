@@ -56,52 +56,73 @@
  */
 #include "ElemWithParam.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include "Constants.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+
+
 
 ElemWithParam::ElemWithParam(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name, lineNumber, columnNumber),
-		m_pSelectPattern(0),
-		m_pQName(0)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),
+	m_selectPattern(0),
+	m_qname(0)
 {
-	int nAttrs = atts.getLength();
+	const int	nAttrs = atts.getLength();
+
 	for(int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const DOMString		aname(atts.getName(i));
 
-		if(equals(aname,Constants::ATTRNAME_SELECT))
+		if(equals(aname, Constants::ATTRNAME_SELECT))
 		{
-			m_pSelectPattern = processor.createXPath(atts.getValue(i), *this);
+			m_selectPattern = constructionContext.createXPath(atts.getValue(i), *this);
 		}
-		else if(equals(aname,Constants::ATTRNAME_NAME))
+		else if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_pQName = new QName(atts.getValue(i), stylesheetTree.getNamespaces());
+			m_qname = QName(atts.getValue(i), stylesheetTree.getNamespaces());
 		}
-		else if(!isAttrOK(aname, atts, i))
+		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
-	if(0 == m_pQName)
-		processor.error("xsl:with-param must have a 'name' attribute.");  
+
+	if(m_qname.isEmpty() == true)
+	{
+		constructionContext.error("xsl:with-param must have a 'name' attribute.");  
+	}
 }
+
 
 
 ElemWithParam::~ElemWithParam()
 {
-	delete m_pQName;
-
-	m_pQName = 0;
-	m_pSelectPattern = 0;	// free'd by XPath
 }
 
-int ElemWithParam::getXSLToken() const
+
+
+int
+ElemWithParam::getXSLToken() const
 {
 	return Constants::ELEMNAME_PARAM;	
 }
-

@@ -67,15 +67,26 @@
    * Should not be null.  That is not enforced.
    */
 
-SelectionEvent::SelectionEvent(const XSLTEngineImpl* processor, 
-	const DOM_Node& sourceNode,
-	const ElemTemplateElement* styleNode,
-	const DOMString& attributeName,
-	const XPath* xpath,
-	const XObject* selection):	m_pProcessor(processor), m_sourceNode(sourceNode),
-		m_pStyleNode(styleNode), m_attributeName(attributeName), m_pXPath(xpath),
-		m_pSelection(selection)
+SelectionEvent::SelectionEvent(
+			StylesheetExecutionContext&		executionContext, 
+			const DOM_Node&					sourceNode,
+			const ElemTemplateElement&		styleNode,
+			const DOMString&				attributeName,
+			const XPath&					xpath,
+			const XObject*					selection) :
+	m_executionContext(executionContext),
+	m_sourceNode(sourceNode),
+	m_styleNode(styleNode),
+	m_attributeName(attributeName),
+	m_xpath(xpath),
+	m_selection(selection)
+{
+}
 
-	{
-	}
+
+
+SelectionEvent::~SelectionEvent()
+{
+}
+
 

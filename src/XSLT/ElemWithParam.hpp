@@ -72,41 +72,46 @@
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
 
 #include <XPath/QName.hpp>
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
+
 
 
 class ElemWithParam : public ElemTemplateElement
 {
 public:
-	ElemWithParam (
-		XSLTEngineImpl& processor,
-		Stylesheet& stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
 
-	virtual ~ElemWithParam();
+	ElemWithParam(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 
-	virtual int getXSLToken() const;
+	virtual
+	~ElemWithParam();
 
-	QName* getQName() const { return m_pQName; }
+	virtual int
+	getXSLToken() const;
 
-	XPath* getSelectPattern() const { return m_pSelectPattern; }
+	const QName&
+	getQName() const { return m_qname; }
+
+	const XPath*
+	getSelectPattern() const { return m_selectPattern; }
 
 private:
 	// not implemented
 	ElemWithParam(const ElemWithParam &);
 	ElemWithParam& operator=(const ElemWithParam &);
 
-	XPath* m_pSelectPattern;
-	QName* m_pQName;
+	const XPath*	m_selectPattern;
+
+	QName			m_qname;
 };
+
+
+
 #endif	// XALAN_ELEMWITHPARAM_HEADER_GUARD

@@ -91,7 +91,11 @@ public:
 	virtual bool
 	equals(const StackEntry&	theRHS) const;
 
-	const QName& getName() const { return m_qname; }
+	const QName&
+	getName() const
+	{
+		return m_qname;
+	}
 
 	bool
 	getIsParamVar() const
@@ -105,11 +109,29 @@ public:
 		return m_argType;
 	}
 
-	const XObject* getXObjectPtr() const { return m_val; }
-	void setXObjectPtr(XObject* pxobj) { m_val = pxobj; }
+	XObject*
+	getXObjectPtr() const
+	{
+		return m_val;
+	}
+	
+	void
+	setXObjectPtr(XObject* pxobj)
+	{
+		m_val = pxobj;
+	}
 
-	const DOMString& getExpression() const {return m_expression; };
-	void setExpression(const DOMString& pexpr) {m_expression = pexpr; };
+	const DOMString&
+	getExpression() const
+	{
+		return m_expression;
+	};
+	
+	void
+	setExpression(const DOMString& pexpr)
+	{
+		m_expression = pexpr;
+	};
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual StackEntry*
@@ -130,14 +152,14 @@ public:
 
 	Arg(
 		const QName&	name,
-		const XObject*		val);
+		XObject*		val);
 
 private:
 
 	QName			m_qname;
 	eArgumentType	m_argType;
 	bool			m_isParamVar;
-	const XObject*		m_val;
+	XObject*		m_val;
 	DOMString		m_expression;
 };
 

@@ -62,48 +62,53 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
 #include <list>
 #include <map>
 #include <vector>
-#include <stack>
 
-#include <dom/DOM_Document.hpp>
-#include <dom/DOM_Element.hpp>
+
 #include <dom/DOM_Node.hpp>
 #include <dom/DOMString.hpp>
 
-#include <util/XMLURL.hpp>
 
-#include "KeyTable.hpp"
-#include "ElemTemplate.hpp"
-#include "ElemVariable.hpp"
-#include "ElemAttributeSet.hpp"
-#include "Arg.hpp"
-#include <XPath/MutableNodeRefList.hpp>
-#include <XPath/NameSpace.hpp>
-#include <XPath/QName.hpp>
-#include <XPath/XPath.hpp>
+
 #include <DOMSupport/UnimplementedDocument.hpp>
 #include <DOMSupport/UnimplementedElement.hpp>
-#include "XSLTEngineImpl.hpp"
+#include <XPath/NameSpace.hpp>
+#include <XPath/QName.hpp>
 
-#include "Constants.hpp"
 
-class AttributeListImpl;
 
-class NodeRefListBase;
+#include "Arg.hpp"
+#include "KeyDeclaration.hpp"
 
-class PrefixResolver;
-class XString;
-class StylesheetRoot;
+
+
+class AttributeList;
 class ExtensionNSHandler;
+class PrefixResolver;
+class ElemAttributeSet;
+class ElemTemplate;
+class ElemTemplateElement;
+class ElemVariable;
+class KeyTable;
+class NodeRefListBase;
+class StylesheetConstructionContext;
+class StylesheetExecutionContext;
+class StylesheetRoot;
+class XMLURL;
+class XObject;
+class XPath;
+class XPathExecutionContext;
+
+
 
 /**
  * This class represents the base stylesheet or an
  * "import" stylesheet.  "include" stylesheets are 
  * combined with the including stylesheet.
  */
-
 class XALAN_XSLT_EXPORT Stylesheet : public UnimplementedDocument, public UnimplementedElement
 {   
 
@@ -113,19 +118,19 @@ protected:
 	* The root of the stylesheet, where all the tables common to all
 	* stylesheets are kept.
    */
-	StylesheetRoot*	m_stylesheetRoot;
+	StylesheetRoot&	m_stylesheetRoot;
 
   /**
    * Reference back to the owning XSLTProcessor object.
 	* JMD: This has to be a pointer,not a reference because of setXSLProcessor
    */
-	XSLTEngineImpl*	m_processor;
+//	XSLTEngineImpl*	m_processor;
 
 	/**
 	 * The base URL of the XSL document.
 	 */
 	DOMString	m_baseIdent;
-    
+
 private:	
 	/**
 	 * The root XSL stylesheet.
@@ -136,14 +141,14 @@ private:
 	 * Table of tables of element keys. See KeyTable.
 	 */
 	typedef std::vector<KeyTable*>	KeyTableVectorType;
-	mutable KeyTableVectorType			m_key_tables;
+	mutable KeyTableVectorType		m_key_tables;
 
 	/**
 	 * Table of KeyDeclaration objects, which are set by the 
 	 * xsl:key element.
 	 */
 	typedef std::vector<KeyDeclaration>		KeyDeclarationVectorType;
-	KeyDeclarationVectorType	m_keyDeclarations;
+	KeyDeclarationVectorType				m_keyDeclarations;
 
   /**
    * This is set to true if an xsl:key directive is found.
@@ -159,126 +164,84 @@ public:	// @@ JMD: temporary, needs accessor method
 	/**
 	 * A vector of the -imported- XSL Stylesheets.
 	 */
-	typedef std::vector<Stylesheet*> StylesheetVectorType;
+	typedef std::vector<Stylesheet*>			StylesheetVectorType;
 
-	typedef	std::vector<XMLURL> URLStackType;
+	typedef	std::vector<const XMLURL*>			URLStackType;
 
-	typedef	std::vector<NameSpace>		NamespaceVectorType;
-	typedef	std::vector<NamespaceVectorType>		NamespacesStackType;
+	typedef	std::vector<NameSpace>				NamespaceVectorType;
+	typedef	std::vector<NamespaceVectorType>	NamespacesStackType;
 
 	// @@ JMD: temporary
 	virtual NodeImpl* cloneNode(bool /*deep*/) { return 0; }
 
 private:
 
-	StylesheetVectorType	m_imports;
+	StylesheetVectorType		m_imports;
 
   /**
    * The default template to use for xsl:apply-templates when 
    * a select attribute is not found.
    */
-	XPath* m_defaultATXpath; 
+	const XPath*				m_defaultATXpath;
 
 	/**
 	 * A stack to keep track of the result tree namespaces.
 	 */
-	NamespacesStackType		m_namespaces;
+	NamespacesStackType			m_namespaces;
 
   /** 
    * A list of namespace declarations,
    * for mapping from prefix to namespace URI.
    */
-	NamespaceVectorType m_namespaceDecls;
+	NamespaceVectorType			m_namespaceDecls;
 
   /**
 	* This is pushed on the m_resultNameSpaces stack 'till a xmlns attribute is
 	* found.
    */
-  static NamespaceVectorType m_emptyNamespace;
-  
-
-	virtual bool isXSLTagOfType(
-			const DOM_Node&		node,
-			int				tagType) const;
-
-	/**
-	 * Given an element, return an attribute value in the form of a string.
-	 * @param el The element from where to get the attribute.
-	 * @param key The name of the attribute.
-	 * @param contextNode The context to evaluate the 
-	 * attribute value template.
-	 * @return Attribute value.
-	 */
-	virtual DOMString getAttrVal(
-			const DOM_Element&	el,
-			const DOMString&	key,
-			const DOM_Node&		contextNode);
-  
-	/**
-	 * Given an element, return an attribute value in the form of a string.
-	 */
-	virtual DOMString getAttrVal(
-			const DOM_Element&	el,
-			const DOMString&	key);
-
-	/**
-	 * Given an element, return an attribute value in the form of a string,
-	 * processing attributes as need be.
-	 * @param el The element from where to get the attribute.
-	 * @param key The name of the attribute.
-	 * @param contextNode The context to evaluate the 
-	 * attribute value template.
-	 * @return Attribute value.
-	 */
-	virtual DOMString getProcessedAttrVal(
-			const DOM_Element&	el,
-			const DOMString&	key,
-			const DOM_Node&		contextNode);
-
-
-	virtual DOMString getNodeData(const DOM_Node&	node) const;
+	static const NamespaceVectorType	s_emptyNamespace;
 
 	/**
 	 * Tells if the stylesheet tables need to be rebuilt.
 	 */
-	bool		m_tablesAreInvalid;
+	bool						m_tablesAreInvalid;
 
   /**
 	* Tells if the stylesheet is without an xsl:stylesheet and xsl:template
 	* wrapper.
    */
-  bool m_isWrapperless;
+	bool						m_isWrapperless;
 
   /**
    * The manufactured template if there is no wrapper.
    */
-  //@@ reference or pointer?
-  ElemTemplate *m_wrapperlessTemplate;
+	ElemTemplate*				m_wrapperlessTemplate;
   
   /**
    * The table of extension namespaces.
    */
-  typedef std::map<DOMString, ExtensionNSHandler *> ExtensionNamespacesMap;
-  ExtensionNamespacesMap m_extensionNamespaces;
+	typedef std::map<DOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
+
+	ExtensionNamespacesMapType	m_extensionNamespaces;
   
   /**
    * The first template of the template children.
    */
-  ElemTemplateElement *m_firstTemplate;
+	ElemTemplateElement*		m_firstTemplate;
   
   /**
 	* A stack of who's including who is needed in order to support "It is an
 	* error if a stylesheet directly or indirectly includes itself."
    */
 	//typedef	std::vector<URL>		URLStackType;
-	URLStackType m_includeStack;
+	URLStackType				m_includeStack;
   
   /** 
    * Tell if this stylesheet has the default space handling
    * turned off or on according to the xml:space attribute.
    * @serial
    */
-  bool m_defaultSpace;
+	bool						m_defaultSpace;
   
 // @@ JMD: temporary -- needs accessor
 public:
@@ -286,13 +249,13 @@ public:
   /**
    * A lookup table of all space preserving elements.
    */
-  typedef std::vector<XPath*> XPathVectorType;
-  XPathVectorType m_whitespacePreservingElements;
+  typedef std::vector<const XPath*> XPathVectorType;
+  XPathVectorType				m_whitespacePreservingElements;
   
   /**
    * A lookup table of all space stripping elements.
    */
-  XPathVectorType m_whitespaceStrippingElements;
+  XPathVectorType				m_whitespaceStrippingElements;
 
 private:
   
@@ -302,30 +265,32 @@ private:
 	* findNamedTemplate.
    */
   typedef std::map<QName, ElemTemplateElement*> ElemTemplateElementMapType;
-  ElemTemplateElementMapType m_namedTemplates;
+  ElemTemplateElementMapType	m_namedTemplates;
   
   /**
    * Table for defined constants, keyed on the names.
    */
 	typedef std::vector<ElemVariable*> ElemVariableVectorType;
-	ElemVariableVectorType m_topLevelVariables;
+	ElemVariableVectorType		m_topLevelVariables;
 
 
   /**
    * The version of XSL that was declared.
    */
-  static double m_XSLTVerDeclared;
+	double						m_XSLTVerDeclared;
   
   
 
 public:
 
-	static double getXSLTVerDeclared()
+	double
+	getXSLTVerDeclared() const
 	{
 		return m_XSLTVerDeclared;
 	}
 
-	static void setXSLTVerDeclared(double ver)
+	void
+	setXSLTVerDeclared(double ver)
 	{
 		m_XSLTVerDeclared = ver;
 	}
@@ -336,19 +301,27 @@ public:
 	 * the error condition is severe enough to halt processing.
 	 */
 	Stylesheet(
-			StylesheetRoot&	root, 
-			XSLTEngineImpl*			processor, 
-			const DOMString&		baseIdentifier);
+			StylesheetRoot&					root,
+			const DOMString&				baseIdentifier,
+			StylesheetConstructionContext&	constructionContext);
 
-	virtual ~Stylesheet();
+	virtual
+	~Stylesheet();
 
-	XSLTEngineImpl* getProcessor() const { return m_processor; }
+	const StylesheetRoot&
+	getStylesheetRoot() const
+	{
+		return m_stylesheetRoot;
+	}
 
-	void setProcessor(XSLTEngineImpl* processor) { m_processor = processor; }
+	StylesheetRoot&
+	getStylesheetRoot()
+	{
+		return m_stylesheetRoot;
+	}
 
-	StylesheetRoot* getStylesheetRoot() { return m_stylesheetRoot; }
-
-	XPath* getDefaultATXpath () const
+	const XPath*
+	getDefaultATXpath () const
 	{
 		return m_defaultATXpath;
 	}
@@ -370,7 +343,8 @@ public:
 	 * Get the top entry on the namespace stack, or 0, if
 	 * there is nothing on the stack.
 	 */
-	NamespaceVectorType getCurrentNamespace() const;
+	const NamespaceVectorType&
+	getCurrentNamespace() const;
 
 	/**
 	 * Push the namespace declarations from the current attribute 
@@ -384,17 +358,22 @@ public:
 	void popNamespaces();
 
 	// See if this is a xmlns attribute or in a non-XSLT.
-	bool isAttrOK(const DOMString& attrName, const AttributeList& atts, int which);
+	bool
+	isAttrOK(
+			const DOMString&				attrName,
+			const AttributeList&			atts,
+			int								which,
+			StylesheetConstructionContext&	constructionContext) const;
 
 	// Get the namespace from a qualified name.
-	DOMString getNamespaceFromStack(const DOMString& nodeName);
+	DOMString getNamespaceFromStack(const DOMString& nodeName) const;
 
 	// Get the namespace from a prefix.
-	DOMString getNamespaceForPrefix(const DOMString& prefix);
+	DOMString getNamespaceForPrefix(const DOMString& prefix) const;
 
 	// Get the namespace from a prefix.
 	DOMString getNamespaceForPrefixFromStack(const DOMString& prefix) const;
-	
+
 
 	void addTemplate(ElemTemplate *tmpl);
 
@@ -402,12 +381,26 @@ public:
 	/**
 	 * Process an attribute that has the value of 'yes' or 'no'.
 	 */
-	virtual bool getYesOrNo( const DOMString&	aname, const DOMString&	val) const;
+	virtual bool
+	getYesOrNo(
+			const DOMString&				aname,
+			const DOMString&				val,
+			StylesheetConstructionContext&	constructionContext) const;
 
 	/**
 	 * Tell if this is the root of the stylesheet tree.
 	 */
-	virtual bool isRoot() const;
+	bool
+	isRoot() const
+	{
+		return m_isRoot;
+	}
+
+private:
+
+	const bool	m_isRoot;
+
+public:
 
 // JMD added Thu Sep 30 08:20:29 EDT 1999
 
@@ -415,26 +408,23 @@ public:
 	const DOMString getBaseIdentifier() { return m_baseIdent; }
 	void setBaseIdentifier(const DOMString& str) { m_baseIdent = str; }
 
-	// Add this and all included stylesheets to the source docs table.
-	void addToDocTables(const DOMString& styleBaseURI);
-
 	/**
 	 * Add an attribute set to the list.
 	 *
 	*/
 	void addAttributeSet(
-		const QName&				qname, 
+		const QName&		qname, 
 		ElemAttributeSet*	attrSet);
 
 	typedef std::vector<QName> QNameVectorType;
 
 	void
 	applyAttrSets(
-			const QNameVectorType&	attributeSetsNames, 
-            XSLTEngineImpl*			processor, 
-            const DOM_Node&			sourceTree, 
-            const DOM_Node&			sourceNode,
-            const QName&			mode);
+			const QNameVectorType&			attributeSetsNames,
+            StylesheetExecutionContext&		executionContext, 
+            const DOM_Node&					sourceTree,
+            const DOM_Node&					sourceNode,
+            const QName&					mode) const;
   
 	const DOMString& getBaseURL() const
 	{
@@ -456,13 +446,14 @@ public:
 		return m_imports;
 	}
 
-
-	ElemTemplate *getWrapperlessTemplate()
+	const ElemTemplate*
+	getWrapperlessTemplate()
 	{
 		return m_wrapperlessTemplate;
 	}
 
-	void setWrapperlessTemplate(ElemTemplate * templ)
+	void
+	setWrapperlessTemplate(ElemTemplate*	templ)
 	{
 		m_wrapperlessTemplate = templ;
 	}
@@ -498,7 +489,11 @@ public:
 	 * Thus, for a given key or keyref, look up hashtable by name, 
 	 * look up the nodelist by the given reference.
 	 */
-	virtual void processKeyElement(ElemTemplateElement *nsContext, const AttributeList& atts);
+	virtual void
+	processKeyElement(
+			ElemTemplateElement*			nsContext,
+			const AttributeList&			atts,
+			StylesheetConstructionContext&	constructionContext);
 //		  throws XSLProcessorException
 private:
 
@@ -542,29 +537,35 @@ public:
 	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
-	virtual ElemTemplateElement* findNamedTemplate(const DOMString&	name) const;
+	virtual ElemTemplateElement*
+	findNamedTemplate(
+			const DOMString&				name,
+            StylesheetExecutionContext&		executionContext) const;
 	/**
 	 * Locate a macro via the "name" attribute.
 	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
-	virtual ElemTemplateElement* findNamedTemplate(const QName& qname) const;
+	virtual ElemTemplateElement*
+	findNamedTemplate(
+			const QName&					qname,
+            StylesheetExecutionContext&		executionContext) const;
 
 	/**
 	 * Given the name of a constant, return a string value.
 	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
-	virtual
-	XString*
-	getTopLevelVariable(const DOMString&	name) const;
-
+	virtual	XObject*
+	getTopLevelVariable(
+			const DOMString&				name,
+            StylesheetExecutionContext&		executionContext) const;
 
 	/**
 	 * Given a target element, find the template that best 
 	 * matches in the given XSL document, according 
 	 * to the rules specified in the xsl draft. 
-	 * @param stylesheetTree Where the XSL rules are to be found.
+	 * @param executionContext The current execution context.
 	 * @param sourceTree Where the targetElem is to be found.
 	 * @param targetElem The element that needs a rule.
 	 * @return Rule that best matches targetElem.
@@ -574,16 +575,16 @@ public:
 	virtual
 	ElemTemplateElement*
 	findTemplate(
-			// java: DOM_Document	sourceTree, 
-			const DOM_Node&		sourceTree, 
-			const DOM_Node&		targetNode) const;
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree,
+			const DOM_Node&					targetNode) const;
 
 
 	/**
 	 * Given a target element, find the template that best 
 	 * matches in the given XSL document, according 
 	 * to the rules specified in the xsl draft. 
-	 * @param stylesheetTree Where the XSL rules are to be found.
+	 * @param executionContext The current execution context.
 	 * @param sourceTree Where the targetElem is to be found.
 	 * @param targetElem The element that needs a rule.
 	 * @param mode A string indicating the display mode.
@@ -597,14 +598,12 @@ public:
 	virtual
 	ElemTemplateElement*
 	findTemplate(
-			const DOM_Node&		sourceTree, 
-			const DOM_Node&		targetNode, 
-			const QName*	mode,
-			bool				useImports,
-			// @@ java: this is an array, although only first element seems to be
-			// used
-			Stylesheet*		foundStylesheet) const;
-
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					targetNode, 
+			const QName&					mode,
+			bool							useImports,
+			const Stylesheet*&				foundStylesheet) const;
 
 	/**
 	 * A class to contain a match pattern and it's corresponding template.
@@ -622,19 +621,18 @@ public:
 		 * patterns (for compatibility with old syntax).
 		 */
 		MatchPattern2(
-				const DOMString&	pat,
-				XPath&			exp,
-// JMD: Was				DOM_Element	theTemplate,
-				ElemTemplate&		theTemplate,
-				int					posInStylesheet, 
-				const DOMString&	targetString,
-				Stylesheet*			stylesheet); 
+				const DOMString&		pat,
+				const XPath&			exp,
+				const ElemTemplate&		theTemplate,
+				int						posInStylesheet, 
+				const DOMString&		targetString,
+				const Stylesheet&		stylesheet); 
 
 		~MatchPattern2();
 
-		Stylesheet* getStylesheet() const { return m_stylesheet; }
+		const Stylesheet& getStylesheet() const { return m_stylesheet; }
 		const DOMString& getTargetString() const { return m_targetString; }
-		XPath& getExpression() const { return m_expression; }
+		const XPath& getExpression() const { return m_expression; }
 		int getPositionInStylesheet() const { return m_posInStylesheet; }
 		const DOMString& getPattern() const { return m_pattern; }
 		const ElemTemplate& getTemplate() const { return m_template; }
@@ -645,12 +643,12 @@ public:
 		void setPriority(double	thePriority) const { m_priority = thePriority; }
 
 	private:
-		Stylesheet* const		m_stylesheet;
-		const DOMString		m_targetString;
-		XPath&			m_expression;
+		const Stylesheet& 		m_stylesheet;
+		const DOMString			m_targetString;
+		const XPath&			m_expression;
 		const int				m_posInStylesheet;
-		const DOMString		m_pattern;
-		ElemTemplate&			m_template; // ref to the corresponding template
+		const DOMString			m_pattern;
+		const ElemTemplate&		m_template; // ref to the corresponding template
 		
 		/**
 		 * Transient... only used to track priority while processing.
@@ -702,6 +700,7 @@ private:
 	// This can't be a map, since you can have multiple attribute sets of the
 	// same name, could be a multimap but why bother
 	typedef std::vector<ElemAttributeSet*> AttributeSetMapType;
+
 	AttributeSetMapType		m_attributeSets;
 
 public:
@@ -733,16 +732,13 @@ public:
 	/**
 	 * Given a valid element key, return the corresponding node list.
 	 */
-	const NodeRefListBase* getNodeSetByKey(
-					const DOM_Node&		doc, 
-					const DOMString&	name, 
-					const DOMString&	ref,
-					const PrefixResolver&	resolver) const;
-
-  /**
-   * Set the XSLTProcessor of this and all imported stylesheets.
-   */
-	void setXSLProcessor(XSLTEngineImpl *processor);
+	const NodeRefListBase*
+	getNodeSetByKey(
+			const DOM_Node&			doc,
+			const DOMString&		name,
+			const DOMString&		ref,
+			const PrefixResolver&	resolver,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Add an extension namespace handler. This provides methods for calling
@@ -759,19 +755,19 @@ public:
 	 *
 	 * @param uri the URI of the extension namespace.
 	 */
-	ExtensionNSHandler* lookupExtensionNSHandler (const DOMString& uri) 
+	ExtensionNSHandler* lookupExtensionNSHandler (const DOMString& uri) const
 	{
-	  ExtensionNamespacesMap::const_iterator it = 
+		const ExtensionNamespacesMapType::const_iterator	it = 
 		  m_extensionNamespaces.find(uri);
+
 		return it == m_extensionNamespaces.end() ? 0 : (*it).second;
 	}
 
 	/**
 	 * Get the type of the node.  We'll pretend we're a Document.
 	 */
-	virtual short getNodeType() { return DOM_Node::DOCUMENT_NODE; }
-
-	void error(const DOMString& msg) const;
+	virtual short
+	getNodeType();
 
 	/** Unimplemented. */
 
@@ -822,10 +818,15 @@ public:
    * the stylesheet.
    * @param var A top-level variable declared with xsl:variable or xsl:param-variable.
    */
-  void setTopLevelVariable(ElemVariable* var) { m_topLevelVariables.push_back(var); }
+	void
+	setTopLevelVariable(ElemVariable* var) { m_topLevelVariables.push_back(var); }
 
-  typedef std::vector<Arg> ParamVectorType;
-  void pushTopLevelVariables(ParamVectorType& topLevelParams);
+	typedef std::vector<Arg> ParamVectorType;
+  
+	void
+	pushTopLevelVariables(
+			StylesheetExecutionContext&		executionContext,
+			ParamVectorType&				topLevelParams) const;
 
 }; // end Stylesheet class definition
 

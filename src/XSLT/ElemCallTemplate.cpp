@@ -56,82 +56,113 @@
  */
 #include "ElemCallTemplate.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include "AVT.hpp"
+#include "Constants.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+#include "StylesheetRoot.hpp"
+
+
 
 ElemCallTemplate::ElemCallTemplate(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name,  lineNumber, columnNumber),
-		m_pNameAVT(0)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),
+	m_pNameAVT(0)
 {
-	int nAttrs = atts.getLength();
+	const int	nAttrs = atts.getLength();
 
 	for(int i = 0; i < nAttrs; i++)
 	{
 		const DOMString aname(atts.getName(i));
 
-		if(equals(aname,Constants::ATTRNAME_NAME))
+		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
 			m_pNameAVT = new AVT(aname,	atts.getType(i), atts.getValue(i),
-				*this, processor);
+				*this, constructionContext);
 		}
-		else if(!isAttrOK(aname, atts, i))
+		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
 }
 
+
+	
 ElemCallTemplate::~ElemCallTemplate()
 {
 	delete m_pNameAVT;
 }
 
-int ElemCallTemplate::getXSLToken() const 
+
+
+int
+ElemCallTemplate::getXSLToken() const 
 {
 	return Constants::ELEMNAME_CALLTEMPLATE;
 }
 	
-void ElemCallTemplate::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
-{
-	ElemTemplateElement::execute(processor,	sourceTree, sourceNode, mode);
 
-	assert(m_pNameAVT);
+
+void
+ElemCallTemplate::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
+{
+	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
+
+	assert(m_pNameAVT != 0);
+
 	DOMString templateName; 
-	m_pNameAVT->evaluate(templateName, sourceNode, *this, processor.getContextNodeList());
+
+	m_pNameAVT->evaluate(templateName, sourceNode, *this, executionContext.getXPathExecutionContext());
 
 	if(!isEmpty(templateName))
 	{
-		ElemTemplateElement* theTemplate = 0;
-		theTemplate = processor.getStylesheetRoot()->findNamedTemplate(templateName);
+		ElemTemplateElement* const	theTemplate =
+			getStylesheet().getStylesheetRoot().findNamedTemplate(templateName, executionContext);
 
 		if(0 != theTemplate)
 		{
-			processor.getVariableStacks().pushContextMarker(DOM_UnimplementedElement(theTemplate), sourceNode);
+			executionContext.pushContextMarker(DOM_UnimplementedElement(theTemplate), sourceNode);
 			
-			processor.getVariableStacks().pushParams(&getStylesheet(), *this, 
+			executionContext.pushParams(*this, 
 				sourceTree, sourceNode, mode, DOM_UnimplementedElement(theTemplate));
 
-			theTemplate->execute(processor, sourceTree, sourceNode, mode);
+			theTemplate->execute(executionContext, sourceTree, sourceNode, mode);
 
-			processor.getVariableStacks().popCurrentContext();
+			executionContext.popCurrentContext();
 		}
 		else
 		{
-			processor.error("Could not find template named: '" + templateName + "'");
+			executionContext.error("Could not find template named: '" + templateName + "'");
 		}
 	}
 	else
 	{
-		processor.error("Could not resolve name AVT in xsl:call-template.");
+		executionContext.error("Could not resolve name AVT in xsl:call-template.");
 	}
 }
 
@@ -141,6 +172,8 @@ void ElemCallTemplate::execute(
  */
 NodeImpl* ElemCallTemplate::appendChild(NodeImpl* newChild)
 {
+	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
+
 	const int type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
 
 	switch(type)
@@ -149,7 +182,7 @@ NodeImpl* ElemCallTemplate::appendChild(NodeImpl* newChild)
 		break;
 		
 	default:
-		error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() +	" to " + this->getTagName());
+		error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() +	" to " + getTagName());
 	}
 
 	return ElemTemplateElement::appendChild(newChild);

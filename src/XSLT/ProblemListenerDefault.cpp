@@ -69,7 +69,6 @@
 // Xerces XML4C header files
 #include <dom/DOM_Node.hpp>
 #include <dom/DOMString.hpp>
-#include <util/StdOut.hpp>
 
 
 

@@ -69,49 +69,54 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
-#include "ElemTemplateElement.hpp"
 #include "ElemUse.hpp"
 
-#include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
 
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
+class AVT;
 
-#include "AVT.hpp"
+
 
 class ElemElement: public ElemUse
 {
 public:
-	ElemElement (
-		XSLTEngineImpl& processor,
-		Stylesheet& stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
 
-	virtual ~ElemElement();
-	
-	virtual int getXSLToken() const; 
+	ElemElement(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
+
+	virtual
+	~ElemElement();
+
+	virtual int
+	getXSLToken() const;
 
 	virtual void 
 	execute(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode);
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 
-	
 private:
+
 	// not implemented
 	ElemElement(const ElemElement &);
-	ElemElement& operator=(const ElemElement &);
 
-	AVT* m_nameAVT;
-	AVT* m_namespaceAVT;
+	ElemElement&
+	operator=(const ElemElement &);
+
+	const AVT*	m_nameAVT;
+	const AVT*	m_namespaceAVT;
 };
+
+
+
 #endif	// XALAN_ELEMELEMENT_HEADER_GUARD

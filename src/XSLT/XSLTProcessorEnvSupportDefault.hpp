@@ -91,10 +91,11 @@ public:
 	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const DOM_Node&		doc,
-			const DOMString&	name,
-			const DOMString&	ref,
-			const PrefixResolver&	resolver) const;
+			const DOM_Node&			doc,
+			const DOMString&		name,
+			const DOMString&		ref,
+			const PrefixResolver&	resolver,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Given a name, locate a variable in the current context, and return 
@@ -102,8 +103,8 @@ public:
 	 */
 	XObject*
 	getVariable(
-			XPathExecutionContext&	executionContext,
-			const QName&			name) const;
+			XObjectFactory&		factory,
+			const QName&		name) const;
 
 	virtual bool
 	problem(

@@ -56,47 +56,71 @@
  */
 #include "ElemWhen.hpp"
 
-#include "ElemPriv.hpp"
 
-		ElemWhen::ElemWhen(
-		XSLTEngineImpl& processor,
-		Stylesheet& stylesheetTree,
-		const DOMString& name, 
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber) :
-			ElemTemplateElement(processor, stylesheetTree, name, lineNumber, columnNumber),
-			m_pTest(0)
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include "Constants.hpp"
+#include "StylesheetConstructionContext.hpp"
+
+
+
+ElemWhen::ElemWhen(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),
+	m_pTest(0)
 {
 	const int nAttrs = atts.getLength();
 
 	for(int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
-		const int tok = getAttrTok(aname);
+		const DOMString		aname(atts.getName(i));
+
+		const int			tok = constructionContext.getAttrTok(aname);
 
 		switch(tok)
 		{
 		case Constants::TATTRNAME_TEST:
-			m_pTest = getStylesheet().getProcessor()->createXPath(atts.getValue(i), *this);
+			m_pTest = constructionContext.createXPath(atts.getValue(i), *this);
 			break;
+
 		case Constants::TATTRNAME_XMLSPACE:
 			processSpaceAttr(atts, i);
 			break;
+
 		default:
 			if(!isAttrOK(tok, aname, atts, i))
 			{
-				processor.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(name + " has an illegal attribute: " + aname);
 			}
 		}
 	}
-	if(0== m_pTest)
+
+	if(0 == m_pTest)
 	{
-		processor.error("xsl:when must have a 'test' attribute.");
+		constructionContext.error("xsl:when must have a 'test' attribute.");
 	}
 }
 
-int ElemWhen::getXSLToken() const
+
+
+int
+ElemWhen::getXSLToken() const
 {
 	return Constants::ELEMNAME_WHEN;
 }

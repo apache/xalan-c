@@ -61,16 +61,30 @@
 
 // Base include file.	Must be first.
 #include "XSLTDefinitions.hpp"
-#include "XSLTEngineImpl.hpp"
-#include "Stylesheet.hpp"
 
-#include "Java2STL.hpp"
+
+
+#include <vector>
+
+
+
+#include <dom/DOMString.hpp>
+
+
 
 #include <XMLSupport/FormatterListener.hpp>
+
+
 
 class ElemTemplate;
 class ElemTemplateElement;
 class ElemTextLiteral;
+class ExtensionNSHandler;
+class Stylesheet;
+class StylesheetConstructionContext;
+class XSLTEngineImpl;
+
+
 
 /**
  * This class processes a stylesheet via SAX events, and inits
@@ -78,8 +92,6 @@ class ElemTextLiteral;
  * it is not for the faint-of-heart, due to the state tracking 
  * that has to be done due to the SAX event model.
  */
-
-
 class XALAN_XSLT_EXPORT StylesheetHandler : public FormatterListener
 {
 private:
@@ -107,11 +119,16 @@ private:
 	 * The owning stylesheet.
 	 */
 	Stylesheet& m_stylesheet;
-	
+
+	/**
+	 * The construction context.
+	 */
+	StylesheetConstructionContext&	m_constructionContext;
+
 	/**
 	 * The stack of elements, pushed and popped as events occur.
 	 */
-	ElemTemplateStackType* m_pElemStack;
+	ElemTemplateStackType	m_elemStack;
 
 	/**
 	 * Need to keep a stack of found whitespace elements so that 
@@ -169,7 +186,10 @@ public:
 	 * FormatterToText instance constructor... it will add the DOM nodes 
 	 * to the document fragment.
 	 */
-	StylesheetHandler(XSLTEngineImpl& processor, Stylesheet& stylesheetTree);
+	StylesheetHandler(
+			XSLTEngineImpl&					processor,
+			Stylesheet&						stylesheetTree,
+			StylesheetConstructionContext&	constructionContext);
 
 	virtual
 	~StylesheetHandler();
@@ -259,12 +279,7 @@ private:
 							const AttributeList& atts,
 							int lineNumber,
 							int columnNumber);
-	
-	/**
-	 * Test to see if the stack contains the given URL.
-	 */
-	bool stackContains(const Stylesheet::URLStackType& stack, const XMLURL& url) const;
-	
+
 protected:
 
 	/**
@@ -438,10 +453,10 @@ public:
 	virtual void entityReference(const XMLCh* const);
 
 	// pure virtual in DocumentHandler
-    virtual void resetDocument() {}
+    virtual void resetDocument();
 
 	// pure virtual in FormatterListener
-    virtual void charactersRaw(const XMLCh* const chars, const unsigned int	length) {}
+    virtual void charactersRaw(const XMLCh* const chars, const unsigned int	length);
 
 };
 

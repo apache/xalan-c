@@ -74,18 +74,18 @@
 
 
 
-#include <dom/DOM_Node.hpp>
+
+//#include <dom/DOM_Node.hpp>
 
 
-#include <XPath/XPath.hpp>
-#include <XPath/XObject.hpp>
 
 #include "NodeSortKey.hpp"
 
 
-
+class DOM_Node;
 class MutableNodeRefList;
-class XSLTProcessor;
+class XPath;
+class XPathExecutionContext;
 
 
 
@@ -102,7 +102,7 @@ public:
 	 * so it can know how to get the node data according to 
 	 * the proper whitespace rules.
 	 */
-	NodeSorter(XSLTProcessor&	p);
+	NodeSorter(XPathExecutionContext&	executionContext);
   
 	~NodeSorter();
 
@@ -143,13 +143,12 @@ public:
 	{
 	public:
 
-		NodeSortKeyCompare(XSLTProcessor&					theProcessor,
+		NodeSortKeyCompare(XPathExecutionContext&			executionContext,
 						   const std::vector<DOM_Node>&		theNodes,
 						   const std::vector<NodeSortKey>&	theNodeSortKeys) :
-			m_processor(theProcessor),
+			m_executionContext(executionContext),
 			m_nodes(theNodes),
 			m_nodeSortKeys(theNodeSortKeys)
-			// java: compare
 		{
 		}
 
@@ -158,14 +157,14 @@ public:
 				   second_argument_type		theRHS,
 				   unsigned int				theKeyIndex = 0) const;
 
-		XSLTProcessor&						m_processor;
+		XPathExecutionContext&				m_executionContext;
 		const std::vector<DOM_Node>&		m_nodes;
 		const std::vector<NodeSortKey>&		m_nodeSortKeys;
 	};
 
 private:
 
-	XSLTProcessor&				m_xslp;
+	XPathExecutionContext&		m_executionContext;
 
 	std::vector<NodeSortKey>	m_keys; // vector of NodeSortKeys
   /**

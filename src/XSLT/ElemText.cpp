@@ -56,60 +56,93 @@
  */
 #include "ElemText.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include "Constants.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+
+
 
 /**
  * This primarily acts as a marker on the element 
  * stack to signal that whitespace should be preserved.
  */
 ElemText::ElemText(
-	XSLTEngineImpl&	processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int	columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name, lineNumber, columnNumber),
-		m_disableOutputEscaping(false)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),
+	m_disableOutputEscaping(false)
 {
 	const int nAttrs = atts.getLength();
 
 	for(int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const DOMString		aname(atts.getName(i));
 		
-		if(equals(aname,Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING))
+		if(equals(aname, Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING))
 		{
-			m_disableOutputEscaping = getStylesheet().getYesOrNo(aname, atts.getValue(i));
+			m_disableOutputEscaping =
+					stylesheetTree.getYesOrNo(aname,
+											  atts.getValue(i),
+											  constructionContext);
 		}
-		else if(!isAttrOK(aname, atts, i))
+		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
 }
 
 
-/**
- * Add a child to the child list.
- */
-NodeImpl* ElemText::appendChild(NodeImpl* newChild)
+
+ElemText::~ElemText()
 {
-	int type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
+}
+
+
+
+NodeImpl*
+ElemText::appendChild(NodeImpl* newChild)
+{
+	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
+
+	const int	type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
+
 	switch(type)
 	{		
 	case Constants::ELEMNAME_TEXTLITERALRESULT:
 		break; 
 		
 	default:
-		error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + this->getTagName());
+		error("Can not add " +
+				dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() +
+				" to " +
+				getTagName());
 	}
+
 	return ElemTemplateElement::appendChild(newChild);
 }
 
 
-int ElemText::getXSLToken() const
+
+int
+ElemText::getXSLToken() const
 {
     return Constants::ELEMNAME_TEXT;	
 }
-

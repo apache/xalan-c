@@ -56,42 +56,73 @@
  */
 #include "ElemComment.hpp"
 
-#include "ElemPriv.hpp"
 
 
-ElemComment::ElemComment(XSLTEngineImpl& processor, 
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int columnNumber) :
-		ElemTemplateElement(processor,stylesheetTree,name,  lineNumber, columnNumber)
+#include <sax/AttributeList.hpp>
+//#include <sax/SAXException.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include "Constants.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
+
+ElemComment::ElemComment(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber)
 {
-	int nAttrs = atts.getLength();
+	const int nAttrs = atts.getLength();
+
 	for(int i = 0; i < nAttrs; i++)
 	{
 		const DOMString aname(atts.getName(i));
 
-		if(isAttrOK(aname, atts, i)== false || processSpaceAttr(aname, atts, i))
+		if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}	
 }
 
-	
-int ElemComment::getXSLToken() const 
+
+
+ElemComment::~ElemComment()
+{
+}
+
+
+
+int
+ElemComment::getXSLToken() const 
 {
 	return Constants::ELEMNAME_COMMENT;
 }
-		
 
-void ElemComment::execute(XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode, 
-	const QName& mode)
+
+
+void
+ElemComment::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
-	ElemTemplateElement::execute(processor,	sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
     // Note the content model is:
     // <!ENTITY % instructions "
@@ -101,18 +132,23 @@ void ElemComment::execute(XSLTEngineImpl& processor,
     // | xsl:element
     // | xsl:attribute
     // ">
-    DOMString data = childrenToString(processor, sourceTree, sourceNode, mode);
+    const DOMString		data = childrenToString(executionContext, sourceTree, sourceNode, mode);
 
-    processor.comment(toCharArray(data));
+    executionContext.comment(toCharArray(data));
 }
+
 
 
 /**
  * Add a child to the child list.
  */
-NodeImpl* ElemComment::appendChild(NodeImpl* newChild)
+NodeImpl*
+ElemComment::appendChild(NodeImpl* newChild)
 {
-	int type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
+	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
+
+	const int	type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
+
 	switch(type)
 	{
 	// char-instructions 
@@ -140,8 +176,11 @@ NodeImpl* ElemComment::appendChild(NodeImpl* newChild)
 	break;
 		
 	default:
-		error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + this->getTagName());
+		error("Can not add " +
+			  dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() +
+			  " to " +
+			  getTagName());
 	}
 
-	return dynamic_cast<ElemTemplateElement*>(ElemTemplateElement::appendChild(newChild));
+	return ElemTemplateElement::appendChild(newChild);
 }

@@ -56,31 +56,54 @@
  */
 #include "ElemApplyTemplates.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <include/DOMHelper.hpp>
+
+
+
+#include "Constants.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetRoot.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+#include "TracerEvent.hpp"
+
+
 
 ElemApplyTemplates::ElemApplyTemplates(
-	XSLTEngineImpl&	processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int	columnNumber) :
-		ElemForEach(processor, stylesheetTree, name,  atts, lineNumber, columnNumber, false),
-		m_isDefaultTemplate(false),
-		m_mode(QName())
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name, 
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemForEach(constructionContext,
+				stylesheetTree,
+				name,
+				atts,
+				lineNumber,
+				columnNumber,
+				false),
+	m_isDefaultTemplate(false),
+	m_mode()
 {
 	const int nAttrs = atts.getLength();
 
 	for(int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const DOMString		aname(atts.getName(i));
 
-		const int tok = getAttrTok(aname);
+		const int			tok = constructionContext.getAttrTok(aname);
 
 		switch(tok)
 		{
 		case Constants::TATTRNAME_SELECT:
-			m_pSelectPattern = processor.createXPath(atts.getValue(i), *this);
+			m_pSelectPattern = constructionContext.createXPath(atts.getValue(i), *this);
 			break;
 
 		case Constants::TATTRNAME_MODE:
@@ -90,7 +113,7 @@ ElemApplyTemplates::ElemApplyTemplates(
 		default:
 			if(!isAttrOK(tok, aname, atts, i))
 			{
-				processor.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(name + " has an illegal attribute: " + aname);
 			}
 			break;
 		}
@@ -98,13 +121,13 @@ ElemApplyTemplates::ElemApplyTemplates(
 
 	if(0 == m_pSelectPattern)
 	{
-		if(0 == getStylesheet().getDefaultATXpath())
+		if(0 == stylesheetTree.getDefaultATXpath())
 		{
-			getStylesheet().setDefaultATXpath(
-				processor.createXPath(DOMString("node()"), *this));
+			stylesheetTree.setDefaultATXpath(
+				constructionContext.createXPath(DOMString("node()"), *this));
 		}
 
-		m_pSelectPattern = getStylesheet().getDefaultATXpath();
+		m_pSelectPattern = stylesheetTree.getDefaultATXpath();
 	}
 }
 
@@ -115,21 +138,23 @@ int ElemApplyTemplates::getXSLToken() const
 
 
 void ElemApplyTemplates::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
-	if(0 != getStylesheet().getStylesheetRoot()->getTraceListeners())
+	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 	{
-	  getStylesheet().getStylesheetRoot()->fireTraceEvent(TracerEvent(
-		  &processor, sourceTree, sourceNode, mode, *this));
+	  getStylesheet().getStylesheetRoot().fireTraceEvent(TracerEvent(
+		  executionContext, sourceTree, sourceNode, mode, *this));
 	}
 
 	if (0 != sourceNode)
 	{
-		transformSelectedChildren(getStylesheet(), 
-			this, 
+		transformSelectedChildren(
+			executionContext,
+			getStylesheet(),
+			*this, 
 			0, 
 			sourceTree, 
 			sourceNode, 
@@ -139,7 +164,7 @@ void ElemApplyTemplates::execute(
 	}
     else // if(null == sourceNode)
 	{
-		processor.error("sourceNode is null in handleApplyTemplatesInstruction!");
+		executionContext.error("sourceNode is null in handleApplyTemplatesInstruction!");
 	}
 }
 

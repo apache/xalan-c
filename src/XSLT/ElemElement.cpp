@@ -56,21 +56,36 @@
  */
 #include "ElemElement.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include "AVT.hpp"
+#include "Constants.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
 
 ElemElement::ElemElement(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int	columnNumber) :
-		ElemUse(processor, stylesheetTree, name, atts, lineNumber, columnNumber),
-		m_nameAVT(0),
-		m_namespaceAVT(0)
-	
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemUse(constructionContext,
+			stylesheetTree,
+			name,
+			lineNumber,
+			columnNumber),
+	m_nameAVT(0),
+	m_namespaceAVT(0)	
 {
 	const int nAttrs = atts.getLength();
+
 	for(int i = 0; i < nAttrs; i++)
 	{
 		const DOMString aname(atts.getName(i));
@@ -78,83 +93,90 @@ ElemElement::ElemElement(
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
 			m_nameAVT = new AVT(aname,	atts.getType(i), atts.getValue(i),
-				*this, processor);
+				*this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_NAMESPACE))
 		{
 			m_namespaceAVT = new AVT(aname, atts.getType(i), atts.getValue(i),
-				*this, processor); 
+				*this, constructionContext); 
 		}
-		else if(!(processUseAttributeSets(aname, atts, i) || processSpaceAttr(aname, atts, i) ||
-			isAttrOK(aname, atts, i) 
-			))
+		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) || processSpaceAttr(aname, atts, i) ||
+			isAttrOK(aname, atts, i, constructionContext)))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
+
 	if(0 == m_nameAVT)
 	{
-		processor.error(name + " must have a name attribute.");
+		constructionContext.error(name + " must have a name attribute.");
 	}
 	
 }
 
+
+
 ElemElement::~ElemElement()
 {
 	delete m_nameAVT;
-	m_nameAVT = 0;
 
 	delete m_namespaceAVT;
-	m_namespaceAVT = 0;
 }
 
-int ElemElement::getXSLToken() const 
+
+
+int
+ElemElement::getXSLToken() const 
 {
 	return Constants::ELEMNAME_ELEMENT;
 }
 	
 
-void ElemElement::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
+void
+ElemElement::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {	
 	DOMString elemName; 
 
-	assert(m_nameAVT);
-	m_nameAVT->evaluate(elemName,sourceNode, *this, processor.getContextNodeList());
-	
+	assert(m_nameAVT != 0);
+
+	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext.getXPathExecutionContext());
+
 	if(!isEmpty(elemName))
 	{
 		if(0 != m_namespaceAVT)
 		{
-			DOMString elemNameSpace;
+			DOMString	elemNameSpace;
+
 			m_namespaceAVT->evaluate(elemNameSpace, sourceNode, 
-				*this, processor.getContextNodeList());
+				*this, executionContext.getXPathExecutionContext());
 
 			if(!isEmpty(elemNameSpace))
 			{
-				DOMString prefix = processor.getResultPrefixForNamespace(elemNameSpace);
+				DOMString	prefix = executionContext.getResultPrefixForNamespace(elemNameSpace);
+
 				if(isEmpty(prefix))
 				{
-					prefix = DOMString("ns") + LongToDOMString(processor.getUniqueNSValue());
-					DOMString nsDecl = DOMString("xmlns:") + prefix;
-					processor.addResultAttribute(processor.getPendingAttributes(), 
-						nsDecl, elemNameSpace);
+					prefix = executionContext.getUniqueNameSpaceValue();
+
+					const DOMString		nsDecl = DOMString("xmlns:") + prefix;
+
+					executionContext.addResultAttribute(nsDecl, elemNameSpace);
 				}
+
 				elemName = (prefix + ":" + elemName);
 			}
 		}
-		
-		processor.startElement(toCharArray(elemName));   
-		
-		ElemUse::execute(processor, sourceTree, sourceNode, mode);
-		
-		executeChildren(processor, sourceTree, sourceNode, mode);
-		
-		processor.endElement(toCharArray(elemName));
+
+		executionContext.startElement(toCharArray(elemName));   
+
+		ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
+
+		executeChildren(executionContext, sourceTree, sourceNode, mode);
+
+		executionContext.endElement(toCharArray(elemName));
 	}
 }
-
-

@@ -71,63 +71,84 @@
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
-#include <sax/AttributeList.hpp>
 
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
+
+#include <dom/DOMString.hpp>
+
+
+
+#include <XPath/QName.hpp>
+
+
+
+class XPath;
+
 
 
 class ElemTemplate : public ElemTemplateElement
 {
 public:
-	ElemTemplate (
-		XSLTEngineImpl& processor,
-		Stylesheet& stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int	lineNumber, 
-		int	columnNumber);
 
-	virtual ~ElemTemplate();
+	ElemTemplate(
+		StylesheetConstructionContext&	constructionContext,
+		Stylesheet&						stylesheetTree,
+		const DOMString&				name,
+		const AttributeList&			atts,
+		int								lineNumber,
+		int								columnNumber);
+
+	virtual
+	~ElemTemplate();
 	
-	virtual int getXSLToken() const; 
+	virtual int
+	getXSLToken() const; 
 
 	virtual void execute(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode);
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 
-	const QName* getName() const
+	const QName&
+	getName() const
 	{
-		return m_pName;
+		return m_name;
 	}
 
-	const QName* getMode() const
+	const QName&
+	getMode() const
 	{
-		return m_pMode;
+		return m_mode;
 	}
 
-	XPath* getMatchPattern() const
+	const XPath*
+	getMatchPattern() const
 	{
-		return m_pMatchPattern;
+		return m_matchPattern;
 	}
 
-	double getPriority() const
+	double
+	getPriority() const
 	{
 		return m_priority;
 	}
 
 private:
+
 	// not implemented
 	ElemTemplate(const ElemTemplate &);
-	ElemTemplate& operator=(const ElemTemplate &);
 
-	XPath*		m_pMatchPattern;
-	QName*		m_pName;
-	QName*		m_pMode;
-	double		m_priority;
+	ElemTemplate&
+	operator=(const ElemTemplate &);
+
+	const XPath*	m_matchPattern;
+
+	QName			m_name;
+	QName			m_mode;
+
+	double			m_priority;
 };
+
+
+
 #endif	// XALAN_ELEMTEMPLATE_HEADER_GUARD

@@ -65,25 +65,33 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
 #include "ElemTemplateElement.hpp"
+
+
 
 class ElemEmpty : public ElemTemplateElement
 {
 public:
-	ElemEmpty (XSLTEngineImpl& processor, 
-		Stylesheet& stylesheetTree,
-		const DOMString& name, 
-		const AttributeList& atts, 
-		int lineNumber, 
-		int columnNumber);
 
-	virtual int getXSLToken() const; 
+	ElemEmpty(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			int								lineNumber,
+			int								columnNumber);
 
-	virtual void execute(XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode, 
-		const QName& mode);
+	virtual int
+	getXSLToken() const; 
+
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 };
 
 

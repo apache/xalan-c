@@ -56,99 +56,120 @@
  */
 #include "ElemCopy.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include "Constants.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+#include "StylesheetRoot.hpp"
+#include "TracerEvent.hpp"
+
+
 
 ElemCopy::ElemCopy(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int	columnNumber) :
-		ElemUse(processor, stylesheetTree, name, atts, lineNumber, columnNumber)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemUse(constructionContext,
+			stylesheetTree,
+			name,
+			//atts,
+			lineNumber,
+			columnNumber)
 {
-	int nAttrs = atts.getLength();
+	const int	nAttrs = atts.getLength();
 
 	for(int i = 0; i < nAttrs; i++)
 	{
 		const DOMString aname(atts.getName(i));
 
-		if(! (processUseAttributeSets(aname, atts, i) ||
+		if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
 				processSpaceAttr(aname, atts, i) ||
-				isAttrOK(aname, atts, i)))
+				isAttrOK(aname, atts, i, constructionContext)))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
 }
-	
-int ElemCopy::getXSLToken() const 
+
+
+
+int
+ElemCopy::getXSLToken() const 
 {
 	return Constants::ELEMNAME_COPY;
 }
 
 
-void ElemCopy::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
+
+void
+ElemCopy::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
-	int nodeType = sourceNode.getNodeType();
+	const int	nodeType = sourceNode.getNodeType();
 	
-	if((DOM_Node::DOCUMENT_NODE != nodeType))
+	if(DOM_Node::DOCUMENT_NODE != nodeType)
 	{
-		processor.cloneToResultTree(getStylesheet(), 
+		executionContext.cloneToResultTree(
 			sourceNode, 
-			false, 
-			false, 
-			false, 
-			false );
-		
+			false,
+			false,
+			false);
+
 		if(DOM_Node::ELEMENT_NODE == nodeType)
 		{
-			ElemUse::execute(processor, 
+			ElemUse::execute(
+				executionContext, 
 				sourceTree, 
 				sourceNode, 
 				mode);
 
-			processor.copyNamespaceAttributes(sourceNode, 
-				false, 
-				processor.getPendingAttributes());
-			
-			executeChildren(processor, 
+			executionContext.copyNamespaceAttributes(sourceNode, 
+													 false);
+
+			executeChildren(executionContext, 
 				sourceTree, 
 				sourceNode, 
 				mode);
 
-			const DOMString s = sourceNode.getNodeName();
-			processor.endElement(toCharArray(s)); 
+			const DOMString		s = sourceNode.getNodeName();
+
+			executionContext.endElement(toCharArray(s)); 
 		}
 		else
 		{
-			if(0 != getStylesheet().getStylesheetRoot()->getTraceListeners())
+			if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 			{
-				getStylesheet().getStylesheetRoot()->fireTraceEvent(TracerEvent(&processor, 
+				getStylesheet().getStylesheetRoot().fireTraceEvent(TracerEvent(executionContext, 
 					sourceTree,
 					sourceNode,
 					mode,
 					*this));
-			} 
+			}
 		}
 	}
 	else
 	{
-		if(0 != getStylesheet().getStylesheetRoot()->getTraceListeners())
+		if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 		{
-			getStylesheet().getStylesheetRoot()->fireTraceEvent(TracerEvent(&processor, 
+			getStylesheet().getStylesheetRoot().fireTraceEvent(TracerEvent(executionContext, 
 				sourceTree,
 				sourceNode,
 				mode,
 				*this));
 		} 
 
-		executeChildren(processor, sourceTree, sourceNode, mode);
+		executeChildren(executionContext, sourceTree, sourceNode, mode);
 	}  
 }
-
-

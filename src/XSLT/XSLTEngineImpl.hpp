@@ -121,89 +121,68 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
+// Base class
+#include "XSLTProcessor.hpp"
+
+
+
 // Standard library headers
 #include <cassert>
 #include <ctime>
 #if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
 #include <hash_map>
 #endif
-#include <list>
 #include <map>
-#include <memory>
 #include <set>
-#include <stack>
-#include <vector>
-#include <stdexcept>
+
 
 
 // Xerces DOM header file
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_NodeList.hpp>
 #include <dom/DOM_Document.hpp>
-#include <dom/DOM_Text.hpp>
 #include <dom/DOMString.hpp>
-#include <util/XMLURL.hpp>
 
 #include <sax/DocumentHandler.hpp>
 
+
+
 // XSL header files.
-#include <Include/DOMHelper.hpp>
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <XMLSupport/FormatterListener.hpp>
-#include <XMLSupport/XMLParserLiaison.hpp>
+
 #include <XPath/MutableNodeRefList.hpp>
-#include <XPath/XPathSupport.hpp>
-#include <XPath/XPathEnvSupport.hpp>
-#include <XPath/XPathProcessorImpl.hpp>
-#include <XPath/QName.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <sax/Locator.hpp>
-#include "Constants.hpp"
-#include "ContextState.hpp"
-#include "ElemTemplateElement.hpp"
+#include <XPath/NameSpace.hpp>
+
+#include "Arg.hpp"
 #include "KeyDeclaration.hpp"
 #include "ProblemListener.hpp"
-#include "Stylesheet.hpp"
-//#include "StylesheetRoot.hpp"
-//#include "ElemVariable.hpp"
-#include "XSLTInputSource.hpp"
-/*
-#include "XSLTResultTarget.hpp"
- */
-class XSLTResultTarget;
 
-#include "TraceListener.hpp"
-
-// Base class
-#include "XSLTProcessor.hpp"
-
-
-//@@ JMD: maybe yes, maybe no
-#include "Java2STL.hpp"
 
 
 // Forward definitions
-//class XMLReader;
-class Arg;
 class DispatcherFactory;
+class ElemAttributeSet;
 class Formatter;
+class GenerateEvent;
 class InputSource;
 class PrintWriter;
-class ProblemListener;
 class ResultTreeFragBase;
 class StackEntry;
 class Stylesheet;
+class StylesheetConstructionContext;
+class StylesheetExecutionContext;
 class StylesheetRoot;
+class XLocator;
 class XMLParserLiaison;
+class XMLURL;
 class XObject;
-class XString;
-//class ElemTemplateElement;
-class ElemVariable;
+class XObjectObject;
+class XPathEnvSupport;
 class XPathFactory;
 class XPathProcessor;
-
-class GenerateEvent;
+class XPathSupport;
+class XSLTResultTarget;
 
 
 /**
@@ -289,11 +268,11 @@ public:
 	 * @see org.apache.xml.xslt4j.xml4j.ProcessXSL
 	 */
 	XSLTEngineImpl(
-							XMLParserLiaison& parserLiaison,
-							XPathSupport&		xpathSupport,
-							XPathEnvSupport&		xpathEnvSupport,
-							XObjectFactory* xobjectFactory,
-							XPathFactory* xpathFactory);
+			XMLParserLiaison&	parserLiaison,
+			XPathSupport&		xpathSupport,
+			XPathEnvSupport&	xpathEnvSupport,
+			XObjectFactory&		xobjectFactory,
+			XPathFactory&		xpathFactory);
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -305,23 +284,11 @@ public:
 protected:
 
 	/**
-	 * Init anything to do with XPath.
-	 */
-	void initXPath(XPathFactory* xpathFactory);
-	
-	
-	/**
 	 * Reset the state.  This needs to be called after a process() call 
 	 * is invoked, if the processor is to be used again.
 	 */
 	virtual void reset();
 	
-	// Guard against being serialized by mistake
-private:
-	//@@ Serialization not supported, we don't need this in C++
-	// void writeObject(ObjectOutputStream stream);
-
-
   //==========================================================
   // SECTION: Main API Functions
   //==========================================================
@@ -338,21 +305,34 @@ public:
 	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
-	virtual void process( XSLTInputSource *inputSource, 
-	                     XSLTInputSource *stylesheetSource,
-	                     XSLTResultTarget* outputTarget);
+	virtual void
+	process(
+			XSLTInputSource*				inputSource, 
+	        XSLTInputSource*				stylesheetSource,
+	        XSLTResultTarget&				outputTarget,
+			StylesheetConstructionContext&	constructionContext,
+			StylesheetExecutionContext&		executionContext);
 	
 	/**
 	 * Given a URI to an XSL stylesheet, 
 	 * Compile the stylesheet into an internal representation.
 	 * This calls reset() before processing if the stylesheet root has been set 
 	 * to non-null.
-	 * @param stylesheetSource  The stylesheet source.  May be null if source has a xml-stylesheet PI.
+	 * @param stylesheetSource  The stylesheet source.
+	 * @param xobjectFactory  The XObjectFactory instance to use.  If you want to use a stylesheet with
+	 * more than one processor, or you want to use the stylesheet more than once, you will need to
+	 * use a different XObjectFactory than the one used to construct the XSLTEngineImpl instance.
+	 * @param xpathFactory  The XPathFactory instance to use.  If you want to use a stylesheet with
+	 * more than one processor, or you want to use the stylesheet more than once, you will need to
+	 * use a different XPathFactory than the one used to construct the XSLTEngineImpl instance.
 	 * @return The compiled stylesheet object.
 	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
-	virtual StylesheetRoot* processStylesheet(XSLTInputSource* stylesheetSource);
+	virtual StylesheetRoot*
+	processStylesheet(
+			XSLTInputSource&				stylesheetSource,
+			StylesheetConstructionContext&	constructionContext);
 
 	/**
 	 * Given a URI to an XSL stylesheet, 
@@ -364,8 +344,10 @@ public:
 	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
-	virtual StylesheetRoot* processStylesheet(const DOMString &xsldocURLString);
-	
+	virtual StylesheetRoot*
+	processStylesheet(
+			const DOMString&				xsldocURLString,
+			StylesheetConstructionContext&	constructionContext);
 
   //==========================================================
   // SECTION: XML Parsing Functions
@@ -388,7 +370,8 @@ public:
 	 * @exception SAXException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
-	DOM_Document parseXML(const XMLURL& url, 
+	DOM_Document
+	parseXML(const XMLURL& url, 
 //@@ TODO: Fix this
 #if 1
 	                         DocumentHandler* docHandler, 
@@ -403,10 +386,13 @@ public:
 	 * @param xslURLString a valid URI to an XSL stylesheet.
 	 * @param outDiagnostics The print stream to write diagnostics (may be null).
 	 */
-	Stylesheet* getStylesheetFromPIURL(DOMString& xslURLString,
-								const DOM_Node& fragBase,
-								DOMString& xmlBaseIdent,
-								bool isRoot);
+	Stylesheet*
+	getStylesheetFromPIURL(
+			const DOMString&				xslURLString,
+			const DOM_Node&					fragBase,
+			const DOMString&				xmlBaseIdent,
+			bool							isRoot,
+			StylesheetConstructionContext&	constructionContext);
 
   //==========================================================
   // SECTION: Stylesheet Tables
@@ -416,7 +402,9 @@ private:
   /**
    * The root of a linked set of stylesheets.
    */
-	StylesheetRoot*		m_stylesheetRoot;  
+	StylesheetRoot*					m_stylesheetRoot;
+
+	StylesheetExecutionContext*		m_stylesheetExecutionContext;
 
 public:
 
@@ -476,11 +464,11 @@ public:
 	typedef hash_map<DOMString,
 					 DOM_Document,
 					 DOMStringHashFunction,
-					 DOMStringEqualsFunction>	SourceDocumentsMapType;
+					 DOMStringEqualsFunction>	SourceDocumentsTableType;
 #else
-	typedef std::map<DOMString, DOM_Document, DOMStringEqualsFunction>	SourceDocumentsMapType;
+	typedef std::map<DOMString, DOM_Document, DOMStringEqualsFunction>	SourceDocumentsTableType;
 #endif
-	SourceDocumentsMapType	m_sourceDocs;
+	SourceDocumentsTableType	m_sourceDocs;
 
 /**
  * The root document.
@@ -492,20 +480,16 @@ public:
 	/**
 	 * Given a DOM Document, tell what URI was used to parse it.
 	 */
-	DOMString findURIFromDoc(const DOM_Document& doc)
-	{ 
-		return m_xpathEnvSupport.findURIFromDoc(doc);
-	}
+	DOMString
+	findURIFromDoc(const DOM_Document& doc);
 
 
   /**
    * Get table of source tree documents.
    * Document objects are keyed by URL string.
    */
-	SourceDocumentsMapType getSourceDocsTable()
-	{
-		return m_xpathEnvSupport.getSourceDocsTable();
-	}
+	SourceDocumentsTableType&
+	getSourceDocsTable() const;
 
   /**
    * Set a source document. Every time a source document is requested 
@@ -641,6 +625,26 @@ public:
 		return s_elementKeys;
 	}
 
+/**
+   * Given an XSL tag name, return an integer token
+   * that corresponds to ELEMNAME_XXX constants defined 
+   * in Constants.java.
+   * Note: I tried to optimize this by caching the node to 
+   * id lookups in a hash table, but it helped not a bit.
+   * I'm not sure that it's spending too much time here anyway.
+   * @param node a probable xsl:xxx element.
+   * @return Constants.ELEMNAME_XXX token, or -1 if in xsl 
+   * or Xalan namespace, -2 if not in known namespace.
+   */
+	int
+	getAttrTok(const DOMString&	name) const
+	{
+		AttributeKeysMapType::const_iterator iter=
+			s_attributeKeys.find(name);
+
+		return iter == s_attributeKeys.end() ? -2 : (*iter).second;
+	}
+
 private:
 
 	/**
@@ -692,12 +696,12 @@ public:
 	 * Output an object to the result tree by doing the right conversions.
 	 * This is public for access by extensions.
 	 *
-	 * @param stylesheetTree the target stylesheet tree.
 	 * @param obj the XObject to output.
 	 */
-	void outputToResultTree (const Stylesheet& stylesheetTree, XObject* xobj);
+	virtual void
+	outputToResultTree(
+			const XObject&	xobj);
 
-  
 private:
 
   /**
@@ -743,12 +747,10 @@ public:
 	 * @param args The function args.
 	 * @returns whether the given function is available or not.
 	 */
-	bool functionAvailable(DOMString& theNamespace, 
-							DOMString& extensionName)
-	{
-		return m_xpathEnvSupport.functionAvailable(theNamespace, extensionName);
-		return false;
-	}
+	bool
+	functionAvailable(
+			DOMString&	theNamespace, 
+			DOMString&	extensionName) const;
 	
 	/**
 	 * Handle an extension function.
@@ -832,8 +834,9 @@ public:
    * The top of this stack should contain the currently processed
    * stylesheet SAX locator object.
    */
-  typedef Stack <Locator *> LocatorStack;
-  LocatorStack  m_stylesheetLocatorStack;
+	typedef std::vector<Locator*> LocatorStack;
+
+	LocatorStack  m_stylesheetLocatorStack;
 
 	/**
 	 * Add a trace listener for the purposes of debugging and diagnosis.
@@ -1025,8 +1028,9 @@ public:
 	/**
 	 * Print a trace of a selection being made.
 	 */
-	void traceSelect(	DOM_Element theTemplate,
-							const NodeRefListBase& nl) const;
+	void traceSelect(
+			const DOM_Element&		theTemplate,
+			const NodeRefListBase&	nl) const;
 //@@ WAS:			int				nodeCount) const;
 
 private:
@@ -1038,7 +1042,7 @@ private:
 	 */
 	void
 	traceTemplate(
-			DOM_Element		theTemplate) const;
+			const DOM_Element&		theTemplate) const;
 
 	/**
 	 * Print some diagnostics about the current 
@@ -1111,23 +1115,29 @@ protected:
 	 * xmlns attribute is found.  It's special because it has
 	 * and empty prefix and uri field.
 	 */
-	NameSpace		m_emptyNamespace;
+	NameSpace			m_emptyNamespace;
 	
 	// Factory for creating xpaths.
-	XPathFactory *m_xpathFactory;
+	XPathFactory&		m_xpathFactory;
+
+	/**
+	 * XPath object to use for short evaluations, so we don't have to 
+	 * create one every time.
+	 */
+	XPath* const		m_xpath;
 
 	// Factory for creating xobjects
-	XObjectFactory* m_xobjectFactory;
+	XObjectFactory&		m_xobjectFactory;
 
 	// The query/pattern-matcher object.
-	XPathProcessor* m_xpathProcessor;
+	std::auto_ptr<XPathProcessor>	m_xpathProcessor;
 
 	/**
 	 * Stack of Booleans to keep track of if we should be outputting 
 	 * cdata instead of escaped text.
 	 * ## Optimization: use array stack instead of object stack.
 	 */
-	Stack <bool> m_cdataStack;
+	std::vector<bool>	m_cdataStack;
 
 private:
 
@@ -1166,6 +1176,20 @@ public:
 			const DOMString&	value);
 
 	/**
+	 * Bottleneck addition of result tree attributes, so I can keep 
+	 * track of namespaces.
+	 */
+	void
+	addResultAttribute(
+			const DOMString&	aname,
+			const DOMString&	value)
+	{
+		addResultAttribute(m_pendingAttributes,
+						   aname,
+						   value);
+	}
+
+	/**
 	 * Bottleneck the startElement event.
 	 */
 	virtual void
@@ -1184,7 +1208,7 @@ public:
 	 * Bottleneck the endElement event.
 	 */
 	virtual void
-	endElement (
+	endElement(
 			const XMLCh* const	name);
 
 	/**
@@ -1265,20 +1289,17 @@ public:
    */
 	void
 	cloneToResultTree(
-			const Stylesheet&	stylesheetTree,
-			const DOM_Node&	node, 
-			bool					isLiteral,
-			bool					shouldCloneWithChildren, 
-			bool					overrideStrip,
-			bool					shouldCloneAttributes);
-
+			const DOM_Node&		node, 
+			bool				isLiteral,
+			bool				overrideStrip,
+			bool				shouldCloneAttributes);
 
   /**
    * Given a result tree fragment, walk the tree and
    * output it to the result stream.
    */
 	void
-	outputResultTreeFragment(XObject*	theTree);
+	outputResultTreeFragment(const XObject&		theTree);
 
 private:
 
@@ -1293,12 +1314,14 @@ private:
 	 * @param mode The mode under which the template is operating.
 	 * @return An object that represents the result tree fragment.
 	 */
-	void writeChildren(
-	                   FormatterListener* flistener,
-	                   Stylesheet& stylesheetTree, 
-	                   ElemTemplateElement& templateParent, 
-	                   const DOM_Node& sourceTree, 
-	                   const DOM_Node& sourceNode, QName mode);
+	void
+	writeChildren(
+			FormatterListener*				flistener,
+			StylesheetExecutionContext&		executionContext,
+	        const ElemTemplateElement&		templateParent,
+	        const DOM_Node&					sourceTree,
+	        const DOM_Node&					sourceNode,
+			const QName&					mode);
 
 
   //==========================================================
@@ -1312,10 +1335,8 @@ private:
   
 public:
 
-	int getUniqueNSValue() const
-	{
-		return m_uniqueNSValue++;
-	}
+	virtual const DOMString
+	getUniqueNSValue() const;
 	
 	/**
 	 * Tell if a given element name should output it's text 
@@ -1343,26 +1364,26 @@ public:
 	getResultPrefixForNamespace(
 			const DOMString&	theNamespace) const;
 
-	/**
-	 * Evaluate an xpath string and return the result.
-	 */
-	double evalMatchPatternStr(
-								const DOMString& str,
-								const DOM_Node& context,
-								const PrefixResolver& resolver);
+public:
 
 	/**
 	 * Evaluate an xpath string and return the result.
 	 */
-	XPath *createMatchPattern(const DOMString& str, const PrefixResolver& resolver);
+	double
+	evalMatchPatternStr(
+			const DOMString&		str,
+			const DOM_Node&			context,
+			XPathExecutionContext&	executionContext);
+
+	/**
+	 * Create and initialize an xpath and return it.
+	 */
+	XPath*
+	createMatchPattern(
+			const DOMString&		str,
+			const PrefixResolver&	resolver);
 
 private:
-
-	/**
-	 * XPath object to use for short evaluations, so we don't have to 
-	 * create one every time.
-	 */
-	XPath* m_xpath;
 
 	/**
 	 * This should probably be in the XMLParserLiaison interface.
@@ -1380,13 +1401,37 @@ public:
 	void
 	copyNamespaceAttributes(
 			const DOM_Node&			src,
-			bool					srcIsStylesheetTree,
-			AttributeListImpl&		destination);
+			bool					srcIsStylesheetTree);
+
+public:
+
 	/**
 	 * Evaluate an xpath string and return the result.
 	 */
-	XObject* evalXPathStr(const DOMString& str,
-						const DOM_Node& context, const PrefixResolver& resolver);
+	XObject*
+	evalXPathStr(
+			const DOMString&		str,
+			XPathExecutionContext&	executionContext);
+
+	/**
+	 * Evaluate an xpath string and return the result.
+	 */
+	XObject*
+	evalXPathStr(
+			const DOMString&		str,
+			const DOM_Node&			contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext);
+
+	/**
+	 * Evaluate an xpath string and return the result.
+	 */
+	XObject*
+	evalXPathStr(
+			const DOMString&		str,
+			const DOM_Node&			contextNode,
+			const DOM_Element&		prefixResolver,
+			XPathExecutionContext&	executionContext);
 
 private:
 
@@ -1428,54 +1473,28 @@ public:
 
 public:
 
-	/**
-	 * Given an element, return an attribute value in 
-	 * the form of a string, processing attributes as 
-	 * need be.
-	 * @param el The element from where to get the attribute.
-	 * @param key The name of the attribute.
-	 * @param contextNode The context to evaluate the 
-	 * attribute value template.
-	 * @return Attribute value.
-	 */
-	DOMString
-	getProcessedAttrVal(
-			const DOM_Element&	el,
-			const DOMString&	key,
-			const DOM_Node&		contextNode);
-
-	/**
-	 * Get the textual contents of the node. If the node 
-	 * is an element, apply whitespace stripping rules, 
-	 * though I'm not sure if this is right (I'll fix 
-	 * or declare victory when I review the entire 
-	 * whitespace handling).
-	 */
-	DOMString
-	getNodeData(const DOM_Node&	node);
-    
 
   /**
-   * An ugly little parser that evaluates attribute values for 
-   * attribute templates (Stuff in curly {} braces that hold 
-   * expressions).  Speed is pretty darned important with this 
-   * function.
+   * Evaluates attribute values for attribute templates
+   * (Stuff in curly {} braces that hold expressions).
+   *
    * @param contextNode the current node in the source tree
-   * @param stylesheetTree used as factory object for creating 
+   * @param namespaceContext the current namespace context.
    * the pattern-by-example structures when parsing expressions.
-   * @param attr used as a key for first attribute template 
-   * parse structure cache.
    * @param stringedValue the attribute value to be processed.
+   * @param executionContext the current execution context.
    * @return Processed stringedValue with attribute templates
    * resolved.
    * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
    * the error condition is severe enough to halt processing.
    */
-	DOMString
+	virtual DOMString
 	evaluateAttrVal(
-			const DOM_Node&		contextNode,
-			const DOM_Element&	namespaceContext,
-			const DOMString&	 stringedValue);
+			const DOM_Node&			contextNode,
+			const DOM_Element&		namespaceContext,
+			const DOMString&		stringedValue,
+			XPathExecutionContext&	executionContext);
+
 
   /**
    * Copy an attribute to the created output element, executing 
@@ -1589,11 +1608,26 @@ public:
 	*/
    virtual const NodeRefListBase*
    getNodeSetByKey(
-					const DOM_Node&			doc, 
-					const DOMString&		name, 
-					const DOMString&		ref, 
-					const PrefixResolver&	resolver) const;
+			const DOM_Node&			doc, 
+			const DOMString&		name, 
+			const DOMString&		ref, 
+			const PrefixResolver&	resolver,
+			XPathExecutionContext&	executionContext) const;
 
+	/**
+	 * Create an XPath whose lifetime can end after transforming
+	 * is complete.  Do not use this to create an XPath to be
+	 * held by a stylesheet.
+	 */
+	virtual XPath*
+	createProcessingXPath(
+		const DOMString&		str,
+		XPathExecutionContext&	executionContext,
+		const PrefixResolver&	resolver);
+
+private:
+
+	// $$$ ToDo:  This must go!!!!!!
 	/**
 	 * Evaluate an xpath string and return the result.
 	 */
@@ -1601,6 +1635,8 @@ public:
 	createXPath(
 		const DOMString&		str,
 		const PrefixResolver&	resolver);
+
+public:
 
   /**
    * Given a valid element id, return the corresponding element.
@@ -1615,7 +1651,59 @@ public:
 	 * Given a name, locate a variable in the current context, and return 
 	 * the Object.
 	 */
-	 virtual XObject* getVariable(const QName& qname) const;
+	virtual XObject*
+	getVariable(const QName& qname) const;
+
+	/**
+	 * Given a name, locate a param variable in the current context, and return 
+	 * the Object.
+	 */
+	virtual XObject*
+	getParamVariable(const QName&	theName) const;
+
+	virtual void
+	pushVariable(
+			const QName&		name,
+			XObject*			var,
+			const DOM_Node&		element);
+
+	/**
+	 * Push a context marker onto the stack to let us know when 
+	 * to stop searching for a var.
+	 */
+	void
+	pushContextMarker(
+			const DOM_Node&	caller,
+			const DOM_Node&	sourceNode)
+	{
+		m_variableStacks.pushContextMarker(caller, sourceNode);
+	}
+
+	/**
+	 * Pop the current context from the current context stack.
+	 */
+	void
+	popCurrentContext()
+	{
+		m_variableStacks.popCurrentContext();
+	}
+
+	void
+	pushParams(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		xslCallTemplateElement,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode,
+			const DOM_Node&					targetTemplate)
+	{
+		m_variableStacks.pushParams(executionContext,
+									xslCallTemplateElement,
+									sourceTree,
+									sourceNode,
+									mode,
+									targetTemplate);
+	}
 
 private:
 
@@ -1633,20 +1721,18 @@ private:
 	 * the association based on the root of the tree that the 
 	 * node is parented by.
 	 */
-	XLocator* getXLocatorFromNode(const DOM_Node& node)
-	{
-		return m_xpathEnvSupport.getXLocatorFromNode(node);
-	}
-	
+	XLocator*
+	getXLocatorFromNode(const DOM_Node&		node) const;
+
 	/**
 	 * Associate an XLocator provider to a node.  This makes
 	 * the association based on the root of the tree that the 
 	 * node is parented by.
 	 */
-	 void associateXLocatorToNode(const DOM_Node& node, XLocator* xlocator)
-	{
-		m_xpathEnvSupport.associateXLocatorToNode(node, xlocator);
-	}
+	 void
+	 associateXLocatorToNode(
+			const DOM_Node&		node,
+			XLocator*			xlocator);
 
 private:
 
@@ -1842,95 +1928,29 @@ public:
 	/**
 	 * Get the XML Parser Liaison that this processor uses.
 	 */
-	virtual XMLParserLiaison& getXMLProcessorLiaison()
-		{ return m_parserLiaison; }
+	virtual XMLParserLiaison&
+	getXMLParserLiaison() const;
 
-// @@ JMD: was: private: but public in base virtual class ?? So I made them
-// all public; these should probably all take const arguments in the fullness
-// of time
-	
-	/**
-	 * Convenience function to create an XString.
-	 * @param s A valid string.
-	 * @return An XString object.
-	 */
-	virtual XObject* createXString(const DOMString& s);
-
-	/**
-	 * Convenience function to create an XObject.
-	 * @param o Any java object.
-	 * @return An XObject object.
-	 */
-	 // @@ JMD: how do we do this ?
-	virtual XObject* createXObject(void* o);
-
-	/**
-	 * Convenience function to create an XNumber.
-	 * @param d Any double number.
-	 * @return An XNumber object.
-	 */
-	virtual XObject* createXNumber(double d);
-
-	/**
-	 * Convenience function to create an XBoolean.
-	 * @param b bool value.
-	 * @return An XBoolean object.
-	 */
-	virtual XObject* createXBoolean(bool b);
-
-	/**
-	 * Convenience function to create an XNodeSet.
-	 * @param nl A NodeList object.
-	 * @return An XNodeSet object.
-	 */
-	virtual XObject* createXNodeSet(const NodeRefListBase& nl);
-
-
-	/**
-	 * Convenience function to create an XNodeSet from a node.
-	 * @param n A DOM node.
-	 * @return An XNodeSet object.
-	 */
-	virtual XObject* createXNodeSet(const DOM_Node& n);
-
-	/**
-	 * Convenience function to create an XRTreeFrag.
-	 * @return An XRTreeFrag object.
-	 */
-	virtual XObject* createXResultTreeFrag(const ResultTreeFragBase& r);
-
-	/**
-	 * Convenience function to create an XNull.
-	 * @return An XNull object.
-	 */
-	virtual XObject* createXNull();
-	
 private:
 	
 	/**
 	 * Set the factory for making XPaths.
 	 */
-	void setXPathFactory(XPathFactory* factory) { m_xpathFactory = factory; }
+//	void setXPathFactory(XPathFactory* factory) { m_xpathFactory = factory; }
 
 	
 	/**
 	 * Get a DOM document, primarily for creating result 
 	 * tree fragments.
 	 */
-	DOM_Document getDOMFactory()
-	{
-		if(m_resultTreeFactory.isNull())
-		{
-			m_resultTreeFactory = m_parserLiaison.createDocument();
-		}
-		return m_resultTreeFactory;
-	}
+	DOM_Document
+	getDOMFactory() const;
 
 	/**
 	 * Set the XPath processor object.
 	 * @param processor A XPathProcessor interface.
 	 */
-	void setXPathProcessor(XPathProcessor* processor) { m_xpathProcessor = processor; }
+//	void setXPathProcessor(XPathProcessor* processor) { m_xpathProcessor = processor; }
 
 	bool
 	getResolveContentsEarly() const
@@ -1940,16 +1960,25 @@ private:
 
 public:
 
+  /**
+   * Convenience function to create an XObject that represents a Result tree fragment.
+   * @param r The result tree fragment to use.
+   * @return An XObject instance.
+   */
+   virtual XObject*
+   createXResultTreeFrag(const ResultTreeFragBase&  r) const;
+
+
 	/**
 	 * Get the factory for making xpaths.
 	 */
-	XPathFactory* getXPathFactory() { return m_xpathFactory; }
+	XPathFactory& getXPathFactory() { return m_xpathFactory; }
 
 	/**
 	 * Get the XPath processor object.
 	 * @return The XPathProcessor interface being used.
 	 */
-	 XPathProcessor* getXPathProcessor() { return m_xpathProcessor; }
+	 XPathProcessor& getXPathProcessor() { return *m_xpathProcessor.get(); }
 
 
 	/**
@@ -1984,13 +2013,16 @@ private:
 	 * @param key The name of the param.
 	 * @param value An XObject that will be used.
 	 */
-	virtual void setStylesheetParam(const DOMString& key, const XObject* value);
+	virtual void
+	setStylesheetParam(
+			const DOMString&	key,
+			XObject*			value);
 
 	/**
 	 * Resolve the params that were pushed by the caller.
 	 */
-	void
-	resolveTopLevelParams();
+	virtual void
+	resolveTopLevelParams(StylesheetExecutionContext&	executionContext);
 
 	/**
 	 * Reset the vector or top level parameters
@@ -2019,7 +2051,7 @@ public:
    * Reset the current element state
    */
 
-	void
+	virtual void
 	resetCurrentState(
 			const DOM_Node&		sourceTree,
 			const DOM_Node&		xmlNode);
@@ -2068,11 +2100,10 @@ public:
    * the url.
    */
 	XMLURL*
-	getURLFromString(const DOMString&	urlString);
+	getURLFromString(const DOMString&	urlString) const;
 
 	XMLURL*
-	getURLFromString(const DOMString&	urlString, const DOMString& base);
-        
+	getURLFromString(const DOMString&	urlString, const DOMString& base) const;
 
 private :
 
@@ -2121,19 +2152,14 @@ public:
 	/**
 	 * Get the current formatter listener.
 	 */
-	virtual FormatterListener* getFormatterListener()
-	{
-		return dynamic_cast<FormatterListener*>(m_flistener);
-	}	
-	
+	virtual FormatterListener*
+	getFormatterListener() const;
 
 	/**
 	 * Set the current formatter listener.
 	 */
-	virtual void setFormatterListener(FormatterListener*	flistener)
-	{
-		m_flistener = flistener;
-	}
+	virtual void
+	setFormatterListener(FormatterListener*	flistener);
 
 private:
 
@@ -2182,16 +2208,18 @@ private:
 
 public:
 
-	MutableNodeRefList getContextNodeList() { return m_contextNodeList; }
+	const MutableNodeRefList& getContextNodeList() { return m_contextNodeList; }
 
 	void setContextNodeList(const MutableNodeRefList& ref)
 	{
 		m_contextNodeList = ref;		
 	}
 
+	virtual DOM_Document
+	getRootDoc() const;
 
-	DOM_Document&	getRootDoc() { return m_rootDoc; }
-	void	setRootDoc(const DOM_Document& doc) { m_rootDoc = doc; }
+	virtual void
+	setRootDoc(const DOM_Document& doc);
 
 private:
 
@@ -2387,13 +2415,13 @@ private:
 	/**
 	 * Table for defined constants, keyed on the names.
 	 */
-	typedef std::map<DOMString, XString*>	TopLevelVariablesMapType;
+	typedef std::map<DOMString, XObject*>	TopLevelVariablesMapType;
 
 	TopLevelVariablesMapType	m_topLevelVariables;
 
 public:
 
-	XString*
+	virtual XObject*
 	getTopLevelVariable(const DOMString&	theName) const;
 
 private:
@@ -2548,7 +2576,6 @@ public:
 		 */
 		void
 		pushContextMarker(
-// was:			const ElemTemplateElement&	caller,
 				const DOM_Node&	caller,
 				const DOM_Node&	sourceNode);
 
@@ -2567,22 +2594,22 @@ public:
 		 */
 		void
 		pushParams(
-				const Stylesheet*			stylesheetTree,
-				const ElemTemplateElement&	xslCallTemplateElement,
+				StylesheetExecutionContext&		executionContext,
+				const ElemTemplateElement&		xslCallTemplateElement,
 				const DOM_Node&					sourceTree, 
 				const DOM_Node&					sourceNode,
-				const QName&				mode,
-				const DOM_Node&	targetTemplate);
+				const QName&					mode,
+				const DOM_Node&					targetTemplate);
 
 		/**
 		 * Same as getXObjectVariable, except don't look in the global space.
 		 */
-		XObject* getXObjectParamVariable(const QName& qname) const
-		// java: getParamVariable(QName qname)
+		XObject*
+		getXObjectParamVariable(const QName& qname) const
 		{
 			return findXObject(qname, false);
 		}
-	 
+
 		/**
 		 * Tell if there is a param variable on the stack.
 		 */
@@ -2606,7 +2633,7 @@ public:
 		 * XObject.
 		 */
 		XObject*
-		getXObjectVariable(const QName&	name) const
+		getXObjectVariable(const QName&		name) const
     	// java: Object getVariable(QName name)
 		{
 			return findXObject(name, true);
@@ -2619,10 +2646,9 @@ public:
 		 */
 		void
 		pushVariable(
-// was:				const DOMString&			name,
-				const QName&			name,
-				XObject*					val,
-				const DOM_Node&	e);
+				const QName&		name,
+				XObject*			val,
+				const DOM_Node&		e);
 
 		/**
 		 * Push an argument onto the stack.  Don't forget 
@@ -2643,12 +2669,12 @@ public:
 		XObject*
 		findXObject(
 				const QName&	name,
-				bool				fSearchGlobalSpace) const;
+				bool			fSearchGlobalSpace) const;
 
 		const Arg*
 		findArg(
 				const QName&	name,
-				bool				fSearchGlobalSpace) const;
+				bool			fSearchGlobalSpace) const;
 
 		// $$$ ToDo:  Is this really used?
 		/**
@@ -2698,29 +2724,29 @@ public:
   /**
    * Given a stylesheet element, create a result tree fragment from its 
    * contents.
-	* @exception XSLProcessorException thrown if the active ProblemListener and
-	* XMLParserLiaison decide the error condition is severe enough to halt
-	* processing.
-   * @param stylesheetTree The stylesheet object that holds the fragment.
+   * @exception XSLProcessorException thrown if the active ProblemListener and
+   * XMLParserLiaison decide the error condition is severe enough to halt
+   * processing.
    * @param templateChild The template element that holds the fragment.
    * @param sourceTree The source tree document context.
    * @param sourceNode The current source context node.
    * @param mode The mode under which the template is operating.
    * @return An object that represents the result tree fragment.
    */
-	ResultTreeFragBase*
+	virtual ResultTreeFragBase*
 	createResultTreeFrag(
-			const Stylesheet*		stylesheetTree, 
-			ElemTemplateElement&	templateChild, 
-			const DOM_Node&			sourceTree, 
-			const DOM_Node&			sourceNode,
-			const QName&			mode);
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		templateChild,
+			const DOM_Node&					sourceTree,
+			const DOM_Node&					sourceNode,
+			const QName&					mode);
 
 	/**
 	 * Create an empty result tree fragment.  Caller owns the memory.
 	 */
-	ResultTreeFragBase* createResultTreeFrag() const;
-	
+	virtual ResultTreeFragBase*
+	createResultTreeFrag() const;
+
 /*
 JMD: 
 These were inner classes in java:
@@ -2736,7 +2762,24 @@ public:
 	void setPendingAttributes(const AttributeList&	pendingAttributes) ;
 	void setPendingElementName(const DOMString& elementName) ;
 
+	/**
+	 * A stack to keep track of the attribute elements.
+	 */
+	typedef	std::vector<ElemAttributeSet*>	AttrStackType;
 
+	AttrStackType&
+	getAttrSetStack()
+	{ 
+		return m_attrSetStack; 
+	}
+
+private:
+
+	/**
+	 * Stack for the purposes of flagging infinite recursion with 
+	 * attribute sets.
+	 */
+	AttrStackType	m_attrSetStack;
 
 private:
 

@@ -55,78 +55,118 @@
  * <http://www.apache.org/>.
  */
 #include "ElemChoose.hpp"
-#include "ElemWhen.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+#include <sax/SAXException.hpp>
+
+
+
+#include <XPath/XPath.hpp>
+
+
+
+#include "Constants.hpp"
+#include "ElemWhen.hpp"
+#include "SelectionEvent.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+#include "StylesheetRoot.hpp"
+
 
 
 ElemChoose::ElemChoose(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree, 
-	const DOMString& name, 
-	const AttributeList& atts, 
-	int lineNumber, 
-	int columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name,  lineNumber, columnNumber)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber)
 {
-	int nAttrs = atts.getLength();
+	const int	nAttrs = atts.getLength();
+
 	for(int i = 0; i < nAttrs; i++)
 	{
 		const DOMString aname(atts.getName(i));
 
-		if(isAttrOK(aname, atts, i)== false  || processSpaceAttr(aname, atts, i))
+		if(isAttrOK(aname, atts, i, constructionContext) == false  || processSpaceAttr(aname, atts, i))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}	
 }
-	
-int ElemChoose::getXSLToken() const 
+
+
+
+int
+ElemChoose::getXSLToken() const 
 {
 	return Constants::ELEMNAME_CHOOSE;
 }
 
-void ElemChoose::execute(XSLTEngineImpl& processor, const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode, const QName& mode)
+
+
+void
+ElemChoose::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
-	ElemTemplateElement::execute(processor,	sourceTree, sourceNode, mode);
-	
-    for (ElemTemplateElement* node = dynamic_cast<ElemTemplateElement*>(getFirstChild()); 
-	node != 0; node = dynamic_cast<ElemTemplateElement*>(node->getNextSibling())) 
+	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
+
+    for (const ElemTemplateElement* node = getFirstChild(); 
+			node != 0;
+				node = node->getNextSibling()) 
     {
-		int type = node->getXSLToken();
-		
+		const int	type = node->getXSLToken();
+
 		if(Constants::ELEMNAME_WHEN == type)
 		{
-			ElemWhen* when = static_cast<ElemWhen*>(node);
+			const ElemWhen* when = static_cast<const ElemWhen*>(node);
 
-			XObject* test = when->getXPath()->execute(sourceNode, *this, 
-				processor.getContextNodeList()); 
+			const XPath* const		theXPath = when->getXPath();
+			assert(theXPath != 0);
 
-			if(0 != getStylesheet().getStylesheetRoot()->getTraceListeners())
+			const XObject* const	test =
+				theXPath ->execute(sourceNode,
+								   *this, 
+								   executionContext.getXPathExecutionContext());
+			assert(test != 0);
+
+			if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 			{
-				getStylesheet().getStylesheetRoot()->fireSelectedEvent(
-					SelectionEvent(getStylesheet().getProcessor(), 
-					sourceNode, 
-					when, 
+				getStylesheet().getStylesheetRoot().fireSelectedEvent(
+					SelectionEvent(executionContext, 
+					sourceNode,
+					*when,
 					DOMString("test"), 
-					when->getXPath(), 
+					*theXPath, 
 					test));
 			}
-			
-			if(test->boolean())
+
+			if(test->boolean() == true)
 			{
-				when->executeChildren(processor, sourceTree, sourceNode, mode);
+				node->executeChildren(executionContext, sourceTree, sourceNode, mode);
+
 				break;
 			}
 		}
 		else
 		{
 			// xsl:otherwise
-			node->executeChildren(processor, sourceTree, sourceNode, mode);
+			node->executeChildren(executionContext, sourceTree, sourceNode, mode);
 		}
     }
 }
+
 
 
 /**
@@ -134,7 +174,10 @@ void ElemChoose::execute(XSLTEngineImpl& processor, const DOM_Node& sourceTree,
  */
 NodeImpl* ElemChoose::appendChild(NodeImpl* newChild)
 {
-    int type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
+	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
+
+	const int	type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
+
     switch(type)
     {
     case Constants::ELEMNAME_WHEN:
@@ -143,7 +186,8 @@ NodeImpl* ElemChoose::appendChild(NodeImpl* newChild)
 		break;
 		
     default:
-		error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + this->getTagName());
+		error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + getTagName());
     }
+
     return ElemTemplateElement::appendChild(newChild);
 }

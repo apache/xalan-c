@@ -70,7 +70,7 @@
 
 #include <Include/DOMHelper.hpp>
 #include <XPath/XPath.hpp>
-#include <XPath/XPathSupport.hpp>
+#include <XPath/XPathExecutionContext.hpp>
 
 
 
@@ -79,32 +79,32 @@
 
 
 KeyTable::KeyTable(
-			const DOM_Node&						doc, 
-			const DOM_Node&						startNode, 
+			const DOM_Node&						doc,
+			const DOM_Node&						startNode,
 			const PrefixResolver&				resolver,
-			const std::vector<KeyDeclaration>&	keyDeclarations, 
-			XPathSupport&						xpathSupport) :
+			const std::vector<KeyDeclaration>&	keyDeclarations,
+			XPathExecutionContext&				executionContext) :
 	m_docKey(doc),
 	m_keys()
-{    
+{
     DOM_Node	pos = startNode;
 
     // Do a non-recursive pre-walk over the tree.
     while(0 != pos)
     {     
 		const int	nDeclarations = keyDeclarations.size();
-      
+
 		// We're going to have to walk the attribute list 
 		// if it's an element, so get the attributes.
 		DOM_NamedNodeMap	attrs;
-      
+
 		int					nNodes = 0;
 
 		if(DOM_Node::ELEMENT_NODE == pos.getNodeType())
 		{
 			attrs = static_cast<const DOM_Element&>(pos).getAttributes();
-        
-			nNodes = attrs.getLength();
+
+			const	nNodes = attrs.getLength();
         
 			if(0 == nNodes)
 			{
@@ -126,7 +126,7 @@ KeyTable::KeyTable(
 
 				// See if our node matches the given key declaration according to 
 				// the match attribute on xsl:key.
-				const double	score = kd.getMatchPattern().getMatchScore(testNode);
+				const double	score = kd.getMatchPattern().getMatchScore(testNode, executionContext);
 
 				if(score != kd.getMatchPattern().s_MatchScoreNone)
 				{
@@ -134,7 +134,7 @@ KeyTable::KeyTable(
 					// use attribute in xsl:key.
 					const XObject* const	xuse =
 					// @@ JMD: is this kosher	
-						kd.getUse().execute(testNode, resolver, NodeRefList());
+						kd.getUse().execute(testNode, resolver, NodeRefList(), executionContext);
 
 					const NodeRefListBase&	nl = xuse->nodeset(); 
 
@@ -151,7 +151,8 @@ KeyTable::KeyTable(
 							// Use getExpr to get the string value of the given node. I hope 
 							// the string assumption is the right thing... I can't see how 
 							// it could work any other way.
-							const DOMString		exprResult = xpathSupport.getNodeData(useNode);
+							const DOMString		exprResult =
+								executionContext.getNodeData(useNode);
 
 							if(length(exprResult) != 0)
 							{

@@ -56,78 +56,108 @@
  */
 #include "ElemIf.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+#include <XPath/XPath.hpp>
+
+
+
+#include "Constants.hpp"
+#include "SelectionEvent.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+#include "StylesheetRoot.hpp"
+
+
 
 ElemIf::ElemIf(
-	XSLTEngineImpl& processor, 
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts, 
-	int lineNumber, 
-	int	columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name, lineNumber,columnNumber), m_pTest(0)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),
+	m_test(0)
 {
-	int nAttrs = atts.getLength();
+	const int	nAttrs = atts.getLength();
 
 	for(int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const DOMString		aname(atts.getName(i));
 		
-		int tok = getAttrTok(aname);
+		const int			tok = constructionContext.getAttrTok(aname);
+
 		switch(tok)
 		{
 		case Constants::TATTRNAME_TEST:
-			m_pTest = getStylesheet().getProcessor()->createXPath(atts.getValue(i), *this);
+			m_test = constructionContext.createXPath(atts.getValue(i), *this);
 			break;
+
 		case Constants::TATTRNAME_XMLSPACE:
 			processSpaceAttr(atts, i);
 			break;
+
 		default:
 			if(!isAttrOK(tok, aname, atts, i))
 			{
-				processor.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(name + " has an illegal attribute: " + aname);
 			}
 		}
 	}
-	if(0 == m_pTest)
+
+	if(0 == m_test)
 	{
-		processor.error(name + " must have a 'test' attribute.");
+		constructionContext.error(name + " must have a 'test' attribute.");
 	}
 }
 
 
-int ElemIf::getXSLToken() const 
+
+int
+ElemIf::getXSLToken() const 
 {
 	return Constants::ELEMNAME_IF;
 }
-		
+
+
 
 void ElemIf::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode, 
-	const QName& mode)
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
-	ElemTemplateElement::execute(processor,	sourceTree, sourceNode, mode);
+	assert(m_test != 0);
 
-	assert(m_pTest);
-	XObject* test = m_pTest->execute(sourceNode, *this, processor.getContextNodeList());
-	
-	if(0 != getStylesheet().getStylesheetRoot()->getTraceListeners())
+	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
+
+	const XObject* const	test =
+		m_test->execute(sourceNode, *this, executionContext.getXPathExecutionContext());
+
+	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 	{
-		getStylesheet().getStylesheetRoot()->fireSelectedEvent(
-			SelectionEvent(getStylesheet().getProcessor(), 
+		getStylesheet().getStylesheetRoot().fireSelectedEvent(
+			SelectionEvent(executionContext,
 			sourceNode,
-			this, 
+			*this, 
 			"test", 
-			m_pTest, 
+			*m_test, 
 			test));
-	}  
-	
+	}
+
 	if(test->boolean())
 	{
-		executeChildren(processor, sourceTree, sourceNode, mode);
+		executeChildren(executionContext, sourceTree, sourceNode, mode);
 	}
 }
-
-

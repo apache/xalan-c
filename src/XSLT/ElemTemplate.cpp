@@ -56,90 +56,111 @@
  */
 #include "ElemTemplate.hpp"
 
-#include "ElemPriv.hpp"
 
-#include <XPath/XPathFactory.hpp>
-#include <XPath/XPathProcessor.hpp>
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+#include <XPath/XPath.hpp>
+
+
+
+#include "Constants.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+
+
 
 ElemTemplate::ElemTemplate(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int	columnNumber) :
-	ElemTemplateElement(processor, stylesheetTree, name, lineNumber, columnNumber),
-		m_pMatchPattern(0),
-		m_pName(0),
-		m_pMode(0),
+		StylesheetConstructionContext&	constructionContext,
+		Stylesheet&						stylesheetTree,
+		const DOMString&				name,
+		const AttributeList&			atts,
+		int								lineNumber,
+		int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),
+		m_matchPattern(0),
+		m_name(),
+		m_mode(),
 		m_priority(XPath::s_MatchScoreNone)
 {
 	const int nAttrs = atts.getLength();
 
 	for(int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const DOMString		aname(atts.getName(i));
 
-		int tok = getAttrTok(aname);
+		const int			tok = constructionContext.getAttrTok(aname);
 
 		switch(tok)
 		{
 		case Constants::TATTRNAME_MATCH:
-			m_pMatchPattern = processor.getXPathFactory()->create();
-			processor.getXPathProcessor()->initMatchPattern(*m_pMatchPattern, atts.getValue(i), *this);
+			m_matchPattern = constructionContext.createMatchPattern(atts.getValue(i), *this);
 			break; 
+
 		case Constants::TATTRNAME_NAME:
-			m_pName = new QName(atts.getValue(i), getStylesheet().getNamespaces());
+			m_name = QName(atts.getValue(i), getStylesheet().getNamespaces());
 			break;
+
 		case Constants::TATTRNAME_PRIORITY:
 			{
 				const DOMString priorityVal = atts.getValue(i);
 				m_priority = DOMStringToDouble(priorityVal);
 			}
 			break;
+
 		case Constants::TATTRNAME_MODE:
-			m_pMode = new QName(atts.getValue(i), getStylesheet().getNamespaces());
+			m_mode = QName(atts.getValue(i), getStylesheet().getNamespaces());
 			break;
+
 		case Constants::TATTRNAME_XMLSPACE:
 			processSpaceAttr(atts, i);
 			break;
+
 		default:
 			if(isAttrOK(tok, aname, atts, i)== false)
 			{
-				processor.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(name + " has an illegal attribute: " + aname);
 			}
 		}
 	}
-	if((0 == m_pMatchPattern) && (m_pName == 0))
+
+	if(0 == m_matchPattern && m_name.isEmpty == 0)
 	{
-		processor.error(name + " requires either a name or a match attribute.");
+		constructionContext.error(name + " requires either a name or a match attribute.");
 	}
 }
 
+
+
 ElemTemplate::~ElemTemplate()
 {
-	delete m_pName;
-	m_pName = 0;
-
-	delete m_pMode;
-	m_pMode = 0;
-
-	// the factory will free the memory
-	m_pMatchPattern = 0;
 }
 
-int ElemTemplate::getXSLToken() const 
+
+
+int
+ElemTemplate::getXSLToken() const 
 {
 	return Constants::ELEMNAME_TEMPLATE;
 }
 
-void ElemTemplate::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
-{    
-	ElemTemplateElement::execute(processor, sourceTree, sourceNode, mode);
 
-	executeChildren(processor, sourceTree, sourceNode, mode);
+
+void
+ElemTemplate::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
+{    
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
+
+	executeChildren(executionContext, sourceTree, sourceNode, mode);
 }

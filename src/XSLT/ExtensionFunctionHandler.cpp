@@ -58,6 +58,17 @@
 
 #include "ExtensionFunctionHandler.hpp"
 
+
+
+#include <cassert>
+
+
+
+#include <PlatformSupport/StringTokenizer.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 /**
  * Class handling an extension namespace for XPath. Provides functions
  * to test a function's existence and call a function
@@ -65,7 +76,7 @@
  * @author Sanjiva Weerawarana (sanjiva@watson.ibm.com)
  */
 
-ExtensionFunctionHandler::ExtensionFunctionHandler (const DOMString& namespaceUri) :
+ExtensionFunctionHandler::ExtensionFunctionHandler(const DOMString& namespaceUri) :
 	m_namespaceUri(namespaceUri),
 	m_scriptLang(),
 	m_scriptSrc(),
@@ -76,10 +87,13 @@ ExtensionFunctionHandler::ExtensionFunctionHandler (const DOMString& namespaceUr
 {
 }
 
+
+
 ExtensionFunctionHandler::~ExtensionFunctionHandler()
 {
-	m_javaObject = 0;	
 }
+
+
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -131,7 +145,7 @@ void ExtensionFunctionHandler::setFunctions (const DOMString& funcNames)
 	StringTokenizer st(funcNames, " \t\n\r", false);
 	while (st.hasMoreTokens ()) 
 	{
-		DOMString tok = st.nextToken ();
+		DOMString tok = st.nextToken();
 		m_functions.insert(tok);
 	}
 }
@@ -191,13 +205,14 @@ bool ExtensionFunctionHandler::isFunctionAvailable (const DOMString& function)
  * @exception IOException           if loading trouble
  * @exception SAXException          if parsing trouble
  */
-XObject* ExtensionFunctionHandler::callFunction (const DOMString& funcName, const ArgVector& args)
+XObject* ExtensionFunctionHandler::callFunction(const DOMString& funcName, const ArgVector& args)
 {
 	assert(0);	// @@ TODO: Not implemented
 	if (!m_componentStarted) 
 	{
 		startupComponent ();
 	}
+
 	// System.out.println("Extensions not implemented!");
 	return 0;
 }

@@ -78,15 +78,26 @@
    * Should not be null.  That is not enforced.
    */
 TracerEvent::TracerEvent(
-	const XSLTEngineImpl* processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode, 
-	const ElemTemplateElement& styleNode): m_pProcessor(processor), m_sourceTree(sourceTree),
-		m_sourceNode(sourceNode), m_mode(mode), m_styleNode(styleNode)
+			const StylesheetExecutionContext&	executionContext,
+			const DOM_Node&						sourceTree,
+			const DOM_Node&						sourceNode,
+			const QName&						mode,
+			const ElemTemplateElement&			styleNode) :
+	m_executionContext(executionContext),
+	m_sourceTree(sourceTree),
+	m_sourceNode(sourceNode),
+	m_mode(mode),
+	m_styleNode(styleNode)
+{
+}
 
-  {
-  }
+
+
+TracerEvent::~TracerEvent()
+{
+}
+
+
 
   /**
    Returns a string representation of the node.
@@ -98,7 +109,8 @@ TracerEvent::TracerEvent(
 
    @return a string representation of the given node.
    */
-DOMString TracerEvent::printNode(const DOM_Node& n)
+DOMString
+TracerEvent::printNode(const DOM_Node& n)
 {
 	// in Java was thigs: String r = n.hashCode() + " ";
 
@@ -147,7 +159,8 @@ DOMString TracerEvent::printNode(const DOM_Node& n)
 
    @return a string representation of the given node list.
    */
-DOMString TracerEvent::printNodeList(const DOM_NodeList& l)
+DOMString
+TracerEvent::printNodeList(const DOM_NodeList&	l)
 {
 	// in Java was this: String r = l.hashCode() + "[";
 	DOMString r = LongToDOMString(reinterpret_cast<long>(&l)) + "[";

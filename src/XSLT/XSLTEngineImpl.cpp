@@ -120,6 +120,9 @@
 #include "XSLTEngineImpl.hpp"
 
 
+#include <memory>
+
+
 
 #include <dom/DOM_DOMException.hpp>
 #include <dom/DOM_Node.hpp>
@@ -127,39 +130,22 @@
 #include <dom/DOM_NamedNodeMap.hpp>
 #include <dom/DOM_ProcessingInstruction.hpp>
 #include <sax/DocumentHandler.hpp>
+#include <sax/Locator.hpp>
 #include <sax/SaxException.hpp>
-#include <util/StdOut.hpp>
 #include <util/PlatformUtils.hpp>
 #include <framework/URLInputSource.hpp>
 
-#include "Arg.hpp"
-#include "ContextMarker.hpp"
-#include "ElemWithParam.hpp"
-#include "ElementMarker.hpp"
-#include "FunctionCurrent.hpp"
-#include "FunctionFormatNumber.hpp"
-#include "FunctionKey.hpp"
-#include "FunctionUnparsedEntityURI.hpp"
-#include "FunctionSystemProperty.hpp"
-#include "FunctionGenerateID.hpp"
-#include "NodeSortKey.hpp"
-#include "NodeSorter.hpp"
-#include "ProblemListener.hpp"
-#include "ProblemListenerDefault.hpp"
-#include "Stylesheet.hpp"
-#include "StylesheetHandler.hpp"
-#include "StylesheetRoot.hpp"
-#include "XSLTProcessorException.hpp"
-
-#include "GenerateEvent.hpp"
-// @@ LATER #include "FunctionDocument.hpp"
-
-// ?? #include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
 #include <Include/DOMHelper.hpp>
+
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
 #include <PlatformSupport/PrintWriter.hpp>
 #include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
+
+#include <DOMSupport/UnimplementedNode.hpp>
+#include <DOMSupport/UnimplementedElement.hpp>
+#include <DOMSupport/UnimplementedDocumentFragment.hpp>
+
 #include <XMLSupport/Formatter.hpp>
 #include <XMLSupport/FormatterToDOM.hpp>
 #include <XMLSupport/FormatterToText.hpp>
@@ -170,14 +156,39 @@
 #include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/ResultTreeFrag.hpp>
 #include <XPath/XObject.hpp>
+#include <XPath/XPathEnvSupport.hpp>
+#include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathFactory.hpp>
+#include <XPath/XPathProcessorImpl.hpp>
 #include <XPath/XPathSupport.hpp>
-#include <XPath/XString.hpp>
+#include <XPath/XObject.hpp>
+#include <XPath/XObjectFactory.hpp>
 #include <XPath/XResultTreeFrag.hpp>
 
-#include <DOMSupport/UnimplementedNode.hpp>
-#include <DOMSupport/UnimplementedElement.hpp>
-#include <DOMSupport/UnimplementedDocumentFragment.hpp>
+
+#include "Arg.hpp"
+#include "Constants.hpp"
+#include "ContextMarker.hpp"
+#include "ElemWithParam.hpp"
+#include "ElementMarker.hpp"
+#include "FunctionCurrent.hpp"
+#include "FunctionFormatNumber.hpp"
+#include "FunctionKey.hpp"
+#include "FunctionUnparsedEntityURI.hpp"
+#include "FunctionSystemProperty.hpp"
+#include "FunctionGenerateID.hpp"
+#include "GenerateEvent.hpp"
+#include "NodeSorter.hpp"
+#include "ProblemListener.hpp"
+#include "ProblemListenerDefault.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetExecutionContext.hpp"
+#include "StylesheetHandler.hpp"
+#include "StylesheetRoot.hpp"
+#include "TraceListener.hpp"
+#include "XSLTInputSource.hpp"
+#include "XSLTProcessorException.hpp"
+
 
 
 const double XSLTEngineImpl::s_XSLTVerSupported(1.0);
@@ -219,17 +230,18 @@ const XSLTEngineImpl::StaticInitializer			XSLTEngineImpl::s_staticInitializer;
 //==========================================================
 
 XSLTEngineImpl::XSLTEngineImpl(
-							XMLParserLiaison &parserLiaison,
+							XMLParserLiaison&	parserLiaison,
 							XPathSupport&		xpathSupport,
-							XPathEnvSupport&		xpathEnvSupport,
-							XObjectFactory* xobjectFactory,
-							XPathFactory *xpathFactory) :
+							XPathEnvSupport&	xpathEnvSupport,
+							XObjectFactory&		xobjectFactory,
+							XPathFactory&		xpathFactory) :
 	/* was:
 XSLTEngineImpl::XSLTEngineImpl(XMLParserLiaison&	parserLiaison, XPathSupport&		xpathSupport)
 	*/
 	XSLTProcessor(),
 	DocumentHandler(),
 	m_stylesheetRoot(0),
+	m_stylesheetExecutionContext(0),
 	m_stylesheets(),
 	m_sourceDocs(),
 	m_rootDoc(),
@@ -257,7 +269,9 @@ XSLTEngineImpl::XSLTEngineImpl(XMLParserLiaison&	parserLiaison, XPathSupport&		x
 	m_xpathSupport(xpathSupport),
 	m_xpathEnvSupport(xpathEnvSupport),
 	m_xpathFactory(xpathFactory),
+	m_xpath(xpathFactory.create()),
 	m_xobjectFactory(xobjectFactory),
+	m_xpathProcessor(new XPathProcessorImpl),
 	m_formatter(0),
 	m_flistener(0),
 	m_resultTreeFactory(),
@@ -279,45 +293,22 @@ XSLTEngineImpl::XSLTEngineImpl(XMLParserLiaison&	parserLiaison, XPathSupport&		x
 {
 	// @@ what's this
 	// FormatterToXML.initEncodings();
-
-	// java: m_parserLiaison.setEnvSupport(this);
-	
-	 /*
-	 // @@ JMD: Do we need this ??
-	if(m_parserLiaison instanceof Formatter)
-	{
-		m_formatter = (Formatter)m_parserLiaison;
-	}
-	 */
-	initXPath(m_xpathFactory);
 }
 
-/**
- * Init anything to do with XPath.
- */
-void XSLTEngineImpl::initXPath(XPathFactory* xpathFactory)
-{
-	if(0 != xpathFactory)
-		m_xpathFactory = xpathFactory;
-			
-	// @@ Not in parser liaison or friends
-	// m_parserLiaison.setProcessorOwner(this);
-	m_xpathProcessor = new XPathProcessorImpl(m_xpathEnvSupport, m_xpathSupport);
-	m_xpath = m_xpathFactory->create();
-	// @@ LATER m_xpath->installFunction("document", FunctionDocument());
-}
+
 
 /**
  * Reset the state.  This needs to be called after a process() call 
  * is invoked, if the processor is to be used again.
  */
-void XSLTEngineImpl::reset()
+void
+XSLTEngineImpl::reset()
 {
 	m_rootDoc = 0;
 	m_XSLNameSpaceURL = s_DefaultXSLNameSpaceURL;
 	m_durationsTable.clear();
 	m_stylesheetLocatorStack.clear();
-	m_pendingElementName = "";
+	m_pendingElementName = DOMString();
 	m_pendingAttributes.clear();
 	m_cdataStack.clear();
 	m_resultTreeFactory = 0;
@@ -330,29 +321,21 @@ void XSLTEngineImpl::reset()
 	m_xpathSupport.reset();
 	m_parserLiaison.reset();
 	m_xpathEnvSupport.reset();
-	m_xpathFactory->reset();
-	m_xobjectFactory->reset();
+	m_xpathFactory.reset();
+	m_xobjectFactory.reset();
 
 	delete m_stylesheetRoot;
 	m_stylesheetRoot = 0;
 
-
+	m_stylesheetExecutionContext = 0;
 }
 
 
 XSLTEngineImpl::~XSLTEngineImpl()
 {
 	delete m_problemListener;
-	delete m_xpathProcessor;
 
 	reset();
-
-	m_diagnosticsPrintWriter = 0;
-	m_xpathFactory = 0;
-	m_xobjectFactory = 0;
-	m_xpath = 0;
-	m_formatter = 0;
-	m_flistener = 0;
 }
 
 
@@ -360,33 +343,63 @@ XSLTEngineImpl::~XSLTEngineImpl()
 // SECTION: Main API Functions
 //==========================================================
 
+
+
+DOM_Document
+XSLTEngineImpl::getRootDoc() const
+{
+	return m_rootDoc;
+}
+
+
+
+void
+XSLTEngineImpl::setRootDoc(const DOM_Document& doc)
+{
+	m_rootDoc = doc;
+}
+
+
+
 AttributeListImpl& 
 XSLTEngineImpl::getPendingAttributes()
 {
-		return m_pendingAttributes;
+	return m_pendingAttributes;
 }
+
+
 
 DOMString
 XSLTEngineImpl::getPendingElementName() const
 {
-		return m_pendingElementName;
+	return m_pendingElementName;
 }
+
+
 
 void
 XSLTEngineImpl::setPendingAttributes(const AttributeList&	pendingAttributes)
 {
-		m_pendingAttributes = pendingAttributes;
+	m_pendingAttributes = pendingAttributes;
 }	
+
+
+
 void
 XSLTEngineImpl::setPendingElementName(const DOMString&	elementName)
 {
 		m_pendingElementName = elementName;
 }
 
+
+
 void
-XSLTEngineImpl::process(XSLTInputSource *inputSource, 
-	                     XSLTInputSource *stylesheetSource,
-	                     XSLTResultTarget* outputTarget)
+XSLTEngineImpl::process(
+			XSLTInputSource*				inputSource, 
+	        XSLTInputSource*				stylesheetSource,
+	        XSLTResultTarget&				outputTarget,
+			StylesheetConstructionContext&	constructionContext,
+			StylesheetExecutionContext&		executionContext)
 {
 	try
 	{
@@ -399,15 +412,16 @@ XSLTEngineImpl::process(XSLTInputSource *inputSource,
 		if(0 != inputSource)
 			sourceTree = getSourceTreeFromInput(inputSource);
 		if(0 != stylesheetSource)
-		{				
-			m_stylesheetRoot = processStylesheet(stylesheetSource);
+		{
+			m_stylesheetRoot = processStylesheet(*stylesheetSource, constructionContext);
 		}
 		else if(0 != sourceTree)
 		{
 			DOMString stylesheetURI = 0;
 			DOM_NodeList children = sourceTree.getChildNodes();
 			int nNodes = children.getLength();
-			Stack <DOMString> hrefs;
+			std::vector<DOMString>	hrefs;
+
 			for(int i = 0; i < nNodes; i++)
 			{
 				DOM_Node child = children.item(i);
@@ -441,7 +455,7 @@ XSLTEngineImpl::process(XSLTInputSource *inputSource,
 								{
 									stylesheetURI = tokenizer.nextToken();
 									stylesheetURI = substring(stylesheetURI, 1, stylesheetURI.length()-1);
-									hrefs.push(stylesheetURI);
+									hrefs.push_back(stylesheetURI);
 								}
 							} 
 							// break;
@@ -455,31 +469,36 @@ XSLTEngineImpl::process(XSLTInputSource *inputSource,
 			{
 				const XMLCh *pxch = (0 != inputSource) ?
 					inputSource->getSystemId() : 0;
-				DOMString sysid(pxch);
-				DOMString ref =  hrefs.pop();
+				const DOMString		sysid(pxch);
+				const DOMString&	ref =  hrefs.back();
+
 				Stylesheet* stylesheet =
-					getStylesheetFromPIURL(ref, sourceTree, sysid, isRoot);
+					getStylesheetFromPIURL(ref, sourceTree, sysid, isRoot, constructionContext);
+
 				if(false == isRoot)
 				{
 					prevStylesheet->getImports().push_back(stylesheet);
 				}
+
 				prevStylesheet = stylesheet;
 				isRoot = false;
+				hrefs.pop_back();
 			}
 		}
 		else
 		{
 			error("Stylesheet input was not specified!");
 		}
-								
+
 		if(0 == m_stylesheetRoot)
 		{
 			error("Failed to process stylesheet!");
 		}
-		
+
 		if(0 != sourceTree)
 		{
-			m_stylesheetRoot->process(sourceTree, outputTarget);
+			m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
+
 			if(0 != m_diagnosticsPrintWriter)
 			{
 				displayDuration("Total time", &totalTimeID);
@@ -514,72 +533,78 @@ XSLTEngineImpl::process(XSLTInputSource *inputSource,
 	}
 }
 
-StylesheetRoot* XSLTEngineImpl::processStylesheet(const DOMString &xsldocURLString)
+
+
+StylesheetRoot*
+XSLTEngineImpl::processStylesheet(
+			const DOMString&				xsldocURLString,
+			StylesheetConstructionContext&	constructionContext)
 {
 	try
 	{
 		std::auto_ptr<XMLURL> url(getURLFromString(xsldocURLString));
+		assert(url.get() != 0);
 
-		XSLTInputSource input(url->getURLText(), 0);
-		return processStylesheet(&input);
+		XSLTInputSource		input(url->getURLText(), 0);
+
+		return processStylesheet(input, constructionContext);
 	}
 	catch(SAXException& se)
 	{
 		message("processStylesheet not successful!");
+
 		throw se;
 	}
 	return 0;
 }
 
-StylesheetRoot* XSLTEngineImpl::processStylesheet(XSLTInputSource* stylesheetSource)
 
+
+StylesheetRoot*
+XSLTEngineImpl::processStylesheet(
+  			XSLTInputSource&				stylesheetSource,
+			StylesheetConstructionContext&	constructionContext)
 {
-	if(0 != m_stylesheetRoot)
-		reset();
-	DOMString xslIdentifier(((0 == stylesheetSource) || 
-									(0 == stylesheetSource->getSystemId())) 
-									 ? DOMString("Input XSL") : stylesheetSource->getSystemId());
+	delete m_stylesheetRoot;
+
+	const DOMString	xslIdentifier(0 == stylesheetSource.getSystemId() ? 
+									 L"Input XSL" : stylesheetSource.getSystemId());
+
 	// In case we have a fragment identifier, go ahead and 
 	// try to parse the XML here.
 	try
 	{
-		m_stylesheetRoot = new StylesheetRoot(this, stylesheetSource->getSystemId());
+		m_stylesheetRoot = new StylesheetRoot(stylesheetSource.getSystemId(), constructionContext);
+
 		addTraceListenersToStylesheet();
 
-		StylesheetHandler	stylesheetProcessor(*this, *m_stylesheetRoot);
-		if(0 != stylesheetSource->getNode())
+		StylesheetHandler	stylesheetProcessor(*this, *m_stylesheetRoot, constructionContext);
+
+		if(0 != stylesheetSource.getNode())
 		{
 			FormatterListener& flistener =
 				dynamic_cast<FormatterListener&>(stylesheetProcessor);
 			FormatterTreeWalker tw(flistener);
-			tw.traverse(stylesheetSource->getNode());
+			tw.traverse(stylesheetSource.getNode());
 		}
 		else
 		{
 			diag("========= Parsing "+xslIdentifier+" ==========");
 			pushTime(&xslIdentifier);
-			m_parserLiaison.parseXMLStream(*stylesheetSource,
+			m_parserLiaison.parseXMLStream(stylesheetSource,
 										   stylesheetProcessor);
 			if(0 != m_diagnosticsPrintWriter)
 				displayDuration("Parse of "+xslIdentifier, &xslIdentifier);
 		}
 	}
-	catch(const XSLException&	e)
+	catch(const XSLException&)
 	{
 		message("Error parsing " + xslIdentifier);
 
 		throw;
 	}
 
-	catch(const SAXException&	e)
-	{
-		message("Error parsing " + xslIdentifier);
-
-		throw;
-	}
-
-
-	catch(const XMLException&	e)
+	catch(const SAXException&)
 	{
 		message("Error parsing " + xslIdentifier);
 
@@ -587,9 +612,18 @@ StylesheetRoot* XSLTEngineImpl::processStylesheet(XSLTInputSource* stylesheetSou
 	}
 
 
+	catch(const XMLException&)
+	{
+		message("Error parsing " + xslIdentifier);
+
+		throw;
+	}
 
 	return m_stylesheetRoot;
 }
+
+
+
 //==========================================================
 // SECTION: XML Parsing Functions
 //==========================================================
@@ -649,7 +683,7 @@ DOM_Document XSLTEngineImpl::parseXML(const XMLURL& url,
 	// java: url.toExternalForm();
 	const DOMString&	urlString = url.getURLText();
 	DOM_Document	doc;
-	const SourceDocumentsMapType::iterator	it = m_sourceDocs.find(urlString);
+	const SourceDocumentsTableType::iterator	it = m_sourceDocs.find(urlString);
 	if(it != m_sourceDocs.end())
 	{
 		doc = (*it).second;
@@ -675,129 +709,174 @@ DOM_Document XSLTEngineImpl::parseXML(const XMLURL& url,
 	return doc;
 }
 
-Stylesheet* XSLTEngineImpl::getStylesheetFromPIURL(DOMString& xslURLString,
-								const DOM_Node& fragBase,
-								DOMString& xmlBaseIdent,
-								bool isRoot)
+
+
+Stylesheet*
+XSLTEngineImpl::getStylesheetFromPIURL(
+			const DOMString&				xslURLString,
+			const DOM_Node&					fragBase,
+			const DOMString&				xmlBaseIdent,
+			bool							isRoot,
+			StylesheetConstructionContext&	constructionContext)
 {
-	Stylesheet* stylesheet = 0;
-	// ?? String[] stringHolder = { null};
-	DOMString stringHolder;
-	xslURLString = trim(xslURLString);
-	int fragIndex = indexOf(xslURLString, '#');
-	DOM_Document stylesheetDoc;
+	Stylesheet*			stylesheet = 0;
+
+	DOMString			stringHolder;
+	const DOMString		localXSLURLString = clone(trim(xslURLString));
+
+	const int			fragIndex = indexOf(localXSLURLString, '#');
+
+	DOM_Document		stylesheetDoc;
+
 	if(fragIndex == 0)
 	{
-		diag("Locating stylesheet from fragment identifier...");
-		DOMString fragID = substring(xslURLString, 1);
-		DOM_Element nsNode;
+		diag(L"Locating stylesheet from fragment identifier...");
+
+		const DOMString		fragID = substring(localXSLURLString, 1);
+
+		DOM_Element			nsNode;
+
 		if (fragBase.getNodeType() == DOM_Node::DOCUMENT_NODE)
 		{
 			const DOM_Document& doc = static_cast<const DOM_Document&>(fragBase);
+
 			nsNode = doc.getDocumentElement(); 
 		}
-		else if	(fragBase.getNodeType() == DOM_Node::ELEMENT_NODE) 
+		else if	(fragBase.getNodeType() == DOM_Node::ELEMENT_NODE)
+		{
 			nsNode = (static_cast<const DOM_Element&>(fragBase));
+		}
 		else		
 		{
-			DOM_Node node = fragBase.getParentNode();
+			const DOM_Node	node = fragBase.getParentNode();
+
 			if	(node.getNodeType() == DOM_Node::ELEMENT_NODE) 
 				nsNode = (static_cast<const DOM_Element&>(node));
 			else
-				error("Could not identify fragment: "+fragID);
+				error(L"Could not identify fragment: " + fragID);
 		}
+
 		// Try a bunch of really ugly stuff to find the fragment.
 		// What's the right way to do this?
-		DOMString ds;
-		ds = "id("; ds += fragID; ds += ")";
+		DOMString ds(L"id(");
 
-		ElementPrefixResolverProxy	theProxy(nsNode, m_xpathSupport);
+		ds += fragID;
+		ds += L")";
 
-		XObject* xobj = evalXPathStr(ds, fragBase, theProxy);
+		ElementPrefixResolverProxy		theProxy(nsNode, m_xpathSupport);
 
-		// java: NodeList nl = xobj->nodeset();
-		const NodeRefListBase* nl = &(xobj->nodeset());
+		XPathExecutionContextDefault	theExecutionContext(m_xpathEnvSupport,
+															m_xpathSupport,
+															m_xobjectFactory,
+															fragBase,
+															NodeRefList(),
+															&theProxy);
+
+		const XObject*	xobj = evalXPathStr(ds, theExecutionContext);
+
+		const NodeRefListBase* nl = &xobj->nodeset();
+
 		if(nl->getLength() == 0)
 		{
-			ds = "//*[@id='"; ds += fragID; ds += "']";
-			xobj = evalXPathStr(ds, fragBase, theProxy);
-			nl = &(xobj->nodeset());
+			ds = L"//*[@id='";
+			ds += fragID;
+			ds += L"']";
+
+			theExecutionContext.setContextNodeList(NodeRefList());
+
+			xobj = evalXPathStr(ds, theExecutionContext);
+
+			nl = &xobj->nodeset();
+
 			if(nl->getLength() == 0)
 			{
-				ds = "//*[@name='"; ds += fragID; ds += "']";
-				xobj = evalXPathStr(ds, fragBase, theProxy);
-				nl = &(xobj->nodeset());
+				ds = L"//*[@name='";
+				ds += fragID;
+				ds += L"']";
+
+				theExecutionContext.setContextNodeList(NodeRefList());
+
+				xobj = evalXPathStr(ds, theExecutionContext);
+
+				nl = &xobj->nodeset();
+
 				if(nl->getLength() == 0)
 				{
 					// Well, hell, maybe it's an XPath...
-					xobj = evalXPathStr(fragID, fragBase, theProxy);
+					theExecutionContext.setContextNodeList(NodeRefList());
+
+					xobj = evalXPathStr(fragID, theExecutionContext);
+
 					nl = &(xobj->nodeset());
 				}
 			}
 		}
+
 		if(nl->getLength() == 0)
 		{
-			error("Could not find fragment: "+fragID);
+			error(L"Could not find fragment: " + fragID);
 		}
-		
+
 		DOM_Node frag = nl->item(0);
 		if(DOM_Node::ELEMENT_NODE == frag.getNodeType())
 		{
 			pushTime(&frag);
 			if(isRoot)
 			{
-				m_stylesheetRoot = new StylesheetRoot(this, stringHolder);
+				m_stylesheetRoot = new StylesheetRoot(stringHolder, constructionContext);
 				stylesheet = m_stylesheetRoot;
 			}
 			else
 			{
-				stylesheet = new Stylesheet(*m_stylesheetRoot, this, stringHolder);
+				stylesheet = new Stylesheet(*m_stylesheetRoot, stringHolder, constructionContext);
 			}
 			addTraceListenersToStylesheet();
 
-			StylesheetHandler stylesheetProcessor(*this, *stylesheet);
+			StylesheetHandler stylesheetProcessor(*this, *stylesheet, constructionContext);
 			FormatterListener& flistener =
 				dynamic_cast<FormatterListener&>(stylesheetProcessor);
 			FormatterTreeWalker tw(flistener);
 			tw.traverse(frag);
 			
-			displayDuration("Setup of "+xslURLString, &frag);
+			displayDuration(L"Setup of " + localXSLURLString, &frag);
 		}
 		else
 		{
 			stylesheetDoc = 0;
-			error("Node pointed to by fragment identifier was not an element: "+fragID);
+			error(L"Node pointed to by fragment identifier was not an element: " + fragID);
 		}
 	}
 	else
 	{ 
 		// hmmm.. for now I'll rely on the XML parser to handle 
 		// fragment URLs.
-		diag("========= Parsing and preparing "+xslURLString+" ==========");
-		pushTime(&xslURLString);
-		
+		diag(L"========= Parsing and preparing " + localXSLURLString + L" ==========");
+		pushTime(&localXSLURLString);
+
 		if(isRoot)
 		{
-			m_stylesheetRoot = new StylesheetRoot(this, xslURLString);
+			m_stylesheetRoot = new StylesheetRoot(localXSLURLString, constructionContext);
 			stylesheet = m_stylesheetRoot;
 		}
 		else
 		{
-			stylesheet = new Stylesheet(*m_stylesheetRoot, this, xslURLString);
+			stylesheet = new Stylesheet(*m_stylesheetRoot, localXSLURLString, constructionContext);
 		}
 		addTraceListenersToStylesheet();
 
-		StylesheetHandler stylesheetProcessor(*this, *stylesheet);
+		StylesheetHandler stylesheetProcessor(*this, *stylesheet, constructionContext);
 		
-		XMLURL* xslURL = getURLFromString(xslURLString, xmlBaseIdent);
-		
-		XSLTInputSource inputSource(xslURL->getURLText());
+		std::auto_ptr<XMLURL>	xslURL(getURLFromString(localXSLURLString, xmlBaseIdent));
+
+		XSLTInputSource		inputSource(xslURL->getURLText());
+
 		// java: m_parserLiaison.setDocumentHandler(stylesheetProcessor);
 		//       m_parserLiaison.parse(inputSource);
 		m_parserLiaison.parseXMLStream(inputSource, stylesheetProcessor);
 
-		displayDuration("Parsing and init of "+xslURLString, &xslURLString);
+		displayDuration("Parsing and init of "+localXSLURLString, &localXSLURLString);
 	}
+
 	return stylesheet;
 }
 
@@ -1010,8 +1089,11 @@ XSLTEngineImpl::isXSLTagOfType(const DOM_Node&	node,
 	return getXSLToken(node) == tagType ? true : false;
 }
 
-void XSLTEngineImpl::outputToResultTree(const Stylesheet& stylesheetTree,
-						XObject* value)
+
+
+void
+XSLTEngineImpl::outputToResultTree(
+			const XObject&		value)
 {
 	 // java:
     // Make the return object into an XObject because it 
@@ -1020,19 +1102,19 @@ void XSLTEngineImpl::outputToResultTree(const Stylesheet& stylesheetTree,
     // XObject classes.
 	 // JMD: Has to be an XObject
 
-	int type = value->getType();
+	int type = value.getType();
 	DOMString s;
 	switch(type)
 	{
 	case XObject::eTypeBoolean:
 	case XObject::eTypeNumber:
 	case XObject::eTypeString:
-		s = value->str();
+		s = value.str();
 		characters(toCharArray(s), 0, length(s));
 		break;					
 	case XObject::eTypeNodeSet:
 		{
-		const NodeRefListBase* nl = &(value->nodeset());
+		const NodeRefListBase* nl = &(value.nodeset());
 		int nChildren = nl->getLength();
 		for(int i = 0; i < nChildren; i++)
 		{
@@ -1041,7 +1123,7 @@ void XSLTEngineImpl::outputToResultTree(const Stylesheet& stylesheetTree,
 			while(0 != pos)
 			{
 				flushPending();
-				cloneToResultTree(stylesheetTree, pos, false, false, false, true);
+				cloneToResultTree(pos, false, false, true);
 				DOM_Node	nextNode = pos.getFirstChild();
 				while(0 == nextNode)
 				{
@@ -1082,6 +1164,18 @@ void XSLTEngineImpl::outputToResultTree(const Stylesheet& stylesheetTree,
 		assert(0);
 	}
 }
+
+
+
+bool
+XSLTEngineImpl::functionAvailable(
+			DOMString&	theNamespace, 
+			DOMString&	extensionName) const
+{
+	return m_xpathEnvSupport.functionAvailable(theNamespace, extensionName);
+}
+
+
 
 /**
  * Handle an extension function.
@@ -1163,13 +1257,16 @@ void XSLTEngineImpl::removeTraceListener(TraceListener* tl)
  */
 void XSLTEngineImpl::fireGenerateEvent(const GenerateEvent& te)
 {
-	int nListeners = m_traceListeners.size();
+	const int	nListeners = m_traceListeners.size();
+
 	for(int i = 0; i < nListeners; i++)
 	{
-		TraceListener* tl = m_traceListeners.at(i);
+		TraceListener* const	tl = m_traceListeners.at(i);
+
 		tl->generated(te);
 	}
 }
+
 
 
 /**
@@ -1378,8 +1475,8 @@ void XSLTEngineImpl::setTraceTemplateChildren(bool	b)
 
 void
 XSLTEngineImpl::traceSelect(
-			DOM_Element 	theTemplate,
-			const NodeRefListBase& nl) const
+			const DOM_Element& 		theTemplate,
+			const NodeRefListBase&	nl) const
 {
 	DOMString	msg = theTemplate.getNodeName() + DOMString(": ");
 	DOM_Attr	attr = theTemplate.getAttributeNode(Constants::ATTRNAME_SELECT);
@@ -1410,7 +1507,7 @@ XSLTEngineImpl::traceSelect(
 * a match, name, or as part of for-each.
 */
 void
-XSLTEngineImpl::traceTemplate(DOM_Element 	theTemplate) const
+XSLTEngineImpl::traceTemplate(const DOM_Element& 	theTemplate) const
 {
 	DOMString	msg;
 	DOM_Attr	attr = theTemplate.getAttributeNode(Constants::ATTRNAME_MATCH);
@@ -1566,7 +1663,7 @@ XSLTEngineImpl::flushPending()
 	if(0 != length(m_pendingElementName))
 	{
 		assert(m_flistener != 0);
-		m_cdataStack.push(isCDataResultElem(m_pendingElementName)? true : false);
+		m_cdataStack.push_back(isCDataResultElem(m_pendingElementName)? true : false);
 		m_flistener->startElement(c_wstr(m_pendingElementName), m_pendingAttributes);
 		if(m_traceListeners.size() > 0)
 		{
@@ -1641,7 +1738,7 @@ XSLTEngineImpl::endElement(const XMLCh* const 	name)
 	m_resultNameSpaces.pop_back();
 	Stylesheet::QNameVectorType cdataElems = m_stylesheetRoot->getCdataSectionElems();
 	if(0 != cdataElems.size())
-      m_cdataStack.pop();
+      m_cdataStack.pop_back();
 }
 
 
@@ -1707,19 +1804,18 @@ XSLTEngineImpl::characters(
 }
 
 
-/**
- * Bottleneck the charactersRaw event.
- */
+
 void 
 XSLTEngineImpl::charactersRaw (
-			const XMLCh* const	ch, 
-			const unsigned int	start, 
+			const XMLCh* const	ch,
+			const unsigned int	/* start */,
 			const unsigned int	length)
-    //throws SAXException
 {
 	flushPending();
-	// java: if(m_flistener instanceof FormatterListener)
-	FormatterListener* pFL = dynamic_cast<FormatterListener*>(m_flistener);
+
+	FormatterListener* const	pFL =
+		dynamic_cast<FormatterListener*>(m_flistener);
+
 	if(0 != pFL)
 	{
 		pFL->charactersRaw(ch, length);
@@ -1728,10 +1824,12 @@ XSLTEngineImpl::charactersRaw (
 	{
 		m_flistener->characters(ch, length);
 	}
+
 	if(m_traceListeners.size() > 0)
 	{
 		GenerateEvent ge(this, GenerateEvent::EVENTTYPE_CHARACTERS,
 				ch, 0, length);
+
 		fireGenerateEvent(ge);
 	}
 }
@@ -1865,17 +1963,14 @@ void XSLTEngineImpl::cdata(
 
 
 void
-XSLTEngineImpl::
-
-cloneToResultTree(
-			const Stylesheet&	stylesheetTree,
-			const DOM_Node&	node, 
-			bool					isLiteral,
-			bool				/* shouldCloneWithChildren */, 
-			bool					overrideStrip,
-			bool					shouldCloneAttributes)
+XSLTEngineImpl::cloneToResultTree(
+			const DOM_Node&		node, 
+			bool				isLiteral,
+			bool				overrideStrip,
+			bool				shouldCloneAttributes)
 {
 	bool	stripWhiteSpace = false;
+
 	switch(node.getNodeType())
 	{
 	case DOM_Node::TEXT_NODE:
@@ -1946,8 +2041,7 @@ cloneToResultTree(
 										m_pendingAttributes);
 
 				copyNamespaceAttributes(node,
-										false,
-										m_pendingAttributes);
+										false);
 			}
 
 			startElement(c_wstr(node.getNodeName()));
@@ -2027,28 +2121,30 @@ cloneToResultTree(
 // @@ java: DocumentFragment
 ResultTreeFragBase*
 XSLTEngineImpl::createResultTreeFrag(
-			const Stylesheet*			stylesheetTree, 
-			ElemTemplateElement&		templateChild, 
-			const DOM_Node&			sourceTree, 
-			const DOM_Node&			sourceNode,
-			const QName&				mode)
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		templateChild, 
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode)
 {
 	DocumentHandler* const	savedFormatterListener = m_flistener;
 
 	std::auto_ptr<ResultTreeFragBase> pfrag(createDocFrag());
-		 
-	DOMString savedPendingName = m_pendingElementName;
-	m_pendingElementName = "";  // DOMString()
-	AttributeListImpl savedPendingAttributes = m_pendingAttributes;
+
+	FormatterToDOM	tempFormatter(m_resultTreeFactory, 
+								  DOM_UnimplementedDocumentFragment(pfrag.get()));
+
+	const DOMString savedPendingName = m_pendingElementName;
+	m_pendingElementName = DOMString();
+
+	AttributeListImpl savedPendingAttributes(m_pendingAttributes);
 	m_pendingAttributes.clear();
-	
-	m_flistener = new FormatterToDOM(m_resultTreeFactory, 
-		DOM_UnimplementedDocumentFragment(pfrag.get()));
-	
-	templateChild.executeChildren(*this, sourceTree, sourceNode, mode);
-	
+
+	m_flistener = &tempFormatter;
+
+	templateChild.executeChildren(executionContext, sourceTree, sourceNode, mode);
+
 	// flushPending();
-	delete m_flistener;
 	m_flistener = savedFormatterListener;
 	m_pendingElementName = savedPendingName;
 	m_pendingAttributes = savedPendingAttributes;
@@ -2056,12 +2152,14 @@ XSLTEngineImpl::createResultTreeFrag(
 	return pfrag.release();
 }
 
-void XSLTEngineImpl::writeChildren(
-	                   FormatterListener* flistener,
-	                   Stylesheet& stylesheetTree, 
-	                   ElemTemplateElement& templateParent, 
-	                   const DOM_Node& sourceTree, 
-	                   const DOM_Node& sourceNode, QName mode)
+void
+XSLTEngineImpl::writeChildren(
+			FormatterListener*				flistener,
+			StylesheetExecutionContext&		executionContext,
+	        const ElemTemplateElement&		templateParent,
+	        const DOM_Node&					sourceTree,
+	        const DOM_Node&					sourceNode,
+			const QName&					mode)
 {
     flushPending();
 
@@ -2072,7 +2170,7 @@ void XSLTEngineImpl::writeChildren(
     m_pendingAttributes.clear();
     m_flistener = flistener;
         
-    templateParent.executeChildren(*this, sourceTree, sourceNode, mode);
+    templateParent.executeChildren(executionContext, sourceTree, sourceNode, mode);
     
     flushPending();
     m_flistener = savedFormatterListener;
@@ -2082,19 +2180,22 @@ void XSLTEngineImpl::writeChildren(
 
 
 void
-XSLTEngineImpl::outputResultTreeFragment(XObject*		obj)
+XSLTEngineImpl::outputResultTreeFragment(const XObject&		theTree)
 {
-	ResultTreeFragBase&		docFrag = obj->rtree();
-	const NodeRefListBase&	nl = docFrag.getChildNodesAsNodeRefList();
-	const int			nChildren = nl.getLength();
+	const ResultTreeFragBase&	docFrag = theTree.rtree();
+	const NodeRefListBase&		nl = docFrag.getChildNodesAsNodeRefList();
+
+	const int					nChildren = nl.getLength();
+
 	for(int i = 0; i < nChildren; i++)
 	{
-		DOM_Node		pos = nl.item(i);
-		const DOM_Node&	top = pos;
+		DOM_Node		pos(nl.item(i));
+		const DOM_Node	top(pos);
+
 		while(0 != pos)
 		{
 			flushPending();
-			cloneToResultTree(*m_stylesheetRoot, pos, false, false, false, true );
+			cloneToResultTree(pos, false, false, true);
 			DOM_Node	nextNode = pos.getFirstChild();
 			while(0 == nextNode)
 			{
@@ -2146,7 +2247,7 @@ bool XSLTEngineImpl::isCDataResultElem(DOMString& elementName)
 			DOMString prefix = substring(elementName, 0, indexOfNSSep);
 			if(equals(prefix, "xml"))
 			{
-				elemNS = Constants::S_XMLNAMESPACEURI;
+				elemNS = QName::s_XMLNAMESPACEURI;
 			}
 			else
 			{
@@ -2184,7 +2285,7 @@ bool XSLTEngineImpl::qnameEqualsResultElemName(QName& qname, DOMString& elementN
 		DOMString prefix = substring(elementName, 0, indexOfNSSep);
 		if(equals(prefix, "xml"))
 		{
-			elemNS = Constants::S_XMLNAMESPACEURI;
+			elemNS = QName::s_XMLNAMESPACEURI;
 		}
 		else
 		{
@@ -2261,8 +2362,7 @@ XSLTEngineImpl::getPrefixForNamespace(
 void
 XSLTEngineImpl::copyNamespaceAttributes(
 			const DOM_Node&			src,
-			bool				srcIsStylesheetTree,
-			AttributeListImpl&	/* destination */) 
+			bool				srcIsStylesheetTree) 
 {
 	int type;
 	DOM_Node	parent = src;
@@ -2306,50 +2406,139 @@ XSLTEngineImpl::copyNamespaceAttributes(
 	}
 }
 
-XObject* XSLTEngineImpl::evalXPathStr(const DOMString& str,
-						const DOM_Node& context,
-						const PrefixResolver& resolver)
+
+
+XObject*
+XSLTEngineImpl::evalXPathStr(
+			const DOMString&		str,
+			XPathExecutionContext&	executionContext)
 {
-    m_xpathProcessor->initXPath(*m_xpath, str, resolver);
-    return m_xpath->execute(context, resolver, m_contextNodeList);
+    m_xpathProcessor->initXPath(*m_xpath,
+								str,
+								*executionContext.getPrefixResolver(),
+								m_xobjectFactory,
+								m_xpathEnvSupport);
+
+    return m_xpath->execute(executionContext);
 }
 
-	/**
-	 * Evaluate an xpath string and return the result.
-	 */
-XPath* XSLTEngineImpl::createXPath(
+
+
+XObject*
+XSLTEngineImpl::evalXPathStr(
+			const DOMString&		str,
+			const DOM_Node&			contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext)
+{
+    m_xpathProcessor->initXPath(*m_xpath,
+								str,
+								prefixResolver,
+								m_xobjectFactory,
+								m_xpathEnvSupport);
+
+    return m_xpath->execute(contextNode, prefixResolver, executionContext);
+}
+
+
+
+XObject*
+XSLTEngineImpl::evalXPathStr(
+			const DOMString&		str,
+			const DOM_Node&			contextNode,
+			const DOM_Element&		prefixResolver,
+			XPathExecutionContext&	executionContext)
+{
+	ElementPrefixResolverProxy	theProxy(prefixResolver,
+										 m_xpathSupport);
+
+	return evalXPathStr(str, contextNode, theProxy, executionContext);
+}
+
+
+
+// $$$ ToDo:  This really should not be here...
+XPath*
+XSLTEngineImpl::createProcessingXPath(
+		const DOMString&		str,
+		XPathExecutionContext&	executionContext,
+		const PrefixResolver&	resolver)
+{
+	XPath* const	xpath = m_xpathFactory.create();
+
+	m_xpathProcessor->initXPath(*xpath,
+								str,
+								resolver,
+								executionContext.getXObjectFactory(),
+								m_xpathEnvSupport);
+
+	return xpath;
+}
+
+
+
+/**
+ * Evaluate an xpath string and return the result.
+ */
+XPath*
+XSLTEngineImpl::createXPath(
 		const DOMString&		str, 
 		const PrefixResolver&	resolver)
 {
-	assert(m_xpathFactory);
-	XPath* xpath = m_xpathFactory->create();
-	m_xpathProcessor->initXPath(*xpath, str, resolver);
-	xpath->shrink();
+	XPath* const	xpath = m_xpathFactory.create();
+
+	m_xpathProcessor->initXPath(*xpath,
+								str,
+								resolver,
+								m_xobjectFactory,
+								m_xpathEnvSupport);
+
 	return xpath;
 }
 
 /**
  * Evaluate an xpath string and return the result.
  */
-double XSLTEngineImpl::evalMatchPatternStr(const DOMString& str,
-						const DOM_Node& context,
-						const PrefixResolver& resolver)
+double
+XSLTEngineImpl::evalMatchPatternStr(
+			const DOMString&		str,
+			const DOM_Node&			context,
+			XPathExecutionContext&	executionContext)
+//			const DOM_Node& context,
+//						const PrefixResolver& resolver)
 {
+	assert(executionContext.getPrefixResolver() != 0);
+
+	FactoryObjectAutoPointer<XPath>		theXPath(&m_xpathFactory,
+												 m_xpathFactory.create());
+
 	// This needs to use a factory method of some sort.
-	m_xpathProcessor->initMatchPattern(*m_xpath, str, resolver);
-	return m_xpath->getMatchScore(context);
+	m_xpathProcessor->initMatchPattern(*theXPath.get(),
+									   str,
+									   *executionContext.getPrefixResolver(),
+									   executionContext.getXObjectFactory(),
+									   m_xpathEnvSupport);
+
+	return theXPath->getMatchScore(context, executionContext);
 }
 
+
+
 /**
- * Evaluate an xpath string and return the result.
+ * Create and initialize an xpath and return it.
  */
-XPath* XSLTEngineImpl::createMatchPattern(const DOMString &str, const PrefixResolver& resolver)
+XPath*
+XSLTEngineImpl::createMatchPattern(
+			const DOMString&		str,
+			const PrefixResolver&	resolver)
 {
-	XPath* xpath = m_xpathFactory->create();
-	m_xpathProcessor->initMatchPattern(*xpath, str, resolver);
-	xpath->shrink();
+	XPath* const	xpath = m_xpathFactory.create();
+
+	m_xpathProcessor->initMatchPattern(*xpath, str, resolver, m_xobjectFactory, m_xpathEnvSupport);
+
 	return xpath;
 }
+
 
 
 XPath* XSLTEngineImpl::getExpression(
@@ -2387,12 +2576,12 @@ XSLTEngineImpl::getAttrVal(
 
 
 
-
 DOMString
 XSLTEngineImpl::evaluateAttrVal(
-			const DOM_Node&	contextNode,
-			const DOM_Element&	namespaceContext,
-			const DOMString&	stringedValue)
+			const DOM_Node&			contextNode,
+			const DOM_Element&		namespaceContext,
+			const DOMString&		stringedValue,
+			XPathExecutionContext&	executionContext)
 {
 	DOMString			expressedValue; // return value
 	StringTokenizer 	tokenizer(stringedValue, "{}\"\'", true);
@@ -2486,9 +2675,11 @@ XSLTEngineImpl::evaluateAttrVal(
 										{
 											// Proper close of attribute template.
 											// Evaluate the expression.
-											XObject* xobj = evalXPathStr(expression, contextNode, theProxy);
+											const XObject* const	xobj =
+												evalXPathStr(expression, contextNode, theProxy, executionContext);
 
-											DOMString exprResult = xobj->str();
+											const DOMString			exprResult(xobj->str());
+
 											append(buffer, exprResult);
 
 											lookahead = ""; // breaks out of inner while loop
@@ -2566,16 +2757,16 @@ XSLTEngineImpl::evaluateAttrVal(
 void
 XSLTEngineImpl::copyAttributeToTarget(
 			const DOM_Attr&			attr,
-			const DOM_Node&			contextNode,
-			const Stylesheet* 		stylesheetTree,
+			const DOM_Node&			/* contextNode */,
+			const Stylesheet* 		/* stylesheetTree */,
 			AttributeListImpl&		attrList, 
-			const DOM_Element& 		namespaceContext)
+			const DOM_Element& 		/* namespaceContext */)
 {
 	const DOMString 	attrName = trim(attr.getName());
 	DOMString			stringedValue = attr.getValue();
-	stringedValue = evaluateAttrVal(contextNode,
-									namespaceContext,
-									stringedValue);
+//	stringedValue = evaluateAttrVal(contextNode,
+//									namespaceContext,
+//									stringedValue);
 
 	// evaluateAttrVal might return a null value if the template expression 
 	// did not turn up a result, in which case I'm going to not add the 
@@ -2583,8 +2774,8 @@ XSLTEngineImpl::copyAttributeToTarget(
 	// TODO: Find out about empty attribute template expression handling.
 	if(0 != length(stringedValue))
 	{
-		if((equals(attrName, "xmlns") || startsWith(attrName, "xmlns:"))
-		   && startsWith(stringedValue, "quote:"))
+		if((equals(attrName, L"xmlns") || startsWith(attrName, L"xmlns:"))
+		   && startsWith(stringedValue, L"quote:"))
 		{
 			stringedValue = substring(stringedValue, 6);
 		}
@@ -2813,17 +3004,18 @@ XSLTEngineImpl::initCSS2Table()
 
 const NodeRefListBase*
 XSLTEngineImpl::getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
-			const PrefixResolver&	resolver) const
+			const DOM_Node&			doc, 
+			const DOMString&		name, 
+			const DOMString&		ref, 
+			const PrefixResolver&	resolver,
+			XPathExecutionContext&	executionContext) const
 {
 	// Should this call the root or the current stylesheet?
 	const NodeRefListBase*	nl = 0;
 
 	if (m_stylesheetRoot != 0)
 	{
-		nl = m_stylesheetRoot->getNodeSetByKey(doc, name, ref, resolver);
+		nl = m_stylesheetRoot->getNodeSetByKey(doc, name, ref, resolver, executionContext);
 	}
 
 	if(0 == nl)
@@ -2873,47 +3065,74 @@ XSLTEngineImpl::shouldStripSourceNode(const DOM_Node&	textNode) const
 			{
 				const DOM_Element&	parentElem =
 					static_cast<const DOM_Element&>(parent);
-				const DOM_Attr	attr = parentElem.getAttributeNode("xml:space");
+				const DOM_Attr	attr = parentElem.getAttributeNode(L"xml:space");
 				if(0 != attr)
 				{
 					const DOMString 	xmlSpaceVal = attr.getValue();
-					if(equals(xmlSpaceVal, "preserve"))
+					if(equals(xmlSpaceVal, L"preserve"))
 					{
 						strip = false;
 					}
-					else if(equals(xmlSpaceVal, "default"))
+					else if(equals(xmlSpaceVal, L"default"))
 					{
 						strip = true;
 					}
 					else
 					{
-						error("xml:space in the source XML has an illegal value: "+xmlSpaceVal);
+						error(L"xml:space in the source XML has an illegal value: " + xmlSpaceVal);
 					}
 					break;
 				}
 
 				double highPreserveScore = XPath::s_MatchScoreNone;
 				double highStripScore = XPath::s_MatchScoreNone;
+
+				ElementPrefixResolverProxy		theProxy(parentElem, m_xpathSupport);
+
 				{
-				int nTests = m_stylesheetRoot->m_whitespacePreservingElements.size();
-				for(int i = 0; i < nTests; i++)
+					const int	nTests = m_stylesheetRoot->m_whitespacePreservingElements.size();
+
+					XPathExecutionContextDefault	theExecutionContext(m_xpathEnvSupport,
+																		m_xpathSupport,
+																		m_xobjectFactory,
+																		parent,
+																		NodeRefList(),
+																		&theProxy);
+
+					for(int i = 0; i < nTests; i++)
+					{
+						const XPath* const	matchPat = m_stylesheetRoot->m_whitespacePreservingElements.at(i);
+						assert(matchPat != 0);
+
+						const double	score = matchPat->getMatchScore(parent, theExecutionContext);
+
+						if(score > highPreserveScore)
+							highPreserveScore = score;
+					}
+				}
+
 				{
-					XPath* matchPat = m_stylesheetRoot->m_whitespacePreservingElements.at(i);
-					double score = matchPat->getMatchScore(parent);
-					if(score > highPreserveScore)
-						highPreserveScore = score;
+					const int	nTests = m_stylesheetRoot->m_whitespaceStrippingElements.size();
+
+					XPathExecutionContextDefault	theExecutionContext(m_xpathEnvSupport,
+																		m_xpathSupport,
+																		m_xobjectFactory,
+																		parent,
+																		NodeRefList(),
+																		&theProxy);
+
+					for(int i = 0; i < nTests; i++)
+					{
+						const XPath* const	matchPat = m_stylesheetRoot->m_whitespaceStrippingElements.at(i);
+						assert(matchPat != 0);
+
+						const double	score = matchPat->getMatchScore(parent, theExecutionContext);
+
+						if(score > highStripScore)
+							highStripScore = score;
+					}
 				}
-				}
-				{
-				int nTests = m_stylesheetRoot->m_whitespaceStrippingElements.size();
-				for(int i = 0; i < nTests; i++)
-				{
-					XPath* matchPat = m_stylesheetRoot->m_whitespaceStrippingElements.at(i);
-					double score = matchPat->getMatchScore(parent);
-					if(score > highStripScore)
-						highStripScore = score;
-				}
-				}
+
 				if((highPreserveScore > XPath::s_MatchScoreNone) ||
 				(highStripScore > XPath::s_MatchScoreNone))
 				{
@@ -3076,100 +3295,116 @@ XSLTEngineImpl::getNormalizedText(const DOM_Text&	tx) const
 }
 
 
-/**
- * Convenience function to create an XString.
- * @param s A valid string.
- * @return An XString object.
- */
+
+XMLParserLiaison&
+XSLTEngineImpl::getXMLParserLiaison() const
+{
+	return m_parserLiaison;
+}
+
+
+
+const DOMString
+XSLTEngineImpl::getUniqueNSValue() const
+{
+	return "ns" + LongToDOMString(m_uniqueNSValue++);
+}
+
+
+
+DOM_Document
+XSLTEngineImpl::getDOMFactory() const
+{
+	if(m_resultTreeFactory.isNull())
+	{
+		m_resultTreeFactory = m_parserLiaison.createDocument();
+	}
+
+	return m_resultTreeFactory;
+}
+
+
+
+#if 0
 XObject* XSLTEngineImpl::createXString(const DOMString& s)
 {
 	return m_xobjectFactory->createString(s);
 }
 
-/**
- * Convenience function to create an XObject.
- * @param o Any java object.
- * @return An XObject object.
- */
- // @@ JMD: how do we do this ?
-XObject* XSLTEngineImpl::createXObject(void* o)
-{
-	assert(0);
-//		return new XObject(o, m_parserLiaison);
-	return 0;
-}
 
-/**
- * Convenience function to create an XNumber.
- * @param d Any double number.
- * @return An XNumber object.
- */
+
 XObject* XSLTEngineImpl::createXNumber(double d)
 {
 	return m_xobjectFactory->createNumber(d);
 }
 
-/**
- * Convenience function to create an XBoolean.
- * @param b bool value.
- * @return An XBoolean object.
- */
+
+
 XObject* XSLTEngineImpl::createXBoolean(bool b)
 {
 	return m_xobjectFactory->createBoolean(b);
 }
 
-/**
- * Convenience function to create an XNodeSet.
- * @param nl A NodeList object.
- * @return An XNodeSet object.
- */
+
+
 XObject* XSLTEngineImpl::createXNodeSet(const NodeRefListBase& nl)
 {
 	return m_xobjectFactory->createNodeSet(nl);
 }
 
-/**
- * Convenience function to create an XRTreeFrag.
- * @return An XRTreeFrag object.
- */
+
+
 XObject* XSLTEngineImpl::createXResultTreeFrag(const ResultTreeFragBase& r)
 {
 	return m_xobjectFactory->createResultTreeFrag(r);
 }
 
-/**
- * Convenience function to create an XNodeSet from a node.
- * @param n A DOM node.
- * @return An XNodeSet object.
- */
+
+
 XObject* XSLTEngineImpl::createXNodeSet(const DOM_Node& n)
 {
 	return m_xobjectFactory->createNodeSet(n);
 }
 
-/**
- * Convenience function to create an XNull.
- * @return An XNull object.
- */
+
+
 XObject* XSLTEngineImpl::createXNull()
 {
 	return m_xobjectFactory->createNull();
 }
+#endif
 
 
 /**
  * Given a name, locate a variable in the current context, and return 
  * the Object.
  */
-XObject* XSLTEngineImpl::getVariable(const QName& qname) const
+XObject*
+XSLTEngineImpl::getVariable(const QName& qname) const
 {
-	XObject* obj = m_variableStacks.getXObjectVariable(qname);
-	// @@ JMD: in java the object may not already be an xobject, if so a new one is created
-	// from it, this is not implemented in the C++ version, i.e., the variable stack contains
-	// ONLY XObjects
-	return obj;
+	return m_variableStacks.getXObjectVariable(qname);
 }
+
+
+
+XObject*
+XSLTEngineImpl::getParamVariable(const QName&	theName) const
+{
+	return m_variableStacks.getXObjectParamVariable(theName);
+}
+
+
+
+void
+XSLTEngineImpl::pushVariable(
+				const QName&		name,
+				XObject*			val,
+				const DOM_Node&		e)
+{
+	m_variableStacks.pushVariable(name, val, e);
+}
+
+
 
 /**
  * Create a document fragment.  This function may return null.
@@ -3180,10 +3415,9 @@ ResultTreeFragBase* XSLTEngineImpl::createDocFrag() const
 	{
 		m_resultTreeFactory = m_parserLiaison.createDocument();
 	}
-	ResultTreeFrag* pfrag = new
-		ResultTreeFrag(m_resultTreeFactory, m_xpathSupport);
+	assert(m_resultTreeFactory != 0);
 
-	return pfrag;
+	return new ResultTreeFrag(m_resultTreeFactory, m_xpathSupport);
 }
   
 
@@ -3192,12 +3426,13 @@ XObject*
 XSLTEngineImpl::getXObjectVariable(const DOMString&	name) const
 {
 	assert(m_stylesheetRoot != 0);
+	assert(m_stylesheetExecutionContext != 0);
 
-    XObject*	theResult = m_variableStacks.getXObjectVariable(name);
+	XObject*	theResult = m_variableStacks.getXObjectVariable(name);
 
     if(0 == theResult)
     {
-		theResult = m_stylesheetRoot->getTopLevelVariable(name);
+		theResult = m_stylesheetRoot->getTopLevelVariable(name, *m_stylesheetExecutionContext);
     }
 
     return theResult;
@@ -3205,9 +3440,25 @@ XSLTEngineImpl::getXObjectVariable(const DOMString&	name) const
 
 
 
+XLocator*
+XSLTEngineImpl::getXLocatorFromNode(const DOM_Node&		node) const
+{
+	return m_xpathEnvSupport.getXLocatorFromNode(node);
+}
+	
 
 
-XString*
+void
+XSLTEngineImpl::associateXLocatorToNode(
+			const DOM_Node&		node,
+			XLocator*			xlocator)
+{
+	m_xpathEnvSupport.associateXLocatorToNode(node, xlocator);
+}
+
+
+
+XObject*
 XSLTEngineImpl::getTopLevelVariable(const DOMString&	theName) const
 {
 	TopLevelVariablesMapType::const_iterator	i =
@@ -3233,6 +3484,7 @@ XSLTEngineImpl::createResultTreeFrag() const
 	{
 		m_resultTreeFactory = m_parserLiaison.createDocument();
 	}
+
 	ResultTreeFrag* pfrag = new
 		ResultTreeFrag(m_resultTreeFactory, m_xpathSupport);
 
@@ -3314,19 +3566,20 @@ XSLTEngineImpl::setStylesheetParam(
 void
 XSLTEngineImpl::setStylesheetParam(
 			const DOMString&	theName,
-			const XObject*	theValue)
+			XObject*			theValue)
 {
 	// java:     QName qname = new QName(key, null, m_parserLiaison);
-	QName qname(theName, DOM_Element(), m_xpathSupport);
-	Arg arg(qname, theValue);
+	const QName		qname(theName, DOM_Element(), m_xpathSupport);
+	const Arg		arg(qname, theValue);
+
 	m_topLevelParams.push_back(arg);
 }
 
 
 void
-XSLTEngineImpl::resolveTopLevelParams()
+XSLTEngineImpl::resolveTopLevelParams(StylesheetExecutionContext&	executionContext)
 {
-	m_stylesheetRoot->pushTopLevelVariables(m_topLevelParams);
+	m_stylesheetRoot->pushTopLevelVariables(executionContext, m_topLevelParams);
 }
 
 
@@ -3486,15 +3739,11 @@ XSLTEngineImpl::findElementByAttribute(
 
 
 
-XMLURL* XSLTEngineImpl::getURLFromString (const DOMString&	urlString)
-	// throws MalformedURLException
-/*
- *  Create an URL as a file: protocol by constructing fully qualified name
- *  from 'urlstring'
- *  NOTE: caller owns memory
- */
+XMLURL*
+XSLTEngineImpl::getURLFromString (const DOMString&	urlString) const
 {
-	XMLURL* url = new XMLURL();
+	std::auto_ptr<XMLURL>	url(new XMLURL);
+
 	try 
 	{
 		url->setURL(c_wstr(urlString));
@@ -3503,6 +3752,7 @@ XMLURL* XSLTEngineImpl::getURLFromString (const DOMString&	urlString)
 	catch (const MalformedURLException&)
 	{
 		DOMString fullpath("file:///");
+
 		try 
 		{
 //			XMLCh* lastPart = XMLPlatformUtils::getBasePath(c_wstr(urlString));
@@ -3516,10 +3766,13 @@ XMLURL* XSLTEngineImpl::getURLFromString (const DOMString&	urlString)
 			throw e2;
 		}
 	}
-	return url;
+
+	return url.release();
 }
 
-XMLURL* XSLTEngineImpl::getURLFromString(const DOMString&	urlString, const DOMString& base)
+
+
+XMLURL* XSLTEngineImpl::getURLFromString(const DOMString&	urlString, const DOMString& base) const
 {
 	if (isEmpty(base))
 		return getURLFromString(urlString);
@@ -3560,92 +3813,46 @@ XSLTEngineImpl::setFormatter(Formatter*	formatter)
 	}
 }
 
-	/**
-	 * Given an element, return an attribute value in 
-	 * the form of a string, processing attributes as 
-	 * need be.
-	 * @param el The element from where to get the attribute.
-	 * @param key The name of the attribute.
-	 * @param contextNode The context to evaluate the 
-	 * attribute value template.
-	 * @return Attribute value.
-	 */
-DOMString
-XSLTEngineImpl::getProcessedAttrVal(
-			const DOM_Element&	el,
-			const DOMString&	key, 
-			const DOM_Node&		contextNode)
-{
-	DOMString	val;
-	const DOM_Attr	attr = el.getAttributeNode(key);
 
-	if(0 != attr)
-	{
-		const DOMString 	stringedValue = attr.getValue();
-		if(stringedValue.length() != 0)
-		{
-			val = evaluateAttrVal(contextNode, el, stringedValue);
-		}
-	}
-	return val;
+
+FormatterListener*
+XSLTEngineImpl::getFormatterListener() const
+{
+	return dynamic_cast<FormatterListener*>(m_flistener);
 }
 
-DOMString
-XSLTEngineImpl::getNodeData(const DOM_Node&	node)
+
+
+void
+XSLTEngineImpl::setFormatterListener(FormatterListener*		flistener)
 {
-	DOMString	data;
-	switch(node.getNodeType())
-	{
-	case DOM_Node::DOCUMENT_FRAGMENT_NODE:
-	case DOM_Node::DOCUMENT_NODE:
-	case DOM_Node::ELEMENT_NODE:
-		{
-			DOM_NodeList	children = node.getChildNodes();
-			int nNodes = children.getLength();
-			for(int i = 0; i < nNodes; i++)
-			{
-				DOMString	nodeData = getNodeData(children.item(i));
-				if(length(nodeData) > 0)
-				{
-					data += nodeData;
-				}
-			}
-		}
-		break;
-
-	case DOM_Node::TEXT_NODE:
-	case DOM_Node::CDATA_SECTION_NODE:
-		{
-			// Apply the same whitespace rules that you apply to 
-			// fixing the whitespace when m_stripWhiteSpace == true.
-			// Don't know if this is OK.
-			const DOM_Text& 	theTextNode =
-					static_cast<const DOM_Text&>(node);
-			if(shouldStripSourceNode(node))
-			{
-				if(!m_xpathSupport.isIgnorableWhitespace(theTextNode))
-				{
-					// data = fixWhiteSpace(((Text)node).getData(), false, false, true);
-					data = getNormalizedText(theTextNode);
-				}
-			}
-			else
-			{
-				data = theTextNode.getData();
-			}
-		}
-		break;
-
-	case DOM_Node::ATTRIBUTE_NODE:
-		data = node.getNodeValue();
-		break;
-
-	default:
-		// ignore
-		break;
-	}
-	return data;
+	m_flistener = flistener;
 }
+
+
+
+DOMString
+XSLTEngineImpl::findURIFromDoc(const DOM_Document&	doc)
+{ 
+	return m_xpathEnvSupport.findURIFromDoc(doc);
+}
+
+
+
+XSLTEngineImpl::SourceDocumentsTableType&
+XSLTEngineImpl::getSourceDocsTable() const
+{
+	return m_xpathEnvSupport.getSourceDocsTable();
+}
+
+
+
+XObject*
+XSLTEngineImpl::createXResultTreeFrag(const ResultTreeFragBase&  r) const
+{
+	return m_xobjectFactory.createResultTreeFrag(r);
+}
+
 
 
 //@@ JMD: NOTE: java implementation of these classes does not pass reference
@@ -3881,12 +4088,12 @@ XSLTEngineImpl::VariableStack::popCurrentContext()
 
 void
 XSLTEngineImpl::VariableStack::pushParams(
-				const Stylesheet*			stylesheetTree,
-				const ElemTemplateElement&	xslCallTemplateElement,
+				StylesheetExecutionContext&		executionContext,
+				const ElemTemplateElement&		xslCallTemplateElement,
 				const DOM_Node&					sourceTree, 
 				const DOM_Node&					sourceNode,
-				const QName&			mode,
-				const DOM_Node&	targetTemplate)
+				const QName&					mode,
+				const DOM_Node&					targetTemplate)
 {
 	StackEntry* const		theStackEntry = m_stack.back();
 	if (theStackEntry->getType() != StackEntry::eContextMarker)
@@ -3913,19 +4120,22 @@ XSLTEngineImpl::VariableStack::pushParams(
 					ElemWithParam* xslParamElement =
 						dynamic_cast<ElemWithParam*>(child);
 					Arg*	theArg = 0;
-					XPath* pxpath = xslParamElement->getSelectPattern();
+
+					const XPath* const	pxpath = xslParamElement->getSelectPattern();
+
 					if(0 != pxpath)
 					{
 						XObject* const	theXObject =
-							pxpath->execute(sourceNode,
-									*xslParamElement,
-									m_processor.getContextNodeList());
-						theArg = new Arg(*xslParamElement->getQName(), theXObject);
+								pxpath->execute(sourceNode,
+												*xslParamElement,
+												executionContext.getXPathExecutionContext());
+
+						theArg = new Arg(xslParamElement->getQName(), theXObject);
 					}
 					else
 					{
 						ResultTreeFragBase* const	theDocFragment =
-							m_processor.createResultTreeFrag(stylesheetTree,
+							m_processor.createResultTreeFrag(executionContext,
 									*xslParamElement,
 									sourceTree,
 									sourceNode,
@@ -3935,7 +4145,7 @@ XSLTEngineImpl::VariableStack::pushParams(
 						ResultTreeFrag* const	theResultTreeFrag =
 							static_cast<ResultTreeFrag* const>(theDocFragment);
 						XObject* var = m_processor.createXResultTreeFrag(*theResultTreeFrag);
-						theArg = new Arg(*xslParamElement->getQName(), var);
+						theArg = new Arg(xslParamElement->getQName(), var);
 					}
 					assert(theArg != 0);
 					tempStack.push_back(theArg);
@@ -4007,14 +4217,15 @@ bool XSLTEngineImpl::VariableStack::hasParamVariable(QName& qname)
 
 void
 XSLTEngineImpl::VariableStack::pushVariable(
-			const QName&			name,
-			XObject*					val,
-			const DOM_Node&	e)
+			const QName&		name,
+			XObject*			val,
+			const DOM_Node&		e)
 {
 	if(elementMarkerAlreadyPushed(e) == false)
 	{
 		pushElementMarker(e);
 	}
+
 	m_stack.push_back(new Arg(name, val));
 }
 
@@ -4024,9 +4235,9 @@ XSLTEngineImpl::VariableStack::pushVariable(
 XObject*
 XSLTEngineImpl::VariableStack::findXObject(
 			const QName&	name,
-			bool				fSearchGlobalSpace) const
+			bool			fSearchGlobalSpace) const
 {
-	XObject*			theXObject = 0;
+	XObject*		theXObject = 0;
 
 	const Arg* const	theArg = findArg(name, fSearchGlobalSpace);
 
@@ -4034,7 +4245,7 @@ XSLTEngineImpl::VariableStack::findXObject(
 	{
 		if (theArg->getArgType() == Arg::eXObject)
 		{
-			theXObject = const_cast<XObject*>(theArg->getXObjectPtr());
+			theXObject = theArg->getXObjectPtr();
 		}
 	}
 
@@ -4291,7 +4502,5 @@ XSLTEngineImpl::StaticInitializer::StaticInitializer()
 XSLTEngineImpl::StaticInitializer::~StaticInitializer()
 {
 }
-
-
 
 //////////////////////////////////////////////////////////////////////////////

@@ -56,16 +56,34 @@
  */
 #include "ElemMessage.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include "Constants.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
 
 ElemMessage::ElemMessage(
-	XSLTEngineImpl& processor, 
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name, lineNumber, columnNumber)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber)
 {
 	const int nAttrs = atts.getLength();
 
@@ -73,26 +91,33 @@ ElemMessage::ElemMessage(
 	{
 		const DOMString aname(atts.getName(i));
 
-		if(isAttrOK(aname, atts, i)== false || processSpaceAttr(aname, atts, i))
+		if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
 }
 
-int ElemMessage::getXSLToken() const 
+
+
+int
+ElemMessage::getXSLToken() const 
 {
 	return Constants::ELEMNAME_MESSAGE;
 }
 
-void ElemMessage::execute(XSLTEngineImpl& processor, const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode, const QName& mode)
+
+
+void
+ElemMessage::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
-	ElemTemplateElement::execute(processor, sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
-    DOMString data = childrenToString(processor, sourceTree, sourceNode, mode);
+    const DOMString		data = childrenToString(executionContext, sourceTree, sourceNode, mode);
 
-    processor.message(DOM_UnimplementedElement(this), sourceNode, data);
+    executionContext.message(data, sourceNode, DOM_UnimplementedElement(const_cast<ElemMessage*>(this)));
 }
-
-

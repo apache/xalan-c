@@ -64,7 +64,7 @@ class DOMString;
 class DOM_Node;
 class DOM_NodeList;
 class QName;
-class XSLTEngineImpl;
+class StylesheetExecutionContext;
 class ElemTemplateElement;
 
 /**
@@ -74,9 +74,16 @@ class ElemTemplateElement;
 class TracerEvent
 {
 public:
-	TracerEvent(const XSLTEngineImpl* processor, const DOM_Node& sourceTree, const DOM_Node& sourceNode,
-		const QName& mode, const ElemTemplateElement& styleNode);
 
+	TracerEvent(
+			const StylesheetExecutionContext&	executionContext,
+			const DOM_Node&						sourceTree,
+			const DOM_Node&						sourceNode,
+			const QName&						mode,
+			const ElemTemplateElement&			styleNode);
+
+	virtual
+	~TracerEvent();
 
   /**
    Returns a string representation of the node.
@@ -104,15 +111,10 @@ public:
   static DOMString printNodeList(const DOM_NodeList& l);
 
   /**
-   * The node in the style tree where the event occurs.
-   */
-  const ElemTemplateElement& m_styleNode;
-  
-  /**
    * The XSLT processor instance.
    */
-  const XSLTEngineImpl* m_pProcessor;
-  
+  const StylesheetExecutionContext&		m_executionContext;
+
   /**
    * The input source tree.
    */
@@ -128,9 +130,17 @@ public:
    */
   const QName& m_mode;
 
+  /**
+   * The node in the style tree where the event occurs.
+   */
+  const ElemTemplateElement& m_styleNode;
+  
 private:
+
 	// not implemented
 	TracerEvent& operator=(const TracerEvent &);
 
 };
+
+
 #endif	//XALAN_TracerEvent_HEADER_GUARD

@@ -71,18 +71,25 @@
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
-#include <PlatformSupport/NumberFormat.hpp>
-
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
 
 #include <locale>
 
+
+
+#include <dom/DOMString.hpp>
+
+
+
 #include "DecimalToRoman.hpp"
+
+
+
+class NumberFormat;
+class QName;
+class XPath;
+class XPathExecutionContext;
+
 
 
 class ElemNumber: public ElemTemplateElement
@@ -92,28 +99,31 @@ public:
 	typedef std::vector<int> IntArrayType;
 
 	ElemNumber(
-		XSLTEngineImpl& processor,
-		Stylesheet&	stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int	lineNumber, 
-		int	columnNumber);
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 
-	
-	virtual int getXSLToken() const; 
+	virtual int
+	getXSLToken() const; 
 
-	virtual void execute(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode);
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 
 	/**
 	 * Add a child to the child list.
 	 * <!ELEMENT xsl:apply-imports EMPTY>
 	 */
-	virtual NodeImpl* appendChild(NodeImpl* newChild);
+	virtual NodeImpl*
+	appendChild(NodeImpl*	newChild);
 
+protected:
 
 	/**
 	 * Given a 'from' pattern (ala xsl:number), a match pattern 
@@ -124,13 +134,13 @@ public:
 	 * @param namespaceContext The context in which namespaces in the 
 	 * queries are supposed to be expanded.
 	 */
-	DOM_Node findAncestor(
-		XSLTEngineImpl&	processor, 
-		XPath* fromMatchPattern, 
-		XPath* countMatchPattern,
-		const DOM_Node& context, 
-		const DOM_Element& namespaceContext);
-
+	DOM_Node
+	findAncestor(
+			StylesheetExecutionContext&		executionContext,
+			const XPath*					fromMatchPattern,
+			const XPath*					countMatchPattern,
+			const DOM_Node&					context,
+			const DOM_Element&				namespaceContext) const;
 
 	  /**
 	   * Given a 'from' pattern (ala xsl:number), a match pattern 
@@ -142,35 +152,39 @@ public:
 	   * queries are supposed to be expanded.
 	   */
 	DOM_Node findPrecedingOrAncestorOrSelf(
-		XSLTEngineImpl&	processor, 
-		XPath* fromMatchPattern, 
-		XPath* countMatchPattern,
-		const DOM_Node& context, 
-		const DOM_Element& namespaceContext);
-
+			StylesheetExecutionContext&		executionContext,
+			const XPath*					fromMatchPattern,
+			const XPath*					countMatchPattern,
+			const DOM_Node&					context,
+			const DOM_Element&				namespaceContext) const;
 
 	/**
 	 * Get the count match pattern, or a default value.
 	 */
-	XPath* getCountMatchPattern(XSLTEngineImpl&	processor, const DOM_Node& contextNode);
-
+	const XPath*
+	getCountMatchPattern(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					contextNode) const;
 
 	/**
 	 * Given an XML source node, get the count according to the 
 	 * parameters set up by the xsl:number attributes.
 	 */
-	DOMString getCountString(
-		XSLTEngineImpl& processor, 
-		const DOM_Node&	sourceTree, 
-		const DOM_Node&	sourceNode);
+	DOMString
+	getCountString(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode) const;
 
 	/**
 	 * from any position in the tree, return the 
 	 * next node in the tree, assuming preorder 
 	 * traversal preceded, or null if at the end.
 	 */
-	DOM_Node getNextInTree(const DOM_Node&	pos, const DOM_Node& from);
-
+	static DOM_Node
+	getNextInTree(
+			const DOM_Node&		pos,
+			const DOM_Node&		from);
 
 	/**
 	 * Get a number that represents a node based on the
@@ -185,13 +199,14 @@ public:
 	 * @return A number that counts target and preceding 
 	 * nodes that qualify.
 	 */
-	int getNumberInTree(
-		XPath* countMatchPattern, 
-		const DOM_Node& pos, 
-		const DOM_Node&	from, 
-		const DOM_Node&	target,
-		int countFrom);
-
+	int
+	getNumberInTree(
+			XPathExecutionContext&	executionContext,
+			const XPath*			countMatchPattern, 
+			const DOM_Node&			pos, 
+			const DOM_Node&			from, 
+			const DOM_Node&			target,
+			int						countFrom) const;
 
 	/**
 	 * Get a number that represents a node based on the
@@ -205,11 +220,11 @@ public:
 	 * @return A number that counts target and preceding 
 	 * siblings that qualify.
 	 */
-	int getSiblingNumber(	
-		XSLTEngineImpl&	processor, 
-		XPath* countMatchPattern, 
-		const DOM_Node& target);
-
+	int
+	getSiblingNumber(
+			StylesheetExecutionContext&		executionContext,
+			const XPath*					countMatchPattern, 
+			const DOM_Node&					target) const;
 
 	/**
 	 * Count the ancestors, up to the root, that match the 
@@ -219,11 +234,11 @@ public:
 	 * @param node Count this node and it's ancestors.
 	 * @return The number of ancestors that match the pattern.
 	 */
-	int countMatchingAncestors(	
-		XSLTEngineImpl& processor, 
-		XPath* patterns, 
-		const DOM_Node& node);
-
+	int
+	countMatchingAncestors(	
+			StylesheetExecutionContext&		executionContext,
+			const XPath*					patterns,
+			const DOM_Node&					node) const;
 
 	/**
 	 * Climb up the ancestor tree, collecting sibling position 
@@ -239,20 +254,25 @@ public:
 	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
-	IntArrayType getAncestorNumbers(
-		XSLTEngineImpl&	processor,
-		XPath* fromMatchPattern,
-		XPath* countMatchPattern, 
-		const DOM_Node& node);
-
+	IntArrayType
+	getAncestorNumbers(
+			StylesheetExecutionContext&		executionContext,
+			const XPath*					fromMatchPattern,
+			const XPath*					countMatchPattern, 
+			const DOM_Node&					node) const;
 
 	/**
 	 * Get the locale we should be using.
 	 */
-	std::locale getLocale(XSLTEngineImpl& processor, const DOM_Node& contextNode);
+	std::locale
+	getLocale(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					contextNode) const;
 
-
-	NumberFormat* getNumberFormatter(XSLTEngineImpl& processor, const DOM_Node& contextNode);
+	NumberFormat*
+	getNumberFormatter(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					contextNode) const;
 
 	/**
 	 * Format a vector of numbers into a formatted string.
@@ -263,14 +283,12 @@ public:
 	 * TODO: Optimize formatNumberList so that it caches the last count and
 	 * reuses that info for the next count.
 	 */
-	DOMString formatNumberList(	
-		XSLTEngineImpl&	processor, 
-		IntArrayType theList, 
-		const DOM_Node& contextNode);
+	DOMString
+	formatNumberList(	
+			StylesheetExecutionContext&		executionContext,
+			const IntArrayType&				theList, 
+			const DOM_Node&					contextNode) const;
 
-
-
-protected:
 	/**
 	 * Convert a long integer into alphabetic counting, in other words 
 	 * count using the sequence A B C ... Z AA AB AC.... etc.
@@ -282,8 +300,10 @@ protected:
 	 * Note that the radix of the conversion is inferred from the size
 	 * of the table.
 	 */
-	DOMString int2alphaCount(int val, const DOMString& table);
-
+	static DOMString
+	int2alphaCount(
+			int					val,
+			const DOMString&	table);
 
 	/**
 	 * Convert a long integer into roman numerals.
@@ -294,41 +314,51 @@ protected:
 	 * @see DecimalToRoman
 	 * @see m_romanConvertTable
 	 */
-	DOMString long2roman(long val, bool	prefixesAreOK);
+	static DOMString
+	long2roman(
+			long	val,
+			bool	prefixesAreOK);
 
 
 private:
 
-  /*
-  * Get Formatted number
-  */
-  DOMString getFormattedNumber(
-		XSLTEngineImpl& processor, const DOM_Node& contextNode,
-		XMLCh numberType, int numberWidth, int listElement);
+	/*
+	 * Get Formatted number
+	 */
+	DOMString 
+	getFormattedNumber(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					contextNode,
+			XMLCh							numberType,
+			int								numberWidth,
+			int								listElement) const;
 
+	const XPath*	m_countMatchPattern;
+	const XPath*	m_fromMatchPattern;
+	const XPath*	m_valueExpr;
 
-	XPath* m_pCountMatchPattern; // = null;
-	XPath* m_pFromMatchPattern; // = null;
-	XPath* m_pValueExpr; // = null;
-	int	m_level; // = Constants.NUMBERLEVEL_SINGLE;
-	DOMString m_format_avt; // = null;
-	DOMString m_lang_avt; // = null;  
-	DOMString m_lettervalue_avt; // = null;
-	DOMString m_groupingSeparator_avt; // = null;
-	DOMString m_groupingSize_avt; // = null;
+	int				m_level; // = Constants.NUMBERLEVEL_SINGLE;
+	
+	DOMString		m_format_avt;
+	DOMString		m_lang_avt;
+	DOMString		m_lettervalue_avt;
+	DOMString		m_groupingSeparator_avt;
+	DOMString		m_groupingSize_avt;
 
 	/**
 	* Chars for converting integers into alpha counts.
 	* @see XSLTEngineImpl#int2alphaCount
 	*/
-	static const DOMString m_alphaCountTable;
+	static const DOMString			s_alphaCountTable;
 
-  /**
-   * Table to help in converting decimals to roman numerals.
-   * @see XSLTEngineImpl#DecimalToRoman
-   * @see XSLTEngineImpl#long2roman
-   */
-	static const DecimalToRoman m_romanConvertTable[];
-
+	/**
+	 * Table to help in converting decimals to roman numerals.
+	 * @see XSLTEngineImpl#DecimalToRoman
+	 * @see XSLTEngineImpl#long2roman
+	 */
+	static const DecimalToRoman		s_romanConvertTable[];
 };
+
+
+
 #endif	// XALAN_ELEMNUMBER_HEADER_GUARD

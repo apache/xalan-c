@@ -70,38 +70,36 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
 #include "ElemUse.hpp"
-#include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
-
-#include <sax/AttributeList.hpp>
-
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
-#include <XPath/QName.hpp>
 
 
 class ElemCopy: public ElemUse
 {
 public:
-	ElemCopy (
-		XSLTEngineImpl& processor,
-		Stylesheet& stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
 
+	ElemCopy(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 	
-	virtual int getXSLToken() const; 
+	virtual int
+	getXSLToken() const; 
 
-	virtual void execute(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode);
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 };
+
+
+
 #endif	// XALAN_ELEMAPPLYIMPORT_HEADER_GUARD

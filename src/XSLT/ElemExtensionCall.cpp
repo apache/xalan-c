@@ -56,41 +56,53 @@
  */
 #include "ElemExtensionCall.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include "Constants.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
 
 ElemExtensionCall::ElemExtensionCall(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	ExtensionNSHandler ns,
-	const DOMString& name,
-	const DOMString& localpart,
-	const AttributeList& atts,
-	int lineNumber, 
-	int columnNumber) :
-		ElemLiteralResult(processor, stylesheetTree, name, atts, lineNumber, columnNumber),	
-		nsh(ns),
-		localPart(localpart)
-	
-{	
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber,
+			ExtensionNSHandler&				ns,
+			const DOMString&				localpart) :
+	ElemLiteralResult(constructionContext,
+					  stylesheetTree,
+					  name,
+					  atts,
+					  lineNumber,
+					  columnNumber),	
+	m_nsh(ns),
+	m_localPart(localpart)	
+{
 }
-	
-int ElemExtensionCall::getXSLToken() const 
+
+
+
+int
+ElemExtensionCall::getXSLToken() const 
 {		
 	return Constants::ELEMNAME_EXTENSIONCALL;		
 }
 
-void ElemExtensionCall::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& /*sourceTree*/, 
-	const DOM_Node& /*sourceNode*/,
-	const QName& /*mode*/)
+
+
+void
+ElemExtensionCall::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					/* sourceTree */, 
+			const DOM_Node&					/* sourceNode */,
+			const QName&					/* mode */) const
 {
 /*
 	nsh.processElement(localPart, this, processor, getStylesheet(), 
 		sourceTree, sourceNode, mode);
 */
-
-	processor.warn("XSL4C does not yet handle Extensions!");
+	executionContext.warn("Xalan C++ does not yet handle extensions!");
 }
-
-

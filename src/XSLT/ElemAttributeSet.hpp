@@ -71,23 +71,24 @@
 
 // Base class header file.
 #include "ElemUse.hpp"
-#include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
 
-#include <XPath/NameSpace.hpp>
+//#include <dom/DOMString.hpp>
+
+//#include <sax/AttributeList.hpp>
+
+//#include <XPath/NameSpace.hpp>
 #include <XPath/QName.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
+//#include <XPath/XObject.hpp>
+//#include <XPath/XPath.hpp>
 
 
 class ElemAttributeSet : public ElemUse
 {
 public:
 	ElemAttributeSet (
-		XSLTEngineImpl& processor,
+		StylesheetConstructionContext&	constructionContext,
 		Stylesheet& stylesheetTree,
 		const DOMString& name,
 		const AttributeList& atts,
@@ -98,11 +99,12 @@ public:
 
 	virtual int getXSLToken() const; 
 
-	virtual void execute(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode);
+	virtual	void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 
 	/**
    * Add a child to the child list.
@@ -114,12 +116,13 @@ public:
    */
 	virtual NodeImpl* appendChild(NodeImpl* newChild);
 
-	 const QName& getQName() { return m_QName; }
+	const QName& getQName() const { return m_QName; }
 	 
 private:
-	QName m_QName;
-	
 
+	QName m_QName;
 };
+
+
+
 #endif	// XALAN_ELEMATTRIBUTESET_HEADER_GUARD
-	

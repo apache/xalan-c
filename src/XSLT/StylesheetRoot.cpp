@@ -59,23 +59,49 @@
 // Class header file
 #include "StylesheetRoot.hpp"
 
+
+
+#include <algorithm>
+#include <iostream>
 #include <memory>
-#include <vector>
+
+
+
+#include <sax/SAXException.hpp>
+
+#include <util/XMLURL.hpp>
+
+
+
+#include <Include/DOMHelper.hpp>
+
+#include <XPath/XPathFactory.hpp>
+#include <XPath/XPathProcessor.hpp>
 
 #include <XMLSupport/Formatter.hpp>
+#include <XMLSupport/FormatterToHTML.hpp>
+#include <XMLSupport/FormatterToText.hpp>
+#include <XMLSupport/FormatterToXML.hpp>
+#include <XMLSupport/FormatterToDOM.hpp>
 
 #include <PlatformSupport/StringTokenizer.hpp>
 #include <PlatformSupport/AttributeListimpl.hpp>
 
+#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
+#include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
+
+
 #include "ElemApplyTemplates.hpp" 
+#include "ElemTemplate.hpp" 
 #include "ElemValueOf.hpp"
 
 #include "Constants.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+#include "TraceListener.hpp"
+#include "XSLTResultTarget.hpp"
 
-#include <sax/SAXException.hpp>
 
-#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
-#include <util/StdOut.hpp>
 
 /**
  * Constructor for a Stylesheet needs a Document.
@@ -84,12 +110,11 @@
  *            halt processing.
  */
 StylesheetRoot::StylesheetRoot(
-				XSLTEngineImpl*		processor, 
-				const DOMString&	baseIdentifier):
-			
-
-	Stylesheet(*this, processor, baseIdentifier),
+        const DOMString&				baseIdentifier,
+		StylesheetConstructionContext&	constructionContext) :
+	Stylesheet(*this, baseIdentifier, constructionContext),
 	m_importStack(),
+	m_resultNameSpaceURL(),
 	m_outputmethod(Formatter::OUTPUT_METH_XML),
 	m_version(baseIdentifier),
 	m_indentResult(false),
@@ -102,77 +127,80 @@ StylesheetRoot::StylesheetRoot(
 	m_cdataSectionElems(),
 	m_defaultTextRule(0),
 	m_defaultRule(0),
-	m_defaultRootRule(0),
-	m_resultNameSpaceURL()
+	m_defaultRootRule(0)
 {
-	  
     // For some reason, the imports aren't working right if I 
     // don't set the baseIdent to full url.  I think this is OK, 
     // and probably safer and faster in general.
-	XMLURL* url = m_processor->getURLFromString(m_baseIdent, DOMString());
-	if (url != 0)
+	std::auto_ptr<XMLURL>	url(constructionContext.getURLFromString(m_baseIdent));
+
+	if (url.get() != 0)
 	{
 		m_baseIdent = url->getURLText();
-		delete url;
-		url = m_processor->getURLFromString(m_baseIdent, DOMString());
-		if (url != 0)
+
+		std::auto_ptr<XMLURL>	url2(constructionContext.getURLFromString(m_baseIdent));
+
+		if (url2.get() != 0)
 		{
-			m_importStack.push_back(*url);
-			delete url;
+			m_importStack.push_back(url2.get());
+
+			// Release the auto_ptr<>...
+			url2.release();
 		}
 	}
-	m_stylesheetRoot = this;
-	//init();
 }				
+
 
 
 StylesheetRoot::~StylesheetRoot()
 {
+	// Clean up all entries in the vector.
+	std::for_each(m_importStack.begin(),
+			 m_importStack.end(),
+			 DeleteFunctor<XMLURL>());
+
 	if (m_defaultRule != 0)
 	{
-		NodeImpl *child = m_defaultRule->getFirstChild();
+		NodeImpl* const		child = m_defaultRule->getFirstChild();
 		m_defaultRule->removeChild(child);
 		delete child;
 		delete m_defaultRule;
-		m_defaultRule = 0;
 	}
 
 	if (m_defaultTextRule != 0)
 	{
-		NodeImpl *child = m_defaultTextRule->getFirstChild();
+		NodeImpl* const		child = m_defaultTextRule->getFirstChild();
 		m_defaultTextRule->removeChild(child);
 		delete child;
 		delete m_defaultTextRule;
-		m_defaultTextRule = 0;
 	}
-
 
 	if (m_defaultRootRule != 0)
 	{
-		NodeImpl *child = m_defaultRootRule->getFirstChild();
+		NodeImpl* const		child = m_defaultRootRule->getFirstChild();
 		m_defaultRootRule->removeChild(child);
 		delete child;
 		delete m_defaultRootRule;
-		m_defaultRootRule = 0;
 	}
 }
 
 
-void StylesheetRoot::process(const DOM_Node& sourceTree, 
-										 XSLTResultTarget* outputTarget)
+
+void StylesheetRoot::process(
+			const DOM_Node&					sourceTree, 
+			XSLTResultTarget&				outputTarget,
+			StylesheetExecutionContext&		executionContext)
 {
-	// synchronized(this)
-	// {
 		// Find the root pattern in the XSL.
 		ElemTemplate* rootRule =
-			dynamic_cast<ElemTemplate*>(findTemplate(sourceTree, sourceTree));
+			dynamic_cast<ElemTemplate*>(findTemplate(executionContext, sourceTree, sourceTree));
 
 		if(0 == rootRule)
 		{
 			rootRule = m_defaultRootRule;
 			assert(rootRule);
 		}
-		m_processor->setStylesheetRoot(this);
+		executionContext.setStylesheetRoot(this);
 
 		FormatterListener* flistener = 0;
 		bool newListener = false;
@@ -183,27 +211,27 @@ void StylesheetRoot::process(const DOM_Node& sourceTree,
 		/*
 		 * Output target has a document handler
 		 */
-		if(0 != outputTarget->getDocumentHandler())
+		if(0 != outputTarget.getDocumentHandler())
 		{
 			// Stuff a DocumentHandler into a FormatterListener
-			FormatterListener* pFL = dynamic_cast<FormatterListener *>(outputTarget->getDocumentHandler());
-			m_processor->m_formatter->setFormatterListener(pFL);
-			flistener = m_processor->m_formatter->getFormatterListener();
+			FormatterListener* pFL = dynamic_cast<FormatterListener *>(outputTarget.getDocumentHandler());
+			executionContext.setFormatterListener(pFL);
+			flistener = executionContext.getFormatterListener();
 		}
 		/*
 		 * Output target has a character or byte stream or file
 		 */
-		else if((0 != outputTarget->getCharacterStream()) || 
-						(0 != outputTarget->getByteStream()) || 
-						(0 != outputTarget->getFileName().length()))
+		else if((0 != outputTarget.getCharacterStream()) || 
+						(0 != outputTarget.getByteStream()) || 
+						(0 != outputTarget.getFileName().length()))
 		{
 
-			if(0 != outputTarget->getCharacterStream())
+			if(0 != outputTarget.getCharacterStream())
 			{
 				// @@ JMD: is this right ??
-				// java: pw = new PrintWriter(outputTarget->getCharacterStream());
+				// java: pw = new PrintWriter(outputTarget.getCharacterStream());
 				pw = static_cast<XercesDOMPrintWriter*>
-					(outputTarget->getCharacterStream());
+					(outputTarget.getCharacterStream());
 			}
 			else
 			{
@@ -221,20 +249,20 @@ void StylesheetRoot::process(const DOM_Node& sourceTree,
 				}
 */
 
-				if(0 != outputTarget->getByteStream())
+				if(0 != outputTarget.getByteStream())
 				{
 					assert(0);	// @@ JMD: not supported yet ??
-					// java: OutputStreamWriter osw = new OutputStreamWriter(outputTarget->getByteStream(), encoding);
+					// java: OutputStreamWriter osw = new OutputStreamWriter(outputTarget.getByteStream(), encoding);
 					// java: pw = new PrintWriter( new BufferedWriter(osw) );
 				}
-				else if(! isEmpty(outputTarget->getFileName()))
+				else if(! isEmpty(outputTarget.getFileName()))
 				{
 					assert(0);	// @@ JMD: not supported yet ??
 				/*
-					FileOutputStream fos = new FileOutputStream(outputTarget->getFileName());
+					FileOutputStream fos = new FileOutputStream(outputTarget.getFileName());
 					try
 					{
-						// pw = new PrintWriter( new BufferedWriter(new FileWriter(outputTarget->getFileName())) );
+						// pw = new PrintWriter( new BufferedWriter(new FileWriter(outputTarget.getFileName())) );
 						OutputStreamWriter osw = new OutputStreamWriter(fos, encoding);
 						pw = new PrintWriter( new BufferedWriter(osw) );
 					}
@@ -245,22 +273,20 @@ void StylesheetRoot::process(const DOM_Node& sourceTree,
 						OutputStreamWriter osw = new OutputStreamWriter(fos, encoding);
 						pw = new PrintWriter( new BufferedWriter(osw) );
 					}
-					m_processor->setOutputFileName(outputTarget->getFileName());
+					m_processor->setOutputFileName(outputTarget.getFileName());
 				*/
 				}
 				else
 				{
-					// $$$ ToDo:  THIS MUST BE FIXED!!!!  WE CAN'T PASS
-					// A REFERENCE TO A STACK-BASED INSTANCE.
-					XMLStdOut				theStdOut;
-					pw = new XercesDOMPrintWriter( theStdOut );
+					// $$$ ToDo:  THIS IS A MEMORY LEAK!!!
+					pw = new XercesDOMPrintWriter(*new XercesStdTextOutputStream(std::cout));
 					newPW = true;
 				}
 			}
 			/*
 			*/
 			
-			int indentAmount = m_processor->getXMLProcessorLiaison().getIndent();
+			int indentAmount = executionContext.getIndent();
 			bool doIndent = (indentAmount > -1) ? true : m_indentResult;
 			
 			switch(m_outputmethod)
@@ -285,34 +311,35 @@ void StylesheetRoot::process(const DOM_Node& sourceTree,
 				newListener = true;
 				break;
 			}
-			m_processor->m_formatter->setFormatterListener(flistener);
+			executionContext.setFormatterListener(flistener);
 		}
+
 		/*
 		 * Output target has a node
 		 */
-		else if(0 != outputTarget->getNode())
+		else if(0 != outputTarget.getNode())
 		{
-			switch(outputTarget->getNode().getNodeType())
+			switch(outputTarget.getNode().getNodeType())
 			{
 			case DOM_Node::DOCUMENT_NODE:
 				flistener = new 
-					FormatterToDOM(static_cast<DOM_Document&>(outputTarget->getNode()));
+					FormatterToDOM(static_cast<DOM_Document&>(outputTarget.getNode()));
 				newListener = true;
 				break;
 			case DOM_Node::DOCUMENT_FRAGMENT_NODE:
 				flistener = new 
-					FormatterToDOM(m_processor->getXMLProcessorLiaison().createDocument(),
-						static_cast<DOM_DocumentFragment&>(outputTarget->getNode()));
+					FormatterToDOM(executionContext.createDocument(),
+						static_cast<DOM_DocumentFragment&>(outputTarget.getNode()));
 				newListener = true;
 				break;
 			case DOM_Node::ELEMENT_NODE:
 				flistener = new 
-					FormatterToDOM(m_processor->getXMLProcessorLiaison().createDocument(),
-						static_cast<DOM_Element&>(outputTarget->getNode()));
+					FormatterToDOM(executionContext.createDocument(),
+						static_cast<DOM_Element&>(outputTarget.getNode()));
 				newListener = true;
 				break;
 			default:
-				error("Can only output to an Element, DocumentFragment, Document, or PrintWriter.");
+				executionContext.error("Can only output to an Element, DocumentFragment, Document, or PrintWriter.");
 			}
 		}
 		/*
@@ -320,56 +347,56 @@ void StylesheetRoot::process(const DOM_Node& sourceTree,
 		 */
 		else
 		{
-			outputTarget->setNode(m_processor->getXMLProcessorLiaison().createDocument());
+			outputTarget.setNode(executionContext.createDocument());
 			flistener = new 
-				FormatterToDOM(static_cast<DOM_Document&>(outputTarget->getNode()));
+				FormatterToDOM(static_cast<DOM_Document&>(outputTarget.getNode()));
 			newListener = true;
 		}
 		
-		m_processor->setFormatterListener(flistener);
-		m_processor->resetCurrentState(sourceTree, sourceTree);
+		executionContext.setFormatterListener(flistener);
+		executionContext.resetCurrentState(sourceTree, sourceTree);
 		// @@ JMD: Is this OK ??
-		m_processor->setRootDoc(static_cast<const DOM_Document&>(sourceTree));
+		executionContext.setRootDocument(static_cast<const DOM_Document&>(sourceTree));
 		
-		if(m_processor->doDiagnosticsOutput())
+		if(executionContext.doDiagnosticsOutput())
 		{
-			m_processor->diag("=============================");
-			m_processor->diag("Transforming...");
-			m_processor->pushTime(&sourceTree);
+			executionContext.diag("=============================");
+			executionContext.diag("Transforming...");
+			executionContext.pushTime(&sourceTree);
 		}
 		
-		m_processor->getVariableStacks().pushContextMarker(DOM_Node(), DOM_Node());
+		executionContext.pushContextMarker(DOM_Node(), DOM_Node());
+
 		try
 		{
-			m_processor->resolveTopLevelParams();
+			executionContext.resolveTopLevelParams();
 		}
 		// java: catch(Exception e)
 		catch(...)
 		{
 			throw SAXException("StylesheetRoot.process error");
 		}
-		
-		m_processor->startDocument();
+
+		executionContext.startDocument();
 
 		// Output the action of the found root rule.	All processing
 		// occurs from here.	buildResultFromTemplate is highly recursive.
 		// java: rootRule->execute(*m_processor, sourceTree, sourceTree, 0);
-		rootRule->execute(*m_processor, sourceTree, sourceTree, QName());
-		
-		m_processor->endDocument();
+		rootRule->execute(executionContext, sourceTree, sourceTree, QName());
+
+		executionContext.endDocument();
 		
 		// Reset the top-level params for the next round.
-		m_processor->clearTopLevelParams();
-		
-		if(m_processor->doDiagnosticsOutput())
+		executionContext.clearTopLevelParams();
+
+		if(executionContext.doDiagnosticsOutput())
 		{
-			m_processor->displayDuration("transform", &sourceTree);
+			executionContext.displayDuration("transform", &sourceTree);
 		}
 		if (newListener) delete flistener;		
 		// Can't release this until flistener is gone, since it contains a
 		// reference to it
 		if (newPW != 0) delete pw;
-	// }
 
 }
 
@@ -385,13 +412,6 @@ StylesheetRoot::getOutputMethod() const
 { 
 	return m_outputmethod; 
 }
-
-
-
-/**
- * Tell if this is the root of the stylesheet tree.
- */
-bool StylesheetRoot::isRoot() const { return true; }
 
 
 
@@ -463,8 +483,9 @@ StylesheetRoot::getOutputDoctypePublic() const
  */
 void 
 StylesheetRoot::processOutputSpec(
-					const DOMString&			name, 
-					const AttributeList&	atts)
+			const DOMString&				name, 
+			const AttributeList&			atts,
+			StylesheetConstructionContext&	constructionContext)
 {
 	int nAttrs = atts.getLength();
 	bool didSpecifyIndent = false;
@@ -487,7 +508,7 @@ StylesheetRoot::processOutputSpec(
 		}
 		else if(equals(aname,Constants::ATTRNAME_OUTPUT_INDENT))
 		{
-			m_indentResult = getYesOrNo(aname, atts.getValue(i));
+			m_indentResult = getYesOrNo(aname, atts.getValue(i), constructionContext);
 			didSpecifyIndent = true;
 		}
 		else if(equals(aname,Constants::ATTRNAME_OUTPUT_ENCODING))
@@ -508,7 +529,7 @@ StylesheetRoot::processOutputSpec(
 		}
 		else if(equals(aname,Constants::ATTRNAME_OUTPUT_XMLDECL))
 		{
-			m_xmlDecl = getYesOrNo(aname, atts.getValue(i));
+			m_xmlDecl = getYesOrNo(aname, atts.getValue(i), constructionContext);
 		}
 		else if(equals(aname,Constants::ATTRNAME_OUTPUT_STANDALONE))
 		{
@@ -526,7 +547,7 @@ StylesheetRoot::processOutputSpec(
 		}
 		else
 		{
-			m_processor->error(name+DOMString(" has an illegal attribute: ")+aname);
+			constructionContext.error(name+DOMString(" has an illegal attribute: ")+aname);
 		}
 	}
 	if((Formatter::OUTPUT_METH_HTML == m_outputmethod) &&
@@ -541,7 +562,7 @@ StylesheetRoot::processOutputSpec(
  * Create the default rule if needed.
  */
 void 
-StylesheetRoot::initDefaultRule()
+StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionContext)
 {
 	int lineNumber = 0;
 	int columnNumber = 0;
@@ -552,13 +573,13 @@ StylesheetRoot::initDefaultRule()
     attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
 	 							c_wstr(DOMString("CDATA")),
 								c_wstr(DOMString("*")));
-    m_defaultRule = new ElemTemplate(*m_processor,	// @@ JMD: should be null 
+    m_defaultRule = new ElemTemplate(constructionContext,	// @@ JMD: should be null 
 									*this,
 									DOMString("xsl:")+Constants::ELEMNAME_TEMPLATE_STRING, 
                                     attrs, lineNumber, columnNumber);
     attrs.clear();
     ElemApplyTemplates* childrenElement 
-      = new ElemApplyTemplates(*m_processor, *this,
+      = new ElemApplyTemplates(constructionContext, *this,
                                 DOMString("xsl:")+Constants::ELEMNAME_APPLY_TEMPLATES_STRING,
                                 attrs, lineNumber, columnNumber);
 	childrenElement->setDefaultTemplate(true);
@@ -570,7 +591,7 @@ StylesheetRoot::initDefaultRule()
     attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
 	 							c_wstr(DOMString("CDATA")),
 								c_wstr(DOMString("text() | @*")));
-    m_defaultTextRule = new ElemTemplate(*m_processor, 
+    m_defaultTextRule = new ElemTemplate(constructionContext, 
 											*this,
 											DOMString("xsl:")+Constants::ELEMNAME_TEMPLATE_STRING,
 											attrs, lineNumber, columnNumber);
@@ -579,7 +600,7 @@ StylesheetRoot::initDefaultRule()
 	 							c_wstr(DOMString("CDATA")),
 								c_wstr(DOMString(".")));
     ElemValueOf* elemValueOf 
-      = (new ElemValueOf(*m_processor, *this,
+      = (new ElemValueOf(constructionContext, *this,
                         DOMString("xsl:")+Constants::ELEMNAME_VALUEOF_STRING,
                         attrs, lineNumber, columnNumber));
     m_defaultTextRule->appendChild(elemValueOf);
@@ -590,12 +611,12 @@ StylesheetRoot::initDefaultRule()
     attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
 	 							c_wstr(DOMString("CDATA")),
 								c_wstr(DOMString("/")));
-    m_defaultRootRule = new ElemTemplate(*m_processor, *this,
+    m_defaultRootRule = new ElemTemplate(constructionContext, *this,
                                         DOMString("xsl:")+Constants::ELEMNAME_TEMPLATE_STRING,
                                         attrs, lineNumber, columnNumber);
     attrs.clear();
     childrenElement 
-      = (new ElemApplyTemplates(*m_processor, *this,
+      = (new ElemApplyTemplates(constructionContext, *this,
 								DOMString("xsl:")+Constants::ELEMNAME_APPLY_TEMPLATES_STRING,
 								attrs,	lineNumber, columnNumber));
 	childrenElement->setDefaultTemplate(true);
@@ -603,40 +624,15 @@ StylesheetRoot::initDefaultRule()
 }
 
 
-/**
- * Read the stylesheet root from a serialization stream.
- * to do
-void 
-readObject(
-		   ObjectInputStream stream)
-{
-    // System.out.println("Reading Stylesheet");
-    try
-    {
-      stream.defaultReadObject();
-    }
-    catch(ClassNotFoundException cnfe)
-    {
-      throw new XSLProcessorException(cnfe);
-    }
-    m_traceListeners = null;
-    m_stringbuf = new StringBuffer();
-    m_attrSetStack = null;
-    // System.out.println("Done reading Stylesheet");
-}
- */
 
-/*
- * Returns the number of trace listeners
- */
-int StylesheetRoot::getTraceListeners()
+int
+StylesheetRoot::getTraceListeners() const
 {
 	return m_traceListeners.size();
 }
 
-/**
- * Add a trace listener for the purposes of debugging and diagnosis.
- */
+
+
 void 
 StylesheetRoot::addTraceListener(TraceListener* tl)
 {
@@ -644,24 +640,21 @@ StylesheetRoot::addTraceListener(TraceListener* tl)
 }
 
 
-/**
- * Remove a trace listener.
- */
+
 void 
 StylesheetRoot::removeTraceListener(TraceListener* theListener)
 {
-	ListenersVectorType::iterator it;
-	for (it = m_traceListeners.begin(); it != m_traceListeners.end(); it++)
+	const ListenersVectorType::iterator		it =
+		std::find(m_traceListeners.begin(),
+				  m_traceListeners.end(),
+				  theListener);
+
+	if (it != m_traceListeners.end())
 	{
-		TraceListener* tl = (*it);
-		if (tl == theListener)
-		{
-			m_traceListeners.erase(it);
-			return;
-		}
+		m_traceListeners.erase(it);
 	}
 }
-  
+ 
 /**
  * Fire a trace event.
  */
@@ -687,6 +680,54 @@ void StylesheetRoot::fireSelectedEvent(const SelectionEvent& se) const
 		tl->selected(se);
 	}
 }
+
+
+
+#if 0
+
+// Transfer these to StylesheetExecutionContext() and StylesheetConstructionContext(), etc...
+XPath*
+StylesheetRoot::createMatchPattern(
+			const DOMString&		str,
+			const PrefixResolver&	resolver)
+{
+	assert(m_processor != 0);
+	assert(m_processor->getXPathProcessor() != 0);
+
+	XPath* const	xpath = m_xpathFactory.create();
+
+	m_processor->getXPathProcessor()->initMatchPattern(*xpath,
+													   str,
+													   resolver,
+													   m_xobjectFactory,
+													   m_processor->getXPathEnvSupport());
+
+	return xpath;
+}
+
+
+
+XPath*
+StylesheetRoot::createXPath(
+			const DOMString&		str,
+			const PrefixResolver&	resolver)
+{
+	assert(m_processor != 0);
+	assert(m_processor->getXPathProcessor() != 0);
+
+	XPath* const	xpath = m_xpathFactory.create();
+
+	// It's OK to use the XPathEnvSupport of the processor,
+	// since we're in construction phase.
+	m_processor->getXPathProcessor()->initXPath(*xpath,
+												str,
+												resolver,
+												m_xobjectFactory,
+												m_processor->getXPathEnvSupport());
+
+	return xpath;
+}
+#endif
 
 
 

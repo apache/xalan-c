@@ -69,16 +69,12 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
+
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
-
-#include <sax/AttributeList.hpp>
-
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
 
 
 /**
@@ -90,27 +86,36 @@ class ElemText : public ElemTemplateElement
 public:
 
 	ElemText(
-		XSLTEngineImpl& processor,
-		Stylesheet& stylesheetTree,
-		const DOMString& name, 
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
+
+	virtual
+	~ElemText();
 
 	/**
 	 * Add a child to the child list.
 	 */
-	virtual NodeImpl* appendChild(NodeImpl* newChild);
+	virtual NodeImpl*
+	appendChild(NodeImpl*	newChild);
 
-	virtual int getXSLToken() const;
+	virtual int
+	getXSLToken() const;
 
-	bool getDisableOutputEscaping() const
+	bool
+	getDisableOutputEscaping() const
 	{
 		return m_disableOutputEscaping;
 	}
 
 private:
+
 	bool m_disableOutputEscaping;  // = false;
 };
-#endif	// XALAN_ELEMTEXT_HEADER_GUARD
 
+
+
+#endif	// XALAN_ELEMTEXT_HEADER_GUARD

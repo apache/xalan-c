@@ -68,30 +68,35 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
+
+
 #include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
 
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
+
+class XPath;
+
 
 
 class ElemSort: public ElemTemplateElement
 {
 public:
-	ElemSort (
-		XSLTEngineImpl& processor,
-		Stylesheet& stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
-	
-	virtual int getXSLToken() const; 
+
+	ElemSort(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
+
+	virtual int
+	getXSLToken() const; 
 
 	/**
 	 * Add a child to the child list.
@@ -101,35 +106,44 @@ public:
 	 *   use-attribute-sets %qnames; #IMPLIED
 	 * >
 	 */
-	virtual NodeImpl* appendChild(NodeImpl* newChild);
+	virtual NodeImpl*
+	appendChild(NodeImpl*	newChild);
 
 	
-	const DOMString& getLangAVT() const
+	const DOMString&
+	getLangAVT() const
 	{
 		return m_langAVT;
 	}
 
-	const DOMString& getOrderAVT() const
+	const DOMString&
+	getOrderAVT() const
 	{
 		return m_orderAVT;
 	}
 
-	const DOMString& getDataTypeAVT() const
+	const DOMString&
+	getDataTypeAVT() const
 	{
 		return m_dataTypeAVT;
 	}
 
-	const XPath* getSelectPattern() const
+	const XPath*
+	getSelectPattern() const
 	{
-		return m_pSelectPattern;
+		return m_selectPattern;
 	}
 
-
 private:
-	XPath*						m_pSelectPattern; // = null;
-    DOMString					m_langAVT; //= null;
-    DOMString					m_dataTypeAVT; //= "text";
-	DOMString					m_orderAVT; // = "ascending";
-    DOMString					m_caseOrderAVT;  // = null;
+
+	const XPath*	m_selectPattern;
+
+    DOMString		m_langAVT;
+    DOMString		m_dataTypeAVT;
+	DOMString		m_orderAVT;
+    DOMString		m_caseOrderAVT;
 };
+
+
+
 #endif	// XALAN_ELEMSORT_HEADER_GUARD

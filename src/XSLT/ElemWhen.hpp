@@ -72,35 +72,39 @@
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
-#include <sax/AttributeList.hpp>
 
-#include <XPath/NameSpace.hpp>
-#include <XPath/QName.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
+
+class XPath;
+
 
 
 class ElemWhen : public ElemTemplateElement
 {
 public:
+
 	ElemWhen (
-		XSLTEngineImpl& processor,
-		Stylesheet& stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 
-	virtual int getXSLToken() const;
+	virtual int
+	getXSLToken() const;
 
-	XPath* getXPath() const
+	const XPath*
+	getXPath() const
 	{
 		return m_pTest;
 	}
 
 private:
-	XPath* m_pTest;
+
+	const XPath*	m_pTest;
 
 };
+
+
+
 #endif	// XALAN_ELEMWHEN_HEADER_GUARD

@@ -61,71 +61,80 @@
 
 
 
+#include <algorithm>
+
+
+
 #include <dom/DOM_Node.hpp>
 #include <dom/DOM_NamedNodeMap.hpp>
+#include <sax/AttributeList.hpp>
 
+
+
+#include <DOMSupport/DOMServices.hpp>
+#include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
 #include <XMLSupport/XMLParserLiaison.hpp>
-#include "XSLTEngineImpl.hpp"
 #include <XPath/ElementPrefixResolverProxy.hpp>
-#include <XPath/XString.hpp>
-#include <DOMSupport/DOMServices.hpp>
+#include <XPath/XObject.hpp>
+#include <XPath/XPath.hpp>
+
+
+
+#include "Constants.hpp"
+#include "ElemAttributeSet.hpp"
+#include "ElemTemplate.hpp"
+#include "ElemTemplateElement.hpp"
+#include "ElemVariable.hpp"
+#include "KeyTable.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
 #include "StylesheetRoot.hpp"
 
-// @@ JMD: ?? why do we need this ??
-typedef	std::vector<NameSpace>		NamespaceVectorType;
 
 
-/**
- * This class represents the base stylesheet or an "import" stylesheet.
- * "include" stylesheets are combined with the including stylesheet. At the
- * moment these stylesheets can not be reused within the stylesheet tree or
- * between trees.  This needs to be fixed in the future.
- */
-double Stylesheet::m_XSLTVerDeclared = 1.0;
+const Stylesheet::NamespaceVectorType	Stylesheet::s_emptyNamespace;
 
-NamespaceVectorType Stylesheet::m_emptyNamespace;
 
-/**
- * Constructor for a Stylesheet needs a Document.
- * XSLProcessorException thrown if the active ProblemListener and
- * XMLParserLiaison decide the error condition is severe enough to halt
- * processing.
- */
+
 Stylesheet::Stylesheet(
-		StylesheetRoot&		root, 
-        XSLTEngineImpl*		theXSLProcessor, 
-        const DOMString&	baseIdentifier) :
+		StylesheetRoot&					root,
+        const DOMString&				baseIdentifier,
+		StylesheetConstructionContext&	constructionContext) :
 	UnimplementedDocument(),
 	UnimplementedElement(&root),
-	m_processor(theXSLProcessor),
-	m_stylesheetRoot(&root),
-	m_imports(),
-	m_patternTable(),
-	m_attributeSets(),
+	m_stylesheetRoot(root),
 	m_baseIdent(baseIdentifier),
-	m_tablesAreInvalid(true),
-	m_key_tables(0),
+	m_document(),
+	m_key_tables(),
 	m_keyDeclarations(),
 	m_needToBuildKeysTable(false),
-   m_defaultATXpath(0),
-   m_firstTemplate(0),
-   m_defaultSpace(true),
+	m_imports(),
+	m_defaultATXpath(0),
 	m_namespaces(),
 	m_namespaceDecls(),
+	m_tablesAreInvalid(true),
+	m_isWrapperless(false),
 	m_wrapperlessTemplate(0),
-   m_isWrapperless(false)
-//    throws XSLProcessorException, MalformedURLException,
-//    FileNotFoundException, IOException, SAXException
+	m_extensionNamespaces(),
+	m_firstTemplate(0),
+	m_includeStack(),
+	m_defaultSpace(true),
+	m_whitespacePreservingElements(),
+	m_whitespaceStrippingElements(),
+	m_namedTemplates(),
+	m_topLevelVariables(),
+	m_XSLTVerDeclared(1.0L),
+	m_isRoot(&root == this ? true: false),
+	m_patternTable(),
+	m_attributeSets()
 {
-	// Java: second argument null 
-	 XMLURL* u = m_processor->getURLFromString(m_baseIdent, DOMString());
+	const XMLURL* const	url = constructionContext.getURLFromString(m_baseIdent);
 
-	 if (u != 0)
-	 {
-		m_includeStack.push_back(*u);
-		delete u;
-	 }
+	if (url != 0)
+	{
+		m_includeStack.push_back(url);
+	}
 
 	 // Register the java namespace as being implemented by the xslt-javaclass
 	 // engine. Note that there's no real code per se for this extension as the
@@ -144,84 +153,30 @@ Stylesheet::Stylesheet(
 }
 
 
+
 Stylesheet::~Stylesheet()
 {
 	// Clean up all entries in the vector.
 	std::for_each(m_imports.begin(),
 			 m_imports.end(),
 			 DeleteFunctor<Stylesheet>());
-	
+
 	// Clean up the key table vector
 	std::for_each(m_key_tables.begin(),
 			 m_key_tables.end(),
 			 DeleteFunctor<KeyTable>());
-	
+
 	// Clean up the match pattern vector
 	PatternTableMapType::iterator it = m_patternTable.begin();
+
 	for ( ; it != m_patternTable.end(); it++)
 	{
-		PatternTableListType theList = (*it).second;
+		PatternTableListType&	theList = (*it).second;
+
 		std::for_each(theList.begin(),
-			theList.end(),
-			DeleteFunctor<MatchPattern2>());
+					  theList.end(),
+					  DeleteFunctor<MatchPattern2>());
 	}
-
-	m_stylesheetRoot = 0;
-	m_processor = 0;
-	m_defaultATXpath = 0;
-	m_wrapperlessTemplate = 0;
-	m_firstTemplate = 0;
-}
-
-bool
-Stylesheet::isXSLTagOfType(
-			const DOM_Node&		node,
-			int					tagType) const
-{
-	return m_processor->isXSLTagOfType(node, tagType);
-}
-
-
-
-DOMString
-Stylesheet::getAttrVal(
-			const DOM_Element&	el,
-			const DOMString&	key,
-			const DOM_Node&		contextNode)
-{
-	return m_processor->getAttrVal(el, key, contextNode);
-}
- 
-
-
-DOMString
-Stylesheet::getAttrVal(
-			const DOM_Element&	el,
-			const DOMString&	key)
-{
-	return m_processor->getAttrVal(el, key);
-}
-
-
-bool Stylesheet::isRoot() const { return false; }
-
-
-
-DOMString
-Stylesheet::getProcessedAttrVal(
-			const DOM_Element&	el,
-			const DOMString&	key,
-			const DOM_Node&		contextNode)
-{
-	return m_processor->getProcessedAttrVal(el, key, contextNode);
-}
-
-
-
-DOMString
-Stylesheet::getNodeData(const DOM_Node&	node) const
-{
-	return m_processor->getNodeData(node);
 }
 
 
@@ -241,7 +196,11 @@ Stylesheet::getNodeData(const DOM_Node&	node) const
  * Thus, for a given key or keyref, look up hashtable by name, 
  * look up the nodelist by the given reference.
  */
-void Stylesheet::processKeyElement(ElemTemplateElement *nsContext, const AttributeList& atts)
+void
+Stylesheet::processKeyElement(
+			ElemTemplateElement*			nsContext,
+			const AttributeList&			atts,
+			StylesheetConstructionContext&	constructionContext)
 // throws XSLProcessorException
 {
 	const XMLCh* nameAttr = 0;
@@ -257,24 +216,24 @@ void Stylesheet::processKeyElement(ElemTemplateElement *nsContext, const Attribu
 		else	if(equals(aname, Constants::ATTRNAME_MATCH))
 		{
 			matchAttr =
-			m_processor->createMatchPattern(DOMString(atts.getValue(i)),
+			constructionContext.createMatchPattern(DOMString(atts.getValue(i)),
 			*nsContext);
 		}
 		else	if(equals(aname, Constants::ATTRNAME_USE))
-			useAttr = m_processor->createXPath(atts.getValue(i),
+			useAttr = constructionContext.createXPath(atts.getValue(i),
 				*nsContext);
 		else
-			m_processor->error(
+			constructionContext.error(
 				DOMString("xsl:key, unrecognized keyword '")+Constants::ATTRNAME_NAME+DOMString("'!"));
 	}
 	if(0 == nameAttr)
-		m_processor->error(DOMString("xsl:key	requires a ")+Constants::ATTRNAME_NAME+" attribute!");
+		constructionContext.error(DOMString("xsl:key	requires a ")+Constants::ATTRNAME_NAME+" attribute!");
 
 	if(0 == matchAttr)
-		m_processor->error(DOMString("xsl:key	requires a ")+Constants::ATTRNAME_MATCH+DOMString(" attribute!"));
+		constructionContext.error(DOMString("xsl:key	requires a ")+Constants::ATTRNAME_MATCH+DOMString(" attribute!"));
 
 	if(0 == useAttr)
-		m_processor->error(DOMString("xsl:key	requires a ")+Constants::ATTRNAME_USE+DOMString(" attribute!"));
+		constructionContext.error(DOMString("xsl:key	requires a ")+Constants::ATTRNAME_USE+DOMString(" attribute!"));
 
 	m_keyDeclarations.push_back(KeyDeclaration(nameAttr, *matchAttr, *useAttr));
 	m_needToBuildKeysTable = true;
@@ -318,26 +277,36 @@ void Stylesheet::popNamespaces()
  * @param which The index into the attribute list (not used at this time).
  * @return True if this attribute should not be flagged as an error.
  */
-bool Stylesheet::isAttrOK(const DOMString& attrName, const AttributeList& atts, int /*which*/)
+bool Stylesheet::isAttrOK(
+			const DOMString&				attrName,
+			const AttributeList&			/* atts */,
+			int								/* which */,
+			StylesheetConstructionContext&	constructionContext) const
 {
 	bool attrOK = equals(attrName, "xmlns") || startsWith(attrName, "xmlns:");
+
 	if(!attrOK)
 	{
-		int indexOfNSSep = indexOf(attrName, ':');
+		const int	indexOfNSSep = indexOf(attrName, ':');
+
 		if(indexOfNSSep >= 0)
 		{
-			DOMString prefix = substring(attrName, 0, indexOfNSSep);
-			DOMString ns = getNamespaceForPrefixFromStack(prefix);
-			attrOK = (indexOf(ns, m_processor->getXSLNameSpaceURLPre()) >= 0);
+			const DOMString prefix = substring(attrName, 0, indexOfNSSep);
+			const DOMString ns = getNamespaceForPrefixFromStack(prefix);
+
+			attrOK = indexOf(ns, constructionContext.getXSLNameSpaceURLPre()) >= 0;
 		}
 	}
+
 	return attrOK;
 }
+
+
 
 /**
  * Get the namespace from a qualified name.
  */
-DOMString Stylesheet::getNamespaceFromStack(const DOMString& nodeName)
+DOMString Stylesheet::getNamespaceFromStack(const DOMString& nodeName) const
 {
 	int indexOfNSSep = indexOf(nodeName, ':');
 	DOMString prefix = (indexOfNSSep >= 0) ?
@@ -348,7 +317,7 @@ DOMString Stylesheet::getNamespaceFromStack(const DOMString& nodeName)
 /**
  * Get the namespace from a prefix.
  */
-DOMString Stylesheet::getNamespaceForPrefix(const DOMString& prefix)
+DOMString Stylesheet::getNamespaceForPrefix(const DOMString& prefix) const
 {
 	return QName::getNamespaceForPrefix(m_namespaceDecls, prefix);
 }
@@ -361,14 +330,17 @@ DOMString Stylesheet::getNamespaceForPrefixFromStack(const DOMString& prefix) co
 	return QName::getNamespaceForPrefix(m_namespaces, prefix);
 }
   
-bool Stylesheet::getYesOrNo(const DOMString& aname, const DOMString& val) const
+bool Stylesheet::getYesOrNo(
+			const DOMString&				aname,
+			const DOMString&				val,
+			StylesheetConstructionContext&	constructionContext) const
 {
 	if(val.equals(Constants::ATTRVAL_YES))
 		return true;
 	else if(val.equals(Constants::ATTRVAL_NO))
 		return false;
 	else
-		m_processor->error(val+" is unknown value for "+aname);
+		constructionContext.error(val+" is unknown value for "+aname);
 	return false;
 }
 
@@ -384,7 +356,7 @@ void Stylesheet::addTemplate(ElemTemplate *tmpl)
 	{
 //	@@ JMD: was: can't make this an UnimplementedElement because there's not a
 //	setNextSibling method -- is this right ??
-		ElemTemplateElement *next = m_firstTemplate;
+		ElemTemplateElement*	next = m_firstTemplate;
 		while(0 != next)
 		{
 			if(0 == next->getNextSibling())
@@ -394,16 +366,18 @@ void Stylesheet::addTemplate(ElemTemplate *tmpl)
 				break;
 			}
 			pos++;
-			next = dynamic_cast<ElemTemplateElement *>(next->getNextSibling());
+
+			next = const_cast<const ElemTemplateElement*>(next)->getNextSibling();
 		}
 	}
 
-	if(0 != tmpl->getName())
+	if(tmpl->getName().isEmpty() == false)
 	{
-		m_namedTemplates.insert(std::make_pair(*tmpl->getName(), tmpl));
+		m_namedTemplates.insert(std::make_pair(tmpl->getName(), tmpl));
 	}
-	
-	XPath* xp = tmpl->getMatchPattern();
+
+	const XPath* xp = tmpl->getMatchPattern();
+
 	if(0 != xp)
 	{
 		std::vector<DOMString> strings;
@@ -423,7 +397,7 @@ void Stylesheet::addTemplate(ElemTemplate *tmpl)
 				DOMString& target = strings[stringIndex];
 				MatchPattern2* newMatchPat =
 					new MatchPattern2(xp->getExpression().getCurrentPattern(), 
-						*xp, *tmpl, pos, target, this);
+						*xp, *tmpl, pos, target, *this);
 				
 				// See if there's already one there
 				PatternTableMapType::iterator it = 
@@ -460,19 +434,27 @@ void Stylesheet::addTemplate(ElemTemplate *tmpl)
  * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
  * the error condition is severe enough to halt processing.
  */
-ElemTemplateElement* Stylesheet::findNamedTemplate(const DOMString&	name) const
+ElemTemplateElement*
+Stylesheet::findNamedTemplate(
+			const DOMString&				name,
+            StylesheetExecutionContext&		executionContext) const
 //throws XSLProcessorException
 {
 	QName qname(name, m_namespaces);
-	return findNamedTemplate(qname);
+
+	return findNamedTemplate(qname, executionContext);
 }
+
 
 /**
  * Locate a macro via the "name" attribute.
  * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
  * the error condition is severe enough to halt processing.
  */
-ElemTemplateElement* Stylesheet::findNamedTemplate(const QName&	qname) const
+ElemTemplateElement*
+Stylesheet::findNamedTemplate(
+			const QName&					qname,
+            StylesheetExecutionContext&		executionContext) const
 //throws XSLProcessorException
 {
 	ElemTemplateElement 	*namedTemplate = 0;
@@ -485,7 +467,7 @@ ElemTemplateElement* Stylesheet::findNamedTemplate(const QName&	qname) const
 		for(int i = 0; i < nImports; i++)
 		{
 			const Stylesheet* const stylesheet = m_imports[i];
-			namedTemplate = stylesheet->findNamedTemplate(qname);
+			namedTemplate = stylesheet->findNamedTemplate(qname, executionContext);
 			if(0 != namedTemplate)
 				break;
 		}
@@ -494,7 +476,7 @@ ElemTemplateElement* Stylesheet::findNamedTemplate(const QName&	qname) const
 		namedTemplate = (*it).second;
 
 	if(0 == namedTemplate)
-		m_processor->warn(DOMString("Could not find macro def named: ") +
+		executionContext.warn(DOMString("Could not find macro def named: ") +
 		qname.getLocalPart());
 
 	return namedTemplate;
@@ -502,10 +484,12 @@ ElemTemplateElement* Stylesheet::findNamedTemplate(const QName&	qname) const
 	
 
 
-XString*
-Stylesheet::getTopLevelVariable(const DOMString&	name) const
+XObject*
+Stylesheet::getTopLevelVariable(
+			const DOMString&				name,
+            StylesheetExecutionContext&		executionContext) const
 {
-	XString*	theResult = m_processor->getTopLevelVariable(name);
+	XObject*	theResult = executionContext.getTopLevelVariable(name);
 
 	if(0 == theResult)
 	{
@@ -515,8 +499,8 @@ Stylesheet::getTopLevelVariable(const DOMString&	name) const
 		{
 			Stylesheet* const	stylesheet = m_imports[i];
 			assert(stylesheet != 0);
-		  
-			theResult = stylesheet->getTopLevelVariable(name);
+
+			theResult = stylesheet->getTopLevelVariable(name, executionContext);
 
 			if(0 != theResult)
 			{
@@ -527,43 +511,33 @@ Stylesheet::getTopLevelVariable(const DOMString&	name) const
 
 	if(0 == theResult)
 	{
-		m_processor->warn(DOMString("Could not find variable def for: ") + name);
+		executionContext.warn(DOMString("Could not find variable def for: ") + name);
 	}
 
 	return theResult;
 }
 
 
-/**
- * Given a target element, find the tmpl that best 
- * matches in the given XSL document, according 
- * to the rules specified in the xsl draft. 
- * @param stylesheetTree Where the XSL rules are to be found.
- * @param sourceTree Where the targetElem is to be found.
- * @param targetElem The element that needs a rule.
- * @param mode A string indicating the display mode.
- * @param useImports means that this is an xsl:apply-imports commend.
- * @param foundStylesheet If non-0, the Stylesheet that the found tmpl
- * belongs to will be returned in the foundStylesheet[0].
- * @return Rule that best matches targetElem.
- * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
- * the error condition is severe enough to halt processing.
- */
-
 ElemTemplateElement* Stylesheet::findTemplate(
-			// java: DOM_Document	sourceTree, 
-			const DOM_Node&		sourceTree, 
-			const DOM_Node&		targetNode) const
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					targetNode) const
 {
-	return findTemplate(sourceTree, targetNode, 0, false, 0);
+	Stylesheet*		theDummy;
+
+	return findTemplate(executionContext, sourceTree, targetNode, QName(), false, theDummy);
 }
 
-ElemTemplateElement* Stylesheet::findTemplate(
-			const DOM_Node&		sourceTree, 
-			const DOM_Node&		targetNode, 
-			const QName*	mode,
-			bool				useImports,
-			Stylesheet*		foundStylesheet) const
+
+
+ElemTemplateElement*
+Stylesheet::findTemplate(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					targetNode, 
+			const QName&					mode,
+			bool							useImports,
+			const Stylesheet*&				foundStylesheet) const
 /*
     throws XSLProcessorException, 
            java.net.MalformedURLException, 
@@ -649,17 +623,17 @@ ElemTemplateElement* Stylesheet::findTemplate(
 
 				// We'll be needing to match rules according to what 
 				// mode we're in.
-				const QName* ruleMode = rule->getMode();
+				const QName& ruleMode = rule->getMode();
 
 				// The logic here should be that if we are not in a mode AND
 				// the rule does not have a node, then go ahead.
 				// OR if we are in a mode, AND the rule has a node, 
 				// AND the rules match, then go ahead.
 
-				bool haveMode = (0!=mode && !mode->isEmpty());
-				bool haveRuleMode = (0!=ruleMode && !ruleMode->isEmpty());
+				bool haveMode = !mode.isEmpty();
+				bool haveRuleMode = !ruleMode.isEmpty();
 
-				if ( (!haveMode && !haveRuleMode) || (haveMode && haveRuleMode && ruleMode->equals(*mode)) )
+				if ( (!haveMode && !haveRuleMode) || (haveMode && haveRuleMode && ruleMode.equals(mode)))
 				{
 					const DOMString 	patterns = matchPat->getPattern();
 
@@ -668,8 +642,10 @@ ElemTemplateElement* Stylesheet::findTemplate(
 					{
 						prevPat = patterns;
 
-						XPath& xpath = matchPat->getExpression();
-		            double score = xpath.getMatchScore(targetNode);
+						const XPath& xpath = matchPat->getExpression();
+
+						double score =
+							xpath.getMatchScore(targetNode, executionContext.getXPathExecutionContext());
 
 						if(XPath::s_MatchScoreNone != score)
 						{
@@ -746,7 +722,8 @@ ElemTemplateElement* Stylesheet::findTemplate(
 			const Stylesheet* const 	stylesheet =
 				m_imports[i];
 
-			bestMatchedRule = stylesheet->findTemplate(sourceTree,
+			bestMatchedRule = stylesheet->findTemplate(executionContext,
+													   sourceTree,
 													   targetNode,
 													   mode, 
 													   false,
@@ -759,7 +736,7 @@ ElemTemplateElement* Stylesheet::findTemplate(
 	const int	nConflicts = conflicts.size();
 	if(nConflicts > 0)
 	{
-		const bool	quietConflictWarnings = m_processor->getQuietConflictWarnings();
+		const bool	quietConflictWarnings = executionContext.getQuietConflictWarnings();
 		DOMString	conflictsString = (quietConflictWarnings == false) 
 								 ? "Specificity conflicts found: " : DOMString();
 		for(int i = 0; i < nConflicts; i++)
@@ -795,13 +772,13 @@ ElemTemplateElement* Stylesheet::findTemplate(
 		{
 			conflictsString += " ";
 			conflictsString += "Last found in stylesheet will be used.";
-			m_processor->warn(conflictsString);
+			executionContext.warn(conflictsString);
 		}
 	}
 
 	if((0 != bestMatchedPattern) && (0 != foundStylesheet))
 	{
-		foundStylesheet = bestMatchedPattern->getStylesheet();
+		foundStylesheet = &bestMatchedPattern->getStylesheet();
 	}
 
 	return const_cast<ElemTemplateElement *>(bestMatchedRule);
@@ -907,24 +884,28 @@ Stylesheet::locateMatchPatternList2(
 }
 
 
+
+
 /**
  * Given a valid element key, return the corresponding node list.
  */
 const NodeRefListBase*
 Stylesheet::getNodeSetByKey(
-							const DOM_Node&		doc,
-							const DOMString&	name,
-							const DOMString&	ref,
-							const PrefixResolver&	resolver) const
+							const DOM_Node&			doc,
+							const DOMString&		name,
+							const DOMString&		ref,
+							const PrefixResolver&	resolver,
+							XPathExecutionContext&	executionContext) const
 {
 	const NodeRefListBase *nl = 0;
+
 	if(0 != m_keyDeclarations.size())
 	{
 		bool foundDoc = false;
-		int nKeyTables = m_key_tables.size();
+		const int nKeyTables = m_key_tables.size();
 		for(int i = 0; i < nKeyTables; i++)
 		{			
-			KeyTable* kt = m_key_tables[i];
+			const KeyTable* const kt = m_key_tables[i];
 			if(doc == kt->getDocKey())
 			{
 				foundDoc = true;
@@ -934,12 +915,15 @@ Stylesheet::getNodeSetByKey(
 		}
 		if((0 == nl) && !foundDoc && m_needToBuildKeysTable)
 		{
-			KeyTable* kt = new KeyTable(doc, 
-									doc, 
-									resolver,
-									m_keyDeclarations, 
-									m_processor->getXPathSupport());
+			KeyTable* const	kt =
+				new KeyTable(doc,
+							 doc,
+							 resolver,
+							 m_keyDeclarations,
+							 executionContext);
+
 			m_key_tables.push_back(kt);
+
 			if(doc == kt->getDocKey())
 			{
 				foundDoc = true;
@@ -958,12 +942,15 @@ Stylesheet::getNodeSetByKey(
 
 		for(int i = 0; i < nImports; i++)
 		{
-			Stylesheet*	stylesheet = m_imports[i];
-			nl = stylesheet->getNodeSetByKey(doc, name, ref, resolver);
+			const Stylesheet*	const	stylesheet = m_imports[i];
+
+			nl = stylesheet->getNodeSetByKey(doc, name, ref, resolver, executionContext);
+
 			if(0 != nl)
 				break;
 		}
 	}
+
 	return nl;
 }
 
@@ -977,13 +964,12 @@ Stylesheet::getNodeSetByKey(
  * patterns (for compatibility with old syntax).
  */
 Stylesheet::MatchPattern2::MatchPattern2(
-			const DOMString&	pat,
-			XPath&			exp,
-// was: a DOM_Element,but is now an ElemTemplate
-			ElemTemplate&		theTemplate,
-			int					posInStylesheet, 
-			const DOMString&	targetString,
-			Stylesheet*			stylesheet) :
+			const DOMString&		pat,
+			const XPath&			exp,
+			const ElemTemplate&		theTemplate,
+			int						posInStylesheet, 
+			const DOMString&		targetString,
+			const Stylesheet&		stylesheet) :
 	m_stylesheet(stylesheet),
 	m_targetString(targetString),
 	m_expression(exp),
@@ -1000,68 +986,6 @@ Stylesheet::MatchPattern2::~MatchPattern2()
 }
 
 
-// JMD added Thu Sep 30 08:20:29 EDT 1999
-  
-/**
- * Set the XSLTProcessor of this and all imported stylesheets.
- */
-void Stylesheet::setXSLProcessor(XSLTEngineImpl *processor)
-{
-	m_processor = processor;
-	if(0 != m_topLevelVariables.size())
-	{
-		ElemVariableVectorType::const_iterator it;
-		for(it = m_topLevelVariables.begin();
-			it != m_topLevelVariables.end(); it++)
-		{
-		  ElemVariable* var = (*it);
-		  ElemTemplateElement* ete = var;
-		  ete->setXSLProcessor(processor);
-		}
-	}
-
-	ElemTemplateElement* next = m_firstTemplate;
-	while(0 != next)
-	{
-		next->setXSLProcessor(processor);
-		next = dynamic_cast<ElemTemplateElement *>(next->getNextSibling());
-	}
-
-	if (0 != m_whitespaceStrippingElements.size())
-	{
-		XPathVectorType::const_iterator it;
-		for(it = m_whitespaceStrippingElements.begin();
-			it != m_whitespaceStrippingElements.end(); it++)
-		{
-			const XPath* xpath = (*it);
-			// @@ LATER
-			// xpath.m_callbacks = processor->m_parserLiaison;
-		}
-	}
-	 
-	if (0 != m_whitespacePreservingElements.size())
-	{
-		XPathVectorType::const_iterator it;
-		for(it = m_whitespacePreservingElements.begin();
-			it != m_whitespacePreservingElements.end(); it++)
-		{
-			const XPath* xpath = (*it);
-			// @@ LATER
-			// xpath.m_callbacks = processor->m_parserLiaison;
-		}
-	}
-		
-	if (0 != m_imports.size())
-	{
-		StylesheetVectorType::const_iterator it;
-		for(it = m_imports.begin(); it != m_imports.end(); it++)
-		{
-			Stylesheet &stylesheet = (**it);
-			stylesheet.setXSLProcessor(processor);
-		}
-	}
-}
-
 void Stylesheet::addExtensionNamespace (const DOMString& uri, ExtensionNSHandler* nsh)
 {
 	m_extensionNamespaces.insert(std::make_pair(uri, nsh));
@@ -1075,86 +999,73 @@ void Stylesheet::addExtensionNamespace (const DOMString& uri, ExtensionNSHandler
 
 
 
-/**
-* Add this and all included stylesheets to the source docs table.
-*/
-void Stylesheet::addToDocTables(const DOMString& styleBaseURI)
-// throws SAXException
-{
-	XSLTEngineImpl::SourceDocumentsMapType sourceDocs =
-		m_processor->getSourceDocsTable();
-	XMLURL* url = m_processor->getURLFromString(m_baseIdent, styleBaseURI);
-	sourceDocs.insert(XSLTEngineImpl::SourceDocumentsMapType::value_type(url->getURLText(),
-		DOM_UnimplementedDocument(m_stylesheetRoot)));
- 
-	// @@ TODO: Include base dirs are lost right now... need to fix this.
-	if (0 != m_imports.size())
-	{
-		StylesheetVectorType::const_iterator it;
-		for(it = m_imports.begin(); it != m_imports.end(); it++)
-		{
-			Stylesheet &stylesheet = (**it);
-			stylesheet.addToDocTables(DOMString(url->getURLText()));
-		}
-	}
-	delete url;
-}
-
-void Stylesheet::pushTopLevelVariables(ParamVectorType& topLevelParams)
+void Stylesheet::pushTopLevelVariables(
+			StylesheetExecutionContext&		executionContext,
+			ParamVectorType&				topLevelParams) const
 {
 //	try
 	{
 		int i, nImports = m_imports.size();
 		for(i = 0; i < nImports; i++)
 		{
-			Stylesheet* const stylesheet = m_imports[i];
-			stylesheet->pushTopLevelVariables(topLevelParams);
+			const Stylesheet* const stylesheet = m_imports[i];
+
+			stylesheet->pushTopLevelVariables(executionContext, topLevelParams);
 		}
-		int nVars = m_topLevelVariables.size();
+
+		const int	nVars = m_topLevelVariables.size();
+
 		for(i = 0; i < nVars; i++)
 		{
-			ElemVariable* var = m_topLevelVariables[i];
-			bool isParam = (Constants::ELEMNAME_PARAMVARIABLE == var->getXSLToken());
-			if(isParam)
+			ElemVariable* const		var = m_topLevelVariables[i];
+
+			bool					isParam =
+				Constants::ELEMNAME_PARAMVARIABLE == var->getXSLToken();
+
+			if(isParam == true)
 			{
 				isParam = false;
-				int n = topLevelParams.size();
+
+				const int	n = topLevelParams.size();
+
 				for(int k = 0; k < n; k++)
 				{
 					Arg& a = topLevelParams[k];
-					if(a.getName().equals(*(var->getName())))
+
+					if(a.getName().equals(var->getName()))
 					{
 						isParam = true;
+
 						XObject *pXO = 0;
+
 						const DOMString& expr = a.getExpression();
+
 						if(length(expr) != 0)
 						{
-							ElementPrefixResolverProxy	theProxy(DOM_UnimplementedElement(this),
-																 m_processor->getXPathSupport());
+							pXO = executionContext.executeXPath(expr,
+																executionContext.getRootDocument(),
+																DOM_UnimplementedElement(const_cast<Stylesheet*>(this)));
 
-							XPath* selectPattern = m_processor->createXPath(expr,
-									theProxy);
-
-							pXO =
-								selectPattern->execute(m_processor->getRootDoc(),
-									theProxy,
-
-									m_processor->getContextNodeList());
 							a.setXObjectPtr(pXO);
 							a.setExpression(0);
 						}
-						m_processor->getVariableStacks().pushVariable(a.getName(),
-							pXO, DOM_UnimplementedElement(this));
+
+						executionContext.pushVariable(a.getName(),
+													  pXO,
+													  DOM_UnimplementedElement(const_cast<Stylesheet*>(this)));
 						break;
 					}
 				}
 			}
 			else
 			{
-				DOM_Document& doc = m_processor->m_rootDoc;
-// java:				var->execute(*m_processor, doc, doc, 0);
-				var->execute(*m_processor, doc, doc, QName());
-			}	
+				const DOM_Document	doc = executionContext.getRootDocument();
+
+				var->execute(executionContext,
+							 doc,
+							 doc,
+							 QName());
+			}
 		}
 	}
 /*
@@ -1184,18 +1095,19 @@ void Stylesheet::addAttributeSet(
  * set with higher import precedence that also contains the attribute."
  */
 void Stylesheet::applyAttrSets(
-			const QNameVectorType&	attributeSetsNames, 
-			XSLTEngineImpl*			processor, 
-			const DOM_Node&			sourceTree, 
-			const DOM_Node&			sourceNode,
-			const QName&			mode)
+			const QNameVectorType&			attributeSetsNames, 
+            StylesheetExecutionContext&		executionContext, 
+            const DOM_Node&					sourceTree, 
+            const DOM_Node&					sourceNode,
+            const QName&					mode) const
 {
 /*
 	java: Difference from Java code is we have map of qnames to attribute sets
 	instead of a vector where we look for the matching qname in the vector
 	@@ Is this right ??
  */
-	int nNames = attributeSetsNames.size();
+	const int	nNames = attributeSetsNames.size();
+
 	if(0 != nNames)
 	{
 		int i;
@@ -1203,30 +1115,31 @@ void Stylesheet::applyAttrSets(
 		const int	nImports = m_imports.size();
 		for(i = 0; i < nImports; i++)
 		{
-			Stylesheet* const stylesheet = m_imports[i];
+			const Stylesheet* const		stylesheet = m_imports[i];
+
 			stylesheet->applyAttrSets(attributeSetsNames, 
-									 processor, sourceTree, sourceNode, mode);
+									 executionContext, sourceTree, sourceNode, mode);
 		}
+
 		for(i = 0; i < nNames; i++)
 		{
 			const QName&	qname = attributeSetsNames[i];
-			int nSets = m_attributeSets.size();
+			const int		nSets = m_attributeSets.size();
+
 			for(int k = 0; k < nSets; k++)
 			{
-				ElemAttributeSet*		attrSet = m_attributeSets[k];
+				const ElemAttributeSet* const	attrSet = m_attributeSets[k];
+
 				if(qname.equals(attrSet->getQName()))
-					attrSet->execute(*processor, sourceTree, sourceNode, mode);
+					attrSet->execute(executionContext, sourceTree, sourceNode, mode);
 			}
 		}
 	}
 }	
 
-void Stylesheet::error(const DOMString& msg) const
-{
-	getProcessor()->error(msg);
-}
 
-const NamespaceVectorType& Stylesheet::getNamespaceDecls() const
+
+const Stylesheet::NamespaceVectorType& Stylesheet::getNamespaceDecls() const
 { 
 	return m_namespaceDecls;
 }
@@ -1236,14 +1149,24 @@ void Stylesheet::setNamespaceDecls(const NamespaceVectorType& ns)
 	m_namespaceDecls = ns;
 }
 
-NamespaceVectorType Stylesheet::getCurrentNamespace() const
+
+short
+Stylesheet::getNodeType()
 {
-	assert (m_namespaces.size() > 0);
+	return DOM_Node::DOCUMENT_NODE;
+}
+
+
+
+const Stylesheet::NamespaceVectorType&
+Stylesheet::getCurrentNamespace() const
+{
 	if (m_namespaces.size() > 0)
 		return m_namespaces.back();
 	else
-		return m_emptyNamespace;
+		return s_emptyNamespace;
 }
+
 
 ////////////////////////////////////////////////////////////////////
 // JAVA Code not implemented

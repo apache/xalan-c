@@ -56,16 +56,30 @@
  */
 #include "AVTPartSimple.hpp"
 
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 /**
  * Simple string part of a complex AVT.
  */
-
-AVTPartSimple::AVTPartSimple(const DOMString& val) : AVTPart(), m_val(val)
+AVTPartSimple::AVTPartSimple(const DOMString& val) :
+	AVTPart(),
+	m_val(val)
 {
 }
-  
-void AVTPartSimple::evaluate(DOMString& buf, const DOM_Node& /*context*/, 
-	const PrefixResolver& /*resolver*/, const NodeRefListBase& /*contextNodeList*/)
+
+
+
+void
+AVTPartSimple::evaluate(
+			DOMString&				buf,
+			const DOM_Node&			/* contextNode */,
+			const PrefixResolver&	/* prefixResolver */,
+			XPathExecutionContext&	/* executionContext */) const
+
 {
 	append(buf, m_val);
 }

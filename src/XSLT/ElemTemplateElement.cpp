@@ -56,19 +56,38 @@
  */
 #include "ElemTemplateElement.hpp"
 
-#include "ElemPriv.hpp"
 
-#include <PlatformSupport/DOMStringPrintWriter.hpp>
-#include <XMLSupport/FormatterToText.hpp>
 
-#include <XPath/MutableNodeRefList.hpp>
+#include <cassert>
 
+
+
+#include <sax/AttributeList.hpp>
 #include <sax/SAXException.hpp>
 
 
+#include <PlatformSupport/AttributeListImpl.hpp>
+#include <PlatformSupport/DOMStringPrintWriter.hpp>
+
+#include <XMLSupport/FormatterToText.hpp>
+
+#include <XPath/MutableNodeRefList.hpp>
+#include <XPath/XPath.hpp>
+
+
+#include "Constants.hpp"
 #include "ElemForEach.hpp"
+#include "ElemSort.hpp"
+#include "ElemTemplate.hpp"
 #include "NodeSortKey.hpp"
 #include "NodeSorter.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetExecutionContext.hpp"
+#include "StylesheetRoot.hpp"
+#include "SelectionEvent.hpp"
+#include "TracerEvent.hpp"
+
+
 
 /** 
  * @param processor The XSLT Processor.
@@ -80,7 +99,7 @@
  * @exception SAXException Never.
  */
 ElemTemplateElement::ElemTemplateElement(
-	const XSLTEngineImpl& /*processor*/,
+	StylesheetConstructionContext&	/* constructionContext */,
 	Stylesheet& stylesheetTree, 
 	const DOMString& name, 
 	int lineNumber, 
@@ -103,22 +122,8 @@ ElemTemplateElement::ElemTemplateElement(
 
 ElemTemplateElement::~ElemTemplateElement()
 {
-	m_parentNode = 0;
-	m_nextSibling = 0;
-	m_firstChild = 0;
 }
 
-
-int ElemTemplateElement::getLineNumber() const
-{
-	return m_lineNumber;
-}
-
-
-int ElemTemplateElement::getColumnNumber() const
-{
-	return m_columnNumber;
-}
 
 NodeImpl* ElemTemplateElement::getParentNode() 
 {
@@ -142,6 +147,47 @@ void ElemTemplateElement::setNextSibling(NodeImpl* elem)
 {
 	m_nextSibling = dynamic_cast<ElemTemplateElement *>(elem);
 }
+
+
+
+ElemTemplateElement*
+ElemTemplateElement::getFirstChild() const
+{
+	return m_firstChild;
+}
+
+
+
+ElemTemplateElement*
+ElemTemplateElement::getNextSibling() const
+{
+	return m_nextSibling;
+}
+
+
+
+ElemTemplateElement*
+ElemTemplateElement::getParentNode() const
+{
+	return m_parentNode;
+}
+
+
+
+DOMString
+ElemTemplateElement::getTagName()
+{
+	return m_elemName;
+}
+
+
+
+DOMString
+ElemTemplateElement::getNodeName()
+{
+	return m_elemName;
+}
+
 
 
 DOMString ElemTemplateElement::getNamespaceForPrefix(const DOMString& prefix) const
@@ -176,27 +222,6 @@ DOMString ElemTemplateElement::getNamespaceForPrefix(const DOMString& prefix) co
 
 
 
-/**
-   * Given an XSL tag name, return an integer token
-   * that corresponds to ELEMNAME_XXX constants defined 
-   * in Constants.java.
-   * Note: I tried to optimize this by caching the node to 
-   * id lookups in a hash table, but it helped not a bit.
-   * I'm not sure that it's spending too much time here anyway.
-   * @param node a probable xsl:xxx element.
-   * @return Constants.ELEMNAME_XXX token, or -1 if in xsl 
-   * or Xalan namespace, -2 if not in known namespace.
-   */
-// rcw: we should declare some constants rather than magic numbers like -1 and -2
-int ElemTemplateElement::getAttrTok(const DOMString& name) const    
-{
-	XSLTEngineImpl::AttributeKeysMapType::const_iterator iter=
-		XSLTEngineImpl::getAttributeKeys().find(name);
-
-    return (iter == XSLTEngineImpl::getAttributeKeys().end() ? -2 : (*iter).second);
-}
-
-
 /** 
  * See if this is a xmlns attribute, and, if so, process it.
  * 
@@ -206,8 +231,12 @@ int ElemTemplateElement::getAttrTok(const DOMString& name) const
  * @param which The index into the attribute list (not used at this time).
  * @return True if this is a namespace name.
  */
-bool ElemTemplateElement::isAttrOK(int tok, const DOMString& attrName,
-	const AttributeList& /*atts*/, int /*which*/) const
+bool
+ElemTemplateElement::isAttrOK(
+			int						tok,
+			const DOMString&		attrName,
+			const AttributeList&	/* atts */,
+			int						/* which */) const
 {
     bool isXMLNS = (Constants::TATTRNAME_XMLNSDEF == tok) 
 		|| startsWith(attrName,Constants::ATTRNAME_XMLNS);
@@ -217,6 +246,7 @@ bool ElemTemplateElement::isAttrOK(int tok, const DOMString& attrName,
     return isXMLNS;  
 }
 
+
 /** 
  * See if this is a xmlns attribute, and, if so, process it.
  * 
@@ -226,10 +256,14 @@ bool ElemTemplateElement::isAttrOK(int tok, const DOMString& attrName,
  * @param which The index into the attribute list (not used at this time).
  * @return True if this is a namespace name.
  */
-bool ElemTemplateElement::isAttrOK(const DOMString& attrName,  
-	const AttributeList& atts, int which) const
+bool
+ElemTemplateElement::isAttrOK(
+			const DOMString&				attrName,
+			const AttributeList&			atts,
+			int								which,
+			StylesheetConstructionContext&	constructionContext) const
 {
-    return m_stylesheet.isAttrOK(attrName, atts, which);
+    return m_stylesheet.isAttrOK(attrName, atts, which, constructionContext);
 }
 
 /** 
@@ -338,13 +372,13 @@ bool ElemTemplateElement::isValidNCName(const DOMString& s)
  * @param sourceNode The current context node.
  * @param mode The current mode.
  */
-void ElemTemplateElement::execute(XSLTEngineImpl& processor, const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode, const QName& mode)
+void ElemTemplateElement::execute(StylesheetExecutionContext& executionContext, const DOM_Node& sourceTree, 
+	const DOM_Node& sourceNode, const QName& mode) const
 {
-	if(0 != getStylesheet().getStylesheetRoot()->getTraceListeners())
+	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
     {
-		getStylesheet().getStylesheetRoot()->fireTraceEvent(
-			TracerEvent(&processor, sourceTree, sourceNode, mode, *this));
+		getStylesheet().getStylesheetRoot().fireTraceEvent(
+			TracerEvent(executionContext, sourceTree, sourceNode, mode, *this));
 	}    
 }
 
@@ -367,12 +401,12 @@ void ElemTemplateElement::execute(XSLTEngineImpl& processor, const DOM_Node& sou
  * @exception SAXException Might be thrown from the  document() function, or
  *      from xsl:include or xsl:import.
  */
-void ElemTemplateElement::executeChildren(XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, const DOM_Node& sourceNode, const QName& mode)    
+void ElemTemplateElement::executeChildren(StylesheetExecutionContext& executionContext, 
+	const DOM_Node& sourceTree, const DOM_Node& sourceNode, const QName& mode) const
 {
     for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
     {
-      node->execute(processor, sourceTree, sourceNode, mode);
+      node->execute(executionContext, sourceTree, sourceNode, mode);
     }
 }
 
@@ -397,59 +431,59 @@ void ElemTemplateElement::executeChildren(XSLTEngineImpl& processor,
  * @param mode The current mode.
  * @return The stringized result of executing the elements children.
  */
-DOMString ElemTemplateElement::childrenToString(XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, const DOM_Node& sourceNode, const QName& mode)
+DOMString ElemTemplateElement::childrenToString(StylesheetExecutionContext& executionContext, 
+	const DOM_Node& sourceTree, const DOM_Node& sourceNode, const QName& mode) const
 { 
-	FormatterListener* savedFListener = processor.getFormatterListener();
+	FormatterListener* const	savedFListener = executionContext.getFormatterListener();
 
-	DOMStringPrintWriter thePrintWriter;
+	DOMStringPrintWriter		thePrintWriter;
 
-	FormatterToText theFormatter(thePrintWriter);
+	FormatterToText				theFormatter(thePrintWriter);
 
 	try
 	{
-		processor.setFormatterListener(&theFormatter);
+		executionContext.setFormatterListener(&theFormatter);
 
-		const DOMString	savedPendingName = processor.getPendingElementName();
+		const DOMString	savedPendingName = executionContext.getPendingElementName();
 
 		try
 		{
-			processor.setPendingElementName(DOMString());
+			executionContext.setPendingElementName(DOMString());
 
-			const AttributeListImpl	savedPendingAttributes(processor.getPendingAttributes());
+			const AttributeListImpl		savedPendingAttributes(executionContext.getPendingAttributes());
 
 			try
 			{
-				processor.setPendingAttributes(AttributeListImpl());
+				executionContext.setPendingAttributes(AttributeListImpl());
 
-				executeChildren(processor, sourceTree, sourceNode, mode);
+				executeChildren(executionContext, sourceTree, sourceNode, mode);
 			}
 			catch(...)
 			{
-				processor.setPendingAttributes(savedPendingAttributes);
+				executionContext.setPendingAttributes(savedPendingAttributes);
 
 				throw;
 			}
 
-			processor.setPendingAttributes(savedPendingAttributes);
+			executionContext.setPendingAttributes(savedPendingAttributes);
 		}
 		catch(...)
 		{
-			processor.setPendingElementName(savedPendingName);
+			executionContext.setPendingElementName(savedPendingName);
 
 			throw;
 		}
 
-		processor.setPendingElementName(savedPendingName);
+		executionContext.setPendingElementName(savedPendingName);
 	}
 	catch(...)
 	{
-		processor.setFormatterListener(savedFListener);
+		executionContext.setFormatterListener(savedFListener);
 
 		throw;
 	}
 
-	processor.setFormatterListener(savedFListener);
+	executionContext.setFormatterListener(savedFListener);
 
 	return thePrintWriter.getString();
 }
@@ -470,25 +504,27 @@ DOMString ElemTemplateElement::childrenToString(XSLTEngineImpl& processor,
  * @param xslToken The current XSLT instruction (depricated -- I do not     
  *     think we want this).
  */
-void ElemTemplateElement::transformSelectedChildren(
-	 const Stylesheet& stylesheetTree, 
-	 const ElemTemplateElement* xslInstruction, // xsl:apply-templates or xsl:for-each
-	 ElemTemplateElement* theTemplate, // The template to copy to the result tree
-	 const DOM_Node& /*sourceTree*/, 
-	 const DOM_Node& sourceNodeContext, 
-	 const QName& mode, 
-	 XPath* selectPattern, 
-	 int xslToken)
+void
+ElemTemplateElement::transformSelectedChildren(
+			StylesheetExecutionContext&		executionContext,
+			const Stylesheet&				stylesheetTree, 
+			const ElemTemplateElement&		xslInstruction, // xsl:apply-templates or xsl:for-each
+			const ElemTemplateElement*		theTemplate, // The template to copy to the result tree
+			const DOM_Node&					/*sourceTree*/, 
+			const DOM_Node&					sourceNodeContext, 
+			const QName&					mode, 
+			const XPath*					selectPattern, 
+			int								xslToken) const
 {
 	// Sort the nodes according to the xsl:sort method
-	int tok = xslInstruction->getXSLToken();
+	int tok = xslInstruction.getXSLToken();
 	
 	std::vector<NodeSortKey> keys;
-	
+
 	if((Constants::ELEMNAME_APPLY_TEMPLATES == tok) ||
 		(Constants::ELEMNAME_FOREACH == tok))
 	{
-		const ElemForEach* foreach = static_cast<const ElemForEach *>(xslInstruction);
+		const ElemForEach* foreach = static_cast<const ElemForEach *>(&xslInstruction);
 		int nChildren = foreach->getSortElems().size();
 		
 		// March backwards, performing a sort on each xsl:sort child.
@@ -497,25 +533,27 @@ void ElemTemplateElement::transformSelectedChildren(
 		{
 			ElemSort* sort = (foreach->getSortElems())[i];
 			
-			DOMString langString = (!isEmpty(sort->getLangAVT())) ? 
-				getProcessor()->evaluateAttrVal(sourceNodeContext, DOM_UnimplementedElement(sort), sort->getLangAVT()): DOMString();
+			const DOMString langString = (!isEmpty(sort->getLangAVT())) ? 
+				executionContext.evaluateAttrVal(sourceNodeContext, DOM_UnimplementedElement(sort), sort->getLangAVT()): DOMString();
 
-			DOMString dataTypeString = getProcessor()->evaluateAttrVal(sourceNodeContext, DOM_UnimplementedElement(sort), sort->getDataTypeAVT());
+			const DOMString dataTypeString = executionContext.evaluateAttrVal(sourceNodeContext, DOM_UnimplementedElement(sort), sort->getDataTypeAVT());
 
 			bool treatAsNumbers = ((!isEmpty(dataTypeString)) && equals(dataTypeString,Constants::ATTRVAL_DATATYPE_NUMBER)) ? 
 				true : false;
 
-			DOMString orderString = getProcessor()->evaluateAttrVal(sourceNodeContext, DOM_UnimplementedElement(sort), sort->getOrderAVT());
+			const DOMString	orderString = executionContext.evaluateAttrVal(sourceNodeContext, DOM_UnimplementedElement(sort), sort->getOrderAVT());
 
 			bool descending = ((!isEmpty(orderString)) &&  equals(orderString,Constants::ATTRVAL_ORDER_DESCENDING))? 
 				true : false;
 
-			NodeSortKey key(getProcessor(), 
-				sort->getSelectPattern(), 
+			assert(sort->getSelectPattern() != 0);
+
+			NodeSortKey key(executionContext, 
+				*sort->getSelectPattern(), 
 				treatAsNumbers, 
 				descending, 
 				langString, 
-				*xslInstruction);
+				xslInstruction);
 
 			keys.push_back(key);
 		}
@@ -526,77 +564,80 @@ void ElemTemplateElement::transformSelectedChildren(
 	if (0 != selectPattern)
 	{
 		XObject* const	result = selectPattern->execute(
-			sourceNodeContext, 
-			*const_cast<ElemTemplateElement*>(xslInstruction), 
-			getProcessor()->getContextNodeList());
+			sourceNodeContext,
+			xslInstruction,
+			executionContext.getXPathExecutionContext());
 
 		sourceNodes = result->mutableNodeset();
 	
-		if(0 != getStylesheet().getStylesheetRoot()->getTraceListeners())
+		if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 		{
-			getStylesheet().getStylesheetRoot()->fireSelectedEvent(
-				SelectionEvent(getProcessor(), 
+			getStylesheet().getStylesheetRoot().fireSelectedEvent(
+				SelectionEvent(executionContext, 
 					sourceNodeContext,
-					this, 
+					*this,
 					"select",
-					selectPattern,
+					*selectPattern,
 					result));
 		}
 	}
-	else if (keys.size()>0)
+	else if (keys.size() > 0)
 	{
-		MutableNodeRefList msourceNodes(&(getStylesheet().getProcessor()->getXPathSupport()));
-		DOM_NodeList children = sourceNodeContext.getChildNodes();    
-		int nNodes = children.getLength();
-		for(int i = 0; i < nNodes; i++) 
-		{
-			msourceNodes.addNode(children.item(i));
-		}
-
-		sourceNodes = msourceNodes;
+		sourceNodes = sourceNodeContext.getChildNodes();
 	}
-	
+
 	int nNodes = sourceNodes.getLength();
 
 	if(nNodes > 0)
 	{
-		if (keys.size()>0)
+		if (keys.size() > 0)
 		{
-			NodeSorter sorter(*getStylesheet().getProcessor());
+			NodeSorter sorter(executionContext.getXPathExecutionContext());
+
 			sorter.sort(sourceNodes, keys);
 		}
-		
-		const MutableNodeRefList& savedContextNodeList = 
-			getStylesheet().getProcessor()->getContextNodeList();
 
-		getStylesheet().getProcessor()->setContextNodeList(sourceNodes);
+		const MutableNodeRefList	savedContextNodeList(executionContext.getContextNodeList());
 
-		if(getProcessor()->isTraceSelect())
-			getProcessor()->traceSelect(
-				DOM_UnimplementedElement(const_cast<ElemTemplateElement *>(xslInstruction)), 
-				sourceNodes);
-		
-		for(int i = 0; i < nNodes; i++) 
+		executionContext.setContextNodeList(sourceNodes);
+
+		try
 		{
-			const DOM_Node childNode = sourceNodes.item(i);
-			
-			DOM_Document ownerDoc = childNode.getOwnerDocument();
-			if((DOM_Node::DOCUMENT_NODE != childNode.getNodeType()) && (0 == ownerDoc))
+			if(executionContext.isTraceSelect())
+				executionContext.traceSelect(
+					DOM_UnimplementedElement(const_cast<ElemTemplateElement*>(&xslInstruction)), 
+					sourceNodes);
+
+			for(int i = 0; i < nNodes; i++) 
 			{
-				error(DOMString("Child node does not have an owner document!"));
+				const DOM_Node childNode = sourceNodes.item(i);
+				
+				DOM_Document ownerDoc = childNode.getOwnerDocument();
+				if((DOM_Node::DOCUMENT_NODE != childNode.getNodeType()) && (ownerDoc == 0))
+				{
+					error(DOMString("Child node does not have an owner document!"));
+				}
+
+				transformChild(
+					executionContext,
+					stylesheetTree, 
+					&xslInstruction,
+					theTemplate, 
+					ownerDoc, 
+					sourceNodeContext, 
+					childNode,
+					mode, 
+					xslToken);
 			}
-			
-			transformChild(
-				stylesheetTree, 
-				xslInstruction, 
-				theTemplate, 
-				ownerDoc, 
-				sourceNodeContext, 
-				childNode,
-				mode, 
-				xslToken);
 		}
-		getStylesheet().getProcessor()->setContextNodeList(savedContextNodeList);
+		catch(...)
+		{
+			executionContext.setContextNodeList(savedContextNodeList);
+
+			throw;
+		}
+
+		executionContext.setContextNodeList(savedContextNodeList);
 	}
 
 }
@@ -617,23 +658,25 @@ void ElemTemplateElement::transformSelectedChildren(
  *      ELEMNAME_FOREACH.
  * @return true if applied a template, false if not.
  */
-bool ElemTemplateElement::transformChild(
-	const Stylesheet&		stylesheet_tree, 
-	const ElemTemplateElement*	xslInstruction, // xsl:apply-templates or xsl:for-each
-	ElemTemplateElement*	theTemplate, // may be null
-	const DOM_Node&			sourceTree, 
-	const DOM_Node&			selectContext,
-	const DOM_Node&			child,
-	const QName&			mode,
-	int						xslToken) 
+bool
+ElemTemplateElement::transformChild(
+			StylesheetExecutionContext& executionContext,
+			const Stylesheet&			stylesheet_tree, 
+			const ElemTemplateElement*	xslInstruction, // xsl:apply-templates or xsl:for-each
+			const ElemTemplateElement*	theTemplate, // may be null
+			const DOM_Node&				sourceTree, 
+			const DOM_Node&				selectContext,
+			const DOM_Node&				child,
+			const QName&				mode,
+			int							xslToken) const
 {
 	bool doApplyTemplate = true; // return value
 	bool shouldStrip = false;
 
-	int nodeType = child.getNodeType();
+	const int nodeType = child.getNodeType();
 	const Stylesheet* stylesheetTree = &stylesheet_tree;
 
-	bool isApplyImports = (xslToken == Constants::ELEMNAME_APPLY_IMPORTS);
+	bool isApplyImports = xslToken == Constants::ELEMNAME_APPLY_IMPORTS;
 
 	if(!shouldStrip) // rcw: odd, seems that shouldStripis always false
 	{
@@ -646,10 +689,10 @@ bool ElemTemplateElement::transformChild(
 			if(!isApplyImports)
 			{
 				
-				stylesheetTree = getStylesheet().getStylesheetRoot();
+				stylesheetTree = &getStylesheet().getStylesheetRoot();
 			}
 			
-			theTemplate = stylesheetTree->findTemplate(sourceTree, child, &mode,
+			theTemplate = stylesheetTree->findTemplate(executionContext, sourceTree, child, mode,
 				isApplyImports,	foundStylesheet);
 			
 			if(isApplyImports && (0 != theTemplate))
@@ -658,7 +701,7 @@ bool ElemTemplateElement::transformChild(
 			}
 			// mode = null; // non-sticky modes
 		}
-		
+
 		if(doApplyTemplate)  //rcw: seems to always be true
 		{
 			if(0 == theTemplate)
@@ -667,15 +710,17 @@ bool ElemTemplateElement::transformChild(
 				{
 				case DOM_Node::DOCUMENT_FRAGMENT_NODE:
 				case DOM_Node::ELEMENT_NODE:
-					theTemplate = getStylesheet().getStylesheetRoot()->getDefaultRule();
+					theTemplate = getStylesheet().getStylesheetRoot().getDefaultRule();
 					break;
+
 				case DOM_Node::CDATA_SECTION_NODE:
 				case DOM_Node::TEXT_NODE:
 				case DOM_Node::ATTRIBUTE_NODE:
-					theTemplate = getStylesheet().getStylesheetRoot()->getDefaultTextRule();
+					theTemplate = getStylesheet().getStylesheetRoot().getDefaultTextRule();
 					break;
+
 				case DOM_Node::DOCUMENT_NODE:
-					theTemplate = getStylesheet().getStylesheetRoot()->getDefaultRootRule();
+					theTemplate = getStylesheet().getStylesheetRoot().getDefaultRootRule();
 					break;
 				case DOM_Node::COMMENT_NODE:
 				case DOM_Node::PROCESSING_INSTRUCTION_NODE:
@@ -688,29 +733,29 @@ bool ElemTemplateElement::transformChild(
 				if(0 != theTemplate)
 				{
 				  // Not sure if this is needed. -sb
-					stylesheetTree = getStylesheet().getStylesheetRoot();
+					stylesheetTree = &getStylesheet().getStylesheetRoot();
 				}
 			}
 			
 			if(0 != theTemplate)
 			{
-				getStylesheet().getProcessor()->resetCurrentState(sourceTree, child);
+				executionContext.resetCurrentState(sourceTree, child);
 				
-				if(theTemplate == getStylesheet().getStylesheetRoot()->getDefaultTextRule())
+				if(theTemplate == getStylesheet().getStylesheetRoot().getDefaultTextRule())
 				{
 					switch(nodeType)
 					{
 					case DOM_Node::CDATA_SECTION_NODE:
 					case DOM_Node::TEXT_NODE:
-						getStylesheet().getProcessor()->cloneToResultTree(*stylesheetTree, 
-							child, false, false, false, false);
+						executionContext.cloneToResultTree(
+							child, false, false, false);
 						break;
 					case DOM_Node::ATTRIBUTE_NODE:
 						{
 							//rcw: DOM_node has no virtual funcs so we can't do a dynamic_cast<>.
 							const DOM_Attr& attr = static_cast<const DOM_Attr&>(child);
 							DOMString val = attr.getValue();
-							getStylesheet().getProcessor()->characters(toCharArray(val), 
+							executionContext.characters(toCharArray(val), 
 								0, length(val));
 						}
 						break;
@@ -722,37 +767,36 @@ bool ElemTemplateElement::transformChild(
 				else
 				{
 					bool doPush = (xslToken != Constants::ELEMNAME_FOREACH);
+
 					if(doPush)
 					{
-						getStylesheet().getProcessor()->getVariableStacks().
-							pushContextMarker(DOM_UnimplementedElement(theTemplate), child);
-						
-						if(0 != xslInstruction)
+						executionContext.pushContextMarker(DOM_UnimplementedElement(const_cast<ElemTemplateElement*>(theTemplate)), child);
+
+						if (xslInstruction != 0)
 						{
-							getStylesheet().getProcessor()->getVariableStacks().
-								pushParams(	stylesheetTree, *xslInstruction, 
-								sourceTree, selectContext, mode,
-								DOM_UnimplementedElement(theTemplate));
+							executionContext.pushParams(*xslInstruction, 
+									sourceTree, selectContext, mode,
+									DOM_UnimplementedElement(const_cast<ElemTemplateElement*>(theTemplate)));
 						}
 					}
-					
-					if(0 != getStylesheet().getStylesheetRoot()->getTraceListeners())
+
+					if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 					{
-						TracerEvent te(getStylesheet().getProcessor(), sourceTree, child, 
+						TracerEvent te(executionContext, sourceTree, child, 
 							mode, *theTemplate);
 
-						getStylesheet().getStylesheetRoot()->fireTraceEvent(te);
+						getStylesheet().getStylesheetRoot().fireTraceEvent(te);
 					}
-					theTemplate->executeChildren(*getStylesheet().getProcessor(), 
+					theTemplate->executeChildren(executionContext, 
 						sourceTree, child, mode);
-					
+
 					if(doPush)
 					{
-						getStylesheet().getProcessor()->getVariableStacks().popCurrentContext();
+						executionContext.popCurrentContext();
 					}
 				}
-				
-				getStylesheet().getProcessor()->resetCurrentState(sourceTree, selectContext);
+
+				executionContext.resetCurrentState(sourceTree, selectContext);
 			}
 		}
 	}
@@ -775,8 +819,18 @@ void ElemTemplateElement::error(const DOMString& msg) const
 }
 
 
+NodeImpl*
+ElemTemplateElement::cloneNode(bool /*deep*/)
+{
+	//should not be called
+	assert(false);	
+	return 0;
+}
+
+
+
 // Implemented DOM Element methods.
-  
+
 /** 
  * Add a child to the child list.
  * 
@@ -940,25 +994,3 @@ NodeImpl* ElemTemplateElement::item(int index)
 
     return node;
 }
-
-
-/** Get the stylesheet owner.
- */
-
-Stylesheet& ElemTemplateElement::getStylesheet() const
-{
-    return m_stylesheet;
-}
-
-XSLTEngineImpl* ElemTemplateElement::getProcessor() const
-{
-    return getStylesheet().getProcessor();
-}
-
-void ElemTemplateElement::setXSLProcessor(XSLTEngineImpl* processor) const
-{
-    getStylesheet().setXSLProcessor(processor);
-}
-
-
-  

@@ -62,15 +62,20 @@
 // Base include file.	Must be first.
 #include "XSLTDefinitions.hpp"
 
-#include <dom/DOMString.hpp>
-#include <PlatformSupport/StringTokenizer.hpp>
-#include <PlatformSupport/DOMStringHelper.hpp>
+
+
 #include <set>
 #include <vector>
 
-#include <cassert>
+
+
+#include <dom/DOMString.hpp>
+
+
 
 class XObject;
+
+
 
 /**
  * Class handling an extension namespace for XPath. Provides functions

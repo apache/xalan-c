@@ -73,12 +73,15 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DoubleSupport.hpp>
-#include "XSLTProcessor.hpp"
+//#include "XSLTProcessor.hpp"
+
+
+#include <XPath/XPath.hpp>
 
 
 
-NodeSorter::NodeSorter(XSLTProcessor&	p) :
-	m_xslp(p),
+NodeSorter::NodeSorter(XPathExecutionContext&	executionContext) :
+	m_executionContext(executionContext),
 	m_keys()
 {
 }
@@ -98,7 +101,7 @@ NodeSorter::sort(
 {
 	m_keys = keys;
 
-	NodeSortKeyCompare	theComparer(m_xslp,
+	NodeSortKeyCompare	theComparer(m_executionContext,
 									v,
 									keys);
 
@@ -143,6 +146,7 @@ NodeSorter::sort(
 }
 
 
+
 NodeSorter::NodeSortKeyCompare::result_type
 NodeSorter::NodeSortKeyCompare::operator()(
 			first_argument_type		theLHS,
@@ -154,9 +158,9 @@ NodeSorter::NodeSortKeyCompare::operator()(
 	const NodeSortKey&	theKey = m_nodeSortKeys[theKeyIndex];
 	// @@ JMD: is this right to provide a default NodeRefList instead of 0 ??
 	// @@ execute can't work on a const XPath
-	XPath* xpath = const_cast<XPath*>(theKey.getSelectPattern());
-	XObject* r1 = xpath->execute(theLHS, theKey.getPrefixResolver(), NodeRefList());
-	XObject* r2 = xpath->execute(theRHS, theKey.getPrefixResolver(), NodeRefList());
+	const XPath& xpath = theKey.getSelectPattern();
+	XObject* r1 = xpath.execute(theLHS, theKey.getPrefixResolver(), NodeRefList(), m_executionContext);
+	XObject* r2 = xpath.execute(theRHS, theKey.getPrefixResolver(), NodeRefList(), m_executionContext);
 
 	// Compare as numbers
 	if(theKey.getTreatAsNumbers() == true)

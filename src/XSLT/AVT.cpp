@@ -56,11 +56,16 @@
  */
 #include "AVT.hpp"
 
-#include "PlatformSupport/StringTokenizer.hpp"
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/StringTokenizer.hpp>
+
 
 #include "AVTPartSimple.hpp"
 #include "AVTPartXPath.hpp"
-#include "XSLTEngineImpl.hpp"
+#include "StylesheetConstructionContext.hpp"
+
+
 
 /**
  * Construct an AVT by parsing the string, and either 
@@ -68,23 +73,26 @@
  * on to the string if the AVT is simple.
  */
 AVT::AVT(
-	const DOMString& name, 
-	const XMLCh* type,
-	const XMLCh* stringedValue,
-	const PrefixResolver&	resolver,
-	XSLTEngineImpl& processor):
-		AVTPart(), m_name(name), m_pcType(type)
+			const DOMString&				name,
+			const XMLCh*					type,
+			const XMLCh*					stringedValue,
+			const PrefixResolver&			resolver,
+			StylesheetConstructionContext&	constructionContext) :
+		AVTPart(),
+		m_name(name),
+		m_pcType(type)
 {
 	StringTokenizer tokenizer(stringedValue, "{}\"\'", true);
 
-	int nTokens = tokenizer.countTokens();
+	const int	nTokens = tokenizer.countTokens();
+
 	if(nTokens < 2)
 	{
 		m_simpleString = stringedValue; // then do the simple thing
 	}
 	else
 	{
-		m_parts.reserve(nTokens+1);
+		m_parts.reserve(nTokens + 1);
 
 		DOMString buffer;
 		DOMString exprBuffer;
@@ -94,14 +102,14 @@ AVT::AVT(
 
 		while(tokenizer.hasMoreTokens())
 		{
-			if(lookahead.length())
+			if(length(lookahead))
 			{
 				t = lookahead;
-				lookahead = "";
+				lookahead = DOMString();
 			}
 			else t = tokenizer.nextToken();
 					
-			if(t.length() == 1)
+			if(length(t) == 1)
 			{
 				switch(t.charAt(0))
 				{
@@ -116,11 +124,11 @@ AVT::AVT(
 					{
 						// Attribute Value Template start
 						lookahead = tokenizer.nextToken();
-						if(lookahead.equals("{"))
+						if(equals(lookahead, "{"))
 						{
 							// Double curlys mean escape to show curly
 							append(buffer,lookahead);
-							lookahead = "";
+							lookahead = DOMString();
 							break; // from switch
 						}
 						/*
@@ -133,18 +141,18 @@ AVT::AVT(
 						*/
 						else
 						{
-							if(buffer.length() > 0)
+							if(length(buffer) > 0)
 							{
 								m_parts.push_back(new AVTPartSimple(buffer));
-								buffer="";
+								buffer = DOMString();
 							}
 									
-							exprBuffer = "";
+							exprBuffer = DOMString();
 							append(exprBuffer,lookahead);
-							while((lookahead.length()>0) && (!lookahead.equals("}")))
+							while(length(lookahead) > 0 && !equals(lookahead, "}"))
 							{
 								lookahead = tokenizer.nextToken();
-								if(lookahead.length() == 1)
+								if(length(lookahead) == 1)
 								{
 									switch(lookahead.charAt(0))
 									{
@@ -153,10 +161,10 @@ AVT::AVT(
 										{
 											// String start
 											append(exprBuffer,lookahead);
-											DOMString quote = lookahead;
+											const DOMString quote = lookahead;
 											// Consume stuff 'till next quote
 											lookahead = tokenizer.nextToken();
-											while(!lookahead.equals(quote))
+											while(!equals(lookahead, quote))
 											{
 												append(exprBuffer,lookahead);
 												lookahead = tokenizer.nextToken();
@@ -176,13 +184,13 @@ AVT::AVT(
 											// Evaluate the expression.
 											// XObject xobj = evalXPathStr(expression, contextNode, namespaceContext);
 											// buffer.append(xobj.str());
-											buffer = "";
-											
-											XPath *xpath = processor.createXPath(exprBuffer, resolver);
+											buffer = DOMString();
+
+											XPath *xpath = constructionContext.createXPath(exprBuffer, resolver);
 
 											m_parts.push_back(new AVTPartXPath(xpath));
 														
-											lookahead = ""; // breaks out of inner while loop
+											lookahead = DOMString(); // breaks out of inner while loop
 											break;
 										}
 										default:
@@ -198,7 +206,7 @@ AVT::AVT(
 									append(exprBuffer,lookahead);
 								}
 							} // end while(!lookahead.equals("}"))
-							if(error.length()>0)
+							if(length(error) > 0)
 							{
 								break; // from inner while loop
 							}
@@ -208,16 +216,16 @@ AVT::AVT(
 					case('}'):
 					{
 						lookahead = tokenizer.nextToken();
-						if(lookahead.equals("}"))
+						if(equals(lookahead, "}"))
 						{
 							// Double curlys mean escape to show curly
 							append(buffer,lookahead);
-							lookahead = ""; // swallow
+							lookahead = DOMString(); // swallow
 						}
 						else
 						{
 							// Illegal, I think...
-							processor.warn("Found \"}\" but no attribute template open!");
+							constructionContext.warn("Found \"}\" but no attribute template open!");
 							append(buffer,"}");
 							// leave the lookahead to be processed by the next round.
 						}
@@ -235,58 +243,70 @@ AVT::AVT(
 				// Anything else just add to string.
 				append(buffer,t);
 			}
-			if(error.length()>0)
+
+			if(length(error) > 0)
 			{
-				processor.warn("Attr Template, "+error);
+				constructionContext.warn("Attr Template, "+error);
 				break;
 			}
 		} // end while(tokenizer.hasMoreTokens())
 
-		if(buffer.length() > 0)
+		if(length(buffer) > 0)
 		{
 			m_parts.push_back(new AVTPartSimple(buffer));
-			buffer = "";
+
+			buffer = DOMString();
 		}
 
 	} // end else nTokens > 1
 
-	if(m_parts.empty() && (m_simpleString.length()==0))
+	if(m_parts.empty() && length(m_simpleString) == 0)
 	{
 		// Error?
-		m_simpleString = "";
+		m_simpleString = DOMString();
 	}
 }
 
+
+
 AVT::~AVT()
 {
-	for (unsigned i=0; i<m_parts.size(); ++i)	
+	for (unsigned i = 0; i < m_parts.size(); ++i)
+	{
 		delete (m_parts[i]);
+	}
 
 	m_pcType = 0;
 }
 
 
 
-void AVT::evaluate(DOMString& buf, const DOM_Node& context,
-	  const PrefixResolver& resolver, const NodeRefListBase& contextNodeList)
+void
+AVT::evaluate(
+			DOMString&				buf,
+			const DOM_Node&			contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const
 {
-	if(m_simpleString.length()>0)
+	if(length(m_simpleString) > 0)
 	{
 		buf = m_simpleString;
 	}
 	else if(!m_parts.empty())
 	{
-		buf = "";
-		int n = m_parts.size();
+		buf = DOMString();
+
+		const int	n = m_parts.size();
 
 		for(int i = 0; i < n; i++)
 		{
-			AVTPart* part = m_parts[i];
-			part->evaluate(buf, context, resolver, contextNodeList);
+			assert(m_parts[i] != 0);
+
+			m_parts[i]->evaluate(buf, contextNode, prefixResolver, executionContext);
 		}
 	}
 	else
 	{
-		buf = "";
+		buf = DOMString();
 	}
 }

@@ -88,7 +88,7 @@ Arg::Arg(
  */
 Arg::Arg(
 		const QName&	name,
-		const XObject*		val) :
+		XObject*		val) :
 	StackEntry(eArgument),
 	m_qname(name),
 	m_argType(eXObject),

@@ -60,10 +60,10 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
-class XSLTEngineImpl;
 class DOM_Node;
-class ElemTemplateElement;
 class DOMString;
+class ElemTemplateElement;
+class StylesheetExecutionContext;
 class XPath;
 class XObject;
 
@@ -82,47 +82,56 @@ public:
    * Should not be null.  That is not enforced.
    */
 
-	SelectionEvent(const XSLTEngineImpl* processor, 
-                     const DOM_Node& sourceNode,
-                     const ElemTemplateElement* styleNode,
-                     const DOMString& attributeName,
-                     const XPath* xpath,
-                     const XObject* selection);
+	SelectionEvent(
+			StylesheetExecutionContext&		executionContext, 
+			const DOM_Node&					sourceNode,
+			const ElemTemplateElement&		styleNode,
+			const DOMString&				attributeName,
+			const XPath&					xpath,
+			const XObject*					selection);
+
+	virtual
+	~SelectionEvent();
+
+private:
 
   /**
-   * The node in the style tree where the event occurs.
+   * The executionContext instance.
    */
-  const ElemTemplateElement* m_pStyleNode;
-  
-  /**
-   * The XSLT processor instance.
-   */
-  const XSLTEngineImpl* m_pProcessor;
-    
+  const StylesheetExecutionContext&		m_executionContext;
+
   /**
    * The current context node.
    */
-  const DOM_Node& m_sourceNode;
+  const DOM_Node&						m_sourceNode;
   
+  /**
+   * The node in the style tree where the event occurs.
+   */
+  const ElemTemplateElement&			m_styleNode;
+
   /**
    * The attribute name from which the selection is made.
    */
-  const DOMString& m_attributeName;
-  
+  const DOMString&						m_attributeName;
+
   /**
    * The XPath that executed the selection.
    */
-  const XPath* m_pXPath;
+  const XPath&							m_xpath;
   
   /**
    * The result of the selection.
    */
-  const XObject* m_pSelection;
+  const XObject* const					m_selection;
 
 private:
-	// unimplemented for now
-	SelectionEvent&	operator=(const SelectionEvent&	other);
 
+	// Unimplemented...
+	SelectionEvent&
+	operator=(const SelectionEvent&	other);
 };
+
+
 
 #endif	//XALAN_SelectionEvent_HEADER_GUARD

@@ -56,43 +56,57 @@
  */
 #include "StylesheetHandler.hpp"
 
+
+
+#include <sax/Locator.hpp>
 #include <sax/SaxException.hpp>
 
+#include <util/XMLURL.hpp>
+
+
 #include <XMLSupport/Formatter.hpp>
+
+
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
 
+
+
+#include "Constants.hpp"
+#include "ElemApplyImport.hpp"
+#include "ElemApplyTemplates.hpp"
+#include "ElemAttribute.hpp"
+#include "ElemAttributeSet.hpp"
+#include "ElemCallTemplate.hpp"
+#include "ElemChoose.hpp"
+#include "ElemComment.hpp"
+#include "ElemCopy.hpp"
+#include "ElemCopyOf.hpp"
+#include "ElemElement.hpp"
+#include "ElemEmpty.hpp"
+#include "ElemExtensionCall.hpp"
+#include "ElemForEach.hpp"
+#include "ElemIf.hpp"
 #include "ElemLiteralResult.hpp"
+#include "ElemMessage.hpp"
+#include "ElemNumber.hpp"
+#include "ElemOtherwise.hpp"
+#include "ElemParam.hpp"
+#include "ElemPI.hpp"
+#include "ElemSort.hpp"
+#include "ElemTemplate.hpp"
 #include "ElemText.hpp"
 #include "ElemTextLiteral.hpp"
-#include "ElemParam.hpp"
-#include "ElemEmpty.hpp"
-#include "ElemApplyTemplates.hpp"
-#include "ElemCallTemplate.hpp"
-#include "ElemWithParam.hpp"
-#include "ElemForEach.hpp"
-#include "ElemApplyImport.hpp"
-#include "ElemValueOf.hpp"
-#include "ElemNumber.hpp"
-#include "ElemIf.hpp"
-#include "ElemChoose.hpp"
-#include "ElemWhen.hpp"
-#include "ElemOtherwise.hpp"
-#include "ElemCopyOf.hpp"
-#include "ElemCopy.hpp"
-#include "ElemText.hpp"
 #include "ElemUse.hpp"
-#include "ElemElement.hpp"
-#include "ElemPI.hpp"
-#include "ElemComment.hpp"
-#include "ElemMessage.hpp"
-#include "ElemAttribute.hpp"
-#include "ElemExtensionCall.hpp"
-
-#include "StylesheetRoot.hpp"
-
+#include "ElemValueOf.hpp"
+#include "ElemWhen.hpp"
+#include "ElemWithParam.hpp"
 #include "ExtensionNSHandler.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetRoot.hpp"
+#include "XSLTEngineImpl.hpp"
 
 
 
@@ -103,10 +117,14 @@
  * that has to be done due to the SAX event model.
  */
 
-StylesheetHandler::StylesheetHandler(XSLTEngineImpl& processor,	Stylesheet& stylesheetTree) :
+StylesheetHandler::StylesheetHandler(
+			XSLTEngineImpl&					processor,
+			Stylesheet&						stylesheetTree,
+			StylesheetConstructionContext&	constructionContext) :
 	FormatterListener(),
 	m_processor(processor),
 	m_stylesheet(stylesheetTree),
+	m_constructionContext(constructionContext),
 	m_includeBase(m_stylesheet.getBaseIdentifier()),
 	m_pTemplate(0),
 	m_pLastPopped(0),
@@ -118,7 +136,7 @@ StylesheetHandler::StylesheetHandler(XSLTEngineImpl& processor,	Stylesheet& styl
 	m_LXSLTScriptLang(),
 	m_LXSLTScriptSrcURL(),
 	m_pLXSLTExtensionNSH(0),
-	m_pElemStack(new ElemTemplateStackType())
+	m_elemStack()
 {
 
 }
@@ -127,10 +145,6 @@ StylesheetHandler::StylesheetHandler(XSLTEngineImpl& processor,	Stylesheet& styl
 
 StylesheetHandler::~StylesheetHandler()
 {
-	m_pElemStack = 0;
-	m_pTemplate = 0;
-	m_pLastPopped = 0;
-	m_pLXSLTExtensionNSH = 0;
 }
 
 
@@ -219,7 +233,7 @@ void StylesheetHandler::endDocument()
  */
 bool StylesheetHandler::isAttrOK(const DOMString& attrName, const AttributeList& atts, int which)
 {
-	return m_stylesheet.isAttrOK(attrName, atts, which);
+	return m_stylesheet.isAttrOK(attrName, atts, which, m_constructionContext);
 }
 
 /** 
@@ -321,7 +335,7 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
 
 	ElemTemplateElement* elem = 0;
 
-	unsigned origStackSize = m_pElemStack->size();
+	const unsigned	origStackSize = m_elemStack.size();
 
 	if(startsWith(ns,m_processor.getXSLNameSpaceURLPre()))
 	{
@@ -330,7 +344,7 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
 
 		if(false == m_foundStylesheet)
 		{
-			m_stylesheet.getStylesheetRoot()->initDefaultRule();
+			m_stylesheet.getStylesheetRoot().initDefaultRule(m_constructionContext);
 			m_stylesheet.setWrapperless(false);
 		}
       
@@ -349,10 +363,10 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
         switch(xslToken)
         {            
         case Constants::ELEMNAME_TEMPLATE:
-          m_pTemplate = new ElemTemplate(m_processor,
+          m_pTemplate = new ElemTemplate(m_constructionContext,
                                         m_stylesheet,
                                         name, atts, lineNumber, columnNumber);
-          m_pElemStack->push_back(m_pTemplate);
+          m_elemStack.push_back(m_pTemplate);
           m_inTemplate = true;
           m_stylesheet.addTemplate(m_pTemplate);
           break;
@@ -370,20 +384,20 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
             // m_processor.handleFunctionsInstruction((Element)child);
           }
           break;
-          
+
         case Constants::ELEMNAME_VARIABLE:
         case Constants::ELEMNAME_PARAMVARIABLE:
           {
 			  ElemVariable* varelem = (Constants::ELEMNAME_PARAMVARIABLE == xslToken) 
-                                   ? new ElemParam(m_processor,
+                                   ? new ElemParam(m_constructionContext,
                                                    m_stylesheet,
                                                    name, atts, 
                                                    lineNumber, columnNumber)
-                                     : new ElemVariable(m_processor,
+                                     : new ElemVariable(m_constructionContext,
                                                         m_stylesheet,
                                                         name, atts, 
                                                         lineNumber, columnNumber);
-            m_pElemStack->push_back(varelem);
+            m_elemStack.push_back(varelem);
             m_inTemplate = true; // fake it out
             m_stylesheet.setTopLevelVariable(varelem);
             varelem->setTopLevel(true);
@@ -393,14 +407,16 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
         case Constants::ELEMNAME_LOCALE:
           m_processor.warn("xsl:locale not yet supported!");
           break;
-          
+
         case Constants::ELEMNAME_PRESERVESPACE:
         case Constants::ELEMNAME_STRIPSPACE:
           {
-            ElemEmpty nsNode(m_processor, m_stylesheet, name, atts, lineNumber, columnNumber);
+            ElemEmpty nsNode(m_constructionContext, m_stylesheet, name, lineNumber, columnNumber);
             
-            int nAttrs = atts.getLength();
+            const int nAttrs = atts.getLength();
+
             bool foundIt = false;
+
             for(int i = 0; i < nAttrs; i++)
             {
               const DOMString aname = atts.getName(i);
@@ -418,21 +434,21 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
                   * easy and safe way to do this right now.  TODO: Validate the pattern 
                   * to make sure it's a WildcardName.
                   */
-                  XPath* matchPat = m_processor.createMatchPattern(wildcardName, nsNode);
+                  const XPath* const	matchPat = m_constructionContext.createMatchPattern(wildcardName, nsNode);
                   
                   if(Constants::ELEMNAME_PRESERVESPACE == xslToken)
                   {
-                    m_stylesheet.getStylesheetRoot()->m_whitespacePreservingElements.push_back(matchPat);
+                    m_stylesheet.getStylesheetRoot().m_whitespacePreservingElements.push_back(matchPat);
                   }
                   else
                   {
-                    m_stylesheet.getStylesheetRoot()->m_whitespaceStrippingElements.push_back(matchPat);
+                    m_stylesheet.getStylesheetRoot().m_whitespaceStrippingElements.push_back(matchPat);
                   }
                 }
               }
               else if(!isAttrOK(aname, atts, i))
               {
-				m_stylesheet.error(DOMString(name) + " has an illegal attribute: " + aname);
+				m_constructionContext.error(DOMString(name) + " has an illegal attribute: " + aname);
               }
             }
             if(!foundIt)
@@ -447,20 +463,21 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
           
         case Constants::ELEMNAME_KEY:
           {
-            ElemEmpty nsContext(m_processor, m_stylesheet, name, atts, lineNumber, columnNumber);
-            m_stylesheet.processKeyElement(&nsContext, atts);
+            ElemEmpty nsContext(m_constructionContext, m_stylesheet, name, lineNumber, columnNumber);
+            m_stylesheet.processKeyElement(&nsContext, atts, m_constructionContext);
           }
           break;
           
         case Constants::ELEMNAME_DEFINEATTRIBUTESET:
 		{
           m_inTemplate = true; // fake it out
-          ElemAttributeSet* attrSet = new ElemAttributeSet(m_processor,
-                                                          m_stylesheet,
-                                                          name, atts, 
-                                                          lineNumber, 
-                                                          columnNumber);
-          m_pElemStack->push_back(attrSet);
+          ElemAttributeSet* attrSet = new ElemAttributeSet(m_constructionContext,
+                                                           m_stylesheet,
+                                                           name,
+														   atts,
+                                                           lineNumber,
+                                                           columnNumber);
+          m_elemStack.push_back(attrSet);
 		}
           break;
           
@@ -473,7 +490,7 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
           break;
           
         case Constants::ELEMNAME_OUTPUT:
-          m_stylesheet.getStylesheetRoot()->processOutputSpec(name, atts);
+          m_stylesheet.getStylesheetRoot().processOutputSpec(name, atts, m_constructionContext);
           break;
           
         case Constants::ELEMNAME_WITHPARAM:
@@ -559,7 +576,7 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
             else if(equals(aname, "version"))
             {
               const DOMString versionStr = atts.getValue(i);
-			  Stylesheet::setXSLTVerDeclared(DOMStringToDouble(versionStr));
+			  m_stylesheet.setXSLTVerDeclared(DOMStringToDouble(versionStr));
             }
             else if(!(isAttrOK(aname, atts, i) || processSpaceAttr(aname, atts, i)))
             {
@@ -582,7 +599,7 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
 				const DOMString versionStr = substring(nsDeclVal,lenOfPre+1);
 				if(versionStr.length() > 1)
 				{
-					Stylesheet::setXSLTVerDeclared(DOMStringToDouble(versionStr));
+					m_stylesheet.setXSLTVerDeclared(DOMStringToDouble(versionStr));
 				}
               }
 #endif
@@ -619,34 +636,34 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
         switch(xslToken)
         {            
         case Constants::ELEMNAME_APPLY_TEMPLATES:
-          elem = new ElemApplyTemplates(m_processor,
+          elem = new ElemApplyTemplates(m_constructionContext,
                                         m_stylesheet,
                                         name, atts, lineNumber, columnNumber);
           break;
           
         case Constants::ELEMNAME_CALLTEMPLATE:
-          elem = new ElemCallTemplate(m_processor,
+          elem = new ElemCallTemplate(m_constructionContext,
                                       m_stylesheet,
                                       name, atts, lineNumber, columnNumber);
           break;
           
         case Constants::ELEMNAME_WITHPARAM:
-          elem = new ElemWithParam(m_processor,
+          elem = new ElemWithParam(m_constructionContext,
                                    m_stylesheet,
                                    name, atts, lineNumber, columnNumber);
           break;
           
         case Constants::ELEMNAME_FOREACH:
-          elem = new ElemForEach(m_processor,
+          elem = new ElemForEach(m_constructionContext,
                                  m_stylesheet,
                                  name, atts, lineNumber, columnNumber, true);
           break;
           
         case Constants::ELEMNAME_SORT:
 		{
-            ElemForEach* foreach = dynamic_cast<ElemForEach*>(m_pElemStack->back());
+            ElemForEach* foreach = dynamic_cast<ElemForEach*>(m_elemStack.back());
 
-            ElemSort* sortElem = new ElemSort(m_processor,
+            ElemSort* sortElem = new ElemSort(m_constructionContext,
                                              m_stylesheet,
                                              name, atts, lineNumber, columnNumber);
             
@@ -656,57 +673,57 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
           break;
           
         case Constants::ELEMNAME_APPLY_IMPORTS:
-          elem = new ElemApplyImport(m_processor,
+          elem = new ElemApplyImport(m_constructionContext,
                                      m_stylesheet,
                                      name, atts, lineNumber, columnNumber);
           break;
           
         case Constants::ELEMNAME_VALUEOF:
-          elem = new ElemValueOf(m_processor,
+          elem = new ElemValueOf(m_constructionContext,
                                  m_stylesheet,
                                  name, atts, lineNumber, columnNumber);
           break;
 
         case Constants::ELEMNAME_NUMBER:
-          elem = new ElemNumber(m_processor,
+          elem = new ElemNumber(m_constructionContext,
                                 m_stylesheet,
                                 name, atts, lineNumber, columnNumber);
           break;
           
         case Constants::ELEMNAME_VARIABLE:
-          elem = new ElemVariable(m_processor,
+          elem = new ElemVariable(m_constructionContext,
                                   m_stylesheet,
                                   name, atts, lineNumber, columnNumber);
           break;
 
         case Constants::ELEMNAME_PARAMVARIABLE:
-          elem = new ElemParam(m_processor,
+          elem = new ElemParam(m_constructionContext,
                                m_stylesheet,
                                name, atts, lineNumber, columnNumber);
           break;
           
         case Constants::ELEMNAME_IF:
-          elem = new ElemIf(m_processor,
+          elem = new ElemIf(m_constructionContext,
                             m_stylesheet,
                             name, atts, lineNumber, columnNumber);
           break;
 
         case Constants::ELEMNAME_CHOOSE:
-          elem = new ElemChoose(m_processor,
+          elem = new ElemChoose(m_constructionContext,
                                 m_stylesheet,
                                 name, atts, lineNumber, columnNumber);
           break;
           
         case Constants::ELEMNAME_WHEN:
           {
-            ElemTemplateElement* parent = m_pElemStack->back();
+            ElemTemplateElement* parent = m_elemStack.back();
             if(Constants::ELEMNAME_CHOOSE == parent->getXSLToken())
             {
               ElemTemplateElement* lastChild = dynamic_cast<ElemTemplateElement*>(parent->getLastChild());
               if((0 == lastChild) || 
                  (Constants::ELEMNAME_WHEN == lastChild->getXSLToken()))
               {
-                elem = new ElemWhen(m_processor,
+                elem = new ElemWhen(m_constructionContext,
                                     m_stylesheet,
                                     name, atts, lineNumber, columnNumber);
               }
@@ -724,14 +741,14 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
           
         case Constants::ELEMNAME_OTHERWISE:
           {
-            ElemTemplateElement* parent = m_pElemStack->back();
+            ElemTemplateElement* parent = m_elemStack.back();
             if(Constants::ELEMNAME_CHOOSE == parent->getXSLToken())
             {
               ElemTemplateElement* lastChild = dynamic_cast<ElemTemplateElement*>(parent->getLastChild());
               if((0 == lastChild) || 
                  (Constants::ELEMNAME_WHEN == lastChild->getXSLToken()))
               {
-                elem = new ElemOtherwise(m_processor,
+                elem = new ElemOtherwise(m_constructionContext,
                                          m_stylesheet,
                                          name, atts, lineNumber, columnNumber);
               }
@@ -748,13 +765,13 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
           break;
 
         case Constants::ELEMNAME_COPY_OF:
-          elem = new ElemCopyOf(m_processor,
+          elem = new ElemCopyOf(m_constructionContext,
                                 m_stylesheet,
                                 name, atts, lineNumber, columnNumber);
           break;
 
         case Constants::ELEMNAME_COPY:
-          elem = new ElemCopy(m_processor,
+          elem = new ElemCopy(m_constructionContext,
                               m_stylesheet,
                               name, atts, lineNumber, columnNumber);
           break;
@@ -762,43 +779,43 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
         case Constants::ELEMNAME_TEXT:
           // Just push the element on the stack to signal
           // that space should be preserved.
-          m_pElemStack->push_back(new ElemText(m_processor,
+          m_elemStack.push_back(new ElemText(m_constructionContext,
                                     m_stylesheet,
                                     name, atts, lineNumber, columnNumber));
           break;
 
         case Constants::ELEMNAME_USE:
-          elem = new ElemUse(m_processor,
+          elem = new ElemUse(m_constructionContext,
                              m_stylesheet,
-                             name, atts, lineNumber, columnNumber);
+                             name, lineNumber, columnNumber);
           break;
 
         case Constants::ELEMNAME_ATTRIBUTE:
-          elem = new ElemAttribute(m_processor,
+          elem = new ElemAttribute(m_constructionContext,
                                    m_stylesheet,
                                    name, atts, lineNumber, columnNumber);
           break;
 
         case Constants::ELEMNAME_ELEMENT:
-          elem = new ElemElement(m_processor,
+          elem = new ElemElement(m_constructionContext,
                                  m_stylesheet,
                                  name, atts, lineNumber, columnNumber);
           break;
           
         case Constants::ELEMNAME_PI:
-          elem = new ElemPI(m_processor,
+          elem = new ElemPI(m_constructionContext,
                             m_stylesheet,
                             name, atts, lineNumber, columnNumber);
           break;
 
         case Constants::ELEMNAME_COMMENT:
-          elem = new ElemComment(m_processor,
+          elem = new ElemComment(m_constructionContext,
                                  m_stylesheet,
                                  name, atts, lineNumber, columnNumber);
           break;
           
         case Constants::ELEMNAME_MESSAGE:
-          elem = new ElemMessage(m_processor,
+          elem = new ElemMessage(m_constructionContext,
                                  m_stylesheet,
                                  name, atts, lineNumber, columnNumber);
 
@@ -823,7 +840,7 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
         default:
           // If this stylesheet is declared to be of a higher version than the one
 			  // supported, don't flag an error.
-			if(XSLTEngineImpl::getXSLTVerSupported() < Stylesheet::getXSLTVerDeclared())
+			if(XSLTEngineImpl::getXSLTVerSupported() < m_stylesheet.getXSLTVerDeclared())
 			{
 				DOMString msg("Unknown XSL element: " + localName);
 				throw SAXException(toCharArray(msg));
@@ -858,7 +875,7 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
           }
           else if(!isAttrOK(aname, atts, i))
           {
-            m_stylesheet.error(DOMString(name) + " has an illegal attribute: " + aname);
+            m_constructionContext.error(DOMString(name) + " has an illegal attribute: " + aname);
           }
         }
         if (isEmpty(prefix)) 
@@ -907,7 +924,7 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
           }
           else if(!isAttrOK(aname, atts, i))
           {
-            m_stylesheet.error(DOMString(name) + " has an illegal attribute: " + aname);
+            m_constructionContext.error(DOMString(name) + " has an illegal attribute: " + aname);
           }
         }
       }
@@ -931,19 +948,23 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
         if (!isEmpty(ns) && 
             ((nsh = m_stylesheet.lookupExtensionNSHandler (ns)) != 0)) 
         {
-          elem = new ElemExtensionCall (m_processor,
+          elem = new ElemExtensionCall (m_constructionContext,
                                         m_stylesheet,
-                                        *nsh,
                                         name,
-                                        localName,
-                                        atts, lineNumber, columnNumber);
+                                        atts,
+										lineNumber,
+										columnNumber,
+										*nsh,
+                                        localName);
         }
         else 
         {
-          elem = new ElemLiteralResult(m_processor,
+          elem = new ElemLiteralResult(m_constructionContext,
                                        m_stylesheet,
-                                       name, 
-                                       atts, lineNumber, columnNumber);
+                                       name,
+                                       atts,
+									   lineNumber,
+									   columnNumber);
         }
         // BEGIN SANJIVA CODE
       }
@@ -951,21 +972,21 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
     }
     if(m_inTemplate && (0 != elem))
     {
-      if(!m_pElemStack->empty())
+      if(!m_elemStack.empty())
       {
-        ElemTemplateElement* parent = m_pElemStack->back();
+        ElemTemplateElement* parent = m_elemStack.back();
         parent->appendChild(elem);
       }
-      m_pElemStack->push_back(elem);
+      m_elemStack.push_back(elem);
     }
 
     // If for some reason something didn't get pushed, push an empty 
     // object.
-    if(origStackSize == m_pElemStack->size())
+    if(origStackSize == m_elemStack.size())
     {
-      m_pElemStack->push_back(new ElemEmpty(m_processor,
+      m_elemStack.push_back(new ElemEmpty(m_constructionContext,
                                  m_stylesheet,
-                                 name, atts, lineNumber, columnNumber));
+                                 name, lineNumber, columnNumber));
     }
 
 	} // end try
@@ -989,16 +1010,16 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
 ElemTemplateElement* StylesheetHandler::initWrapperless (const DOMString& name,
 	const AttributeList& atts, int lineNumber, int columnNumber)
 {
-	m_stylesheet.getStylesheetRoot()->initDefaultRule();
+	m_stylesheet.getStylesheetRoot().initDefaultRule(m_constructionContext);
 
 	AttributeListImpl templateAttrs;
 
 	templateAttrs.addAttribute(c_wstr("name"), c_wstr("CDATA"), c_wstr("simple"));
 
-	m_pTemplate = new ElemTemplate(m_processor, m_stylesheet, "xsl:template", 
+	m_pTemplate = new ElemTemplate(m_constructionContext, m_stylesheet, "xsl:template", 
 		templateAttrs, lineNumber, columnNumber);
 
-	ElemTemplateElement* pElem = new ElemLiteralResult(m_processor,
+	ElemTemplateElement* pElem = new ElemLiteralResult(m_constructionContext,
 		m_stylesheet, name,  atts, lineNumber, columnNumber);
 
 	m_pTemplate->appendChild(pElem);
@@ -1011,12 +1032,43 @@ ElemTemplateElement* StylesheetHandler::initWrapperless (const DOMString& name,
 
 	if(name.equals("HTML"))
 	{
-		m_stylesheet.getStylesheetRoot()->setIndentResult(true);
-		m_stylesheet.getStylesheetRoot()->setOutputMethod(Formatter::OUTPUT_METH_HTML);
+		m_stylesheet.getStylesheetRoot().setIndentResult(true);
+		m_stylesheet.getStylesheetRoot().setOutputMethod(Formatter::OUTPUT_METH_HTML);
 	}
 
 	return pElem;
 }
+
+
+
+namespace
+{
+
+/**
+ * Test to see if the stack contains the given URL.
+ */
+bool 
+stackContains(
+			const Stylesheet::URLStackType&		stack, 
+			const XMLURL&						url)
+{
+	const int	n = stack.size();
+
+	bool		contains = false;
+
+	for(int i = 0; i < n && contains == false; i++)
+	{
+		if(*stack[i] == url)
+		{
+			contains = true;
+		}
+	}
+
+	return contains;	
+}
+
+};
+
 
 
 /**
@@ -1040,34 +1092,34 @@ void StylesheetHandler::processImport(const DOMString& name, const AttributeList
 				throw SAXException("Imports can only occur as the first elements in the stylesheet!");
 			}
 			
-			const DOMString saved_XSLNameSpaceURL = m_processor.getXSLNameSpaceURL();
-			
-			const DOMString href = atts.getValue(i);
+			const DOMString			saved_XSLNameSpaceURL = m_processor.getXSLNameSpaceURL();
 
-			const XMLURL& hrefUrl = *(m_processor.getURLFromString(href, m_stylesheet.getBaseIdentifier()));
+			const DOMString			href = atts.getValue(i);
 
-			StylesheetRoot::ImportStackType& importStack = m_stylesheet.getStylesheetRoot()->getImportStack();
+			const XMLURL* const		hrefUrl = m_processor.getURLFromString(href, m_stylesheet.getBaseIdentifier());
+			assert(hrefUrl != 0);
 
+			StylesheetRoot::ImportStackType& importStack = m_stylesheet.getStylesheetRoot().getImportStack();
 
-			if(stackContains(importStack, hrefUrl))
+			if(stackContains(importStack, *hrefUrl))
 			{
-				DOMString msg(DOMString(hrefUrl.getURLText()) + " is directly or indirectly importing itself!");
+				DOMString msg(DOMString(hrefUrl->getURLText()) + " is directly or indirectly importing itself!");
+
 				throw SAXException(toCharArray(msg));
 			}
 			
 			importStack.push_back(hrefUrl);
-			
-	
+
 			Stylesheet* pImportedStylesheet = new Stylesheet(
-				*(m_stylesheet.getStylesheetRoot()), 
-				&m_processor, 
-				m_stylesheet.getBaseIdentifier());
+				m_stylesheet.getStylesheetRoot(), 
+				m_stylesheet.getBaseIdentifier(),
+				m_constructionContext);
 
-			StylesheetHandler tp(m_processor, *pImportedStylesheet);
+			StylesheetHandler tp(m_processor, *pImportedStylesheet, m_constructionContext);
 				
-			pImportedStylesheet->setBaseIdentifier(hrefUrl.getURLText());
+			pImportedStylesheet->setBaseIdentifier(hrefUrl->getURLText());
 
-			m_processor.parseXML(hrefUrl, &tp, DOM_UnimplementedDocument(pImportedStylesheet));
+			m_processor.parseXML(*hrefUrl, &tp, DOM_UnimplementedDocument(pImportedStylesheet));
 			
 			// I'm going to insert the elements in backwards order, 
 			// so I can walk them 0 to n.
@@ -1080,7 +1132,7 @@ void StylesheetHandler::processImport(const DOMString& name, const AttributeList
 		}
 		else if(!isAttrOK(aname, atts, i))
 		{
-			m_stylesheet.error(name + " has an illegal attribute: " + aname);
+			m_constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
 	if(!foundIt)
@@ -1090,26 +1142,6 @@ void StylesheetHandler::processImport(const DOMString& name, const AttributeList
 	}
 }
 
-/**
- * Test to see if the stack contains the given URL.
- */
-
-bool StylesheetHandler::stackContains(const Stylesheet::URLStackType& stack, 
-	const XMLURL& url) const
-{
-	int n = stack.size();
-	bool contains = false;
-	for(int i = 0; i < n; i++)
-	{
-		XMLURL url2 = stack[i];
-		if(url2 == url)
-		{
-			contains = true;
-			break;
-		}
-	}
-	return contains;	
-}
 
 
 /**
@@ -1128,8 +1160,8 @@ void StylesheetHandler::processInclude(const DOMString& name, const AttributeLis
 			foundIt = true;
 			
 			// Save state, so this class can be reused.
-			ElemTemplateStackType* saved_pElemStack = m_pElemStack;
-			m_pElemStack = new ElemTemplateStackType();
+			ElemTemplateStackType	saved_ElemStack(m_elemStack);
+			m_elemStack.clear();
 
 			ElemTemplate* saved_pTemplate = m_pTemplate;
 			m_pTemplate = 0;
@@ -1150,22 +1182,22 @@ void StylesheetHandler::processInclude(const DOMString& name, const AttributeLis
 			
 			const DOMString href = atts.getValue(i);
 
-			const XMLURL* hrefUrl = m_processor.getURLFromString(href, m_stylesheet.getIncludeStack().back().getURLText());
-			
+			assert(m_stylesheet.getIncludeStack().back() != 0);
+			const XMLURL* const		hrefUrl = m_processor.getURLFromString(href, m_stylesheet.getIncludeStack().back()->getURLText());
+
 			if(stackContains(m_stylesheet.getIncludeStack(), *hrefUrl))
 			{
 				DOMString msg(DOMString(hrefUrl->getURLText()) + " is directly or indirectly including itself!");
 				throw SAXException(toCharArray(msg));
 			}
 			
-			m_stylesheet.getIncludeStack().push_back(*hrefUrl);
+			m_stylesheet.getIncludeStack().push_back(hrefUrl);
 
 			m_processor.parseXML(*hrefUrl, this, DOM_UnimplementedDocument(&m_stylesheet));
 			
 			m_stylesheet.getIncludeStack().pop_back();
-			
-			delete m_pElemStack;
-			m_pElemStack = saved_pElemStack;
+
+			m_elemStack = saved_ElemStack;
 			m_pTemplate = saved_pTemplate;
 			m_pLastPopped = saved_pLastPopped;
 			m_inTemplate = saved_inTemplate;
@@ -1175,7 +1207,7 @@ void StylesheetHandler::processInclude(const DOMString& name, const AttributeLis
 		}
 		else if(!isAttrOK(aname, atts, i))
 		{
-			m_stylesheet.error(name+ " has an illegal attribute: " + aname);
+			m_constructionContext.error(name+ " has an illegal attribute: " + aname);
 		}
 	}
 	if(!foundIt)
@@ -1209,8 +1241,8 @@ void StylesheetHandler::endElement(const XMLCh* const name)
 
 	m_stylesheet.popNamespaces();
 
-	m_pLastPopped = m_pElemStack->back();
-	m_pElemStack->pop_back();
+	m_pLastPopped = m_elemStack.back();
+	m_elemStack.pop_back();
 	m_pLastPopped->setFinishedConstruction(true);
 
 	int tok = m_pLastPopped->getXSLToken();
@@ -1292,14 +1324,14 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 
 	if(m_inTemplate)
 	{
-		ElemTemplateElement* parent = m_pElemStack->back();
+		ElemTemplateElement* parent = m_elemStack.back();
 		bool preserveSpace = false;
 		bool disableOutputEscaping = false;
 
 		if(Constants::ELEMNAME_TEXT == parent->getXSLToken())
 		{
 			disableOutputEscaping = (dynamic_cast<ElemText*>(parent))->getDisableOutputEscaping();
-			parent = (*m_pElemStack)[m_pElemStack->size()-2];
+			parent = m_elemStack[m_elemStack.size()-2];
 			preserveSpace = true;
 		}
 
@@ -1309,12 +1341,12 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 		int lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
 		int columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
 
-		ElemTextLiteral *elem = new ElemTextLiteral(m_processor,
+		ElemTextLiteral *elem = new ElemTextLiteral(m_constructionContext,
 			m_stylesheet,
+			lineNumber, columnNumber,
 			chars, 0, length, 
 			true, preserveSpace, 
-			disableOutputEscaping,
-			lineNumber, columnNumber);
+			disableOutputEscaping);
 
 		bool isWhite = isWhiteSpace(chars, 0, length);
 
@@ -1399,14 +1431,14 @@ void StylesheetHandler::cdata(const XMLCh* const chars, const unsigned int lengt
 
 	if(m_inTemplate)
 	{
-		ElemTemplateElement* parent = m_pElemStack->back();
+		ElemTemplateElement* parent = m_elemStack.back();
 		bool preserveSpace = false;
 		bool disableOutputEscaping = false;
 
 		if(Constants::ELEMNAME_TEXT == parent->getXSLToken())
 		{
 			disableOutputEscaping = (static_cast<ElemText*>(parent))->getDisableOutputEscaping();
-			parent = (*m_pElemStack)[m_pElemStack->size()-2];
+			parent = m_elemStack[m_elemStack.size()-2];
 			preserveSpace = true;
 		}
 		Locator* locator = (m_processor.m_stylesheetLocatorStack.size()==0) 
@@ -1415,12 +1447,12 @@ void StylesheetHandler::cdata(const XMLCh* const chars, const unsigned int lengt
 		int lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
 		int columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
 
-		ElemTextLiteral* elem = new ElemTextLiteral(m_processor,
+		ElemTextLiteral* elem = new ElemTextLiteral(m_constructionContext,
 			m_stylesheet,
-			chars, 0, length, 
+			lineNumber, columnNumber,
+			chars, 0, length,
 			true, preserveSpace, 
-			disableOutputEscaping,
-			lineNumber, columnNumber);
+			disableOutputEscaping);
 
 		bool isWhite = isWhiteSpace(chars, 0, length);
 
@@ -1542,6 +1574,27 @@ void StylesheetHandler::comment(const XMLCh* const /*data*/)
  * Receive notification of a entityReference.
  */
 void StylesheetHandler::entityReference(const XMLCh* const /*name*/)
+{
+	// if we have apending exception, we don't want to even try to process this
+	if (!isEmpty(m_pendingException))
+		return;
+
+  // No action for the moment.
+}
+
+
+void StylesheetHandler::resetDocument()
+{
+	// if we have apending exception, we don't want to even try to process this
+	if (!isEmpty(m_pendingException))
+		return;
+
+  // No action for the moment.
+}
+
+	// pure virtual in FormatterListener
+void
+StylesheetHandler::charactersRaw(const XMLCh* const /* chars */, const unsigned int	/* length */)
 {
 	// if we have apending exception, we don't want to even try to process this
 	if (!isEmpty(m_pendingException))

@@ -127,7 +127,7 @@ NumeratorFormatter::~NumeratorFormatter()
 
 
 void
-NumeratorFormatter::processAttributes(const DOM_Node&	contextNode)
+NumeratorFormatter::processAttributes(const DOM_Node&	/* contextNode */)
 {
 /*
 	@@ java: commented out

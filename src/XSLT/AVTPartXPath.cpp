@@ -56,31 +56,80 @@
  */
 #include "AVTPartXPath.hpp"
 
+
+
+#include <XPath/XObject.hpp>
+#include <XPath/XPath.hpp>
+#include <XPath/XPathFactory.hpp>
+#include <XPath/XPathProcessor.hpp>
+
+
+
 /**
  * Construct a simple AVT part.
  * @param val A pure string section of an AVT.
  */
-AVTPartXPath::AVTPartXPath(XPath* xpath) :AVTPart(), m_pXPath(xpath)
+AVTPartXPath::AVTPartXPath(const XPath* xpath) :
+	AVTPart(),
+	m_pXPath(xpath)
 {
 }
-  
-  
-AVTPartXPath::AVTPartXPath(const DOMString& val, const PrefixResolver& resolver, 
-	XPathProcessor& xpathProcessor, XPathFactory& factory, XMLParserLiaison& /*liaison*/):
-		AVTPart(), m_pXPath(factory.create())
-{
-	xpathProcessor.initMatchPattern(*m_pXPath, val, resolver);
 
-	m_pXPath->shrink();
+
+
+namespace
+{
+
+const XPath*
+createAndInitXPath(
+			const DOMString&		val,
+			const PrefixResolver&	resolver,
+			XObjectFactory&			xobjectFactory,
+			XPathEnvSupport&		xpathEnvSupport,
+			XPathProcessor&			xpathProcessor, 
+			XPathFactory&			xpathFactory)
+{
+	XPath* const	theXPath = xpathFactory.create();
+
+	xpathProcessor.initMatchPattern(*theXPath, val, resolver, xobjectFactory, xpathEnvSupport);
+
+	return theXPath;
 }
 
-  
-void AVTPartXPath::evaluate(DOMString& buf, const DOM_Node& context, 
-	const PrefixResolver& resolver, const NodeRefListBase& contextNodeList)
+};
+
+
+
+AVTPartXPath::AVTPartXPath(
+			const DOMString&		val,
+			const PrefixResolver&	resolver,
+			XObjectFactory&			xobjectFactory,
+			XPathEnvSupport&		xpathEnvSupport,
+			XPathProcessor&			xpathProcessor, 
+			XPathFactory&			xpathFactory) :
+	AVTPart(),
+	m_pXPath(createAndInitXPath(val,
+								resolver,
+								xobjectFactory,
+								xpathEnvSupport,
+								xpathProcessor,
+								xpathFactory))
 {
-	const XObject* xobj = m_pXPath->execute(context, resolver, contextNodeList);
+}
+
+
+
+void
+AVTPartXPath::	evaluate(
+			DOMString&				buf,
+			const DOM_Node&			contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const
+{
+	const XObject* const	xobj = m_pXPath->execute(contextNode, prefixResolver, executionContext);
+
 	if(0 != xobj)
 	{
-		append(buf,xobj->str());
+		append(buf, xobj->str());
 	}
 }

@@ -57,8 +57,14 @@
 #if !defined(XALAN_KEYDECLARATION_HEADER_GUARD)
 #define XALAN_KEYDECLARATION_HEADER_GUARD
 
+
+
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
+
+
+
+#include <dom/DOMString.hpp>
 
 
 class XPath;

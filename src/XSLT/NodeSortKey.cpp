@@ -67,14 +67,14 @@
 
 
 NodeSortKey::NodeSortKey(
-			XSLTProcessor*			processor,
-			const XPath*			selectPat,
-			bool					treatAsNumbers,
+			ExecutionContext&		executionContext,
+			const XPath&			selectPat, 
+			bool					treatAsNumbers, 
 			bool					descending,
-			const DOMString&		/* langValue */,
+			const DOMString&		/* langValue */, 
 			const PrefixResolver&	resolver) :
-	m_processor(processor),
-	m_selectPat(selectPat),
+	m_executionContext(&executionContext),
+	m_selectPat(&selectPat),
 	m_treatAsNumbers(treatAsNumbers),
 	m_descending(descending),
 	m_prefixResolver(&resolver)
@@ -101,7 +101,7 @@ NodeSortKey::NodeSortKey(
 
 	if(null == m_col)
 	{
-		m_processor.warn("Could not find Collator for <sort xml:lang=" + langValue);
+		executionContext.warn("Could not find Collator for <sort xml:lang=" + langValue);
 
 		m_col = Collator.getInstance();
 	}
@@ -112,8 +112,6 @@ NodeSortKey::NodeSortKey(
 
 NodeSortKey::~NodeSortKey()
 {
-	m_processor = 0;
-	m_prefixResolver = 0;
 }
 
 
@@ -123,7 +121,7 @@ NodeSortKey::operator=(const NodeSortKey&	theRHS)
 {
 	if (this != &theRHS)
 	{
-		m_processor = theRHS.m_processor;
+		m_executionContext = theRHS.m_executionContext;
 		m_selectPat = theRHS.m_selectPat;
 		m_treatAsNumbers = theRHS.m_treatAsNumbers;
 		m_descending = theRHS.m_descending;

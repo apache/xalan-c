@@ -56,64 +56,73 @@
  */
 #include "ElemTextLiteral.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <cassert>
+
+
+
+#include "Constants.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
 
 ElemTextLiteral::ElemTextLiteral(
-			XSLTEngineImpl& processor,
-            Stylesheet& stylesheetTree,
-            const XMLCh* const ch, 
-			int start, 
-			int theLength, 
-            bool isCData, 
-			bool preserveSpace,
-            bool disableOutputEscaping,
-            int lineNumber, 
-			int columnNumber):
-	ElemTemplateElement(processor, 
-						stylesheetTree, 
-						DOMString("#text"), 
-						lineNumber, 
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			int								lineNumber,
+			int								columnNumber,
+            const XMLCh*					ch,
+			int								start,
+			int								length,
+            bool							isCData,
+			bool							preserveSpace,
+            bool							disableOutputEscaping) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						DOMString("#text"),
+						lineNumber,
 						columnNumber),
 	m_isCData(isCData),
 	m_preserveSpace(preserveSpace),
-	// $$$ ToDo:  Why isn't this just a const std::vector<XMLCh>?
-	m_ch(new XMLCh[theLength]),
-	m_start(start),
-	m_length(theLength),
+	m_ch(ch + start, ch + start + length),
 	m_disableOutputEscaping(disableOutputEscaping)
 {
-    assert(theLength > 0);
-	assert(m_ch != 0);
-
-	memcpy(m_ch, ch, theLength * sizeof(XMLCh));
+	assert(static_cast<XMLChVectorType::size_type>(static_cast<int>(m_ch.size()))
+			== m_ch.size());
 }
+
+
 
 ElemTextLiteral::~ElemTextLiteral()
 {
-	delete [] m_ch;
 }
 
 
-int ElemTextLiteral::getXSLToken() const
+
+int
+ElemTextLiteral::getXSLToken() const
 {
     return Constants::ELEMNAME_TEXTLITERALRESULT;
 }
 
 
-void ElemTextLiteral::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
+
+void
+ElemTextLiteral::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
-	ElemTemplateElement::execute(processor, sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
     if(!m_disableOutputEscaping)
     {
-      processor.characters(m_ch, m_start, m_length);
+		executionContext.characters(m_ch.begin(), 0, static_cast<int>(m_ch.size()));
     }
     else
     {
-      processor.charactersRaw(m_ch, m_start, m_length);
+		executionContext.charactersRaw(m_ch.begin(), 0, static_cast<int>(m_ch.size()));
     }
 }

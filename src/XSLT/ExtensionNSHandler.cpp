@@ -57,24 +57,35 @@
 // $ Id: $
 // Class header file.
 #include "ExtensionNSHandler.hpp"
-#include "ExtensionFunctionHandler.hpp"
 
-class XSLTEngineImpl;
-class Stylesheet;
-class DOM_Node;
-class DOM_Node;
-class QName;
+
+
+#include <cassert>
+
+
+#include <dom/DOM_Element.hpp>
+
+
+
+#include <PlatformSupport/StringTokenizer.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include "XSLTProcessor.hpp"
+
+
 
 struct XSLProcessorContext
 {
-  const XSLTEngineImpl& m_processor;
+  const XSLTProcessor& m_processor;
   const Stylesheet& m_stylesheetTree;
   const DOM_Node& m_sourceTree;
   const DOM_Node& m_sourceNode;
   const QName& m_mode;
 
   XSLProcessorContext(
-		  const XSLTEngineImpl& processor,
+		  const XSLTProcessor& processor,
 		  const Stylesheet& stylesheetTree, 
 		  const DOM_Node& sourceTree,
 		  const DOM_Node& sourceNode,
@@ -94,7 +105,7 @@ struct XSLProcessorContext
  * @param xslp				 handle to the XSL processor that I'm working for
  * @param namespaceUri the extension namespace URI that I'm implementing
  */
-ExtensionNSHandler::ExtensionNSHandler(XSLTEngineImpl& xslp,
+ExtensionNSHandler::ExtensionNSHandler(XSLTProcessor& xslp,
 							const DOMString& namespaceUri) :
 	ExtensionFunctionHandler(namespaceUri),
 	m_XSLProcessor(xslp),
@@ -118,7 +129,7 @@ ExtensionNSHandler::ExtensionNSHandler(XSLTEngineImpl& xslp,
  * @param scriptSrc		the actual script code (if any)
  */
 ExtensionNSHandler::ExtensionNSHandler (
-	XSLTEngineImpl& xslp,
+	XSLTProcessor& xslp,
 	const DOMString& namespaceUri,
 	const DOMString& elemNames,
 	const DOMString& funcNames,
@@ -226,21 +237,24 @@ bool ExtensionNSHandler::isElementAvailable (const DOMString& element)
  */
 void ExtensionNSHandler::processElement (
 	const DOMString& localPart,
-	const DOM_Element& element,
-	XSLTEngineImpl& processor, 
+	const DOM_Element& /* element */,
+	XSLTProcessor& processor, 
 	Stylesheet& stylesheetTree, 
 	const DOM_Node& sourceTree,
 	const DOM_Node& sourceNode,
 	const QName& mode)
+{
+	const XObject*	result = 0;
+
+	if (!m_componentStarted) 
 	{
-		XObject* result = 0;
-		if (!m_componentStarted) 
+		try 
 		{
-			try 
-			{
-				startupComponent();
-				ExtensionFunctionHandler::ArgVector argv;
-				XSLProcessorContext xpc(processor,
+			startupComponent();
+
+			ExtensionFunctionHandler::ArgVector argv;
+			
+			XSLProcessorContext xpc(processor,
 					stylesheetTree, sourceTree, sourceNode, mode);
 			/*
 				java:
@@ -251,23 +265,26 @@ void ExtensionNSHandler::processElement (
 				// $$$ ToDo: There's no way this will ever work...
 //				argv.push_back(static_cast<void *>(&xpc));
 //				argv.push_back(static_cast<void *>(&element));
-				result = ExtensionFunctionHandler::callFunction (localPart, argv);
-			}
-			// catch (XPathProcessorException e) 
-			catch (...) 
-			{
+			result = ExtensionFunctionHandler::callFunction (localPart, argv);
+		}
+		// catch (XPathProcessorException e) 
+		catch (...) 
+		{
 			/*
 				e.printStackTrace ();
 				throw new XSLProcessorException (e.getMessage (), e);
 			*/
 			//@@ TODO: Error reporting, or throw
-			} 
-		}
-		if (result != 0) 
-		{
-			processor.outputToResultTree (stylesheetTree, result);
-		}
+		} 
 	}
+
+	if (result != 0) 
+	{
+		processor.outputToResultTree(*result);
+	}
+}
+
+
 
 /////////////////////////////////////////////////////////////////////////
 // Private/Protected Functions

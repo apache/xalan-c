@@ -57,43 +57,42 @@
 #if !defined(XALAN_ELEMMESSAGE_HEADER_GUARD)
 #define XALAN_ELEMMESSAGE_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
+
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
+
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
-
-#include <sax/AttributeList.hpp>
-
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
 
 
 class ElemMessage: public ElemTemplateElement
 {
 public:
-	ElemMessage (
-		XSLTEngineImpl& processor, 
-		Stylesheet& stylesheetTree,
-		const DOMString& name, 
-		const AttributeList& atts, 
-		int lineNumber, 
-		int	columnNumber);
 
-	virtual int getXSLToken() const; 
+	ElemMessage(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 
-	virtual	void execute(XSLTEngineImpl& processor, const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode, const QName& mode);
+	virtual int
+	getXSLToken() const; 
+
+	virtual	void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 };
+
+
+
 #endif	// XALAN_ELEMMESSAGE_HEADER_GUARD

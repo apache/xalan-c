@@ -56,21 +56,41 @@
  */
 #include "ElemAttribute.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+//#include <sax/SAXException.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include "AVT.hpp"
+#include "Constants.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
 
 ElemAttribute::ElemAttribute(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name,  lineNumber, columnNumber),
-		m_pNameAVT(0),	
-		m_pNamespaceAVT(0)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),
+	m_pNameAVT(0),	
+	m_pNamespaceAVT(0)
 {
 	const int nAttrs = atts.getLength();
-	
+
 	for(int i = 0; i < nAttrs; i++)
 	{
 		const DOMString aname(atts.getName(i));
@@ -78,54 +98,61 @@ ElemAttribute::ElemAttribute(
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
 			m_pNameAVT = new AVT(aname, atts.getType(i), atts.getValue(i),
-				*this, processor);
+				*this, constructionContext);
 		}
 		else if(equals(aname,Constants::ATTRNAME_NAMESPACE))
 		{
 			m_pNamespaceAVT = new AVT(aname, atts.getType(i), atts.getValue(i),
-				*this, processor);
+				*this, constructionContext);
 		}
-		else if(!(isAttrOK(aname, atts, i) || 
+		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 			processSpaceAttr(aname, atts, i)))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
 
 	if(0 == m_pNameAVT)
 	{
-		processor.error(name + " must have a name attribute.");
+		constructionContext.error(name + " must have a name attribute.");
 	} 
 	
 }
 
+
+
 ElemAttribute::~ElemAttribute()
 {
 	delete m_pNameAVT;
-	m_pNameAVT = 0;
 
 	delete m_pNamespaceAVT;
-	m_pNamespaceAVT = 0;
 }
 
-int ElemAttribute::getXSLToken() const 
+
+
+int
+ElemAttribute::getXSLToken() const 
 {
 	return Constants::ELEMNAME_ATTRIBUTE;
 }
 
-void ElemAttribute::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
-{
-	ElemTemplateElement::execute(processor, sourceTree, sourceNode, mode);
 
-	assert(m_pNameAVT);
+
+void
+ElemAttribute::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
+{
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
+
+	assert(m_pNameAVT != 0);
 
 	DOMString attrName;
+
 	m_pNameAVT->evaluate(attrName, sourceNode, *this, 
-		processor.getContextNodeList());
+		executionContext.getXPathExecutionContext());
 
 	if(!isEmpty(attrName))
 	{
@@ -133,28 +160,30 @@ void ElemAttribute::execute(
 		{
 			DOMString attrNameSpace;
 			m_pNamespaceAVT->evaluate(attrNameSpace, sourceNode, 
-				*this, processor.getContextNodeList());
+				*this, executionContext.getXPathExecutionContext());
 
 			if(!isEmpty(attrNameSpace))
 			{
-				DOMString prefix = processor.getResultPrefixForNamespace(attrNameSpace);
+				DOMString prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
 
 				if(isEmpty(prefix))
 				{
-					prefix = DOMString("ns") + LongToDOMString(processor.getUniqueNSValue());
+					prefix = executionContext.getUniqueNameSpaceValue();
+
 					DOMString nsDecl = DOMString("xmlns:") + prefix;
-					processor.addResultAttribute(processor.getPendingAttributes(), 
-						nsDecl, attrNameSpace);
+
+					executionContext.addResultAttribute(nsDecl, attrNameSpace);
 				}
-				attrName = (prefix + DOMString(":") + attrName);
+
+				attrName = prefix + DOMString(":") + attrName;
 			}
 		}
 		
-		if(!isEmpty(processor.getPendingElementName()))
+		if(!isEmpty(executionContext.getPendingElementName()))
 		{
-			DOMString val = childrenToString(processor, sourceTree, sourceNode, mode);
+			const DOMString	val = childrenToString(executionContext, sourceTree, sourceNode, mode);
 			
-			processor.addResultAttribute(processor.getPendingAttributes(), attrName, val);
+			executionContext.addResultAttribute(attrName, val);
 		}
 		else
 		{
@@ -167,10 +196,10 @@ void ElemAttribute::execute(
 
 NodeImpl* ElemAttribute::appendChild(NodeImpl* newChild)
 {
-	assert(newChild != 0);
-	
+	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
+
 	const int	type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
-	
+
 	switch(type)
 	{
 		// char-instructions 
@@ -200,6 +229,6 @@ NodeImpl* ElemAttribute::appendChild(NodeImpl* newChild)
 		error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + getTagName());
 		break;
 	}
-	
+
 	return ElemTemplateElement::appendChild(newChild);
 }

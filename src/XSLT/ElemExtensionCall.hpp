@@ -69,46 +69,52 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
-#include "ElemTemplateElement.hpp"
 #include "ElemLiteralResult.hpp"
+
+
 
 #include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
 
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
 
-#include "ExtensionNSHandler.hpp"
+class ExtensionNSHandler;
+
+
 
 class ElemExtensionCall: public ElemLiteralResult
 {
 public:
-	ElemExtensionCall (
-		XSLTEngineImpl&	processor,
-		Stylesheet& stylesheetTree,
-		ExtensionNSHandler ns,
-		const DOMString& name,
-		const DOMString& localpart,
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
 
+	ElemExtensionCall(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber,
+			ExtensionNSHandler&				ns,
+			const DOMString&				localpart);
 	
-	virtual int getXSLToken() const; 
+	virtual int
+	getXSLToken() const; 
 
-	virtual void execute(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode);
-
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
 	
 private:
-	ExtensionNSHandler nsh;
-	DOMString localPart;
-	
+
+	ExtensionNSHandler&		m_nsh;
+
+	DOMString				m_localPart;	
 };
+
+
+
 #endif	// XALAN_ELEMEXTENSIONCALL_HEADER_GUARD

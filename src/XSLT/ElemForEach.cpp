@@ -56,17 +56,36 @@
  */
 #include "ElemForEach.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <cassert>
+
+
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include "Constants.hpp"
+#include "ElemSort.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
 
 ElemForEach::ElemForEach(
-	XSLTEngineImpl& processor,
+	StylesheetConstructionContext&	constructionContext,
 	Stylesheet& stylesheetTree,
 	const DOMString& name, 
 	const AttributeList& atts,
 	int lineNumber, 
 	int	columnNumber,
 	bool isOnlyForEach) :
-		ElemTemplateElement(processor, stylesheetTree, name,  lineNumber, columnNumber),	
+		ElemTemplateElement(constructionContext, stylesheetTree, name,  lineNumber, columnNumber),	
 		m_pSelectPattern(0)
 {
 	// since we're calling the virtual function getXSLToken() from a ctor, subclasses 
@@ -86,16 +105,17 @@ ElemForEach::ElemForEach(
 
 			if(equals(aname,Constants::ATTRNAME_SELECT))
 			{
-				m_pSelectPattern = processor.createXPath(atts.getValue(i), *this);
+				m_pSelectPattern = constructionContext.createXPath(atts.getValue(i), *this);
 			}
-			else if(!(isAttrOK(aname, atts, i) || processSpaceAttr(aname, atts, i)))
+			else if(!(isAttrOK(aname, atts, i, constructionContext) || processSpaceAttr(aname, atts, i)))
 			{
-				processor.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(name + " has an illegal attribute: " + aname);
 			}
 		}
+
 		if(0 == m_pSelectPattern)
 		{
-			processor.error(name + " requires attribute: " + Constants::ATTRNAME_SELECT);
+			constructionContext.error(name + " requires attribute: " + Constants::ATTRNAME_SELECT);
 		}
 	}
 }
@@ -106,8 +126,6 @@ ElemForEach::~ElemForEach()
 
 	for (size_t i=0; i< len; i++)
 		delete m_sortElems[i];
-
-	m_pSelectPattern = 0;
 }
 
 int ElemForEach::getXSLToken() const 
@@ -115,24 +133,28 @@ int ElemForEach::getXSLToken() const
 	return Constants::ELEMNAME_FOREACH;
 }
 
-void ElemForEach::execute(
-	XSLTEngineImpl& processor, 
+
+
+void
+ElemForEach::execute(
+	StylesheetExecutionContext& executionContext, 
 	const DOM_Node& sourceTree, 
 	const DOM_Node& sourceNode,
-	const QName& mode)
+	const QName& mode) const
 {
 	if (sourceNode != 0)
 	{
-		assert(m_pSelectPattern);
+		assert(m_pSelectPattern != 0);
 
-		transformSelectedChildren(getStylesheet(), 
-			this,this,sourceTree,sourceNode,mode,
+		transformSelectedChildren(executionContext, getStylesheet(), 
+			*this,this,sourceTree,sourceNode,mode,
 			m_pSelectPattern, Constants::ELEMNAME_FOREACH);
 	}
     else
     {
 	  // error wants DOM_node for first param		
-      processor.error(DOM_UnimplementedElement(this), sourceNode, 
-                      "sourceNode is null in handleApplyTemplatesInstruction!");
+      executionContext.error("sourceNode is null in handleApplyTemplatesInstruction!",
+							 sourceNode, 
+							 DOM_UnimplementedElement(const_cast<ElemForEach*>(this)));
     }
 }

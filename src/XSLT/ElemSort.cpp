@@ -56,21 +56,34 @@
  */
 #include "ElemSort.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include "Constants.hpp"
+#include "StylesheetConstructionContext.hpp"
+
+
 
 ElemSort::ElemSort(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int	columnNumber) :
-		ElemTemplateElement(processor, stylesheetTree, name, lineNumber, columnNumber),	
-		m_pSelectPattern(0),
-		m_langAVT(DOMString()),
-		m_dataTypeAVT("text"),
-		m_orderAVT("ascending"),
-		m_caseOrderAVT(DOMString())	
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext, stylesheetTree, name, lineNumber, columnNumber),	
+	m_selectPattern(0),
+	m_langAVT(),
+	m_dataTypeAVT("text"),
+	m_orderAVT("ascending"),
+	m_caseOrderAVT()	
 {
 	const int nAttrs = atts.getLength();
 
@@ -80,8 +93,8 @@ ElemSort::ElemSort(
 
 		if(equals(aname,Constants::ATTRNAME_SELECT))
 		{
-			m_pSelectPattern 
-				= processor.createXPath(atts.getValue(i), *this);
+			m_selectPattern 
+				= constructionContext.createXPath(atts.getValue(i), *this);
 		}
 		else if(equals(aname,Constants::ATTRNAME_LANG))
 		{
@@ -97,31 +110,36 @@ ElemSort::ElemSort(
 		}
 		else if(equals(aname,Constants::ATTRNAME_CASEORDER))
 		{
-			processor.warn("XSL4C does not yet handle the " + Constants::ATTRNAME_CASEORDER + " attribute!");
+			constructionContext.warn("XSL4C does not yet handle the " + Constants::ATTRNAME_CASEORDER + " attribute!");
 
 			m_caseOrderAVT = atts.getValue(i);
 		}
-		else if(!isAttrOK(aname, atts, i))
+		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			processor.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
-	if(0 == m_pSelectPattern)
+
+	if(0 == m_selectPattern)
 	{
-		m_pSelectPattern = processor.createXPath(DOMString("."), *this);
+		m_selectPattern = constructionContext.createXPath(DOMString("."), *this);
 	}
 }
 
-int ElemSort::getXSLToken() const 
+
+
+int
+ElemSort::getXSLToken() const 
 {
 	return Constants::ELEMNAME_SORT;
 }
 
-NodeImpl* ElemSort::appendChild(NodeImpl* newChild)
+
+
+NodeImpl*
+ElemSort::appendChild(NodeImpl* newChild)
 {
     error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + this->getTagName());
 
     return 0;
 }
-
-

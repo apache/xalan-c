@@ -56,55 +56,88 @@
  */
 #include "ElemValueOf.hpp"
 
-#include "ElemPriv.hpp"
+
+
+#include <sax/AttributeList.hpp>
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+#include <XPath/XPath.hpp>
+
+
+
+#include "Constants.hpp"
+#include "SelectionEvent.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+#include "StylesheetRoot.hpp"
+
 
 
 ElemValueOf::ElemValueOf(
-	XSLTEngineImpl&	processor,
-	Stylesheet&	stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int columnNumber) :
-		ElemTemplateElement(processor, 	stylesheetTree, name, lineNumber, columnNumber),
-			m_selectPattern(0),
-			m_disableOutputEscaping(false)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber),
+	m_selectPattern(0),
+	m_disableOutputEscaping(false)
 {
-	const int nAttrs = atts.getLength();
-	
+	const int	nAttrs = atts.getLength();
+
 	for(int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const DOMString		aname(atts.getName(i));
 
-		const int tok = getAttrTok(aname);
-		
+		const int			tok = constructionContext.getAttrTok(aname);
+
 		switch(tok)
 		{
 		case Constants::TATTRNAME_SELECT:
-			m_selectPattern = processor.createXPath(atts.getValue(i), 
-				*this);
+			m_selectPattern = constructionContext.createXPath(atts.getValue(i), 
+															  *this);
 			break;
+
 		case Constants::TATTRNAME_DISABLE_OUTPUT_ESCAPING:
-			m_disableOutputEscaping = getStylesheet().getYesOrNo(aname, atts.getValue(i));
+			m_disableOutputEscaping =
+						getStylesheet().getYesOrNo(aname, atts.getValue(i), constructionContext);
 			break;
+
 		case Constants::TATTRNAME_XMLSPACE:
 			processSpaceAttr(atts, i);
 			break; 
+
 		default:
 			if(!isAttrOK(tok, aname, atts, i))
 			{
-				processor.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(name + " has an illegal attribute: " + aname);
 			} 
 		}
 	}
+
 	if(0 == m_selectPattern)
 	{
-		processor.error(name + " requires a select attribute.");
+		constructionContext.error(name + " requires a select attribute.");
 	}
 }
 
 
-int ElemValueOf::getXSLToken() const
+
+ElemValueOf::~ElemValueOf()
+{
+}
+
+
+
+int
+ElemValueOf::getXSLToken() const
 {
     return Constants::ELEMNAME_VALUEOF;
 }
@@ -123,45 +156,52 @@ NodeImpl* ElemValueOf::appendChild(NodeImpl* newChild)
 }
 
 
-void ElemValueOf::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
+void
+ElemValueOf::execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {    
-	ElemTemplateElement::execute(processor, sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 	
-	XObject* value = m_selectPattern->execute(sourceNode, *this, 
-		processor.getContextNodeList());
+	const XObject* const	value =
+		m_selectPattern->execute(sourceNode,
+								 *this,
+								 executionContext.getXPathExecutionContext());
 
-	if(0 != getStylesheet().getStylesheetRoot()->getTraceListeners())
+	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 	{
-		getStylesheet().getStylesheetRoot()->fireSelectedEvent(
-			SelectionEvent(getStylesheet().getProcessor(),sourceNode,
-			this, DOMString("select"), m_selectPattern, value));       
+		getStylesheet().getStylesheetRoot().fireSelectedEvent(
+			SelectionEvent(executionContext,
+						   sourceNode,
+						   *this,
+						   DOMString("select"),
+						   *m_selectPattern,
+						   value));       
 	}
 
 	if(0 != value)
 	{
-		const int type = value->getType();
+		const int	type = value->getType();
+
 		if (XObject::eTypeNull != type)
 		{
-			DOMString s = value->str();
-			if(!isEmpty(s))
+			const DOMString		s = value->str();
+
+			const int			len = length(s);
+
+			if(len > 0)
 			{
-				int len = length(s);
-				if(len > 0)
+				if(m_disableOutputEscaping == false)
 				{
-					if(!m_disableOutputEscaping)
-					{
-						processor.characters(toCharArray(s), 0, length(s));
-					}
-					else
-					{
-						processor.charactersRaw(toCharArray(s), 0, length(s));
-					}
+					executionContext.characters(toCharArray(s), 0, len);
+				}
+				else
+				{
+					executionContext.charactersRaw(toCharArray(s), 0, len);
 				}
 			}
 		}
 	}
-  }
+}

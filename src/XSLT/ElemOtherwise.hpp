@@ -69,28 +69,29 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
-
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
 
 class ElemOtherwise: public ElemTemplateElement
 {
 public:
-	ElemOtherwise (XSLTEngineImpl& processor, 
-		Stylesheet& stylesheetTree,
-		const DOMString& name, 
-		const AttributeList& atts, 
-		int lineNumber, 
-		int columnNumber);
 
-	virtual int getXSLToken() const; 
+	ElemOtherwise(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 
+	virtual int
+	getXSLToken() const; 
 };
+
+
+
 #endif	// XALAN_ELEMOTHERWISE_HEADER_GUARD

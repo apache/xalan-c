@@ -71,33 +71,35 @@
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
 
-#include <sax/AttributeList.hpp>
 
 #include <XPath/QName.hpp>
-#include <XPath/NameSpace.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPath.hpp>
+
+
 
 class ElemUse : public ElemTemplateElement
 {
 public:
-	ElemUse (
-		XSLTEngineImpl&	processor,
-		Stylesheet& stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
 
-	virtual void execute(
-		XSLTEngineImpl& processor, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode);
+	ElemUse(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			int								lineNumber,
+			int								columnNumber);
 
-	virtual int getXSLToken() const; 
+	virtual
+	~ElemUse();
+
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const;
+
+	virtual int
+	getXSLToken() const; 
 
 	/** 
 	 * See if this is a use-attribute-sets attribute, and, if so, process it.
@@ -108,12 +110,18 @@ public:
 	 * @param which The index into the attribute list (not used at this time).
 	 * @return True if this is a use-attribute-sets attribute.
 	 */
-	bool processUseAttributeSets(
-		const DOMString& attrName,
-		const AttributeList& atts, 
-		int which);
+	bool
+	processUseAttributeSets(
+			StylesheetConstructionContext&	constructionContext,
+			const DOMString&				attrName,
+			const AttributeList&			atts,
+			int								which);
 
 private:
+
 	std::vector<QName> m_attributeSetsNames;
 };
+
+
+
 #endif	// XALAN_ELEMUSE_HEADER_GUARD

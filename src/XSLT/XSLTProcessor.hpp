@@ -64,35 +64,10 @@
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
-/*
-#include "XSLTInputSource.hpp"
-#include "XSLTResultTarget.hpp"
- */
-class XSLTInputSource;
-class XSLTResultTarget;
 
-class PrintWriter;
 
-class XNumber;
-class XBoolean;
-class XNodeSet;
-class XNull;
 
-class TraceListener;
 
-class StylesheetRoot;
-class XMLParserLiaison;
-
-class XString;
-class XObject;
-class XNumber;
-class XBoolean;
-class XNodeSet;
-class XNull;
-class FormatterListener;
-class TraceListener;
-
-class NodeRefListBase;
 
 //@@ JMD: This makes it all work, I don't know why?? Need to fix this
 // These were all declared in the original class XSLProcessor.hpp, but
@@ -100,27 +75,34 @@ class NodeRefListBase;
 class Arg;
 class DispatcherFactory;
 class DOM_Element;
-class DOM_Node;
+class ElemTemplateElement;
 class Formatter;
 class FormatterListener;
 class InputSource;
 class Locator;
+class NodeRefListBase;
 class PrefixResolver;
 class PrintWriter;
 class ProblemListener;
 class QName;
 class ResultTreeFrag;
+class ResultTreeFragBase;
 class StackEntry;
 class Stylesheet;
+class StylesheetConstructionContext;
+class StylesheetExecutionContext;
 class StylesheetRoot;
+class TraceListener;
 class XMLParserLiaison;
 class XObject;
-class XPathSupport;
-class XString;
-class ElemTemplateElement;
-class ElemVariable;
+class XObjectFactory;
+class XPathExecutionContext;
 class XPathFactory;
 class XPathProcessor;
+class XSLTInputSource;
+class XSLTResultTarget;
+
+
 
 #include <dom/DOM_Node.hpp>
 #include <dom/DOMString.hpp>
@@ -145,34 +127,44 @@ public:
 
   	XSLTProcessor();
 
-	virtual ~XSLTProcessor();
+	virtual
+	~XSLTProcessor();
 
   /**
    * Transform the source tree to the output in the given 
    * result tree target.
-   * @param inputSource  The input source.
+   * @param inputSource  The input source.  May be null.
    * @param stylesheetSource  The stylesheet source.  May be null if source has a xml-stylesheet PI.
    * @param outputTarget The output source tree.
 	* @exception XSLProcessorException thrown if the active ProblemListener and
 	* XMLParserLiaison decide the error condition is severe enough to halt
 	* processing.
    */
-  virtual void process( XSLTInputSource* inputSource, 
-                       XSLTInputSource* stylesheetSource,
-                       XSLTResultTarget* outputTarget) = 0;
-    // throws XSLProcessorException
+	virtual void
+	process(
+			XSLTInputSource*				inputSource, 
+	        XSLTInputSource*				stylesheetSource,
+	        XSLTResultTarget&				outputTarget,
+			StylesheetConstructionContext&	constructionContext,
+			StylesheetExecutionContext&		executionContext) = 0;
 
   /**
    * Given a URI to an XSL stylesheet, 
    * Compile the stylesheet into an internal representation.
-   * This calls reset() before processing if the stylesheet root has been set 
-   * to non-null.
-   * @param xmldocURLString  The URL to the input XML document.
+   * This will delete any existing stylesheet root.  If you want to use this stylesheet multiple
+   * times, or with multiple processor instances, you must use different XObjectFactory and
+   * XPathFactory instances from the ones being used by the process itself.
+   * @param stylesheetSource  The input source for the input XML.
+   * @param xobjectFactory  The XObjectFactory to use for constructing the stylesheet.
+   * @param xpathFactory  The XPathFactory to use for constructing the stylesheet.
    * @return The compiled stylesheet object.
    * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
    * the error condition is severe enough to halt processing.
    */
-  virtual StylesheetRoot* processStylesheet(XSLTInputSource* stylesheetSource) = 0;
+	virtual StylesheetRoot*
+	processStylesheet(
+			XSLTInputSource&				stylesheetSource,
+			StylesheetConstructionContext&	constructionContext) = 0;
     // throws XSLProcessorException
   
   /**
@@ -186,7 +178,10 @@ public:
 	* XMLParserLiaison decide the error condition is severe enough to halt
 	* processing.
    */
-  virtual StylesheetRoot* processStylesheet(const DOMString& xsldocURLString) = 0;
+	virtual StylesheetRoot*
+	processStylesheet(
+			const DOMString&				xsldocURLString,
+			StylesheetConstructionContext&	constructionContext) = 0;
     // throws XSLProcessorException
   
   /**
@@ -199,66 +194,129 @@ public:
    * Given an input source, get the source tree.
    */
    virtual const DOM_Node getSourceTreeFromInput(XSLTInputSource* inputSource) = 0;
-  
+
+   /**
+    * Output an object to the result tree by doing the right conversions.
+    * This is public for access by extensions.
+    *
+    * @param stylesheetTree the target stylesheet tree.
+    * @param obj the XObject to output.
+    */
+	virtual void
+	outputToResultTree(
+			const XObject&		xobj) = 0;
+
+	virtual XObject*
+	getTopLevelVariable(const DOMString&	theName) const = 0;
+
+  /**
+   * Reset the current element state
+   */
+	virtual void
+	resetCurrentState(
+			const DOM_Node&		sourceTree,
+			const DOM_Node&		xmlNode) = 0;
+
+	virtual DOM_Document
+	getRootDoc() const = 0;
+
+	virtual void
+	setRootDoc(const DOM_Document& doc) = 0;
+
+  /**
+   * Evaluates attribute values for attribute templates
+   * (Stuff in curly {} braces that hold expressions).
+   *
+   * @param contextNode the current node in the source tree
+   * @param namespaceContext the current namespace context.
+   * the pattern-by-example structures when parsing expressions.
+   * @param stringedValue the attribute value to be processed.
+   * @param executionContext the current execution context.
+   * @return Processed stringedValue with attribute templates
+   * resolved.
+   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
+   * the error condition is severe enough to halt processing.
+   */
+	virtual DOMString
+	evaluateAttrVal(
+			const DOM_Node&			contextNode,
+			const DOM_Element&		namespaceContext,
+			const DOMString&		stringedValue,
+			XPathExecutionContext&	executionContext) = 0;
+
+  /**
+   * Given a stylesheet element, create a result tree fragment from its 
+   * contents.  Caller owns the memory.
+   * @exception XSLProcessorException thrown if the active ProblemListener and
+   * XMLParserLiaison decide the error condition is severe enough to halt
+   * processing.
+   * @param templateChild The template element that holds the fragment.
+   * @param sourceTree The source tree document context.
+   * @param sourceNode The current source context node.
+   * @param mode The mode under which the template is operating.
+   * @return An object that represents the result tree fragment.
+   */
+	virtual ResultTreeFragBase*
+	createResultTreeFrag(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		templateChild,
+			const DOM_Node&					sourceTree,
+			const DOM_Node&					sourceNode,
+			const QName&					mode) = 0;
+
+	/**
+	 * Create an empty result tree fragment. Caller owns the memory.
+	 */
+	virtual ResultTreeFragBase*
+	createResultTreeFrag() const = 0;
+
+	/**
+	 * Resolve the params that were pushed by the caller.
+	 */
+	virtual void
+	resolveTopLevelParams(StylesheetExecutionContext&	executionContext) = 0;
+
   /**
    * Get the XML Parser Liaison that this processor uses.
    */
-   virtual XMLParserLiaison& getXMLProcessorLiaison() = 0;
-  
+   virtual XMLParserLiaison&
+   getXMLParserLiaison() const = 0;
+
+   virtual const DOMString
+   getUniqueNSValue() const = 0;
+
   /**
-   * Convenience function to create an XString.
-   * @param s A valid string.
-   * @return An XString object.
+   * Convenience function to create an XObject that represents a Result tree fragment.
+   * @param r The result tree fragment to use.
+   * @return An XObject instance.
    */
-   virtual XObject* createXString(const DOMString& s) = 0;
-  
-  /**
-   * Convenience function to create an XObject.
-   * @param o Any java object.
-   * @return An XObject object.
-   */
-   virtual XObject* createXObject(void* o) = 0;
-  
-  /**
-   * Convenience function to create an XNumber.
-   * @param d Any double number.
-   * @return An XNumber object.
-   */
-   virtual XObject* createXNumber(double d) = 0;
-  
-  /**
-   * Convenience function to create an XBoolean.
-   * @param b bool value.
-   * @return An XBoolean object.
-   */
-   virtual XObject* createXBoolean(bool b) = 0;
-  
-  /**
-   * Convenience function to create an XNodeSet.
-   * @param nl A NodeList object.
-   * @return An XNodeSet object.
-   */
-   virtual XObject* createXNodeSet(const NodeRefListBase& nl) = 0;
-  
-  /**
-   * Convenience function to create an XNodeSet from a node.
-   * @param n A DOM node.
-   * @return An XNodeSet object.
-   */
-   virtual XObject* createXNodeSet(const DOM_Node& n) = 0;
-  
-  /**
-   * Convenience function to create an XNull.
-   * @return An XNull object.
-   */
-   virtual XObject* createXNull() = 0;
-  
-  /**
+   virtual XObject*
+   createXResultTreeFrag(const ResultTreeFragBase&  r) const = 0;
+
+   /**
    * Given a name, locate a variable in the current context, and return 
    * the object.
    * @return An XObject if the variable was found, 0 if it was not.
    */
-   virtual XObject* getVariable(const QName& qname) const = 0;
+   virtual XObject*
+   getVariable(const QName& qname) const = 0;
+
+	/**
+	 * Given a name, locate a param variable in the current context, and return 
+	 * the Object.
+	 */
+	virtual XObject*
+	getParamVariable(const QName&	theName) const = 0;
+
+	/**
+	 * Given a name, a variable, and an element, push the variable on the variables
+	 * stack.
+	 */
+	virtual void
+	pushVariable(
+			const QName&		name,
+			XObject*			var,
+			const DOM_Node&		element) = 0;
 
   /**
    * Push a top-level stylesheet parameter.  This value can 
@@ -266,7 +324,10 @@ public:
    * @param key The name of the param.
    * @param value An XObject that will be used.
    */
-   virtual void setStylesheetParam(const DOMString& key, const XObject* value) = 0;
+   virtual void
+   setStylesheetParam(
+			const DOMString&	key,
+			XObject*			value) = 0;
   
   /**
    * Push a top-level stylesheet parameter.  This value can 
@@ -285,7 +346,8 @@ public:
 					const DOM_Node&			doc, 
 					const DOMString&		name, 
 					const DOMString&		ref, 
-					const PrefixResolver&	resolver) const = 0;
+					const PrefixResolver&	resolver,
+					XPathExecutionContext&	executionContext) const = 0;
 
 	/**
 	 * Tells, through the combination of the default-space attribute
@@ -302,7 +364,7 @@ public:
   /**
    * Get the current formatter listener.
    */
-   virtual FormatterListener* getFormatterListener() = 0;
+   virtual FormatterListener* getFormatterListener() const = 0;
   
   /**
    * Set the current formatter listener.

@@ -56,20 +56,36 @@
  */
 #include "ElemLiteralResult.hpp"
 
-#include "ElemPriv.hpp"
 
-typedef	std::vector<NameSpace>		NamespaceVectorType;
+
+#include <sax/AttributeList.hpp>
+
+
+#include <PlatformSupport/StringTokenizer.hpp>
+
+
+
+#include "AVT.hpp"
+#include "Constants.hpp"
+#include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
 
 ElemLiteralResult::ElemLiteralResult(
-	XSLTEngineImpl& processor,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int	columnNumber) :
-		ElemUse(processor, stylesheetTree, name,  atts, lineNumber, columnNumber),	
-		m_pExtensionElementPrefixes(0),
-		m_QName(name)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const DOMString&				name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemUse(constructionContext,
+			stylesheetTree,
+			name,
+			lineNumber,
+			columnNumber),
+	m_QName(name)
 {
 	const int nAttrs = atts.getLength();
 
@@ -77,25 +93,31 @@ ElemLiteralResult::ElemLiteralResult(
 	{
 		const DOMString aname(atts.getName(i));
 
-		bool needToProcess = true;
-		int indexOfNSSep = indexOf(aname,':');
+		bool		needToProcess = true;
+		const int	indexOfNSSep = indexOf(aname,':');
+
 		DOMString prefix;
 
 		if(indexOfNSSep > 0)
 		{
 			prefix = substring(aname,0,indexOfNSSep);
-			if(!prefix.equals("xmlns"))
+
+			if(!equals(prefix, "xmlns"))
 			{
 				DOMString ns = getNamespaceForPrefix(prefix);
 
-				if(startsWith(ns,getStylesheet().getProcessor()->getXSLNameSpaceURLPre()))
+				if(startsWith(ns, constructionContext.getXSLNameSpaceURLPre()))
 				{
-					const DOMString localName = substring(aname,indexOfNSSep+1);
+					const DOMString localName = substring(aname,indexOfNSSep + 1);
+
 					if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
 					{
 						needToProcess = false;
+
 						const DOMString qnames = atts.getValue(i);
+
 						StringTokenizer tokenizer(qnames, " \t\n\r", false);
+
 						m_extensionElementPrefixes.reserve(tokenizer.countTokens());
 
 						while(tokenizer.hasMoreTokens())
@@ -107,14 +129,14 @@ ElemLiteralResult::ElemLiteralResult(
 			}
 		}
 
-		if(needToProcess)
+		if(needToProcess == true)
 		{
-			bool _processUseAttributeSets = processUseAttributeSets(aname, atts, i);
-			bool _processSpaceAttr = processSpaceAttr(aname, atts, i);
-			if(!(isAttrOK(aname, atts, i) || _processUseAttributeSets || _processSpaceAttr))
+			if(!(isAttrOK(aname, atts, i, constructionContext) ||
+				processUseAttributeSets(constructionContext, aname, atts, i) ||
+				processSpaceAttr(aname, atts, i)))
 			{
 				m_avts.push_back(new AVT(aname, atts.getType(i), atts.getValue(i), 	
-							*this, processor));
+							*this, constructionContext));
 			}
 		}
 	}
@@ -123,8 +145,9 @@ ElemLiteralResult::ElemLiteralResult(
 
 ElemLiteralResult::~ElemLiteralResult()
 {
-	m_pExtensionElementPrefixes = 0;
 }
+
+
 
 int ElemLiteralResult::getXSLToken() const 
 {		
@@ -133,71 +156,78 @@ int ElemLiteralResult::getXSLToken() const
 	
 
 void ElemLiteralResult::execute(
-	XSLTEngineImpl& processor, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode)
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode,
+			const QName&					mode) const
 {
-	processor.startElement (toCharArray(m_QName));
+	executionContext.startElement(toCharArray(m_QName));
 	
-	ElemUse::execute(processor, sourceTree, sourceNode, mode);
-	
+	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
+
 	if(0 != m_avts.size())
 	{
-		int nAttrs = m_avts.size();
+		const int	nAttrs = m_avts.size();
+
 		for(int i = (nAttrs-1); i >= 0; i--)
 		{
-			AVT *avt = m_avts[i];
+			const AVT* const	avt = m_avts[i];
 
 			DOMString stringedValue;
+
 			avt->evaluate(stringedValue, sourceNode, *this, 
-				processor.getContextNodeList());
+				executionContext.getXPathExecutionContext());
 
 			if(!isEmpty(stringedValue))
 			{
-				processor.getPendingAttributes().removeAttribute(toCharArray(avt->getName()));
-				processor.getPendingAttributes().addAttribute(toCharArray(avt->getName()), 
+				executionContext.replacePendingAttribute(toCharArray(avt->getName()), 
 					avt->getType(), toCharArray(stringedValue));
 			}
 		}
 	}
 
-	ElemTemplateElement* elem = dynamic_cast<ElemTemplateElement *>(this);
-	NamespaceVectorType nsVector = elem->getNameSpace();
+	const ElemTemplateElement*	elem = this;
+
+	const NamespaceVectorType*	nsVector = &elem->getNameSpace();
+
 	bool more = true;
-	while (more)
+
+	while(more == true)
 	{
-		int i;
 		NameSpace ns;
+
 		// Traverse the vector of namespaces, which in java is a linked list
 		// starting with last namespace; our vector pushes elements on the back,
 		// so we have to iterate from there down
-		for (i=nsVector.size()-1; i>=0; i--)
+		for (int i = nsVector->size()-1; i>=0; i--)
 		{
-			ns = nsVector.at(i);
+			ns = nsVector->at(i);
+
 			if(!isEmpty(ns.getURI()) && ns.getResultCandidate())
 			{
-				bool hasPrefix = !isEmpty(ns.getPrefix());
-				DOMString prefix = hasPrefix ? ns.getPrefix() : DOMString();
-				DOMString desturi = processor.getResultNamespaceForPrefix(prefix);
-				DOMString attrName = hasPrefix ? 
+				bool		hasPrefix = !isEmpty(ns.getPrefix());
+
+				DOMString	prefix = hasPrefix ? ns.getPrefix() : DOMString();
+				DOMString	desturi = executionContext.getResultNamespaceForPrefix(prefix);
+				DOMString	attrName = hasPrefix ? 
 					(DOMString("xmlns:") + prefix) : DOMString("xmlns");
+
 				DOMString srcURI = ns.getURI();
 
-				bool isXSLNS = srcURI.equals(processor.getXSLNameSpaceURL())
-					|| (0 != getStylesheet().lookupExtensionNSHandler(srcURI))
-					|| equalsIgnoreCase(srcURI,processor.getXSLT4JNameSpaceURL());
+				bool isXSLNS = equals(srcURI, executionContext.getXSLNameSpaceURL())
+					|| 0 != getStylesheet().lookupExtensionNSHandler(srcURI)
+					|| equalsIgnoreCase(srcURI,executionContext.getXSLT4JNameSpaceURL());
 
 				if(!isXSLNS)
 				{
 					if(startsWith(srcURI,DOMString("quote:")))
 					{
-						srcURI = substring(srcURI,6);
+						srcURI = substring(srcURI, 6);
 					}
+
 					if(!equalsIgnoreCase(srcURI,desturi)) // TODO: Check for extension namespaces
 					{
-						processor.addResultAttribute(processor.getPendingAttributes(), 
-								attrName, srcURI);
+						executionContext.addResultAttribute(attrName, srcURI);
 					}
 				}
 				else
@@ -206,33 +236,33 @@ void ElemLiteralResult::execute(
 				}
 			}
 		}
+
 		// We didn't find a namespace, start looking at the parents
 		if (0 != elem)
 		{
-			elem = dynamic_cast<ElemTemplateElement *>(elem->getParentNode());
+			elem = elem->getParentNode();
+
 			while(0 != elem)
 			{
-				nsVector = elem->getNameSpace();
-				if(0 == nsVector.size())
-					elem = dynamic_cast<ElemTemplateElement *>(elem->getParentNode());
+				nsVector = &elem->getNameSpace();
+
+				if(0 == nsVector->size())
+					elem = elem->getParentNode();
 				else
 					break;
 			}
+
 			// Last chance, try the stylesheet namespace
-			if (0 == nsVector.size())
-				nsVector = getStylesheet().getNamespaceDecls();
-			if (0 == nsVector.size())
+			if (0 == nsVector || 0 == nsVector->size())
+				nsVector = &getStylesheet().getNamespaceDecls();
+			if (0 == nsVector || 0 == nsVector->size())
 				more = false;
 		}
 		else
 			more = false;
 	}
-	
-	executeChildren(processor, sourceTree, sourceNode, mode);
 
-	processor.endElement (toCharArray(m_QName));
+	executeChildren(executionContext, sourceTree, sourceNode, mode);
+
+	executionContext.endElement(toCharArray(m_QName));
 }
-
-
-
-
