@@ -75,121 +75,104 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-// $$$ToDo:  These strings must be initialized in a static call, and not at initialization.
-const XalanDOMString	XMLFileReporter::OPT_FILENAME(L"filename");
-const XalanDOMString	XMLFileReporter::ELEM_RESULTSFILE(L"resultsfile");
-const XalanDOMString	XMLFileReporter::ELEM_TESTFILE(L"testfile");
-const XalanDOMString	XMLFileReporter::ELEM_FILERESULT(L"fileresult");
-const XalanDOMString	XMLFileReporter::ELEM_TESTCASE(L"Test_Dir");
-const XalanDOMString	XMLFileReporter::ELEM_CASERESULT(L"Dir-result");
-const XalanDOMString	XMLFileReporter::ELEM_CHECKRESULT(L"Testcase");
-const XalanDOMString	XMLFileReporter::ELEM_STATISTIC(L"statistic");
-const XalanDOMString	XMLFileReporter::ELEM_LONGVAL(L"longval");
-const XalanDOMString	XMLFileReporter::ELEM_DOUBLEVAL(L"doubleval");
-const XalanDOMString	XMLFileReporter::ELEM_MESSAGE(L"message");
-const XalanDOMString	XMLFileReporter::ELEM_ARBITRARY(L"arbitrary");
-const XalanDOMString	XMLFileReporter::ELEM_HASHTABLE(L"hashtable");
-const XalanDOMString	XMLFileReporter::ELEM_HASHITEM(L"hashitem");
-const XalanDOMString	XMLFileReporter::ATTR_LEVEL(L"level");
-const XalanDOMString	XMLFileReporter::ATTR_DESC(L"desc");
-const XalanDOMString	XMLFileReporter::ATTR_TIME(L"time");
-const XalanDOMString	XMLFileReporter::ATTR_RESULT(L"result");
-const XalanDOMString	XMLFileReporter::ATTR_KEY(L"key");
-const XalanDOMString	XMLFileReporter::ATTR_FILENAME = XMLFileReporter::OPT_FILENAME;
-const XalanDOMString	XMLFileReporter::LESS_THAN(L"<");
-const XalanDOMString	XMLFileReporter::GREATER_THAN(L">");
-const XalanDOMString	XMLFileReporter::EQUALS_QUOTE(L"=\"");
-const XalanDOMString	XMLFileReporter::SPACE(L" ");
-const XalanDOMString	XMLFileReporter::QUOTE(L"\"");
-const XalanDOMString	XMLFileReporter::QUOTE_SPACE(L"\" ");
-const XalanDOMString	XMLFileReporter::QUOTE_GREATER_THAN(L"\">");
-const XalanDOMString	XMLFileReporter::QUOTE_SOLIDUS_GREATER_THAN(L"\"/>");
-const XalanDOMString	XMLFileReporter::PASS(L"PASS");
-const XalanDOMString	XMLFileReporter::AMBG(L"AMBG");
-const XalanDOMString	XMLFileReporter::ERRR(L"ERRR");
-const XalanDOMString	XMLFileReporter::FAIL(L"FAIL");
-const XalanDOMString	XMLFileReporter::LESS_THAN_SOLIDUS(L"</");
-const XalanDOMString	XMLFileReporter::XML_HEADER("<?xml version=\"1.0\"?>");
-const XalanDOMString	XMLFileReporter::REASON_EQUALS_QUOTE("reason=\"");
-
-const XalanDOMString	XMLFileReporter::TESTCASEINIT_HDR(LESS_THAN + ELEM_TESTCASE + SPACE + ATTR_DESC + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::TESTCASECLOSE_HDR(LESS_THAN + ELEM_CASERESULT + SPACE + ATTR_DESC + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::MESSAGE_HDR(LESS_THAN + ELEM_MESSAGE + SPACE + ATTR_LEVEL + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::STATISTIC_HDR(LESS_THAN + ELEM_STATISTIC + SPACE + ATTR_LEVEL + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::ARBITRARY_HDR(LESS_THAN + ELEM_ARBITRARY + SPACE + ATTR_LEVEL + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::HASHTABLE_HDR(LESS_THAN + ELEM_HASHTABLE + SPACE + ATTR_LEVEL + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::HASHITEM_HDR(LESS_THAN + ELEM_HASHITEM + SPACE + ATTR_KEY + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::CHECKPASS_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + PASS + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::CHECKAMBG_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + AMBG + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::CHECKERRR_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + ERRR + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::CHECKFAIL_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + FAIL + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
-const XalanDOMString	XMLFileReporter::CHECKFAIL_FTR(LESS_THAN_SOLIDUS + ELEM_CHECKRESULT + GREATER_THAN);
-
-
-XMLFileReporter::XMLFileReporter():
-	m_anyOutput(false),
-	m_fileName(""),
-	m_fileHandle(0),
-	m_ready(false),
-	m_error(false),
-	m_flushOnCaseClose(true)
-{        
-}
-
-
-
-XMLFileReporter::XMLFileReporter(const XalanDOMString& fileName):
+XMLFileReporter::XMLFileReporter(const XalanDOMString&	fileName) :
+	OPT_FILENAME(),
+	ELEM_RESULTSFILE(),
+	ELEM_TESTFILE(),
+	ELEM_FILERESULT(),
+	ELEM_TESTCASE(),
+	ELEM_CASERESULT(),
+	ELEM_CHECKRESULT(),
+	ELEM_STATISTIC(),
+	ELEM_LONGVAL(),
+	ELEM_DOUBLEVAL(),
+	ELEM_MESSAGE(),
+	ELEM_ARBITRARY(),
+	ELEM_HASHTABLE(),
+	ELEM_HASHITEM(),
+	ATTR_LEVEL(),
+	ATTR_DESC(),
+	ATTR_TIME(),
+	ATTR_RESULT(),
+	ATTR_KEY(),
+	ATTR_FILENAME(),
+	LESS_THAN(),
+	GREATER_THAN(),
+	EQUALS_QUOTE(),
+	SPACE(),
+	QUOTE(),
+	QUOTE_SPACE(),
+	QUOTE_GREATER_THAN(),
+	QUOTE_SOLIDUS_GREATER_THAN(),
+	PASS(),
+	AMBG(),
+	ERRR(),
+	FAIL(),
+	LESS_THAN_SOLIDUS(),
+	XML_HEADER(),
+	REASON_EQUALS_QUOTE(),
+	TESTCASEINIT_HDR(),
+	TESTCASECLOSE_HDR(),
+	MESSAGE_HDR(),
+	STATISTIC_HDR(),
+	ARBITRARY_HDR(),
+	HASHTABLE_HDR(),
+	HASHITEM_HDR(),
+	CHECKPASS_HDR(),
+	CHECKAMBG_HDR(),
+	CHECKERRR_HDR(),
+	CHECKFAIL_HDR(),
+	CHECKFAIL_FTR(),
 	m_anyOutput(false),
 	m_fileName(fileName),
 	m_fileHandle(0),
 	m_ready(false),
 	m_error(false),
 	m_flushOnCaseClose(true)
-{         
-    m_ready = initialize();
+{
+	if (m_fileName.size() > 0)
+	{
+		m_ready = initialize();
+	}
 }
 
-XMLFileReporter::XMLFileReporter(const char* fileName):
-	m_anyOutput(false),
-	m_fileName(XalanDOMString(fileName)),
-	m_fileHandle(0),
-	m_ready(false),
-	m_error(false),
-	m_flushOnCaseClose(true)
-{         
-    m_ready = initialize();
-}
-
-bool 
+bool
 XMLFileReporter::initialize()
 {   	
-    if (length(m_fileName) == 0)
+    if (m_fileName.size() == 0)
     {
         // We don't have a valid file, so bail
         m_error = true;
         m_ready = false;
         fprintf(stderr, "XMLFileReporter.initialize() ERROR: No file name specified");
-        return(false);
     }
-
-	// Transcode down the file name...
-	const CharVectorType	theTranscodedFileName(m_fileName.transcode());
-	const char* const		theTranscodedFileNamePointer = &theTranscodedFileName.front();
-
-    // Create a file and ensure it has a place to live
-	m_fileHandle = fopen(theTranscodedFileNamePointer, "w");
-	if (m_fileHandle == 0)
+	else
 	{
-        // Couldn't create or find the directory for the file to live in, so bail
-        m_error = true;
-        m_ready = false;
-        fprintf(stderr, "XMLFileReporter.initialize() ERROR: unble to open file, %s", theTranscodedFileNamePointer);
-        return(false);
-	}
+		// Transcode down the file name...
+		const CharVectorType	theTranscodedFileName(m_fileName.transcode());
+		const char* const		theTranscodedFileNamePointer = &theTranscodedFileName.front();
 
-    m_ready = true;
-    startResultsFile();
-    // fprintf(stderr, "DEBUG:XMLFileReporter.initialize() complete with " + fileName);
+		// Create a file and ensure it has a place to live
+		m_fileHandle = fopen(theTranscodedFileNamePointer, "w");
+		if (m_fileHandle == 0)
+		{
+			// Couldn't create or find the directory for the file to live in, so bail
+			m_error = true;
+			m_ready = false;
+			fprintf(stderr, "XMLFileReporter.initialize() ERROR: unble to open file, %s", theTranscodedFileNamePointer);
+			return(false);
+		}
+		else
+		{
+			m_ready = true;
+
+			initStrings();
+
+			startResultsFile();
+
+			// fprintf(stderr, "DEBUG:XMLFileReporter.initialize() complete with " + fileName);
+		}
+	}
 
     return m_ready;
 }
@@ -741,6 +724,61 @@ XMLFileReporter::getDateTimeString()
 	const char* const	theTime = asctime(tmNow);
 
 	return XalanDOMString(theTime, strlen(theTime) - 1);
+}
+
+
+
+void
+XMLFileReporter::initStrings()
+{
+	OPT_FILENAME = XALAN_STATIC_UCODE_STRING("filename");
+	ELEM_RESULTSFILE = XALAN_STATIC_UCODE_STRING("resultsfile");
+	ELEM_TESTFILE = XALAN_STATIC_UCODE_STRING("testfile");
+	ELEM_FILERESULT = XALAN_STATIC_UCODE_STRING("fileresult");
+	ELEM_TESTCASE = XALAN_STATIC_UCODE_STRING("Test_Dir");
+	ELEM_CASERESULT = XALAN_STATIC_UCODE_STRING("Dir-result");
+	ELEM_CHECKRESULT = XALAN_STATIC_UCODE_STRING("Testcase");
+	ELEM_STATISTIC = XALAN_STATIC_UCODE_STRING("statistic");
+	ELEM_LONGVAL = XALAN_STATIC_UCODE_STRING("longval");
+	ELEM_DOUBLEVAL = XALAN_STATIC_UCODE_STRING("doubleval");
+	ELEM_MESSAGE = XALAN_STATIC_UCODE_STRING("message");
+	ELEM_ARBITRARY = XALAN_STATIC_UCODE_STRING("arbitrary");
+	ELEM_HASHTABLE = XALAN_STATIC_UCODE_STRING("hashtable");
+	ELEM_HASHITEM = XALAN_STATIC_UCODE_STRING("hashitem");
+	ATTR_LEVEL = XALAN_STATIC_UCODE_STRING("level");
+	ATTR_DESC = XALAN_STATIC_UCODE_STRING("desc");
+	ATTR_TIME = XALAN_STATIC_UCODE_STRING("time");
+	ATTR_RESULT = XALAN_STATIC_UCODE_STRING("result");
+	ATTR_KEY = XALAN_STATIC_UCODE_STRING("key");
+	ATTR_FILENAME = OPT_FILENAME;
+	LESS_THAN = XALAN_STATIC_UCODE_STRING("<");
+	GREATER_THAN = XALAN_STATIC_UCODE_STRING(">");
+	EQUALS_QUOTE = XALAN_STATIC_UCODE_STRING("=\"");
+	SPACE = XALAN_STATIC_UCODE_STRING(" ");
+	QUOTE = XALAN_STATIC_UCODE_STRING("\"");
+	QUOTE_SPACE = XALAN_STATIC_UCODE_STRING("\" ");
+	QUOTE_GREATER_THAN = XALAN_STATIC_UCODE_STRING("\">");
+	QUOTE_SOLIDUS_GREATER_THAN = XALAN_STATIC_UCODE_STRING("\"/>");
+	PASS = XALAN_STATIC_UCODE_STRING("PASS");
+	AMBG = XALAN_STATIC_UCODE_STRING("AMBG");
+	ERRR = XALAN_STATIC_UCODE_STRING("ERRR");
+	FAIL = XALAN_STATIC_UCODE_STRING("FAIL");
+	LESS_THAN_SOLIDUS = XALAN_STATIC_UCODE_STRING("</");
+	XML_HEADER = XALAN_STATIC_UCODE_STRING("<?xml version=\"1.0\"?>");
+	REASON_EQUALS_QUOTE = XALAN_STATIC_UCODE_STRING("reason=\"");
+
+	TESTCASEINIT_HDR = LESS_THAN + ELEM_TESTCASE + SPACE + ATTR_DESC + EQUALS_QUOTE;
+	TESTCASECLOSE_HDR = LESS_THAN + ELEM_CASERESULT + SPACE + ATTR_DESC + EQUALS_QUOTE;
+	MESSAGE_HDR = LESS_THAN + ELEM_MESSAGE + SPACE + ATTR_LEVEL + EQUALS_QUOTE;
+	STATISTIC_HDR = LESS_THAN + ELEM_STATISTIC + SPACE + ATTR_LEVEL + EQUALS_QUOTE;
+	ARBITRARY_HDR = LESS_THAN + ELEM_ARBITRARY + SPACE + ATTR_LEVEL + EQUALS_QUOTE;
+	HASHTABLE_HDR = LESS_THAN + ELEM_HASHTABLE + SPACE + ATTR_LEVEL + EQUALS_QUOTE;
+	HASHITEM_HDR = LESS_THAN + ELEM_HASHITEM + SPACE + ATTR_KEY + EQUALS_QUOTE;
+	CHECKPASS_HDR = LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + PASS + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE;
+	CHECKAMBG_HDR = LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + AMBG + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE;
+	CHECKERRR_HDR = LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + ERRR + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE;
+	CHECKFAIL_HDR = LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + FAIL + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE;
+	CHECKFAIL_FTR = LESS_THAN_SOLIDUS + ELEM_CHECKRESULT + GREATER_THAN;
 }
 
 

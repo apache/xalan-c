@@ -92,15 +92,9 @@ public:
 public:
 
 
-	// Simple constructor, does not perform initialization.
-	XMLFileReporter();   
-
-
-	// Construct and initialize this reporter with specified filename.
-	XMLFileReporter(const XalanDOMString& fileName);
-
-	// Construct and initialize this reporter with specified filename.
-	XMLFileReporter(const char* fileName);
+	// Construct and initialize this reporter with specified filename, if
+	// the filename is not empty.
+	XMLFileReporter(const XalanDOMString& fileName = XalanDOMString());
 
 	// Initialize this XMLFileReporter.  Must be called before attempting to log anything.
 	bool initialize();
@@ -325,68 +319,71 @@ private:
 	*/
 	bool printToFile(const XalanDOMString& output);
 
+	void
+	initStrings();
+
 	/**
 	* worker method to prints to the resultsfile.  
 	*/
 	XalanDOMString getDateTimeString();
 	
 	/** Key for Properties block that denotes our output filename.  */
-	static const XalanDOMString OPT_FILENAME;
+	XalanDOMString	OPT_FILENAME;
 
 	/** XML tagnames for results file structure.  */
-	static const XalanDOMString ELEM_RESULTSFILE;
-	static const XalanDOMString ELEM_TESTFILE;
-	static const XalanDOMString ELEM_FILERESULT;
-	static const XalanDOMString ELEM_TESTCASE;
-	static const XalanDOMString ELEM_CASERESULT;
-	static const XalanDOMString ELEM_CHECKRESULT;
-	static const XalanDOMString ELEM_STATISTIC;
-	static const XalanDOMString ELEM_LONGVAL;
-	static const XalanDOMString ELEM_DOUBLEVAL;
-	static const XalanDOMString ELEM_MESSAGE;
-	static const XalanDOMString ELEM_ARBITRARY;
-	static const XalanDOMString ELEM_HASHTABLE;
-	static const XalanDOMString ELEM_HASHITEM;
+	XalanDOMString	ELEM_RESULTSFILE;
+	XalanDOMString	ELEM_TESTFILE;
+	XalanDOMString	ELEM_FILERESULT;
+	XalanDOMString	ELEM_TESTCASE;
+	XalanDOMString	ELEM_CASERESULT;
+	XalanDOMString	ELEM_CHECKRESULT;
+	XalanDOMString	ELEM_STATISTIC;
+	XalanDOMString	ELEM_LONGVAL;
+	XalanDOMString	ELEM_DOUBLEVAL;
+	XalanDOMString	ELEM_MESSAGE;
+	XalanDOMString	ELEM_ARBITRARY;
+	XalanDOMString	ELEM_HASHTABLE;
+	XalanDOMString	ELEM_HASHITEM;
 
 	/** XML attribute names for results file structure.  */
-	static const XalanDOMString ATTR_LEVEL;
-	static const XalanDOMString ATTR_DESC;
-	static const XalanDOMString ATTR_TIME;
-	static const XalanDOMString ATTR_RESULT;
-	static const XalanDOMString ATTR_KEY;
-	static const XalanDOMString ATTR_FILENAME;
-	static const XalanDOMString	LESS_THAN;
-	static const XalanDOMString	GREATER_THAN;
-	static const XalanDOMString	EQUALS_QUOTE;
-	static const XalanDOMString	SPACE;
-	static const XalanDOMString	QUOTE;
-	static const XalanDOMString	QUOTE_SPACE;
-	static const XalanDOMString QUOTE_GREATER_THAN;
-	static const XalanDOMString QUOTE_SOLIDUS_GREATER_THAN;
-	static const XalanDOMString	PASS;
-	static const XalanDOMString	AMBG;
-	static const XalanDOMString	ERRR;
-	static const XalanDOMString	FAIL;
-	static const XalanDOMString	LESS_THAN_SOLIDUS;
-	static const XalanDOMString	XML_HEADER;
-	static const XalanDOMString	REASON_EQUALS_QUOTE;
+	XalanDOMString	ATTR_LEVEL;
+	XalanDOMString	ATTR_DESC;
+	XalanDOMString	ATTR_TIME;
+	XalanDOMString	ATTR_RESULT;
+	XalanDOMString	ATTR_KEY;
+	XalanDOMString	ATTR_FILENAME;
+	XalanDOMString	LESS_THAN;
+	XalanDOMString	GREATER_THAN;
+	XalanDOMString	EQUALS_QUOTE;
+	XalanDOMString	SPACE;
+	XalanDOMString	QUOTE;
+	XalanDOMString	QUOTE_SPACE;
+	XalanDOMString	QUOTE_GREATER_THAN;
+	XalanDOMString	QUOTE_SOLIDUS_GREATER_THAN;
+	XalanDOMString	PASS;
+	XalanDOMString	AMBG;
+	XalanDOMString	ERRR;
+	XalanDOMString	FAIL;
+	XalanDOMString	LESS_THAN_SOLIDUS;
+	XalanDOMString	XML_HEADER;
+	XalanDOMString	REASON_EQUALS_QUOTE;
 
 	/** 
 	* Optimization: for heavy use methods, form pre-defined constants to save on XalanDOMString concatenation.  
 	* <P>Note the indent; must be updated if we ever switch to another indenting method.</P>
 	*/
-	static const XalanDOMString TESTCASEINIT_HDR;
-	static const XalanDOMString TESTCASECLOSE_HDR;
-	static const XalanDOMString MESSAGE_HDR;
-	static const XalanDOMString STATISTIC_HDR;
-	static const XalanDOMString ARBITRARY_HDR;
-	static const XalanDOMString HASHTABLE_HDR;
-	static const XalanDOMString HASHITEM_HDR;
-	static const XalanDOMString CHECKPASS_HDR;
-	static const XalanDOMString CHECKAMBG_HDR;
-	static const XalanDOMString CHECKERRR_HDR;
-	static const XalanDOMString CHECKFAIL_HDR;
-	static const XalanDOMString CHECKFAIL_FTR;
+	XalanDOMString	TESTCASEINIT_HDR;
+	XalanDOMString	TESTCASECLOSE_HDR;
+	XalanDOMString	MESSAGE_HDR;
+	XalanDOMString	STATISTIC_HDR;
+	XalanDOMString	ARBITRARY_HDR;
+	XalanDOMString	HASHTABLE_HDR;
+	XalanDOMString	HASHITEM_HDR;
+	XalanDOMString	CHECKPASS_HDR;
+	XalanDOMString	CHECKAMBG_HDR;
+	XalanDOMString	CHECKERRR_HDR;
+	XalanDOMString	CHECKFAIL_HDR;
+	XalanDOMString	CHECKFAIL_FTR;
 
 	/** If we have output anything yet.  */
 	bool m_anyOutput;
