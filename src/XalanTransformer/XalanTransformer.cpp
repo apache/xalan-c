@@ -225,12 +225,6 @@ XalanTransformer::terminate()
 
 	s_xsltInit = 0;
 
-	XalanExtensionsInstaller::uninstallGlobal();
-	XalanEXSLTCommonFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTMathFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTSetFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
-
 #if defined(XALAN_USE_ICU)
 	XPath::uninstallFunction(
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")));
