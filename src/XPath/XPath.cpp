@@ -2612,8 +2612,6 @@ XPath::functionCount(
 	{
 		return result->getLength();
 	}
-
-	return executionContext.getContextNodeListLength();
 }
 
 
