@@ -559,7 +559,7 @@ public:
 	 * @return true if the string is valid, false if not.
 	 */
 	static bool
-	isValid(const XalanDOMString	theString);
+	isValid(const XalanDOMString&	theString);
 
 	/**
 	 * Determine whether or not a string contains
