@@ -106,18 +106,14 @@ public:
 	setExecutionContext(ExecutionContext&	theContext) = 0;
 
 	/**
-	 * Determine if the liaison supports the SAX DocumentHandler interface.
-	 *
-	 * @return true if SAX supported
-	 */
-	virtual bool
-	supportsSAX() const = 0;
-
-	/**
 	 * Parse the text pointed at by the reader as XML, and return a DOM
 	 * Document interface.  It is recommended that you pass in some sort of
 	 * recognizable name, such as the filename or URI, with which the reader
 	 * can be recognized if the parse fails.
+	 *
+	 * The liaison owns the XalanDocument instance, and will delete it when
+	 * when asked (see DestroyDocument()), or when the liaison is reset, or
+	 * goes out of scope.
 	 *
 	 * @param reader     stream that should hold valid XML
 	 * @param identifier used for diagnostic purposes only, some sort of
@@ -151,6 +147,10 @@ public:
 	 * Create an empty DOM Document.  Mainly used for creating an 
 	 * output document.
 	 *
+	 * The liaison owns the XalanDocument instance, and will delete it when
+	 * when asked (see DestroyDocument()), or when the liaison is reset, or
+	 * goes out of scope.
+	 * 
 	 * @return DOM document created
 	 */
 	virtual XalanDocument*
@@ -159,6 +159,10 @@ public:
 	/**
 	 * Get a factory object required to create nodes in the result tree.
 	 *
+	 * The liaison owns the XalanDocument instance, and will delete it when
+	 * when asked (see DestroyDocument()), or when the liaison is reset, or
+	 * goes out of scope.
+	 * 
 	 * @return A XalanDocument instance.
 	 */
 	virtual XalanDocument*
@@ -172,22 +176,6 @@ public:
 	 */
 	virtual void
 	destroyDocument(XalanDocument*	theDocument) = 0;
-
-	/**
-	 * Get special characters for attributes that will be escaped.
-	 *
-	 * @return string containing characters
-	 */
-	virtual const XalanDOMString&
-	getSpecialCharacters() const = 0;
-
-	/**
-	 * Set special characters for attributes that will be escaped.
-	 *
-	 * @param str string containing characters
-	 */
-	virtual void
-	setSpecialCharacters(const XalanDOMString&	str) = 0;
 
 	/**
 	 * Get the amount to indent when indent-result="yes".
@@ -204,24 +192,6 @@ public:
 	 */
 	virtual void
 	setIndent(int	i) = 0;
-
-	/**
-	 * Determine whether to expand all entity references in the source and
-	 * style trees.
-	 *
-	 * @return true if entity references should be expanded
-	 */
-	virtual bool
-	getShouldExpandEntityRefs() const = 0;
-
-	/**
-	 * Set whether to expand all entity references in the source and style
-	 * trees.
-	 *
-	 * @param b true if entity references should be expanded
-	 */
-	virtual void
-	SetShouldExpandEntityRefs(bool	b) = 0;
 
 	/**
 	 * Get whether or not validation will be performed.  Validation is off by

@@ -81,12 +81,9 @@ public:
 	/**
 	 * Construct a XMLParserLiaisonDefault instance.
 	 *
-	 * @param formatterListener implemention of the FormatterListener operation
-	 *                          (toXMLString, digest, ...)
-	 *
-	 * @param theDOMSupport        instance of DOMSupport object
 	 */
-	XMLParserLiaisonDefault(DOMSupport&		theDOMSupport);
+	explicit
+	XMLParserLiaisonDefault();
 
 	virtual
 	~XMLParserLiaisonDefault();
@@ -103,9 +100,6 @@ public:
 
 	virtual void
 	setExecutionContext(ExecutionContext&	theContext);
-
-	virtual bool
-	supportsSAX() const;
 
 	virtual XalanDocument*
 	parseXMLStream(
@@ -127,23 +121,11 @@ public:
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
 
-	virtual const XalanDOMString&
-	getSpecialCharacters() const { return m_SpecialCharacters; }
-
-	virtual void
-	setSpecialCharacters(const XalanDOMString&	str) { m_SpecialCharacters = str; }
-
 	virtual int
 	getIndent() const { return m_Indent; }
 
 	virtual void
 	setIndent(int i) { m_Indent = i; }
-
-	virtual bool
-	getShouldExpandEntityRefs() const { return m_fShouldExpandEntityRefs; }
-
-	virtual void
-	SetShouldExpandEntityRefs(bool b) { m_fShouldExpandEntityRefs = b; }
 
 	virtual bool
 	getUseValidation() const { return m_fUseValidation; }
@@ -160,11 +142,6 @@ public:
 	virtual void
 	setEntityResolver(EntityResolver*	resolver) { m_entityResolver = resolver; }
 
-protected:
-
-	// Data members...
-	DOMSupport&				m_DOMSupport;
-
 private:
 
 	// Not implemented...
@@ -174,11 +151,8 @@ private:
 	operator=(const XMLParserLiaisonDefault&);
 
 	// Data members...
-	XalanDOMString		m_SpecialCharacters;
-
 	int					m_Indent;
 
-	bool				m_fShouldExpandEntityRefs;
 	bool				m_fUseValidation;
 
 	EntityResolver*		m_entityResolver;

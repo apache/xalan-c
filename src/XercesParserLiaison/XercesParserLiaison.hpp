@@ -123,9 +123,6 @@ public:
 	virtual void
 	setExecutionContext(ExecutionContext&	theContext);
 
-	virtual bool
-	supportsSAX() const;
-
 	virtual XalanDocument*
 	parseXMLStream(
 			const InputSource&		reader,
@@ -148,23 +145,11 @@ public:
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
 
-	virtual void
-	setSpecialCharacters(const XalanDOMString&	str);
-
-	virtual const XalanDOMString&
-	getSpecialCharacters() const;
-
 	virtual int
 	getIndent() const;
 
 	virtual void
 	setIndent(int	i);
-
-	virtual bool
-	getShouldExpandEntityRefs() const;
-
-	virtual void
-	SetShouldExpandEntityRefs(bool	b);
 
 	virtual bool
 	getUseValidation() const;
@@ -468,11 +453,7 @@ protected:
 private:
 
 	// Data members...
-	XalanDOMString		m_specialCharacters;
-
 	int 				m_indent;
-
-	bool				m_shouldExpandEntityRefs;
 
 	bool				m_useValidation;
 

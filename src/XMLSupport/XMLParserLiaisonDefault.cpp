@@ -67,12 +67,9 @@
 
 
 
-XMLParserLiaisonDefault::XMLParserLiaisonDefault(DOMSupport&	theDOMSupport) :
+XMLParserLiaisonDefault::XMLParserLiaisonDefault() :
 	XMLParserLiaison(),
-	m_DOMSupport(theDOMSupport),
-	m_SpecialCharacters(),
 	m_Indent(-1),
-	m_fShouldExpandEntityRefs(false),
 	m_fUseValidation(false),
 	m_entityResolver(0)
 {
@@ -89,7 +86,6 @@ XMLParserLiaisonDefault::~XMLParserLiaisonDefault()
 void
 XMLParserLiaisonDefault::reset()
 {
-	m_DOMSupport.reset();
 }
 
 
@@ -105,14 +101,6 @@ XMLParserLiaisonDefault::getExecutionContext() const
 void
 XMLParserLiaisonDefault::setExecutionContext(ExecutionContext&	/* theContext */)
 {
-}
-
-
-
-bool
-XMLParserLiaisonDefault::supportsSAX() const
-{
-	return false;
 }
 
 

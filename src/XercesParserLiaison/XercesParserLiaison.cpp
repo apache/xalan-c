@@ -112,9 +112,7 @@ static const XalanDOMChar	theDefaultSpecialCharacters[] =
 
 
 XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
-	m_specialCharacters(theDefaultSpecialCharacters),
 	m_indent(-1),
-	m_shouldExpandEntityRefs(true),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),
 	m_doNamespaces(true),
@@ -131,9 +129,7 @@ XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
 
 
 XercesParserLiaison::XercesParserLiaison() :
-	m_specialCharacters(theDefaultSpecialCharacters),
 	m_indent(-1),
-	m_shouldExpandEntityRefs(true),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),
 	m_doNamespaces(true),
@@ -187,14 +183,6 @@ void
 XercesParserLiaison::setExecutionContext(ExecutionContext&	theContext)
 {
 	m_executionContext = &theContext;
-}
-
-
-
-bool
-XercesParserLiaison::supportsSAX() const
-{
-	return true;
 }
 
 
@@ -272,22 +260,6 @@ XercesParserLiaison::destroyDocument(XalanDocument*		theDocument)
 
 
 
-void
-XercesParserLiaison::setSpecialCharacters(const XalanDOMString&	str)
-{
-	m_specialCharacters = str;
-}
-
-
-
-const XalanDOMString&
-XercesParserLiaison::getSpecialCharacters() const
-{
-	return m_specialCharacters;
-}
-
-
-
 int
 XercesParserLiaison::getIndent() const
 {
@@ -300,22 +272,6 @@ void
 XercesParserLiaison::setIndent(int	i)
 {
 	m_indent = i;
-}
-
-
-
-bool
-XercesParserLiaison::getShouldExpandEntityRefs() const
-{
-	return m_shouldExpandEntityRefs;
-}
-
-
-
-void
-XercesParserLiaison::SetShouldExpandEntityRefs(bool	b)
-{
-	m_shouldExpandEntityRefs = b;
 }
 
 
@@ -582,7 +538,7 @@ XercesParserLiaison::CreateDOMParser()
 {
 	DOMParser* const	theParser = new DOMParser;
 
-	theParser->setExpandEntityReferences(m_shouldExpandEntityRefs);
+	theParser->setExpandEntityReferences(true);
 
 	theParser->setDoValidation(m_useValidation);
 
