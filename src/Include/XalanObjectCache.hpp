@@ -65,6 +65,7 @@
 
 
 #include <Include/STLHelper.hpp>
+#include <Include/XalanAutoPtr.hpp>
 
 
 
@@ -108,16 +109,22 @@ public:
 		// that's the cheapest thing.
 		if (m_availableList.size() == 0)
 		{
-			m_busyList.push_back(create());
+			XalanAutoPtr<ObjectType>	theNewObject(create());
+
+			m_busyList.push_back(theNewObject.get());
+
+			return theNewObject.release();
 		}
 		else
 		{
-			m_busyList.push_back(m_availableList.back());
+			ObjectType* const	theObject = m_availableList.back();
+
+			m_busyList.push_back(theObject);
 
 			m_availableList.pop_back();
-		}
 
-		return m_busyList.back();
+			return theObject;
+		}
 	}
 
 	bool
@@ -127,7 +134,9 @@ public:
 		using std::find;
 #endif
 
-		const VectorType::iterator	i =
+		typedef typename VectorType::iterator	IteratorType;
+
+		const IteratorType	i =
 			find(
 				m_busyList.begin(),
 				m_busyList.end(),
@@ -187,6 +196,42 @@ private:
 	VectorType	m_busyList;
 };
 
+
+template<class ObjectType>
+class GetReleaseCachedObject
+{
+public:
+
+	typedef XalanObjectCache<ObjectType>	CacheType;
+
+	GetReleaseCachedObject(CacheType&	theCache) :
+		m_cache(theCache),
+		m_cachedObject(theCache.get())
+	{
+	}
+
+	~GetReleaseCachedObject()
+	{
+		m_cache.release(m_cachedObject);
+	}
+
+	ObjectType*
+	get() const
+	{
+		return m_cachedObject;
+	}
+
+private:
+
+	// Not implemented...
+	GetReleaseCachedObject(const GetReleaseCachedObject<ObjectType>&);
+
+
+	// Data members...
+	CacheType&			m_cache;
+
+	ObjectType* const	m_cachedObject;
+};
 
 
 template<class ObjectType>
