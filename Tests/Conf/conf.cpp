@@ -262,138 +262,135 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	HarnessInit xmlPlatformUtils;
-	XalanTransformer::initialize();
 
+	Hashtable runAttrs;	// Attribute lists for conformance testing.
+
+
+	XalanDOMString  category;	// Test all of base dir by default
+	XalanDOMString  baseDir, outputRoot, goldRoot;	
+
+	if (getParams(argc, argv, futil, baseDir, outputRoot, goldRoot, category) == true)
 	{
-		Hashtable runAttrs;	// Attribute lists for conformance testing.
-		int theResult = 0;
+		// Call the static initializers for xerces and xalan, and create a transformer
+		HarnessInit xmlPlatformUtils;
+		XalanTransformer::initialize();
+		XalanTransformer xalan;
 
-		XalanDOMString  category;	// Test all of base dir by default
-		XalanDOMString  baseDir, outputRoot, goldRoot;	
+		// Generate Unique Run id and processor info
+		const XalanDOMString& UniqRunid = futil.GenerateUniqRunid();
 
-		if (getParams(argc, argv, futil, baseDir, outputRoot, goldRoot, category) == true)
+
+		// Defined basic constants for file manipulation and open results file
+		const XalanDOMString  drive(futil.getDrive());
+		const XalanDOMString  resultFilePrefix("cpp");
+		const XalanDOMString  resultsFile(drive + outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+
+
+		XMLFileReporter	logFile(resultsFile);
+		logFile.logTestFileInit("Conformance Testing:");
+
+
+		// Get the list of Directories that are below conf
+		const FileNameVectorType	dirs = futil.getDirectoryNames(baseDir);
+
+
+		for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 		{
-			//
-			// Call the static initializers for xerces and xalan, and create a transformer
-			//
-			XalanTransformer xalan;
+			const XalanDOMString currentDir(dirs[j]);
 
-			XalanSourceTreeDOMSupport domSupport;
-			XalanSourceTreeParserLiaison parserLiaison(domSupport);
-			domSupport.setParserLiaison(&parserLiaison);
-
-			// Generate Unique Run id and processor info
-			const XalanDOMString& UniqRunid = futil.GenerateUniqRunid();
-
-
-			// Defined basic constants for file manipulation and open results file
-			const XalanDOMString  resultFilePrefix("cpp");
-			const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
-
-
-			XMLFileReporter	logFile(resultsFile);
-			logFile.logTestFileInit("Conformance Testing:");
-
-
-			// Get the list of Directories that are below conf
-			const FileNameVectorType	dirs = futil.getDirectoryNames(baseDir);
-
-
-			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
+			// Run specific category of files from given directory
+			if (length(category) > 0 && !equals(currentDir, category))
 			{
-				const XalanDOMString currentDir(dirs[j]);
-
-				// Run specific category of files from given directory
-				if (length(category) > 0 && !equals(currentDir, category))
-				{
-					continue;
-				}					
+				continue;
+			}					
 					
-				// Check that output directory is there.
-				const XalanDOMString  theOutputDir = outputRoot + currentDir;
-				futil.checkAndCreateDir(theOutputDir);
-
+			// Check that output directory is there.
+			const XalanDOMString  theOutputDir = outputRoot + currentDir;
+			futil.checkAndCreateDir(theOutputDir);
 				
-				// Get the files found in the test directory
-				const FileNameVectorType files = futil.getTestFileNames(baseDir, currentDir, true);
+			// Get the files found in the test directory
+			const FileNameVectorType files = futil.getTestFileNames(baseDir, currentDir, true);
 				
-				logFile.logTestCaseInit(currentDir);
+			logFile.logTestCaseInit(currentDir);
 
-				for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
+			for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
+			{
+				Hashtable attrs;
+				const XalanDOMString currentFile(files[i]);
+				futil.data.testOrFile = currentFile;
+
+				if (checkForExclusion(currentFile))
+					continue;
+
+				const XalanDOMString  theXSLFile= baseDir + currentDir + pathSep + currentFile;
+				const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
+				futil.data.xmlFileURL = theXMLFile;
+				futil.data.xslFileURL = theXSLFile;
+
+				XalanDOMString  theGoldFile = goldRoot + currentDir + pathSep + currentFile;
+				theGoldFile = futil.GenerateFileName(theGoldFile, "out");
+
+				const XalanDOMString  outbase =  outputRoot + currentDir + pathSep + currentFile; 
+				const XalanDOMString  theOutputFile = futil.GenerateFileName(outbase, "out");
+
+				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+				const XSLTResultTarget	resultFile(theOutputFile);
+
+				//
+				// Parsing(compile) the XSL stylesheet and report the results..
+				//
+				const XalanCompiledStylesheet*	compiledSS = 0;
+				xalan.compileStylesheet(xslInputSource, compiledSS);
+				if (compiledSS == 0 )
 				{
-					Hashtable attrs;
-					const XalanDOMString currentFile(files[i]);
-					futil.data.testOrFile = currentFile;
+					// Report the failure and be sure to increment fail count.
+					cout << "Failed to PARSE stylesheet for " << currentFile << endl;
+					futil.data.fail += 1;
+					logFile.logErrorResult(currentFile, XalanDOMString("Failed to PARSE stylesheet."));
+					continue;
+				}
 
-					if (checkForExclusion(currentFile))
-						continue;
+				//
+				// Parsing the input XML and report the results..
+				//
+				const XalanParsedSource*	parsedSource = 0;
+				xalan.parseSource(xmlInputSource, parsedSource);
+				if (parsedSource == 0)
+				{
+					// Report the failure and be sure to increment fail count.
+					cout << "Failed to PARSE source document for " << currentFile << endl;
+					futil.data.fail += 1;
+					logFile.logErrorResult(currentFile, XalanDOMString("Failed to PARSE source document."));
+					continue;
+				}
 
-					const XalanDOMString  theXSLFile= baseDir + currentDir + pathSep + currentFile;
-					const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
-					XalanDOMString  theGoldFile = goldRoot + currentDir + pathSep + currentFile;
-					theGoldFile = futil.GenerateFileName(theGoldFile, "out");
+				//
+				// Perform One transform using parsed stylesheet and parsed xml source, report results...
+				// 
+				xalan.transform(*parsedSource, compiledSS, resultFile);
 
-					const XalanDOMString  outbase =  outputRoot + currentDir + pathSep + currentFile; 
-					const XalanDOMString  theOutputFile = futil.GenerateFileName(outbase, "out");
+				futil.checkResults(theOutputFile, 
+								  theGoldFile, 
+								  logFile);
 
-					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-					const XSLTResultTarget	resultFile(theOutputFile);
+				xalan.destroyParsedSource(parsedSource);
+				xalan.destroyStylesheet(compiledSS);
 
-					//
-					// Parsing(compile) the XSL stylesheet and report the results..
-					//
-					const XalanCompiledStylesheet*	compiledSS = 0;
-					xalan.compileStylesheet(xslInputSource, compiledSS);
-					if (compiledSS == 0 )
-					{
-						// Report the failure and be sure to increment fail count.
-						cout << "Failed to PARSE stylesheet for " << currentFile << endl;
-						futil.data.fail += 1;
-						logFile.logErrorResult(currentFile, XalanDOMString("Failed to PARSE stylesheet."));
-						continue;
-					}
+			}	//for files
 
-					//
-					// Parsing the input XML and report the results..
-					//
-					const XalanParsedSource*	parsedSource = 0;
-					xalan.parseSource(xmlInputSource, parsedSource);
-					if (parsedSource == 0)
-					{
-						// Report the failure and be sure to increment fail count.
-						cout << "Failed to PARSE source document for " << currentFile << endl;
-						futil.data.fail += 1;
-						logFile.logErrorResult(currentFile, XalanDOMString("Failed to PARSE source document."));
-						continue;
-					}
+			logFile.logTestCaseClose("Done", "Pass");
 
-					//
-					// Perform One transform using parsed stylesheet and parsed xml source, report results...
-					// 
-					xalan.transform(*parsedSource, compiledSS, resultFile);
+		}		//for directories
 
-					futil.checkResults(theOutputFile, 
-									  theGoldFile, 
-									  logFile);
+		futil.reportPassFail(logFile, UniqRunid);
+		logFile.logTestFileClose("Conformance ", "Done");
+		logFile.close();
 
-					parserLiaison.reset();
-					xalan.destroyParsedSource(parsedSource);
-					xalan.destroyStylesheet(compiledSS);
+		futil.analyzeResults(xalan, resultsFile);
 
-				}	//for files
+	} //if getParams
 
-				logFile.logTestCaseClose("Done", "Pass");
-
-			}		//for directories
-
-			futil.reportPassFail(logFile, UniqRunid);
-			logFile.logTestFileClose("Conformance ", "Done");
-			logFile.close();
-
-		} //if getParams
-	}
 
 	XalanTransformer::terminate();
 

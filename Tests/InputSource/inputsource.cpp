@@ -389,10 +389,11 @@ main(int			argc,
 		// Generate Unique Run id. (Only used to name the result logfile.)
 		const XalanDOMString UniqRunid = futil.GenerateUniqRunid();
 
-		// Defined basic constants for file manipulation 
-
+		// Defined basic constants for file manipulation
+		const XalanDOMString drive(futil.getDrive());
+		
 		const XalanDOMString  resultFilePrefix("isource");
-		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+		const XalanDOMString  resultsFile(drive + outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
 		
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("XSLTInputSource Testing: Give various types of allowable Inputs. ");
@@ -402,20 +403,20 @@ main(int			argc,
 			// Call the static initializers...
 			HarnessInit xmlPlatformUtils;
 			XalanTransformer::initialize();
-
+			XalanTransformer xalan;
 			{
-				XalanTransformer	transformEngine;
 				XalanDOMString		fileName;
 				
 				// Set the test directory.
-				const XalanDOMString  xDir("smoke");
+				const XalanDOMString  currentDir("smoke");
+				logFile.logTestCaseInit(currentDir);
 
 				// Create the output directory.
-				const XalanDOMString  theOutputDir = outputRoot + xDir;
+				const XalanDOMString  theOutputDir = outputRoot + currentDir;
 				futil.checkAndCreateDir(theOutputDir);
 
 				// Get the files found in the "smoke" directory
-				const FileNameVectorType	files = futil.getTestFileNames(baseDir, xDir, true);
+				const FileNameVectorType	files = futil.getTestFileNames(baseDir, currentDir, true);
 
 				// This only processes a single file, smoke01.xsl
 				for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
@@ -425,28 +426,31 @@ main(int			argc,
 					futil.data.testOrFile = fileName;
 
 					// Set up the input/output files.
-					const XalanDOMString  theXSLFile= baseDir + xDir + pathSep + fileName;
+					const XalanDOMString  theXSLFile= baseDir + currentDir + pathSep + fileName;
 					const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
-					
+					futil.data.xmlFileURL = theXMLFile;
+					futil.data.xslFileURL = theXSLFile;
+
 					// Set the gold file.
-					XalanDOMString  theGoldFile = goldRoot +xDir + pathSep + fileName;
+					XalanDOMString  theGoldFile = goldRoot +currentDir + pathSep + fileName;
 					theGoldFile = futil.GenerateFileName(theGoldFile, "out");
 					
 					// Execute the test cases. 
-					testCase1(transformEngine, logFile, theXMLFile, theXSLFile, theOutputDir, theGoldFile);
-					testCase2(transformEngine, logFile, theOutputDir, theGoldFile);
-					testCase3(transformEngine, logFile, theOutputDir, theGoldFile);
-					testCase4(transformEngine, logFile);
+					testCase1(xalan, logFile, theXMLFile, theXSLFile, theOutputDir, theGoldFile);
+					testCase2(xalan, logFile, theOutputDir, theGoldFile);
+					testCase3(xalan, logFile, theOutputDir, theGoldFile);
+					testCase4(xalan, logFile);
 				}
-				
+
+				logFile.logTestCaseClose("Done", "Pass");	
 			}
 
-			XalanTransformer::terminate();
-
-			futil.reportPassFail(logFile);
+			futil.reportPassFail(logFile, UniqRunid);
 			logFile.logTestFileClose("ISource Testing: ", "Done");
 			logFile.close();
 
+			futil.analyzeResults(xalan, resultsFile);
+			XalanTransformer::terminate();
 		}
 		catch(...)
 		{

@@ -89,7 +89,7 @@
 // GLOBAL VARIABLES...
 FileUtility				futil;
 XalanDOMString			baseDir, outputRoot, goldRoot, theGoldFile;  // These are set by the getParams routine.
-const XalanDOMString	testDir("params");
+const XalanDOMString	currentDir("params");
 XalanDOMString			fileName;
 
 
@@ -218,130 +218,131 @@ main(
 
 	if (getParams(argc, argv, baseDir, outputRoot, goldRoot) == true)
 	{
+		// Call the static initializers...
+		HarnessInit xmlPlatformUtils;
+		XalanTransformer::initialize();
+		XalanTransformer	xalan;
 
 		// Generate Unique Run id. (Only used to name the result logfile.)
 		const XalanDOMString UniqRunid = futil.GenerateUniqRunid();
 
-		// Defined basic constants for file manipulation 
-
+		// Defined basic constants for file manipulation
+		const XalanDOMString  drive(futil.getDrive());
 		const XalanDOMString  resultFilePrefix("params");
-		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+		const XalanDOMString  resultsFile(drive + outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
 		
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("Param Testing: Testing ability to pass parameters to stylesheets. ");
 
 		try
 		{
-			// Call the static initializers...
-			HarnessInit xmlPlatformUtils;
-			XalanTransformer::initialize();
+			bool embedFlag =  false;
+				
+			// Get the files found in the "params" directory
+			const XalanDOMString  currentDir("params");
+			const XalanDOMString  theOutputDir = outputRoot + currentDir;
 
+			// Check that output directory is there.
+			futil.checkAndCreateDir(theOutputDir);
+
+			const FileNameVectorType	files = futil.getTestFileNames(baseDir, currentDir, true);
+			logFile.logTestCaseInit(currentDir);
+
+			for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 			{
-				XalanTransformer		transformEngine;
-				bool embedFlag =  false;
-				
-				// Get the files found in the "params" directory
-				const XalanDOMString  testDir("params");
-				const XalanDOMString  theOutputDir = outputRoot + testDir;
+				fileName = files[i];
+				sprintf(testCase, "%s%d","TestCase",i+1);
+				futil.data.testOrFile = testCase;
 
-				// Check that output directory is there.
-				futil.checkAndCreateDir(theOutputDir);
+				// Set up the input/output files.
+				const XalanDOMString  theXSLFile= baseDir + currentDir + pathSep + fileName;
+				const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
+				futil.data.xmlFileURL = theXMLFile;
+				futil.data.xslFileURL = theXSLFile;
 
-				const FileNameVectorType	files = futil.getTestFileNames(baseDir, testDir, true);
+				const XalanDOMString  theOutput =  outputRoot + currentDir + pathSep + fileName; 
+				const XalanDOMString  theOutputFile = futil.GenerateFileName(theOutput, "out");
+				theGoldFile = goldRoot +currentDir + pathSep + fileName;
+				theGoldFile = futil.GenerateFileName(theGoldFile, "out");
 
-				for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
-				{
-					fileName = files[i];
-					sprintf(testCase, "%s%d","TestCase",i+1);
-					futil.data.testOrFile = testCase;
-
-
-					// Set up the input/output files.
-					const XalanDOMString  theXSLFile= baseDir + testDir + pathSep + fileName;
-					const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
-					const XalanDOMString  theOutput =  outputRoot + testDir + pathSep + fileName; 
-					const XalanDOMString  theOutputFile = futil.GenerateFileName(theOutput, "out");
-					theGoldFile = goldRoot +testDir + pathSep + fileName;
-					theGoldFile = futil.GenerateFileName(theGoldFile, "out");
-
-					XSLTResultTarget		theResultTarget(theOutputFile);
-					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+				XSLTResultTarget		theResultTarget(theOutputFile);
+				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
 						
-					// Set the desired parameters
-					switch (getTestNumber(fileName))
-					{	
-						case 2:
-							transformEngine.setStylesheetParam("in1", "'A '");
+				// Set the desired parameters
+				switch (getTestNumber(fileName))
+				{	
+					case 2:
+						xalan.setStylesheetParam("in1", "'A '");
 
-							transformEngine.setStylesheetParam("in2", "'B '");
+						xalan.setStylesheetParam("in2", "'B '");
 
-							transformEngine.setStylesheetParam(
-								XalanDOMString("in3"),
-								XalanDOMString("'C '"));
-							transformEngine.setStylesheetParam(
-								XalanDOMString("in4"),
-								XalanDOMString("'D '"));
-							transformEngine.setStylesheetParam(
-								XalanDOMString("in5"),
-								XalanDOMString("'E '"));
+						xalan.setStylesheetParam(
+							XalanDOMString("in3"),
+							XalanDOMString("'C '"));
+						xalan.setStylesheetParam(
+							XalanDOMString("in4"),
+							XalanDOMString("'D '"));
+						xalan.setStylesheetParam(
+							XalanDOMString("in5"),
+							XalanDOMString("'E '"));
+						break;
+
+					case 3:
+						xalan.setStylesheetParam(
+							XalanDOMString("'xyz:in1'"),
+							XalanDOMString("'DATA'"));
+						break;
+
+					case 7:
+						{
+							const XSLTInputSource	embed07InputSource(c_wstr(theXSLFile));
+							xalan.transform(embed07InputSource, theResultTarget);
+							append(futil.data.testOrFile, " (Embed01)" );
+							embedFlag = true;
 							break;
+						}
 
-						case 3:
-							transformEngine.setStylesheetParam(
-								XalanDOMString("'xyz:in1'"),
-								XalanDOMString("'DATA'"));
+					case 8:
+						{
+							const XSLTInputSource	embed08InputSource(c_wstr(theXSLFile));
+							xalan.transform(embed08InputSource, theResultTarget);
+							append(futil.data.testOrFile, " (Embed02)" );
+							embedFlag = true;
 							break;
-
-						case 7:
-							{
-								const XSLTInputSource	embed07InputSource(c_wstr(theXSLFile));
-								transformEngine.transform(embed07InputSource, theResultTarget);
-								append(futil.data.testOrFile, " (Embed01)" );
-								embedFlag = true;
-								break;
-							}
-
-						case 8:
-							{
-								const XSLTInputSource	embed08InputSource(c_wstr(theXSLFile));
-								transformEngine.transform(embed08InputSource, theResultTarget);
-								append(futil.data.testOrFile, " (Embed02)" );
-								embedFlag = true;
-								break;
-							}
-						default:
-							transformEngine.setStylesheetParam(
-								XalanDOMString("input"),
-								XalanDOMString("'testing 1 2 3'"));
-							break;
-					}
-
-
-
-					// Do a total end to end transform with no pre parsing of either xsl or xml files.
-					if (!embedFlag)
-					{
-						transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-					}
-
-					// Check and report the results.
-					futil.checkResults(theOutputFile, theGoldFile, logFile);
+						}
+					default:
+						xalan.setStylesheetParam(
+							XalanDOMString("input"),
+							XalanDOMString("'testing 1 2 3'"));
+						break;
 				}
-				
+
+				// Do a total end to end transform with no pre parsing of either xsl or xml files.
+				if (!embedFlag)
+				{
+					xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
+				}
+
+				// Check and report the results.
+				futil.checkResults(theOutputFile, theGoldFile, logFile);
 			}
-
-			XalanTransformer::terminate();
-
-			futil.reportPassFail(logFile);
-			logFile.logTestFileClose("Param Testing: ", "Done");
-			logFile.close();
-
+							
+			logFile.logTestCaseClose("Done", "Pass");
 		}
+
 		catch(...)
 		{
 			cerr << "Exception caught!!!" << endl << endl;
 		}
+
+		futil.reportPassFail(logFile, UniqRunid);
+		logFile.logTestFileClose("Param Testing: ", "Done");
+		logFile.close();
+
+		futil.analyzeResults(xalan, resultsFile);
+
+		XalanTransformer::terminate();
 	}
 
 	return 0;
