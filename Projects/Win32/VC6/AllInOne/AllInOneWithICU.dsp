@@ -2583,6 +2583,14 @@ SOURCE=..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentFragmentAllocator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanSpaceNodeTester.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanSpaceNodeTester.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\XSLT\XResultTreeFrag.cpp
 # End Source File
 # Begin Source File
