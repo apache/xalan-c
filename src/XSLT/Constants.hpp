@@ -217,7 +217,6 @@ public:
 	static const XalanDOMString	ELEMNAME_NSALIAS_STRING;
 	static const XalanDOMString	ELEMNAME_NUMBER_STRING;
 	static const XalanDOMString	ELEMNAME_OTHERWISE_STRING;
-	static const XalanDOMString	ELEMNAME_PARAM_STRING;
 	static const XalanDOMString	ELEMNAME_PRESERVESPACE_STRING;
 	static const XalanDOMString	ELEMNAME_ROOT_STRING; // pattern-by-example support
 	static const XalanDOMString	ELEMNAME_SORT_STRING;
@@ -239,7 +238,6 @@ public:
 	static const XalanDOMString	ELEMNAME_COMPONENT_STRING;
 	static const XalanDOMString	ELEMNAME_CSSSTYLECONVERSION_STRING;
 	static const XalanDOMString	ELEMNAME_OUTPUT_STRING;
-	static const XalanDOMString	ELEMNAME_PARAMVARIABLE_OLD_STRING;
 	static const XalanDOMString	ELEMNAME_PARAMVARIABLE_STRING;
 	static const XalanDOMString	ELEMNAME_PI_OLD_STRING;
 	static const XalanDOMString	ELEMNAME_PI_STRING;
