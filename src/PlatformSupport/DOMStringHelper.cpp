@@ -1453,6 +1453,28 @@ TranscodeNumber(
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+PointerToDOMString(
+			const void*			theValue,
+			XalanDOMString&		theResult)
+{
+	char			theBuffer[MAX_PRINTF_DIGITS + 1];
+
+	unsigned int	theCharsWritten = sprintf(theBuffer, "%p", theValue);
+	assert(theCharsWritten != 0);
+
+	reserve(theResult, length(theResult) + theCharsWritten);
+
+	TranscodeNumber(
+			theBuffer,
+			theBuffer + theCharsWritten,
+			back_inserter(theResult));
+
+	return theResult;
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 DoubleToDOMString(
 			double				theDouble,
 			XalanDOMString&		theResult)

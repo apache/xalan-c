@@ -600,6 +600,38 @@ endsWith(
 
 
 /**
+ * Converts a pointer into a XalanDOMString
+ * 
+ * @param theValue pointer to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
+PointerToDOMString(
+			const void*			theValue,
+			XalanDOMString&		theResult);
+
+
+
+/**
+ * Converts a pointer into a XalanDOMString
+ * 
+ * @param theValue pointer to be converted
+ * @return string representation of the pointer
+ */
+inline const XalanDOMString
+PointerToDOMString(const void*	theValue)
+{
+	XalanDOMString	theResult;
+
+	PointerToDOMString(theValue, theResult);
+
+	return theResult;
+}
+
+
+
+/**
  * Converts a double value into a XalanDOMString
  * 
  * @param theValue number to be converted
