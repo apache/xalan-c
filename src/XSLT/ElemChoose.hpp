@@ -69,10 +69,6 @@
 
 
 
-#include <xercesc/sax/AttributeList.hpp>
-
-
-
 class ElemChoose: public ElemTemplateElement
 {
 public:
