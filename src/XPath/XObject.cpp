@@ -303,6 +303,210 @@ private:
 
 
 
+struct
+equalsDOMString
+{
+	bool
+	operator()(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS) const
+	{
+		return DOMStringEqualsFunction()(theLHS, theRHS);
+	}
+
+	bool
+	operator()(
+			const XObject&			theLHS,
+			const XalanDOMString&	theRHS) const
+	{
+		return DOMStringEqualsFunction()(theLHS.str(), theRHS);
+	}
+
+	bool
+	operator()(
+			const XalanDOMString&	theLHS,
+			const XObject&			theRHS) const
+	{
+		return DOMStringEqualsFunction()(theLHS, theRHS.str());
+	}
+};
+
+
+
+struct
+notEqualsDOMString
+{
+	bool
+	operator()(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS) const
+	{
+		return DOMStringNotEqualsFunction()(theLHS, theRHS);
+	}
+
+	bool
+	operator()(
+			const XObject&			theLHS,
+			const XalanDOMString&	theRHS) const
+	{
+		return DOMStringNotEqualsFunction()(theLHS.str(), theRHS);
+	}
+
+	bool
+	operator()(
+			const XalanDOMString&	theLHS,
+			const XObject&			theRHS) const
+	{
+		return DOMStringNotEqualsFunction()(theLHS, theRHS.str());
+	}
+};
+
+
+
+struct
+lessThanDOMString
+{
+	bool
+	operator()(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS) const
+	{
+		return DoubleSupport::lessThan(
+				DOMStringToDouble(theLHS),
+				DOMStringToDouble(theRHS));
+	}
+
+	bool
+	operator()(
+			const XObject&			theLHS,
+			const XalanDOMString&	theRHS) const
+	{
+		return DoubleSupport::lessThan(
+				theLHS.num(),
+				DOMStringToDouble(theRHS));
+	}
+
+	bool
+	operator()(
+			const XalanDOMString&	theLHS,
+			const XObject&			theRHS) const
+	{
+		return DoubleSupport::lessThan(
+				DOMStringToDouble(theLHS),
+				theRHS.num());
+	}
+};
+
+
+
+struct
+lessThanOrEqualDOMString
+{
+	bool
+	operator()(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS) const
+	{
+		return DoubleSupport::lessThanOrEqual(
+				DOMStringToDouble(theLHS),
+				DOMStringToDouble(theRHS));
+	}
+
+	bool
+	operator()(
+			const XObject&			theLHS,
+			const XalanDOMString&	theRHS) const
+	{
+		return DoubleSupport::lessThanOrEqual(
+				theLHS.num(),
+				DOMStringToDouble(theRHS));
+	}
+
+	bool
+	operator()(
+			const XalanDOMString&	theLHS,
+			const XObject&			theRHS) const
+	{
+		return DoubleSupport::lessThanOrEqual(
+				DOMStringToDouble(theLHS),
+				theRHS.num());
+	}
+};
+
+
+
+struct
+greaterThanDOMString
+{
+	bool
+	operator()(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS) const
+	{
+		return DoubleSupport::greaterThan(
+				DOMStringToDouble(theLHS),
+				DOMStringToDouble(theRHS));
+	}
+
+	bool
+	operator()(
+			const XObject&			theLHS,
+			const XalanDOMString&	theRHS) const
+	{
+		return DoubleSupport::greaterThan(
+				theLHS.num(),
+				DOMStringToDouble(theRHS));
+	}
+
+	bool
+	operator()(
+			const XalanDOMString&	theLHS,
+			const XObject&			theRHS) const
+	{
+		return DoubleSupport::greaterThan(
+				DOMStringToDouble(theLHS),
+				theRHS.num());
+	}
+};
+
+
+
+struct
+greaterThanOrEqualDOMString
+{
+	bool
+	operator()(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS) const
+	{
+		return DoubleSupport::greaterThanOrEqual(
+				DOMStringToDouble(theLHS),
+				DOMStringToDouble(theRHS));
+	}
+
+	bool
+	operator()(
+			const XObject&			theLHS,
+			const XalanDOMString&	theRHS) const
+	{
+		return DoubleSupport::greaterThanOrEqual(
+				theLHS.num(),
+				DOMStringToDouble(theRHS));
+	}
+
+	bool
+	operator()(
+			const XalanDOMString&	theLHS,
+			const XObject&			theRHS) const
+	{
+		return DoubleSupport::greaterThanOrEqual(
+				DOMStringToDouble(theLHS),
+				theRHS.num());
+	}
+};
+
+
+
 template<class CompareFunction, class TypeFunction>
 bool
 doCompareNodeSets(
@@ -375,7 +579,7 @@ bool
 doCompareString(
 			const NodeRefListBase&	theLHSNodeSet,
 			const StringFunction&	theStringFunction,
-			const XalanDOMString&	theRHS,
+			const XObject&			theRHS,
 			const CompareFunction&	theCompareFunction,
 			XPathExecutionContext&	executionContext)
 {
@@ -508,7 +712,7 @@ compareNodeSets(
 			theResult = doCompareString(
 					theLHS.nodeset(),
 					getStringFromNodeFunction(executionContext),
-					theRHS.str(),
+					theRHS,
 					theStringCompareFunction,
 					executionContext);
 		}
@@ -524,7 +728,7 @@ compareNodeSets(
 		theResult = doCompareString(
 				theLHS.nodeset(),
 				getStringFromNodeFunction(executionContext),
-				theRHS.str(),
+				theRHS,
 				theStringCompareFunction,
 				executionContext);
 	}
@@ -549,7 +753,7 @@ equalNodeSet(
 				theLHS,
 				theRHS,
 				theRHSType,
-				DOMStringEqualsFunction(),
+				equalsDOMString(),
 				DoubleSupport::equalFunction(),
 				executionContext);
 }
@@ -567,7 +771,7 @@ notEqualNodeSet(
 				theLHS,
 				theRHS,
 				theRHSType,
-				DOMStringNotEqualsFunction(),
+				notEqualsDOMString(),
 				DoubleSupport::notEqualFunction(),
 				executionContext);
 }
@@ -585,7 +789,7 @@ lessThanNodeSet(
 				theLHS,
 				theRHS,
 				theRHSType,
-				DOMStringLessThanFunction(),
+				lessThanDOMString(),
 				DoubleSupport::lessThanFunction(),
 				executionContext);
 }
@@ -603,7 +807,7 @@ lessThanOrEqualNodeSet(
 				theLHS,
 				theRHS,
 				theRHSType,
-				DOMStringLessThanOrEqualFunction(),
+				lessThanOrEqualDOMString(),
 				DoubleSupport::lessThanOrEqualFunction(),
 				executionContext);
 }
@@ -621,7 +825,7 @@ greaterThanNodeSet(
 				theLHS,
 				theRHS,
 				theRHSType,
-				DOMStringGreaterThanFunction(),
+				greaterThanDOMString(),
 				DoubleSupport::greaterThanFunction(),
 				executionContext);
 }
@@ -639,7 +843,7 @@ greaterThanOrEqualNodeSet(
 				theLHS,
 				theRHS,
 				theRHSType,
-				DOMStringGreaterThanOrEqualFunction(),
+				greaterThanOrEqualDOMString(),
 				DoubleSupport::greaterThanOrEqualFunction(),
 				executionContext);
 }
