@@ -203,7 +203,7 @@ FormatterToXMLBase::~FormatterToXMLBase()
 
 
 
-inline unsigned int
+unsigned int
 FormatterToXMLBase::decodeUTF16SurrogatePair(
 			XalanDOMChar	theHighSurrogate,
 			XalanDOMChar	theLowSurrogate)
