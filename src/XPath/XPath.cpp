@@ -2270,6 +2270,52 @@ XPath::findFollowingSiblings(
 
 
 
+/*
+ * This is bit of a hack to figure out where we should start for
+ * the preceeding axis.  It's mostly to support RTFs which have
+ * been coerced to nodesets through the nodeset() extension function.
+ */
+static XalanNode*
+findTopNode(
+			XalanNode*				context,
+			XalanNode::NodeType		theType)
+{
+	assert(context != 0);
+
+	if (theType == XalanNode::DOCUMENT_NODE)
+	{
+		return context;
+	}
+	else
+	{
+		XalanDocument* const	theDocument = context->getOwnerDocument();
+		assert(theDocument != 0);
+
+		if (theDocument->getDocumentElement() != 0)
+		{
+			return theDocument;
+		}
+		else
+		{
+			XalanNode*	theNode = 0;
+
+			while(context != 0 &&
+				  context->getNodeType() != XalanNode::DOCUMENT_NODE)
+			{
+				theNode = context;
+
+				context = DOMServices::getParentOfNode(*context);
+			}
+
+			assert(theNode != 0);
+
+			return theNode;
+		}
+	}
+}
+
+
+
 int
 XPath::findPreceeding(
 			XPathExecutionContext&	executionContext,
@@ -2290,15 +2336,17 @@ XPath::findPreceeding(
 	opPos += 3;
 
 	// Ugh.  Reverse document order, no parents, I guess.
-	XalanDocument* const	doc = context->getOwnerDocument();
+	const XalanNode::NodeType	theType = context->getNodeType();
 
-	XalanNode*				pos = doc;
+	XalanNode* const	topNode = findTopNode(context, theType);
+
+	XalanNode*			pos = topNode;
 
 	// If the context node is an attribute, we need to perform some
 	// magic to stop the search at the appropriate point, which is when
 	// we arrive back at the parent.
 	const bool				contextIsAttribute =
-			context->getNodeType() == XalanNode::ATTRIBUTE_NODE ? true : false;
+			theType == XalanNode::ATTRIBUTE_NODE ? true : false;
 
 	const XalanNode* const	theAttributeContextParent =
 		contextIsAttribute == true ? DOMServices::getParentOfNode(*context) : 0;
@@ -2368,7 +2416,7 @@ XPath::findPreceeding(
 			{
 				pos = DOMServices::getParentOfNode(*pos);
 
-				if(doc == pos)
+				if(topNode == pos)
 				{
 					nextNode = 0;
 					break;
@@ -2842,8 +2890,7 @@ XPath::predicates(
 			assert(pred.get() != 0);
 
 			// Remove any node that doesn't satisfy the predicate.
-			if(XObject::eTypeNumber == pred->getType() &&
-					i + 1 != pred->num() ||
+			if((XObject::eTypeNumber == pred->getType() && i + 1 != pred->num()) ||
 			   pred->boolean() == false)
 			{
 				// Set the node to 0.  After we're done,

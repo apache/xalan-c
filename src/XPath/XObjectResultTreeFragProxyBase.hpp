@@ -85,8 +85,8 @@ public:
 
 	// These interfaces are inherited from ResultTreeFragBase...
 
-	virtual void
-	clear();
+	virtual XalanNode*
+	getNodesetRoot() const;
 
 	virtual const XalanDOMString&
 	getNodeName() const;

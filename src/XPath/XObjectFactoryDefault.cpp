@@ -68,8 +68,6 @@
 #include "XNodeSet.hpp"
 #include "XNull.hpp"
 #include "XNumber.hpp"
-#include "XResultTreeFrag.hpp"
-#include "XSpan.hpp"
 #include "XString.hpp"
 #include "XStringAdapter.hpp"
 #include "XStringCached.hpp"
@@ -81,8 +79,7 @@
 XObjectFactoryDefault::XObjectFactoryDefault(
 			unsigned int	theXStringBlockSize,
 			unsigned int	theXNumberBlockSize,
-			unsigned int	theXNodeSetBlockSize,
-			unsigned int	theXResultTreeFragBlockSize) :  
+			unsigned int	theXNodeSetBlockSize) : 
 	XObjectFactory(),
 	m_xstringAdapterAllocator(theXStringBlockSize),
 	m_xstringAllocator(theXStringBlockSize),
@@ -90,13 +87,11 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 	m_xstringReferenceAllocator(theXStringBlockSize),
 	m_xnumberAllocator(theXNumberBlockSize),
 	m_xnodesetAllocator(theXNodeSetBlockSize),
-	m_xresultTreeFragAllocator(theXResultTreeFragBlockSize),
 	m_xtokenNumberAdapterAllocator(theXNumberBlockSize),
 	m_xtokenStringAdapterAllocator(theXStringBlockSize),
 	m_xobjects(),
 	m_xnumberCache(),
 	m_xnodesetCache(),
-	m_xresultTreeFragCache(),
 	m_XNull(new XNull),
 	m_xbooleanFalse(new XBoolean(false)),
 	m_xbooleanTrue(new XBoolean(true))
@@ -255,28 +250,6 @@ XObjectFactoryDefault::doReturnObject(
 		}
 		break;
 
-	case XObject::eTypeResultTreeFrag:	
-		{
-			XResultTreeFrag* const	theXResultTreeFrag =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(XResultTreeFrag*)theXObject;
-#else
-				static_cast<XResultTreeFrag*>(theXObject);
-#endif
-
-			if (m_xresultTreeFragCache.size() < eXResultTreeFragCacheMax)
-			{
-				m_xresultTreeFragCache.push_back(theXResultTreeFrag);
-
-				bStatus = true;
-			}
-			else
-			{
-				bStatus = m_xresultTreeFragAllocator.destroy(theXResultTreeFrag);
-			}
-		}
-		break;
-
 	default:
 		{
 #if !defined(XALAN_NO_NAMESPACES)
@@ -340,20 +313,6 @@ XObjectFactoryDefault::createUnknown(const XalanDOMString&	theValue)
 	theXUnknown->setFactory(this);
 
 	return XObjectPtr(theXUnknown);
-}
-
-
-
-const XObjectPtr
-XObjectFactoryDefault::createSpan(BorrowReturnMutableNodeRefList&	theValue)
-{
-	XSpan* const	theXObject = new XSpan(theValue);
-
-	m_xobjects.push_back(theXObject);
-
-	theXObject->setFactory(this);
-
-	return XObjectPtr(theXObject);
 }
 
 
@@ -510,33 +469,6 @@ XObjectFactoryDefault::createString(GetAndReleaseCachedString&	theValue)
 
 
 
-const XObjectPtr
-XObjectFactoryDefault::createResultTreeFrag(BorrowReturnResultTreeFrag&		theValue)
-{
-	if (m_xresultTreeFragCache.size() > 0)
-	{
-		XResultTreeFrag* const	theResultTreeFrag = m_xresultTreeFragCache.back();
-
-		m_xresultTreeFragCache.pop_back();
-
-		theResultTreeFrag->set(theValue);
-
-		return XObjectPtr(theResultTreeFrag);
-	}
-	else
-	{
-		m_xresultTreeFragCache.reserve(eXResultTreeFragCacheMax);
-
-		XResultTreeFrag* const	theResultTreeFrag =  m_xresultTreeFragAllocator.create(theValue);
-
-		theResultTreeFrag->setFactory(this);
-
-		return XObjectPtr(theResultTreeFrag);
-	}
-}
-
-
-
 void
 XObjectFactoryDefault::reset()
 {
@@ -549,8 +481,6 @@ XObjectFactoryDefault::reset()
 	m_xnumberAllocator.reset();
 
 	m_xnodesetAllocator.reset();
-
-	m_xresultTreeFragAllocator.reset();
 
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::for_each;
@@ -565,6 +495,4 @@ XObjectFactoryDefault::reset()
 	m_xnumberCache.clear();
 
 	m_xnodesetCache.clear();
-
-	m_xresultTreeFragCache.clear();
 }

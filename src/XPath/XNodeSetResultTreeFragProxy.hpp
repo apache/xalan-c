@@ -81,7 +81,7 @@ public:
 	virtual
 	~XNodeSetResultTreeFragProxy();
 
-	// These interfaces are inherited from ResultTreeFragBase...
+	// These interfaces are inherited from XObjectResultTreeFragProxyBase...
 
 	virtual XalanNode*
 	getFirstChild() const;

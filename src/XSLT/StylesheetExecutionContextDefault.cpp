@@ -154,8 +154,10 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_formatterToTextCache(),
 	m_formatterToSourceTreeCache(),
 	m_nodeSorterCache(),
-	m_resultTreeFragCache(*this, eResultTreeFragCacheListSize),
-	m_indentAmount(-1)
+	m_indentAmount(-1),
+	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
+	m_resultTreeFragAllocator(eResultTreeFragAllocatorBlockSize),
+	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize)
 {
 }
 
@@ -189,8 +191,10 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_formatterToTextCache(),
 	m_formatterToSourceTreeCache(),
 	m_nodeSorterCache(),
-	m_resultTreeFragCache(*this, eResultTreeFragCacheListSize),
-	m_indentAmount(-1)
+	m_indentAmount(-1),
+	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
+	m_resultTreeFragAllocator(eResultTreeFragAllocatorBlockSize),
+	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize)
 {
 }
 
@@ -927,7 +931,13 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 {
 	assert(m_xsltProcessor != 0);
 
-	BorrowReturnResultTreeFrag	theResultTreeFrag(*this);
+	XalanSourceTreeDocumentFragment* const	theDocumentFragment =
+		m_documentFragmentAllocator.create(*getSourceTreeFactory());
+	assert(theDocumentFragment != 0);
+
+	ResultTreeFragBase* const	theResultTreeFrag =
+		m_resultTreeFragAllocator.create(theDocumentFragment);
+	assert(theResultTreeFrag != 0);
 
 	GuardCachedObject<FormatterToSourceTreeCacheType>	theGuard(m_formatterToSourceTreeCache);
 
@@ -938,14 +948,6 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 
 	theFormatter->setDocument(theDocument);
 
-	XalanSourceTreeDocumentFragment* const	theDocumentFragment =
-#if defined(XALAN_OLD_STYLE_CASTS)
-		((const ResultTreeFrag*)theResultTreeFrag.get())->getDocumentFragment();
-#else
-		static_cast<const ResultTreeFrag*>(theResultTreeFrag.get())->getDocumentFragment();
-#endif
-	assert(theDocumentFragment != 0);
-
 	theFormatter->setDocumentFragment(theDocumentFragment);
 
 	theFormatter->setPrefixResolver(m_xsltProcessor);
@@ -954,9 +956,18 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 				*this,
 				theFormatter);
 
+	theFormatter->startDocument();
+
 	templateChild.executeChildren(*this, sourceNode);
 
-	return getXObjectFactory().createResultTreeFrag(theResultTreeFrag);
+	theFormatter->endDocument();
+
+	XResultTreeFrag* const	theXResultTreeFrag =
+		m_xresultTreeFragAllocator.create(*theResultTreeFrag);
+
+	theXResultTreeFrag->setExecutionContext(this);
+
+	return XObjectPtr(theXResultTreeFrag);
 }
 
 
@@ -1072,6 +1083,40 @@ StylesheetExecutionContextDefault::popElementRecursionStack()
 
 
 
+bool
+StylesheetExecutionContextDefault::returnXResultTreeFrag(XResultTreeFrag*	theXResultTreeFrag)
+{
+	assert(theXResultTreeFrag != 0);
+
+	ResultTreeFragBase* const	theResultTreeFragBase =
+		theXResultTreeFrag->release();
+
+	if (m_xresultTreeFragAllocator.destroy(theXResultTreeFrag) == false)
+	{
+		return false;
+	}
+	else
+	{
+	ResultTreeFrag* const	theResultTreeFrag =
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(ResultTreeFrag*)theResultTreeFragBase;
+#else
+			static_cast<ResultTreeFrag*>(theResultTreeFragBase);
+#endif
+
+		XalanSourceTreeDocumentFragment* const	theDocumentFragment =
+			theResultTreeFrag->getDocumentFragment();
+		assert(theDocumentFragment != 0);
+
+		m_resultTreeFragAllocator.destroy(theResultTreeFrag);
+		m_documentFragmentAllocator.destroy(theDocumentFragment);
+
+		return true;
+	}
+}
+
+
+	
 FormatterToXML*
 StylesheetExecutionContextDefault::createFormatterToXML(
 			Writer&					writer,
@@ -1455,7 +1500,9 @@ StylesheetExecutionContextDefault::reset()
 	m_formatterToTextCache.reset();
 	m_formatterToSourceTreeCache.reset();
 	m_nodeSorterCache.reset();
-	m_resultTreeFragCache.reset();
+	m_documentFragmentAllocator.reset();
+	m_resultTreeFragAllocator.reset();
+	m_xresultTreeFragAllocator.reset();
 
 	// Just in case endDocument() was not called,
 	// clean things up...
@@ -1610,22 +1657,6 @@ bool
 StylesheetExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*		theList)
 {
 	return m_xpathExecutionContextDefault.returnMutableNodeRefList(theList);
-}
-
-
-
-ResultTreeFragBase*
-StylesheetExecutionContextDefault::borrowResultTreeFrag()
-{
-	return m_resultTreeFragCache.get();
-}
-
-
-
-bool
-StylesheetExecutionContextDefault::returnResultTreeFrag(ResultTreeFragBase*		theResultTreeFragBase)
-{
-	return m_resultTreeFragCache.release(theResultTreeFragBase);
 }
 
 
@@ -2353,54 +2384,3 @@ StylesheetExecutionContextDefault::cleanUpTransients()
 
 
 
-StylesheetExecutionContextDefault::ResultTreeFragCache::ResultTreeFragCache(
-			StylesheetExecutionContextDefault&	theExecutionContext,
-			unsigned int						initialSize) :
-	m_resultTreeFragCache(initialSize),
-	m_documentFragmentCache(initialSize)
-{
-	m_documentFragmentCache.m_createFunctor.setExecutionContext(&theExecutionContext);
-}
-
-
-
-StylesheetExecutionContextDefault::ResultTreeFragCache::~ResultTreeFragCache()
-{
-}
-
-
-
-ResultTreeFragBase*
-StylesheetExecutionContextDefault::ResultTreeFragCache::get()
-{
-	GuardCachedObject<ResultTreeFragCacheType>		theResultTreeFrag(m_resultTreeFragCache);
-	assert(theResultTreeFrag.get() != 0);
-
-	theResultTreeFrag.get()->setDocumentFragment(m_documentFragmentCache.get());
-	assert(theResultTreeFrag.get()->getDocumentFragment() != 0);
-
-	return theResultTreeFrag.release();
-}
-
-
-
-bool
-StylesheetExecutionContextDefault::ResultTreeFragCache::release(ResultTreeFragBase*		theResultTreeFragBase)
-{
-	assert(theResultTreeFragBase != 0);
-
-	ResultTreeFrag* const	theResultTreeFrag =
-#if defined(XALAN_OLD_STYLE_CASTS)
-		(ResultTreeFrag*)theResultTreeFragBase;
-#else
-		static_cast<ResultTreeFrag*>(theResultTreeFragBase);
-#endif
-
-	XalanSourceTreeDocumentFragment* const	theDocumentFragment =
-			theResultTreeFrag->getDocumentFragment();
-	assert(theDocumentFragment != 0);
-
-	m_documentFragmentCache.release(theDocumentFragment);
-
-	return m_resultTreeFragCache.release(theResultTreeFrag);
-}

@@ -78,7 +78,6 @@
 class XalanNode;
 class MutableNodeRefList;
 class NodeRefListBase;
-class ResultTreeFragBase;
 class XObject;
 class XObjectPtr;
 class XToken;
@@ -93,7 +92,6 @@ class XALAN_XPATH_EXPORT XObjectFactory
 public:
 
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
-	typedef XPathExecutionContext::BorrowReturnResultTreeFrag		BorrowReturnResultTreeFrag;
 	typedef XPathExecutionContext::GetAndReleaseCachedString		GetAndReleaseCachedString;
 
 
@@ -250,24 +248,6 @@ public:
 	 */
 	virtual const XObjectPtr
 	createUnknown(const XalanDOMString& 	theValue) = 0;
-
-	/**
-	 * Create a result tree fragment XObject from a result tree fragment.
-	 * 
-	 * @param theValue	value used to create object.  theValue will be owned by the new XObject.	
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createResultTreeFrag(BorrowReturnResultTreeFrag&	theValue) = 0;
-
-	/**
-	 * Create a span XObject from a node list.
-	 * 
-	 * @param theValue	value used to create object.  The new object will own the pointer.
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createSpan(BorrowReturnMutableNodeRefList& 	theValue) = 0;
 
 	/**
 	 *

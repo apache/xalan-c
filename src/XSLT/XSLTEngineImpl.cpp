@@ -118,7 +118,6 @@
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathFactory.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
-#include <XPath/XResultTreeFrag.hpp>
 
 
 

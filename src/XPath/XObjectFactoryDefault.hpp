@@ -76,7 +76,6 @@
 
 #include <XPath/XNodeSetAllocator.hpp>
 #include <XPath/XNumberAllocator.hpp>
-#include <XPath/XResultTreeFragAllocator.hpp>
 #include <XPath/XStringAllocator.hpp>
 #include <XPath/XStringAdapterAllocator.hpp>
 #include <XPath/XStringCachedAllocator.hpp>
@@ -116,7 +115,6 @@ public:
 		eDefaultXStringBlockSize = 10,
 		eDefaultXNumberBlockSize = 10,
 		eDefaultXNodeSetBlockSize = 10,
-		eDefaultXResultTreeFragBlockSize = 10,
 		eXNumberCacheMax = 40,
 		eXNodeSetCacheMax = 40,
 		eXResultTreeFragCacheMax = 40
@@ -125,16 +123,15 @@ public:
 	/**
 	 * Construct a factory for creating XObjects.
 	 * 
-	 * @param theXStringBlockSize allacation block size
-	 * @param theXNumberBlockSize allacation block size
-	 * @param theXNodeSetBlockSize allacation block size
+	 * @param theXStringBlockSize allocation block size
+	 * @param theXNumberBlockSize allocation block size
+	 * @param theXNodeSetBlockSize allocation block size
 	 */
 	explicit
 	XObjectFactoryDefault(
 			unsigned int		theXStringBlockSize = eDefaultXStringBlockSize,
 			unsigned int		theXNumberBlockSize = eDefaultXNumberBlockSize,
-			unsigned int		theXNodeSetBlockSize = eDefaultXNodeSetBlockSize,
-			unsigned int		theXResultTreeFragBlockSize = eDefaultXResultTreeFragBlockSize); 
+			unsigned int		theXNodeSetBlockSize = eDefaultXNodeSetBlockSize); 
 
 	virtual
 	~XObjectFactoryDefault();
@@ -186,22 +183,14 @@ public:
 	createUnknown(
 			const XalanDOMString&	theValue);
 
-	virtual const XObjectPtr
-	createResultTreeFrag(BorrowReturnResultTreeFrag&	theValue);
-
-	virtual const XObjectPtr
-	createSpan(BorrowReturnMutableNodeRefList&	theValue);
-
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XObject*>			XObjectCollectionType;
 	typedef vector<XNumber*>			XNumberCacheType;
 	typedef vector<XNodeSet*>			XNodeSetCacheType;
-	typedef vector<XResultTreeFrag*>	XResultTreeFragCacheType;
 #else
 	typedef std::vector<XObject*>			XObjectCollectionType;
 	typedef std::vector<XNumber*>			XNumberCacheType;
 	typedef std::vector<XNodeSet*>			XNodeSetCacheType;
-	typedef std::vector<XResultTreeFrag*>	XResultTreeFragCacheType;
 #endif
 
 protected:
@@ -239,8 +228,6 @@ private:
 
 	XNodeSetAllocator				m_xnodesetAllocator;
 
-	XResultTreeFragAllocator		m_xresultTreeFragAllocator;
-
 	XTokenNumberAdapterAllocator	m_xtokenNumberAdapterAllocator;
 
 	XTokenStringAdapterAllocator	m_xtokenStringAdapterAllocator;
@@ -250,8 +237,6 @@ private:
 	XNumberCacheType				m_xnumberCache;
 
 	XNodeSetCacheType				m_xnodesetCache;
-
-	XResultTreeFragCacheType		m_xresultTreeFragCache;
 
 	const XalanAutoPtr<XNull>		m_XNull;
 

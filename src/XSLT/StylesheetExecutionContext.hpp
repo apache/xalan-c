@@ -141,6 +141,7 @@ class XalanNumberFormat;
 class XPath;
 class XObject;
 class XObjectPtr;
+class XResultTreeFrag;
 
 
 
@@ -1070,6 +1071,19 @@ public:
 	};
 
 
+	/**
+	 * This is a hook that XResultTreeFrag instances (which are reference
+	 * counted), can notify the owning StylesheetExecutionContext instance
+	 * when they are dereferenced and can be cleaned up.
+	 *
+	 * @param theXResultTreeFrag The instance that is being returned.
+	 *
+	 * @return true if the XResultTreeFrag instance belongs to the execution context. false if not.
+	 */
+	virtual bool
+	returnXResultTreeFrag(XResultTreeFrag*	theXResultTreeFrag) = 0;
+
+
 	enum eDummy
 	{
 		eDefaultXMLIndentAmount = 0,
@@ -1595,12 +1609,6 @@ public:
 
 	virtual bool
 	returnMutableNodeRefList(MutableNodeRefList*	theList) = 0;
-
-	virtual ResultTreeFragBase*
-	borrowResultTreeFrag() = 0;
-
-	virtual bool
-	returnResultTreeFrag(ResultTreeFragBase*	theResultTreeFragBase) = 0;
 
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const = 0;

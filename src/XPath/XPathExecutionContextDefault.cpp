@@ -332,22 +332,6 @@ XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	theLi
 
 
 
-ResultTreeFragBase*
-XPathExecutionContextDefault::borrowResultTreeFrag()
-{
-	return 0;
-}
-
-
-
-bool
-XPathExecutionContextDefault::returnResultTreeFrag(ResultTreeFragBase*	/* theResultTreeFragBase */)
-{
-	return true;
-}
-
-
-
 MutableNodeRefList*
 XPathExecutionContextDefault::createMutableNodeRefList() const
 {

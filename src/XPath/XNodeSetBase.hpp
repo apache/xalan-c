@@ -156,11 +156,11 @@ private:
 	operator=(const XNodeSetBase&);
 
 	// Data members...
-	XNodeSetResultTreeFragProxy					m_proxy;
+	XNodeSetResultTreeFragProxy		m_proxy;
 
-	mutable XalanDOMString						m_cachedStringValue;
+	mutable XalanDOMString			m_cachedStringValue;
 
-	mutable double								m_cachedNumberValue;
+	mutable double					m_cachedNumberValue;
 };
 
 

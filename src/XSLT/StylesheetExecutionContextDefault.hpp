@@ -97,8 +97,11 @@
 #include <XSLT/CountersTable.hpp>
 #include <XSLT/NodeSorter.hpp>
 #include <XSLT/ResultTreeFrag.hpp>
+#include <XSLT/ResultTreeFragAllocator.hpp>
 #include <XSLT/Stylesheet.hpp>
 #include <XSLT/VariablesStack.hpp>
+#include <XSLT/XResultTreeFragAllocator.hpp>
+#include <XSLT/XalanSourceTreeDocumentFragmentAllocator.hpp>
 
 
 
@@ -513,6 +516,9 @@ public:
 	virtual const ElemTemplateElement*
 	popElementRecursionStack();
 
+	virtual bool
+	returnXResultTreeFrag(XResultTreeFrag*	theXResultTreeFrag);
+
 	virtual FormatterToXML*
 	createFormatterToXML(
 			Writer&					writer,
@@ -799,12 +805,6 @@ public:
 	virtual bool
 	returnMutableNodeRefList(MutableNodeRefList*	theList);
 
-	virtual ResultTreeFragBase*
-	borrowResultTreeFrag();
-
-	virtual bool
-	returnResultTreeFrag(ResultTreeFragBase*	theResultTreeFragBase);
-
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const;
 
@@ -1011,105 +1011,6 @@ private:
 	void
 	cleanUpTransients();
 
-	/**
-	 *
-	 * A simple class to cache ResultTreeFrag and
-	 * XalanSourceTreeDocumentFragment instances.
-	 *
-	 */
-	class XALAN_XSLT_EXPORT ResultTreeFragCache
-	{
-	public:
-
-		ResultTreeFragCache(
-				StylesheetExecutionContextDefault&	theExecutionContext,
-				unsigned int						initialSize);
-
-		~ResultTreeFragCache();
-
-		ResultTreeFragBase*
-		get();
-
-		bool
-		release(ResultTreeFragBase*		theResultTreeFragBase);
-
-		void
-		reset()
-		{
-			m_resultTreeFragCache.reset();
-
-			m_documentFragmentCache.reset();
-		}
-
-	private:
-
-		/**
-		 *
-		 * A simple functor class to create XalanSourceTreeDocumentFragment
-		 * instances.  This is necessary because the constructor requires
-		 * a XalanSourceTreeDocument instance.
-		 *
-		 */
-		class XALAN_XSLT_EXPORT LocalCreateFunctor
-		{
-		public:
-
-			LocalCreateFunctor() :
-				m_executionContext(0)
-			{
-			}
-
-			void
-			setExecutionContext(StylesheetExecutionContextDefault*	theExecutionContext)
-			{
-				m_executionContext = theExecutionContext;
-			}
-
-			XalanSourceTreeDocumentFragment*
-			operator()() const
-			{
-				assert(m_executionContext != 0);
-
-				return new XalanSourceTreeDocumentFragment(*m_executionContext->getSourceTreeFactory());
-			}
-
-			StylesheetExecutionContextDefault*		m_executionContext;
-		};
-
-		/**
-		 *
-		 * A simple functor class to clear the children from a 
-		 * XalanSourceTreeDocumentFragment so it can be re-used.
-		 *
-		 */
-		class XALAN_XSLT_EXPORT LocalResetFunctor
-		{
-		public:
-
-			void
-			operator()(XalanSourceTreeDocumentFragment*		theInstance) const
-			{
-				theInstance->clearChildren();
-			}
-		};
-
-		typedef XalanObjectCache<
-					ResultTreeFrag,
-					DefaultCacheCreateFunctor<ResultTreeFrag>,
-					DeleteFunctor<ResultTreeFrag>,
-					ClearCacheResetFunctor<ResultTreeFrag> >		ResultTreeFragCacheType;
-
-		typedef XalanObjectCache<
-					XalanSourceTreeDocumentFragment,
-					LocalCreateFunctor,
-					DeleteFunctor<XalanSourceTreeDocumentFragment>,
-					LocalResetFunctor>											DocumentFragmentCacheType;
-
-		ResultTreeFragCacheType			m_resultTreeFragCache;
-
-		DocumentFragmentCacheType		m_documentFragmentCache;
-	};
-
 	XPathExecutionContextDefault	m_xpathExecutionContextDefault;
 
 	// $$ ToDo: Try to remove this dependency, and rely only on XSLTProcessor...
@@ -1119,7 +1020,9 @@ private:
 
 	enum { eXPathCacheMax = 50,
 		   eDefaultParamsVectorSize = 10,
- 		   eResultTreeFragCacheListSize = 50 };
+		   eXResultTreeFragAllocatorBlockSize = 10,
+		   eResultTreeFragAllocatorBlockSize = 10,
+		   eDocumentFragmentAllocatorBlockSize = 10 };
 
 	ElementRecursionStackType			m_elementRecursionStack;
 
@@ -1174,9 +1077,13 @@ private:
 
 	NodeSorterCacheType					m_nodeSorterCache;
 
-	ResultTreeFragCache					m_resultTreeFragCache;
-
 	int									m_indentAmount;
+
+	XResultTreeFragAllocator			m_xresultTreeFragAllocator;
+
+	ResultTreeFragAllocator				m_resultTreeFragAllocator;
+
+	XalanSourceTreeDocumentFragmentAllocator	m_documentFragmentAllocator;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 

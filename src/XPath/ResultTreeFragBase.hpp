@@ -96,6 +96,19 @@ public:
 	virtual
 	~ResultTreeFragBase();
 
+	// These interfaces are new to ResultTreeFragBase...
+
+	/**
+	 * Get the root when this instance is cast to a Nodeset.
+	 * This value might be this instance itself, or could
+	 * be another object that is serving as a proxy for
+	 * this instance.  Most likely the proxy would be a
+	 * DocumentFragment.
+	 *
+	 * @return The root for this fragment.
+	 */
+	virtual XalanNode*
+	getNodesetRoot() const = 0;
 
 	// These interfaces are inherited from XalanDocumentFragment...
 	virtual const XalanDOMString&

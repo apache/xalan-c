@@ -91,7 +91,7 @@ XNodeSet::XNodeSet(BorrowReturnMutableNodeRefList&	value) :
 
 
 XNodeSet::XNodeSet(const XNodeSet&	source,
-				   bool				deepClone) :
+				   bool				/* deepClone */) :
 	XNodeSetBase(source),
 	m_value(source.m_value.clone())
 {

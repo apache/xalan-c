@@ -240,12 +240,6 @@ public:
 	virtual bool
 	returnMutableNodeRefList(MutableNodeRefList*	theList);
 
-	virtual ResultTreeFragBase*
-	borrowResultTreeFrag();
-
-	virtual bool
-	returnResultTreeFrag(ResultTreeFragBase*	theResultTreeFragBase);
-
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const;
 
