@@ -136,8 +136,8 @@ The -XML or -HTML flag must be set:
      </ol>     
      </s3>
      <s3 title="Rebuilding TestXSLT in UNIX">
-     <p>In Linux, AIX, and HP-UX 11, the ICUBridge is in the core Xalan library (&xml4c-linuxlib; in Linux; &xml4c-aixlib; in
-     AIX; &xml4c-hplib; in HP-UX 11), so you must rebuild this library along with TestXSLT.</p>
+     <p>In the Linux, AIX, HP-UX 11, and Solaris builds, the ICUBridge is in the core Xalan library (&xslt4c-linuxlib; in Linux; &xslt4c-aixlib; in
+     AIX; &xslt4c-hplib; in HP-UX 11; &xslt4c-solarislib; in Solaris), so you must rebuild this library along with TestXSLT.</p>
      <p>Before you do the build, define the XALAN_USE_ICU environment variable.  For information about defining this
      environment variable and doing a build, see <link idref="readme" anchor="unix">Steps for doing a
      UNIX build</link>.</p>
@@ -145,7 +145,7 @@ The -XML or -HTML flag must be set:
      ICUBridge to the list of dependencies for TestXSLT. If you uncomment the <code>#define XALAN_USE_ICU</code>
      statement in process.cpp (which is the right thing to do in Windows), you will get an error in AIX ("The
      macro 'XALAN_USE_ICU' has already been defined"), an error in HP-UX 11 ("Redefinition of macro 'XALAN-USE_ICU' 
-     differs from previous definition"), or a warning in Linux about duplicate settings when you
+     differs from previous definition"), or a warning in Linux or Solaris about duplicate settings when you
      run the make, and TestXSLT does not link with ICUBridge.</note>
      </s3>
    </s2>

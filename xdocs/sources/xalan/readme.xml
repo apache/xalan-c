@@ -143,7 +143,7 @@
       <li>Set the XERCESCROOT environment variable to the root of xml-xerces.<br/><br/></li>    
       <li>Set the XALANCROOT environment variable to the complete path to the root of the &xslt4c;
        distribution.<br/><br/></li>
-      <li>AIX only: Download <resource-ref idref="stlport"/> and set the STLPORTROOT environment
+      <li>AIX and Solaris only: Download <resource-ref idref="stlport"/> and set the STLPORTROOT environment
        variable to the complete path to the STLPort distribution. <br/>
        (This step is not required for Linux or HP-UX 11 because The Linux GNU compiler and HP aCC compiler include the STL (Standard Template
         Library.)<br/><br/></li>
@@ -160,7 +160,8 @@
       <li>Run the runConfigure utility with at least the platform flag (Linux) or the platform, C compilier, and C++ compiler flags (AIX) as indicated below.<br/><br/>
       <ref>Linux:</ref>&nbsp;&nbsp;<code>runConfigure -p linux</code><br/>
       <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc_r -x xlC_r</code><br/><br/>
-      <ref>HP-UX 11:</ref>&nbsp;&nbsp;<code>runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>      
+      <ref>HP-UX 11:</ref>&nbsp;&nbsp;<code>runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>
+      <ref>Solaris:</ref>&nbsp;&nbsp;<code>runConfigure -p solaris -c cc -x CC</code><br/><br/>            
       To see the other runConfigure flags you may include, use the help flag:<br/><br/>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -h</code><br/><br/></li>
       <li>Purge the previous build:<br/><br/>

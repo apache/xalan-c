@@ -6,7 +6,7 @@
     <ul>
        <li>Add support for extension elements<br/><br/></li>
        <li>Fix any conformance bugs we or our users find<br/><br/></li>
-       <li>Investigate introducing an API along the lines of the Java TRaX (Transformations for XML) interfaces<br/><br/></li>
+       <li>Expand the XalanTransformer simplified API.<br/><br/></li>
        <li>Implement a more efficient mechanism for storing and navigating DOM trees, along the lines of the &xslt4j; Document
        Table Model (DTM)</li> 
     </ul>
