@@ -82,11 +82,18 @@ using namespace std;
 #define HARNESS_API __declspec(dllimport)
 #endif
 
+// Misc typedefs and const definitions
+// These structures hold vectors of directory names and file names.
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanDOMString>		FileNameVectorType;
 #else
 	typedef std::vector<XalanDOMString>	FileNameVectorType;
 #endif
+
+	const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
+	const XalanDOMString	XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
+	const XalanDOMString	XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
+	const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
 
 // This class is exported from the Harness.dll
 class HARNESS_API FileUtility 
