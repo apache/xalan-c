@@ -64,11 +64,6 @@
 
 
 
-#include <deque>
-#include <map>
-
-
-
 #include <PlatformSupport/ArenaAllocator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanDOMStringAllocator.hpp>
