@@ -104,7 +104,7 @@ class XalanOutputStream;
 // This macro has been defined to deal with certain C++ compilers which
 // do not create Unicode strings when the "L" string constant prefix is
 // used.  It is meant _only_ for use with static strings.
-#if defined(XALAN_LSTRSUPPORT)
+#if defined(XALAN_LSTRSUPPORT) && !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 
 #define XALAN_STATIC_UCODE_STRING(str) L##str
 
