@@ -86,7 +86,7 @@
 <!ENTITY suse_81_IA-dist "-suse_81-gcc_32">
 <!ENTITY win32-dist "-win32-msvc_60">
 <!ENTITY win64-dist "-winxp_64-ecc_70">
-<!ENTITY winxp_64-dist "-windows_xp_64-ecc_71">
+<!ENTITY winxp_64-dist "-windows_xp_64-ecl_71">
 <!ENTITY winnt-dist "-windows_nt-msvc_60">
 <!ENTITY win2k-dist "-windows_2000-msvc_60">
 <!ENTITY winxp-dist "-windows_xp-msvc_60">

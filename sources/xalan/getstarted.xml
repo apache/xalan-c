@@ -166,7 +166,7 @@ will be provided in a separate distribution.</p>
        </tr>
        <tr>
          <td>HP/UX 11.0</td>
-         <td>aCC A.03.13</td>
+         <td>aCC A.03.37</td>
        </tr>
        <tr>
          <td>Red Hat Linux 7.2</td>
@@ -180,7 +180,7 @@ will be provided in a separate distribution.</p>
          <td>Windows NT, 2000, and XP</td>
          <td>Microsoft Visual C++ with SP3 and <jump href="http://www.dinkumware.com/vc_fixes.html">
          Dinkumware fixes</jump> (for 32-bit)<br/>
-         Intel C++ Compiler, version 7.0 (for 64-bit)</td>
+         Intel C++ Compiler, version 7.1 (for 64-bit)</td>
        </tr>
     </table>
 </p>
