@@ -91,11 +91,15 @@ main(
 							theCompiledStylesheet,
 							outBuffer);
 				}
+
+				// I don't have to do this, since the transformer will
+				// clean this up when it's destroyed, but why not...
+				theResult = theXalanTransformer.destroyStylesheet(theCompiledStylesheet);
 			}
    
 			if(theResult != 0)
 			{
-				cerr << "CompileStylesheet Error: \n" << theXalanTransformer.getLastError()
+				cerr << "CompileStylesheet Error: " << theXalanTransformer.getLastError()
 					 << endl
 					 << endl;
 			}
