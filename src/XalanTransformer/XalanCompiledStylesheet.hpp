@@ -87,14 +87,14 @@ public:
 	
 	XalanCompiledStylesheet(
 			const XSLTInputSource&					theStylesheetSource,
-			XSLTProcessorEnvSupportDefault&	theXSLTProcessorEnvSupport,
+			XSLTProcessorEnvSupportDefault&			theXSLTProcessorEnvSupport,
 			XSLTEngineImpl&							theProcessor);
 
 	~XalanCompiledStylesheet();
 
 	void
 	setStylesheetRoot(
-				StylesheetExecutionContextDefault&		theStylesheetExecutionContext) const;
+			StylesheetExecutionContextDefault&		theStylesheetExecutionContext) const;
 
 protected:
 
