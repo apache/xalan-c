@@ -260,7 +260,7 @@ FunctionDocument::execute(
 	if (context == 0)
 	{
 		executionContext.error(
-			"The document() function requires a non-null context node!",
+			"The document() function requires a non-null context node",
 			context,
 			locator);
 
@@ -268,13 +268,20 @@ FunctionDocument::execute(
 	}
 	else
 	{
-		if(XObject::eTypeNodeSet == arg2->getType())
+		if(XObject::eTypeNodeSet != arg2->getType())
+		{
+			executionContext.error(
+				"The second argument to the document() function must be a node-set",
+				context,
+				locator);
+		}
+		else
 		{
 			const NodeRefListBase&	nodeset = arg2->nodeset();
 
 			if (nodeset.getLength() == 0)
 			{
-				executionContext.warn("Ignoring the empty node-set provided as the second argument to the function document().",
+				executionContext.warn("Ignoring the empty node-set provided as the second argument to the function document()",
 									  context);
 
 				assert(executionContext.getPrefixResolver() != 0);
@@ -296,10 +303,6 @@ FunctionDocument::execute(
 
 				base = executionContext.findURIFromDoc(baseDoc);
 			}
-		}
-		else
-		{
-			base = arg2->str();
 		}
 	}
 
