@@ -143,7 +143,11 @@ FunctionDistinct::execute(
 			if (theStrings.find(theCachedString) == theStrings.end())
 			{
 				theResult->addNode(theNode);
+
+				theStrings.insert(theCachedString);
 			}
+
+			clear(theCachedString);
 		}
 	}
 
