@@ -68,7 +68,7 @@
 
 #include <vector>
 
-#include <xercesc/util/PlatformUtils.hpp>
+#include <util/PlatformUtils.hpp>
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanFileOutputStream.hpp>
