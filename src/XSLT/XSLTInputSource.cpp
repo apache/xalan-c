@@ -86,6 +86,38 @@ XSLTInputSource::XSLTInputSource() :
 
 
 
+#if defined(XALAN_IMPLICIT_CONSTRUCTION_REQUIRES_COPY_CONSTRUCTOR)
+XSLTInputSource::XSLTInputSource(const XSLTInputSource&		theSource) :
+	InputSource(),
+	m_stream(theSource.m_stream),
+	m_node(theSource.m_node)
+{
+	setIssueFatalErrorIfNotFound(theSource.getIssueFatalErrorIfNotFound());
+
+	const XMLCh*	theValue = theSource.getSystemId();
+
+	if (theValue != 0)
+	{
+		setSystemId(theValue);
+	}
+
+	theValue = theSource.getPublicId();
+
+	if (theValue != 0)
+	{
+		setPublicId(theValue);
+	}
+
+	theValue = theSource.getEncoding();
+
+	if (theValue != 0)
+	{
+		setEncoding(theValue);
+	}
+}
+#endif
+
+
 
 XSLTInputSource::XSLTInputSource(const XMLCh*	systemId) :
 	InputSource(systemId),

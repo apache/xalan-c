@@ -93,6 +93,10 @@ public:
 	explicit
 	XSLTInputSource();
 
+#if defined(XALAN_IMPLICIT_CONSTRUCTION_REQUIRES_COPY_CONSTRUCTOR)
+	XSLTInputSource(const XSLTInputSource&);
+#endif
+
 	/**
 	 * Create a new input source with a system identifier.
 	 *
@@ -226,8 +230,10 @@ public:
 
 private:
 
+#if !defined(XALAN_IMPLICIT_CONSTRUCTION_REQUIRES_COPY_CONSTRUCTOR)
 	// Not implemented...
 	XSLTInputSource(const XSLTInputSource&);
+#endif
 
 	void
 	operator=(const XSLTInputSource&);
