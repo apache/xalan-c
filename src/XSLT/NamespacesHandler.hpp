@@ -152,7 +152,7 @@ public:
 	typedef vector<NameSpace> 							NamespaceVectorType;
 	typedef vector<NamespaceVectorType>					NamespacesStackType;
 
-	typedef set<XalanDOMString
+	typedef set<XalanDOMString,
 				less<XalanDOMString> >					ExtensionNamespaceURISetType;
 #else
 	typedef std::map<XalanDOMString, XalanDOMString>	ExcludedResultPrefixesMapType;
