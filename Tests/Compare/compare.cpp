@@ -71,29 +71,11 @@
 	using std::string;
 #endif
 
+// XERCES HEADERS...
+//	Are included by HarnessInit.hpp
+
 // XALAN HEADERS...
-#include <util/PlatformUtils.hpp>
-#include <sax/SAXException.hpp>
-
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/DoubleSupport.hpp>
-#include <XalanTransformer/XalanTransformer.hpp>
-#include <XalanTransformer/XalanCompiledStylesheetDefault.hpp>
-
-#include <DOMSupport/DOMServices.hpp>
-#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
-#include <PlatformSupport/XalanFileOutputStream.hpp>
-#include <PlatformSupport/XalanUnicode.hpp>
-
-#include <XMLSupport/FormatterToXML.hpp>
-#include <XMLSupport/FormatterTreeWalker.hpp>
-
-#include <XSLT/XSLTInputSource.hpp>
-#include <XSLT/XSLTResultTarget.hpp>
-
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
-#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
+//	Are included by FileUtility.hpp
 
 // HARNESS HEADERS...
 #include <XMLFileReporter.hpp>
@@ -111,11 +93,13 @@
 #include <crtdbg.h>
 #endif
 
+FileUtility		futil;
+
 void
 printArgOptions()
 {
 	cerr << endl
-		 << "Perf dirname [-out -category -i -iter]"
+		 << "Perf dirname [-out -gold]"
 		 << endl
 		 << endl
 		 << "dirname		(base directory for testcases)"
@@ -123,12 +107,6 @@ printArgOptions()
 		 << "-out dirname	(base directory for output)"
 		 << endl
 		 << "-gold dirname	(base directory for gold files)"
-		 << endl
-		 << "-category dirname (run files only from a specific directory)"
-		 << endl
-		 << "-i                (include all testcases)"
-		 << endl
-		 << "-iter n           (specifies number of iterations; must be > 0)"
 		 << endl;
 }
 
@@ -138,8 +116,7 @@ getParams(int argc,
 		  FileUtility& f,
 		  XalanDOMString& baseDir,
 		  XalanDOMString& outDir,
-		  XalanDOMString& goldRoot,
-		  XalanDOMString& category)
+		  XalanDOMString& goldRoot)
 {
 	bool fSuccess = true;	// Used to continue argument loop
 	bool fsetOut = true;	// Set default output directory, set to false if data is provided
@@ -187,25 +164,13 @@ getParams(int argc,
 				fSuccess = false;
 			}
 		}
-		else if(!stricmp("-category", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(category, XalanDOMString(argv[i]));
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
 		else if(!stricmp("-gold", argv[i]))
 		{
 			++i;
 			if(i < argc && argv[i][0] != '-')
 			{
 				assign(goldRoot, XalanDOMString(argv[i]));
+				fsetGold = false;
 			}
 			else
 			{
@@ -247,58 +212,6 @@ getParams(int argc,
 }
 
 
-FormatterListener* 
-getXMLFormatter(bool					shouldWriteXMLHeader,
-				bool					stripCData,
-				bool					escapeCData,
-				PrintWriter&			resultWriter,
-				int						indentAmount,
-				const XalanDOMString&	mimeEncoding,
-				const StylesheetRoot*	stylesheet)
-{
-	FormatterListener*	formatter = 0;
-
-		XalanDOMString	version;
-		bool			outputIndent= 0;
-		XalanDOMString	mediatype;
-		XalanDOMString	doctypeSystem;
-		XalanDOMString	doctypePublic;
-		XalanDOMString	standalone;
-
-		if (stylesheet != 0)
-		{
-			version = stylesheet->m_version;
-
-			mediatype = stylesheet->m_mediatype;
-			doctypeSystem = stylesheet->getOutputDoctypeSystem();
-			doctypePublic = stylesheet->getOutputDoctypePublic();
-			standalone = stylesheet->m_standalone;
-			outputIndent = stylesheet->m_indentResult;
-		}
-
-		FormatterToXML* const	fToXML =
-			new FormatterToXML(
-					resultWriter,
-					version,
-					outputIndent,
-					indentAmount,
-					mimeEncoding,
-					mediatype,
-					doctypeSystem,
-					doctypePublic,
-					true,	// xmlDecl
-					standalone);
-
-		fToXML->setShouldWriteXMLHeader(shouldWriteXMLHeader);
-		fToXML->setStripCData(stripCData);
-		fToXML->setEscapeCData(escapeCData);
-
-		formatter = fToXML;
-		return formatter;
-}
-
-
-
 int
 main(
 	 int			argc,
@@ -319,12 +232,12 @@ main(
 		int transResult = 0;
 
 		XalanDOMString  category;	// Test all of base dir by default
-		XalanDOMString  baseDir, outputRoot, goldRoot;	
+		XalanDOMString  baseDir, outputRoot, goldRoot, fileName;	
 
 
-		FileUtility futil;
+		//FileUtility futil;
 
-		if (getParams(argc, argv, futil, baseDir, outputRoot, goldRoot, category) == true)
+		if (getParams(argc, argv, futil, baseDir, outputRoot, goldRoot) == true)
 		{
 			//
 			// Call the static initializers for xerces and xalan, and create a transformer
@@ -366,19 +279,20 @@ main(
 				{
 
 					Hashtable attrs;
+					fileName = files[i];
 
-					attrs.insert(Hashtable::value_type(XalanDOMString("idref"), files[i]));
+					attrs.insert(Hashtable::value_type(XalanDOMString("idref"), fileName));
 					attrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"),UniqRunid));
 					attrs.insert(Hashtable::value_type(XalanDOMString("processor"),processorType));
 
-					const XalanDOMString  theXSLFile= baseDir + xDir + pathSep + files[i];
+					const XalanDOMString  theXSLFile= baseDir + xDir + pathSep + fileName;
 					const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
-					XalanDOMString  theGoldFile = goldRoot +xDir + pathSep + files[i];
+					XalanDOMString  theGoldFile = goldRoot +xDir + pathSep + fileName;
 					theGoldFile = futil.GenerateFileName(theGoldFile, "out");
 
-					const XalanDOMString  outbase =  outputRoot + xDir + pathSep + files[i]; 
+					const XalanDOMString  outbase =  outputRoot + xDir + pathSep + fileName; 
 					const XalanDOMString  theOutputFile = futil.GenerateFileName(outbase, "out");
-					cout << endl << endl << "Processing: " << files[i] << endl;
+					cout << endl << endl << "Processing: " << fileName << endl;
 
 					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
@@ -417,25 +331,7 @@ main(
 
 					if(!transResult)
 					{
-						const XalanDOMString mimeEncoding("whatever");
-						XalanFileOutputStream myOutput(theOutputFile);
-						XalanOutputStreamPrintWriter myResultWriter(myOutput);
-						FormatterListener* theFormatter = getXMLFormatter(true,true,true,
-																		myResultWriter,0,
-																		mimeEncoding,
-																		compiledSS->getStylesheetRoot());
-
-						FormatterTreeWalker theTreeWalker(*theFormatter);
-						theTreeWalker.traverse(dom);
-						delete theFormatter;
-
-						
-						XalanDocument* goldDom = parserLiaison.parseXMLStream(goldInputSource);
-						if ( futil.domCompare(*goldDom, *dom, files[i]) )
-						{
-							cout << endl << "Passed: " << c_str(TranscodeToLocalCodePage(files[i]));
-						}
-
+						futil.compareResults(theOutputFile, compiledSS, dom, fileName, goldInputSource);
 					}
 					else
 					{
