@@ -65,7 +65,9 @@
 
 
 #include <algorithm>
+#if !defined(XPATH_FUNCTION_TABLE_NEW)
 #include <map>
+#endif
 
 
 
@@ -117,6 +119,7 @@ class XALAN_XPATH_EXPORT XPathFunctionTable
 {
 public:
 
+#if !defined(XPATH_FUNCTION_TABLE_NEW)
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const Function*>			CollectionType;
 	typedef map<XalanDOMString,
@@ -126,9 +129,12 @@ public:
 	typedef std::vector<const Function*>	CollectionType;
 	typedef std::map<XalanDOMString, int>	FunctionNameIndexMapType;
 #endif
+#endif
 
-	enum { eDefaultTableSize = 36 };
+	enum { InvalidFunctionNumberID = -1, eTableSize = 36 };
 
+	typedef size_t						SizeType;
+	typedef XalanDOMString::size_type	StringSizeType;
 	typedef DeleteFunctor<Function>		DeleteFunctorType;
 
 	/**
@@ -161,6 +167,15 @@ public:
 	const Function&
 	operator[](const XalanDOMString&	theFunctionName) const
 	{
+#if defined(XPATH_FUNCTION_TABLE_NEW)
+		const int	theFunctionID =
+			getFunctionIndex(theFunctionName);
+
+		if (theFunctionID != InvalidFunctionNumberID)
+		{
+			return *m_functionTable[theFunctionID];
+		}
+#else
 		FunctionNameIndexMapType::const_iterator	i =
 			m_FunctionNameIndex.find(theFunctionName);
 
@@ -168,6 +183,7 @@ public:
 		{
 			return *m_FunctionCollection[(*i).second];
 		}
+#endif
 		else
 		{
 			throw XPathExceptionFunctionNotAvailable(theFunctionName);
@@ -183,13 +199,17 @@ public:
 	const Function&
 	operator[](int	theFunctionID) const
 	{
+#if defined(XPATH_FUNCTION_TABLE_NEW)
+		assert(theFunctionID >= 0 && theFunction < eTableSize);
+
+		return *m_functionTable[theFunctionID];
+#else
 		assert(theFunctionID >= 0 &&
 			   CollectionType::size_type(theFunctionID) < m_FunctionCollection.size());
 
 		return *m_FunctionCollection[theFunctionID];
+#endif
 	}
-
-	enum { InvalidFunctionNumberID = -1 };
 
 	/**
 	 * Map a function ID to the corresponding name.
@@ -202,6 +222,12 @@ public:
 	{
 		XalanDOMString	theName;
 
+#if defined(XPATH_FUNCTION_TABLE_NEW)
+		if (theFunctionID >= 0 && theFunction < eTableSize)
+		{
+			theName = s_functionNames[theFunctionID];
+		}
+#else
 		if (theFunctionID >= 0 &&
 			CollectionType::size_type(theFunctionID) < m_FunctionCollection.size())
 		{
@@ -218,6 +244,7 @@ public:
 				}
 			}
 		}
+#endif
 
 		return theName;
 	}
@@ -231,6 +258,9 @@ public:
 	int
 	nameToID(const XalanDOMString&	theName) const
 	{
+#if defined(XPATH_FUNCTION_TABLE_NEW)
+		return getFunctionIndex(theName);
+#else
 		const FunctionNameIndexMapType::const_iterator	i =
 			m_FunctionNameIndex.find(theName);
 
@@ -242,6 +272,7 @@ public:
 		{
 			return InvalidFunctionNumberID;
 		}
+#endif
 	}
 
 	/**
@@ -273,7 +304,11 @@ public:
 	bool
 	isInstalledFunction(const XalanDOMString&	theFunctionName) const
 	{
+#if defined(XPATH_FUNCTION_TABLE_NEW)
+		if (getFunctionIndex(theFunctionName) != InvalidFunctionNumberID)
+#else
 		if (m_FunctionNameIndex.find(theFunctionName) != m_FunctionNameIndex.end())
+#endif
 		{
 			return true;
 		}
@@ -299,6 +334,21 @@ public:
 	void
 	getInstalledFunctionNames(InstalledFunctionNameVectorType&	theVector) const
 	{
+#if defined(XPATH_FUNCTION_TABLE_NEW)
+		XalanDOMString	theString;
+
+		for (int i = 0; i < TableSize; ++i)
+		{
+			if (m_functionTable[i] != 0)
+			{
+				theString.assign(
+					s_functionNames[i].m_name,
+					s_functionNames[i].size);
+
+				theVector.push_back(theString);
+			}
+		}
+#else
 		FunctionNameIndexMapType::const_iterator	i =
 			m_FunctionNameIndex.begin();
 
@@ -309,7 +359,9 @@ public:
 			++i;
 		}
 	}
+#endif
 #else
+
 	/**
 	 * Add a list of the names of installed functions to a vector of names.
 	 * 
@@ -319,6 +371,23 @@ public:
 	void
 	getInstalledFunctionNames(OutputIteratorType	theIterator) const
 	{
+#if defined(XPATH_FUNCTION_TABLE_NEW)
+		XalanDOMString	theString;
+
+		for (int i = 0; i < TableSize; ++i)
+		{
+			if (m_functionTable[i] != 0)
+			{
+				theString.assign(
+					s_functionNames[i].m_name,
+					s_functionNames[i].size);
+
+				*theIterator = theString;
+
+				++theIterator;
+			}
+		}
+#else
 		FunctionNameIndexMapType::const_iterator	i =
 			m_FunctionNameIndex.begin();
 
@@ -329,17 +398,41 @@ public:
 			++i;
 			++theIterator;
 		}
+#endif
 	}
 #endif
 
+	struct FunctionNameTableEntry
+	{
+		const XalanDOMChar*		m_name;
+
+		StringSizeType			m_size;
+	};
+
 private:
 
+	static int
+	getFunctionIndex(const XalanDOMString&	theName);
+
+#if !defined(XPATH_FUNCTION_TABLE_NEW)
 	CollectionType				m_FunctionCollection;
 
 	FunctionNameIndexMapType	m_FunctionNameIndex;
+#endif
+
+	const Function*				m_functionTable[eTableSize];
+
+	const Function** const		m_functionTableEnd;
+
+	// These are static strings for the functions supported.
+	// Note that the XSLT functions are also here, since it's
+	// just easier to do it this way.
 
 	// The string "id"
 	static const XalanDOMChar	s_id[];
+
+	// The string "key"
+	static const XalanDOMChar	s_key[];
 
 	// The string "not"
 	static const XalanDOMChar	s_not[];
@@ -386,8 +479,14 @@ private:
 	// The string "ceiling"
 	static const XalanDOMChar	s_ceiling[];
 
+	// The string "current"
+	static const XalanDOMChar	s_current[];
+
 	// The string "contains"
 	static const XalanDOMChar	s_contains[];
+
+	// The string "document"
+	static const XalanDOMChar	s_document[];
 
 	// The string "position"
 	static const XalanDOMChar	s_position[];
@@ -401,8 +500,14 @@ private:
 	// The string "local-name"
 	static const XalanDOMChar	s_localName[];
 
+	// The string "generate-id"
+	static const XalanDOMChar	s_generateId[];
+
 	// The string "starts-with"
 	static const XalanDOMChar	s_startsWith[];
+
+	// The string "format-number"
+	static const XalanDOMChar	s_formatNumber[];
 
 	// The string "namespace-uri"
 	static const XalanDOMChar	s_namespaceUri[];
@@ -416,8 +521,29 @@ private:
 	// The string "substring-after"
 	static const XalanDOMChar	s_substringAfter[];
 
+	// The string "system-property"
+	static const XalanDOMChar	s_systemProperty[];
+
 	// The string "substring-before"
 	static const XalanDOMChar	s_substringBefore[];
+
+	// The string "element-available"
+	static const XalanDOMChar	s_elementAvailable[];
+
+	// The string "function-available"
+	static const XalanDOMChar	s_functionAvailable[];
+
+	// The string "unparsed-entity-uri"
+	static const XalanDOMChar	s_unparsedEntityUri[];
+
+	// A table of function names.
+	static const FunctionNameTableEntry			s_functionNames[];
+
+	// The last one in the table of function names.
+	static const FunctionNameTableEntry* const	s_lastFunctionName;
+
+	// The size of the table.
+	static const SizeType						s_functionNamesSize;
 };
 
 

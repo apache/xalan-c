@@ -59,6 +59,10 @@
 
 
 
+#include <cstring>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
@@ -95,8 +99,18 @@
 
 XPathFunctionTable::XPathFunctionTable(bool		fCreateTable) :
 	m_FunctionCollection(),
-	m_FunctionNameIndex()
+	m_FunctionNameIndex(),
+	m_functionTable(),
+	m_functionTableEnd(m_functionTable + (sizeof(m_functionTable) / sizeof(m_functionTable[0])) - 1)
 {
+	assert(int(s_functionNamesSize) == eTableSize);
+
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	std::memset(m_functionTable, 0, sizeof(m_functionTable));
+#else
+	memset(m_functionTable, 0, sizeof(m_functionTable));
+#endif
+
 	if (fCreateTable == true)
 	{
 		CreateTable();
@@ -271,7 +285,7 @@ XPathFunctionTable::CreateTable()
 {
 	try
 	{
-		m_FunctionCollection.reserve(eDefaultTableSize);
+		m_FunctionCollection.reserve(eTableSize);
 
 		// Start with the longest function name, so we only have
 		// one allocation for this string.
@@ -438,6 +452,7 @@ XPathFunctionTable::CreateTable()
 		InstallFunction(
 				theFunctionName,
 				FunctionRound());
+
 #if 0
 		std::ofstream	theSourceStream("\\foo.cpp");
 		std::ofstream	theHeaderStream("\\foo.hpp");
@@ -475,6 +490,44 @@ XPathFunctionTable::DestroyTable()
 	catch(...)
 	{
 	}
+}
+
+
+
+int
+XPathFunctionTable::getFunctionIndex(const XalanDOMString&	theName)
+{
+	// Do a binary search...
+	const FunctionNameTableEntry*	theFirst = s_functionNames;
+	const FunctionNameTableEntry*	theLast = s_lastFunctionName;
+
+	while(theFirst <= theLast)
+	{
+		const FunctionNameTableEntry* const		theCurrent =
+			theFirst + (theLast - theFirst) / 2;
+		assert(theCurrent->m_size == length(theCurrent->m_name));
+
+		const int	theResult = compare(
+				theName.c_str(),
+				theName.length(),
+				theCurrent->m_name,
+				theCurrent->m_size);
+
+		if (theResult < 0)
+		{
+			theLast = theCurrent - 1;
+		}
+		else if (theResult > 0)
+		{
+			theFirst = theCurrent + 1;
+		}
+		else
+		{
+			return theCurrent - s_functionNames;
+		}
+	}
+
+	return InvalidFunctionNumberID;
 }
 
 
@@ -525,6 +578,14 @@ const XalanDOMChar	XPathFunctionTable::s_id[] =
 {
 	XalanUnicode::charLetter_i,
 	XalanUnicode::charLetter_d,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_key[] =
+{
+	XalanUnicode::charLetter_k,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_y,
 	0
 };
 
@@ -677,6 +738,18 @@ const XalanDOMChar	XPathFunctionTable::s_ceiling[] =
 	0
 };
 
+const XalanDOMChar	XPathFunctionTable::s_current[] =
+{
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	0
+};
+
 const XalanDOMChar	XPathFunctionTable::s_contains[] =
 {
 	XalanUnicode::charLetter_c,
@@ -687,6 +760,19 @@ const XalanDOMChar	XPathFunctionTable::s_contains[] =
 	XalanUnicode::charLetter_i,
 	XalanUnicode::charLetter_n,
 	XalanUnicode::charLetter_s,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_document[] =
+{
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
 	0
 };
 
@@ -746,6 +832,22 @@ const XalanDOMChar	XPathFunctionTable::s_localName[] =
 	0
 };
 
+const XalanDOMChar	XPathFunctionTable::s_generateId[] =
+{
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_d,
+	0
+};
+
 const XalanDOMChar	XPathFunctionTable::s_startsWith[] =
 {
 	XalanUnicode::charLetter_s,
@@ -759,6 +861,24 @@ const XalanDOMChar	XPathFunctionTable::s_startsWith[] =
 	XalanUnicode::charLetter_i,
 	XalanUnicode::charLetter_t,
 	XalanUnicode::charLetter_h,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_formatNumber[] =
+{
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
 	0
 };
 
@@ -838,6 +958,26 @@ const XalanDOMChar	XPathFunctionTable::s_substringAfter[] =
 	0
 };
 
+const XalanDOMChar	XPathFunctionTable::s_systemProperty[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_y,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_y,
+	0
+};
+
 const XalanDOMChar	XPathFunctionTable::s_substringBefore[] =
 {
 	XalanUnicode::charLetter_s,
@@ -858,3 +998,235 @@ const XalanDOMChar	XPathFunctionTable::s_substringBefore[] =
 	XalanUnicode::charLetter_e,
 	0
 };
+
+const XalanDOMChar	XPathFunctionTable::s_elementAvailable[] =
+{
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_functionAvailable[] =
+{
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_unparsedEntityUri[] =
+{
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_y,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	0
+};
+
+
+typedef XPathFunctionTable::SizeType				SizeType;
+typedef XPathFunctionTable::FunctionNameTableEntry	FunctionNameTableEntry;
+
+#define XFTBL_SIZE(str)	((sizeof(str) / sizeof(str[0]) - 1))
+
+
+const FunctionNameTableEntry	XPathFunctionTable::s_functionNames[] =
+{
+	{
+		s_id,
+		XFTBL_SIZE(s_id)
+	},
+	{
+		s_key,
+		XFTBL_SIZE(s_key)
+	},
+	{
+		s_not,
+		XFTBL_SIZE(s_not)
+	},
+	{
+		s_sum,
+		XFTBL_SIZE(s_sum)
+	},
+	{
+		s_lang,
+		XFTBL_SIZE(s_lang)
+	},
+	{
+		s_last,
+		XFTBL_SIZE(s_last)
+	},
+	{
+		s_name,
+		XFTBL_SIZE(s_name)
+	},
+	{
+		s_true,
+		XFTBL_SIZE(s_true)
+	},
+	{
+		s_count,
+		XFTBL_SIZE(s_count)
+	},
+	{
+		s_false,
+		XFTBL_SIZE(s_false)
+	},
+	{
+		s_floor,
+		XFTBL_SIZE(s_floor)
+	},
+	{
+		s_round,
+		XFTBL_SIZE(s_round)
+	},
+	{
+		s_concat,
+		XFTBL_SIZE(s_concat)
+	},
+	{
+		s_number,
+		XFTBL_SIZE(s_number)
+	},
+	{
+		s_string,
+		XFTBL_SIZE(s_string)
+	},
+	{
+		s_boolean,
+		XFTBL_SIZE(s_boolean)
+	},
+	{
+		s_ceiling,
+		XFTBL_SIZE(s_ceiling)
+	},
+	{
+		s_current,
+		XFTBL_SIZE(s_current)
+	},
+	{
+		s_contains,
+		XFTBL_SIZE(s_contains)
+	},
+	{
+		s_document,
+		XFTBL_SIZE(s_document)
+	},
+	{
+		s_position,
+		XFTBL_SIZE(s_position)
+	},
+	{
+		s_substring,
+		XFTBL_SIZE(s_substring)
+	},
+	{
+		s_translate,
+		XFTBL_SIZE(s_translate)
+	},
+	{
+		s_localName,
+		XFTBL_SIZE(s_localName)
+	},
+	{
+		s_generateId,
+		XFTBL_SIZE(s_generateId)
+	},
+	{
+		s_startsWith,
+		XFTBL_SIZE(s_startsWith)
+	},
+	{
+		s_formatNumber,
+		XFTBL_SIZE(s_formatNumber)
+	},
+	{
+		s_namespaceUri,
+		XFTBL_SIZE(s_namespaceUri)
+	},
+	{
+		s_stringLength,
+		XFTBL_SIZE(s_stringLength)
+	},
+	{
+		s_normalizeSpace,
+		XFTBL_SIZE(s_normalizeSpace)
+	},
+	{
+		s_substringAfter,
+		XFTBL_SIZE(s_substringAfter)
+	},
+	{
+		s_systemProperty,
+		XFTBL_SIZE(s_systemProperty)
+	},
+	{
+		s_substringBefore,
+		XFTBL_SIZE(s_substringBefore)
+	},
+	{
+		s_elementAvailable,
+		XFTBL_SIZE(s_elementAvailable)
+	},
+	{
+		s_functionAvailable,
+		XFTBL_SIZE(s_functionAvailable)
+	},
+	{
+		s_unparsedEntityUri,
+		XFTBL_SIZE(s_unparsedEntityUri)
+	}
+};
+
+
+const FunctionNameTableEntry* const		XPathFunctionTable::s_lastFunctionName =
+	&s_functionNames[sizeof(s_functionNames) / sizeof(s_functionNames[0]) - 1];
+
+
+const SizeType		XPathFunctionTable::s_functionNamesSize =
+	sizeof(s_functionNames) / sizeof(s_functionNames[0]);
