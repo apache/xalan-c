@@ -128,6 +128,9 @@
 #include <Include/XalanAutoPtr.hpp>
 
 
+const XalanDOMString	StylesheetHandler::s_emptyString;
+
+
 
 StylesheetHandler::StylesheetHandler(
 			Stylesheet&						stylesheetTree,
@@ -357,7 +360,7 @@ StylesheetHandler::startElement(
 		// First push namespaces
 		m_stylesheet.pushNamespaces(atts);
 
-		const XalanDOMString&	ns = m_stylesheet.getNamespaceFromStack(name);
+		const XalanDOMString&	ns = getNamespaceFromStack(name);
 
 		const unsigned int		nameLength = length(name);
 		const unsigned int		index = indexOf(name, XalanUnicode::charColon);
@@ -654,10 +657,10 @@ StylesheetHandler::startElement(
 			{
 				// BEGIN SANJIVA CODE
 				// is this an extension element call?
-				ExtensionNSHandler* nsh = 0;
+				ExtensionNSHandler*		nsh = 0;
 
 				if (!isEmpty(ns) && 
-					((nsh = m_stylesheet.lookupExtensionNSHandler (ns)) != 0)) 
+					((nsh = m_stylesheet.lookupExtensionNSHandler(ns)) != 0)) 
 				{
 					elem = new ElemExtensionCall (m_constructionContext,
 											m_stylesheet,
@@ -807,6 +810,42 @@ StylesheetHandler::initWrapperless(
 	}
 
 	return pElem;
+}
+
+
+
+const XalanDOMString&
+StylesheetHandler::getNamespaceFromStack(const XalanDOMChar*	theName) const
+{
+	const XalanDOMString* const		theNamespace =
+		m_stylesheet.getNamespaceFromStack(theName);
+
+	if (theNamespace == 0)
+	{
+		return s_emptyString;
+	}
+	else
+	{
+		return *theNamespace;
+	}
+}
+
+
+
+const XalanDOMString&
+StylesheetHandler::getNamespaceForPrefixFromStack(const XalanDOMString&		thePrefix) const
+{
+	const XalanDOMString* const		theNamespace =
+		m_stylesheet.getNamespaceForPrefixFromStack(thePrefix);
+
+	if (theNamespace == 0)
+	{
+		return s_emptyString;
+	}
+	else
+	{
+		return *theNamespace;
+	}
 }
 
 
@@ -1027,7 +1066,7 @@ StylesheetHandler::processStylesheet(
 				const XalanDOMString	prefix = tokenizer.nextToken();
 				// SANJIVA: ask Scott: is the line below correct?
 
-				const XalanDOMString&	extns = m_stylesheet.getNamespaceForPrefixFromStack(prefix);
+				const XalanDOMString&	extns = getNamespaceForPrefixFromStack(prefix);
 
 				ExtensionNSHandler* const	nsh = new ExtensionNSHandler(extns);
 
@@ -1134,7 +1173,7 @@ StylesheetHandler::processExtensionElement(
 		}
 
 		// SCOTT: is the line below correct?
-		const XalanDOMString&	extns = m_stylesheet.getNamespaceForPrefixFromStack (prefix);
+		const XalanDOMString&	extns = getNamespaceForPrefixFromStack(prefix);
 
 		ExtensionNSHandler* nsh = m_stylesheet.lookupExtensionNSHandler(extns);
 

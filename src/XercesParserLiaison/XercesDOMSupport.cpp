@@ -95,7 +95,7 @@ XercesDOMSupport::reset()
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 XercesDOMSupport::getNamespaceForPrefix(
 			const XalanDOMString&	prefix, 
 			const XalanElement&		namespaceContext) const

@@ -123,9 +123,10 @@ ElemLiteralResult::ElemLiteralResult(
 
 			if(!equals(prefix, DOMServices::s_XMLNamespace))
 			{
-				const XalanDOMString&	ns = getNamespaceForPrefixInternal(prefix, true);
+				const XalanDOMString* const		ns =
+						getNamespaceForPrefixInternal(prefix, true);
 
-				if(equals(ns, stylesheetTree.getXSLTNamespaceURI()))
+				if(ns != 0 && equals(*ns, stylesheetTree.getXSLTNamespaceURI()))
 				{
 					const XalanDOMString localName = substring(aname, indexOfNSSep + 1);
 
@@ -233,6 +234,27 @@ ElemLiteralResult::execute(StylesheetExecutionContext&		executionContext) const
 
 	m_namespacesHandler.outputResultNamespaces(executionContext);
 
+	// OK, now let's check to make sure we don't have to change the default namespace...
+	const XalanDOMString* const		theCurrentDefaultNamespace =
+				executionContext.getResultNamespaceForPrefix(s_emptyString);
+
+	if (theCurrentDefaultNamespace != 0)
+	{
+		const XalanDOMString* const		theElementDefaultNamespace =
+					m_namespacesHandler.getNamespace(s_emptyString);
+
+		if (theElementDefaultNamespace == 0)
+		{
+			// There was no default namespace, so we have to turn the
+			// current one off.
+			executionContext.addResultAttribute(DOMServices::s_XMLNamespace, s_emptyString);
+		}
+		else if (equals(*theCurrentDefaultNamespace, *theElementDefaultNamespace) == false)
+		{
+			executionContext.addResultAttribute(DOMServices::s_XMLNamespace, *theElementDefaultNamespace);
+		}
+	}
+
 	if(0 != m_avts.size())
 	{
 		const AVTVectorType::size_type	nAttrs = m_avts.size();
@@ -310,9 +332,9 @@ ElemLiteralResult::isAttrOK(
 		{
 			const XalanDOMString	prefix = substring(attrName, 0, indexOfNSSep);
 
-			const XalanDOMString&	ns = getStylesheet().getNamespaceForPrefixFromStack(prefix);
+			const XalanDOMString* const		ns = getStylesheet().getNamespaceForPrefixFromStack(prefix);
 
-			if (equals(ns, constructionContext.getXSLTNamespaceURI()) == false)
+			if (ns != 0 && equals(*ns, constructionContext.getXSLTNamespaceURI()) == false)
 			{
 				isAttrOK = true;
 			}

@@ -120,36 +120,39 @@ FunctionSystemProperty::execute(
 	{
 		const XalanDOMString	prefix = substring(fullName, 0, indexOfNSSep);
 
-		const XalanDOMString&	nspace = executionContext.getNamespaceForPrefix(prefix);
+		const XalanDOMString* const		nspace = executionContext.getNamespaceForPrefix(prefix);
 
-		const XalanDOMString	propName = substring(fullName, indexOfNSSep + 1);
-
-		if(startsWith(nspace, XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform")))
+		if (nspace != 0)
 		{
-			if(equals(propName, XALAN_STATIC_UCODE_STRING("version")))
-			{
-				numberResult = 1.0;
+			const XalanDOMString	propName = substring(fullName, indexOfNSSep + 1);
 
-				fNumberResult = true;
-			}
-			else if(equals(propName, XALAN_STATIC_UCODE_STRING("vendor")))
+			if(startsWith(*nspace, XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform")))
 			{
-				result = XALAN_STATIC_UCODE_STRING("Apache Software Foundation");
-			}
-			else if(equals(propName, XALAN_STATIC_UCODE_STRING("vendor-url")))
-			{
-				result = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan-c");
+				if(equals(propName, XALAN_STATIC_UCODE_STRING("version")))
+				{
+					numberResult = 1.0;
+
+					fNumberResult = true;
+				}
+				else if(equals(propName, XALAN_STATIC_UCODE_STRING("vendor")))
+				{
+					result = XALAN_STATIC_UCODE_STRING("Apache Software Foundation");
+				}
+				else if(equals(propName, XALAN_STATIC_UCODE_STRING("vendor-url")))
+				{
+					result = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan-c");
+				}
+				else
+				{
+					executionContext.warn("XSL Property not supported: " + fullName);
+				}
 			}
 			else
 			{
-				executionContext.warn("XSL Property not supported: " + fullName);
-			}
-		}
-		else
-		{
-			executionContext.warn("Don't currently do anything with namespace " + nspace + " in property: " + fullName);
+				executionContext.warn("Don't currently do anything with namespace " + *nspace + " in property: " + fullName);
 
-			result = TranscodeFromLocalCodePage(::getenv(c_str(TranscodeToLocalCodePage(propName))));
+				result = TranscodeFromLocalCodePage(::getenv(c_str(TranscodeToLocalCodePage(propName))));
+			}
 		}
 	}
 	else

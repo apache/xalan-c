@@ -76,13 +76,13 @@ const XalanDOMString	QName::s_emptyString;
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 QName::getNamespaceForPrefix(
 			const NamespaceVectorType&	namespaces,
 			const XalanDOMString&		prefix,
 			bool						reverse)
 {
-	const XalanDOMString*	nsURI = &s_emptyString;
+	const XalanDOMString*	nsURI = 0;
 
 	if(::equals(prefix, DOMServices::s_XMLString))
 	{
@@ -124,20 +124,18 @@ QName::getNamespaceForPrefix(
 		}
 	}
 
-	assert(nsURI != 0);
-
-	return *nsURI;
+	return nsURI;
 }
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 QName::getNamespaceForPrefix(
 			const NamespacesStackType&	nsStack,
 			const XalanDOMString&		prefix,
 			bool						reverse)
 {
-	const XalanDOMString*	nsURI = &s_emptyString;
+	const XalanDOMString*	nsURI = 0;
 
 	const int depth = nsStack.size();
 
@@ -145,26 +143,24 @@ QName::getNamespaceForPrefix(
 	{
 		const NamespaceVectorType&	namespaces = nsStack[i];
 
-		nsURI = &QName::getNamespaceForPrefix(namespaces, prefix, reverse);
+		nsURI = getNamespaceForPrefix(namespaces, prefix, reverse);
 
-		if (! ::isEmpty(*nsURI))
+		if (nsURI != 0)
 			break;
 	}
 
-	assert(nsURI != 0);
-
-	return *nsURI;
+	return nsURI;
 }
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 QName::getPrefixForNamespace(
 			const NamespaceVectorType&	namespaces,
 			const XalanDOMString&		uri,
 			bool						/* reverse */)
 {
-	const XalanDOMString*	thePrefix = &s_emptyString;
+	const XalanDOMString*	thePrefix = 0;
 
 	for(int j = namespaces.size()-1; j >= 0; j--)
 	{
@@ -179,20 +175,18 @@ QName::getPrefixForNamespace(
 		}
 	}
 
-	assert(thePrefix != 0);
-
-	return *thePrefix;
+	return thePrefix;
 }		
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 QName::getPrefixForNamespace(
 			const NamespacesStackType&	nsStack,
 			const XalanDOMString&		uri,
 			bool						reverse)
 {
-	const XalanDOMString*	thePrefix = &s_emptyString;
+	const XalanDOMString*	thePrefix = 0;
 
 	const int		depth = nsStack.size();
 
@@ -202,9 +196,9 @@ QName::getPrefixForNamespace(
 		{
 			const NamespaceVectorType&	namespaces = nsStack[i];
 
-			thePrefix = &QName::getPrefixForNamespace(namespaces, uri, reverse);
+			thePrefix = getPrefixForNamespace(namespaces, uri, reverse);
 
-			if (! ::isEmpty(*thePrefix))
+			if (thePrefix != 0)
 				break;
 		}
 	}
@@ -214,14 +208,12 @@ QName::getPrefixForNamespace(
 		{
 			const NamespaceVectorType&	namespaces = nsStack[i];
 
-			thePrefix = &QName::getPrefixForNamespace(namespaces, uri, reverse);
+			thePrefix = getPrefixForNamespace(namespaces, uri, reverse);
 
-			if (! ::isEmpty(*thePrefix))
+			if (thePrefix != 0)
 				break;
 		}
 	}
 
-	assert(thePrefix != 0);
-
-	return *thePrefix;
+	return thePrefix;
 }

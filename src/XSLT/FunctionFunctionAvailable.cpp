@@ -66,6 +66,10 @@
 
 
 
+const XalanDOMString	FunctionFunctionAvailable::s_emptyString;
+
+
+
 FunctionFunctionAvailable::FunctionFunctionAvailable()
 {
 }
@@ -105,11 +109,18 @@ FunctionFunctionAvailable::execute(
 
 	const XalanDOMString	prefix = indexOfNSSep < nameLength ? substring(fullName, 0, indexOfNSSep) : XalanDOMString();
 
-	const XalanDOMString&	theNamespace = executionContext.getNamespaceForPrefix(prefix);
+	const XalanDOMString*	theNamespace =
+			executionContext.getNamespaceForPrefix(prefix);
 
-	const XalanDOMString	functionName = indexOfNSSep == nameLength ? fullName : substring(fullName, indexOfNSSep + 1);
+	if (theNamespace == 0)
+	{
+		theNamespace = &s_emptyString;
+	}
 
-	return executionContext.getXObjectFactory().createBoolean(executionContext.functionAvailable(theNamespace, functionName));
+	const XalanDOMString	functionName =
+			indexOfNSSep == nameLength ? fullName : substring(fullName, indexOfNSSep + 1);
+
+	return executionContext.getXObjectFactory().createBoolean(executionContext.functionAvailable(*theNamespace, functionName));
 }
 
 

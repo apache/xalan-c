@@ -589,6 +589,11 @@ private:
 			int						lineNumber,
 			int						columnNumber);
 
+	const XalanDOMString&
+	getNamespaceFromStack(const XalanDOMChar*	theName) const;
+
+	const XalanDOMString&
+	getNamespaceForPrefixFromStack(const XalanDOMString&	thePrefix) const;
 
 	class PushPopIncludeState
 	{
@@ -630,6 +635,8 @@ private:
 	};
 
 	friend class PushPopIncludeState;
+
+	static const XalanDOMString				s_emptyString;
 };
 
 

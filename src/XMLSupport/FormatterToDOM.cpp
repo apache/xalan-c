@@ -320,16 +320,16 @@ FormatterToDOM::createElement(
 	else
 	{
 		// Check for the namespace...
-		const XalanDOMString&	theNamespace =
+		const XalanDOMString* const		theNamespace =
 					getNamespaceForPrefix(theElementName, *m_prefixResolver, m_buffer2);
 
-		if (length(theNamespace) == 0)
+		if (theNamespace == 0 || length(*theNamespace) == 0)
 		{
 			theElement = m_doc->createElement(m_buffer1);
 		}
 		else
 		{
-			theElement = m_doc->createElementNS(theNamespace, m_buffer1);
+			theElement = m_doc->createElementNS(*theNamespace, m_buffer1);
 		}
 
 		addAttributes(theElement, attrs);
@@ -365,19 +365,19 @@ FormatterToDOM::addAttributes(
 			assert(theName != 0);
 
 			// Check for the namespace...
-			const XalanDOMString&	theNamespace =
+			const XalanDOMString* const		theNamespace =
 					getNamespaceForPrefix(theName, *m_prefixResolver, m_buffer2);
 
 			assign(m_buffer1, theName);
 			assign(m_buffer2, attrs.getValue(i));
 
-			if (length(theNamespace) == 0)
+			if (theNamespace == 0 || length(*theNamespace) == 0)
 			{
 				theElement->setAttribute(m_buffer1, m_buffer2);
 			}
 			else
 			{
-				theElement->setAttributeNS(theNamespace, m_buffer1, m_buffer2);
+				theElement->setAttributeNS(*theNamespace, m_buffer1, m_buffer2);
 			}
 		}
 	}
@@ -385,7 +385,7 @@ FormatterToDOM::addAttributes(
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 FormatterToDOM::getNamespaceForPrefix(
 			const XalanDOMChar*		theName,
 			const PrefixResolver&	thePrefixResolver,

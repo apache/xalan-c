@@ -166,7 +166,7 @@ Stylesheet::Stylesheet(
 				m_includeStack.push_back(urlString);
 			}
 		}
-		catch(const XMLException&	e)
+		catch(const XMLException&)
 		{
 			// Assume that any exception here relates to get the urlString from
 			// m_baseIdent.  We'll assume that it's just a fake base identifier
@@ -396,9 +396,9 @@ Stylesheet::isAttrOK(
 		if(indexOfNSSep < length(attrName))
 		{
 			const XalanDOMString	prefix = substring(attrName, 0, indexOfNSSep);
-			const XalanDOMString&	ns = getNamespaceForPrefixFromStack(prefix);
+			const XalanDOMString*	ns = getNamespaceForPrefixFromStack(prefix);
 
-			attrOK = ! ::isEmpty(ns) && !equals(ns,constructionContext.getXSLTNamespaceURI());
+			attrOK = ns != 0 && !::isEmpty(*ns) && !equals(*ns, constructionContext.getXSLTNamespaceURI());
 		}
 		else
 		{
@@ -411,7 +411,7 @@ Stylesheet::isAttrOK(
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 Stylesheet::getNamespaceFromStack(const XalanDOMString&		nodeName) const
 {
 	return getNamespaceFromStack(c_wstr(nodeName));
@@ -419,7 +419,7 @@ Stylesheet::getNamespaceFromStack(const XalanDOMString&		nodeName) const
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 Stylesheet::getNamespaceFromStack(const XalanDOMChar* 	nodeName) const
 {
 	assert(nodeName != 0);
@@ -436,7 +436,7 @@ Stylesheet::getNamespaceFromStack(const XalanDOMChar* 	nodeName) const
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 Stylesheet::getNamespaceForPrefix(const XalanDOMString& 	prefix) const
 {
 	return QName::getNamespaceForPrefix(m_namespaceDecls, prefix);
@@ -444,7 +444,7 @@ Stylesheet::getNamespaceForPrefix(const XalanDOMString& 	prefix) const
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 Stylesheet::getNamespaceForPrefixFromStack(const XalanDOMString&	prefix) const
 {
 	return QName::getNamespaceForPrefix(m_namespaces, prefix);
@@ -452,7 +452,7 @@ Stylesheet::getNamespaceForPrefixFromStack(const XalanDOMString&	prefix) const
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 Stylesheet::getNamespaceForPrefixFromStack(const XalanDOMChar*	prefix) const
 {
 	assert(prefix != 0);
@@ -1223,11 +1223,11 @@ Stylesheet::processNSAliasElement(
 
 			if (equals(value, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 			{
-				stylesheetNamespace = &getNamespaceForPrefix(dummy);
+				stylesheetNamespace = getNamespaceForPrefix(dummy);
 			}
 			else
 			{
-				stylesheetNamespace = &getNamespaceForPrefix(XalanDOMString(value));
+				stylesheetNamespace = getNamespaceForPrefix(XalanDOMString(value));
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_RESULT_PREFIX))
@@ -1236,11 +1236,11 @@ Stylesheet::processNSAliasElement(
 
 			if (equals(value, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 			{
-				resultNamespace = &getNamespaceForPrefix(dummy);
+				resultNamespace = getNamespaceForPrefix(dummy);
 			}
 			else
 			{
-				resultNamespace = &getNamespaceForPrefix(XalanDOMString(value));
+				resultNamespace = getNamespaceForPrefix(XalanDOMString(value));
 			}
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))

@@ -336,18 +336,18 @@ public:
 	 * Get the namespace from a qualified name.
 	 * 
 	 * @param nodeName name of node
-	 * @return namespace string for node
+	 * @return namespace string for node, or null if not found.
 	 */
-	const XalanDOMString&
+	const XalanDOMString*
 	getNamespaceFromStack(const XalanDOMString& 	nodeName) const;
 
 	/**
 	 * Get the namespace from a qualified name.
 	 * 
 	 * @param nodeName name of node
-	 * @return namespace string for node
+	 * @return namespace string for node, or null if not found.
 	 */
-	const XalanDOMString&
+	const XalanDOMString*
 	getNamespaceFromStack(const XalanDOMChar* 	nodeName) const;
 
 	/**
@@ -355,9 +355,9 @@ public:
 	 * lists.
 	 * 
 	 * @param prefix prefix to search
-	 * @return namespace corresponding to prefix
+	 * @return namespace corresponding to prefix, or null if not found.
 	 */
-	const XalanDOMString&
+	const XalanDOMString*
 	getNamespaceForPrefixFromStack(const XalanDOMString&	prefix) const;
 
 	/**
@@ -365,9 +365,9 @@ public:
 	 * lists.
 	 * 
 	 * @param prefix prefix to search
-	 * @return namespace corresponding to prefix
+	 * @return namespace corresponding to prefix, or null if not found.
 	 */
-	const XalanDOMString&
+	const XalanDOMString*
 	getNamespaceForPrefixFromStack(const XalanDOMChar*	prefix) const;
 
 	/**
@@ -1104,7 +1104,7 @@ public:
 
 	// These interfaces are inherited from PrefixResolver...
 
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString& 	prefix) const;
 
 	virtual const XalanDOMString&

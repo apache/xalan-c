@@ -89,7 +89,7 @@ public:
 	 * @param prefix Prefix to resolve
 	 * @return namespace that prefix resolves to, or null if prefix is not found
 	 */
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const = 0;
 
 	/**

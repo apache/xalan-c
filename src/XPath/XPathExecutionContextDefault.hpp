@@ -272,7 +272,7 @@ public:
 	virtual void
 	setPrefixResolver(const PrefixResolver*		thePrefixResolver);
 
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
 
 	virtual XalanDocument*

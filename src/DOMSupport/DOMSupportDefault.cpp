@@ -99,7 +99,7 @@ DOMSupportDefault::reset()
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 DOMSupportDefault::getNamespaceForPrefix(
 			const XalanDOMString&	prefix, 
 			const XalanElement&		namespaceContext) const

@@ -199,15 +199,18 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 
 				// See if the namespace already exists.  If it does, we'll get the
 				// prefix that was used when it was declared.
-				const XalanDOMString&	prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
+				const XalanDOMString*  const	prefix =
+					executionContext.getResultPrefixForNamespace(attrNameSpace);
 
-				if(isEmpty(prefix) == false)
+				if(prefix != 0)
 				{
+					assert(length(*prefix) != 0);
+
 					if(indexOfNSSep < origAttrNameLength)
 					{
 						reserve(
 							attrName,
-							length(attrName) - (indexOfNSSep + 1) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(prefix) + 1);
+							length(attrName) - (indexOfNSSep + 1) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
 
 						assign(attrName, substring(attrName, indexOfNSSep + 1));
 					}
@@ -215,11 +218,11 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 					{
 						reserve(
 							attrName,
-							length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(prefix) + 1);
+							length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
 					}
 
 					insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
-					insert(attrName, 0, prefix);
+					insert(attrName, 0, *prefix);
 				}
 				else
 				{
@@ -300,7 +303,13 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 
 					nsprefix = substring(origAttrName, 0, indexOfNSSep);
 
-					assign(attrNameSpace, getNamespaceForPrefix(nsprefix));
+					const XalanDOMString* const		theNamespace =
+						getNamespaceForPrefix(nsprefix);
+
+					if (theNamespace != 0)
+					{
+						assign(attrNameSpace, *theNamespace);
+					}
 
 					if (isEmpty(attrNameSpace))
 					{
@@ -310,9 +319,10 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 					else
 					{
 						// Check to see if there's already a namespace declaration in scope...
-						const XalanDOMString&	prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
+						const XalanDOMString* const		prefix =
+							executionContext.getResultPrefixForNamespace(attrNameSpace);
 
-						if (length(prefix) == 0)
+						if (prefix == 0)
 						{
 							// We need to generate a namespace declaration...
 							StylesheetExecutionContext::GetAndReleaseCachedString	nsDeclGuard(executionContext);

@@ -197,11 +197,16 @@ QNameByValue::initialize(
 		if(::equals(prefix, DOMServices::s_XMLNamespace))
 			return;
 
-		m_namespace = getNamespaceForPrefix(namespaces, prefix);
+		const XalanDOMString* const		theNamespace = 
+				getNamespaceForPrefix(namespaces, prefix);
 
-		if(0 == length(m_namespace))
+		if(theNamespace == 0 || 0 == length(*theNamespace))
 		{
 			throw XSLException(TranscodeFromLocalCodePage("Prefix must resolve to a namespace: ") + prefix);
+		}
+		else
+		{
+			m_namespace = *theNamespace;
 		}
 
 		m_localpart =  substring(qname, indexOfNSSep + 1);
@@ -237,7 +242,13 @@ QNameByValue::resolvePrefix(
 		}
 		else
 		{
-			m_namespace = theResolver.getNamespaceForPrefix(prefix);
+			const XalanDOMString* const		theNamespace =
+				theResolver.getNamespaceForPrefix(prefix);
+
+			if (theNamespace != 0)
+			{
+				m_namespace = *theNamespace;
+			}
 		}  
 
 		if(0 == length(m_namespace))

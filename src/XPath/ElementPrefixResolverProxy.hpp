@@ -100,7 +100,7 @@ public:
 
 	// These methods are inherited from PrefixResolver ...
 
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
 
 	virtual const XalanDOMString&
@@ -115,9 +115,6 @@ private:
 	const DOMSupport&				m_domSupport;
 
 	mutable XalanDOMString			m_uri;
-
-	// A dummy string to return when we need an emtpy string...
-	static const XalanDOMString		s_emptyString;
 };
 
 

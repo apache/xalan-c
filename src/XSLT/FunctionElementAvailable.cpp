@@ -103,11 +103,13 @@ FunctionElementAvailable::execute(
 	const unsigned int		nameLength = length(fullName);
 	const unsigned int		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
 
-	const XalanDOMString	prefix = indexOfNSSep < nameLength ? substring(fullName, 0, indexOfNSSep) : XalanDOMString();
+	const XalanDOMString			prefix =
+		indexOfNSSep < nameLength ? substring(fullName, 0, indexOfNSSep) : XalanDOMString();
 
-	const XalanDOMString&	theNamespace = executionContext.getNamespaceForPrefix(prefix);
+	const XalanDOMString* const		theNamespace =
+		executionContext.getNamespaceForPrefix(prefix);
 
-	if (length(theNamespace) == 0)
+	if (theNamespace == 0 || length(*theNamespace) == 0)
 	{
 		return executionContext.getXObjectFactory().createBoolean(false);
 	}
@@ -115,13 +117,13 @@ FunctionElementAvailable::execute(
 	{
 		if (indexOfNSSep == nameLength)
 		{
-			return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(theNamespace, fullName));
+			return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(*theNamespace, fullName));
 		}
 		else
 		{
 			const XalanDOMString	elementName =  substring(fullName, indexOfNSSep + 1);
 
-			return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(theNamespace, elementName));
+			return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(*theNamespace, elementName));
 		}
 	}
 }

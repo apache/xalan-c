@@ -164,7 +164,7 @@ NamespacesHandler::~NamespacesHandler()
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 NamespacesHandler::getNamespace(const XalanDOMString&	thePrefix) const
 {
 	// Check the excluded result prefixes first...
@@ -173,7 +173,7 @@ NamespacesHandler::getNamespace(const XalanDOMString&	thePrefix) const
 
 	if (i != m_excludedResultPrefixes.end())
 	{
-		return (*i).second;
+		return &(*i).second;
 	}
 	else
 	{
@@ -183,11 +183,11 @@ NamespacesHandler::getNamespace(const XalanDOMString&	thePrefix) const
 
 		if (i != m_namespaceDeclarations.end())
 		{
-			return (*i).second.getURI();
+			return &(*i).second.getURI();
 		}
 		else
 		{
-			return s_dummyEmptyString;
+			return 0;
 		}
 	}
 }
@@ -202,12 +202,12 @@ NamespacesHandler::copyNamespaceAliases(const NamespacesHandler&	parentNamespace
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 NamespacesHandler::getNamespaceAlias(const XalanDOMString&		theStylesheetNamespace) const
 {
 	if (m_namespaceAliases.size() == 0)
 	{
-		return s_dummyEmptyString;
+		return 0;
 	}
 	else
 	{
@@ -216,11 +216,11 @@ NamespacesHandler::getNamespaceAlias(const XalanDOMString&		theStylesheetNamespa
 
 		if (i != m_namespaceAliases.end())
 		{
-			return (*i).second;
+			return &(*i).second;
 		}
 		else
 		{
-			return s_dummyEmptyString;
+			return 0;
 		}
 	}
 }
@@ -246,10 +246,10 @@ NamespacesHandler::processExcludeResultPrefixes(
 			::clear(thePrefix);
 		}
 
-		const XalanDOMString&	theNamespace =
+		const XalanDOMString* const		theNamespace =
 			QName::getNamespaceForPrefix(theCurrentNamespaces, thePrefix);
 
-		if(length(theNamespace) == 0)
+		if(theNamespace == 0)
 		{
 			XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid prefix in exclude-result-prefixes: "));
 
@@ -258,7 +258,7 @@ NamespacesHandler::processExcludeResultPrefixes(
 			theConstructionContext.error(theMessage);
 		}
 
-		m_excludedResultPrefixes[thePrefix] = theNamespace;
+		m_excludedResultPrefixes[thePrefix] = *theNamespace;
     }
 }
 
@@ -283,10 +283,10 @@ NamespacesHandler::processExtensionElementPrefixes(
 			::clear(thePrefix);
 		}
 
-		const XalanDOMString&	theNamespace =
+		const XalanDOMString* const		theNamespace =
 			QName::getNamespaceForPrefix(theCurrentNamespaces, thePrefix);
 
-		if(length(theNamespace) == 0)
+		if(theNamespace == 0)
 		{
 			XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid prefix in extension-element-prefixes: "));
 
@@ -295,7 +295,7 @@ NamespacesHandler::processExtensionElementPrefixes(
 			theConstructionContext.error(theMessage);
 		}
 
-		m_extensionNamespaceURIs.insert(theNamespace);
+		m_extensionNamespaceURIs.insert(*theNamespace);
     }
 }
 
@@ -384,7 +384,9 @@ NamespacesHandler::shouldExcludeResultNamespaceNode(
 
 
 void
-NamespacesHandler::outputResultNamespaces(StylesheetExecutionContext&	theExecutionContext) const
+NamespacesHandler::outputResultNamespaces(
+			StylesheetExecutionContext&		theExecutionContext,
+			const XalanDOMString*			theNamespaceToExclude) const
 {
 	// Write out the namespace declarations...
 	if (m_namespaceDeclarations.size() > 0)
@@ -402,18 +404,22 @@ NamespacesHandler::outputResultNamespaces(StylesheetExecutionContext&	theExecuti
 			const XalanDOMString&		theResultURI = theNamespace.getURI();
 			assert(length(theNamespace.getResultAttributeName()) > 0);
 
-			const XalanDOMString&		thePrefix = theNamespace.getPrefix();
-
-			// Get the any namespace declaration currently active for the
-			// prefix.
-			const XalanDOMString&		desturi =
-				theExecutionContext.getResultNamespaceForPrefix(thePrefix);
-
-			// Is there already an active namespace declaration?
-			if(!equals(theResultURI, desturi))
+//			if (theNamespaceToExclude == 0 ||
+//				equals(*theNamespaceToExclude, theResultURI) == false)
 			{
-				// No, so add one...
-				theExecutionContext.addResultAttribute(theNamespace.getResultAttributeName(), theResultURI);
+				const XalanDOMString&		thePrefix = theNamespace.getPrefix();
+
+				// Get the any namespace declaration currently active for the
+				// prefix.
+				const XalanDOMString* const		desturi =
+					theExecutionContext.getResultNamespaceForPrefix(thePrefix);
+
+				// Is there already an active namespace declaration?
+				if(desturi == 0 || !equals(theResultURI, *desturi))
+				{
+					// No, so add one...
+					theExecutionContext.addResultAttribute(theNamespace.getResultAttributeName(), theResultURI);
+				}
 			}
 		}
 	}
@@ -592,15 +598,17 @@ NamespacesHandler::processNamespaceAliases()
 		{
 			NameSpace&	theNamespace = (*i).second;
 
-			const XalanDOMString&	theURI = theNamespace.getURI();
+			const XalanDOMString&			theURI =
+						theNamespace.getURI();
 
-			const XalanDOMString&	theAlias = getNamespaceAlias(theURI);
+			const XalanDOMString* const		theAlias =
+						getNamespaceAlias(theURI);
 
 			// Is there a local alias?
-			if (length(theAlias) != 0)
+			if (theAlias != 0)
 			{
 				// Yup, so use it...
-				theNamespace.setURI(theAlias);
+				theNamespace.setURI(*theAlias);
 			}
 		}
 	}
@@ -713,8 +721,6 @@ const XalanDOMString&	NamespacesHandler::s_LotusXSLTNamespaceURI =
 
 const XalanDOMString&	NamespacesHandler::s_LotusXSLTNamespaceURIWithSeparator =
 							::s_LotusXSLTNamespaceURIWithSeparator;
-
-const XalanDOMString	NamespacesHandler::s_dummyEmptyString;
 
 
 

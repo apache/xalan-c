@@ -728,12 +728,12 @@ DOMServices::getNamespaceOfNode(const XalanNode&	n)
 // than the parser, we need to decide between demanding a 
 // namespace-normalized DOM as input, doing a normalize pass
 // (full treewalk, expensive), or recognizing implicit declarations.
-const XalanDOMString&
+const XalanDOMString*
 DOMServices::getNamespaceForPrefix(
 			const XalanDOMString&	prefix,
 			const XalanElement&		namespaceContext)
 {
-	const XalanDOMString*	theNamespace = &s_emptyString;
+	const XalanDOMString*	theNamespace = 0;
 
 	// Reserved xml: is hardcoded
 	if(equals(prefix, s_XMLString) == true)
@@ -800,9 +800,7 @@ DOMServices::getNamespaceForPrefix(
 		}
 	}
 
-	assert(theNamespace != 0);
-
-	return *theNamespace;
+	return theNamespace;
 }
 
 

@@ -620,7 +620,7 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 XSLTEngineImpl::getNamespaceForPrefix(const XalanDOMString&		prefix) const
 {
 	return m_resultNamespacesStack.getNamespaceForPrefix(prefix);
@@ -653,7 +653,7 @@ XSLTEngineImpl::parseXML(
 
 		if (theResolver == 0)
 		{
-			XSLTInputSource		inputSource(c_wstr(urlString));
+			const XSLTInputSource	inputSource(c_wstr(urlString));
 
 			doc = parseXML(inputSource, docHandler, docToRegister);
 		}
@@ -1572,21 +1572,29 @@ XSLTEngineImpl::addResultAttribute(
 		// If it's not, it means we're "turning off" the previous default
 		// declaration.
 
+		const XalanDOMString* const		currentDefaultNamespace =
+					getNamespaceForPrefix(s_emptyString);
+
 		// Note that we use an empty string for the prefix, instead of "xmlns", since the
 		// prefix really is "".
 		if (length(value) != 0)
 		{
-			addResultNamespaceDecl(s_emptyString, value);
+			if (currentDefaultNamespace != 0 &&
+				equals(*currentDefaultNamespace, value) == true)
+			{
+				fExcludeAttribute = true;
+			}
+			else
+			{
+				addResultNamespaceDecl(s_emptyString, value);
+			}
 		}
 		else
 		{
 			// OK, we're turning of the previous default namespace declaration.
 			// Check to see if there is one, and if there isn't, don't add
 			// the namespace declaration _and_ don't add the attribute.
-			const XalanDOMString&	currentDefaultNamespace =
-					getNamespaceForPrefix(s_emptyString);
-
-			if (length(currentDefaultNamespace) != 0)
+			if (currentDefaultNamespace != 0 && length(*currentDefaultNamespace) != 0)
 			{
 				addResultNamespaceDecl(s_emptyString, value);
 			}
@@ -2345,8 +2353,8 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 
 	if(0 != theSize)
 	{
-		XalanDOMString		elemNS;
-		XalanDOMString		elemLocalName;
+		const XalanDOMString*	elemNS = 0;
+		XalanDOMString			elemLocalName;
 
 		const unsigned int	indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
 
@@ -2360,14 +2368,14 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 
 			if(equals(prefix, DOMServices::s_XMLString))
 			{
-				elemNS = DOMServices::s_XMLNamespaceURI;
+				elemNS = &DOMServices::s_XMLNamespaceURI;
 			}
 			else
 			{
 				elemNS = getResultNamespaceForPrefix(prefix);
 			}
 
-			if(0 == length(elemNS))
+			if(elemNS == 0)
 			{
 				error("Prefix must resolve to a namespace: " + prefix);
 			}
@@ -2375,11 +2383,13 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 			elemLocalName = substring(elementName, indexOfNSSep + 1);
 		}
 
+		const QNameByReference	theQName(elemNS != 0 ? *elemNS : s_emptyString, elemLocalName);
+
 		for(Stylesheet::QNameVectorType::size_type i = 0; i < theSize && is == false; i++)
 		{
 			const QName&	qname = cdataElems[i];
 
-			is = qname.equals(QNameByReference(elemNS, elemLocalName));
+			is = qname.equals(theQName);
 		}
 	}
 
@@ -2394,8 +2404,8 @@ XSLTEngineImpl::qnameEqualsResultElemName(
 			const QName&			qname,
 			const XalanDOMString&	elementName) const
 {
-	XalanDOMString		elemNS;
-	XalanDOMString		elemLocalName;
+	const XalanDOMString*	elemNS = 0;
+	XalanDOMString			elemLocalName;
 
 	const unsigned int	indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
 
@@ -2405,14 +2415,14 @@ XSLTEngineImpl::qnameEqualsResultElemName(
 
 		if(equals(prefix, DOMServices::s_XMLString))
 		{
-			elemNS = DOMServices::s_XMLNamespaceURI;
+			elemNS = &DOMServices::s_XMLNamespaceURI;
 		}
 		else
 		{
 			elemNS = getResultNamespaceForPrefix(prefix);
 		}
 
-		if(0 == elemNS.length())
+		if(elemNS == 0)
 		{
 			error("Prefix must resolve to a namespace: " + prefix);
 		}
@@ -2424,12 +2434,14 @@ XSLTEngineImpl::qnameEqualsResultElemName(
 		elemLocalName = elementName;
 	}
 
-	return qname.equals(QNameByReference(elemNS, elemLocalName));
+	assert(elemNS != 0);
+
+	return qname.equals(QNameByReference(*elemNS, elemLocalName));
 }
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 XSLTEngineImpl::getResultNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
 	return m_resultNamespacesStack.getNamespaceForPrefix(prefix);
@@ -2437,7 +2449,7 @@ XSLTEngineImpl::getResultNamespaceForPrefix(const XalanDOMString&	prefix) const
   
 
 
-const XalanDOMString&
+const XalanDOMString*
 XSLTEngineImpl::getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const
 {
 	return m_resultNamespacesStack.getPrefixForNamespace(theNamespace);
@@ -2466,10 +2478,10 @@ XSLTEngineImpl::addResultNamespace(
 		{
 			if (m_resultNamespacesStack.prefixIsPresentLocal(prefix) == false)
 			{
-				const XalanDOMString& 	desturi = getResultNamespaceForPrefix(prefix);
-				const XalanDOMString&	srcURI = theNode.getNodeValue();
+				const XalanDOMString* const 	desturi = getResultNamespaceForPrefix(prefix);
+				const XalanDOMString&			srcURI = theNode.getNodeValue();
 
-				if(equals(srcURI, desturi) == false)
+				if(desturi == 0 || equals(srcURI, *desturi) == false)
 				{
 					addResultAttribute(thePendingAttributes, aname, srcURI);
 				}
@@ -2477,10 +2489,10 @@ XSLTEngineImpl::addResultNamespace(
 		}
 		else
 		{
-			const XalanDOMString& 	desturi = getResultNamespaceForPrefix(prefix);
-			const XalanDOMString&	srcURI = theNode.getNodeValue();
+			const XalanDOMString* const 	desturi = getResultNamespaceForPrefix(prefix);
+			const XalanDOMString&			srcURI = theNode.getNodeValue();
 
-			if(equals(srcURI, desturi) == false)
+			if(desturi == 0 || equals(srcURI, *desturi) == false)
 			{
 				addResultAttribute(thePendingAttributes, aname, srcURI);
 			}

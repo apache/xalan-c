@@ -103,7 +103,7 @@ XalanSourceTreeDOMSupport::reset()
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 XalanSourceTreeDOMSupport::getNamespaceForPrefix(
 			const XalanDOMString&	prefix, 
 			const XalanElement&		namespaceContext) const

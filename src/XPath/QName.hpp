@@ -173,8 +173,9 @@ public:
 	 * @param namespaces vector of namespaces to search
 	 * @param prefix     namespace prefix to find
 	 * @param reverse    true to search vector from last to first, default true
+	 * @return pointer to the string value if found, otherwise null.
 	 */
-	static const XalanDOMString&
+	static const XalanDOMString*
 	getNamespaceForPrefix(
 			const NamespaceVectorType&	namespaces,
 			const XalanDOMString&		prefix,
@@ -187,8 +188,9 @@ public:
 	 * @param nsStack stack of namespace vectors to search
 	 * @param prefix  namespace prefix to find
 	 * @param reverse true to search vector from last to first, default true
+	 * @return pointer to the string value if found, otherwise null.
 	 */
-	static const XalanDOMString&
+	static const XalanDOMString*
 	getNamespaceForPrefix(
 			const NamespacesStackType&	nsStack,
 			const XalanDOMString&		prefix,
@@ -200,8 +202,9 @@ public:
 	 * @param namespaces vector of namespaces to search
 	 * @param uri        URI string for namespace to find
 	 * @param reverse    true to search vector from last to first, default true
+	 * @return pointer to the string value if found, otherwise null.
 	 */
-	static const XalanDOMString&
+	static const XalanDOMString*
 	getPrefixForNamespace(
 			const NamespaceVectorType&	namespaces,
 			const XalanDOMString&		uri,
@@ -214,8 +217,9 @@ public:
 	 * @param nsStack stack of namespace vectors to search
 	 * @param uri     URI string for namespace to find
 	 * @param reverse true to search vector from last to first, default true
+	 * @return pointer to the string value if found, otherwise null.
 	 */
-	static const XalanDOMString&
+	static const XalanDOMString*
 	getPrefixForNamespace(
 			const NamespacesStackType&	nsStack,
 			const XalanDOMString&		uri,

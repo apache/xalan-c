@@ -1421,7 +1421,7 @@ ElemTemplateElement::getElementsByTagNameNS(
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 ElemTemplateElement::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
 	return getNamespaceForPrefixInternal(prefix, false);
@@ -1429,12 +1429,12 @@ ElemTemplateElement::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 ElemTemplateElement::getNamespaceForPrefixInternal(
 			const XalanDOMString&	prefix,
 			bool					fReportError) const
 {
-    const XalanDOMString*	nameSpace = &DOMServices::s_emptyString;
+    const XalanDOMString*	nameSpace = 0;
 
 	if (isEmpty(prefix) == false)
 	{
@@ -1452,35 +1452,37 @@ ElemTemplateElement::getNamespaceForPrefixInternal(
 			}
 			else
 			{
-				nameSpace = &getNamespacesHandler().getNamespace(prefix);
+				nameSpace = getNamespacesHandler().getNamespace(prefix);
 
-				if(isEmpty(*nameSpace) == true)
+				if(nameSpace == 0)
 				{
 					if (m_parentNode != 0)
 					{
-						nameSpace = &m_parentNode->getNamespaceForPrefixInternal(prefix, false);
+						nameSpace = m_parentNode->getNamespaceForPrefixInternal(prefix, false);
 					}
 
 					// Try one last time with the stylesheet...
-					if(isEmpty(*nameSpace) == true)
+					if (nameSpace == 0)
 					{
-						nameSpace = &getStylesheet().getNamespaceForPrefix(prefix);
+						nameSpace = getStylesheet().getNamespaceForPrefix(prefix);
 					}
 				}
 			}
 		}
 		else
 		{
-			nameSpace = &getStylesheet().getNamespaceForPrefixFromStack(prefix);
+			nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
 		}
 
-		if(fReportError == true && fEmptyIsError == true && isEmpty(*nameSpace) == true)
+		if(fReportError == true &&
+		   fEmptyIsError == true &&
+		   nameSpace == 0)
 		{
 			error("Cannot resolve namespace prefix: " + prefix);
 		}
 	}
 
-    return *nameSpace;
+    return nameSpace;
 }
 
 

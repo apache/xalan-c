@@ -108,10 +108,10 @@ public:
 	void
 	popContext();
 
-	const XalanDOMString&
+	const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString&		thePrefix) const;
 
-	const XalanDOMString&
+	const XalanDOMString*
 	getPrefixForNamespace(const XalanDOMString&		theNamespaceURI) const;
 
 

@@ -541,7 +541,7 @@ public:
 	 * @param namespaceContext DOM element representing the context for namespace
 	 * @return URI corresponding to namespace
 	 */
-	static const XalanDOMString&
+	static const XalanDOMString*
 	getNamespaceForPrefix(
 			const XalanDOMString&	prefix,
 			const XalanElement&		namespaceContext);

@@ -247,7 +247,7 @@ private:
 			XalanElement*	theElement,
 			AttributeList&	attrs);
 
-	const XalanDOMString&
+	const XalanDOMString*
 	getNamespaceForPrefix(
 			const XalanDOMChar*		theName,
 			const PrefixResolver&	thePrefixResolver,

@@ -158,7 +158,18 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 
 	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext);
 
+	StylesheetExecutionContext::GetAndReleaseCachedString	elemNameSpaceGuard(executionContext);
+
+	XalanDOMString&		elemNameSpace = elemNameSpaceGuard.get();
+
+	if (m_namespaceAVT != 0)
+	{
+		m_namespaceAVT->evaluate(elemNameSpace, sourceNode, *this, executionContext);
+	}
+
 	bool				isIllegalElement = false;
+
+	bool				hasUnresolvedPrefix = false;
 
 	unsigned int		len = length(elemName);
 
@@ -193,65 +204,79 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 	{
 		prefix = substring(elemName, 0, indexOfNSSep);
 
-		const XalanDOMString&	theNamespace = executionContext.getResultNamespaceForPrefix(prefix);
+		const XalanDOMString* const		theNamespace =
+			executionContext.getResultNamespaceForPrefix(prefix);
 
-		if (length(theNamespace) == 0 && length(m_namespacesHandler.getNamespace(prefix)) == 0)
+		if (theNamespace == 0)
 		{
-			executionContext.warn("Could not resolve prefix: " + prefix, this, sourceNode);
+			const XalanDOMString* const		theNamespace =
+				m_namespacesHandler.getNamespace(prefix);
 
-			isIllegalElement = true;
+			if(theNamespace == 0 && isEmpty(elemNameSpace))
+			{
+				executionContext.warn("Could not resolve prefix: " + prefix, this, sourceNode);
+
+				if (m_namespaceAVT != 0)
+				{
+					hasUnresolvedPrefix = true;
+
+					elemName = substring(elemName, indexOfNSSep + 1);
+				}
+				else
+				{
+					isIllegalElement = true;
+				}
+			}
 		}
 	}
 
 	if (isIllegalElement == false)
 	{
-		if(0 == m_namespaceAVT)
-		{
-			executionContext.startElement(c_wstr(elemName));   
+		executionContext.startElement(c_wstr(elemName));   
 
-			m_namespacesHandler.outputResultNamespaces(executionContext);
+		m_namespacesHandler.outputResultNamespaces(executionContext);
 
-			// OK, now let's check to make sure we don't have to change the default namespace...
-			const XalanDOMString&	theCurrentDefaultNamespace =
+		// OK, now let's check to make sure we don't have to change the default namespace...
+		const XalanDOMString* const		theCurrentDefaultNamespace =
 				executionContext.getResultNamespaceForPrefix(s_emptyString);
 
-			const XalanDOMString&	theElementDefaultNamespace =
-				m_namespacesHandler.getNamespace(s_emptyString);
+		if (theCurrentDefaultNamespace != 0)
+		{
+			const XalanDOMString* const		theElementDefaultNamespace =
+					m_namespacesHandler.getNamespace(s_emptyString);
 
-			if (equals(theCurrentDefaultNamespace, theElementDefaultNamespace) == false)
+			if (hasUnresolvedPrefix == true || theElementDefaultNamespace == 0)
 			{
-				executionContext.addResultAttribute(DOMServices::s_XMLNamespace, theElementDefaultNamespace);
+				// There was no default namespace, so we have to turn the
+				// current one off.
+				executionContext.addResultAttribute(DOMServices::s_XMLNamespace, s_emptyString);
+			}
+			else if (equals(*theCurrentDefaultNamespace, *theElementDefaultNamespace) == false)
+			{
+				executionContext.addResultAttribute(DOMServices::s_XMLNamespace, *theElementDefaultNamespace);
 			}
 		}
-		else
+
+		if(0 != m_namespaceAVT)
 		{
-			StylesheetExecutionContext::GetAndReleaseCachedString	elemNameSpaceGuard(executionContext);
-
-			XalanDOMString&		elemNameSpace = elemNameSpaceGuard.get();
-
-			m_namespaceAVT->evaluate(elemNameSpace, sourceNode, *this, executionContext);
-
-			if(isEmpty(elemNameSpace) == true)
+			if(isEmpty(elemNameSpace) == false || hasUnresolvedPrefix == false)
 			{
-				executionContext.startElement(c_wstr(elemName));   
-
-				m_namespacesHandler.outputResultNamespaces(executionContext);
-			}
-			else
-			{
-				executionContext.startElement(c_wstr(elemName));
-
-				m_namespacesHandler.outputResultNamespaces(executionContext);
-
 				if(indexOfNSSep == len)
 				{
 					executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
 				}
 				else
 				{
-					insert(prefix, 0, DOMServices::s_XMLNamespaceWithSeparator);
+					const XalanDOMString* const		theNamespace =
+						executionContext.getResultNamespaceForPrefix(prefix);
 
-					executionContext.addResultAttribute(prefix, elemNameSpace);
+					if (theNamespace == 0 ||
+						equals(*theNamespace, elemNameSpace) == false)
+					{
+						insert(prefix, 0, DOMServices::s_XMLNamespaceWithSeparator);
+
+						executionContext.addResultAttribute(prefix, elemNameSpace);
+					}
 				}
 			}
 		}

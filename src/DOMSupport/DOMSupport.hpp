@@ -102,7 +102,7 @@ public:
 	 * @param prefix prefix for a namespace
 	 * @return URI corresponding to namespace
 	 */
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getNamespaceForPrefix(
 			const XalanDOMString&	prefix, 
 			const XalanElement&		namespaceContext) const = 0;

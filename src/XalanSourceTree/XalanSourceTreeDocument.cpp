@@ -827,7 +827,7 @@ XalanSourceTreeDocument::getTextNodeString(
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 XalanSourceTreeDocument::getNamespaceForPrefix(
 			const XalanDOMChar*		theName,
 			const PrefixResolver&	thePrefixResolver,
@@ -945,10 +945,10 @@ XalanSourceTreeDocument::createAttribute(
 			XalanSourceTreeElement*		theOwnerElement,
 			const PrefixResolver&		thePrefixResolver)
 {
-	const XalanDOMString&	theNamespace =
+	const XalanDOMString* const		theNamespace =
 		getNamespaceForPrefix(theName, thePrefixResolver, m_stringBuffer);
 
-	if (length(theNamespace) == 0)
+	if (theNamespace == 0 || length(*theNamespace) == 0)
 	{
 		return m_attributeAllocator.create(
 				m_namesStringPool.get(theName),
@@ -971,7 +971,7 @@ XalanSourceTreeDocument::createAttribute(
 		return m_attributeNSAllocator.create(
 				m_namesStringPool.get(theName),
 				m_namesStringPool.get(theName + length(m_stringBuffer) + 1),
-				m_namesStringPool.get(theNamespace),
+				m_namesStringPool.get(*theNamespace),
 				// This is the prefix...
 				m_namesStringPool.get(m_stringBuffer),
 				m_valuesStringPool.get(theValue),
@@ -992,10 +992,10 @@ XalanSourceTreeDocument::createElement(
 			XalanNode*					theNextSibling,
 			const PrefixResolver&		thePrefixResolver)
 {
-	const XalanDOMString&	theNamespace =
+	const XalanDOMString* const		theNamespace =
 		getNamespaceForPrefix(theTagName, thePrefixResolver, m_stringBuffer);
 
-	if (length(theNamespace) == 0)
+	if (theNamespace == 0 || length(*theNamespace) == 0)
 	{
 		// the prefix was returned by getNamespaceForPrefix()...
 		assert(length(m_stringBuffer) == 0);
@@ -1029,7 +1029,7 @@ XalanSourceTreeDocument::createElement(
 		return m_elementNSAllocator.create(
 				m_namesStringPool.get(theTagName),
 				m_namesStringPool.get(theTagName + length(m_stringBuffer) + 1),
-				m_namesStringPool.get(theNamespace),
+				m_namesStringPool.get(*theNamespace),
 				// This is the prefix...
 				m_namesStringPool.get(m_stringBuffer),
 				this,

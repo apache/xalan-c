@@ -588,14 +588,15 @@ XPathProcessorImpl::mapNSTokens(
 {
 	assert(m_prefixResolver != 0);
 
-	const XalanDOMString 	prefix = substring(pat, startSubstring, posOfNSSep);
+	const XalanDOMString 			prefix =
+				substring(pat, startSubstring, posOfNSSep);
 
-	const XalanDOMString 	uName =
+	const XalanDOMString* const		uName =
 				m_prefixResolver->getNamespaceForPrefix(prefix);
 
-	if(length(uName) > 0)
+	if(uName != 0 && length(*uName) > 0)
 	{
-		addToTokenQueue(uName);
+		addToTokenQueue(*uName);
 
 		addToTokenQueue(DOMServices::s_XMLNamespaceSeparatorString);
 
@@ -2052,14 +2053,17 @@ XPathProcessorImpl::NodeTest(int	axisType)
 						m_expression->getRelativeToken(-1);
 				assert(theToken != 0);
 
-				const XalanDOMString&	theString = theToken->str();
+				const XalanDOMString&			theString = theToken->str();
 
-				const XalanDOMString&	theNamespace =
+				const XalanDOMString* const		theNamespace =
 						m_prefixResolver->getNamespaceForPrefix(theString);
 
-				m_expression->replaceRelativeToken(
-									-1,
-									theNamespace);
+				if (theNamespace != 0)
+				{
+					m_expression->replaceRelativeToken(
+										-1,
+										*theNamespace);
+				}
 			}
 
 			m_expression->pushCurrentTokenOnOpCodeMap();

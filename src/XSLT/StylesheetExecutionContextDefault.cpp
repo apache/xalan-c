@@ -390,9 +390,8 @@ StylesheetExecutionContextDefault::copyNamespaceAttributes(const XalanNode&		src
 
 
 
-const XalanDOMString&
-StylesheetExecutionContextDefault::getResultPrefixForNamespace(
-			const XalanDOMString&	theNamespace) const
+const XalanDOMString*
+StylesheetExecutionContextDefault::getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const
 {
 	assert(m_xsltProcessor != 0);
 
@@ -401,7 +400,7 @@ StylesheetExecutionContextDefault::getResultPrefixForNamespace(
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 StylesheetExecutionContextDefault::getResultNamespaceForPrefix(const XalanDOMString&	thePrefix) const
 {
 	assert(m_xsltProcessor != 0);
@@ -1699,7 +1698,7 @@ StylesheetExecutionContextDefault::setPrefixResolver(const PrefixResolver*	thePr
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 StylesheetExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
 	return m_xpathExecutionContextDefault.getNamespaceForPrefix(prefix);

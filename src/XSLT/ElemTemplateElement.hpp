@@ -627,7 +627,7 @@ public:
 
 	// These interfaces are inherited from PrefixResolver...
 
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString& prefix) const;
 
 	virtual const XalanDOMString&
@@ -642,7 +642,7 @@ protected:
 	 * @param fReportError If true, and exception will be thrown to report the error.
 	 * @return The namespace string.
 	 */
-	const XalanDOMString&
+	const XalanDOMString*
 	getNamespaceForPrefixInternal(
 			const XalanDOMString&	prefix,
 			bool					fReportError) const;

@@ -340,7 +340,7 @@ public:
 	 * @param prefix Prefix to resolve
 	 * @return namespace that prefix resolves to, or null if prefix is not found
 	 */
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
 
 	/**
@@ -914,7 +914,7 @@ public:
 	 * @param prefix prefix for namespace
 	 * @return string for namespace URI
 	 */
-	const XalanDOMString&
+	const XalanDOMString*
 	getResultNamespaceForPrefix(const XalanDOMString&	prefix) const;
   
 	/**
@@ -923,7 +923,7 @@ public:
 	 * @param theNamespace namespace for prefix
 	 * @return string for namespace prefix
 	 */
-	const XalanDOMString&
+	const XalanDOMString*
 	getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const;
 
 	/**

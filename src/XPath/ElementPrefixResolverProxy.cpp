@@ -75,10 +75,6 @@
 
 
 
-const XalanDOMString	ElementPrefixResolverProxy::s_emptyString;
-
-
-
 ElementPrefixResolverProxy::ElementPrefixResolverProxy(
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
@@ -98,12 +94,12 @@ ElementPrefixResolverProxy::~ElementPrefixResolverProxy()
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 ElementPrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&		prefix) const
 {
 	if (m_namespaceContext == 0)
 	{
-		return s_emptyString;
+		return 0;
 	}
 	else
 	{

@@ -142,6 +142,8 @@ private:
 
 	bool
 	operator==(const FunctionFunctionAvailable&) const;
+
+	static const XalanDOMString		s_emptyString;
 };
 
 

@@ -301,7 +301,7 @@ public:
 	 * @param thePrefix The namespace prefix.
 	 * @return The namespace URI
 	 */
-	const XalanDOMString&
+	const XalanDOMString*
 	getNamespace(const XalanDOMString&	thePrefix) const;
 
 	/**
@@ -310,7 +310,7 @@ public:
 	 * @param theStylesheetNamespace The namespace as declared in the stylesheet.
 	 * @return The namespace alias URI
 	 */
-	const XalanDOMString&
+	const XalanDOMString*
 	getNamespaceAlias(const XalanDOMString&		theStylesheetNamespace) const;
 
 	/**
@@ -352,7 +352,9 @@ public:
 	 * @param theExecutionContext The current execution context.
 	 */
 	void
-	outputResultNamespaces(StylesheetExecutionContext&	theExecutionContext) const;
+	outputResultNamespaces(
+			StylesheetExecutionContext&		theExecutionContext,
+			const XalanDOMString*			theNamespaceToExclude = 0) const;
 
 	/**
 	 * Clear out the handler.
@@ -458,8 +460,6 @@ private:
 
 	// If true namespace aliases will be processed.  If false, they will not.
 	bool							m_processAliases;
-
-	const static XalanDOMString		s_dummyEmptyString;
 };
 
 

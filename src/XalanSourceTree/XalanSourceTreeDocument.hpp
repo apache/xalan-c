@@ -457,7 +457,7 @@ private:
 			const XalanDOMChar*		chars,
 			unsigned int			length);
 
-	const XalanDOMString&
+	const XalanDOMString*
 	getNamespaceForPrefix(
 			const XalanDOMChar*		theName,
 			const PrefixResolver&	thePrefixResolver,

@@ -360,7 +360,7 @@ public:
 	 * 
 	 * @param theNamespace namespace for prefix
 	 */
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const = 0;
 
 	/**
@@ -368,7 +368,7 @@ public:
 	 * 
 	 * @param thePrefix prefix for namespace
 	 */
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getResultNamespaceForPrefix(const XalanDOMString&	thePrefix) const = 0;
 
 	/**
@@ -1631,7 +1631,7 @@ public:
 	virtual void
 	setPrefixResolver(const PrefixResolver*		thePrefixResolver) = 0;
 
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const = 0;
 
 	virtual XalanDOMString

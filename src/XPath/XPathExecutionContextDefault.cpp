@@ -406,7 +406,7 @@ XPathExecutionContextDefault::setPrefixResolver(const PrefixResolver*	thePrefixR
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 XPathExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
 	assert(m_prefixResolver != 0);

@@ -1049,10 +1049,10 @@ FormatterToHTML::pushHasNamespace(const XalanDOMChar*	theElementName)
 		assert(thePrefix != 0);
 
 		// Check for the namespace...
-		const XalanDOMString&	theNamespace =
+		const XalanDOMString* const		theNamespace =
 				m_prefixResolver->getNamespaceForPrefix(*thePrefix);
 
-		if (length(theNamespace) != 0)
+		if (theNamespace != 0 && length(*theNamespace) != 0)
 		{
 			m_hasNamespaceStack.push_back(true);
 

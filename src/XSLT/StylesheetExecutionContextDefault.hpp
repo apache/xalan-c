@@ -317,10 +317,10 @@ public:
 	virtual void
 	copyNamespaceAttributes(const XalanNode&	src);
 
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const;
 
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getResultNamespaceForPrefix(const XalanDOMString&	thePrefix) const;
 
 	virtual XalanDOMString
@@ -834,7 +834,7 @@ public:
 	virtual void
 	setPrefixResolver(const PrefixResolver*		thePrefixResolver);
 
-	virtual const XalanDOMString&
+	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
 
 	virtual XalanDOMString

@@ -142,7 +142,7 @@ ResultNamespacesStack::popContext()
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 ResultNamespacesStack::getNamespaceForPrefix(const XalanDOMString&	thePrefix) const
 {
 	// Search vector from first element back
@@ -151,7 +151,7 @@ ResultNamespacesStack::getNamespaceForPrefix(const XalanDOMString&	thePrefix) co
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 ResultNamespacesStack::getPrefixForNamespace(const XalanDOMString&	theNamespaceURI) const
 {
 	// Search vector from first element back
