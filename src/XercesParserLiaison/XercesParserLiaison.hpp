@@ -110,6 +110,12 @@ public:
 	virtual void
 	reset();
 
+	virtual ExecutionContext*
+	getExecutionContext() const;
+
+	virtual void
+	setExecutionContext(ExecutionContext&	theContext);
+
 	virtual bool
 	supportsSAX() const;
 
@@ -360,6 +366,9 @@ public:
 	DOM_Document
 	mapXercesDocument(const XalanDocument*	theDocument) const;
 
+	static void
+	formatErrorMessage(const SAXParseException& e, XalanDOMString& theMessage);
+
 	// Implementations for SAX ErrorHandler
 
 	virtual void
@@ -501,6 +510,8 @@ private:
 	bool				m_buildBridge;
 
 	bool				m_threadSafe;
+
+	ExecutionContext*	m_executionContext;
 };
 
 

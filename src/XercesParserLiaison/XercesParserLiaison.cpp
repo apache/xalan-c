@@ -82,6 +82,7 @@
 
 
 
+#include <PlatformSupport/ExecutionContext.hpp>
 #include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 
@@ -123,7 +124,8 @@ XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	theSupport) :
 	m_errorHandler(this),
 	m_documentMap(),
 	m_buildBridge(true),
-	m_threadSafe(false)
+	m_threadSafe(false),
+	m_executionContext(0)
 {
 }
 
@@ -151,6 +153,24 @@ XercesParserLiaison::reset()
 	m_documentMap.clear();
 
 	m_DOMSupport.reset();
+
+	m_executionContext = 0;
+}
+
+
+
+ExecutionContext*
+XercesParserLiaison::getExecutionContext() const
+{
+	return m_executionContext;
+}
+
+
+
+void
+XercesParserLiaison::setExecutionContext(ExecutionContext&	theContext)
+{
+	m_executionContext = &theContext;
 }
 
 
@@ -439,34 +459,25 @@ XercesParserLiaison::mapXercesDocument(const XalanDocument*		theDocument) const
 void
 XercesParserLiaison::fatalError(const SAXParseException&	e)
 {
+	XalanDOMString	theMessage("Fatal Error");
+
+	formatErrorMessage(e, theMessage);
+
+	if (m_executionContext != 0)
+	{
+		// We call warning() because we don't want the execution
+		// context to potentially throw an exception.
+		m_executionContext->warn(theMessage);
+	}
+	else
+	{
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::endl;
+		using std::cerr;
+		using std::endl;
 #endif
 
-#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
-	cerr << endl
-		 << "Fatal Error at (file ";
-	OutputString(cerr, e.getSystemId());
-	cerr << ", line "
-		 << e.getLineNumber()
-		 << ", char"
-		 << e.getColumnNumber()
-         << "): ";
-	OutputString(cerr, e.getMessage());		 
-	cerr <<  endl;
-#else
-	cerr << endl
-		 << "Fatal Error at (file "
-		 << e.getSystemId()
-		 << ", line "
-		 << e.getLineNumber()
-		 << ", char"
-		 << e.getColumnNumber()
-         << "): "
-		 << e.getMessage()
-		 << endl;
-#endif			 
+		cerr << endl << theMessage << endl;
+	}
 
 	throw e;
 }
@@ -476,35 +487,25 @@ XercesParserLiaison::fatalError(const SAXParseException&	e)
 void
 XercesParserLiaison::error(const SAXParseException&		e)
 {
+	XalanDOMString	theMessage("Error ");
+
+	formatErrorMessage(e, theMessage);
+
+	if (m_executionContext != 0)
+	{
+		// We call warn() because we don't want the execution
+		// context to potentially throw an exception.
+		m_executionContext->warn(theMessage);
+	}
+	else
+	{
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::endl;
+		using std::cerr;
+		using std::endl;
 #endif
 
-#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
-	cerr << endl
-		 << "Error at (file ";
-	OutputString(cerr, e.getSystemId());
-	cerr << ", line "
-		 << e.getLineNumber()
-		 << ", char"
-		 << e.getColumnNumber()
-         << "): ";
-    OutputString(cerr, e.getMessage());		 
-	cerr <<  endl;
-#else
-	cerr << endl
-		 << "Error at (file "
-		 << e.getSystemId()
-		 << ", line "
-		 << e.getLineNumber()
-		 << ", char"
-		 << e.getColumnNumber()
-         << "): "
-		 << e.getMessage()
-		 << endl;
-#endif
-
+		cerr << endl << theMessage << endl;
+	}
 }
 
 
@@ -512,35 +513,38 @@ XercesParserLiaison::error(const SAXParseException&		e)
 void
 XercesParserLiaison::warning(const SAXParseException&	e)
 {
+	XalanDOMString	theMessage("Warning ");
+
+	formatErrorMessage(e, theMessage);
+
+	if (m_executionContext != 0)
+	{
+		m_executionContext->warn(theMessage);
+	}
+	else
+	{
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::endl;
+		using std::cerr;
+		using std::endl;
 #endif
 
-#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
-	cerr << endl
-		 << "Warning at (file ";
-	OutputString(cerr, e.getSystemId());
-	cerr << ", line "
-		 << e.getLineNumber()
-		 << ", char"
-		 << e.getColumnNumber()
-         << "): ";
-    OutputString(cerr, e.getMessage());		 
-	cerr <<  endl;
-#else
-	cerr << endl
-		 << "Warning at (file "
-		 << e.getSystemId()
-		 << ", line "
-		 << e.getLineNumber()
-		 << ", char"
-		 << e.getColumnNumber()
-         << "): "
-		 << e.getMessage()
-		 << endl;
-#endif
-	
+		cerr << endl << theMessage << endl;
+	}
+}
+
+
+
+void
+XercesParserLiaison::formatErrorMessage(const SAXParseException& e, XalanDOMString& theMessage)
+{
+	append(theMessage, " at (file ");
+	append(theMessage, e.getSystemId());
+	append(theMessage, ", line ");
+	append(theMessage, LongToDOMString(long(e.getLineNumber())));
+	append(theMessage, ", column ");
+	append(theMessage, LongToDOMString(long(e.getColumnNumber())));
+	append(theMessage, "): ");
+	append(theMessage, e.getMessage());
 }
 
 
