@@ -97,7 +97,8 @@ ResultNamespacesStack::addDeclaration(
 
 	// If the last vector contains only an empty namespace, replace it with a
 	// new vector containing only this namespace
-	if(isEmpty(theCurrentNamespace.getURI()))
+	if(length(theCurrentNamespace.getURI()) == 0 &&
+	   length(theCurrentNamespace.getPrefix()) == 0)
 	{
 		theCurrentNamespace.setPrefix(thePrefix);
 
