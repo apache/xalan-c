@@ -128,14 +128,18 @@ XercesDOMPrintWriter::write(
 			long			theLength)
 {
 	assert(s != 0);
-	assert(theOffset >= 0);
+	assert(theOffset >= 0 && theOffset < length(s));
 	assert(theLength >= 0 || theLength == -1);
 
 	if (theLength == -1)
 	{
-		for (long i = theOffset; s[i] != 0; i++)
+		if (theOffset == 0)
 		{
-			m_OutputStream << s[i];
+			m_OutputStream << s;
+		}
+		else
+		{
+			m_OutputStream << s + theOffset;
 		}
 	}
 	else
@@ -152,7 +156,7 @@ XercesDOMPrintWriter::write(
 
 
 void
-XercesDOMPrintWriter::write(XMLCh		c)
+XercesDOMPrintWriter::write(XMLCh	c)
 {
 	m_OutputStream << c;
 }
