@@ -107,6 +107,9 @@ public:
 	typedef map<XalanDOMString,
 				XPathExpression::eOpCodes,
 				less<XalanDOMString> >		NodeTypesMapType;
+	typedef map<XalanDOMString,
+				XalanDOMString,
+				less<XalanDOMString> >		StringToStringMapType;
 
 	typedef vector<XalanDOMString>			DOMStringVectorType;
 
@@ -120,6 +123,8 @@ public:
 					 XPathExpression::eOpCodes>		AxisNamesMapType;
 	typedef std::map<XalanDOMString,
 					 XPathExpression::eOpCodes>		NodeTypesMapType;
+	typedef std::map<XalanDOMString,
+					 XalanDOMString>				StringToStringMapType;
 
 	typedef std::vector<XalanDOMString>				DOMStringVectorType;
 
@@ -195,6 +200,9 @@ private:
 	void
 	addToTokenQueue(const XalanDOMString&	s) const;
 
+	void
+	replaceTokenWithNamespaceToken() const;
+
 	/**
 	 * When a separator token is found, see if there's a element name or the
 	 * like to map.
@@ -204,7 +212,7 @@ private:
 			const XalanDOMString&	pat,
 			int						startSubstring,
 			int						posOfNSSep,
-			int						posOfScan) const;
+			int						posOfScan);
 
 	/**
 	 * Given a map pos, return the corresponding token queue pos.
@@ -826,6 +834,8 @@ private:
 	const Locator*					m_locator;
 
 	BoolVectorType					m_positionPredicateStack;
+
+	StringToStringMapType			m_namespaces;
 
 	enum eDummy
 	{

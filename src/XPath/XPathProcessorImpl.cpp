@@ -93,7 +93,8 @@ XPathProcessorImpl::XPathProcessorImpl() :
 	m_prefixResolver(0),
 	m_requireLiterals(false),
 	m_isMatchPattern(false),
-	m_positionPredicateStack()
+	m_positionPredicateStack(),
+	m_namespaces()
 {
 }
 
@@ -142,6 +143,7 @@ XPathProcessorImpl::initXPath(
 	m_prefixResolver = 0;
 	m_locator = 0;
 	m_positionPredicateStack.clear();
+	m_namespaces.clear();
 }
 
 
@@ -188,6 +190,7 @@ XPathProcessorImpl::initMatchPattern(
 	m_prefixResolver = 0;
 	m_locator = 0;
 	m_positionPredicateStack.clear();
+	m_namespaces.clear();
 }
 
 
@@ -624,12 +627,32 @@ XPathProcessorImpl::addToTokenQueue(const XalanDOMString&	s) const
 
 
 
+void
+XPathProcessorImpl::replaceTokenWithNamespaceToken() const
+{
+	assert(m_xpath != 0);
+	assert(m_expression != 0);
+	assert(m_token.size() > 0);
+
+	StringToStringMapType::const_iterator	i = m_namespaces.find(m_token);
+	assert(i != m_namespaces.end());
+
+	const XalanDOMString&	theNamespaceURI = (*i).second;
+	assert(theNamespaceURI.size() != 0);
+
+	m_expression->replaceRelativeToken(
+			-1,
+			theNamespaceURI);
+}
+
+
+
 int
 XPathProcessorImpl::mapNSTokens(
 			const XalanDOMString&	pat,
 			int 					startSubstring,
 			int 					posOfNSSep,
-			int 					posOfScan) const
+			int 					posOfScan)
 {
 	assert(m_prefixResolver != 0);
 
@@ -659,7 +682,9 @@ XPathProcessorImpl::mapNSTokens(
 	}
 	else
 	{
-		addToTokenQueue(*uName);
+		m_namespaces[prefix] = *uName;
+
+		addToTokenQueue(prefix);
 
 		addToTokenQueue(DOMServices::s_XMLNamespaceSeparatorString);
 
@@ -1731,6 +1756,9 @@ XPathProcessorImpl::FunctionCall()
 
 		XPathExpression::OpCodeMapValueVectorType	theArgs(2, 0);
 
+		// Replace the token in the queue with the actual namespace URI...
+		replaceTokenWithNamespaceToken();
+
 		theArgs[0] = m_expression->getTokenPosition() - 1;
 
 		nextToken();
@@ -2078,6 +2106,9 @@ XPathProcessorImpl::NodeTest(int	axisType)
 			}
 			else
 			{
+				// Replace the token in the queue with the actual namespace...
+				replaceTokenWithNamespaceToken();
+
 				m_expression->pushCurrentTokenOnOpCodeMap();
 			}
 
@@ -2197,6 +2228,9 @@ XPathProcessorImpl::QName()
 	}
 	else
 	{
+		// Replace the token in the queue with the actual namespace...
+		replaceTokenWithNamespaceToken();
+
 		m_expression->pushCurrentTokenOnOpCodeMap();
 
 		nextToken();
