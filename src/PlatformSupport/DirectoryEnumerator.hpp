@@ -229,7 +229,11 @@ EnumerateDirectory(
 			OutputIteratorType			theOutputIterator,
 			FilterPredicateType			theFilterPredicate,
 			StringConversionFunction	theConversionFunction,
+#if defined(XALAN_TEMPLATE_FUNCTION_NO_DEFAULT_PARAMETERS)
+			bool						fIncludeSelfAndParent)
+#else
 			bool						fIncludeSelfAndParent = false)
+#endif
 {
 #if defined(_MSC_VER)
 	FindFileStruct 		theFindData;
@@ -282,7 +286,11 @@ EnumerateDirectory(
 			OutputIteratorType			theOutputIterator,
 			FilterPredicateType			theFilterPredicate,
 			StringConversionFunction	theConversionFunction,
+#if defined(XALAN_TEMPLATE_FUNCTION_NO_DEFAULT_PARAMETERS)
+			bool						fIncludeSelfAndParent)
+#else
 			bool						fIncludeSelfAndParent = false)
+#endif
 {
 	StringType	theFullSearchSpec(theDirectory);
 
