@@ -557,6 +557,17 @@ public:
 			unsigned int			count, 
 			const XalanDOMString&	arg);
 
+	/**
+	 * Get the Xerces node this instance represent.
+	 *
+	 * @return The Xerces node
+	 */
+	DOM_Comment
+	getXercesNode() const
+	{
+		return m_xercesNode;
+	}
+
   //@}
 
 private:

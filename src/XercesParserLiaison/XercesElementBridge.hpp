@@ -720,7 +720,18 @@ public:
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const;
 
-  //@}
+	/**
+	 * Get the Xerces node this instance represent.
+	 *
+	 * @return The Xerces node
+	 */
+	DOM_Element
+	getXercesNode() const
+	{
+		return m_xercesNode;
+	}
+
+	//@}
 
 private:
 

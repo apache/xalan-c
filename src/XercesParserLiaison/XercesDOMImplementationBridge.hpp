@@ -148,6 +148,17 @@ public:
 			const XalanDOMString&		qualifiedName,
 			const XalanDocumentType&	doctype);
 
+	/**
+	 * Get the Xerces node this instance represent.
+	 *
+	 * @return The Xerces node
+	 */
+	DOM_DOMImplementation&
+	getXercesNode() const
+	{
+		return m_xercesNode;
+	}
+
     //@}
 
 private:

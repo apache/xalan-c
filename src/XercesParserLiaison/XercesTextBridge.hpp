@@ -593,6 +593,17 @@ public:
 	virtual bool
 	isIgnorableWhitespace() const;
 
+	/**
+	 * Get the Xerces node this instance represent.
+	 *
+	 * @return The Xerces node
+	 */
+	DOM_Text
+	getXercesNode() const
+	{
+		return m_xercesNode;
+	}
+
 private:
 
 	// Not implemented...

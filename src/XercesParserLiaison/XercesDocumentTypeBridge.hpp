@@ -484,6 +484,18 @@ public:
      */
 	virtual const XalanDOMString&
 	getInternalSubset() const;
+
+	/**
+	 * Get the Xerces node this instance represent.
+	 *
+	 * @return The Xerces node
+	 */
+	DOM_DocumentType
+	getXercesNode() const
+	{
+		return m_xercesNode;
+	}
+
     //@}
 
 private:

@@ -470,6 +470,17 @@ public:
 	setData(const XalanDOMString&	data);
     //@}
 
+	/**
+	 * Get the Xerces node this instance represent.
+	 *
+	 * @return The Xerces node
+	 */
+	DOM_ProcessingInstruction
+	getXercesNode() const
+	{
+		return m_xercesNode;
+	}
+
 private:
 
 	// Not implemented...

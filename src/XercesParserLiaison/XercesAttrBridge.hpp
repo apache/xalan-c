@@ -488,6 +488,17 @@ public:
 	getOwnerElement() const;
     //@}
 
+	/**
+	 * Get the Xerces node this instance represent.
+	 *
+	 * @return The Xerces node
+	 */
+	DOM_Attr
+	getXercesNode() const
+	{
+		return m_xercesNode;
+	}
+
 private:
 
 	// Not implemented...

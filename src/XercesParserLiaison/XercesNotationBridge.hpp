@@ -451,6 +451,17 @@ public:
 	virtual const XalanDOMString&
 	getSystemId() const;
 
+	/**
+	 * Get the Xerces node this instance represent.
+	 *
+	 * @return The Xerces node
+	 */
+	DOM_Notation
+	getXercesNode() const
+	{
+		return m_xercesNode;
+	}
+
 private:
 
 	// Not implemented...
