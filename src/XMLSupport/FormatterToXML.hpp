@@ -1205,6 +1205,16 @@ private:
 	 * A pointer to the member function that will flush the buffer.
 	 */
 	FlushFunctionType			m_flushFunction;
+
+	/**
+	 * The string of characters that represents the newline
+	 */
+	const XalanDOMChar*			m_newlineString;
+
+	/**
+	 * The length of the the string of characters that represents the newline
+	 */
+	XalanDOMString::size_type	m_newlineStringLength;
 };
 
 

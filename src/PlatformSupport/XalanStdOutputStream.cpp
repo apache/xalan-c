@@ -81,13 +81,36 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XalanStdOutputStream::XalanStdOutputStream(StreamType&	theOutputStream) :
 	XalanOutputStream(),
+#if !defined(XALAN_NEWLINE_IS_CRLF)
 	m_outputStream(theOutputStream)
+#else
+	m_outputStream(theOutputStream),
+	m_newlineString(0),
+	m_newlineStringLength(0)
+#endif
 {
 	// This will make sure that cerr is not buffered...
 	if (&m_outputStream == &XALAN_STD_QUALIFIER cerr)
 	{
 		setBufferSize(0);
+
+#if defined(XALAN_NEWLINE_IS_CRLF)
+		m_newlineString = s_nlString;
+		m_newlineStringLength = s_nlStringLength;
+#endif
 	}
+#if defined(XALAN_NEWLINE_IS_CRLF)
+	else if (&m_outputStream == &XALAN_STD_QUALIFIER cout)
+	{
+		m_newlineString = s_nlString;
+		m_newlineStringLength = s_nlStringLength;
+	}
+	else
+	{
+		m_newlineString = s_nlCRString;
+		m_newlineStringLength = s_nlCRStringLength;
+	}
+#endif
 }
 
 
@@ -95,6 +118,28 @@ XalanStdOutputStream::XalanStdOutputStream(StreamType&	theOutputStream) :
 XalanStdOutputStream::~XalanStdOutputStream()
 {
 }
+
+
+
+#if defined(XALAN_NEWLINE_IS_CRLF)
+void
+XalanStdOutputStream::newline()
+{
+	assert(m_newlineString != 0 && length(m_newlineString) == m_newlineStringLength);
+
+	write(m_newlineString, m_newlineStringLength);
+}
+
+
+
+const XalanDOMChar*
+XalanStdOutputStream::getNewlineString() const
+{
+	assert(m_newlineString != 0);
+
+	return m_newlineString;
+}
+#endif
 
 
 

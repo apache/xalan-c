@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.	All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -10,33 +10,33 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *	  notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ *	  notice, this list of conditions and the following disclaimer in
+ *	  the documentation and/or other materials provided with the
+ *	  distribution.
  *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
+ *	  if any, must include the following acknowledgment:  
+ *		 "This product includes software developed by the
+ *		  Apache Software Foundation (http://www.apache.org/)."
+ *	  Alternately, this acknowledgment may appear in the software itself,
+ *	  if and wherever such third-party acknowledgments normally appear.
  *
  * 4. The names "Xalan" and "Apache Software Foundation" must
- *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
- *    permission, please contact apache@apache.org.
+ *	  not be used to endorse or promote products derived from this
+ *	  software without prior written permission. For written 
+ *	  permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache",
- *    nor may "Apache" appear in their name, without prior written
- *    permission of the Apache Software Foundation.
+ *	  nor may "Apache" appear in their name, without prior written
+ *	  permission of the Apache Software Foundation.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * DISCLAIMED.	IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
@@ -119,10 +119,32 @@ public :
 	virtual
 	~XalanOutputStream();
 
+	static const XalanDOMChar*
+	defaultNewlineString()
+	{
+#if defined(XALAN_NEWLINE_IS_CRLF)
+		return s_nlCRString;
+#else
+		return s_nlString;
+#endif
+	}
+
+	/**
+	 * Write the appropriate newline character(s) to the stream.
+	 */
+	virtual void
+	newline();
+
+	/**
+	 * Get the string which is appropriate for inserting a line feed in the stream.
+	 */
+	virtual const XalanDOMChar*
+	getNewlineString() const;
+
 	/**
 	 * Flush the stream's buffer.
 	 */
-    void
+	void
 	flush()
 	{
 		flushBuffer();
@@ -131,12 +153,12 @@ public :
 	}
 
 	/**
-	 * Write a character to the output stream.  The character
+	 * Write a character to the output stream.	The character
 	 * will not be transcoded.
 	 *
-	 * @param theChar       the character to write
+	 * @param theChar		the character to write
 	 */
-    void
+	void
 	write(char	theChar)
 	{
 		write(&theChar, 1);
@@ -146,9 +168,9 @@ public :
 	 * Write a wide character to the output stream.  The character
 	 * will be transcoded, if an output encoding is specified.
 	 *
-	 * @param theChar       the character to write
+	 * @param theChar		the character to write
 	 */
-    void
+	void
 	write(XalanDOMChar	theChar)
 	{
 		assert(m_bufferSize > 0);
@@ -165,9 +187,9 @@ public :
 	 * Write a null-terminated string to the output file.  The character
 	 * will not be transcoded.
 	 *
-	 * @param theBuffer       character buffer to write
+	 * @param theBuffer 	  character buffer to write
 	 */
-    void
+	void
 	write(const char*	theBuffer)
 	{
 		assert(theBuffer != 0);
@@ -178,12 +200,12 @@ public :
 	}
 
 	/**
-	 * Write a null-terminated wide string to the output file.  The string
+	 * Write a null-terminated wide string to the output file.	The string
 	 * will be transcoded, if an output encoding is specified.
 	 *
-	 * @param theBuffer       character buffer to write
+	 * @param theBuffer 	  character buffer to write
 	 */
-    void
+	void
 	write(const XalanDOMChar*	theBuffer)
 	{
 		XALAN_USING_XALAN(length)
@@ -195,12 +217,12 @@ public :
 	 * Write a specified number of characters to the output stream.  The string
 	 * will not be transcoded.
 	 *
-	 * @param theBuffer       character buffer to write
+	 * @param theBuffer 	  character buffer to write
 	 * @param theBufferLength number of characters to write
 	 */
-    void
+	void
 	write(
-			const char*		theBuffer,
+			const char* 	theBuffer,
 			size_type		theBufferLength)
 	{
 		assert(theBuffer != 0);
@@ -215,12 +237,12 @@ public :
 	 * Write a specified number of characters to the output stream.  The string
 	 * will be transcoded, if an output encoding is specified.
 	 *
-	 * @param theBuffer       character buffer to write
+	 * @param theBuffer 	  character buffer to write
 	 * @param theBufferLength number of characters to write
 	 */
-    void
+	void
 	write(
-			const XalanDOMChar*		theBuffer,
+			const XalanDOMChar* 	theBuffer,
 			size_type				theBufferLength);
 
 	/**
@@ -240,7 +262,7 @@ public :
 	 * @param theEncoding The encoding name
 	 */
 	void
-	setOutputEncoding(const XalanDOMString&		theEncoding);
+	setOutputEncoding(const XalanDOMString& 	theEncoding);
 
 	/**
 	 * Determine if a given value can be represented in
@@ -248,8 +270,8 @@ public :
 	 *
 	 * @return true if the value can be represented, and false if not.
 	 */
-    bool
-	canTranscodeTo(unsigned int		theChar) const;
+	bool
+	canTranscodeTo(unsigned int 	theChar) const;
 
 	const XalanOutputTranscoder*
 	getTranscoder() const
@@ -282,7 +304,7 @@ public :
 	 * @param the new value of the flag.
 	 */
 	void
-	setThrowTranscodeException(bool	flag)
+	setThrowTranscodeException(bool flag)
 	{
 		m_throwTranscodeException = flag;
 	}
@@ -293,7 +315,7 @@ public :
 	 * @param theBufferSize The buffer size.
 	 */
 	void
-	setBufferSize(BufferType::size_type		theBufferSize);
+	setBufferSize(BufferType::size_type 	theBufferSize);
 
 
 	class XALAN_PLATFORMSUPPORT_EXPORT XalanOutputStreamException : public XSLException
@@ -381,27 +403,42 @@ protected:
 	 */
 	void
 	transcode(
-			const XalanDOMChar*		theBuffer,
+			const XalanDOMChar* 	theBuffer,
 			size_type				theBufferLength,
 			TranscodeVectorType&	theDestination);
 
+	/**
+	 * Write the data in the buffer
+	 *
+	 * @param theBuffer The data to write
+	 * @param theBufferLength The length of theBuffer.
+	 */
 	virtual void
 	writeData(
-			const char*		theBuffer,
+			const char* 	theBuffer,
 			size_type		theBufferLength) = 0;
 
+	/**
+	 * Flush the stream.
+	 */
 	virtual void
 	doFlush() = 0;
 
+	static const XalanDOMChar				s_nlString[];
+	static const XalanDOMChar				s_nlCRString[];
+
+	static const XalanDOMString::size_type	s_nlStringLength;
+	static const XalanDOMString::size_type	s_nlCRStringLength;
+
 private:
 
-    // These are not implemented...
-    XalanOutputStream(const XalanOutputStream&);
+	// These are not implemented...
+	XalanOutputStream(const XalanOutputStream&);
 
-    XalanOutputStream&
+	XalanOutputStream&
 	operator=(const XalanOutputStream&);
 
-    bool
+	bool
 	operator==(const XalanOutputStream&) const;
 
 	// Utility functions...
@@ -410,7 +447,7 @@ private:
 
 	void
 	doWrite(
-			const XalanDOMChar*		theBuffer,
+			const XalanDOMChar* 	theBuffer,
 			size_t					theBufferLength);
 
 
@@ -428,7 +465,7 @@ private:
 
 	bool									m_throwTranscodeException;
 
-	TranscodeVectorType						m_transcodingBuffer;
+	TranscodeVectorType 					m_transcodingBuffer;
 };
 
 

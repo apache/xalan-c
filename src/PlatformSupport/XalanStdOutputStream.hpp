@@ -114,6 +114,15 @@ public:
     virtual
 	~XalanStdOutputStream();
 
+#if defined(XALAN_NEWLINE_IS_CRLF)
+	virtual void
+	newline();
+
+	virtual const XalanDOMChar*
+	getNewlineString() const;
+#endif
+
+
 	class XALAN_PLATFORMSUPPORT_EXPORT XalanStdOutputStreamWriteException : public XalanOutputStream::XalanOutputStreamException
 	{
 	public:
@@ -143,7 +152,13 @@ private:
 	operator=(const XalanStdOutputStream&);
 
 	// Data members...
-	StreamType&		m_outputStream;
+	StreamType&					m_outputStream;
+
+#if defined(XALAN_NEWLINE_IS_CRLF)
+	const XalanDOMChar*			m_newlineString;
+
+	XalanDOMString::size_type	m_newlineStringLength;
+#endif
 };
 
 

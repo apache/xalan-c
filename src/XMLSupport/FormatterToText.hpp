@@ -135,7 +135,7 @@ public:
 	{
 		m_writer = theWriter;
 
-		update();
+		update(false);
 	}
 
 	void
@@ -152,7 +152,7 @@ public:
 	{
 		m_encoding = theEncoding;
 
-		update();
+		update(false);
 	}
 
 	XalanDOMChar
@@ -258,7 +258,7 @@ private:
 	// Utility function to update various member variables
 	// when data changes.
 	void
-	update();
+	update(bool	fNormalizationOnly);
 
 	// Data members...
 	Writer*			m_writer;
@@ -272,6 +272,10 @@ private:
 	bool			m_normalize;
 
 	bool			m_handleIgnorableWhitespace;
+
+	const XalanDOMChar*			m_newlineString;
+
+	XalanDOMString::size_type	m_newlineStringLength;
 };
 
 

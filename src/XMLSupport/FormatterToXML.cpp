@@ -166,7 +166,11 @@ FormatterToXML::FormatterToXML(
 		}
 	}
 
-	if (m_stream != 0)
+	if (m_stream == 0)
+	{
+		m_newlineString = XalanOutputStream::defaultNewlineString();
+	}
+	else
 	{
 		try
 		{
@@ -179,7 +183,13 @@ FormatterToXML::FormatterToXML(
 
 			m_encoding = XalanTranscodingServices::s_utf8String;
 		}
+
+		m_newlineString = m_stream->getNewlineString();
 	}
+
+	assert(m_newlineString != 0);
+
+	m_newlineStringLength = length(m_newlineString);
 
 	m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue(m_encoding);
 
@@ -1662,12 +1672,9 @@ FormatterToXML::processAttribute(
 void
 FormatterToXML::outputLineSep()
 {
-#if defined(XALAN_NEWLINE_IS_CRLF)
-	accumContent(XalanUnicode::charCR);
-	accumContent(XalanUnicode::charLF);
-#else
-	accumContent(XalanUnicode::charLF);
-#endif
+	assert(m_newlineString != 0 && length(m_newlineString) == m_newlineStringLength);
+
+	accumContent(m_newlineString, 0, m_newlineStringLength);
 }
 
 

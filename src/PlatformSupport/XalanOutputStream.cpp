@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,6 +68,33 @@
 
 
 XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+const XalanDOMChar	XalanOutputStream::s_nlString[] =
+{
+	XalanUnicode::charLF,
+	0
+};
+
+
+
+const XalanDOMChar	XalanOutputStream::s_nlCRString[] =
+{
+	XalanUnicode::charCR,
+	XalanUnicode::charLF,
+	0
+};
+
+
+
+const XalanDOMString::size_type		XalanOutputStream::s_nlStringLength =
+	sizeof(s_nlString) / sizeof(s_nlString[0]) - 1;
+
+const XalanDOMString::size_type		XalanOutputStream::s_nlCRStringLength =
+	sizeof(s_nlCRString) / sizeof(s_nlCRString[0]) - 1;
+
+
 
 
 
@@ -410,6 +437,34 @@ XalanOutputStream::setBufferSize(BufferType::size_type	theBufferSize)
 		// m_buffer is now the correct size.
 		temp.swap(m_buffer);
 	}
+}
+
+
+
+void
+XalanOutputStream::newline()
+{
+	// We've had requests to make this a run-time switch, but for now,
+	// it's compile time only...
+#if defined(XALAN_NEWLINE_IS_CRLF)
+	write(s_nlCRString, s_nlCRStringLength);
+#else
+	write(s_nlString, s_nlStringLength);
+#endif
+}
+
+
+
+const XalanDOMChar*
+XalanOutputStream::getNewlineString() const
+{
+	// We've had requests to make this a run-time switch, but for now,
+	// it's compile time only...
+#if defined(XALAN_NEWLINE_IS_CRLF)
+	return s_nlCRString;
+#else
+	return s_nlString;
+#endif
 }
 
 

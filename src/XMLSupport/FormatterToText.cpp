@@ -79,7 +79,9 @@ FormatterToText::FormatterToText() :
 	m_encoding(),
 	m_haveEncoding(false),
 	m_normalize(true),
-	m_handleIgnorableWhitespace(true)
+	m_handleIgnorableWhitespace(true),
+	m_newlineString(0),
+	m_newlineStringLength(0)
 {
 }
 
@@ -95,8 +97,11 @@ FormatterToText::FormatterToText(
 	m_encoding(),
 	m_haveEncoding(false),
 	m_normalize(normalizeLinefeed),
-	m_handleIgnorableWhitespace(handleIgnorableWhitespace)
+	m_handleIgnorableWhitespace(handleIgnorableWhitespace),
+	m_newlineString(0),
+	m_newlineStringLength(0)
 {
+	update(true);
 }
 
 
@@ -112,9 +117,11 @@ FormatterToText::FormatterToText(
 	m_encoding(isEmpty(encoding) == false ? encoding : XalanDOMString(XalanTranscodingServices::s_utf8String)),
 	m_haveEncoding(true),
 	m_normalize(normalizeLinefeed),
-	m_handleIgnorableWhitespace(handleIgnorableWhitespace)
+	m_handleIgnorableWhitespace(handleIgnorableWhitespace),
+	m_newlineString(0),
+	m_newlineStringLength(0)
 {
-	update();
+	update(false);
 }
 
 
@@ -159,8 +166,6 @@ FormatterToText::endDocument()
 	assert(m_writer != 0);
 
 	m_writer->flush();
-
-	m_writer->close();
 }
 
 
@@ -197,26 +202,41 @@ FormatterToText::characters(
 	}
 	else
 	{
-		for (unsigned int i = 0; i < length; ++i)
+		unsigned int i = 0;
+
+		while(i < length)
 		{
-#if defined(XALAN_NEWLINE_IS_CRLF)
-			if (m_normalize == true)
-			{
-				// Normalize LF to CR/LF...
-				if (chars[i] == XalanUnicode::charLF &&
-					(i == 0 ||
-					 chars[i - 1] != XalanUnicode::charCR))
-				{
-					m_writer->write(XalanUnicode::charCR);
-				}
-			}
-#endif
 			if (chars[i] > m_maxCharacter)
 			{
 				//$$$ ToDo: Figure out what we're going to do here...
 			}
 
+#if defined(XALAN_NEWLINE_IS_CRLF)
+			if (m_normalize == false)
+			{
+				m_writer->write(XalanUnicode::charLF);
+			}
+			else
+			{
+				// Normalize LF to CR/LF...
+				if (chars[i] == XalanUnicode::charLF &&
+					(i + 1 < length &&
+					 chars[i + 1] == XalanUnicode::charCR))
+				{
+					m_writer->write(m_newlineString, m_newlineStringLength);
+
+					++i;
+				}
+				else
+				{
+					m_writer->write(chars[i]);
+				}
+			}
+#else
 			m_writer->write(chars[i]);
+#endif
+
+			++i;
 		}
 	}
 }
@@ -289,8 +309,12 @@ FormatterToText::cdata(
 
 
 
+static const XalanDOMChar	s_newlineChar = XalanUnicode::charLF;
+
+
+
 void
-FormatterToText::update()
+FormatterToText::update(bool	fNormalizationOnly)
 {
 	assert(m_writer != 0);
 
@@ -298,29 +322,43 @@ FormatterToText::update()
 
 	if (theStream == 0)
 	{
-		// We're pretty much screwed here, since we can't transcode, so get the
-		// maximum character for the local code page.
-		m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue();
+		m_newlineString = &s_newlineChar;
+		m_newlineStringLength = 1;
+
+		if (fNormalizationOnly == false)
+		{
+			// We're pretty much screwed here, since we can't transcode, so get the
+			// maximum character for the local code page.
+			m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue();
+		}
 	}
 	else
 	{
-		try
+		m_newlineString = theStream->getNewlineString();
+		assert(m_newlineString != 0);
+
+		m_newlineStringLength = length(m_newlineString);
+
+		if (fNormalizationOnly == false)
 		{
-			theStream->setOutputEncoding(m_encoding);
+			try
+			{
+				theStream->setOutputEncoding(m_encoding);
+			}
+			catch(const XalanOutputStream::UnsupportedEncodingException&)
+			{
+				const XalanDOMString	theUTF8String(XalanTranscodingServices::s_utf8String);
+
+				// Default to UTF-8 if the requested encoding is not supported...
+				theStream->setOutputEncoding(theUTF8String);
+
+				m_encoding = theUTF8String;
+
+				m_haveEncoding = true;
+			}
+
+			m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue(theStream->getOutputEncoding());
 		}
-		catch(const XalanOutputStream::UnsupportedEncodingException&)
-		{
-			const XalanDOMString	theUTF8String(XalanTranscodingServices::s_utf8String);
-
-			// Default to UTF-8 if the requested encoding is not supported...
-			theStream->setOutputEncoding(theUTF8String);
-
-			m_encoding = theUTF8String;
-
-			m_haveEncoding = true;
-		}
-
-		m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue(theStream->getOutputEncoding());
 	}
 }
 
