@@ -628,7 +628,12 @@ createFormatter(
 	}
 	else if(FormatterListener::OUTPUT_METHOD_TEXT == outputType)
 	{
-		formatter = new FormatterToText( theManager, resultWriter, mimeEncoding);
+		formatter = new FormatterToText(
+                            resultWriter,
+                            mimeEncoding,
+                            true,
+                            true,
+                            theManager);
 	}
 	else if(FormatterListener::OUTPUT_METHOD_HTML == outputType)
 	{
@@ -656,14 +661,16 @@ createFormatter(
 
 		FormatterToHTML* const	fToHTML =
 				new FormatterToHTML(
-                        theManager,
 						resultWriter,
 						mimeEncoding,
 						mediatype,
 						doctypeSystem,
 						doctypePublic,
 						outputIndent,
-						indentAmount);
+						indentAmount,
+                        true,
+                        false,
+                        theManager);
 
 		fToHTML->setPrefixResolver(&prefixResolver);
 
