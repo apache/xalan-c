@@ -103,14 +103,14 @@ getSuffix(
 		// We're assuming here that each nodes has an implementation with a 
 		// unique address that we can convert into a string
 #if defined(XALAN_OLD_STYLE_CASTS)
-		UnsignedLongToDOMString((unsigned long)theNode, theResult);
+		UnsignedLongToHexDOMString((unsigned long)theNode, theResult);
 #else
-		UnsignedLongToDOMString(reinterpret_cast<unsigned long>(theNode), theResult);
+		UnsignedLongToHexDOMString(reinterpret_cast<unsigned long>(theNode), theResult);
 #endif
 	}
 	else
 	{
-		UnsignedLongToDOMString(theIndex, theResult);
+		UnsignedLongToHexDOMString(theIndex, theResult);
 	}
 }
 
