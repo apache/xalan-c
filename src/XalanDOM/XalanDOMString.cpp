@@ -976,11 +976,23 @@ doTranscodeFromLocalCodePage(
 					strlen);
 	}
 #else
+	XalanArrayAutoPtr<char>		tempString;
+
 	if (theSourceStringIsNullTerminated == true)
 	{
 		assert(strlen(theSourceString) < XalanDOMString::npos);
 
 		theSourceStringLength = size_type(strlen(theSourceString));
+	}
+	else
+	{
+		tempString.reset(new char[theSourceStringLength + 1]);
+
+		strncpy(tempString.get(), theSourceString, theSourceStringLength);
+
+		tempString[theSourceStringLength] = '\0';
+
+		theSourceString = tempString.get();
 	}
 
     // See how many chars we need to transcode.
