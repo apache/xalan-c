@@ -64,6 +64,7 @@
 
 
 
+#include <cmath>
 #include <functional>
 
 
@@ -606,6 +607,40 @@ public:
 	 */
 	static double
 	round(double	theValue);
+
+	/**
+	 * Returns the ceiling of a number according to the XPath
+	 * rules.
+	 *
+	 * @param theValue The value to round.
+	 * @return The result of the rounding
+	 */
+	static double
+	ceiling(double	theValue)
+	{
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		return std::ceil(theValue);
+#else
+		return ceil(theValue);
+#endif
+	}
+
+	/**
+	 * Returns the floor of a number according to the XPath
+	 * rules.
+	 *
+	 * @param theValue The value to round.
+	 * @return The result of the rounding
+	 */
+	static double
+	floor(double	theValue)
+	{
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		return std::floor(theValue);
+#else
+		return ::floor(theValue);
+#endif
+	}
 
 	typedef const unsigned int*						DWORDPointerType;
 	typedef XALAN_UNALIGNED const unsigned int*		UnalignedDWORDPointerType;
