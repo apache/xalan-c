@@ -72,7 +72,7 @@ public:
 			executionContext.error("The square-root() function takes one argument!", context);
 		}
 
-		assert(args[0].null() == true);
+		assert(args[0].null() == false);
 
 		return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num()));
 	}
@@ -132,7 +132,7 @@ public:
 			executionContext.error("The cube() function takes one argument!", context);
 		}
 
-		assert(args[0].null() == true);
+		assert(args[0].null() == false);
 
 		return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(), 3));
 	}
@@ -172,25 +172,21 @@ public:
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
-	 * object.
+	 * object. Called if function has no parameters.
 	 *
 	 * @param executionContext executing context
-	 * @param context          current context node
-	 * @param opPos            current op position
-	 * @param args             vector of pointers to XObject arguments
+	 * @param context          current context node	 
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
+			XalanNode*						context)
 	{
-		if (args.size() != 0)
-		{
-			executionContext.error("The asctime() function takes no arguments!", context);
-		}
+		//if (args.size() != 0)
+		//{
+		//	executionContext.error("The asctime() function takes no arguments!", context);
+		//}
 
 		time_t	theTime;
 
