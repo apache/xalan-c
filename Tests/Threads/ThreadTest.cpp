@@ -17,7 +17,7 @@
 // Base header file.  Must be first.
 #include <xalanc/Include/PlatformDefinitions.hpp>
 
-
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 #include <cassert>
 #include <ctime>
@@ -277,6 +277,11 @@ thePreparsedThreadRoutine(void*		param)
 
 	theInfo->m_counter->increment();
 
+    XALAN_USING_XALAN(MemoryManagerType)
+    XALAN_USING_XALAN(XalanMemMgrs)
+
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
 	try
 	{
 		XALAN_USING_XALAN(LongToDOMString)
@@ -286,16 +291,18 @@ thePreparsedThreadRoutine(void*		param)
 		// from same directory as the input files.
 
 		// Generate the output file name.
-		XalanDOMString	theOutputFile(XALAN_STATIC_UCODE_STRING("birds"));
+		XalanDOMString	theOutputFile(XALAN_STATIC_UCODE_STRING("birds"), theManager);
 
 		LongToDOMString(theInfo->m_threadNumber, theOutputFile);
         theOutputFile.append(".out");
 
 		// Create a transformer...
-		XalanTransformer	theTransformer;
+		XalanTransformer	theTransformer(theManager);
+
+        XALAN_USING_XALAN(XSLTResultTarget)
 
 		// Do the transform...
-		theTransformer.transform(*glbParsedSource, glbCompiledStylesheet, theOutputFile);
+		theTransformer.transform(*glbParsedSource, glbCompiledStylesheet, XSLTResultTarget( theOutputFile, theManager));
 	}
 	catch(...)
 	{
@@ -349,22 +356,29 @@ theUnparsedThreadRoutine(void*		param)
 		// Our input file.  The assumption is that the executable will be run
 		// from same directory as the input files.
 
-		// Generate the output file name.
-		XalanDOMString	theOutputFile(XALAN_STATIC_UCODE_STRING("birds"));
+        XALAN_USING_XALAN(MemoryManagerType)
+        XALAN_USING_XALAN(XalanMemMgrs)
+
+        MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
+        // Generate the output file name.
+        XalanDOMString	theOutputFile(XALAN_STATIC_UCODE_STRING("birds"), theManager);
 
 		LongToDOMString(theInfo->m_threadNumber, theOutputFile);
         theOutputFile.append(".out");
 
 		// Create a transformer...
-		XalanTransformer	theTransformer;
+		XalanTransformer	theTransformer( theManager );
 
 		assert(theSourceFileName != 0 && theStylesheetFileName != 0);
+
+        XALAN_USING_XALAN(XSLTResultTarget)
 
 		// Do the transform...
 		theTransformer.transform(
 			theSourceFileName,
 			theStylesheetFileName,
-			theOutputFile);
+			XSLTResultTarget( theOutputFile, theManager));
 	}
 	catch(...)
 	{
@@ -709,9 +723,14 @@ main(
 					// pre-parsed source document.  Note that we can't let the individual
 					// threads use this as a factory without serializing access to it, but
 					// we can share the stylesheet and source document.
-					XalanTransformer		theXalanTransformer;
+                    XALAN_USING_XALAN(MemoryManagerType)
+                    XALAN_USING_XALAN(XalanMemMgrs)
 
-					const XalanDOMString	theXSLFileName("birds.xsl");
+                    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
+                    XalanTransformer		theXalanTransformer(theManager);
+
+                    const XalanDOMString	theXSLFileName("birds.xsl", theManager);
 
 					theStylesheetFileName = theXSLFileName.c_str();
 
@@ -720,7 +739,7 @@ main(
 
 					// Compile the XML source document as well. All threads will use
 					// this binary representation of the source tree.
-					const XalanDOMString	theXMLFileName("birds.xml");
+					const XalanDOMString	theXMLFileName("birds.xml", theManager);
 
 					theSourceFileName = theXMLFileName.c_str();
 
