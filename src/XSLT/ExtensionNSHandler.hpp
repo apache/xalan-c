@@ -57,6 +57,7 @@
 #if !defined(XALAN_EXTENSIONNSHANDLER_HEADER_GUARD)
 #define XALAN_EXTENSIONNSHANDLER_HEADER_GUARD
 
+
 // Base include file.	Must be first.
 #include "XSLTDefinitions.hpp"
 
@@ -70,14 +71,15 @@
 #include <set>
 
 
-#include <dom/DOMString.hpp>
+
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
-class DOM_Node;
-class DOM_Element;
 class QName;
 class Stylesheet;
+class XalanElement;
+class XalanNode;
 class XSLTProcessor;
 
 
@@ -89,16 +91,14 @@ public:
 	 * Construct a new extension namespace handler for a given extension NS.
 	 * This doesn't do anything - just hang on to the namespace URI.
 	 * 
-	 * @param xslp         handle to the XSL processor calling the function
 	 * @param namespaceUri extension namespace URI being implemented
 	 */
-	ExtensionNSHandler(XSLTProcessor& xslp, const DOMString& namespaceUri);
+	ExtensionNSHandler(const XalanDOMString&	namespaceUri);
 
 	/**
 	 * Construct a new extension namespace handler given all the information
 	 * needed. 
 	 * 
-	 * @param xslp         handle to the XSL processor calling the function
 	 * @param namespaceUri extension namespace URI being implemented
 	 * @param elemNames    string containing list of elements of extension NS
 	 * @param funcNames    string containing list of functions of extension NS
@@ -108,14 +108,13 @@ public:
 	 *                     srcURL is not null, then scriptSrc is ignored.
 	 * @param scriptSrc    the actual script code (if any)
 	 */
-	ExtensionNSHandler (
-		XSLTProcessor& xslp,
-		const DOMString& namespaceUri,
-		const DOMString& elemNames,
-		const DOMString& funcNames,
-		const DOMString& lang,
-		const DOMString& srcURL,
-		const DOMString& src);
+	ExtensionNSHandler(
+			const XalanDOMString&	namespaceUri,
+			const XalanDOMString&	elemNames,
+			const XalanDOMString&	funcNames,
+			const XalanDOMString&	lang,
+			const XalanDOMString&	srcURL,
+			const XalanDOMString&	src);
 
 	/**
 	 * Set function local parts of extension NS. Super does the work; I
@@ -124,8 +123,8 @@ public:
 	 * @param functions whitespace separated list of function names defined
 	 *                  by this extension namespace
 	*/
-	virtual void setFunctions (const DOMString& funcNames); 
-	
+	virtual void
+	setFunctions(const XalanDOMString&	funcNames); 
 
 	/**
 	 * Set the script data for this extension NS. Deferred to super for
@@ -137,7 +136,11 @@ public:
 	 *                  srcURL is not null, then scriptSrc is ignored.
 	 * @param scriptSrc the actual script code (if any)
 	 */
-	virtual void setScript(const DOMString& lang, const DOMString& srcURL, const DOMString& scriptSrc); 
+	virtual void
+	setScript(
+			const XalanDOMString&	lang,
+			const XalanDOMString&	srcURL,
+			const XalanDOMString&	scriptSrc); 
 
 
 	/**
@@ -146,7 +149,8 @@ public:
 	 * @param elemNames whitespace separated list of element names defined
 	 *                  by this extension namespace
 	 */
-	void setElements (const DOMString& elemNames); 
+	void
+	setElements(const XalanDOMString&	elemNames); 
 	
 
 	/**
@@ -155,7 +159,8 @@ public:
 	 * @param element name of the element being tested
 	 * @return true if known, false if not
 	 */
-	bool isElementAvailable (const DOMString& element); 
+	bool
+	isElementAvailable (const XalanDOMString&	element); 
 
 
 	/**
@@ -177,14 +182,15 @@ public:
 	 * @exception IOException           if loading trouble
 	 * @exception SAXException          if parsing trouble
 	 */
-	void processElement (
-		const DOMString& localPart,
-		const DOM_Element& element,
-		XSLTProcessor& processor, 
-		Stylesheet& stylesheetTree, 
-		const DOM_Node& sourceTree,
-		const DOM_Node& sourceNode,
-		const QName& mode);
+	void
+	processElement (
+			const XalanDOMString&	localPart,
+			const XalanElement*		element,
+			XSLTProcessor&			processor, 
+			Stylesheet&				stylesheetTree, 
+			const XalanNode*		sourceTree,
+			const XalanNode*		sourceNode,
+			const QName&			mode);
 
 protected:
 
@@ -193,18 +199,21 @@ protected:
 	 * at startup time. This needs to happen before any functions can be
 	 * called on the component.
 	 * 
-	 * @exception XPathProcessorException if something bad happens.
 	 */
-	virtual void startupComponent(); //throws	XPathProcessorException; 
+	virtual void
+	startupComponent();
 
 
 private:
 
-	XSLTProcessor& m_XSLProcessor;	// xsl processor for whom I'm working
+#if defined(XALAN_NO_NAMESPACES)
+	typedef set<XalanDOMString>			ExtensionSetType;
+#else
+	typedef std::set<XalanDOMString>	ExtensionSetType;
+#endif
 
 	// Extension elements of this namespace
-	typedef std::set<DOMString> ExtensionSetType;
-	ExtensionSetType m_elements;
+	ExtensionSetType	m_elements;
 
 	// True when info from the component description has been loaded. This gets
 	// set as soon as any of the info has been specified. If this is false,
@@ -216,14 +225,9 @@ private:
 	/**
 	 * Load the component spec for this extension namespace taking the URI
 	 * of this namespace as the URL to read from.
-	 * 
-	 * @exception XSLProcessorException if something bad happens.
-	 * @exception MalformedURLException if loading trouble
-	 * @exception FileNotFoundException if loading trouble
-	 * @exception IOException					 if loading trouble
-	 * @exception SAXException					if parsing trouble
 	 */
-	void loadComponentDescription ();
+	void
+	loadComponentDescription();
 
 	/**
 	 * extract the text nodes and CDATA content children of the given
@@ -236,13 +240,10 @@ private:
 	 * @return string resulting from concatanating the text/cdata child
 	 *				 nodes' values.
 	 */
-	DOMString getScriptString (const DOM_Element& elem); 
+	static XalanDOMString
+	getScriptString(const XalanElement&		elem);
+};
 
-}; // end ExtensionNSHandler class definition
+
 
 #endif	// XALAN_EXTENSIONNSHANDLER_HEADER_GUARD
-
-/*
- *	$ Log: $
- */
-
