@@ -262,7 +262,7 @@ else
 endif
     CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
 
-	MAKE_SHARED = makeC++SharedLib_r -p 5000 -brtl ${bitstobuildLink}
+	MAKE_SHARED = makeC++SharedLib_r -p 1024 -brtl ${bitstobuildLink}
 
 	LINK = $(CXX) -qnotempinc $(CXXFLAGS)  -brtl $(PLATFORM_COMPILE_OPTIONS) ${bitstobuildLink}
 
