@@ -347,9 +347,6 @@ public:
 	DOM_Document
 	mapXercesDocument(const XalanDocument*	theDocument) const;
 
-	static void
-	formatErrorMessage(const SAXParseException& e, XalanDOMString& theMessage);
-
 	// Implementations for SAX ErrorHandler
 
 	virtual void
@@ -442,6 +439,11 @@ public:
 	}
 
 protected:
+
+	static void
+	formatErrorMessage(
+			const SAXParseException&	e,
+			XalanDOMString&				theMessage);
 
 	virtual DOMParser*
 	CreateDOMParser();

@@ -543,10 +543,23 @@ XercesParserLiaison::warning(const SAXParseException&	e)
 
 
 void
-XercesParserLiaison::formatErrorMessage(const SAXParseException& e, XalanDOMString& theMessage)
+XercesParserLiaison::formatErrorMessage(
+			const SAXParseException&	e,
+			XalanDOMString&				theMessage)
 {
 	append(theMessage, " at (file ");
-	append(theMessage, e.getSystemId());
+
+	const XalanDOMChar* const	theSystemID = e.getSystemId();
+
+	if (theSystemID == 0)
+	{
+		append(theMessage, "<unknown>");
+	}
+	else
+	{
+		append(theMessage, theSystemID);
+	}
+
 	append(theMessage, ", line ");
 	append(theMessage, LongToDOMString(long(e.getLineNumber())));
 	append(theMessage, ", column ");
@@ -602,9 +615,7 @@ XercesParserLiaison::CreateSAXParser()
 
 	theParser->setDoValidation(m_useValidation);
 
-	// $$$ ToDo: For the time being, we cannot process namespaces
-	// with SAX due to the age of Xerces' SAX interfaces.
-//	theParser->setDoNamespaces(m_doNamespaces);
+	theParser->setDoNamespaces(false);
 
 	theParser->setExitOnFirstFatalError(m_exitOnFirstFatalError);
 
