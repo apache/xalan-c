@@ -100,7 +100,7 @@ public:
 	getDocument() const;
 
 	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManagerType& theManager) const;
+	createHelper(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR) const;
 
 	virtual const XalanDOMString&
 	getURI() const;

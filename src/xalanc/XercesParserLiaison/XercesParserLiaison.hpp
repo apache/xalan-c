@@ -83,7 +83,7 @@ public:
 	 *
 	 * @deprecated This constructor is deprecated.  Use the next constructor instead.
 	 */
-	XercesParserLiaison(MemoryManagerType& theManager, XercesDOMSupport&	theSupport);
+	XercesParserLiaison( XercesDOMSupport&	theSupport, MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
 	/**
 	 * Construct a XercesParserLiaison instance.

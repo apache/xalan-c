@@ -27,7 +27,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 DOMStringPrintWriter::DOMStringPrintWriter(XalanDOMString&	theString) :
-PrintWriter(theString.getMemoryManager(), true),
+PrintWriter(true, theString.getMemoryManager()),
 	m_outputString(&theString)
 {
 }

@@ -87,7 +87,7 @@ class XALAN_TRANSFORMER_EXPORT XalanDefaultParsedSourceHelper : public XalanPars
 public:
 
 	XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
-                                    MemoryManagerType&                  theManager);
+                                    MemoryManagerType&                  theManager XALAN_DEFAULT_MEMMGR);
 
     static XalanDefaultParsedSourceHelper*
     create(const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
@@ -128,13 +128,13 @@ public:
 
 	XalanDefaultParsedSource(
 			const InputSourceType&	theInputSource,
-            MemoryManagerType&      theManager,
 			bool					fValidate = false,
 			ErrorHandlerType*		theErrorHandler = 0,
 			EntityResolverType*		theEntityResolver = 0,
 			const XalanDOMChar*		theExternalSchemaLocation = 0,
             const XalanDOMChar*     theExternalNoNamespaceSchemaLocation = 0,
-            bool                    fPoolAllTextNodes = XalanSourceTreeDocument::getPoolAllTextNodes());
+            bool                    fPoolAllTextNodes = XalanSourceTreeDocument::getPoolAllTextNodes(),
+            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
 
 	static XalanDefaultParsedSource*
     create(
@@ -154,7 +154,7 @@ public:
 	getDocument() const;
 
 	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManagerType& theManager) const;
+	createHelper(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR) const;
 
 	virtual const XalanDOMString&
 	getURI() const;

@@ -38,7 +38,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 XalanOutputStreamPrintWriter::XalanOutputStreamPrintWriter(
 			XalanOutputStream&	theOutputStream,
 			bool				fAutoFlush) :
-    PrintWriter(theOutputStream.getMemoryManager(), fAutoFlush),
+    PrintWriter(fAutoFlush, theOutputStream.getMemoryManager()),
 	m_outputStream(theOutputStream),
     m_buffer(theOutputStream.getMemoryManager()),
 	m_flushWideChars(false)

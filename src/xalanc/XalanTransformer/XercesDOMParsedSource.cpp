@@ -78,13 +78,13 @@ XercesDOMParsedSourceHelper::getParserLiaison()
 
 
 XercesDOMParsedSource::XercesDOMParsedSource(
-            MemoryManagerType&      theManager,
 			const InputSourceType&	theInputSource,
 			bool					fValidate,
 			ErrorHandlerType*		theErrorHandler,
 			EntityResolverType*		theEntityResolver,
 			const XalanDOMChar*		theExternalSchemaLocation,
-			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation) :
+			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation,
+            MemoryManagerType&      theManager) :
 	XalanParsedSource(),
 	m_parserLiaison(theManager),
 	m_parsedSource(0),
@@ -135,13 +135,13 @@ XercesDOMParsedSource::create(
     ThisType* theResult = theGuard.get();
 
     new (theResult) ThisType(            
-                            theManager,
                             theInputSource,
                             fValidate,
                             theErrorHandler,
                             theEntityResolver,
                             theExternalSchemaLocation,
-                            theExternalNoNamespaceSchemaLocation);
+                            theExternalNoNamespaceSchemaLocation,
+                            theManager);
 
 
      theGuard.release();

@@ -64,7 +64,7 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-XercesParserLiaison::XercesParserLiaison(MemoryManagerType& theManager, XercesDOMSupport&	/* theSupport */) :
+XercesParserLiaison::XercesParserLiaison( XercesDOMSupport&	/* theSupport */, MemoryManagerType& theManager) :
 	m_indent(-1),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),

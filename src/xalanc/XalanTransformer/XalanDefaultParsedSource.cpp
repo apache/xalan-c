@@ -150,13 +150,13 @@ XalanDefaultParsedSourceHelper::getParserLiaison()
 
 XalanDefaultParsedSource::XalanDefaultParsedSource(
 			const InputSourceType&	theInputSource,
-            MemoryManagerType&      theManager,
 			bool					fValidate,
 			ErrorHandlerType*		theErrorHandler,
 			EntityResolverType*		theEntityResolver,
 			const XalanDOMChar*		theExternalSchemaLocation,
 			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation,
-            bool                    fPoolAllTextNodes) :
+            bool                    fPoolAllTextNodes,
+            MemoryManagerType&      theManager) :
 	XalanParsedSource(),
 	m_parserLiaison(theManager),
 	m_domSupport(m_parserLiaison),
@@ -213,13 +213,13 @@ XalanDefaultParsedSource::create(
 
     new (theResult) ThisType(
 			                theInputSource,
-                            theManager,
 			                fValidate,
 			                theErrorHandler,
 			                theEntityResolver,
 			                theExternalSchemaLocation,
 			                theExternalNoNamespaceSchemaLocation,
-                            fPoolAllTextNodes);
+                            fPoolAllTextNodes,
+                            theManager);
 
     theGuard.release();
 
