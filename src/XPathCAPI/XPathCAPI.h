@@ -120,6 +120,17 @@ typedef void*	XalanXPathEvaluatorHandle;
 typedef void*	XalanXPathHandle;
 
 
+#if defined(OS390)
+#pragma export(XalanXPathAPIInitialize)
+#pragma export(XalanXPathAPITerminate)
+#pragma export(XalanCreateXPathEvaluator)
+#pragma export(XalanDestroyXPathEvaluator)
+#pragma export(XalanCreateXPath)
+#pragma export(XalanDestroyXPath)
+#pragma export(XalanEvaluateXPathAsBoolean)
+#pragma export(XalanEvaluateXPathExpressionAsBoolean)
+#endif
+
 /**
  * Initialize Xerces and the XPath API.
  *
