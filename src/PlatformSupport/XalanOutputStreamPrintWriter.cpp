@@ -76,7 +76,8 @@ XalanOutputStreamPrintWriter::XalanOutputStreamPrintWriter(
 			XalanOutputStream&	theOutputStream,
 			bool				fAutoFlush) :
 	PrintWriter(fAutoFlush),
-	m_OutputStream(theOutputStream)
+	m_outputStream(theOutputStream),
+	m_buffer()
 {
 }
 
@@ -107,7 +108,7 @@ XalanOutputStreamPrintWriter::close()
 void
 XalanOutputStreamPrintWriter::flush()
 {
-	m_OutputStream.flush();
+	m_outputStream.flush();
 }
 
 
@@ -115,7 +116,7 @@ XalanOutputStreamPrintWriter::flush()
 XalanOutputStream*
 XalanOutputStreamPrintWriter::getStream()
 {
-	return &m_OutputStream;
+	return &m_outputStream;
 }
 
 
@@ -123,7 +124,7 @@ XalanOutputStreamPrintWriter::getStream()
 const XalanOutputStream*
 XalanOutputStreamPrintWriter::getStream() const
 {
-	return &m_OutputStream;
+	return &m_outputStream;
 }
 
 
@@ -140,16 +141,16 @@ XalanOutputStreamPrintWriter::write(
 	{
 		if (theOffset == 0)
 		{
-			m_OutputStream.write(s);
+			m_outputStream.write(s);
 		}
 		else
 		{
-			m_OutputStream.write(s + theOffset);
+			m_outputStream.write(s + theOffset);
 		}
 	}
 	else
 	{
-		m_OutputStream.write(s + theOffset, theLength);
+		m_outputStream.write(s + theOffset, theLength);
 	}
 }
 
@@ -167,16 +168,16 @@ XalanOutputStreamPrintWriter::write(
 	{
 		if (theOffset == 0)
 		{
-			m_OutputStream.write(s);
+			m_outputStream.write(s);
 		}
 		else
 		{
-			m_OutputStream.write(s + theOffset);
+			m_outputStream.write(s + theOffset);
 		}
 	}
 	else
 	{
-		m_OutputStream.write(s + theOffset, theLength);
+		m_outputStream.write(s + theOffset, theLength);
 	}
 }
 
@@ -185,7 +186,7 @@ XalanOutputStreamPrintWriter::write(
 void
 XalanOutputStreamPrintWriter::write(XalanDOMChar	c)
 {
-	m_OutputStream.write(c);
+	m_outputStream.write(c);
 }
 
 
@@ -255,15 +256,23 @@ XalanOutputStreamPrintWriter::print(
 void
 XalanOutputStreamPrintWriter::print(double	d)
 {
-	m_OutputStream.write(c_wstr(DoubleToDOMString(d)));
+	m_buffer.clear();
+
+	DoubleToDOMString(d, m_buffer);
+
+	m_outputStream.write(c_wstr(m_buffer), length(m_buffer));
 }
 
 
 
 void
-XalanOutputStreamPrintWriter::print(int	i)
+XalanOutputStreamPrintWriter::print(int		i)
 {
-	m_OutputStream.write(c_wstr(LongToDOMString(i)));
+	m_buffer.clear();
+
+	LongToDOMString(i, m_buffer);
+
+	m_outputStream.write(c_wstr(m_buffer), length(m_buffer));
 }
 
 
@@ -271,7 +280,11 @@ XalanOutputStreamPrintWriter::print(int	i)
 void
 XalanOutputStreamPrintWriter::print(long	l)
 {
-	m_OutputStream.write(c_wstr(LongToDOMString(l)));
+	m_buffer.clear();
+
+	LongToDOMString(l, m_buffer);
+
+	m_outputStream.write(c_wstr(m_buffer), length(m_buffer));
 }
 
 
@@ -279,7 +292,7 @@ XalanOutputStreamPrintWriter::print(long	l)
 void
 XalanOutputStreamPrintWriter::print(const XalanDOMString&	s)
 {
-	m_OutputStream.write(c_wstr(s), length(s));
+	m_outputStream.write(c_wstr(s), length(s));
 }
 
 
@@ -287,7 +300,7 @@ XalanOutputStreamPrintWriter::print(const XalanDOMString&	s)
 void
 XalanOutputStreamPrintWriter::println()
 {
-	m_OutputStream.write(c_wstr(s_newlineString));
+	m_outputStream.write(c_wstr(s_newlineString), length(s_newlineString));
 
 	flush();
 }
@@ -351,7 +364,7 @@ XalanOutputStreamPrintWriter::println(double	d)
 
 
 void
-XalanOutputStreamPrintWriter::println(int		i)
+XalanOutputStreamPrintWriter::println(int	i)
 {
 	print(i);
 

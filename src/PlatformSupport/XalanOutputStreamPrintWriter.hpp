@@ -64,6 +64,10 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 #include <PlatformSupport/PrintWriter.hpp>
 
 
@@ -190,10 +194,6 @@ public:
 	virtual void
 	println(const XalanDOMString&	s);
 
-protected:
-
-	XalanOutputStream&	m_OutputStream;
-
 private:
 
 	// Not implemented
@@ -204,6 +204,12 @@ private:
 
 	bool
 	operator==(const XalanOutputStreamPrintWriter&);
+
+
+	// Data members...
+	XalanOutputStream&	m_outputStream;
+
+	XalanDOMString		m_buffer;
 };
 
 
