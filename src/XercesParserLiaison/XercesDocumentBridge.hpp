@@ -129,22 +129,6 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDocumentBridge : public XalanDocume
 {
 public:
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Attr				DOM_AttrType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Comment			DOM_CommentType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_CDATASection		DOM_CDATASectionType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Document			DOM_DocumentType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentFragment	DOM_DocumentFragmentType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element			DOM_ElementType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Entity			DOM_EntityType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_EntityReference	DOM_EntityReferenceType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node				DOM_NodeType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text				DOM_TextType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Notation			DOM_NotationType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_ProcessingInstruction	DOM_ProcessingInstructionType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text				DOM_TextType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentType		DOM_DocumentTypeType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER NodeImpl				NodeImplType;
-
 	friend class XercesBridgeNavigator;
 
 	/**
