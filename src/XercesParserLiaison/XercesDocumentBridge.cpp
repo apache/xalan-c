@@ -1037,7 +1037,7 @@ XercesDocumentBridge::getElementById(const XalanDOMString&	elementId) const
 
 #endif
 
-	assert(mapNode(theXercesNode) != 0 &&
+	assert(mapNode(theXercesNode) == 0 ||
 			mapNode(theXercesNode)->getNodeType() == XalanNode::ELEMENT_NODE);
 
 	return static_cast<XalanElement*>(mapNode(theXercesNode));
