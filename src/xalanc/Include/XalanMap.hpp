@@ -268,6 +268,7 @@ public:
 
 	~XalanMap()
 	{
+        doRemoveEntries();
 	}
 
 	XalanMap & operator=(const XalanMap& theRhs) 
@@ -282,7 +283,8 @@ public:
 		return m_size;
 	}
 
-	bool empty() const {
+	bool empty() const
+    {
 		return m_size == 0;
 	}
 
@@ -390,6 +392,8 @@ public:
 
 	void clear() 
 	{
+        doRemoveEntries();
+
 		m_size = 0;
 
 		XALAN_STD_QUALIFIER fill(
@@ -453,7 +457,7 @@ public:
 		return bucketStartPos;
 	}
 
-	void doRemoveEntry(iterator & toRemovePos)
+	void doRemoveEntry(const iterator & toRemovePos)
 	{
 		size_type index = toRemovePos->bucketIndex;
 		iterator nextPos = ++(iterator(toRemovePos));
@@ -473,13 +477,26 @@ public:
 				m_buckets[index] = m_entries.end();
 			}
 		}
-        
+
         value_type& toRemove = *toRemovePos;
+#if defined(_MSC_VER) && _MSC_VER <= 1300
         toRemove.value_type::~value_type();
+#else
+        toRemove.~value_type();
+#endif
         deallocate(&toRemove);
 		m_entries.erase(toRemovePos);
 		--m_size;
 	}
+
+    void
+    doRemoveEntries()
+    {
+        while(size() > 0)
+        {
+            doRemoveEntry(begin());
+        }
+    }
 
 	size_type doHash(const Key & key) const
 	{
