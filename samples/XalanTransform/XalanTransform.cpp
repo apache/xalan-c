@@ -80,11 +80,9 @@ main(
 			int				 argc,
 			const char*		 argv[])
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cout;
-	using std::cerr;
-    using std::endl;
-#endif
+	XALAN_USING_STD(cerr)
+	XALAN_USING_STD(cout)
+	XALAN_USING_STD(endl)
 
     if (argc < 3 || argc > 4)
 	{
@@ -96,6 +94,10 @@ main(
 
 	try
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
+		XALAN_USING_XALAN(XalanTransformer)
+
 		// Call the static initializer for Xerces.
 		XMLPlatformUtils::Initialize();
 

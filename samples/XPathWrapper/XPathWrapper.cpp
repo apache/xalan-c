@@ -73,7 +73,7 @@ public:
 		const char*		xml,
 		const char*		context, 
 		const char*		expr,
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 		ostream&		errorStream)
 #else
 		std::ostream&	errorStream)
@@ -82,6 +82,9 @@ public:
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 		using std::strlen;
 #endif
+
+		XALAN_USING_XERCES(XMLPlatformUtils)
+		XALAN_USING_XERCES(XMLException)
 
 		//initialize Xerces...
 		try
@@ -98,6 +101,9 @@ public:
 		XPathWrapper::CharVectorTypeVectorType	theResultList;
 
 		{
+			// Just hoist everything...
+			XALAN_CPP_NAMESPACE_USE
+
 			// Initialize the XPath subsystem...
 			XPathInit						theInit;
 
@@ -112,8 +118,10 @@ public:
 
 			try
 			{
+				XALAN_USING_XERCES(MemBufInputSource)
+
 				// parse XML and get root element
-				MemBufInputSource inStream((XMLByte*)xml, strlen(xml), "foo", false);
+				MemBufInputSource	inStream((XMLByte*)xml, strlen(xml), "foo", false);
 
 				XalanDocument* const	doc = theLiaison.parseXMLStream(inStream);
 				assert(doc != 0);

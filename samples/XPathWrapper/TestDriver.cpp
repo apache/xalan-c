@@ -29,13 +29,10 @@ main(
 			int				argc,
 			const char*		argv[])
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-	using std::ifstream;
-	using std::vector;
-#endif
+	XALAN_USING_STD(cerr)
+	XALAN_USING_STD(cout)
+	XALAN_USING_STD(endl)
+	XALAN_USING_STD(ifstream)
 
 	if (argc < 4)
 	{
@@ -43,7 +40,7 @@ main(
 		return -1;
 	}
 
-	CharVectorType		theXML;
+	XPathWrapper::CharVectorType	theXML;
 
 	ifstream	in(argv[1]);
 
@@ -69,7 +66,7 @@ main(
 		cout << "the result set has " << len << " strings\n";
 
 		for (size_t i=0; i<len; i++)
-			cout << "item " << (i+1) << "= \"" << result[i] << "\"" << endl;
+			cout << "item " << (i+1) << "= \"" << &*result[i].begin() << "\"" << endl;
 	}
 	catch(const XMLException&)
 	{

@@ -27,15 +27,19 @@
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-	using std::ifstream;
-	using std::ios_base;
-	using std::ostrstream;
-	using std::string;
-#endif
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
+XALAN_USING_STD(ostrstream)
+
+
+
+XALAN_USING_XALAN(XalanCompiledStylesheet)
+XALAN_USING_XALAN(XalanDOMString)
+XALAN_USING_XALAN(XalanParsedSource)
+XALAN_USING_XALAN(XalanTransformer)
+XALAN_USING_XALAN(XSLTInputSource)
+XALAN_USING_XALAN(XSLTResultTarget)
 
 
 
@@ -175,6 +179,8 @@ main(
 	{
 		try
 		{
+			XALAN_USING_XERCES(XMLPlatformUtils)
+
 			// Call the static initializer for Xerces.
 			XMLPlatformUtils::Initialize();
 

@@ -93,10 +93,10 @@ doTransform(
 			const char*		theXSLFile,
 			FILE*			theOutputFile)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-    using std::endl;
-#endif
+	XALAN_USING_STD(cerr)
+	XALAN_USING_STD(endl)
+
+	XALAN_USING_XALAN(XalanTransformer)
 
     // Create a XalanTransformer...
 	XalanTransformer	theXalanTransformer;
@@ -128,10 +128,9 @@ main(
 			int				 argc,
 			const char*		 argv[])
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-    using std::endl;
-#endif
+	XALAN_USING_STD(cerr)
+	XALAN_USING_STD(cout)
+	XALAN_USING_STD(endl)
 
     if (argc < 3 || argc > 4)
 	{
@@ -140,44 +139,55 @@ main(
 		return -1;
 	}
 
-	// Call the static initializer for Xerces.
-	XMLPlatformUtils::Initialize();
+	int		theResult = -1;
 
-    // Initialize Xalan.
-    XalanTransformer::initialize();
-
-    int				theResult = 0;
-
-    if (argc == 3)
+	try
 	{
-		// No output file, so use stdout...
-		theResult = doTransform(argv[1], argv[2], stdout);
-    }
-    else
-    {
-		// Output file specified, so try to open it...
-		FILE* const	theOutputFile = fopen(argv[3], "w");
+		XALAN_USING_XERCES(XMLPlatformUtils)
 
-		if (theOutputFile == 0)
+		XALAN_USING_XALAN(XalanTransformer)
+
+		// Call the static initializer for Xerces.
+		XMLPlatformUtils::Initialize();
+
+		// Initialize Xalan.
+		XalanTransformer::initialize();
+
+		if (argc == 3)
 		{
-			cerr << "Error: " << "Unable to open output file " << argv[3] << endl;
+			// No output file, so use stdout...
+			theResult = doTransform(argv[1], argv[2], stdout);
 		}
 		else
 		{
-			theResult = doTransform(argv[1], argv[2], theOutputFile);
+			// Output file specified, so try to open it...
+			FILE* const	theOutputFile = fopen(argv[3], "w");
 
-			fclose(theOutputFile);
+			if (theOutputFile == 0)
+			{
+				cerr << "Error: " << "Unable to open output file " << argv[3] << endl;
+			}
+			else
+			{
+				theResult = doTransform(argv[1], argv[2], theOutputFile);
+
+				fclose(theOutputFile);
+			}
 		}
-    }
 
-	// Terminate Xalan...
-	XalanTransformer::terminate();
+		// Terminate Xalan...
+		XalanTransformer::terminate();
 
-	// Terminate Xerces...
-	XMLPlatformUtils::Terminate();
+		// Terminate Xerces...
+		XMLPlatformUtils::Terminate();
 
-	// Clean up the ICU, if it's integrated...
-	XalanTransformer::ICUCleanUp();
+		// Clean up the ICU, if it's integrated...
+		XalanTransformer::ICUCleanUp();
+	}
+	catch(...)
+	{
+		cerr << "An unknown error occurred!" << endl;
+	}
 
 	return theResult;
 }

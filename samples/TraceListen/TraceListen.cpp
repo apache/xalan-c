@@ -36,19 +36,18 @@ main(
 			int				argc,
 			const char*		argv[])
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::endl;
+	XALAN_USING_STD(cerr)
+	XALAN_USING_STD(endl)
+
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 	using std::strcmp;
 #endif
-#endif
 
 	// TraceListener flags...
-	bool traceTemplates = false;
-	bool traceTemplateChildren = false;
-	bool traceGenerationEvent = false;
-	bool traceSelectionEvent = false;
+	bool	traceTemplates = false;
+	bool	traceTemplateChildren = false;
+	bool	traceGenerationEvent = false;
+	bool	traceSelectionEvent = false;
 
 	if (argc < 2 || argc > 5)
 	{
@@ -86,6 +85,10 @@ main(
  
 	try
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
+		XALAN_USING_XALAN(XalanTransformer)
+
 		// Initialize Xerces...
 		XMLPlatformUtils::Initialize();
 
@@ -93,6 +96,13 @@ main(
 		XalanTransformer::initialize();
 
 		{
+			XALAN_USING_XALAN(TraceListenerDefault)
+			XALAN_USING_XALAN(XalanDOMString)
+			XALAN_USING_XALAN(XalanOutputStreamPrintWriter)
+			XALAN_USING_XALAN(XalanStdOutputStream)
+			XALAN_USING_XALAN(XSLTInputSource)
+			XALAN_USING_XALAN(XSLTResultTarget)
+
 			// Create a XalanTransformer.
 			XalanTransformer	theXalanTransformer;
 
@@ -100,8 +110,8 @@ main(
 			const XalanDOMString	theXSLFileName("birds.xsl");
 
 			// Our input sources...
-			const XSLTInputSource	theInputSource(c_wstr(theXMLFileName));
-			const XSLTInputSource	theStylesheetSource(c_wstr(theXSLFileName));
+			const XSLTInputSource	theInputSource(theXMLFileName);
+			const XSLTInputSource	theStylesheetSource(theXSLFileName);
 
 			// Our output target...
 			const XalanDOMString	theOutputFile("birds.out");

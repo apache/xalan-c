@@ -77,31 +77,21 @@
 
 
 
-#if defined(WIN32)
-#if defined(_XPathWrapper)
-#define XALAN_XPATHWRAPPER_EXPORT XALAN_PLATFORM_EXPORT
-#else
-#define XALAN_XPATHWRAPPER_EXPORT XALAN_PLATFORM_IMPORT
-#endif
-#else
-#define XALAN_XPATHWRAPPER_EXPORT
-#endif
-
-
-
 class XPathWrapperImpl;
 
 
 
-class XALAN_XPATHWRAPPER_EXPORT XPathWrapper
+class XPathWrapper
 {
 
 public:
 
+	typedef XALAN_CPP_NAMESPACE_QUALIFIER CharVectorType	CharVectorType;
+
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<CharVectorType> CharVectorTypeVectorType;	
+	typedef vector<CharVectorType>			CharVectorTypeVectorType;	
 #else
-	typedef std::vector<CharVectorType> CharVectorTypeVectorType;	
+	typedef std::vector<CharVectorType>		CharVectorTypeVectorType;	
 #endif	
 
 	XPathWrapper();
