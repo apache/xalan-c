@@ -753,7 +753,15 @@ XalanDOMString::length(const char*	theString)
 
 
 
+XALAN_CPP_NAMESPACE_END
+
+
+
 #include <xercesc/util/XMLString.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
