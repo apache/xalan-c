@@ -1331,6 +1331,8 @@ SimpleNodeLocator::findNamespace(
 
 					const XalanDOMString&	theNodeName = attr->getNodeName();
 
+					// This is an optimization to keep non-namespace attributes out of
+					// the call to nodeTest().
 					if (startsWith(theNodeName, DOMServices::s_XMLNamespaceWithSeparator) == true ||
 						equals(theNodeName, DOMServices::s_XMLNamespace) == true)
 					{
@@ -1398,8 +1400,6 @@ SimpleNodeLocator::nodeTest(
 
 	const XalanNode::NodeType	nodeType = context->getNodeType();
 
-	opPos++;
-
 	switch(testType)
 	{
 	case XPathExpression::eNODETYPE_COMMENT:
@@ -1421,6 +1421,8 @@ SimpleNodeLocator::nodeTest(
 	case XPathExpression::eNODETYPE_PI:
 		if(XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType)
 		{
+			opPos++;
+
 			if(argLen == 1)
 			{
 				score = xpath.s_MatchScoreNodeTest;
@@ -1472,6 +1474,8 @@ SimpleNodeLocator::nodeTest(
 
 	case XPathExpression::eNODENAME:
 		{
+			opPos++;
+
 			if (nodeType == XalanNode::ATTRIBUTE_NODE || nodeType == XalanNode::ELEMENT_NODE)
 			{
 				bool					test = false;
@@ -1504,7 +1508,7 @@ SimpleNodeLocator::nodeTest(
 
 				if(isTotallyWild == false)
 				{
-					const XalanDOMString&	contextNS = context->getNamespaceURI();
+					const XalanDOMString&	contextNS = DOMServices::getNamespaceOfNode(*context);
 
 					if(0 != length(targetNS) && 0 != length(contextNS))
 					{
