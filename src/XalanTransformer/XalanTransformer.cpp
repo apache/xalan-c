@@ -482,8 +482,9 @@ XalanTransformer::compileStylesheet(
 		theCompiledStylesheet =
 			new XalanCompiledStylesheetDefault(
 						theStylesheetSource,
-						theXSLTProcessorEnvSupport,
-						theProcessor);
+						theProcessor,
+						m_errorHandler,
+						m_entityResolver);
 
 		// Store it in a vector.
 		m_compiledStylesheets.push_back(theCompiledStylesheet);

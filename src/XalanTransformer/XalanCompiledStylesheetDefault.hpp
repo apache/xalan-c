@@ -92,7 +92,6 @@ public:
 	
 	XalanCompiledStylesheetDefault(
 			const XSLTInputSource&				theStylesheetSource,
-			XSLTProcessorEnvSupportDefault&		theXSLTProcessorEnvSupport,
 			XSLTEngineImpl&						theProcessor,
 			ErrorHandler*						theErrorHandler = 0,
 			EntityResolver*						theEntityResolver = 0);
