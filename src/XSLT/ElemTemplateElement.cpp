@@ -344,6 +344,42 @@ ElemTemplateElement::executeChildren(
 
 
 
+XalanDOMString&
+ElemTemplateElement::doChildrenToString(
+			StylesheetExecutionContext&		executionContext, 
+			XalanDOMString&					result) const
+{
+	reserve(result, length(result) + 1024);
+
+	// Create a print writer and formatter to generate the children as
+	// a string.
+	DOMStringPrintWriter	thePrintWriter(result);
+
+	// Borrow a FormatterToText, and don't normalize CR/LF, since we don't want
+	// this text to be normalized.  Finally, have the formatter handle any ignorable
+	// whitespace events.
+	StylesheetExecutionContext::BorrowReturnFormatterToText	theFormatter(
+					executionContext,
+					thePrintWriter,
+					false,
+					true);
+
+	// Create an object to set and restore the execution state.
+	StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
+						executionContext,
+						theFormatter.get());
+
+	theFormatter->startDocument();
+
+	executeChildren(executionContext);
+
+	theFormatter->endDocument();
+
+	return result;
+}
+
+
+
 const XalanDOMString&
 ElemTemplateElement::childrenToString(
 			StylesheetExecutionContext&		executionContext,			
@@ -351,37 +387,84 @@ ElemTemplateElement::childrenToString(
 {
 	if (hasSingleTextChild() == true)
 	{
+		assert(m_firstChild != 0);
+
 		return m_firstChild->getNodeValue();
 	}
 	else
 	{
-		reserve(result, length(result) + 1024);
-
-		// Create a print writer and formatter to generate the children as
-		// a string.
-		DOMStringPrintWriter	thePrintWriter(result);
-
-		// Borrow a FormatterToText, and don't normalize CR/LF, since we don't want
-		// this text to be normalized.  Finally, have the formatter handle any ignorable
-		// whitespace events.
-		StylesheetExecutionContext::BorrowReturnFormatterToText	theFormatter(
-					executionContext,
-					thePrintWriter,
-					false,
-					true);
-
-		// Create an object to set and restore the execution state.
-		StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
-						executionContext,
-						theFormatter.get());
-
-		theFormatter->startDocument();
-
-		executeChildren(executionContext);
-
-		theFormatter->endDocument();
+		doChildrenToString(executionContext, result);
 
 		return result;
+	}
+}
+
+
+
+void
+ElemTemplateElement::childrenToResultAttribute(
+			StylesheetExecutionContext&		executionContext,
+			const XalanDOMString&			theName) const
+{
+	if (hasSingleTextChild() == true)
+	{
+		assert(m_firstChild != 0);
+
+		executionContext.addResultAttribute(
+			theName,
+			m_firstChild->getNodeValue());
+	}
+	else
+	{
+		StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+
+		executionContext.addResultAttribute(
+			theName,
+			doChildrenToString(executionContext, theResult.get()));
+	}
+}
+
+
+
+void
+ElemTemplateElement::childrenToResultComment(StylesheetExecutionContext&	executionContext) const
+{
+	if (hasSingleTextChild() == true)
+	{
+		assert(m_firstChild != 0);
+
+		executionContext.comment(c_wstr(m_firstChild->getNodeValue()));
+	}
+	else
+	{
+		StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+
+		executionContext.comment(c_wstr(doChildrenToString(executionContext, theResult.get())));
+	}
+}
+
+
+
+void
+ElemTemplateElement::childrenToResultPI(
+			StylesheetExecutionContext&		executionContext,
+			const XalanDOMString&			theTarget) const
+{
+	if (hasSingleTextChild() == true)
+	{
+		assert(m_firstChild != 0);
+
+		executionContext.processingInstruction(
+			c_wstr(theTarget),
+			c_wstr(m_firstChild->getNodeValue()));
+	}
+	else
+	{
+		StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+
+		executionContext.processingInstruction(
+			c_wstr(theTarget),
+			c_wstr(doChildrenToString(executionContext, theResult.get())));
 	}
 }
 

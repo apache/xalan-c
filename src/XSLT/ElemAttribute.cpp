@@ -370,11 +370,9 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 		// the result attribute.
 		if (indexOfNSSep == origAttrNameLength || !isEmpty(attrNameSpace))
 		{
-			StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
-
-			executionContext.addResultAttribute(
-				attrName,
-				childrenToString(executionContext, theResult.get()));
+			childrenToResultAttribute(
+				executionContext,
+				attrName);
 		}
 	}
 }

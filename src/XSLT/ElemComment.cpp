@@ -118,11 +118,8 @@ ElemComment::execute(StylesheetExecutionContext&	executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
-	StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
-
-    executionContext.comment(c_wstr(childrenToString(executionContext,theResult.get())));
+    childrenToResultComment(executionContext);
 }
-
 
 
 

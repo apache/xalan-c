@@ -222,7 +222,7 @@ public:
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceNode) const;
 
-	/** 
+	/**
 	 * Take the contents of a template element, process it, and
 	 * convert it to a string.  Returns a const reference to
 	 * the resulting string value.  Note that this may _not_ be
@@ -235,9 +235,45 @@ public:
 	 */
 	const XalanDOMString&
 	childrenToString(
-			StylesheetExecutionContext&		executionContext, 
+			StylesheetExecutionContext&		executionContext,
 			XalanDOMString&					result) const;
 
+	/**
+	 * Take the contents of a template element, process it, and
+	 * convert it to a string.  Then, add an attribute to the
+	 * result tree using the provided name and the string value.
+	 * 
+	 * @param executionContext  The current execution context
+	 * @param theName The name for the result attribute
+	 */
+	void
+	childrenToResultAttribute(
+			StylesheetExecutionContext&		executionContext,
+			const XalanDOMString&			theName) const;
+
+	/**
+	 * Take the contents of a template element, process it, and
+	 * convert it to a string.  Then, add a comment to the
+	 * result tree using the string value.
+	 * 
+	 * @param executionContext  The current execution context
+	 */
+	void
+	childrenToResultComment(StylesheetExecutionContext&	executionContext) const;
+
+	/**
+	 * Take the contents of a template element, process it, and
+	 * convert it to a string.  Then, add a processing instruction
+	 * to the result tree using the string value, and the provided
+	 * target.
+	 * 
+	 * @param executionContext  The current execution context
+	 * @param theName The name for the result attribute
+	 */
+	void
+	childrenToResultPI(
+			StylesheetExecutionContext&		executionContext,
+			const XalanDOMString&			theTarget) const;
 
 	/** 
 	 * Get an integer representation of the element type.
@@ -760,6 +796,19 @@ protected:
 	static const XalanDOMString		s_emptyString;
 
 private:
+
+	/** 
+	 * Take the contents of a template element, process it, and
+	 * convert it to a string.
+	 * 
+	 * @param executionContext  The current execution context
+	 * @param result result of executing the elements children
+	 * @result a reference to a string containing the result.
+	 */
+	XalanDOMString&
+	doChildrenToString(
+			StylesheetExecutionContext&		executionContext, 
+			XalanDOMString&					result) const;
 
 	Stylesheet&				m_stylesheet;
 
