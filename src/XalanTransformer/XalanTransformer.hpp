@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,34 +68,26 @@
 
 
 
-#include <XSLT/StylesheetConstructionContextDefault.hpp>
+#include <XPath/QNameByValue.hpp>
+
+
+
+#include <XSLT/StylesheetExecutionContextDefault.hpp>
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
 
 
-#include <XalanTransformer/XalanDocumentBuilder.hpp>
-#include <XalanTransformer/XalanCompiledStylesheet.hpp>
-#include <XalanTransformer/XalanParsedSource.hpp>
 #include <XalanTransformer/XalanTransformerOutputStream.hpp>
 
 
 
-#if defined(XALAN_OLD_STREAM_HEADERS)
-#include <iostream.h>
-#else
-#include <iostream>
-#endif
-
-
-
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::ostream;
-	using std::istream;
-#endif
-
-
+class Function;
 class XSLTInit;
+class XalanDocumentBuilder;
+class XalanCompiledStylesheet;
+class XalanParsedSource;
+class XalanTransformerOutputStream;
 
 
 

@@ -54,31 +54,37 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XALANCOMPILEDSTYLESHEET_HEADER_GUARD)
-#define XALANCOMPILEDSTYLESHEET_HEADER_GUARD
+#include "XalanCompiledStylesheetDefault.hpp"
 
 
 
-// Base include file.  Must be first.
-#include <XalanTransformer/XalanTransformerDefinitions.hpp>
-
-
-
-/**
- * This is an abstraction of the StylesheetRoot class. It is designed
- * to allow a XalanTranfomer object to reuse a compliled stylesheet. 
- */
-class XALAN_TRANSFORMER_EXPORT XalanCompiledStylesheet
+XalanCompiledStylesheetDefault::XalanCompiledStylesheetDefault(
+			const XSLTInputSource&				theStylesheetSource,
+			XSLTProcessorEnvSupportDefault&		theXSLTProcessorEnvSupport,
+			XSLTEngineImpl&						theProcessor):
+	XalanCompiledStylesheet(),
+	m_stylesheetXPathFactory(),
+	m_stylesheetConstructionContext(
+				theProcessor,
+				theXSLTProcessorEnvSupport,
+				m_stylesheetXPathFactory),
+	m_stylesheetRoot(
+				theProcessor.processStylesheet(
+				theStylesheetSource,
+				m_stylesheetConstructionContext))
 {
-public:
-
-	virtual
-	~XalanCompiledStylesheet() {}
-
-	virtual const StylesheetRoot*
-	getStylesheetRoot() const = 0;
-};
+}
 
 
 
-#endif	// XALANCOMPILEDSTYLESHEET_HEADER_GUARD
+XalanCompiledStylesheetDefault::~XalanCompiledStylesheetDefault()
+{
+}
+
+
+
+const StylesheetRoot*
+XalanCompiledStylesheetDefault::getStylesheetRoot() const
+{
+	return m_stylesheetRoot;
+}

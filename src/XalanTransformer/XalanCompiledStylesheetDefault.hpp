@@ -54,38 +54,57 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+#if !defined(XALANCOMPILEDSTYLESHEETDEFAULT_HEADER_GUARD)
+#define XALANCOMPILEDSTYLESHEETDEFAULT_HEADER_GUARD
+
+
+
+// Base include file.  Must be first.
+#include <XalanTransformer/XalanTransformerDefinitions.hpp>
+
+
+
+#include <XPath/XPathFactoryBlock.hpp>
+
+
+
+#include <XSLT/StylesheetConstructionContextDefault.hpp>
+#include <XSLT/StylesheetExecutionContextDefault.hpp>
+#include <XSLT/StylesheetRoot.hpp>
+#include <XSLT/XSLTEngineImpl.hpp>
+#include <XSLT/XSLTInputSource.hpp>
+#include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
+
+
+
 #include <XalanTransformer/XalanCompiledStylesheet.hpp>
 
 
+
+class XALAN_TRANSFORMER_EXPORT XalanCompiledStylesheetDefault : public XalanCompiledStylesheet
+{
+public:
 	
-XalanCompiledStylesheet::XalanCompiledStylesheet(
-			const XSLTInputSource&					theStylesheetSource,
-			XSLTProcessorEnvSupportDefault&	theXSLTProcessorEnvSupport,
-			XSLTEngineImpl&							theProcessor):
-	m_stylesheetXPathFactory(),
-	m_stylesheetConstructionContext(
-				theProcessor,
-				theXSLTProcessorEnvSupport,
-				m_stylesheetXPathFactory),
-	m_stylesheetRoot(
-				theProcessor.processStylesheet(
-				theStylesheetSource,
-				m_stylesheetConstructionContext))
-{
-}
+	XalanCompiledStylesheetDefault(
+			const XSLTInputSource&				theStylesheetSource,
+			XSLTProcessorEnvSupportDefault&		theXSLTProcessorEnvSupport,
+			XSLTEngineImpl&						theProcessor);
+
+	virtual
+	~XalanCompiledStylesheetDefault();
+
+	virtual const StylesheetRoot*
+	getStylesheetRoot() const;
+
+private:
+
+	XPathFactoryBlock						m_stylesheetXPathFactory;
+
+	StylesheetConstructionContextDefault	m_stylesheetConstructionContext;
+
+	const StylesheetRoot*					m_stylesheetRoot;
+};
 
 
 
-XalanCompiledStylesheet::~XalanCompiledStylesheet()
-{
-}
-
-
-
-void
-XalanCompiledStylesheet::setStylesheetRoot(
-				StylesheetExecutionContextDefault&		theStylesheetExecutionContext) const
-{
-	theStylesheetExecutionContext.setStylesheetRoot(m_stylesheetRoot);
-}
-
+#endif	// XALANCOMPILEDSTYLESHEETDEFAULT_HEADER_GUARD

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,6 +85,7 @@
 
 
 
+#include <XSLT/StylesheetConstructionContextDefault.hpp>
 #include <XSLT/StylesheetRoot.hpp>
 #include <XSLT/XSLTEngineImpl.hpp>
 #include <XSLT/XSLTInit.hpp>
@@ -97,6 +98,7 @@
 
 
 
+#include "XalanCompiledStylesheetDefault.hpp"
 #include "XalanDefaultDocumentBuilder.hpp"
 #include "XalanDefaultParsedSource.hpp"
 #include "XercesDOMParsedSource.hpp"
@@ -402,7 +404,7 @@ XalanTransformer::transform(
 		m_stylesheetExecutionContext.setXSLTProcessor(&theProcessor);
 		
 		// Set the compiled stylesheet.
-		theCompiledStylesheet->setStylesheetRoot(m_stylesheetExecutionContext);
+		m_stylesheetExecutionContext.setStylesheetRoot(theCompiledStylesheet->getStylesheetRoot());
 
 		// Set the parameters if any.
 		for (ParamPairVectorType::size_type i = 0; i < m_paramPairs.size(); ++i)
@@ -665,8 +667,8 @@ XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 		theProcessor.setProblemListener(&theProblemListener);
 
 		// Create a new XalanCompiledStylesheet.
-		XalanCompiledStylesheet* const theCompiledStylesheet =
-			new XalanCompiledStylesheet(
+		XalanCompiledStylesheet* const	theCompiledStylesheet =
+			new XalanCompiledStylesheetDefault(
 						theStylesheetSource, 
 						theXSLTProcessorEnvSupport,
 						theProcessor);
