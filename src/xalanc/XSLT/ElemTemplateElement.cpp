@@ -587,7 +587,7 @@ ElemTemplateElement::getNameAttribute() const
 
 void
 ElemTemplateElement::addToStylesheet(
-			StylesheetConstructionContext&	constructionContext,
+			StylesheetConstructionContext&	/* constructionContext */,
 			Stylesheet&						/* theStylesheet */)
 {
 	// An illegal call to addToStylesheet() was made during compilation of the stylesheet.
