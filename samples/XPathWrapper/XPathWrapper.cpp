@@ -9,7 +9,7 @@
 #include <dom/DOM_Document.hpp>
 #include <dom/DOM_Element.hpp>
 #include <dom/DOM_NodeList.hpp>
-#include <internal/URLInputSource.hpp>
+#include <framework/URLInputSource.hpp>
 #include <PlatformSupport/DirectoryEnumerator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <DOMSupport/DOMSupportDefault.hpp>
@@ -24,7 +24,7 @@
 #include <XMLSupport/FormatterToXML.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
-#include <internal/MemBufInputSource.hpp>
+#include <framework/MemBufInputSource.hpp>
 
 #include "XPathWrapper.hpp"
 

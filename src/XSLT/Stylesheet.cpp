@@ -119,7 +119,7 @@ Stylesheet::Stylesheet(
 //    FileNotFoundException, IOException, SAXException
 {
 	// Java: second argument null 
-	 URL* u = m_processor->getURLFromString(m_baseIdent, DOMString());
+	 XMLURL* u = m_processor->getURLFromString(m_baseIdent, DOMString());
 
 	 if (u != 0)
 	 {
@@ -1083,8 +1083,8 @@ void Stylesheet::addToDocTables(const DOMString& styleBaseURI)
 {
 	XSLTEngineImpl::SourceDocumentsMapType sourceDocs =
 		m_processor->getSourceDocsTable();
-	URL* url = m_processor->getURLFromString(m_baseIdent, styleBaseURI);
-	sourceDocs.insert(XSLTEngineImpl::SourceDocumentsMapType::value_type(url->getURL(),
+	XMLURL* url = m_processor->getURLFromString(m_baseIdent, styleBaseURI);
+	sourceDocs.insert(XSLTEngineImpl::SourceDocumentsMapType::value_type(url->getURLText(),
 		DOM_UnimplementedDocument(m_stylesheetRoot)));
  
 	// @@ TODO: Include base dirs are lost right now... need to fix this.
@@ -1094,7 +1094,7 @@ void Stylesheet::addToDocTables(const DOMString& styleBaseURI)
 		for(it = m_imports.begin(); it != m_imports.end(); it++)
 		{
 			Stylesheet &stylesheet = (**it);
-			stylesheet.addToDocTables(DOMString(url->getURL()));
+			stylesheet.addToDocTables(DOMString(url->getURLText()));
 		}
 	}
 	delete url;

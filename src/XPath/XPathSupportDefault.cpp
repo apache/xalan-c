@@ -175,7 +175,7 @@ XPathSupportDefault::parseXML(
 
 DOM_Document
 XPathSupportDefault::parseXML(
-			const URL&				/* url */,
+			const XMLURL&				/* url */,
 			DocumentHandler&		/* docHandler */,
 			const DOM_Document&		/* styleDoc */) const
 {
@@ -194,7 +194,7 @@ XPathSupportDefault::getElementByID(
 
 
 
-URL*
+XMLURL*
 XPathSupportDefault::getURLFromString(
 			const DOMString&		/* urlString */,
 			const DOMString&		/* base */) const

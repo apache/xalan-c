@@ -263,7 +263,7 @@ private:
 	/**
 	 * Test to see if the stack contains the given URL.
 	 */
-	bool stackContains(const Stylesheet::URLStackType& stack, const URL& url) const;
+	bool stackContains(const Stylesheet::URLStackType& stack, const XMLURL& url) const;
 	
 protected:
 

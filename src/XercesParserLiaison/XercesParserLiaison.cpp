@@ -65,7 +65,7 @@
 
 #include <parsers/DOMParser.hpp>
 #include <parsers/SAXParser.hpp>
-#include <internal/URLInputSource.hpp>
+#include <framework/URLInputSource.hpp>
 
 #include <sax/SAXParseException.hpp>
 

@@ -67,7 +67,7 @@
 #include <dom/DOM_Document.hpp>
 #include <dom/DOM_Element.hpp>
 #include <dom/DOM_NodeList.hpp>
-#include <internal/URLInputSource.hpp>
+#include <framework/URLInputSource.hpp>
 
 
 

@@ -109,10 +109,10 @@ StylesheetRoot::StylesheetRoot(
     // For some reason, the imports aren't working right if I 
     // don't set the baseIdent to full url.  I think this is OK, 
     // and probably safer and faster in general.
-	URL* url = m_processor->getURLFromString(m_baseIdent, DOMString());
+	XMLURL* url = m_processor->getURLFromString(m_baseIdent, DOMString());
 	if (url != 0)
 	{
-		m_baseIdent = url->getURL();
+		m_baseIdent = url->getURLText();
 		delete url;
 		url = m_processor->getURLFromString(m_baseIdent, DOMString());
 		if (url != 0)

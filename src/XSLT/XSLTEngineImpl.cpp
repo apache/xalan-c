@@ -130,7 +130,7 @@
 #include <sax/SaxException.hpp>
 #include <util/StdOut.hpp>
 #include <util/PlatformUtils.hpp>
-#include <internal/URLInputSource.hpp>
+#include <framework/URLInputSource.hpp>
 
 #include "Arg.hpp"
 #include "ContextMarker.hpp"
@@ -518,9 +518,9 @@ StylesheetRoot* XSLTEngineImpl::processStylesheet(const DOMString &xsldocURLStri
 {
 	try
 	{
-		std::auto_ptr<URL> url(getURLFromString(xsldocURLString));
+		std::auto_ptr<XMLURL> url(getURLFromString(xsldocURLString));
 
-		XSLTInputSource input(url->getURL(), 0);
+		XSLTInputSource input(url->getURLText(), 0);
 		return processStylesheet(&input);
 	}
 	catch(SAXException& se)
@@ -642,12 +642,12 @@ const DOM_Node XSLTEngineImpl::getSourceTreeFromInput(XSLTInputSource *inputSour
 }
 
 
-DOM_Document XSLTEngineImpl::parseXML(const URL& url, 
+DOM_Document XSLTEngineImpl::parseXML(const XMLURL& url, 
 	                         DocumentHandler* docHandler, 
 	                         const DOM_Document& docToRegister)
 {
 	// java: url.toExternalForm();
-	const DOMString&	urlString = url.getURL();
+	const DOMString&	urlString = url.getURLText();
 	DOM_Document	doc;
 	const SourceDocumentsMapType::iterator	it = m_sourceDocs.find(urlString);
 	if(it != m_sourceDocs.end())
@@ -656,7 +656,7 @@ DOM_Document XSLTEngineImpl::parseXML(const URL& url,
 		return doc;
 	}
 	 // java: url.toString()
-	XSLTInputSource	inputSource(url.getURL());
+	XSLTInputSource	inputSource(url.getURLText());
 	if(0 != docHandler)
 		m_parserLiaison.parseXMLStream(inputSource, *docHandler);
 	else
@@ -789,9 +789,9 @@ Stylesheet* XSLTEngineImpl::getStylesheetFromPIURL(DOMString& xslURLString,
 
 		StylesheetHandler stylesheetProcessor(*this, *stylesheet);
 		
-		URL* xslURL = getURLFromString(xslURLString, xmlBaseIdent);
+		XMLURL* xslURL = getURLFromString(xslURLString, xmlBaseIdent);
 		
-		XSLTInputSource inputSource(xslURL->getURL());
+		XSLTInputSource inputSource(xslURL->getURLText());
 		// java: m_parserLiaison.setDocumentHandler(stylesheetProcessor);
 		//       m_parserLiaison.parse(inputSource);
 		m_parserLiaison.parseXMLStream(inputSource, stylesheetProcessor);
@@ -3486,7 +3486,7 @@ XSLTEngineImpl::findElementByAttribute(
 
 
 
-URL* XSLTEngineImpl::getURLFromString (const DOMString&	urlString)
+XMLURL* XSLTEngineImpl::getURLFromString (const DOMString&	urlString)
 	// throws MalformedURLException
 /*
  *  Create an URL as a file: protocol by constructing fully qualified name
@@ -3494,7 +3494,7 @@ URL* XSLTEngineImpl::getURLFromString (const DOMString&	urlString)
  *  NOTE: caller owns memory
  */
 {
-	URL* url = new URL();
+	XMLURL* url = new XMLURL();
 	try 
 	{
 		url->setURL(c_wstr(urlString));
@@ -3505,8 +3505,8 @@ URL* XSLTEngineImpl::getURLFromString (const DOMString&	urlString)
 		DOMString fullpath("file:///");
 		try 
 		{
-			XMLCh* lastPart = XMLPlatformUtils::getBasePath(c_wstr(urlString));
-			fullpath += lastPart;
+//			XMLCh* lastPart = XMLPlatformUtils::getBasePath(c_wstr(urlString));
+//			fullpath += lastPart;
 			fullpath += urlString;
 			url->setURL(c_wstr(fullpath));
 		}
@@ -3519,7 +3519,7 @@ URL* XSLTEngineImpl::getURLFromString (const DOMString&	urlString)
 	return url;
 }
 
-URL* XSLTEngineImpl::getURLFromString(const DOMString&	urlString, const DOMString& base)
+XMLURL* XSLTEngineImpl::getURLFromString(const DOMString&	urlString, const DOMString& base)
 {
 	if (isEmpty(base))
 		return getURLFromString(urlString);

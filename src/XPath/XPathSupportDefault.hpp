@@ -152,7 +152,7 @@ public:
 	 */
 	virtual DOM_Document
 	parseXML(
-			const URL&				url,
+			const XMLURL&				url,
 			DocumentHandler&		docHandler,
 			const DOM_Document&		styleDoc) const;
 
@@ -170,7 +170,7 @@ public:
 	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
-	virtual URL*
+	virtual XMLURL*
 	getURLFromString(
 			const DOMString&		urlString,
 			const DOMString&		base) const;

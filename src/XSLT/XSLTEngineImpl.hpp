@@ -142,7 +142,7 @@
 #include <dom/DOM_Document.hpp>
 #include <dom/DOM_Text.hpp>
 #include <dom/DOMString.hpp>
-#include <util/URL.hpp>
+#include <util/XMLURL.hpp>
 
 #include <sax/DocumentHandler.hpp>
 
@@ -388,7 +388,7 @@ public:
 	 * @exception SAXException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
-	DOM_Document parseXML(const URL& url, 
+	DOM_Document parseXML(const XMLURL& url, 
 //@@ TODO: Fix this
 #if 1
 	                         DocumentHandler* docHandler, 
@@ -2067,10 +2067,10 @@ public:
    * Take a user string and try to parse XML, and also return 
    * the url.
    */
-	URL*
+	XMLURL*
 	getURLFromString(const DOMString&	urlString);
 
-	URL*
+	XMLURL*
 	getURLFromString(const DOMString&	urlString, const DOMString& base);
         
 

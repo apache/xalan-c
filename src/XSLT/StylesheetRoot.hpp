@@ -76,7 +76,7 @@
 #include "ElemTemplate.hpp"
 
 
-#include <util/URL.hpp>
+#include <util/XMLURL.hpp>
 
 #include <XMLSupport/FormatterToHTML.hpp>
 #include <XMLSupport/FormatterToText.hpp>
@@ -149,7 +149,7 @@ public:
 	/**
 	 * A stack to keep track of URLs.
 	 */
-	typedef	std::vector<URL>				ImportStackType;
+	typedef	std::vector<XMLURL>				ImportStackType;
 
 	/** 
 	 * Return the output method that was specified in the stylesheet. 

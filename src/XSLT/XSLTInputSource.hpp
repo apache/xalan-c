@@ -62,7 +62,7 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
-#include <internal/URLInputSource.hpp>
+#include <framework/URLInputSource.hpp>
 #include <dom/DOM_Node.hpp>
 #include <sax/InputSource.hpp>
 

@@ -1044,14 +1044,14 @@ void StylesheetHandler::processImport(const DOMString& name, const AttributeList
 			
 			const DOMString href = atts.getValue(i);
 
-			const URL& hrefUrl = *(m_processor.getURLFromString(href, m_stylesheet.getBaseIdentifier()));
+			const XMLURL& hrefUrl = *(m_processor.getURLFromString(href, m_stylesheet.getBaseIdentifier()));
 
 			StylesheetRoot::ImportStackType& importStack = m_stylesheet.getStylesheetRoot()->getImportStack();
 
 
 			if(stackContains(importStack, hrefUrl))
 			{
-				DOMString msg(DOMString(hrefUrl.getURL()) + " is directly or indirectly importing itself!");
+				DOMString msg(DOMString(hrefUrl.getURLText()) + " is directly or indirectly importing itself!");
 				throw SAXException(toCharArray(msg));
 			}
 			
@@ -1065,7 +1065,7 @@ void StylesheetHandler::processImport(const DOMString& name, const AttributeList
 
 			StylesheetHandler tp(m_processor, *pImportedStylesheet);
 				
-			pImportedStylesheet->setBaseIdentifier(hrefUrl.getURL());
+			pImportedStylesheet->setBaseIdentifier(hrefUrl.getURLText());
 
 			m_processor.parseXML(hrefUrl, &tp, DOM_UnimplementedDocument(pImportedStylesheet));
 			
@@ -1095,13 +1095,13 @@ void StylesheetHandler::processImport(const DOMString& name, const AttributeList
  */
 
 bool StylesheetHandler::stackContains(const Stylesheet::URLStackType& stack, 
-	const URL& url) const
+	const XMLURL& url) const
 {
 	int n = stack.size();
 	bool contains = false;
 	for(int i = 0; i < n; i++)
 	{
-		URL url2 = stack[i];
+		XMLURL url2 = stack[i];
 		if(url2 == url)
 		{
 			contains = true;
@@ -1150,11 +1150,11 @@ void StylesheetHandler::processInclude(const DOMString& name, const AttributeLis
 			
 			const DOMString href = atts.getValue(i);
 
-			const URL* hrefUrl = m_processor.getURLFromString(href, m_stylesheet.getIncludeStack().back().getURL());
+			const XMLURL* hrefUrl = m_processor.getURLFromString(href, m_stylesheet.getIncludeStack().back().getURLText());
 			
 			if(stackContains(m_stylesheet.getIncludeStack(), *hrefUrl))
 			{
-				DOMString msg(DOMString(hrefUrl->getURL()) + " is directly or indirectly including itself!");
+				DOMString msg(DOMString(hrefUrl->getURLText()) + " is directly or indirectly including itself!");
 				throw SAXException(toCharArray(msg));
 			}
 			

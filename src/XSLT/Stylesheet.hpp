@@ -72,7 +72,7 @@
 #include <dom/DOM_Node.hpp>
 #include <dom/DOMString.hpp>
 
-#include <util/URL.hpp>
+#include <util/XMLURL.hpp>
 
 #include "KeyTable.hpp"
 #include "ElemTemplate.hpp"
@@ -161,7 +161,7 @@ public:	// @@ JMD: temporary, needs accessor method
 	 */
 	typedef std::vector<Stylesheet*> StylesheetVectorType;
 
-	typedef	std::vector<URL> URLStackType;
+	typedef	std::vector<XMLURL> URLStackType;
 
 	typedef	std::vector<NameSpace>		NamespaceVectorType;
 	typedef	std::vector<NamespaceVectorType>		NamespacesStackType;
