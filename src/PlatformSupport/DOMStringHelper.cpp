@@ -761,3 +761,76 @@ isWhiteSpace(const XMLCh* const ch, int start, int length)
 	}
 	return true;
 }
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(std::string)
+DOMStringToStdString(const DOMString& domString)
+{
+	XMLCh* toTranscode = domString.rawBuffer();
+	unsigned int len = domString.length();
+
+
+    // Short circuit if its a null pointer
+    if (!toTranscode || (!toTranscode[0]))
+    {
+        return std::string();
+	}
+
+    // See if our XMLCh and wchar_t as the same on this platform
+    const bool isSameSize = (sizeof(XMLCh) == sizeof(wchar_t));
+
+    //
+    //  Get the actual number of chars. If the passed len is zero, its null
+    //  terminated. Else we have to use the len.
+    //
+    wchar_t realLen = (wchar_t)len;
+    if (!realLen)
+    {
+        //
+        //  We cannot just assume we can use wcslen() because we don't know
+        //  if our XMLCh is the same as wchar_t on this platform.
+        //
+        const XMLCh* tmpPtr = toTranscode;
+        while (*(tmpPtr++))
+            realLen++;
+    }
+
+    //
+    //  If either the passed length was non-zero or our char sizes are not 
+    //  same, we have to use a temp buffer. Since this is common in these
+    //  samples, we just do it anyway.
+    //
+    wchar_t* tmpSource = new wchar_t[realLen + 1];
+    if (isSameSize)
+    {
+        memcpy(tmpSource, toTranscode, realLen * sizeof(wchar_t));
+    }
+	else
+    {
+        for (unsigned int index = 0; index < realLen; index++)
+            tmpSource[index] = (wchar_t)toTranscode[index];
+    }
+    tmpSource[realLen] = 0;
+
+    // See now many chars we need to transcode this guy
+    const unsigned int targetLen = ::wcstombs(0, tmpSource, 0);
+
+    // Allocate out storage member
+    char *localForm = new char[targetLen + 1];
+
+    //
+    //  And transcode our temp source buffer to the local buffer. Cap it
+    //  off since the converter won't do it (because the null is beyond
+    //  where the target will fill up.)
+    //
+    ::wcstombs(localForm, tmpSource, targetLen);
+    localForm[targetLen] = 0;
+
+	std::string ret(localForm);
+
+    // Don't forget to delete our temp buffers
+    delete [] tmpSource;
+	delete [] localForm;
+
+	return ret;
+}

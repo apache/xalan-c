@@ -60,12 +60,14 @@
 
 
 #include <memory>
-
+#include <iostream>
 
 
 #include <parsers/DOMParser.hpp>
 #include <parsers/SAXParser.hpp>
 #include <internal/URLInputSource.hpp>
+
+#include <sax/SAXParseException.hpp>
 
 
 
@@ -102,18 +104,10 @@ namespace
 inline DOMParser*
 CreateDOMParser(bool	fValidating)
 {
-	return new DOMParser;
+	DOMParser *parser = new DOMParser;
+	parser->setDoValidation(fValidating);
 
-/*
-	if (fValidating == true)
-	{
-		return new ValidatingDOMParser;
-	}
-	else
-	{
-		return new NonValidatingDOMParser;
-	}
-*/
+	return parser;
 }
 
 
@@ -121,18 +115,10 @@ CreateDOMParser(bool	fValidating)
 inline SAXParser*
 CreateSAXParser(bool	fValidating)
 {
-	return new SAXParser;
+	SAXParser *parser = new SAXParser;
+	parser->setDoValidation(fValidating);
 
-/*
-	if (fValidating == true)
-	{
-		return new ValidatingSAXParser;
-	}
-	else
-	{
-		return new NonValidatingSAXParser;
-	}
-*/
+	return parser;
 }
 };
 
@@ -144,6 +130,7 @@ XercesParserLiaison::parseXMLStream(
 {
 	std::auto_ptr<DOMParser>	theParser(CreateDOMParser(m_fUseValidatingParser));
 
+	theParser->setErrorHandler(this);
 	theParser->parse(reader);
 
 	return theParser->getDocument();
@@ -160,6 +147,7 @@ XercesParserLiaison::parseXMLStream(
 	std::auto_ptr<SAXParser>	theParser(CreateSAXParser(m_fUseValidatingParser));
 
 	theParser->setDocumentHandler(&handler);
+	theParser->setErrorHandler(this);
 
 	theParser->parse(urlInputSource);
 }
@@ -173,6 +161,7 @@ XercesParserLiaison::parseXMLStream(
 {
 	std::auto_ptr<DOMParser>	theParser(CreateDOMParser(m_fUseValidatingParser));
 
+	theParser->setErrorHandler(this);
 	theParser->parse(urlInputSource);
 
 	return theParser->getDocument();
@@ -187,7 +176,8 @@ XercesParserLiaison::parseXMLStream(
 			const DOMString&	/* identifier */)
 {
 	std::auto_ptr<SAXParser>	theParser(CreateSAXParser(m_fUseValidatingParser));
-
+	
+	theParser->setErrorHandler(this);
 	theParser->setDocumentHandler(&handler);
 
 	theParser->parse(urlInputSource);
@@ -199,4 +189,33 @@ DOM_Document
 XercesParserLiaison::createDocument()
 {
 	return DOM_Document::createDocument();
+}
+
+
+
+void XercesParserLiaison::fatalError(const SAXParseException& e)
+{
+	std::cerr << "\nFatatal Error at (file " << DOMStringToStdString(e.getSystemId())
+		 << ", line " << e.getLineNumber()
+		 << ", char " << e.getColumnNumber()
+         << "): " << DOMStringToStdString(e.getMessage()) << std::endl;
+
+	throw e;
+}
+
+void XercesParserLiaison::error(const SAXParseException& e)
+{
+	std::cerr << "\nError at (file " << DOMStringToStdString(e.getSystemId())
+		 << ", line " << e.getLineNumber()
+		 << ", char " << e.getColumnNumber()
+         << "): " << DOMStringToStdString(e.getMessage()) << std::endl;
+}
+
+
+void XercesParserLiaison::warning(const SAXParseException& e)
+{
+	std::cerr << "\nWarning at (file " << DOMStringToStdString(e.getSystemId())
+		 << ", line " << e.getLineNumber()
+		 << ", char " << e.getColumnNumber()
+         << "): " << DOMStringToStdString(e.getMessage()) << std::endl;
 }

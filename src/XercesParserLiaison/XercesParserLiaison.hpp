@@ -76,6 +76,7 @@
 #include <dom/DOM_Document.hpp>
 #include <dom/DOMString.hpp>
 
+#include <sax/ErrorHandler.hpp>
 
 
 // Base class header file.
@@ -90,7 +91,7 @@ class XSLProcessor;
 
 
 
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison : public XMLParserLiaisonDefault
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison : public XMLParserLiaisonDefault, ErrorHandler
 {
 public:
 
@@ -178,7 +179,13 @@ public:
 	 */
 	virtual DOM_Document
 	createDocument();
-  
+
+	// Implementations for SAX ErrorHandler
+
+    virtual void warning(const SAXParseException& exception);
+    virtual void error(const SAXParseException& exception);
+    virtual void fatalError(const SAXParseException& exception);
+
 private:
 
 	const bool	m_fUseValidatingParser;

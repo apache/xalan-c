@@ -568,20 +568,9 @@ struct DOMStringEqualsFunction : public std::binary_function<const DOMString&, c
 	}
 };
 
-// not really safe in DBCS environments
-inline std::string DOMStringToStdString(const DOMString& domString)
-{
-	std::string ret;
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(std::string)
+DOMStringToStdString(const DOMString& domString);
 
-	for (int i=0; i< domString.length(); i++)
-	{
-		ret += (char)domString.charAt(i);
-	}
-
-	return ret;
-}
-
-// safe, but not very efficient
 inline std::wstring DOMStringToStdWString(const DOMString& domString)
 {
 	return (c_wstr(domString));

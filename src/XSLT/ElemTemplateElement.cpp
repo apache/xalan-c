@@ -63,6 +63,8 @@
 
 #include <XPath/MutableNodeRefList.hpp>
 
+#include <sax/SAXException.hpp>
+
 
 #include "ElemForEach.hpp"
 #include "NodeSortKey.hpp"
@@ -760,14 +762,16 @@ bool ElemTemplateElement::transformChild(
 
 
 /** 
- * Throw a template element runtime error.  (Note: should we throw a SAXException instead?)
+ * Throw a template element error.
  * 
  * @param msg Description of the error that occured.
  */
 
 void ElemTemplateElement::error(const DOMString& msg) const
 {
-	throw ("ElemTemplateElement error: " + msg);
+	DOMString errMsg("ElemTemplateElement error: " + msg);
+
+	throw SAXException(toCharArray(errMsg));
 }
 
 
