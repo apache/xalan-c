@@ -91,6 +91,7 @@
 #if defined(_MSC_VER)
 class FindFileStruct : public _wfinddata_t
 {
+
 public:
 
 	enum eAttributes
@@ -102,29 +103,6 @@ public:
 		eReadOnly = _A_RDONLY,
 		eSystem = _A_SYSTEM
 	};
-
-#elif defined(__GNUC__)
-
-class FindFileStruct
-{
-public:
-
-	XMLCh m_name[MAXNAMLEN];
-	int m_attrib;
-
-	enum eAttributes
-	{
-		eAttributeArchive = 1,
-		eAttributeDirectory = 2,
-		eAttributeHidden = 4,
-		eAttributeNormal = 8,
-		eReadOnly = 16,
-		eSystem = 32
-	};
-
-#else
-#error Unsupported platform!!!
-#endif
 
 	const XMLCh*
 	getName() const
@@ -170,20 +148,27 @@ public:
 };
 
 
+#elif defined(__GNUC__)
 
-#if defined(XALAN_NO_NAMESPACES)
-struct ArchiveFileFilterPredicate : public unary_function<FindFileStruct, bool>
-#else
-struct ArchiveFileFilterPredicate : public std::unary_function<FindFileStruct, bool>
-#endif
+class FindFileStruct : public dirent
 {
-	result_type
-	operator()(const argument_type&		theFindData) const
+public:
+
+	const char* getName() const
 	{
-		return theFindData.isArchive();
+		return d_name;
+	}
+
+	bool isDirectory() const
+	{
+		return d_type ==  DT_DIR;
 	}
 };
 
+
+#else
+#error Unsupported platform!!!
+#endif
 
 
 #if defined(XALAN_NO_NAMESPACES)
@@ -200,6 +185,23 @@ struct DirectoryFilterPredicate : public std::unary_function<FindFileStruct, boo
 };
 
 
+// Only defined for Windows platform thus far
+
+#if defined(_MSC_VER)
+
+
+#if defined(XALAN_NO_NAMESPACES)
+struct ArchiveFileFilterPredicate : public unary_function<FindFileStruct, bool>
+#else
+struct ArchiveFileFilterPredicate : public std::unary_function<FindFileStruct, bool>
+#endif
+{
+	result_type
+	operator()(const argument_type&		theFindData) const
+	{
+		return theFindData.isArchive();
+	}
+};
 
 #if defined(XALAN_NO_NAMESPACES)
 struct HiddenFileFilterPredicate : public unary_function<FindFileStruct, bool>
@@ -214,8 +216,6 @@ struct HiddenFileFilterPredicate : public std::unary_function<FindFileStruct, bo
 	}
 };
 
-
-
 #if defined(XALAN_NO_NAMESPACES)
 struct NormalFileFilterPredicate : public unary_function<FindFileStruct, bool>
 #else
@@ -228,8 +228,6 @@ struct NormalFileFilterPredicate : public std::unary_function<FindFileStruct, bo
 		return theFindData.isNormal();
 	}
 };
-
-
 
 #if defined(XALAN_NO_NAMESPACES)
 struct ReadOnlyFileFilterPredicate : public unary_function<FindFileStruct, bool>
@@ -244,8 +242,6 @@ struct ReadOnlyFileFilterPredicate : public std::unary_function<FindFileStruct, 
 	}
 };
 
-
-
 #if defined(XALAN_NO_NAMESPACES)
 struct SystemFileFilterPredicate : public unary_function<FindFileStruct, bool>
 #else
@@ -259,6 +255,8 @@ struct SystemFileFilterPredicate : public std::unary_function<FindFileStruct, bo
 	}
 };
 
+#endif //  defined(_MSC_VER)
+
 
 
 #if defined(XALAN_NO_NAMESPACES)
@@ -270,19 +268,24 @@ struct FilesOnlyFilterPredicate : public std::unary_function<FindFileStruct, boo
 	result_type
 	operator()(const argument_type&		theFindData) const
 	{
+#if defined(_MSC_VER)
 		DirectoryFilterPredicate		theDirectoryPredicate;
 		ArchiveFileFilterPredicate		theArchivePredicate;
 		NormalFileFilterPredicate		theNormalPredicate;
 		ReadOnlyFileFilterPredicate		theReadOnlyPredicate;
 
-		return !theDirectoryPredicate(theFindData) &&
-			   (theArchivePredicate(theFindData) ||
+		return !theDirectoryPredicate(theFindData)
+		&& (theArchivePredicate(theFindData) ||
 			    theNormalPredicate(theFindData) ||
 				theReadOnlyPredicate(theFindData));
+#else
+		DirectoryFilterPredicate		theDirectoryPredicate;
+
+		return !theDirectoryPredicate(theFindData);
+#endif
 			   
 	}
 };
-
 
 
 template<class OutputIteratorType,

@@ -62,7 +62,7 @@
 #include <math.h>
 // @@ JMD: Shouldn't need this as well ??
 #include <bits/nan.h>
-else
+#else
 #error Unsupported platform!!!
 #endif
 #else
