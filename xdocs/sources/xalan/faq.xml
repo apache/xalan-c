@@ -92,7 +92,7 @@
 <faq title="Make errors on UNIX platforms">
 <q>I get errors in the Makefile when running the make utility.  What's wrong?</q>
 
-<a><p>You must use the GNU make utility.  Other make utilities may not work with the Xalan Makefile</p>
+<a><p>You must use the GNU make utility.  Other make utilities may not work with the Xalan Makefile</p></a>
 </faq>
 
 <faq title="ICU">
