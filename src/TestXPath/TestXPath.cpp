@@ -120,26 +120,18 @@ ExecuteXPath(
 			XPath&					theXPath,
 			const XalanDOMString&	theXPathString,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
-			XObjectFactory&			theXObjectFactory,
 			XalanNode* 				theContextNode,
 			const PrefixResolver&	thePrefixResolver,
-			const NodeRefListBase& 	theContextNodeList)
+			const NodeRefListBase& 	theContextNodeList,
+			XPathExecutionContext&	theExecutionContext)
 {
 	theXPathProcessor.initXPath(theXPath,
 								theXPathString,
 								thePrefixResolver,
 								theXPathEnvSupport);
 
-	XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupport,
-														theXPathSupport,
-														theXObjectFactory,
-														theContextNode,
-														&theContextNodeList,
-														&thePrefixResolver);
-
 	const XObject* const	theResult =
-		theXPath.execute(theExecutionContext);
+		theXPath.execute(theContextNode, thePrefixResolver, theContextNodeList, theExecutionContext);
 
 	return theResult;
 }
@@ -154,11 +146,10 @@ TestNumericResult(
 			PrintWriter&			thePrintWriter,
 			double					theExpectedResult,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
-			XObjectFactory&			theXObjectFactory,
 			XalanNode* 				theContextNode,
 			const PrefixResolver&	thePrefixResolver,
-			const NodeRefListBase& 	theContextNodeList)
+			const NodeRefListBase& 	theContextNodeList,
+			XPathExecutionContext&	theExecutionContext)
 {
 	bool	fError = false;
 
@@ -167,11 +158,10 @@ TestNumericResult(
 					 theXPath,
 					 theXPathString,
 					 theXPathEnvSupport,
-					 theXPathSupport,
-					 theXObjectFactory,
 					 theContextNode,
 					 thePrefixResolver,
-					 theContextNodeList);
+					 theContextNodeList,
+					 theExecutionContext);
 
 	thePrintWriter.print(XALAN_STATIC_UCODE_STRING("Execution of XPath "));
 	thePrintWriter.print(theXPathString);
@@ -206,11 +196,10 @@ TestStringResult(
 			PrintWriter&			thePrintWriter,
 			const XalanDOMString&	theExpectedResult,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
-			XObjectFactory&			theXObjectFactory,
 			XalanNode* 				theContextNode,
 			const PrefixResolver&	thePrefixResolver,
-			const NodeRefListBase& 	theContextNodeList)
+			const NodeRefListBase& 	theContextNodeList,
+			XPathExecutionContext&	theExecutionContext)
 {
 	bool	fError = false;
 
@@ -219,11 +208,10 @@ TestStringResult(
 					 theXPath,
 					 theXPathString,
 					 theXPathEnvSupport,
-					 theXPathSupport,
-					 theXObjectFactory,
 					 theContextNode,
 					 thePrefixResolver,
-					 theContextNodeList);
+					 theContextNodeList,
+					 theExecutionContext);
 
 	thePrintWriter.print(XALAN_STATIC_UCODE_STRING("Execution of XPath "));
 	thePrintWriter.print(theXPathString);
@@ -261,11 +249,10 @@ TestBooleanResult(
 			PrintWriter&			thePrintWriter,
 			bool					theExpectedResult,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
-			XObjectFactory&			theXObjectFactory,
 			XalanNode* 		theContextNode,
 			const PrefixResolver&	thePrefixResolver,
-			const NodeRefListBase& 	theContextNodeList)
+			const NodeRefListBase& 	theContextNodeList,
+			XPathExecutionContext&	theExecutionContext)
 {
 	bool	fError = false;
 
@@ -274,11 +261,10 @@ TestBooleanResult(
 					 theXPath,
 					 theXPathString,
 					 theXPathEnvSupport,
-					 theXPathSupport,
-					 theXObjectFactory,
 					 theContextNode,
 					 thePrefixResolver,
-					 theContextNodeList);
+					 theContextNodeList,
+					 theExecutionContext);
 
 	bool	fDump = false;
 
@@ -323,7 +309,7 @@ TestBooleanResult(
 
 XalanDocument*
 ParseXML(
-			XMLParserLiaison&	theLiaison,
+			XMLParserLiaison&		theLiaison,
 			const XalanDOMString&	theFileName)
 {
 	URLInputSource	theURLInputSource(c_wstr(theFileName));
@@ -433,11 +419,11 @@ FindContextNode(
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
-			XObjectFactory&			theXObjectFactory,
 			XPathFactory&			theXPathFactory,
 			XalanDocument*			theDocument,
 			const XalanDOMString&	theContextNodeMatchPattern,
-			PrintWriter&			thePrintWriter)
+			PrintWriter&			thePrintWriter,
+			XPathExecutionContext&	theExecutionContext)
 {
 	XalanNode*							theResult = 0;
 
@@ -455,11 +441,10 @@ FindContextNode(
 					 *theXPath,
 					 theContextNodeMatchPattern,
 					 theXPathEnvSupport,
-					 theXPathSupport,
-					 theXObjectFactory,
 					 theDocument,
 					 thePrefixResolver,
-					 theContextNodeList);
+					 theContextNodeList,
+					 theExecutionContext);
 
 	try
 	{
@@ -504,12 +489,12 @@ TestAxisResult(
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
-			XObjectFactory&			theXObjectFactory,
 			XMLParserLiaison&		theLiaison,
 			XPathFactory&			theXPathFactory,
-			const XalanDOMString&		theXMLFileURL,
-			const XalanDOMString&		theXSLFileURL,
-			PrintWriter&			thePrintWriter)
+			const XalanDOMString&	theXMLFileURL,
+			const XalanDOMString&	theXSLFileURL,
+			PrintWriter&			thePrintWriter,
+			XPathExecutionContext&	theExecutionContext)
 {
 	bool					fError = false;
 
@@ -530,11 +515,11 @@ TestAxisResult(
 				FindContextNode(theXPathProcessor,
 								theXPathEnvSupport,
 								theXPathSupport,
-								theXObjectFactory,
 								theXPathFactory,
 								theXMLDocument,
 								theContextNodeMatchPattern,
-								thePrintWriter);
+								thePrintWriter,
+								theExecutionContext);
 
 			if (theContextNode != 0)
 			{
@@ -565,15 +550,8 @@ TestAxisResult(
 					thePrintWriter.println();
 				}
 
-				XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupport,
-																	theXPathSupport,
-																	theXObjectFactory,
-																	theContextNode,
-																	&theContextNodeList,
-																	&thePrefixResolver);
-
 				const XObject* const	theResult =
-					theXPath->execute(theExecutionContext);
+					theXPath->execute(theContextNode, thePrefixResolver, theContextNodeList, theExecutionContext);
 
 				try
 				{
@@ -619,12 +597,12 @@ TestPredicateResult(
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
-			XObjectFactory&			theXObjectFactory,
 			XMLParserLiaison&		theLiaison,
 			XPathFactory&			theXPathFactory,
 			const XalanDOMString&	theXMLFileURL,
 			const XalanDOMString&	theXSLFileURL,
-			PrintWriter&			thePrintWriter)
+			PrintWriter&			thePrintWriter,
+			XPathExecutionContext&	theExecutionContext)
 {
 	bool					fError = false;
 
@@ -646,11 +624,11 @@ TestPredicateResult(
 				FindContextNode(theXPathProcessor,
 								theXPathEnvSupport,
 								theXPathSupport,
-								theXObjectFactory,
 								theXPathFactory,
 								theXMLDocument,
 								theContextNodeMatchPattern,
-								thePrintWriter);
+								thePrintWriter,
+								theExecutionContext);
 
 			if (theContextNode != 0)
 			{
@@ -704,13 +682,6 @@ TestPredicateResult(
 					{
 						continue;
 					}
-
-					XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupport,
-																		theXPathSupport,
-																		theXObjectFactory,
-																		theContextNode,
-																		&theContextNodeList,
-																		&thePrefixResolver);
 
 					const XObject* const	theResult1 =
 							theXPath1->execute(theExecutionContext);
@@ -830,12 +801,12 @@ const double	theNumericTestExpectedOutput[] =
 
 void
 TestNumericResults(
-			XPathFactory&		theXPathFactory,
-			XObjectFactory&		theXObjectFactory,
-			XPathProcessor&		theXPathProcessor,
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport&		theXPathSupport,
-			PrintWriter&		thePrintWriter)
+			XPathFactory&			theXPathFactory,
+			XPathProcessor&			theXPathProcessor,
+			XPathEnvSupport&		theXPathEnvSupport,
+			XPathSupport&			theXPathSupport,
+			PrintWriter&			thePrintWriter,
+			XPathExecutionContext&	theExecutionContext)
 {
 	assert(sizeof(theNumericTestInput) / sizeof(theNumericTestInput[0]) ==
 			sizeof(theNumericTestExpectedOutput) / sizeof(theNumericTestExpectedOutput[0]));
@@ -855,11 +826,10 @@ TestNumericResults(
 							  thePrintWriter,
 							  theNumericTestExpectedOutput[i],
 							  theXPathEnvSupport,
-							  theXPathSupport,
-							  theXObjectFactory,
 							  0,
 							  ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
-							  NodeRefList());
+							  NodeRefList(),
+							  theExecutionContext);
 		}
 		catch(...)
 		{
@@ -963,12 +933,12 @@ const char* const	theStringTestExpectedOutput[] =
 
 void
 TestStringResults(
-			XPathFactory&		theXPathFactory,
-			XObjectFactory&		theXObjectFactory,
-			XPathProcessor&		theXPathProcessor,
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport&		theXPathSupport,
-			PrintWriter&		thePrintWriter)
+			XPathFactory&			theXPathFactory,
+			XPathProcessor&			theXPathProcessor,
+			XPathEnvSupport&		theXPathEnvSupport,
+			XPathSupport&			theXPathSupport,
+			PrintWriter&			thePrintWriter,
+			XPathExecutionContext&	theExecutionContext)
 {
 	assert(sizeof(theStringTestInput) == sizeof(theStringTestExpectedOutput));
 
@@ -987,11 +957,10 @@ TestStringResults(
 							 thePrintWriter,
 							 theStringTestExpectedOutput[i],
 							 theXPathEnvSupport,
-							 theXPathSupport,
-							 theXObjectFactory,
 							 0,
 							 ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
-							 NodeRefList());
+							 NodeRefList(),
+							 theExecutionContext);
 		}
 		catch(...)
 		{
@@ -1098,12 +1067,12 @@ const bool	theBooleanTestExpectedOutput[] =
 
 void
 TestBooleanResults(
-			XPathFactory&		theXPathFactory,
-			XObjectFactory&		theXObjectFactory,
-			XPathProcessor&		theXPathProcessor,
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport&		theXPathSupport,
-			PrintWriter&		thePrintWriter)
+			XPathFactory&			theXPathFactory,
+			XPathProcessor&			theXPathProcessor,
+			XPathEnvSupport&		theXPathEnvSupport,
+			XPathSupport&			theXPathSupport,
+			PrintWriter&			thePrintWriter,
+			XPathExecutionContext&	theExecutionContext)
 {
 	assert(sizeof(theBooleanTestInput) / sizeof(theBooleanTestInput[0]) ==
 				sizeof(theBooleanTestExpectedOutput) / sizeof(theBooleanTestExpectedOutput[0]));
@@ -1123,11 +1092,10 @@ TestBooleanResults(
 							  thePrintWriter,
 							  theBooleanTestExpectedOutput[i],
 							  theXPathEnvSupport,
-							  theXPathSupport,
-							  theXObjectFactory,
 							  0,
 							  ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
-							  NodeRefList());
+							  NodeRefList(),
+							  theExecutionContext);
 		}
 		catch(...)
 		{
@@ -1176,13 +1144,13 @@ GetXSLFileName(const XalanDOMString&		theXMLFileName)
 void
 TestAxes(
 			XPathFactory&			theXPathFactory,
-			XObjectFactory&			theXObjectFactory,
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
 			XMLParserLiaison&		theLiaison,
 			const XalanDOMString&	theDirectory,
-			PrintWriter&			thePrintWriter)
+			PrintWriter&			thePrintWriter,
+			XPathExecutionContext&	theExecutionContext)
 {
 	const XalanDOMString		theProtocol(XALAN_STATIC_UCODE_STRING("file://"));
 	const XalanDOMString		theBaseURL = theProtocol + theDirectory;
@@ -1222,12 +1190,12 @@ TestAxes(
 				TestAxisResult(theXPathProcessor,
 							   theXPathEnvSupport,
 							   theXPathSupport,
-							   theXObjectFactory,
 							   theLiaison,
 							   theXPathFactory,
 							   theXMLFileName,
 							   theXSLFileName,
-							   thePrintWriter);
+							   thePrintWriter,
+							   theExecutionContext);
 			}
 			catch(...)
 			{
@@ -1242,43 +1210,43 @@ TestAxes(
 
 void
 RunTests(
-			XPathFactory&		theXPathFactory,
-			XObjectFactory&		theXObjectFactory,
-			XPathProcessor&		theXPathProcessor,
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport&		theXPathSupport,
-			XMLParserLiaison&	theLiaison,
-			PrintWriter&		thePrintWriter)
+			XPathFactory&			theXPathFactory,
+			XPathProcessor&			theXPathProcessor,
+			XPathEnvSupport&		theXPathEnvSupport,
+			XPathSupport&			theXPathSupport,
+			XMLParserLiaison&		theLiaison,
+			PrintWriter&			thePrintWriter,
+			XPathExecutionContext&	theExecutionContext)
 {
 	TestNumericResults(theXPathFactory,
-					   theXObjectFactory,
 					   theXPathProcessor,
 					   theXPathEnvSupport,
 					   theXPathSupport,
-					   thePrintWriter);
+					   thePrintWriter,
+					   theExecutionContext);
 
 	TestStringResults(theXPathFactory,
-					  theXObjectFactory,
 					  theXPathProcessor,
 					  theXPathEnvSupport,
 					  theXPathSupport,
-					  thePrintWriter);
+					  thePrintWriter,
+					  theExecutionContext);
 
 	TestBooleanResults(theXPathFactory,
-					   theXObjectFactory,
 					   theXPathProcessor,
 					   theXPathEnvSupport,
 					   theXPathSupport,
-					   thePrintWriter);
+					   thePrintWriter,
+					   theExecutionContext);
 
 	TestAxes(theXPathFactory,
-			 theXObjectFactory,
 			 theXPathProcessor,
 		     theXPathEnvSupport,
 			 theXPathSupport,
 			 theLiaison,
 			 XALAN_STATIC_UCODE_STRING("/testsuite/conf/Axes/"),
-			 thePrintWriter);
+			 thePrintWriter,
+		     theExecutionContext);
 }
 
 
@@ -1293,24 +1261,28 @@ main(int			/* argc */,
 
 	XMLPlatformUtils::Initialize();
 
-	XPathEnvSupportDefault		theXPathEnvSupport;
-	DOMSupportDefault			theDOMSupport;
-	XPathSupportDefault			theXPathSupport(theDOMSupport);
-	XObjectFactoryDefault		theXObjectFactory;
-	XPathFactoryDefault			theXPathFactory;
-	XPathProcessorImpl			theXPathProcessor;
+	XPathEnvSupportDefault			theXPathEnvSupport;
+	DOMSupportDefault				theDOMSupport;
+	XPathSupportDefault				theXPathSupport(theDOMSupport);
+	XObjectFactoryDefault			theXObjectFactory;
+	XPathFactoryDefault				theXPathFactory;
+	XPathProcessorImpl				theXPathProcessor;
+
+	XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupport,
+														theXPathSupport,
+														theXObjectFactory);
 
 	XercesStdTextOutputStream	theStdOut(cout);
 	XercesDOMPrintWriter		thePrintWriter(theStdOut);
 	XercesParserLiaison			theLiaison(theDOMSupport);
 
 	RunTests(theXPathFactory,
-			 theXObjectFactory,
 			 theXPathProcessor,
 			 theXPathEnvSupport,
 		     theXPathSupport,
 			 theLiaison,
-			 thePrintWriter);
+			 thePrintWriter,
+			 theExecutionContext);
 
 	return 0;
 }
