@@ -592,6 +592,14 @@ SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanFileOutputStream.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanFStreamOutputStream.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanFStreamOutputStream.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanLocator.hpp
 # End Source File
 # Begin Source File
