@@ -206,7 +206,7 @@ XalanOutputTranscoder*
 XalanTranscodingServices::makeNewTranscoder(
 			const XalanDOMString&	theEncodingName,
 			eCode&					theResult,
-			unsigned int			theBlockSize)
+			size_t					theBlockSize)
 {
 	assert(XMLPlatformUtils::fgTransService != 0);
 

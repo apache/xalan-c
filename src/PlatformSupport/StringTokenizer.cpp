@@ -287,8 +287,8 @@ StringTokenizer::countTokens() const
 
 
 
-unsigned int
-StringTokenizer::FindNextDelimiterIndex(unsigned int	theStartIndex) const
+XalanDOMString::size_type
+StringTokenizer::FindNextDelimiterIndex(XalanDOMString::size_type	theStartIndex) const
 {
 	bool						fTokenFound = false;
 

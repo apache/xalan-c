@@ -153,8 +153,8 @@ XalanOutputStream::transcode(
 		// Keep track of the total bytes we've added to the
 		// destination vector, and the total bytes we've
 		// eaten from theBuffer.
-		unsigned int			theTotalBytesFilled = 0;
-		unsigned int			theTotalBytesEaten = 0;
+		size_t	theTotalBytesFilled = 0;
+		size_t	theTotalBytesEaten = 0;
 
 		// Keep track of the current position in the input buffer,
 		// and amount remaining in the buffer, since we may not be
@@ -176,8 +176,8 @@ XalanOutputStream::transcode(
 			// Resize the buffer...
 			theDestination.resize(theDestinationSize + 1);
 
-			unsigned int						theSourceBytesEaten = 0;
-			unsigned int						theTargetBytesEaten = 0;
+			size_t	theSourceBytesEaten = 0;
+			size_t	theTargetBytesEaten = 0;
 
 			XalanTranscodingServices::eCode		theResult =
 				m_transcoder->transcode(

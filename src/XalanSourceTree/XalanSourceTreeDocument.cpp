@@ -872,7 +872,7 @@ XalanSourceTreeDocument::getNamespaceForPrefix(
 XalanSourceTreeText*
 XalanSourceTreeDocument::createTextNode(
 			const XalanDOMChar*			chars,
-			unsigned int				length,
+			XalanDOMString::size_type	length,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling)
@@ -906,7 +906,7 @@ XalanSourceTreeDocument::createTextNode(
 XalanSourceTreeText*
 XalanSourceTreeDocument::createTextIWSNode(
 			const XalanDOMChar*			chars,
-			unsigned int				length,
+			XalanDOMString::size_type	length,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling)

@@ -140,6 +140,8 @@ XalanToXercesTranscoderWrapper::transcode(
 
 	try
 	{
+		XercesSizeType	theXercesSourceCharsTranscoded = 0;
+
 		assert(XercesSizeType(theSourceCount) == theSourceCount);
 		assert(XercesSizeType(theTargetSize) == theTargetSize);
 
@@ -149,9 +151,10 @@ XalanToXercesTranscoderWrapper::transcode(
 			XercesSizeType(theSourceCount),
 			theTarget,
 			XercesSizeType(theTargetSize),
-			theSourceCharsTranscoded,
+			theXercesSourceCharsTranscoded,
 			theCharSizes);
 
+		theSourceCharsTranscoded = theXercesSourceCharsTranscoded;
 		theTargetBytesUsed = theXercesTargetBytesUsed;
 	}
 	catch(const XMLException&)

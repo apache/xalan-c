@@ -94,7 +94,7 @@ XalanDOMStringPool::clear()
 
 
 
-unsigned int
+size_t
 XalanDOMStringPool::size() const
 {
 	assert(m_stringCount == m_hashTable.size());

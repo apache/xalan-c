@@ -517,11 +517,11 @@ FormatterToHTML::characters(
 
 bool
 FormatterToHTML::accumDefaultEntity(
-		XalanDOMChar		ch,
-		unsigned int		i,
-		const XalanDOMChar	chars[],
-		unsigned int		len,
-		bool				escLF)
+		XalanDOMChar				ch,
+		XalanDOMString::size_type	i,
+		const XalanDOMChar			chars[],
+		XalanDOMString::size_type	len,
+		bool						escLF)
 {
 	if(FormatterToXML::accumDefaultEntity(ch, i, chars, len, escLF) == false)
 	{	

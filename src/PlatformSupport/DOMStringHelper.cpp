@@ -171,7 +171,7 @@ DOMStringHelperTerminate()
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
 indexOf(
 			const XalanDOMChar*		theString,
 			const XalanDOMChar*		theSubstring)
@@ -190,9 +190,9 @@ indexOf(
 	}
 	else
 	{
-		bool			fMatch = false;
+		bool						fMatch = false;
 
-		unsigned int	theStringIndex = 0;
+		XalanDOMString::size_type	theStringIndex = 0;
 
 		// While we haven't matched, and we haven't finished with the
 		// first string, and the number of characters left in the first
@@ -240,7 +240,7 @@ indexOf(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
 indexOf(
 			const XalanDOMString&	theString,
 			const XalanDOMString&	theSubstring)
@@ -261,7 +261,7 @@ indexOf(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
 lastIndexOf(
 			const XalanDOMChar*		theString,
 			XalanDOMChar			theChar)
@@ -916,10 +916,10 @@ compare(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compare(
-			const XalanDOMChar*		theLHS,
-			unsigned int			theLHSLength,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theRHSLength)
+			const XalanDOMChar*			theLHS,
+			XalanDOMString::size_type	theLHSLength,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theRHSLength)
 {
 	return doCompare(
 				theLHS,
@@ -933,10 +933,10 @@ compare(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compareIgnoreCaseASCII(
-			const XalanDOMChar*		theLHS,
-			unsigned int			theLHSLength,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theRHSLength)
+			const XalanDOMChar*			theLHS,
+			XalanDOMString::size_type	theLHSLength,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theRHSLength)
 {
 	return doCompare(
 				theLHS,
@@ -950,10 +950,10 @@ compareIgnoreCaseASCII(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 collationCompare(
-			const XalanDOMChar*		theLHS,
-			unsigned int			theLHSLength,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theRHSLength)
+			const XalanDOMChar*			theLHS,
+			XalanDOMString::size_type	theLHSLength,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theRHSLength)
 {
 	return doCollationCompare(
 				theLHS,
@@ -1048,9 +1048,9 @@ doEqualsIgnoreCase(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 equals(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theLength)
+			const XalanDOMChar*			theLHS,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theLength)
 {
 	return doEquals(
 				theLHS,
@@ -1063,9 +1063,9 @@ equals(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 equalsIgnoreCaseASCII(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theLength)
+			const XalanDOMChar*			theLHS,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theLength)
 {
 	return doEqualsIgnoreCase(
 				theLHS,
@@ -1738,13 +1738,13 @@ isXMLWhitespace(const XalanDOMString&	string)
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isXMLWhitespace(
-			const XalanDOMChar		ch[],
-			unsigned int			start,
-			unsigned int			length)
+			const XalanDOMChar			ch[],
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length)
 {
-	const unsigned int	end = start + length;
+	const XalanDOMString::size_type		end = start + length;
 
-	for(unsigned int s = start; s < end; s++) 
+	for(XalanDOMString::size_type s = start; s < end; s++) 
 	{
 		if (!isXMLWhitespace(ch[s]))	
 			return false;

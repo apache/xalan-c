@@ -385,8 +385,8 @@ consumeWhitespace(const XalanDOMChar*&	theString)
 
 inline void
 consumeWhitespace(
-			const XalanDOMChar*&	theString,
-			unsigned int&			theLength)
+			const XalanDOMChar*&		theString,
+			XalanDOMString::size_type&	theLength)
 {
 	while(*theString != 0 &&
 		  isXMLWhitespace(*theString))
@@ -528,11 +528,11 @@ doValidate(const XalanDOMChar*	theString)
 #if defined(XALAN_NON_ASCII_PLATFORM)
 void
 translateWideString(
-			const XalanDOMChar*		theWideString,
-			char*					theNarrowString,
-			unsigned int			theStringLength)
+			const XalanDOMChar*			theWideString,
+			char*						theNarrowString,
+			XalanDOMString::size_type	theStringLength)
 {
-	for(unsigned int i = 0; i < theStringLength; ++i)
+	for(XalanDOMString::size_type i = 0; i < theStringLength; ++i)
 	{
 		switch(theWideString[i])
 		{
@@ -628,7 +628,7 @@ convertHelper(
 #if defined(XALAN_NON_ASCII_PLATFORM)
 			translateWideString(theString, theBuffer, theLength);
 #else
-			for(unsigned int i = 0; i < theLength; ++i)
+			for(XalanDOMString::size_type i = 0; i < theLength; ++i)
 			{
 				theBuffer[i] = char(theString[i]);
 			}
