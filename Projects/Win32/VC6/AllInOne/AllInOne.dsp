@@ -148,6 +148,10 @@ SOURCE=..\..\..\..\src\Include\XalanAutoPtr.hpp
 
 SOURCE=..\..\..\..\src\Include\XalanObjectCache.hpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\Include\XalanVersion.hpp
+# End Source File
 # End Group
 # Begin Group "XalanDOM"
 
@@ -534,6 +538,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanAllocator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanArrayAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanBitmap.cpp
 # End Source File
 # Begin Source File
@@ -603,6 +611,14 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanLocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanNamespace.hpp
 # End Source File
 # Begin Source File
 
@@ -763,6 +779,10 @@ SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\DOMSupport\XalanNamespacesStack.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\DOMSupport\XalanNamespacesStack.hpp
 # End Source File
 # End Group
 # Begin Group "XPath"
@@ -1638,7 +1658,15 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapper.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapper.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapperAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapperAllocator.hpp
 # End Source File
 # Begin Source File
 
@@ -1738,6 +1766,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentWrapper.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentWrapper.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOM_NodeHack.cpp
 # End Source File
 # Begin Source File
@@ -1782,6 +1814,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWalker.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWalker.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWrapperException.cpp
 # End Source File
 # Begin Source File
@@ -1818,7 +1854,15 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapper.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapper.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapperAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapperAllocator.hpp
 # End Source File
 # Begin Source File
 
@@ -1882,6 +1926,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapWrapper.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapWrapper.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListBridge.cpp
 # End Source File
 # Begin Source File
@@ -1891,6 +1939,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListBridge.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListWrapper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListWrapper.hpp
 # End Source File
 # Begin Source File
 
@@ -1958,7 +2010,15 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapper.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapper.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapperAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapperAllocator.hpp
 # End Source File
 # Begin Source File
 
@@ -1990,7 +2050,15 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperNavigator.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperNavigator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.hpp
 # End Source File
 # End Group
 # Begin Group "XalanSourceTree"
@@ -2027,14 +2095,6 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributesVector.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributesVector.hpp
 # End Source File
 # Begin Source File
 
@@ -2826,11 +2886,55 @@ SOURCE=..\..\..\..\src\XSLT\XalanAVTAllocator.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\XalanAVTAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\XalanAVTPartSimpleAllocator.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\XalanAVTPartSimpleAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\XalanAVTPartXPathAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanAVTPartXPathAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemLiteralResultAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemLiteralResultAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemTemplateAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemTemplateAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemValueOfAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemValueOfAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemVariableAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemVariableAllocator.hpp
 # End Source File
 # Begin Source File
 
@@ -2855,10 +2959,6 @@ SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentFragmentAllocator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentFragmentAllocator.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XSLT\XalanTemplate.cpp
 # End Source File
 # Begin Source File
 

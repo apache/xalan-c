@@ -148,6 +148,10 @@ SOURCE=..\..\..\..\src\Include\XalanAutoPtr.hpp
 
 SOURCE=..\..\..\..\src\Include\XalanObjectCache.hpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\Include\XalanVersion.hpp
+# End Source File
 # End Group
 # Begin Group "XalanDOM"
 
@@ -534,6 +538,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanAllocator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanArrayAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanBitmap.cpp
 # End Source File
 # Begin Source File
@@ -603,6 +611,14 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanLocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanNamespace.hpp
 # End Source File
 # Begin Source File
 
@@ -2082,14 +2098,6 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributesVector.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributesVector.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttrNS.cpp
 # End Source File
 # Begin Source File
@@ -2878,11 +2886,55 @@ SOURCE=..\..\..\..\src\XSLT\XalanAVTAllocator.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\XalanAVTAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\XalanAVTPartSimpleAllocator.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\XalanAVTPartSimpleAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\XalanAVTPartXPathAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanAVTPartXPathAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemLiteralResultAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemLiteralResultAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemTemplateAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemTemplateAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemValueOfAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemValueOfAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemVariableAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemVariableAllocator.hpp
 # End Source File
 # Begin Source File
 
@@ -2907,10 +2959,6 @@ SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentFragmentAllocator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentFragmentAllocator.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XSLT\XalanTemplate.cpp
 # End Source File
 # Begin Source File
 
