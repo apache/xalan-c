@@ -121,15 +121,10 @@ XSLTProcessorEnvSupportDefault::parseXML(
 	}
 	else
 	{
-		XMLParserLiaison& parserLiaison = m_processor->getXMLParserLiaison() ;
-		if (0 != m_processor)
-		{
-			XMLURL xslURL(c_wstr(base), c_wstr(urlString));
-			XSLTInputSource		inputSource(xslURL.getURLText());
-			return parserLiaison.parseXMLStream(inputSource);
-		}
-		else
-			return DOM_Document();
+		XMLParserLiaison& parserLiaison = m_processor->getXMLParserLiaison();
+		XMLURL xslURL(c_wstr(base), c_wstr(urlString));
+		XSLTInputSource		inputSource(xslURL.getURLText());
+		return parserLiaison.parseXMLStream(inputSource);
 	}
 }
 
