@@ -4,7 +4,6 @@
 
 
 #include <cassert>
-#include <csignal>
 #include <ctime>
 
 
@@ -182,11 +181,14 @@ signalHandler(DWORD		theSignalType)
 	}
 }
 #elif defined(XALAN_POSIX2_AVAILABLE)
+extern "C"
+{
 static void
 signalHandler(int)
 {
 	fContinue = false;
 }
+};
 #else
 #error Unsupported platform!
 #endif
@@ -397,7 +399,11 @@ doThreads(
 				signalHandler,
 				TRUE);
 #elif defined(XALAN_POSIX2_AVAILABLE)
+#if defined(XALAN_SIGNAL_IN_STD)
+		std::signal(SIGINT, signalHandler);
+#else
 		signal(SIGINT, signalHandler);
+#endif
 #else
 #error Unsupported platform!
 #endif

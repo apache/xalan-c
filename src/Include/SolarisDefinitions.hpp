@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -87,6 +87,7 @@
 #if __SUNPRO_CC_COMPAT >= 5
 
 #define XALAN_SIZE_T_IN_NAMESPACE_STD
+#define XALAN_SIGNAL_IN_STD
 
 // A copy constructor should not need to be accessible to allow
 // implicit construction from a conversion constructor.  However,
