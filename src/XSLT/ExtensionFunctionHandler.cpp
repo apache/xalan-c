@@ -207,7 +207,10 @@ bool ExtensionFunctionHandler::isFunctionAvailable (const DOMString& function)
  * @exception IOException           if loading trouble
  * @exception SAXException          if parsing trouble
  */
-XObject* ExtensionFunctionHandler::callFunction(const DOMString& funcName, const ArgVector& args)
+XObject*
+ExtensionFunctionHandler::callFunction(
+			const DOMString&	/* funcName */,
+			const ArgVector&	/* args */)
 {
 	assert(0);	// @@ TODO: Not implemented
 	if (!m_componentStarted) 

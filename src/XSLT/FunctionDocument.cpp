@@ -88,7 +88,6 @@ FunctionDocument::~FunctionDocument()
 static DOM_Document
 getDoc(
 			XPathExecutionContext&	executionContext,
-			const DOM_Node&			context,
 			const DOMString&		uri,
 			const DOMString&		base)
 {
@@ -222,7 +221,7 @@ FunctionDocument::execute(
 					base = DOMString();
 				}
 
-				const DOM_Document	newDoc = getDoc(executionContext, context, ref, base);
+				const DOM_Document	newDoc = getDoc(executionContext, ref, base);
 
 				if(newDoc != 0)
 				{

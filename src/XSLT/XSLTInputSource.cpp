@@ -86,7 +86,7 @@ XSLTInputSource::XSLTInputSource(const char* const systemId, const char* const p
   *
   * @param byteStream The raw byte stream containing the document.
   */
-XSLTInputSource::XSLTInputSource (InputStream* byteStream) : InputSource("") 
+XSLTInputSource::XSLTInputSource (InputStream* /* byteStream */) : InputSource("") 
 {
 	// @@ JMD: These are not in the C++ InputSource class
 	assert(0);	// @@ ??
@@ -100,7 +100,7 @@ XSLTInputSource::XSLTInputSource (InputStream* byteStream) : InputSource("")
   * for resolving relative URIs, and setPublicId to include a 
   * public identifier.</p>
   */
-XSLTInputSource::XSLTInputSource (Reader* characterStream) : InputSource("") 
+XSLTInputSource::XSLTInputSource (Reader* /* characterStream */) : InputSource("") 
 {
 	// @@ JMD: These are not in the C++ InputSource class
 	assert(0);	// @@ ??
