@@ -534,8 +534,6 @@ public:
 		}
 		else
 		{
-			assert(length(n.getNodeName()) != 0);
-
 			return n.getNodeName();
 		}
 	}
@@ -550,6 +548,22 @@ public:
 	 */
 	static const XalanDOMString&
 	getNamespaceOfNode(const XalanNode&	n);
+
+	/**
+	 * Determine whether or not an attribute node
+	 * is declaring a namespace.
+	 * 
+	 * @param node	DOM node to check
+	 * @return true if the attribute is declaring a namespace, false if not.
+	 */
+	static bool
+	isNamespaceDeclaration(const XalanAttr&		n)
+	{
+		const XalanDOMString&	theName = n.getNodeName();
+
+		return startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true ||
+				equals(theName, DOMServices::s_XMLNamespace) == true;
+	}
 
 	/**
 	 * Retrieve the parent of a node. This function has to be implemented,
