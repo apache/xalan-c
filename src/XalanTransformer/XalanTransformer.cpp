@@ -195,12 +195,6 @@ XalanTransformer::initialize()
 	// Initialize Xalan. 
 	s_xsltInit = new XSLTInit;
 
-	XalanExtensionsInstaller::installGlobal();
-	XalanEXSLTCommonFunctionsInstaller::installGlobal();
-	XalanEXSLTMathFunctionsInstaller::installGlobal();
-	XalanEXSLTSetFunctionsInstaller::installGlobal();
-	XalanEXSLTStringFunctionsInstaller::installGlobal();
-
 #if defined(XALAN_USE_ICU)
 	theICUFunctor = new ICUBridgeCollationCompareFunctor;
 
@@ -224,12 +218,6 @@ XalanTransformer::terminate()
 #endif
 
 	s_xsltInit = 0;
-
-	XalanExtensionsInstaller::uninstallGlobal();
-	XalanEXSLTCommonFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTMathFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTSetFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
 
 #if defined(XALAN_USE_ICU)
 	XPath::uninstallFunction(
