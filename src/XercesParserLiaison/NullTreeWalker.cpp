@@ -60,7 +60,12 @@
 
 
 
-NullTreeWalker::NullTreeWalker()
+#include <XalanDOM/XalanNode.hpp>
+
+
+
+NullTreeWalker::NullTreeWalker(bool		makeCalls) :
+	m_makeCalls(makeCalls)
 {
 }
 
@@ -73,15 +78,31 @@ NullTreeWalker::~NullTreeWalker()
 
 
 void
-NullTreeWalker::startNode(const XalanNode*	/* node */)
+NullTreeWalker::startNode(const XalanNode*	node)
 {
+	if (m_makeCalls == true)
+	{
+		node->getParentNode();
+		node->getPreviousSibling();
+		node->getNextSibling();
+		node->getFirstChild();
+		node->getLastChild();
+	}
 }
 
 
 
 void
-NullTreeWalker::startNode(XalanNode*	/* node */)
+NullTreeWalker::startNode(XalanNode*	node)
 {
+	if (m_makeCalls == true)
+	{
+		node->getParentNode();
+		node->getPreviousSibling();
+		node->getNextSibling();
+		node->getFirstChild();
+		node->getLastChild();
+	}
 }
 
 

@@ -75,7 +75,7 @@ public:
 	/**
 	 * Constructor.
 	 */
-	NullTreeWalker();
+	NullTreeWalker(bool		makeCalls = false);
 
 	virtual
 	~NullTreeWalker();
@@ -95,6 +95,8 @@ protected:
 	endNode(XalanNode*	node);
 
 private:
+
+	const bool	m_makeCalls;
 };
 
 
