@@ -779,12 +779,26 @@ private:
 	 */
 	static const XalanDOMCharVectorType&	s_defaultVersionString;
 
+	/**
+ 	 * The string "-//W3C//DTD XHTML".
+ 	 */
+ 	static const XalanDOMString&			s_xhtmlDocType;
 
-	DOMCharBufferType				m_charBuf;
+	/**
+ 	 * The string "ISO-8859-1"
+ 	 */
+ 	static const XalanDOMString&			s_iso88591String;
 
-	DOMCharBufferType::size_type	m_pos;
+	/**
+ 	 * The string "]]>".
+ 	 */
+ 	static const XalanDOMString&			s_dtdCDATACloseString;
 
-	ByteBufferType					m_byteBuf;
+	DOMCharBufferType							m_charBuf;
+
+	DOMCharBufferType::size_type				m_pos;
+
+	ByteBufferType								m_byteBuf;
 
 	static const DOMCharBufferType::size_type	s_maxBufferSize;
 

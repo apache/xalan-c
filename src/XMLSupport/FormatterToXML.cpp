@@ -141,7 +141,7 @@ FormatterToXML::FormatterToXML(
 	{
 		if(startsWith(
 			m_doctypePublic,
-			XALAN_STATIC_UCODE_STRING("-//W3C//DTD XHTML")) == true)
+			s_xhtmlDocType) == true)
 		{
 			m_spaceBeforeClose = true;
 		}
@@ -586,8 +586,8 @@ FormatterToXML::startDocument()
 			accum(s_xmlHeaderEncodingString);	// "\" encoding=\""
 
 			if (isEmpty(m_encoding) == true)
-			{
-				accum(XALAN_STATIC_UCODE_STRING("ISO-8859-1"));
+			{	
+				accum(s_iso88591String);
 			}
 			else
 			{
@@ -895,7 +895,7 @@ FormatterToXML::writeNormalizedChars(
 		{
 			if(i != 0)
 			{
-				accum(XALAN_STATIC_UCODE_STRING("]]>"));
+				accum(s_dtdCDATACloseString);
 			}
 
 			// This needs to go into a function... 
@@ -1555,6 +1555,11 @@ static XalanDOMCharVectorType	s_xmlHeaderStandaloneString;
 
 static XalanDOMCharVectorType	s_xmlHeaderEndString;
 
+static XalanDOMString			s_xhtmlDocType;
+
+static XalanDOMString			s_iso88591String;
+
+static XalanDOMString			s_dtdCDATACloseString;
 
 
 const XalanDOMCharVectorType&	FormatterToXML::s_xsltNextIsRawString = ::s_xsltNextIsRawString;
@@ -1579,7 +1584,13 @@ const XalanDOMCharVectorType&	FormatterToXML::s_xmlHeaderStandaloneString = ::s_
 
 const XalanDOMCharVectorType&	FormatterToXML::s_xmlHeaderEndString = ::s_xmlHeaderEndString;
 
-bool							FormatterToXML::s_javaEncodingIsISO = false; 
+bool							FormatterToXML::s_javaEncodingIsISO = false;
+
+const XalanDOMString&			FormatterToXML::s_xhtmlDocType = ::s_xhtmlDocType;
+
+const XalanDOMString&			FormatterToXML::s_iso88591String = ::s_iso88591String;
+
+const XalanDOMString&			FormatterToXML::s_dtdCDATACloseString = ::s_dtdCDATACloseString;
 
 const FormatterToXML::DOMCharBufferType::size_type	FormatterToXML::s_maxBufferSize = 512;
 
@@ -1620,6 +1631,15 @@ FormatterToXML::initialize()
 
 	::s_xmlHeaderEndString =
 		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("\"?>")));
+
+	::s_xhtmlDocType = 
+		XALAN_STATIC_UCODE_STRING("-//W3C//DTD XHTML");
+				
+	::s_iso88591String = 
+		XALAN_STATIC_UCODE_STRING("ISO-8859-1");
+
+	::s_dtdCDATACloseString =
+		XALAN_STATIC_UCODE_STRING("]]>");
 }
 
 
@@ -1648,4 +1668,10 @@ FormatterToXML::terminate()
 	XalanDOMCharVectorType().swap(::s_xmlHeaderStandaloneString);
 
 	XalanDOMCharVectorType().swap(::s_xmlHeaderEndString);
+
+	clear(::s_xhtmlDocType);
+
+	clear(::s_iso88591String);	
+
+	clear(::s_dtdCDATACloseString);
 }
