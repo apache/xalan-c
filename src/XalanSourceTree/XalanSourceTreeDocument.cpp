@@ -970,8 +970,6 @@ XalanSourceTreeDocument::createAttribute(
 				theOwnerElement,
 				m_nextIndexValue++);
 	}
-
-	return 0;
 }
 
 
@@ -1034,8 +1032,6 @@ XalanSourceTreeDocument::createElement(
 				theNextSibling,
 				m_nextIndexValue++);
 	}
-
-	return 0;
 }
 
 
