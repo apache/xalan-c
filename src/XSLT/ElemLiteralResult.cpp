@@ -123,9 +123,13 @@ ElemLiteralResult::ElemLiteralResult(
 			if(!equals(prefix, DOMServices::s_XMLNamespace))
 			{
 				const XalanDOMString* const		ns =
-						getNamespaceForPrefixInternal(prefix, true);
+						getNamespaceForPrefixInternal(prefix);
 
-				if(ns != 0 && equals(*ns, stylesheetTree.getXSLTNamespaceURI()))
+				if(ns == 0)
+				{
+					constructionContext.error("Cannot resolve namespace prefix: " + prefix);
+				}
+				else if(equals(*ns, stylesheetTree.getXSLTNamespaceURI()))
 				{
 					const XalanDOMString localName = substring(aname, indexOfNSSep + 1);
 
@@ -150,7 +154,7 @@ ElemLiteralResult::ElemLiteralResult(
 
 		if(needToProcess == true)
 		{
-			processSpaceAttr(aname, atts, i);
+			processSpaceAttr(aname, atts, i, constructionContext);
 
 			// Add xmlns attribute(except xmlns:xsl), xml:space, etc... 
 			// Ignore anything with xsl:xxx 

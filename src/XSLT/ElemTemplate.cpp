@@ -125,7 +125,7 @@ ElemTemplate::ElemTemplate(
 			break;
 
 		case Constants::TATTRNAME_XMLSPACE:
-			processSpaceAttr(atts, i);
+			processSpaceAttr(atts, i, constructionContext);
 			break;
 
 		default:

@@ -94,7 +94,7 @@ ElemCopy::ElemCopy(
 		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
-				processSpaceAttr(aname, atts, i) ||
+				processSpaceAttr(aname, atts, i, constructionContext) ||
 				isAttrOK(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(

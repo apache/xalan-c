@@ -96,7 +96,8 @@ ElemPI::ElemPI(
 			m_nameAVT = new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
 		}
-		else if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
+		else if(isAttrOK(aname, atts, i, constructionContext) == false ||
+				processSpaceAttr(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
 				"xsl:processing-instruction has an illegal attribute",

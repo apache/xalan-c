@@ -109,7 +109,7 @@ ElemAttribute::ElemAttribute(
 				*this, constructionContext);
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
-			processSpaceAttr(aname, atts, i)))
+				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
 				"xsl:attribute has an illegal attribute",

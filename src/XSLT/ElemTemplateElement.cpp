@@ -100,6 +100,7 @@
 #include "NamespacesHandler.hpp"
 #include "NodeSorter.hpp"
 #include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 #include "StylesheetRoot.hpp"
 #include "SelectionEvent.hpp"
@@ -197,8 +198,9 @@ ElemTemplateElement::isAttrOK(
 
 void
 ElemTemplateElement::processSpaceAttr(
-			const AttributeList&	atts,
-			int						which)
+			const AttributeList&			atts,
+			int								which,
+			StylesheetConstructionContext&	constructionContext)
 {
 	const XalanDOMChar*	const	spaceVal = atts.getValue(which);
 
@@ -212,7 +214,7 @@ ElemTemplateElement::processSpaceAttr(
 	}
 	else
 	{
-		error("xml:space has an illegal value");
+		constructionContext.error("xml:space has an illegal value");
 	}
 }
 
@@ -220,9 +222,10 @@ ElemTemplateElement::processSpaceAttr(
 
 bool
 ElemTemplateElement::processSpaceAttr(
-			const XalanDOMChar*		aname, 
-			const AttributeList&	atts,
-			int						which)
+			const XalanDOMChar*				aname, 
+			const AttributeList&			atts,
+			int								which,
+			StylesheetConstructionContext&	constructionContext)
 {
     const bool	isSpaceAttr = equals(aname, Constants::ATTRNAME_XMLSPACE);
 
@@ -240,7 +243,7 @@ ElemTemplateElement::processSpaceAttr(
 		}
 		else
 		{
-			error("xml:space has an illegal value");
+			constructionContext.error("xml:space has an illegal value");
 		}
     }
 
@@ -923,24 +926,6 @@ ElemTemplateElement::transformChild(
 
 
 
-void
-ElemTemplateElement::error(const XalanDOMString&	msg) const
-{
-	XalanDOMString errMsg("ElemTemplateElement error: " + msg);
-
-	throw SAXException(c_wstr(errMsg));
-}
-
-
-
-void
-ElemTemplateElement::error(const char*	msg) const
-{
-	error(TranscodeFromLocalCodePage(msg));
-}
-
-
-
 const XalanDOMString&
 ElemTemplateElement::getNodeName() const
 {
@@ -1431,31 +1416,23 @@ ElemTemplateElement::getElementsByTagNameNS(
 const XalanDOMString*
 ElemTemplateElement::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
-	return getNamespaceForPrefixInternal(prefix, false);
+	return getNamespaceForPrefixInternal(prefix);
 }
 
 
 
 const XalanDOMString*
-ElemTemplateElement::getNamespaceForPrefixInternal(
-			const XalanDOMString&	prefix,
-			bool					fReportError) const
+ElemTemplateElement::getNamespaceForPrefixInternal(const XalanDOMString&	prefix) const
 {
     const XalanDOMString*	nameSpace = 0;
 
 	if (isEmpty(prefix) == false)
 	{
-		bool			fEmptyIsError = true;
-
 		if(m_finishedConstruction == true)
 		{
 			if (equals(prefix, DOMServices::s_XMLString) == true)
 			{
 				nameSpace = &DOMServices::s_XMLNamespaceURI;
-			}
-			else if (equals(prefix, DOMServices::s_XMLNamespace) == true)
-			{
-				fEmptyIsError = false;
 			}
 			else
 			{
@@ -1465,7 +1442,7 @@ ElemTemplateElement::getNamespaceForPrefixInternal(
 				{
 					if (m_parentNode != 0)
 					{
-						nameSpace = m_parentNode->getNamespaceForPrefixInternal(prefix, false);
+						nameSpace = m_parentNode->getNamespaceForPrefixInternal(prefix);
 					}
 
 					// Try one last time with the stylesheet...
@@ -1479,13 +1456,6 @@ ElemTemplateElement::getNamespaceForPrefixInternal(
 		else
 		{
 			nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
-		}
-
-		if(fReportError == true &&
-		   fEmptyIsError == true &&
-		   nameSpace == 0)
-		{
-			error("Cannot resolve namespace prefix: " + prefix);
 		}
 	}
 

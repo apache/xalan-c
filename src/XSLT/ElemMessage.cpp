@@ -107,7 +107,8 @@ ElemMessage::ElemMessage(
 					this);
 			}
 		}
-		else if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
+		else if(isAttrOK(aname, atts, i, constructionContext) == false ||
+				processSpaceAttr(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
 				"xsl:message has an illegal attribute",

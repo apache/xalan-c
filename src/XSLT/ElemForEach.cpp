@@ -105,7 +105,8 @@ ElemForEach::ElemForEach(
 		{
 			m_selectPattern = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
 		}
-		else if(!(isAttrOK(aname, atts, i, constructionContext) || processSpaceAttr(aname, atts, i)))
+		else if(!(isAttrOK(aname, atts, i, constructionContext) ||
+				processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
 				"xsl:for-each has an illegal attribute",

@@ -156,6 +156,7 @@ public:
 	* @param atts     attribute list where the element comes from (not used at 
 	*                 this time)
 	* @param which    index into the attribute list (not used at this time)
+	* @param constructionContext The current construction context
 	* @return         true if this is a namespace name
 	*/
 	virtual bool
@@ -168,15 +169,16 @@ public:
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
 	 * 
-	 * @param aname name of the attribute in question
 	 * @param atts  attribute list that owns the attribute
 	 * @param which index of the attribute into the attribute list
+	 * @param constructionContext The current construction context
 	 * @return      true if this is a xml:space attribute
 	 */
 	void
 	processSpaceAttr(
-			const AttributeList&	atts,
-			int						which);
+			const AttributeList&			atts,
+			int								which,
+			StylesheetConstructionContext&	constructionContext);
 
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
@@ -184,13 +186,15 @@ public:
 	 * @param aname  name of the attribute in question
 	 * @param atts   attribute list that owns the attribute
 	 * @param which  index of the attribute into the attribute list
+	 * @param constructionContext The current construction context
 	 * @return       true if this is a xml:space attribute
 	 */
 	bool
 	processSpaceAttr(
-			const XalanDOMChar*		aname, 
-			const AttributeList&	atts,
-			int						which);
+			const XalanDOMChar*				aname,
+			const AttributeList&			atts,
+			int								which,
+			StylesheetConstructionContext&	constructionContext);
 
 	/** 
 	 * Validate that the string is an NCName.
@@ -327,22 +331,6 @@ public:
 	 */
 	virtual bool
 	isWhitespace() const;
-
-	/** 
-	 * Throw a template element runtime error.  
-	 * 
-	 * @param msg Description of the error that occurred
-	 */
-	virtual	void
-	error(const XalanDOMString&		msg) const;
-
-	/** 
-	 * Throw a template element runtime error.  
-	 * 
-	 * @param msg Description of the error that occurred
-	 */
-	virtual	void
-	error(const char*	msg) const;
 
 	virtual const XalanDOMString&
 	getElementName() const = 0;
@@ -736,13 +724,11 @@ protected:
 	 * Get the namespace for a given prefix.
 	 * 
 	 * @param prefix The prefix to search for
-	 * @param fReportError If true, and exception will be thrown to report the error.
+	 * @param fExists If not null, set to true if the namespace was defined.
 	 * @return The namespace string.
 	 */
 	const XalanDOMString*
-	getNamespaceForPrefixInternal(
-			const XalanDOMString&	prefix,
-			bool					fReportError) const;
+	getNamespaceForPrefixInternal(const XalanDOMString&		prefix) const;
 
 	/**
 	 * Perform a query if needed, and call transformChild for each child.

@@ -108,8 +108,9 @@ ElemElement::ElemElement(
 			m_namespaceAVT = new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext); 
 		}
-		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) || processSpaceAttr(aname, atts, i) ||
-			isAttrOK(aname, atts, i, constructionContext)))
+		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
+			    processSpaceAttr(aname, atts, i, constructionContext) ||
+				isAttrOK(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 		}

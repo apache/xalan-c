@@ -90,7 +90,8 @@ ElemComment::ElemComment(
 	{
 		const XalanDOMChar*	const	aname = atts.getName(i);
 
-		if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
+		if(isAttrOK(aname, atts, i, constructionContext) == false ||
+		   processSpaceAttr(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
 				"xsl:comment has an illegal attribute",
