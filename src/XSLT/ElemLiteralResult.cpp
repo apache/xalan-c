@@ -245,8 +245,6 @@ ElemLiteralResult::execute(
 
 			StylesheetExecutionContext::GetAndReleaseCachedString	theGuard2(executionContext);
 
-			XalanDOMString&		theStringedValue = theGuard2.get();
-
 			avt->evaluate(theStringedValue, sourceNode, *this, executionContext);
 
 			if (isEmpty(thePrefix) == true ||

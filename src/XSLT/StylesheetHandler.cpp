@@ -1604,7 +1604,7 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 	m_namespaces(),
 	m_namespacesHandler()
 {
-	m_handler.m_accumulateText.clear();
+	clear(m_handler.m_accumulateText);
 	m_handler.m_elemStack.clear();
 	m_handler.m_pTemplate = 0;
 	m_handler.m_lastPopped = 0;
@@ -1633,7 +1633,7 @@ StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 			 m_handler.m_elemStack.end(),
 			 DeleteFunctor<ElemTemplateElement>());
 
-	m_handler.m_accumulateText.clear();
+	clear(m_handler.m_accumulateText);
 	m_handler.m_elemStack = m_elemStack;
 	m_handler.m_elemStackParentedElements = m_elemStackParentedElements;
 	m_handler.m_pTemplate = m_pTemplate;

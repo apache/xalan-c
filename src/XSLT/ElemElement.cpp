@@ -226,16 +226,12 @@ ElemElement::execute(
 
 				if(isEmpty(prefix) == false)
 				{
-#if defined(XALAN_USE_XERCES_DOMSTRING)
-					elemName = prefix + DOMServices::s_XMLNamespaceSeparatorString + elemName;
-#else
 					reserve(
 						elemName,
 						length(elemName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(prefix) + 1);
 
 					insert(elemName, 0, DOMServices::s_XMLNamespaceSeparatorString);
 					insert(elemName, 0, prefix);
-#endif
 				}
 				else
 				{
@@ -253,16 +249,12 @@ ElemElement::execute(
 
 					executionContext.addResultAttribute(nsDecl, elemNameSpace);
 
-#if defined(XALAN_USE_XERCES_DOMSTRING)
-					assign(elemName, newPrefix + DOMServices::s_XMLNamespaceSeparatorString + elemName);
-#else
 					reserve(
 						elemName,
 						length(elemName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
 
 					insert(elemName, 0, DOMServices::s_XMLNamespaceSeparatorString);
 					insert(elemName, 0, newPrefix);
-#endif
 				}
 			}
 		}

@@ -114,14 +114,14 @@ const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		Stylesh
 StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 			XSLTEngineImpl&			xsltProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
+			DOMSupport&				theDOMSupport,
 			XObjectFactory&			theXObjectFactory,
 			XalanNode*				theCurrentNode,
 			const NodeRefListBase*	theContextNodeList,
 			const PrefixResolver*	thePrefixResolver) :
 	StylesheetExecutionContext(),
 	m_xpathExecutionContextDefault(theXPathEnvSupport,
-								   theXPathSupport,
+								   theDOMSupport,
 								   theXObjectFactory,
 								   theCurrentNode,
 								   theContextNodeList,
@@ -1335,14 +1335,6 @@ StylesheetExecutionContextDefault::createNodeSet(XalanNode&	theNode)
 
 
 bool
-StylesheetExecutionContextDefault::isIgnorableWhitespace(const XalanText&	node) const
-{
-	return m_xpathExecutionContextDefault.isIgnorableWhitespace(node);
-}
-
-
-
-bool
 StylesheetExecutionContextDefault::isNodeAfter(
 			const XalanNode&	node1,
 			const XalanNode&	node2) const
@@ -1351,14 +1343,6 @@ StylesheetExecutionContextDefault::isNodeAfter(
 }
 
 
-
-const XalanDOMString&
-StylesheetExecutionContextDefault::getNamespaceOfNode(const XalanNode&	theNode) const
-{
-	return m_xpathExecutionContextDefault.getNamespaceOfNode(theNode);
-}
-	
-	
 
 const NodeRefListBase&
 StylesheetExecutionContextDefault::getContextNodeList() const
@@ -1497,14 +1481,6 @@ bool
 StylesheetExecutionContextDefault::releaseCachedString(XalanDOMString&	theString)
 {
 	return m_xpathExecutionContextDefault.releaseCachedString(theString);
-}
-
-
-
-bool
-StylesheetExecutionContextDefault::getProcessNamespaces() const
-{
-	return m_xpathExecutionContextDefault.getProcessNamespaces();
 }
 
 

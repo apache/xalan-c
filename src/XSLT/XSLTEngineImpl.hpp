@@ -132,7 +132,6 @@ class XObject;
 class XPathEnvSupport;
 class XPathFactory;
 class XPathProcessor;
-class XPathSupport;
 class XSLTResultTarget;
 
 
@@ -189,14 +188,13 @@ public:
 	 *
 	 * @param XMLParserLiaison liaison to an object that can help with a
 	 *						   specific parser implementation
-	 * @param xpathSupport	   $$$
-	 * @param xpathEnvSupport  $$$
+	 * @param xpathEnvSupport  An XPathEnvSupport instance
+	 * @param domSupport	   A DOMSupport instance for the DOM being used
 	 * @param xobjectFactory   object responsible for XObject objects
 	 * @param xpathFactory	   object responsible for XPath objects
 	 */
 	XSLTEngineImpl(
 			XMLParserLiaison&	parserLiaison,
-			XPathSupport&		xpathSupport,
 			XPathEnvSupport&	xpathEnvSupport,
 			DOMSupport&			domSupport,
 			XObjectFactory& 	xobjectFactory,
@@ -1011,17 +1009,6 @@ public:
 	reset();
 
 	/**
-	 * Retrieve the XPath support object
-	 *
-	 * @return XPath support object
-	 */
-	XPathSupport&
-	getXPathSupport()
-	{
-		return m_xpathSupport;
-	}
-
-	/**
 	 * Retrieve the XPath environment support object
 	 *
 	 * @return XPath environment support object
@@ -1674,8 +1661,6 @@ public:
 private:
 
 	XMLParserLiaison&	m_parserLiaison;
-
-	XPathSupport&		m_xpathSupport;
 
 	XPathEnvSupport&	m_xpathEnvSupport;
 

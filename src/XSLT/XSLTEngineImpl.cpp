@@ -93,6 +93,7 @@
 
 
 #include <DOMSupport/DOMServices.hpp>
+#include <DOMSupport/DOMSupport.hpp>
 
 
 
@@ -117,8 +118,6 @@
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathFactory.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
-#include <XPath/XPathSupport.hpp>
-#include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XResultTreeFrag.hpp>
 
 
@@ -154,7 +153,6 @@
 
 XSLTEngineImpl::XSLTEngineImpl(
 			XMLParserLiaison&	parserLiaison,
-			XPathSupport&		xpathSupport,
 			XPathEnvSupport&	xpathEnvSupport,
 			DOMSupport&			domSupport,
 			XObjectFactory&		xobjectFactory,
@@ -183,7 +181,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_uniqueNSValue(0),
 	m_topLevelParams(),
 	m_parserLiaison(parserLiaison),
-	m_xpathSupport(xpathSupport),
 	m_xpathEnvSupport(xpathEnvSupport),
 	m_domSupport(domSupport),
 	m_executionContext(0),
@@ -209,10 +206,10 @@ XSLTEngineImpl::reset()
 
 	m_outputContextStack.pushContext();
 
-	m_xpathSupport.reset();
 	m_xpathEnvSupport.reset();
 	m_xpathFactory.reset();
 	m_xobjectFactory.reset();
+	m_domSupport.reset();
 
 	m_resultNamespacesStack.clear();
 }
@@ -628,7 +625,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 	XalanDOMString			stringHolder;
 
-	const XalanDOMString	localXSLURLString = clone(trim(xslURLString));
+	const XalanDOMString	localXSLURLString = trim(xslURLString);
 
 	const unsigned int		fragIndex = indexOf(localXSLURLString, XalanUnicode::charNumberSign);
 
@@ -691,13 +688,10 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		assert(nsNode != 0);
 
 
-		XPathEnvSupportDefault			theXPathEnvSupportDefault;
-		XPathSupportDefault				theXPathSupportDefault(m_domSupport);
+		ElementPrefixResolverProxy		theProxy(nsNode, m_xpathEnvSupport, m_domSupport);
 
-		ElementPrefixResolverProxy		theProxy(nsNode, theXPathEnvSupportDefault, theXPathSupportDefault);
-
-		XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupportDefault,
-															theXPathSupportDefault,
+		XPathExecutionContextDefault	theExecutionContext(m_xpathEnvSupport,
+															m_domSupport,
 															m_xobjectFactory,
 															&fragBase,
 															0,
@@ -868,8 +862,7 @@ XSLTEngineImpl::getXSLToken(const XalanNode&	node) const
 
 	if(XalanNode::ELEMENT_NODE != node.getNodeType()) return tok;
 
-	const XalanDOMString 	ns =
-			m_xpathSupport.getNamespaceOfNode(node);
+	const XalanDOMString& 	ns = node.getNamespaceURI();
 
 	if(equals(ns, s_XSLNameSpaceURL))
 	{
@@ -1476,25 +1469,10 @@ XSLTEngineImpl::addResultAttribute(
 		addResultNamespaceDecl(p, value);
 	}
 
-	attList.removeAttribute(c_wstr(aname));
-
-	if (length(value) > 0)
-	{
-		attList.addAttribute(
-			c_wstr(aname),
-			c_wstr(Constants::ATTRTYPE_CDATA),
-			c_wstr(value));
-	}
-	else
-	{
-		const XalanDOMChar		theDummy = 0;
-
-		attList.addAttribute(
-			c_wstr(aname),
-			c_wstr(Constants::ATTRTYPE_CDATA),
-			&theDummy);
-	}
-
+	attList.addAttribute(
+		c_wstr(aname),
+		c_wstr(Constants::ATTRTYPE_CDATA),
+		c_wstr(value));
 }
 
 
@@ -2401,7 +2379,7 @@ XSLTEngineImpl::evalXPathStr(
 {
 	ElementPrefixResolverProxy	theProxy(&prefixResolver,
 										 m_xpathEnvSupport,
-										 m_xpathSupport);
+										 m_domSupport);
 
 	return evalXPathStr(str, contextNode, theProxy, executionContext);
 }
@@ -2734,11 +2712,13 @@ XSLTEngineImpl::shouldStripSourceNode(
 
 			if(!theTextNode.isIgnorableWhitespace())
 			{
-				if(0 == length(theTextNode.getData()))
+				const XalanDOMString&	data = theTextNode.getData();
+
+				if(0 == length(data))
 				{
 					return true;
 				}
-				else
+				else if(!isXMLWhitespace(data))
 				{
 					return false;
 				}
@@ -2760,7 +2740,7 @@ XSLTEngineImpl::shouldStripSourceNode(
 					double highPreserveScore = XPath::s_MatchScoreNone;
 					double highStripScore = XPath::s_MatchScoreNone;
 
-					ElementPrefixResolverProxy		theProxy(parentElem, m_xpathEnvSupport, m_xpathSupport);
+					ElementPrefixResolverProxy		theProxy(parentElem, m_xpathEnvSupport, m_domSupport);
 
 					{
 						// $$$ ToDo:  All of this should be moved into a member of
@@ -2932,7 +2912,7 @@ XSLTEngineImpl::setStylesheetParam(
 			const XalanDOMString&	theName,
 			const XalanDOMString&	expression)
 {
-	const QNameByValue	qname(theName, 0, m_xpathEnvSupport, m_xpathSupport);
+	const QNameByValue	qname(theName, 0, m_xpathEnvSupport, m_domSupport);
 
 	m_topLevelParams.push_back(ParamVectorType::value_type(qname, expression));
 }
@@ -2944,7 +2924,7 @@ XSLTEngineImpl::setStylesheetParam(
 			const XalanDOMString&	theName,
 			XObjectPtr				theValue)
 {
-	const QNameByValue	qname(theName, 0, m_xpathEnvSupport, m_xpathSupport);
+	const QNameByValue	qname(theName, 0, m_xpathEnvSupport, m_domSupport);
 
 	m_topLevelParams.push_back(ParamVectorType::value_type(qname, theValue));
 }

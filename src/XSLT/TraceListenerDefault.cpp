@@ -128,7 +128,7 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 				static_cast<const ElemTextLiteral&>(ev.m_styleNode);
 #endif
 
-			m_printWriter.println(c_wstr(etl.getText()), etl.getText().size());
+			m_printWriter.println(&*etl.getText().begin(), etl.getText().size());
 		}
 		break;
 

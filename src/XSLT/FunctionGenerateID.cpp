@@ -131,18 +131,11 @@ FunctionGenerateID::execute(
 	{
 		XPathExecutionContext::GetAndReleaseCachedString	theID(executionContext);
 
-#if defined(XALAN_USE_XERCES_DOMSTRING)
-		getSuffix(context, theID);
-		assert(length(theID) != 0);
-
-		return executionContext.getXObjectFactory().createString(m_prefix + theID);
-#else
 		theID.get() = m_prefix;
 
 		getSuffix(context, theID);
 
 		return executionContext.getXObjectFactory().createString(theID);
-#endif
 	}
 }
 

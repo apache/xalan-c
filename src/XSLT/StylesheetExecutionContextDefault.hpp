@@ -85,7 +85,6 @@
 
 
 class XPathProcessor;
-class XPathSupport;
 class XObjectFactory;
 class XSLTEngineImpl;
 
@@ -125,10 +124,21 @@ public:
 	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;
 	typedef VariablesStack::ParamsVectorType			ParamsVectorType;
 
+
+	/**
+	 * Construct a StylesheetExecutionContextDefault object
+	 *
+	 * @param theXPathEnvSupport XPath environment support class instance
+	 * @param theDOMSupport		 DOMSupport class instance
+	 * @param theXobjectFactory  factory class instance for XObjects
+	 * @param theCurrentNode     current node in the source tree
+	 * @param theContextNodeList node list for current context
+	 * @param thePrefixResolver  pointer to prefix resolver to use
+	 */	
 	StylesheetExecutionContextDefault(
 			XSLTEngineImpl&			xsltProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
+			DOMSupport&				theDOMSupport,
 			XObjectFactory&			theXObjectFactory,
 			XalanNode*				theCurrentNode = 0,
 			const NodeRefListBase*	theContextNodeList = 0,
@@ -593,15 +603,9 @@ public:
 	createNodeSet(XalanNode&	theNode);
 
 	virtual bool
-	isIgnorableWhitespace(const XalanText&	node) const;
-
-	virtual bool
 	isNodeAfter(
 			const XalanNode&	node1,
 			const XalanNode&	node2) const;
-
-	virtual const XalanDOMString&
-	getNamespaceOfNode(const XalanNode&	theNode) const;
 
 	virtual const NodeRefListBase&
 	getContextNodeList() const;
@@ -659,9 +663,6 @@ public:
 
 	virtual bool
 	releaseCachedString(XalanDOMString&		theString);
-
-	virtual bool
-	getProcessNamespaces() const;
 
 	virtual void
 	getNodeSetByKey(			

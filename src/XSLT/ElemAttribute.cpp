@@ -197,16 +197,12 @@ ElemAttribute::execute(
 
 				if(isEmpty(prefix) == false)
 				{
-#if defined(XALAN_USE_XERCES_DOMSTRING)
-					assign(attrName, prefix + DOMServices::s_XMLNamespaceSeparatorString + attrName);
-#else
 					reserve(
 						attrName,
 						length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(prefix) + 1);
 
 					insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
 					insert(attrName, 0, prefix);
-#endif
 				}
 				else
 				{
@@ -214,9 +210,6 @@ ElemAttribute::execute(
 
 					executionContext.getUniqueNamespaceValue(newPrefix);
 
-#if defined(XALAN_USE_XERCES_DOMSTRING)
-					const XalanDOMString	nsDecl = DOMServices::s_XMLNamespaceWithSeparator + newPrefix;
-#else
 					StylesheetExecutionContext::GetAndReleaseCachedString	nsDecl(executionContext);
 
 					reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
@@ -224,20 +217,16 @@ ElemAttribute::execute(
 					assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
 					
 					append(nsDecl, newPrefix);
-#endif
+
 					executionContext.addResultAttribute(nsDecl, attrNameSpace);
 
 // $$$ ToDo: Move these blocks (and those in ElemElement.cpp) into a common set of functions...
-#if defined(XALAN_USE_XERCES_DOMSTRING)
-					assign(attrName, newPrefix + DOMServices::s_XMLNamespaceSeparatorString + attrName);
-#else
 					reserve(
 						attrName,
 						length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
 
 					insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
 					insert(attrName, 0, newPrefix);
-#endif
 				}
 			}
 		}

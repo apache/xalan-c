@@ -1375,15 +1375,9 @@ public:
 	createNodeSet(XalanNode&	theNode) = 0;
 
 	virtual bool
-	isIgnorableWhitespace(const XalanText&	node) const = 0;
-
-	virtual bool
 	isNodeAfter(
 			const XalanNode&	node1,
 			const XalanNode&	node2) const = 0;
-
-	virtual const XalanDOMString&
-	getNamespaceOfNode(const XalanNode&	theNode) const = 0;
 
 	virtual const NodeRefListBase&
 	getContextNodeList() const = 0;
@@ -1441,9 +1435,6 @@ public:
 
 	virtual bool
 	releaseCachedString(XalanDOMString&		theString) = 0;
-
-	virtual bool
-	getProcessNamespaces() const = 0;
 
 	virtual void
 	getNodeSetByKey(
