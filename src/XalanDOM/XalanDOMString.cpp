@@ -806,6 +806,8 @@ doXercesTranscode(
 
 	do
 	{
+		XALAN_USING_XERCES(XMLString)
+
 		// $$$ ToDo: We should use the Xerces transcoder interface
 		// instead of XMLString::transcode(), so we can better control
 		// error handling and failures due to inadequate space.
