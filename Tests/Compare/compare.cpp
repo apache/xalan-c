@@ -217,7 +217,7 @@ runTests(
 			XalanSourceTreeDocument* dom = parserLiaison.createXalanSourceTreeDocument();
 			FormatterToSourceTree	domOut(dom); 
 			XSLTResultTarget		domResultTarget;
-			domResultTarget.setDocumentHandler(&domOut);
+			domResultTarget.setFormatterListener(&domOut);
 
 			// Parsing(compile) the XSL stylesheet and report the results..
 			//
