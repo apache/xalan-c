@@ -117,6 +117,7 @@ public:
 	typedef std::vector<wchar_t>		WideCharVectorType;
 #endif
 
+	typedef XalanDOMChar				value_type;
 	typedef XalanDOMChar&				reference;
 	typedef const XalanDOMChar&			const_reference;
 
