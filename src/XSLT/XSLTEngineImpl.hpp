@@ -1473,7 +1473,8 @@ private:
 	void
 	addResultNamespace(
 			const XalanNode&	theNode,
-			AttributeListImpl&	thePendingAttributes);
+			AttributeListImpl&	thePendingAttributes,
+			bool				fOnlyIfPrefixNotPresent = false);
 
   /**
    * The top of this stack should contain the currently processed

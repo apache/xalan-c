@@ -2243,7 +2243,8 @@ XSLTEngineImpl::getResultPrefixForNamespace(const XalanDOMString&	theNamespace) 
 void
 XSLTEngineImpl::addResultNamespace(
 			const XalanNode&	theNode,
-			AttributeListImpl&	thePendingAttributes)
+			AttributeListImpl&	thePendingAttributes,
+			bool				fOnlyIfPrefixNotPresent)
 {
 	assert(theNode.getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
@@ -2251,17 +2252,33 @@ XSLTEngineImpl::addResultNamespace(
 
 	const bool	isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
 
-	if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix) 
-	{
-		const XalanDOMString 	prefix = isPrefix == true ?
+	const XalanDOMString 	prefix = isPrefix == true ?
 			substring(aname, DOMServices::s_XMLNamespaceWithSeparatorLength) : XalanDOMString();
 
-		const XalanDOMString& 	desturi = getResultNamespaceForPrefix(prefix);
-		const XalanDOMString&	srcURI = theNode.getNodeValue();
-
-		if(equals(srcURI, desturi) == false)
+	if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix) 
+	{
+		if (fOnlyIfPrefixNotPresent == true)
 		{
-			addResultAttribute(thePendingAttributes, aname, srcURI);
+			if (m_resultNamespacesStack.prefixIsPresentLocal(prefix) == false)
+			{
+				const XalanDOMString& 	desturi = getResultNamespaceForPrefix(prefix);
+				const XalanDOMString&	srcURI = theNode.getNodeValue();
+
+				if(equals(srcURI, desturi) == false)
+				{
+					addResultAttribute(thePendingAttributes, aname, srcURI);
+				}
+			}
+		}
+		else
+		{
+			const XalanDOMString& 	desturi = getResultNamespaceForPrefix(prefix);
+			const XalanDOMString&	srcURI = theNode.getNodeValue();
+
+			if(equals(srcURI, desturi) == false)
+			{
+				addResultAttribute(thePendingAttributes, aname, srcURI);
+			}
 		}
 	}
 }
@@ -2294,7 +2311,7 @@ XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&	src)
 			const XalanNode* const	attr = nnm->item(i);
 			assert(attr != 0);
 
-			addResultNamespace(*attr, thePendingAttributes);
+			addResultNamespace(*attr, thePendingAttributes, true);
 		}
 
 		parent = parent->getParentNode();
