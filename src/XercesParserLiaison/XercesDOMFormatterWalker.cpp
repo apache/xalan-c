@@ -70,7 +70,7 @@
 
 
 
-#include <XercesParserLiaison/XercesNamedNodeMapAttributeList.hpp>
+#include "XercesNamedNodeMapAttributeList.hpp"
 
 
 
