@@ -71,7 +71,7 @@ static const int	theClearMasks[XalanBitmap::eBitsPerUnit] = { ~1, ~2, ~4, ~8, ~1
 
 XalanBitmap::XalanBitmap(unsigned long	theSize) :
 	m_size(theSize),
-	m_bitmap((theSize + eBitsPerUnit) / eBitsPerUnit)
+	m_bitmap((theSize + eBitsPerUnit) / eBitsPerUnit, 0)
 {
 }
 
