@@ -864,7 +864,121 @@ XalanTransformer::getIndent() const
 void
 XalanTransformer::setIndent(int	indentAmount)
 {
-	m_stylesheetExecutionContext->setIndent(indentAmount);;
+	m_stylesheetExecutionContext->setIndent(indentAmount);
+}
+
+
+
+XalanTransformer::eEscapeURLs
+XalanTransformer::getEscapeURLs() const
+{
+	eEscapeURLs		escapeValue = eEscapeURLsDefault;
+
+	switch(m_stylesheetExecutionContext->getEscapeURLs())
+	{
+	case StylesheetExecutionContextDefault::eEscapeURLsDefault:
+		break;
+
+	case StylesheetExecutionContextDefault::eEscapeURLsNo:
+		escapeValue = eEscapeURLsNo;
+		break;
+
+	case StylesheetExecutionContextDefault::eEscapeURLsYes:
+		escapeValue = eEscapeURLsYes;
+		break;
+
+	default:
+		assert(false);
+		break;
+	}
+
+	return escapeValue;
+}
+
+
+
+void
+XalanTransformer::setEscapeURLs(eEscapeURLs		value)
+{
+	StylesheetExecutionContextDefault::eEscapeURLs	escapeValue =
+		StylesheetExecutionContextDefault::eEscapeURLsDefault;
+
+	switch(value)
+	{
+	case eEscapeURLsDefault:
+		break;
+
+	case eEscapeURLsNo:
+		escapeValue = StylesheetExecutionContextDefault::eEscapeURLsNo;
+		break;
+
+	case eEscapeURLsYes:
+		escapeValue = StylesheetExecutionContextDefault::eEscapeURLsYes;
+		break;
+
+	default:
+		assert(false);
+		break;
+	}
+
+	m_stylesheetExecutionContext->setEscapeURLs(escapeValue);
+}
+
+
+
+XalanTransformer::eOmitMETATag
+XalanTransformer::getOmitMETATag() const
+{
+	eOmitMETATag	omitValue = eOmitMETATagDefault;
+
+	switch(m_stylesheetExecutionContext->getOmitMETATag())
+	{
+	case StylesheetExecutionContextDefault::eOmitMETATagDefault:
+		break;
+
+	case StylesheetExecutionContextDefault::eOmitMETATagNo:
+		omitValue = eOmitMETATagNo;
+		break;
+
+	case StylesheetExecutionContextDefault::eOmitMETATagYes:
+		omitValue = eOmitMETATagYes;
+		break;
+
+	default:
+		assert(false);
+		break;
+	}
+
+	return omitValue;
+}
+
+
+
+void
+XalanTransformer::setOmitMETATag(eOmitMETATag		value)
+{
+	StylesheetExecutionContextDefault::eOmitMETATag		omitValue =
+		StylesheetExecutionContextDefault::eOmitMETATagDefault;
+
+	switch(value)
+	{
+	case eOmitMETATagDefault:
+		break;
+
+	case eOmitMETATagNo:
+		omitValue = StylesheetExecutionContextDefault::eOmitMETATagNo;
+		break;
+
+	case eOmitMETATagYes:
+		omitValue = StylesheetExecutionContextDefault::eOmitMETATagYes;
+		break;
+
+	default:
+		assert(false);
+		break;
+	}
+
+	m_stylesheetExecutionContext->setOmitMETATag(omitValue);
 }
 
 

@@ -278,6 +278,7 @@ public:
 	static const XalanDOMString&	ATTRNAME_DIGITGROUPSEP;
 	static const XalanDOMString&	ATTRNAME_ELEMENT;
 	static const XalanDOMString&	ATTRNAME_ELEMENTS;
+	static const XalanDOMString&	ATTRNAME_ESCAPE_URLS;
 	static const XalanDOMString&	ATTRNAME_EXCLUDE_RESULT_PREFIXES;
 	static const XalanDOMString&	ATTRNAME_EXPR;
 	static const XalanDOMString&	ATTRNAME_EXTENSIONELEMENTPREFIXES;
@@ -289,6 +290,7 @@ public:
 	static const XalanDOMString&	ATTRNAME_HREF;
 	static const XalanDOMString&	ATTRNAME_ID;
 	static const XalanDOMString&	ATTRNAME_IMPORTANCE;
+	static const XalanDOMString&	ATTRNAME_INDENTAMOUNT;
 	static const XalanDOMString&	ATTRNAME_INDENTRESULT;
 	static const XalanDOMString&	ATTRNAME_INFINITY;
 	static const XalanDOMString&	ATTRNAME_LANG;
@@ -301,6 +303,7 @@ public:
 	static const XalanDOMString&	ATTRNAME_NAMESPACE;
 	static const XalanDOMString&	ATTRNAME_NAN;
 	static const XalanDOMString&	ATTRNAME_NDIGITSPERGROUP;
+	static const XalanDOMString&	ATTRNAME_OMIT_META_TAG;
 	static const XalanDOMString&	ATTRNAME_ONLY;
 	static const XalanDOMString&	ATTRNAME_ORDER;
 	static const XalanDOMString&	ATTRNAME_PATTERNSEPARATOR;
@@ -316,6 +319,7 @@ public:
 	static const XalanDOMString&	ATTRNAME_SEQUENCESRC;
 	static const XalanDOMString&	ATTRNAME_SRC;
 	static const XalanDOMString&	ATTRNAME_STYLE;
+	static const XalanDOMString&	ATTRNAME_STYLESHEET_PREFIX;
 	static const XalanDOMString&	ATTRNAME_TERMINATE;
 	static const XalanDOMString&	ATTRNAME_TEST;
 	static const XalanDOMString&	ATTRNAME_TOSTRING;
@@ -328,7 +332,6 @@ public:
 	static const XalanDOMString&	ATTRNAME_XMLNSDEF;
 	static const XalanDOMString&	ATTRNAME_XMLSPACE;
 	static const XalanDOMString&	ATTRNAME_ZERODIGIT;
-	static const XalanDOMString&	ATTRNAME_STYLESHEET_PREFIX;
  
 	  // Atributes on the functions element
 	static const XalanDOMString&	ATTRNAME_NS;

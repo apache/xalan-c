@@ -1214,8 +1214,69 @@ public:
 	enum eDummy
 	{
 		eDefaultXMLIndentAmount = 0,
-		eDefaultHTMLIndentAmount = 0
+		eDefaultHTMLIndentAmount = 0,
 	};
+
+	/**
+	 * Enums to determine whether or not run-time escaping of URLs has been set.
+	 */
+	enum eEscapeURLs
+	{
+		eEscapeURLsDefault,		// Use the value in the stylesheet
+		eEscapeURLsNo,			// Don't escape URLs
+		eEscapeURLsYes			// Escape URLs
+	};
+
+	/**
+	 * Get the value for run-time escaping of URLs.  This can
+	 * override the property specified by the stylesheet.  The
+	 * default behavior is to honor the property in the stylesheet.
+	 *
+	 * @return The value of the enum
+	 */
+	virtual eEscapeURLs
+	getEscapeURLs() const = 0;
+
+	/**
+	 * Set the value for run-time escaping of URLs.  This can
+	 * override the property specified by the stylesheet.  The
+	 * default behavior is to honor the property in the stylesheet.
+	 *
+	 * @param value The value of the enum
+	 */
+	virtual void
+	setEscapeURLs(eEscapeURLs	value) = 0;
+
+
+	/**
+	 * Enums to determine whether or not run-time omission of the META tag has been set.
+	 */
+	enum eOmitMETATag
+	{
+		eOmitMETATagDefault,	// Use the value in the stylesheet
+		eOmitMETATagNo,			// Don't omit the META tag
+		eOmitMETATagYes			// Omit the META tag
+	};
+
+	/**
+	 * Get the value for run-time omission of URLs.  This can
+	 * override the property specified by the stylesheet.  The
+	 * default behavior is to honor the property in the stylesheet.
+	 *
+	 * @return The value of the enum
+	 */
+	virtual eOmitMETATag
+	getOmitMETATag() const = 0;
+
+	/**
+	 * Get the value for run-time omission of URLs.  This can
+	 * override the property specified by the stylesheet.  The
+	 * default behavior is to honor the property in the stylesheet.
+	 *
+	 * @param value The value of the enum
+	 */
+	virtual void
+	setOmitMETATag(eOmitMETATag		value) = 0;
 
 	/**
 	 * Create a new FormatterToXML instance.  The execution context
@@ -1263,11 +1324,8 @@ public:
 	 *                          type declaration
 	 * @param doIndent          true if output is to be indented
 	 * @param indent            number of spaces to indent at each nesting level
-	 * @param version           version of the output method
-	 * @param standalone        true if the XSLT processor should output a
-	 *                          standalone document declaration
-	 * @param xmlDecl           true if the XSLT processor should output an XML
-	 *                          declaration
+	 * @param escapeURLs        Whether or not to escape URLs according to the recommendation.  The default is true.
+	 * @param omitMetaTag       Whether or not to output a META TAG according to the recommendation.  The default is false.
 	 * @return a pointer to the new instance.
 	 */
 	virtual FormatterToHTML*
@@ -1279,9 +1337,8 @@ public:
 			const XalanDOMString&	doctypePublic = XalanDOMString(),
 			bool					doIndent = true,
 			int						indent = eDefaultHTMLIndentAmount,
-			const XalanDOMString&	version = XalanDOMString(),
-			const XalanDOMString&	standalone = XalanDOMString(),
-			bool					xmlDecl = false) = 0;
+			bool					escapeURLs = true,
+			bool					omitMetaTag = false) = 0;
 
 	/**
 	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 

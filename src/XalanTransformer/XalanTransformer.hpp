@@ -598,6 +598,66 @@ public:
 	setIndent(int	indentAmount);
 
 	/**
+	 * Enums to determine whether or not run-time escaping of URLs has been set.
+	 */
+	enum eEscapeURLs
+	{
+		eEscapeURLsDefault,		// Use the value in the stylesheet
+		eEscapeURLsNo,			// Don't escape URLs
+		eEscapeURLsYes			// Escape URLs
+	};
+
+	/**
+	 * Get the value for run-time escaping of URLs.  This can
+	 * override the property specified by the stylesheet.  The
+	 * default behavior is to honor the property in the stylesheet.
+	 *
+	 * @return The value of the enum
+	 */
+	eEscapeURLs
+	getEscapeURLs() const;
+
+	/**
+	 * Set the value for run-time escaping of URLs.  This can
+	 * override the property specified by the stylesheet.  The
+	 * default behavior is to honor the property in the stylesheet.
+	 *
+	 * @param value The value of the enum
+	 */
+	void
+	setEscapeURLs(eEscapeURLs	value);
+
+	/**
+	 * Enums to determine whether or not run-time omission of the META tag has been set.
+	 */
+	enum eOmitMETATag
+	{
+		eOmitMETATagDefault,	// Use the value in the stylesheet
+		eOmitMETATagNo,			// Don't omit the META tag
+		eOmitMETATagYes			// Omit the META tag
+	};
+
+	/**
+	 * Get the value for run-time omission of URLs.  This can
+	 * override the property specified by the stylesheet.  The
+	 * default behavior is to honor the property in the stylesheet.
+	 *
+	 * @return The value of the enum
+	 */
+	eOmitMETATag
+	getOmitMETATag() const;
+
+	/**
+	 * Get the value for run-time omission of URLs.  This can
+	 * override the property specified by the stylesheet.  The
+	 * default behavior is to honor the property in the stylesheet.
+	 *
+	 * @param value The value of the enum
+	 */
+	void
+	setOmitMETATag(eOmitMETATag		value);
+
+	/**
 	 * Set the ostream instance for reporting warnings and messages.  The default
 	 * is std::cerr.  If set to null, no warnings or messages will be written.
 	 * 

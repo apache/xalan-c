@@ -561,12 +561,24 @@ public:
 	virtual bool
 	returnXResultTreeFrag(XResultTreeFrag*	theXResultTreeFrag);
 
+	virtual eEscapeURLs
+	getEscapeURLs() const;
+
+	virtual void
+	setEscapeURLs(eEscapeURLs	value);
+
+	virtual eOmitMETATag
+	getOmitMETATag() const;
+
+	void
+	setOmitMETATag(eOmitMETATag		value);
+
 	virtual FormatterToXML*
 	createFormatterToXML(
 			Writer&					writer,
 			const XalanDOMString&	version = XalanDOMString(),
 			bool					doIndent = false,
-			int						indent = 0,
+			int						indent = eDefaultXMLIndentAmount,
 			const XalanDOMString&	encoding = XalanDOMString(),
 			const XalanDOMString&	mediaType = XalanDOMString(),
 			const XalanDOMString&	doctypeSystem = XalanDOMString(),
@@ -582,10 +594,9 @@ public:
 			const XalanDOMString&	doctypeSystem = XalanDOMString(),
 			const XalanDOMString&	doctypePublic = XalanDOMString(),
 			bool					doIndent = true,
-			int						indent = 4,
-			const XalanDOMString&	version = XalanDOMString(),
-			const XalanDOMString&	standalone = XalanDOMString(),
-			bool					xmlDecl = false);
+			int						indent = eDefaultHTMLIndentAmount,
+			bool					escapeURLs = true,
+			bool					omitMetaTag = false);
 
 	virtual FormatterToDOM*
 	createFormatterToDOM(
@@ -1154,6 +1165,12 @@ private:
 
 	// If true, only text nodes will be cloned in the output...
 	bool								m_cloneTextNodesOnly;
+
+	// Determines whether or not to override the property in the stylesheet.
+	eEscapeURLs							m_escapeURLs;
+
+	// Determines whether or not to override the property in the stylesheet.
+	eOmitMETATag						m_omitMETATag;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 

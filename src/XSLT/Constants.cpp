@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -92,6 +92,7 @@ static XalanDOMString		ATTRNAME_ELEMENTS;
 static XalanDOMString		ATTRNAME_EXCLUDE_RESULT_PREFIXES;
 static XalanDOMString		ATTRNAME_EXPR;
 static XalanDOMString		ATTRNAME_EXTENSIONELEMENTPREFIXES;
+static XalanDOMString		ATTRNAME_ESCAPE_URLS;
 static XalanDOMString		ATTRNAME_FORMAT;
 static XalanDOMString		ATTRNAME_FROM;
 static XalanDOMString		ATTRNAME_FUNCTIONS;
@@ -100,6 +101,7 @@ static XalanDOMString		ATTRNAME_GROUPINGSIZE;
 static XalanDOMString		ATTRNAME_HREF;
 static XalanDOMString		ATTRNAME_ID;
 static XalanDOMString		ATTRNAME_IMPORTANCE;
+static XalanDOMString		ATTRNAME_INDENTAMOUNT;
 static XalanDOMString		ATTRNAME_INDENTRESULT;
 static XalanDOMString		ATTRNAME_INFINITY;
 static XalanDOMString		ATTRNAME_LANG;
@@ -114,6 +116,7 @@ static XalanDOMString		ATTRNAME_NAMESPACE;
 static XalanDOMString		ATTRNAME_NAN;
 static XalanDOMString		ATTRNAME_NDIGITSPERGROUP;
 static XalanDOMString		ATTRNAME_NS;
+static XalanDOMString		ATTRNAME_OMIT_META_TAG;
 static XalanDOMString		ATTRNAME_ONLY;
 static XalanDOMString		ATTRNAME_ORDER;
 static XalanDOMString		ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS;
@@ -301,6 +304,7 @@ const XalanDOMString&		Constants::ATTRNAME_DIGITGROUPSEP = ::ATTRNAME_DIGITGROUP
 const XalanDOMString&		Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING  = ::ATTRNAME_DISABLE_OUTPUT_ESCAPING;
 const XalanDOMString&		Constants::ATTRNAME_ELEMENT = ::ATTRNAME_ELEMENT;
 const XalanDOMString&		Constants::ATTRNAME_ELEMENTS = ::ATTRNAME_ELEMENTS;
+const XalanDOMString&		Constants::ATTRNAME_ESCAPE_URLS = ::ATTRNAME_ESCAPE_URLS;
 const XalanDOMString&		Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES = ::ATTRNAME_EXCLUDE_RESULT_PREFIXES;
 const XalanDOMString&		Constants::ATTRNAME_EXPR = ::ATTRNAME_EXPR;
 const XalanDOMString&		Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES = ::ATTRNAME_EXTENSIONELEMENTPREFIXES;
@@ -312,6 +316,7 @@ const XalanDOMString&		Constants::ATTRNAME_GROUPINGSIZE = ::ATTRNAME_GROUPINGSIZ
 const XalanDOMString&		Constants::ATTRNAME_HREF = ::ATTRNAME_HREF;
 const XalanDOMString&		Constants::ATTRNAME_ID = ::ATTRNAME_ID;
 const XalanDOMString&		Constants::ATTRNAME_IMPORTANCE = ::ATTRNAME_IMPORTANCE;
+const XalanDOMString&		Constants::ATTRNAME_INDENTAMOUNT = ::ATTRNAME_INDENTAMOUNT;
 const XalanDOMString&		Constants::ATTRNAME_INDENTRESULT = ::ATTRNAME_INDENTRESULT;
 const XalanDOMString&		Constants::ATTRNAME_INFINITY = ::ATTRNAME_INFINITY;
 const XalanDOMString&		Constants::ATTRNAME_LANG = ::ATTRNAME_LANG;
@@ -326,6 +331,7 @@ const XalanDOMString&		Constants::ATTRNAME_NAMESPACE = ::ATTRNAME_NAMESPACE;
 const XalanDOMString&		Constants::ATTRNAME_NAN = ::ATTRNAME_NAN;
 const XalanDOMString&		Constants::ATTRNAME_NDIGITSPERGROUP = ::ATTRNAME_NDIGITSPERGROUP;
 const XalanDOMString&		Constants::ATTRNAME_NS = ::ATTRNAME_NS;
+const XalanDOMString&		Constants::ATTRNAME_OMIT_META_TAG = ::ATTRNAME_OMIT_META_TAG;
 const XalanDOMString&		Constants::ATTRNAME_ONLY = ::ATTRNAME_ONLY;
 const XalanDOMString&		Constants::ATTRNAME_ORDER = ::ATTRNAME_ORDER;
 const XalanDOMString&		Constants::ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS  = ::ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS;
@@ -515,6 +521,7 @@ Constants::initialize()
 	::ATTRNAME_DISABLE_OUTPUT_ESCAPING  = XALAN_STATIC_UCODE_STRING("disable-output-escaping");
 	::ATTRNAME_ELEMENT = XALAN_STATIC_UCODE_STRING("element");
 	::ATTRNAME_ELEMENTS = XALAN_STATIC_UCODE_STRING("elements");
+	::ATTRNAME_ESCAPE_URLS = XALAN_STATIC_UCODE_STRING("use-url-escaping");
 	::ATTRNAME_EXCLUDE_RESULT_PREFIXES = XALAN_STATIC_UCODE_STRING("exclude-result-prefixes");
 	::ATTRNAME_EXPR = XALAN_STATIC_UCODE_STRING("expr");
 	::ATTRNAME_EXTENSIONELEMENTPREFIXES = XALAN_STATIC_UCODE_STRING("extension-element-prefixes");
@@ -526,6 +533,7 @@ Constants::initialize()
 	::ATTRNAME_HREF = XALAN_STATIC_UCODE_STRING("href");
 	::ATTRNAME_ID = XALAN_STATIC_UCODE_STRING("id");
 	::ATTRNAME_IMPORTANCE = XALAN_STATIC_UCODE_STRING("importance");
+	::ATTRNAME_INDENTAMOUNT = XALAN_STATIC_UCODE_STRING("indent-amount");
 	::ATTRNAME_INDENTRESULT = XALAN_STATIC_UCODE_STRING("indent-result");
 	::ATTRNAME_INFINITY = XALAN_STATIC_UCODE_STRING("infinity");
 	::ATTRNAME_LANG = XALAN_STATIC_UCODE_STRING("lang");
@@ -540,6 +548,7 @@ Constants::initialize()
 	::ATTRNAME_NAN = XALAN_STATIC_UCODE_STRING("NaN");
 	::ATTRNAME_NDIGITSPERGROUP = XALAN_STATIC_UCODE_STRING("n-digits-per-group");
 	::ATTRNAME_NS = XALAN_STATIC_UCODE_STRING("ns");
+	::ATTRNAME_OMIT_META_TAG = XALAN_STATIC_UCODE_STRING("omit-meta-tag");
 	::ATTRNAME_ONLY = XALAN_STATIC_UCODE_STRING("only");
 	::ATTRNAME_ORDER = XALAN_STATIC_UCODE_STRING("order");
 	::ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS  = XALAN_STATIC_UCODE_STRING("cdata-section-elements");
@@ -730,6 +739,7 @@ Constants::terminate()
 	releaseMemory(::ATTRNAME_DISABLE_OUTPUT_ESCAPING);
 	releaseMemory(::ATTRNAME_ELEMENT);
 	releaseMemory(::ATTRNAME_ELEMENTS);
+	releaseMemory(::ATTRNAME_ESCAPE_URLS);
 	releaseMemory(::ATTRNAME_EXCLUDE_RESULT_PREFIXES);
 	releaseMemory(::ATTRNAME_EXPR);
 	releaseMemory(::ATTRNAME_EXTENSIONELEMENTPREFIXES);
@@ -741,6 +751,7 @@ Constants::terminate()
 	releaseMemory(::ATTRNAME_HREF);
 	releaseMemory(::ATTRNAME_ID);
 	releaseMemory(::ATTRNAME_IMPORTANCE);
+	releaseMemory(::ATTRNAME_INDENTAMOUNT);
 	releaseMemory(::ATTRNAME_INDENTRESULT);
 	releaseMemory(::ATTRNAME_INFINITY);
 	releaseMemory(::ATTRNAME_LANG);
@@ -755,6 +766,7 @@ Constants::terminate()
 	releaseMemory(::ATTRNAME_NAN);
 	releaseMemory(::ATTRNAME_NDIGITSPERGROUP);
 	releaseMemory(::ATTRNAME_NS);
+	releaseMemory(::ATTRNAME_OMIT_META_TAG);
 	releaseMemory(::ATTRNAME_ONLY);
 	releaseMemory(::ATTRNAME_ORDER);
 	releaseMemory(::ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS);

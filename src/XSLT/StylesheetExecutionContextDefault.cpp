@@ -168,7 +168,9 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
 	m_documentAllocator(eDocumentAllocatorBlockSize),
 	m_usePerInstanceDocumentFactory(true),
-	m_cloneTextNodesOnly(false)
+	m_cloneTextNodesOnly(false),
+	m_escapeURLs(eEscapeURLsDefault),
+	m_omitMETATag(eOmitMETATagDefault)
 {
 }
 
@@ -209,7 +211,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
 	m_documentAllocator(eDocumentAllocatorBlockSize),
 	m_usePerInstanceDocumentFactory(true),
-	m_cloneTextNodesOnly(false)
+	m_cloneTextNodesOnly(false),
+	m_escapeURLs(eEscapeURLsDefault)
 {
 }
 
@@ -1212,7 +1215,39 @@ StylesheetExecutionContextDefault::returnXResultTreeFrag(XResultTreeFrag*	theXRe
 }
 
 
-	
+
+StylesheetExecutionContextDefault::eEscapeURLs
+StylesheetExecutionContextDefault::getEscapeURLs() const
+{
+	return m_escapeURLs;
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setEscapeURLs(eEscapeURLs	value)
+{
+	m_escapeURLs = value;
+}
+
+
+
+StylesheetExecutionContextDefault::eOmitMETATag
+StylesheetExecutionContextDefault::getOmitMETATag() const
+{
+	return m_omitMETATag;
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setOmitMETATag(eOmitMETATag	value)
+{
+	m_omitMETATag = value;
+}
+
+
+
 FormatterToXML*
 StylesheetExecutionContextDefault::createFormatterToXML(
 			Writer&					writer,
@@ -1255,9 +1290,8 @@ StylesheetExecutionContextDefault::createFormatterToHTML(
 			const XalanDOMString&	doctypePublic,
 			bool					doIndent,
 			int						indent,
-			const XalanDOMString&	version,
-			const XalanDOMString&	standalone,
-			bool					xmlDecl)
+			bool					escapeURLs,
+			bool					omitMetaTag)
 {
 	FormatterToHTML* const	theFormatter =
 		new FormatterToHTML(
@@ -1268,9 +1302,8 @@ StylesheetExecutionContextDefault::createFormatterToHTML(
 			doctypePublic,
 			doIndent,
 			indent,
-			version,
-			standalone,
-			xmlDecl);
+			escapeURLs,
+			omitMetaTag);
 
 	// Check to see if the user has asked us to ignore
 	// namespaces in HTML output.

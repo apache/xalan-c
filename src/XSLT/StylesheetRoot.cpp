@@ -139,8 +139,10 @@ StylesheetRoot::StylesheetRoot(
 	m_defaultTextRule(0),
 	m_defaultRule(0),
 	m_defaultRootRule(0),
-	m_needToBuildKeysTable(false)
-
+	m_needToBuildKeysTable(false),
+	m_outputEscapeURLs(true),
+	m_indentAmount(-1),
+	m_omitMETATag(false)
 {
 	// Our base class has already resolved the URI and pushed it on
 	// the back of the include stack, so get it from there...
@@ -316,21 +318,75 @@ StylesheetRoot::setupFormatterListener(
 			}
 		}
 
-		int			indentAmount = executionContext.getIndent();
+		int		indentAmount = executionContext.getIndent();
+
+		// If the indent amount is less than 0, that means use
+		// the value specified in the stylesheet.
+		if (indentAmount < 0)
+		{
+			indentAmount = m_indentAmount;
+		}
 
 		const bool	doIndent = (indentAmount > -1) ? true : m_indentResult;
 
 		switch(m_outputMethod)
 		{
 		case FormatterListener::OUTPUT_METHOD_HTML:
-			if (doIndent == true && indentAmount < 0)
 			{
-				indentAmount = FormatterToHTML::eDefaultIndentAmount;
-			}
+				if (doIndent == true && indentAmount < 0)
+				{
+					indentAmount = FormatterToHTML::eDefaultIndentAmount;
+				}
 
-			flistener = executionContext.createFormatterToHTML(
-						*pw, m_encoding, m_mediatype, m_doctypeSystem, m_doctypePublic,
-						doIndent, indentAmount, m_version, m_standalone, !m_omitxmlDecl);
+				// Start with the default that was set in the stylesheet...
+				bool	outputEscapeURLs = m_outputEscapeURLs;
+
+				{
+					const StylesheetExecutionContext::eEscapeURLs	eEscapeURLs =
+						executionContext.getEscapeURLs();
+
+					// If it's anything other than StylesheetExecutionContext::eEscapeURLsDefault,
+					// use the property from the execution context...
+					if (eEscapeURLs == StylesheetExecutionContext::eEscapeURLsNo)
+					{
+						outputEscapeURLs = false;
+					}
+					else if (eEscapeURLs == StylesheetExecutionContext::eEscapeURLsYes)
+					{
+						outputEscapeURLs = true;
+					}
+				}
+
+				// Start with the default that was set in the stylesheet...
+				bool	omitMETATag = m_omitMETATag;
+
+				{
+					const StylesheetExecutionContext::eOmitMETATag	eOmitMETATag =
+						executionContext.getOmitMETATag();
+
+					// If it's anything other than StylesheetExecutionContext::eOmitMETATagDefault,
+					// use the property from the execution context...
+					if (eOmitMETATag == StylesheetExecutionContext::eOmitMETATagNo)
+					{
+						omitMETATag = false;
+					}
+					else if (eOmitMETATag == StylesheetExecutionContext::eOmitMETATagYes)
+					{
+						omitMETATag = true;
+					}
+				}
+
+				flistener = executionContext.createFormatterToHTML(
+								*pw,
+								m_encoding,
+								m_mediatype,
+								m_doctypeSystem,
+								m_doctypePublic,
+								doIndent,
+								indentAmount,
+								outputEscapeURLs,
+								omitMETATag);
+			}
 			break;
 
 		case FormatterListener::OUTPUT_METHOD_TEXT:
@@ -413,9 +469,11 @@ StylesheetRoot::processOutputSpec(
 			const AttributeList&			atts,
 			StylesheetConstructionContext&	constructionContext)
 {
-	const unsigned int	nAttrs = atts.getLength();
+	const unsigned int		nAttrs = atts.getLength();
 
-	bool				didSpecifyIndent = false;
+	bool					didSpecifyIndent = false;
+
+	const Locator* const	theLocator = constructionContext.getLocatorFromStack();
 
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
@@ -426,11 +484,21 @@ StylesheetRoot::processOutputSpec(
 			const XalanDOMChar*	const	method = atts.getValue(i);
 
 			if(equals(method, Constants::ATTRVAL_OUTPUT_METHOD_HTML))
+			{
 				m_outputMethod = FormatterListener::OUTPUT_METHOD_HTML;
+			}
 			else if(equals(method, Constants::ATTRVAL_OUTPUT_METHOD_XML))
+			{
 				m_outputMethod = FormatterListener::OUTPUT_METHOD_XML;
+			}
 			else if(equals(method, Constants::ATTRVAL_OUTPUT_METHOD_TEXT))
+			{
 				m_outputMethod = FormatterListener::OUTPUT_METHOD_TEXT;
+			}
+			else
+			{
+				constructionContext.warn(XalanDOMString(aname) + " has an unknown method: " + method, 0, theLocator);
+			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_OUTPUT_VERSION))
 		{
@@ -439,6 +507,7 @@ StylesheetRoot::processOutputSpec(
 		else if(equals(aname,Constants::ATTRNAME_OUTPUT_INDENT))
 		{
 			m_indentResult = getYesOrNo(aname, atts.getValue(i), constructionContext);
+
 			didSpecifyIndent = true;
 		}
 		else if(equals(aname,Constants::ATTRNAME_OUTPUT_ENCODING))
@@ -476,8 +545,6 @@ StylesheetRoot::processOutputSpec(
 
 			XalanDOMString	theToken;
 
-			const Locator* const	theLocator = constructionContext.getLocatorFromStack();
-
 			while(theTokenCount > 0)
 			{
 				theTokenizer.nextToken(theToken);
@@ -490,9 +557,44 @@ StylesheetRoot::processOutputSpec(
 
 			assert(theTokenizer.hasMoreTokens() == false);
 		}
-		else if (isAttrOK(aname, atts, i, constructionContext) == false)
+		else
 		{
-			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			const XalanQNameByValue		theAttributeName(aname, getNamespaces(), theLocator);
+
+			if (theAttributeName.getNamespace() == constructionContext.getXalanXSLNameSpaceURL())
+			{
+				if (theAttributeName.getLocalPart() == Constants::ATTRNAME_ESCAPE_URLS)
+				{
+					m_outputEscapeURLs = getYesOrNo(aname, atts.getValue(i), constructionContext);
+				}
+				else if (theAttributeName.getLocalPart() == Constants::ATTRNAME_INDENTAMOUNT)
+				{
+					m_indentAmount = WideStringToInt(atts.getValue(i));
+
+					if (m_indentAmount < 0)
+					{
+						m_indentAmount = 0;
+					}
+				}
+				else if (theAttributeName.getLocalPart() == Constants::ATTRNAME_OMIT_META_TAG)
+				{
+					m_omitMETATag = getYesOrNo(aname, atts.getValue(i), constructionContext);
+				}
+				else
+				{
+					constructionContext.warn(
+						theAttributeName.getLocalPart() + " is an unsupported Xalan-specific attribute",
+						0,
+						theLocator);
+				}
+			}
+			else if (isAttrOK(aname, atts, i, constructionContext) == false)
+			{
+				constructionContext.error(
+						XalanDOMString(name) + " has an illegal attribute: " + aname,
+						0,
+						theLocator);
+			}
 		}
 	}
 

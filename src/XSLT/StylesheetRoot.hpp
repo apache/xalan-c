@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -494,7 +494,23 @@ private:
 	 */
 	bool						m_needToBuildKeysTable;
 
-    // Not implemented...
+	/**
+	 * This is set to true if URLs should be escaped in HTML output (the default)
+	 */
+	bool						m_outputEscapeURLs;
+
+	/**
+	 * The amount to indent.  The default is -1, which indicates not to indent.
+	 */
+	int							m_indentAmount;
+
+	/**
+	 * This is set to true if we should omit the META tag in HTML output (the default is false)
+	 */
+	bool						m_omitMETATag;
+
+
+	// Not implemented...
     StylesheetRoot(const StylesheetRoot&);
 
     StylesheetRoot&
