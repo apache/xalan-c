@@ -347,22 +347,6 @@ warnPreviousOutputMethod(int	outputMethod)
 
 
 
-#if defined(OS390)
-#undef stricmp                                                   
-#include <strings.h>                                             
-                                                                 
-int
-stricmp(
-			const char*		str1,
-			const char*		str2)     
-{
-	return strcasecmp(str1, str2);
-}
-
-#endif
-
-
-
 bool
 getArgs(
 			int				argc,
