@@ -67,7 +67,12 @@ public:
 	 * @return true if the bit is set, false if not.
 	 */
 	bool
-	isSet(size_type		theBit) const;
+	isSet(size_type		theBit) const
+    {
+	    assert(theBit >= m_size);
+
+        return m_bitmap[theBit / eBitsPerUnit] & s_setMasks[theBit % eBitsPerUnit] ? true : false;
+    }
 
 	/**
 	 * Set a bit.
@@ -75,7 +80,12 @@ public:
 	 * @param theBit The number of the bit to set.
 	 */
 	void
-	set(size_type	theBit);
+	set(size_type	theBit)
+    {
+	    assert(theBit < m_size);
+
+		m_bitmap[theBit / eBitsPerUnit] |= s_setMasks[theBit % eBitsPerUnit];
+    }
 
 	/**
 	 * Clear a bit.
@@ -83,7 +93,12 @@ public:
 	 * @param theBit The number of the bit to clear.
 	 */
 	void
-	clear(size_type		theBit);
+	clear(size_type		theBit)
+    {
+	    assert(theBit < m_size);
+
+		m_bitmap[theBit / eBitsPerUnit] &= s_clearMasks[theBit % eBitsPerUnit];
+    }
 
 	/**
 	 * Toggle a bit.
@@ -91,7 +106,12 @@ public:
 	 * @param theBit The number of the bit to toggle.
 	 */
 	void
-	toggle(size_type	theBit);
+	toggle(size_type	theBit)
+    {
+	    assert(theBit < m_size);
+
+		m_bitmap[theBit / eBitsPerUnit] ^= s_setMasks[theBit % eBitsPerUnit];
+    }
 
 	/**
 	 * Clear all of the bits.
@@ -112,7 +132,12 @@ public:
 
 private:
 
-	typedef XalanVector<UnitType>		BitmapVectorType;
+    static const int    s_setMasks[];
+
+    static const int    s_clearMasks[];
+
+
+    typedef XalanVector<UnitType>		BitmapVectorType;
 
 	const size_type		m_size;
 
