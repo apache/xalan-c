@@ -82,6 +82,10 @@
 #define XALAN_LITLE_ENDIAN
 #define XALAN_NEWLINE_IS_CRLF
 
+// This is defined because Microsoft's basic_string is old, and
+// does not have some of the things that it ought, like push_back().
+// Eventually, they will get with it.
+#define XALAN_OLD_STD_STRING
 
 
 #endif	// VCPPDEFINITIONS_HEADER_GUARD_1357924680
