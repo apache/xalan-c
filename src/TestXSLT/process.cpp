@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,10 +66,6 @@
 #include <iostream.h>
 #else
 #include <iostream>
-#endif
-
-#if defined(XALAN_RTTI_AVAILABLE) && !defined(XALAN_NO_TYPEINFO)
-#include <typeinfo>
 #endif
 
 
@@ -1126,7 +1122,7 @@ main(
 			int				argc,
 			const char*		argv[])
 {
-#if !defined(XALAN_USE_ICU) && !defined(NDEBUG) && defined(_MSC_VER)
+#if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
@@ -1254,58 +1250,6 @@ main(
 
 			theResult = -5;
 		}
-
-#if !defined(NDEBUG)
-		const size_t	theInstanceCount =
-				XalanNode::getInstanceCount();
-
-		if (theInstanceCount > 0)
-		{
-			cout << "There are "
-				 << theInstanceCount
-				 << " XalanNode instances still alive!"
-				 << endl
-				 << endl
-				 << "A dump of these instances follows..."
-				 << endl
-				 << endl;
-
-			typedef vector<XalanNode*>	NodeVectorType;
-
-			NodeVectorType	theNodes(theInstanceCount, NodeVectorType::value_type(0));
-
-			XalanNode::getLiveInstances(&*theNodes.begin());
-
-			for(size_t i = 0; i < theInstanceCount; ++i)
-			{
-				const XalanNode* const	theInstance = theNodes[i];
-
-				if(theInstance == 0)
-				{
-					cout << "No instance information is available..."
-						 << endl;
-				}
-				else
-				{
-					cout << "("
-						 << hex
-						 << theInstance
-						 << ")  Node name: \""
-						 << theInstance->getNodeName()
-						 << "\"  Node value: \""
-						 << theInstance->getNodeValue()
-						 << "\""
-#if defined(XALAN_RTTI_AVAILABLE)
-						 << "  Type: \""
-						 << typeid(*theInstance).name()
-						 << "\""
-#endif
-						 << endl
-						 << endl;
-				}
-			}
-		}
-#endif
 
 		XMLPlatformUtils::Terminate();
 	}

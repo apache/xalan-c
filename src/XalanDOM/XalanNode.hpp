@@ -451,34 +451,6 @@ public:
 
 	//@}
 
-
-#if !defined(NDEBUG)
-
-	/**
-	 * Get the number of live instances.
-	 * @return the number of live instances.
-	 */
-	static size_t
-	getInstanceCount()
-	{
-		return s_instanceCount;
-	}
-
-
-	/**
-	 * File an array with pointers to all of the
-	 * live instances.  This function is only
-	 * available if XALAN_NODE_SPECIAL_DEBUG is
-	 * defined.  Otherwise this function does
-	 * nothing.
-	 *
-	 * @param An array in which to store the pointers.
-	 */
-	static void
-	getLiveInstances(XalanNode*	theNodes[]);
-
-#endif
-
 protected:
 
 	XalanNode(const XalanNode&	theSource);

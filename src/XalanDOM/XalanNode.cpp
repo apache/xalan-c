@@ -58,77 +58,20 @@
 
 
 
-#if !defined(NDEBUG)
-size_t	XalanNode::s_instanceCount = 0;
-
-#if defined(XALAN_NODE_SPECIAL_DEBUG)
-
-#include <set>
-
-#if defined(XALAN_NO_NAMESPACES)
-
-typedef set<XalanNode*, less<XalanNode*> >	InstanceSetType;
-
-#else
-
-typedef std::set<XalanNode*>	InstanceSetType;
-
-#endif
-
-static InstanceSetType	s_instanceSet;
-
-#endif
-
-#endif
-
-
-
 XalanNode::XalanNode()
 {
-#if !defined(NDEBUG)
-	s_instanceCount++;
-
-#if defined(XALAN_NODE_SPECIAL_DEBUG)
-	s_instanceSet.insert(this);
-
-#endif
-
-#endif
-
 }
 
 
 
 XalanNode::~XalanNode()
 {
-#if !defined(NDEBUG)
-
-	s_instanceCount--;
-
-#if defined(XALAN_NODE_SPECIAL_DEBUG)
-
-	s_instanceSet.erase(this);
-
-#endif
-
-#endif
 }
 
 
 
 XalanNode::XalanNode(const XalanNode&	/* theSource */)
 {
-#if !defined(NDEBUG)
-
-	s_instanceCount++;
-
-#if defined(XALAN_NODE_SPECIAL_DEBUG)
-
-	s_instanceSet.insert(this);
-
-#endif
-
-#endif
 }
 
 
@@ -146,32 +89,3 @@ XalanNode::operator==(const XalanNode&	/* theRHS */) const
 {
 	return false;
 }
-
-
-
-#if !defined(NDEBUG)
-
-void
-#if defined(XALAN_NODE_SPECIAL_DEBUG)
-XalanNode::getLiveInstances(XalanNode*	theNodes[])
-#else
-XalanNode::getLiveInstances(XalanNode*	/* theNodes*/ [])
-#endif
-{
-#if defined(XALAN_NODE_SPECIAL_DEBUG)
-
-	InstanceSetType::const_iterator		i =
-		s_instanceSet.begin();
-
-	InstanceSetType::const_iterator		end =
-		s_instanceSet.end();
-
-	for(size_t j = 0; i != end; ++i, ++j)
-	{
-		theNodes[j] = *i;
-	}
-#endif
-}
-
-#endif
-
