@@ -64,6 +64,10 @@
 
 
 
+class StylesheetRoot;
+
+
+
 /**
  * This is an abstraction of the StylesheetRoot class. It is designed
  * to allow a XalanTranfomer object to reuse a compliled stylesheet. 
