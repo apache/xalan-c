@@ -36,16 +36,16 @@
   <property name="doc.generator.styletargz" value="${xdocs.dir}/xml-site-style.tar.gz"/>
   <property name="doc.generator.styletar" value="${xdocs.dir}/xml-site-style.tar"/>
   
-  <property name="build.dir" value="./build"/>
-
-  <property name="build.docs" value="${build.dir}/docs"/>
-  <property name="build.apidocs" value="${build.docs}/apidocs"/>  
-  <property name="site.dir" value="./xml-site"/>
-  
+  <property name="build.dir"            value="./build"/>
+  <property name="build.docs"           value="${build.dir}/docs"/>
+  <property name="build.apidocs"        value="${build.docs}/apidocs"/>  
+  <property name="site.dir"             value="./xml-site"/>
+    
   <property name="package.name"         value="Xalan-C"/>
-  <property name="docs.package.name"    value="${build.dir}/${package.name}_${version.VERSION}_${version.RELEASE}-docs"/>
-  <property name="webdocs.package.name" value="${build.dir}/${package.name}_${version.VERSION}_${version.RELEASE}-webdocs"/>
-  <property name="src.package.name"     value="${build.dir}/${package.name}_${version.VERSION}_${version.RELEASE}-src"/>  
+  <property name="package.version"      value="${version.VERSION}_${version.RELEASE}_${version.MINOR}"/>  
+  <property name="docs.package.name"    value="${package.name}_${package.version}-docs"/>
+  <property name="webdocs.package.name" value="${package.name}_${package.version}-webdocs"/>
+  <property name="src.package.name"     value="${package.name}_${package.version}-src"/>  
 
   <target name="prepare">
     <gunzip src="${doc.generator.styletargz}"/>
@@ -126,30 +126,39 @@
 
   <!-- package documentation (user guide and apidocs) for distribution -->
   <target name="pack.docs">
-    <tar tarfile="${docs.package.name}.tar" basedir="${build.docs}" includes="**"/>
-    <gzip src="${docs.package.name}.tar" zipfile="${docs.package.name}.tar.gz"/>
-    <delete file="${docs.package.name}.tar"/>
+    <mkdir dir="${build.dir}/${docs.package.name}"/>
+    <copy todir="${build.dir}/${docs.package.name}">
+      <fileset dir="${build.docs}"/>
+    </copy>     
+      
+    <tar tarfile="${build.dir}/${docs.package.name}.tar" basedir="${build.dir}" includes="${docs.package.name}/**"/>
+    <gzip src="${build.dir}/${docs.package.name}.tar" zipfile="${build.dir}/${docs.package.name}.tar.gz"/>
+    <delete file="${build.dir}/${docs.package.name}.tar"/>
     
-    <zip zipfile="${docs.package.name}.zip" basedir="${build.docs}" includes="**"/>
+    <zip zipfile="${build.dir}/${docs.package.name}.zip" basedir="${build.dir}" includes="${docs.package.name}/**"/>
   </target>
 
   <!-- package documentation (user guide and apidocs) for transfer to website -->
   <target name="pack.webdocs">
-    <tar tarfile="${webdocs.package.name}.tar" basedir="${site.dir}" includes="**"/>
-    <gzip src="${webdocs.package.name}.tar" zipfile="${webdocs.package.name}.tar.gz"/>
-    <delete file="${webdocs.package.name}.tar"/>
+    <tar tarfile="${build.dir}/${webdocs.package.name}.tar" basedir="${site.dir}" includes="**"/>
+    <gzip src="${build.dir}/${webdocs.package.name}.tar" zipfile="${build.dir}/${webdocs.package.name}.tar.gz"/>
+    <delete file="${build.dir}/${webdocs.package.name}.tar"/>
     
-    <zip zipfile="${webdocs.package.name}.zip" basedir="${site.dir}" includes="**"/>
+    <zip zipfile="${build.dir}/${webdocs.package.name}.zip" basedir="${site.dir}" includes="**"/>
   </target>
 
   <!-- package source code for distribution -->
   <target name="pack.src">
-    <tar tarfile="${src.package.name}.tar" basedir="../.." includes="xml-xalan/**" excludes="xml-xalan/c/build/** xml-xalan/c/xml-site/**" defaultexcludes="no"/>
-    <gzip src="${src.package.name}.tar" zipfile="${src.package.name}.tar.gz"/>
-    <delete file="${src.package.name}.tar"/>
+    <mkdir dir="${build.dir}/${src.package.name}"/>
+    <copy todir="${build.dir}/${src.package.name}">
+      <fileset dir="../.." excludes="xml-xalan/c/build/** xml-xalan/c/xml-site/**"/>
+    </copy> 
+      
+    <tar tarfile="${build.dir}/${src.package.name}.tar" basedir="${build.dir}/${src.package.name}" includes="**" defaultexcludes="no"/>
+    <gzip src="${build.dir}/${src.package.name}.tar" zipfile="${build.dir}/${src.package.name}.tar.gz"/>
+    <delete file="${build.dir}/${src.package.name}.tar"/>
     
-    <!-- this rule is not picking up the CVS directories dd anybody know how to fix? -->
-    <zip zipfile="${src.package.name}.zip" basedir="../.." includes="xml-xalan/**" excludes="xml-xalan/c/build/** xml-xalan/c/xml-site/**" defaultexcludes="no"/>
+    <zip zipfile="${build.dir}/${src.package.name}.zip" basedir="${build.dir}/${src.package.name}" includes="**" defaultexcludes="no"/>
   </target>
   
 </project>
