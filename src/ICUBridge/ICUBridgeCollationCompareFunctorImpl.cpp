@@ -175,7 +175,7 @@ ICUBridgeCollationCompareFunctorImpl::doCompare(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) const
 {
-#if defined(XALAN_USE_WCHAR_CAST_HACK) && defined(U_WCHAR_IS_UTF16)
+#if defined(XALAN_USE_WCHAR_CAST_HACK)
 	return theCollator.compare(
 				(const wchar_t*)theLHS,
 				length(theLHS),
@@ -366,7 +366,7 @@ ICUBridgeCollationCompareFunctorImpl::doCompare(
 				caseOrderConvert(theCaseOrder),
 				theStatus);
 
-#if defined(XALAN_USE_WCHAR_CAST_HACK) && defined(U_WCHAR_IS_UTF16)
+#if defined(XALAN_USE_WCHAR_CAST_HACK)
 	return theCollator.compare(
 					(const wchar_t*)theLHS,
 					length(theLHS),
