@@ -70,7 +70,11 @@
 
 
 
+#if defined(XALAN_NO_NAMESPACES)
+XercesStdTextOutputStream::XercesStdTextOutputStream(ostream&	theOutputStream) :
+#else
 XercesStdTextOutputStream::XercesStdTextOutputStream(std::ostream&	theOutputStream) :
+#endif
 	XercesTextOutputStream(),
 	m_outputStream(theOutputStream)
 {
@@ -116,9 +120,13 @@ FormatMessageLocal(
 			const DOMString&	theMessage,
 			int					theErrorCode)
 {
+#if !defined(XALAN_NO_NAMESPACES)
+using std::ostrstream;
+#endif
+
 	DOMString	theResult(clone(theMessage));
 
-	std::ostrstream   theFormatter;
+	ostrstream   theFormatter;
 
 	theFormatter << ".  The error code was "
 				 << theErrorCode
