@@ -752,11 +752,11 @@ ElemTemplateElement::doTransformSelectedChildren(
 			const NodeRefListBase&						sourceNodes,
 			unsigned int								sourceNodesCount) const
 {
-	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
-
 	if (keys.size() > 0)
 	{
-		typedef StylesheetExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+		typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
+		typedef StylesheetExecutionContext::ContextNodeListSetAndRestore			ContextNodeListSetAndRestore;
+		typedef StylesheetExecutionContext::BorrowReturnMutableNodeRefList			BorrowReturnMutableNodeRefList;
 
 		BorrowReturnMutableNodeRefList	sortedSourceNodes(executionContext);
 
@@ -765,9 +765,13 @@ ElemTemplateElement::doTransformSelectedChildren(
 		{
 			NodeSorter	sorter;
 
-			SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
+			SetAndRestoreCurrentStackFrameIndex		theStackFrameSetAndRestore(
 					executionContext,
 					selectStackFrameIndex);
+
+			ContextNodeListSetAndRestore			theContextNodeListSetAndRestore(
+					executionContext,
+					sourceNodes);
 
 			sorter.sort(executionContext, *sortedSourceNodes, keys);
 		}
