@@ -157,7 +157,7 @@ ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 
 			if(test->boolean() == true)
 			{
-				node->executeChildren(executionContext);
+				node->execute(executionContext);
 
 				break;
 			}
@@ -165,7 +165,7 @@ ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 		else
 		{
 			// xsl:otherwise
-			node->executeChildren(executionContext);
+			node->execute(executionContext);
 		}
     }
 }

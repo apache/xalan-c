@@ -101,6 +101,7 @@
 #include <XSLT/Stylesheet.hpp>
 #include <XSLT/VariablesStack.hpp>
 #include <XSLT/XResultTreeFragAllocator.hpp>
+#include <XSLT/XalanSourceTreeDocumentAllocator.hpp>
 #include <XSLT/XalanSourceTreeDocumentFragmentAllocator.hpp>
 
 
@@ -264,6 +265,18 @@ public:
 		m_xsltProcessor = theProcessor;
 	}
 
+	bool
+	getUsePerInstanceDocumentFactory() const
+	{
+		return m_usePerInstanceDocumentFactory;
+	}
+
+	void
+	setUsePerInstanceDocumentFactory(bool	fValue)
+	{
+		m_usePerInstanceDocumentFactory = fValue;
+	}
+
 
 	// These interfaces are inherited from StylesheetExecutionContext...
 
@@ -287,6 +300,12 @@ public:
 
 	virtual	void
 	setCurrentMode(const XalanQName*	theMode); 
+
+	virtual const ElemTemplate*
+	getCurrentTemplate() const;
+
+	virtual	void
+	setCurrentTemplate(const ElemTemplate*	theTemplate); 
 
 	virtual bool
 	doDiagnosticsOutput() const;
@@ -1018,7 +1037,6 @@ private:
 
 	XPathExecutionContextDefault	m_xpathExecutionContextDefault;
 
-	// $$ ToDo: Try to remove this dependency, and rely only on XSLTProcessor...
 	XSLTEngineImpl*					m_xsltProcessor;
 
 	XalanNode*						m_rootDocument;
@@ -1027,6 +1045,7 @@ private:
 		   eDefaultParamsVectorSize = 10,
 		   eXResultTreeFragAllocatorBlockSize = 10,
 		   eResultTreeFragAllocatorBlockSize = 10,
+		   eDocumentAllocatorBlockSize = 10,
 		   eDocumentFragmentAllocatorBlockSize = 10 };
 
 	ElementRecursionStackType			m_elementRecursionStack;
@@ -1072,6 +1091,8 @@ private:
 	// Holds the current mode.
 	const XalanQName*					m_mode;
 
+	const ElemTemplate*					m_currentTemplate;
+
 	typedef XalanObjectCacheDefault<FormatterToText>		FormatterToTextCacheType;
 	typedef XalanObjectCacheDefault<FormatterToSourceTree>	FormatterToSourceTreeCacheType;
 	typedef XalanObjectCacheDefault<NodeSorter>				NodeSorterCacheType;
@@ -1089,6 +1110,12 @@ private:
 	ResultTreeFragAllocator				m_resultTreeFragAllocator;
 
 	XalanSourceTreeDocumentFragmentAllocator	m_documentFragmentAllocator;
+
+	XalanSourceTreeDocumentAllocator	m_documentAllocator;
+
+	// If true, we will use a separate document factory for
+	// result tree fragments.
+	bool								m_usePerInstanceDocumentFactory;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 

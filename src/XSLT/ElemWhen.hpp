@@ -107,6 +107,9 @@ public:
 	virtual const XalanDOMString&
 	getElementName() const;
 
+	virtual void
+	execute(StylesheetExecutionContext& 	executionContext) const;
+
 private:
 
 	const XPath*	m_pTest;

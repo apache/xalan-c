@@ -130,3 +130,13 @@ ElemWhen::getElementName() const
 {
 	return Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING;
 }
+
+
+
+void
+ElemWhen::execute(StylesheetExecutionContext&	executionContext) const
+{
+	ElemTemplateElement::execute(executionContext);
+
+	executeChildren(executionContext);
+}

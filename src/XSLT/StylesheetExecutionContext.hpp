@@ -113,6 +113,7 @@
 
 
 class CountersTable;
+class ElemTemplate;
 class ElemTemplateElement;
 class ElemVariable;
 class FormatterListener;
@@ -207,7 +208,7 @@ public:
 	setStylesheetRoot(const StylesheetRoot*		theStylesheet) = 0;
 
 	/**
-	 * Retrieve the current mode of the element
+	 * Retrieve the current mode.
 	 * 
 	 * @return QName for mode
 	 */
@@ -215,12 +216,64 @@ public:
 	getCurrentMode() const = 0;
 
 	/**
-	 * Set the current mode of the element
+	 * Set the current mode.
 	 * 
-	 * @param QName for mode
+	 * @param theMode QName for mode
 	 */
 	virtual	void
 	setCurrentMode(const XalanQName* theMode) = 0; 
+
+	/**
+	 * Retrieve the current template
+	 * 
+	 * @return The current template instance or null if there is no current template
+	 */
+	virtual const ElemTemplate*
+	getCurrentTemplate() const = 0;
+
+	/**
+	 * Set the current template
+	 * 
+	 * @param theTemplate The current template instance
+	 */
+	virtual	void
+	setCurrentTemplate(const ElemTemplate*	theTemplate) = 0; 
+
+	/*
+	 * A class to manage setting and restoring the current
+	 * template instance.
+	 */
+	class SetAndRestoreCurrentTemplate
+	{
+	public:
+
+		SetAndRestoreCurrentTemplate(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplate*				theTemplate) :
+			m_executionContext(executionContext),
+			m_template(executionContext.getCurrentTemplate())
+		{
+			executionContext.setCurrentTemplate(theTemplate);
+		}
+
+		~SetAndRestoreCurrentTemplate()
+		{
+			m_executionContext.setCurrentTemplate(m_template);
+		}
+
+	private:
+
+		// Not implemented...
+		SetAndRestoreCurrentTemplate(const SetAndRestoreCurrentTemplate&);
+
+		SetAndRestoreCurrentTemplate&
+		operator=(const SetAndRestoreCurrentTemplate&);
+
+		// Data members...
+		StylesheetExecutionContext&		m_executionContext;
+
+		const ElemTemplate* const		m_template;
+	};
 
 	/**
 	 * Whether diagnostic output is to be generated

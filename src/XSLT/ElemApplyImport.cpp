@@ -119,12 +119,17 @@ ElemApplyImport::getElementName() const
 
 
 void
-ElemApplyImport::execute(StylesheetExecutionContext&		executionContext) const
+ElemApplyImport::execute(StylesheetExecutionContext&	executionContext) const
 {
-	ElemTemplateElement::execute(executionContext);
-
 	XalanNode* const	sourceNode = executionContext.getCurrentNode();
 	assert(sourceNode != 0);
+
+	if (executionContext.getCurrentTemplate() == 0)
+	{
+		executionContext.error("There is no current template", sourceNode, this);
+	}
+
+	ElemTemplateElement::execute(executionContext);
 
 	transformChild(
 			executionContext,

@@ -169,6 +169,8 @@ ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 {
 	assert(m_selectPattern != 0);
 
+	StylesheetExecutionContext::SetAndRestoreCurrentTemplate	theSetAndRestore(executionContext, 0);
+
 	if (hasChildren() == true)
 	{
 		XalanNode* const	sourceNode = executionContext.getCurrentNode();

@@ -153,6 +153,14 @@ public:
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
 
+	virtual void
+	executeChildren(StylesheetExecutionContext& 	executionContext) const;
+
+	virtual void
+	executeChildren(
+			StylesheetExecutionContext& 	executionContext,
+			XalanNode*						sourceNode) const;
+
 private:
 
 	// not implemented

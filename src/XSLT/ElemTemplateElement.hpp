@@ -223,7 +223,7 @@ public:
 	 * 
 	 * @param processor  XSLT processor instance
 	 */
-	void
+	virtual void
 	executeChildren(StylesheetExecutionContext& 	executionContext) const;
 
 	/** 
@@ -232,7 +232,7 @@ public:
 	 * @param processor  XSLT processor instance
 	 * @param sourceNode current node
 	 */
-	void
+	virtual void
 	executeChildren(
 			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						sourceNode) const;

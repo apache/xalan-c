@@ -174,9 +174,31 @@ ElemTemplate::getElementName() const
 
 
 void
-ElemTemplate::execute(StylesheetExecutionContext&		executionContext) const
+ElemTemplate::execute(StylesheetExecutionContext&	executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
 	executeChildren(executionContext);
+}
+
+
+
+void
+ElemTemplate::executeChildren(StylesheetExecutionContext&	executionContext) const
+{
+	StylesheetExecutionContext::SetAndRestoreCurrentTemplate	theSetAndRestore(executionContext, this);
+
+	ElemTemplateElement::executeChildren(executionContext);
+}
+
+
+
+void
+ElemTemplate::executeChildren(
+		StylesheetExecutionContext&		executionContext,
+		XalanNode*						sourceNode) const
+{
+	StylesheetExecutionContext::SetAndRestoreCurrentTemplate	theSetAndRestore(executionContext, this);
+
+	ElemTemplateElement::executeChildren(executionContext, sourceNode);
 }

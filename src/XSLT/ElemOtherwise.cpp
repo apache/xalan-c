@@ -107,3 +107,13 @@ ElemOtherwise::getElementName() const
 {
 	return Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING;
 }
+
+
+
+void
+ElemOtherwise::execute(StylesheetExecutionContext&	executionContext) const
+{
+	ElemTemplateElement::execute(executionContext);
+
+	executeChildren(executionContext);
+}

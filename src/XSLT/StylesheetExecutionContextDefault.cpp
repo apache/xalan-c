@@ -151,13 +151,16 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0),
+	m_currentTemplate(0),
 	m_formatterToTextCache(),
 	m_formatterToSourceTreeCache(),
 	m_nodeSorterCache(),
 	m_indentAmount(-1),
 	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
 	m_resultTreeFragAllocator(eResultTreeFragAllocatorBlockSize),
-	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize)
+	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
+	m_documentAllocator(eDocumentAllocatorBlockSize),
+	m_usePerInstanceDocumentFactory(true)
 {
 }
 
@@ -188,13 +191,16 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0),
+	m_currentTemplate(0),
 	m_formatterToTextCache(),
 	m_formatterToSourceTreeCache(),
 	m_nodeSorterCache(),
 	m_indentAmount(-1),
 	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
 	m_resultTreeFragAllocator(eResultTreeFragAllocatorBlockSize),
-	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize)
+	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
+	m_documentAllocator(eDocumentAllocatorBlockSize),
+	m_usePerInstanceDocumentFactory(true)
 {
 }
 
@@ -277,6 +283,22 @@ void
 StylesheetExecutionContextDefault::setCurrentMode(const XalanQName*		theMode)
 {		
 	m_mode = theMode;
+}
+
+
+
+const ElemTemplate*
+StylesheetExecutionContextDefault::getCurrentTemplate() const
+{
+	return m_currentTemplate;
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setCurrentTemplate(const ElemTemplate*	theTemplate)
+{		
+	m_currentTemplate = theTemplate;
 }
 
 
@@ -937,8 +959,13 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 {
 	assert(m_xsltProcessor != 0);
 
+	XalanSourceTreeDocument* const	theDocument = m_usePerInstanceDocumentFactory == true ?
+		m_documentAllocator.create() :
+		getSourceTreeFactory();
+	assert(theDocument != 0);
+
 	XalanSourceTreeDocumentFragment* const	theDocumentFragment =
-		m_documentFragmentAllocator.create(*getSourceTreeFactory());
+		m_documentFragmentAllocator.create(*theDocument);
 	assert(theDocumentFragment != 0);
 
 	ResultTreeFragBase* const	theResultTreeFrag =
@@ -949,8 +976,6 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 
 	FormatterToSourceTree* const	theFormatter = theGuard.get();
 	assert(theFormatter != 0);
-
-	XalanSourceTreeDocument* const	theDocument = getSourceTreeFactory();
 
 	theFormatter->setDocument(theDocument);
 
@@ -1103,7 +1128,7 @@ StylesheetExecutionContextDefault::returnXResultTreeFrag(XResultTreeFrag*	theXRe
 	}
 	else
 	{
-	ResultTreeFrag* const	theResultTreeFrag =
+		ResultTreeFrag* const	theResultTreeFrag =
 #if defined(XALAN_OLD_STYLE_CASTS)
 			(ResultTreeFrag*)theResultTreeFragBase;
 #else
@@ -1115,9 +1140,23 @@ StylesheetExecutionContextDefault::returnXResultTreeFrag(XResultTreeFrag*	theXRe
 		assert(theDocumentFragment != 0);
 
 		m_resultTreeFragAllocator.destroy(theResultTreeFrag);
+
+		if (m_usePerInstanceDocumentFactory == true)
+		{
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+#if defined(XALAN_OLD_STYLE_CASTS)
+			m_documentAllocator.destroy((const XalanSourceTreeDocument*)theDocumentFragment->getOwnerDocument());
+#else
+			m_documentAllocator.destroy(static_cast<XalanSourceTreeDocument*>(theDocumentFragment->getOwnerDocument()));
+#endif
+#else
+			m_documentAllocator.destroy(theDocumentFragment->getOwnerDocument());
+#endif
+		}
+
 		m_documentFragmentAllocator.destroy(theDocumentFragment);
 
-		return true;
+        return true;
 	}
 }
 
@@ -1502,10 +1541,12 @@ StylesheetExecutionContextDefault::reset()
 	}
 
 	m_mode = 0;
+	m_currentTemplate = 0;
 
 	m_formatterToTextCache.reset();
 	m_formatterToSourceTreeCache.reset();
 	m_nodeSorterCache.reset();
+	m_documentAllocator.reset();
 	m_documentFragmentAllocator.reset();
 	m_resultTreeFragAllocator.reset();
 	m_xresultTreeFragAllocator.reset();
