@@ -137,17 +137,12 @@ protected:
 private:
 
 	/** 
-	 * Output the static namespace definitions.
+	 * Do any necessary fixup for the default namespace
 	 * 
 	 * @param executionContext The current execution context
-	 * @param true if the element being generated has an unresolved prefix.
-	 * @param supressDefault If true, any default namespace declaration will not be output.
 	 */
 	void
-	outputResultNamespaces(
-			StylesheetExecutionContext&		executionContext,
-			bool							hasUnresolvedPrefix,
-			bool							supressDefault = false) const;
+	fixupDefaultNamespace(StylesheetExecutionContext&	executionContext) const;
 
 	/** 
 	 * Get the default namespace from the parent of this element.  Returns
