@@ -776,7 +776,7 @@ FormatterToXML::throwInvalidUTF16SurrogateException(
 
 
 
-void
+XalanDOMString::size_type
 FormatterToXML::accumDefaultEscape(
 			XalanDOMChar				ch,
 			XalanDOMString::size_type	i,
@@ -789,22 +789,22 @@ FormatterToXML::accumDefaultEscape(
 		if (0xd800 <= ch && ch < 0xdc00) 
 		{
 			// UTF-16 surrogate
-			XalanDOMChar	next = 0;
+			unsigned long	next = 0;
 
-			if (i + 1 >= len) 
+			if (i + 1 >= len)
 			{
 				throwInvalidUTF16SurrogateException(ch);
 			}
 			else 
 			{
-				next = chars[i + 1];
+				next = chars[++i];
 
 				if (!(0xdc00u <= next && next < 0xe000u))
 				{
-					throwInvalidUTF16SurrogateException(ch, next);
+					throwInvalidUTF16SurrogateException(ch, XalanDOMChar(next));
 				}
 
-				next = XalanDOMChar(((ch - 0xd800u) << 10) + next - 0xdc00u + 0x00010000u);
+				next = ((ch - 0xd800u) << 10) + next - 0xdc00u + 0x00010000u;
 			}
 
 			writeNumberedEntityReference(next);
@@ -821,14 +821,16 @@ FormatterToXML::accumDefaultEscape(
 			}
 		}
 	}
+
+	return i;
 }
 
 
 
 bool
 FormatterToXML::accumDefaultEntity(
-			XalanDOMChar				ch,
-			bool						escLF)
+			XalanDOMChar	ch,
+			bool			escLF)
 {
 	if (escLF == false && XalanUnicode::charLF == ch) 
 	{
@@ -1174,7 +1176,7 @@ FormatterToXML::characters(
 				{
 					accumContent(chars, firstIndex, i - firstIndex);
 
-					accumDefaultEscape(ch, i, chars, length, false);
+					i = accumDefaultEscape(ch, i, chars, length, false);
 
 					++i;
 
@@ -1235,7 +1237,7 @@ FormatterToXML::writeAttrString(
 		{
 			accumContent(theString, firstIndex, i - firstIndex);
 
-			accumDefaultEscape(ch, i, theString, theStringLength, true);
+			i = accumDefaultEscape(ch, i, theString, theStringLength, true);
 
 			++i;
 

@@ -489,7 +489,7 @@ protected:
 	/**
 	 * Escape and accum a character.
 	 */
-	void
+	XalanDOMString::size_type
 	accumDefaultEscape(
 			XalanDOMChar				ch,
 			XalanDOMString::size_type	i,
@@ -500,11 +500,11 @@ protected:
 	/**
 	 * Handle one of the default entities, return false if it 
 	 * is not a default entity.
-	*/
+	 */
 	virtual bool
 	accumDefaultEntity(
-			XalanDOMChar				ch,
-			bool						escLF);
+			XalanDOMChar	ch,
+			bool			escLF);
 
 	/**
 	 * Set the attribute characters what will require special mapping.
