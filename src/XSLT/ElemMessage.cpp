@@ -129,20 +129,26 @@ ElemMessage::getElementName() const
 
 
 void
-ElemMessage::execute(StylesheetExecutionContext&		executionContext) const
+ElemMessage::execute(StylesheetExecutionContext&	executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
 	StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-    executionContext.message(
-		childrenToString(executionContext,theResult.get()),
-		executionContext.getCurrentNode(),
-		getLocator());
+	const XalanDOMString&	theString =
+		childrenToString(
+			executionContext,
+			theResult.get());
+
+		
+	executionContext.message(
+			theString,
+			executionContext.getCurrentNode(),
+			getLocator());
 
 	if (m_terminate == true)
 	{
-		throw ElemMessageTerminateException(theResult.get());
+		throw ElemMessageTerminateException(theString);
 	}
 }
 
