@@ -596,7 +596,7 @@ private:
  * Hash table that can look up XSLT4J extensions element IDs via name.
  */
 	typedef std::map<DOMString, int>	ElementKeysMapType;
-	static const ElementKeysMapType		s_XSLT4JElementKeys;
+	static ElementKeysMapType		s_XSLT4JElementKeys;
 
 	/**
 	 * Init the XSLT hashtable.
@@ -613,12 +613,12 @@ public:
 	typedef std::map<DOMString, int>	AttributeKeysMapType;
 
 private:
-	static const AttributeKeysMapType	s_attributeKeys;
+	static AttributeKeysMapType	s_attributeKeys;
 
   /**
    *  Hash table that can look up xslt element IDs via name.
    */
-	static const AttributeKeysMapType	s_elementKeys;
+	static AttributeKeysMapType	s_elementKeys;
 
 
 public:
@@ -2796,13 +2796,13 @@ private:
 	static void
 	InstallFunctions();
 
-	static AttributeKeysMapType
+	static void
 	InitializeAttributeKeysTable();
 
-	static AttributeKeysMapType
+	static void
 	InitializeElementKeysTable();
 
-	static ElementKeysMapType
+	static void
 	InitializeXSLT4JElementKeys();
 
 

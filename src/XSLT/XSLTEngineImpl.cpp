@@ -212,11 +212,11 @@ const DOMString	XSLTEngineImpl::s_XSLT4JNameSpaceURL(XALAN_STATIC_UCODE_STRING("
  */
 const bool										XSLTEngineImpl::m_resolveContentsEarly = true;
 
-const XSLTEngineImpl::AttributeKeysMapType XSLTEngineImpl::s_attributeKeys;
+XSLTEngineImpl::AttributeKeysMapType XSLTEngineImpl::s_attributeKeys;
 
-const XSLTEngineImpl::ElementKeysMapType		XSLTEngineImpl::s_elementKeys;
+XSLTEngineImpl::ElementKeysMapType		XSLTEngineImpl::s_elementKeys;
 
-const XSLTEngineImpl::ElementKeysMapType XSLTEngineImpl::s_XSLT4JElementKeys;
+XSLTEngineImpl::ElementKeysMapType XSLTEngineImpl::s_XSLT4JElementKeys;
 
 
 
@@ -289,9 +289,9 @@ XSLTEngineImpl::XSLTEngineImpl(
 void XSLTEngineImpl::Initialize()
 {
 	InstallFunctions();
-	s_attributeKeys = InitializeAttributeKeysTable();
-	s_elementKeys = InitializeElementKeysTable();
-	s_XSLT4JElementKeys = InitializeXSLT4JElementKeys();
+	InitializeAttributeKeysTable();
+	InitializeElementKeysTable();
+	InitializeXSLT4JElementKeys();
 }
 
 
@@ -4331,163 +4331,151 @@ XSLTEngineImpl::InstallFunctions()
 
 
 
-XSLTEngineImpl::AttributeKeysMapType
+void
 XSLTEngineImpl::InitializeAttributeKeysTable()
 {
-	AttributeKeysMapType	theAttributeKeys;
+	s_attributeKeys[Constants::ATTRNAME_OUTPUT_METHOD] = Constants::TATTRNAME_OUTPUT_METHOD;
+	s_attributeKeys[Constants::ATTRNAME_AMOUNT] = Constants::TATTRNAME_AMOUNT;
+	s_attributeKeys[Constants::ATTRNAME_ANCESTOR] = Constants::TATTRNAME_ANCESTOR;
+	s_attributeKeys[Constants::ATTRNAME_ARCHIVE] = Constants::TATTRNAME_ARCHIVE;
+	s_attributeKeys[Constants::ATTRNAME_ATTRIBUTE] = Constants::TATTRNAME_ATTRIBUTE;
+	s_attributeKeys[Constants::ATTRNAME_ATTRIBUTE_SET] = Constants::TATTRNAME_ATTRIBUTE_SET;
+	s_attributeKeys[Constants::ATTRNAME_CASEORDER] = Constants::TATTRNAME_CASEORDER;
+	s_attributeKeys[Constants::ATTRNAME_CLASS] = Constants::TATTRNAME_CLASS;
+	s_attributeKeys[Constants::ATTRNAME_CLASSID] = Constants::TATTRNAME_CLASSID;
+	s_attributeKeys[Constants::ATTRNAME_CODEBASE] = Constants::TATTRNAME_CODEBASE;
+	s_attributeKeys[Constants::ATTRNAME_CODETYPE] = Constants::TATTRNAME_CODETYPE;
+	s_attributeKeys[Constants::ATTRNAME_CONDITION] = Constants::TATTRNAME_CONDITION;
+	s_attributeKeys[Constants::ATTRNAME_COPYTYPE] = Constants::TATTRNAME_COPYTYPE;
+	s_attributeKeys[Constants::ATTRNAME_COUNT] = Constants::TATTRNAME_COUNT;
+	s_attributeKeys[Constants::ATTRNAME_DATATYPE] = Constants::TATTRNAME_DATATYPE;
+	s_attributeKeys[Constants::ATTRNAME_DEFAULT] = Constants::TATTRNAME_DEFAULT;
+	s_attributeKeys[Constants::ATTRNAME_DEFAULTSPACE] = Constants::TATTRNAME_DEFAULTSPACE;
+	s_attributeKeys[Constants::ATTRNAME_DEPTH] = Constants::TATTRNAME_DEPTH;
+	s_attributeKeys[Constants::ATTRNAME_DIGITGROUPSEP] = Constants::TATTRNAME_DIGITGROUPSEP;
+	s_attributeKeys[Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING] = Constants::TATTRNAME_DISABLE_OUTPUT_ESCAPING;
+	s_attributeKeys[Constants::ATTRNAME_ELEMENT] = Constants::TATTRNAME_ELEMENT;
+	s_attributeKeys[Constants::ATTRNAME_ELEMENTS] = Constants::TATTRNAME_ELEMENTS;
+	s_attributeKeys[Constants::ATTRNAME_EXPR] = Constants::TATTRNAME_EXPR;
+	s_attributeKeys[Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES] = Constants::TATTRNAME_EXTENSIONELEMENTPREFIXES;
+	s_attributeKeys[Constants::ATTRNAME_FORMAT] = Constants::TATTRNAME_FORMAT;
+	s_attributeKeys[Constants::ATTRNAME_FROM] = Constants::TATTRNAME_FROM;
+	s_attributeKeys[Constants::ATTRNAME_GROUPINGSEPARATOR] = Constants::TATTRNAME_GROUPINGSEPARATOR;
+	s_attributeKeys[Constants::ATTRNAME_GROUPINGSIZE] = Constants::TATTRNAME_GROUPINGSIZE;
+	s_attributeKeys[Constants::ATTRNAME_HREF] = Constants::TATTRNAME_HREF;
+	s_attributeKeys[Constants::ATTRNAME_ID] = Constants::TATTRNAME_ID;
+	s_attributeKeys[Constants::ATTRNAME_IMPORTANCE] = Constants::TATTRNAME_IMPORTANCE;
+	s_attributeKeys[Constants::ATTRNAME_INDENTRESULT] = Constants::TATTRNAME_INDENTRESULT;
+	s_attributeKeys[Constants::ATTRNAME_LANG] = Constants::TATTRNAME_LANG;
+	s_attributeKeys[Constants::ATTRNAME_LETTERVALUE] = Constants::TATTRNAME_LETTERVALUE;
+	s_attributeKeys[Constants::ATTRNAME_LEVEL] = Constants::TATTRNAME_LEVEL;
+	s_attributeKeys[Constants::ATTRNAME_MATCH] = Constants::TATTRNAME_MATCH;
+	s_attributeKeys[Constants::ATTRNAME_METHOD] = Constants::TATTRNAME_METHOD;
+	s_attributeKeys[Constants::ATTRNAME_MODE] = Constants::TATTRNAME_MODE;
+	s_attributeKeys[Constants::ATTRNAME_NAME] = Constants::TATTRNAME_NAME;
+	s_attributeKeys[Constants::ATTRNAME_NAMESPACE] = Constants::TATTRNAME_NAMESPACE;
+	s_attributeKeys[Constants::ATTRNAME_NDIGITSPERGROUP] = Constants::TATTRNAME_NDIGITSPERGROUP;
+	s_attributeKeys[Constants::ATTRNAME_NS] = Constants::TATTRNAME_NS;
+	s_attributeKeys[Constants::ATTRNAME_ONLY] = Constants::TATTRNAME_ONLY;
+	s_attributeKeys[Constants::ATTRNAME_ORDER] = Constants::TATTRNAME_ORDER;
+	s_attributeKeys[Constants::ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS] = Constants::TATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS;
+	s_attributeKeys[Constants::ATTRNAME_OUTPUT_DOCTYPE_PUBLIC] = Constants::TATTRNAME_OUTPUT_DOCTYPE_PUBLIC;
+	s_attributeKeys[Constants::ATTRNAME_OUTPUT_DOCTYPE_SYSTEM] = Constants::TATTRNAME_OUTPUT_DOCTYPE_SYSTEM;
+	s_attributeKeys[Constants::ATTRNAME_OUTPUT_ENCODING] = Constants::TATTRNAME_OUTPUT_ENCODING;
+	s_attributeKeys[Constants::ATTRNAME_OUTPUT_INDENT] = Constants::TATTRNAME_OUTPUT_INDENT;
+	s_attributeKeys[Constants::ATTRNAME_OUTPUT_MEDIATYPE] = Constants::TATTRNAME_OUTPUT_MEDIATYPE;
+	s_attributeKeys[Constants::ATTRNAME_OUTPUT_STANDALONE] = Constants::TATTRNAME_OUTPUT_STANDALONE;
+	s_attributeKeys[Constants::ATTRNAME_OUTPUT_VERSION] = Constants::TATTRNAME_OUTPUT_VERSION;
+	s_attributeKeys[Constants::ATTRNAME_OUTPUT_XMLDECL] = Constants::TATTRNAME_OUTPUT_XMLDECL;
+	s_attributeKeys[Constants::ATTRNAME_PRIORITY] = Constants::TATTRNAME_PRIORITY;
+	s_attributeKeys[Constants::ATTRNAME_REFID] = Constants::TATTRNAME_REFID;
+	s_attributeKeys[Constants::ATTRNAME_RESULTNS] = Constants::TATTRNAME_RESULTNS;
+	s_attributeKeys[Constants::ATTRNAME_SELECT] = Constants::TATTRNAME_SELECT;
+	s_attributeKeys[Constants::ATTRNAME_SEQUENCESRC] = Constants::TATTRNAME_SEQUENCESRC;
+	s_attributeKeys[Constants::ATTRNAME_STYLE] = Constants::TATTRNAME_STYLE;
+	s_attributeKeys[Constants::ATTRNAME_TEST] = Constants::TATTRNAME_TEST;
+	s_attributeKeys[Constants::ATTRNAME_TOSTRING] = Constants::TATTRNAME_TOSTRING;
+	s_attributeKeys[Constants::ATTRNAME_TYPE] = Constants::TATTRNAME_TYPE;
+	s_attributeKeys[Constants::ATTRNAME_USE] = Constants::TATTRNAME_USE;
+	s_attributeKeys[Constants::ATTRNAME_USEATTRIBUTESETS] = Constants::TATTRNAME_USEATTRIBUTESETS;
+	s_attributeKeys[Constants::ATTRNAME_VALUE] = Constants::TATTRNAME_VALUE;
 
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_METHOD] = Constants::TATTRNAME_OUTPUT_METHOD;
-	theAttributeKeys[Constants::ATTRNAME_AMOUNT] = Constants::TATTRNAME_AMOUNT;
-	theAttributeKeys[Constants::ATTRNAME_ANCESTOR] = Constants::TATTRNAME_ANCESTOR;
-	theAttributeKeys[Constants::ATTRNAME_ARCHIVE] = Constants::TATTRNAME_ARCHIVE;
-	theAttributeKeys[Constants::ATTRNAME_ATTRIBUTE] = Constants::TATTRNAME_ATTRIBUTE;
-	theAttributeKeys[Constants::ATTRNAME_ATTRIBUTE_SET] = Constants::TATTRNAME_ATTRIBUTE_SET;
-	theAttributeKeys[Constants::ATTRNAME_CASEORDER] = Constants::TATTRNAME_CASEORDER;
-	theAttributeKeys[Constants::ATTRNAME_CLASS] = Constants::TATTRNAME_CLASS;
-	theAttributeKeys[Constants::ATTRNAME_CLASSID] = Constants::TATTRNAME_CLASSID;
-	theAttributeKeys[Constants::ATTRNAME_CODEBASE] = Constants::TATTRNAME_CODEBASE;
-	theAttributeKeys[Constants::ATTRNAME_CODETYPE] = Constants::TATTRNAME_CODETYPE;
-	theAttributeKeys[Constants::ATTRNAME_CONDITION] = Constants::TATTRNAME_CONDITION;
-	theAttributeKeys[Constants::ATTRNAME_COPYTYPE] = Constants::TATTRNAME_COPYTYPE;
-	theAttributeKeys[Constants::ATTRNAME_COUNT] = Constants::TATTRNAME_COUNT;
-	theAttributeKeys[Constants::ATTRNAME_DATATYPE] = Constants::TATTRNAME_DATATYPE;
-	theAttributeKeys[Constants::ATTRNAME_DEFAULT] = Constants::TATTRNAME_DEFAULT;
-	theAttributeKeys[Constants::ATTRNAME_DEFAULTSPACE] = Constants::TATTRNAME_DEFAULTSPACE;
-	theAttributeKeys[Constants::ATTRNAME_DEPTH] = Constants::TATTRNAME_DEPTH;
-	theAttributeKeys[Constants::ATTRNAME_DIGITGROUPSEP] = Constants::TATTRNAME_DIGITGROUPSEP;
-	theAttributeKeys[Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING] = Constants::TATTRNAME_DISABLE_OUTPUT_ESCAPING;
-	theAttributeKeys[Constants::ATTRNAME_ELEMENT] = Constants::TATTRNAME_ELEMENT;
-	theAttributeKeys[Constants::ATTRNAME_ELEMENTS] = Constants::TATTRNAME_ELEMENTS;
-	theAttributeKeys[Constants::ATTRNAME_EXPR] = Constants::TATTRNAME_EXPR;
-	theAttributeKeys[Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES] = Constants::TATTRNAME_EXTENSIONELEMENTPREFIXES;
-	theAttributeKeys[Constants::ATTRNAME_FORMAT] = Constants::TATTRNAME_FORMAT;
-	theAttributeKeys[Constants::ATTRNAME_FROM] = Constants::TATTRNAME_FROM;
-	theAttributeKeys[Constants::ATTRNAME_GROUPINGSEPARATOR] = Constants::TATTRNAME_GROUPINGSEPARATOR;
-	theAttributeKeys[Constants::ATTRNAME_GROUPINGSIZE] = Constants::TATTRNAME_GROUPINGSIZE;
-	theAttributeKeys[Constants::ATTRNAME_HREF] = Constants::TATTRNAME_HREF;
-	theAttributeKeys[Constants::ATTRNAME_ID] = Constants::TATTRNAME_ID;
-	theAttributeKeys[Constants::ATTRNAME_IMPORTANCE] = Constants::TATTRNAME_IMPORTANCE;
-	theAttributeKeys[Constants::ATTRNAME_INDENTRESULT] = Constants::TATTRNAME_INDENTRESULT;
-	theAttributeKeys[Constants::ATTRNAME_LANG] = Constants::TATTRNAME_LANG;
-	theAttributeKeys[Constants::ATTRNAME_LETTERVALUE] = Constants::TATTRNAME_LETTERVALUE;
-	theAttributeKeys[Constants::ATTRNAME_LEVEL] = Constants::TATTRNAME_LEVEL;
-	theAttributeKeys[Constants::ATTRNAME_MATCH] = Constants::TATTRNAME_MATCH;
-	theAttributeKeys[Constants::ATTRNAME_METHOD] = Constants::TATTRNAME_METHOD;
-	theAttributeKeys[Constants::ATTRNAME_MODE] = Constants::TATTRNAME_MODE;
-	theAttributeKeys[Constants::ATTRNAME_NAME] = Constants::TATTRNAME_NAME;
-	theAttributeKeys[Constants::ATTRNAME_NAMESPACE] = Constants::TATTRNAME_NAMESPACE;
-	theAttributeKeys[Constants::ATTRNAME_NDIGITSPERGROUP] = Constants::TATTRNAME_NDIGITSPERGROUP;
-	theAttributeKeys[Constants::ATTRNAME_NS] = Constants::TATTRNAME_NS;
-	theAttributeKeys[Constants::ATTRNAME_ONLY] = Constants::TATTRNAME_ONLY;
-	theAttributeKeys[Constants::ATTRNAME_ORDER] = Constants::TATTRNAME_ORDER;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS] = Constants::TATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_DOCTYPE_PUBLIC] = Constants::TATTRNAME_OUTPUT_DOCTYPE_PUBLIC;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_DOCTYPE_SYSTEM] = Constants::TATTRNAME_OUTPUT_DOCTYPE_SYSTEM;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_ENCODING] = Constants::TATTRNAME_OUTPUT_ENCODING;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_INDENT] = Constants::TATTRNAME_OUTPUT_INDENT;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_MEDIATYPE] = Constants::TATTRNAME_OUTPUT_MEDIATYPE;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_STANDALONE] = Constants::TATTRNAME_OUTPUT_STANDALONE;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_VERSION] = Constants::TATTRNAME_OUTPUT_VERSION;
-	theAttributeKeys[Constants::ATTRNAME_OUTPUT_XMLDECL] = Constants::TATTRNAME_OUTPUT_XMLDECL;
-	theAttributeKeys[Constants::ATTRNAME_PRIORITY] = Constants::TATTRNAME_PRIORITY;
-	theAttributeKeys[Constants::ATTRNAME_REFID] = Constants::TATTRNAME_REFID;
-	theAttributeKeys[Constants::ATTRNAME_RESULTNS] = Constants::TATTRNAME_RESULTNS;
-	theAttributeKeys[Constants::ATTRNAME_SELECT] = Constants::TATTRNAME_SELECT;
-	theAttributeKeys[Constants::ATTRNAME_SEQUENCESRC] = Constants::TATTRNAME_SEQUENCESRC;
-	theAttributeKeys[Constants::ATTRNAME_STYLE] = Constants::TATTRNAME_STYLE;
-	theAttributeKeys[Constants::ATTRNAME_TEST] = Constants::TATTRNAME_TEST;
-	theAttributeKeys[Constants::ATTRNAME_TOSTRING] = Constants::TATTRNAME_TOSTRING;
-	theAttributeKeys[Constants::ATTRNAME_TYPE] = Constants::TATTRNAME_TYPE;
-	theAttributeKeys[Constants::ATTRNAME_USE] = Constants::TATTRNAME_USE;
-	theAttributeKeys[Constants::ATTRNAME_USEATTRIBUTESETS] = Constants::TATTRNAME_USEATTRIBUTESETS;
-	theAttributeKeys[Constants::ATTRNAME_VALUE] = Constants::TATTRNAME_VALUE;
-
-	theAttributeKeys[Constants::ATTRNAME_XMLNSDEF] = Constants::TATTRNAME_XMLNSDEF;
-	theAttributeKeys[Constants::ATTRNAME_XMLNS] = Constants::TATTRNAME_XMLNS;
-	theAttributeKeys[Constants::ATTRNAME_XMLSPACE] = Constants::TATTRNAME_XMLSPACE;
-
-	return theAttributeKeys;
+	s_attributeKeys[Constants::ATTRNAME_XMLNSDEF] = Constants::TATTRNAME_XMLNSDEF;
+	s_attributeKeys[Constants::ATTRNAME_XMLNS] = Constants::TATTRNAME_XMLNS;
+	s_attributeKeys[Constants::ATTRNAME_XMLSPACE] = Constants::TATTRNAME_XMLSPACE;
 }
 
 
 
-XSLTEngineImpl::AttributeKeysMapType
+void
 XSLTEngineImpl::InitializeElementKeysTable()
 {
-	AttributeKeysMapType	theElementKeys;
+	s_elementKeys[Constants::ELEMNAME_APPLY_TEMPLATES_STRING] = Constants::ELEMNAME_APPLY_TEMPLATES;
+	s_elementKeys[Constants::ELEMNAME_WITHPARAM_STRING] = Constants::ELEMNAME_WITHPARAM;
+	s_elementKeys[Constants::ELEMNAME_CONSTRUCT_STRING] = Constants::ELEMNAME_CONSTRUCT;
+	s_elementKeys[Constants::ELEMNAME_CONTENTS_STRING] = Constants::ELEMNAME_CONTENTS;
+	s_elementKeys[Constants::ELEMNAME_COPY_STRING] = Constants::ELEMNAME_COPY;
+	s_elementKeys[Constants::ELEMNAME_COPY_OF_STRING] = Constants::ELEMNAME_COPY_OF;
 
-	theElementKeys[Constants::ELEMNAME_APPLY_TEMPLATES_STRING] = Constants::ELEMNAME_APPLY_TEMPLATES;
-	theElementKeys[Constants::ELEMNAME_WITHPARAM_STRING] = Constants::ELEMNAME_WITHPARAM;
-	theElementKeys[Constants::ELEMNAME_CONSTRUCT_STRING] = Constants::ELEMNAME_CONSTRUCT;
-	theElementKeys[Constants::ELEMNAME_CONTENTS_STRING] = Constants::ELEMNAME_CONTENTS;
-	theElementKeys[Constants::ELEMNAME_COPY_STRING] = Constants::ELEMNAME_COPY;
-	theElementKeys[Constants::ELEMNAME_COPY_OF_STRING] = Constants::ELEMNAME_COPY_OF;
+	s_elementKeys[Constants::ELEMNAME_ATTRIBUTESET_STRING] = Constants::ELEMNAME_DEFINEATTRIBUTESET;
 
-	theElementKeys[Constants::ELEMNAME_ATTRIBUTESET_STRING] = Constants::ELEMNAME_DEFINEATTRIBUTESET;
+	s_elementKeys[Constants::ELEMNAME_USE_STRING] = Constants::ELEMNAME_USE;
 
-	theElementKeys[Constants::ELEMNAME_USE_STRING] = Constants::ELEMNAME_USE;
+	s_elementKeys[Constants::ELEMNAME_VARIABLE_STRING] = Constants::ELEMNAME_VARIABLE;
+	s_elementKeys[Constants::ELEMNAME_PARAMVARIABLE_STRING] = Constants::ELEMNAME_PARAMVARIABLE;
 
-	theElementKeys[Constants::ELEMNAME_VARIABLE_STRING] = Constants::ELEMNAME_VARIABLE;
-	theElementKeys[Constants::ELEMNAME_PARAMVARIABLE_STRING] = Constants::ELEMNAME_PARAMVARIABLE;
-
-	theElementKeys[Constants::ELEMNAME_DISPLAYIF_STRING] = Constants::ELEMNAME_DISPLAYIF;
-	theElementKeys[Constants::ELEMNAME_EMPTY_STRING] = Constants::ELEMNAME_EMPTY;
-	theElementKeys[Constants::ELEMNAME_EVAL_STRING] = Constants::ELEMNAME_EVAL;
-	theElementKeys[Constants::ELEMNAME_CALLTEMPLATE_STRING] = Constants::ELEMNAME_CALLTEMPLATE;
-	theElementKeys[Constants::ELEMNAME_TEMPLATE_STRING] = Constants::ELEMNAME_TEMPLATE;
-	theElementKeys[Constants::ELEMNAME_STYLESHEET_STRING] = Constants::ELEMNAME_STYLESHEET;
-	theElementKeys[Constants::ELEMNAME_TRANSFORM_STRING] = Constants::ELEMNAME_STYLESHEET;
-	theElementKeys[Constants::ELEMNAME_IMPORT_STRING] = Constants::ELEMNAME_IMPORT;
-	theElementKeys[Constants::ELEMNAME_INCLUDE_STRING] = Constants::ELEMNAME_INCLUDE;
-	theElementKeys[Constants::ELEMNAME_FOREACH_STRING] = Constants::ELEMNAME_FOREACH;
-	theElementKeys[Constants::ELEMNAME_VALUEOF_STRING] = Constants::ELEMNAME_VALUEOF;
-	theElementKeys[Constants::ELEMNAME_KEY_STRING] = Constants::ELEMNAME_KEY;
-	theElementKeys[Constants::ELEMNAME_STRIPSPACE_STRING] = Constants::ELEMNAME_STRIPSPACE;
-	theElementKeys[Constants::ELEMNAME_PRESERVESPACE_STRING] = Constants::ELEMNAME_PRESERVESPACE;
-	theElementKeys[Constants::ELEMNAME_NUMBER_STRING] = Constants::ELEMNAME_NUMBER;
-	theElementKeys[Constants::ELEMNAME_IF_STRING] = Constants::ELEMNAME_IF;
-	theElementKeys[Constants::ELEMNAME_CHOOSE_STRING] = Constants::ELEMNAME_CHOOSE;
-	theElementKeys[Constants::ELEMNAME_WHEN_STRING] = Constants::ELEMNAME_WHEN;
-	theElementKeys[Constants::ELEMNAME_OTHERWISE_STRING] = Constants::ELEMNAME_OTHERWISE;
-	theElementKeys[Constants::ELEMNAME_TEXT_STRING] = Constants::ELEMNAME_TEXT;
-	theElementKeys[Constants::ELEMNAME_ELEMENT_STRING] = Constants::ELEMNAME_ELEMENT;
-	theElementKeys[Constants::ELEMNAME_ATTRIBUTE_STRING] = Constants::ELEMNAME_ATTRIBUTE;
-	theElementKeys[Constants::ELEMNAME_SORT_STRING] = Constants::ELEMNAME_SORT;
-	theElementKeys[Constants::ELEMNAME_PI_STRING] = Constants::ELEMNAME_PI;
-	theElementKeys[Constants::ELEMNAME_COMMENT_STRING] = Constants::ELEMNAME_COMMENT;
+	s_elementKeys[Constants::ELEMNAME_DISPLAYIF_STRING] = Constants::ELEMNAME_DISPLAYIF;
+	s_elementKeys[Constants::ELEMNAME_EMPTY_STRING] = Constants::ELEMNAME_EMPTY;
+	s_elementKeys[Constants::ELEMNAME_EVAL_STRING] = Constants::ELEMNAME_EVAL;
+	s_elementKeys[Constants::ELEMNAME_CALLTEMPLATE_STRING] = Constants::ELEMNAME_CALLTEMPLATE;
+	s_elementKeys[Constants::ELEMNAME_TEMPLATE_STRING] = Constants::ELEMNAME_TEMPLATE;
+	s_elementKeys[Constants::ELEMNAME_STYLESHEET_STRING] = Constants::ELEMNAME_STYLESHEET;
+	s_elementKeys[Constants::ELEMNAME_TRANSFORM_STRING] = Constants::ELEMNAME_STYLESHEET;
+	s_elementKeys[Constants::ELEMNAME_IMPORT_STRING] = Constants::ELEMNAME_IMPORT;
+	s_elementKeys[Constants::ELEMNAME_INCLUDE_STRING] = Constants::ELEMNAME_INCLUDE;
+	s_elementKeys[Constants::ELEMNAME_FOREACH_STRING] = Constants::ELEMNAME_FOREACH;
+	s_elementKeys[Constants::ELEMNAME_VALUEOF_STRING] = Constants::ELEMNAME_VALUEOF;
+	s_elementKeys[Constants::ELEMNAME_KEY_STRING] = Constants::ELEMNAME_KEY;
+	s_elementKeys[Constants::ELEMNAME_STRIPSPACE_STRING] = Constants::ELEMNAME_STRIPSPACE;
+	s_elementKeys[Constants::ELEMNAME_PRESERVESPACE_STRING] = Constants::ELEMNAME_PRESERVESPACE;
+	s_elementKeys[Constants::ELEMNAME_NUMBER_STRING] = Constants::ELEMNAME_NUMBER;
+	s_elementKeys[Constants::ELEMNAME_IF_STRING] = Constants::ELEMNAME_IF;
+	s_elementKeys[Constants::ELEMNAME_CHOOSE_STRING] = Constants::ELEMNAME_CHOOSE;
+	s_elementKeys[Constants::ELEMNAME_WHEN_STRING] = Constants::ELEMNAME_WHEN;
+	s_elementKeys[Constants::ELEMNAME_OTHERWISE_STRING] = Constants::ELEMNAME_OTHERWISE;
+	s_elementKeys[Constants::ELEMNAME_TEXT_STRING] = Constants::ELEMNAME_TEXT;
+	s_elementKeys[Constants::ELEMNAME_ELEMENT_STRING] = Constants::ELEMNAME_ELEMENT;
+	s_elementKeys[Constants::ELEMNAME_ATTRIBUTE_STRING] = Constants::ELEMNAME_ATTRIBUTE;
+	s_elementKeys[Constants::ELEMNAME_SORT_STRING] = Constants::ELEMNAME_SORT;
+	s_elementKeys[Constants::ELEMNAME_PI_STRING] = Constants::ELEMNAME_PI;
+	s_elementKeys[Constants::ELEMNAME_COMMENT_STRING] = Constants::ELEMNAME_COMMENT;
    
-	theElementKeys[Constants::ELEMNAME_COUNTER_STRING] = Constants::ELEMNAME_COUNTER;
-	theElementKeys[Constants::ELEMNAME_COUNTERS_STRING] = Constants::ELEMNAME_COUNTERS;
-	theElementKeys[Constants::ELEMNAME_COUNTERINCREMENT_STRING] = Constants::ELEMNAME_COUNTERINCREMENT;
-	theElementKeys[Constants::ELEMNAME_COUNTERRESET_STRING] = Constants::ELEMNAME_COUNTERRESET;
-	theElementKeys[Constants::ELEMNAME_COUNTERSCOPE_STRING] = Constants::ELEMNAME_COUNTERSCOPE;
+	s_elementKeys[Constants::ELEMNAME_COUNTER_STRING] = Constants::ELEMNAME_COUNTER;
+	s_elementKeys[Constants::ELEMNAME_COUNTERS_STRING] = Constants::ELEMNAME_COUNTERS;
+	s_elementKeys[Constants::ELEMNAME_COUNTERINCREMENT_STRING] = Constants::ELEMNAME_COUNTERINCREMENT;
+	s_elementKeys[Constants::ELEMNAME_COUNTERRESET_STRING] = Constants::ELEMNAME_COUNTERRESET;
+	s_elementKeys[Constants::ELEMNAME_COUNTERSCOPE_STRING] = Constants::ELEMNAME_COUNTERSCOPE;
 	
-	theElementKeys[Constants::ELEMNAME_APPLY_IMPORTS_STRING] = Constants::ELEMNAME_APPLY_IMPORTS;
+	s_elementKeys[Constants::ELEMNAME_APPLY_IMPORTS_STRING] = Constants::ELEMNAME_APPLY_IMPORTS;
 	
-	theElementKeys[Constants::ELEMNAME_EXTENSION_STRING] = Constants::ELEMNAME_EXTENSION;
+	s_elementKeys[Constants::ELEMNAME_EXTENSION_STRING] = Constants::ELEMNAME_EXTENSION;
 
-	theElementKeys[Constants::ELEMNAME_MESSAGE_STRING] = Constants::ELEMNAME_MESSAGE;
-	theElementKeys[Constants::ELEMNAME_LOCALE_STRING] = Constants::ELEMNAME_LOCALE;
-	theElementKeys[Constants::ELEMNAME_FALLBACK_STRING] = Constants::ELEMNAME_FALLBACK;
+	s_elementKeys[Constants::ELEMNAME_MESSAGE_STRING] = Constants::ELEMNAME_MESSAGE;
+	s_elementKeys[Constants::ELEMNAME_LOCALE_STRING] = Constants::ELEMNAME_LOCALE;
+	s_elementKeys[Constants::ELEMNAME_FALLBACK_STRING] = Constants::ELEMNAME_FALLBACK;
 
-	theElementKeys[Constants::ELEMNAME_OUTPUT_STRING] = Constants::ELEMNAME_OUTPUT;
-
-	return theElementKeys;
+	s_elementKeys[Constants::ELEMNAME_OUTPUT_STRING] = Constants::ELEMNAME_OUTPUT;
 }
 
 
 
-XSLTEngineImpl::ElementKeysMapType
+void
 XSLTEngineImpl::InitializeXSLT4JElementKeys()
 {
-	ElementKeysMapType	theElementKeys;
+	s_XSLT4JElementKeys[Constants::ELEMNAME_CSSSTYLECONVERSION_STRING] = Constants::ELEMNAME_CSSSTYLECONVERSION;
 
-	theElementKeys[Constants::ELEMNAME_CSSSTYLECONVERSION_STRING] = Constants::ELEMNAME_CSSSTYLECONVERSION;
-
-	theElementKeys[Constants::ELEMNAME_COMPONENT_STRING] = Constants::ELEMNAME_COMPONENT;
-	theElementKeys[Constants::ELEMNAME_SCRIPT_STRING] = Constants::ELEMNAME_SCRIPT;
-
-	return theElementKeys;
+	s_XSLT4JElementKeys[Constants::ELEMNAME_COMPONENT_STRING] = Constants::ELEMNAME_COMPONENT;
+	s_XSLT4JElementKeys[Constants::ELEMNAME_SCRIPT_STRING] = Constants::ELEMNAME_SCRIPT;
 }
 
 
