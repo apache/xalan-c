@@ -766,6 +766,14 @@ SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\DOMSupport\XalanDocumentPrefixResolver.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\DOMSupport\XalanDocumentPrefixResolver.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\DOMSupport\XalanNamespacesStack.cpp
 # End Source File
 # Begin Source File
