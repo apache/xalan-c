@@ -37,20 +37,20 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-template <class MapIterator>
+template <class Value, class MapIterator>
 struct XalanSetIterator
 {
-    typedef typename MapIterator::value_type::first_type  value_type;
+    typedef Value  value_type;
 
-    typedef value_type&     reference;
-    typedef value_type*     pointer;
+    typedef Value& reference;
+    typedef Value* pointer;
 
     XalanSetIterator(const MapIterator & iter) :
         m_mapIterator(iter)
     {
     }
 
-    value_type& operator*() const
+    reference operator*() const
     {
         return m_mapIterator->first;
     };
@@ -69,6 +69,13 @@ struct XalanSetIterator
     {
         ++m_mapIterator;
         return *this;
+    }
+
+    XalanSetIterator operator++(int)
+    {
+        XalanSetIterator orig(m_mapIterator);
+        ++(*this);
+        return orig;
     }
 
 protected:
@@ -95,8 +102,8 @@ public:
 
     typedef XalanMap<value_type, bool>  SetMapType;
 
-    typedef XalanSetIterator<typename SetMapType::iterator>         iterator;
-    typedef XalanSetIterator<typename SetMapType::const_iterator>   const_iterator;
+    typedef XalanSetIterator<value_type, typename SetMapType::iterator>             iterator;
+    typedef XalanSetIterator<const value_type, typename SetMapType::const_iterator> const_iterator;
 
     XalanSet(MemoryManagerType * theMemoryManager = 0) :
         m_map(theMemoryManager)
@@ -136,7 +143,8 @@ public:
 
     void insert(const value_type& value)
     {
-        m_map.insert(SetMapType::value_type(value,true));
+	typedef typename SetMapType::value_type MapValueType;
+        m_map.insert(MapValueType(value,true));
     }
 
     size_type erase(const value_type& value)
