@@ -95,6 +95,10 @@ ICUBridgeCollationCompareFunctor::~ICUBridgeCollationCompareFunctor()
 
 
 
+static UChar	dummy = 0;
+
+
+
 int
 ICUBridgeCollationCompareFunctor::operator()(
 			const XalanDOMChar*		theLHS,
@@ -108,8 +112,21 @@ ICUBridgeCollationCompareFunctor::operator()(
 	{
 		assert(m_collator != 0);
 
+#if defined(XALAN_ICU_BRIDGE_UCHAR_MISMATCH)
 		return m_collator->compare(
-					ICUBridge::XalanDOMCharStringToUnicodeString(theLHS),
-					ICUBridge::XalanDOMCharStringToUnicodeString(theRHS));
+					ICUBridge::XalanDOMCharStringToUnicodeString(lhs),
+					ICUBridge::XalanDOMCharStringToUnicodeString(rhs));
+#else
+		// $$$ ToDo: This code is necessary because DOMStrings can
+		// have a null representation.
+		const XalanDOMChar* const	lhs = theLHS == 0 ? &dummy : theLHS;
+		const XalanDOMChar* const	rhs = theRHS == 0 ? &dummy : theRHS;
+
+		return m_collator->compare(
+					lhs,
+					length(lhs),
+					rhs,
+					length(rhs));
+#endif
 	}
 }
