@@ -43,6 +43,7 @@
 
 
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
 
 
 
@@ -86,7 +87,7 @@ public:
 			XPathInit						theInit;
 
 			// parse the XML file
-			DOMSupportDefault				theDOMSupport;
+			XercesDOMSupport				theDOMSupport;
 			XercesParserLiaison				theLiaison(theDOMSupport);
 
 			XalanElement*	rootElem = 0;
@@ -121,12 +122,13 @@ public:
 			{
 				// first get the context nodeset
 				XPath* const	contextXPath = theXPathFactory.create();
-				theXPathProcessor.initXPath(*contextXPath,
-											c_str(context),
+
+				theXPathProcessor.initXPath(*contextXPath,										
+											TranscodeFromLocalCodePage(context),
 											ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
 											theEnvSupport);
 
-	   			const XObject*	xObj =
+	   			XObjectPtr	xObj =
 					contextXPath->execute(rootElem,
 										  ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
 										  theExecutionContext);
@@ -162,7 +164,7 @@ public:
 					// and now get the result of the primary xpath expression
 					XPath* const	xpath = theXPathFactory.create();
 					theXPathProcessor.initXPath(*xpath,
-												c_str(expr),
+												TranscodeFromLocalCodePage(expr),
 												ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
 												theEnvSupport);
 
@@ -192,7 +194,7 @@ public:
 								else if (theType == XalanNode::ELEMENT_NODE)
 									str = node->getNodeName();
 								else
-									str = theSupport.getNodeData(*node);
+									theSupport.getNodeData(*node, str);
 
 								theResultList.push_back(TranscodeToLocalCodePage(str));
 							}
