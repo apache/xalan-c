@@ -85,7 +85,7 @@ class XObjectPtr;
 /**
  * This class holds an instance of an argument on the stack.
  */
-class TopLevelArg
+class XALAN_XSLT_EXPORT TopLevelArg
 {
 public:
 
