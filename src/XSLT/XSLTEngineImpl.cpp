@@ -1602,6 +1602,11 @@ XSLTEngineImpl::flushPending()
 							true,	// indent
 							theFormatter->getIndent() > 0 ? theFormatter->getIndent() :
 											StylesheetExecutionContext::eDefaultHTMLIndentAmount));
+
+					if (m_hasCDATASectionElements == true)
+					{
+						m_hasCDATASectionElements = false;
+					}
 				}
 			}
 		}
