@@ -196,7 +196,7 @@ NodeSorter::NodeSortKeyCompare::operator()(
 	// Compare as strings
 	else
 	{
-		const int	theCompareResult = compare(r1->str(), r2->str());
+		const int	theCompareResult = collationCompare(r1->str(), r2->str());
 
 		if(0 == theCompareResult)
 		{
