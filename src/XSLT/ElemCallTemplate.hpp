@@ -71,12 +71,12 @@
 
 
 
+#include <XPath/QName.hpp>
+
+
+
 // Base class header file.
 #include "ElemTemplateElement.hpp"
-
-
-
-class AVT;
 
 
 
@@ -128,7 +128,7 @@ private:
 	operator=(const ElemCallTemplate &);
 
 	// Data members...
-	const QName* m_templateName;
+	QName	m_templateName;
 };
 
 

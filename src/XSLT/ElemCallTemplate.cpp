@@ -88,7 +88,7 @@ ElemCallTemplate::ElemCallTemplate(
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_CALLTEMPLATE),
-	m_templateName(0)
+	m_templateName()
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -98,17 +98,17 @@ ElemCallTemplate::ElemCallTemplate(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_templateName = new QName(atts.getValue(i), getStylesheet().getNamespaces());        
-
-/*
-			m_pNameAVT = new AVT(aname,	atts.getType(i), atts.getValue(i),
-				*this, constructionContext);
-*/
+			m_templateName = QName(atts.getValue(i), getStylesheet().getNamespaces());        
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
+	}
+
+	if (m_templateName.isEmpty() == true)
+	{
+		constructionContext.error(name + " requires a name attribute!");
 	}
 }
 
@@ -116,7 +116,6 @@ ElemCallTemplate::ElemCallTemplate(
 	
 ElemCallTemplate::~ElemCallTemplate()
 {
-	delete m_templateName;
 }
 
 
@@ -130,10 +129,10 @@ ElemCallTemplate::execute(
 {
 	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
 
-	if(!isEmpty(m_templateName->getLocalPart()))
+	if(!isEmpty(m_templateName.getLocalPart()))
 	{
 		ElemTemplateElement* const	theTemplate =
-			getStylesheet().getStylesheetRoot().findNamedTemplate(*m_templateName,
+			getStylesheet().getStylesheetRoot().findNamedTemplate(m_templateName,
 					executionContext);
 
 		if(0 != theTemplate)
@@ -152,7 +151,7 @@ ElemCallTemplate::execute(
 		else
 		{
 			executionContext.error("Could not find template named: '" +
-					m_templateName->getLocalPart() + "'");
+					m_templateName.getLocalPart() + "'");
 		}
 	}
 	else
