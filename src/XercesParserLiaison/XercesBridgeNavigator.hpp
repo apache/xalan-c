@@ -90,9 +90,9 @@ public:
 	virtual
 	~XercesBridgeNavigator();
 
-	XercesBridgeNavigator&
-	operator=(const XercesBridgeNavigator&	theRHS);
 
+	void
+	clearCachedNodes();
 
 	virtual XercesDocumentBridge*
 	getOwnerDocument() const;
@@ -163,11 +163,24 @@ public:
 private:
 
 	// Not implemented...
+//	XercesBridgeNavigator&
+//	operator=(const XercesBridgeNavigator&	theRHS);
+
 	bool
 	operator==(const XercesBridgeNavigator&	theRHS) const;
 
 	// Data members...
-	XercesDocumentBridge* const		m_ownerDocument;
+	XercesDocumentBridge*	m_ownerDocument;
+
+	mutable	XalanNode*		m_parentNode;
+
+	mutable	XalanNode*		m_previousSibling;
+
+	mutable	XalanNode*		m_nextSibling;
+
+	mutable	XalanNode*		m_firstChild;
+
+	mutable	XalanNode*		m_lastChild;
 };
 
 

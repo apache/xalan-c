@@ -63,6 +63,7 @@
 
 
 
+#include <deque>
 #include <memory>
 #include <set>
 
@@ -272,6 +273,34 @@ public:
 
 	// These are some special interfaces to manage relationships between
 	// our nodes and Xerces nodes.
+
+	/**
+	 * Destroy the entire bridge structure that connects
+	 * the Xerces document to this XercesDocumentBridge
+	 * instance.  This will invalidate any pointers to
+	 * any nodes in the document (except, of course, the
+	 * document itself).
+	 */
+	void
+	destroyBridge();
+
+	/**
+	 * Rebuild the entire bridge structure that connects
+	 * the Xerces document to this XercesDocumentBridge
+	 * instance.  This destroys the bridge before
+	 * rebuilding.
+	 */
+	void
+	rebuildBridge();
+
+	/**
+	 * Clears any node relationships that may have been
+	 * cached.  This should be done if the document is
+	 * modified in any way.
+	 */
+	void
+	clearCachedNodes();
+
 	XalanNode*
 	mapNode(const DOM_Node& 	theXercesNode) const;
 
@@ -343,6 +372,10 @@ private:
 			const DOM_Node&		theXercesNode,
 			bool				deep);
 
+	// Convenience function to build the Doctype node...
+	XercesDocumentTypeBridge*
+	buildDocumentTypeBridge() const;
+
 	// Factory methods for our implementation nodes...
 	XalanNode*
 	createBridgeNode(const DOM_Node&	theXercesNode) const;
@@ -377,6 +410,9 @@ private:
 	XercesNotationBridge*
 	createBridgeNode(const DOM_Notation&	theXercesNode) const;
 
+	const XercesBridgeNavigator&
+	pushNavigator() const;
+
 	// $$$ ToDo: This is because DOM_Document::getElementById() is not
 	// const...
 	mutable DOM_Document					m_xercesDocument;
@@ -392,16 +428,22 @@ private:
 #if defined(XALAN_NO_NAMESPACES)
 	auto_ptr<XalanDOMImplementation>		m_domImplementation;
 
+	typedef deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
+
 	typedef set<XalanNode*>					NodeSetType;
 #else
 	std::auto_ptr<XalanDOMImplementation>	m_domImplementation;
 
+	typedef std::deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
+
 	typedef std::set<XalanNode*>			NodeSetType;
 #endif
 
+	mutable NavigatorBridgeVectorType		m_navigators;
+
 	mutable NodeSetType						m_nodes;
 
-	XercesDocumentTypeBridge* 				m_doctype;
+	mutable XercesDocumentTypeBridge* 		m_doctype;
 };
 
 

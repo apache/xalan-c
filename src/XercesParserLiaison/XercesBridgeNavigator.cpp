@@ -69,15 +69,32 @@
 
 
 
+// I'm using this to distinguish between null nodes, which are valid, and
+// an uninitialized cached node address.  This is probably bogus, and I'll
+// probably just change this to 0, but this is experimental anyway...
+XalanNode* const	invalidNodeAddress = reinterpret_cast<XalanNode*>(1);
+
+
+
 XercesBridgeNavigator::XercesBridgeNavigator(XercesDocumentBridge*	theOwnerDocument) :
-	m_ownerDocument(theOwnerDocument)
+	m_ownerDocument(theOwnerDocument),
+	m_parentNode(invalidNodeAddress),
+	m_previousSibling(invalidNodeAddress),
+	m_nextSibling(invalidNodeAddress),
+	m_firstChild(invalidNodeAddress),
+	m_lastChild(invalidNodeAddress)
 {
 }
 
 
 
 XercesBridgeNavigator::XercesBridgeNavigator(const XercesBridgeNavigator&	theSource) :
-	m_ownerDocument(theSource.m_ownerDocument)
+	m_ownerDocument(theSource.m_ownerDocument),
+	m_parentNode(theSource.m_parentNode),
+	m_previousSibling(theSource.m_previousSibling),
+	m_nextSibling(theSource.m_nextSibling),
+	m_firstChild(theSource.m_firstChild),
+	m_lastChild(theSource.m_lastChild)
 {
 }
 
@@ -85,6 +102,18 @@ XercesBridgeNavigator::XercesBridgeNavigator(const XercesBridgeNavigator&	theSou
 
 XercesBridgeNavigator::~XercesBridgeNavigator()
 {
+}
+
+
+
+void
+XercesBridgeNavigator::clearCachedNodes()
+{
+	m_parentNode = invalidNodeAddress;
+	m_previousSibling = invalidNodeAddress;
+	m_nextSibling = invalidNodeAddress;
+	m_firstChild = invalidNodeAddress;
+	m_lastChild = invalidNodeAddress;
 }
 
 
@@ -132,7 +161,16 @@ XercesBridgeNavigator::mapNode(const XalanAttr*		theXalanNode) const
 XalanNode*
 XercesBridgeNavigator::getParentNode(const DOM_Node&	theXercesNode) const
 {
-	return m_ownerDocument->mapNode(theXercesNode.getParentNode());
+	if (m_parentNode == invalidNodeAddress)
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((XercesBridgeNavigator*)this)->m_parentNode = m_ownerDocument->mapNode(theXercesNode.getParentNode());
+#else
+		m_parentNode = m_ownerDocument->mapNode(theXercesNode.getParentNode());
+#endif
+	}
+
+	return m_parentNode;
 }
 
 
@@ -140,7 +178,16 @@ XercesBridgeNavigator::getParentNode(const DOM_Node&	theXercesNode) const
 XalanNode*
 XercesBridgeNavigator::getPreviousSibling(const DOM_Node&	theXercesNode) const
 {
-	return m_ownerDocument->mapNode(theXercesNode.getPreviousSibling());
+	if (m_previousSibling == invalidNodeAddress)
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((XercesBridgeNavigator*)this)->m_previousSibling = m_ownerDocument->mapNode(theXercesNode.getPreviousSibling());
+#else
+		m_previousSibling = m_ownerDocument->mapNode(theXercesNode.getPreviousSibling());
+#endif
+	}
+
+	return m_previousSibling;
 }
 
 
@@ -148,7 +195,16 @@ XercesBridgeNavigator::getPreviousSibling(const DOM_Node&	theXercesNode) const
 XalanNode*
 XercesBridgeNavigator::getNextSibling(const DOM_Node&	theXercesNode) const
 {
-	return m_ownerDocument->mapNode(theXercesNode.getNextSibling());
+	if (m_nextSibling == invalidNodeAddress)
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((XercesBridgeNavigator*)this)->m_nextSibling = m_ownerDocument->mapNode(theXercesNode.getNextSibling());
+#else
+		m_nextSibling = m_ownerDocument->mapNode(theXercesNode.getNextSibling());
+#endif
+	}
+
+	return m_nextSibling;
 }
 
 
@@ -156,7 +212,16 @@ XercesBridgeNavigator::getNextSibling(const DOM_Node&	theXercesNode) const
 XalanNode*
 XercesBridgeNavigator::getFirstChild(const DOM_Node&	theXercesNode) const
 {
-	return m_ownerDocument->mapNode(theXercesNode.getFirstChild());
+	if (m_firstChild == invalidNodeAddress)
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((XercesBridgeNavigator*)this)->m_firstChild = m_ownerDocument->mapNode(theXercesNode.getFirstChild());
+#else
+		m_firstChild = m_ownerDocument->mapNode(theXercesNode.getFirstChild());
+#endif
+	}
+
+	return m_firstChild;
 }
 
 
@@ -164,7 +229,16 @@ XercesBridgeNavigator::getFirstChild(const DOM_Node&	theXercesNode) const
 XalanNode*
 XercesBridgeNavigator::getLastChild(const DOM_Node&	theXercesNode) const
 {
-	return m_ownerDocument->mapNode(theXercesNode.getLastChild());
+	if (m_lastChild == invalidNodeAddress)
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((XercesBridgeNavigator*)this)->m_lastChild = m_ownerDocument->mapNode(theXercesNode.getLastChild());
+#else
+		m_lastChild = m_ownerDocument->mapNode(theXercesNode.getLastChild());
+#endif
+	}
+
+	return m_lastChild;
 }
 
 

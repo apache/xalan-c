@@ -108,6 +108,7 @@ XercesDocumentBridge::XercesDocumentBridge(
 					  m_navigator),
 	m_nodeMap(),
 	m_domImplementation(new XercesDOMImplementationBridge(theXercesDocument.getImplementation())),
+	m_navigators(),
 	m_nodes(),
 	m_doctype(0)
 {
@@ -118,24 +119,12 @@ XercesDocumentBridge::XercesDocumentBridge(
 	// Put ourself into the node map, and don't assign an index...
 	m_nodeMap.addAssociation(m_xercesDocument, this, false);
 
-	// Try to build the doctype...
-	DOM_DocumentType	theDoctype = theXercesDocument.getDoctype();
-
-	if (theDoctype.isNull() == false)
-	{
-		m_doctype = new XercesDocumentTypeBridge(theDoctype, m_navigator);
-
-		// Add it to the node map...
-		m_nodeMap.addAssociation(theDoctype, m_doctype, false);
-
-		m_nodes.insert(m_doctype);
-	}
+	m_doctype = buildDocumentTypeBridge();
 
 	if (buildBridge == true)
 	{
 		// OK, let's build the nodes.  This makes things
 		// thread-safe, so the document can be shared...
-
 		buildBridgeNodes();
 	}
 }
@@ -144,15 +133,7 @@ XercesDocumentBridge::XercesDocumentBridge(
 
 XercesDocumentBridge::~XercesDocumentBridge()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
-	// m_bridgeMap contains all of the nodes that
-	// are still alive...
-	for_each(m_nodes.begin(),
-			 m_nodes.end(),
-			 DeleteFunctor<XalanNode>());
+	destroyBridge();
 }
 
 
@@ -266,6 +247,74 @@ XercesDocumentBridge::mapNode(const DOM_Element& 	theXercesNode) const
 
 
 
+class ClearCacheFunctor
+{
+public:
+
+	void
+	operator()(XercesBridgeNavigator&	theNavigator)
+	{
+		theNavigator.clearCachedNodes();
+	}
+};
+
+
+
+void
+XercesDocumentBridge::clearCachedNodes()
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+	// m_bridgeMap contains all of the nodes that
+	// are still alive...
+	for_each(m_navigators.begin(),
+			 m_navigators.end(),
+			 ClearCacheFunctor());
+
+}
+
+
+
+void
+XercesDocumentBridge::destroyBridge()
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+	// Set this to null, since it will be deleted
+	// by the next for_each...
+	m_doctype = 0;
+
+	// m_bridgeMap contains all of the nodes that
+	// are still alive...
+	for_each(m_nodes.begin(),
+			 m_nodes.end(),
+			 DeleteFunctor<XalanNode>());
+
+	// Clear everything out...
+	m_nodes.clear();
+
+	m_navigators.clear();
+
+	m_nodeMap.clear();
+}
+
+
+
+void
+XercesDocumentBridge::rebuildBridge()
+{
+	destroyBridge();
+
+	// Create the doctype...
+	m_doctype = buildDocumentTypeBridge();
+
+	buildBridgeNodes();
+}
+
+
+
 void
 XercesDocumentBridge::buildBridgeNodes()
 {
@@ -286,7 +335,7 @@ XercesDocumentBridge::buildBridgeNodes()
 
 	if (theDocumentElement != 0)
 	{
-		NullTreeWalker	theTreeWalker;
+		NullTreeWalker	theTreeWalker(true);
 
 		theTreeWalker.traverse(theDocumentElement, this);
 	}
@@ -297,10 +346,9 @@ XercesDocumentBridge::buildBridgeNodes()
 XercesElementBridge*
 XercesDocumentBridge::createBridgeNode(const DOM_Element& 	theXercesNode) const
 {
-
 	XercesElementBridge* const	theBridge =
 		new XercesElementBridge(theXercesNode,
-								m_navigator);
+								pushNavigator());
 
 	m_nodes.insert(theBridge);
 
@@ -317,7 +365,7 @@ XercesDocumentBridge::createBridgeNode(const DOM_DocumentFragment&	theXercesNode
 {
 	XercesDocumentFragmentBridge* const		theBridge =
 		new XercesDocumentFragmentBridge(theXercesNode,
-										 m_navigator);
+										 pushNavigator());
 
 	m_nodes.insert(theBridge);
 
@@ -334,7 +382,7 @@ XercesDocumentBridge::createBridgeNode(const DOM_Text&	theXercesNode) const
 {
 	XercesTextBridge* const		theBridge =
 		new XercesTextBridge(theXercesNode,
-								m_navigator);
+							 pushNavigator());
 
 	m_nodes.insert(theBridge);
 
@@ -351,7 +399,7 @@ XercesDocumentBridge::createBridgeNode(const DOM_Comment&	theXercesNode) const
 {
 	XercesCommentBridge* const	theBridge =
 		new XercesCommentBridge(theXercesNode,
-								m_navigator);
+								pushNavigator());
 
 	m_nodes.insert(theBridge);
 
@@ -368,7 +416,7 @@ XercesDocumentBridge::createBridgeNode(const DOM_CDATASection&	theXercesNode) co
 {
 	XercesCDATASectionBridge* const		theBridge =
 		new XercesCDATASectionBridge(theXercesNode,
-									 m_navigator);
+									 pushNavigator());
 
 	m_nodes.insert(theBridge);
 
@@ -385,7 +433,7 @@ XercesDocumentBridge::createBridgeNode(const DOM_ProcessingInstruction&		theXerc
 {
 	XercesProcessingInstructionBridge* const	theBridge =
 		new XercesProcessingInstructionBridge(theXercesNode,
-											  m_navigator);
+											  pushNavigator());
 
 	m_nodes.insert(theBridge);
 
@@ -402,7 +450,7 @@ XercesDocumentBridge::createBridgeNode(const DOM_Attr&	theXercesNode) const
 {
 	XercesAttrBridge* const		theBridge =
 		new XercesAttrBridge(theXercesNode,
-								m_navigator);
+							 pushNavigator());
 
 	m_nodes.insert(theBridge);
 
@@ -419,7 +467,7 @@ XercesDocumentBridge::createBridgeNode(const DOM_Entity&	theXercesNode) const
 {
 	XercesEntityBridge* const	theBridge =
 		new XercesEntityBridge(theXercesNode,
-								m_navigator);
+							   pushNavigator());
 
 	m_nodes.insert(theBridge);
 
@@ -436,7 +484,7 @@ XercesDocumentBridge::createBridgeNode(const DOM_EntityReference& 	theXercesNode
 {
 	XercesEntityReferenceBridge* const	theBridge =
 		new XercesEntityReferenceBridge(theXercesNode,
-										m_navigator);
+										pushNavigator());
 
 	m_nodes.insert(theBridge);
 
@@ -453,7 +501,7 @@ XercesDocumentBridge::createBridgeNode(const DOM_Notation&	theXercesNode) const
 {
 	XercesNotationBridge* const		theBridge =
 		new XercesNotationBridge(theXercesNode,
-								 m_navigator);
+								 pushNavigator());
 
 	m_nodes.insert(theBridge);
 
@@ -514,6 +562,35 @@ XercesDocumentBridge::internalCloneNode(
 	}
 
 	return theNewNode;
+}
+
+
+
+XercesDocumentTypeBridge*
+XercesDocumentBridge::buildDocumentTypeBridge() const
+{
+	XercesDocumentTypeBridge*	theResult = 0;
+
+	// Try to build the doctype...
+	DOM_DocumentType	theDoctype = m_xercesDocument.getDoctype();
+
+	if (theDoctype.isNull() == false)
+	{
+		theResult = new XercesDocumentTypeBridge(theDoctype, pushNavigator());
+#if defined(XALAN_NO_MUTABLE)
+		// Add it to the node map...
+		((XercesDocumentBridge*)this)->m_nodeMap.addAssociation(theDoctype, theResult, false);
+
+		((XercesDocumentBridge*)this)->m_nodes.insert(theResult);
+#else
+		// Add it to the node map...
+		m_nodeMap.addAssociation(theDoctype, theResult, false);
+
+		m_nodes.insert(theResult);
+#endif
+	}
+
+	return theResult;
 }
 
 
@@ -953,6 +1030,31 @@ XercesDocumentBridge::createEntityReference(const XalanDOMString&	name)
 XalanDocumentType*
 XercesDocumentBridge::getDoctype() const
 {
+	if (m_doctype == 0)
+	{
+		// Try to build the doctype...
+		DOM_DocumentType	theDoctype = m_xercesDocument.getDoctype();
+
+		if (theDoctype.isNull() == false)
+		{
+#if defined(XALAN_NO_MUTABLE)
+			((XercesDocumentBridge*)this)->m_doctype = new XercesDocumentTypeBridge(theDoctype, pushNavigator());
+
+			// Add it to the node map...
+			((XercesDocumentBridge*)this)->m_nodeMap.addAssociation(theDoctype, m_doctype, false);
+
+			((XercesDocumentBridge*)this)->m_nodes.insert(m_doctype);
+#else
+			m_doctype = new XercesDocumentTypeBridge(theDoctype, pushNavigator());
+
+			// Add it to the node map...
+			m_nodeMap.addAssociation(theDoctype, m_doctype, false);
+
+			m_nodes.insert(m_doctype);
+#endif
+		}
+	}
+
 	return m_doctype;
 }
 
@@ -989,6 +1091,9 @@ XercesDocumentBridge::importNode(
 			bool		deep)
 {
 	// $$$ToDo: Fix this....
+	// The problem is that we must get the Xerces node that corresponds to the
+	// importedNode parameter.  We could assume that it is indeed a node from
+	// another XercesDocumentBridge, but I'm not sure that we should do that.
 	throw XercesDOMException(XercesDOMException::NO_MODIFICATION_ALLOWED_ERR);
 
 	return 0;
@@ -1195,3 +1300,17 @@ XercesDocumentBridge::createBridgeNode(const DOM_Node&	theXercesNode) const
 
 	return theNewNode;
 }
+
+
+
+const XercesBridgeNavigator&
+XercesDocumentBridge::pushNavigator() const
+{
+	XercesDocumentBridge* const		This =
+		const_cast<XercesDocumentBridge*>(this);
+
+	m_navigators.push_back(XercesBridgeNavigator(This));
+
+	return m_navigators.back();
+}
+
