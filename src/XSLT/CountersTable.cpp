@@ -164,9 +164,11 @@ CountersTable::countNode(
 
 		// If we got to this point, then we didn't find a counter, so make 
 		// one and add it to the list.
-		counters.push_back(Counter(&numberElem));
+		counters.resize(counters.size() + 1);
 
 		Counter&	counter = counters.back();
+
+		counter.m_numberElem = &numberElem;
 
 		appendBtoFList(counter.m_countNodes, m_newFound);
 
