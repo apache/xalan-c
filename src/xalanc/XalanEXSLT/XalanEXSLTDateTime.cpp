@@ -112,6 +112,8 @@ XalanEXSLTFunctionDateTime::execute(
 	XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
 
 	XalanDOMString&		theResult = theGuard.get();
+	
+	theResult.clear();
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 	using std::localtime;
@@ -129,34 +131,60 @@ XalanEXSLTFunctionDateTime::execute(
 
 	const struct tm*	strctTime = localtime(&long_time);
 
-	assert (strctTime != 0 );
-
-	//save hours - the struct going to be overrided
-	const int	iHours = strctTime->tm_hour;
-
-	const size_t	MAX_DATE_TIME_LEN = 1000;
-
-	char stringTime[MAX_DATE_TIME_LEN + 1];
-	
-	const size_t	result = strftime(stringTime, MAX_DATE_TIME_LEN, "%Y-%m-%dT%H:%M:%S", strctTime);
-
-	if (result == 0)
+	if (strctTime != 0 )
 	{
-		theResult.clear();
-	}
-	else
-	{
-		// Microsoft doesn't fully support the strftime definition. Let's complete the job manually
+		// save local time value
+		struct tm localTime = *strctTime;
+
 		strctTime = gmtime(&long_time);
 
-		assert (strctTime != 0 );
+		if(strctTime != 0 )
+		{
 
-		char timeZone[MAX_DATE_TIME_LEN+1];
+			const size_t	MAX_DATE_TIME_LEN = 1000;
+			char stringTime[MAX_DATE_TIME_LEN + 1];
 
-		sprintf(timeZone , "%2.2d:00", iHours - strctTime->tm_hour);
+			const size_t	result = strftime(stringTime, MAX_DATE_TIME_LEN, "%Y-%m-%dT%H:%M:%S", strctTime);
 
-		theResult.assign(stringTime);
-		theResult.append(timeZone);
+			if (result != 0)
+			{
+				theResult.assign(stringTime);
+				
+				long localData = localTime.tm_year * 10000 + localTime.tm_mon * 100 + localTime.tm_mday;
+				long gmtData = strctTime->tm_year * 10000 + strctTime->tm_mon * 100 + strctTime->tm_mday;
+
+				char timeZone[MAX_DATE_TIME_LEN+1];
+				
+				int offset = 0; 
+
+				if( localData == gmtData )
+				{
+					if(localTime.tm_hour == strctTime->tm_hour)
+					{
+						offset = 100; //  much bigger then any legal offset
+					}
+					else
+					{
+						offset = localTime.tm_hour - strctTime->tm_hour;
+					}
+				}
+				else if(localData < gmtData)
+				{
+					offset = localTime.tm_hour - strctTime->tm_hour - 24;
+				}
+				else
+				{
+					offset = localTime.tm_hour - strctTime->tm_hour + 24;
+				}
+
+				if(offset == 100)
+					sprintf(timeZone , "%s", "z");
+				else
+					sprintf(timeZone , "%2.2d:00",offset);
+
+				theResult.append(timeZone);
+			}
+		}
 	}
 
 	return executionContext.getXObjectFactory().createString(theResult);
