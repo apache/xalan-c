@@ -163,19 +163,10 @@ struct DirectoryFilterPredicate : public unary_function<FindFileStruct, bool>
 struct DirectoryFilterPredicate : public std::unary_function<FindFileStruct, bool>
 #endif
 {
-	// This function will filter out the parent, self and CVS directories, i.e.
-	// ".", "..", "CVS".
 	result_type
 	operator()(const argument_type&	theFindData) const
 	{
-		const XalanDOMString	current(XALAN_STATIC_UCODE_STRING("."));
-		const XalanDOMString	parent(XALAN_STATIC_UCODE_STRING(".."));
-		const XalanDOMString	cvs(XALAN_STATIC_UCODE_STRING("CVS"));
-		
-		const XalanDOMString	dirName=XalanDOMString(theFindData.getName());
-
-		return theFindData.isDirectory() && (!equals(dirName, cvs) && !equals(dirName, current) && !equals(dirName, parent));
-
+		return theFindData.isDirectory();
 	}
 };
 
@@ -196,6 +187,7 @@ struct FilesOnlyFilterPredicate : public std::unary_function<FindFileStruct, boo
 			   
 	}
 };
+
 
 
 template<class OutputIteratorType,
@@ -226,7 +218,8 @@ EnumerateDirectory(
 					*theOutputIterator = StringType(theFindData.getName());
 				}
 			}
-			while(_wfindnext(theSearchHandle, &theFindData) == 0);
+			while(_wfindnext(theSearchHandle,
+							 &theFindData) == 0);
 		}
 		catch(...)
 		{
