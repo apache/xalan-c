@@ -737,6 +737,7 @@ ifeq ($(PLATFORM), TRU64)
 	rm -rf $(XALANCROOT)/src/so_locations
 endif
 	rm -f $(THISLIB)$(VER)$(SHLIBSUFFIX)
+	rm -f $(THISLIB)$(VER).map1
 	rm -f $(BINTARGETDIR)/testXSLT
 	rm -f $(BINTARGETDIR)/testXPath
 	rm -f ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX)
