@@ -62,6 +62,10 @@
 #include <cassert>
 #include <algorithm>
 
+#if !defined(NDEBUG)
+#include <set>
+#endif
+
 
 
 NodeRefList::NodeRefList() :
@@ -184,3 +188,40 @@ NodeRefList::getSupport() const
 {
 	return 0;
 }
+
+
+
+#if !defined(NDEBUG)
+bool
+NodeRefList::checkForDuplicates() const
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::set;
+#endif
+
+	bool	fResult = false;
+
+	const unsigned int	theLength = getLength();
+
+	if (theLength > 0)
+	{
+		set<const XalanNode*>	theNodes;
+
+		for (unsigned i = 0; i < theLength && fResult == false; ++i)
+		{
+			const XalanNode* const	theNode = item(i);
+
+			if (theNodes.find(theNode) != theNodes.end())
+			{
+				fResult = true;
+			}
+			else
+			{
+				theNodes.insert(theNode);
+			}
+		}
+	}
+
+	return fResult;
+}
+#endif

@@ -121,6 +121,11 @@ public:
 	virtual XPathSupport*
 	getSupport() const;
 
+#if !defined(NDEBUG)
+	bool
+	checkForDuplicates() const;
+#endif
+
 protected:
 
 #if defined(XALAN_NO_NAMESPACES)

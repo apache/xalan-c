@@ -258,6 +258,12 @@ MutableNodeRefList::addNodes(const NodeRefListBase&		nodelist)
 {
 	const unsigned int	theLength = nodelist.getLength();
 
+	// Reserve the space at the start.  We may end up reserving
+	// more space than necessary, but it's a small price to
+	// pay for the increased speed.  We can always shrink by
+	// swapping if we have way to much space.
+	m_nodeList.reserve(getLength() + theLength);
+
 	for (unsigned int i = 0; i < theLength; i++)
 	{
 		addNode(nodelist.item(i));
@@ -269,11 +275,17 @@ MutableNodeRefList::addNodes(const NodeRefListBase&		nodelist)
 void
 MutableNodeRefList::addNodesInDocOrder(const XalanNodeList&		nodelist)
 {
-	const unsigned int	nChildren = nodelist.getLength();
+	const unsigned int	theLength = nodelist.getLength();
 
-	for(unsigned int i = 0; i < nChildren; i++)
+	// Reserve the space at the start.  We may end up reserving
+	// more space than necessary, but it's a small price to
+	// pay for the increased speed.  We can always shrink by
+	// swapping if we have way to much space.
+	m_nodeList.reserve(getLength() + theLength);
+
+	for(unsigned int i = 0; i < theLength; i++)
 	{
-		addNodeInDocOrder(nodelist.item(i), false);
+		addNodeInDocOrder(nodelist.item(i), true);
 	}
 }
 
@@ -282,9 +294,15 @@ MutableNodeRefList::addNodesInDocOrder(const XalanNodeList&		nodelist)
 void
 MutableNodeRefList::addNodesInDocOrder(const NodeRefListBase&	nodelist)
 {
-	const unsigned int	nChildren = nodelist.getLength();
+	const unsigned int	theLength = nodelist.getLength();
 
-	for(unsigned int i = 0; i < nChildren; i++)
+	// Reserve the space at the start.  We may end up reserving
+	// more space than necessary, but it's a small price to
+	// pay for the increased speed.  We can always shrink by
+	// swapping if we have way to much space.
+	m_nodeList.reserve(getLength() + theLength);
+
+	for(unsigned int i = 0; i < theLength; i++)
 	{
 		addNodeInDocOrder(nodelist.item(i), true);
 	}
@@ -305,9 +323,8 @@ MutableNodeRefList::addNodeInDocOrder(
 		{
 			addNode(node);
 		}
-		else
+		else if (indexOf(node) == npos)
 		{
-
 			unsigned int	i = size - 1;
 
 			// When wrap-around happens, i will be > than size...
