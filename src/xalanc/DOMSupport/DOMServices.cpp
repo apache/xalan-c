@@ -807,7 +807,14 @@ DOMServices::getNamespaceForPrefix(
 		{
 			clear(thePrefix);
 
-			return thePrefixResolver.getNamespaceForPrefix(s_emptyString);
+			if (isAttribute == true)
+			{
+				return 0;
+			}
+			else
+			{
+				return thePrefixResolver.getNamespaceForPrefix(s_emptyString);
+			}
 		}
 		else
 		{
