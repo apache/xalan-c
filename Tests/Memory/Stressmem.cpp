@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,6 +85,7 @@
 	using std::endl;
 #endif
 
+FileUtility			h;
 	
 static const char* const	excludeStylesheets[] =
 {
@@ -108,140 +109,45 @@ checkForExclusion(XalanDOMString currentFile)
 }
 
 void
-printArgOptions()
+setHelp()
 {
-	cerr << endl
-		 << "stressmem dirname [-out -category]"
+	h.args.help << endl
+		 << "stressmem dirname [-out -sub]"
 		 << endl
 		 << endl
 		 << "dirname		(base directory for testcases)"
 		 << endl
 		 << "-out dirname	(base directory for output)"
 		 << endl
-		 << "-category dirname (run files only from a specific directory)"
+		 << "-sub dirname (run files only from a specific directory)"
 		 << endl;
 }
 
-bool
-getParams(int argc, 
-		  const char*	argv[],
-		  FileUtility& f,
-		  XalanDOMString& basedir,
-		  XalanDOMString& outdir,
-		  XalanDOMString& category)
-{
-bool fSuccess = true;	// Used to continue argument loop
-bool fSetOut = true;	// Set default output directory
-
-	// Insure that required "-base" argument is there.
-	if (argc == 1 || argv[1][0] == '-')
-	{
-		printArgOptions(); 
-		return false;
-	}
-	else
-	{
-		if (f.checkDir(pathSep + XalanDOMString(argv[1])))
-		{
-			assign(basedir, XalanDOMString(argv[1]));
-			insert(basedir, 0, pathSep);
-		}
-		else
-		{
-			cout << endl << "Given base directory \"" << argv[1] << "\" does not exist" << endl;
-			printArgOptions();
-			return false;
-		}
-	}
-
-	// Get the rest of the arguments in any order.
-	for (int i = 2; i < argc && fSuccess == true; ++i)
-	{
-		if(!stricmp("-out", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(outdir, XalanDOMString(argv[i]));
-				insert(outdir, 0, XalanDOMString("\\"));
-				append(outdir, XalanDOMString("\\"));
-				f.checkAndCreateDir(outdir);
-				fSetOut = false;
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-		else if(!stricmp("-category", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(category, XalanDOMString(argv[i]));
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-		else
-		{
-			printArgOptions();
-			fSuccess = false;
-		}
-
-	} // End of for-loop
-
-	// Do we need to set the default output directory??
-	if (fSetOut)
-	{
-		unsigned int ii = lastIndexOf(basedir,charAt(pathSep,0));
-		outdir = substring(basedir, 0, ii+1);
-		append(outdir,XalanDOMString("MEM-RESULTS\\"));
-		f.checkAndCreateDir(outdir);
-	}
-	
-	// Add the path seperator to the end of the base directory
-	append(basedir, pathSep);
-	return fSuccess;
-}
-
 int
-main(
-	 int			argc,
+main(int			argc,
 	 const char*	argv[])
 {
-
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	FileUtility			f;
-
-	XalanDOMString  category;	// Test all of base dir by default
-	XalanDOMString  baseDir;	
-	XalanDOMString  outputRoot;	
-
-
-	if (getParams(argc, argv, f, baseDir, outputRoot, category) == true)
+	// Set the program help string,  then get the command line parameters.
+	//
+	setHelp();
+	if (h.getParams(argc, argv) == true)
 	{
-
 		// Get the list of Directories that are below perf
-		const FileNameVectorType	dirs = f.getDirectoryNames(baseDir);
+		const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
 
 		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString UniqRunid = f.generateUniqRunid();
+		const XalanDOMString UniqRunid = h.generateUniqRunid();
 
 		// Defined basic constants for file manipulation 
 
 		const XalanDOMString  resultFilePrefix(XalanDOMString("cpp-mem"));
-		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XMLSuffix);
 		
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
@@ -251,23 +157,23 @@ main(
 			// Call the static initializers...
 			HarnessInit xmlPlatformUtils;
 			XalanTransformer::initialize();
-
 			{
 				XalanTransformer		transformEngine;
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 				{
-					// Run specific category of files from given directory
-					if (length(category) > 0 && !equals(dirs[j], category))
+					// Skip all but the specified directory if the -sub cmd-line option was used.
+					//
+					if (length(h.args.sub) > 0 && !equals(dirs[j], h.args.sub))
 					{
 						continue;
 					}					
 					
 					// Check that output directory is there.
-					const XalanDOMString  theOutputDir = outputRoot + dirs[j];
-					f.checkAndCreateDir(theOutputDir);
+					const XalanDOMString  theOutputDir = h.args.output + dirs[j];
+					h.checkAndCreateDir(theOutputDir);
 
-					const FileNameVectorType	files = f.getTestFileNames(baseDir, dirs[j],true);
+					const FileNameVectorType	files = h.getTestFileNames(h.args.base, dirs[j],true);
 
 					for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 					{
@@ -278,10 +184,10 @@ main(
 							cout << files[i] << endl;
 
 
-							const XalanDOMString  theXSLFile= baseDir + dirs[j] + pathSep + files[i];
-							const XalanDOMString  theXMLFile = f.generateFileName(theXSLFile,"xml");
-							const XalanDOMString  theOutput =  outputRoot + dirs[j] + pathSep + files[i]; 
-							const XalanDOMString  theOutputFile = f.generateFileName(theOutput, "out");
+							const XalanDOMString  theXSLFile= h.args.base + dirs[j] + pathSep + files[i];
+							const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+							const XalanDOMString  theOutput =  h.args.output + dirs[j] + pathSep + files[i]; 
+							const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
 
 							// Do a total end to end transform with no pre parsing of either xsl or xml files.
 							XSLTResultTarget		theResultTarget(theOutputFile);

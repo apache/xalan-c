@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -94,26 +94,27 @@
 #endif
 
 // GLOBAL VARIABLES...
-FileUtility				futil;
-XalanDOMString			baseDir, outputRoot, goldRoot;  // These are set by the getParams routine.
+FileUtility				h;
+
 const XalanDOMString	currentDir("library");
 const XalanDOMString	theNamespace("http://xml.apache.org/xalan");
 const char *resultString = "The specified function is not available: http://xml.apache.org/xalan:nodeset";
 
 
 void
-printArgOptions()
+setHelp()
 {
-	cerr << endl
+	h.args.help << endl
 		 << "extensions dirname [-out]"
 		 << endl
 		 << endl
-		 << "dirname		(base directory for xml-xalan\test\tests\extensions)"
+		 << "dirname		(base directory for xml-xalan\\test\\tests\\extensions)"
 		 << endl
 		 << "-out dirname	(base directory for output)"
 		 << endl;
 }
 
+/*
 bool
 getParams(int argc, 
 		  const char*	argv[],
@@ -133,10 +134,15 @@ getParams(int argc,
 	}
 	else
 	{
-		if (futil.checkDir(pathSep + XalanDOMString(argv[1])))
+		if (h.checkDir(XalanDOMString(argv[1])))
 		{
 			assign(baseDir, XalanDOMString(argv[1]));
-			insert(baseDir, 0, pathSep);
+			if ( !endsWith(baseDir, XalanDOMString("extensions")) )
+			{
+				cout << endl << "Given base directory \"" << argv[1] << "\" not valid extensions directory" << endl;
+				printArgOptions();
+				return false;
+			}
 		}
 		else
 		{
@@ -155,9 +161,9 @@ getParams(int argc,
 			if(i < argc && argv[i][0] != '-')
 			{
 				assign(outDir, XalanDOMString(argv[i]));
-				insert(outDir, 0, XalanDOMString("\\"));
+//				insert(outDir, 0, XalanDOMString("\\"));
 				append(outDir, XalanDOMString("\\"));
-				futil.checkAndCreateDir(outDir);
+				h.checkAndCreateDir(outDir);
 				fSetOut = false;
 			}
 			else
@@ -193,23 +199,23 @@ getParams(int argc,
 	{
 		unsigned int ii = lastIndexOf(baseDir,charAt(pathSep,0));
 		outDir = substring(baseDir, 0, ii+1);
-		append(outDir,XalanDOMString("CEXTENSIONS-results\\"));
-		futil.checkAndCreateDir(outDir);
+		append(outDir,XalanDOMString("CEXTENSIONS-RESULTS\\"));
+		h.checkAndCreateDir(outDir);
 	}
 	
 	if (fsetGold)
 	{
 		goldRoot = baseDir;
-		append(goldRoot,XalanDOMString("-gold"));
-		futil.checkAndCreateDir(goldRoot);
-		append(goldRoot,pathSep);
+		append(goldRoot,XalanDOMString("-gold\\"));
+		h.checkAndCreateDir(goldRoot);
+//		append(goldRoot,pathSep);
 	}
 
 	// Add the path seperator to the end of the base directory
 	append(baseDir, pathSep);
 	return fSuccess;
 }
-
+*/
 // Generate the various filenames needed for testing.
 void generateFiles(const XalanDOMString &fileName, 
 				   XalanDOMString &xml, 
@@ -219,17 +225,17 @@ void generateFiles(const XalanDOMString &fileName,
 				   const char* test)
 {
 	// Set up the input/output files.
-	const XalanDOMString testName(futil.generateFileName(fileName,"out"));
 
-	xsl = baseDir + currentDir + pathSep + fileName;
-	xml = futil.generateFileName(xsl,"xml");
-	futil.data.xmlFileURL = xml;
-	futil.data.xslFileURL = xsl;
+	const XalanDOMString testName(h.generateFileName(fileName,"out"));
 
-	out =  outputRoot + currentDir + pathSep + XalanDOMString(test) + testName; 
+	xsl = h.args.base + currentDir + pathSep + fileName;
+	xml = h.generateFileName(xsl,"xml");
+	h.data.xmlFileURL = xml;
+	h.data.xslFileURL = xsl;
 
-	gold = goldRoot +currentDir + pathSep + testName;
-	//gold = futil.generateFileName(gold, "out");
+	out =  h.args.output + currentDir + pathSep + XalanDOMString(test) + testName; 
+
+	gold = h.args.gold + currentDir + pathSep + testName;
 
 }
 
@@ -249,9 +255,9 @@ void TestCase1(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 		
 	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "tc1-");
 
-	futil.data.testOrFile = XalanDOMString("TestCase1: ") + fileName;
-	futil.data.xmlFileURL = xml;
-	futil.data.xslFileURL = xsl;
+	h.data.testOrFile = XalanDOMString("TestCase1: ") + fileName;
+	h.data.xmlFileURL = xml;
+	h.data.xslFileURL = xsl;
 
 	// Create the InputSources and ResultTraget.
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
@@ -260,7 +266,7 @@ void TestCase1(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 
 	// Perform the transform and check the results.
 	xalan.transform(xmlInputSource, xslInputSource, theResultTarget);	
-	futil.checkResults(theOutputFile, theGoldFile, logFile);
+	h.checkResults(theOutputFile, theGoldFile, logFile);
 
 }
 
@@ -277,9 +283,9 @@ void TestCase2(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 	
 	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "tc2-");
-	futil.data.testOrFile = XalanDOMString("TestCase2");
-	futil.data.xmlFileURL = xml;
-	futil.data.xslFileURL = xsl;
+	h.data.testOrFile = XalanDOMString("TestCase2");
+	h.data.xmlFileURL = xml;
+	h.data.xslFileURL = xsl;
 
 	// Create the InputSources and ResultTraget.
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
@@ -294,15 +300,13 @@ void TestCase2(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 	//Perform the transform and check the results.
 	xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
 
-	futil.checkAPIResults(xalan.getLastError(), 
+	h.checkAPIResults(xalan.getLastError(), 
 						  resultString,
 						  "transformer.uninstallExternalFunctionGlobal()",
 						  logFile,
 						  theOutputFile,
 						  theGoldFile);
 }
-
-
 //	TestCase3:
 //  API Call:	
 //		XalanTransformer::installExternalFunction
@@ -317,9 +321,9 @@ void TestCase3(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 	
 	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "tc3-");
-	futil.data.testOrFile = XalanDOMString("TestCase3a");
-	futil.data.xmlFileURL = xml;
-	futil.data.xslFileURL = xsl;
+	h.data.testOrFile = XalanDOMString("TestCase3a");
+	h.data.xmlFileURL = xml;
+	h.data.xslFileURL = xsl;
 
 	// Create the InputSources and ResultTraget.
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
@@ -334,16 +338,16 @@ void TestCase3(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 	// Perform the transform and check the results.
 	xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
 
-	futil.checkResults(theOutputFile, theGoldFile, logFile);
+	h.checkResults(theOutputFile, theGoldFile, logFile);
 
 	// Because we install the function locally, this second instance of the transformer 
 	// should _NOT_ run the test successfully.
 	XalanTransformer newEngine;
-	futil.data.testOrFile = XalanDOMString("TestCase3b");
+	h.data.testOrFile = XalanDOMString("TestCase3b");
 
 	//Perform the transform and check the results.
 	newEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-	futil.checkAPIResults(newEngine.getLastError(), 
+	h.checkAPIResults(newEngine.getLastError(), 
 							   resultString,
 						       "transformer.installExternalFunction()",
 						       logFile,
@@ -352,12 +356,12 @@ void TestCase3(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 
 	// Now unInstall the external function "nodeset". Once again the transform should
 	// _NOT_ run the test successfully
-	futil.data.testOrFile = XalanDOMString("TestCase3c");
+	h.data.testOrFile = XalanDOMString("TestCase3c");
 	xalan.uninstallExternalFunction(theNamespace, XalanDOMString("nodeset"));
 
 	// Perform the transform and check the results.
 	xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
-	futil.checkAPIResults(xalan.getLastError(), 
+	h.checkAPIResults(xalan.getLastError(), 
 							   resultString,
 						       "transformer.uninstallExternalFunction()",
 						       logFile,
@@ -379,9 +383,9 @@ void TestCase4(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 
 	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "tc4-");
-	futil.data.testOrFile = XalanDOMString("TestCase4a");
-	futil.data.xmlFileURL = xml;
-	futil.data.xslFileURL = xsl;
+	h.data.testOrFile = XalanDOMString("TestCase4a");
+	h.data.xmlFileURL = xml;
+	h.data.xslFileURL = xsl;
 
 	// Create the InputSources and ResultTraget.
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
@@ -395,44 +399,43 @@ void TestCase4(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 
 	// Perform the transform and check the results.
 	xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
-	futil.checkResults(theOutputFile, theGoldFile, logFile);
+	h.checkResults(theOutputFile, theGoldFile, logFile);
 
 	// Create a second transformer and verify that it can 'see' the extension as well...
 	XalanTransformer newEngine;
-	futil.data.testOrFile = XalanDOMString("TestCase4b");
+	h.data.testOrFile = XalanDOMString("TestCase4b");
 
 	newEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-	futil.checkResults(theOutputFile, theGoldFile, logFile);
+	h.checkResults(theOutputFile, theGoldFile, logFile);
 
 }
 
 int
-main(
-		  int			argc,
-		  const char*	argv [])
+main(int			argc,
+	 const char*	argv [])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-
-	if (getParams(argc, argv, baseDir, outputRoot, goldRoot) == true)
+	// Set the program help string,  then get the command line parameters.
+	//
+	setHelp();	
+	if (h.getParams(argc, argv) == true)
 	{
 		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString  UniqRunid = futil.generateUniqRunid();
+		const XalanDOMString  UniqRunid = h.generateUniqRunid();
 
 		// Defined basic constants for file manipulation 
-		const XalanDOMString drive(futil.getDrive());
-		const XalanDOMString  resultsFile(drive + outputRoot + currentDir + UniqRunid + XMLSuffix);
+		const XalanDOMString drive(h.getDrive());
+		const XalanDOMString  resultsFile(drive + h.args.output + currentDir + UniqRunid + XMLSuffix);
 		
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("C++ Extension Testing. ");
 		logFile.logTestCaseInit(currentDir);
 
-		futil.data.testBase = baseDir;
 		cout << "Performing Extension testing ..." << endl;
 
 		// Call the static initializers...
@@ -444,11 +447,11 @@ main(
 		// Check that output directory is there.
 		XalanDOMString		  fileName;
 				
-		const XalanDOMString  theOutputDir = outputRoot + currentDir;
-		futil.checkAndCreateDir(theOutputDir);
+		const XalanDOMString  theOutputDir = h.args.output + currentDir;
+		h.checkAndCreateDir(theOutputDir);
 
 		// Get the files found in the "cextension" directory
-		const FileNameVectorType	files = futil.getTestFileNames(baseDir, currentDir, false);
+		const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, false);
 
 		// TestCase1 is used to verify correct functioning of the default extension functions
 		TestCase1(xalan, files[0], logFile);	// Difference function
@@ -465,12 +468,12 @@ main(
 		TestCase4(xalan, files[5], logFile);
 
 		logFile.logTestCaseClose("Done", "Pass");
-		futil.reportPassFail(logFile, UniqRunid);
+		h.reportPassFail(logFile, UniqRunid);
 			
 		logFile.logTestFileClose("C++ Extension Testing: ", "Done");
 		logFile.close();
 
-		futil.analyzeResults(xalan, resultsFile);
+		h.analyzeResults(xalan, resultsFile);
 		XalanTransformer::terminate();
 
 	}

@@ -95,21 +95,16 @@
 
 const char* const 	excludeStylesheets[] =
 {
-	/*
-	"attribseterr05.xsl",
-	"attribseterr06.xsl", 
-	"namedtemplateerr03.xsl",
-	"namedtemplateerr11.xsl",  */
 	"sorterr06.xsl",
 	0
 };
 
-FileUtility		futil;
+FileUtility		h;
 
 void
-printArgOptions()
+setHelp()
 {
-	cerr << endl
+	h.args.help << endl
 		 << "errortests dir [-sub -out]"
 		 << endl
 		 << endl
@@ -120,106 +115,6 @@ printArgOptions()
 		 << "-out dir	(base directory for output)"
 		 << endl;
 }
-
-bool
-getParams(int argc, 
-		  const char*	argv[],
-		  FileUtility& f,
-		  XalanDOMString& baseDir,
-		  XalanDOMString& outDir,
-		  XalanDOMString& category)
-{
-	bool fSuccess = true;	// Used to continue argument loop
-	bool fsetOut = true;	// Set default output directory, set to false if data is provided
-
-
-
-	// Insure that required "-base" argument is there.
-	if (argc == 1 || argv[1][0] == '-')
-	{
-		printArgOptions(); 
-		return false;
-	}
-	else
-	{
-		if (f.checkDir( XalanDOMString(argv[1])) )
-		{
-			assign(baseDir, XalanDOMString(argv[1]));
-			if ( !endsWith(baseDir, XalanDOMString("conf")) )
-			{
-				cout << endl << "Given base directory \"" << argv[1] << "\" not valid conformance directory" << endl;
-				printArgOptions();
-				return false;
-			}
-		}
-		else
-		{
-			cout << endl << "Given base directory \"" << argv[1] << "\" does not exist" << endl;
-			printArgOptions();
-			return false;
-		}
-	}
-
-	// Get the rest of the arguments in any order.
-	for (int i = 2; i < argc && fSuccess == true; ++i)
-	{
-		if(!stricmp("-out", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(outDir, XalanDOMString(argv[i]));
-				insert(outDir, 0, XalanDOMString("\\"));
-				append(outDir, XalanDOMString("\\"));
-				f.checkAndCreateDir(outDir);
-				fsetOut = false;
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-		else if(!stricmp("-sub", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(category, XalanDOMString(argv[i]));
-				append(category, XalanDOMString("\\err"));
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-
-		else
-		{
-			printArgOptions();
-			fSuccess = false;
-		}
-
-	} // End of for-loop
-
-	// Do we need to set the default output directory??
-	if (fsetOut)
-	{
-		unsigned int ii = lastIndexOf(baseDir,charAt(pathSep,0));
-		outDir = substring(baseDir, 0, ii+1);
-		append(outDir,XalanDOMString("CONF-ERR-results"));
-		f.checkAndCreateDir(outDir);
-		append(outDir,pathSep);
-	}
-	
-	// Add the path seperator to the end of the base directory 
-	// here after we've finished using it for all directory creation.
-
-	append(baseDir,pathSep);
-	return fSuccess;
-}
-
 
 inline bool
 checkForExclusion(XalanDOMString currentFile)
@@ -236,13 +131,11 @@ checkForExclusion(XalanDOMString currentFile)
 }
 
 int
-main(
-	 int			argc,
+main(int			argc,
 	 const char*	argv[])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
@@ -251,13 +144,12 @@ main(
 	XalanTransformer::initialize();
 
 	{
-		Hashtable runAttrs;		// Attribute list for perfdata element
-		int theResult = 0;
+		int theResult;	
 
-		XalanDOMString  category;	// Test all of base dir by default
-		XalanDOMString  baseDir, outputRoot, goldRoot;	
-
-		if (getParams(argc, argv, futil, baseDir, outputRoot, category) == true)
+		// Set the program help string,  then get the command line parameters.
+		//
+		setHelp();
+		if (h.getParams(argc, argv) == true)
 		{
 			//
 			// Call the static initializers for xerces and xalan, and create a transformer
@@ -270,71 +162,69 @@ main(
 
 
 			// Generate Unique Run id and processor info
-			const XalanDOMString UniqRunid = futil.generateUniqRunid();
+			const XalanDOMString UniqRunid = h.generateUniqRunid();
 
 
 			// Defined basic constants for file manipulation and open results file
-			const XalanDOMString  resultFilePrefix("cpp");
-			const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+			const XalanDOMString  resultFilePrefix("cpperr");
+			const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XMLSuffix);
 
 
 			XMLFileReporter	logFile(resultsFile);
 			logFile.logTestFileInit("Error Testing:");
 
-
-			// Create run entry that contains runid and number of iterations used for averages.
-			runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
-			runAttrs.insert(Hashtable::value_type(XalanDOMString("Xerces-Version "), futil.getXercesVersion()));
-			logFile.logElementWAttrs(10, "Rundata", runAttrs, "xxx");
-
 			// Get the list of Directories that are below conf
 			bool foundDir = false;		// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
-			const FileNameVectorType	dirs = futil.getDirectoryNames(baseDir);
+			const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
 
 			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 			{
+				// If conformance directory structure does not exist, it needs to be created.
+				const XalanDOMString  confSubdir = h.args.output + dirs[j];
+				h.checkAndCreateDir(confSubdir);
+
+				// Set up to get files from the associated error directories
 				const XalanDOMString currentDir(dirs[j] + XalanDOMString("\\err"));
+				const XalanDOMString subErrDir(h.args.sub + XalanDOMString("\\err"));
 
 				// Run specific category of files from given directory
-				if (length(category) > 0 && !equals(currentDir, category))
+				if (length(h.args.sub) > 0 && !equals(currentDir, subErrDir))
 				{
 					continue;
 				}					
 					
 				// Check that output directory is there.
-				const XalanDOMString  theOutputDir = outputRoot + currentDir;
-				futil.checkAndCreateDir(theOutputDir);
+				const XalanDOMString  theOutputDir = h.args.output + currentDir;
+				h.checkAndCreateDir(theOutputDir);
 
 				
 				// Indicate that directory was processed and get test files from the directory
 				foundDir = true;
-				const FileNameVectorType files = futil.getTestFileNames(baseDir, currentDir, false);
-				
 				logFile.logTestCaseInit(currentDir);
 
+				const FileNameVectorType files = h.getTestFileNames(h.args.base, currentDir, false);
 				for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 				{
 					Hashtable attrs;
 					const XalanDOMString currentFile(files[i]);
-					futil.data.testOrFile = currentFile;
+					h.data.testOrFile = currentFile;
 
 					if (checkForExclusion(currentFile))
 						continue;
 
-					const XalanDOMString  theXSLFile= baseDir + currentDir + pathSep + currentFile;
-					const XalanDOMString  theXMLFile = futil.generateFileName(theXSLFile,"xml");
-					XalanDOMString  theGoldFile = goldRoot + currentDir + pathSep + currentFile;
-					theGoldFile = futil.generateFileName(theGoldFile, "out");
+					const XalanDOMString  theXSLFile= h.args.base + currentDir + pathSep + currentFile;
+					const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+					XalanDOMString  theGoldFile = h.args.gold + currentDir + pathSep + currentFile;
+					theGoldFile = h.generateFileName(theGoldFile, "out");
 
-					const XalanDOMString  outbase =  outputRoot + currentDir + pathSep + currentFile; 
-					const XalanDOMString  theOutputFile = futil.generateFileName(outbase, "out");
+					const XalanDOMString  outbase =  h.args.output + currentDir + pathSep + currentFile; 
+					const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
 
 					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
 					const XSLTInputSource	goldInputSource(c_wstr(theGoldFile));
 					const XSLTResultTarget	resultFile(theOutputFile);
 
-					//
 					// Parsing(compile) the XSL stylesheet and report the results..
 					//
 					const XalanCompiledStylesheet*	compiledSS = 0;
@@ -356,7 +246,6 @@ main(
 						cerr << "Exception caught!!!" << endl << endl;
 					}
 
-					//
 					// Parsing the input XML and report the results..
 					//
 					cout << "PARSING SOURCE XML FOR: " << currentFile << endl;
@@ -368,12 +257,18 @@ main(
 						continue;
 					}
 
-					//
 					// Perform One transform using parsed stylesheet and parsed xml source, report results...
 					// 
+					theResult = 0;
 					cout << "TRANSFORMING: " << currentFile << endl;
 					theResult = xalan.transform(*parsedSource, compiledSS, resultFile);
-					if (!theResult)
+					if (theResult != 0)
+					{
+						cout << "FAILED to transform stylesheet for " << currentFile << endl;
+						cout << "Reason: " << xalan.getLastError() << endl;
+						logFile.logErrorResult(currentFile, XalanDOMString(xalan.getLastError()));
+					}
+					else
 					{
 						logFile.logCheckPass(currentFile);
 					}
@@ -382,23 +277,23 @@ main(
 					xalan.destroyParsedSource(parsedSource);
 					xalan.destroyStylesheet(compiledSS);
 
-				}	//for files
+				}
 
 				logFile.logTestCaseClose("Done", "Pass");
-
-			}		//for directories
+			}
 
 
 		// Check to see if -sub cmd-line directory was processed correctly.
 		if (!foundDir)
 		{
-			cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(category)) << "\" not found" << endl;
+			cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
 		}
 
+		h.reportPassFail(logFile, UniqRunid);
 		logFile.logTestFileClose("Conformance ", "Done");
 		logFile.close();
 
-		} //if getParams
+		}
 	}
 
 	XalanTransformer::terminate();

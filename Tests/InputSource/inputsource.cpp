@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -87,117 +87,20 @@
 	using std::endl;
 #endif
 
-FileUtility		futil;
+FileUtility		h;
 
 void
-printArgOptions()
+setHelp()
 {
-	cerr << endl
-		 << "inputsource dirname [-out]"
-		 << endl
-		 << endl
-		 << "dirname		(base directory for testcases)"
-		 << endl
-		 << "-out dirname	(base directory for output)"
-		 << endl;
+	h.args.help << endl
+				<< "inputsource dirname [-out]"
+				<< endl
+				<< endl
+				<< "dirname		(base directory for testcases)"
+				<< endl
+				<< "-out dirname	(base directory for output)"
+				<< endl;
 }
-
-bool
-getParams(int argc, 
-		  const char*	argv[],
-		  XalanDOMString& baseDir,
-		  XalanDOMString& outDir,
-		  XalanDOMString& goldRoot)
-{
-	bool fSuccess = true;	// Used to continue argument loop
-	bool fSetOut = true;	// Set default output directory, set to false if data is provided
-	bool fsetGold = true;	// Set default gold directory, set to false if data is provided
-
-	// Insure that required "-base" argument is there.
-	if (argc == 1 || argv[1][0] == '-')
-	{
-		printArgOptions(); 
-		return false;
-	}
-	else
-	{
-		if (futil.checkDir(pathSep + XalanDOMString(argv[1])))
-		{
-			assign(baseDir, XalanDOMString(argv[1]));
-			insert(baseDir, 0, pathSep);
-		}
-		else
-		{
-			cout << endl << "Given base directory \"" << argv[1] << "\" does not exist" << endl;
-			printArgOptions();
-			return false;
-		}
-	}
-
-	// Get the rest of the arguments in any order.
-	for (int i = 2; i < argc && fSuccess == true; ++i)
-	{
-		if(!stricmp("-out", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(outDir, XalanDOMString(argv[i]));
-				insert(outDir, 0, XalanDOMString("\\"));
-				append(outDir, XalanDOMString("\\"));
-				futil.checkAndCreateDir(outDir);
-				fSetOut = false;
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-		else if(!stricmp("-gold", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(goldRoot, XalanDOMString(argv[i]));
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-
-		else
-		{
-			printArgOptions();
-			fSuccess = false;
-		}
-
-	} // End of for-loop
-
-	// Do we need to set the default output directory??
-	if (fSetOut)
-	{
-		unsigned int ii = lastIndexOf(baseDir,charAt(pathSep,0));
-		outDir = substring(baseDir, 0, ii+1);
-		append(outDir,XalanDOMString("ISOURCE-results\\"));
-		futil.checkAndCreateDir(outDir);
-	}
-	
-	if (fsetGold)
-	{
-		goldRoot = baseDir;
-		append(goldRoot,XalanDOMString("-gold"));
-		futil.checkAndCreateDir(goldRoot);
-		append(goldRoot,pathSep);
-	}
-
-	// Add the path seperator to the end of the base directory
-	append(baseDir, pathSep);
-	return fSuccess;
-}
-
 
 // TestCase1 will use the following method of XSLTInputSource
 //		- XSLTInputSource(const XMLCh* systemId)
@@ -209,10 +112,10 @@ void testCase1(XalanTransformer &xalan, XMLFileReporter& logFile,
 {
 	const XalanDOMString  publicID("public-smublic");
 
-	const XalanDOMString	theOutputFile = outBase + XalanDOMString("\\TestCase1.out");
+	const XalanDOMString	theOutputFile = outBase + XalanDOMString("\\InputSource-TestCase1.out");
 	const XSLTResultTarget	theResultTarget(theOutputFile);
 
-	futil.data.testOrFile = "TestCase1";
+	h.data.testOrFile = "InputSource-TestCase1";
 
 	// This code excersized the stated methods of XSLTInputSource
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
@@ -220,7 +123,7 @@ void testCase1(XalanTransformer &xalan, XMLFileReporter& logFile,
 
 	// Do the transform and report the results.
 	xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
-	futil.checkResults(theOutputFile, theGoldFile, logFile);
+	h.checkResults(theOutputFile, theGoldFile, logFile);
 		
 }
 
@@ -232,10 +135,10 @@ void testCase2(XalanTransformer &xalan, XMLFileReporter& logFile,
 			   const XalanDOMString outBase, XalanDOMString &theGoldFile)
 
 {
-	const XalanDOMString	theOutputFile = outBase + XalanDOMString("\\TestCase2.out");
+	const XalanDOMString	theOutputFile = outBase + XalanDOMString("\\InputSource-TestCase2.out");
 	const XSLTResultTarget	theResultTarget2(theOutputFile);
 
-	futil.data.testOrFile = "TestCase2";
+	h.data.testOrFile = "InputSource-TestCase2";
 
 	// This code excersized the stated methods of XSLTInputSource
 	const XSLTInputSource	xslStringSource("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xsl","public-smublic");
@@ -244,7 +147,7 @@ void testCase2(XalanTransformer &xalan, XMLFileReporter& logFile,
 
 	// Do the transform and report the results.
 	xalan.transform(xmlStringSource, xslStringSource, theResultTarget2);
-	futil.checkResults(theOutputFile, theGoldFile, logFile);
+	h.checkResults(theOutputFile, theGoldFile, logFile);
 
 }
 
@@ -262,10 +165,10 @@ void testCase3(XalanTransformer &xalan, XMLFileReporter &logFile,
 	XalanSourceTreeDocument::NodeType	type;		// actual values used for testing.
 	XalanDOMString						name, value;	
 
-	const XalanDOMString	theOutputFile = outBase + XalanDOMString("\\TestCase3.out");
+	const XalanDOMString	theOutputFile = outBase + XalanDOMString("\\InputSource-TestCase3.out");
 	XSLTResultTarget		theResultTarget3(theOutputFile);
 
-	futil.data.testOrFile = "TestCase3a";
+	h.data.testOrFile = "InputSource-TestCase3a";
 
 	// Create necessary Infrastructure to perform transform without the XalanTransformer Class.
 	// Can't use it because it doesn't take a DOM.
@@ -323,7 +226,7 @@ void testCase3(XalanTransformer &xalan, XMLFileReporter &logFile,
 	firstChild = theNode->getFirstChild();
 	value = firstChild->getNodeValue();
 
-	futil.checkAPIResults(value, XalanDOMString(" This is THE Smoke Test "), "XSLTInputSource.getNode()", logFile,
+	h.checkAPIResults(value, XalanDOMString(" This is THE Smoke Test "), "XSLTInputSource.getNode()", logFile,
 							theOutputFile, theGoldFile);
 
 	// Create the XML Input Source
@@ -344,12 +247,10 @@ void testCase3(XalanTransformer &xalan, XMLFileReporter &logFile,
 						execuContext);
 
 	// Reset testcase name
-	futil.data.testOrFile = "TestCase3b";
-	futil.checkResults(theOutputFile, 
+	h.data.testOrFile = "InputSource-TestCase3b";
+	h.checkResults(theOutputFile, 
 					  theGoldFile, 
 					  logFile);
-
-
 }
 
 // TestCase4 will use the following API.  Default constructor of XSLTInputSource will take a string.
@@ -358,79 +259,82 @@ void testCase3(XalanTransformer &xalan, XMLFileReporter &logFile,
 void testCase4(XalanTransformer &xalan, XMLFileReporter& logFile)
 {
 
-	const XalanDOMString theOutputFile("\\xml-xalan\\test\\tests\\ISOURCE-results\\smoke\\testCase4.out");
+	const XalanDOMString theOutputFile("\\xml-xalan\\test\\tests\\ISOURCE-results\\smoke\\InputSource-TestCase4.out");
 	const XalanDOMString theGoldFile("\\xml-xalan\\test\\tests\\capi-gold\\smoke\\smoke01.out");
 
-	futil.data.testOrFile = "TestCase4";
+	XSLTResultTarget theResultTarget(theOutputFile);
+
+	h.data.testOrFile = "InputSource-TestCase4";
 
 	// This code excersized the stated methods of XSLTInputSource
 	// Do the transform and report the results.
 	xalan.transform("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xml", 
 					"\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xsl",
-					"\\xml-xalan\\test\\tests\\ISOURCE-results\\smoke\\TestCase4.out");
+					theResultTarget);
 
-	futil.checkResults(theOutputFile, theGoldFile, logFile);
+	h.checkResults(theOutputFile, theGoldFile, logFile);
 }
 
 // TestCase5 uses XercesDOMWrapperParsedSource class to wrap a xerces generated dom. 
 //
-void testCase5(XalanTransformer &xalan, XMLFileReporter& logFile)
+void testCase5(XalanTransformer &xalan, XMLFileReporter& logFile,
+			   const XalanDOMString &xml, const XalanDOMString &xsl,
+			   const XalanDOMString outBase, XalanDOMString &theGoldFile)
 {
-
-	const XalanDOMString theOutputFile("\\xml-xalan\\test\\tests\\ISOURCE-results\\smoke\\TestCase5.out");
-	const XalanDOMString theGoldFile("\\xml-xalan\\test\\tests\\capi-gold\\smoke\\smoke01.out");
-
-	futil.data.testOrFile = "TestCase5";
-	const char* const theURI = "/xml-xalan/test/tests/capi/smoke/smoke01.xml";
+	h.data.testOrFile = "InputSource-TestCase5";
+	const XSLTInputSource	xmlInputSource(c_wstr(xml));
 		 
 	DOMParser  theParser;
 	theParser.setToCreateXMLDeclTypeNode(false);
-	theParser.parse(theURI);
+	theParser.parse(xmlInputSource);
 	const DOM_Document theDOM = theParser.getDocument();
 
 	XercesDOMSupport	theDOMSupport;
 	XercesParserLiaison theParserLiaison(theDOMSupport);
 
-	// This is the new class...
-	const XercesDOMWrapperParsedSource xmlDocWrapper(theDOM, 
+	// This is the wrapper class for Xerces DOM. 
+	const XercesDOMWrapperParsedSource* xmlDocWrapper = 0;
+	xmlDocWrapper = new XercesDOMWrapperParsedSource(theDOM, 
 													 theParserLiaison, 
 													 theDOMSupport, 
-													 XalanDOMString(theURI));
+													 xml);
+/*	const XercesDOMWrapperParsedSource xmlDocWrapper(theDOM, 
+													 theParserLiaison, 
+													 theDOMSupport, 
+													 xml);
 
-	const XSLTInputSource	xslInputSource("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xsl");
+*/
+	const XalanDOMString theOutputFile(outBase + XalanDOMString("\\InputSource-TestCase5.out"));
+	const XSLTInputSource	xslInputSource(c_wstr(xsl));
 	const XSLTResultTarget	theResultTarget(theOutputFile);
 
 	// Do the transform and report the results.
-	xalan.transform(xmlDocWrapper, xslInputSource, theResultTarget);
-	futil.checkResults(theOutputFile, theGoldFile, logFile);
+	xalan.transform(*xmlDocWrapper, xslInputSource, theResultTarget);
+	h.checkResults(theOutputFile, theGoldFile, logFile);
+	delete xmlDocWrapper;
 }
 
 int
-main(int			argc,
-		const char*	argv [])
+main(int		  argc,
+	 const char*  argv [])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	XalanDOMString  baseDir, outputRoot, goldRoot;	 	
-
-
-	if (getParams(argc, argv, baseDir, outputRoot, goldRoot) == true)
+	// Set the program help string,  then get the command line parameters.
+	//
+	setHelp();
+	if (h.getParams(argc, argv) == true)
 	{
-
-		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString UniqRunid = futil.generateUniqRunid();
-
-		// Defined basic constants for file manipulation
-		const XalanDOMString drive(futil.getDrive());
-		futil.data.testBase = baseDir;
-		
+		// Generate and Initialize Unique result logfile, and get drive designation
+		//
+		const XalanDOMString UniqRunid = h.generateUniqRunid();
+		const XalanDOMString drive(h.getDrive());
 		const XalanDOMString  resultFilePrefix("isource");
-		const XalanDOMString  resultsFile(drive + outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+		const XalanDOMString  resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + XMLSuffix);
 		
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("XSLTInputSource Testing: Give various types of allowable Inputs. ");
@@ -438,56 +342,55 @@ main(int			argc,
 		try
 		{
 			// Call the static initializers...
+			//
 			HarnessInit xmlPlatformUtils;
 			XalanTransformer::initialize();
 			XalanTransformer xalan;
 			{
 				XalanDOMString		fileName;
 				
-				// Set the test directory.
+				// Get testfiles from the capi\smoke directory, create output directory, .
+				//
 				const XalanDOMString  currentDir("smoke");
+				const XalanDOMString  theOutputDir = h.args.output + currentDir;
+				h.checkAndCreateDir(theOutputDir);
+
+				// Get the single file found in the "smoke" directory, and run tests.
+				//
+				const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
 				logFile.logTestCaseInit(currentDir);
-
-				// Create the output directory.
-				const XalanDOMString  theOutputDir = outputRoot + currentDir;
-				futil.checkAndCreateDir(theOutputDir);
-
-				// Get the files found in the "smoke" directory
-				const FileNameVectorType	files = futil.getTestFileNames(baseDir, currentDir, true);
-
-				// This only processes a single file, smoke01.xsl
 				for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 				{
-
 					fileName = files[i];
-					futil.data.testOrFile = fileName;
+					h.data.testOrFile = fileName;
 
 					// Set up the input/output files.
-					const XalanDOMString  theXSLFile= baseDir + currentDir + pathSep + fileName;
-					const XalanDOMString  theXMLFile = futil.generateFileName(theXSLFile,"xml");
-					futil.data.xmlFileURL = theXMLFile;
-					futil.data.xslFileURL = theXSLFile;
+					const XalanDOMString  theXSLFile= h.args.base + currentDir + pathSep + fileName;
+					const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+					h.data.xmlFileURL = theXMLFile;
+					h.data.xslFileURL = theXSLFile;
 
 					// Set the gold file.
-					XalanDOMString  theGoldFile = goldRoot +currentDir + pathSep + fileName;
-					theGoldFile = futil.generateFileName(theGoldFile, "out");
+					XalanDOMString  theGoldFile = h.args.gold + currentDir + pathSep + fileName;
+					theGoldFile = h.generateFileName(theGoldFile, "out");
 					
 					// Execute the test cases. 
+					//
 					testCase1(xalan, logFile, theXMLFile, theXSLFile, theOutputDir, theGoldFile);
 					testCase2(xalan, logFile, theOutputDir, theGoldFile);
 					testCase3(xalan, logFile, theOutputDir, theGoldFile);
 					testCase4(xalan, logFile);
-					testCase5(xalan, logFile);
+					testCase5(xalan, logFile, theXMLFile, theXSLFile, theOutputDir, theGoldFile);
 				}
 
 				logFile.logTestCaseClose("Done", "Pass");	
 			}
 
-			futil.reportPassFail(logFile, UniqRunid);
+			h.reportPassFail(logFile, UniqRunid);
 			logFile.logTestFileClose("ISource Testing: ", "Done");
 			logFile.close();
 
-			futil.analyzeResults(xalan, resultsFile);
+			h.analyzeResults(xalan, resultsFile);
 			XalanTransformer::terminate();
 		}
 		catch(...)

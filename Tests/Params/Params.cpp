@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -86,32 +86,28 @@
 	using std::endl;
 #endif
 
-// GLOBAL VARIABLES...
-FileUtility				futil;
-XalanDOMString			baseDir, outputRoot, goldRoot, theGoldFile;  // These are set by the getParams routine.
-const XalanDOMString	currentDir("params");
-XalanDOMString			fileName;
-
+FileUtility		h;
 
 void
-printArgOptions()
+setHelp()
 {
-	cerr << endl
+	h.args.help << endl
 		 << "params dirname [-out]"
 		 << endl
 		 << endl
-		 << "dirname		(base directory for testcases)"
+		 << "dirname		(base directory for \'capi\' testcases)"
 		 << endl
 		 << "-out dirname	(base directory for output)"
 		 << endl;
 }
-
+/*
 bool
 getParams(int argc, 
 		  const char*	argv[],
-		  XalanDOMString& basedir,
-		  XalanDOMString& outdir,
-		  XalanDOMString& goldroot)
+		  FileUtility&		h,
+		  XalanDOMString&	baseDir,
+		  XalanDOMString&	outDir,
+		  XalanDOMString&	goldRoot)
 {
 	bool fSuccess = true;	// Used to continue argument loop
 	bool fSetOut = true;	// Set default output directory
@@ -125,10 +121,15 @@ getParams(int argc,
 	}
 	else
 	{
-		if (futil.checkDir(pathSep + XalanDOMString(argv[1])))
+		if (h.checkDir(XalanDOMString(argv[1])))
 		{
-			assign(basedir, XalanDOMString(argv[1]));
-			insert(basedir, 0, pathSep);
+			assign(baseDir, XalanDOMString(argv[1]));
+			if ( !endsWith(baseDir, XalanDOMString("capi")) )
+			{
+				cout << endl << "Given base directory \"" << argv[1] << "\" not a valid \'capi\' directory" << endl;
+				printArgOptions();
+				return false;
+			}
 		}
 		else
 		{
@@ -146,10 +147,10 @@ getParams(int argc,
 			++i;
 			if(i < argc && argv[i][0] != '-')
 			{
-				assign(outdir, XalanDOMString(argv[i]));
-				insert(outdir, 0, XalanDOMString("\\"));
-				append(outdir, XalanDOMString("\\"));
-				futil.checkAndCreateDir(outdir);
+				assign(outDir, XalanDOMString(argv[i]));
+				insert(outDir, 0, XalanDOMString("\\"));
+				append(outDir, XalanDOMString("\\"));
+				h.checkAndCreateDir(outDir);
 				fSetOut = false;
 			}
 			else
@@ -169,25 +170,25 @@ getParams(int argc,
 	// Do we need to set the default output directory??
 	if (fSetOut)
 	{
-		unsigned int ii = lastIndexOf(basedir,charAt(pathSep,0));
-		outdir = substring(basedir, 0, ii+1);
-		append(outdir,XalanDOMString("PARAM-RESULTS\\"));
-		futil.checkAndCreateDir(outdir);
+		unsigned int ii = lastIndexOf(baseDir,charAt(pathSep,0));
+		outDir = substring(baseDir, 0, ii+1);
+		append(outDir,XalanDOMString("PARAM-RESULTS\\"));
+		h.checkAndCreateDir(outDir);
 	}
 	
 	if (fSetGold)
 	{
 		goldRoot = baseDir;
 		append(goldRoot,XalanDOMString("-gold"));
-		futil.checkAndCreateDir(goldRoot);
+		h.checkAndCreateDir(goldRoot);
 		append(goldRoot,pathSep);
 	}
 
 	// Add the path seperator to the end of the base directory
-	append(basedir, pathSep);
+	append(baseDir, pathSep);
 	return fSuccess;
 }
-
+*/
 //	This function returns the testcase number.  All of these tests are called
 //	params0X, and there are only 6 of them,  so we can pick off the
 //	second X to determine what test number we're dealing with.  We need to
@@ -203,20 +204,22 @@ getTestNumber(const XalanDOMString& theFile)
 
 
 int
-main(
-		  int			argc,
-		  const char*	argv [])
+main(int			argc,
+	 const char*	argv [])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
 	char testCase[15];
+	XalanDOMString fileName, theGoldFile;
 
-	if (getParams(argc, argv, baseDir, outputRoot, goldRoot) == true)
+	// Set the program help string,  then get the command line parameters.
+	//
+	setHelp();	
+	if (h.getParams(argc, argv) == true)
 	{
 		// Call the static initializers...
 		HarnessInit xmlPlatformUtils;
@@ -224,13 +227,12 @@ main(
 		XalanTransformer	xalan;
 
 		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString UniqRunid = futil.generateUniqRunid();
+		const XalanDOMString UniqRunid = h.generateUniqRunid();
 
 		// Defined basic constants for file manipulation
-		const XalanDOMString  drive(futil.getDrive());
-		futil.data.testBase = baseDir;
+		const XalanDOMString  drive(h.getDrive());
 		const XalanDOMString  resultFilePrefix("params");
-		const XalanDOMString  resultsFile(drive + outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+		const XalanDOMString  resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + XMLSuffix);
 		
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("Param Testing: Testing ability to pass parameters to stylesheets. ");
@@ -241,30 +243,30 @@ main(
 				
 			// Get the files found in the "params" directory
 			const XalanDOMString  currentDir("params");
-			const XalanDOMString  theOutputDir = outputRoot + currentDir;
+			const XalanDOMString  theOutputDir = h.args.output + currentDir;
 
 			// Check that output directory is there.
-			futil.checkAndCreateDir(theOutputDir);
+			h.checkAndCreateDir(theOutputDir);
 
-			const FileNameVectorType	files = futil.getTestFileNames(baseDir, currentDir, true);
+			const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
 			logFile.logTestCaseInit(currentDir);
 
 			for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 			{
 				fileName = files[i];
 				sprintf(testCase, "%s%d","TestCase",i+1);
-				futil.data.testOrFile = testCase;
+				h.data.testOrFile = testCase;
 
 				// Set up the input/output files.
-				const XalanDOMString  theXSLFile= baseDir + currentDir + pathSep + fileName;
-				const XalanDOMString  theXMLFile = futil.generateFileName(theXSLFile,"xml");
-				futil.data.xmlFileURL = theXMLFile;
-				futil.data.xslFileURL = theXSLFile;
+				const XalanDOMString  theXSLFile= h.args.base + currentDir + pathSep + fileName;
+				const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+				h.data.xmlFileURL = theXMLFile;
+				h.data.xslFileURL = theXSLFile;
 
-				const XalanDOMString  theOutput =  outputRoot + currentDir + pathSep + fileName; 
-				const XalanDOMString  theOutputFile = futil.generateFileName(theOutput, "out");
-				theGoldFile = goldRoot +currentDir + pathSep + fileName;
-				theGoldFile = futil.generateFileName(theGoldFile, "out");
+				const XalanDOMString  theOutput =  h.args.output + currentDir + pathSep + fileName; 
+				const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
+				theGoldFile = h.args.gold + currentDir + pathSep + fileName;
+				theGoldFile = h.generateFileName(theGoldFile, "out");
 
 				XSLTResultTarget		theResultTarget(theOutputFile);
 				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
@@ -299,7 +301,7 @@ main(
 						{
 							const XSLTInputSource	embed07InputSource(c_wstr(theXSLFile));
 							xalan.transform(embed07InputSource, theResultTarget);
-							append(futil.data.testOrFile, " (Embed01)" );
+							append(h.data.testOrFile, " (Embed01)" );
 							embedFlag = true;
 							break;
 						}
@@ -308,7 +310,7 @@ main(
 						{
 							const XSLTInputSource	embed08InputSource(c_wstr(theXSLFile));
 							xalan.transform(embed08InputSource, theResultTarget);
-							append(futil.data.testOrFile, " (Embed02)" );
+							append(h.data.testOrFile, " (Embed02)" );
 							embedFlag = true;
 							break;
 						}
@@ -326,7 +328,7 @@ main(
 				}
 
 				// Check and report the results.
-				futil.checkResults(theOutputFile, theGoldFile, logFile);
+				h.checkResults(theOutputFile, theGoldFile, logFile);
 			}
 							
 			logFile.logTestCaseClose("Done", "Pass");
@@ -337,11 +339,11 @@ main(
 			cerr << "Exception caught!!!" << endl << endl;
 		}
 
-		futil.reportPassFail(logFile, UniqRunid);
+		h.reportPassFail(logFile, UniqRunid);
 		logFile.logTestFileClose("Param Testing: ", "Done");
 		logFile.close();
 
-		futil.analyzeResults(xalan, resultsFile);
+		h.analyzeResults(xalan, resultsFile);
 
 		XalanTransformer::terminate();
 	}

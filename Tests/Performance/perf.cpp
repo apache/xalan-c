@@ -111,6 +111,10 @@
 	typedef std::map<XalanDOMString, XalanDOMString>	Hashtable;
 #endif
 
+
+FileUtility h;
+
+
 const char* const 	excludeStylesheets[] =
 {
 	"large-evans_large.xsl",
@@ -245,17 +249,17 @@ eTOeTransform(const XSLTInputSource&		inputSource,
 
 
 void
-printArgOptions()
+setHelp()
 {
-	cerr << endl
-		 << "Perf dirname [-out -category -i -iter]"
+	h.args.help << endl
+		 << "Perf dir [-out -sub -i -iter]"
 		 << endl
 		 << endl
-		 << "dirname		(base directory for testcases)"
+		 << "dir		(base directory for testcases)"
 		 << endl
-		 << "-out dirname	(base directory for output)"
+		 << "-out dir	(base directory for output)"
 		 << endl
-		 << "-category dirname (run files only from a specific directory)"
+		 << "-sub dir (run files only from a specific directory)"
 		 << endl
 		 << "-i                (include all testcases)"
 		 << endl
@@ -263,157 +267,34 @@ printArgOptions()
 		 << endl;
 }
 
-bool
-getParams(int argc, 
-		  const char*	argv[],
-		  FileUtility& f,
-		  XalanDOMString& basedir,
-		  XalanDOMString& outdir,
-		  XalanDOMString& category,
-		  bool& skip,
-		  long& iterCount)
-{
-bool fSuccess = true;	// Used to continue argument loop
-bool fSetOut = true;	// Set default output directory
-
-
-	// Insure that required "-base" argument is there.
-	if (argc == 1 || argv[1][0] == '-')
-	{
-		printArgOptions(); 
-		return false;
-	}
-	else
-	{
-		if (f.checkDir(pathSep + XalanDOMString(argv[1])))
-		{
-			assign(basedir, XalanDOMString(argv[1]));
-			insert(basedir, 0, pathSep);
-		}
-		else
-		{
-			cout << endl << "Given base directory \"" << argv[1] << "\" does not exist" << endl;
-			printArgOptions();
-			return false;
-		}
-	}
-
-	// Get the rest of the arguments in any order.
-	for (int i = 2; i < argc && fSuccess == true; ++i)
-	{
-		if(!stricmp("-out", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(outdir, XalanDOMString(argv[i]));
-				insert(outdir, 0, XalanDOMString("\\"));
-				append(outdir, XalanDOMString("\\"));
-				f.checkAndCreateDir(outdir);
-				fSetOut = false;
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-		else if(!stricmp("-category", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(category, XalanDOMString(argv[i]));
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-		else if(!stricmp("-i", argv[i]))
-		{
-			skip = false;
-		}
-		else if(!stricmp("-iter", argv[i]))
-		{
-			++i;
-			
-			// Make sure number is there and is greater then zero
-			if(i < argc && atol(argv[i]) > 0)
-			{
-				iterCount = atol(argv[i]);
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-		else
-		{
-			printArgOptions();
-			fSuccess = false;
-		}
-
-	} // End of for-loop
-
-	// Do we need to set the default output directory??
-	if (fSetOut)
-	{
-		unsigned int ii = lastIndexOf(basedir,charAt(pathSep,0));
-		outdir = substring(basedir, 0, ii+1);
-		append(outdir,XalanDOMString("PERF-RESULTS\\"));
-		f.checkAndCreateDir(outdir);
-	}
-	
-	// Add the path seperator to the end of the base directory
-	append(basedir,pathSep);
-	return fSuccess;
-}
-
-
 int
-main(
-	 int			argc,
+main(int			argc,
 	 const char*	argv[])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	Hashtable runAttrs;		// Attribute list for perfdata element
-	long iterCount = 5;		// Default number of iterations
+	const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
+	long iterCount;			// Default number of iterations
 	bool skip = true;		// Default will skip long tests
 
-	XalanDOMString  category;	// Test all of base dir by default
-	XalanDOMString  baseDir;	
-	XalanDOMString  outputRoot;	
+	// Set the program help string,  then get the command line parameters.
+	//
+	setHelp();
 
-	FileUtility f;
-
-	if (getParams(argc, argv, f, baseDir, outputRoot, category, skip, iterCount) == true)
+	if (h.getParams(argc, argv) == true)
 	{
 
 		// Generate Unique Run id and processor info
-		const XalanDOMString UniqRunid = f.generateUniqRunid();
-		const XalanDOMString processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
-
-		// Defined basic constants for file manipulation and open results file
+		const XalanDOMString UniqRunid = h.generateUniqRunid();
 		const XalanDOMString  resultFilePrefix(XalanDOMString("cpp"));
-		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XMLSuffix);
 
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("Performance Testing - Reports performance times for single transform, and average for multiple transforms using compiled stylesheet");
-
-		// Create initial entry in results file that has info somewhat equivlent to what XalanJ
-		// reports in the hashtable entries.
-		runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
-		logFile.addMetricToAttrs("Iterations",iterCount, runAttrs);
-		logFile.logElementWAttrs(10, "perfdata", runAttrs, "xxx");
 
 		try
 		{
@@ -427,12 +308,12 @@ main(
 				XSLTInit	theInit;  
 		
 				// Get the list of Directories that are below perf and iterate through them
-				const FileNameVectorType dirs = f.getDirectoryNames(baseDir);
+				const FileNameVectorType dirs = h.getDirectoryNames(h.args.base);
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 				{
-					// Run specific category of files from given directory
-					if (length(category) > 0 && !equals(dirs[j], category))
+					// Run specific sub of files from given directory
+					if (length(h.args.sub) > 0 && !equals(dirs[j], h.args.sub))
 					{
 						continue;
 					}
@@ -440,41 +321,42 @@ main(
 					cout << "Processing files in Directory: " << dirs[j] << endl;
 
 					// Check that output directory is there.
-					const XalanDOMString  theOutputDir = outputRoot + dirs[j];
-					f.checkAndCreateDir(theOutputDir);
+					const XalanDOMString  theOutputDir = h.args.output + dirs[j];
+					h.checkAndCreateDir(theOutputDir);
 
 					logFile.logTestCaseInit(XalanDOMString("Performance Directory: ") + dirs[j] ); 
-					const FileNameVectorType files = f.getTestFileNames(baseDir, dirs[j], false);
+					const FileNameVectorType files = h.getTestFileNames(h.args.base, dirs[j], false);
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
 						// Define  variables used for timing and reporting ...
 						clock_t startTime, endTime, accmTime, avgEtoe;
 						double timeinMilliseconds, theAverage;
 						Hashtable attrs;
-
-						attrs.insert(Hashtable::value_type(XalanDOMString("idref"), files[i]));
-						attrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"),UniqRunid));
-						attrs.insert(Hashtable::value_type(XalanDOMString("processor"),processorType));
-						
+					
 						if (skip)
 						{
 							if (checkForExclusion(files[i]))
 								continue;
 						}
 
-						const XalanDOMString  theXSLFile= baseDir + dirs[j] + pathSep + files[i];
-						const XalanDOMString  theXMLFile = f.generateFileName(theXSLFile,"xml");
+						const XalanDOMString  theXSLFile= h.args.base + dirs[j] + pathSep + files[i];
+						const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
 
-						const XalanDOMString  theOutput =  outputRoot + dirs[j] + pathSep + files[i]; 
-						const XalanDOMString  theOutputFile = f.generateFileName(theOutput, "out");
+						const XalanDOMString  theOutput =  h.args.output + dirs[j] + pathSep + files[i]; 
+						const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
 
 
 						attrs.insert(Hashtable::value_type(XalanDOMString("href"), theXSLFile));
 						// Create the necessary support objects to instantiate a processor.
-						XalanSourceTreeDOMSupport		csDOMSupport;
+
+						XercesDOMSupport				csDOMSupport;
+						XercesParserLiaison				csParserLiaison(csDOMSupport);
+
+						/*XalanSourceTreeDOMSupport		csDOMSupport;
 						XalanSourceTreeParserLiaison	csParserLiaison(csDOMSupport);
 
 						csDOMSupport.setParserLiaison(&csParserLiaison);
+						*/
 
 						XSLTProcessorEnvSupportDefault	csXSLTProcessorEnvSupport;
 						XObjectFactoryDefault			csXObjectFactory;
@@ -568,11 +450,7 @@ main(
 						logFile.addMetricToAttrs("single",timeinMilliseconds, attrs);
 
 
-
-			
-
 						// Do a total end to end transform with no pre parsing of either xsl or xml files.
-
 						const etoetran = eTOeTransform(xmlInputSource, 
 													xslInputSource,
 													theResultTarget,
@@ -589,8 +467,7 @@ main(
 						// These are done 3 different ways.
 						// FIRST: Parsed XSL Stylesheet and Parsed XML Source.
 
-						// addMetricToAttrs("Iterations",iterCount, attrs);
-
+						iterCount = h.args.iters;
 						accmTime = 0;
 						for(int j = 0; j < iterCount; ++j)
 						{	
@@ -606,7 +483,6 @@ main(
 
 						// Output average transform time to console and result log
 						cout << endl  << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Parsed files" << endl;
-
 						logFile.addMetricToAttrs("avgparsedxml",theAverage, attrs);
 
 						// SECOND: Parsed Stylesheet and UnParsed XML Source.
@@ -650,18 +526,16 @@ main(
 
 						// Output average transform time to console and result log
 						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's of eToe" << endl;
-
 						logFile.addMetricToAttrs("avgetoe",theAverage, attrs);
-
-
 						logFile.logElementWAttrs(10, "perf", attrs, "xxx");
-					}//for files
+					}
 
 					logFile.logTestCaseClose(XalanDOMString("Performance Directory: ") + dirs[j], XalanDOMString("Done") );
-				}//for dirs
+				}
 
-			}//xsltinit
+			}
 
+		h.reportPassFail(logFile, UniqRunid);
 		logFile.logTestFileClose("Performance", "Done");
 		logFile.close();
 
