@@ -124,7 +124,7 @@ XPath::execute(
 
 	return executeMore(
             context,
-            m_expression.getInitialOpCodePosition(),
+            getInitialOpCodePosition(),
             executionContext);
 }
 
@@ -151,7 +151,7 @@ XPath::execute(
 
 	executeMore(
             context,
-            m_expression.getInitialOpCodePosition(),
+            getInitialOpCodePosition(),
             executionContext,
             result);
 }
@@ -179,7 +179,7 @@ XPath::execute(
 
 	executeMore(
             context,
-            m_expression.getInitialOpCodePosition(),
+            getInitialOpCodePosition(),
             executionContext,
             result);
 }
@@ -207,7 +207,7 @@ XPath::execute(
 
 	executeMore(
             context,
-            m_expression.getInitialOpCodePosition(),
+            getInitialOpCodePosition(),
             executionContext,
             result);
 }
@@ -236,7 +236,7 @@ XPath::execute(
 
 	executeMore(
             context,
-            m_expression.getInitialOpCodePosition(),
+            getInitialOpCodePosition(),
             executionContext,
             formatterListener,
             function);
@@ -266,7 +266,7 @@ XPath::execute(
 
 	return executeMore(
             context,
-            m_expression.getInitialOpCodePosition(),
+            getInitialOpCodePosition(),
             executionContext,
             result);
 }
@@ -281,10 +281,6 @@ XPath::executeMore(
 {
 	switch(m_expression.getOpCodeMapValue(opPos))
 	{
-	case XPathExpression::eOP_XPATH:
-		return executeMore(context, opPos + 2, executionContext);
-		break;
-
 	case XPathExpression::eOP_OR:
 		return executionContext.getXObjectFactory().createBoolean(Or(context, opPos, executionContext));
 		break;
@@ -476,10 +472,6 @@ XPath::executeMore(
 {
 	switch(m_expression.getOpCodeMapValue(opPos))
 	{
-	case XPathExpression::eOP_XPATH:
-		executeMore(context, opPos + 2, executionContext, result);
-		break;
-
 	case XPathExpression::eOP_OR:
 		result = Or(context, opPos, executionContext);
 		break;
@@ -661,10 +653,6 @@ XPath::executeMore(
 {
 	switch(m_expression.getOpCodeMapValue(opPos))
 	{
-	case XPathExpression::eOP_XPATH:
-		executeMore(context, opPos + 2, executionContext, result);
-		break;
-
 	case XPathExpression::eOP_OR:
 		result = XObject::number(Or(context, opPos, executionContext));
 		break;
@@ -846,10 +834,6 @@ XPath::executeMore(
 {
 	switch(m_expression.getOpCodeMapValue(opPos))
 	{
-	case XPathExpression::eOP_XPATH:
-		executeMore(context, opPos + 2, executionContext, result);
-		break;
-
 	case XPathExpression::eOP_OR:
 		XObject::string(Or(context, opPos, executionContext), result);
 		break;
@@ -1043,10 +1027,6 @@ XPath::executeMore(
 {
 	switch(m_expression.getOpCodeMapValue(opPos))
 	{
-	case XPathExpression::eOP_XPATH:
-		executeMore(context, opPos + 2, executionContext, formatterListener, function);
-		break;
-
 	case XPathExpression::eOP_OR:
 		XObject::string(
 				Or(context, opPos, executionContext),
@@ -1254,10 +1234,6 @@ XPath::executeMore(
 
 	switch(m_expression.getOpCodeMapValue(opPos))
 	{
-	case XPathExpression::eOP_XPATH:
-		theXObject = executeMore(context, opPos + 2, executionContext, result);
-		break;
-
 	case XPathExpression::eOP_OR:
 	case XPathExpression::eOP_AND:
 	case XPathExpression::eOP_NOTEQUALS:

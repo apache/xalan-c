@@ -454,7 +454,7 @@ public:
 
 		return executeMore(
                 executionContext.getCurrentNode(),
-                m_expression.getInitialOpCodePosition(),
+                getInitialOpCodePosition(),
                 executionContext);
 	}
 
@@ -477,7 +477,7 @@ public:
 
 		executeMore(
                 executionContext.getCurrentNode(),
-                m_expression.getInitialOpCodePosition(),
+                getInitialOpCodePosition(),
                 executionContext,
                 result);
 	}
@@ -501,7 +501,7 @@ public:
 
 		executeMore(
                 executionContext.getCurrentNode(),
-                m_expression.getInitialOpCodePosition(),
+                getInitialOpCodePosition(),
                 executionContext,
                 result);
 	}
@@ -526,7 +526,7 @@ public:
 
 		executeMore(
                 executionContext.getCurrentNode(),
-                m_expression.getInitialOpCodePosition(),
+                getInitialOpCodePosition(),
                 executionContext,
                 result);
 	}
@@ -552,7 +552,7 @@ public:
 
 		executeMore(
                 executionContext.getCurrentNode(),
-                m_expression.getInitialOpCodePosition(),
+                getInitialOpCodePosition(),
                 executionContext,
                 formatterListener,
                 function);
@@ -588,7 +588,7 @@ public:
 
 		return executeMore(
                 executionContext.getCurrentNode(),
-                m_expression.getInitialOpCodePosition(),
+                getInitialOpCodePosition(),
                 executionContext,
                 result);
 	}
@@ -617,7 +617,7 @@ public:
 
 		return executeMore(
                 executionContext.getCurrentNode(),
-                m_expression.getInitialOpCodePosition(),
+                getInitialOpCodePosition(),
                 executionContext);
 	}
 
@@ -646,7 +646,7 @@ public:
 
 		executeMore(
                 executionContext.getCurrentNode(),
-                m_expression.getInitialOpCodePosition(),
+                getInitialOpCodePosition(),
                 executionContext,
                 result);
 	}
@@ -676,7 +676,7 @@ public:
 
 		executeMore(
                 executionContext.getCurrentNode(),
-                m_expression.getInitialOpCodePosition(),
+                getInitialOpCodePosition(),
                 executionContext,
                 result);
 	}
@@ -707,7 +707,7 @@ public:
 
 		executeMore(
                 executionContext.getCurrentNode(),
-                m_expression.getInitialOpCodePosition(),
+                getInitialOpCodePosition(),
                 executionContext,
                 result);
 	}
@@ -736,7 +736,7 @@ public:
 
 		executeMore(
                 executionContext.getCurrentNode(),
-                m_expression.getInitialOpCodePosition(),
+                getInitialOpCodePosition(),
                 executionContext,
                 formatterListener,
                 function);
@@ -778,7 +778,7 @@ public:
 
 		return executeMore(
                 executionContext.getCurrentNode(),
-                m_expression.getInitialOpCodePosition(),
+                getInitialOpCodePosition(),
                 executionContext,
                 result);
 	}
@@ -2382,6 +2382,18 @@ private:
 	{
 		eDefaultTargetDataSize = 5
 	};
+
+    OpCodeMapPositionType
+    getInitialOpCodePosition() const
+    {
+#if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
+        assert(m_expression.getOpCodeMapValue(0) == XPathExpression::eOP_XPATH);
+#else
+        assert(m_expression.getOpCodeMapValue(
+                    m_expression.getInitialOpCodePosition()) == XPathExpression::eOP_XPATH);
+#endif
+        return m_expression.getInitialOpCodePosition() + 2;
+    }
 
 	eMatchScore
 	locationPathPattern(
