@@ -298,6 +298,7 @@ ElemTemplateElement::beginExecuteChildren(StylesheetExecutionContext&	executionC
 
 	if (hasDirectTemplate() == true)
 	{
+        executionContext.pushContextMarker();
 		executionContext.pushInvoker(this);
 	}
 
@@ -317,6 +318,7 @@ ElemTemplateElement::endExecuteChildren(StylesheetExecutionContext&	executionCon
 	if (hasDirectTemplate() == true)
 	{
 		executionContext.popInvoker();
+        executionContext.popContextMarker();
 	}
 }
 
