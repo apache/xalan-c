@@ -1,9 +1,10 @@
 <s3 title="Things still to be done">
   <p>We still need to do the following:</p>
     <ul>
-      <li><p>Linux build support</p></li>
-      <li><p>Conformance work</p></li>
-      <li><p>Performance work.</p></li>
-      <li><p>Robustness work</p></li>
+      <li><p>Work on number formatting</p></li>
+      <li><p>Fix up our implementation of XPath node-set objects</p></li>
+      <li><p>Support for Linux builds</p></li>
+      <li><p>Verify conformance to <resource-ref idref="xsl-draft-used"/></p></li>
+      <li><p>Work on stability and performance</p></li>
     </ul>
 </s3>    
