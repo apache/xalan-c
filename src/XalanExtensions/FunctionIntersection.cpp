@@ -92,9 +92,9 @@ FunctionIntersection::execute(
 
 	BorrowReturnMutableNodeRefList	theResult(executionContext);
 
-	const unsigned int	theLength = nodeset1.getLength();
+	const NodeRefListBase::size_type	theLength = nodeset1.getLength();
 
-	for (unsigned int i = 0; i < theLength; ++i)
+	for (NodeRefListBase::size_type i = 0; i < theLength; ++i)
 	{
 		XalanNode* const	theNode = nodeset1.item(i);
 		assert(theNode != 0);

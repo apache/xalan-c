@@ -88,7 +88,7 @@ FunctionHasSameNodes::execute(
 	const NodeRefListBase&	nodeset1 = arg1->nodeset();
 	const NodeRefListBase&	nodeset2 = arg2->nodeset();
 
-	const unsigned int	theLength = nodeset1.getLength();
+	const NodeRefListBase::size_type	theLength = nodeset1.getLength();
 
 	bool	fResult = true;
 
@@ -98,7 +98,7 @@ FunctionHasSameNodes::execute(
 	}
 	else
 	{
-		for (unsigned int i = 0; i < theLength && fResult == true; ++i)
+		for (NodeRefListBase::size_type i = 0; i < theLength && fResult == true; ++i)
 		{
 			XalanNode* const	theNode = nodeset1.item(i);
 			assert(theNode != 0);

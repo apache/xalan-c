@@ -1327,7 +1327,7 @@ main(
 		if (theInstanceCount > 0)
 		{
 			cout << "There are "
-				 << XalanNode::getInstanceCount()
+				 << theInstanceCount
 				 << " XalanNode instances still alive!"
 				 << endl
 				 << endl
@@ -1341,7 +1341,7 @@ main(
 
 			XalanNode::getLiveInstances(&*theNodes.begin());
 
-			for(unsigned int i = 0; i < theInstanceCount; ++i)
+			for(size_t i = 0; i < theInstanceCount; ++i)
 			{
 				const XalanNode* const	theInstance = theNodes[i];
 

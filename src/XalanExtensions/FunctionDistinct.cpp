@@ -102,7 +102,7 @@ FunctionDistinct::execute(
 
 	BorrowReturnMutableNodeRefList	theResult(executionContext);
 
-	const unsigned int	theLength = nodeset.getLength();
+	const NodeRefListBase::size_type	theLength = nodeset.getLength();
 
 	if (theLength == 1)
 	{
@@ -126,7 +126,7 @@ FunctionDistinct::execute(
 
 		// Check to make sure each node has a unique
 		// string value.
-		for (unsigned int i = 0; i < theLength; ++i)
+		for (NodeRefListBase::size_type i = 0; i < theLength; ++i)
 		{
 			XalanNode* const	theNode = nodeset.item(i);
 			assert(theNode != 0);
