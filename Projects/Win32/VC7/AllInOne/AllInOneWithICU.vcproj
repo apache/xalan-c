@@ -370,6 +370,9 @@
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\ArenaBlock.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\ArenaBlockBase.hpp">
+			</File>			
+			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\AttributeListImpl.cpp">
 			</File>
 			<File

@@ -411,6 +411,10 @@ SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ArenaBlock.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ArenaBlockBase.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributeListImpl.cpp
 # End Source File
 # Begin Source File
