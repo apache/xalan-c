@@ -359,7 +359,7 @@ private:
 	getTokenRelative(int	theOffset) const;
 
 	/**
-	 * Retrieve the next token from the command and
+	 * Retrieve the previous token from the command and
 	 * store it in m_token string.
 	 */
 	void
@@ -385,6 +385,9 @@ private:
 	 */
 	void
 	consumeExpected(char	expected);
+
+	bool
+	isCurrentLiteral() const;
 
 	/**
 	 * Warn the user of an problem.
@@ -830,6 +833,8 @@ private:
 	const PrefixResolver*			m_prefixResolver;
 
 	const XPathEnvSupport*			m_envSupport;
+
+	bool							m_requireLiterals;
 
 	enum eDummy
 	{

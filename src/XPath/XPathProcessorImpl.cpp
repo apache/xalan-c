@@ -86,7 +86,8 @@ XPathProcessorImpl::XPathProcessorImpl() :
 	m_xpath(0),
 	m_expression(0),
 	m_prefixResolver(0),
-	m_envSupport(0)
+	m_envSupport(0),
+	m_requireLiterals(false)
 {
 }
 
@@ -105,6 +106,8 @@ XPathProcessorImpl::initXPath(
 			const PrefixResolver&		prefixResolver,
 			const XPathEnvSupport&		envSupport)
 {
+	m_requireLiterals = false;
+
 	m_xpath = &pathObj;
 	m_expression = &m_xpath->getExpression();
 
@@ -1640,7 +1643,15 @@ XPathProcessorImpl::Argument()
 
 	m_expression->appendOpCode(XPathExpression::eOP_ARGUMENT);
 
-	Expr();
+	if (m_requireLiterals == false ||
+		isCurrentLiteral() == true)
+	{
+		Expr();
+	}
+	else
+	{
+		error(TranscodeFromLocalCodePage("A literal argument is required!"));
+	}
 
 	m_expression->updateOpCodeLength(XPathExpression::eOP_ARGUMENT,
 									 opPos);
@@ -1721,8 +1732,6 @@ XPathProcessorImpl::FunctionCall()
 				 TranscodeFromLocalCodePage("()"));
 		}
 
-		// $$$ ToDo: I believe that this is XSLT functionality.  We
-		// need to figure out how to do the extensions for this stuff.
 		const int funcTok = getFunctionToken(m_token);
 
 		switch(funcTok)
@@ -2164,17 +2173,9 @@ XPathProcessorImpl::Literal()
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
 
-	const int last = length(m_token) - 1;
-
-	assert(last > 0);
-
-	const XalanDOMChar 	c0 = m_tokenChar;
-	const XalanDOMChar 	cX = charAt(m_token, last);
-
-	if((c0 == XalanUnicode::charQuoteMark && cX == XalanUnicode::charQuoteMark) ||
-	   (c0 == XalanUnicode::charApostrophe && cX == XalanUnicode::charApostrophe))
+	if(isCurrentLiteral() == true)
 	{
-		const XalanDOMString	theArgument = substring(m_token, 1, last);
+		const XalanDOMString	theArgument = substring(m_token, 1, length(m_token) - 1);
 
 		m_expression->pushArgumentOnOpCodeMap(theArgument);
 
@@ -2305,7 +2306,11 @@ XPathProcessorImpl::LocationPathPattern()
 void
 XPathProcessorImpl::IdKeyPattern()
 {
+	m_requireLiterals = true;
+
 	FunctionCall();
+
+	m_requireLiterals = false;
 }
 
 
@@ -2439,6 +2444,36 @@ XPathProcessorImpl::isValidFunction(const XalanDOMString&	key) const
 	}
 
 	return fResult;
+}
+
+
+
+bool
+XPathProcessorImpl::isCurrentLiteral() const
+{
+	const int last = length(m_token) - 1;
+
+	if (last <= 0)
+	{
+		return false;
+	}
+	else
+	{
+		assert(last > 0);
+
+		const XalanDOMChar 	c0 = m_tokenChar;
+		const XalanDOMChar 	cX = charAt(m_token, last);
+
+		if((c0 == XalanUnicode::charQuoteMark && cX == XalanUnicode::charQuoteMark) ||
+		   (c0 == XalanUnicode::charApostrophe && cX == XalanUnicode::charApostrophe))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 
 
