@@ -119,11 +119,6 @@
 		<target>An invalid argument of '{0}' was supplied for op code '{1}'</target>
 </trans-unit>
 
-<trans-unit id="InvalidOffsetWasSupplied_1Param">
-		<source>An invalid offset of '{0}' was supplied as a relative token position</source>
-		<target>An invalid offset of '{0}' was supplied as a relative token position</target>
-</trans-unit>
-
 <trans-unit id="RemainingTokens">
 		<source> Remaining tokens:  </source>
 		<target> Remaining tokens:  </target>
