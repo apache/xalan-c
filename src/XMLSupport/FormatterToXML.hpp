@@ -296,10 +296,22 @@ public:
 		return m_doIndent;
 	}
 
+	void
+	setDoIndent(bool	value)
+	{
+		m_doIndent = value;
+	}
+
 	int
 	getIndent() const
 	{
 		return m_indent;
+	}
+
+	void
+	setIndent(int	value)
+	{
+		m_indent = value;
 	}
 
 #if defined(XALAN_NO_NAMESPACES)
