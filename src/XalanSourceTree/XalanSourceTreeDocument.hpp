@@ -76,13 +76,13 @@
 
 
 
+#include <PlatformSupport/XalanArrayAllocator.hpp>
 #include <PlatformSupport/XalanDOMStringPool.hpp>
 
 
 
 #include <XalanSourceTree/XalanSourceTreeAttributeAllocator.hpp>
 #include <XalanSourceTree/XalanSourceTreeAttributeNSAllocator.hpp>
-#include <XalanSourceTree/XalanSourceTreeAttributesVector.hpp>
 #include <XalanSourceTree/XalanSourceTreeCommentAllocator.hpp>
 #include <XalanSourceTree/XalanSourceTreeElementAllocator.hpp>
 #include <XalanSourceTree/XalanSourceTreeElementNSAllocator.hpp>
@@ -95,6 +95,7 @@
 class AttributeList;
 class Attributes;
 class PrefixResolver;
+class XalanSourceTreeAttr;
 
 
 
@@ -103,6 +104,7 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeDocument : public XalanDocumen
 public:
 
 	typedef XalanSourceTreeElement::AttributesCountType		AttributesCountType;
+	typedef XalanArrayAllocator<XalanSourceTreeAttr*>		AttributesArrayAllocatorType;
 
 #if defined (XALAN_NO_NAMESPACES)
 	typedef map<
@@ -538,7 +540,7 @@ private:
 
 	XalanDOMStringPool								m_valuesStringPool;
 
-	XalanSourceTreeAttributesVector					m_attributesVector;
+	AttributesArrayAllocatorType					m_attributesVector;
 
 	unsigned int									m_nextIndexValue;
 
