@@ -520,7 +520,7 @@ compareNodeSets(
 				theStringCompareFunction,
 				executionContext);
 	}
-	else
+	else if (theRHSType != XObject::eTypeUnknown)
 	{
 		assert(false);
 	}
