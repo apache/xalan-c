@@ -98,6 +98,11 @@ public:
 	typedef std::ostream	StreamType;
 #endif
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	typedef std::FILE	FILE;
+#endif
+
+
 	explicit
 	XSLTResultTarget();
 
