@@ -135,7 +135,9 @@ public:
 	 * Initialize Xalan.
 	 *
 	 * Should be called only once per process before creating any
-	 * instances of XalanTransformer.
+	 * instances of XalanTransformer.  This call is not thread-safe,
+	 * so you must serialize any calls to it, and you must track the
+	 * initialization state, so you do not call it more than once.
 	 */
 	static void
 	initialize();
@@ -144,7 +146,9 @@ public:
 	 * Terminate Xalan.
 	 *
 	 * Should be called only once per process after deleting all
-	 * instances of XalanTransformer.
+	 * instances of XalanTransformer.  This call is not thread-safe,
+	 * so you must serialize any calls to it, and you must track the
+	 * initialization state, so you do not call it more than once.
 	 *
 	 * This is handy when using leak-detection software, as all
 	 * static data allocated by Xalan is freed.
@@ -163,12 +167,17 @@ public:
 	 * the process, since the ICU will no longer be in a usable state.
 	 * See the ICU documentation for more details.
 	 *
+	 * This call is not thread-safe, so you must serialize any calls
+	 * to it, and you must track the initialization state, so you do
+	 * not call it more than once.
+	 *
 	 * This is handy when using leak-detection software, as all
 	 * static data allocated by the ICU is freed.
 	 *
 	 */
 	static void
 	ICUCleanUp();
+
 
 	/**
 	 * Transform will apply the stylesheet source to the parsed xml source
