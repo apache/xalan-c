@@ -56,11 +56,23 @@
 //	Notes:	It builds the searchSpecification by concatenating all the 
 //			necessary components.
 //																			*/	
-FileNameVectorType FileUtility::getTestFileNames(XalanDOMString baseDir, XalanDOMString relDir)
+FileNameVectorType FileUtility::getTestFileNames(XalanDOMString baseDir, XalanDOMString relDir, bool useDirPrefix)
 {
 	const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
 	const XalanDOMString	searchSuffix(XALAN_STATIC_UCODE_STRING("*.xsl"));
-	const XalanDOMString	searchSpecification(baseDir + relDir + pathSep + relDir + searchSuffix);
+	XalanDOMString	searchSpecification;
+
+	// Allow directory search w/o mandating files start with directory name. Required for files
+	// garnered from XSLTMARK performance directory exm.
+	if (useDirPrefix)
+	{
+		assign(searchSpecification, baseDir + relDir + pathSep + relDir + searchSuffix);
+	}
+	else
+	{
+		assign(searchSpecification, baseDir + relDir + pathSep + searchSuffix); 
+	}
+
 
 	DirectoryEnumeratorFunctor<FileNameVectorType, XalanDOMString>	theEnumerator;
 	FileNameVectorType	theFiles;

@@ -104,7 +104,7 @@ public:
 	* Utility method used to get test files from a specific directory.
 	* @returns a vector containing test files.
 	*/
-	FileNameVectorType getTestFileNames(XalanDOMString baseDir, XalanDOMString relDir);
+	FileNameVectorType getTestFileNames(XalanDOMString baseDir, XalanDOMString relDir, bool useDirPrefix);
 	//FileNameVectorType getTestFileNames (char* theDirectory);
 
 	/** 
