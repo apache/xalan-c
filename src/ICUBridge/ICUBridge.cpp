@@ -292,20 +292,20 @@ doFormatNumber(
 
 		// We got a XalanDecimalFormatSymbols, so set the
 		// corresponding data in the ICU DecimalFormatSymbols.
-		theDFS->setSymbol(DecimalFormatSymbols::kZeroDigitSymbol, theXalanDFS.getZeroDigit());
-		theDFS->setSymbol(DecimalFormatSymbols::kGroupingSeparatorSymbol, theXalanDFS.getGroupingSeparator());
-		theDFS->setSymbol(DecimalFormatSymbols::kDecimalSeparatorSymbol, theXalanDFS.getDecimalSeparator());
-		theDFS->setSymbol(DecimalFormatSymbols::kPerMillSymbol, theXalanDFS.getPerMill());
-		theDFS->setSymbol(DecimalFormatSymbols::kPercentSymbol, theXalanDFS.getPercent());
-		theDFS->setSymbol(DecimalFormatSymbols::kDigitSymbol, theXalanDFS.getDigit());
-		theDFS->setSymbol(DecimalFormatSymbols::kPatternSeparatorSymbol, theXalanDFS.getPatternSeparator());
+		theDFS->setSymbol(DecimalFormatSymbols::kZeroDigitSymbol, UChar(theXalanDFS.getZeroDigit()));
+		theDFS->setSymbol(DecimalFormatSymbols::kGroupingSeparatorSymbol, UChar(theXalanDFS.getGroupingSeparator()));
+		theDFS->setSymbol(DecimalFormatSymbols::kDecimalSeparatorSymbol, UChar(theXalanDFS.getDecimalSeparator()));
+		theDFS->setSymbol(DecimalFormatSymbols::kPerMillSymbol, UChar(theXalanDFS.getPerMill()));
+		theDFS->setSymbol(DecimalFormatSymbols::kPercentSymbol, UChar(theXalanDFS.getPercent()));
+		theDFS->setSymbol(DecimalFormatSymbols::kDigitSymbol, UChar(theXalanDFS.getDigit()));
+		theDFS->setSymbol(DecimalFormatSymbols::kPatternSeparatorSymbol, UChar(theXalanDFS.getPatternSeparator()));
 
 		theDFS->setSymbol(DecimalFormatSymbols::kInfinitySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInfinity()));
 		theDFS->setSymbol(DecimalFormatSymbols::kNaNSymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getNaN()));
-		theDFS->setSymbol(DecimalFormatSymbols::kMinusSignSymbol, theXalanDFS.getMinusSign());
+		theDFS->setSymbol(DecimalFormatSymbols::kMinusSignSymbol, UChar(theXalanDFS.getMinusSign()));
 		theDFS->setSymbol(DecimalFormatSymbols::kCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getCurrencySymbol()));
 		theDFS->setSymbol(DecimalFormatSymbols::kIntlCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInternationalCurrencySymbol()));
-		theDFS->setSymbol(DecimalFormatSymbols::kMonetarySeparatorSymbol, theXalanDFS.getMonetaryDecimalSeparator());
+		theDFS->setSymbol(DecimalFormatSymbols::kMonetarySeparatorSymbol, UChar(theXalanDFS.getMonetaryDecimalSeparator()));
 
 		UnicodeString	theUnicodeResult;
 
