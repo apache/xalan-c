@@ -9,7 +9,8 @@
 #include <PlatformSupport/XalanFileOutputStream.hpp>
 #include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
 
-#include <DOMSupport/DOMSupportDefault.hpp>
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
+#include <XercesParserLiaison/XercesParserLiaison.hpp>
 
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathSupportDefault.hpp>
@@ -24,7 +25,6 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
 
 //This is here for the threads.
 #define WIN32_LEAN_AND_MEAN
@@ -61,7 +61,7 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 	const DWORD		theThreadID = GetCurrentThreadId();
 
 	// Create the support objects that are necessary for running the processor...
-	DOMSupportDefault				theDOMSupport;
+	XercesDOMSupport				theDOMSupport;
 	XercesParserLiaison				theParserLiaison(theDOMSupport);
 	XPathSupportDefault				theXPathSupport(theDOMSupport);
 	XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
@@ -93,17 +93,14 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 	// from same directory as the input files.
 
 	// Generate the input and output file names.
-    ostrstream theFormatterIn, theFormatterOut;
-	theFormatterIn << "birds.xml" << '\0';
-    theFormatterOut << "birds" << number << ".out" << '\0';
+	char buffer[10];
+	const XalanDOMString theXMLfile("birds.xml");
+	const XalanDOMString outPutfile(XalanDOMString("birds") + XalanDOMString(itoa(number,buffer,10)) + XalanDOMString(".out"));
+
 
 	//Generate the XML input and output objects.
-	XSLTInputSource		theInputSource(theFormatterIn.str());
-	XSLTResultTarget	theResultTarget(theFormatterOut.str());
-
-	// Unfreeze the ostrstreams, so the memory is returned...
-	theFormatterIn.freeze(false);
-	theFormatterOut.freeze(false);
+	XSLTInputSource		theInputSource(c_wstr(theXMLfile));
+	XSLTResultTarget	theResultTarget(outPutfile);
 
 	// Set the stylesheet to be the compiled stylesheet. Then do the transform. 
 	// Report both the start of the transform and end of the thread.
@@ -194,7 +191,7 @@ main(
 			XSLTInit	theInit;
 
 			// Create the necessary stuff of compile the stylesheet.
-			DOMSupportDefault				ssDOMSupport;
+			XercesDOMSupport				ssDOMSupport;
 			XercesParserLiaison				ssParserLiaison(ssDOMSupport);
 			XPathSupportDefault				ssXPathSupport(ssDOMSupport);
 			XSLTProcessorEnvSupportDefault	ssXSLTProcessorEnvSupport;
@@ -213,7 +210,6 @@ main(
 			// Create separate factory support objects so the stylesheet's
 			// factory-created XObject and XPath instances are independent 
 			// from processor's.
-			XObjectFactoryDefault	ssStylesheetXObjectFactory;
 			XPathFactoryDefault		ssStylesheetXPathFactory;
 
 			// Create a stylesheet construction context, using the
@@ -234,15 +230,11 @@ main(
 			// input XSL.  This is the compiled stylesheet.  We don't have to
 			// delete it, since it is owned by the StylesheetConstructionContext
 			// instance.
-			cout << "Now compiling Stylesheet:1 " << endl;
+
 			glbStylesheetRoot = ssProcessor.processStylesheet(ssStylesheetSourceXSL,
 													   ssConstructionContext);
-			cout << "Now compiling Stylesheet:2 " << endl;
 			assert(glbStylesheetRoot != 0);
 			
-			// Create a compiled source tree as well, to use with perThreadCC
-			// glbSourceDoc = ssProcessor.getSourceTreeFromInput(ssStylesheetSourceXML);
-			// assert(glbSourceDoc != 0);
 
 			doThreads(threadCount);
 		  }
