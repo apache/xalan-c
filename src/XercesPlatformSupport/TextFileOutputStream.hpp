@@ -63,9 +63,7 @@
 #include <XercesPlatformSupport/XercesPlatformSupportDefinitions.hpp>
 
 
-#if !defined(_MSC_VER)
 #include <cstdio>
-#endif
 #include <vector>
 
 
@@ -123,11 +121,7 @@ private:
 	// Data members...
 	const DOMString		m_fileName;
 
-#if defined(_MSC_VER)
-	FileHandle			m_handle;
-#else
 	FILE*				m_handle;
-#endif
 };
 
 
