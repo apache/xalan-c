@@ -76,8 +76,12 @@ class XALAN_XERCESPLATFORMSUPPORT_EXPORT XercesDOMPrintWriter : public PrintWrit
 {
 public:
 
-	// If fAutoFlush is true, the output will not
-	// be buffered.
+	/**
+	 * Construct a XercesDOMPrintWriter instance. 
+	 *
+	 * @param theOutputStream output stream to write
+	 * @param fAutoFlush      if true, the output will not be buffered
+	 */
 	XercesDOMPrintWriter(
 			TextOutputStream&	theOutputStream,
 			bool	fAutoFlush = false);
@@ -85,7 +89,8 @@ public:
 	virtual
 	~XercesDOMPrintWriter();
 
-	// Flush the stream, then check the error status.
+	// These methods are inherited from PrintWriter ...
+
 	virtual bool
     checkError() const;
 
@@ -98,13 +103,11 @@ public:
 
 	// Output functions...
 
-	// If the length is UINT_MAX, then the array is assumed to be null-terminated.
 	virtual void
 	write(const char*	s,
 		  unsigned int	theOffset = 0,
 		  unsigned int	theLength = UINT_MAX);
 
-	// If the length is UINT_MAX, then the entire string is printed.
 	virtual void
 	write(const XMLCh*	s,
 		  unsigned int	theOffset = 0,
@@ -113,7 +116,6 @@ public:
 	virtual void
 	write(XMLCh		c);
 
-	// If the length is UINT_MAX, then the entire string is printed.
 	virtual void
 	write(const DOMString&	s,
 		  unsigned int		theOffset = 0,

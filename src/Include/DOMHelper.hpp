@@ -76,6 +76,14 @@ class NodeImpl;
 
 
 
+/**
+ *	Compare with a pointer.  Intended only to allow a convenient comparison
+ *	with null.
+ *
+ * @param theAddress null pointer to compare
+ * @param theObject  object to compare
+ * @return true if object represents a null instance
+ */
 inline bool
 operator==(
 			int					/* theAddress */,
@@ -86,6 +94,14 @@ operator==(
 
 
 
+/**
+ *	Compare with a pointer.  Intended only to allow a convenient comparison
+ *	with null.
+ *
+ * @param theAddress null pointer to compare
+ * @param theObject  object to compare
+ * @return true if object represents a null instance
+ */
 inline bool
 operator==(
 			int					/* theAddress */,
@@ -95,6 +111,14 @@ operator==(
 }
 
 
+/**
+ *	Compare with a pointer.  Intended only to allow a convenient comparison
+ *	with null.
+ *
+ * @param theAddress null pointer to compare
+ * @param theObject  object to compare
+ * @return true if object represents a null instance
+ */
 inline bool
 operator==(
 			int					/* theAddress */,
@@ -105,6 +129,14 @@ operator==(
 
 
 
+/**
+ *	Compare with a pointer.  Intended only to allow a convenient comparison
+ *	with null.
+ *
+ * @param theObject  object to compare
+ * @param theAddress null pointer to compare
+ * @return true if object represents a null instance
+ */
 inline bool
 operator==(
 			const DOM_Node&		theObject,
@@ -115,6 +147,14 @@ operator==(
 
 
 
+/**
+ *	Compare with a pointer.  Intended only to allow a convenient comparison
+ *	with null.
+ *
+ * @param theObject  object to compare
+ * @param theAddress null pointer to compare
+ * @return true if object represents a null instance
+ */
 inline bool
 operator==(
 			const DOM_NamedNodeMap&		theObject,
@@ -125,6 +165,14 @@ operator==(
 
 
 
+/**
+ *	Compare with a pointer.  Intended only to allow a convenient comparison
+ *	with null.
+ *
+ * @param theObject  object to compare
+ * @param theAddress null pointer to compare
+ * @return true if object represents a null instance
+ */
 inline bool
 operator==(
 			const DOM_NodeList&		theObject,
@@ -135,6 +183,14 @@ operator==(
 
 
 
+/**
+ *	Compare with a pointer.  Intended only to allow a convenient comparison
+ *	with null.
+ *
+ * @param theAddress null pointer to compare
+ * @param theObject  object to compare
+ * @return true if object does not represent a null instance
+ */
 inline bool
 operator!=(
 			int					/* theAddress */,
@@ -145,6 +201,14 @@ operator!=(
 
 
 
+/**
+ *	Compare with a pointer.  Intended only to allow a convenient comparison
+ *	with null.
+ *
+ * @param theAddress null pointer to compare
+ * @param theObject  object to compare
+ * @return true if object does not represent a null instance
+ */
 inline bool
 operator!=(
 			int							/* theAddress */,
@@ -155,6 +219,14 @@ operator!=(
 
 
 
+/**
+ *	Compare with a pointer.  Intended only to allow a convenient comparison
+ *	with null.
+ *
+ * @param theAddress null pointer to compare
+ * @param theObject  object to compare
+ * @return true if object does not represent a null instance
+ */
 inline bool
 operator!=(
 			int						/* theAddress */,
@@ -165,6 +237,14 @@ operator!=(
 
 
 
+/**
+ *	Compare with a pointer.  Intended only to allow a convenient comparison
+ *	with null.
+ *
+ * @param theObject  object to compare
+ * @param theAddress null pointer to compare
+ * @return true if object does not represent a null instance
+ */
 inline bool
 operator!=(
 			const DOM_Node&		theObject,
@@ -175,6 +255,14 @@ operator!=(
 
 
 
+/**
+ *	Compare with a pointer.  Intended only to allow a convenient comparison
+ *	with null.
+ *
+ * @param theObject  object to compare
+ * @param theAddress null pointer to compare
+ * @return true if object does not represent a null instance
+ */
 inline bool
 operator!=(
 			const DOM_NamedNodeMap&		theObject,
@@ -185,6 +273,14 @@ operator!=(
 
 
 
+/**
+ *	Compare with a pointer.  Intended only to allow a convenient comparison
+ *	with null.
+ *
+ * @param theObject  object to compare
+ * @param theAddress null pointer to compare
+ * @return true if object does not represent a null instance
+ */
 inline bool
 operator!=(
 			const DOM_NodeList&		theObject,
@@ -202,11 +298,22 @@ class XALAN_DOM_NodeHack : public DOM_Node
 {
 public:
 
+	/**
+	 * Construct a XALAN_DOM_NodeHack instance from a DOM node.
+	 *
+	 * @param theOtherNode DOM node to use
+	 */
 	XALAN_DOM_NodeHack(const DOM_Node&		theOtherNode) :
 		DOM_Node(theOtherNode)
 	{
 	}
 
+	/**
+	 * Construct a XALAN_DOM_NodeHack instance from an underlying DOM node
+	 * implementation object.
+	 *
+	 * @param theOtherNode pointer to implementation object
+	 */
 	XALAN_DOM_NodeHack(NodeImpl*	theOtherNode) :
 		DOM_Node(theOtherNode)
 	{
@@ -216,6 +323,11 @@ public:
 	{
 	}
 
+	/**
+	 * Retrieve the underlying DOM node implementation object.
+	 *
+	 * @return pointer to implementation object
+	 */
 	NodeImpl*
 	getImplementationObject() const
 	{
@@ -232,6 +344,13 @@ public:
 // according to the C++ standard, but it should work on 99.99% of
 // architectures.  We're only using it until STL hash containers are
 // available.
+
+/**
+ * Less operator for two XALAN_DOM_NodeHack instances, needed for STL.
+ *
+ * @param theLHS first object to compare
+ * @param theRHS second object to compare
+ */
 inline bool
 operator<(
 			const XALAN_DOM_NodeHack&	theLHS,
@@ -242,13 +361,21 @@ operator<(
 
 
 
-// Functor for hashing DOM_Nodes.
+/**
+ * Functor for hashing DOM_Nodes.
+ */
 #if defined(XALAN_NO_NAMESPACES)
 struct DOM_NodeHashFunction : public unary_function<DOM_Node, size_t>
 #else
 struct DOM_NodeHashFunction : public std::unary_function<DOM_Node, size_t>
 #endif
 {
+	/**
+	 * Determine a hash value for the given key.
+	 *
+	 * @param theKey key to hash
+	 * @return hash value
+	 */
 	result_type
 	operator() (const argument_type&	theKey) const
 	{
@@ -258,13 +385,21 @@ struct DOM_NodeHashFunction : public std::unary_function<DOM_Node, size_t>
 
 
 
-// Functor for hashing DOM_Elements.
+/**
+ * Functor for hashing DOM_Elements.
+ */
 #if defined(XALAN_NO_NAMESPACES)
 struct DOM_ElementHashFunction : public unary_function<DOM_Element, size_t>
 #else
 struct DOM_ElementHashFunction : public std::unary_function<DOM_Element, size_t>
 #endif
 {
+	/**
+	 * Determine a hash value for the given key.
+	 *
+	 * @param theKey key to hash
+	 * @return hash value
+	 */
 	result_type
 	operator() (const argument_type&	theKey) const
 	{

@@ -67,7 +67,9 @@
 #include <functional>
 
 
-
+/**
+ * Functor to delete objects, used in STL iteration algorithms.
+ */
 template <class T>
 #if defined(XALAN_NO_NAMESPACES)
 struct DeleteFunctor : public unary_function<const T*, void>
@@ -75,6 +77,11 @@ struct DeleteFunctor : public unary_function<const T*, void>
 struct DeleteFunctor : public std::unary_function<const T*, void>
 #endif
 {
+	/**
+	 * Delete the object pointed to by argument.
+	 *
+	 * @param thePointer pointer to object to be deleted
+	 */
 	result_type
 	operator()(argument_type	thePointer) const
 	{
@@ -85,6 +92,10 @@ struct DeleteFunctor : public std::unary_function<const T*, void>
 
 #if ! defined(__GNUC__)
 
+/**
+ * Functor to retrieve the key of a key-value pair in a map, used in STL
+ * iteration algorithms.
+ */
 template <class PairType>
 #if defined(XALAN_NO_NAMESPACES)
 struct select1st : public unary_function<PairType, PairType::first_type>
@@ -94,6 +105,12 @@ struct select1st : public std::unary_function<PairType, PairType::first_type>
 {
 	typedef PairType	value_type;
 
+	/**
+	 * Retrieve the key of a key-value pair.
+	 *
+	 * @param thePair key-value pair
+	 * @return key
+	 */
 	result_type
 	operator()(const argument_type&		thePair) const
 	{
@@ -103,6 +120,10 @@ struct select1st : public std::unary_function<PairType, PairType::first_type>
 
 
 
+/**
+ * Functor to retrieve the value of a key-value pair in a map, used in STL
+ * iteration algorithms.
+ */
 template <class PairType>
 #if defined(XALAN_NO_NAMESPACES)
 struct select2nd : public unary_function<PairType, PairType::second_type>
@@ -112,6 +133,12 @@ struct select2nd : public std::unary_function<PairType, PairType::second_type>
 {
 	typedef PairType	value_type;
 
+	/**
+	 * Retrieve the value of a key-value pair.
+	 *
+	 * @param thePair key-value pair
+	 * @return value
+	 */
 	result_type
 	operator()(const argument_type&		thePair)
 	{
@@ -121,21 +148,30 @@ struct select2nd : public std::unary_function<PairType, PairType::second_type>
 
 #endif
 
-
+/*
+$$$ What's it all mean ???
+*/
 template <class OutputIteratorType, class PairMemberSelectType>
 struct PairIsolatorOutputIterator
 {
+
+// $$$ This doesn't seem to be used anywhere ???
+/*
 #if defined(XALAN_NO_NAMESPACES)
 	typedef output_iterator_tag					iterator_category;
 #else
 	typedef std::output_iterator_tag			iterator_category;
 #endif
+*/
 
 	typedef typename PairMemberSelectType::value_type        value_type;
 
+// $$$ This doesn't seem to be used anywhere ???
+/*
 	typedef void								difference_type;
 	typedef void								pointer;
 	typedef void								reference;
+*/
 
 	PairIsolatorOutputIterator(
 			OutputIteratorType		theOutputIterator,
@@ -145,6 +181,12 @@ struct PairIsolatorOutputIterator
 	{
 	}
 
+	/**
+	 * Changes the output iterator member based on a value.
+	 *
+	 * @param theValue value to use
+	 * @return this object
+	 */
 	PairIsolatorOutputIterator&
 	operator=(const value_type&		theValue)
 	{ 
@@ -153,12 +195,22 @@ struct PairIsolatorOutputIterator
 		return *this;
 	}
 
+	/**
+	 * Retrieve the object.
+	 *
+	 * @return this object
+	 */
 	PairIsolatorOutputIterator&
 	operator*()
 	{
 		return *this;
 	}
 
+	/**
+	 * Increments the output iterator member.
+	 *
+	 * @return this object
+	 */
 	PairIsolatorOutputIterator&
 	operator++()
 	{
@@ -167,6 +219,11 @@ struct PairIsolatorOutputIterator
 		return *this;
 	} 
 
+	/**
+	 * Increments the output iterator member.
+	 *
+	 * @return this object
+	 */
 	PairIsolatorOutputIterator& operator++(int)
 	{
 		m_OutputIterator++;
@@ -182,6 +239,9 @@ private:
 
 
 
+/**
+ * Functor to delete value objects in maps, used in STL iteration algorithms.
+ */
 template <class T>
 #if defined(XALAN_NO_NAMESPACES)
 struct MapValueDeleteFunctor : public unary_function<const T::value_type&, void>
@@ -189,6 +249,12 @@ struct MapValueDeleteFunctor : public unary_function<const T::value_type&, void>
 struct MapValueDeleteFunctor : public std::unary_function<const typename T::value_type&, void>
 #endif
 {
+	/**
+	 * Delete the value object in a map value pair.  The value of the pair must
+	 * be of pointer type.
+	 *
+	 * @param thePair key-value pair
+	 */
 	result_type
 	operator()(argument_type	thePair)
 	{
@@ -198,6 +264,11 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
 
 
 
+/**
+ * Template allows nested execution of for_each algorithm by defining a unary
+ * functor that takes a container object as an argument, allowing iteration
+ * through the container.
+ */
 template<class T, class Functor>
 #if defined(XALAN_NO_NAMESPACES)
 struct nested_for_each_functor : public unary_function<const T::value_type&, Functor>
@@ -205,11 +276,22 @@ struct nested_for_each_functor : public unary_function<const T::value_type&, Fun
 struct nested_for_each_functor : public std::unary_function<const typename T::value_type&, Functor>
 #endif
 {
+	/**
+	 * Construct a nested_for_each_functor instance.
+	 *
+	 * @param theFunctor functor to use as return type
+	 */
 	nested_for_each_functor(Functor		theFunctor) :
 		m_functor(theFunctor)
 	{
 	}
 
+	/**
+	 * Execute the () operator, with the side effect of calling for_each on
+	 * each element in the container argument with the functor member.
+	 *
+	 * @param theContainer container object
+	 */
  	typename T::result_type
 	operator()(argument_type	theContainer)
 	{
@@ -225,6 +307,7 @@ private:
 
 
 
+// $$$ ???
 /*
 template <class InputIterator, class Function>
 Function
@@ -239,13 +322,15 @@ nested_for_each(
 */
 
 
-// This functor is designed to compare 0-terminated arrays.  It substitutes for
-// the default less<type*> so that pointers to arrays can be compared, rather than
-// copies of arrays.  For example, you might want to use C-style strings as keys
-// in a map, rather than string objects.  The default algorithm less<const char*>
-// would just compare the pointers, and not the vector of characters to which it
-// points.  Using this algorithm instead of the default will allow the map to
-// work as expected.
+/**
+ * This functor is designed to compare 0-terminated arrays.  It substitutes
+ * for the default less<type*> so that pointers to arrays can be compared,
+ * rather than copies of arrays.  For example, you might want to use C-style
+ * strings as keys in a map, rather than string objects.  The default
+ * algorithm less<const char*> would just compare the pointers, and not the
+ * vector of characters to which it points.  Using this algorithm instead of
+ * the default will allow the map to work as expected.
+ */
 template<class T>
 #if defined(XALAN_NO_NAMESPACES)
 struct less_null_terminated_arrays : public binary_function<const T*, const T*, bool>
@@ -253,6 +338,14 @@ struct less_null_terminated_arrays : public binary_function<const T*, const T*, 
 struct less_null_terminated_arrays : public std::binary_function<const T*, const T*, bool>
 #endif
 {
+	/**
+	 * Compare the values of two objects.
+	 *
+	 *
+	 * @param theLHS first object to compare
+	 * @param theRHS second object to compare
+	 * @return true if objects are the same
+	 */
 	result_type
 	operator()(first_argument_type		theLHS,
 			   second_argument_type		theRHS) const

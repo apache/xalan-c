@@ -73,6 +73,12 @@ class XALAN_XERCESPLATFORMSUPPORT_EXPORT XercesPlatformSupportException : public
 {
 public:
 
+	/**
+	 * Construct a Xerces Platform Support exception object
+	 * 
+	 * @param theMessage message to print when exception thrown
+	 * @param theType    type of exception string
+	 */
 	XercesPlatformSupportException(
 		const DOMString&	theMessage,
 		const DOMString&	theType);

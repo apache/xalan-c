@@ -84,7 +84,9 @@ public :
     virtual
 	~XercesTextOutputStream();
 
+
     // These are inherited from TextOutputStream...
+
     virtual void
 	flush();
 
@@ -95,6 +97,13 @@ public :
 	write(const char* const		theBuffer);
 
     // This is new...
+
+	/**
+	 * Write a specified number of characters to the output stream.
+	 *
+	 * @param theBuffer       character buffer to write from
+	 * @param theBufferLength number of characters to write
+	 */
     virtual void
 	write(
 			const char*		theBuffer,

@@ -79,6 +79,11 @@ class XALAN_XERCESPLATFORMSUPPORT_EXPORT TextFileOutputStream : public XercesTex
 {
 public :
 
+	/**
+	 * Construct an TextFileOutputStream exception object.
+	 * 
+	 * @param theFileName name of file causing the exception
+	 */
     TextFileOutputStream(const DOMString&	theFileName);
 
     virtual
@@ -131,6 +136,13 @@ class XALAN_XERCESPLATFORMSUPPORT_EXPORT TextFileOutputStreamOpenException : pub
 {
 public:
 
+	/**
+	 * Construct an TextFileOutputStreamOpen exception object for an exception
+	 * that occurred on opening a text file stream.
+	 * 
+	 * @param theFileName  name of file causing the exception
+	 * @param theErrorCode number of error encountered
+	 */
 	TextFileOutputStreamOpenException(
 		const DOMString&	theFileName,
 		int					theErrorCode);
@@ -146,6 +158,13 @@ class XALAN_XERCESPLATFORMSUPPORT_EXPORT TextFileOutputStreamWriteException : pu
 {
 public:
 
+	/**
+	 * Construct an TextFileOutputStreamOpen exception object for an exception
+	 * that occurred while writing to a text file stream.
+	 * 
+	 * @param theFileName  name of file causing the exception
+	 * @param theErrorCode number of error encountered
+	 */
 	TextFileOutputStreamWriteException(
 		const DOMString&	theFileName,
 		int					theErrorCode);

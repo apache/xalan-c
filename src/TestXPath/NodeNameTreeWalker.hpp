@@ -75,20 +75,36 @@ class NodeNameTreeWalker : public TreeWalker
 {
 public:
 
-	/**
-	 * Constructor.
-	 */
+#if defined(XALAN_NO_NAMESPACES)
+#	define XALAN_STD
+	typedef vector<DOM_Node> NodeVectorType;
+#else
+	typedef std::vector<DOM_Node> NodeVectorType;
+#endif
+
 	NodeNameTreeWalker();
 
 	virtual
 	~NodeNameTreeWalker();
 
+	/**
+	 * Find all nodes matching a specified node in a specified node tree.  The
+	 * member m_matchingNodes is populated as a side effect.
+	 *
+	 * @param theNodeName  name of node sought
+	 * @param theStartNode start node for search
+	 */
 	virtual void
 	findMatchingNodes(
 			const DOMString&	theNodeName,
 			const DOM_Node&		theStartNode);
 
-	const std::vector<DOM_Node>&
+	/**
+	 * Retrieve the matching nodes from the last search.
+	 *
+	 * @return vector of nodes
+	 */
+	const NodeVectorType&
 	getMatchingNodes() const
 	{
 		return m_matchingNodes;
@@ -105,7 +121,7 @@ protected:
 private:
 
 	DOMString				m_nodeName;
-	std::vector<DOM_Node>	m_matchingNodes;
+	NodeVectorType	m_matchingNodes;
 };
 
 

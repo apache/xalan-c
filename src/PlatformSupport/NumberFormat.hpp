@@ -78,24 +78,78 @@ public:
 	virtual
 	~NumberFormat();
 
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
+	 * @return string representation of number
+	 */
 	virtual DOMString
 	format(double	theValue);
 
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
+	 * @return string representation of number
+	 */
 	virtual DOMString
 	format(int	theValue);
 
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
+	 * @return string representation of number
+	 */
 	virtual DOMString
 	format(unsigned int		theValue);
 
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
+	 * @return string representation of number
+	 */
 	virtual DOMString
 	format(long		theValue);
 
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
+	 * @return string representation of number
+	 */
 	virtual DOMString
 	format(unsigned long	theValue);
 
+	/**
+	 * Whether groupings are used for numbers, for example, "234,678"
+	 *
+	 * @return true if grouping used
+	 */
 	virtual bool isGroupingUsed() const;
+	
+	/**
+	 * Change whether groupings are used for numbers, for example, "234,678"
+	 *
+	 * @param bUsed true to use grouping
+	 */
 	virtual void setGroupingUsed(bool bUsed);
+	
+	/**
+	 * Change the size of groupings, for example, "234,678" uses a size of "3"
+	 *
+	 * @param s string representation of grouping size
+	 */
 	virtual void setGroupingSize(const DOMString& s);
+	
+	/**
+	 * Change the separator string used for groupings, for example, "234,678"
+	 * uses the separator ","
+	 *
+	 * @param s grouping separator string
+	 */
 	virtual void setGroupingSeparator(const DOMString& s);
 
 private:

@@ -79,8 +79,14 @@
 // A base class for all text output streams.
 class XALAN_XERCESPLATFORMSUPPORT_EXPORT XercesStdTextOutputStream : public XercesTextOutputStream
 {
-public :
+public:
 
+	/**
+	 * Construct a XercesStdTextOutputStream instance for output to the
+	 * standard output device.
+	 *
+	 * @param theOutputStream output stream to use
+	 */
     XercesStdTextOutputStream(std::ostream&		theOutputStream);
 
     virtual
