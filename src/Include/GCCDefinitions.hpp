@@ -87,7 +87,7 @@
 // This will change, depending upon the target platform.
 #if defined(SOLARIS)
 #define XALAN_BIG_ENDIAN
-#elif defined(__I386__)
+#elif defined(__i386__)
 #define XALAN_LITLE_ENDIAN
 #else
 #error XALAN_BIG_ENDIAN or XALAN_LITTLE_ENDIAN must be defined for this platform!
