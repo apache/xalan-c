@@ -79,10 +79,18 @@ public:
 
 	typedef XalanSourceTreeDocument				data_type;
 
-	typedef ReusableArenaAllocator<data_type>	ArenaAllocatorType;
-	typedef ArenaAllocatorType::size_type		size_type;
+	typedef ReusableArenaAllocator<data_type>				ArenaAllocatorType;
+	typedef ArenaAllocatorType::size_type					size_type;
 
-	enum { eDefaultNamesStringPoolBlockSize = XalanSourceTreeDocument::eDefaultNamesStringPoolBlockSize,
+	enum { eDefaultAttributeAllocatorBlockSize = XalanSourceTreeDocument::eDefaultAttributeAllocatorBlockSize,
+		   eDefaultAttributeNSAllocatorBlockSize = XalanSourceTreeDocument::eDefaultAttributeNSAllocatorBlockSize,
+		   eDefaultCommentAllocatorBlockSize = XalanSourceTreeDocument::eDefaultCommentAllocatorBlockSize,
+		   eDefaultElementAllocatorBlockSize = XalanSourceTreeDocument::eDefaultElementAllocatorBlockSize,
+		   eDefaultElementNSAllocatorBlockSize = XalanSourceTreeDocument::eDefaultElementNSAllocatorBlockSize,
+		   eDefaultPIAllocatorBlockSize = XalanSourceTreeDocument::eDefaultPIAllocatorBlockSize,
+		   eDefaultTextAllocatorBlockSize = XalanSourceTreeDocument::eDefaultTextAllocatorBlockSize,
+		   eDefaultTextIWSAllocatorBlockSize = XalanSourceTreeDocument::eDefaultTextIWSAllocatorBlockSize,
+		   eDefaultNamesStringPoolBlockSize = XalanSourceTreeDocument::eDefaultNamesStringPoolBlockSize,
 		   eDefaultNamesStringPoolBucketCount = XalanSourceTreeDocument::eDefaultNamesStringPoolBucketCount,
 		   eDefaultNamesStringPoolBucketSize = XalanSourceTreeDocument::eDefaultNamesStringPoolBucketSize,
 		   eDefaultValuesStringPoolBlockSize = XalanSourceTreeDocument::eDefaultValuesStringPoolBlockSize,
@@ -101,11 +109,17 @@ public:
 	XalanSourceTreeDocumentAllocator(size_type	theBlockCount);
 
 	~XalanSourceTreeDocumentAllocator();
-	
+
 	/**
-	 * Create a ResultTreeFrag object.
+	 * Create a XalanSourceTreeDocument object.
 	 * 
-	 * @param theValue The constructor parameter
+	 * @param fPoolAllText If false, text node data that is not whitespace will not be pooled.
+	 * @param theNamesStringPoolBlockSize The block size for allocating strings in the name pool
+	 * @param theNamesStringPoolBucketCount The number of buckets for allocating strings in the name pool
+	 * @param theNamesStringPoolBucketSize The bucket size for allocating strings in the name pool
+	 * @param theValuesStringPoolBlockSize The block size for allocating strings in the values pool
+	 * @param theValuesStringPoolBucketCount The number of buckets for allocating strings in the values pool
+	 * @param theValuesStringPoolBucketSize The bucket size for allocating strings in the values pool
 	 *
 	 * @return pointer to a node
 	 */
@@ -118,6 +132,32 @@ public:
 			block_size_type		theValuesStringPoolBlockSize = eDefaultValuesStringPoolBlockSize,
 			bucket_count_type	theValuesStringPoolBucketCount = eDefaultValuesStringPoolBucketCount,
 			bucket_size_type	theValuesStringPoolBucketSize = eDefaultValuesStringPoolBucketSize);
+
+	/**
+	 * Create a XalanSourceTreeDocument object.
+	 * 
+	 * @param fPoolAllText If false, text node data that is not whitespace will not be pooled.
+	 * @param theAttributeBlockSize The block size for allocating attribute nodes
+	 * @param theAttributeNSBlockSize The block size for allocating attribute NS nodes
+	 * @param theCommentBlockSize The block size for allocating comment nodes
+	 * @param theElementBlockSize The block size for allocating element nodes
+	 * @param theElementNSBlockSize The block size for allocating element nodes
+	 * @param theTextBlockSize The block size for allocating text nodes,
+	 * @param theTextIWSBlockSize The block size for allocating text IWS nodes,
+	 *
+	 * @return pointer to a node
+	 */
+	data_type*
+	create(
+			size_type	theAttributeBlockSize,
+			size_type	theAttributeNSBlockSize,
+			size_type	theCommentBlockSize,
+			size_type	theElementBlockSize,
+			size_type	theElementNSBlockSize,
+			size_type	thePIBlockSize,
+			size_type	theTextBlockSize,
+			size_type	theTextIWSBlockSize,
+			bool		fPoolAllText = true);
 
 	/**
 	 * Delete a XalanSourceTreeDocument object from allocator.	 

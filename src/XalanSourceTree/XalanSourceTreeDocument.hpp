@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -142,7 +142,15 @@ public:
 	terminate();
 
 
-	enum { eDefaultNamesStringPoolBlockSize = XalanDOMStringPool::eDefaultBlockSize,
+	enum { eDefaultAttributeAllocatorBlockSize = 100,
+		   eDefaultAttributeNSAllocatorBlockSize = 50,
+		   eDefaultCommentAllocatorBlockSize = 10,
+		   eDefaultElementAllocatorBlockSize = 100,
+		   eDefaultElementNSAllocatorBlockSize = 100,
+		   eDefaultPIAllocatorBlockSize = 10,
+		   eDefaultTextAllocatorBlockSize = 100,
+		   eDefaultTextIWSAllocatorBlockSize = 100,
+		   eDefaultNamesStringPoolBlockSize = XalanDOMStringPool::eDefaultBlockSize,
 		   eDefaultNamesStringPoolBucketCount = XalanDOMStringPool::eDefaultBucketCount,
 		   eDefaultNamesStringPoolBucketSize = XalanDOMStringPool::eDefaultBucketSize,
 		   eDefaultValuesStringPoolBlockSize = XalanDOMStringPool::eDefaultBlockSize,
@@ -150,9 +158,10 @@ public:
 		   eDefaultValuesStringPoolBucketSize = XalanDOMStringPool::eDefaultBucketSize };
 
 
-	typedef XalanDOMStringPool::block_size_type		block_size_type;
-	typedef XalanDOMStringPool::bucket_count_type	bucket_count_type;
-	typedef XalanDOMStringPool::bucket_size_type	bucket_size_type;
+	typedef XalanSourceTreeAttributeAllocator::size_type	allocator_size_type;
+	typedef XalanDOMStringPool::block_size_type				block_size_type;
+	typedef XalanDOMStringPool::bucket_count_type			bucket_count_type;
+	typedef XalanDOMStringPool::bucket_size_type			bucket_size_type;
 
 	/**
 	 *
@@ -175,6 +184,31 @@ public:
 			block_size_type		theValuesStringPoolBlockSize = eDefaultValuesStringPoolBlockSize,
 			bucket_count_type	theValuesStringPoolBucketCount = eDefaultValuesStringPoolBucketCount,
 			bucket_size_type	theValuesStringPoolBucketSize = eDefaultValuesStringPoolBucketSize);
+
+	/**
+	 *
+	 * Constructor for XalanSourceTreeDocument.
+	 *
+	 * @param theAttributeBlockSize The block size for allocating attribute nodes
+	 * @param theAttributeNSBlockSize The block size for allocating attribute NS nodes
+	 * @param theCommentBlockSize The block size for allocating comment nodes
+	 * @param theElementBlockSize The block size for allocating element nodes
+	 * @param theElementNSBlockSize The block size for allocating element nodes
+	 * @param theTextBlockSize The block size for allocating text nodes,
+	 * @param theTextIWSBlockSize The block size for allocating text IWS nodes,
+	 * @param fPoolAllText If false, text node data that is not whitespace will not be pooled.
+	 *
+	 */
+	XalanSourceTreeDocument(
+			allocator_size_type		theAttributeBlockSize,
+			allocator_size_type		theAttributeNSBlockSize,
+			allocator_size_type		theCommentBlockSize,
+			allocator_size_type		theElementBlockSize,
+			allocator_size_type		theElementNSBlockSize,
+			allocator_size_type		thePIBlockSize,
+			allocator_size_type		theTextBlockSize,
+			allocator_size_type		theTextIWSBlockSize,
+			bool					fPoolAllText = true);
 
 	virtual
 	~XalanSourceTreeDocument();

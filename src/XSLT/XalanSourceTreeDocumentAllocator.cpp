@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -95,6 +95,39 @@ XalanSourceTreeDocumentAllocator::create(
 				theValuesStringPoolBlockSize,
 				theValuesStringPoolBucketCount,
 				theValuesStringPoolBucketSize);
+
+	m_allocator.commitAllocation(theBlock);
+
+	return theResult;
+}
+
+
+
+XalanSourceTreeDocumentAllocator::data_type*
+XalanSourceTreeDocumentAllocator::create(
+			size_type	theAttributeBlockSize,
+			size_type	theAttributeNSBlockSize,
+			size_type	theCommentBlockSize,
+			size_type	theElementBlockSize,
+			size_type	theElementNSBlockSize,
+			size_type	thePIBlockSize,
+			size_type	theTextBlockSize,
+			size_type	theTextIWSBlockSize,
+			bool		fPoolAllText)
+{
+	data_type* const	theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
+
+	data_type* const	theResult = new(theBlock) data_type(
+				theAttributeBlockSize,
+				theAttributeNSBlockSize,
+				theCommentBlockSize,
+				theElementBlockSize,
+				theElementNSBlockSize,
+				thePIBlockSize,
+				theTextBlockSize,
+				theTextIWSBlockSize,
+				fPoolAllText);
 
 	m_allocator.commitAllocation(theBlock);
 

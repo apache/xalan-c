@@ -1046,7 +1046,15 @@ private:
 		   eXResultTreeFragAllocatorBlockSize = 10,
 		   eResultTreeFragAllocatorBlockSize = 10,
 		   eDocumentAllocatorBlockSize = 10,
-		   eDocumentFragmentAllocatorBlockSize = 10 };
+		   eDocumentFragmentAllocatorBlockSize = 10,
+		   eDefaultAttributeAllocatorBlockSize = 10,
+		   eDefaultAttributeNSAllocatorBlockSize = 10,
+		   eDefaultCommentAllocatorBlockSize = 10,
+		   eDefaultElementAllocatorBlockSize = 10,
+		   eDefaultElementNSAllocatorBlockSize = 10,
+		   eDefaultPIAllocatorBlockSize = 10,
+		   eDefaultTextAllocatorBlockSize = 20,
+		   eDefaultTextIWSAllocatorBlockSize = 20 };
 
 	ElementRecursionStackType			m_elementRecursionStack;
 

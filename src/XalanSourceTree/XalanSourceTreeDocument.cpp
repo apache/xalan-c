@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -95,16 +95,51 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(
 	XalanDocument(),
 	m_firstChild(0),
 	m_documentElement(0),
-	m_attributeAllocator(200),
-	m_attributeNSAllocator(50),
-	m_commentAllocator(20),
-	m_elementAllocator(200),
-	m_elementNSAllocator(200),
-	m_piAllocator(25),
-	m_textAllocator(200),
-	m_textIWSAllocator(400),
+	m_attributeAllocator(eDefaultAttributeAllocatorBlockSize),
+	m_attributeNSAllocator(eDefaultAttributeNSAllocatorBlockSize),
+	m_commentAllocator(eDefaultCommentAllocatorBlockSize),
+	m_elementAllocator(eDefaultElementAllocatorBlockSize),
+	m_elementNSAllocator(eDefaultElementNSAllocatorBlockSize),
+	m_piAllocator(eDefaultPIAllocatorBlockSize),
+	m_textAllocator(eDefaultTextAllocatorBlockSize),
+	m_textIWSAllocator(eDefaultTextIWSAllocatorBlockSize),
 	m_namesStringPool(theNamesStringPoolBlockSize, theNamesStringPoolBucketCount, theNamesStringPoolBucketSize),
 	m_valuesStringPool(theValuesStringPoolBlockSize, theValuesStringPoolBucketCount, theValuesStringPoolBucketSize),
+	m_attributesVector(),
+	m_nextIndexValue(2),
+	m_poolAllText(fPoolAllText),
+	m_elementsByID(),
+	m_unparsedEntityURIs(),
+	m_nonPooledStrings(),
+	m_stringBuffer()
+{
+}
+
+
+
+XalanSourceTreeDocument::XalanSourceTreeDocument(
+			allocator_size_type		theAttributeBlockSize,
+			allocator_size_type		theAttributeNSBlockSize,
+			allocator_size_type		theCommentBlockSize,
+			allocator_size_type		theElementBlockSize,
+			allocator_size_type		theElementNSBlockSize,
+			allocator_size_type		thePIBlockSize,
+			allocator_size_type		theTextBlockSize,
+			allocator_size_type		theTextIWSBlockSize,
+			bool					fPoolAllText) :
+	XalanDocument(),
+	m_firstChild(0),
+	m_documentElement(0),
+	m_attributeAllocator(theAttributeBlockSize),
+	m_attributeNSAllocator(theAttributeNSBlockSize),
+	m_commentAllocator(theCommentBlockSize),
+	m_elementAllocator(theElementBlockSize),
+	m_elementNSAllocator(theElementNSBlockSize),
+	m_piAllocator(thePIBlockSize),
+	m_textAllocator(theTextBlockSize),
+	m_textIWSAllocator(theTextIWSBlockSize),
+	m_namesStringPool(eDefaultNamesStringPoolBlockSize, eDefaultNamesStringPoolBucketCount, eDefaultNamesStringPoolBucketSize),
+	m_valuesStringPool(eDefaultValuesStringPoolBlockSize, eDefaultValuesStringPoolBucketCount, eDefaultValuesStringPoolBucketSize),
 	m_attributesVector(),
 	m_nextIndexValue(2),
 	m_poolAllText(fPoolAllText),

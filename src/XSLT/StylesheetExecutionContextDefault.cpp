@@ -960,7 +960,15 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 	assert(m_xsltProcessor != 0);
 
 	XalanSourceTreeDocument* const	theDocument = m_usePerInstanceDocumentFactory == true ?
-		m_documentAllocator.create() :
+		m_documentAllocator.create(
+			eDefaultAttributeAllocatorBlockSize,
+			eDefaultAttributeNSAllocatorBlockSize,
+			eDefaultCommentAllocatorBlockSize,
+			eDefaultElementAllocatorBlockSize,
+			eDefaultElementNSAllocatorBlockSize,
+			eDefaultPIAllocatorBlockSize,
+			eDefaultTextAllocatorBlockSize,
+			eDefaultTextIWSAllocatorBlockSize) :
 		getSourceTreeFactory();
 	assert(theDocument != 0);
 
