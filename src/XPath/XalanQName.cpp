@@ -79,8 +79,7 @@ const XalanDOMString	XalanQName::s_emptyString;
 const XalanDOMString*
 XalanQName::getNamespaceForPrefix(
 			const NamespaceVectorType&	namespaces,
-			const XalanDOMString&		prefix,
-			bool						reverse)
+			const XalanDOMString&		prefix)
 {
 	const XalanDOMString*	nsURI = 0;
 
@@ -96,36 +95,17 @@ XalanQName::getNamespaceForPrefix(
 	{
 		const NamespaceVectorType::size_type	theSize = namespaces.size();
 
-		if (reverse)
+		for(NamespaceVectorType::size_type j = theSize; j > 0; --j)
 		{
-			for(NamespaceVectorType::size_type j = theSize; j > 0; --j)
+			const NameSpace&	ns = namespaces[j - 1];
+
+			const XalanDOMString&	thisPrefix = ns.getPrefix();
+
+			if(::equals(prefix, thisPrefix))
 			{
-				const NameSpace&	ns = namespaces[j - 1];
+				nsURI = &ns.getURI();
 
-				const XalanDOMString&	thisPrefix = ns.getPrefix();
-
-				if(::equals(prefix, thisPrefix))
-				{
-					nsURI = &ns.getURI();
-
-					break;
-				}
-			}
-		}
-		else
-		{
-			for(NamespaceVectorType::size_type j = 0; j < theSize; j++)
-			{
-				const NameSpace&	ns = namespaces[j];
-
-				const XalanDOMString&	thisPrefix = ns.getPrefix();
-
-				if(::equals(prefix, thisPrefix))
-				{
-					nsURI = &ns.getURI();
-
-					break;
-				}
+				break;
 			}
 		}
 	}
@@ -138,19 +118,48 @@ XalanQName::getNamespaceForPrefix(
 const XalanDOMString*
 XalanQName::getNamespaceForPrefix(
 			const NamespacesStackType&	nsStack,
-			const XalanDOMString&		prefix,
-			bool						reverse)
+			const XalanDOMString&		prefix)
 {
+#if 1
+	return getNamespaceForPrefix(nsStack.begin(), nsStack.end(), prefix);
+#else
 	const XalanDOMString*	nsURI = 0;
 
 	for(NamespacesStackType::size_type i = nsStack.size(); i > 0; --i)
 	{
 		const NamespaceVectorType&	namespaces = nsStack[i - 1];
 
-		nsURI = getNamespaceForPrefix(namespaces, prefix, reverse);
+		nsURI = getNamespaceForPrefix(namespaces, prefix);
 
 		if (nsURI != 0)
 			break;
+	}
+
+	return nsURI;
+#endif
+}
+
+
+
+const XalanDOMString*
+XalanQName::getNamespaceForPrefix(
+			NamespacesStackType::const_iterator		theBegin,
+			NamespacesStackType::const_iterator		theEnd,
+			const XalanDOMString&					prefix)
+{
+	const XalanDOMString*	nsURI = 0;
+
+	if (theBegin != theEnd)
+	{
+		do
+		{
+			nsURI = getNamespaceForPrefix(*(--theEnd), prefix);
+
+			if (nsURI != 0)
+			{
+				break;
+			}
+		} while(theBegin != theEnd);
 	}
 
 	return nsURI;
@@ -161,12 +170,13 @@ XalanQName::getNamespaceForPrefix(
 const XalanDOMString*
 XalanQName::getPrefixForNamespace(
 			const NamespaceVectorType&	namespaces,
-			const XalanDOMString&		uri,
-			bool						/* reverse */)
+			const XalanDOMString&		uri)
 {
 	const XalanDOMString*	thePrefix = 0;
 
-	for(NamespaceVectorType::size_type j = namespaces.size(); j > 0; --j)
+	const NamespaceVectorType::size_type	theSize = namespaces.size();
+
+	for(NamespaceVectorType::size_type j = theSize; j > 0; --j)
 	{
 		const NameSpace&		ns = namespaces[j - 1];
 		const XalanDOMString&	thisURI = ns.getURI();
@@ -187,36 +197,52 @@ XalanQName::getPrefixForNamespace(
 const XalanDOMString*
 XalanQName::getPrefixForNamespace(
 			const NamespacesStackType&	nsStack,
-			const XalanDOMString&		uri,
-			bool						reverse)
+			const XalanDOMString&		uri)
 {
+#if 1
+	return getPrefixForNamespace(nsStack.begin(), nsStack.end(), uri);
+#else
 	const XalanDOMString*					thePrefix = 0;
 
 	const NamespacesStackType::size_type	depth = nsStack.size();
 
-	if (reverse)
+	for(NamespacesStackType::size_type i = depth; i > 0; --i)
 	{
-		for(NamespacesStackType::size_type i = depth; i > 0; --i)
+		const NamespaceVectorType&	namespaces = nsStack[i - 1];
+
+		thePrefix = getPrefixForNamespace(namespaces, uri);
+
+		if (thePrefix != 0)
 		{
-			const NamespaceVectorType&	namespaces = nsStack[i - 1];
-
-			thePrefix = getPrefixForNamespace(namespaces, uri, reverse);
-
-			if (thePrefix != 0)
-				break;
+			break;
 		}
 	}
-	else
-	{
-		for(NamespacesStackType::size_type i = 0; i < depth; i++)
-		{
-			const NamespaceVectorType&	namespaces = nsStack[i];
 
-			thePrefix = getPrefixForNamespace(namespaces, uri, reverse);
+	return thePrefix;
+#endif
+}
+
+
+
+const XalanDOMString*
+XalanQName::getPrefixForNamespace(
+			NamespacesStackType::const_iterator		theBegin,
+			NamespacesStackType::const_iterator		theEnd,
+			const XalanDOMString&					uri)
+{
+	const XalanDOMString*	thePrefix = 0;
+
+	if (theBegin != theEnd)
+	{
+		do
+		{
+			thePrefix = getPrefixForNamespace(*(--theEnd), uri);
 
 			if (thePrefix != 0)
+			{
 				break;
-		}
+			}
+		} while(theBegin != theEnd);
 	}
 
 	return thePrefix;

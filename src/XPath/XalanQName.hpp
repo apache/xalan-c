@@ -179,33 +179,45 @@ public:
 	}
 
 	/**
-	 * Get the namespace from a prefix by searching a vector of namespaces.
+	 * Get the namespace for a prefix by searching a vector of namespaces.
 	 *
 	 * @param namespaces vector of namespaces to search
 	 * @param prefix     namespace prefix to find
-	 * @param reverse    true to search vector from last to first, default true
 	 * @return pointer to the string value if found, otherwise null.
 	 */
 	static const XalanDOMString*
 	getNamespaceForPrefix(
 			const NamespaceVectorType&	namespaces,
-			const XalanDOMString&		prefix,
-			bool						reverse = true);
+			const XalanDOMString&		prefix);
 
 	/**
-	 * Get the namespace from a prefix by searching a stack of namespace
+	 * Get the namespace for a prefix by searching a stack of namespace
 	 * vectors.
 	 *
 	 * @param nsStack stack of namespace vectors to search
 	 * @param prefix  namespace prefix to find
-	 * @param reverse true to search vector from last to first, default true
 	 * @return pointer to the string value if found, otherwise null.
 	 */
 	static const XalanDOMString*
 	getNamespaceForPrefix(
 			const NamespacesStackType&	nsStack,
-			const XalanDOMString&		prefix,
-			bool						reverse = true);
+			const XalanDOMString&		prefix);
+
+	/**
+	 * Get the namespace for a prefix by searching a range of iterators.
+	 * The search is done in reverse, from the end of the range to the
+	 * beginning.
+	 *
+	 * @param theBegin The beginning iterator for the range
+	 * @param theBegin The ending iterator for the range
+	 * @param prefix  namespace prefix to find
+	 * @return pointer to the string value if found, otherwise null.
+	 */
+	static const XalanDOMString*
+	getNamespaceForPrefix(
+			NamespacesStackType::const_iterator		theBegin,
+			NamespacesStackType::const_iterator		theEnd,
+			const XalanDOMString&					prefix);
 
 	/**
 	 * Get the prefix for a namespace by searching a vector of namespaces.
@@ -218,8 +230,7 @@ public:
 	static const XalanDOMString*
 	getPrefixForNamespace(
 			const NamespaceVectorType&	namespaces,
-			const XalanDOMString&		uri,
-			bool						reverse = true);
+			const XalanDOMString&		uri);
 
 	/**
 	 * Get the prefix for a namespace by searching a stack of namespace
@@ -227,14 +238,28 @@ public:
 	 *
 	 * @param nsStack stack of namespace vectors to search
 	 * @param uri     URI string for namespace to find
-	 * @param reverse true to search vector from last to first, default true
 	 * @return pointer to the string value if found, otherwise null.
 	 */
 	static const XalanDOMString*
 	getPrefixForNamespace(
 			const NamespacesStackType&	nsStack,
-			const XalanDOMString&		uri,
-			bool						reverse = true);
+			const XalanDOMString&		uri);
+
+	/**
+	 * Get the prefix for a namespace by searching a range of iterators.
+	 * The search is done in reverse, from the end of the range to the
+	 * beginning.
+	 *
+	 * @param theBegin The beginning iterator for the range to search
+	 * @param theBegin The ending iterator for the range to search
+	 * @param uri     URI string for namespace to find
+	 * @return pointer to the string value if found, otherwise null.
+	 */
+	static const XalanDOMString*
+	getPrefixForNamespace(
+			NamespacesStackType::const_iterator		theBegin,
+			NamespacesStackType::const_iterator		theEnd,
+			const XalanDOMString&					uri);
 
 	/**
 	 * Determine if the string supplied satisfies the grammar for
