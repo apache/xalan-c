@@ -75,7 +75,9 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanFileOutputStream.hpp>
 #include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
+
 #include <XercesParserLiaison/XercesDOMSupport.hpp>
+#include <XercesParserLiaison/XercesParserLiaison.hpp>
 
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathSupportDefault.hpp>
@@ -89,8 +91,6 @@
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
-
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
 
 #include <XMLFileReporter.hpp>
 
@@ -122,25 +122,25 @@
 const char* 	xslStylesheets[] =
 {
 	"v:\\xsl-test\\perf\\basic\\basic-all_well",
-	"v:\\xsl-test\\perf\\basic\\basic-datetranscode",
-	"v:\\xsl-test\\perf\\basic\\basic-dict2",
-	"v:\\xsl-test\\perf\\basic\\basic-Fischer-Euwe",
+	//"v:\\xsl-test\\perf\\basic\\basic-datetranscode",
+	//"v:\\xsl-test\\perf\\basic\\basic-dict2", 
+	//"v:\\xsl-test\\perf\\basic\\basic-Fischer-Euwe",
 	//"v:\\xsl-test\\perf\\basic\\basic-queens", 
 	"v:\\xsl-test\\perf\\large\\large-all_well",
 	//"v:\\xsl-test\\perf\\large\\large-evans_large", 
-	"v:\\xsl-test\\perf\\nodes\\nodes-fancy_xml_tree_viewer_34",
-	"v:\\xsl-test\\perf\\nodes\\nodes-showtree-19991008",
-	"v:\\xsl-test\\perf\\sort\\sort-big",
-	"v:\\xsl-test\\perf\\xpath\\xpath-evans_small",
-	"v:\\xsl-test\\perf\\xpath\\xpath-evans_tiny",
+	//"v:\\xsl-test\\perf\\nodes\\nodes-fancy_xml_tree_viewer_34",
+	//"v:\\xsl-test\\perf\\nodes\\nodes-showtree-19991008",
+	//"v:\\xsl-test\\perf\\sort\\sort-big",
+	//"v:\\xsl-test\\perf\\xpath\\xpath-evans_small",
+	//"v:\\xsl-test\\perf\\xpath\\xpath-evans_tiny",
 	0
 };
 const char* 	outputDir = "d:\\xslt-results\\perf\\test\\";
 
 
 // Used to hold compiled stylesheet, and source document.
-XalanNode*		glbSourceXML[sizeof(xslStylesheets) / sizeof(const char*)];
-StylesheetRoot*	glbStylesheetRoot[sizeof(xslStylesheets) / sizeof(const char*)];
+XalanNode*		glbSourceXML;
+StylesheetRoot*	glbStylesheetRoot;
 
 void outputMessage(int iter)
 {
@@ -156,8 +156,6 @@ int main( int argc,	const char* argv [])
 	theXMLFileReporter.logTestFileInit("CConformanceTest - Iterates over all conf test dirs and validates outputs USING Xalan-C");
 	theXMLFileReporter.logTestFileClose("xxx", "pass");		
 	theXMLFileReporter.close();
-
-	assert(sizeof(glbStylesheetRoot) == sizeof(glbSourceXML));
 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
@@ -180,16 +178,17 @@ int main( int argc,	const char* argv [])
 
 		try
 		{
-			// Call the static initializers...
+			// Call the static initializers... and define file suffixes
 			XMLPlatformUtils::Initialize();
+			const XalanDOMString  XSLSuffix(".xsl");
+			const XalanDOMString  XMLSuffix(".xml");
+			const XalanDOMString  outputSuffix(".out");
 
 			{
-				XSLTInit	theInit;
+			  XSLTInit	theInit;
 
-				const XalanDOMString  XSLSuffix(".xsl");
-				const XalanDOMString  XMLSuffix(".xml");
-				const XalanDOMString  outputSuffix(".out");
-
+			  for(int i = 0; xslStylesheets[i] != 0; i++)
+			  {
 				// Create the necessary support objects to instantiate a processor.
 				XercesDOMSupport			    csDOMSupport;
 				XercesParserLiaison				csParserLiaison(csDOMSupport);
@@ -220,89 +219,82 @@ int main( int argc,	const char* argv [])
 														csXSLTProcessorEnvSupport,
 														ssXPathFactory);
 
-				for(int i = 0; xslStylesheets[i] != 0; i++)
-				{
-					const XalanDOMString  theXSLfile(XalanDOMString(xslStylesheets[i]) + XSLSuffix);
-					const XalanDOMString  theXMLfile(XalanDOMString(xslStylesheets[i]) + XMLSuffix);
 
-					cout << "Now compiling Stylesheet: " << xslStylesheets[i] << endl;
+				const XalanDOMString  theXSLfile(XalanDOMString(xslStylesheets[i]) + XSLSuffix);
+				const XalanDOMString  theXMLfile(XalanDOMString(xslStylesheets[i]) + XMLSuffix);
 
-					//Generate the XML and XSL input objects.
-					XSLTInputSource		csStylesheetSourceXSL(c_wstr(theXSLfile));
-					XSLTInputSource		csSourceXML(c_wstr(theXMLfile));
+				cout << endl << "Compiling: " << xslStylesheets[i] << endl;
 
-					// Ask the processor to create a compiled stylesheet (StylesheetRoot) for the 
-					// specified input XSL. We don't have to delete it, since it is owned by the 
-					// StylesheetConstructionContext instance.
+				//Generate the XML and XSL input objects.
+				XSLTInputSource		csStylesheetSourceXSL(c_wstr(theXSLfile));
+				XSLTInputSource		csSourceXML(c_wstr(theXMLfile));
 
-					{const double startTime = clock();
-					//cout << "Clock before Compliation: " << startTime << endl;
+				// Ask the processor to create a compiled stylesheet (StylesheetRoot) for the 
+				// specified input XSL. We don't have to delete it, since it is owned by the 
+				// StylesheetConstructionContext instance.
 
-					glbStylesheetRoot[i] = csProcessor.processStylesheet(csStylesheetSourceXSL,
-														   csConstructionContext);
-					const double endTime = clock();
-					//cout << "Clock after Compliation: " << endTime << endl;
-					cout << "Compliation took: " << endTime - startTime << endl;
-					}
+				const double startTime = clock();
+					glbStylesheetRoot= csProcessor.processStylesheet(csStylesheetSourceXSL,
+												   csConstructionContext);
+				const double endTime = clock();
+				cout << "Compliation took: " << endTime - startTime << endl;
+				
+				assert(glbStylesheetRoot != 0);
 
-					assert(glbStylesheetRoot[i] != 0);
+				// Have the processor create a compiled SourceDocument for the specified
+				// input XML. 
+				glbSourceXML = csProcessor.getSourceTreeFromInput(csSourceXML);
+				assert(glbSourceXML != 0);
 
-					// Have the processor create a compiled SourceDocument for the specified
-					// input XML. 
-					glbSourceXML[i] = csProcessor.getSourceTreeFromInput(csSourceXML);
-					assert(glbSourceXML[i] != 0);
-				}
+				//cout << endl << "Testing: " << xslStylesheets[i] << endl;
 
-				for(int ii = 0; xslStylesheets[ii] != 0; ii++)
-				{
-					cout << endl << "Testing: " << xslStylesheets[ii] << endl;
-
-					// The execution context uses the same factory support objects as
-					// the processor, since those objects have the same lifetime as
-					// other objects created as a result of the execution.
-					StylesheetExecutionContextDefault	psExecutionContext(
+				// The execution context uses the same factory support objects as
+				// the processor, since those objects have the same lifetime as
+				// other objects created as a result of the execution.
+				StylesheetExecutionContextDefault	psExecutionContext(
 							csProcessor,
 							csXSLTProcessorEnvSupport,
 							csXPathSupport,
 							csXObjectFactory);
 
-					const XalanDOMString  outputfile(//XalanDOMString(outputDir) +
-						                             XalanDOMString(xslStylesheets[ii]) + 
+				const XalanDOMString  outputfile(//XalanDOMString(outputDir) +
+						                             XalanDOMString(xslStylesheets[i]) + 
 													                outputSuffix);
 
-					//Generate the XML input and output objects.
-					XSLTInputSource		csSourceXML(glbSourceXML[ii]);
-					XSLTResultTarget	theResultTarget(outputfile);
+				//Generate the XML input and output objects.
+				//XSLTInputSource		csSourceXML(glbSourceXML);
+				XSLTResultTarget	theResultTarget(outputfile);
 
-					// Set the stylesheet to be the compiled stylesheet. Then do the transform.
-					const double singleStart = clock();
-					//cout << "Clock before single transform: " << singleStart << endl;
-						csProcessor.setStylesheetRoot(glbStylesheetRoot[ii]);
-						csProcessor.process(csSourceXML, theResultTarget,psExecutionContext);
-						psExecutionContext.reset();
-					const double singleEnd = clock();
-					//cout << "Clock after single transform: " << singleEnd << endl;
-					cout << "Single Transform time: " << singleEnd - singleStart << endl;
+				// Set the stylesheet to be the compiled stylesheet. Then do the transform.
+				csProcessor.setStylesheetRoot(glbStylesheetRoot);
+
+				const double singleStart = clock();
+					csProcessor.process(csSourceXML, theResultTarget,psExecutionContext);
+				const double singleEnd = clock();
+
+				psExecutionContext.reset();
+				cout << "Single Transform time: " << singleEnd - singleStart << endl;
 
 
-
-					const double startTime = clock();
-					//cout << endl << "Clock before transforms: " << startTime << endl;
-					for(int j = 0; j < iterCount; ++j)
-					{	
-						csProcessor.setStylesheetRoot(glbStylesheetRoot[ii]);
-						csProcessor.process(csSourceXML, theResultTarget,psExecutionContext);
-						psExecutionContext.reset();
-					}
-					const double endTime = clock();
-					//cout << "Clock after transforms: " << endTime << endl;
-					//cout << "Total clock ticks: " << endTime - startTime << endl;
-					const double	millis = ((endTime - startTime) / CLOCKS_PER_SEC) * 1000.0;
-					//cout << "Milliseconds: " << millis << endl;
-					cout << "Averaged: " << millis / iterCount << " for " << iterCount << " iterations" << endl;
+/*
+				const double startTime = clock();
+				//cout << endl << "Clock before transforms: " << startTime << endl;
+				for(int j = 0; j < iterCount; ++j)
+				{	
+					csProcessor.setStylesheetRoot(glbStylesheetRoot);
+					csProcessor.process(csSourceXML, theResultTarget,psExecutionContext);
+					psExecutionContext.reset();
 				}
+				const double endTime = clock();
+				//cout << "Clock after transforms: " << endTime << endl;
+				//cout << "Total clock ticks: " << endTime - startTime << endl;
+				const double	millis = ((endTime - startTime) / CLOCKS_PER_SEC) * 1000.0;
+				//cout << "Milliseconds: " << millis << endl;
+				cout << "Averaged: " << millis / iterCount << " for " << iterCount << " iterations" << endl;
+*/
+  }
 				
-			}
+		}
 
 			XMLPlatformUtils::Terminate();
 		}
