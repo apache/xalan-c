@@ -1172,7 +1172,7 @@ GetXSLFileName(const XalanDOMString&		theXMLFileName, XalanDOMString&	theResult)
 							  0,
 							  thePeriodIndex + 1);
 
-		theResult += XALAN_STATIC_UCODE_STRING("xsl");
+		theResult.append(XALAN_STATIC_UCODE_STRING("xsl"));
 	}
 
 	return theResult;
