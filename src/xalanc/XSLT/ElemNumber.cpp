@@ -1285,7 +1285,9 @@ ElemNumber::getFormattedNumber(
 		case 0x10D0:
 		case 0x0430:
 			executionContext.error(
-				"Numbering format not supported yet",
+				XalanMessageLoader::getMessage(
+					XalanMessages::NumberingFormatNotSupported_1Param,
+					UnsignedLongToHexDOMString(numberType)),
 				executionContext.getCurrentNode(),
 				getLocator());
 			break;
