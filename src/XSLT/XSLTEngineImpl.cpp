@@ -400,7 +400,7 @@ XSLTEngineImpl::process(
 		FormatterListener* const	theFormatter =
 				outputTarget.getDocumentHandler();
 
-		if (theFormatter != 0)
+		if (theFormatter != 0 && theFormatter->getPrefixResolver() == 0)
 		{
 			theFormatter->setPrefixResolver(this);
 		}
@@ -1373,6 +1373,8 @@ XSLTEngineImpl::problem(
 
 
 
+static const XalanDOMChar	theDummy = 0;
+
 void
 XSLTEngineImpl::problem(
 			const XalanDOMString&				msg, 
@@ -1380,7 +1382,12 @@ XSLTEngineImpl::problem(
 			const Locator&						locator,
 			const XalanNode*					sourceNode) const
 {
-	const XalanDOMChar* const	id = locator.getSystemId();
+	const XalanDOMChar*			id = locator.getSystemId();
+
+	if (id == 0)
+	{
+		id = &theDummy;
+	}
 
 	const int					lineNumber = locator.getLineNumber();
 	const int 					columnNumber = locator.getColumnNumber();
