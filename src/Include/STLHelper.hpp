@@ -212,11 +212,7 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
 	result_type
 	operator()(argument_type	thePair) const
 	{
-#if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (T*)thePair.second;
-#else
 		delete thePair.second;
-#endif
 	}
 };
 
@@ -227,46 +223,6 @@ MapValueDeleteFunctor<T>
 makeMapValueDeleteFunctor(const T&	/* theMap */)
 {
 	return MapValueDeleteFunctor<T>();
-}
-
-
-
-template <class T>
-#if defined(XALAN_NO_NAMESPACES)
-struct MapKeyDeleteFunctor : public unary_function<const typename T::value_type&, void>
-#else
-struct MapKeyDeleteFunctor : public std::unary_function<const typename T::value_type&, void>
-#endif
-{
-#if defined(XALAN_NO_NAMESPACES)
-	typedef unary_function<const typename T::value_type&, void>		BaseClassType;
-#else
-	typedef std::unary_function<const typename T::value_type&, void>	BaseClassType;
-#endif
-
-	typedef typename BaseClassType::result_type		result_type;
-	typedef typename BaseClassType::argument_type	argument_type;
-
-	/**
-	 * Delete the value object in a map value pair.  The value of the pair must
-	 * be of pointer type.
-	 *
-	 * @param thePair key-value pair
-	 */
-	result_type
-	operator()(argument_type	thePair)
-	{
-		delete thePair.first;
-	}
-};
-
-
-
-template<class T>
-MapKeyDeleteFunctor<T>
-makeMapKeyDeleteFunctor(const T&	/* theMap */)
-{
-	return MapKeyDeleteFunctor<T>();
 }
 
 
