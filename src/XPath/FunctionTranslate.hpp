@@ -114,6 +114,7 @@ public:
 		const XalanDOMString	theThirdString = args[2]->str();
 
 		const unsigned int		theFirstStringLength = length(theFirstString);
+		const unsigned int		theSecondStringLength = length(theSecondString);
 		const unsigned int		theThirdStringLength = length(theThirdString);
 
 #if !defined(XALAN_NO_NAMESPACES)
@@ -135,7 +136,7 @@ public:
 
 			const unsigned int		theIndex = indexOf(theSecondString, theCurrentChar);
 
-			if (theIndex >= theFirstStringLength)
+			if (theIndex >= theSecondStringLength)
 			{
 				// Didn't find the character in the second string, so it
 				// is not translated.
