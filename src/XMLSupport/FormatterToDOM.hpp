@@ -192,16 +192,34 @@ public:
 		return m_doc;
 	}
 
+	void
+	setDocument(XalanDocument*	theDocument)
+	{
+		m_doc = theDocument;
+	}
+
 	XalanDocumentFragment*
 	getDocumentFragment() const
 	{
 		return m_docFrag;
 	}
 
+	void
+	setDocumentFragment(XalanDocumentFragment*	theDocumentFragment)
+	{
+		m_docFrag = theDocumentFragment;
+	}
+
 	XalanElement*
 	getCurrentElement() const
 	{
 		return m_currentElem;
+	}
+
+	void
+	setCurrentElement(XalanElement*		theElement)
+	{
+		m_currentElem = theElement;
 	}
 
 private:
@@ -227,6 +245,8 @@ private:
 #endif
 
 	ElementStackType				m_elemStack;
+
+	XalanDOMString					m_buffer;
 
 	static const XalanDOMString&	s_xsltNextIsRawString;
 

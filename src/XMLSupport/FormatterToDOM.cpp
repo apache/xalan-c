@@ -188,7 +188,9 @@ FormatterToDOM::characters(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	append(m_doc->createTextNode(XalanDOMString(chars, length)));
+	assign(m_buffer, chars, length);
+
+	append(m_doc->createTextNode(m_buffer));
 }
 
 
@@ -202,7 +204,7 @@ FormatterToDOM::charactersRaw(
 				s_xsltNextIsRawString,
 				s_formatterToDOMString));
 
-	append(m_doc->createTextNode(XalanDOMString(chars, length)));
+	characters(chars, length);
 }		
 
 
@@ -220,7 +222,9 @@ FormatterToDOM::ignorableWhitespace(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	append(m_doc->createTextNode(XalanDOMString(chars, length)));
+	assign(m_buffer, chars, length);
+
+	append(m_doc->createTextNode(m_buffer));
 }
 
 
@@ -255,7 +259,9 @@ FormatterToDOM::cdata(
 			const XMLCh* const	ch,
 			const unsigned int 	length)
 {
-	append(m_doc->createCDATASection(XalanDOMString(ch, length)));
+	assign(m_buffer, ch, length);
+
+	append(m_doc->createCDATASection(m_buffer));
 }
 
 
