@@ -234,3 +234,43 @@ TreeWalker::traverse(
 		thePos = nextNode;
 	}
 }
+
+
+
+void
+TreeWalker::traverseSubtree(const XalanNode*	pos)
+{
+	if (pos != 0)
+	{
+		startNode(pos);
+
+		const XalanNode* const	theFirstChild = pos->getFirstChild();
+
+		if (theFirstChild != 0)
+		{
+			traverse(theFirstChild, pos);
+		}
+
+		endNode(pos);
+	}
+}
+
+
+
+void
+TreeWalker::traverseSubtree(XalanNode*	pos)
+{
+	if (pos != 0)
+	{
+		startNode(pos);
+
+		XalanNode* const	theFirstChild = pos->getFirstChild();
+
+		if (theFirstChild != 0)
+		{
+			traverse(theFirstChild, pos);
+		}
+
+		endNode(pos);
+	}
+}

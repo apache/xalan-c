@@ -120,6 +120,22 @@ public:
 			XalanNode*	pos,
 			XalanNode*	parent);
 
+	/**
+	 * Perform a pre-order traversal non-recursive style.
+	 * 
+	 * @param pos starting node
+	 */
+	virtual void
+	traverseSubtree(const XalanNode*	pos);
+
+	/**
+	 * Perform a pre-order traversal non-recursive style.
+	 * 
+	 * @param pos starting node
+	 */
+	virtual void
+	traverseSubtree(XalanNode*	pos);
+
 protected:
 
 	virtual void
