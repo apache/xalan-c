@@ -152,7 +152,19 @@ private:
 
 	const XalanDOMString						m_value;
 
+#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_MUTABLE)
+	auto_ptr<ResultTreeFragBase>				m_resultTreeFrag;
+#else
+	mutable auto_ptr<ResultTreeFragBase>		m_resultTreeFrag;
+#endif
+#else
+#if defined(XALAN_NO_MUTABLE)
+	std::auto_ptr<ResultTreeFragBase>			m_resultTreeFrag;
+#else
 	mutable std::auto_ptr<ResultTreeFragBase>	m_resultTreeFrag;
+#endif
+#endif
 };
 
 

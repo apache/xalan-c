@@ -91,15 +91,9 @@ XString::XString(const XString&	source) :
 	XObject(source),
 	m_support(source.m_support),
 	m_value(source.m_value),
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	m_resultTreeFrag(source.m_resultTreeFrag.get() == 0 ?
-						0 :
-						dynamic_cast<ResultTreeFragBase*>(source.m_resultTreeFrag->clone(true)))
-#else
 	m_resultTreeFrag(source.m_resultTreeFrag.get() == 0 ?
 						0 :
 						source.m_resultTreeFrag->clone(true))
-#endif
 {
 }
 
@@ -166,17 +160,33 @@ XString::rtree() const
 			new ResultTreeFrag(*theFactory,
 							   m_support);
 
-#if defined(XALAN_OLD_AUTO_PTR)
-		m_resultTreeFrag = std::auto_ptr<ResultTreeFragBase>(theFrag);
-#else
-	    m_resultTreeFrag.reset(theFrag);
-#endif
-
 		XalanNode* const	textNode =
 			theFactory->createTextNode(str());
 		assert(textNode != 0);
 
 		theFrag->appendChild(textNode);
+
+#if defined(XALAN_OLD_AUTO_PTR)
+
+#if !defined (XALAN_NO_NAMESPACES)
+		using std::auto_ptr;
+#endif
+
+#if defined(XALAN_NO_MUTABLE)
+		((XString*)this)->m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
+#else
+		m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
+#endif
+
+#else
+
+#if defined(XALAN_NO_MUTABLE)
+		((XString*)this)->m_resultTreeFrag.reset(theFrag);
+#else
+		m_resultTreeFrag.reset(theFrag);
+#endif
+
+#endif
 	}
 
 	return *m_resultTreeFrag.get();
@@ -197,17 +207,33 @@ XString::rtree()
 			new ResultTreeFrag(*theFactory,
 							   m_support);
 
-#if defined(XALAN_OLD_AUTO_PTR)
-		m_resultTreeFrag = std::auto_ptr<ResultTreeFragBase>(theFrag);
-#else
-	    m_resultTreeFrag.reset(theFrag);
-#endif
-
 		XalanNode* const	textNode =
 			theFactory->createTextNode(str());
 		assert(textNode != 0);
 
 		theFrag->appendChild(textNode);
+
+#if defined(XALAN_OLD_AUTO_PTR)
+
+#if !defined (XALAN_NO_NAMESPACES)
+		using std::auto_ptr;
+#endif
+
+#if defined(XALAN_NO_MUTABLE)
+		((XString*)this)->m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
+#else
+		m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
+#endif
+
+#else
+
+#if defined(XALAN_NO_MUTABLE)
+		((XString*)this)->m_resultTreeFrag.reset(theFrag);
+#else
+		m_resultTreeFrag.reset(theFrag);
+#endif
+
+#endif
 	}
 
 	return *m_resultTreeFrag.get();

@@ -83,11 +83,7 @@ XResultTreeFrag::XResultTreeFrag(
 	XObject(&envSupport),
 	NodeRefListBase(),
 	m_support(support),
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	m_value(dynamic_cast<ResultTreeFragBase*>(val.clone(deepClone)))
-#else
 	m_value(val.clone(deepClone))
-#endif
 {
 }
 
@@ -99,11 +95,7 @@ XResultTreeFrag::XResultTreeFrag(
 	XObject(source),
 	NodeRefListBase(source),
 	m_support(source.m_support),
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	m_value(dynamic_cast<ResultTreeFragBase*>(source.m_value->clone(deepClone)))
-#else
 	m_value(source.m_value->clone(deepClone))
-#endif
 {
 }
 
