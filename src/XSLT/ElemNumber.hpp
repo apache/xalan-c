@@ -104,7 +104,9 @@ public:
 #     define XALAN_STD std::
 #endif
 	typedef XALAN_STD vector<int> IntArrayType;
-	typedef XALAN_STD locale LocaleType;
+#	if ! defined(__GNUC__)
+		typedef XALAN_STD locale LocaleType;
+#	endif
 #undef XALAN_STD	
 
 	/**
