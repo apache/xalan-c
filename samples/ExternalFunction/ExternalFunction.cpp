@@ -26,6 +26,15 @@
 
 
 
+XALAN_USING_XALAN(Function)
+XALAN_USING_XALAN(XPathExecutionContext)
+XALAN_USING_XALAN(XalanDOMString)
+XALAN_USING_XALAN(XalanNode)
+XALAN_USING_XALAN(StaticStringToDOMString)
+XALAN_USING_XALAN(XObjectPtr)
+
+
+
 // This class defines a function that will return the square root
 // of its argument.
 class FunctionSquareRoot : public Function
@@ -49,7 +58,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 	{
 		if (args.size() != 1)
 		{
@@ -130,7 +139,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 	{
 		if (args.size() != 1)
 		{
@@ -211,7 +220,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 	{
 		if (args.size() != 0)
 		{
@@ -287,10 +296,8 @@ main(
 			int				argc,
 			const char*		/* argv */[])
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::endl;
-#endif
+	XALAN_USING_STD(cerr)
+	XALAN_USING_STD(endl)
 
 	int	theResult = 0;
 
@@ -302,6 +309,10 @@ main(
 	}
 	else
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
+		XALAN_USING_XALAN(XalanTransformer)
+
 		// Call the static initializer for Xerces.
 		XMLPlatformUtils::Initialize();
 
@@ -310,7 +321,7 @@ main(
 
 		{
 			// Create a XalanTransformer.
-			XalanTransformer theXalanTransformer;
+			XalanTransformer	theXalanTransformer;
 
 			// The namespace for our functions...
 			const XalanDOMString	theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");

@@ -40,11 +40,9 @@ main(
 			int				argc,
 			const char*		argv[])
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-#endif
+	XALAN_USING_STD(cerr)
+	XALAN_USING_STD(cout)
+	XALAN_USING_STD(endl)
 
 	int		theResult = 0;
 
@@ -58,11 +56,26 @@ main(
 	{
 		try
 		{
+			XALAN_USING_XERCES(XMLPlatformUtils)
+
+			XALAN_USING_XALAN(XPathEvaluator)
+
+
 			XMLPlatformUtils::Initialize();
 
 			XPathEvaluator::initialize();
 
 			{
+				XALAN_USING_XERCES(LocalFileInputSource)
+
+				XALAN_USING_XALAN(XalanDocument)
+				XALAN_USING_XALAN(XalanDOMString)
+				XALAN_USING_XALAN(XalanNode)
+				XALAN_USING_XALAN(XalanSourceTreeInit)
+				XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
+				XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
+				XALAN_USING_XALAN(XObjectPtr)
+
 				// Initialize the XalanSourceTree subsystem...
 				XalanSourceTreeInit		theSourceTreeInit;
 
@@ -74,7 +87,7 @@ main(
 				theDOMSupport.setParserLiaison(&theLiaison);
 
 				// Create an input source that represents a local file...
-				const LocalFileInputSource	theInputSource(c_wstr(XalanDOMString(argv[1])));
+				const LocalFileInputSource	theInputSource(XalanDOMString(argv[1]).c_str());
 
 				// Parse the document...
 				XalanDocument* const	theDocument =

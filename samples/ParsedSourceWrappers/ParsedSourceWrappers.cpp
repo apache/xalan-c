@@ -98,6 +98,14 @@
 
 
 
+XALAN_USING_XALAN(XalanCompiledStylesheet)
+XALAN_USING_XALAN(XalanDOMString)
+XALAN_USING_XALAN(XalanTransformer)
+XALAN_USING_XALAN(XSLTInputSource)
+XALAN_USING_XALAN(XSLTResultTarget)
+
+
+
 int
 transformXercesDOM(
 			XalanTransformer&				theTransformer,
@@ -105,6 +113,13 @@ transformXercesDOM(
 			const XalanCompiledStylesheet*	theStylesheet,
 			const XSLTResultTarget&			theResultTarget)
 {
+	XALAN_USING_XERCES(URLInputSource)
+
+	XALAN_USING_XALAN(XercesParserLiaison)
+	XALAN_USING_XALAN(XercesDOMSupport)
+	XALAN_USING_XALAN(XercesDOMWrapperParsedSource)
+
+
 	const URLInputSource	theInputSource(theURI.c_str());
 
 	XercesParserLiaison::DOMParserType	theParser;
@@ -135,6 +150,15 @@ transformXalanSourceTree(
 			const XalanCompiledStylesheet*	theStylesheet,
 			const XSLTResultTarget&			theResultTarget)
 {
+	XALAN_USING_XERCES(URLInputSource)
+
+	XALAN_USING_XALAN(XalanDocument)
+	XALAN_USING_XALAN(XalanSourceTreeDocument)
+	XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
+	XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
+	XALAN_USING_XALAN(XalanSourceTreeWrapperParsedSource)
+
+
 	const URLInputSource			theInputSource(theURI.c_str());
 
 	XalanSourceTreeParserLiaison	theParserLiaison;
@@ -158,11 +182,9 @@ transformXalanSourceTree(
 int
 transform()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cout;
-	using std::cerr;
-    using std::endl;
-#endif
+	XALAN_USING_STD(cerr)
+	XALAN_USING_STD(cout)
+	XALAN_USING_STD(endl)
 
 	int		theResult = -1;
 
@@ -184,6 +206,8 @@ transform()
 		}
 		else
 		{
+			XALAN_USING_XALAN(URISupport)
+
 			assert(theStylesheet != 0);
 
 			const XalanDOMString	theInputFile("foo.xml");
@@ -238,6 +262,8 @@ main(
 	{
 		try
 		{
+			XALAN_USING_XERCES(XMLPlatformUtils)
+
 			// Call the static initializer for Xerces.
 			XMLPlatformUtils::Initialize();
 

@@ -32,12 +32,9 @@ main(
 			int				argc,
 			const char*		/* argv */[])
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::endl;
-	using std::ifstream;
-	using std::ostrstream;
-#endif
+	XALAN_USING_STD(cerr)
+	XALAN_USING_STD(endl)
+	XALAN_USING_STD(ostrstream)
 
 	int	theResult = 0;
 
@@ -49,6 +46,11 @@ main(
 	}
 	else
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
+		XALAN_USING_XALAN(XalanTransformer)
+		XALAN_USING_XALAN(XalanCompiledStylesheet)
+
 		// Call the static initializer for Xerces.
 		XMLPlatformUtils::Initialize();
 

@@ -25,9 +25,21 @@
 
 
 
+XALAN_USING_XALAN(XalanDocumentBuilder)
+XALAN_USING_XALAN(XalanTransformer)
+
+
+
 void
 BuildDocument(XalanDocumentBuilder*		theBuilder)
 {
+	XALAN_USING_XERCES(ContentHandler)
+	XALAN_USING_XALAN(AttributesImpl)
+	XALAN_USING_XALAN(XalanDOMChar)
+	XALAN_USING_XALAN(XalanDOMString)
+	XALAN_USING_XALAN(c_wstr)
+	XALAN_USING_XALAN(length)
+
 	// Get the SAX2 ContentHandler from the builder...
 	ContentHandler* const	theContentHandler = theBuilder->getContentHandler();
 	assert(theContentHandler != 0);
@@ -47,55 +59,57 @@ BuildDocument(XalanDocumentBuilder*		theBuilder)
 	theContentHandler->startDocument();
 
 	// start the document element...
-	assign(theElementName, XALAN_STATIC_UCODE_STRING("foo"));
+	theElementName = XALAN_STATIC_UCODE_STRING("foo");
 
 	theContentHandler->startElement(&theEmptyString, &theEmptyString, c_wstr(theElementName), theAttributes);
 
 	// Create an element child...
 
 	// Set the name of the element...
-	assign(theElementName, XALAN_STATIC_UCODE_STRING("foobar"));
+	theElementName = XALAN_STATIC_UCODE_STRING("foobar");
 
 	// Add an attribute...
-	assign(theAttributeName, XALAN_STATIC_UCODE_STRING("attribute1"));
-	assign(theAttributeValue, XALAN_STATIC_UCODE_STRING("value1"));
+	theAttributeName = XALAN_STATIC_UCODE_STRING("attribute1");
+	theAttributeValue = XALAN_STATIC_UCODE_STRING("value1");
+
 	theAttributes.addAttribute(c_wstr(theAttributeName), c_wstr(theAttributeType), c_wstr(theAttributeValue));
 
 	theContentHandler->startElement(&theEmptyString, &theEmptyString, c_wstr(theElementName), theAttributes);
 
 	// Add a text node...
-	assign(theTextValue, XALAN_STATIC_UCODE_STRING("The first foobar"));
+	theTextValue = XALAN_STATIC_UCODE_STRING("The first foobar");
+
 	theContentHandler->characters(c_wstr(theTextValue), length(theTextValue));
 
 	// End the element...
 	theContentHandler->endElement(&theEmptyString, &theEmptyString, c_wstr(theElementName));
 
 	theAttributes.clear();
-	assign(theAttributeName, XALAN_STATIC_UCODE_STRING("attribute2"));
-	assign(theAttributeValue, XALAN_STATIC_UCODE_STRING("value2"));
+	theAttributeName = XALAN_STATIC_UCODE_STRING("attribute2");
+	theAttributeValue = XALAN_STATIC_UCODE_STRING("value2");
 	theAttributes.addAttribute(c_wstr(theAttributeName), c_wstr(theAttributeType), c_wstr(theAttributeValue));
 
 	theContentHandler->startElement(&theEmptyString, &theEmptyString, c_wstr(theElementName), theAttributes);
 
-	assign(theTextValue, XALAN_STATIC_UCODE_STRING("The second foobar"));
+	theTextValue = XALAN_STATIC_UCODE_STRING("The second foobar");
 	theContentHandler->characters(c_wstr(theTextValue), length(theTextValue));
 
 	theContentHandler->endElement(&theEmptyString, &theEmptyString, c_wstr(theElementName));
 
 	theAttributes.clear();
-	assign(theAttributeName, XALAN_STATIC_UCODE_STRING("attribute3"));
-	assign(theAttributeValue, XALAN_STATIC_UCODE_STRING("value3"));
+	theAttributeName = XALAN_STATIC_UCODE_STRING("attribute3");
+	theAttributeValue = XALAN_STATIC_UCODE_STRING("value3");
 	theAttributes.addAttribute(c_wstr(theAttributeName), c_wstr(theAttributeType), c_wstr(theAttributeValue));
 
 	theContentHandler->startElement(&theEmptyString, &theEmptyString, c_wstr(theElementName), theAttributes);
 
-	assign(theTextValue, XALAN_STATIC_UCODE_STRING("The third foobar"));
+	theTextValue = XALAN_STATIC_UCODE_STRING("The third foobar");
 	theContentHandler->characters(c_wstr(theTextValue), length(theTextValue));
 
 	theContentHandler->endElement(&theEmptyString, &theEmptyString, c_wstr(theElementName));
 
 	// end the document element...
-	assign(theElementName, XALAN_STATIC_UCODE_STRING("foo"));
+	theElementName = XALAN_STATIC_UCODE_STRING("foo");
 
 	theContentHandler->endElement(&theEmptyString, &theEmptyString, c_wstr(theElementName));
 
@@ -125,6 +139,8 @@ main(
 	}
 	else
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
 		// Call the static initializer for Xerces.
 		XMLPlatformUtils::Initialize();
 

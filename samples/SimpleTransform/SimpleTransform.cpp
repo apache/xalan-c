@@ -24,10 +24,8 @@ main(
 			int				argc,
 			const char*		/* argv */[])
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::endl;
-#endif
+	XALAN_USING_STD(cerr)
+	XALAN_USING_STD(endl)
 
 	int	theResult = -1;
 
@@ -41,6 +39,11 @@ main(
 	{
 		try
 		{
+			XALAN_USING_XERCES(XMLPlatformUtils)
+
+			XALAN_USING_XALAN(XalanTransformer)
+
+
 			// Call the static initializer for Xerces.
 			XMLPlatformUtils::Initialize();
 

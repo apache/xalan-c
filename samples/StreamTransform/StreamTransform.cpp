@@ -28,16 +28,15 @@ main(
 			int				argc,
 			const char*		/* argv */[])
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-	using std::istrstream;
-	using std::ofstream;
-	using std::ostrstream;
+	XALAN_USING_STD(cerr)
+	XALAN_USING_STD(cout)
+	XALAN_USING_STD(endl)
+	XALAN_USING_STD(istrstream)
+	XALAN_USING_STD(ofstream)
+	XALAN_USING_STD(ostrstream)
+
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 	using std::strlen;
-#endif
 #endif
 
 	int	theResult = -1;
@@ -52,6 +51,11 @@ main(
 	{
 		try
 		{
+			XALAN_USING_XERCES(XMLPlatformUtils)
+
+			XALAN_USING_XALAN(XalanTransformer)
+
+
 			// Call the static initializer for Xerces.
 			XMLPlatformUtils::Initialize();
 
@@ -96,9 +100,12 @@ main(
 				istrstream	theXMLStream(theInputDocument, strlen(theInputDocument));
 				istrstream	theXSLStream(theStylesheet, strlen(theStylesheet));
 
-				XSLTInputSource	inputSource(&theXSLStream);
+				XALAN_USING_XALAN(XalanDOMString)
+				XALAN_USING_XALAN(XSLTInputSource)
 
-				inputSource.setSystemId(c_wstr(XalanDOMString("foo")));
+				XSLTInputSource		inputSource(&theXSLStream);
+
+				inputSource.setSystemId(XalanDOMString("foo").c_str());
 
 				// Do the transform.
 				theResult = theXalanTransformer.transform(&theXMLStream, inputSource, cout);
