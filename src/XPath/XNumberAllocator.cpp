@@ -54,85 +54,65 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680)
-#define XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680
+
+// Class header file.
+#include "XNumberAllocator.hpp"
 
 
 
-// Base include file.  Must be first.
-#include <XPath/XPathDefinitions.hpp>
-
-
-
-#include <set>
-
-
-
-// Base class header file...
-#include <XPath/XPathFactory.hpp>
-
-
-
-class XALAN_XPATH_EXPORT XPathFactoryDefault : public XPathFactory
+XNumberAllocator::XNumberAllocator(size_type	theBlockCount) :
+	m_allocator(theBlockCount)
 {
-
-public:
-
-	explicit
-	XPathFactoryDefault();
-
-	virtual
-	~XPathFactoryDefault();
-
-
-	// Inherited from XPathFactory...
-	virtual void
-	reset();
-
-	// Inherited from XPathFactory...
-
-	virtual XPath*
-	create();
-
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef set<const XPath*, less<const XPath*> >	CollectionType;
-#else
-	typedef std::set<const XPath*>	CollectionType;
-#endif
-
-	CollectionType::size_type
-	getInstanceCount() const
-	{
-		return m_xpaths.size();
-	}
-
-#if !defined(NDEBUG)
-	unsigned long
-	getTotalInstanceCount() const
-	{
-		return m_totalInstanceCount;
-	}
-#endif
-
-protected:
-
-	// Inherited from XPathFactory...
-
-	virtual bool
-	doReturnObject(
-			const XPath*	theXPath,
-			bool			fInReset = false);
-
-private:
-
-	CollectionType		m_xpaths;
-
-#if !defined(NDEBUG)
-	unsigned long		m_totalInstanceCount;
-#endif
-};
+}
 
 
 
-#endif	// XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680
+XNumberAllocator::~XNumberAllocator()
+{
+}
+
+
+
+XNumberAllocator::number_type*
+XNumberAllocator::createNumber(double	theNumber) 
+{
+	number_type* const	theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
+
+	number_type* const	theResult = new(theBlock) number_type(theNumber);
+
+	m_allocator.commitAllocation(theBlock);
+
+	return theResult;
+}
+
+
+
+XNumberAllocator::number_type*
+XNumberAllocator::clone(const XNumber&	value)
+{
+	number_type* const		theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
+
+	value.clone(theBlock);
+
+	m_allocator.commitAllocation(theBlock);
+
+	return theBlock;
+}
+
+
+
+bool
+XNumberAllocator::destroy(number_type*	theNumber)
+{
+	return m_allocator.destroyObject(theNumber);
+}
+
+
+
+void 
+XNumberAllocator::reset()
+{
+	m_allocator.reset();
+}

@@ -73,6 +73,13 @@
 
 
 
+#include <XPath/XStringAllocator.hpp>
+#include <XPath/XNumberAllocator.hpp>
+#include <XPath/XNodeSetAllocator.hpp>
+#include <XPath/XResultTreeFragAllocator.hpp>
+
+
+
 #if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
 #include <XPath/XNull.hpp>
 #endif
@@ -94,15 +101,31 @@ class XALAN_XPATH_EXPORT XObjectFactoryDefault : public XObjectFactory
 {
 public:
 
+	// Default block size for strings.
+	enum
+	{
+		eDefaultXStringBlockSize = 10,
+		eDefaultXNumberBlockSize = 10,
+		eDefaultXNodeSetBlockSize = 10,
+		eDefaultXResultTreeFragBlockSize = 10
+	};
+	
 	/**
 	 * Construct a factory for creating XObjects.
+	 * 
+	 * @param theXStringBlockSize allacation block size
+	 * @param theXNumberBlockSize allacation block size
+	 * @param theXNodeSetBlockSize allacation block size
 	 */
 	explicit
-	XObjectFactoryDefault();
+	XObjectFactoryDefault(
+			unsigned int		theXStringBlockSize = eDefaultXStringBlockSize,
+			unsigned int		theXNumberBlockSize = eDefaultXNumberBlockSize,
+			unsigned int		theXNodeSetBlockSize = eDefaultXNodeSetBlockSize,
+			unsigned int		theXResultTreeFragBlockSize = eDefaultXResultTreeFragBlockSize); 
 
 	virtual
 	~XObjectFactoryDefault();
-
 
 	// These methods are inherited from XObjectFactory ...
 
@@ -114,41 +137,34 @@ public:
 
 	virtual XObject*
 	createBoolean(
-			bool	theValue,
-			bool	fOptimize = true);
+			bool	theValue);
 
 	virtual XObject*
 	createNodeSet(
-			BorrowReturnMutableNodeRefList&		theValue,
-			bool								fOptimize = true);
+			BorrowReturnMutableNodeRefList&		theValue);
 
 	virtual XObject*
-	createNull(bool	fOptimize = true);
+	createNull();
 
 	virtual XObject*
 	createNumber(
-			double	theValue,
-			bool	fOptimize = true);
+			double	theValue);
 
 	virtual XObject*
 	createString(
-			const XalanDOMString&	theValue,
-			bool					fOptimize = true);
+			const XalanDOMString&	theValue);
 
 	virtual XObject*
 	createUnknown(
-			const XalanDOMString&	theValue,
-			bool					fOptimize = true);
+			const XalanDOMString&	theValue);
 
 	virtual XObject*
 	createResultTreeFrag(
-			ResultTreeFragBase*		theValue,
-			bool					fOptimize = true);
+			ResultTreeFragBase*		theValue);
 
 	virtual XObject*
 	createSpan(
-			BorrowReturnMutableNodeRefList&		theValue,
-			bool								fOptimize = true);
+			BorrowReturnMutableNodeRefList&		theValue);
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef set<const XObject*, less<const XObject*> >	CollectionType;
@@ -156,69 +172,6 @@ public:
 	typedef std::set<const XObject*>	CollectionType;
 #endif
 
-	/**
-	 * Retrieve the number of instances in existence
-	 * 
-	 * @return number of objects
-	 */
-	CollectionType::size_type
-	instanceCount() const
-	{
-		return m_xobjects.size();
-	}
-
-#if !defined(NDEBUG)
-
-	unsigned long
-	getTotalBooleanInstanceCount() const
-	{
-		return m_totalBooleanInstanceCount;
-	}
-
-	unsigned long
-	getTotalNodeSetInstanceCount() const
-	{
-		return m_totalNodeSetInstanceCount;
-	}
-
-	unsigned long
-	getTotalNullInstanceCount() const
-	{
-		return m_totalNullInstanceCount;
-	}
-
-	unsigned long
-	getTotalNumberInstanceCount() const
-	{
-		return m_totalNumberInstanceCount;
-	}
-
-	unsigned long
-	getTotalStringInstanceCount() const
-	{
-		return m_totalStringInstanceCount;
-	}
-
-	unsigned long
-	getTotalUnknownInstanceCount() const
-	{
-		return m_totalUnknownInstanceCount;
-	}
-
-	unsigned long
-	getTotalResultTreeFragInstanceCount() const
-	{
-		return m_totalResultTreeFragInstanceCount;
-	}
-
-	unsigned long
-	getTotalSpanInstanceCount() const
-	{
-		return m_totalSpanInstanceCount;
-	}
-
-#endif
-	
 protected:
 
 	// These methods are inherited from Factory ...
@@ -245,25 +198,13 @@ private:
 
 	const XalanAutoPtr<XNull>	m_XNull;
 
-#if !defined(NDEBUG)
+	XStringAllocator			m_xstringAllocator;
+	    
+	XNumberAllocator			m_xnumberAllocator;
 
-	unsigned long		m_totalBooleanInstanceCount;
+	XNodeSetAllocator			m_xnodesetAllocator;
 
-	unsigned long		m_totalNodeSetInstanceCount;
-
-	unsigned long		m_totalNullInstanceCount;
-
-	unsigned long		m_totalNumberInstanceCount;
-
-	unsigned long		m_totalStringInstanceCount;
-
-	unsigned long		m_totalUnknownInstanceCount;
-
-	unsigned long		m_totalResultTreeFragInstanceCount;
-
-	unsigned long		m_totalSpanInstanceCount;
-
-#endif
+	XResultTreeFragAllocator	m_xresultTreeFragAllocator;
 };
 
 

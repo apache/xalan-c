@@ -129,98 +129,81 @@ public:
 	/**
 	 * Create a boolean XObject from a boolean value.
 	 * 
-	 * @param theValue  value used to create object
-	 * @param fOptimize true to use static objects rather than creating new
-	 *                  instances, default true
+	 * @param theValue  value used to create object	 
 	 * @return pointer to new object
 	 */
 	virtual XObject*
 	createBoolean(
-			bool	theValue,
-			bool	fOptimize = true) = 0;
+			bool	theValue) = 0;
 
 	/**
 	 * Create a node set XObject from a node list.
 	 * 
 	 * @param theValue  value used to create object.  theValue will be owned by the new XObject.
-	 * @param fOptimize not used
 	 * @return pointer to new object
 	 */
 	virtual XObject*
 	createNodeSet(
-			BorrowReturnMutableNodeRefList&		theValue,
-			bool								fOptimize = true) = 0;
+			BorrowReturnMutableNodeRefList&		theValue) = 0;
 
 	/**
 	 * Create a null XObject.
 	 * 
-	 * @param theValue  value used to create object
-	 * @param fOptimize true to use static objects rather than creating new
-	 *                  instances, default true
+	 * @param theValue  value used to create object	
 	 * @return pointer to new object
 	 */
 	virtual XObject*
-	createNull(bool	fOptimize = true) = 0;
+	createNull() = 0;
 
 	/**
 	 * Create a numeric XObject from a number.
 	 * 
-	 * @param theValue  value used to create object
-	 * @param fOptimize not used
+	 * @param theValue  value used to create object	
 	 * @return pointer to new object
 	 */
 	virtual XObject*
 	createNumber(
-			double	theValue,
-			bool	fOptimize = true) = 0;
+			double	theValue) = 0;
 
 	/**
 	 * Create a string XObject from a string.
 	 * 
-	 * @param theValue  value used to create object
-	 * @param fOptimize not used
+	 * @param theValue  value used to create object	 
 	 * @return pointer to new object
 	 */
 	virtual XObject*
 	createString(
-			const XalanDOMString&	theValue,
-			bool					fOptimize = true) = 0;
+			const XalanDOMString&	theValue) = 0;
 
 	/**
 	 * Create an "unknown" XObject from a string.
 	 * 
-	 * @param theValue  value used to create object
-	 * @param fOptimize not used
+	 * @param theValue  value used to create object	 
 	 * @return pointer to new object
 	 */
 	virtual XObject*
 	createUnknown(
-			const XalanDOMString&	theValue,
-			bool					fOptimize = true) = 0;
+			const XalanDOMString&	theValue) = 0;
 
 	/**
 	 * Create a result tree fragment XObject from a result tree fragment.
 	 * 
-	 * @param theValue  value used to create object.  theValue will be owned by the new XObject.
-	 * @param fOptimize not used
+	 * @param theValue  value used to create object.  theValue will be owned by the new XObject.	
 	 * @return pointer to new object
 	 */
 	virtual XObject*
 	createResultTreeFrag(
-			ResultTreeFragBase*		theValue,
-			bool					fOptimize = true) = 0;
+			ResultTreeFragBase*		theValue) = 0;
 
 	/**
 	 * Create a span XObject from a node list.
 	 * 
 	 * @param theValue  value used to create object.  The new object will own the pointer.
-	 * @param fOptimize not used
 	 * @return pointer to new object
 	 */
 	virtual XObject*
 	createSpan(
-			BorrowReturnMutableNodeRefList&		theValue,
-			bool								fOptimize = true) = 0;
+			BorrowReturnMutableNodeRefList&		theValue) = 0;
 
 	/**
 	 *

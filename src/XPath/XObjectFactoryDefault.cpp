@@ -80,20 +80,18 @@ static XBoolean		theFalseBoolean(false);
 
 
 
-XObjectFactoryDefault::XObjectFactoryDefault() :
+XObjectFactoryDefault::XObjectFactoryDefault(
+			unsigned int		theXStringBlockSize,
+			unsigned int		theXNumberBlockSize,
+			unsigned int		theXNodeSetBlockSize,
+			unsigned int		theXResultTreeFragBlockSize) :  
 	XObjectFactory(),
 	m_xobjects(),
-	m_XNull(new XNull)
-#if !defined(NDEBUG)
-	, m_totalBooleanInstanceCount(0),
-	m_totalNodeSetInstanceCount(0),
-	m_totalNullInstanceCount(1),
-	m_totalNumberInstanceCount(0),
-	m_totalStringInstanceCount(0),
-	m_totalUnknownInstanceCount(0),
-	m_totalResultTreeFragInstanceCount(0),
-	m_totalSpanInstanceCount(0)
-#endif
+	m_XNull(new XNull),
+	m_xstringAllocator(theXStringBlockSize),
+	m_xnumberAllocator(theXNumberBlockSize),
+	m_xnodesetAllocator(theXNodeSetBlockSize),
+	m_xresultTreeFragAllocator(theXResultTreeFragBlockSize)
 {
 }
 
@@ -113,33 +111,86 @@ XObjectFactoryDefault::doReturnObject(
 {
 	assert(theXObject != 0);
 
-	if (theXObject == &theTrueBoolean ||
-		theXObject == &theFalseBoolean ||
-		theXObject == m_XNull.get())
-	{
-		return true;
-	}
-	else
-	{
-		const CollectionType::iterator	i =
-				m_xobjects.find(theXObject);
+	bool bStatus = false;	
 
-		if (i != m_xobjects.end())
+	const XObject::eObjectType	theType = theXObject->getType();
+
+	switch(theType)
+	{
+	case XObject::eTypeBoolean:
+	case XObject::eTypeNull:
+	{		
+		bStatus = true;
+	}	
+	case XObject::eTypeString:
 		{
-			if (fInReset == false)
+			XString* const	theXString =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(XString*)theXObject;
+#else
+				static_cast<XString*>(const_cast<XObject*>(theXObject));
+#endif
+
+			bStatus = m_xstringAllocator.destroy(theXString);
+		}
+		break;
+	case  XObject::eTypeNumber:
+		{
+			XNumber* const	theXNumber =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(XNumber*)theXObject;
+#else
+				static_cast<XNumber*>(const_cast<XObject*>(theXObject));
+#endif
+
+			bStatus = m_xnumberAllocator.destroy(theXNumber);
+		}
+		break;
+	case XObject::eTypeNodeSet:
+		{
+			XNodeSet* const	theXNodeSet =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(XNodeSet*)theXObject;
+#else
+				static_cast<XNodeSet*>(const_cast<XObject*>(theXObject));
+#endif
+
+			bStatus = m_xnodesetAllocator.destroy(theXNodeSet);
+		}
+		break;
+	case XObject::eTypeResultTreeFrag:	
+		{
+			XResultTreeFrag* const	theXResultTreeFrag =	
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(XResultTreeFrag*)theXObject;
+#else
+				static_cast<XResultTreeFrag*>(const_cast<XObject*>(theXObject));	
+#endif
+
+			bStatus = m_xresultTreeFragAllocator.destroy(theXResultTreeFrag);
+		}
+		break;
+	default:
+		{
+			const CollectionType::iterator	i =
+			m_xobjects.find(theXObject);
+
+			if (i != m_xobjects.end())
 			{
-				m_xobjects.erase(i);
+				if (fInReset == false)
+				{
+					m_xobjects.erase(i);
+				}
+
+				deleteObject(theXObject);
+
+				bStatus = true;
 			}
-
-			deleteObject(theXObject);
-
-			return true;
 		}
-		else
-		{
-			return false;
-		}
+		break;
 	}
+	
+	return bStatus;
 }
 
 
@@ -147,143 +198,100 @@ XObjectFactoryDefault::doReturnObject(
 XObject*
 XObjectFactoryDefault::clone(const XObject&		theXObject)
 {
+	XObject*	theClone = 0;
+
 	if (&theXObject == &theTrueBoolean)
 	{
-		return &theTrueBoolean;
+		theClone = &theTrueBoolean;
 	}
 	else if (&theXObject == &theFalseBoolean)
 	{
-		return &theFalseBoolean;
+		theClone = &theFalseBoolean;
 	}
 	else if (&theXObject == m_XNull.get())
 	{
-		return m_XNull.get();
+		theClone = m_XNull.get();
 	}
 	else
 	{
-		XObject* const	theClone = theXObject.clone();
+		const XObject::eObjectType	theType = theXObject.getType();		
 
-		m_xobjects.insert(theClone);
+		switch(theType)
+		{
+		
+		case XObject::eTypeString:
+			theClone = m_xstringAllocator.clone(
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(const XString&)theXObject);
+#else			
+			static_cast<const XString&>(theXObject));
+#endif
 
-		return theClone;
+			break;
+		case  XObject::eTypeNumber:
+			theClone = m_xnumberAllocator.clone(
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(const XNumber&)theXObject);
+#else			
+			static_cast<const XNumber&>(theXObject));
+#endif
+
+			break;
+		case XObject::eTypeNodeSet:
+			theClone = m_xnodesetAllocator.clone(
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(const XNodeSet&)theXObject);
+#else			
+			static_cast<const XNodeSet&>(theXObject));
+#endif
+
+			break;
+		case XObject::eTypeResultTreeFrag:
+			theClone = m_xresultTreeFragAllocator.clone(
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(const XResultTreeFrag&)theXObject);
+#else			
+			static_cast<const XResultTreeFrag&>(theXObject));
+#endif
+
+			break;
+		default:
+			XObject* const	theClone = theXObject.clone();
+
+			m_xobjects.insert(theClone);
+			break;
+		}
 	}
+
+	return theClone;
 }
 
 
 
 XObject*
 XObjectFactoryDefault::createBoolean(
-			bool	theValue,
-			bool	fOptimize)
+			bool	theValue)
 {
-	if (fOptimize == true)
-	{
-		return theValue == true ? &theTrueBoolean : &theFalseBoolean;
-	}
-	else
-	{
-		XBoolean* const		theBoolean = new XBoolean(theValue);
-
-		m_xobjects.insert(theBoolean);
-
-#if !defined(NDEBUG)
-		++m_totalBooleanInstanceCount;
-#endif
-		return theBoolean;
-	}
+	return theValue == true ? &theTrueBoolean : &theFalseBoolean;	
 }
 
 
 
 XObject*
-XObjectFactoryDefault::createNodeSet(
-			BorrowReturnMutableNodeRefList&		theValue,
-			bool								/* fOptimize */)
-{
-	XNodeSet* const		theXNodeSet = new XNodeSet(theValue);
-
-	m_xobjects.insert(theXNodeSet);
-
-#if !defined(NDEBUG)
-	++m_totalNodeSetInstanceCount;
-#endif
-
-	return theXNodeSet;
-}
-
-
-
-XObject*
-XObjectFactoryDefault::createNull(bool		fOptimize)
-{
-	if (fOptimize == true)
-	{
-		return m_XNull.get();
-	}
-	else
-	{
-		XNull* const	theXNull = new XNull();
-
-		m_xobjects.insert(theXNull);
-
-#if !defined(NDEBUG)
-	++m_totalNullInstanceCount;
-#endif
-
-		return theXNull;
-	}
-}
-
-
-
-XObject*
-XObjectFactoryDefault::createNumber(
-			double	theValue,
-			bool	/* fOptimize */)
-{
-	XNumber*	theXNumber = new XNumber(theValue);
-
-	m_xobjects.insert(theXNumber);
-
-#if !defined(NDEBUG)
-	++m_totalNumberInstanceCount;
-#endif
-
-	return theXNumber;
-}
-
-
-
-XObject*
-XObjectFactoryDefault::createString(
-			const XalanDOMString&	theValue,
-			bool					/* fOptimize */)
-{
-	XString* const	theXString = new XString(theValue);
-
-	m_xobjects.insert(theXString);
-
-#if !defined(NDEBUG)
-	++m_totalStringInstanceCount;
-#endif
-
-	return theXString;
+XObjectFactoryDefault::createNull()
+{	
+	return m_XNull.get();	
 }
 
 
 
 XObject*
 XObjectFactoryDefault::createUnknown(
-			const XalanDOMString&	theValue,
-			bool					/* fOptimize */)
+			const XalanDOMString&	theValue)
 {
 	XUnknown* const	theXUnknown = new XUnknown(theValue);
 
 	m_xobjects.insert(theXUnknown);
-
-#if !defined(NDEBUG)
-	++m_totalUnknownInstanceCount;
-#endif
 
 	return theXUnknown;
 }
@@ -291,37 +299,58 @@ XObjectFactoryDefault::createUnknown(
 
 
 XObject*
-XObjectFactoryDefault::createResultTreeFrag(
-			ResultTreeFragBase*		theValue,
-			bool					/* fOptimize */)
-{
-	XResultTreeFrag* const	theResultTreeFrag = new XResultTreeFrag(theValue);
-
-	m_xobjects.insert(theResultTreeFrag);
-
-#if !defined(NDEBUG)
-	++m_totalResultTreeFragInstanceCount;
-#endif
-
-	return theResultTreeFrag;
-}
-
-
-
-XObject*
 XObjectFactoryDefault::createSpan(
-			BorrowReturnMutableNodeRefList&		theValue,
-			bool								/* fOptimize */)
+			BorrowReturnMutableNodeRefList&		theValue)
 {
 	XSpan* const	theXSpan = new XSpan(theValue);
 
 	m_xobjects.insert(theXSpan);
 
-#if !defined(NDEBUG)
-	++m_totalSpanInstanceCount;
-#endif
-
 	return theXSpan;
+}
+
+
+
+XObject*
+XObjectFactoryDefault::createNumber(
+			double	theValue)
+{
+	XNumber*	theXNumber = m_xnumberAllocator.createNumber(theValue);
+
+	return theXNumber;
+}
+
+
+
+XObject*
+XObjectFactoryDefault::createNodeSet(
+			BorrowReturnMutableNodeRefList&		theValue)
+{
+	XNodeSet* const		theXNodeSet = m_xnodesetAllocator.createNodeSet(theValue);
+
+	return theXNodeSet;
+}
+
+
+
+XObject*
+XObjectFactoryDefault::createString(
+			const XalanDOMString&	theValue)
+{
+	XString* const	theXString = m_xstringAllocator.createString(theValue);
+
+	return theXString;
+}
+
+
+
+XObject*
+XObjectFactoryDefault::createResultTreeFrag(
+			ResultTreeFragBase*		theValue)
+{
+	XResultTreeFrag* const	theResultTreeFrag =  m_xresultTreeFragAllocator.create(theValue);
+
+	return theResultTreeFrag;
 }
 
 
@@ -332,6 +361,14 @@ XObjectFactoryDefault::reset()
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::for_each;
 #endif
+
+	m_xstringAllocator.reset();
+	    
+	m_xnumberAllocator.reset();
+
+	m_xnodesetAllocator.reset();
+
+	m_xresultTreeFragAllocator.reset();
 
 	for_each(m_xobjects.begin(),
 			 m_xobjects.end(),

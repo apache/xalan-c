@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,9 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680)
-#define XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680
+
+#if !defined(XRESULTTREEFRAGALLOCATOR_INCLUDE_GUARD_12455133)
+#define XRESULTTREEFRAGALLOCATOR_INCLUDE_GUARD_12455133
 
 
 
@@ -64,75 +65,120 @@
 
 
 
-#include <set>
+#include <XPath/XResultTreeFrag.hpp>
 
 
 
-// Base class header file...
-#include <XPath/XPathFactory.hpp>
+#include <PlatformSupport/ReusableArenaAllocator.hpp>
 
 
 
-class XALAN_XPATH_EXPORT XPathFactoryDefault : public XPathFactory
+class XALAN_XPATH_EXPORT XResultTreeFragAllocator
 {
-
 public:
 
-	explicit
-	XPathFactoryDefault();
+	typedef XResultTreeFrag						data_type;
 
-	virtual
-	~XPathFactoryDefault();
+	typedef ReusableArenaAllocator<data_type>	ArenaAllocatorType;
+	typedef ArenaAllocatorType::size_type		size_type;
 
+	/**
+	 * Construct an instance that will allocate blocks of the specified size.
+	 *
+	 * @param theBlockSize The block size.
+	 */
+	XResultTreeFragAllocator(size_type	theBlockCount);
 
-	// Inherited from XPathFactory...
-	virtual void
+	~XResultTreeFragAllocator();
+	
+	/**
+	 * Create an XResultTreeFrag object using allocator from a string.
+	 * 
+	 * @param value			source NodeRefListBase
+	 *
+	 * @return pointer to a node
+	 */
+	data_type*
+	create(ResultTreeFragBase*	value);
+
+	/**
+	 * Create an XResultTreeFrag object using allocator from a string.
+	 * 
+	 * @param theEnvSupport XPath environment support class instance
+	 * @param theSupport    XPath support class instance
+	 * @param value			source MutableNodeRefList
+	 *
+	 * @return pointer to a node
+	 */
+	data_type*
+	create(const XResultTreeFrag&	value);
+
+	/**
+	 * Clone an XResultTreeFrag object.
+	 * 
+	 * @param value			source XResultTreeFrag
+	 *
+	 * @return pointer to an XResultTreeFrag
+	 */
+	data_type*
+	clone(const XResultTreeFrag&	value);
+
+	/**
+	 * Delete an XResultTreeFrag object from allocator.	 
+	 */
+	bool
+	destroy(data_type*	theObject);
+
+	/**
+	 * Determine if an object is owned by the allocator...
+	 */
+	bool
+	ownsObject(const data_type*		theObject)
+	{
+		return m_allocator.ownsObject(theObject);
+	}
+
+	/**
+	 * Delete all XResultTreeFrag objects from allocator.	 
+	 */	
+	void
 	reset();
 
-	// Inherited from XPathFactory...
-
-	virtual XPath*
-	create();
-
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef set<const XPath*, less<const XPath*> >	CollectionType;
-#else
-	typedef std::set<const XPath*>	CollectionType;
-#endif
-
-	CollectionType::size_type
-	getInstanceCount() const
+	/**
+	 * Get size of an ArenaBlock, that is, the number
+	 * of objects in each block.
+	 *
+	 * @return The size of the block
+	 */
+	size_type
+	getBlockCount() const
 	{
-		return m_xpaths.size();
+		return m_allocator.getBlockCount();
 	}
 
-#if !defined(NDEBUG)
-	unsigned long
-	getTotalInstanceCount() const
+	/**
+	 * Get the number of ArenaBlocks currently allocated.
+	 *
+	 * @return The number of blocks.
+	 */
+	size_type
+	getBlockSize() const
 	{
-		return m_totalInstanceCount;
+		return m_allocator.getBlockSize();
 	}
-#endif
-
-protected:
-
-	// Inherited from XPathFactory...
-
-	virtual bool
-	doReturnObject(
-			const XPath*	theXPath,
-			bool			fInReset = false);
 
 private:
 
-	CollectionType		m_xpaths;
+	// Not implemented...
+	XResultTreeFragAllocator(const XResultTreeFragAllocator&);
 
-#if !defined(NDEBUG)
-	unsigned long		m_totalInstanceCount;
-#endif
+	XResultTreeFragAllocator&
+	operator=(const XResultTreeFragAllocator&);
+
+	// Data members...
+	ArenaAllocatorType	m_allocator;
 };
 
 
 
-#endif	// XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680
+#endif	// XRESULTTREEFRAGALLOCATOR_INCLUDE_GUARD_12455133

@@ -133,7 +133,7 @@ XPathFactoryDefault::doReturnObject(
 
 
 XPath*
-XPathFactoryDefault::create(bool	/* fOptimize */)
+XPathFactoryDefault::create()
 {
 	XPath* const	theXPath = new XPath;
 

@@ -54,85 +54,65 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680)
-#define XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680
+
+// Class header file.
+#include "XStringAllocator.hpp"
 
 
 
-// Base include file.  Must be first.
-#include <XPath/XPathDefinitions.hpp>
-
-
-
-#include <set>
-
-
-
-// Base class header file...
-#include <XPath/XPathFactory.hpp>
-
-
-
-class XALAN_XPATH_EXPORT XPathFactoryDefault : public XPathFactory
+XStringAllocator::XStringAllocator(size_type	theBlockCount) :
+	m_allocator(theBlockCount)
 {
-
-public:
-
-	explicit
-	XPathFactoryDefault();
-
-	virtual
-	~XPathFactoryDefault();
-
-
-	// Inherited from XPathFactory...
-	virtual void
-	reset();
-
-	// Inherited from XPathFactory...
-
-	virtual XPath*
-	create();
-
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef set<const XPath*, less<const XPath*> >	CollectionType;
-#else
-	typedef std::set<const XPath*>	CollectionType;
-#endif
-
-	CollectionType::size_type
-	getInstanceCount() const
-	{
-		return m_xpaths.size();
-	}
-
-#if !defined(NDEBUG)
-	unsigned long
-	getTotalInstanceCount() const
-	{
-		return m_totalInstanceCount;
-	}
-#endif
-
-protected:
-
-	// Inherited from XPathFactory...
-
-	virtual bool
-	doReturnObject(
-			const XPath*	theXPath,
-			bool			fInReset = false);
-
-private:
-
-	CollectionType		m_xpaths;
-
-#if !defined(NDEBUG)
-	unsigned long		m_totalInstanceCount;
-#endif
-};
+}
 
 
 
-#endif	// XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680
+XStringAllocator::~XStringAllocator()
+{
+}
+
+
+
+XStringAllocator::string_type*
+XStringAllocator::createString(const XalanDOMString&	theString) 
+{
+	string_type* const	theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
+
+	string_type* const	theResult = new(theBlock) string_type(theString);
+
+	m_allocator.commitAllocation(theBlock);
+
+	return theResult;
+}
+
+
+
+XStringAllocator::string_type*
+XStringAllocator::clone(const XString&	value)
+{
+	string_type* const		theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
+
+	value.clone(theBlock);
+
+	m_allocator.commitAllocation(theBlock);
+
+	return theBlock;
+}
+
+
+
+bool 
+XStringAllocator::destroy(string_type*	theString)
+{
+	return m_allocator.destroyObject(theString);
+}
+
+
+
+void 
+XStringAllocator::reset()
+{
+	m_allocator.reset();
+}

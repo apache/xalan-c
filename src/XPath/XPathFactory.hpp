@@ -106,10 +106,9 @@ public:
 	 * Create an XPath.  The XPath instance is owned by the factory, and should
 	 * not be deleted.  The factory will manage the lifetime.
 	 *
-	 * @param fOptimize true to optimize management of objects
 	 */
 	virtual XPath*
-	create(bool		fOptimize = true) = 0;
+	create() = 0;
 
 	/**
 	 *

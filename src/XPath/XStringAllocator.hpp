@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,9 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680)
-#define XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680
+
+#if !defined(XSTRINGALLOCATOR_INCLUDE_GUARD_1357924680)
+#define XSTRINGALLOCATOR_INCLUDE_GUARD_1357924680
 
 
 
@@ -64,75 +65,108 @@
 
 
 
-#include <set>
+#include <XPath/XString.hpp>
 
 
 
-// Base class header file...
-#include <XPath/XPathFactory.hpp>
+#include <PlatformSupport/ReusableArenaAllocator.hpp>
 
 
 
-class XALAN_XPATH_EXPORT XPathFactoryDefault : public XPathFactory
+class XALAN_XPATH_EXPORT XStringAllocator
 {
-
 public:
 
-	explicit
-	XPathFactoryDefault();
+	typedef XString			string_type;
 
-	virtual
-	~XPathFactoryDefault();
+	typedef ReusableArenaAllocator<string_type>		ArenaAllocatorType;
+	typedef ArenaAllocatorType::size_type			size_type;
 
+	/**
+	 * Construct an instance that will allocate blocks of the specified size.
+	 *
+	 * @param theBlockSize The block size.
+	 */
+	XStringAllocator(size_type	theBlockCount);
 
-	// Inherited from XPathFactory...
-	virtual void
+	~XStringAllocator();
+
+	/**
+	 * Create an XString object using allocator from a string.
+	 * 
+	 * @param theString     source string
+	 *
+	 * @return a pointer to string
+	 */
+	string_type*
+	createString(const XalanDOMString&	theString);
+
+	/**
+	 * Clone an XString object.
+	 * 
+	 * @param value			source XString
+	 *
+	 * @return pointer to an XString
+	 */
+	string_type*
+	clone(const XString&	value);
+
+	/**
+	 * Delete an XString object from allocator.	 
+	 */
+	bool
+	destroy(string_type*	theString);
+
+	/**
+	 * Determine if an object is owned by the allocator...
+	 */
+	bool
+	ownsObject(const string_type*	theObject)
+	{
+		return m_allocator.ownsObject(theObject);
+	}
+
+	/**
+	 * Delete all XString objects from allocator.	 
+	 */
+	void 
 	reset();
 
-	// Inherited from XPathFactory...
-
-	virtual XPath*
-	create();
-
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef set<const XPath*, less<const XPath*> >	CollectionType;
-#else
-	typedef std::set<const XPath*>	CollectionType;
-#endif
-
-	CollectionType::size_type
-	getInstanceCount() const
+	/**
+	 * Get size of an ArenaBlock, that is, the number
+	 * of objects in each block.
+	 *
+	 * @return The size of the block
+	 */
+	size_type
+	getBlockCount() const
 	{
-		return m_xpaths.size();
+		return m_allocator.getBlockCount();
 	}
 
-#if !defined(NDEBUG)
-	unsigned long
-	getTotalInstanceCount() const
+	/**
+	 * Get the number of ArenaBlocks currently allocated.
+	 *
+	 * @return The number of blocks.
+	 */
+	size_type
+	getBlockSize() const
 	{
-		return m_totalInstanceCount;
+		return m_allocator.getBlockSize();
 	}
-#endif
-
-protected:
-
-	// Inherited from XPathFactory...
-
-	virtual bool
-	doReturnObject(
-			const XPath*	theXPath,
-			bool			fInReset = false);
 
 private:
 
-	CollectionType		m_xpaths;
+	// Not implemented...
+	XStringAllocator(const XStringAllocator&);
 
-#if !defined(NDEBUG)
-	unsigned long		m_totalInstanceCount;
-#endif
+	XStringAllocator&
+	operator=(const XStringAllocator&);
+
+	// Data members...
+	ArenaAllocatorType	m_allocator;
 };
 
 
 
-#endif	// XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680
+#endif	// XSTRINGALLOCATOR_INCLUDE_GUARD_1357924680
