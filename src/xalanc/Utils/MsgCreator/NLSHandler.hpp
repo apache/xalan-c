@@ -61,7 +61,6 @@
 #include "ICUResHandler.hpp"
 
 
-
 XERCES_CPP_NAMESPACE_USE
 
 class NLSHandler : public ICUResHandler 
@@ -69,28 +68,46 @@ class NLSHandler : public ICUResHandler
 public:
 	NLSHandler(const char* fileName, bool bCreateUnicode = false);
 
-	~NLSHandler(void){}
+	virtual 
+	~NLSHandler(){}
 
-	virtual void createHeaderForDataFile ();
-	virtual void createBottomForDataFile ();
+	virtual void 
+	createHeaderForDataFile ();
+	
+	virtual void 
+	createBottomForDataFile ();
 
-	virtual void printBeginOfDataLine ();
-	virtual void printEndOfDataLine ();
+	virtual void 
+	printBeginOfDataLine ();
+	
+	virtual void 
+	printEndOfDataLine ();
 
-	void characters(	const   XMLCh* const    chars
+	void 
+	characters(	const   XMLCh* const    chars
 						, const unsigned int    length);
-	void startDocument();
+	void 
+	startDocument();
 
 protected:
 
 	// ASCII version of print
-	void printToDataFileasASCII( const char* sArrayOfStrins[] );
+	void 
+	printToDataFileasASCII( const char* sArrayOfStrins[] );
 
 private:
 	int m_RunningNumber;
 	
 	bool m_bCreateUnicode;
 
+	// Not implemented...
+	NLSHandler&
+	operator=(const NLSHandler&);
+
+	NLSHandler(const NLSHandler&);
+
+	bool
+	operator==(const NLSHandler&) const;
 };
 
 

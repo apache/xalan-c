@@ -59,12 +59,16 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include "ICUResData.hpp"
 #include "ICUResHandler.hpp"
+
+#include <xercesc/sax2/Attributes.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+
 #include <cstdio>
 #include <cassert>
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/sax2/Attributes.hpp>
-#include "ICUResData.hpp"
+
+
 
 
 // -----------------------------------------------------------------------
@@ -93,7 +97,7 @@ void ICUResHandler::endDocument()
 
 
 // ICU genrb doesnt' like " and {} chars
-// change tham with \", \{ and /}
+// change tham with \", \{ and \}
 
 void ICUResHandler::characters(	const   XMLCh* const    chars
 						, const unsigned int    length)
@@ -107,7 +111,7 @@ void ICUResHandler::characters(	const   XMLCh* const    chars
 
 		int j = 0;
 
-		for ( int i=0 ; i < length ; i++ , j++)
+		for ( unsigned int i=0 ; i < length ; i++ , j++)
 		{
 			if( chars[i] == chDoubleQuote || chars[i] == chOpenCurly || chars[i] == chCloseCurly)
 			{
@@ -138,15 +142,15 @@ void ICUResHandler::startDocument()
 
 }
 
-void ICUResHandler::endElement(const XMLCh* const uri,
+void ICUResHandler::endElement(const XMLCh* const ,
 					const XMLCh* const localname,
-					const XMLCh* const qname)
+					const XMLCh* const )
 {
 	if ( m_startCollectingCharacters == false)
 		return;
 
 
-    if(!XMLString::compareString(localname,targetXMLCh))
+    if(!XMLString::compareString(localname,s_targetXMLCh))
 	{
 		m_startCollectingCharacters = false;
 
@@ -160,15 +164,15 @@ void ICUResHandler::startElement(const   XMLCh* const    uri,
 								const   Attributes&		attributes)
 {
 	
-	if(!XMLString::compareString(localname,trans_unitXMLCh))
+	if(!XMLString::compareString(localname,s_transUnitXMLCh))
 	{
 		// this is an elemente, SAX2Handler class is responsible to handle:
 		// creating Index file, commom for all localization styles
 		SAX2Handler::startElement(uri, localname, qname, attributes);
 	}
-	else if(!XMLString::compareString(localname,targetXMLCh))
+	else if(!XMLString::compareString(localname,s_targetXMLCh))
 	{
-		if ( m_XML_lang != 0 )
+		if ( m_locale != 0 )
 		{
 			m_startCollectingCharacters = true;	
 			
@@ -183,9 +187,9 @@ void ICUResHandler::createHeaderForDataFile ()
 {
 	printToDataFile( szApacheLicense );
 
-	if ( m_XML_lang != 0)
+	if ( m_locale != 0)
 	{
-		m_fStream.write(m_XML_lang,XMLString::stringLen(m_XML_lang));
+		m_fStream.write(m_locale,XMLString::stringLen(m_locale));
 
 	}
 

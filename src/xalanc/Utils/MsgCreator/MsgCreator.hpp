@@ -60,9 +60,9 @@
 
 #include <xalanc/Include/PlatformDefinitions.hpp>
 
-// ---------------------------------------------------------------------------
-//  Includes for all the program files to see
-// ---------------------------------------------------------------------------
+#include <xercesc/util/XMLString.hpp>
+
+
 #include <cstring>
 #include <cstdlib>
 
@@ -72,7 +72,7 @@
 #include <iostream>
 #endif
 
-#include "SAX2Handler.hpp"
+XERCES_CPP_NAMESPACE_USE
 
 // ---------------------------------------------------------------------------
 //  This is a simple class that lets us do easy (though not terribly efficient)

@@ -57,14 +57,11 @@
 
 #include "MsgFileOutputStream.hpp"
 
-#include <cerrno>
-
 #include <xercesc/util/PlatformUtils.hpp>
-
 #include <xercesc/util/XMLString.hpp>
 
 #include <cassert>
-
+#include <cerrno>
 #include <cstdio>
 
 

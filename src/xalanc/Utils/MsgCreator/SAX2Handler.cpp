@@ -62,25 +62,14 @@
 #include <cassert>
 #include <cstdio>
 
-
-
-#include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/sax2/Attributes.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 
-
-
-#include "MsgCreator.hpp"
+#include "ICUResHandler.hpp"
 #include "IndexFileData.hpp"
+#include "MsgCreator.hpp"
 
 
-
-// ---------------------------------------------------------------------------
-//  Local const data
-//
-//  Note: This is the 'safe' way to do these strings. If you compiler supports
-//        L"" style strings, and portability is not a concern, you can use
-//        those types constants directly.
-// ---------------------------------------------------------------------------
 
 static const char* INDEX_FILE_NAME="LocalMsgIndex.hpp";
 
@@ -91,51 +80,20 @@ static const char* INDEX_FILE_NAME="LocalMsgIndex.hpp";
 // ---------------------------------------------------------------------------
 SAX2Handler::SAX2Handler( ) :
 							m_numberOfRecords(0),
-							m_XML_lang(0),
+							m_locale(0),
 							m_startCollectingCharacters(false),
-							m_fIndexFormatter(INDEX_FILE_NAME)
+							m_fIndexOutputStream(INDEX_FILE_NAME)
 {
 
 }
 
 SAX2Handler::~SAX2Handler()
 {
-	if (m_XML_lang != 0)
+	if (m_locale != 0)
 	{
-		XMLString::release(&m_XML_lang);
+		XMLString::release(&m_locale);
 	}
 }
-
-
-bool SAX2Handler::translateCharToXMLByteArr ( XMLByte* buffer, int iBufLen, const char* szSource)const
-{
-	bool bResult = false;
-
-	if ( iBufLen == 0 || szSource == 0 || buffer == 0 )
-	{
-		return bResult;
-	}
-	int inpLen = XMLString::stringLen(szSource);
-
-	if ( inpLen > iBufLen )
-	{
-		buffer[0] = 0;
-		return bResult;
-	}
-
-
-	for ( int i = 0; i < inpLen; i++ )
-	{
-		buffer[i] = szSource[i];
-	}
-	buffer[inpLen+1] = 0;
-	
-	bResult = true;
-
-	return bResult;
-}
-
-
 
 void SAX2Handler::createHeaderForIndexFile ()
 {
@@ -152,7 +110,6 @@ void SAX2Handler::printBeginOfIndexLine ()
 	
 void SAX2Handler::printEndOfIndexLine ()
 {
-//	printToIndexFile ( szEndIndexLine );
 }
 
 
@@ -168,28 +125,20 @@ void SAX2Handler::printToIndexFile( const char* sArrayOfStrins[] )
 	if ( sArrayOfStrins == NULL)
 		return;
 
-	XMLByte buffer[1024];
-	buffer[0] = 0;
-
-	for (int i = 0; sArrayOfStrins[i] != NULL; i++){
-
-		translateCharToXMLByteArr(buffer, 1024, sArrayOfStrins[i]);
-
-
-		m_fIndexFormatter.writeChars(buffer,XMLString::stringLen(sArrayOfStrins[i] ),NULL);
-		m_fIndexFormatter.flush();
-
+	for (int i = 0; sArrayOfStrins[i] != NULL; i++)
+	{
+		m_fIndexOutputStream.writeAsASCII(sArrayOfStrins[i],XMLString::stringLen(sArrayOfStrins[i]));
 	}
 }
 
 
 
-void SAX2Handler::startElement(const   XMLCh* const    uri,
+void SAX2Handler::startElement(const   XMLCh* const    ,
 									const   XMLCh* const    localname,
-									const   XMLCh* const    qname,
+									const   XMLCh* const    ,
                                     const   Attributes&		attributes)
 {
-	if(!XMLString::compareString(localname,trans_unitXMLCh))
+	if(!XMLString::compareString(localname,s_transUnitXMLCh))
 	{
 		unsigned int len = attributes.getLength();
 		
@@ -199,45 +148,23 @@ void SAX2Handler::startElement(const   XMLCh* const    uri,
 		{
 			const XMLCh* name = attributes.getQName(index) ;
 			
-			if (name != NULL && !XMLString::compareString(name,idXMLCh)	)
+			if (name != NULL && !XMLString::compareString(name,s_idXMLCh)	)
 			{
 				const XMLCh* val = attributes.getValue(index);
 				if ( val != NULL )
 				{
 					if ( m_numberOfRecords != 1)
 						printBeginOfIndexLine();
-					
-					int valLen = XMLString::stringLen(val);
-					
-					
-					char* szTempString = XMLString::transcode(val);
-					
-					XMLByte* xmlByteBufferPtr = new XMLByte[valLen+10];
-					
-					translateCharToXMLByteArr(xmlByteBufferPtr, valLen, szTempString);
-					
-					m_fIndexFormatter.writeChars(xmlByteBufferPtr,XMLString::stringLen(szTempString),NULL);
-					
-					m_fIndexFormatter.flush();
-					
-					XMLString::release( &szTempString );
-					delete[] xmlByteBufferPtr;
-					
+										
+					m_fIndexOutputStream.writeAsASCII(val,XMLString::stringLen(val));
 					
 					char buff[100];
-					XMLByte xmlByteBuffer[100];
 					
 					sprintf( buff, "		 = %d \n",(m_numberOfRecords - 1));
 					
-					translateCharToXMLByteArr(xmlByteBuffer, 100, buff);
-					
-					m_fIndexFormatter.writeChars(xmlByteBuffer,XMLString::stringLen(buff),NULL);
-					
-					m_fIndexFormatter.flush();
+					m_fIndexOutputStream.writeAsASCII(buff,XMLString::stringLen(buff));
 					
 					printEndOfIndexLine ();
-					
-					
 				}
 			}
 			
@@ -280,16 +207,16 @@ void SAX2Handler::warning(const SAXParseException& e)
 }
 
 
-void SAX2Handler::setXML_Lang( const char* localName)
+void SAX2Handler::setLocale( const char* localName)
 {
 	assert(localName != 0);
 
-	if (m_XML_lang != 0)
+	if (m_locale != 0)
 	{
-		XMLString::release(&m_XML_lang);
+		XMLString::release(&m_locale);
 	}
 
-	m_XML_lang = XMLString::transcode(localName);
+	m_locale = XMLString::transcode(localName);
 }
 
 

@@ -58,9 +58,7 @@
 #if !defined(ICURESHANDLER_MSGCREATOR_1357924680)
 #define ICURESHANDLER_MSGCREATOR_1357924680
 
-#include "InMemHandler.hpp"
-
-#include "MsgFileOutputStream.hpp"
+#include "SAX2Handler.hpp"
 
 
 XERCES_CPP_NAMESPACE_USE
@@ -73,36 +71,58 @@ public:
     // -----------------------------------------------------------------------
     ICUResHandler(const char* fileName);
 
+    virtual 
     ~ICUResHandler();
 	// -----------------------------------------------------------------------
     //  Implementations of the SAX DocumentHandler interface
     // -----------------------------------------------------------------------
-	void endDocument();
-	void endElement(const XMLCh* const uri,
+	virtual void 
+	endDocument();
+	virtual void 
+	endElement(const XMLCh* const ,
 								 const XMLCh* const localname,
-								 const XMLCh* const qname)	;
-	void startDocument();
+								 const XMLCh* const )	;
+	virtual void 
+	startDocument();
 
-	void startElement(const   XMLCh* const    uri,
-									const   XMLCh* const    localname,
-									const   XMLCh* const    qname,
-                                    const   Attributes&		attributes);
+	virtual void 
+	startElement(const   XMLCh* const    uri,
+								const   XMLCh* const    localname,
+								const   XMLCh* const    qname,
+                                const   Attributes&		attributes);
 
-	void characters(	const   XMLCh* const    chars
+	virtual void 
+	characters(	const   XMLCh* const    chars
 						, const unsigned int    length);
 
 protected:
-	virtual void createHeaderForDataFile ();
-	virtual void createBottomForDataFile ();
+	virtual void 
+	createHeaderForDataFile ();
+	
+	virtual void 
+	createBottomForDataFile ();
 
-	virtual void printBeginOfDataLine ();
-	virtual void printEndOfDataLine ();
+	virtual void 
+	printBeginOfDataLine ();
+	
+	virtual void 
+	printEndOfDataLine ();
 
-	void printToDataFile( const char* sArrayOfStrins[] );
+	void 
+	printToDataFile( const char* sArrayOfStrins[] );
 
 
 	XalanFileOutputStream	m_fStream;
 
+private:
+	// Not implemented...
+	ICUResHandler&
+	operator=(const ICUResHandler&);
+
+	ICUResHandler(const ICUResHandler&);
+
+	bool
+	operator==(const ICUResHandler&) const;
 };
 
 #endif // ICURESHANDLER_MSGCREATOR_1357924680

@@ -55,22 +55,17 @@
 * <http://www.apache.org/>.
 */
 
-
-
-
-// ---------------------------------------------------------------------------
-//  Includes
-// ---------------------------------------------------------------------------
-#include <cassert>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/TransService.hpp>
-#include <xercesc/sax2/SAX2XMLReader.hpp>
-#include <xercesc/sax2/XMLReaderFactory.hpp>
-#include "MsgCreator.hpp"
-#include "InMemHandler.hpp"
 #include "ICUResHandler.hpp"
+#include "InMemHandler.hpp"
+#include "MsgCreator.hpp"
 #include "NLSHandler.hpp"
 
+#include <xercesc/sax2/SAX2XMLReader.hpp>
+#include <xercesc/sax2/XMLReaderFactory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/TransService.hpp>
+
+#include <cassert>
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
@@ -463,7 +458,7 @@ int main(int argC, char* argV[])
 				{
 					try
 					{				
-						handler->setXML_Lang(theParams.localeName);
+						handler->setLocale(theParams.localeName);
 	
 						parser->setContentHandler(handler);
 

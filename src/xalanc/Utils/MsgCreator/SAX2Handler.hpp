@@ -58,16 +58,17 @@
 #if !defined(SAX2HANDLER_MSGCREATOR_1357924680)
 #define SAX2HANDLER_MSGCREATOR_1357924680
 
+#include "MsgFileOutputStream.hpp"
 
-#include    <xercesc/sax2/DefaultHandler.hpp>
-#include <xercesc/framework/LocalFileFormatTarget.hpp>
+#include <xercesc/sax2/DefaultHandler.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+
 
 XERCES_CPP_NAMESPACE_USE
 
 
 
-static const XMLCh trans_unitXMLCh[] = 
+static const XMLCh s_transUnitXMLCh[] = 
 { 
 	chLatin_t, 
 	chLatin_r,
@@ -84,7 +85,7 @@ static const XMLCh trans_unitXMLCh[] =
 };
 
 
-static const XMLCh sourceXMLCh[] = 
+static const XMLCh s_sourceXMLCh[] = 
 { 
 	chLatin_s, 
 	chLatin_o,
@@ -97,7 +98,7 @@ static const XMLCh sourceXMLCh[] =
 };
 
 
-static const XMLCh targetXMLCh[] = 
+static const XMLCh s_targetXMLCh[] = 
 { 
 	chLatin_t, 
 	chLatin_a,
@@ -110,7 +111,7 @@ static const XMLCh targetXMLCh[] =
 };
 
 
-static const XMLCh xml_LangXMLCh[] = 
+static const XMLCh s_xmlLangXMLCh[] = 
 { 
 	chLatin_x, 
 	chLatin_m,
@@ -125,14 +126,14 @@ static const XMLCh xml_LangXMLCh[] =
 
 
 
-static const XMLCh idXMLCh[] =
+static const XMLCh s_idXMLCh[] =
 {
 	chLatin_i,
 	chLatin_d,
 	chNull
 };
 
-static const XMLCh textXMLCh[] = 
+static const XMLCh s_textXMLCh[] = 
 { 
 	chLatin_T, 
 	chLatin_e, 
@@ -140,64 +141,78 @@ static const XMLCh textXMLCh[] =
 	chLatin_t, 
 	chNull
 };
+
+
 // Common class for the all system: creates index file ( common for all localization systems)
 // For creation data file responsible subclasses
 
 
-class SAX2Handler : public DefaultHandler, public XMLFormatTarget
+class SAX2Handler : public DefaultHandler
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors
     // -----------------------------------------------------------------------
     SAX2Handler();
-    ~SAX2Handler();
+    virtual ~SAX2Handler();
 
 public:
-    void startElement(const   XMLCh* const    uri,
+    virtual void 
+    startElement(const   XMLCh* const    ,
 									const   XMLCh* const    localname,
-									const   XMLCh* const    qname,
+									const   XMLCh* const    ,
                                     const   Attributes&		attributes);
 
-	void startDocument();
+	virtual void 
+	startDocument();
 
-	void endDocument();
+	virtual void 
+	endDocument();
 
    // -----------------------------------------------------------------------
     //  Implementations of the SAX ErrorHandler interface
     // -----------------------------------------------------------------------
-	void error(const SAXParseException& e);
-	void fatalError(const SAXParseException& e);
-	void warning(const SAXParseException& e);
+	virtual void 
+	error(const SAXParseException& e); 
+	
+	virtual void 
+	fatalError(const SAXParseException& e);
+	
+	virtual void 
+	warning(const SAXParseException& e);
 
-    virtual void writeChars
-				(
-					  const XMLByte* const      toWrite
-					, const unsigned int        count
-					,       XMLFormatter* const formatter
-					){};
-
-	void setXML_Lang( const char* localName);
+	void 
+	setLocale( const char* localeName);
 
 	const XMLCh*
-	getXML_lang () const
+	getLocale () const
 	{
-		return m_XML_lang;
+		return m_locale;
 	}
 
 protected:
 	bool translateCharToXMLByteArr ( XMLByte* buffer, int iBufLen, const char* szSource)const;
 
-	virtual void createHeaderForDataFile ()=0;
-	virtual void createBottomForDataFile ()=0;
+	virtual void 
+	createHeaderForDataFile ()=0;
+	
+	virtual void 
+	createBottomForDataFile ()=0;
 
-	virtual void printBeginOfDataLine ()=0;
-	virtual void printEndOfDataLine ()=0;
+	virtual void 
+	printBeginOfDataLine ()=0;
+	
+	virtual void 
+	printEndOfDataLine ()=0;
 
-	virtual void printToDataFile( const char* sArrayOfStrins[] ) = 0;
-	void printToIndexFile( const char* sArrayOfStrins[] );
+	virtual void 
+	printToDataFile( const char* sArrayOfStrins[] ) = 0;
+	
+	void 
+	printToIndexFile( const char* sArrayOfStrins[] );
 
-	void printNumbOfRecords ();
+	void 
+	printNumbOfRecords ();
 
 
 
@@ -212,9 +227,7 @@ private:
 protected :
 	int	m_numberOfRecords;
 
-	// Name of asked locale. Usially two code points, for example from local
-	// name en_US "XML_lang" will be "en"
-	XMLCh* m_XML_lang;
+	XMLCh* m_locale;
 
 	bool m_startCollectingCharacters;
 
@@ -224,8 +237,16 @@ protected :
     // -----------------------------------------------------------------------
 
 private:
-	LocalFileFormatTarget    m_fIndexFormatter;
+	XalanFileOutputStream    m_fIndexOutputStream;
 
+	// Not implemented...
+	SAX2Handler&
+	operator=(const SAX2Handler&);
+
+	SAX2Handler(const SAX2Handler&);
+
+	bool
+	operator==(const SAX2Handler&) const;
 
 };
 
