@@ -60,7 +60,6 @@
 
 
 #include <XalanDOM/XalanDOMDefinitions.hpp>
-#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -70,6 +69,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 class XalanDocument;
 class XalanDocumentType;
+class XalanDOMString;
 
 
 

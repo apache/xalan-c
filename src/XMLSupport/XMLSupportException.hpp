@@ -64,16 +64,16 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
 // Base class header file.
 #include <PlatformSupport/XSLException.hpp>
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+class XalanDOMString;
 
 
 
@@ -87,8 +87,7 @@ public:
 	 * @param theMessage message to print when exception thrown
 	 */
 	explicit
-	XMLSupportException(
-			const XalanDOMString&	message = XalanDOMString());
+	XMLSupportException(const XalanDOMString&	message);
 
 	virtual
 	~XMLSupportException();

@@ -64,16 +64,13 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 
 class XalanAttr;
 class XalanDocument;
+class XalanDOMString;
 class XalanElement;
 class XalanNode;
 class XalanText;
