@@ -64,13 +64,17 @@
 
 
 
+#include <cmath>
 #include <vector>
 
 
 
 // Base class header file...
-// Base class header file...
 #include <XPath/Function.hpp>
+
+
+
+#include <PlatformSupport/DoubleSupport.hpp>
 
 
 
@@ -108,10 +112,7 @@ public:
 
 		const double	theValue = args[0]->num();
 
-		// $$$ ToDo: This is not really correct, but will do for now...
-		const long	theRoundedValue = static_cast<long>(theValue < 0 ? theValue - 0.5 : theValue + 0.5);
-
-		return executionContext.getXObjectFactory().createNumber(theRoundedValue);
+		return executionContext.getXObjectFactory().createNumber(getRoundedValue(theValue));
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
@@ -122,6 +123,50 @@ public:
 	clone() const
 	{
 		return new FunctionRound(*this);
+	}
+
+	static double
+	getRoundedValue(double	theValue)
+	{
+		if (DoubleSupport::isNaN(theValue))
+		{
+			return DoubleSupport::getNaN();
+		}
+		else if (DoubleSupport::isPositiveInfinity(theValue))
+		{
+			return DoubleSupport::getPositiveInfinity();
+		}
+		if (DoubleSupport::isNegativeInfinity(theValue))
+		{
+			return DoubleSupport::getNegativeInfinity();
+		}
+		else if (theValue == 0)
+		{
+			return 0.0;
+		}
+		else if (theValue > 0)
+		{
+			return static_cast<long>(theValue + 0.5);
+		}
+		else
+		{
+			// Negative numbers are a special case.  Any time we
+			// have -0.5 as the fractional part, we have to
+			// round up (toward 0), rather than down.
+			double			intPart = 0;
+
+			const double	fracPart = modf(theValue, &intPart);
+
+			if (fracPart == -0.5)
+			{
+				// special case -- we have have to round toward 0...
+				return static_cast<long>(theValue + 0.5);
+			}
+			else
+			{
+				return static_cast<long>(theValue - 0.5);
+			}
+		}
 	}
 
 private:
