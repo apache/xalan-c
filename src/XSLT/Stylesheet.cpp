@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -411,8 +411,8 @@ private:
 
 static void
 addToList(
-			Stylesheet::PatternTableListType&	theList,
-			const Stylesheet::MatchPattern2*	thePattern)
+			Stylesheet::PatternTableVectorType&		theList,
+			const Stylesheet::MatchPattern2*		thePattern)
 {
 	typedef Stylesheet::size_type	size_type;
 	assert(thePattern != 0);
@@ -420,7 +420,7 @@ addToList(
 	const double		thePatternPriority = thePattern->getPriorityOrDefault();
 	const size_type		thePatternPosition = thePattern->getPositionInStylesheet();
 
-	typedef Stylesheet::PatternTableListType	PatternTableListType;
+	typedef Stylesheet::PatternTableVectorType	PatternTableListType;
 	typedef PatternTableListType::iterator		iterator;
 
 	iterator		theCurrent = theList.begin();
@@ -451,11 +451,11 @@ addToList(
 
 static void
 addToTable(
-		   Stylesheet::PatternTableMapType&			theTable,
-		   const Stylesheet::PatternTableListType&	theList)
+		   Stylesheet::PatternTableMapType&				theTable,
+		   const Stylesheet::PatternTableVectorType&	theList)
 {
 	typedef Stylesheet::PatternTableMapType		PatternTableMapType;
-	typedef Stylesheet::PatternTableListType	PatternTableListType;
+	typedef Stylesheet::PatternTableVectorType	PatternTableListType;
 
 	PatternTableMapType::iterator				theCurrentTable = theTable.begin();
 	const PatternTableMapType::iterator			theTableEnd = theTable.end();
@@ -898,7 +898,7 @@ Stylesheet::addObjectIfNotFound(
 
 
 
-inline const Stylesheet::PatternTableListType* 
+inline const Stylesheet::PatternTableVectorType* 
 Stylesheet::locateElementMatchPatternList2(const XalanDOMString&	theName) const
 {
 	assert(m_elementPatternTableEnd == m_elementPatternTable.end());
@@ -918,7 +918,7 @@ Stylesheet::locateElementMatchPatternList2(const XalanDOMString&	theName) const
 
 
 
-inline const Stylesheet::PatternTableListType* 
+inline const Stylesheet::PatternTableVectorType* 
 Stylesheet::locateAttributeMatchPatternList2(const XalanDOMString&	theName) const
 {
 	assert(m_attributePatternTableEnd == m_attributePatternTable.end());
@@ -938,10 +938,14 @@ Stylesheet::locateAttributeMatchPatternList2(const XalanDOMString&	theName) cons
 
 
 
-inline const Stylesheet::PatternTableListType*
-Stylesheet::locateMatchPatternList2(const XalanNode&	theNode) const
+inline const Stylesheet::PatternTableVectorType*
+Stylesheet::locateMatchPatternList2(
+			const XalanNode&		theNode,
+			XalanNode::NodeType		targetNodeType) const
 {
-	switch(theNode.getNodeType())
+	assert(theNode.getNodeType() == targetNodeType);
+
+	switch(targetNodeType)
 	{
 	case XalanNode::ELEMENT_NODE:
 		return locateElementMatchPatternList2(DOMServices::getLocalNameOfNode(theNode));
@@ -952,6 +956,11 @@ Stylesheet::locateMatchPatternList2(const XalanNode&	theNode) const
 		break;
 
 	case XalanNode::ATTRIBUTE_NODE:
+#if defined(XALAN_OLD_STYLE_CASTS)
+		assert(DOMServices::isNamespaceDeclaration((const XalanAttr&)theNode) == false);
+#else
+		assert(DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(theNode)) == false);
+#endif
 		return locateAttributeMatchPatternList2(DOMServices::getLocalNameOfNode(theNode));
 		break;
 
@@ -980,9 +989,11 @@ Stylesheet::locateMatchPatternList2(const XalanNode&	theNode) const
 inline const ElemTemplate*
 Stylesheet::findTemplateInImports(
 			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						targetNode, 
+			XalanNode*						targetNode,
+			XalanNode::NodeType				targetNodeType,
 			const XalanQName&				mode) const
 {
+	assert(targetNode->getNodeType() == targetNodeType);
 	assert(m_importsSize == m_imports.size());
 
 	for(StylesheetVectorType::size_type i = 0; i < m_importsSize; i++)
@@ -994,6 +1005,7 @@ Stylesheet::findTemplateInImports(
 			stylesheet->findTemplate(
 				executionContext,
 				targetNode,
+				targetNodeType,
 				mode, 
 				false);
 
@@ -1011,11 +1023,13 @@ Stylesheet::findTemplateInImports(
 const ElemTemplate*
 Stylesheet::findTemplate(
 			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						targetNode, 
+			XalanNode*						targetNode,
+			XalanNode::NodeType				targetNodeType,
 			const XalanQName&				mode,
 			bool							onlyUseImports) const
 {
 	assert(targetNode != 0);
+	assert(targetNode->getNodeType() == targetNodeType);
 	assert(m_patternCount == m_matchPattern2Container.size());
 
 	if(m_isWrapperless == true)
@@ -1024,7 +1038,7 @@ Stylesheet::findTemplate(
 	}
 	else if (onlyUseImports == true)
 	{
-		return findTemplateInImports(executionContext, targetNode, mode);
+		return findTemplateInImports(executionContext, targetNode, targetNodeType, mode);
 	}
 	else
 	{
@@ -1034,14 +1048,14 @@ Stylesheet::findTemplate(
 		{
 			// Points to the current list of match patterns.  Note
 			// that this may point to more than one table.
-			const PatternTableListType* 	matchPatternList =
-					locateMatchPatternList2(*targetNode);
+			const PatternTableVectorType* 	matchPatternList =
+					locateMatchPatternList2(*targetNode, targetNodeType);
 			assert(matchPatternList != 0);
 
-			PatternTableListType::const_iterator		theCurrentEntry =
+			PatternTableVectorType::const_iterator		theCurrentEntry =
 					matchPatternList->begin();
 
-			const PatternTableListType::const_iterator	theTableEnd =
+			const PatternTableVectorType::const_iterator	theTableEnd =
 					matchPatternList->end();
 
 			while(theCurrentEntry != theTableEnd)
@@ -1084,19 +1098,19 @@ Stylesheet::findTemplate(
 
 			if(0 == bestMatchedRule)
 			{
-				bestMatchedRule = findTemplateInImports(executionContext, targetNode, mode);
+				bestMatchedRule = findTemplateInImports(executionContext, targetNode, targetNodeType, mode);
 			}
 		}
 		else
 		{
-			const PatternTableListType* 	matchPatternList =
-					locateMatchPatternList2(*targetNode);
+			const PatternTableVectorType* 	matchPatternList =
+					locateMatchPatternList2(*targetNode, targetNodeType);
 			assert(matchPatternList != 0);
 
-			PatternTableListType::const_iterator		theCurrentEntry =
+			PatternTableVectorType::const_iterator		theCurrentEntry =
 					matchPatternList->begin();
 
-			const PatternTableListType::const_iterator	theTableEnd =
+			const PatternTableVectorType::const_iterator	theTableEnd =
 					matchPatternList->end();
 
 			if (theCurrentEntry != theTableEnd)
@@ -1257,7 +1271,7 @@ Stylesheet::findTemplate(
 
 			if(0 == bestMatchedRule)
 			{
-				bestMatchedRule = findTemplateInImports(executionContext, targetNode, mode);
+				bestMatchedRule = findTemplateInImports(executionContext, targetNode, targetNodeType, mode);
 			}
 		}
 

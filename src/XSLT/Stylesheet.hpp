@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -609,7 +609,14 @@ public:
 			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						targetNode) const
 	{
-		return findTemplate(executionContext, targetNode, s_emptyQName, false);
+		assert(targetNode != 0);
+
+		return findTemplate(
+				executionContext,
+				targetNode,
+				targetNode->getNodeType(),
+				s_emptyQName,
+				false);
 	}
 
 	/**
@@ -617,15 +624,17 @@ public:
 	 * XSL document, according to the rules specified in the xsl draft. 
 	 *
 	 * @param executionContext current execution context
-	 * @param targetElem        element that needs a rule
-	 * @param mode              string indicating the display mode
+	 * @param targetNode        node that needs a rule
+	 * @param targetNodeType    the type of targetNode
+	 * @param mode              string indicating the mode
 	 * @param onlyUseImports    only use imports, do not use any templates from the stylesheet itself
 	 * @return pointer to rule that best matches targetElem
 	 */
 	const ElemTemplate*
 	findTemplate(
 			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						targetNode, 
+			XalanNode*						targetNode,
+			XalanNode::NodeType				targetNodeType,
 			const XalanQName&				mode,
 			bool							onlyUseImports) const;
 
@@ -754,22 +763,18 @@ public:
 	};
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<const MatchPattern2*>		PatternTableListType;
-
 	typedef vector<const MatchPattern2*>		PatternTableVectorType;
 
 	typedef map<XalanDOMString,
-			    PatternTableListType,
+			    PatternTableVectorType,
 				less<XalanDOMString> >			PatternTableMapType;
 
 	typedef deque<MatchPattern2>				MatchPattern2Container;
 #else
-	typedef std::vector<const MatchPattern2*>	PatternTableListType;
-
 	typedef std::vector<const MatchPattern2*>	PatternTableVectorType;
 
 	typedef std::map<XalanDOMString,
-					 PatternTableListType>		PatternTableMapType;
+					 PatternTableVectorType>	PatternTableMapType;
 
 	typedef std::deque<MatchPattern2>			MatchPattern2Container;
 #endif
@@ -807,7 +812,7 @@ public:
 	 *
 	 * @param theName The name to match
 	 */
-	const PatternTableListType*
+	const PatternTableVectorType*
 	locateElementMatchPatternList2(const XalanDOMString&	theName) const;
 
 	/**
@@ -817,7 +822,7 @@ public:
 	 *
 	 * @param theName The name to match
 	 */
-	const PatternTableListType*
+	const PatternTableVectorType*
 	locateAttributeMatchPatternList2(const XalanDOMString&	theName) const;
 
 	/**
@@ -826,8 +831,10 @@ public:
 	 *
 	 * @param XalanNode The node to match
 	 */
-	const PatternTableListType*
-	locateMatchPatternList2(const XalanNode&	theNode) const;
+	const PatternTableVectorType*
+	locateMatchPatternList2(
+			const XalanNode&		theNode,
+			XalanNode::NodeType		targetNodeType) const;
 
 	/**
 	 * Add an extension namespace handler. This provides methods for calling
@@ -1089,14 +1096,16 @@ private:
 	 * stylesheet, using only imports
 	 *
 	 * @param executionContext current execution context
-	 * @param targetElem        element that needs a rule
-	 * @param mode              string indicating the display mode
+	 * @param targetNode        node that needs a rule
+	 * @param targetNodeType    the type of targetNode
+	 * @param mode              string indicating the mode
 	 * @return pointer to rule that best matches targetElem
 	 */
 	const ElemTemplate*
 	findTemplateInImports(
 			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						targetNode, 
+			XalanNode*						targetNode,
+			XalanNode::NodeType				targetNodeType,
 			const XalanQName&				mode) const;
 
 	/**
@@ -1173,7 +1182,7 @@ private:
 
 	const PatternTableMapType::const_iterator	m_elementPatternTableEnd;
 
-	PatternTableListType						m_elementAnyPatternList;
+	PatternTableVectorType						m_elementAnyPatternList;
 
 	/**
 	 * This table is keyed on the target attributes of patterns, and contains linked
@@ -1184,23 +1193,23 @@ private:
 
 	const PatternTableMapType::const_iterator	m_attributePatternTableEnd;
 
-	PatternTableListType						m_attributeAnyPatternList;
+	PatternTableVectorType						m_attributeAnyPatternList;
 
 	/**
 	 * These tables are for text, comment, root, and PI node templates.
 	 */
-	PatternTableListType					m_textPatternList;
+	PatternTableVectorType					m_textPatternList;
 
-	PatternTableListType					m_commentPatternList;
+	PatternTableVectorType					m_commentPatternList;
 
-	PatternTableListType					m_rootPatternList;
+	PatternTableVectorType					m_rootPatternList;
 
-	PatternTableListType					m_piPatternList;
+	PatternTableVectorType					m_piPatternList;
 
 	/**
 	 * This table is for patterns that match "node()".
 	 */
-	PatternTableListType					m_nodePatternList;
+	PatternTableVectorType					m_nodePatternList;
 
 	/**
 	 * This will hold all of the MatchPattern2 instances for the
