@@ -102,7 +102,7 @@ UnicodeStringToXalanDOMString(const UnicodeString&	theString)
 
 	theBuffer.reserve(theLength);
 
-	for (unsigned int i = 0; i < theLength; ++i)
+	for (int32_t i = 0; i < theLength; ++i)
 	{
 		theBuffer.push_back(theString[i]);
 	}
