@@ -1691,7 +1691,7 @@ makeDecimalNumberTranscodeTransform(
 
 // A very cheap hex number transcoder...
 template <class InputCharType, class OutputCharType>
-class HexadecimalDecimalNumberTranscodeTransform : public DecimalNumberTranscodeTransform<InputCharType, OutputCharType>
+class HexadecimalNumberTranscodeTransform : public DecimalNumberTranscodeTransform<InputCharType, OutputCharType>
 {
 public:
 
@@ -1703,51 +1703,51 @@ public:
 		switch(theChar)
 		{
 		case 'A':
-			return OutputCharType(XalanUnicode::char_A);
+			return OutputCharType(XalanUnicode::charLetter_A);
 			break;
 
 		case 'a':
-			return OutputCharType(XalanUnicode::char_a);
+			return OutputCharType(XalanUnicode::charLetter_a);
 			break;
 
 		case 'B':
-			return OutputCharType(XalanUnicode::char_B);
+			return OutputCharType(XalanUnicode::charLetter_B);
 			break;
 
 		case 'b':
-			return OutputCharType(XalanUnicode::char_b);
+			return OutputCharType(XalanUnicode::charLetter_b);
 			break;
 
 		case 'C':
-			return OutputCharType(XalanUnicode::char_C);
+			return OutputCharType(XalanUnicode::charLetter_C);
 			break;
 
 		case 'c':
-			return OutputCharType(XalanUnicode::char_c);
+			return OutputCharType(XalanUnicode::charLetter_c);
 			break;
 
 		case 'D':
-			return OutputCharType(XalanUnicode::char_D);
+			return OutputCharType(XalanUnicode::charLetter_D);
 			break;
 
 		case 'd':
-			return OutputCharType(XalanUnicode::char_d);
+			return OutputCharType(XalanUnicode::charLetter_d);
 			break;
 
 		case 'E':
-			return OutputCharType(XalanUnicode::char_E);
+			return OutputCharType(XalanUnicode::charLetter_E);
 			break;
 
 		case 'e':
-			return OutputCharType(XalanUnicode::char_e);
+			return OutputCharType(XalanUnicode::charLetter_e);
 			break;
 
 		case 'F':
-			return OutputCharType(XalanUnicode::char_F);
+			return OutputCharType(XalanUnicode::charLetter_F);
 			break;
 
 		case 'f':
-			return OutputCharType(XalanUnicode::char_f);
+			return OutputCharType(XalanUnicode::charLetter_f);
 			break;
 
 		default:
