@@ -158,6 +158,28 @@ public:
 	typedef clock_t			ClockType;
 #endif
 
+	struct CompareXalanDOMStringPointers
+	{
+		bool
+		operator()(
+				const XalanDOMString*	theLHS,
+				const XalanDOMString*	theRHS) const
+		{
+			if (theLHS == 0 && theRHS != 0)
+			{
+				return true;
+			}
+			else if (theRHS == 0)
+			{
+				return false;
+			}
+			else
+			{
+				return theLHS->compare(*theRHS) < 0 ? true : false;
+			}
+		}
+	};
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
 				int,
@@ -171,6 +193,8 @@ public:
 	typedef vector<const Locator*>			LocatorStack;
 	typedef vector<TraceListener*>			TraceListenerVectorType;
 	typedef vector<bool>					BoolVectorType;
+	typedef set<const XalanDOMString*,
+				CompareXalanDOMStringPointers>	XalanDOMStringPointerSetType;
 #else
 	typedef std::map<XalanDOMString, int>		AttributeKeysMapType;
 	typedef std::map<XalanDOMString, int>		ElementKeysMapType;
@@ -178,6 +202,8 @@ public:
 	typedef std::vector<const Locator*>			LocatorStack;
 	typedef std::vector<TraceListener*>			TraceListenerVectorType;
 	typedef std::vector<bool>					BoolVectorType;
+	typedef std::set<const XalanDOMString*,
+					 CompareXalanDOMStringPointers>	XalanDOMStringPointerSetType;
 #endif
 
 	typedef XalanAutoPtr<XPathProcessor>				XPathProcessorPtrType;
@@ -1490,7 +1516,7 @@ private:
 	bool
 	pendingAttributesHasDefaultNS() const; 
 
-	void
+	bool
 	addResultNamespace(
 			const XalanDOMString&	thePrefix,
 			const XalanDOMString&	theName,
@@ -1498,7 +1524,7 @@ private:
 			AttributeListImpl&		thePendingAttributes,
 			bool					fOnlyIfPrefixNotPresent);
 
-	void
+	bool
 	addResultNamespace(
 			const XalanNode&	theNode,
 			AttributeListImpl&	thePendingAttributes,

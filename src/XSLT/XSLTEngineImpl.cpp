@@ -2985,7 +2985,7 @@ XSLTEngineImpl::isPendingResultPrefix(const XalanDOMString&		thePrefix) const
 
 
 
-void
+bool
 XSLTEngineImpl::addResultNamespace(
 			const XalanDOMString&	thePrefix,
 			const XalanDOMString&	theName,
@@ -3003,13 +3003,23 @@ XSLTEngineImpl::addResultNamespace(
 		{
 			addResultAttribute(thePendingAttributes, theName, srcURI);
 			addResultNamespaceDecl(thePrefix, srcURI);
+
+			return true;
 		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
 	}
 }
 
 
 
-void
+bool
 XSLTEngineImpl::addResultNamespace(
 			const XalanNode&	theNode,
 			AttributeListImpl&	thePendingAttributes,
@@ -3023,7 +3033,7 @@ XSLTEngineImpl::addResultNamespace(
 	if (equals(aname, DOMServices::s_XMLNamespace) == true)
 	{
 		// Default namespace declaration...
-		addResultNamespace(s_emptyString, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
+		return addResultNamespace(s_emptyString, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
 	}
 	else if (startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator))
 	{
@@ -3033,7 +3043,11 @@ XSLTEngineImpl::addResultNamespace(
 
 		substring(aname, thePrefix, DOMServices::s_XMLNamespaceWithSeparatorLength);
 
-		addResultNamespace(thePrefix, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
+		return addResultNamespace(thePrefix, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
+	}
+	else
+	{
+		return false;
 	}
 }
 
@@ -3043,6 +3057,10 @@ void
 XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&	src) 
 {
 	const XalanNode*	parent = &src;
+
+	XalanDOMStringPointerSetType	names;
+
+	XalanDOMStringPointerSetType::iterator	end = names.end();
 
 	while (parent != 0 &&
 		   parent->getNodeType() == XalanNode::ELEMENT_NODE) 
@@ -3063,7 +3081,14 @@ XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&	src)
 			const XalanNode* const	attr = nnm->item(i);
 			assert(attr != 0);
 
-			addResultNamespace(*attr, thePendingAttributes, true);
+			const XalanDOMString&	nodeName = attr->getNodeName();
+
+			if (names.find(&nodeName) == end)
+			{
+				addResultNamespace(*attr, thePendingAttributes, true);
+
+				names.insert(&nodeName);
+			}
 		}
 
 		parent = parent->getParentNode();
