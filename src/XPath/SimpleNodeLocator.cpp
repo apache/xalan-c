@@ -1308,29 +1308,47 @@ SimpleNodeLocator::findNamespace(
 
 	if(context != 0 && context->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
-		const XalanNamedNodeMap* const	attributeList =
-			context->getAttributes();
+		// Look up the element chain until we hit the document, so that we
+		// get all of the attribute/namespace nodes.
+		const XalanNode* const	theOwnerDocument = context->getOwnerDocument();
+		assert(theOwnerDocument != 0);
 
-		if(attributeList != 0) 
+		const XalanNode*		theCurrentNode = context;
+
+		do
 		{
-			const unsigned int	nAttrs = attributeList->getLength();
+			const XalanNamedNodeMap* const	attributeList =
+				theCurrentNode->getAttributes();
 
-			for(unsigned int i = 0; i < nAttrs; ++i)
+			if(attributeList != 0) 
 			{
-				XalanNode* const	attr = attributeList->item(i);
+				const unsigned int	nAttrs = attributeList->getLength();
 
-				if(nodeTest(xpath,
-							executionContext,
-							attr,
-							opPos,
-							argLen,
-							stepType) != xpath.s_MatchScoreNone)
+				for(unsigned int i = 0; i < nAttrs; ++i)
 				{
-					subQueryResults.addNode(attr);
-					// If we have an attribute name here, we can quit.
+					XalanNode* const	attr = attributeList->item(i);
+					assert(attr != 0);
+
+					const XalanDOMString&	theNodeName = attr->getNodeName();
+
+					if (startsWith(theNodeName, DOMServices::s_XMLNamespaceWithSeparator) == true ||
+						equals(theNodeName, DOMServices::s_XMLNamespace) == true)
+					{
+						if(nodeTest(xpath,
+									executionContext,
+									attr,
+									opPos,
+									argLen,
+									stepType) != xpath.s_MatchScoreNone)
+						{
+							subQueryResults.addNode(attr);
+						}
+					}
 				}
 			}
-		}
+
+			theCurrentNode = theCurrentNode->getParentNode();
+		} while (theCurrentNode != theOwnerDocument && theCurrentNode != 0);
 	}
 
 	return argLen + 3;
