@@ -538,9 +538,18 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 
 		XalanDOMString&     xmlIdentifier = theGuard1.get();
 
-        if (0 != inputSource.getSystemId())
+		const XalanDOMChar* const	theSystemID = inputSource.getSystemId();
+
+		if (0 != theSystemID)
 		{
-			xmlIdentifier = inputSource.getSystemId();
+			try
+			{
+				URISupport::getURLStringFromString(theSystemID, xmlIdentifier);
+			}
+			catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
+			{
+				xmlIdentifier = theSystemID;
+			}
 		}
 		else
 		{
@@ -590,7 +599,7 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
                     xmlIdentifier),
 				&xmlIdentifier);
 		}
-
+ 
 		m_xpathEnvSupport.setSourceDocument(xmlIdentifier, theDocument);
 
 		sourceTree = theDocument;
