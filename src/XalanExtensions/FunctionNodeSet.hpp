@@ -69,7 +69,7 @@
 
 
 
-#include <XPath/XResultTreeFrag.hpp>
+#include <XSLT/XResultTreeFrag.hpp>
 
 
 
