@@ -268,7 +268,7 @@ XResultTreeFrag::stringLength() const
 	{
 		FormatterStringLengthCounter	theCounter;
 
-		DOMServices::getNodeData(*m_value, theCounter, FormatterListener::characters);
+		DOMServices::getNodeData(*m_value, theCounter, &FormatterListener::characters);
 
 		return theCounter.getCount();
 	}

@@ -220,7 +220,7 @@ XNodeSetBase::stringLength() const
 
 		FormatterStringLengthCounter	theCounter;
 
-		DOMServices::getNodeData(*theNode, theCounter, FormatterListener::characters);
+		DOMServices::getNodeData(*theNode, theCounter, &FormatterListener::characters);
 
 		return theCounter.getCount();
 	}
