@@ -446,8 +446,49 @@ private:
 	void
 	processAccumulatedText();
 
+	void
+	processTopLevelElement(
+			const XalanDOMChar*		name,
+			const XalanDOMString&	localName,
+			const XalanDOMString&	ns,
+			const AttributeList&	atts,
+			int						xslToken,
+			int						lineNumber,
+			int						columnNumber,
+			bool&					fPreserveSpace,
+			bool&					fSpaceAttrProcessed);
+
+	void
+	processStylesheet(
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			int						lineNumber,
+			int						columnNumber,
+			bool&					fPreserveSpace,
+			bool&					fSpaceAttrProcessed);
+
+	void
+	processPreserveStripSpace(
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			int						lineNumber,
+			int						columnNumber,
+			int						xslToken);
+
+	void
+	appendChildElementToParent(
+			ElemTemplateElement*	elem,
+			int						lineNumber,
+			int						columnNumber);
+
 	bool
 	inExtensionElement() const;
+
+	void
+	processExtensionElement(
+			const XalanDOMChar*		name,
+			const XalanDOMString&	localName,
+			const AttributeList&	atts);
 
 	// Data members...
 	XalanDOMString	m_pendingException;

@@ -389,668 +389,259 @@ StylesheetHandler::startElement(
 
 			if(!m_inTemplate)
 			{
-				if(m_foundStylesheet && Constants::ELEMNAME_IMPORT != xslToken)
-				{
-					m_foundNotImport = true;
-				}
-
+				processTopLevelElement(name, localName, ns, atts, xslToken, lineNumber, columnNumber, fPreserveSpace, fSpaceAttrProcessed);
+			}
+			else
+			{
 				switch(xslToken)
-				{
-				case Constants::ELEMNAME_TEMPLATE:
-					m_pTemplate = new ElemTemplate(m_constructionContext,
+				{            
+				case Constants::ELEMNAME_APPLY_TEMPLATES:
+					elem = new ElemApplyTemplates(m_constructionContext,
 												m_stylesheet,
 												atts, lineNumber, columnNumber);
-					m_elemStack.push_back(m_pTemplate);
-					m_elemStackParentedElements.insert(m_pTemplate);
-					m_inTemplate = true;
-					m_stylesheet.addTemplate(m_pTemplate, m_constructionContext);
 					break;
-
-				case Constants::ELEMNAME_EXTENSION:
-					if(!equalsIgnoreCase(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
-					{
-						m_constructionContext.warn("Old syntax: the functions instruction should use a url of " + m_constructionContext.getXalanXSLNameSpaceURL());
-					}
-				break;
-
-				case Constants::ELEMNAME_VARIABLE:
-				case Constants::ELEMNAME_PARAMVARIABLE:
-				{
-					ElemVariable* varelem = (Constants::ELEMNAME_PARAMVARIABLE == xslToken) 
-									   ? new ElemParam(m_constructionContext,
-													   m_stylesheet,
-													   atts, 
-													   lineNumber, columnNumber)
-										 : new ElemVariable(m_constructionContext,
-															m_stylesheet,
-															atts, 
-															lineNumber, columnNumber);
-
-					m_elemStack.push_back(varelem);
-					m_inTemplate = true; // fake it out
-					m_stylesheet.setTopLevelVariable(varelem);
-					m_elemStackParentedElements.insert(varelem);
-					varelem->setTopLevel(true);
-				}
-				break;
-
-				case Constants::ELEMNAME_LOCALE:
-					m_constructionContext.warn(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("xsl:locale not yet supported!")));
-					break;
-
-				case Constants::ELEMNAME_PRESERVESPACE:
-				case Constants::ELEMNAME_STRIPSPACE:
-				{
-					// $$$ ToDo: We should move this code into a separate function.
-					ElemEmpty nsNode(m_constructionContext, m_stylesheet, lineNumber, columnNumber);
-
-					const unsigned int	nAttrs = atts.getLength();
-
-					bool foundIt = false;
-
-					for(unsigned int i = 0; i < nAttrs; i++)
-					{
-						const XalanDOMChar* const	aname = atts.getName(i);
-
-						if(equals(aname, Constants::ATTRNAME_ELEMENTS))
-						{
-							foundIt = true;
-
-							StringTokenizer		tokenizer(atts.getValue(i),
-														  Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
-
-							while(tokenizer.hasMoreTokens())
-							{
-								// Use only the root, at least for right now.
-								const XalanDOMString	wildcardName = tokenizer.nextToken();
-
-								/**
-								 * Creating a match pattern is too much overhead, but it's a reasonably 
-								 * easy and safe way to do this right now.  TODO: Validate the pattern 
-								 * to make sure it's a WildcardName.
-								 */
-								const XPath* const	matchPat =
-										m_constructionContext.createMatchPattern(wildcardName, nsNode);
-
-								if(Constants::ELEMNAME_PRESERVESPACE == xslToken)
-								{
-									m_stylesheet.getStylesheetRoot().pushWhitespacePreservingElement(matchPat);
-								}
-								else
-								{
-									m_stylesheet.getStylesheetRoot().pushWhitespaceStrippingElement(matchPat);
-								}
-							}
-						}
-						else if(!isAttrOK(aname, atts, i))
-						{
-								m_constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
-						}
-					}
-
-					if(!foundIt && inExtensionElement() == false)
-					{
-						XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) +
-						" requires a " + Constants::ATTRNAME_ELEMENTS + " attribute!");
-
-						throw SAXException(c_wstr(msg));
-					}
-				}
-				break;
-
-				case Constants::ELEMNAME_KEY:
-				{
-					ElemEmpty nsContext(m_constructionContext, m_stylesheet, lineNumber, columnNumber);
-
-					m_stylesheet.processKeyElement(&nsContext, atts, m_constructionContext);
-				}
-				break;
-
-				case Constants::ELEMNAME_DEFINEATTRIBUTESET:
-				{
-					m_inTemplate = true; // fake it out
-
-					ElemAttributeSet* attrSet = new ElemAttributeSet(m_constructionContext,
-															   m_stylesheet,
-															   atts,
-															   lineNumber,
-															   columnNumber);
-					m_elemStack.push_back(attrSet);
-				}
-				break;
-
-				case Constants::ELEMNAME_INCLUDE:
-					processInclude(name, atts);
-					break;
-
-				case Constants::ELEMNAME_IMPORT:
-					processImport(name, atts);
-					break;
-
-				case Constants::ELEMNAME_OUTPUT:
-					m_stylesheet.getStylesheetRoot().processOutputSpec(name, atts, m_constructionContext);
-					break;
-
-				case Constants::ELEMNAME_DECIMALFORMAT:
-					{
-						ElemDecimalFormat* const	edf =
-							new ElemDecimalFormat(m_constructionContext,
-												  m_stylesheet,
-												  atts,
-												  lineNumber,
-												  columnNumber);
-
-						m_stylesheet.processDecimalFormatElement(edf, atts, m_constructionContext);
-					}
-					break;
-
-				case Constants::ELEMNAME_NSALIAS:
-					{
-						m_stylesheet.processNSAliasElement(name, atts, m_constructionContext);
-					}
-					break;
-
-				case Constants::ELEMNAME_WITHPARAM:
-				case Constants::ELEMNAME_ATTRIBUTE:
-				case Constants::ELEMNAME_APPLY_TEMPLATES:
-				case Constants::ELEMNAME_USE:
-				case Constants::ELEMNAME_CHILDREN:
-				case Constants::ELEMNAME_CHOOSE:
-				case Constants::ELEMNAME_COMMENT:
-				case Constants::ELEMNAME_CONSTRUCT:
-				case Constants::ELEMNAME_CONTENTS:
-				case Constants::ELEMNAME_COPY:
-				case Constants::ELEMNAME_COPY_OF:
-				case Constants::ELEMNAME_DISPLAYIF:
-				case Constants::ELEMNAME_EVAL:
-				case Constants::ELEMNAME_EXPECTEDCHILDREN:
-				case Constants::ELEMNAME_FOREACH:
-				case Constants::ELEMNAME_IF:
+          
 				case Constants::ELEMNAME_CALLTEMPLATE:
-				case Constants::ELEMNAME_MESSAGE:
-				case Constants::ELEMNAME_NUMBER:
-				case Constants::ELEMNAME_OTHERWISE:
-				case Constants::ELEMNAME_PI:
-				case Constants::ELEMNAME_REMOVEATTRIBUTE:
+					elem = new ElemCallTemplate(m_constructionContext,
+											  m_stylesheet,
+											  atts, lineNumber, columnNumber);
+					break;
+          
+				case Constants::ELEMNAME_WITHPARAM:
+					elem = new ElemWithParam(m_constructionContext,
+										   m_stylesheet,
+										   atts, lineNumber, columnNumber);
+					break;
+          
+				case Constants::ELEMNAME_FOREACH:
+					elem = new ElemForEach(m_constructionContext,
+										 m_stylesheet,
+										 atts, lineNumber, columnNumber);
+					break;
+          
 				case Constants::ELEMNAME_SORT:
-				case Constants::ELEMNAME_TEXT:
-				case Constants::ELEMNAME_VALUEOF:
-				case Constants::ELEMNAME_WHEN:
-				case Constants::ELEMNAME_ELEMENT:
-				case Constants::ELEMNAME_COUNTER:
-				case Constants::ELEMNAME_COUNTERS:
-				case Constants::ELEMNAME_COUNTERINCREMENT:
-				case Constants::ELEMNAME_COUNTERRESET:
-				case Constants::ELEMNAME_COUNTERSCOPE:
-				case Constants::ELEMNAME_APPLY_IMPORTS:
-					if (inExtensionElement() == false)
 					{
-						XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + " not allowed inside a stylesheet!");
+						ElemForEach* foreach =
+#if defined(XALAN_OLD_STYLE_CASTS)
+							(ElemForEach*)m_elemStack.back();
+#else
+							static_cast<ElemForEach*>(m_elemStack.back());
+#endif
 
-						throw SAXException(c_wstr(msg));
+						ElemSort* sortElem = new ElemSort(m_constructionContext,
+													 m_stylesheet,
+													 atts, lineNumber, columnNumber);
+
+						// Note: deleted in ElemForEach destructor
+						foreach->getSortElems().push_back(sortElem);
+
+						sortElem->setParentNodeElem(foreach);
+
+						m_elemStackParentedElements.insert(foreach);
 					}
 					break;
 
-				case Constants::ELEMNAME_STYLESHEET:
-				{
-					m_stylesheet.setWrapperless(false);
-					m_foundStylesheet = true;
+				case Constants::ELEMNAME_APPLY_IMPORTS:
+					elem = new ElemApplyImport(m_constructionContext,
+											 m_stylesheet,
+											 atts, lineNumber, columnNumber);
+					break;
+          
+				case Constants::ELEMNAME_VALUEOF:
+					elem = new ElemValueOf(m_constructionContext,
+										 m_stylesheet,
+										 atts, lineNumber, columnNumber);
+					break;
 
-					const unsigned int	nAttrs = atts.getLength();
+				case Constants::ELEMNAME_NUMBER:
+					elem = new ElemNumber(m_constructionContext,
+										m_stylesheet,
+										atts, lineNumber, columnNumber);
+					break;
+          
+				case Constants::ELEMNAME_VARIABLE:
+					elem = new ElemVariable(m_constructionContext,
+										  m_stylesheet,
+										  atts, lineNumber, columnNumber);
+					break;
 
-					bool				fVersionFound = false;
+				case Constants::ELEMNAME_PARAMVARIABLE:
+					elem = new ElemParam(m_constructionContext,
+									   m_stylesheet,
+									   atts, lineNumber, columnNumber);
+					break;
+          
+				case Constants::ELEMNAME_IF:
+					elem = new ElemIf(m_constructionContext,
+									m_stylesheet,
+									atts, lineNumber, columnNumber);
+					break;
 
-					for(unsigned int i = 0; i < nAttrs; i++)
+				case Constants::ELEMNAME_FALLBACK:
+					elem = new ElemFallback(
+							m_constructionContext,
+							m_stylesheet,
+							atts,
+							lineNumber,
+							columnNumber);
+					break;
+
+				case Constants::ELEMNAME_CHOOSE:
+					elem = new ElemChoose(m_constructionContext,
+										m_stylesheet,
+										atts, lineNumber, columnNumber);
+					break;
+          
+				case Constants::ELEMNAME_WHEN:
 					{
-						const XalanDOMChar* const	aname = atts.getName(i);
+						ElemTemplateElement* const	parent = m_elemStack.back();
 
-						if(equals(aname, Constants::ATTRNAME_RESULTNS))
+						if(Constants::ELEMNAME_CHOOSE == parent->getXSLToken())
 						{
-							throw SAXException("result-ns no longer supported!  Use xsl:output instead.");
-						}
-						else if(equals(aname, Constants::ATTRNAME_DEFAULTSPACE))
-						{
-							throw SAXException("default-space no longer supported!  Use xsl:strip-space or xsl:preserve-space instead.");
-						}
-						else if(equals(aname, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
-						{
-							m_stylesheet.processExcludeResultPrefixes(atts.getValue(i), m_constructionContext);
-						}
-						else if(equals(aname, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
-						{
-							StringTokenizer tokenizer(atts.getValue(i),
-													  Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
+							ElemTemplateElement* const	lastChild = parent->getLastChildElem();
 
-							while(tokenizer.hasMoreTokens() == true)
+							if(0 == lastChild ||
+								Constants::ELEMNAME_WHEN == lastChild->getXSLToken())
 							{
-								const XalanDOMString	prefix = tokenizer.nextToken();
-								// SANJIVA: ask Scott: is the line below correct?
-
-								const XalanDOMString&	extns = m_stylesheet.getNamespaceForPrefixFromStack(prefix);
-
-								ExtensionNSHandler* const	nsh = new ExtensionNSHandler(extns);
-
-								m_stylesheet.addExtensionNamespace(extns, nsh);
+								elem = new ElemWhen(m_constructionContext,
+											m_stylesheet,
+											atts, lineNumber, columnNumber);
 							}
-						}
-						else if(equals(aname, Constants::ATTRNAME_ID))
-						{
-							//
-						}
-						else if(equals(aname, Constants::ATTRNAME_INDENTRESULT))
-						{
-							throw SAXException("indent-result no longer supported!  Use xsl:output instead.");
-						}
-						else if(equals(aname, Constants::ATTRNAME_VERSION))
-						{
-							const XalanDOMChar* const	versionStr = atts.getValue(i);
-
-							m_stylesheet.setXSLTVerDeclared(DoubleSupport::toDouble(versionStr));
-
-							fVersionFound = true;
-						}
-						else if(processSpaceAttr(aname, atts, i, fPreserveSpace) == true)
-						{
-							fSpaceAttrProcessed = true;
-						}
-						else if(isAttrOK(aname, atts, i) == false)
-						{
-							if(false == m_stylesheet.isWrapperless())
+							else
 							{
-								XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + 
-											  " has an illegal attribute: " + aname);
-
-								throw SAXException(c_wstr(msg));
+								throw SAXException("(StylesheetHandler) misplaced xsl:when!");
 							}
-						}
-
-						if(!m_stylesheet.getNamespaces().empty())
-						{
-							m_stylesheet.setNamespaceDecls(m_stylesheet.getNamespaces().back());
-						}
-					}
-
-					if (fVersionFound == false)
-					{
-						throw SAXException(c_wstr(TranscodeFromLocalCodePage("The stylesheet element did not specify a version attribute!")));
-					}
-					else
-					{
-						if (fPreserveSpace == false)
-						{
-							m_stylesheet.setDefaultSpaceProcessing(true);
 						}
 						else
 						{
-							m_stylesheet.setDefaultSpaceProcessing(false);
+							throw SAXException("(StylesheetHandler) xsl:when not parented by xsl:choose!");
 						}
 					}
+					break;
+          
+				case Constants::ELEMNAME_OTHERWISE:
+					{
+						ElemTemplateElement* parent = m_elemStack.back();
 
-				}
-				break;
+						if(Constants::ELEMNAME_CHOOSE == parent->getXSLToken())
+						{
+							ElemTemplateElement* lastChild = parent->getLastChildElem();
+
+							if(0 == lastChild || 
+								Constants::ELEMNAME_WHEN == lastChild->getXSLToken())
+							{
+								elem = new ElemOtherwise(m_constructionContext,
+												 m_stylesheet,
+												 atts, lineNumber, columnNumber);
+							}
+							else
+							{
+								throw SAXException("(StylesheetHandler) misplaced xsl:otherwise!");
+							}
+						}
+						else
+						{
+							throw SAXException("(StylesheetHandler) xsl:otherwise not parented by xsl:choose!");
+						}
+					}
+					break;
+
+				case Constants::ELEMNAME_COPY_OF:
+					elem = new ElemCopyOf(m_constructionContext,
+										m_stylesheet,
+										atts, lineNumber, columnNumber);
+					break;
+
+				case Constants::ELEMNAME_COPY:
+					elem = new ElemCopy(m_constructionContext,
+									  m_stylesheet,
+									  atts, lineNumber, columnNumber);
+					break;
+
+				case Constants::ELEMNAME_TEXT:
+				  // Just push the element on the stack to signal
+				  // that space should be preserved.
+					m_elemStack.push_back(new ElemText(m_constructionContext,
+											m_stylesheet,
+											atts, lineNumber, columnNumber));
+					break;
+
+				case Constants::ELEMNAME_USE:
+					elem = new ElemUse(m_constructionContext,
+									 m_stylesheet,
+									 lineNumber, columnNumber);
+					break;
+
+				case Constants::ELEMNAME_ATTRIBUTE:
+					elem = new ElemAttribute(m_constructionContext,
+										   m_stylesheet,
+										   atts, lineNumber, columnNumber);
+					break;
+
+				case Constants::ELEMNAME_ELEMENT:
+					elem = new ElemElement(m_constructionContext,
+										 m_stylesheet,
+										 atts, lineNumber, columnNumber);
+				  break;
+          
+				case Constants::ELEMNAME_PI:
+					elem = new ElemPI(m_constructionContext,
+									m_stylesheet,
+									atts, lineNumber, columnNumber);
+				  break;
+
+				case Constants::ELEMNAME_COMMENT:
+					elem = new ElemComment(m_constructionContext,
+										 m_stylesheet,
+										 atts, lineNumber, columnNumber);
+				  break;
+          
+				case Constants::ELEMNAME_MESSAGE:
+					elem = new ElemMessage(m_constructionContext,
+										 m_stylesheet,
+										 atts, lineNumber, columnNumber);
+
+					break;
+          
+				case Constants::ELEMNAME_TEMPLATE:
+				case Constants::ELEMNAME_LOCALE:
+				case Constants::ELEMNAME_DEFINEATTRIBUTESET:
+				case Constants::ELEMNAME_DEFINESCRIPT:
+				case Constants::ELEMNAME_EXTENSION:
+				case Constants::ELEMNAME_EXTENSIONHANDLER:
+				case Constants::ELEMNAME_KEY:
+				case Constants::ELEMNAME_IMPORT:
+				case Constants::ELEMNAME_INCLUDE:
+				case Constants::ELEMNAME_PRESERVESPACE:
+				case Constants::ELEMNAME_STRIPSPACE:
+					{
+						XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + " is not allowed inside a template!");
+						throw SAXException(c_wstr(msg));
+					}
+					break;
 
 				default:
-					if (inExtensionElement() == false)
 					{
 						XalanDOMString msg("Unknown XSL element: " + localName);
 
-						throw SAXException(c_wstr(TranscodeFromLocalCodePage("Unknown XSL element: ") + localName));
-					}
-				break;
-
-			}
-		}
-		else
-		{
-			switch(xslToken)
-			{            
-			case Constants::ELEMNAME_APPLY_TEMPLATES:
-				elem = new ElemApplyTemplates(m_constructionContext,
-											m_stylesheet,
-											atts, lineNumber, columnNumber);
-				break;
-          
-			case Constants::ELEMNAME_CALLTEMPLATE:
-				elem = new ElemCallTemplate(m_constructionContext,
-										  m_stylesheet,
-										  atts, lineNumber, columnNumber);
-				break;
-          
-			case Constants::ELEMNAME_WITHPARAM:
-				elem = new ElemWithParam(m_constructionContext,
-									   m_stylesheet,
-									   atts, lineNumber, columnNumber);
-				break;
-          
-			case Constants::ELEMNAME_FOREACH:
-				elem = new ElemForEach(m_constructionContext,
-									 m_stylesheet,
-									 atts, lineNumber, columnNumber);
-				break;
-          
-			case Constants::ELEMNAME_SORT:
-				{
-					ElemForEach* foreach =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(ElemForEach*)m_elemStack.back();
-#else
-						static_cast<ElemForEach*>(m_elemStack.back());
-#endif
-
-					ElemSort* sortElem = new ElemSort(m_constructionContext,
-												 m_stylesheet,
-												 atts, lineNumber, columnNumber);
-
-					// Note: deleted in ElemForEach destructor
-					foreach->getSortElems().push_back(sortElem);
-
-					sortElem->setParentNodeElem(foreach);
-
-					m_elemStackParentedElements.insert(foreach);
-				}
-				break;
-
-			case Constants::ELEMNAME_APPLY_IMPORTS:
-				elem = new ElemApplyImport(m_constructionContext,
-										 m_stylesheet,
-										 atts, lineNumber, columnNumber);
-				break;
-          
-			case Constants::ELEMNAME_VALUEOF:
-				elem = new ElemValueOf(m_constructionContext,
-									 m_stylesheet,
-									 atts, lineNumber, columnNumber);
-				break;
-
-			case Constants::ELEMNAME_NUMBER:
-				elem = new ElemNumber(m_constructionContext,
-									m_stylesheet,
-									atts, lineNumber, columnNumber);
-				break;
-          
-			case Constants::ELEMNAME_VARIABLE:
-				elem = new ElemVariable(m_constructionContext,
-									  m_stylesheet,
-									  atts, lineNumber, columnNumber);
-				break;
-
-			case Constants::ELEMNAME_PARAMVARIABLE:
-				elem = new ElemParam(m_constructionContext,
-								   m_stylesheet,
-								   atts, lineNumber, columnNumber);
-				break;
-          
-			case Constants::ELEMNAME_IF:
-				elem = new ElemIf(m_constructionContext,
-								m_stylesheet,
-								atts, lineNumber, columnNumber);
-				break;
-
-			case Constants::ELEMNAME_FALLBACK:
-				elem = new ElemFallback(
-						m_constructionContext,
-						m_stylesheet,
-						atts,
-						lineNumber,
-						columnNumber);
-				break;
-
-			case Constants::ELEMNAME_CHOOSE:
-				elem = new ElemChoose(m_constructionContext,
-									m_stylesheet,
-									atts, lineNumber, columnNumber);
-				break;
-          
-			case Constants::ELEMNAME_WHEN:
-				{
-					ElemTemplateElement* const	parent = m_elemStack.back();
-
-					if(Constants::ELEMNAME_CHOOSE == parent->getXSLToken())
-					{
-						ElemTemplateElement* const	lastChild = parent->getLastChildElem();
-
-						if(0 == lastChild ||
-							Constants::ELEMNAME_WHEN == lastChild->getXSLToken())
+						// If this stylesheet is declared to be of a higher version than the one
+						// supported, don't flag an error.
+						if(m_constructionContext.getXSLTVersionSupported() < m_stylesheet.getXSLTVerDeclared())
 						{
-							elem = new ElemWhen(m_constructionContext,
-										m_stylesheet,
-										atts, lineNumber, columnNumber);
+							m_constructionContext.warn(msg);
 						}
 						else
 						{
-							throw SAXException("(StylesheetHandler) misplaced xsl:when!");
+							throw SAXException(c_wstr(msg));
 						}
-					}
-					else
-					{
-						throw SAXException("(StylesheetHandler) xsl:when not parented by xsl:choose!");
-					}
-				}
-				break;
-          
-			case Constants::ELEMNAME_OTHERWISE:
-				{
-					ElemTemplateElement* parent = m_elemStack.back();
-
-					if(Constants::ELEMNAME_CHOOSE == parent->getXSLToken())
-					{
-						ElemTemplateElement* lastChild = parent->getLastChildElem();
-
-						if(0 == lastChild || 
-							Constants::ELEMNAME_WHEN == lastChild->getXSLToken())
-						{
-							elem = new ElemOtherwise(m_constructionContext,
-											 m_stylesheet,
-											 atts, lineNumber, columnNumber);
-						}
-						else
-						{
-							throw SAXException("(StylesheetHandler) misplaced xsl:otherwise!");
-						}
-					}
-					else
-					{
-						throw SAXException("(StylesheetHandler) xsl:otherwise not parented by xsl:choose!");
-					}
-				}
-				break;
-
-			case Constants::ELEMNAME_COPY_OF:
-				elem = new ElemCopyOf(m_constructionContext,
-									m_stylesheet,
-									atts, lineNumber, columnNumber);
-				break;
-
-			case Constants::ELEMNAME_COPY:
-				elem = new ElemCopy(m_constructionContext,
-								  m_stylesheet,
-								  atts, lineNumber, columnNumber);
-				break;
-
-			case Constants::ELEMNAME_TEXT:
-			  // Just push the element on the stack to signal
-			  // that space should be preserved.
-				m_elemStack.push_back(new ElemText(m_constructionContext,
-										m_stylesheet,
-										atts, lineNumber, columnNumber));
-				break;
-
-			case Constants::ELEMNAME_USE:
-				elem = new ElemUse(m_constructionContext,
-								 m_stylesheet,
-								 lineNumber, columnNumber);
-				break;
-
-			case Constants::ELEMNAME_ATTRIBUTE:
-				elem = new ElemAttribute(m_constructionContext,
-									   m_stylesheet,
-									   atts, lineNumber, columnNumber);
-				break;
-
-			case Constants::ELEMNAME_ELEMENT:
-				elem = new ElemElement(m_constructionContext,
-									 m_stylesheet,
-									 atts, lineNumber, columnNumber);
-			  break;
-          
-			case Constants::ELEMNAME_PI:
-				elem = new ElemPI(m_constructionContext,
-								m_stylesheet,
-								atts, lineNumber, columnNumber);
-			  break;
-
-			case Constants::ELEMNAME_COMMENT:
-				elem = new ElemComment(m_constructionContext,
-									 m_stylesheet,
-									 atts, lineNumber, columnNumber);
-			  break;
-          
-			case Constants::ELEMNAME_MESSAGE:
-				elem = new ElemMessage(m_constructionContext,
-									 m_stylesheet,
-									 atts, lineNumber, columnNumber);
-
-				break;
-          
-			case Constants::ELEMNAME_TEMPLATE:
-			case Constants::ELEMNAME_LOCALE:
-			case Constants::ELEMNAME_DEFINEATTRIBUTESET:
-			case Constants::ELEMNAME_DEFINESCRIPT:
-			case Constants::ELEMNAME_EXTENSION:
-			case Constants::ELEMNAME_EXTENSIONHANDLER:
-			case Constants::ELEMNAME_KEY:
-			case Constants::ELEMNAME_IMPORT:
-			case Constants::ELEMNAME_INCLUDE:
-			case Constants::ELEMNAME_PRESERVESPACE:
-			case Constants::ELEMNAME_STRIPSPACE:
-				{
-					XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + " is not allowed inside a template!");
-					throw SAXException(c_wstr(msg));
-				}
-				break;
-
-			default:
-				{
-					XalanDOMString msg("Unknown XSL element: " + localName);
-
-					// If this stylesheet is declared to be of a higher version than the one
-					// supported, don't flag an error.
-					if(m_constructionContext.getXSLTVersionSupported() < m_stylesheet.getXSLTVerDeclared())
-					{
-						m_constructionContext.warn(msg);
-					}
-					else
-					{
-						throw SAXException(c_wstr(msg));
 					}
 				}
 			}
-		  }
 		}
-		// BEGIN SANJIVA CODE
 		else if (!m_inTemplate && startsWith(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
 		{
-			if (equals(localName, Constants::ATTRNAME_COMPONENTS))
-			{
-				XalanDOMString prefix;
-				XalanDOMString elements;
-				XalanDOMString functions;
-
-				const int nAttrs = atts.getLength();
-
-				for (int i = 0; i < nAttrs; i++)
-				{
-					const XalanDOMChar* const	aname = atts.getName (i);
-
-					if (equals(aname, Constants::ATTRNAME_PREFIX))
-					{
-						prefix = atts.getValue(i);
-					}
-					else if (equals(aname, Constants::ATTRNAME_ELEMENTS))
-					{
-						elements = atts.getValue(i);
-					}
-					else if (equals(aname, Constants::ATTRNAME_FUNCTIONS))
-					{
-						functions = atts.getValue(i);
-					}
-					else if(!isAttrOK(aname, atts, i))
-					{
-						m_constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
-					}
-				}
-
-				if (isEmpty(prefix)) 
-				{
-					XalanDOMString msg("StylesheetHandler) " + XalanDOMString(name) + " attribute 'prefix' is missing");
-
-					throw SAXException(c_wstr(msg));
-				}
-
-				// SCOTT: is the line below correct?
-				XalanDOMString extns = m_stylesheet.getNamespaceForPrefixFromStack (prefix);
-				ExtensionNSHandler* nsh = m_stylesheet.lookupExtensionNSHandler(extns);
-
-				if (nsh == 0) 
-				{
-					// The extension namespace might not yet be known...
-					nsh = new ExtensionNSHandler(extns);
-
-					m_stylesheet.addExtensionNamespace(extns, nsh);
-
-					assert(m_inExtensionElementStack.empty() == false);
-
-					m_inExtensionElementStack.back() = true;
-				}
-
-				if (!isEmpty(elements)) 
-				{
-					nsh->setElements(elements);
-				}
-
-				if (!isEmpty(functions)) 
-				{
-					nsh->setFunctions(functions);
-				}
-
-				m_pLXSLTExtensionNSH = nsh; // hang on to it for processing 
-				// endElement on lxslt:script
-			}
-			else if (equals(localName, Constants::ATTRNAME_SCRIPT)) 
-			{
-				// process this in end element so that I can see whether I had 
-				// a body as well. The default pushing logic will save the 
-				// attributes for me. The body will be accumulated into the
-				// following string buffer
-				m_inLXSLTScript = true;
-				clear(m_LXSLTScriptBody);
-
-				const int	nAttrs = atts.getLength();
-
-				for (int i = 0; i < nAttrs; i++) 
-				{
-					const XalanDOMChar* const	aname = atts.getName(i);
-
-					if (equals(aname, Constants::ATTRNAME_LANG))
-					{
-						m_LXSLTScriptLang = atts.getValue (i);
-					}
-					else if (equals(aname, Constants::ATTRNAME_SRC))
-					{
-						m_LXSLTScriptSrcURL = atts.getValue (i);
-					}
-					else if(!isAttrOK(aname, atts, i))
-					{
-						m_constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
-					}
-				}
-			}
-			else 
-			{
-				// other xslt4j: element. Not my business.
-			}
+			processExtensionElement(name, localName, atts);
 		}
-		// END SANJIVA CODE
 		else
 		{
 			if(!m_inTemplate && !m_foundStylesheet)
@@ -1088,42 +679,17 @@ StylesheetHandler::startElement(
 										   lineNumber,
 										   columnNumber);
 				}
-				// BEGIN SANJIVA CODE
 			}
-			// END SANJIVA CODE
 		}
 
 		if(m_inTemplate && 0 != elem)
 		{
 			if(!m_elemStack.empty())
 			{
-				ElemTemplateElement* const	parent = m_elemStack.back();
-
 				// Guard against an exception in appendChildElem()...
 				XalanAutoPtr<ElemTemplateElement>	theGuard(elem);
 
-				try
-				{
-					parent->appendChildElem(elem);
-				}
-				catch(const XalanDOMException&	e)
-				{
-					if (e.getExceptionCode() == XalanDOMException::HIERARCHY_REQUEST_ERR)
-					{
-						XalanDOMString	theMessage(elem->getElementName());
-
-						append(theMessage, " is not a valid child of ");
-						append(theMessage, elem->getElementName());
-
-						error(theMessage, lineNumber, columnNumber);
-					}
-					else
-					{
-						throw;
-					}
-				}
-
-				m_elemStackParentedElements.insert(elem);
+				appendChildElementToParent(elem, lineNumber, columnNumber);
 
 				// The element is parented and will now be
 				// deleted when the parent is delete...
@@ -1244,6 +810,503 @@ StylesheetHandler::initWrapperless(
 
 
 void
+StylesheetHandler::processTopLevelElement(
+			const XalanDOMChar*		name,
+			const XalanDOMString&	localName,
+			const XalanDOMString&	ns,
+			const AttributeList&	atts,
+			int						xslToken,
+			int						lineNumber,
+			int						columnNumber,
+			bool&					fPreserveSpace,
+			bool&					fSpaceAttrProcessed)
+{
+	if(m_foundStylesheet && Constants::ELEMNAME_IMPORT != xslToken)
+	{
+		m_foundNotImport = true;
+	}
+
+	switch(xslToken)
+	{
+	case Constants::ELEMNAME_TEMPLATE:
+		m_pTemplate = new ElemTemplate(m_constructionContext,
+									m_stylesheet,
+									atts, lineNumber, columnNumber);
+	
+		m_elemStack.push_back(m_pTemplate);
+		m_elemStackParentedElements.insert(m_pTemplate);
+		m_inTemplate = true;
+		m_stylesheet.addTemplate(m_pTemplate, m_constructionContext);
+		break;
+
+	case Constants::ELEMNAME_EXTENSION:
+		if(!equalsIgnoreCase(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
+		{
+			m_constructionContext.warn("Old syntax: the functions instruction should use a url of " + m_constructionContext.getXalanXSLNameSpaceURL());
+		}
+		break;
+
+	case Constants::ELEMNAME_VARIABLE:
+	case Constants::ELEMNAME_PARAMVARIABLE:
+		{
+			ElemVariable* varelem = (Constants::ELEMNAME_PARAMVARIABLE == xslToken) 
+									   ? new ElemParam(m_constructionContext,
+													   m_stylesheet,
+													   atts, 
+													   lineNumber, columnNumber)
+										 : new ElemVariable(m_constructionContext,
+															m_stylesheet,
+															atts, 
+															lineNumber, columnNumber);
+
+			m_elemStack.push_back(varelem);
+			m_inTemplate = true; // fake it out
+			m_stylesheet.setTopLevelVariable(varelem);
+			m_elemStackParentedElements.insert(varelem);
+			varelem->setTopLevel(true);
+		}
+	break;
+
+	case Constants::ELEMNAME_LOCALE:
+		m_constructionContext.warn(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("xsl:locale not yet supported!")));
+		break;
+
+	case Constants::ELEMNAME_PRESERVESPACE:
+	case Constants::ELEMNAME_STRIPSPACE:
+		processPreserveStripSpace(name, atts, lineNumber, columnNumber, xslToken);
+		break;
+
+	case Constants::ELEMNAME_KEY:
+		{
+			ElemEmpty nsContext(m_constructionContext, m_stylesheet, lineNumber, columnNumber);
+
+			m_stylesheet.processKeyElement(&nsContext, atts, m_constructionContext);
+		}
+		break;
+
+	case Constants::ELEMNAME_DEFINEATTRIBUTESET:
+		{
+			m_inTemplate = true; // fake it out
+
+			ElemAttributeSet* attrSet = new ElemAttributeSet(m_constructionContext,
+															   m_stylesheet,
+															   atts,
+															   lineNumber,
+															   columnNumber);
+		
+			m_elemStack.push_back(attrSet);
+		}
+		break;
+
+	case Constants::ELEMNAME_INCLUDE:
+		processInclude(name, atts);
+		break;
+
+	case Constants::ELEMNAME_IMPORT:
+		processImport(name, atts);
+		break;
+
+	case Constants::ELEMNAME_OUTPUT:
+		m_stylesheet.getStylesheetRoot().processOutputSpec(name, atts, m_constructionContext);
+		break;
+
+	case Constants::ELEMNAME_DECIMALFORMAT:
+		{
+			ElemDecimalFormat* const	edf =
+							new ElemDecimalFormat(m_constructionContext,
+												  m_stylesheet,
+												  atts,
+												  lineNumber,
+												  columnNumber);
+
+			m_stylesheet.processDecimalFormatElement(edf, atts, m_constructionContext);
+		}
+		break;
+
+	case Constants::ELEMNAME_NSALIAS:
+		m_stylesheet.processNSAliasElement(name, atts, m_constructionContext);
+		break;
+
+	case Constants::ELEMNAME_WITHPARAM:
+	case Constants::ELEMNAME_ATTRIBUTE:
+	case Constants::ELEMNAME_APPLY_TEMPLATES:
+	case Constants::ELEMNAME_USE:
+	case Constants::ELEMNAME_CHILDREN:
+	case Constants::ELEMNAME_CHOOSE:
+	case Constants::ELEMNAME_COMMENT:
+	case Constants::ELEMNAME_CONSTRUCT:
+	case Constants::ELEMNAME_CONTENTS:
+	case Constants::ELEMNAME_COPY:
+	case Constants::ELEMNAME_COPY_OF:
+	case Constants::ELEMNAME_DISPLAYIF:
+	case Constants::ELEMNAME_EVAL:
+	case Constants::ELEMNAME_EXPECTEDCHILDREN:
+	case Constants::ELEMNAME_FOREACH:
+	case Constants::ELEMNAME_IF:
+	case Constants::ELEMNAME_CALLTEMPLATE:
+	case Constants::ELEMNAME_MESSAGE:
+	case Constants::ELEMNAME_NUMBER:
+	case Constants::ELEMNAME_OTHERWISE:
+	case Constants::ELEMNAME_PI:
+	case Constants::ELEMNAME_REMOVEATTRIBUTE:
+	case Constants::ELEMNAME_SORT:
+	case Constants::ELEMNAME_TEXT:
+	case Constants::ELEMNAME_VALUEOF:
+	case Constants::ELEMNAME_WHEN:
+	case Constants::ELEMNAME_ELEMENT:
+	case Constants::ELEMNAME_COUNTER:
+	case Constants::ELEMNAME_COUNTERS:
+	case Constants::ELEMNAME_COUNTERINCREMENT:
+	case Constants::ELEMNAME_COUNTERRESET:
+	case Constants::ELEMNAME_COUNTERSCOPE:
+	case Constants::ELEMNAME_APPLY_IMPORTS:
+		if (inExtensionElement() == false)
+		{
+			XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + " not allowed inside a stylesheet!");
+				throw SAXException(c_wstr(msg));
+		}
+		break;
+
+	case Constants::ELEMNAME_STYLESHEET:
+		processStylesheet(name, atts, lineNumber, columnNumber, fPreserveSpace, fSpaceAttrProcessed);
+		break;
+
+	default:
+		if (inExtensionElement() == false)
+		{
+			XalanDOMString msg("Unknown XSL element: " + localName);
+
+			throw SAXException(c_wstr(TranscodeFromLocalCodePage("Unknown XSL element: ") + localName));
+		}
+		break;
+	}
+}
+
+
+void
+StylesheetHandler::processStylesheet(
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			int						/* lineNumber */,
+			int						/* columnNumber */,
+			bool&					fPreserveSpace,
+			bool&					fSpaceAttrProcessed)
+{
+	m_stylesheet.setWrapperless(false);
+	m_foundStylesheet = true;
+
+	const unsigned int	nAttrs = atts.getLength();
+
+	bool				fVersionFound = false;
+
+	for(unsigned int i = 0; i < nAttrs; i++)
+	{
+		const XalanDOMChar* const	aname = atts.getName(i);
+
+		if(equals(aname, Constants::ATTRNAME_RESULTNS))
+		{
+			throw SAXException("result-ns no longer supported!  Use xsl:output instead.");
+		}
+		else if(equals(aname, Constants::ATTRNAME_DEFAULTSPACE))
+		{
+			throw SAXException("default-space no longer supported!  Use xsl:strip-space or xsl:preserve-space instead.");
+		}
+		else if(equals(aname, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
+		{
+			m_stylesheet.processExcludeResultPrefixes(atts.getValue(i), m_constructionContext);
+		}
+		else if(equals(aname, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
+		{
+			StringTokenizer tokenizer(atts.getValue(i),
+									  Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
+
+			while(tokenizer.hasMoreTokens() == true)
+			{
+				const XalanDOMString	prefix = tokenizer.nextToken();
+				// SANJIVA: ask Scott: is the line below correct?
+
+				const XalanDOMString&	extns = m_stylesheet.getNamespaceForPrefixFromStack(prefix);
+
+				ExtensionNSHandler* const	nsh = new ExtensionNSHandler(extns);
+
+				m_stylesheet.addExtensionNamespace(extns, nsh);
+			}
+		}
+		else if(equals(aname, Constants::ATTRNAME_ID))
+		{
+			//
+		}
+		else if(equals(aname, Constants::ATTRNAME_INDENTRESULT))
+		{
+			throw SAXException("indent-result no longer supported!  Use xsl:output instead.");
+		}
+		else if(equals(aname, Constants::ATTRNAME_VERSION))
+		{
+			const XalanDOMChar* const	versionStr = atts.getValue(i);
+
+			m_stylesheet.setXSLTVerDeclared(DoubleSupport::toDouble(versionStr));
+
+			fVersionFound = true;
+		}
+		else if(processSpaceAttr(aname, atts, i, fPreserveSpace) == true)
+		{
+			fSpaceAttrProcessed = true;
+		}
+		else if(isAttrOK(aname, atts, i) == false)
+		{
+			if(false == m_stylesheet.isWrapperless())
+			{
+				XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + 
+											  " has an illegal attribute: " + aname);
+
+				throw SAXException(c_wstr(msg));
+			}
+		}
+
+		if(!m_stylesheet.getNamespaces().empty())
+		{
+			m_stylesheet.setNamespaceDecls(m_stylesheet.getNamespaces().back());
+		}
+	}
+
+	if (fVersionFound == false)
+	{
+		throw SAXException(c_wstr(TranscodeFromLocalCodePage("The stylesheet element did not specify a version attribute!")));
+	}
+	else
+	{
+		if (fPreserveSpace == false)
+		{
+			m_stylesheet.setDefaultSpaceProcessing(true);
+		}
+		else
+		{
+			m_stylesheet.setDefaultSpaceProcessing(false);
+		}
+	}
+}
+
+
+
+void
+StylesheetHandler::processExtensionElement(
+			const XalanDOMChar*		name,
+			const XalanDOMString&	localName,
+			const AttributeList&	atts)
+{
+	if (equals(localName, Constants::ATTRNAME_COMPONENTS))
+	{
+		XalanDOMString prefix;
+		XalanDOMString elements;
+		XalanDOMString functions;
+
+		const int nAttrs = atts.getLength();
+
+		for (int i = 0; i < nAttrs; i++)
+		{
+			const XalanDOMChar* const	aname = atts.getName (i);
+
+			if (equals(aname, Constants::ATTRNAME_PREFIX))
+			{
+				prefix = atts.getValue(i);
+			}
+			else if (equals(aname, Constants::ATTRNAME_ELEMENTS))
+			{
+				elements = atts.getValue(i);
+			}
+			else if (equals(aname, Constants::ATTRNAME_FUNCTIONS))
+			{
+				functions = atts.getValue(i);
+			}
+			else if(!isAttrOK(aname, atts, i))
+			{
+				m_constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			}
+		}
+
+		if (isEmpty(prefix)) 
+		{
+			XalanDOMString msg("StylesheetHandler) " + XalanDOMString(name) + " attribute 'prefix' is missing");
+
+			throw SAXException(c_wstr(msg));
+		}
+
+		// SCOTT: is the line below correct?
+		const XalanDOMString&	extns = m_stylesheet.getNamespaceForPrefixFromStack (prefix);
+
+		ExtensionNSHandler* nsh = m_stylesheet.lookupExtensionNSHandler(extns);
+
+		if (nsh == 0) 
+		{
+			// The extension namespace might not yet be known...
+			nsh = new ExtensionNSHandler(extns);
+
+			m_stylesheet.addExtensionNamespace(extns, nsh);
+
+			assert(m_inExtensionElementStack.empty() == false);
+
+			m_inExtensionElementStack.back() = true;
+		}
+
+		if (!isEmpty(elements)) 
+		{
+			nsh->setElements(elements);
+		}
+
+		if (!isEmpty(functions)) 
+		{
+			nsh->setFunctions(functions);
+		}
+
+		m_pLXSLTExtensionNSH = nsh; // hang on to it for processing 
+		// endElement on lxslt:script
+	}
+	else if (equals(localName, Constants::ATTRNAME_SCRIPT)) 
+	{
+		// process this in end element so that I can see whether I had 
+		// a body as well. The default pushing logic will save the 
+		// attributes for me. The body will be accumulated into the
+		// following string buffer
+		m_inLXSLTScript = true;
+		clear(m_LXSLTScriptBody);
+
+		const int	nAttrs = atts.getLength();
+
+		for (int i = 0; i < nAttrs; i++) 
+		{
+			const XalanDOMChar* const	aname = atts.getName(i);
+
+			if (equals(aname, Constants::ATTRNAME_LANG))
+			{
+				m_LXSLTScriptLang = atts.getValue (i);
+			}
+			else if (equals(aname, Constants::ATTRNAME_SRC))
+			{
+				m_LXSLTScriptSrcURL = atts.getValue (i);
+			}
+			else if(!isAttrOK(aname, atts, i))
+			{
+				m_constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			}
+		}
+	}
+	else 
+	{
+		// other xslt4j: element. Not my business.
+	}
+}
+
+
+
+void
+StylesheetHandler::processPreserveStripSpace(
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			int						lineNumber,
+			int						columnNumber,
+			int						xslToken)
+{
+	ElemEmpty nsNode(m_constructionContext, m_stylesheet, lineNumber, columnNumber);
+
+	const unsigned int	nAttrs = atts.getLength();
+
+	bool foundIt = false;
+
+	for(unsigned int i = 0; i < nAttrs; i++)
+	{
+		const XalanDOMChar* const	aname = atts.getName(i);
+
+		if(equals(aname, Constants::ATTRNAME_ELEMENTS))
+		{
+			foundIt = true;
+
+			StringTokenizer		tokenizer(atts.getValue(i),
+										  Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
+
+			while(tokenizer.hasMoreTokens())
+			{
+				// Use only the root, at least for right now.
+				const XalanDOMString	wildcardName = tokenizer.nextToken();
+
+				/**
+				 * Creating a match pattern is too much overhead, but it's a reasonably 
+				 * easy and safe way to do this right now.  TODO: Validate the pattern 
+				 * to make sure it's a WildcardName.
+				 */
+				const XPath* const	matchPat =
+						m_constructionContext.createMatchPattern(wildcardName, nsNode);
+
+				if(Constants::ELEMNAME_PRESERVESPACE == xslToken)
+				{
+					m_stylesheet.getStylesheetRoot().pushWhitespacePreservingElement(matchPat);
+				}
+				else
+				{
+					m_stylesheet.getStylesheetRoot().pushWhitespaceStrippingElement(matchPat);
+				}
+			}
+		}
+		else if(!isAttrOK(aname, atts, i))
+		{
+			m_constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+		}
+	}
+
+	if(!foundIt && inExtensionElement() == false)
+	{
+		XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) +
+			" requires a " + Constants::ATTRNAME_ELEMENTS + " attribute!");
+
+		throw SAXException(c_wstr(msg));
+	}
+}
+
+
+
+void
+StylesheetHandler::appendChildElementToParent(
+			ElemTemplateElement*	elem,
+			int						lineNumber,
+			int						columnNumber)
+{
+	ElemTemplateElement* const	parent = m_elemStack.back();
+
+	try
+	{
+		parent->appendChildElem(elem);
+	}
+	catch(const XalanDOMException&	e)
+	{
+		if (e.getExceptionCode() == XalanDOMException::HIERARCHY_REQUEST_ERR)
+		{
+			// $$$ ToDo: There is a bug in the version of gcc that
+			// we're using when the optimizer is enabled.  Constructing
+			// this error message from the parameter results in an internal
+			// compiler error, so I'm using a local variable instead.
+#if defined(__GNUC__)
+			const ElemTemplateElement* const	localElem = elem;
+
+			XalanDOMString	theMessage(localElem->getElementName());
+
+#else
+			XalanDOMString	theMessage(elem->getElementName());
+#endif
+
+			append(theMessage, " is not a valid child of ");
+			append(theMessage, parent->getElementName());
+
+			error(theMessage, lineNumber, columnNumber);
+		}
+
+		throw;
+	}
+
+	m_elemStackParentedElements.insert(elem);
+}
+
+
+
+void
 StylesheetHandler::doCleanup()
 {
 	if (m_locatorsPushed > 0)
@@ -1264,7 +1327,7 @@ StylesheetHandler::doCleanup()
 
 
 
-static bool 
+static bool
 stackContains(
 			const Stylesheet::URLStackType&		stack, 
 			const XalanDOMString&				urlString)
@@ -1283,6 +1346,7 @@ stackContains(
 
 	return contains;	
 }
+
 
 
 void
