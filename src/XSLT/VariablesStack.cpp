@@ -142,7 +142,7 @@ VariablesStack::popContextMarker()
 {
 	const int	nElems = m_stack.size();
 
-	for(int i = (nElems - 1); i >= 0 && m_stack.empty() == false; --i)
+	for(int i = nElems - 1; i >= 0 && m_stack.empty() == false; --i)
 	{
 		const StackEntry&			theEntry = m_stack[i];
 		assert(theEntry == back());
@@ -305,7 +305,7 @@ VariablesStack::pushVariable(
 {
 	if(elementFrameAlreadyPushed(e) == false)
 	{
-		pushElementFrame(e);
+		throw InvalidStackContextException();
 	}
 
 	push(StackEntry(&name, val));
@@ -531,9 +531,8 @@ private:
 void
 VariablesStack::popElementFrame(const ElemTemplateElement*	elem)
 {
-	const unsigned int	nElems = getCurrentStackFrameIndex();
+	const unsigned int	nElems = m_stack.size();
 
-	// Sub 1 extra for the context marker.
 	for(unsigned int i = nElems - 1; i > 0; --i)
 	{
 		const StackEntry&	theEntry = m_stack[i];
@@ -566,6 +565,7 @@ VariablesStack::StackEntry::StackEntry() :
 	m_type(eContextMarker),
 	m_qname(0),
 	m_value(),
+	m_variable(0),
 	m_element(0)
 {
 }
@@ -613,13 +613,11 @@ VariablesStack::StackEntry::StackEntry(const ElemTemplateElement*	elem) :
 
 VariablesStack::StackEntry::StackEntry(const StackEntry&	theSource) :
 	m_type(theSource.m_type),
-	m_qname(0),
-	m_value(),
-	m_variable(0),
-	m_element(0)
+	m_qname(theSource.m_qname),
+	m_value(theSource.m_value),
+	m_variable(theSource.m_variable),
+	m_element(theSource.m_element)
 {
-	// Use operator=() to do the work...
-	*this = theSource;
 }
 
 
@@ -633,25 +631,15 @@ VariablesStack::StackEntry::~StackEntry()
 VariablesStack::StackEntry&
 VariablesStack::StackEntry::operator=(const StackEntry&		theRHS)
 {
-	m_type = theRHS.m_type;
-
-	if (m_type == eVariable || m_type == eParam || m_type == eActiveParam)
+	if (this != &theRHS)
 	{
+		m_type = theRHS.m_type;
+
 		m_qname = theRHS.m_qname;
 
 		m_value = theRHS.m_value;
 
 		m_variable = theRHS.m_variable;
-
-		m_element = 0;
-	}
-	else if (m_type == eElementFrameMarker)
-	{
-		m_qname = 0;
-
-		m_value = XObjectPtr();
-
-		m_variable = 0;
 
 		m_element = theRHS.m_element;
 	}
