@@ -119,11 +119,9 @@ public:
 	typedef map<XalanDOMString,
 				XalanDOMChar,
 				less<XalanDOMString> >	MaximumCharacterValueMapType;
-	typedef vector<XalanXMLByte>		XalanXMLByteVectorType;
 #else
 	typedef std::map<XalanDOMString,
 					 XalanDOMChar>		MaximumCharacterValueMapType;
-	typedef std::vector<XalanXMLByte>	XalanXMLByteVectorType;
 #endif
 
     enum eCode
