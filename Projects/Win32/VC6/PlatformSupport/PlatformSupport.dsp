@@ -154,6 +154,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\Resettable.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\StdBinInputStream.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\StringTokenizer.cpp
 # End Source File
 # Begin Source File
