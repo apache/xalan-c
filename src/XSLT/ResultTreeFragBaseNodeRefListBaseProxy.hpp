@@ -98,7 +98,7 @@ public:
 
 	// These methods are inherited from NodeRefListBase...
 	XalanNode*
-	item(unsigned int	index) const;
+	item(size_type	index) const;
 
 	size_type
 	getLength() const;
