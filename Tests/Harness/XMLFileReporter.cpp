@@ -715,6 +715,14 @@ XMLFileReporter::printToFile(const XalanDOMString&	output)
 XalanDOMString 
 XMLFileReporter::getDateTimeString() 
 {
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	using std::tm;
+	using std::time;
+	using std::localtime;
+	using std::asctime;
+	using std::strlen;
+#endif
+
 	struct tm *tmNow;
 	time_t time_tNow;
 

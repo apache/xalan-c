@@ -89,6 +89,12 @@ public:
 	typedef std::map<XalanDOMString, XalanDOMString>	Hashtable;
 #endif
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	typedef std::FILE	FileHandleType;
+#else
+	typedef FILE		FileHandleType;
+#endif
+
 public:
 
 
@@ -392,7 +398,7 @@ private:
 	XalanDOMString m_fileName;
 
 	/** File reference and other internal convenience variables.  */
-	FILE* m_fileHandle;
+	FileHandleType* m_fileHandle;
 
 	/** If we're ready to start outputting yet.  */
 	bool m_ready;
