@@ -145,7 +145,7 @@ ICUBridgeCollationCompareFunctor::operator()(
 	UErrorCode	theStatus = U_ZERO_ERROR;
 
 #if U_SIZEOF_WCHAR_T==2
-	XalanAutoPtr<Collator>	theCollator(Collator::createInstance(Locale(UnicodeString(const theLocale)), theStatus));
+	XalanAutoPtr<Collator>	theCollator(Collator::createInstance(Locale(UnicodeString((const wchar_t*)theLocale)), theStatus));
 #else
 	XalanAutoPtr<Collator>	theCollator(Collator::createInstance(Locale(UnicodeString(theLocale)), theStatus));
 #endif
@@ -191,9 +191,9 @@ ICUBridgeCollationCompareFunctor::operator()(
 		assert(m_collator != 0);
 #if U_SIZEOF_WCHAR_T==2
 		return m_collator->compare(
-					(wchar_t*)theLHS,
+					const (wchar_t*)theLHS,
 					length(theLHS),
-					(wchar_t*)theRHS,
+					const (wchar_t*)theRHS,
 					length(theRHS));
 #else
 		return m_collator->compare(
