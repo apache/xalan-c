@@ -78,7 +78,6 @@
 
 
 #include "Constants.hpp"
-#include "ElemWithParam.hpp"
 #include "FunctionCurrent.hpp"
 #include "FunctionDocument.hpp"
 #include "FunctionElementAvailable.hpp"
@@ -1351,7 +1350,7 @@ XSLTEngineImpl::traceSelect(
 void
 XSLTEngineImpl::startDocument()
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(m_executionContext != 0);
 
 	if (getHasPendingStartDocument() == false)
@@ -1371,7 +1370,7 @@ XSLTEngineImpl::startDocument()
 	}
 	else if (getMustFlushPendingStartDocument() == true)
 	{
-		getFormatterListener()->startDocument();
+		getFormatterListenerImpl()->startDocument();
 
 		if(getTraceListeners() > 0)
 		{
@@ -1391,14 +1390,14 @@ XSLTEngineImpl::startDocument()
 void
 XSLTEngineImpl::endDocument()
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(m_executionContext != 0);
 
 	setMustFlushPendingStartDocument(true);
 
 	flushPending();
 
-	getFormatterListener()->endDocument();
+	getFormatterListenerImpl()->endDocument();
 
 	if(getTraceListeners() > 0)
 	{
@@ -1537,7 +1536,7 @@ XSLTEngineImpl::flushPending()
 {
 	if(getHasPendingStartDocument() == true && 0 != length(getPendingElementName()))
 	{
-		assert(getFormatterListener() != 0);
+		assert(getFormatterListenerImpl() != 0);
 		assert(m_executionContext != 0);
 
 		if (m_stylesheetRoot->isOutputMethodSet() == false)
@@ -1546,11 +1545,11 @@ XSLTEngineImpl::flushPending()
 								 Constants::ELEMNAME_HTML_STRING) == true &&
 				pendingAttributesHasDefaultNS() == false)
 			{
-				if (getFormatterListener()->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
+				if (getFormatterListenerImpl()->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
 				{
 					// Yuck!!! Ugly hack to switch to HTML on-the-fly.
 					FormatterListener* const	theFormatter =
-							getFormatterListener();
+							getFormatterListenerImpl();
 					assert(theFormatter->getWriter() != 0);
 
 					setFormatterListenerImpl(
@@ -1560,7 +1559,7 @@ XSLTEngineImpl::flushPending()
 							theFormatter->getMediaType(),
 							theFormatter->getDoctypeSystem(),
 							theFormatter->getDoctypePublic(),
-							true,	// indent
+							m_stylesheetRoot->getOutputIndent(),
 							theFormatter->getIndent() > 0 ? theFormatter->getIndent() :
 											StylesheetExecutionContext::eDefaultHTMLIndentAmount));
 
@@ -1582,7 +1581,7 @@ XSLTEngineImpl::flushPending()
 
 	if(0 != length(thePendingElementName) && getMustFlushPendingStartDocument() == true)
 	{
-		assert(getFormatterListener() != 0);
+		assert(getFormatterListenerImpl() != 0);
 		assert(m_executionContext != 0);
 
 		if(m_hasCDATASectionElements == true)
@@ -1593,7 +1592,9 @@ XSLTEngineImpl::flushPending()
 		AttributeListImpl&	thePendingAttributes =
 				getPendingAttributesImpl();
 
-		getFormatterListener()->startElement(c_wstr(thePendingElementName), thePendingAttributes);
+		getFormatterListenerImpl()->startElement(
+                c_wstr(thePendingElementName),
+                thePendingAttributes);
 
 		if(getTraceListeners() > 0)
 		{
@@ -1616,7 +1617,7 @@ XSLTEngineImpl::flushPending()
 void
 XSLTEngineImpl::startElement(const XalanDOMChar*	name)
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(name != 0);
 
 	flushPending();
@@ -1635,7 +1636,7 @@ XSLTEngineImpl::startElement(
 			const XalanDOMChar*		name,
 			AttributeListType&		atts)
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(name != 0);
 
 	flushPending();
@@ -1667,12 +1668,12 @@ XSLTEngineImpl::startElement(
 void
 XSLTEngineImpl::endElement(const XalanDOMChar*	name)
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(name != 0);
 
 	flushPending();
 
-	getFormatterListener()->endElement(name);
+	getFormatterListenerImpl()->endElement(name);
 
 	if(getTraceListeners() > 0)
 	{
@@ -1698,9 +1699,10 @@ XSLTEngineImpl::characters(
 			const XalanDOMChar*			ch,
 			XalanDOMString::size_type 	length)
 {
-	characters(ch,
-			   0,
-			   length);
+	characters(
+        ch,
+		0,
+		length);
 }
 
 
@@ -1711,7 +1713,7 @@ XSLTEngineImpl::characters(
 			XalanDOMString::size_type	start,
 			XalanDOMString::size_type	length)
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(ch != 0);
 	assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
 
@@ -1719,7 +1721,7 @@ XSLTEngineImpl::characters(
 
 	if(generateCDATASection() == true)
 	{
-		getFormatterListener()->cdata(ch + start, length);
+		getFormatterListenerImpl()->cdata(ch + start, length);
 
 		if(getTraceListeners() > 0)
 		{
@@ -1728,7 +1730,7 @@ XSLTEngineImpl::characters(
 	}
 	else
 	{
-		getFormatterListener()->characters(ch + start, length);
+		getFormatterListenerImpl()->characters(ch + start, length);
 
 		if(getTraceListeners() > 0)
 		{
@@ -1742,14 +1744,14 @@ XSLTEngineImpl::characters(
 void
 XSLTEngineImpl::characters(const XalanNode&		node)
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
 
 	doFlushPending();
 
 	if(generateCDATASection() == true)
 	{
-		DOMServices::getNodeData(node, *getFormatterListener(), &FormatterListener::cdata);
+		DOMServices::getNodeData(node, *getFormatterListenerImpl(), &FormatterListener::cdata);
 
 		if(getTraceListeners() > 0)
 		{
@@ -1758,7 +1760,7 @@ XSLTEngineImpl::characters(const XalanNode&		node)
 	}
 	else
 	{
-		DOMServices::getNodeData(node, *getFormatterListener(), &FormatterListener::characters);
+		DOMServices::getNodeData(node, *getFormatterListenerImpl(), &FormatterListener::characters);
 
 		if(getTraceListeners() > 0)
 		{
@@ -1772,7 +1774,7 @@ XSLTEngineImpl::characters(const XalanNode&		node)
 void
 XSLTEngineImpl::characters(const XObjectPtr&	xobject)
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(xobject.null() == false);
 	assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
 
@@ -1780,7 +1782,7 @@ XSLTEngineImpl::characters(const XObjectPtr&	xobject)
 
 	if(generateCDATASection() == true)
 	{
-		xobject->str(*getFormatterListener(), &FormatterListener::cdata);
+		xobject->str(*getFormatterListenerImpl(), &FormatterListener::cdata);
 
 		if(getTraceListeners() > 0)
 		{
@@ -1789,7 +1791,7 @@ XSLTEngineImpl::characters(const XObjectPtr&	xobject)
 	}
 	else
 	{
-		xobject->str(*getFormatterListener(), &FormatterListener::characters);
+		xobject->str(*getFormatterListenerImpl(), &FormatterListener::characters);
 
 		if(getTraceListeners() > 0)
 		{
@@ -1810,7 +1812,7 @@ XSLTEngineImpl::charactersRaw(
 
 	doFlushPending();
 
-	getFormatterListener()->charactersRaw(ch, length);
+	getFormatterListenerImpl()->charactersRaw(ch, length);
 
 	if(getTraceListeners() > 0)
 	{
@@ -1825,7 +1827,7 @@ XSLTEngineImpl::charactersRaw(const XalanNode&	node)
 {
 	doFlushPending();
 
-	DOMServices::getNodeData(node, *getFormatterListener(), &FormatterListener::charactersRaw);
+	DOMServices::getNodeData(node, *getFormatterListenerImpl(), &FormatterListener::charactersRaw);
 
 	if(getTraceListeners() > 0)
 	{
@@ -1840,7 +1842,7 @@ XSLTEngineImpl::charactersRaw(const XObjectPtr&		xobject)
 {
 	doFlushPending();
 
-	xobject->str(*getFormatterListener(), &FormatterListener::charactersRaw);
+	xobject->str(*getFormatterListenerImpl(), &FormatterListener::charactersRaw);
 
 	if(getTraceListeners() > 0)
 	{
@@ -1853,11 +1855,11 @@ XSLTEngineImpl::charactersRaw(const XObjectPtr&		xobject)
 void
 XSLTEngineImpl::resetDocument()
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 
 	flushPending();
-	
-	getFormatterListener()->resetDocument();
+
+	getFormatterListenerImpl()->resetDocument();
 }
 
 
@@ -1867,12 +1869,12 @@ XSLTEngineImpl::ignorableWhitespace(
 			const XalanDOMChar*			ch,
 			XalanDOMString::size_type	length)
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(ch != 0);
 
 	doFlushPending();
 
-	getFormatterListener()->ignorableWhitespace(ch, length);
+	getFormatterListenerImpl()->ignorableWhitespace(ch, length);
 
 	if(getTraceListeners() > 0)
 	{
@@ -1890,13 +1892,13 @@ XSLTEngineImpl::processingInstruction(
 			const XalanDOMChar*		target,
 			const XalanDOMChar*		data)
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(target != 0);
 	assert(data != 0);
 
 	doFlushPending();
 
-	getFormatterListener()->processingInstruction(target, data);
+	getFormatterListenerImpl()->processingInstruction(target, data);
 
 	if(getTraceListeners() > 0)
 	{
@@ -1914,12 +1916,12 @@ XSLTEngineImpl::processingInstruction(
 void
 XSLTEngineImpl::comment(const XalanDOMChar*		data)
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(data != 0);
 
 	doFlushPending();
 
-	getFormatterListener()->comment(data);
+	getFormatterListenerImpl()->comment(data);
 
 	if(getTraceListeners() > 0)
 	{
@@ -1933,12 +1935,12 @@ XSLTEngineImpl::comment(const XalanDOMChar*		data)
 void
 XSLTEngineImpl::entityReference(const XalanDOMChar*		name)
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(name != 0);
 
 	doFlushPending();
 
-	getFormatterListener()->entityReference(name);
+	getFormatterListenerImpl()->entityReference(name);
 
 	if(getTraceListeners() > 0)
 	{
@@ -1957,14 +1959,14 @@ XSLTEngineImpl::cdata(
 			XalanDOMString::size_type	start,
 			XalanDOMString::size_type	length)
 {
-	assert(getFormatterListener() != 0);
+	assert(getFormatterListenerImpl() != 0);
 	assert(ch != 0);
 
 	setMustFlushPendingStartDocument(true);
 
 	flushPending();
 
-	getFormatterListener()->cdata(ch, length);
+	getFormatterListenerImpl()->cdata(ch, length);
 
 	if(getTraceListeners() > 0)
 	{
@@ -3004,7 +3006,8 @@ XSLTEngineImpl::getFormatterListener() const
 void
 XSLTEngineImpl::setFormatterListener(FormatterListener*		flistener)
 {
-	if (getHasPendingStartDocument() == true && getFormatterListener() != 0)
+	if (getHasPendingStartDocument() == true &&
+        getFormatterListenerImpl() != 0)
 	{
 		setMustFlushPendingStartDocument(true);
 
