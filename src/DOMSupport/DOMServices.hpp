@@ -523,9 +523,9 @@ public:
 		if(node.getNodeType() == XalanNode::ATTRIBUTE_NODE)
 		{
 #if defined(XALAN_OLD_STYLE_CASTS)
-			return findOwnerElement((const XalanAttr&)node);
+			return ((const XalanAttr&)node).getOwnerElement();
 #else
-			return findOwnerElement(static_cast<const XalanAttr&>(node));
+			return static_cast<const XalanAttr&>(node).getOwnerElement();
 #endif
 		}
 		else
@@ -579,6 +579,8 @@ private:
 	 * necessary when a given DOM implementation returns 0 for
 	 * XalanAttr::getOwnerElement()
 	 *
+	 * @deprecated We now require DOM Level 2 support, so XalanAttr::getOwnerElement() always works.
+	 *
 	 * @param attr The XalanAttr instance for which to find the owner element
 	 * @return A pointer to the element node that owns the attribute
 	 */
@@ -601,6 +603,8 @@ private:
 	 * If necessary, do a brute-force search for an owner element.  This is
 	 * necessary when a given DOM implementation returns 0 for
 	 * XalanAttr::getOwnerElement()
+	 *
+	 * @deprecated We now require DOM Level 2 support, so XalanAttr::getOwnerElement() always works.
 	 *
 	 * @param attr The XalanAttr instance for which to find the owner element
 	 * @param element The document element
