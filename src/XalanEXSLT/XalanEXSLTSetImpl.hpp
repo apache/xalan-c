@@ -156,11 +156,11 @@ protected:
 private:
 
 	// Not implemented...
-	XalanEXSLTFunctionDifference&
-	operator=(const XalanEXSLTFunctionDifference&);
+	XalanEXSLTFunctionDistinct&
+	operator=(const XalanEXSLTFunctionDistinct&);
 
 	bool
-	operator==(const XalanEXSLTFunctionDifference&) const;
+	operator==(const XalanEXSLTFunctionDistinct&) const;
 };
 
 
@@ -318,11 +318,11 @@ protected:
 private:
 
 	// Not implemented...
-	XalanEXSLTFunctionHasSameNode&
-	operator=(const XalanEXSLTFunctionHasSameNode&);
+	XalanEXSLTFunctionLeading&
+	operator=(const XalanEXSLTFunctionLeading&);
 
 	bool
-	operator==(const XalanEXSLTFunctionHasSameNode&) const;
+	operator==(const XalanEXSLTFunctionLeading&) const;
 };
 
 
