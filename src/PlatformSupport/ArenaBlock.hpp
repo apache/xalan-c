@@ -128,7 +128,11 @@ public:
 	void
 	operator()(ObjectType&	theObject) const
 	{
+#if defined(XALAN_EXPLICIT_SCOPE_IN_TEMPLATE_BUG)
+		theObject.~ObjectType();
+#else
 		theObject.ObjectType::~ObjectType();
+#endif
 	}
 };
 
