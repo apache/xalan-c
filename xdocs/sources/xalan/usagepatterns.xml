@@ -66,6 +66,7 @@
 <li><link anchor="xpath">Working with XPath expressions</link></li>
 <li><link anchor="extensions">Creating and using extension functions</link></li>
 <li><link anchor="tracelistener">Using the TraceListener</link></li>
+<li><link anchor="icu">Using the International Components for Unicode (ICU)</link></li>
 
 </ul><anchor name="intro"/>
 
@@ -288,5 +289,77 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
  </ul>
 <p>To construct a TraceListener with TraceListenerDefault, you need a PrintWriter and a boolean for each of these four tracing options. You can then use the XSLTEngimeImpl setTraceSelects and addTraceListener methods to add the TraceListener to an XSLTProcessor. See the <link idref="samples" anchor="tracelisten">TraceListen</link> sample application.</p>
 <p>The <link idref="commandline">command-line utility (TextXSLT)</link> and TraceListen both use TraceListenerDefault to write events to the screen.</p>
-</s2>
+</s2><anchor name="icu"/>
+<s2 title="Using the ICU">
+    <p>You can use the <resource-ref idref="icu"/> to extend support for encoding, number
+    formatting, and sorting.</p>
+    <ul>
+      <li><em>Encoding</em>
+      <br/> &xml4c; and &xslt4c; use UTF-16 encoding to work with Unicode data.
+      If you integrate the ICU with &xml4c;, both &xml4c; and &xslt4c; use ICU support for 
+      UTF-16 encoding.<br/><br/></li>
+      <li><em>xsl:number element</em>
+      <br/>Both &xslt4c; and the ICU provide a complete implementation for
+      xsl:number.<br/><br/></li>
+      <li><em>format-number()</em>
+      <br/>This XSLT function includes two or three arguments (the third is
+      optional): number, format pattern, and decimal-format name. &xslt4c; ignores the format
+      pattern and optional decimal-format name. If you install ICU support for format-number(), 
+      this function is fully supported with all its arguments.<br/><br/></li>
+      <li><em>xsl:sort</em>
+      <br/>If you install ICU spport for xml:sort, &xslt4c; applies the Unicode sorting
+      algorithm.</li>
+     </ul>
+
+    <p>To get the ICU:</p> 
+    <ol>
+      <li>Download and unzip the <resource-ref idref="icu-download"/> from the IBM
+      developerWorks open source zone.<br/><br/></li>
+      <li>Do a build -- see the Windows NT or Unix build instructions in the readme.html that
+       accompanies the download. 
+      <br/><em>Important</em> For Windows, be sure to install the ICU on the same drive and at 
+      the same level as &xslt4c; and &xml4c;.<br/><br/></li>
+      <li>Set the ICU_DATA environment variable as indicated in the readme.html.</li>
+    </ol>
+    <s3 title="Enabling ICU support for encoding">
+    <p>If you want to enable ICU support for encoding, you must integrate ICU with
+    your &xml4c; build. &xml4c; uses ICU for input encoding. See
+    <resource-ref idref="xerces-build-icu"/>.</p>
+    <p>Once you have integreated the ICU with &xml4c;, &xslt4c; automatically uses ICU support 
+    for output encoding (the xsl:output encoding attribute).</p>
+     </s3>
+    <s3 title="Enabling ICU support for number formatting and sorting"> 
+    <p>If you only want to use the ICU to support number formatting and sorting, you do not need to
+    integrate the ICU with &xslt4c;, but you must do the following in the application where you
+    want to enable ICU support:</p>
+    <ol>
+      <li>Include the ICUBridge headers</li>
+      <li>Substitue ICU support for format-number(), xsl:number, and xsl:sort</li>
+      </ol>
+      <p><em>ICUBridge</em></p>
+     <p>All &xslt4c; references to ICU are centralized in the ICUBridge module, which supplies the
+     infrastructure for enabling ICU support for number formatting and sorting.</p>
+     <source>#include &lt;ICUBridge/ICUBridge.hpp&gt;
+#include &lt;ICUBridge/FunctionICUFormatNumber.hpp&gt;
+#include &lt;ICUBridge/ICUXalanNumberFormatFactory.hpp&gt;
+#include &lt;ICUBridge/ICUBridgeCollationCompareFunctor.hpp&gt;</source>
+    <p><em>Number formatting</em></p>
+    <p>To enable ICU support for the xsl:number element and the XSLT format-number() function, do
+     the following:</p>
+<source>// Install ICU support for the format-number() function.
+FunctionICUFormatNumber::FunctionICUFormatNumberInstaller theInstaller;
+
+// Create and install a factory for using the ICU for xsl:number.
+ICUXalanNumberFormatFactory		theXalanNumberFormatFactory;
+StylesheetExecutionContextDefault::installXalanNumberFormatFactory
+                                   (&amp;theXalanNumberFormatFactory);</source>
+  <p><em>Sorting</em></p> 
+  <p>To enable ICU support for xsl:sort, do the following:</p>
+  <source>// Set up a StylesheetExecutionContextDefault	object
+// (named theExecutionContext in the following fragment),
+// and install the ICUCollationCompareFunctor.
+ICUBridgeCollationCompareFunctor	theICUFunctor;
+theExecutionContext.installCollationCompareFunctor(&amp;theICUFunctor);</source>
+  </s3>
+ </s2>
 </s1>
