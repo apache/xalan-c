@@ -18,6 +18,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "CAPI"="..\..\..\Tests\C-API\CAPI.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "CompileStylesheet"="..\..\..\samples\CompileStylesheet\CompileStylesheet.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -531,6 +546,30 @@ Package=<4>
 
 ###############################################################################
 
+Project: "ThreadTest"="..\..\..\Tests\Threads\ThreadTest.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "TraceListen"="..\..\..\samples\TraceListen\TraceListen.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -550,6 +589,27 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Transformer"="..\..\..\Tests\Transformer\Transformer.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
     End Project Dependency
 }}}
 
@@ -861,6 +921,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "compare"="..\..\..\Tests\Compare\compare.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "conf"="..\..\..\Tests\Conf\conf.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -887,6 +959,18 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name PlatformSupport
     End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "dom2dom"="..\..\..\Tests\Dom2Dom\Dom2Dom.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
 }}}
 
 ###############################################################################
@@ -947,6 +1031,18 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name XalanSourceTree
     End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "perf"="..\..\..\Tests\Performance\perf.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
 }}}
 
 ###############################################################################
