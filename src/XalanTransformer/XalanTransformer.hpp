@@ -67,6 +67,12 @@
 #include <cassert>
 #include <vector>
 
+#if defined(XALAN_OLD_STREAMS)
+class ostream;
+#else
+#include <iosfwd>
+#endif
+
 
 
 #include <XPath/XalanQNameByValue.hpp>
@@ -102,6 +108,12 @@ class XALAN_TRANSFORMER_EXPORT XalanTransformer
 {
 public:
 	
+#if defined(XALAN_NO_NAMESPACES)
+	typedef ostream			StreamType;
+#else
+	typedef std::ostream	StreamType;
+#endif
+
 	XalanTransformer();
 
 	virtual
@@ -585,6 +597,29 @@ public:
 	void
 	setIndent(int	indentAmount);
 
+	/**
+	 * Set the ostream instance for reporting warnings and messages.  The default
+	 * is std::cerr.  If set to null, no warnings or messages will be written.
+	 * 
+	 * @param theStream A pointer to the ostream instance.
+	 */
+	void
+	setWarningStream(StreamType*	theStream)
+	{
+		m_warningStream = theStream;
+	}
+
+	/**
+	 * Get the current warning stream ostream instance
+	 *
+	 * @return A pointer to the instance.  Can be null.
+	 */
+	StreamType*
+	getWarningStream() const
+	{
+		return m_warningStream;
+	}
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const XalanCompiledStylesheet*>		CompiledStylesheetPtrVectorType;
 	typedef vector<const XalanParsedSource*>			ParsedSourcePtrVectorType;
@@ -724,6 +759,8 @@ private:
 	ErrorHandler*							m_errorHandler;
 
 	ProblemListener*						m_problemListener;
+
+	StreamType*								m_warningStream;
 
 	// This should always be the latest data member!!!
 	StylesheetExecutionContextDefault*		m_stylesheetExecutionContext;

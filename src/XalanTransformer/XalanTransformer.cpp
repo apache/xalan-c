@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,6 +59,11 @@
 
 
 #include <algorithm>
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <iostream.h>
+#else
+#include <iostream>
+#endif
 
 
 
@@ -112,6 +117,7 @@
 #include "XalanDefaultDocumentBuilder.hpp"
 #include "XalanDefaultParsedSource.hpp"
 #include "XalanTransformerOutputStream.hpp"
+#include "XalanTransformerProblemListener.hpp"
 #include "XercesDOMParsedSource.hpp"
 
 
@@ -135,6 +141,11 @@ XalanTransformer::XalanTransformer():
 	m_entityResolver(0),
 	m_errorHandler(0),
 	m_problemListener(0),
+#if defined(XALAN_NO_NAMESPACES)
+	m_warningStream(&cerr),
+#else
+	m_warningStream(&std::cerr),
+#endif
 	m_stylesheetExecutionContext(new StylesheetExecutionContextDefault)
 {
 #if defined(XALAN_USE_ICU)
@@ -489,7 +500,7 @@ XalanTransformer::compileStylesheet(
 		// Create a problem listener and send output to a XalanDOMString.
 		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
 
-		ProblemListenerDefault	theProblemListener(&thePrintWriter);
+		XalanTransformerProblemListener		theProblemListener(m_warningStream, &thePrintWriter);
 
 		if (m_problemListener == 0)
 		{
@@ -1005,7 +1016,7 @@ XalanTransformer::doTransform(
 		// pushing params, since there could be a problem resolving a QName.
 		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
 
-		ProblemListenerDefault	theProblemListener(&thePrintWriter);
+		XalanTransformerProblemListener		theProblemListener(m_warningStream, &thePrintWriter);
 
 		if (m_problemListener == 0)
 		{
