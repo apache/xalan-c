@@ -67,10 +67,11 @@
 
 
 
-XalanDefaultDocumentBuilder::XalanDefaultDocumentBuilder() :
+XalanDefaultDocumentBuilder::XalanDefaultDocumentBuilder(const XalanDOMString&	theURI) :
 	m_domSupport(),
 	m_parserLiaison(),
-	m_contentHandler(m_parserLiaison.mapDocument(m_parserLiaison.createDocument()))
+	m_contentHandler(m_parserLiaison.mapDocument(m_parserLiaison.createDocument())),
+	m_uri(theURI)
 {
 	m_domSupport.setParserLiaison(&m_parserLiaison);
 }
@@ -118,4 +119,12 @@ LexicalHandler*
 XalanDefaultDocumentBuilder::getLexicalHandler()
 {
 	return &m_contentHandler;
+}
+
+
+
+const XalanDOMString&
+XalanDefaultDocumentBuilder::getURI() const
+{
+	return m_uri;
 }

@@ -157,6 +157,9 @@ public:
 	virtual XalanParsedSourceHelper*
 	createHelper() const;
 
+	virtual const XalanDOMString&
+	getURI() const;
+
 private:
 
 	XalanSourceTreeDOMSupport		m_domSupport;
@@ -164,6 +167,8 @@ private:
 	XalanSourceTreeParserLiaison	m_parserLiaison;
 
 	XalanSourceTreeDocument* const	m_parsedSource;
+
+	XalanDOMString					m_uri;
 };
 
 

@@ -62,6 +62,10 @@
 
 
 
+#include <PlatformSupport/URISupport.hpp>
+
+
+
 #include <XalanSourceTree/XalanSourceTreeDocument.hpp>
 #include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
 
@@ -170,6 +174,24 @@ XalanDefaultParsedSource::XalanDefaultParsedSource(const XSLTInputSource&	theInp
 	assert(m_parsedSource != 0);
 
 	m_domSupport.setParserLiaison(&m_parserLiaison);
+
+	const XalanDOMChar* const	theSystemID = theInputSource.getSystemId();
+
+	if (theSystemID != 0)
+	{
+		try
+		{
+			m_uri = URISupport::getURLStringFromString(theSystemID);
+		}
+		catch(const XMLException&)
+		{
+			// Assume that any exception here relates to get the url from
+			// the system ID.  We'll assume that it's just a fake base identifier
+			// since the parser would have thrown an error if the system ID
+			// wasn't resolved.
+			m_uri = theSystemID;
+		}
+	}
 }
 
 
@@ -192,4 +214,12 @@ XalanParsedSourceHelper*
 XalanDefaultParsedSource::createHelper() const
 {
 	return new XalanDefaultParsedSourceHelper(m_domSupport);
+}
+
+
+
+const XalanDOMString&
+XalanDefaultParsedSource::getURI() const
+{
+	return m_uri;
 }

@@ -123,7 +123,7 @@ public:
 	 * @return A pointer to a XalanDocument instance.
 	 */
 	virtual XalanDocument*
-	getDocument() const = 0;	
+	getDocument() const = 0;
 
 	/**
 	 * Create the appropriate XalanParsedSourceHelper instance to
@@ -135,6 +135,15 @@ public:
 	 */
 	virtual XalanParsedSourceHelper*
 	createHelper() const = 0;
+
+	/**
+	 * Get the URI for the parsed source, if any.
+	 * use for transforming with the instance.
+	 *
+	 * @return A const reference to a string containing the URI
+	 */
+	virtual const XalanDOMString&
+	getURI() const = 0;
 };
 
 

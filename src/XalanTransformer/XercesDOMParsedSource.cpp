@@ -62,6 +62,10 @@
 
 
 
+#include <PlatformSupport/URISupport.hpp>
+
+
+
 class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSourceHelper : public XalanParsedSourceHelper
 {
 public:
@@ -92,6 +96,23 @@ XercesDOMParsedSource::XercesDOMParsedSource(const XSLTInputSource&		theInputSou
 	m_parserLiaison(),
 	m_parsedSource(m_parserLiaison.parseXMLStream(theInputSource))
 {
+	const XalanDOMChar* const	theSystemID = theInputSource.getSystemId();
+
+	if (theSystemID != 0)
+	{
+		try
+		{
+			m_uri = URISupport::getURLStringFromString(theSystemID);
+		}
+		catch(const XMLException&)
+		{
+			// Assume that any exception here relates to get the url from
+			// the system ID.  We'll assume that it's just a fake base identifier
+			// since the parser would have thrown an error if the system ID
+			// wasn't resolved.
+			m_uri = theSystemID;
+		}
+	}
 }
 
 
@@ -114,4 +135,12 @@ XalanParsedSourceHelper*
 XercesDOMParsedSource::createHelper() const
 {
 	return new XercesDOMParsedSourceHelper;
+}
+
+
+
+const XalanDOMString&
+XercesDOMParsedSource::getURI() const
+{
+	return m_uri;
 }

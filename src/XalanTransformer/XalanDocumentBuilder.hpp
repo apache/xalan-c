@@ -97,6 +97,9 @@ public:
 	virtual XalanParsedSourceHelper*
 	createHelper() const = 0;
 
+	virtual const XalanDOMString&
+	getURI() const = 0;
+
 	// These are new to XalanDocumentBuilder...
 	virtual ContentHandler*
 	getContentHandler() = 0;

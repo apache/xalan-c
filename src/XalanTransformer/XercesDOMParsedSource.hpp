@@ -96,11 +96,16 @@ public:
 	virtual XalanParsedSourceHelper*
 	createHelper() const;
 
+	virtual const XalanDOMString&
+	getURI() const;
+
 private:
 
 	XercesParserLiaison		m_parserLiaison;
 
 	XalanDocument* const	m_parsedSource;
+
+	XalanDOMString			m_uri;
 };
 
 

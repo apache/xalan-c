@@ -227,6 +227,9 @@ XalanTransformer::transform(
 
 	try
 	{
+		XalanDocument* const	theSourceDocument = theParsedXML.getDocument();
+		assert(theSourceDocument != 0);
+
 		// Create the helper object that is necessary for running the processor...
 		XalanAutoPtr<XalanParsedSourceHelper>	theHelper(theParsedXML.createHelper());
 		assert(theHelper.get() != 0);
@@ -252,9 +255,16 @@ XalanTransformer::transform(
 
 		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
+		const XalanDOMString&	theURI = theParsedXML.getURI();
+
+		if (length(theURI) > 0)
+		{
+			theXSLTProcessorEnvSupport.setSourceDocument(theURI, theSourceDocument);
+		}
+
 		// Create a problem listener and send output to a XalanDOMString.
 		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
-		
+
 		ProblemListenerDefault	theProblemListener(&thePrintWriter);
 
 		theProcessor.setProblemListener(&theProblemListener);
@@ -301,7 +311,7 @@ XalanTransformer::transform(
 
 		// Do the transformation...
 		theProcessor.process(
-					theParsedXML.getDocument(),
+					theSourceDocument,
 					theStylesheetSource,
 					tempResultTarget,
 					theStylesheetConstructionContext,
@@ -390,6 +400,9 @@ XalanTransformer::transform(
 
 	try
 	{
+		XalanDocument* const	theSourceDocument = theParsedXML.getDocument();
+		assert(theSourceDocument != 0);
+
 		// Create the helper object that is necessary for running the processor...
 		XalanAutoPtr<XalanParsedSourceHelper>	theHelper(theParsedXML.createHelper());
 		assert(theHelper.get() != 0);
@@ -414,6 +427,13 @@ XalanTransformer::transform(
 				theXPathFactory);
 
 		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
+
+		const XalanDOMString&	theURI = theParsedXML.getURI();
+
+		if (length(theURI) > 0)
+		{
+			theXSLTProcessorEnvSupport.setSourceDocument(theURI, theSourceDocument);
+		}
 
 		// Create a problem listener and send output to a XalanDOMString.
 		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
@@ -460,7 +480,7 @@ XalanTransformer::transform(
 
 		// Do the transformation...
 		theProcessor.process(
-					theParsedXML.getDocument(), 	
+					theSourceDocument,
 					tempResultTarget,					
 					*m_stylesheetExecutionContext);
 	}

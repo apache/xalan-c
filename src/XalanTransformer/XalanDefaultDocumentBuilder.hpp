@@ -82,7 +82,12 @@ class XALAN_TRANSFORMER_EXPORT XalanDefaultDocumentBuilder : public XalanDocumen
 {
 public:
 
-	XalanDefaultDocumentBuilder();
+	/**
+	 * Create a XalanDefaultDocumentBuilder instance,
+	 *
+	 * @param theURI An optional string to identify the document.
+	 */
+	XalanDefaultDocumentBuilder(const XalanDOMString&	theURI = XalanDOMString());
 
 	virtual
 	~XalanDefaultDocumentBuilder();
@@ -92,6 +97,9 @@ public:
 
 	virtual XalanParsedSourceHelper*
 	createHelper() const;
+
+	virtual const XalanDOMString&
+	getURI() const;
 
 	virtual ContentHandler*
 	getContentHandler();
@@ -109,6 +117,8 @@ private:
 	XalanSourceTreeParserLiaison	m_parserLiaison;
 
 	XalanSourceTreeContentHandler	m_contentHandler;
+
+	const XalanDOMString			m_uri;
 };
 
 
