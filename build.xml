@@ -1,0 +1,57 @@
+<project name="XalanC" default="docs" basedir=".">
+
+  <property name="xdocs.dir" value="./xdocs"/>
+  <property name="xdocs.book" value="${xdocs.dir}/sources/xalanLocal.xml"/>
+  <property name="xdocs.site" value="${xdocs.dir}/sources/xalan.xml"/>  
+  <property name="xdocs.style" value="${xdocs.dir}/style"/>
+  <property name="xdocs.apidocs" value="${xdocs.dir}/html/apiDocs"/>  
+
+  <property name="doc.generator" value="org.apache.stylebook.StyleBook"/>
+  <property name="doc.generator.styletargz" value="${xdocs.dir}/xml-site-style.tar.gz"/>
+  <property name="doc.generator.styletar" value="${xdocs.dir}/xml-site-style.tar"/>
+  
+  <property name="build.dir" value="./build"/>
+
+  <property name="build.docs" value="${build.dir}/docs"/>
+  <property name="build.apidocs" value="${build.docs}/apidocs"/>  
+  <property name="build.site" value="${build.dir}/site"/>
+
+  <target name="prepare">
+    <gunzip src="${doc.generator.styletargz}"/>
+    <untar src="${doc.generator.styletar}" dest="${xdocs.dir}"/>
+	<delete file="${doc.generator.styletar}"/>
+    <mkdir dir="${build.apidocs}"/>
+    <mkdir dir="${site.dir}/apidocs}"/>    
+    
+  </target>
+
+  <target name="docs" depends="prepare">
+    <java fork="yes" classname="${doc.generator}" classpath="${java.class.path}">
+      <arg line="targetDirectory=${build.docs} ${xdocs.book} ${xdocs.style}"/>    
+    </java>  
+  </target>
+
+  <target name="apidocs" depends="prepare">
+    <!--copy todir="${build.apidocs}">
+      <fileset dir="${xdocs.apidocs}"/>
+    </copy-->
+    <exec executable="doxygen.exe" dir="${xdocs.dir}">
+      <arg value="DoxyFileXalan"/>
+    </exec>  
+  </target>
+    
+  <target name="site" depends="prepare">
+    <java fork="yes" classname="${doc.generator}" classpath="${java.class.path}">
+      <arg line="targetDirectory=${build.site} ${xdocs.site} ${xdocs.style}"/>    
+    </java>
+    <copy todir="${site.dir}/apidocs">
+      <fileset dir="${build.apidocs}"/>
+    </copy>      
+      
+  </target>
+  
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>   
+    
+</project>
