@@ -78,6 +78,11 @@
 
 
 
+#include <XercesParserLiaison/XercesParserLiaison.hpp>
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
+
+
+
 #include <XalanTransformer/XalanTransformer.hpp>
 #include <XalanTransformer/XercesDOMWrapperParsedSource.hpp>
 
