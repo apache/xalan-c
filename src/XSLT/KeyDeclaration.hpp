@@ -68,6 +68,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+#include <PlatformSupport/XalanLocator.hpp>
+
+
+
 class XPath;
 
 
@@ -82,17 +86,23 @@ public:
 	/**
 	 * Construct an object containing attributes of an "xsl:key" element
 	 * 
-	 * @param qname        name of element
+	 * @param qname name of element
 	 * @param matchPattern XPath for "match" attribute
-	 * @paramuse           XPath for "use" attribute
+	 * @param use XPath for "use" attribute
 	 */
 	KeyDeclaration(
-			const XalanQName&	qname,
-			const XPath&		matchPattern,
-			const XPath&		use) :
+			const XalanQName&			qname,
+			const XPath&				matchPattern,
+			const XPath&				use,
+			const XalanDOMString&		uri,
+			XalanLocator::size_type		lineNumber,
+			XalanLocator::size_type		columnNumber) :
 		m_qname(&qname),
 		m_match(&matchPattern),
-		m_use(&use)
+		m_use(&use),
+		m_uri(&uri),
+		m_lineNumber(lineNumber),
+		m_columnNumber(columnNumber)
 	{
 	}
 
@@ -100,7 +110,10 @@ public:
 	KeyDeclaration() :
 		m_qname(0),
 		m_match(0),
-		m_use(0)
+		m_use(0),
+		m_uri(0),
+		m_lineNumber(0),
+		m_columnNumber(0)
 	{
 	}
 
@@ -148,13 +161,52 @@ public:
 		return m_match;
 	}
 
+	/**
+	 * Retrieves the URI.
+	 * 
+	 * @return A pointer to a URI string.
+	 */
+	const XalanDOMString*
+	getURI() const
+	{
+		return m_uri;
+	}
+
+	/**
+	 * Retrieves the line number where the xsl:key element occurred.
+	 *
+	 * @return The line number
+	 */
+	XalanLocator::size_type
+	getLineNumber() const
+	{
+		return m_lineNumber;
+	}
+
+	/**
+	 * Retrieves the column number where the xsl:key element occurred.
+	 *
+	 * @return The column number
+	 */
+	XalanLocator::size_type
+	getColumnNumber() const
+	{
+		return m_columnNumber;
+	}
+
 private:
 
-	const XalanQName*	m_qname;
+	const XalanQName*			m_qname;
 
-	const XPath*		m_match;
+	const XPath*				m_match;
 
-	const XPath*		m_use;
+	const XPath*				m_use;
+
+	const XalanDOMString*		m_uri;
+
+	XalanLocator::size_type		m_lineNumber;
+
+	XalanLocator::size_type		m_columnNumber;
 };
 
 
