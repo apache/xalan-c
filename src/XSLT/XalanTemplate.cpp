@@ -214,7 +214,7 @@ static XalanTranscodingServices::MaximumCharacterValueMapType theMaximumCharacte
 static set<XalanNode*, less<XalanNode*> >	theInstanceSetType;
 static XalanTransformer::CompiledStylesheetPtrVectorType	theCompiledStylesheetVector;
 static XalanTransformer::ParsedSourcePtrVectorType			theParsedSourceVector;
-static XalanTransformer::ParamPairVectorType				theParamsVector;
+static XalanTransformer::ParamPairVectorType				theParamsPairVector;
 
 
 
@@ -356,7 +356,7 @@ foo()
 
 		for_each(theCache.begin(),
 				 theCache.end(),
-				 MapValueDeleteFunctor<FormatterToText>());
+				 DeleteFunctor<FormatterToText>());
 	}
 
 	{
