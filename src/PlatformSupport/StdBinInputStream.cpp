@@ -56,13 +56,19 @@
  *
  * $ Id: $
  *
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 
 #include "StdBinInputStream.hpp"
 
 
 
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <istream.h>
+#else
 #include <istream>
+#endif
 
 
 
