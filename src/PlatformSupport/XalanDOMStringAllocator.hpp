@@ -106,7 +106,7 @@ public:
 	data_type*
 	create(
 			const char*				theString,
-#if defined(_MSC_VER
+#if defined(_MSC_VER)
 			// $$$ ToDo: Some strange bug in MSVC++ complains when using data_type::npos here.
 			data_type_size_type		theCount = data_type_size_type(-1));
 #else
