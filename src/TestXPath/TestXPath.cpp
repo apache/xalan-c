@@ -115,7 +115,7 @@ ExecuteXPath(
 														theXPathSupport,
 														theXObjectFactory,
 														theContextNode,
-														theContextNodeList,
+														&theContextNodeList,
 														&thePrefixResolver);
 
 	const XObject* const	theResult =
@@ -130,7 +130,7 @@ bool
 TestNumericResult(
 			XPathProcessor&			theXPathProcessor,
 			XPath&					theXPath,
-			const XalanDOMString&		theXPathString,
+			const XalanDOMString&	theXPathString,
 			PrintWriter&			thePrintWriter,
 			double					theExpectedResult,
 			XPathEnvSupport&		theXPathEnvSupport,
@@ -549,7 +549,7 @@ TestAxisResult(
 																	theXPathSupport,
 																	theXObjectFactory,
 																	theContextNode,
-																	theContextNodeList,
+																	&theContextNodeList,
 																	&thePrefixResolver);
 
 				const XObject* const	theResult =
@@ -689,7 +689,7 @@ TestPredicateResult(
 																		theXPathSupport,
 																		theXObjectFactory,
 																		theContextNode,
-																		theContextNodeList,
+																		&theContextNodeList,
 																		&thePrefixResolver);
 
 					const XObject* const	theResult1 =
@@ -822,22 +822,31 @@ TestNumericResults(
 
 	for(int i = 0; theNumericTestInput[i] != 0; i++)
 	{
-		XPath* const	theXPath = theXPathFactory.create();
+		try
+		{
+			XPath* const	theXPath = theXPathFactory.create();
 
-		XPathGuard		theGuard(theXPathFactory,
-								 theXPath);
+			XPathGuard		theGuard(theXPathFactory,
+									 theXPath);
 
-		TestNumericResult(theXPathProcessor,
-						  *theXPath,
-						  theNumericTestInput[i],
-						  thePrintWriter,
-						  theNumericTestExpectedOutput[i],
-						  theXPathEnvSupport,
-						  theXPathSupport,
-						  theXObjectFactory,
-						  0,
-						  ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
-						  NodeRefList());
+			TestNumericResult(theXPathProcessor,
+							  *theXPath,
+							  theNumericTestInput[i],
+							  thePrintWriter,
+							  theNumericTestExpectedOutput[i],
+							  theXPathEnvSupport,
+							  theXPathSupport,
+							  theXObjectFactory,
+							  0,
+							  ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
+							  NodeRefList());
+		}
+		catch(...)
+		{
+			thePrintWriter.print("Exception caught evaluating XPath \"");
+			thePrintWriter.print(theNumericTestInput[i]);
+			thePrintWriter.println();
+		}
 	}
 }
 
@@ -945,22 +954,31 @@ TestStringResults(
 
 	for(int i = 0; theStringTestInput[i] != 0; i++)
 	{
-		XPath* const	theXPath = theXPathFactory.create();
+		try
+		{
+			XPath* const	theXPath = theXPathFactory.create();
 
-		XPathGuard	theGuard(theXPathFactory,
-							 theXPath);
+			XPathGuard	theGuard(theXPathFactory,
+								 theXPath);
 
-		TestStringResult(theXPathProcessor,
-						 *theXPath,
-						 theStringTestInput[i],
-						 thePrintWriter,
-						 theStringTestExpectedOutput[i],
-						 theXPathEnvSupport,
-						 theXPathSupport,
-						 theXObjectFactory,
-						 0,
-						 ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
-						 NodeRefList());
+			TestStringResult(theXPathProcessor,
+							 *theXPath,
+							 theStringTestInput[i],
+							 thePrintWriter,
+							 theStringTestExpectedOutput[i],
+							 theXPathEnvSupport,
+							 theXPathSupport,
+							 theXObjectFactory,
+							 0,
+							 ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
+							 NodeRefList());
+		}
+		catch(...)
+		{
+			thePrintWriter.print("Exception caught evaluating XPath \"");
+			thePrintWriter.print(theStringTestInput[i]);
+			thePrintWriter.println();
+		}
 	}
 }
 
@@ -1072,22 +1090,31 @@ TestBooleanResults(
 
 	for(int i = 0; theBooleanTestInput[i] != 0; i++)
 	{
-		XPath* const	theXPath = theXPathFactory.create();
+		try
+		{
+			XPath* const	theXPath = theXPathFactory.create();
 
-		XPathGuard	theGuard(theXPathFactory,
-							 theXPath);
+			XPathGuard	theGuard(theXPathFactory,
+								 theXPath);
 
-		TestBooleanResult(theXPathProcessor,
-						  *theXPath,
-						  theBooleanTestInput[i],
-						  thePrintWriter,
-						  theBooleanTestExpectedOutput[i],
-						  theXPathEnvSupport,
-						  theXPathSupport,
-						  theXObjectFactory,
-						  0,
-						  ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
-						  NodeRefList());
+			TestBooleanResult(theXPathProcessor,
+							  *theXPath,
+							  theBooleanTestInput[i],
+							  thePrintWriter,
+							  theBooleanTestExpectedOutput[i],
+							  theXPathEnvSupport,
+							  theXPathSupport,
+							  theXObjectFactory,
+							  0,
+							  ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
+							  NodeRefList());
+		}
+		catch(...)
+		{
+			thePrintWriter.print("Exception caught evaluating XPath \"");
+			thePrintWriter.print(theStringTestInput[i]);
+			thePrintWriter.println();
+		}
 	}
 }
 
@@ -1128,14 +1155,14 @@ GetXSLFileName(const XalanDOMString&		theXMLFileName)
 
 void
 TestAxes(
-			XPathFactory&		theXPathFactory,
-			XObjectFactory&		theXObjectFactory,
-			XPathProcessor&		theXPathProcessor,
-			XPathEnvSupport&	theXPathEnvSupport,
-			XPathSupport&		theXPathSupport,
-			XMLParserLiaison&	theLiaison,
+			XPathFactory&			theXPathFactory,
+			XObjectFactory&			theXObjectFactory,
+			XPathProcessor&			theXPathProcessor,
+			XPathEnvSupport&		theXPathEnvSupport,
+			XPathSupport&			theXPathSupport,
+			XMLParserLiaison&		theLiaison,
 			const XalanDOMString&	theDirectory,
-			PrintWriter&		thePrintWriter)
+			PrintWriter&			thePrintWriter)
 {
 	const XalanDOMString		theProtocol(XALAN_STATIC_UCODE_STRING("file://"));
 	const XalanDOMString		theBaseURL = theProtocol + theDirectory;
@@ -1161,24 +1188,32 @@ TestAxes(
 	{
 		if (endsWith(theFiles[i], theXMLSuffix) == true)
 		{
-			// Create a fully qualified URL specification...
-			const XalanDOMString		theXMLFileName = theBaseURL + theFiles[i];
+			try
+			{
+				// Create a fully qualified URL specification...
+				const XalanDOMString		theXMLFileName = theBaseURL + theFiles[i];
 
-			// Get the name of the corresponding XSL file...
-			const XalanDOMString		theXSLFileName = GetXSLFileName(theXMLFileName);
+				// Get the name of the corresponding XSL file...
+				const XalanDOMString		theXSLFileName = GetXSLFileName(theXMLFileName);
 
-			XPathGuard	theXPath(theXPathFactory,
-								 theXPathFactory.create());
+				XPathGuard	theXPath(theXPathFactory,
+									 theXPathFactory.create());
 
-			TestAxisResult(theXPathProcessor,
-						   theXPathEnvSupport,
-						   theXPathSupport,
-						   theXObjectFactory,
-						   theLiaison,
-						   theXPathFactory,
-						   theXMLFileName,
-						   theXSLFileName,
-						   thePrintWriter);
+				TestAxisResult(theXPathProcessor,
+							   theXPathEnvSupport,
+							   theXPathSupport,
+							   theXObjectFactory,
+							   theLiaison,
+							   theXPathFactory,
+							   theXMLFileName,
+							   theXSLFileName,
+							   thePrintWriter);
+			}
+			catch(...)
+			{
+				thePrintWriter.print("Exception caught evaluating XPath!");
+				thePrintWriter.println();
+			}
 		}
 	}
 }
