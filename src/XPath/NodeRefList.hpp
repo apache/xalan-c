@@ -106,6 +106,13 @@ public:
 	NodeRefList&
 	operator=(const NodeRefList&	theRHS);
 
+	bool
+	empty() const
+	{
+		return m_nodeList.empty();
+	}
+
+
 	// These methods are inherited from NodeRefListBase ...
 
 	virtual XalanNode*

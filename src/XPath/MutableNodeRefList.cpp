@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -123,7 +123,7 @@ MutableNodeRefList::operator=(const MutableNodeRefList&		theRHS)
 
 
 MutableNodeRefList&
-MutableNodeRefList::operator=(const NodeRefList&		theRHS)
+MutableNodeRefList::operator=(const NodeRefList&	theRHS)
 {
 	if (this != &theRHS)
 	{
@@ -230,7 +230,7 @@ MutableNodeRefList::clear()
 {
 	m_nodeList.clear();
 
-	m_order = eUnknownOrder;
+	m_order = eDocumentOrder;
 }
 
 
@@ -710,4 +710,57 @@ MutableNodeRefList::reverse()
 #endif
 		m_nodeList.begin(),
 		m_nodeList.end());
+
+	if (m_order == eDocumentOrder)
+	{
+		m_order = eReverseDocumentOrder;
+	}
+	else if (m_order == eReverseDocumentOrder)
+	{
+		m_order = eDocumentOrder;
+	}
+}
+
+
+
+void
+MutableNodeRefList::reverseAssign(MutableNodeRefList&	nodelist) const
+{
+	if (&nodelist == this)
+	{
+		nodelist.reverse();
+	}
+	else
+	{
+#if defined(XALAN_MODERN_STL)
+		nodelist.m_nodeList.assign(m_nodeList.rbegin(), m_nodeList.rend());
+#else
+		nodelist.reserve(m_nodeList.size());
+
+		typedef NodeListVectorType::const_reverse_iterator	const_reverse_iterator;
+
+		const const_reverse_iterator	theEnd = m_nodeList.rend();
+		const_reverse_iterator			theCurrent = m_nodeList.rbegin();
+
+		while(theCurrent != theEnd)
+		{
+			nodelist.m_nodeList.push_back(*theCurrent);
+
+			++theCurrent;
+		}
+#endif
+
+		if (m_order == eDocumentOrder)
+		{
+			nodelist.m_order = eReverseDocumentOrder;
+		}
+		else if (m_order == eReverseDocumentOrder)
+		{
+			nodelist.m_order = eDocumentOrder;
+		}
+		else
+		{
+			nodelist.m_order = eUnknownOrder;
+		}
+	}
 }
