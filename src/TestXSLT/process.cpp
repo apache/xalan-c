@@ -151,13 +151,6 @@
 
 
 
-//#define XALAN_VQ_SPECIAL_TRACE
-#if defined(XALAN_VQ_SPECIAL_TRACE)
-#include "d:/Rational/Quantify/pure.h"
-#endif
-
-
-
 #if !defined (XALAN_NO_NAMESPACES)
 using std::cerr;
 using std::cout;
@@ -1005,7 +998,7 @@ main(
 		else if (theParams.versionOnly == true)
 		{
 			cout << endl
-				 << "TestXSLT version 1.0.0 (Xalan C++ version 1.0.0)"
+				 << "TestXSLT version 1.1.0 (Xalan C++ version 1.1.0)"
 				 << endl;
 		}
 		else if (theParams.inFileName.size() == 0)
