@@ -185,8 +185,8 @@ main(int			argc,
 				h.checkAndCreateDir(confSubdir);
 
 				// Set up to get files from the associated error directories
-				const XalanDOMString currentDir(dirs[j] + XalanDOMString("\\err"));
-				const XalanDOMString subErrDir(h.args.sub + XalanDOMString("\\err"));
+				const XalanDOMString currentDir(dirs[j]);
+				const XalanDOMString subErrDir(h.args.sub);
 
 				// Run specific category of files from given directory
 				if (length(h.args.sub) > 0 && !equals(currentDir, subErrDir))
