@@ -1324,6 +1324,7 @@ XalanSourceTreeDocument::createAttributes(
 
 		const XalanDOMChar* const	theURI =
 			theAttributes.getURI(i);
+		assert(theURI != 0);
 
 		if (length(theURI) == 0)
 		{
