@@ -76,10 +76,7 @@
 
 
 
-class SelectionEvent;
 class StylesheetConstructionContext;
-class TraceListener;
-class TracerEvent;
 class XMLURL;
 class XSLTResultTarget;
 
@@ -93,12 +90,6 @@ class XSLTResultTarget;
 class XALAN_XSLT_EXPORT StylesheetRoot : public Stylesheet
 {
 public:
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef	vector<TraceListener*>	ListenersVectorType;
-#else
-	typedef	std::vector<TraceListener*>	ListenersVectorType;
-#endif
 
 	/**
 	 * Construct a Stylesheet from a Document.
@@ -124,7 +115,7 @@ public:
 	process(
 			XalanNode*						sourceTree, 
 			XSLTResultTarget&				outputTarget,
-			StylesheetExecutionContext&		executionContext);
+			StylesheetExecutionContext&		executionContext) const;
 
 	/** 
 	 * Return the output method that was specified in the stylesheet. 
@@ -238,7 +229,6 @@ public:
 		return m_defaultTextRule;
 	}
 
-	
 	/**
 	 * Get the template representing the default rule.
 	 *
@@ -286,32 +276,32 @@ public:
 	 * The version tells the version of XML to be used for outputting the result tree,
 	 * as specified in xsl:output.
 	 */
-	XalanDOMString m_version; // = null;
+	XalanDOMString m_version;
 
 	/**
 	 * indent-result is by default no, which means an XSL processor must not
 	 * change the whitespace on output.
 	 */
-	bool m_indentResult; // = false;
+	bool m_indentResult;
 
 	/**
 	 * The encoding attribute specifies the preferred encoding to use 
 	 * for outputting the result tree. 
 	 */
-	XalanDOMString m_encoding; // = null;
+	XalanDOMString m_encoding;
 
 	/**
 	 * The media-type attribute is applicable for the xml output method. 
 	 * The default value for the media-type attribute is text/xml.
 	 */
-	XalanDOMString m_mediatype; // = null;
+	XalanDOMString m_mediatype;
 
 	/**
 	 * If the doctype-system-id attribute is specified, the xml output method should 
 	 * output a document type declaration immediately before the first element. 
 	 * The name following <!DOCTYPE should be the name of the first element. 
 	 */
-	XalanDOMString m_doctypeSystem; // = null;
+	XalanDOMString m_doctypeSystem;
 
 	/**
 	 * If doctype-public-id attribute is also specified, then the xml output 
@@ -321,17 +311,17 @@ public:
 	 * doctype-public-id attribute should be ignored unless the doctype-system-id 
 	 * attribute is specified.
 	 */
-	XalanDOMString m_doctypePublic; // = null;
+	XalanDOMString m_doctypePublic;
 
 	/**
 	 * Tells whether or not to output an XML declaration.
 	 */
-	bool m_omitxmlDecl; // = false;
+	bool m_omitxmlDecl;
 
 	/**
 	 * Tells what the xmldecl should specify for the standalone value.
      */
-	XalanDOMString m_standalone; // = null;
+	XalanDOMString m_standalone;
 
 	/**
 	 * Retrieve the stack of imported stylesheets.
@@ -354,7 +344,6 @@ public:
 	{
 		return m_importStack;
 	}
-
 
 	/**
 	 * Change the value of the flag for indenting results.
@@ -380,62 +369,16 @@ public:
 	}
 
 	/**
-	 * Determine the number of trace listeners.
-	 * 
-	 * @return number of listeners
-	 */
-	int
-	getTraceListeners() const;
-
-	/**
-	 * Add a trace listener for the purposes of debugging and diagnosis.
-	 * 
-	 * @param tl pointer to listener to add
-	 */
-	void
-	addTraceListener(TraceListener *tl);
-
-	/**
-	 * Remove a trace listener.
-	 * 
-	 * @param tl pointer to listener to remove
-	 */
-	void
-	removeTraceListener(TraceListener* tl); 
-
-	/**
-	 * Fire a trace event.
-	 * 
-	 * @param te trace event to fire
-	 */
-	void
-	fireTraceEvent(const TracerEvent& te) const;
-	  
-	/**
-	 * Fire a selection event.
-	 * 
-	 * @param se selection event to fire
-	 */
-	void
-	fireSelectedEvent(const SelectionEvent& se) const;
-
-	/**
 	 * Retrieve list of CDATA section elements.
 	 * 
 	 * @return vector of elements
 	 */
 	const QNameVectorType&
-	getCdataSectionElems()
+	getCDATASectionElems() const
 	{
 		return m_cdataSectionElems;
 	}
 
-	// Read the stylesheet root from a serialization stream.
-	// @@ Not implemented yet
-	// void readObject(ObjectInputStream stream);
-
-	// These methods are inherited from Stylesheet ...
-	
 private:
 
 	/**
@@ -443,18 +386,7 @@ private:
 	 * @serial
 	 */
 	XalanDOMString	m_resultNameSpaceURL;
-  
-	/**
-	 * List of listeners who are interested in tracing what's going on.
-	 */
-	//transient 
-	ListenersVectorType		m_traceListeners;
-  
-	/**
-	 * String buffer for use by AVTs and the like.
-	 */
-	//java: transient DOMStringBuffer m_stringbuf = new StringBuffer();
-  
+
 	/**
 	 * The output method as specified in xsl:output.
 	 */
@@ -473,10 +405,9 @@ private:
 	 * particular URI is imported in multiple places is not treated 
 	 * specially."
 	 */
-	//transient
 	URLStackType m_importStack;
 
-  
+
 	/**
 	 * The default template to use for text nodes if we don't find 
 	 * anything else.  This is initialized in initDefaultRule().

@@ -111,10 +111,10 @@ XSLTProcessorEnvSupportDefault::~XSLTProcessorEnvSupportDefault()
 void
 XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName,
+			const XalanDOMString&	functionName,
 			const Function&			function)
 {
-	XPathEnvSupportDefault::installExternalFunctionGlobal(theNamespace, extensionName, function);
+	XPathEnvSupportDefault::installExternalFunctionGlobal(theNamespace, functionName, function);
 }
 
 
@@ -122,9 +122,9 @@ XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
 void
 XSLTProcessorEnvSupportDefault::uninstallExternalFunctionGlobal(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName)
+			const XalanDOMString&	functionName)
 {
-	XPathEnvSupportDefault::uninstallExternalFunctionGlobal(theNamespace, extensionName);
+	XPathEnvSupportDefault::uninstallExternalFunctionGlobal(theNamespace, functionName);
 }
 
 
@@ -132,10 +132,10 @@ XSLTProcessorEnvSupportDefault::uninstallExternalFunctionGlobal(
 void
 XSLTProcessorEnvSupportDefault::installExternalFunctionLocal(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName,
+			const XalanDOMString&	functionName,
 			const Function&			function)
 {
-	m_defaultSupport.installExternalFunctionLocal(theNamespace, extensionName, function);
+	m_defaultSupport.installExternalFunctionLocal(theNamespace, functionName, function);
 }
 
 
@@ -143,9 +143,9 @@ XSLTProcessorEnvSupportDefault::installExternalFunctionLocal(
 void
 XSLTProcessorEnvSupportDefault::uninstallExternalFunctionLocal(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName)
+			const XalanDOMString&	functionName)
 {
-	m_defaultSupport.uninstallExternalFunctionLocal(theNamespace, extensionName);
+	m_defaultSupport.uninstallExternalFunctionLocal(theNamespace, functionName);
 }
 
 
@@ -347,10 +347,10 @@ XSLTProcessorEnvSupportDefault::getDOMFactory() const
 bool
 XSLTProcessorEnvSupportDefault::elementAvailable(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName) const
+			const XalanDOMString&	functionName) const
 {
 	return m_defaultSupport.elementAvailable(theNamespace,
-											 extensionName);
+											 functionName);
 }
 
 
@@ -358,10 +358,10 @@ XSLTProcessorEnvSupportDefault::elementAvailable(
 bool
 XSLTProcessorEnvSupportDefault::functionAvailable(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName) const
+			const XalanDOMString&	functionName) const
 {
 	return m_defaultSupport.functionAvailable(theNamespace,
-											  extensionName);
+											  functionName);
 }
 
 
@@ -370,13 +370,13 @@ XObject*
 XSLTProcessorEnvSupportDefault::extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName,
+			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const
 {
 	return m_defaultSupport.extFunction(executionContext,
 										theNamespace,
-										extensionName,
+										functionName,
 										context,
 										argVec);
 }

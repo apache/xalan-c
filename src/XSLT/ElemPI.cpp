@@ -139,7 +139,7 @@ ElemPI::execute(
 	{
 		error("processing-instruction name must be a valid NCName: " + piName);
 	}
-	
+
 	const XalanDOMString	data = childrenToString(executionContext, sourceTree, sourceNode, mode);
 
 	executionContext.processingInstruction(toCharArray(piName), toCharArray(data));

@@ -209,7 +209,7 @@ StylesheetExecutionContextDefault::createDocument() const
 
 
 void
-StylesheetExecutionContextDefault::setStylesheetRoot(StylesheetRoot*	theStylesheet)
+StylesheetExecutionContextDefault::setStylesheetRoot(const StylesheetRoot*	theStylesheet)
 {
 	assert(theStylesheet->isRoot() == true);
 
@@ -688,10 +688,11 @@ StylesheetExecutionContextDefault::getXalanXSLNameSpaceURL() const
 
 
 bool
-StylesheetExecutionContextDefault::isTraceSelect() const
+StylesheetExecutionContextDefault::getTraceSelects() const
 {
-	return m_xsltProcessor.isTraceSelect();
+	return m_xsltProcessor.getTraceSelects();
 }
+
 
 
 void
@@ -1021,9 +1022,9 @@ StylesheetExecutionContextDefault::getContextNodeListPosition(const XalanNode&	c
 bool
 StylesheetExecutionContextDefault::elementAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const
+			const XalanDOMString&	elementName) const
 {
-	return m_xpathExecutionContextDefault.elementAvailable(theNamespace, extensionName);
+	return m_xpathExecutionContextDefault.elementAvailable(theNamespace, elementName);
 }
 
 
@@ -1031,9 +1032,9 @@ StylesheetExecutionContextDefault::elementAvailable(
 bool
 StylesheetExecutionContextDefault::functionAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const
+			const XalanDOMString&	functionName) const
 {
-	return m_xpathExecutionContextDefault.functionAvailable(theNamespace, extensionName);
+	return m_xpathExecutionContextDefault.functionAvailable(theNamespace, functionName);
 }
 
 
@@ -1041,11 +1042,11 @@ StylesheetExecutionContextDefault::functionAvailable(
 XObject*
 StylesheetExecutionContextDefault::extFunction(
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName,
+			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec)
 {
-	return m_xpathExecutionContextDefault.extFunction(theNamespace, extensionName, context, argVec);
+	return m_xpathExecutionContextDefault.extFunction(theNamespace, functionName, context, argVec);
 }
 
 
@@ -1301,6 +1302,38 @@ StylesheetExecutionContextDefault::createPrintWriter(std::ostream&	theStream)
 	m_textOutputStreams.insert(theTextOutputStream);
 
 	return createPrintWriter(theTextOutputStream);
+}
+
+
+
+unsigned long
+StylesheetExecutionContextDefault::getTraceListeners() const
+{
+	return m_xsltProcessor.getTraceListeners();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::fireGenerateEvent(const GenerateEvent&	ge)
+{
+	m_xsltProcessor.fireGenerateEvent(ge);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::fireTraceEvent(const TracerEvent&	te)
+{
+	m_xsltProcessor.fireTraceEvent(te);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::fireSelectEvent(const SelectionEvent&	se)
+{
+	m_xsltProcessor.fireSelectEvent(se);
 }
 
 

@@ -179,9 +179,9 @@ ElemValueOf::execute(
 			theValue = executionContext.getNodeData(*sourceNode);
 		}
 
-		if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+		if(0 != executionContext.getTraceListeners())
 		{
-			getStylesheet().getStylesheetRoot().fireSelectedEvent(
+			executionContext.fireSelectEvent(
 				SelectionEvent(executionContext,
 							   sourceNode,
 							   *this,
@@ -197,9 +197,9 @@ ElemValueOf::execute(
 									 *this,
 									 executionContext);
 
-		if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+		if(0 != executionContext.getTraceListeners())
 		{
-			getStylesheet().getStylesheetRoot().fireSelectedEvent(
+			executionContext.fireSelectEvent(
 				SelectionEvent(executionContext,
 							   sourceNode,
 							   *this,

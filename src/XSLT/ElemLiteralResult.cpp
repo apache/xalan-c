@@ -82,9 +82,6 @@
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::make_pair;
-#endif
 
 
 ElemLiteralResult::ElemLiteralResult(
@@ -141,8 +138,10 @@ ElemLiteralResult::ElemLiteralResult(
 				}
 			}
 			else
+			{
 				// don't process namespace decls
 				needToProcess = false;
+			}
 		}
 
 		if(needToProcess == true)
@@ -283,41 +282,75 @@ void ElemLiteralResult::execute(
 	executionContext.endElement(toCharArray(m_QName));
 }
 
-/**
- * Process the exclude-result-prefixes or the extension-element-prefixes
- * attributes, for the purpose of prefix exclusion.
- */
-void ElemLiteralResult::processPrefixControl(const DOMString& localName, 
-		const DOMString& attrValue) 
-{                                                                                                                   
-/*
-	OLD:
-	if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
-	{
-		needToProcess = false;
-		const DOMString qnames = attrValue;
-		StringTokenizer tokenizer(qnames, " \t\n\r", false);
-		m_extensionElementPrefixes.reserve(tokenizer.countTokens());
-		while(tokenizer.hasMoreTokens())
+
+
+bool
+ElemLiteralResult::isAttrOK(
+			const XalanDOMChar*				attrName,
+			const AttributeList&			/* atts */,
+			int								/* which */,
+			StylesheetConstructionContext&	constructionContext) const
+{
+    bool	isAttrOK = equals(attrName, DOMServices::s_XMLNamespace) ||
+					   startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator);
+
+    if(isAttrOK == false)
+    {
+		unsigned int	indexOfNSSep = indexOf(attrName, ':');
+
+		if(indexOfNSSep < length(attrName))
 		{
-			m_extensionElementPrefixes.push_back(tokenizer.nextToken());
+			const XalanDOMString	prefix = substring(attrName, 0, indexOfNSSep);
+
+			const XalanDOMString	ns = getStylesheet().getNamespaceForPrefixFromStack(prefix);
+
+			if (equals(ns, constructionContext.getXSLTNamespaceURI()) == true)
+			{
+				isAttrOK = false;
+			}
 		}
-	}
-*/
+		else
+		{
+			// An empty namespace is OK.
+			isAttrOK = true;
+		}
+    }
+
+    // TODO: Well, process it...
+    return isAttrOK;
+}
+
+
+
+void
+ElemLiteralResult::processPrefixControl(
+			const XalanDOMString& localName, 
+			const XalanDOMString& attrValue) 
+{                                                                                                                   
 	if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES) ||
 			equals(localName, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
 	{
-		const DOMString qnames = attrValue;
+		const XalanDOMString qnames = attrValue;
+
 		StringTokenizer tokenizer(qnames, " \t\n\r", false);
-		while(tokenizer.hasMoreTokens())
+
+		while(tokenizer.hasMoreTokens() == true)
 		{
-			DOMString prefix = tokenizer.nextToken();
-			if(equalsIgnoreCase(prefix, "#default")) prefix="";
-			DOMString ns = getStylesheet().getNamespaceForPrefixFromStack(prefix);
-			if(isEmpty(ns))
+			XalanDOMString	prefix = tokenizer.nextToken();
+
+			if(equalsIgnoreCase(prefix, XALAN_STATIC_UCODE_STRING("#default")) == true)
+			{
+				clear(prefix);
+			}
+
+			const XalanDOMString	ns = getStylesheet().getNamespaceForPrefixFromStack(prefix);
+
+			if(isEmpty(ns) == true)
+			{
 				throw SAXException("Invalid prefix in exclude-result-prefixes");
-			m_excludeResultPrefixes.insert(make_pair(prefix, ns));
+			}
+
+			m_excludeResultPrefixes.insert(String2StringMapType::value_type(prefix, ns));
 		}
 	}
 }
-

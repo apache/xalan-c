@@ -190,7 +190,7 @@ void
 StylesheetRoot::process(
 			XalanNode*						sourceTree, 
 			XSLTResultTarget&				outputTarget,
-			StylesheetExecutionContext&		executionContext)
+			StylesheetExecutionContext&		executionContext) const
 {
 		// Find the root pattern in the XSL.
 		ElemTemplate* rootRule =
@@ -283,7 +283,7 @@ StylesheetRoot::process(
 				{
 					if (doIndent == true && indentAmount < 0)
 					{
-						indentAmount = 4;
+						indentAmount = FormatterToHTML::eDefaultIndentAmount;
 					}
 
 					flistener = executionContext.createFormatterToHTML(
@@ -304,7 +304,7 @@ StylesheetRoot::process(
 					// indenting
 					if (doIndent == true && indentAmount < 0)
 					{
-						indentAmount = 0;
+						indentAmount = FormatterToXML::eDefaultIndentAmount;
 					}
 
 					flistener = executionContext.createFormatterToXML(
@@ -672,75 +672,4 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 	assert(m_defaultRule != 0);
 	assert(m_defaultTextRule != 0);
 	assert(m_defaultRootRule != 0);
-}
-
-
-
-int
-StylesheetRoot::getTraceListeners() const
-{
-	return m_traceListeners.size();
-}
-
-
-
-void 
-StylesheetRoot::addTraceListener(TraceListener* tl)
-{
-    m_traceListeners.push_back(tl);
-}
-
-
-
-void 
-StylesheetRoot::removeTraceListener(TraceListener* theListener)
-{
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
-
-	const ListenersVectorType::iterator		it =
-			find(m_traceListeners.begin(),
-				 m_traceListeners.end(),
-				 theListener);
-
-	if (it != m_traceListeners.end())
-	{
-		m_traceListeners.erase(it);
-	}
-}
-
-
-
-
-/**
- * Fire a trace event.
- */
-void
-StylesheetRoot::fireTraceEvent(const TracerEvent& te) const
-{
-	const ListenersVectorType::size_type	nListeners =
-		m_traceListeners.size();
-
-	for(ListenersVectorType::size_type i = 0; i < nListeners; i++)
-	{
-		m_traceListeners[i]->trace(te);
-	}
-}
-
-
-  
-/**
- * Fire a selection event.
- */
-void
-StylesheetRoot::fireSelectedEvent(const SelectionEvent& se) const
-{
-	const ListenersVectorType::size_type	nListeners =
-		m_traceListeners.size();
-
-	for(ListenersVectorType::size_type i = 0; i < nListeners; i++)
-	{
-		m_traceListeners[i]->selected(se);
-	}
 }

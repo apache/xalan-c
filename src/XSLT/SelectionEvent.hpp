@@ -101,41 +101,41 @@ public:
 	virtual
 	~SelectionEvent();
 
+	/**
+	 * The executionContext instance.
+	 */
+	const StylesheetExecutionContext&	m_executionContext;
+
+	/**
+	 * The current context node.
+	 */
+	const XalanNode*					m_sourceNode;
+  
+	/**
+	 * The node in the style tree where the event occurs.
+	 */
+	const ElemTemplateElement&			m_styleNode;
+
+	/**
+	 * The attribute name from which the selection is made.
+	 */
+	const XalanDOMString				m_attributeName;
+
+	/**
+	 * The XPath that executed the selection.
+	 */
+	const XPath&						m_xpath;
+  
+	/**
+	 * The result of the selection.
+	 */
+	const XObject* const				m_selection;
+
 private:
 
 	// Unimplemented...
 	SelectionEvent&
 	operator=(const SelectionEvent&	other);
-
-  /**
-   * The executionContext instance.
-   */
-	const StylesheetExecutionContext&	m_executionContext;
-
-  /**
-   * The current context node.
-   */
-	const XalanNode*					m_sourceNode;
-  
-  /**
-   * The node in the style tree where the event occurs.
-   */
-	const ElemTemplateElement&			m_styleNode;
-
-  /**
-   * The attribute name from which the selection is made.
-   */
-	const XalanDOMString				m_attributeName;
-
-  /**
-   * The XPath that executed the selection.
-   */
-	const XPath&						m_xpath;
-  
-  /**
-   * The result of the selection.
-   */
-	const XObject* const				m_selection;
 };
 
 

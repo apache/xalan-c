@@ -538,22 +538,20 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 						}
 						else if(equals(aname, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
 						{
-							// BEGIN SANJIVA CODE
 							StringTokenizer tokenizer(atts.getValue(i),
 													  XALAN_STATIC_UCODE_STRING(" \t\n\r"),
 													  false);
 
-							while(tokenizer.hasMoreTokens ()) 
+							while(tokenizer.hasMoreTokens() == true)
 							{
 								const XalanDOMString	prefix = tokenizer.nextToken();
 								// SANJIVA: ask Scott: is the line below correct?
 
 								const XalanDOMString extns = m_stylesheet.getNamespaceForPrefixFromStack(prefix);
 
-								ExtensionNSHandler* const	nsh = new ExtensionNSHandler (m_processor, extns);
+								ExtensionNSHandler* const	nsh = new ExtensionNSHandler(m_processor, extns);
 								m_stylesheet.addExtensionNamespace(extns, nsh);
 							}
-							// END SANJIVA CODE
 						}
 						else if(equals(aname, XALAN_STATIC_UCODE_STRING("id")))
 						{
@@ -1056,7 +1054,7 @@ ElemTemplateElement* StylesheetHandler::initWrapperless (const XalanDOMString& n
 	m_foundStylesheet = true;
 	m_stylesheet.setWrapperless(true);
 
-	if(equals(name, XALAN_STATIC_UCODE_STRING("HTML")))
+	if(equalsIgnoreCase(name, Constants::ELEMNAME_HTML_STRING) == true)
 	{
 		m_stylesheet.getStylesheetRoot().setIndentResult(true);
 		m_stylesheet.getStylesheetRoot().setOutputMethod(OUTPUT_METHOD_HTML);
@@ -1064,6 +1062,7 @@ ElemTemplateElement* StylesheetHandler::initWrapperless (const XalanDOMString& n
 
 	return pElem;
 }
+
 
 
 static bool 

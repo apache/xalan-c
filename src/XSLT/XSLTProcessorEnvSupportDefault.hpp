@@ -110,25 +110,25 @@ public:
 	 * Install an external function in the global space.
 	 *
 	 * @param theNamespace The namespace for the functionl
-	 * @param extensionName The name of the function.
+	 * @param functionName The name of the function.
 	 * @param function The function to install.
 	 */
 	static void
 	installExternalFunctionGlobal(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName,
+			const XalanDOMString&	functionName,
 			const Function&			function);
 
 	/**
 	 * Uninstall an external function from the global space.
 	 *
 	 * @param theNamespace The namespace for the functionl
-	 * @param extensionName The name of the function.
+	 * @param functionName The name of the function.
 	 */
 	static void
 	uninstallExternalFunctionGlobal(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName);
+			const XalanDOMString&	functionName);
 
 	// Interfaces to install and uninstall external functions in this instance.
 
@@ -136,25 +136,25 @@ public:
 	 * Install an external function in the local space.
 	 *
 	 * @param theNamespace The namespace for the functionl
-	 * @param extensionName The name of the function.
+	 * @param functionName The name of the function.
 	 * @param function The function to install.
 	 */
 	virtual void
 	installExternalFunctionLocal(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName,
+			const XalanDOMString&	functionName,
 			const Function&			function);
 
 	/**
 	 * Uninstall an external function from the local space.
 	 *
 	 * @param theNamespace The namespace for the functionl
-	 * @param extensionName The name of the function.
+	 * @param functionName The name of the function.
 	 */
 	virtual void
 	uninstallExternalFunctionLocal(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName);
+			const XalanDOMString&	functionName);
 
 
 	// These interfaces are inherited from XSLTProcessorEnvSupport...
@@ -204,18 +204,18 @@ public:
 	virtual bool
 	elementAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const;
+			const XalanDOMString&	elementName) const;
 
 	virtual bool
 	functionAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const;
+			const XalanDOMString&	functionName) const;
 
 	virtual XObject*
 	extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName,
+			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const;
 

@@ -131,7 +131,7 @@ public:
 	* @param which    index into the attribute list (not used at this time)
 	* @return         true if this is a namespace name
 	*/
-	bool
+	virtual bool
 	isAttrOK(
 			int						tok,
 			const XalanDOMChar*		attrName,
@@ -147,7 +147,7 @@ public:
 	* @param which    index into the attribute list (not used at this time)
 	* @return         true if this is a namespace name
 	*/
-	bool
+	virtual bool
 	isAttrOK(
 			const XalanDOMChar*				attrName,
 			const AttributeList&			atts,
@@ -303,6 +303,12 @@ public:
 	getColumnNumber() const
 	{
 		return m_columnNumber;
+	}
+
+	const XalanDOMString
+	getElementName() const
+	{
+		return m_elemName;
 	}
 
 #if defined(XALAN_NO_NAMESPACES)
@@ -626,14 +632,24 @@ public:
 	virtual XalanDOMString
 	getNamespaceForPrefix(const XalanDOMString& prefix) const;
 
-
 	virtual XalanDOMString
 	getURI() const;
 
-
 protected:
 
-	/** 
+	/**
+	 * Get the namespace for a given prefix.
+	 * 
+	 * @param prefix The prefix to search for
+	 * @param fReportError If true, and exception will be thrown to report the error.
+	 * @return The namespace string.
+	 */
+	XalanDOMString
+	getNamespaceForPrefixInternal(
+			const XalanDOMString&	prefix,
+			bool					fReportError) const;
+
+	/**
 	 * Perform a query if needed, and call transformChild for each child.
 	 * 
 	 * @param stylesheetTree The owning stylesheet tree.
@@ -677,14 +693,6 @@ protected:
    */
   bool shouldExcludeResultNamespaceNode(
 		  const XalanDOMString& prefix, const XalanDOMString& uri);
-
-  /** 
-   * The table of namespaces that are excluded from being 
-   * used in the result tree but which need to be used 
-   * in to resolve prefixes.
-   * @serial
-   */
-  String2StringMapType m_excludedNamespaces;
 
 	/**
 	 * Given an element and mode, find the corresponding
@@ -737,6 +745,14 @@ private:
 	const int				m_columnNumber;
 
 	NamespaceVectorType 	m_namespaces;
+
+	/** 
+	 * The table of namespaces that are excluded from being 
+	 * used in the result tree but which need to be used 
+	 * in to resolve prefixes.
+	 * @serial
+	 */
+	String2StringMapType	m_excludedNamespaces;
 
 	bool					m_defaultSpace;
 	bool					m_finishedConstruction;

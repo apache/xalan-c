@@ -75,6 +75,3 @@ XSLTProcessorException::XSLTProcessorException(
 XSLTProcessorException::~XSLTProcessorException()
 {
 }
-
-
-

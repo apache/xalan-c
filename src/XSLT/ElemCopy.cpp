@@ -145,9 +145,9 @@ ElemCopy::execute(
 		}
 		else
 		{
-			if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+			if(0 != executionContext.getTraceListeners())
 			{
-				getStylesheet().getStylesheetRoot().fireTraceEvent(TracerEvent(executionContext, 
+				executionContext.fireTraceEvent(TracerEvent(executionContext, 
 					sourceTree,
 					sourceNode,
 					mode,
@@ -157,9 +157,9 @@ ElemCopy::execute(
 	}
 	else
 	{
-		if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+		if(0 != executionContext.getTraceListeners())
 		{
-			getStylesheet().getStylesheetRoot().fireTraceEvent(TracerEvent(executionContext, 
+			executionContext.fireTraceEvent(TracerEvent(executionContext, 
 				sourceTree,
 				sourceNode,
 				mode,

@@ -137,9 +137,9 @@ ElemApplyTemplates::execute(
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+	if(0 != executionContext.getTraceListeners())
 	{
-	  getStylesheet().getStylesheetRoot().fireTraceEvent(TracerEvent(
+		executionContext.fireTraceEvent(TracerEvent(
 		  executionContext, sourceTree, sourceNode, mode, *this));
 	}
 	if (0 != sourceNode)

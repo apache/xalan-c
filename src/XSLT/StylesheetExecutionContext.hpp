@@ -100,13 +100,16 @@ class FormatterToDOM;
 class FormatterToHTML;
 class FormatterToText;
 class FormatterToXML;
+class GenerateEvent;
 class PrefixResolver;
 class NodeRefListBase;
 class PrintWriter;
 class QName;
+class SelectionEvent;
 class Stylesheet;
 class StylesheetRoot;
 class TextOutputStream;
+class TracerEvent;
 class Writer;
 class XalanDocument;
 class XalanDocumentFragment;
@@ -187,7 +190,7 @@ public:
 	 * @param theStylesheet root stylesheet
 	 */
 	virtual void
-	setStylesheetRoot(StylesheetRoot*	theStylesheet) = 0;
+	setStylesheetRoot(const StylesheetRoot*		theStylesheet) = 0;
 
 	/**
 	 * Reset the state of execution to node 'xmlNode' in source tree 'sourceTree.'
@@ -878,25 +881,6 @@ public:
 	getXalanXSLNameSpaceURL() const = 0;
 
 	/**
-	 * If this is set to true, simple traces of template calls are made.
-	 *
-	 * @return true if traces made
-	 */
-	virtual bool
-	isTraceSelect() const = 0;
-
-	/**
-	 * Compose a diagnostic trace of the current selection
-	 *
-	 * @param theTemplate current context node
-	 * @param nl          list of selected nodes
-	 */
-	virtual void
-	traceSelect(
-			const XalanElement&		theTemplate,
-			const NodeRefListBase&	nl) const = 0;
-
-	/**
 	 * Determine if an element is on the recursion stack.
 	 *
 	 * @return true if element on stack
@@ -985,6 +969,11 @@ public:
 			bool					xmlDecl = true,
 			const XalanDOMString&	standalone = XalanDOMString()) = 0;
 
+	enum eDummy
+	{
+		eDefaultHTMLIndentAmount = 4
+	};
+
 	/**
 	 * Create a new FormatterToHTML instance.  The execution context
 	 * owns the instance and will delete it when reset.
@@ -1069,6 +1058,60 @@ public:
 	createXalanNumberFormat() = 0;
 
 
+	// Trace interface...
+
+	/**
+	 * Determine the number of trace listeners.
+	 * 
+	 * @return number of listeners
+	 */
+	virtual unsigned long
+	getTraceListeners() const = 0;
+
+	/**
+	 * Fire a generate event.
+	 * 
+	 * @param ge generate event to fire
+	 */
+	virtual void
+	fireGenerateEvent(const GenerateEvent&	ge) = 0;
+
+	/**
+	 * Fire a trace event.
+	 * 
+	 * @param te trace event to fire
+	 */
+	virtual void
+	fireTraceEvent(const TracerEvent&	te) = 0;
+
+	/**
+	 * Fire a selection event.
+	 * 
+	 * @param se selection event to fire
+	 */
+	virtual void
+	fireSelectEvent(const SelectionEvent&	se) = 0;
+
+	/**
+	 * If this is set to true, simple traces of template calls are made.
+	 *
+	 * @return true if traces made
+	 */
+	virtual bool
+	getTraceSelects() const = 0;
+
+	/**
+	 * Compose a diagnostic trace of the current selection
+	 *
+	 * @param theTemplate current context node
+	 * @param nl          list of selected nodes
+	 */
+	virtual void
+	traceSelect(
+			const XalanElement&		theTemplate,
+			const NodeRefListBase&	nl) const = 0;
+
+
 	// These interfaces are inherited from XPathExecutionContext...
 
 	virtual XalanNode*
@@ -1117,17 +1160,17 @@ public:
 	virtual bool
 	elementAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const = 0;
+			const XalanDOMString&	elementName) const = 0;
 
 	virtual bool
 	functionAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const = 0;
+			const XalanDOMString&	functionName) const = 0;
 
 	virtual XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName,
+			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) = 0;
 

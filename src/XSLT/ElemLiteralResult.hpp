@@ -101,6 +101,13 @@ public:
 
 	// These methods are inherited from ElemUse ...
 	
+	virtual bool
+	isAttrOK(
+			const XalanDOMChar*				attrName,
+			const AttributeList&			atts,
+			int								which,
+			StylesheetConstructionContext&	constructionContext) const;
+
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
@@ -143,12 +150,14 @@ private:
 	 */
 	String2StringMapType m_excludeResultPrefixes;
 
-/**
- * Process the exclude-result-prefixes or the extension-element-prefixes
- * attributes, for the purpose of prefix exclusion.
- */
-void ElemLiteralResult::processPrefixControl(const DOMString& localName, 
-		const DOMString& attrValue);
+	/**
+	 * Process the exclude-result-prefixes or the extension-element-prefixes
+	 * attributes, for the purpose of prefix exclusion.
+	 */
+	void
+	ElemLiteralResult::processPrefixControl(
+			const DOMString&	localName, 
+			const DOMString&	attrValue);
 		
 };
 

@@ -124,7 +124,7 @@ public:
 	createDocument() const;
 
 	virtual void
-	setStylesheetRoot(StylesheetRoot*	theStylesheet);
+	setStylesheetRoot(const StylesheetRoot*		theStylesheet);
 
 	virtual void
 	resetCurrentState(
@@ -316,14 +316,6 @@ public:
 	getXalanXSLNameSpaceURL() const;
 
 	virtual bool
-	isTraceSelect() const;
-
-	virtual void
-	traceSelect(
-			const XalanElement&		theTemplate,
-			const NodeRefListBase&	nl) const;
-
-	virtual bool
 	findOnElementRecursionStack(const ElemTemplateElement*	theElement) const;
 
 	virtual void
@@ -408,6 +400,28 @@ public:
 	static XalanNumberFormatFactory*
 	installXalanNumberFormatFactory(XalanNumberFormatFactory*	theFactory);
 
+	// Trace interface...
+	virtual unsigned long
+	getTraceListeners() const;
+
+	virtual void
+	fireGenerateEvent(const GenerateEvent&	ge);
+
+	virtual void
+	fireTraceEvent(const TracerEvent&	te);
+
+	virtual void
+	fireSelectEvent(const SelectionEvent&	se);
+
+	virtual bool
+	getTraceSelects() const;
+
+	virtual void
+	traceSelect(
+			const XalanElement&		theTemplate,
+			const NodeRefListBase&	nl) const;
+
+
 	// These interfaces are inherited from XPathExecutionContext...
 
 	virtual XalanNode*
@@ -456,17 +470,17 @@ public:
 	virtual bool
 	elementAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const;
+			const XalanDOMString&	elementName) const;
 
 	virtual bool
 	functionAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const;
+			const XalanDOMString&	functionName) const;
 
 	virtual XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName,
+			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec);
 
@@ -614,7 +628,7 @@ private:
 
 	const PrefixResolver*				m_prefixResolver;
 
-	StylesheetRoot*						m_stylesheetRoot;
+	const StylesheetRoot*				m_stylesheetRoot;
 
 	FormatterListenerSetType			m_formatterListeners;
 

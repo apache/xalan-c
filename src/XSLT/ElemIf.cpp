@@ -143,9 +143,9 @@ ElemIf::execute(
 	const XObject* const	test =
 		m_test->execute(sourceNode, *this, executionContext);
 
-	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+	if(0 != executionContext.getTraceListeners())
 	{
-		getStylesheet().getStylesheetRoot().fireSelectedEvent(
+		executionContext.fireSelectEvent(
 			SelectionEvent(executionContext,
 			sourceNode,
 			*this, 

@@ -77,6 +77,7 @@ class DispatcherFactory;
 class ElemTemplateElement;
 class Formatter;
 class FormatterListener;
+class GenerateEvent;
 class InputSource;
 class Locator;
 class NodeRefListBase;
@@ -86,12 +87,14 @@ class ProblemListener;
 class QName;
 class ResultTreeFrag;
 class ResultTreeFragBase;
+class SelectionEvent;
 class StackEntry;
 class Stylesheet;
 class StylesheetConstructionContext;
 class StylesheetExecutionContext;
 class StylesheetRoot;
 class TraceListener;
+class TracerEvent;
 class XalanDocument;
 class XalanElement;
 class XalanNode;
@@ -127,10 +130,11 @@ public:
 
 	/**
 	 * Transform the source tree to the output in the given result tree target.
+	 * The processor will process the input source, the stylesheet source,
+	 * and transform to the output target.
 	 *
-	 * @param inputSource		  input source,  may be null
-	 * @param stylesheetSource	  stylesheet source,  may be null if source
-	 *							  has a xml-stylesheet PI
+	 * @param inputSource		  input source
+	 * @param stylesheetSource	  stylesheet source
 	 * @param outputTarget		  output source tree
 	 * @param constructionContext context for construction of objects
 	 * @param executionContext	  current execution context
@@ -139,14 +143,31 @@ public:
 	virtual void
 	process(
 		XSLTInputSource&				inputSource, 
-		XSLTInputSource*				stylesheetSource,
+		XSLTInputSource&				stylesheetSource,
 		XSLTResultTarget&				outputTarget,
 		StylesheetConstructionContext&	constructionContext,
 		StylesheetExecutionContext& 	executionContext) = 0;
 
 	/**
+	 * Transform the source tree to the output in the given result tree target.
+	 * This function does not create a stylesheet tree, it assumes the
+	 * provided StylesheetExecutionContext has the stylesheet tree to use. This
+	 * is set by calling StylesheetExecutionContext::setStylesheetRoot().
+	 *
+	 * @param inputSource		  input source
+	 * @param outputTarget		  output source tree
+	 * @param executionContext	  current execution context
+	 * @exception XSLProcessorException 
+	 */
+	virtual void
+	process(
+			XSLTInputSource&				inputSource, 
+			XSLTResultTarget&				outputTarget,
+			StylesheetExecutionContext& 	executionContext) = 0;
+
+	/**
 	 * Given a stylesheet input source, compile the stylesheet into an internal
-	 * representation. This will delete any existing stylesheet root.
+	 * representation.
 	 *
 	 * @param stylesheetSource	  input source for the stylesheet
 	 * @param constructionContext context for construction of objects
@@ -160,7 +181,7 @@ public:
   
 	/**
 	 * Given a URI to an XSL stylesheet, compile the stylesheet into an internal
-	 * representation. This will delete any existing stylesheet root.
+	 * representation.
 	 *
 	 * @param xmldocURLString URI to the input XML document
 	 * @param constructionContext context for construction of objects
@@ -247,7 +268,7 @@ public:
 	 * 
 	 * @return pointer to root stylesheet
 	 */
-	virtual StylesheetRoot*
+	virtual const StylesheetRoot*
 	getStylesheetRoot() const = 0;
 
 	/**
@@ -256,7 +277,7 @@ public:
 	 * @param theStylesheet pointer to new root stylesheet
 	 */
 	virtual void
-	setStylesheetRoot(StylesheetRoot*	theStylesheet) = 0;
+	setStylesheetRoot(const StylesheetRoot*		theStylesheet) = 0;
 
 	/**
 	 * Set the execution context. Must be set if after calling
@@ -436,7 +457,15 @@ public:
 	 */
 	virtual void
 	setFormatterListener(FormatterListener* 	flistener) = 0;  
-  
+
+	/**
+	 * Determine the number of trace listeners.
+	 * 
+	 * @return number of listeners
+	 */
+	virtual unsigned long
+	getTraceListeners() const = 0;
+
 	/**
 	 * Add a trace listener for the purposes of debugging and diagnosis.
 	 * 
@@ -444,34 +473,57 @@ public:
 	 */
 	virtual void
 	addTraceListener(TraceListener* 	tl) = 0;
-  
+
+	/**
+	 * Remove a trace listener.
+	 *
+	 * @param tl Trace listener to be removed.
+	 */
+	virtual void
+	removeTraceListener(TraceListener*	tl) = 0;
+
+	/**
+	 * Fire a generate event.
+	 * 
+	 * @param ge generate event to fire
+	 */
+	virtual void
+	fireGenerateEvent(const GenerateEvent&	ge) = 0;
+
+	/**
+	 * Fire a trace event.
+	 * 
+	 * @param te trace event to fire
+	 */
+	virtual void
+	fireTraceEvent(const TracerEvent&	te) = 0;
+
+	/**
+	 * Fire a selection event.
+	 * 
+	 * @param se selection event to fire
+	 */
+	virtual void
+	fireSelectEvent(const SelectionEvent&	se) = 0;
+
 	/**
 	 * If this is set to true, simple traces of template calls are made.
 	 *
-	 * @param b true to make traces of template calls
+	 * @return true if traces made
 	 */
-	virtual void
-	setTraceTemplates(bool b) = 0;
+	virtual bool
+	getTraceSelects() const = 0;
 
 	/**
-	 * If this is set to true, simple traces of select calls are made.
+	 * Compose a diagnostic trace of the current selection
 	 *
-	 * @param b true to make traces of select calls
+	 * @param theTemplate current context node
+	 * @param nl          list of selected nodes
 	 */
 	virtual void
-	setTraceSelect(bool b) = 0;
-  
-	/**
-	 * If this is set to true, debug diagnostics about 
-	 * template children as they are being constructed 
-	 * will be written to the m_diagnosticsPrintWriter 
-	 * stream.	diagnoseTemplateChildren is false by
-	 * default.
-	 *
-	 * @param b true to make traces of template children construction
-	 */
-	virtual void
-	setTraceTemplateChildren(bool b) = 0;
+	traceSelect(
+			const XalanElement&		theTemplate,
+			const NodeRefListBase&	nl) const = 0;
 
 	/**
 	 * If the quietConflictWarnings property is set to 
@@ -484,23 +536,6 @@ public:
 	virtual void
 	setQuietConflictWarnings(bool b) = 0;
 
-	/**
-	 * Remove a trace listener.
-	 *
-	 * @param tl Trace listener to be removed.
-	 */
-	virtual void
-	removeTraceListener(TraceListener*	tl) = 0;
-
-// @@TODO: what to do about output stream ??
-  /*
-   * If this is set, diagnostics will be 
-   * written to the m_diagnosticsPrintWriter stream. If 
-   * the value is null, then diagnostics will be turned 
-   * off.
-   */
-//	 virtual void setDiagnosticsOutput(java.io.OutputStream out) = 0;
-  
 	/**
 	 * If this is set, diagnostics will be 
 	 * written to the m_diagnosticsPrintWriter stream. If 

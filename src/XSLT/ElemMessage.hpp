@@ -64,9 +64,9 @@
 
 
 
-
 // Base class header file.
 #include "ElemTemplateElement.hpp"
+#include "XSLTProcessorException.hpp"
 
 
 
@@ -100,6 +100,26 @@ public:
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
+
+	class ElemMessageTerminateException : public XSLTProcessorException
+	{
+	public:
+
+		/**
+		 * Construct an ElemMessageTerminateException object
+		 * 
+		 * @param theMessage message to print when exception thrown
+		 */
+		ElemMessageTerminateException(const DOMString&	theMessage);
+		
+
+		virtual
+		~ElemMessageTerminateException();
+	};
+
+private:
+
+	bool	m_terminate;
 };
 
 

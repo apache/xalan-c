@@ -84,7 +84,8 @@ ElemMessage::ElemMessage(
 						name,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_MESSAGE)
+						Constants::ELEMNAME_MESSAGE),
+	m_terminate(false)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -92,7 +93,21 @@ ElemMessage::ElemMessage(
 	{
 		const XalanDOMChar*	const	aname = atts.getName(i);
 
-		if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
+		if (equals(aname, Constants::ATTRNAME_TERMINATE) == true)
+		{
+			const XalanDOMChar*	const	avalue = atts.getValue(i);
+
+			if (equals(avalue, Constants::ATTRVAL_YES) == true)
+			{
+				m_terminate = true;
+			}
+			else if (equals(avalue, Constants::ATTRVAL_NO) == false)
+			{
+				constructionContext.error(XalanDOMString("Attribute terminate has an illegal value: ") +
+										  XalanDOMString(avalue));
+			}
+		}
+		else if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
 			constructionContext.error(XalanDOMString(name) +
 										" has an illegal attribute: " +
@@ -115,4 +130,23 @@ ElemMessage::execute(
     const XalanDOMString	data = childrenToString(executionContext, sourceTree, sourceNode, mode);
 
     executionContext.message(data, sourceNode, this);
+
+	if (m_terminate == true)
+	{
+		throw ElemMessageTerminateException(data);
+	}
+}
+
+
+
+ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(const DOMString&	theMessage) :
+	XSLTProcessorException(theMessage,
+						   XALAN_STATIC_UCODE_STRING("ElemMessageTerminateException"))
+{
+}
+
+
+
+ElemMessage::ElemMessageTerminateException::~ElemMessageTerminateException()
+{
 }

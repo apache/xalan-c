@@ -134,9 +134,9 @@ ElemChoose::execute(
 								   executionContext);
 			assert(test != 0);
 
-			if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+			if(0 != executionContext.getTraceListeners())
 			{
-				getStylesheet().getStylesheetRoot().fireSelectedEvent(
+				executionContext.fireSelectEvent(
 					SelectionEvent(executionContext,
 					sourceNode,
 					*when,

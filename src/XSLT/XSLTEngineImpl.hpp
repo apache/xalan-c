@@ -257,11 +257,17 @@ public:
 	virtual void
 	process(
 			XSLTInputSource&				inputSource, 
-			XSLTInputSource*				stylesheetSource,
+			XSLTInputSource&				stylesheetSource,
 			XSLTResultTarget&				outputTarget,
 			StylesheetConstructionContext&	constructionContext,
 			StylesheetExecutionContext& 	executionContext);
-	
+
+	virtual void
+	process(
+			XSLTInputSource&				inputSource,
+			XSLTResultTarget&				outputTarget,
+			StylesheetExecutionContext& 	executionContext);
+
 	virtual StylesheetRoot*
 	processStylesheet(
 			XSLTInputSource&				stylesheetSource,
@@ -354,25 +360,40 @@ public:
 	virtual void
 	setFormatterListener(FormatterListener* flistener);
 
-	virtual void addTraceListener(TraceListener* tl);
-	
-	virtual void
-	setTraceTemplates(bool	b);
+	// Trace-related functions...
 
-	bool isTraceSelect() const;
+	virtual unsigned long
+	getTraceListeners() const;
 
 	virtual void
-	setTraceSelect(bool b);
-  
+	addTraceListener(TraceListener* 	tl);
+
 	virtual void
-	setTraceTemplateChildren(bool	b);
+	removeTraceListener(TraceListener*	tl);
+
+	virtual void
+	fireGenerateEvent(const GenerateEvent&	ge);
+	  
+	virtual void
+	fireTraceEvent(const TracerEvent&	te);
+
+	virtual void
+	fireSelectEvent(const SelectionEvent&	se);
+
+	virtual bool
+	getTraceSelects() const;
+
+	virtual void
+	setTraceSelects(bool	b);
+
+	virtual void
+	traceSelect(
+			const XalanElement&		theTemplate,
+			const NodeRefListBase&	nl) const;
 
 	virtual void
 	setQuietConflictWarnings(bool	b);
 
-	virtual void
-	removeTraceListener(TraceListener*	tl);
-	
 	virtual void
 	setDiagnosticsOutput(PrintWriter*	pw);
 
@@ -592,52 +613,11 @@ public:
 	outputResultTreeFragment(const XObject& 	theTree);
 
 	/**
-	 * Determine if an external function is available.
-	 *
-	 * @param theNamespace	namespace for function
-	 * @param extensionName name of extension function
-	 * @return whether the given function is available or not
-	 */
-	bool
-	functionAvailable(
-			XalanDOMString&		theNamespace, 
-			XalanDOMString&		extensionName) const;
-	
-	/**
-	 * Handle an extension function.
-	 * 
-	 * @param executionContext	current execution context
-	 * @param theNamespace	namespace of function	 
-	 * @param extensionName extension function name
-	 * @param argVec		vector of arguments to function
-	 * @return pointer to XObject result
-	 */
-	virtual XObject*
-	extFunction(
-			XPathExecutionContext&			executionContext,
-			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName,
-			XalanNode*						context,
-			const XObjectArgVectorType&		argVec) const;
-
-	// This is public for class Stylesheet...
-	/**
-	 * In response to xsl:function, set up a function that can be called from
-	 * the expression language.
-	 *
-	 * NOTE: this method is not yet supported
-	 *
-	 * @param extensionElem extension element
-	 */
-	void
-	handleFunctionsInstruction(XalanElement& 	extensionElem);
-
-	/**
 	 * Retrieve the root stylesheet.
 	 * 
 	 * @return pointer to root stylesheet
 	 */
-	virtual StylesheetRoot*
+	virtual const StylesheetRoot*
 	getStylesheetRoot() const;
 
 	/**
@@ -646,7 +626,7 @@ public:
 	 * @param theStylesheet pointer to new root stylesheet
 	 */
 	virtual void
-	setStylesheetRoot(StylesheetRoot*	theStylesheet);
+	setStylesheetRoot(const StylesheetRoot*		theStylesheet);
 
 	/**
 	 * Set the execution context.
@@ -766,19 +746,6 @@ public:
 			const XalanNode& node,
 			int 		tagType) const;
 
-  /**
-	* Add list of trace listeners to the root sylesheet for the purposes of
-	* debugging and diagnosis.
-   */
-	void addTraceListenersToStylesheet();
-
-	/**
-	 * Fire a generate event.
-	 *
-	 * @param te generate event to fire
-	 */
-	void fireGenerateEvent(const GenerateEvent& te);
-	
 	/**
 	 * Whether to warn about pattern match conflicts.
 	 *
@@ -876,23 +843,14 @@ public:
 			const XalanDOMString&	s) const;
   
 	/**
-	 * Compose a diagnostic trace of the current selection
-	 *
-	 * @param theTemplate current context node
-	 * @param nl		  list of selected nodes
-	 */
-	void traceSelect(
-			const XalanElement&		theTemplate,
-			const NodeRefListBase&	nl) const;
-
-	/**
 	 * Tell if a given element name should output it's text 
 	 * as cdata.
 	 *
 	 * @param elementName name of element
 	 * @return true if it should output as cdata
 	 */
-	bool isCDataResultElem(const XalanDOMString& elementName);
+	bool
+	isCDataResultElem(const XalanDOMString&		elementName) const;
 	
 	/**
 	 * Tell if a qualified name equals the current result tree name.
@@ -901,7 +859,10 @@ public:
 	 * @param elementName current result tree element
 	 * @return true if names are the same
 	 */
-	bool qnameEqualsResultElemName(const QName& qname, const XalanDOMString& elementName);
+	bool
+	qnameEqualsResultElemName(
+			const QName&			qname,
+			const XalanDOMString&	elementName) const;
 	
 	/**
 	 * Retrieve the result namespace corresponding to a prefix.
@@ -910,8 +871,7 @@ public:
 	 * @return string for namespace URI
 	 */
 	XalanDOMString
-	getResultNamespaceForPrefix(
-			const XalanDOMString&	prefix) const;
+	getResultNamespaceForPrefix(const XalanDOMString&	prefix) const;
   
 	/**
 	 * Retrieve the result prefix corresponding to a namespace.
@@ -920,8 +880,7 @@ public:
 	 * @return string for namespace prefix
 	 */
 	XalanDOMString
-	getResultPrefixForNamespace(
-			const XalanDOMString&	theNamespace) const;
+	getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const;
 
 	/**
 	 * Evaluate an xpath string and return the result as a numberic score.
@@ -969,7 +928,7 @@ public:
 	 */
 	XObject*
 	evalXPathStr(
-			const XalanDOMString&		str,
+			const XalanDOMString&	str,
 			XPathExecutionContext&	executionContext);
 
 	/**
@@ -1224,32 +1183,6 @@ public:
 	 */
 	const XalanDOMString
 	getNormalizedText(const XalanText&	tx) const;
-
-	/**
-	 * Set the stylesheet root.  If this is set, then the process calls that
-	 * take only the input .xml will use this instead of looking for a
-	 * stylesheet PI.
-	 * 
-	 * @param theStylesheet pointer to root stylesheet
-	 */
-	void
-	setStylesheet(StylesheetRoot *stylesheetRoot)
-	{
-		m_stylesheetRoot = stylesheetRoot;
-	}
- 
-	/**
-	 * Get the stylesheet root.  If this is set, then the process calls that
-	 * take only the input .xml will use this instead of looking for a
-	 * stylesheet PI.
-	 * 
-	 * @return pointer to root stylesheet
-	 */
-	StylesheetRoot*
-	getStylesheet() const
-	{
-		return m_stylesheetRoot;
-	}
 
 	/**
 	 * Get the filename of the output document, if it was set. This is for use
@@ -1915,6 +1848,12 @@ protected:
 	 */
 	AttributeListImpl	m_pendingAttributes;
 
+	/*
+	 * true if a startDocument() event has been fired, but we
+	 * haven't yet calld startDocument() on our formatter.
+	 */
+	bool				m_hasPendingStartDocument;
+
 	/**
 	 * NOTE: This replaces the ResultNameSpace class in java, since it is the
 	 * same as the NameSpace class
@@ -1978,27 +1917,10 @@ private:
 	 */
 	ProblemListener*	m_problemListener;
 
-	/**
-	 * Print a trace of a template that is being called, either by 
-	 * a match, name, or as part of for-each.
-	 */
-	void
-	traceTemplate(
-			const XalanElement&		theTemplate) const;
-
-	/**
-	 * Print some diagnostics about the current 
-	 * template child.
-	 */
-	void
-	diagnoseTemplateChildren(
-			const XalanNode& templateChild,
-			const XalanNode& sourceNode) const;
-
   /**
    * The root of a linked set of stylesheets.
    */
-	StylesheetRoot* 				m_stylesheetRoot;
+	const StylesheetRoot* 				m_stylesheetRoot;
 
 /**
  * The namespace that we must match as a minimum for XSLT.
@@ -2049,28 +1971,15 @@ private:
 	 */
 
 	/**
+	 * If this is set to true, selects will be traced
+	 */
+	bool	m_traceSelects;
+
+	/**
 	 * If this is set to true, do not warn about pattern 
 	 * match conflicts.
 	 */
 	bool	m_quietConflictWarnings;
-
-	/*
-	 * If this is true, then the diag function will 
-	 * be called.
-	 */
-	bool	m_traceTemplateChildren;
-  
-	/*
-	 * If this is true, then the simple tracing of templates 
-	 * will be performed.
-	 */
-	bool	m_traceTemplates;
-
-	/*
-	 * If this is true, then diagnostics of each select 
-	 * will be performed.
-	 */
-	bool	m_traceSelects;
 
 	/*
 	 * A stream to print diagnostics to.

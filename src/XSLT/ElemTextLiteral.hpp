@@ -57,13 +57,6 @@
 #if !defined(XALAN_ELEMTEXTLITERAL_HEADER_GUARD)
 #define XALAN_ELEMTEXTLITERAL_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
@@ -123,6 +116,18 @@ public:
 		return m_preserveSpace;
 	}
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanDOMChar>		XMLChVectorType;
+#else
+	typedef std::vector<XalanDOMChar>	XMLChVectorType;
+#endif
+
+	const XMLChVectorType&
+	getText() const
+	{
+		return m_ch;
+	}
+
 	// These methods are inherited from ElemTemplateElement ...
 	
 	virtual void
@@ -143,12 +148,6 @@ private:
 	const bool				m_isCData;
 	const bool				m_preserveSpace;
 	const bool				m_disableOutputEscaping;
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanDOMChar>		XMLChVectorType;
-#else
-	typedef std::vector<XalanDOMChar>	XMLChVectorType;
-#endif
 
 	const XMLChVectorType	m_ch;
 };

@@ -93,7 +93,7 @@ public:
 	ElemPI(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
@@ -117,6 +117,9 @@ protected:
 
 private:
 
-	DOMString m_name_atv;
+	XalanDOMString	m_name_atv;
 };
+
+
+
 #endif	// XALAN_ELEMPI_HEADER_GUARD

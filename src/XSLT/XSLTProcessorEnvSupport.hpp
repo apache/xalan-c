@@ -133,18 +133,18 @@ public:
 	virtual bool
 	elementAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const = 0;
+			const XalanDOMString&	elementName) const = 0;
 
 	virtual bool
 	functionAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const = 0;
+			const XalanDOMString&	functionName) const = 0;
 
 	virtual XObject*
 	extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName,
+			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const = 0;
 

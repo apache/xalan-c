@@ -176,9 +176,9 @@ ElemVariable::getValue(
 	{
 		var = m_selectPattern->execute(sourceNode, *this, executionContext);
 
-		if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+		if(0 != executionContext.getTraceListeners())
 		{
-			getStylesheet().getStylesheetRoot().fireSelectedEvent(
+			executionContext.fireSelectEvent(
 				SelectionEvent(executionContext, sourceNode,
 					*this, XalanDOMString(XALAN_STATIC_UCODE_STRING("select")), *m_selectPattern, var));
 		}

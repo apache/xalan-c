@@ -136,14 +136,53 @@ ElemElement::execute(
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
-{	
+{
 	XalanDOMString	elemName; 
 
 	assert(m_nameAVT != 0);
 
 	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext);
 
-	if(!isEmpty(elemName))
+	bool				isIllegalAttribute = false;
+	unsigned int		len = length(elemName);
+	const unsigned int	indexOfNSSep = indexOf(elemName, ':');
+	const bool			haveNamespace = indexOfNSSep == len ? false : true;
+
+	XalanDOMString	ns;
+
+	if(haveNamespace == true)
+	{
+		if (indexOfNSSep + 1 == len ||
+			isValidNCName(substring(elemName, indexOfNSSep + 1)) == false)
+		{
+			isIllegalAttribute = true;
+		}
+	}
+	else if(len == 0 || isValidNCName(elemName) == false)
+	{
+		isIllegalAttribute = true;
+	}
+
+	if (isIllegalAttribute == true)
+	{
+		XalanDOMString	msg("Illegal attribute name: ");
+		msg += elemName;
+
+		executionContext.warn(msg, sourceNode, this);
+
+		clear(elemName);
+		len = 0;
+	}
+	else if (haveNamespace == true)
+	{
+		const XalanDOMString	nsprefix = substring(elemName, 0, indexOfNSSep);
+
+		ns = getNamespaceForPrefixInternal(nsprefix, false);
+	}
+
+	const unsigned int	nsLength = length(ns);
+
+	if (len != 0 && (haveNamespace == false || nsLength != 0))
 	{
 		if(0 != m_namespaceAVT)
 		{
@@ -165,16 +204,24 @@ ElemElement::execute(
 					executionContext.addResultAttribute(nsDecl, elemNameSpace);
 				}
 
+				if(indexOfNSSep < len)
+				{
+					elemName = substring(elemName, indexOfNSSep + 1);
+				}
+
 				elemName = prefix + XALAN_STATIC_UCODE_STRING(":") + elemName;
 			}
 		}
 
 		executionContext.startElement(toCharArray(elemName));   
+	}
 
-		ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
+	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
 
-		executeChildren(executionContext, sourceTree, sourceNode, mode);
+	executeChildren(executionContext, sourceTree, sourceNode, mode);
 
+	if (len != 0 && (haveNamespace == false || nsLength != 0))
+	{
 		executionContext.endElement(toCharArray(elemName));
 	}
 }

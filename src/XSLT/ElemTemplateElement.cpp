@@ -99,9 +99,6 @@
 #include "SelectionEvent.hpp"
 #include "TracerEvent.hpp"
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::make_pair;
-#endif
 
 
 /** 
@@ -141,22 +138,27 @@ ElemTemplateElement::ElemTemplateElement(
 	 */
 	const Stylesheet::NamespacesStackType& stylesheetNamespaces =
 		m_stylesheet.getNamespaces();
-	int n = stylesheetNamespaces.size();
+
+	const int	n = stylesheetNamespaces.size();
+
 	for(int i = (n-1); i >= 0; i--)
 	{
 		const Stylesheet::NamespaceVectorType& nsVector = stylesheetNamespaces[i];
+
 		for(unsigned int j = 0; j < nsVector.size(); j++)
 		{
-			NameSpace ns = nsVector[j];
-			if(isEmpty(ns.getURI()))
-				continue;
-			if(!shouldExcludeResultNamespaceNode(ns.getPrefix(), ns.getURI()))
+			const NameSpace&	ns = nsVector[j];
+
+			if(isEmpty(ns.getURI()) == false)
 			{
-				m_namespaces.push_back(ns);
-			}
-			else
-			{
-				m_excludedNamespaces.insert(make_pair(ns.getPrefix(), ns.getURI()));
+				if(!shouldExcludeResultNamespaceNode(ns.getPrefix(), ns.getURI()))
+				{
+					m_namespaces.push_back(ns);
+				}
+				else
+				{
+					m_excludedNamespaces.insert(String2StringMapType::value_type(ns.getPrefix(), ns.getURI()));
+				}
 			}
 		}
 	}
@@ -182,8 +184,6 @@ ElemTemplateElement::isAttrOK(
 {
     bool isXMLNS = (Constants::TATTRNAME_XMLNSDEF == tok) 
 		|| startsWith(attrName, Constants::ATTRNAME_XMLNS);
-
-    // TODO: Well, process it...
 
     return isXMLNS;  
 }
@@ -288,9 +288,9 @@ ElemTemplateElement::execute(
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+	if(0 != executionContext.getTraceListeners())
     {
-		getStylesheet().getStylesheetRoot().fireTraceEvent(
+		executionContext.fireTraceEvent(
 			TracerEvent(executionContext, sourceTree, sourceNode, mode, *this));
 	}    
 }
@@ -580,11 +580,11 @@ ElemTemplateElement::transformSelectedChildren(
 		(Constants::ELEMNAME_FOREACH == tok))
 	{
 		const ElemForEach* foreach = static_cast<const ElemForEach *>(&xslInstruction);
-		int nChildren = foreach->getSortElems().size();
+		const unsigned int nChildren = foreach->getSortElems().size();
 		
 		// March backwards, performing a sort on each xsl:sort child.
 		// Probably not the most efficient method.
-		for(int i = 0; i < nChildren; i++)
+		for(unsigned int i = 0; i < nChildren; i++)
 		{
 			ElemSort* sort = foreach->getSortElems()[i];
 			assert(sort != 0);
@@ -655,9 +655,9 @@ ElemTemplateElement::transformSelectedChildren(
 		{
 			sourceNodes = result->mutableNodeset();
 
-			if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+			if(0 != executionContext.getTraceListeners())
 			{
-				getStylesheet().getStylesheetRoot().fireSelectedEvent(
+				executionContext.fireSelectEvent(
 						SelectionEvent(executionContext, 
 							sourceNodeContext,
 							*this,
@@ -692,7 +692,7 @@ ElemTemplateElement::transformSelectedChildren(
 				executionContext,
 				sourceNodes);
 
-		if(executionContext.isTraceSelect())
+		if(executionContext.getTraceSelects() == true)
 		{
 			executionContext.traceSelect(
 				xslInstruction,
@@ -731,7 +731,7 @@ bool
 ElemTemplateElement::transformChild(
 			StylesheetExecutionContext& executionContext,
 			const Stylesheet&			stylesheet_tree, 
-			const ElemTemplateElement*	xslInstruction,
+			const ElemTemplateElement*	/* xslInstruction */,
 			const ElemTemplateElement*	theTemplate,
 			XalanNode*					sourceTree, 
 			XalanNode*					selectContext,
@@ -837,7 +837,7 @@ ElemTemplateElement::transformChild(
 				}
 				else
 				{
-					if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+					if(0 != executionContext.getTraceListeners())
 					{
 						TracerEvent te(executionContext,
 									   sourceTree,
@@ -845,7 +845,7 @@ ElemTemplateElement::transformChild(
 										mode,
 										*theTemplate);
 
-						getStylesheet().getStylesheetRoot().fireTraceEvent(te);
+						executionContext.fireTraceEvent(te);
 					}
 
 					theTemplate->executeChildren(executionContext, 
@@ -1166,30 +1166,44 @@ ElemTemplateElement::getAttributeNode(const XalanDOMString&		/* name */) const
 }
 
 
-void ElemTemplateElement::removeExcludedPrefixes(
-		const String2StringMapType& excludeResultPrefixes)
+void
+ElemTemplateElement::removeExcludedPrefixes(const String2StringMapType&		excludeResultPrefixes)
 {
 	if(0 !=excludeResultPrefixes.size() && 0 != m_namespaces.size())
 	{
-		for( NamespaceVectorType::iterator it = m_namespaces.begin();
-				it != m_namespaces.end(); )
+		const NamespaceVectorType::iterator		theEnd =
+			m_namespaces.end();
+
+		for(NamespaceVectorType::iterator it = m_namespaces.begin();
+				it != theEnd; )
 		{
-			NameSpace ns = *it;
-			DOMString p = ns.getPrefix();
-			String2StringMapType::const_iterator it2 = excludeResultPrefixes.find(p);
+			const NameSpace&	ns = *it;
+
+			const XalanDOMString&	prefix = ns.getPrefix();
+
+			const String2StringMapType::const_iterator	it2 =
+				excludeResultPrefixes.find(prefix);
+
 			if(it2 != excludeResultPrefixes.end())
 			{
-				m_excludedNamespaces.insert(make_pair(p, ns.getURI()));
+				m_excludedNamespaces.insert(String2StringMapType::value_type(prefix, ns.getURI()));
+
 				it = m_namespaces.erase(it);
 			}
-			else 
-				it++;
+			else
+			{
+				++it;
+			}
 		}
 	}
 }
-  
-bool ElemTemplateElement::shouldExcludeResultNamespaceNode(
-		const DOMString& prefix, const DOMString& uri)
+ 
+
+ 
+bool
+ElemTemplateElement::shouldExcludeResultNamespaceNode(
+		const XalanDOMString&	prefix,
+		const XalanDOMString&	uri)
 {
 /*
 	@@ JMD: Need to implement this ---
@@ -1216,6 +1230,7 @@ bool ElemTemplateElement::shouldExcludeResultNamespaceNode(
 */
 	return false;
 }
+
 
 
 XalanNodeList*
@@ -1328,6 +1343,16 @@ ElemTemplateElement::getElementsByTagNameNS(
 XalanDOMString
 ElemTemplateElement::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
+	return getNamespaceForPrefixInternal(prefix, true);
+}
+
+
+
+XalanDOMString
+ElemTemplateElement::getNamespaceForPrefixInternal(
+			const XalanDOMString&	prefix,
+			bool					fReportError) const
+{
     XalanDOMString	nameSpace;
 
     if(m_finishedConstruction == true)
@@ -1358,7 +1383,7 @@ ElemTemplateElement::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 		nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
     }
 
-    if(isEmpty(nameSpace))
+    if(fReportError == true && isEmpty(nameSpace) == true)
 	{
 		error("Can not resolve namespace prefix: " + prefix);
 	}
