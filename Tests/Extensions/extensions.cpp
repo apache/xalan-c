@@ -98,6 +98,7 @@ FileUtility				futil;
 XalanDOMString			baseDir, outputRoot, goldRoot;  // These are set by the getParams routine.
 const XalanDOMString	testDir("extensions");
 const XalanDOMString	theNamespace("http://xml.apache.org/xalan");
+const char *resultString = "The specified function is not available: http://xml.apache.org/xalan:nodeset";
 
 
 void
@@ -209,59 +210,155 @@ getParams(int argc,
 	return fSuccess;
 }
 
+// Generate the various filenames needed for testing.
 void generateFiles(const XalanDOMString &fileName, 
 				   XalanDOMString &xml, 
-				   XalanDOMString &xsl, 
+				   XalanDOMString &xsl,
 				   XalanDOMString &out,
-				   XalanDOMString &gold)
+				   XalanDOMString &gold,
+				   const char* test)
 {
 	// Set up the input/output files.
+	const XalanDOMString testName(test + XalanDOMString(".out"));
 
 	xsl = baseDir + testDir + pathSep + fileName;
+	
 	xml = futil.GenerateFileName(xsl,"xml");
-	out =  outputRoot + testDir + pathSep + fileName; 
-	out = futil.GenerateFileName(out, "out");
+
+	out =  outputRoot + testDir + pathSep + testName; 
 
 	gold = goldRoot +testDir + pathSep + fileName;
 	gold = futil.GenerateFileName(gold, "out");
 
 }
 
-void installUninstallExtensions(XalanTransformer &transformer, bool install)
-{
-	// The namespace for our functions is "http://xml.apache.org/xalan".
-
-	// Install the functions in the local space.  They will only be installed in this instance, so no other instances
-	// will know about them...
-	if (install)
-	{
-		transformer.installExternalFunction(theNamespace, XalanDOMString("difference"), FunctionDifference());
-		transformer.installExternalFunction(theNamespace, XalanDOMString("distinct"), FunctionDistinct());
-		transformer.installExternalFunction(theNamespace, XalanDOMString("evaluate"), FunctionEvaluate());
-		transformer.installExternalFunction(theNamespace, XalanDOMString("hasSameNodes"), FunctionHasSameNodes());
-		transformer.installExternalFunction(theNamespace, XalanDOMString("intersection"), FunctionIntersection());
-	}
-	else
-	{
-		transformer.uninstallExternalFunction(theNamespace, XalanDOMString("difference"));
-		transformer.uninstallExternalFunction(theNamespace, XalanDOMString("distinct"));
-		transformer.uninstallExternalFunction(theNamespace, XalanDOMString("evaluate"));
-		transformer.uninstallExternalFunction(theNamespace, XalanDOMString("hasSameNodes"));
-		transformer.uninstallExternalFunction(theNamespace, XalanDOMString("intersection"));
-
-	}
-	return;
-}
-
-//TestCase1:
-//	This tests uses transformer method installExternalFunction to install the nodeset function. 
-//	Then if checks that the nodeset function works. 
+//	TestCase1
+//  API Call: 
+//		None. Verfies default behavior of XalanTransformer.
+//	Comments:
+//		This test verifies that the Nodeset function was properly installed with the transformer.  All 
+//		functions are preinstalled globally.  Output file should contain data. 
+//		 
 void TestCase1(XalanTransformer &transformEngine, const XalanDOMString &fileName)
 {
 	
 	XalanDOMString	xml, xsl, result, gold;
-	char *resultString = "The specified function is not available: http://xml.apache.org/xalan:nodeset";		
-	generateFiles(fileName, xml, xsl, result, gold);
+		
+	generateFiles(fileName, xml, xsl, result, gold, "TestCase1");
+
+	// Create the InputSources and ResultTraget.
+	const XSLTInputSource	xmlInputSource(c_wstr(xml));
+	const XSLTInputSource	xslInputSource(c_wstr(xsl));
+	const XSLTResultTarget	theResultTarget(result);
+
+	// Perform the transform and check the results.
+	int	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+	if (!theResult)
+	{
+		const XSLTInputSource resultInputSource(c_wstr(result));
+		const XSLTInputSource goldInputSource(c_wstr(gold));
+		futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, "TestCase1"); 
+	}
+	else
+	{
+		cout << endl << "Failed: TestCase1" ;
+	}
+}
+
+//	TestCase2
+//  API Call: 
+//		None. Verfies default behavior of XalanTransformer.
+//	Comments:
+//		This test verifies that the following functions: difference, distinct, evaluate, hasSameNodes, 
+//		and intersection are defined and working.  Output file should contain data.
+//
+void TestCase2(XalanTransformer &transformEngine, const XalanDOMString &fileName)
+{
+	
+	XalanDOMString	xml, xsl, result, gold;
+
+	generateFiles(fileName, xml, xsl, result, gold, "TestCase2");
+
+	// Create the InputSources and ResultTraget.
+	const XSLTInputSource	xmlInputSource(c_wstr(xml));
+	const XSLTInputSource	xslInputSource(c_wstr(xsl));
+	const XSLTResultTarget	theResultTarget(result);
+
+
+	// Perform the transform and check the results.
+	int	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+	if (!theResult)
+	{
+		const XSLTInputSource resultInputSource(c_wstr(result));
+		const XSLTInputSource goldInputSource(c_wstr(gold));
+		futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, "TestCase2"); 
+	}
+	else
+	{
+		cout << endl << "Failed: TestCase2" ;
+	}
+
+}
+
+//	TestCase3
+//  API Call:
+//		XalanTransformer::uninstallExternalFunctionGlobal
+//	Comments:
+//		This test verifies that the 'nodeset' function is properly uninstalled via the api.
+//		Output file should NOT contain data. 
+//
+void TestCase3(XalanTransformer &transformEngine, const XalanDOMString &fileName)
+{	
+
+	XalanDOMString	xml, xsl, result, gold;
+	
+	generateFiles(fileName, xml, xsl, result, gold, "TestCase3");
+
+	// Create the InputSources and ResultTraget.
+	const XSLTInputSource	xmlInputSource(c_wstr(xml));
+	const XSLTInputSource	xslInputSource(c_wstr(xsl));
+	const XSLTResultTarget	theResultTarget(result);
+
+	// UnInstall the external Global function "nodeset"
+	transformEngine.uninstallExternalFunctionGlobal(
+					theNamespace,
+					XalanDOMString("nodeset"));
+
+	int theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+	if (theResult == -1)
+	{
+		if (!strcmp(resultString, transformEngine.getLastError()))
+		{
+			cout << endl << "Passed: TestCase3" ;
+		}
+		else 
+		{
+			cout << endl << "Failed: TestCase3" ;
+		}
+	}
+	else
+	{
+		cout << endl << "Failed: TestCase3" ;
+	}
+
+}
+
+
+//	TestCase4:
+//  API Call:	
+//		XalanTransformer::installExternalFunction
+//		XalanTransformer::uninstallExternalFunction
+//  Comments:
+//		This tests the installExternalFunction method of XalanTransformer using the nodeset function.
+//		Output file should NOT contain data.
+//
+void TestCase4(XalanTransformer &transformEngine, const XalanDOMString &fileName)
+{
+	
+	XalanDOMString	xml, xsl, result, gold;
+
+
+	generateFiles(fileName, xml, xsl, result, gold, "TestCase4");
 
 	// Create the InputSources and ResultTraget.
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
@@ -280,124 +377,78 @@ void TestCase1(XalanTransformer &transformEngine, const XalanDOMString &fileName
 	{
 		const XSLTInputSource resultInputSource(c_wstr(result));
 		const XSLTInputSource goldInputSource(c_wstr(gold));
-		futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, "TestCase1a"); 
+		futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, "TestCase4a"); 
 	}
 	else
 	{
-		cout << endl << "Failed: TestCase1a" ;
+		cout << endl << "Failed: TestCase4a" ;
 	}
 
+	// Because we install the function locally, this second instance of the transformer should not run the
+	// test successfully.
 	XalanTransformer newEngine;
-	int secondResult = newEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-	if (secondResult == -1)
+	theResult = newEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+	if (theResult == -1)
 	{
 		if (!strcmp(resultString, newEngine.getLastError()))
 		{
-			cout << endl << "Passed: TestCase1b" ;
+			cout << endl << "Passed: TestCase4b" ;
 		}
 		else 
 		{
-			cout << endl << "Failed: TestCase1b" ;
+			cout << endl << "Failed: TestCase4b" ;
 		}
 	}
 	else
 	{
-		cout << endl << "Failed: TestCase1b" ;
+		cout << endl << "Failed: TestCase4b" ;
 	}
 
-}
-
-//TestCase2 
-//	This tests uses transformer method installExternalFunction to install the following functions:
-//		difference, distinct, evaluate, hasSameNodes, intersection
-//	They are then tested with a stylesheet.
-void TestCase2(XalanTransformer &transformEngine, const XalanDOMString &fileName)
-{
-	
-	XalanDOMString	xml, xsl, result, gold;
-		
-	generateFiles(fileName, xml, xsl, result, gold);
-
-	// Create the InputSources and ResultTraget.
-	const XSLTInputSource	xmlInputSource(c_wstr(xml));
-	const XSLTInputSource	xslInputSource(c_wstr(xsl));
-	const XSLTResultTarget	theResultTarget(result);
-
-	installUninstallExtensions(transformEngine, true);
-
-	// Perform the transform and check the results.
-	int	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-	if (!theResult)
-	{
-		const XSLTInputSource resultInputSource(c_wstr(result));
-		const XSLTInputSource goldInputSource(c_wstr(gold));
-		futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, "TestCase2"); 
-	}
-	else
-	{
-		cout << endl << "Failed: TestCase2" ;
-	}
-
-}
-
-//TestCase3:
-//	This tests uses transformer method uninstallExternalFunction to remove the nodeset function. 
-//	It then attempts to execute the function.  The test passes if the proper error message is 
-//	returned.  The remaining installed functions from the previous test are uninstalled.
-void TestCase3(XalanTransformer &transformEngine, const XalanDOMString &fileName)
-{
-	
-	XalanDOMString	xml, xsl, result, gold;
-	char *resultString = "The specified function is not available: http://xml.apache.org/xalan:nodeset";
-
-	generateFiles(fileName, xml, xsl, result, gold);
-
-	// Create the InputSources and ResultTraget.
-	const XSLTInputSource	xmlInputSource(c_wstr(xml));
-	const XSLTInputSource	xslInputSource(c_wstr(xsl));
-	const XSLTResultTarget	theResultTarget(result);
-
-	// Install the external function "nodeset"
+	// Now unInstall the external function "nodeset"
 	transformEngine.uninstallExternalFunction(
 		theNamespace,
 		XalanDOMString("nodeset"));
 
 	// Perform the transform and check the results.
-	int	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
 	if (theResult == -1)
 	{
-		if (!strcmp(resultString, transformEngine.getLastError()))
+		if (!strcmp(resultString, newEngine.getLastError()))
 		{
-			cout << endl << "Passed: TestCase3" ;
+			cout << endl << "Passed: TestCase4c" ;
 		}
 		else 
 		{
-			cout << endl << "Failed: TestCase3" ;
+			cout << endl << "Failed: TestCase4c" ;
 		}
 	}
 	else
 	{
-		cout << endl << "Failed: TestCase3" ;
+		cout << endl << "Failed: TestCase4c" ;
 	}
-	installUninstallExtensions(transformEngine, false);
+
 }
 
-//TestCase4:
-//	This tests the nodeset function as well as the 
-//	installExternalFunction method of XalanTransformer
-void TestCase4(XalanTransformer &transformEngine, const XalanDOMString &fileName)
+//	TestCase5:
+//  API Call: 
+//		XalanTransformer::installExternalFunctionGlobal
+//	Comments:
+//		This tests uses transformer method installExternalFunctionGlobal to add the nodeset function. 
+//		The output file should contain data.
+//
+void TestCase5(XalanTransformer &transformEngine, const XalanDOMString &fileName)
 {
 	
 	XalanDOMString	xml, xsl, result, gold;
 
-	generateFiles(fileName, xml, xsl, result, gold);
+	generateFiles(fileName, xml, xsl, result, gold, "TestCase5");
 
 	// Create the InputSources and ResultTraget.
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
 	const XSLTInputSource	xslInputSource(c_wstr(xsl));
 	const XSLTResultTarget	theResultTarget(result);
 
-	// Install the external function "nodeset"
+	// Install the external function "nodeset" Globally
 	transformEngine.installExternalFunctionGlobal(
 		theNamespace,
 		XalanDOMString("nodeset"),
@@ -409,11 +460,11 @@ void TestCase4(XalanTransformer &transformEngine, const XalanDOMString &fileName
 	{
 		const XSLTInputSource resultInputSource(c_wstr(result));
 		const XSLTInputSource goldInputSource(c_wstr(gold));
-		futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, "TestCase4a"); 
+		futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, "TestCase5a"); 
 	}
 	else
 	{
-		cout << endl << "Failed: TestCase4a" ;
+		cout << endl << "Failed: TestCase5a" ;
 	}
 
 	XalanTransformer newEngine;
@@ -422,73 +473,12 @@ void TestCase4(XalanTransformer &transformEngine, const XalanDOMString &fileName
 	{
 		const XSLTInputSource resultInputSource(c_wstr(result));
 		const XSLTInputSource goldInputSource(c_wstr(gold));
-		futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, "TestCase4b"); 
-	}
-	else
-	{
-		cout << endl << "Failed: TestCase4b" ;
-	}
-
-}
-
-//TestCase5:
-//	This tests the nodeset function as well as the 
-//	installExternalFunction method of XalanTransformer
-void TestCase5(XalanTransformer &transformEngine, const XalanDOMString &fileName)
-{
-	
-	XalanDOMString	xml, xsl, result, gold;
-	char *resultString = "The specified function is not available: http://xml.apache.org/xalan:nodeset";
-
-	generateFiles(fileName, xml, xsl, result, gold);
-
-	// Create the InputSources and ResultTraget.
-	const XSLTInputSource	xmlInputSource(c_wstr(xml));
-	const XSLTInputSource	xslInputSource(c_wstr(xsl));
-	const XSLTResultTarget	theResultTarget(result);
-
-	// Install the external function "nodeset"
-	transformEngine.uninstallExternalFunctionGlobal(
-		theNamespace,
-		XalanDOMString("nodeset"));
-
-	// Perform the transform and check the results.
-	int	theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-	if (theResult == -1)
-	{
-		if (!strcmp(resultString, transformEngine.getLastError()))
-		{
-			cout << endl << "Passed: TestCase5a" ;
-		}
-		else 
-		{
-			cout << endl << "Failed: TestCase5a" ;
-		}
-	}
-	else
-	{
-		cout << endl << "Failed: TestCase5a" ;
-	}
-
-
-	XalanTransformer newEngine;
-	int secondResult = newEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
-	if (secondResult == -1)
-	{
-		if (!strcmp(resultString, transformEngine.getLastError()))
-		{
-			cout << endl << "Passed: TestCase5b" ;
-		}
-		else 
-		{
-			cout << endl << "Failed: TestCase5b" ;
-		}
+		futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, "TestCase5b"); 
 	}
 	else
 	{
 		cout << endl << "Failed: TestCase5b" ;
 	}
-
 }
 
 int
