@@ -95,7 +95,7 @@ FunctionNamespaceURI::execute(
 		// The XPath standard says that if there are no arguments,
 		// the argument defaults to a node set with the context node
 		// as the only member.
-		return executionContext.getXObjectFactory().createStringReference(executionContext.getNamespaceOfNode(*context));
+		return executionContext.getXObjectFactory().createStringReference(context->getNamespaceURI());
 	}
 }
 
@@ -119,7 +119,7 @@ FunctionNamespaceURI::execute(
 	{
 		assert(theList.item(0) != 0);
 
-		return executionContext.getXObjectFactory().createStringReference(executionContext.getNamespaceOfNode(*theList.item(0)));
+		return executionContext.getXObjectFactory().createStringReference(theList.item(0)->getNamespaceURI());
 	}
 }
 

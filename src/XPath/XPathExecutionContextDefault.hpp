@@ -91,6 +91,7 @@
 
 
 class XPathEnvSupport;
+class DOMSupport;
 
 
 
@@ -104,8 +105,8 @@ public:
 	/**
 	 * Construct an XPathExecutionContextDefault object
 	 *
-	 * @param theXpathEnvSupport XPath environment support class instance
-	 * @param theXPathSupport    XPath support class instance
+	 * @param theXPathEnvSupport XPathEnvSupport class instance
+	 * @param theDOMSupport		 DOMSupport class instance
 	 * @param theXobjectFactory  factory class instance for XObjects
 	 * @param theCurrentNode     current node in the source tree
 	 * @param theContextNodeList node list for current context
@@ -113,7 +114,7 @@ public:
 	 */	
 	XPathExecutionContextDefault(
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
+			DOMSupport&				theDOMSupport,
 			XObjectFactory&			theXObjectFactory,
 			XalanNode*				theCurrentNode = 0,
 			const NodeRefListBase*	theContextNodeList = 0,
@@ -141,15 +142,9 @@ public:
 	createNodeSet(XalanNode&	theNode);
 
 	virtual bool
-	isIgnorableWhitespace(const XalanText&	node) const;
-
-	virtual bool
 	isNodeAfter(
 			const XalanNode&	node1,
 			const XalanNode&	node2) const;
-
-	virtual const XalanDOMString&
-	getNamespaceOfNode(const XalanNode&	theNode) const;
 
 	virtual const NodeRefListBase&
 	getContextNodeList() const;
@@ -207,9 +202,6 @@ public:
 
 	virtual bool
 	releaseCachedString(XalanDOMString&		theString);
-
-	virtual bool
-	getProcessNamespaces() const;
 
 	virtual void
 	getNodeSetByKey(
@@ -314,7 +306,7 @@ protected:
 
 	XPathEnvSupport&			m_xpathEnvSupport;
 
-	XPathSupport&				m_xpathSupport;
+	DOMSupport&					m_domSupport;
 
 	XObjectFactory&				m_xobjectFactory;
 

@@ -76,7 +76,6 @@
 #include "NodeRefListBase.hpp"
 #include "ResultTreeFragBase.hpp"
 #include "XObjectTypeCallback.hpp"
-#include "XPathSupport.hpp"
 
 
 

@@ -82,7 +82,6 @@
 #include "XObject.hpp"
 #include "XObjectFactory.hpp"
 #include "XPathEnvSupport.hpp"
-#include "XPathSupport.hpp"
 
 
 

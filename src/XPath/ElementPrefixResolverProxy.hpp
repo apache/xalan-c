@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,8 +73,8 @@
 
 
 
+class DOMSupport;
 class XPathEnvSupport;
-class XPathSupport;
 class XalanElement;
 
 
@@ -87,13 +87,13 @@ public:
 	 * Construct an instance of an element prefix resolver proxy
 	 * 
 	 * @param namespaceContext context object for namespace resolution
-	 * @param EnvSupport       XPath environment support class instance
-	 * @param support          XPath support class instance
+	 * @param envSupport XPath environment support class instance
+	 * @param domSupport DOMSupport class instance
 	 */
 	ElementPrefixResolverProxy(
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
-			const XPathSupport& 	support);
+			const DOMSupport& 		domSupport);
 
 	virtual
 	~ElementPrefixResolverProxy();
@@ -112,7 +112,7 @@ private:
 
 	const XPathEnvSupport&			m_envSupport;
 
-	const XPathSupport&				m_support;
+	const DOMSupport&				m_domSupport;
 
 	mutable XalanDOMString			m_uri;
 

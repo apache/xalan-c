@@ -64,12 +64,12 @@
 
 
 #include <DOMSupport/DOMServices.hpp>
+#include <DOMSupport/DOMSupport.hpp>
 
 
 
 #include "ElementPrefixResolverProxy.hpp"
 #include "PrefixResolver.hpp"
-#include "XPathSupport.hpp"
 
 
 
@@ -139,11 +139,11 @@ QNameByValue::QNameByValue(
 			const XalanDOMString&	qname,
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
-			const XPathSupport& 	support) :
+			const DOMSupport& 		domSupport) :
 	m_namespace(),
 	m_localpart()
 {
-	ElementPrefixResolverProxy	theProxy(namespaceContext, envSupport, support);
+	ElementPrefixResolverProxy	theProxy(namespaceContext, envSupport, domSupport);
 
 	resolvePrefix(qname, theProxy);
 }

@@ -85,7 +85,6 @@
 
 
 class ResultTreeFragBase;
-class XPathSupport;
 class XResultTreeFrag;
 
 

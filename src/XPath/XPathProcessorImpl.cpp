@@ -76,7 +76,6 @@
 #include "XPathEnvSupport.hpp"
 #include "XPathExecutionContext.hpp"
 #include "XPathParserException.hpp"
-#include "XPathSupport.hpp"
 
 
 

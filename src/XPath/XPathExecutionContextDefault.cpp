@@ -66,12 +66,15 @@
 
 
 
+#include <DOMSupport/DOMSupport.hpp>
+
+
+
 #include "FoundIndex.hpp"
 #include "XObjectFactory.hpp"
 #include "PrefixResolver.hpp"
 #include "QName.hpp"
 #include "XPathEnvSupport.hpp"
-#include "XPathSupport.hpp"
 
 
 
@@ -81,14 +84,14 @@ const NodeRefList	XPathExecutionContextDefault::s_dummyList;
 
 XPathExecutionContextDefault::XPathExecutionContextDefault(
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
+			DOMSupport&				theDOMSupport,
 			XObjectFactory&			theXObjectFactory,
 			XalanNode*				theCurrentNode,
 			const NodeRefListBase*	theContextNodeList,
 			const PrefixResolver*	thePrefixResolver) :
 	XPathExecutionContext(),
 	m_xpathEnvSupport(theXPathEnvSupport),
-	m_xpathSupport(theXPathSupport),
+	m_domSupport(theDOMSupport),
 	m_xobjectFactory(theXObjectFactory),
 	m_currentNode(theCurrentNode),
 	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
@@ -125,7 +128,7 @@ void
 XPathExecutionContextDefault::reset()
 {
 	m_xpathEnvSupport.reset();
-	m_xpathSupport.reset();
+	m_domSupport.reset();
 	m_xobjectFactory.reset();
 
 	while (m_busyCachedNodeLists.size() != 0)
@@ -178,30 +181,14 @@ XPathExecutionContextDefault::createNodeSet(XalanNode&	theNode)
 
 
 bool
-XPathExecutionContextDefault::isIgnorableWhitespace(const XalanText&	node) const
-{
-	return m_xpathSupport.isIgnorableWhitespace(node);
-}
-
-
-
-bool
 XPathExecutionContextDefault::isNodeAfter(
 			const XalanNode&	node1,
 			const XalanNode&	node2) const
 {
-	return m_xpathSupport.isNodeAfter(node1, node2);
+	return m_domSupport.isNodeAfter(node1, node2);
 }
 
 
-
-const XalanDOMString&
-XPathExecutionContextDefault::getNamespaceOfNode(const XalanNode&	theNode) const
-{
-	return m_xpathSupport.getNamespaceOfNode(theNode);
-}
-	
-	
 
 const NodeRefListBase&
 XPathExecutionContextDefault::getContextNodeList() const
@@ -383,14 +370,6 @@ XPathExecutionContextDefault::releaseCachedString(XalanDOMString&	theString)
 
 
 
-bool
-XPathExecutionContextDefault::getProcessNamespaces() const
-{
-	return m_xpathSupport.getProcessNamespaces();
-}
-
-
-
 void
 XPathExecutionContextDefault::getNodeSetByKey(
 			XalanNode*				/* doc */,
@@ -458,7 +437,7 @@ XPathExecutionContextDefault::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const
 {
-	return m_xpathSupport.getUnparsedEntityURI(theName, theDocument);
+	return m_domSupport.getUnparsedEntityURI(theName, theDocument);
 }
 
 

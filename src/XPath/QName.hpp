@@ -83,7 +83,6 @@
 class XalanElement;
 class PrefixResolver;
 class XPathEnvSupport;
-class XPathSupport;
 
 
 

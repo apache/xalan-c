@@ -67,8 +67,11 @@
 
 
 
+#include <DOMSupport/DOMSupport.hpp>
+
+
+
 #include "XPathEnvSupport.hpp"
-#include "XPathSupport.hpp"
 
 
 
@@ -79,10 +82,10 @@ const XalanDOMString	ElementPrefixResolverProxy::s_emptyString;
 ElementPrefixResolverProxy::ElementPrefixResolverProxy(
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
-			const XPathSupport& 	support) :
+			const DOMSupport& 		domSupport) :
 	m_namespaceContext(namespaceContext),
 	m_envSupport(envSupport),
-	m_support(support),
+	m_domSupport(domSupport),
 	m_uri()
 {
 }
@@ -104,7 +107,7 @@ ElementPrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&		prefix)
 	}
 	else
 	{
-		return m_support.getNamespaceForPrefix(prefix, *m_namespaceContext);
+		return m_domSupport.getNamespaceForPrefix(prefix, *m_namespaceContext);
 	}
 }
 

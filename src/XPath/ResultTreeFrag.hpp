@@ -77,10 +77,6 @@
 
 
 
-class XPathSupport;
-
-
-
 /**
  * The holder of result tree fragments.
  */

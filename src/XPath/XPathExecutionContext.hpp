@@ -187,16 +187,6 @@ public:
 	createNodeSet(XalanNode&	theNode) = 0;
 
 	/**
-	 * Tell if the node is ignorable whitespace. This should be in the DOM.
-	 * Return false if the parser doesn't handle this.
-	 * 
-	 * @param node	text node queried
-	 * @return true if white space can be ignored
-	 */
-	virtual bool
-	isIgnorableWhitespace(const XalanText&	node) const = 0;
-
-	/**
 	 * Determine if a node is after another node, in document order.
 	 *
 	 * @param node1 The first node
@@ -207,15 +197,6 @@ public:
 	isNodeAfter(
 			const XalanNode&	node1,
 			const XalanNode&	node2) const = 0;
-
-	/**
-	 * Retrieve namespace corresponding to a DOM node
-	 * 
-	 * @param theNode DOM node whose namespace is queried
-	 * @return namespace corresponding to 'theNode'
-	 */
-	virtual const XalanDOMString&
-	getNamespaceOfNode(const XalanNode&	theNode) const = 0;
 
 	/**
 	 * Retrieve node list for current context.
@@ -504,14 +485,6 @@ public:
 	 */
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const = 0;
-
-	/**
-	 * Tells if namespaces should be supported.  For optimization purposes.
-	 *
-	 * @return true if namespaces supported
-	 */
-	virtual bool
-	getProcessNamespaces() const = 0;
 
 	/**
 	 * Given a valid element key, return the corresponding node list.

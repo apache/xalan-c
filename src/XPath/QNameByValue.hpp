@@ -69,6 +69,10 @@
 
 
 
+class DOMSupport;
+
+
+
 class XALAN_XPATH_EXPORT QNameByValue : public QName
 {
 public:
@@ -130,16 +134,16 @@ public:
 	 * Construct a QNameByValue from a string, resolving the prefix using the given
 	 * namespace context. The default namespace is not resolved.
 	 *
-	 * @param qname            QName string
+	 * @param qname QName string
 	 * @param namespaceContext context object for namespace resolution
-	 * @param envSupport       XPath environment support class instance
-	 * @param support          XPath support class instance
+	 * @param envSupport XPathEnvSupport class instance
+	 * @param domSupport DOMSupport class instance
 	 */
 	QNameByValue(
 			const XalanDOMString&	qname,
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
-			const XPathSupport&		support);
+			const DOMSupport& 		domSupport);
 
 	/**
 	 * Construct a QNameByValue from a string, resolving the prefix using the given
