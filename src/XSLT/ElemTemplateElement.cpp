@@ -967,7 +967,7 @@ ElemTemplateElement::transformChild(
 						static_cast<const XalanAttr*>(child);
 #endif
 
-					const XalanDOMString	val = attr->getValue();
+					const XalanDOMString&	val = attr->getValue();
 
 					executionContext.characters(toCharArray(val), 
 												0,
