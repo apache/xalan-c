@@ -152,6 +152,10 @@ StylesheetConstructionContextDefault::reset()
 			 DeleteFunctor<StylesheetRoot>());
 
 	m_stylesheets.clear();
+
+	m_xobjectFactory.reset();
+
+	m_xpathFactory.reset();
 }
 
 
