@@ -63,10 +63,6 @@
 
 
 
-#include <xalanc/Include/XalanAutoPtr.hpp>
-
-
-
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 

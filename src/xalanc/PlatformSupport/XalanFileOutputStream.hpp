@@ -99,7 +99,7 @@ public :
 	 * Construct an XalanFileOutputStream object.
 	 * 
 	 * @param theFileName name of file
-	 * @param theBufferSize The size of the buffer
+	 * @param theBufferSize The size of the transcoding buffer
 	 */
     XalanFileOutputStream(
 			const XalanDOMString&	theFileName,
