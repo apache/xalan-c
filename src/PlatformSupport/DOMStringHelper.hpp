@@ -1476,7 +1476,7 @@ struct DOMStringEqualsFunction : public std::binary_function<const XalanDOMStrin
 	operator() (first_argument_type		theLHS,
 				second_argument_type	theRHS) const
 	{
-		return compare(theLHS, theRHS) == 0 ? true : false;
+		return equals(theLHS, theRHS);
 	}
 };
 
@@ -1499,7 +1499,7 @@ struct DOMStringNotEqualsFunction : public std::binary_function<const XalanDOMSt
 	operator() (first_argument_type		theLHS,
 				second_argument_type	theRHS) const
 	{
-		return compare(theLHS, theRHS) == 0 ? false : true;
+		return !equals(theLHS, theRHS);
 	}
 };
 
