@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -2272,6 +2272,29 @@ XSLTEngineImpl::cdata(
 
 
 void
+XSLTEngineImpl::checkDefaultNamespace(
+			const XalanDOMString&	theElementName,
+			const XalanDOMString&	theElementNamespaceURI)
+{
+	// Check for elements with no prefix...
+	if (indexOf(theElementName, XalanUnicode::charColon) == theElementName.length())
+	{
+		// Get the current default namespace URI..
+		const XalanDOMString* const		theResultNamespace =
+			getResultNamespaceForPrefix(s_emptyString);
+
+		// If there is one, and the URIs are different, add a new declaration.  This
+		// will also "turn-off" the default namespace, if necessary.
+		if (theResultNamespace != 0 && theElementNamespaceURI != *theResultNamespace)
+		{
+			addResultAttribute(DOMServices::s_XMLNamespace, theElementNamespaceURI);
+		}
+	}
+}
+
+
+
+void
 XSLTEngineImpl::cloneToResultTree(
 			XalanNode&					node,
 			XalanNode::NodeType			nodeType,
@@ -2329,15 +2352,22 @@ XSLTEngineImpl::cloneToResultTree(
 		break;
 
 	case XalanNode::ELEMENT_NODE:
-		startElement(c_wstr(node.getNodeName()));
-
-		if(shouldCloneAttributes == true)
 		{
-			copyAttributesToAttList(
-									node,
-									getPendingAttributesImpl());
+			const XalanDOMString&	theElementName =
+				node.getNodeName();
 
-			copyNamespaceAttributes(node);
+			startElement(c_wstr(theElementName));
+
+			if(shouldCloneAttributes == true)
+			{
+				copyAttributesToAttList(
+					node,
+					getPendingAttributesImpl());
+
+				copyNamespaceAttributes(node);
+			}
+
+			checkDefaultNamespace(theElementName, node.getNamespaceURI());
 		}
 		break;
 
