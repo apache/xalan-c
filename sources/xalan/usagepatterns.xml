@@ -353,16 +353,22 @@ executing XPath expressions.</p>
 #include &lt;ICUBridge/FunctionICUFormatNumber.hpp&gt;
 #include &lt;ICUBridge/ICUXalanNumberFormatFactory.hpp&gt;
 #include &lt;ICUBridge/ICUBridgeCollationCompareFunctor.hpp&gt;</source>
-    <p>For Windows be sure &icubridge-win;,the ICUBridge library, is on the path.</p>
-    <p>For Linux, rebuild &xslt4c-linuxlib; with XALAN_USE_ICU defined, and place it on the shared library path
-    (LD_LIBRARY_PATH for Red Hat Linux 6.1) or copy it to /usr/lib.</p> 
-    <p>For AIX, rebuild &xslt4c-aixlib; with XALAN_USE_ICU defined, and place it on the load library
-    path (LIBPATH) or copy it to /usr/lib.</p>
-    <p>For HP-UX 11, rebuild &xslt4c-hplib; with XALAN_USE_ICU defined, and place it on the shared library
-    path (SHLIB_PATH) or copy it to /usr/lib.</p>
-    <p>For Solaris, rebuild &xslt4c-solarislib; with XALAN_USE_ICU defined, and place it on the shared library
-    path (LD_LIBRARY_PATH) or copy it to /usr/lib.</p>
-    
+    <p>For Windows be sure &icubridge-win;,the ICUBridge dynamic link library, is on the path.</p>
+    <p>For UNIX:</p>
+    <ol>
+    <li>Define the XALAN_USE_ICU environment variable.<br/><br/></li>
+    <li>Set the XALANROOT environment variable to the path to to the ICU root (unless you have copied the ICU library to
+    /usr/lib).<br/><br/></li> 
+    <li><link idref="readme" anchor="unix">Rebuild the Xalan library</link> (&xml4c-linuxlib; for Linux, &xml4c-aixlib; for AIX,
+    &xml4c-hplib; for HP-UX 11, and &xml4c-solarislib; for Solaris).<br/><br/></li>
+    <li>Be sure the Xalan library is on the library path (LD_LIBRARY_PATH for Red Hat Linux, LIBPATH for AIX, SHLIB_PATH for HP-UX 11, LD_LIBRARY_PATH for Solaris).</li>
+</ol>
+    <note>The command you use for setting environment variables depends on the shell you are
+     using.<br/>
+     For Bourne Shell, K Shell, or Bash use <em>export</em> ENVAR="val"<br/>
+     For C Shell, use <em>setenv</em> ENVAR "val"<br/>
+     where ENVAR is the environment variable name and val is the environment variable
+     setting. You can check the setting of an environment variable with <em>echo</em> $ENVAR<br/>To define XALAN_USE_ICU, set its value to "1".</note>
     <p><em>Number formatting</em></p>
     <p>To enable ICU support for the XSLT format-number() function, do
      the following:</p>

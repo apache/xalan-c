@@ -74,7 +74,7 @@
     do the following:</p>
  		<ol>
     <li><link idref="getstarted" anchor="download">Download &xslt4c;</link>.<br/><br/></li> 
-    <li><link idref="getstarted" anchor="path">Set the path</link> to include the build directory.<br/><br/></li>
+    <li><link idref="getstarted" anchor="path">Set the path/library path</link> to include the Xalan executable and the Xalan and Xerces libraries.<br/><br/></li>
     <li>Call the executable with the appropriate flags and arguments (described below).</li>
   </ol>  
 </s2><anchor name="xalanexe"/>

@@ -64,55 +64,12 @@
     <p>Xalan is an XSLT processor for transforming XML documents into HTML, text, or other XML
      document types.</p>
     <p>&xslt4c-current; is a robust implementation of the W3C Recommendations 
-    for XSL Transformations (XSLT) and the XML Path Language (XPath). It includes a compatible release of the 
-    &xml4c; XML parser: &xml4c-used;. The focus for this release is on bug fixes, along with a new and simpler command-line executable, 
-    two new samples and additional support for using a Xerces DOM as input for a transformation. For the details, see the <link idref="readme">Release Notes</link>.</p>
+    for XSL Transformations (XSLT) and the XML Path Language (XPath). It works with a compatible release of the 
+    &xml4c; XML parser: &xml4c-used;. The focus for this release is on bug fixes, a new sample that shows how to wrap pre-built Xerces DOM input and XalanSourceTree input, a 64-bit HP-UX build, and alpha support for a number of EXSLT extension functionss. For the details, see the <link idref="readme">Release Notes</link>.</p>
 	</s2>
   
   <s2 title="How do I get it?">
-    <p>Download and unzip the distribution file for your platform. In addition to the
-     platform-specific binaries, documentation, and sample applications, the distribution also
-     includes the complete &xslt4c; source tree.</p>
-     <table>
-       <tr>
-         <td><ref>Platform</ref></td>
-         <td><ref>Download</ref></td>
-         <td><ref>Built with</ref></td>         
-       </tr>
-       <tr>
-         <td>Windows32</td>
-        <td><resource-ref idref="xslt4c-win32-download"/></td>
-        <td>MSVC 6.0 SP3 and <jump href="http://www.dinkumware.com/vc_fixes.html">Dinkumware C++ library fixes</jump></td>
-      </tr>
-      <tr>
-        <td>Red Hat Linux 6.1</td>
-        <td><resource-ref idref="xslt4c-linux-download"/></td>
-        <td>egcs-2.91.66 and glibc-2.1.2-11</td>
-      </tr>
-      <tr>
-        <td>AIX 4.3</td>
-        <td><resource-ref idref="xslt4c-aix-download"/></td>
-        <td>IBM C and C++ for AIX 5.02</td>
-      </tr>
-      <tr>
-        <td>HP-UX 11</td>
-        <td><resource-ref idref="xslt4c-hp-ux-download"/></td>
-        <td>aCC A.03.27</td>
-      </tr>
-      <tr>
-        <td>Solaris 2.6</td>
-        <td><resource-ref idref="xslt4c-Solaris-download"/>*<br/>
-        [*Use GNU tar to untar; see <link idref="faq" anchor="gnutar">FAQs</link>]</td>
-        <td>Sun Workshop 6 update 2</td>
-      </tr>      
-     </table>
-  <p>Volunteers are more than welcome to help develop builds for other platforms!</p>
-  </s2>
-  
-  <s2 title="Where do I get Xerces?">
-    <p>Right here! The distributions include everything you need to build and run applications that use Xalan and Xerces. Each distribution
-     file includes the Xerces distribution with the appropriate Xerces runtime environment for Xalan: &xml4c-windll; for
-     Windows, &xml4c-linuxlib; for Linux, &xml4c-aixlib; for AIX, &xml4c-hplib; for HP-UX 11, and &xml4c-solarislib; for Solaris.</p>
+    <p>Download and unzip the &xslt4c; distribution file and the corresponding &xml4c; distributions file for your platform. For the details, see <link idref="getstarted" anchor="download">Downloading what you need</link>. The &xslt4c; distribution includes platform-specific binaries, documentation, sample applications, the complete &xslt4c; source tree.</p>
   </s2>
   <s2 title="How about support for internationalization?">
     <p>To extend Unicode support for encoding, number formatting, and sorting, you can download,

@@ -74,6 +74,7 @@
     <li><link anchor="simplexpathcapi">SimpleXPathCAPI</link></li>
     <li><link anchor="serializenodeset">SerializeNodeSet</link></li>    
     <li><link anchor="externalfunctions">ExternalFunctions</link></li>
+    <li><link anchor="parsedsourcewrappers">ParsedSourceWrappers</link></li>    
     <li><link anchor="apachemodulexslt">ApacheModuleXSLT</link></li>
   </ul>
 
@@ -272,7 +273,14 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     <p>Run this sample from the ExternalFunctions subdirectory with</p> 
     <p><code>ExternalFunctions</code></p>
     <p>See also: <link idref="extensions">Extension Functions</link>.</p>
-  </s2><anchor name="apachemodulexslt"/>
+  </s2><anchor name="parsedsourcewrappers"/>
+  <s2 title="ParsedSourceWrappers">
+  <p>What it does: performs a transformation with input in the form of a pre-built XercesDOM or XalanSourceTree.</p>
+  <p>Run this sample from the ParsedSourceWrappers subdirectory with</p>
+  <p><code>ParsedSourceWrappers</code></p>
+  <p>See transformXercesDOM() and transformXalanSourceTree() as called by transform() in ParsedSourceWrappers.cpp.</p>
+  </s2>
+  <anchor name="apachemodulexslt"/>
   <s2 title="ApacheModuleXSLT">
   <note>This sample must be built with the Apache Web server, and the &xslt4c; distribution files do not include a binary
     for ApacheModuleXSLT. Assuming you have installed the Apache server on your platform, you can use Visual C++ on Windows to

@@ -17,8 +17,8 @@
   <resource id="xslt4c-current" title="&xslt4c-current;" location="http://xml.apache.org/xalan"/>
   <resource id="xml4c-used" title="&xml4c-used;" location="http://xml.apache.org/xerces-c/index.html"/>   
 
-  <resource id="xslt4c-distdir" title="&xslt4c; distribution directory" location="http://xml.apache.org/dist/xalan-c"/>
-  <resource id="xml4c-distdir" title="&xml4c; distribution directory" location="http://xml.apache.org/dist/xerces-c/"/>
+  <resource id="xslt4c-distdir" title="Xalan-C downloads" location="http://xml.apache.org/dist/xalan-c"/>
+  <resource id="xml4c-distdir" title="Xerces-C downloads" location="http://xml.apache.org/dist/xerces-c/"/>
   <resource id="xslt4c-win32-download" title="&xslt4c-dist;-win32.zip" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-win32.zip"/>
   <resource id="xslt4c-linux-download" title="&xslt4c-dist;-linux.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-linux.tar.gz"/>
 <resource id="xslt4c-aix-download" title="&xslt4c-dist;-aix.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-aix.tar.gz"/>
@@ -56,5 +56,8 @@
             title="XalanC open bugs"         
             location="http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=XalanC&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time"/>
 
+  <resource id="bugsfixedforthisrelease"
+            title="XalanC bugs fixed for this release"
+            location="http://nagoya.apache.org/bugzilla/buglist.cgi?resolution=FIXED&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;chfield=resolution&amp;chfieldfrom=01%2F10%2F2002&amp;chfieldto=09%2F11%2F2002&amp;chfieldvalue=FIXED&amp;product=XalanC&amp;short_desc=&amp;short_desc_type=allwordssubstr"/>
 
 </resources>

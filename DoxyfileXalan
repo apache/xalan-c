@@ -204,7 +204,7 @@ ENABLED_SECTIONS     =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT  = ../src/DOMSupport ../src/ICUBridge ../src/Include ../src/PlatformSupport ../src/TestXSLT  ../src/XalanDOM  ../src/XalanSourceTree  ../src/XalanTransformer  ../src/XercesParserLiaison  ../src/XMLSupport  ../src/XPath  ../src/XSLT ../src/XalanExtensions ../src/XalanExe ../src/XpathCAPI
+INPUT  = ../src/DOMSupport ../src/ICUBridge ../src/Include ../src/PlatformSupport ../src/TestXSLT  ../src/XalanDOM  ../src/XalanSourceTree  ../src/XalanTransformer  ../src/XercesParserLiaison  ../src/XMLSupport  ../src/XPath  ../src/XSLT ../src/XalanExtensions ../src/XalanExe ../src/XpathCAPI ../src/XalanEXSLT
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
