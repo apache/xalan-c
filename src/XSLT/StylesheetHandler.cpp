@@ -336,7 +336,6 @@ StylesheetHandler::startElement(
 				case StylesheetConstructionContext::ELEMNAME_NUMBER:
 				case StylesheetConstructionContext::ELEMNAME_VALUE_OF:
 				case StylesheetConstructionContext::ELEMNAME_WITH_PARAM:
-				case StylesheetConstructionContext::ELEMNAME_PARAM:
 				case StylesheetConstructionContext::ELEMNAME_PI:
 					elem = m_constructionContext.createElement(
 												xslToken,
@@ -346,6 +345,18 @@ StylesheetHandler::startElement(
 					assert(elem != 0);
 					break;
           
+				case StylesheetConstructionContext::ELEMNAME_PARAM:
+					elem = m_constructionContext.createElement(
+												xslToken,
+												m_stylesheet,
+												atts,
+												locator);
+
+					checkForOrAddVariableName(elem->getNameAttribute(), locator);
+
+					assert(elem != 0);
+					break;
+
 				case StylesheetConstructionContext::ELEMNAME_SORT:
 					{
 						if (m_elemStack.empty() == true)
@@ -921,7 +932,7 @@ StylesheetHandler::checkForOrAddVariableName(
 
 		if (m_globalVariableNames.find(theVariableName) != m_globalVariableNames.end())
 		{
-			error("A global variable with this name has already been declared", theLocator);
+			error("A global variable or param with this name has already been declared", theLocator);
 		}
 		else
 		{
@@ -941,7 +952,7 @@ StylesheetHandler::checkForOrAddVariableName(
 
 			if (theLocalScope.find(theVariableName) != theLocalScope.end())
 			{
-				error("A variable with this name has already been declared in this template", theLocator);
+				error("A variable or param with this name has already been declared in this template", theLocator);
 			}
 
 			++theCurrent;
