@@ -210,8 +210,6 @@ protected:
 	virtual bool
 	shouldDestroyBlock(const ObjectType*	theObject) const
 	{
-		assert(ownsObject(theObject) == true);
-
 		return !isOnFreeList(theObject);
 	}
 
@@ -243,8 +241,6 @@ private:
 		}
 		else
 		{
-			assert(ownsObject(theObject) == true);
-
 			const size_type		theOffset =
 					getBlockOffset(theObject);
 
