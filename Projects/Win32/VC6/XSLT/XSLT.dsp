@@ -114,6 +114,10 @@ SOURCE=..\..\..\..\src\XSLT\AVTPartXPath.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\Constants.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\ContextMarker.cpp
 # End Source File
 # Begin Source File
