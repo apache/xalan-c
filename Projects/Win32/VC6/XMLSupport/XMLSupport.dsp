@@ -155,10 +155,6 @@ SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaison.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaisonDefault.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XMLSupport\XMLSupportException.cpp
 # End Source File
 # Begin Source File
@@ -196,10 +192,6 @@ SOURCE=..\..\..\..\src\XMLSupport\FormatterTreeWalker.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaison.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaisonDefault.hpp
 # End Source File
 # Begin Source File
 
