@@ -86,12 +86,12 @@ class XPathWrapper
 
 public:
 
-	typedef XALAN_CPP_NAMESPACE_QUALIFIER CharVectorType	CharVectorType;
+	typedef XALAN_CPP_NAMESPACE_QUALIFIER CharVectorType	ChVectorType;
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<CharVectorType>			CharVectorTypeVectorType;	
+	typedef vector<ChVectorType>		CharVectorTypeVectorType;	
 #else
-	typedef std::vector<CharVectorType>		CharVectorTypeVectorType;	
+	typedef std::vector<ChVectorType>	CharVectorTypeVectorType;	
 #endif	
 
 	XPathWrapper();

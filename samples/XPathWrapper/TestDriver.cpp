@@ -36,7 +36,7 @@ main(
 		return -1;
 	}
 
-	XPathWrapper::CharVectorType	theXML;
+	XPathWrapper::ChVectorType	theXML;
 
 	ifstream	in(argv[1]);
 
