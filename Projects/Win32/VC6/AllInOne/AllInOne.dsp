@@ -635,6 +635,14 @@ SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringPool.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringReusableAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringReusableAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanEncodingPropertyCache.cpp
 # End Source File
 # Begin Source File
@@ -2036,6 +2044,14 @@ SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigatorAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigatorAllocator.hpp
 # End Source File
 # Begin Source File
 
