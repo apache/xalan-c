@@ -127,7 +127,7 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::validationString[] = {
 
 
 
-XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(XalanSourceTreeDOMSupport&	theSupport) :
+XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(XalanSourceTreeDOMSupport&	/* theSupport */) :
 	m_xercesParserLiaison(),
 	m_documentMap(),
 	m_persistentDocumentMap(),
@@ -196,14 +196,6 @@ void
 XalanSourceTreeParserLiaison::setExecutionContext(ExecutionContext&		theContext)
 {
 	m_xercesParserLiaison.setExecutionContext(theContext);
-}
-
-
-
-bool
-XalanSourceTreeParserLiaison::supportsSAX() const
-{
-	return m_xercesParserLiaison.supportsSAX();
 }
 
 
@@ -281,22 +273,6 @@ XalanSourceTreeParserLiaison::destroyDocument(XalanDocument*		theDocument)
 
 
 
-void
-XalanSourceTreeParserLiaison::setSpecialCharacters(const XalanDOMString&	str)
-{
-	m_xercesParserLiaison.setSpecialCharacters(str);
-}
-
-
-
-const XalanDOMString&
-XalanSourceTreeParserLiaison::getSpecialCharacters() const
-{
-	return m_xercesParserLiaison.getSpecialCharacters();
-}
-
-
-
 int
 XalanSourceTreeParserLiaison::getIndent() const
 {
@@ -309,22 +285,6 @@ void
 XalanSourceTreeParserLiaison::setIndent(int		i)
 {
 	m_xercesParserLiaison.setIndent(i);
-}
-
-
-
-bool
-XalanSourceTreeParserLiaison::getShouldExpandEntityRefs() const
-{
-	return m_xercesParserLiaison.getShouldExpandEntityRefs();
-}
-
-
-
-void
-XalanSourceTreeParserLiaison::SetShouldExpandEntityRefs(bool	b)
-{
-	m_xercesParserLiaison.SetShouldExpandEntityRefs(b);
 }
 
 
