@@ -672,6 +672,11 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Fatal Error.</target>
 </trans-unit>
 
+<trans-unit id="FormatNumberFailed">
+		<source>The call to 'format-number' function failed.</source>
+		<target>The call to 'format-number' function failed.</target>
+</trans-unit>
+
 <trans-unit id="UnknownMatchOperation">
 		<source>Found unknown match operation!</source>
 		<target>Found unknown match operation!</target>

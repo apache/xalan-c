@@ -81,7 +81,7 @@ ICUFormatNumberFunctor::operator() (
 	if (!doFormat(theNumber, thePattern, theResult, theDFS))
 	{
 		executionContext.warn(
-			XalanMessageLoader::getMessage(XalanMessages::FormatNumberFailed_1Param),
+			XalanMessageLoader::getMessage(XalanMessages::FormatNumberFailed),
 			context,
 			locator);
 	}		
