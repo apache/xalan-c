@@ -112,7 +112,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /debug /machine:I386
-# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /debug /machine:I386
+# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release.symbols/XSLTS.dll"
 
 !ENDIF 
 
@@ -355,6 +355,10 @@ SOURCE=..\..\..\..\src\XSLT\ProblemListener.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\ProblemListenerDefault.cpp
+# End Source File
+# Begin Source File
+
+SOURCE="C:\Program Files\Rational\Quantify\pure_api.c"
 # End Source File
 # Begin Source File
 
