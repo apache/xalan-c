@@ -120,7 +120,7 @@ XNumber::num() const
 bool
 XNumber::boolean() const
 {
-	return m_value == 0.0 ? false : true;
+	return DoubleSupport::isNaN(m_value) || DoubleSupport::equal(m_value, 0.0) ? false : true;
 }
 
 
