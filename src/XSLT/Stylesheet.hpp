@@ -777,7 +777,7 @@ public:
 		eMatchScore
 		getDefaultPriority() const
 		{
-			m_priority;
+			return m_priority;
 		}
 
 		double
