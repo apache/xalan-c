@@ -82,7 +82,7 @@ class DOM_Document;
 
 
 /**
- * This is designed to allow a XalanTranfomer object to wrapped a parsed
+ * This is designed to allow a XalanTranfomer object to wrap a parsed
  * Xerces document. 
  */
 class XALAN_TRANSFORMER_EXPORT XercesDOMWrapperParsedSource : public XalanParsedSource
