@@ -1183,14 +1183,17 @@ ElemTemplateElement::postConstruction(
     {
 		node->postConstruction(constructionContext, m_namespacesHandler);
 
+		const int	theToken = node->getXSLToken();
+
 		if (hasVariables() == false &&
-			node->getXSLToken() == Constants::ELEMNAME_VARIABLE)
+			(theToken == Constants::ELEMNAME_VARIABLE ||
+			 theToken == Constants::ELEMNAME_PARAMVARIABLE))
 		{
 			m_optimizationFlags |= eHasVariables;
 		}
 
 		if (hasParams() == false &&
-			node->getXSLToken() == Constants::ELEMNAME_WITHPARAM)
+			theToken == Constants::ELEMNAME_WITHPARAM)
 		{
 			m_optimizationFlags |= eHasParams;
 		}
