@@ -131,7 +131,7 @@ ElemAttributeSet::getElementName() const
 
 
 void
-ElemAttributeSet::execute(StylesheetExecutionContext&		executionContext) const
+ElemAttributeSet::execute(StylesheetExecutionContext&	executionContext) const
 {
 	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
 	typedef StylesheetExecutionContext::ElementRecursionStackPusher				ElementRecursionStackPusher;

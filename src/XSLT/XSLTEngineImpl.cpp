@@ -962,19 +962,6 @@ XSLTEngineImpl::getXSLToken(const XalanNode&	node) const
 			tok = (*j).second;
 		}
 	}
-	else if(equals(ns, s_XSLT4JNameSpaceURL))
-	{
-		const XalanDOMString&	localName =
-			DOMServices::getLocalNameOfNode(node);
-
-		const ElementKeysMapType::const_iterator		j =
-						s_XSLT4JElementKeys.find(localName);
-
-		if(j != s_XSLT4JElementKeys.end())
-		{
-			tok = (*j).second;
-		}
-	}
 
 	return tok;
 }
@@ -2735,44 +2722,52 @@ XSLTEngineImpl::isPendingResultPrefix(const XalanDOMString&		thePrefix) const
 
 void
 XSLTEngineImpl::addResultNamespace(
+			const XalanDOMString&	thePrefix,
+			const XalanDOMString&	theName,
+			const XalanNode&		theNode,
+			AttributeListImpl&		thePendingAttributes,
+			bool					fOnlyIfPrefixNotPresent)
+{
+	if (fOnlyIfPrefixNotPresent == false ||
+		m_resultNamespacesStack.prefixIsPresentLocal(thePrefix) == false)
+	{
+		const XalanDOMString* const 	desturi = getResultNamespaceForPrefix(thePrefix);
+		const XalanDOMString&			srcURI = theNode.getNodeValue();
+
+		if(desturi == 0 || equals(srcURI, *desturi) == false)
+		{
+			addResultAttribute(thePendingAttributes, theName, srcURI);
+		}
+	}
+}
+
+
+
+void
+XSLTEngineImpl::addResultNamespace(
 			const XalanNode&	theNode,
 			AttributeListImpl&	thePendingAttributes,
 			bool				fOnlyIfPrefixNotPresent)
 {
+	assert(m_executionContext != 0);
 	assert(theNode.getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
 	const XalanDOMString& 	aname = theNode.getNodeName();
 
-	const bool	isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
-
-	const XalanDOMString 	prefix = isPrefix == true ?
-			substring(aname, DOMServices::s_XMLNamespaceWithSeparatorLength) : XalanDOMString();
-
-	if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix) 
+	if (equals(aname, DOMServices::s_XMLNamespace) == true)
 	{
-		if (fOnlyIfPrefixNotPresent == true)
-		{
-			if (m_resultNamespacesStack.prefixIsPresentLocal(prefix) == false)
-			{
-				const XalanDOMString* const 	desturi = getResultNamespaceForPrefix(prefix);
-				const XalanDOMString&			srcURI = theNode.getNodeValue();
+		// Default namespace declaration...
+		addResultNamespace(s_emptyString, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
+	}
+	else if (startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator))
+	{
+		StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(*m_executionContext);
 
-				if(desturi == 0 || equals(srcURI, *desturi) == false)
-				{
-					addResultAttribute(thePendingAttributes, aname, srcURI);
-				}
-			}
-		}
-		else
-		{
-			const XalanDOMString* const 	desturi = getResultNamespaceForPrefix(prefix);
-			const XalanDOMString&			srcURI = theNode.getNodeValue();
+		XalanDOMString& 	thePrefix = prefixGuard.get();
 
-			if(desturi == 0 || equals(srcURI, *desturi) == false)
-			{
-				addResultAttribute(thePendingAttributes, aname, srcURI);
-			}
-		}
+		substring(aname, thePrefix, DOMServices::s_XMLNamespaceWithSeparatorLength);
+
+		addResultNamespace(thePrefix, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
 	}
 }
 
@@ -3391,15 +3386,6 @@ XSLTEngineImpl::initializeElementKeysTable(ElementKeysMapType&	theElementKeys)
 
 
 
-void
-XSLTEngineImpl::initializeXSLT4JElementKeys(ElementKeysMapType&		theElementKeys)
-{
-	theElementKeys[Constants::ELEMNAME_COMPONENT_STRING] = Constants::ELEMNAME_COMPONENT;
-	theElementKeys[Constants::ELEMNAME_SCRIPT_STRING] = Constants::ELEMNAME_SCRIPT;
-}
-
-
-
 static XalanDOMString							s_XSLNameSpaceURL;
 
 static XalanDOMString							s_XSLT4JNameSpaceURL;
@@ -3409,8 +3395,6 @@ static XalanDOMString							s_uniqueNamespacePrefix;
 static XSLTEngineImpl::AttributeKeysMapType		s_attributeKeys;
 
 static XSLTEngineImpl::ElementKeysMapType		s_elementKeys;
-
-static XSLTEngineImpl::ElementKeysMapType		s_XSLT4JElementKeys;
 
 
 
@@ -3426,8 +3410,6 @@ const XalanDOMString&	XSLTEngineImpl::s_uniqueNamespacePrefix = ::s_uniqueNamesp
 const XSLTEngineImpl::AttributeKeysMapType&		XSLTEngineImpl::s_attributeKeys = ::s_attributeKeys;
 
 const XSLTEngineImpl::ElementKeysMapType&		XSLTEngineImpl::s_elementKeys = ::s_elementKeys;
-
-const XSLTEngineImpl::ElementKeysMapType&		XSLTEngineImpl::s_XSLT4JElementKeys = ::s_XSLT4JElementKeys;
 
 
 
@@ -3445,8 +3427,6 @@ XSLTEngineImpl::initialize()
 	initializeAttributeKeysTable(::s_attributeKeys);
 
 	initializeElementKeysTable(::s_elementKeys);
-
-	initializeXSLT4JElementKeys(::s_XSLT4JElementKeys);
 }
 
 
@@ -3454,8 +3434,6 @@ XSLTEngineImpl::initialize()
 void
 XSLTEngineImpl::terminate()
 {
-	ElementKeysMapType().swap(::s_XSLT4JElementKeys);
-
 	ElementKeysMapType().swap(::s_elementKeys);
 
 	AttributeKeysMapType().swap(::s_attributeKeys);

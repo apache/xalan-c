@@ -662,28 +662,6 @@ public:
 	getXSLTVerSupported();
 
 	/**
-	 * Accessor method for hash table of XSLT IDs for attribute names.
-	 * 
-	 * @return hash table of key names and IDs
-	 */
-	static const AttributeKeysMapType&
-	getAttributeKeys()
-	{
-		return s_attributeKeys;
-	}
-
-	/**
-	 * Accessor method for hash table of XSLT IDs for element names.
-	 * 
-	 * @return hash table of key names and IDs
-	 */
-	static const ElementKeysMapType&
-	getElementKeys()
-	{
-		return s_elementKeys;
-	}
-
-	/**
 	 * Given an XSL tag name, return an integer token that corresponds to
 	 * ELEMNAME_XXX constants defined in Constants.hpp
 	 *
@@ -711,7 +689,7 @@ public:
 	static int
 	getAttrTok(const XalanDOMString&	name)
 	{
-		AttributeKeysMapType::const_iterator iter=
+		ElementKeysMapType::const_iterator iter=
 			s_attributeKeys.find(name);
 
 		return iter == s_attributeKeys.end() ? -2 : (*iter).second;
@@ -1464,6 +1442,14 @@ private:
 
 	void
 	addResultNamespace(
+			const XalanDOMString&	thePrefix,
+			const XalanDOMString&	theName,
+			const XalanNode&		theNode,
+			AttributeListImpl&		thePendingAttributes,
+			bool					fOnlyIfPrefixNotPresent);
+
+	void
+	addResultNamespace(
 			const XalanNode&	theNode,
 			AttributeListImpl&	thePendingAttributes,
 			bool				fOnlyIfPrefixNotPresent = false);
@@ -1508,11 +1494,6 @@ private:
 	 * Prefix to use when generating unique namespaces.
 	 */
 	static const XalanDOMString&		s_uniqueNamespacePrefix;
-
-	/**
-	 * Map that can look up XSLT4J extensions element IDs via name.
-	 */
-	static const ElementKeysMapType&	s_XSLT4JElementKeys;
 
 	/**
 	 * Map of XSLT IDs for attribute names.
@@ -1672,9 +1653,6 @@ private:
 
 	static void
 	initializeElementKeysTable(ElementKeysMapType&	theElementKeys);
-
-	static void
-	initializeXSLT4JElementKeys(ElementKeysMapType&		theElementKeys);
 
 	static const XalanDOMString		s_emptyString;
 };
