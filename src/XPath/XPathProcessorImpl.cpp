@@ -1365,21 +1365,6 @@ XPathProcessorImpl::BooleanExpr()
 
 
 void
-XPathProcessorImpl::NumberExpr()
-{
-	const int	opPos = m_expression->opCodeMapLength();
-
-	m_expression->appendOpCode(XPathExpression::eOP_NUMBER);
-
-	Expr();
-
-	m_expression->updateOpCodeLength(XPathExpression::eOP_NUMBER,
-									 opPos);
-}
-
-
-
-void
 XPathProcessorImpl::UnionExpr()
 {
 	const int	opPos = m_expression->opCodeMapLength();

@@ -522,15 +522,6 @@ private:
 	BooleanExpr();
 
 	/**
-	 * 
-	 * --------------------------------------------------------------------------------
-	 NumberExpr  ::=	Expr   
-	 * --------------------------------------------------------------------------------
-	 */
-	void
-	NumberExpr();
-  
-	/**
 	 * The context of the right hand side expressions is the context of the 
 	 * left hand side expression. The results of the right hand side expressions 
 	 * are node sets. The result of the left hand side UnionExpr is the union 
