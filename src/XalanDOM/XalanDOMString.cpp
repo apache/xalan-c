@@ -67,10 +67,6 @@
 
 
 
-#if defined(XALAN_USE_CUSTOM_STRING)
-
-
-
 #include <cstdlib>
 
 
@@ -456,10 +452,6 @@ XalanDOMString::transcode() const
 
 
 
-#endif
-
-
-
 static inline unsigned int
 length(const XalanDOMChar*	theString)
 {
@@ -474,10 +466,6 @@ length(const XalanDOMChar*	theString)
 
 	return theStringPointer - theString;
 }
-
-
-
-#if defined(XALAN_USE_CUSTOM_STRING)
 
 
 
@@ -525,10 +513,6 @@ XalanDOMString::length(const XalanDOMChar*	theString)
 {
 	return ::length(theString);
 }
-
-
-
-#endif
 
 
 
@@ -747,35 +731,3 @@ TranscodeFromLocalCodePage(
 {
 	return doTranscodeFromLocalCodePage(theSourceString, 0, true, theTargetVector, terminate);
 }
-
-
-
-#if defined(XALAN_USE_STD_STRING)
-XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
-TranscodeFromLocalCodePage(
-			const char*		theSourceString,
-			unsigned int	theSourceStringLength)
-{
-	XalanDOMCharVectorType	theResult;
-
-	if (theSourceStringLength == unsigned(-1))
-	{
-		TranscodeFromLocalCodePage(theSourceString, theResult, false);
-	}
-	else
-	{
-		TranscodeFromLocalCodePage(theSourceString, theSourceStringLength, theResult, false);
-	}
-
-	const XalanDOMCharVectorType::size_type		theSize = theResult.size();
-
-	if (theSize == 0)
-	{
-		return XalanDOMString();
-	}
-	else
-	{
-		return XalanDOMString(&theResult[0], theSize);
-	}
-}
-#endif

@@ -72,16 +72,8 @@ typedef unsigned short	XalanDOMChar;
 
 
 
-#if defined(XALAN_USE_STD_STRING)
-
-#include <string>
-
-typedef std::basic_string<XalanDOMChar>		XalanDOMString;
-
-#else
-
-#define XALAN_USE_CUSTOM_STRING
 //#define XALAN_DOMSTRING_CACHE_SIZE
+
 
 
 #include <cassert>
@@ -302,7 +294,7 @@ public:
 	{
 		invariants();
 
-		XalanDOMCharVectorType().swap(m_data);
+		m_data.erase(m_data.begin(), m_data.end());
 
 #if defined(XALAN_DOMSTRING_CACHE_SIZE)
 		m_size = 0;
@@ -312,18 +304,8 @@ public:
 	}
 
 	void
-	erase()
-	{
-		invariants();
-
-		clear();
-
-		invariants();
-	}
-
-	void
 	erase(
-			size_type	theStartPosition,
+			size_type	theStartPosition = 0,
 			size_type	theCount = size_type(npos))
 	{
 		invariants();
@@ -333,7 +315,11 @@ public:
 
 		if (theStartPosition == 0 && theCount == size())
 		{
-			erase();
+			m_data.erase(m_data.begin(), m_data.end());
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+			m_size = 0;
+#endif
 		}
 		else
 		{
@@ -976,9 +962,6 @@ operator+(
 
 
 
-#endif
-
-
 // Standard vector of XalanDOMChars and chars
 #if defined(XALAN_NO_NAMESPACES)
 typedef vector<XalanDOMChar>		XalanDOMCharVectorType;
@@ -1098,12 +1081,6 @@ TranscodeToLocalCodePage(const XalanDOMString&	theSourceString)
  * @param theSourceStringLength The source string length.
  * @return The new string.
  */
-#if defined(XALAN_USE_STD_STRING)
-XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
-TranscodeFromLocalCodePage(
-			const char*		theSourceString,
-			unsigned int	theSourceStringLength = unsigned(-1));
-#else 
 inline const XalanDOMString
 TranscodeFromLocalCodePage(
 			const char*		theSourceString,
@@ -1111,7 +1088,6 @@ TranscodeFromLocalCodePage(
 {
 	return XalanDOMString(theSourceString, theSourceStringLength);
 }
-#endif
 
 
 
