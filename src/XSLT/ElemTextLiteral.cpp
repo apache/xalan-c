@@ -80,22 +80,20 @@ ElemTextLiteral::ElemTextLiteral(
             const XMLCh*					ch,
 			XalanDOMString::size_type		start,
 			XalanDOMString::size_type		length,
-            bool							isCData,
-			bool							preserveSpace,
-            bool							disableOutputEscaping) :
+			bool							fPreserveSpace,
+            bool							fDisableOutputEscaping) :
 	ElemTemplateElement(
 		stylesheetTree,
 		lineNumber,
 		columnNumber,
 		StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT),
-	m_isCData(isCData),
-	m_preserveSpace(preserveSpace),	
-	m_disableOutputEscaping(disableOutputEscaping),
 	m_isWhitespace(isXMLWhitespace(ch, start, length)),
 	// Always null-terminate our buffer, since we may need it that way.
 	m_ch(constructionContext.allocateXalanDOMCharVector(ch + start, length, true)),
 	m_length(length)
 {
+	disableOutputEscaping(fDisableOutputEscaping);
+	preserveSpace(fPreserveSpace);
 }
 
 
@@ -127,7 +125,7 @@ ElemTextLiteral::execute(StylesheetExecutionContext&	executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
-    if(!m_disableOutputEscaping)
+    if(disableOutputEscaping() == false)
     {
 		executionContext.characters(m_ch, 0, m_length);
     }

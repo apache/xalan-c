@@ -126,8 +126,6 @@ Stylesheet::Stylesheet(
 	m_baseIdent(baseIdentifier),
 	m_keyDeclarations(),
 	m_XSLTNamespaceURI(constructionContext.getXSLTNamespaceURI()),
-	m_whitespacePreservingElements(),
-	m_whitespaceStrippingElements(),	
 	m_imports(),
 	m_importsSize(0),
 	m_namespaces(),
@@ -712,7 +710,9 @@ Stylesheet::addTemplate(
 
 		if(nTargets != 0)
 		{
-			XalanDOMString	tempString;
+			StylesheetConstructionContext::GetAndReleaseCachedString	theGuard(constructionContext);
+
+			XalanDOMString&	tempString = theGuard.get();
 
 			for(TargetDataVectorType::size_type i = 0;
 								i < nTargets; ++i) 

@@ -82,22 +82,42 @@ class XALAN_XSLT_EXPORT SelectionEvent
 {
 public:
 
-  /**
-   * Create an event originating at the given node of the style tree.
-	*
-   * @param processor   XSLT Processor.
-   * @param sourceTree  input source tree.
-   * @param sourceNode  current context node.
-   * @param mode        current mode.
-   * @param m_styleNode node in the style tree reference for the event
-   *                    (should not be null, not enforced)
-   */
+	/**
+	 * Create an event originating at the given node of the style tree.
+	 *
+	 * @param executionContext The current execution context
+	 * @param sourceNode The source node selected.
+	 * @param styleNode The node in the style tree reference for the event
+	 * @param attributeName The attribute name where the XPath expression was supplied
+	 * @param xpath The XPath instance executed
+	 * @param selection The result of evaluating the XPath
+	 *
+	 */
 	SelectionEvent(
 			StylesheetExecutionContext&		executionContext,
 			const XalanNode*				sourceNode,
 			const ElemTemplateElement&		styleNode,
 			const XalanDOMString&			attributeName,
 			const XPath&					xpath,
+			const XObjectPtr				selection);
+
+	/**
+	 * Create an event originating at the given node of the style tree.
+	 *
+	 * @param executionContext The current execution context
+	 * @param sourceNode The source node selected.
+	 * @param styleNode The node in the style tree reference for the event
+	 * @param attributeName The attribute name where the XPath expression was supplied
+	 * @param xpathExpression The XPath expression executed
+	 * @param selection The result of evaluating the XPath
+	 *
+	 */
+	SelectionEvent(
+			StylesheetExecutionContext&		executionContext,
+			const XalanNode*				sourceNode,
+			const ElemTemplateElement&		styleNode,
+			const XalanDOMString&			attributeName,
+			const XalanDOMString&			xpathExpression,
 			const XObjectPtr				selection);
 
 	virtual
@@ -121,12 +141,12 @@ public:
 	/**
 	 * The attribute name from which the selection is made.
 	 */
-	const XalanDOMString				m_attributeName;
+	const XalanDOMString&				m_attributeName;
 
 	/**
-	 * The XPath that executed the selection.
+	 * The XPath expression evaluated.
 	 */
-	const XPath&						m_xpath;
+	const XalanDOMString&				m_xpathExpression;
   
 	/**
 	 * The result of the selection.  If it's null, m_sourceNode

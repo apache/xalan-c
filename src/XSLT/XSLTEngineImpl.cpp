@@ -381,8 +381,7 @@ XSLTEngineImpl::process(
 			theFormatter->setPrefixResolver(this);
 		}
 
-		m_hasStripOrPreserveSpace = m_stylesheetRoot->getWhitespacePreservingElements().empty() == false ||
-			m_stylesheetRoot->getWhitespaceStrippingElements().empty() == false;
+		m_hasStripOrPreserveSpace = m_stylesheetRoot->hasPreserveOrStripSpaceElements();
 
 		m_hasCDATASectionElements = m_stylesheetRoot->hasCDATASectionElements();
 
@@ -427,8 +426,7 @@ XSLTEngineImpl::process(
 			theFormatter->setPrefixResolver(this);
 		}
 
-		m_hasStripOrPreserveSpace = m_stylesheetRoot->getWhitespacePreservingElements().empty() == false ||
-			m_stylesheetRoot->getWhitespaceStrippingElements().empty() == false;
+		m_hasStripOrPreserveSpace = m_stylesheetRoot->hasPreserveOrStripSpaceElements();
 
 		m_hasCDATASectionElements = m_stylesheetRoot->hasCDATASectionElements();
 
@@ -2439,7 +2437,7 @@ XSLTEngineImpl::outputResultTreeFragment(
 		}
 		else
 		{
-			XalanNode* const		top = pos;
+			XalanNode* const	top = pos;
 
 			while(0 != pos)
 			{
@@ -2979,8 +2977,8 @@ XSLTEngineImpl::copyAttributesToAttList(
 
 bool
 XSLTEngineImpl::shouldStripSourceNode(
-			XPathExecutionContext&	executionContext,
-			const XalanNode&		textNode) const
+			StylesheetExecutionContext&		executionContext,
+			const XalanNode&				textNode) const
 {
 	if (m_hasStripOrPreserveSpace == false || m_stylesheetRoot == 0)
 	{
@@ -2990,8 +2988,7 @@ XSLTEngineImpl::shouldStripSourceNode(
 	{
 		bool	strip = false;
 
-		assert(m_stylesheetRoot->getWhitespacePreservingElements().empty() == false ||
-			   m_stylesheetRoot->getWhitespaceStrippingElements().empty() == false);
+		assert(m_stylesheetRoot->hasPreserveOrStripSpaceElements() == true);
 
 		const XalanNode::NodeType	type = textNode.getNodeType();
 
@@ -3010,88 +3007,15 @@ XSLTEngineImpl::shouldStripSourceNode(
 
 				if(0 == length(data))
 				{
-					return true;
-				}
-				else if(!isXMLWhitespace(data))
-				{
-					return false;
+					strip = true;
 				}
 			}
-
-			XalanNode*	parent = DOMServices::getParentOfNode(textNode);
-
-			while(0 != parent)
+			else
 			{
-				if(parent->getNodeType() == XalanNode::ELEMENT_NODE)
-				{
-					XPath::eMatchScore	highPreserveScore = XPath::eMatchScoreNone;
-					XPath::eMatchScore	highStripScore = XPath::eMatchScoreNone;
-
-					{
-						// $$$ ToDo:  All of this should be moved into a member of
-						// Stylesheet, so as not to expose these two data members...
-						typedef Stylesheet::XPathVectorType		XPathVectorType;
-
-						const XPathVectorType&	theElements =
-								m_stylesheetRoot->getWhitespacePreservingElements();
-
-						const XPathVectorType::size_type	nTests =
-								theElements.size();
-
-						for(XPathVectorType::size_type i = 0; i < nTests; i++)
-						{
-							const XPath* const	matchPat = theElements[i];
-							assert(matchPat != 0);
-
-							const XPath::eMatchScore	score = matchPat->getMatchScore(parent, executionContext);
-
-							if(score > highPreserveScore)
-								highPreserveScore = score;
-						}
-					}
-
-					{
-						typedef Stylesheet::XPathVectorType		XPathVectorType;
-
-						const XPathVectorType&	theElements =
-								m_stylesheetRoot->getWhitespaceStrippingElements();
-
-						const XPathVectorType::size_type	nTests =
-							theElements.size();
-
-						for(XPathVectorType::size_type i = 0; i < nTests; i++)
-						{
-							const XPath* const	matchPat =
-									theElements[i];
-							assert(matchPat != 0);
-
-							const XPath::eMatchScore	score = matchPat->getMatchScore(parent, executionContext);
-
-							if(score > highStripScore)
-								highStripScore = score;
-						}
-					}
-
-					if(highPreserveScore > XPath::eMatchScoreNone ||
-					   highStripScore > XPath::eMatchScoreNone)
-					{
-						if(highPreserveScore > highStripScore)
-						{
-							strip = false;
-						}
-						else if(highStripScore > highPreserveScore)
-						{
-							strip = true;
-						}
-						else
-						{
-							warn("Match conflict between xsl:strip-space and xsl:preserve-space");
-						}
-						break;
-					}
-				}
-
-				parent = parent->getParentNode();
+				strip =
+					m_stylesheetRoot->shouldStripSourceNode(
+							executionContext,
+							theTextNode);
 			}
 		}
 

@@ -89,8 +89,8 @@ ElemAttribute::ElemAttribute(
 						lineNumber,
 						columnNumber,
 						StylesheetConstructionContext::ELEMNAME_ATTRIBUTE),
-	m_pNameAVT(0),	
-	m_pNamespaceAVT(0)
+	m_nameAVT(0),	
+	m_namespaceAVT(0)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -100,12 +100,12 @@ ElemAttribute::ElemAttribute(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_pNameAVT =
+			m_nameAVT =
 				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_NAMESPACE))
 		{
-			m_pNamespaceAVT =
+			m_namespaceAVT =
 				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
@@ -118,7 +118,7 @@ ElemAttribute::ElemAttribute(
 		}
 	}
 
-	if(0 == m_pNameAVT)
+	if(0 == m_nameAVT)
 	{
 		constructionContext.error(
 			"xsl:attribute must have a 'name' attribute",
@@ -146,7 +146,7 @@ ElemAttribute::getElementName() const
 void
 ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 {
-	assert(m_pNameAVT != 0);
+	assert(m_nameAVT != 0);
 
 	ElemTemplateElement::execute(executionContext);
 
@@ -156,7 +156,7 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 
 	XalanNode* sourceNode = executionContext.getCurrentNode();
 
-	m_pNameAVT->evaluate(attrName, sourceNode, *this, executionContext);
+	m_nameAVT->evaluate(attrName, sourceNode, *this, executionContext);
 
 	if(XalanQName::isValidQName(attrName) == false)
 	{
@@ -182,9 +182,9 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 
 		XalanDOMString&		attrNameSpace = attrNameSpaceGuard.get();
 
-		if(0 != m_pNamespaceAVT)
+		if(0 != m_namespaceAVT)
 		{
-			m_pNamespaceAVT->evaluate(attrNameSpace, sourceNode, *this, executionContext);
+			m_namespaceAVT->evaluate(attrNameSpace, sourceNode, *this, executionContext);
 
 			indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 

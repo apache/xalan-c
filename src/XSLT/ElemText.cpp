@@ -86,8 +86,7 @@ ElemText::ElemText(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_TEXT),
-	m_disableOutputEscaping(false)
+						StylesheetConstructionContext::ELEMNAME_TEXT)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -97,10 +96,11 @@ ElemText::ElemText(
 
 		if(equals(aname, Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING))
 		{
-			m_disableOutputEscaping =
-					stylesheetTree.getYesOrNo(aname,
-											  atts.getValue(i),
-											  constructionContext);
+			disableOutputEscaping(
+				stylesheetTree.getYesOrNo(
+					aname,
+					atts.getValue(i),
+					constructionContext));
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{

@@ -112,8 +112,6 @@ public:
 private:
 
 	const XPath*	m_selectPattern;
-
-	bool			m_isDot;
 };
 
 

@@ -125,7 +125,6 @@ ElemTemplateElement::ElemTemplateElement(
 			int								xslToken) :
 	XalanElement(),
 	PrefixResolver(),
-	m_finishedConstruction(false),
 	m_namespacesHandler(
 			constructionContext,
 			stylesheetTree.getNamespacesHandler(),
@@ -134,16 +133,14 @@ ElemTemplateElement::ElemTemplateElement(
 	m_stylesheet(stylesheetTree),
 	m_lineNumber(lineNumber),
 	m_columnNumber(columnNumber),
-	m_defaultSpace(true),
 	m_xslToken(xslToken),
 	m_parentNode(0),
 	m_nextSibling(0),
 	m_previousSibling(0),
 	m_firstChild(0),
-	m_surrogateChildren(*this),
 	m_baseIndentifier(constructionContext.getPooledString(stylesheetTree.getCurrentIncludeBaseIdentifier())),
-	m_optimizationFlags(eCanGenerateAttributes),
-	m_locatorProxy(*this)
+	m_locatorProxy(*this),
+	m_flags(eCanGenerateAttributes)
 {
 }
 
@@ -156,20 +153,17 @@ ElemTemplateElement::ElemTemplateElement(
 			int								xslToken) :
 	XalanElement(),
 	PrefixResolver(),
-	m_finishedConstruction(false),
 	m_namespacesHandler(),
 	m_stylesheet(stylesheetTree),
 	m_lineNumber(lineNumber),
 	m_columnNumber(columnNumber),
-	m_defaultSpace(true),
 	m_xslToken(xslToken),
 	m_parentNode(0),
 	m_nextSibling(0),
 	m_previousSibling(0),
 	m_firstChild(0),
-	m_surrogateChildren(*this),
 	m_baseIndentifier(s_emptyString),
-	m_optimizationFlags(eCanGenerateAttributes),
+	m_flags(eCanGenerateAttributes),
 	m_locatorProxy(*this)
 {
 }
@@ -228,15 +222,11 @@ ElemTemplateElement::processSpaceAttr(
     {
 		const XalanDOMChar*	const	spaceVal = atts.getValue(which);
 
-		if (equals(spaceVal, Constants::ATTRVAL_DEFAULT))
+		if(equals(spaceVal, Constants::ATTRVAL_PRESERVE) == true)
 		{
-			m_defaultSpace = true;
+			m_flags |= eSpacePreserve;
 		}
-		else if(equals(spaceVal, Constants::ATTRVAL_PRESERVE) == true)
-		{
-			m_defaultSpace = false;
-		}
-		else
+		else if (equals(spaceVal, Constants::ATTRVAL_DEFAULT) == false)
 		{
 			constructionContext.error(
 				"xml:space has an illegal value",
@@ -359,6 +349,8 @@ ElemTemplateElement::processSortElement(
 void
 ElemTemplateElement::setDefaultTemplate(bool	value)
 {
+	m_flags |= eDefaultTemplate;
+
 	for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
 	{
 		node->setDefaultTemplate(value);
@@ -851,7 +843,9 @@ ElemTemplateElement::getParentNode() const
 const XalanNodeList*
 ElemTemplateElement::getChildNodes() const
 {
-	return &m_surrogateChildren;
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+
+	return 0;
 }
 
 
@@ -1097,13 +1091,13 @@ ElemTemplateElement::postConstruction(
 				(theToken == StylesheetConstructionContext::ELEMNAME_VARIABLE ||
 				 theToken == StylesheetConstructionContext::ELEMNAME_PARAM))
 			{
-				m_optimizationFlags |= eHasVariables;
+				m_flags |= eHasVariables;
 			}
 
 			if (hasParams() == false &&
 				theToken == StylesheetConstructionContext::ELEMNAME_WITH_PARAM)
 			{
-				m_optimizationFlags |= eHasParams;
+				m_flags |= eHasParams;
 			}
 		}
 
@@ -1116,7 +1110,7 @@ ElemTemplateElement::postConstruction(
 		if (theToken == StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT &&
 			m_firstChild->getNextSibling() == 0)
 		{
-			m_optimizationFlags |= eHasSingleTextChild;
+			m_flags |= eHasSingleTextChild;
 		}
 		else if (theToken == StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE &&
 				 m_firstChild->getNextSibling() == 0)
@@ -1126,7 +1120,7 @@ ElemTemplateElement::postConstruction(
 			// template directly...
 			if (m_firstChild->hasParams() == false)
 			{
-				m_optimizationFlags |= eHasDirectTemplate;
+				m_flags |= eHasDirectTemplate;
 
 				ElemCallTemplate* const		theCallTemplateChild =
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -1143,7 +1137,7 @@ ElemTemplateElement::postConstruction(
 		else if (canGenerateAttributes() == false &&
 				 theToken != StylesheetConstructionContext::ELEMNAME_LITERAL_RESULT)
 		{
-			m_optimizationFlags |= eCanGenerateAttributes;
+			m_flags |= eCanGenerateAttributes;
 		}
 	}
 }
@@ -1272,7 +1266,7 @@ ElemTemplateElement::getNamespaceForPrefixInternal(const XalanDOMString&	prefix)
 
 	if (isEmpty(prefix) == false)
 	{
-		if(m_finishedConstruction == true)
+		if(finishedConstruction() == true)
 		{
 			if (equals(prefix, DOMServices::s_XMLString) == true)
 			{

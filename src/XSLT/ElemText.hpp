@@ -112,7 +112,7 @@ public:
 	bool
 	getDisableOutputEscaping() const
 	{
-		return m_disableOutputEscaping;
+		return disableOutputEscaping();
 	}
 
 	virtual const XalanDOMString&
@@ -126,8 +126,6 @@ protected:
 	childTypeAllowed(int	xslToken) const;
 
 private:
-
-	bool m_disableOutputEscaping;  // = false;
 };
 
 

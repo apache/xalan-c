@@ -123,8 +123,8 @@ private:
 	ElemAttribute(const ElemAttribute &);
 	ElemAttribute& operator=(const ElemAttribute &);
 
-	const AVT*					m_pNameAVT;
-	const AVT*					m_pNamespaceAVT;
+	const AVT*	m_nameAVT;
+	const AVT*	m_namespaceAVT;
 };
 
 

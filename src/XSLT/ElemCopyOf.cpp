@@ -89,9 +89,10 @@ ElemCopyOf::ElemCopyOf(
 						lineNumber,
 						columnNumber,
 						StylesheetConstructionContext::ELEMNAME_COPY_OF),
-	m_selectPattern(0),
-	m_isDot(false)
+	m_selectPattern(0)
 {
+	bool	isSelectCurrentNode = false;
+
 	const unsigned int	nAttrs = atts.getLength();
 	
 	for(unsigned int i = 0; i < nAttrs; ++i)
@@ -105,10 +106,12 @@ ElemCopyOf::ElemCopyOf(
 
 			if (avalue[0] == XalanUnicode::charFullStop && avalue[1] == 0)
 			{
-				m_isDot = true;
+				isSelectCurrentNode = true;
 			}
-
-			m_selectPattern = constructionContext.createXPath(getLocator(), avalue, *this);
+			else
+			{
+				m_selectPattern = constructionContext.createXPath(getLocator(), avalue, *this);
+			}
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
@@ -119,7 +122,7 @@ ElemCopyOf::ElemCopyOf(
 		}
 	}
 
-	if (m_selectPattern == 0)
+	if (isSelectCurrentNode == false && m_selectPattern == 0)
 	{
 		constructionContext.error(
 			"xsl:copy-of must have a 'select' attribute",
@@ -143,23 +146,25 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
-	assert(m_selectPattern != 0);
-
 	XalanNode* const	sourceNode = executionContext.getCurrentNode();
 	assert(sourceNode != 0);
 
-	if (m_isDot == true)
+	if (m_selectPattern == 0)
 	{
 		if(0 != executionContext.getTraceListeners())
 		{
+			StylesheetExecutionContext::BorrowReturnMutableNodeRefList	theNodeList(executionContext);
+
+			theNodeList->addNode(sourceNode);
+
 			executionContext.fireSelectEvent(
 				SelectionEvent(
 					executionContext,
 					sourceNode,
 					*this,
 					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
-					*m_selectPattern,
-					XObjectPtr()));
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING(".")),
+					executionContext.getXObjectFactory().createNodeSet(theNodeList)));
 		}
 
 		executionContext.cloneToResultTree(*sourceNode, this);

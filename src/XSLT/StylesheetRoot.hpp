@@ -77,6 +77,7 @@
 
 
 class StylesheetConstructionContext;
+class XalanText;
 class XSLTResultTarget;
 
 
@@ -92,8 +93,10 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const XalanQName*> 		XalanQNameVectorType;
+	typedef vector<const XPath*>			XPathVectorType;
 #else
 	typedef std::vector<const XalanQName*>	XalanQNameVectorType;
+	typedef std::vector<const XPath*>		XPathVectorType;
 #endif
 
 	/**
@@ -402,6 +405,30 @@ public:
 		return m_elemNumberNextID;
 	}
 
+	bool
+	hasPreserveOrStripSpaceElements() const
+	{
+		return m_whitespacePreservingElements.empty() == false ||
+			   m_whitespaceStrippingElements.empty() == false;
+	}
+
+	void
+	pushWhitespacePreservingElement(const XPath*	theXPath)
+	{
+		m_whitespacePreservingElements.push_back(theXPath);
+	}
+
+	void
+	pushWhitespaceStrippingElement(const XPath*		theXPath)
+	{
+		m_whitespaceStrippingElements.push_back(theXPath);
+	}
+
+	bool
+	shouldStripSourceNode(
+			StylesheetExecutionContext&		executionContext,
+			const XalanText&				textNode) const;
+
 private:
 
 	/**
@@ -531,6 +558,16 @@ private:
 	 * This is set to true if we should omit the META tag in HTML output (the default is false)
 	 */
 	unsigned long				m_elemNumberNextID;
+
+	/**
+	 * A lookup table of all space preserving elements.
+	 */
+	XPathVectorType 			m_whitespacePreservingElements;
+  
+	/**
+	 * A lookup table of all space stripping elements.
+	 */
+	XPathVectorType 			m_whitespaceStrippingElements;
 
 	// Not implemented...
     StylesheetRoot(const StylesheetRoot&);

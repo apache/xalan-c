@@ -95,10 +95,10 @@ ElemValueOf::ElemValueOf(
 						lineNumber,
 						columnNumber,
 						StylesheetConstructionContext::ELEMNAME_VALUE_OF),
-	m_selectPattern(0),
-	m_disableOutputEscaping(false),
-	m_isDot(false)
+	m_selectPattern(0)
 {
+	bool	isSelectCurrentNode = false;
+
 	const unsigned int	nAttrs = atts.getLength();
 
 	for(unsigned int i = 0; i < nAttrs; i++)
@@ -112,19 +112,24 @@ ElemValueOf::ElemValueOf(
 
 			if (avalue[0] == XalanUnicode::charFullStop && avalue[1] == 0)
 			{
-				m_isDot = true;
+				isSelectCurrentNode = true;
 			}
-
-			m_selectPattern =
-					constructionContext.createXPath(
-						getLocator(),
-						avalue,
-						*this);
+			else
+			{
+				m_selectPattern =
+						constructionContext.createXPath(
+							getLocator(),
+							avalue,
+							*this);
+			}
 		}
 		else if (equals(aname, Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING))
 		{
-			m_disableOutputEscaping =
-						getStylesheet().getYesOrNo(aname, atts.getValue(i), constructionContext);
+			disableOutputEscaping(
+				getStylesheet().getYesOrNo(
+					aname,
+					atts.getValue(i),
+					constructionContext));
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
@@ -136,7 +141,7 @@ ElemValueOf::ElemValueOf(
 		}
 	}
 
-	if(0 == m_selectPattern)
+	if(isSelectCurrentNode == false && m_selectPattern == 0)
 	{
 		constructionContext.error(
 			"xsl:value-of requires a 'select' attribute",
@@ -169,9 +174,9 @@ ElemValueOf::execute(StylesheetExecutionContext&	executionContext) const
 	XalanNode* const	sourceNode = executionContext.getCurrentNode();
 	assert(sourceNode != 0);
 
-	if (m_isDot == true)
+	if (m_selectPattern == 0)
 	{
-		if (m_disableOutputEscaping == false)
+		if (disableOutputEscaping() == false)
 		{
 			executionContext.characters(*sourceNode);
 		}
@@ -182,7 +187,11 @@ ElemValueOf::execute(StylesheetExecutionContext&	executionContext) const
 
 		if(0 != executionContext.getTraceListeners())
 		{
-			fireSelectionEvent(executionContext, sourceNode, DOMServices::getNodeData(*sourceNode));
+			const StylesheetExecutionContext::GetAndReleaseCachedString		theString(executionContext);
+
+			DOMServices::getNodeData(*sourceNode, theString.get());
+
+			fireSelectionEvent(executionContext, sourceNode, theString.get());
 		}
 	}
 	else
@@ -200,7 +209,7 @@ ElemValueOf::execute(StylesheetExecutionContext&	executionContext) const
 
 			if (XObject::eTypeNull != type)
 			{
-				if (m_disableOutputEscaping == false)
+				if (disableOutputEscaping() == false)
 				{
 					executionContext.characters(value);
 				}
@@ -235,11 +244,13 @@ ElemValueOf::fireSelectionEvent(
 			const XObjectPtr				theValue) const
 {
 	executionContext.fireSelectEvent(
-				SelectionEvent(
-					executionContext,
-					sourceNode,
-					*this,
-					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
-					*m_selectPattern,
-					theValue));
+		SelectionEvent(
+			executionContext,
+			sourceNode,
+			*this,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+			m_selectPattern == 0 ?
+				StaticStringToDOMString(XALAN_STATIC_UCODE_STRING(".")) :
+				m_selectPattern->getExpression().getCurrentPattern(),
+			theValue));
 }

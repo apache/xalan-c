@@ -86,9 +86,8 @@ public:
 	 * @param ch                    pointer to character string for element
 	 * @param start                 starting offset of element
 	 * @param length                number of characters in element
-	 * @param isCData               true if a CDATA element
-	 * @param preserveSpace         true is space should be preserved
-	 * @param disableOutputEscaping true if output escaping should be disabled
+	 * @param fPreserveSpace         true is space should be preserved
+	 * @param fDisableOutputEscaping true if output escaping should be disabled
 	 */
 	ElemTextLiteral(
 			StylesheetConstructionContext&	constructionContext,
@@ -98,9 +97,8 @@ public:
             const XalanDOMChar*				ch,
 			XalanDOMString::size_type		start,
 			XalanDOMString::size_type		length,
-            bool							isCData,
-			bool							preserveSpace,
-            bool							disableOutputEscaping);
+			bool							fPreserveSpace,
+            bool							fDisableOutputEscaping);
 
 	virtual
 	~ElemTextLiteral();
@@ -113,7 +111,7 @@ public:
 	bool
 	isPreserveSpace() const
 	{
-		return m_preserveSpace;
+		return preserveSpace();
 	}
 
 	const XalanDOMChar*
@@ -147,10 +145,7 @@ private:
 	ElemTextLiteral&
 	operator=(const ElemTextLiteral&);
 
-	const bool				m_isCData;
-	const bool				m_preserveSpace;
-	const bool				m_disableOutputEscaping;
-	const bool				m_isWhitespace;
+	const bool	m_isWhitespace;
 
 	const XalanDOMChar* const			m_ch;
 	const XalanDOMString::size_type		m_length;

@@ -57,14 +57,10 @@
 #include "SelectionEvent.hpp"
 
 
-  /**
-   * Create an event originating at the given node of the style tree.
-   * @param processor The XSLT Processor.
-   * @param sourceTree The input source tree.
-   * @param sourceNode The current context node.
-   * @param m_styleNode node in the style tree reference for the event.
-   * Should not be null.  That is not enforced.
-   */
+
+#include <XPath/XPath.hpp>
+
+
 
 SelectionEvent::SelectionEvent(
 			StylesheetExecutionContext&		executionContext,
@@ -77,7 +73,25 @@ SelectionEvent::SelectionEvent(
 	m_sourceNode(sourceNode),
 	m_styleNode(styleNode),
 	m_attributeName(attributeName),
-	m_xpath(xpath),
+	m_xpathExpression(xpath.getExpression().getCurrentPattern()),
+	m_selection(selection)
+{
+}
+
+
+
+SelectionEvent::SelectionEvent(
+			StylesheetExecutionContext&		executionContext,
+			const XalanNode*				sourceNode,
+			const ElemTemplateElement&		styleNode,
+			const XalanDOMString&			attributeName,
+			const XalanDOMString&			xpathExpression,
+			const XObjectPtr				selection) :
+	m_executionContext(executionContext),
+	m_sourceNode(sourceNode),
+	m_styleNode(styleNode),
+	m_attributeName(attributeName),
+	m_xpathExpression(xpathExpression),
 	m_selection(selection)
 {
 }

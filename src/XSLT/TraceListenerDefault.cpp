@@ -241,7 +241,7 @@ TraceListenerDefault::selected(const SelectionEvent&	ev)
 		m_printWriter.print(XALAN_STATIC_UCODE_STRING(", "));
 		m_printWriter.print(ev.m_attributeName);
 		m_printWriter.print(XALAN_STATIC_UCODE_STRING("=\""));
-		m_printWriter.print(ev.m_xpath.getExpression().getCurrentPattern());
+		m_printWriter.print(ev.m_xpathExpression);
 		m_printWriter.print(XALAN_STATIC_UCODE_STRING("\": "));
 
 		if (ev.m_selection.null() == true)

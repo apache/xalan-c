@@ -317,8 +317,8 @@ public:
 
 	virtual bool
 	shouldStripSourceNode(
-			XPathExecutionContext&	executionContext,
-			const XalanNode&		node) const;
+			StylesheetExecutionContext&		executionContext,
+			const XalanNode&				node) const;
 
 	virtual FormatterListener*
 	getFormatterListener() const;

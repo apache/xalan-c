@@ -104,20 +104,6 @@ public:
     virtual
     ~ElemApplyTemplates();
 
-	/**
-	 * Determines whether this is the default template
-	 *
-	 * @return true if the template is the default
-	 */
-	bool
-	isDefaultTemplate() const
-	{
-		return m_isDefaultTemplate;
-	}
-
-	virtual void
-	setDefaultTemplate(bool		value);
-
 	// These methods are inherited from ElemTemplateElement ...
 	
 	virtual const XalanDOMString&
@@ -132,8 +118,6 @@ protected:
 	childTypeAllowed(int	xslToken) const;
 
 private:
-
-	bool				m_isDefaultTemplate;
 
 	const XalanQName*	m_mode;
 };

@@ -108,7 +108,6 @@ public:
 	 * @param ch                    pointer to character string for element
 	 * @param start                 starting offset of element
 	 * @param length                number of characters in element
-	 * @param isCData               true if a CDATA element
 	 * @param preserveSpace         true is space should be preserved
 	 * @param disableOutputEscaping true if output escaping should be disabled
 	 *
@@ -123,7 +122,6 @@ public:
             const XalanDOMChar*				ch,
 			XalanDOMString::size_type		start,
 			XalanDOMString::size_type		length,
-            bool							isCData,
 			bool							preserveSpace,
             bool							disableOutputEscaping);
 

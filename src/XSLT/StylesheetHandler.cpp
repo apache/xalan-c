@@ -1199,8 +1199,10 @@ StylesheetHandler::processImport(
 
 			m_constructionContext.parseXML(hrefUrl, &tp, 0);
 
-			// Add it to the front of the imports, releasing the XalanAutoPtr...
-			m_stylesheet.addImport(importedStylesheet.release(), true);
+			// Add it to the imports, releasing the XalanAutoPtr...
+			m_stylesheet.addImport(importedStylesheet.get());
+
+			importedStylesheet.release();
 
 			assert(equals(importStack.back(), hrefUrl));
 			importStack.pop_back();		
@@ -1460,7 +1462,6 @@ StylesheetHandler::processText(
 				m_stylesheet,
 				chars,
 				length,
-				true,
 				preserveSpace, 
 				disableOutputEscaping,
 				locator);

@@ -681,7 +681,6 @@ public:
 	 * @param stylesheetTree The stylesheet containing the element
 	 * @param chars The pointer to character string for element
 	 * @param length length of the chars parameter.
-	 * @param isCData true if a CDATA element
 	 * @param preserveSpace true is space should be preserved
 	 * @param disableOutputEscaping true if output escaping should be disabled
 	 * @param locator The Locator instance for error reporting.  May be 0.
@@ -693,7 +692,6 @@ public:
 			Stylesheet&					stylesheetTree,
             const XalanDOMChar*			chars,
 			XalanDOMString::size_type	length,
-            bool						isCData,
 			bool						preserveSpace,
             bool						disableOutputEscaping,
 			const Locator*				locator = 0) = 0;

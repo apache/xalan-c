@@ -124,16 +124,6 @@ private:
 	 * The select pattern used to locate the value.
 	 */
 	const XPath*	m_selectPattern;
-
-	/**
-	 * Tells if this element should disable escaping.
-	 */
-	bool			m_disableOutputEscaping;
-
-	/**
-	 * True if the select pattern is '.'
-	 */
-	bool			m_isDot;
 };
 
 

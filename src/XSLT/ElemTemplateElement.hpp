@@ -72,7 +72,6 @@
 #include <XalanDOM/XalanDOMString.hpp>
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanEmptyNamedNodeMap.hpp>
-#include <XalanDOM/XalanNodeListSurrogate.hpp>
 
 
 
@@ -408,12 +407,21 @@ public:
 	}
 
 	/** 
-	 * Set a flag indicating construction of the element is completed.
+	 * Set the flag indicating construction of the element is completed.
 	 */
 	void
 	finishedConstruction()
 	{
-		m_finishedConstruction = true;
+		setFlag(eFinishedConstruction, true);
+	}
+
+	/** 
+	 * Get the flag indicating construction of the element is completed.
+	 */
+	bool
+	finishedConstruction() const
+	{
+		return getFlag(eFinishedConstruction);
 	}
 
 	/**
@@ -704,48 +712,6 @@ public:
 	virtual const XalanDOMString&
 	getURI() const;
 
-
-	// These optimization interfaces are new to ElemTemplateElement...
-	bool
-	hasParams() const
-	{
-		return m_optimizationFlags & eHasParams ? true : false;
-	}
-
-	bool
-	hasVariables() const
-	{
-		return m_optimizationFlags & eHasVariables ? true : false;
-	}
-
-	bool
-	hasSingleTextChild() const
-	{
-		return m_optimizationFlags & eHasSingleTextChild ? true : false;
-	}
-
-	bool
-	hasChildren() const
-	{
-		return m_firstChild != 0 ? true : false;
-	}
-
-	bool
-	hasDirectTemplate() const
-	{
-		return m_optimizationFlags & eHasDirectTemplate ? true : false;
-	}
-
-	/**
-	 *
-	 * Determine whether or not the instance can generate
-	 */
-	bool
-	canGenerateAttributes() const
-	{
-		return m_optimizationFlags & eCanGenerateAttributes ? true : false;
-	}
-
 	class LocatorProxy : public XalanLocator
 	{
 	public:
@@ -782,19 +748,90 @@ public:
 		const ElemTemplateElement&	m_element;
 	};
 
+	bool
+	hasParams() const
+	{
+		return getFlag(eHasParams);
+	}
+
+	bool
+	hasVariables() const
+	{
+		return getFlag(eHasVariables);
+	}
+
+	bool
+	hasSingleTextChild() const
+	{
+		return getFlag(eHasSingleTextChild);
+	}
+
+	bool
+	hasChildren() const
+	{
+		return m_firstChild != 0 ? true : false;
+	}
+
+	bool
+	hasDirectTemplate() const
+	{
+		return getFlag(eHasDirectTemplate);
+	}
+
+	bool
+	canGenerateAttributes() const
+	{
+		return getFlag(eCanGenerateAttributes);
+	}
+
+	bool
+	isDefaultTemplate() const
+	{
+		return getFlag(eDefaultTemplate);
+	}
+
 protected:
 
 	void
 	canGenerateAttributes(bool	value)
 	{
-		if (value == true)
-		{
-			m_optimizationFlags |= eCanGenerateAttributes;
-		}
-		else
-		{
-			m_optimizationFlags &= ~eCanGenerateAttributes;
-		}
+		setFlag(eCanGenerateAttributes, value);
+	}
+
+	void
+	hasPrefix(bool	value)
+	{
+		setFlag(eHasPrefix, value);
+	}
+
+	bool
+	hasPrefix() const
+	{
+		return getFlag(eHasPrefix);
+	}
+
+	void
+	preserveSpace(bool	value)
+	{
+		setFlag(eSpacePreserve, value);
+	}
+
+	bool
+	preserveSpace() const
+	{
+		return getFlag(eSpacePreserve);
+	}
+
+	void
+	disableOutputEscaping(bool	value)
+	{
+		setFlag(eDisableOutputEscaping, value);
+	}
+
+	bool
+	disableOutputEscaping() const
+	{
+		return getFlag(eDisableOutputEscaping);
 	}
 
 	/**
@@ -840,8 +877,6 @@ protected:
 	virtual bool
 	childTypeAllowed(int	xslToken) const;
 
-	bool					m_finishedConstruction;
-
 	/*
 	 * This object handles all result tree namespace processing.
 	 */
@@ -850,6 +885,41 @@ protected:
 	static const XalanDOMString 	s_emptyString;
 
 private:
+
+	enum eFlags
+	{ 
+		eHasParams = 1,
+		eHasSingleTextChild = 2,
+		eHasVariables = 4,
+		eHasDirectTemplate = 8,
+		eCanGenerateAttributes = 16,
+		eDefaultTemplate = 32,
+		eSpacePreserve = 64,
+		eFinishedConstruction = 128,
+		eHasPrefix = 256,
+		eDisableOutputEscaping = 512
+	};
+
+	bool
+	getFlag(eFlags	theFlag) const
+	{
+		return m_flags & theFlag ? true : false;
+	}
+
+	void
+	setFlag(
+			eFlags	theFlag,
+			bool	theValue)
+	{
+		if (theValue == true)
+		{
+			m_flags |= theFlag;
+		}
+		else
+		{
+			m_flags &= ~theFlag;
+		}
+	}
 
 	/** 
 	 * Take the contents of a template element, process it, and
@@ -869,8 +939,6 @@ private:
 	const int				m_lineNumber;
 	const int				m_columnNumber;
 
-	bool					m_defaultSpace;
-
 	const int				m_xslToken;
 
 	ElemTemplateElement*	m_parentNode;
@@ -884,19 +952,11 @@ private:
 		const ElemTextLiteral*	m_textLiteralChild;
 	};
 
-	const XalanNodeListSurrogate	m_surrogateChildren;
-
 	const XalanDOMString&	m_baseIndentifier;
 
-	enum { eHasParams = 1,
-		   eHasSingleTextChild = 2,
-		   eHasVariables = 4,
-		   eHasDirectTemplate = 8,
-		   eCanGenerateAttributes = 16 };
-
-	unsigned				m_optimizationFlags;
-
 	LocatorProxy			m_locatorProxy;
+
+	unsigned short			m_flags;
 
 	static const XalanEmptyNamedNodeMap 	s_fakeAttributes;
 

@@ -87,30 +87,21 @@
 
 #include "Constants.hpp"
 #include "ElemApplyImport.hpp"
-#include "ElemApplyTemplates.hpp"
-#include "ElemAttribute.hpp"
-#include "ElemAttributeSet.hpp"
-#include "ElemCallTemplate.hpp"
 #include "ElemChoose.hpp"
 #include "ElemComment.hpp"
 #include "ElemCopy.hpp"
 #include "ElemCopyOf.hpp"
 #include "ElemDecimalFormat.hpp"
-#include "ElemElement.hpp"
 #include "ElemExtensionCall.hpp"
 #include "ElemFallback.hpp"
 #include "ElemForEach.hpp"
 #include "ElemIf.hpp"
-#include "ElemLiteralResult.hpp"
 #include "ElemMessage.hpp"
 #include "ElemNumber.hpp"
 #include "ElemOtherwise.hpp"
 #include "ElemParam.hpp"
 #include "ElemPI.hpp"
 #include "ElemSort.hpp"
-#include "ElemTemplate.hpp"
-#include "ElemTextLiteral.hpp"
-#include "ElemValueOf.hpp"
 #include "ElemWhen.hpp"
 #include "ElemWithParam.hpp"
 #include "StylesheetRoot.hpp"
@@ -145,6 +136,11 @@ StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
 	m_useAttributeSetsQName(XSLTEngineImpl::getXSLNameSpaceURL(), Constants::ATTRNAME_USEATTRIBUTESETS),
 	m_pointerVectorAllocator(thePointerVectorAllocatorBlockSize),
 	m_allocatedElements(),
+	m_elemApplyTemplatesAllocator(eDefaultElemApplyTemplatesBlockSize),
+	m_elemAttributeAllocator(eDefaultElemAttributeBlockSize),
+	m_elemAttributeSetAllocator(eDefaultElemAttributeSetBlockSize),
+	m_elemCallTemplateAllocator(eDefaultElemCallTemplateBlockSize),
+	m_elemElementAllocator(eDefaultElemElementBlockSize),
 	m_elemLiteralResultAllocator(eDefaultElemLiteralResultBlockSize),
 	m_elemTemplateAllocator(eDefaultElemTemplateBlockSize),
 	m_elemTextLiteralAllocator(eDefaultElemTextLiteralBlockSize),
@@ -351,6 +347,16 @@ StylesheetConstructionContextDefault::reset()
 	m_xalanQNameByValueAllocator.reset();
 
 	m_pointerVectorAllocator.reset();
+
+	m_elemApplyTemplatesAllocator.reset();
+
+	m_elemAttributeAllocator.reset();
+
+	m_elemAttributeSetAllocator.reset();
+
+	m_elemCallTemplateAllocator.reset();
+
+	m_elemElementAllocator.reset();
 
 	m_elemLiteralResultAllocator.reset();
 
@@ -717,9 +723,7 @@ StylesheetConstructionContextDefault::createElement(
 		break;
 
 	case ELEMNAME_APPLY_TEMPLATES:
-		m_allocatedElements.push_back(0);
-
-		theElement = new ElemApplyTemplates(
+		return m_elemApplyTemplatesAllocator.create(
 			*this,
 			stylesheetTree,
 			atts,
@@ -728,9 +732,7 @@ StylesheetConstructionContextDefault::createElement(
 		break;
 
 	case ELEMNAME_ATTRIBUTE:
-		m_allocatedElements.push_back(0);
-
-		theElement = new ElemAttribute(
+		return m_elemAttributeAllocator.create(
 			*this,
 			stylesheetTree,
 			atts,
@@ -739,9 +741,7 @@ StylesheetConstructionContextDefault::createElement(
 		break;
 
 	case ELEMNAME_ATTRIBUTE_SET:
-		m_allocatedElements.push_back(0);
-
-		theElement = new ElemAttributeSet(
+		return m_elemAttributeSetAllocator.create(
 			*this,
 			stylesheetTree,
 			atts,
@@ -750,9 +750,7 @@ StylesheetConstructionContextDefault::createElement(
 		break;
 
 	case ELEMNAME_CALL_TEMPLATE:
-		m_allocatedElements.push_back(0);
-
-		theElement = new ElemCallTemplate(
+		return m_elemCallTemplateAllocator.create(
 			*this,
 			stylesheetTree,
 			atts,
@@ -816,9 +814,7 @@ StylesheetConstructionContextDefault::createElement(
 		break;
 
 	case ELEMNAME_ELEMENT:
-		m_allocatedElements.push_back(0);
-
-		theElement = new ElemElement(
+		return m_elemElementAllocator.create(
 			*this,
 			stylesheetTree,
 			atts,
@@ -1042,7 +1038,6 @@ StylesheetConstructionContextDefault::createElement(
 			Stylesheet&					stylesheetTree,
             const XalanDOMChar*			chars,
 			XalanDOMString::size_type	length,
-            bool						isCData,
 			bool						preserveSpace,
             bool						disableOutputEscaping,
 			const Locator*				locator)
@@ -1058,7 +1053,6 @@ StylesheetConstructionContextDefault::createElement(
 			chars,
 			0,
 			length,
-			isCData,
 			preserveSpace, 
 			disableOutputEscaping);
 }

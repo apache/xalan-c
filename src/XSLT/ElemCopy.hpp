@@ -96,7 +96,6 @@ public:
 
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
-
 };
 
 

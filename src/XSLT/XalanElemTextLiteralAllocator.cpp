@@ -82,7 +82,6 @@ XalanElemTextLiteralAllocator::create(
             const XalanDOMChar*				ch,
 			XalanDOMString::size_type		start,
 			XalanDOMString::size_type		length,
-            bool							isCData,
 			bool							preserveSpace,
             bool							disableOutputEscaping)
 {
@@ -98,7 +97,6 @@ XalanElemTextLiteralAllocator::create(
 				ch,
 				start,
 				length,
-				isCData,
 				preserveSpace,
 				disableOutputEscaping);
 

@@ -92,10 +92,9 @@ ElemLiteralResult::ElemLiteralResult(
 			StylesheetConstructionContext::ELEMNAME_LITERAL_RESULT),
 	m_elementName(constructionContext.getPooledString(name)),
 	m_avts(0),
-	m_avtsCount(0),
-	m_hasPrefix(indexOf(name, XalanUnicode::charColon) < length(name) ? true : false)
+	m_avtsCount(0)
 {
-	init(constructionContext, stylesheetTree, atts);
+	init(constructionContext, stylesheetTree, name, atts);
 }
 
 
@@ -115,10 +114,9 @@ ElemLiteralResult::ElemLiteralResult(
 			xslToken),
 	m_elementName(constructionContext.getPooledString(name)),
 	m_avts(0),
-	m_avtsCount(0),
-	m_hasPrefix(indexOf(name, XalanUnicode::charColon) < length(name) ? true : false)
+	m_avtsCount(0)
 {
-	init(constructionContext, stylesheetTree, atts);
+	init(constructionContext, stylesheetTree, name, atts);
 }
 
 
@@ -127,8 +125,13 @@ void
 ElemLiteralResult::init(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts)
 {
+	assert(name != 0);
+
+	hasPrefix(indexOf(name, XalanUnicode::charColon) < length(name) ? true : false);
+
 	const unsigned int	nAttrs = atts.getLength();
 
 	// This over-allocates, but we probably won't waste that much space.
@@ -295,7 +298,7 @@ ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 
 	m_namespacesHandler.outputResultNamespaces(executionContext);
 
-	if (m_hasPrefix == false)
+	if (hasPrefix() == false)
 	{
 		// OK, let's check to make sure we don't have to change the default namespace...
 		const XalanDOMString* const		theCurrentDefaultNamespace =

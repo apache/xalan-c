@@ -150,7 +150,6 @@ public:
 				less<const XalanNode*> >			KeyTablesTableType;
 	typedef vector<Stylesheet*>						StylesheetVectorType;
 	typedef vector<XalanDOMString>					URLStackType;
-	typedef vector<const XPath*>					XPathVectorType;
 	typedef vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 #else
 	typedef std::map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
@@ -163,7 +162,6 @@ public:
 	typedef std::map<const XalanNode*, KeyTable*>			KeyTablesTableType;
 	typedef std::vector<Stylesheet*>						StylesheetVectorType;
 	typedef std::vector<XalanDOMString>						URLStackType;
-	typedef std::vector<const XPath*>						XPathVectorType;
 	typedef std::vector<ElemDecimalFormat*>					ElemDecimalFormatVectorType;
 #endif
 
@@ -539,14 +537,11 @@ public:
 	 * Add an imported stylesheet.
 	 *
 	 * @param theStylesheet The stylesheet to add.
-	 * @param fFront If true, the stylesheet is added to the front of the imports, instead of the end.
 	 */
 	void
-	addImport(
-			Stylesheet*		theStylesheet,
-			bool			fFront)
+	addImport(Stylesheet*	theStylesheet)
 	{
-		m_imports.insert(fFront ? m_imports.begin() : m_imports.end(), theStylesheet);
+		m_imports.insert(m_imports.begin(), theStylesheet);
 	}
 
 	/**
@@ -885,30 +880,6 @@ public:
 			StylesheetExecutionContext& 	executionContext,
 			const ParamVectorType&			topLevelParams) const;
 
-	const XPathVectorType&
-	getWhitespacePreservingElements() const
-	{
-		return m_whitespacePreservingElements;
-	}
-
-	void
-	pushWhitespacePreservingElement(const XPath*	theXPath)
-	{
-		m_whitespacePreservingElements.push_back(theXPath);
-	}
-
-	const XPathVectorType&
-	getWhitespaceStrippingElements() const
-	{
-		return m_whitespaceStrippingElements;
-	}
-
-	void
-	pushWhitespaceStrippingElement(const XPath* theXPath)
-	{
-		m_whitespaceStrippingElements.push_back(theXPath);
-	}
-
 	// These interfaces are inherited from XalanDocument...
 
 	virtual const XalanDOMString&
@@ -1132,16 +1103,6 @@ private:
 	 * found.
 	 */
 	XalanDOMString							m_XSLTNamespaceURI;
-
-	/**
-	 * A lookup table of all space preserving elements.
-	 */
-	XPathVectorType 						m_whitespacePreservingElements;
-  
-	/**
-	 * A lookup table of all space stripping elements.
-	 */
-	XPathVectorType 						m_whitespaceStrippingElements;
 
 	/**
 	 * A vector of the -imported- XSL Stylesheets.

@@ -123,14 +123,16 @@ protected:
 	/**
 	 * Do common initialization.
 	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
+	 * @param constructionContext The current onstruction context.
+	 * @param stylesheetTree The stylesheet containing the element.
+	 * @param name The name of the element.
+	 * @param atts The list of attributes for the element.
 	 */
 	void
 	init(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
+			const XalanDOMChar*				name,
 			const AttributeList&			atts);
 
 	/**
@@ -191,11 +193,6 @@ private:
 	 * The size of m_avts, once the stylesheet is compiled...
 	 */
 	unsigned int			m_avtsCount;
-
-	/**
-	 * If true, the literal result element has a namespace prefix...
-	 */
-	const bool				m_hasPrefix;
 };
 
 

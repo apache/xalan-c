@@ -91,7 +91,6 @@ ElemApplyTemplates::ElemApplyTemplates(
 		lineNumber,
 		columnNumber,
 		StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES),
-	m_isDefaultTemplate(false),
 	m_mode(0)
 {
 	const unsigned	int nAttrs = atts.getLength();
@@ -157,16 +156,6 @@ ElemApplyTemplates::getElementName() const
 
 
 void
-ElemApplyTemplates::setDefaultTemplate(bool		value)
-{
-	m_isDefaultTemplate = value;
-
-	ParentType::setDefaultTemplate(value);
-}
-
-
-
-void
 ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 {
 	assert(m_selectPattern != 0 && m_mode != 0);
@@ -192,7 +181,7 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 	const XalanQName* const		currentMode = executionContext.getCurrentMode();
 	assert(currentMode != 0);
 
-	if (m_isDefaultTemplate == false &&
+	if (isDefaultTemplate() == false &&
 		!m_mode->equals(*currentMode))
 	{
 		executionContext.setCurrentMode(m_mode);

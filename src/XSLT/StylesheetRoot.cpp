@@ -86,6 +86,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include <XPath/XalanQNameByReference.hpp>
 #include <XPath/XPathFactory.hpp>
 #include <XPath/XPathProcessor.hpp>
@@ -143,7 +147,9 @@ StylesheetRoot::StylesheetRoot(
 	m_outputEscapeURLs(true),
 	m_indentAmount(-1),
 	m_omitMETATag(false),
-	m_elemNumberNextID(0)
+	m_elemNumberNextID(0),
+	m_whitespacePreservingElements(),
+	m_whitespaceStrippingElements()
 {
 	// Our base class has already resolved the URI and pushed it on
 	// the back of the include stack, so get it from there...
@@ -779,4 +785,86 @@ StylesheetRoot::getNodeSetByKey(
 			}
 		}
 	}
+}
+
+
+
+bool
+StylesheetRoot::shouldStripSourceNode(
+			StylesheetExecutionContext&		executionContext,
+			const XalanText&				textNode) const
+{
+	bool	strip = false;
+
+	XalanNode*	parent = DOMServices::getParentOfNode(textNode);
+
+	while(0 != parent)
+	{
+		if(parent->getNodeType() == XalanNode::ELEMENT_NODE)
+		{
+			XPath::eMatchScore	highPreserveScore = XPath::eMatchScoreNone;
+			XPath::eMatchScore	highStripScore = XPath::eMatchScoreNone;
+
+			{
+				const XPathVectorType&	theElements =
+						m_whitespacePreservingElements;
+
+				const XPathVectorType::size_type	nTests =
+						theElements.size();
+
+				for(XPathVectorType::size_type i = 0; i < nTests; i++)
+				{
+					const XPath* const	matchPat = theElements[i];
+					assert(matchPat != 0);
+
+					const XPath::eMatchScore	score = matchPat->getMatchScore(parent, executionContext);
+
+					if(score > highPreserveScore)
+						highPreserveScore = score;
+				}
+			}
+
+			{
+				const XPathVectorType&	theElements =
+						m_whitespaceStrippingElements;
+
+				const XPathVectorType::size_type	nTests =
+					theElements.size();
+
+				for(XPathVectorType::size_type i = 0; i < nTests; i++)
+				{
+					const XPath* const	matchPat =
+									theElements[i];
+					assert(matchPat != 0);
+
+					const XPath::eMatchScore	score = matchPat->getMatchScore(parent, executionContext);
+
+					if(score > highStripScore)
+						highStripScore = score;
+				}
+			}
+
+			if(highPreserveScore > XPath::eMatchScoreNone ||
+			   highStripScore > XPath::eMatchScoreNone)
+			{
+				if(highPreserveScore > highStripScore)
+				{
+					strip = false;
+				}
+				else if(highStripScore > highPreserveScore)
+				{
+					strip = true;
+				}
+				else
+				{
+					executionContext.warn("Match conflict between xsl:strip-space and xsl:preserve-space");
+				}
+				break;
+			}
+		}
+
+		parent = parent->getParentNode();
+	}
+
+	return strip;
 }

@@ -107,6 +107,11 @@
 #include <XSLT/XalanAVTPartSimpleAllocator.hpp>
 #include <XSLT/AVTPartXPath.hpp>
 #include <XSLT/XalanAVTPartXPathAllocator.hpp>
+#include <XSLT/XalanElemApplyTemplatesAllocator.hpp>
+#include <XSLT/XalanElemAttributeAllocator.hpp>
+#include <XSLT/XalanElemAttributeSetAllocator.hpp>
+#include <XSLT/XalanElemCallTemplateAllocator.hpp>
+#include <XSLT/XalanElemElementAllocator.hpp>
 #include <XSLT/XalanElemLiteralResultAllocator.hpp>
 #include <XSLT/XalanElemTemplateAllocator.hpp>
 #include <XSLT/XalanElemTextLiteralAllocator.hpp>
@@ -144,6 +149,11 @@ public:
 			eDefaultAVTPartXPathBlockSize = 128,
 			eDefaultXalanQNameByValueBlockSize = 32,
 			eDefaultPointerVectorBlockSize = 512,
+			eDefaultElemApplyTemplatesBlockSize = 10,
+			eDefaultElemAttributeBlockSize = 10,
+			eDefaultElemAttributeSetBlockSize = 10,
+			eDefaultElemCallTemplateBlockSize = 10,
+			eDefaultElemElementBlockSize = 10,
 			eDefaultElemLiteralResultBlockSize = 20,
 			eDefaultElemTemplateBlockSize = 10,
 			eDefaultElemTextLiteralBlockSize = 20,
@@ -452,7 +462,6 @@ public:
 			Stylesheet&					stylesheetTree,
             const XalanDOMChar*			chars,
 			XalanDOMString::size_type	length,
-            bool						isCData,
 			bool						preserveSpace,
             bool						disableOutputEscaping,
 			const Locator*				locator = 0);
@@ -548,6 +557,16 @@ private:
 	PointerVectorAllocatorType				m_pointerVectorAllocator;
 
 	ElemTemplateElementVectorType			m_allocatedElements;
+
+	XalanElemApplyTemplatesAllocator		m_elemApplyTemplatesAllocator;
+
+	XalanElemAttributeAllocator				m_elemAttributeAllocator;
+
+	XalanElemAttributeSetAllocator			m_elemAttributeSetAllocator;
+
+	XalanElemCallTemplateAllocator			m_elemCallTemplateAllocator;
+
+	XalanElemElementAllocator				m_elemElementAllocator;
 
 	XalanElemLiteralResultAllocator			m_elemLiteralResultAllocator;
 
