@@ -105,8 +105,6 @@ findByPrefix(
 
 
 
-#if defined(_MSC_VER)
-
 template<class VectorType>
 typename VectorType::value_type*
 findByPrefixNonConst(
@@ -131,42 +129,6 @@ findByPrefixNonConst(
 	return 0;
 }
 
-#else
-
-template<class VectorType>
-typename VectorType::value_type*
-findByPrefix(
-			VectorType&				theVector,
-			const XalanDOMString&	thePrefix)
-{
-	typename const VectorType::iterator		theEnd(theVector.end());
-	typename VectorType::iterator			theCurrent(theVector.begin());
-
-	while(theCurrent != theEnd)
-	{
-		if ((*theCurrent).getPrefix() == thePrefix)
-		{
-			return &*theCurrent;
-		}
-		else
-		{
-			++theCurrent;
-		}
-	}
-
-	return 0;
-}
-
-template<class VectorType>
-typename VectorType::value_type*
-findByPrefixNonConst(
-			VectorType&				theVector,
-			const XalanDOMString&	thePrefix)
-{
-	return findByPrefix(theVector, thePrefix);
-}
-
-#endif
 
 
 template<class VectorType>
