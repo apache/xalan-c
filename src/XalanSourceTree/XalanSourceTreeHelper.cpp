@@ -75,14 +75,49 @@
 
 
 
-template<class TargetType>
-inline TargetType*
-castTo(XalanNode*	theNode)
+inline XalanSourceTreeComment*
+castToComment(XalanNode*	theNode)
 {
 #if defined(XALAN_OLD_STYLE_CASTS)
-	return (TargetType*)theNode;
+	return (XalanSourceTreeComment*)theNode;
 #else
-	return static_cast<TargetType*>(theNode);
+	return static_cast<XalanSourceTreeComment*>(theNode);
+#endif
+}
+
+
+
+inline XalanSourceTreeElement*
+castToElement(XalanNode*	theNode)
+{
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return (XalanSourceTreeElement*)theNode;
+#else
+	return static_cast<XalanSourceTreeElement*>(theNode);
+#endif
+}
+
+
+
+inline XalanSourceTreeProcessingInstruction*
+castToProcessingInstruction(XalanNode*	theNode)
+{
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return (XalanSourceTreeProcessingInstruction*)theNode;
+#else
+	return static_cast<XalanSourceTreeProcessingInstruction*>(theNode);
+#endif
+}
+
+
+
+inline XalanSourceTreeText*
+castToText(XalanNode*	theNode)
+{
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return (XalanSourceTreeText*)theNode;
+#else
+	return static_cast<XalanSourceTreeText*>(theNode);
 #endif
 }
 
@@ -102,19 +137,19 @@ doAppendSibling(
 	switch(theLastSibling->getNodeType())
 	{
 	case XalanNode::COMMENT_NODE:
-		castTo<XalanSourceTreeComment>(theLastSibling)->appendSiblingNode(theNewSibling);
+		castToComment(theLastSibling)->appendSiblingNode(theNewSibling);
 		break;
 
 	case XalanNode::ELEMENT_NODE:
-		castTo<XalanSourceTreeElement>(theLastSibling)->appendSiblingNode(theNewSibling);
+		castToElement(theLastSibling)->appendSiblingNode(theNewSibling);
 		break;
 
 	case XalanNode::PROCESSING_INSTRUCTION_NODE:
-		castTo<XalanSourceTreeProcessingInstruction>(theLastSibling)->appendSiblingNode(theNewSibling);
+		castToProcessingInstruction(theLastSibling)->appendSiblingNode(theNewSibling);
 		break;
 
 	case XalanNode::TEXT_NODE:
-		castTo<XalanSourceTreeText>(theLastSibling)->appendSiblingNode(theNewSibling);
+		castToText(theLastSibling)->appendSiblingNode(theNewSibling);
 		break;
 
 	default:
@@ -180,19 +215,19 @@ doAppendSibling(
 	switch(theNewSibling->getNodeType())
 	{
 	case XalanNode::COMMENT_NODE:
-		append(thePreviousSibling, theNextSiblingSlot, castTo<XalanSourceTreeComment>(theNewSibling));
+		append(thePreviousSibling, theNextSiblingSlot, castToComment(theNewSibling));
 		break;
 
 	case XalanNode::ELEMENT_NODE:
-		append(thePreviousSibling, theNextSiblingSlot, castTo<XalanSourceTreeElement>(theNewSibling));
+		append(thePreviousSibling, theNextSiblingSlot, castToElement(theNewSibling));
 		break;
 
 	case XalanNode::PROCESSING_INSTRUCTION_NODE:
-		append(thePreviousSibling, theNextSiblingSlot, castTo<XalanSourceTreeProcessingInstruction>(theNewSibling));
+		append(thePreviousSibling, theNextSiblingSlot, castToProcessingInstruction(theNewSibling));
 		break;
 
 	case XalanNode::TEXT_NODE:
-		append(thePreviousSibling, theNextSiblingSlot, castTo<XalanSourceTreeText>(theNewSibling));
+		append(thePreviousSibling, theNextSiblingSlot, castToText(theNewSibling));
 		break;
 
 	default:
@@ -218,15 +253,15 @@ XalanSourceTreeHelper::appendSibling(
 		switch(theNewSibling->getNodeType())
 		{
 		case XalanNode::COMMENT_NODE:
-			append(theNextSiblingSlot, castTo<XalanSourceTreeComment>(theNewSibling));
+			append(theNextSiblingSlot, castToComment(theNewSibling));
 			break;
 
 		case XalanNode::ELEMENT_NODE:
-			append(theNextSiblingSlot, castTo<XalanSourceTreeElement>(theNewSibling));
+			append(theNextSiblingSlot, castToElement(theNewSibling));
 			break;
 
 		case XalanNode::PROCESSING_INSTRUCTION_NODE:
-			append(theNextSiblingSlot, castTo<XalanSourceTreeProcessingInstruction>(theNewSibling));
+			append(theNextSiblingSlot, castToProcessingInstruction(theNewSibling));
 			break;
 
 		default:
