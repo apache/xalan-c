@@ -108,6 +108,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "extensions"=".\Extensions\extensions.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "inputsource"=".\InputSource\inputsource.dsp" - Package Owner=<4>
 
 Package=<5>
