@@ -68,6 +68,7 @@
 
 
 
+#include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
@@ -77,6 +78,7 @@
 
 
 
+#include <XPath/FunctionRound.hpp>
 #include <XPath/XObject.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPathExecutionContext.hpp>
@@ -132,32 +134,38 @@ public:
 			// $$$ ToDo: Add support for NaN.
 
 			// Get the value of the second argument...
-			const double	theSecondArgValue = args[1]->num();
+			const double	theSecondArgValue =
+				FunctionRound::getRoundedValue(args[1]->num());
 
 			// Now, total the second and third arguments.  If
 			// the third argument is missing, make the total
 			// DBL_MAX.
 			const double	theTotal =
-							theArgCount == 2 ? DBL_MAX :
-											   theSecondArgValue + args[2]->num();
+					theArgCount == 2 ? DBL_MAX :
+									   FunctionRound::getRoundedValue(theSecondArgValue + args[2]->num());
 
-			// Start with 1, since strings are index from 1 in the XPath spec,
-			for (unsigned int i = 1; i <= theSourceStringLength; i++)
+			if (DoubleSupport::isNaN(theSecondArgValue) == false &&
+				DoubleSupport::isNaN(theTotal) == false &&
+				DoubleSupport::isNegativeInfinity(theTotal) == false)
 			{
-				// Is the index greater than or equal to the second argument?
-				if (i >= theSecondArgValue)
+				// Start with 1, since strings are index from 1 in the XPath spec,
+				for (unsigned int i = 1; i <= theSourceStringLength; i++)
 				{
-					// Is it less than the sum of the second and
-					// third arguments?
-					if (i < theTotal)
+					// Is the index greater than or equal to the second argument?
+					if (i >= theSecondArgValue)
 					{
-						// It is, so include the character.
-						theBuffer.push_back(charAt(theSourceString, i - 1));
-					}
-					else
-					{
-						// It's not, so stop.
-						break;
+						// Is it less than the sum of the second and
+						// third arguments?
+						if (i < theTotal)
+						{
+							// It is, so include the character.
+							theBuffer.push_back(charAt(theSourceString, i - 1));
+						}
+						else
+						{
+							// It's not, so stop.
+							break;
+						}
 					}
 				}
 			}
