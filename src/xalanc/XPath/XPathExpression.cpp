@@ -85,6 +85,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+#if defined(XALAN_INLINE_INITIALIZATION)
+const XPathExpression::TokenQueueSizeType   XPathExpression::s_opCodeMapLengthIndex;
+#endif
+
+
+
 // This is an array which indicates which of the value defined by
 // XPathExpression::eOpCodes are node tests.
 static const bool	theNodeTestOpCodesArray[] =
