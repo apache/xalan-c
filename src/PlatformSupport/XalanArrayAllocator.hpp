@@ -272,13 +272,13 @@ private:
 	}
 
 	// Not implemented...
-	XalanArrayAllocator(const XalanArrayAllocator&	theSource);
+	XalanArrayAllocator(const XalanArrayAllocator<Type>&	theSource);
 
-	XalanArrayAllocator&
-	operator=(const XalanArrayAllocator&	theSource);
+	XalanArrayAllocator<Type>&
+	operator=(const XalanArrayAllocator<Type>&	theSource);
 
 	bool
-	operator==(const XalanArrayAllocator&	theRHS) const;
+	operator==(const XalanArrayAllocator<Type>&	theRHS) const;
 
 
 	// Data members...
