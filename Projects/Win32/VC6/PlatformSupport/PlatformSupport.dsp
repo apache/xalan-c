@@ -335,6 +335,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportInit.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\PrefixResolver.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\PrintWriter.hpp
 # End Source File
 # Begin Source File
