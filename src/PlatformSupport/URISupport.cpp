@@ -225,7 +225,7 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 
 	// OK, look for a quick, cheap exit...
 	const unsigned int	len = length(uriString);
-	unsigned int		index = indexOf(uriString, '\\');
+	const unsigned int	index = indexOf(uriString, '\\');
 
 	if (index != len)
 	{
