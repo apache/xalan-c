@@ -258,8 +258,8 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     <li>Add a &lt;Location&gt; entry to httpd.conf that indicates where xml/xsl file pairs are to be found, and what target file extensions
     to recognize. We suggest the following:<br/><br/>
     <code>&lt;Location /xslt&gt;</code><br/>
-    &nbsp;&nbsp;<code>AddHandler .html</code><br/>
-    &nbsp;&nbsp;<code>AddHandler .txt</code><br/>
+    &nbsp;&nbsp;<code>AddHandler mod_xslt .html</code><br/>
+    &nbsp;&nbsp;<code>AddHandler mod_xslt .txt</code><br/>
     <code>&lt;/Location&gt;</code><br/><br/>
     This &lt;Location&gt; element instructs the module to respond to requests for <ref>xxx</ref>.html and <ref>xxx</ref>.txt files in the 
     in the xslt subdirectory (under the document root; see next item) by applying the <ref>xxx</ref>.xsl stylesheet to <ref>xxx</ref>.xml 
