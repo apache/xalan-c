@@ -260,6 +260,8 @@ void
 XercesDOMPrintWriter::println()
 {
 	m_OutputStream.write(XMLCh('\n'));
+
+	flush();
 }
 
 
