@@ -159,6 +159,7 @@
 #include <XSLT/StylesheetHandler.hpp>
 #include <XSLT/TraceListener.hpp>
 #include <XSLT/VariablesStack.hpp>
+#include <XSLT/XalanNumberingResourceBundle.hpp>
 #include <XSLT/XSLTEngineImpl.hpp>
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 
@@ -185,8 +186,9 @@ static Stylesheet::PatternTableListType	thePatternTableList;
 static Stylesheet::PatternTableVectorType thePatternTableVector;
 static map<int,int,less<int> > theIntMap;
 static ElemNumber::DecimalToRomanVectorType theDecimalToRomanVector;
-static NamespacesHandler::IteratorVectorType	theDeadEntries; 
+static vector<NamespacesHandler::NamespacesMapType::iterator> theNamespacesMapTypeIteratorVector;
 static VariablesStack::ParamsVectorType	theParamsVector;
+static ElemNumber::NumberingResourceBundleMapType theNumberingResourceBundleMapType;
 
 
 
@@ -204,7 +206,7 @@ foo()
 		
 		for_each(theVector.begin(),
 			 theVector.end(),
-			 XObjectFactoryDefault::ProtectedDeleteXObjectFunctor(theFactory, true));
+			 XObjectFactoryDefault::DeleteXObjectFunctor(theFactory, true));
 	}
 	
 	{		
@@ -222,7 +224,7 @@ foo()
 
 		for_each(theVector.begin(),
 			 theVector.end(),
-			 XPathFactoryDefault::ProtectedDeleteXPathFunctor(theXPath, true));
+			 XPathFactoryDefault::DeleteXPathFunctor(theXPath, true));
 	}
 	
 	{		
@@ -244,8 +246,8 @@ foo()
 	{
 		typedef XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor		NamespaceFunctionTableDeleteFunctor;
 	
-		typedef NamespaceFunctionTableDeleteFunctor::FunctionTableType 			FunctionTableType;
-		typedef NamespaceFunctionTableDeleteFunctor::NamespaceFunctionTablesType 	NamespaceFunctionTablesType;
+		typedef NamespaceFunctionTableDeleteFunctor::FunctionTableInnerType 			FunctionTableType;
+		typedef NamespaceFunctionTableDeleteFunctor::NamespaceFunctionTablesInnerType 	NamespaceFunctionTablesType;
 	
 		NamespaceFunctionTablesType	theTable;
 		
