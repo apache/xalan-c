@@ -101,7 +101,11 @@ XalanToXercesTranscoderWrapper::transcode(
 			theTarget,
 			theTargetSize,
 			theSourceCharsTranscoded,
-			XMLTranscoder::UnRep_Throw);
+			// $$$ ToDo: Eventually, we're going to want to
+			// replace this with UnRep_Throw, and let the
+			// caller try to recover.
+//			XMLTranscoder::UnRep_Throw);
+			XMLTranscoder::UnRep_RepChar);
 	}
 	catch(const XMLException&)
 	{
