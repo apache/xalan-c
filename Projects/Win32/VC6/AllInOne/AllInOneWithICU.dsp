@@ -2098,10 +2098,6 @@ SOURCE=..\..\..\..\src\XSLT\CountersTable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\DecimalToRoman.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\DecimalToRoman.hpp
 # End Source File
 # Begin Source File
