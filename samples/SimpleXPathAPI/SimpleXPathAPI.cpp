@@ -35,6 +35,36 @@
 
 
 
+XALAN_USING_XALAN(XalanNode)
+XALAN_USING_XALAN(XalanElement)
+
+
+
+const XalanElement*
+getPrefixResolver(const XalanNode*	node)
+{
+	if (node == 0)
+	{
+		return 0;
+	}
+	else if (node->getNodeType() == XalanNode::ELEMENT_NODE)
+	{
+		return static_cast<const XalanElement*>(node);
+	}
+	else if (node->getNodeType() == XalanNode::DOCUMENT_NODE)
+	{
+		XALAN_USING_XALAN(XalanDocument)
+
+		return static_cast<const XalanDocument*>(node)->getDocumentElement();
+	}
+	else
+	{
+		return getPrefixResolver(node->getParentNode());
+	}
+}
+
+
+
 int
 main(
 			int				argc,
@@ -124,7 +154,7 @@ main(
 								theDOMSupport,
 								theContextNode,
 								XalanDOMString(argv[3]).c_str(),
-								theDocument->getDocumentElement()));
+								getPrefixResolver(theContextNode)));
 
 					assert(theResult.null() == false);
 
