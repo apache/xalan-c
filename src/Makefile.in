@@ -1,0 +1,232 @@
+#
+# The Apache Software License, Version 1.1
+# 
+# Copyright (c) 1999 The Apache Software Foundation.  All rights 
+# reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer. 
+# 
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:  
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+# 
+# 4. The names "Xalan", "Xerces" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written 
+#    permission, please contact apache\@apache.org.
+# 
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+# 
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+# 
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+# 
+#
+# $Log$
+# Revision 1.1  2000/01/27 20:30:27  jdonohue
+# no message
+#
+# Revision 1.10  2000/01/11 16:22:06  jdonohue
+# General cleanup
+#
+# Revision 1.9  2000/01/10 17:40:39  jdonohue
+# Added CXXFLAGS to make executables so that debugging info created
+#
+# Revision 1.8  2000/01/04 22:08:12  jdonohue
+# Added clean target, make of testXPath, fixed other macros
+#
+# Revision 1.7  1999/12/27 18:31:18  jdonohue
+# Fixed * for #, cpp instead of hpp
+#
+# Revision 1.6  1999/12/23 20:59:57  jdonohue
+# Added XERCESCROOT as macro
+# Uncomment ifdef LINUX -- need to fix this
+#
+# Revision 1.5  1999/12/23 18:06:02  jdonohue
+# Changes for linux
+#
+# Revision 1.4  1999/12/22 21:05:30  jdonohue
+# Changes for linux
+#
+# Revision 1.3  1999/12/22 17:49:22  jdonohue
+# Consolidated making into one file, eliminated copying of includes, etc
+#
+# Revision 1.1  1999/12/21 01:13:49  jdonohue
+# Make for linux, etc
+#
+#
+#
+
+#all these setting come from the arguments passed in to runConfigure.
+PLATFORM =@platform@
+CC  = @cc@
+CXX = @cxx@
+CXXFLAGS = @cxxflags@
+PREFIX = @prefix@
+
+#=============== LINUX SPECIFIC OPTIONS =========================
+ifeq ($(PLATFORM), LINUX)
+PLATFORM_COMPILE_OPTIONS = -fpic -instances=static -D${PLATFORM} -D_REENTRANT
+MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fpic
+ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc
+SHLIBSUFFIX=.so
+LINK =  g++ -D${PLATFORM} -fpic
+PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+EXTRA_LINK_OPTIONS=-lc
+CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+else
+nogood:
+	@echo Linux only unix platform supported
+endif
+
+# We need the Xerces library
+ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_0
+XERCESLIB = $(XERCESCROOT)/lib/libxerces-c1_0.so
+
+
+XSL_BUILD_OPTIONS =
+# We have to use the includes from the source distribution, since we use
+# headers that others normally wouldn't
+XSL_INCL = -I . -I $(XERCESCROOT)/src/
+
+###################################################################
+#                    IMPORTANT NOTE                               #
+###################################################################
+# Before you try to run the Makefile, make sure you have two      #
+# environment variables set.                                      #
+#                                                                 #
+# export XALANCROOT=<the directory where you installed XALAN-C>   #
+# export XERCESCROOT=<the directory where you installed XERCES-C> #
+#                                                                 #
+###################################################################
+
+###################################################################
+# @@ NOTE:                                                        #
+# Need to add dependencies for header files and for XERCES headers#
+###################################################################
+
+#MACROS defining commands
+MKDIR=mkdir
+
+
+ifndef XALANCROOT 
+noxalanroot:
+	@echo XALANCROOT must be defined
+endif
+
+ifndef XERCESCROOT 
+noxercesroot:
+	@echo XERCESCROOT must be defined
+endif
+
+DOMSUPPORT_DIR = DOMSupport
+INCLUDE_DIR = Include
+PLATFORMSUPPORT_DIR = PlatformSupport
+TESTXPATH_DIR = TestXPath
+TESTXSLT_DIR = TestXSLT
+XMLSUPPORT_DIR = XMLSupport
+XPATH_DIR = XPath
+XSLT_DIR = XSLT
+XERCESINIT_DIR = XercesInit
+XERCESPARSERLIAISON_DIR = XercesParserLiaison
+XERCESPLATFORMSUPPORT_DIR = XercesPlatformSupport
+ALL_OBJECTS_DIR = ${XALANCROOT}/obj
+LIB_DIR = ${XALANCROOT}/lib
+
+LIBNAME = libxalan-c
+THISLIB = ${LIB_DIR}/${LIBNAME}
+VER = 1_0
+
+PRODUCTNAME=xalan
+PRODUCTVERSION=${VER}
+BINTARGETDIR=${XALANCROOT}/bin
+
+vpath %.cpp \
+$(DOMSUPPORT_DIR):$(PLATFORMSUPPORT_DIR):$(TESTXPATH_DIR):$(TESTXSLT_DIR):\
+$(XMLSUPPORT_DIR):$(XPATH_DIR):$(XSLT_DIR):$(XERCESINIT_DIR):\
+$(XERCESPARSERLIAISON_DIR):$(XERCESPLATFORMSUPPORT_DIR)
+
+${ALL_OBJECTS_DIR}/%.o:%.cpp
+	$(CC1) -c $(XSL_BUILD_OPTIONS) $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+	 
+${ALL_OBJECTS_DIR}/%.o:%.hpp
+	$(CC1) -c $(XSL_BUILD_OPTIONS) $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $(patsubst .hpp,.cpp,$<)
+
+ALLSOURCE = \
+	$(wildcard $(DOMSUPPORT_DIR)/*.cpp) \
+	$(wildcard $(PLATFORMSUPPORT_DIR)/*.cpp) \
+	$(wildcard $(XMLSUPPORT_DIR)/*.cpp) \
+	$(wildcard $(XPATH_DIR)/*.cpp) \
+	$(wildcard $(XSLT_DIR)/*.cpp) \
+	$(wildcard $(XERCESINIT_DIR)/*.cpp) \
+	$(wildcard $(XERCESPARSERLIAISON_DIR)/*.cpp) \
+	$(wildcard $(XERCESPLATFORMSUPPORT_DIR)/*.cpp) 
+
+ALL_OBJECTS = $(addprefix $(ALL_OBJECTS_DIR)/,$(addsuffix .o,$(basename $(notdir $(ALLSOURCE)))))
+
+all:	 prepare compile lib  testXSLT testXPath
+
+prepare:
+	@echo Preparing the directory structure for a build ...
+	-${MKDIR} -p ${ALL_OBJECTS_DIR}
+	-${MKDIR} -p ${LIB_DIR}
+	-${MKDIR} -p $(BINTARGETDIR)
+
+compile:	 $(ALL_OBJECTS)
+
+testXSLT: $(BINTARGETDIR)/testXSLT
+
+testXPath: $(BINTARGETDIR)/testXPath
+
+$(BINTARGETDIR)/testXSLT: $(TESTXSLT_DIR)/process.cpp $(THISLIB)$(VER)$(SHLIBSUFFIX)
+	  ${LINK} ${PLATFORM_LIB_LINK_OPTIONS} $^ -o $@ $(XSL_INCL) \
+	  ${LIBRARY_SEARCH_PATHS} ${EXTRA_LINK_OPTIONS} $(ALLLIBS) $(CXXFLAGS)
+
+$(BINTARGETDIR)/testXPath: $(TESTXPATH_DIR)/TestXPath.cpp \
+	$(TESTXPATH_DIR)/NodeNameTreeWalker.cpp $(THISLIB)$(VER)$(SHLIBSUFFIX)
+	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} $^ -o $@ $(XSL_INCL) \
+	${LIBRARY_SEARCH_PATHS} ${EXTRA_LINK_OPTIONS} $(ALLLIBS) $(CXXFLAGS)
+
+
+lib:	$(THISLIB)$(VER)$(SHLIBSUFFIX)
+
+$(THISLIB)$(VER)$(SHLIBSUFFIX): $(ALL_OBJECTS)
+	$(MAKE_SHARED) -o $@ $^ $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS)
+
+clean:
+	rm $(ALL_OBJECTS_DIR)/*.o
+	rm $(THISLIB)$(VER)$(SHLIBSUFFIX)
+	rm  $(BINTARGETDIR)/testXSLT
+	rm  $(BINTARGETDIR)/testXPath
