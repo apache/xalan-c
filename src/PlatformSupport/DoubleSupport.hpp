@@ -93,7 +93,11 @@ public:
 	{
 		// Compare the two DWORDs of the double as unsigned longs.
 		const unsigned long* const	theFirstDWORD =
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(const unsigned long*)&theNumber;
+#else
 			reinterpret_cast<const unsigned long*>(&theNumber);
+#endif
 
 		const unsigned long* const	theSecondDWORD =
 							theFirstDWORD + 1;
