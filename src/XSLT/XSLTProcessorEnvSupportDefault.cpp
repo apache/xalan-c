@@ -183,7 +183,7 @@ XSLTProcessorEnvSupportDefault::parseXML(
 			URISupport::getURLFromString(urlString, base);
 
 		// $$$ ToDo: Explicit XalanDOMString constructor
-		const XalanDOMString	urlText(XalanDOMString(xslURL->getURLText()));
+		const XalanDOMString	urlText(xslURL->getURLText());
 
 		// First see if it's already been parsed...
 		XalanDocument*		theDocument =
