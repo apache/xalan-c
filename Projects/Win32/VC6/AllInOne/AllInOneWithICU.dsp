@@ -2874,6 +2874,18 @@ SOURCE=..\..\..\..\src\XSLT\VariablesStack.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\XalanAVTAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanAVTPartSimpleAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanAVTPartXPathAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\XalanNumberingResourceBundle.cpp
 # End Source File
 # Begin Source File
