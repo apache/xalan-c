@@ -116,22 +116,6 @@ SOURCE=..\..\..\..\src\DOMSupport\NamespaceResolver.cpp
 
 SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\DOMSupport\UnimplementedDocument.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\DOMSupport\UnimplementedDocumentFragment.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\DOMSupport\UnimplementedElement.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\DOMSupport\UnimplementedNode.cpp
-# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -163,22 +147,6 @@ SOURCE=..\..\..\..\src\DOMSupport\NamespaceResolver.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\DOMSupport\UnimplementedDocument.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\DOMSupport\UnimplementedDocumentFragment.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\DOMSupport\UnimplementedElement.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\DOMSupport\UnimplementedNode.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
