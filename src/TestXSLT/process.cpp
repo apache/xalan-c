@@ -171,15 +171,13 @@
 
 
 
-#if !defined (XALAN_NO_NAMESPACES)
-using std::cerr;
-using std::cin;
-using std::cout;
-using std::endl;
-using std::hex;
-using std::pair;
-using std::vector;
-#endif
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cin)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
+XALAN_USING_STD(hex)
+XALAN_USING_STD(pair)
+XALAN_USING_STD(vector)
 
 
 
@@ -277,7 +275,7 @@ typedef vector<pair<const char*, const char*> >	StringPairVectorType;
 
 struct CmdLineParams
 {
-	StringPairVectorType params;
+	StringPairVectorType	params;
 
 	bool		escapeCData;
 	bool		setQuietConflictWarnings;
@@ -329,6 +327,19 @@ struct CmdLineParams
 	{
 	}
 };
+
+
+
+// We only need a few things from the Xerces namespace...
+XALAN_USING_XERCES(XMLPlatformUtils)
+XALAN_USING_XERCES(SAXParseException)
+XALAN_USING_XERCES(SAXException)
+XALAN_USING_XERCES(XMLException)
+
+
+
+// We need lots of things from the Xalan namespace, so hoist everything...
+XALAN_CPP_NAMESPACE_USE
 
 
 
@@ -964,7 +975,7 @@ xsltMain(const CmdLineParams&	params)
 
 	const StylesheetRoot*	stylesheet = 0;
 
-	if (!isEmpty(xslFileName))
+	if (!xslFileName.empty())
 	{
 		stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
 	}
@@ -1010,7 +1021,7 @@ xsltMain(const CmdLineParams&	params)
 
 	if (params.inFileName != 0)
 	{
-		theInputSource.setSystemId(c_wstr(XalanDOMString(params.inFileName)));
+		theInputSource.setSystemId(XalanDOMString(params.inFileName).c_str());
 	}
 	else
 	{
@@ -1192,7 +1203,7 @@ main(
 
 			const XalanDOMString&	theURI = e.getURI();
 
-			if (length(theURI) != 0)
+			if (theURI.length() != 0)
 			{
 				cout << theURI;
 			}
@@ -1210,7 +1221,7 @@ main(
 
 			theResult = -1;
 		}
-		catch (const SAXParseException&	e)
+		catch (const SAXParseException&		e)
 		{
 			cout << "\nSAXParseException ";
 
