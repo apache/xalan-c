@@ -128,7 +128,7 @@ XalanDOMStringPool::clear()
 	// guaranteed to free up all allocated memory.
 	XalanDOMStringCollectionType().swap(m_strings);
 
-	IteratorMapType().swap(m_index);
+	IndexMapType().swap(m_index);
 }
 
 
@@ -167,8 +167,8 @@ XalanDOMStringPool::get(
 		const unsigned int	theActualLength = theLength == -1 ? length(theString) : theLength;
 
 		// Find the string...
-		const IteratorMapType::const_iterator	i =
-			m_index.find(IteratorMapType::key_type(theString, theActualLength));
+		const IndexMapType::const_iterator	i =
+			m_index.find(IndexMapType::key_type(theString, theActualLength));
 
 		if (i != m_index.end())
 		{
@@ -189,9 +189,9 @@ XalanDOMStringPool::get(
 
 			// Add an index entry...
 			m_index.insert(
-				IteratorMapType::value_type(
-					IteratorMapType::key_type(toCharArray(theNewString), theActualLength),
-					theIterator));
+				IndexMapType::value_type(
+					IndexMapType::key_type(toCharArray(theNewString), theActualLength),
+					&theNewString));
 
 			assert(m_strings.size() == m_index.size());
 

@@ -107,18 +107,18 @@ public:
 	};
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef deque<XalanDOMString>								XalanDOMStringCollectionType;
+	typedef deque<XalanDOMString>		XalanDOMStringCollectionType;
 
 	typedef map<
 				StringKey,
-				XalanDOMStringCollectionType::const_iterator,
-				less<StringKey> >								IteratorMapType;
+				const XalanDOMString*,
+				less<StringKey> >		IndexMapType;
 #else
-	typedef std::deque<XalanDOMString>							XalanDOMStringCollectionType;
+	typedef std::deque<XalanDOMString>	XalanDOMStringCollectionType;
 
 	typedef std::map<
 				StringKey,
-				XalanDOMStringCollectionType::const_iterator>	IteratorMapType;
+				const XalanDOMString*>	IndexMapType;
 #endif
 
 	typedef XalanDOMStringCollectionType::size_type		size_type;
@@ -180,7 +180,7 @@ private:
 	// Data members...
 	XalanDOMStringCollectionType	m_strings;
 
-	IteratorMapType					m_index;
+	IndexMapType					m_index;
 
 	static const XalanDOMString		s_emptyString;
 };
