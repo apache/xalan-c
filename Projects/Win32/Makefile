@@ -211,5 +211,5 @@ clean:
 
 	
 build_debug:
-	$(MAKE) XALANCROOT=$(XALANCROOT) prefix=$(prefix) INSTALL_MODE=Debug PACKAGE_NAME=$(PACKAGE_NAME) libs COPY="$(COPY)"
+	$(MAKE) XALANCROOT=$(XALANCROOT) prefix=$(prefix) INSTALL_MODE=Debug PACKAGE_NAME=$(PACKAGE_NAME) libs COPY="$(COPY)" IDE_VER=$(IDE_VER)
 
