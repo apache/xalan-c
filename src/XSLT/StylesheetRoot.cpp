@@ -68,14 +68,6 @@
 
 
 
-#if defined(XALAN_OLD_STREAM_HEADERS)
-#include <iostream.h>
-#else
-#include <iostream>
-#endif
-
-
-
 #include <XalanDOM/XalanDocumentFragment.hpp>
 
 
@@ -319,11 +311,10 @@ StylesheetRoot::setupFormatterListener(
 			}
 			else
 			{
-#if !defined(XALAN_NO_NAMESPACES)
-				using std::cout;
-#endif
-
-				pw = executionContext.createPrintWriter(cout);
+				executionContext.error(
+					"There is no valid result target",
+					executionContext.getCurrentNode(),
+					0);
 			}
 		}
 
