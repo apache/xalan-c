@@ -170,6 +170,11 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 		  executionContext, *this));
 	}
 
+#if 1
+	ParentType::transformSelectedChildren(
+			executionContext,
+			0);
+#else
 	XalanNode* const	sourceNode = executionContext.getCurrentNode();
 	assert(sourceNode != 0);
 
@@ -202,6 +207,54 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 		transformSelectedChildren(
 				executionContext,
 				0,
+				thePushPop.getStackFrameIndex());
+	}
+#endif
+}
+
+
+
+void
+ElemApplyTemplates::selectAndSortChildren(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement*		theTemplate,
+			NodeSorter*						sorter,
+			int								/* selectStackFrameIndex */) const
+{
+	XalanNode* const	sourceNode = executionContext.getCurrentNode();
+	assert(sourceNode != 0);
+
+	// Push the params & stack frame, but then execute the select
+	// expression inside transformSelectedChildren, which must be
+	// executed in the stack frame before the new stack frame.
+	StylesheetExecutionContext::ParamsPushPop	thePushPop(
+			executionContext,
+			*this,
+			sourceNode,
+			this);
+
+	const XalanQName* const		currentMode = executionContext.getCurrentMode();
+	assert(currentMode != 0);
+
+	if (isDefaultTemplate() == false &&
+		!m_mode->equals(*currentMode))
+	{
+		executionContext.setCurrentMode(m_mode);
+
+		ParentType::selectAndSortChildren(
+				executionContext,
+				theTemplate,
+				sorter,
+				thePushPop.getStackFrameIndex());
+
+		executionContext.setCurrentMode(currentMode);
+	}
+	else
+	{
+		ParentType::selectAndSortChildren(
+				executionContext,
+				theTemplate,
+				sorter,
 				thePushPop.getStackFrameIndex());
 	}
 }

@@ -113,6 +113,13 @@ protected:
 	virtual bool
 	childTypeAllowed(int	xslToken) const;
 
+	virtual void
+	selectAndSortChildren(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement*		theTemplate,
+			NodeSorter*						sorter,
+			int								selectStackFrameIndex) const;
+
 private:
 
 	const XalanQName*	m_mode;

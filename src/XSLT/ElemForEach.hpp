@@ -166,30 +166,11 @@ protected:
 	 * @param executionContext  The current execution context
 	 * @param template The owning template context.
 	 * @param sourceNodeContext The current source node context.
-	 * @param selectStackFrameIndex stack frame context for executing the
-	 *                              select statement
 	 */
 	void
 	transformSelectedChildren(
 			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement*		theTemplate,
-			int								selectStackFrameIndex) const;
-
-	/**
-	 * Perform a query if needed, and call transformChild for each child.
-	 * 
-	 * @param executionContext	The current execution context
-	 * @param template The owning template context.
-	 * @param sorter The NodeSorter instance, if any.
-	 * @param selectStackFrameIndex stack frame context for executing the
-	 *								select statement
-	 */
-	void
-	transformSelectedChildren(
-			StylesheetExecutionContext& 	executionContext,
-			const ElemTemplateElement*		theTemplate,
-			NodeSorter* 					sorter,
-			int 							selectStackFrameIndex) const;
+			const ElemTemplateElement*		theTemplate) const;
 
 	/**
 	 * Perform a query if needed, and call transformChild for each child.
@@ -205,6 +186,22 @@ protected:
 			const ElemTemplateElement*		theTemplate,
 			const NodeRefListBase&			sourceNodes,
 			NodeRefListBase::size_type		sourceNodesCount) const;
+
+	/**
+	 * Perform a query if needed, and call transformChild for each child.
+	 * 
+	 * @param executionContext	The current execution context
+	 * @param template The owning template context.
+	 * @param sorter The NodeSorter instance, if any.
+	 * @param selectStackFrameIndex stack frame context for executing the
+	 *								select statement
+	 */
+	virtual void
+	selectAndSortChildren(
+			StylesheetExecutionContext& 	executionContext,
+			const ElemTemplateElement*		theTemplate,
+			NodeSorter* 					sorter,
+			int 							selectStackFrameIndex) const;
 
 	const XPath*			m_selectPattern;
 

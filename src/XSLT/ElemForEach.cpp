@@ -223,8 +223,7 @@ ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 	{
 		transformSelectedChildren(
 			executionContext,
-			this,
-			executionContext.getCurrentStackFrameIndex());
+			this);
 	}
 }
 
@@ -233,19 +232,18 @@ ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 void
 ElemForEach::transformSelectedChildren(
 			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement*		theTemplate,
-			int								selectStackFrameIndex) const
+			const ElemTemplateElement*		theTemplate) const
 {
 	assert(m_selectPattern != 0);
 	assert(m_sortElemsCount == m_sortElems.size());
 
 	if (m_sortElemsCount == 0)
 	{
-		transformSelectedChildren(
+		selectAndSortChildren(
 					executionContext,
 					theTemplate,
 					0,
-					selectStackFrameIndex);
+					executionContext.getCurrentStackFrameIndex());
 	}
 	else
 	{
@@ -392,18 +390,18 @@ ElemForEach::transformSelectedChildren(
 						*this));
 		}
 
-		transformSelectedChildren(
+		selectAndSortChildren(
 					executionContext,
 					theTemplate,
 					sorter.get(),
-					selectStackFrameIndex);
+					executionContext.getCurrentStackFrameIndex());
 	}
 }
 
 
 
 void
-ElemForEach::transformSelectedChildren(
+ElemForEach::selectAndSortChildren(
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement*		theTemplate,
 			NodeSorter*						sorter,
