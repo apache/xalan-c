@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,27 +53,19 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- *
- * FileUtility.hpp
  */
-#if !defined(HARNESSINIT_HEADER_GUARD_1357924690)
-#define HARNESSINIT_HEADER_GUARD_1357924690
+#if !defined(HARNESSDEFINITIONS_HEADER_GUARD_1357924680)
+#define HARNESSDEFINITIONS_HEADER_GUARD_1357924680
 
-#include <Harness/HarnessDefinitions.hpp>
+#include <Include/PlatformDefinitions.hpp>
 
-
-
-// This class is exported from the Harness.dll
-class HARNESS_API HarnessInit 
-{
-public:
-
-	/** Simple constructor, performs initialization.  */
-	HarnessInit();
-
-	~HarnessInit();
-};
-
-
-
+#if defined(HARNESS_EXPORTS)
+#	define HARNESS_API XALAN_PLATFORM_EXPORT
+#	define HARNESS_API_FUNCTION(T) XALAN_PLATFORM_EXPORT_FUNCTION(T)
+#else
+#	define HARNESS_API XALAN_PLATFORM_IMPORT
+#	define HARNESS_API_FUNCTION(T) XALAN_PLATFORM_IMPORT_FUNCTION(T)
 #endif
+
+
+#endif	// HARNESSDEFINITIONS_HEADER_GUARD_1357924680

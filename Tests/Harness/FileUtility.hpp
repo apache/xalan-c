@@ -59,60 +59,23 @@
 #if !defined(FILEUTILITY_HEADER_GUARD_1357924680)
 #define FILEUTILITY_HEADER_GUARD_1357924680
 
-#include<string>
-#include<stdio.h>
-#include <time.h>
+#include <Harness/HarnessDefinitions.hpp>
+
+
+
+#include <vector>
+
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
-#include <iostream.h>
-#include <sstream.h>
+#include <strstream.h>
 #else
-#include <iostream>
-#include <sstream>
+#include <strstream>
 #endif
 
-// XERCES HEADERS ... 
-//	Are included in HarnessInit.hpp
-
-// XALAN HEADERS...
-#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
-#include <PlatformSupport/XalanFileOutputStream.hpp>
-#include <PlatformSupport/DirectoryEnumerator.hpp>
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-#include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathFactoryDefault.hpp>
-
-#include <XMLSupport/FormatterToXML.hpp>
-#include <XMLSupport/FormatterTreeWalker.hpp>
-
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
-#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
-
-#include <XalanTransformer/XalanCompiledStylesheetDefault.hpp>
-#include <XalanTransformer/XalanTransformer.hpp>
-
-#include "XMLFileReporter.hpp"
-
-using namespace std;
 
 
-/**
- * Utility call that extracts test file names from testsuite.  
- * @author Paul Dick@lotus.com
- * @version $Id$
- */
+#include <XalanDOM/XalanDOMString.hpp>
 
-#if !defined(WIN32)
-#define HARNESS_API
-#else
-#if defined(HARNESS_EXPORTS)
-#define HARNESS_API __declspec(dllexport)
-#else
-#define HARNESS_API __declspec(dllimport)
-#endif
-#endif
 
 
 // Misc typedefs and Global variables.
@@ -121,26 +84,43 @@ using namespace std;
 	typedef vector<XalanDOMString>		FileNameVectorType;
 #else
 	typedef std::vector<XalanDOMString>	FileNameVectorType;
-	using std::ostringstream;
 #endif
 
 
-// Basic Global variables used by many tests.
-//const XalanDOMString	XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
-const XalanDOMString	XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
+class FormatterListener;
+class PrintWriter;
+class StylesheetRoot;
+class XalanCompiledStylesheet;
+class XalanNode;
+class XalanSourceTreeDocument;
+class XalanTransformer;
+class XMLFileReporter;
+class XSLTInputSource;
 
-#if defined(WIN32)
-const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
-#else
-const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("/"));
-#endif
+
 
 // This class is exported from the Harness.dll
 class HARNESS_API FileUtility 
 {
 public:
 
-	struct reportStruct
+	/**
+	 * Initialize static data.
+	 * Should be called only once per process before creating any
+	 * instances of FileUtility.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Clean-up static data.
+	 * Should be called only once per process after deleting all
+	 * instances of FileUtility.
+	 */
+	static void
+	terminate();
+
+	struct HARNESS_API reportStruct
 	{
 		XalanDOMString  theDrive;
 		XalanDOMString	testOrFile;
@@ -155,19 +135,27 @@ public:
 		int				fail;
 		int				nogold;
 
-		void reset()
-		{
-			clear(testOrFile);
-			msg = "";
-			clear(currentNode);
-			clear(actual);
-			clear(expected);
-		}
+		reportStruct();
+
+		void
+		reset();
+
 	} data;
 
-	struct cmdParams
+	struct HARNESS_API cmdParams
 	{
-		ostringstream   help;
+	private:
+
+#if defined(XALAN_NO_NAMESPACES)
+		ostrstream			help;
+#else
+		std::ostrstream		help;
+#endif
+
+		char*				data;
+
+	public:
+
 		XalanDOMString  base;
 		XalanDOMString	output;
 		XalanDOMString  gold;
@@ -176,13 +164,40 @@ public:
 		bool			skip;
 		long			iters;
 
+
+		cmdParams();
+
+		~cmdParams()
+		{
+			delete [] data;
+		}
+
+		const char*
+		getHelpMessage()
+		{
+			delete [] data;
+
+			help << '\0';
+
+			data = help.str();
+
+			return data;
+		}
+
+#if defined(XALAN_NO_NAMESPACES)
+		ostream&
+#else
+		std::ostream&
+#endif
+		getHelpStream()
+		{
+			return help;
+		}
+
 	} args;
 
 	/** Simple constructor, does not perform initialization.  */
-	FileUtility()
-	{
-		cout << endl << "Using Xerces Version " << gXercesFullVersionStr << endl;
-	}
+	FileUtility();
 	
 	/** 
 	* Utility method used to get test files from a specific directory.
@@ -361,6 +376,10 @@ public:
 	void
 	analyzeResults(XalanTransformer& xalan, const XalanDOMString& resultsFile);
 
+	static const XalanDOMString&	s_xmlSuffix;
+
+	static const XalanDOMString&	s_pathSep;
+
 private:
 
 	XalanDOMString
@@ -384,35 +403,41 @@ private:
 	void
 	reportError();
 
+#if defined(NDEBUG)
 	void
-	debugNodeData(const XalanDOMString& value)
+	debugNodeData(const XalanDOMString&		/* value */) const
 	{
-#if !defined(NDEBUG) && defined(_MSC_VER)
-		cout << "Node is: " << c_str(TranscodeToLocalCodePage(value)) << endl;
-#endif
 	}
 
 	void
 	debugNodeData(
-			const XalanDOMString&	node,
-			const XalanDOMString&	value)
+			const XalanDOMString&	/* node */,
+			const XalanDOMString&	/* value */) const
 	{
-#if !defined(NDEBUG) && defined(_MSC_VER)
-		cout << "Node is: " << c_str(TranscodeToLocalCodePage(node)) << "	"
-			 << "Value is: \"" << c_str(TranscodeToLocalCodePage(value)) << "\"\n";
-#endif
 	}
 
 	void
-	debugAttributeData(const XalanDOMString&	value)
+	debugAttributeData(const XalanDOMString&	/* value */) const
 	{
-#if !defined(NDEBUG) && defined(_MSC_VER)
-		cout << "Attribute is: " << c_str(TranscodeToLocalCodePage(value)) << endl;
-#endif
 	}
+
+#else
+
+	void
+	debugNodeData(const XalanDOMString&		value) const;
+
+	void
+	debugNodeData(
+			const XalanDOMString&	node,
+			const XalanDOMString&	value) const;
+
+	void
+	debugAttributeData(const XalanDOMString&	value) const;
+
+#endif
+
 };        // end of class FileUtility
 
 
 
 #endif
-

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,26 +54,47 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- * FileUtility.hpp
+ *
  */
-#if !defined(HARNESSINIT_HEADER_GUARD_1357924690)
-#define HARNESSINIT_HEADER_GUARD_1357924690
 
-#include <Harness/HarnessDefinitions.hpp>
+#include "HarnessInit.hpp"
 
 
 
-// This class is exported from the Harness.dll
-class HARNESS_API HarnessInit 
+#include <util/PlatformUtils.hpp>
+
+
+
+#include <XalanDOM/XalanDOMInit.hpp>
+
+
+
+#include "FileUtility.hpp"
+
+
+
+static const XalanDOMInit*	s_xalanDOMInit = 0;
+
+HarnessInit::HarnessInit()
 {
-public:
+	assert(s_xalanDOMInit == 0);
 
-	/** Simple constructor, performs initialization.  */
-	HarnessInit();
+	XMLPlatformUtils::Initialize();
 
-	~HarnessInit();
-};
+	s_xalanDOMInit = new XalanDOMInit;
+
+	FileUtility::initialize();
+}
 
 
 
-#endif
+HarnessInit::~HarnessInit()
+{
+	FileUtility::terminate();
+
+	delete s_xalanDOMInit;
+
+	s_xalanDOMInit = 0;
+
+	XMLPlatformUtils::Terminate();
+}

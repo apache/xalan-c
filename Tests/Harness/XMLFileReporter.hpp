@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,35 +54,30 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- * XMLFileReporter.hpp
+ *
  */
 #if !defined(HARNESS_HEADER_GUARD_1357924680)
 #define HARNESS_HEADER_GUARD_1357924680
 
-#include<stdio.h>
-#include <time.h>
 
-//#include <util/PlatformUtils.hpp>
-#include <PlatformSupport/DOMStringHelper.hpp>
 
-#include<map>
+#include <Harness/HarnessDefinitions.hpp>
+
+
+
+#include <map>
+
+
+
+#include <XalanDOM/XalanDOMString.hpp>
+
+
 
 /**
  * Reporter that saves output to a simple XML-format file.  
  * @author Shane_Curcuru@lotus.com
  * @version $Id$
  */
-
-#if !defined(WIN32)
-#define HARNESS_API
-#else
-#if defined(HARNESS_EXPORTS)
-#define HARNESS_API __declspec(dllexport)
-#else
-#define HARNESS_API __declspec(dllimport)
-#endif
-#endif
-
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;

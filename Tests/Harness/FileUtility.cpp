@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,10 @@
  * <http://www.apache.org/>.
  */
 
+#include "FileUtility.hpp"
+
+
+
 #include <cstdlib>
 #include <cstdio>
 #include <ctime>
@@ -62,8 +66,6 @@
 #include <climits>
 #include <cstring>
 
-// Added for directory creation 
-#include <strstream>
 #if defined(WIN32)
 #include <direct.h>
 #define PATH_MAX _MAX_PATH
@@ -80,26 +82,57 @@ extern "C" int mkdir(const char*, mode_t mode);
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
+#include <strstrea.h>
 #else
 #include <iostream>
+#include <strstream>
 #endif
 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
 
-// XERCES HEADERS...
-//	Are included by HarnessInit.hpp
-#include "HarnessInit.hpp"
+
+
 #include <sax/SAXException.hpp>
 
-// XALAN HEADERS...
-//	Are included by FileUtility.hpp
-#include "FileUtility.hpp"
+
+
+#include <PlatformSupport/DirectoryEnumerator.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
+#include <PlatformSupport/XalanFileOutputStream.hpp>
+
+
+
+#include <XMLSupport/FormatterToXML.hpp>
+#include <XMLSupport/FormatterTreeWalker.hpp>
+
+
+
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
+
+
+
+#include <XSLT/StylesheetRoot.hpp>
+
+
+
+#include <XalanTransformer/XalanCompiledStylesheet.hpp>
+#include <XalanTransformer/XalanTransformer.hpp>
+
+
+
 #include "XMLFileReporter.hpp"
 
-char *xalanNodeTypes[]=
-	{"UNKNOWN_NODE",
+
+
+
+const char* const	xalanNodeTypes[] =
+{
+	"UNKNOWN_NODE",
 	"ELEMENT_NODE",
 	"ATTRIBUTE_NODE",
 	"TEXT_NODE",
@@ -111,7 +144,70 @@ char *xalanNodeTypes[]=
 	"DOCUMENT_NODE",
 	"DOCUMENT_TYPE_NODE",
 	"DOCUMENT_FRAGMENT_NODE",
-	"NOTATION_NODE"};
+	"NOTATION_NODE"
+};
+
+
+
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::cout;
+	using std::endl;
+#endif
+
+
+
+FileUtility::reportStruct::reportStruct() :
+	theDrive(),
+	testOrFile(),
+	xmlFileURL(),
+	xslFileURL(),
+	xmlFormat(),
+	msg(0),
+	currentNode(),
+	actual(),
+	expected(),
+	pass(0),
+	fail(0),
+	nogold(0)
+{
+}
+
+
+
+void
+FileUtility::reportStruct::reset()
+{
+	clear(testOrFile);
+	msg = "";
+	clear(currentNode);
+	clear(actual);
+	clear(expected);
+}
+
+
+
+FileUtility::cmdParams::cmdParams() :
+	help(),
+	data(0),
+	base(),
+	output(),
+	gold(),
+	sub(),
+	source(0),
+	skip(false),
+	iters(0)
+{
+}
+
+
+
+FileUtility::FileUtility() :
+	data(),
+	args()
+{
+	cout << endl << "Using Xerces Version " << gXercesFullVersionStr << endl;
+}
+
 
 
 #if !defined(WIN32)
@@ -155,7 +251,7 @@ FileUtility::getParams(int argc,
 	//
 	if (argc == 1 || argv[1][0] == '-')
 	{
-		cout << args.help.str();  
+		cout << args.getHelpMessage();  
 		return false;
 	}
 	else
@@ -167,7 +263,7 @@ FileUtility::getParams(int argc,
 		else
 		{
 			cout << endl << "Given base directory \"" << argv[1] << "\" does not exist" << endl;
-			cout << args.help.str();
+			cout << args.getHelpMessage();
 			return false;
 		}
 	}
@@ -182,13 +278,13 @@ FileUtility::getParams(int argc,
 			if(i < argc && argv[i][0] != '-')
 			{
 				assign(args.output, XalanDOMString(argv[i]));
-				append(args.output, pathSep);
+				append(args.output, s_pathSep);
 				checkAndCreateDir(args.output);
 				fsetOut = false;
 			}
 			else
 			{
-				cout << args.help.str();
+				cout << args.getHelpMessage();
 				fSuccess = false;
 			}
 		}
@@ -205,12 +301,12 @@ FileUtility::getParams(int argc,
 					fSuccess = false;
 				}
 
-				append(args.gold, pathSep);
+				append(args.gold, s_pathSep);
 				fsetGold = false;
 			}
 			else
 			{
-				cout << args.help.str();
+				cout << args.getHelpMessage();
 				fSuccess = false;
 			}
 		}
@@ -231,13 +327,13 @@ FileUtility::getParams(int argc,
 				}
 				else
 				{
-					cout << args.help.str();
+					cout << args.getHelpMessage();
 					fSuccess = false;
 				}
 			}
 			else
 			{
-				cout << args.help.str();
+				cout << args.getHelpMessage();
 				fSuccess = false;
 			}
 		}
@@ -250,7 +346,7 @@ FileUtility::getParams(int argc,
 			}
 			else
 			{
-				cout << args.help.str();
+				cout << args.getHelpMessage();
 				fSuccess = false;
 			}
 		}
@@ -269,13 +365,13 @@ FileUtility::getParams(int argc,
 			}
 			else
 			{
-				cout << args.help.str();
+				cout << args.getHelpMessage();
 				fSuccess = false;
 			}
 		}
 		else
 		{
-			cout << args.help.str();
+			cout << args.getHelpMessage();
 			fSuccess = false;
 		}
 
@@ -285,7 +381,7 @@ FileUtility::getParams(int argc,
 	//
 	if (fsetOut)
 	{ 
-		unsigned int ii = lastIndexOf(args.base,charAt(pathSep,0));
+		unsigned int ii = lastIndexOf(args.base,charAt(s_pathSep,0));
 
 		if (ii < length(args.base))
 		{
@@ -294,7 +390,7 @@ FileUtility::getParams(int argc,
 
 		append(args.output,XalanDOMString(outDir));
 		checkAndCreateDir(args.output);
-		append(args.output,pathSep); 
+		append(args.output,s_pathSep); 
 
 	}
 	// Do we need to set the default gold directory??
@@ -308,13 +404,13 @@ FileUtility::getParams(int argc,
 			cout << "Assumed Gold dir - " << c_str(TranscodeToLocalCodePage(args.gold)) << " - does not exist" << endl;
 			fSuccess = false;
 		}
-		append(args.gold,pathSep);
+		append(args.gold,s_pathSep);
 	}
 	
 	// Add the path seperator to the end of the base directory 
 	// here after we've finished using it for all directory creation.
 	//
-	append(args.base,pathSep);
+	append(args.base,s_pathSep);
 	
 	return fSuccess;
 }
@@ -341,11 +437,11 @@ FileUtility::getTestFileNames(
 	// garnered from XSLTMARK performance directory exm.
 	if (useDirPrefix)
 	{
-		assign(searchSpecification, baseDir + relDir + pathSep + relDir + searchSuffix);
+		assign(searchSpecification, baseDir + relDir + s_pathSep + relDir + searchSuffix);
 	}
 	else
 	{
-		assign(searchSpecification, baseDir + relDir + pathSep + searchSuffix); 
+		assign(searchSpecification, baseDir + relDir + s_pathSep + searchSuffix); 
 	}
 
 
@@ -1273,6 +1369,36 @@ FileUtility::reportError()
 }
 
 
+#if !defined(NDEBUG)
+void
+FileUtility::debugNodeData(const XalanDOMString&	value) const
+{
+	cout << "Node is: " << c_str(TranscodeToLocalCodePage(value)) << endl;
+}
+
+
+
+void
+FileUtility::debugNodeData(
+			const XalanDOMString&	node,
+			const XalanDOMString&	value) const
+{
+	cout << "Node is: " << c_str(TranscodeToLocalCodePage(node)) << "	"
+		 << "Value is: \"" << c_str(TranscodeToLocalCodePage(value)) << "\"\n";
+}
+
+
+
+void
+FileUtility::debugAttributeData(const XalanDOMString&	value) const
+{
+	cout << "Attribute is: " << c_str(TranscodeToLocalCodePage(value)) << endl;
+}
+
+#endif
+
+
+
 /*	This routine collects up data pertinent to a dom comparison failure. 
 //	Inputs: 
 //		errmsg:			Reason for the failure.
@@ -1397,4 +1523,37 @@ FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resul
 			 << xalan.getLastError()
 			 << endl;
 	}	
+}
+
+
+
+static XalanDOMString	s_xmlSuffix;
+static XalanDOMString	s_pathSep;
+
+
+
+const XalanDOMString&	FileUtility::s_xmlSuffix = ::s_xmlSuffix;
+const XalanDOMString&	FileUtility::s_pathSep = ::s_pathSep;
+
+
+
+void
+FileUtility::initialize()
+{
+	::s_xmlSuffix = XALAN_STATIC_UCODE_STRING(".xml");
+
+#if defined(WIN32)
+	::s_pathSep = XALAN_STATIC_UCODE_STRING("\\");
+#else
+	::s_pathSep = XALAN_STATIC_UCODE_STRING("/");
+#endif
+}
+
+
+
+void
+FileUtility::terminate()
+{
+	releaseMemory(::s_pathSep);
+	releaseMemory(::s_xmlSuffix);
 }

@@ -44,7 +44,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src\\" /I "..\harness\\" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /FD /c
+# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src\\" /I ".." /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -71,7 +71,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /Gf /Gy /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src\\" /I "..\harness\\" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /Yc /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /Gf /Gy /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src\\" /I ".." /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /Yc /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -99,7 +99,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src\\" /I "..\harness\\" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /FD /c
-# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /Ob2 /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src\\" /I "..\harness\\" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /FD /c
+# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /Ob2 /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src\\" /I ".." /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -110,7 +110,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release\PlatformSupport.lib ..\..\Build\Win32\VC6\Release\XalanDOM.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:yes /machine:I386
 # SUBTRACT BASE LINK32 /debug
-# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release.symbols\PlatformSupportS.lib ..\..\Build\Win32\VC6\Release.symbols\DOMSupportS.lib ..\..\Build\Win32\VC6\Release.symbols\XalanDOMS.lib ..\..\Build\Win32\VC6\Release.symbols\XMLSupportS.lib ..\..\Build\Win32\VC6\Release.symbols\XalanSourceTreeS.lib ..\..\Build\Win32\VC6\Release.symbols\XSLTS.lib /nologo /dll /debug /machine:I386
+# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release.symbols\PlatformSupportS.lib ..\..\Build\Win32\VC6\Release.symbols\DOMSupportS.lib ..\..\Build\Win32\VC6\Release.symbols\XalanDOMS.lib ..\..\Build\Win32\VC6\Release.symbols\XMLSupportS.lib ..\..\Build\Win32\VC6\Release.symbols\XalanSourceTreeS.lib ..\..\Build\Win32\VC6\Release.symbols\XSLTS.lib  ..\..\Build\Win32\VC6\Release.symbols\XalanTransformerS.lib /nologo /dll /debug /machine:I386
 # SUBTRACT LINK32 /incremental:yes
 
 !ENDIF 
@@ -140,6 +140,10 @@ SOURCE=.\FileUtility.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\HarnessInit.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\XMLFileReporter.cpp
 
 !IF  "$(CFG)" == "Harness - Win32 Release"
@@ -160,6 +164,10 @@ SOURCE=.\XMLFileReporter.cpp
 # Begin Source File
 
 SOURCE=.\FileUtility.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HarnessDefinitions.hpp
 # End Source File
 # Begin Source File
 
