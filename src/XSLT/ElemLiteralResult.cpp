@@ -206,6 +206,11 @@ ElemLiteralResult::postConstruction(const NamespacesHandler&	theParentHandler)
 
 
 
+// $$$ ToDo: Get rid of this when we get rid of Xerces' DOMString!!!
+static const XalanDOMChar	theDummy = 0;
+
+
+
 void
 ElemLiteralResult::execute(
 			StylesheetExecutionContext&		executionContext,
@@ -225,31 +230,29 @@ ElemLiteralResult::execute(
 		{
 			const AVT* const	avt = m_avts[i];
 
+			XalanDOMString		thePrefix;
+
+			const XalanDOMString&	theName = avt->getName();
+
+			if (startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true)
+			{
+				thePrefix = substring(theName, DOMServices::s_XMLNamespaceWithSeparatorLength);
+			}
+
 			XalanDOMString	theStringedValue;
 
 			avt->evaluate(theStringedValue, sourceNode, *this, executionContext);
 
-			if(isEmpty(theStringedValue) == false)
+			if (isEmpty(thePrefix) == true ||
+			    shouldExcludeResultNamespaceNode(
+					thePrefix,
+					theStringedValue) == false)
 			{
-				XalanDOMString		thePrefix;
-
-				const XalanDOMString&	theName = avt->getName();
-
-				if (startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true)
-				{
-					thePrefix = substring(theName, DOMServices::s_XMLNamespaceWithSeparatorLength);
-				}
-
-				if (isEmpty(thePrefix) == true ||
-				    shouldExcludeResultNamespaceNode(
-						thePrefix,
-						theStringedValue) == false)
-				{
-					executionContext.replacePendingAttribute(
+				// $$$ ToDo: Get rid of theDummy when we get rid of Xerces' DOMString!!!
+				executionContext.replacePendingAttribute(
 						c_wstr(avt->getName()), 
 						c_wstr(avt->getType()),
-						c_wstr(theStringedValue));
-				}
+						length(theStringedValue) == 0 ? &theDummy : c_wstr(theStringedValue));
 			}
 		}
 	}
