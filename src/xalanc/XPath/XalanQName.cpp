@@ -220,27 +220,7 @@ XalanQName::getPrefixForNamespace(
 			const NamespacesStackType&	nsStack,
 			const XalanDOMString&		uri)
 {
-#if 1
 	return getPrefixForNamespace(nsStack.begin(), nsStack.end(), uri);
-#else
-	const XalanDOMString*					thePrefix = 0;
-
-	const NamespacesStackType::size_type	depth = nsStack.size();
-
-	for(NamespacesStackType::size_type i = depth; i > 0; --i)
-	{
-		const NamespaceVectorType&	namespaces = nsStack[i - 1];
-
-		thePrefix = getPrefixForNamespace(namespaces, uri);
-
-		if (thePrefix != 0)
-		{
-			break;
-		}
-	}
-
-	return thePrefix;
-#endif
 }
 
 
