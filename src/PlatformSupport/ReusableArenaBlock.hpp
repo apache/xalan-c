@@ -64,96 +64,6 @@
 #include <PlatformSupport/ArenaBlock.hpp>
 
 
-#if 0
-template<class ObjectType,
-		 class DestroyFunctionType = ArenaBlockDestroy<ObjectType> >
-class ReusableArenaBlockDestroy
-{
-public:
-
-	ReusableArenaBlockDestroy() :
-		m_freeListSet()
-	{
-	}
-
-	void
-	operator()(ObjectType&	theObject) const
-	{
-		if (isOnFreeList(&theObject) == false)
-		{
-			m_destroyFunction(theObject);
-		}
-	}
-
-	bool
-	isOnFreeList(ObjectType*	theObject) const
-	{
-		return m_freeListSet.find(theObject) == m_freeListSet.end() ? false : true;
-	}
-
-	void
-	destroyObject(ObjectType*	theObject)
-	{
-		assert(theObject != 0);
-
-		m_destroyFunction(*theObject);
-
-		m_freeListSet.insert(theObject);
-	}
-
-	ObjectType*
-	getNextFromFreeList()
-	{
-		assert(m_freeListSet.size() != 0);
-
-		const FreeListSetType::const_iterator	i = m_freeListSet.begin();
-
-		return *i;
-	}
-
-	bool
-	removeFromFreeList(ObjectType*	theObject)
-	{
-		assert(m_freeListSet.size() != 0);
-
-		const FreeListSetType::iterator		i =
-			m_freeListSet.find(theObject);
-
-		if (i == m_freeListSet.end())
-		{
-			return false;
-		}
-		else
-		{
-			m_freeListSet.erase(i);
-
-			return true;
-		}
-	}
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef set<ObjectType*>		FreeListSetType;
-#else
-	typedef std::set<ObjectType*>	FreeListSetType;
-#endif
-
-	FreeListSetType::size_type
-	freeListSize() const
-	{
-		return m_freeListSet.size();
-	}
-
-private:
-
-	// Destroy function to call.
-	DestroyFunctionType		m_destroyFunction;
-
-	// Bitmap which tracks which blocks are in use
-	// that should not be destroyed.
-	FreeListSetType			m_freeListSet;
-};
-#endif
-
 
 
 template<class ObjectType,
@@ -173,10 +83,16 @@ public:
 					   DestroyFunctionType,
 					   AllocatorType>				BaseClassType;
 
-	ReusableArenaBlock(size_type	theBlockCount) :
-		BaseClassType(theBlockCount),
-		m_freeList(theBlockCount),
-		m_freeListSize(0)
+	/*
+	 * Construct an ArenaBlock of the specified size
+	 * of objects.
+	 *
+	 * @param theBlockSize The size of the block (the number of objects it can contain).
+	 */
+	ReusableArenaBlock(size_type	theBlockSize) :
+		BaseClassType(theBlockSize),
+		m_freeList(theBlockSize),
+		m_freeBlockCount(0)
 	{
 	}
 
@@ -184,10 +100,16 @@ public:
 	{
 	}
 
+	/*
+	 * Allocate a block.  Once the object is constructed, you must call
+	 * commitAllocation().
+	 *
+	 * @return a pointer to the new block.
+	 */
 	virtual ObjectType*
 	allocateBlock()
 	{
-		if (m_freeListSize == 0)
+		if (m_freeBlockCount == 0)
 		{
 			return BaseClassType::allocateBlock();
 		}
@@ -197,14 +119,19 @@ public:
 		}
 	}
 
+	/*
+	 * Commit the previous allocation.
+	 *
+	 * @param theBlock the address that was returned by allocateBlock()
+	 */
 	virtual void
 	commitAllocation(ObjectType*	theBlock)
 	{
 		assert(theBlock != 0);
-		assert(m_freeListSize == 0 ||
+		assert(m_freeBlockCount == 0 ||
 			   theBlock == getNextFromFreeList());
 
-		if (m_freeListSize == 0)
+		if (m_freeBlockCount == 0)
 		{
 			BaseClassType::commitAllocation(theBlock);
 		}
@@ -214,17 +141,55 @@ public:
 		}
 	}
 
+	/*
+	 * Find out if there is a block available.
+	 *
+	 * @return true if one is available, false if not.
+	 */
 	virtual bool
 	blockAvailable() const
 	{
-		return m_freeListSize != 0 ? true : BaseClassType::blockAvailable();
+		return m_freeBlockCount != 0 ? true : BaseClassType::blockAvailable();
 	}
 
+	/*
+	 * Get the number of objects currently allocated in the
+	 * block.
+	 *
+	 * @return The number of objects allocated.
+	 */
+	virtual size_type
+	getCountAllocated() const
+	{
+		return BaseClassType::getCountAllocated() - m_freeBlockCount;
+	}
+
+	/*
+	 * Determine if this block owns the specified object.  Note
+	 * that even if the object address is within our block, this
+	 * call will return false if no object currently occupies the
+	 * block.  See also ownsBlock().
+	 *
+	 * @param theObject the address of the object.
+	 * @return true if we own the object, false if not.
+	 */
+	virtual bool
+	ownsObject(const ObjectType*	theObject) const
+	{
+		return BaseClassType::ownsObject(theObject) && !isOnFreeList(theObject);
+	}
+
+	/*
+	 * Destroy the object, and return the block to the free list.
+	 * The behavior is undefined if the object pointed to is not
+	 * owned by the block.
+	 *
+	 * @param theObject the address of the object.
+	 */
 	void
 	destroyObject(ObjectType*	theObject)
 	{
-		assert(ownsObject(theObject) == true &&
-			   isOnFreeList(theObject) == false);
+		assert(ownsObject(theObject) == true);
 
 		m_destroyFunction(*theObject);
 
@@ -233,6 +198,15 @@ public:
 
 protected:
 
+	/*
+	 * Determine if the block should be destroyed.  Returns true,
+	 * unless the object is on the free list.  The behavior is
+	 * undefined if the object pointed to is not owned by the
+	 * block.
+	 *
+	 * @param theObject the address of the object
+	 * @return true if block should be destroyed, false if not.
+	 */
 	virtual bool
 	shouldDestroyBlock(const ObjectType*	theObject) const
 	{
@@ -252,17 +226,39 @@ private:
 	bool
 	operator==(const ReusableArenaBlock&) const;
 
+	/*
+	 * Determine if the block is on the free list.  The behavior is
+	 * undefined if the object pointed to is not owned by the
+	 * block.
+	 *
+	 * @param theObject the address of the object
+	 * @return true if block is on the free list, false if not.
+	 */
 	bool
 	isOnFreeList(const ObjectType*	theObject) const
 	{
-		assert(ownsObject(theObject) == true);
+		if (m_freeBlockCount == 0)
+		{
+			return false;
+		}
+		else
+		{
+			assert(ownsObject(theObject) == true);
 
-		const size_type		theOffset =
-				getBlockOffset(theObject);
+			const size_type		theOffset =
+					getBlockOffset(theObject);
 
-		return m_freeList.isSet(theOffset);
+			return m_freeList.isSet(theOffset);
+		}
 	}
 
+	/*
+	 * Add a block to the free list.  The behavior is
+	 * undefined if the object pointed to is not owned by the
+	 * block.
+	 *
+	 * @param theObject the address of the object
+	 */
 	void
 	addToFreeList(const ObjectType*		theObject)
 	{
@@ -271,9 +267,16 @@ private:
 
 		m_freeList.set(theOffset);
 
-		++m_freeListSize;
+		++m_freeBlockCount;
 	}
 
+	/*
+	 * Remove a block from the free list.  The behavior is
+	 * undefined if the object pointed to is not owned by the
+	 * block.
+	 *
+	 * @param theObject the address of the object
+	 */
 	void
 	removeFromFreeList(const ObjectType*	theObject)
 	{
@@ -282,21 +285,32 @@ private:
 
 		m_freeList.clear(theOffset);
 
-		--m_freeListSize;
+		--m_freeBlockCount;
 	}
 
+	/*
+	 * Get the next block from the free list.  Returns 0 if
+	 * the free list is empty.
+	 *
+	 * @return the address of the block
+	 */
 	ObjectType*
 	getNextFromFreeList()
 	{
 		ObjectType*		theResult = 0;
 
-		const unsigned long	theFreeListSize = m_freeList.getSize();
-
-		for(unsigned long i = 0; i < theFreeListSize; ++i)
+		if (m_freeBlockCount > 0)
 		{
-			if (m_freeList.isSet(i) == false)
+			const unsigned long	theFreeListSize = m_freeList.getSize();
+
+			for(unsigned long i = 0; i < theFreeListSize; ++i)
 			{
-				theResult = getBlockAddress(i);
+				if (m_freeList.isSet(i) == true)
+				{
+					theResult = getBlockAddress(i);
+
+					break;
+				}
 			}
 		}
 
@@ -307,7 +321,8 @@ private:
 	// and that should not be destroyed.
 	XalanBitmap		m_freeList;
 
-	unsigned long	m_freeListSize;
+	// The number of blocks on the free list.)
+	unsigned long	m_freeBlockCount;
 };
 
 

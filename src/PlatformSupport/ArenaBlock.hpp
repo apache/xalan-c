@@ -94,13 +94,19 @@ public:
 
 	typedef AllocatorType::size_type	size_type;
 
-	ArenaBlock(size_type	theBlockCount) :
+	/*
+	 * Construct an ArenaBlock of the specified size
+	 * of objects.
+	 *
+	 * @param theBlockSize The size of the block (the number of objects it can contain).
+	 */
+	ArenaBlock(size_type	theBlockSize) :
 		m_objectCount(0),
-		m_blockCount(theBlockCount),
+		m_blockSize(theBlockSize),
 		m_objectBlock(0),
 		m_allocator()
 	{
-		assert(theBlockCount > 0);
+		assert(theBlockSize > 0);
 	}
 
 	~ArenaBlock()
@@ -118,18 +124,24 @@ public:
 		m_allocator.deallocate(m_objectBlock, 0);
 	}
 
+	/*
+	 * Allocate a block.  Once the object is constructed, you must call
+	 * commitAllocation().
+	 *
+	 * @return a pointer to the new block.
+	 */
 	virtual ObjectType*
 	allocateBlock()
 	{
 		// If no memory has yet been allocated, then allocate it...
 		if (m_objectBlock == 0)
 		{
-			m_objectBlock = m_allocator.allocate(m_blockCount, 0);
+			m_objectBlock = m_allocator.allocate(m_blockSize, 0);
 		}
 		assert(m_objectBlock != 0);
 
 		// Any space left?
-		if (m_objectCount == m_blockCount)
+		if (m_objectCount == m_blockSize)
 		{
 			return 0;
 		}
@@ -139,9 +151,11 @@ public:
 		}
 	}
 
-	// $$$ ToDo: How much error checking, etc. do we do here?  Is
-	// it worth trying to throw exceptions when things are not
-	// what they should be?
+	/*
+	 * Commit the previous allocation.
+	 *
+	 * @param theBlock the address that was returned by allocateBlock()
+	 */
 	virtual void
 #if defined (NDEBUG)
 	commitAllocation(ObjectType*	/* theBlock */)
@@ -150,30 +164,56 @@ public:
 #endif
 	{
 		assert(theBlock == m_objectBlock + m_objectCount);
-		assert(m_objectCount < m_blockCount);
+		assert(m_objectCount < m_blockSize);
 
 		m_objectCount++;
 	}
 
+	/*
+	 * Find out if there is a block available.
+	 *
+	 * @return true if one is available, false if not.
+	 */
 	virtual bool
 	blockAvailable() const
 	{
-		return m_objectCount < m_blockCount ? true : false;
+		return m_objectCount < m_blockSize ? true : false;
 	}
 
-	size_type
+	/*
+	 * Get the number of objects currently allocated in the
+	 * block.
+	 *
+	 * @return The number of objects allocated.
+	 */
+	virtual size_type
 	getCountAllocated() const
 	{
 		return m_objectCount;
 	}
 
+	/*
+	 * Get the block size, that is, the number
+	 * of objects in each block.
+	 *
+	 * @return The size of the block
+	 */
 	size_type
-	getBlockCount() const
+	getBlockSize() const
 	{
-		return m_blockCount;
+		return m_blockSize;
 	}
 
-	bool
+	/*
+	 * Determine if this block owns the specified object.  Note
+	 * that even if the object address is within our block, this
+	 * call will return false if no object currently occupies the
+	 * block.  See also ownsBlock().
+	 *
+	 * @param theObject the address of the object.
+	 * @return true if we own the object, false if not.
+	 */
+	virtual bool
 	ownsObject(const ObjectType*	theObject) const
 	{
 #if !defined(XALAN_NO_NAMESPACES)
@@ -195,26 +235,82 @@ public:
 		}
 	}
 
+	/*
+	 * Determine if this block owns the specified object block.
+	 * Note that, unlike ownsObject(), there does not need to
+	 * be an object at the address.
+	 *
+	 * @param theObject the address of the object
+	 * @return true if we own the object block, false if not.
+	 */
+	bool
+	ownsBlock(const ObjectType*		theObject) const
+	{
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::less;
+#endif
+
+		// Use less<>, since it's guaranteed to do pointer
+		// comparisons correctly...
+		less<const ObjectType*>		functor;
+
+		if (functor(theObject, m_objectBlock) == false &&
+			functor(theObject, m_objectBlock + m_blockSize) == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 protected:
 
+	/*
+	 * Determine if the block should be destroyed.  Called by
+	 * an instance of DeleteFunctor, this function is for
+	 * deriving classes that might want to control the destruction
+	 * of things.
+	 *
+	 * @param theObject the address of the object
+	 * @return true if block should be destroyed, false if not.
+	 */
 	virtual bool
 	shouldDestroyBlock(const ObjectType*	/* theObject */) const
 	{
 		return true;
 	}
 
+	/*
+	 * Determine the offset into the block for the given address.
+	 * Behavior is undefined if the address is not within our
+	 * block
+	 *
+	 * @param theObject the address of the object
+	 * @return the offset
+	 */
 	size_type
 	getBlockOffset(const ObjectType*	theObject) const
 	{
-		assert(ownsObject(theObject) == true);
+		assert(theObject - m_objectBlock < m_blockSize);
 
 		return theObject - m_objectBlock;
 	}
 
+	/*
+	 * Determine the address within our block of the object
+	 * at the specified offset.
+	 * Behavior is undefined if the offset is greater than the
+	 * block size.
+	 *
+	 * @param theObject the address of the object
+	 * @return the offset
+	 */
 	ObjectType*
 	getBlockAddress(size_type	theOffset) const
 	{
-		assert(ownsObject(m_objectBlock + theOffset) == true);
+		assert(theOffset < m_blockSize);
 
 		return m_objectBlock + theOffset;
 	}
@@ -262,7 +358,7 @@ private:
 	// data members...
 	size_type				m_objectCount;
 
-	const size_type			m_blockCount;
+	const size_type			m_blockSize;
 
 	ObjectType*				m_objectBlock;
 

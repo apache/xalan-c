@@ -94,8 +94,14 @@ public:
 						   AllocatorType,
 						   ReusableArenaBlockType>		BaseClassType;
 
-	ReusableArenaAllocator(size_type	theBlockCount) :
-		BaseClassType(theBlockCount)
+	/*
+	 * Construct an instance that will allocate blocks of the specified size.
+	 *
+	 * @param theBlockSize The block size.
+	 */
+	ReusableArenaAllocator(size_type	theBlockSize) :
+		BaseClassType(theBlockSize),
+		m_lastBlockReferenced(0)
 	{
 	}
 
@@ -103,29 +109,114 @@ public:
 	{
 	}
 
+	/*
+	 * Destroy the object, and free the block for re-use.
+	 *
+	 * @param theObject the address of the object.
+	 */
 	void
 	destroyObject(ObjectType*	theObject)
 	{
 		assert(m_blocks.size() != 0);
 
-		const ArenaBlockListType::iterator	theEnd = m_blocks.end();
-
-		ArenaBlockListType::iterator	i = m_blocks.begin();
-
-		while(i != theEnd)
+		// Check this, just in case...
+		if (m_lastBlockReferenced != 0 && m_lastBlockReferenced->ownsObject(theObject) == true)
 		{
-			if ((*i)->ownsObject(theObject) == true)
-			{
-				(*i)->destroyObject(theObject);
+			m_lastBlockReferenced->destroyObject(theObject);
+		}
+		else
+		{
+			// Search for the block that owns the object...
+			const ArenaBlockListType::reverse_iterator	theEnd = m_blocks.rend();
 
-				break;
-			}
-			else
+			ArenaBlockListType::reverse_iterator	i = m_blocks.rbegin();
+
+			while(i != theEnd)
 			{
-				++i;
+				if ((*i)->ownsObject(theObject) == true)
+				{
+					m_lastBlockReferenced = *i;
+
+					m_lastBlockReferenced->destroyObject(theObject);
+
+					break;
+				}
+				else
+				{
+					++i;
+				}
 			}
 		}
 	}
+
+	/*
+	 * Allocate a block of the appropriate size for an
+	 * object.  Call commitAllocation() when after
+	 * the object is successfully constructed.  You _must_
+	 * commit an allocation before performing any other
+	 * operation on the allocator.
+	 *
+	 * @return A pointer to a block of memory
+	 */
+	virtual ObjectType*
+	allocateBlock()
+	{
+		if (m_lastBlockReferenced == 0 ||
+			m_lastBlockReferenced->blockAvailable() == false)
+		{
+			// Search back for a block with some space available...
+			ArenaBlockListType::reverse_iterator	i = m_blocks.rbegin();
+			const ArenaBlockListType::reverse_iterator	theEnd = m_blocks.rend();
+
+			while(i != theEnd)
+			{
+				assert(*i != 0);
+
+				if (*i != m_lastBlockReferenced && (*i)->blockAvailable() == true)
+				{
+					// Ahh, found one with free space.
+					m_lastBlockReferenced = *i;
+
+					break;
+				}
+				else
+				{
+					++i;
+				}
+			}
+
+			if (i == theEnd)
+			{
+				// No blocks have free space available, so create a new block, and
+				// push it on the list.
+				m_lastBlockReferenced = new ReusableArenaBlockType(m_blockSize);
+
+				m_blocks.push_back(m_lastBlockReferenced);
+			}
+		}
+		assert(m_lastBlockReferenced != 0 && m_lastBlockReferenced->blockAvailable() == true);
+
+		return m_lastBlockReferenced->allocateBlock();
+	}
+
+	/*
+	 * Commits the allocation of the previous
+	 * allocateBlock() call.
+	 *
+	 * @param theObject A pointer to a block of memory
+	 */
+	virtual void
+	commitAllocation(ObjectType*	theObject)
+	{
+		assert(m_blocks.size() != 0 && m_lastBlockReferenced != 0 && m_lastBlockReferenced->ownsBlock(theObject) == true);
+
+		m_lastBlockReferenced->commitAllocation(theObject);
+		assert(m_lastBlockReferenced->ownsObject(theObject) == true);
+	}
+
+private:
+
+	ReusableArenaBlockType*		m_lastBlockReferenced;
 };
 
 

@@ -97,8 +97,13 @@ public:
 
 	typedef ArenaBlockType::size_type	size_type;
 
-	ArenaAllocator(size_type	theBlockCount) :
-		m_blockCount(theBlockCount),
+	/*
+	 * Construct an instance that will allocate blocks of the specified size.
+	 *
+	 * @param theBlockSize The block size.
+	 */
+	ArenaAllocator(size_type	theBlockSize) :
+		m_blockSize(theBlockSize),
 		m_blocks()
 	{
 	}
@@ -115,16 +120,26 @@ public:
 	}
 
 	/*
-	 * Allocate a block of the appropriate size for an
-	 * object.  Call commitAllocation() when after
-	 * the object is successfully constructed.
+	 * Get size of an ArenaBlock, that is, the number
+	 * of objects in each block.
 	 *
-	 * @return A pointer to a block of memory
+	 * @return The size of the block
+	 */
+	size_type
+	getBlockSize() const
+	{
+		return m_blockSize;
+	}
+
+	/*
+	 * Get the number of ArenaBlocks currently allocated.
+	 *
+	 * @return The number of blocks.
 	 */
 	size_type
 	getBlockCount() const
 	{
-		return m_blockCount;
+		return m_blocks.size();
 	}
 
 	/*
@@ -134,14 +149,15 @@ public:
 	 *
 	 * @return A pointer to a block of memory
 	 */
-	ObjectType*
+	virtual ObjectType*
 	allocateBlock()
 	{
 		if (m_blocks.size() == 0 ||
 			m_blocks.back()->blockAvailable() == false)
 		{
-			m_blocks.push_back(new ArenaBlockType(m_blockCount));
+			m_blocks.push_back(new ArenaBlockType(m_blockSize));
 		}
+		assert(m_blocks.size() > 0 && m_blocks.back() != 0 && m_blocks.back()->blockAvailable() == true);
 
 		return m_blocks.back()->allocateBlock();
 	}
@@ -150,14 +166,15 @@ public:
 	 * Commits the allocation of the previous
 	 * allocateBlock() call.
 	 *
-	 * @param A pointer to a block of memory
+	 * @param theObject A pointer to a block of memory
 	 */
-	void
-	commitAllocation(ObjectType*	theBlock)
+	virtual void
+	commitAllocation(ObjectType*	theObject)
 	{
-		assert(m_blocks.size() != 0);
+		assert(m_blocks.size() != 0 && m_blocks.back()->ownsBlock(theObject) == true);
 
-		m_blocks.back()->commitAllocation(theBlock);
+		m_blocks.back()->commitAllocation(theObject);
+		assert(m_blocks.back()->ownsObject(theObject) == true);
 	}
 
 protected:
@@ -171,7 +188,7 @@ protected:
 
 	ArenaBlockListType	m_blocks;
 
-	const size_type		m_blockCount;
+	const size_type		m_blockSize;
 };
 
 
