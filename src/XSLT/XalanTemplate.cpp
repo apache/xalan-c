@@ -426,6 +426,14 @@ foo()
 	}
 	
 	{
+		XPathExecutionContextDefault::ResultTreeFragCacheType	theVector;
+		
+		for_each(theVector.begin(),
+			 theVector.end(),
+			 DeleteFunctor<ResultTreeFragBase>());
+	}
+	
+	{
 		StylesheetConstructionContextDefault::StylesheetSetType	theSet;
 		
 		for_each(theSet.begin(),
