@@ -100,6 +100,12 @@ protected:
 	virtual void 
 	dereferenced() = 0;
 
+	virtual unsigned int
+	getReferenceCount() const
+	{
+		return m_referenceCount;
+	}
+
 private:
 
 	unsigned int	m_referenceCount;
