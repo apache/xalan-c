@@ -2,7 +2,11 @@
 
   <property name="name" value="xalan"/>
   <property name="Name" value="Xalan-C++"/>
-  <property name="year" value="2001"/>
+  <property name="year" value="2003"/>
+  
+  <property name="version.VERSION" value="1"/>
+  <property name="version.RELEASE" value="6"/>
+  <property name="version.MINOR"   value="0"/>
 
   <property name="xdocs.dir" value="./xdocs"/>
   <property name="xdocs.book" value="${xdocs.dir}/sources/xalanLocal.xml"/>
@@ -19,6 +23,11 @@
   <property name="build.docs" value="${build.dir}/docs"/>
   <property name="build.apidocs" value="${build.docs}/apidocs"/>  
   <property name="site.dir" value="./xml-site"/>
+  
+  <property name="package.name"         value="Xalan-C"/>
+  <property name="docs.package.name"    value="${build.dir}/${package.name}_${version.VERSION}_${version.RELEASE}-docs"/>
+  <property name="webdocs.package.name" value="${build.dir}/${package.name}_${version.VERSION}_${version.RELEASE}-webdocs"/>
+  <property name="src.package.name"     value="${build.dir}/${package.name}_${version.VERSION}_${version.RELEASE}-src"/>  
 
   <target name="prepare">
     <gunzip src="${doc.generator.styletargz}"/>
@@ -44,7 +53,7 @@
       <fileset dir="${xdocs.apidocs}"/>
     </copy>
     <exec executable="doxygen.exe" dir="${xdocs.dir}">
-      <arg value="DoxyFileXalan"/>
+      <arg value="DoxyfileXalan"/>
     </exec>  
   </target>
     
@@ -97,24 +106,32 @@
     </java>
   </target>
 
-  <!-- pack doc for distribution -->
- <target name="pack.distribdocs">
-    <!--tar tarfile="./build/xalan-c-apidocs.tar" basedir="./build/docs/apidocs" includes="*"/>
-    <gzip src="./build/xalan-c-apidocs.tar" zipfile="./build/xalan-c-apidocs.tar.gz"/-->
-    <zip zipfile="./build/xalan-c-distribdocs.zip" basedir="./build/docs" includes="**"/>
+  <!-- package documentation (user guide and apidocs) for distribution -->
+  <target name="pack.docs">
+    <tar tarfile="${docs.package.name}.tar" basedir="${build.docs}" includes="**"/>
+    <gzip src="${docs.package.name}.tar" zipfile="${docs.package.name}.tar.gz"/>
+    <delete file="${docs.package.name}.tar"/>
+    
+    <zip zipfile="${docs.package.name}.zip" basedir="${build.docs}" includes="**"/>
   </target>
 
-  <!-- pack user guide doc for transfer to website -->
- <target name="pack.docs">
-    <!--tar tarfile="./build/xalan-c-docs.tar" basedir="./build/docs" includes="**"/>
-    <gzip src="./build/xalan-c-docs.tar" zipfile="./build/xalan-c-docs.tar.gz"/-->
-    <zip zipfile="./build/xalan-c-docs.zip" basedir="./xml-site" includes="**" excludes="apidocs/*"/>
+  <!-- package documentation (user guide and apidocs) for transfer to website -->
+  <target name="pack.webdocs">
+    <tar tarfile="${webdocs.package.name}.tar" basedir="${site.dir}" includes="**"/>
+    <gzip src="${webdocs.package.name}.tar" zipfile="${webdocs.package.name}.tar.gz"/>
+    <delete file="${webdocs.package.name}.tar"/>
+    
+    <zip zipfile="${webdocs.package.name}.zip" basedir="${site.dir}" includes="**"/>
   </target>
-  <!-- pack all doc for transfer to website -->
- <target name="pack.webdocs">
-    <!--tar tarfile="./build/xalan-c-docs.tar" basedir="./build/docs" includes="**"/>
-    <gzip src="./build/xalan-c-docs.tar" zipfile="./build/xalan-c-docs.tar.gz"/-->
-    <zip zipfile="./build/xalan-c-webdocs.zip" basedir="./xml-site" includes="**"/>
+
+  <!-- package source code for distribution -->
+  <target name="pack.src">
+    <tar tarfile="${src.package.name}.tar" basedir="../.." includes="xml-xalan/**" excludes="xml-xalan/c/build/** xml-xalan/c/xml-site/**" defaultexcludes="no"/>
+    <gzip src="${src.package.name}.tar" zipfile="${src.package.name}.tar.gz"/>
+    <delete file="${src.package.name}.tar"/>
+    
+    <!-- this rule is not picking up the CVS directories -- anybody know how to fix? -->
+    <zip zipfile="${src.package.name}.zip" basedir="../.." includes="xml-xalan/**" excludes="xml-xalan/c/build/** xml-xalan/c/xml-site/**" defaultexcludes="no"/>
   </target>
   
 </project>
