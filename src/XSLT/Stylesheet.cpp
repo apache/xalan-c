@@ -748,16 +748,15 @@ Stylesheet::findTemplate(
 			switch(targetNodeType)
 			{
 			case XalanNode::ELEMENT_NODE:
-				{
-					const XalanDOMString&	targetName = DOMServices::getLocalNameOfNode(*targetNode);
-
-					matchPatternList = locateMatchPatternList2(targetName, true);
-				}
+				matchPatternList = locateMatchPatternList2(DOMServices::getLocalNameOfNode(*targetNode), true);
 				break;
 
 			case XalanNode::PROCESSING_INSTRUCTION_NODE:
-			case XalanNode::ATTRIBUTE_NODE:
 				matchPatternList = locateMatchPatternList2(targetNode->getNodeName(), true);
+				break;
+
+			case XalanNode::ATTRIBUTE_NODE:
+				matchPatternList = locateMatchPatternList2(DOMServices::getLocalNameOfNode(*targetNode), true);
 				break;
 
 			case XalanNode::CDATA_SECTION_NODE:
@@ -770,7 +769,7 @@ Stylesheet::findTemplate(
 				break;
 
 			case XalanNode::DOCUMENT_NODE:
-					matchPatternList = locateMatchPatternList2(XPath::PSEUDONAME_ROOT, false);
+				matchPatternList = locateMatchPatternList2(XPath::PSEUDONAME_ROOT, false);
 				break;
 
 			case XalanNode::DOCUMENT_FRAGMENT_NODE:
@@ -778,9 +777,8 @@ Stylesheet::findTemplate(
 				break;
 
 			default:
-				{
-					matchPatternList = locateMatchPatternList2(targetNode->getNodeName(), true);
-				}
+				matchPatternList = locateMatchPatternList2(targetNode->getNodeName(), true);
+				break;
 			}
 
 			if (matchPatternList != 0)
