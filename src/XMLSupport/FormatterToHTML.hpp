@@ -99,6 +99,11 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToHTML : public FormatterToXML
 
 public:
 
+	enum eDummy
+	{
+		eDefaultIndentAmount = 4
+	};
+
 	/**
 	 * Constructor for customized encoding and doctype.
 	 * @param writer        The character output stream to use.
@@ -113,7 +118,7 @@ public:
 			const XalanDOMString&	doctypeSystem = XalanDOMString(),
 			const XalanDOMString&	doctypePublic = XalanDOMString(),
 			bool					doIndent = true,
-			int						indent = 4,
+			int						indent = eDefaultIndentAmount,
 			const XalanDOMString&	version = XalanDOMString(),
 			const XalanDOMString&	standalone = XalanDOMString(),
 			bool					xmlDecl = false);
@@ -121,7 +126,6 @@ public:
 	virtual
 	~FormatterToHTML();
 
-	
 	// These methods are inherited from DocumentHandler ...
 
 	virtual void

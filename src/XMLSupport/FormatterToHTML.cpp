@@ -407,6 +407,7 @@ FormatterToHTML::startElement(
 	m_currentElementName = nameUpper;
 
 	accum('<');
+
 	accum(name);
 
 	const unsigned int	nAttrs = attrs.getLength();
@@ -812,8 +813,7 @@ FormatterToHTML::writeAttrString(
 
 				accum('&');
 				accum('#');
-				accum('x');
-				accum(UnsignedLongToHexDOMString(next));
+				accum(UnsignedLongToDOMString(next));
 				accum(';');
 			}
 			else if(ch >= 160 && ch <= 255)
@@ -861,8 +861,7 @@ FormatterToHTML::writeAttrString(
 			{
 				accum('&');
 				accum('#');
-				accum('x');
-				accum(UnsignedLongToHexDOMString(ch));
+				accum(UnsignedLongToDOMString(ch));
 				accum(';');
 			}
 		}
