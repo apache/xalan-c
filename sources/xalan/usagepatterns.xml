@@ -212,17 +212,18 @@ XSLTInit  theInit;</source>
 <s3 title="3. Set up an XSLT processor with its support objects">
 <p>The XSLT processor interacts with several support objects that you must set up before you can perform transformations.</p>
 <source>// Create the support objects.
-XercesDOMSupport           theDOMSupport;
-XercesParserLiaison        theParserLiaison(theDOMSupport);
-XPathSupportDefault        theXPathSupport(theDOMSupport);
-XSLTProcessorEnvSupportDefault  theXSLTProcessorEnvSupport;
-XObjectFactoryDefault      theXObjectFactory;
-XPathFactoryDefault        theXPathFactory;
+XalanSourceTreeDOMSupport      theDOMSupport;
+XalanSourceTreeParserLiaison   theParserLiaison(theDOMSupport);
+// Hook the two together...
+theDOMSupport.setParserLiaison(&amp;theParserLiaison);
+// More support objects...
+XSLTProcessorEnvSupportDefault theXSLTProcessorEnvSupport;
+XObjectFactoryDefault          theXObjectFactory;
+XPathFactoryDefault            theXPathFactory;
 
 // Create the processor.
 XSLTEngineImpl  theProcessor(
           theParserLiaison,
-          theXPathSupport,
           theXSLTProcessorEnvSupport,
           theDOMSupport,
           theXObjectFactory,
@@ -241,8 +242,12 @@ StylesheetConstructionContextDefault  theConstructionContext(
 StylesheetExecutionContextDefault      theExecutionContext(
             theProcessor,
             theXSLTProcessorEnvSupport,
-            theXPathSupport,
-            theXObjectFactory);</source>
+            theDOMSupport,
+            theXObjectFactory);
+            
+// Optional: arrange to send parsing errors to the ProblemListener set 
+// for XSLTEngineImpl.
+theParserLiaison.setExecutionContext(theExecutionContext);</source>
 </s3>
 <s3 title="5. Set up input and output objects for a transformation">
 <p>You must set up XSLTInputSource objects for the XML document and XSL stylesheet, and an XSLTResultTarget object to contain the transformation output.</p>
