@@ -71,6 +71,10 @@ serialize(const DOMDocument&	theDocument)
 
 	FormatterToXML	theFormatter(thePrintWriter);
 
+	theFormatter.setDoIndent(true);
+
+	theFormatter.setIndent(2);
+
 	XercesDOMFormatterWalker	theWalker(theFormatter);
 
 	theWalker.traverse(&theDocument);
