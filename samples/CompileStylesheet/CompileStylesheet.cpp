@@ -76,9 +76,6 @@ main(
 			// Connect the processor to the support object...
 			theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
-			// Use the parser liaison as the formatter...
-			theProcessor.setFormatter(&theParserLiaison);
-
 			// Create separate factory support objects so the stylesheet's
 			// factory-created XObject and XPath instances are independent 
 			// from processor's.
