@@ -94,6 +94,7 @@ ElemAttributeSet::ElemAttributeSet(
 		if(equals(aname,Constants::ATTRNAME_NAME))
 		{
 			m_QName = QName(atts.getValue(i), stylesheetTree.getNamespaces());
+
 			stylesheetTree.addAttributeSet(m_QName, this);
 		}
 		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
@@ -123,18 +124,11 @@ ElemAttributeSet::execute(
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
-{	
-	if(executionContext.findOnElementRecursionStack(this) != false)
-	{
-		XalanDOMString msg("xsl:attribute-set '" 
-					  + m_QName.getLocalPart() + 
-					  "' used itself, which will cause an infinite loop.");
-
-		throw SAXException(toCharArray(msg));
-	}
-
+{
 	// This will push and pop the stack automatically...
 	StylesheetExecutionContext::ElementRecursionStackPusher		thePusher(executionContext, this);
+
+	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
 
 	const ElemTemplateElement*	attr = getFirstChildElem();
 
@@ -144,8 +138,6 @@ ElemAttributeSet::execute(
 
 		attr = attr->getNextSiblingElem();
 	}
-
-	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
 }
 
 

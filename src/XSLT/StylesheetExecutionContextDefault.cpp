@@ -94,8 +94,10 @@
 
 
 
+#include "ElemTemplateElement.hpp"
 #include "StylesheetRoot.hpp"
 #include "XSLTEngineImpl.hpp"
+#include "XSLTProcessorException.hpp"
 
 
 
@@ -773,7 +775,14 @@ StylesheetExecutionContextDefault::findOnElementRecursionStack(const ElemTemplat
 void
 StylesheetExecutionContextDefault::pushOnElementRecursionStack(const ElemTemplateElement*	theElement)
 {
-	assert(findOnElementRecursionStack(theElement) == false);
+	if (findOnElementRecursionStack(theElement) == true)
+	{
+		XalanDOMString	theMessage(XALAN_STATIC_UCODE_STRING("Infinite recursion detected for element: "));
+
+		theMessage += theElement->getNodeName();
+
+		throw XSLTProcessorException(theMessage);
+	}
 
 	m_elementRecursionStack.push_back(theElement);
 }
