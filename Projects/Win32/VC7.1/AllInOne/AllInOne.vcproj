@@ -592,6 +592,12 @@
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringPool.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringReusableAllocator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringReusableAllocator.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanEncodingPropertyCache.cpp">
 			</File>
 			<File
@@ -1498,6 +1504,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigatorAllocator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigatorAllocator.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp">
