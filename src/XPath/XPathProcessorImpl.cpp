@@ -2097,7 +2097,7 @@ XPathProcessorImpl::Literal()
 			  XalanDOMString(") needs to be quoted!"));
 	}
 }
-  
+
 
 
 void
@@ -2171,7 +2171,7 @@ XPathProcessorImpl::LocationPathPattern()
 			// Tell how long the step is without the predicate
 			theArgs[0] = 4;
 
-			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR,
+			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE,
 									   theArgs);
 
 			m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
@@ -2192,7 +2192,7 @@ XPathProcessorImpl::LocationPathPattern()
 
 		if(lookahead('/', 1) == true)
 		{
-			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR,
+			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE,
 									   theArgs);
 		}
 		else
