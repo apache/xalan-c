@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,7 +55,7 @@
  * <http://www.apache.org/>.
  */
 
-#include <ICUBridge/ICUBridge.hpp>
+#include "ICUBridge.hpp"
 
 
 
@@ -113,12 +113,12 @@ const unsigned int	theStackBufferSize = 200u;
 
 
 
-const ICUBridge::ICUUnicodeString
+const UnicodeString
 ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 {
 	if (theString == 0)
 	{
-		return ICUUnicodeString();
+		return UnicodeString();
 	}
 	else
 	{
@@ -157,14 +157,14 @@ ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 			return ICUUnicodeString(&theBuffer[0], theLength);
 		}
 #else
-		return ICUUnicodeString(theString, length(theString));
+		return UnicodeString(theString, length(theString));
 #endif
 	}
 }
 
 
 
-const ICUBridge::ICUUnicodeString
+const UnicodeString
 ICUBridge::XalanDOMStringToUnicodeString(const XalanDOMString&	theString)
 {
 	// Just call up to the XalanDOMChar* version...
@@ -174,7 +174,7 @@ ICUBridge::XalanDOMStringToUnicodeString(const XalanDOMString&	theString)
 
 
 const XalanDOMString
-ICUBridge::UnicodeStringToXalanDOMString(const ICUUnicodeString&	theString)
+ICUBridge::UnicodeStringToXalanDOMString(const UnicodeString&	theString)
 {
 	const int32_t	theLength = theString.length();
 
@@ -228,8 +228,8 @@ ICUBridge::UnicodeStringToXalanDOMString(const ICUUnicodeString&	theString)
 
 void
 ICUBridge::UnicodeStringToXalanDOMString(
-			const ICUUnicodeString&		theString,
-			XalanDOMString&				theResult)
+			const UnicodeString&	theString,
+			XalanDOMString&			theResult)
 {
 #if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 	
@@ -307,7 +307,7 @@ doFormatNumber(
 		theDFS->setSymbol(DecimalFormatSymbols::kIntlCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInternationalCurrencySymbol()));
 		theDFS->setSymbol(DecimalFormatSymbols::kMonetarySeparatorSymbol, theXalanDFS.getMonetaryDecimalSeparator());
 
-		ICUBridge::ICUUnicodeString		theUnicodeResult;
+		UnicodeString	theUnicodeResult;
 
 		// Construct a DecimalFormat.  Note that we release the XalanAutoPtr, since the
 		// DecimalFormat will adopt the DecimalFormatSymbols instance.
@@ -389,8 +389,8 @@ ICUBridge::collationCompare(
 		// OK, do the compare...
 		return theCollator->compare(
 #if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-					XalanDOMCharStringToUnicodeString(theLHS),
-					XalanDOMCharStringToUnicodeString(theRHS));
+					ICUBridge::XalanDOMCharStringToUnicodeString(theLHS),
+					ICUBridge::XalanDOMCharStringToUnicodeString(theRHS));
 #else
 					theLHS,
 					length(theLHS),

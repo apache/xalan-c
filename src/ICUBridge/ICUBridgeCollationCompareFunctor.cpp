@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,84 +56,24 @@
  */
 
 #include "ICUBridgeCollationCompareFunctor.hpp"
+
+
+
 #include "ICUBridge.hpp"
-
-
-
-#include <Include/XalanAutoPtr.hpp>
-
-
-
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
-#include <unicode/coll.h>
-
-// this is the ICU's macro for using namespace ...
-U_NAMESPACE_USE
-
-
-
-const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		ICUBridgeCollationCompareFunctor::s_defaultFunctor;
+#include "ICUBridgeCollationCompareFunctorImpl.hpp"
 
 
 
 ICUBridgeCollationCompareFunctor::ICUBridgeCollationCompareFunctor() :
-	m_isValid(false),
-	m_defaultCollator(0)
+	m_impl(new ICUBridgeCollationCompareFunctorImpl)
 {
-	UErrorCode	theStatus = U_ZERO_ERROR;
-
-#if defined(XALAN_ICU_DEFAULT_LOCALE_PROBLEM)
-	m_defaultCollator = Collator::createInstance(Locale::US, theStatus);
-#else
-	m_defaultCollator = Collator::createInstance(theStatus);
-#endif
-
-	if (theStatus == U_ZERO_ERROR ||
-	    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
-	{
-		m_isValid = true;
-	}
 }
 
 
 
 ICUBridgeCollationCompareFunctor::~ICUBridgeCollationCompareFunctor()
 {
-	delete m_defaultCollator;
-}
-
-
-
-int
-ICUBridgeCollationCompareFunctor::doDefaultCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const
-{
-	if (isValid() == false)
-	{
-		return s_defaultFunctor(theLHS, theRHS);
-	}
-	else
-	{
-		assert(m_defaultCollator != 0);
-
-#if defined(XALAN_USE_WCHAR_CAST_HACK)
-		return m_defaultCollator->compare(
-					(const wchar_t*)theLHS,
-					length(theLHS),
-					(const wchar_t*)theRHS,
-					length(theRHS));
-#else
-		return m_defaultCollator->compare(
-					theLHS,
-					length(theLHS),
-					theRHS,
-					length(theRHS));
-#endif
-	}
+	delete m_impl;
 }
 
 
@@ -143,46 +83,7 @@ ICUBridgeCollationCompareFunctor::operator()(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) const
 {
-	return doDefaultCompare(theLHS, theRHS);
-}
-
-
-
-inline Collator*
-getCollator(
-			const XalanDOMChar*		theLocale,
-			UErrorCode&				theStatus)
-{
-	const XalanDOMString::size_type		theLength = length(theLocale);
-
-	if (theLength >= ULOC_FULLNAME_CAPACITY)
-	{
-		theStatus = U_ILLEGAL_ARGUMENT_ERROR;
-
-		return 0;
-	}
-	else
-	{
-#if defined(XALAN_NON_ASCII_PLATFORM)
-		CharVectorType	theVector;
-
-		TranscodeToLocalCodePage(theLocale, theVector, true);
-
-		const char* const	theBuffer = c_str(theVector);
-#else
-		char	theBuffer[ULOC_FULLNAME_CAPACITY];
-
-		// Since language names must be ASCII, this
-		// is the cheapest way to "transcode"...
-		for (unsigned int i = 0; i <= theLength; ++i)
-		{
-			theBuffer[i] = char(theLocale[i]);
-		}
-#endif
-		return Collator::createInstance(
-					Locale::createFromName(theBuffer),
-					theStatus);
-	}
+	return (*m_impl)(theLHS, theRHS);
 }
 
 
@@ -193,31 +94,5 @@ ICUBridgeCollationCompareFunctor::operator()(
 			const XalanDOMChar*		theRHS,
 			const XalanDOMChar*		theLocale) const
 {
-	UErrorCode	theStatus = U_ZERO_ERROR;
-
-	XalanAutoPtr<Collator>	theCollator(getCollator(theLocale, theStatus));
-
-	if (theStatus == U_ZERO_ERROR ||
-	    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
-	{
-		assert(theCollator.get() != 0);
-
-#if defined(XALAN_USE_WCHAR_CAST_HACK)
-		return theCollator->compare(
-					(const wchar_t*)theLHS,
-					length(theLHS),
-					(const wchar_t*)theRHS,
-					length(theRHS));
-#else
-		return theCollator->compare(
-					theLHS,
-					length(theLHS),
-					theRHS,
-					length(theRHS));
-#endif
-	}
-	else
-	{
-		return s_defaultFunctor(theLHS, theRHS);
-	}
+	return (*m_impl)(theLHS, theRHS, theLocale);
 }

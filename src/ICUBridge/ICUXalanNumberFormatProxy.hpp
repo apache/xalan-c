@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,21 +68,7 @@
 
 
 
-// We're stuck here.  We don't want to include the ICU header files, since we're trying
-// to keep them hidden, but we need their namespace.  So we're just duplicating here.  When
-// it changes, we'll have to track that change.  This is more desirable than forcing users
-// to have the ICU sources.
-//
-// We could fix this by using factories, rather than allowing user access to these
-// implementation classes.  It's certainly worth pursuing...
-#if defined(XALAN_NO_NAMESPACES)
-class DecimalFormat;
-#else
-namespace icu_2_0
-{
-	class DecimalFormat;
-};
-#endif
+#include <unicode/decimfmt.h>
 
 
 

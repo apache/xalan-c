@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,12 +59,9 @@
 
 
 
-#include <vector>
-
-
-
 #include <unicode/dcfmtsym.h>
-#include <unicode/decimfmt.h>
+
+
 
 // this is the ICU's macro for using namespace ...
 U_NAMESPACE_USE
