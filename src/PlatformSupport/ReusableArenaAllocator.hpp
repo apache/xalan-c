@@ -117,9 +117,9 @@ public:
 
 		while(i != theEnd)
 		{
-			if (i->ownsObject(theObject) == true)
+			if ((*i)->ownsObject(theObject) == true)
 			{
-				i->destroyObject(theObject);
+				(*i)->destroyObject(theObject);
 
 				break;
 			}
