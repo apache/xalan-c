@@ -35,9 +35,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class Function;
-
-
 class XALAN_ICUBRIDGE_EXPORT ICUBridge
 {
 public:
