@@ -1486,13 +1486,11 @@ SimpleNodeLocator::nodeTest(
 							0 == length(targetNS) &&
 							currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eELEMWILDCARD;
 
-				const bool	processNamespaces = executionContext.getProcessNamespaces();
-
 				bool		didMatchNS = false;
 
-				if(isTotallyWild == false && processNamespaces == true)
+				if(isTotallyWild == false)
 				{
-					const XalanDOMString&	contextNS = executionContext.getNamespaceOfNode(*context);
+					const XalanDOMString&	contextNS = context->getNamespaceURI();
 
 					if(0 != length(targetNS) && 0 != length(contextNS))
 					{
@@ -1515,9 +1513,6 @@ SimpleNodeLocator::nodeTest(
 
 				if(test == true)
 				{
-					const XalanDOMString&	targetLocalName =
-								queueIndex >= 0 ? currentExpression.getToken(queueIndex)->str() : s_emptyString;
-
 					switch(nodeType)
 					{
 					case XalanNode::ATTRIBUTE_NODE:
@@ -1556,8 +1551,13 @@ SimpleNodeLocator::nodeTest(
 								{
 									if (isNamespace == false)
 									{
+										assert(queueIndex >= 0);
+
+										const XalanDOMString&	targetLocalName =
+															currentExpression.getToken(queueIndex)->str();
+
 										const XalanDOMString&	localAttrName =
-											DOMServices::getLocalNameOfNode(*context);
+												DOMServices::getLocalNameOfNode(*context);
 
 										if (equals(localAttrName, targetLocalName) == true)
 										{
@@ -1580,6 +1580,11 @@ SimpleNodeLocator::nodeTest(
 										const XalanDOMString&	theNamespace =
 													theAttrNode->getValue();
 
+										assert(queueIndex >= 0);
+
+										const XalanDOMString&	targetLocalName =
+															currentExpression.getToken(queueIndex)->str();
+
 										if (equals(theNamespace, targetLocalName) == true)
 										{
 											score = xpath.s_MatchScoreQName;
@@ -1600,6 +1605,11 @@ SimpleNodeLocator::nodeTest(
 							}
 							else
 							{
+								assert(queueIndex >= 0);
+
+								const XalanDOMString&	targetLocalName =
+															currentExpression.getToken(queueIndex)->str();
+
 								if (equals(DOMServices::getLocalNameOfNode(*context),
 										   targetLocalName) == true)
 								{
