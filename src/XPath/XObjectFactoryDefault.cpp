@@ -269,8 +269,12 @@ XObjectFactoryDefault::doReturnObject(
 
 	default:
 		{
-			const CollectionType::iterator	i =
-			m_xobjects.find(theXObject);
+#if !defined(XALAN_NO_NAMESPACES)
+			using std::find;
+#endif
+
+			const XObjectCollectionType::iterator	i =
+					find(m_xobjects.begin(), m_xobjects.end(), theXObject);
 
 			if (i != m_xobjects.end())
 			{
@@ -321,7 +325,7 @@ XObjectFactoryDefault::createUnknown(const XalanDOMString&	theValue)
 {
 	XUnknown* const	theXUnknown = new XUnknown(theValue);
 
-	m_xobjects.insert(theXUnknown);
+	m_xobjects.push_back(theXUnknown);
 
 	theXUnknown->setFactory(this);
 
@@ -335,7 +339,7 @@ XObjectFactoryDefault::createSpan(BorrowReturnMutableNodeRefList&	theValue)
 {
 	XSpan* const	theXObject = new XSpan(theValue);
 
-	m_xobjects.insert(theXObject);
+	m_xobjects.push_back(theXObject);
 
 	theXObject->setFactory(this);
 

@@ -192,13 +192,13 @@ public:
 	createSpan(BorrowReturnMutableNodeRefList&	theValue);
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef set<XObject*, less<XObject*> >	CollectionType;
-	typedef vector<XNumber*>				XNumberCacheType;
-	typedef vector<XNodeSet*>				XNodeSetCacheType;
+	typedef vector<XObject*>		XObjectCollectionType;
+	typedef vector<XNumber*>		XNumberCacheType;
+	typedef vector<XNodeSet*>		XNodeSetCacheType;
 #else
-	typedef std::set<XObject*>			CollectionType;
-	typedef std::vector<XNumber*>		XNumberCacheType;
-	typedef std::vector<XNodeSet*>		XNodeSetCacheType;
+	typedef std::vector<XObject*>	XObjectCollectionType;
+	typedef std::vector<XNumber*>	XNumberCacheType;
+	typedef std::vector<XNodeSet*>	XNodeSetCacheType;
 #endif
 
 protected:
@@ -242,7 +242,7 @@ private:
 
 	XTokenStringAdapterAllocator	m_xtokenStringAdapterAllocator;
 
-	CollectionType					m_xobjects;
+	XObjectCollectionType			m_xobjects;
 
 	XNumberCacheType				m_xnumberCache;
 
