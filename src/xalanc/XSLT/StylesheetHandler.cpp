@@ -1296,7 +1296,7 @@ StylesheetHandler::endElement(const XMLCh* const	/* name */)
 	else if((StylesheetConstructionContext::ELEMNAME_PARAM == tok) ||
 			 StylesheetConstructionContext::ELEMNAME_VARIABLE == tok)
 	{
-		if(m_lastPopped->getParentNode() == 0)
+		if(m_lastPopped->getParentNodeElem() == 0)
 		{
 			// Top-level param or variable
 			m_inTemplate = false;

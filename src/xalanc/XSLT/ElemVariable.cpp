@@ -209,7 +209,7 @@ ElemVariable::addToStylesheet(
 			0,
 			this);
 	}
-	else if (getParentNode() != 0)
+	else if (getParentNodeElem() != 0)
 	{
 		constructionContext.error(
 			"The ElemVariable instance is already parented and cannot be a top-level element.",
@@ -283,7 +283,7 @@ ElemVariable::getValue(
 {
 	if(m_selectPattern == 0)
 	{
-		if (getFirstChild() == 0)
+		if (getFirstChildElem() == 0)
 		{
 			return executionContext.getXObjectFactory().createStringReference(s_emptyString);
 		}
