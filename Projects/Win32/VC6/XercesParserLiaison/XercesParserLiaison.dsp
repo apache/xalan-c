@@ -94,7 +94,95 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeNavigator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentFragmentBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentNamedNodeListCache.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOM_NodeHack.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMException.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementNamedNodeListCache.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeListCache.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationBridge.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesParserLiaison.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesToXalanNodeMap.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -102,11 +190,107 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesParserLiaison.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeCommon.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeNavigator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommon.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentFragmentBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentNamedNodeListCache.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOM_NodeHack.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementNamedNodeListCache.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeListCache.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationBridge.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesParserLiaison.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesParserLiaisonDefinitions.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesToXalanNodeMap.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
