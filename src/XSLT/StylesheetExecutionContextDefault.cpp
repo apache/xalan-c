@@ -141,7 +141,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_textOutputStreams(),
 	m_collationCompareFunctor(&s_defaultFunctor),
 	m_liveVariablesStack(),
-	m_variablesStack()
+	m_variablesStack(),
+	m_matchPatternCache()
 {
 	m_liveVariablesStack.reserve(eDefaultVariablesStackSize);
 }
@@ -183,6 +184,8 @@ StylesheetExecutionContextDefault::reset()
 	clearLiveVariablesStack();
 
 	m_variablesStack.reset();
+
+	assert(m_matchPatternCache.size() == 0);
 }
 
 
@@ -454,7 +457,44 @@ StylesheetExecutionContextDefault::createMatchPattern(
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver)
 {
-	return m_xsltProcessor.createMatchPattern(str, resolver);
+	XPath*	theResult = 0;
+
+	// We won't cache any xpath that has a namespace, since
+	// we have no idea how that might be resolved.  We could
+	// enhance XPath so that we can tell if str would match
+	// the XPath, once the namespace is resolved, but it may
+	// not be worth it...
+	const unsigned int	index = indexOf(str, ':');
+	const unsigned int	len = length(str);
+
+	// If we found a ':' before the end of the string, and
+	// it's by itself (:: would indicate an axis), don't
+	// try to cache the XPath...
+	if (index < len - 1 && (charAt(str, index + 1) != ':'))
+	{
+		theResult = m_xsltProcessor.createMatchPattern(str, resolver);
+	}
+	else
+	{
+		const XPathCacheMapType::iterator	i =
+			m_matchPatternCache.find(str);
+
+		if (i != m_matchPatternCache.end())
+		{
+			// Update hit time...
+			i->second.second = clock();
+
+			theResult = i->second.first;
+		}
+		else
+		{
+			theResult = m_xsltProcessor.createMatchPattern(str, resolver);
+
+			addToXPathCache(str, theResult);
+		}
+	}
+
+	return theResult;
 }
 
 
@@ -462,7 +502,10 @@ StylesheetExecutionContextDefault::createMatchPattern(
 void
 StylesheetExecutionContextDefault::returnXPath(XPath*	xpath)
 {
-	m_xsltProcessor.returnXPath(xpath);
+	if (isCached(xpath) == false)
+	{
+		m_xsltProcessor.returnXPath(xpath);
+	}
 }
 
 
@@ -735,7 +778,7 @@ StylesheetExecutionContextDefault::pushParams(
 							mode);
 				}
 
-				theParams.push_back(ParamsVectorType::value_type(xslParamElement->getQName(), theXObject));
+				theParams.push_back(ParamsVectorType::value_type(&xslParamElement->getQName(), theXObject));
 			}
 
 			child = child->getNextSiblingElem();
@@ -808,6 +851,9 @@ StylesheetExecutionContextDefault::endDocument()
 	// This matches the pushContextMarker in
 	// resolveTopLevelParams().
 	popContextMarker();
+
+	// Clear any cached XPaths...
+	clearXPathCache();
 }
 
 
@@ -1774,3 +1820,152 @@ StylesheetExecutionContextDefault::clearLiveVariablesStack()
 	}
 }
 
+
+
+bool
+StylesheetExecutionContextDefault::isCached(const XPath*	theXPath)
+{
+	XPathCacheMapType::const_iterator	i =
+		m_matchPatternCache.begin();
+
+	const XPathCacheMapType::const_iterator		theEnd =
+		m_matchPatternCache.end();
+
+	while(i != theEnd)
+	{
+		if (i->second.first == theXPath)
+		{
+			return true;
+		}
+		else
+		{
+			++i;
+		}
+	}
+
+	return false;
+}
+
+
+
+// I should be able to make this out of a
+// bunch of compose<> and select2nd<> adapters...
+template<class Type>
+class XPathCacheReturnFunctor
+{
+public:
+
+	XPathCacheReturnFunctor(XSLTEngineImpl&		xsltProcessor) :
+		m_xsltProcessor(xsltProcessor)
+	{
+	}
+
+	void
+	operator()(const Type&	theCacheEntry)
+	{
+		m_xsltProcessor.returnXPath(theCacheEntry.second.first);
+	}
+
+private:
+
+	XSLTEngineImpl&		m_xsltProcessor;
+};
+
+
+
+void
+StylesheetExecutionContextDefault::clearXPathCache()
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	for_each(m_matchPatternCache.begin(),
+			 m_matchPatternCache.end(),
+			 XPathCacheReturnFunctor<XPathCacheMapType::value_type>(m_xsltProcessor));
+
+	m_matchPatternCache.clear();
+}
+
+
+
+// I should be able to make this out of a
+// bunch of compose<> and select2nd<> adapters...
+template<class Type>
+class XPathCacheEarliestPredicate
+{
+public:
+
+	XPathCacheEarliestPredicate(XSLTEngineImpl&		xsltProcessor) :
+		m_xsltProcessor(xsltProcessor)
+	{
+	}
+
+	void
+	operator()(const Type&	theCacheEntry)
+	{
+		m_xsltProcessor.returnXPath(theCacheEntry.second.first);
+	}
+
+private:
+
+	XSLTEngineImpl&		m_xsltProcessor;
+};
+
+
+
+
+
+
+void
+StylesheetExecutionContextDefault::addToXPathCache(
+			const XalanDOMString&	pattern,
+			XPath*					theXPath)
+{
+	clock_t		addClock = clock();
+
+	if (m_matchPatternCache.size() == eXPathCacheMax)
+	{
+		// OK, we need to clear something out of the cache...
+
+		// Initialize the lowest clock time found so far
+		// with the current clock...
+		clock_t		lowest = addClock;
+
+		// Get some iterators ready to search the cache...
+		XPathCacheMapType::iterator		i =
+			m_matchPatternCache.begin();
+
+		const XPathCacheMapType::iterator	theEnd =
+			m_matchPatternCache.end();
+
+		XPathCacheMapType::iterator		earliest(theEnd);
+
+		while(i != theEnd)
+		{
+			const clock_t	current = i->second.second;
+
+			if (current < lowest)
+			{
+				// OK, found a lower clock time, so
+				// update the everything...
+				lowest = current;
+
+				earliest = i;
+			}
+			else
+			{
+				++i;
+			}
+		}
+		assert(earliest != theEnd);
+
+		// Return the XPath and erase it from the cache.
+		m_xsltProcessor.returnXPath(earliest->second.first);
+
+		m_matchPatternCache.erase(earliest);
+	}
+
+	// Add the XPath with the current clock
+	m_matchPatternCache.insert(XPathCacheMapType::value_type(pattern, XPathCacheEntry(theXPath, addClock)));
+}

@@ -66,6 +66,7 @@
 
 
 
+#include <ctime>
 #include <deque>
 #include <memory>
 #include <set>
@@ -457,11 +458,10 @@ public:
 	 * @param a pointer to the new factory instance to use.
 	 * @return a pointer to the old factory instance.
 	 */
-	// 
 	static XalanNumberFormatFactory*
 	installXalanNumberFormatFactory(XalanNumberFormatFactory*	theFactory);
 
-	// Trace interface...
+
 	virtual unsigned long
 	getTraceListeners() const;
 
@@ -713,11 +713,45 @@ public:
 
 private:
 
+	/**
+	 * Pop the top entry from the live variables.
+	 */
 	void
 	popLiveVariablesStack();
 
+	/**
+	 * Clear out the entire stack of live variables.
+	 */
 	void
 	clearLiveVariablesStack();
+
+	/**
+	 * Determine if the XPath is one that we have cached.
+	 *
+	 * @param theXPath the XPath instance to check
+	 * @return true if the instance has been cached, false if not.
+	 */
+	bool
+	isCached(const XPath*	theXPath);
+
+	/**
+	 * Clear out the cache of XPath instances.
+	 */
+	void
+	clearXPathCache();
+
+	/**
+	 * Add an XPath instance to the cache, clearing out an old entry
+	 * if the cache is full.
+	 *
+	 * @param pattern the key for looking up the XPath instance in the cache.
+	 * @param theXPath the XPath instance to cache
+	 */
+	void
+	addToXPathCache(
+			const XalanDOMString&	pattern,
+			XPath*					theXPath);
+
 
 	XPathExecutionContextDefault	m_xpathExecutionContextDefault;
 
@@ -733,6 +767,8 @@ private:
 	typedef set<TextOutputStream*>						TextOutputStreamSetType;
 	typedef vector<const XObject*>						VariablesCollectionType;
 	typedef vector<VariablesCollectionType>				LiveVariablesStackType;
+	typedef pair<XPath*, clock_t>						XPathCacheEntry;
+	typedef map<XalanDOMString, XPathCacheEntry>		XPathCacheMapType;
 #else
 	typedef std::deque<const ElemTemplateElement*>		ElementRecursionStackType;
 	typedef std::set<FormatterListener*>				FormatterListenerSetType;
@@ -740,9 +776,13 @@ private:
 	typedef std::set<TextOutputStream*>					TextOutputStreamSetType;
 	typedef std::vector<const XObject*>					VariablesCollectionType;
 	typedef std::vector<VariablesCollectionType>		LiveVariablesStackType;
+	typedef std::pair<XPath*, clock_t>					XPathCacheEntry;
+	typedef std::map<XalanDOMString, XPathCacheEntry>	XPathCacheMapType;
 #endif
 
-	enum { eDefaultVariablesCollectionSize = 10, eDefaultVariablesStackSize = 200 };
+	enum { eDefaultVariablesCollectionSize = 10,
+		   eXPathCacheMax = 50,
+		   eDefaultVariablesStackSize = 200 };
 
 	ElementRecursionStackType			m_elementRecursionStack;
 
@@ -764,6 +804,8 @@ private:
 	 * Holds all information about variables during execution.
 	 */
 	VariablesStack						m_variablesStack;
+
+	XPathCacheMapType					m_matchPatternCache;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 
