@@ -171,7 +171,7 @@ getArgs(
 		const char**	pErrorMsg)
 {
 	bool fSuccess = true;
-	char* errorMessage = 0;
+	const char*		errorMessage = 0;
 	if ( argc > 7)
 	{
 		fSuccess = false;
