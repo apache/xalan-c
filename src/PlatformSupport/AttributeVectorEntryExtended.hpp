@@ -101,8 +101,8 @@ public:
 			const XMLCh*	theValue,
 			const XMLCh*	theType) :
 		AttributeVectorEntry(theName, theValue, theType),
-		m_uri(0),
-		m_localName(0)
+		m_uri(),
+		m_localName()
 	{
 	}
 
