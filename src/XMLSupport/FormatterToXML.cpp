@@ -116,7 +116,7 @@ FormatterToXML::FormatterToXML(
 	m_stripCData(false),
 	m_nextIsRaw(false),
 	m_inCData(false),
-	m_isUTF8(false),
+	m_encodingIsUTF(false),
 	m_doctypeSystem(doctypeSystem),
 	m_doctypePublic(doctypePublic),
 	m_encoding(isEmpty(encoding) == false ? encoding : XalanDOMString(XalanTranscodingServices::s_utf8String)),
@@ -137,8 +137,14 @@ FormatterToXML::FormatterToXML(
 	m_pos(0),
 	m_byteBuf(),
 	m_elemStack(),
-	m_accumNameFunction(0),
-	m_accumContentFunction(0)
+	m_accumNameCharFunction(0),
+	m_accumNameStringFunction(0),
+	m_accumNameDOMStringFunction(0),
+	m_accumNameArrayFunction(0),
+	m_accumContentCharFunction(0),
+	m_accumContentStringFunction(0),
+	m_accumContentDOMStringFunction(0),
+	m_accumContentArrayFunction(0)
 {
 	assert(isEmpty(m_encoding) == false);
 
@@ -169,26 +175,113 @@ FormatterToXML::FormatterToXML(
 
 	m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue(m_encoding);
 
-	m_isUTF8 = XalanTranscodingServices::encodingIsUTF8(m_encoding);
+	m_encodingIsUTF = XalanTranscodingServices::encodingIsUTF8(m_encoding) ||
+					  XalanTranscodingServices::encodingIsUTF16(m_encoding);
 
+#if 1
+	if (m_encodingIsUTF == true)
+	{
+		if (fBufferData == false)
+		{
+			m_accumNameCharFunction = &FormatterToXML::accumCharUTFDirect;
+
+			m_accumContentCharFunction = &FormatterToXML::accumCharUTFDirect;
+
+			m_accumNameStringFunction = &FormatterToXML::accumStringUTFDirect;
+
+			m_accumContentStringFunction = &FormatterToXML::accumStringUTFDirect;
+
+			m_accumNameDOMStringFunction = &FormatterToXML::accumDOMStringUTFDirect;
+
+			m_accumContentDOMStringFunction = &FormatterToXML::accumDOMStringUTFDirect;
+
+			m_accumNameArrayFunction = &FormatterToXML::accumArrayUTFDirect;
+
+			m_accumContentArrayFunction = &FormatterToXML::accumArrayUTFDirect;
+		}
+		else
+		{
+			m_charBuf.resize(s_maxBufferSize);
+
+			m_accumNameCharFunction = &FormatterToXML::accumCharUTF;
+
+			m_accumContentCharFunction = &FormatterToXML::accumCharUTF;
+
+			m_accumNameStringFunction = &FormatterToXML::accumStringUTF;
+
+			m_accumContentStringFunction = &FormatterToXML::accumStringUTF;
+
+			m_accumNameDOMStringFunction = &FormatterToXML::accumDOMStringUTF;
+
+			m_accumContentDOMStringFunction = &FormatterToXML::accumDOMStringUTF;
+
+			m_accumNameArrayFunction = &FormatterToXML::accumArrayUTF;
+
+			m_accumContentArrayFunction = &FormatterToXML::accumArrayUTF;
+		}
+	}
+	else
+	{
+		if (fBufferData == false)
+		{
+			m_accumNameCharFunction = &FormatterToXML::accumNameAsCharDirect;
+
+			m_accumContentCharFunction = &FormatterToXML::accumContentAsCharDirect;
+		}
+		else
+		{
+			m_charBuf.resize(s_maxBufferSize);
+
+			m_accumNameCharFunction = &FormatterToXML::accumNameAsChar;
+
+			m_accumContentCharFunction = &FormatterToXML::accumContentAsChar;
+		}
+
+		m_accumNameStringFunction = &FormatterToXML::accumNameString;
+
+		m_accumContentStringFunction = &FormatterToXML::accumContentString;
+
+		m_accumNameDOMStringFunction = &FormatterToXML::accumNameDOMString;
+
+		m_accumContentDOMStringFunction = &FormatterToXML::accumContentDOMString;
+
+		m_accumNameArrayFunction = &FormatterToXML::accumNameArray;
+
+		m_accumContentArrayFunction = &FormatterToXML::accumContentArray;
+	}
+
+	m_flushFunction = &FormatterToXML::flushChars;
+#else
 	if (XalanTranscodingServices::getBytesEqualChars(m_encoding) == true)
 	{
 		m_bytesEqualChars = true;
 
 		if (fBufferData == false)
 		{
-			m_accumNameFunction = &FormatterToXML::accumNameAsByteDirect;
+			m_accumNameCharFunction = &FormatterToXML::accumNameAsByteDirect;
 
-			m_accumContentFunction = &FormatterToXML::accumContentAsByteDirect;
+			m_accumContentCharFunction = &FormatterToXML::accumContentAsByteDirect;
 		}
 		else
 		{
 			m_byteBuf.resize(s_maxBufferSize);
 
-			m_accumNameFunction = &FormatterToXML::accumNameAsByte;
+			m_accumNameCharFunction = &FormatterToXML::accumNameAsByte;
 
-			m_accumContentFunction = &FormatterToXML::accumContentAsByte;
+			m_accumContentCharFunction = &FormatterToXML::accumContentAsByte;
 		}
+
+		m_accumNameStringFunction = &FormatterToXML::accumNameString;
+
+		m_accumContentStringFunction = &FormatterToXML::accumContentString;
+
+		m_accumNameDOMStringFunction = &FormatterToXML::accumNameDOMString;
+
+		m_accumContentDOMStringFunction = &FormatterToXML::accumContentDOMString;
+
+		m_accumNameArrayFunction = &FormatterToXML::accumNameArray;
+
+		m_accumContentArrayFunction = &FormatterToXML::accumContentArray;
 
 		m_flushFunction = &FormatterToXML::flushBytes;
 	}
@@ -196,21 +289,22 @@ FormatterToXML::FormatterToXML(
 	{
 		if (fBufferData == false)
 		{
-			m_accumNameFunction = &FormatterToXML::accumNameAsCharDirect;
+			m_accumNameCharFunction = &FormatterToXML::accumNameAsCharDirect;
 
-			m_accumContentFunction = &FormatterToXML::accumContentAsCharDirect;
+			m_accumContentCharFunction = &FormatterToXML::accumContentAsCharDirect;
 		}
 		else
 		{
 			m_charBuf.resize(s_maxBufferSize);
 
-			m_accumNameFunction = &FormatterToXML::accumNameAsChar;
+			m_accumNameCharFunction = &FormatterToXML::accumNameAsChar;
 
-			m_accumContentFunction = &FormatterToXML::accumContentAsChar;
+			m_accumContentCharFunction = &FormatterToXML::accumContentAsChar;
 		}
 
 		m_flushFunction = &FormatterToXML::flushChars;
 	}
+#endif
 
 	// Do this last so we initialize the map according to the value of
 	// m_maxCharacter for the encoding.
@@ -363,6 +457,8 @@ FormatterToXML::accumContentAsByte(XalanDOMChar		ch)
 void
 FormatterToXML::accumContentAsByteDirect(XalanDOMChar	ch)
 {
+	assert(m_stream != 0);
+
 	if (ch > m_maxCharacter)
 	{
 		writeNumberedEntityReference(ch);
@@ -398,6 +494,8 @@ FormatterToXML::accumNameAsChar(XalanDOMChar	ch)
 void
 FormatterToXML::accumNameAsCharDirect(XalanDOMChar	ch)
 {
+	assert(m_stream != 0);
+
 	if (ch > m_maxCharacter)
 	{
 		m_stream->write(XalanDOMChar(XalanUnicode::charQuestionMark));
@@ -433,6 +531,8 @@ FormatterToXML::accumContentAsChar(XalanDOMChar	ch)
 void
 FormatterToXML::accumContentAsCharDirect(XalanDOMChar	ch)
 {
+	assert(m_stream != 0);
+
 	if (ch > m_maxCharacter)
 	{
 		writeNumberedEntityReference(ch);
@@ -446,7 +546,34 @@ FormatterToXML::accumContentAsCharDirect(XalanDOMChar	ch)
 
 
 void
-FormatterToXML::accumName(const XalanDOMChar*	chars)
+FormatterToXML::accumCharUTF(XalanDOMChar	ch)
+{
+	assert(m_maxCharacter >= 65535);
+	assert(m_stream != 0);
+
+	m_charBuf[m_pos++] = ch;
+
+	if(m_pos == s_maxBufferSize)
+	{
+		flushChars();
+	}
+}
+
+
+
+void
+FormatterToXML::accumCharUTFDirect(XalanDOMChar	ch)
+{
+	assert(m_maxCharacter >= 65535);
+	assert(m_stream != 0);
+
+	m_stream->write(ch);
+}
+
+
+
+void
+FormatterToXML::accumNameString(const XalanDOMChar*	chars)
 {
 	for(; *chars!= 0; ++chars)
 	{
@@ -457,7 +584,29 @@ FormatterToXML::accumName(const XalanDOMChar*	chars)
 
 
 void
-FormatterToXML::accumContent(const XalanDOMChar*	chars)
+FormatterToXML::accumStringUTF(const XalanDOMChar*	chars)
+{
+	for(; *chars!= 0; ++chars)
+	{
+		accumCharUTF(*chars);
+	}
+}
+
+
+
+void
+FormatterToXML::accumStringUTFDirect(const XalanDOMChar*	chars)
+{
+	assert(m_maxCharacter >= 65535);
+	assert(m_stream != 0);
+
+	m_stream->write(chars);
+}
+
+
+
+void
+FormatterToXML::accumContentString(const XalanDOMChar*	chars)
 {
 	for(; *chars!= 0; ++chars)
 	{
@@ -468,7 +617,7 @@ FormatterToXML::accumContent(const XalanDOMChar*	chars)
 
 
 void
-FormatterToXML::accumName(
+FormatterToXML::accumNameArray(
 			const XalanDOMChar	chars[],
 			unsigned int		start,
 			unsigned int		length)
@@ -484,7 +633,7 @@ FormatterToXML::accumName(
 
 
 void
-FormatterToXML::accumContent(
+FormatterToXML::accumContentArray(
 			const XalanDOMChar	chars[],
 			unsigned int		start,
 			unsigned int		length)
@@ -500,7 +649,37 @@ FormatterToXML::accumContent(
 
 
 void
-FormatterToXML::accumName(const XalanDOMString&		str)
+FormatterToXML::accumArrayUTF(
+			const XalanDOMChar	chars[],
+			unsigned int		start,
+			unsigned int		length)
+{
+	const DOMCharBufferType::size_type	n = start + length;
+
+	for(DOMCharBufferType::size_type i = start; i < n; ++i)
+	{
+		accumCharUTF(chars[i]);
+	}
+}
+
+
+
+void
+FormatterToXML::accumArrayUTFDirect(
+			const XalanDOMChar	chars[],
+			unsigned int		start,
+			unsigned int		length)
+{
+	assert(m_maxCharacter >= 65535);
+	assert(m_stream != 0);
+
+	m_stream->write(chars + start, length);
+}
+
+
+
+void
+FormatterToXML::accumNameDOMString(const XalanDOMString&	str)
 {
 	accumName(c_wstr(str), 0, length(str));
 }
@@ -508,9 +687,28 @@ FormatterToXML::accumName(const XalanDOMString&		str)
 
 
 void
-FormatterToXML::accumContent(const XalanDOMString&	str)
+FormatterToXML::accumContentDOMString(const XalanDOMString&		str)
 {
 	accumContent(c_wstr(str), 0, length(str));
+}
+
+
+
+void
+FormatterToXML::accumDOMStringUTF(const XalanDOMString&		str)
+{
+	accumArrayUTF(c_wstr(str), 0, length(str));
+}
+
+
+
+void
+FormatterToXML::accumDOMStringUTFDirect(const XalanDOMString&	str)
+{
+	assert(m_maxCharacter >= 65535);
+	assert(m_stream != 0);
+
+	m_stream->write(c_wstr(str), length(str));
 }
 
 
@@ -730,14 +928,7 @@ FormatterToXML::startDocument()
 
 			accumName(s_xmlHeaderEncodingString);	// "\" encoding=\""
 
-			if (isEmpty(m_encoding) == true)
-			{	
-				accumName(s_iso88591String);
-			}
-			else
-			{
-				accumName(m_encoding);
-			}
+			accumName(m_encoding);
 
 			if (length(m_standalone) != 0)
 			{
@@ -988,21 +1179,19 @@ FormatterToXML::charactersRaw(
 
 
 void
-FormatterToXML::writeAttrString(
-			const XalanDOMChar*		string,
-			const XalanDOMString&	/* encoding */)
+FormatterToXML::writeAttrString(const XalanDOMChar*		theString)
 {
-    const unsigned int	len = length(string);
+    const unsigned int	len = length(theString);
 
     for (unsigned int i = 0;  i < len;  i ++) 
     {
-		const XalanDOMChar	ch = string[i];
+		const XalanDOMChar	ch = theString[i];
 
 		if((ch < SPECIALSSIZE &&
 		    m_attrCharsMap[ch] == 'S') ||
 			ch > m_maxCharacter)
 		{
-			accumDefaultEscape(ch, i, string, len, true);
+			accumDefaultEscape(ch, i, theString, len, true);
 		}
 		else
 		{
@@ -1395,7 +1584,7 @@ FormatterToXML::processAttribute(
 	accumName(name);
 	accumContent(XalanUnicode::charEqualsSign);
 	accumContent(XalanUnicode::charQuoteMark);
-	writeAttrString(value, m_encoding);
+	writeAttrString(value);
 	accumContent(XalanUnicode::charQuoteMark);
 }
 
@@ -1490,8 +1679,6 @@ static XalanDOMString	s_xmlHeaderEndString;
 
 static XalanDOMString	s_xhtmlDocType;
 
-static XalanDOMString	s_iso88591String;
-
 static XalanDOMString	s_dtdCDATACloseString;
 
 
@@ -1513,11 +1700,7 @@ const XalanDOMString&	FormatterToXML::s_xmlHeaderStandaloneString = ::s_xmlHeade
 
 const XalanDOMString&	FormatterToXML::s_xmlHeaderEndString = ::s_xmlHeaderEndString;
 
-bool							FormatterToXML::s_javaEncodingIsISO = false;
-
 const XalanDOMString&			FormatterToXML::s_xhtmlDocType = ::s_xhtmlDocType;
-
-const XalanDOMString&			FormatterToXML::s_iso88591String = ::s_iso88591String;
 
 const XalanDOMString&			FormatterToXML::s_dtdCDATACloseString = ::s_dtdCDATACloseString;
 
@@ -1548,8 +1731,6 @@ FormatterToXML::initialize()
 
 	::s_xhtmlDocType = XALAN_STATIC_UCODE_STRING("-//W3C//DTD XHTML");
 				
-	::s_iso88591String = XALAN_STATIC_UCODE_STRING("ISO-8859-1");
-
 	::s_dtdCDATACloseString = XALAN_STATIC_UCODE_STRING("]]>");
 }
 
@@ -1577,8 +1758,6 @@ FormatterToXML::terminate()
 	releaseMemory(::s_xmlHeaderEndString);
 
 	releaseMemory(::s_xhtmlDocType);
-
-	releaseMemory(::s_iso88591String);	
 
 	releaseMemory(::s_dtdCDATACloseString);
 }

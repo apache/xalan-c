@@ -67,7 +67,7 @@
 
 
 #include <cassert>
-#include <climits>
+//#include <climits>
 #include <map>
 
 
@@ -79,6 +79,7 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/PrefixResolver.hpp>
 #include <PlatformSupport/Writer.hpp>
+#include <PlatformSupport/XalanTranscodingServices.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 #include <PlatformSupport/XalanXMLChar.hpp>
 
@@ -121,6 +122,7 @@ FormatterToHTML::FormatterToHTML(
 	m_isScriptOrStyleElem(false),
 	m_escapeURLs(true),
 	m_isFirstElement(false),
+	m_isUTF8(XalanTranscodingServices::encodingIsUTF8(m_encoding)),
 	m_elementLevel(0),
 	m_hasNamespaceStack()
 {
@@ -215,11 +217,9 @@ FormatterToHTML::startDocument()
     m_startNewLine = false;
 	m_shouldWriteXMLHeader = false;
 
-	const bool				isEmptySystem =
-			isEmpty(m_doctypeSystem);
+	const bool	isEmptySystem = isEmpty(m_doctypeSystem);
 
-	const bool				isEmptyPublic =
-			isEmpty(m_doctypePublic);
+	const bool	isEmptyPublic = isEmpty(m_doctypePublic);
 
 	// Output the header if either the System or Public attributes are
 	// specified
@@ -499,7 +499,7 @@ FormatterToHTML::accumDefaultEntity(
 {
 	if(FormatterToXML::accumDefaultEntity(ch, i, chars, len, escLF) == false)
 	{	
-		const XalanEntityReferenceType::const_iterator	theIterator = s_xalanHTMLEntities.find(ch);
+		const XalanEntityReferenceMapType::const_iterator	theIterator = s_xalanHTMLEntities.find(ch);
 
 		if (theIterator == s_xalanHTMLEntitiesIteratorEnd)	
 		{
@@ -689,10 +689,10 @@ FormatterToHTML::writeCharacters(
 
 
 void
-FormatterToHTML::writeAttrString(
-			const XalanDOMChar*		theString,
-			const XalanDOMString&	/* encoding */)
+FormatterToHTML::writeAttrString(const XalanDOMChar*	theString)
 {
+	assert(theString != 0);
+
     const unsigned int	theLength = length(theString);
 
     for (unsigned int i = 0;  i < theLength;  i ++)
@@ -814,11 +814,11 @@ FormatterToHTML::processAttribute(
 
 		if(elemDesc.isAttrFlagSet(name, ElemDesc::ATTRURL) == true)
 		{
-			writeAttrURI(value, m_encoding);
+			writeAttrURI(value);
 		}
 		else
 		{
-			writeAttrString(value, m_encoding);
+			writeAttrString(value);
 		}
 
 		accumContent(XalanUnicode::charQuoteMark);
@@ -828,10 +828,10 @@ FormatterToHTML::processAttribute(
 
 
 void
-FormatterToHTML::writeAttrURI(
-			const XalanDOMChar*		string,
-			const XalanDOMString&	/* encoding */)
+FormatterToHTML::writeAttrURI(const XalanDOMChar*	theString)
 {
+	assert(theString != 0);
+
 	// http://www.ietf.org/rfc/rfc2396.txt says:
 	// A URI is always in an "escaped" form, since escaping or unescaping a
 	// completed URI might change its semantics.  Normally, the only time
@@ -847,11 +847,11 @@ FormatterToHTML::writeAttrURI(
 	// causing damage.	If the URL is already properly escaped, in theory, this 
 	// function should not change the string value.
 
-	const unsigned int	len = length(string);
+	const unsigned int	len = length(theString);
 
     for (unsigned int i = 0; i < len; ++i)
     {
-		const XalanDOMChar	ch = string[i];
+		const XalanDOMChar	ch = theString[i];
 
 		if (ch < 33 || ch > 126)
 		{
@@ -901,7 +901,7 @@ FormatterToHTML::writeAttrURI(
 					const XalanDOMChar	temp = XalanDOMChar(((highSurrogate & 0x0003) << 4) & 0x30);
             
 					// Get low surrogate character.
-					const XalanDOMChar	nextChar = string[++i];
+					const XalanDOMChar	nextChar = theString[++i];
             
 					// Clear high 6 bits.
 					const XalanDOMChar	lowSurrogate = XalanDOMChar(nextChar & 0x03FF);
@@ -970,7 +970,7 @@ FormatterToHTML::writeAttrURI(
 			}
 			else
 			{
-				accumDefaultEntity(ch, i, string, len, true);
+				accumDefaultEntity(ch, i, theString, len, true);
 			}
 		}
 		else
@@ -1660,337 +1660,337 @@ FormatterToHTML::initializeElementFlagsMap(ElementFlagsMapType&		theElementFlags
 }
 
 
-typedef FormatterToHTML::XalanEntityReferenceType	XalanEntityReferenceType;
+typedef FormatterToHTML::XalanEntityReferenceMapType	XalanEntityReferenceMapType;
 
 
 
 static void
-initializeXalanEntityReferenceMap1(XalanEntityReferenceType&	theMap)
+initializeXalanEntityReferenceMap1(XalanEntityReferenceMapType&	theMap)
 {
-	typedef XalanEntityReferenceType::value_type	value_type;
+	typedef XalanEntityReferenceMapType::value_type	value_type;
 
     //#    
     //# Character markup-significant  
     //#  
 	// currently handled by FormatterToXML::accumDefaultEntity
-    //theMap.insert(value_type(34, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("quot" ))));
-    //theMap.insert(value_type(38, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("amp" ))));
-    //theMap.insert(value_type(60, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("lt" ))));
-    //theMap.insert(value_type(62, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("gt" ))));
-    theMap.insert(value_type(160, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("nbsp" ))));
+    //theMap[34] = XALAN_STATIC_UCODE_STRING("quot");
+    //theMap[38] = XALAN_STATIC_UCODE_STRING("amp");
+    //theMap[60] = XALAN_STATIC_UCODE_STRING("lt");
+    //theMap[62] = XALAN_STATIC_UCODE_STRING("gt");
+    theMap[160] = XALAN_STATIC_UCODE_STRING("nbsp");
     //#    
     //# Character ISO 8859-1 characters
     //#    
-    theMap.insert(value_type(161, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("iexcl" ))));
-    theMap.insert(value_type(162, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("cent" ))));
-    theMap.insert(value_type(163, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("pound" ))));
-    theMap.insert(value_type(164, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("curren" ))));
-    theMap.insert(value_type(165, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("yen" ))));
-    theMap.insert(value_type(166, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("brvbar" ))));
-    theMap.insert(value_type(167, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sect" ))));
-    theMap.insert(value_type(168, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("uml" ))));
-    theMap.insert(value_type(169, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("copy" ))));
-    theMap.insert(value_type(170, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ordf" ))));
-    theMap.insert(value_type(171, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("laquo" ))));
-    theMap.insert(value_type(172, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("not" ))));
-    theMap.insert(value_type(173, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("shy" ))));
-    theMap.insert(value_type(174, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("reg" ))));
-    theMap.insert(value_type(175, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("macr" ))));
-    theMap.insert(value_type(176, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("deg" ))));
-    theMap.insert(value_type(177, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("plusmn" ))));
-    theMap.insert(value_type(178, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sup2" ))));
-    theMap.insert(value_type(179, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sup3" ))));
-    theMap.insert(value_type(180, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("acute" ))));
-    theMap.insert(value_type(181, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("micro" ))));
-    theMap.insert(value_type(182, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("para" ))));
-    theMap.insert(value_type(183, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("middot" ))));
-    theMap.insert(value_type(184, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("cedil" ))));
-    theMap.insert(value_type(185, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sup1" ))));
-    theMap.insert(value_type(186, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ordm" ))));
-    theMap.insert(value_type(187, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("raquo" ))));
-    theMap.insert(value_type(188, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("frac14" ))));
-    theMap.insert(value_type(189, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("frac12" ))));
-    theMap.insert(value_type(190, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("frac34" ))));
-    theMap.insert(value_type(191, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("iquest" ))));
-    theMap.insert(value_type(192, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Agrave" ))));
-    theMap.insert(value_type(193, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Aacute" ))));
-    theMap.insert(value_type(194, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Acirc" ))));
-    theMap.insert(value_type(195, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Atilde" ))));
-    theMap.insert(value_type(196, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Auml" ))));
-    theMap.insert(value_type(197, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Aring" ))));
-    theMap.insert(value_type(198, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("AElig" ))));
-    theMap.insert(value_type(199, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Ccedil" ))));
-    theMap.insert(value_type(200, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Egrave" ))));
-    theMap.insert(value_type(201, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Eacute" ))));
-    theMap.insert(value_type(202, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Ecirc" ))));
-    theMap.insert(value_type(203, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Euml" ))));
-    theMap.insert(value_type(204, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Igrave" ))));
-    theMap.insert(value_type(205, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Iacute" ))));
-    theMap.insert(value_type(206, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Icirc" ))));
-    theMap.insert(value_type(207, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Iuml" ))));
-    theMap.insert(value_type(208, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ETH" ))));
-    theMap.insert(value_type(209, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Ntilde" ))));
-    theMap.insert(value_type(210, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Ograve" ))));
-    theMap.insert(value_type(211, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Oacute" ))));
-    theMap.insert(value_type(212, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Ocirc" ))));
-    theMap.insert(value_type(213, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Otilde" ))));
-    theMap.insert(value_type(214, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Ouml" ))));
-    theMap.insert(value_type(215, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("times" ))));
-    theMap.insert(value_type(216, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Oslash" ))));
-    theMap.insert(value_type(217, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Ugrave" ))));
-    theMap.insert(value_type(218, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Uacute" ))));
-    theMap.insert(value_type(219, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Ucirc" ))));
-    theMap.insert(value_type(220, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Uuml" ))));
-    theMap.insert(value_type(221, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Yacute" ))));
-    theMap.insert(value_type(222, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("THORN" ))));
-    theMap.insert(value_type(223, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("szlig" ))));
-    theMap.insert(value_type(224, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("agrave" ))));
-    theMap.insert(value_type(225, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("aacute" ))));
-    theMap.insert(value_type(226, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("acirc" ))));
-    theMap.insert(value_type(227, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("atilde" ))));
-    theMap.insert(value_type(228, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("auml" ))));
-    theMap.insert(value_type(229, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("aring" ))));
-    theMap.insert(value_type(230, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("aelig" ))));
-    theMap.insert(value_type(231, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ccedil" ))));
-    theMap.insert(value_type(232, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("egrave" ))));
-    theMap.insert(value_type(233, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("eacute" ))));
-    theMap.insert(value_type(234, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ecirc" ))));
-    theMap.insert(value_type(235, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("euml" ))));
-    theMap.insert(value_type(236, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("igrave" ))));
-    theMap.insert(value_type(237, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("iacute" ))));
-    theMap.insert(value_type(238, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("icirc" ))));
-    theMap.insert(value_type(239, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("iuml" ))));
-    theMap.insert(value_type(240, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("eth" ))));
-    theMap.insert(value_type(241, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ntilde" ))));
-    theMap.insert(value_type(242, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ograve" ))));
-    theMap.insert(value_type(243, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("oacute" ))));
-    theMap.insert(value_type(244, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ocirc" ))));
-    theMap.insert(value_type(245, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("otilde" ))));
-    theMap.insert(value_type(246, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ouml" ))));
-    theMap.insert(value_type(247, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("divide" ))));
-    theMap.insert(value_type(248, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("oslash" ))));
-    theMap.insert(value_type(249, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ugrave" ))));
-    theMap.insert(value_type(250, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("uacute" ))));
-    theMap.insert(value_type(251, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ucirc" ))));
-    theMap.insert(value_type(252, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("uuml" ))));
-    theMap.insert(value_type(253, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("yacute" ))));
-    theMap.insert(value_type(254, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("thorn" ))));
-    theMap.insert(value_type(255, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("yuml" ))));
+    theMap[161] = XALAN_STATIC_UCODE_STRING("iexcl");
+    theMap[162] = XALAN_STATIC_UCODE_STRING("cent");
+    theMap[163] = XALAN_STATIC_UCODE_STRING("pound");
+    theMap[164] = XALAN_STATIC_UCODE_STRING("curren");
+    theMap[165] = XALAN_STATIC_UCODE_STRING("yen");
+    theMap[166] = XALAN_STATIC_UCODE_STRING("brvbar");
+    theMap[167] = XALAN_STATIC_UCODE_STRING("sect");
+    theMap[168] = XALAN_STATIC_UCODE_STRING("uml");
+    theMap[169] = XALAN_STATIC_UCODE_STRING("copy");
+    theMap[170] = XALAN_STATIC_UCODE_STRING("ordf");
+    theMap[171] = XALAN_STATIC_UCODE_STRING("laquo");
+    theMap[172] = XALAN_STATIC_UCODE_STRING("not");
+    theMap[173] = XALAN_STATIC_UCODE_STRING("shy");
+    theMap[174] = XALAN_STATIC_UCODE_STRING("reg");
+    theMap[175] = XALAN_STATIC_UCODE_STRING("macr");
+    theMap[176] = XALAN_STATIC_UCODE_STRING("deg");
+    theMap[177] = XALAN_STATIC_UCODE_STRING("plusmn");
+    theMap[178] = XALAN_STATIC_UCODE_STRING("sup2");
+    theMap[179] = XALAN_STATIC_UCODE_STRING("sup3");
+    theMap[180] = XALAN_STATIC_UCODE_STRING("acute");
+    theMap[181] = XALAN_STATIC_UCODE_STRING("micro");
+    theMap[182] = XALAN_STATIC_UCODE_STRING("para");
+    theMap[183] = XALAN_STATIC_UCODE_STRING("middot");
+    theMap[184] = XALAN_STATIC_UCODE_STRING("cedil");
+    theMap[185] = XALAN_STATIC_UCODE_STRING("sup1");
+    theMap[186] = XALAN_STATIC_UCODE_STRING("ordm");
+    theMap[187] = XALAN_STATIC_UCODE_STRING("raquo");
+    theMap[188] = XALAN_STATIC_UCODE_STRING("frac14");
+    theMap[189] = XALAN_STATIC_UCODE_STRING("frac12");
+    theMap[190] = XALAN_STATIC_UCODE_STRING("frac34");
+    theMap[191] = XALAN_STATIC_UCODE_STRING("iquest");
+    theMap[192] = XALAN_STATIC_UCODE_STRING("Agrave");
+    theMap[193] = XALAN_STATIC_UCODE_STRING("Aacute");
+    theMap[194] = XALAN_STATIC_UCODE_STRING("Acirc");
+    theMap[195] = XALAN_STATIC_UCODE_STRING("Atilde");
+    theMap[196] = XALAN_STATIC_UCODE_STRING("Auml");
+    theMap[197] = XALAN_STATIC_UCODE_STRING("Aring");
+    theMap[198] = XALAN_STATIC_UCODE_STRING("AElig");
+    theMap[199] = XALAN_STATIC_UCODE_STRING("Ccedil");
+    theMap[200] = XALAN_STATIC_UCODE_STRING("Egrave");
+    theMap[201] = XALAN_STATIC_UCODE_STRING("Eacute");
+    theMap[202] = XALAN_STATIC_UCODE_STRING("Ecirc");
+    theMap[203] = XALAN_STATIC_UCODE_STRING("Euml");
+    theMap[204] = XALAN_STATIC_UCODE_STRING("Igrave");
+    theMap[205] = XALAN_STATIC_UCODE_STRING("Iacute");
+    theMap[206] = XALAN_STATIC_UCODE_STRING("Icirc");
+    theMap[207] = XALAN_STATIC_UCODE_STRING("Iuml");
+    theMap[208] = XALAN_STATIC_UCODE_STRING("ETH");
+    theMap[209] = XALAN_STATIC_UCODE_STRING("Ntilde");
+    theMap[210] = XALAN_STATIC_UCODE_STRING("Ograve");
+    theMap[211] = XALAN_STATIC_UCODE_STRING("Oacute");
+    theMap[212] = XALAN_STATIC_UCODE_STRING("Ocirc");
+    theMap[213] = XALAN_STATIC_UCODE_STRING("Otilde");
+    theMap[214] = XALAN_STATIC_UCODE_STRING("Ouml");
+    theMap[215] = XALAN_STATIC_UCODE_STRING("times");
+    theMap[216] = XALAN_STATIC_UCODE_STRING("Oslash");
+    theMap[217] = XALAN_STATIC_UCODE_STRING("Ugrave");
+    theMap[218] = XALAN_STATIC_UCODE_STRING("Uacute");
+    theMap[219] = XALAN_STATIC_UCODE_STRING("Ucirc");
+    theMap[220] = XALAN_STATIC_UCODE_STRING("Uuml");
+    theMap[221] = XALAN_STATIC_UCODE_STRING("Yacute");
+    theMap[222] = XALAN_STATIC_UCODE_STRING("THORN");
+    theMap[223] = XALAN_STATIC_UCODE_STRING("szlig");
+    theMap[224] = XALAN_STATIC_UCODE_STRING("agrave");
+    theMap[225] = XALAN_STATIC_UCODE_STRING("aacute");
+    theMap[226] = XALAN_STATIC_UCODE_STRING("acirc");
+    theMap[227] = XALAN_STATIC_UCODE_STRING("atilde");
+    theMap[228] = XALAN_STATIC_UCODE_STRING("auml");
+    theMap[229] = XALAN_STATIC_UCODE_STRING("aring");
+    theMap[230] = XALAN_STATIC_UCODE_STRING("aelig");
+    theMap[231] = XALAN_STATIC_UCODE_STRING("ccedil");
+    theMap[232] = XALAN_STATIC_UCODE_STRING("egrave");
+    theMap[233] = XALAN_STATIC_UCODE_STRING("eacute");
+    theMap[234] = XALAN_STATIC_UCODE_STRING("ecirc");
+    theMap[235] = XALAN_STATIC_UCODE_STRING("euml");
+    theMap[236] = XALAN_STATIC_UCODE_STRING("igrave");
+    theMap[237] = XALAN_STATIC_UCODE_STRING("iacute");
+    theMap[238] = XALAN_STATIC_UCODE_STRING("icirc");
+    theMap[239] = XALAN_STATIC_UCODE_STRING("iuml");
+    theMap[240] = XALAN_STATIC_UCODE_STRING("eth");
+    theMap[241] = XALAN_STATIC_UCODE_STRING("ntilde");
+    theMap[242] = XALAN_STATIC_UCODE_STRING("ograve");
+    theMap[243] = XALAN_STATIC_UCODE_STRING("oacute");
+    theMap[244] = XALAN_STATIC_UCODE_STRING("ocirc");
+    theMap[245] = XALAN_STATIC_UCODE_STRING("otilde");
+    theMap[246] = XALAN_STATIC_UCODE_STRING("ouml");
+    theMap[247] = XALAN_STATIC_UCODE_STRING("divide");
+    theMap[248] = XALAN_STATIC_UCODE_STRING("oslash");
+    theMap[249] = XALAN_STATIC_UCODE_STRING("ugrave");
+    theMap[250] = XALAN_STATIC_UCODE_STRING("uacute");
+    theMap[251] = XALAN_STATIC_UCODE_STRING("ucirc");
+    theMap[252] = XALAN_STATIC_UCODE_STRING("uuml");
+    theMap[253] = XALAN_STATIC_UCODE_STRING("yacute");
+    theMap[254] = XALAN_STATIC_UCODE_STRING("thorn");
+    theMap[255] = XALAN_STATIC_UCODE_STRING("yuml");
 }
 
 
 
 static void
-initializeXalanEntityReferenceMap2(XalanEntityReferenceType&	theMap)
+initializeXalanEntityReferenceMap2(XalanEntityReferenceMapType&	theMap)
 {
-	typedef XalanEntityReferenceType::value_type	value_type;
+	typedef XalanEntityReferenceMapType::value_type	value_type;
 
     //#    
     //# Character symbols, mathematical symbols,
     //#    
     //# Latin   
-    theMap.insert(value_type(402, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("fnof" ))));
+    theMap[402] = XALAN_STATIC_UCODE_STRING("fnof");
     //#    
     //# Greek   
-    theMap.insert(value_type(913, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Alpha" ))));
-    theMap.insert(value_type(914, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Beta" ))));
-    theMap.insert(value_type(915, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Gamma" ))));
-    theMap.insert(value_type(916, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Delta" ))));
-    theMap.insert(value_type(917, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Epsilon" ))));
-    theMap.insert(value_type(918, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Zeta" ))));
-    theMap.insert(value_type(919, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Eta" ))));
-    theMap.insert(value_type(920, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Theta" ))));
-    theMap.insert(value_type(921, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Iota" ))));
-    theMap.insert(value_type(922, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Kappa" ))));
-    theMap.insert(value_type(923, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Lambda" ))));
-    theMap.insert(value_type(924, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Mu" ))));
-    theMap.insert(value_type(925, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Nu" ))));
-    theMap.insert(value_type(926, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Xi" ))));
-    theMap.insert(value_type(927, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Omicron" ))));
-    theMap.insert(value_type(928, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Pi" ))));
-    theMap.insert(value_type(929, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Rho" ))));
-    theMap.insert(value_type(931, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Sigma" ))));
-    theMap.insert(value_type(932, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Tau" ))));
-    theMap.insert(value_type(933, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Upsilon" ))));
-    theMap.insert(value_type(934, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Phi" ))));
-    theMap.insert(value_type(935, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Chi" ))));
-    theMap.insert(value_type(936, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Psi" ))));
-    theMap.insert(value_type(937, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Omega" ))));
-    theMap.insert(value_type(945, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("alpha" ))));
-    theMap.insert(value_type(946, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("beta" ))));
-    theMap.insert(value_type(947, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("gamma" ))));
-    theMap.insert(value_type(948, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("delta" ))));
-    theMap.insert(value_type(949, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("epsilon" ))));
-    theMap.insert(value_type(950, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("zeta" ))));
-    theMap.insert(value_type(951, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("eta" ))));
-    theMap.insert(value_type(952, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("theta" ))));
-    theMap.insert(value_type(953, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("iota" ))));
-    theMap.insert(value_type(954, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("kappa" ))));
-    theMap.insert(value_type(955, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("lambda" ))));
-    theMap.insert(value_type(956, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("mu" ))));
-    theMap.insert(value_type(957, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("nu" ))));
-    theMap.insert(value_type(958, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("xi" ))));
-    theMap.insert(value_type(959, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("omicron" ))));
-    theMap.insert(value_type(960, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("pi" ))));
-    theMap.insert(value_type(961, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("rho" ))));
-    theMap.insert(value_type(962, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sigmaf" ))));
-    theMap.insert(value_type(963, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sigma" ))));
-    theMap.insert(value_type(964, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("tau" ))));
-    theMap.insert(value_type(965, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("upsilon" ))));
-    theMap.insert(value_type(966, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("phi" ))));
-    theMap.insert(value_type(967, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("chi" ))));
-    theMap.insert(value_type(968, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("psi" ))));
-    theMap.insert(value_type(969, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("omega" ))));
-    theMap.insert(value_type(977, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("thetasym" ))));
-    theMap.insert(value_type(978, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("upsih" ))));
-    theMap.insert(value_type(982, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("piv" ))));
+    theMap[913] = XALAN_STATIC_UCODE_STRING("Alpha");
+    theMap[914] = XALAN_STATIC_UCODE_STRING("Beta");
+    theMap[915] = XALAN_STATIC_UCODE_STRING("Gamma");
+    theMap[916] = XALAN_STATIC_UCODE_STRING("Delta");
+    theMap[917] = XALAN_STATIC_UCODE_STRING("Epsilon");
+    theMap[918] = XALAN_STATIC_UCODE_STRING("Zeta");
+    theMap[919] = XALAN_STATIC_UCODE_STRING("Eta");
+    theMap[920] = XALAN_STATIC_UCODE_STRING("Theta");
+    theMap[921] = XALAN_STATIC_UCODE_STRING("Iota");
+    theMap[922] = XALAN_STATIC_UCODE_STRING("Kappa");
+    theMap[923] = XALAN_STATIC_UCODE_STRING("Lambda");
+    theMap[924] = XALAN_STATIC_UCODE_STRING("Mu");
+    theMap[925] = XALAN_STATIC_UCODE_STRING("Nu");
+    theMap[926] = XALAN_STATIC_UCODE_STRING("Xi");
+    theMap[927] = XALAN_STATIC_UCODE_STRING("Omicron");
+    theMap[928] = XALAN_STATIC_UCODE_STRING("Pi");
+    theMap[929] = XALAN_STATIC_UCODE_STRING("Rho");
+    theMap[931] = XALAN_STATIC_UCODE_STRING("Sigma");
+    theMap[932] = XALAN_STATIC_UCODE_STRING("Tau");
+    theMap[933] = XALAN_STATIC_UCODE_STRING("Upsilon");
+    theMap[934] = XALAN_STATIC_UCODE_STRING("Phi");
+    theMap[935] = XALAN_STATIC_UCODE_STRING("Chi");
+    theMap[936] = XALAN_STATIC_UCODE_STRING("Psi");
+    theMap[937] = XALAN_STATIC_UCODE_STRING("Omega");
+    theMap[945] = XALAN_STATIC_UCODE_STRING("alpha");
+    theMap[946] = XALAN_STATIC_UCODE_STRING("beta");
+    theMap[947] = XALAN_STATIC_UCODE_STRING("gamma");
+    theMap[948] = XALAN_STATIC_UCODE_STRING("delta");
+    theMap[949] = XALAN_STATIC_UCODE_STRING("epsilon");
+    theMap[950] = XALAN_STATIC_UCODE_STRING("zeta");
+    theMap[951] = XALAN_STATIC_UCODE_STRING("eta");
+    theMap[952] = XALAN_STATIC_UCODE_STRING("theta");
+    theMap[953] = XALAN_STATIC_UCODE_STRING("iota");
+    theMap[954] = XALAN_STATIC_UCODE_STRING("kappa");
+    theMap[955] = XALAN_STATIC_UCODE_STRING("lambda");
+    theMap[956] = XALAN_STATIC_UCODE_STRING("mu");
+    theMap[957] = XALAN_STATIC_UCODE_STRING("nu");
+    theMap[958] = XALAN_STATIC_UCODE_STRING("xi");
+    theMap[959] = XALAN_STATIC_UCODE_STRING("omicron");
+    theMap[960] = XALAN_STATIC_UCODE_STRING("pi");
+    theMap[961] = XALAN_STATIC_UCODE_STRING("rho");
+    theMap[962] = XALAN_STATIC_UCODE_STRING("sigmaf");
+    theMap[963] = XALAN_STATIC_UCODE_STRING("sigma");
+    theMap[964] = XALAN_STATIC_UCODE_STRING("tau");
+    theMap[965] = XALAN_STATIC_UCODE_STRING("upsilon");
+    theMap[966] = XALAN_STATIC_UCODE_STRING("phi");
+    theMap[967] = XALAN_STATIC_UCODE_STRING("chi");
+    theMap[968] = XALAN_STATIC_UCODE_STRING("psi");
+    theMap[969] = XALAN_STATIC_UCODE_STRING("omega");
+    theMap[977] = XALAN_STATIC_UCODE_STRING("thetasym");
+    theMap[978] = XALAN_STATIC_UCODE_STRING("upsih");
+    theMap[982] = XALAN_STATIC_UCODE_STRING("piv");
 }
 
 
 
 static void
-initializeXalanEntityReferenceMap3(XalanEntityReferenceType&	theMap)
+initializeXalanEntityReferenceMap3(XalanEntityReferenceMapType&	theMap)
 {
-	typedef XalanEntityReferenceType::value_type	value_type;
+	typedef XalanEntityReferenceMapType::value_type	value_type;
 
     //#    
     //# General   
-    theMap.insert(value_type(8226, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("bull" ))));
-    theMap.insert(value_type(8230, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("hellip" ))));
-    theMap.insert(value_type(8242, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("prime" ))));
-    theMap.insert(value_type(8243, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Prime" ))));
-    theMap.insert(value_type(8254, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("oline" ))));
-    theMap.insert(value_type(8260, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("frasl" ))));
+    theMap[8226] = XALAN_STATIC_UCODE_STRING("bull");
+    theMap[8230] = XALAN_STATIC_UCODE_STRING("hellip");
+    theMap[8242] = XALAN_STATIC_UCODE_STRING("prime");
+    theMap[8243] = XALAN_STATIC_UCODE_STRING("Prime");
+    theMap[8254] = XALAN_STATIC_UCODE_STRING("oline");
+    theMap[8260] = XALAN_STATIC_UCODE_STRING("frasl");
     //#    
     //# Letterlike   
-    theMap.insert(value_type(8472, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("weierp" ))));
-    theMap.insert(value_type(8465, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("image" ))));
-    theMap.insert(value_type(8476, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("real" ))));
-    theMap.insert(value_type(8482, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("trade" ))));
-    theMap.insert(value_type(8501, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("alefsym" ))));
+    theMap[8472] = XALAN_STATIC_UCODE_STRING("weierp");
+    theMap[8465] = XALAN_STATIC_UCODE_STRING("image");
+    theMap[8476] = XALAN_STATIC_UCODE_STRING("real");
+    theMap[8482] = XALAN_STATIC_UCODE_STRING("trade");
+    theMap[8501] = XALAN_STATIC_UCODE_STRING("alefsym");
     //#    
     //# Arrows   
-    theMap.insert(value_type(8592, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("larr" ))));
-    theMap.insert(value_type(8593, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("uarr" ))));
-    theMap.insert(value_type(8594, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("rarr" ))));
-    theMap.insert(value_type(8595, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("darr" ))));
-    theMap.insert(value_type(8596, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("harr" ))));
-    theMap.insert(value_type(8629, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("crarr" ))));
-    theMap.insert(value_type(8656, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("lArr" ))));
-    theMap.insert(value_type(8657, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("uArr" ))));
-    theMap.insert(value_type(8658, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("rArr" ))));
-    theMap.insert(value_type(8659, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("dArr" ))));
-    theMap.insert(value_type(8660, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("hArr" ))));
+    theMap[8592] = XALAN_STATIC_UCODE_STRING("larr");
+    theMap[8593] = XALAN_STATIC_UCODE_STRING("uarr");
+    theMap[8594] = XALAN_STATIC_UCODE_STRING("rarr");
+    theMap[8595] = XALAN_STATIC_UCODE_STRING("darr");
+    theMap[8596] = XALAN_STATIC_UCODE_STRING("harr");
+    theMap[8629] = XALAN_STATIC_UCODE_STRING("crarr");
+    theMap[8656] = XALAN_STATIC_UCODE_STRING("lArr");
+    theMap[8657] = XALAN_STATIC_UCODE_STRING("uArr");
+    theMap[8658] = XALAN_STATIC_UCODE_STRING("rArr");
+    theMap[8659] = XALAN_STATIC_UCODE_STRING("dArr");
+    theMap[8660] = XALAN_STATIC_UCODE_STRING("hArr");
     //#    
     //# Mathematical   
-    theMap.insert(value_type(8704, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("forall" ))));
-    theMap.insert(value_type(8706, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("part" ))));
-    theMap.insert(value_type(8707, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("exist" ))));
-    theMap.insert(value_type(8709, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("empty" ))));
-    theMap.insert(value_type(8711, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("nabla" ))));
-    theMap.insert(value_type(8712, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("isin" ))));
-    theMap.insert(value_type(8713, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("notin" ))));
-    theMap.insert(value_type(8715, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ni" ))));
-    theMap.insert(value_type(8719, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("prod" ))));
-    theMap.insert(value_type(8721, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sum" ))));
-    theMap.insert(value_type(8722, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("minus" ))));
-    theMap.insert(value_type(8727, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("lowast" ))));
-    theMap.insert(value_type(8730, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("radic" ))));
-    theMap.insert(value_type(8733, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("prop" ))));
-    theMap.insert(value_type(8734, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("infin" ))));
-    theMap.insert(value_type(8736, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ang" ))));
-    theMap.insert(value_type(8743, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("and" ))));
-    theMap.insert(value_type(8744, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("or" ))));
-    theMap.insert(value_type(8745, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("cap" ))));
-    theMap.insert(value_type(8746, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("cup" ))));
-    theMap.insert(value_type(8747, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("int" ))));
-    theMap.insert(value_type(8756, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("there4" ))));
-    theMap.insert(value_type(8764, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sim" ))));
-    theMap.insert(value_type(8773, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("cong" ))));
-    theMap.insert(value_type(8776, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("asymp" ))));
-    theMap.insert(value_type(8800, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ne" ))));
-    theMap.insert(value_type(8801, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("equiv" ))));
-    theMap.insert(value_type(8804, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("le" ))));
-    theMap.insert(value_type(8805, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ge" ))));
-    theMap.insert(value_type(8834, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sub" ))));
-    theMap.insert(value_type(8835, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sup" ))));
-    theMap.insert(value_type(8836, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("nsub" ))));
-    theMap.insert(value_type(8838, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sube" ))));
-    theMap.insert(value_type(8839, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("supe" ))));
-    theMap.insert(value_type(8853, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("oplus" ))));
-    theMap.insert(value_type(8855, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("otimes" ))));
-    theMap.insert(value_type(8869, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("perp" ))));
-    theMap.insert(value_type(8901, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sdot" ))));
+    theMap[8704] = XALAN_STATIC_UCODE_STRING("forall");
+    theMap[8706] = XALAN_STATIC_UCODE_STRING("part");
+    theMap[8707] = XALAN_STATIC_UCODE_STRING("exist");
+    theMap[8709] = XALAN_STATIC_UCODE_STRING("empty");
+    theMap[8711] = XALAN_STATIC_UCODE_STRING("nabla");
+    theMap[8712] = XALAN_STATIC_UCODE_STRING("isin");
+    theMap[8713] = XALAN_STATIC_UCODE_STRING("notin");
+    theMap[8715] = XALAN_STATIC_UCODE_STRING("ni");
+    theMap[8719] = XALAN_STATIC_UCODE_STRING("prod");
+    theMap[8721] = XALAN_STATIC_UCODE_STRING("sum");
+    theMap[8722] = XALAN_STATIC_UCODE_STRING("minus");
+    theMap[8727] = XALAN_STATIC_UCODE_STRING("lowast");
+    theMap[8730] = XALAN_STATIC_UCODE_STRING("radic");
+    theMap[8733] = XALAN_STATIC_UCODE_STRING("prop");
+    theMap[8734] = XALAN_STATIC_UCODE_STRING("infin");
+    theMap[8736] = XALAN_STATIC_UCODE_STRING("ang");
+    theMap[8743] = XALAN_STATIC_UCODE_STRING("and");
+    theMap[8744] = XALAN_STATIC_UCODE_STRING("or");
+    theMap[8745] = XALAN_STATIC_UCODE_STRING("cap");
+    theMap[8746] = XALAN_STATIC_UCODE_STRING("cup");
+    theMap[8747] = XALAN_STATIC_UCODE_STRING("int");
+    theMap[8756] = XALAN_STATIC_UCODE_STRING("there4");
+    theMap[8764] = XALAN_STATIC_UCODE_STRING("sim");
+    theMap[8773] = XALAN_STATIC_UCODE_STRING("cong");
+    theMap[8776] = XALAN_STATIC_UCODE_STRING("asymp");
+    theMap[8800] = XALAN_STATIC_UCODE_STRING("ne");
+    theMap[8801] = XALAN_STATIC_UCODE_STRING("equiv");
+    theMap[8804] = XALAN_STATIC_UCODE_STRING("le");
+    theMap[8805] = XALAN_STATIC_UCODE_STRING("ge");
+    theMap[8834] = XALAN_STATIC_UCODE_STRING("sub");
+    theMap[8835] = XALAN_STATIC_UCODE_STRING("sup");
+    theMap[8836] = XALAN_STATIC_UCODE_STRING("nsub");
+    theMap[8838] = XALAN_STATIC_UCODE_STRING("sube");
+    theMap[8839] = XALAN_STATIC_UCODE_STRING("supe");
+    theMap[8853] = XALAN_STATIC_UCODE_STRING("oplus");
+    theMap[8855] = XALAN_STATIC_UCODE_STRING("otimes");
+    theMap[8869] = XALAN_STATIC_UCODE_STRING("perp");
+    theMap[8901] = XALAN_STATIC_UCODE_STRING("sdot");
 }
 
 
 
 static void
-initializeXalanEntityReferenceMap4(XalanEntityReferenceType&	theMap)
+initializeXalanEntityReferenceMap4(XalanEntityReferenceMapType&	theMap)
 {
-	typedef XalanEntityReferenceType::value_type	value_type;
+	typedef XalanEntityReferenceMapType::value_type	value_type;
 
     //#    
     //# Miscellaneous   
-    theMap.insert(value_type(8968, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("lceil" ))));
-    theMap.insert(value_type(8969, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("rceil" ))));
-    theMap.insert(value_type(8970, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("lfloor" ))));
-    theMap.insert(value_type(8971, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("rfloor" ))));
-    theMap.insert(value_type(9001, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("lang" ))));
-    theMap.insert(value_type(9002, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("rang" ))));
+    theMap[8968] = XALAN_STATIC_UCODE_STRING("lceil");
+    theMap[8969] = XALAN_STATIC_UCODE_STRING("rceil");
+    theMap[8970] = XALAN_STATIC_UCODE_STRING("lfloor");
+    theMap[8971] = XALAN_STATIC_UCODE_STRING("rfloor");
+    theMap[9001] = XALAN_STATIC_UCODE_STRING("lang");
+    theMap[9002] = XALAN_STATIC_UCODE_STRING("rang");
     //#    
     //# Geometric   
-    theMap.insert(value_type(9674, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("loz" ))));
+    theMap[9674] = XALAN_STATIC_UCODE_STRING("loz");
     //#    
     //# Miscellaneous   
-    theMap.insert(value_type(9824, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("spades" ))));
-    theMap.insert(value_type(9827, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("clubs" ))));
-    theMap.insert(value_type(9829, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("hearts" ))));
-    theMap.insert(value_type(9830, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("diams" ))));
+    theMap[9824] = XALAN_STATIC_UCODE_STRING("spades");
+    theMap[9827] = XALAN_STATIC_UCODE_STRING("clubs");
+    theMap[9829] = XALAN_STATIC_UCODE_STRING("hearts");
+    theMap[9830] = XALAN_STATIC_UCODE_STRING("diams");
     //#    
     //# Character internationalization characters 
     //#    
     //# Latin   
-    theMap.insert(value_type(338, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("OElig" ))));
-    theMap.insert(value_type(339, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("oelig" ))));
+    theMap[338] = XALAN_STATIC_UCODE_STRING("OElig");
+    theMap[339] = XALAN_STATIC_UCODE_STRING("oelig");
     //#    
     //# May not be supported Comment out???
-    theMap.insert(value_type(352, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Scaron" ))));
-    theMap.insert(value_type(353, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("scaron" ))));
-    theMap.insert(value_type(376, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Yuml" ))));
+    theMap[352] = XALAN_STATIC_UCODE_STRING("Scaron");
+    theMap[353] = XALAN_STATIC_UCODE_STRING("scaron");
+    theMap[376] = XALAN_STATIC_UCODE_STRING("Yuml");
     //#    
     //# Spacing   
-    theMap.insert(value_type(710, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("circ" ))));
-    theMap.insert(value_type(732, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("tilde" ))));
+    theMap[710] = XALAN_STATIC_UCODE_STRING("circ");
+    theMap[732] = XALAN_STATIC_UCODE_STRING("tilde");
     //#    
     //# General   
-    theMap.insert(value_type(8194, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ensp" ))));
-    theMap.insert(value_type(8195, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("emsp" ))));
-    theMap.insert(value_type(8201, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("thinsp" ))));
-    theMap.insert(value_type(8204, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("zwnj" ))));
-    theMap.insert(value_type(8205, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("zwj" ))));
-    theMap.insert(value_type(8206, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("lrm" ))));
-    theMap.insert(value_type(8207, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("rlm" ))));
-    theMap.insert(value_type(8211, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ndash" ))));
-    theMap.insert(value_type(8212, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("mdash" ))));
-    theMap.insert(value_type(8216, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("lsquo" ))));
-    theMap.insert(value_type(8217, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("rsquo" ))));
-    theMap.insert(value_type(8218, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sbquo" ))));
-    theMap.insert(value_type(8220, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ldquo" ))));
-    theMap.insert(value_type(8221, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("rdquo" ))));
-    theMap.insert(value_type(8222, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("bdquo" ))));
-    theMap.insert(value_type(8224, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("dagger" ))));
-    theMap.insert(value_type(8225, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Dagger" ))));
-    theMap.insert(value_type(8240, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("permil" ))));
-    theMap.insert(value_type(8249, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("lsaquo" ))));
-    theMap.insert(value_type(8250, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("rsaquo" ))));
-    theMap.insert(value_type(8364, StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("euro" ))));
+    theMap[8194] = XALAN_STATIC_UCODE_STRING("ensp");
+    theMap[8195] = XALAN_STATIC_UCODE_STRING("emsp");
+    theMap[8201] = XALAN_STATIC_UCODE_STRING("thinsp");
+    theMap[8204] = XALAN_STATIC_UCODE_STRING("zwnj");
+    theMap[8205] = XALAN_STATIC_UCODE_STRING("zwj");
+    theMap[8206] = XALAN_STATIC_UCODE_STRING("lrm");
+    theMap[8207] = XALAN_STATIC_UCODE_STRING("rlm");
+    theMap[8211] = XALAN_STATIC_UCODE_STRING("ndash");
+    theMap[8212] = XALAN_STATIC_UCODE_STRING("mdash");
+    theMap[8216] = XALAN_STATIC_UCODE_STRING("lsquo");
+    theMap[8217] = XALAN_STATIC_UCODE_STRING("rsquo");
+    theMap[8218] = XALAN_STATIC_UCODE_STRING("sbquo");
+    theMap[8220] = XALAN_STATIC_UCODE_STRING("ldquo");
+    theMap[8221] = XALAN_STATIC_UCODE_STRING("rdquo");
+    theMap[8222] = XALAN_STATIC_UCODE_STRING("bdquo");
+    theMap[8224] = XALAN_STATIC_UCODE_STRING("dagger");
+    theMap[8225] = XALAN_STATIC_UCODE_STRING("Dagger");
+    theMap[8240] = XALAN_STATIC_UCODE_STRING("permil");
+    theMap[8249] = XALAN_STATIC_UCODE_STRING("lsaquo");
+    theMap[8250] = XALAN_STATIC_UCODE_STRING("rsaquo");
+    theMap[8364] = XALAN_STATIC_UCODE_STRING("euro");
 }
 
 
 
 void
-FormatterToHTML::initializeXalanEntityReferenceMap(XalanEntityReferenceType&	theMap)
+FormatterToHTML::initializeXalanEntityReferenceMap(XalanEntityReferenceMapType&	theMap)
 {
 	initializeXalanEntityReferenceMap1(theMap);
 	initializeXalanEntityReferenceMap2(theMap);
@@ -2006,16 +2006,16 @@ static FormatterToHTML::ElementFlagsMapType			s_elementFlags;
 const FormatterToHTML::ElementFlagsMapType&			FormatterToHTML::s_elementFlags = ::s_elementFlags;
 
 
-static FormatterToHTML::XalanEntityReferenceType	s_xalanHTMLEntities;
+static FormatterToHTML::XalanEntityReferenceMapType	s_xalanHTMLEntities;
 
 
-const FormatterToHTML::XalanEntityReferenceType&	FormatterToHTML::s_xalanHTMLEntities = ::s_xalanHTMLEntities;
+const FormatterToHTML::XalanEntityReferenceMapType&	FormatterToHTML::s_xalanHTMLEntities = ::s_xalanHTMLEntities;
 
 
-static FormatterToHTML::XalanEntityReferenceType::const_iterator s_xalanHTMLEntitiesIteratorEnd; 
+static FormatterToHTML::XalanEntityReferenceMapType::const_iterator s_xalanHTMLEntitiesIteratorEnd; 
 
 
-const  FormatterToHTML::XalanEntityReferenceType::const_iterator& FormatterToHTML::s_xalanHTMLEntitiesIteratorEnd = ::s_xalanHTMLEntitiesIteratorEnd;
+const  FormatterToHTML::XalanEntityReferenceMapType::const_iterator& FormatterToHTML::s_xalanHTMLEntitiesIteratorEnd = ::s_xalanHTMLEntitiesIteratorEnd;
 
 
 const FormatterToHTML::ElemDesc						FormatterToHTML::s_dummyDesc(FormatterToHTML::ElemDesc::BLOCK);
@@ -2092,7 +2092,7 @@ FormatterToHTML::terminate()
 {
 	ElementFlagsMapType().swap(::s_elementFlags);
 
-	XalanEntityReferenceType().swap(::s_xalanHTMLEntities);
+	XalanEntityReferenceMapType().swap(::s_xalanHTMLEntities);
 
 	releaseMemory(::s_doctypeHeaderStartString);
 

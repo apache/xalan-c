@@ -102,10 +102,10 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMChar,
 				XalanDOMString,
-				less<XalanDOMChar> >	XalanEntityReferenceType;
+				less<XalanDOMChar> >	XalanEntityReferenceMapType;
 #else
 	typedef std::map<XalanDOMChar,
-					 XalanDOMString>	XalanEntityReferenceType;	
+					 XalanDOMString>	XalanEntityReferenceMapType;	
 #endif
 
 	/**
@@ -295,9 +295,7 @@ public:
 protected:
 
 	virtual void
-	writeAttrString(
-			const XalanDOMChar*		string,
-			const XalanDOMString&	encoding);
+	writeAttrString(const XalanDOMChar*		theString);
 
 	virtual void
 	accumCommentData(const XalanDOMChar*	data);
@@ -312,16 +310,16 @@ protected:
 
 private:
 
-	static const ElementFlagsMapType&		s_elementFlags;
+	static const ElementFlagsMapType&							s_elementFlags;
 
-	static const XalanEntityReferenceType&	s_xalanHTMLEntities;
+	static const XalanEntityReferenceMapType&					s_xalanHTMLEntities;
 
-	static const XalanEntityReferenceType::const_iterator&	s_xalanHTMLEntitiesIteratorEnd; 
+	static const XalanEntityReferenceMapType::const_iterator&	s_xalanHTMLEntitiesIteratorEnd; 
 
 	/**
 	 * Dummy description for elements not found.
 	 */
-	static const ElemDesc				s_dummyDesc;
+	static const ElemDesc			s_dummyDesc;
 
 	/**
 	 * The string "<!DOCTYPE  HTML".
@@ -391,7 +389,7 @@ private:
 	 * @return map of element flags.
 	 */
 	static void
-	initializeElementFlagsMap(ElementFlagsMapType&);
+	initializeElementFlagsMap(ElementFlagsMapType&	theMap);
 
 	/**
 	 * Initialize the map of enity references.
@@ -399,7 +397,7 @@ private:
 	 * @return map of enity references.
 	 */
 	static void
-	initializeXalanEntityReferenceMap(XalanEntityReferenceType&);
+	initializeXalanEntityReferenceMap(XalanEntityReferenceMapType&	theMap);
 
 	/**
 	 * Process an attribute.
@@ -413,16 +411,13 @@ private:
 			const ElemDesc&			elemDesc);
 
 	/**
-	 * Write the specified <var>string</var> after substituting non ASCII characters,
-	 * with <CODE>%HH</CODE>, where HH is the hex of the byte value.
+	 * Write the specified string after substituting non ASCII characters,
+	 * with %HH, where HH is the hex of the byte value.
 	 *
-	 * @param   string      String to convert to XML format.
-	 * @param   encoding    CURRENTLY NOT IMPLEMENTED.
+	 * @param   theString     String to convert to XML format.
 	 */
 	void
-	writeAttrURI(
-			const XalanDOMChar*		string,
-			const XalanDOMString&	encoding);
+	writeAttrURI(const XalanDOMChar*	theString);
 
 	/**
 	 * Accumulate the specified character by converting its numeric value to
@@ -456,6 +451,11 @@ private:
 	 * element.
 	 */
 	bool					m_isFirstElement;
+
+	/**
+	 * A flag so we know whether or not we're writing utf-8.
+	 */
+	bool					m_isUTF8;
 
 	/**
 	 * A counter so we can tell if we're inside the document element.

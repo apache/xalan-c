@@ -330,7 +330,17 @@ protected:
 	void
 	outputLineSep();
 
-	typedef void (FormatterToXML::*AccumFunctionType)(XalanDOMChar);
+	typedef void (FormatterToXML::*AccumCharFunctionType)(XalanDOMChar);
+
+	typedef void (FormatterToXML::*AccumStringFunctionType)(const XalanDOMChar*);
+
+	typedef void (FormatterToXML::*AccumDOMStringFunctionType)(const XalanDOMString&);
+
+	typedef void (FormatterToXML::*AccumArrayFunctionType)(
+						const XalanDOMChar[],
+						unsigned int,
+						unsigned int);
+
 	typedef void (FormatterToXML::*FlushFunctionType)();
 
 	/**
@@ -345,9 +355,9 @@ protected:
 	void
 	accumName(XalanDOMChar	ch)
 	{
-		assert(m_accumNameFunction != 0);
+		assert(m_accumNameCharFunction != 0);
 
-		(this->*m_accumNameFunction)(ch);
+		(this->*m_accumNameCharFunction)(ch);
 	}
 
 	/**
@@ -358,9 +368,9 @@ protected:
 	void
 	accumContent(XalanDOMChar	ch)
 	{
-		assert(m_accumContentFunction != 0);
+		assert(m_accumContentCharFunction != 0);
 
-		(this->*m_accumContentFunction)(ch);
+		(this->*m_accumContentCharFunction)(ch);
 	}
 
 	/**
@@ -374,7 +384,12 @@ protected:
 	 * @chars the array to append
 	 */
 	void
-	accumName(const XalanDOMChar*	chars);
+	accumName(const XalanDOMChar*	chars)
+	{
+		assert(m_accumNameStringFunction != 0);
+
+		(this->*m_accumNameStringFunction)(chars);
+	}
 
 	/**
 	 * Append a null-terminated array of wide characters to
@@ -383,7 +398,12 @@ protected:
 	 * @chars the array to append
 	 */
 	void
-	accumContent(const XalanDOMChar*		chars);
+	accumContent(const XalanDOMChar*	chars)
+	{
+		assert(m_accumContentStringFunction != 0);
+
+		(this->*m_accumContentStringFunction)(chars);
+	}
 
 	/**
 	 * Append an array of wide character to the buffer.
@@ -400,7 +420,12 @@ protected:
 	accumName(
 			const XalanDOMChar	chars[],
 			unsigned int		start,
-			unsigned int		length);
+			unsigned int		length)
+	{
+		assert(m_accumNameArrayFunction != 0);
+
+		(this->*m_accumNameArrayFunction)(chars, start, length);
+	}
 
 	/**
 	 * Append an array of wide character to the buffer.
@@ -413,7 +438,12 @@ protected:
 	accumContent(
 			const XalanDOMChar	chars[],
 			unsigned int		start,
-			unsigned int		length);
+			unsigned int		length)
+	{
+		assert(m_accumContentArrayFunction != 0);
+
+		(this->*m_accumContentArrayFunction)(chars, start, length);
+	}
 
 	/**
 	 * Append a string to the buffer.
@@ -425,7 +455,12 @@ protected:
 	 * @param str the string to append
 	 */
 	void
-	accumName(const XalanDOMString&		str);
+	accumName(const XalanDOMString&		str)
+	{
+		assert(m_accumNameDOMStringFunction != 0);
+
+		(this->*m_accumNameDOMStringFunction)(str);
+	}
 
 	/**
 	 * Append a string to the buffer.
@@ -433,7 +468,12 @@ protected:
 	 * @param str the string to append
 	 */
 	void
-	accumContent(const XalanDOMString&	str);
+	accumContent(const XalanDOMString&	str)
+	{
+		assert(m_accumContentDOMStringFunction != 0);
+
+		(this->*m_accumContentDOMStringFunction)(str);
+	}
 
 	/**
 	 * Escape and accum a character.
@@ -535,13 +575,10 @@ protected:
 
 	/**
 	 * Write an attribute string.
-	 * @param string The string to write.
-	 * @param encoding The current encoding.
+	 * @param theString The string to write.
 	 */
 	virtual void
-	writeAttrString(
-			const XalanDOMChar*		string,
-			const XalanDOMString&	encoding);
+	writeAttrString(const XalanDOMChar*		theString);
 
 	/**
 	 * Write the data for a comment
@@ -638,9 +675,10 @@ protected:
 	bool		m_inCData;
 
 	/**
-	 * Flag to quickly tell if the encoding is UTF8.
+	 * Flag to quickly tell if the encoding is capable of full
+	 * Unicode support.
 	 */
-	bool		m_isUTF8;
+	bool		m_encodingIsUTF;
 
 	/**
 	 * The System ID for the doc type.
@@ -728,7 +766,7 @@ private:
 	accumContentAsByte(XalanDOMChar		ch);
 
 	/**
-	 * Append a wide character to the stream with buffering.
+	 * Append a wide character to the output.
 	 * Characters that are not representable
 	 * in the encoding are written as entities.
 	 *
@@ -774,6 +812,167 @@ private:
 	 */
 	void
 	accumContentAsCharDirect(XalanDOMChar	ch);
+
+	/**
+	 * Append a wide character to the buffer.
+	 * All characters are representable,
+	 * so no checks or escapes are needed.
+	 *
+	 * @ch the character to append.
+	 */
+	void
+	accumCharUTF(XalanDOMChar	ch);
+
+	/**
+	 * Append a wide character to the output.
+	 * All characters are representable,
+	 * so no checks or escapes are needed.
+	 *
+	 * @ch the character to append.
+	 */
+	void
+	accumCharUTFDirect(XalanDOMChar	ch);
+
+	/**
+	 * Append a string to the buffer.
+	 * Characters that are not representable
+	 * in the encoding are not written as
+	 * entities.
+	 *
+	 * @chars the string to append.
+	 */
+	void
+	accumNameString(const XalanDOMChar*	chars);
+
+	/**
+	 * Append a wide character to the buffer.
+	 * All characters are representable,
+	 * so no checks or escapes are needed.
+	 *
+	 * @chars the string to append.
+	 */
+	void
+	accumStringUTF(const XalanDOMChar*	chars);
+
+	/**
+	 * Append a wide character to the output.
+	 * All characters are representable,
+	 * so no checks or escapes are needed.
+	 *
+	 * @chars the string to append.
+	 */
+	void
+	accumStringUTFDirect(const XalanDOMChar*	chars);
+
+	/**
+	 * Append a string to the buffer.
+	 * Characters that are not representable
+	 * in the encoding are written as entities.
+	 *
+	 * @chars the string to append.
+	 */
+	void
+	accumContentString(const XalanDOMChar*	chars);
+
+	/**
+	 * Append an array of wide character to the buffer.
+	 * Characters that are not representable in the
+	 * encoding are not written as entities.
+	 *
+	 * @chars the array to append
+	 * @start the offset into the array to start from
+	 * @length the number of characters to append
+	 */
+	void
+	accumNameArray(
+			const XalanDOMChar	chars[],
+			unsigned int		start,
+			unsigned int		length);
+
+	/**
+	 * Append an array of wide character to the buffer.
+	 * Characters that are not representable in the
+	 * encoding are written as entities.
+	 *
+	 * @chars the array to append
+	 * @start the offset into the array to start from
+	 * @length the number of characters to append
+	 */
+	void
+	accumContentArray(
+			const XalanDOMChar	chars[],
+			unsigned int		start,
+			unsigned int		length);
+
+	/**
+	 * Append an array of wide character to the buffer.
+	 * All characters are representable,
+	 * so no checks or escapes are needed.
+	 *
+	 * @chars the array to append
+	 * @start the offset into the array to start from
+	 * @length the number of characters to append
+	 */
+	void
+	accumArrayUTF(
+			const XalanDOMChar	chars[],
+			unsigned int		start,
+			unsigned int		length);
+
+	/**
+	 * Append an array of wide character to the output.
+	 * All characters are representable,
+	 * so no checks or escapes are needed.
+	 *
+	 * @chars the array to append
+	 * @start the offset into the array to start from
+	 * @length the number of characters to append
+	 */
+	void
+	accumArrayUTFDirect(
+			const XalanDOMChar	chars[],
+			unsigned int		start,
+			unsigned int		length);
+
+	/**
+	 * Append a string to the buffer.
+	 * Characters that are not representable in the
+	 * encoding are not written as entities.
+	 *
+	 * @str the string to append
+	 */
+	void
+	accumNameDOMString(const XalanDOMString&	str);
+
+	/**
+	 * Append a string to the buffer.
+	 * Characters that are not representable in the
+	 * encoding are written as entities.
+	 *
+	 * @str the string to append
+	 */
+	void
+	accumContentDOMString(const XalanDOMString&	str);
+
+	/**
+	 * Append a string to the buffer.
+	 * All characters are representable,
+	 * so no checks or escapes are needed.
+	 *
+	 * @str the string to append
+	 */
+	void
+	accumDOMStringUTF(const XalanDOMString&	str);
+
+	/**
+	 * Append a string to the output.
+	 * All characters are representable,
+	 * so no checks or escapes are needed.
+	 *
+	 * @str the string to append
+	 */
+	void
+	accumDOMStringUTFDirect(const XalanDOMString&	str);
 
 	/**
 	 * Output the doc type declaration.
@@ -835,11 +1034,6 @@ private:
 	 * Tells if we're in an EntityRef event.
 	 */
 	bool		m_inEntityRef;
-
-	/**
-	 * Assume java encoding names are the same as the ISO encoding names if this is true.
-	 */
-	static bool		s_javaEncodingIsISO;
 
 	/**
 	 * Tells the XML version, for writing out to the XML decl.
@@ -912,11 +1106,6 @@ private:
  	static const XalanDOMString&			s_xhtmlDocType;
 
 	/**
- 	 * The string "ISO-8859-1"
- 	 */
- 	static const XalanDOMString&			s_iso88591String;
-
-	/**
  	 * The string "]]>".
  	 */
  	static const XalanDOMString&			s_dtdCDATACloseString;
@@ -936,21 +1125,57 @@ private:
 	BoolStackType	m_elemStack;
 
 	/**
-	 * A pointer to the member function that will do the accumulating
+	 * A pointer to a member function that will do accumulating
 	 * for names.
 	 */
-	AccumFunctionType	m_accumNameFunction;
+	AccumCharFunctionType		m_accumNameCharFunction;
 
 	/**
-	 * A pointer to the member function that will do the accumulating
+	 * A pointer to a member function that will do accumulating
+	 * for names.
+	 */
+	AccumStringFunctionType		m_accumNameStringFunction;
+
+	/**
+	 * A pointer to a member function that will do accumulating
+	 * for names.
+	 */
+	AccumDOMStringFunctionType	m_accumNameDOMStringFunction;
+
+	/**
+	 * A pointer to a member function that will do accumulating
+	 * for names.
+	 */
+	AccumArrayFunctionType		m_accumNameArrayFunction;
+
+	/**
+	 * A pointer to a member function that will do accumulating
 	 * for content.
 	 */
-	AccumFunctionType	m_accumContentFunction;
+	AccumCharFunctionType		m_accumContentCharFunction;
+
+	/**
+	 * A pointer to a member function that will do accumulating
+	 * for content.
+	 */
+	AccumStringFunctionType		m_accumContentStringFunction;
+
+	/**
+	 * A pointer to a member function that will do accumulating
+	 * for content.
+	 */
+	AccumDOMStringFunctionType	m_accumContentDOMStringFunction;
+
+	/**
+	 * A pointer to a member function that will do accumulating
+	 * for names.
+	 */
+	AccumArrayFunctionType		m_accumContentArrayFunction;
 
 	/**
 	 * A pointer to the member function that will flush the buffer.
 	 */
-	FlushFunctionType	m_flushFunction;
+	FlushFunctionType		m_flushFunction;
 };
 
 
