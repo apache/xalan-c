@@ -38,7 +38,8 @@
 #define DIR_MODE_BITS 509
 #include <dirent.h>
 #include <unistd.h>
-extern "C" int mkdir(const char*, mode_t mode);
+
+#include <sys/stat.h>
 #endif
 
 
@@ -420,6 +421,9 @@ FileUtility::getTestFileNames(
             const XalanDOMString&   relDir,
             bool                    useDirPrefix)
 {
+	char buffer3[PATH_MAX];
+    getcwd(buffer3, PATH_MAX);
+
     const XalanDOMString    searchSuffix(XALAN_STATIC_UCODE_STRING("*.xsl"));
     XalanDOMString  searchSpecification;
 
@@ -439,6 +443,8 @@ FileUtility::getTestFileNames(
     FileNameVectorType  theFiles;
     theEnumerator(searchSpecification, theFiles);
 
+	chdir(buffer3);
+
     return theFiles;
 }
 
@@ -450,11 +456,16 @@ FileUtility::getTestFileNames(
 FileUtility::FileNameVectorType
 FileUtility::getDirectoryNames(const XalanDOMString&        rootDirectory)
 {
+	char buffer2[PATH_MAX];
+	getcwd(buffer2, PATH_MAX);
+
     const XalanDOMString    dirSpec(XALAN_STATIC_UCODE_STRING("*"));
 
     DirectoryEnumeratorFunctor<FileNameVectorType, XalanDOMString, DirectoryFilterPredicate> theEnumerator;
     FileNameVectorType  theFiles;
     theEnumerator(XalanDOMString(rootDirectory), XalanDOMString(dirSpec), theFiles);
+	
+	chdir(buffer2);
 
     return theFiles;
 }
@@ -986,13 +997,14 @@ FileUtility::fileCompare(
                 data.actual = XalanDOMString("<![CDATA[") + XalanDOMString(rline) + XalanDOMString("]]>");
                 data.currentNode = XalanDOMString("Line: ") + XalanDOMString(temp);
                 data.fail += 1;
+			fclose(result); 	fclose(gold);
                 return false;
             }
         }
 
         lineNum += 1;
     }
-
+			fclose(result); 	fclose(gold);
     return true;
 }
 
@@ -1842,12 +1854,36 @@ FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resul
     XalanDOMString paramValue;
     bool    fileStatus;
 
+#if defined(AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX)
+
+	bool	pathStatus;
+	CharVectorType     withPath;
+	TranscodeToLocalCodePage(resultsFile, withPath, false);
+	if (withPath[0] == '/')
+		pathStatus=true;
+	else
+		pathStatus=false;
+	
+	char buffer5[PATH_MAX];
+	XalanDOMString resultPath= XalanDOMString(getcwd(buffer5, PATH_MAX));
+	append(resultPath, s_pathSep);
+#endif
+	
+
     // Pass the results .xml file as a parameter to the stylesheet.  It must be wrapped in single
     // quotes so that it is not considered an expression.
     //
-    assign(paramValue, XalanDOMString("'"));
-    append(paramValue, resultsFile);
-    append(paramValue, XalanDOMString("'"));
+  #if defined (AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX)
+	assign(paramValue, XalanDOMString("\'"));
+	if ( !pathStatus )
+		append(paramValue, resultPath);
+	append(paramValue, resultsFile);
+	append(paramValue, XalanDOMString("\'"));
+  #else	
+	assign(paramValue, XalanDOMString("'"));
+    	append(paramValue, resultsFile);
+    	append(paramValue, XalanDOMString("'"));
+  #endif
 
     // Set the parameter
     //
@@ -1882,7 +1918,11 @@ FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resul
 
     if (result == 0)
     {
-        system(c_str(TranscodeToLocalCodePage(theHTMLFile)));
+	#if defined(_MSC_VER)
+		system(c_str(TranscodeToLocalCodePage(theHTMLFile)));
+	#else
+		cout << "The HTML output: " << theHTMLFile << " was created" << endl;
+	#endif
     }
     else 
     {

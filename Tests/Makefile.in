@@ -48,7 +48,7 @@ include ../Makefile.incl
 
 all: Tests
 
-tests : ThreadTest
+tests : ThreadTest Conf
 
 Tests:   ThreadTest Conf
 

@@ -26,7 +26,13 @@
 #if defined(_MSC_VER)
 #include <io.h>
 #else
+#include <unistd.h>
 #include <dirent.h>
+#include <sys/stat.h>
+#include <errno.h>
+
+extern int 	errno;
+
 #endif
 
 
@@ -35,7 +41,7 @@
 #include <iterator>
 
 
-
+#include <xalanc/PlatformSupport/XalanFileOutputStream.hpp>
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
@@ -137,8 +143,30 @@ public:
 	 */
 	bool isDirectory() const
 	{
-#if defined(AIX) || defined(HPUX) || defined(SOLARIS) || defined(OS390) || defined(OS400) || defined(TRU64)  || defined(CYGWIN)
+#if defined(OS390) || defined(OS400) || defined(TRU64)
 		return false;
+
+#elif defined(AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX) || defined(CYGWIN)
+
+	struct	stat stat_Info;
+	int	retCode = stat (d_name, &stat_Info);
+ 
+	if ( retCode == -1 )
+	{
+		typedef	XalanFileOutputStream::XalanFileOutputStreamOpenException XalanStatDirectoryException;
+		throw	XalanStatDirectoryException( XalanDOMString(d_name), errno );
+	}
+
+	if ( S_ISDIR(stat_Info.st_mode) == 1 )
+	{   
+		return true;
+	}
+	else 
+	{   
+		return false;
+	}
+
+
 #else		
 		if (d_type == DT_DIR || d_type == DT_UNKNOWN)
 		{
@@ -154,7 +182,7 @@ public:
 	bool
 	isSelfOrParent() const
 	{
-#if defined(AIX) || defined(HPUX) || defined(SOLARIS) || defined(OS390) || defined(OS400) || defined(TRU64)
+#if defined(OS390) || defined(OS400) || defined(TRU64)
 		return false;
 #else		
 		if (isDirectory() == false)
@@ -240,8 +268,14 @@ EnumerateDirectory(
 {
 #if defined(_MSC_VER)
 	FindFileStruct 		theFindData;
+	
+	#ifdef _WIN64
+		typedef	intptr_t	theHandleType;
+	#else
+		typedef	long	theHandleType;
+	#endif
 
-	long	theSearchHandle = _wfindfirst(const_cast<wchar_t*>(theConversionFunction(theFullSearchSpec)),
+	theHandleType	theSearchHandle = _wfindfirst(const_cast<wchar_t*>(theConversionFunction(theFullSearchSpec)),
 										  &theFindData);
 
 	if (theSearchHandle != -1)
@@ -269,36 +303,67 @@ EnumerateDirectory(
 		_findclose(theSearchHandle);
 	}
 
-	
-#elif defined(LINUX)
+
+#elif defined(AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX) || defined(CYGWIN)	
 
 	CharVectorType	theTargetVector;
 
 	TranscodeToLocalCodePage(theFullSearchSpec, theTargetVector, false);
 
 	const CharVectorType::size_type		theSize = theTargetVector.size();
+	int  indexSuffix=0, indexName=0;
+	bool target_Dir = false; 
 
 	if (theSize > 0)
 	{
 		if (theTargetVector.back() == '*')
 		{
+			target_Dir = true;
 			theTargetVector.pop_back();
 
 			if (theSize == 1)
 			{
 				theTargetVector.push_back('.');
 			}
+		
 		}
+		else
+        {
+			target_Dir = false;
+
+			while(theTargetVector.back() != '*')
+			{
+				theTargetVector.pop_back();
+				indexSuffix++;
+			}
+
+			theTargetVector.pop_back();
+			while(theTargetVector.back() != '/')
+			{ 
+				theTargetVector.pop_back();
+				indexName++;
+			}
+		}      
 
 		theTargetVector.push_back('\0');
 
 		const char* const	theSpec = c_str(theTargetVector);
 		assert(theSpec != 0);
+		
+		XalanDOMString		theName;
+		XalanDOMString		theSuffix;
+		if ( !target_Dir )
+		{
+			int lenSpec = strlen(theSpec); 
+			theName = theFullSearchSpec.substr(lenSpec, indexName); 
+			theSuffix = theFullSearchSpec.substr(lenSpec+indexName+1, indexSuffix);
+		}
 
 		DIR* const	theDirectory = opendir(theSpec);
 
 		if (theDirectory != 0)
 		{
+			chdir(theSpec);
 			try
 			{
 				const FindFileStruct*	theEntry =
@@ -306,22 +371,41 @@ EnumerateDirectory(
 	
 				while(theEntry != 0)
 				{
-					if ((fIncludeSelfAndParent == true || theEntry->isSelfOrParent() == false) &&
-						theFilterPredicate(*theEntry) == true)
+					if ((fIncludeSelfAndParent == true || theEntry->isSelfOrParent() == false))
 					{
-						*theOutputIterator = StringType(theEntry->getName());
+						if (theFilterPredicate(*theEntry) == true)
+						{
+							if( target_Dir )
+							{
+								*theOutputIterator = StringType(theEntry->getName());
+							}
+							else
+							{
+								XalanDOMString	Getname = StringType(theEntry->getName());
+								int	Check_1 = Getname.compare(theName);
+								XalanDOMString	GetnameSuffix = Getname.substr(length(Getname)-indexSuffix, indexSuffix);            
+								int Check_2 = GetnameSuffix.compare(theSuffix);
+								if ( Check_1 == 1 && (!Check_2) )
+								{
+									*theOutputIterator = Getname;
+								}
+							}
+						}
 					}
-
 					theEntry = (FindFileStruct*)readdir(theDirectory);
-				}
-			}
+				} //while
+			}//try
+
 			catch(...)
 			{
 				closedir(theDirectory);
 
 				throw;
 			}
-
+			if( target_Dir )
+                           chdir("..");
+                         else
+                           chdir("../..");
 			closedir(theDirectory);
 		}
 	}
