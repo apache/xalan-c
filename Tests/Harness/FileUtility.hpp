@@ -156,8 +156,6 @@ public:
 
 		StreamType	help;
 
-		char*		data;
-
 	public:
 
 		XalanDOMString  base;
@@ -173,20 +171,10 @@ public:
 
 		~cmdParams()
 		{
-			delete [] data;
 		}
 
 		const char*
-		getHelpMessage()
-		{
-			delete [] data;
-
-			help << '\0';
-
-			data = help.str();
-
-			return data;
-		}
+		getHelpMessage();
 
 		StreamType&
 		getHelpStream()

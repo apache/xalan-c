@@ -191,7 +191,6 @@ FileUtility::reportStruct::reset()
 
 FileUtility::cmdParams::cmdParams() :
 	help(),
-	data(0),
 	base(),
 	output(),
 	gold(),
@@ -200,6 +199,20 @@ FileUtility::cmdParams::cmdParams() :
 	skip(false),
 	iters(0)
 {
+}
+
+
+
+const char*
+FileUtility::cmdParams::getHelpMessage()
+{
+	help << '\0';
+
+	const char* const	data = help.str();
+
+	help.freeze(false);
+
+	return data;
 }
 
 
