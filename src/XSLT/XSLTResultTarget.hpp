@@ -108,6 +108,13 @@ public:
 	XSLTResultTarget(const XalanDOMString&	fileName);
 
 	/**
+	 * Create a new output target with a file name.
+	 *
+	 * @param fileName valid system file name
+	 */
+	XSLTResultTarget(const char*	fileName);
+
+	/**
 	 * Create a new output target with a stream.
 	 *
 	 * @param byteStream a pointer to a std ostream for the output
@@ -116,6 +123,17 @@ public:
 	XSLTResultTarget(ostream*		theStream);
 #else
 	XSLTResultTarget(std::ostream*	theStream);
+#endif
+
+	/**
+	 * Create a new output target with a stream.
+	 *
+	 * @param byteStream a reference to a std ostream for the output
+	 */
+#if defined(XALAN_NO_NAMESPACES)
+	XSLTResultTarget(ostream&		theStream);
+#else
+	XSLTResultTarget(std::ostream&	theStream);
 #endif
 
 	/**
