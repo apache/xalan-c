@@ -49,13 +49,21 @@ getPrefixResolver(const XalanNode*	node)
 	}
 	else if (node->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
+#if defined(XALAN_OLD_STYLE_CASTS)
+		return (const XalanElement*)node;
+#else
 		return static_cast<const XalanElement*>(node);
+#endif
 	}
 	else if (node->getNodeType() == XalanNode::DOCUMENT_NODE)
 	{
 		XALAN_USING_XALAN(XalanDocument)
 
+#if defined(XALAN_OLD_STYLE_CASTS)
+		return ((const XalanDocument*)node)->getDocumentElement();
+#else
 		return static_cast<const XalanDocument*>(node)->getDocumentElement();
+#endif
 	}
 	else
 	{
