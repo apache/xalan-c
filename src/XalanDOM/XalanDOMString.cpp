@@ -1015,7 +1015,7 @@ doTranscodeFromLocalCodePage(
 					theSourceStringIsNullTerminated,
 					theTargetVector,
 					terminate,
-					XalanDOMString::length(strlen));
+					length);
 	}
 #else
 	XalanArrayAutoPtr<char>		tempString;
