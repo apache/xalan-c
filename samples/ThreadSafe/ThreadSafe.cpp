@@ -21,10 +21,12 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
+
+
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
-#include <XercesPlatformSupport/TextFileOutputStream.hpp>
-#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
+
 
 //This is here for the Windows threads.
 #define WIN32_LEAN_AND_MEAN
@@ -68,7 +70,7 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 	const DWORD		theThreadID = GetCurrentThreadId();
 
 	// Create the support objects that are necessary for running the processor...
-	DOMSupportDefault				theDOMSupport;
+	XercesDOMSupport				theDOMSupport;
 	XercesParserLiaison				theParserLiaison(theDOMSupport);
 	XPathSupportDefault				theXPathSupport(theDOMSupport);
 	XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
@@ -80,6 +82,7 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 					theParserLiaison,
 					theXPathSupport,
 					theXSLTProcessorEnvSupport,
+					theDOMSupport,
 					theXObjectFactory,
 					theXPathFactory);
 	outputMessage(theThreadID,"Starting ");
@@ -191,7 +194,7 @@ int main(int argc, const char*	/* argv */[])
 				XSLTInit						theInit;
 
 				// Create the support objects required to run the processor...
-				DOMSupportDefault				ssDOMSupport;
+				XercesDOMSupport				ssDOMSupport;
 				XercesParserLiaison				ssParserLiaison(ssDOMSupport);
 				XPathSupportDefault				ssXPathSupport(ssDOMSupport);
 				XSLTProcessorEnvSupportDefault	ssXSLTProcessorEnvSupport;
@@ -206,6 +209,7 @@ int main(int argc, const char*	/* argv */[])
 						ssParserLiaison,
 						ssXPathSupport,
 						ssXSLTProcessorEnvSupport,
+						ssDOMSupport,
 						ssXObjectFactory,
 						ssXPathFactory);
 

@@ -124,7 +124,7 @@ class QName;
 class SelectionEvent;
 class Stylesheet;
 class StylesheetRoot;
-class TextOutputStream;
+class XalanOutputStream;
 class TracerEvent;
 class Writer;
 class XalanDocument;
@@ -1521,7 +1521,7 @@ public:
 	 * @return The new instance.
 	 */
 	virtual PrintWriter*
-	createPrintWriter(TextOutputStream*		theTextOutputStream) = 0;
+	createPrintWriter(XalanOutputStream*		theTextOutputStream) = 0;
 
 	/**
 	 * Create a PrintWriter.  Create an appropriate output stream

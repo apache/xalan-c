@@ -83,7 +83,6 @@
 
 
 class Stylesheet;
-class TextOutputStream;
 class XPathProcessor;
 class XPathSupport;
 class XObjectFactory;
@@ -104,8 +103,8 @@ public:
 				less<FormatterListener*> >				FormatterListenerSetType;
 	typedef set<PrintWriter*,
 				less<PrintWriter*> >					PrintWriterSetType;
-	typedef set<TextOutputStream*,
-				less<TextOutputStream*> >				TextOutputStreamSetType;
+	typedef set<XalanOutputStream*,
+				less<XalanOutputStream*> >				OutputStreamSetType;
 	typedef set<const KeyDeclaration*,
 				less<const KeyDeclaration*> >			KeyDeclarationSetType;
 	typedef vector<const XObject*>						VariablesCollectionType;
@@ -118,7 +117,7 @@ public:
 	typedef std::deque<const ElemTemplateElement*>		ElementRecursionStackType;
 	typedef std::set<FormatterListener*>				FormatterListenerSetType;
 	typedef std::set<PrintWriter*>						PrintWriterSetType;
-	typedef std::set<TextOutputStream*>					TextOutputStreamSetType;
+	typedef std::set<XalanOutputStream*>				OutputStreamSetType;
 	typedef std::set<const KeyDeclaration*>				KeyDeclarationSetType;
 	typedef std::vector<const XObject*>					VariablesCollectionType;
 	typedef std::vector<VariablesCollectionType>		LiveVariablesStackType;
@@ -570,7 +569,7 @@ public:
 	getDecimalFormatSymbols(const XalanDOMString&	name);
 
 	virtual PrintWriter*
-	createPrintWriter(TextOutputStream*		theTextOutputStream);
+	createPrintWriter(XalanOutputStream*		theTextOutputStream);
 
 	virtual PrintWriter*
 	createPrintWriter(
@@ -845,7 +844,7 @@ private:
 
 	PrintWriterSetType					m_printWriters;
 
-	TextOutputStreamSetType				m_textOutputStreams;
+	OutputStreamSetType					m_outputStreams;
 
 	const CollationCompareFunctor*		m_collationCompareFunctor;
 

@@ -112,10 +112,12 @@
 #include <XPath/ResultTreeFrag.hpp>
 #include <XPath/XObject.hpp>
 #include <XPath/XPathEnvSupport.hpp>
+#include <XPath/XPathEnvSupportDefault.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathFactory.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
 #include <XPath/XPathSupport.hpp>
+#include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XObject.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XResultTreeFrag.hpp>
@@ -155,6 +157,7 @@ XSLTEngineImpl::XSLTEngineImpl(
 			XMLParserLiaison&	parserLiaison,
 			XPathSupport&		xpathSupport,
 			XPathEnvSupport&	xpathEnvSupport,
+			DOMSupport&			domSupport,
 			XObjectFactory&		xobjectFactory,
 			XPathFactory&		xpathFactory) :
 	XSLTProcessor(),
@@ -190,6 +193,7 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_parserLiaison(parserLiaison),
 	m_xpathSupport(xpathSupport),
 	m_xpathEnvSupport(xpathEnvSupport),
+	m_domSupport(domSupport),
 	m_flistener(0),
 	m_executionContext(0)
 {
@@ -724,10 +728,14 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		assert(nsNode != 0);
 
-		ElementPrefixResolverProxy		theProxy(nsNode, m_xpathEnvSupport, m_xpathSupport);
 
-		XPathExecutionContextDefault	theExecutionContext(m_xpathEnvSupport,
-															m_xpathSupport,
+		XPathEnvSupportDefault			theXPathEnvSupportDefault;
+		XPathSupportDefault				theXPathSupportDefault(m_domSupport);
+
+		ElementPrefixResolverProxy		theProxy(nsNode, theXPathEnvSupportDefault, theXPathSupportDefault);
+
+		XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupportDefault,
+															theXPathSupportDefault,
 															m_xobjectFactory,
 															&fragBase,
 															0,
@@ -738,9 +746,9 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 						evalXPathStr(ds, theExecutionContext));
 		assert(xobj.get() != 0);
 
-		const NodeRefListBase* nl = &xobj->nodeset();
+		MutableNodeRefList	nl(xobj->nodeset());
 
-		if(nl->getLength() == 0)
+		if(nl.getLength() == 0)
 		{
 			NodeRefList		theEmptyList;
 
@@ -755,9 +763,9 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 						evalXPathStr(ds, theExecutionContext));
 			assert(xobj.get() != 0);
 
-			nl = &xobj->nodeset();
+			nl = xobj->nodeset();
 
-			if(nl->getLength() == 0)
+			if(nl.getLength() == 0)
 			{
 				ds = XALAN_STATIC_UCODE_STRING("//*[@name='");
 				ds += fragID;
@@ -770,9 +778,9 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 							evalXPathStr(ds, theExecutionContext));
 				assert(xobj.get() != 0);
 
-				nl = &xobj->nodeset();
+				nl = xobj->nodeset();
 
-				if(nl->getLength() == 0)
+				if(nl.getLength() == 0)
 				{
 					// Well, hell, maybe it's an XPath...
 					theExecutionContext.setContextNodeList(theEmptyList);
@@ -782,17 +790,17 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 								evalXPathStr(fragID, theExecutionContext));
 					assert(xobj.get() != 0);
 
-					nl = &xobj->nodeset();
+					nl = xobj->nodeset();
 				}
 			}
 		}
 
-		if(nl->getLength() == 0)
+		if(nl.getLength() == 0)
 		{
 			error("Could not find fragment: " + fragID);
 		}
 
-		XalanNode* const	frag = nl->item(0);
+		XalanNode* const	frag = nl.item(0);
 
 		if(XalanNode::ELEMENT_NODE == frag->getNodeType())
 		{
@@ -820,11 +828,12 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 			FormatterTreeWalker tw(stylesheetProcessor);
 
-			tw.traverse(frag);
+			tw.traverse(frag, frag->getParentNode());
 
-			displayDuration(XalanDOMString(XALAN_STATIC_UCODE_STRING("Setup of ")) +
-								localXSLURLString,
-								&frag);
+			displayDuration(
+					XalanDOMString(XALAN_STATIC_UCODE_STRING("Setup of ")) +
+					localXSLURLString,
+					frag);
 
 			stylesheet->postConstruction();
 		}
@@ -1271,8 +1280,6 @@ XSLTEngineImpl::popDuration(const void*		key) const
 				m_durationsTable.find(key);
 #endif
 
-		assert(i != m_durationsTable.end());
-
 		if (i != m_durationsTable.end())
 		{
 			clockTicksDuration = clock() - (*i).second;
@@ -1408,7 +1415,7 @@ XSLTEngineImpl::startDocument()
 
 		if(getTraceListeners() > 0)
 		{
-			GenerateEvent ge(this, GenerateEvent::EVENTTYPE_STARTDOCUMENT);
+			GenerateEvent ge(GenerateEvent::EVENTTYPE_STARTDOCUMENT);
 
 			fireGenerateEvent(ge);
 		}
@@ -1433,7 +1440,7 @@ XSLTEngineImpl::endDocument()
 
 	if(getTraceListeners() > 0)
 	{
-		GenerateEvent ge(this, GenerateEvent::EVENTTYPE_ENDDOCUMENT);
+		GenerateEvent ge(GenerateEvent::EVENTTYPE_ENDDOCUMENT);
 
 		fireGenerateEvent(ge);
 	}
@@ -1585,7 +1592,7 @@ XSLTEngineImpl::flushPending()
 
 		if(getTraceListeners() > 0)
 		{
-			const GenerateEvent	ge(this, GenerateEvent::EVENTTYPE_STARTELEMENT,
+			const GenerateEvent	ge(GenerateEvent::EVENTTYPE_STARTELEMENT,
 					m_pendingElementName, &m_pendingAttributes);
 
 			fireGenerateEvent(ge);
@@ -1664,7 +1671,7 @@ XSLTEngineImpl::endElement(const XMLCh* const 	name)
 
 	if(getTraceListeners() > 0)
 	{
-		GenerateEvent ge(this, GenerateEvent::EVENTTYPE_ENDELEMENT, name, 0);
+		GenerateEvent ge(GenerateEvent::EVENTTYPE_ENDELEMENT, name, 0);
 		fireGenerateEvent(ge);
 	}
 
@@ -1714,7 +1721,7 @@ XSLTEngineImpl::characters(
 
 		if(getTraceListeners() > 0)
 		{
-			GenerateEvent ge(this, GenerateEvent::EVENTTYPE_CDATA, ch, start, length);
+			GenerateEvent ge(GenerateEvent::EVENTTYPE_CDATA, ch, start, length);
 			fireGenerateEvent(ge);
 		}
 	}
@@ -1724,7 +1731,7 @@ XSLTEngineImpl::characters(
 
 		if(getTraceListeners() > 0)
 		{
-			GenerateEvent ge(this, GenerateEvent::EVENTTYPE_CHARACTERS, ch,
+			GenerateEvent ge(GenerateEvent::EVENTTYPE_CHARACTERS, ch,
 						start, length);
 			fireGenerateEvent(ge);
 		}
@@ -1748,7 +1755,7 @@ XSLTEngineImpl::charactersRaw (
 
 	if(getTraceListeners() > 0)
 	{
-		GenerateEvent ge(this, GenerateEvent::EVENTTYPE_CHARACTERS,
+		GenerateEvent ge(GenerateEvent::EVENTTYPE_CHARACTERS,
 				ch, 0, length);
 
 		fireGenerateEvent(ge);
@@ -1785,7 +1792,7 @@ XSLTEngineImpl::ignorableWhitespace(
 
 	if(getTraceListeners() > 0)
 	{
-		GenerateEvent ge(this, GenerateEvent::EVENTTYPE_IGNORABLEWHITESPACE,
+		GenerateEvent ge(GenerateEvent::EVENTTYPE_IGNORABLEWHITESPACE,
 					ch, 0, length);
 
 		fireGenerateEvent(ge);
@@ -1811,7 +1818,7 @@ XSLTEngineImpl::processingInstruction(
 
 	if(getTraceListeners() > 0)
 	{
-		GenerateEvent ge(this, GenerateEvent::EVENTTYPE_PI,
+		GenerateEvent ge(GenerateEvent::EVENTTYPE_PI,
                                           target, data);
 
 		fireGenerateEvent(ge);
@@ -1834,7 +1841,7 @@ XSLTEngineImpl::comment(const XMLCh* const	data)
 
 	if(getTraceListeners() > 0)
 	{
-		GenerateEvent ge(this, GenerateEvent::EVENTTYPE_COMMENT,
+		GenerateEvent ge(GenerateEvent::EVENTTYPE_COMMENT,
                                           data);
 		fireGenerateEvent(ge);
 	}
@@ -1855,7 +1862,7 @@ XSLTEngineImpl::entityReference(const XMLCh* const	name)
 
 	if(getTraceListeners() > 0)
 	{
-		GenerateEvent ge(this, GenerateEvent::EVENTTYPE_ENTITYREF,
+		GenerateEvent ge(GenerateEvent::EVENTTYPE_ENTITYREF,
                                           name);
 
 		fireGenerateEvent(ge);
@@ -1886,7 +1893,7 @@ XSLTEngineImpl::cdata(
 
 		if(getTraceListeners() > 0)
 		{
-			GenerateEvent ge(this, GenerateEvent::EVENTTYPE_CDATA, ch, start,
+			GenerateEvent ge(GenerateEvent::EVENTTYPE_CDATA, ch, start,
 					length);
 
 			fireGenerateEvent(ge);
@@ -1898,7 +1905,7 @@ XSLTEngineImpl::cdata(
 
 		if(getTraceListeners() > 0)
 		{
-			GenerateEvent ge(this, GenerateEvent::EVENTTYPE_CHARACTERS, ch,
+			GenerateEvent ge(GenerateEvent::EVENTTYPE_CHARACTERS, ch,
 					start, length);
 
 			fireGenerateEvent(ge);

@@ -410,15 +410,12 @@ SimpleNodeLocator::stepPattern(
 
 			opPos += 3;
 
-			XalanNode* const	docContext =
-				XalanNode::DOCUMENT_NODE == localContext->getNodeType() ? 
-								localContext : localContext->getOwnerDocument();
+			const XalanNode::NodeType	nodeType = localContext->getNodeType();
 
-			score = docContext == localContext ? xpath.s_MatchScoreOther : xpath.s_MatchScoreNone;
-
-			if(score == xpath.s_MatchScoreOther)
+			if (nodeType == XalanNode::DOCUMENT_NODE ||
+				nodeType == XalanNode::DOCUMENT_FRAGMENT_NODE)
 			{
-				localContext = docContext;
+				score = XPath::s_MatchScoreOther;
 			}
 		}
 		break;
@@ -567,11 +564,11 @@ SimpleNodeLocator::handleFoundIndex(
 			XalanNode* 				localContext, 
 			int 					startOpPos)
 {
-			// We have an index somewhere in our pattern.  So, we have 
-			// to do a full search for our step, using the parent as 
-			// localContext, then see if the current localContext is found in the 
-			// node set.  Seems crazy, but, so far, it seems like the 
-			// easiest way.
+	// We have an index somewhere in our pattern.  So, we have 
+	// to do a full search for our step, using the parent as 
+	// localContext, then see if the current localContext is found in the 
+	// node set.  Seems crazy, but, so far, it seems like the 
+	// easiest way.
 	executionContext.setThrowFoundIndex(false);
 
 	XalanNode* const	parentContext =

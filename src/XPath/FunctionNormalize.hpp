@@ -161,7 +161,7 @@ public:
 			thePreviousChar = theCurrentChar;
 		}
 
-		if (isSpace(theVector.back()) == true)
+		if (theVector.empty() == false && isSpace(theVector.back()) == true)
 		{
 			// The last character is a space, so remove it
 			theVector.pop_back();

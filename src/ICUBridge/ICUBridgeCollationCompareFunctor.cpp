@@ -112,7 +112,7 @@ ICUBridgeCollationCompareFunctor::operator()(
 	{
 		assert(m_collator != 0);
 
-#if defined(XALAN_ICU_BRIDGE_UCHAR_MISMATCH)
+#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 		return m_collator->compare(
 					ICUBridge::XalanDOMCharStringToUnicodeString(theLHS),
 					ICUBridge::XalanDOMCharStringToUnicodeString(theRHS));

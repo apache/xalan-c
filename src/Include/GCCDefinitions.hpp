@@ -76,14 +76,22 @@
 #define XALAN_NO_COVARIANT_RETURN_TYPE
 #define XALAN_NEED_SPECIAL_NAN_SUPPORT
 #define NO_STD_LIMITS
-#define XALAN_WIDE_STRING_UCODE_PROBLEM
 #define XALAN_RTTI_AVAILABLE
 #define XALAN_OLD_STREAM_HEADERS
 #define XALAN_NO_TYPEINFO
 #define XALAN_SGI_BASED_STL
-#define XALAN_ICU_BRIDGE_UCHAR_MISMATCH
+#define XALAN_XALANDOMCHAR_USHORT_MISMATCH
 #define XALAN_NO_STD_ALLOCATORS
 
+
+// This will change, depending upon the target platform.
+#if defined(SOLARIS)
+#define XALAN_BIG_ENDIAN
+#elif defined(__I386__)
+#define XALAN_LITLE_ENDIAN
+#else
+#error XALAN_BIG_ENDIAN or XALAN_LITTLE_ENDIAN must be defined for this platform!
+#endif
 
 
 #endif	// GCCDEFINITIONS_HEADER_GUARD_1357924680

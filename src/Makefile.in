@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.16  2000/09/27 16:44:55  dbertoni
+# Output transcoding support.
+#
 # Revision 1.15  2000/09/25 14:37:06  auriemma
 # Clean up.
 #
@@ -247,7 +250,6 @@ XPATH_DIR = XPath
 XSLT_DIR = XSLT
 XERCESINIT_DIR = XercesInit
 XERCESPARSERLIAISON_DIR = XercesParserLiaison
-XERCESPLATFORMSUPPORT_DIR = XercesPlatformSupport
 ALL_OBJECTS_DIR = ${XALANCROOT}/obj
 LIB_DIR = ${XALANCROOT}/lib
 SAMPLES_DIR = ${XALANCROOT}/samples
@@ -264,7 +266,7 @@ BINTARGETDIR=${XALANCROOT}/bin
 ALL_VPATH_CPP = \
 $(XALANDOM_DIR):$(DOMSUPPORT_DIR):$(PLATFORMSUPPORT_DIR):$(TESTXPATH_DIR):$(TESTXSLT_DIR):\
 $(XMLSUPPORT_DIR):$(XPATH_DIR):$(XSLT_DIR):$(XERCESINIT_DIR):\
-$(XERCESPARSERLIAISON_DIR):$(XERCESPLATFORMSUPPORT_DIR)
+$(XERCESPARSERLIAISON_DIR)
 
 # Using ICUBridge
 ifdef XALAN_USE_ICU
@@ -291,7 +293,6 @@ ALLSOURCE = \
 	$(wildcard $(XSLT_DIR)/*.cpp) \
 	$(wildcard $(XERCESINIT_DIR)/*.cpp) \
 	$(wildcard $(XERCESPARSERLIAISON_DIR)/*.cpp) \
-	$(wildcard $(XERCESPLATFORMSUPPORT_DIR)/*.cpp) \
 	
 
 # Using ICUBridge

@@ -314,7 +314,7 @@ Stylesheet::pushNamespaces(const AttributeList& atts)
 
 void
 Stylesheet::popNamespaces() 
-{ 
+{
 	assert(m_namespaces.empty() == false);
 
 	m_namespaces.pop_back(); 

@@ -68,8 +68,11 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/STLHelper.hpp>
-#include <PlatformSupport/TextOutputStream.hpp>
+#include <PlatformSupport/XalanOutputStream.hpp>
 #include <PlatformSupport/XalanNumberFormat.hpp>
+#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
+#include <PlatformSupport/XalanStdOutputStream.hpp>
+#include <PlatformSupport/XalanFileOutputStream.hpp>
 
 
 
@@ -87,13 +90,6 @@
 #include <XMLSupport/FormatterToHTML.hpp>
 #include <XMLSupport/FormatterToText.hpp>
 #include <XMLSupport/XMLParserLiaison.hpp>
-
-
-
-// Yuck, these really shouldn't be here...
-#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
-#include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
-#include <XercesPlatformSupport/TextFileOutputStream.hpp>
 
 
 
@@ -137,7 +133,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_stylesheetRoot(0),
 	m_formatterListeners(),
 	m_printWriters(),
-	m_textOutputStreams(),
+	m_outputStreams(),
 	m_collationCompareFunctor(&s_defaultFunctor),
 	m_liveVariablesStack(),
 	m_variablesStack(),
@@ -1348,11 +1344,11 @@ StylesheetExecutionContextDefault::reset()
 
 	m_printWriters.clear();
 
-	for_each(m_textOutputStreams.begin(),
-			 m_textOutputStreams.end(),
-			 DeleteFunctor<TextOutputStream>());
+	for_each(m_outputStreams.begin(),
+			 m_outputStreams.end(),
+			 DeleteFunctor<XalanOutputStream>());
 
-	m_textOutputStreams.clear();
+	m_outputStreams.clear();
 
 	clearLiveVariablesStack();
 
@@ -1769,12 +1765,12 @@ StylesheetExecutionContextDefault::getDecimalFormatSymbols(const XalanDOMString&
 
 
 PrintWriter*
-StylesheetExecutionContextDefault::createPrintWriter(TextOutputStream*	theTextOutputStream)
+StylesheetExecutionContextDefault::createPrintWriter(XalanOutputStream*	theTextOutputStream)
 {
 	assert(theTextOutputStream != 0);
 
 	PrintWriter* const	thePrintWriter =
-		new XercesDOMPrintWriter(*theTextOutputStream);
+		new XalanOutputStreamPrintWriter(*theTextOutputStream);
 
 	m_printWriters.insert(thePrintWriter);
 
@@ -1788,15 +1784,12 @@ StylesheetExecutionContextDefault::createPrintWriter(
 			const XalanDOMString&		theFileName,
 			const XalanDOMString&		/* theEncoding */)
 {
-	// $$$ ToDo: We need to either remove these explicit dependencies on the
-	// Xerces classes, or make the Xerces classes more generic. (I prefer the
-	// latter...)
-	TextOutputStream* const		theTextOutputStream =
-		new TextFileOutputStream(theFileName);
+	XalanOutputStream* const	theOutputStream =
+		new XalanFileOutputStream(theFileName);
 
-	m_textOutputStreams.insert(theTextOutputStream);
+	m_outputStreams.insert(theOutputStream);
 
-	return createPrintWriter(theTextOutputStream);
+	return createPrintWriter(theOutputStream);
 }
 
 
@@ -1811,12 +1804,12 @@ StylesheetExecutionContextDefault::createPrintWriter(std::ostream&	theStream)
 	// $$$ ToDo: We need to either remove these explicit dependencies on the
 	// Xerces classes, or make the Xerces classes more generic. (I prefer the
 	// latter...)
-	TextOutputStream* const		theTextOutputStream =
-		new XercesStdTextOutputStream(theStream);
+	XalanOutputStream* const		theOutputStream =
+		new XalanStdOutputStream(theStream);
 
-	m_textOutputStreams.insert(theTextOutputStream);
+	m_outputStreams.insert(theOutputStream);
 
-	return createPrintWriter(theTextOutputStream);
+	return createPrintWriter(theOutputStream);
 }
 
 

@@ -916,8 +916,7 @@ XObject::equals(const XObject&	theRHS) const
 
 
 bool
-XObject::notEquals(
-			const XObject&	theRHS) const
+XObject::notEquals(const XObject&	theRHS) const
 {
 	if (this == &theRHS)
 	{

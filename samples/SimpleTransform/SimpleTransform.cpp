@@ -36,12 +36,8 @@
 
 
 
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
-
-
-
-#include <XercesPlatformSupport/TextFileOutputStream.hpp>
-#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
 
 
 
@@ -74,7 +70,7 @@ main(
 				XSLTInit						theInit;
 
 				// Create the support objects that are necessary for running the processor...
-				DOMSupportDefault				theDOMSupport;
+				XercesDOMSupport				theDOMSupport;
 				XercesParserLiaison				theParserLiaison(theDOMSupport);
 				XPathSupportDefault				theXPathSupport(theDOMSupport);
 				XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
@@ -86,6 +82,7 @@ main(
 						theParserLiaison,
 						theXPathSupport,
 						theXSLTProcessorEnvSupport,
+						theDOMSupport,
 						theXObjectFactory,
 						theXPathFactory);
 
@@ -115,9 +112,8 @@ main(
 				XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
 
 				// Our output target...
-				TextFileOutputStream	theOutputStream("foo.out");
-				XercesDOMPrintWriter	theResultWriter(theOutputStream);
-				XSLTResultTarget		theResultTarget(&theResultWriter);
+				const XalanDOMString	theOutputFileName("foo.out");
+				XSLTResultTarget		theResultTarget(theOutputFileName);
 
 				theProcessor.process(
 							theInputSource,

@@ -468,7 +468,7 @@ public:
 			assert(m_mutableNodeRefList != 0);
 		}
 
-#if defined(XALAN_CANNOT_MUTATE_ANONYMOUS_OBJECT)
+		// N.B. Non-const copy constructor semantics (like std::auto_ptr)
 		BorrowReturnMutableNodeRefList(const BorrowReturnMutableNodeRefList&	theSource) :
 			m_xpathExecutionContext(theSource.m_xpathExecutionContext),
 			m_mutableNodeRefList(theSource.m_mutableNodeRefList)
@@ -477,17 +477,6 @@ public:
 
 			((BorrowReturnMutableNodeRefList&)theSource).m_mutableNodeRefList = 0;
 		}
-#else
-		// N.B. Non-const copy constructor semantics (like std::auto_ptr)
-		BorrowReturnMutableNodeRefList(BorrowReturnMutableNodeRefList&	theSource) :
-			m_xpathExecutionContext(theSource.m_xpathExecutionContext),
-			m_mutableNodeRefList(theSource.m_mutableNodeRefList)
-		{
-			assert(m_mutableNodeRefList != 0);
-
-			theSource.m_mutableNodeRefList = 0;
-		}
-#endif
 
 		~BorrowReturnMutableNodeRefList()
 		{

@@ -261,7 +261,9 @@ StylesheetHandler::processSpaceAttr(
 
 
 void
-StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
+StylesheetHandler::startElement(
+			const XMLCh* const	name,
+			AttributeList&		atts)
 {
 	// if we have apending exception, we don't want to even try to process this
 	if (m_exceptionPending == true)
@@ -1266,13 +1268,15 @@ StylesheetHandler::processInclude(
 
 
 void
-StylesheetHandler::endElement(const XMLCh* const name) 
+StylesheetHandler::endElement(const XMLCh* const name)
 {
 	// if we have apending exception, we don't want to even try to process this
 	if (m_exceptionPending == true)
 		return;
 
 	m_stylesheet.popNamespaces();
+
+	assert(m_elemStack.empty() == false);
 
 	m_lastPopped = m_elemStack.back();
 	m_elemStack.pop_back();

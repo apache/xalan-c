@@ -139,11 +139,12 @@ StylesheetRoot::StylesheetRoot(
 	m_defaultRule(0),
 	m_defaultRootRule(0)
 {
-		const XalanDOMString urlString = constructionContext.getURLStringFromString(m_baseIdent);
-		if (length(urlString) != 0)
-		{
-			m_importStack.push_back(urlString);
-		}
+	const XalanDOMString urlString = constructionContext.getURLStringFromString(m_baseIdent);
+
+	if (length(urlString) != 0)
+	{
+		m_importStack.push_back(urlString);
+	}
 }				
 
 

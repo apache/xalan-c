@@ -112,6 +112,7 @@
 
 
 // Forward definitions
+class DOMSupport;
 class GenerateEvent;
 class PrintWriter;
 class ResultTreeFragBase;
@@ -197,6 +198,7 @@ public:
 			XMLParserLiaison&	parserLiaison,
 			XPathSupport&		xpathSupport,
 			XPathEnvSupport&	xpathEnvSupport,
+			DOMSupport&			domSupport,
 			XObjectFactory& 	xobjectFactory,
 			XPathFactory&		xpathFactory);
 
@@ -1620,6 +1622,8 @@ public:
 	XPathSupport&		m_xpathSupport;
 
 	XPathEnvSupport&	m_xpathEnvSupport;
+
+	DOMSupport&			m_domSupport;
 
 	/**
 	 * The listener for formatting events.	This should be 

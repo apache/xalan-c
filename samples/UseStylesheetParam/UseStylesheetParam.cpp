@@ -24,10 +24,9 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
-#include <XercesPlatformSupport/TextFileOutputStream.hpp>
-#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
 
 int
 main(
@@ -58,24 +57,23 @@ main(
 
 			// Get the stylesheet parameter key (name) and
 			// expression (a string expression).
-			const DOMString		paramKey(argv[1]);
-			const DOMString		paramExpression(argv[2]);
+			const XalanDOMString	paramKey(argv[1]);
+			const XalanDOMString	paramExpression(argv[2]);
 
 			// Set up input and output objects for the transformation.
 			// Assumption: the executable is run from the directory
 			// containing the input files. 
-			const DOMString		theXMLFileName("foo.xml");
-			const DOMString		theXSLFileName("foo.xsl");
-			XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
-			XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
+			const XalanDOMString	theXMLFileName("foo.xml");
+			const XalanDOMString	theXSLFileName("foo.xsl");
+			XSLTInputSource			theInputSource(c_wstr(theXMLFileName));
+			XSLTInputSource			theStylesheetSource(c_wstr(theXSLFileName));
  
 			// The output target...
-			TextFileOutputStream	theOutputStream("foo.out");
-			XercesDOMPrintWriter	theResultWriter(theOutputStream);
-			XSLTResultTarget		theResultTarget(&theResultWriter);
+			const XalanDOMString	theOutputFile("foo.out");
+			XSLTResultTarget		theResultTarget(theOutputFile);
 
 			// Create the support objects that are necessary for running the processor...
-			DOMSupportDefault				theDOMSupport;
+			XercesDOMSupport				theDOMSupport;
 			XercesParserLiaison				theParserLiaison(theDOMSupport);
 			XPathSupportDefault				theXPathSupport(theDOMSupport);
 			XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
@@ -87,6 +85,7 @@ main(
 						theParserLiaison,
 						theXPathSupport,
 						theXSLTProcessorEnvSupport,
+						theDOMSupport,
 						theXObjectFactory,
 						theXPathFactory);
 

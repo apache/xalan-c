@@ -84,6 +84,9 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
 #include <PlatformSupport/XalanAutoPtr.hpp>
+#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
+#include <PlatformSupport/XalanFileOutputStream.hpp>
+#include <PlatformSupport/XalanStdOutputStream.hpp>
 
 
 
@@ -98,12 +101,6 @@
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
-
-
-
-#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
-#include <XercesPlatformSupport/TextFileOutputStream.hpp>
-#include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
 
 
 
@@ -648,16 +645,16 @@ createFormatter(
 
 
 
-TextOutputStream*
+XalanOutputStream*
 createOutputStream(const CmdLineParams&		params)
 {
 	if (params.outFileName.empty())
 	{
-		return new XercesStdTextOutputStream(cout);
+		return new XalanStdOutputStream(cout);
 	}
 	else
 	{
-		return new TextFileOutputStream(c_str(params.outFileName));
+		return new XalanFileOutputStream(c_str(params.outFileName));
 	}
 }
 
@@ -729,8 +726,8 @@ xsltMain(const CmdLineParams&	params)
 	/**
 	 * The default diagnostic writer...
 	 */
-	XercesStdTextOutputStream				theStdErr(cerr);
-	XercesDOMPrintWriter					diagnosticsWriter(theStdErr);
+	XalanStdOutputStream				theStdErr(cerr);
+	XalanOutputStreamPrintWriter		diagnosticsWriter(theStdErr);
 
 	XercesDOMSupport		theDOMSupport;
 	XercesParserLiaison		xmlParserLiaison(theDOMSupport);
@@ -763,8 +760,10 @@ xsltMain(const CmdLineParams&	params)
 				diagnosticsWriter));
 
 	XSLTEngineImpl processor(
-			xmlParserLiaison, theXPathSupport,
+			xmlParserLiaison,
+			theXPathSupport,
 			theXSLProcessorSupport,
+			theDOMSupport,
 			theXObjectFactory,
 			theXPathFactory);
 
@@ -835,10 +834,10 @@ xsltMain(const CmdLineParams&	params)
 		stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
 	}
 
-	XalanAutoPtr<TextOutputStream>	outputFileStream(createOutputStream(params));
+	XalanAutoPtr<XalanOutputStream>		outputFileStream(createOutputStream(params));
 	assert(outputFileStream.get() != 0);
 
-	XercesDOMPrintWriter	resultWriter(*outputFileStream.get());
+	XalanOutputStreamPrintWriter	resultWriter(*outputFileStream.get());
 
 	const XalanAutoPtr<FormatterListener>	formatter(
 			createFormatter(
@@ -1084,28 +1083,62 @@ main(
 			{
 				cout << "\nXSLException ";
 
+#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
+				cout << "Type is : ";
+
+				OutputString(cout, e.getType());
+
+				cout << endl;
+
+				cout << "Message is : ";
+
+				OutputString(cout, e.getMessage());
+
+				cout << endl;
+#else
 				cout << "Type is : " << e.getType() << endl;
 
 				cout << "Message is : " << e.getMessage() << endl;
-
+#endif
 				theResult = -1;
 			}
 			catch (SAXException& e)
 			{
 				cout << "\nSAXException ";
 
+#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
+				cout << "Message is : ";
+
+				OutputString(cout, e.getMessage());
+
+				cout << endl;
+#else
 				cout << "Message is : " << e.getMessage() << endl;
 
+#endif
 				theResult = -2;
 			}
 			catch (XMLException& e)
 			{
 				cout << "\nXMLException ";
 
+#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
+				cout << "Type is : ";
+
+				OutputString(cout, e.getType());
+
+				cout << endl;
+
+				cout << "Message is : ";
+
+				OutputString(cout, e.getMessage());
+
+				cout << endl;
+#else
 				cout << "Type is : " << e.getType() << endl;
 
 				cout << "Message is : " << e.getMessage() << endl;
-
+#endif
 				theResult = -3;
 			}
 			catch(const XalanDOMException&	e)

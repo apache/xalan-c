@@ -68,7 +68,6 @@
 
 
 
-class XSLTEngineImpl;
 class AttributeList;
 
 
@@ -143,53 +142,44 @@ public:
 	/** 
 	 * Constructor for startDocument, endDocument events.
 	 * 
-	 * @param processor XSLT Processor instance
 	 * @param eventType one of the EVENTTYPE_XXX constants
 	 */
-	GenerateEvent(
-			XSLTEngineImpl*		processor,
-			EventType			eventType);
+	GenerateEvent(EventType		eventType);
 	
 	/** 
 	* Constructor for startElement, endElement events.
 	* 
-	* @param processor XSLT Processor Instance
 	* @param eventType one of the EVENTTYPE_XXX constants
 	* @param name      name of the element
 	* @param atts      SAX attribute list
 	*/
 	GenerateEvent(
-			XSLTEngineImpl*			processor,
 			EventType				eventType,
 			const XalanDOMString&	name,
 			AttributeList*			atts);
 	
 	/** 
 	* Constructor for characters, cdate events.
-	* 
-	* @param processor XSLT Processor instance
+	*
 	* @param eventType one of the EVENTTYPE_XXX constants
 	* @param ch        char array from the SAX event
 	* @param start     start offset to be used in the char array
 	* @param length    end offset to be used in the chara array
 	*/
 	GenerateEvent(
-			XSLTEngineImpl*			processor,
 			EventType				eventType,
-			const XalanDOMString&	ch,
+			const XalanDOMChar*		ch,
 			unsigned int			start,
 			unsigned int			length);
 	
 	/** 
 	* Constructor for processingInstruction events.
 	* 
-	* @param processor instance of the XSLT processor
 	* @param eventType one of the EVENTTYPE_XXX constants
 	* @param name      name of the processing instruction
 	* @param data      processing instruction data
 	*/
 	GenerateEvent(
-			XSLTEngineImpl*			processor,
 			EventType				eventType,
 			const XalanDOMString&	name,
 			const XalanDOMString&	data);
@@ -202,7 +192,6 @@ public:
 	* @param data      comment or entity ref data
 	*/
 	GenerateEvent(
-			XSLTEngineImpl*			processor,
 			EventType				eventType,
 			const XalanDOMString&	data);
 
@@ -242,10 +231,6 @@ public:
 	 * The current attribute list.
 	 */
 	AttributeList*		m_pAtts;
-	
-private:
-
-	XSLTEngineImpl*		m_pProcessor;
 };
 
 

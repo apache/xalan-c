@@ -88,6 +88,8 @@
 #include <PlatformSupport/DirectoryEnumerator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
+#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
+#include <PlatformSupport/XalanStdOutputStream.hpp>
 
 
 
@@ -113,8 +115,6 @@
 
 
 
-#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
-#include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
 
@@ -1257,7 +1257,7 @@ RunTests(
 		     theXPathEnvSupport,
 			 theXPathSupport,
 			 theLiaison,
-			 XALAN_STATIC_UCODE_STRING("/testsuite/conf/Axes/"),
+			 XALAN_STATIC_UCODE_STRING("/xsl-test/conf/Axes/"),
 			 thePrintWriter,
 		     theExecutionContext);
 }
@@ -1296,9 +1296,9 @@ main(int			/* argc */,
 															theXPathSupport,
 															theXObjectFactory);
 
-		XercesStdTextOutputStream	theStdOut(cout);
-		XercesDOMPrintWriter		thePrintWriter(theStdOut);
-		XercesParserLiaison			theLiaison(theDOMSupport);
+		XalanStdOutputStream			theStdOut(cout);
+		XalanOutputStreamPrintWriter	thePrintWriter(theStdOut);
+		XercesParserLiaison				theLiaison(theDOMSupport);
 
 		RunTests(theXPathFactory,
 				 theXPathProcessor,

@@ -15,7 +15,6 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <DOMSupport/DOMSupportDefault.hpp>
 
 
 
@@ -36,12 +35,8 @@
 
 
 
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
-
-
-
-#include <XercesPlatformSupport/TextFileOutputStream.hpp>
-#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
 
 
 
@@ -75,7 +70,7 @@ main(
 				XSLTInit						theInit;
 
 				// Create the support objects that are necessary for running the processor...
-				DOMSupportDefault				theDOMSupport;
+				XercesDOMSupport				theDOMSupport;
 				XercesParserLiaison				theParserLiaison(theDOMSupport);
 				XPathSupportDefault				theXPathSupport(theDOMSupport);
 				XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
@@ -87,6 +82,7 @@ main(
 						theParserLiaison,
 						theXPathSupport,
 						theXSLTProcessorEnvSupport,
+						theDOMSupport,
 						theXObjectFactory,
 						theXPathFactory);
 
@@ -114,11 +110,10 @@ main(
 							theXPathSupport,
 							theXObjectFactory);
 
-				// Our input files.  The assumption is that the executable will be run
+				// Our input file.  The assumption is that the executable will be run
 				// from same directory as the input files.
-				const XalanDOMString		theXMLFileName("foo.xml");
-				const XalanDOMString		theXSLFileName("foo.xsl");
-				
+				const XalanDOMString	theXSLFileName("foo.xsl");
+
 				// Our stylesheet input source...
 				XSLTInputSource			theStylesheetSource(c_wstr(theXSLFileName));
 

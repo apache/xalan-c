@@ -1,25 +1,38 @@
 // Base header file.  Must be first.
 #include <Include/PlatformDefinitions.hpp>
 
+
+
 #include <iostream>
 #include <fstream>
 
+
+
 #include <util/PlatformUtils.hpp>
 
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
+#include <PlatformSupport/XalanStdOutputStream.hpp>
+
+
 
 #include <DOMSupport/DOMSupportDefault.hpp>
+
+
 
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
 
-#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
-#include <XercesPlatformSupport/TextFileOutputStream.hpp>
-#include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
 
+
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
+
+
 
 #include <XSLT/XSLTEngineImpl.hpp>
 #include <XSLT/XSLTInit.hpp>
@@ -91,7 +104,7 @@ main(
 			XSLTInit						theInit;
 
 			// Create the support objects that are necessary for running the processor...
-			DOMSupportDefault				theDOMSupport;
+			XercesDOMSupport				theDOMSupport;
 			XercesParserLiaison				theParserLiaison(theDOMSupport);
 			XPathSupportDefault				theXPathSupport(theDOMSupport);
 			XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
@@ -103,6 +116,7 @@ main(
 						theParserLiaison,
 						theXPathSupport,
 						theXSLTProcessorEnvSupport,
+						theDOMSupport,
 						theXObjectFactory,
 						theXPathFactory);
 
@@ -132,13 +146,12 @@ main(
 			XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
 
 			// Our output target...
-			TextFileOutputStream	theOutputStream("birds.out");
-			XercesDOMPrintWriter	theResultWriter(theOutputStream);
-			XSLTResultTarget		theResultTarget(&theResultWriter);
+			const XalanDOMString	theOutputFile("birds.out");
+			XSLTResultTarget		theResultTarget(theOutputFile);
 
 			// Set up a diagnostic writer to be used by the TraceListener...
-			XercesStdTextOutputStream				theStdErr(cerr);
-			XercesDOMPrintWriter					diagnosticsWriter(theStdErr);
+			XalanStdOutputStream			theStdErr(cerr);
+			XalanOutputStreamPrintWriter	diagnosticsWriter(theStdErr);
 
 			// Set up the TraceListener... 
 			TraceListenerDefault		theTraceListener(				

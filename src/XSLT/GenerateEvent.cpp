@@ -58,24 +58,20 @@
 
 
 
-GenerateEvent::GenerateEvent(
-			XSLTEngineImpl*		processor,
-			EventType			eventType) :
+GenerateEvent::GenerateEvent(EventType	eventType) :
 	m_eventType(eventType),
 	m_characters(),
 	m_start(0),
 	m_length(0),
 	m_name(),
 	m_data(),
-	m_pAtts(0),
-	m_pProcessor(processor)
+	m_pAtts(0)
 {
 }
 
 
 
 GenerateEvent::GenerateEvent(
-			XSLTEngineImpl*			processor,
 			EventType				eventType,
 			const XalanDOMString&	name,
 			AttributeList*			atts) :
@@ -85,34 +81,30 @@ GenerateEvent::GenerateEvent(
 	m_length(0),
 	m_name(name),
 	m_data(),
-	m_pAtts(atts),
-	m_pProcessor(processor)
+	m_pAtts(atts)
 {
 }
 
 
 
 GenerateEvent::GenerateEvent(
-			XSLTEngineImpl*			processor,
 			EventType				eventType,
-			const XalanDOMString&	ch,
+			const XalanDOMChar*		ch,
 			unsigned int			start,
 			unsigned int			length) :
 	m_eventType(eventType),
-	m_characters(ch),
+	m_characters(ch + start, length),
 	m_start(start),
 	m_length(length),
 	m_name(),
 	m_data(),
-	m_pAtts(0),
-	m_pProcessor(processor)
+	m_pAtts(0)
 {
 }
 
 
 
 GenerateEvent::GenerateEvent(
-			XSLTEngineImpl*			processor,
 			EventType				eventType,
 			const XalanDOMString&	name,
 			const XalanDOMString&	data) :
@@ -122,15 +114,13 @@ GenerateEvent::GenerateEvent(
 	m_length(0),
 	m_name(name),
 	m_data(data),
-	m_pAtts(0),
-	m_pProcessor(processor)
+	m_pAtts(0)
 {
 }
 
 
 
 GenerateEvent::GenerateEvent(
-			XSLTEngineImpl*			processor,
 			EventType				eventType,
 			const XalanDOMString&	data) :
 	m_eventType(eventType),
@@ -139,7 +129,6 @@ GenerateEvent::GenerateEvent(
 	m_length(0),
 	m_name(),
 	m_data(data),
-	m_pAtts(0),
-	m_pProcessor(processor)
+	m_pAtts(0)
 {
 }

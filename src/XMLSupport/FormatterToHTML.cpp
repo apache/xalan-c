@@ -89,7 +89,7 @@
 
 
 
-#if defined(XALAN_WIDE_STRING_UCODE_PROBLEM)
+#if !defined(XALAN_LSTRSUPPORT)
 static const char* const	theHTMLSymbols1[] = 
 {
 	"Alpha",    "Beta",
@@ -138,7 +138,7 @@ static const XalanDOMChar* const	theHTMLSymbols2[] =
 #endif
 
 
-#if defined(XALAN_WIDE_STRING_UCODE_PROBLEM)
+#if !defined(XALAN_LSTRSUPPORT)
 static const char* const	theHTMLLatin1Symbols[] = 
 {
 	"nbsp",    "iexcl",    "cent",    "pound",

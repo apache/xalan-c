@@ -67,7 +67,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/TextOutputStream.hpp>
+#include <PlatformSupport/XalanOutputStream.hpp>
 #include <PlatformSupport/Writer.hpp>
 
 
@@ -147,7 +147,7 @@ FormatterToXML::FormatterToXML(
 
 	if (isEmpty(m_encoding) == false)
 	{
-		TextOutputStream* const		theStream = m_writer.getStream();
+		XalanOutputStream* const		theStream = m_writer.getStream();
 
 		if (theStream != 0)
 		{

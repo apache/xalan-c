@@ -92,7 +92,7 @@ ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 	}
 	else
 	{
-#if defined(XALAN_ICU_BRIDGE_UCHAR_MISMATCH)
+#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 
 		// Create a buffer to copy out the UnicodeString data...
 		UCharVectorType		theBuffer;
@@ -135,7 +135,7 @@ ICUBridge::XalanDOMStringToUnicodeString(const XalanDOMString&	theString)
 const XalanDOMString
 ICUBridge::UnicodeStringToXalanDOMString(const UnicodeString&		theString)
 {
-#if defined(XALAN_ICU_BRIDGE_UCHAR_MISMATCH)
+#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 
 	// If XalanDOMChar is larger than the ICU's UChar, we have to more work...
 	const int32_t	theLength = theString.length();
@@ -179,7 +179,7 @@ ICUBridge::UnicodeStringToXalanDOMString(
 			const UnicodeString&	theString,
 			XalanDOMString&			theResult)
 {
-#if defined(XALAN_ICU_BRIDGE_UCHAR_MISMATCH)
+#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 	
 	// If XalanDOMChar is larger than the ICU's UChar, we have to more work.
 	// Don't bother to provide the optimized version, just call to the
@@ -327,7 +327,7 @@ ICUBridge::collationCompare(
 	{
 		// OK, do the compare...
 		return theCollator->compare(
-#if defined(XALAN_ICU_BRIDGE_UCHAR_MISMATCH)
+#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 					XalanDOMCharStringToUnicodeString(theLHS),
 					XalanDOMCharStringToUnicodeString(theRHS));
 #else

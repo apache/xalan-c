@@ -139,7 +139,6 @@ ElemTemplateElement::ElemTemplateElement(
 	m_fakeAttributes(),
 	m_baseIndentifier(stylesheetTree.getCurrentIncludeBaseIdentifier())
 {
-	assert(length(m_baseIndentifier) > 0);
 }
 
 

@@ -98,10 +98,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\AttributeListImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\Cloneable.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\PlatformSupport\DOMStringHelper.cpp
 # End Source File
 # Begin Source File
@@ -146,10 +142,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\StringTokenizer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\TextOutputStream.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\PlatformSupport\URISupport.cpp
 # End Source File
 # Begin Source File
@@ -170,7 +162,39 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormatSymbols.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanNullOutputStream.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanNumberFormat.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStream.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStreamPrintWriter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanStdOutputStream.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanToXercesTranscoderWrapper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanTranscodingServices.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanUTF16Transcoder.cpp
 # End Source File
 # Begin Source File
 
@@ -191,10 +215,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\ArenaBlock.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\AttributeListImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\Cloneable.hpp
 # End Source File
 # Begin Source File
 
@@ -258,10 +278,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\StringTokenizer.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\TextOutputStream.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\PlatformSupport\URISupport.hpp
 # End Source File
 # Begin Source File
@@ -290,11 +306,43 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormatSymbols.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanNullOutputStream.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanNumberFormat.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStreamPrintWriter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanStdOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanToXercesTranscoderWrapper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanTranscodingServices.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanUnicode.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanUTF16Transcoder.hpp
 # End Source File
 # Begin Source File
 
