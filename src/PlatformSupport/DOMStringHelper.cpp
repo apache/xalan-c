@@ -1460,7 +1460,7 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 
 	wchar_t			theBuffer[MAX_PRINTF_DIGITS + 1];
 
-	wchar_t*		thePointer = &theBuffer[MAX_PRINTF_DIGITS + 1];
+	wchar_t*		thePointer = &theBuffer[MAX_PRINTF_DIGITS];
 	wchar_t* const	theEnd = thePointer;
 
 	// Null terminate it...
