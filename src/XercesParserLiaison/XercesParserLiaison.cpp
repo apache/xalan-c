@@ -59,10 +59,6 @@
 
 
 
-#include <algorithm>
-
-
-
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
 #else
@@ -162,10 +158,18 @@ XercesParserLiaison::reset()
 	{
 		if ((*i).second.m_isDeprecated == false)
 		{
+#if defined(XALAN_CANNOT_DELETE_CONST)
+			delete (DOMDocument*)(*i).second.m_wrapper->getXercesDocument();
+#else
 			delete (*i).second.m_wrapper->getXercesDocument();
+#endif
 		}
 
+#if defined(XALAN_CANNOT_DELETE_CONST)
+		delete (XalanDocument*)(*i).first;
+#else
 		delete (*i).first;
+#endif
 	}
 
 	m_documentMap.clear();
