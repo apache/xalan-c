@@ -128,6 +128,7 @@
 #include <XPath/XPathEnvSupportDefault.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathExpression.hpp>
+#include <XPath/XPathFactoryBlock.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 #include <XPath/XPathFunctionTable.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
@@ -212,7 +213,7 @@ foo()
 #endif
 
 	{		
-		XObjectFactoryDefault::CollectionType 	theVector;
+		XObjectFactoryDefault::XObjectCollectionType 	theVector;
 		XObjectFactoryDefault			theFactory;
 		
 		for_each(theVector.begin(),
