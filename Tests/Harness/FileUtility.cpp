@@ -307,15 +307,16 @@ FileUtility::compareResults(const XalanDOMString& theOutputFile,
 	XalanDocument* goldDom = parserLiaison.parseXMLStream(goldInputSource);
 	if ( domCompare(*goldDom, *dom, fileName) )
 	{
-		cout << endl << "Passed: " << c_str(TranscodeToLocalCodePage(fileName));
+		cout << endl << "Passed:  " << c_str(TranscodeToLocalCodePage(fileName)) << endl;
 	}
 
 }
 
-void
+bool
 FileUtility::compareSerializedResults(const XSLTInputSource& transformResult,
 									const XSLTInputSource& goldInputSource,
-									XalanDOMString fileName, const char* testCase)
+									XalanDOMString fileName , const char* testCase
+									)
 {
 	XalanSourceTreeDOMSupport domSupport;
 	XalanSourceTreeParserLiaison parserLiaison(domSupport);
@@ -325,9 +326,13 @@ FileUtility::compareSerializedResults(const XSLTInputSource& transformResult,
 	XalanDocument* transformDom = parserLiaison.parseXMLStream(transformResult);
 	if ( domCompare(*goldDom, *transformDom, fileName) )
 	{
-		cout << endl << "Passed: " << testCase;
+		return true;
+		//cout << endl << "Passed: " << testCase;
 	}
-
+	else 
+	{
+		return false;
+	}
 }
 
 /*	This routine performs a DOM Comparision. 
@@ -355,8 +360,13 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc,  const Xala
 
 	if (goldNodeType != docNodeType)
 	{
+		collectData("Error: NodeType mismatch.",
+					docNodeName,
+					XalanDOMString(xalanNodeTypes[docNodeType]),
+					XalanDOMString(xalanNodeTypes[goldNodeType]));
+
 		reportDOMError(fileName, docNodeName, "Error: NodeType mismatch. Expected: ");
-		cout << xalanNodeTypes[goldNodeType];				
+		cout << xalanNodeTypes[goldNodeType] << endl;				
 		return false;
 	}
 
@@ -381,9 +391,14 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc,  const Xala
 		
 		if(goldNodeValue != docNodeValue)
 		{
+			collectData("Error: Text node mismatch. ", 
+						 docNodeName,
+						 goldNodeValue,
+						 docNodeValue);
+
 			reportDOMError(fileName, docNodeName, "Error: Text node mismatch. Expected: ");
-			cout << c_str(TranscodeToLocalCodePage(goldNodeValue));
-			cout << c_str(TranscodeToLocalCodePage(docNodeValue));
+			cout << c_str(TranscodeToLocalCodePage(goldNodeValue)) << endl;
+			cout << c_str(TranscodeToLocalCodePage(docNodeValue)) << endl;
 			return false;
 		}
 
@@ -402,8 +417,13 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc,  const Xala
 			}
 			else
 			{
+				collectData("Error: Element missing SiblingNode. ", 
+						 docNodeName,
+						 goldNextNode->getNodeName(),
+						 goldNextNode->getNodeName());
+
 				reportDOMError(fileName, docNodeName, "Error: Element missing SiblingNode. Expected: ");
-				cout << c_str(TranscodeToLocalCodePage(goldNextNode->getNodeName()));
+				cout << c_str(TranscodeToLocalCodePage(goldNextNode->getNodeName())) << endl;
 				return false;
 			}
 		}
@@ -427,6 +447,7 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc,  const Xala
 
 		if (goldNodeName != docNodeName)  
 		{
+			assert(goldNodeName != docNodeName);
 			reportDOMError(fileName, docNodeName, "Error: Missing Document Node");
 		}
 		else
@@ -495,25 +516,28 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc, const Xala
 	// same.  So specific checks of these items are not necessary.
 	if (goldNodeName != docNodeName)
 	{
+		
+		collectData("Error: Element mismatch. ", 
+						 docNodeName,
+						 goldNodeName,
+						 docNodeName);
+		
 		reportDOMError(fileName, docNodeName, "Error: Element mismatch. Expected: ");
-		cout << c_str(TranscodeToLocalCodePage(goldNodeName));		
+		cout << c_str(TranscodeToLocalCodePage(goldNodeName)) << endl;		
 		return false;
 	}
 
 	if ( goldNsUri != docNsUri)
 	{
+
+		collectData("Error: Element NamespaceURI mismatch. ",
+						 docNodeName,
+						 goldNsUri,
+						 docNsUri);
 		reportDOMError(fileName, docNodeName, "Error: Element NamespaceURI mismatch. Expected: ");
-		cout << c_str(TranscodeToLocalCodePage(goldNsUri));
+		cout << c_str(TranscodeToLocalCodePage(goldNsUri)) << endl;
 		return false;
 	}
-
-	if ( goldNsUri != docNsUri)
-	{
-		reportDOMError(fileName, docNodeName, "Error: Element NamespaceURI mismatch. Expected: ");
-		cout << c_str(TranscodeToLocalCodePage(goldNsUri));
-		return false;
-	}
-
 
 	// Get Attributes for each Element Node. 
 	const XalanNamedNodeMap	*goldAttrs = gold.getAttributes();
@@ -541,16 +565,29 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc, const Xala
 			}
 			else
 			{
+				collectData("Error: Element missing named Attribute. ",
+						 docNodeName,
+						 goldAttrName,
+						 XalanDOMString("NOTHING"));
+				
 				reportDOMError(fileName, docNodeName, "Error: Element missing named Attribute. Expected: ");
-				cout << c_str(TranscodeToLocalCodePage(goldAttrName));
+				cout << c_str(TranscodeToLocalCodePage(goldAttrName)) << endl;
 				return false;
 			}
 		}
 	}
 	else
 	{
+		char  buf1[2], buf2[2];
+		sprintf(buf1, "%d", numGoldAttr);
+		sprintf(buf2, "%d", numDomAttr);
+		collectData("Error: Elements don't have same number of attributes. ",
+						 docNodeName,
+						 XalanDOMString(buf1),
+						 XalanDOMString(buf2));
+
 		reportDOMError( fileName, docNodeName, "Error: Elements don't have same number of attributes. Expected: ");
-		cout << numGoldAttr;;
+		cout << numGoldAttr << endl;
 		return false;
 	}
 
@@ -569,8 +606,12 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc, const Xala
 		}
 		else
 		{
+			collectData("Error: Element missing ChildNode. ", 
+						 docNodeName,
+						 XalanDOMString(goldNextNode->getNodeName()),
+						 XalanDOMString("NOTHING"));
 			reportDOMError(fileName, docNodeName, "Error: Element missing ChildNode. Expected: ");
-			cout <<  c_str(TranscodeToLocalCodePage(goldNextNode->getNodeName()));
+			cout <<  c_str(TranscodeToLocalCodePage(goldNextNode->getNodeName())) << endl;
 			return false;
 		}
 	}
@@ -587,19 +628,39 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc, const Xala
 		}
 		else
 		{
+			collectData("Error: Element missing SiblingNode. ", 
+						 docNodeName,
+						 XalanDOMString(goldNextNode->getNodeName()),
+						 XalanDOMString("NOTHING"));
+
 			reportDOMError(fileName, docNodeName, "Error: Element missing SiblingNode. Expected: ");
-			cout << c_str(TranscodeToLocalCodePage(goldNextNode->getNodeName()));
+			cout << c_str(TranscodeToLocalCodePage(goldNextNode->getNodeName())) << endl;
 			return false;
 		}
 	}
 	else if ( domNextNode)
 	{
-			reportDOMError(fileName, docNodeName, "Error: Transformed Doc has additional sibling nodes: ");
-			cout << c_str(TranscodeToLocalCodePage(domNextNode->getNodeName())) << endl; 
+
+
+//			reportDOMError(fileName, docNodeName, "Error: Transformed Doc has additional sibling nodes: ");
+//			cout << c_str(TranscodeToLocalCodePage(domNextNode->getNodeName())) << endl; 
 			if ( domNextNode->getNodeType() == XalanNode::TEXT_NODE)
 			{
-				cout << "	"
-					 << "\"" << c_str(TranscodeToLocalCodePage(domNextNode->getNodeValue())) << "\"" << endl;
+				collectData("Error: Transformed Doc has additional sibling nodes: ", 
+						docNodeName,
+						XalanDOMString("NOTHING"),		 
+						XalanDOMString(domNextNode->getNodeName()) + XalanDOMString("  \"") +
+						XalanDOMString(domNextNode->getNodeValue()) + XalanDOMString("\""));
+//				cout << "	"
+//					 << "\"" << c_str(TranscodeToLocalCodePage(domNextNode->getNodeValue())) << "\"" << endl;
+			}
+			else
+			{
+				collectData("Error: Transformed Doc has additional sibling node: ", 
+						docNodeName,
+						XalanDOMString("NOTHING"),		 
+						XalanDOMString(domNextNode->getNodeName()));
+
 			}
 			return false;
 
@@ -644,15 +705,25 @@ bool FileUtility::diffATTR(const XalanNode* gAttr, const XalanNode* dAttr, const
 
 	if (goldAttrValue != docAttrValue)
 	{
+		collectData("Error: Attribute Value mismatch. ",
+						 docAttrName,
+						 goldAttrValue,
+						 docAttrValue);
+
 		reportDOMError(fileName, docAttrName, "Error: Attribute Value mismatch. Expected: ");
-		cout << c_str(TranscodeToLocalCodePage(goldAttrValue));							
+		cout << c_str(TranscodeToLocalCodePage(goldAttrValue)) << endl;							
 		return false;
 	}
 
 	if (goldAttrNsUri != docAttrNsUri)
 	{
+		collectData("Error: Attribute NamespaceURI mismatch. ", 
+						 docAttrName,
+						 goldAttrNsUri,
+						 docAttrNsUri);
+
 		reportDOMError(fileName, docAttrName, "Error: Attribute NamespaceURI mismatch. Expected: ");
-		cout << c_str(TranscodeToLocalCodePage(goldAttrNsUri)); 						
+		cout << c_str(TranscodeToLocalCodePage(goldAttrNsUri)) << endl; 						
 		return false;
 	}
 
@@ -667,6 +738,7 @@ bool FileUtility::diffATTR(const XalanNode* gAttr, const XalanNode* dAttr, const
 //				
 */
 
+
 void
 FileUtility::reportDOMError( XalanDOMString file, XalanDOMString node, char* msg)
 {
@@ -674,5 +746,30 @@ FileUtility::reportDOMError( XalanDOMString file, XalanDOMString node, char* msg
 	cout << endl << "Failed "<< file << endl
 		 << "	Processing node : " << node << endl
 		 << "	" << msg ;
+}
+
+void
+FileUtility::reportDOMError()
+{
+
+	cout << endl << "** Failed "<< data.testOrFile 
+		 << "	" << data.msg << endl
+		 << "	" << "Processing Node: " << data.currentNode << endl
+		 << "	Expected: " << data.expected << endl
+		 << "	Actual: " << data.actual << endl;
+
+}
+
+void 
+FileUtility::collectData(char* errmsg, XalanDOMString currentnode, XalanDOMString expdata, XalanDOMString actdata)
+{
+
+	data.msg = errmsg;
+	data.currentNode = currentnode;
+	data.expected = expdata;
+	data.actual = actdata;
+
+	reportDOMError();
+
 }
 

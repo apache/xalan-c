@@ -126,11 +126,29 @@ class HARNESS_API FileUtility
 
 public:
 
+	struct reportStruct
+	{
+		XalanDOMString testOrFile;
+		char* msg;
+		XalanDOMString currentNode;
+		XalanDOMString actual;
+		XalanDOMString expected;
+
+		void reset()
+		{
+			clear(testOrFile);
+			msg = "";
+			clear(currentNode);
+			clear(actual);
+			clear(expected);
+		}
+	} data ;
+
 	/** Simple constructor, does not perform initialization.  */
 	FileUtility()
 	{
-
-			cout << endl << "Using Xerces Version " << gXercesFullVersionStr << endl;
+		//reportStruct data;
+		cout << endl << "Using Xerces Version " << gXercesFullVersionStr << endl;
 	}
 	
 	/** 
@@ -194,7 +212,12 @@ public:
 	/** 
 	* Simplified version of above.
 	*/
-	void
+//	void
+//	FileUtility::compareSerializedResults(const XSLTInputSource& transformResult,
+//								const XSLTInputSource& goldInputSource,
+//								XalanDOMString fileName, const char* testCase);
+
+	bool
 	FileUtility::compareSerializedResults(const XSLTInputSource& transformResult,
 								const XSLTInputSource& goldInputSource,
 								XalanDOMString fileName, const char* testCase);
@@ -241,6 +264,17 @@ public:
 	void 
 	FileUtility::reportDOMError( XalanDOMString file, XalanDOMString node, char* msg);
 
+	void
+	FileUtility::reportDOMError();
+
+
+private:
+
+void 
+FileUtility::collectData(char* errmsg, 
+						 XalanDOMString currentnode, 
+						 XalanDOMString actdata, 
+						 XalanDOMString expdata);
 
 };        // end of class FileUtility
 #endif
