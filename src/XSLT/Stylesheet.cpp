@@ -99,6 +99,7 @@
 #include "ElemTemplate.hpp"
 #include "ElemTemplateElement.hpp"
 #include "ElemVariable.hpp"
+#include "ExtensionNSHandler.hpp"
 #include "KeyTable.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
@@ -192,13 +193,18 @@ Stylesheet::~Stylesheet()
 	for_each(m_elemDecimalFormats.begin(),
 			 m_elemDecimalFormats.end(),
 			 DeleteFunctor<ElemDecimalFormat>());
-	
-	// Clean up the match pattern vector
-	PatternTableMapType::iterator	it = m_patternTable.begin();
 
-	for ( ; it != m_patternTable.end(); it++)
+	// Clean up the extension namespaces vector
+	for_each(m_extensionNamespaces.begin(),
+			 m_extensionNamespaces.end(),
+			 MapValueDeleteFunctor<ExtensionNamespacesMapType>());
+
+	// Clean up the match pattern vector
+	for (PatternTableMapType::const_iterator	it = m_patternTable.begin();
+			it != m_patternTable.end();
+				++it)
 	{
-		PatternTableListType&	theList = it->second;
+		const PatternTableListType&		theList = it->second;
 
 		for_each(theList.begin(),
 				 theList.end(),
@@ -623,7 +629,7 @@ Stylesheet::findTemplate(
 			// Points to the current list of match patterns.  Note
 			// that this may point to more than one table.
 			const PatternTableListType* 	matchPatternList = 0;
-			int targetNodeType = targetNode->getNodeType();
+			const XalanNode::NodeType		targetNodeType = targetNode->getNodeType();
 
 			switch(targetNodeType)
 			{
@@ -1061,7 +1067,10 @@ Stylesheet::MatchPattern2::~MatchPattern2()
 }
 
 
-void Stylesheet::addExtensionNamespace (const XalanDOMString& uri, ExtensionNSHandler* nsh)
+void
+Stylesheet::addExtensionNamespace(
+			const XalanDOMString&	uri,
+			ExtensionNSHandler*		nsh)
 {
 	m_extensionNamespaces.insert(ExtensionNamespacesMapType::value_type(uri, nsh));
 }
