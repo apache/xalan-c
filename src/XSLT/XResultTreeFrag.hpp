@@ -181,53 +181,12 @@ public:
 	void
 	set(ResultTreeFragBase*		theValue);
 
-	// This is a proxy class for result tree fragment to node-set
-	// conversion.
-	class XALAN_XSLT_EXPORT NodeRefListBaseProxy : public NodeRefListBase
-	{
-	public:
-
-		NodeRefListBaseProxy(const XResultTreeFrag&		theXResultTreeFrag);
-
-		virtual
-		~NodeRefListBaseProxy();
-
-		virtual XalanNode*
-		item(size_type	index) const;
-
-		virtual size_type
-		getLength() const;
-
-		virtual size_type
-		indexOf(const XalanNode*	theNode) const;
-
-	private:
-
-		// Not implemented...
-		NodeRefListBaseProxy(const NodeRefListBaseProxy&);
-
-		const XResultTreeFrag&	m_xresultTreeFrag;		
-	};
-
-	friend class NodeRefListBaseProxy;
-
 protected:
 
 	virtual void 
 	dereferenced();
 
 private:
-
-	// New member functions for node list compatibility...
-	XalanNode*
-	item(unsigned int	index) const;
-
-	unsigned int
-	getLength() const;
-
-	unsigned int
-	indexOf(const XalanNode*	theNode) const;
-
 
 	// Data members...
 	ResultTreeFragBase*				m_value;	
