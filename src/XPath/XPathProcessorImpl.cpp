@@ -609,7 +609,6 @@ XPathProcessorImpl::mapNSTokens(
 	}
 	else
 	{
-		// error(XalanDOMString("Could not locate namespace for prefix: ") + prefix);
 		addToTokenQueue(prefix);
 
 		addToTokenQueue(DOMServices::s_XMLNamespaceSeparatorString);
@@ -1883,6 +1882,10 @@ XPathProcessorImpl::Step()
 
 		// Tell how long the entire step is.
 		m_expression->updateOpCodeLength(opPos);
+	}
+	else if (tokenIs(XalanUnicode::charRightParenthesis) == false)
+	{
+		error("Unexpected token!");
 	}
 }
 
