@@ -167,7 +167,7 @@ XPath::executeMore(
 			int 					opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	switch(m_expression.m_opMap[opPos])
+	switch(m_expression.getOpCodeMapValue(opPos))
 	{
 	case XPathExpression::eOP_XPATH:
 		return executeMore(context, opPos + 2, executionContext);
@@ -175,10 +175,6 @@ XPath::executeMore(
 
 	case XPathExpression::eOP_MATCHPATTERN:
 		return matchPattern(context, opPos + 2, executionContext);
-		break;
-
-	case XPathExpression::eEMPTY:
-		opPos++;
 		break;
 
 	case XPathExpression::eOP_OR:
@@ -283,10 +279,12 @@ XPath::executeMore(
 
 	default:
 		{
-			const XalanDOMString	theOpCode = LongToDOMString(m_expression.m_opMap[opPos]);
+			XalanDOMString	theMessage("Unknown op code: ");
+			
+			LongToDOMString(m_expression.getOpCodeMapValue(opPos), theMessage);
 
 			executionContext.error(
-				TranscodeFromLocalCodePage("ERROR! Unknown op code: ") + theOpCode,
+				theMessage,
 				context,
 				m_locator);
 		}
@@ -335,7 +333,14 @@ XPath::getMatchScore(
 {
 	eMatchScore		score = eMatchScoreNone;
 
-	if(m_expression.m_opMap[0] == XPathExpression::eOP_MATCHPATTERN)
+	if(m_expression.getOpCodeMapValue(0) != XPathExpression::eOP_MATCHPATTERN)
+	{
+		executionContext.error(
+			TranscodeFromLocalCodePage("Expected match pattern in getMatchScore!"),
+			node,
+			m_locator);
+	}
+	else
 	{
 		assert(node != 0);
 
@@ -356,13 +361,6 @@ XPath::getMatchScore(
 
 			doGetMatchScore(node, executionContext, score);
 		}
-	}
-	else
-	{
-		executionContext.error(
-			TranscodeFromLocalCodePage("Expected match pattern in getMatchScore!"),
-			node,
-			m_locator);
 	}
 	
 	return score;
@@ -629,19 +627,13 @@ XPath::Or(
 {
 	opPos += 2;
 
-	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
-	assert(expr1.get() != 0);
-
-	bool	fResult = expr1->boolean();
+	bool	fResult = executeMore(context, opPos, executionContext)->boolean();
 
 	if(fResult == false)
 	{
-		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+		opPos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
-		assert(expr2.get() != 0);
-
-		fResult = expr2->boolean();
+		fResult = executeMore(context, opPos, executionContext)->boolean();
 	}
 
 	return executionContext.getXObjectFactory().createBoolean(fResult);
@@ -659,17 +651,11 @@ XPath::And(
 
 	opPos += 2;	
 
-	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
-	assert(expr1.get() != 0);
-
-	if (expr1->boolean() == true)
+	if (executeMore(context, opPos, executionContext)->boolean() == true)
 	{
-		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+		opPos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
-		assert(expr2.get() != 0);
-
-		if (expr2->boolean() == true)
+		if (executeMore(context, opPos, executionContext)->boolean() == true)
 		{
 			fResult = true;
 		}
@@ -691,12 +677,12 @@ XPath::notequals(
 	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
-	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
-	assert(expr2.get() != 0);
-
-	return executionContext.getXObjectFactory().createBoolean(expr1->notEquals(*expr2.get(), executionContext));
+	return executionContext.getXObjectFactory().createBoolean(
+		expr1->notEquals(
+			*executeMore(context, opPos, executionContext).get(),
+			executionContext));
 }
 
 
@@ -712,12 +698,12 @@ XPath::equals(
 	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
-	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
-	assert(expr2.get() != 0);
-
-	return executionContext.getXObjectFactory().createBoolean(expr1->equals(*expr2.get(), executionContext));
+	return executionContext.getXObjectFactory().createBoolean(
+		expr1->equals(
+			*executeMore(context, opPos, executionContext).get(),
+			executionContext));
 }
 
 
@@ -733,12 +719,12 @@ XPath::lte(
 	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
-	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
-	assert(expr2.get() != 0);
-
-	return executionContext.getXObjectFactory().createBoolean(expr1->lessThanOrEquals(*expr2.get(), executionContext));
+	return executionContext.getXObjectFactory().createBoolean(
+		expr1->lessThanOrEquals(
+			*executeMore(context, opPos, executionContext).get(),
+			executionContext));
 }
 
 
@@ -754,12 +740,12 @@ XPath::lt(
 	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
-	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
-	assert(expr2.get() != 0);
-
-	return executionContext.getXObjectFactory().createBoolean(expr1->lessThan(*expr2.get(), executionContext));
+	return executionContext.getXObjectFactory().createBoolean(
+		expr1->lessThan(
+			*executeMore(context, opPos, executionContext).get(),
+			executionContext));
 }
 
 
@@ -775,12 +761,12 @@ XPath::gte(
 	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
-	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
-	assert(expr2.get() != 0);
-
-	return executionContext.getXObjectFactory().createBoolean(expr1->greaterThanOrEquals(*expr2.get(), executionContext));
+	return executionContext.getXObjectFactory().createBoolean(
+		expr1->greaterThanOrEquals(
+			*executeMore(context, opPos, executionContext).get(),
+			executionContext));
 }
 
 
@@ -796,12 +782,12 @@ XPath::gt(
 	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
-	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
-	assert(expr2.get() != 0);
-
-	return executionContext.getXObjectFactory().createBoolean(expr1->greaterThan(*expr2.get(), executionContext));
+	return executionContext.getXObjectFactory().createBoolean(
+		expr1->greaterThan(
+			*executeMore(context, opPos, executionContext).get(),
+			executionContext));
 }
 
 
@@ -812,11 +798,12 @@ XPath::getNumericOperand(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	if (m_expression.m_opMap[opPos] == XPathExpression::eOP_NUMBERLIT)
+	if (m_expression.getOpCodeMapValue(opPos) == XPathExpression::eOP_NUMBERLIT)
 	{
-		assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[opPos + 3]));
+		assert(m_expression.m_tokenQueue.size() >
+			unsigned(m_expression.getOpCodeMapValue(opPos + 3)));
 
-		return m_expression.getNumberLiteral(m_expression.m_opMap[opPos + 2]);
+		return m_expression.getNumberLiteral(m_expression.getOpCodeMapValue(opPos + 2));
 	}
 	else
 	{
@@ -836,9 +823,9 @@ XPath::plus(
 
 	const double	expr1 = getNumericOperand(context, opPos, executionContext);
 
-	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const double	expr2 = getNumericOperand(context, expr2Pos, executionContext);
+	const double	expr2 = getNumericOperand(context, opPos, executionContext);
 
 	return executionContext.getXObjectFactory().createNumber(DoubleSupport::add(expr1, expr2));
 }
@@ -855,9 +842,9 @@ XPath::minus(
 
 	const double	expr1 = getNumericOperand(context, opPos, executionContext);
 
-	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const double	expr2 = getNumericOperand(context, expr2Pos, executionContext);
+	const double	expr2 = getNumericOperand(context, opPos, executionContext);
 
 	return executionContext.getXObjectFactory().createNumber(DoubleSupport::subtract(expr1, expr2));
 }
@@ -874,9 +861,9 @@ XPath::mult(
 
 	const double	expr1 = getNumericOperand(context, opPos, executionContext);
 
-	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const double	expr2 = getNumericOperand(context, expr2Pos, executionContext);
+	const double	expr2 = getNumericOperand(context, opPos, executionContext);
 
 	return executionContext.getXObjectFactory().createNumber(DoubleSupport::multiply(expr1, expr2));
 }
@@ -893,9 +880,9 @@ XPath::div(
 
 	const double	expr1 = getNumericOperand(context, opPos, executionContext);
 
-	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const double	expr2 = getNumericOperand(context, expr2Pos, executionContext);
+	const double	expr2 = getNumericOperand(context, opPos, executionContext);
 
 	return executionContext.getXObjectFactory().createNumber(DoubleSupport::divide(expr1, expr2));
 }
@@ -910,15 +897,13 @@ XPath::mod(
 {
 	opPos += 2;	
 
-	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
-	assert(expr1.get() != 0);
+	const double	expr1 = getNumericOperand(context, opPos, executionContext);
 
-	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
-	assert(expr2.get() != 0);
+	const double	expr2 = getNumericOperand(context, opPos, executionContext);
 
-	return executionContext.getXObjectFactory().createNumber(DoubleSupport::modulus(expr1->num(), expr2->num()));
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::modulus(expr1, expr2));
 }
 
 
@@ -929,10 +914,8 @@ XPath::neg(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	const XObjectPtr	expr1(executeMore(context, opPos + 2, executionContext));
-	assert(expr1.get() != 0);
-
-	return executionContext.getXObjectFactory().createNumber(DoubleSupport::negative(expr1->num()));
+	return executionContext.getXObjectFactory().createNumber(
+		DoubleSupport::negative(executeMore(context, opPos + 2, executionContext)->num()));
 }
 
 
@@ -972,10 +955,8 @@ XPath::Union(
 
 	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
 
-	while(m_expression.m_opMap[opPos] != XPathExpression::eENDOP)
+	while(m_expression.getOpCodeMapValue(opPos) != XPathExpression::eENDOP)
 	{
-		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
-
 		const XObjectPtr	expr(executeMore(context, opPos, executionContext));
 
 		const NodeRefListBase&	nl =
@@ -983,7 +964,7 @@ XPath::Union(
 
 		resultNodeList->addNodesInDocOrder(nl, executionContext);	
 
-		opPos = nextOpPos;
+		opPos = m_expression.getNextOpCodePosition(opPos);
 	}
 
 	return executionContext.getXObjectFactory().createNodeSet(resultNodeList);
@@ -1129,14 +1110,14 @@ XPath::runFunction(
 
 	opPos += 2;
 
-	// This is actually the position in the token queue of the
-	// string that contains the name of the function.
-	const int	funcID = m_expression.m_opMap[opPos];
+	// This is index into the function table for the
+	// function.
+	const int	funcID = m_expression.getOpCodeMapValue(opPos);
 
 	opPos++;
 
-	// Number of args is next, not used for now...
-	const int	argCount = m_expression.m_opMap[opPos];
+	// Number of args is next.
+	const int	argCount = m_expression.getOpCodeMapValue(opPos);
 
 	opPos++;
 
@@ -1148,58 +1129,46 @@ XPath::runFunction(
 	}
 	else if (argCount == 1)
 	{
-		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
-
-		const XObjectPtr	theArg(executeMore(context, opPos, executionContext));
-
-		opPos = nextOpPos;
-		
-		assert(opPos == endFunc);
-
-		return s_functions[funcID].execute(executionContext, context, theArg, m_locator);
+		return s_functions[funcID].execute(
+			executionContext,
+			context,
+			executeMore(context, opPos, executionContext),
+			m_locator);
 	}
 	else if (argCount == 2)
 	{
-		int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
-
 		const XObjectPtr	theArg1(executeMore(context, opPos, executionContext));
 
-		opPos = nextOpPos;
+		opPos = m_expression.getNextOpCodePosition(opPos);
 
-		nextOpPos = m_expression.getNextOpCodePosition(opPos);
+		assert(m_expression.getNextOpCodePosition(opPos) == endFunc);
 
-		const XObjectPtr	theArg2(executeMore(context, opPos, executionContext));
-
-		opPos = nextOpPos;
-		
-		assert(opPos == endFunc);
-
-		return s_functions[funcID].execute(executionContext, context, theArg1, theArg2, m_locator);
+		return s_functions[funcID].execute(
+			executionContext,
+			context,
+			theArg1,
+			executeMore(context, opPos, executionContext),
+			m_locator);
 	}
 	else if (argCount == 3)
 	{
-
-		int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
-
 		const XObjectPtr	theArg1(executeMore(context, opPos, executionContext));
 
-		opPos = nextOpPos;
-
-		nextOpPos = m_expression.getNextOpCodePosition(opPos);
+		opPos = m_expression.getNextOpCodePosition(opPos);
 
 		const XObjectPtr	theArg2(executeMore(context, opPos, executionContext));
 
-		opPos = nextOpPos;
+		opPos = m_expression.getNextOpCodePosition(opPos);
 
-		nextOpPos = m_expression.getNextOpCodePosition(opPos);
+		assert(m_expression.getNextOpCodePosition(opPos) == endFunc);
 
-		const XObjectPtr	theArg3(executeMore(context, opPos, executionContext));
-
-		opPos = nextOpPos;
-
-		assert(opPos == endFunc);
-
-		return s_functions[funcID].execute(executionContext, context, theArg1, theArg2, theArg3, m_locator);
+		return s_functions[funcID].execute(
+			executionContext,
+			context,
+			theArg1,
+			theArg2,
+			executeMore(context, opPos, executionContext),
+			m_locator);
 	}
 	else
 	{
@@ -1211,11 +1180,9 @@ XPath::runFunction(
 
 		while(opPos < endFunc)
 		{
-			const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
-
 			args.push_back(executeMore(context, opPos, executionContext));
 
-			opPos = nextOpPos;
+			opPos = m_expression.getNextOpCodePosition(opPos);
 		}
 
 		return function(context, funcID, args, executionContext);
@@ -1265,7 +1232,6 @@ XPath::step(
 {
 	const XPathExpression&	currentExpression = getExpression();
 
-	// int endStep = xpath.getNextOpPos(opPos);
 	const int	stepType =
 		currentExpression.getOpCodeMapValue(opPos);
 
@@ -1275,7 +1241,6 @@ XPath::step(
 
 	BorrowReturnMutableNodeRefList	subQueryResults(executionContext);
 
-	bool	shouldReorder = false;
 	bool	continueStepRecursion = true;
 
 	switch(stepType)
@@ -1301,12 +1266,10 @@ XPath::step(
 
 	case XPathExpression::eFROM_ANCESTORS:
 		argLen = findAncestors(executionContext, context, opPos, stepType, *subQueryResults);
-		shouldReorder = true;
 		break;
 
 	case XPathExpression::eFROM_ANCESTORS_OR_SELF:
 		argLen = findAncestorsOrSelf(executionContext, context, opPos, stepType, *subQueryResults);
-		shouldReorder = true;
 		break;
 
 	case XPathExpression::eMATCH_ATTRIBUTE:
@@ -1342,12 +1305,10 @@ XPath::step(
 
 	case XPathExpression::eFROM_PRECEDING:
 		argLen = findPreceeding(executionContext, context, opPos, stepType, *subQueryResults);
-		shouldReorder = true;
 		break;
 
 	case XPathExpression::eFROM_PRECEDING_SIBLINGS:
 		argLen = findPreceedingSiblings(executionContext, context, opPos, stepType, *subQueryResults);
-		shouldReorder = true;
 		break;
 
 	case XPathExpression::eFROM_NAMESPACE:
@@ -1359,7 +1320,7 @@ XPath::step(
 		break;
 	}
 
-	// Push and pop the PrefixResolver...
+	// Push and pop the context node list...
 	XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
 									executionContext,
 									*subQueryResults);
@@ -1394,28 +1355,23 @@ XPath::step(
 
 				step(executionContext, node, opPos, *mnl);
 
-				if (mnl->getLength() > 0)
+				if (mnl->empty() == false)
 				{
-					if(queryResults.getLength() == 0)
-					{
-						if (mnl->getReverseDocumentOrder() == true)
-						{
-							mnl->reverse();
-
-							queryResults.setDocumentOrder();
-						}
-						else if (mnl->getDocumentOrder() == true)
-						{
-							queryResults.setDocumentOrder();
-						}
-
-						queryResults = *mnl;
-					}
-					else
+					if(queryResults.empty() == false)
 					{
 						queryResults.addNodesInDocOrder(*mnl, executionContext);
 
 						queryResults.setDocumentOrder();
+					}
+					else if (mnl->getReverseDocumentOrder() == true)
+					{
+						mnl->reverseAssign(queryResults);
+					}
+					else
+					{
+						assert(mnl->getDocumentOrder() == true);
+
+						queryResults = *mnl;
 					}
 				}
 			}
@@ -1423,35 +1379,18 @@ XPath::step(
 	}
 	else
 	{
-		if (shouldReorder == true)
+		if (subQueryResults->empty() == true)
 		{
-			if (queryResults.getLength() != 0 ||
-				subQueryResults->getUnknownOrder() == true)
-			{
-				queryResults.addNodesInDocOrder(*subQueryResults, executionContext);
-			}
-			else
-			{
-				if (subQueryResults->getReverseDocumentOrder() == true)
-				{
-					subQueryResults->reverse();
-
-					queryResults = *subQueryResults;
-				}
-				else if (subQueryResults->getDocumentOrder() == true)
-				{
-					queryResults = *subQueryResults;
-				}
-				else
-				{
-					assert(false);
-				}
-			}
-
-			queryResults.setDocumentOrder();
+			queryResults.clear();
+		}
+		else if (subQueryResults->getReverseDocumentOrder() == true)
+		{
+			subQueryResults->reverseAssign(queryResults);
 		}
 		else
 		{
+			assert(subQueryResults->getDocumentOrder() == true);
+
 			queryResults = *subQueryResults;
 		}
 	}
@@ -2028,9 +1967,9 @@ XPath::findAncestors(
 
 			context = DOMServices::getParentOfNode(*context);
 		} while(0 != context);
-
-		subQueryResults.setReverseDocumentOrder();
 	}
+
+	subQueryResults.setReverseDocumentOrder();
 
 	return argLen + 3;
 }
@@ -2136,9 +2075,9 @@ XPath::findAttributes(
 				}
 			}
 		}
-
-		subQueryResults.setDocumentOrder();
 	}
+
+	subQueryResults.setDocumentOrder();
 
 	return argLen + 3;
 }
@@ -2188,9 +2127,9 @@ XPath::findChildren(
 
 			child = child->getNextSibling();
 		} while(0 != child);
-
-		subQueryResults.setDocumentOrder();
 	}
+
+	subQueryResults.setDocumentOrder();
 
 	return argLen + 3;
 }
@@ -2411,9 +2350,9 @@ XPath::findFollowingSiblings(
 
 			pos = pos->getNextSibling();
 		} while(0 != pos);
-
-		subQueryResults.setDocumentOrder();
 	}
+
+	subQueryResults.setDocumentOrder();
 
 	return argLen + 3;
 }
@@ -2632,9 +2571,9 @@ XPath::findPreceedingSiblings(
 
 			pos = pos->getPreviousSibling();
 		} while(0 != pos);
-
-		subQueryResults.setReverseDocumentOrder();
 	}
+
+	subQueryResults.setReverseDocumentOrder();
 
 	return argLen + 3;
 }
@@ -2712,6 +2651,8 @@ XPath::findNamespace(
 			theCurrentNode = theCurrentNode->getParentNode();
 		} while (theCurrentNode != theOwnerDocument && theCurrentNode != 0);
 	}
+
+	subQueryResults.setDocumentOrder();
 
 	return argLen + 3;
 }
@@ -3029,20 +2970,19 @@ XPath::predicates(
 {
 	const XPathExpression&	currentExpression = getExpression();
 
-	int 	nextStepType =
-			currentExpression.getOpCodeMapValue(opPos);
+	assert(currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eOP_PREDICATE ||
+		   currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eOP_PREDICATE_WITH_POSITION);
 
-	while(XPathExpression::eOP_PREDICATE == nextStepType ||
-		  XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
+	NodeRefListBase::size_type	theLength = subQueryResults.getLength();
+
+	for(;;)
 	{
-		const NodeRefListBase::size_type	theLength = subQueryResults.getLength();
-
 		// If we have no nodes left, then there's no point in executing any
 		// predicates.  However, we will continue to loop, since we need to
 		// update endPredicatePos.
 		if (theLength > 0)
 		{
-			const int predOpPos = opPos + 2;
+			const int	predOpPos = opPos + 2;
 
 			// OK, this is a huge hack/optimization.  If the predicate is
 			// simple a number, such as [2], we can just get the
@@ -3115,12 +3055,21 @@ XPath::predicates(
 
 		opPos = currentExpression.getNextOpCodePosition(opPos);
 
-		nextStepType = currentExpression.getOpCodeMapValue(opPos);
+		const int	nextStepType = currentExpression.getOpCodeMapValue(opPos);
 
-		if(XPathExpression::eOP_PREDICATE == nextStepType ||
-		   XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
+		if (nextStepType != XPathExpression::eOP_PREDICATE &&
+		    nextStepType != XPathExpression::eOP_PREDICATE_WITH_POSITION)
 		{
-			executionContext.setContextNodeList(subQueryResults);
+			break;
+		}
+		else
+		{
+			theLength = subQueryResults.getLength();
+
+			if(theLength != 0)
+			{
+				executionContext.setContextNodeList(subQueryResults);
+			}
 		}
 	}
 
@@ -3299,7 +3248,7 @@ XPath::NodeTester::testText(
 			const XalanNode& 		context,
 			XalanNode::NodeType		nodeType) const
 {
-	if ((XalanNode::CDATA_SECTION_NODE == nodeType || XalanNode::TEXT_NODE == nodeType) &&
+	if ((XalanNode::TEXT_NODE == nodeType || XalanNode::CDATA_SECTION_NODE == nodeType) &&
 		 shouldStripSourceNode(context) == false)
 	{
 		return eMatchScoreNodeTest;
@@ -3354,7 +3303,7 @@ XPath::NodeTester::testNode(
 			const XalanNode& 		context,
 			XalanNode::NodeType		nodeType) const
 {
-	if ((nodeType != XalanNode::CDATA_SECTION_NODE && nodeType != XalanNode::TEXT_NODE) ||
+	if ((nodeType != XalanNode::TEXT_NODE && nodeType != XalanNode::CDATA_SECTION_NODE) ||
 		shouldStripSourceNode(context) == false)
 	{
 		return eMatchScoreNodeTest;
@@ -3372,8 +3321,8 @@ XPath::NodeTester::testRoot(
 			const XalanNode& 		/* context */,
 			XalanNode::NodeType		nodeType) const
 {
-	if (XalanNode::DOCUMENT_FRAGMENT_NODE == nodeType ||
-		XalanNode::DOCUMENT_NODE == nodeType)
+	if (XalanNode::DOCUMENT_NODE == nodeType ||
+		XalanNode::DOCUMENT_FRAGMENT_NODE == nodeType)
 	{
 		return eMatchScoreOther;
 	}
