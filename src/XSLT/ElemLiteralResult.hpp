@@ -60,7 +60,7 @@
 
 
 // Base include file.  Must be first.
-#include "XSLTDefinitions.hpp"
+#include <XSLT/XSLTDefinitions.hpp>
 
 
 
@@ -174,7 +174,7 @@ private:
 	/**
 	 * A vector to keep track of the attribute elements.
 	 */
-	AVTVectorType		m_avts;
+	AVTVectorType			m_avts;
 };
 
 

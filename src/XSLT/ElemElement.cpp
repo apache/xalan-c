@@ -253,7 +253,13 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 			{
 				if(haveNamespace == false)
 				{
-					if (namespaceLen == 0)
+					if (namespaceLen > 0)
+					{
+						outputResultNamespaces(executionContext, hasUnresolvedPrefix);
+
+						executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
+					}
+					else
 					{
 						// OK, the namespace we're generating is the default namespace,
 						// so let's make sure that we really need it.  If we don't,
@@ -276,12 +282,6 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 
 							executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
 						}
-					}
-					else
-					{
-						outputResultNamespaces(executionContext, hasUnresolvedPrefix);
-
-						executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
 					}
 				}
 				else
