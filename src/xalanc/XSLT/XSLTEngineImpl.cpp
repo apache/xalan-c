@@ -739,7 +739,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		ds += fragID;
 		ds += XalanDOMString(XALAN_STATIC_UCODE_STRING(")"),getMemoryManager());
 
-		ElementPrefixResolverProxy		theProxy( getMemoryManager(), nsNode, m_xpathEnvSupport, m_domSupport);
+		ElementPrefixResolverProxy		theProxy(  nsNode, m_xpathEnvSupport, m_domSupport, getMemoryManager());
 
 		XPathExecutionContextDefault	theExecutionContext(m_xpathEnvSupport,
 															m_domSupport,
@@ -2954,10 +2954,10 @@ XSLTEngineImpl::evalXPathStr(
 			const XalanElement&		prefixResolver,
 			XPathExecutionContext&	executionContext)
 {
-    ElementPrefixResolverProxy	theProxy(executionContext.getMemoryManager(),
-                                         &prefixResolver,
+    ElementPrefixResolverProxy	theProxy(&prefixResolver,
 										 m_xpathEnvSupport,
-										 m_domSupport);
+										 m_domSupport, 
+                                         executionContext.getMemoryManager());
 
 	return evalXPathStr(str, contextNode, theProxy, executionContext);
 }

@@ -48,7 +48,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT AttributesImpl : public AttributesType
 public:
 
 	explicit
-	AttributesImpl(MemoryManagerType&      theManager);
+	AttributesImpl(MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~AttributesImpl();

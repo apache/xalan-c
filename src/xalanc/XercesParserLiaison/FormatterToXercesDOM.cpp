@@ -62,11 +62,11 @@ const XalanDOMString	FormatterToXercesDOM::s_emptyString(XalanMemMgrs::getDummyM
 
 
 
-FormatterToXercesDOM::FormatterToXercesDOM(
-            MemoryManagerType&          theManager,
+FormatterToXercesDOM::FormatterToXercesDOM( 
 			DOMDocument_Type*			doc,
 			DOMDocumentFragmentType*	docFrag,
-			DOMElementType*				currentElement) :
+			DOMElementType*				currentElement,
+            MemoryManagerType&          theManager) :
 	FormatterListener(OUTPUT_METHOD_DOM),
 	m_doc(doc),
 	m_docFrag(docFrag),
@@ -81,9 +81,9 @@ FormatterToXercesDOM::FormatterToXercesDOM(
 
 
 FormatterToXercesDOM::FormatterToXercesDOM(
-            MemoryManagerType& theManager,
 			DOMDocument_Type*	doc,
-			DOMElementType*		elem) :
+			DOMElementType*		elem,
+            MemoryManagerType& theManager) :
 	FormatterListener(OUTPUT_METHOD_DOM),
 	m_doc(doc),
 	m_docFrag(0),

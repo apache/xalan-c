@@ -148,7 +148,7 @@ XalanQNameByValue::XalanQNameByValue(
 	m_namespace(theManager),
 	m_localpart(theManager)
 {
-	ElementPrefixResolverProxy	theProxy(theManager, namespaceContext, envSupport, domSupport);
+	ElementPrefixResolverProxy	theProxy( namespaceContext, envSupport, domSupport, theManager);
 
 	resolvePrefix(
 		c_wstr(qname),

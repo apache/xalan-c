@@ -46,7 +46,7 @@ public:
 	 *                          (toXMLString, digest, ...)
 	 */
 	FormatterTreeWalker(FormatterListener&	formatterListener,
-                        MemoryManagerType& theManager);
+                        MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~FormatterTreeWalker();

@@ -540,7 +540,7 @@ XalanEvaluateXPathAsBoolean(
 			XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
 
 			XalanSourceTreeDOMSupport		theDOMSupport;
-			XalanSourceTreeParserLiaison	theLiaison(XalanMemMgrs::getDefaultXercesMemMgr(), theDOMSupport);
+			XalanSourceTreeParserLiaison	theLiaison(theDOMSupport, XalanMemMgrs::getDefaultXercesMemMgr());
 
 			// Hook the two together...
 			theDOMSupport.setParserLiaison(&theLiaison);

@@ -69,7 +69,6 @@ FormatterToHTML::FormatterToHTML(
 			bool					escapeURLs,
 			bool					omitMetaTag) :
 	FormatterToXML(
-            theManager,
 			writer,
 			s_emptyString,
 			doIndent,
@@ -80,7 +79,9 @@ FormatterToHTML::FormatterToHTML(
 			doctypePublic,
 			false,
 			s_emptyString,
-			OUTPUT_METHOD_HTML),
+			OUTPUT_METHOD_HTML,
+            true,
+            theManager),
 	m_currentElementName(theManager),
 	m_inBlockElem(false),
 	m_isRawStack(theManager),

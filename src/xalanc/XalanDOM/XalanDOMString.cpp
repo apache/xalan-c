@@ -979,9 +979,11 @@ doTranscodeToLocalCodePage(
             XalanMemMngArrayAllocate<wchar_t>::allocate( theSourceStringLength + 1, theTargetVector.getMemoryManager()),
             theSourceStringLength + 1);
 
+        typedef XalanMemMgrAutoPtrArray<wchar_t>::size_type size_type;
+
 		for (size_t	index = 0; index < theSourceStringLength; ++index)
 		{
-			theTempSourceJanitor[index] = wchar_t(theSourceString[index]);
+			theTempSourceJanitor[size_type(index)] = wchar_t(theSourceString[index]);
 		}
 
 		theTempSourceJanitor[theSourceStringLength] = 0;

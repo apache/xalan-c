@@ -49,12 +49,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 TraceListenerDefault::TraceListenerDefault(
-            MemoryManagerType& theManager,
 			PrintWriter&	thePrintWriter,
 			bool			traceTemplates,
 			bool			traceElements,
 			bool			traceGeneration,
-			bool			traceSelection) :
+			bool			traceSelection,
+            MemoryManagerType& theManager) :
 	m_printWriter(thePrintWriter),
 	m_traceTemplates(traceTemplates),
 	m_traceElements(traceElements),

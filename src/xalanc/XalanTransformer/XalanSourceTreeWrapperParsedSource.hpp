@@ -51,11 +51,11 @@ class XALAN_TRANSFORMER_EXPORT XalanSourceTreeWrapperParsedSource : public Xalan
 public:
 
 	XalanSourceTreeWrapperParsedSource(
-            MemoryManagerType&              theManager,
 			XalanSourceTreeDocument*		theDocument,
 			XalanSourceTreeParserLiaison&	theParserLiaison,
 			XalanSourceTreeDOMSupport&		theDOMSupport,
-			const XalanDOMString&			theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
+			const XalanDOMString&			theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+            MemoryManagerType&              theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~XalanSourceTreeWrapperParsedSource();

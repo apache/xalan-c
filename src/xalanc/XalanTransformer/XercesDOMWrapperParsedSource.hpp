@@ -71,11 +71,11 @@ public:
 	 * @deprecated This constructor is deprecated.
 	 */
 	XercesDOMWrapperParsedSource(
-            MemoryManagerType&          theManager,
 			const DOM_Document_Type&	theDocument,
 			XercesParserLiaison&		theParserLiaison,
 			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
+			const XalanDOMString&		theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr())
+            MemoryManagerType&          theManager XALAN_DEFAULT_MEMMGR);
 #endif
 
 	/**
@@ -87,11 +87,11 @@ public:
 	 * @param theURI The URI of the document, if any.
 	 */
 	XercesDOMWrapperParsedSource(
-            MemoryManagerType&          theManager,
 			const DOMDocument_Type*		theDocument,
 			XercesParserLiaison&		theParserLiaison,
 			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
+			const XalanDOMString&		theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+            MemoryManagerType&          theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~XercesDOMWrapperParsedSource();

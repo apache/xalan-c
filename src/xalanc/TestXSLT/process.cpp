@@ -606,7 +606,6 @@ createFormatter(
 
 		FormatterToXML* const	fToXML =
 			new FormatterToXML(
-                    theManager,
 					resultWriter,
 					version,
 					outputIndent,
@@ -616,7 +615,10 @@ createFormatter(
 					doctypeSystem,
 					doctypePublic,
 					true,	// xmlDecl
-					standalone);
+					standalone,
+                    FormatterToXML::OUTPUT_METHOD_XML,
+                    true,
+                    theManager);
 
 		fToXML->setShouldWriteXMLHeader(shouldWriteXMLHeader);
 
@@ -689,7 +691,7 @@ createFormatter(
 			assert(theDocument != 0);
 
 			FormatterToXercesDOM* const     fToDOM =
-				new FormatterToXercesDOM( theManager, theDocument, 0);
+				new FormatterToXercesDOM( theDocument, 0, theManager);
 
 			fToDOM->setPrefixResolver(&prefixResolver);
 
@@ -740,12 +742,12 @@ createTraceListener(
 		params.traceSelectionEvent == true)
 	{
 		return new TraceListenerDefault(
-                theManager,
 				diagnosticsWriter,
 				params.traceTemplates,
 				params.traceTemplateChildren,
 				params.traceGenerationEvent,
-				params.traceSelectionEvent);
+				params.traceSelectionEvent,
+                theManager);
 	}
 	else
 	{
@@ -824,7 +826,7 @@ xsltMain(const CmdLineParams&	params)
 	XalanSourceTreeInit				theXalanSourceTreeInit(theManager);
 
 	XalanSourceTreeDOMSupport		theXalanSourceTreeDOMSupport;
-	XalanSourceTreeParserLiaison	theXalanSourceTreeParserLiaison(theManager, theXalanSourceTreeDOMSupport);
+	XalanSourceTreeParserLiaison	theXalanSourceTreeParserLiaison(theXalanSourceTreeDOMSupport, theManager);
 
 	// Hookup the parser liaison instance to the support instance.
 	theXalanSourceTreeDOMSupport.setParserLiaison( &theXalanSourceTreeParserLiaison);

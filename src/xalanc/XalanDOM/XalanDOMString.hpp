@@ -63,31 +63,30 @@ public:
 	enum { npos = -1 };
 #endif
 
-	XalanDOMString(MemoryManagerType&  theManager);
-
+	XalanDOMString(MemoryManagerType&  theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR );
 
 	explicit
 	XalanDOMString(
 			const char*		    theString,
-            MemoryManagerType&  theManager,
+            MemoryManagerType&  theManager XALAN_DEFAULT_MEMMGR,
 			size_type		    theCount = size_type(npos));
 
 	XalanDOMString(
 			const XalanDOMString&	theSource,
-            MemoryManagerType&      theManager,
+            MemoryManagerType&      theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR,
 			size_type				theStartPosition = 0,
 			size_type				theCount = size_type(npos));
 
 	explicit
 	XalanDOMString(
 			const XalanDOMChar*		theString,
-            MemoryManagerType&      theManager,
+            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR,
 			size_type				theCount = size_type(npos));
 
 	XalanDOMString(
 			size_type		theCount,
 			XalanDOMChar	theChar,
-            MemoryManagerType&  theManager);
+            MemoryManagerType&  theManager XALAN_DEFAULT_MEMMGR);
 
     XalanDOMString*
     clone(MemoryManagerType&  theManager);
@@ -782,10 +781,13 @@ protected:
 		return m_data.begin() + thePosition;
 	}
 
-private:
+#if defined (XALAN_DEVELOPMENT)
     // not defined
     XalanDOMString();
     XalanDOMString(const XalanDOMString&);
+#endif
+
+private:
 
 
 	XalanDOMCharVectorType		m_data;
@@ -955,6 +957,25 @@ TranscodeToLocalCodePage(
 			bool						terminate = false);
 
 /**
+ * Convert a string to a XalanDOMString, transcoding from
+ * the default local code page.
+ * 
+ * @param theSourceString The source string
+ * @param theSourceStringLength The source string length.
+ * @return The new string.
+ */
+#if !defined(XALAN_DEVELOPMENT)
+inline const XalanDOMString
+TranscodeFromLocalCodePage(
+			const char*					theSourceString,
+			XalanDOMString::size_type	theSourceStringLength = XalanDOMString::npos)
+{
+	return XalanDOMString(theSourceString,XalanMemMgrs::getDefaultXercesMemMgr(), theSourceStringLength);
+}
+#endif
+
+
+/**
  * Convert a XalanDOMChar string to C++ standard library
  * vector, transcoding to the default local code
  * page.  The string _must_ be null-terminated.
@@ -970,7 +991,25 @@ TranscodeToLocalCodePage(
 			CharVectorType&			targetVector,
 			bool					terminate = false);
 
+/**
+ * Convert XalanDOMString to C++ standard library
+ * vector, transcoding to the default local code
+ * page.  Null-terminate the sttring...
+ *
+ * @param theSourceString source string
+ * @return The transcoded string.
+ */
+#if !defined(XALAN_DEVELOPMENT)
+inline const CharVectorType
+TranscodeToLocalCodePage(const XalanDOMChar*	theSourceString)
+{
+	CharVectorType	theResult;
 
+	TranscodeToLocalCodePage(theSourceString, theResult, true);
+
+	return theResult;
+}
+#endif
 
 
 /**
@@ -993,6 +1032,25 @@ TranscodeToLocalCodePage(
 
 
 
+/**
+ * Convert XalanDOMString to C++ standard library
+ * vector, transcoding to the default local code
+ * page.
+ *
+ * @param thetheSourceString source string
+ * @return The transcoded string.
+ */
+#if !defined(XALAN_DEVELOPMENT)
+inline const CharVectorType
+TranscodeToLocalCodePage(const XalanDOMString&	theSourceString)
+{
+	CharVectorType	theResult;
+
+	TranscodeToLocalCodePage(theSourceString, theResult, true);
+
+	return theResult;
+}
+#endif
 
 
 /**

@@ -43,14 +43,14 @@ class XALAN_XPATH_EXPORT NodeRefList : public NodeRefListBase
 public:
 
 	explicit
-	NodeRefList(MemoryManagerType& theManager);
+	NodeRefList(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
 
 	/**
 	 * Construct a node list from another
 	 *
 	 * @param theSource source node list
 	 */
-	NodeRefList(const NodeRefList&	theSource, MemoryManagerType& theManager);
+	NodeRefList(const NodeRefList&	theSource, MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
     MemoryManagerType&
     getMemoryManager()
@@ -64,7 +64,7 @@ public:
 	 * @param theSource source node list
 	 */
 	explicit
-	NodeRefList(const NodeRefListBase&	theSource, MemoryManagerType& theManager);
+	NodeRefList(const NodeRefListBase&	theSource, MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~NodeRefList();
@@ -107,8 +107,7 @@ public:
 	}
 
 protected:
-    //undefined
-    NodeRefList(const NodeRefList&	theSource);
+
 	// Default vector allocation size.  It seems high, but
 	// it's really worth it...
 	enum
@@ -130,6 +129,12 @@ protected:
 	}
 
 	NodeListVectorType	m_nodeList;
+private:
+#if defined (XALAN_DEVELOPMENT)
+    // not defined
+    NodeRefList();
+    NodeRefList(const NodeRefList&	theSource);
+#endif
 };
 
 

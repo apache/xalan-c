@@ -53,7 +53,7 @@ public:
 	/*
 	 * Construct an instance.
 	 */
-	XPathConstructionContextDefault(MemoryManagerType& theManager);
+	XPathConstructionContextDefault(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
     static XPathConstructionContextDefault*
     create(MemoryManagerType& theManager);

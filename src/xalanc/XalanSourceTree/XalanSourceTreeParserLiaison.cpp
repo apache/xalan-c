@@ -453,8 +453,8 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::s_externalNoNamespaceSchemaLoca
 
 
 XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(
-            MemoryManagerType&          theManager,
-			XalanSourceTreeDOMSupport&	/* theSupport */) :
+			XalanSourceTreeDOMSupport&	/* theSupport */,
+            MemoryManagerType&          theManager) :
 	m_xercesParserLiaison(theManager),
 	m_documentMap(theManager),
 	m_poolAllText(true)

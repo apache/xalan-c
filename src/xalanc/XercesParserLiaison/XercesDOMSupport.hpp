@@ -36,7 +36,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMSupport : public DOMSupport
 {
 public:
 
-	XercesDOMSupport(MemoryManagerType& theManager);
+	XercesDOMSupport(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~XercesDOMSupport();

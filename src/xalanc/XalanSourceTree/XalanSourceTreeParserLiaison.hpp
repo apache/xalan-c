@@ -66,13 +66,13 @@ public:
 	 *
 	 * @deprecated This constructor is deprecated.  Use the next constructor instead.
 	 */
-	XalanSourceTreeParserLiaison(MemoryManagerType&             theManager,
-                                XalanSourceTreeDOMSupport&		theSupport);
+	XalanSourceTreeParserLiaison( XalanSourceTreeDOMSupport&	theSupport, 
+                                  MemoryManagerType&            theManager XALAN_DEFAULT_MEMMGR);
 
 	/**
 	 * Construct a XalanSourceTreeParserLiaison instance.
 	 */
-	XalanSourceTreeParserLiaison(MemoryManagerType& theManager);
+	XalanSourceTreeParserLiaison(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
     MemoryManagerType&
     getMemoryManager()

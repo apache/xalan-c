@@ -65,12 +65,25 @@ class XalanOutputStream;
 
 #define XALAN_STATIC_UCODE_STRING(str) L##str
 
-
+#if !defined (XALAN_DEVELOPMENT)
+inline const XalanDOMString
+StaticStringToDOMString(const XalanDOMChar*		theString)
+{
+	return XalanDOMString(theString);
+}
+#endif
 
 #else
 
 #define XALAN_STATIC_UCODE_STRING(str) str
 
+#if !defined (XALAN_DEVELOPMENT) 
+inline const XalanDOMString&
+StaticStringToDOMString(const XalanDOMString&	theString)
+{
+	return theString;
+}
+#endif
 
 #endif
 

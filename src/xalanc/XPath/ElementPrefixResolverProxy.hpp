@@ -56,10 +56,10 @@ public:
 	 * @deprecated
 	 */
 	ElementPrefixResolverProxy(
-            MemoryManagerType&      theManager,
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
-			const DOMSupport& 		domSupport);
+			const DOMSupport& 		domSupport,
+            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
 
 	/**
 	 * Construct an instance of an element prefix resolver proxy.
@@ -69,8 +69,8 @@ public:
 	 *
 	 */
 	ElementPrefixResolverProxy(
-            MemoryManagerType&      theManager,
 			const XalanElement*		namespaceContext,
+            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR,
 			const XPathEnvSupport*	envSupport = 0);
 
 	virtual

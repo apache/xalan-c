@@ -381,7 +381,7 @@ ElemNumber::getCountMatchPattern(
 #else
 					static_cast<const XalanElement*>(contextNode);
 #endif
-					const ElementPrefixResolverProxy	theProxy(executionContext.getMemoryManager(), theElement);
+					const ElementPrefixResolverProxy	theProxy( theElement, executionContext.getMemoryManager());
 
 				countMatchPattern =
 						executionContext.createMatchPattern(theNodeName, theProxy);
@@ -430,7 +430,7 @@ ElemNumber::getCountMatchPattern(
 
 			const XalanDOMString&	theNodeName = theAttribute->getNodeName();
 
-			const ElementPrefixResolverProxy	theProxy(executionContext.getMemoryManager(),theAttribute->getOwnerElement());
+			const ElementPrefixResolverProxy	theProxy(theAttribute->getOwnerElement(), executionContext.getMemoryManager());
 
 			StylesheetExecutionContext::GetAndReleaseCachedString	theMatchPatternString(executionContext);
 

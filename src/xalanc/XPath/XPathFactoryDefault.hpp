@@ -42,7 +42,7 @@ class XALAN_XPATH_EXPORT XPathFactoryDefault : public XPathFactory
 public:
 
 	explicit
-	XPathFactoryDefault(MemoryManagerType& theManager);
+	XPathFactoryDefault(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~XPathFactoryDefault();

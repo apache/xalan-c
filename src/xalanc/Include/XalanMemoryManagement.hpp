@@ -48,6 +48,19 @@ public:
 	getDefaultXercesMemMgr();
 };
 
+
+
+
+#if defined (XALAN_DEVELOPMENT)
+#define XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR
+#define XALAN_DEFAULT_MEMMGR = XalanMemMgrs::getDummyMemMgr()
+#else
+#define XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR = XalanMemMgrs::getDefaultXercesMemMgr()
+#define XALAN_DEFAULT_MEMMGR = XalanMemMgrs::getDefaultXercesMemMgr()
+#endif
+
+
+
 template <class C>
 class ConstructValueWithNoMemoryManager 
 { 

@@ -82,7 +82,7 @@ public:
 	 */
 	explicit
 	XObjectFactoryDefault(
-            MemoryManagerType& theManager,
+            MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR,
 			size_type	theXStringBlockSize = eDefaultXStringBlockSize,
 			size_type	theXNumberBlockSize = eDefaultXNumberBlockSize,
 			size_type	theXNodeSetBlockSize = eDefaultXNodeSetBlockSize,

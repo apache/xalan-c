@@ -36,11 +36,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanSourceTreeWrapperParsedSource::XalanSourceTreeWrapperParsedSource(
-            MemoryManagerType&              theManager,
 			XalanSourceTreeDocument*		theDocument,
 			XalanSourceTreeParserLiaison&	theParserLiaison,
 			XalanSourceTreeDOMSupport&		theDOMSupport,
-			const XalanDOMString&			theURI) :
+			const XalanDOMString&			theURI,
+            MemoryManagerType&              theManager) :
 	XalanParsedSource(),
 	m_parserLiaison(theParserLiaison),
 	m_domSupport(theDOMSupport),

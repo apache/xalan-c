@@ -500,7 +500,7 @@ XalanTransformer::compileStylesheet(
 		// Create some support objects that are necessary for running the processor...
 		XalanSourceTreeDOMSupport		theDOMSupport;
 
-		XalanSourceTreeParserLiaison	theParserLiaison(m_memoryManager, theDOMSupport);
+		XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport, m_memoryManager);
 
 		theParserLiaison.setEntityResolver(m_entityResolver);
 		theParserLiaison.setErrorHandler(m_errorHandler);

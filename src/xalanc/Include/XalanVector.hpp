@@ -111,7 +111,7 @@ public:
     typedef typename ConstructionTraits::Constructor Constructor;
 
     XalanVector(
-            MemoryManagerType&  theManager,
+            MemoryManagerType&  theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR,
             size_type           initialAllocation = size_type(0)) :
         m_memoryManager(&theManager),
         m_size(0),
@@ -1079,9 +1079,11 @@ private:
         return theLHS > theRHS ? theLHS : theRHS;
     }
 
+#if defined(XALAN_DEVELOPMENT)
     //not implemented
     XalanVector(const     XalanVector&);
     XalanVector();
+#endif
 
     // Data members...
     MemoryManagerType*  m_memoryManager;

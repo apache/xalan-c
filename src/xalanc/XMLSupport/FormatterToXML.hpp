@@ -85,7 +85,6 @@ public:
 	 * @param fBufferData		If true, data will be buffered in the formatter
 	 */
 	FormatterToXML(
-            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	version = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			bool					doIndent = false,
@@ -97,7 +96,8 @@ public:
 			bool					xmlDecl = true,
 			const XalanDOMString&	standalone = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			eFormat					format = OUTPUT_METHOD_XML,
-			bool					fBufferData = true);
+			bool					fBufferData = true,
+            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
     
     static FormatterToXML*
     create(

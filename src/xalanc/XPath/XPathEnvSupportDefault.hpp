@@ -62,7 +62,7 @@ public:
 	terminate();
 
 
-	XPathEnvSupportDefault(MemoryManagerType&  theManager);
+	XPathEnvSupportDefault(MemoryManagerType&  theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~XPathEnvSupportDefault();

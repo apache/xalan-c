@@ -275,7 +275,7 @@ XPathEvaluator::evaluate(
 			domSupport,
 			contextNode,
 			xpathString,
-			ElementPrefixResolverProxy(m_memoryManager, namespaceNode, theEnvSupportDefault, domSupport),
+			ElementPrefixResolverProxy(namespaceNode, theEnvSupportDefault, domSupport, m_memoryManager),
 			theEnvSupportDefault);
  
 }
@@ -295,7 +295,7 @@ XPathEvaluator::evaluate(
 				domSupport,
 				contextNode,
 				xpath,
-				ElementPrefixResolverProxy(m_memoryManager, namespaceNode, theEnvSupportDefault, domSupport),
+				ElementPrefixResolverProxy(namespaceNode, theEnvSupportDefault, domSupport, m_memoryManager),
 				theEnvSupportDefault);
 }
 
@@ -345,7 +345,7 @@ XPathEvaluator::createXPath(const XalanDOMChar*		xpathString)
 	DOMSupportDefault		theDOMSupport(m_memoryManager);
 	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
 
-	return createXPath(xpathString, ElementPrefixResolverProxy(m_memoryManager, 0, theEnvSupportDefault, theDOMSupport));
+	return createXPath(xpathString, ElementPrefixResolverProxy(0, theEnvSupportDefault, theDOMSupport, m_memoryManager));
 }
 
 
@@ -358,7 +358,7 @@ XPathEvaluator::createXPath(
 {
 	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
 
-	return createXPath(xpathString, ElementPrefixResolverProxy(m_memoryManager, namespaceNode, theEnvSupportDefault, domSupport));
+	return createXPath(xpathString, ElementPrefixResolverProxy( namespaceNode, theEnvSupportDefault, domSupport, m_memoryManager));
 }
 
 

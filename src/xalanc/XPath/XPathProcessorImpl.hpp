@@ -66,7 +66,7 @@ public:
 
 	typedef XalanVector<bool>				BoolVectorType;
 
-	XPathProcessorImpl(MemoryManagerType& theManager);
+	XPathProcessorImpl(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~XPathProcessorImpl();

@@ -39,11 +39,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 #if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-            MemoryManagerType&          theManager,
 			const DOM_Document_Type&	theDocument,
 			XercesParserLiaison&		theParserLiaison,
 			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
+			const XalanDOMString&		theURI,
+            MemoryManagerType&          theManager) :
 	XalanParsedSource(),
 	m_parserLiaison(theParserLiaison),
 	m_domSupport(theDOMSupport),
@@ -61,11 +61,11 @@ XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
 
 
 XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-            MemoryManagerType&          theManager,
-			const DOMDocument_Type*		theDocument,
+ 			const DOMDocument_Type*		theDocument,
 			XercesParserLiaison&		theParserLiaison,
 			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
+			const XalanDOMString&		theURI,
+            MemoryManagerType&          theManager) :
 	XalanParsedSource(),
 	m_parserLiaison(theParserLiaison),
 	m_domSupport(theDOMSupport),

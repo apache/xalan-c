@@ -850,7 +850,7 @@ XalanFileUtility::checkDOMResults(
     destroyObjWithMemMgr( theFormatter, theManager);
 
     XalanSourceTreeDOMSupport       domSupport;
-    XalanSourceTreeParserLiaison    parserLiaison(theManager, domSupport);
+    XalanSourceTreeParserLiaison    parserLiaison(domSupport, theManager);
     
     domSupport.setParserLiaison(&parserLiaison);
 
@@ -915,7 +915,7 @@ XalanFileUtility::compareSerializedResults(
     MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
     XalanSourceTreeDOMSupport       domSupport;
-    XalanSourceTreeParserLiaison    parserLiaison(theManager, domSupport );
+    XalanSourceTreeParserLiaison    parserLiaison(domSupport, theManager );
 
     domSupport.setParserLiaison(&parserLiaison);
 

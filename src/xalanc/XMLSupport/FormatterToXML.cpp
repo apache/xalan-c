@@ -55,7 +55,6 @@ static const XalanDOMChar 	theDefaultAttrSpecialChars[] =
 
 
 FormatterToXML::FormatterToXML(
-            MemoryManagerType&      theManager,
 			Writer& 				writer,
 			const XalanDOMString&	version,
 			bool					doIndent,
@@ -67,7 +66,8 @@ FormatterToXML::FormatterToXML(
 			bool					xmlDecl,
 			const XalanDOMString&	standalone,
 			eFormat					format,
-			bool					fBufferData) :
+			bool					fBufferData,
+            MemoryManagerType&      theManager) :
 	FormatterListener(format),
 	m_writer(&writer),
 	m_stream(m_writer->getStream()),
@@ -334,8 +334,7 @@ FormatterToXML::create(
 
     ThisType* theResult = theGuard.get();
 
-    new (theResult) ThisType(   theManager,
-                     	        writer,
+    new (theResult) ThisType(   writer,
                      	        version,
                                 doIndent ,
                      	        indent ,
@@ -346,7 +345,8 @@ FormatterToXML::create(
                                 xmlDecl ,
                      	        standalone ,
                      	        format,
-                                fBufferData);
+                                fBufferData,
+                                theManager);
 
 
     theGuard.release();

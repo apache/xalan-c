@@ -88,7 +88,7 @@ public:
 	/**
 	 * Construct a XercesParserLiaison instance.
 	 */
-	XercesParserLiaison(MemoryManagerType& theManager);
+	XercesParserLiaison(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~XercesParserLiaison();

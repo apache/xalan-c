@@ -44,12 +44,12 @@ class XALAN_XSLT_EXPORT TraceListenerDefault : public TraceListener
 public:
 
 	TraceListenerDefault(
-            MemoryManagerType& theManager,
 			PrintWriter&	thePrintWriter,
 			bool			traceTemplates = false,
 			bool			traceElements = false,
 			bool			traceGeneration = false,
-			bool			traceSelection = false);
+			bool			traceSelection = false,
+            MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~TraceListenerDefault();
