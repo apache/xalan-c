@@ -1400,7 +1400,7 @@ XPath::runExtFunction(
 
 	opPos++;
 
-	std::vector<XObject*>	args;
+	Function::XObjectArgVectorType	args;
 
 	while(opPos < endExtFunc)
 	{
@@ -1448,7 +1448,7 @@ XPath::runFunction(
 
 	opPos++;
 
-	std::vector<XObject*>	args;
+	Function::XObjectArgVectorType	args;
 
 	while(opPos < endFunc)
 	{
