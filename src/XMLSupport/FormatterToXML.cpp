@@ -61,8 +61,8 @@
 
 
 
-#include <xercesc/sax/AttributeList.hpp>
-#include <xercesc/sax/SAXException.hpp>
+#include <sax/AttributeList.hpp>
+#include <sax/SAXException.hpp>
 
 
 
