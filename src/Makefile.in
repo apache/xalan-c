@@ -140,7 +140,7 @@ PREFIX = @prefix@
 ifeq ($(PLATFORM), LINUX)
 
   SUPPORTED = TRUE
-  PLATFORM_COMPILE_OPTIONS = -fpic -Wall -instances=static -D${PLATFORM} -D_REENTRANT
+  PLATFORM_COMPILE_OPTIONS = -fpic -Wall -D${PLATFORM} -D_REENTRANT
   ALLLIBS = ${LIBS} -L/usr/lib
   SHLIBSUFFIX=.so
 
