@@ -259,10 +259,6 @@ FileUtility::getXMLFormatter(bool		shouldWriteXMLHeader,
 					true,	// xmlDecl
 					standalone);
 
-//		fToXML->setShouldWriteXMLHeader(shouldWriteXMLHeader);
-//		fToXML->setStripCData(stripCData);
-//		fToXML->setEscapeCData(escapeCData);
-
 		formatter = fToXML;
 		return formatter;
 }
@@ -360,12 +356,14 @@ FileUtility::checkAPIResults(const XalanDOMString& actual,
 //		Void
 //		
 */
-bool
-FileUtility::compareDOMResults(const XalanDOMString& theOutputFile, 
+void
+FileUtility::checkDOMResults(const XalanDOMString& theOutputFile, 
 			   const XalanCompiledStylesheet* compiledSS, 
 			   XalanSourceTreeDocument* dom,
-			   const XSLTInputSource& goldInputSource)
+			   const XSLTInputSource& goldInputSource,
+			   XMLFileReporter& logfile)
 {
+	int ambgFlag = data.nogold;
 	const XalanDOMString mimeEncoding("");
 	XalanFileOutputStream myOutput(theOutputFile);
 	XalanOutputStreamPrintWriter myResultWriter(myOutput);
@@ -385,7 +383,34 @@ FileUtility::compareDOMResults(const XalanDOMString& theOutputFile,
 	
 	XalanDocument* goldDom = parserLiaison.parseXMLStream(goldInputSource);
 
-	return domCompare(*goldDom, *dom);
+	
+	if(domCompare(*goldDom, *dom))
+	{
+		cout << "Passed: " << data.testOrFile << endl;
+		logfile.logCheckPass(data.testOrFile);
+		data.pass += 1;
+	}
+	else
+	{	// if the compairson fails gather up the failure data and determine if it failed 
+		// due to bad output or missing Gold file. Lastly, log the failure.
+		Hashtable attrs;
+		Hashtable actexp;
+		reportError();
+
+		attrs.insert(Hashtable::value_type(XalanDOMString("reason"), XalanDOMString(data.msg)));
+		attrs.insert(Hashtable::value_type(XalanDOMString("atNode"), data.currentNode));
+		actexp.insert(Hashtable::value_type(XalanDOMString("exp"), data.expected));
+		actexp.insert(Hashtable::value_type(XalanDOMString("act"), data.actual));
+
+		if (ambgFlag < data.nogold)
+		{
+			logfile.logCheckAmbiguous(data.testOrFile);
+		}
+		else
+		{
+			logfile.logCheckFail(data.testOrFile, attrs, actexp);
+		}
+	}
 }
 
 /*	This routine takes the result file and gold file and parses them.
@@ -425,7 +450,7 @@ FileUtility::compareSerializedResults(const XalanDOMString& outputFile,
 	// This exception is being reported prior to this Catch, however, however, I clarify that it's a SAX exception.
 	// It's a good indication that the Gold file is not a valid XML.  When this happens the transform result needs
 	// to be compared with the Gold,  with a character by character basis,  not via the DOM compair. 
-	catch (SAXException& e)
+	catch (SAXException)
 	{
 		cout << "SAXException: Using fileCompare to check output.\n";
 		return fileCompare(c_str(TranscodeToLocalCodePage(goldFile)), c_str(TranscodeToLocalCodePage(outputFile)));
@@ -448,10 +473,10 @@ bool
 FileUtility::fileCompare(const char* goldFile,
 						const char* outputFile)
 {
-	FILE *result, *gold;			// declare files
-	char rline[132] = {'/n'};		// declare buffers to hold single line from file
-	char gline[132] = {'/n'};	
-	char temp[10];					// buffer to hold line number
+	FILE *result, *gold;		// declare files
+	char rline[132] = {'0'};	// declare buffers to hold single line from file
+	char gline[132] = {'0'};	
+	char temp[10];				// buffer to hold line number
 	char lineNum = 1;
 
 	// Set fail data incase there are i/o problems with the files to compare.
@@ -466,7 +491,7 @@ FileUtility::fileCompare(const char* goldFile,
 	// If the result file fails to open report this as a failure.
 	if (!result)
 	{
-		data.msg = "No Result file (Transform failed)";
+		data.msg = "No Result (Transform failed)";
 		data.fail += 1;
 		return false;
 	}
@@ -488,14 +513,14 @@ FileUtility::fileCompare(const char* goldFile,
 
 		if (ferror(gold) || ferror(result))
 		{
-			data.msg = "Read Error on either Gold or Result file";
+			data.msg = "Read Error - Gold/Result file";
 			data.currentNode = XalanDOMString("Line: ") + XalanDOMString(temp);
 			return false;
 		}
 
 		// Compare the lines character by charcter ....
-		int i = 0;
-		while(i < sizeof(gline)) 
+		unsigned int i = 0;
+		while(i < strlen(gline)) 
 		{
 			if (gline[i] == rline[i]) 
 			{
@@ -505,7 +530,7 @@ FileUtility::fileCompare(const char* goldFile,
 			else 
 			{	// If there is a mismatch collect up the fail data and return false.  To ensure that 
 				// the results can be seen in the browser enclose the actual/expected in CDATA Sections.
-				data.msg = "Error: Text based comparison failure";
+				data.msg = "Text based comparison failure";
 				data.expected = XalanDOMString("<![CDATA[") + XalanDOMString(gline) + XalanDOMString("]]>");
 				data.actual = XalanDOMString("<![CDATA[") + XalanDOMString(rline) + XalanDOMString("]]>");
 				data.currentNode = XalanDOMString("Line: ") + XalanDOMString(temp);
@@ -541,13 +566,9 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc)
 	const XalanDOMString&  docNodeName  = doc.getNodeName();	
 	const XalanDOMString&  goldNodeName = gold.getNodeName();
 
-	const XalanDOMString&	docNodeValue  = doc.getNodeValue();
-	const XalanDOMString&	goldNodeValue = gold.getNodeValue();
-
-
 	if (goldNodeType != docNodeType)
 	{
-		collectData("Error: NodeType mismatch.",
+		collectData("NodeType mismatch.",
 					docNodeName,
 					XalanDOMString(xalanNodeTypes[docNodeType]),
 					XalanDOMString(xalanNodeTypes[goldNodeType]));
@@ -558,7 +579,6 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc)
 	{
 	case XalanNode::ELEMENT_NODE:	// ATTRIBUTE_NODE's are processed with diffElement().
 	{ 
-
 		if ( ! diffElement(gold, doc) ) 
 		{
 			return false;
@@ -568,14 +588,14 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc)
 	}
 	case XalanNode::TEXT_NODE:	
 	{
-
-//#if !defined(NDEBUG) && defined(_MSC_VER)
-//		cout << "Node is: " << c_str(TranscodeToLocalCodePage(docNodeValue)) << endl;
-//#endif
+		const XalanDOMString&	docNodeValue  = doc.getNodeValue();
+		const XalanDOMString&	goldNodeValue = gold.getNodeValue();
+		
+		//debugNodeData(docNodeName, docNodeValue);
 		
 		if(goldNodeValue != docNodeValue)
 		{
-			collectData("Error: Text node mismatch. ", 
+			collectData("Text node mismatch. ", 
 						 docNodeName,
 						 goldNodeValue,
 						 docNodeValue);
@@ -597,7 +617,7 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc)
 			}
 			else
 			{
-				collectData("Error: Element missing SiblingNode. ", 
+				collectData("Element missing SiblingNode. ", 
 						 docNodeName,
 						 goldNextNode->getNodeName(),
 						 goldNextNode->getNodeName());
@@ -617,30 +637,18 @@ FileUtility::domCompare(const XalanNode& gold ,const XalanNode& doc)
 	}
 	case XalanNode::DOCUMENT_NODE:
 	{
+		//debugNodeData(docNodeName);
 
-//#if !defined(NDEBUG) && defined(_MSC_VER)
-//		cout << "Node is: " << c_str(TranscodeToLocalCodePage(docNodeName)) << endl;
-//#endif
-		// We should never reach this code path.  The parser should flag the fact that there
-		// is no Document_Node.
-		if (goldNodeName != docNodeName)  
+		const XalanNode	*goldNextNode;
+		const XalanNode	*domNextNode;
+
+		goldNextNode = gold.getFirstChild();
+		domNextNode = doc.getFirstChild();
+
+		if (0 != goldNextNode)
 		{
-			assert(goldNodeName != docNodeName);
-		}
-		else
-		{
-			const XalanNode	*goldNextNode;
-			const XalanNode	*domNextNode;
-
-			goldNextNode = gold.getFirstChild();
-			domNextNode = doc.getFirstChild();
-
-			if (0 != goldNextNode)
-			{
-				if( ! domCompare(*goldNextNode,*domNextNode) )
-					return false;
-			}
-
+			if( ! domCompare(*goldNextNode,*domNextNode) )
+				return false;
 		}
 
 		break;
@@ -679,16 +687,13 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 	const XalanDOMString&  docNsUri  = doc.getNamespaceURI();
 	const XalanDOMString&  goldNsUri = gold.getNamespaceURI();
 
-//#if !defined(NDEBUG) && defined(_MSC_VER)
-//	cout << "Node is: " << c_str(TranscodeToLocalCodePage(docNodeName)) << endl;
-//#endif
+	//debugNodeData(docNodeName);
 
 	// This essentially checks 2 things, that the prefix and localname are the
 	// same.  So specific checks of these items are not necessary.
 	if (goldNodeName != docNodeName)
 	{
-		
-		collectData("Error: Element mismatch. ", 
+		collectData("Element mismatch. ", 
 						 docNodeName,
 						 goldNodeName,
 						 docNodeName);
@@ -697,8 +702,7 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 
 	if ( goldNsUri != docNsUri)
 	{
-
-		collectData("Error: Element NamespaceURI mismatch. ",
+		collectData("Element NamespaceURI mismatch. ",
 						 docNodeName,
 						 goldNsUri,
 						 docNsUri);
@@ -708,15 +712,27 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 	// Get Attributes for each Element Node. 
 	const XalanNamedNodeMap	*goldAttrs = gold.getAttributes();
 	const XalanNamedNodeMap *docAttrs  = doc.getAttributes();
-	
+
 	// Get number of Attributes
 	int numGoldAttr = goldAttrs->getLength();
 	int numDomAttr  = docAttrs ->getLength();
 
-	// Check that each Element has same number of Attributes. If they don't report error 
+	/*
+	// This needs to be uncommented if 'compare.exe' is to work. 
+	// If this is the 'root' element strip off the xmlns:xml namespace attribute,
+	// that is lurking around on the gold file, but not the dom.  This is necessary
+	// only for the 'compare' test, that uses a pure DOM, that has not been serialized.
+	//if (goldNodeName == XalanDOMString("root"))
+	{
+		numGoldAttr -= 1;
+		XalanNode *gXMLAttr = goldAttrs->item(1);
+	}
+	*/
+	// Check that each Element has same number of Attributes. If they don't report error  
 	if ( numGoldAttr == numDomAttr )
 	{
 		// Compare Attributes one at a time.
+		//for (int i=1; i < numGoldAttr; i++)  // To be used with 'compare'
 		for (int i=0; i < numGoldAttr; i++)
 		{
 			// Attribute order is irrelvant, so comparision is base on Attribute name.
@@ -731,7 +747,7 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 			}
 			else
 			{
-				collectData("Error: Element missing named Attribute. ",
+				collectData("Element missing named Attribute. ",
 						 docNodeName,
 						 goldAttrName,
 						 XalanDOMString("NOTHING"));
@@ -744,7 +760,7 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 		char  buf1[2], buf2[2];
 		sprintf(buf1, "%d", numGoldAttr);
 		sprintf(buf2, "%d", numDomAttr);
-		collectData("Error: Elements don't have same number of attributes. ",
+		collectData("Wrong number of attributes. ",
 						 docNodeName,
 						 XalanDOMString(buf1),
 						 XalanDOMString(buf2));
@@ -766,7 +782,7 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 		}
 		else
 		{
-			collectData("Error: Element missing ChildNode. ", 
+			collectData("Element missing ChildNode. ", 
 						 docNodeName,
 						 XalanDOMString(goldNextNode->getNodeName()),
 						 XalanDOMString("NOTHING"));
@@ -779,7 +795,7 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 		// then gather up the text and print it out.
 		if ( domNextNode->getNodeType() == XalanNode::TEXT_NODE)
 		{
-			collectData("Error: Transformed Doc has additional Child nodes: ", 
+			collectData("Result has additional Child node: ", 
 					docNodeName,
 					XalanDOMString("NOTHING"),		 
 					XalanDOMString(domNextNode->getNodeName()) + XalanDOMString("  \"") +
@@ -788,7 +804,7 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 		// Additional node is NOT text, so just print it's Name.
 		else
 		{
-			collectData("Error: Transformed Doc has additional Child node: ", 
+			collectData("Result has additional Child node: ", 
 						docNodeName,
 						XalanDOMString("NOTHING"),		 
 						XalanDOMString(domNextNode->getNodeName()));
@@ -811,7 +827,7 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 		else
 		{	// domcomtest10 used to fail here,  now it is caught above, with the error
 			// "Transformed Doc has additional Child nodes:"
-			collectData("Error: Element missing SiblingNode. ", 
+			collectData("Element missing SiblingNode. ", 
 						 docNodeName,
 						 XalanDOMString(goldNextNode->getNodeName()),
 						 XalanDOMString("NOTHING"));
@@ -824,7 +840,7 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 			// then gather up the text and print it out.
 			if ( domNextNode->getNodeType() == XalanNode::TEXT_NODE)
 			{
-				collectData("Error: Transformed Doc has additional sibling nodes: ", 
+				collectData("Result has additional sibling node: ", 
 						docNodeName,
 						XalanDOMString("NOTHING"),		 
 						XalanDOMString(domNextNode->getNodeName()) + XalanDOMString("  \"") +
@@ -833,7 +849,7 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 			// Additional node is NOT text, so just print it's Name.
 			else
 			{
-				collectData("Error: Transformed Doc has additional sibling node: ", 
+				collectData("Result has additional sibling node: ", 
 						docNodeName,
 						XalanDOMString("NOTHING"),		 
 						XalanDOMString(domNextNode->getNodeName()));
@@ -862,30 +878,28 @@ bool FileUtility::diffAttr(const XalanNode* gAttr, const XalanNode* dAttr)
 {
 
 	const XalanDOMString& docAttrName  = dAttr->getNodeName();
+	const XalanDOMString& goldAttrName = gAttr->getNodeName();
 
-//#if !defined(NDEBUG) && defined(_MSC_VER)
-//	const XalanDOMString& goldAttrName = gAttr->getNodeName();
-//	cout << "	Attribute is: " << c_str(TranscodeToLocalCodePage(goldAttrName)) << endl;
-//#endif
-
-	const XalanDOMString& goldAttrNsUri = gAttr->getNamespaceURI();
-	const XalanDOMString& docAttrNsUri	= dAttr->getNamespaceURI();
+	//debugAttributeData(goldAttrName);
 
 	const XalanDOMString& goldAttrValue = gAttr->getNodeValue();
 	const XalanDOMString& docAttrValue	= dAttr->getNodeValue();
 
 	if (goldAttrValue != docAttrValue)
 	{
-		collectData("Error: Attribute Value mismatch. ",
+		collectData("Attribute Value mismatch. ",
 						 docAttrName,
 						 goldAttrValue,
 						 docAttrValue);
 		return false;
 	}
 
+	const XalanDOMString& goldAttrNsUri = gAttr->getNamespaceURI();
+	const XalanDOMString& docAttrNsUri	= dAttr->getNamespaceURI();
+
 	if (goldAttrNsUri != docAttrNsUri)
 	{
-		collectData("Error: Attribute NamespaceURI mismatch. ", 
+		collectData("Attribute NamespaceURI mismatch. ", 
 						 docAttrName,
 						 goldAttrNsUri,
 						 docAttrNsUri);
@@ -907,7 +921,7 @@ FileUtility::reportError()
 {
 
 	cout << endl << "* Failed "<< data.testOrFile 
-		 << "  " << data.msg << endl
+		 << "  Error: " << data.msg << endl
 		 << "	" << "Processing Node: " << data.currentNode << endl
 		 << "	Expected:	" << data.expected << endl
 		 << "	Actual:		" << data.actual << "\n\n";
@@ -947,6 +961,44 @@ FileUtility::reportPassFail(XMLFileReporter& logfile)
 	
 	sprintf(temp, "%d", data.fail);
 	runResults.insert(Hashtable::value_type(XalanDOMString("Failed"), XalanDOMString(temp)));
+
+	sprintf(temp, "%d", data.nogold);
+	runResults.insert(Hashtable::value_type(XalanDOMString("No_Gold_Files"), XalanDOMString(temp)));
+
+	logfile.logElementWAttrs(10, "RunResults", runResults, "xxx");	
+
+	cout << "\nPassed " << data.pass;
+	cout << "\nFailed " << data.fail;
+	cout << "\nMissing Gold " << data.nogold << endl;
+
+}
+
+void
+FileUtility::reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runid)
+{
+	Hashtable runResults;
+	char temp[5];
+
+	// Create entrys that contain runid, xerces version, and numbers for Pass, Fail and No Gold.
+
+	runResults.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), runid));
+	runResults.insert(Hashtable::value_type(XalanDOMString("Xerces-Version "), getXercesVersion()));
+	runResults.insert(Hashtable::value_type(XalanDOMString("ICU-Enabled "), XalanDOMString("No")));
+
+#if defined(XALAN_USE_ICU)
+	// At some point in time I want to be able to programatically check it the ICU is enabled.
+	// Dave needs to add some code before I can do this. It will not be done via ifdef's. 
+	runResults.insert(Hashtable::value_type(XalanDOMString("ICU-Enabled "), XalanDOMString("Yes")));
+#endif
+
+	sprintf(temp, "%d", data.pass);
+	runResults.insert(Hashtable::value_type(XalanDOMString("Passed"), XalanDOMString(temp)));
+	
+	sprintf(temp, "%d", data.fail);
+	runResults.insert(Hashtable::value_type(XalanDOMString("Failed"), XalanDOMString(temp)));
+
+	sprintf(temp, "%d", data.nogold);
+	runResults.insert(Hashtable::value_type(XalanDOMString("No_Gold_Files"), XalanDOMString(temp)));
 
 	logfile.logElementWAttrs(10, "RunResults", runResults, "xxx");	
 
