@@ -262,10 +262,6 @@ printArgOptions()
 
 
 
-#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
-#include<stl/_vector.c>
-#endif
-
 typedef vector<pair<const char*, const char*> >	StringPairVectorType;
 
 
@@ -1154,62 +1150,63 @@ main(
 		{
 			cout << "\nXSLException ";
 
-#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
-			cout << "Type is : ";
+			cout << "Type is: " << e.getType() << endl;
 
-			OutputString(cout, e.getType());
+			cout << "Message is: " << e.getMessage() << " (";
 
-			cout << endl;
+			const XalanDOMString&	theURI = e.getURI();
 
-			cout << "Message is : ";
+			if (length(theURI) != 0)
+			{
+				cout << theURI;
+			}
+			else
+			{
+				cout << "Unknown URI";
+			}
 
-			OutputString(cout, e.getMessage());
+			const int	theLineNumber = e.getLineNumber();
 
-			cout << endl;
-#else
-			cout << "Type is : " << e.getType() << endl;
+			if (theLineNumber != -1)
+			{
+				cout << ", line " << theLineNumber;
+			}
+			else
+			{
+				cout << ", unknown line";
+			}
 
-			cout << "Message is : " << e.getMessage() << endl;
-#endif
+			const int	theColumnNumber = e.getColumnNumber();
+
+			if (theColumnNumber != -1)
+			{
+				cout << ", column " << theColumnNumber;
+			}
+			else
+			{
+				cout << ", unknown column";
+			}
+
+			cout << ")" << endl;
+
 			theResult = -1;
 		}
 		catch (SAXException& e)
 		{
 			cout << "\nSAXException ";
 
-#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
-			cout << "Message is : ";
+			cout << "Message is: " << e.getMessage() << endl;
 
-			OutputString(cout, e.getMessage());
-
-			cout << endl;
-#else
-			cout << "Message is : " << e.getMessage() << endl;
-
-#endif
 			theResult = -2;
 		}
 		catch (XMLException& e)
 		{
 			cout << "\nXMLException ";
 
-#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
-			cout << "Type is : ";
+			cout << "Type is: " << e.getType() << endl;
 
-			OutputString(cout, e.getType());
+			cout << "Message is: " << e.getMessage() << endl;
 
-			cout << endl;
-
-			cout << "Message is : ";
-
-			OutputString(cout, e.getMessage());
-
-			cout << endl;
-#else
-			cout << "Type is : " << e.getType() << endl;
-
-			cout << "Message is : " << e.getMessage() << endl;
-#endif
 			theResult = -3;
 		}
 		catch(const XalanDOMException&	e)
