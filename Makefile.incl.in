@@ -360,8 +360,8 @@ endif
 
   endif
    
-  XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c25
-  ICU_LIB= -L$(ICUROOT)/lib -licuuc26 -L$(ICUI18NROOT)/lib -licui18n26
+  XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c26
+  ICU_LIB= -L$(ICUROOT)/lib -licuuc30 -L$(ICUI18NROOT)/lib -licui18n30
 
   LIB = $(LIB_NAME)$(LIB_MAJOR_VER).$(LIB_MINOR_VER)$(SHLIBSUFFIX)
   SO_NAME = $(LIB_NAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
@@ -402,8 +402,8 @@ endif
   MAKE_SHARED_MSG = ${CXX} $(CXXMSGFLAGS) -Wl,compat=pm4 -D${PLATFORM} -Wl,dll
   LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) -Wl,compat=pm4
 
-  XERCES_LIB=$(XERCESCROOT)/lib/libxerces-c2_5_0.x
-  ICU_LIB=$(XERCESCROOT)/lib/libicuuc26.1.x $(XERCESCROOT)/lib/libicui18n26.1.x
+  XERCES_LIB=$(XERCESCROOT)/lib/libxerces-c2_6_0.x
+  ICU_LIB=$(XERCESCROOT)/lib/libicuuc30.0.x $(XERCESCROOT)/lib/libicui18n30.0x
   
   LIB=$(LIB_NAME).$(VER)$(SHLIBSUFFIX) 
   
