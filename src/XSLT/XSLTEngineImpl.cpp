@@ -122,6 +122,11 @@
 
 
 
+#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
+#include <XalanSourceTree/FormatterToSourceTree.hpp>
+
+
+
 #include "Constants.hpp"
 #include "ElemWithParam.hpp"
 #include "FunctionCurrent.hpp"
@@ -161,7 +166,8 @@ XSLTEngineImpl::XSLTEngineImpl(
 	DocumentHandler(),
 	m_outputCarriageReturns(false),
 	m_outputLinefeeds(false),
-	m_resultTreeFactory(0),
+	m_useDOMResultTreeFactory(false),
+	m_domResultTreeFactory(0),
 	m_resultNameSpacePrefix(),
 	m_resultNameSpaceURL(),
 	m_currentNode(),
@@ -199,7 +205,13 @@ XSLTEngineImpl::reset()
 	m_durationsTable.clear();
 	m_stylesheetLocatorStack.clear();
 	m_cdataStack.clear();
-	m_resultTreeFactory = 0;
+
+	if (m_domResultTreeFactory != 0)
+	{
+		m_parserLiaison.destroyDocument(m_domResultTreeFactory);
+		m_domResultTreeFactory = 0;
+	}
+
 	m_currentNode = 0;
 
 	m_outputContextStack.reset();
@@ -2055,35 +2067,6 @@ XSLTEngineImpl::cloneToResultTree(
 
 
 
-ResultTreeFragBase*
-XSLTEngineImpl::createResultTreeFrag(
-			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement&		templateChild, 
-			XalanNode*						sourceTree, 
-			XalanNode*						sourceNode,
-			const QName&					mode)
-{
-	XalanAutoPtr<ResultTreeFragBase> pfrag(createDocFrag());
-
-	FormatterToDOM	tempFormatter(m_resultTreeFactory, 
-								  pfrag.get(),
-								  0);
-
-//	setMustFlushPendingStartDocument(true);
-
-//	flushPending();
-
-	StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
-			executionContext,
-			&tempFormatter);
-
-	templateChild.executeChildren(executionContext, sourceTree, sourceNode, mode);
-
-	return pfrag.release();
-}
-
-
-
 void
 XSLTEngineImpl::outputResultTreeFragment(
 			StylesheetExecutionContext&		executionContext,
@@ -2857,28 +2840,18 @@ XSLTEngineImpl::getUniqueNamespaceValue(XalanDOMString&		theValue) const
 XalanDocument*
 XSLTEngineImpl::getDOMFactory() const
 {
-	if(m_resultTreeFactory == 0)
+	if(m_domResultTreeFactory == 0)
 	{
 #if defined(XALAN_NO_MUTABLE)
-		((XSLTEngineImpl*)this)->m_resultTreeFactory = m_parserLiaison.createDocument();
+		((XSLTEngineImpl*)this)->m_domResultTreeFactory = m_parserLiaison.createDOMFactory();
 #else
-		m_resultTreeFactory = m_parserLiaison.createDocument();
+		m_domResultTreeFactory = m_parserLiaison.createDOMFactory();
 #endif
 	}
 
-	return m_resultTreeFactory;
+	return m_domResultTreeFactory;
 }
 
-
-
-/**
- * Create a document fragment.  This function may return null.
- */
-ResultTreeFragBase* XSLTEngineImpl::createDocFrag() const
-{
-	return new ResultTreeFrag(*getDOMFactory());
-}
-  
 
 
 XLocator*
@@ -2895,14 +2868,6 @@ XSLTEngineImpl::associateXLocatorToNode(
 			XLocator*			xlocator)
 {
 	m_xpathEnvSupport.associateXLocatorToNode(node, xlocator);
-}
-
-
-
-ResultTreeFragBase*
-XSLTEngineImpl::createResultTreeFrag() const
-{
-	return new ResultTreeFrag(*getDOMFactory());
 }
 
 

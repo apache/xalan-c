@@ -124,6 +124,7 @@ class StylesheetConstructionContext;
 class StylesheetExecutionContext;
 class StylesheetRoot;
 class XalanAttr;
+class XalanSourceTreeDocument;
 class XalanText;
 class XLocator;
 class XMLParserLiaison;
@@ -260,17 +261,6 @@ public:
 			const PrefixResolver& 	namespaceContext,
 			const XalanDOMString&	stringedValue,
 			XPathExecutionContext&	executionContext);
-
-	virtual ResultTreeFragBase*
-	createResultTreeFrag(
-			StylesheetExecutionContext& 	executionContext,
-			const ElemTemplateElement&		templateChild,
-			XalanNode*						sourceTree,
-			XalanNode*						sourceNode,
-			const QName&					mode);
-
-	virtual ResultTreeFragBase*
-	createResultTreeFrag() const;
 
 	virtual void
 	resolveTopLevelParams(StylesheetExecutionContext&	executionContext);
@@ -1009,6 +999,13 @@ public:
 	reset();
 
 	/**
+	 * Get a DOM document, primarily for creating result 
+	 * tree fragments.
+	 */
+	virtual XalanDocument*
+	getDOMFactory() const;
+
+	/**
 	 * Retrieve the XPath environment support object
 	 *
 	 * @return XPath environment support object
@@ -1106,14 +1103,6 @@ public:
 	{
 		setMustFlushPendingStartDocumentImpl(b);
 	}
-
-	/**
-	 * Create a document fragment.	This function may return null.
-	 *
-	 * @return pointer to new document fragment
-	 */
-	ResultTreeFragBase*
-	createDocFrag() const;
 
 	/**
 	 * Get the list of attributes yet to be processed
@@ -1222,6 +1211,7 @@ public:
 			m_stylesheetLocatorStack.pop_back();
 		}
 	}
+
 
 	// These methods are inherited from DocumentHandler ...
 	
@@ -1404,9 +1394,14 @@ protected:
 	bool	m_outputLinefeeds;
 
 	/**
-	 * The factory that will be used to create result tree fragments.
+	 * If true, build DOM-based result tree fragments.
 	 */
-	mutable XalanDocument*	m_resultTreeFactory;
+	bool											m_useDOMResultTreeFactory;
+
+	/**
+	 * The factory that will be used to create DOM-based result tree fragments.
+	 */
+	mutable XalanDocument*							m_domResultTreeFactory;
 
 	/**
 	 * The namespace that the result tree conforms to.  A null value 
@@ -1470,7 +1465,6 @@ protected:
 	BoolVectorType			m_cdataStack;
 
 private:
-
 
 	/**
 	 * Determine if any pending attributes is a default
@@ -1621,13 +1615,6 @@ private:
 	 * until NodeList variables are implemented.
 	 */
 	static const bool	s_resolveContentsEarly;
-
-	/**
-	 * Get a DOM document, primarily for creating result 
-	 * tree fragments.
-	 */
-	virtual XalanDocument*
-	getDOMFactory() const;
 
 	bool
 	getResolveContentsEarly() const

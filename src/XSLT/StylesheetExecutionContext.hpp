@@ -1427,6 +1427,12 @@ public:
 	virtual bool
 	returnMutableNodeRefList(MutableNodeRefList*	theList) = 0;
 
+	virtual ResultTreeFragBase*
+	borrowResultTreeFrag() = 0;
+
+	virtual bool
+	returnResultTreeFrag(ResultTreeFragBase*	theResultTreeFragBase) = 0;
+
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const = 0;
 

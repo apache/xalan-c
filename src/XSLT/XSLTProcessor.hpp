@@ -276,33 +276,6 @@ public:
 			XPathExecutionContext&	executionContext) = 0;
 
 	/**
-	 * Given a stylesheet element, create a result tree fragment from its 
-	 * contents.  Caller owns the memory.
-	 *
-	 * @param templateChild template element that holds the fragment
-	 * @param sourceTree	source tree document context
-	 * @param sourceNode	current source context node
-	 * @param mode			mode under which the template is operating
-	 * @return pointer to an object that represents the result tree fragment
-	 * @exception XSLProcessorException 
-	 */
-	virtual ResultTreeFragBase*
-	createResultTreeFrag(
-			StylesheetExecutionContext& 	executionContext,
-			const ElemTemplateElement&		templateChild,
-			XalanNode*						sourceTree,
-			XalanNode*						sourceNode,
-			const QName&					mode) = 0;
-
-	/**
-	 * Create an empty result tree fragment. Caller owns the memory.
-	 *
-	 * @return pointer to an object that represents the result tree fragment
-	 */
-	virtual ResultTreeFragBase*
-	createResultTreeFrag() const = 0;
-
-	/**
 	 * Resolve the params that were pushed by the caller.
 	 */
 	virtual void

@@ -93,6 +93,11 @@
 
 
 
+#include <XalanSourceTree/FormatterToSourceTree.hpp>
+#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
+
+
+
 #include "Constants.hpp"
 #include "ElemTemplateElement.hpp"
 #include "ElemWithParam.hpp"
@@ -139,7 +144,9 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_matchPatternCache(),
 	m_keyTables(),
 	m_keyDeclarationSet(),
-	m_countersTable()
+	m_countersTable(),
+	m_useDOMResultTreeFactory(false),
+	m_sourceTreeResultTreeFactory()
 {
 }
 
@@ -859,14 +866,43 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 			XalanNode*					sourceNode,
 			const QName&				mode)
 {
-	XalanAutoPtr<ResultTreeFragBase>
-		theFragment(m_xsltProcessor.createResultTreeFrag(*this,
-														 templateChild,
-														 sourceTree,
-														 sourceNode,
-														 mode));
+	BorrowReturnResultTreeFrag	theResultTreeFrag(*this);
 
-	return getXObjectFactory().createResultTreeFrag(theFragment.release());
+	if (m_useDOMResultTreeFactory == true)
+	{
+		XalanDocument* const	theDocument = m_xsltProcessor.getDOMFactory();
+
+		FormatterToDOM	tempFormatter(
+					theDocument,
+					theResultTreeFrag.get(),
+					0);
+
+		theResultTreeFrag->setOwnerDocument(theDocument);
+
+		StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
+				*this,
+				&tempFormatter);
+
+		templateChild.executeChildren(*this, sourceTree, sourceNode, mode);
+	}
+	else
+	{
+		XalanSourceTreeDocument* const	theDocument = getSourceTreeFactory();
+
+		FormatterToSourceTree	tempFormatter(
+					theDocument,
+					theResultTreeFrag.get());
+
+		theResultTreeFrag->setOwnerDocument(theDocument);
+
+		StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
+				*this,
+				&tempFormatter);
+
+		templateChild.executeChildren(*this, sourceTree, sourceNode, mode);
+	}
+
+	return getXObjectFactory().createResultTreeFrag(theResultTreeFrag);
 }
 
 
@@ -1296,6 +1332,11 @@ StylesheetExecutionContextDefault::reset()
 
 	assert(m_matchPatternCache.size() == 0);
 
+	// Destroy the source tree factory, which
+	// will destroy all result tree fragment nodes
+	// that were generated...
+	m_sourceTreeResultTreeFactory.reset();
+
 	m_countersTable.reset();
 
 	// Reset the default execution context...
@@ -1459,6 +1500,22 @@ bool
 StylesheetExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*		theList)
 {
 	return m_xpathExecutionContextDefault.returnMutableNodeRefList(theList);
+}
+
+
+
+ResultTreeFragBase*
+StylesheetExecutionContextDefault::borrowResultTreeFrag()
+{
+	return m_xpathExecutionContextDefault.borrowResultTreeFrag();
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::returnResultTreeFrag(ResultTreeFragBase*		theResultTreeFragBase)
+{
+	return m_xpathExecutionContextDefault.returnResultTreeFrag(theResultTreeFragBase);
 }
 
 
@@ -1780,6 +1837,23 @@ StylesheetExecutionContextDefault::message(
 			const XalanNode*	styleNode) const
 {
 	message(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+XalanSourceTreeDocument*
+StylesheetExecutionContextDefault::getSourceTreeFactory() const
+{
+	if(m_sourceTreeResultTreeFactory.get() == 0)
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((XSLTEngineImpl*)this)->m_sourceTreeResultTreeFactory.reset(new XalanSourceTreeDocument);
+#else
+		m_sourceTreeResultTreeFactory.reset(new XalanSourceTreeDocument);
+#endif
+	}
+
+	return m_sourceTreeResultTreeFactory.get();
 }
 
 

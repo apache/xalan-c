@@ -78,12 +78,19 @@
 
 
 
+#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
+#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
+#endif
+
+
+
 #include <XSLT/CountersTable.hpp>
 #include <XSLT/Stylesheet.hpp>
 #include <XSLT/VariablesStack.hpp>
 
 
 
+class XalanSourceTreeDocument;
 class XPathProcessor;
 class XObjectFactory;
 class XSLTEngineImpl;
@@ -146,6 +153,31 @@ public:
 
 	virtual
 	~StylesheetExecutionContextDefault();
+
+	/**
+	 * Get the value of the flag that controls whether result tree
+	 * fragments are created using a DOM factory, or a XalanSourceTreeDocument.
+	 *
+	 * @return The value
+	 */
+	bool
+	getUseDOMResultTreeFactory() const
+	{
+		return m_useDOMResultTreeFactory;
+	}
+
+	/**
+	 * Set the value of the flag that controls whether result tree
+	 * fragments are created using a DOM factory, or a XalanSourceTreeDocument.
+	 *
+	 * @param The boolean value
+	 */
+	void
+	setUseDOMResultTreeFactory(bool		theValue)
+	{
+		m_useDOMResultTreeFactory = theValue;
+	}
+
 
 	// These interfaces are inherited from StylesheetExecutionContext...
 
@@ -655,6 +687,12 @@ public:
 	virtual bool
 	returnMutableNodeRefList(MutableNodeRefList*	theList);
 
+	virtual ResultTreeFragBase*
+	borrowResultTreeFrag();
+
+	virtual bool
+	returnResultTreeFrag(ResultTreeFragBase*	theResultTreeFragBase);
+
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const;
 
@@ -772,6 +810,13 @@ public:
 private:
 
 	/**
+	 * Get a XalanSourceTreeDocument, primarily for creating result 
+	 * tree fragments.
+	 */
+	XalanSourceTreeDocument*
+	getSourceTreeFactory() const;
+
+	/**
 	 * Determine if the XPath is one that we have cached.
 	 *
 	 * @param theXPath the XPath instance to check
@@ -839,6 +884,14 @@ private:
 	KeyDeclarationSetType				m_keyDeclarationSet;
 
 	CountersTable						m_countersTable;
+
+	bool								m_useDOMResultTreeFactory;
+
+	/**
+	 * The factory that will be used to create result tree fragments based on our
+	 * proprietary source tree.
+	 */
+	mutable XalanAutoPtr<XalanSourceTreeDocument>	m_sourceTreeResultTreeFactory;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 
