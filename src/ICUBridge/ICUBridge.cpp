@@ -305,8 +305,15 @@ ICUBridge::collationCompare(
 	{
 		// OK, do the compare...
 		return theCollator->compare(
+#if defined(XALAN_ICU_BRIDGE_UCHAR_MISMATCH)
 					XalanDOMCharStringToUnicodeString(theLHS),
 					XalanDOMCharStringToUnicodeString(theRHS));
+#else
+					theLHS,
+					length(theLHS),
+					theRHS,
+					length(theRHS));
+#endif
 	}
 	else
 	{
