@@ -78,6 +78,7 @@
 
 
 
+#include <XSLT/CountersTable.hpp>
 #include <XSLT/Stylesheet.hpp>
 #include <XSLT/VariablesStack.hpp>
 
@@ -204,7 +205,10 @@ public:
 	getResultNamespaceForPrefix(const XalanDOMString&	thePrefix) const;
 
 	virtual XalanDOMString
-	getUniqueNameSpaceValue() const;
+	getUniqueNamespaceValue() const;
+
+	virtual void
+	getUniqueNamespaceValue(XalanDOMString&		theValue) const;
 
 	virtual FormatterListener*
 	getFormatterListener() const;
@@ -568,6 +572,9 @@ public:
 	createPrintWriter(std::ostream&		theStream);
 #endif
 
+	virtual CountersTable&
+	getCountersTable();
+
 	// These interfaces are inherited from XPathExecutionContext...
 
 	virtual void
@@ -848,6 +855,8 @@ private:
 	KeyTablesTableType					m_keyTables;
 
 	KeyDeclarationSetType				m_keyDeclarationSet;
+
+	CountersTable						m_countersTable;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 

@@ -120,7 +120,7 @@ FunctionUnparsedEntityURI::execute(
 
 	const XalanDOMString&	uri = executionContext.getUnparsedEntityURI(name, *doc);
 
-	return executionContext.getXObjectFactory().createString(uri);
+	return executionContext.getXObjectFactory().createStringReference(uri);
 }
 
 

@@ -158,19 +158,23 @@ ElemAttribute::execute(
 
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
-	XalanDOMString attrName;
+	StylesheetExecutionContext::GetAndReleaseCachedString	attrName(executionContext);
 
 	m_pNameAVT->evaluate(attrName, sourceNode, *this, executionContext);
 
 	if(!isEmpty(attrName))
 	{
-		const XalanDOMString	origAttrName(attrName);      // save original attribute name
+		// save original attribute name
+		StylesheetExecutionContext::GetAndReleaseCachedString	origAttrName(executionContext);
+
+		assign(origAttrName, attrName);
 
 		const unsigned int		origAttrNameLength = length(origAttrName);
 
 		unsigned int			indexOfNSSep = 0;
 
-		XalanDOMString			attrNameSpace;
+		// save original attribute name
+		StylesheetExecutionContext::GetAndReleaseCachedString	attrNameSpace(executionContext);
 
 		if(0 != m_pNamespaceAVT)
 		{
@@ -186,7 +190,7 @@ ElemAttribute::execute(
 
 				if(indexOfNSSep < origAttrNameLength)
 				{
-					attrName = substring(attrName, indexOfNSSep + 1);
+					assign(attrName, substring(attrName, indexOfNSSep + 1));
 				}
 
 				const XalanDOMString&	prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
@@ -194,7 +198,7 @@ ElemAttribute::execute(
 				if(isEmpty(prefix) == false)
 				{
 #if defined(XALAN_USE_XERCES_DOMSTRING)
-					attrName = prefix + DOMServices::s_XMLNamespaceSeparatorString + attrName;
+					assign(attrName, prefix + DOMServices::s_XMLNamespaceSeparatorString + attrName);
 #else
 					reserve(
 						attrName,
@@ -206,16 +210,18 @@ ElemAttribute::execute(
 				}
 				else
 				{
-					const XalanDOMString	newPrefix(executionContext.getUniqueNameSpaceValue());
+					StylesheetExecutionContext::GetAndReleaseCachedString	newPrefix(executionContext);
+
+					executionContext.getUniqueNamespaceValue(newPrefix);
 
 #if defined(XALAN_USE_XERCES_DOMSTRING)
 					const XalanDOMString	nsDecl = DOMServices::s_XMLNamespaceWithSeparator + newPrefix;
 #else
-					XalanDOMString			nsDecl;
+					StylesheetExecutionContext::GetAndReleaseCachedString	nsDecl(executionContext);
 
 					reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
 
-					nsDecl = XalanDOMString(DOMServices::s_XMLNamespaceWithSeparator);
+					assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
 					
 					append(nsDecl, newPrefix);
 #endif
@@ -223,7 +229,7 @@ ElemAttribute::execute(
 
 // $$$ ToDo: Move these blocks (and those in ElemElement.cpp) into a common set of functions...
 #if defined(XALAN_USE_XERCES_DOMSTRING)
-					attrName = newPrefix + DOMServices::s_XMLNamespaceSeparatorString + attrName;
+					assign(attrName, newPrefix + DOMServices::s_XMLNamespaceSeparatorString + attrName);
 #else
 					reserve(
 						attrName,
@@ -246,7 +252,7 @@ ElemAttribute::execute(
 			{
 				const XalanDOMString	nsprefix = substring(origAttrName, 0, indexOfNSSep);
 
-				attrNameSpace = getNamespaceForPrefix(nsprefix);
+				assign(attrNameSpace, getNamespaceForPrefix(nsprefix));
 
 				if (isEmpty(attrNameSpace))
 				{

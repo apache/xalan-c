@@ -143,6 +143,7 @@ Stylesheet::Stylesheet(
 	m_XSLTVerDeclared(1.0L),
 	m_isRoot(&root == this ? true: false),
 	m_patternTable(),
+	m_patternCount(0),
 	m_attributeSets(),
 	m_surrogateChildren(*this),
 	m_fakeAttributes(),
@@ -358,6 +359,8 @@ Stylesheet::postConstruction()
     {
 		node->postConstruction(m_namespacesHandler);
 	}
+
+	m_patternCount = m_patternTable.size();
 }
 
 
@@ -572,16 +575,6 @@ Stylesheet::addTemplate(
 		}
 	}
 }
-	  
-
-
-const ElemTemplate*
-Stylesheet::findNamedTemplate(
-			const XalanDOMString&			name,
-			StylesheetExecutionContext& 	executionContext) const
-{
-	return findNamedTemplate(QNameByValue(name, m_namespaces), executionContext);
-}
 
 
 
@@ -637,6 +630,67 @@ Stylesheet::findTemplate(
 
 
 
+void
+Stylesheet::addObjectIfNotFound(
+			const MatchPattern2*		thePattern,
+			PatternTableVectorType& 	theVector)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+
+	const PatternTableVectorType::const_iterator 	theResult =
+		find(
+				theVector.begin(),
+				theVector.end(),
+				thePattern);
+
+	// Did we find it?
+	if(theResult == theVector.end())
+	{
+		theVector.push_back(thePattern);
+	}
+}
+
+
+
+void
+Stylesheet::addObjectIfNotFound(
+			const MatchPattern2*	thePattern,
+			const MatchPattern2* 	thePatternArray[],
+			unsigned int&			thePatternArraySize)
+{
+	if (thePatternArraySize == 0)
+	{
+		thePatternArray[0] = thePattern;
+
+		++thePatternArraySize;
+	}
+	else
+	{
+		unsigned int i = 0;
+
+		while(i < thePatternArraySize)
+		{
+			if (thePatternArray[i] != thePattern)
+			{
+				++i;
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		if (i == thePatternArraySize)
+		{
+			thePatternArray[thePatternArraySize++] = thePattern;
+		}
+	}
+}
+
+
+
 const ElemTemplate*
 Stylesheet::findTemplate(
 			StylesheetExecutionContext& 	executionContext,
@@ -648,6 +702,7 @@ Stylesheet::findTemplate(
 {
 	assert(sourceTree != 0);
 	assert(targetNode != 0);
+	assert(m_patternCount == m_patternTable.size());
 
 	const ElemTemplate*		theResult = 0;
 
@@ -663,7 +718,25 @@ Stylesheet::findTemplate(
 		const MatchPattern2*	bestMatchedPattern = 0; // Syncs with bestMatchedRule
 		double					bestMatchPatPriority = XPath::s_MatchScoreNone;
 
-		PatternTableVectorType	conflicts;
+		unsigned int			nConflicts = 0;
+
+		// Use a stack-based array when possible...
+		const MatchPattern2*	conflictsArray[100];
+
+		XalanArrayAutoPtr<const MatchPattern2*>		conflictsVector;
+
+		const MatchPattern2**	conflicts = 0;
+
+		if (m_patternCount > sizeof(conflictsArray) / sizeof(conflictsArray[0]))
+		{
+			conflictsVector.reset(new const MatchPattern2*[m_patternCount]);
+
+			conflicts = conflictsVector.get();
+		}
+		else
+		{
+			conflicts = conflictsArray;
+		}
 
 		if(useImports == false)
 		{
@@ -781,15 +854,20 @@ Stylesheet::findTemplate(
 
 								if(priorityOfRule > priorityOfBestMatched)
 								{
-									conflicts.clear();
+									nConflicts = 0;
+
 									bestMatchedRule = rule;
 									bestMatchedPattern = matchPat;
 									bestMatchPatPriority = matchPatPriority;
 								}
 								else if(priorityOfRule == priorityOfBestMatched)
 								{
-									addObjectIfNotFound(bestMatchedPattern, conflicts);
-									conflicts.push_back(matchPat);
+									// Add the best matched pattern so far.
+									addObjectIfNotFound(bestMatchedPattern, conflicts, nConflicts);
+
+									// Add the pattern that caused the conflict...
+									conflicts[nConflicts++] = matchPat;
+
 									bestMatchedRule = rule;
 									bestMatchedPattern = matchPat;
 									bestMatchPatPriority = matchPatPriority;
@@ -853,8 +931,6 @@ Stylesheet::findTemplate(
 			}
 		}
 		
-		const unsigned int	nConflicts = conflicts.size();
-
 		if(nConflicts > 0)
 		{
 			const bool		quietConflictWarnings = executionContext.getQuietConflictWarnings();
@@ -919,30 +995,6 @@ Stylesheet::findTemplate(
 
 
 	
-void
-Stylesheet::addObjectIfNotFound(
-			const MatchPattern2*		thePattern,
-			PatternTableVectorType& 	theVector)
-{
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
-
-	const PatternTableVectorType::const_iterator 	theResult =
-		find(
-				theVector.begin(),
-				theVector.end(),
-				thePattern);
-
-	// Did we find it?
-	if(theResult == theVector.end())
-	{
-		theVector.push_back(thePattern);
-	}
-}
-
-
-
 const Stylesheet::PatternTableListType*
 Stylesheet::locateMatchPatternList2(XalanNode*	sourceNode) const
 {
@@ -987,10 +1039,8 @@ Stylesheet::locateMatchPatternList2(XalanNode*	sourceNode) const
 	return matchPatternList;
 }
 
-/**
- * Given an element type, locate the start of a linked list of 
- * possible tmpl matches.
- */
+
+
 const Stylesheet::PatternTableListType* 
 Stylesheet::locateMatchPatternList2(
 			const XalanDOMString&	sourceElementType,

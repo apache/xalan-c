@@ -81,7 +81,7 @@
 
 #include <XPath/PrefixResolver.hpp>
 #include <XPath/NameSpace.hpp>
-#include <XPath/QNameByValue.hpp>
+#include <XPath/QNameByReference.hpp>
 
 
 
@@ -132,7 +132,7 @@ public:
 	typedef map<XalanDOMString,
 				ExtensionNSHandler*,
 				less<XalanDOMString> >				ExtensionNamespacesMapType;
-	typedef map<QNameByValue,
+	typedef map<QNameByReference,
 				ElemTemplate*,
 				less<QName> >						ElemTemplateMapType;
 	typedef vector<ElemAttributeSet*> 				AttributeSetMapType;
@@ -149,7 +149,7 @@ public:
 #else
 	typedef std::map<XalanDOMString, XalanDOMString>		StringToStringMapType;
 	typedef std::map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
-	typedef std::map<QNameByValue, ElemTemplate*>			ElemTemplateMapType;
+	typedef std::map<QNameByReference, ElemTemplate*>		ElemTemplateMapType;
 	typedef std::vector<ElemAttributeSet*> 					AttributeSetMapType;
 	typedef std::vector<ElemVariable*> 						ElemVariableVectorType;
 	typedef std::vector<KeyDeclaration>						KeyDeclarationVectorType;
@@ -659,18 +659,7 @@ public:
 			ElemTemplateElement*			nsContext,
 			const AttributeList&			atts,
 			StylesheetConstructionContext&	constructionContext);
-  
-	/**
-	 * Locate a template via the "name" attribute.
-	 * 
-	 * @param name				 name of template
-	 * @param executionContext	 current execution context
-	 * @return pointer to template found or 0 if none found
-	 */
-	const ElemTemplate*
-	findNamedTemplate(
-			const XalanDOMString&			name,
-			StylesheetExecutionContext& 	executionContext) const;
+
 	/**
 	 * Locate a template via the "name" attribute.
 	 * 
@@ -844,7 +833,7 @@ public:
 #endif
 
 	/**
-	 * Add object to list of match patterns if not already there.
+	 * Add object to vector of match patterns if not already there.
 	 *
 	 * @param thePattern pattern to add
 	 * @param theVector  vector of patterns to add to
@@ -853,6 +842,21 @@ public:
 	addObjectIfNotFound(
 			const MatchPattern2*		thePattern,
 			PatternTableVectorType& 	theVector);
+
+	/**
+	 * Add object to array of match patterns if not already there.
+	 * theArraySize size will be incremented if the pattern was
+	 * added.
+	 *
+	 * @param thePattern pattern to add
+	 * @param theArray  vector of patterns to add to
+	 * @param theArraySize The size of the array
+	 */
+	static void
+	addObjectIfNotFound(
+			const MatchPattern2*	thePattern,
+			const MatchPattern2* 	theArray[],
+			unsigned int&			theArraySize);
 
 	/**
 	 * Given a source node, locate the start of a list of possible template
@@ -1261,6 +1265,12 @@ private:
 	 * of specifity.
 	 */
 	PatternTableMapType 					m_patternTable;
+
+	/**
+	 * This caches the size of the pattern table, so we don't recompute the
+	 * value each time.
+	 */
+	PatternTableMapType::size_type			m_patternCount;
 
 	/**
 	 * Table of attribute sets, keyed by set name.

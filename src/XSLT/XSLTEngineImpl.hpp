@@ -281,7 +281,10 @@ public:
 	getXMLParserLiaison() const;
 
 	virtual const XalanDOMString
-	getUniqueNSValue() const;
+	getUniqueNamespaceValue() const;
+
+	virtual void
+	getUniqueNamespaceValue(XalanDOMString&		theValue) const;
 
 	virtual void
 	setStylesheetParam(	

@@ -138,7 +138,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_variablesStack(),
 	m_matchPatternCache(),
 	m_keyTables(),
-	m_keyDeclarationSet()
+	m_keyDeclarationSet(),
+	m_countersTable()
 {
 }
 
@@ -322,9 +323,17 @@ StylesheetExecutionContextDefault::getResultNamespaceForPrefix(const XalanDOMStr
 
 
 XalanDOMString
-StylesheetExecutionContextDefault::getUniqueNameSpaceValue() const
+StylesheetExecutionContextDefault::getUniqueNamespaceValue() const
 {
-	return m_xsltProcessor.getUniqueNSValue();
+	return m_xsltProcessor.getUniqueNamespaceValue();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::getUniqueNamespaceValue(XalanDOMString&	theValue) const
+{
+	m_xsltProcessor.getUniqueNamespaceValue(theValue);
 }
 
 
@@ -1731,6 +1740,14 @@ StylesheetExecutionContextDefault::createPrintWriter(std::ostream&	theStream)
 	m_outputStreams.insert(theOutputStream);
 
 	return createPrintWriter(theOutputStream);
+}
+
+
+
+CountersTable&
+StylesheetExecutionContextDefault::getCountersTable()
+{
+	return m_countersTable;
 }
 
 

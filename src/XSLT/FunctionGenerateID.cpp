@@ -129,9 +129,7 @@ FunctionGenerateID::execute(
 	}
 	else
 	{
-		XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
-
-		XalanDOMString&		theID = theGuard.get();
+		XPathExecutionContext::GetAndReleaseCachedString	theID(executionContext);
 
 #if defined(XALAN_USE_XERCES_DOMSTRING)
 		getSuffix(context, theID);
@@ -139,7 +137,7 @@ FunctionGenerateID::execute(
 
 		return executionContext.getXObjectFactory().createString(m_prefix + theID);
 #else
-		theID = m_prefix;
+		theID.get() = m_prefix;
 
 		getSuffix(context, theID);
 
@@ -153,7 +151,7 @@ FunctionGenerateID::execute(
 XObjectPtr
 FunctionGenerateID::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
+			XalanNode*				/* context */,			
 			const XObjectPtr		arg1)
 {
 	assert(arg1.null() == false);

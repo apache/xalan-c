@@ -308,29 +308,37 @@ public:
 	virtual void
 	resolveTopLevelParams(StylesheetExecutionContext&	executionContext) = 0;
 
-  /**
-   * Get the XML Parser Liaison that this processor uses.
+	/**
+	 * Get the XML Parser Liaison that this processor uses.
 	 *
 	 * @return XML parser liaison object
-   */
-   virtual XMLParserLiaison&
-   getXMLParserLiaison() const = 0;
+	 */
+	virtual XMLParserLiaison&
+	getXMLParserLiaison() const = 0;
 
 	/**
 	 * Generate a random namespace prefix guaranteed to be unique.
-	 * 
+	 *
 	 * @return unique namespace prefix
 	 */
-   virtual const XalanDOMString
-   getUniqueNSValue() const = 0;
+	virtual const XalanDOMString
+	getUniqueNamespaceValue() const = 0;
 
-  /**
+	/**
+	 * Generate a random namespace prefix guaranteed to be unique.
+	 *
+	 * @param theValue A string for returning the new prefix
+	 */
+	virtual void
+	getUniqueNamespaceValue(XalanDOMString&		theValue) const = 0;
+
+   /**
 	* Push a top-level stylesheet parameter.  This value can be evaluated via
 	* xsl:param-variable.
 	*
-   * @param key   name of the parameter
-   * @param value XObject value for parameter
-   */
+    * @param key   name of the parameter
+    * @param value XObject value for parameter
+    */
    virtual void
    setStylesheetParam(
 			const XalanDOMString&	key,

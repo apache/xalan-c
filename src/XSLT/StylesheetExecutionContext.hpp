@@ -118,6 +118,7 @@
 
 
 
+class CountersTable;
 class ElemTemplateElement;
 class ElemVariable;
 class FormatterListener;
@@ -368,7 +369,15 @@ public:
 	 * @return unique namespace prefix
 	 */
 	virtual XalanDOMString
-	getUniqueNameSpaceValue() const = 0;
+	getUniqueNamespaceValue() const = 0;
+
+	/**
+	 * Generate a random namespace prefix guaranteed to be unique.
+	 * 
+	 * @param theValue A string for returning the new prefix
+	 */
+	virtual void
+	getUniqueNamespaceValue(XalanDOMString&		theValue) const = 0;
 
 	/**
 	 * Retrieve the current number of spaces to indent.
@@ -1339,6 +1348,15 @@ public:
 	createPrintWriter(std::ostream&		theStream) = 0;
 #endif
 
+	/**
+	 * Get the counters table, which is a table of cached
+	 * results that is used by ElemNumber.
+	 * 
+	 * @return A reference to the counters table.
+	 */
+	virtual CountersTable&
+	getCountersTable() = 0;
+
 	// These interfaces are inherited from XPathExecutionContext...
 
 	virtual void
@@ -1497,7 +1515,6 @@ public:
 
 	virtual const XalanDecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanDOMString&	name) = 0;
-
 
 	// These interfaces are inherited from ExecutionContext...
 

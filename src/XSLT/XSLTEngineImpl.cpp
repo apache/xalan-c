@@ -2870,17 +2870,31 @@ XSLTEngineImpl::getXMLParserLiaison() const
 
 
 const XalanDOMString
-XSLTEngineImpl::getUniqueNSValue() const
+XSLTEngineImpl::getUniqueNamespaceValue() const
 {
-#if defined(XALAN_NO_MUTABLE)
+	XalanDOMString	theResult;
+
+	getUniqueNamespaceValue(theResult);
+
+	return theResult;
+}
+
+
+
+void
+XSLTEngineImpl::getUniqueNamespaceValue(XalanDOMString&		theValue) const
+{
 	const unsigned long		temp = m_uniqueNSValue;
 
+#if defined(XALAN_NO_MUTABLE)
 	((XSLTEngineImpl*)this)->m_uniqueNSValue++;
-
-	return s_uniqueNamespacePrefix + UnsignedLongToDOMString(temp);
 #else
-	return s_uniqueNamespacePrefix + UnsignedLongToDOMString(m_uniqueNSValue++);
+	m_uniqueNSValue++;
 #endif
+
+	append(theValue, s_uniqueNamespacePrefix);
+
+	UnsignedLongToDOMString(temp, theValue);
 }
 
 

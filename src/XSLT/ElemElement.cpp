@@ -165,9 +165,7 @@ ElemElement::execute(
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	XalanDOMString	elemName; 
-
-	assert(m_nameAVT != 0);
+	StylesheetExecutionContext::GetAndReleaseCachedString	elemName(executionContext);
 
 	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext);
 
@@ -204,9 +202,7 @@ ElemElement::execute(
 	}
 	else if (haveNamespace == true)
 	{
-		const XalanDOMString	nsprefix = substring(elemName, 0, indexOfNSSep);
-
-		ns = &getNamespaceForPrefixInternal(nsprefix, false);
+		ns = &getNamespaceForPrefixInternal(substring(elemName, 0, indexOfNSSep), false);
 	}
 
 	const unsigned int	nsLength = ns == 0 ? 0 : length(*ns);
@@ -215,7 +211,7 @@ ElemElement::execute(
 	{
 		if(0 != m_namespaceAVT)
 		{
-			XalanDOMString	elemNameSpace;
+			StylesheetExecutionContext::GetAndReleaseCachedString	elemNameSpace(executionContext);
 
 			m_namespaceAVT->evaluate(elemNameSpace, sourceNode, *this, executionContext);
 
@@ -223,7 +219,7 @@ ElemElement::execute(
 			{
 				if(indexOfNSSep < len)
 				{
-					elemName = substring(elemName, indexOfNSSep + 1);
+					assign(elemName, substring(elemName, indexOfNSSep + 1));
 				}
 
 				const XalanDOMString&	prefix = executionContext.getResultPrefixForNamespace(elemNameSpace);
@@ -243,20 +239,22 @@ ElemElement::execute(
 				}
 				else
 				{
-					const XalanDOMString	newPrefix(executionContext.getUniqueNameSpaceValue());
+					StylesheetExecutionContext::GetAndReleaseCachedString	newPrefix(executionContext);
 
-					XalanDOMString			nsDecl;
+					executionContext.getUniqueNamespaceValue(newPrefix);
+
+					StylesheetExecutionContext::GetAndReleaseCachedString	nsDecl(executionContext);
 
 					reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
 
-					nsDecl = XalanDOMString(DOMServices::s_XMLNamespaceWithSeparator);
+					assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
 
 					append(nsDecl, newPrefix);
 
 					executionContext.addResultAttribute(nsDecl, elemNameSpace);
 
 #if defined(XALAN_USE_XERCES_DOMSTRING)
-					elemName = newPrefix + DOMServices::s_XMLNamespaceSeparatorString + elemName;
+					assign(elemName, newPrefix + DOMServices::s_XMLNamespaceSeparatorString + elemName);
 #else
 					reserve(
 						elemName,
