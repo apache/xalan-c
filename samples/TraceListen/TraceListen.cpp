@@ -3,8 +3,13 @@
 
 
 
-#include <iostream>
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <fstream.h>
+#include <iostream.h>
+#else
 #include <fstream>
+#include <iostream>
+#endif
 
 
 

@@ -1,20 +1,35 @@
 // Base header file.  Must be first.
 #include <Include/PlatformDefinitions.hpp>
 
-#include <iostream>
+
+
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <fstream.h>
+#include <iostream.h>
+#else
 #include <fstream>
+#include <iostream>
+#endif
 
 #include <util/PlatformUtils.hpp>
 #include <parsers/DOMParser.hpp>
 #include <dom/DOM_Node.hpp>
 
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 
+
+
 #include <DOMSupport/DOMSupportDefault.hpp>
+
+
 
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
+
+
 
 #include <XSLT/StylesheetConstructionContextDefault.hpp>
 #include <XSLT/StylesheetExecutionContextDefault.hpp>
@@ -24,8 +39,11 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
+
+
 #include <XercesParserLiaison/XercesDOMSupport.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
+
 
 
 int
