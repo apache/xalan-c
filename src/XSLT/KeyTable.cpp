@@ -139,8 +139,13 @@ KeyTable::KeyTable(
 
 				if (executionContext.getInConstruction(kd) == true)			
 				{
+					assert(kd.getURI() != 0);
+
 					throw XSLTProcessorException(
 							TranscodeFromLocalCodePage("The use of the key() function in the \"match\" or \"use\" attribute of xsl:key is illegal!"),
+							*kd.getURI(),
+							kd.getLineNumber(),
+							kd.getColumnNumber(),
 							TranscodeFromLocalCodePage("XSLTKeyIllegalKeyFunctionException"));
 				}
 				else
