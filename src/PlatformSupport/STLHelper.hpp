@@ -128,7 +128,7 @@ struct select1st : public std::unary_function<PairType, PairType::first_type>
 	typedef typename BaseClassType::result_type		result_type;
 	typedef typename BaseClassType::argument_type	argument_type;
 
-	typedef typename PairType						value_type;
+	typedef PairType								value_type;
 
 	/**
 	 * Retrieve the key of a key-value pair.
@@ -136,8 +136,8 @@ struct select1st : public std::unary_function<PairType, PairType::first_type>
 	 * @param thePair key-value pair
 	 * @return key
 	 */
-	typename result_type
-	operator()(const typename argument_type&	thePair) const
+	result_type
+	operator()(const argument_type&		thePair) const
 	{
 		return thePair.first;
 	}
@@ -165,7 +165,7 @@ struct select2nd : public std::unary_function<PairType, PairType::second_type>
 	typedef typename BaseClassType::result_type		result_type;
 	typedef typename BaseClassType::argument_type	argument_type;
 
-	typedef typename PairType						value_type;
+	typedef PairType								value_type;
 
 	/**
 	 * Retrieve the value of a key-value pair.
@@ -173,8 +173,8 @@ struct select2nd : public std::unary_function<PairType, PairType::second_type>
 	 * @param thePair key-value pair
 	 * @return value
 	 */
-	typename result_type
-	operator()(const typename argument_type&	thePair) const
+	result_type
+	operator()(const argument_type&		thePair) const
 	{
 		return thePair.second;
 	}
