@@ -206,11 +206,6 @@ ElemLiteralResult::postConstruction(const NamespacesHandler&	theParentHandler)
 
 
 
-// $$$ ToDo: Get rid of this when we get rid of Xerces' DOMString!!!
-static const XalanDOMChar	theDummy = 0;
-
-
-
 void
 ElemLiteralResult::execute(
 			StylesheetExecutionContext&		executionContext,
@@ -254,11 +249,9 @@ ElemLiteralResult::execute(
 					thePrefix,
 					theStringedValue) == false)
 			{
-				// $$$ ToDo: Get rid of theDummy when we get rid of Xerces' DOMString!!!
-				executionContext.replacePendingAttribute(
-						c_wstr(avt->getName()), 
-						c_wstr(avt->getType()),
-						length(theStringedValue) == 0 ? &theDummy : c_wstr(theStringedValue));
+				executionContext.addResultAttribute(
+						avt->getName(), 
+						theStringedValue);
 			}
 
 			clear(thePrefix);
