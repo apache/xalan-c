@@ -101,8 +101,8 @@ public:
 	public:
 
 		VectorEntry(
-			XalanNode*		theNode,
-			unsigned int	thePosition) :
+			XalanNode*		theNode = 0,
+			unsigned int	thePosition = 0) :
 			m_node(theNode),
 			m_position(thePosition)
 		{
