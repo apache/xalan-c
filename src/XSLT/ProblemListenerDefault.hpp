@@ -103,6 +103,14 @@ public:
 			int						lineNo,
 			int						charOffset);
 
+	// These methods are new...
+
+	PrintWriter*
+	getPrintWriter() const
+	{
+		return m_pw;
+	}
+
 private:
 
 	PrintWriter*	m_pw;
