@@ -63,7 +63,8 @@
 
 #include <cstdio>
 
-#if !defined(XALAN_NO_NAMESPACES)
+
+#if !defined(XALAN_NO_STD_NAMESPACE)
 	using std::cerr;
 	using std::cout;
 	using std::cin;
@@ -77,11 +78,8 @@
 
 
 
-#if XERCES_VERSION_MAJOR >= 2
-#include <xercesc/dom/deprecated/DOMParser.hpp>
-#else
-#include <xercesc/parsers/DOMParser.hpp>
-#endif
+#include <xercesc/parsers/XercesDOMParser.hpp>
+
 
 
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
@@ -99,11 +97,12 @@
 #include <Harness/FileUtility.hpp>
 #include <Harness/HarnessInit.hpp>
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
-#else
-	typedef std::map<XalanDOMString, XalanDOMString>  Hashtable;
-#endif
+
+
+// Just hoist everything...
+XALAN_CPP_NAMESPACE_USE
+
+
 
 // This is here for memory leak testing. 
 #if !defined(NDEBUG) && defined(_MSC_VER)
@@ -211,19 +210,21 @@ parseWithXerces(
 			XMLFileReporter&				logFile,
 			FileUtility&					h)
 {
+	XALAN_USING_XERCES(XercesDOMParser)
+	XALAN_USING_XERCES(DOMDocument)
 
 	h.data.xmlFormat = XalanDOMString("Xerces_DOM");
 
-	DOMParser  theParser;
-	theParser.setToCreateXMLDeclTypeNode(false);
+	XercesDOMParser  theParser;
+
 	theParser.setDoValidation(true);
 	theParser.setDoNamespaces(true);
 
 	theParser.parse(xmlInput);
 
-	DOM_Document theDOM = theParser.getDocument();
+	DOMDocument* const theDOM = theParser.getDocument();
 
-	theDOM.normalize();
+	theDOM->normalize();
 
 	XercesDOMSupport	theDOMSupport;
 	XercesParserLiaison theParserLiaison;
@@ -421,6 +422,8 @@ main(
 
 	try
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
 		XMLPlatformUtils::Initialize();

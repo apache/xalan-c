@@ -78,9 +78,13 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // Misc typedefs and Global variables.
 // These structures hold vectors of directory names and file names.
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XalanDOMString>		FileNameVectorType;
 #else
 	typedef std::vector<XalanDOMString>	FileNameVectorType;
@@ -437,6 +441,10 @@ private:
 #endif
 
 };        // end of class FileUtility
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -129,6 +129,10 @@ extern "C" int mkdir(const char*, mode_t mode);
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 
 const char* const	xalanNodeTypes[] =
 {
@@ -869,7 +873,7 @@ FileUtility::compareSerializedResults(
 	// This exception is being reported prior to this Catch, however, however, I clarify that it's a SAX exception.
 	// It's a good indication that the Gold file is not a valid XML.  When this happens the transform result needs
 	// to be compared with the Gold,  with a character by character basis,  not via the DOM compair. 
-	catch (const SAXException&)
+	catch (const XERCES_CPP_NAMESPACE_QUALIFIER SAXException&)
 	{
 		cout << "SAXException: Using fileCompare to check output.\n";
 
@@ -1551,25 +1555,25 @@ FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resul
 
 
 
-static XalanDOMString	s_xmlSuffix;
-static XalanDOMString	s_pathSep;
+static XalanDOMString	s_staticXmlSuffix;
+static XalanDOMString	s_staticPathSep;
 
 
 
-const XalanDOMString&	FileUtility::s_xmlSuffix = ::s_xmlSuffix;
-const XalanDOMString&	FileUtility::s_pathSep = ::s_pathSep;
+const XalanDOMString&	FileUtility::s_xmlSuffix = s_staticXmlSuffix;
+const XalanDOMString&	FileUtility::s_pathSep = s_staticPathSep;
 
 
 
 void
 FileUtility::initialize()
 {
-	::s_xmlSuffix = XALAN_STATIC_UCODE_STRING(".xml");
+	s_staticXmlSuffix = XALAN_STATIC_UCODE_STRING(".xml");
 
 #if defined(WIN32)
-	::s_pathSep = XALAN_STATIC_UCODE_STRING("\\");
+	s_staticPathSep = XALAN_STATIC_UCODE_STRING("\\");
 #else
-	::s_pathSep = XALAN_STATIC_UCODE_STRING("/");
+	s_staticPathSep = XALAN_STATIC_UCODE_STRING("/");
 #endif
 }
 
@@ -1578,6 +1582,10 @@ FileUtility::initialize()
 void
 FileUtility::terminate()
 {
-	releaseMemory(::s_pathSep);
-	releaseMemory(::s_xmlSuffix);
+	releaseMemory(s_staticXmlSuffix);
+	releaseMemory(s_staticPathSep);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

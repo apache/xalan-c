@@ -63,6 +63,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // This class is exported from the Harness.dll
 class HARNESS_API HarnessInit 
 {
@@ -73,6 +77,10 @@ public:
 
 	~HarnessInit();
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

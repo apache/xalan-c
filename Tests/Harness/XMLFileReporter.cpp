@@ -71,6 +71,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // $$$ToDo:  These strings must be initialized in a static call, and not at initialization.
 const XalanDOMString	XMLFileReporter::OPT_FILENAME(L"filename");
 const XalanDOMString	XMLFileReporter::ELEM_RESULTSFILE(L"resultsfile");
@@ -738,3 +742,7 @@ XMLFileReporter::getDateTimeString()
 
 	return XalanDOMString(theTime, strlen(theTime) - 1);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

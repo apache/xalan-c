@@ -73,13 +73,19 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static const XalanDOMInit*	s_xalanDOMInit = 0;
+
+
 
 HarnessInit::HarnessInit()
 {
 	assert(s_xalanDOMInit == 0);
 
-	XMLPlatformUtils::Initialize();
+	XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtils::Initialize();
 
 	s_xalanDOMInit = new XalanDOMInit;
 
@@ -96,5 +102,9 @@ HarnessInit::~HarnessInit()
 
 	s_xalanDOMInit = 0;
 
-	XMLPlatformUtils::Terminate();
+	XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtils::Terminate();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -74,13 +74,11 @@
 
 
 
-/**
- * Reporter that saves output to a simple XML-format file.  
- * @author Shane_Curcuru@lotus.com
- * @version $Id$
- */
+XALAN_CPP_NAMESPACE_BEGIN
 
-#if defined(XALAN_NO_NAMESPACES)
+
+
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
 #else
 	typedef std::map<XalanDOMString, XalanDOMString>	Hashtable;
@@ -410,6 +408,10 @@ private:
 	bool m_flushOnCaseClose;
 
 };        // end of class XMLFileReporter
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 
