@@ -108,6 +108,7 @@
 //#define XALAN_USE_ICU
 #if defined(XALAN_USE_ICU)
 #include <ICUBridge/FunctionICUFormatNumber.hpp>
+#include <ICUBridge/ICUBridgeCleanup.hpp>
 #include <ICUBridge/ICUBridgeCollationCompareFunctor.hpp>
 #endif
 
@@ -282,6 +283,8 @@ XalanTransformer::terminate()
 #endif
 
 	theICUFunctor = 0;
+
+	ICUBridgeCleanup::cleanup();
 #endif
 }
 
