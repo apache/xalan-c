@@ -1328,7 +1328,7 @@ TranscodeNumber(
 				theInputEnd,
 				theOutputIterator,
 #if defined(XALAN_NON_ASCII_PLATFORM)
-				DecimalNumberTranscodeTransform<char, XalanDOMChar>());
+				HexadecimalNumberTranscodeTransform<char, XalanDOMChar>());
 #else
 				IdentityTransform<char, XalanDOMChar>());
 #endif
