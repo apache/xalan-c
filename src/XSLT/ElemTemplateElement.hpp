@@ -64,11 +64,6 @@
 
 
 
-#include <vector>
-#include <map>
-
-
-
 #include <XalanDOM/XalanDOMString.hpp>
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanEmptyNamedNodeMap.hpp>
