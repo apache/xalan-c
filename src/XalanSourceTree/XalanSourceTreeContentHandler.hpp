@@ -1,0 +1,239 @@
+/*
+ * The Apache Software License, Version 1.1
+ * 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.	All rights
+ * reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright
+ *	  notice, this list of conditions and the following disclaimer. 
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *	  notice, this list of conditions and the following disclaimer in
+ *	  the documentation and/or other materials provided with the
+ *	  distribution.
+ * 
+ * 3. The end-user documentation included with the redistribution,
+ *	  if any, must include the following acknowledgment:  
+ *		 "This product includes software developed by the
+ *		  Apache Software Foundation (http://www.apache.org/)."
+ *	  Alternately, this acknowledgment may appear in the software itself,
+ *	  if and wherever such third-party acknowledgments normally appear.
+ * 
+ * 4. The names "Xerces" and "Apache Software Foundation" must
+ *	  not be used to endorse or promote products derived from this
+ *	  software without prior written permission. For written 
+ *	  permission, please contact apache\@apache.org.
+ * 
+ * 5. Products derived from this software may not be called "Apache",
+ *	  nor may "Apache" appear in their name, without prior written
+ *	  permission of the Apache Software Foundation.
+ * 
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.	IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ * 
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation, and was
+ * originally based on software copyright (c) 1999, International
+ * Business Machines, Inc., http://www.ibm.com .  For more information
+ * on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ */
+
+#if !defined(XALANSOURCETREECONTENTHANDLER_HEADER_GUARD_1357924680)
+#define XALANSOURCETREECONTENTHANDLER_HEADER_GUARD_1357924680
+
+
+
+#include <XalanSourceTree/XalanSourceTreeDefinitions.hpp>
+
+
+
+#include <vector>
+
+
+
+#include <sax/DocumentHandler.hpp>
+#include <sax/DTDHandler.hpp>
+#include <sax2/ContentHandler.hpp>
+
+
+
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+class XalanSourceTreeDocument;
+class XalanSourceTreeElement;
+
+
+
+class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeContentHandler : public ContentHandler, public DTDHandler
+{
+public:
+	/** @name Constructors and Destructor */
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanSourceTreeElement*>			ElementStackType;
+#else
+	typedef std::vector<XalanSourceTreeElement*>	ElementStackType;
+#endif
+
+	enum { eDefaultStackSize = 50, eDefaultTextBufferSize = 100 };
+
+	//@{
+
+	// Constructor
+	explicit
+	XalanSourceTreeContentHandler(
+			XalanSourceTreeDocument*	theDocument = 0,
+			bool						fAccumulateText = true);
+
+	virtual
+	~XalanSourceTreeContentHandler();
+
+
+	// Inherited from ContentHandler...
+	virtual void
+	characters(
+			const XMLCh* const	chars,
+			const unsigned int	length);
+
+	virtual void
+	endDocument();
+
+	virtual void
+	endElement(
+			const XMLCh* const	uri, 
+			const XMLCh* const	localname, 
+			const XMLCh* const	qname);
+
+	virtual void
+	ignorableWhitespace(
+			const XMLCh* const	chars,
+			const unsigned int	length);
+
+	virtual void
+	processingInstruction(
+		const XMLCh* const	target,
+		const XMLCh* const	data);
+
+	virtual void
+	setDocumentLocator(const Locator* const		locator);
+
+	virtual void
+	startDocument();
+
+	virtual void
+	startElement(
+			const XMLCh* const	uri,
+			const XMLCh* const	localname,
+			const XMLCh* const	qname,
+			const Attributes& 	attrs);
+
+	virtual void
+	startPrefixMapping(
+		const XMLCh* const	prefix,
+		const XMLCh* const	uri);
+
+	virtual void
+	endPrefixMapping(const XMLCh* const		prefix);
+
+
+	virtual void
+	skippedEntity(const XMLCh* const	name);
+
+
+	// Inherited from DTDHandler...
+
+	virtual void
+	notationDecl(
+			const XMLCh* const    name,
+			const XMLCh* const    publicId,
+			const XMLCh* const    systemId);
+
+	virtual void
+	unparsedEntityDecl(
+			const XMLCh* const    name,
+			const XMLCh* const    publicId,
+			const XMLCh* const    systemId,
+			const XMLCh* const    notationName);
+
+    virtual void
+	resetDocType();
+
+
+	// New to XalanSourceTreeContentHandler...
+
+	XalanSourceTreeDocument*
+	getDocument() const
+	{
+		return m_document;
+	}
+
+	void
+	setDocument(XalanSourceTreeDocument*	theDocument);
+
+	XalanSourceTreeDocument*
+	detachDocument();
+
+private:
+
+	// Not implemented...
+	XalanSourceTreeContentHandler(const XalanSourceTreeContentHandler&);
+
+	XalanSourceTreeContentHandler&
+	operator=(const XalanSourceTreeContentHandler&);
+
+	bool
+	operator==(const XalanSourceTreeContentHandler&) const;
+
+	// Helper functions...
+	XalanSourceTreeElement*
+	createElement(
+			const XMLCh* const			uri,
+			const XMLCh* const			localname,
+			const XMLCh* const			qname,
+			const Attributes& 			attrs,
+			XalanSourceTreeElement*		theOwnerElement);
+
+	void
+	processAccumulatedText();
+
+	void
+	doCharacters(
+			const XMLCh*	chars,
+			unsigned int	length);
+
+
+	// Data members...
+	XalanSourceTreeDocument*	m_document;
+
+	XalanSourceTreeElement*		m_currentElement;
+
+	ElementStackType			m_elementStack;
+
+	bool						m_ownsDocument;
+
+	const bool					m_accumulateText;
+
+	XalanDOMString				m_textBuffer;
+};
+
+
+
+#endif	// #if !defined(XALANSOURCETREECONTENTHANDLER_HEADER_GUARD_1357924680)
