@@ -162,8 +162,11 @@ URISupport::getURLStringFromString(
 			XALAN_USING_XERCES(XMLPlatformUtils)
 
 			// Assume it's a file specification...
+#if _XERCES_VERSION >= 20300
 			const ArrayJanitor<XMLCh>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)), XMLPlatformUtils::fgMemoryManager);
-
+#else
+			const ArrayJanitor<XMLCh>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
+#endif
 			const XalanDOMChar* const	theFullPath = theFullPathGuard.get();
 			assert(theFullPath != 0);
 
