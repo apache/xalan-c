@@ -154,6 +154,10 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerOutputStream.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerProblemListener.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMParsedSource.cpp
 # End Source File
 # Begin Source File
@@ -203,6 +207,10 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerDefinitions.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerProblemListener.hpp
 # End Source File
 # Begin Source File
 
