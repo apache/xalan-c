@@ -1,3 +1,6 @@
+// Base header file.  Must be first.
+#include <Include/PlatformDefinitions.hpp>
+
 #include <iostream>
 #include <fstream>
 
@@ -39,11 +42,11 @@ main(
 	using std::endl;
 #endif
 
-  // TraceListener flags...
-  bool traceTemplates = false;
-  bool traceTemplateChildren = false;
-  bool traceGenerationEvent = false;
-  bool traceSelectionEvent = false;
+	// TraceListener flags...
+	bool traceTemplates = false;
+	bool traceTemplateChildren = false;
+	bool traceGenerationEvent = false;
+	bool traceSelectionEvent = false;
 
 	if (argc < 2 || argc > 5)
 	{
@@ -115,7 +118,7 @@ main(
 						theXPathSupport,
 						theXObjectFactory);
 
-	  // Our input files...The assumption is that the executable will be run
+		// Our input files...The assumption is that the executable will be run
 		// from same directory as the input files.
 		const XalanDOMString		theXMLFileName("birds.xml");
 		const XalanDOMString		theXSLFileName("birds.xsl");
@@ -133,18 +136,17 @@ main(
 		XercesStdTextOutputStream				theStdErr(cerr);
 		XercesDOMPrintWriter					diagnosticsWriter(theStdErr);
 
-	  // Set up the TraceListener... 
-		auto_ptr<TraceListener>		theTraceListener(
-			new TraceListenerDefault(
+		// Set up the TraceListener... 
+		TraceListenerDefault		theTraceListener(				
 				diagnosticsWriter,
 				traceTemplates,
 				traceTemplateChildren,
 				traceGenerationEvent,
-				traceSelectionEvent));
+				traceSelectionEvent);
 
 		// Add the TraceListener to the XSLT processor...
 		theProcessor.setTraceSelects(traceSelectionEvent);
-		theProcessor.addTraceListener(theTraceListener.get());
+		theProcessor.addTraceListener(&theTraceListener);
 
 		// Perform the transformation...
 		theProcessor.process(
