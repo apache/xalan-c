@@ -130,6 +130,10 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanCAPI.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheet.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformer.cpp
 # End Source File
 # Begin Source File
@@ -143,6 +147,10 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerOutputStream.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanTransformer\XalanCAPI.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheet.hpp
 # End Source File
 # Begin Source File
 
