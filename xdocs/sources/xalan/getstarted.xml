@@ -197,7 +197,7 @@ will be provided in a separate distribution.</p>
 <s3 title="For Windows">
 <p>To use the Windows distribution, you must place the Xalan executables and the Xalan and Xerces libraries on the path:</p>
 <ul>
-<li>Put &xslt4c-dist;-&lt;my_Windows_distribution&gt;\Build\Win32\VC6\Release and &xml4c-dist;-&lt;my_Windows_distribution&gt;\bin on the path.</li>
+<li>Put &xslt4c-win_root;\Build\Win32\VC6\Release and &xml4c-dist;-&lt;my_Windows_distribution&gt;\bin on the path.</li>
 </ul>
 <p>The Visual C++ Xalan project included with the Windows release knows the relative paths to the Xalan headers and libraries, but it does not know where you have unzipped the Xerces distribution. If you plan to use Visual C++ to build Xalan applications or <link idref="readme" anchor="jar">rebuild Xalan</link>, you must also provide Visual C++ with access to the Xerces headers and libraries.</p> 
 <p>Use the Visual C++ Tools menu to open the Options dialog box, go to the Directories tab, and do the following:</p>
@@ -212,26 +212,26 @@ will be provided in a separate distribution.</p>
 the &xslt4c; and &xml4c; libraries on the library path.</p>
 <p>For the &xslt4c; AIX distributions:</p>
 <ul>
-<li>Put &xslt4c-dist;-&lt;my_AIX_distribution&gt;/bin on the path (PATH).</li>
-<li>Put &xslt4c-dist;-&lt;my_AIX_distribution&gt;/lib and &xml4c-dist;-&lt;my_AIX_distribution&gt;/lib 
+<li>Put &xslt4c-unix_root;/bin on the path (PATH).</li>
+<li>Put &xslt4c-unix_root;/lib and &xml4c-dist;-&lt;my_AIX_distribution&gt;/lib 
 on the library path (LIBPATH), or copy the shared libraries to /usr/lib.</li>
 </ul>
 <p>For the &xslt4c; HP-UX 11 distributions:</p>
 <ul>
-<li>Put &xslt4c-dist;-&lt;my_HPUX_distribution&gt;/bin on the path (PATH).<br/><br/></li>
-<li>Put &xslt4c-dist;-&lt;my_HPUX_distribution&gt;/lib and &xml4c-dist;-&lt;my_HPUX_distribution&gt;/lib on the library path (SHLIB_PATH), or copy 
+<li>Put &xslt4c-unix_root;/bin on the path (PATH).<br/><br/></li>
+<li>Put &xslt4c-unix_root;/lib and &xml4c-dist;-&lt;my_HPUX_distribution&gt;/lib on the library path (SHLIB_PATH), or copy 
 the shared libraries to /usr/lib.</li>
 </ul>
 <p>For the &xslt4c; Solaris distributions:</p>
 <ul>
-<li>Put &xslt4c-dist;-&lt;my_solaris_distribution&gt;/bin on the path (PATH).<br/><br/></li>
-<li>Put &xslt4c-dist;-&lt;my_solaris_distribution&gt;/lib and &xml4c-dist;-&lt;my_solaris_distribution&gt;/lib on the library path 
+<li>Put &xslt4c-unix_root;/bin on the path (PATH).<br/><br/></li>
+<li>Put &xslt4c-unix_root;/lib and &xml4c-dist;-&lt;my_solaris_distribution&gt;/lib on the library path 
 (LD_LIBRARY_PATH), or copy the shared libraries to /usr/lib.</li>
 </ul>
 <p>For the &xslt4c; RedHat and SuSE Linux distributions:</p>
 <ul>
-<li>Put &xslt4c-dist;-&lt;my_linux_distribution&gt;/bin on the path (PATH).</li>
-<li>Put &xslt4c-dist;-&lt;my_linux_distribution&gt;/lib and &xml4c-dist;-&lt;my_linux_distribution&gt;/lib on the library path (LD_LIBRARY_PATH), 
+<li>Put &xslt4c-unix_root;/bin on the path (PATH).</li>
+<li>Put &xslt4c-unix_root;/lib and &xml4c-dist;-&lt;my_linux_distribution&gt;/lib on the library path (LD_LIBRARY_PATH), 
 or copy the shared libraries to /usr/lib.</li>
 </ul>
 </s3>
@@ -241,7 +241,7 @@ or copy the shared libraries to /usr/lib.</li>
 <p>To run the samples, do the following:</p>
 <ol>
 <li>Set up your path (see above). In the Windows32 distribution, the sample executables are in
-&xslt4c-dist;-&lt;my_Windows_distribution&gt;\Build\Win32\VC6\Release. In the UNIX distributions, the executables are in &xslt4c-dist;-&lt;my_UNIX_distribution&gt;/bin.</li>
+&xslt4c-win_root;\Build\Win32\VC6\Release. In the UNIX distributions, the executables are in &xslt4c-win_root;/bin.</li>
 <li>Go to the samples subdirectory containing the sample.</li>
 <li>Run the sample from the command line (in Windows, use the DOS shell).</li>
 <li>Examine the application source files.</li>
