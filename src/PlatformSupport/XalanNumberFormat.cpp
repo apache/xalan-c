@@ -55,7 +55,11 @@
  * <http://www.apache.org/>.
  */
 #include "XalanNumberFormat.hpp"
+
+
+
 #include "DOMStringHelper.hpp"
+#include "STLHelper.hpp"
 
 
 
@@ -126,6 +130,8 @@ XalanNumberFormat::applyGrouping(const XalanDOMString& value)
 
 	XalanDOMChar* const		buffer = new XalanDOMChar[bufsize];
 
+	array_auto_ptr<XalanDOMChar>	theGuard(buffer);
+
 	XalanDOMChar*			p = buffer + bufsize - 1;
 
 	*p-- = 0;	// null terminate
@@ -144,11 +150,7 @@ XalanNumberFormat::applyGrouping(const XalanDOMString& value)
 		*p-- = c;
 	}
 
-	XalanDOMString s(++p);
-
-	delete [] buffer;
-
-	return s;
+	return XalanDOMString(++p);
 }
 
 
