@@ -352,16 +352,31 @@ public:
 	/**
 	 * Compile an XPath expression into an object which can be used multiple times.
 	 * Call destroyXPath() when finished with the instance.  Otherwise, the object
+	 * will be destroyed when the XPathEvaluator instance goes out of scope.  Since
+	 * no PrefixResolver is supplied, the XPath expression may not contain any
+	 * namespace prefixes.
+	 *
+	 * @param xpathString The XPath expression to evaluate
+	 * @return A pointer to an XPath instance.
+	 */
+	XPath*
+	createXPath(const XalanDOMChar*		xpathString);
+
+	/**
+	 * Compile an XPath expression into an object which can be used multiple times.
+	 * Call destroyXPath() when finished with the instance.  Otherwise, the object
 	 * will be destroyed when the XPathEvaluator instance goes out of scope.
 	 *
 	 * @param xpathString The XPath expression to evaluate
+	 * @param domSupport An instance of the corresponding DOMSupport-derived for the DOM implementation being used.
 	 * @param namespaceNode A node to use for namespace prefix resolution.
 	 * @return A pointer to an XPath instance.
 	 */
 	XPath*
 	createXPath(
 			const XalanDOMChar*		xpathString,
-			const XalanElement*		namespaceNode = 0);
+			DOMSupport&				domSupport,
+			const XalanElement*		namespaceNode);
 
 	/**
 	 * Compile an XPath expression into an object which can be used multiple times.

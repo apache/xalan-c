@@ -59,6 +59,10 @@
 
 
 
+#include <DOMSupport/DOMSupportDefault.hpp>
+
+
+
 #include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
@@ -346,6 +350,30 @@ XPathEvaluator::evaluate(
 				xpath,
 				prefixResolver,
 				theEnvSupportDefault);
+}
+
+
+
+XPath*
+XPathEvaluator::createXPath(const XalanDOMChar*		xpathString)
+{
+	DOMSupportDefault		theDOMSupport;
+	XPathEnvSupportDefault	theEnvSupportDefault;
+
+	return createXPath(xpathString, ElementPrefixResolverProxy(0, theEnvSupportDefault, theDOMSupport));
+}
+
+
+
+XPath*
+XPathEvaluator::createXPath(
+			const XalanDOMChar*		xpathString,
+			DOMSupport&				domSupport,
+			const XalanElement*		namespaceNode)
+{
+	XPathEnvSupportDefault	theEnvSupportDefault;
+
+	return createXPath(xpathString, ElementPrefixResolverProxy(namespaceNode, theEnvSupportDefault, domSupport));
 }
 
 
