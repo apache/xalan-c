@@ -42,7 +42,8 @@
 
 // This is a workaround for a Tru64 compiler bug...
 #if defined(XALAN_STRICT_ANSI_HEADERS) && defined(TRU64)
-#include <setjmp.h>
+#include <csetjmp>
+typedef long sigjmp_buf[_JBLEN];
 #endif
 #include <pthread.h>
 #include <unistd.h>
