@@ -93,7 +93,7 @@ public:
 
 	/**
 	 * Execute a location path.  Normally, this method simply moves past the
-	 * OP_LOCATIONPATH and it's length member, and calls the Step function,
+	 * OP_LOCATIONPATH and its length member, and calls the Step function,
 	 * which will recursively process the rest of the location path, and then
 	 * wraps the resulting node list in an XNodeSet object.
 	 *

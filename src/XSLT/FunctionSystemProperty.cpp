@@ -104,7 +104,7 @@ FunctionSystemProperty::execute(
 
 	const XalanDOMString	fullName = args[0]->str();
 	const unsigned int		fullNameLength = length(fullName);
-	const unsigned int		indexOfNSSep = indexOf(fullName,':');
+	const unsigned int		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
 
 	bool			fNumberResult = false;
 
@@ -134,11 +134,11 @@ FunctionSystemProperty::execute(
 			}
 			else if(equals(propName, XALAN_STATIC_UCODE_STRING("vendor-url")))
 			{
-				result = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt");
+				result = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan-c/index.html");
 			}
 			else
 			{
-				executionContext.warn("XSL Property not supported: "+fullName);
+				executionContext.warn("XSL Property not supported: " + fullName);
 			}
 		}
 		else

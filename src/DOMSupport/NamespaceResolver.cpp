@@ -67,6 +67,10 @@
 
 
 
+#include <PlatformSupport/XalanUnicode.hpp>
+
+
+
 #include "DOMServices.hpp"
 
 
@@ -176,7 +180,7 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 	{
 		XalanDOMString	nodeName = theLocalNode->getNodeName();
 
-		unsigned int	indexOfNSSep = indexOf(nodeName, ':');
+		unsigned int	indexOfNSSep = indexOf(nodeName, XalanUnicode::charColon);
 
 		XalanDOMString	prefix;
 
@@ -253,7 +257,7 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 							const XalanDOMString	aname = attr->getNodeName();
 
 							// Quick test of first character, to reduce cost of startsWith.
-							if(charAt(aname, 0) == 'x')
+							if(charAt(aname, 0) == charAt(DOMServices::s_XMLNamespaceWithSeparator, 0))
 							{
 								// "xmlns:"* prefix declaration?
 								bool isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);

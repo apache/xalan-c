@@ -71,6 +71,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "SimpleNodeLocator.hpp"
 #include "XObject.hpp"
 #include "XObjectFactory.hpp"
@@ -468,7 +472,7 @@ XPathEnvSupportDefault::extFunction(
 		if(length(theNamespace) > 0)
 		{
 			theFunctionName += theNamespace;
-			theFunctionName += XALAN_STATIC_UCODE_STRING(":");
+			theFunctionName += DOMServices::s_XMLNamespaceSeparatorString;
 		}
 
 		theFunctionName += functionName;

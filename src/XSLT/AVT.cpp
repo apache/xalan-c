@@ -65,12 +65,40 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
 #include <PlatformSupport/STLHelper.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
 #include "AVTPartSimple.hpp"
 #include "AVTPartXPath.hpp"
 #include "StylesheetConstructionContext.hpp"
+
+
+
+static const XalanDOMChar	theTokenDelimiterCharacters[] =
+{
+		XalanUnicode::charLeftCurlyBracket,
+		XalanUnicode::charRightCurlyBracket,
+		XalanUnicode::charApostrophe,
+		XalanUnicode::charQuoteMark,
+		0
+};
+
+
+
+static const XalanDOMChar	theLeftCurlyBracketString[] =
+{
+		XalanUnicode::charLeftCurlyBracket,
+		0
+};
+
+
+
+static const XalanDOMChar	theRightCurlyBracketString[] =
+{
+		XalanUnicode::charRightCurlyBracket,
+		0
+};
 
 
 
@@ -90,7 +118,7 @@ AVT::AVT(
 		m_simpleString(),
 		m_pcType(type)
 {
-	StringTokenizer		tokenizer(stringedValue, XALAN_STATIC_UCODE_STRING("{}\"\'"), true);
+	StringTokenizer		tokenizer(stringedValue, theTokenDelimiterCharacters, true);
 
 	const unsigned int	nTokens = tokenizer.countTokens();
 
@@ -127,11 +155,11 @@ AVT::AVT(
 
 				switch(theChar)
 				{
-					case('{'):
+					case(XalanUnicode::charLeftCurlyBracket):
 					{
 						// Attribute Value Template start
 						lookahead = tokenizer.nextToken();
-						if(equals(lookahead, XALAN_STATIC_UCODE_STRING("{")))
+						if(equals(lookahead, theLeftCurlyBracketString))
 						{
 							// Double curlys mean escape to show curly
 							append(buffer, lookahead);
@@ -151,19 +179,19 @@ AVT::AVT(
 									
 							clear(exprBuffer);
 
-							while(length(lookahead) > 0 && !equals(lookahead, XALAN_STATIC_UCODE_STRING("}")))
+							while(length(lookahead) > 0 && !equals(lookahead, theRightCurlyBracketString))
 							{
 								if(length(lookahead) == 1)
 								{
 									switch(charAt(lookahead, 0))
 									{
-										case '\'':
-										case '\"':
+										case XalanUnicode::charApostrophe:
+										case XalanUnicode::charQuoteMark:
 										{
 											// String start
 											append(exprBuffer, lookahead);
 
-											const XalanDOMString quote = lookahead;
+											const XalanDOMString	quote = lookahead;
 
 											// Consume stuff 'till next quote
 											lookahead = tokenizer.nextToken();
@@ -179,7 +207,7 @@ AVT::AVT(
 
 											break;
 										}
-										case '{':
+										case XalanUnicode::charLeftCurlyBracket:
 										{
 											// What's another curly doing here?
 											error = "Error: Can not have \"{\" within expression.";
@@ -201,7 +229,7 @@ AVT::AVT(
 
 								lookahead = tokenizer.nextToken();
 							} // end while(!equals(lookahead, "}"))
-							assert(equals(lookahead, XALAN_STATIC_UCODE_STRING("}")));
+							assert(equals(lookahead, theRightCurlyBracketString));
 							
 							// Proper close of attribute template. Evaluate the
 							// expression.
@@ -220,11 +248,11 @@ AVT::AVT(
 						}
 						break;
 					}
-					case('}'):
+					case(XalanUnicode::charRightCurlyBracket):
 					{
 						lookahead = tokenizer.nextToken();
 
-						if(equals(lookahead, XALAN_STATIC_UCODE_STRING("}")))
+						if(equals(lookahead, theRightCurlyBracketString))
 						{
 							// Double curlys mean escape to show curly
 							append(buffer, lookahead);
@@ -236,7 +264,7 @@ AVT::AVT(
 							// Illegal, I think...
 							constructionContext.warn("Found \"}\" but no attribute template open!");
 
-							append(buffer, XALAN_STATIC_UCODE_STRING("}"));
+							append(buffer, theRightCurlyBracketString);
 							// leave the lookahead to be processed by the next round.
 						}
 						break;

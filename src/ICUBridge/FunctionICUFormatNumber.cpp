@@ -83,7 +83,10 @@ FunctionICUFormatNumber::FunctionICUFormatNumberInstaller::FunctionICUFormatNumb
 
 FunctionICUFormatNumber::FunctionICUFormatNumberInstaller::~FunctionICUFormatNumberInstaller()
 {
-	XPath::uninstallFunction(XALAN_STATIC_UCODE_STRING("format-number"));
+	// Reinstall the standard function to overwrite the ICU version...
+	XPath::installFunction(
+			XALAN_STATIC_UCODE_STRING("format-number"),
+			FunctionFormatNumber());
 }
 
 

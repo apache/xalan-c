@@ -431,13 +431,13 @@ StylesheetExecutionContextDefault::createMatchPattern(
 	// enhance XPath so that we can tell if str would match
 	// the XPath, once the namespace is resolved, but it may
 	// not be worth it...
-	const unsigned int	index = indexOf(str, ':');
+	const unsigned int	index = indexOf(str, XalanUnicode::charColon);
 	const unsigned int	len = length(str);
 
 	// If we found a ':' before the end of the string, and
 	// it's by itself (:: would indicate an axis), don't
 	// try to cache the XPath...
-	if (index < len - 1 && (charAt(str, index + 1) != ':'))
+	if (index < len - 1 && (charAt(str, index + 1) != XalanUnicode::charColon))
 	{
 		theResult = m_xsltProcessor.createMatchPattern(str, resolver);
 	}

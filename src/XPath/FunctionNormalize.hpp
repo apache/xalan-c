@@ -63,6 +63,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -149,7 +150,7 @@ public:
 				// space.
 				if (isSpace(thePreviousChar) == false && theVector.size() > 0)
 				{
-					theVector.push_back(XalanDOMChar(' '));
+					theVector.push_back(XalanDOMChar(XalanUnicode::charSpace));
 				}
 			}
 			else

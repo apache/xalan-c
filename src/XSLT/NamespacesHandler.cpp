@@ -82,10 +82,6 @@
 
 
 
-const XalanDOMString	NamespacesHandler::s_dummyEmptyString;
-
-
-
 NamespacesHandler::NamespacesHandler() :
 	m_excludedResultPrefixes(),
 	m_namespaceDeclarations(),
@@ -238,8 +234,7 @@ NamespacesHandler::processExcludeResultPrefixes(
 {
 	StringTokenizer		tokenizer(
 					theValue,
-					XALAN_STATIC_UCODE_STRING(" \t\n\r"),
-					false);
+					Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
 
     while(tokenizer.hasMoreTokens() == true)
     {
@@ -276,8 +271,7 @@ NamespacesHandler::processExtensionElementPrefixes(
 {
 	StringTokenizer		tokenizer(
 					theValue,
-					XALAN_STATIC_UCODE_STRING(" \t\n\r"),
-					false);
+					Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
 
     while(tokenizer.hasMoreTokens() == true)
     {
@@ -323,7 +317,7 @@ NamespacesHandler::postConstruction(
 
 	// Figure out the prefix of the owning element, to make sure we
 	// don't exclude it's prefix.
-	const unsigned int		indexOfNSSep = indexOf(theElementName, ':');
+	const unsigned int		indexOfNSSep = indexOf(theElementName, XalanUnicode::charColon);
 
 	const XalanDOMString	thePrefix = indexOfNSSep < length(theElementName) ?
 					substring(theElementName, 0, indexOfNSSep) : XalanDOMString();
@@ -366,9 +360,9 @@ NamespacesHandler::shouldExcludeResultNamespaceNode(
 	// These are commone namespaces that are always excluded...
 	if(equals(theURI, theXSLTNamespaceURI)
 			|| m_extensionNamespaceURIs.find(theURI) != m_extensionNamespaceURIs.end()
-			|| equals(theURI, XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt"))
-			|| equals(theURI, XALAN_STATIC_UCODE_STRING("http://xsl.lotus.com/"))
-			|| equals(theURI, XALAN_STATIC_UCODE_STRING("http://xsl.lotus.com")))
+			|| equals(theURI, s_ApacheXSLTNamespaceURI)
+			|| equals(theURI, s_LotusXSLTNamespaceURIWithSeparator)
+			|| equals(theURI, s_LotusXSLTNamespaceURI))
 	{
 		return true;
 	}
@@ -712,4 +706,44 @@ NamespacesHandler::copyExcludeResultPrefixes(const ExcludedResultPrefixesMapType
 			}
 		}
 	}
+}
+
+
+
+static XalanDOMString	s_ApacheXSLTNamespaceURI;
+
+static XalanDOMString	s_LotusXSLTNamespaceURI;
+
+static XalanDOMString	s_LotusXSLTNamespaceURIWithSeparator;
+
+
+const XalanDOMString&	NamespacesHandler::s_ApacheXSLTNamespaceURI =
+							::s_ApacheXSLTNamespaceURI;
+
+const XalanDOMString&	NamespacesHandler::s_LotusXSLTNamespaceURI =
+							::s_LotusXSLTNamespaceURI;
+
+const XalanDOMString&	NamespacesHandler::s_LotusXSLTNamespaceURIWithSeparator =
+							::s_LotusXSLTNamespaceURIWithSeparator;
+
+const XalanDOMString	NamespacesHandler::s_dummyEmptyString;
+
+
+
+void
+NamespacesHandler::initialize()
+{
+	::s_ApacheXSLTNamespaceURI = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt");
+	::s_LotusXSLTNamespaceURI = XALAN_STATIC_UCODE_STRING("http://xsl.lotus.com");
+	::s_LotusXSLTNamespaceURIWithSeparator = XALAN_STATIC_UCODE_STRING("http://xsl.lotus.com/");
+}
+
+
+
+void
+NamespacesHandler::terminate()
+{
+	::clear(::s_ApacheXSLTNamespaceURI);
+	::clear(::s_LotusXSLTNamespaceURI);
+	::clear(::s_LotusXSLTNamespaceURIWithSeparator);
 }

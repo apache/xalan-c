@@ -235,17 +235,17 @@ StylesheetHandler::processSpaceAttr(
 			const AttributeList&	atts,
 			int						which)
 {
-	const bool	isSpaceAttr = equals(aname, XALAN_STATIC_UCODE_STRING("xml:space"));
+	const bool	isSpaceAttr = equals(aname, Constants::ATTRNAME_XMLSPACE);
 
 	if(isSpaceAttr)
 	{
 		const XalanDOMChar*	const	spaceVal = atts.getValue(which);
 
-		if(equals(spaceVal, XALAN_STATIC_UCODE_STRING("default")))
+		if(equals(spaceVal, Constants::ATTRVAL_DEFAULT))
 		{
 			m_stylesheet.setDefaultSpaceProcessing(true);
 		}
-		else if(equals(spaceVal, XALAN_STATIC_UCODE_STRING("preserve")))
+		else if(equals(spaceVal, Constants::ATTRVAL_PRESERVE))
 		{
 			m_stylesheet.setDefaultSpaceProcessing(false);
 		}
@@ -291,7 +291,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 		const XalanDOMString	ns = m_stylesheet.getNamespaceFromStack(name);
 
 		const unsigned int		nameLength = length(name);
-		const unsigned int		index = indexOf(name,':');
+		const unsigned int		index = indexOf(name, XalanUnicode::charColon);
 
 		const XalanDOMString	localName = index == nameLength ? XalanDOMString(name) : substring(name, index + 1);
 
@@ -372,7 +372,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 				case Constants::ELEMNAME_PRESERVESPACE:
 				case Constants::ELEMNAME_STRIPSPACE:
 				{
-					// $$$ ToDo: We should separate this out into a separate function.
+					// $$$ ToDo: We should move this code into a separate function.
 					ElemEmpty nsNode(m_constructionContext, m_stylesheet, name, lineNumber, columnNumber);
 
 					const unsigned int	nAttrs = atts.getLength();
@@ -388,7 +388,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 							foundIt = true;
 
 							StringTokenizer		tokenizer(atts.getValue(i),
-														  XALAN_STATIC_UCODE_STRING(" \t\n\r"));
+														  Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
 
 							while(tokenizer.hasMoreTokens())
 							{
@@ -538,7 +538,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 					{
 						const XalanDOMChar* const	aname = atts.getName(i);
 
-						if(equals(aname, XALAN_STATIC_UCODE_STRING("result-ns")))
+						if(equals(aname, Constants::ATTRNAME_RESULTNS))
 						{
 							throw SAXException("result-ns no longer supported!  Use xsl:output instead.");
 						}
@@ -553,8 +553,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 						else if(equals(aname, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
 						{
 							StringTokenizer tokenizer(atts.getValue(i),
-													  XALAN_STATIC_UCODE_STRING(" \t\n\r"),
-													  false);
+													  Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
 
 							while(tokenizer.hasMoreTokens() == true)
 							{
@@ -567,15 +566,15 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 								m_stylesheet.addExtensionNamespace(extns, nsh);
 							}
 						}
-						else if(equals(aname, XALAN_STATIC_UCODE_STRING("id")))
+						else if(equals(aname, Constants::ATTRNAME_ID))
 						{
 							//
 						}
-						else if(equals(aname, XALAN_STATIC_UCODE_STRING("indent-result")))
+						else if(equals(aname, Constants::ATTRNAME_INDENTRESULT))
 						{
 							throw SAXException("indent-result no longer supported!  Use xsl:output instead.");
 						}
-						else if(equals(aname, XALAN_STATIC_UCODE_STRING("version")))
+						else if(equals(aname, Constants::ATTRNAME_VERSION))
 						{
 							const XalanDOMChar* const	versionStr = atts.getValue(i);
 
@@ -870,7 +869,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 		// BEGIN SANJIVA CODE
 		else if (!m_inTemplate && startsWith(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
 		{
-			if (equals(localName, XALAN_STATIC_UCODE_STRING("component")))
+			if (equals(localName, Constants::ATTRNAME_COMPONENTS))
 			{
 				XalanDOMString prefix;
 				XalanDOMString elements;
@@ -882,17 +881,17 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 				{
 					const XalanDOMChar* const	aname = atts.getName (i);
 
-					if (equals(aname, XALAN_STATIC_UCODE_STRING("prefix")))
+					if (equals(aname, Constants::ATTRNAME_PREFIX))
 					{
-						prefix = atts.getValue (i);
+						prefix = atts.getValue(i);
 					}
-					else if (equals(aname, XALAN_STATIC_UCODE_STRING("elements")))
+					else if (equals(aname, Constants::ATTRNAME_ELEMENTS))
 					{
-						elements = atts.getValue (i);
+						elements = atts.getValue(i);
 					}
-					else if (equals(aname, XALAN_STATIC_UCODE_STRING("functions")))
+					else if (equals(aname, Constants::ATTRNAME_FUNCTIONS))
 					{
-						functions = atts.getValue (i);
+						functions = atts.getValue(i);
 					}
 					else if(!isAttrOK(aname, atts, i))
 					{
@@ -932,27 +931,26 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 				m_pLXSLTExtensionNSH = nsh; // hang on to it for processing 
 				// endElement on lxslt:script
 			}
-			else if (equals(localName, XALAN_STATIC_UCODE_STRING("script"))) 
+			else if (equals(localName, Constants::ATTRNAME_SCRIPT)) 
 			{
 				// process this in end element so that I can see whether I had 
 				// a body as well. The default pushing logic will save the 
 				// attributes for me. The body will be accumulated into the
 				// following string buffer
 				m_inLXSLTScript = true;
-				m_LXSLTScriptBody = XalanDOMString();
+				clear(m_LXSLTScriptBody);
 
 				const int	nAttrs = atts.getLength();
 
 				for (int i = 0; i < nAttrs; i++) 
 				{
-
 					const XalanDOMChar* const	aname = atts.getName(i);
 
-					if (equals(aname, XALAN_STATIC_UCODE_STRING("lang")))
+					if (equals(aname, Constants::ATTRNAME_LANG))
 					{
 						m_LXSLTScriptLang = atts.getValue (i);
 					}
-					else if (equals(aname, XALAN_STATIC_UCODE_STRING("src")))
+					else if (equals(aname, Constants::ATTRNAME_SRC))
 					{
 						m_LXSLTScriptSrcURL = atts.getValue (i);
 					}
@@ -1078,13 +1076,13 @@ ElemTemplateElement* StylesheetHandler::initWrapperless (const XalanDOMString& n
 
 	AttributeListImpl templateAttrs;
 
-	templateAttrs.addAttribute(c_wstr(XALAN_STATIC_UCODE_STRING("name")),
-							   c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
-							   c_wstr(XALAN_STATIC_UCODE_STRING("simple")));
+	templateAttrs.addAttribute(c_wstr(Constants::ATTRNAME_NAME),
+							   c_wstr(Constants::ATTRTYPE_CDATA),
+							   c_wstr(Constants::ATTRVAL_SIMPLE));
 
 	m_pTemplate = new ElemTemplate(m_constructionContext,
 								   m_stylesheet,
-								   XALAN_STATIC_UCODE_STRING("xsl:template"),
+								   Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING,
 								   templateAttrs,
 								   lineNumber,
 								   columnNumber);

@@ -172,7 +172,7 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 				if (isEmpty(theNamespace) == false)
 				{
 					m_printWriter.print(theNamespace);
-					m_printWriter.print(':');
+					m_printWriter.print(XalanUnicode::charColon);
 				}
 
 				m_printWriter.print(theName.getLocalPart());

@@ -373,7 +373,7 @@ Stylesheet::isAttrOK(
 	{
 		// Others are OK if their prefix has been
 		// bound to a non-null Namespace URI other than XSLT's
-		const unsigned int	indexOfNSSep = indexOf(attrName, ':');
+		const unsigned int	indexOfNSSep = indexOf(attrName, XalanUnicode::charColon);
 
 		if(indexOfNSSep < length(attrName))
 		{
@@ -396,7 +396,7 @@ Stylesheet::isAttrOK(
 XalanDOMString
 Stylesheet::getNamespaceFromStack(const XalanDOMString& nodeName) const
 {
-	const unsigned int		indexOfNSSep = indexOf(nodeName, ':');
+	const unsigned int		indexOfNSSep = indexOf(nodeName, XalanUnicode::charColon);
 
 	const XalanDOMString	prefix =
 		indexOfNSSep < length(nodeName) ?
@@ -497,7 +497,7 @@ Stylesheet::addTemplate(
 			if (length(theNamespace) != 0)
 			{
 				theMessage += theNamespace;
-				theMessage += ":";
+				theMessage += DOMServices::s_XMLNamespaceSeparatorString;
 			}
 
 			theMessage += theName.getLocalPart();
@@ -778,7 +778,7 @@ Stylesheet::findTemplate(
 					// We also have to consider wildcard matches.
 					if(theCurrentEntry == theTableEnd &&
 					   equals(matchPat->getTargetString(),
-							  XALAN_STATIC_UCODE_STRING("*")) == false
+							  Constants::PSEUDONAME_ANY) == false
 						&& (XalanNode::ELEMENT_NODE == targetNodeType || 
 							XalanNode::ATTRIBUTE_NODE == targetNodeType ||
 							XalanNode::PROCESSING_INSTRUCTION_NODE == targetNodeType)
@@ -788,7 +788,7 @@ Stylesheet::findTemplate(
 							assert(usedWildcard==false);	// Should only be here once ??
 							usedWildcard = true;
 							const PatternTableMapType::const_iterator 	theTableIterator =
-								m_patternTable.find(XALAN_STATIC_UCODE_STRING("*"));
+								m_patternTable.find(Constants::PSEUDONAME_ANY);
 
 							assert(m_patternTable.size());
 							if (theTableIterator != m_patternTable.end())
@@ -986,13 +986,15 @@ Stylesheet::locateMatchPatternList2(
 	}
 	else if(tryWildCard == true)
 	{
-		i = m_patternTable.find(XALAN_STATIC_UCODE_STRING("*"));
+		i = m_patternTable.find(Constants::PSEUDONAME_ANY);
+
 		if (i != m_patternTable.end())
 		{
 			theMatchList = &(*i).second;
 			assert(theMatchList != 0);
 		}
 	}
+
 	return theMatchList;
 }
 

@@ -69,6 +69,7 @@
 
 
 XercesTextOutputStream::XercesTextOutputStream(BufferType::size_type	theBufferSize) :
+	TextOutputStream(),
 	m_buffer(),
 	m_bufferSize(0)
 {

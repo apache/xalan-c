@@ -69,6 +69,7 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanAutoPtr.hpp>
 #include <PlatformSupport/XalanNumberFormat.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -290,7 +291,9 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 				break;
 			}
 		}
+
 		XalanNode* const	prevSibling = contextCopy->getPreviousSibling();
+
 		if(prevSibling == 0)
 		{
 			contextCopy = executionContext.getParentOfNode(*contextCopy);
@@ -647,7 +650,7 @@ ElemNumber::formatNumberList(
 			XalanNode*						contextNode) const
 {
 	const IntArrayType::size_type	nNumbers = theList.size();
-	XalanDOMChar	numberType('1');
+	XalanDOMChar	numberType(XalanUnicode::charDigit_1);
 	int			numberWidth = 1;
 
 	XalanDOMString	formattedNumber;
@@ -749,18 +752,22 @@ ElemNumber::getFormattedNumber(
 
 	switch(numberType)
 	{
-		case 'A':
+		case XalanUnicode::charLetter_A:
 			formattedNumber += int2alphaCount(listElement, s_alphaCountTable);
 			break;
-		case 'a':
+
+		case XalanUnicode::charLetter_a:
 			formattedNumber += toLowerCase(int2alphaCount(listElement, s_alphaCountTable));
 			break;
-		case 'I':
+
+		case XalanUnicode::charLetter_I:
 			formattedNumber += long2roman(listElement, true);
 			break;
-		case 'i':
+
+		case XalanUnicode::charLetter_i:
 			formattedNumber += toLowerCase(long2roman(listElement, true));
 			break;
+
 		case 0x3042:
 		case 0x3044:
 		case 0x30A2:
@@ -799,20 +806,30 @@ ElemNumber::getFormattedNumber(
 	return formattedNumber;  
 }
 
-XalanDOMString ElemNumber::int2singlealphaCount(int val, 
+
+
+XalanDOMString
+ElemNumber::int2singlealphaCount(
+		int						val, 
 		const XalanDOMString&	table)
 {
 	const int		radix = length(table);
 
 	// TODO:  throw error on out of range input
 	if (val > radix)
+	{
 		return XalanDOMString(XALAN_STATIC_UCODE_STRING("#E(") +
 				LongToDOMString(val) +
 				XALAN_STATIC_UCODE_STRING(")"));
+	}
 	else
-		return XalanDOMString(charAt(table, val-1));
+	{
+		return XalanDOMString(charAt(table, val - 1));
+	}
 
 }
+
+
 
 XalanDOMString
 ElemNumber::int2alphaCount(
@@ -1173,11 +1190,67 @@ XalanNode* ElemNumber::Counter::getLast()
 
 
 
-const XalanDOMChar	elalphaCountTable[] =
+static const XalanDOMChar	alphaCountTable[] =
 {
-	0x03c9, 0x03b1,0x03b2,0x03b3,0x03b4,0x03b5,0x03b6,0x03b7,0x03b8,0x03b9,0x03ba,
-	0x03bb,0x03bc,0x03bd,0x03be,0x03bf,0x03c0,0x03c1,0x03c2,0x03c3,0x03c4,
-	0x03c5,0x03c6,0x03c7,0x03c8,0
+	XalanUnicode::charLetter_Z,
+	XalanUnicode::charLetter_A,
+	XalanUnicode::charLetter_B,
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charLetter_D,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_F,
+	XalanUnicode::charLetter_G,
+	XalanUnicode::charLetter_H,
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_J,
+	XalanUnicode::charLetter_K,
+	XalanUnicode::charLetter_L,
+	XalanUnicode::charLetter_M,
+	XalanUnicode::charLetter_N,
+	XalanUnicode::charLetter_O,
+	XalanUnicode::charLetter_P,
+	XalanUnicode::charLetter_Q,
+	XalanUnicode::charLetter_R,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_U,
+	XalanUnicode::charLetter_V,
+	XalanUnicode::charLetter_W,
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_Y,
+	0
+};
+
+
+
+static const XalanDOMChar	elalphaCountTable[] =
+{
+	0x03c9,
+	0x03b1,
+	0x03b2,
+	0x03b3,
+	0x03b4,
+	0x03b5,
+	0x03b6,
+	0x03b7,
+	0x03b8,
+	0x03b9,
+	0x03ba,
+	0x03bb,
+	0x03bc,
+	0x03bd,
+	0x03be,
+	0x03bf,
+	0x03c0,
+	0x03c1,
+	0x03c2,
+	0x03c3,
+	0x03c4,
+	0x03c5,
+	0x03c6,
+	0x03c7,
+	0x03c8,
+	0
 };
 
 
@@ -1202,7 +1275,7 @@ const ElemNumber::DecimalToRomanVectorType&		ElemNumber::s_romanConvertTable =
 void
 ElemNumber::initialize()
 {
-	::s_alphaCountTable = XALAN_STATIC_UCODE_STRING("ZABCDEFGHIJKLMNOPQRSTUVWXY");
+	::s_alphaCountTable = alphaCountTable;
 
 	::s_elalphaCountTable = elalphaCountTable;
 
@@ -1216,7 +1289,6 @@ ElemNumber::initialize()
 	::s_romanConvertTable.push_back(DecimalToRoman(5L, XALAN_STATIC_UCODE_STRING("V"), 4L, XALAN_STATIC_UCODE_STRING("IV")));
 	::s_romanConvertTable.push_back(DecimalToRoman(1L, XALAN_STATIC_UCODE_STRING("I"), 1L, XALAN_STATIC_UCODE_STRING("I")));
 }
-
 
 
 

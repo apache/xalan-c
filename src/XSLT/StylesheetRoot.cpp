@@ -505,15 +505,13 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 
 		AttributeListImpl		attrs;
 
-		const XalanDOMString	xslPrefix(XALAN_STATIC_UCODE_STRING("xsl:"));
-
 		attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
-	 					   c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
-						   c_wstr(XALAN_STATIC_UCODE_STRING("*")));
+	 					   c_wstr(Constants::ATTRTYPE_CDATA),
+						   c_wstr(Constants::PSEUDONAME_ANY));
 
 		m_defaultRule = new ElemTemplate(constructionContext,
 										 *this,
-										 xslPrefix + Constants::ELEMNAME_TEMPLATE_STRING, 
+										 Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING, 
 										 attrs,
 										 lineNumber,
 										 columnNumber);
@@ -523,7 +521,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		ElemApplyTemplates* childrenElement 
 		  = new ElemApplyTemplates(constructionContext,
 								   *this,
-								   xslPrefix + Constants::ELEMNAME_APPLY_TEMPLATES_STRING,
+								   Constants::ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING,
 								   attrs,
 								   lineNumber,
 								   columnNumber);
@@ -535,25 +533,25 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 
 		attrs.clear();
 		attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
-	 					   c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
-						   c_wstr(XALAN_STATIC_UCODE_STRING("text() | @*")));
+	 					   c_wstr(Constants::ATTRTYPE_CDATA),
+						   c_wstr(Constants::ATTRVAL_DEFAULT_TEXT_RULE));
 
 		m_defaultTextRule = new ElemTemplate(constructionContext,
 											 *this,
-											 xslPrefix + Constants::ELEMNAME_TEMPLATE_STRING,
+											 Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING,
 											 attrs,
 											 lineNumber,
 											 columnNumber);
 
 		attrs.clear();
 		attrs.addAttribute(c_wstr(Constants::ATTRNAME_SELECT),
-	 					   c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
-						   c_wstr(XALAN_STATIC_UCODE_STRING(".")));
+	 					   c_wstr(Constants::ATTRTYPE_CDATA),
+						   c_wstr(Constants::ATTRVAL_THIS));
 
 		ElemValueOf* elemValueOf =
 			new ElemValueOf(constructionContext,
 							*this,
-							xslPrefix + Constants::ELEMNAME_VALUEOF_STRING,
+							Constants::ELEMNAME_VALUEOF_WITH_PREFIX_STRING,
 							attrs,
 							lineNumber,
 							columnNumber);
@@ -564,13 +562,13 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
     
 		attrs.clear();
 		attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
-	 					   c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
-						   c_wstr(XALAN_STATIC_UCODE_STRING("/")));
+	 					   c_wstr(Constants::ATTRTYPE_CDATA),
+						   c_wstr(Constants::PSEUDONAME_ROOT));
 
 		m_defaultRootRule =
 			new ElemTemplate(constructionContext,
 							 *this,
-							 xslPrefix + Constants::ELEMNAME_TEMPLATE_STRING,
+							 Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING,
 							 attrs,
 							 lineNumber,
 							 columnNumber);
@@ -580,7 +578,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		childrenElement =
 			new ElemApplyTemplates(constructionContext,
 								   *this,
-								   xslPrefix + Constants::ELEMNAME_APPLY_TEMPLATES_STRING,
+								   Constants::ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING,
 								   attrs,
 								   lineNumber,
 								   columnNumber);

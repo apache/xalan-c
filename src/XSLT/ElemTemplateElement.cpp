@@ -75,6 +75,7 @@
 
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -200,11 +201,11 @@ ElemTemplateElement::processSpaceAttr(
 {
 	const XalanDOMChar*	const	spaceVal = atts.getValue(which);
 
-	if(equals(spaceVal, XALAN_STATIC_UCODE_STRING("default")) == true)
+	if(equals(spaceVal, Constants::ATTRVAL_DEFAULT) == true)
 	{
 		m_defaultSpace = true;
 	}
-	else if(equals(spaceVal, XALAN_STATIC_UCODE_STRING("preserve")) == true)
+	else if(equals(spaceVal, Constants::ATTRVAL_PRESERVE) == true)
 	{
 		m_defaultSpace = false;
 	}
@@ -222,17 +223,17 @@ ElemTemplateElement::processSpaceAttr(
 			const AttributeList&	atts,
 			int						which)
 {
-    const bool	isSpaceAttr = equals(aname, XALAN_STATIC_UCODE_STRING("xml:space"));
+    const bool	isSpaceAttr = equals(aname, Constants::ATTRNAME_XMLSPACE);
 
     if(isSpaceAttr == true)
     {
 		const XalanDOMChar*	const	spaceVal = atts.getValue(which);
 
-		if(equals(spaceVal, XALAN_STATIC_UCODE_STRING("default")))
+		if(equals(spaceVal, Constants::ATTRVAL_DEFAULT))
 		{
 			m_defaultSpace = true;
 		}
-		else if(equals(spaceVal, XALAN_STATIC_UCODE_STRING("preserve")) == true)
+		else if(equals(spaceVal, Constants::ATTRVAL_PRESERVE) == true)
 		{
 			m_defaultSpace = false;
 		}
@@ -252,20 +253,25 @@ ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 {
     const unsigned int	len = length(s);
 
-    XalanDOMChar		c = charAt(s,0);
+    XalanDOMChar		c = charAt(s, 0);
 
-    if(!(isLetterOrDigit(c) || (c == '_')))
+    if(!(isLetterOrDigit(c) || (c == XalanUnicode::charLowLine)))
       return false;
 
     if(len > 0)
     {
 		for(unsigned int i = 1; i < len; i++)
 		{
-			c = charAt(s,i); 
+			c = charAt(s, i); 
 
-			if(!(isLetterOrDigit(c) || (c == '_') || (c == '-') || (c == '.')))
+			if(!(isLetterOrDigit(c) ||
+				 c == XalanUnicode::charLowLine ||
+				 c == XalanUnicode::charHyphenMinus ||
+				 c == XalanUnicode::charFullStop))
+			{
 				return false;
-      }
+			}
+		}
     }
 
     return true;

@@ -84,6 +84,21 @@ class XALAN_PLATFORMSUPPORT_EXPORT NamedNodeMapAttributeList : public AttributeL
 {
 public:
 
+	/**
+	 * Initialize static data.  Must be called before any
+	 * other functions are called.  See PlatformSupportInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Destroy static data.  After thus function is called,
+	 * no other functions can be called.  See PlatformSupportInit.
+	 */
+	static void
+	terminate();
+
+
 	explicit
 	NamedNodeMapAttributeList(const XalanNamedNodeMap&	theMap);
 
@@ -138,6 +153,8 @@ private:
 #endif
 
 	mutable CacheType				m_cachedData;
+
+	static const XalanDOMString&	s_typeString;
 };
 
 

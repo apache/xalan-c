@@ -73,6 +73,10 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 class XalanDocument;
 class XalanDocumentFragment;
 class XalanElement;
@@ -87,6 +91,19 @@ class XalanNode;
 class XALAN_XMLSUPPORT_EXPORT FormatterToDOM : public FormatterListener
 {
 public:
+
+	/**
+	 * Perform static initialization.  See class XMLSupportInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XMLSupportInit.
+	 */
+	static void
+	terminate();
+
 
 	/**
 	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 
@@ -197,11 +214,11 @@ private:
 
 
 	// Data members...
-	XalanDocument*				m_doc;
+	XalanDocument*					m_doc;
 
-	XalanDocumentFragment*		m_docFrag;
+	XalanDocumentFragment*			m_docFrag;
 
-	XalanElement*				m_currentElem;
+	XalanElement*					m_currentElem;
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanElement*>		ElementStackType;
@@ -209,7 +226,11 @@ private:
 	typedef std::vector<XalanElement*>	ElementStackType;
 #endif
 
-	ElementStackType			m_elemStack;
+	ElementStackType				m_elemStack;
+
+	static const XalanDOMString&	s_xsltNextIsRawString;
+
+	static const XalanDOMString&	s_formatterToDOMString;
 };
 
 

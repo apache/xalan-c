@@ -68,6 +68,7 @@
 
 
 #include "STLHelper.hpp"
+#include "XalanUnicode.hpp"
 
 
 
@@ -87,6 +88,9 @@ URISupport::getURLFromString(const XalanDOMString&	urlString)
 	return url;
 }
 
+
+
+
 XalanDOMString
 URISupport::getURLStringFromString(const XalanDOMString&	urlString)
 {
@@ -94,7 +98,7 @@ URISupport::getURLStringFromString(const XalanDOMString&	urlString)
 
 	// Let's see what sort of URI we have...
 	const unsigned int	len = length(theNormalizedURI);
-	const unsigned int	index = indexOf(theNormalizedURI, ':');
+	const unsigned int	index = indexOf(theNormalizedURI, XalanUnicode::charColon);
 
 	bool				protocolPresent = false;
 
@@ -125,9 +129,10 @@ URISupport::getURLStringFromString(const XalanDOMString&	urlString)
 
 		NormalizeURIText(theNormalizedURI);
 
-		const XalanDOMString	theFilePrefix(indexOf(theNormalizedURI, '/') == 0 ?
-					XALAN_STATIC_UCODE_STRING("file://") :
-					XALAN_STATIC_UCODE_STRING("file:///"));
+		const XalanDOMString	theFilePrefix(
+					indexOf(theNormalizedURI, XalanUnicode::charSolidus) == 0 ?
+					s_fileProtocolString1 :
+					s_fileProtocolString2);
 
 		theNormalizedURI = theFilePrefix + theNormalizedURI;
 	}
@@ -158,7 +163,9 @@ URISupport::getURLStringFromString(
 
 	const unsigned int	theContextLength = length(context);
 
-	const unsigned int	indexOfSlash = theContextLength == 0 ? 0 : lastIndexOf(context, '/');
+	const unsigned int	indexOfSlash = theContextLength == 0 ?
+							0 :
+							lastIndexOf(context, XalanUnicode::charSolidus);
 
 	bool				hasPath = true;
 
@@ -175,7 +182,7 @@ URISupport::getURLStringFromString(
 
 	// Is there a colon, indicating some sort of drive spec, or protocol?
 	const unsigned int	theURLStringLength = length(urlString);
-	const unsigned int	theColonIndex = indexOf(urlString, ':');
+	const unsigned int	theColonIndex = indexOf(urlString, XalanUnicode::charColon);
 
 	if (theColonIndex == theURLStringLength)
 	{
@@ -248,7 +255,7 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 
 	// OK, look for a quick, cheap exit...
 	const unsigned int	len = length(uriString);
-	const unsigned int	index = indexOf(uriString, '\\');
+	const unsigned int	index = indexOf(uriString, XalanUnicode::charReverseSolidus);
 
 	if (index != len)
 	{
@@ -257,7 +264,11 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 
 		// Start replacing at the index point, since that's the
 		// first one...
-		replace(theVector.begin(), theVector.end(), '\\', '/');
+		replace(
+				theVector.begin(),
+				theVector.end(),
+				XalanUnicode::charReverseSolidus,
+				XalanUnicode::charSolidus);
 
 		uriString = XalanDOMString(&theVector[0]);
 	}
@@ -277,4 +288,36 @@ URISupport::InvalidURIException::InvalidURIException(const XalanDOMString&	theMe
 
 URISupport::InvalidURIException::~InvalidURIException()
 {
+}
+
+
+
+static XalanDOMString	s_fileProtocolString1;
+
+static XalanDOMString	s_fileProtocolString2;
+
+
+
+const XalanDOMString&	URISupport::s_fileProtocolString1 = ::s_fileProtocolString1;
+
+const XalanDOMString&	URISupport::s_fileProtocolString2 = ::s_fileProtocolString2;
+
+
+
+void
+URISupport::initialize()
+{
+	::s_fileProtocolString1 = XALAN_STATIC_UCODE_STRING("file://");
+
+	::s_fileProtocolString2 = XALAN_STATIC_UCODE_STRING("file:///");
+}
+
+
+
+void
+URISupport::terminate()
+{
+	clear(::s_fileProtocolString1);
+
+	clear(::s_fileProtocolString2);
 }

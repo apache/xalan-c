@@ -62,6 +62,7 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/XSLException.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -95,7 +96,7 @@ QName::QName(
 	m_namespace(),
 	m_localpart()
 {
-	const unsigned int	indexOfNSSep = indexOf(qname, ':');
+	const unsigned int	indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
 
 	if(indexOfNSSep < length(qname))
 	{
@@ -161,7 +162,7 @@ QName::resolvePrefix(
 			const XalanDOMString&	qname,
 			const PrefixResolver&	theResolver)
 {
-	const unsigned int	indexOfNSSep = indexOf(qname, ':');
+	const unsigned int	indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
 	const unsigned int	theLength = length(qname);
 
 	if(indexOfNSSep < theLength)

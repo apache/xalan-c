@@ -69,7 +69,9 @@
 #endif
 
 
+
 #include "DOMStringHelper.hpp"
+#include "XalanUnicode.hpp"
 
 
 
@@ -342,13 +344,10 @@ DoubleSupport::toDouble(const XalanDOMString&	theString)
 
 
 void
-processWhitespace(const XalanDOMChar*&	theString)
+consumeWhitespace(const XalanDOMChar*&	theString)
 {
 	while(*theString != 0 &&
-		  (*theString == 0x20 ||
-		   *theString == 0xD ||
-		   *theString == 0xA ||
-		   *theString == 0x9))
+		  isSpace(*theString))
 	{
 		++theString;
 	}
@@ -356,6 +355,139 @@ processWhitespace(const XalanDOMChar*&	theString)
 
 
 
+#if 1
+
+void
+consumeNumbers(const XalanDOMChar*&	theString)
+{
+	while(*theString &&
+		  *theString >= XalanUnicode::charDigit_0 &&
+		  *theString <= XalanUnicode::charDigit_9)
+	{
+			++theString;
+	}
+}
+
+
+
+double
+doConvert(const XalanDOMChar*	theString)
+{
+	assert(theString != 0);
+	assert(*theString != 0);
+
+	double	theResult = 0.0;
+
+	bool	fError = false;
+	bool	fGotDecimalPoint = false;
+	bool	fGotDigit = false;
+	bool	fGotMinus = false;
+	bool	fGotWhitespace = false;
+
+	const XalanDOMChar*		theCurrent = theString;
+
+	// trim any whitespace
+	consumeWhitespace(theCurrent);
+
+	while(*theCurrent != 0 && fError == false)
+	{
+		switch(*theCurrent)
+		{
+		case XalanUnicode::charFullStop:
+			if (fGotDecimalPoint == true ||	// can't have more than one...
+				fGotWhitespace == true)	// can't have one after whitespace...
+			{
+				fError = true;
+			}
+			else
+			{
+				fGotDecimalPoint = true;
+
+				++theCurrent;
+			}
+			break;
+
+		case XalanUnicode::charHyphenMinus:
+			if (fGotDecimalPoint == true ||
+				fGotMinus == true ||
+				fGotDigit == true ||
+				fGotWhitespace == true)
+			{
+				// Error -- more than one, or in bad position.
+				fError = true;
+			}
+			else
+			{
+				fGotMinus = true;
+
+				++theCurrent;
+			}
+			break;
+
+		case XalanUnicode::charDigit_0:
+		case XalanUnicode::charDigit_1:
+		case XalanUnicode::charDigit_2:
+		case XalanUnicode::charDigit_3:
+		case XalanUnicode::charDigit_4:
+		case XalanUnicode::charDigit_5:
+		case XalanUnicode::charDigit_6:
+		case XalanUnicode::charDigit_7:
+		case XalanUnicode::charDigit_8:
+		case XalanUnicode::charDigit_9:
+			if (fGotWhitespace == true)
+			{
+				fError = true;
+			}
+			else
+			{
+				fGotDigit = true;
+
+				consumeNumbers(theCurrent);
+			}
+			break;
+
+		case XalanUnicode::charSpace:
+		case XalanUnicode::charCR:
+		case XalanUnicode::charHTab:
+		case XalanUnicode::charLF:
+			if (fGotWhitespace == true)
+			{
+				fError = true;
+			}
+			else
+			{
+				fGotWhitespace = true;
+
+				consumeWhitespace(theCurrent);
+			}
+			break;
+
+		default:
+			fError = true;
+			break;
+		}
+	}
+
+	if (fError == true || fGotDigit == false)
+	{
+		return DoubleSupport::getNaN();
+	}
+	else
+	{
+		CharVectorType	theVector;
+
+		CopyWideStringToVector(theString, theVector);
+
+		return atof(&theVector.front());
+	}
+}
+
+#else
+
+// This version is disabled because it turns out that
+// an unsigned long is not large enough to accumulate
+// all values (duh!).  Perhaps on 64-bit platforms, we
+// can use this code, as it's much faster.
 void
 accumulateNumbers(
 			const XalanDOMChar*&	theString,
@@ -369,12 +501,14 @@ accumulateNumbers(
 		// accumulate as an integer, to avoid
 		// rounding issues.  It's also much
 		// faster...
-		unsigned long	temp = 0;
+		double	temp = 0;
 
-		while(*theString && *theString >= '0' && *theString <= '9')
+		while(*theString &&
+			  *theString >= XalanUnicode::charDigit_0 &&
+			  *theString <= XalanUnicode::charDigit_9)
 		{
 			temp *= 10;
-			temp += char(*theString) - '0';
+			temp += char(*theString) - XalanUnicode::charDigit_0;
 
 			++theString;
 		}
@@ -384,19 +518,21 @@ accumulateNumbers(
 	else
 	{
 		// Accumulate a divisor, so we can divide at the end.
-		unsigned long	theDivisor = 1;
+		double	theDivisor = 1;
 
 		// accumulate as an integer, to avoid
 		// rounding issues.  It's also much
 		// faster...
 		unsigned long	temp = 0;
 
-		while(*theString && *theString >= '0' && *theString <= '9')
+		while(*theString &&
+			  *theString >= XalanUnicode::charDigit_0 &&
+			  *theString <= XalanUnicode::charDigit_9)
 		{
 			theDivisor *= 10;
 
 			temp *= 10;
-			temp += char(*theString) - '0';
+			temp += char(*theString) - XalanUnicode::charDigit_0;
 
 			++theString;
 		}
@@ -430,13 +566,13 @@ doConvert(const XalanDOMChar*	theString)
 	const XalanDOMChar*		theCurrent = theString;
 
 	// trim any whitespace
-	processWhitespace(theCurrent);
+	consumeWhitespace(theCurrent);
 
 	while(*theCurrent != 0 && fError == false)
 	{
 		switch(*theCurrent)
 		{
-		case '.':
+		case XalanUnicode::charFullStop:
 			if (fGotDecimalPoint == true ||	// can't have more than one...
 				fGotWhitespace == true)	// can't have one after whitespace...
 			{
@@ -450,7 +586,7 @@ doConvert(const XalanDOMChar*	theString)
 			}
 			break;
 
-		case '-':
+		case XalanUnicode::charHyphenMinus:
 			if (fGotDecimalPoint == true ||
 				fGotMinus == true ||
 				fGotDigit == true ||
@@ -467,16 +603,16 @@ doConvert(const XalanDOMChar*	theString)
 			}
 			break;
 
-		case '0':
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		case '8':
-		case '9':
+		case XalanUnicode::charDigit_0:
+		case XalanUnicode::charDigit_1:
+		case XalanUnicode::charDigit_2:
+		case XalanUnicode::charDigit_3:
+		case XalanUnicode::charDigit_4:
+		case XalanUnicode::charDigit_5:
+		case XalanUnicode::charDigit_6:
+		case XalanUnicode::charDigit_7:
+		case XalanUnicode::charDigit_8:
+		case XalanUnicode::charDigit_9:
 			if (fGotWhitespace == true)
 			{
 				fError = true;
@@ -489,10 +625,10 @@ doConvert(const XalanDOMChar*	theString)
 			}
 			break;
 
-		case 0x20:
-		case 0xD:
-		case 0x9:
-		case 0xA:
+		case XalanUnicode::charSpace:
+		case XalanUnicode::charCR:
+		case XalanUnicode::charHTab:
+		case XalanUnicode::charLF:
 			if (fGotWhitespace == true)
 			{
 				fError = true;
@@ -501,7 +637,7 @@ doConvert(const XalanDOMChar*	theString)
 			{
 				fGotWhitespace = true;
 
-				processWhitespace(theCurrent);
+				consumeWhitespace(theCurrent);
 			}
 			break;
 
@@ -520,6 +656,8 @@ doConvert(const XalanDOMChar*	theString)
 		return fGotMinus == true ? -theResult : theResult;
 	}
 }
+
+#endif
 
 
 

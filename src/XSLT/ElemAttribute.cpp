@@ -63,6 +63,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -167,7 +168,7 @@ ElemAttribute::execute(
 
 		const unsigned int		origAttrNameLength = length(origAttrName);
 
-		unsigned int			indexOfNSSep = origAttrNameLength;
+		unsigned int			indexOfNSSep = 0;
 
 		XalanDOMString			attrNameSpace;
 
@@ -175,7 +176,11 @@ ElemAttribute::execute(
 		{
 			m_pNamespaceAVT->evaluate(attrNameSpace, sourceNode, *this, executionContext);
 
-			if(!isEmpty(attrNameSpace))
+			if(isEmpty(attrNameSpace))
+			{
+				indexOfNSSep = origAttrNameLength;
+			}
+			else
 			{
 				XalanDOMString	prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
 
@@ -183,19 +188,19 @@ ElemAttribute::execute(
 				{
 					prefix = executionContext.getUniqueNameSpaceValue();
 
-					XalanDOMString nsDecl = XalanDOMString(DOMServices::s_XMLNamespaceWithSeparator) + prefix;
+					const XalanDOMString	nsDecl = XalanDOMString(DOMServices::s_XMLNamespaceWithSeparator) + prefix;
 
 					executionContext.addResultAttribute(nsDecl, attrNameSpace);
 				}
 
-				indexOfNSSep = indexOf(origAttrName, ':');
+				indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 
 				if(indexOfNSSep < origAttrNameLength)
 				{
 					attrName = substring(attrName, indexOfNSSep + 1);
 				}
 
-				attrName = prefix + XalanDOMString(XALAN_STATIC_UCODE_STRING(":")) + attrName;
+				attrName = prefix + DOMServices::s_XMLNamespaceSeparatorString + attrName;
 			}
 		}
       // Note we are using original attribute name for these tests. 
@@ -203,7 +208,7 @@ ElemAttribute::execute(
 				&& !equals(origAttrName, DOMServices::s_XMLNamespace))
 		{
 			// make sure that if a prefix is specified on the attribute name, it is valid
-			indexOfNSSep = indexOf(origAttrName, ':');
+			indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 
 			if(indexOfNSSep < origAttrNameLength)
 			{

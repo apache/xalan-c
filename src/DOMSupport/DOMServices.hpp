@@ -91,11 +91,14 @@ public:
 	static const XalanDOMString&	s_XMLNamespaceURI;
 	static const XalanDOMString&	s_XMLNamespace;
 	static const XalanDOMString&	s_XMLNamespaceWithSeparator;
+	static const XalanDOMString&	s_XMLNamespaceSeparatorString;
 
 	static const unsigned int&		s_XMLStringLength;
 	static const unsigned int&		s_XMLNamespaceURILength;
 	static const unsigned int&		s_XMLNamespaceLength;
 	static const unsigned int&		s_XMLNamespaceWithSeparatorLength;
+	static const unsigned int&		s_XMLNamespaceSeparatorStringLength;
+
 
 	class XALAN_DOMSUPPORT_EXPORT WhitespaceSupport
 	{

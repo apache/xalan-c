@@ -59,6 +59,10 @@
 
 
 
+#include "DOMStringHelper.hpp"
+
+
+
 PrintWriter::PrintWriter(bool	fAutoFlush) :
 	Writer(),
 	m_fAutoFlush(fAutoFlush)
@@ -69,4 +73,44 @@ PrintWriter::PrintWriter(bool	fAutoFlush) :
 
 PrintWriter::~PrintWriter()
 {
+}
+
+
+
+static XalanDOMString	s_trueString;
+
+static XalanDOMString	s_falseString;
+
+static XalanDOMString	s_newlineString;
+
+
+const XalanDOMString&	PrintWriter::s_trueString = ::s_trueString;
+
+const XalanDOMString&	PrintWriter::s_falseString = ::s_falseString;
+
+const XalanDOMString&	PrintWriter::s_newlineString = ::s_newlineString;
+
+
+
+void
+PrintWriter::initialize()
+{
+	::s_trueString = XALAN_STATIC_UCODE_STRING("true");
+
+	::s_falseString = XALAN_STATIC_UCODE_STRING("false");
+
+	// $$$ ToDo: Does this need to be \r\n for some platforms?
+	::s_newlineString = XALAN_STATIC_UCODE_STRING("\n");
+}
+
+
+
+void
+PrintWriter::terminate()
+{
+	clear(::s_trueString);
+
+	clear(::s_falseString);
+
+	clear(::s_newlineString);
 }

@@ -172,8 +172,11 @@ ElemElement::execute(
 	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext);
 
 	bool				isIllegalAttribute = false;
+
 	unsigned int		len = length(elemName);
-	const unsigned int	indexOfNSSep = indexOf(elemName, ':');
+
+	const unsigned int	indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
+
 	const bool			haveNamespace = indexOfNSSep == len ? false : true;
 
 	XalanDOMString	ns;
@@ -237,7 +240,7 @@ ElemElement::execute(
 					elemName = substring(elemName, indexOfNSSep + 1);
 				}
 
-				elemName = prefix + XALAN_STATIC_UCODE_STRING(":") + elemName;
+				elemName = prefix + DOMServices::s_XMLNamespaceSeparatorString + elemName;
 			}
 		}
 

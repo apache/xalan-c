@@ -815,12 +815,32 @@ private:
 	// This shouldn't really be here, since it duplicates a string that is part
 	// of the information that is maintained by the class XPathFunctionTable,
 	// but this is a reasonable optimization.
-	static const XalanDOMString&	FUNC_ID_STRING;
+	static const XalanDOMString&	s_functionIDString;
 
 
 	// This shouldn't really be here, since it's not part of the XPath standard,
 	// but rather a part ofthe XSLT standard.
-	static const XalanDOMString&	FUNC_KEY_STRING;
+	static const XalanDOMString&	s_functionKeyString;
+
+	static const XalanDOMString&	s_orString;
+
+	static const XalanDOMString&	s_andString;
+
+	static const XalanDOMString&	s_divString;
+
+	static const XalanDOMString&	s_modString;
+
+	static const XalanDOMString&	s_quoString;
+
+	static const XalanDOMString&	s_dotString;
+
+	static const XalanDOMString&	s_dotDotString;
+
+	static const XalanDOMString&	s_axisString;
+
+	static const XalanDOMString&	s_attributeString;
+
+	static const XalanDOMString&	s_childString;
 
 	/**
 	 * Map of keyword names to token values.

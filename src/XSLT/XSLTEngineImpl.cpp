@@ -89,6 +89,7 @@
 #include <PlatformSupport/PrintWriter.hpp>
 #include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -196,10 +197,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 
 
 
-/**
- * Reset the state.  This needs to be called after a process() call 
- * is invoked, if the processor is to be used again.
- */
 void
 XSLTEngineImpl::reset()
 {
@@ -388,7 +385,7 @@ XSLTEngineImpl::process(
 			Stylesheet* prevStylesheet = 0;
 			while(!hrefs.empty())
 			{
-				const XMLCh* const		pxch = inputSource.getSystemId();
+				const XalanDOMChar* const		pxch = inputSource.getSystemId();
 				const XalanDOMString	sysid(pxch);
 				const XalanDOMString&	ref =  hrefs.back();
 
@@ -605,21 +602,10 @@ XSLTEngineImpl::getSourceTreeFromInput(XSLTInputSource&		inputSource)
 			sourceTree = theDocument;
 		}
 		// catch(Exception e)
-		// @@ Fix later
+		// $$$ ToDo: Fix this!!!
 		catch(...)
 		{
-		/*
-			java:
-			// Unwrap exception
-			if((e instanceof SAXException) && (null != ((SAXException)e).getException()))
-			{
-				// ((SAXException)e).getException().printStackTrace();
-				e = ((SAXException)e).getException();
-			}
-			sourceTree = null; // shutup compiler
-			error("Could not parse "+xmlIdentifier+" document!", e);
-		*/
-			error("Could not parse "+xmlIdentifier+" document!");
+			error("Could not parse " + xmlIdentifier + " document!");
 		}
 	}
 
@@ -635,7 +621,7 @@ XSLTEngineImpl::parseXML(
 			XalanDocument*			docToRegister)
 {
 	
-	XalanDocument*			doc =
+	XalanDocument*	doc =
 			m_xpathEnvSupport.getSourceDocument(urlString);
 
 	if(doc == 0)
@@ -678,7 +664,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 	const XalanDOMString	localXSLURLString = clone(trim(xslURLString));
 
-	const unsigned int		fragIndex = indexOf(localXSLURLString, '#');
+	const unsigned int		fragIndex = indexOf(localXSLURLString, XalanUnicode::charNumberSign);
 
 	const XalanDocument*	stylesheetDoc = 0;
 
@@ -1194,6 +1180,7 @@ XSLTEngineImpl::message(
 }
 
 
+
 void
 XSLTEngineImpl::problem(
 			const XalanDOMString&				msg, 
@@ -1205,16 +1192,21 @@ XSLTEngineImpl::problem(
 
 	const Locator* const	locator = getLocatorFromStack();
 
-	const XMLCh* id = (0 == locator) ?
+	const XalanDOMChar* id = (0 == locator) ?
 						0 : (0 == locator->getPublicId()) ?
 					 locator->getPublicId() : locator->getSystemId();
+
 	const bool	shouldThrow =
-	 m_problemListener->problem(ProblemListener::eXSLPROCESSOR, 
-								  classification,
-								  styleNode, sourceNode, msg, 
-								  id, 
-								  (0 == locator) ? 0: locator->getLineNumber(), 
-								  (0 == locator) ? 0: locator->getColumnNumber());
+		m_problemListener->problem(
+				ProblemListener::eXSLPROCESSOR, 
+				classification,
+				styleNode,
+				sourceNode,
+				msg, 
+				id, 
+				(0 == locator) ? 0: locator->getLineNumber(), 
+				(0 == locator) ? 0: locator->getColumnNumber());
+
 	if(shouldThrow == true)
 	{
 		throw XSLTProcessorException(msg);
@@ -1260,7 +1252,7 @@ XSLTEngineImpl::pushTime(const void*	key) const
 
 
 clock_t
-XSLTEngineImpl::popDuration(const void*	key) const
+XSLTEngineImpl::popDuration(const void*		key) const
 {
 	clock_t 	clockTicksDuration = 0;
 
@@ -1448,13 +1440,11 @@ XSLTEngineImpl::addResultNamespaceDecl(
 			const XalanDOMString&	prefix, 
 	        const XalanDOMString&	namespaceVal)
 {
-
 	const NameSpace		ns(prefix, namespaceVal);
 
 	if (m_resultNameSpaces.size() == 0)
 	{
-		NamespaceVectorType	nsVector;
-		nsVector.push_back(ns);
+		NamespaceVectorType		nsVector(1, ns);
 
 		m_resultNameSpaces.push_back(nsVector);
 	}
@@ -1466,10 +1456,7 @@ XSLTEngineImpl::addResultNamespaceDecl(
 		// new vector containing only this namespace
 		if(isEmpty(nsOnStack.front().getURI()))
 		{
-			NamespaceVectorType		nsVector;
-			nsVector.push_back(ns);
-
-			nsOnStack = nsVector;
+			nsOnStack.front() = ns;
 		}
 		// Otherwise, add the namespace at the end of the last vector
 		else
@@ -1491,7 +1478,8 @@ XSLTEngineImpl::addResultAttribute(
 
 	if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix == true) 
 	{
-		const XalanDOMString		p = isPrefix == true ? substring(aname, 6) : XalanDOMString();
+		const XalanDOMString	p = isPrefix == true ? substring(aname, 6) : XalanDOMString();
+
 		addResultNamespaceDecl(p, value);
 	}
 
@@ -1501,16 +1489,16 @@ XSLTEngineImpl::addResultAttribute(
 	{
 		attList.addAttribute(
 			c_wstr(aname),
-			c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
+			c_wstr(Constants::ATTRTYPE_CDATA),
 			c_wstr(value));
 	}
 	else
 	{
-		const XMLCh		theDummy = 0;
+		const XalanDOMChar		theDummy = 0;
 
 		attList.addAttribute(
 			c_wstr(aname),
-			c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
+			c_wstr(Constants::ATTRTYPE_CDATA),
 			&theDummy);
 	}
 
@@ -1553,8 +1541,7 @@ XSLTEngineImpl::flushPending()
 			{
 				if (m_flistener->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
 				{
-					// Yuck!!! Ugly hack to switch to HTML on-the-fly.  You can
-					// blame this ridiculous crap on the XSLT Working Group...
+					// Yuck!!! Ugly hack to switch to HTML on-the-fly.
 					FormatterToXML* const	theFormatter =
 #if defined(XALAN_OLD_STYLE_CASTS)
 						(FormatterToXML*)m_flistener;
@@ -2209,7 +2196,7 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 		XalanDOMString		elemNS;
 		XalanDOMString		elemLocalName;
 
-		const unsigned int	indexOfNSSep = indexOf(elementName, ':');
+		const unsigned int	indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
 
 		if(indexOfNSSep == length(elementName))
 		{
@@ -2258,7 +2245,7 @@ XSLTEngineImpl::qnameEqualsResultElemName(
 	XalanDOMString		elemNS;
 	XalanDOMString		elemLocalName;
 
-	const unsigned int	indexOfNSSep = indexOf(elementName, ':');
+	const unsigned int	indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
 
 	if(indexOfNSSep < length(elementName))
 	{
@@ -2340,7 +2327,7 @@ XSLTEngineImpl::getPrefixForNamespace(
 
 				if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix) 
 				{
-					const unsigned int		index = indexOf(aname, ':');
+					const unsigned int		index = indexOf(aname, XalanUnicode::charColon);
 					assert(index < length(aname));
 
 					const XalanDOMString 	namespaceOfPrefix = attr->getNodeValue();
@@ -2533,6 +2520,35 @@ XSLTEngineImpl::getAttrVal(
 
 
 
+static const XalanDOMChar	theTokenDelimiterCharacters[] =
+{
+		XalanUnicode::charLeftCurlyBracket,
+		XalanUnicode::charRightCurlyBracket,
+		XalanUnicode::charApostrophe,
+		XalanUnicode::charQuoteMark,
+		0
+};
+
+
+
+static const XalanDOMChar	theLeftCurlyBracketString[] =
+{
+		XalanUnicode::charLeftCurlyBracket,
+		0
+};
+
+
+
+static const XalanDOMChar	theRightCurlyBracketString[] =
+{
+		XalanUnicode::charRightCurlyBracket,
+		0
+};
+
+
+
+// $$$ ToDo: Get rid of this!!! See ElemPI, ElemSort, etc.  These have strings instead of
+// AVT instances...
 XalanDOMString
 XSLTEngineImpl::evaluateAttrVal(
 			XalanNode*				contextNode,
@@ -2542,7 +2558,7 @@ XSLTEngineImpl::evaluateAttrVal(
 {
 	XalanDOMString		expressedValue;
 
-	StringTokenizer 	tokenizer(stringedValue, XALAN_STATIC_UCODE_STRING("{}\"\'"), true);
+	StringTokenizer 	tokenizer(stringedValue, theTokenDelimiterCharacters, true);
 
 	const unsigned int	nTokens = tokenizer.countTokens();
 
@@ -2570,18 +2586,18 @@ XSLTEngineImpl::evaluateAttrVal(
 			{
 				switch(charAt(t, 0))
 				{
-					case('\"'):
-					case('\''):
+					case XalanUnicode::charApostrophe:
+					case XalanUnicode::charQuoteMark:
 					{
 						// just keep on going, since we're not in an attribute template
 						append(buffer, t);
 						break;
 					}
-					case('{'):
+					case(XalanUnicode::charLeftCurlyBracket):
 					{
 						// Attr template start
 						lookahead = tokenizer.nextToken();
-						if(equals(lookahead, XALAN_STATIC_UCODE_STRING("{")))
+						if(equals(lookahead, theLeftCurlyBracketString))
 						{
 							// Double curlys mean escape to show curly
 							append(buffer, lookahead);
@@ -2589,7 +2605,8 @@ XSLTEngineImpl::evaluateAttrVal(
 							break; // from switch
 						}
 						/*
-						else if(equals(lookahead, "\"") || equals(lookahead, "\'"))
+						else if(equals(lookahead, XalanUnicode::charQuoteMar) ||
+								equals(lookahead, XalanUnicode::charApostrophe))
 						{
 							// Error. Expressions can not begin with quotes.
 							error = "Expressions can not begin with quotes.";
@@ -2600,15 +2617,15 @@ XSLTEngineImpl::evaluateAttrVal(
 						{
 							XalanDOMString expression = lookahead; // Probably should make into StringBuffer
 
-							while(0 != length(lookahead) && !equals(lookahead, XALAN_STATIC_UCODE_STRING("}")))
+							while(0 != length(lookahead) && !equals(lookahead, theRightCurlyBracketString))
 							{
 								lookahead = tokenizer.nextToken();
 								if(length(lookahead) == 1)
 								{
 									switch(charAt(lookahead, 0))
 									{
-										case '\'':
-										case '\"':
+										case XalanUnicode::charApostrophe:
+										case XalanUnicode::charQuoteMark:
 										{
 											// String start
 											expression += lookahead;
@@ -2623,13 +2640,13 @@ XSLTEngineImpl::evaluateAttrVal(
 											expression += lookahead;
 											break;
 										}
-										case '{':
+										case XalanUnicode::charLeftCurlyBracket:
 										{
 											// What's another curly doing here?
 											error = "Error: Can not have \"{\" within expression.";
 											break;
 										}
-										case '}':
+										case XalanUnicode::charRightCurlyBracket:
 										{
 											// Proper close of attribute template.
 											// Evaluate the expression.
@@ -2664,10 +2681,10 @@ XSLTEngineImpl::evaluateAttrVal(
 						}
 						break;
 					}
-					case('}'):
+					case(XalanUnicode::charRightCurlyBracket):
 					{
 						lookahead = tokenizer.nextToken();
-						if(equals(lookahead, XALAN_STATIC_UCODE_STRING("}")))
+						if(equals(lookahead, theRightCurlyBracketString))
 						{
 							// Double curlys mean escape to show curly
 							append(buffer, lookahead);
@@ -2677,7 +2694,7 @@ XSLTEngineImpl::evaluateAttrVal(
 						{
 							// Illegal, I think...
 							warn("Found \"}\" but no attribute template open!");
-							append(buffer, XALAN_STATIC_UCODE_STRING("}"));
+							append(buffer, theRightCurlyBracketString);
 							// leave the lookahead to be processed by the next round.
 						}
 						break;
@@ -2849,29 +2866,6 @@ XSLTEngineImpl::shouldStripSourceNode(
 #else
 						static_cast<const XalanElement*>(parent);
 #endif
-					/* 
-					const XalanAttr* const		attr =
-						parentElem->getAttributeNode(XALAN_STATIC_UCODE_STRING("xml:space"));
-
-					if(0 != attr)
-					{
-						const XalanDOMString 	xmlSpaceVal = attr->getValue();
-
-						if(equals(xmlSpaceVal, XALAN_STATIC_UCODE_STRING("preserve")))
-						{
-							strip = false;
-						}
-						else if(equals(xmlSpaceVal, XALAN_STATIC_UCODE_STRING("default")))
-						{
-							strip = true;
-						}
-						else
-						{
-							error("xml:space in the source XML has an illegal value: " + xmlSpaceVal);
-						}
-						break;
-					}
-					*/
 
 					double highPreserveScore = XPath::s_MatchScoreNone;
 					double highStripScore = XPath::s_MatchScoreNone;
@@ -2959,18 +2953,17 @@ XSLTEngineImpl::fixWhiteSpace(
 			bool					trimTail, 
 			bool					doublePunctuationSpaces) 
 {
-	const XMLCh* const	theStringData = c_wstr(string);
+	const XalanDOMChar* const	theStringData = c_wstr(string);
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XMLCh>		XMLChVectorType;
-#else
-	typedef std::vector<XMLCh>	XMLChVectorType;
-#endif
 
-	XMLChVectorType		buf(theStringData,
-							theStringData + length(string));
+	XalanDOMCharVectorType		buf(
+					theStringData,
+					theStringData + length(string));
+
 	const unsigned int	len = buf.size();
+
 	bool				edit = false;
+
 	unsigned int 		s;
 
 	for(s = 0;	s < len;  ++s) 
@@ -2982,25 +2975,32 @@ XSLTEngineImpl::fixWhiteSpace(
 	}
 
 	/* replace S to ' '. and ' '+ -> single ' '. */
-	unsigned int d = s;
-	bool	pres = false;
+	unsigned int	d = s;
+
+	bool			pres = false;
+
 	for ( ;  s < len;  ++s)
 	{
-		const XMLCh 	c = buf[s];
+		const XalanDOMChar 	c = buf[s];
 
 		if (isSpace(c) == true) 
 		{
 			if (!pres) 
 			{
-				if (' ' != c)  
+				if (XalanUnicode::charSpace != c)  
 				{
 					edit = true;
 				}
-				buf[d++] = ' ';
+
+				buf[d++] = XalanUnicode::charSpace;
+
 				if(doublePunctuationSpaces == true && (s != 0))
 				{
-					const XMLCh 	prevChar = buf[s-1];
-					if(!((prevChar == '.') || (prevChar == '!') || (prevChar == '?')))
+					const XalanDOMChar 	prevChar = buf[s - 1];
+
+					if(!(prevChar == XalanUnicode::charFullStop ||
+						 prevChar == XalanUnicode::charExclamationMark ||
+						 prevChar == XalanUnicode::charQuestionMark))
 					{
 						pres = true;
 					}
@@ -3023,14 +3023,15 @@ XSLTEngineImpl::fixWhiteSpace(
 		}
 	}
 
-	if (trimTail == true && 1 <= d && ' ' == buf[d-1]) 
+	if (trimTail == true && 1 <= d && XalanUnicode::charSpace == buf[d - 1]) 
 	{
 		edit = true;
 		d --;
 	}
 
-	XMLChVectorType::const_iterator	start = buf.begin();
-	if (trimHead  == true && 0 < d && ' ' == buf[0]) 
+	XalanDOMCharVectorType::const_iterator	start = buf.begin();
+
+	if (trimHead  == true && 0 < d && XalanUnicode::charSpace == buf[0]) 
 	{
 		edit = true;
 		start++;
@@ -3048,6 +3049,7 @@ XSLTEngineImpl::fixWhiteSpace(
 		// taking into account that we may have moved up the
 		// start because we're trimming the from of the string.
 		const unsigned int	theLength = d - (start - buf.begin());
+
 		return XalanDOMString(start, theLength);
 	}
 }
@@ -3066,17 +3068,13 @@ XSLTEngineImpl::getNormalizedText(const XalanText&	tx) const
 
 	const int				nSrcChars = src.length();
 
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::vector;
-#endif
+	XalanDOMCharVectorType	sb;
 
-	vector<XMLCh>		sb;
-
-	XMLCh					prevChar = 0x00;
+	XalanDOMChar			prevChar = 0;
 
 	for(int i = 0; i < nSrcChars; i++)
 	{
-		const XMLCh c = charAt(src, i);
+		const XalanDOMChar	c = charAt(src, i);
 
 		if(0x0A == c)
 		{
@@ -3125,9 +3123,9 @@ XSLTEngineImpl::getUniqueNSValue() const
 
 	((XSLTEngineImpl*)this)->m_uniqueNSValue++;
 
-	return XALAN_STATIC_UCODE_STRING("ns") + UnsignedLongToDOMString(temp);
+	return s_uniqueNamespacePrefix + UnsignedLongToDOMString(temp);
 #else
-	return XALAN_STATIC_UCODE_STRING("ns") + UnsignedLongToDOMString(m_uniqueNSValue++);
+	return s_uniqueNamespacePrefix + UnsignedLongToDOMString(m_uniqueNSValue++);
 #endif
 }
 
@@ -3530,6 +3528,8 @@ static XalanDOMString							s_XSLNameSpaceURL;
 
 static XalanDOMString							s_XSLT4JNameSpaceURL;
 
+static XalanDOMString							s_uniqueNamespacePrefix;
+
 static XSLTEngineImpl::AttributeKeysMapType		s_attributeKeys;
 
 static XSLTEngineImpl::ElementKeysMapType		s_elementKeys;
@@ -3543,6 +3543,9 @@ const double			XSLTEngineImpl::s_XSLTVerSupported(1.0);
 const XalanDOMString&	XSLTEngineImpl::s_XSLNameSpaceURL = ::s_XSLNameSpaceURL;
 
 const XalanDOMString&	XSLTEngineImpl::s_XSLT4JNameSpaceURL = ::s_XSLT4JNameSpaceURL;
+
+const XalanDOMString&	XSLTEngineImpl::s_uniqueNamespacePrefix = ::s_uniqueNamespacePrefix;
+
 
 /**
  * Control if the xsl:variable is resolved early or 
@@ -3574,6 +3577,8 @@ XSLTEngineImpl::initialize()
 
 	::s_XSLT4JNameSpaceURL = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt");
 
+	::s_uniqueNamespacePrefix = XALAN_STATIC_UCODE_STRING("ns");
+
 	installFunctions();
 
 	initializeAttributeKeysTable(::s_attributeKeys);
@@ -3595,6 +3600,8 @@ XSLTEngineImpl::terminate()
 	AttributeKeysMapType().swap(::s_attributeKeys);
 
 	uninstallFunctions();
+
+	clear(::s_uniqueNamespacePrefix);
 
 	clear(::s_XSLT4JNameSpaceURL);
 

@@ -74,6 +74,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -141,7 +142,7 @@ public:
 						const unsigned int	valLen = length(lang);
 
 						if(length(langVal) == valLen ||
-						   charAt(langVal, valLen) == '-')
+						   charAt(langVal, valLen) == XalanUnicode::charHyphenMinus)
 						{
 							fMatch = true;
 

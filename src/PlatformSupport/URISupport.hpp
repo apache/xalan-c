@@ -84,6 +84,21 @@ public:
 	typedef XalanAutoPtr<XMLURL>	URLAutoPtrType;
 
 	/**
+	 * Initialize static data.  Must be called before any
+	 * other functions are called.  See PlatformSupportInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Destroy static data.  After thus function is called,
+	 * no other functions can be called.  See PlatformSupportInit.
+	 */
+	static void
+	terminate();
+
+
+	/**
 	 * Determine the fully qualified URI for a string.
 	 *
 	 * @param urlString string to qualify
@@ -150,6 +165,11 @@ public:
 		virtual
 		~InvalidURIException();
 	};
+
+
+	static const XalanDOMString&	s_fileProtocolString1;
+
+	static const XalanDOMString&	s_fileProtocolString2;
 };
 
 

@@ -198,8 +198,10 @@ FormatterToDOM::charactersRaw(
 		const XMLCh* const	chars,
 		const unsigned int	length)
 {
-	append(m_doc->createProcessingInstruction(XALAN_STATIC_UCODE_STRING("xslt-next-is-raw"),
-				XALAN_STATIC_UCODE_STRING("formatter-to-dom")));
+	append(m_doc->createProcessingInstruction(
+				s_xsltNextIsRawString,
+				s_formatterToDOMString));
+
 	append(m_doc->createTextNode(XalanDOMString(chars, length)));
 }		
 
@@ -275,4 +277,36 @@ FormatterToDOM::append(XalanNode*	newNode)
 	{
 		m_doc->appendChild(newNode);
 	}
+}
+
+
+
+static XalanDOMString	s_xsltNextIsRawString;
+
+static XalanDOMString	s_formatterToDOMString;
+
+
+
+const XalanDOMString&	FormatterToDOM::s_xsltNextIsRawString = ::s_xsltNextIsRawString;
+
+const XalanDOMString&	FormatterToDOM::s_formatterToDOMString = ::s_formatterToDOMString;
+
+
+
+void
+FormatterToDOM::initialize()
+{
+	::s_xsltNextIsRawString = XALAN_STATIC_UCODE_STRING("xslt-next-is-raw");
+
+	::s_formatterToDOMString = XALAN_STATIC_UCODE_STRING("formatter-to-dom");
+}
+
+
+
+void
+FormatterToDOM::terminate()
+{
+	clear(::s_xsltNextIsRawString);
+
+	clear(::s_formatterToDOMString);
 }

@@ -89,6 +89,10 @@
 
 
 
+#include <PlatformSupport/XalanUnicode.hpp>
+
+
+
 class TextOutputStream;
 
 
@@ -113,6 +117,25 @@ initializeAndTranscode(const char*	theString);
 #define XALAN_STATIC_UCODE_STRING(str) initializeAndTranscode(str)
 
 #endif
+
+
+
+/**
+ * Initialize static data.  Must be called before any
+ * other functions are called.  See PlatformSupportInit.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+DOMStringHelperInitialize();
+
+
+
+/**
+ * Destroy static data.  After thus function is called,
+ * no other functions can be called.  See PlatformSupportInit.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+DOMStringHelperTerminate();
+
 
 
 /**
@@ -742,11 +765,11 @@ clone(const XalanDOMString&	theString)
 inline bool
 isSpace(XalanDOMChar	theChar)
 {
-	return theChar > 0x20 ? false :
-		   (theChar == 0x20 ||
-		    theChar == 0xD ||
-		    theChar == 0xA ||
-		    theChar == 0x9) ? true : false;
+	return theChar > XalanUnicode::charSpace ? false :
+		   (theChar == XalanUnicode::charSpace ||
+		    theChar == XalanUnicode::charCR ||
+		    theChar == XalanUnicode::charLF ||
+		    theChar == XalanUnicode::charHTab) ? true : false;
 }
 
 
@@ -1203,9 +1226,20 @@ clear(XalanDOMString&	theString)
 // A standard vector of XalanChars
 #if defined(XALAN_NO_NAMESPACES)
 typedef vector<XalanDOMChar>		XalanDOMCharVectorType;
+
+typedef vector<char>				CharVectorType;
 #else
 typedef std::vector<XalanDOMChar>	XalanDOMCharVectorType;
+
+typedef std::vector<char>			CharVectorType;
 #endif
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+CopyWideStringToVector(
+			const XalanDOMChar*		theString,
+			CharVectorType&			theVector);
 
 
 

@@ -113,7 +113,7 @@ ElemLiteralResult::ElemLiteralResult(
 		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		bool						needToProcess = true;
-		const unsigned int			indexOfNSSep = indexOf(aname, ':');
+		const unsigned int			indexOfNSSep = indexOf(aname, XalanUnicode::charColon);
 
 		XalanDOMString				prefix;
 
@@ -123,7 +123,7 @@ ElemLiteralResult::ElemLiteralResult(
 
 			if(!equals(prefix, DOMServices::s_XMLNamespace))
 			{
-				XalanDOMString	ns = getNamespaceForPrefix(prefix);
+				const XalanDOMString	ns = getNamespaceForPrefix(prefix);
 
 				if(equals(ns, stylesheetTree.getXSLTNamespaceURI()))
 				{
@@ -202,7 +202,7 @@ ElemLiteralResult::postConstruction(const NamespacesHandler&	theParentHandler)
 	const XalanDOMString&	theElementName = getElementName();
 	assert(length(theElementName) > 0);
 
-	const unsigned int		indexOfNSSep = indexOf(theElementName, ':');
+	const unsigned int		indexOfNSSep = indexOf(theElementName, XalanUnicode::charColon);
 
 	const XalanDOMString	thePrefix = indexOfNSSep < length(theElementName) ?
 					substring(theElementName, 0, indexOfNSSep) : XalanDOMString();
@@ -295,7 +295,7 @@ ElemLiteralResult::isAttrOK(
 
     if(isAttrOK == false)
     {
-		unsigned int	indexOfNSSep = indexOf(attrName, ':');
+		const unsigned int	indexOfNSSep = indexOf(attrName, XalanUnicode::charColon);
 
 		if(indexOfNSSep < length(attrName))
 		{

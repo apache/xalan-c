@@ -110,7 +110,7 @@ DOMSupportDefault::getExpandedElementName(const XalanElement&	elem) const
 {
 	const XalanDOMString	theNamespace = getNamespaceOfNode(elem);
 
-	return (0 != length(theNamespace)) ? theNamespace + XALAN_STATIC_UCODE_STRING(":") + DOMServices::getLocalNameOfNode(elem) 
+	return (0 != length(theNamespace)) ? theNamespace + DOMServices::s_XMLNamespaceSeparatorString + DOMServices::getLocalNameOfNode(elem) 
 									: DOMServices::getLocalNameOfNode(elem);
 }
 
@@ -121,6 +121,6 @@ DOMSupportDefault::getExpandedAttributeName(const XalanAttr&	attr) const
 {
 	const XalanDOMString	theNamespace = getNamespaceOfNode(attr);
 
-	return (0 != length(theNamespace)) ? theNamespace + XALAN_STATIC_UCODE_STRING(":") + DOMServices::getLocalNameOfNode(attr) 
+	return (0 != length(theNamespace)) ? theNamespace + DOMServices::s_XMLNamespaceSeparatorString + DOMServices::getLocalNameOfNode(attr) 
                                  : DOMServices::getLocalNameOfNode(attr);
 }

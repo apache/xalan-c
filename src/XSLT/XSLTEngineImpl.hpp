@@ -1452,6 +1452,10 @@ private:
 	 */
 	static const XalanDOMString&		s_XSLT4JNameSpaceURL; // "http://xml.apache.org/xslt"
 
+	/**
+	 * Prefix to use when generating unique namespaces.
+	 */
+	static const XalanDOMString&		s_uniqueNamespacePrefix;
 
 	/**
 	 * Map that can look up XSLT4J extensions element IDs via name.

@@ -61,6 +61,7 @@
 
 #include "Constants.hpp"
 #include "ElemNumber.hpp"
+#include "NamespacesHandler.hpp"
 #include "XSLTEngineImpl.hpp"
 
 
@@ -100,9 +101,11 @@ XSLTInit::~XSLTInit()
 void
 XSLTInit::initialize()
 {
+	Constants::initialize();
+
 	ElemNumber::initialize();
 
-	Constants::initialize();
+	NamespacesHandler::initialize();
 
 	XSLTEngineImpl::initialize();
 }
@@ -114,7 +117,9 @@ XSLTInit::terminate()
 {
 	XSLTEngineImpl::terminate();
 
-	Constants::terminate();
+	NamespacesHandler::terminate();
 
 	ElemNumber::terminate();
+
+	Constants::terminate();
 }

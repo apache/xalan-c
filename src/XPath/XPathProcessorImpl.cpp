@@ -68,6 +68,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "PrefixResolver.hpp"
 #include "XPathEnvSupport.hpp"
 #include "XPathExecutionContext.hpp"
@@ -185,7 +189,7 @@ XPathProcessorImpl::tokenize(
 
 		switch(c)
 		{
-		case '\"': 
+		case XalanUnicode::charQuoteMark: 
 			{
 				if(startSubstring != -1)
 				{
@@ -206,9 +210,9 @@ XPathProcessorImpl::tokenize(
 
 				startSubstring = i;
 
-				for(++i; i < nChars && (c = charAt(pat, i)) != '\"'; ++i);
+				for(++i; i < nChars && (c = charAt(pat, i)) != XalanUnicode::charQuoteMark; ++i);
 
-				if(c == '\"')
+				if(c == XalanUnicode::charQuoteMark)
 				{
 					addToTokenQueue(substring(pat, startSubstring, i + 1));
 					startSubstring = -1;
@@ -220,7 +224,7 @@ XPathProcessorImpl::tokenize(
 			}
 			break;
 
-		case '\'':
+		case XalanUnicode::charApostrophe:
 			{
 				if(startSubstring != -1)
 				{
@@ -240,9 +244,9 @@ XPathProcessorImpl::tokenize(
 
 				startSubstring = i;
 
-				for(++i; i < nChars && (c = charAt(pat, i)) != '\''; ++i);
+				for(++i; i < nChars && (c = charAt(pat, i)) != XalanUnicode::charApostrophe; ++i);
 
-				if(c == '\'')
+				if(c == XalanUnicode::charApostrophe)
 				{
 					addToTokenQueue(substring(pat, startSubstring, i + 1));
 					startSubstring = -1;
@@ -254,10 +258,10 @@ XPathProcessorImpl::tokenize(
 			}
 			break;
 		
-		case 0x0A:
-		case 0x0D:
-		case ' ':
-		case '\t':
+		case XalanUnicode::charLF:
+		case XalanUnicode::charCR:
+		case XalanUnicode::charSpace:
+		case XalanUnicode::charHTab:
 			{
 				if(startSubstring != -1)
 				{
@@ -279,13 +283,13 @@ XPathProcessorImpl::tokenize(
 			}
 			break;
 		
-		case '@':
+		case XalanUnicode::charCommercialAt:
 			isAttrName = true;
 			// fall-through on purpose
 
-		case '-':
+		case XalanUnicode::charHyphenMinus:
 			{
-				if('-' == c)
+				if(XalanUnicode::charHyphenMinus == c)
 				{
 					if(!(isNum || startSubstring == -1))
 					{
@@ -297,22 +301,22 @@ XPathProcessorImpl::tokenize(
 			}
 			// fall-through on purpose
 
-		case '(':
-		case '[':
-		case ')':
-		case ']':
-		case '|':
-		case '/':
-		case '*':
-		case '+':
-		case '=':
-		case ',':
-		case '\\': // Unused at the moment
-		case '^': // Unused at the moment
-		case '!': // Unused at the moment
-		case '$':
-		case '<':
-		case '>':
+		case XalanUnicode::charLeftParenthesis:
+		case XalanUnicode::charLeftSquareBracket:
+		case XalanUnicode::charRightParenthesis:
+		case XalanUnicode::charRightSquareBracket:
+		case XalanUnicode::charVerticalLine:
+		case XalanUnicode::charSolidus:
+		case XalanUnicode::charAsterisk:
+		case XalanUnicode::charPlusSign:
+		case XalanUnicode::charEqualsSign:
+		case XalanUnicode::charComma:
+		case XalanUnicode::charReverseSolidus: // Unused at the moment
+		case XalanUnicode::charCircumflexAccent: // Unused at the moment
+		case XalanUnicode::charExclamationMark: // Unused at the moment
+		case XalanUnicode::charDollarSign:
+		case XalanUnicode::charLessThanSign:
+		case XalanUnicode::charGreaterThanSign:
 			{
 				if(startSubstring != -1)
 				{
@@ -331,11 +335,11 @@ XPathProcessorImpl::tokenize(
 
 					startSubstring = -1;
 				}
-				else if('/' == c && isStartOfPat == true)
+				else if(XalanUnicode::charSolidus == c && isStartOfPat == true)
 				{
 					isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
 				}
-				else if('*' == c)
+				else if(XalanUnicode::charAsterisk == c)
 				{
 					isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
 					isAttrName = false;
@@ -343,7 +347,7 @@ XPathProcessorImpl::tokenize(
 
 				if(0 == nesting)
 				{
-					if('|' == c)
+					if(XalanUnicode::charVerticalLine == c)
 					{
 						if(0 != targetStrings)
 						{
@@ -354,11 +358,11 @@ XPathProcessorImpl::tokenize(
 					}
 				}
 
-				if(')' == c || ']' == c)
+				if(XalanUnicode::charRightParenthesis == c || XalanUnicode::charRightSquareBracket == c)
 				{
 					nesting--;
 				}
-				else if('(' == c || '[' == c)
+				else if(XalanUnicode::charLeftParenthesis == c || XalanUnicode::charLeftSquareBracket == c)
 				{
 					nesting++;
 				}
@@ -367,7 +371,7 @@ XPathProcessorImpl::tokenize(
 			}		
 			break;
 
-		case ':':
+		case XalanUnicode::charColon:
 			{
 				if(posOfNSSep == i - 1)
 				{ 
@@ -477,7 +481,7 @@ XPathProcessorImpl::recordTokenString(DOMStringVectorType&	targetStrings)
 
 	resetTokenMark(tokPos + 1);
 
-	if(lookahead('(', 1) == true)
+	if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true)
 	{
 		const int	tok = getKeywordToken(m_token);
 
@@ -514,14 +518,14 @@ XPathProcessorImpl::recordTokenString(DOMStringVectorType&	targetStrings)
 	}
 	else
 	{
-		if(tokenIs('@') == true)
+		if(tokenIs(XalanUnicode::charCommercialAt) == true)
 		{
 			tokPos++;
 
 			resetTokenMark(tokPos + 1);
 		}
 
-		if(lookahead(':', 1) == true)
+		if(lookahead(XalanUnicode::charColon, 1) == true)
 		{
 			tokPos += 2;
 		}
@@ -564,7 +568,7 @@ XPathProcessorImpl::mapNSTokens(
 	{
 		addToTokenQueue(uName);
 
-		addToTokenQueue(XALAN_STATIC_UCODE_STRING(":"));
+		addToTokenQueue(DOMServices::s_XMLNamespaceSeparatorString);
 
 		const XalanDOMString 	s = substring(pat, posOfNSSep + 1, posOfScan);
 	  
@@ -578,7 +582,7 @@ XPathProcessorImpl::mapNSTokens(
 		// error(XalanDOMString("Could not locate namespace for prefix: ") + prefix);
 		addToTokenQueue(prefix);
 
-		addToTokenQueue(XALAN_STATIC_UCODE_STRING(":"));
+		addToTokenQueue(DOMServices::s_XMLNamespaceSeparatorString);
 
 		const XalanDOMString 	s = substring(pat, posOfNSSep + 1, posOfScan);
 
@@ -705,9 +709,9 @@ XPathProcessorImpl::lookbehindHasToken(int	n) const
 	const XalanDOMString 	tok =
 		getTokenRelative(-(n + 1));
 
-	const XalanDOMChar 		c0 = length(tok) == 0 ? '|' : charAt(tok, 0);
+	const XalanDOMChar 		c0 = length(tok) == 0 ? XalanUnicode::charVerticalLine : charAt(tok, 0);
 
-	return c0 == '|' ? false : true;
+	return c0 == XalanUnicode::charVerticalLine ? false : true;
 }
 
 
@@ -942,7 +946,7 @@ XPathProcessorImpl::OrExpr()
 
 	AndExpr();
 
-	if(tokenIs(XALAN_STATIC_UCODE_STRING("or")) == true)
+	if(tokenIs(s_orString) == true)
 	{
 		nextToken();
 
@@ -965,7 +969,7 @@ XPathProcessorImpl::AndExpr()
 
 	EqualityExpr();
 
-	if(tokenIs(XALAN_STATIC_UCODE_STRING("and")) == true)
+	if(tokenIs(s_andString) == true)
 	{
 		nextToken();
 
@@ -993,14 +997,14 @@ XPathProcessorImpl::EqualityExpr(int	opCodePos)
 	XPathExpression::eOpCodes	theOpCode =
 			XPathExpression::eENDOP;
 
-	if(tokenIs('!') && lookahead('=', 1))
+	if(tokenIs(XalanUnicode::charExclamationMark) && lookahead(XalanUnicode::charEqualsSign, 1))
 	{
 		nextToken();
 		nextToken();
 
 		theOpCode = XPathExpression::eOP_NOTEQUALS;
 	}
-	else if(tokenIs('='))
+	else if(tokenIs(XalanUnicode::charEqualsSign))
 	{
 		nextToken();
 
@@ -1060,11 +1064,11 @@ XPathProcessorImpl::RelationalExpr(int	opCodePos)
 		XPathExpression::eOpCodes	theOpCode =
 			XPathExpression::eENDOP;
 
-		if(tokenIs('<') == true)
+		if(tokenIs(XalanUnicode::charLessThanSign) == true)
 		{
 			nextToken();
 
-			if(tokenIs('=') == true)
+			if(tokenIs(XalanUnicode::charEqualsSign) == true)
 			{
 				nextToken();
 
@@ -1075,11 +1079,11 @@ XPathProcessorImpl::RelationalExpr(int	opCodePos)
 				theOpCode = XPathExpression::eOP_LT;
 			}
 		}
-		else if(tokenIs('>') == true)
+		else if(tokenIs(XalanUnicode::charGreaterThanSign) == true)
 		{
 			nextToken();
 
-			if(tokenIs('=') == true)
+			if(tokenIs(XalanUnicode::charEqualsSign) == true)
 			{
 				nextToken();
 
@@ -1145,11 +1149,11 @@ XPathProcessorImpl::AdditiveExpr(int	opCodePos)
 		XPathExpression::eOpCodes	theOpCode =
 			XPathExpression::eENDOP;
 
-		if(tokenIs('+') == true)
+		if(tokenIs(XalanUnicode::charPlusSign) == true)
 		{
 			theOpCode = XPathExpression::eOP_PLUS;
 		}
-		else if(tokenIs('-') == true)
+		else if(tokenIs(XalanUnicode::charHyphenMinus) == true)
 		{
 			theOpCode = XPathExpression::eOP_MINUS;
 		}
@@ -1210,19 +1214,19 @@ XPathProcessorImpl::MultiplicativeExpr(int	opCodePos)
 		XPathExpression::eOpCodes	theOpCode =
 			XPathExpression::eENDOP;
 
-		if(tokenIs('*') == true)
+		if(tokenIs(XalanUnicode::charAsterisk) == true)
 		{
 			theOpCode = XPathExpression::eOP_MULT;
 		}
-		else if(tokenIs(XALAN_STATIC_UCODE_STRING("div")) == true)
+		else if(tokenIs(s_divString) == true)
 		{
 			theOpCode = XPathExpression::eOP_DIV;
 		}
-		else if(tokenIs(XALAN_STATIC_UCODE_STRING("mod")) == true)
+		else if(tokenIs(s_modString) == true)
 		{
 			theOpCode = XPathExpression::eOP_MOD;
 		}
-		else if(tokenIs(XALAN_STATIC_UCODE_STRING("quo")) == true)
+		else if(tokenIs(s_quoString) == true)
 		{
 			theOpCode = XPathExpression::eOP_QUO;
 		}
@@ -1276,7 +1280,7 @@ XPathProcessorImpl::UnaryExpr()
 
 	bool		isNeg = false;
 
-	if(m_tokenChar == '-')
+	if(m_tokenChar == XalanUnicode::charHyphenMinus)
 	{
 		nextToken();
 
@@ -1362,7 +1366,7 @@ XPathProcessorImpl::UnionExpr()
 	{
 		PathExpr();
 
-		if(tokenIs('|') == true)
+		if(tokenIs(XalanUnicode::charVerticalLine) == true)
 		{
 			if(false == foundUnion)
 			{
@@ -1401,7 +1405,7 @@ XPathProcessorImpl::PathExpr()
 
 	FilterExpr();
 
-	if(tokenIs('/') == true)
+	if(tokenIs(XalanUnicode::charSolidus) == true)
 	{
 		nextToken();
 
@@ -1426,21 +1430,21 @@ XPathProcessorImpl::FilterExpr()
 
 	const int	opPos = m_expression->opCodeMapLength();
 
-	//	const bool	isFunc = lookahead('(', 1);
+	//	const bool	isFunc = lookahead(XalanUnicode::charLeftParenthesis, 1);
 
 	PrimaryExpr();
 
-	if(tokenIs('[') == true)
+	if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
 	{
 		m_expression->insertOpCode(XPathExpression::eOP_LOCATIONPATH,
 								   opPos);
 	  
-		while(tokenIs('[') == true)
+		while(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
 		{
 			Predicate();
 		}
 
-		if(tokenIs('/') == true)
+		if(tokenIs(XalanUnicode::charSolidus) == true)
 		{
 			nextToken();
 
@@ -1455,7 +1459,7 @@ XPathProcessorImpl::FilterExpr()
 	}
 
 	/*
-	if(tokenIs('[') == true)
+	if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
 	{
 		Predicate();
 
@@ -1474,7 +1478,7 @@ XPathProcessorImpl::PrimaryExpr()
 
 	const int	opPos = m_expression->opCodeMapLength();
 
-	if(m_tokenChar == '\'' || m_tokenChar == '"')
+	if(m_tokenChar == XalanUnicode::charApostrophe || m_tokenChar == XalanUnicode::charQuoteMark)
 	{
 		m_expression->appendOpCode(XPathExpression::eOP_LITERAL);
 
@@ -1483,7 +1487,7 @@ XPathProcessorImpl::PrimaryExpr()
 		m_expression->updateOpCodeLength(XPathExpression::eOP_LITERAL,
 										 opPos);
 	}
-	else if(m_tokenChar == '$')
+	else if(m_tokenChar == XalanUnicode::charDollarSign)
 	{
 		nextToken(); // consume '$'
 
@@ -1494,7 +1498,7 @@ XPathProcessorImpl::PrimaryExpr()
 		m_expression->updateOpCodeLength(XPathExpression::eOP_VARIABLE,
 										 opPos);
 	}
-	else if(m_tokenChar == '(')
+	else if(m_tokenChar == XalanUnicode::charLeftParenthesis)
 	{
 		nextToken();
 
@@ -1502,12 +1506,14 @@ XPathProcessorImpl::PrimaryExpr()
 
 		Expr();
 
-		consumeExpected(')');
+		consumeExpected(XalanUnicode::charRightParenthesis);
 
 		m_expression->updateOpCodeLength(XPathExpression::eOP_GROUP,
 										 opPos);
 	}
-	else if(('.' == m_tokenChar && m_token.length() > 1 && isDigit(charAt(m_token, 1)) == true)
+	else if((XalanUnicode::charFullStop == m_tokenChar &&
+				m_token.length() > 1 &&
+				isDigit(charAt(m_token, 1)) == true)
 			 || isDigit(m_tokenChar) == true)
 	{
 		m_expression->appendOpCode(XPathExpression::eOP_NUMBERLIT);
@@ -1517,8 +1523,8 @@ XPathProcessorImpl::PrimaryExpr()
 		m_expression->updateOpCodeLength(XPathExpression::eOP_NUMBERLIT,
 										 opPos);
 	}
-	else if(lookahead('(', 1) == true ||
-			(lookahead(':', 1) == true && lookahead('(', 3) == true))
+	else if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true ||
+			(lookahead(XalanUnicode::charColon, 1) == true && lookahead(XalanUnicode::charLeftParenthesis, 3) == true))
 	{
 		FunctionCall();
 	}
@@ -1552,11 +1558,11 @@ XPathProcessorImpl::FunctionCallArguments()
 {
 	int		argCount = 0;
 
-	consumeExpected('(');
+	consumeExpected(XalanUnicode::charLeftParenthesis);
 
-	while(tokenIs(')') == false)
+	while(tokenIs(XalanUnicode::charRightParenthesis) == false)
 	{
-		if(tokenIs(',') == true)
+		if(tokenIs(XalanUnicode::charComma) == true)
 		{
 			error("Found ',' but no preceding argument!");
 		}
@@ -1565,19 +1571,19 @@ XPathProcessorImpl::FunctionCallArguments()
 
 		++argCount;
 
-		if(tokenIs(')') == false)
+		if(tokenIs(XalanUnicode::charRightParenthesis) == false)
 		{
 
-			consumeExpected(',');
+			consumeExpected(XalanUnicode::charComma);
 
-			if(tokenIs(')') == true)
+			if(tokenIs(XalanUnicode::charRightParenthesis) == true)
 			{
 				error("Found ',' but no following argument!");
 			}
 		}
 	}
 
-	consumeExpected(')');
+	consumeExpected(XalanUnicode::charRightParenthesis);
 
 	return argCount;
 }
@@ -1590,7 +1596,7 @@ XPathProcessorImpl::FunctionCall()
 
 	const int	opPos = m_expression->opCodeMapLength();
 
-	if(lookahead(':', 1) == true)
+	if(lookahead(XalanUnicode::charColon, 1) == true)
 	{
 		m_expression->appendOpCode(XPathExpression::eOP_EXTFUNCTION);
 
@@ -1600,7 +1606,7 @@ XPathProcessorImpl::FunctionCall()
 
 		nextToken();
 
-		consumeExpected(':');
+		consumeExpected(XalanUnicode::charColon);
 
 		theArgs[1] = m_expression->getTokenPosition() - 1;
 
@@ -1681,7 +1687,7 @@ XPathProcessorImpl::LocationPath()
 
 	m_expression->appendOpCode(XPathExpression::eOP_LOCATIONPATH);
 
-	if(tokenIs('/') == true)
+	if(tokenIs(XalanUnicode::charSolidus) == true)
 	{
 		const int	newOpPos = m_expression->opCodeMapLength();
 
@@ -1720,7 +1726,7 @@ XPathProcessorImpl::RelativeLocationPath()
 {
 	Step();
 
-	while(tokenIs('/') == true)
+	while(tokenIs(XalanUnicode::charSolidus) == true)
 	{
 		nextToken();
 
@@ -1735,11 +1741,11 @@ XPathProcessorImpl::Step()
 {
 	const int	opPos = m_expression->opCodeMapLength();
 
-	if(tokenIs(XALAN_STATIC_UCODE_STRING(".")) == true)
+	if(tokenIs(s_dotString) == true)
 	{
 		nextToken();
 
-		if(tokenIs('[') == true)
+		if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
 		{
 			error("'..[predicate]' or '.[predicate]' is illegal syntax.  Use 'self::node()[predicate]' instead.");
 		}
@@ -1754,7 +1760,7 @@ XPathProcessorImpl::Step()
 
 		m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
 	}
-	else if(tokenIs(XALAN_STATIC_UCODE_STRING("..")) == true)
+	else if(tokenIs(s_dotDotString) == true)
 	{
 		nextToken();
 
@@ -1772,7 +1778,7 @@ XPathProcessorImpl::Step()
 	{
 		Basis();
 
-		while(tokenIs('[') == true)
+		while(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
 		{
 			Predicate();
 		}
@@ -1795,14 +1801,14 @@ XPathProcessorImpl::Basis()
 	int			axisType = 0;
 
 	// The next blocks guarantee that a FROM_XXX will be added.
-	if(lookahead(XALAN_STATIC_UCODE_STRING("::"), 1) == true)
+	if(lookahead(s_axisString, 1) == true)
 	{
 		axisType = AxisName();
 
 		nextToken();
 		nextToken();
 	}
-	else if(tokenIs('@') == true)
+	else if(tokenIs(XalanUnicode::charCommercialAt) == true)
 	{
 		axisType = XPathExpression::eFROM_ATTRIBUTES;
 
@@ -1810,7 +1816,7 @@ XPathProcessorImpl::Basis()
 
 		nextToken();
 	}
-	else if(tokenIs('/') == true)
+	else if(tokenIs(XalanUnicode::charSolidus) == true)
 	{
 		axisType = XPathExpression::eFROM_DESCENDANTS_OR_SELF;
 
@@ -1818,7 +1824,7 @@ XPathProcessorImpl::Basis()
 		// which translate to 'descendant-or-self::node()/attribute::foo'.
 		// notice I leave the '/' on the queue, so the next will be processed 
 		// by a regular step pattern.
-		// if(lookahead('@', 1) == true || lookahead("::", 2) == true)
+		// if(lookahead(XalanUnicode::charCommercialAt, 1) == true || lookahead("::", 2) == true)
 		{
 			XPathExpression::OpCodeMapValueVectorType	theArgs(1);
 
@@ -1885,7 +1891,7 @@ XPathProcessorImpl::NodeTest(int	axisType)
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
 
-	if(lookahead('(', 1) == true)
+	if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true)
 	{
 		NodeTypesMapType::const_iterator	i =
 			s_nodeTypes.find(m_token);
@@ -1901,17 +1907,17 @@ XPathProcessorImpl::NodeTest(int	axisType)
 
 			m_expression->appendOpCode((*i).second);
 		
-			consumeExpected('(');
+			consumeExpected(XalanUnicode::charLeftParenthesis);
 
 			if(XPathExpression::eNODETYPE_PI == (*i).second)
 			{
-				if(tokenIs(')') == false)
+				if(tokenIs(XalanUnicode::charRightParenthesis) == false)
 				{
 					Literal();
 				}
 			}
 
-			consumeExpected(')');
+			consumeExpected(XalanUnicode::charRightParenthesis);
 		}
 	}
 	else
@@ -1919,9 +1925,9 @@ XPathProcessorImpl::NodeTest(int	axisType)
 		// Assume name of attribute or element.
 		m_expression->appendOpCode(XPathExpression::eNODENAME);
 
-		if(lookahead(':', 1) == true)
+		if(lookahead(XalanUnicode::charColon, 1) == true)
 		{
-			if(tokenIs('*') == true)
+			if(tokenIs(XalanUnicode::charAsterisk) == true)
 			{
 				m_expression->appendOpCode(XPathExpression::eELEMWILDCARD);
 			}
@@ -1947,14 +1953,14 @@ XPathProcessorImpl::NodeTest(int	axisType)
 
 			nextToken();
 
-			consumeExpected(':');
+			consumeExpected(XalanUnicode::charColon);
 		}
 		else
 		{
 			m_expression->appendOpCode(XPathExpression::eEMPTY);
 		}
 
-		if(tokenIs('*') == true)
+		if(tokenIs(XalanUnicode::charAsterisk) == true)
 		{
 			m_expression->appendOpCode(XPathExpression::eELEMWILDCARD);
 		}
@@ -1972,13 +1978,13 @@ XPathProcessorImpl::NodeTest(int	axisType)
 void
 XPathProcessorImpl::Predicate()
 {
-	if(tokenIs('[') == true)
+	if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
 	{
 		nextToken();
 
 		PredicateExpr();		
 
-		consumeExpected(']');
+		consumeExpected(XalanUnicode::charRightSquareBracket);
 	}
 }
 
@@ -2015,7 +2021,7 @@ XPathProcessorImpl::QName()
 
 	nextToken();
 
-	consumeExpected(':');
+	consumeExpected(XalanUnicode::charColon);
 
 	m_expression->pushCurrentTokenOnOpCodeMap();
 
@@ -2050,8 +2056,8 @@ XPathProcessorImpl::Literal()
 	const XalanDOMChar 	c0 = m_tokenChar;
 	const XalanDOMChar 	cX = charAt(m_token, last);
 
-	if((c0 == '\"' && cX == '\"') ||
-	   (c0 == '\'' && cX == '\''))
+	if((c0 == XalanUnicode::charQuoteMark && cX == XalanUnicode::charQuoteMark) ||
+	   (c0 == XalanUnicode::charApostrophe && cX == XalanUnicode::charApostrophe))
 	{
 		const XalanDOMString	theArgument = substring(m_token, 1, last);
 
@@ -2094,7 +2100,7 @@ XPathProcessorImpl::Pattern()
 	{
 		LocationPathPattern();
 
-		if(tokenIs('|') == true)
+		if(tokenIs(XalanUnicode::charVerticalLine) == true)
 		{
 			nextToken();
 		}
@@ -2117,15 +2123,15 @@ XPathProcessorImpl::LocationPathPattern()
 
 	m_expression->appendOpCode(XPathExpression::eOP_LOCATIONPATHPATTERN);
 
-	// These token FUNC_KEY_STRING should not be here, as it is really
+	// These token s_functionKeyString should not be here, as it is really
 	// part of the XSLT standard, and not the XPATH standard.
-	if(lookahead('(', 1) == true &&
-					tokenIs(FUNC_ID_STRING) == true ||
-				  tokenIs(FUNC_KEY_STRING) == true)
+	if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true &&
+					tokenIs(s_functionIDString) == true ||
+				  tokenIs(s_functionKeyString) == true)
 	{
 		IdKeyPattern();
 
-		if(tokenIs('/') == true && lookahead('/', 1) == true)
+		if(tokenIs(XalanUnicode::charSolidus) == true && lookahead(XalanUnicode::charSolidus, 1) == true)
 		{
 			const int	newOpPos = m_expression->opCodeMapLength();
 
@@ -2144,7 +2150,7 @@ XPathProcessorImpl::LocationPathPattern()
 			nextToken();
 		}
 	}
-	else if(tokenIs('/') == true)
+	else if(tokenIs(XalanUnicode::charSolidus) == true)
 	{
 		const int	newOpPos = m_expression->opCodeMapLength();
 
@@ -2153,7 +2159,7 @@ XPathProcessorImpl::LocationPathPattern()
 		// Tell how long the step is without the predicate
 		theArgs[0] = 4;
 
-		if(lookahead('/', 1) == true)
+		if(lookahead(XalanUnicode::charSolidus, 1) == true)
 		{
 			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE,
 									   theArgs);
@@ -2171,7 +2177,7 @@ XPathProcessorImpl::LocationPathPattern()
 		nextToken();
 	}
 
-	if(!tokenIs('|') == true && length(m_token) != 0)
+	if(!tokenIs(XalanUnicode::charVerticalLine) == true && length(m_token) != 0)
 	{
 		RelativePathPattern();
 	}
@@ -2198,7 +2204,7 @@ XPathProcessorImpl::RelativePathPattern()
 {	 
 	StepPattern();
 
-	while(tokenIs('/') == true)
+	while(tokenIs(XalanUnicode::charSolidus) == true)
 	{
 		nextToken();
 
@@ -2229,7 +2235,7 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 	int			matchTypePos = -1;
 
 	// The next blocks guarantee that a MATCH_XXX will be added.
-	if(tokenIs('@') == true)
+	if(tokenIs(XalanUnicode::charCommercialAt) == true)
 	{
 		axisType = XPathExpression::eMATCH_ATTRIBUTE;
 
@@ -2237,17 +2243,17 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 
 		nextToken();
 	}
-	else if(lookahead(XALAN_STATIC_UCODE_STRING("::"), 1) == true)
+	else if(lookahead(s_axisString, 1) == true)
 	{
 		// $$$ To Do: Perhaps these strings should be in the
 		// axis table?
-		if(tokenIs(XALAN_STATIC_UCODE_STRING("attribute")) == true)
+		if(tokenIs(s_attributeString) == true)
 		{
 			axisType = XPathExpression::eMATCH_ATTRIBUTE;
 
 			m_expression->appendOpCode(XPathExpression::eMATCH_ATTRIBUTE);
 		}
-		else if(tokenIs(XALAN_STATIC_UCODE_STRING("child")) == true)
+		else if(tokenIs(s_childString) == true)
 		{
 			axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
 
@@ -2261,7 +2267,7 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 		nextToken();
 		nextToken();
 	}
-	else if(tokenIs('/') == true)
+	else if(tokenIs(XalanUnicode::charSolidus) == true)
 	{
 		axisType = XPathExpression::eMATCH_ANY_ANCESTOR;
 
@@ -2271,7 +2277,7 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 	}
 	else
 	{
-		if(tokenIs('/') == true)
+		if(tokenIs(XalanUnicode::charSolidus) == true)
 		{
 			nextToken();
 		}
@@ -2291,12 +2297,12 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 
 	m_expression->updateOpCodeLengthAfterNodeTest(opPos);
 
-	while(tokenIs('[') == true)
+	while(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
 	{
 		Predicate();
 	}
 
-	if(matchTypePos > -1 && tokenIs('/') == true && lookahead('/', 1) == true)
+	if(matchTypePos > -1 && tokenIs(XalanUnicode::charSolidus) == true && lookahead(XalanUnicode::charSolidus, 1) == true)
 	{
 		assert(m_expression->opCodeMapLength() > matchTypePos);
 
@@ -2390,17 +2396,57 @@ XPathProcessorImpl::initializeNodeTypesTable(NodeTypesMapType&		theNodeTypes)
 
 
 
-static XalanDOMString		FUNC_ID_STRING;
+static XalanDOMString	s_functionIDString;
 
-static XalanDOMString		FUNC_KEY_STRING;
+static XalanDOMString	s_functionKeyString;
+
+static XalanDOMString	s_orString;
+
+static XalanDOMString	s_andString;
+
+static XalanDOMString	s_divString;
+
+static XalanDOMString	s_modString;
+
+static XalanDOMString	s_quoString;
+
+static XalanDOMString	s_dotString;
+
+static XalanDOMString	s_dotDotString;
+
+static XalanDOMString	s_axisString;
+
+static XalanDOMString	s_attributeString;
+
+static XalanDOMString	s_childString;
 
 
-const XalanDOMString&	XPathProcessorImpl::FUNC_ID_STRING = ::FUNC_ID_STRING;
+const XalanDOMString&	XPathProcessorImpl::s_functionIDString = ::s_functionIDString;
 
 
 	// This shouldn't really be here, since it's not part of the XPath standard,
 	// but rather a part ofthe XSLT standard.
-const XalanDOMString&	XPathProcessorImpl::FUNC_KEY_STRING = ::FUNC_KEY_STRING;
+const XalanDOMString&	XPathProcessorImpl::s_functionKeyString = ::s_functionKeyString;
+
+const XalanDOMString&	XPathProcessorImpl::s_orString = ::s_orString;
+
+const XalanDOMString&	XPathProcessorImpl::s_andString = ::s_andString;
+
+const XalanDOMString&	XPathProcessorImpl::s_divString = ::s_divString;
+
+const XalanDOMString&	XPathProcessorImpl::s_modString = ::s_modString;
+
+const XalanDOMString&	XPathProcessorImpl::s_quoString = ::s_quoString;
+
+const XalanDOMString&	XPathProcessorImpl::s_dotString = ::s_dotString;
+
+const XalanDOMString&	XPathProcessorImpl::s_dotDotString = ::s_dotDotString;
+
+const XalanDOMString&	XPathProcessorImpl::s_axisString = ::s_axisString;
+
+const XalanDOMString&	XPathProcessorImpl::s_attributeString = ::s_attributeString;
+
+const XalanDOMString&	XPathProcessorImpl::s_childString = ::s_childString;
 
 
 static XPathProcessorImpl::KeywordsMapType 		s_keywords;
@@ -2425,8 +2471,18 @@ XPathProcessorImpl::initialize()
 	XPathProcessorImpl::initializeAxisNamesTable(::s_axisNames);
 	XPathProcessorImpl::initializeNodeTypesTable(::s_nodeTypes);
 
-	::FUNC_ID_STRING = XALAN_STATIC_UCODE_STRING("id");
-	::FUNC_KEY_STRING = XALAN_STATIC_UCODE_STRING("key");
+	::s_functionIDString = XALAN_STATIC_UCODE_STRING("id");
+	::s_functionKeyString = XALAN_STATIC_UCODE_STRING("key");
+	::s_orString = XALAN_STATIC_UCODE_STRING("or");
+	::s_andString = XALAN_STATIC_UCODE_STRING("and");
+	::s_divString = XALAN_STATIC_UCODE_STRING("div");
+	::s_modString = XALAN_STATIC_UCODE_STRING("mod");
+	::s_quoString = XALAN_STATIC_UCODE_STRING("quo");
+	::s_dotString = XALAN_STATIC_UCODE_STRING(".");
+	::s_dotDotString = XALAN_STATIC_UCODE_STRING("..");
+	::s_axisString = XALAN_STATIC_UCODE_STRING("::");
+	::s_attributeString = XALAN_STATIC_UCODE_STRING("attribute");
+	::s_childString = XALAN_STATIC_UCODE_STRING("child");
 }
 
 
@@ -2439,6 +2495,16 @@ XPathProcessorImpl::terminate()
 	AxisNamesMapType().swap(::s_axisNames);
 	NodeTypesMapType().swap(::s_nodeTypes);
 
-	clear(::FUNC_ID_STRING);
-	clear(::FUNC_KEY_STRING);
+	clear(::s_functionIDString);
+	clear(::s_functionKeyString);
+	clear(::s_orString);
+	clear(::s_andString);
+	clear(::s_divString);
+	clear(::s_modString);
+	clear(::s_quoString);
+	clear(::s_dotString);
+	clear(::s_dotDotString);
+	clear(::s_axisString);
+	clear(::s_attributeString);
+	clear(::s_childString);
 }

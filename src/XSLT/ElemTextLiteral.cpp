@@ -84,7 +84,7 @@ ElemTextLiteral::ElemTextLiteral(
             bool							disableOutputEscaping) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						XALAN_STATIC_UCODE_STRING("#text"),
+						Constants::PSEUDONAME_TEXT,
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_TEXTLITERALRESULT),

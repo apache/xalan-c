@@ -203,11 +203,11 @@ XercesDOMPrintWriter::print(bool	b)
 {
 	if (b == true)
 	{
-		print(XALAN_STATIC_UCODE_STRING("true"));
+		print(s_trueString);
 	}
 	else
 	{
-		print(XALAN_STATIC_UCODE_STRING("false"));
+		print(s_falseString);
 	}
 }
 #endif
@@ -284,7 +284,7 @@ XercesDOMPrintWriter::print(const DOMString&	s)
 void
 XercesDOMPrintWriter::println()
 {
-	m_OutputStream.write(c_wstr(XALAN_STATIC_UCODE_STRING("\n")));
+	m_OutputStream.write(c_wstr(s_newlineString));
 
 	flush();
 }

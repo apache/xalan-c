@@ -87,6 +87,7 @@
 #include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/DirectoryEnumerator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -1131,7 +1132,7 @@ GetXSLFileName(const XalanDOMString&		theXMLFileName)
 
 	for (int i = theLength - 1; i > 0; i--)
 	{
-		if (charAt(theXMLFileName, i) == '.')
+		if (charAt(theXMLFileName, i) == XalanUnicode::charFullStop)
 		{
 			thePeriodIndex = i;
 

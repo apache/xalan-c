@@ -72,6 +72,21 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanNumberFormat
 {
 public:
 
+	/**
+	 * Initialize static data.  Must be called before any
+	 * other functions are called.  See PlatformSupportInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Destroy static data.  After thus function is called,
+	 * no other functions can be called.  See PlatformSupportInit.
+	 */
+	static void
+	terminate();
+
+
 	explicit
 	XalanNumberFormat();
 
@@ -172,11 +187,13 @@ private:
 	operator==(const XalanNumberFormat&);
 
 	// Data members...
-	bool			m_isGroupingUsed;
+	bool							m_isGroupingUsed;
 
-	XalanDOMString	m_groupingSeparator;
+	XalanDOMString					m_groupingSeparator;
 
-	int				m_groupingSize;
+	int								m_groupingSize;
+
+	static const XalanDOMString&	s_defaultGroupingSeparator;
 };
 
 

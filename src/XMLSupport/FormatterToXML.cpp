@@ -71,7 +71,16 @@
 
 
 
-static const XalanDOMChar 	theDefaultAttrSpecialChars[] = {'<', '>', '&', '"', '\r', '\n', 0 };
+static const XalanDOMChar 	theDefaultAttrSpecialChars[] =
+{
+	XalanUnicode::charLessThanSign,
+	XalanUnicode::charGreaterThanSign,
+	XalanUnicode::charAmpersand, 
+	XalanUnicode::charQuoteMark,
+	XalanUnicode::charCR,
+	XalanUnicode::charLF,
+	0
+};
 
 
 FormatterToXML::FormatterToXML(
@@ -108,8 +117,8 @@ FormatterToXML::FormatterToXML(
 	m_currentIndent(0),
 	m_indent(indent),
 	m_preserves(),
-	m_shouldFlush(true),
 	m_bytesEqualChars(false),
+	m_shouldFlush(true),
 	m_spaceBeforeClose(false),
 	m_escapeCData(false),
 	m_inEntityRef(false),
@@ -118,7 +127,6 @@ FormatterToXML::FormatterToXML(
 	m_mediaType(mediaType),
 	m_attrSpecialChars(theDefaultAttrSpecialChars),
 	m_charBuf(),
-	m_byteBuf(),
 	m_pos(0),
 	m_level(0),
 	m_elemStack()
@@ -138,17 +146,13 @@ FormatterToXML::FormatterToXML(
 	m_isUTF8 = equals(m_encoding, s_utf8EncodingString); // || isEmpty(m_encoding);
 
 	if (equals(m_encoding, s_windows1250EncodingString) == true ||
-        equals(m_encoding, s_usASCIIEncodingString) == true ||
+		equals(m_encoding, s_usASCIIEncodingString) == true ||
 		equals(m_encoding, s_asciiEncodingString) == true)
 	{
 		m_bytesEqualChars = true;
+	}
 
-		m_byteBuf.resize(s_maxBufferSize + 1);
-	}
-	else
-	{
-		m_charBuf.resize(s_maxBufferSize + 1);
-	}
+	m_charBuf.resize(s_maxBufferSize + 1);
 
 #if 0
 	DOMString2IntMapType::const_iterator it =
@@ -203,10 +207,10 @@ FormatterToXML::initCharsMap()
 
 	memset(m_charsMap, 0, sizeof(m_charsMap));
 
-	m_charsMap['\n'] = 'S';
-	m_charsMap['<'] = 'S';
-	m_charsMap['>'] = 'S';
-	m_charsMap['&'] = 'S';
+	m_charsMap[XalanUnicode::charLF] = 'S';
+	m_charsMap[XalanUnicode::charLessThanSign] = 'S';
+	m_charsMap[XalanUnicode::charGreaterThanSign] = 'S';
+	m_charsMap[XalanUnicode::charAmpersand] = 'S';
 
 	memset(m_charsMap, 'S', 20);
 
@@ -234,9 +238,9 @@ FormatterToXML::outputDocTypeDecl(const XalanDOMString& 	name)
 	{
 		accum(s_doctypeHeaderPublicString); // " PUBLIC \""
 		accum(m_doctypePublic);
-		accum('"');
-		accum(' ');
-		accum('"');
+		accum(XalanUnicode::charQuoteMark);
+		accum(XalanUnicode::charSpace);
+		accum(XalanUnicode::charQuoteMark);
 	}
 	else
 	{
@@ -244,8 +248,8 @@ FormatterToXML::outputDocTypeDecl(const XalanDOMString& 	name)
 	}
 
 	accum(m_doctypeSystem);
-	accum('"');
-	accum('>');
+	accum(XalanUnicode::charQuoteMark);
+	accum(XalanUnicode::charGreaterThanSign);
 
 	outputLineSep();
 }
@@ -253,49 +257,64 @@ FormatterToXML::outputDocTypeDecl(const XalanDOMString& 	name)
 
 
 void
-FormatterToXML::accum(char	ch)
+FormatterToXML::accum(XalanDOMChar	ch)
 {
-	if(m_bytesEqualChars == true)
+	if (m_bytesEqualChars == true)
 	{
-		m_byteBuf[m_pos++] = ch;
-
-		if(m_pos == s_maxBufferSize)
+		if (ch > 255)
 		{
-			flushBytes();
+			writeNumberedEntityReference(ch);
+		}
+		else
+		{
+			m_charBuf[m_pos++] = char(ch);
 		}
 	}
 	else
 	{
 		m_charBuf[m_pos++] = ch;
+	}
 
-		if(m_pos == s_maxBufferSize)
-		{
-			flushChars();
-		}
+	if(m_pos == s_maxBufferSize)
+	{
+		flushChars();
 	}
 }
 
 
 
 void
-FormatterToXML::accum(XalanDOMChar	ch)
+FormatterToXML::accum(const XalanDOMChar*	chars)
 {
-	if(m_bytesEqualChars == true)
+	if (m_bytesEqualChars == true)
 	{
-		m_byteBuf[m_pos++] = ByteBufferType::value_type(ch);
-
-		if(m_pos == s_maxBufferSize)
+		for(const XalanDOMChar*	current = chars; *current != 0; ++current)
 		{
-			flushBytes();
+			if (*current > 255)
+			{
+				writeNumberedEntityReference(*current);
+			}
+			else
+			{
+				m_charBuf[m_pos++] = *current;
+			}
+
+			if(m_pos == s_maxBufferSize)
+			{
+				flushChars();
+			}
 		}
 	}
 	else
 	{
-		m_charBuf[m_pos++] = ch;
-
-		if(m_pos == s_maxBufferSize)
+		for(const XalanDOMChar*	current = chars; *current != 0; ++current)
 		{
-			flushChars();
+			m_charBuf[m_pos++] = *current;
+
+			if(m_pos == s_maxBufferSize)
+			{
+				flushChars();
+			}
 		}
 	}
 }
@@ -310,15 +329,22 @@ FormatterToXML::accum(
 {
 	const DOMCharBufferType::size_type	n = start + length;
 
-	if(m_bytesEqualChars == true)
+	if (m_bytesEqualChars == true)
 	{
 		for(DOMCharBufferType::size_type i = start; i < n; ++i)
 		{
-			m_byteBuf[m_pos++] = ByteBufferType::value_type(chars[i]);
+			if (chars[i] > 255)
+			{
+				writeNumberedEntityReference(chars[i]);
+			}
+			else
+			{
+				m_charBuf[m_pos++] = char(chars[i]);
+			}
 
 			if(m_pos == s_maxBufferSize)
 			{
-				flushBytes();
+				flushChars();
 			}
 		}
 	}
@@ -462,49 +488,49 @@ FormatterToXML::accumDefaultEntity(
 
 		i++;
 	}
-	else if (escLF == false && '\n' == ch) 
+	else if (escLF == false && XalanUnicode::charLF == ch) 
 	{
 		outputLineSep();
 	}
-	else if ('<' == ch) 
+	else if (XalanUnicode::charLessThanSign == ch) 
 	{
-		accum('&');
-		accum('l');
-		accum('t');
-		accum(';');
+		accum(XalanUnicode::charAmpersand);
+		accum(XalanUnicode::charLetter_l);
+		accum(XalanUnicode::charLetter_t);
+		accum(XalanUnicode::charSemicolon);
 	}
-	else if ('>' == ch) 
+	else if (XalanUnicode::charGreaterThanSign == ch) 
 	{
-		accum('&');
-		accum('g');
-		accum('t');
-		accum(';');
+		accum(XalanUnicode::charAmpersand);
+		accum(XalanUnicode::charLetter_g);
+		accum(XalanUnicode::charLetter_t);
+		accum(XalanUnicode::charSemicolon);
 	}
-	else if ('&' == ch) 
+	else if (XalanUnicode::charAmpersand == ch) 
 	{
-		accum('&');
-		accum('a');
-		accum('m');
-		accum('p');
-		accum(';');
+		accum(XalanUnicode::charAmpersand);
+		accum(XalanUnicode::charLetter_a);
+		accum(XalanUnicode::charLetter_m);
+		accum(XalanUnicode::charLetter_p);
+		accum(XalanUnicode::charSemicolon);
 	}
-	else if ('"' == ch) 
+	else if (XalanUnicode::charQuoteMark == ch) 
 	{
-		accum('&');
-		accum('q');
-		accum('u');
-		accum('o');
-		accum('t');
-		accum(';');
+		accum(XalanUnicode::charAmpersand);
+		accum(XalanUnicode::charLetter_q);
+		accum(XalanUnicode::charLetter_u);
+		accum(XalanUnicode::charLetter_o);
+		accum(XalanUnicode::charLetter_t);
+		accum(XalanUnicode::charSemicolon);
 	}
-	else if ('\'' == ch) 
+	else if (XalanUnicode::charApostrophe == ch) 
 	{
-		accum('&');
-		accum('a');
-		accum('p');
-		accum('o');
-		accum('s');
-		accum(';');
+		accum(XalanUnicode::charAmpersand);
+		accum(XalanUnicode::charLetter_a);
+		accum(XalanUnicode::charLetter_p);
+		accum(XalanUnicode::charLetter_o);
+		accum(XalanUnicode::charLetter_s);
+		accum(XalanUnicode::charSemicolon);
 	}
 	else
 	{
@@ -512,20 +538,6 @@ FormatterToXML::accumDefaultEntity(
 	}
 
 	return true;
-}
-
-
-
-void
-FormatterToXML::flushBytes()
-{
-	assert(m_byteBuf.size() > 0 && m_byteBuf.size() > m_pos);
-
-	m_byteBuf[m_pos] = '\0';
-
-	m_writer.write(&m_byteBuf[0]);
-
-	m_pos = 0;
 }
 
 
@@ -547,14 +559,7 @@ FormatterToXML::flushChars()
 void
 FormatterToXML::flush()
 {
-	if(m_bytesEqualChars == true)
-	{
-		flushBytes();
-	}
-	else
-	{
-		flushChars();
-	}
+	flushChars();
 }
 
 
@@ -674,7 +679,7 @@ FormatterToXML::startElement(
 
 		m_startNewLine = true;
 
-		accum('<');
+		accum(XalanUnicode::charLessThanSign);
 		accum(name);
 
 		const unsigned int	nAttrs = attrs.getLength();
@@ -709,21 +714,21 @@ FormatterToXML::endElement(const XMLCh* const	name)
 			indent(m_currentIndent);
 		}
 
-		accum('<');
-		accum('/');
+		accum(XalanUnicode::charLessThanSign);
+		accum(XalanUnicode::charSolidus);
 		accum(name);
 	}
 	else
 	{
 		if(m_spaceBeforeClose == true)
 		{
-			accum(' ');
+			accum(XalanUnicode::charSpace);
 		}
 
-		accum('/');
+		accum(XalanUnicode::charSolidus);
 	}
 
-	accum('>');
+	accum(XalanUnicode::charGreaterThanSign);
 
 	if (hasChildNodes == true) 
 	{
@@ -767,21 +772,21 @@ FormatterToXML::processingInstruction(
 				indent(m_currentIndent);
 			}
 
-			accum('<');
-			accum('?');
+			accum(XalanUnicode::charLessThanSign);
+			accum(XalanUnicode::charQuestionMark);
 			accum(target);
 
 			const unsigned int	len = length(data);
 
 			if ( len > 0 && !isSpace(data[0]))
 			{
-				accum(' ');
+				accum(XalanUnicode::charSpace);
 			}
 
 			accumNormalizedPIData(data, len);
 
-			accum('?');
-			accum('>');
+			accum(XalanUnicode::charQuestionMark);
+			accum(XalanUnicode::charGreaterThanSign);
 
 			m_startNewLine = true;
 		}
@@ -834,7 +839,6 @@ FormatterToXML::characters(
 		}
 	}
 }
-
 
 
 
@@ -909,7 +913,7 @@ FormatterToXML::writeNormalizedChars(
 
 			i++;
 		}
-		else if('\n' == c)
+		else if(XalanUnicode::charLF == c)
 		{
 			outputLineSep();
 		}
@@ -956,9 +960,9 @@ FormatterToXML::writeNormalizedChars(
 		}
 		else if(isCData == true &&
 				i < end - 2 &&
-				']' == c &&
-                ']' == ch[i + 1] &&
-				'>' == ch[ i + 2])
+				XalanUnicode::charRightSquareBracket == c &&
+                XalanUnicode::charRightSquareBracket == ch[i + 1] &&
+				XalanUnicode::charGreaterThanSign == ch[ i + 2])
 		{
 			accum(XALAN_STATIC_UCODE_STRING("]]]]><![CDATA[>"));
 
@@ -1007,10 +1011,10 @@ FormatterToXML::writeNormalizedChars(
 void
 FormatterToXML::writeNumberedEntityReference(unsigned long	theNumber)
 {
-	accum('&');
-	accum('#');
+	accum(XalanUnicode::charAmpersand);
+	accum(XalanUnicode::charNumberSign);
 	accum(UnsignedLongToDOMString(theNumber));
-	accum(';');
+	accum(XalanUnicode::charSemicolon);
 }
 
 
@@ -1025,9 +1029,9 @@ FormatterToXML::entityReference(const XMLCh* const	name)
 		indent(m_currentIndent);
 	}
 
-	m_writer.write('&');
+	m_writer.write(XalanUnicode::charAmpersand);
 	m_writer.write(name);
-	m_writer.write(';');
+	m_writer.write(XalanUnicode::charSemicolon);
 }
 
 
@@ -1065,16 +1069,16 @@ FormatterToXML::comment(const XMLCh* const	data)
 			indent(m_currentIndent);
 		}
 
-		accum('<');
-		accum('!');
-		accum('-');
-		accum('-');
+		accum(XalanUnicode::charLessThanSign);
+		accum(XalanUnicode::charExclamationMark);
+		accum(XalanUnicode::charHyphenMinus);
+		accum(XalanUnicode::charHyphenMinus);
 
 		accum(data);
 
-		accum('-');
-		accum('-');
-		accum('>');
+		accum(XalanUnicode::charHyphenMinus);
+		accum(XalanUnicode::charHyphenMinus);
+		accum(XalanUnicode::charGreaterThanSign);
 
 		m_startNewLine = true;
 	}
@@ -1126,9 +1130,9 @@ FormatterToXML::cdata(
 				if(length >= 1 &&
 				   ch[length - 1] <= m_maxCharacter)
 				{
-					accum(']');
-					accum(']');
-					accum('>');
+					accum(XalanUnicode::charRightSquareBracket);
+					accum(XalanUnicode::charRightSquareBracket);
+					accum(XalanUnicode::charGreaterThanSign);
 				}
 			}
 		}
@@ -1145,7 +1149,7 @@ FormatterToXML::writeParentTagEnd()
 		// See if the parent element has already been flagged as having children.
 		if(false == m_elemStack.back())
 		{
-			accum('>');
+			accum(XalanUnicode::charGreaterThanSign);
 			m_isprevtext = false;
 
 			m_elemStack.pop_back();
@@ -1188,12 +1192,32 @@ FormatterToXML::processAttribute(
 			const XalanDOMChar* 	name,
 			const XalanDOMChar* 	value)
 {
-	accum(' ');
+	accum(XalanUnicode::charSpace);
 	accum(name);
-	accum('=');
-	accum('"');
+	accum(XalanUnicode::charEqualsSign);
+	accum(XalanUnicode::charQuoteMark);
 	writeAttrString(value, m_encoding);
-	accum('"');
+	accum(XalanUnicode::charQuoteMark);
+}
+
+
+
+void
+FormatterToXML::outputLineSep()
+{
+	// $$$ ToDo: Does this need to be CR/LF on some platforms?
+	accum(XalanUnicode::charLF);
+}
+
+
+
+void
+FormatterToXML::printSpace(int n)
+{
+	for (int i = 0;  i < n;  i ++)
+	{
+		accum(XalanUnicode::charSpace);
+	}
 }
 
 
@@ -1227,10 +1251,10 @@ FormatterToXML::accumNormalizedPIData(
 	{
 		const XalanDOMChar	theChar = theData[i];
 
-		if (theChar == '?' && i + 1 < theLength && theData[i + 1] == '>')
+		if (theChar == XalanUnicode::charQuestionMark && i + 1 < theLength && theData[i + 1] == XalanUnicode::charGreaterThanSign)
 		{
-			accum('?');
-			accum(' ');
+			accum(XalanUnicode::charQuestionMark);
+			accum(XalanUnicode::charSpace);
 		}
 		else
 		{
@@ -1299,7 +1323,7 @@ void FormatterToXML::initEncodings()
 	{
 		String encoding = System.getProperty("file.encoding");
 
-		unsigned int dashindex = (encoding != null ? encoding.indexOf('-') : -1);
+		unsigned int dashindex = (encoding != null ? encoding.indexOf(XalanUnicode::charHyphenMinus) : -1);
 		if(3 == dashindex)
 		{
 			String ISOprefix =	new String(encoding.toCharArray(), 0, 3);
@@ -1560,11 +1584,7 @@ const XalanDOMCharVectorType&	FormatterToXML::s_asciiEncodingString = ::s_asciiE
 
 const XalanDOMCharVectorType&	FormatterToXML::s_utf8EncodingString = ::s_utf8EncodingString;
 
-XalanDOMChar					FormatterToXML::s_lineSep = '\n';
-
-
 bool							FormatterToXML::s_javaEncodingIsISO = false; 
-
 
 const FormatterToXML::DOMCharBufferType::size_type	FormatterToXML::s_maxBufferSize = 512;
 

@@ -56,27 +56,29 @@
  */
 #include "XalanDecimalFormatSymbols.hpp"
 #include "DOMStringHelper.hpp"
+#include "XalanUnicode.hpp"
 
 
 
 static XalanDOMChar		theNaNDefault[] = { 0xFFFD, 0 };
 static XalanDOMChar		theInfinityDefault[] = { 0x221E, 0 };
+static XalanDOMChar		theCurrencySymbol[] = { XalanUnicode::charDollarSign, 0 };
 
 
 XalanDecimalFormatSymbols::XalanDecimalFormatSymbols() :
-	m_currencySymbol(XALAN_STATIC_UCODE_STRING("$")),
-	m_decimalSeparator('.'),
+	m_currencySymbol(theCurrencySymbol),
+	m_decimalSeparator(XalanUnicode::charFullStop),
 	m_digit(0),
-	m_groupingSeparator(','),
+	m_groupingSeparator(XalanUnicode::charComma),
 	m_infinity(theInfinityDefault),
 	m_internationalCurrencySymbol(),
-	m_minusSign('-'),
-	m_monetaryDecimalSeparator('.'),
+	m_minusSign(XalanUnicode::charHyphenMinus),
+	m_monetaryDecimalSeparator(XalanUnicode::charFullStop),
 	m_NaN(theNaNDefault),
-	m_patternSeparator(';'),
-	m_percent('%'),
+	m_patternSeparator(XalanUnicode::charSemicolon),
+	m_percent(XalanUnicode::charPercentSign),
 	m_perMill(0),
-	m_zeroDigit('0')
+	m_zeroDigit(XalanUnicode::charDigit_0)
 {
 }
 

@@ -195,6 +195,7 @@ public:
 	static const XalanDOMString&	ELEMNAME_ANY_STRING; // pattern-by-example support
 	static const XalanDOMString&	ELEMNAME_APPLY_IMPORTS_STRING;
 	static const XalanDOMString&	ELEMNAME_APPLY_TEMPLATES_STRING;
+	static const XalanDOMString&	ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_ARG_STRING;
 	static const XalanDOMString&	ELEMNAME_ATTRIBUTESET_STRING;
 	static const XalanDOMString&	ELEMNAME_ATTRIBUTE_STRING; // pattern-by-example support
@@ -244,11 +245,13 @@ public:
 	static const XalanDOMString&	ELEMNAME_TARGETPI_STRING;
 	static const XalanDOMString&	ELEMNAME_TARGETTEXT_STRING;
 	static const XalanDOMString&	ELEMNAME_TEMPLATE_STRING;
+	static const XalanDOMString&	ELEMNAME_TEMPLATE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_TEXT_STRING;
 	static const XalanDOMString&	ELEMNAME_TRANSFORM_STRING;
 	static const XalanDOMString&	ELEMNAME_URL_STRING; // pattern-by-example support
 	static const XalanDOMString&	ELEMNAME_USE_STRING;
 	static const XalanDOMString&	ELEMNAME_VALUEOF_STRING;
+	static const XalanDOMString&	ELEMNAME_VALUEOF_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_VARIABLE_STRING;
 	static const XalanDOMString&	ELEMNAME_WHEN_STRING;
 	static const XalanDOMString&	ELEMNAME_COMPONENT_STRING;
@@ -268,6 +271,7 @@ public:
 	static const XalanDOMString&	ATTRNAME_ATTRIBUTE_SET;
 	static const XalanDOMString&	ATTRNAME_CASEORDER;
 	static const XalanDOMString&	ATTRNAME_CLASS;
+	static const XalanDOMString&	ATTRNAME_COMPONENTS;
 	static const XalanDOMString&	ATTRNAME_CONDITION;
 	static const XalanDOMString&	ATTRNAME_COPYTYPE;
 	static const XalanDOMString&	ATTRNAME_COUNT;
@@ -285,6 +289,7 @@ public:
 	static const XalanDOMString&	ATTRNAME_EXTENSIONELEMENTPREFIXES;
 	static const XalanDOMString&	ATTRNAME_FORMAT;
 	static const XalanDOMString&	ATTRNAME_FROM;
+	static const XalanDOMString&	ATTRNAME_FUNCTIONS;
 	static const XalanDOMString&	ATTRNAME_GROUPINGSEPARATOR;
 	static const XalanDOMString&	ATTRNAME_GROUPINGSIZE;
 	static const XalanDOMString&	ATTRNAME_HREF;
@@ -307,12 +312,15 @@ public:
 	static const XalanDOMString&	ATTRNAME_PATTERNSEPARATOR;
 	static const XalanDOMString&	ATTRNAME_PERCENT;
 	static const XalanDOMString&	ATTRNAME_PERMILLE;
+	static const XalanDOMString&	ATTRNAME_PREFIX;
 	static const XalanDOMString&	ATTRNAME_PRIORITY;
 	static const XalanDOMString&	ATTRNAME_REFID;
 	static const XalanDOMString&	ATTRNAME_RESULTNS;
 	static const XalanDOMString&	ATTRNAME_RESULT_PREFIX;
+	static const XalanDOMString&	ATTRNAME_SCRIPT;
 	static const XalanDOMString&	ATTRNAME_SELECT;
 	static const XalanDOMString&	ATTRNAME_SEQUENCESRC;
+	static const XalanDOMString&	ATTRNAME_SRC;
 	static const XalanDOMString&	ATTRNAME_STYLE;
 	static const XalanDOMString&	ATTRNAME_TERMINATE;
 	static const XalanDOMString&	ATTRNAME_TEST;
@@ -336,6 +344,8 @@ public:
 	static const XalanDOMString&	ATTRNAME_CODEBASE;
 	static const XalanDOMString&	ATTRNAME_METHOD;
   
+	static const XalanDOMString&	ATTRTYPE_CDATA;
+
 	  // For space-att
 	static const XalanDOMString&	ATTRVAL_PRESERVE;
 	static const XalanDOMString&	ATTRVAL_STRIP;
@@ -389,10 +399,16 @@ public:
 	static const XalanDOMString&	ATTRVAL_INFINITY;
 	static const XalanDOMString&	ATTRVAL_NAN;
 
+	static const XalanDOMString&	ATTRVAL_SIMPLE;
+
 	// Name of default for xsl:decimal-format element
-	static const XalanDOMString& DEFAULT_DECIMAL_FORMAT;
+	static const XalanDOMString&	DEFAULT_DECIMAL_FORMAT;
 
+	// Default whitespace separator string for StringTokenizer.
+	static const XalanDOMString&	DEFAULT_WHITESPACE_SEPARATOR_STRING;
 
+	// Value for default text rule
+	static const XalanDOMString&	ATTRVAL_DEFAULT_TEXT_RULE;
 	enum eNumberLevel
 	{
 		/*
@@ -404,6 +420,8 @@ public:
 
 		MAX_MULTI_COUNTING_DEPTH = 32
 	};
+
+	static const XalanDOMString&	ATTRVAL_DEFAULT;
 
 	// For Stylesheet-prefix and result-prefix in xsl:namespace-alias 
 	static const XalanDOMString&	ATTRVAL_DEFAULT_PREFIX;
@@ -485,11 +503,12 @@ public:
 	// These are used mainly for keys in the pattern lookup table,
 	// for those nodes that don't have unique lookup values
 	static const XalanDOMString&	PSEUDONAME_ANY;
+	static const XalanDOMString&	PSEUDONAME_COMMENT;
+	static const XalanDOMString&	PSEUDONAME_NODE;
+	static const XalanDOMString&	PSEUDONAME_OTHER;
+	static const XalanDOMString&	PSEUDONAME_PI;
 	static const XalanDOMString&	PSEUDONAME_ROOT;
 	static const XalanDOMString&	PSEUDONAME_TEXT;
-	static const XalanDOMString&	PSEUDONAME_COMMENT;
-	static const XalanDOMString&	PSEUDONAME_PI;
-	static const XalanDOMString&	PSEUDONAME_OTHER;
 
 };
 

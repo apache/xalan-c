@@ -73,6 +73,7 @@
 
 #include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/XalanAutoPtr.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -84,9 +85,23 @@
 
 
 
+static const XalanDOMChar	theDefaultSpecialCharacters[] =
+{
+		XalanUnicode::charLessThanSign,
+		XalanUnicode::charGreaterThanSign,
+		XalanUnicode::charAmpersand,
+		XalanUnicode::charApostrophe,
+		XalanUnicode::charQuoteMark,
+		XalanUnicode::charCR,
+		XalanUnicode::charLF,
+		0
+};
+
+
+
 XercesParserLiaison::XercesParserLiaison(DOMSupport&	theSupport) :
 	m_DOMSupport(theSupport),
-	m_specialCharacters(XALAN_STATIC_UCODE_STRING("<>&\"\'\r\n")),
+	m_specialCharacters(theDefaultSpecialCharacters),
 	m_indent(-1),
 	m_shouldExpandEntityRefs(false),
 	m_useValidation(false),

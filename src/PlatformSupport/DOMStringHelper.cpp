@@ -76,6 +76,7 @@
 using std::back_inserter;
 using std::copy;
 using std::hex;
+using std::ios;
 using std::istrstream;
 using std::ostream;
 using std::ostrstream;
@@ -99,22 +100,18 @@ using std::vector;
 #include "STLHelper.hpp"
 #include "TextOutputStream.hpp"
 #include "XalanAutoPtr.hpp"
+#include "XalanUnicode.hpp"
 
 
 
 // The maximum number of digits that sprintf can put in a buffer.
-// 50 for now.  We're using this because we want to avoid transcoding
+// 100 for now.  We're using this because we want to avoid transcoding
 // number strings when we don't have to,
-const size_t	MAX_PRINTF_DIGITS = 50;
+const size_t	MAX_PRINTF_DIGITS = 100;
 
 
 
 #if !defined(XALAN_LSTRSUPPORT)
-
-// This string is defined just to make sure that
-// _something_ trips the initialization code
-// before main() is entered.
-const XalanDOMString		theDummy(XALAN_STATIC_UCODE_STRING("dummy"));
 
 
 
@@ -134,6 +131,42 @@ initializeAndTranscode(const char*	theString)
 }
 
 #endif
+
+
+
+static XalanDOMString	theNaNString;
+
+static XalanDOMString	theNegativeInfinityString;
+
+static XalanDOMString	thePositiveInfinityString;
+
+
+
+/**
+ * Initialize static data.  Must be called before any
+ * other functions are called.  See PlatformSupportInit.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+DOMStringHelperInitialize()
+{
+	theNaNString = XALAN_STATIC_UCODE_STRING("NaN");
+	theNegativeInfinityString = XALAN_STATIC_UCODE_STRING("-Infinity");
+	thePositiveInfinityString = XALAN_STATIC_UCODE_STRING("Infinity");
+}
+
+
+
+/**
+ * Destroy static data.  After thus function is called,
+ * no other functions can be called.  See PlatformSupportInit.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+DOMStringHelperTerminate()
+{
+	clear(theNaNString);
+	clear(theNegativeInfinityString);
+	clear(thePositiveInfinityString);
+}
 
 
 
@@ -908,16 +941,16 @@ MakeXalanDOMCharVector(const XalanDOMChar*	data)
 
 
 
-static void
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 CopyWideStringToVector(
 			const XalanDOMChar*		theString,
-			vector<char>&			theVector)
+			CharVectorType&			theVector)
 {
 	const unsigned int	theLength = length(theString);
 
 	if (theLength != 0)
 	{
-		theVector.reserve(theLength + 1);
+		theVector.reserve(theVector.size() + theLength + 1);
 
 		for(unsigned int i = 0; i < theLength; i++)
 		{
@@ -959,7 +992,7 @@ WideStringToLong(const XalanDOMChar*	theString)
 {
 	long			theResult = 0;
 
-	vector<char>	theVector;
+	CharVectorType	theVector;
 
 	CopyWideStringToVector(theString,
 						   theVector);
@@ -979,7 +1012,7 @@ WideStringToUnsignedLong(const XalanDOMChar*	theString)
 {
 	unsigned long	theResult = 0;
 
-	vector<char>	theVector;
+	CharVectorType	theVector;
 
 	CopyWideStringToVector(theString,
 						   theVector);
@@ -1036,15 +1069,15 @@ DoubleToDOMString(double	theDouble)
 {
 	if (DoubleSupport::isNaN(theDouble) == true)
 	{
-		return XALAN_STATIC_UCODE_STRING("NaN");
+		return theNaNString;
 	}
 	else if (DoubleSupport::isPositiveInfinity(theDouble) == true)
 	{
-		return XALAN_STATIC_UCODE_STRING("Infinity");
+		return thePositiveInfinityString;
 	}
 	else if (DoubleSupport::isNegativeInfinity(theDouble) == true)
 	{
-		return XALAN_STATIC_UCODE_STRING("-Infinity");
+		return theNegativeInfinityString;
 	}
 	else
 	{
@@ -1056,48 +1089,59 @@ DoubleToDOMString(double	theDouble)
 
 		double	fracPart = fabs(modf(theDouble, &intPart));
 
-		if (fracPart == 0)
-		{
-			return LongToDOMString(long(theDouble));
-		}
-		else
-		{
-			char		theBuffer[MAX_PRINTF_DIGITS + 1];
+		char		theBuffer[MAX_PRINTF_DIGITS + 1];
 
-			ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
+#if 1
+		sprintf(theBuffer, "%f", theDouble);
+#else
+		ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
 
-			theFormatter << theDouble << '\0';
+		// Ensure that we get fixed point results, and that there's enough precision.
+		theFormatter.flags((theFormatter.flags() & ~ios::scientific) | ios::fixed);
 
-			// OK, now we have to clean up the output for
-			// the XPath standard, which says no trailing
-			// '0's for the decimal portion.  So start with
-			// the last digit, and replace any '0's with the
-			// null character.  We know at this point that
-			// we have at least 1 digit before the decimal
-			// point, and and least 1 non-zero digit after
-			// the decimal point, since any values with no
-			// fractional part were printed as integers
-			XalanDOMCharVectorType	theResult =
+		theFormatter.precision(20);
+
+		theFormatter << theDouble << '\0';
+#endif
+		// OK, now we have to clean up the output for
+		// the XPath standard, which says no trailing
+		// '0's for the decimal portion.  So start with
+		// the last digit, and replace any '0's with the
+		// null character.  We know at this point that
+		// we have at least 1 digit before the decimal
+		// point, and and least 1 non-zero digit after
+		// the decimal point, since any values with no
+		// fractional part were printed as integers
+		XalanDOMCharVectorType		theResult =
+#if defined(XALAN_NON_ASCII_PLATFORM)
+				MakeXalanDOMCharVector(theBuffer, true);
+#else
 				MakeXalanDOMCharVector(theBuffer, false);
+#endif
 
-			XalanDOMCharVectorType::iterator	thePosition = theResult.end();
+		XalanDOMCharVectorType::iterator	thePosition = theResult.end();
 
-			// Move to the terminating null byte...
-			--thePosition;
+		// Move to the terminating null byte...
+		--thePosition;
 
-			// Now, move back while there are zeros.
-			while(*--thePosition == '0')
-			{
-			}
+		// Now, move back while there are zeros.
+		while(*--thePosition == XalanUnicode::charDigit_0)
+		{
+		}
 
+		// If there's no fractional part, make sure we get rid
+		// of the decimal point...
+		if (fracPart != 0 ||
+			*thePosition != XalanUnicode::charFullStop)
+		{
 			// Move up one, since we need to keep at least one...
 			++thePosition;
-
-			// Terminate it...
-			*thePosition = 0;
-
-			return XalanDOMString(theResult.begin());
 		}
+
+		// Terminate it...
+		*thePosition = 0;
+			
+		return XalanDOMString(theResult.begin());
 	}
 }
 
@@ -1229,10 +1273,8 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 		// Next spot...
 		--thePointer;
 
-		// Isolate the left most character.  We may need to
-		// change this to a switch statement on platforms
-		// that are not ASCII-based (i.e. EBCDIC)
-		*thePointer = wchar_t(theUnsignedLong % 10 + '0');
+		// Isolate the left most character.
+		*thePointer = wchar_t(theUnsignedLong % 10 + XalanUnicode::charDigit_0);
 
 		// OK, we're done with it...
 		theUnsignedLong /= 10;

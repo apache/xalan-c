@@ -97,7 +97,7 @@ FunctionFunctionAvailable::execute(
 	const XalanDOMString	fullName = args[0]->str();
 
 	const unsigned int		nameLength = length(fullName);
-	const unsigned int		indexOfNSSep = indexOf(fullName, ':');
+	const unsigned int		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
 
 	const XalanDOMString	prefix = indexOfNSSep < nameLength ? substring(fullName, 0, indexOfNSSep) : XalanDOMString();
 

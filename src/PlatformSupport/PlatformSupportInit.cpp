@@ -59,6 +59,14 @@
 
 
 
+#include "DOMStringHelper.hpp"
+#include "NamedNodeMapAttributeList.hpp"
+#include "PrintWriter.hpp"
+#include "URISupport.hpp"
+#include "XalanNumberFormat.hpp"
+
+
+
 unsigned long	PlatformSupportInit::s_initCounter = 0;
 
 
@@ -91,6 +99,15 @@ PlatformSupportInit::~PlatformSupportInit()
 void
 PlatformSupportInit::initialize()
 {
+	DOMStringHelperInitialize();
+
+	PrintWriter::initialize();
+
+	NamedNodeMapAttributeList::initialize();
+
+	XalanNumberFormat::initialize();
+
+	URISupport::initialize();
 }
 
 
@@ -98,4 +115,13 @@ PlatformSupportInit::initialize()
 void
 PlatformSupportInit::terminate()
 {
+	URISupport::terminate();
+
+	XalanNumberFormat::terminate();
+
+	NamedNodeMapAttributeList::terminate();
+
+	PrintWriter::terminate();
+
+	DOMStringHelperTerminate();
 }

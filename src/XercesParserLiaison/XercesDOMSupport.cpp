@@ -69,6 +69,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 XercesDOMSupport::XercesDOMSupport() :
 	DOMSupport()
 {
@@ -102,7 +106,7 @@ XercesDOMSupport::getExpandedElementName(const XalanElement&	elem) const
 {
 	const XalanDOMString	theNamespace = getNamespaceOfNode(elem);
 
-	return 0 != length(theNamespace) ? theNamespace + XALAN_STATIC_UCODE_STRING(":") + elem.getLocalName() 
+	return 0 != length(theNamespace) ? theNamespace + DOMServices::s_XMLNamespaceSeparatorString + elem.getLocalName() 
 									: elem.getLocalName();
 }
 
@@ -113,6 +117,6 @@ XercesDOMSupport::getExpandedAttributeName(const XalanAttr&	attr) const
 {
 	const XalanDOMString	theNamespace = getNamespaceOfNode(attr);
 
-	return 0 != length(theNamespace) ? theNamespace + XALAN_STATIC_UCODE_STRING(":") + attr.getLocalName() 
+	return 0 != length(theNamespace) ? theNamespace + DOMServices::s_XMLNamespaceSeparatorString + attr.getLocalName() 
                                  : attr.getLocalName();
 }

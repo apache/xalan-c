@@ -192,11 +192,11 @@ DOMStringPrintWriter::print(bool	b)
 {
 	if (b == true)
 	{
-		print(XALAN_STATIC_UCODE_STRING("true"));
+		print(s_trueString);
 	}
 	else
 	{
-		print(XALAN_STATIC_UCODE_STRING("false"));
+		print(s_falseString);
 	}
 }
 #endif
@@ -270,7 +270,7 @@ DOMStringPrintWriter::print(const XalanDOMString&	s)
 void
 DOMStringPrintWriter::println()
 {
-	m_outputString += XALAN_STATIC_UCODE_STRING("\n");
+	m_outputString += s_newlineString;
 }
 
 

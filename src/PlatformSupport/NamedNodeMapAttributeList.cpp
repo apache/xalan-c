@@ -72,7 +72,6 @@ NamedNodeMapAttributeList::NamedNodeMapAttributeList(const XalanNamedNodeMap&	th
 	m_lastIndex(theMap.getLength() - 1),
 	m_cachedData()
 {
-	m_cachedData.push_back(XALAN_STATIC_UCODE_STRING("CDATA"));
 }
 
 
@@ -116,9 +115,9 @@ NamedNodeMapAttributeList::getName(const unsigned int index) const
 const XMLCh*
 NamedNodeMapAttributeList::getType(const unsigned int /* index */) const
 {
-	assert(m_cachedData.size() > 0);
+	assert(length(s_typeString) > 0);
 
-	return c_wstr(m_cachedData.front());
+	return c_wstr(s_typeString);
 }
 
 
@@ -144,9 +143,9 @@ NamedNodeMapAttributeList::getValue(const unsigned int index) const
 const XMLCh*
 NamedNodeMapAttributeList::getType(const XMLCh* const /* name */) const
 {
-	assert(m_cachedData.size() > 0);
+	assert(length(s_typeString) > 0);
 
-	return c_wstr(m_cachedData.front());
+	return c_wstr(s_typeString);
 }
 
 
@@ -200,4 +199,28 @@ NamedNodeMapAttributeList::cacheData(const XalanDOMString&	theData) const
 #else
 	m_cachedData.push_back(theData);
 #endif
+}
+
+
+
+static XalanDOMString	s_typeString;
+
+
+
+const XalanDOMString&	NamedNodeMapAttributeList::s_typeString = ::s_typeString;
+
+
+
+void
+NamedNodeMapAttributeList::initialize()
+{
+	::s_typeString = XALAN_STATIC_UCODE_STRING("CDATA");
+}
+
+
+
+void
+NamedNodeMapAttributeList::terminate()
+{
+	clear(::s_typeString);
 }

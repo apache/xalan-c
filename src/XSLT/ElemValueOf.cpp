@@ -113,7 +113,7 @@ ElemValueOf::ElemValueOf(
 				const XalanDOMChar* const	avalue = atts.getValue(i);
 				assert(avalue != 0);
 
-				if (avalue[0] == '.' && avalue[1] == 0)
+				if (avalue[0] == XalanUnicode::charFullStop && avalue[1] == 0)
 				{
 					m_isDot = true;
 				}

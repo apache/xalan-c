@@ -75,6 +75,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -335,18 +336,7 @@ protected:
 	 * Output a line break.
 	 */
 	void
-	outputLineSep()
-	{
-		accum(s_lineSep);
-	}
-
-	/**
-	 * Append a character to the buffer.
-	 *
-	 * @ch the character to append.
-	 */
-	void
-	accum(char			ch);
+	outputLineSep();
 
 	/**
 	 * Append a wide character to the buffer.
@@ -355,6 +345,15 @@ protected:
 	 */
 	void
 	accum(XalanDOMChar	ch);
+
+	/**
+	 * Append a mull-termiated array of wide character to
+	 * the buffer.
+	 *
+	 * @chars the array to append
+	 */
+	void
+	accum(const XalanDOMChar*	chars);
 
 	/**
 	 * Append an array of wide character to the buffer.
@@ -419,12 +418,6 @@ protected:
 	 */
 	void
 	initCharsMap();
-
-	/**
-	 * Flush the byte buffer.
-	 */
-	void
-	flushBytes();
 
 	/**
 	 * Flush the char buffer.
@@ -673,13 +666,7 @@ private:
 	 * @param n         Number of spaces to print.
 	 */
 	void
-	printSpace(int n)
-	{
-		for (int i = 0;  i < n;  i ++)
-		{
-			accum(' ');
-		}
-	}
+	printSpace(int n);
 
 	/**
 	 * Normalize the data in a PI, to replace any
@@ -693,9 +680,12 @@ private:
 
 
 	// Data members...
-	bool		m_shouldFlush;
-
+	/**
+	 * True if an encoding is only has only values from 0 - 255
+	 */
 	bool		m_bytesEqualChars;
+
+	bool		m_shouldFlush;
 
 	/**
 	 * Add space before '/>' for XHTML.
@@ -805,11 +795,9 @@ private:
 	static const XalanDOMCharVectorType&	s_utf8EncodingString;
 
 
-	DOMCharBufferType		m_charBuf;
+	DOMCharBufferType				m_charBuf;
 
-	ByteBufferType			m_byteBuf;
-
-	ByteBufferType::size_type	m_pos;
+	DOMCharBufferType::size_type	m_pos;
 
 	static const DOMCharBufferType::size_type	s_maxBufferSize;
 
@@ -823,12 +811,6 @@ private:
 	 * has children.
 	 */
 	BoolStackType	m_elemStack;
-
-	/**
-	 * Use the system line seperator to write line breaks.  This should
-	 * always be '\n'.
-	 */
-	static XalanDOMChar		s_lineSep;
 };
 
 

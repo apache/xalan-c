@@ -260,11 +260,11 @@ FunctionDocument::execute(
 				// will still work, but confusion may result.
 				const unsigned int	theLength = length(ref);
 
-				const unsigned int	indexOfColon = indexOf(ref, ':');
-				unsigned int		indexOfSlash = indexOf(ref, '/');
+				const unsigned int	indexOfColon = indexOf(ref, XalanUnicode::charColon);
+				unsigned int		indexOfSlash = indexOf(ref, XalanUnicode::charSolidus);
 
 #if defined(WIN32)				
-				const unsigned int	indexOfBackSlash = indexOf(ref, '\\');
+				const unsigned int	indexOfBackSlash = indexOf(ref, XalanUnicode::charReverseSolidus);
 
 				if(indexOfBackSlash > indexOfSlash && indexOfBackSlash < theLength)
 				{
