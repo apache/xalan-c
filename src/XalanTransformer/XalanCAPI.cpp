@@ -54,6 +54,10 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+#include "XalanTransformerDefinitions"
+
+
+
 #include <util/PlatformUtils.hpp>
 
 
