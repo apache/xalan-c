@@ -270,10 +270,10 @@ static XalanDOMString	s_warningNotFoundString;
 
 
 const XalanDOMString&	FunctionFormatNumber::s_warningNotImplementedString =
-		s_warningNotImplementedString;
+		::s_warningNotImplementedString;
 
 const XalanDOMString&	FunctionFormatNumber::s_warningNotFoundString =
-		s_warningNotFoundString;
+		::s_warningNotFoundString;
 
 const XalanDOMString	FunctionFormatNumber::s_emptyString;
 
