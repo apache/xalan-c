@@ -68,7 +68,7 @@
 
 
 
-#include <list>
+#include <deque>
 #include <map>
 #include <vector>
 
@@ -103,7 +103,6 @@ class ElemTemplate;
 class ElemTemplateElement;
 class ElemVariable;
 class KeyTable;
-class MatchPattern2;
 class NodeRefListBase;
 class PrefixResolver;
 class StylesheetConstructionContext;
@@ -415,12 +414,12 @@ public:
 	/**
 	 * Add a template to the list of names templates
 	 * 
-	 * @param tmpl template to add
+	 * @param theTemplate template to add
 	 * @param constructionContext context for construction
 	 */
 	void
 	addTemplate(
-			ElemTemplate*					tmpl,
+			ElemTemplate*					theTemplate,
 			StylesheetConstructionContext&	constructionContext);
 
 	/**
@@ -688,7 +687,7 @@ public:
 	 * @param executionContext current execution context
 	 * @param targetElem        element that needs a rule
 	 * @param mode              string indicating the display mode
-	 * @param useImports        means that this is an xsl:apply-imports commend
+	 * @param onlyUseImports    only use imports, do not use any templates from the stylesheet itself
 	 * @return pointer to rule that best matches targetElem
 	 */
 	const ElemTemplate*
@@ -696,7 +695,7 @@ public:
 			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						targetNode, 
 			const QName&					mode,
-			bool							useImports,
+			bool							onlyUseImports,
 			const Stylesheet*&				foundStylesheet) const;
 
 	/**
@@ -710,22 +709,42 @@ public:
 		/**
 		 * Construct a match pattern from a pattern and template.
 		 *
-		 * @param pat string that contains element pattern
-		 * @param exp XPath expression for pattern
 		 * @param theTemplate node that contains the template for this pattern
 		 * @param posInStylesheet position in stylesheet
 		 * @param targetString target string
 		 * @param stylesheet stylesheet for pattern
+		 * @param matchPattern the match pattern
+		 * @param pattern the pattern string
 		 */
 		MatchPattern2(
-				const XalanDOMString&	pat,
-				const XPath*			exp,
-				const ElemTemplate*		theTemplate,
-				int 					posInStylesheet, 
+				const ElemTemplate&		theTemplate,
+				int 					posInStylesheet,
 				const XalanDOMString&	targetString,
-				const Stylesheet* 		stylesheet); 
+				const Stylesheet& 		stylesheet,
+				const XPath&			matchPattern,
+				const XalanDOMString&	pattern) :
+			m_template(&theTemplate),
+			m_posInStylesheet(posInStylesheet),
+			m_targetString(targetString),
+			m_stylesheet(&stylesheet),
+			m_matchPattern(&matchPattern),
+			m_pattern(&pattern)
+		{
+		}
 
-		~MatchPattern2();
+		MatchPattern2() :
+			m_template(0),
+			m_posInStylesheet(0),
+			m_targetString(),
+			m_stylesheet(0),
+			m_matchPattern(0),
+			m_pattern(0)
+		{
+		}
+
+		~MatchPattern2()
+		{
+		}
 
 		/**
 		 * Retrieve stylesheet associated with pattern.
@@ -737,7 +756,7 @@ public:
 		{
 			return m_stylesheet;
 		}
-		
+
 		/**
 		 * Retrieve string for target.
 		 * 
@@ -745,21 +764,21 @@ public:
 		 */
 		const XalanDOMString&
 		getTargetString() const
-		{ 
+		{
 			return m_targetString;
 		}
-		
+
 		/**
-		 * Retrieve expression associated with pattern.
+		 * Retrieve the match pattern associated with pattern.
 		 * 
-		 * @return XPath expression for pattern
+		 * @return XPath for pattern
 		 */
 		const XPath*
 		getExpression() const
 		{
-			return m_expression;
+			return m_matchPattern;
 		}
-		
+
 		/**
 		 * Retrieve position of pattern in stylesheet.
 		 * 
@@ -770,18 +789,18 @@ public:
 		{
 			return m_posInStylesheet;
 		}
-		
+
 		/**
 		 * Retrieve pattern string.
 		 * 
 		 * @return string that contains element pattern
 		 */
-		const XalanDOMString&
+		const XalanDOMString*
 		getPattern() const
 		{
 			return m_pattern;
 		}
-		
+
 		/**
 		 * Retrieve node that contains the template for this pattern.
 		 * 
@@ -792,36 +811,36 @@ public:
 		{
 			return m_template;
 		}
-		
+
 	private:
 
-		const Stylesheet* const		m_stylesheet;
-		const XalanDOMString		m_targetString;
-		const XPath* const			m_expression;
-		const int					m_posInStylesheet;
-		const XalanDOMString		m_pattern;
-		const ElemTemplate*	const	m_template; // ref to the corresponding template
-
-		// Not implemented...
-		MatchPattern2();
-		MatchPattern2& operator=(const MatchPattern2&);
+		const ElemTemplate*		m_template;
+		int						m_posInStylesheet;
+		XalanDOMString			m_targetString;
+		const Stylesheet*		m_stylesheet;
+		const XPath*			m_matchPattern;
+		const XalanDOMString*	m_pattern;
 	};
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef list<MatchPattern2*>				PatternTableListType;
+	typedef vector<MatchPattern2*>				PatternTableListType;
 
 	typedef vector<const MatchPattern2*>		PatternTableVectorType;
 
 	typedef map<XalanDOMString,
 			    PatternTableListType,
 				less<XalanDOMString> >			PatternTableMapType;
+
+	typedef deque<MatchPattern2>				MatchPattern2Container;
 #else
-	typedef std::list<MatchPattern2*>			PatternTableListType;
+	typedef std::vector<MatchPattern2*>			PatternTableListType;
 
 	typedef std::vector<const MatchPattern2*>	PatternTableVectorType;
 
 	typedef std::map<XalanDOMString,
 					 PatternTableListType>		PatternTableMapType;
+
+	typedef std::deque<MatchPattern2>			MatchPattern2Container;
 #endif
 
 	/**
@@ -851,25 +870,17 @@ public:
 			unsigned int&			theArraySize);
 
 	/**
-	 * Given a source node, locate the start of a list of possible template
-	 * matches, according to its type.
+	 * Given a name, , locate the start of a list of 
+	 * possible templates that match that name, also
+	 * trying wild card matches.
 	 *
-	 * @param sourceNode source node for search of match patterns
-	 */
-	const PatternTableListType*
-	locateMatchPatternList2(XalanNode*	sourceNode) const;
-
-	/**
-	 * Given an element type, locate the start of a list of 
-	 * possible template matches, possibly trying wild card matches.
-	 *
-	 * @param sourceElementType type of element to search
-	 * @param tryWildCard		if true, use wild card matching
+	 * @param theName The name to match
+	 * @param usedWildCard Set to true if wild card matching was used, false if not.
 	 */
 	const PatternTableListType*
 	locateMatchPatternList2(
-			const XalanDOMString&	sourceElementType,
-			bool					tryWildCard = false) const;
+			const XalanDOMString&	theName,
+			bool&					usedWildcard) const;
 
 	/**
 	 * Add an extension namespace handler. This provides methods for calling
@@ -1258,11 +1269,40 @@ private:
 	 */
 	PatternTableMapType 					m_patternTable;
 
+	PatternTableMapType::const_iterator		m_patternTableEnd;
+
 	/**
-	 * This caches the size of the pattern table, so we don't recompute the
-	 * value each time.
+	 * These tables are for text, comment, and root node templates.
 	 */
-	PatternTableMapType::size_type			m_patternCount;
+	PatternTableListType					m_textPatternList;
+
+	PatternTableListType					m_commentPatternList;
+
+	PatternTableListType					m_rootPatternList;
+
+	PatternTableListType					m_piPatternList;
+
+	PatternTableListType					m_nodePatternList;
+
+	/**
+	 * This table is for patterns that match "*"
+	 */
+	PatternTableListType					m_anyPatternList;
+
+	PatternTableListType::const_iterator	m_anyPatternBegin;
+
+	PatternTableListType::const_iterator	m_anyPatternEnd;
+
+	/**
+	 * This will hold all of the MatchPattern2 instances for the
+	 * stylesheet.
+	 */
+	MatchPattern2Container					m_matchPattern2Container;
+
+	/**
+	 * This caches the number of possible patterns we can match.
+	 */
+	MatchPattern2Container::size_type		m_patternCount;
 
 	AttributeSetVectorType 					m_attributeSets;
 
