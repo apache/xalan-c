@@ -173,7 +173,8 @@ XercesDocumentBridge::mapNode(NodeImpl*		theXercesNodeImpl) const
 			assert(theOwnerDocument != 0);
 
 			if (theXercesNodeImpl != theOwnerDocument &&
-					theXercesNodeImpl->getOwnerDocument() != theOwnerDocument)
+					theXercesNodeImpl->getOwnerDocument() != theOwnerDocument &&
+				theXercesNodeImpl->getParentNode() != theOwnerDocument)
 			{
 				throw XalanDOMException(XalanDOMException::WRONG_DOCUMENT_ERR);
 			}
