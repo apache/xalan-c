@@ -91,7 +91,7 @@ ResultNamespacesStack::addDeclaration(
 			XalanDOMString::size_type	theLength)
 {
 	assert(theNamespaceURI != 0);
-	assert(m_createNewContextStack.size() != 0);
+	assert(m_createNewContextStack.empty() == false);
 
 	// Check to see if we need to create a new context and do so if necessary...
 	if (m_createNewContextStack.back() == true)

@@ -124,7 +124,7 @@ openFile(const XalanDOMString&	theFileName)
 #else
 	const CharVectorType	theResult(TranscodeToLocalCodePage(theFileName));
 
-	if (theResult.size() == 0)
+	if (theResult.empty() == true)
 	{
 		return 0;
 	}

@@ -145,7 +145,7 @@ OutputContextStack::reset()
 		popContext();
 	}
 
-	assert(size() == 0);
+	assert(empty() == true);
 }
 
 

@@ -210,7 +210,7 @@ runTests(
 				const XalanDOMString&	currentDir = dirs[j];
 
 				// Run specific category of files from given directory
-				if (h.args.sub.size() == 0 || currentDir == h.args.sub)
+				if (h.args.sub.empty() == true || currentDir == h.args.sub)
 				{
 					// Check that output directory is there.
 					const XalanDOMString  theOutputDir = h.args.output + currentDir;

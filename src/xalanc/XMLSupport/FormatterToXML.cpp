@@ -890,7 +890,7 @@ FormatterToXML::accumDefaultEntity(
 void
 FormatterToXML::flushChars()
 {
-	assert(m_charBuf.size() > 0 && m_charBuf.size() >= m_pos);
+	assert(m_charBuf.empty() == false && m_charBuf.size() >= m_pos);
 
 	m_writer->write(&m_charBuf[0], 0, m_pos);
 
@@ -902,7 +902,7 @@ FormatterToXML::flushChars()
 void
 FormatterToXML::flushBytes()
 {
-	assert(m_byteBuf.size() > 0 && m_byteBuf.size() >= m_pos);
+	assert(m_byteBuf.empty() == false && m_byteBuf.size() >= m_pos);
 
 	m_writer->write(&m_byteBuf[0], 0, m_pos);
 

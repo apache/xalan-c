@@ -494,13 +494,13 @@ XPathProcessorImpl::replaceTokenWithNamespaceToken() const
 {
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
-	assert(m_token.size() > 0);
+	assert(m_token.empty() == false);
 
 	StringToStringMapType::const_iterator	i = m_namespaces.find(m_token);
 	assert(i != m_namespaces.end());
 
 	const XalanDOMString* const		theNamespaceURI = (*i).second;
-	assert(theNamespaceURI != 0 && theNamespaceURI->size() != 0);
+	assert(theNamespaceURI != 0 && theNamespaceURI->empty() == false);
 
 	m_expression->replaceRelativeToken(
 			-1,

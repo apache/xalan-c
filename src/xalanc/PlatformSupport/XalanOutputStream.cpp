@@ -146,7 +146,7 @@ XalanOutputStream::write(
 
 	if (theBufferLength > m_bufferSize)
 	{
-		assert(m_buffer.size() == 0);
+		assert(m_buffer.empty() == true);
 
 		doWrite(theBuffer, theBufferLength);
 	}

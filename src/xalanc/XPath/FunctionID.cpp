@@ -113,7 +113,7 @@ FunctionID::execute(
 									context->getOwnerDocument();
 	assert(theDocContext != 0);
 
-	if (theResultString.size() == 0)
+	if (theResultString.empty() == true)
 	{
 		return executionContext.getXObjectFactory().createNodeSet(0);
 	}

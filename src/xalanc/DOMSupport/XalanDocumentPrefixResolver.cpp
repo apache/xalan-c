@@ -106,7 +106,7 @@ XalanDocumentPrefixResolver::getNamespaceForPrefix(const XalanDOMString&	prefix)
 	else
 	{
 		const AttributeVectorType&	theVector = (*i).second;
-		assert(theVector.size() > 0);
+		assert(theVector.empty() == false);
 
 		if (theVector.size() == 1)
 		{

@@ -286,7 +286,7 @@ public:
 			const XObjectArgVectorType&		args,
 			const LocatorType*				locator) const
 	{
-		if (args.size() != 0)
+		if (args.empty() == false)
 		{
 			executionContext.error(getError(), context, locator);
 		}

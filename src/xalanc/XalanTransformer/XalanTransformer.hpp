@@ -631,7 +631,7 @@ public:
 	const XalanDOMChar*
 	getExternalSchemaLocation() const
 	{
-		return m_externalSchemaLocation.size() == 0 ? 0 : m_externalSchemaLocation.c_str();
+		return m_externalSchemaLocation.empty() == true ? 0 : m_externalSchemaLocation.c_str();
 	}
 
 	/**
@@ -657,7 +657,7 @@ public:
 	const XalanDOMChar*
 	getExternalNoNamespaceSchemaLocation() const
 	{
-		return m_externalNoNamespaceSchemaLocation.size() == 0 ? 0 : m_externalNoNamespaceSchemaLocation.c_str();
+		return m_externalNoNamespaceSchemaLocation.empty() == true ? 0 : m_externalNoNamespaceSchemaLocation.c_str();
 	}
 
 	/**
@@ -705,7 +705,7 @@ public:
 	const char*
 	getLastError() const
 	{
-		assert(m_errorMessage.size() > 0);
+		assert(m_errorMessage.empty() == false);
 
 		return &m_errorMessage[0]; 
 	}

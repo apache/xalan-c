@@ -915,7 +915,7 @@ xsltMain(const CmdLineParams&	params)
 	 */
 	processor.setQuietConflictWarnings(params.setQuietConflictWarnings);
 
-	if (params.params.size() > 0)
+	if (params.params.empty() == false)
 	{
 		StringPairVectorType::const_iterator	it = params.params.begin();
 

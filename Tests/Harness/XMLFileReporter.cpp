@@ -130,7 +130,7 @@ XMLFileReporter::XMLFileReporter(const XalanDOMString&	fileName) :
 	m_error(false),
 	m_flushOnCaseClose(true)
 {
-	if (m_fileName.size() > 0)
+	if (m_fileName.empty() == false)
 	{
 		m_ready = initialize();
 	}
@@ -139,7 +139,7 @@ XMLFileReporter::XMLFileReporter(const XalanDOMString&	fileName) :
 bool
 XMLFileReporter::initialize()
 {   	
-    if (m_fileName.size() == 0)
+    if (m_fileName.empty() == true)
     {
         // We don't have a valid file, so bail
         m_error = true;

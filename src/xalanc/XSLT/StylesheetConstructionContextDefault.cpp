@@ -436,7 +436,7 @@ StylesheetConstructionContextDefault::destroy(StylesheetRoot*	theStylesheetRoot)
 		delete theStylesheetRoot;
 	}
 
-	if (m_stylesheets.size() == 0)
+	if (m_stylesheets.empty() == true)
 	{
 		reset();
 	}

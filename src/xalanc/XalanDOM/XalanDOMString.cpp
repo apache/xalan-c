@@ -402,7 +402,7 @@ XalanDOMString::append(
 
 	if (theLength != 0)
 	{
-		if (size() == 0)
+		if (empty() == true)
 		{
 			doTranscode(theString, theLength, m_data, true);
 		}

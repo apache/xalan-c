@@ -206,7 +206,7 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&		constructionCon
 	{
 		m_cdataSectionElems.clear();
 	}
-	else if (m_cdataSectionElems.size() > 0)
+	else if (m_cdataSectionElems.empty() == false)
 	{
 		XALAN_USING_STD(sort)
 

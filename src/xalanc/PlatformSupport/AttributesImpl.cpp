@@ -536,9 +536,9 @@ AttributesImpl::getNewEntry(
 
 		theEntry->clear();
 
-		assert(theEntry->m_Name.size() == 0 && theEntry->m_Value.size() == 0 &&
-			   theEntry->m_Type.size() == 0 && theEntry->m_uri.size() == 0 &&
-			   theEntry->m_localName.size() == 0 );
+		assert(theEntry->m_Name.empty() == true && theEntry->m_Value.empty() == true &&
+			   theEntry->m_Type.empty() == true && theEntry->m_uri.empty() == true &&
+			   theEntry->m_localName.empty() == true);
 
 		theEntry->m_Name.insert(theEntry->m_Name.begin(), name, AttributeVectorEntry::endArray(name) + 1);
 		theEntry->m_Value.insert(theEntry->m_Value.begin(), value, AttributeVectorEntry::endArray(value) + 1);
