@@ -300,8 +300,8 @@ transcodeString(
 	assert(theChars != 0);
 	assert(theCharsCount != 0);
 
-	unsigned int	theSourceCharsTranscoded = 0;
-	unsigned int	theTargetBytesUsed = 0;
+	size_t	theSourceCharsTranscoded = 0;
+	size_t	theTargetBytesUsed = 0;
 
 	const XalanTranscodingServices::eCode	theCode = theTranscoder->transcode(
 #if defined(XALAN_OLD_STYLE_CASTS)
