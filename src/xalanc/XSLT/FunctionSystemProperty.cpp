@@ -71,7 +71,7 @@ validateNCName(
 	if (XalanQName::isValidNCName(ncname) == false)
 	{
 		executionContext.error(
-			"system-property(): The property is not a valid QName",
+			XalanMessageLoader::getMessage(XalanMessages::PropertyIsNotValidQName_1Param,"system-property()"),
 			context,
 			locator);
 	}

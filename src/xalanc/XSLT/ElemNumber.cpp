@@ -758,11 +758,8 @@ ElemNumber::getMatchingAncestors(
 				break;
 		}
 
-		if(0 == countMatchPattern)
-			executionContext.error(
-				"Programmer error! countMatchPattern should never be 0!",
-				node,
-				getLocator());
+		// Programmer error! countMatchPattern should never be 0!
+		assert(0 != countMatchPattern);
 
 		if(countMatchPattern->getMatchScore(node, *this, executionContext) !=
 				XPath::eMatchScoreNone)
@@ -797,7 +794,7 @@ ElemNumber::getNumberFormatter(StylesheetExecutionContext&	executionContext) con
 	if (length(digitGroupSepValue) > 1)
 	{
 		executionContext.error(
-			"The grouping-separator value must be one character in length",
+			XalanMessageLoader::getMessage(XalanMessages::Grouping_separatorValueMustSeOneCharacterLength),
 			executionContext.getCurrentNode(),
 			getLocator());
 	}
@@ -1337,7 +1334,7 @@ ElemNumber::getFormattedNumber(
 				else
 				{
 					executionContext.error(
-						"The legal values for letter-value are 'alphabetic' and 'traditional'",
+						XalanMessageLoader::getMessage(XalanMessages::LegalValuesForLetterValue),
 						executionContext.getCurrentNode(),
 						getLocator());
 				}

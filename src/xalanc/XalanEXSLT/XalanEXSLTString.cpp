@@ -592,7 +592,10 @@ XalanEXSLTFunctionDecodeURI::hexCharsToByte(
 		}
 		else 
 		{
-			executionContext.error("Invalid URI", context, locator);
+			executionContext.error(
+				XalanMessageLoader::getMessage(XalanMessages::InvalidURI),
+				context, 
+				locator);
 		}
 		curChar = highHexChar;
 	}

@@ -1040,6 +1040,17 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<source>The xsl:sort attribute 'case-order' value must be 'upper-first' or 'lower-first'.</source>
 		<target>The xsl:sort attribute 'case-order' value must be 'upper-first' or 'lower-first'.</target>
 </trans-unit>
+
+<trans-unit id="LegalValuesForLetterValue">
+		<source>The legal values for letter-value are 'alphabetic' and 'traditional'.</source>
+		<target>The legal values for letter-value are 'alphabetic' and 'traditional'.</target>
+</trans-unit>
+
+<trans-unit id="InvalidURI">
+		<source>Invalid URI.</source>
+		<target>Invalid URI.</target>
+</trans-unit>
+
     </body>
   </file>
 </xliff>
