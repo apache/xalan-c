@@ -146,6 +146,9 @@ public:
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const;
 
+	virtual void
+	str(XalanDOMString&	theBuffer) const;
+
 	virtual const ResultTreeFragBase&
 	rtree(XPathExecutionContext&	executionContext) const;
 
@@ -161,16 +164,6 @@ public:
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
-	// New member functions for node list compatibility...
-	XalanNode*
-	item(unsigned int	index) const;
-
-	unsigned int
-	getLength() const;
-
-	unsigned int
-	indexOf(const XalanNode*	theNode) const;
-
 	/**
 	 * Release the ResultTreeFrag held by the instance.
 	 */
@@ -184,8 +177,6 @@ public:
 	 */
 	void
 	set(BorrowReturnResultTreeFrag&	theValue);
-
-private:
 
 	class  NodeRefListBaseProxy : public NodeRefListBase
 	{
@@ -212,6 +203,21 @@ private:
 
 		const XResultTreeFrag&	m_xresultTreeFrag;		
 	};
+
+	friend class NodeRefListBaseProxy;
+
+private:
+
+	// New member functions for node list compatibility...
+	XalanNode*
+	item(unsigned int	index) const;
+
+	unsigned int
+	getLength() const;
+
+	unsigned int
+	indexOf(const XalanNode*	theNode) const;
+
 
 	// Data members...
 	BorrowReturnResultTreeFrag		m_value;	

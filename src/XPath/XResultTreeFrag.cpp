@@ -193,6 +193,21 @@ XResultTreeFrag::str(
 
 
 
+void
+XResultTreeFrag::str(XalanDOMString&	theBuffer) const
+{
+	if (isEmpty(m_cachedStringValue) == false)
+	{
+		append(theBuffer, m_cachedStringValue);
+	}
+	else
+	{
+		DOMServices::getNodeData(*m_value, theBuffer);
+	}
+}
+
+
+
 const ResultTreeFragBase&
 XResultTreeFrag::rtree(XPathExecutionContext&	/* executionContext */) const
 {

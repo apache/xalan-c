@@ -109,6 +109,9 @@ public:
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const;
 
+	virtual void
+	str(XalanDOMString&	theBuffer) const;
+
 	// These methods are new to XNumber...
 
 	/**

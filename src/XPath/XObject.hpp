@@ -182,6 +182,14 @@ public:
 			MemberFunctionPtr	function) const = 0;
 
 	/**
+	 * Append the string value directly a string
+	 *
+	 * @param theBuffer The buffer for the data
+	 */
+	virtual void
+	str(XalanDOMString&	theBuffer) const;
+
+	/**
 	 * Cast result object to a result tree fragment.
 	 *
 	 * @param executionContext the current execution context

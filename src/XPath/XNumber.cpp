@@ -137,6 +137,21 @@ XNumber::str(
 
 
 void
+XNumber::str(XalanDOMString&	theBuffer) const
+{
+	if (isEmpty(m_cachedStringValue) == false)
+	{
+		append(theBuffer, m_cachedStringValue);
+	}
+	else
+	{
+		DoubleToDOMString(m_value, theBuffer);
+	}
+}
+
+
+
+void
 XNumber::set(double		theValue)
 {
 	m_value = theValue;

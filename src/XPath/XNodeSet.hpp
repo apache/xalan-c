@@ -140,6 +140,9 @@ public:
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const;
 
+	virtual void
+	str(XalanDOMString&	theBuffer) const;
+
 	virtual const ResultTreeFragBase&
 	rtree(XPathExecutionContext&	executionContext) const;
 

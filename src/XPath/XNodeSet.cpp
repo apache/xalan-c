@@ -200,6 +200,24 @@ XNodeSet::str(
 
 
 
+void
+XNodeSet::str(XalanDOMString&	theBuffer) const
+{
+	if (isEmpty(m_cachedStringValue) == false)
+	{
+		append(theBuffer, m_cachedStringValue);
+	}
+	else if (m_value->getLength() > 0)
+	{
+		const XalanNode* const	theNode = m_value->item(0);
+		assert(theNode != 0);
+
+		DOMServices::getNodeData(*theNode, theBuffer);
+	}
+}
+
+
+
 const ResultTreeFragBase&
 XNodeSet::rtree(XPathExecutionContext&	executionContext) const
 {

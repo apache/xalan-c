@@ -172,6 +172,14 @@ XObject::str(
 
 
 
+void
+XObject::str(XalanDOMString&	theBuffer) const
+{
+	append(theBuffer, str());
+}
+
+
+
 const ResultTreeFragBase&
 XObject::rtree(XPathExecutionContext&	/* executionContext */) const
 {
