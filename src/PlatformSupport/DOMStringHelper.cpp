@@ -1630,7 +1630,7 @@ DOMStringHelper::DoubleToCharacters(
 		TranscodeNumber(
 				theBuffer,
 				theBuffer + theCharsWritten,
-				theResult);
+				&theResult[0]);
 
 		(formatterListener.*function)(
 			theResult,
