@@ -364,7 +364,7 @@ endif
   endif
    
   XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c26
-  ICU_LIB= -L$(ICUROOT)/lib -licuuc30 -L$(ICUI18NROOT)/lib -licui18n30
+  ICU_LIB= -L$(ICUROOT)/lib -licuuc32 -L$(ICUI18NROOT)/lib -licui18n32
 
   LIB = $(LIB_NAME)$(LIB_MAJOR_VER).$(LIB_MINOR_VER)$(SHLIBSUFFIX)
   SO_NAME = $(LIB_NAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
@@ -406,7 +406,7 @@ endif
   LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) -Wl,compat=pm4
 
   XERCES_LIB=$(XERCESCROOT)/lib/libxerces-c2_6_0.x
-  ICU_LIB=$(XERCESCROOT)/lib/libicuuc30.0.x $(XERCESCROOT)/lib/libicui18n30.0.x
+  ICU_LIB=$(XERCESCROOT)/lib/libicuuc32.0.x $(XERCESCROOT)/lib/libicui18n32.0.x
   
   LIB=$(LIB_NAME).$(VER)$(SHLIBSUFFIX) 
   
