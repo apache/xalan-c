@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,15 +55,15 @@
  * <http://www.apache.org/>.
  */
 // Class header file.
-#include "XPathException.hpp"
+#include "XalanXPathException.hpp"
 
 
 
-const XalanDOMString	XPathException::s_emptyString;
+const XalanDOMString	XalanXPathException::s_emptyString;
 
 
 
-XPathException::XPathException(
+XalanXPathException::XalanXPathException(
 			const XalanDOMString&	message,
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
@@ -77,7 +77,7 @@ XPathException::XPathException(
 
 
 
-XPathException::XPathException(
+XalanXPathException::XalanXPathException(
 			const XalanDOMString&	message,
 			const XalanNode*		styleNode,
 			const XalanDOMString&	theType) :
@@ -88,7 +88,7 @@ XPathException::XPathException(
 
 
 
-XPathException::XPathException(
+XalanXPathException::XalanXPathException(
 			const Locator&			theLocator,
 			const XalanDOMString&	theMessage,
 			const XalanNode*		styleNode,
@@ -100,13 +100,13 @@ XPathException::XPathException(
 
 
 
-XPathException::XPathException() :
+XalanXPathException::XalanXPathException() :
 	XSLException(s_emptyString, s_emptyString)
 {
 }
 
 
 
-XPathException::~XPathException()
+XalanXPathException::~XalanXPathException()
 {
 }

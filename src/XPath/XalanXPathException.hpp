@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XPATHEXCEPTION_HEADER_GUARD_1357924680)
-#define XPATHEXCEPTION_HEADER_GUARD_1357924680
+#if !defined(XALANXPATHEXCEPTION_HEADER_GUARD_1357924680)
+#define XALANXPATHEXCEPTION_HEADER_GUARD_1357924680
 
 
 
@@ -78,7 +78,7 @@ class XalanNode;
 
 
 
-class XALAN_XPATH_EXPORT XPathException : public XSLException
+class XALAN_XPATH_EXPORT XalanXPathException : public XSLException
 {
 public:
 
@@ -90,15 +90,15 @@ public:
 	 * @param theLineNumber the line number of the related document, or -1 if not known
 	 * @param theColumnNumber the column number of the related document, or -1 if not known
 	 * @param styleNode the node in the stylesheet where the problem occurred
-	 * @param theType type of exception, default is "XPathException"
+	 * @param theType type of exception, default is "XalanXPathException"
 	 */
-	XPathException(
+	XalanXPathException(
 			const XalanDOMString&	message,
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
 			int						theColumnNumber,
 			const XalanNode*		styleNode = 0,
-			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathException")));
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XalanXPathException")));
 
 	/**
 	 * Constructor
@@ -106,28 +106,28 @@ public:
 	 * @param theLocator The locator instance for error reporting.
 	 * @param theMessage message to write when exception thrown
 	 * @param styleNode the node in the stylesheet where the problem occurred
-	 * @param theType type of exception, default is "XPathException"
+	 * @param theType type of exception, default is "XalanXPathException"
 	 */
-	XPathException(
+	XalanXPathException(
 			const Locator&			theLocator,
 			const XalanDOMString&	theMessage,
 			const XalanNode*		styleNode = 0,
-			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathException")));
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XalanXPathException")));
 
 	/**
 	 * Construct an XPath exeption object.
 	 * 
 	 * @param message message explaining the problem. 
 	 * @param styleNode the node in the stylesheet where the problem occurred
-	 * @param theType type of exception, default is "XPathException"
+	 * @param theType type of exception, default is "XalanXPathException"
 	 */
-	XPathException(
+	XalanXPathException(
 			const XalanDOMString&	message,
 			const XalanNode*		styleNode = 0,
-			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathException")));
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XalanXPathException")));
 
 	virtual
-	~XPathException();
+	~XalanXPathException();
 
 	const XalanNode*
 	getStyleNode() const
@@ -142,7 +142,7 @@ protected:
 	 * 
 	 */
 	explicit
-	XPathException();
+	XalanXPathException();
 
 private:
 
@@ -153,4 +153,4 @@ private:
 
 
 
-#endif	// XPATHEXCEPTION_HEADER_GUARD_1357924680
+#endif	// XALANXPATHEXCEPTION_HEADER_GUARD_1357924680
