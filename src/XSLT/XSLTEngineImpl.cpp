@@ -2565,7 +2565,7 @@ XSLTEngineImpl::evaluateAttrVal(
 										{
 											// Proper close of attribute template.
 											// Evaluate the expression.
-											const XObjectPtr const	xobj =
+											const XObjectPtr	xobj =
 												evalXPathStr(expression, contextNode, namespaceContext, executionContext);
 
 											const XalanDOMString			exprResult(xobj->str());
