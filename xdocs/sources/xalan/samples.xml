@@ -61,7 +61,8 @@
   <ul>
     <li><link anchor="getstarted">Samples to help you get started</link></li>
     <li><link anchor="simpletransform">SimpleTransform</link></li>
-    <li><link anchor="usestylesheetparam">Use StylesheetParam</link></li>    
+    <li><link anchor="usestylesheetparam">UseStylesheetParam</link></li>
+    <li><link anchor="tracelisten">TraceListen</link></li>        
     <li><link anchor="compilestylesheet">CompileStylesheet</link></li>    
     <li><link anchor="xpathwrapper">XPathWrapper</link></li>
     <li><link anchor="externalfunctions">ExternalFunctions</link></li>
@@ -82,12 +83,7 @@
       <li>Examine the application source files. You may also want to modify the source files. Remember that if you
       modify a .cpp file, you must rebuild the executable and place it on the path before you can run the
       modified application.</li>
-     </ol>      
-    <p>The basic command line for running samples is </p> 
-    <p><code><ref>executable</ref></code></p>
-    <p>or</p>
-    <p><code><ref>executable args</ref></code></p>
-    <p>where <ref>executable</ref> is the name of the executable and <ref>args</ref> are the arguments.</p>
+     </ol>
   </s2><anchor name="simpletransform"/>
   <s2 title="SimpleTransform">
     <p>What it does: The SimpleTransform class uses the foo.xsl stylesheet to transform foo.xml, and writes the
@@ -109,6 +105,41 @@
      as a single argument. For example:</p>
      <p><code>UseStylesheetParam param1 "'hello out there'"</code></p>
      <p>See also: <link idref="usagepatterns" anchor="params">Setting stylesheet parameters</link>.</p>     
+  </s2><anchor name="tracelisten"/>
+  <s2 title="TraceListen">
+  <p>What it does: Trace events during a transformation; the transformation uses birds.xsl to transform birds.xml and writes the
+  output to birds.out.</p>
+  <p>You can run it from the TraceListen subdirectory with</p>
+  <p><code>TraceListen <ref>traceFlags</ref></code></p>
+  <p>where <ref>traceFlags</ref> is one or more of the following:</p>
+  <p>&nbsp;&nbsp;<code>-TT</code> (Trace the templates as they are being called)</p>
+  <p>&nbsp;&nbsp;<code>-TG</code> (Trace each result tree generation event)</p>
+  <p>&nbsp;&nbsp;<code>-TS</code> (Trace each selection event)</p>
+  <p>&nbsp;&nbsp;<code>-TTC</code> (Trace the template children as they are being processed)</p>
+  <p>These flags are also available in the <link idref="commandline">command-line utility (TestXSLT)</link>.</p>
+  <p>The core of this example is the following fragment:</p>
+  <source>// Set up a diagnostic writer to be used by the TraceListener...
+XercesStdTextOutputStream  theStdErr(std::cerr);
+XercesDOMPrintWriter       diagnosticsWriter(theStdErr);
+
+// Set up the TraceListener...
+// traceTemplates, traceTemplateChildren, traceGenerationEvent,
+// and TraceSelectionEvent are booleans set by the command line.
+auto_ptr&lt;TraceListener&gt; theTraceListener;
+theTraceListener = auto_ptr&lt;TraceListener&gt;(new TraceListenerDefault(
+        diagnosticsWriter,
+        traceTemplates,
+        traceTemplateChildren,
+        traceGenerationEvent,
+        traceSelectionEvent));
+
+// Add the TraceListener to the XSLT processor...
+theProcessor.setTraceSelects(traceSelectionEvent);
+theProcessor.addTraceListener(theTraceListener.get());
+
+// Perform the transformation
+....</source>
+  
   </s2><anchor name="compilestylesheet"/>    
   <s2 title="CompileStylesheet">
     <p>What it does: Use a compiled stylesheet to perform a series of transformations.</p>
@@ -120,7 +151,7 @@
     <p>This sample uses TestDriver, an executable, and two classes: XPathWrapper and XPathWrapperImp. </p>
     <p>What it does: TestDriver passes XPathWrapper an XML file name, a context node location path, and an XPath
     expression. XPathWrapper in turn passes these arguments to the XPathWrapperImpl evaluate() method, which executes
-    the XPath expression from specified context node in the XML document and returns the nodes (if any) it finds.</p>
+    the XPath expression from specified context node in the XML document and returns the nodes it finds (if any).</p>
      <note>You can use this sample as an aid when you want to find out what a given XPath expression returns from a
      given context node in an XML file.</note>
     <p>Run this sample from the XPathWrapper subdirectory with</p> 
@@ -135,10 +166,10 @@
   ...
   &lt;name first="Paul" last="Dick"/&gt;
 &lt;/doc&gt;</source>
-     <p>You can try command lines like</p>
+    <p>You can try command lines like</p>
     <p><code>TestDriver foo.xml /doc name/@last</code></p>
     <p>and</p>
-    <p><code>TestDriver foo.xml //name[position()="4" ./@first</code></p>
+    <p><code>TestDriver foo.xml //name[position()="4"]./@first</code></p>
     <p>See also: <link idref="usagepatterns" anchor="xpath">Working with XPath expressions</link>.</p>    
   </s2><anchor name="externalfunctions"/>
   <s2 title="ExternalFunctions">

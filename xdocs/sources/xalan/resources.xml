@@ -13,10 +13,16 @@
    ]>     
 <resources>
  	
-  <resource id="Xalan-current" title="Xalan-C++ 1.0.0 XSLT Processor" location="http://xml.apache.org/xalan"/>
-  <resource id="Xalan-c-dist" title="Xalan-C distribution directory" location="http://xml.apache.org/dist/xalan-c/"/>
-  <resource id="LotusXSL-current" title="LotusXSL 1.0.0" location="http://www.alphaworks.ibm.com/tech/LotusXSL"/>
-  <resource id="Xerces-c-dist" title="Xerces-C distribution directory" location="http://xml.apache.org/dist/xerces-c/"/>     
+  <resource id="xalan-c-current" title="Xalan-C++ Version 0.40.0 XSLT Processor" location="http://xml.apache.org/xalan"/>
+  <resource id="xerces-c-used" title="Xerces-C++ Version 1.2.0" location="http://xml.apache.org/xerces-c/index.html"/>   
+
+  <resource id="xalan-c-dist" title="Xalan-C++ distribution directory" location="http://xml.apache.org/dist/"/>
+  <resource id="xerces-c-dist" title="Xerces-C++ distribution directory" location="http://xml.apache.org/dist/xerces-c/"/>
+  <resource id="xalan-c-win32-download" title="Xalan-C_0_40_0-win32.zip" location="http://xml.apache.org/dist/Xalan-C_0_40_0-win32.zip"/>
+  <resource id="xalan-c-linux-download" title="Xalan-C_40_0-linux.tar.gz" location="http://xml.apache.org/dist/Xalan-C_0_40_0-linux.tar.gz"/>
+  
+  <resource id="icu" title="International Components for Unicode(ICU)" location="http://oss.software.ibm.com/developerworks/opensource/icu/project/index.html"/>
+<resource id="icu-download" title="International Components for Unicode(ICU) 1.4.1.2 source files" location="http://oss.software.ibm.com/developerworks/opensource/icu/project/download/index.html"/>
 	
  <resource id="ApacheLicense" title="The Apache Software License, Version 1.1" location="http://xml.apache.org/dist/LICENSE.txt"/>
 	
@@ -29,9 +35,6 @@
   <resource id="DOM" title="DOM" location="http://www.w3.org/DOM"/>
 
     
-  <resource id="xml4c-used" title="Version 3.0.0EA3 of the XML Parser for C++" location="http://www.alphaworks.ibm.com/tech/xml4j"/>    
-  <resource id="xerces-used" title="Version 1.0.3 of Xerces-C++" location="http://xml.apache.org/xerces-c/index.html"/>   
-  
  
   <human-resource id="xalandev" name="Xalan Development Mailing List" mailto="xalan-dev@xml.apache.org"/>
   <human-resource id="sboag" name="Scott Boag" mailto="scott_boag@lotus.com"/>

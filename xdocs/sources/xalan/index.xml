@@ -58,11 +58,11 @@
 
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="Xalan-C Version 1.0.0">
+<s1 title="Xalan-C++ Version 0.30.0">
       
   <s2 title="What is it?">
-    <p>Xalan is an XSL processor for transforming XML documents into HTML, text, or other XML document types. Xalan-C
-     version 1.0.0 represents a complete and a robust C++ reference implementation of the W3C Recommendations for XSL
+    <p>Xalan is an XSL processor for transforming XML documents into HTML, text, or other XML document types. Xalan-C++
+     version 0.30.0 represents an almost complete and a robust C++ reference implementation of the W3C Recommendations for XSL
      Transformations (XSLT) and the XML Path Language (XPath).</p>
     <p>Xalan-C uses the Xerces-C XML parser.</p>
 	</s2>
@@ -77,11 +77,11 @@
        </tr>
        <tr>
          <td>Windows32</td>
-        <td><jump href="http://xml.apache.org/dist/xalan-j/xalan-j_1_0_1.zip">xalan-c_1_0_0.zip</jump></td>
+        <td><jump href="http://xml.apache.org/dist/Xalan-C_0_30_0-win32.zip">Xalan-C_0_30_0-win32.zip</jump></td>
       </tr>
       <tr>
         <td>Linux</td>
-        <td><jump href="http://xml.apache.org/dist/xalan-j/xalan-j_1_0_1.tar.gz">xalan-c_1_0_0.tar.gz</jump></td>
+        <td><jump href="http://xml.apache.org/dist/Xalan-C_0_30_0-linux.tar.gz">Xalan-C_0_30_0-linux.tar.gz</jump></td>
   </tr>
   </table>
   <p>We plan to add builds for other platforms as soon as possible. Volunteers are more than welcome!</p>
@@ -89,7 +89,7 @@
   
   <s2 title="Where do I get Xerces?">
     <p>Both distributions include the Xerces runtime environment for Xalan -- xerces-c_1_1.dll for Windows,
-     and libxerces-c_1_1.so for Linux. To build applications with Xalan and Xerces, you also need the Xerces-C binary
+     and libxerces-c_1_1.so for Linux. To build applications with Xalan and Xerces, you also need the &xml4c;
      binary distribution for your platform, which you can download from the  
      <resource-ref idref="Xerces-c-dist"/>.</p>
      <note>Be sure you are using a compatible Xerces-C build. For information about the build with which this release

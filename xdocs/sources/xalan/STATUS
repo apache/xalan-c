@@ -1,17 +1,19 @@
 <s3 title="Version of Xerces to use"> 
-<p>Xalan-C version 1.0.0 has been tested with Xerces-C version 1.1.0. The Xalan-C 1.1.0 Windows32 download includes xerces-c_1_1.dll. The Xalan-C 1.1.0 Linux download includes libxerces-c_1_1.so.
+<p>The &xslt4c-current; has been tested with &xml4c-used;. The &xslt4c-current; Windows32 download includes xerces-c_1_1.dll. The &xslt4c-current; Linux download includes libxerces-c_1_1.so.
 
- For information about including The Xerces-C dynamic link or shared object library on the system class path, see <link idref="getstarted" anchor="classpath">Setting up the system class path</link>.</p>
+For information about including The Xerces-C dynamic link or shared object library on the path, see <link idref="getstarted" anchor="path">Setting up the system path</link>.</p>
 <p><em>Important</em> You may experience unpredictable anomalies if your Xalan and Xerces builds are not in synch. If you download an update to Xalan, check the release notes to determine which version of Xerces you should use.</p>
 
-</s3>
-<s3 title="To-do tasks for future Xalan releases">
-  <p>We still need to do the following:</p>
+</s3><anchor name="to-do"/>
+<s3 title="To-do tasks for future &xslt4c; releases">
+  <p>To complete our implementation of the <resource-ref idref="XSLT"/>, we must add support for</p>
     <ul>
-      <li>Implement a more efficient mechanism for storing and navigating DOM trees, along the lines of the Xalan-J
-       Document Table Model )<br/><br/>(DTM)<br/><br/></li>
-       <li>Provide a debugging interface to enable the tracing of transformation events<br/><br/></li>
-      <li>Add support for extension elements<br/><br/></li>
+       <li>The fallback element<br/><br/></li>
+       <li>The exclude-result-prefixes attribute<br/><br/></li>
+       <li>The output encoding attribute<br/><br/></li>
+       <li>Extension elements<br/><br/></li>
     </ul>
+    <p>The XSLT specification makes no such requirement, but we plan to implement a more efficient mechanism for storing and
+    navigating DOM trees, along the lines of the Xalan-J Document Table Model (DTM)</p>
     <p>Watch the <human-resource-ref idref="xalandev"/> for more information and for ideas about how you can get involved.</p>    
 </s3>    
