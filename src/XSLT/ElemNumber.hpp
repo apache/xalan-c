@@ -103,19 +103,12 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<DecimalToRoman>					DecimalToRomanVectorType;
 	typedef vector<int>								IntArrayType;
-	typedef vector<Counter>							CounterVectorType;
-	typedef map<const ElemNumber*,
-				CounterVectorType,
-				less<const ElemNumber*> >			ElemToCounterVectorMapType;
 	typedef map<XalanDOMChar,
 				XalanNumberingResourceBundle,
 				less<XalanDOMChar> >				NumberingResourceBundleMapType;
 #else
 	typedef std::vector<DecimalToRoman>				DecimalToRomanVectorType;
 	typedef std::vector<int>						IntArrayType;
-	typedef std::vector<Counter>					CounterVectorType;
-	typedef std::map<const ElemNumber*,
-					 CounterVectorType>				ElemToCounterVectorMapType;
 	typedef std::map<XalanDOMChar,
 					 XalanNumberingResourceBundle>	NumberingResourceBundleMapType;
 #endif
@@ -161,6 +154,20 @@ public:
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
+
+	/**
+	 * Get the previous node to be counted.
+	 */
+	XalanNode* getPreviousNode(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						pos) const;
+
+	/**
+	 * Get the target node that will be counted..
+	 */
+	XalanNode* getTargetNode(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceNode) const;
 
 protected:
 
@@ -214,20 +221,6 @@ protected:
 	getCountString(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceTree, 
-			XalanNode*						sourceNode) const;
-
-	/**
-	 * Get the previous node to be counted.
-	 */
-	XalanNode* getPreviousNode(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						pos) const;
-
-	/**
-	 * Get the target node that will be counted..
-	 */
-	XalanNode* getTargetNode(
-			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceNode) const;
 
 	/**
@@ -493,145 +486,6 @@ private:
 			int				m_maxPosition;
 			XalanDOMString	m_str;
 	}; // end NumberFormatStringTokenizer
-
-	/**
-	 * <meta name="usage" content="internal"/>
-	 * This is a table of counters, keyed by ElemNumber objects, each 
-	 * of which has a list of Counter objects.  This really isn't a true 
-	 * table, it is more like a list of lists (there must be a technical 
-	 * term for that...).
-	 */
-	class CountersTable
-	{
-		public:
-
-			/**
-			 * Construct a CountersTable.
-			 */
-			CountersTable() : 
-				m_countersMade(0)
-				{
-				};
-
-
-			/**
-			 * Count forward until the given node is found, or until 
-			 * we have looked to the given amount.
-			 * @node The node to count.
-			 * @return The node count, or 0 if not found.
-			 */
-			int
-			countNode(
-					StylesheetExecutionContext&		support,
-					const ElemNumber*				numberElem,
-					XalanNode*						node);
-
-		private:
-
-			/**
-			 * Get the list of counters that corresponds to 
-			 * the given ElemNumber object.
-			 */
-			CounterVectorType& getCounters(const ElemNumber*	numberElem);
-
-			/**
-			 * Add a list of counted nodes that were built in backwards document 
-			 * order, or a list of counted nodes that are in forwards document 
-			 * order.
-			 */
-			void appendBtoFList(MutableNodeRefList& flist, MutableNodeRefList& blist);
-
-			/**
-			 * Place to collect new counters.
-			 */
-			MutableNodeRefList m_newFound;
-
-			// For diagnostics
-			int m_countersMade;
-
-			ElemToCounterVectorMapType	m_counterMap;
-
-	}; // end CountersTable
-
-	friend class CountersTable;
-
-	/**
-	 * <meta name="usage" content="internal"/>
-	 * A class that does incremental counting for support of xsl:number.
-	 * This class stores a cache of counted nodes (m_countNodes). 
-	 * It tries to cache the counted nodes in document order... 
-	 * the node count is based on its position in the cache list 
-	 */
-	struct Counter
-	{
-		/**
-		 * The start count from where m_countNodes counts 
-		 * from.  In other words, the count of a given node 
-		 * in the m_countNodes vector is node position + 
-		 * m_countNodesStartCount.
-		 */
-		int							m_countNodesStartCount;
-
-		/**
-		 * A vector of all nodes counted so far.
-		 */
-		MutableNodeRefList			m_countNodes;
-
-		/**
-		 * The node from where the counting starts.  This is needed to 
-		 * find a counter if the node being counted is not immediatly
-		 * found in the m_countNodes vector.
-		 */
-		const XalanNode*			m_fromNode;
-
-		/**
-		 * The owning xsl:number element.
-		 */
-		const ElemNumber*			m_numberElem;
-
-		/**
-		 * Construct a counter object.
-		 */
-		Counter(
-				const ElemNumber*		numberElem,
-				MutableNodeRefList&		countNodes) :
-			m_countNodesStartCount(0),
-			m_countNodes(countNodes),
-			m_fromNode(0),
-			m_numberElem(numberElem)
-		{
-		}
-
-		/**
-		 * Construct a counter object.
-		 */
-		Counter(const ElemNumber*	numberElem = 0) :
-			m_countNodesStartCount(0),
-			m_countNodes(),
-			m_fromNode(0),
-			m_numberElem(numberElem)
-		{
-		}
-
-		/**
-		 * Try to find a node that was previously counted. If found, return a
-		 * positive integer that corresponds to the count.
-		 * @param node The node to be counted.
-		 * @returns The count of the node, or -1 if not found.
-		 */
-		int
-		getPreviouslyCounted(
-				StylesheetExecutionContext&		support,
-				const XalanNode*				node) const;
-
-		/**
-		 * Get the last node in the list.
-		 */
-		XalanNode*
-		getLast();
-	}; // end Counter
-
-	friend struct Counter;
 
 }; // end ElemNumber
 

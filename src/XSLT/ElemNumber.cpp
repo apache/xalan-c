@@ -84,6 +84,7 @@
 
 #include "AVT.hpp"
 #include "Constants.hpp"
+#include "CountersTable.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
@@ -394,7 +395,7 @@ ElemNumber::getCountString(
 	}
 	else
 	{
-		CountersTable	ctable;
+		CountersTable&	ctable = executionContext.getCountersTable();
 
 		if(Constants::NUMBERLEVEL_ANY == m_level)
 		{
@@ -428,10 +429,12 @@ ElemNumber::getCountString(
 	return numberList.size() > 0 ? formatNumberList(executionContext, numberList, sourceNode) : XalanDOMString();
 }
 
+
+
 XalanNode*
 ElemNumber::getPreviousNode(
-		StylesheetExecutionContext&		executionContext,
-		XalanNode* pos) const
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						pos) const
 {
 	// Create an XPathGuard, since we may need to
 	// create a new XPath...
@@ -1357,136 +1360,6 @@ ElemNumber::NumberFormatStringTokenizer::countTokens() const
 		count++;
 	}
 	return count;
-}
-
-
-
-ElemNumber::CounterVectorType& ElemNumber::CountersTable::getCounters(const ElemNumber* numberElem)
-{
-	return m_counterMap[numberElem];
-}
-
-
-
-void
-ElemNumber::CountersTable::appendBtoFList(MutableNodeRefList& flist, MutableNodeRefList& blist)
-{
-	const int n = blist.getLength();
-
-	for(int i = n - 1; i >= 0; i--)
-	{
-		flist.addNode(blist.item(i));
-	}
-}
-
-
-
-int
-ElemNumber::CountersTable::countNode(
-			StylesheetExecutionContext&		support,
-			const ElemNumber*				numberElem,
-			XalanNode*						node)
-{
-	int		count = 0;
-
-	CounterVectorType&	counters = getCounters(numberElem);
-
-	const CounterVectorType::size_type	nCounters = counters.size();
-
-	XalanNode* 	target = numberElem->getTargetNode(support, node);
-
-	if(0 != target)
-	{
-		for(CounterVectorType::size_type i = 0; i < nCounters; i++)
-		{    
-			const Counter&	counter = counters[i];
-
-			count = counter.getPreviouslyCounted(support, target);
-			if(count > 0)
-				return count;
-		}
-
-		// In the loop below, we collect the nodes in backwards doc order, so 
-		// we don't have to do inserts, but then we store the nodes in forwards 
-		// document order, so we don't have to insert nodes into that list, 
-		// so that's what the appendBtoFList stuff is all about.  In cases 
-		// of forward counting by one, this will mean a single node copy from 
-		// the backwards list (m_newFound) to the forwards list
-		// (counter.m_countNodes).
-		count = 0;
-		for(; 0 != target; target = numberElem->getPreviousNode(support, target))
-		{   
-			// First time in, we should not have to check for previous counts, 
-			// since the original target node was already checked in the 
-			// block above.
-			if(0 != count)  
-			{
-				for(CounterVectorType::size_type i = 0; i < nCounters; i++)
-				{
-					Counter&	counter = counters[i];
-
-					const unsigned int	cacheLen = counter.m_countNodes.getLength();
-
-					if((cacheLen > 0) &&
-							(counter.m_countNodes.item(cacheLen-1) == target))
-					{
-						count += cacheLen + counter.m_countNodesStartCount;
-						if(cacheLen > 0)
-							appendBtoFList(counter.m_countNodes, m_newFound);
-						m_newFound.clear();
-						return count;
-					}
-				}
-			}
-			m_newFound.addNode(target);
-			count++;
-		}
-		// If we got to this point, then we didn't find a counter, so make 
-		// one and add it to the list.
-		ElemNumber::Counter counter(numberElem);
-		m_countersMade++; // for diagnostics
-		appendBtoFList(counter.m_countNodes, m_newFound);
-		m_newFound.clear();
-		counters.push_back(counter);
-	}
-
-	return count;
-}
-
-
-
-int
-ElemNumber::Counter::getPreviouslyCounted(
-		StylesheetExecutionContext&		support,
-		const XalanNode*				node) const
-{
-	const int n = m_countNodes.getLength();
-	int result = 0;
-
-	for(int i = n-1;i >= 0; i--)
-	{
-		const XalanNode* countedNode = m_countNodes.item(i);
-		if(node == countedNode)
-		{
-			// Since the list is in backwards order, the count is 
-			// how many are in the rest of the list.
-			result = i + 1 + m_countNodesStartCount;
-			break;
-		}
-
-		// Try to see if the given node falls after the counted node...
-		// if it does, don't keep searching backwards.
-		if(support.isNodeAfter(*countedNode, *node))
-			break;
-	}
-
-	return result;
-}
-
-XalanNode* ElemNumber::Counter::getLast()
-{
-	const int size = m_countNodes.getLength();
-	return (size > 0) ? m_countNodes.item(size-1) : 0;
 }
 
 
