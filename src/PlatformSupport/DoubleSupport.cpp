@@ -72,11 +72,15 @@ const double	DoubleSupport::s_positiveInfinity = HUGE_VAL;
 const double	DoubleSupport::s_negativeInfinity = -DoubleSupport::s_positiveInfinity;
 const double	DoubleSupport::s_positiveZero = 0.0;
 
+#if !defined(_AIX)
+const double	DoubleSupport::s_negativeZero = -DoubleSupport::s_positiveZero;
+#else
 // Some compiler are overly aggressive and think that there is no such thing as -0,
 // so we have to get it in a very sneaky way.
 double	theDummy;
 
 const double	DoubleSupport::s_negativeZero = modf(-7.0, &theDummy);
+#endif
 
 
 
