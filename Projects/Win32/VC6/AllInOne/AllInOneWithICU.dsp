@@ -211,6 +211,22 @@ SOURCE=..\..\..\..\src\xalanc\Include\XalanMap.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\Include\XalanMemMgrAutoPtr.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\Include\XalanMemMgrHelper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\Include\XalanMemMngArrayAllocate.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\Include\XalanObjectCache.hpp
 # End Source File
 # Begin Source File
@@ -704,6 +720,10 @@ SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanInMemoryMessageLoader.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanLocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagement.cpp
 # End Source File
 # Begin Source File
 
