@@ -320,7 +320,7 @@ XObjectFactoryDefault::createUnknown(const XalanDOMString&	theValue)
 const XObjectPtr
 XObjectFactoryDefault::createNumber(double	theValue)
 {
-	if (m_xnumberCache.size() > 0)
+	if (m_xnumberCache.empty() == false)
 	{
 		XNumber* const	theXNumber = m_xnumberCache.back();
 
@@ -359,7 +359,7 @@ XObjectFactoryDefault::createNumber(const XToken&	theValue)
 const XObjectPtr
 XObjectFactoryDefault::createNodeSet(BorrowReturnMutableNodeRefList&	theValue)
 {
-	if (m_xnodesetCache.size() > 0)
+	if (m_xnodesetCache.empty() == false)
 	{
 		XNodeSet* const		theXObject = m_xnodesetCache.back();
 

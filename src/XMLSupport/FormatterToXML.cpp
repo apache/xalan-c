@@ -1054,7 +1054,7 @@ FormatterToXML::endElement(const XMLCh* const	name)
 
 	if (hasChildNodes == true) 
 	{
-		if (m_preserves.size() == 0)
+		if (m_preserves.empty() == true)
 		{
 			m_ispreserve = false;
 		}
@@ -1596,7 +1596,7 @@ FormatterToXML::childNodesWereAdded()
 {
 	bool	fResult = false;
 
-	if (m_elemStack.size() > 0)
+	if (m_elemStack.empty() == false)
 	{
 		fResult = m_elemStack.back();
 
