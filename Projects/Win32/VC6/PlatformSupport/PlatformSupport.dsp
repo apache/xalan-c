@@ -207,6 +207,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringCache.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringHashTable.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringPool.cpp
 # End Source File
 # Begin Source File
@@ -376,6 +380,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormatSymbols.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringCache.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringHashTable.hpp
 # End Source File
 # Begin Source File
 
