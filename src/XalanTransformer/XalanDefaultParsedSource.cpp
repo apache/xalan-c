@@ -58,7 +58,7 @@
 
 
 
-#include <xercesc/sax/InputSource.hpp>
+#include <sax/InputSource.hpp>
 
 
 
