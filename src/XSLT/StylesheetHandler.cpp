@@ -118,7 +118,7 @@ StylesheetHandler::StylesheetHandler(
 	m_processor(processor),
 	m_stylesheet(stylesheetTree),
 	m_constructionContext(constructionContext),
-	m_includeBase(m_stylesheet.getBaseIdentifier()),
+	m_includeBase(),
 	m_pTemplate(0),
 	m_pLastPopped(0),
 	m_inTemplate(false),
@@ -131,6 +131,7 @@ StylesheetHandler::StylesheetHandler(
 	m_pLXSLTExtensionNSH(0),
 	m_elemStack()
 {
+	m_includeBase = m_stylesheet.getBaseIdentifier();
 }
 
 
