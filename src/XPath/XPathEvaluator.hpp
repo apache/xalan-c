@@ -109,12 +109,16 @@ class XALAN_XPATH_EXPORT XPathEvaluator
 public:
 
 	// Static initializer to be called before any instances are
-	// created.
+	// created.  The call is _not_ thread-safe, you must only call
+	// it once, unless you have called terminate previously, and
+	// you want to re-initialize the library.
 	static void
 	initialize();
 
-	// Static terminator to be called when after all instances
-	// are destroyed.
+	// Static terminator to be called after all instances
+	// are destroyed.  The call is _not_ thread-safe.  Once
+	// terminated, you can call initialize() again, to
+	// re-initialize the library.
 	static void
 	terminate();
 
