@@ -33,8 +33,8 @@ and provide users with programming hints on how to utilize the features in their
 <anchor name="memory"/>
 <s2 title="Pluggable Memory Management">
 <p>Pluggable memory management was added as a new feature in &xslt4c-current;.  This feature introduces an
-object called MemoryManager which allows users with a deeper understanding of their application's 
-characteristics to utilize a more efficient allocation method.  This MemoryManager object can be applied to 
+object called MemoryManager which allows applications with stricter memory management requirements to 
+utilize a more efficient allocation method.  This MemoryManager object can be applied to 
 each processor instance, thus recovery procedures from memory leaks or processor crashes will be applied to 
 the associated instance only.</p>
 <p>The memory management model is similar to the memory management feature provided by &xml4c;.  For more 

@@ -54,20 +54,45 @@
 <anchor name="bugfixes"/>
 <s2 title="Bugs Fixed in this Release">
 <p>The bugs fixed in this release include:</p>
-  <table>
-      <tr>
-         <th>JIRA #</th>
-         <th>Abstract</th>
-      </tr>
-      <tr>
-         <td>XALANC-414</td>
-         <td>DOCS: Apache 2.0 license update</td>
-      </tr>
-      <tr>
-         <td>XALANC-428</td>
-         <td>Usage patterns doc spelling fixes</td>
-      </tr>
-   </table>
+<ul>
+   <li>Fixed bug in binary operators. Failed to detect a missing term. (XPathProcessorImpl.cpp, XPathProcessorImpl.hpp)</li>
+   <li>Fixed threadsafe issues in XalanEXSLTDateTime. (Bugzilla 28818) (XalanEXSLTDateTime.cpp)</li>
+   <li>Fixed incorrect linefeed serialization after an XML declaration. (various files) </li>
+   <li>Fixed behaviour of xsl:number to conform to XSLT erratum E24 (See http://www.w3.org/1999/11/REC-xslt-19991116-errata/). 
+       (ElemNumber.cpp) </li>
+   <li>Fixed memory corruption when encoding of the output is set to UTF-16. (Jira XALANC-438) (FormatterToXML_UTF16.cpp)</li>
+   <li>Fixed InvalidStackContextException exception. endExecuteChildren() not being called. (ElemVariable.cpp, ElemWithParam.cpp) </li>
+   <li>Fixed problem with global variables. (Bugzilla 27959) (VariablesStack.cpp) </li>
+   <li>Fixed bug in capacity(). (XalanDOMString.hpp) </li>
+   <li>Fixed bug in creation/deletion of key maps (key-value/node-list pairs) for tree-fragments. (Jira XALANC-425) 
+       (StylesheetExecutionContextDefault.cpp) </li>
+   <li>Fixed leakage of DOMStringPrintWriter instances. (StylesheetExecutionContextDefault.cpp)</li>
+   <li>Fixed bug in reset(). (StylesheetExecutionContextDefault.hpp)</li>
+   <li>Fixed bug in with the omit-xml-declaration attribute (xsl:output). (Bugzilla 29545) (FormatterToXMLBase.cpp)</li>
+   <li>Calling a named template should not change the current template rule. (Bugzilla 27841) (various files)</li>
+   <li>Fixed conflict resolution problem for unique attributes with the same qname. (Bugzilla 23955) (ElemAttribute.cpp)</li>
+   <li>Fixed problem with out-of-scope xsl:variable's not being detected in certain circumstances. 
+      (Bugzilla 29079) (ElemTemplateElement.cpp)</li>
+   <li>Fixed bug in exslt extension function date-time().  Wrong GMT offsets were being reported. 
+      (Bugzilla 27365) (XalanEXSLTDateTime.cpp)</li>
+   <li>Fixed bug in XalanSourceTreeElementNA::getLocalName(). (Bugzilla 27982) (XalanSourceTreeElementNA.cpp)</li>
+   <li>Fixed bug in XalanTransformer::initialize() (Bugzilla 22350)  (XalanTransformer.cpp)</li>
+   <li>Cleaned up whitespace stripping. Fixed bug with whitespace stripping and xsl:copy-of. (various files)</li>
+   <li>Cleaned up embedded string literals and unnecessary copies. (various files)</li>  
+   <li>Removed createDOMFactory() call, because we cannot truly support it. (XMLParserLiaison.hpp)</li>
+   <li>Cleaned up minor spelling problems in XalanMsg_en_US.xlf. (Bugzilla 30750)</li>
+   <li>Fixed compilation problems with cygwin, gcc 2.95.3 and Tru64.</li>
+   <li>Fixed compilation problems with HP aCC v3.52. (Bugzilla 29983)</li>
+   <li>Fixed compilation problem with gcc 3.4.0 (Jira XALANC-423)</li>   
+   <li>Fixed Win64 linkage problem.  Do not link with the Intel's default libmmd.lib library.</li>
+   <li>Fixed problem with INSTALL_{PROGRAM->DATA}. (Bugzilla 27404)</li>
+   <li>Build fails if no ICUROOT is set. (Jira XALANC-422)</li>
+   <li>FreeBSD configure changes for threading.  (Bugzilla 27406)</li>
+   <li>Update runConfigure to include new HP Itanium platform (hp-11-ia64). (Bugzilla 28452)</li>
+   <li>Fixed AIX packaging bug. ICU on AIX now produces archives instead of shared objects.</li>
+   <li>Fixed bug in CompileStylesheet.dsp that prevented building the sample on Win32.</li>
+   <li>Fixed spelling errors in usagepatterns.xml. (JIRA XALANC-428)</li>
+</ul>
 </s2>
 
 <anchor name="bugs"/>
