@@ -221,18 +221,24 @@ public:
 	FileUtility::checkAPIResults(const XalanDOMString& actual, 
 								 const XalanDOMString& expected,
 								 char* msg,
-								 XMLFileReporter& logfile);
+								 XMLFileReporter& logfile,
+								 const XalanDOMString& outputFile,
+								 const XalanDOMString& goldFile);
 
 	void
-	FileUtility::checkAPIErrorResults(const char* actual, 
-									  const char* expected,
-									  char* msg,
-									  XMLFileReporter& logfile)
+	FileUtility::checkAPIResults(const char* actual, 
+								 const char* expected,
+								 char* msg,
+								 XMLFileReporter& logfile,
+								 const XalanDOMString& outputFile,
+								 const XalanDOMString& goldFile								 )
 	{
 		FileUtility::checkAPIResults(XalanDOMString(actual), 
 									 XalanDOMString(expected),
 									 msg,
-									 logfile);
+									 logfile,
+									 outputFile,
+									 goldFile);
 	}
 
 	/**

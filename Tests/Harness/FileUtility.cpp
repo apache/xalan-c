@@ -338,7 +338,9 @@ void
 FileUtility::checkAPIResults(const XalanDOMString& actual, 
 						  const XalanDOMString& expected, 
 						  char* msg,
-						  XMLFileReporter& logfile)
+						  XMLFileReporter& logfile,
+						  const XalanDOMString& outputFile, 
+						  const XalanDOMString& goldFile)
 {
 	if(actual == expected)
 	{
@@ -358,7 +360,12 @@ FileUtility::checkAPIResults(const XalanDOMString& actual,
 
 		actexp.insert(Hashtable::value_type(XalanDOMString("exp"), expected));
 		actexp.insert(Hashtable::value_type(XalanDOMString("act"), actual));
+		actexp.insert(Hashtable::value_type(XalanDOMString("xsl"), data.xslFileURL));
+		actexp.insert(Hashtable::value_type(XalanDOMString("xml"), data.xmlFileURL));
+		actexp.insert(Hashtable::value_type(XalanDOMString("result"), outputFile));
+		actexp.insert(Hashtable::value_type(XalanDOMString("gold"), goldFile));
 
+		// Todo: Need to determine if I should check for missing gold in these cases.
 		logfile.logCheckFail(data.testOrFile, actexp);
 
 	}
