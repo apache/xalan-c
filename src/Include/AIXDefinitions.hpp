@@ -106,6 +106,7 @@
 #define XALAN_TEMPLATE_FUNCTION_NO_DEFAULT_PARAMETERS
 
 // STL Port Definitions
+#define _REENTRANT
 #define __STL_NO_SGI_IOSTREAMS
 #include <stl/_config.h>
 

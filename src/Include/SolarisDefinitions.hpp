@@ -109,6 +109,7 @@
 
 // STL Port Definitions
 #define __STL_NO_SGI_IOSTREAMS
+#define _REENTRANT
 #include <stl/_config.h>
 
 #endif
