@@ -142,23 +142,23 @@ FormatterToHTML::startDocument()
 		// specified
 		if((! isEmpty(m_doctypeSystem)) || (! isEmpty(m_doctypePublic)))
 		{
-			m_writer.write("<!DOCTYPE HTML");          
+			m_writer.write(XALAN_STATIC_UCODE_STRING("<!DOCTYPE HTML"));          
 			if(! isEmpty(m_doctypePublic))
 			{
-				m_writer.write(" PUBLIC \"");
+				m_writer.write(XALAN_STATIC_UCODE_STRING(" PUBLIC \""));
 				m_writer.write(m_doctypePublic);
-				m_writer.write("\"");
+				m_writer.write(XALAN_STATIC_UCODE_STRING("\""));
 			}
 			if(! isEmpty(m_doctypeSystem))
 			{
 				if(isEmpty(m_doctypePublic))
-					m_writer.write(" SYSTEM \"");
+					m_writer.write(XALAN_STATIC_UCODE_STRING(" SYSTEM \""));
 				else
-					m_writer.write(" \"");
+					m_writer.write(XALAN_STATIC_UCODE_STRING(" \""));
 				m_writer.write(m_doctypeSystem);
-				m_writer.write("\"");
+				m_writer.write(XALAN_STATIC_UCODE_STRING("\""));
 			}
-			m_writer.write(">");
+			m_writer.write(XALAN_STATIC_UCODE_STRING(">"));
 			m_writer.write(m_lineSep);
       }              
     }
@@ -195,24 +195,24 @@ FormatterToHTML::startElement(
 		{
 			if((! isEmpty(m_doctypeSystem)) || (! isEmpty(m_doctypePublic)))
 			{
-				m_writer.write("<!DOCTYPE ");
+				m_writer.write(XALAN_STATIC_UCODE_STRING("<!DOCTYPE "));
 				m_writer.write(name);
 				if(! isEmpty(m_doctypePublic))
 				{
-					m_writer.write(" PUBLIC \"");
+					m_writer.write(XALAN_STATIC_UCODE_STRING(" PUBLIC \""));
 					m_writer.write(m_doctypePublic);
-					m_writer.write("\"");
+					m_writer.write(XALAN_STATIC_UCODE_STRING("\""));
 				}
 				if(! isEmpty(m_doctypeSystem))
 				{
 					if(isEmpty(m_doctypePublic))
-						m_writer.write(" SYSTEM \"");
+						m_writer.write(XALAN_STATIC_UCODE_STRING(" SYSTEM \""));
 					else
-						m_writer.write(" \"");
+						m_writer.write(XALAN_STATIC_UCODE_STRING(" \""));
 					m_writer.write(m_doctypeSystem);
-					m_writer.write("\"");
+					m_writer.write(XALAN_STATIC_UCODE_STRING("\""));
 				}
-				m_writer.write(">");
+				m_writer.write(XALAN_STATIC_UCODE_STRING(">"));
 				m_writer.write(m_lineSep);
 			}
 		}
@@ -314,24 +314,24 @@ FormatterToHTML::endElement(
 		{
 			if (shouldIndent == true)
 				indent(m_writer, m_currentIndent);
-			m_writer.write("</");
+			m_writer.write(XALAN_STATIC_UCODE_STRING("</"));
 			m_writer.write(name);
-			m_writer.write(">");
+			m_writer.write(XALAN_STATIC_UCODE_STRING(">"));
 		}
 		else
 		{
 			if(s_empties.find(toUpperCase(name)) == s_empties.end())
 			{
-				m_writer.write(">");
+				m_writer.write(XALAN_STATIC_UCODE_STRING(">"));
 				if (shouldIndent)
 					indent(m_writer, m_currentIndent);
-				m_writer.write("</");
+				m_writer.write(XALAN_STATIC_UCODE_STRING("</"));
 				m_writer.write(name);
-				m_writer.write(">");
+				m_writer.write(XALAN_STATIC_UCODE_STRING(">"));
 			}
 			else
 			{
-				m_writer.write(">");
+				m_writer.write(XALAN_STATIC_UCODE_STRING(">"));
 			}
 		}
 /*
@@ -485,9 +485,9 @@ FormatterToHTML::entityReference(const XMLCh* const	name)
 {
 	try
 	{
-		m_writer.write("&");
+		m_writer.write(XALAN_STATIC_UCODE_STRING("&"));
 		m_writer.write(name);
-		m_writer.write(";");
+		m_writer.write(XALAN_STATIC_UCODE_STRING(";"));
 	}
 	catch(...)
 	{
@@ -588,15 +588,15 @@ FormatterToHTML::processAttribute(
 
 			if(s_attrempties.find(aname) == s_attrempties.end())
 			{
-				m_writer.write(' ');
+				m_writer.write(XALAN_STATIC_UCODE_STRING(" "));
 				m_writer.write(name);
 				m_writer.write(XALAN_STATIC_UCODE_STRING("=\""));
 				m_writer.write(pval);
-				m_writer.write('\"');
+				m_writer.write(XALAN_STATIC_UCODE_STRING("\""));
 			}
 			else
 			{
-				m_writer.write(' ');
+				m_writer.write(XALAN_STATIC_UCODE_STRING(" "));
 				if((pval.length() == 0) || equalsIgnoreCase(pval, aname))
 				{
 					m_writer.write(name);
@@ -606,7 +606,7 @@ FormatterToHTML::processAttribute(
 					m_writer.write(name);
 					m_writer.write(XALAN_STATIC_UCODE_STRING("=\""));
 					m_writer.write(pval);
-					m_writer.write('\"');
+					m_writer.write(XALAN_STATIC_UCODE_STRING("\""));
 				}
 			}
 		}
