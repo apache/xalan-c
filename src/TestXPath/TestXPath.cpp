@@ -1198,6 +1198,7 @@ TestAxes(
 {
 	const XalanDOMString	theProtocol(XALAN_STATIC_UCODE_STRING("file://"));
 	const XalanDOMString	theBaseURL = theProtocol + theDirectory;
+
 #if defined(WIN32)
 	const XalanDOMString	theSearchSpecification(theDirectory + "\\*");
 #else
@@ -1205,7 +1206,7 @@ TestAxes(
 #endif
 	const XalanDOMString	theXMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XalanDOMString>		FileNameVectorType;
 #else
 	typedef std::vector<XalanDOMString>	FileNameVectorType;
@@ -1303,9 +1304,7 @@ int
 main(int			/* argc */,
 	 const char*	/* argv */ [])
 {
-#if !defined (XALAN_NO_NAMESPACES)
-	using std::cout;
-#endif
+	XALAN_USING_STD(cout)
 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);

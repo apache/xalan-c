@@ -79,7 +79,7 @@ class NodeNameTreeWalker : public TreeWalker
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XalanNode*>			NodeVectorType;
 #else
 	typedef std::vector<XalanNode*>		NodeVectorType;
