@@ -878,6 +878,26 @@ FileUtility::compareSerializedResults(
  
 }
 
+
+
+static void
+replaceNonAsciiCharacters(
+			char*	theBuffer,
+			char	theReplacementChar)
+{
+	while(*theBuffer)
+	{
+		if (unsigned(*theBuffer) > 127)
+		{
+			*theBuffer = theReplacementChar;
+		}
+
+		++theBuffer;
+	}
+}
+
+
+
 /*	This routine is used to compare the results against the gold when one or both of 
 //  fails to parse without throwing a SAXException. When a failure is detected the 'data' 
 //  structure used to report detailed info about a failure is filled in.
@@ -894,8 +914,10 @@ FileUtility::fileCompare(
 			const char*		goldFile,
 			const char*		outputFile)
 {
-	char rline[132] = {'0'};	// declare buffers to hold single line from file
-	char gline[132] = {'0'};	
+	const unsigned long		maxBuffer = 132;
+
+	char rline[maxBuffer] = {'0'};	// declare buffers to hold single line from file
+	char gline[maxBuffer] = {'0'};	
 	char temp[10];				// buffer to hold line number
 	char lineNum = 1;
 
@@ -945,11 +967,16 @@ FileUtility::fileCompare(
 			if (gline[i] == rline[i]) 
 			{
 				i++;
-				continue;
 			}
-			else 
+			else
 			{	// If there is a mismatch collect up the fail data and return false.  To ensure that 
 				// the results can be seen in the browser enclose the actual/expected in CDATA Sections.
+
+				// Replace any non-ASCII characters.  Otherwise, we would have to encode them
+				// in UTF-8, which is a huge pain.
+				replaceNonAsciiCharacters(gline, '?');
+				replaceNonAsciiCharacters(rline, '?');
+
 				data.msg = "Text based comparison failure";
 				data.expected = XalanDOMString("<![CDATA[") + XalanDOMString(gline) + XalanDOMString("]]>");
 				data.actual = XalanDOMString("<![CDATA[") + XalanDOMString(rline) + XalanDOMString("]]>");
