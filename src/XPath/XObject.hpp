@@ -396,6 +396,7 @@ class XALAN_XPATH_EXPORT XObjectPtr
 public:
 
 	friend bool operator==(const XObjectPtr&, const XObjectPtr&);
+	friend bool operator<(const XObjectPtr&, const XObjectPtr&);
 
 	/**
 	 * Create an XObjectPtr.
@@ -498,6 +499,16 @@ operator!=(
 			const XObjectPtr&	theRHS)
 {
 	return !(theLHS == theRHS);
+}
+
+
+
+inline bool
+operator<(
+			const XObjectPtr&	theLHS,
+			const XObjectPtr&	theRHS)
+{
+	return theLHS.m_xobjectPtr < theRHS.m_xobjectPtr;
 }
 
 
