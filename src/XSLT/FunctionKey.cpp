@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -219,5 +219,6 @@ FunctionKey::clone() const
 const XalanDOMString
 FunctionKey::getError() const
 {
-	return "The key() function takes two arguments!";
+	return XALAN_STATIC_UCODE_STRING(
+		"The key() function takes two arguments!");
 }

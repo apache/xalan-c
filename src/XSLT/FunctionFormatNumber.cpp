@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -199,5 +199,6 @@ FunctionFormatNumber::clone() const
 const XalanDOMString
 FunctionFormatNumber::getError() const
 {
-	return "The format-number() function takes two or three arguments!";
+	return XALAN_STATIC_UCODE_STRING(
+		"The format-number() function takes two or three arguments!");
 }

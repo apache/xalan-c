@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -171,5 +171,6 @@ FunctionSystemProperty::clone() const
 const XalanDOMString
 FunctionSystemProperty::getError() const
 {
-	return "The system-property() function takes a single argument!";
+	return XALAN_STATIC_UCODE_STRING(
+		"The system-property() function takes a single argument!");
 }

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -177,6 +177,7 @@ FunctionGenerateID::clone() const
 const XalanDOMString
 FunctionGenerateID::getError() const
 {
-	return "The generate-id function takes zero or one arguments!";
+	return XALAN_STATIC_UCODE_STRING(
+		"The generate-id function takes zero or one arguments!");
 }
 
