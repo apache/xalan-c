@@ -122,6 +122,8 @@ Usage()
 		 << endl
 		 << "  -a                    Use xml-stylesheet PI, not the 'stylesheet' argument"
 		 << endl
+		 << "  -e encoding           Force the specified encoding for the output."
+		 << endl
 		 << "  -i integer            Indent the specified amount."
 		 << endl
 		 << "  -m                    Omit the META tag in HTML output."
@@ -150,6 +152,7 @@ XALAN_USING_XALAN(XalanTransformer)
 XALAN_USING_XALAN(XSLTInputSource)
 
 
+
 class Params
 {
 public:
@@ -163,6 +166,7 @@ public:
 		m_inFileName(0),
 		m_xslFileName(0),
 		m_outFileName(0),
+		m_encoding(0),
 		m_params(),
 		m_maxParams(maxParams),
 		m_currentParam(0)
@@ -235,6 +239,8 @@ public:
 	const char*		m_xslFileName;
 	const char*		m_outFileName;
 
+	const char*		m_encoding;
+
 private:
 
 	struct ParamPair
@@ -282,6 +288,20 @@ getArgs(
 			else if (argv[i][1] == 'a') 
 			{
 				params.m_useStylesheetPI = true;
+			}
+			else if (argv[i][1] == 'e') 
+			{
+				++i;
+
+				if(i < argc && argv[i][0] != '-' &&
+				   strlen(argv[i]) != 0)
+				{
+					params.m_encoding = argv[i];
+				}
+				else
+				{
+					fSuccess = false;
+				}
 			}
 			else if (argv[i][1] == 'i') 
 			{
@@ -411,20 +431,29 @@ transform(
 			const XSLTInputSource&	theSource,
 			const XSLTInputSource&	theStylesheetSource)
 {
+	XALAN_USING_XALAN(XalanDOMString)
+	XALAN_USING_XALAN(XSLTResultTarget)
+
+	XSLTResultTarget	theTarget;
+
+	if (theParams.m_encoding != 0)
+	{
+		theTarget.setEncoding(XalanDOMString(theParams.m_encoding));
+	}
+
 	if (theParams.m_outFileName != 0)
 	{
-		return theTransformer.transform(
-				theSource,
-				theStylesheetSource,
-				theParams.m_outFileName);
+		theTarget.setFileName(theParams.m_outFileName);
 	}
 	else
 	{
-		return theTransformer.transform(
+		theTarget.setByteStream(&cout);
+	}
+
+	return theTransformer.transform(
 				theSource,
 				theStylesheetSource,
-				cout);
-	}
+				theTarget);
 }
 
 
