@@ -232,11 +232,12 @@ public:
 	* call domCompare.  
 	* @returns Void.
 	*/
-	bool
-	FileUtility::compareDOMResults(const XalanDOMString& theOutputFile, 
+	void
+	FileUtility::checkDOMResults(const XalanDOMString& theOutputFile, 
 								const XalanCompiledStylesheet* compiledSS, 
 								XalanSourceTreeDocument* dom,
-								const XSLTInputSource& goldInputSource);
+								const XSLTInputSource& goldInputSource,
+								XMLFileReporter& logfile);
 
 	bool
 	FileUtility::compareSerializedResults(const XalanDOMString& transformResult,
@@ -289,6 +290,9 @@ public:
 	void
 	FileUtility::reportPassFail(XMLFileReporter& logfile);
 
+	void
+	FileUtility::reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runid);
+
 private:
 
 	/** 
@@ -307,7 +311,31 @@ private:
 	*/
 	void
 	FileUtility::reportError();
+	
+	inline void
+	FileUtility::debugNodeData(const XalanDOMString& value)
+	{
+#if !defined(NDEBUG) && defined(_MSC_VER)
+		cout << "Node is: " << c_str(TranscodeToLocalCodePage(value)) << endl;
+#endif
+	}
 
+	inline void
+	FileUtility::debugNodeData(const XalanDOMString& node, const XalanDOMString& value)
+	{
+#if !defined(NDEBUG) && defined(_MSC_VER)
+		cout << "Node is: " << c_str(TranscodeToLocalCodePage(node)) << "	"
+			 << "Value is: \"" << c_str(TranscodeToLocalCodePage(value)) << "\"\n";
+#endif
+	}
+
+	inline void
+	FileUtility::debugAttributeData(const XalanDOMString& value)
+	{
+#if !defined(NDEBUG) && defined(_MSC_VER)
+		cout << "Attribute is: " << c_str(TranscodeToLocalCodePage(value)) << endl;
+#endif
+	}
 };        // end of class FileUtility
 #endif
 
