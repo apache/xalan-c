@@ -2129,7 +2129,18 @@ XSLTEngineImpl::cloneToResultTree(
 {
 	XalanNode::NodeType		posNodeType = node.getNodeType();
 
-	if (cloneTextNodesOnly == true &&
+	if (posNodeType == XalanNode::DOCUMENT_FRAGMENT_NODE)
+	{
+		outputResultTreeFragment(
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanDocumentFragment&)node,
+#else
+				static_cast<const XalanDocumentFragment&>(node),
+#endif
+			cloneTextNodesOnly,
+			styleNode);
+	}
+	else if (cloneTextNodesOnly == true &&
 		posNodeType != XalanNode::TEXT_NODE)
 	{
 		warnCopyTextNodesOnly(
@@ -2177,7 +2188,11 @@ XSLTEngineImpl::cloneToResultTree(
 
 					posNodeType = pos->getNodeType();
 
-					if(&node == pos)
+					if (posNodeType == XalanNode::DOCUMENT_FRAGMENT_NODE)
+					{
+						break;
+					}
+					else if (&node == pos)
 					{
 						if(XalanNode::ELEMENT_NODE == posNodeType)
 						{
@@ -2311,6 +2326,10 @@ XSLTEngineImpl::cloneToResultTree(
 					c_wstr(node.getNodeValue()));
 			break;
 
+		case XalanNode::DOCUMENT_FRAGMENT_NODE:
+			assert(false);
+			break;
+
 		// Can't really do this, but we won't throw an error so that copy-of will
 		// work
 		case XalanNode::DOCUMENT_NODE:
@@ -2432,7 +2451,8 @@ XSLTEngineImpl::outputToResultTree(
 	case XObject::eTypeUnknown:
 	case XObject::eUnknown:
 	default:
-		assert(0);
+		assert(false);
+		break;
 	}
 }
 
@@ -2440,13 +2460,11 @@ XSLTEngineImpl::outputToResultTree(
 
 void
 XSLTEngineImpl::outputResultTreeFragment(
-			const XObject& 				theTree,
-			bool						outputTextNodesOnly,
-			const ElemTemplateElement*	styleNode)
+			const XalanDocumentFragment& 	theTree,
+			bool							outputTextNodesOnly,
+			const ElemTemplateElement*		styleNode)
 {
-	const ResultTreeFragBase&	docFrag = theTree.rtree();
-
-	const XalanNodeList* const	nl = docFrag.getChildNodes();
+	const XalanNodeList* const	nl = theTree.getChildNodes();
 	assert(nl != 0);
 
 	const unsigned int			nChildren = nl->getLength();

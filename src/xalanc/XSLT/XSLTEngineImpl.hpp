@@ -767,7 +767,24 @@ public:
 	outputResultTreeFragment(
 			const XObject& 				theTree,
 			bool						outputTextNodesOnly,
-			const ElemTemplateElement*	styleNode);
+			const ElemTemplateElement*	styleNode)
+	{
+		outputResultTreeFragment(theTree.rtree(), outputTextNodesOnly, styleNode);
+	}
+
+	/**
+	 * Given a result tree fragment, walk the tree and output it to the result
+	 * stream.
+	 *
+	 * @param theTree result tree fragment
+	 * @param outputTextNodesOnly if true, only text nodes will be copied
+	 * @param styleNode	the stylesheet element that generate the fragment.
+	 */
+	void
+	outputResultTreeFragment(
+			const XalanDocumentFragment& 	theTree,
+			bool							outputTextNodesOnly,
+			const ElemTemplateElement*		styleNode);
 
 	/**
 	 * Retrieve the root stylesheet.
