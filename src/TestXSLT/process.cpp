@@ -249,11 +249,6 @@ printArgOptions()
 		 << "The following options are valid only with -HTML or -XML."
 		 << endl
 		 << endl
-		 << " [-STRIPCDATA (Strip CDATA sections of their brackets, but don't escape.)"
-		 << endl
-		 << " [-ESCAPECDATA (Strip CDATA sections of their brackets, but escape.)"
-		 << endl
-		 << endl
 		 << "The following option is valid only with -HTML."
 		 << endl
 		 << endl
@@ -277,10 +272,8 @@ struct CmdLineParams
 {
 	StringPairVectorType	params;
 
-	bool		escapeCData;
 	bool		setQuietConflictWarnings;
 	bool		setQuietMode;
-	bool		stripCData;
 	bool		versionOnly;
 	bool		traceTemplates;
 	bool		traceGenerationEvent;
@@ -303,10 +296,8 @@ struct CmdLineParams
 
 	CmdLineParams() :
 		params(),
-		escapeCData(false),
 		setQuietConflictWarnings(false),
 		setQuietMode(false),
-		stripCData(false),
 		versionOnly(false),
 		traceTemplates(false),
 		traceGenerationEvent(false),
@@ -566,14 +557,6 @@ getArgs(
 		{
 			p.formatToNull = true;
 		}
-		else if(!compareNoCase("-STRIPCDATA", argv[i]))
-		{
-			p.stripCData = true;
-		}
-		else if(!compareNoCase("-ESCAPECDATA", argv[i]))
-		{
-			p.escapeCData = true;
-		}
 		else if (!compareNoCase("-NH", argv[i]))
 		{
 			p.shouldWriteXMLHeader = false;
@@ -617,8 +600,6 @@ FormatterListener*
 createFormatter(
 			int								outputType,
 			bool							shouldWriteXMLHeader,
-			bool							stripCData,
-			bool							escapeCData,
 			bool							noIndent,
 			bool							formatToNull,
 			bool							formatToSourceTree,
@@ -670,8 +651,6 @@ createFormatter(
 					standalone);
 
 		fToXML->setShouldWriteXMLHeader(shouldWriteXMLHeader);
-		fToXML->setStripCData(stripCData);
-		fToXML->setEscapeCData(escapeCData);
 
 		formatter = fToXML;
 	}
@@ -713,7 +692,6 @@ createFormatter(
 						outputIndent,
 						indentAmount);
 
-		fToHTML->setStripCData(stripCData);
 		fToHTML->setPrefixResolver(&prefixResolver);
 
 		formatter = fToHTML;
@@ -991,8 +969,6 @@ xsltMain(const CmdLineParams&	params)
 			createFormatter(
 				params.outputType,
 				params.shouldWriteXMLHeader,
-				params.stripCData,
-				params.escapeCData,
 				params.noIndent,
 				params.formatToNull,
 				params.formatToSourceTree,
@@ -1097,8 +1073,6 @@ xsltMain(const CmdLineParams&	params)
 					createFormatter(
 						FormatterListener::OUTPUT_METHOD_XML,
 						params.shouldWriteXMLHeader,
-						params.stripCData,
-						params.escapeCData,
 						params.noIndent,
 						false,
 						false,
