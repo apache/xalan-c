@@ -1220,7 +1220,7 @@ main(
 	else if (theParams.versionOnly == true)
 	{
 		cout << endl
-			 << "TestXSLT version 1.2.0 (Xalan C++ version 1.2.0)"
+			 << "TestXSLT version 1.2.1 (Xalan C++ version 1.2.1)"
 			 << endl;
 	}
 	else
