@@ -97,20 +97,6 @@
 
 
 
-static const XalanDOMChar	theDefaultSpecialCharacters[] =
-{
-		XalanUnicode::charLessThanSign,
-		XalanUnicode::charGreaterThanSign,
-		XalanUnicode::charAmpersand,
-		XalanUnicode::charApostrophe,
-		XalanUnicode::charQuoteMark,
-		XalanUnicode::charCR,
-		XalanUnicode::charLF,
-		0
-};
-
-
-
 XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
 	m_indent(-1),
 	m_useValidation(false),
