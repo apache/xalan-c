@@ -173,7 +173,11 @@ bool fSetOut = true;	// Set default output directory
 	return fSuccess;
 }
 
-
+//	This function returns the testcase number.  All of these tests are called
+//	variablemanXX, and there are only 6 of them,  so we can pick off the
+//	second X to determine what test number we're dealing with.  We need to
+//	know which test because each test gets different parameters. This code will
+//  need modification if the number of tests changes.
 unsigned short
 getTestNumber(const XalanDOMString& theFile)
 {
@@ -184,8 +188,8 @@ getTestNumber(const XalanDOMString& theFile)
 
 int
 main(
-		  int				     argc,
-		  const char*		 argv [])
+		  int			argc,
+		  const char*	argv [])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
@@ -194,7 +198,7 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	FileUtility			f;
+	FileUtility		f;
 
 	XalanDOMString  category;	// Test all of base dir by default
 	XalanDOMString  baseDir;	
@@ -232,51 +236,52 @@ main(
 				const XalanDOMString  theOutputDir = outputRoot + xMan;
 				f.checkAndCreateDir(theOutputDir);
 
+				// Get the files found in the "xmanual" directory
 				const FileNameVectorType	files = f.getTestFileNames(baseDir, xMan,false);
 
 				for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 				{
-					// Output file name to result log and console.
-					logFile.logTestCaseInit(files[i]);
-					cout << files[i] << endl;
 
+					// If the file starts with "variable" process it.
 					if (startsWith(files[i],"variable"))
 					{
+						// Output file name to result log and console.
+						logFile.logTestCaseInit(files[i]);
+						cout << files[i] << endl;
 
+						// Set up the input/output files.
 						const XalanDOMString  theXSLFile= baseDir + xMan + pathSep + files[i];
 						const XalanDOMString  theXMLFile = f.GenerateFileName(theXSLFile,"xml");
 						const XalanDOMString  theOutput =  outputRoot + xMan + pathSep + files[i]; 
 						const XalanDOMString  theOutputFile = f.GenerateFileName(theOutput, "out");
 						const XalanDOMString  testFile = f.GenerateFileName(theXSLFile,"");
 
-						// Do a total end to end transform with no pre parsing of either xsl or xml files.
 						XSLTResultTarget		theResultTarget(theOutputFile);
-
 						const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 						const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-						const char*	paramKey =	"input";
-						const char*	paramExpression = "'testing'";	
 						
+						// Set the desired parameters
 						switch (getTestNumber(files[i]))
 						{	case 1:
-								transformEngine.setStylesheetParam("input", "'testing123'");
-								transformEngine.setStylesheetParam(paramKey, paramExpression);
+								transformEngine.setStylesheetParam("input", "'testing 1 2 3'");
 								break;
 							case 2:
-								transformEngine.setStylesheetParam("in1", "'01 '");
-								transformEngine.setStylesheetParam("in2", "'02 '");
-								transformEngine.setStylesheetParam("in3", "'03 '");
-								transformEngine.setStylesheetParam("in4", "'04 '");
-								transformEngine.setStylesheetParam("in5", "'05 '");
+								transformEngine.setStylesheetParam("in1", "A ");
+								transformEngine.setStylesheetParam(XalanDOMString("in2"), 
+																   XalanDOMString("B "));
+								transformEngine.setStylesheetParam("in3", "C ");
+								transformEngine.setStylesheetParam("in4", "D ");
+								transformEngine.setStylesheetParam("in5", "E ");
 								break;
 							case 3:
-								transformEngine.setStylesheetParam("in1", "'01 '");
+								transformEngine.setStylesheetParam("'xyz:in1'", "DATA");
 								break;
 							default:
-								transformEngine.setStylesheetParam("input", "'testing123'");
+								transformEngine.setStylesheetParam("input", "testing 1 2 3");
 								break;
 						}
-						//if 
+
+						// Do a total end to end transform with no pre parsing of either xsl or xml files.
 						int	theResult =
 							transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
 
@@ -296,7 +301,7 @@ main(
 
 			XalanTransformer::terminate();
 
-			logFile.logTestFileClose("Memory Testing: ", "Done");
+			logFile.logTestFileClose("Param Testing: ", "Done");
 			logFile.close();
 
 		}
@@ -308,61 +313,4 @@ main(
 
 	return 0;
 
-
-
-
-/*	int	theResult = 0;
-
-	if (argc != 3)
-	{
-		cerr << "Usage: UseStylesheetParam key expression" << endl;
-
-		theResult = -1;
-	}
-	else
-	{
-		// Call the static initializer for Xerces.
-		XMLPlatformUtils::Initialize();
-
-		// Initialize Xalan.
-		XalanTransformer::initialize();
-
-		// Create a XalanTransformer.
-		XalanTransformer theXalanTransformer;
-
-		// Our input files...The assumption is that the executable will be run
-		// from same directory as the input files.
-		const char*		theXMLFileName = "foo.xml";
-		const char*		theXSLFileName = "foo.xsl";
-
-		// Our output target...
-		const char*	theOutputFileName = "foo.out";
-
-		// Get the stylesheet parameter key (name) and
-		// expression (a string expression).
-		const char*	paramKey = argv[1];
-		const char*	paramExpression = argv[2];
-
-		// Set the stylesheet parameter.
-		theXalanTransformer.setStylesheetParam(paramKey, paramExpression);
-
-		// Do the transform.
-		theResult = theXalanTransformer.transform(theXMLFileName, theXSLFileName, theOutputFileName);
-    
-		if(theResult != 0)
-		{
-			cerr << "UseStylesheetParam Error: \n" << theXalanTransformer.getLastError()
-				 << endl
-				 << endl;
-		}
-
-		// Terminate Xalan.
-		XalanTransformer::terminate();
-
-		// Call the static terminator for Xerces.
-		XMLPlatformUtils::Terminate();
-	}
-
-	return theResult;
-*/
 }
