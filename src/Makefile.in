@@ -165,14 +165,13 @@ endif
 #=============== SOLARIS SPECIFIC OPTIONS =========================
 ifeq ($(PLATFORM), SOLARIS)
 
-SUPPORTED = TRUE
+  SUPPORTED = TRUE
 
   ifeq (${CXX}, g++)
 
 	PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
 
-# We need the ICU library if we are using the ICUBridge
 	ifdef XALAN_USE_ICU
 	LD_RPATH_PRE=  -Wl,-rpath,
 	PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)/usr/lib $(LD_RPATH_PRE)/usr/local/lib
@@ -210,19 +209,42 @@ endif
 #=============== AIX SPECIFIC OPTIONS =========================
 ifeq ($(PLATFORM), AIX)
 
-ifndef STLPORTROOT 
-nostlportroot:
-	@echo STLPORTROOT must be defined
-endif
+  SUPPORTED = TRUE
 
-SUPPORTED = TRUE
-PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -D_THREAD_SAFE -I${STLPORTROOT}/stlport
-ALLLIBS = ${LIBS} -L/usr/lib 
-SHLIBSUFFIX=.a
-CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS)
-MAKE_SHARED = makeC++SharedLib_r -p 5000 
-LINK = $(CXX) -qnotempinc $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  ifeq (${CXX}, g++)
+
+	PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
+	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
+
+	ifdef XALAN_USE_ICU
+	LD_RPATH_PRE=  -Wl,-rpath,
+	PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)/usr/lib $(LD_RPATH_PRE)/usr/local/lib
+	endif
+
+	EXTRA_LINK_OPTIONS=-lc
+	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+	MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fPIC
+	LINK =  g++ -D${PLATFORM} -fPIC
+
+	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
+
+  else
+
+	ifndef STLPORTROOT 
+	nostlportroot:
+		@echo STLPORTROOT must be defined
+	endif
+
+	PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -D_THREAD_SAFE -I${STLPORTROOT}/stlport
+	ALLLIBS = ${LIBS} -L/usr/lib 
+	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+	CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS)
+	MAKE_SHARED = makeC++SharedLib_r -p 5000 
+	LINK = $(CXX) -qnotempinc $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+
+  endif
+
+  SHLIBSUFFIX=.a
 
 endif
 
