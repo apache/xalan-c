@@ -97,6 +97,7 @@
 
 #include "Constants.hpp"
 #include "ElemApplyTemplates.hpp"
+#include "ElemAttributeSet.hpp"
 #include "ElemTemplate.hpp"
 #include "ElemValueOf.hpp"
 #include "KeyTable.hpp"
@@ -146,7 +147,8 @@ StylesheetRoot::StylesheetRoot(
 	m_omitMETATag(false),
 	m_elemNumberNextID(0),
 	m_whitespacePreservingElements(),
-	m_whitespaceStrippingElements()
+	m_whitespaceStrippingElements(),
+	m_attributeSetsMap()
 {
 	// Our base class has already resolved the URI and pushed it on
 	// the back of the include stack, so get it from there...
@@ -170,6 +172,26 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&		constructionCon
 	Stylesheet::postConstruction(constructionContext);
 
 	initDefaultRule(constructionContext);
+
+	{
+		AttributeSetMapType::iterator			theCurrentMap = m_attributeSetsMap.begin();
+		const AttributeSetMapType::iterator		theEndMap = m_attributeSetsMap.end();
+
+		while(theCurrentMap != theEndMap)
+		{
+			AttributeSetVectorType::iterator		theCurrentVector = (*theCurrentMap).second.begin();
+			const AttributeSetVectorType::iterator	theEndVector = (*theCurrentMap).second.end();
+
+			while(theCurrentVector != theEndVector)
+			{
+				(*theCurrentVector)->postConstruction(constructionContext, getNamespacesHandler());
+
+				++theCurrentVector;
+			}
+
+			++theCurrentMap;
+		}	
+	}
 
 	// We may need to build keys, since we may have inherited them from
 	// our imports.
@@ -900,6 +922,46 @@ StylesheetRoot::shouldStripSourceNode(
 	}
 
 	return strip;
+}
+
+
+
+void
+StylesheetRoot::addAttributeSet(ElemAttributeSet&	theAttributeSet)
+{
+	m_attributeSetsMap[&theAttributeSet.getQName()].push_back(&theAttributeSet);
+}
+
+
+
+void
+StylesheetRoot::executeAttributeSet(
+			StylesheetExecutionContext&		theExecutionContext,
+			const XalanQName&				theQName,
+			const LocatorType*				theLocator) const
+{
+	const AttributeSetMapType::const_iterator	i =
+		m_attributeSetsMap.find(&theQName);
+
+	if (i == m_attributeSetsMap.end())
+	{
+		theExecutionContext.error(
+			"Unknown xsl:attribute-set",
+			theExecutionContext.getCurrentNode(),
+			theLocator);
+	}
+	else
+	{
+		const AttributeSetVectorType&					theAttributeSets = (*i).second;
+		const AttributeSetVectorType::const_iterator	theEnd = theAttributeSets.end();
+
+		for(AttributeSetVectorType::const_iterator i = theAttributeSets.begin(); i != theEnd; ++i)
+		{
+			assert(*i != 0);
+
+			(*i)->execute(theExecutionContext);
+		}
+	}
 }
 
 

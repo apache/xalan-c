@@ -71,6 +71,7 @@
 
 
 #include "Constants.hpp"
+#include "ElemAttributeSet.hpp"
 #include "StylesheetRoot.hpp"
 #include "StylesheetConstructionContext.hpp"
 
@@ -154,11 +155,13 @@ ElemUse::doExecute(
 	{
 		assert(canGenerateAttributes() == true);
 
-		getStylesheet().getStylesheetRoot().applyAttrSets(
-				m_attributeSetsNames, 
-				m_attributeSetsNamesCount,
-				executionContext,
-				executionContext.getCurrentNode());
+		const StylesheetRoot&		theStylesheetRoot = getStylesheet().getStylesheetRoot();
+		const LocatorType* const	theLocator = getLocator();
+
+		for(size_type i = 0; i < m_attributeSetsNamesCount; ++i)
+		{
+			theStylesheetRoot.executeAttributeSet(executionContext, *m_attributeSetsNames[i], theLocator);
+		}
 	}
 }
 

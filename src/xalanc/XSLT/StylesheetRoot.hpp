@@ -80,6 +80,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+class ElemAttributeSet;
 class StylesheetConstructionContext;
 class XalanText;
 class XSLTResultTarget;
@@ -98,9 +99,17 @@ public:
 #if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<const XalanQName*> 		XalanQNameVectorType;
 	typedef vector<const XPath*>			XPathVectorType;
+	typedef vector<ElemAttributeSet*> 		AttributeSetVectorType;
+	typedef map<const XalanQName*,
+			    AttributeSetVectorType,
+				pointer_less<const XalanQName> >	AttributeSetMapType;
 #else
 	typedef std::vector<const XalanQName*>	XalanQNameVectorType;
 	typedef std::vector<const XPath*>		XPathVectorType;
+	typedef std::vector<ElemAttributeSet*> 	AttributeSetVectorType;
+	typedef std::map<const XalanQName*,
+					 AttributeSetVectorType,
+					 pointer_less<const XalanQName> >	AttributeSetMapType;
 #endif
 
 	/**
@@ -433,6 +442,15 @@ public:
 			StylesheetExecutionContext&		executionContext,
 			const XalanText&				textNode) const;
 
+	void
+	addAttributeSet(ElemAttributeSet&	theAttributeSet);
+
+	void
+	executeAttributeSet(
+			StylesheetExecutionContext&		theExecutionContext,
+			const XalanQName&				theQName,
+			const LocatorType*				theLocator) const;
+
 private:
 
 	/**
@@ -582,6 +600,12 @@ private:
 	 * A lookup table of all space stripping elements.
 	 */
 	XPathVectorType 			m_whitespaceStrippingElements;
+
+	/**
+	 * A lookup table of all attribute sets.
+	 */
+	AttributeSetMapType			m_attributeSetsMap;
+
 
 	// Not implemented...
     StylesheetRoot(const StylesheetRoot&);

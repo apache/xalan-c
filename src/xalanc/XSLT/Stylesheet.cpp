@@ -99,7 +99,6 @@
 #include "KeyTable.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
-#include "StylesheetRoot.hpp"
 
 
 
@@ -146,8 +145,6 @@ Stylesheet::Stylesheet(
 	m_nodePatternList(),
 	m_matchPattern2Container(),
 	m_patternCount(0),
-	m_attributeSets(),
-	m_attributeSetsSize(0),
 	m_elemDecimalFormats(),
 	m_namespacesHandler()
 {
@@ -499,7 +496,6 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 	// Call postConstruction() on our own namespaces handler...
 	m_namespacesHandler.postConstruction(constructionContext);
 
-
 	{
 		for (ElemTemplateElement* node = m_firstTemplate;
 			 node != 0;
@@ -517,9 +513,6 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 			(*it)->postConstruction(constructionContext, m_namespacesHandler);
 		}
 	}
-
-	// Cache the size...
-	m_attributeSetsSize = m_attributeSets.size();
 
 	addToTable(m_elementPatternTable, m_elementAnyPatternList);
 	addToTable(m_attributePatternTable, m_attributeAnyPatternList);
@@ -1499,53 +1492,6 @@ Stylesheet::getDecimalFormatSymbols(const XalanQName&	theQName) const
 	}
 
 	return dfs;
-}
-
-
-
-void
-Stylesheet::applyAttrSets(
-			const XalanQName**				attributeSetsNames,
-			size_type						attributeSetsNamesCount,
-			StylesheetExecutionContext& 	executionContext,			
-			XalanNode*						sourceNode) const
-{
-	if(0 != attributeSetsNamesCount)
-	{
-		// Process up the import chain...
-		const StylesheetVectorType::const_reverse_iterator	theEnd = m_imports.rend();
-		StylesheetVectorType::const_reverse_iterator		i = m_imports.rbegin();
-
-		while(i != theEnd)
-		{
-			(*i)->applyAttrSets(
-				attributeSetsNames,
-				attributeSetsNamesCount,
-				executionContext,
-				sourceNode);
-
-			++i;
-		}
-
-		for(size_type j = 0; j < attributeSetsNamesCount; j++)
-		{
-			const XalanQName* const		qname = attributeSetsNames[j];
-			assert(qname != 0);
-
-			assert(m_attributeSetsSize == m_attributeSets.size());
-
-			for(StylesheetVectorType::size_type k = 0; k < m_attributeSetsSize; k++)
-			{
-				const ElemAttributeSet* const	attrSet = m_attributeSets[k];
-				assert(attrSet != 0);
-
-				if(qname->equals(attrSet->getQName()))
-				{
-					attrSet->execute(executionContext);
-				}
-			}
-		}
-	}
 }
 
 

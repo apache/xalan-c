@@ -754,12 +754,16 @@ StylesheetHandler::processTopLevelElement(
 			m_inTemplate = true; // fake it out
 			m_inScopeVariableNamesStack.resize(m_inScopeVariableNamesStack.size() + 1);
 
-			m_elemStack.push_back(
+			ElemTemplateElement* const	theAttributeSet =
 				m_constructionContext.createElement(
 					xslToken,
 					m_stylesheet,
 					atts,
-					locator));
+					locator);
+
+			theAttributeSet->addToStylesheet(m_constructionContext, m_stylesheet);
+
+			m_elemStack.push_back(theAttributeSet);
 		}
 		break;
 

@@ -64,6 +64,7 @@
 
 #include "Constants.hpp"
 #include "Stylesheet.hpp"
+#include "StylesheetRoot.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
@@ -98,8 +99,6 @@ ElemAttributeSet::ElemAttributeSet(
 				atts.getValue(i),
 				stylesheetTree.getNamespaces(),
 				getLocator());
-
-			stylesheetTree.addAttributeSet(this);
 		}
 		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
 					isAttrOK(aname, atts, i, constructionContext)))
@@ -167,6 +166,16 @@ ElemAttributeSet::execute(StylesheetExecutionContext&	executionContext) const
 
 		attr = attr->getNextSiblingElem();
 	}
+}
+
+
+
+void
+ElemAttributeSet::addToStylesheet(
+			StylesheetConstructionContext&	/* constructionContext */,
+			Stylesheet&						theStylesheet)
+{
+	theStylesheet.getStylesheetRoot().addAttributeSet(*this);
 }
 
 

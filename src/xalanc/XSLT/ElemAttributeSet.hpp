@@ -118,6 +118,11 @@ public:
 	virtual	void
 	execute(StylesheetExecutionContext&		executionContext) const;
 
+	virtual void
+	addToStylesheet(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						theStylesheet);
+
 protected:
 
 	virtual bool

@@ -99,7 +99,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 class ExtensionNSHandler;
 class XalanDecimalFormatSymbols;
-class ElemAttributeSet;
 class ElemDecimalFormat;
 class ElemTemplate;
 class ElemTemplateElement;
@@ -141,7 +140,6 @@ public:
 	typedef map<XalanQNameByReference,
 				const ElemTemplate*,
 				less<XalanQName> >					ElemTemplateMapType;
-	typedef vector<ElemAttributeSet*> 				AttributeSetVectorType;
 	typedef vector<ElemVariable*> 					ElemVariableVectorType;
 	typedef vector<KeyDeclaration>					KeyDeclarationVectorType;
 	typedef map<const XalanNode*,
@@ -155,7 +153,6 @@ public:
 	typedef std::map<XalanQNameByReference,
 					 const ElemTemplate*,
 					 std::less<XalanQName> >				ElemTemplateMapType;
-	typedef std::vector<ElemAttributeSet*> 					AttributeSetVectorType;
 	typedef std::vector<ElemVariable*> 						ElemVariableVectorType;
 	typedef std::vector<KeyDeclaration>						KeyDeclarationVectorType;
 	typedef std::map<const XalanNode*, KeyTable*>			KeyTablesTableType;
@@ -434,17 +431,6 @@ public:
 	}
 
 	/**
-	 * Set the base identifier with which this stylesheet is associated.
-	 * 
-	 * @param str string for base identifier
-	 */
-	void
-	setBaseIdentifier(const XalanDOMString&		str)
-	{
-		m_baseIdent = str;
-	}
-
-	/**
 	 * Retrieve the base identifier for the most recently
 	 * included stylesheet.  This will return the same value
 	 * as getBaseIdentifier(), if no include is being
@@ -491,35 +477,6 @@ public:
 	 */
 	const XalanDecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanQName&	theQName) const;
-
-	/**
-	 * Add an attribute set to the list.
-	 *
-	 * @param attrSet pointer to attribute set to add
-	 */
-	void
-	addAttributeSet(ElemAttributeSet*	attrSet)
-	{
-		assert(attrSet != 0);
-
-		m_attributeSets.push_back(attrSet);
-	}
-
-	/**
-	 * Apply the set of named attributes to a node in a given context with a
-	 * given mode
-	 *
-	 * @param attributeSetsNames The vector of attribute set names
-	 * @param attributeSetsNamesCount The size of the vector
-	 * @param executionContext	 The current execution context
-	 * @param sourceNode		 The source node
-	 */
-	void
-	applyAttrSets(
-			const XalanQName**				attributeSetsNames,
-			size_type						attributeSetsNamesCount,
-			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						sourceNode) const;
 
 	/**
 	 * Add an imported stylesheet.
@@ -1056,13 +1013,6 @@ private:
 	 * This caches the number of possible patterns we can match.
 	 */
 	MatchPattern2Container::size_type		m_patternCount;
-
-	AttributeSetVectorType 					m_attributeSets;
-
-	/**
-	 * This caches the number of attribute sets.
-	 */
-	AttributeSetVectorType::size_type		m_attributeSetsSize;
 
 	ElemDecimalFormatVectorType				m_elemDecimalFormats;
 
