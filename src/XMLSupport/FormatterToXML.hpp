@@ -431,7 +431,7 @@ protected:
 	 * Handle one of the default entities, return false if it 
 	 * is not a default entity.
 	*/
-	bool
+	virtual bool
 	accumDefaultEntity(
 			XalanDOMChar		ch,
 			unsigned int		i,

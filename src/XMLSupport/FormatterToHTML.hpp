@@ -99,6 +99,15 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToHTML : public FormatterToXML
 
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<XalanDOMChar,
+				XalanDOMString,
+				less<XalanDOMChar> >	XalanEntityReferenceType;
+#else
+	typedef std::map<XalanDOMChar,
+					 XalanDOMString>	XalanEntityReferenceType;	
+#endif
+
 	/**
 	 * Perform static initialization.  See class XMLSupportInit.
 	 */
@@ -159,6 +168,15 @@ public:
 			const XMLCh* const	chars,
 			const unsigned int	length);
 
+	// These methods are inherited from FormatterToXML...
+
+	virtual bool
+	accumDefaultEntity(
+			XalanDOMChar		ch,
+			unsigned int		i,
+			const XalanDOMChar	chars[],
+			unsigned int		len,
+			bool				escLF);
 
 	// These methods are inherited from FormatterListener ...
 
@@ -294,7 +312,11 @@ protected:
 
 private:
 
-	static const ElementFlagsMapType&	s_elementFlags;
+	static const ElementFlagsMapType&		s_elementFlags;
+
+	static const XalanEntityReferenceType&	s_xalanHTMLEntities;
+
+	static const XalanEntityReferenceType::const_iterator&	s_xalanHTMLEntitiesIteratorEnd; 
 
 	/**
 	 * Dummy description for elements not found.
@@ -327,29 +349,9 @@ private:
 	static const XalanDOMString&	s_styleString;
 
 	/**
-	 * The string "lt".
-	 */
-	static const XalanDOMString&	s_ltString;
-
-	/**
-	 * The string "gt".
-	 */
-	static const XalanDOMString&	s_gtString;
-
-	/**
-	 * The string "amp.
-	 */
-	static const XalanDOMString&	s_ampString;
-
-	/**
 	 * The string "fnof".
 	 */
 	static const XalanDOMString&	s_fnofString;
-
-	/**
-	 * The string "OElig".
-	 */
-	static const XalanDOMString&	s_oeligString;
 
 	/**
 	 * The string "<META http-equiv=\"Content-Type\" content=\"text/html; charset=".
@@ -389,7 +391,15 @@ private:
 	 * @return map of element flags.
 	 */
 	static void
-	initializeElementFlagsMap(ElementFlagsMapType&	theMap);
+	initializeElementFlagsMap(ElementFlagsMapType&);
+
+	/**
+	 * Initialize the map of enity references.
+	 *
+	 * @return map of enity references.
+	 */
+	static void
+	initializeXalanEntityReferenceMap(XalanEntityReferenceType&);
 
 	/**
 	 * Process an attribute.
@@ -438,7 +448,6 @@ private:
 	 * A counter so we can tell if we're inside the document element.
 	 */
 	int				m_elementLevel;
-
 };
 
 
