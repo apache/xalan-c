@@ -1517,10 +1517,11 @@ XSLTEngineImpl::pendingAttributesHasDefaultNS() const
 
 	const unsigned int	n = thePendingAttributes.getLength();
 
-	for(unsigned int i = 0; i < n; i++)
+	for(unsigned int i = 0; i < n; ++i)
 	{
-		if(equals(thePendingAttributes.getName(i),
-				  DOMServices::s_XMLNamespace) == true)
+		if(equals(
+            thePendingAttributes.getName(i),
+			DOMServices::s_XMLNamespace) == true)
 		{
 			return true;
 		}
@@ -1541,17 +1542,20 @@ XSLTEngineImpl::flushPending()
 
 		if (m_stylesheetRoot->isOutputMethodSet() == false)
 		{
-			if (equalsIgnoreCaseASCII(getPendingElementName(),
-								 Constants::ELEMNAME_HTML_STRING) == true &&
+			if (equalsIgnoreCaseASCII(
+                    getPendingElementName(),
+					Constants::ELEMNAME_HTML_STRING) == true &&
 				pendingAttributesHasDefaultNS() == false)
 			{
-				if (getFormatterListenerImpl()->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
+			    FormatterListener* const	theFormatter =
+							getFormatterListenerImpl();
+				assert(
+                    theFormatter != 0 &&
+                    theFormatter->getWriter() != 0);
+
+				if (theFormatter->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
 				{
 					// Yuck!!! Ugly hack to switch to HTML on-the-fly.
-					FormatterListener* const	theFormatter =
-							getFormatterListenerImpl();
-					assert(theFormatter->getWriter() != 0);
-
 					setFormatterListenerImpl(
 						m_executionContext->createFormatterToHTML(
 							*theFormatter->getWriter(),
@@ -1559,9 +1563,10 @@ XSLTEngineImpl::flushPending()
 							theFormatter->getMediaType(),
 							theFormatter->getDoctypeSystem(),
 							theFormatter->getDoctypePublic(),
-							m_stylesheetRoot->getOutputIndent(),
-							theFormatter->getIndent() > 0 ? theFormatter->getIndent() :
-											StylesheetExecutionContext::eDefaultHTMLIndentAmount));
+							m_stylesheetRoot->getHTMLOutputIndent(),
+							theFormatter->getIndent() > 0 ?
+                                theFormatter->getIndent() :
+								StylesheetExecutionContext::eDefaultHTMLIndentAmount));
 
 					if (m_hasCDATASectionElements == true)
 					{
@@ -1572,14 +1577,16 @@ XSLTEngineImpl::flushPending()
 		}
 	}
 
-	if(getHasPendingStartDocument() == true && getMustFlushPendingStartDocument() == true)
+	if(getHasPendingStartDocument() == true &&
+       getMustFlushPendingStartDocument() == true)
 	{
 		startDocument();
 	}
 
 	XalanDOMString&		thePendingElementName = getPendingElementNameImpl();
 
-	if(0 != length(thePendingElementName) && getMustFlushPendingStartDocument() == true)
+	if(0 != length(thePendingElementName) &&
+       getMustFlushPendingStartDocument() == true)
 	{
 		assert(getFormatterListenerImpl() != 0);
 		assert(m_executionContext != 0);

@@ -579,9 +579,9 @@ StylesheetRoot::processOutputSpec(
 		}
 	}
 
+    // If HTML output 
 	if(m_outputMethod == FormatterListener::OUTPUT_METHOD_HTML &&
-	   m_indentResult != eIndentNoExplicit &&
-       m_indentResult != eIndentYesExplicit)
+	   m_indentResult == eIndentNoImplicit)
 	{
 		m_indentResult = eIndentYesImplicit;
 	}

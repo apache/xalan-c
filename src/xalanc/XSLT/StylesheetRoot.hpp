@@ -159,6 +159,20 @@ public:
 	}
 
 	/**
+	 * Determine if output indenting should be
+	 * enabled for HTML output.  Semantically,
+     * this implies the output method is implicit,
+     * not explicit, but we don't really check that.
+	 *
+	 * @return true to indent
+	 */
+	bool 
+	getHTMLOutputIndent() const
+	{
+        return m_indentResult == eIndentNoExplicit ? false : true;
+	}
+
+	/**
 	 * Get the output encoding string that was specified in the
 	 * xsl:output element
 	 *
