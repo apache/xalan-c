@@ -144,11 +144,14 @@ Stylesheet::Stylesheet(
 	m_surrogateChildren(*this),
 	m_elemDecimalFormats()
 {
-	const XMLURL* const url = constructionContext.getURLFromString(m_baseIdent);
-
-	if (url != 0)
+	if (length(m_baseIdent) != 0)
 	{
-		m_includeStack.push_back(url);
+		const XMLURL* const url = constructionContext.getURLFromString(m_baseIdent);
+
+		if (url != 0)
+		{
+			m_includeStack.push_back(url);
+		}
 	}
 }
 
