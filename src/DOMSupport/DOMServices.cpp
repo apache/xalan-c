@@ -396,7 +396,9 @@ DOMServices::getNodeData(
 			const XalanDocument&	document,
 			XalanDOMString&			data)
 {
-	getChildrenData(document.getFirstChild(), data);
+	assert(document.getDocumentElement() != 0);
+
+	getChildrenData(document.getDocumentElement(), data);
 }
 
 
@@ -615,7 +617,7 @@ DOMServices::getNodeData(
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function)
 {
-	getChildrenData(document.getFirstChild(), formatterListener, function);
+	getChildrenData(document.getDocumentElement(), formatterListener, function);
 }
 
 
@@ -692,7 +694,11 @@ DOMServices::getNameOfNode(const XalanNode&		n)
 const XalanDOMString&
 DOMServices::getNamespaceOfNode(const XalanNode&	n)
 {
-	if (n.getNodeType() == XalanNode::ATTRIBUTE_NODE)
+	if (n.getNodeType() != XalanNode::ATTRIBUTE_NODE)
+	{
+		return n.getNamespaceURI();
+	}
+	else
 	{
 		const XalanDOMString&	theNodeName = n.getNodeName();
 
@@ -706,10 +712,6 @@ DOMServices::getNamespaceOfNode(const XalanNode&	n)
 		{
 			return n.getNamespaceURI();
 		}
-	}
-	else
-	{
-		return n.getNamespaceURI();
 	}
 }
 
@@ -752,7 +754,7 @@ DOMServices::getNamespaceForPrefix(
 	{
 		XalanNode::NodeType		type;
 		const XalanNode*		parent = &namespaceContext;
-    
+
 		// Consider elements until NS is resolved, or we run out of
 		// ancestors, or we hit something other than an Element or 
 		// EntityReference node (ie, Document or DocumentFragment)
@@ -774,9 +776,9 @@ DOMServices::getNamespaceForPrefix(
 					const XalanNode* const	attr = nnm->item(i);
 					assert(attr != 0);
 
-					const XalanDOMString&		aname = attr->getNodeName();
+					const XalanDOMString&	aname = attr->getNodeName();
 
-					const unsigned int			len = length(aname);
+					const unsigned int		len = length(aname);
 
 					const bool isPrefix = len <= s_XMLNamespaceWithSeparatorLength ? false :
 							equals(substring(aname,
