@@ -75,7 +75,7 @@
 
 <s2 title="Introduction">  
 <p>To perform a transformation, use one of the <jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> transform() methods. The transformation requires an XML source document and an XSL stylesheet. Both of these objects may be represented by instances of <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump>. You can construct an XSLTInputSource with a string (the system ID for a file or URI), an input stream, or a DOM.</p>
-<p>If you are using an XSL stylesheet to perform a series of transformations, you can improve performance by calling transfomr() with a compiled stylesheet, an instance of <jump href="apidocs/class_xalancompiledstylesheet.html">XalanCompiledStylesheet</jump>. If you are transforming an XML source more than once, you should call transform() with a parsed XML source, an instance of <jump href="apidocs/class_xalanparsedsource">XalanParsedSource</jump>. See <link anchor="compiled">Performing a series of transformations</link>.</p>
+<p>If you are using an XSL stylesheet to perform a series of transformations, you can improve performance by calling transform() with a compiled stylesheet, an instance of <jump href="apidocs/class_xalancompiledstylesheet.html">XalanCompiledStylesheet</jump>. If you are transforming an XML source more than once, you should call transform() with a parsed XML source, an instance of <jump href="apidocs/class_xalanparsedsource">XalanParsedSource</jump>. See <link anchor="compiled">Performing a series of transformations</link>.</p>
 <p>If you XML source document contains a stylesheet Processing Instruction (PI), you do not need to include a stylesheet object when you call transform().</p>
 <p>The transformation output is represented by an <jump href="apdidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>, which you can set up to refer to an output stream, the system ID for a file or URI, or a DOM.</p>
 <p>For detailed API documentation, see <jump href="apidocs/index.html">&xslt4c; API</jump>. For an overview of the
@@ -166,7 +166,7 @@ transform(const XSLTInputSource&amp; xmlIn,
           const void* theOutputHandle,
           XalanOutputHandlerType theOutputHandler
           XalanFlushHanderType theFlushHandler = 0);</source>
-
+<p>For an example, see <link idref="samples" anchor="xalantransformercallback">XalanTransformerCallback</link>.</p>
 </s2><anchor name="compiled"/>
 <s2 title="Performing a series of transformations">
 <p>Before Xalan performs a standard transformation, it must parse the XML document and compile the XSL stylesheet into binary representations. If you plan to use the same XML document or stylesheet in a series of transformations, you can improve performance by parsing the XML document or compiling the styleheet once and using the binary representation when you call transform().</p>
@@ -223,8 +223,12 @@ XSLTResultTarget theDOMResultTarget(docOut);
 DOM_Document domOut = theParserLiaison.mapXercesDocument(docOut)</source>
 </s2><anchor name="xpath"/>
 <s2 title="Working with XPath expressions">
-<p>XSL stylesheets use XPath expressions to select nodes, specify conditions, and generate text for the result tree. XPath provides an API that you can call directly. For example, you may want to select nodes programmatically and do your own processing without a stylesheet.</p>
-<p>For an example that executes XPath expressions against XML source files, see <link idref="samples" anchor="xpathwrapper">XPathWrapper</link>.</p>
+<p>XSL stylesheets use XPath expressions to select nodes, specify conditions, and generate text for the result tree. 
+XPath provides an API that you can call directly. For example, you may want to select nodes programmatically and do 
+your own processing without a stylesheet. &xslt4c; provides an XPathEvaluator interface to simplify the process of
+executing XPath expressions.</p>
+<p>For an example that executes XPath expressions against XML source files, see <link idref="samples" anchor="simplexpathapi">SimpleXPathAPI</link> 
+(takes advantage of the XPathEvaluator interface) and <link idref="samples" anchor="xpathwrapper">XPathWrapper</link>.</p>
 </s2><anchor name="tracelistener"/>
 <s2 title="Using TraceListener">
 <p>TraceListener is a debugging abstract base class implemented by TraceListenerDefault. You can use TraceListener to trace any combination of the following:</p>

@@ -1,4 +1,4 @@
-<s3 title="Changes since &xslt4c; version 1.0">
+<s3 title="Changes for &xslt4c; version 1.1">
 <p>In addition to adding to the list of platforms on which &xslt4c; builds, our focus for this release has been on bug fixes, performance enhancements, 
 and providing a simplified C++ and C API for performing standard transformations. Major updates since version 1.0 include:</p>
 <ul>
@@ -30,7 +30,7 @@ anchor="xalantransformer">XalanTransformer</link> class and associated header fi
     recognize.</li>
 </ul>
 </s3>
-<s3 title="Changes since &xslt4c; version 0.40.0">
+<s3 title="Changes for &xslt4c; version 1.0">
 <p>Major updates since version 0.40.0 include:</p>
 <ul>
 <li>Full support for namespace handling<br/><br/></li>
@@ -40,7 +40,7 @@ anchor="xalantransformer">XalanTransformer</link> class and associated header fi
 <li>Support for the output encoding attribute</li>
 </ul>
 </s3>
-<s3 title="Changes since &xslt4c; version 0.30.0">
+<s3 title="Changes for &xslt4c; version 0.40.0">
 <p>Major updates since version 0.30.0 include:</p>
 <ul>
 <li>Permitting OS file names (as well as URLs) as command-line arguments with TestXSLT<br/><br/></li>

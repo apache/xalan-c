@@ -2,7 +2,6 @@
 <!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd"[
 <!ENTITY done-c SYSTEM "DONE">
 <!ENTITY status-c SYSTEM "STATUS">
-<!ENTITY bugs-c SYSTEM "BUGS">
 <!ENTITY history-c SYSTEM "history.xml">]>
 
 <!--
@@ -74,16 +73,31 @@
    <ul>
     <li><link anchor="done">Changes since &xslt4c; version 1.1</link></li>    
     <li><link anchor="bugs">Bug reporting</link></li>    
-    <li><link anchor="xml4j">Version of &xml4c; to use</link></li>
+    <li><link anchor="xml4c">Version of &xml4c; to use</link></li>
     <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
    </ul>
      <anchor name="done"/>
-     &done-c;
+  <s3 title="Changes since &xslt4c; version 1.1">
+     <p>TO BE ADDED</p>
+     <ul>
+      <li>Extension functions</li>
+      <li></li>      
+      <li></li>
+      <li></li>
+      </ul>
+   </s3>  
      <anchor name="bugs"/>
-     &bugs-c;     
-     <anchor name="xml4j"/>
-     &status-c;
-     
+   <s3 title="Bug reporting">
+     <p>All known &xslt4c; bugs are listed in <resource-ref idref="bugzilla"/>. For a list of open bugs with links to each bug
+      report, see <resource-ref idref="buglist"/>. If you find a new bug, please enter a XalanC bug report in this
+      database.</p>
+     <note>Before you can enter your first bug report, you must submit your email address to Bugzilla and receive a password.</note> 
+     <p>We strongly encourage you write patches for problems you find and submit them to
+      xalan-dev@xml.apache.org. We review the patches we receive to make sure they do not break something else, and (assuming they 
+     do not) include them in our next release. In the interest of fixing bugs, adding enhancements, and addressing outstanding design
+     issues, we sincerely want (and need!) your active participation in the ongoing development of Xalan.</p>
+     </s3><anchor name="xml4c"/>     
+     &status-c;     
   </s2><anchor name="build"/>
   <s2 title="Build Notes">
 <ul>
