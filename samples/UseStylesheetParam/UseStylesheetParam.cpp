@@ -11,9 +11,9 @@
 #include <iostream>
 #endif
 
+
+
 #include <util/PlatformUtils.hpp>
-#include <parsers/DOMParser.hpp>
-#include <dom/DOM_Node.hpp>
 
 
 
@@ -26,7 +26,6 @@
 
 
 #include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 
 
@@ -41,8 +40,8 @@
 
 
 
-#include <XercesParserLiaison/XercesDOMSupport.hpp>
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
 
 
@@ -83,17 +82,22 @@ main(
 			// containing the input files. 
 			const XalanDOMString	theXMLFileName("foo.xml");
 			const XalanDOMString	theXSLFileName("foo.xsl");
-			XSLTInputSource			theInputSource(c_wstr(theXMLFileName));
-			XSLTInputSource			theStylesheetSource(c_wstr(theXSLFileName));
+
+			const XSLTInputSource	theInputSource(c_wstr(theXMLFileName));
+			const XSLTInputSource	theStylesheetSource(c_wstr(theXSLFileName));
  
 			// The output target...
 			const XalanDOMString	theOutputFile("foo.out");
 			XSLTResultTarget		theResultTarget(theOutputFile);
 
-			// Create the support objects that are necessary for running the processor...
-			XercesDOMSupport				theDOMSupport;
-			XercesParserLiaison				theParserLiaison(theDOMSupport);
-			XPathSupportDefault				theXPathSupport(theDOMSupport);
+			// Create some support objects that are necessary for running the processor...
+			XalanSourceTreeDOMSupport		theDOMSupport;
+			XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport);
+
+			// Hook the two together...
+			theDOMSupport.setParserLiaison(&theParserLiaison);
+
+			// Create some more support objects.
 			XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
 			XObjectFactoryDefault			theXObjectFactory;
 			XPathFactoryDefault				theXPathFactory;
@@ -101,7 +105,6 @@ main(
 			// Create a processor...
 			XSLTEngineImpl	theProcessor(
 						theParserLiaison,
-						theXPathSupport,
 						theXSLTProcessorEnvSupport,
 						theDOMSupport,
 						theXObjectFactory,
@@ -121,7 +124,7 @@ main(
 			StylesheetExecutionContextDefault		theExecutionContext(
 							theProcessor,
 							theXSLTProcessorEnvSupport,
-							theXPathSupport,
+							theDOMSupport,
 							theXObjectFactory);
 
 			// Set the stylesheet parameter.

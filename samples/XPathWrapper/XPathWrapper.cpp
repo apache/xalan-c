@@ -32,7 +32,7 @@
 
 
 
-#include <DOMSupport/DOMSupportDefault.hpp>
+#include <DOMSupport/DOMServices.hpp>
 
 
 
@@ -41,15 +41,14 @@
 #include <XPath/XPathEnvSupportDefault.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathInit.hpp>
-#include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 #include <XPath/ElementPrefixResolverProxy.hpp>
 
 
 
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
-#include <XercesParserLiaison/XercesDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
 
 
@@ -92,9 +91,12 @@ public:
 			// Initialize the XPath subsystem...
 			XPathInit						theInit;
 
-			// parse the XML file
-			XercesDOMSupport				theDOMSupport;
-			XercesParserLiaison				theLiaison(theDOMSupport);
+			// We'll use these to parse the XML file.
+			XalanSourceTreeDOMSupport		theDOMSupport;
+			XalanSourceTreeParserLiaison	theLiaison(theDOMSupport);
+
+			// Hook the two together...
+			theDOMSupport.setParserLiaison(&theLiaison);
 
 			XalanElement*	rootElem = 0;
 
@@ -118,9 +120,8 @@ public:
 
 			// configure the objects needed for XPath to work with the Xerces DOM
 			XPathEnvSupportDefault			theEnvSupport;
-			XPathSupportDefault				theSupport(theDOMSupport);
 			XObjectFactoryDefault			theXObjectFactory;
-			XPathExecutionContextDefault	theExecutionContext(theEnvSupport, theSupport, theXObjectFactory);
+			XPathExecutionContextDefault	theExecutionContext(theEnvSupport, theDOMSupport, theXObjectFactory);
 			XPathFactoryDefault				theXPathFactory;
 			XPathProcessorImpl				theXPathProcessor;
 
@@ -131,12 +132,12 @@ public:
 
 				theXPathProcessor.initXPath(*contextXPath,										
 											TranscodeFromLocalCodePage(context),
-											ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
+											ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport),
 											theEnvSupport);
 
 	   			XObjectPtr	xObj =
 					contextXPath->execute(rootElem,
-										  ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
+										  ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport),
 										  theExecutionContext);
 
 				const NodeRefListBase&	contextNodeList = xObj->nodeset();
@@ -171,11 +172,11 @@ public:
 					XPath* const	xpath = theXPathFactory.create();
 					theXPathProcessor.initXPath(*xpath,
 												TranscodeFromLocalCodePage(expr),
-												ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
+												ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport),
 												theEnvSupport);
 
 					xObj = xpath->execute(contextNodeList.item(0),
-										  ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
+										  ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport),
 										  theExecutionContext);
 
 					// now encode the results.  For all types but nodelist, we'll just convert it to a string
@@ -200,7 +201,7 @@ public:
 								else if (theType == XalanNode::ELEMENT_NODE)
 									str = node->getNodeName();
 								else
-									theSupport.getNodeData(*node, str);
+									DOMServices::getNodeData(*node, str);
 
 								theResultList.push_back(TranscodeToLocalCodePage(str));
 							}

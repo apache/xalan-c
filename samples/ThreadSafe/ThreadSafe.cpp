@@ -9,7 +9,6 @@
 #include <DOMSupport/DOMSupportDefault.hpp>
 
 #include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 
 #include <XSLT/StylesheetConstructionContextDefault.hpp>
@@ -23,8 +22,8 @@
 
 
 
-#include <XercesParserLiaison/XercesDOMSupport.hpp>
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
 
 
@@ -69,22 +68,21 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 	const int	number = reinterpret_cast<int>(param);
 	const DWORD		theThreadID = GetCurrentThreadId();
 
-	// Create the support objects that are necessary for running the processor...
-	XercesDOMSupport				theDOMSupport;
-	XercesParserLiaison				theParserLiaison(theDOMSupport);
-	XPathSupportDefault				theXPathSupport(theDOMSupport);
+	// Create some support objects that are necessary for running the processor...
+	XalanSourceTreeDOMSupport		theDOMSupport;
+	XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport);
+
+	// Hook the two together...
+	theDOMSupport.setParserLiaison(&theParserLiaison);
+
+	// Create some more support objects.
 	XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
 	XObjectFactoryDefault			theXObjectFactory;
 	XPathFactoryDefault				theXPathFactory;
 
-	// The default is that documents are not thread-safe.  Set this to
-	// true so they are.
-	theParserLiaison.setThreadSafe(true);
-
 	// Create a processor...and output the start message.
 	XSLTEngineImpl	theProcessor(
 					theParserLiaison,
-					theXPathSupport,
 					theXSLTProcessorEnvSupport,
 					theDOMSupport,
 					theXObjectFactory,
@@ -100,7 +98,7 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 	StylesheetExecutionContextDefault	ssExecutionContext(
 						theProcessor,
 						theXSLTProcessorEnvSupport,
-						theXPathSupport,
+						theDOMSupport,
 						theXObjectFactory);
 
 	// Set the XSLTInputSource...
@@ -197,10 +195,14 @@ int main(int argc, const char*	/* argv */[])
 				// Initialize the Xalan XSLT subsystem...
 				XSLTInit						theInit;
 
-				// Create the support objects required to run the processor...
-				XercesDOMSupport				ssDOMSupport;
-				XercesParserLiaison				ssParserLiaison(ssDOMSupport);
-				XPathSupportDefault				ssXPathSupport(ssDOMSupport);
+				// Create some support objects that are necessary for running the processor...
+				XalanSourceTreeDOMSupport		ssDOMSupport;
+				XalanSourceTreeParserLiaison	ssParserLiaison(ssDOMSupport);
+
+				// Hook the two together...
+				ssDOMSupport.setParserLiaison(&ssParserLiaison);
+
+				// Create some more support objects.
 				XSLTProcessorEnvSupportDefault	ssXSLTProcessorEnvSupport;
 				XObjectFactoryDefault			ssXObjectFactory;
 				XPathFactoryDefault				ssXPathFactory;
@@ -211,7 +213,6 @@ int main(int argc, const char*	/* argv */[])
 
 				XSLTEngineImpl	ssProcessor(
 						ssParserLiaison,
-						ssXPathSupport,
 						ssXSLTProcessorEnvSupport,
 						ssDOMSupport,
 						ssXObjectFactory,
