@@ -154,10 +154,18 @@ public:
 	 *
 	 * Constructor for XalanSourceTreeDocument.
 	 *
+	 * @param theNumber The number of the document.
 	 * @param fPoolAllText If false, text node data that is not whitespace will not be pooled.
+	 * @param theNamesStringPoolBlockSize The block size for allocating strings in the name pool
+	 * @param theNamesStringPoolBucketCount The number of buckets for allocating strings in the name pool
+	 * @param theNamesStringPoolBucketSize The bucket size for allocating strings in the name pool
+	 * @param theValuesStringPoolBlockSize The block size for allocating strings in the values pool
+	 * @param theValuesStringPoolBucketCount The number of buckets for allocating strings in the values pool
+	 * @param theValuesStringPoolBucketSize The bucket size for allocating strings in the values pool
 	 *
 	 */
 	XalanSourceTreeDocument(
+			unsigned long	theNumber,
 			bool			fPoolAllText = true,
 			unsigned int	theNamesStringPoolBlockSize = eDefaultNamesStringPoolBlockSize,
 			unsigned int	theNamesStringPoolBucketCount = eDefaultNamesStringPoolBucketCount,
@@ -320,6 +328,9 @@ public:
 	virtual XalanElement*
 	getElementById(const XalanDOMString&	elementId) const;
 
+	virtual unsigned long
+	getNumber() const;
+
 
 	// Interfaces not inherited from XalanDocument...
 
@@ -475,6 +486,8 @@ private:
 
 
 	// Data members...
+	const unsigned long								m_number;
+
 	XalanNode*										m_firstChild;
 
 	XalanSourceTreeElement*							m_documentElement;

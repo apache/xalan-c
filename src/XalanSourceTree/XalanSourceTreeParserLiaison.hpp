@@ -157,6 +157,9 @@ public:
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
 
+	virtual unsigned long
+	getDocumentNumber();
+
 	virtual int
 	getIndent() const;
 
@@ -363,6 +366,8 @@ public:
 private:
 
 	// Data members...
+
+	unsigned long				m_documentNumber;
 
 	XercesParserLiaison			m_xercesParserLiaison;
 

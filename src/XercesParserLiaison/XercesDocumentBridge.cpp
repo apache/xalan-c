@@ -103,9 +103,11 @@
 
 XercesDocumentBridge::XercesDocumentBridge(
 			const DOM_Document&		theXercesDocument,
+			unsigned long			theNumber,
 			bool					threadSafe,
 			bool					buildBridge) :
 	XalanDocument(),
+	m_number(theNumber),
 	m_xercesDocument(theXercesDocument),
 	m_documentElement(0),
 	m_nodeMap(),
@@ -1537,6 +1539,14 @@ XercesDocumentBridge::getElementById(const XalanDOMString&	elementId) const
 #else
 				static_cast<XalanElement*>(mapNode(theXercesNode));
 #endif
+}
+
+
+
+unsigned long
+XercesDocumentBridge::getNumber() const
+{
+	return m_number;
 }
 
 

@@ -81,6 +81,7 @@ static const XalanDOMString		s_emptyString;
 
 
 XalanSourceTreeDocument::XalanSourceTreeDocument(
+			unsigned long	theNumber,
 			bool			fPoolAllText,
 			unsigned int	theNamesStringPoolBlockSize,
 			unsigned int	theNamesStringPoolBucketCount,
@@ -89,6 +90,7 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(
 			unsigned int	theValuesStringPoolBucketCount,
 			unsigned int	theValuesStringPoolBucketSize) :
 	XalanDocument(),
+	m_number(theNumber),
 	m_firstChild(0),
 	m_documentElement(0),
 	m_attributeAllocator(200),
@@ -536,6 +538,14 @@ XalanSourceTreeDocument::getElementById(const XalanDOMString&	elementId) const
 	{
 		return (*i).second;
 	}
+}
+
+
+
+unsigned long
+XalanSourceTreeDocument::getNumber() const
+{
+	return m_number;
 }
 
 

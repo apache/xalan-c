@@ -128,6 +128,7 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::validationString[] = {
 
 
 XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(XalanSourceTreeDOMSupport&	/* theSupport */) :
+	m_documentNumber(0),
 	m_xercesParserLiaison(),
 	m_documentMap(),
 	m_persistentDocumentMap(),
@@ -237,9 +238,7 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 
 	theReader->parse(inputSource);
 
-	XalanSourceTreeDocument* const	theDocument = theContentHandler.detachDocument();
-
-	return theDocument;
+	return theContentHandler.getDocument();
 }
 
 
@@ -269,6 +268,14 @@ XalanSourceTreeParserLiaison::destroyDocument(XalanDocument*		theDocument)
 
 		delete theDocument;
 	}
+}
+
+
+
+unsigned long
+XalanSourceTreeParserLiaison::getDocumentNumber()
+{
+	return m_documentNumber++;
 }
 
 
@@ -466,7 +473,7 @@ XalanSourceTreeDocument*
 XalanSourceTreeParserLiaison::createXalanSourceTreeDocument()
 {
 	XalanSourceTreeDocument* const	theNewDocument =
-		new XalanSourceTreeDocument(m_poolAllText);
+		new XalanSourceTreeDocument(m_documentNumber++, m_poolAllText);
 
 	m_documentMap[theNewDocument] = theNewDocument;
 

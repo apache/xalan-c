@@ -220,9 +220,6 @@ public:
 	void
 	setDocument(XalanSourceTreeDocument*	theDocument);
 
-	XalanSourceTreeDocument*
-	detachDocument();
-
 private:
 
 	// Not implemented...
@@ -272,10 +269,6 @@ private:
 	// Stack of last children appended.  There is a ono-to-one
 	// correspondance to the entries in m_elementStack.
 	LastChildStackType			m_lastChildStack;
-
-	// If true, the instance owns the document and will delete
-	// it when necessary.
-	bool						m_ownsDocument;
 
 	// If true, the handler will accumulate text from calls to
 	// characters() until another event triggers the creation

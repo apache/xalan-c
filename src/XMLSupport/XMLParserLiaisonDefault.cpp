@@ -71,7 +71,8 @@ XMLParserLiaisonDefault::XMLParserLiaisonDefault() :
 	XMLParserLiaison(),
 	m_Indent(-1),
 	m_fUseValidation(false),
-	m_entityResolver(0)
+	m_entityResolver(0),
+	m_documentNumber(0)
 {
 }
 

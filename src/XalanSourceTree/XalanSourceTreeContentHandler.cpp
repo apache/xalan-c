@@ -83,7 +83,6 @@ XalanSourceTreeContentHandler::XalanSourceTreeContentHandler(
 	m_elementStack(),
 	m_lastChild(0),
 	m_lastChildStack(),
-	m_ownsDocument(false),
 	m_accumulateText(fAccumulateText),
 	m_textBuffer()
 {
@@ -93,10 +92,6 @@ XalanSourceTreeContentHandler::XalanSourceTreeContentHandler(
 
 XalanSourceTreeContentHandler::~XalanSourceTreeContentHandler()
 {
-	if (m_ownsDocument == true)
-	{
-		delete m_document;
-	}
 }
 
 
@@ -269,18 +264,6 @@ XalanSourceTreeContentHandler::setDocumentLocator(const Locator* const	/* locato
 void
 XalanSourceTreeContentHandler::startDocument()
 {
-	// Clean up and reset everything...
-	if (m_document == 0)
-	{
-		m_document = new XalanSourceTreeDocument;
-	}
-	else if (m_ownsDocument == true)
-	{
-		delete m_document;
-
-		m_document = new XalanSourceTreeDocument;
-	}
-
 	m_currentElement = 0;
 
 	m_elementStack.clear();
@@ -463,26 +446,7 @@ XalanSourceTreeContentHandler::startEntity(const XMLCh* const	name)
 void
 XalanSourceTreeContentHandler::setDocument(XalanSourceTreeDocument*	theDocument)
 {
-	if (m_ownsDocument == true)
-	{
-		delete m_document;
-	}
-
 	m_document = theDocument;
-}
-
-
-
-XalanSourceTreeDocument*
-XalanSourceTreeContentHandler::detachDocument()
-{
-	XalanSourceTreeDocument* const	theDocument = m_document;
-
-	m_document = 0;
-
-	m_ownsDocument = false;
-
-	return theDocument;
 }
 
 

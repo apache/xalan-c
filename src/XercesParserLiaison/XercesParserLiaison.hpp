@@ -145,6 +145,9 @@ public:
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
 
+	virtual unsigned long
+	getDocumentNumber();
+
 	virtual int
 	getIndent() const;
 
@@ -453,6 +456,8 @@ protected:
 private:
 
 	// Data members...
+	unsigned long		m_documentNumber;
+
 	int 				m_indent;
 
 	bool				m_useValidation;

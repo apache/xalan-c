@@ -112,6 +112,7 @@ static const XalanDOMChar	theDefaultSpecialCharacters[] =
 
 
 XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
+	m_documentNumber(0),
 	m_indent(-1),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),
@@ -256,6 +257,14 @@ XercesParserLiaison::destroyDocument(XalanDocument*		theDocument)
 
 		delete theDocument;
 	}
+}
+
+
+
+unsigned long
+XercesParserLiaison::getDocumentNumber()
+{
+	return m_documentNumber++;
 }
 
 
@@ -594,7 +603,7 @@ XercesParserLiaison::createDocument(
 			bool					buildBridge)
 {
 	XercesDocumentBridge* const		theNewDocument =
-		new XercesDocumentBridge(theXercesDocument, threadSafe, buildBridge);
+		new XercesDocumentBridge(theXercesDocument, m_documentNumber++, threadSafe, buildBridge);
 
 	m_documentMap[theNewDocument] = theNewDocument;
 

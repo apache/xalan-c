@@ -178,6 +178,15 @@ public:
 	destroyDocument(XalanDocument*	theDocument) = 0;
 
 	/**
+	 * Get a unique number for identifying the document.  The number need
+	 * only be unique to the parser liaison instance.
+	 *
+	 * @return The unique number
+	 */
+	virtual unsigned long
+	getDocumentNumber() = 0;
+
+	/**
 	 * Get the amount to indent when indent-result="yes".
 	 *
 	 * @return number of characters to indent

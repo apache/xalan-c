@@ -121,6 +121,12 @@ public:
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
 
+	virtual unsigned long
+	getDocumentNumber()
+	{
+		return m_documentNumber++;
+	}
+
 	virtual int
 	getIndent() const { return m_Indent; }
 
@@ -156,6 +162,8 @@ private:
 	bool				m_fUseValidation;
 
 	EntityResolver*		m_entityResolver;
+
+	unsigned long		m_documentNumber;
 };
 
 
