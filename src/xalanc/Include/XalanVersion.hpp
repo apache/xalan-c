@@ -138,12 +138,14 @@
 #define CAT2_SEP_PERIOD(a, b) #a "." #b
 #define CAT2_SEP_NIL(a, b) #a #b
 #define CAT2_RAW_NUMERIC(a, b) a ## b
+#define CAT2_RAW_NUMERIC_SEP_UNDERSCORE(a, b) a ## _ ## b 
 
 // two argument macro invokers
 #define INVK_CAT2_SEP_UNDERSCORE(a,b) CAT2_SEP_UNDERSCORE(a,b)
 #define INVK_CAT2_SEP_PERIOD(a,b)     CAT2_SEP_PERIOD(a,b)
 #define INVK_CAT2_STR_SEP_NIL(a,b)    CAT2_SEP_NIL(a,b)
 #define INVK_CAT2_RAW_NUMERIC(a,b)    CAT2_RAW_NUMERIC(a,b)
+#define INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(a,b)    CAT2_RAW_NUMERIC_SEP_UNDERSCORE(a,b)
 
 // ---------------------------------------------------------------------------
 // T H R E E   A R G U M E N T   C O N C A T E N A T I O N   M A C R O S

@@ -18,22 +18,17 @@
 
 
 // Class header file.
-#include "XalanICUMessageLoader.hpp"
-
-#include "PlatformSupportInit.hpp"
-
-#include "DOMStringHelper.hpp"
-
-#include "unicode/uloc.h"
-
-#include "unicode/udata.h" 
-
-#include <xercesc/util/XMLMsgLoader.hpp> //
-
-#include <xercesc/util/XMLString.hpp>
-
 #include "xalanc/Include/XalanVersion.hpp"
 
+#include <xalanc/PlatformSupport/XalanICUMessageLoader.hpp>
+#include <xalanc/PlatformSupport/PlatformSupportInit.hpp>
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+
+#include "unicode/uloc.h"
+#include "unicode/udata.h" 
+
+#include <xercesc/util/XMLMsgLoader.hpp> 
+#include <xercesc/util/XMLString.hpp>
 
 #define XALAN_MESSAGES_NAME XalanMessages_
 
@@ -61,11 +56,11 @@
 
 
 #define ICUDLL_ENTRYPOINT_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME,\
-									INVK_CAT3_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR,XALAN_VERSION_REVISION),\
+									INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\
 									ENTRY_POINT_SUFFIX)
 
 #define PACKAGE_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME,\
-									INVK_CAT3_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR,XALAN_VERSION_REVISION),\
+									INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\
 									PACKAGE_NAME_SUFFIX)
 
 extern "C" const char U_IMPORT  ICUDLL_ENTRYPOINT_NAME [];

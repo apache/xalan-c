@@ -44,12 +44,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2D.lib"
-				OutputFile="..\..\Build\Win32\VC7\Debug/Harness_1_8_0D.dll"
+				OutputFile="..\..\Build\Win32\VC7\Debug/Harness_1_8D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7\Debug;$(XERCESCROOT)\Build\Win32\VC7\Debug;$(XERCESCROOT)\lib"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\Build\Win32\VC7\Debug/Harness_1_8_0D.pdb"
+				ProgramDatabaseFile=".\..\..\Build\Win32\VC7\Debug/Harness_1_8D.pdb"
 				ImportLibrary="..\..\Build\Win32\VC7\Debug/Harness_1D.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -103,7 +103,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2.lib"
-				OutputFile="..\..\Build\Win32\VC7\Release/Harness_1_8_0.dll"
+				OutputFile="..\..\Build\Win32\VC7\Release/Harness_1_8.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release;$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib"
@@ -161,12 +161,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2.lib"
-				OutputFile="..\..\Build\Win32\VC7\Release.symbols/Harness_1_8_0S.dll"
+				OutputFile="..\..\Build\Win32\VC7\Release.symbols/Harness_1_8S.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release;$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\Build\Win32\VC7\Release.symbols/Harness_1_8_0S.pdb"
+				ProgramDatabaseFile=".\..\..\Build\Win32\VC7\Release.symbols/Harness_1_8S.pdb"
 				ImportLibrary="..\..\Build\Win32\VC7\Release.symbols/Harness_1S.lib"/>
 			<Tool
 				Name="VCMIDLTool"
