@@ -59,6 +59,7 @@
 
 
 
+#include <cstdlib>
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
 #else
@@ -98,6 +99,10 @@ using std::cout;
 using std::endl;
 #endif
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+using std::atoi;
+#endif
+
 
 
 void
@@ -116,9 +121,15 @@ Usage()
 		 << endl
 		 << "  -a                    Use xml-stylesheet PI, not the 'stylesheet' argument"
 		 << endl
+		 << "  -i integer            Indent the specified amount."
+		 << endl
+		 << "  -m                    Omit the META tag in HTML output."
+		 << endl
 		 << "  -o filename           Write output to the specified file."
 		 << endl
 		 << "  -p name expression    Sets a stylesheet parameter."
+		 << endl
+		 << "  -u                    Disable escaping of URLs in HTML output."
 		 << endl
 		 << "  -v                    Validates source documents."
 		 << endl
@@ -135,6 +146,9 @@ public:
 	Params(unsigned long	maxParams) :
 		m_validate(false),
 		m_useStylesheetPI(false),
+		m_omitMETATag(false),
+		m_noURLEscaping(false),
+		m_indentAmount(-1),
 		m_inFileName(0),
 		m_xslFileName(0),
 		m_outFileName(0),
@@ -176,6 +190,21 @@ public:
 	{
 		theTransformer.setUseValidation(m_validate);
 
+		if (m_omitMETATag == true)
+		{
+			theTransformer.setOmitMETATag(XalanTransformer::eOmitMETATagYes);
+		}
+
+		if (m_noURLEscaping == true)
+		{
+			theTransformer.setEscapeURLs(XalanTransformer::eEscapeURLsNo);
+		}
+
+		if (m_indentAmount >= 0)
+		{
+			theTransformer.setIndent(m_indentAmount);
+		}
+
 		for(unsigned long i = 0; i < m_currentParam; ++i)
 		{
 			theTransformer.setStylesheetParam(
@@ -186,6 +215,10 @@ public:
 
 	bool			m_validate;
 	bool			m_useStylesheetPI;
+	bool			m_omitMETATag;
+	bool			m_noURLEscaping;
+
+	int				m_indentAmount;
 
 	const char*		m_inFileName;
 	const char*		m_xslFileName;
@@ -241,6 +274,24 @@ getArgs(
 			{
 				params.m_useStylesheetPI = true;
 			}
+			else if (argv[i][1] == 'i') 
+			{
+				++i;
+
+				if(i < argc && argv[i][0] != '-' &&
+				   strlen(argv[i]) != 0)
+				{
+					params.m_indentAmount = atoi(argv[i]);
+				}
+				else
+				{
+					fSuccess = false;
+				}
+			}
+			else if (argv[i][1] == 'm') 
+			{
+				params.m_omitMETATag = true;
+			}
 			else if (argv[i][1] == 'o') 
 			{
 				++i;
@@ -287,6 +338,10 @@ getArgs(
 						}
 					}
 				}
+			}
+			else if (argv[i][1] == 'u') 
+			{
+				params.m_noURLEscaping = true;
 			}
 			else if (argv[i][1] == 'v')
 			{
