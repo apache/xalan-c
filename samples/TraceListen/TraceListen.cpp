@@ -163,7 +163,7 @@ main(
 
 			// Make sure that error reporting, which includes any TraceListener output
 			// does not throw exceptions when transcoding, since that could result in
-			// an exception being thrown will another exception is active.  In particular,
+			// an exception being thrown while another exception is active.  In particular,
 			// characters that the TraceListener writes might not be representable in the
 			// local code page.
 			theStdErr.setThrowTranscodeException(false);
