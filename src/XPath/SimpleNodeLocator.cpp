@@ -459,7 +459,7 @@ SimpleNodeLocator::stepPattern(
 					if(xpath.s_MatchScoreNone != score)
 						break;
 
-					localContext = localContext->getParentNode();
+					localContext = executionContext.getParentOfNode(*localContext);
 				}
 			}
 		}
@@ -993,7 +993,7 @@ SimpleNodeLocator::findDescendants(
 
 			if(0 == nextNode)
 			{
-				pos = pos->getParentNode();
+				pos = executionContext.getParentOfNode(*pos);
 
 				if(context == pos || pos == 0)
 				{
@@ -1062,11 +1062,27 @@ SimpleNodeLocator::findFollowing(
 
 		while(0 == nextNode)
 		{
-			nextNode = pos->getNextSibling();
+			// This requires some explanation.  pos could be an attribute
+			// node, so getNextSibling() will always return 0.  In that
+			// case, I want to continue the search with the first child of
+			// the owner element, as if attribute nodes are children which
+			// are always _before_ the first child element.  I don't have to
+			// consider following attributes, since they _never_ match the
+			// following axis.
+			if (pos->getNodeType() == XalanNode::ATTRIBUTE_NODE)
+			{
+				assert(executionContext.getParentOfNode(*pos) != 0);
+
+				nextNode = executionContext.getParentOfNode(*pos)->getFirstChild();
+			}
+			else
+			{
+				nextNode = pos->getNextSibling();
+			}
 
 			if(0 == nextNode)
 			{
-				pos = pos->getParentNode();
+				pos = executionContext.getParentOfNode(*pos);
 
 				if(doc == pos || 0 == pos)
 				{
@@ -1152,10 +1168,21 @@ SimpleNodeLocator::findPreceeding(
 
 	XalanNode*				pos = doc;
 
+	// If the context node is an attribute, we need to perform some
+	// magic to stop the search at the appropriate point, which is when
+	// we arrive back at the parent.
+	const bool				contextIsAttribute =
+			context->getNodeType() == XalanNode::ATTRIBUTE_NODE ? true : false;
+
+	const XalanNode* const	theAttributeContextParent =
+		contextIsAttribute == true ? executionContext.getParentOfNode(*context) : 0;
+
 	while(0 != pos)
 	{
 		if(context == pos)
+		{
 			break;
+		}
 
 		const double	score = nodeTest(xpath,
 										 executionContext,
@@ -1185,11 +1212,23 @@ SimpleNodeLocator::findPreceeding(
 
 			if(isParent == false)
 			{
-			  subQueryResults.insertNode(pos, 0);
+				subQueryResults.insertNode(pos, 0);
 			}
 		}
 
-		XalanNode*	nextNode = pos->getFirstChild();
+		XalanNode*	nextNode = 0;
+
+		// Check to see if we're back at the attribute context node's
+		// parent, in which case, we should stop.
+		if (contextIsAttribute == true &&
+			pos == theAttributeContextParent)
+		{
+			nextNode = context;
+		}
+		else
+		{
+			nextNode = pos->getFirstChild();
+		}
 
 		while(0 == nextNode)
 		{
@@ -1197,7 +1236,7 @@ SimpleNodeLocator::findPreceeding(
 
 			if(0 == nextNode)
 			{
-				pos = pos->getParentNode();
+				pos = executionContext.getParentOfNode(*pos);
 
 				if(doc == pos)
 				{
