@@ -220,7 +220,8 @@ TestCase2(
 						  "transformer.uninstallExternalFunctionGlobal()",
 						  logFile,
 						  theOutputFile,
-						  theGoldFile);
+						  theGoldFile,
+						  true);
 }
 //	TestCase3:
 //  API Call:	
@@ -274,7 +275,8 @@ void TestCase3(
 						       "transformer.installExternalFunction()",
 						       logFile,
 							   theOutputFile,
-							   theGoldFile);
+							   theGoldFile,
+							   true);
 
 	// Now unInstall the external function "nodeset". Once again the transform should
 	// _NOT_ run the test successfully
@@ -288,7 +290,8 @@ void TestCase3(
 						       "transformer.uninstallExternalFunction()",
 						       logFile,
 							   theOutputFile,
-							   theGoldFile);
+							   theGoldFile,
+							   true);
 
 }
 
@@ -411,9 +414,9 @@ main(int			argc,
 			const XalanDOMString	theNamespace("http://xml.apache.org/xalan");
 
 			// These testcases are used to test the Install/Uninstall Function API's of the transformer.
-			TestCase2(xalan, files[5], theNamespace, currentDir, logFile, h);
-			TestCase3(xalan, files[5], theNamespace, currentDir, logFile, h);
-			TestCase4(xalan, files[5], theNamespace, currentDir, logFile, h);
+			TestCase2(xalan, files[5], currentDir, theNamespace, logFile, h);
+			TestCase3(xalan, files[5], currentDir, theNamespace, logFile, h);
+			TestCase4(xalan, files[5], currentDir, theNamespace, logFile, h);
 
 			logFile.logTestCaseClose("Done", "Pass");
 			h.reportPassFail(logFile, UniqRunid);
@@ -425,7 +428,6 @@ main(int			argc,
 		}
 
 		XalanTransformer::terminate();
-
 	}
 
 	return 0;
