@@ -21,6 +21,7 @@
 #define PATH_MAX _MAX_PATH
 #define chdir _chdir
 #define getcwd _getcwd
+#define mkdir _mkdir
 #else
 #include <unistd.h>
 #endif
@@ -166,7 +167,7 @@ void FileUtility::checkAndCreateDir(const XalanDOMString&	directory)
 	if ( (chdir(c_str(TranscodeToLocalCodePage(directory)))) )
 	{
 		//cout << "Couldn't change to " << directory << ", will create it." << endl;
-		if ( !(_mkdir(c_str(TranscodeToLocalCodePage(directory)))))
+		if ( !(mkdir(c_str(TranscodeToLocalCodePage(directory)))))
 		{
 			cout << directory << " created." << endl;
 		}
