@@ -99,6 +99,7 @@
 #include "ElemSort.hpp"
 #include "ElemTemplate.hpp"
 #include "NamespacesHandler.hpp"
+#include "NodeSorter.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetExecutionContext.hpp"
 #include "StylesheetRoot.hpp"
@@ -108,7 +109,6 @@
 
 
 const XalanDOMString						ElemTemplateElement::s_emptyString;
-const NodeSorter::NodeSortKeyVectorType		ElemTemplateElement::s_dummyKeys;
 
 
 
@@ -602,12 +602,20 @@ ElemTemplateElement::transformSelectedChildren(
 					theTemplate,
 					sourceNodeContext,
 					selectPattern,
-					s_dummyKeys,
+					0,
 					selectStackFrameIndex);
 		}
 		else
 		{
-			NodeSorter::NodeSortKeyVectorType	keys;
+			typedef NodeSorter::NodeSortKeyVectorType					NodeSortKeyVectorType;
+			typedef StylesheetExecutionContext::BorrowReturnNodeSorter	BorrowReturnNodeSorter;
+
+			BorrowReturnNodeSorter	sorter(executionContext);
+
+			NodeSortKeyVectorType&	keys = sorter->getSortKeys();
+			assert(keys.size() == 0);
+
+			CollectionClearGuard<NodeSortKeyVectorType>		guard(keys);
 
 			// Reserve the space now...
 			keys.reserve(nChildren);
@@ -677,7 +685,7 @@ ElemTemplateElement::transformSelectedChildren(
 					theTemplate,
 					sourceNodeContext,
 					selectPattern,
-					keys,
+					sorter.get(),
 					selectStackFrameIndex);
 		}
 	}
@@ -689,7 +697,7 @@ ElemTemplateElement::transformSelectedChildren(
 				theTemplate,
 				sourceNodeContext,
 				selectPattern,
-				s_dummyKeys,
+				0,
 				selectStackFrameIndex);
 	}
 }
@@ -698,13 +706,13 @@ ElemTemplateElement::transformSelectedChildren(
 
 void
 ElemTemplateElement::doTransformSelectedChildren(
-			StylesheetExecutionContext&					executionContext,
-			const ElemTemplateElement&					xslInstruction,
-			const ElemTemplateElement*					theTemplate,
-			XalanNode*									sourceNodeContext,
-			const XPath&								selectPattern,
-			const NodeSorter::NodeSortKeyVectorType&	keys,
-			int											selectStackFrameIndex) const
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						sourceNodeContext,
+			const XPath&					selectPattern,
+			NodeSorter*						sorter,
+			int								selectStackFrameIndex) const
 {
 	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
 
@@ -748,7 +756,7 @@ ElemTemplateElement::doTransformSelectedChildren(
 					theTemplate,
 					sourceNodeContext,
 					selectStackFrameIndex,
-					keys,
+					sorter,
 					sourceNodes,
 					nNodes);
 		}
@@ -759,16 +767,16 @@ ElemTemplateElement::doTransformSelectedChildren(
 
 void
 ElemTemplateElement::doTransformSelectedChildren(
-			StylesheetExecutionContext&					executionContext,
-			const ElemTemplateElement&					xslInstruction,
-			const ElemTemplateElement*					theTemplate,
-			XalanNode*									sourceNodeContext,
-			int											selectStackFrameIndex,
-			const NodeSorter::NodeSortKeyVectorType&	keys,
-			const NodeRefListBase&						sourceNodes,
-			unsigned int								sourceNodesCount) const
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						sourceNodeContext,
+			int								selectStackFrameIndex,
+			NodeSorter*						sorter,
+			const NodeRefListBase&			sourceNodes,
+			unsigned int					sourceNodesCount) const
 {
-	if (keys.size() > 0)
+	if (sorter != 0)
 	{
 		typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
 		typedef StylesheetExecutionContext::ContextNodeListSetAndRestore			ContextNodeListSetAndRestore;
@@ -779,8 +787,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 		*sortedSourceNodes = sourceNodes;
 
 		{
-			NodeSorter	sorter;
-
 			SetAndRestoreCurrentStackFrameIndex		theStackFrameSetAndRestore(
 					executionContext,
 					selectStackFrameIndex);
@@ -789,7 +795,7 @@ ElemTemplateElement::doTransformSelectedChildren(
 					executionContext,
 					sourceNodes);
 
-			sorter.sort(executionContext, *sortedSourceNodes, keys);
+			sorter->sort(executionContext, *sortedSourceNodes);
 		}
 
 		doTransformSelectedChildren(

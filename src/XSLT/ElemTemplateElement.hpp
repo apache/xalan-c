@@ -85,13 +85,13 @@
 
 
 #include <XSLT/NamespacesHandler.hpp>
-#include <XSLT/NodeSorter.hpp>
 
 
 
 class AttributeList;
 class NamespacesHandler;
 class NodeRefListBase;
+class NodeSorter;
 class QName;
 class Stylesheet;
 class StylesheetConstructionContext;
@@ -684,13 +684,13 @@ protected:
 	 */
 	void
 	doTransformSelectedChildren(
-			StylesheetExecutionContext&					executionContext,
-			const ElemTemplateElement&					xslInstruction,
-			const ElemTemplateElement*					theTemplate,
-			XalanNode*									sourceNodeContext,
-			const XPath&								selectPattern,
-			const NodeSorter::NodeSortKeyVectorType&	keys,
-			int											selectStackFrameIndex) const;
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						sourceNodeContext,
+			const XPath&					selectPattern,
+			NodeSorter*						sorter,
+			int								selectStackFrameIndex) const;
 
 	/**
 	 * Perform a query if needed, and call transformChild for each child.
@@ -705,19 +705,19 @@ protected:
 	 *     think we want this).
 	 * @param selectStackFrameIndex stack frame context for executing the
 	 *                              select statement
-	 * @param keys Any sort keys that should be applied
+	 * @param sorter If non-null, use the sorter to sort the nodes.
 	 * @param sourceNodesCount The number of source nodes.
 	 */
 	void
 	doTransformSelectedChildren(
-			StylesheetExecutionContext&					executionContext,
-			const ElemTemplateElement&					xslInstruction,
-			const ElemTemplateElement*					theTemplate,
-			XalanNode*									sourceNodeContext,
-			int											selectStackFrameIndex,
-			const NodeSorter::NodeSortKeyVectorType&	keys,
-			const NodeRefListBase&						sourceNodes,
-			unsigned int								sourceNodesCount) const;
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						sourceNodeContext,
+			int								selectStackFrameIndex,
+			NodeSorter*						sorter,
+			const NodeRefListBase&			sourceNodes,
+			unsigned int					sourceNodesCount) const;
 
 	/**
 	 * Perform a query if needed, and call transformChild for each child.
@@ -804,8 +804,6 @@ private:
 	XalanEmptyNamedNodeMap	m_fakeAttributes;
 
 	const XalanDOMString	m_baseIndentifier;
-
-	static const NodeSorter::NodeSortKeyVectorType	s_dummyKeys;
 };
 
 
