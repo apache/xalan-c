@@ -58,7 +58,20 @@
 #include "XSLException.hpp"
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
+
+XSLException::XSLException(
+		const XalanDOMString&	theMessage,
+		const XalanDOMString&	theURI,
+		int						theLineNumber,
+		int						theColumnNumber,
+		const XalanDOMString&	theType) :
+	m_message(theMessage),
+	m_uri(theURI),
+	m_lineNumber(theLineNumber),
+	m_columnNumber(theColumnNumber),
+	m_type(theType)
+{
+}
 
 
 
@@ -66,6 +79,9 @@ XSLException::XSLException(
 		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theType) :
 	m_message(theMessage),
+	m_uri(),
+	m_lineNumber(-1),
+	m_columnNumber(-1),
 	m_type(theType)
 {
 }

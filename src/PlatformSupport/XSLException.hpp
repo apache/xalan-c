@@ -76,11 +76,27 @@ public:
 	 * Constructor
 	 * 
 	 * @param theMessage message to write when exception thrown
-	 * @param theType    type of exception, default is "XSLException"
+	 * @param theURI the URI of the related document, if known
+	 * @param theLineNumber the line number of the related document, or -1 if not known
+	 * @param theColumnNumber the column number of the related document, or -1 if not known
+	 * @param theType type of exception, default is "XSLException"
 	 */
 	XSLException(
-		const XalanDOMString&	theMessage,
-		const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLException")));
+			const XalanDOMString&	theMessage,
+			const XalanDOMString&	theURI,
+			int						theLineNumber,
+			int						theColumnNumber,
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLException")));
+
+	/**
+	 * Constructor
+	 * 
+	 * @param theMessage message to write when exception thrown
+	 * @param theType type of exception, default is "XSLException"
+	 */
+	XSLException(
+			const XalanDOMString&	theMessage,
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLException")));
 
 	virtual
 	~XSLException();
@@ -107,9 +123,47 @@ public:
 		return m_message;
 	}
 
+	/**
+	 * Get the URI for the associated document, if any
+	 * 
+	 * @return The URI.
+	 */
+	const XalanDOMString&
+	getURI() const
+	{
+		return m_uri;
+	}
+
+	/**
+	 * Retrieve the line number, or -1 if unknown
+	 * 
+	 * @return the line number
+	 */
+	int
+	getLineNumber() const
+	{
+		return m_lineNumber;
+	}
+
+	/**
+	 * Retrieve the column number, or -1 if unknown
+	 * 
+	 * @return the column number
+	 */
+	int
+	getColumnNumber() const
+	{
+		return m_columnNumber;
+	}
+
 private:
 	
 	const XalanDOMString	m_message;
+	const XalanDOMString	m_uri;
+
+	const int				m_lineNumber;
+	const int				m_columnNumber;
+
 	const XalanDOMString	m_type;
 };
 
