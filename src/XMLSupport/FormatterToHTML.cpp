@@ -130,6 +130,40 @@ FormatterToHTML::~FormatterToHTML()
 }
 
 
+void
+FormatterToHTML::startDocument()
+{
+    m_needToOutputDocTypeDecl = true;
+    m_startNewLine = false;
+    
+    if(true == m_needToOutputDocTypeDecl)
+    {
+		// Output the header if either the System or Public attributes are
+		// specified
+		if((! isEmpty(m_doctypeSystem)) || (! isEmpty(m_doctypePublic)))
+		{
+			m_writer.write("<!DOCTYPE HTML");          
+			if(! isEmpty(m_doctypePublic))
+			{
+				m_writer.write(" PUBLIC \"");
+				m_writer.write(m_doctypePublic);
+				m_writer.write("\"");
+			}
+			if(! isEmpty(m_doctypeSystem))
+			{
+				if(isEmpty(m_doctypePublic))
+					m_writer.write(" SYSTEM \"");
+				else
+					m_writer.write(" \"");
+				m_writer.write(m_doctypeSystem);
+				m_writer.write("\"");
+			}
+			m_writer.write(">");
+			m_writer.write(m_lineSep);
+      }              
+    }
+    m_needToOutputDocTypeDecl = false;
+}
 
 void
 FormatterToHTML::endDocument()
@@ -194,8 +228,9 @@ FormatterToHTML::startElement(
 	// element is a non-block element, then do not indent.
 	m_doIndent =
 	((s_nonblockelems.end() != s_nonblockelems.find(toUpperCase(theName))) ||
-	((! isEmpty(m_currentElementName)) &&
-		(s_nonblockelems.end() != s_nonblockelems.find(toUpperCase(m_currentElementName)))))
+	((! isEmpty(m_currentElementName) &&
+		(s_nonblockelems.end() !=
+		 s_nonblockelems.find(toUpperCase(m_currentElementName))))))
 			? false : true;
 
 	m_currentElementName = name;
@@ -243,12 +278,10 @@ FormatterToHTML::endElement(
  		m_currentIndent -= m_indent;
 		// name = name.toUpperCase();
 		const bool	hasChildNodes = childNodesWereAdded();
-      bool isWhitespaceSensitive 
-        = (s_nonblockelems.end() != s_nonblockelems.find(toUpperCase(name)));
 
 		if (hasChildNodes == true) 
 		{
-			if (shouldIndent() == true && ! isWhitespaceSensitive)
+			if (shouldIndent() == true)
 				indent(m_writer, m_currentIndent);
 			m_writer.write("</");
 			m_writer.write(name);

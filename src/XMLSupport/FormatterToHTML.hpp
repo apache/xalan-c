@@ -133,6 +133,9 @@ public:
 	// These methods are inherited from DocumentHandler ...
 
 	virtual void
+	startDocument();
+
+	virtual void
 	endDocument();
 
 	virtual void
