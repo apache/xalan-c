@@ -207,8 +207,8 @@ DOM_Document domOut = theParserLiaison.mapXercesDocument(docOut)</source>
 </s2><anchor name="compiled"/>
 <s2 title="Compiling stylesheets">
 <p>When &xslt4c; performs a transformation with the <link anchor="process">XSLTEngineImpl process() method used above</link>, it starts by compiling the stylesheet into a binary representation. If you intend to use the same stylesheet to perform multiple transformations, you can enhance efficiency by explicitly compiling the stylesheet and using another XSLTEngimeImpl process() method for each transformation. A compiled stylesheet (a <jump href="apidocs/class_stylesheetroot.html">StylesheetRoot</jump> object) is thread safe, so it even supports concurrent access by multiple clients. If, for example, you are setting up a server application to perform transformations, you can improve performance by compiling any stylesheets the application repeatedly uses.</p>
-<p>A compiled stylesheet requires its own XPath and XObject factory support objects, independent of the support objects for an XSLT processor. So after you have set up the XSLT processor with its support objects, set up other
-factory support objects and use them to create a construction context for the stylesheet:</p>
+<p>A compiled stylesheet requires its own XPath factory support object, independent of the XPath support object for an XSLT processor. So after you have set up the XSLT processor with its support objects, set up another XPath
+factory support object and use it to create a construction context for the stylesheet:</p>
 <source>// Set up the XSLT processor with its support objects
 XercesDOMSupport           theDOMSupport;
 XercesParserLiaison        theParserLiaison(theDOMSupport);
