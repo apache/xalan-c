@@ -105,6 +105,7 @@ public:
 	static const XalanDOMString&	PSEUDONAME_COMMENT;
 	static const XalanDOMString&	PSEUDONAME_PI;
 	static const XalanDOMString&	PSEUDONAME_OTHER;
+	static const XalanDOMString&	PSEUDONAME_NODE;
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanDOMString>			TargetElementStringsVectorType;

@@ -455,7 +455,7 @@ XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings) co
 							break;
 
 						case XPathExpression::eNODETYPE_NODE:
-							targetStrings.push_back(PSEUDONAME_ANY);
+							targetStrings.push_back(PSEUDONAME_NODE);
 							break;
 
 						case XPathExpression::eNODETYPE_ROOT:
@@ -467,7 +467,7 @@ XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings) co
 							break;
 
 						case XPathExpression::eNODETYPE_PI:
-							targetStrings.push_back(PSEUDONAME_ANY);
+							targetStrings.push_back(PSEUDONAME_PI);
 							break;
 
 						case XPathExpression::eNODENAME:
@@ -1269,6 +1269,7 @@ static XalanDOMString	PSEUDONAME_TEXT;
 static XalanDOMString	PSEUDONAME_COMMENT;
 static XalanDOMString	PSEUDONAME_PI;
 static XalanDOMString	PSEUDONAME_OTHER;
+static XalanDOMString	PSEUDONAME_NODE;
 
 
 
@@ -1278,6 +1279,7 @@ const XalanDOMString&	XPath::PSEUDONAME_TEXT = ::PSEUDONAME_TEXT;
 const XalanDOMString&	XPath::PSEUDONAME_COMMENT = ::PSEUDONAME_COMMENT;
 const XalanDOMString&	XPath::PSEUDONAME_PI = ::PSEUDONAME_PI;
 const XalanDOMString&	XPath::PSEUDONAME_OTHER = ::PSEUDONAME_OTHER;
+const XalanDOMString&	XPath::PSEUDONAME_NODE = ::PSEUDONAME_NODE;
 
 
 
@@ -1305,6 +1307,7 @@ XPath::initialize()
 	::PSEUDONAME_COMMENT = XALAN_STATIC_UCODE_STRING("#comment");
 	::PSEUDONAME_PI = XALAN_STATIC_UCODE_STRING("#pi");
 	::PSEUDONAME_OTHER = XALAN_STATIC_UCODE_STRING("*");
+	::PSEUDONAME_NODE = XALAN_STATIC_UCODE_STRING("#node");
 }
 
 
@@ -1318,6 +1321,7 @@ XPath::terminate()
 	releaseMemory(::PSEUDONAME_COMMENT);
 	releaseMemory(::PSEUDONAME_PI);
 	releaseMemory(::PSEUDONAME_OTHER);
+	releaseMemory(::PSEUDONAME_NODE);
 
 	s_functions.DestroyTable();
 }
