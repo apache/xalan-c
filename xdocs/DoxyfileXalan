@@ -23,7 +23,8 @@ PROJECT_NAME         = Xalan-C
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER       = 0.30.0
+# not using -- don't like where it appears; release num is in sources -- dml
+PROJECT_NUMBER       =
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
