@@ -78,11 +78,6 @@
 
 
 
-static XBoolean		theTrueBoolean(true);
-static XBoolean		theFalseBoolean(false);
-
-
-
 XObjectFactoryDefault::XObjectFactoryDefault(
 			unsigned int	theXStringBlockSize,
 			unsigned int	theXNumberBlockSize,
@@ -101,7 +96,9 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 	m_xobjects(),
 	m_xnumberCache(),
 	m_xnodesetCache(),
-	m_XNull(new XNull)
+	m_XNull(new XNull),
+	m_xbooleanFalse(new XBoolean(false)),
+	m_xbooleanTrue(new XBoolean(true))
 {
 }
 
@@ -299,7 +296,14 @@ const XObjectPtr
 XObjectFactoryDefault::createBoolean(
 			bool	theValue)
 {
-	return XObjectPtr(theValue == true ? &theTrueBoolean : &theFalseBoolean);
+	if (theValue == true)
+	{
+		return XObjectPtr(m_xbooleanTrue.get());
+	}
+	else
+	{
+		return XObjectPtr(m_xbooleanFalse.get());
+	}
 }
 
 

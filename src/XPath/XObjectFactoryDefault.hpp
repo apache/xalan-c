@@ -88,6 +88,7 @@
 
 #if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
 #include <XPath/XNull.hpp>
+#include <XPath/XBoolean.hpp>
 #endif
 
 
@@ -96,6 +97,7 @@
 
 
 
+class XBoolean;
 class XNull;
 class XNumber;
 
@@ -247,6 +249,10 @@ private:
 	XNodeSetCacheType				m_xnodesetCache;
 
 	const XalanAutoPtr<XNull>		m_XNull;
+
+	const XalanAutoPtr<XBoolean>	m_xbooleanFalse;
+
+	const XalanAutoPtr<XBoolean>	m_xbooleanTrue;
 };
 
 
