@@ -260,6 +260,7 @@ ElemNumber::findAncestor(
 		
 		contextCopy = DOMServices::getParentOfNode(*contextCopy);
 	}
+
 	return contextCopy;
 }					
 
@@ -392,7 +393,7 @@ ElemNumber::getCountString(
 		}
 		else
 		{
-			numberList.push_back(int(theValue));
+			numberList.push_back(int(DoubleSupport::round(theValue)));
 		}
 	}
 	else
