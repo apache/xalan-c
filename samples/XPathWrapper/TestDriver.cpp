@@ -60,12 +60,8 @@ main(
 
 	try
 	{
-		CharVectorType xmlContext, xmlPath;
-		CopyStringToVector(argv[2], xmlContext);
-		CopyStringToVector(argv[3], xmlPath);
-
 		// call evaluate, passing in the XML string, the context string and the xpath string
-		const XPathWrapper::CharVectorTypeVectorType	result = helper.evaluate(theXML, xmlContext, xmlPath);
+		const XPathWrapper::CharVectorTypeVectorType	result = helper.evaluate(&*theXML.begin(), argv[2], argv[3]);
 
 		// take the resulting string vector	and do whatever you want with it:
 		size_t len = result.size();

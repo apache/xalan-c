@@ -67,10 +67,6 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
 #include <vector>
 
 
@@ -118,9 +114,9 @@ public:
 	// string objects
 	CharVectorTypeVectorType
 	evaluate(
-		const CharVectorType&	xml, 
-		const CharVectorType&	context, 
-		const CharVectorType&	path);
+		const char*		xml, 
+		const char*		context, 
+		const char*		path);
 
 private:
 

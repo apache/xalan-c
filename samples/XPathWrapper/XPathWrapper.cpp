@@ -56,7 +56,6 @@
 
 
 #if !defined(XALAN_NO_NAMESPACES)
-using std::cerr;
 using std::endl;
 using std::vector;
 #endif
@@ -72,9 +71,14 @@ public:
 
 	XPathWrapper::CharVectorTypeVectorType
 	evaluate(
-		const CharVectorType&	xml, 
-		const CharVectorType&	context, 
-		const CharVectorType&	expr)
+		const char*		xml,
+		const char*		context, 
+		const char*		expr,
+#if defined(XALAN_NO_NAMESPACES)
+		ostream&		errorStream)
+#else
+		std::ostream&	errorStream)
+#endif
 	{
 		//initialize Xerces...
 		try
@@ -83,7 +87,7 @@ public:
 		}
 		catch(const XMLException&)
 		{
-			cerr << "XMLPlatformUtils::Initialize() failed!" << endl;
+			errorStream << "XMLPlatformUtils::Initialize() failed!" << endl;
 
 			throw;
 		}
@@ -106,7 +110,7 @@ public:
 			try
 			{
 				// parse XML and get root element
-				MemBufInputSource inStream((XMLByte*)c_str(xml), xml.size(), "foo", false);
+				MemBufInputSource inStream((XMLByte*)xml, strlen(xml), "foo", false);
 
 				XalanDocument* const	doc = theLiaison.parseXMLStream(inStream);
 				assert(doc != 0);
@@ -116,7 +120,7 @@ public:
 			}
 			catch(const XMLException&)
 			{
-				cerr << "Caught XMLExecption..." << endl;
+				errorStream << "Caught XMLExecption..." << endl;
 
 				throw;
 			}
@@ -133,8 +137,8 @@ public:
 				// first get the context nodeset
 				XPath* const	contextXPath = theXPathFactory.create();
 
-				theXPathProcessor.initXPath(*contextXPath,										
-											TranscodeFromLocalCodePage(context),
+				theXPathProcessor.initXPath(*contextXPath,
+											XalanDOMString(context),
 											ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport));
 
 	   			XObjectPtr	xObj =
@@ -149,25 +153,25 @@ public:
 
 				if (theLength == 0)
 				{
-						cerr << "Warning -- No nodes matched the location path \""
-							 << context
-							 << "\"."
-							 << endl
-							 << "Execution cannot continue..."
-							 << endl
-							 << endl;
+						errorStream << "Warning -- No nodes matched the location path \""
+									<< context
+									<< "\"."
+									<< endl
+									<< "Execution cannot continue..."
+									<< endl
+									<< endl;
 				}
 				else
 				{
 					if (theLength > 1)
 					{
-						cerr << "Warning -- More than one node matched the location path \""
-							 << context
-							 << "\"."
-							 << endl
-							 << "The first node matched will be used as the context node."
-							 << endl
-							 << endl;
+						errorStream << "Warning -- More than one node matched the location path \""
+									<< context
+									<< "\"."
+									<< endl
+									<< "The first node matched will be used as the context node."
+									<< endl
+									<< endl;
 					}
 
 					// and now get the result of the primary xpath expression
@@ -221,7 +225,7 @@ public:
 			}
 			catch(const XMLException&)
 			{
-				cerr << "Caught XMLExecption..." << endl;
+				errorStream << "Caught XMLExecption..." << endl;
 
 				throw;
 			}
@@ -255,11 +259,19 @@ XPathWrapper::~XPathWrapper()
 
 XPathWrapper::CharVectorTypeVectorType
 XPathWrapper::evaluate(
-		const CharVectorType&	xml, 
-		const CharVectorType&	context, 
-		const CharVectorType&	path)
+		const char*		xml, 
+		const char*		context, 
+		const char*		path)
 {
-	return pImpl->evaluate(xml, context, path);
+	return pImpl->evaluate(
+			xml,
+			context,
+			path,
+#if defined(XALAN_NO_NAMESPACES)
+			cerr);
+#else
+			std::cerr);
+#endif
 }
 
 
