@@ -316,7 +316,7 @@ doFormatNumber(
 		DecimalFormat	theFormatter(ICUBridge::XalanDOMStringToUnicodeString(thePattern), theDFS.release(), theStatus);
 
 		if (theStatus == U_ZERO_ERROR ||
-			theStatus == U_USING_DEFAULT_ERROR)
+		    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
 		{
 			// Do the format...
 			theFormatter.format(theNumber, theUnicodeResult);
