@@ -99,13 +99,14 @@ public:
 
 protected:
 
-	virtual XalanDOMString
+	virtual void
 	doFormat(
 			XPathExecutionContext&				executionContext,
 			XalanNode*							context,
 			double								theNumber,
 			const XalanDOMString&				thePattern,
-			const XalanDecimalFormatSymbols*	theDFS);
+			const XalanDecimalFormatSymbols*	theDFS,
+			XalanDOMString&						theResult);
 
 private:
 

@@ -116,41 +116,36 @@ FunctionICUFormatNumber::clone() const
 
 
 
-XalanDOMString
+void
 FunctionICUFormatNumber::doFormat(
 			XPathExecutionContext&				executionContext,
 			XalanNode*							context,
 			double								theNumber,
 			const XalanDOMString&				thePattern,
-			const XalanDecimalFormatSymbols*	theDFS)
+			const XalanDecimalFormatSymbols*	theDFS,
+			XalanDOMString&						theResult)
 {
-	XalanDOMString	theResultString;
-
-	unsigned long	theResult = 0;
-
-	theResult = ICUBridge::FormatNumber(
+	unsigned long	theResultCode =
+		ICUBridge::FormatNumber(
 					thePattern,
 					theNumber,
 					theDFS,
-					theResultString);
+					theResult);
 
-	if (theResult != 0)
+	if (theResultCode != 0)
 	{
 		executionContext.warn(
 			XALAN_STATIC_UCODE_STRING("Warning!  ICUBridge::FormatNumber failed. (") +
-				UnsignedLongToDOMString(theResult) +
+				UnsignedLongToDOMString(theResultCode) +
 				XALAN_STATIC_UCODE_STRING(")."),
 			context);
 
-		return FunctionFormatNumber::doFormat(
+		FunctionFormatNumber::doFormat(
 						executionContext,
 						context,
 						theNumber,
 						thePattern,
-						theDFS);
-	}
-	else
-	{
-		return theResultString;
+						theDFS,
+						theResult);
 	}
 }
