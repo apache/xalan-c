@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -152,7 +152,7 @@ FormatterToXML::FormatterToXML(
 	{
 		if(startsWith(
 			m_doctypePublic,
-			s_xhtmlDocType) == true)
+			s_xhtmlDocTypeString) == true)
 		{
 			m_spaceBeforeClose = true;
 		}
@@ -383,13 +383,15 @@ FormatterToXML::initCharsMap()
 void
 FormatterToXML::outputDocTypeDecl(const XalanDOMChar* 	name)
 {
-	accumName(s_doctypeHeaderStartString);	// "<!DOCTYPE "
+	// "<!DOCTYPE "
+	accumName(s_doctypeHeaderStartString, 0, s_doctypeHeaderStartStringLength);
 
 	accumName(name);
 	  
 	if(length(m_doctypePublic) != 0)
 	{
-		accumName(s_doctypeHeaderPublicString); // " PUBLIC \""
+		// " PUBLIC \""
+		accumName(s_doctypeHeaderPublicString, 0, s_doctypeHeaderPublicStringLength);
 		accumName(m_doctypePublic);
 		accumName(XalanUnicode::charQuoteMark);
 		accumName(XalanUnicode::charSpace);
@@ -397,7 +399,8 @@ FormatterToXML::outputDocTypeDecl(const XalanDOMChar* 	name)
 	}
 	else
 	{
-		accumName(s_doctypeHeaderSystemString); // " SYSTEM \""
+		// " SYSTEM \""
+		accumName(s_doctypeHeaderSystemString, 0, s_doctypeHeaderSystemStringLength);
 	}
 
 	accumName(m_doctypeSystem);
@@ -927,7 +930,8 @@ FormatterToXML::startDocument()
 
 		if(m_shouldWriteXMLHeader == true)
 		{
-			accumName(s_xmlHeaderStartString);	// "<?xml version=\""
+			// "<?xml version=\""
+			accumName(s_xmlHeaderStartString, 0, s_xmlHeaderStartStringLength);
 
 			if (length(m_version) != 0)
 			{
@@ -935,20 +939,21 @@ FormatterToXML::startDocument()
 			}
 			else
 			{
-				accumName(s_defaultVersionString);
+				accumName(s_defaultVersionString, 0, s_defaultVersionStringLength);
 			}
 
-			accumName(s_xmlHeaderEncodingString);	// "\" encoding=\""
+			// "\" encoding=\""
+			accumName(s_xmlHeaderEncodingString, 0, s_xmlHeaderEncodingStringLength);
 
 			accumName(m_encoding);
 
 			if (length(m_standalone) != 0)
 			{
-				accumName(s_xmlHeaderStandaloneString);
+				accumName(s_xmlHeaderStandaloneString, 0, s_xmlHeaderStandaloneStringLength);
 				accumName(m_standalone);
 			}
 
-			accumName(s_xmlHeaderEndString);
+			accumName(s_xmlHeaderEndString, 0, s_xmlHeaderEndStringLength);
 
 			outputLineSep();
 		}	   
@@ -1272,7 +1277,7 @@ FormatterToXML::writeNormalizedChars(
 		{
 			if(i != 0)
 			{
-				accumContent(s_dtdCDATACloseString);
+				accumContent(s_dtdCDATACloseString, 0, s_dtdCDATACloseStringLength);
 			}
 
 			// This needs to go into a function... 
@@ -1692,105 +1697,183 @@ FormatterToXML::accumNormalizedPIData(
 
 
 
-static XalanDOMString	s_defaultMIMEEncoding;
+#define FXML_SIZE(str)	((sizeof(str) / sizeof(str[0]) - 1))
 
-static XalanDOMString	s_doctypeHeaderStartString;
+const XalanDOMChar						FormatterToXML::s_doctypeHeaderStartString[] =
+{
+	XalanUnicode::charLessThanSign,
+	XalanUnicode::charExclamationMark,
+	XalanUnicode::charLetter_D,
+	XalanUnicode::charLetter_O,
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_Y,
+	XalanUnicode::charLetter_P,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charSpace,
+	0
+};
 
-static XalanDOMString	s_doctypeHeaderPublicString;
+const FormatterToXML::size_type			FormatterToXML::s_doctypeHeaderStartStringLength =
+		FXML_SIZE(s_doctypeHeaderStartString);
 
-static XalanDOMString	s_doctypeHeaderSystemString;
+const XalanDOMChar						FormatterToXML::s_doctypeHeaderPublicString[] =
+{
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_P,
+	XalanUnicode::charLetter_U,
+	XalanUnicode::charLetter_B,
+	XalanUnicode::charLetter_L,
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charSpace,
+	XalanUnicode::charQuoteMark,
+	0
+};
 
-static XalanDOMString	s_defaultVersionString;
+const FormatterToXML::size_type		FormatterToXML::s_doctypeHeaderPublicStringLength =
+		FXML_SIZE(s_doctypeHeaderPublicString);
 
-static XalanDOMString	s_xmlHeaderStartString;
+const XalanDOMChar					FormatterToXML::s_doctypeHeaderSystemString[] =
+{
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_Y,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_M,
+	XalanUnicode::charSpace,
+	XalanUnicode::charQuoteMark,
+	0
+};
 
-static XalanDOMString	s_xmlHeaderEncodingString;
+const FormatterToXML::size_type		FormatterToXML::s_doctypeHeaderSystemStringLength =
+		FXML_SIZE(s_doctypeHeaderSystemString);
 
-static XalanDOMString	s_xmlHeaderStandaloneString;
+const XalanDOMChar					FormatterToXML::s_xmlHeaderStartString[] =
+{
+	XalanUnicode::charLessThanSign,
+	XalanUnicode::charQuestionMark,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charEqualsSign,
+	XalanUnicode::charQuoteMark,
+	0
+};
 
-static XalanDOMString	s_xmlHeaderEndString;
+const FormatterToXML::size_type		FormatterToXML::s_xmlHeaderStartStringLength =
+		FXML_SIZE(s_xmlHeaderStartString);
 
-static XalanDOMString	s_xhtmlDocType;
+const XalanDOMChar					FormatterToXML::s_xmlHeaderEncodingString[] =
+{
+	XalanUnicode::charQuoteMark,
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charEqualsSign,
+	XalanUnicode::charQuoteMark,
+	0
+};
 
-static XalanDOMString	s_dtdCDATACloseString;
+const FormatterToXML::size_type		FormatterToXML::s_xmlHeaderEncodingStringLength =
+		FXML_SIZE(s_xmlHeaderEncodingString);
+
+const XalanDOMChar					FormatterToXML::s_xmlHeaderStandaloneString[] =
+{
+	XalanUnicode::charQuoteMark,
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charEqualsSign,
+	XalanUnicode::charQuoteMark,
+	0
+};
+
+const FormatterToXML::size_type		FormatterToXML::s_xmlHeaderStandaloneStringLength =
+		FXML_SIZE(s_xmlHeaderStandaloneString);
+
+const XalanDOMChar					FormatterToXML::s_xmlHeaderEndString[] =
+{
+	XalanUnicode::charQuoteMark,
+	XalanUnicode::charQuestionMark,
+	XalanUnicode::charGreaterThanSign,
+	0
+};
+
+const FormatterToXML::size_type		FormatterToXML::s_xmlHeaderEndStringLength =
+		FXML_SIZE(s_xmlHeaderEndString);
+
+const XalanDOMChar					FormatterToXML::s_defaultVersionString[] =
+{
+	XalanUnicode::charDigit_1,
+	XalanUnicode::charFullStop,
+	XalanUnicode::charDigit_0,
+	0
+};
+
+const FormatterToXML::size_type		FormatterToXML::s_defaultVersionStringLength =
+		FXML_SIZE(s_defaultVersionString);
+
+const XalanDOMChar					FormatterToXML::s_dtdCDATACloseString[] =
+{
+	XalanUnicode::charRightSquareBracket,
+	XalanUnicode::charRightSquareBracket,
+	XalanUnicode::charGreaterThanSign,
+	0
+};
+
+const FormatterToXML::size_type		FormatterToXML::s_dtdCDATACloseStringLength =
+		FXML_SIZE(s_dtdCDATACloseString);
 
 
-const XalanDOMString&	FormatterToXML::s_defaultMIMEEncoding = ::s_defaultMIMEEncoding;
+const XalanDOMChar					FormatterToXML::s_xhtmlDocTypeString[] =
+{
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_W,
+	XalanUnicode::charDigit_3,
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_D,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_D,
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_H,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_M,
+	XalanUnicode::charLetter_L,
+	0
+};
 
-const XalanDOMString&	FormatterToXML::s_doctypeHeaderStartString = ::s_doctypeHeaderStartString;
+const FormatterToXML::size_type		FormatterToXML::s_xhtmlDocTypeStringLength =
+		FXML_SIZE(s_xhtmlDocTypeString);
 
-const XalanDOMString&	FormatterToXML::s_doctypeHeaderPublicString = ::s_doctypeHeaderPublicString;
-
-const XalanDOMString&	FormatterToXML::s_doctypeHeaderSystemString = ::s_doctypeHeaderSystemString;
-
-const XalanDOMString&	FormatterToXML::s_defaultVersionString = ::s_defaultVersionString;
-
-const XalanDOMString&	FormatterToXML::s_xmlHeaderStartString = ::s_xmlHeaderStartString;
-
-const XalanDOMString&	FormatterToXML::s_xmlHeaderEncodingString = ::s_xmlHeaderEncodingString;
-
-const XalanDOMString&	FormatterToXML::s_xmlHeaderStandaloneString = ::s_xmlHeaderStandaloneString;
-
-const XalanDOMString&	FormatterToXML::s_xmlHeaderEndString = ::s_xmlHeaderEndString;
-
-const XalanDOMString&			FormatterToXML::s_xhtmlDocType = ::s_xhtmlDocType;
-
-const XalanDOMString&			FormatterToXML::s_dtdCDATACloseString = ::s_dtdCDATACloseString;
 
 const FormatterToXML::DOMCharBufferType::size_type	FormatterToXML::s_maxBufferSize = 512;
-
-
-
-void
-FormatterToXML::initialize()
-{
-	::s_defaultMIMEEncoding = XALAN_STATIC_UCODE_STRING("UTF-8");
-
-	::s_doctypeHeaderStartString = XALAN_STATIC_UCODE_STRING("<!DOCTYPE ");
-
-	::s_doctypeHeaderPublicString = XALAN_STATIC_UCODE_STRING(" PUBLIC \"");
-
-	::s_doctypeHeaderSystemString = XALAN_STATIC_UCODE_STRING(" SYSTEM \"");
-
-	::s_defaultVersionString = XALAN_STATIC_UCODE_STRING("1.0");
-
-	::s_xmlHeaderStartString = XALAN_STATIC_UCODE_STRING("<?xml version=\"");
-
-	::s_xmlHeaderEncodingString = XALAN_STATIC_UCODE_STRING("\" encoding=\"");
-
-	::s_xmlHeaderStandaloneString = XALAN_STATIC_UCODE_STRING("\" standalone=\"");
-
-	::s_xmlHeaderEndString = XALAN_STATIC_UCODE_STRING("\"?>");
-
-	::s_xhtmlDocType = XALAN_STATIC_UCODE_STRING("-//W3C//DTD XHTML");
-				
-	::s_dtdCDATACloseString = XALAN_STATIC_UCODE_STRING("]]>");
-}
-
-
-
-void
-FormatterToXML::terminate()
-{
-	releaseMemory(::s_defaultMIMEEncoding);
-
-	releaseMemory(::s_doctypeHeaderStartString);
-
-	releaseMemory(::s_doctypeHeaderPublicString);
-
-	releaseMemory(::s_doctypeHeaderSystemString);
-
-	releaseMemory(::s_defaultVersionString);
-
-	releaseMemory(::s_xmlHeaderStartString);
-
-	releaseMemory(::s_xmlHeaderEncodingString);
-
-	releaseMemory(::s_xmlHeaderStandaloneString);
-
-	releaseMemory(::s_xmlHeaderEndString);
-
-	releaseMemory(::s_xhtmlDocType);
-
-	releaseMemory(::s_dtdCDATACloseString);
-}

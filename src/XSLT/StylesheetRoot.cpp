@@ -622,7 +622,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 
 		attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
 	 					   c_wstr(Constants::ATTRTYPE_CDATA),
-						   c_wstr(Constants::PSEUDONAME_ANY));
+						   XPath::PSEUDONAME_ANY);
 
 		m_defaultRule = new ElemTemplate(constructionContext,
 										 *this,
@@ -674,7 +674,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 		attrs.clear();
 		attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
 	 					   c_wstr(Constants::ATTRTYPE_CDATA),
-						   c_wstr(Constants::PSEUDONAME_ROOT));
+						   XPath::PSEUDONAME_ROOT);
 
 		m_defaultRootRule =
 			new ElemTemplate(constructionContext,

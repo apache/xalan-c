@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -100,18 +100,6 @@ public:
 	{
 		eDefaultIndentAmount = 0
 	};
-
-	/**
-	 * Perform static initialization.  See class XMLSupportInit.
-	 */
-	static void
-	initialize();
-
-	/**
-	 * Perform static shut down.  See class XMLSupportInit.
-	 */
-	static void
-	terminate();
 
 	/**
 	 * Constructor for customized encoding and doctype.
@@ -1067,60 +1055,77 @@ private:
 	 */
 	const XalanDOMString	m_attrSpecialChars;
 
-	/**
-	 * The default MIME encoding.
-	 */
-	static const XalanDOMString&	s_defaultMIMEEncoding;
+	typedef XalanDOMString::size_type	size_type;
 
 	/**
 	 * The string "<!DOCTYPE ".
 	 */
-	static const XalanDOMString&	s_doctypeHeaderStartString;
+	static const XalanDOMChar	s_doctypeHeaderStartString[];
+
+	static const size_type		s_doctypeHeaderStartStringLength;
 
 	/**
 	 * The string " PUBLIC \"".
 	 */
-	static const XalanDOMString&	s_doctypeHeaderPublicString;
+	static const XalanDOMChar	s_doctypeHeaderPublicString[];
+
+	static const size_type		s_doctypeHeaderPublicStringLength;
 
 	/**
 	 * The string " SYSTEM \"".
 	 */
-	static const XalanDOMString&	s_doctypeHeaderSystemString;
+	static const XalanDOMChar	s_doctypeHeaderSystemString[];
+
+	static const size_type		s_doctypeHeaderSystemStringLength;
 
 	/**
 	 * The string "<?xml version=\"".
 	 */
-	static const XalanDOMString&	s_xmlHeaderStartString;
+	static const XalanDOMChar	s_xmlHeaderStartString[];
+
+	static const size_type		s_xmlHeaderStartStringLength;
 
 	/**
-	 * The string "<?xml version=\"".
+	 * The string "\" encoding=\"".
 	 */
-	static const XalanDOMString&	s_xmlHeaderEncodingString;
+	static const XalanDOMChar	s_xmlHeaderEncodingString[];
+
+	static const size_type		s_xmlHeaderEncodingStringLength;
 
 	/**
 	 * The string "\" standalone=\"".
 	 */
-	static const XalanDOMString&	s_xmlHeaderStandaloneString;
+	static const XalanDOMChar	s_xmlHeaderStandaloneString[];
+
+	static const size_type		s_xmlHeaderStandaloneStringLength;
 
 	/**
 	 * The string "\"?>".
 	 */
-	static const XalanDOMString&	s_xmlHeaderEndString;
+	static const XalanDOMChar	s_xmlHeaderEndString[];
+
+	static const size_type		s_xmlHeaderEndStringLength;
 
 	/**
 	 * The string "1.0".
 	 */
-	static const XalanDOMString&	s_defaultVersionString;
+	static const XalanDOMChar	s_defaultVersionString[];
+
+	static const size_type		s_defaultVersionStringLength;
 
 	/**
  	 * The string "-//W3C//DTD XHTML".
  	 */
- 	static const XalanDOMString&			s_xhtmlDocType;
+ 	static const XalanDOMChar	s_xhtmlDocTypeString[];
+
+	static const size_type		s_xhtmlDocTypeStringLength;
 
 	/**
  	 * The string "]]>".
  	 */
- 	static const XalanDOMString&			s_dtdCDATACloseString;
+ 	static const XalanDOMChar	s_dtdCDATACloseString[];
+
+	static const size_type		s_dtdCDATACloseStringLength;
 
 	DOMCharBufferType							m_charBuf;
 
@@ -1187,7 +1192,7 @@ private:
 	/**
 	 * A pointer to the member function that will flush the buffer.
 	 */
-	FlushFunctionType		m_flushFunction;
+	FlushFunctionType			m_flushFunction;
 };
 
 

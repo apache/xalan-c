@@ -471,16 +471,8 @@ public:
 		TATTRNAME_EXCLUDE_RESULT_PREFIXES = 69
 	};
 
-	// These are used mainly for keys in the pattern lookup table,
-	// for those nodes that don't have unique lookup values
-	static const XalanDOMString&	PSEUDONAME_ANY;
-	static const XalanDOMString&	PSEUDONAME_COMMENT;
+	// This is used for trace reporting.
 	static const XalanDOMString&	PSEUDONAME_NODE;
-	static const XalanDOMString&	PSEUDONAME_OTHER;
-	static const XalanDOMString&	PSEUDONAME_PI;
-	static const XalanDOMString&	PSEUDONAME_ROOT;
-	static const XalanDOMString&	PSEUDONAME_TEXT;
-
 };
 
 
