@@ -186,7 +186,7 @@ getNumberFromNode(
 			const XalanNode&	theNode,
 			XPathSupport*		theXPathSupport)
 {
-	return DOMStringToDouble(getStringFromNode(theNode, theXPathSupport));
+	return DoubleSupport::toDouble(getStringFromNode(theNode, theXPathSupport));
 }
 
 

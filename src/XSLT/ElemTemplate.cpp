@@ -63,6 +63,10 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/DoubleSupport.hpp>
+
+
+
 #include <XPath/XPath.hpp>
 
 
@@ -113,7 +117,7 @@ ElemTemplate::ElemTemplate(
 		case Constants::TATTRNAME_PRIORITY:
 			{
 				const XalanDOMString priorityVal = atts.getValue(i);
-				m_priority = DOMStringToDouble(priorityVal);
+				m_priority = DoubleSupport::toDouble(priorityVal);
 			}
 			break;
 

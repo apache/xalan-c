@@ -69,6 +69,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/DoubleSupport.hpp>
 
 
 
@@ -118,7 +119,7 @@ public:
 
 		for (unsigned int i = 0; i < count; i++)
 		{
-			sum += DOMStringToDouble(executionContext.getNodeData(*nl.item(i)));
+			sum += DoubleSupport::toDouble(executionContext.getNodeData(*nl.item(i)));
 		}
 
 		return executionContext.getXObjectFactory().createNumber(sum);

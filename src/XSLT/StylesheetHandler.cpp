@@ -75,6 +75,7 @@
 
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
 #include <PlatformSupport/STLHelper.hpp>
 
@@ -565,7 +566,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 						{
 							const XalanDOMChar* const	versionStr = atts.getValue(i);
 
-							m_stylesheet.setXSLTVerDeclared(WideStringToDouble(versionStr));
+							m_stylesheet.setXSLTVerDeclared(DoubleSupport::toDouble(versionStr));
 
 							fVersionFound = true;
 						}

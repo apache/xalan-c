@@ -64,6 +64,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/DoubleSupport.hpp>
 
 
 
@@ -138,9 +139,9 @@ XString::num() const
 	if (m_cachedNumberValue == 0.0)
 	{
 #if defined(XALAN_NO_MUTABLE)
-		((XString*)this)->m_cachedNumberValue = DOMStringToDouble(m_value);
+		((XString*)this)->m_cachedNumberValue = DoubleSupport::toDouble(m_value);
 #else
-		m_cachedNumberValue = DOMStringToDouble(m_value);
+		m_cachedNumberValue = DoubleSupport::toDouble(m_value);
 #endif
 	}
 

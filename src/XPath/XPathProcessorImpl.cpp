@@ -64,6 +64,7 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
+#include <PlatformSupport/DoubleSupport.hpp>
 
 
 
@@ -2117,7 +2118,7 @@ XPathProcessorImpl::Number()
 	{
 		// Mutate the token to remove the quotes and have the XNumber object
 		// already made.
-		const double	num = DOMStringToDouble(m_token);
+		const double	num = DoubleSupport::toDouble(m_token);
 
 		XObject* const	theArgument =
 			m_xobjectFactory->createNumber(num);

@@ -65,6 +65,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/DoubleSupport.hpp>
 
 
 
@@ -138,7 +139,7 @@ XResultTreeFrag::num() const
 {
 	const XalanDOMString	theValue = m_support->getNodeData(*m_value.get());
 
-	return DOMStringToDouble(theValue);
+	return DoubleSupport::toDouble(theValue);
 }
 
 

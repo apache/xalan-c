@@ -67,6 +67,7 @@
 
 
 
+#include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
 #include <PlatformSupport/STLHelper.hpp>
 
@@ -134,7 +135,7 @@ ElemLiteralResult::ElemLiteralResult(
 					{
 						const XalanDOMChar*	const	value = atts.getValue(i);
 
-						stylesheetTree.setXSLTVerDeclared(DOMStringToDouble(value));
+						stylesheetTree.setXSLTVerDeclared(DoubleSupport::toDouble(value));
 					}
 				}
 			}
