@@ -56,21 +56,22 @@ main(
 		// Initialize Xalan.
 		XalanTransformer::initialize();
 
-		// Create a XalanTransformer.
-		XalanTransformer theXalanTransformer;
+		{
+			// Create a XalanTransformer.
+			XalanTransformer theXalanTransformer;
 
-		// A simple input document...
+			// A simple input document...
 #if defined(XALAN_NON_ASCII_PLATFORM)
-		const char* const  theInputDocument = "<?xml version='1.0' encoding='EBCDIC-CP-US' ?><doc>Hello world!</doc>";
+			const char* const  theInputDocument = "<?xml version='1.0' encoding='EBCDIC-CP-US' ?><doc>Hello world!</doc>";
 #else
-		const char* const  theInputDocument = "<?xml version='1.0' encoding='ISO-8859-1' ?><doc>Hello world!</doc>";
+			const char* const  theInputDocument = "<?xml version='1.0' encoding='ISO-8859-1' ?><doc>Hello world!</doc>";
 #endif
 
-		// A "hello world" stylesheet.  Note that the encoding for the output is platform-dependent,
-		// since we're writing to a string.  It could be any encoding, but "binary" encodings,
-		// or encodings that could produce multi-byte characters would require transcoding on
-		// some platforms.
-		const char* const  theStylesheet =
+			// A "hello world" stylesheet.  Note that the encoding for the output is platform-dependent,
+			// since we're writing to a string.  It could be any encoding, but "binary" encodings,
+			// or encodings that could produce multi-byte characters would require transcoding on
+			// some platforms.
+			const char* const  theStylesheet =
 #if defined(XALAN_NON_ASCII_PLATFORM)
 "<?xml version='1.0' encoding='EBCDIC-CP-US'?>\
 <xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='1.0'>\
@@ -89,22 +90,23 @@ main(
 </xsl:stylesheet>";
 #endif
 
-		// Our input streams...
-		istrstream	theXMLStream(theInputDocument, strlen(theInputDocument));
-		istrstream	theXSLStream(theStylesheet, strlen(theStylesheet));
+			// Our input streams...
+			istrstream	theXMLStream(theInputDocument, strlen(theInputDocument));
+			istrstream	theXSLStream(theStylesheet, strlen(theStylesheet));
 
-		XSLTInputSource	inputSource(&theXSLStream);
+			XSLTInputSource	inputSource(&theXSLStream);
 
-		inputSource.setSystemId(c_wstr(XalanDOMString("foo")));
+			inputSource.setSystemId(c_wstr(XalanDOMString("foo")));
 
-		// Do the transform.
-		theResult = theXalanTransformer.transform(&theXMLStream, inputSource, cout);
+			// Do the transform.
+			theResult = theXalanTransformer.transform(&theXMLStream, inputSource, cout);
     
-		if(theResult != 0)
-		{
-			cerr << "StreamTransform Error: \n" << theXalanTransformer.getLastError()
-				 << endl
-				 << endl;
+			if(theResult != 0)
+			{
+				cerr << "StreamTransform Error: \n" << theXalanTransformer.getLastError()
+					 << endl
+					 << endl;
+			}
 		}
 
 		// Terminate Xalan.
