@@ -261,40 +261,7 @@ ElemTemplateElement::processSpaceAttr(
 bool
 ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 {
-    const XalanDOMString::size_type		len = length(s);
-
-	if (len == 0)
-	{
-		return false;
-	}
-	else
-	{
-		XalanDOMChar	c = charAt(s, 0);
-
-		if(!(XalanXMLChar::isLetter(c) || c == XalanUnicode::charLowLine))
-		  return false;
-
-		if(len > 1)
-		{
-			for(XalanDOMString::size_type i = 1; i < len; i++)
-			{
-				c = charAt(s, i); 
-
-				if(!(XalanXMLChar::isLetter(c) ||
-					 XalanXMLChar::isDigit(c) ||
-					 XalanXMLChar::isExtender(c) ||
-					 XalanXMLChar::isCombiningChar(c) ||
-					 c == XalanUnicode::charLowLine ||
-					 c == XalanUnicode::charHyphenMinus ||
-					 c == XalanUnicode::charFullStop))
-				{
-					return false;
-				}
-			}
-		}
-
-		return true;
-	}
+	return XalanQName::isValidNCName(s);
 }
 
 
