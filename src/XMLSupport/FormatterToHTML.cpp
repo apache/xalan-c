@@ -392,8 +392,8 @@ FormatterToHTML::startElement(
 	const ElemDesc&		elemDesc =
 		getElemDesc(name);
 
-    bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
-	bool	isHeadElement = elemDesc.is(ElemDesc.HEADELEM);
+    const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
+	const bool	isHeadElement = elemDesc.is(ElemDesc::HEADELEM);
 
 	m_isScriptOrStyleElem = 
 		equalsIgnoreCaseASCII(name, c_wstr(s_scriptString)) ||
@@ -971,6 +971,7 @@ FormatterToHTML::writeAttrURI(
 			const XalanDOMChar*		string,
 			const XalanDOMString	encoding)
 {
+#if 1
 	const unsigned int	len = length(string);
 
     for (unsigned int i = 0; i < len; ++i)
@@ -998,6 +999,107 @@ FormatterToHTML::writeAttrURI(
 			accumContent(ch);
 		}
 	}
+#else
+	// http://www.ietf.org/rfc/rfc2396.txt says:
+	// A URI is always in an "escaped" form, since escaping or unescaping a
+	// completed URI might change its semantics.  Normally, the only time
+	// escape encodings can safely be made is when the URI is being created
+	// from its component parts; each component may have its own set of
+	// characters that are reserved, so only the mechanism responsible for
+	// generating or interpreting that component can determine whether or
+	// not escaping a character will change its semantics. Likewise, a URI
+	// must be separated into its components before the escaped characters
+	// within those components can be safely decoded.
+	//
+	// ...So we do our best to do limited escaping of the URL, without 
+	// causing damage.	If the URL is already properly escaped, in theory, this 
+	// function should not change the string value.
+
+	char[] stringArray = string.toCharArray();
+	int len = stringArray.length;
+		
+	accum('"');
+
+	for (int i = 0; i < len; i++)
+	{
+		char ch = stringArray[i];
+
+		// if first 8 bytes are 0, no need to append them.
+		if ((ch < 9) || (ch > 127)
+			  || /*(ch == '"') || -sb, as per #PDIK4L9LZY */ (ch == ' '))
+		{
+			if (m_specialEscapeURLs)
+			{
+				if(ch <= 0x7F)
+				{
+					accum("%");
+					accum(Integer.toHexString(ch).toUpperCase());		   
+				}
+				else if(ch <= 0x7FF)
+				{
+					int high = (int) ((((int) ch) & 0xFFC0) >> 6) | 0xC0; // Clear high bytes?
+					int low = (int) (((int) ch) & 0x3F) | 0x80; // First 6 bits, + high bit
+					accum("%");
+					accum(Integer.toHexString(high).toUpperCase());
+					accum("%");
+					accum(Integer.toHexString(low).toUpperCase());
+				}
+				else
+				{
+					int high = (int) ((((int) ch) & 0xF000) >> 12) | 0xE0; // top 4 bits
+					int middle = (int) ((((int) ch) & 0x0FC0) >> 6) | 0x80; // middle 6 bits
+					int low = (int) (((int) ch) & 0x3F) | 0x80; // First 6 bits, + high bit
+					accum("%");
+					accum(Integer.toHexString(high).toUpperCase());
+					accum("%");
+					accum(Integer.toHexString(middle).toUpperCase());
+					accum("%");
+					accum(Integer.toHexString(low).toUpperCase());
+				}
+			}
+			else if (ch < m_maxCharacter)
+			{
+				accum(ch);
+			}
+			else
+			{
+				accum("&#");
+				accum(Integer.toString(ch));
+				accum(';');
+			}
+		}
+		else if('%' == ch)
+		{
+			// If the character is a '%' number number, try to avoid double-escaping.
+			// There is a question if this is legal behavior.
+			if(((i+2) < len) && Character.isDigit(stringArray[i+1])
+			&& Character.isDigit(stringArray[i+2]))
+			{
+				accum(ch);
+			}
+			else
+			{
+				accum("%");
+				accum(Integer.toHexString(ch).toUpperCase());
+			}
+		} 
+		// Since http://www.ietf.org/rfc/rfc2396.txt refers to the URI grammar as
+		// not allowing quotes in the URI proper syntax, nor in the fragment 
+		// identifier, we believe that double quotes should be escaped.
+		else if (ch == '"')
+		{
+			accum('%');
+			accum('2');
+			accum('2');
+		}
+		else
+		{
+			accum(ch);
+		}
+	}
+
+	accum('"');
+#endif
 }
 
 
