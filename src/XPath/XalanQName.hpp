@@ -236,12 +236,52 @@ public:
 			const XalanDOMString&		uri,
 			bool						reverse = true);
 
+	/**
+	 * Determine if the string supplied satisfies the grammar for
+	 * an XML NCName.
+	 *
+	 * @param theNCName The string to check
+	 * @return bool true if the string is a valid NCName, false if not.
+	 */
 	static bool
 	isValidNCName(const XalanDOMString&		theNCName);
 
+	/**
+	 * Determine if the string supplied satisfies the grammar for
+	 * an XML NCName.
+	 *
+	 * @param theNCName The string to check
+	 * @param theLength The length of the string
+	 * @return bool true if the string is a valid NCName, false if not
+	 */
 	static bool
 	isValidNCName(
 			const XalanDOMChar*			theNCName,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos);
+
+	/**
+	 * Determine if the string supplied satisfies the grammar for
+	 * an XML QName.  Note that this function does not determine
+	 * if any supplied prefix is bound to a namespace URI
+	 *
+	 * @param theQName The string to check
+	 * @return bool true if the string is a valid QName, false if not
+	 */
+	static bool
+	isValidQName(const XalanDOMString&	theQName);
+
+	/**
+	 * Determine if the string supplied satisfies the grammar for
+	 * an XML QName.  Note that this function does not determine
+	 * if any supplied prefix is bound to a namespace URI
+	 *
+	 * @param theQName The string to check
+	 * @param theLength The length of the string
+	 * @return bool true if the string is a valid QName, false if not
+	 */
+	static bool
+	isValidQName(
+			const XalanDOMChar*			theQName,
 			XalanDOMString::size_type	theLength = XalanDOMString::npos);
 
 protected:

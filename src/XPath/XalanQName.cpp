@@ -277,3 +277,35 @@ XalanQName::isValidNCName(
 		return true;
 	}
 }
+
+
+
+bool
+XalanQName::isValidQName(const XalanDOMString&	theQName)
+{
+	return isValidQName(c_wstr(theQName), length(theQName));
+}
+
+
+
+bool
+XalanQName::isValidQName(
+			const XalanDOMChar*			theQName,
+			XalanDOMString::size_type	theLength)
+{
+	const XalanDOMString::size_type		theIndex =
+		indexOf(theQName, XalanUnicode::charColon);
+
+	if (theIndex == theLength)
+	{
+		return isValidNCName(theQName, theLength);
+	}
+	else
+	{
+		const XalanDOMChar* const	thePrefix = c_wstr(theQName);
+		const XalanDOMChar*	const	theLocalName = thePrefix + theIndex + 1;
+
+		return XalanQName::isValidNCName(thePrefix, theIndex) &&
+			   XalanQName::isValidNCName(theLocalName, theLength - theIndex - 1);
+	}
+}
