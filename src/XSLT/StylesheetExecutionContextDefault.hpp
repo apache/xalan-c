@@ -227,7 +227,6 @@ public:
 
 	virtual void
 	resetCurrentState(
-			XalanNode*	sourceTree,
 			XalanNode*	xmlNode);
 
 	virtual bool
@@ -317,7 +316,6 @@ public:
 	createVariable(
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceTree,
 			XalanNode*					sourceNode,
 			const QName&				mode);
 
@@ -354,7 +352,6 @@ public:
 			const QName&				name,
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceTree,
 			XalanNode*					sourceNode);
 
 	virtual void
@@ -372,7 +369,6 @@ public:
 	virtual	void
 	pushParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
-			XalanNode*					sourceTree, 
 			XalanNode*					sourceNode,
 			const QName&				mode,
 			const ElemTemplateElement*	targetTemplate);
@@ -437,13 +433,11 @@ public:
 	virtual const XObjectPtr
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceTree,
 			XalanNode*					sourceNode);
 
 	virtual const XObjectPtr
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceTree,
 			XalanNode*					sourceNode,
 			const QName&				mode);
 

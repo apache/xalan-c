@@ -198,14 +198,12 @@ public:
 	 * recursively execute down the element tree.
 	 * 
 	 * @param executionContext  The current execution context
-	 * @param sourceTree input source tree
 	 * @param sourceNode current context node
 	 * @param mode       current mode
 	 */
 	virtual	void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
@@ -213,14 +211,12 @@ public:
 	 * Process the children of a template.
 	 * 
 	 * @param processor  XSLT processor instance
-	 * @param sourceTree input source tree
 	 * @param sourceNode current context node
 	 * @param mode       current mode
 	 */
 	void
 	executeChildren(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree, 
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
@@ -229,7 +225,6 @@ public:
 	 * convert it to a string.
 	 * 
 	 * @param executionContext  The current execution context
-	 * @param sourceTree primary source tree
 	 * @param sourceNode current source node context
 	 * @param mode       current mode
 	 * @param result result of executing the elements children
@@ -237,7 +232,6 @@ public:
 	void
 	childrenToString(
 			StylesheetExecutionContext&		executionContext, 
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode,
 			XalanDOMString&					result) const;
@@ -656,7 +650,6 @@ protected:
 	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
 	 *      not think we need this).
 	 * @param template The owning template context.
-	 * @param sourceTree The input source tree.
 	 * @param sourceNodeContext The current source node context.
 	 * @param mode The current mode.
 	 * @param selectPattern The XPath with which to perform the selection.
@@ -671,7 +664,6 @@ protected:
 			const Stylesheet&				stylesheetTree,
 			const ElemTemplateElement&		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNodeContext,
 			const QName&					mode,
 			const XPath*					selectPattern,
@@ -686,7 +678,6 @@ protected:
 	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
 	 *      not think we need this).
 	 * @param template The owning template context.
-	 * @param sourceTree The input source tree.
 	 * @param sourceNodeContext The current source node context.
 	 * @param mode The current mode.
 	 * @param selectPattern The XPath with which to perform the selection.
@@ -701,7 +692,6 @@ protected:
 			const Stylesheet&							stylesheetTree,
 			const ElemTemplateElement&					xslInstruction,
 			const ElemTemplateElement*					theTemplate,
-			XalanNode*									sourceTree,
 			XalanNode*									sourceNodeContext,
 			const QName&								mode,
 			int											xslToken,
@@ -718,7 +708,6 @@ protected:
 	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
 	 *      not think we need this).
 	 * @param template The owning template context.
-	 * @param sourceTree The input source tree.
 	 * @param sourceNodeContext The current source node context.
 	 * @param mode The current mode.
 	 * @param selectPattern The XPath with which to perform the selection.
@@ -733,7 +722,6 @@ protected:
 			const Stylesheet&							stylesheetTree,
 			const ElemTemplateElement&					xslInstruction,
 			const ElemTemplateElement*					theTemplate,
-			XalanNode*									sourceTree,
 			XalanNode*									sourceNodeContext,
 			const QName&								mode,
 			int											xslToken,
@@ -748,7 +736,6 @@ protected:
 			const Stylesheet&					stylesheetTree,
 			const ElemTemplateElement&			xslInstruction,
 			const ElemTemplateElement*			theTemplate,
-			XalanNode*							sourceTree,
 			XalanNode*							sourceNodeContext,
 			const QName&						mode,
 			int									xslToken,
@@ -764,7 +751,6 @@ protected:
 	 * @param xslInstruction The calling element (deprecated -- I dont think we 
 	 *      need this).
 	 * @param template The template to use if xsl:for-each, or null.
-	 * @param sourceTree The source DOM tree.
 	 * @param selectContext The selection context.
 	 * @param child The source context node.
 	 * @param mode The current mode, may be null.
@@ -778,7 +764,6 @@ protected:
 			const Stylesheet&				stylesheetTree,
 			const ElemTemplateElement*		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceTree,
 			XalanNode*						selectContext,
 			XalanNode*						child,
 			const QName&					mode,

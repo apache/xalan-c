@@ -157,7 +157,6 @@ ElemForEach::getElementName() const
 void
 ElemForEach::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
@@ -170,7 +169,6 @@ ElemForEach::execute(
 			getStylesheet(),
 			*this,
 			this,
-			sourceTree,
 			sourceNode,
 			mode,
 			m_pSelectPattern,

@@ -117,12 +117,11 @@ ElemApplyImport::getElementName() const
 
 void
 ElemApplyImport::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree, 
+			StylesheetExecutionContext&		executionContext,			
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode, mode);
 
 	// This will have to change to current template, (which will have 
 	// to be the top of a current template stack).
@@ -131,8 +130,7 @@ ElemApplyImport::execute(
 	transformChild(executionContext,
 				   getStylesheet(),
 				   0, 
-				   0, 
-                   sourceTree, 
+				   0,                    
 				   DOMServices::getParentOfNode(*sourceNode), 
 				   sourceNode, 
                    mode,

@@ -80,7 +80,6 @@ StylesheetExecutionContext::ParamsPushPop::ParamsPushPop(
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement*		/* contextElement */,
 			const ElemTemplateElement&		xslCallTemplateElement,
-			XalanNode*						sourceTree, 
 			XalanNode*						sourceNode,
 			const QName&					mode,
 			const ElemTemplateElement*		targetTemplate) :
@@ -93,7 +92,6 @@ StylesheetExecutionContext::ParamsPushPop::ParamsPushPop(
 
 	executionContext.pushParams(
 			xslCallTemplateElement,
-			sourceTree,
 			sourceNode,
 			mode,
 			targetTemplate);

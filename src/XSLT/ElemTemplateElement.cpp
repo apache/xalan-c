@@ -262,14 +262,13 @@ ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 void
 ElemTemplateElement::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	if(0 != executionContext.getTraceListeners())
     {
 		executionContext.fireTraceEvent(
-			TracerEvent(executionContext, sourceTree, sourceNode, mode, *this));
+			TracerEvent(executionContext, sourceNode, mode, *this));
 	}    
 }
 
@@ -278,7 +277,6 @@ ElemTemplateElement::execute(
 void
 ElemTemplateElement::executeChildren(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree, 
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
@@ -286,7 +284,7 @@ ElemTemplateElement::executeChildren(
 
     for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
     {
-		node->execute(executionContext, sourceTree, sourceNode, mode);
+		node->execute(executionContext, sourceNode, mode);
     }
 }
 
@@ -295,7 +293,6 @@ ElemTemplateElement::executeChildren(
 void
 ElemTemplateElement::childrenToString(
 			StylesheetExecutionContext&		executionContext, 
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode,
 			XalanDOMString&					result) const
@@ -315,7 +312,7 @@ ElemTemplateElement::childrenToString(
 					executionContext,
 					&theFormatter);
 
-	executeChildren(executionContext, sourceTree, sourceNode, mode);
+	executeChildren(executionContext, sourceNode, mode);
 }
 
 
@@ -546,7 +543,6 @@ ElemTemplateElement::transformSelectedChildren(
 			const Stylesheet&				stylesheetTree,
 			const ElemTemplateElement&		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNodeContext,
 			const QName&					mode,
 			const XPath*					selectPattern,
@@ -695,7 +691,6 @@ ElemTemplateElement::transformSelectedChildren(
 						stylesheetTree,
 						xslInstruction,
 						theTemplate,
-						sourceTree,
 						sourceNodeContext,
 						mode,
 						xslToken,
@@ -720,7 +715,6 @@ ElemTemplateElement::transformSelectedChildren(
 					stylesheetTree,
 					xslInstruction,
 					theTemplate,
-					sourceTree,
 					sourceNodeContext,
 					mode,
 					xslToken,
@@ -740,7 +734,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 			const Stylesheet&							stylesheetTree,
 			const ElemTemplateElement&					xslInstruction,
 			const ElemTemplateElement*					theTemplate,
-			XalanNode*									sourceTree,
 			XalanNode*									sourceNodeContext,
 			const QName&								mode,
 			int											xslToken,
@@ -778,7 +771,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 			stylesheetTree,
 			xslInstruction,
 			theTemplate,
-			sourceTree,
 			sourceNodeContext,
 			mode,
 			xslToken,
@@ -792,7 +784,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 			stylesheetTree,
 			xslInstruction,
 			theTemplate,
-			sourceTree,
 			sourceNodeContext,
 			mode,
 			xslToken,
@@ -809,7 +800,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 			const Stylesheet&							stylesheetTree,
 			const ElemTemplateElement&					xslInstruction,
 			const ElemTemplateElement*					theTemplate,
-			XalanNode*									sourceTree,
 			XalanNode*									sourceNodeContext,
 			const QName&								mode,
 			int											xslToken,
@@ -829,7 +819,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 			stylesheetTree,
 			xslInstruction,
 			theTemplate,
-			sourceTree,
 			sourceNodeContext,
 			mode,
 			xslToken,
@@ -847,7 +836,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 			const Stylesheet&					stylesheetTree,
 			const ElemTemplateElement&			xslInstruction,
 			const ElemTemplateElement*			theTemplate,
-			XalanNode*							sourceTree,
 			XalanNode*							sourceNodeContext,
 			const QName&						mode,
 			int									xslToken,
@@ -883,7 +871,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 				stylesheetTree,
 				&xslInstruction,
 				theTemplate,
-				sourceTree,
 				sourceNodeContext, 
 				childNode,
 				mode,
@@ -899,7 +886,6 @@ ElemTemplateElement::transformChild(
 			const Stylesheet&			stylesheet_tree, 
 			const ElemTemplateElement*	/* xslInstruction */,
 			const ElemTemplateElement*	theTemplate,
-			XalanNode*					sourceTree, 
 			XalanNode*					selectContext,
 			XalanNode*					child,
 			const QName&				mode,
@@ -921,7 +907,6 @@ ElemTemplateElement::transformChild(
 
 		theTemplate = stylesheetTree->findTemplate(
 						executionContext,
-						sourceTree,
 						child,
 						mode,
 						isApplyImports,
@@ -954,7 +939,7 @@ ElemTemplateElement::transformChild(
 			
 	if(0 != theTemplate)
 	{
-		executionContext.resetCurrentState(sourceTree, child);
+		executionContext.resetCurrentState(child);
 				
 		if(theTemplate == getStylesheet().getStylesheetRoot().getDefaultTextRule())
 		{
@@ -993,7 +978,6 @@ ElemTemplateElement::transformChild(
 			if(0 != executionContext.getTraceListeners())
 			{
 				TracerEvent te(executionContext,
-							   sourceTree,
 							   child, 
 								mode,
 								*theTemplate);
@@ -1002,12 +986,11 @@ ElemTemplateElement::transformChild(
 			}
 
 			theTemplate->executeChildren(executionContext, 
-										 sourceTree,
 										 child,
 										 mode);
 		}
 
-		executionContext.resetCurrentState(sourceTree, selectContext);
+		executionContext.resetCurrentState(selectContext);
 	}
 
 	return true;

@@ -139,13 +139,12 @@ ElemIf::getElementName() const
 void
 ElemIf::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	assert(m_test != 0);
 
-	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode, mode);
 
 	const XObjectPtr	test(m_test->execute(sourceNode, *this, executionContext));
 	assert(test.null() == false);
@@ -163,6 +162,6 @@ ElemIf::execute(
 
 	if(test->boolean())
 	{
-		executeChildren(executionContext, sourceTree, sourceNode, mode);
+		executeChildren(executionContext, sourceNode, mode);
 	}
 }

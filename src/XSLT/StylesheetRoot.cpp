@@ -185,7 +185,7 @@ StylesheetRoot::process(
 {
 	// Find the root pattern in the XSL.
 	const ElemTemplate*		rootRule =
-			findTemplate(executionContext, sourceTree, sourceTree);
+			findTemplate(executionContext, sourceTree);
 
 	if(0 == rootRule)
 	{
@@ -197,7 +197,7 @@ StylesheetRoot::process(
 
 	setupFormatterListener(outputTarget, executionContext);
 
-	executionContext.resetCurrentState(sourceTree, sourceTree);
+	executionContext.resetCurrentState(sourceTree);
 
 	executionContext.setRootDocument(sourceTree);
 
@@ -226,7 +226,7 @@ StylesheetRoot::process(
 
 	// Output the action of the found root rule.  All processing
 	// occurs from here.
-	rootRule->execute(executionContext, sourceTree, sourceTree, QNameByReference());
+	rootRule->execute(executionContext, sourceTree, QNameByReference());
 
 	// At this point, anything transient during the tranformation
 	// may have been deleted, so we may not refer to anything the

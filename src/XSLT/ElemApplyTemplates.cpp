@@ -134,15 +134,14 @@ ElemApplyTemplates::getElementName() const
 
 void
 ElemApplyTemplates::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
+			StylesheetExecutionContext&		executionContext,			
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	if(0 != executionContext.getTraceListeners())
 	{
 		executionContext.fireTraceEvent(TracerEvent(
-		  executionContext, sourceTree, sourceNode, mode, *this));
+		  executionContext, sourceNode, mode, *this));
 	}
 	if (0 != sourceNode)
 	{
@@ -153,8 +152,7 @@ ElemApplyTemplates::execute(
 		StylesheetExecutionContext::ParamsPushPop	thePushPop(
 			executionContext,
 			this,
-			*this,
-			sourceTree,
+			*this,		
 			sourceNode,
 			mode,
 			this);
@@ -165,8 +163,7 @@ ElemApplyTemplates::execute(
 				executionContext,
 				getStylesheet(),
 				*this,
-				0,
-				sourceTree,
+				0,				
 				sourceNode,
 				m_mode,
 				m_pSelectPattern,
@@ -179,8 +176,7 @@ ElemApplyTemplates::execute(
 				executionContext,
 				getStylesheet(),
 				*this,
-				0,
-				sourceTree,
+				0,				
 				sourceNode,
 				mode,
 				m_pSelectPattern,

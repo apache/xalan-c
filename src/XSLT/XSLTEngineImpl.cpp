@@ -2811,7 +2811,6 @@ XSLTEngineImpl::resolveTopLevelParams(StylesheetExecutionContext&	executionConte
 
 void
 XSLTEngineImpl::resetCurrentState(
-			XalanNode*	/* sourceTree */,
 			XalanNode*	xmlNode)
 {
 	if(0 != xmlNode)

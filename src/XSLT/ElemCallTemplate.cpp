@@ -129,12 +129,11 @@ ElemCallTemplate::getElementName() const
 
 void
 ElemCallTemplate::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
+			StylesheetExecutionContext&		executionContext,			
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode, mode);
 
 	assert(isEmpty(m_templateName.getLocalPart()) == false);
 
@@ -147,13 +146,12 @@ ElemCallTemplate::execute(
 		StylesheetExecutionContext::ParamsPushPop	thePushPop(
 				executionContext,
 				theTemplate,
-				*this,
-				sourceTree,
+				*this,			
 				sourceNode,
 				mode,
 				theTemplate);
 
-		theTemplate->execute(executionContext, sourceTree, sourceNode, mode);
+		theTemplate->execute(executionContext, sourceNode, mode);
 	}
 	else
 	{

@@ -98,7 +98,6 @@ ElemParam::getElementName() const
 void
 ElemParam::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
@@ -106,7 +105,7 @@ ElemParam::execute(
 
 	if (obj.null() == true)
 	{
-		ElemVariable::execute(executionContext, sourceTree, sourceNode, mode);
+		ElemVariable::execute(executionContext, sourceNode, mode);
 	}
 	else
 	{
@@ -115,7 +114,6 @@ ElemParam::execute(
 			executionContext.fireTraceEvent(
 				TracerEvent(
 					executionContext,
-					sourceTree,
 					sourceNode,
 					mode,
 					*this));

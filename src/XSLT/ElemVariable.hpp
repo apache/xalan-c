@@ -148,14 +148,12 @@ public:
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
 	const XObjectPtr
 	getValue(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode) const;
 
 protected:

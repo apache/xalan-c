@@ -282,11 +282,10 @@ ElemDecimalFormat::getElementName() const
 
 void
 ElemDecimalFormat::execute(
-			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						sourceTree,
+			StylesheetExecutionContext& 	executionContext,		
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	// $$$ ToDo: Fix this!!!
-	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode, mode);
 }

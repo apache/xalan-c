@@ -215,14 +215,13 @@ ElemNumber::getElementName() const
 void
 ElemNumber::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode, mode);
 
 	const XalanDOMString	countString =
-		getCountString(executionContext, sourceTree, sourceNode);
+		getCountString(executionContext, sourceNode);
 
 	if (!isEmpty(countString))
 	{
@@ -379,7 +378,6 @@ ElemNumber::getCountMatchPattern(
 XalanDOMString
 ElemNumber::getCountString(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*							/* sourceTree */, 
 			XalanNode*							sourceNode) const
 {
 	assert(sourceNode != 0);

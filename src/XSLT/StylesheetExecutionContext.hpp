@@ -211,12 +211,10 @@ public:
 	/**
 	 * Reset the state of execution to node 'xmlNode' in source tree 'sourceTree.'
 	 * 
-	 * @param sourceTree source tree for execution
 	 * @param xmlNode    node to execute
 	 */
 	virtual void
 	resetCurrentState(
-			XalanNode*	sourceTree,
 			XalanNode*	xmlNode) = 0;
 
 	/**
@@ -514,7 +512,6 @@ public:
 	 * @param name    name of variable
 	 * @param element element marker for variable
 	 * @param templateChild result tree fragment to use.
-	 * @param sourceTree node for source tree
 	 * @param sourceNode source node
 	 * @return a pointer to the XObject result
 	 */
@@ -522,7 +519,6 @@ public:
 	createVariable(
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceTree,
 			XalanNode*					sourceNode,
 			const QName&				mode) = 0;
 
@@ -572,7 +568,6 @@ public:
 	 * @param name    name of variable
 	 * @param element element marker for variable
 	 * @param templateChild result tree fragment to use.
-	 * @param sourceTree node for source tree
 	 * @param sourceNode source node
 	 */
 	virtual void
@@ -580,7 +575,6 @@ public:
 			const QName&				name,
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceTree,
 			XalanNode*					sourceNode) = 0;
 
 	/**
@@ -641,7 +635,6 @@ public:
 	 * Also, push default arguments on the stack.
 	 *
 	 * @param xslCallTemplateElement "call-template" element
-	 * @param sourceTree             source tree
 	 * @param sourceNode             source node
 	 * @param mode                   mode under which the template is operating
 	 * @param targetTemplate         target template
@@ -649,7 +642,6 @@ public:
 	virtual	void
 	pushParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
-			XalanNode*					sourceTree, 
 			XalanNode*					sourceNode,
 			const QName&				mode,
 			const ElemTemplateElement*	targetTemplate) = 0;
@@ -772,7 +764,6 @@ public:
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement*		contextElement,
 			const ElemTemplateElement&		xslCallTemplateElement,
-			XalanNode*						sourceTree, 
 			XalanNode*						sourceNode,
 			const QName&					mode,
 			const ElemTemplateElement*		targetTemplate);
@@ -952,21 +943,18 @@ public:
 	 * Create an XObject that represents a Result tree fragment.
 	 *
 	 * @param templateChild result tree fragment to use.
-	 * @param sourceTree node for source tree
 	 * @param sourceNode source node
 	 * @return XObject instance
 	 */
 	virtual const XObjectPtr
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceTree,
 			XalanNode*					sourceNode) = 0;
 
 	/**
 	 * Create an XObject that represents a Result tree fragment.
 	 *
 	 * @param templateChild result tree fragment to use.
-	 * @param sourceTree node for source tree
 	 * @param sourceNode source node
 	 * @param mode current mode
 	 * @return XObject instance
@@ -974,7 +962,6 @@ public:
 	virtual const XObjectPtr
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceTree,
 			XalanNode*					sourceNode,
 			const QName&				mode) = 0;
 

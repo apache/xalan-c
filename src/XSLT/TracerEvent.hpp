@@ -89,14 +89,12 @@ public:
 	 * Construct a tracer event.
 	 * 
 	 * @param executionContext    XSLT processor instance
-	 * @param sourceTree input    source tree
 	 * @param sourceNode current  context node
 	 * @param mode                current mode
 	 * @param styleNode           node in the style tree where the event occurs
 	 */
 	TracerEvent(
 			const StylesheetExecutionContext&	executionContext,
-			const XalanNode*					sourceTree,
 			const XalanNode*					sourceNode,
 			const QName&						mode,
 			const ElemTemplateElement&			styleNode);
@@ -133,11 +131,6 @@ public:
 	 */
 	const StylesheetExecutionContext&		m_executionContext;
 
-	/**
-	 * The input source tree.
-	 */
-	const XalanNode*						m_sourceTree;
-  
 	/**
 	 * The current context node.
 	 */

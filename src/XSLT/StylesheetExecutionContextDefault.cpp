@@ -215,10 +215,9 @@ StylesheetExecutionContextDefault::setStylesheetRoot(const StylesheetRoot*	theSt
 
 void
 StylesheetExecutionContextDefault::resetCurrentState(
-			XalanNode*	sourceTree,
 			XalanNode*	xmlNode)
 {
-	m_xsltProcessor.resetCurrentState(sourceTree, xmlNode);
+	m_xsltProcessor.resetCurrentState(xmlNode);
 }
 
 
@@ -466,11 +465,10 @@ const XObjectPtr
 StylesheetExecutionContextDefault::createVariable(
 			const ElemTemplateElement*	/* element */,
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceTree,
 			XalanNode*					sourceNode,
 			const QName&				mode)
 {
-	return createXResultTreeFrag(templateChild, sourceTree, sourceNode, mode);
+	return createXResultTreeFrag(templateChild, sourceNode, mode);
 }
 
 
@@ -538,10 +536,9 @@ StylesheetExecutionContextDefault::pushVariable(
 			const QName&				name,
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceTree,
 			XalanNode*					sourceNode)
 {
-	m_variablesStack.pushVariable(name, createXResultTreeFrag(templateChild, sourceTree, sourceNode), element);
+	m_variablesStack.pushVariable(name, createXResultTreeFrag(templateChild, sourceNode), element);
 }
 
 
@@ -607,7 +604,6 @@ private:
 void
 StylesheetExecutionContextDefault::pushParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
-			XalanNode*					sourceTree, 
 			XalanNode*					sourceNode,
 			const QName&				mode,
 			const ElemTemplateElement*	targetTemplate)
@@ -665,7 +661,6 @@ StylesheetExecutionContextDefault::pushParams(
 						createVariable(
 							&xslCallTemplateElement,
 							*xslParamElement,
-							sourceTree,
 							sourceNode,
 							mode);
 				}
@@ -834,11 +829,9 @@ StylesheetExecutionContextDefault::cloneToResultTree(
 const XObjectPtr
 StylesheetExecutionContextDefault::createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceTree,
 			XalanNode*					sourceNode)
 {
 	return createXResultTreeFrag(templateChild,
-								 sourceTree,
 								 sourceNode,
 								 QNameByReference());
 }
@@ -848,7 +841,6 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 const XObjectPtr
 StylesheetExecutionContextDefault::createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
-			XalanNode*					sourceTree,
 			XalanNode*					sourceNode,
 			const QName&				mode)
 {
@@ -869,7 +861,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 				*this,
 				&tempFormatter);
 
-		templateChild.executeChildren(*this, sourceTree, sourceNode, mode);
+		templateChild.executeChildren(*this, sourceNode, mode);
 	}
 	else
 	{
@@ -885,7 +877,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 				*this,
 				&tempFormatter);
 
-		templateChild.executeChildren(*this, sourceTree, sourceNode, mode);
+		templateChild.executeChildren(*this, sourceNode, mode);
 	}
 
 	return getXObjectFactory().createResultTreeFrag(theResultTreeFrag);

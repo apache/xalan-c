@@ -149,8 +149,7 @@ ElemElement::getElementName() const
 
 void
 ElemElement::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
+			StylesheetExecutionContext&		executionContext,			
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
@@ -259,9 +258,9 @@ ElemElement::execute(
 		}
 	}
 
-	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
+	ElemUse::execute(executionContext, sourceNode, mode);
 
-	doExecuteChildren(executionContext, sourceTree, sourceNode, mode, isIllegalElement);
+	doExecuteChildren(executionContext, sourceNode, mode, isIllegalElement);
 
 	if (isIllegalElement == false)
 	{
@@ -273,8 +272,7 @@ ElemElement::execute(
 
 void
 ElemElement::doExecuteChildren(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
+			StylesheetExecutionContext&		executionContext,			
 			XalanNode*						sourceNode,
 			const QName&					mode,
 			bool							skipAttributeChildren) const
@@ -283,7 +281,7 @@ ElemElement::doExecuteChildren(
 	{
 		// If we should execute all children, then just call
 		// executeChildren()...
-		executeChildren(executionContext, sourceTree, sourceNode, mode);
+		executeChildren(executionContext, sourceNode, mode);
 	}
 	else
 	{
@@ -293,7 +291,7 @@ ElemElement::doExecuteChildren(
 		{
 			if (node->getXSLToken() != Constants::ELEMNAME_ATTRIBUTE)
 			{
-				node->execute(executionContext, sourceTree, sourceNode, mode);
+				node->execute(executionContext, sourceNode, mode);
 			}
 		}
 	}

@@ -97,8 +97,7 @@ ElemExtensionCall::getElementName() const
 
 void
 ElemExtensionCall::execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
+			StylesheetExecutionContext&		executionContext,		
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
@@ -108,7 +107,7 @@ ElemExtensionCall::execute(
 	{
 		if(child->getXSLToken() == Constants::ELEMNAME_FALLBACK)
 		{
-			child->execute(executionContext, sourceTree, sourceNode, mode);
+			child->execute(executionContext, sourceNode, mode);
 		}
 	}
 }

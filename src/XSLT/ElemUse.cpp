@@ -114,15 +114,14 @@ ElemUse::getElementName() const
 void
 ElemUse::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode, mode);
 
 	if(0 != m_attributeSetsNames.size())
 		getStylesheet().getStylesheetRoot().applyAttrSets(m_attributeSetsNames, 
-				executionContext, sourceTree, sourceNode, mode);
+				executionContext, sourceNode, mode);
 }
 
 

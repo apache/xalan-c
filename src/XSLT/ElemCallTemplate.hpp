@@ -103,8 +103,7 @@ public:
 
 	virtual void
 	execute(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
+			StylesheetExecutionContext&		executionContext,		
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
 

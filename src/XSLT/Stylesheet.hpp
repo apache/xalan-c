@@ -534,15 +534,13 @@ public:
 	 *
 	 * @param attributeSetsNames list of attribute set names
 	 * @param executionContext	 current execution context
-	 * @param sourceTree		 node for source tree
 	 * @param sourceNode		 source node
 	 * @param mode				 execution mode
 	 */
 	void
 	applyAttrSets(
 			const QNameVectorType&			attributeSetsNames,
-			StylesheetExecutionContext& 	executionContext, 
-			XalanNode*						sourceTree,
+			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
   
@@ -680,14 +678,12 @@ public:
 	 * XSL document, according to the rules specified in the xsl draft. 
 	 *
 	 * @param executionContext current execution context
-	 * @param sourceTree	   where the targetElem is to be found
 	 * @param targetNode	   element that needs a rule
 	 * @return				   pointer to rule that best matches targetNode
 	 */
 	const ElemTemplate*
 	findTemplate(
 			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						targetNode) const;
 
 	/**
@@ -695,7 +691,6 @@ public:
 	 * XSL document, according to the rules specified in the xsl draft. 
 	 *
 	 * @param executionContext current execution context
-	 * @param sourceTree        where the targetElem is to be found
 	 * @param targetElem        element that needs a rule
 	 * @param mode              string indicating the display mode
 	 * @param useImports        means that this is an xsl:apply-imports commend
@@ -704,7 +699,6 @@ public:
 	const ElemTemplate*
 	findTemplate(
 			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						sourceTree, 
 			XalanNode*						targetNode, 
 			const QName&					mode,
 			bool							useImports,

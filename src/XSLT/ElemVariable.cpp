@@ -155,13 +155,12 @@ ElemVariable::getElementName() const
 void
 ElemVariable::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode, mode);
 
-	const XObjectPtr	theValue(getValue(executionContext, sourceTree, sourceNode));
+	const XObjectPtr	theValue(getValue(executionContext, sourceNode));
 
 	if (theValue.null() == false)
 	{
@@ -184,12 +183,11 @@ ElemVariable::execute(
 const XObjectPtr
 ElemVariable::getValue(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode) const
 {
 	if(m_selectPattern == 0)
 	{
-		return executionContext.createXResultTreeFrag(*this, sourceTree, sourceNode);
+		return executionContext.createXResultTreeFrag(*this, sourceNode);
 	}
 	else
 	{

@@ -114,11 +114,10 @@ ElemTextLiteral::getElementName() const
 void
 ElemTextLiteral::execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
+	ElemTemplateElement::execute(executionContext, sourceNode, mode);
 
     if(!m_disableOutputEscaping)
     {

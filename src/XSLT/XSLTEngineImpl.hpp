@@ -256,9 +256,7 @@ public:
 			const XObject&					xobj);
 
 	virtual void
-	resetCurrentState(
-			XalanNode*	sourceTree,
-			XalanNode*	xmlNode);
+	resetCurrentState(XalanNode*	xmlNode);
 
 	virtual void
 	resolveTopLevelParams(StylesheetExecutionContext&	executionContext);

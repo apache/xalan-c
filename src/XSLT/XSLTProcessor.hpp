@@ -222,12 +222,10 @@ public:
 	 * Reset the state of execution to node 'xmlNode' in source tree
 	 * 'sourceTree.'
 	 * 
-	 * @param sourceTree source tree for execution
 	 * @param xmlNode	 node to execute
 	 */
 	virtual void
 	resetCurrentState(
-			XalanNode*	sourceTree,
 			XalanNode*	xmlNode) = 0;
 
 	/**

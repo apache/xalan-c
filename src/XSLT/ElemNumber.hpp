@@ -152,7 +152,6 @@ public:
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
@@ -221,7 +220,6 @@ protected:
 	XalanDOMString
 	getCountString(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree, 
 			XalanNode*						sourceNode) const;
 
 	/**

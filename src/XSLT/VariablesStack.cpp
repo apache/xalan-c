@@ -427,7 +427,7 @@ VariablesStack::findXObject(
 
 				SetAndRestoreForceGlobalSearch	theGuard(*this);
 
-				theNewValue = var->getValue(executionContext, doc, doc);
+				theNewValue = var->getValue(executionContext, doc);
 				assert(theNewValue.null() == false);
 
 				theEntry->setValue(theNewValue);

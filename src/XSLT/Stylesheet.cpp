@@ -631,12 +631,11 @@ Stylesheet::findNamedTemplate(
 const ElemTemplate*
 Stylesheet::findTemplate(
 			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						sourceTree, 
 			XalanNode*						targetNode) const
 {
 	const Stylesheet*	theDummy;
 
-	return findTemplate(executionContext, sourceTree, targetNode, QNameByReference(), false, theDummy);
+	return findTemplate(executionContext, targetNode, QNameByReference(), false, theDummy);
 }
 
 
@@ -705,13 +704,11 @@ Stylesheet::addObjectIfNotFound(
 const ElemTemplate*
 Stylesheet::findTemplate(
 			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						sourceTree, 
 			XalanNode*						targetNode, 
 			const QName&					mode,
 			bool							useImports,
 			const Stylesheet*&				foundStylesheet) const
 {
-	assert(sourceTree != 0);
 	assert(targetNode != 0);
 	assert(m_patternCount == m_patternTable.size());
 
@@ -930,7 +927,6 @@ Stylesheet::findTemplate(
 					m_imports[i];
 
 				bestMatchedRule = stylesheet->findTemplate(executionContext,
-														   sourceTree,
 														   targetNode,
 														   mode, 
 														   false,
@@ -1467,8 +1463,7 @@ Stylesheet::addAttributeSet(
 void
 Stylesheet::applyAttrSets(
 			const QNameVectorType&			attributeSetsNames, 
-			StylesheetExecutionContext& 	executionContext, 
-			XalanNode*						sourceTree, 
+			StylesheetExecutionContext& 	executionContext, 			
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
@@ -1485,7 +1480,7 @@ Stylesheet::applyAttrSets(
 			const Stylesheet* const 	stylesheet = m_imports[i];
 
 			stylesheet->applyAttrSets(attributeSetsNames, 
-									 executionContext, sourceTree, sourceNode, mode);
+									 executionContext, sourceNode, mode);
 		}
 
 		for(QNameVectorType::size_type j = 0; j < nNames; j++)
@@ -1500,7 +1495,7 @@ Stylesheet::applyAttrSets(
 
 				if(qname.equals(attrSet->getQName()))
 				{
-					attrSet->execute(executionContext, sourceTree, sourceNode, mode);
+					attrSet->execute(executionContext, sourceNode, mode);
 				}
 			}
 		}
