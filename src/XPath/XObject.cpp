@@ -307,32 +307,41 @@ doCompareNodeSets(
 	bool				theResult = false;
 
 	const unsigned int	len1 = theLHSNodeSet.getLength();
-	const unsigned int	len2 = theRHSNodeSet.getLength();
 
-	for(unsigned int i = 0; i < len1 && theResult == false; i++)
+	if (len1 > 0)
 	{
-		const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
-		assert(theLHSNode != 0);
+		const unsigned int	len2 = theRHSNodeSet.getLength();
 
-		XPathExecutionContext::GetAndReleaseCachedString	s1(executionContext);
-
-		theTypeFunction(*theLHSNode, s1);
-
-		XPathExecutionContext::GetAndReleaseCachedString	s2(executionContext);
-
-		for(unsigned int k = 0; k < len2 && theResult == false; k++)
+		if (len2 > 0)
 		{
-			const XalanNode* const	theRHSNode = theRHSNodeSet.item(k);
-			assert(theRHSNode != 0);
+			XPathExecutionContext::GetAndReleaseCachedString	s1(executionContext);
 
-			theTypeFunction(*theRHSNode, s2);
+			XPathExecutionContext::GetAndReleaseCachedString	s2(executionContext);
 
-			if(theCompareFunction(s1, s2) == true)
+			for(unsigned int i = 0; i < len1 && theResult == false; i++)
 			{
-				theResult = true;
-			}
+				const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
+				assert(theLHSNode != 0);
 
-			clear(s2);
+				theTypeFunction(*theLHSNode, s1);
+
+				for(unsigned int k = 0; k < len2 && theResult == false; k++)
+				{
+					const XalanNode* const	theRHSNode = theRHSNodeSet.item(k);
+					assert(theRHSNode != 0);
+
+					theTypeFunction(*theRHSNode, s2);
+
+					if(theCompareFunction(s1, s2) == true)
+					{
+						theResult = true;
+					}
+
+					clear(s2);
+				}
+
+				clear(s1);
+			}
 		}
 	}
 
