@@ -1907,21 +1907,22 @@ operator+(
 
 
 /**
- * Concatenate two strings
+ * Assign one string to another
  * 
  * @param theString         target string
- * @param theStringToAppend string to add to target
- * @return string with contents of 'theStringToAppend' added to target string
+ * @param theStringToAppend string to assign
+ * @param theStringToAppendLength length of the string (-1 implies the string is null-terminated)
+ * @return a reference to the target string
  */
 inline XalanDOMString&
-append(
+assign(
 			XalanDOMString&			theString,
-			const XalanDOMString&	theStringToAppend)
+			const XalanDOMString&	theStringToAssign)
 {
 #if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
-	theString.append(theStringToAppend);
+	theString = theStringToAssign;
 #else
-	theString.appendData(theStringToAppend);
+	theString = theStringToAssign.clone();
 #endif
 
 	return theString;
@@ -1961,6 +1962,29 @@ assign(
 	{
 		theString = XalanDOMString(theStringToAssign, theStringToAssignLength);
 	}
+#endif
+
+	return theString;
+}
+
+
+
+/**
+ * Concatenate two strings
+ * 
+ * @param theString         target string
+ * @param theStringToAppend string to add to target
+ * @return a reference to the target string
+ */
+inline XalanDOMString&
+append(
+			XalanDOMString&			theString,
+			const XalanDOMString&	theStringToAppend)
+{
+#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
+	theString.append(theStringToAppend);
+#else
+	theString = theString + theStringToAppend;
 #endif
 
 	return theString;
