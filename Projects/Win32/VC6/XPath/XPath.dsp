@@ -234,6 +234,14 @@ SOURCE=..\..\..\..\src\XPath\QName.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\QNameByReference.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\QNameByValue.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\ResultTreeFrag.cpp
 # End Source File
 # Begin Source File
@@ -535,6 +543,14 @@ SOURCE=..\..\..\..\src\XPath\PrefixResolver.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\QName.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\QNameByReference.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\QNameByValue.hpp
 # End Source File
 # Begin Source File
 
