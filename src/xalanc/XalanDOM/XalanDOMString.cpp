@@ -1215,4 +1215,30 @@ TranscodeFromLocalCodePage(
 
 
 
+XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
+TranscodeFromLocalCodePage(const CharVectorType&	theSourceString)
+{
+	if (theSourceString.empty() == true)
+	{
+		return XalanDOMString();
+	}
+	else
+	{
+		typedef XalanDOMString::size_type		size_type;
+
+		const CharVectorType::size_type		theSize = theSourceString.size();
+
+		if (theSourceString[theSize - 1] == CharVectorType::value_type(0))
+		{
+			return TranscodeFromLocalCodePage(&*theSourceString.begin(), size_type(theSize) - 1);
+		}
+		else
+		{
+			return TranscodeFromLocalCodePage(&*theSourceString.begin(), size_type(theSize));
+		}
+	}
+}
+
+
+
 XALAN_CPP_NAMESPACE_END

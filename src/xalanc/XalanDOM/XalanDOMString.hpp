@@ -1158,22 +1158,8 @@ TranscodeFromLocalCodePage(
  * @param theSourceString source string
  * @return The transcoded string.
  */
-inline const XalanDOMString
-TranscodeFromLocalCodePage(const CharVectorType&	theSourceString)
-{
-	typedef XalanDOMString::size_type		size_type;
-
-	const CharVectorType::size_type		theSize = theSourceString.size();
-
-	if (theSourceString[theSize - 1] == CharVectorType::value_type(0))
-	{
-		return TranscodeFromLocalCodePage(&*theSourceString.begin(), size_type(theSize) - 1);
-	}
-	else
-	{
-		return TranscodeFromLocalCodePage(&*theSourceString.begin(), size_type(theSize));
-	}
-}
+XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
+TranscodeFromLocalCodePage(const CharVectorType&	theSourceString);
 
 
 
