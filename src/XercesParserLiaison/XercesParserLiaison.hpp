@@ -294,10 +294,15 @@ public:
 	 * liaison is destroyed.
 	 *
 	 * @param theXercesDocument The Xerces document.
+	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
+	 * @param buildBridge If true, the entire bridge structure is built.
 	 * @return a pointer to a new XalanDocument-derived instance.
 	 */
 	virtual XalanDocument*
-	createDocument(const DOM_Document&	theXercesDocument);
+	createDocument(
+			const DOM_Document&		theXercesDocument,
+			bool					threadSafe = false,
+			bool					buildBridge = false);
 
 	/** 
 	 * Map a pointer to a XalanDocument instance to its implementation
@@ -436,7 +441,7 @@ protected:
 	 * @return a pointer to a new XercesDocumentBridge instance.
 	 */
 	virtual XercesDocumentBridge*
-	createDocument(
+	doCreateDocument(
 			const DOM_Document&		theXercesDocument,
 			bool					threadSafe,
 			bool					buildBridge);
