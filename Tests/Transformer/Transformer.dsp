@@ -110,7 +110,7 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=xilink6.exe
-# ADD BASE LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release\*.lib /nologo /stack:0x1f4000 /subsystem:console /pdb:none /machine:I386
+# ADD BASE LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /stack:0x1f4000 /subsystem:console /pdb:none /machine:I386
 # ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /stack:0x1f4000 /subsystem:console /pdb:none /debug /machine:I386 /fixed:no
 
 !ENDIF 
