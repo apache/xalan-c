@@ -102,7 +102,8 @@
       </tr>
       <tr>
         <td>Solaris 2.6</td>
-        <td><resource-ref idref="xslt4c-solaris-download"/></td>
+        <td><resource-ref idref="xslt4c-solaris-download"/>*<br/>
+        *Use GNU tar to untar; see <link idref="faq" anchor="gnutar">FAQs</link></td>
         <td>Workshop 4.2</td>
       </tr>      
      </table>

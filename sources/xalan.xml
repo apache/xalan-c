@@ -126,7 +126,8 @@
 <external href="http://xml.apache.org/bugs/"  
           label="Bug reporting"/>
 
-<separator/>
-
+<external href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c"  
+          label="Testing"/>
+          
 </book>
   
