@@ -133,7 +133,6 @@
 #include "FunctionSystemProperty.hpp"
 #include "FunctionUnparsedEntityURI.hpp"
 #include "GenerateEvent.hpp"
-#include "NodeSorter.hpp"
 #include "ProblemListener.hpp"
 #include "ProblemListenerDefault.hpp"
 #include "Stylesheet.hpp"
@@ -206,7 +205,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_defaultProblemListener(),
 	m_problemListener(&m_defaultProblemListener),
 	m_stylesheetRoot(0),
-	m_XSLDirectiveLookup(),
 	m_traceSelects(false),
 	m_quietConflictWarnings(false),
 	m_diagnosticsPrintWriter(0),
@@ -356,19 +354,8 @@ XSLTEngineImpl::process(
 			// stylesheet processing instruction...
 			XalanDOMString			stylesheetURI = 0;
 
-			// Find the first element, and assume that it's the document element.
+			// The PI must be a child of the document...
 			XalanNode*				child = sourceTree->getFirstChild();
-
-			while(child != 0 && child->getNodeType() != XalanNode::ELEMENT_NODE)
-			{
-				child = child->getNextSibling();
-			}
-
-			// OK, if we found a document element, start with the first child.
-			if(child != 0)
-			{
-				child = child->getFirstChild();
-			}
 
 #if !defined(XALAN_NO_NAMESPACES)
 			using std::vector;
@@ -686,7 +673,6 @@ XSLTEngineImpl::parseXML(
 			DocumentHandler*	docHandler,
 			XalanDocument*		docToRegister)
 {
-	// java: url.toExternalForm();
 	const XalanDOMString&	urlString = url.getURLText();
 
 	XalanDocument*			doc =
@@ -694,7 +680,6 @@ XSLTEngineImpl::parseXML(
 
 	if(doc == 0)
 	{
-		 // java: url.toString()
 		XSLTInputSource		inputSource(url.getURLText());
 
 		if(0 != docHandler)
@@ -1274,11 +1259,7 @@ XSLTEngineImpl::pushTime(const void*	key) const
 {
 	if(0 != key)
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::make_pair;
-#endif
-
-		m_durationsTable.insert(make_pair(key, clock()));
+		m_durationsTable.insert(DurationsTableMapType::value_type(key, clock()));
 	}
 }
 
@@ -1288,6 +1269,7 @@ clock_t
 XSLTEngineImpl::popDuration(const void*	key) const
 {
 	clock_t 	clockTicksDuration = 0;
+
 	if(0 != key)
 	{
 		const DurationsTableMapType::iterator	i =
@@ -1298,6 +1280,7 @@ XSLTEngineImpl::popDuration(const void*	key) const
 		if (i != m_durationsTable.end())
 		{
 			clockTicksDuration = clock() - (*i).second;
+
 			m_durationsTable.erase(i);
 		}
 	}
@@ -1643,8 +1626,11 @@ XSLTEngineImpl::startElement(
 {
 	assert(m_flistener != 0);
 	assert(name != 0);
+
 	flushPending();
+
 	const unsigned int	nAtts = atts.getLength();
+
 	m_pendingAttributes.clear();
 
 	for(unsigned int i = 0; i < nAtts; i++)
@@ -1657,6 +1643,7 @@ XSLTEngineImpl::startElement(
 	// Push a new container on the stack, then push an empty
 	// result namespace on to that container.
 	NamespaceVectorType		nsVector;
+
 	nsVector.push_back(m_emptyNamespace);
 
 	m_resultNameSpaces.push_back(nsVector);

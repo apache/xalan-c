@@ -93,7 +93,6 @@
 
 
 #include <XPath/Function.hpp>
-//#include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NameSpace.hpp>
 
 
@@ -107,10 +106,7 @@
 
 // Forward definitions
 class DispatcherFactory;
-class ElemAttributeSet;
-class Formatter;
 class GenerateEvent;
-class InputSource;
 class PrintWriter;
 class ResultTreeFragBase;
 class StylesheetConstructionContext;
@@ -127,6 +123,7 @@ class XPathFactory;
 class XPathProcessor;
 class XPathSupport;
 class XSLTResultTarget;
+
 
 
 /**
@@ -160,7 +157,6 @@ public:
 	typedef XALAN_STD vector<NamespaceVectorType>		NamespacesStackType;
 	typedef XALAN_STD vector<TraceListener*>			TraceListenerVectorType;
 	typedef XALAN_STD vector<bool>						BoolVectorType;
-	typedef XALAN_STD map<const XalanNode*, int>		XSLDirectiveMapType;
 #undef XALAN_STD
 
 	typedef Function::XObjectArgVectorType				XObjectArgVectorType;
@@ -168,40 +164,6 @@ public:
 
 	// Public members
 	//---------------------------------------------------------------------
-
-	/**
-	 * The root document.
-	 */
-	XalanDocument*	m_rootDoc;
-
-  /**
-   * If true, output carriage returns.
-   */
-	bool	m_outputCarriageReturns;
-
-	/**
-	 * If true, output linefeeds.
-	 */
-	bool	m_outputLinefeeds;
-
-	/**
-	 * The factory that will be used to create result tree fragments.
-	 */
-	mutable XalanDocument*	m_resultTreeFactory;
-
-  /**
-   * The namespace that the result tree conforms to.  A null value 
-   * indicates that result-ns is not used and there is no checking. 
-   * A empty string indicates that the result tree conforms to the 
-   * default namespace.
-   */
-	XalanDOMString	m_resultNameSpacePrefix;
-
-  /**
-   * The URL that belongs to the result namespace.
-   */
-	XalanDOMString	m_resultNameSpaceURL;
-
 
 	/**
 	 * Construct an XSL processor that can call back to a XML processor, so it
@@ -712,13 +674,13 @@ public:
 	int
 	getXSLToken(const XalanNode&	node) const;
 
-  /**
-   * Find the type of an element using this method.
-   *
-   * @param node	a probable xsl:xxx element
-   * @param tagType Constants.ELEMNAME_XXX token
-   * @return true if node is of tagType
-   */
+	/**
+	 * Find the type of an element using this method.
+	 *
+	 * @param node	a probable xsl:xxx element
+	 * @param tagType Constants.ELEMNAME_XXX token
+	 * @return true if node is of tagType
+	 */
 	bool
 	isXSLTagOfType(
 			const XalanNode& node,
@@ -754,9 +716,6 @@ public:
 			const XalanDOMString&	msg,
 			const XalanNode*		styleNode = 0,
 			const XalanNode*		sourceNode = 0) const;
-
-//@@ HOLD until we figure out exceptions
-//	void error(XalanDOMString& msg, Exception e);
 
 	/**
 	 * Tell the user of an error, and probably throw an exception.
@@ -817,8 +776,7 @@ public:
 	 * @param s string to print
 	 */
 	void
-	diag(
-			const XalanDOMString&	s) const;
+	diag(const XalanDOMString&	s) const;
   
 	/**
 	 * Tell if a given element name should output it's text 
@@ -1132,7 +1090,12 @@ public:
 			const XalanDOMString&	mimeType,
 			DispatcherFactory*		factory);
 
-public:
+	/**
+	 * Reset the state.  This needs to be called after a process() call 
+	 * is invoked, if the processor is to be used again.
+	 */
+	virtual void
+	reset();
 
 	/**
 	 * Retrieve the XPath support object
@@ -1337,16 +1300,45 @@ public:
 
 protected:
 
+	/**
+	 * If true, output carriage returns.
+	 */
+	bool	m_outputCarriageReturns;
+
+	/**
+	 * If true, output linefeeds.
+	 */
+	bool	m_outputLinefeeds;
+
+	/**
+	 * The factory that will be used to create result tree fragments.
+	 */
+	mutable XalanDocument*	m_resultTreeFactory;
+
+	/**
+	 * The namespace that the result tree conforms to.  A null value 
+	 * indicates that result-ns is not used and there is no checking. 
+	 * A empty string indicates that the result tree conforms to the 
+	 * default namespace.
+	 */
+	XalanDOMString	m_resultNameSpacePrefix;
+
+	/**
+	 * The URL that belongs to the result namespace.
+	 */
+	XalanDOMString	m_resultNameSpaceURL;
+
+
 	/*
 	 * The current input element that is being processed.
 	 */
 	XalanNode*	m_currentNode;
 
-  /**
-   * Given a tag name, an attribute name, and 
-   * an attribute value, do a very crude recursive 
-   * search and locate the first match.
-   */
+	/**
+	 * Given a tag name, an attribute name, and 
+	 * an attribute value, do a very crude recursive 
+	 * search and locate the first match.
+	 */
 	static XalanElement*
 	findElementByAttribute(
 			XalanElement&			elem,
@@ -1368,26 +1360,15 @@ protected:
 			const XalanElement&		templateChild,
 			AttributeListImpl&		attList);
 
-public:
-
 	/**
-	 * Reset the state.  This needs to be called after a process() call 
-	 * is invoked, if the processor is to be used again.
+	 * The pending element.  We have to delay the call to 
+	 * m_flistener.startElement(name, atts) because of the 
+	 * xsl:attribute and xsl:copy calls.	In other words, 
+	 * the attributes have to be fully collected before you 
+	 * can call startElement.
 	 */
-	virtual void
-	reset();
 
-protected:
-
-  /**
-   * The pending element.  We have to delay the call to 
-   * m_flistener.startElement(name, atts) because of the 
-   * xsl:attribute and xsl:copy calls.	In other words, 
-   * the attributes have to be fully collected before you 
-   * can call startElement.
-   */
-
-	XalanDOMString	m_pendingElementName;
+	XalanDOMString		m_pendingElementName;
 
 	/**
 	 * The pending attributes.	We have to delay the call to 
@@ -1468,31 +1449,30 @@ private:
 
 	ProblemListener*	m_problemListener;
 
-  /**
-   * The root of a linked set of stylesheets.
-   */
+	/**
+	 * The root of a linked set of stylesheets.
+	 */
 	const StylesheetRoot* 				m_stylesheetRoot;
 
-/**
- * The namespace that we must match as a minimum for XSLT.
- */
+	/**
+	 * The namespace that we must match as a minimum for XSLT.
+	 */
 	static const XalanDOMString		s_XSLNameSpaceURL;	//"http://www.w3.org/1999/XSL/Transform"
 
-
-/**
- * The minimum version of XSLT supported.
- */
+	/**
+	 * The minimum version of XSLT supported.
+	 */
 	static const double s_XSLTVerSupported; // 1.0
 
-/**
- * Special Xalan namespace for built-in extensions.
- */
+	/**
+	 * Special Xalan namespace for built-in extensions.
+	 */
 	static const XalanDOMString s_XSLT4JNameSpaceURL; // "http://xml.apache.org/xslt"
 
 
-/**
- * Hash table that can look up XSLT4J extensions element IDs via name.
- */
+	/**
+	 * Hash table that can look up XSLT4J extensions element IDs via name.
+	 */
 	static ElementKeysMapType		s_XSLT4JElementKeys;
 
 	/**
@@ -1504,22 +1484,6 @@ private:
 	 * Hash table of XSLT element IDs for element names.
 	 */
 	static ElementKeysMapType	s_elementKeys;
-
-
-	/**
-	 * Node to xsl directive table, used so we don't have to keep 
-	 * looking up the directives each time.  This isn't of huge 
-	 * benifit, but is used because of the cost of getExpandedElementName.
-	 */
-	// Create a hash table that can look up xsl element IDs via name.
-	mutable XSLDirectiveMapType 	m_XSLDirectiveLookup;
-
-	/**
-	 * In response to 'xsl:import', call transformChild, or, if that 
-	 * fails, transformChildren.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
-	 */
 
 	/**
 	 * If this is set to true, selects will be traced
@@ -1636,23 +1600,11 @@ private:
 	static const bool	s_resolveContentsEarly;
 
 	/**
-	 * Set the factory for making XPaths.
-	 */
-//	void setXPathFactory(XPathFactory* factory) { m_xpathFactory = factory; }
-
-	
-	/**
 	 * Get a DOM document, primarily for creating result 
 	 * tree fragments.
 	 */
 	virtual XalanDocument*
 	getDOMFactory() const;
-
-	/**
-	 * Set the XPath processor object.
-	 * @param processor A XPathProcessor interface.
-	 */
-//	void setXPathProcessor(XPathProcessor* processor) { m_xpathProcessor = processor; }
 
 	bool
 	getResolveContentsEarly() const
@@ -1662,7 +1614,7 @@ private:
 
 	ParamVectorType 	m_topLevelParams;
 
-	public:
+public:
 
 	/**
 	 * Reset the vector of top level parameters
