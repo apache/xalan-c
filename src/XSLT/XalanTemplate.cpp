@@ -192,7 +192,7 @@ static vector<NamespacesHandler::NamespacesMapType::iterator> theNamespacesMapTy
 static VariablesStack::ParamsVectorType	theParamsVector;
 static ElemNumber::NumberingResourceBundleMapType theNumberingResourceBundleMapType;
 static XalanTranscodingServices::MaximumCharacterValueMapType theMaximumCharacterValueMapType;
-
+static set<XalanNode*, less<XalanNode*> >	theInstanceSetType;
 
 static void
 foo()
