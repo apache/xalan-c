@@ -120,15 +120,9 @@ XNodeSet::XNodeSet(const XNodeSet&	source,
 	XObject(source),
 	m_support(source.m_support),
 	m_value(source.m_value),
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	m_resultTreeFrag(source.m_resultTreeFrag.get() == 0 ?
-						0 :
-						dynamic_cast<ResultTreeFragBase*>(source.m_resultTreeFrag->clone(deepClone)))
-#else
 	m_resultTreeFrag(source.m_resultTreeFrag.get() == 0 ?
 						0 :
 						source.m_resultTreeFrag->clone(deepClone))
-#endif
 {
 }
 
@@ -159,23 +153,7 @@ XNodeSet::getTypeString() const
 double
 XNodeSet::num() const
 {
-	double result = DoubleSupport::getNaN();
-
-	if(m_value.getLength() > 0)
-	{
-		const XalanDOMString	s = m_support.getNodeData(*m_value.item(0));
-
-		if(0 == length(s))
-		{
-			result = 0;
-		}
-		else
-		{
-			result = DOMStringToDouble(s);
-		}
-	}
-
-	return result;
+	return DOMStringToDouble(str());
 }
 
 
@@ -235,18 +213,26 @@ XNodeSet::rtree() const
 			new ResultTreeFrag(*m_envSupport->getDOMFactory(),
 							   m_support);
 
-#if defined(XALAN_OLD_AUTO_PTR)
-		m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
-#else
-	    m_resultTreeFrag.reset(theFrag);
-#endif
-
 		const int	nNodes = m_value.getLength();
 
 		for(int i = 0; i < nNodes; i++)
 		{
-			m_resultTreeFrag->appendChild(m_value.item(i)->cloneNode(true));
+			theFrag->appendChild(m_value.item(i)->cloneNode(true));
 		}
+
+#if defined(XALAN_OLD_AUTO_PTR)
+#if defined(XALAN_NO_MUTABLE)
+		((XNodeSet*)this)->m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
+#else
+		m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
+#endif
+#else
+#if defined(XALAN_NO_MUTABLE)
+		((XNodeSet*)this)->m_resultTreeFrag.reset(theFrag);
+#else
+	    m_resultTreeFrag.reset(theFrag);
+#endif
+#endif
 	}
 
 	return *m_resultTreeFrag.get();
