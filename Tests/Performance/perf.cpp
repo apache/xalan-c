@@ -121,10 +121,10 @@
 
 const char* const 	excludeStylesheets[] =
 {
-//	"basic-all_well.xml",
+	//"basic-all_well.xsl",
 	"large-evans_large.xsl",
-//	"sort-cem-big.xml",
-//	"large-cem10k.xml",
+	//"sort-cem-big.xsl",
+	//"large-cem10k.xsl",
 	0
 };
 
@@ -317,13 +317,18 @@ main(
 
 		FileUtility f;
 
+		// Generate Unique Run id and processor info
+		const XalanDOMString UniqRunid = f.GenerateUniqRunid();
+
+		const XalanDOMString processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
+
 		// Defined root for performance directory. Based on PD's machine. 
 		const XalanDOMString	perfDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\perf\\"));
 
 		// Get the list of Directories that are below perf
 		const FileNameVectorType dirs = f.getDirectoryNames(perfDir);
 
-		XMLFileReporter	logFile("d:\\xslt\\cperf-results\\cpp.xml");
+		XMLFileReporter	logFile("d:\\xslt\\xsl-test\\perf-dataxml\\cpp.xml");
 		logFile.logTestFileInit("Performance Testing - Reports performance times for single transform, and average for multiple transforms using compiled stylesheet");
 
 
@@ -352,7 +357,9 @@ main(
 						Hashtable attrs;
 
 						attrs.insert(Hashtable::value_type(XalanDOMString("idref"), files[i]));
-
+						attrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"),UniqRunid));
+						attrs.insert(Hashtable::value_type(XalanDOMString("processor"),processorType));
+						
 						if (skip)
 						{
 							if (checkForExclusion(files[i]))
@@ -415,7 +422,7 @@ main(
 						// Calculate & report performance on stylesheet parse to console and log file.
 						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
 						cout << "   XSL parse: " << timeinMilliseconds << " milliseconds." << endl;
-						addMetricToAttrs("Parse_XSL",timeinMilliseconds, attrs);						
+						addMetricToAttrs("parsexsl",timeinMilliseconds, attrs);						
 
 						
 						// Parse the input XML and report how long it took...                             
@@ -428,7 +435,7 @@ main(
 						// Calculate & report performance on source document parse to console and log file.
 						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
 						cout << "   XML parse: " << timeinMilliseconds << " milliseconds." << endl;
-						addMetricToAttrs("Parse_XML",timeinMilliseconds, attrs);
+						addMetricToAttrs("parsexml",timeinMilliseconds, attrs);
 
 
 
@@ -454,17 +461,17 @@ main(
 													psExecutionContext,
 													csProcessor);
 	
-						// Output single transform time to console and result log
+						// Output single etoe transform time to console and result log
 						cout << "   Single eTOe: " << etoetran << " milliseconds." << endl;
-						addMetricToAttrs("eTOe", etoetran, attrs);
+						addMetricToAttrs("etoe", etoetran, attrs);
 
 
-						// Perform a single transform using compiled stylesheet and report results...
+						// Perform a single transform using parsed stylesheet and unparsed xml source, report results...
 						csProcessor.setStylesheetRoot(glbStylesheetRoot);
-						const XSLTInputSource	csSourceDocument(glbSourceXML);
+						//const XSLTInputSource	csSourceDocument(glbSourceXML);
 
 						startTime = clock();
-						csProcessor.process(csSourceDocument, 
+						csProcessor.process(xmlInputSource, 
 									theResultTarget, 
 									psExecutionContext);
 						endTime = clock();
@@ -474,7 +481,7 @@ main(
 
 						// Output single transform time to console and result log
 						cout << "   One transform w/Parsed XSL: " << timeinMilliseconds << " milliseconds." << endl;
-						addMetricToAttrs("Single_Transform",timeinMilliseconds, attrs);
+						addMetricToAttrs("single",timeinMilliseconds, attrs);
 
 
 
@@ -500,7 +507,7 @@ main(
 						// Output average transform time to console and result log
 						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Parsed XML" << endl;
 
-						addMetricToAttrs("Avg_Parsed_XML",theAverage, attrs);
+						addMetricToAttrs("avgparsedxml",theAverage, attrs);
 
 						// SECOND: Parsed Stylesheet and UnParsed XML Source.
 						// This is currently how the XalanJ 2.0 is performing transforms,
@@ -521,7 +528,7 @@ main(
 						theAverage = calculateAvgTime(accmTime, iterCount);
 						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/UnParsed XML" << endl;
 
-						addMetricToAttrs("Avg_UnParsed_XML",theAverage, attrs);
+						addMetricToAttrs("avgunparsedxml",theAverage, attrs);
 
 						// THIRD: Neither Stylesheet nor XML Source are parsed.
 						// Perform multiple etoe transforms and calculate the average ...
@@ -544,7 +551,7 @@ main(
 						// Output average transform time to console and result log
 						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's of eToe" << endl;
 
-						addMetricToAttrs("Avg_eTOe",theAverage, attrs);
+						addMetricToAttrs("avgetoe",theAverage, attrs);
 
 
 						logFile.logElement(10, "perf", attrs, "xxx");
