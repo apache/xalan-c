@@ -80,7 +80,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1.lib ..\..\..\..\Build\Win32\VC6\Debug\PlatformSupport.lib ..\..\..\..\Build\Win32\VC6\Debug\XercesPlatformSupport.lib ..\..\..\..\Build\Win32\VC6\Debug\XPath.lib ..\..\..\..\Build\Win32\VC6\Debug\XMLSupport.lib ..\..\..\..\Build\Win32\VC6\Debug\DOMSupport.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1D.lib ..\..\..\..\Build\Win32\VC6\Debug\PlatformSupport.lib ..\..\..\..\Build\Win32\VC6\Debug\XercesPlatformSupport.lib ..\..\..\..\Build\Win32\VC6\Debug\XPath.lib ..\..\..\..\Build\Win32\VC6\Debug\XMLSupport.lib ..\..\..\..\Build\Win32\VC6\Debug\DOMSupport.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 

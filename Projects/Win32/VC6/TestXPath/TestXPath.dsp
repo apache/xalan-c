@@ -75,7 +75,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1.lib ..\..\..\..\Build\Win32\VC6\Debug\PlatformSupport.lib ..\..\..\..\Build\Win32\VC6\Debug\XercesPlatformSupport.lib ..\..\..\..\Build\Win32\VC6\Debug\XPath.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1D.lib ..\..\..\..\Build\Win32\VC6\Debug\PlatformSupport.lib ..\..\..\..\Build\Win32\VC6\Debug\XercesPlatformSupport.lib ..\..\..\..\Build\Win32\VC6\Debug\XPath.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
 
 !ENDIF 
 

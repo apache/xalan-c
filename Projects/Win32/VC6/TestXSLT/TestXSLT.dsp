@@ -74,7 +74,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1.lib ..\..\..\..\Build\Win32\VC6\Debug\*.lib user32.lib /nologo /incremental:no /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1D.lib ..\..\..\..\Build\Win32\VC6\Debug\*.lib user32.lib /nologo /incremental:no /debug /machine:I386 /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
