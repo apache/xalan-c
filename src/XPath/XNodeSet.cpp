@@ -147,14 +147,14 @@ XNodeSet::set(BorrowReturnMutableNodeRefList&	value)
 
 
 XalanNode*
-XNodeSet::item(unsigned int	index) const
+XNodeSet::item(size_type	index) const
 {
 	return m_value->item(index);
 }
 
 
 
-unsigned int
+XNodeSet::size_type
 XNodeSet::getLength() const
 {
 	return m_value->getLength();

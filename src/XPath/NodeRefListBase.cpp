@@ -60,7 +60,7 @@
 
 
 #if !defined(XALAN_INLINE_INITIALIZATION)
-const unsigned int	NodeRefListBase::npos = ~0u;
+const NodeRefListBase::size_type	NodeRefListBase::npos = ~0u;
 #endif
 
 
