@@ -1441,6 +1441,9 @@ XalanNodeList*
 XercesDocumentBridge::getElementsByTagName(const XalanDOMString&	/* tagname */) const
 {
 	// Not supported
+	throw XercesDOMException(XercesDOMException::NOT_SUPPORTED_ERR);
+
+	// Dummy return value...
 	return 0;
 }
 
@@ -1451,12 +1454,9 @@ XercesDocumentBridge::importNode(
 			XalanNode*	importedNode,
 			bool		deep)
 {
-	// $$$ToDo: Fix this...
-	// The problem is that we must get the Xerces node that corresponds to the
-	// importedNode parameter.  We could assume that it is indeed a node from
-	// another XercesDocumentBridge, but I'm not sure that we should do that.
 	throw XercesDOMException(XercesDOMException::NOT_SUPPORTED_ERR);
 
+	// Dummy return value...
 	return 0;
 }
 
@@ -1519,7 +1519,9 @@ XercesDocumentBridge::getElementsByTagNameNS(
 			const XalanDOMString&	/* namespaceURI */,
 			const XalanDOMString&	/* localName */) const
 {
-	// Not supported
+	throw XercesDOMException(XercesDOMException::NOT_SUPPORTED_ERR);
+
+	// Dummy return value...
 	return 0;
 }
 
