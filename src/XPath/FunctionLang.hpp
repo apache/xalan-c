@@ -128,7 +128,7 @@ public:
 					static_cast<const XalanElement*>(parent);
 
 				const XalanDOMString		langVal =
-					theElementNode->getAttribute("xml:lang");
+					theElementNode->getAttribute(XALAN_STATIC_UCODE_STRING("xml:lang"));
 
 				if(0 != length(langVal))
 				{
