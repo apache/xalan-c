@@ -149,11 +149,8 @@ ElemVariable::init(
 		{
 			m_qname = XalanQNameByValue(atts.getValue(i), stylesheetTree.getNamespaces());
 		}
-		else if (equals(aname, Constants::ATTRNAME_XMLSPACE))
-		{
-			processSpaceAttr(atts, i, constructionContext);
-		}
-		else if (!isAttrOK(aname, atts, i, constructionContext))
+		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
+				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
 					"xsl:variable has an illegal attribute",

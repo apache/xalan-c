@@ -81,12 +81,16 @@
 
 
 
+#include <XPath/XalanQNameByReference.hpp>
+#include <XPath/XalanQNameByValue.hpp>
+
+
+
 // Base class header file...
 #include <XSLT/StylesheetConstructionContext.hpp>
 
 
 
-#include <set>
 #include <vector>
 
 
@@ -287,6 +291,12 @@ public:
 			DocumentHandler*		docHandler, 
 			XalanDocument*			docToRegister);
 
+	virtual bool
+	isXMLSpaceAttribute(
+			const XalanDOMChar*		theAttributeName,
+			const Stylesheet&		theStylesheet,
+			const Locator*			theLocator);
+
 	virtual int
 	getElementToken(const XalanDOMString&	name) const;
 
@@ -310,11 +320,13 @@ public:
 			XalanDOMString::size_type	theLength = XalanDOMString::npos,
 			bool						fTerminate = true);
 
+	static int
+	getElementNameToken(const XalanDOMString&	name);
+
 #if defined(XALAN_NO_NAMESPACES)
-	typedef set<StylesheetRoot*,
-				less<StylesheetRoot*> >		StylesheetSetType;
+	typedef vector<StylesheetRoot*>			StylesheetVectorType;
 #else
-	typedef std::set<StylesheetRoot*>		StylesheetSetType;
+	typedef std::vector<StylesheetRoot*>	StylesheetVectorType;
 #endif
 
 private:
@@ -327,7 +339,7 @@ private:
 
 	XPathProcessAutoPtr					m_xpathProcessor;
 
-	StylesheetSetType					m_stylesheets;
+	StylesheetVectorType				m_stylesheets;
 
 	XalanDOMStringPool					m_stringPool;
 
@@ -335,6 +347,9 @@ private:
 
 	mutable XalanDOMString				m_tempBuffer;
 
+	XalanQNameByValue					m_spaceAttributeQName;
+
+	static const XalanQNameByReference	s_spaceAttrQName;
 
 	// Static strings for stylesheet compilation...
 

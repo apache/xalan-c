@@ -148,20 +148,6 @@ public:
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
 	 * 
-	 * @param atts	attribute list that owns the attribute
-	 * @param which index of the attribute into the attribute list
-	 * @param constructionContext The current construction context
-	 * @return		true if this is a xml:space attribute
-	 */
-	void
-	processSpaceAttr(
-			const AttributeList&			atts,
-			int 							which,
-			StylesheetConstructionContext&	constructionContext);
-
-	/** 
-	 * Tell whether or not this is a xml:space attribute and, if so, process it.
-	 * 
 	 * @param aname  name of the attribute in question
 	 * @param atts	 attribute list that owns the attribute
 	 * @param which  index of the attribute into the attribute list

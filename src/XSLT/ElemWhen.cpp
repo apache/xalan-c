@@ -94,11 +94,8 @@ ElemWhen::ElemWhen(
 		{
 			m_pTest = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
 		}
-		else if (equals(aname, Constants::ATTRNAME_XMLSPACE))
-		{
-			processSpaceAttr(atts, i, constructionContext);
-		}
-		else if (!isAttrOK(aname, atts, i, constructionContext))
+		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
+				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
 					"xsl:when has an illegal attribute",

@@ -400,11 +400,11 @@ protected:
 	 */
 	bool
 	processSpaceAttr(
-			const XalanDOMChar*		aname,
-			const AttributeList&	atts,
-			int						which,
-			const Locator*			locator,
-			bool&					fPreserve);
+			const XalanDOMChar*				aname,
+			const AttributeList&			atts,
+			int								which,
+			const Locator*					locator,
+			bool&							fPreserve);
 
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
@@ -416,9 +416,9 @@ protected:
 	 */
 	bool
 	processSpaceAttr(
-			const AttributeList&	atts,
-			const Locator*			locator,
-			bool&					fPreserve);
+			const AttributeList&			atts,
+			const Locator*					locator,
+			bool&							fPreserve);
 
 	/**
 	 * Process xsl:import.
@@ -597,8 +597,6 @@ private:
 
 	XalanDOMString		m_elementLocalName;
 
-	XalanQNameByValue	m_spaceAttributeQName;
-
 	/**
 	 * Accumulate character buffer to create contiguous character data
 	 * where possible.
@@ -686,8 +684,6 @@ private:
 	friend class PushPopIncludeState;
 
 	static const XalanDOMString				s_emptyString;
-
-	static const XalanQName&				s_spaceAttrQName;
 };
 
 

@@ -93,11 +93,8 @@ ElemFallback::ElemFallback(
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
 
-		if (equals(aname, Constants::ATTRNAME_XMLSPACE))
-		{
-			processSpaceAttr(atts, i, constructionContext);
-		}
-		else if (!isAttrOK(aname, atts, i, constructionContext))
+		if (!(isAttrOK(aname, atts, i, constructionContext) ||
+			processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
 					"xsl:fallback has an illegal attribute",

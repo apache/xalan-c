@@ -73,6 +73,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPathEnvSupport.hpp>
 #include <XPath/XPathFactory.hpp>
@@ -80,6 +84,7 @@
 
 
 
+#include "Constants.hpp"
 #include "ElemTemplateElement.hpp"
 #include "StylesheetRoot.hpp"
 #include "XSLTEngineImpl.hpp"
@@ -271,9 +276,10 @@ StylesheetConstructionContextDefault::reset()
 	using std::for_each;
 #endif
 
-	for_each(m_stylesheets.begin(),
-			 m_stylesheets.end(),
-			 DeleteFunctor<StylesheetRoot>());
+	for_each(
+			m_stylesheets.begin(),
+			m_stylesheets.end(),
+			DeleteFunctor<StylesheetRoot>());
 
 	m_stylesheets.clear();
 
@@ -285,10 +291,12 @@ StylesheetConstructionContextDefault::reset()
 StylesheetRoot*
 StylesheetConstructionContextDefault::create(const XalanDOMString&	theBaseIdentifier)
 {
+	m_stylesheets.resize(m_stylesheets.size() + 1);
+
 	StylesheetRoot* const	theStylesheetRoot =
 		new StylesheetRoot(theBaseIdentifier, *this);
 
-	m_stylesheets.insert(theStylesheetRoot);
+	m_stylesheets.push_back(theStylesheetRoot);
 
 	return theStylesheetRoot;
 }
@@ -329,8 +337,15 @@ StylesheetConstructionContextDefault::create(
 void
 StylesheetConstructionContextDefault::destroy(StylesheetRoot*	theStylesheetRoot)
 {
-	const StylesheetSetType::iterator	i =
-		m_stylesheets.find(theStylesheetRoot);
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+
+	const StylesheetVectorType::iterator	i =
+		find(
+			m_stylesheets.begin(),
+			m_stylesheets.end(),
+			theStylesheetRoot);
 
 	if (i != m_stylesheets.end())
 	{
@@ -515,16 +530,31 @@ StylesheetConstructionContextDefault::parseXML(
 
 
 
-int
-StylesheetConstructionContextDefault::getElementToken(const XalanDOMString&		name)
+bool
+StylesheetConstructionContextDefault::isXMLSpaceAttribute(
+			const XalanDOMChar*		theAttributeName,
+			const Stylesheet&		theStylesheet,
+			const Locator*			theLocator)
 {
-	return StylesheetConstructionContextDefault::getElementToken(name);
+	assert(theAttributeName != 0);
+
+	m_spaceAttributeQName.set(theAttributeName, theStylesheet.getNamespaces(), theLocator, true);
+
+	return s_spaceAttrQName.equals(m_spaceAttributeQName);
 }
 
 
 
 int
-StylesheetConstructionContextDefault::getElementToken(const XalanDOMString&		name)
+StylesheetConstructionContextDefault::getElementToken(const XalanDOMString&		name) const
+{
+	return getElementNameToken(name);
+}
+
+
+
+int
+StylesheetConstructionContextDefault::getElementNameToken(const XalanDOMString&		name)
 {
 	// Find the entity, if any...
 	const ElementTokenTableEntry*	theFirst = s_elementTokenTable;
@@ -559,7 +589,7 @@ StylesheetConstructionContextDefault::getElementToken(const XalanDOMString&		nam
 double
 StylesheetConstructionContextDefault::getXSLTVersionSupported() const
 {
-	return XSLTEngineImpl::getXSLTVerSupported();
+	return 1.0L;
 }
 
 
@@ -614,6 +644,11 @@ StylesheetConstructionContextDefault::allocateVector(
 
 	return theVector;
 }
+
+
+
+const XalanQNameByReference		StylesheetConstructionContextDefault::s_spaceAttrQName(DOMServices::s_XMLNamespaceURI, Constants::ATTRNAME_SPACE);
+
 
 
 

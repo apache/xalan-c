@@ -935,51 +935,6 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 }
 
 
-//==========================================================
-// SECTION: Stylesheet Tables
-//==========================================================
-
-
-double
-XSLTEngineImpl::getXSLTVerSupported()
-{
-	return s_XSLTVerSupported;
-}
-
-
-//==========================================================
-// SECTION: XSL directive handling functions
-//==========================================================  
-
-
-
-int
-XSLTEngineImpl::getXSLToken(const XalanNode&	node) const
-{
-	int 	tok = -2;
-
-	if(XalanNode::ELEMENT_NODE != node.getNodeType()) return tok;
-
-	const XalanDOMString& 	ns = node.getNamespaceURI();
-
-	if(equals(ns, s_XSLNameSpaceURL))
-	{
-		const XalanDOMString& 	localName =
-			DOMServices::getLocalNameOfNode(node);
-
-		const ElementKeysMapType::const_iterator		j =
-						s_elementKeys.find(localName);
-
-		if(j != s_elementKeys.end())
-		{
-			tok = (*j).second;
-		}
-	}
-
-	return tok;
-}
-
-
 
 const StylesheetRoot*
 XSLTEngineImpl::getStylesheetRoot() const
@@ -3449,62 +3404,6 @@ XSLTEngineImpl::uninstallFunctions()
 
 
 
-void
-XSLTEngineImpl::initializeElementKeysTable(ElementKeysMapType&	theElementKeys)
-{
-#if 0
-	theElementKeys[Constants::ELEMNAME_APPLY_TEMPLATES_STRING] = Constants::ELEMNAME_APPLY_TEMPLATES;
-	theElementKeys[Constants::ELEMNAME_WITHPARAM_STRING] = Constants::ELEMNAME_WITHPARAM;
-	theElementKeys[Constants::ELEMNAME_CONSTRUCT_STRING] = Constants::ELEMNAME_CONSTRUCT;
-	theElementKeys[Constants::ELEMNAME_CONTENTS_STRING] = Constants::ELEMNAME_CONTENTS;
-	theElementKeys[Constants::ELEMNAME_COPY_STRING] = Constants::ELEMNAME_COPY;
-	theElementKeys[Constants::ELEMNAME_COPY_OF_STRING] = Constants::ELEMNAME_COPY_OF;
-
-	theElementKeys[Constants::ELEMNAME_ATTRIBUTESET_STRING] = Constants::ELEMNAME_DEFINEATTRIBUTESET;
-
-	theElementKeys[Constants::ELEMNAME_USE_STRING] = Constants::ELEMNAME_USE;
-
-	theElementKeys[Constants::ELEMNAME_VARIABLE_STRING] = Constants::ELEMNAME_VARIABLE;
-	theElementKeys[Constants::ELEMNAME_PARAMVARIABLE_STRING] = Constants::ELEMNAME_PARAMVARIABLE;
-
-	theElementKeys[Constants::ELEMNAME_EMPTY_STRING] = Constants::ELEMNAME_EMPTY;
-	theElementKeys[Constants::ELEMNAME_CALLTEMPLATE_STRING] = Constants::ELEMNAME_CALLTEMPLATE;
-	theElementKeys[Constants::ELEMNAME_TEMPLATE_STRING] = Constants::ELEMNAME_TEMPLATE;
-	theElementKeys[Constants::ELEMNAME_STYLESHEET_STRING] = Constants::ELEMNAME_STYLESHEET;
-	theElementKeys[Constants::ELEMNAME_TRANSFORM_STRING] = Constants::ELEMNAME_STYLESHEET;
-	theElementKeys[Constants::ELEMNAME_IMPORT_STRING] = Constants::ELEMNAME_IMPORT;
-	theElementKeys[Constants::ELEMNAME_INCLUDE_STRING] = Constants::ELEMNAME_INCLUDE;
-	theElementKeys[Constants::ELEMNAME_FOREACH_STRING] = Constants::ELEMNAME_FOREACH;
-	theElementKeys[Constants::ELEMNAME_VALUEOF_STRING] = Constants::ELEMNAME_VALUEOF;
-	theElementKeys[Constants::ELEMNAME_KEY_STRING] = Constants::ELEMNAME_KEY;
-	theElementKeys[Constants::ELEMNAME_STRIPSPACE_STRING] = Constants::ELEMNAME_STRIPSPACE;
-	theElementKeys[Constants::ELEMNAME_PRESERVESPACE_STRING] = Constants::ELEMNAME_PRESERVESPACE;
-	theElementKeys[Constants::ELEMNAME_NUMBER_STRING] = Constants::ELEMNAME_NUMBER;
-	theElementKeys[Constants::ELEMNAME_IF_STRING] = Constants::ELEMNAME_IF;
-	theElementKeys[Constants::ELEMNAME_CHOOSE_STRING] = Constants::ELEMNAME_CHOOSE;
-	theElementKeys[Constants::ELEMNAME_WHEN_STRING] = Constants::ELEMNAME_WHEN;
-	theElementKeys[Constants::ELEMNAME_OTHERWISE_STRING] = Constants::ELEMNAME_OTHERWISE;
-	theElementKeys[Constants::ELEMNAME_TEXT_STRING] = Constants::ELEMNAME_TEXT;
-	theElementKeys[Constants::ELEMNAME_ELEMENT_STRING] = Constants::ELEMNAME_ELEMENT;
-	theElementKeys[Constants::ELEMNAME_ATTRIBUTE_STRING] = Constants::ELEMNAME_ATTRIBUTE;
-	theElementKeys[Constants::ELEMNAME_SORT_STRING] = Constants::ELEMNAME_SORT;
-	theElementKeys[Constants::ELEMNAME_PI_STRING] = Constants::ELEMNAME_PI;
-	theElementKeys[Constants::ELEMNAME_COMMENT_STRING] = Constants::ELEMNAME_COMMENT;
-
-	theElementKeys[Constants::ELEMNAME_APPLY_IMPORTS_STRING] = Constants::ELEMNAME_APPLY_IMPORTS;
-	
-	theElementKeys[Constants::ELEMNAME_EXTENSION_STRING] = Constants::ELEMNAME_EXTENSION;
-	theElementKeys[Constants::ELEMNAME_MESSAGE_STRING] = Constants::ELEMNAME_MESSAGE;
-	theElementKeys[Constants::ELEMNAME_FALLBACK_STRING] = Constants::ELEMNAME_FALLBACK;
-	theElementKeys[Constants::ELEMNAME_OUTPUT_STRING] = Constants::ELEMNAME_OUTPUT;
-
-	theElementKeys[Constants::ELEMNAME_DECIMALFORMAT_STRING] = Constants::ELEMNAME_DECIMALFORMAT;
-	theElementKeys[Constants::ELEMNAME_NSALIAS_STRING] = Constants::ELEMNAME_NSALIAS;
-#endif
-}
-
-
-
 static XalanDOMString	s_XSLNameSpaceURL;
 
 static XalanDOMString	s_XalanNamespaceURL;
@@ -3528,11 +3427,6 @@ static XalanDOMString	s_typeValueString3;
 static XalanDOMString	s_typeValueString4;
 
 
-static XSLTEngineImpl::ElementKeysMapType		s_elementKeys;
-
-
-
-const double			XSLTEngineImpl::s_XSLTVerSupported(1.0);
 
 const XalanDOMString&	XSLTEngineImpl::s_XSLNameSpaceURL = ::s_XSLNameSpaceURL;
 
@@ -3555,8 +3449,6 @@ const XalanDOMString&	XSLTEngineImpl::s_typeValueString2 = ::s_typeValueString2;
 const XalanDOMString&	XSLTEngineImpl::s_typeValueString3 = ::s_typeValueString3;
 
 const XalanDOMString&	XSLTEngineImpl::s_typeValueString4 = ::s_typeValueString4;
-
-const XSLTEngineImpl::ElementKeysMapType&		XSLTEngineImpl::s_elementKeys = ::s_elementKeys;
 
 
 #if 0
@@ -3666,8 +3558,6 @@ XSLTEngineImpl::initialize()
 	::s_typeValueString4 = XALAN_STATIC_UCODE_STRING("application/xml+xslt");
 
 	installFunctions();
-
-	initializeElementKeysTable(::s_elementKeys);
 }
 
 
@@ -3675,8 +3565,6 @@ XSLTEngineImpl::initialize()
 void
 XSLTEngineImpl::terminate()
 {
-	ElementKeysMapType().swap(::s_elementKeys);
-
 	uninstallFunctions();
 
 	releaseMemory(::s_uniqueNamespacePrefix);

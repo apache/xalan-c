@@ -184,32 +184,6 @@ ElemTemplateElement::isAttrOK(
 }
 
 
-void
-ElemTemplateElement::processSpaceAttr(
-			const AttributeList&			atts,
-			int								which,
-			StylesheetConstructionContext&	constructionContext)
-{
-	const XalanDOMChar*	const	spaceVal = atts.getValue(which);
-
-	if(equals(spaceVal, Constants::ATTRVAL_DEFAULT) == true)
-	{
-		m_defaultSpace = true;
-	}
-	else if(equals(spaceVal, Constants::ATTRVAL_PRESERVE) == true)
-	{
-		m_defaultSpace = false;
-	}
-	else
-	{
-		constructionContext.error(
-			"xml:space has an illegal value",
-			0,
-			this);
-	}
-}
-
-
 
 bool
 ElemTemplateElement::processSpaceAttr(
@@ -218,13 +192,18 @@ ElemTemplateElement::processSpaceAttr(
 			int								which,
 			StylesheetConstructionContext&	constructionContext)
 {
-    const bool	isSpaceAttr = equals(aname, Constants::ATTRNAME_XMLSPACE);
-
-    if(isSpaceAttr == true)
+    if(constructionContext.isXMLSpaceAttribute(
+			aname,
+			getStylesheet(),
+			getLocator()) == false)
+	{
+		return false;
+	}
+	else
     {
 		const XalanDOMChar*	const	spaceVal = atts.getValue(which);
 
-		if(equals(spaceVal, Constants::ATTRVAL_DEFAULT))
+		if (equals(spaceVal, Constants::ATTRVAL_DEFAULT))
 		{
 			m_defaultSpace = true;
 		}
@@ -239,9 +218,9 @@ ElemTemplateElement::processSpaceAttr(
 				0,
 				this);
 		}
-    }
 
-    return isSpaceAttr;
+		return true;
+    }
 }
 
 

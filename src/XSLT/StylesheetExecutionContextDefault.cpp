@@ -103,7 +103,7 @@
 #include "Constants.hpp"
 #include "ElemTemplateElement.hpp"
 #include "ElemWithParam.hpp"
-#include "StylesheetConstructionContext.hpp"
+#include "StylesheetConstructionContextDefault.hpp"
 #include "StylesheetRoot.hpp"
 #include "XSLTEngineImpl.hpp"
 #include "XSLTProcessorException.hpp"
@@ -1760,7 +1760,7 @@ StylesheetExecutionContextDefault::elementAvailable(
 {
 	if (equals(theNamespace, XSLTEngineImpl::getXSLNameSpaceURL()) == true)
 	{
-		const int	xslToken = StylesheetConstructionContext::getElementToken(elementName);
+		const int	xslToken = StylesheetConstructionContextDefault::getElementNameToken(elementName);
 
 		return xslToken < 0 ? false : true;
 	}

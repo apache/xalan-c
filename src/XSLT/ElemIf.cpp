@@ -103,12 +103,8 @@ ElemIf::ElemIf(
 		{
 			m_test = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
 		}
-		else if (equals(aname, Constants::ATTRNAME_XMLSPACE))
-		{
-			processSpaceAttr(atts, i, constructionContext);
-		}
-		else if (!processSpaceAttr(aname, atts, i, constructionContext) ||
-				 !isAttrOK(aname, atts, i, constructionContext))
+		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
+				 processSpaceAttr(aname, atts, i, constructionContext)))
 		{
 			constructionContext.error(
 					"xsl:if has an illegal attribute",

@@ -106,7 +106,7 @@ ElemUse::~ElemUse()
 const XalanDOMString&
 ElemUse::getElementName() const
 {
-	return Constants::ELEMNAME_USE_WITH_PREFIX_STRING;
+	return s_emptyString;
 }
 
 

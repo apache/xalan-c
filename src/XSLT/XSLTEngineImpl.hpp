@@ -181,9 +181,6 @@ public:
 	};
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString,
-				int,
-				less<XalanDOMString> >		ElementKeysMapType;
 	typedef map<const void*,
 				ClockType,
 				less<const void*> >			DurationsTableMapType;
@@ -193,7 +190,6 @@ public:
 	typedef set<const XalanDOMString*,
 				LessXalanDOMStringPointers>	XalanDOMStringPointerSetType;
 #else
-	typedef std::map<XalanDOMString, int>		ElementKeysMapType;
 	typedef std::map<const void*, ClockType>	DurationsTableMapType;
 	typedef std::vector<const Locator*>			LocatorStack;
 	typedef std::vector<TraceListener*>			TraceListenerVectorType;
@@ -777,43 +773,6 @@ public:
 	{
 		return s_XalanNamespaceURL;
 	}
-
-	/**
-	 * Get the latest XSLT version currently supported.
-	 *
-	 * @return XSLT version number
-	 */
-	static double
-	getXSLTVerSupported();
-
-	/**
-	 * Given an XSL tag name, return an integer token that corresponds to
-	 * ELEMNAME_XXX constants defined in Constants.hpp
-	 *
-	 * @param name a probable xsl:xxx element
-	 * @return Constants.ELEMNAME_XXX token, -1 if in XSL or Xalan namespace,
-	 *		   or -2 if not in known namespace
-	 */
-	static int
-	getElementToken(const XalanDOMString&	name)
-	{
-		ElementKeysMapType::const_iterator iter=
-			s_elementKeys.find(name);
-
-		return iter == s_elementKeys.end() ? -2 : (*iter).second;
-	}
-
-	/**
-	 * Given an XSL tag name, return an integer token
-	 * that corresponds to ELEMNAME_XXX constants defined 
-	 * in Constants.java.
-	 *
-	 * @param node a probable xsl:xxx element.
-	 * @return Constants.ELEMNAME_XXX token, -1 if in XSL or Xalan namespace,
-	 *		   or -2 if not in known namespace
-	 */
-	int
-	getXSLToken(const XalanNode&	node) const;
 
 	/**
 	 * Whether to warn about pattern match conflicts.
@@ -1602,11 +1561,6 @@ private:
 	static const XalanDOMString&		s_XSLNameSpaceURL;	//"http://www.w3.org/1999/XSL/Transform"
 
 	/**
-	 * The minimum version of XSLT supported.
-	 */
-	static const double					s_XSLTVerSupported; // 1.0
-
-	/**
 	 * Special Xalan namespace for built-in extensions.
 	 */
 	static const XalanDOMString&		s_XalanNamespaceURL; // "http://xml.apache.org/xalan"
@@ -1615,11 +1569,6 @@ private:
 	 * Prefix to use when generating unique namespaces.
 	 */
 	static const XalanDOMString&		s_uniqueNamespacePrefix;
-
-	/**
-	 * Map of XSLT element IDs for element names.
-	 */
-	static const ElementKeysMapType&	s_elementKeys;
 
 	/**
 	 * If this is set to true, selects will be traced
@@ -1794,8 +1743,6 @@ private:
 	static void
 	uninstallFunctions();
 
-	static void
-	initializeElementKeysTable(ElementKeysMapType&	theElementKeys);
 
 	static const XalanDOMString		s_emptyString;
 

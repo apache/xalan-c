@@ -383,6 +383,18 @@ public:
 			XalanDocument*			docToRegister) = 0;
 
 	/**
+	 * Given an name, determine if it is the xml:space attribute
+	 *
+	 * @param name a name
+	 * @return true if the string is the xml:space attribute name
+	 */
+	virtual bool
+	isXMLSpaceAttribute(
+			const XalanDOMChar*		theAttributeName,
+			const Stylesheet&		theStylesheet,
+			const Locator*			theLocator) = 0;
+
+	/**
 	 * Given an XSL tag name, return an integer token that corresponds to
 	 * the enums defined above.
 	 *

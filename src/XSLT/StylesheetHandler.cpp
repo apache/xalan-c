@@ -256,19 +256,17 @@ StylesheetHandler::isAttrOK(
 
 bool
 StylesheetHandler::processSpaceAttr(
-			const XalanDOMChar*		aname,
-			const AttributeList&	atts,
-			int						which,
-			const Locator*			locator,
-			bool&					fPreserve)
+			const XalanDOMChar*				aname,
+			const AttributeList&			atts,
+			int								which,
+			const Locator*					locator,
+			bool&							fPreserve)
 {
-	m_spaceAttributeQName.set(aname, m_stylesheet.getNamespaces(), locator, true);
-
-	const bool	isSpaceAttr = s_spaceAttrQName.equals(m_spaceAttributeQName);
-
-	if(isSpaceAttr == false)
+	if(m_constructionContext.isXMLSpaceAttribute(aname, m_stylesheet, locator) == false)
 	{
 		fPreserve = false;
+
+		return false;
 	}
 	else
 	{
@@ -286,9 +284,9 @@ StylesheetHandler::processSpaceAttr(
 		{
 			error("xml:space has an illegal value", locator);
 		}
-	}
 
-	return isSpaceAttr;
+		return true;
+	}
 }
 
 
@@ -311,9 +309,9 @@ getColumnNumber(const Locator*	theLocator)
 
 bool
 StylesheetHandler::processSpaceAttr(
-			const AttributeList&	atts,
-			const Locator*			locator,
-			bool&					fPreserve)
+			const AttributeList&			atts,
+			const Locator*					locator,
+			bool&							fPreserve)
 {
 	const unsigned int	len = atts.getLength();
 
@@ -1127,10 +1125,10 @@ StylesheetHandler::processStylesheet(
 				m_stylesheet.addExtensionNamespace(extns, nsh);
 			}
 		}
-		else if(equals(aname, Constants::ATTRNAME_ID))
-		{
-			//
-		}
+ 		else if(equals(aname, Constants::ATTRNAME_ID))
+ 		{
+ 			//
+ 		}
 		else if(equals(aname, Constants::ATTRNAME_VERSION))
 		{
 			const XalanDOMChar* const	versionStr = atts.getValue(i);
@@ -1174,115 +1172,11 @@ StylesheetHandler::processStylesheet(
 
 void
 StylesheetHandler::processExtensionElement(
-			const XalanDOMChar*		name,
-			const XalanDOMString&	localName,
-			const AttributeList&	atts,
-			const Locator*			locator)
+			const XalanDOMChar*		/* name */,
+			const XalanDOMString&	/* localName */,
+			const AttributeList&	/* atts */,
+			const Locator*			/* locator */)
 {
-	if (equals(localName, Constants::ATTRNAME_COMPONENTS))
-	{
-		XalanDOMString	prefix;
-		XalanDOMString	elements;
-		XalanDOMString	functions;
-
-		const int nAttrs = atts.getLength();
-
-		for (int i = 0; i < nAttrs; i++)
-		{
-			const XalanDOMChar* const	aname = atts.getName (i);
-
-			if (equals(aname, Constants::ATTRNAME_PREFIX))
-			{
-				prefix = atts.getValue(i);
-			}
-			else if (equals(aname, Constants::ATTRNAME_ELEMENTS))
-			{
-				elements = atts.getValue(i);
-			}
-			else if (equals(aname, Constants::ATTRNAME_FUNCTIONS))
-			{
-				functions = atts.getValue(i);
-			}
-			else if(!isAttrOK(aname, atts, i))
-			{
-				const XalanDOMString	msg(XalanDOMString(name) + " has an illegal attribute: " + aname);
-
-				error(msg, locator);
-			}
-		}
-
-		if (isEmpty(prefix) == true) 
-		{
-			const XalanDOMString	msg("StylesheetHandler) " + XalanDOMString(name) + " attribute 'prefix' is missing");
-
-			error(msg, locator);
-		}
-
-		// SCOTT: is the line below correct?
-		const XalanDOMString&	extns = getNamespaceForPrefixFromStack(prefix);
-
-		ExtensionNSHandler* nsh = m_stylesheet.lookupExtensionNSHandler(extns);
-
-		if (nsh == 0) 
-		{
-			// The extension namespace might not yet be known...
-			nsh = new ExtensionNSHandler(extns);
-
-			m_stylesheet.addExtensionNamespace(extns, nsh);
-
-			assert(m_inExtensionElementStack.empty() == false);
-
-			m_inExtensionElementStack.back() = true;
-		}
-
-		if (!isEmpty(elements)) 
-		{
-			nsh->setElements(elements);
-		}
-
-		if (!isEmpty(functions)) 
-		{
-			nsh->setFunctions(functions);
-		}
-
-		m_pLXSLTExtensionNSH = nsh; // hang on to it for processing 
-		// endElement on lxslt:script
-	}
-	else if (equals(localName, Constants::ATTRNAME_SCRIPT)) 
-	{
-		// process this in end element so that I can see whether I had 
-		// a body as well. The default pushing logic will save the 
-		// attributes for me. The body will be accumulated into the
-		// following string buffer
-		m_inLXSLTScript = true;
-		clear(m_LXSLTScriptBody);
-
-		const int	nAttrs = atts.getLength();
-
-		for (int i = 0; i < nAttrs; i++) 
-		{
-			const XalanDOMChar* const	aname = atts.getName(i);
-
-			if (equals(aname, Constants::ATTRNAME_LANG))
-			{
-				m_LXSLTScriptLang = atts.getValue (i);
-			}
-			else if (equals(aname, Constants::ATTRNAME_SRC))
-			{
-				m_LXSLTScriptSrcURL = atts.getValue (i);
-			}
-			else if(!isAttrOK(aname, atts, i))
-			{
-				const XalanDOMString	msg(XalanDOMString(name) + " has an illegal attribute: " + aname);
-
-				error(msg, locator);
-			}
-		}
-	}
-	else 
-	{
-		// other xslt4j: element. Not my business.
-	}
 }
 
 
@@ -2084,22 +1978,11 @@ StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 
 const XalanDOMString			StylesheetHandler::s_emptyString;
 
-XalanDOMString					s_localPart;
-
-XalanQNameByReference			s_spaceAttrQName;
-
-const XalanQName&				StylesheetHandler::s_spaceAttrQName = ::s_spaceAttrQName;
-
 
 
 void
 StylesheetHandler::initialize()
 {
-	::s_localPart = XALAN_STATIC_UCODE_STRING("space");
-
-	::s_spaceAttrQName.setLocalPart(::s_localPart);
-
-	::s_spaceAttrQName.setNamespace(DOMServices::s_XMLNamespaceURI);
 }
 
 
@@ -2107,7 +1990,4 @@ StylesheetHandler::initialize()
 void
 StylesheetHandler::terminate()
 {
-	releaseMemory(::s_localPart);
-
-	::s_spaceAttrQName.clear();
 }

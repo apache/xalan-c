@@ -91,7 +91,7 @@ ElemParam::ElemParam(
 const XalanDOMString&
 ElemParam::getElementName() const
 {
-	return Constants::ELEMNAME_PARAMVARIABLE_WITH_PREFIX_STRING;
+	return Constants::ELEMNAME_PARAM_WITH_PREFIX_STRING;
 }
 
 
