@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <!DOCTYPE resources [
-  <!ENTITY % externalEntity SYSTEM "sbk:/sources/entities.ent">
+  <!ENTITY % externalEntity SYSTEM "../entities.ent">
   %externalEntity;
-  <!ENTITY apiResources SYSTEM "apiResources.xml">
   <!ELEMENT resources (resource|human-resource)+>
   <!ELEMENT resource EMPTY>
   <!ATTLIST resource 		id CDATA #IMPLIED

@@ -56,7 +56,7 @@
  * <http://www.apache.org/>.
  -->
 
-<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
 
 <s1 title="&xslt4c-current;">
       

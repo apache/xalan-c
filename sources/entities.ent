@@ -1,23 +1,23 @@
 <?xml encoding="US-ASCII"?>
 
 <!ENTITY xslt4c "Xalan-C++">
-<!ENTITY xslt4c-dist "Xalan-C_1_1">
-<!ENTITY xslt4c-current "Xalan-C++ version 1.1">
+<!ENTITY xslt4c-dist "Xalan-C_1_2">
+<!ENTITY xslt4c-current "Xalan-C++ version 1.2">
 <!ENTITY xslt4c-windlls "DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XercesParserLiaison.dll, XMLSupport.dll, XPath.dll, XSLT.dll">
-<!ENTITY xslt4c-linuxlib "libxalan-c1_1.so">
-<!ENTITY xslt4c-aixlib "libxalan-c1_1.a">
-<!ENTITY xslt4c-hplib "libxalan-c1_1.sl">
+<!ENTITY xslt4c-linuxlib "libxalan-c1_2.so">
+<!ENTITY xslt4c-aixlib "libxalan-c1_2.a">
+<!ENTITY xslt4c-hplib "libxalan-c1_2.sl">
 <!ENTITY xml4c "Xerces-C++">
-<!ENTITY xml4c-used "Xerces-C++ version 1.3.5">
-<!ENTITY xml4c-windll "xerces-c_1_3_0xalan.dll">
-<!ENTITY xml4c-winlib "xerces-c1_3_0xalan.lib">
-<!ENTITY xml4c-linuxlib "libxerces-c1_3_0xalan.so">
-<!ENTITY xml4c-aixlib "libxerces-c1_3_0xalan.a">
-<!ENTITY xml4c-hplib "libxerces-c1_3_0xalan.sl">
+<!ENTITY xml4c-used "Xerces-C++ version 1.4.0">
+<!ENTITY xml4c-windll "xerces-c_1_4.dll">
+<!ENTITY xml4c-winlib "xerces-c_1.lib">
+<!ENTITY xml4c-linuxlib "libxerces-c1_4.so">
+<!ENTITY xml4c-aixlib "libxerces-c1_4.a">
+<!ENTITY xml4c-hplib "libxerces-c1_4.sl">
 <!ENTITY xslt4j "Xalan-Java">
 <!ENTITY icu-used "International Components for Unicode(ICU) 1.6 source files">
 <!ENTITY icu-windlls "icui18n.dll, icuuc.dll">
 <!ENTITY icubridge-win "ICUBridge.dll">
-<!ENTITY done SYSTEM "sbk:/sources/xalan/DONE">
-<!ENTITY status SYSTEM "sbk:/sources/xalan/STATUS">
-<!ENTITY bugs SYSTEM "sbk:/sources/xalan/BUGS">
+<!ENTITY done SYSTEM "xalan/DONE">
+<!ENTITY status SYSTEM "xalan/STATUS">
+<!ENTITY bugs SYSTEM "xalan/BUGS">
