@@ -55,13 +55,15 @@
  * <http://www.apache.org/>.
  */
 
+#include <Include/PlatformDefinitions.hpp>
+
+
+
 #include <cassert>
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
-#include <strstream.h>
 #else
 #include <iostream>
-#include <strstream>
 #endif
 
 
@@ -182,7 +184,7 @@ transform()
 
 			const XalanDOMString	theURI(URISupport::getURLStringFromString(theInputFile));
 
-			const XSLTResultTarget	theResultTarget(&cout);
+			const XSLTResultTarget	theResultTarget(cout);
 
 			theResult = transformXercesDOM(theTransformer, theURI, theStylesheet, theResultTarget);
 
