@@ -256,7 +256,7 @@ private:
 
 	mutable CollatorCacheListType	m_collatorCache;
 
-	const static StylesheetExecutionContextDefault::DefaultCollationCompareFunctor	s_defaultFunctor;
+	static const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor	s_defaultFunctor;
 };
 
 
