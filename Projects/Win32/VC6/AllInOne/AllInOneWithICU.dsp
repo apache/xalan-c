@@ -2035,6 +2035,14 @@ SOURCE=..\..\..\..\src\xalanc\XSLT\ElemForEach.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemForwardCompatible.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemForwardCompatible.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\XSLT\ElemIf.cpp
 # End Source File
 # Begin Source File
@@ -3434,13 +3442,5 @@ SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperToXalanNodeMap.hp
 SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperTypes.hpp
 # End Source File
 # End Group
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XSLT\ElemForwardCompatible.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XSLT\ElemForwardCompatible.hpp
-# End Source File
 # End Target
 # End Project
