@@ -308,38 +308,40 @@ main(
 		// Initialize Xalan.
 		XalanTransformer::initialize();
 
-		// Create a XalanTransformer.
-		XalanTransformer theXalanTransformer;
-
-		// The namespace for our functions...
-		const XalanDOMString	theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");
-
-		// Install the functions in the local space.  They will only
-		// be installed in this instance, so no other instances
-		// will know about them...
-		theXalanTransformer.installExternalFunction(
-			theNamespace,
-			XalanDOMString("asctime"),
-			FunctionAsctime());
-
-		theXalanTransformer.installExternalFunction(
-			theNamespace,
-			XalanDOMString("square-root"),
-			FunctionSquareRoot());
-
-		theXalanTransformer.installExternalFunction(
-			theNamespace,
-			XalanDOMString("cube"),
-			FunctionCube());
-
-		// Do the transform.
-		theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
-    
-		if(theResult != 0)
 		{
-			cerr << "ExternalFunction Error: \n" << theXalanTransformer.getLastError()
-				 << endl
-				 << endl;
+			// Create a XalanTransformer.
+			XalanTransformer theXalanTransformer;
+
+			// The namespace for our functions...
+			const XalanDOMString	theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");
+
+			// Install the functions in the local space.  They will only
+			// be installed in this instance, so no other instances
+			// will know about them...
+			theXalanTransformer.installExternalFunction(
+				theNamespace,
+				XalanDOMString("asctime"),
+				FunctionAsctime());
+
+			theXalanTransformer.installExternalFunction(
+				theNamespace,
+				XalanDOMString("square-root"),
+				FunctionSquareRoot());
+
+			theXalanTransformer.installExternalFunction(
+				theNamespace,
+				XalanDOMString("cube"),
+				FunctionCube());
+
+			// Do the transform.
+			theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
+    
+			if(theResult != 0)
+			{
+				cerr << "ExternalFunction Error: \n" << theXalanTransformer.getLastError()
+					 << endl
+					 << endl;
+			}
 		}
 
 		// Terminate Xalan.
