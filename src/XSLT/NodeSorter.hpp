@@ -232,7 +232,7 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 	typedef	vector<double>		NumberResultsCacheVectorType;
 
-	typedef	vector<XObjectPtr>	StringResultsCacheMapType;
+	typedef	vector<XObjectPtr>	StringResultsCacheVectorType;
 
 	typedef vector<NumberResultsCacheVectorType>	NumberResultsCacheType;
 	typedef vector<StringResultsCacheVectorType>	StringResultsCacheType;
