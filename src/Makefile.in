@@ -734,16 +734,24 @@ clean:
 	rm -rf $(ALL_OBJECTS_DIR)/*
 ifeq ($(PLATFORM), TRU64)
 	rm -rf $(ALL_OBJECTS_DIR)/.cxx_repository
+	rm -rf $(XALANCROOT)/src/so_locations
 endif
 	rm -f $(THISLIB)$(VER)$(SHLIBSUFFIX)
 	rm -f $(BINTARGETDIR)/testXSLT
 	rm -f $(BINTARGETDIR)/testXPath
-	rm -f ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 	
+	rm -f ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX)
 	rm -f $(BINTARGETDIR)/CompileStylesheet
+	rm -f $(BINTARGETDIR)/DocumentBuilder
 	rm -f $(BINTARGETDIR)/ExternalFunction
+	rm -f $(BINTARGETDIR)/SerializeNodeSet
 	rm -f $(BINTARGETDIR)/SimpleTransform
+	rm -f $(BINTARGETDIR)/SimpleXPathAPI
+	rm -f $(BINTARGETDIR)/SimpleXPathCAPI
 	rm -f $(BINTARGETDIR)/StreamTransform
+	rm -f $(BINTARGETDIR)/ThreadTest
 	rm -f $(BINTARGETDIR)/TraceListen
 	rm -f $(BINTARGETDIR)/UseStylesheetParam
+	rm -f $(BINTARGETDIR)/Xalan
 	rm -f $(BINTARGETDIR)/XalanTransform
+	rm -f $(BINTARGETDIR)/XalanTransformerCallback
 	rm -f $(BINTARGETDIR)/XPathWrapper
