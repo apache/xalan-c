@@ -60,6 +60,7 @@
 
 
 #include <cassert>
+#include <cctype>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -75,18 +76,6 @@
 #include <iostream.h>
 #else
 #include <iostream>
-#endif
-
-
-
-#if !defined(XALAN_NO_NAMESPACES)
-using std::back_inserter;
-using std::copy;
-using std::hex;
-using std::ios;
-using std::ostream;
-using std::transform;
-using std::vector;
 #endif
 
 
@@ -581,7 +570,11 @@ TransformString(
 			theOutputIterator,
 			theFunction);
 #else
+#if defined(XALAN_NO_NAMESPACES)
 	return transform(
+#else
+	return std::transform(
+#endif
 			theInputBegin,
 			theInputEnd,
 			theOutputIterator,
@@ -601,6 +594,10 @@ TransformString(
 	assert(theInputString != 0);
 
 	XalanDOMString	theConvertedString;
+
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::back_inserter;
+#endif
 
 	TransformString(
 			theInputString,
@@ -995,13 +992,21 @@ MakeXalanDOMCharVector(
 
 		theResult.reserve(theLength);
 
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::back_inserter;
+#endif
+
 #if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
 		XalanCopy(
 			data,
 			data + theLength,
 			back_inserter(theResult));
 #else
+#if defined(XALAN_NO_NAMESPACES)
 		copy(
+#else
+		std::copy(
+#endif
 			data,
 			data + theLength,
 			back_inserter(theResult));
@@ -1400,6 +1405,10 @@ PointerToDOMString(
 
 	reserve(theResult, length(theResult) + theCharsWritten);
 
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::back_inserter;
+#endif
+
 	TranscodeNumber(
 			theBuffer,
 			theBuffer + theCharsWritten,
@@ -1461,6 +1470,7 @@ DoubleToDOMString(
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 		using std::sprintf;
 		using std::atof;
+		using std::isdigit;
 #endif
 
 		const char* const *		thePrintfString = thePrintfStrings;
@@ -1522,6 +1532,10 @@ DoubleToDOMString(
 		}
 
 		reserve(theResult, length(theResult) + theCharsWritten);
+
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::back_inserter;
+#endif
 
 		TranscodeNumber(
 				theBuffer,

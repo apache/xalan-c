@@ -655,7 +655,11 @@ convertHelper(
 	}
 	else
 	{
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		const char	theDecimalPointChar = std::localeconv()->decimal_point[0];
+#else
 		const char	theDecimalPointChar = localeconv()->decimal_point[0];
+#endif
 
 		// trim any whitespace
 		consumeWhitespace(theString, theLength);
