@@ -182,6 +182,21 @@ public:
 			const char*					theOutFileName);
 
 	/**
+	 * Transform the XML source tree to the given result file.
+	 * The processor will apply the the stylesheet provided as a PI in the 
+	 * the XML to the input file and write the transformation output to the 
+	 * output file.
+	 *
+	 * @param theXMLFileName	filename of XML input file	
+	 * @param theOutFileName	filename of output file
+	 * @return	0 for success
+	 */
+	int
+	transform(
+			const char*					theXMLFileName, 
+			const char*					theOutFileName);
+
+	/**
 	 * Transform the XML source tree to an output stream.
 	 * The processor will apply the the stylesheet file to the input file
 	 * and write the transformation output to the output stream.
@@ -199,6 +214,22 @@ public:
 
 	/**
 	 * Transform the XML source tree to an output stream.
+	 * The processor will apply the the stylesheet provided as a PI in the
+	 * the XML to the input file and write the transformation output to the 
+	 * output stream.
+	 *
+	 * @param theXMLFileName	filename of XML input source
+	 * @param theXSLFileName	filename of stylesheet source
+	 * @param theOutStream		a std ostream for the output
+	 * @return	0 for success
+	 */
+	int
+	transform(
+			const char*					theXMLFileName, 
+			ostream&					theOutStream);
+
+	/**
+	 * Transform the XML source tree to an output stream.
 	 * The processor will apply the the stylesheet stream to the input stream
 	 * and write the transformation output to the output stream.
 	 *
@@ -211,6 +242,21 @@ public:
 	transform(
 			istream&					theXMLInStream, 
 			istream&					theXSLInStream,
+			ostream&					theOutStream);
+	
+	/**
+	 * Transform the XML source tree to an output stream.
+	 * The processor will apply the the stylesheet provided as a PI in the 
+	 * XML of the input stream and write the transformation output to the 
+	 * output stream.
+	 *
+	 * @param theXMLInStream	a std istream for the input
+	 * @param theOutStream		a std ostream for the output
+	 * @return	0 for success
+	 */
+	int
+	transform(
+			istream&					theXMLInStream, 
 			ostream&					theOutStream);
 
 	/**

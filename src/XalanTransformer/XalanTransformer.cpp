@@ -267,6 +267,31 @@ XalanTransformer::transform(
 int
 XalanTransformer::transform(
 		const char*		theXMLFileName, 
+		const char*		theOutFileName)
+{
+	// Set input sources
+	const XalanDOMString	theDOMStringXMLFileName(theXMLFileName);
+
+	XSLTInputSource	theInputSource(c_wstr(theDOMStringXMLFileName));
+	XSLTInputSource	theStylesheetSource;
+
+	// Set output target
+	const XalanDOMString	theDomStringOutFileName(theOutFileName);
+	
+	XSLTResultTarget		theResultTarget(theDomStringOutFileName);
+
+	// Do the transformation...
+	return transform(
+					theInputSource, 
+					theStylesheetSource,
+					theResultTarget);
+}
+
+
+
+int
+XalanTransformer::transform(
+		const char*		theXMLFileName, 
 		const char*		theXSLFileName,
 		ostream&		theOutStream)
 {
@@ -291,6 +316,29 @@ XalanTransformer::transform(
 
 int
 XalanTransformer::transform(
+		const char*		theXMLFileName, 
+		ostream&		theOutStream)
+{
+	// Set input sources
+	const XalanDOMString	theDOMStringXMLFileName(theXMLFileName);
+	
+	XSLTInputSource	theInputSource(c_wstr(theDOMStringXMLFileName));
+	XSLTInputSource		theStylesheetSource;	
+
+	// Set output target
+	XSLTResultTarget	theResultTarget(&theOutStream);
+
+	// Do the transformation...
+	return transform(
+					theInputSource, 
+					theStylesheetSource,
+					theResultTarget);
+}
+
+
+
+int
+XalanTransformer::transform(
 		istream&		theXMLInStream, 
 		istream&		theXSLInStream,
 		ostream&		theOutStream)
@@ -298,6 +346,27 @@ XalanTransformer::transform(
 	// Set input sources
 	XSLTInputSource		theInputSource(&theXMLInStream);
 	XSLTInputSource		theStylesheetSource(&theXSLInStream);
+	
+	// Set output target
+	XSLTResultTarget	theResultTarget(&theOutStream);
+
+	// Do the transformation...
+	return transform(
+					theInputSource, 
+					theStylesheetSource,
+					theResultTarget);
+}
+
+
+
+int
+XalanTransformer::transform(
+		istream&		theXMLInStream, 		
+		ostream&		theOutStream)
+{
+	// Set input sources
+	XSLTInputSource		theInputSource(&theXMLInStream);
+	XSLTInputSource		theStylesheetSource;	
 	
 	// Set output target
 	XSLTResultTarget	theResultTarget(&theOutStream);
