@@ -3196,13 +3196,6 @@ XSLTEngineImpl::shouldStripSourceNode(
 			{
 				if(parent->getNodeType() == XalanNode::ELEMENT_NODE)
 				{
-					const XalanElement*	const	parentElem =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const XalanElement*)parent;
-#else
-						static_cast<const XalanElement*>(parent);
-#endif
-
 					XPath::eMatchScore	highPreserveScore = XPath::eMatchScoreNone;
 					XPath::eMatchScore	highStripScore = XPath::eMatchScoreNone;
 
