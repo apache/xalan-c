@@ -140,6 +140,13 @@
 
 
 
+#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
+#include <XalanSourceTree/XalanSourceTreeElement.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include <XalanSourceTree/XalanSourceTreeContentHandler.hpp>
+
+
+
 #include <XSLT/AVT.hpp>
 #include <XSLT/AVTPart.hpp>
 #include <XSLT/ElemAttributeSet.hpp>
@@ -172,6 +179,7 @@ static numeric_limits<double> theDoubleLimits;
 static string theString;
 static vector<XalanDOMString> theDOMStringVector;
 static vector<char> theCharVector;
+static vector<wchar_t> theWCharVector;
 static vector<unsigned char> theUnsignedCharVector;
 static AttributeListImpl::AttributeVectorType theAttributeVectorEntryVector;
 static allocator<DOMString> theAllocator;
@@ -494,6 +502,14 @@ foo()
 			theVector.begin(),
 			theVector.end(),
 			TraceListener::TraceListenerTraceFunctor(*theEvent));
+	}
+	
+	{
+		XalanSourceTreeParserLiaison::DocumentMapType	theMap;
+
+		for_each(theMap.begin(),
+			 theMap.end(),
+			 makeMapValueDeleteFunctor(theMap));
 	}
 
 	{
