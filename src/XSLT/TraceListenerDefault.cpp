@@ -275,6 +275,7 @@ TraceListenerDefault::generated(const GenerateEvent&	ev)
 			break;
 
 		case GenerateEvent::EVENTTYPE_ENDDOCUMENT:
+			m_printWriter.println();
 			m_printWriter.println(XALAN_STATIC_UCODE_STRING("ENDDOCUMENT"));
 			break;
 
