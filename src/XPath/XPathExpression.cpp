@@ -759,7 +759,7 @@ XPathExpression::IntializeOpCodeLengthMap()
 	theMap[eOP_NUMBERLIT] = 1 + s__opCodeMapLengthIndex;
 	theMap[eOP_ARGUMENT] = 1 + s__opCodeMapLengthIndex;
 	theMap[eOP_EXTFUNCTION] = 3 + s__opCodeMapLengthIndex;
-	theMap[eOP_FUNCTION] = 2 + s__opCodeMapLengthIndex;
+	theMap[eOP_FUNCTION] = 3 + s__opCodeMapLengthIndex;
 	theMap[eOP_LOCATIONPATH] = 1 + s__opCodeMapLengthIndex;
 	theMap[eOP_PREDICATE] = 1 + s__opCodeMapLengthIndex;
 	theMap[eNODETYPE_COMMENT] = 1;

@@ -139,6 +139,13 @@ XPath::installFunction(
 
 
 
+bool
+XPath::uninstallFunction(const XalanDOMString&	funcName)
+{
+	return 	s_functions.UninstallFunction(funcName);
+}
+
+
 XLocator*
 XPath::createXLocatorHandler() const
 {
@@ -1413,6 +1420,11 @@ XPath::runFunction(
 	// This is actually the position in the token queue of the
 	// string that contains the name of the function.
 	const int	funcID = m_expression.m_opMap[opPos];
+
+	opPos++;
+
+	// Number of args is next...
+	const int	argCount = m_expression.m_opMap[opPos];
 
 	opPos++;
 

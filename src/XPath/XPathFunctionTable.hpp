@@ -231,6 +231,14 @@ public:
 			const XalanDOMString&	theFunctionName,
 			const Function&			theFunction);
 
+	/**
+	 * Remove a named function from the function table.
+	 * 
+	 * @param theFunctionName name of function
+	 * @return true if the function was found and removed.
+	 */
+	bool
+	UninstallFunction(const XalanDOMString&		theFunctionName);
 
 	/**
 	 * Whether a named function is in the function table.

@@ -1604,6 +1604,42 @@ XPathProcessorImpl::Argument()
 
 
 
+int
+XPathProcessorImpl::FunctionCallArguments()
+{
+	int		argCount = 0;
+
+	consumeExpected('(');
+
+	while(tokenIs(')') == false)
+	{
+		if(tokenIs(',') == true)
+		{
+			error("Found ',' but no preceding argument!");
+		}
+
+		Argument();
+
+		++argCount;
+
+		if(tokenIs(')') == false)
+		{
+
+			consumeExpected(',');
+
+			if(tokenIs(')') == true)
+			{
+				error("Found ',' but no following argument!");
+			}
+		}
+	}
+
+	consumeExpected(')');
+
+	return argCount;
+}
+
+
 void
 XPathProcessorImpl::FunctionCall()
 {
@@ -1625,11 +1661,13 @@ XPathProcessorImpl::FunctionCall()
 
 		theArgs[1] = m_expression->getTokenPosition() - 1;
 
-		nextToken();
-
 		m_expression->setOpCodeArgs(XPathExpression::eOP_EXTFUNCTION,
 									opPos,
 									theArgs);
+
+		nextToken();
+
+		FunctionCallArguments();
 	}
 	else
 	{
@@ -1664,7 +1702,10 @@ XPathProcessorImpl::FunctionCall()
 				int		theFunctionID =
 					XPath::getFunctionTable().nameToID(m_token);
 
-				XPathExpression::OpCodeMapValueVectorType	theArgs(1, theFunctionID);
+				XPathExpression::OpCodeMapValueVectorType	theArgs(2);
+		
+				theArgs[0] = theFunctionID;
+				theArgs[1] = 0;
 
 				m_expression->appendOpCode(XPathExpression::eOP_FUNCTION,
 										   theArgs);
@@ -1672,32 +1713,15 @@ XPathProcessorImpl::FunctionCall()
 		}
 
 		nextToken();
+
+		// Get the arguments, and the argument count...
+		const int	argCount = FunctionCallArguments();
+
+		assert(m_expression->m_opMap[opPos + 3] == 0);
+
+		// update the arg count in the op map...
+		m_expression->m_opMap[opPos + 3] = argCount;
 	}
-
-	consumeExpected('(');
-
-	while(tokenIs(')') == false)
-	{
-		if(tokenIs(',') == true)
-		{
-			error("Found ',' but no preceding argument!");
-		}
-
-		Argument();
-
-		if(tokenIs(')') == false)
-		{
-
-			consumeExpected(',');
-
-			if(tokenIs(')') == true)
-			{
-				error("Found ',' but no following argument!");
-			}
-		}
-	}
-
-	consumeExpected(')');
 
 	// Terminate for safety.
 	m_expression->appendOpCode(XPathExpression::eENDOP);

@@ -738,6 +738,9 @@ private:
 
 private:
 
+	int
+	FunctionCallArguments();
+
 	static void
 	initializeKeywordsTable();
 
