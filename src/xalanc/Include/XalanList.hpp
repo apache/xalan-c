@@ -191,8 +191,8 @@ public:
 	typedef XalanListIteratorBase<XalanListConstIteratorTraits<value_type>, Node>	const_iterator;
 			
 #if defined(XALAN_HAS_STD_ITERATORS)
-	typedef XALAN_STD_QUALIFIER reverse_iterator<iterator, XALAN_STD_QUALIFIER bidirectional_iterator_tag, value_type>			reverse_iterator_;
-	typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator, XALAN_STD_QUALIFIER bidirectional_iterator_tag, value_type>	const_reverse_iterator_;
+	typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>	reverse_iterator_;
+	typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator>	const_reverse_iterator_;
 #elif defined(XALAN_RW_NO_CLASS_PARTIAL_SPEC)
 	typedef XALAN_STD_QUALIFIER reverse_iterator<
 		iterator,
