@@ -125,8 +125,6 @@ SynchronizedCounter::decrement()
 unsigned long
 SynchronizedCounter::getCounter() const
 {
-	XMLMutexLock	theLock(&m_mutex);
-
 	return m_counter;
 }
 
@@ -258,22 +256,36 @@ doThreads(long	theThreadCount)
 			}
 		}
 
+		clock_t		theClock = 0;
+
 		if (theThreadInfo.size() == 0)
 		{
 			cerr << endl << "No threads were created!" << endl;
 		}
 		else
 		{
+			unsigned int	theCheckCount = 0;
+
 			do
 			{
 				Sleep(2000);
-			}
-			while(theCounter.getCounter() != 0);
 
-			Sleep(2000);
+				// Check a couple of times, just in case, since
+				// getCounter() is not synchronized...
+				if (theCounter.getCounter() == 0)
+				{
+					if (theCheckCount == 0)
+					{
+						theClock = clock();
+					}
+
+					++theCheckCount;
+				}
+			}
+			while(theCheckCount < 2);
 		}
 
-		cout << endl << "Clock after threads: " << clock() << endl;
+		cout << endl << "Clock after threads: " << theClock << endl;
 	}
 	catch(...)
 	{
