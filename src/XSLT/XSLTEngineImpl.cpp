@@ -1424,15 +1424,21 @@ XSLTEngineImpl::startDocument()
 {
 	assert(getFormatterListener() != 0);
 	assert(m_executionContext != 0);
-	assert(m_cdataStack.empty() == true);
 
 	if (getHasPendingStartDocument() == false)
 	{
+		assert(m_cdataStack.empty() == true || m_outputContextStack.size() != 1);
+
 		m_resultNamespacesStack.pushContext();
 
 		setHasPendingStartDocument(true);
 
 		setMustFlushPendingStartDocument(false);
+
+		if (m_hasCDATASectionElements == true)
+		{
+			m_cdataStack.push_back(false);
+		}
 	}
 	else if (getMustFlushPendingStartDocument() == true)
 	{
@@ -1458,7 +1464,6 @@ XSLTEngineImpl::endDocument()
 {
 	assert(getFormatterListener() != 0);
 	assert(m_executionContext != 0);
-	assert(m_cdataStack.empty() == true);
 
 	setMustFlushPendingStartDocument(true);
 
@@ -1472,6 +1477,12 @@ XSLTEngineImpl::endDocument()
 
 		fireGenerateEvent(ge);
 	}
+
+	if (m_hasCDATASectionElements == true)
+	{
+		m_cdataStack.pop_back();
+	}
+	assert(m_cdataStack.empty() == true);
 
 	m_resultNamespacesStack.popContext();
 
@@ -2536,53 +2547,58 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 
 	bool	fResult = false;
 
-	const XalanDOMString::size_type		indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
-
-	if(indexOfNSSep == length(elementName))
+	// We only want to worry about cdata-section-elements when we're serializing the
+	// result tree, which is only when the output context is 1.
+	if (m_outputContextStack.size() == 1)
 	{
-		const XalanDOMString* const		elemNS =
-					getResultNamespaceForPrefix(s_emptyString);
+		const XalanDOMString::size_type		indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
 
-		if (elemNS != 0)
-		{
-			fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elementName));
-		}
-		else
-		{
-			fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(s_emptyString, elementName));
-		}
-	}
-	else
-	{
-		typedef StylesheetExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
-
-		GetAndReleaseCachedString	elemLocalNameGuard(*m_executionContext);
-		GetAndReleaseCachedString	prefixGuard(*m_executionContext);
-
-		XalanDOMString&		elemLocalName = elemLocalNameGuard.get();
-		XalanDOMString&		prefix = prefixGuard.get();
-
-		substring(elementName, prefix, 0, indexOfNSSep);
-		substring(elementName, elemLocalName, indexOfNSSep + 1);
-
-		if(equals(prefix, DOMServices::s_XMLString))
-		{
-			fResult =
-					m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(DOMServices::s_XMLNamespaceURI, elemLocalName));
-		}
-		else
+		if(indexOfNSSep == length(elementName))
 		{
 			const XalanDOMString* const		elemNS =
-				getResultNamespaceForPrefix(prefix);
+						getResultNamespaceForPrefix(s_emptyString);
 
-			if(elemNS == 0)
+			if (elemNS != 0)
 			{
-				error("Prefix must resolve to a namespace: " + prefix);
+				fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elementName));
 			}
 			else
 			{
+				fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(s_emptyString, elementName));
+			}
+		}
+		else
+		{
+			typedef StylesheetExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
+			GetAndReleaseCachedString	elemLocalNameGuard(*m_executionContext);
+			GetAndReleaseCachedString	prefixGuard(*m_executionContext);
+
+			XalanDOMString&		elemLocalName = elemLocalNameGuard.get();
+			XalanDOMString&		prefix = prefixGuard.get();
+
+			substring(elementName, prefix, 0, indexOfNSSep);
+			substring(elementName, elemLocalName, indexOfNSSep + 1);
+
+			if(equals(prefix, DOMServices::s_XMLString))
+			{
 				fResult =
-						m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elemLocalName));
+						m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(DOMServices::s_XMLNamespaceURI, elemLocalName));
+			}
+			else
+			{
+				const XalanDOMString* const		elemNS =
+					getResultNamespaceForPrefix(prefix);
+
+				if(elemNS == 0)
+				{
+					error("Prefix must resolve to a namespace: " + prefix);
+				}
+				else
+				{
+					fResult =
+							m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elemLocalName));
+				}
 			}
 		}
 	}

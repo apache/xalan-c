@@ -70,7 +70,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 OutputContextStack::OutputContextStack() :
 	m_stack(1),
-	m_stackPosition(m_stack.begin())
+	m_stackPosition(m_stack.begin()),
+	m_stackSize(0)
 {
 	// m_stack is initialized to a size of 1, so that
 	// we always have a dummy entry at the beginning
@@ -90,6 +91,7 @@ void
 OutputContextStack::pushContext(FormatterListener*	theListener)
 {
 	++m_stackPosition;
+	++m_stackSize;
 
 	if (m_stackPosition == m_stack.end())
 	{
@@ -116,6 +118,7 @@ OutputContextStack::popContext()
 	theCurrentContext.reset();
 
 	--m_stackPosition;
+	--m_stackSize;
 }
 
 
@@ -128,6 +131,8 @@ OutputContextStack::clear()
 	OutputContextStackType(1).swap(m_stack);
 
 	m_stackPosition = m_stack.begin();
+
+	m_stackSize = 0;
 }
 
 
@@ -139,6 +144,8 @@ OutputContextStack::reset()
 	{
 		popContext();
 	}
+
+	assert(size() == 0);
 }
 
 

@@ -213,7 +213,9 @@ public:
 	{
 		// Since we always keep one dummy entry at the beginning,
 		// subtract one from the size
-		return m_stack.size() - 1;
+		assert(m_stackSize == size_type(OutputContextStackType::const_iterator(m_stackPosition) - m_stack.begin()));
+
+		return m_stackSize;
 	}
 
 	bool
@@ -245,6 +247,8 @@ private:
 	OutputContextStackType				m_stack;
 
 	OutputContextStackType::iterator	m_stackPosition;
+
+	size_type							m_stackSize;
 };
 
 
