@@ -127,7 +127,6 @@ public:
 	/*---------------------------------------------
 	 * Literals for XSL attribute names.
 	 */
-	static const XalanDOMString&	ATTRNAME_ATTRIBUTE_SET;
 	static const XalanDOMString&	ATTRNAME_CASEORDER;
 	static const XalanDOMString&	ATTRNAME_COUNT;
 	static const XalanDOMString&	ATTRNAME_DATATYPE;

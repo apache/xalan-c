@@ -65,7 +65,6 @@
 
 
 
-static XalanDOMString		ATTRNAME_ATTRIBUTE_SET;
 static XalanDOMString		ATTRNAME_CASEORDER;
 static XalanDOMString		ATTRNAME_COUNT;
 static XalanDOMString		ATTRNAME_DATATYPE;
@@ -187,7 +186,6 @@ static XalanDOMString		PSEUDONAME_NODE;
 
 
 
-const XalanDOMString&		Constants::ATTRNAME_ATTRIBUTE_SET = ::ATTRNAME_ATTRIBUTE_SET;
 const XalanDOMString&		Constants::ATTRNAME_CASEORDER = ::ATTRNAME_CASEORDER;
 const XalanDOMString&		Constants::ATTRNAME_COUNT = ::ATTRNAME_COUNT;
 const XalanDOMString&		Constants::ATTRNAME_DATATYPE = ::ATTRNAME_DATATYPE;
@@ -311,7 +309,6 @@ const XalanDOMString&		Constants::PSEUDONAME_NODE = ::PSEUDONAME_NODE;
 void
 Constants::initialize()
 {
-	::ATTRNAME_ATTRIBUTE_SET = XALAN_STATIC_UCODE_STRING("attribute-set");
 	::ATTRNAME_CASEORDER = XALAN_STATIC_UCODE_STRING("case-order");
 	::ATTRNAME_COUNT = XALAN_STATIC_UCODE_STRING("count");
 	::ATTRNAME_DATATYPE = XALAN_STATIC_UCODE_STRING("data-type");
@@ -437,7 +434,6 @@ Constants::initialize()
 void
 Constants::terminate()
 {
-	releaseMemory(::ATTRNAME_ATTRIBUTE_SET);
 	releaseMemory(::ATTRNAME_CASEORDER);
 	releaseMemory(::ATTRNAME_COUNT);
 	releaseMemory(::ATTRNAME_DATATYPE);
