@@ -113,7 +113,24 @@ public:
 	 */
 	void
 	process(
-			XalanNode*						sourceTree, 
+			XalanNode*						sourceTree,
+			XSLTResultTarget&				outputTarget,
+			StylesheetExecutionContext&		executionContext) const;
+
+	/**
+	 * Have the stylesheet create the appropriate FormatterListener,
+	 * based on the XSLTResultTarget provided.  setupFormatterListener
+	 * also calls setFormatterListener() on the execution context
+	 * instance.  setupFormatterListener() is done automatically by
+	 * process(), but this is provided as an escape, to allow for
+	 * changing the FormatterListener on-the-fly.
+	 *
+	 * @param outputTarget The output source tree
+	 * @param constructionContext context for construction of object
+	 * @return a pointer to the new FormatterListener instance.
+	 */
+	FormatterListener*
+	setupFormatterListener(
 			XSLTResultTarget&				outputTarget,
 			StylesheetExecutionContext&		executionContext) const;
 
@@ -124,7 +141,10 @@ public:
 	 * @return value of output method
 	 */
 	FormatterListener::eFormat
-	getOutputMethod() const;
+	getOutputMethod() const
+	{
+		return m_outputMethod;
+	}
 
 	bool
 	isOutputMethodSet() const
@@ -139,7 +159,10 @@ public:
 	 * @return output version string
 	 */
 	XalanDOMString
-	getOutputVersion() const;
+	getOutputVersion() const
+	{ 
+		return m_version;
+	}
 
 	/**
 	 * Determine if output indenting was specified in the
@@ -148,7 +171,10 @@ public:
 	 * @return true to indent
 	 */
 	bool 
-	getOutputIndent() const;
+	getOutputIndent() const
+	{
+		return m_indentResult;
+	}
 
 	/**
 	 * Get the output encoding string that was specified in the
@@ -157,7 +183,10 @@ public:
 	 * @return encoding string
 	 */
 	XalanDOMString 
-	getOutputEncoding() const;
+	getOutputEncoding() const
+	{
+		return m_encoding;
+	}
 
 	/**
 	 * Get the java output encoding string that was specified in the
@@ -169,23 +198,29 @@ public:
 	getJavaOutputEncoding() const;
 
 	/**
-	 * Get the doctype-system-id string that was specified in the 
-	 * xsl:output element
-	 *
-	 * @return document type string
-	 */
-	XalanDOMString 
-	getOutputDoctypeSystem() const;
-
-	/**
 	 * Get the media-type string that was specified in the 
 	 * xsl:output element
 	 *
 	 * @return media type string
 	 */
 	XalanDOMString 
-	getOutputMediaType() const;
-	
+	getOutputMediaType() const
+	{
+		return m_mediatype;
+	}
+
+	/**
+	 * Get the doctype-system-id string that was specified in the 
+	 * xsl:output element
+	 *
+	 * @return document type string
+	 */
+	XalanDOMString 
+	getOutputDoctypeSystem() const
+	{
+		return m_doctypeSystem;
+	}
+
 	/**
 	 * Get the doctype-public-id string that was specified in the 
 	 * xsl:output element
@@ -193,7 +228,10 @@ public:
 	 * @return document type public id string
 	 */
 	XalanDOMString 
-	getOutputDoctypePublic() const;
+	getOutputDoctypePublic() const
+	{
+		return m_doctypePublic;
+	}
 
 	/**
 	 * Determine whether to output XML declarations.

@@ -204,13 +204,58 @@ StylesheetRoot::process(
 
 	executionContext.setStylesheetRoot(this);
 
-	FormatterListener* flistener = 0;
+	setupFormatterListener(outputTarget, executionContext);
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
+	executionContext.resetCurrentState(sourceTree, sourceTree);
 
-	Writer* pw = 0;
+	executionContext.setRootDocument(sourceTree);
+		
+	if(executionContext.doDiagnosticsOutput())
+	{
+		executionContext.diag(XALAN_STATIC_UCODE_STRING("============================="));
+		executionContext.diag(XALAN_STATIC_UCODE_STRING("Transforming..."));
+		executionContext.pushTime(&sourceTree);
+	}
+
+	try
+	{
+		executionContext.resolveTopLevelParams();
+	}
+	// java: catch(Exception e)
+	catch(...)
+	{
+		throw SAXException("StylesheetRoot.process error");
+	}
+
+	executionContext.startDocument();
+
+	// Output the action of the found root rule.	All processing
+	// occurs from here.	buildResultFromTemplate is highly recursive.
+	rootRule->execute(executionContext, sourceTree, sourceTree, QName());
+
+	executionContext.endDocument();
+
+	// Reset the top-level params for the next round.
+	executionContext.clearTopLevelParams();
+
+	if(executionContext.doDiagnosticsOutput())
+	{
+		executionContext.diag(XALAN_STATIC_UCODE_STRING(""));
+		executionContext.displayDuration(XALAN_STATIC_UCODE_STRING("transform"), &sourceTree);
+		executionContext.diag(XALAN_STATIC_UCODE_STRING(""));
+	}
+}
+
+
+
+FormatterListener*
+StylesheetRoot::setupFormatterListener(
+			XSLTResultTarget&				outputTarget,
+			StylesheetExecutionContext&		executionContext) const
+{
+	FormatterListener*	flistener = 0;
+
+	Writer*				pw = 0;
 
 	flistener = outputTarget.getFormatterListener();
 
@@ -358,86 +403,12 @@ StylesheetRoot::process(
 	}
 
 	executionContext.setFormatterListener(flistener);
-	executionContext.resetCurrentState(sourceTree, sourceTree);
 
-	executionContext.setRootDocument(sourceTree);
-		
-	if(executionContext.doDiagnosticsOutput())
-	{
-		executionContext.diag(XALAN_STATIC_UCODE_STRING("============================="));
-		executionContext.diag(XALAN_STATIC_UCODE_STRING("Transforming..."));
-		executionContext.pushTime(&sourceTree);
-	}
-
-	try
-	{
-		executionContext.resolveTopLevelParams();
-	}
-	// java: catch(Exception e)
-	catch(...)
-	{
-		throw SAXException("StylesheetRoot.process error");
-	}
-
-	executionContext.startDocument();
-
-	// Output the action of the found root rule.	All processing
-	// occurs from here.	buildResultFromTemplate is highly recursive.
-	rootRule->execute(executionContext, sourceTree, sourceTree, QName());
-
-	executionContext.endDocument();
-
-	// Reset the top-level params for the next round.
-	executionContext.clearTopLevelParams();
-
-	if(executionContext.doDiagnosticsOutput())
-	{
-		executionContext.diag(XALAN_STATIC_UCODE_STRING(""));
-		executionContext.displayDuration(XALAN_STATIC_UCODE_STRING("transform"), &sourceTree);
-		executionContext.diag(XALAN_STATIC_UCODE_STRING(""));
-	}
+	return flistener;
 }
 
 
 
-/** 
- * Return the output method that was specified in the stylesheet. 
- * The returned value is one of Formatter.OUTPUT_METH_XML,
- * Formatter.OUTPUT_METH_HTML, or Formatter.OUTPUT_METH_TEXT.
- */
-FormatterListener::eFormat
-StylesheetRoot::getOutputMethod() const
-{ 
-	return m_outputMethod; 
-}
-
-
-
-/** Get the version string that was specified in the stylesheet. */
-XalanDOMString 
-StylesheetRoot::getOutputVersion() const
-{ 
-	return m_version; 
-}
-
-
-/** Get the media-type string that was specified in the stylesheet. */
-bool 
-StylesheetRoot::getOutputIndent() const
-{ 
-	return m_indentResult;
-}
-
-
-/** Get the encoding string that was specified in the stylesheet. */
-XalanDOMString 
-StylesheetRoot::getOutputEncoding() const
-{ 
-    return m_encoding; 
-}
-
-
-/** Get the encoding string that was specified in the stylesheet. */
 XalanDOMString 
 StylesheetRoot::getJavaOutputEncoding() const 
 { 
@@ -459,32 +430,7 @@ StylesheetRoot::getJavaOutputEncoding() const
 }
 
 
-/** Get the media-type string that was specified in the stylesheet. */
-XalanDOMString 
-StylesheetRoot::getOutputMediaType() const 
-{ 
-	return m_mediatype; 
-}
 
-
-/** Get the doctype-system-id string that was specified in the stylesheet. */
-XalanDOMString 
-StylesheetRoot::getOutputDoctypeSystem() const 
-{ 
-	return m_doctypeSystem; 
-}
-
-
-/** Get the doctype-public-id string that was specified in the stylesheet. */
-XalanDOMString 
-StylesheetRoot::getOutputDoctypePublic() const
-{ 
-	return m_doctypePublic; 
-}
-
-/**
- * Process the xsl:output element.
- */
 void 
 StylesheetRoot::processOutputSpec(
 			const XalanDOMChar*				name, 
