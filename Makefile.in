@@ -53,6 +53,11 @@
 # <http://www.apache.org/>.
 #
 
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+
 include Makefile.incl
 
 all: 
