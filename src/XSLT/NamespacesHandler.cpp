@@ -588,7 +588,7 @@ NamespacesHandler::processExcludeResultPrefixes(const XalanDOMString&	theElement
 			// check that first...
 			if (equals(thePrefix, theElementPrefix) == false &&
 				m_activePrefixes.find(thePrefix) == m_activePrefixes.end() &&
-				(m_excludedResultPrefixes.find(thePrefix) != m_excludedResultPrefixes.end() ||
+				(isExcludedNamespaceURI(theURI) == true ||
 				 m_extensionNamespaceURIs.find(theURI) != m_extensionNamespaceURIs.end()))
 			{
 				// It's excluded, so remove it...
