@@ -1823,15 +1823,15 @@ StylesheetExecutionContextDefault::setSourceDocument(
 
 
 const XalanDecimalFormatSymbols*
-StylesheetExecutionContextDefault::getDecimalFormatSymbols(const XalanDOMString&	name)
+StylesheetExecutionContextDefault::getDecimalFormatSymbols(const XalanQName&	qname)
 {
 	if (m_stylesheetRoot == 0)
 	{
-		return m_xpathExecutionContextDefault.getDecimalFormatSymbols(name);
+		return m_xpathExecutionContextDefault.getDecimalFormatSymbols(qname);
 	}
 	else
 	{
-		return m_stylesheetRoot->getDecimalFormatSymbols(name);
+		return m_stylesheetRoot->getDecimalFormatSymbols(qname);
 	}
 }
 

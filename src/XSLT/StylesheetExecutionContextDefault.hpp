@@ -710,7 +710,7 @@ public:
 	endConstruction(const KeyDeclaration&	keyDeclaration);
 
 	virtual const XalanDecimalFormatSymbols*
-	getDecimalFormatSymbols(const XalanDOMString&	name);
+	getDecimalFormatSymbols(const XalanQName&	qname);
 
 	virtual PrintWriter*
 	createPrintWriter(XalanOutputStream*		theTextOutputStream);

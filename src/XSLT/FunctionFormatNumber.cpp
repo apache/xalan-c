@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,6 +66,7 @@
 
 
 #include <XPath/XObjectFactory.hpp>
+#include <XPath/XalanQNameByValue.hpp>
 
 
 
@@ -82,6 +83,10 @@ FunctionFormatNumber::FunctionFormatNumber()
 FunctionFormatNumber::~FunctionFormatNumber()
 {
 }
+
+
+
+static const XalanQNameByValue	theEmptyQName;
 
 
 
@@ -102,7 +107,7 @@ FunctionFormatNumber::execute(
 
 	if (theDFS == 0)
 	{
-		theDFS = executionContext.getDecimalFormatSymbols(Constants::DEFAULT_DECIMAL_FORMAT);
+		theDFS = executionContext.getDecimalFormatSymbols(theEmptyQName);
 	}
 
 	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
@@ -140,8 +145,10 @@ FunctionFormatNumber::execute(
 	const XalanDOMString&				theDecimalFormatName = arg3->str();
 	assert(length(theDecimalFormatName) != 0);
 
+	const XalanQNameByValue				theQName(theDecimalFormatName, executionContext.getPrefixResolver());
+
 	const XalanDecimalFormatSymbols*	theDFS =
-			executionContext.getDecimalFormatSymbols(theDecimalFormatName);
+			executionContext.getDecimalFormatSymbols(theQName);
 
 	if (theDFS == 0)
 	{
@@ -150,7 +157,7 @@ FunctionFormatNumber::execute(
 				context,
 				locator);
 
-		theDFS = executionContext.getDecimalFormatSymbols(Constants::DEFAULT_DECIMAL_FORMAT);
+		theDFS = executionContext.getDecimalFormatSymbols(theEmptyQName);
 	
 	}	
 

@@ -1670,7 +1670,7 @@ public:
 
 
 	virtual const XalanDecimalFormatSymbols*
-	getDecimalFormatSymbols(const XalanDOMString&	name) = 0;
+	getDecimalFormatSymbols(const XalanQName&	qname) = 0;
 
 	// These interfaces are inherited from ExecutionContext...
 
