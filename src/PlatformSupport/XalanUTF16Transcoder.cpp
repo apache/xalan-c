@@ -96,8 +96,8 @@ XalanUTF16Transcoder::transcode(
 		}
 		else
 		{
-			const XMLByte	theHighByte = XMLByte((theSourceData[theSourceEaten] & 0xFF00) >> 8);
-			const XMLByte	theLowByte = XMLByte(theSourceData[theSourceEaten] & 0x00FF);
+			const XalanXMLByte	theHighByte = XalanXMLByte((theSourceData[theSourceEaten] & 0xFF00) >> 8);
+			const XalanXMLByte	theLowByte = XalanXMLByte(theSourceData[theSourceEaten] & 0x00FF);
 
 #if defined(XALAN_LITLE_ENDIAN)
 			theTarget[theTargetPosition++] = theLowByte;
