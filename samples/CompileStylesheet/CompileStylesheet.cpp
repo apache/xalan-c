@@ -144,7 +144,7 @@ main(
 
 					//Generate the XML input and output objects.
 					XSLTInputSource		theInputSource(theFormatterIn.str());
-					XSLTResultTarget	theResultTarget(theFormatterOut.str());
+					XSLTResultTarget	theResultTarget(XalanDOMString(theFormatterOut.str()));
 
 					// Do the tranformation...
 					theProcessor.process(
