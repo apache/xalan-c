@@ -68,6 +68,10 @@
 
 
 
+#include <PlatformSupport/XalanReferenceCountedObject.hpp>
+
+
+
 #include <XPath/XPathException.hpp>
 
 
@@ -75,6 +79,7 @@
 class MutableNodeRefList;
 class NodeRefListBase;
 class ResultTreeFragBase;
+class XObjectFactory;
 class XObjectTypeCallback;
 class XPathExecutionContext;
 
@@ -83,9 +88,11 @@ class XPathExecutionContext;
 /**
  * Class to hold XPath return types.
  */
-class XALAN_XPATH_EXPORT XObject
+class XALAN_XPATH_EXPORT XObject : protected XalanReferenceCountedObject
 {
 public:
+
+	friend class XObjectPtr;
 
 	/**
 	 * Enumeration of possible object types
@@ -257,6 +264,12 @@ public:
 	// All XObject instances are controlled by an instance of an XObjectFactory.
 	friend class XObjectFactory;
 
+	void
+	setFactory(XObjectFactory*	theFactory)
+	{
+		m_factory = theFactory;
+	}
+
 	// Base class for all XObject exceptions...
 	class XObjectException : public XPathException
 	{
@@ -309,6 +322,12 @@ public:
 
 protected:
 
+	virtual void 
+	referenced();
+
+	virtual void 
+	dereferenced();
+
 	virtual
 	~XObject();
 
@@ -321,6 +340,8 @@ private:
 	operator=(const XObject&);
 
 	const eObjectType	m_objectType;
+
+	XObjectFactory*		m_factory;
 };
 
 
@@ -381,6 +402,119 @@ operator>=(
 			const XObject&	theRHS)
 {
 	return theLHS.greaterThanOrEqual(theRHS);
+}
+
+
+
+/**
+ * Class to hold XObjectPtr return types.
+ */
+class XALAN_XPATH_EXPORT XObjectPtr
+{
+public:
+
+	friend bool operator==(const XObjectPtr&, const XObjectPtr&);
+	/**
+	 * Create an XObjectPtr.
+	 */
+	explicit
+	XObjectPtr(XObject*		theXObject = 0) :
+		m_xobjectPtr(theXObject)
+	{
+		XalanReferenceCountedObject::addReference(theXObject);
+	}
+	
+	XObjectPtr(const XObjectPtr&	theSource) :
+		m_xobjectPtr(theSource.m_xobjectPtr)
+	{ 
+		XalanReferenceCountedObject::addReference(m_xobjectPtr);
+	};
+
+	XObjectPtr&
+	operator=(const XObjectPtr&		theRHS)
+	{ 
+		if (m_xobjectPtr != theRHS.m_xobjectPtr)
+		{
+			XalanReferenceCountedObject::removeReference(m_xobjectPtr);
+
+			m_xobjectPtr = theRHS.m_xobjectPtr;
+
+			XalanReferenceCountedObject::addReference(m_xobjectPtr);
+		}
+
+		return *this;
+	}
+
+	~XObjectPtr()
+	{
+		XalanReferenceCountedObject::removeReference(m_xobjectPtr);
+	};	
+
+	bool
+	null() const
+	{
+		return m_xobjectPtr == 0 ? true : false;
+	}
+
+	const XObject&
+	operator*() const
+	{
+		return *m_xobjectPtr;
+	};
+
+	XObject&
+	operator*() 
+	{
+		return *m_xobjectPtr;
+	};
+
+	const XObject*
+	operator->() const
+	{
+		return m_xobjectPtr;
+	};
+
+	XObject*
+	operator->()
+	{
+		return m_xobjectPtr;
+	};
+
+	const XObject*
+	get() const
+	{
+		return m_xobjectPtr;
+	};
+
+	XObject*
+	get()
+	{
+		return m_xobjectPtr;
+	};
+
+private:
+
+	XObject*	m_xobjectPtr;	
+};
+
+
+
+inline bool
+operator==(
+			const XObjectPtr&	theLHS,
+			const XObjectPtr&	theRHS)
+{
+	return theLHS.m_xobjectPtr == theRHS.m_xobjectPtr;
+}
+
+
+
+inline bool
+operator!=(
+			const XObjectPtr&	theLHS,
+			const XObjectPtr&	theRHS)
+{
+	return !(theLHS == theRHS);
 }
 
 

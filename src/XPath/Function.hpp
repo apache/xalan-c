@@ -107,7 +107,7 @@ public:
 	 * @param args             vector of pointers to XObject arguments
 	 * @return                 pointer to the result XObject
 	 */
-	virtual XObject*
+	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
@@ -122,7 +122,7 @@ public:
 	 * @param context          current context node	 
 	 * @return                 pointer to the result XObject
 	 */
-	virtual XObject*
+	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context);
@@ -136,11 +136,12 @@ public:
 	 * @param arg              pointer to XObject argument
 	 * @return                 pointer to the result XObject
 	 */
-	virtual XObject*
+	virtual XObjectPtr
 	execute(
+
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
-			const XObject*			arg);
+			const XObjectPtr		arg);
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
@@ -152,12 +153,13 @@ public:
 	 * @param arg2             pointer to XObject argument
 	 * @return                 pointer to the result XObject
 	 */
-	virtual XObject*
+	virtual XObjectPtr
 	execute(
+
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
-			const XObject*			arg1,
-			const XObject*			arg2);
+			const XObjectPtr		arg1,
+			const XObjectPtr		arg2);
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
@@ -170,13 +172,13 @@ public:
 	 * @param arg3             pointer to XObject argument
 	 * @return                 pointer to the result XObject
 	 */
-	virtual XObject*
+	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
-			const XObject*			arg1,
-			const XObject*			arg2,
-			const XObject*			arg3);
+			const XObjectPtr		arg1,
+			const XObjectPtr		arg2,
+			const XObjectPtr		arg3);
 
 	/**
 	 * Create a copy of the function object.

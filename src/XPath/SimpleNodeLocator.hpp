@@ -105,7 +105,7 @@ public:
 
 	// These methods are inherited from XLocator ...
 
-	virtual const XObject*
+	virtual const XObjectPtr
 	locationPath(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,

@@ -70,7 +70,7 @@ FunctionLast::~FunctionLast()
 
 
 
-XObject*
+XObjectPtr
 FunctionLast::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */)

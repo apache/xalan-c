@@ -83,7 +83,7 @@ public:
 
 	// These methods are inherited from Function ...
 
-	virtual XObject*
+	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context);

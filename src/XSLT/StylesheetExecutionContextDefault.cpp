@@ -81,7 +81,7 @@
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XPathExecutionContext.hpp>
-#include <XPath/QName.hpp>
+#include <XPath/XObject.hpp>
 
 
 
@@ -135,7 +135,6 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_printWriters(),
 	m_outputStreams(),
 	m_collationCompareFunctor(&s_defaultFunctor),
-	m_liveVariablesStack(theXObjectFactory),
 	m_variablesStack(),
 	m_matchPatternCache(),
 	m_keyTables(),
@@ -354,7 +353,7 @@ StylesheetExecutionContextDefault::getIndent() const
 
 
 
-const XObject*
+const XObjectPtr
 StylesheetExecutionContextDefault::executeXPath(
 			const XalanDOMString&	str,
 			XalanNode*				contextNode,
@@ -450,26 +449,19 @@ StylesheetExecutionContextDefault::pushTopLevelVariables(const ParamVectorType&	
 
 
 
-const XObject*
+const XObjectPtr
 StylesheetExecutionContextDefault::createVariable(
 			const ElemTemplateElement*	/* element */,
 			const XPath&				xpath,
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver)
 {
-	const XObject* const	theVariable =
-		xpath.execute(contextNode, resolver, *this);
-
-	// We'll want to return this variable after the current element frame
-	// has finished executing, so save this off for later...
-	m_liveVariablesStack.pushVariable(theVariable);
-
-	return theVariable;
+	return xpath.execute(contextNode, resolver, *this);
 }
 
 
 
-const XObject*
+const XObjectPtr
 StylesheetExecutionContextDefault::createVariable(
 			const ElemTemplateElement*	/* element */,
 			const ElemTemplateElement&	templateChild,
@@ -477,14 +469,7 @@ StylesheetExecutionContextDefault::createVariable(
 			XalanNode*					sourceNode,
 			const QName&				mode)
 {
-	const XObject* const	theVariable =
-		createXResultTreeFrag(templateChild, sourceTree, sourceNode, mode);
-
-	// We'll want to return this variable after the current element frame
-	// has finished executing, so save this off for later...
-	m_liveVariablesStack.pushVariable(theVariable);
-
-	return theVariable;
+	return createXResultTreeFrag(templateChild, sourceTree, sourceNode, mode);
 }
 
 
@@ -497,16 +482,16 @@ StylesheetExecutionContextDefault::pushVariable(
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver)
 {
-	const XObject*	var = 0;
+	XObjectPtr	var;
 
 	if (length(str) > 0)
 	{
-		var = 	m_xsltProcessor.evalXPathStr(
+		var = m_xsltProcessor.evalXPathStr(
 						str,
 						contextNode,
 						resolver,
 						*this);
-		assert(var != 0);
+		assert(var.null() == false);
 	}
 
 	// Call to our own member function, to keep track of the XObject...
@@ -518,17 +503,10 @@ StylesheetExecutionContextDefault::pushVariable(
 void
 StylesheetExecutionContextDefault::pushVariable(
 			const QName&				name,
-			const XObject*				var,
+			const XObjectPtr			var,
 			const ElemTemplateElement*	element)
 {
 	m_variablesStack.pushVariable(name, var, element);
-
-	if (m_liveVariablesStack.empty() == false)
-	{
-		// We'll want to return this variable after the current element frame
-		// has finished executing, so save this off for later...
-		m_liveVariablesStack.pushVariable(var);
-	}
 }
 
 
@@ -541,13 +519,9 @@ StylesheetExecutionContextDefault::pushVariable(
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver)
 {
-	XObjectGuard	theXObject(
-				m_xpathExecutionContextDefault.getXObjectFactory(),
-				xpath.execute(contextNode, resolver, *this));
+	XObjectPtr	theXObject(xpath.execute(contextNode, resolver, *this));
 
-	pushVariable(name, theXObject.get(), element);
-
-	theXObject.release();
+	pushVariable(name, theXObject, element);
 }
 
 
@@ -560,13 +534,7 @@ StylesheetExecutionContextDefault::pushVariable(
 			XalanNode*					sourceTree,
 			XalanNode*					sourceNode)
 {
-	XObjectGuard	theXObject(
-				m_xpathExecutionContextDefault.getXObjectFactory(),
-				createXResultTreeFrag(templateChild, sourceTree, sourceNode));
-
-	pushVariable(name, theXObject.get(), element);
-
-	theXObject.release();
+	pushVariable(name, createXResultTreeFrag(templateChild, sourceTree, sourceNode), element);
 }
 
 
@@ -575,8 +543,6 @@ void
 StylesheetExecutionContextDefault::pushContextMarker()
 {
 	m_variablesStack.pushContextMarker();
-
-	m_liveVariablesStack.pushContext();
 }
 
 
@@ -585,8 +551,6 @@ void
 StylesheetExecutionContextDefault::popContextMarker()
 {
 	m_variablesStack.popContextMarker();
-
-	m_liveVariablesStack.popContext();
 }
 
 
@@ -668,7 +632,7 @@ StylesheetExecutionContextDefault::pushParams(
 
 				const XPath* const	pxpath = xslParamElement->getSelectPattern();
 
-				const XObject*	theXObject = 0;
+				XObjectPtr	theXObject;
 
 				if(0 != pxpath)
 				{
@@ -703,7 +667,7 @@ StylesheetExecutionContextDefault::pushParams(
 
 
 
-const XObject*
+const XObjectPtr
 StylesheetExecutionContextDefault::getParamVariable(const QName&	theName) const
 {
 	return m_variablesStack.getParamVariable(theName);
@@ -715,8 +679,6 @@ void
 StylesheetExecutionContextDefault::pushElementFrame(const ElemTemplateElement*	elem)
 {
 	m_variablesStack.pushElementFrame(elem);
-
-	m_liveVariablesStack.pushContext();
 }
 
 
@@ -725,8 +687,6 @@ void
 StylesheetExecutionContextDefault::popElementFrame(const ElemTemplateElement*	elem)
 {
 	m_variablesStack.popElementFrame(elem);
-
-	m_liveVariablesStack.popContext();
 }
 
 
@@ -849,7 +809,7 @@ StylesheetExecutionContextDefault::cloneToResultTree(
 
 
 
-const XObject*
+const XObjectPtr
 StylesheetExecutionContextDefault::createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceTree,
@@ -863,7 +823,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 
 
 
-const XObject*
+const XObjectPtr
 StylesheetExecutionContextDefault::createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceTree,
@@ -878,14 +838,6 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 														 mode));
 
 	return getXObjectFactory().createResultTreeFrag(theFragment.release());
-}
-
-
-
-bool
-StylesheetExecutionContextDefault::destroyXObject(const XObject*	theXObject) const
-{
-	return getXObjectFactory().returnObject(theXObject);
 }
 
 
@@ -1307,8 +1259,6 @@ StylesheetExecutionContextDefault::reset()
 
 	m_outputStreams.clear();
 
-	m_liveVariablesStack.clear();
-
 	m_variablesStack.reset();
 
 	// Clean up the key table vector
@@ -1347,7 +1297,7 @@ StylesheetExecutionContextDefault::getXObjectFactory() const
 
 
 
-XObject*
+XObjectPtr
 StylesheetExecutionContextDefault::createNodeSet(XalanNode&	theNode)
 {
 	return m_xpathExecutionContextDefault.createNodeSet(theNode);
@@ -1486,7 +1436,7 @@ StylesheetExecutionContextDefault::functionAvailable(
 
 
 
-const XObject*
+const XObjectPtr
 StylesheetExecutionContextDefault::extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
@@ -1589,20 +1539,10 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
 
 
 
-const XObject*
+const XObjectPtr
 StylesheetExecutionContextDefault::getVariable(const QName&		name) const
 {
-	const XObject* const	theVariable =
-		m_variablesStack.getVariable(name);
-
-	if (theVariable != 0)
-	{
-		return m_xpathExecutionContextDefault.getXObjectFactory().clone(*theVariable);
-	}
-	else
-	{
-		return 0;
-	}
+	return m_variablesStack.getVariable(name);
 }
 
 
@@ -1964,92 +1904,4 @@ StylesheetExecutionContextDefault::addToXPathCache(
 
 	// Add the XPath with the current clock
 	m_matchPatternCache.insert(XPathCacheMapType::value_type(pattern, XPathCacheEntry(theXPath, addClock)));
-}
-
-
-
-StylesheetExecutionContextDefault::LiveVariablesStack::LiveVariablesStack(XObjectFactory&	theXObjectFactory) :
-	m_xobjectFactory(theXObjectFactory),
-	m_variablesStack(),
-	m_createNewContextStack()
-{
-}
-
-
-
-StylesheetExecutionContextDefault::LiveVariablesStack::~LiveVariablesStack()
-{
-	clear();
-}
-
-
-
-void
-StylesheetExecutionContextDefault::LiveVariablesStack::pushVariable(const XObject*	theVariable)
-{
-	assert(m_createNewContextStack.size() != 0);
-
-	// Check to see if we need to create a new context and do so if necessary...
-	if (m_createNewContextStack.back() == true)
-	{
-		m_variablesStack.resize(m_variablesStack.size() + 1);
-
-		m_variablesStack.back().reserve(eDefaultVariablesCollectionSize);
-
-		m_createNewContextStack.back() = false;
-	}
-
-	m_variablesStack.back().push_back(theVariable);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::LiveVariablesStack::pushContext()
-{
-	if (m_createNewContextStack.size() == 0)
-	{
-		m_createNewContextStack.reserve(eDefaultCreateNewContextStackSize);
-	}
-
-	m_createNewContextStack.push_back(true);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::LiveVariablesStack::popContext()
-{
-	assert(m_createNewContextStack.size() != 0);
-
-	if (m_createNewContextStack.back() == false)
-	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::for_each;
-#endif
-
-		assert(m_variablesStack.empty() == false);
-
-		// Clean up any XObjects we created...
-		for_each(
-				m_variablesStack.back().begin(),
-				m_variablesStack.back().end(),
-				XObjectFactory::DeleteXObjectFunctor(m_xobjectFactory));
-
-		// Pop the stack...
-		m_variablesStack.pop_back();
-	}
-
-	m_createNewContextStack.pop_back();
-}
-
-
-
-void
-StylesheetExecutionContextDefault::LiveVariablesStack::clear()
-{
-	while(m_variablesStack.empty() == false)
-	{
-		popContext();
-	}
 }

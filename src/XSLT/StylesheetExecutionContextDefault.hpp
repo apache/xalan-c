@@ -216,7 +216,7 @@ public:
 	getIndent() const;
 
 	// $$$ ToDo: Get rid of this!!!!
-	virtual const XObject*
+	virtual const XObjectPtr
 	executeXPath(
 			const XalanDOMString&	str,
 			XalanNode*				contextNode,
@@ -239,14 +239,14 @@ public:
 	virtual void
 	pushTopLevelVariables(const ParamVectorType&	topLevelParams);
 
-	virtual const XObject*
+	virtual const XObjectPtr
 	createVariable(
 			const ElemTemplateElement*	element,
 			const XPath&				xpath,
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver);
 
-	virtual const XObject*
+	virtual const XObjectPtr
 	createVariable(
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
@@ -265,7 +265,7 @@ public:
 	virtual void
 	pushVariable(
 			const QName&				name,
-			const XObject*				var,
+			const XObjectPtr			var,
 			const ElemTemplateElement*	element);
 
 	virtual void
@@ -304,7 +304,7 @@ public:
 			const QName&				mode,
 			const ElemTemplateElement*	targetTemplate);
 
-	virtual const XObject*
+	virtual const XObjectPtr
 	getParamVariable(const QName&	theName) const;
 
 	virtual void
@@ -361,21 +361,18 @@ public:
 			bool		overrideStrip,
 			bool		shouldCloneAttributes);
 
-	virtual const XObject*
+	virtual const XObjectPtr
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceTree,
 			XalanNode*					sourceNode);
 
-	virtual const XObject*
+	virtual const XObjectPtr
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceTree,
 			XalanNode*					sourceNode,
 			const QName&				mode);
-
-	virtual bool
-	destroyXObject(const XObject*	theXObject) const;
 
 	virtual void
 	outputToResultTree(const XObject&	xobj);
@@ -579,7 +576,7 @@ public:
 	virtual XObjectFactory&
 	getXObjectFactory() const;
 
-	virtual XObject*
+	virtual XObjectPtr
 	createNodeSet(XalanNode&	theNode);
 
 	virtual bool
@@ -634,7 +631,7 @@ public:
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	functionName) const;
 
-	virtual const XObject*
+	virtual const XObjectPtr
 	extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
@@ -680,7 +677,7 @@ public:
 			const PrefixResolver&	resolver,
 			MutableNodeRefList&		nodelist);
 
-	virtual const XObject*
+	virtual const XObjectPtr
 	getVariable(const QName&	name) const;
 
 	virtual const PrefixResolver*
@@ -777,63 +774,6 @@ public:
 		XSLTEngineImpl&		m_xsltProcessor;
 	};
 
-	class LiveVariablesStack
-	{
-	public:
-
-#if defined(XALAN_NO_NAMESPACES)
-			typedef vector<bool>							BoolVectorType;
-			typedef vector<const XObject*>					VariablesCollectionType;
-			typedef deque<VariablesCollectionType>			LiveVariablesStackType;
-#else
-			typedef std::vector<bool>						BoolVectorType;
-			typedef std::vector<const XObject*>				VariablesCollectionType;
-			typedef std::deque<VariablesCollectionType>		LiveVariablesStackType;
-#endif
-
-		LiveVariablesStack(XObjectFactory&	theXObjectFactory);
-
-		~LiveVariablesStack();
-
-		void
-		pushVariable(const XObject*		theVariable);
-
-		void
-		pushContext();
-
-		void
-		popContext();
-
-		void
-		clear();
-
-		bool
-		empty() const
-		{
-			return m_createNewContextStack.empty();
-		}
-
-	private:
-
-		// not implemented
-		LiveVariablesStack(const LiveVariablesStack&);
-
-		bool
-		operator==(const LiveVariablesStack&) const;
-
-		LiveVariablesStack&
-		operator=(const LiveVariablesStack&);
-
-		enum { eDefaultCreateNewContextStackSize = 100, eDefaultVariablesCollectionSize = 10 };
-
-
-		XObjectFactory&			m_xobjectFactory;
-
-		LiveVariablesStackType	m_variablesStack;
-
-		BoolVectorType			m_createNewContextStack;
-	};
-
 private:
 
 	/**
@@ -888,8 +828,6 @@ private:
 	OutputStreamSetType					m_outputStreams;
 
 	const CollationCompareFunctor*		m_collationCompareFunctor;
-
-	LiveVariablesStack					m_liveVariablesStack;
 
 	/**
 	 * Holds all information about variables during execution.

@@ -185,7 +185,7 @@ public:
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	functionName) const;
 
-	virtual XObject*
+	virtual XObjectPtr
 	extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,

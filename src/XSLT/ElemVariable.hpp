@@ -75,14 +75,14 @@
 
 
 #include <XPath/QName.hpp>
-
+#include <XPath/XObject.hpp>
 
 
 #include <XSLT/Constants.hpp>
 
 
 
-class XObject;
+class XObjectPtr;
 
 
 
@@ -170,7 +170,7 @@ private:
 
 	bool			m_isTopLevel;
 
-	const XObject*	m_value;
+	XObjectPtr		m_value;
 
 	XalanNode*		m_varContext;
 };

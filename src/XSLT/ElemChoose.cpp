@@ -134,10 +134,8 @@ ElemChoose::execute(
 			const XPath* const		theXPath = when->getXPath();
 			assert(theXPath != 0);
 
-			const XObjectGuard		test(
-								executionContext.getXObjectFactory(),
-								theXPath->execute(sourceNode, *this, executionContext));
-			assert(test.get() != 0);
+			const XObjectPtr	test(theXPath->execute(sourceNode, *this, executionContext));
+			assert(test.null() == false);
 
 			if(0 != executionContext.getTraceListeners())
 			{
@@ -147,7 +145,7 @@ ElemChoose::execute(
 					*when,
 					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("test")),
 					*theXPath,
-					test.get()));
+					test));
 			}
 
 			if(test->boolean() == true)

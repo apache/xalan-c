@@ -74,13 +74,13 @@ FunctionElementAvailable::~FunctionElementAvailable()
 
 
 
-XObject*
+XObjectPtr
 FunctionElementAvailable::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
-		const XObject*					arg1)
+		const XObjectPtr				arg1)
 {
-	assert(arg1 != 0);
+	assert(arg1.null() == false);
 
 	const XalanDOMString&	fullName = arg1->str();
 

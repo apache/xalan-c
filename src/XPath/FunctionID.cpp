@@ -70,13 +70,13 @@ FunctionID::~FunctionID()
 
 
 
-XObject*
+XObjectPtr
 FunctionID::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
-		const XObject*					arg1)
+		const XObjectPtr				arg1)
 {
-	assert(arg1 != 0);
+	assert(arg1.null() == false);	
 
 	if (context == 0)
 	{

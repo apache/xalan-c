@@ -123,10 +123,8 @@ ElemCopyOf::execute(
 
 	assert(m_pSelectPattern != 0);
 
-	const XObjectGuard		value(
-								executionContext.getXObjectFactory(),
-								m_pSelectPattern->execute(sourceNode, *this, executionContext));
-	assert(value.get() != 0);
+	const XObjectPtr	value(m_pSelectPattern->execute(sourceNode, *this, executionContext));
+	assert(value.null() == false);
 
 	if(0 != executionContext.getTraceListeners())
 	{
@@ -137,7 +135,7 @@ ElemCopyOf::execute(
 				*this,
 				StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
 				*m_pSelectPattern,
-				value.get()));
+				value));
 	}
 
 	const XObject::eObjectType	type = value->getType();

@@ -70,13 +70,13 @@ FunctionBoolean::~FunctionBoolean()
 
 
 
-XObject*
+XObjectPtr
 FunctionBoolean::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
-		const XObject*					arg1)
+		const XObjectPtr				arg1)
 {
-	assert(arg1 != 0);
+	assert(arg1.null() == false);
 
 	return executionContext.getXObjectFactory().createBoolean(arg1->boolean());	
 }

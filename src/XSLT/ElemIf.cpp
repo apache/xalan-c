@@ -141,10 +141,8 @@ ElemIf::execute(
 
 	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
 
-	const XObjectGuard		test(
-								executionContext.getXObjectFactory(),
-								m_test->execute(sourceNode, *this, executionContext));
-	assert(test.get() != 0);
+	const XObjectPtr	test(m_test->execute(sourceNode, *this, executionContext));
+	assert(test.null() == false);
 
 	if(0 != executionContext.getTraceListeners())
 	{
@@ -154,7 +152,7 @@ ElemIf::execute(
 			*this, 
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("test")),
 			*m_test, 
-			test.get()));
+			test));
 	}
 
 	if(test->boolean())

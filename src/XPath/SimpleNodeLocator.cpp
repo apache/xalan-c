@@ -106,7 +106,7 @@ SimpleNodeLocator::~SimpleNodeLocator()
 
 
 
-const XObject*
+const XObjectPtr
 SimpleNodeLocator::locationPath(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -373,9 +373,7 @@ SimpleNodeLocator::stepPattern(
 		{
 			argLen = currentExpression.getOpCodeLength(opPos);
 
-			const XObjectGuard		obj(
-										executionContext.getXObjectFactory(),
-										xpath.executeMore(localContext, opPos, executionContext));
+			const XObjectPtr		obj(xpath.executeMore(localContext, opPos, executionContext));
 			assert(obj.get() != 0);
 
 			const NodeRefListBase&	nl = obj->nodeset();
@@ -519,9 +517,7 @@ SimpleNodeLocator::stepPattern(
 
 			while(XPathExpression::eOP_PREDICATE == nextStepType)
 			{
-				const XObjectGuard		pred(
-										executionContext.getXObjectFactory(),
-										xpath.predicate(localContext, opPos, executionContext));
+				const XObjectPtr		pred(xpath.predicate(localContext, opPos, executionContext));
 				assert(pred.get() != 0);
 
 				if(XObject::eTypeNumber == pred->getType())
@@ -606,9 +602,7 @@ SimpleNodeLocator::findNodeSet(
 		xpath.getExpression();
 
 
-	const XObjectGuard		obj(
-				executionContext.getXObjectFactory(),
-				xpath.executeMore(context, opPos, executionContext));
+	const XObjectPtr		obj(xpath.executeMore(context, opPos, executionContext));
 
 	const NodeRefListBase&	nl = obj->nodeset();
 
@@ -1354,7 +1348,7 @@ SimpleNodeLocator::findNodesOnUnknownAxis(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
 			int 					opPos,
-			int 					stepType,
+			int 					/* stepType */,
 			MutableNodeRefList& 	/* subQueryResults */)
 {
 	const XPathExpression&	currentExpression =
@@ -1659,9 +1653,7 @@ SimpleNodeLocator::predicates(
 			XalanNode* const	theNode = subQueryResults.item(i);
 			assert(theNode != 0);
 
-			const XObjectGuard		pred(
-						executionContext.getXObjectFactory(),
-						xpath.predicate(theNode, opPos, executionContext));
+			const XObjectPtr		pred(xpath.predicate(theNode, opPos, executionContext));
 			assert(pred.get() != 0);
 
 			// Remove any node that doesn't satisfy the predicate.

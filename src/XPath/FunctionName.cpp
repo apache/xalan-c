@@ -70,16 +70,15 @@ FunctionName::~FunctionName()
 
 
 
-XObject*
+XObjectPtr
 FunctionName::execute(
 		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObject*					arg1)
+		XalanNode*						/* context */,			
+		const XObjectPtr					arg1)
 {
-	assert(arg1 != 0);	
+	assert(arg1.null() == false);	
 	
-	XalanDOMString	theData;
-	XalanNode*		theContext = 0;
+	XalanDOMString	theData;	
 
 	const NodeRefListBase&	theNodeList = arg1->nodeset();
 
@@ -94,7 +93,7 @@ FunctionName::execute(
 
 
 
-XObject*
+XObjectPtr
 FunctionName::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context)

@@ -301,10 +301,8 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 		}
 	}
 
-	const XObjectGuard	result(
-		m_executionContext.getXObjectFactory(),
-		xpath->execute(node, *theKey.getPrefixResolver(), dummy, m_executionContext));
-	assert(result.get() != 0);
+	const XObjectPtr	result(xpath->execute(node, *theKey.getPrefixResolver(), dummy, m_executionContext));
+	assert(result.null() == false);
 
 	const double	theResult = result->num();
 
@@ -344,10 +342,9 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 		}
 	}
 
-	const XObjectGuard	result(
-		m_executionContext.getXObjectFactory(),
+	const XObjectPtr	result(
 		xpath->execute(node, *theKey.getPrefixResolver(), dummy, m_executionContext));
-	assert(result.get() != 0);
+	assert(result.null() == false);
 
 	const XalanDOMString&	theResult = result->str();
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,132 +53,75 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- *
- * $ Id: $
- *
  */
-
-#if !defined(XALAN_TOPLEVELARG_HEADER_GUARD)
-#define XALAN_TOPLEVELARG_HEADER_GUARD
-
+#if !defined(FUNCTIONDOC_HEADER_GUARD_1357924680)
+#define FUNCTIONDOC_HEADER_GUARD_1357924680
 
 
 
-// Base include file.  Must be first.
+// Base header file.  Must be first.
 #include <XSLT/XSLTDefinitions.hpp>
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+#include <vector>
 
 
 
-#include <XPath/QName.hpp>
-#include <XPath/XObject.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
-class XObjectPtr;
-
+// Base class header file...
+#include <XPath/Function.hpp>
 
 
 /**
- * This class holds an instance of an argument on the stack.
+ * XPath implementation of "document" function.
  */
-class TopLevelArg
+//
+// These are all inline, even though
+// there are virtual functions, because we expect that they will only be
+// needed by the XSLT class.
+class XALAN_XSLT_EXPORT FunctionDoc : public Function
 {
 public:
 
-	/**
-	 * Construct an argument object from a string expression
-	 * 
-	 * @param name	name of argument
-	 * @param expr	expression argument represents
-	 */
-	TopLevelArg(
-		const QName&			name,
-		const XalanDOMString&	expr);
+	// These methods are inherited from Function ...
 
-	/**
-	 * Construct an argument object from an XObject instance.
-	 * 
-	 * @param name	name of argument
-	 * @param variable	the XObject instance.
-	 */
-	TopLevelArg(
-		const QName&		name = QName(),
-		const XObjectPtr	variable = XObjectPtr());
-
-	/**
-	 * Copy constructor
-	 * 
-	 * @param theSource	the TopLevelArg to copy.
-	 */
-	TopLevelArg(const TopLevelArg&	theSource);
-
-	/**
-	 * Destructor
-	 */
-	~TopLevelArg();
-
-	/**
-	 * Retrieve object name
-	 * 
-	 * @return qualified name of object
-	 */
-	const QName&
-	getName() const
+	virtual XObjectPtr
+	execute(
+			XPathExecutionContext&			executionContext,
+			const DOM_Node&					context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		args)
 	{
-		return m_qname;
+		executionContext.error("Document() function implementation has been replaced by xslt/FunctionDocument!",
+							   context);
+
+		return executionContext.getXObjectFactory().createNull();
 	}
 
-	/**
-	 * Retrieve object's expression
-	 * 
-	 * @return string representation of expression
-	 */
-	const XalanDOMString&
-	getExpression() const
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual Function*
+#else
+	virtual FunctionDoc*
+#endif
+	clone() const
 	{
-		return m_expression;
-	};
-
-	/**
-	 * Retrieve object's XObject variable.
-	 * 
-	 * @return pointer to the XObject instance
-	 */
-	const XObjectPtr
-	getXObject() const
-	{
-		return m_xobject;
-	}
-
-	/**
-	 * Assignment operator
-	 */
-	TopLevelArg&
-	operator=(const TopLevelArg&	theRHS)
-	{
-		if (&theRHS != this)
-		{
-			m_qname = theRHS.m_qname;
-
-			m_expression = theRHS.m_expression;
-		}
-
-		return *this;
+		return new FunctionDoc(*this);
 	}
 
 private:
 
-	QName				m_qname;
+	// Not implemented...
+	FunctionDoc&
+	operator=(const FunctionDoc&);
 
-	XalanDOMString		m_expression;
-
-	const XObjectPtr	m_xobject;
+	bool
+	operator==(const FunctionDoc&) const;
 };
 
 
 
-#endif	// XALAN_TOPLEVELARG_HEADER_GUARD
+#endif	// FUNCTIONDOC_HEADER_GUARD_1357924680

@@ -70,13 +70,13 @@ FunctionStringLength::~FunctionStringLength()
 
 
 
-XObject*
+XObjectPtr
 FunctionStringLength::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
-		const XObject*					arg1)
+		const XObjectPtr				arg1)
 {
-	assert(arg1 != 0);
+	assert(arg1.null() == false);	
 
 	unsigned int	theLength = length(arg1->str());	
 	
@@ -85,7 +85,7 @@ FunctionStringLength::execute(
 
 
 
-XObject*
+XObjectPtr
 FunctionStringLength::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context)
@@ -104,13 +104,10 @@ FunctionStringLength::execute(
 		// the argument defaults to a node set with the context node
 		// as the only member.
 		// So we have to create an XNodeList with the context node as
-		// the only member and call the str() function on it.  We shroud
-		// the temporary XNodeList in an XObjectGuard because it can be
-		// deleted once we've converted the context node to a string.
+		// the only member and call the str() function on it.  
 
 		// An XObject that contains the context node.
-		XObjectGuard	theXObject(executionContext.getXObjectFactory(),
-								   executionContext.createNodeSet(*context));
+		XObjectPtr	theXObject(executionContext.createNodeSet(*context));
 
 		// Get the value of the theXObject...
 		theValue = theXObject->str();

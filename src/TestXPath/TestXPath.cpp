@@ -120,7 +120,7 @@
 
 
 
-const XObject*
+const XObjectPtr
 ExecuteXPath(
 			XPathProcessor&			theXPathProcessor,
 			XPath&					theXPath,
@@ -136,7 +136,7 @@ ExecuteXPath(
 								thePrefixResolver,
 								theXPathEnvSupport);
 
-	const XObject* const	theResult =
+	const XObjectPtr theResult =
 		theXPath.execute(theContextNode, thePrefixResolver, theContextNodeList, theExecutionContext);
 
 	return theResult;
@@ -159,7 +159,7 @@ TestNumericResult(
 {
 	bool	fError = false;
 
-	const XObject* const	theResult =
+	const XObjectPtr theResult =
 		ExecuteXPath(theXPathProcessor,
 					 theXPath,
 					 theXPathString,
@@ -209,7 +209,7 @@ TestStringResult(
 {
 	bool	fError = false;
 
-	const XObject* const	theResult =
+	const XObjectPtr theResult =
 		ExecuteXPath(theXPathProcessor,
 					 theXPath,
 					 theXPathString,
@@ -262,7 +262,7 @@ TestBooleanResult(
 {
 	bool	fError = false;
 
-	const XObject* const	theResult =
+	const XObjectPtr theResult =
 		ExecuteXPath(theXPathProcessor,
 					 theXPath,
 					 theXPathString,
@@ -446,7 +446,7 @@ FindContextNode(
 	ElementPrefixResolverProxy	thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
 	NodeRefList					theContextNodeList;
 
-	const XObject* const	theXObject =
+	const XObjectPtr theXObject =
 		ExecuteXPath(theXPathProcessor,
 					 *theXPath,
 					 theContextNodeMatchPattern,
@@ -458,7 +458,7 @@ FindContextNode(
 
 	try
 	{
-		assert(theXObject != 0);
+		assert(theXObject.null == false);
 
 		const NodeRefListBase&	theResultList =
 						theXObject->nodeset();
@@ -560,12 +560,12 @@ TestAxisResult(
 					thePrintWriter.println();
 				}
 
-				const XObject* const	theResult =
+				const XObjectPtr theResult =
 					theXPath->execute(theContextNode, thePrefixResolver, theContextNodeList, theExecutionContext);
 
 				try
 				{
-					assert(theResult != 0);
+					assert(theResult.null == false);
 
 					const NodeRefListBase&	theResultList =
 						theResult->nodeset();
@@ -693,12 +693,12 @@ TestPredicateResult(
 						continue;
 					}
 
-					const XObject* const	theResult1 =
+					const XObjectPtr theResult1 =
 							theXPath1->execute(theExecutionContext);
 
 					try
 					{
-						assert(theResult1 != 0);
+						assert(theResult1.null() == false);
 
 						const NodeRefListBase&	theResultList =
 								theResult1->nodeset();
@@ -726,12 +726,12 @@ TestPredicateResult(
 						thePrintWriter.println(XALAN_STATIC_UCODE_STRING(" failed!"));
 					}
 
-					const XObject* const	theResult2 =
+					const XObjectPtr 	theResult2 =
 							theXPath2->execute(theExecutionContext);
 
 					try
 					{
-						assert(theResult2 != 0);
+						assert(theResult2.null() == false);
 
 						const NodeRefListBase&	theResultList =
 								theResult2->nodeset();

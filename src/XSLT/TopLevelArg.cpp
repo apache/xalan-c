@@ -74,8 +74,8 @@ TopLevelArg::TopLevelArg(
 
 
 TopLevelArg::TopLevelArg(
-		const QName&	name,
-		const XObject*	variable) :
+		const QName&		name,
+		const XObjectPtr	variable) :
 	m_qname(name),
 	m_expression(),
 	m_xobject(variable)

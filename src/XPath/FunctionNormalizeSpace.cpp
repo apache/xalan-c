@@ -70,20 +70,20 @@ FunctionNormalizeSpace::~FunctionNormalizeSpace()
 
 
 
-XObject*
+XObjectPtr
 FunctionNormalizeSpace::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
-		const XObject*					arg1)
+		const XObjectPtr				arg1)
 {
-	assert(arg1 != 0);
+	assert(arg1.null() == false);	
 		
 	return normalize(executionContext, arg1->str());
 }
 
 
 
-XObject*
+XObjectPtr
 FunctionNormalizeSpace::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context)
@@ -104,8 +104,7 @@ FunctionNormalizeSpace::execute(
 		// do the real work in turning themselves into strings.
 
 		// A node set that contains the context node.
-		XObjectGuard	theXObject(executionContext.getXObjectFactory(),
-								executionContext.createNodeSet(*context));
+		XObjectPtr	theXObject(executionContext.createNodeSet(*context));
 
 		return normalize(executionContext, theXObject->str());
 	}
@@ -113,7 +112,7 @@ FunctionNormalizeSpace::execute(
 
 
 
-XObject*
+XObjectPtr
 FunctionNormalizeSpace::normalize(
 		XPathExecutionContext&	executionContext,
 		const XalanDOMString&	theString)

@@ -85,13 +85,13 @@ FunctionSystemProperty::~FunctionSystemProperty()
 
 
 
-XObject*
+XObjectPtr
 FunctionSystemProperty::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
-		const XObject*					arg1)
+		const XObjectPtr				arg1)
 {
-	assert(arg1 != 0);
+	assert(arg1.null() == false);
 
 	const XalanDOMString&	fullName = arg1->str();
 	const unsigned int		fullNameLength = length(fullName);

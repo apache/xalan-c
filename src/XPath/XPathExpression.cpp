@@ -367,6 +367,20 @@ XPathExpression::XToken::operator=(double	theNumber)
 
 
 
+void 
+XPathExpression::XToken::referenced()
+{
+}
+
+
+
+void 
+XPathExpression::XToken::dereferenced()
+{
+}
+
+
+
 XPathExpression::XPathExpression() :
 	m_opMap(),
 	m_lastOpCodeIndex(0),

@@ -197,16 +197,14 @@ ElemValueOf::execute(
 	}
 	else
 	{
-		const XObjectGuard		value(
-								executionContext.getXObjectFactory(),
-								m_selectPattern->execute(sourceNode, *this, executionContext));
+		const XObjectPtr	value(m_selectPattern->execute(sourceNode, *this, executionContext));
 
 		if(0 != executionContext.getTraceListeners())
 		{
-			fireSelectionEvent(executionContext, sourceNode, value.get());
+			fireSelectionEvent(executionContext, sourceNode, value);
 		}
-
-		if(0 != value.get())
+		
+		if(value.null() == false)	
 		{
 			const XObject::eObjectType	type = value->getType();
 
@@ -248,11 +246,9 @@ ElemValueOf::	fireSelectionEvent(
 			XalanNode*						sourceNode,
 			const XalanDOMString&			theValue) const
 {
-	const XObjectGuard		value(
-			executionContext.getXObjectFactory(),
-			executionContext.getXObjectFactory().createString(theValue));
+	const XObjectPtr value(executionContext.getXObjectFactory().createString(theValue));
 
-	fireSelectionEvent(executionContext, sourceNode, value.get());
+	fireSelectionEvent(executionContext, sourceNode, value);
 }
 
 
@@ -261,7 +257,7 @@ void
 ElemValueOf::fireSelectionEvent(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceNode,
-			const XObject*					theValue) const
+			const XObjectPtr				theValue) const
 {
 	executionContext.fireSelectEvent(
 				SelectionEvent(

@@ -70,7 +70,7 @@ FunctionFalse::~FunctionFalse()
 
 
 
-XObject*
+XObjectPtr
 FunctionFalse::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */)

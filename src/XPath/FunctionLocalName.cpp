@@ -70,55 +70,49 @@ FunctionLocalName::~FunctionLocalName()
 
 
 
-XObject*
+XObjectPtr
 FunctionLocalName::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
-		const XObject*					arg1)
+		const XObjectPtr					arg1)
 {
-	assert(arg1 != 0);	
-
-	XObject*	theResult = 0;
+	assert(arg1.null() == false);	
 
 	const NodeRefListBase&	theNodeList = arg1->nodeset();
 
 	if (theNodeList.getLength() == 0)
 	{	
-		theResult = executionContext.getXObjectFactory().createString(XalanDOMString());
+		return executionContext.getXObjectFactory().createString(XalanDOMString());
 		
 	}
 	else
 	{	
-		theResult = getLocalName(executionContext, *theNodeList.item(0));	
+		return getLocalName(executionContext, *theNodeList.item(0));	
 	}
-
-	return theResult;
 }
 
 
 
-XObject*
+XObjectPtr
 FunctionLocalName::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context)
 {
-	XObject*	theResult = 0;
-
 	if (context == 0)
 	{
 		executionContext.error("The local-name() function requires a non-null context node!");
 	}
 	else
 	{
-		theResult = getLocalName(executionContext, *context);
+		return getLocalName(executionContext, *context);
 	}
 
-	return theResult;
+	return 0;
 }
 
 
 
-XObject*
+XObjectPtr
 FunctionLocalName::getLocalName(
 		XPathExecutionContext&	executionContext,
 		const XalanNode&		node)

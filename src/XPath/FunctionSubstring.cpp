@@ -70,15 +70,15 @@ FunctionSubstring::~FunctionSubstring()
 
 
 
-XObject*
+XObjectPtr
 FunctionSubstring::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
-		const XObject*					arg1,
-		const XObject*					arg2,
-		const XObject*					arg3)
+		const XObjectPtr				arg1,
+		const XObjectPtr				arg2,
+		const XObjectPtr				arg3)
 {
-	assert(arg1 != 0 || arg2 != 0);
+	assert(arg1.null() == false && arg2.null() == false);	
 
 	const XalanDOMString&	theSourceString = arg1->str();
 	const unsigned int		theSourceStringLength = length(theSourceString);
@@ -109,7 +109,7 @@ FunctionSubstring::execute(
 		// the third argument is missing, make the total
 		// DBL_MAX.
 		const double	theTotal =
-				arg3 == 0 ? DBL_MAX :
+				arg3.null() == true ? DBL_MAX :
 								   FunctionRound::getRoundedValue(
 									   theSecondArgValue + arg3->num());
 
@@ -154,16 +154,18 @@ FunctionSubstring::execute(
 
 
 
-XObject*
+XObjectPtr
 FunctionSubstring::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
-		const XObject*					arg1,
-		const XObject*					arg2)
+		const XObjectPtr				arg1,
+		const XObjectPtr				arg2)
 {
-	assert(arg1 != 0 || arg2 != 0);	
+	assert(arg1.null() == false && arg2.null() == false);
+	
+	XObjectPtr dummy;
 
-	return execute(executionContext, context, arg1, arg2, 0);
+	return execute(executionContext, context, arg1, arg2, dummy);
 }
 
 

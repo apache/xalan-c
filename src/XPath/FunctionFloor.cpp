@@ -70,13 +70,13 @@ FunctionFloor::~FunctionFloor()
 
 
 
-XObject*
+XObjectPtr
 FunctionFloor::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
-		const XObject*					arg1)
-{
-	assert(arg1 != 0);
+		const XObjectPtr				arg1)
+{	
+	assert(arg1.null() == false);	
 
 	return executionContext.getXObjectFactory().createNumber(floor(arg1->num()));
 }

@@ -70,13 +70,13 @@ FunctionLang::~FunctionLang()
 
 
 
-XObject*
+XObjectPtr
 FunctionLang::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
-		const XObject*					arg1)
+		const XObjectPtr				arg1)
 {
-	assert(arg1 != 0);
+	assert(arg1.null() == false);	
 
 	const XalanNode*		parent = context;
 

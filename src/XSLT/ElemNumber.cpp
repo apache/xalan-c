@@ -378,10 +378,8 @@ ElemNumber::getCountString(
 
 	if(0 != m_valueExpr)
 	{
-		const XObjectGuard		countObj(
-				executionContext.getXObjectFactory(),
-				m_valueExpr->execute(sourceNode, *this, executionContext));
-		assert(countObj.get() != 0);
+		const XObjectPtr	countObj(m_valueExpr->execute(sourceNode, *this, executionContext));
+		assert(countObj.null() == false);
 
 		const double	theValue = countObj->num();
 

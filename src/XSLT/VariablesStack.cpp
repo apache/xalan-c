@@ -285,7 +285,7 @@ VariablesStack::pushParams(
 void
 VariablesStack::pushVariable(
 			const QName&				name,
-			const XObject*				val,
+			const XObjectPtr			val,
 			const ElemTemplateElement*	e)
 {
 	if(elementFrameAlreadyPushed(e) == false)
@@ -315,23 +315,24 @@ VariablesStack::markGlobalStackFrame()
 
 
 
-const XObject*
+const XObjectPtr
 VariablesStack::findXObject(
 			const QName&	name,
 			bool			fSearchGlobalSpace) const
 {
-	const XObject*		theXObject = 0;
+	const StackEntry* const		theVariable =
+		findVariable(name, fSearchGlobalSpace);
 
-	const StackEntry*	theVariable = findVariable(name, fSearchGlobalSpace);
-
-	if (theVariable != 0)
+	if (theVariable == 0)
+	{
+		return XObjectPtr();
+	}
+	else
 	{
 		assert(theVariable->getType() == StackEntry::eVariable);
 
-		theXObject = theVariable->getVariable();
+		return theVariable->getVariable();
 	}
-
-	return theXObject;
 }
 
 
@@ -464,33 +465,42 @@ VariablesStack::popElementFrame(const ElemTemplateElement*	elem)
 
 
 VariablesStack::StackEntry::StackEntry() :
-	m_type(eContextMarker)
+	m_type(eContextMarker),
+	m_qname(0),
+	m_value(),
+	m_element(0)
 {
 }
 
 
 
 VariablesStack::StackEntry::StackEntry(
-		const QName*	name,
-		const XObject*	val) :
-	m_type(eVariable)
+		const QName*		name,
+		const XObjectPtr	val) :
+	m_type(eVariable),
+	m_qname(name),
+	m_value(val),
+	m_element(0)
 {
-	variable.m_qname = name;
-	variable.m_value = val;
 }
 
 
 
 VariablesStack::StackEntry::StackEntry(const ElemTemplateElement*	elem) :
-	m_type(eElementFrameMarker)
+	m_type(eElementFrameMarker),
+	m_qname(0),
+	m_value(),
+	m_element(elem)
 {
-	elementMarker.m_element = elem;
 }
 
 
 
 VariablesStack::StackEntry::StackEntry(const StackEntry&	theSource) :
-	m_type(theSource.m_type)
+	m_type(theSource.m_type),
+	m_qname(0),
+	m_value(),
+	m_element(0)
 {
 	// Use operator=() to do the work...
 	*this = theSource;
@@ -511,13 +521,19 @@ VariablesStack::StackEntry::operator=(const StackEntry&		theRHS)
 
 	if (m_type == eVariable)
 	{
-		variable.m_qname = theRHS.variable.m_qname;
+		m_qname = theRHS.m_qname;
 
-		variable.m_value = theRHS.variable.m_value;
+		m_value = theRHS.m_value;
+
+		m_element = 0;
 	}
 	else if (m_type == eElementFrameMarker)
 	{
-		elementMarker.m_element = theRHS.elementMarker.m_element;
+		m_element = theRHS.m_element;
+
+		m_qname = 0;
+
+		m_value = XObjectPtr();
 	}
 
 	return *this;
@@ -544,14 +560,14 @@ VariablesStack::StackEntry::operator==(const StackEntry&	theRHS) const
 		else if (m_type == eVariable)
 		{
 			// We only need to compare the variable pointer..
-			if (variable.m_value == theRHS.variable.m_value)
+			if (m_value == theRHS.m_value)
 			{
 				fResult = true;
 			}
 		}
 		else if (m_type == eElementFrameMarker)
 		{
-			if (elementMarker.m_element == theRHS.elementMarker.m_element)
+			if (m_element == theRHS.m_element)
 			{
 				fResult = true;
 			}

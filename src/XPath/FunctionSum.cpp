@@ -70,13 +70,13 @@ FunctionSum::~FunctionSum()
 
 
 
-XObject*
+XObjectPtr
 FunctionSum::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
-		const XObject*					arg1)
+		const XObjectPtr				arg1)
 {
-	assert(arg1 != 0);
+	assert(arg1.null() == false);
 
 	const NodeRefListBase&	nl = arg1->nodeset();
 

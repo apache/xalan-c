@@ -784,6 +784,14 @@ public:
 		XToken&
 		operator=(double	theNumber);
 
+	protected:
+
+		virtual void 
+		referenced();
+
+		virtual void 
+		dereferenced();
+
 	private:
 
 		// Not defined...

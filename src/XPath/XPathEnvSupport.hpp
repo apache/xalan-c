@@ -194,7 +194,7 @@ public:
 	 * @param argVec        vector of arguments to function
 	 * @return pointer to XObject result
 	 */
-	virtual XObject*
+	virtual XObjectPtr
 	extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,

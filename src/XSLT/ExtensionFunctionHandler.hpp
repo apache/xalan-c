@@ -77,7 +77,11 @@
 
 
 
-class XObject;
+#include <XPath/XObject.hpp>
+
+
+
+class XObjectPtr;
 
 
 
@@ -185,7 +189,7 @@ public:
 	 * @exception SAXException          if parsing trouble
 	 */
 
-	virtual XObject*
+	virtual XObjectPtr
 	callFunction(
 			const XalanDOMString&	funcName,
 			const ArgVectorType&	args);

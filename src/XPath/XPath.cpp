@@ -134,7 +134,7 @@ XPath::createXLocatorHandler() const
 
 
 
-const XObject*
+const XObjectPtr
 XPath::execute(XPathExecutionContext&	executionContext) const
 {
 	assert(executionContext.getPrefixResolver() != 0);
@@ -144,7 +144,7 @@ XPath::execute(XPathExecutionContext&	executionContext) const
 
 
 
-const XObject*
+const XObjectPtr
 XPath::execute(
 			XalanNode*				context,
 			const PrefixResolver&	prefixResolver,
@@ -160,16 +160,12 @@ XPath::execute(
 									executionContext,
 									context);
 
-	const XObject*	theResult = 0;
-
-	theResult = execute(executionContext);
-
-	return theResult;
+	return execute(executionContext);
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::execute(
 			XalanNode*				context,
 			const PrefixResolver&	prefixResolver,
@@ -179,24 +175,20 @@ XPath::execute(
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
 									executionContext,
-									contextNodeList);
+									contextNodeList);	
 
-	const XObject*	theResult = 0;
-
-	theResult = execute(context, prefixResolver, executionContext);
-
-	return theResult;
+	return execute(context, prefixResolver, executionContext);
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::executeMore(
 			XalanNode* 				context,
 			int 					opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	const XObject*	result = 0;
+	XObjectPtr	result;
 
 	switch(m_expression.m_opMap[opPos])
 	{
@@ -605,7 +597,7 @@ XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings) co
 
 
 
-const XObject*
+const XObjectPtr
 XPath::xpath(
 			XalanNode*				context,
 			int						opPos,
@@ -616,23 +608,21 @@ XPath::xpath(
 
 
 
-const XObject*
+const XObjectPtr
 XPath::matchPattern(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 
 {
-	const XObject*	score = 0;
-
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+	XObjectPtr	score;
 
 	while(m_expression.m_opMap[opPos] == XPathExpression::eOP_LOCATIONPATHPATTERN)
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
 		score = executeMore(context, opPos, executionContext);
-		assert(score != 0);
+		assert(score.null() == false);
 
 		if(score->num() != s_MatchScoreNone)
 		{
@@ -640,16 +630,11 @@ XPath::matchPattern(
 		}
 		else
 		{
-			// We're done with this object, so return it...
-			theFactory.returnObject(score);
-
-			score = 0;
-
 			opPos = nextOpPos;
 		}
 	}
 
-	if(0 == score)
+	if(score.null() == true)
 	{
 		score = executionContext.getXObjectFactory().createNumber(s_MatchScoreNone);
 	}
@@ -673,7 +658,7 @@ XPath::step(
 
 
 
-const XObject*
+const XObjectPtr
 XPath::Or(
 			XalanNode*				context,
 			int						opPos,
@@ -681,9 +666,7 @@ XPath::Or(
 {
 	opPos += 2;
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	bool	fResult = expr1->boolean();
@@ -692,18 +675,18 @@ XPath::Or(
 	{
 		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+		const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 		assert(expr2.get() != 0);
 
 		fResult = expr2->boolean();
 	}
 
-	return theFactory.createBoolean(fResult);
+	return executionContext.getXObjectFactory().createBoolean(fResult);
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::And(
 			XalanNode*				context,
 			int						opPos,
@@ -711,101 +694,93 @@ XPath::And(
 {
 	bool	fResult = false;
 
-	opPos += 2;
+	opPos += 2;	
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	if (expr1->boolean() == true)
 	{
 		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+		const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 		assert(expr2.get() != 0);
 
 		if (expr2->boolean() == true)
 		{
 			fResult = true;
 		}
-	}
+	}	
 
-	return theFactory.createBoolean(fResult);
+	return executionContext.getXObjectFactory().createBoolean(fResult);
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::notequals(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	opPos += 2;
+	opPos += 2;	
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return theFactory.createBoolean(*expr1.get() != *expr2.get());
+	return executionContext.getXObjectFactory().createBoolean(*expr1.get() != *expr2.get());
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::equals(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	opPos += 2;
+	opPos += 2;	
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return theFactory.createBoolean(*expr1.get() == *expr2.get());
+	return executionContext.getXObjectFactory().createBoolean(*expr1.get() == *expr2.get());
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::lte(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	opPos += 2;
+	opPos += 2;	
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return theFactory.createBoolean(*expr1.get() <= *expr2.get());
+	return executionContext.getXObjectFactory().createBoolean(*expr1.get() <= *expr2.get());
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::lt(
 			XalanNode*				context,
 			int						opPos,
@@ -813,22 +788,20 @@ XPath::lt(
 {
 	opPos += 2;
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return theFactory.createBoolean(*expr1.get() < *expr2.get());
+	return executionContext.getXObjectFactory().createBoolean(*expr1.get() < *expr2.get());
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::gte(
 			XalanNode*				context,
 			int						opPos,
@@ -836,22 +809,20 @@ XPath::gte(
 {
 	opPos += 2;
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return theFactory.createBoolean(*expr1.get() >= *expr2.get());
+	return executionContext.getXObjectFactory().createBoolean(*expr1.get() >= *expr2.get());
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::gt(
 			XalanNode*				context,
 			int						opPos,
@@ -859,22 +830,20 @@ XPath::gt(
 {
 	opPos += 2;
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return theFactory.createBoolean(*expr1.get() > *expr2.get());
+	return executionContext.getXObjectFactory().createBoolean(*expr1.get() > *expr2.get());
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::plus(
 			XalanNode*				context,
 			int						opPos,
@@ -882,22 +851,20 @@ XPath::plus(
 {
 	opPos += 2;
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return theFactory.createNumber(DoubleSupport::add(expr1->num(), expr2->num()));
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::add(expr1->num(), expr2->num()));
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::minus(
 			XalanNode*				context,
 			int						opPos,
@@ -905,22 +872,20 @@ XPath::minus(
 {
 	opPos += 2;
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return theFactory.createNumber(DoubleSupport::subtract(expr1->num(), expr2->num()));
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::subtract(expr1->num(), expr2->num()));
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::mult(
 			XalanNode*				context,
 			int						opPos,
@@ -928,22 +893,20 @@ XPath::mult(
 {
 	opPos += 2;
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return theFactory.createNumber(DoubleSupport::multiply(expr1->num(), expr2->num()));
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::multiply(expr1->num(), expr2->num()));
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::div(
 			XalanNode*				context,
 			int						opPos,
@@ -951,45 +914,41 @@ XPath::div(
 {
 	opPos += 2;
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return theFactory.createNumber(DoubleSupport::divide(expr1->num(), expr2->num()));
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::divide(expr1->num(), expr2->num()));
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::mod(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	opPos += 2;
+	opPos += 2;	
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
 	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return theFactory.createNumber(DoubleSupport::modulus(expr1->num(), expr2->num()));
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::modulus(expr1->num(), expr2->num()));
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::quo(
 			XalanNode*				context,
 			int						opPos,
@@ -1003,98 +962,90 @@ XPath::quo(
 
 
 
-const XObject*
+const XObjectPtr
 XPath::neg(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	const XObjectGuard	expr1(theFactory, executeMore(context, opPos + 2, executionContext));
+	const XObjectPtr	expr1(executeMore(context, opPos + 2, executionContext));
 	assert(expr1.get() != 0);
 
-	return theFactory.createNumber(DoubleSupport::negative(expr1->num()));
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::negative(expr1->num()));
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::string(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	XObjectGuard	expr1(theFactory, executeMore(context, opPos + 2, executionContext));
+	XObjectPtr	expr1(executeMore(context, opPos + 2, executionContext));
 	assert(expr1.get() != 0);
 
 	// Try to optimize when the result of the execution is
 	// already a string.
 	if (expr1->getType() == XObject::eTypeString)
 	{
-		return expr1.release();
+		return expr1;
 	}
 	else
 	{
-		return theFactory.createString(expr1->str());
+		return executionContext.getXObjectFactory().createString(expr1->str());
 	}
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::boolean(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	XObjectGuard	expr1(theFactory, executeMore(context, opPos + 2, executionContext));
+	XObjectPtr	expr1(executeMore(context, opPos + 2, executionContext));
 	assert(expr1.get() != 0);
 
 	// Try to optimize when the result of the execution is
 	// already a boolean.
 	if (expr1->getType() == XObject::eTypeBoolean)
 	{
-		return expr1.release();
+		return expr1;
 	}
 	else
 	{
-		return theFactory.createBoolean(expr1->boolean());
+		return executionContext.getXObjectFactory().createBoolean(expr1->boolean());
 	}
 }
 
 
  
-const XObject*
+const XObjectPtr
 XPath::number(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	XObjectGuard	expr1(theFactory, executeMore(context, opPos + 2, executionContext));
+	XObjectPtr	expr1(executeMore(context, opPos + 2, executionContext));
 	assert(expr1.get() != 0);
 
 	// Try to optimize when the result of the execution is
 	// already a number.
 	if (expr1->getType() == XObject::eTypeNumber)
 	{
-		return expr1.release();
+		return expr1;
 	}
 	else
 	{
-		return theFactory.createNumber(expr1->num());
+		return executionContext.getXObjectFactory().createNumber(expr1->num());
 	}
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::Union(
 			XalanNode*				context,
 			int						opPos,
@@ -1105,31 +1056,28 @@ XPath::Union(
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
 	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
-
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+	
 
 	while(m_expression.m_opMap[opPos] != XPathExpression::eENDOP)
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObject*	expr = executeMore(context, opPos, executionContext);
+		const XObjectPtr	expr = executeMore(context, opPos, executionContext);
 
 		const NodeRefListBase&	nl =
 				expr->nodeset();
 
-		resultNodeList->addNodesInDocOrder(nl, executionContext);
-
-		theFactory.returnObject(expr);
+		resultNodeList->addNodesInDocOrder(nl, executionContext);	
 
 		opPos = nextOpPos;
 	}
 
-	return theFactory.createNodeSet(resultNodeList);
+	return executionContext.getXObjectFactory().createNodeSet(resultNodeList);
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::literal(
 			XalanNode*				/* context */,
 			int						opPos,
@@ -1145,7 +1093,7 @@ XPath::literal(
 
 
 
-const XObject*
+const XObjectPtr
 XPath::variable(
 			XalanNode*				context,
 			int						opPos,
@@ -1159,9 +1107,9 @@ XPath::variable(
 
 	// $$$ ToDo: I don't this will be parsed right in the first place...
 	const QName		qname(ns.str(),
-						  varName.str());
+						  varName.str());	
 
-	const XObject*	result = 0;
+	XObjectPtr result;
 
 	try
 	{
@@ -1174,7 +1122,7 @@ XPath::variable(
 		throw;
 	}
 
-	if(0 == result)
+	if(result.null() == true)
 	{
 		executionContext.warn(TranscodeFromLocalCodePage("VariableReference given for variable out ") +
 								TranscodeFromLocalCodePage("of context or without definition!  Name = ") +
@@ -1187,7 +1135,7 @@ XPath::variable(
 
 
 
-const XObject*
+const XObjectPtr
 XPath::group(
 			XalanNode*				context,
 			int						opPos,
@@ -1198,7 +1146,7 @@ XPath::group(
 
 
 
-const XObject*
+const XObjectPtr
 XPath::numberlit(
 			XalanNode*				/* context */,
 			int						opPos,
@@ -1214,7 +1162,7 @@ XPath::numberlit(
   
 
 
-const XObject*
+const XObjectPtr
 XPath::arg(
 			XalanNode*				context,
 			int						opPos,
@@ -1225,7 +1173,7 @@ XPath::arg(
 
 
 
-const XObject*
+const XObjectPtr
 XPath::locationPath(
 			XalanNode*				context,
 			int						opPos,
@@ -1272,13 +1220,13 @@ XPath::locationPath(
 
 
 
-const XObject*
+const XObjectPtr
 XPath::predicate(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	const XObject* const	expr1 = executeMore(context, opPos + 2, executionContext);
+	const XObjectPtr expr1 = executeMore(context, opPos + 2, executionContext);
 
 	// $$$ ToDo: This appears to be just an optimization, but is it really?
 /*
@@ -1294,7 +1242,7 @@ XPath::predicate(
 
 
 
-const XObject*
+const XObjectPtr
 XPath::locationPathPattern(
 			XalanNode*				context,
 			int						opPos,
@@ -1316,7 +1264,7 @@ XPath::locationPathPattern(
 
 
 
-const XObject*
+const XObjectPtr
 XPath::runExtFunction(
 			XalanNode*				context,
 			int						opPos,
@@ -1347,25 +1295,15 @@ XPath::runExtFunction(
 		opPos = nextOpPos;
 	}
 
-	const XObject* const		theResult =
+	const XObjectPtr	theResult =
 		extfunction(context, opPos, ns, funcName, args, executionContext);
-
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
-	// Return the args...
-	while(args.size() > 0)
-	{
-		theFactory.returnObject(args.back());
-
-		args.pop_back();
-	}
 
 	return theResult;
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::extfunction(
 			XalanNode*								context,
 			int										/* opPos */,
@@ -1382,14 +1320,12 @@ XPath::extfunction(
 
 
 
-const XObject*
+const XObjectPtr
 XPath::runFunction(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	const XObject*	theResult = 0;
-
 	const int	endFunc = opPos + m_expression.m_opMap[opPos + 1] - 1;
 
 	opPos += 2;
@@ -1411,62 +1347,62 @@ XPath::runFunction(
 	{
 		assert(opPos == endFunc);
 
-		theResult =  s_functions[funcID].execute(executionContext, context);
+		return s_functions[funcID].execute(executionContext, context);
 	}
 	else if (argCount == 1)
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObjectGuard	theArg(theFactory, executeMore(context, opPos, executionContext));
+		const XObjectPtr	theArg(executeMore(context, opPos, executionContext));
 
 		opPos = nextOpPos;
 		
 		assert(opPos == endFunc);
 
-		theResult =  s_functions[funcID].execute(executionContext, context, theArg.get());
+		return s_functions[funcID].execute(executionContext, context, theArg);
 	}
 	else if (argCount == 2)
 	{
 		int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObjectGuard	theArg1(theFactory, executeMore(context, opPos, executionContext));
+		const XObjectPtr	theArg1(executeMore(context, opPos, executionContext));
 
 		opPos = nextOpPos;
 
 		nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObjectGuard	theArg2(theFactory, executeMore(context, opPos, executionContext));
+		const XObjectPtr	theArg2(executeMore(context, opPos, executionContext));
 
 		opPos = nextOpPos;
 		
 		assert(opPos == endFunc);
 
-		theResult =  s_functions[funcID].execute(executionContext, context, theArg1.get(), theArg2.get());
+		return s_functions[funcID].execute(executionContext, context, theArg1, theArg2);
 	}
 	else if (argCount == 3)
 	{
 
 		int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObjectGuard	theArg1(theFactory, executeMore(context, opPos, executionContext));
+		const XObjectPtr	theArg1(executeMore(context, opPos, executionContext));
 
 		opPos = nextOpPos;
 
 		nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObjectGuard	theArg2(theFactory, executeMore(context, opPos, executionContext));
+		const XObjectPtr	theArg2(executeMore(context, opPos, executionContext));
 
 		opPos = nextOpPos;
 
 		nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObjectGuard	theArg3(theFactory, executeMore(context, opPos, executionContext));
+		const XObjectPtr	theArg3(executeMore(context, opPos, executionContext));
 
 		opPos = nextOpPos;
 
 		assert(opPos == endFunc);
 
-		theResult =  s_functions[funcID].execute(executionContext, context, theArg1.get(), theArg2.get(), theArg3.get());
+		return s_functions[funcID].execute(executionContext, context, theArg1, theArg2, theArg3);
 	}
 	else
 	{
@@ -1485,23 +1421,13 @@ XPath::runFunction(
 			opPos = nextOpPos;
 		}
 
-		theResult = function(context, opPos, funcID, args, executionContext);
-
-		// Return the args...
-		while(args.size() > 0)
-		{
-			theFactory.returnObject(args.back());
-
-			args.pop_back();
-		}
+		return function(context, opPos, funcID, args, executionContext);
 	}
-
-	return theResult;
 }
 
 
 
-const XObject*
+const XObjectPtr
 XPath::function(
 			XalanNode*								context,
 			int										opPos,

@@ -272,7 +272,7 @@ XSLTProcessorEnvSupportDefault::functionAvailable(
 
 
 
-XObject*
+XObjectPtr
 XSLTProcessorEnvSupportDefault::extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,

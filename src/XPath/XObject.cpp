@@ -76,6 +76,7 @@
 
 
 #include "NodeRefList.hpp"
+#include "XObjectFactory.hpp"
 
 
 
@@ -84,14 +85,16 @@ const XalanDOMString	XObject::s_nullString;
 
 
 XObject::XObject(eObjectType	theObjectType) :
-	m_objectType(theObjectType)
+	m_objectType(theObjectType),
+	m_factory(0)
 {
 }
 
 
 
 XObject::XObject(const XObject&		source) :
-	m_objectType(source.m_objectType)
+	m_objectType(source.m_objectType),
+	m_factory(0)
 {
 }
 
@@ -99,6 +102,24 @@ XObject::XObject(const XObject&		source) :
 
 XObject::~XObject()
 {
+}
+
+
+
+void
+XObject::referenced()
+{
+}
+
+
+
+void 
+XObject::dereferenced()
+{
+	if (m_factory != 0)
+	{
+		m_factory->returnObject(this);
+	}
 }
 
 

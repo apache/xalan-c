@@ -100,14 +100,14 @@ FunctionKey::~FunctionKey()
 
 
 
-XObject*
+XObjectPtr
 FunctionKey::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
-		const XObject*					arg1,
-		const XObject*					arg2)
+		const XObjectPtr				arg1,
+		const XObjectPtr				arg2)
 {
-	assert(arg1 != 0 || arg2 != 0);	
+	assert(arg1.null() == false && arg2.null() == false);
 
 	if (context == 0)
 	{
@@ -137,7 +137,7 @@ FunctionKey::execute(
 
 		const XalanDOMString	keyname = arg1->str();
 
-		assert(arg2 != 0);
+		assert(arg2.null() == false);
 
 		const bool				argIsNodeSet =
 				XObject::eTypeNodeSet == arg2->getType() ? true : false;

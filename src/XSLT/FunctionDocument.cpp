@@ -138,14 +138,14 @@ getDoc(
 
 
 
-XObject*
+XObjectPtr
 FunctionDocument::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
-		const XObject*					arg1,
-		const XObject*					arg2)
+		const XObjectPtr				arg1,
+		const XObjectPtr				arg2)
 {
-	assert(arg1 != 0 || arg2 != 0);	
+	assert(arg1.null() == false && arg2.null() == false);
 
 	XalanDOMString				base;
 
@@ -198,13 +198,13 @@ FunctionDocument::execute(
 
 
 
-XObject*
+XObjectPtr
 FunctionDocument::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
-		const XObject*					arg1)
+		const XObjectPtr				arg1)
 {
-	assert(arg1 != 0);	
+	assert(arg1.null() == false);
 
 	if (context == 0)
 	{
@@ -225,11 +225,11 @@ FunctionDocument::execute(
 
 
 
-XObject*
+XObjectPtr
 FunctionDocument::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
-		const XObject*					arg,
+		const XObjectPtr				arg,
 		XalanDOMString*					base,
 		int								argCount)
 {

@@ -80,6 +80,7 @@ class MutableNodeRefList;
 class NodeRefListBase;
 class ResultTreeFragBase;
 class XObject;
+class XObjectPtr;
 
 
 
@@ -118,21 +119,12 @@ public:
 	reset() = 0;
 
 	/**
-	 * Clone an XObject instance, and hold in the factory.
-	 *
-	 * @param theXObject the instance to clone
-	 * @return a clone of the instance.
-	 */
-	virtual XObject*
-	clone(const XObject&	theXObject) = 0;
-
-	/**
 	 * Create a boolean XObject from a boolean value.
 	 * 
 	 * @param theValue  value used to create object	 
 	 * @return pointer to new object
 	 */
-	virtual XObject*
+	virtual const XObjectPtr
 	createBoolean(
 			bool	theValue) = 0;
 
@@ -142,7 +134,7 @@ public:
 	 * @param theValue  value used to create object.  theValue will be owned by the new XObject.
 	 * @return pointer to new object
 	 */
-	virtual XObject*
+	virtual const XObjectPtr
 	createNodeSet(
 			BorrowReturnMutableNodeRefList&		theValue) = 0;
 
@@ -152,7 +144,7 @@ public:
 	 * @param theValue  value used to create object	
 	 * @return pointer to new object
 	 */
-	virtual XObject*
+	virtual const XObjectPtr
 	createNull() = 0;
 
 	/**
@@ -161,7 +153,7 @@ public:
 	 * @param theValue  value used to create object	
 	 * @return pointer to new object
 	 */
-	virtual XObject*
+	virtual const XObjectPtr
 	createNumber(
 			double	theValue) = 0;
 
@@ -171,7 +163,7 @@ public:
 	 * @param theValue  value used to create object	 
 	 * @return pointer to new object
 	 */
-	virtual XObject*
+	virtual const XObjectPtr
 	createString(
 			const XalanDOMString&	theValue) = 0;
 
@@ -181,7 +173,7 @@ public:
 	 * @param theValue  a pointer to the array
 	 * @return pointer to new object
 	 */
-	virtual XObject*
+	virtual const XObjectPtr
 	createString(
 			const XalanDOMChar*		theValue) = 0;
 
@@ -192,7 +184,7 @@ public:
 	 * @paran theLength the length of the array
 	 * @return pointer to new object
 	 */
-	virtual XObject*
+	virtual const XObjectPtr
 	createString(
 			const XalanDOMChar*		theValue,
 			unsigned int			theLength) = 0;
@@ -203,7 +195,7 @@ public:
 	 * @param theValue  value used to create object	 
 	 * @return pointer to new object
 	 */
-	virtual XObject*
+	virtual const XObjectPtr
 	createUnknown(
 			const XalanDOMString&	theValue) = 0;
 
@@ -213,7 +205,7 @@ public:
 	 * @param theValue  value used to create object.  theValue will be owned by the new XObject.	
 	 * @return pointer to new object
 	 */
-	virtual XObject*
+	virtual const XObjectPtr
 	createResultTreeFrag(
 			ResultTreeFragBase*		theValue) = 0;
 
@@ -223,7 +215,7 @@ public:
 	 * @param theValue  value used to create object.  The new object will own the pointer.
 	 * @return pointer to new object
 	 */
-	virtual XObject*
+	virtual const XObjectPtr
 	createSpan(
 			BorrowReturnMutableNodeRefList&		theValue) = 0;
 
@@ -311,169 +303,6 @@ private:
 
 	bool
 	operator==(const XObjectFactory&) const;
-};
-
-
-
-/**
- * Manages the lifetime of an XObject instance.
- */
-class XObjectGuard
-{
-public:
-
-	/**
-	 * Construct an XObjectGuard instance from a factory object and an XObject.
-	 * 
-	 * @param theFactory object that manages lifetime of XObjects
-	 * @param theXObject pointer to XObject managed
-	 */
-	XObjectGuard(
-			XObjectFactory&		theFactory,
-			const XObject*		theXObject) :
-		m_factory(&theFactory),
-		m_object(theXObject)
-	{
-	}
-
-	explicit
-	XObjectGuard() :
-		m_factory(0),
-		m_object(0)
-	{
-	}
-
-	// Note that copy construction transfers ownership, just
-	// as std::auto_ptr.
-	XObjectGuard(XObjectGuard&	theRHS)
-	{
-		// Release the current object...
-		release();
-
-		// Copy the factory and object pointers...
-		m_factory = theRHS.m_factory;
-		m_object = theRHS.m_object;
-
-		// The source object no longer points to
-		// the object...
-		theRHS.m_factory = 0;
-		theRHS.m_object = 0;
-	}
-
-	~XObjectGuard()
-	{
-		reset();
-	}
-
-	// Note that assignment transfers ownership, just
-	// as std::auto_ptr.
-	XObjectGuard&
-	operator=(XObjectGuard&		theRHS)
-	{
-		if (&theRHS != this)
-		{
-			// Release the current object...
-			release();
-
-			// Copy the factory and object pointers...
-			m_factory = theRHS.m_factory;
-			m_object = theRHS.m_object;
-
-			// The source object no longer points to
-			// the object...
-			theRHS.m_factory = 0;
-			theRHS.m_object = 0;
-		}
-
-		return *this;
-	}
-
-	/**
-	 * Retrieve the object pointer (must not be null)
-	 * 
-	 * @return pointer to XObject
-	 */
-	const XObject*
-	operator->() const
-	{
-		assert(m_object != 0);
-
-		return m_object;
-	}
-
-	/**
-	 * Retrieve the object pointer (may be null)
-	 * 
-	 * @return pointer to XObject
-	 */
-	const XObject*
-	get() const
-	{
-		return m_object;
-	}
-
-	/**
-	 * Return the referenced object to the factory and set the pointers to null.
-	 */
-	void
-	reset()
-	{
-		if (m_object != 0)
-		{
-			assert(m_factory != 0);
-
-			m_factory->returnObject(m_object);
-
-			m_object = 0;
-		}
-
-		m_factory = 0;
-	}
-
-	/**
-	 * Return the referenced object to the factory, if there is one,
-	 * and set the pointers to the new object and factory.
-	 */
-	void
-	reset(
-			XObjectFactory&		theFactory,
-			const XObject*		theXObject)
-	{
-		if (m_object != 0)
-		{
-			assert(m_factory != 0);
-
-			m_factory->returnObject(m_object);
-		}
-
-		m_object = theXObject;
-		m_factory = &theFactory;
-	}
-
-	/**
-	 * Transfers ownership of XObject to caller
-	 * 
-	 * @return pointer to XObject
-	 */
-	const XObject*
-	release()
-	{
-		const XObject* const	theTemp = m_object;
-
-		m_object = 0;
-
-		return theTemp;
-	}
-
-private:
-
-	bool
-	operator==(const XObjectGuard&) const;
-
-
-	// Data members...
-	XObjectFactory*		m_factory;
-    const XObject*		m_object;
 };
 
 

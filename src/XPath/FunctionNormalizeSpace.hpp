@@ -86,13 +86,13 @@ public:
 	virtual
 	~FunctionNormalizeSpace();
 
-	XObject*
+	XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,			
-			const XObject*					arg1);
+			const XObjectPtr				arg1);
 
-	XObject*
+	XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context);	
@@ -102,7 +102,7 @@ public:
 
 private:
 
-	XObject*
+	XObjectPtr
 	normalize(
 		XPathExecutionContext&	executionContext,
 		const XalanDOMString&	theString);

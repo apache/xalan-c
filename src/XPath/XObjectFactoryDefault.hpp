@@ -132,46 +132,46 @@ public:
 	virtual void
 	reset();
 
-	virtual XObject*
+	virtual const XObjectPtr
 	clone(const XObject&	theXObject);
 
-	virtual XObject*
+	virtual const XObjectPtr
 	createBoolean(
 			bool	theValue);
 
-	virtual XObject*
+	virtual const XObjectPtr
 	createNodeSet(
 			BorrowReturnMutableNodeRefList&		theValue);
 
-	virtual XObject*
+	virtual const XObjectPtr
 	createNull();
 
-	virtual XObject*
+	virtual const XObjectPtr
 	createNumber(
 			double	theValue);
 
-	virtual XObject*
+	virtual const XObjectPtr
 	createString(
 			const XalanDOMString&	theValue);
 
-	virtual XObject*
+	virtual const XObjectPtr
 	createString(
 			const XalanDOMChar*		theValue);
 
-	virtual XObject*
+	virtual const XObjectPtr
 	createString(
 			const XalanDOMChar*		theValue,
 			unsigned int			theLength);
 
-	virtual XObject*
+	virtual const XObjectPtr
 	createUnknown(
 			const XalanDOMString&	theValue);
 
-	virtual XObject*
+	virtual const XObjectPtr
 	createResultTreeFrag(
 			ResultTreeFragBase*		theValue);
 
-	virtual XObject*
+	virtual const XObjectPtr
 	createSpan(
 			BorrowReturnMutableNodeRefList&		theValue);
 
@@ -182,8 +182,6 @@ public:
 #endif
 
 protected:
-
-	// These methods are inherited from Factory ...
 
 	virtual bool
 	doReturnObject(

@@ -1082,9 +1082,9 @@ Stylesheet::pushTopLevelVariables(
 				{
 					isParam = true;
 
-					const XObject* const	theXObject = arg.getXObject();
+					const XObjectPtr	theXObject = arg.getXObject();
 
-					if (theXObject != 0)
+					if (theXObject.null() == false)
 					{
 						executionContext.pushVariable(arg.getName(),
 													  theXObject,

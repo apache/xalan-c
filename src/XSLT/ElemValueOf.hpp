@@ -69,7 +69,7 @@
 
 
 
-class XObject;
+class XObjectPtr;
 class XPath;
 
 
@@ -131,7 +131,7 @@ private:
 	fireSelectionEvent(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceNode,
-			const XObject*					theValue) const;
+			const XObjectPtr				theValue) const;
 
 	/**
 	 * The select pattern used to locate the value.

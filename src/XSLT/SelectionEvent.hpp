@@ -68,11 +68,13 @@
 
 
 
+#include <XPath/XObject.hpp>
+
+
 class XalanNode;
 class ElemTemplateElement;
 class StylesheetExecutionContext;
 class XPath;
-class XObject;
 
 
 
@@ -96,7 +98,7 @@ public:
 			const ElemTemplateElement&		styleNode,
 			const XalanDOMString&			attributeName,
 			const XPath&					xpath,
-			const XObject*					selection);
+			const XObjectPtr				selection);
 
 	virtual
 	~SelectionEvent();
@@ -129,7 +131,7 @@ public:
 	/**
 	 * The result of the selection.
 	 */
-	const XObject* const				m_selection;
+	const XObjectPtr					m_selection;
 
 private:
 

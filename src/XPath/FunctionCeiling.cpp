@@ -70,13 +70,13 @@ FunctionCeiling::~FunctionCeiling()
 
 
 
-XObject*
+XObjectPtr
 FunctionCeiling::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
-		const XObject*					arg1)
+		const XObjectPtr				arg1)
 {
-	assert(arg1 != 0);
+	assert(arg1.null() == false);
 
 	return executionContext.getXObjectFactory().createNumber(ceil(arg1->num()));
 }

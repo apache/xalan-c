@@ -114,13 +114,13 @@ getSuffix(
 
 
 
-XObject*
+XObjectPtr
 FunctionGenerateID::execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,			
-			const XObject*				arg1)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		arg1)
 {
-	assert(arg1 != 0);	
+	assert(arg1.null() == false);
 
 	const NodeRefListBase&	theNodeList = arg1->nodeset();
 
@@ -136,7 +136,7 @@ FunctionGenerateID::execute(
 
 
 
-XObject*
+XObjectPtr
 FunctionGenerateID::execute(
 			XPathExecutionContext&		executionContext,
 			XalanNode*					context)
@@ -156,9 +156,13 @@ FunctionGenerateID::execute(
 		getSuffix(context, theID);
 		assert(length(theID) != 0);
 
+#if defined(XALAN_USE_XERCES_DOMSTRING)
+		return executionContext.getXObjectFactory().createString(m_prefix + theID);
+#else
 		insert(theID, 0, m_prefix);
 
 		return executionContext.getXObjectFactory().createString(theID);
+#endif
 	}
 }
 

@@ -70,15 +70,15 @@ FunctionTranslate::~FunctionTranslate()
 
 
 
-XObject*
+XObjectPtr
 FunctionTranslate::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
-		const XObject*					arg1,
-		const XObject*					arg2,
-		const XObject*					arg3)
+		const XObjectPtr				arg1,
+		const XObjectPtr				arg2,
+		const XObjectPtr				arg3)
 {
-	assert(arg1 != 0 || arg2 != 0 || arg3 != 0);	
+	assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);
 
 	const XalanDOMString&	theFirstString = arg1->str();
 	const XalanDOMString&	theSecondString = arg2->str();

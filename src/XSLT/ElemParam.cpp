@@ -96,9 +96,9 @@ ElemParam::execute(
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	const XObject* const	obj = executionContext.getParamVariable(m_qname);
+	const XObjectPtr	obj = executionContext.getParamVariable(m_qname);
 
-	if(0 == obj)
+	if(obj.null() == true)
 	{
 		ElemVariable::execute(executionContext, sourceTree, sourceNode, mode);
 	}

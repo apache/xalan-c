@@ -137,6 +137,7 @@ class XalanNode;
 class XalanNumberFormat;
 class XPath;
 class XObject;
+class XObjectPtr;
 
 
 
@@ -380,7 +381,7 @@ public:
 	 * @param resolver    resolver for namespace resolution
 	 * @return pointer to resulting XObject
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	executeXPath(
 			const XalanDOMString&	str,
 			XalanNode*				contextNode,
@@ -501,7 +502,7 @@ public:
 	 * @param resolver    resolver for namespace resolution
 	 * @return a pointer to the XObject result
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	createVariable(
 			const ElemTemplateElement*	element,
 			const XPath&				xpath,
@@ -519,7 +520,7 @@ public:
 	 * @param sourceNode source node
 	 * @return a pointer to the XObject result
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	createVariable(
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
@@ -594,7 +595,7 @@ public:
 	virtual void
 	pushVariable(
 			const QName&				name,
-			const XObject*				var,
+			const XObjectPtr			var,
 			const ElemTemplateElement*	element) = 0;
 
 	/**
@@ -647,7 +648,7 @@ public:
 	 * @param theName name of variable
 	 * @return pointer to XObject for variable
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	getParamVariable(const QName&	theName) const = 0;
 
 	/**
@@ -942,7 +943,7 @@ public:
 	 * @param sourceNode source node
 	 * @return XObject instance
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceTree,
@@ -957,23 +958,12 @@ public:
 	 * @param mode current mode
 	 * @return XObject instance
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceTree,
 			XalanNode*					sourceNode,
 			const QName&				mode) = 0;
-
-	/**
-	 * Function to destroy an XObject that was returned
-	 * by executing.  It is safe to call this function
-	 * with any XObject.
-	 *
-	 * @param theXObject pointer to the XObject.
-	 * @return true if the object was destroyed.
-	 */
-	virtual bool
-	destroyXObject(const XObject*	theXObject) const = 0;
 
 	/**
 	 * Output an object to the result tree by doing the right conversions.
@@ -1340,7 +1330,7 @@ public:
 	virtual XObjectFactory&
 	getXObjectFactory() const = 0;
 
-	virtual XObject*
+	virtual XObjectPtr
 	createNodeSet(XalanNode&	theNode) = 0;
 
 	virtual bool
@@ -1395,7 +1385,7 @@ public:
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	functionName) const = 0;
 
-	virtual const XObject*
+	virtual const XObjectPtr
 	extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
@@ -1441,7 +1431,7 @@ public:
 			const PrefixResolver&	resolver,
 			MutableNodeRefList&		nodelist) = 0;
 
-	virtual const XObject*
+	virtual const XObjectPtr
 	getVariable(const QName&	name) const = 0;
 
 	virtual const PrefixResolver*

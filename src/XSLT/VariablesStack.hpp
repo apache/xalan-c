@@ -70,6 +70,7 @@
 
 
 #include <XPath/QName.hpp>
+#include <XPath/XObject.hpp>
 
 
 
@@ -81,6 +82,7 @@ class Arg;
 class ElemTemplateElement;
 class StylesheetExecutionContext;
 class XObject;
+class XObjectPtr;
 class XalanNode;
 
 
@@ -140,9 +142,9 @@ public:
 	popContextMarker();
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<pair<const QName*, const XObject*> >				ParamsVectorType;
+	typedef vector<pair<const QName*,  XObjectPtr> >				ParamsVectorType;
 #else
-	typedef std::vector<std::pair<const QName*, const XObject*> >	ParamsVectorType;
+	typedef std::vector<std::pair<const QName*,  XObjectPtr> >	ParamsVectorType;
 #endif
 
 	/**
@@ -164,7 +166,7 @@ public:
 	 * @param theName name of variable
 	 * @return pointer to XObject for variable
 	 */
-	const XObject*
+	const XObjectPtr
 	getParamVariable(const QName& qname) const
 	{
 		return findXObject(qname, false);
@@ -176,7 +178,7 @@ public:
 	 * @param qname name of variable
 	 * @return pointer to the corresponding XObject
 	 */
-	const XObject*
+	const XObjectPtr
 	getVariable(const QName& 	name) const
 	{
 		return findXObject(name, true);
@@ -194,7 +196,7 @@ public:
 	void
 	pushVariable(
 			const QName&				name,
-			const XObject*				val,
+			const XObjectPtr			val,
 			const ElemTemplateElement*	e);
 
 	/**
@@ -337,8 +339,8 @@ private:
 		 * Construct a variable.
 		 */
 		StackEntry(
-			const QName*	name,
-			const XObject*	val);
+			const QName*		name,
+			const XObjectPtr	val);
 
 		/**
 		 * Construct an element frame marker.
@@ -375,7 +377,7 @@ private:
 		const QName*
 		getName() const
 		{
-			return variable.m_qname;
+			return m_qname;
 		}
 
 		/**
@@ -383,10 +385,10 @@ private:
 		 * 
 		 * @return pointer to XObject
 		 */
-		const XObject*
+		const XObjectPtr
 		getVariable() const
 		{
-			return variable.m_value;
+			return m_value;
 		}
 
 		/**
@@ -397,7 +399,7 @@ private:
 		const ElemTemplateElement*
 		getElement() const
 		{
-			return elementMarker.m_element;
+			return m_element;
 		}
 
 		StackEntry&
@@ -411,20 +413,11 @@ private:
 		// Data members...
 		eStackEntryType				m_type;
 
-		union
-		{
-			struct
-			{
-				const QName*				m_qname;
+		const QName*				m_qname;
 
-				const XObject*				m_value;
-			} variable;
+		XObjectPtr					m_value;
 
-			struct
-			{
-				const ElemTemplateElement*	m_element;
-			} elementMarker;
-		};
+		const ElemTemplateElement*	m_element;
 	};
 
 #if defined(XALAN_NO_NAMESPACES)
@@ -436,7 +429,7 @@ private:
 	enum { eDefaultStackSize = 100 };
 
 
-	const XObject*
+	const XObjectPtr
 	findXObject(
 			const QName&	name,
 			bool			fSearchGlobalSpace) const;

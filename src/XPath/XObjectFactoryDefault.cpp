@@ -200,7 +200,7 @@ XObjectFactoryDefault::doReturnObject(
 
 
 
-XObject*
+const XObjectPtr
 XObjectFactoryDefault::clone(const XObject&		theXObject)
 {
 	XObject*	theClone = 0;
@@ -222,8 +222,7 @@ XObjectFactoryDefault::clone(const XObject&		theXObject)
 		const XObject::eObjectType	theType = theXObject.getType();		
 
 		switch(theType)
-		{
-		
+		{	
 		case XObject::eTypeString:
 			theClone = m_xstringAllocator.clone(
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -265,36 +264,38 @@ XObjectFactoryDefault::clone(const XObject&		theXObject)
 			break;
 
 		default:
-			XObject* const	theClone = theXObject.clone();
+			theClone = theXObject.clone();
 
 			m_xobjects.insert(theClone);
 			break;
 		}
 	}
 
-	return theClone;
+	theClone->setFactory(this);
+
+	return XObjectPtr(theClone);
 }
 
 
 
-XObject*
+const XObjectPtr
 XObjectFactoryDefault::createBoolean(
 			bool	theValue)
 {
-	return theValue == true ? &theTrueBoolean : &theFalseBoolean;	
+	return XObjectPtr(theValue == true ? &theTrueBoolean : &theFalseBoolean);
 }
 
 
 
-XObject*
+const XObjectPtr
 XObjectFactoryDefault::createNull()
 {	
-	return m_XNull.get();	
+	return XObjectPtr(m_XNull.get());
 }
 
 
 
-XObject*
+const XObjectPtr
 XObjectFactoryDefault::createUnknown(
 			const XalanDOMString&	theValue)
 {
@@ -302,12 +303,14 @@ XObjectFactoryDefault::createUnknown(
 
 	m_xobjects.insert(theXUnknown);
 
-	return theXUnknown;
+	theXUnknown->setFactory(this);
+
+	return XObjectPtr(theXUnknown);
 }
 
 
 
-XObject*
+const XObjectPtr
 XObjectFactoryDefault::createSpan(
 			BorrowReturnMutableNodeRefList&		theValue)
 {
@@ -315,74 +318,88 @@ XObjectFactoryDefault::createSpan(
 
 	m_xobjects.insert(theXSpan);
 
-	return theXSpan;
+	theXSpan->setFactory(this);
+
+	return XObjectPtr(theXSpan);
 }
 
 
 
-XObject*
+const XObjectPtr
 XObjectFactoryDefault::createNumber(
 			double	theValue)
 {
 	XNumber*	theXNumber = m_xnumberAllocator.createNumber(theValue);
 
-	return theXNumber;
+	theXNumber->setFactory(this);
+
+	return XObjectPtr(theXNumber);
 }
 
 
 
-XObject*
+const XObjectPtr
 XObjectFactoryDefault::createNodeSet(
 			BorrowReturnMutableNodeRefList&		theValue)
 {
 	XNodeSet* const		theXNodeSet = m_xnodesetAllocator.createNodeSet(theValue);
 
-	return theXNodeSet;
+	theXNodeSet->setFactory(this);
+
+	return XObjectPtr(theXNodeSet);
 }
 
 
 
-XObject*
+const XObjectPtr
 XObjectFactoryDefault::createString(
 			const XalanDOMString&	theValue)
 {
 	XString* const	theXString = m_xstringAllocator.createString(theValue);
 
-	return theXString;
+	theXString->setFactory(this);
+
+	return XObjectPtr(theXString);
 }
 
 
 
-XObject*
+const XObjectPtr
 XObjectFactoryDefault::createString(
 			const XalanDOMChar*		theValue)
 {
 	XString* const	theXString = m_xstringAllocator.createString(theValue);
 
-	return theXString;
+	theXString->setFactory(this);
+
+	return XObjectPtr(theXString);
 }
 
 
 
-XObject*
+const XObjectPtr
 XObjectFactoryDefault::createString(
 			const XalanDOMChar*		theValue,
 			unsigned int			theLength)
 {
 	XString* const	theXString = m_xstringAllocator.createString(theValue, theLength);
 
-	return theXString;
+	theXString->setFactory(this);
+
+	return XObjectPtr(theXString);
 }
 
 
 
-XObject*
+const XObjectPtr
 XObjectFactoryDefault::createResultTreeFrag(
 			ResultTreeFragBase*		theValue)
 {
 	XResultTreeFrag* const	theResultTreeFrag =  m_xresultTreeFragAllocator.create(theValue);
 
-	return theResultTreeFrag;
+	theResultTreeFrag->setFactory(this);
+
+	return XObjectPtr(theResultTreeFrag);
 }
 
 

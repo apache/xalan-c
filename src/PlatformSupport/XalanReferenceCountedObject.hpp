@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,132 +53,64 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- *
- * $ Id: $
- *
  */
-
-#if !defined(XALAN_TOPLEVELARG_HEADER_GUARD)
-#define XALAN_TOPLEVELARG_HEADER_GUARD
-
+#if !defined(XALANREFERENCECOUNTEDOBJECT_HEADER_GUARD_1357924680)
+#define XALANREFERENCECOUNTEDOBJECT_HEADER_GUARD_1357924680
 
 
 
 // Base include file.  Must be first.
-#include <XSLT/XSLTDefinitions.hpp>
-
-
-
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
-#include <XPath/QName.hpp>
-#include <XPath/XObject.hpp>
-
-
-
-class XObjectPtr;
+#include <PlatformSupport/PlatformSupportDefinitions.hpp>
 
 
 
 /**
- * This class holds an instance of an argument on the stack.
+ * Class to hold reference count information.
  */
-class TopLevelArg
+class XALAN_PLATFORMSUPPORT_EXPORT XalanReferenceCountedObject
 {
 public:
 
 	/**
-	 * Construct an argument object from a string expression
-	 * 
-	 * @param name	name of argument
-	 * @param expr	expression argument represents
+	 * Increment reference count.	 
 	 */
-	TopLevelArg(
-		const QName&			name,
-		const XalanDOMString&	expr);
+	static void
+	addReference(XalanReferenceCountedObject*	theInstance);
 
 	/**
-	 * Construct an argument object from an XObject instance.
-	 * 
-	 * @param name	name of argument
-	 * @param variable	the XObject instance.
+	 * Decrement reference count.	 
 	 */
-	TopLevelArg(
-		const QName&		name = QName(),
-		const XObjectPtr	variable = XObjectPtr());
+	static void
+	removeReference(XalanReferenceCountedObject*	theInstance);
+
+protected:
 
 	/**
-	 * Copy constructor
-	 * 
-	 * @param theSource	the TopLevelArg to copy.
+	 * Create a XalanReferenceCountedObject.
 	 */
-	TopLevelArg(const TopLevelArg&	theSource);
+	explicit
+	XalanReferenceCountedObject();
 
-	/**
-	 * Destructor
-	 */
-	~TopLevelArg();
+	virtual
+	~XalanReferenceCountedObject();
 
-	/**
-	 * Retrieve object name
-	 * 
-	 * @return qualified name of object
-	 */
-	const QName&
-	getName() const
-	{
-		return m_qname;
-	}
+	virtual void 
+	referenced() = 0;
 
-	/**
-	 * Retrieve object's expression
-	 * 
-	 * @return string representation of expression
-	 */
-	const XalanDOMString&
-	getExpression() const
-	{
-		return m_expression;
-	};
-
-	/**
-	 * Retrieve object's XObject variable.
-	 * 
-	 * @return pointer to the XObject instance
-	 */
-	const XObjectPtr
-	getXObject() const
-	{
-		return m_xobject;
-	}
-
-	/**
-	 * Assignment operator
-	 */
-	TopLevelArg&
-	operator=(const TopLevelArg&	theRHS)
-	{
-		if (&theRHS != this)
-		{
-			m_qname = theRHS.m_qname;
-
-			m_expression = theRHS.m_expression;
-		}
-
-		return *this;
-	}
+	virtual void 
+	dereferenced() = 0;
 
 private:
 
-	QName				m_qname;
+	int		m_referenceCount;
 
-	XalanDOMString		m_expression;
+	// Not implemented...
+	XalanReferenceCountedObject&
+	operator=(const XalanReferenceCountedObject&);
 
-	const XObjectPtr	m_xobject;
+	XalanReferenceCountedObject(const XalanReferenceCountedObject&);
 };
 
 
 
-#endif	// XALAN_TOPLEVELARG_HEADER_GUARD
+#endif	// XALANREFERENCECOUNTEDOBJECT_HEADER_GUARD_1357924680

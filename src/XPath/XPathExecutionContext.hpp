@@ -91,6 +91,7 @@ class QName;
 class XLocator;
 class XMLURL;
 class XObject;
+class XObjectPtr;
 class XObjectFactory;
 class XalanDocument;
 class XalanElement;
@@ -109,9 +110,9 @@ class XALAN_XPATH_EXPORT XPathExecutionContext : public ExecutionContext
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<const XObject*>			XObjectArgVectorType;
+	typedef vector<XObjectPtr>			XObjectArgVectorType;
 #else
-	typedef std::vector<const XObject*>		XObjectArgVectorType;
+	typedef std::vector<XObjectPtr>		XObjectArgVectorType;
 #endif
 
 	explicit
@@ -182,7 +183,7 @@ public:
 	 * @param node	The  node queried
 	 * @return a pointer to the XObject instance.
 	 */
-	virtual XObject*
+	virtual XObjectPtr
 	createNodeSet(XalanNode&	theNode) = 0;
 
 	/**
@@ -360,7 +361,7 @@ public:
 	 * @param argVec        vector of arguments to function
 	 * @return pointer to XObject result
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
@@ -558,7 +559,7 @@ public:
 	 * @param theName name of variable
 	 * @return pointer to an XObject if the variable was found, 0 if it was not
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	getVariable(const QName&	name) const = 0;
 
 	/**

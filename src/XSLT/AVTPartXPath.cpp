@@ -85,9 +85,7 @@ AVTPartXPath::	evaluate(
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const
 {
-	const XObjectGuard		xobj(
-								executionContext.getXObjectFactory(),
-								m_pXPath->execute(contextNode, prefixResolver, executionContext));
+	const XObjectPtr	xobj(m_pXPath->execute(contextNode, prefixResolver, executionContext));
 
 	if(0 != xobj.get())
 	{

@@ -291,7 +291,7 @@ public:
 	virtual void
 	setStylesheetParam(
 			const XalanDOMString&	key,
-			XObject*				value);
+			XObjectPtr				value);
 
 	virtual bool
 	shouldStripSourceNode(
@@ -922,7 +922,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to XObject result
 	 */
-	const XObject*
+	const XObjectPtr
 	evalXPathStr(
 			const XalanDOMString&	str,
 			XPathExecutionContext&	executionContext);
@@ -936,7 +936,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to XObject result
 	 */
-	const XObject*
+	const XObjectPtr
 	evalXPathStr(
 			const XalanDOMString&	str,
 			XalanNode* 				contextNode,
@@ -952,7 +952,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to XObject result
 	 */
-	const XObject*
+	const XObjectPtr
 	evalXPathStr(
 			const XalanDOMString&	str,
 			XalanNode* 				contextNode,

@@ -212,7 +212,7 @@ ExtensionNSHandler::processElement(
 			const XalanNode*				/* sourceNode */,
 			const QName&					/* mode */)
 {
-	const XObject*	result = 0;
+	XObjectPtr	result;
 
 	if (!m_componentStarted) 
 	{
@@ -246,7 +246,7 @@ ExtensionNSHandler::processElement(
 		} 
 	}
 
-	if (result != 0) 
+	if (result.null() == false) 
 	{
 		executionContext.outputToResultTree(*result);
 	}

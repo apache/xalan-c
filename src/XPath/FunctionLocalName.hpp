@@ -95,13 +95,13 @@ public:
 
 	// These methods are inherited from Function ...
 
-	XObject*
+	XObjectPtr
 	execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
-		const XObject*					arg1);
+		const XObjectPtr				arg1);
 		
-	XObject*
+	XObjectPtr
 	execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context);
@@ -115,7 +115,7 @@ public:
 
 private:
 
-	XObject*
+	XObjectPtr
 	getLocalName(
 		XPathExecutionContext&	executionContext,
 		const XalanNode&		node);

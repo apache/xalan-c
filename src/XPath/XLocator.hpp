@@ -70,6 +70,7 @@
 
 class XalanNode;
 class XObject;
+class XObjectPtr;
 class XPath;
 class XPathExecutionContext;
 class XNodeSet;
@@ -86,9 +87,9 @@ public:
 	~XLocator();
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef	vector<XObject*>		ConnectArgsVectorType;
+	typedef	vector<XObjectPtr>		ConnectArgsVectorType;
 #else
-	typedef	std::vector<XObject*>	ConnectArgsVectorType;
+	typedef	std::vector<XObjectPtr>	ConnectArgsVectorType;
 #endif
 
 	/**
@@ -102,7 +103,7 @@ public:
 	 * @param opPos   current position in the xpath.m_opMap array
 	 * @return result of the query in a pointer to an XObject
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	locationPath(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,

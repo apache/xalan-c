@@ -70,7 +70,7 @@ FunctionCurrent::~FunctionCurrent()
 
 
 
-XObject*
+XObjectPtr
 FunctionCurrent::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context)

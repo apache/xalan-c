@@ -1988,10 +1988,11 @@ XPathProcessorImpl::NodeTest(int	axisType)
 				{
 					const XObject* const	theToken =
 						m_expression->getRelativeToken(-1);
+					assert(theToken != 0);
 
-					const XalanDOMString	theString = theToken->str();
+					const XalanDOMString&	theString = theToken->str();
 
-					const XalanDOMString	theNamespace =
+					const XalanDOMString&	theNamespace =
 						m_prefixResolver->getNamespaceForPrefix(theString);
 
 					m_expression->replaceRelativeToken(

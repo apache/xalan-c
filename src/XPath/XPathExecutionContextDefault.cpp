@@ -164,7 +164,7 @@ XPathExecutionContextDefault::getXObjectFactory() const
 
 
 
-XObject*
+XObjectPtr
 XPathExecutionContextDefault::createNodeSet(XalanNode&	theNode)
 {
 	// This list will hold the node...
@@ -313,7 +313,7 @@ XPathExecutionContextDefault::functionAvailable(
 
 
 
-const XObject*
+const XObjectPtr
 XPathExecutionContextDefault::extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName, 
@@ -447,7 +447,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
 
 
 
-const XObject*
+const XObjectPtr
 XPathExecutionContextDefault::getVariable(const QName&	name) const
 {
 	return m_xobjectFactory.createUnknown(name.getLocalPart());

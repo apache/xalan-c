@@ -158,7 +158,7 @@ ExtensionFunctionHandler::isFunctionAvailable (const XalanDOMString&	function) c
 
 
 
-XObject*
+XObjectPtr
 ExtensionFunctionHandler::callFunction(
 			const XalanDOMString&	/* funcName */,
 			const ArgVectorType&	/* args */)

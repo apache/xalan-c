@@ -72,7 +72,7 @@ Function::~Function()
 
 
 
-XObject*
+XObjectPtr
 Function::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
@@ -81,62 +81,63 @@ Function::execute(
 {
 	executionContext.error(getError(), context);
 
-	return 0;
+	return XObjectPtr(0);
 }
 
 
 
-XObject*
+XObjectPtr
 Function::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context)
 {
 	executionContext.error(getError(), context);
 
-	return 0;
+	return XObjectPtr(0);
 }
 
 
 
-XObject*
+XObjectPtr
 Function::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
-			const XObject*			/* arg1 */)
+			const XObjectPtr		/* arg1 */)
 {
 	executionContext.error(getError(), context);
 
-	return 0;
+	return XObjectPtr(0);
 }
 
 
 
-XObject*
+XObjectPtr
 Function::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
-			const XObject*			/* arg1 */,
-			const XObject*			/* arg2 */)
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */)
 {
-		executionContext.error(getError(), context);
+	executionContext.error(getError(), context);
 
-		return 0;
+	return XObjectPtr(0);
 }
 
 
 
-XObject*
+XObjectPtr
 Function::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
-			const XObject*			/* arg1 */,
-			const XObject*			/* arg2 */,
-			const XObject*			/* arg3 */)
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */)
 {
-		executionContext.error(getError(), context);
+	executionContext.error(getError(), context);
 
-		return 0;
+	return XObjectPtr(0);
 }
+
 
 
 const XalanDOMString

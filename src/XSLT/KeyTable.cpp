@@ -169,7 +169,7 @@ KeyTable::KeyTable(
 							// use attribute in xsl:key.
 							assert(kd.getUse() != 0);
 
-							const XObject* const	xuse =
+							const XObjectPtr	xuse =
 								kd.getUse()->execute(testNode, resolver, NodeRefList(), executionContext);
 
 							const NodeRefListBase*	nl = 0;

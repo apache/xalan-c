@@ -151,7 +151,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to union of node-set operands
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	execute(
 			XalanNode*				context,
 			const PrefixResolver&	prefixResolver,
@@ -166,7 +166,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to union of node-set operands
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	execute(
 			XalanNode*				context,
 			const PrefixResolver&	prefixResolver,
@@ -181,7 +181,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to result XObject
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	execute(XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -192,7 +192,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to union of node-set operands
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	executeMore(
 			XalanNode* 				context,
 			int 					opPos,
@@ -206,7 +206,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return node-set
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	locationPath(
 			XalanNode*				context,
 			int						opPos,
@@ -331,7 +331,7 @@ public:
 	 * @param executionContext current execution context
 	 * @return pointer to either a boolean or a number
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	predicate(
 			XalanNode*				context,
 			int						opPos,
@@ -437,7 +437,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return The result of the expression.
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	xpath(
 			XalanNode*				context,
 			int						opPos,
@@ -449,7 +449,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return the match score in the form of an XObject.
 	 */
-	virtual const XObject*
+	virtual const XObjectPtr
 	matchPattern(
 			XalanNode*				context,
 			int						opPos,
@@ -477,7 +477,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if the one of the two arguments are true.
 	 */
-	const XObject*
+	const XObjectPtr
 	Or(
 			XalanNode*				context,
 			int						opPos,
@@ -489,7 +489,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if the two arguments are both true.
 	 */
-	const XObject*
+	const XObjectPtr
 	And(
 			XalanNode*				context,
 			int						opPos,
@@ -501,7 +501,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if the two arguments are not equal.
 	 */
-	const XObject*
+	const XObjectPtr
 	notequals(
 			XalanNode*				context,
 			int						opPos,
@@ -513,7 +513,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if the two arguments are equal.
 	 */
-	const XObject*
+	const XObjectPtr
 	equals(
 			XalanNode*				context,
 			int						opPos,
@@ -525,7 +525,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if arg 1 is less than or equal to arg 2.
 	 */
-	const XObject*
+	const XObjectPtr
 	lte(
 			XalanNode*				context,
 			int						opPos,
@@ -537,7 +537,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if arg 1 is less than arg 2.
 	 */
-	const XObject*
+	const XObjectPtr
 	lt(
 			XalanNode*				context,
 			int						opPos,
@@ -549,7 +549,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if arg 1 is greater than or equal to arg 2.
 	 */
-	const XObject*
+	const XObjectPtr
 	gte(
 			XalanNode*				context,
 			int						opPos,
@@ -561,7 +561,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return XBoolean set to true if arg 1 is greater than arg 2.
 	 */
-	const XObject*
+	const XObjectPtr
 	gt(
 			XalanNode*				context,
 			int						opPos,
@@ -573,7 +573,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return sum of arg1 and arg2.
 	 */
-	const XObject*
+	const XObjectPtr
 	plus(
 			XalanNode*				context,
 			int						opPos,
@@ -585,7 +585,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return difference of arg1 and arg2.
 	 */
-	const XObject*
+	const XObjectPtr
 	minus(
 			XalanNode*				context,
 			int						opPos,
@@ -597,7 +597,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg1 * arg2.
 	 */
-	const XObject*
+	const XObjectPtr
 	mult(
 			XalanNode*				context,
 			int						opPos,
@@ -609,7 +609,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg1 / arg2.
 	 */
-	const XObject*
+	const XObjectPtr
 	div(
 			XalanNode*				context,
 			int						opPos,
@@ -621,7 +621,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg1 mod arg2.
 	 */
-	const XObject*
+	const XObjectPtr
 	mod(
 			XalanNode*				context,
 			int						opPos,
@@ -634,7 +634,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg1 mod arg2.
 	 */
-	const XObject*
+	const XObjectPtr
 	quo(
 			XalanNode*				context,
 			int						opPos,
@@ -646,7 +646,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return -arg.
 	 */
-	const XObject*
+	const XObjectPtr
 	neg(
 			XalanNode*				context,
 			int						opPos,
@@ -658,7 +658,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg cast to a string.
 	 */
-	const XObject*
+	const XObjectPtr
 	string(
 			XalanNode*				context,
 			int						opPos,
@@ -670,7 +670,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg cast to a boolean.
 	 */
-	const XObject*
+	const XObjectPtr
 	boolean(
 			XalanNode*				context,
 			int						opPos,
@@ -682,7 +682,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg cast to a number.
 	 */
-	const XObject*
+	const XObjectPtr
 	number(
 			XalanNode*				context,
 			int						opPos,
@@ -694,7 +694,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return the union of node-set operands.
 	 */
-	const XObject*
+	const XObjectPtr
 	Union(
 			XalanNode*				context,
 			int						opPos,
@@ -706,7 +706,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return an XObject object.
 	 */
-	const XObject*
+	const XObjectPtr
 	literal(
 			XalanNode*				context,
 			int						opPos,
@@ -718,7 +718,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return an XObject object.
 	 */
-	const XObject*
+	const XObjectPtr
 	variable(
 			XalanNode*				context,
 			int						opPos,
@@ -730,7 +730,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return arg.
 	 */
-	const XObject*
+	const XObjectPtr
 	group(
 			XalanNode*				context,
 			int						opPos,
@@ -742,7 +742,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return an XObject object.
 	 */
-	const XObject*
+	const XObjectPtr
 	numberlit(
 			XalanNode*				context,
 			int						opPos,
@@ -754,7 +754,7 @@ protected:
 	 * @param opPos The current position in the m_opMap array.
 	 * @return the result of the argument expression.
 	 */
-	const XObject*
+	const XObjectPtr
 	arg(
 			XalanNode*				context,
 			int						opPos,
@@ -767,7 +767,7 @@ protected:
 	 * @return score in an XNumber, one of MATCH_SCORE_NODETEST, 
 	 * MATCH_SCORE_NONE, MATCH_SCORE_OTHER, MATCH_SCORE_QNAME.
 	 */
-	const XObject*
+	const XObjectPtr
 	locationPathPattern(
 			XalanNode*				context,
 			int						opPos,
@@ -776,7 +776,7 @@ protected:
 	/**
 	 * Setup for and run an extension function.
 	 */
-	const XObject*
+	const XObjectPtr
 	runExtFunction(
 			XalanNode*				context,
 			int						opPos,
@@ -785,7 +785,7 @@ protected:
 	/**
 	 * Handle an extension function.
 	 */
-	const XObject*
+	const XObjectPtr
 	extfunction(
 			XalanNode*								context,
 			int										opPos,
@@ -797,7 +797,7 @@ protected:
 	/**
 	 * Setup for and run a function.
 	 */
-	const XObject*
+	const XObjectPtr
 	runFunction(
 			XalanNode*				context,
 			int						opPos,
@@ -806,7 +806,7 @@ protected:
 	/**
 	 * Handle a built-in function.
 	 */
-	const XObject*
+	const XObjectPtr
 	function(
 			XalanNode*								context,
 			int										opPos,

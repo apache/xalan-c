@@ -70,7 +70,7 @@ FunctionTrue::~FunctionTrue()
 
 
 
-XObject*
+XObjectPtr
 FunctionTrue::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */)

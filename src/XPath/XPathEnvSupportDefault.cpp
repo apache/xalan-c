@@ -423,7 +423,7 @@ XPathEnvSupportDefault::findFunction(
 
 
 
-XObject*
+XObjectPtr
 XPathEnvSupportDefault::extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
@@ -431,13 +431,11 @@ XPathEnvSupportDefault::extFunction(
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const
 {
-	XObject*	theResult = 0;
-
 	Function* const		theFunction = findFunction(theNamespace, functionName);
 
 	if (theFunction != 0)
 	{
-		theResult = theFunction->execute(
+		return theFunction->execute(
 					executionContext,
 					context,
 					0,
@@ -456,9 +454,9 @@ XPathEnvSupportDefault::extFunction(
 		theFunctionName += functionName;
 
 		throw XPathExceptionFunctionNotAvailable(theFunctionName);
-	}
 
-	return theResult;
+		return XObjectPtr();
+	}
 }
 
 

@@ -90,13 +90,13 @@ public:
 	virtual
 	~FunctionNamespaceURI();
 
-	XObject*
+	XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,			
-			const XObject*					arg1);
+			const XObjectPtr				arg1);
 
-	XObject*
+	XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context);	

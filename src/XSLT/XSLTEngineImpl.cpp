@@ -704,10 +704,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 															0,
 															&theProxy);
 
-		const XObjectGuard		xobj(
-						m_xobjectFactory,
-						evalXPathStr(ds, theExecutionContext));
-		assert(xobj.get() != 0);
+		const XObjectPtr	xobj(evalXPathStr(ds, theExecutionContext));
+		assert(xobj.null() == false);
 
 		MutableNodeRefList	nl(xobj->nodeset());
 
@@ -721,10 +719,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 			theExecutionContext.setContextNodeList(theEmptyList);
 
-			const XObjectGuard		xobj(
-						m_xobjectFactory,
-						evalXPathStr(ds, theExecutionContext));
-			assert(xobj.get() != 0);
+			const XObjectPtr	xobj(evalXPathStr(ds, theExecutionContext));
+			assert(xobj.null() == false);
 
 			nl = xobj->nodeset();
 
@@ -736,10 +732,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 				theExecutionContext.setContextNodeList(theEmptyList);
 
-				const XObjectGuard		xobj(
-							m_xobjectFactory,
-							evalXPathStr(ds, theExecutionContext));
-				assert(xobj.get() != 0);
+				const XObjectPtr	xobj(evalXPathStr(ds, theExecutionContext));
+				assert(xobj.null() == false);
 
 				nl = xobj->nodeset();
 
@@ -748,10 +742,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 					// Well, hell, maybe it's an XPath...
 					theExecutionContext.setContextNodeList(theEmptyList);
 
-					const XObjectGuard		xobj(
-								m_xobjectFactory,
-								evalXPathStr(fragID, theExecutionContext));
-					assert(xobj.get() != 0);
+					const XObjectPtr	xobj(evalXPathStr(fragID, theExecutionContext));
+					assert(xobj.null() == false);
 
 					nl = xobj->nodeset();
 				}
@@ -2357,7 +2349,7 @@ XSLTEngineImpl::copyNamespaceAttributes(
 
 
 
-const XObject*
+const XObjectPtr
 XSLTEngineImpl::evalXPathStr(
 			const XalanDOMString&	str,
 			XPathExecutionContext&	executionContext)
@@ -2379,7 +2371,7 @@ XSLTEngineImpl::evalXPathStr(
 
 
 
-const XObject*
+const XObjectPtr
 XSLTEngineImpl::evalXPathStr(
 			const XalanDOMString&	str,
 			XalanNode*				contextNode,
@@ -2401,7 +2393,7 @@ XSLTEngineImpl::evalXPathStr(
 
 
 
-const XObject*
+const XObjectPtr
 XSLTEngineImpl::evalXPathStr(
 			const XalanDOMString&	str,
 			XalanNode*				contextNode,
@@ -2573,7 +2565,7 @@ XSLTEngineImpl::evaluateAttrVal(
 										{
 											// Proper close of attribute template.
 											// Evaluate the expression.
-											const XObject* const	xobj =
+											const XObjectPtr const	xobj =
 												evalXPathStr(expression, contextNode, namespaceContext, executionContext);
 
 											const XalanDOMString			exprResult(xobj->str());
@@ -2960,7 +2952,7 @@ XSLTEngineImpl::setStylesheetParam(
 void
 XSLTEngineImpl::setStylesheetParam(
 			const XalanDOMString&	theName,
-			XObject*				theValue)
+			XObjectPtr				theValue)
 {
 	const QName		qname(theName, 0, m_xpathEnvSupport, m_xpathSupport);
 

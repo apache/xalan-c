@@ -70,13 +70,13 @@ FunctionNumber::~FunctionNumber()
 
 
 
-XObject*
+XObjectPtr
 FunctionNumber::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
-		const XObject*					arg1)
+		const XObjectPtr				arg1)
 {
-	assert(arg1 != 0);
+	assert(arg1.null() == false);	
 	
 	double	theValue = 0.0L;
 
@@ -87,7 +87,7 @@ FunctionNumber::execute(
 
 
 
-XObject*
+XObjectPtr
 FunctionNumber::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context)
@@ -105,12 +105,11 @@ FunctionNumber::execute(
 		// as the only member.
 		// So we have to create an XNodeList with the context node as
 		// the only member and call the num() function on it.  We shroud
-		// the temporary XNodeList in an XObjectGuard because it can be
+		// the temporary XNodeList in an XObjectPtr because it can be
 		// deleted once we've converted the context node to a number.
 
 		// An XObject that contains the context node.
-		XObjectGuard	theXObject(executionContext.getXObjectFactory(),
-								   executionContext.createNodeSet(*context));
+		XObjectPtr	theXObject(executionContext.createNodeSet(*context));
 
 		// Get the numeric value of the theXObject...
 		theValue = theXObject->num();

@@ -634,7 +634,7 @@ ElemTemplateElement::transformSelectedChildren(
 
 	if (0 != selectPattern)
 	{
-		const XObject*	theXObject = 0;
+		XObjectPtr	theXObject;
 
 		{
 			SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
@@ -663,11 +663,9 @@ ElemTemplateElement::transformSelectedChildren(
 		}
 
 		// @@ JMD: Should this be an assert ??
-		if (0 != theXObject)
+		if (theXObject.null() == false)
 		{
-			const XObjectGuard	result(
-					executionContext.getXObjectFactory(),
-					theXObject);
+			const XObjectPtr	result(theXObject);
 
 			const NodeRefListBase&	sourceNodes = result->nodeset();
 
@@ -679,7 +677,7 @@ ElemTemplateElement::transformSelectedChildren(
 							*this,
 							StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
 							*selectPattern,
-							result.get()));
+							result));
 			}
 
 			const unsigned int	nNodes = sourceNodes.getLength();

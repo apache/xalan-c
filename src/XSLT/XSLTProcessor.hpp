@@ -91,6 +91,7 @@ class XalanElement;
 class XalanNode;
 class XMLParserLiaison;
 class XObject;
+class XObjectPtr;
 class XPathExecutionContext;
 class XSLTInputSource;
 class XSLTResultTarget;
@@ -333,7 +334,7 @@ public:
    virtual void
    setStylesheetParam(
 			const XalanDOMString&	key,
-			XObject*				value) = 0;
+			XObjectPtr				value) = 0;
   
   /**
 	* Push a top-level stylesheet parameter.  This value can be evaluated via

@@ -70,13 +70,13 @@ FunctionNamespaceURI::~FunctionNamespaceURI()
 
 
 
-XObject*
+XObjectPtr
 FunctionNamespaceURI::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
-		const XObject*					arg1)
+		const XObjectPtr					arg1)
 {
-	assert(arg1 != 0);
+	assert(arg1.null() == false);	
 	
 	const XalanDOMString*	theNamespace = 0;
 
@@ -87,7 +87,7 @@ FunctionNamespaceURI::execute(
 
 
 
-XObject*
+XObjectPtr
 FunctionNamespaceURI::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context)
@@ -110,8 +110,7 @@ FunctionNamespaceURI::execute(
 		// we're done.
 
 		// An XObject that contains the context node.
-		XObjectGuard	theXObject(executionContext.getXObjectFactory(),
-								   executionContext.createNodeSet(*context));
+		XObjectPtr	theXObject(executionContext.createNodeSet(*context));
 
 
 		theNamespace = getNamespaceFromNodeSet(*theXObject.get(), executionContext);

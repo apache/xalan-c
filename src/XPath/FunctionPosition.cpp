@@ -70,7 +70,7 @@ FunctionPosition::~FunctionPosition()
 
 
 
-XObject*
+XObjectPtr
 FunctionPosition::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context)

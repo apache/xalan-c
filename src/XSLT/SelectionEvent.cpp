@@ -73,7 +73,7 @@ SelectionEvent::SelectionEvent(
 			const ElemTemplateElement&		styleNode,
 			const XalanDOMString&			attributeName,
 			const XPath&					xpath,
-			const XObject*					selection) :
+			const XObjectPtr				selection) :
 	m_executionContext(executionContext),
 	m_sourceNode(sourceNode),
 	m_styleNode(styleNode),

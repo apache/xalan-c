@@ -138,7 +138,7 @@ public:
 	virtual XObjectFactory&
 	getXObjectFactory() const;
 
-	virtual XObject*
+	virtual XObjectPtr
 	createNodeSet(XalanNode&	theNode);
 
 	virtual bool
@@ -193,7 +193,7 @@ public:
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	functionName) const;
 
-	virtual const XObject*
+	virtual const XObjectPtr
 	extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
@@ -239,7 +239,7 @@ public:
 			const PrefixResolver&	resolver,
 			MutableNodeRefList&		nodelist);
 
-	virtual const XObject*
+	virtual const XObjectPtr
 	getVariable(
 			const QName&	name) const;
 
