@@ -278,12 +278,6 @@ public:
 	{
 	}
 
-	// A dummy constructor for use internally.  Do not use this one!!!!
-	XalanEXSLTFunctionEncodeURI(int	/* theDummy */) :
-		Function()
-	{
-	}
-
 	virtual
 	~XalanEXSLTFunctionEncodeURI()
 	{
@@ -339,9 +333,9 @@ private:
 
 	bool
 	operator==(const XalanEXSLTFunctionEncodeURI&) const;
-
-
 };
+
+
 
 class XALAN_EXSLT_EXPORT XalanEXSLTFunctionDecodeURI : public Function
 {
@@ -350,12 +344,6 @@ public:
 	typedef Function	ParentType;
 
 	XalanEXSLTFunctionDecodeURI() :
-		Function()
-	{
-	}
-
-	// A dummy constructor for use internally.  Do not use this one!!!!
-	XalanEXSLTFunctionDecodeURI(int	/* theDummy */) :
 		Function()
 	{
 	}
@@ -416,8 +404,6 @@ private:
 
 	bool
 	operator==(const XalanEXSLTFunctionDecodeURI&) const;
-
-
 };
 
 XALAN_CPP_NAMESPACE_END
