@@ -109,18 +109,18 @@ public:
 	 * Constructor for XercesDocumentBridge.
 	 *
 	 * If the document will be shared amongst multiple threads of execution,
-	 * the parameter buildBridgeNodes must be true.  Otherwise, the bridge
+	 * the parameter buildBridge must be true.  Otherwise, the bridge
 	 * nodes will be built on demand, a process which is not synchronized.
 	 * This could cause serious problems if multiple threads tried to visit
 	 * an unbuilt node at the same time.
 	 *
 	 * @param theXercesDocument The Xerces document to bridge
-	 * @param buildBridgeNodes If true, all of the bridge nodes will be built during construction.
+	 * @param buildBridge If true, all of the bridge nodes will be built during construction.
 	 *
 	 */
 	XercesDocumentBridge(
 			const DOM_Document&		theXercesDocument,
-			bool					buildBridgeNodes = true);
+			bool					buildBridge = true);
 
 	virtual
 	~XercesDocumentBridge();
@@ -293,11 +293,29 @@ public:
 	XalanElement*
 	mapNode(const DOM_Element& 	theXercesNode) const;
 
+	/**
+	 *
+	 * Get the Xerces DOM_Document that this XercesDocument represents.
+	 *
+	 * @return the Xerces DOM_Document instance.
+	 *
+	 */
 	DOM_Document
 	getXercesDocument() const
 	{
 		return m_xercesDocument;
 	}
+
+	/**
+	 *
+	 * Constructor for XercesDocumentBridge.
+	 *
+	 * Build the entire bridge structure.  This should be done before any
+	 * processing begins, if the tree will be shared amongst multiple
+	 * threads.
+	 */
+	void
+	buildBridgeNodes();
 
 private:
 

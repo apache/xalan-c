@@ -100,7 +100,7 @@
 
 XercesDocumentBridge::XercesDocumentBridge(
 			const DOM_Document&		theXercesDocument,
-			bool					buildBridgeNodes) :
+			bool					buildBridge) :
 	XalanDocument(),
 	m_xercesDocument(theXercesDocument),
 	m_navigator(this),
@@ -133,30 +133,12 @@ XercesDocumentBridge::XercesDocumentBridge(
 		m_nodes.insert(m_doctype);
 	}
 
-	if (buildBridgeNodes == true)
+	if (buildBridge == true)
 	{
 		// OK, let's build the nodes.  This makes things
 		// thread-safe, so the document can be shared...
 
-		// First, build any children of the document...
-		const XalanNode*	theChild = getFirstChild();
-
-		while(theChild != 0)
-		{
-			theChild = theChild->getNextSibling();
-		}
-
-		// OK, now walk everything below the document
-		// element...
-		const XalanNode* const	theDocumentElement =
-			getDocumentElement();
-
-		if (theDocumentElement != 0)
-		{
-			NullTreeWalker	theTreeWalker;
-
-			theTreeWalker.traverse(theDocumentElement, this);
-		}
+		buildBridgeNodes();
 	}
 }
 
@@ -285,6 +267,34 @@ XalanElement*
 XercesDocumentBridge::mapNode(const DOM_Element& 	theXercesNode) const
 {
 	return static_cast<XercesElementBridge*>(mapNode(XercesDOM_NodeHack::getImpl(theXercesNode)));
+}
+
+
+
+void
+XercesDocumentBridge::buildBridgeNodes()
+{
+	// First, build any children of the document...
+	const XalanNode*	theChild = getFirstChild();
+
+	while(theChild != 0)
+	{
+		// Note that just accessing the sibling is
+		// enough to build the bridge nodes...
+		theChild = theChild->getNextSibling();
+	}
+
+	// OK, now walk everything below the document
+	// element...
+	const XalanNode* const	theDocumentElement =
+			getDocumentElement();
+
+	if (theDocumentElement != 0)
+	{
+		NullTreeWalker	theTreeWalker;
+
+		theTreeWalker.traverse(theDocumentElement, this);
+	}
 }
 
 
