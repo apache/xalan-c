@@ -30,8 +30,6 @@ static const char* szStartDataFile[]=
 "#define XALAN_MSG_LOADER_GUARD_1357924680 \n",
 "\n",
 "\n",
-"#include <xalanc/PlatformSupport/DOMStringHelper.hpp>\n",
-"\n",
 "XALAN_CPP_NAMESPACE_BEGIN\n",
 "\n",
 "\n",
