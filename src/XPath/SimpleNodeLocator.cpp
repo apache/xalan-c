@@ -405,7 +405,7 @@ SimpleNodeLocator::stepPattern(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
 			int 					opPos,
-			double& 				score)
+			double& 				scoreHolder)
 {
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
@@ -425,17 +425,21 @@ SimpleNodeLocator::stepPattern(
 								   executionContext,
 								   localContext,
 								   endStep,
-								   score);
+								   scoreHolder);
 
 		if(0 == localContext)
 		{
-			score = xpath.s_MatchScoreNone;
+			scoreHolder = xpath.s_MatchScoreNone;
 
+		}
+
+		if (scoreHolder == xpath.s_MatchScoreNone)
+		{
 			// !!!!!!!!!!!!! Big ugly return here !!!!!!!!!!!!!!!!!!!
 			return 0;
 		}
 
-		score = xpath.s_MatchScoreOther;
+		scoreHolder = xpath.s_MatchScoreOther;
 
 		localContext = executionContext.getParentOfNode(*localContext);
 
@@ -448,7 +452,9 @@ SimpleNodeLocator::stepPattern(
 
 	assert(localContext != 0);
 
-	int argLen = 0;
+	int			argLen = 0;
+
+	double		score = xpath.s_MatchScoreNone;
 
 	switch(stepType)
 	{
@@ -651,6 +657,12 @@ SimpleNodeLocator::stepPattern(
 				}
 			}
 		}
+	}
+
+	if (scoreHolder == xpath.s_MatchScoreNone || 
+        score == xpath.s_MatchScoreNone)
+	{
+		scoreHolder = score;
 	}
 
 	return score == xpath.s_MatchScoreNone ? 0 : localContext;

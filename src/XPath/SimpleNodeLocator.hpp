@@ -144,7 +144,7 @@ protected:
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
 			int 					opPos,
-			double& 				score);
+			double& 				scoreHolder);
 
 	int
 	findNodeSet(
