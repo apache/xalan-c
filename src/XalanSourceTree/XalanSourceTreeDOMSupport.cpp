@@ -140,7 +140,7 @@ XalanSourceTreeDOMSupport::isNodeAfter(
 			const XalanNode&	node1,
 			const XalanNode&	node2) const
 {
-	assert(node1.isIndexed() == true && node1.isIndexed() == true);
+	assert(node1.isIndexed() == true && node2.isIndexed() == true);
 
 	return node1.getIndex() > node2.getIndex() ? true : false;
 }
