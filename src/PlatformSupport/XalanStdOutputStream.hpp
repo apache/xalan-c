@@ -65,7 +65,6 @@
 
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
-#include <strstream.h>
 #include <iostream.h>
 #else
 #if defined(XALAN_NO_IOSFWD)
@@ -90,7 +89,7 @@ public:
 
 #if defined (XALAN_NO_NAMESPACES)
 	typedef ostream					StreamType;
-	typedef iosbase::streamsize		StreamSizeType;
+	typedef long					StreamSizeType;
 #else
 	typedef std::ostream		StreamType;
 	typedef std::streamsize		StreamSizeType;
