@@ -60,8 +60,14 @@
 
 
 #include <cerrno>
-#include <strstream>
 
+
+
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <strstream.h>
+#else
+#include <strstream>
+#endif
 
 
 #include <Include/XalanAutoPtr.hpp>
