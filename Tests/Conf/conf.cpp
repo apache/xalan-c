@@ -157,11 +157,6 @@ const char* const 	excludeStylesheets[] =
 	"sort31.xsl",
 	"sort35.xsl",
 	"sort37.xsl",
-	//".xsl",
-	//".xsl",
-	//".xsl",
-	//".xsl",
-	//".xsl",
 	0
 };
 
@@ -333,7 +328,7 @@ main(
 		int transResult = 0;
 
 		XalanDOMString  category;	// Test all of base dir by default
-		XalanDOMString  baseDir, outputRoot, goldRoot, fileName;	
+		XalanDOMString  baseDir, outputRoot, goldRoot;	
 
 		if (getParams(argc, argv, futil, baseDir, outputRoot, goldRoot, category) == true)
 		{
@@ -382,31 +377,33 @@ main(
 				const XalanDOMString  theOutputDir = outputRoot + currentDir;
 				futil.checkAndCreateDir(theOutputDir);
 
-
+				
 				// Get the files found in the test directory
 				const FileNameVectorType files = futil.getTestFileNames(baseDir, currentDir, true);
+				
+				logFile.logTestCaseInit(currentDir);
 
 				for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 				{
 
 					Hashtable attrs;
-					fileName = files[i];
+					const XalanDOMString currentFile(files[i]);
 
-					//attrs.insert(Hashtable::value_type(XalanDOMString("idref"), fileName));
+					//attrs.insert(Hashtable::value_type(XalanDOMString("idref"), currentFile));
 					//attrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"),UniqRunid));
 					//attrs.insert(Hashtable::value_type(XalanDOMString("processor"),processorType));
 
-					if (checkForExclusion(fileName))
+					if (checkForExclusion(currentFile))
 						continue;
 
-					const XalanDOMString  theXSLFile= baseDir + currentDir + pathSep + fileName;
+					const XalanDOMString  theXSLFile= baseDir + currentDir + pathSep + currentFile;
 					const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
-					XalanDOMString  theGoldFile = goldRoot + currentDir + pathSep + fileName;
+					XalanDOMString  theGoldFile = goldRoot + currentDir + pathSep + currentFile;
 					theGoldFile = futil.GenerateFileName(theGoldFile, "out");
 
-					const XalanDOMString  outbase =  outputRoot + currentDir + pathSep + fileName; 
+					const XalanDOMString  outbase =  outputRoot + currentDir + pathSep + currentFile; 
 					const XalanDOMString  theOutputFile = futil.GenerateFileName(outbase, "out");
-					//cout << endl << endl << "Processing: " << fileName << endl;
+					//cout << endl << endl << "Processing: " << currentFile << endl;
 
 					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
@@ -445,7 +442,7 @@ main(
 
 					if(!transResult)
 					{
-						futil.compareResults(theOutputFile, compiledSS, dom, fileName, goldInputSource);
+						futil.compareResults(theOutputFile, compiledSS, dom, currentFile, goldInputSource);
 					}
 					else
 					{
@@ -453,11 +450,16 @@ main(
 						return 0;
 					}
 
+					logFile.logCheckPass(currentFile);
+
 					parserLiaison.reset();
 					xalan.destroyParsedSource(parsedSource);
 					xalan.destroyStylesheet(compiledSS);
 
 				}	//for files
+
+				logFile.logTestCaseClose("Done", "Pass");
+
 			}		//for directories
 
 		logFile.logTestFileClose("Conformance ", "Done");
