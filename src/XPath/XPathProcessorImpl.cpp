@@ -633,15 +633,25 @@ XPathProcessorImpl::mapNSTokens(
 
 		addToTokenQueue(DOMServices::s_XMLNamespaceSeparatorString);
 
-		const XalanDOMString 	s = substring(pat, posOfNSSep + 1, posOfScan);
-	  
-		if(XalanQName::isValidNCName(s) == false)
+		// If there's no local part, then don't bother.  We need to check
+		// this because '*' tokenizes separately, which means "ns:*" tokenizes
+		// differently from "ns:foo".  In the first case, '*' will be tokenized
+		// _after_ this code, in the second 'ns:foo' will be split into tokens
+		// here...
+		if(posOfNSSep + 1 < posOfScan)
 		{
-			error(XalanDOMString("'") + s + XalanDOMString("' is not a valid NCName"));
-		}
-		else
-		{
-			addToTokenQueue(s);
+			const XalanDOMString 	s = substring(pat, posOfNSSep + 1, posOfScan);
+
+			assert(length(s) > 0);
+
+			if (XalanQName::isValidNCName(s) == false)
+			{
+				error(XalanDOMString("'") + s + XalanDOMString("' is not a valid NCName"));
+			}
+			else
+			{
+				addToTokenQueue(s);
+			}
 		}
 	}
 
@@ -2615,6 +2625,7 @@ static XalanDOMString	s_attributeString;
 static XalanDOMString	s_childString;
 
 
+
 const XalanDOMString	XPathProcessorImpl::s_emptyString;
 
 
@@ -2643,6 +2654,7 @@ const XalanDOMString&	XPathProcessorImpl::s_axisString = ::s_axisString;
 const XalanDOMString&	XPathProcessorImpl::s_attributeString = ::s_attributeString;
 
 const XalanDOMString&	XPathProcessorImpl::s_childString = ::s_childString;
+
 
 
 static XPathProcessorImpl::KeywordsMapType 		s_keywords;
