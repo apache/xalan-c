@@ -1840,6 +1840,8 @@ XPath::findRoot(
 			int 					/* stepType */,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
+
 	const XPathExpression&	currentExpression = getExpression();
 
 	// $$ ToDO: Can we reduce this to some call on the
@@ -1869,6 +1871,7 @@ XPath::findParent(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
 	assert(context != 0);
 
 	const XPathExpression&	currentExpression = getExpression();
@@ -1922,6 +1925,7 @@ XPath::findSelf(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
 	assert(context != 0);
 
 	const XPathExpression&	currentExpression = getExpression();
@@ -1971,6 +1975,7 @@ XPath::findAncestors(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
 	assert(context != 0);
 
 	context = DOMServices::getParentOfNode(*context);
@@ -2023,6 +2028,7 @@ XPath::findAncestorsOrSelf(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
 	assert(context != 0);
 
 	const XPathExpression&	currentExpression = getExpression();
@@ -2070,6 +2076,7 @@ XPath::findAttributes(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
 	assert(context != 0);
 
 	const XPathExpression&	currentExpression = getExpression();
@@ -2131,6 +2138,7 @@ XPath::findChildren(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
 	assert(context != 0);
 
 	XalanNode*	child = context->getFirstChild();
@@ -2183,6 +2191,7 @@ XPath::findDescendants(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
 	assert(context != 0);
 
 	const XPathExpression&	currentExpression = getExpression();
@@ -2258,6 +2267,7 @@ XPath::findFollowing(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
 	assert(context != 0);
 
 	const XPathExpression&	currentExpression = getExpression();
@@ -2354,6 +2364,7 @@ XPath::findFollowingSiblings(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
 	assert(context != 0);
 
 	const XPathExpression&	currentExpression = getExpression();
@@ -2452,6 +2463,7 @@ XPath::findPreceeding(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
 	assert(context != 0);
 
 	const XPathExpression&	currentExpression = getExpression();
@@ -2575,6 +2587,7 @@ XPath::findPreceedingSiblings(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
 	assert(context != 0);
 
 	const XPathExpression&	currentExpression = getExpression();
@@ -2627,6 +2640,7 @@ XPath::findNamespace(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(subQueryResults.empty() == true);
 	assert(context != 0);
 
 	const XPathExpression&	currentExpression = getExpression();
