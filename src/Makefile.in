@@ -343,10 +343,10 @@ endif
 # headers that others normally wouldn't
 ifdef XALAN_USE_ICU
 # We need the ICU library if we are using the ICUBridge
-  XSL_INCL = -I${ICUROOT}/include/ -I. -I$(XERCESCROOT)/src/ -I$(XERCESCROOT)/include/ 
+  XSL_INCL = -I${ICUROOT}/include/ -I. -I$(XERCESCROOT)/src/ -I$(XERCESCROOT)/include/xercesc -I$(XERCESCROOT)/include/
   XSL_BUILD_OPTIONS += -DXALAN_USE_ICU
 else
-  XSL_INCL = -I. -I$(XERCESCROOT)/src/ -I$(XERCESCROOT)/include/ 
+  XSL_INCL = -I. -I$(XERCESCROOT)/src/ -I$(XERCESCROOT)/include/xercesc -I$(XERCESCROOT)/include/
 endif
 
 
