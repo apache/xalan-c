@@ -338,8 +338,6 @@ ElemLiteralResult::startElement(StylesheetExecutionContext&		executionContext) c
 		}
 	}
 
-	evaluateAVTs(executionContext);
-
 	return beginExecuteChildren(executionContext);
 
 }
