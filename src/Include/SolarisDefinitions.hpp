@@ -101,9 +101,11 @@
 
 #define XALAN_UNALIGNED
 
+#if __SUNPRO_CC_COMPAT < 5
 // STL Port Definitions
 #define __STL_NO_SGI_IOSTREAMS
 #include <stl/_config.h>
+#endif
 
 
 #endif	// SOLARISDEFINITIONS_HEADER_GUARD_1357924680
