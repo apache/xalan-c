@@ -3117,7 +3117,9 @@ XSLTEngineImpl::setStylesheetParam(
 {
 	const XalanQNameByValue		qname(theName, 0, m_xpathEnvSupport, m_domSupport, getMemoryManager());
 
-	m_topLevelParams.push_back(ParamVectorType::value_type(getMemoryManager(), qname, expression));
+    const ParamVectorType::value_type   temp(getMemoryManager(), qname, expression);
+
+	m_topLevelParams.push_back(temp);
 }
 
 
@@ -3129,7 +3131,9 @@ XSLTEngineImpl::setStylesheetParam(
 {
 	const XalanQNameByValue		qname(theName, 0, m_xpathEnvSupport, m_domSupport,  getMemoryManager());
 
-	m_topLevelParams.push_back(ParamVectorType::value_type(getMemoryManager(), qname, theValue));
+    const ParamVectorType::value_type   temp(getMemoryManager(), qname, theValue);
+
+	m_topLevelParams.push_back(temp);
 }
 
 
@@ -3171,7 +3175,7 @@ XSLTEngineImpl::fireCharacterGenerateEvent(
 			const XalanNode&	theNode,
 			bool				isCDATA)
 {
-    XalanDOMString theBuffer( getMemoryManager());
+    XalanDOMString  theBuffer(getMemoryManager());
     
     DOMServices::getNodeData(theNode, theBuffer);
 
@@ -3195,7 +3199,11 @@ XSLTEngineImpl::fireCharacterGenerateEvent(
 			const XalanDOMString&	theString,
 			bool					isCDATA)
 {
-	fireCharacterGenerateEvent(c_wstr(theString), 0, length(theString), isCDATA);
+	fireCharacterGenerateEvent(
+        theString.c_str(),
+        0,
+        theString.length(),
+        isCDATA);
 }
 
 
@@ -3228,7 +3236,10 @@ XSLTEngineImpl::installFunctions(MemoryManagerType& theManager)
 	XPath::installFunction(XPathFunctionTable::s_formatNumber, FunctionFormatNumber());
 	XPath::installFunction(XPathFunctionTable::s_generateId, FunctionGenerateID());
 	XPath::installFunction(XPathFunctionTable::s_key, FunctionKey());
-	XPath::installFunction(XPathFunctionTable::s_systemProperty, FunctionSystemProperty(theManager));
+
+    const FunctionSystemProperty    temp(theManager);
+
+	XPath::installFunction(XPathFunctionTable::s_systemProperty, temp);
 	XPath::installFunction(XPathFunctionTable::s_unparsedEntityUri, FunctionUnparsedEntityURI());
 }
 

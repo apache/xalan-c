@@ -271,11 +271,17 @@ XPathEvaluator::evaluate(
 {
 	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
 
+    const ElementPrefixResolverProxy    thePrefixResolver(
+                    namespaceNode,
+                    theEnvSupportDefault,
+                    domSupport,
+                    m_memoryManager);
+
 	return evaluate(
 			domSupport,
 			contextNode,
 			xpathString,
-			ElementPrefixResolverProxy(namespaceNode, theEnvSupportDefault, domSupport, m_memoryManager),
+			thePrefixResolver,
 			theEnvSupportDefault);
  
 }
@@ -291,11 +297,17 @@ XPathEvaluator::evaluate(
 {
 	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
 
+    const ElementPrefixResolverProxy    thePrefixResolver(
+                    namespaceNode,
+                    theEnvSupportDefault,
+                    domSupport,
+                    m_memoryManager);
+
 	return evaluate(
 				domSupport,
 				contextNode,
 				xpath,
-				ElementPrefixResolverProxy(namespaceNode, theEnvSupportDefault, domSupport, m_memoryManager),
+				thePrefixResolver,
 				theEnvSupportDefault);
 }
 
@@ -343,9 +355,16 @@ XPath*
 XPathEvaluator::createXPath(const XalanDOMChar*		xpathString)
 {
 	DOMSupportDefault		theDOMSupport(m_memoryManager);
-	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
 
-	return createXPath(xpathString, ElementPrefixResolverProxy(0, theEnvSupportDefault, theDOMSupport, m_memoryManager));
+    XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
+
+    const ElementPrefixResolverProxy    thePrefixResolver(
+                    0,
+                    theEnvSupportDefault,
+                    theDOMSupport,
+                    m_memoryManager);
+
+	return createXPath(xpathString, thePrefixResolver);
 }
 
 
@@ -358,8 +377,18 @@ XPathEvaluator::createXPath(
 {
 	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
 
-	return createXPath(xpathString, ElementPrefixResolverProxy( namespaceNode, theEnvSupportDefault, domSupport, m_memoryManager));
+    const ElementPrefixResolverProxy    thePrefixResolver(
+                    namespaceNode,
+                    theEnvSupportDefault,
+                    domSupport,
+                    m_memoryManager);
+
+	return createXPath(xpathString, thePrefixResolver);
 }
+
+
+
+typedef XPathConstructionContext::GetAndReleaseCachedString     GetAndReleaseCachedString;
 
 
 
@@ -373,10 +402,16 @@ XPathEvaluator::createXPath(
 
 	XPathProcessorImpl		theProcessor(m_memoryManager);
 
+    GetAndReleaseCachedString   theGuard(*m_constructionContext.get());
+
+    XalanDOMString&     theTempString = theGuard.get();
+
+    theTempString = xpathString;
+
     theProcessor.initXPath(
 			*theXPath,
 			*m_constructionContext.get(),
-			XalanDOMString(xpathString, m_memoryManager),
+			theTempString,
 			prefixResolver);
 
 	return theXPath;
@@ -414,17 +449,28 @@ XPathEvaluator::evaluate(
 
 	// Create an XPath, and an XPathProcessorImpl to process
 	// the XPath.
-	XPath					theXPath(m_memoryManager);
+	XPath				theXPath(m_memoryManager);
 
-	XPathProcessorImpl		theProcessor(m_memoryManager);
+	XPathProcessorImpl  theProcessor(m_memoryManager);
+
+    GetAndReleaseCachedString   theGuard(*m_constructionContext.get());
+
+    XalanDOMString&     theTempString = theGuard.get();
+
+    theTempString = xpathString;
 
     theProcessor.initXPath(
 			theXPath,
 			*m_constructionContext.get(),
-			XalanDOMString(xpathString,m_memoryManager),
+			theTempString,
 			prefixResolver);
 
-	return evaluate(domSupport, contextNode, theXPath, prefixResolver, envSupport);
+	return evaluate(
+                domSupport,
+                contextNode,
+                theXPath,
+                prefixResolver,
+                envSupport);
 }
 
 

@@ -393,7 +393,9 @@ Stylesheet::pushNamespaces(const AttributeListType&		atts)
 				substring(aname, prefix, DOMServices::s_XMLNamespaceWithSeparatorLength);
 			}
 
-			namespaces.push_back(NameSpace(prefix, XalanDOMString(value, getMemoryManager()), getMemoryManager()));
+            const NameSpace     newNS(prefix, XalanDOMString(value, getMemoryManager()), getMemoryManager());
+
+			namespaces.push_back(newNS);
 		}
 	}
 
