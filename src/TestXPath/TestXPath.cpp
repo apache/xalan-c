@@ -105,7 +105,6 @@
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
-#include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
@@ -435,7 +434,7 @@ XalanNode*
 FindContextNode(
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
+			DOMSupport&				theDOMSupport,
 			XPathFactory&			theXPathFactory,
 			XalanDocument*			theDocument,
 			const XalanDOMString&	theContextNodeMatchPattern,
@@ -450,7 +449,7 @@ FindContextNode(
 						 theXPath);
 
 	XalanElement*				theNamespaceContext = 0;
-	ElementPrefixResolverProxy	thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
+	ElementPrefixResolverProxy	thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theDOMSupport);
 	NodeRefList					theContextNodeList;
 
 	const XObjectPtr theXObject =
@@ -505,7 +504,7 @@ bool
 TestAxisResult(
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
+			DOMSupport&				theDOMSupport,
 			XMLParserLiaison&		theLiaison,
 			XPathFactory&			theXPathFactory,
 			const XalanDOMString&	theXMLFileURL,
@@ -531,7 +530,7 @@ TestAxisResult(
 			XalanNode* const	theContextNode =
 				FindContextNode(theXPathProcessor,
 								theXPathEnvSupport,
-								theXPathSupport,
+								theDOMSupport,
 								theXPathFactory,
 								theXMLDocument,
 								theContextNodeMatchPattern,
@@ -541,7 +540,7 @@ TestAxisResult(
 			if (theContextNode != 0)
 			{
 				XalanElement* const				theNamespaceContext = 0;
-				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
+				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theDOMSupport);
 				NodeRefList						theContextNodeList;
 
 				XPath* const	theXPath = theXPathFactory.create();
@@ -613,7 +612,7 @@ bool
 TestPredicateResult(
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
+			DOMSupport&				theDOMSupport,
 			XMLParserLiaison&		theLiaison,
 			XPathFactory&			theXPathFactory,
 			const XalanDOMString&	theXMLFileURL,
@@ -640,7 +639,7 @@ TestPredicateResult(
 			XalanNode* const	theContextNode =
 				FindContextNode(theXPathProcessor,
 								theXPathEnvSupport,
-								theXPathSupport,
+								theDOMSupport,
 								theXPathFactory,
 								theXMLDocument,
 								theContextNodeMatchPattern,
@@ -650,7 +649,7 @@ TestPredicateResult(
 			if (theContextNode != 0)
 			{
 				XalanElement* const				theNamespaceContext = 0;
-				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
+				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theDOMSupport);
 				NodeRefList						theContextNodeList;
 
 				XPath* const	theXPath1 = theXPathFactory.create();
@@ -821,7 +820,7 @@ TestNumericResults(
 			XPathFactory&			theXPathFactory,
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
+			DOMSupport&				theDOMSupport,
 			PrintWriter&			thePrintWriter,
 			XPathExecutionContext&	theExecutionContext)
 {
@@ -844,7 +843,7 @@ TestNumericResults(
 							  theNumericTestExpectedOutput[i],
 							  theXPathEnvSupport,
 							  0,
-							  ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
+							  ElementPrefixResolverProxy(0, theXPathEnvSupport, theDOMSupport),
 							  NodeRefList(),
 							  theExecutionContext);
 		}
@@ -953,7 +952,7 @@ TestStringResults(
 			XPathFactory&			theXPathFactory,
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
+			DOMSupport&				theDOMSupport,
 			PrintWriter&			thePrintWriter,
 			XPathExecutionContext&	theExecutionContext)
 {
@@ -975,7 +974,7 @@ TestStringResults(
 							 TranscodeFromLocalCodePage(theStringTestExpectedOutput[i]),
 							 theXPathEnvSupport,
 							 0,
-							 ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
+							 ElementPrefixResolverProxy(0, theXPathEnvSupport, theDOMSupport),
 							 NodeRefList(),
 							 theExecutionContext);
 		}
@@ -1087,7 +1086,7 @@ TestBooleanResults(
 			XPathFactory&			theXPathFactory,
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
+			DOMSupport&				theDOMSupport,
 			PrintWriter&			thePrintWriter,
 			XPathExecutionContext&	theExecutionContext)
 {
@@ -1110,7 +1109,7 @@ TestBooleanResults(
 							  theBooleanTestExpectedOutput[i],
 							  theXPathEnvSupport,
 							  0,
-							  ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
+							  ElementPrefixResolverProxy(0, theXPathEnvSupport, theDOMSupport),
 							  NodeRefList(),
 							  theExecutionContext);
 		}
@@ -1163,7 +1162,7 @@ TestAxes(
 			XPathFactory&			theXPathFactory,
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
+			DOMSupport&				theDOMSupport,
 			XMLParserLiaison&		theLiaison,
 			const XalanDOMString&	theDirectory,
 			PrintWriter&			thePrintWriter,
@@ -1206,7 +1205,7 @@ TestAxes(
 
 				TestAxisResult(theXPathProcessor,
 							   theXPathEnvSupport,
-							   theXPathSupport,
+							   theDOMSupport,
 							   theLiaison,
 							   theXPathFactory,
 							   theXMLFileName,
@@ -1230,7 +1229,7 @@ RunTests(
 			XPathFactory&			theXPathFactory,
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
-			XPathSupport&			theXPathSupport,
+			DOMSupport&				theDOMSupport,
 			XMLParserLiaison&		theLiaison,
 			PrintWriter&			thePrintWriter,
 			XPathExecutionContext&	theExecutionContext)
@@ -1238,30 +1237,30 @@ RunTests(
 	TestNumericResults(theXPathFactory,
 					   theXPathProcessor,
 					   theXPathEnvSupport,
-					   theXPathSupport,
+					   theDOMSupport,
 					   thePrintWriter,
 					   theExecutionContext);
 
 	TestStringResults(theXPathFactory,
 					  theXPathProcessor,
 					  theXPathEnvSupport,
-					  theXPathSupport,
+					  theDOMSupport,
 					  thePrintWriter,
 					  theExecutionContext);
 
 	TestBooleanResults(theXPathFactory,
 					   theXPathProcessor,
 					   theXPathEnvSupport,
-					   theXPathSupport,
+					   theDOMSupport,
 					   thePrintWriter,
 					   theExecutionContext);
 
 	TestAxes(theXPathFactory,
 			 theXPathProcessor,
 		     theXPathEnvSupport,
-			 theXPathSupport,
+			 theDOMSupport,
 			 theLiaison,
-			 StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("/xsl-test/conf/Axes/")),
+			 StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("/xsl-test/conf/axes/")),
 			 thePrintWriter,
 		     theExecutionContext);
 }
@@ -1291,13 +1290,12 @@ main(int			/* argc */,
 
 		XPathEnvSupportDefault			theXPathEnvSupport;
 		XercesDOMSupport				theDOMSupport;
-		XPathSupportDefault				theXPathSupport(theDOMSupport);
 		XObjectFactoryDefault			theXObjectFactory;
 		XPathFactoryDefault				theXPathFactory;
 		XPathProcessorImpl				theXPathProcessor;
 
 		XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupport,
-															theXPathSupport,
+															theDOMSupport,
 															theXObjectFactory);
 
 		XalanStdOutputStream			theStdOut(cout);
@@ -1307,7 +1305,7 @@ main(int			/* argc */,
 		RunTests(theXPathFactory,
 				 theXPathProcessor,
 				 theXPathEnvSupport,
-				 theXPathSupport,
+				 theDOMSupport,
 				 theLiaison,
 				 thePrintWriter,
 				 theExecutionContext);
