@@ -363,7 +363,7 @@ ElemNumber::getCountMatchPattern(
 			if (isEmpty(theNamespaceURI) == true)
 			{
 				// No namespace URI means no prefix, so this is easy...
-				assert(isEmpty(contextNode->getLocalName()) == true);
+//				assert(isEmpty(contextNode->getLocalName()) == true);
 
 				// We can pass any PrefixResolver instance, so just
 				// pass ourself...
