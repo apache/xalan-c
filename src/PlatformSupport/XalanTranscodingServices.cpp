@@ -244,7 +244,7 @@ const XalanTranscodingServices::XalanXMLByte	XalanTranscodingServices::s_UTF8Byt
 const XalanDOMChar	XalanTranscodingServices::s_UTF16ByteOrderMark[] =
 {
 	XalanDOMChar(0xFEFF),
-	XalanTranscodingServices::XalanXMLByte(0)
+	XalanDOMChar(0)
 };
 
 
@@ -345,6 +345,7 @@ XalanTranscodingServices::encodingIsUTF8(const XalanDOMChar*	theEncodingName)
 }
 
 
+
 bool
 XalanTranscodingServices::encodingIsUTF8(const XalanDOMString&	theEncodingName)
 {
@@ -360,6 +361,7 @@ XalanTranscodingServices::encodingIsUTF16(const XalanDOMChar*	theEncodingName)
 		   compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf16LEString) == 0 ||
 		   compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf16BEString) == 0 ? true : false;
 }
+
 
 
 bool
