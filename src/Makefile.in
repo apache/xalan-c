@@ -53,124 +53,6 @@
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
 # 
-#
-# $Log$
-# Revision 1.27  2001/02/01 20:20:38  auriemma
-# Changed object output directory for sample ApacheModuleXSLT.
-#
-# Revision 1.26  2001/02/01 16:26:18  auriemma
-# Added XalanTranfomer class to library and added ApacheModuleXSLT sample to makefile.
-#
-# Revision 1.25  2001/01/27 18:04:10  dbertoni
-# Incorporated changes for Solaris with Sun Workshop 4.2.
-#
-# Revision 1.24  2001/01/25 19:06:14  auriemma
-# Removed spaces from include directive for solaris.
-#
-# Revision 1.23  2001/01/18 23:23:56  dbertoni
-# Bumped up Xerces library number.
-#
-# Revision 1.22  2000/12/15 23:29:08  dbertoni
-# Changes to integrate new Xalan source tree.
-#
-# Revision 1.21  2000/11/29 17:55:11  auriemma
-# HP port based on work from Trevor Smigiel .
-#
-# Revision 1.20  2000/10/11 21:13:29  auriemma
-# Reordered members and added -Wall as recommended by Nile Geisinger.
-#
-# Revision 1.19  2000/10/10 16:34:56  auriemma
-# Update version number.
-#
-# Revision 1.18  2000/10/03 14:58:14  auriemma
-# Added Xerces include to the include path.
-#
-# Revision 1.17  2000/10/02 13:38:39  auriemma
-# Added Solaris GCC support to makefile. This update was provided by Andrei Smirnov.
-#
-# Revision 1.16  2000/09/27 16:44:55  dbertoni
-# Output transcoding support.
-#
-# Revision 1.15  2000/09/25 14:37:06  auriemma
-# Clean up.
-#
-# Revision 1.14  2000/09/22 18:21:48  auriemma
-# Resolve issues for AIX .
-#
-# Revision 1.13  2000/09/21 16:54:07  auriemma
-# Clean up.
-#
-# Revision 1.12  2000/09/20 18:21:21  auriemma
-# Fixed problem on Linux.
-#
-# Revision 1.11  2000/09/20 14:11:54  auriemma
-# Reduced the size of library and executables on AIX by explicitly instantiating templates.
-#
-# Revision 1.10  2000/08/31 19:41:49  dbertoni
-# Updated Xerces library version number.
-#
-# Revision 1.9  2000/08/25 21:13:38  auriemma
-# Added support for building samples.
-#
-# Revision 1.8  2000/08/24 17:23:44  auriemma
-# Added support for AIX and ICU support for Linux and AIX.
-#
-# Revision 1.7  2000/07/07 15:04:23  dbertoni
-# Updated library name.
-#
-# Revision 1.6  2000/06/23 22:04:48  dbertoni
-# Bumped up revision numbers for new Xerces version, and for the next Xalan version.
-#
-# Revision 1.5  2000/06/01 17:44:23  dbertoni
-# New source directory.
-#
-# Revision 1.4  2000/04/10 20:25:06  dbertoni
-# Changes to remove absolute path to shared library when linking executable.
-#
-# Revision 1.3  2000/02/10 13:08:55  jdonohue
-# Added make for dependencies
-#
-# Revision 1.2  2000/02/03 20:13:12  jdonohue
-# Linux changes
-# PR:
-# Obtained from:
-# Submitted by:
-# Reviewed by:
-#
-# Revision 1.1  2000/01/27 20:30:27  jdonohue
-# no message
-#
-# Revision 1.10  2000/01/11 16:22:06  jdonohue
-# General cleanup
-#
-# Revision 1.9  2000/01/10 17:40:39  jdonohue
-# Added CXXFLAGS to make executables so that debugging info created
-#
-# Revision 1.8  2000/01/04 22:08:12  jdonohue
-# Added clean target, make of testXPath, fixed other macros
-#
-# Revision 1.7  1999/12/27 18:31:18  jdonohue
-# Fixed * for #, cpp instead of hpp
-#
-# Revision 1.6  1999/12/23 20:59:57  jdonohue
-# Added XERCESCROOT as macro
-# Uncomment ifdef LINUX -- need to fix this
-#
-# Revision 1.5  1999/12/23 18:06:02  jdonohue
-# Changes for linux
-#
-# Revision 1.4  1999/12/22 21:05:30  jdonohue
-# Changes for linux
-#
-# Revision 1.3  1999/12/22 17:49:22  jdonohue
-# Consolidated making into one file, eliminated copying of includes, etc
-#
-# Revision 1.1  1999/12/21 01:13:49  jdonohue
-# Make for linux, etc
-#
-#
-#
-
 ###################################################################
 #                    IMPORTANT NOTE                               #
 ###################################################################
@@ -232,7 +114,6 @@ $(XMLSUPPORT_DIR):$(XPATH_DIR):$(XSLT_DIR):$(XERCESINIT_DIR):$(XALANTRANSFORMER_
 ifdef XALAN_USE_ICU
 ALL_VPATH_CPP+=:$(ICUBRIDGE_DIR) 
 endif
-
 
 #all these setting come from the arguments passed in to runConfigure.
 PLATFORM =@platform@
@@ -441,14 +322,14 @@ $(BINTARGETDIR)/testXPath: ${ALL_OBJECTS_DIR}/TestXPath.o ${ALL_OBJECTS_DIR}/Nod
 ${ALL_OBJECTS_DIR}/%.o:$(TESTXPATH_DIR)/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
-Samples: lib  CompileStylesheet  ExternalFunction  SimpleTransform  TraceListen  UseStylesheetParam  XPathWrapper #  ThreadSafe
+Samples: lib  CompileStylesheet  ExternalFunction  SimpleTransform  TraceListen  UseStylesheetParam  XalanTransform XPathWrapper #  ThreadSafe
 
 ApacheModuleXSLT: lib ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 
 
-${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) : $(SAMPLES_DIR)/ApacheModuleXSLT/mod_xslt.o
+${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) : ${ALL_OBJECTS_DIR}/mod_xslt.o
 	$(MAKE_SHARED) $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
-$(SAMPLES_DIR)/ApacheModuleXSLT/%.o:$(SAMPLES_DIR)/ApacheModuleXSLT/%.c
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ApacheModuleXSLT/%.c
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I/usr/include/apache/ $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 CompileStylesheet: lib $(SAMPLES_DIR)/CompileStylesheet/CompileStylesheet 
@@ -490,6 +371,14 @@ $(SAMPLES_DIR)/UseStylesheetParam/UseStylesheetParam: ${ALL_OBJECTS_DIR}/UseStyl
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/UseStylesheetParam/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<	
+
+XalanTransform: lib $(SAMPLES_DIR)/XalanTransform/XalanTransform
+
+$(SAMPLES_DIR)/XalanTransform/XalanTransform: ${ALL_OBJECTS_DIR}/XalanTransform.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XalanTransform/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 	
 XPathWrapper: lib $(SAMPLES_DIR)/XPathWrapper/XPathWrapper 
 
@@ -509,12 +398,12 @@ clean:
 	rm -f $(THISLIB)$(VER)$(SHLIBSUFFIX)
 	rm -f $(BINTARGETDIR)/testXSLT
 	rm -f $(BINTARGETDIR)/testXPath
-	rm -f ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 
-	rm -f $(SAMPLES_DIR)/ApacheModuleXSLT/mod_xslt.o
+	rm -f ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 	
 	rm -f $(SAMPLES_DIR)/CompileStylesheet/CompileStylesheet
 	rm -f $(SAMPLES_DIR)/ExternalFunction/ExternalFunction
 	rm -f $(SAMPLES_DIR)/SimpleTransform/SimpleTransform
 	rm -f $(SAMPLES_DIR)/TraceListen/TraceListen
 	rm -f $(SAMPLES_DIR)/UseStylesheetParam/UseStylesheetParam
+	rm -f $(SAMPLES_DIR)/XalanTransform/XalanTransform
 	rm -f $(SAMPLES_DIR)/XPathWrapper/XPathWrapper
 
