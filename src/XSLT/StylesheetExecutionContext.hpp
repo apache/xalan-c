@@ -727,6 +727,14 @@ public:
 	};
 
 	/**
+	 * Get the top of the global stack frame.
+	 *
+	 * @return current value of index
+	 */
+	virtual int
+	getGlobalStackFrameIndex() const = 0;
+
+	/**
 	 * Get the top of the stack frame from where a search 
 	 * for a variable or param should take place.
 	 *

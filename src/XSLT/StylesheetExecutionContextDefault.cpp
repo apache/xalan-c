@@ -767,6 +767,14 @@ StylesheetExecutionContextDefault::popElementFrame(const ElemTemplateElement*	el
 
 
 int
+StylesheetExecutionContextDefault::getGlobalStackFrameIndex() const
+{
+	return m_variablesStack.getGlobalStackFrameIndex();
+}
+
+
+
+int
 StylesheetExecutionContextDefault::getCurrentStackFrameIndex() const
 {
 	return m_variablesStack.getCurrentStackFrameIndex();
@@ -1661,9 +1669,9 @@ StylesheetExecutionContextDefault::getVariable(const QName&		name)
 	}
 	else
 	{
-		warn(
-			TranscodeFromLocalCodePage("Variable reference given for variable out of context or without definition!  Name = ") +
-			name.getLocalPart());
+		error(
+			TranscodeFromLocalCodePage("Variable reference given for variable out of context or without definition!  Name = '") +
+			name.getLocalPart() + "'");
 
 		return getXObjectFactory().createUnknown(name.getLocalPart());
 	}

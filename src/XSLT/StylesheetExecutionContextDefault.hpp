@@ -428,6 +428,9 @@ public:
 	popElementFrame(const ElemTemplateElement*	elem);
 
 	virtual int
+	getGlobalStackFrameIndex() const;
+
+	virtual int
 	getCurrentStackFrameIndex() const;
 
 	virtual void

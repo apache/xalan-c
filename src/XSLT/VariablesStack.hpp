@@ -307,6 +307,17 @@ public:
 		return m_currentStackFrameIndex;
 	}
 
+	/**
+	 * Get the top of the global stack frame.
+	 *
+	 * @return current value of index
+	 */
+	int
+	getGlobalStackFrameIndex() const
+	{
+		return m_globalStackFrameIndex;
+	}
+
 	class InvalidStackContextException : public XSLTProcessorException
 	{
 	public:

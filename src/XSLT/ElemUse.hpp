@@ -118,6 +118,20 @@ public:
 			const AttributeList&			atts,
 			int								which);
 
+	/**
+	 * Copy the QNames from the source
+	 *
+	 * @param theSource The source ElemUse instance.
+	 */
+	void
+	copyQNames(const ElemUse&	theSource)
+	{
+		m_attributeSetsNames.insert(
+			m_attributeSetsNames.end(),
+			theSource.m_attributeSetsNames.begin(),
+			theSource.m_attributeSetsNames.end());
+	}
+
 	// These methods are inherited from ElemTemplateElement ...
 	
 	virtual const XalanDOMString&
@@ -125,6 +139,8 @@ public:
 
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
+
+private:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<QNameByValue>		QNameVectorType;

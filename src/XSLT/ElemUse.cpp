@@ -157,12 +157,17 @@ ElemUse::processUseAttributeSets(
 
 		m_attributeSetsNames.reserve(numTokens);
 
+		XalanDOMString	qname;
+
 		while(tokenizer.hasMoreTokens())
 		{
-			const XalanDOMString		qname = tokenizer.nextToken();
+			tokenizer.nextToken(qname);
 			assert(length(qname) != 0);
 
-			m_attributeSetsNames.push_back(QNameVectorType::value_type(qname, getStylesheet().getNamespaces()));
+			m_attributeSetsNames.push_back(
+				QNameVectorType::value_type(
+					qname,
+					getStylesheet().getNamespaces()));
 		}
 	}
 

@@ -125,10 +125,43 @@ ElemAttributeSet::getElementName() const
 
 
 void
+ElemAttributeSet::adopt(ElemAttributeSet&	theSource)
+{
+	ElemTemplateElement* node = theSource.getFirstChildElem();
+
+	while(node != 0) 
+	{
+		assert(node->getXSLToken() == Constants::ELEMNAME_ATTRIBUTE);
+
+		theSource.removeChild(node);
+
+		XalanAutoPtr<ElemTemplateElement>	theGuard(node);
+
+		appendChild(node);
+
+		theGuard.release();
+
+		node = theSource.getFirstChildElem();
+	}
+
+	copyQNames(theSource);
+}
+
+
+
+void
 ElemAttributeSet::execute(StylesheetExecutionContext&		executionContext) const
 {
+	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
+	typedef StylesheetExecutionContext::ElementRecursionStackPusher				ElementRecursionStackPusher;
+
 	// This will push and pop the stack automatically...
-	StylesheetExecutionContext::ElementRecursionStackPusher		thePusher(executionContext, this);
+	ElementRecursionStackPusher		thePusher(executionContext, this);
+
+	// Make sure only global variables are visible during execution...
+	SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
+					executionContext, 
+					executionContext.getGlobalStackFrameIndex());
 
 	ElemUse::execute(executionContext);
 

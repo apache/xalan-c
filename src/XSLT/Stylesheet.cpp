@@ -325,6 +325,30 @@ Stylesheet::popNamespaces()
 
 
 
+class attrSetCompare
+{
+public:
+
+	attrSetCompare(const ElemAttributeSet&	theAttrSet) :
+		m_attrSet(theAttrSet)
+	{
+	}
+
+	bool
+	operator()(const ElemAttributeSet*	theRHS) const
+	{
+		assert(theRHS != 0);
+
+		return m_attrSet == *theRHS;
+	}
+
+private:
+
+	const ElemAttributeSet&		m_attrSet;
+};
+
+
+
 void
 Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext)
 {
@@ -390,11 +414,40 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 	}
 
 	{
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::find_if;
+#endif
 		for (AttributeSetVectorType::size_type i = 0; i < m_attributeSets.size(); ++i)
 		{
-			assert(m_attributeSets[i] != 0);
+			ElemAttributeSet* const		theCurrent = m_attributeSets[i];
 
-			m_attributeSets[i]->postConstruction(constructionContext, m_namespacesHandler);
+			assert(theCurrent != 0);
+
+			for(;;)
+			{
+				// Look for duplicate sets...
+				const AttributeSetVectorType::iterator 	theResult =
+					find_if(
+							m_attributeSets.begin() + (i + 1),
+							m_attributeSets.end(),
+							attrSetCompare(*theCurrent));
+
+				// Did we find it?
+				if(theResult == m_attributeSets.end())
+				{
+					break;
+				}
+				else
+				{
+					theCurrent->adopt(**theResult);
+
+					delete *theResult;
+
+					m_attributeSets.erase(theResult);
+				}
+			}
+
+			theCurrent->postConstruction(constructionContext, m_namespacesHandler);
 		}
 	}
 
@@ -1454,6 +1507,8 @@ Stylesheet::addAttributeSet(
 		const QName&		/* qname */, 
 		ElemAttributeSet*	attrSet)
 {
+	assert(attrSet != 0);
+
 	m_attributeSets.push_back(attrSet);
 }		
 
@@ -1484,8 +1539,10 @@ Stylesheet::applyAttrSets(
 		{
 			const Stylesheet* const 	stylesheet = m_imports[i];
 
-			stylesheet->applyAttrSets(attributeSetsNames, 
-									 executionContext, sourceNode);
+			stylesheet->applyAttrSets(
+				attributeSetsNames, 
+				executionContext,
+				sourceNode);
 		}
 
 		for(QNameVectorType::size_type j = 0; j < nNames; j++)
@@ -1505,7 +1562,7 @@ Stylesheet::applyAttrSets(
 			}
 		}
 	}
-}	
+}
 
 
 
