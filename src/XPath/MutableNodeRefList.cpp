@@ -59,8 +59,9 @@
 
 
 
-#include <cassert>
 #include <algorithm>
+#include <cassert>
+#include <functional>
 
 
 
@@ -236,10 +237,7 @@ MutableNodeRefList::setNode(
 {
 	assert(pos < getLength());
 
-	if (theNode != 0)
-	{
-		m_nodeList[pos] = theNode;
-	}
+	m_nodeList[pos] = theNode;
 }
 
 
@@ -364,6 +362,40 @@ MutableNodeRefList::addNodeInDocOrder(
 			}
 		}
 	}
+}
+
+
+
+void
+MutableNodeRefList::clearNulls()
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::remove;
+#endif
+
+	NodeListVectorType::iterator	i =
+		m_nodeList.begin();
+
+	while(i != m_nodeList.end())
+	{
+		if (*i == 0)
+		{
+			NodeListVectorType::iterator	j = i + 1;
+
+			while(j != m_nodeList.end() && *j == 0)
+			{
+				++j;
+			}
+
+			i = m_nodeList.erase(i, j);
+		}
+		else
+		{
+			++i;
+		}
+	}
+
+	assert(checkForDuplicates() == false);
 }
 
 

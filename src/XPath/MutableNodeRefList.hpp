@@ -215,6 +215,12 @@ public:
 			XalanNode*	node,
 			bool		test);
 
+	/**
+	 * Clear any null entrees in the node list.
+	 */
+	virtual void
+	clearNulls();
+
 	virtual XPathSupport*
 	getSupport() const;
 
