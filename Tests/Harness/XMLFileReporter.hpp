@@ -357,6 +357,11 @@ private:
 	static const XalanDOMString ATTR_RESULT;
 	static const XalanDOMString ATTR_KEY;
 	static const XalanDOMString ATTR_FILENAME;
+	static const XalanDOMString	LESS_THAN;
+	static const XalanDOMString	GREATER_THAN;
+	static const XalanDOMString	EQUALS_QUOTE;
+	static const XalanDOMString	SPACE;
+	static const XalanDOMString	QUOTE_SPACE;
 
 	/** 
 	* Optimization: for heavy use methods, form pre-defined constants to save on XalanDOMString concatenation.  

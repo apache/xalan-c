@@ -328,9 +328,6 @@ public:
 	*/
 	FormatterListener* 
 	getXMLFormatter(
-			bool					shouldWriteXMLHeader,
-			bool					stripCData,
-			bool					escapeCData,
 			PrintWriter&			resultWriter,
 			int						indentAmount,
 			const XalanDOMString&	mimeEncoding,

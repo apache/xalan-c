@@ -611,9 +611,6 @@ FileUtility::getXercesVersion()
 
 FormatterListener* 
 FileUtility::getXMLFormatter(
-			bool					shouldWriteXMLHeader,
-			bool					stripCData,
-			bool					escapeCData,
 			PrintWriter&			resultWriter,
 			int						indentAmount,
 			const XalanDOMString&	mimeEncoding,
@@ -773,9 +770,6 @@ FileUtility::checkDOMResults(
 
 	FormatterListener* const	theFormatter =
 		getXMLFormatter(
-			true,
-			true,
-			true,
 			myResultWriter,
 			0,
 			mimeEncoding,
@@ -982,7 +976,6 @@ FileUtility::domCompare(
 	const XalanNode::NodeType	goldNodeType = gold.getNodeType();
 
 	const XalanDOMString&  docNodeName  = doc.getNodeName();	
-	const XalanDOMString&  goldNodeName = gold.getNodeName();
 
 	if (goldNodeType != docNodeType)
 	{
@@ -1297,7 +1290,6 @@ bool FileUtility::diffAttr(const XalanNode* gAttr, const XalanNode* dAttr)
 {
 
 	const XalanDOMString&	docAttrName  = dAttr->getNodeName();
-	const XalanDOMString&	goldAttrName = gAttr->getNodeName();
 
 	//debugAttributeData(goldAttrName);
 

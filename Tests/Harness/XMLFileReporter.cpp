@@ -71,39 +71,45 @@
 
 
 
-const XalanDOMString  XMLFileReporter::OPT_FILENAME("filename");
-const XalanDOMString  XMLFileReporter::ELEM_RESULTSFILE("resultsfile");
-const XalanDOMString  XMLFileReporter::ELEM_TESTFILE("testfile");
-const XalanDOMString  XMLFileReporter::ELEM_FILERESULT("fileresult");
-const XalanDOMString  XMLFileReporter::ELEM_TESTCASE("Test_Dir");
-const XalanDOMString  XMLFileReporter::ELEM_CASERESULT("Dir-result");
-const XalanDOMString  XMLFileReporter::ELEM_CHECKRESULT("Testcase");
-const XalanDOMString  XMLFileReporter::ELEM_STATISTIC("statistic");
-const XalanDOMString  XMLFileReporter::ELEM_LONGVAL("longval");
-const XalanDOMString  XMLFileReporter::ELEM_DOUBLEVAL("doubleval");
-const XalanDOMString  XMLFileReporter::ELEM_MESSAGE("message");
-const XalanDOMString  XMLFileReporter::ELEM_ARBITRARY("arbitrary");
-const XalanDOMString  XMLFileReporter::ELEM_HASHTABLE("hashtable");
-const XalanDOMString  XMLFileReporter::ELEM_HASHITEM("hashitem");
-const XalanDOMString  XMLFileReporter::ATTR_LEVEL("level");
-const XalanDOMString  XMLFileReporter::ATTR_DESC("desc");
-const XalanDOMString  XMLFileReporter::ATTR_TIME("time");
-const XalanDOMString  XMLFileReporter::ATTR_RESULT("result");
-const XalanDOMString  XMLFileReporter::ATTR_KEY("key");
-const XalanDOMString  XMLFileReporter::ATTR_FILENAME = XMLFileReporter::OPT_FILENAME;
+// $$$ToDo:  These strings must be initialized in a static call, and not at initialization.
+const XalanDOMString	XMLFileReporter::OPT_FILENAME(L"filename");
+const XalanDOMString	XMLFileReporter::ELEM_RESULTSFILE(L"resultsfile");
+const XalanDOMString	XMLFileReporter::ELEM_TESTFILE(L"testfile");
+const XalanDOMString	XMLFileReporter::ELEM_FILERESULT(L"fileresult");
+const XalanDOMString	XMLFileReporter::ELEM_TESTCASE(L"Test_Dir");
+const XalanDOMString	XMLFileReporter::ELEM_CASERESULT(L"Dir-result");
+const XalanDOMString	XMLFileReporter::ELEM_CHECKRESULT(L"Testcase");
+const XalanDOMString	XMLFileReporter::ELEM_STATISTIC(L"statistic");
+const XalanDOMString	XMLFileReporter::ELEM_LONGVAL(L"longval");
+const XalanDOMString	XMLFileReporter::ELEM_DOUBLEVAL(L"doubleval");
+const XalanDOMString	XMLFileReporter::ELEM_MESSAGE(L"message");
+const XalanDOMString	XMLFileReporter::ELEM_ARBITRARY(L"arbitrary");
+const XalanDOMString	XMLFileReporter::ELEM_HASHTABLE(L"hashtable");
+const XalanDOMString	XMLFileReporter::ELEM_HASHITEM(L"hashitem");
+const XalanDOMString	XMLFileReporter::ATTR_LEVEL(L"level");
+const XalanDOMString	XMLFileReporter::ATTR_DESC(L"desc");
+const XalanDOMString	XMLFileReporter::ATTR_TIME(L"time");
+const XalanDOMString	XMLFileReporter::ATTR_RESULT(L"result");
+const XalanDOMString	XMLFileReporter::ATTR_KEY(L"key");
+const XalanDOMString	XMLFileReporter::ATTR_FILENAME = XMLFileReporter::OPT_FILENAME;
+const XalanDOMString	XMLFileReporter::LESS_THAN(L"<");
+const XalanDOMString	XMLFileReporter::GREATER_THAN(L">");
+const XalanDOMString	XMLFileReporter::EQUALS_QUOTE(L"=\"");
+const XalanDOMString	XMLFileReporter::SPACE(L" ");
+const XalanDOMString	XMLFileReporter::QUOTE_SPACE(L"\" ");
 
-const XalanDOMString XMLFileReporter::TESTCASEINIT_HDR("<" + ELEM_TESTCASE + " " + ATTR_DESC + "=\"");
-const XalanDOMString XMLFileReporter::TESTCASECLOSE_HDR("<" + ELEM_CASERESULT + " " + ATTR_DESC + "=\"");
-const XalanDOMString XMLFileReporter::MESSAGE_HDR("<" + ELEM_MESSAGE + " " + ATTR_LEVEL + "=\"");
-const XalanDOMString XMLFileReporter::STATISTIC_HDR("<" + ELEM_STATISTIC + " " + ATTR_LEVEL + "=\"");
-const XalanDOMString XMLFileReporter::ARBITRARY_HDR("<" + ELEM_ARBITRARY + " " + ATTR_LEVEL + "=\"");
-const XalanDOMString XMLFileReporter::HASHTABLE_HDR("<" + ELEM_HASHTABLE + " " + ATTR_LEVEL + "=\"");
-const XalanDOMString XMLFileReporter::HASHITEM_HDR("<" + ELEM_HASHITEM + " " + ATTR_KEY + "=\"");
-const XalanDOMString XMLFileReporter::CHECKPASS_HDR("<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "PASS" + "\" " + ATTR_DESC + "=\"");
-const XalanDOMString XMLFileReporter::CHECKAMBG_HDR("<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "AMBG" + "\" " + ATTR_DESC + "=\"");
-const XalanDOMString XMLFileReporter::CHECKERRR_HDR("<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "ERRR" + "\" " + ATTR_DESC + "=\"");
-const XalanDOMString XMLFileReporter::CHECKFAIL_HDR("<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "FAIL" + "\" " + ATTR_DESC + "=\"");
-const XalanDOMString XMLFileReporter::CHECKFAIL_FTR("</" + ELEM_CHECKRESULT + ">");
+const XalanDOMString	XMLFileReporter::TESTCASEINIT_HDR(LESS_THAN + ELEM_TESTCASE + SPACE + ATTR_DESC + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::TESTCASECLOSE_HDR(LESS_THAN + ELEM_CASERESULT + SPACE + ATTR_DESC + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::MESSAGE_HDR(LESS_THAN + ELEM_MESSAGE + SPACE + ATTR_LEVEL + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::STATISTIC_HDR(LESS_THAN + ELEM_STATISTIC + SPACE + ATTR_LEVEL + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::ARBITRARY_HDR(LESS_THAN + ELEM_ARBITRARY + SPACE + ATTR_LEVEL + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::HASHTABLE_HDR(LESS_THAN + ELEM_HASHTABLE + SPACE + ATTR_LEVEL + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::HASHITEM_HDR(LESS_THAN + ELEM_HASHITEM + SPACE + ATTR_KEY + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::CHECKPASS_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + L"PASS" + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::CHECKAMBG_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + L"AMBG" + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::CHECKERRR_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + L"ERRR" + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::CHECKFAIL_HDR(LESS_THAN + ELEM_CHECKRESULT + SPACE + ATTR_RESULT + EQUALS_QUOTE + L"FAIL" + QUOTE_SPACE + ATTR_DESC + EQUALS_QUOTE);
+const XalanDOMString	XMLFileReporter::CHECKFAIL_FTR(L"</" + ELEM_CHECKRESULT + GREATER_THAN);
 
 
 XMLFileReporter::XMLFileReporter():
