@@ -110,11 +110,11 @@ public:
 
   /**
    * Print the result tree.
-   * @param doc The result tree.
-   * @param pw The PrintWriter to print the contents to.
-   * @param resultns the value of the resultns attribute.
-   * @param format Tells if it should be pretty-printed.
-   * @exception Exception thrown if the result tree is corrupted.
+	*
+   * @param doc      result tree
+   * @param pw       printWriter to print the contents to
+   * @param resultns value of the result namespace attribute
+   * @param format   true if it should be pretty-printed
    */
 	virtual void
 	toMarkup(
@@ -122,18 +122,23 @@ public:
 			PrintWriter&			pw,
 			const DOMString&		resultns,
 			bool					format) = 0;
-//        throws Exception;
 
   /**
-   * Get an instance of the formatter listener that is associated 
-   * with this formatter.
+	* Get the instance of the formatter listener that is associated with this
+	* formatter.
+	*
+   * @return pointer to listener
    */
 	virtual FormatterListener*
 	getFormatterListener() const = 0;
 
   /**
-   * Set an instance of the formatter listener that is associated 
-   * with this formatter.
+	* Set the instance of the formatter listener that is associated with this
+	* formatter.
+	*
+   * @param pw       printWriter to print the contents to
+   * @param resultns value of the result namespace attribute
+   * @param format   true if it should be pretty-printed
    */
 	virtual void
 	setFormatterListener(
@@ -142,8 +147,13 @@ public:
 			bool				format) = 0;
 
   /**
-   * Set an instance of the formatter listener that is associated 
-   * with this formatter.
+	* Set the instance of the formatter listener that is associated with this
+	* formatter.
+	*
+   * @param pw       printWriter to print the contents to
+   * @param resultns value of the result namespace attribute
+   * @param format   true if it should be pretty-printed
+   * @param fl       pointer to listener to use
    */
 	virtual void
 	setFormatterListener(FormatterListener*		fl) = 0;

@@ -89,17 +89,73 @@ class XALAN_XMLSUPPORT_EXPORT FormatterListener : public DocumentHandler
 public:
 
 	FormatterListener();
-
 	virtual
+
 	~FormatterListener();
 
-    virtual void
-	characters(
+	/**
+	 * Receive notification of character data. If available, when the
+	 * disable-output-escaping attribute is used, output raw text without
+	 * escaping.
+	 *
+	 * @param chars  pointer to characters from the XML document
+	 * @param length number of characters to read from the array
+	 * @exception SAXException
+	 */
+	virtual void
+	charactersRaw(
 			const XMLCh* const	chars,
 			const unsigned int	length) = 0;
 
+	/**
+	 * Called when a Comment is to be constructed.
+	 *
+	 * @param   data	pointer to comment data
+	 * @exception SAXException
+	 */
+	virtual void
+	comment(const XMLCh* const	data) = 0;
+
+	/**
+	 * Receive notification of cdata.
+	 *
+	 * <p>The Parser will call this method to report each chunk of
+	 * character data.  SAX parsers may return all contiguous character
+	 * data in a single chunk, or they may split it into several
+	 * chunks; however, all of the characters in any single event
+	 * must come from the same external entity, so that the Locator
+	 * provides useful information.</p>
+	 *
+	 * <p>The application must not attempt to read from the array
+	 * outside of the specified range.</p>
+	 *
+	 * <p>Note that some parsers will report whitespace using the
+	 * ignorableWhitespace() method rather than this one (validating
+	 * parsers must do so).</p>
+	 *
+	 * @param ch     pointer to characters from the XML document
+	 * @param length number of characters to read from the array
+	 * @exception SAXException
+	 */
+	virtual void
+	cdata(
+			const XMLCh* const	ch,
+			const unsigned int 	length) = 0;
+
+	/**
+	 * Receive notification of a entityReference.
+	 *
+	 * @param data pointer to characters from the XML document
+	 * @exception SAXException
+	 */
+	virtual void
+	entityReference(const XMLCh* const	name) = 0;
+
+
+// These methods are inherited from DocumentHandler ...
+
     virtual void
-	charactersRaw(
+	characters(
 			const XMLCh* const	chars,
 			const unsigned int	length) = 0;
 
@@ -133,16 +189,6 @@ public:
 			const	XMLCh* const	name,
 			AttributeList&			attrs) = 0;
 
-	virtual void
-	comment(const XMLCh* const	data) = 0;
-
-	virtual void
-	cdata(
-			const XMLCh* const	ch,
-			const unsigned int 	length) = 0;
-
-	virtual void
-	entityReference(const XMLCh* const	name) = 0;
 };
 
 

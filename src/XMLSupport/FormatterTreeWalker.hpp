@@ -78,9 +78,10 @@ class XALAN_XMLSUPPORT_EXPORT FormatterTreeWalker : public TreeWalker
 public:
 
 	/**
-	 * Constructor.
-	 * @param   formatterListener The implemention of the 
-	 * FormatterListener operation (toXMLString, digest, ...)
+	 * Construct a FormatterTreeWalker instance.
+	 *
+	 * @param formatterListener implemention of the FormatterListener operation
+	 *                          (toXMLString, digest, ...)
 	 */
 	FormatterTreeWalker(FormatterListener&	formatterListener);
 

@@ -79,6 +79,15 @@ class XALAN_XMLSUPPORT_EXPORT XMLParserLiaisonDefault : public XMLParserLiaison,
 {
 public:
 
+	/**
+	 * Construct a XMLParserLiaisonDefault instance.
+	 *
+	 * @param formatterListener implemention of the FormatterListener operation
+	 *                          (toXMLString, digest, ...)
+	 *
+	 * @param theDOMSupport        instance of DOMSupport object
+	 * @param theParserDescription string description of parser
+	 */
 	XMLParserLiaisonDefault(
 			DOMSupport&			theDOMSupport,
 			const DOMString&	theParserDescription = DOMString("(No parser - generic DOM)"));
@@ -88,171 +97,77 @@ public:
 
 	// These interfaces are inherited from Resettable...
 
-	/**
-	 * Reset for new run.
-	 */
 	virtual void
 	reset();
 
 	// These interfaces are inherited from XMLParserLiaison...
 
-	/**
-	 * Returns true if the liaison supports the SAX DocumentHandler 
-	 * interface.
-	 */
 	virtual bool
 	supportsSAX() const;
 
-	/**
-	 * Parse the text pointed at by the reader as XML, and return 
-	 * a DOM Document interface.  May return null if not 
-	 * supported.  It is recommended that you pass in some sort 
-	 * of recognizable name, such as the filename or URI, with 
-	 * which the reader can be recognized if the parse fails.
-	 * @param reader A stream that should hold valid XML.
-	 * @param identifier Used for diagnostic purposes only, 
-	 * some sort of identification for error reporting, may be 
-	 * an empty string.
-	 */
 	virtual DOM_Document
 	parseXMLStream(
 			InputSource&		reader,
 			const DOMString&	identifier = DOMString());
 
-	/**
-	 * Parse the text pointed at by the reader as XML, and return 
-	 * a DOM Document interface.  May return null if not 
-	 * supported.  It is recommended that you pass in some sort 
-	 * of recognizable name, such as the filename or URI, with 
-	 * which the reader can be recognized if the parse fails.
-	 * @param reader A URL input source that should hold valid XML.
-	 * @param identifier Used for diagnostic purposes only, 
-	 * some sort of identification for error reporting, may be 
-	 * an empty string.
-	 */
 	virtual DOM_Document
 	parseXMLStream(
 			URLInputSource&		reader,
 			const DOMString&	identifier = DOMString());
 
-	/**
-	 * Parse the text pointed at by the reader as XML.
-	 *
-	 * @param reader A URL input source that should hold valid XML.
-	 * @param handler An instance of a DocumentHandler.
-	 * @param identifier Used for diagnostic purposes only, 
-	 * some sort of identification for error reporting, may be 
-	 * an empty string.
-	 */
 	virtual void
 	parseXMLStream(
 			InputSource&		urlInputSource,
 			DocumentHandler&	handler,
 			const DOMString&	identifier = DOMString());
 
-	/**
-	 * Parse the text pointed at by the reader as XML.
-	 *
-	 * @param reader A URL input source that should hold valid XML.
-	 * @param handler An instance of a DocumentHandler.
-	 * @param identifier Used for diagnostic purposes only, 
-	 * some sort of identification for error reporting, may be 
-	 * an empty string.
-	 */
 	virtual void
 	parseXMLStream(
 			URLInputSource&		urlInputSource,
 			DocumentHandler&	handler,
 			const DOMString&	identifier = DOMString());
 
-	/**
-	 * Create an empty DOM Document.  Mainly used for creating an 
-	 * output document.
-	 */
 	virtual DOM_Document
 	createDocument();
   
 	virtual DOM_Document
 	getDOMFactory();
 
-	/**
-	 * Return the expanded element name.
-	 */
 	virtual DOMString
 	getExpandedElementName(const DOM_Element&	elem) const;
 
-	/**
-	 * Returns the attribute name with the namespace expanded.
-	 */
 	virtual DOMString
 	getExpandedAttributeName(const DOM_Attr&	attr) const;
 
-	/**
-	 * Set special characters for attributes that will be escaped.
-	 */
 	virtual void
 	setSpecialCharacters(const DOMString&	str) { m_SpecialCharacters = str; }
 
-	/**
-	 * Get special characters for attributes that will be escaped.
-	 */
 	virtual DOMString
 	getSpecialCharacters() const { return m_SpecialCharacters; }
 
-	/**
-	 * Get the amount to indent when indent-result="yes".
-	 */
 	virtual int
 	getIndent() const { return m_Indent; }
 
-	/**
-	 * Set the amount to indent when indent-result="yes".
-	 */
 	virtual void
 	setIndent(int i) { m_Indent = i; }
 
-	/**
-	 * Get whether or not to expand all entity references in the 
-	 * source and style trees.
-	 */
 	virtual bool
 	getShouldExpandEntityRefs() const { return m_fShouldExpandEntityRefs; }
 
-	/**
-	 * Set whether or not to expand all entity references in the 
-	 * source and style trees.
-	 */
 	virtual void
 	SetShouldExpandEntityRefs(bool b) { m_fShouldExpandEntityRefs = b; }
 
-	/**
-	 * Get whether or not validation will be performed.  Validation is off by default.
-	 */
 	virtual bool
 	getUseValidation() const { return m_fUseValidation; }
 
-	/**
-	 * If set to true, validation will be performed.  Validation is off by default.
-	 */
 	virtual void
 	setUseValidation(bool b) { m_fUseValidation = b; }
 
-	/**
-	 * Return a string suitable for telling the user what parser is being used.
-	 */
 	virtual const DOMString&
 	getParserDescription() const { return m_ParserDescription; }
 
 	// These interfaces are inherited from Formatter...
 
-	/**
-	 * Print the result tree.
-	 * @param doc The result tree.
-	 * @param pw The PrintWriter to print the contents to.
-	 * @param resultns the value of the resultns attribute.
-	 * @param format Tells if it should be pretty-printed.
-	 * @exception Exception thrown if the result tree is corrupted.
-	 */
 	virtual void
 	toMarkup(
 			const DOM_Document&		doc,
@@ -260,27 +175,15 @@ public:
 			const DOMString&		resultns,
 			bool					format);
 
-	/**
-	 * Get an instance of the formatter listener that is associated 
-	 * with this formatter.
-	 */
 	virtual FormatterListener*
 	getFormatterListener() const;
 
-	/**
-	 * Set an instance of the formatter listener that is associated 
-	 * with this formatter.
-	 */
 	virtual void
 	setFormatterListener(
 			PrintWriter&		pw,
 			const DOMString&	resultns,
 			bool				format);
 
-	/**
-	 * Set an instance of the formatter listener that is associated 
-	 * with this formatter.
-	 */
 	virtual void
 	setFormatterListener(FormatterListener*		fl);
 

@@ -77,6 +77,11 @@ class XALAN_XMLSUPPORT_EXPORT XMLSupportException : public XSLException
 {
 public:
 
+	/**
+	 * Construct an XML Support exception object
+	 * 
+	 * @param theMessage message to print when exception thrown
+	 */
 	explicit
 	XMLSupportException(
 			const DOMString&	message = DOMString());

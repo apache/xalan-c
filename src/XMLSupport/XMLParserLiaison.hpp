@@ -93,31 +93,30 @@ public:
 
 	// These interfaces are inherited from Resettable...
 
-	/**
-	 * Reset for new run.
-	 */
 	virtual void
 	reset() = 0;
 
 	// These interfaces are new to XMLParserLiaison
 
 	/**
-	 * Returns true if the liaison supports the SAX DocumentHandler 
-	 * interface.
+	 * Determine if the liaison supports the SAX DocumentHandler interface.
+	 *
+	 * @return true if SAX supported
 	 */
 	virtual bool
 	supportsSAX() const = 0;
 
 	/**
-	 * Parse the text pointed at by the reader as XML, and return 
-	 * a DOM Document interface.  May return null if not 
-	 * supported.  It is recommended that you pass in some sort 
-	 * of recognizable name, such as the filename or URI, with 
-	 * which the reader can be recognized if the parse fails.
-	 * @param reader A stream that should hold valid XML.
-	 * @param identifier Used for diagnostic purposes only, 
-	 * some sort of identification for error reporting, may be 
-	 * an empty string.
+	 * Parse the text pointed at by the reader as XML, and return a DOM
+	 * Document interface.  It is recommended that you pass in some sort of
+	 * recognizable name, such as the filename or URI, with which the reader
+	 * can be recognized if the parse fails.
+	 *
+	 * @param reader     stream that should hold valid XML
+	 * @param identifier used for diagnostic purposes only, some sort of
+	 *                   identification for error reporting, default an empty
+	 *                   string
+	 * @return DOM document created
 	 */
 	virtual DOM_Document
 	parseXMLStream(
@@ -125,15 +124,16 @@ public:
 			const DOMString&	identifier = DOMString()) = 0;
 
 	/**
-	 * Parse the text pointed at by the reader as XML, and return 
-	 * a DOM Document interface.  May return null if not 
-	 * supported.  It is recommended that you pass in some sort 
-	 * of recognizable name, such as the filename or URI, with 
-	 * which the reader can be recognized if the parse fails.
-	 * @param reader A URL input source that should hold valid XML.
-	 * @param identifier Used for diagnostic purposes only, 
-	 * some sort of identification for error reporting, may be 
-	 * an empty string.
+	 * Parse the text pointed at by the reader as XML, and return a DOM
+	 * Document interface.  It is recommended that you pass in some sort of
+	 * recognizable name, such as the filename or URI, with which the reader
+	 * can be recognized if the parse fails.
+	 *
+	 * @param reader     URL input source that should hold valid XML
+	 * @param identifier used for diagnostic purposes only, some sort of
+	 *                   identification for error reporting, default an empty
+	 *                   string
+	 * @return DOM document created
 	 */
 	virtual DOM_Document
 	parseXMLStream(
@@ -141,13 +141,15 @@ public:
 			const DOMString&	identifier = DOMString()) = 0;
 
 	/**
-	 * Parse the text pointed at by the reader as XML.
+	 * Parse the text pointed at by the reader as XML. It is recommended that
+	 * you pass in some sort of recognizable name, such as the filename or URI,
+	 * with which the reader can be recognized if the parse fails.
 	 *
-	 * @param reader A URL input source that should hold valid XML.
-	 * @param handler An instance of a DocumentHandler.
-	 * @param identifier Used for diagnostic purposes only, 
-	 * some sort of identification for error reporting, may be 
-	 * an empty string.
+	 * @param urlInputSource input source that should hold valid XML
+	 * @param handler        instance of a DocumentHandler
+	 * @param identifier     used for diagnostic purposes only, some sort of
+	 *                       identification for error reporting, default an
+	 *                       empty string
 	 */
 	virtual void
 	parseXMLStream(
@@ -156,13 +158,15 @@ public:
 			const DOMString&	identifier = DOMString()) = 0;
 
 	/**
-	 * Parse the text pointed at by the reader as XML.
+	 * Parse the text pointed at by the reader as XML. It is recommended that
+	 * you pass in some sort of recognizable name, such as the filename or URI,
+	 * with which the reader can be recognized if the parse fails.
 	 *
-	 * @param reader A URL input source that should hold valid XML.
-	 * @param handler An instance of a DocumentHandler.
-	 * @param identifier Used for diagnostic purposes only, 
-	 * some sort of identification for error reporting, may be 
-	 * an empty string.
+	 * @param urlInputSource URL input source that should hold valid XML
+	 * @param handler        instance of a DocumentHandler
+	 * @param identifier      used for diagnostic purposes only, some sort of
+	 *                        identification for error reporting, default an
+	 *                        empty string
 	 */
 	virtual void
 	parseXMLStream(
@@ -173,77 +177,110 @@ public:
 	/**
 	 * Create an empty DOM Document.  Mainly used for creating an 
 	 * output document.
+	 *
+	 * @return DOM document created
 	 */
 	virtual DOM_Document
 	createDocument() = 0;
   
+  /**
+	* Get the factory object required to create DOM nodes in the result tree.
+	*
+	* @return DOM document factory
+	*/
 	virtual DOM_Document
 	getDOMFactory() = 0;
 
 	/**
 	 * Return the expanded element name.
+	 *
+	 * @param elem DOM element queried
+	 * @return string for expanded name of element
 	 */
 	virtual DOMString
 	getExpandedElementName(const DOM_Element&	elem) const = 0;
 
 	/**
 	 * Returns the attribute name with the namespace expanded.
+	 *
+	 * @param attr attribute queried
+	 * @return string for expanded name of attribute
 	 */
 	virtual DOMString
 	getExpandedAttributeName(const DOM_Attr&	attr) const = 0;
 
 	/**
 	 * Set special characters for attributes that will be escaped.
+	 *
+	 * @param str string containing characters
 	 */
 	virtual void
 	setSpecialCharacters(const DOMString&	str) = 0;
 
 	/**
 	 * Get special characters for attributes that will be escaped.
+	 *
+	 * @return string containing characters
 	 */
 	virtual DOMString
 	getSpecialCharacters() const = 0;
 
 	/**
 	 * Get the amount to indent when indent-result="yes".
+	 *
+	 * @return number of characters to indent
 	 */
 	virtual int
 	getIndent() const = 0;
 
 	/**
 	 * Set the amount to indent when indent-result="yes".
+	 *
+	 * @param i number of characters to indent
 	 */
 	virtual void
 	setIndent(int	i) = 0;
 
 	/**
-	 * Get whether or not to expand all entity references in the 
-	 * source and style trees.
+	 * Determine whether to expand all entity references in the source and
+	 * style trees.
+	 *
+	 * @return true if entity references should be expanded
 	 */
 	virtual bool
 	getShouldExpandEntityRefs() const = 0;
 
 	/**
-	 * Set whether or not to expand all entity references in the 
-	 * source and style trees.
+	 * Set whether to expand all entity references in the source and style
+	 * trees.
+	 *
+	 * @param b true if entity references should be expanded
 	 */
 	virtual void
 	SetShouldExpandEntityRefs(bool	b) = 0;
 
 	/**
-	 * Get whether or not validation will be performed.  Validation is off by default.
+	 * Get whether or not validation will be performed.  Validation is off by
+	 * default.
+	 *
+	 * @return true to perform validation
 	 */
 	virtual bool
 	getUseValidation() const = 0;
 
 	/**
-	 * If set to true, validation will be performed.  Validation is off by default.
+	 * If set to true, validation will be performed.  Validation is off by
+	 * default.
+	 *
+	 * @param b true to perform validation
 	 */
 	virtual void
 	setUseValidation(bool	b) = 0;
 
 	/**
 	 * Return a string suitable for telling the user what parser is being used.
+	 *
+	 * @return string describing parser
 	 */
 	virtual const DOMString&
 	getParserDescription() const = 0;

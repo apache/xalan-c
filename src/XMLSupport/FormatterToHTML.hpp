@@ -83,7 +83,6 @@
 
 #include <XPath/QName.hpp>
 
-typedef std::vector<QName> QNameVectorType;
 
 /**
  * FormatterToHTML formats SAX-style events into HTML.
@@ -92,6 +91,20 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToHTML : public FormatterToXML
 {  
 
 public:
+
+#if defined(XALAN_NO_NAMESPACES)
+#	define XALAN_STD
+#else
+#	define XALAN_STD std::
+#endif
+	typedef XALAN_STD vector<QName> QNameVectorType;
+	typedef XALAN_STD set<DOMString>		EmptiesSetType;
+	typedef XALAN_STD vector<DOMString>	HTMLAttributesVectorType;
+	typedef XALAN_STD vector<DOMString>	HTMLSymbolsVectorType;
+	typedef XALAN_STD set<DOMString>		StringSetType;
+	typedef XALAN_STD map<DOMString, StringSetType> AttributesMapType;
+#undef XALAN_STD
+
 
 	/**
 	 * Constructor for customized encoding and doctype.
@@ -116,127 +129,101 @@ public:
 	virtual
 	~FormatterToHTML();
 
-	/**
-	 * Receive notification of the end of a document.
-	 *
-	 * @exception org.xml.sax.SAXException Any SAX exception, possibly
-	 *			wrapping another exception.
-	 */
+	
+	// These methods are inherited from DocumentHandler ...
+
 	virtual void
 	endDocument();
 
-	/**
-	 * Receive notification of the beginning of an element.
-	 *
-	 * <p>The Parser will invoke this method at the beginning of every
-	 * element in the XML document; there will be a corresponding
-	 * endElement() event for every startElement() event (even when the
-	 * element is empty). All of the element's content will be
-	 * reported, in order, before the corresponding endElement()
-	 * event.</p>
-	 *
-	 * <p>If the element name has a namespace prefix, the prefix will
-	 * still be attached.  Note that the attribute list provided will
-	 * contain only attributes with explicit values (specified or
-	 * defaulted): #IMPLIED attributes will be omitted.</p>
-	 *
-	 * @param name The element type name.
-	 * @param atts The attributes attached to the element, if any.
-	 * @exception org.xml.sax.SAXException Any SAX exception, possibly
-	 *			wrapping another exception.
-	 * @see #endElement
-	 * @see org.xml.sax.AttributeList 
-	 */
 	virtual void
 	startElement(
 			const	XMLCh* const	name,
 			AttributeList&			attrs);
 
-	/**
-	 * Receive notification of the end of an element.
-	 *
-	 * <p>The SAX parser will invoke this method at the end of every
-	 * element in the XML document; there will be a corresponding
-	 * startElement() event for every endElement() event (even when the
-	 * element is empty).</p>
-	 *
-	 * <p>If the element name has a namespace prefix, the prefix will
-	 * still be attached to the name.</p>
-	 *
-	 * @param name The element type name
-	 * @exception org.xml.sax.SAXException Any SAX exception, possibly
-	 *			wrapping another exception.
-	 */
     virtual void
 	endElement(const XMLCh* const	name);
 
-	/**
-	 * Receive notification of character data.
-	 *
-	 * <p>The Parser will call this method to report each chunk of
-	 * character data.  SAX parsers may return all contiguous character
-	 * data in a single chunk, or they may split it into several
-	 * chunks; however, all of the characters in any single event
-	 * must come from the same external entity, so that the Locator
-	 * provides useful information.</p>
-	 *
-	 * <p>The application must not attempt to read from the array
-	 * outside of the specified range.</p>
-	 *
-	 * <p>Note that some parsers will report whitespace using the
-	 * ignorableWhitespace() method rather than this one (validating
-	 * parsers must do so).</p>
-	 *
-	 * @param ch The characters from the XML document.
-	 * @param start The start position in the array.
-	 * @param length The number of characters to read from the array.
-	 * @exception org.xml.sax.SAXException Any SAX exception, possibly
-	 *			wrapping another exception.
-	 * @see #ignorableWhitespace 
-	 * @see org.xml.sax.Locator
-	 */
     virtual void
 	characters(
 			const XMLCh* const	chars,
 			const unsigned int	length);
 
 
-	/**
-	 * Receive notivication of a entityReference.
-	 */
+	// These methods are inherited from FormatterListener ...
+
 	virtual void
 	entityReference(const XMLCh* const	name);
 
 
-	/**
-	 * Receive notification of cdata.
-	 *
-	 * <p>The Parser will call this method to report each chunk of
-	 * character data.  SAX parsers may return all contiguous character
-	 * data in a single chunk, or they may split it into several
-	 * chunks; however, all of the characters in any single event
-	 * must come from the same external entity, so that the Locator
-	 * provides useful information.</p>
-	 *
-	 * <p>The application must not attempt to read from the array
-	 * outside of the specified range.</p>
-	 *
-	 * <p>Note that some parsers will report whitespace using the
-	 * ignorableWhitespace() method rather than this one (validating
-	 * parsers must do so).</p>
-	 *
-	 * @param ch The characters from the XML document.
-	 * @param start The start position in the array.
-	 * @param length The number of characters to read from the array.
-	 * @exception org.xml.sax.SAXException Any SAX exception, possibly
-	 *			wrapping another exception.
-	 * @see #ignorableWhitespace 
-	 * @see org.xml.sax.Locator
-	 */
 	virtual void
 	cdata(
 			const XMLCh* const	ch,
 			const unsigned int 	length);
+
+
+	// These methods are new ...
+
+	/**
+	 * Initialize the list of HTML elements that do not contain text, for
+	 * example, "BR"
+	 *
+	 * @return set of strings for elements
+	 */
+	static EmptiesSetType
+	createEmpties();
+
+	/**
+	 * Initialize the list of attributes for HTML elements that do not contain
+	 * text, for example, "checked."
+	 *
+	 * @return set of strings for elements
+	 */
+	static EmptiesSetType
+	createAttrEmpties();
+
+	/**
+	 * Initialize the list of entity reference names, for example, "nbsp."
+	 *
+	 * @return vector of strings
+	 */
+	static HTMLAttributesVectorType
+	createAttributes();
+
+	/**
+	 * Initialize the list of HTML non-block elements, for example, "BR".
+	 * These are present alone and do not have the closing "/>" needed for
+	 * valid XML.
+	 *
+	 * @return vector of strings
+	 */
+	static StringSetType
+	createNonBlockElems();
+
+	/**
+	 * Initialize the list of symbols that must be escaped, for example, "<"
+	 *
+	 * @return set of strings
+	 */
+	static StringSetType
+	createEscapeElems();
+
+	/**
+	 * Initialize the map of valid attributes for HTML tags.  For example, the
+	 * tag "A" can have attributes of "HREF" and "NAME"
+	 *
+	 * @return map of attributes to vector of tags
+	 */
+	static AttributesMapType
+	createAttributesMap();
+
+	/**
+	 * Initialize the list of names for symbols, for example, "chi" for the
+	 * Greek letter Chi.
+	 *
+	 * @return vector of strings for symbol names
+	 */
+	static HTMLSymbolsVectorType
+	createSymbols();
 
 protected:
 
@@ -266,37 +253,6 @@ protected:
 			const DOMString& specials,
 			const DOMString& encoding);
 	// java: throws SAXException
-
-public:
-
-	// Static tables.
-	typedef std::set<DOMString>		EmptiesSetType;
-	typedef	std::vector<DOMString>	HTMLAttributesVectorType;
-	typedef std::vector<DOMString>	HTMLSymbolsVectorType;
-	typedef std::set<DOMString>		StringSetType;
-	// java: hashtable(map) to String vector
-	typedef std::map<DOMString, StringSetType> AttributesMapType;
-
-	static EmptiesSetType
-	createEmpties();
-
-	static EmptiesSetType
-	createAttrEmpties();
-
-	static HTMLAttributesVectorType
-	createAttributes();
-
-	static StringSetType
-	createNonBlockElems();
-
-	static StringSetType
-	createEscapeElems();
-
-	static AttributesMapType
-	createAttributesMap();
-
-	static HTMLSymbolsVectorType
-	createSymbols();
 
 private:
 
