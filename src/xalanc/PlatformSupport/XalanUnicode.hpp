@@ -177,6 +177,7 @@ struct XALAN_PLATFORMSUPPORT_EXPORT XalanUnicode
 		charCircumflexAccent	= 0x5E,
 
 		charLowLine				= 0x5F,
+		charGraveAccent			= 0x60,
 
 		charLetter_a			= 0x61,
 		charLetter_b			= 0x62,
@@ -311,6 +312,7 @@ struct XALAN_PLATFORMSUPPORT_EXPORT XalanUnicode
 	static const XalanDOMChar	charCircumflexAccent	= 0x5E;
 
 	static const XalanDOMChar	charLowLine				= 0x5F;
+	static const XalanDOMChar   charGraveAccent			= 0x60;
 
 	static const XalanDOMChar	charLetter_a			= 0x61;
 	static const XalanDOMChar	charLetter_b			= 0x62;

@@ -267,6 +267,158 @@ private:
 };
 
 
+class XALAN_EXSLT_EXPORT XalanEXSLTFunctionEncodeURI : public Function
+{
+public:
+
+	typedef Function	ParentType;
+
+	XalanEXSLTFunctionEncodeURI() :
+		Function()
+	{
+	}
+
+	// A dummy constructor for use internally.  Do not use this one!!!!
+	XalanEXSLTFunctionEncodeURI(int	/* theDummy */) :
+		Function()
+	{
+	}
+
+	virtual
+	~XalanEXSLTFunctionEncodeURI()
+	{
+	}
+
+	// These methods are inherited from Function ...
+
+	virtual XObjectPtr
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const LocatorType*				locator) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
+
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual Function*
+#else
+	virtual XalanEXSLTFunctionEncodeURI*
+#endif
+	clone() const
+	{
+		return new XalanEXSLTFunctionEncodeURI;
+	}
+
+protected:
+
+	const XalanDOMString
+	getError() const
+	{
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function encode-uri() accepts two or three arguments"));
+	}
+
+	const XalanDOMString
+	escapedOctet(const XalanDOMChar theChar) const;
+
+	static const XalanDOMChar	s_reservedChars[];
+	static const XalanDOMString::size_type s_reservedCharsSize;
+
+	static const XalanDOMChar   s_excludedChars[];
+	static const XalanDOMString::size_type s_excludedCharsSize;
+
+private:
+
+	// Not implemented...
+	XalanEXSLTFunctionEncodeURI(const XalanEXSLTFunctionEncodeURI&);
+
+	XalanEXSLTFunctionEncodeURI&
+	operator=(const XalanEXSLTFunctionEncodeURI&);
+
+	bool
+	operator==(const XalanEXSLTFunctionEncodeURI&) const;
+
+
+};
+
+class XALAN_EXSLT_EXPORT XalanEXSLTFunctionDecodeURI : public Function
+{
+public:
+
+	typedef Function	ParentType;
+
+	XalanEXSLTFunctionDecodeURI() :
+		Function()
+	{
+	}
+
+	// A dummy constructor for use internally.  Do not use this one!!!!
+	XalanEXSLTFunctionDecodeURI(int	/* theDummy */) :
+		Function()
+	{
+	}
+
+	virtual
+	~XalanEXSLTFunctionDecodeURI()
+	{
+	}
+
+	// These methods are inherited from Function ...
+
+	virtual XObjectPtr
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const LocatorType*				locator) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
+
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual Function*
+#else
+	virtual XalanEXSLTFunctionDecodeURI*
+#endif
+	clone() const
+	{
+		return new XalanEXSLTFunctionDecodeURI;
+	}
+
+protected:
+
+	const XalanDOMString
+	getError() const
+	{
+		return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function decode-uri() accepts one or two arguments"));
+	}
+
+	const XalanDOMChar
+	hexCharsToByte(	
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context,
+			const LocatorType*			locator,
+			const XalanDOMChar			highHexChar,
+			const XalanDOMChar			lowHexChar) const;
+
+	static const XalanDOMString::size_type s_octetSize;
+
+private:
+
+	// Not implemented...
+	XalanEXSLTFunctionDecodeURI(const XalanEXSLTFunctionDecodeURI&);
+
+	XalanEXSLTFunctionDecodeURI&
+	operator=(const XalanEXSLTFunctionDecodeURI&);
+
+	bool
+	operator==(const XalanEXSLTFunctionDecodeURI&) const;
+
+
+};
 
 XALAN_CPP_NAMESPACE_END
 

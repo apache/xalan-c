@@ -61,6 +61,7 @@
 
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
+#include <xalanc/PlatformSupport/XalanTranscodingServices.hpp>
 
 
 
@@ -315,6 +316,330 @@ XalanEXSLTFunctionPadding::execute(
 	}
 }
 
+// Reserved URI characters
+const XalanDOMChar	
+XalanEXSLTFunctionEncodeURI::s_reservedChars[] = 
+{
+	XalanUnicode::charDollarSign,
+	XalanUnicode::charAmpersand,
+	XalanUnicode::charPlusSign,
+	XalanUnicode::charComma,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charColon,
+	XalanUnicode::charSemicolon,
+	XalanUnicode::charEqualsSign,
+	XalanUnicode::charQuestionMark,
+	XalanUnicode::charCommercialAt,
+	XalanUnicode::charLeftSquareBracket,
+	XalanUnicode::charRightSquareBracket,
+	0
+};
+const XalanDOMString::size_type 
+XalanEXSLTFunctionEncodeURI::s_reservedCharsSize = 12;
+
+// Excluded URI characters
+const XalanDOMChar
+XalanEXSLTFunctionEncodeURI::s_excludedChars[] =
+{
+	XalanUnicode::charSpace,
+	XalanUnicode::charQuoteMark,
+	XalanUnicode::charNumberSign,
+	XalanUnicode::charPercentSign,
+	XalanUnicode::charLessThanSign,
+	XalanUnicode::charGreaterThanSign,
+	XalanUnicode::charReverseSolidus,
+	XalanUnicode::charCircumflexAccent,
+	XalanUnicode::charGraveAccent,
+	XalanUnicode::charLeftCurlyBracket,
+	XalanUnicode::charVerticalLine,
+	XalanUnicode::charRightCurlyBracket
+};
+const XalanDOMString::size_type
+XalanEXSLTFunctionEncodeURI::s_excludedCharsSize = sizeof(s_excludedChars) / sizeof(s_excludedChars[0]);
+
+XObjectPtr
+XalanEXSLTFunctionEncodeURI::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const LocatorType*				locator) const
+{
+	const XObjectArgVectorType::size_type	theSize = args.size();
+
+	if (theSize != 2 && theSize != 3)
+	{
+		executionContext.error(getError(), context, locator);
+	}
+
+	assert(args[0].null() == false && 
+		   args[1].null() == false &&
+		   (theSize == 3 || args[2].null() == false));
+
+	const XalanDOMString& theString = args[0]->str();
+	const bool            escapeReserved = args[1]->boolean();
+	const XalanDOMString& theEncoding = 
+		theSize == 3 ? args[2]->str() : XalanDOMString(XalanTranscodingServices::s_utf8String);
+
+	if (theString.length() == 0 ||
+		!XalanTranscodingServices::encodingIsUTF8(theEncoding))
+	{
+		return executionContext.getXObjectFactory().createStringReference(s_emptyString);
+	} 	
+	
+	XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	XalanDOMString &theResult = theGuard.get();
+
+	XALAN_USING_STD(find)
+
+	for (XalanDOMString::size_type i = 0; i < theString.length(); ++i)
+	{
+		const XalanDOMChar	ch = theString[i];
+		
+		// ASCII characters (C0 control and basic Latin)
+		if (ch <= 0x7F) {
+			// Escape all control and excluded URI characters.
+			// Reserved URI characters are optionally escaped.
+			if (ch < 32 || ch > 126 || 
+				find(s_excludedChars,s_excludedChars+s_excludedCharsSize,ch)
+					!= s_excludedChars+s_excludedCharsSize || 
+				(escapeReserved && 
+				 find(s_reservedChars,s_reservedChars+s_reservedCharsSize,ch) 
+					 != s_reservedChars+s_reservedCharsSize))
+			{
+				theResult+= escapedOctet(ch);
+			}
+			else 
+			{
+				theResult+= ch;
+			}
+		} 
+		// Character is in the BMP
+		else if(ch <= 0x7FF)
+		{
+			const XalanDOMChar	highByte = XalanDOMChar((ch >> 6) | 0xC0);
+			const XalanDOMChar	lowByte = XalanDOMChar((ch & 0x3F) | 0x80);
+			escapedOctet(highByte);
+			theResult+= escapedOctet(highByte);
+			theResult+= escapedOctet(lowByte);
+		}
+		// Character is in a higher supplementary plane
+		else if((ch & 0xFC00) == 0xD800) // high surrogate
+		{	
+			const XalanDOMChar highSurrogate = XalanDOMChar((ch & 0x03FF) + 0x40);
+
+			const XalanDOMChar nextChar = theString[++i];
+			const XalanDOMChar lowSurrogate = XalanDOMChar(nextChar & 0x03FF);
+
+			const XalanDOMChar byte1 = XalanDOMChar(0xF0 + ((highSurrogate & 0x0300) >> 8));
+			const XalanDOMChar byte2 = XalanDOMChar(0x80 + ((highSurrogate & 0x00FC) >> 2));
+			const XalanDOMChar byte3 = XalanDOMChar(0x80 + ((highSurrogate & 0x0003) << 4) + ((lowSurrogate & 0x03C0) >> 6));
+			const XalanDOMChar byte4 = XalanDOMChar(0x80 + (lowSurrogate & 0x003F));
+
+			theResult+= escapedOctet(byte1);
+			theResult+= escapedOctet(byte2);
+			theResult+= escapedOctet(byte3);
+			theResult+= escapedOctet(byte4);
+		}
+		else
+		{
+			const XalanDOMChar	highByte = XalanDOMChar((ch >> 12) | 0xE0);
+			const XalanDOMChar	middleByte = XalanDOMChar(((ch & 0x0FC0) >> 6) | 0x80);
+			const XalanDOMChar	lowByte = XalanDOMChar((ch & 0x3F) | 0x80);
+			theResult+= escapedOctet(highByte);
+			theResult+= escapedOctet(middleByte);
+			theResult+= escapedOctet(lowByte);
+		}	
+	}
+
+	return executionContext.getXObjectFactory().createString(theResult);
+
+}
+
+const XalanDOMString
+XalanEXSLTFunctionEncodeURI::escapedOctet(const XalanDOMChar	theChar) const
+{
+	XalanDOMString theResult;
+
+	theResult += XalanUnicode::charPercentSign;
+	XalanDOMString stringBuffer;
+	UnsignedLongToHexDOMString(theChar, stringBuffer);
+	if (stringBuffer.length() == 1) 
+	{
+		theResult += XalanUnicode::charDigit_0;
+	}
+	theResult += stringBuffer;
+	return theResult;
+}
+
+const XalanDOMString::size_type XalanEXSLTFunctionDecodeURI::s_octetSize = 3;
+
+XObjectPtr
+XalanEXSLTFunctionDecodeURI::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const LocatorType*				locator) const
+{
+	const XObjectArgVectorType::size_type	theSize = args.size();
+
+	if (theSize != 1 && theSize != 2)
+	{
+		executionContext.error(getError(), context, locator);
+	}
+
+	assert(args[0].null() == false && 
+		   (theSize == 2 || args[1].null() == false));
+
+    const XalanDOMString& theString = args[0]->str();
+	const XalanDOMString& theEncoding = 
+		theSize == 2 ? args[1]->str() : XalanDOMString(XalanTranscodingServices::s_utf8String);
+
+	if (theString.length() == 0 ||
+		!XalanTranscodingServices::encodingIsUTF8(theEncoding))
+	{
+		return executionContext.getXObjectFactory().createStringReference(s_emptyString);
+	} 
+		
+	XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+	XalanDOMString &theResult = theGuard.get();
+
+    for (XalanDOMString::size_type i = 0; i < theString.length(); ++i)
+    {
+		const XalanDOMChar	ch = theString[i];
+			
+		if (ch != XalanUnicode::charPercentSign) 
+		{
+			theResult+= ch;
+			continue;
+		}
+		
+		// escaped character
+		
+		// count number of escaped octets
+		XalanDOMString::size_type numOctets = 0;
+		XalanDOMString::size_type j = i;
+		//assert(theString[j] == XalanUnicode::charPercentSign);
+		//assert(j + 2 < theString.length());
+		while (theString[j] == XalanUnicode::charPercentSign &&
+			   j + 2 < theString.length()) 
+		{
+			++numOctets;
+			j+= s_octetSize;
+		}
+		
+		// no complete sequences found
+		if (numOctets < 1) {
+			break;
+		}
+
+		XalanDOMChar byte1 = hexCharsToByte(executionContext, context, locator,
+										    theString[i+1],theString[i+2]);
+
+		if ((byte1 & 0x80) == 0) 
+		{
+			i += 2;
+		 	theResult+=byte1;
+		}
+		else if ((byte1 & 0xE0) == 0xC0 && numOctets >= 2) 
+		{
+			i += s_octetSize;
+			XalanDOMChar byte2 = hexCharsToByte(executionContext, context, locator,
+											    theString[i+1],theString[i+2]);
+			i+=2;
+	
+			if (byte2 & 0x80 == 0) 
+			{
+				// invalid byte, bypass rest of this sequence
+				i+= (numOctets - 2) * s_octetSize;
+			}
+			theResult+= XalanDOMChar(((byte1 & 0x1F) << 6) + (byte2 & 0x3F));
+		} 
+		else if ((byte1 & 0xF0) == 0xE0 && numOctets >= 3)
+		{
+			i+= s_octetSize;
+			XalanDOMChar byte2 = hexCharsToByte(executionContext, context, locator,
+											    theString[i+1],theString[i+2]);
+			i+= s_octetSize;
+			XalanDOMChar byte3 = hexCharsToByte(executionContext, context, locator,
+											    theString[i+1],theString[i+2]);
+			i+=2;
+			
+			if (byte2 & 0x80 == 0 || byte3 & 0x80 == 0)
+			{
+				// invalid byte, bypass rest of this sequence
+				i+= (numOctets - 3) * s_octetSize;
+			}
+			theResult+= XalanDOMChar(((byte1 & 0x0F) << 12) + ((byte2 & 0x3F) << 6) + (byte3 & 0x3F));
+		}
+		else if ((byte1 & 0xF8) == 0xF0 && numOctets >=4)
+		{
+			i+= s_octetSize;
+			XalanDOMChar byte2 = hexCharsToByte(executionContext, context, locator,
+											    theString[i+1],theString[i+2]);
+			i+= s_octetSize;
+			XalanDOMChar byte3 = hexCharsToByte(executionContext, context, locator,
+											    theString[i+1],theString[i+2]);
+			i+= s_octetSize;
+			XalanDOMChar byte4 = hexCharsToByte(executionContext, context, locator,
+											    theString[i+1],theString[i+2]);
+			i+=2;
+	
+			if (byte2 & 0x80 == 0 || byte3 & 0x80 == 0 || byte4 & 0x80 == 0)
+			{
+				// invalid byte, bypass rest of this sequence
+				i+= (numOctets - 4) * s_octetSize;
+			}
+			theResult+= XalanDOMChar(0xD800 + 
+				                     ((byte1 & 0x07) << 8) + ((byte2 & 0x3F) << 2) + 
+				                     ((byte3 & 0x30) >> 4) - 0x40);
+			theResult+= XalanDOMChar(0xDC00 + ((byte3 & 0x0F) << 6) + (byte4 & 0x3F));
+		} 
+		else 
+		{
+			// invalid byte, bypass rest of this sequence
+			i+=numOctets * s_octetSize -1;
+		}
+	}
+	return executionContext.getXObjectFactory().createString(theResult);
+}
+
+const XalanDOMChar
+XalanEXSLTFunctionDecodeURI::hexCharsToByte(
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context,
+			const LocatorType*			locator,
+			const XalanDOMChar			highHexChar,
+			const XalanDOMChar			lowHexChar) const
+{
+	XalanDOMChar byte = 0;
+	
+	XalanDOMChar curChar = lowHexChar;
+	for (int place = 0; place < 2; ++place)
+	{
+		if (  curChar >= XalanUnicode::charDigit_0 
+			&& curChar <= XalanUnicode::charDigit_9) // Digit 
+		{
+			byte += XalanDOMChar((curChar - XalanUnicode::charDigit_0) << (place * 4));
+		}
+		else if (   curChar >= XalanUnicode::charLetter_A 
+			  	 && curChar <= XalanUnicode::charLetter_F) // Uppercase
+		{
+			byte += XalanDOMChar((curChar - XalanUnicode::charLetter_A + 10) << (place * 4));
+		}
+		else if (   curChar >= XalanUnicode::charLetter_a
+				 && curChar <= XalanUnicode::charLetter_f)  // Lowercase
+		{
+			byte += XalanDOMChar((curChar - XalanUnicode::charLetter_a + 10) << place);
+		}
+		else 
+		{
+			executionContext.error("Invalid URI", context, locator);
+		}
+		curChar = highHexChar;
+	}
+
+	return byte;
+}
 
 
 static const XalanDOMChar	s_stringNamespace[] =
@@ -385,7 +710,35 @@ static const XalanDOMChar	s_paddingFunctionName[] =
 	0
 };
 
+static const XalanDOMChar	s_encodeUriFunctionName[] =
+{
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	0
+};
 
+static const XalanDOMChar	s_decodeUriFunctionName[] =
+{
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	0
+};
 
 static const XalanEXSLTFunctionAlign	s_alignFunction;
 static const XalanEXSLTFunctionConcat	s_concatFunction;
@@ -393,6 +746,8 @@ static const XalanEXSLTFunctionConcat	s_concatFunction;
 // allocates no memory.  It is only used here, so we can have table-based
 // initialization, but not have any memory allocation.
 static const XalanEXSLTFunctionPadding	s_paddingFunction(1);
+static const XalanEXSLTFunctionEncodeURI s_encodeUriFunction;
+static const XalanEXSLTFunctionDecodeURI s_decodeUriFunction;
 
 
 
@@ -401,6 +756,8 @@ static const XalanEXSLTStringFunctionsInstaller::FunctionTableEntry		theFunction
 	{ s_alignFunctionName, &s_alignFunction },
 	{ s_concatFunctionName, &s_concatFunction },
 	{ s_paddingFunctionName, &s_paddingFunction },
+	{ s_encodeUriFunctionName, &s_encodeUriFunction },
+	{ s_decodeUriFunctionName, &s_decodeUriFunction },
 	{ 0, 0 }
 };
 
