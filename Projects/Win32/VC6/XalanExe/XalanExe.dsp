@@ -45,7 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\Build\Win32\VC6\Release\Nls\Include" /D "NDEBUG" /D "_USRDLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /FD /c
+# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\Build\Win32\VC6\Release\Nls\Include" /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include" /D "NDEBUG" /D "_USRDLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 xerces-c_2.lib largeint.lib /nologo /stack:0x2f4000 /pdb:none /machine:I386 /nodefaultlib:"libc" /out:"..\..\..\..\Build\Win32\VC6\Release/Xalan.exe" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release"
+# ADD LINK32 xerces-c_2.lib largeint.lib /nologo /stack:0x2f4000 /pdb:none /machine:I386 /nodefaultlib:"libc" /out:"..\..\..\..\Build\Win32\VC6\Release/Xalan.exe" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib"
 
 !ELSEIF  "$(CFG)" == "XalanExe - Win32 Debug"
 
@@ -69,7 +69,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XSLT_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\Build\Win32\VC6\Debug\Nls\Include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\Build\Win32\VC6\Debug\Nls\Include" /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /YX /FD /GZ /c
 # SUBTRACT CPP /Fr
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -78,7 +78,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2D.lib largeint.lib /nologo /stack:0x2f4000 /debug /machine:I386 /nodefaultlib:"libc" /out:"..\..\..\..\Build\Win32\VC6\Debug/Xalan.exe" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\\"
+# ADD LINK32 xerces-c_2D.lib largeint.lib /nologo /stack:0x2f4000 /debug /machine:I386 /nodefaultlib:"libc" /out:"..\..\..\..\Build\Win32\VC6\Debug/Xalan.exe" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\\" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\lib"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XalanExe - Win32 Release with symbols"
@@ -96,7 +96,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W4 /GR /GX /O2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\Build\Win32\VC6\Release.symbols\Nls\Include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XERCES" /D "_CONSOLE" /FD /c
-# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /Ob2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\Build\Win32\VC6\Release.symbols\Nls\Include" /D "NDEBUG" /D "_USRDLL" /D "XALAN_XERCES" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /FD /c
+# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /Ob2 /I "..\..\..\..\Build\Win32\VC6\Release.symbols\Nls\Include" /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include" /D "NDEBUG" /D "_USRDLL" /D "XALAN_XERCES" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -104,7 +104,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /pdb:none /machine:I386
-# ADD LINK32 xerces-c_2.lib largeint.lib /nologo /stack:0x2f4000 /debug /machine:I386 /nodefaultlib:"libc" /out:"..\..\..\..\Build\Win32\VC6\Release.symbols/Xalan.exe" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /fixed:no
+# ADD LINK32 xerces-c_2.lib largeint.lib /nologo /stack:0x2f4000 /debug /machine:I386 /nodefaultlib:"libc" /out:"..\..\..\..\Build\Win32\VC6\Release.symbols/Xalan.exe" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib" /fixed:no
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XalanExe - Win64 Release"
@@ -121,7 +121,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\Build\Win64\VC6\Release\Nls\Include" /D "WIN64" /D "NDEBUG" /D "_USRDLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /FD /c
+# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\Build\Win64\VC6\Release\Nls\Include" /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include" /D "WIN64" /D "NDEBUG" /D "_USRDLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -129,7 +129,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 xerces-c_2.lib /nologo /stack:0x2f4000 /pdb:none /machine:IX86 /out:"..\..\..\..\Build\Win64\VC6\Release/Xalan.exe" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release" /machine:IA64
+# ADD LINK32 xerces-c_2.lib /nologo /stack:0x2f4000 /pdb:none /machine:IX86 /out:"..\..\..\..\Build\Win64\VC6\Release/Xalan.exe" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win64\VC6\Release" /libpath:"$(XERCESCROOT)\lib" /machine:IA64
 
 !ELSEIF  "$(CFG)" == "XalanExe - Win64 Debug"
 
@@ -145,7 +145,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XSLT_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\Build\Win64\VC6\Debug\Nls\Include" /D "WIN64" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\Build\Win64\VC6\Debug\Nls\Include" /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include" /D "WIN64" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /YX /FD /GZ /c
 # SUBTRACT CPP /Fr
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -154,7 +154,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2D.lib /nologo /stack:0x2f4000 /debug /machine:IX86 /out:"..\..\..\..\Build\Win64\VC6\Debug/Xalan.exe" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug\\" /machine:IA64
+# ADD LINK32 xerces-c_2D.lib /nologo /stack:0x2f4000 /debug /machine:IX86 /out:"..\..\..\..\Build\Win64\VC6\Debug/Xalan.exe" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug\\" /libpath:"$(XERCESCROOT)\Build\Win64\VC6\Debug" /libpath:"$(XERCESCROOT)\lib" /machine:IA64
 # SUBTRACT LINK32 /pdb:none /incremental:no
 
 !ENDIF 
