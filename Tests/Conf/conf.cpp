@@ -388,7 +388,7 @@ main(
 		logFile.logTestFileClose("Conformance ", "Done");
 		logFile.close();
 
-		futil.analyzeResults(xalan, baseDir, resultsFile);
+		futil.analyzeResults(xalan, resultsFile);
 
 	} //if getParams
 

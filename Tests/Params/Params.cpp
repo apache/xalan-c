@@ -228,6 +228,7 @@ main(
 
 		// Defined basic constants for file manipulation
 		const XalanDOMString  drive(futil.getDrive());
+		futil.data.testBase = baseDir;
 		const XalanDOMString  resultFilePrefix("params");
 		const XalanDOMString  resultsFile(drive + outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
 		
@@ -340,7 +341,7 @@ main(
 		logFile.logTestFileClose("Param Testing: ", "Done");
 		logFile.close();
 
-		futil.analyzeResults(xalan, baseDir, resultsFile);
+		futil.analyzeResults(xalan, resultsFile);
 
 		XalanTransformer::terminate();
 	}

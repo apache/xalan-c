@@ -1026,29 +1026,33 @@ FileUtility::reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runi
 //	Returns: Void						
 */
 void
-FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& base, const XalanDOMString& resultsFile)
+FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resultsFile)
 {
 	XalanDOMString paramValue;
 
+	// Pass the results .xml file as a parameter to the stylesheet.  It must be wrapped in single
+	// quotes so that it is not considered an expression.
 	assign(paramValue, XalanDOMString("'"));
 	append(paramValue, resultsFile);
 	append(paramValue, XalanDOMString("'"));
 
+	// Set the parameter
 	xalan.setStylesheetParam(XalanDOMString("testfile"), paramValue);
 
-
+	// Generate the input and output file names.
 	const XalanDOMString  theHTMLFile = generateFileName(resultsFile,"html");
-	const XalanDOMString  theStylesheet = base + XalanDOMString("\cconf.xsl");
-	const XalanDOMString  theXMLSource = base + XalanDOMString("\cconf.xml");
+	const XalanDOMString  theStylesheet = data.testBase + XalanDOMString("\cconf.xsl");
+	const XalanDOMString  theXMLSource = data.testBase + XalanDOMString("\cconf.xml");
 
+	// Create the InputSources and ResultTarget.
 	const XSLTInputSource	xslInputSource(c_wstr(theStylesheet));
 	const XSLTInputSource	xmlInputSource(c_wstr(theXMLSource));
 	const XSLTResultTarget	resultFile(theHTMLFile);
 
-
+	// Do the transform, display the output HTML, or report any failure.
 	int result = xalan.transform(xmlInputSource, xslInputSource, resultFile);
 	if (!result)
-	{
+	{	
 		system(c_str(TranscodeToLocalCodePage(theHTMLFile)));
 	}
 	else 

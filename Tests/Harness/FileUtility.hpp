@@ -308,7 +308,7 @@ public:
 	FileUtility::reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runid);
 
 	void
-	FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& base, const XalanDOMString& resultsFile);
+	FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resultsFile);
 //	FileUtility::analyzeResults(const XalanDOMString& resultsFile);
 
 private:
