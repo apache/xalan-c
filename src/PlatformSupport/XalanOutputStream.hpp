@@ -108,8 +108,13 @@ public :
 	/**
 	 * Flush the stream's buffer.
 	 */
-    virtual void
-	flush();
+    void
+	flush()
+	{
+		flushBuffer();
+
+		doFlush();
+	}
 
 	/**
 	 * Write a character to the output stream.  The character
@@ -117,8 +122,11 @@ public :
 	 *
 	 * @param theChar       the character to write
 	 */
-    virtual void
-	write(char	theChar);
+    void
+	write(char	theChar)
+	{
+		write(&theChar, 1);
+	}
 
 	/**
 	 * Write a wide character to the output stream.  The character
@@ -126,8 +134,18 @@ public :
 	 *
 	 * @param theChar       the character to write
 	 */
-    virtual void
-	write(XalanDOMChar	theChar);
+    void
+	write(XalanDOMChar	theChar)
+	{
+		assert(m_bufferSize > 0);
+
+		if (m_buffer.size() == m_bufferSize)
+		{
+			flushBuffer();
+		}
+
+		m_buffer.push_back(theChar);
+	}
 
 	/**
 	 * Write a null-terminated string to the output file.  The character
@@ -135,8 +153,13 @@ public :
 	 *
 	 * @param theBuffer       character buffer to write
 	 */
-    virtual void
-	write(const char*	theBuffer);
+    void
+	write(const char*	theBuffer)
+	{
+		assert(theBuffer != 0);
+
+		write(theBuffer, length(theBuffer));
+	}
 
 	/**
 	 * Write a null-terminated wide string to the output file.  The string
@@ -144,8 +167,11 @@ public :
 	 *
 	 * @param theBuffer       character buffer to write
 	 */
-    virtual void
-	write(const XalanDOMChar*	theBuffer);
+    void
+	write(const XalanDOMChar*	theBuffer)
+	{
+		write(theBuffer, length(theBuffer));
+	}
 
 	/**
 	 * Write a specified number of characters to the output stream.  The string
@@ -154,10 +180,18 @@ public :
 	 * @param theBuffer       character buffer to write
 	 * @param theBufferLength number of characters to write
 	 */
-    virtual void
+    void
 	write(
 			const char*		theBuffer,
-			unsigned long	theBufferLength);
+			unsigned long	theBufferLength)
+	{
+		assert(theBuffer != 0);
+
+		flushBuffer();
+
+		writeData(theBuffer,
+				  theBufferLength);
+	}
 
 	/**
 	 * Write a specified number of characters to the output stream.  The string
@@ -166,7 +200,7 @@ public :
 	 * @param theBuffer       character buffer to write
 	 * @param theBufferLength number of characters to write
 	 */
-    virtual void
+    void
 	write(
 			const XalanDOMChar*		theBuffer,
 			unsigned long			theBufferLength);
@@ -176,15 +210,18 @@ public :
 	 *
 	 * @return The encoding name
 	 */
-	virtual const XalanDOMString&
-	getOutputEncoding() const;
+	const XalanDOMString&
+	getOutputEncoding() const
+	{
+		return m_encoding;
+	}
 
 	/**
 	 * Set the output encoding for the stream.
 	 *
 	 * @param theEncoding The encoding name
 	 */
-	virtual void
+	void
 	setOutputEncoding(const XalanDOMString&		theEncoding);
 
 	/**
@@ -192,7 +229,7 @@ public :
 	 *
 	 * @param theBufferSize The buffer size.
 	 */
-	virtual void
+	void
 	setBufferSize(BufferType::size_type		theBufferSize);
 
 

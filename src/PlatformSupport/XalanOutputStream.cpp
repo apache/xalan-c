@@ -79,6 +79,11 @@ XalanOutputStream::XalanOutputStream(
 	m_writeAsUTF16(false),
 	m_transcodingBuffer()
 {
+	if (m_bufferSize == 0)
+	{
+		m_bufferSize = 1;
+	}
+
 	m_buffer.reserve(theBufferSize + 1);
 }
 
@@ -87,44 +92,6 @@ XalanOutputStream::XalanOutputStream(
 XalanOutputStream::~XalanOutputStream()
 {
 	XalanTranscodingServices::destroyTranscoder(m_transcoder);
-}
-
-
-
-void
-XalanOutputStream::flush()
-{
-	flushBuffer();
-
-	doFlush();
-}
-
-
-
-void
-XalanOutputStream::write(char	theChar)
-{
-	write(&theChar, 1);
-}
-
-
-
-void
-XalanOutputStream::write(XalanDOMChar	theChar)
-{
-	if (m_bufferSize == 0)
-	{
-		doWrite(&theChar, 1);
-	}
-	else
-	{
-		if (m_buffer.size() == m_bufferSize)
-		{
-			flushBuffer();
-		}
-
-		m_buffer.push_back(theChar);
-	}
 }
 
 
@@ -151,45 +118,6 @@ XalanOutputStream::write(
 						theBuffer,
 						theBuffer + theBufferLength);
 	}
-}
-
-
-
-void
-XalanOutputStream::write(const XalanDOMChar*	theBuffer)
-{
-	if (theBuffer != 0)
-	{
-		write(theBuffer, length(theBuffer));
-	}
-}
-
-
-
-void
-XalanOutputStream::write(const char*	theBuffer)
-{
-	assert(theBuffer != 0);
-
-	flushBuffer();
-
-	writeData(theBuffer,
-		      strlen(theBuffer));
-}
-
-
-
-void
-XalanOutputStream::write(
-			const char*		theBuffer,
-			unsigned long	theBufferLength)
-{
-	assert(theBuffer != 0);
-
-	flushBuffer();
-
-	writeData(theBuffer,
-			  theBufferLength);
 }
 
 
@@ -327,14 +255,6 @@ XalanOutputStream::transcode(
 
 
 
-const XalanDOMString&
-XalanOutputStream::getOutputEncoding() const
-{
-	return m_encoding;
-}
-
-
-
 void
 XalanOutputStream::setOutputEncoding(const XalanDOMString&	theEncoding)
 {
@@ -463,11 +383,18 @@ XalanOutputStream::doWrite(
 
 
 void
-XalanOutputStream::setBufferSize(BufferType::size_type		theBufferSize)
+XalanOutputStream::setBufferSize(BufferType::size_type	theBufferSize)
 {
 	flushBuffer();
 
-	m_bufferSize = theBufferSize;
+	if (theBufferSize == 0)
+	{
+		m_bufferSize = 1;
+	}
+	else
+	{
+		m_bufferSize = theBufferSize;
+	}
 
 	if (m_buffer.size() < m_bufferSize)
 	{

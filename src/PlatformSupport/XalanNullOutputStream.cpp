@@ -60,7 +60,7 @@
 
 
 XalanNullOutputStream::XalanNullOutputStream() :
-	XalanOutputStream()
+	XalanOutputStream(1)
 {
 }
 
@@ -73,42 +73,7 @@ XalanNullOutputStream::~XalanNullOutputStream()
 
 
 void
-XalanNullOutputStream::flush()
-{
-}
-
-
-
-void
-XalanNullOutputStream::write(char	/* theChar */)
-{
-}
-
-
-
-void
-XalanNullOutputStream::write(XalanDOMChar	/* theChar */)
-{
-}
-
-
-
-void
-XalanNullOutputStream::write(const XalanDOMChar*		/* theBuffer */)
-{
-}
-
-
-
-void
-XalanNullOutputStream::write(const char*		/* theBuffer */)
-{
-}
-
-
-
-void
-XalanNullOutputStream::write(
+XalanNullOutputStream::writeData(
 			const char*		/* theBuffer */,
 			unsigned long	/* theBufferLength */)
 {
@@ -117,8 +82,6 @@ XalanNullOutputStream::write(
 
 
 void
-XalanNullOutputStream::write(
-			const XalanDOMChar*		/* theBuffer */,
-			unsigned long			/* theBufferLength */)
+XalanNullOutputStream::doFlush()
 {
 }

@@ -79,31 +79,16 @@ public :
     virtual
 	~XalanNullOutputStream();
 
+protected:
+
     // These are inherited from XalanOutputStream...
-    virtual void
-	flush();
-
-    virtual void
-	write(char	theChar);
-
-    virtual void
-	write(XalanDOMChar	theChar);
-
-    virtual void
-	write(const XalanDOMChar*	theBuffer);
-
-    virtual void
-	write(const char*	theBuffer);
-
-    virtual void
-	write(
+	virtual void
+	writeData(
 			const char*		theBuffer,
 			unsigned long	theBufferLength);
 
-    virtual void
-	write(
-			const XalanDOMChar*		theBuffer,
-			unsigned long			theBufferLength);
+	virtual void
+	doFlush();
 
 private:
 
