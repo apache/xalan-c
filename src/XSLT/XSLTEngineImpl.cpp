@@ -411,7 +411,7 @@ XSLTEngineImpl::process(
 					{
 						bool isOK = true;
 
-						StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="), true);
+						StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="));
 
 						while(tokenizer.hasMoreTokens())
 						{
@@ -430,7 +430,7 @@ XSLTEngineImpl::process(
 						
 						if(isOK)
 						{
-							StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="), true);
+							StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="));
 
 							while(tokenizer.hasMoreTokens())
 							{
