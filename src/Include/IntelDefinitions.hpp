@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,27 +54,31 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(PLATFORMDEFINITIONS_HEADER_GUARD_1357924680)
-#define PLATFORMDEFINITIONS_HEADER_GUARD_1357924680
+#if !defined(INTELDEFINITIONS_HEADER_GUARD_1357924680)
+#define INTELDEFINITIONS_HEADER_GUARD_1357924680
 
-#if defined(_MSC_VER)
-#include "VCPPDefinitions.hpp"
-#elif defined(__GNUC__)
-#include "GCCDefinitions.hpp"
-#elif defined(_AIX)
-#include "AIXDefinitions.hpp"
-#elif defined(__hpux)
-#include "HPUXDefinitions.hpp"
-#elif defined(SOLARIS)
-#include "SolarisDefinitions.hpp"
-#elif defined(OS390)
-#include "OS390Definitions.hpp"
-#elif defined(__DECCXX)
-#include "TRU64Definitions.hpp"
-#elif defined(__INTEL_COMPILER)
-#include "IntelDefinitions.hpp"
-#else
-#error Unknown compiler!
-#endif
 
-#endif	// PLATFORMDEFINITIONS_HEADER_GUARD_1357924680
+
+// ---------------------------------------------------------------------------
+//  A define in the build for each project is also used to control whether
+//  the export keyword is from the project's viewpoint or the client's.
+//  These defines provide the platform specific keywords that they need
+//  to do this.
+// ---------------------------------------------------------------------------
+#define XALAN_PLATFORM_EXPORT
+#define XALAN_PLATFORM_IMPORT
+#define XALAN_PLATFORM_EXPORT_FUNCTION(T) T XALAN_PLATFORM_EXPORT
+#define XALAN_PLATFORM_IMPORT_FUNCTION(T) T XALAN_PLATFORM_IMPORT
+
+
+
+#define XALAN_USE_DEQUE_FOR_VECTOR_BOOL
+#define XALAN_RTTI_AVAILABLE
+#define XALAN_XALANDOMCHAR_USHORT_MISMATCH
+#define XALAN_POSIX2_AVAILABLE
+#define XALAN_INLINE_INITIALIZATION
+#define XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
+
+#define XALAN_UNALIGNED
+
+#endif	// INTELDEFINITIONS_HEADER_GUARD_1357924680
