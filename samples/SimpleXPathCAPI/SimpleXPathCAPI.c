@@ -76,7 +76,7 @@ ReadFile(const char*	theXMLFileName)
 			{
 				fseek(theFile, SEEK_SET, 0);
 
-				theBuffer = malloc(theSize + 1);
+				theBuffer = (char*)malloc(theSize + 1);
 
 				if (theBuffer == 0)
 				{
@@ -192,4 +192,4 @@ main(
 	}
 
 	return theResult;
-};
+}
