@@ -62,6 +62,7 @@
 #include <limits>
 #endif
 
+#include <clocale>
 #include <cmath>
 
 
@@ -568,7 +569,8 @@ void
 translateWideString(
 			const XalanDOMChar*			theWideString,
 			char*						theNarrowString,
-			XalanDOMString::size_type	theStringLength)
+			XalanDOMString::size_type	theStringLength,
+			char						theDecimalPointCharacter)
 {
 	for(XalanDOMString::size_type i = 0; i < theStringLength; ++i)
 	{
@@ -579,7 +581,7 @@ translateWideString(
 			break;
 
 		case XalanUnicode::charFullStop:
-			theNarrowString[i] = '.';
+			theNarrowString[i] = theDecimalPointCharacter;
 			break;
 
 		case XalanUnicode::charDigit_0:
@@ -653,6 +655,8 @@ convertHelper(
 	}
 	else
 	{
+		const char	theDecimalPointChar = localeconv()->decimal_point[0];
+
 		// trim any whitespace
 		consumeWhitespace(theString, theLength);
 
@@ -664,11 +668,18 @@ convertHelper(
 			char	theBuffer[theBufferSize];
 
 #if defined(XALAN_NON_ASCII_PLATFORM)
-			translateWideString(theString, theBuffer, theLength);
+			translateWideString(theString, theBuffer, theLength, theDecimalPointChar);
 #else
 			for(XalanDOMString::size_type i = 0; i < theLength; ++i)
 			{
-				theBuffer[i] = char(theString[i]);
+				if (theString[i] == XalanUnicode::charFullStop)
+				{
+					theBuffer[i] = theDecimalPointChar;
+				}
+				else
+				{
+					theBuffer[i] = char(theString[i]);
+				}
 			}
 
 			theBuffer[theLength] = '\0';
@@ -691,7 +702,7 @@ convertHelper(
 #else
 			theVector.resize(theLength + 1, CharVectorType::value_type(0));
 
-			translateWideString(theString, &*theVector.begin(), theLength);
+			translateWideString(theString, &*theVector.begin(), theLength, theDecimalPointChar);
 #endif
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
@@ -711,106 +722,6 @@ doConvert(const XalanDOMChar*	theString)
 	assert(theString != 0);
 	assert(*theString != 0);
 
-#if 0
-	bool	fError = false;
-	bool	fGotDecimalPoint = false;
-	bool	fGotDigit = false;
-	bool	fGotMinus = false;
-	bool	fGotWhitespace = false;
-
-	const XalanDOMChar*		theCurrent = theString;
-
-	// trim any whitespace
-	consumeWhitespace(theCurrent);
-
-	while(*theCurrent != 0 && fError == false)
-	{
-		switch(*theCurrent)
-		{
-		case XalanUnicode::charFullStop:
-			if (fGotDecimalPoint == true ||	// can't have more than one...
-				fGotWhitespace == true)	// can't have one after whitespace...
-			{
-				fError = true;
-			}
-			else
-			{
-				fGotDecimalPoint = true;
-
-				++theCurrent;
-			}
-			break;
-
-		case XalanUnicode::charHyphenMinus:
-			if (fGotDecimalPoint == true ||
-				fGotMinus == true ||
-				fGotDigit == true ||
-				fGotWhitespace == true)
-			{
-				// Error -- more than one, or in bad position.
-				fError = true;
-			}
-			else
-			{
-				fGotMinus = true;
-
-				++theCurrent;
-			}
-			break;
-
-		case XalanUnicode::charDigit_0:
-		case XalanUnicode::charDigit_1:
-		case XalanUnicode::charDigit_2:
-		case XalanUnicode::charDigit_3:
-		case XalanUnicode::charDigit_4:
-		case XalanUnicode::charDigit_5:
-		case XalanUnicode::charDigit_6:
-		case XalanUnicode::charDigit_7:
-		case XalanUnicode::charDigit_8:
-		case XalanUnicode::charDigit_9:
-			if (fGotWhitespace == true)
-			{
-				fError = true;
-			}
-			else
-			{
-				fGotDigit = true;
-
-				consumeNumbers(theCurrent);
-			}
-			break;
-
-		case XalanUnicode::charSpace:
-		case XalanUnicode::charCR:
-		case XalanUnicode::charHTab:
-		case XalanUnicode::charLF:
-			if (fGotWhitespace == true)
-			{
-				fError = true;
-			}
-			else
-			{
-				fGotWhitespace = true;
-
-				consumeWhitespace(theCurrent);
-			}
-			break;
-
-		default:
-			fError = true;
-			break;
-		}
-	}
-
-	if (fError == true || fGotDigit == false)
-	{
-		return DoubleSupport::getNaN();
-	}
-	else
-	{
-		return convertHelper(theString, fGotDecimalPoint);
-	}
-#else
 	bool	fGotDecimalPoint = false;
 
 	if (doValidate(theString, fGotDecimalPoint) == false)
@@ -821,7 +732,6 @@ doConvert(const XalanDOMChar*	theString)
 	{
 		return convertHelper(theString, fGotDecimalPoint);
 	}
-#endif
 }
 
 
@@ -843,7 +753,7 @@ DoubleSupport::toDouble(const XalanDOMChar*		theString)
 
 
 bool
-DoubleSupport::isValid(const XalanDOMString		theString)
+DoubleSupport::isValid(const XalanDOMString&	theString)
 {
 	return isValid(c_wstr(theString));
 }
@@ -856,184 +766,6 @@ DoubleSupport::isValid(const XalanDOMChar*		theString)
 	return doValidate(theString);
 }
 
-
-
-#if 0
-
-// This version is disabled because it turns out that
-// an unsigned long is not large enough to accumulate
-// all values (duh!).  Perhaps on 64-bit platforms, we
-// can use this code, as it's much faster.
-void
-accumulateNumbers(
-			const XalanDOMChar*&	theString,
-			double&					theResult,
-			bool					fAfterDecimal)
-{
-	if (fAfterDecimal == false)
-	{
-		assert(theResult == 0.0);
-
-		// accumulate as an integer, to avoid
-		// rounding issues.  It's also much
-		// faster...
-		double	temp = 0;
-
-		while(*theString &&
-			  *theString >= XalanUnicode::charDigit_0 &&
-			  *theString <= XalanUnicode::charDigit_9)
-		{
-			temp *= 10;
-			temp += char(*theString) - XalanUnicode::charDigit_0;
-
-			++theString;
-		}
-
-		theResult = temp;
-	}
-	else
-	{
-		// Accumulate a divisor, so we can divide at the end.
-		double	theDivisor = 1;
-
-		// accumulate as an integer, to avoid
-		// rounding issues.  It's also much
-		// faster...
-		unsigned long	temp = 0;
-
-		while(*theString &&
-			  *theString >= XalanUnicode::charDigit_0 &&
-			  *theString <= XalanUnicode::charDigit_9)
-		{
-			theDivisor *= 10;
-
-			temp *= 10;
-			temp += char(*theString) - XalanUnicode::charDigit_0;
-
-			++theString;
-		}
-
-		if (temp > 0 && theDivisor > 1)
-		{
-			const double	theFactionalPart =
-				double(temp) / double(theDivisor);
-
-			theResult += theFactionalPart;
-		}
-	}
-}
-
-
-
-double
-doConvert(const XalanDOMChar*	theString)
-{
-	assert(theString != 0);
-	assert(*theString != 0);
-
-	double	theResult = 0.0;
-
-	bool	fError = false;
-	bool	fGotDecimalPoint = false;
-	bool	fGotDigit = false;
-	bool	fGotMinus = false;
-	bool	fGotWhitespace = false;
-
-	const XalanDOMChar*		theCurrent = theString;
-
-	// trim any whitespace
-	consumeWhitespace(theCurrent);
-
-	while(*theCurrent != 0 && fError == false)
-	{
-		switch(*theCurrent)
-		{
-		case XalanUnicode::charFullStop:
-			if (fGotDecimalPoint == true ||	// can't have more than one...
-				fGotWhitespace == true)	// can't have one after whitespace...
-			{
-				fError = true;
-			}
-			else
-			{
-				fGotDecimalPoint = true;
-
-				++theCurrent;
-			}
-			break;
-
-		case XalanUnicode::charHyphenMinus:
-			if (fGotDecimalPoint == true ||
-				fGotMinus == true ||
-				fGotDigit == true ||
-				fGotWhitespace == true)
-			{
-				// Error -- more than one, or in bad position.
-				fError = true;
-			}
-			else
-			{
-				fGotMinus = true;
-
-				++theCurrent;
-			}
-			break;
-
-		case XalanUnicode::charDigit_0:
-		case XalanUnicode::charDigit_1:
-		case XalanUnicode::charDigit_2:
-		case XalanUnicode::charDigit_3:
-		case XalanUnicode::charDigit_4:
-		case XalanUnicode::charDigit_5:
-		case XalanUnicode::charDigit_6:
-		case XalanUnicode::charDigit_7:
-		case XalanUnicode::charDigit_8:
-		case XalanUnicode::charDigit_9:
-			if (fGotWhitespace == true)
-			{
-				fError = true;
-			}
-			else
-			{
-				fGotDigit = true;
-
-				accumulateNumbers(theCurrent, theResult, fGotDecimalPoint);
-			}
-			break;
-
-		case XalanUnicode::charSpace:
-		case XalanUnicode::charCR:
-		case XalanUnicode::charHTab:
-		case XalanUnicode::charLF:
-			if (fGotWhitespace == true)
-			{
-				fError = true;
-			}
-			else
-			{
-				fGotWhitespace = true;
-
-				consumeWhitespace(theCurrent);
-			}
-			break;
-
-		default:
-			fError = true;
-			break;
-		}
-	}
-
-	if (fError == true || fGotDigit == false)
-	{
-		return DoubleSupport::getNaN();
-	}
-	else
-	{
-		return fGotMinus == true ? -theResult : theResult;
-	}
-}
-
-#endif
 
 
 double
