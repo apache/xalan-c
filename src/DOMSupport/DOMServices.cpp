@@ -141,53 +141,6 @@ const XalanDOMString::size_type&	DOMServices::s_XMLNamespaceSeparatorStringLengt
 const XalanDOMString::size_type&	DOMServices::s_XMLNamespacePrefixURILength = ::s_XMLNamespacePrefixURILength;
 
 
-DOMServices::WhitespaceSupport::WhitespaceSupport()
-{
-}
-
-
-
-DOMServices::WhitespaceSupport::~WhitespaceSupport()
-{
-}
-
-
-
-DOMServices::WhitespaceSupportDefault::WhitespaceSupportDefault()
-{
-}
-
-
-
-DOMServices::WhitespaceSupportDefault::~WhitespaceSupportDefault()
-{
-}
-
-
-
-bool
-DOMServices::WhitespaceSupportDefault::isIgnorableWhitespace(const XalanText&	node) const
-{
-	const XalanDOMString				theData(node.getData());
-
-	const XalanDOMString::size_type		theLength = length(theData);
-
-	XalanDOMString::size_type	i = 0;
-
-	for (; i < theLength; i++)
-	{
-		const XalanDOMChar	theChar = charAt(theData, i);
-
-		if (!isXMLWhitespace(theChar))
-		{
-			break;
-		}
-	}
-
-	return i == theLength ? true : false;
-}
-
-
 
 void
 DOMServices::initialize()

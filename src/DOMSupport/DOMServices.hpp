@@ -115,47 +115,6 @@ public:
 	static const XalanDOMString		s_emptyString;
 
 
-	class XALAN_DOMSUPPORT_EXPORT WhitespaceSupport
-	{
-	public:
-
-		WhitespaceSupport();
-
-		virtual
-		~WhitespaceSupport();
-
-		/**
-		 * Tell if the node is ignorable whitespace. This should be in the DOM.
-		 * Return false if the parser doesn't handle this.
-		 * 
-		 * @param node	text node queried
-		 * @return true if white space can be ignored
-		 */
-		virtual bool
-		isIgnorableWhitespace(const XalanText&	node) const = 0;
-	};
-
-	// A default implementation using the values from the XML spec.
-	class XALAN_DOMSUPPORT_EXPORT WhitespaceSupportDefault : public WhitespaceSupport
-	{
-	public:
-
-		WhitespaceSupportDefault();
-
-		virtual
-		~WhitespaceSupportDefault();
-
-		/**
-		 * Tell if the node is ignorable whitespace. This should be in the DOM.
-		 * Return false if the parser doesn't handle this.
-		 * 
-		 * @param node	text node queried
-		 * @return true if white space can be ignored
-		 */
-		virtual bool
-		isIgnorableWhitespace(const XalanText&	node) const;
-	};
-
 	/**
 	 * Initialize static data.  Must be called before any
 	 * other functions are called.
