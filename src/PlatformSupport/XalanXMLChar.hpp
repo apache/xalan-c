@@ -93,46 +93,44 @@ public:
 	static bool 
 	isBaseChar(XalanDOMChar c)
 	{
-		return theUnicodeTable[c] == XML_BC;
+		return theUnicodeTable[c] == char(XML_BC);
 	}
 
 	static bool 
 	isIdeographic(XalanDOMChar c)
 	{
-		return theUnicodeTable[c] == XML_ID;
+		return theUnicodeTable[c] == char(XML_ID);
 	}
 
 	static bool 
 	isExtender(XalanDOMChar c) 
 	{
-		return theUnicodeTable[c] == XML_EX;
+		return theUnicodeTable[c] == char(XML_EX);
 	}
 
 	static bool 
 	isDigit(XalanDOMChar c) 
 	{
-		return theUnicodeTable[c] == XML_DI;
+		return theUnicodeTable[c] == char(XML_DI);
 	}
 
 	static bool 
 	isCombiningChar(XalanDOMChar c) 
 	{
-		return theUnicodeTable[c] == XML_CC;
+		return theUnicodeTable[c] == char(XML_CC);
 	}
 
 	static bool 
 	isWhitespace(XalanDOMChar c) 
 	{
-		return theUnicodeTable[c] == XML_WS;
+		return theUnicodeTable[c] == char(XML_WS);
 	}
 
 	static bool 
 	isLetter(XalanDOMChar c) 
 	{
-		return theUnicodeTable[c] == XML_BC || theUnicodeTable[c] == XML_ID;
+		return theUnicodeTable[c] == char(XML_BC) || theUnicodeTable[c] == char(XML_ID);
 	}
-
-
 };
 
 
