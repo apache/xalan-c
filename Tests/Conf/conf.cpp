@@ -248,11 +248,16 @@ getParams(int argc,
 	// Do we need to set the default output directory??
 	if (fsetOut)
 	{
-		unsigned int ii = lastIndexOf(baseDir,charAt(pathSep,0));
-		outDir = substring(baseDir, 0, ii+1);
-		append(outDir,XalanDOMString("CONF-results"));
+		const unsigned int	ii = lastIndexOf(baseDir,charAt(pathSep,0));
+
+		if (ii < length(baseDir))
+		{
+			outDir = substring(baseDir, 0, ii + 1);
+		}
+
+		append(outDir, XalanDOMString("CONF-results"));
 		f.checkAndCreateDir(outDir);
-		append(outDir,pathSep);
+		append(outDir, pathSep);
 	}
 	if (fsetGold)
 	{
