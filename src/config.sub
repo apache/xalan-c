@@ -211,7 +211,7 @@ case $basic_machine in
 		| hppa64 \
 		| alpha | alphaev[4-8] | alphaev56 | alphapca5[67] \
 		| alphaev6[78] \
-		| we32k | ns16k | clipper | i370 | sh | sh[34] \
+		| we32k | ns16k | clipper | i390 | sh | sh[34] \
 		| powerpc | powerpcle \
 		| 1750a | dsp16xx | pdp11 | mips16 | mips64 | mipsel | mips64el \
 		| mips64orion | mips64orionel | mipstx39 | mipstx39el \
@@ -481,8 +481,8 @@ case $basic_machine in
 		basic_machine=hppa1.1-hp
 		os=-proelf
 		;;
-	i370-ibm* | ibm*)
-		basic_machine=i370-ibm
+	i390-ibm* | ibm*)
+		basic_machine=i390-ibm
 		;;
 # I'm not sure what "Sysv32" means.  Should this be sysv3.2?
 	i[34567]86v32)
@@ -580,7 +580,7 @@ case $basic_machine in
 		os=-msdos
 		;;
 	mvs)
-		basic_machine=i370-ibm
+		basic_machine=i390-ibm
 		os=-mvs
 		;;
 	ncr3000)
@@ -1207,7 +1207,7 @@ case $basic_machine in
 	*-ns)
 		os=-genix
 		;;
-	i370-*)
+	i390-*)
 		os=-mvs
 		;;
 	*-next)

@@ -226,18 +226,48 @@ LINK = $(CXX) -qnotempinc $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
 
 endif
 
+#=============== OS390 SPECIFIC OPTIONS =========================               
+                                                                                
+ifeq ($(PLATFORM), OS390)                                                       
+                                                                                
+                                                                                
+ifndef STLPORTROOT                                                              
+nostlportroot:                                                                  
+	@echo STLPORTROOT must be defined                                       
+endif                                                                           
+                                                                                
+SUPPORTED = TRUE                                                                
+PLATFORM_COMPILE_OPTIONS =-Wc,dll -W0,"langlvl(extended),notempinc,float(ieee)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -I ${STLPORTROOT}/stlport
+ALLLIBS =                                                                       
+SHLIBSUFFIX=.dll                                                                
+OS390SIDEDECK=.x                                                                
+                                                                                
+CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)                            
+MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -Wl,dll                          
+LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)                           
+                                                                                
+endif                                                                           
+
 ifndef SUPPORTED
 nogood:
-	@echo Linux Solaris AIX and HPUX are the only unix platforms supported.
+	@echo Linux Solaris, AIX and HPUX are the only unix platforms supported.
 endif
 
 # We need the Xerces library
+ifeq ($(PLATFORM), OS390)                             
+ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_4.x        
+else                                                  
 ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_4
+endif
 
 # We need the ICU library if we are using the ICUBridge
 ifdef XALAN_USE_ICU
+ifeq ($(PLATFORM), OS390)                                             
+ALLLIBS += ${ICUROOT}/lib/libicu-uc.x ${ICUROOT}/lib/libicu-i18n.x    
+else                                                                  
 ALLLIBS += -L/usr/local/lib -licu-uc
 ALLLIBS += -L/usr/local/lib -licu-i18n
+endif
 endif
 
 
@@ -247,7 +277,11 @@ XSL_INCL = -I. -I$(XERCESCROOT)/src/ -I$(XERCESCROOT)/include/
 
 # We need the ICU library if we are using the ICUBridge
 ifdef XALAN_USE_ICU
+ifeq ($(PLATFORM), OS390)                 
+XSL_INCL += -I ${ICUROOT}/include/        
+else                                      
 XSL_INCL += -I/usr/local/include/
+endif
 XSL_BUILD_OPTIONS += -DXALAN_USE_ICU
 endif
 
@@ -309,19 +343,35 @@ endif
 
 testXSLT: lib  $(BINTARGETDIR)/testXSLT
 
+ifeq ($(PLATFORM), OS390)                                                       
+$(BINTARGETDIR)/testXSLT: ${ALL_OBJECTS_DIR}/process.o                          
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $^ -o $@	
+${ALL_OBJECTS_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp                       
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+else                                                            
 $(BINTARGETDIR)/testXSLT: ${ALL_OBJECTS_DIR}/process.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+endif
 
 testXPath: lib  $(BINTARGETDIR)/testXPath
 
+ifeq ($(PLATFORM), OS390)                                                       
+$(BINTARGETDIR)/testXPath: ${ALL_OBJECTS_DIR}/TestXPath.o ${ALL_OBJECTS_DIR}/NodeNameTreeWalker.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(TESTXPATH_DIR)/%.cpp                                   
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+else                                                                 
 $(BINTARGETDIR)/testXPath: ${ALL_OBJECTS_DIR}/TestXPath.o ${ALL_OBJECTS_DIR}/NodeNameTreeWalker.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(TESTXPATH_DIR)/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+endif
 
 Samples: lib  CompileStylesheet  ExternalFunction  SimpleTransform  StreamTransform  TraceListen  UseStylesheetParam  XalanTransform XPathWrapper #  ThreadSafe
 
@@ -411,6 +461,9 @@ lib:	prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
 
 $(THISLIB)$(VER)$(SHLIBSUFFIX): $(ALL_OBJECTS)
 	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS) $^ -o $@ 
+ifeq ($(PLATFORM), OS390)            
+	cp -p *.x  ${LIB_DIR}        
+endif                                
 
 clean:
 	rm -rf $(ALL_OBJECTS_DIR)/*

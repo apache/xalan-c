@@ -242,7 +242,10 @@ EOF
 	echo mipsel-unknown-openbsd${UNAME_RELEASE}
 	exit 0 ;;
     *:OS/390:*:*)
-	echo i370-ibm-openedition
+	echo i390-ibm-mvs${UNAME_RELEASE}
+	exit 0 ;;
+    *:z/OS:*:*)
+	echo i390-ibm-mvs${UNAME_RELEASE}
 	exit 0 ;;
     arm:RISC*:1.[012]*:*|arm:riscix:1.[012]*:*)
 	echo arm-acorn-riscix${UNAME_RELEASE}
