@@ -65,9 +65,8 @@
 
 
 
-#include <Harness/XMLFileReporter.hpp>
-#include <Harness/FileUtility.hpp>
-#include <Harness/HarnessInit.hpp>
+#include <xalanc/Harness/XalanXMLFileReporter.hpp>
+#include <xalanc/Harness/XalanFileUtility.hpp>
 
 
 
@@ -108,7 +107,7 @@ bool
 getParams(
 			int					argc, 
 			char*				argv[],
-			FileUtility&		f,
+			XalanFileUtility&		f,
 			XalanDOMString&		basedir,
 			XalanDOMString&		outdir)
 {
@@ -123,10 +122,10 @@ getParams(
 	}
 	else
 	{
-		if (f.checkDir(FileUtility::s_pathSep + XalanDOMString(argv[1])))
+		if (f.checkDir(XalanFileUtility::s_pathSep + XalanDOMString(argv[1])))
 		{
 			assign(basedir, XalanDOMString(argv[1]));
-			insert(basedir, 0, FileUtility::s_pathSep);
+			insert(basedir, 0, XalanFileUtility::s_pathSep);
 		}
 		else
 		{
@@ -167,14 +166,14 @@ getParams(
 	// Do we need to set the default output directory??
 	if (fSetOut)
 	{
-		unsigned int ii = lastIndexOf(basedir,charAt(FileUtility::s_pathSep,0));
+		unsigned int ii = lastIndexOf(basedir, XalanFileUtility::s_pathSep[0]);
 		outdir = substring(basedir, 0, ii+1);
 		append(outdir, "Dom2Dom-RESULTS\\");
 		f.checkAndCreateDir(outdir);
 	}
 	
 	// Add the path seperator to the end of the base directory
-	append(basedir, FileUtility::s_pathSep);
+	append(basedir, XalanFileUtility::s_pathSep);
 
 	return fSuccess;
 }
@@ -237,10 +236,7 @@ runTests(
 		  int		argc,
 		  char*		argv[])
 {
-
-	HarnessInit		xmlPlatformUtils;
-
-	FileUtility		f;
+	XalanFileUtility	f;
 
 	XalanDOMString  category;	// Test all of base dir by default
 	XalanDOMString  baseDir;	
@@ -248,7 +244,7 @@ runTests(
 	
 	if (getParams(argc, argv, f, baseDir, outputRoot) == true)
 	{
-		typedef FileUtility::FileNameVectorType		FileNameVectorType;
+		typedef XalanFileUtility::FileNameVectorType		FileNameVectorType;
 
 		// Get the list of Directories that are below perf
 		const FileNameVectorType	dirs = f.getDirectoryNames(baseDir);
@@ -259,9 +255,9 @@ runTests(
 		// Defined basic constants for file manipulation 
 
 		const XalanDOMString  resultFilePrefix("dom2dom");
-		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
 		
-		XMLFileReporter	logFile(resultsFile);
+		XalanXMLFileReporter    logFile(resultsFile);
 		logFile.logTestFileInit("Dom2Dom Testing: Treating all inputs and outputs as DOM's. ");
 
 		try
@@ -286,9 +282,9 @@ runTests(
 				cout << files[i] << endl;
 
 				// Set up the input/output files.
-				const XalanDOMString  theXSLFile= baseDir + xMan + FileUtility::s_pathSep + files[i];
+				const XalanDOMString  theXSLFile= baseDir + xMan + XalanFileUtility::s_pathSep + files[i];
 				const XalanDOMString  theXMLFile = f.generateFileName(theXSLFile,"xml");
-				const XalanDOMString  theOutput =  outputRoot + xMan + FileUtility::s_pathSep + files[i]; 
+				const XalanDOMString  theOutput =  outputRoot + xMan + XalanFileUtility::s_pathSep + files[i]; 
 				const XalanDOMString  theOutputFile = f.generateFileName(theOutput, "out");
 
 				XALAN_USING_XERCES(DOMDocument)

@@ -55,9 +55,8 @@ XALAN_USING_STD(endl)
 
 
 
-#include <Harness/XMLFileReporter.hpp>
-#include <Harness/FileUtility.hpp>
-#include <Harness/HarnessInit.hpp>
+#include <xalanc/Harness/XalanXMLFileReporter.hpp>
+#include <xalanc/Harness/XalanFileUtility.hpp>
 
 
 
@@ -73,13 +72,13 @@ const char* const 	excludeStylesheets[] =
 
 
 
-XALAN_USING_XALAN(FileUtility)
+XALAN_USING_XALAN(XalanFileUtility)
 XALAN_USING_XALAN(XalanDOMString)
 
 
 
 void
-setHelp(FileUtility&	h)
+setHelp(XalanFileUtility&	h)
 {
 	h.args.getHelpStream() << endl
 		 << "errortests dir [-sub -out]"
@@ -116,11 +115,7 @@ runTests(
 			int		argc,
 			char*	argv[])
 {
-	XALAN_USING_XALAN(HarnessInit)
-
-	HarnessInit		xmlPlatformUtils;
-
-	FileUtility		h;
+	XalanFileUtility	h;
 
 	// Set the program help string,  then get the command line parameters.
 	//
@@ -133,7 +128,7 @@ runTests(
 		XALAN_USING_XALAN(XalanTransformer)
 		XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
 		XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
-		XALAN_USING_XALAN(XMLFileReporter)
+		XALAN_USING_XALAN(XalanXMLFileReporter)
 
 		XalanTransformer				xalan;
 
@@ -147,15 +142,16 @@ runTests(
 
 		// Defined basic constants for file manipulation and open results file
 		const XalanDOMString  resultFilePrefix("cpperr");
-		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
 
-		XMLFileReporter		logFile(resultsFile);
+		XalanXMLFileReporter    logFile(resultsFile);
+
 		logFile.logTestFileInit("Error Testing:");
 
 		// Get the list of Directories that are below conf
 		bool foundDir = false;		// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
 
-		typedef FileUtility::FileNameVectorType		FileNameVectorType;
+		typedef XalanFileUtility::FileNameVectorType    FileNameVectorType;
 
 		const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
 
@@ -189,7 +185,7 @@ runTests(
 						XALAN_USING_XALAN(XalanCompiledStylesheet)
 						XALAN_USING_XALAN(XalanParsedSource)
 
-						XMLFileReporter::Hashtable	attrs;
+						XalanXMLFileReporter::Hashtable     attrs;
 
 						const XalanDOMString currentFile(files[i]);
 						h.data.testOrFile = currentFile;
@@ -197,12 +193,12 @@ runTests(
 						if (checkForExclusion(currentFile))
 							continue;
 
-						const XalanDOMString  theXSLFile= h.args.base + currentDir + FileUtility::s_pathSep + currentFile;
+						const XalanDOMString  theXSLFile= h.args.base + currentDir + XalanFileUtility::s_pathSep + currentFile;
 						const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
-						XalanDOMString  theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + currentFile;
+						XalanDOMString  theGoldFile = h.args.gold + currentDir + XalanFileUtility::s_pathSep + currentFile;
 						theGoldFile = h.generateFileName(theGoldFile, "out");
 
-						const XalanDOMString  outbase =  h.args.output + currentDir + FileUtility::s_pathSep + currentFile; 
+						const XalanDOMString  outbase =  h.args.output + currentDir + XalanFileUtility::s_pathSep + currentFile; 
 						const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
 
 						const XSLTInputSource	xslInputSource(theXSLFile);

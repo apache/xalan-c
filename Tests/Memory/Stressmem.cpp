@@ -40,9 +40,8 @@
 
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
-#include <Harness/XMLFileReporter.hpp>
-#include <Harness/FileUtility.hpp>
-#include <Harness/HarnessInit.hpp>
+#include <xalanc/Harness/XalanXMLFileReporter.hpp>
+#include <xalanc/Harness/XalanFileUtility.hpp>
 
 
 
@@ -59,7 +58,7 @@ static const char* const	excludeStylesheets[] =
 
 
 
-XALAN_USING_XALAN(FileUtility)
+XALAN_USING_XALAN(XalanFileUtility)
 XALAN_USING_XALAN(XalanDOMString)
 
 
@@ -81,7 +80,7 @@ checkForExclusion(const XalanDOMString&		currentFile)
 
 
 void
-setHelp(FileUtility&	h)
+setHelp(XalanFileUtility&	h)
 {
 	h.args.getHelpStream() << endl
 		 << "stressmem dirname [-out -sub]"
@@ -106,11 +105,7 @@ runTests(
 
 	try
 	{
-		XALAN_USING_XALAN(HarnessInit)
-
-		HarnessInit		xmlPlatformUtils;
-
-		FileUtility		h;
+		XalanFileUtility	h;
 
 		setHelp(h);
 
@@ -122,9 +117,9 @@ runTests(
 		{
 			//XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
 			//XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
-			XALAN_USING_XALAN(XMLFileReporter)
+			XALAN_USING_XALAN(XalanXMLFileReporter)
 
-			typedef FileUtility::FileNameVectorType		FileNameVectorType;
+			typedef XalanFileUtility::FileNameVectorType	FileNameVectorType;
 
 			// Get the list of Directories that are below perf
 			const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
@@ -134,10 +129,10 @@ runTests(
 
 			// Defined basic constants for file manipulation 
 
-			const XalanDOMString  resultFilePrefix(XalanDOMString("cpp-mem"));
-			const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+			const XalanDOMString    resultFilePrefix(XalanDOMString("cpp-mem"));
+			const XalanDOMString    resultsFile(h.args.output + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
 
-			XMLFileReporter		logFile(resultsFile);
+			XalanXMLFileReporter	logFile(resultsFile);
 
 			logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
 
@@ -147,7 +142,7 @@ runTests(
 
 				bool foundDir = false;
 
-				XalanTransformer		transformEngine;
+				XalanTransformer	transformEngine;
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 				{
@@ -176,9 +171,9 @@ runTests(
 							logFile.logTestCaseInit(files[i]);
 							cout << files[i] << endl;
 
-							const XalanDOMString  theXSLFile = h.args.base + dirs[j] + FileUtility::s_pathSep + files[i];
+							const XalanDOMString  theXSLFile = h.args.base + dirs[j] + XalanFileUtility::s_pathSep + files[i];
 							const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
-							const XalanDOMString  theOutput =  h.args.output + dirs[j] + FileUtility::s_pathSep + files[i]; 
+							const XalanDOMString  theOutput =  h.args.output + dirs[j] + XalanFileUtility::s_pathSep + files[i]; 
 							const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
 
 							// Do a total end to end transform with no pre parsing of either xsl or xml files.

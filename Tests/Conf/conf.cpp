@@ -54,9 +54,8 @@ XALAN_USING_STD(endl)
 
 
 // HARNESS HEADERS...
-#include <Harness/XMLFileReporter.hpp>
-#include <Harness/FileUtility.hpp>
-#include <Harness/HarnessInit.hpp>
+#include "xalanc/Harness/XalanXMLFileReporter.hpp"
+#include "xalanc/Harness/XalanFileUtility.hpp"
 
 
 
@@ -80,7 +79,7 @@ XALAN_CPP_NAMESPACE_USE
 
 
 void
-setHelp(FileUtility&	h)
+setHelp(XalanFileUtility&	h)
 {
 	h.args.getHelpStream() << endl
 		 << "conf dir [-sub -out -gold -source (XST | XPL | DOM)]"
@@ -125,28 +124,30 @@ checkForExclusion(const XalanDOMString&		currentFile)
 
 
 
-void
+int
 parseWithTransformer(
 			int								sourceType,
 			XalanTransformer&				xalan,
 			const XSLTInputSource&			xmlInput,
 			const XalanCompiledStylesheet*	styleSheet,
 			const XSLTResultTarget&			output, 
-			XMLFileReporter&				logFile,
-			FileUtility&					h)
+			XalanXMLFileReporter&				logFile,
+			XalanFileUtility&					h)
 {
 	const XalanParsedSource* parsedSource = 0;
+
+    int theResult = 0;
 
 	// Parse the XML source accordingly.
 	//
 	if (sourceType != 0 )
 	{
-		xalan.parseSource(xmlInput, parsedSource, true);
+		theResult = xalan.parseSource(xmlInput, parsedSource, true);
 		h.data.xmlFormat = XalanDOMString("XercesParserLiasion");
 	}
 	else
 	{
-		xalan.parseSource(xmlInput, parsedSource, false);
+		theResult = xalan.parseSource(xmlInput, parsedSource, false);
 		h.data.xmlFormat = XalanDOMString("XalanSourceTree");
 	}
 				
@@ -162,21 +163,23 @@ parseWithTransformer(
 	}
 	else 
 	{
-		xalan.transform(*parsedSource, styleSheet, output);
+		theResult = xalan.transform(*parsedSource, styleSheet, output);
 		xalan.destroyParsedSource(parsedSource);
 	}
+
+    return theResult;
 }
 
 
 
-void
+int
 parseWithXerces(
 			XalanTransformer&				xalan,
 			const XSLTInputSource&			xmlInput, 
 			const XalanCompiledStylesheet*	styleSheet,
 			const XSLTResultTarget&			output,
-			XMLFileReporter&				logFile,
-			FileUtility&					h)
+			XalanXMLFileReporter&			logFile,
+			XalanFileUtility&				h)
 {
 	XALAN_USING_XERCES(XercesDOMParser)
 	XALAN_USING_XERCES(DOMDocument)
@@ -197,6 +200,8 @@ parseWithXerces(
 	XercesDOMSupport	theDOMSupport;
 	XercesParserLiaison theParserLiaison;
 
+    int theResult = 0;
+
 	try
 	{
 		const XercesDOMWrapperParsedSource	parsedSource(
@@ -205,7 +210,7 @@ parseWithXerces(
 					theDOMSupport, 
 					XalanDOMString(xmlInput.getSystemId()));
 
-		xalan.transform(parsedSource, styleSheet, output);
+		theResult = xalan.transform(parsedSource, styleSheet, output);
 	}
 	catch(...)
 	{
@@ -215,6 +220,8 @@ parseWithXerces(
 		++h.data.fail;
 		logFile.logErrorResult(h.data.testOrFile, XalanDOMString("Failed to parse source document.  ") + xalan.getLastError());
 	}
+
+    return theResult;
 }
 
 
@@ -228,9 +235,7 @@ runTests(
 
 	try
 	{
-		HarnessInit		xmlPlatformUtils;
-
-		FileUtility		h;
+		XalanFileUtility	h;
 
 		// Set the program help string,  then get the command line parameters.
 		//
@@ -245,11 +250,11 @@ runTests(
 			const XalanDOMString  drive(h.getDrive());			// This is used to get stylesheet for final analysis
 			const XalanDOMString  resultFilePrefix("conf");		// This & UniqRunid used for log file name.
 			const XalanDOMString  UniqRunid = h.generateUniqRunid(); 
-			const XalanDOMString  resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+			const XalanDOMString  resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
 
 			// Open results log, and do some initialization of result data.
 			//
-			XMLFileReporter	logFile(resultsFile);
+			XalanXMLFileReporter	logFile(resultsFile);
 			logFile.logTestFileInit("Conformance Testing:");
 			h.data.xmlFormat = XalanDOMString("NotSet");
 
@@ -259,11 +264,15 @@ runTests(
 			// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
 			bool	foundDir = false;
 
-			typedef FileUtility::FileNameVectorType		FileNameVectorType;
+			typedef XalanFileUtility::FileNameVectorType		FileNameVectorType;
 
 			const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
 
-			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
+            int theResult = 0;
+
+			for(FileNameVectorType::size_type j = 0;
+                    j < dirs.size() && theResult == 0;
+                        ++j)
 			{
 				// Skip all but the specified directory if the -sub cmd-line option was used.
 				//
@@ -287,14 +296,14 @@ runTests(
 
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
-						XMLFileReporter::Hashtable	attrs;
+						XalanXMLFileReporter::Hashtable	attrs;
 
 						const XalanDOMString&	currentFile = files[i];
 						if (checkForExclusion(currentFile))
 							continue;
 
 						h.data.testOrFile = currentFile;
-						const XalanDOMString  theXSLFile = h.args.base + currentDir + FileUtility::s_pathSep + currentFile;
+						const XalanDOMString  theXSLFile = h.args.base + currentDir + XalanFileUtility::s_pathSep + currentFile;
 
 						// Check and see if the .xml file exists. If not skip this .xsl file and continue.
 						bool fileStatus = true;
@@ -306,10 +315,10 @@ runTests(
 						h.data.xslFileURL = theXSLFile;
 
 
-						XalanDOMString  theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + currentFile;
+						XalanDOMString  theGoldFile = h.args.gold + currentDir + XalanFileUtility::s_pathSep + currentFile;
 						theGoldFile = h.generateFileName(theGoldFile, "out");
 
-						const XalanDOMString  outbase =  h.args.output + currentDir + FileUtility::s_pathSep + currentFile; 
+						const XalanDOMString  outbase =  h.args.output + currentDir + XalanFileUtility::s_pathSep + currentFile; 
 						const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
 
 						const XSLTInputSource	xslInputSource(theXSLFile);
@@ -336,11 +345,11 @@ runTests(
 						{
 							case 0:
 							case 1:
-								parseWithTransformer(h.args.source, xalan, xmlInputSource, compiledSS, resultFile, logFile, h);
+								theResult = parseWithTransformer(h.args.source, xalan, xmlInputSource, compiledSS, resultFile, logFile, h);
 								break;
 
 							case 2:
-								parseWithXerces(xalan, xmlInputSource, compiledSS, resultFile, logFile, h);
+								theResult = parseWithXerces(xalan, xmlInputSource, compiledSS, resultFile, logFile, h);
 								break;
 						}
 
@@ -360,6 +369,15 @@ runTests(
 			{
 				cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
 			}
+            else if (theResult != 0)
+            {
+				cout << "An unexpected tranformer error occurred.  The error code is "
+                     << theResult
+                     << "\n"
+                     << "The error message is \""
+                     << xalan.getLastError()
+                     << endl;
+            }
 
 			h.reportPassFail(logFile, UniqRunid);
 			logFile.logTestFileClose("Conformance ", "Done");

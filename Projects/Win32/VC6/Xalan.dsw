@@ -87,9 +87,6 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name Harness
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name AllInOne
     End Project Dependency
 }}}
@@ -97,21 +94,6 @@ Package=<4>
 ###############################################################################
 
 Project: "ExternalFunction"=".\ExternalFunction\ExternalFunction.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "Harness"="..\..\..\Tests\Harness\Harness.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -147,9 +129,6 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name Harness
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name AllInOne
     End Project Dependency
 }}}
@@ -164,9 +143,6 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name Harness
-    End Project Dependency
     Begin Project Dependency
     Project_Dep_Name AllInOne
     End Project Dependency
@@ -197,9 +173,6 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name Harness
-    End Project Dependency
     Begin Project Dependency
     Project_Dep_Name AllInOne
     End Project Dependency
@@ -268,21 +241,6 @@ Package=<4>
 ###############################################################################
 
 Project: "StreamTransform"=".\StreamTransform\StreamTransform.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "XPathWrapper"=".\XPathWrapper\XPathWrapper.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -417,6 +375,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "XPathWrapper"=".\XPathWrapper\XPathWrapper.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name AllInOne
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "XalanExe"=".\XalanExe\XalanExe.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -471,9 +444,6 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name Harness
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name AllInOne
     End Project Dependency
 }}}
@@ -488,9 +458,6 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name Harness
-    End Project Dependency
     Begin Project Dependency
     Project_Dep_Name AllInOne
     End Project Dependency
@@ -507,9 +474,6 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name Harness
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name AllInOne
     End Project Dependency
 }}}
@@ -524,9 +488,6 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name Harness
-    End Project Dependency
     Begin Project Dependency
     Project_Dep_Name AllInOne
     End Project Dependency
@@ -543,9 +504,6 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name Harness
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name AllInOne
     End Project Dependency
 }}}
@@ -560,9 +518,6 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name Harness
-    End Project Dependency
     Begin Project Dependency
     Project_Dep_Name AllInOne
     End Project Dependency

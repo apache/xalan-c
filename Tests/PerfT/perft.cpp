@@ -34,10 +34,8 @@
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
-// HARNESS HEADERS...
-#include <Harness/XMLFileReporter.hpp>
-#include <Harness/FileUtility.hpp>
-#include <Harness/HarnessInit.hpp>
+#include <xalanc/Harness/XalanXMLFileReporter.hpp>
+#include <xalanc/Harness/XalanFileUtility.hpp>
 
 
 // This is here for memory leak testing.
@@ -97,7 +95,7 @@ calculateAvgTime(
 
 
 void
-setHelp(XALAN_CPP_NAMESPACE_QUALIFIER FileUtility&	h)
+setHelp(XALAN_CPP_NAMESPACE_QUALIFIER XalanFileUtility&	h)
 {
 	h.args.getHelpStream() << endl
 		 << "Perft dir [-out -sub -i -iter]"
@@ -125,10 +123,7 @@ runTests(
 	// Just hoist everything...
 	XALAN_CPP_NAMESPACE_USE
 
-
-	HarnessInit		xmlPlatformUtils;
-
-	FileUtility		h;
+	XalanFileUtility	h;
 
 	// Set the program help string,  then get the command line parameters.
 	//
@@ -148,16 +143,16 @@ runTests(
 
 		// Defined basic constants for file manipulation and open results file
 		const XalanDOMString  resultFilePrefix("cpp");
-		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
 
 
-		XMLFileReporter	logFile(resultsFile);
+		XalanXMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("Performance Testing - Reports various performance metrics using the Transformer");
 
 		// Get the list of sub-directories below "base" and iterate through them
 		bool foundDir = false;		// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
 
-		typedef FileUtility::FileNameVectorType		FileNameVectorType;
+		typedef XalanFileUtility::FileNameVectorType		FileNameVectorType;
 
 		const FileNameVectorType dirs = h.getDirectoryNames(h.args.base);
 
@@ -190,7 +185,7 @@ runTests(
 				double timeinMilliseconds = 0, theAverage =0;
 				int transformResult = 0;
 
-				typedef XMLFileReporter::Hashtable	Hashtable;
+				typedef XalanXMLFileReporter::Hashtable	Hashtable;
 
 				Hashtable attrs;
 
@@ -205,10 +200,10 @@ runTests(
 						continue;
 				}
 
-				const XalanDOMString  theXSLFile= h.args.base + dirs[j] + FileUtility::s_pathSep + files[i];
+				const XalanDOMString  theXSLFile= h.args.base + dirs[j] + XalanFileUtility::s_pathSep + files[i];
 				const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
 
-				const XalanDOMString  outbase =  h.args.output + dirs[j] + FileUtility::s_pathSep + files[i]; 
+				const XalanDOMString  outbase =  h.args.output + dirs[j] + XalanFileUtility::s_pathSep + files[i]; 
 				const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
 
 				const XSLTInputSource	xslInputSource(theXSLFile);

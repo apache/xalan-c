@@ -56,9 +56,8 @@ XALAN_USING_STD(endl)
 
 
 
-#include <Harness/XMLFileReporter.hpp>
-#include <Harness/FileUtility.hpp>
-#include <Harness/HarnessInit.hpp>
+#include <xalanc/Harness/XalanXMLFileReporter.hpp>
+#include <xalanc/Harness/XalanFileUtility.hpp>
 
 
 
@@ -69,12 +68,12 @@ XALAN_USING_STD(endl)
 
 
 
-XALAN_USING_XALAN(FileUtility)
+XALAN_USING_XALAN(XalanFileUtility)
 
 
 
 void
-setHelp(FileUtility&	h)
+setHelp(XalanFileUtility&	h)
 {
 	h.args.getHelpStream() << endl
 		 << "compare dirname [-out -gold]"
@@ -95,11 +94,7 @@ runTests(
 			int		argc,
 			char*	argv[])
 {
-	XALAN_USING_XALAN(HarnessInit)
-
-	HarnessInit		xmlPlatformUtils;
-
-	FileUtility		h;
+	XalanFileUtility	h;
 
 	bool setGold = true;
 
@@ -117,7 +112,7 @@ runTests(
 		XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
 		XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
 		XALAN_USING_XALAN(XalanTransformer)
-		XALAN_USING_XALAN(XMLFileReporter)
+		XALAN_USING_XALAN(XalanXMLFileReporter)
 		XALAN_USING_XALAN(XSLTInputSource)
 		XALAN_USING_XALAN(XSLTResultTarget)
 
@@ -134,9 +129,9 @@ runTests(
 		// Generate Unique Run id and processor info
 		const XalanDOMString UniqRunid = h.generateUniqRunid();
 		const XalanDOMString  resultFilePrefix("cpp");
-		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
 
-		XMLFileReporter		logFile(resultsFile);
+		XalanXMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("Comparison Testing:");
 					
 		// Specify the "test" directory for both input and output.
@@ -149,7 +144,7 @@ runTests(
 		//
 		logFile.logTestCaseInit(currentDir);
 
-		typedef FileUtility::FileNameVectorType		FileNameVectorType;
+		typedef XalanFileUtility::FileNameVectorType		FileNameVectorType;
 
 		const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
 
@@ -159,12 +154,12 @@ runTests(
 			h.data.reset();
 			h.data.testOrFile = fileName;
 
-			const XalanDOMString  theXSLFile= h.args.base + currentDir + FileUtility::s_pathSep + fileName;
+			const XalanDOMString  theXSLFile= h.args.base + currentDir + XalanFileUtility::s_pathSep + fileName;
 			const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
-			XalanDOMString  theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + fileName;
+			XalanDOMString  theGoldFile = h.args.gold + currentDir + XalanFileUtility::s_pathSep + fileName;
 			theGoldFile = h.generateFileName(theGoldFile, "out");
 
-			const XalanDOMString  outbase =  h.args.output + currentDir + FileUtility::s_pathSep + fileName; 
+			const XalanDOMString  outbase =  h.args.output + currentDir + XalanFileUtility::s_pathSep + fileName; 
 			const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
 
 			const XSLTInputSource	xslInputSource(theXSLFile);

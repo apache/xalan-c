@@ -263,6 +263,9 @@
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanObjectCache.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanVector.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanVersion.hpp">
 			</File>
 		</Filter>

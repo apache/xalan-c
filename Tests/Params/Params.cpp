@@ -50,9 +50,8 @@
 
 
 
-#include <Harness/XMLFileReporter.hpp>
-#include <Harness/FileUtility.hpp>
-#include <Harness/HarnessInit.hpp>
+#include <xalanc/Harness/XalanXMLFileReporter.hpp>
+#include <xalanc/Harness/XalanFileUtility.hpp>
 
 
 
@@ -62,13 +61,13 @@ XALAN_USING_STD(endl)
 
 
 
-XALAN_USING_XALAN(FileUtility)
+XALAN_USING_XALAN(XalanFileUtility)
 XALAN_USING_XALAN(XalanDOMString)
 
 
 
 void
-setHelp(FileUtility&	h)
+setHelp(XalanFileUtility&	h)
 {
 	h.args.getHelpStream() << endl
 		 << "params dirname [-out]"
@@ -104,11 +103,7 @@ runTests(
 {
 	int				theResult = 0;
 
-	XALAN_USING_XALAN(HarnessInit)
-
-	HarnessInit		xmlPlatformUtils;
-
-	FileUtility		h;
+	XalanFileUtility    h;
 
 	char testCase[15];
 	XalanDOMString fileName, theGoldFile;
@@ -135,7 +130,7 @@ runTests(
 		else
 		{
 			XALAN_USING_XALAN(XalanTransformer)
-			XALAN_USING_XALAN(XMLFileReporter)
+			XALAN_USING_XALAN(XalanXMLFileReporter)
 
 			XalanTransformer	xalan;
 
@@ -145,9 +140,9 @@ runTests(
 			// Defined basic constants for file manipulation
 			const XalanDOMString	drive(h.getDrive());
 			const XalanDOMString	resultFilePrefix("params");
-			const XalanDOMString	resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+			const XalanDOMString	resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
 			
-			XMLFileReporter		logFile(resultsFile);
+			XalanXMLFileReporter		logFile(resultsFile);
 
 			logFile.logTestFileInit("Param Testing: Testing ability to pass parameters to stylesheets. ");
 
@@ -161,7 +156,7 @@ runTests(
 				// Check that output directory is there.
 				h.checkAndCreateDir(theOutputDir);
 
-				typedef FileUtility::FileNameVectorType		FileNameVectorType;
+				typedef XalanFileUtility::FileNameVectorType		FileNameVectorType;
 
 				const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
 				logFile.logTestCaseInit(currentDir);
@@ -173,7 +168,7 @@ runTests(
 					h.data.testOrFile = testCase;
 
 					// Set up the input/output files.
-					const XalanDOMString  theXSLFile= h.args.base + currentDir + FileUtility::s_pathSep + fileName;
+					const XalanDOMString  theXSLFile= h.args.base + currentDir + XalanFileUtility::s_pathSep + fileName;
 					XalanDOMString		  theXMLFile;
 					
 					// Neither testcase 7 nor 8 utilize xml source files. Both use fragment identifiers,
@@ -188,9 +183,9 @@ runTests(
 					h.data.xmlFileURL = theXMLFile;
 					h.data.xslFileURL = theXSLFile;
 
-					const XalanDOMString  theOutput =  h.args.output + currentDir + FileUtility::s_pathSep + fileName; 
+					const XalanDOMString  theOutput =  h.args.output + currentDir + XalanFileUtility::s_pathSep + fileName; 
 					const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
-					theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + fileName;
+					theGoldFile = h.args.gold + currentDir + XalanFileUtility::s_pathSep + fileName;
 					theGoldFile = h.generateFileName(theGoldFile, "out");
 
 					XALAN_USING_XALAN(XSLTResultTarget);

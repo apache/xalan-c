@@ -56,9 +56,8 @@
 
 
 // HARNESS HEADERS...
-#include <Harness/XMLFileReporter.hpp>
-#include <Harness/FileUtility.hpp>
-#include <Harness/HarnessInit.hpp>
+#include <xalanc/Harness/XalanXMLFileReporter.hpp>
+#include <xalanc/Harness/XalanFileUtility.hpp>
 
 
 
@@ -72,17 +71,17 @@ XALAN_USING_STD(endl)
 const char* const	resultString = "The specified function is not available: http://xml.apache.org/xalan:nodeset";
 
 
-XALAN_USING_XALAN(FileUtility)
+XALAN_USING_XALAN(XalanFileUtility)
 XALAN_USING_XALAN(XalanDOMString)
 XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XMLFileReporter)
+XALAN_USING_XALAN(XalanXMLFileReporter)
 XALAN_USING_XALAN(XSLTInputSource)
 XALAN_USING_XALAN(XSLTResultTarget)
 
 
 
 void
-setHelp(FileUtility&	h)
+setHelp(XalanFileUtility&	h)
 {
 	h.args.getHelpStream() << endl
 		 << "extensions dirname [-out]"
@@ -105,19 +104,19 @@ generateFiles(
 			XalanDOMString&			out,
 			XalanDOMString&			gold,
 			const char*				test,
-			FileUtility&			h)
+			XalanFileUtility&		h)
 {
 	// Set up the input/output files.
 	const XalanDOMString testName(h.generateFileName(fileName,"out"));
 
-	xsl = h.args.base + currentDir + FileUtility::s_pathSep + fileName;
+	xsl = h.args.base + currentDir + XalanFileUtility::s_pathSep + fileName;
 	xml = h.generateFileName(xsl,"xml");
 	h.data.xmlFileURL = xml;
 	h.data.xslFileURL = xsl;
 
-	out =  h.args.output + currentDir + FileUtility::s_pathSep + XalanDOMString(test) + testName; 
+	out =  h.args.output + currentDir + XalanFileUtility::s_pathSep + XalanDOMString(test) + testName; 
 
-	gold = h.args.gold + currentDir + FileUtility::s_pathSep + testName;
+	gold = h.args.gold + currentDir + XalanFileUtility::s_pathSep + testName;
 
 }
 
@@ -135,8 +134,8 @@ TestCase1(
 			XalanTransformer&		xalan,
 			const XalanDOMString&	fileName,
 			const XalanDOMString&	currentDir,
-			XMLFileReporter&		logFile,
-			FileUtility&			h)
+			XalanXMLFileReporter&	logFile,
+			XalanFileUtility&		h)
 {
 	
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
@@ -171,8 +170,8 @@ TestCase2(
 			const XalanDOMString&	fileName,
 			const XalanDOMString&	currentDir,
 			const XalanDOMString&	theNamespace,
-			XMLFileReporter&		logFile,
-			FileUtility&			h)
+			XalanXMLFileReporter&	logFile,
+			XalanFileUtility&		h)
 {	
 
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
@@ -216,8 +215,8 @@ void TestCase3(
 			const XalanDOMString&	fileName,
 			const XalanDOMString&	currentDir,
 			const XalanDOMString&	theNamespace,
-			XMLFileReporter&		logFile,
-			FileUtility&			h)
+			XalanXMLFileReporter&	logFile,
+			XalanFileUtility&		h)
 {
 	XALAN_USING_XALAN(FunctionNodeSet)
 
@@ -288,8 +287,8 @@ void TestCase4(
 			const XalanDOMString&	fileName,
 			const XalanDOMString&	currentDir,
 			const XalanDOMString&	theNamespace,
-			XMLFileReporter&		logFile,
-			FileUtility&			h)
+			XalanXMLFileReporter&	logFile,
+			XalanFileUtility&		h)
 {
 	XALAN_USING_XALAN(FunctionNodeSet)
 	
@@ -332,11 +331,7 @@ runTests(
 {
 	int				theResult = 0;
 
-	XALAN_USING_XALAN(HarnessInit)
-
-	HarnessInit		xmlPlatformUtils;
-
-	FileUtility		h;
+	XalanFileUtility	h;
 
 	// Set the program help string,  then get the command line parameters.
 	//
@@ -364,9 +359,9 @@ runTests(
 
 				// Defined basic constants for file manipulation 
 				const XalanDOMString	drive(h.getDrive());
-				const XalanDOMString	resultsFile(drive + h.args.output + currentDir + UniqRunid + FileUtility::s_xmlSuffix);
+				const XalanDOMString	resultsFile(drive + h.args.output + currentDir + UniqRunid + XalanFileUtility::s_xmlSuffix);
 				
-				XMLFileReporter	logFile(resultsFile);
+				XalanXMLFileReporter	logFile(resultsFile);
 				logFile.logTestFileInit("C++ Extension Testing. ");
 				logFile.logTestCaseInit(currentDir);
 
@@ -381,7 +376,7 @@ runTests(
 
 				h.checkAndCreateDir(theOutputDir);
 
-				typedef FileUtility::FileNameVectorType		FileNameVectorType;
+				typedef XalanFileUtility::FileNameVectorType		FileNameVectorType;
 
 				// Get the files found in the "cextension" directory
 				const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);

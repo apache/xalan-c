@@ -54,9 +54,8 @@
 #include <xalanc/XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <xalanc/XSLT/XSLTResultTarget.hpp>  
 
-#include <Harness/XMLFileReporter.hpp>
-#include <Harness/FileUtility.hpp>
-#include <Harness/HarnessInit.hpp>
+#include <xalanc/Harness/XalanXMLFileReporter.hpp>
+#include <xalanc/Harness/XalanFileUtility.hpp>
 
 
 
@@ -144,9 +143,9 @@ calculateAvgTime(
 
 inline double
 calculateAverageElapsedTime( 
-			clock_t			theStartTime,
-			clock_t			theEndTime,
-			long			theIterationCount)
+			clock_t     theStartTime,
+			clock_t		theEndTime,
+			long		theIterationCount)
 {
 	assert(theIterationCount > 0);
 
@@ -226,7 +225,7 @@ eTOeTransform(
 
 
 void
-setHelp(FileUtility&	h)
+setHelp(XalanFileUtility&	h)
 {
 	h.args.getHelpStream() << endl
 		 << "Perf dir [-out -sub -i -iter]"
@@ -260,9 +259,7 @@ main(
 	bool skip = true;		// Default will skip long tests
 	bool setGold = false;
 
-	HarnessInit		xmlPlatformUtils;
-
-	FileUtility		h;
+	XalanFileUtility	h;
 
 	// Set the program help string,  then get the command line parameters.
 	//
@@ -274,9 +271,9 @@ main(
 		// Generate Unique Run id and processor info
 		const XalanDOMString	UniqRunid = h.generateUniqRunid();
 		const XalanDOMString	resultFilePrefix(XalanDOMString("cpp"));
-		const XalanDOMString	resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+		const XalanDOMString	resultsFile(h.args.output + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
 
-		XMLFileReporter	logFile(resultsFile);
+		XalanXMLFileReporter	logFile(resultsFile);
 
 		logFile.logTestFileInit("Performance Testing - Reports performance times for single transform, and average for multiple transforms using compiled stylesheet");
 
@@ -290,7 +287,7 @@ main(
 			{
 				XSLTInit	theInit;  
 		
-				typedef FileUtility::FileNameVectorType		FileNameVectorType;
+				typedef XalanFileUtility::FileNameVectorType		FileNameVectorType;
 
 				// Get the list of Directories that are below perf and iterate through them
 				const FileNameVectorType dirs = h.getDirectoryNames(h.args.base);
@@ -321,7 +318,7 @@ main(
 						clock_t startTime, endTime, accmTime, avgEtoe;
 						double timeinMilliseconds, theAverage;
 
-						typedef XMLFileReporter::Hashtable	Hashtable;
+						typedef XalanXMLFileReporter::Hashtable	Hashtable;
 
 						Hashtable attrs;
 					
@@ -330,10 +327,10 @@ main(
 							continue;
 						}
 
-						const XalanDOMString  theXSLFile= h.args.base + dirs[j] + FileUtility::s_pathSep + files[i];
+						const XalanDOMString  theXSLFile= h.args.base + dirs[j] + XalanFileUtility::s_pathSep + files[i];
 						const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
 
-						const XalanDOMString  theOutput =  h.args.output + dirs[j] + FileUtility::s_pathSep + files[i]; 
+						const XalanDOMString  theOutput =  h.args.output + dirs[j] + XalanFileUtility::s_pathSep + files[i]; 
 						const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
 
 
