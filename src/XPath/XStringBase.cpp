@@ -69,7 +69,6 @@
 
 
 
-#include "ResultTreeFrag.hpp"
 #include "XObjectTypeCallback.hpp"
 #include "XPathExecutionContext.hpp"
 
@@ -78,7 +77,7 @@
 XStringBase::XStringBase() :
 	XObject(eTypeString),
 	m_cachedNumberValue(0.0),
-	m_resultTreeFrag(0)
+	m_resultTreeFrag(*this)
 {
 }
 
@@ -87,9 +86,7 @@ XStringBase::XStringBase() :
 XStringBase::XStringBase(const XStringBase&		source) :
 	XObject(source),
 	m_cachedNumberValue(source.m_cachedNumberValue),
-	m_resultTreeFrag(source.m_resultTreeFrag.get() == 0 ?
-						0 :
-						source.m_resultTreeFrag->clone(true))
+	m_resultTreeFrag(*this)
 {
 }
 
@@ -135,31 +132,9 @@ XStringBase::boolean() const
 
 
 const ResultTreeFragBase&
-XStringBase::rtree(XPathExecutionContext&	executionContext) const
+XStringBase::rtree() const
 {
-	if (m_resultTreeFrag.get() == 0)
-	{
-		ResultTreeFrag* const	theFrag = new ResultTreeFrag;
-
-		XalanDocument* const	theFactory = executionContext.getDOMFactory();
-
-		if (theFactory != 0)
-		{
-			XalanNode* const	textNode =
-				theFactory->createTextNode(str());
-			assert(textNode != 0);
-
-			theFrag->appendChild(textNode);
-		}
-
-#if defined(XALAN_NO_MUTABLE)
-		((XStringBase*)this)->m_resultTreeFrag.reset(theFrag);
-#else
-		m_resultTreeFrag.reset(theFrag);
-#endif
-	}
-
-	return *m_resultTreeFrag.get();
+	return m_resultTreeFrag;
 }
 
 

@@ -91,7 +91,6 @@
 
 
 #include <XPath/MutableNodeRefList.hpp>
-#include <XPath/ResultTreeFrag.hpp>
 
 
 
@@ -278,9 +277,6 @@ public:
 	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
 
-	virtual XalanDocument*
-	getDOMFactory() const;
-
 	virtual XalanDOMString
 	findURIFromDoc(const XalanDocument*		owner) const;
 
@@ -387,10 +383,8 @@ public:
 protected:
 
 	typedef XalanObjectCache<MutableNodeRefList, DefaultCacheCreateFunctor<MutableNodeRefList>, DeleteFunctor<MutableNodeRefList>, ClearCacheResetFunctor<MutableNodeRefList> >	NodeListCacheType;
-	typedef XalanObjectCache<ResultTreeFragBase, DefaultCacheCreateFunctor<ResultTreeFrag>, DeleteFunctor<ResultTreeFragBase>, ClearCacheResetFunctor<ResultTreeFragBase> >		ResultTreeFragCacheType;
 
-	enum { eNodeListCacheListSize = 50,
- 		   eResultTreeFragCacheListSize = 50 };
+	enum { eNodeListCacheListSize = 50 };
 
 	XPathEnvSupport*			m_xpathEnvSupport;
 
@@ -409,8 +403,6 @@ protected:
 	XalanDOMString				m_currentPattern;
 
 	NodeListCacheType			m_nodeListCache;
-
-	ResultTreeFragCacheType		m_resultTreeFragCache;
 
 	XalanDOMStringCache			m_stringCache;
 

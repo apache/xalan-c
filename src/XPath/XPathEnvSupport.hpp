@@ -153,14 +153,6 @@ public:
 	findURIFromDoc(const XalanDocument*		owner) const = 0;
 
 	/**
-	 * Get a DOM document, primarily for creating result tree fragments.
-	 *
-	 * @return DOM document
-	 */
-	virtual XalanDocument*
-	getDOMFactory() const = 0;
-
-	/**
 	 * Determine if an external element is available.
 	 *
 	 * @param theNamespace  namespace for the element

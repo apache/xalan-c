@@ -211,14 +211,6 @@ XResultTreeFrag::str(XalanDOMString&	theBuffer) const
 
 
 const ResultTreeFragBase&
-XResultTreeFrag::rtree(XPathExecutionContext&	/* executionContext */) const
-{
-	return *m_value.get();
-}
-
-
-
-const ResultTreeFragBase&
 XResultTreeFrag::rtree() const
 {
 	return *m_value.get();

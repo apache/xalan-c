@@ -64,11 +64,7 @@
 
 
 
-#include <XalanDOM/XalanNodeList.hpp>
-
-
-
-#include <XPath/ResultTreeFragBase.hpp>
+#include <XPath/XObjectResultTreeFragProxyBase.hpp>
 
 
 
@@ -76,7 +72,7 @@ class XNodeSetBase;
 
 
 
-class XALAN_XPATH_EXPORT XNodeSetResultTreeFragProxy : public ResultTreeFragBase, private XalanNodeList
+class XALAN_XPATH_EXPORT XNodeSetResultTreeFragProxy : public XObjectResultTreeFragProxyBase
 {
 public:
 
@@ -87,41 +83,11 @@ public:
 
 	// These interfaces are inherited from ResultTreeFragBase...
 
-	virtual void
-	clear();
-
-	virtual const XalanDOMString&
-	getNodeName() const;
-
-	virtual const XalanDOMString&
-	getNodeValue() const;
-
-	virtual NodeType
-	getNodeType() const;
-
-	virtual XalanNode*
-	getParentNode() const;
-
-	virtual const XalanNodeList*
-	getChildNodes() const;
-
 	virtual XalanNode*
 	getFirstChild() const;
 
 	virtual XalanNode*
 	getLastChild() const;
-
-	virtual XalanNode*
-	getPreviousSibling() const;
-
-	virtual XalanNode*
-	getNextSibling() const;
-
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
-
-	virtual XalanDocument*
-	getOwnerDocument() const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XalanNode*
@@ -130,53 +96,8 @@ public:
 #endif
 	cloneNode(bool deep) const;
 
-	virtual XalanNode*
-	insertBefore(
-			XalanNode*	newChild,
-			XalanNode*	refChild);
-
-	virtual XalanNode*
-	replaceChild(
-			XalanNode*	newChild,
-			XalanNode*	oldChild);
-
-	virtual XalanNode*
-	removeChild(XalanNode*	oldChild);
-
-	virtual XalanNode*
-	appendChild(XalanNode*	newChild);
-
 	virtual bool
 	hasChildNodes() const;
-
-	virtual void
-	setNodeValue(const XalanDOMString&	nodeValue);
-
-	virtual void
-	normalize();
-
-	virtual bool
-	supports(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const;
-
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
-
-	virtual const XalanDOMString&
-	getPrefix() const;
-
-	virtual const XalanDOMString&
-	getLocalName() const;
-
-	virtual void
-	setPrefix(const XalanDOMString&		prefix);
-
-	virtual bool
-	isIndexed() const;
-
-	virtual unsigned long
-	getIndex() const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual ResultTreeFragBase*
@@ -207,9 +128,6 @@ private:
 
 	// Data members...
 	const XNodeSetBase&		m_value;
-
-	static const XalanDOMString		s_emptyString;
-
 };
 
 

@@ -168,9 +168,6 @@ public:
 	virtual XalanDOMString
 	findURIFromDoc(const XalanDocument*		owner) const;
 
-	virtual XalanDocument*
-	getDOMFactory() const;
-
 	virtual bool
 	elementAvailable(
 			const XalanDOMString&	theNamespace, 

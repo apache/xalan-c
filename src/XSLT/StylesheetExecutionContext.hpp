@@ -1628,9 +1628,6 @@ public:
 	virtual XalanDOMString
 	findURIFromDoc(const XalanDocument*		owner) const = 0;
 
-	virtual XalanDocument*
-	getDOMFactory() const = 0;
-
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,

@@ -72,7 +72,6 @@
 
 
 
-#include "ResultTreeFrag.hpp"
 #include "MutableNodeRefList.hpp"
 #include "XObjectTypeCallback.hpp"
 #include "XPathExecutionContext.hpp"

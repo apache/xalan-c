@@ -72,7 +72,6 @@
 
 
 
-#include "ResultTreeFrag.hpp"
 #include "XObjectTypeCallback.hpp"
 #include "XPathExecutionContext.hpp"
 
@@ -203,7 +202,7 @@ XNodeSetBase::str(XalanDOMString&	theBuffer) const
 
 
 const ResultTreeFragBase&
-XNodeSetBase::rtree(XPathExecutionContext&	/* executionContext */) const
+XNodeSetBase::rtree() const
 {
 	return m_proxy;
 }

@@ -64,26 +64,12 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
-#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
-#include <XPath/ResultTreeFragBase.hpp>
-#endif
-
-
-
-#include <Include/XalanAutoPtr.hpp>
-
-
-
 // Base class header file.
 #include <XPath/XObject.hpp>
+#include <XPath/XObjectResultTreeFragProxy.hpp>
 
 
 
-class ResultTreeFragBase;
 class XPathEnvSupport;
 
 
@@ -131,7 +117,7 @@ public:
 			MemberFunctionPtr	function) const = 0;
 
 	virtual const ResultTreeFragBase&
-	rtree(XPathExecutionContext&	executionContext) const;
+	rtree() const;
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
@@ -141,9 +127,9 @@ public:
 
 private:
 
-	mutable double								m_cachedNumberValue;
+	mutable double						m_cachedNumberValue;
 
-	mutable XalanAutoPtr<ResultTreeFragBase>	m_resultTreeFrag;
+	mutable XObjectResultTreeFragProxy	m_resultTreeFrag;
 };
 
 

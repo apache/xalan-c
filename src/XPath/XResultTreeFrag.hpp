@@ -150,9 +150,6 @@ public:
 	str(XalanDOMString&	theBuffer) const;
 
 	virtual const ResultTreeFragBase&
-	rtree(XPathExecutionContext&	executionContext) const;
-
-	virtual const ResultTreeFragBase&
 	rtree() const;
 
 	virtual const NodeRefListBase&

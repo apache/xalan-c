@@ -235,21 +235,6 @@ XSLTProcessorEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) cons
 
 
 
-XalanDocument*
-XSLTProcessorEnvSupportDefault::getDOMFactory() const
-{
-	if (m_processor == 0)
-	{
-		return m_defaultSupport.getDOMFactory();
-	}
-	else
-	{
-		return m_processor->getDOMFactory();
-	}
-}
-
-
-
 bool
 XSLTProcessorEnvSupportDefault::elementAvailable(
 			const XalanDOMString&	theNamespace,

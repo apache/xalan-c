@@ -152,7 +152,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_mode(0),
 	m_formatterToTextCache(),
 	m_formatterToSourceTreeCache(),
-	m_nodeSorterCache()
+	m_nodeSorterCache(),
+	m_resultTreeFragCache(eResultTreeFragCacheListSize)
 {
 }
 
@@ -185,7 +186,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_mode(0),
 	m_formatterToTextCache(),
 	m_formatterToSourceTreeCache(),
-	m_nodeSorterCache()
+	m_nodeSorterCache(),
+	m_resultTreeFragCache(eResultTreeFragCacheListSize)
 {
 }
 
@@ -937,7 +939,7 @@ StylesheetExecutionContextDefault::outputToResultTree(const XObject&	xobj)
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->outputToResultTree(*this, xobj);
+	m_xsltProcessor->outputToResultTree(xobj);
 }
 
 
@@ -947,7 +949,7 @@ StylesheetExecutionContextDefault::outputResultTreeFragment(const XObject&	theTr
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->outputResultTreeFragment(*this, theTree);
+	m_xsltProcessor->outputResultTreeFragment(theTree);
 }
 
 
@@ -1424,6 +1426,9 @@ StylesheetExecutionContextDefault::reset()
 	m_mode = 0;
 
 	m_formatterToTextCache.reset();
+	m_formatterToSourceTreeCache.reset();
+	m_nodeSorterCache.reset();
+	m_resultTreeFragCache.reset(),
 
 	// Just in case endDocument() was not called,
 	// clean things up...
@@ -1580,7 +1585,7 @@ StylesheetExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	
 ResultTreeFragBase*
 StylesheetExecutionContextDefault::borrowResultTreeFrag()
 {
-	return m_xpathExecutionContextDefault.borrowResultTreeFrag();
+	return m_resultTreeFragCache.get();
 }
 
 
@@ -1588,7 +1593,7 @@ StylesheetExecutionContextDefault::borrowResultTreeFrag()
 bool
 StylesheetExecutionContextDefault::returnResultTreeFrag(ResultTreeFragBase*		theResultTreeFragBase)
 {
-	return m_xpathExecutionContextDefault.returnResultTreeFrag(theResultTreeFragBase);
+	return m_resultTreeFragCache.release(theResultTreeFragBase);
 }
 
 
@@ -1681,14 +1686,6 @@ const XalanDOMString*
 StylesheetExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
 	return m_xpathExecutionContextDefault.getNamespaceForPrefix(prefix);
-}
-
-
-
-XalanDocument*
-StylesheetExecutionContextDefault::getDOMFactory() const
-{
-	return m_xpathExecutionContextDefault.getDOMFactory();
 }
 
 

@@ -719,14 +719,6 @@ public:
 	findURIFromDoc(const XalanDocument*		owner) const = 0;
 
 	/**
-	 * Get a DOM document, primarily for creating result tree fragments.
-	 *
-	 * @return DOM document
-	 */
-	virtual XalanDocument*
-	getDOMFactory() const = 0;
-
-	/**
 	 * The getUnparsedEntityURI function returns the URI of the unparsed
 	 * entity with the specified name in the same document as the context
 	 * node (see [3.3 Unparsed Entities]). It returns the empty string if

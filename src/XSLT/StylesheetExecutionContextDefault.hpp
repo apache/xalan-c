@@ -78,6 +78,7 @@
 
 
 
+#include <XPath/ResultTreeFrag.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 
 
@@ -834,9 +835,6 @@ public:
 	virtual XalanDOMString
 	findURIFromDoc(const XalanDocument*		owner) const;
 
-	virtual XalanDocument*
-	getDOMFactory() const;
-
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
@@ -1017,7 +1015,8 @@ private:
 	XalanNode*						m_rootDocument;
 
 	enum { eXPathCacheMax = 50,
-		   eDefaultParamsVectorSize = 10 };
+		   eDefaultParamsVectorSize = 10,
+ 		   eResultTreeFragCacheListSize = 50 };
 
 	ElementRecursionStackType			m_elementRecursionStack;
 
@@ -1065,12 +1064,15 @@ private:
 	typedef XalanObjectCacheDefault<FormatterToText>		FormatterToTextCacheType;
 	typedef XalanObjectCacheDefault<FormatterToSourceTree>	FormatterToSourceTreeCacheType;
 	typedef XalanObjectCacheDefault<NodeSorter>				NodeSorterCacheType;
+	typedef XalanObjectCache<ResultTreeFragBase, DefaultCacheCreateFunctor<ResultTreeFrag>, DeleteFunctor<ResultTreeFragBase>, ClearCacheResetFunctor<ResultTreeFragBase> >		ResultTreeFragCacheType;
 
 	FormatterToTextCacheType			m_formatterToTextCache;
 
 	FormatterToSourceTreeCacheType		m_formatterToSourceTreeCache;
 
 	NodeSorterCacheType					m_nodeSorterCache;
+
+	ResultTreeFragCacheType				m_resultTreeFragCache;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 

@@ -322,14 +322,6 @@ XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
 
 
 
-XalanDocument*
-XPathEnvSupportDefault::getDOMFactory() const
-{
-	return 0;
-}
-
-
-
 bool
 XPathEnvSupportDefault::elementAvailable(
 			const XalanDOMString&	/* theNamespace */,

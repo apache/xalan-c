@@ -249,9 +249,7 @@ public:
 	getSourceTreeFromInput(const XSLTInputSource&	inputSource);
 
 	virtual void
-	outputToResultTree(
-			StylesheetExecutionContext&		executionContext,
-			const XObject&					xobj);
+	outputToResultTree(const XObject&	xobj);
 
 	virtual void
 	resolveTopLevelParams(StylesheetExecutionContext&	executionContext);
@@ -607,9 +605,7 @@ public:
 	 * @param theTree result tree fragment
 	 */
 	void
-	outputResultTreeFragment(
-			StylesheetExecutionContext&		executionContext,
-			const XObject& 					theTree);
+	outputResultTreeFragment(const XObject& 	theTree);
 
 	/**
 	 * Retrieve the root stylesheet.

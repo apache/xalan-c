@@ -106,7 +106,6 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
 	m_nodeListCache(eNodeListCacheListSize),
-	m_resultTreeFragCache(eResultTreeFragCacheListSize),
 	m_stringCache()
 {
 }
@@ -126,7 +125,6 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
 	m_nodeListCache(eNodeListCacheListSize),
-	m_resultTreeFragCache(eResultTreeFragCacheListSize),
 	m_stringCache()
 {
 }
@@ -165,7 +163,6 @@ XPathExecutionContextDefault::reset()
 	m_throwFoundIndex = false;
 
 	m_nodeListCache.reset(),
-	m_resultTreeFragCache.reset(),
 
 	m_stringCache.reset();
 }
@@ -339,7 +336,7 @@ XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	theLi
 ResultTreeFragBase*
 XPathExecutionContextDefault::borrowResultTreeFrag()
 {
-	return m_resultTreeFragCache.get();
+	return new ResultTreeFrag;
 }
 
 
@@ -347,7 +344,9 @@ XPathExecutionContextDefault::borrowResultTreeFrag()
 bool
 XPathExecutionContextDefault::returnResultTreeFrag(ResultTreeFragBase*	theResultTreeFragBase)
 {
-	return m_resultTreeFragCache.release(theResultTreeFragBase);
+	delete theResultTreeFragBase;
+
+	return true;
 }
 
 
@@ -422,16 +421,6 @@ XPathExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	prefix
 	assert(m_prefixResolver != 0);
 
 	return m_prefixResolver->getNamespaceForPrefix(prefix);
-}
-
-
-
-XalanDocument*
-XPathExecutionContextDefault::getDOMFactory() const
-{
-	assert(m_xpathEnvSupport != 0);
-
-	return m_xpathEnvSupport->getDOMFactory();
 }
 
 

@@ -980,9 +980,7 @@ XSLTEngineImpl::getXSLToken(const XalanNode&	node) const
 
 
 void
-XSLTEngineImpl::outputToResultTree(
-			StylesheetExecutionContext&		executionContext,
-			const XObject&					value)
+XSLTEngineImpl::outputToResultTree(const XObject&	value)
 {
 	const XObject::eObjectType	type = value.getType();
 
@@ -1065,7 +1063,7 @@ XSLTEngineImpl::outputToResultTree(
 		break;
 		
 	case XObject::eTypeResultTreeFrag:
-		outputResultTreeFragment(executionContext, value);
+		outputResultTreeFragment(value);
 		break;
 
 	case XObject::eTypeNull:
@@ -2381,11 +2379,9 @@ XSLTEngineImpl::cloneToResultTree(
 
 
 void
-XSLTEngineImpl::outputResultTreeFragment(
-			StylesheetExecutionContext&		executionContext,
-			const XObject&					theTree)
+XSLTEngineImpl::outputResultTreeFragment(const XObject&		theTree)
 {
-	const ResultTreeFragBase&	docFrag = theTree.rtree(executionContext);
+	const ResultTreeFragBase&	docFrag = theTree.rtree();
 
 	const XalanNodeList* const	nl = docFrag.getChildNodes();
 	assert(nl != 0);

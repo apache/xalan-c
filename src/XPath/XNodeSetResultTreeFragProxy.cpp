@@ -68,13 +68,8 @@
 
 
 
-const XalanDOMString	XNodeSetResultTreeFragProxy::s_emptyString;
-
-
-
 XNodeSetResultTreeFragProxy::XNodeSetResultTreeFragProxy(const XNodeSetBase&	theValue) :
-	ResultTreeFragBase(),
-	XalanNodeList(),
+	XObjectResultTreeFragProxyBase(),
 	m_value(theValue)
 {
 }
@@ -83,54 +78,6 @@ XNodeSetResultTreeFragProxy::XNodeSetResultTreeFragProxy(const XNodeSetBase&	the
 
 XNodeSetResultTreeFragProxy::~XNodeSetResultTreeFragProxy()
 {
-}
-
-
-
-void
-XNodeSetResultTreeFragProxy::clear()
-{
-	assert(false);
-}
-
-
-
-const XalanDOMString&
-XNodeSetResultTreeFragProxy::getNodeName() const
-{
-	return s_emptyString;
-}
-
-
-
-const XalanDOMString&
-XNodeSetResultTreeFragProxy::getNodeValue() const
-{
-	return s_emptyString;
-}
-
-
-
-XNodeSetResultTreeFragProxy::NodeType
-XNodeSetResultTreeFragProxy::getNodeType() const
-{
-	return DOCUMENT_FRAGMENT_NODE;
-}
-
-
-
-XalanNode*
-XNodeSetResultTreeFragProxy::getParentNode() const
-{
-	return 0;
-}
-
-
-
-const XalanNodeList*
-XNodeSetResultTreeFragProxy::getChildNodes() const
-{
-	return this;
 }
 
 
@@ -153,38 +100,6 @@ XNodeSetResultTreeFragProxy::getLastChild() const
 
 
 
-XalanNode*
-XNodeSetResultTreeFragProxy::getPreviousSibling() const
-{
-	return 0;
-}
-
-
-
-XalanNode*
-XNodeSetResultTreeFragProxy::getNextSibling() const
-{
-	return 0;
-}
-
-
-
-const XalanNamedNodeMap*
-XNodeSetResultTreeFragProxy::getAttributes() const
-{
-	return 0;
-}
-
-
-
-XalanDocument*
-XNodeSetResultTreeFragProxy::getOwnerDocument() const
-{
-	return 0;
-}
-
-
-
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 XalanNode*
 #else
@@ -199,130 +114,10 @@ XNodeSetResultTreeFragProxy::cloneNode(bool	/* deep */) const
 
 
 
-XalanNode*
-XNodeSetResultTreeFragProxy::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XNodeSetResultTreeFragProxy::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XNodeSetResultTreeFragProxy::appendChild(XalanNode*	/* newChild */ )
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XNodeSetResultTreeFragProxy::removeChild(XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
 bool
 XNodeSetResultTreeFragProxy::hasChildNodes() const
 {
 	return getLength() > 0 ? true : false;
-}
-
-
-
-void
-XNodeSetResultTreeFragProxy::setNodeValue(const XalanDOMString&	/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XNodeSetResultTreeFragProxy::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XNodeSetResultTreeFragProxy::supports(
-			const XalanDOMString&	/* feature */,
-			const XalanDOMString&	/* version */) const
-{
-	return false;
-}
-
-
-
-const XalanDOMString&
-XNodeSetResultTreeFragProxy::getNamespaceURI() const
-{
-	return s_emptyString;
-}
-
-
-
-const XalanDOMString&
-XNodeSetResultTreeFragProxy::getPrefix() const
-{
-	return s_emptyString;
-}
-
-
-
-const XalanDOMString&
-XNodeSetResultTreeFragProxy::getLocalName() const
-{
-	return s_emptyString;
-}
-
-
-
-void
-XNodeSetResultTreeFragProxy::setPrefix(const XalanDOMString&		/* prefix */)
-{
-}
-
-
-
-bool
-XNodeSetResultTreeFragProxy::isIndexed() const
-{
-	return false;
-}
-
-
-
-unsigned long
-XNodeSetResultTreeFragProxy::getIndex() const
-{
-	return 0;
 }
 
 

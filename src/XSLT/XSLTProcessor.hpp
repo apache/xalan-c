@@ -214,15 +214,11 @@ public:
 
    /**
 	* Output an object to the result tree by doing the right conversions.
-	* This is public for access by extensions.
 	*
-	* @param executionContext	  current execution context
 	* @param obj the XObject to output
 	*/
 	virtual void
-	outputToResultTree(
-			StylesheetExecutionContext&		executionContext,
-			const XObject&					xobj) = 0;
+	outputToResultTree(const XObject&	xobj) = 0;
 
 	/**
 	 * Retrieve the root stylesheet.

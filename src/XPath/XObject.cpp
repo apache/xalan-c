@@ -181,7 +181,7 @@ XObject::str(XalanDOMString&	theBuffer) const
 
 
 const ResultTreeFragBase&
-XObject::rtree(XPathExecutionContext&	/* executionContext */) const
+XObject::rtree() const
 {
 	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("result tree fragment"));
 

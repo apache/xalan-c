@@ -192,11 +192,10 @@ public:
 	/**
 	 * Cast result object to a result tree fragment.
 	 *
-	 * @param executionContext the current execution context
 	 * @return result tree fragment
 	 */
 	virtual const ResultTreeFragBase&
-	rtree(XPathExecutionContext&	executionContext) const;
+	rtree() const;
 
 	/**
 	 * Cast result object to a nodelist.
