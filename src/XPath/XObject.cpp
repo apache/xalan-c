@@ -166,7 +166,7 @@ XObject::rtree(XPathExecutionContext&	/* executionContext */) const
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return *((ResultTreeFragBase*)0);
 #else
-	return *static_cast<ResultTreeFragBase*>(0);
+	return *reinterpret_cast<ResultTreeFragBase*>(0);
 #endif
 }
 
