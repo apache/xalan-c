@@ -102,7 +102,7 @@
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/PrintWriter.hpp>
-#include <PlatformSupport/TextOutputStream.hpp>
+#include <PlatformSupport/XalanOutputStream.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 
 
@@ -169,6 +169,7 @@ static numeric_limits<double> theDoubleLimits;
 static string theString;
 static vector<DOMString> theDOMStringVector;
 static vector<char> theCharVector;
+static vector<unsigned char> theUnsignedCharVector;
 static AttributeListImpl::AttributeVectorType theAttributeVectorEntryVector;
 static AttributeListImpl::AttributeKeyMapType theAttributeVectorEntryMap;
 static allocator<DOMString> theAllocator;
@@ -440,11 +441,11 @@ foo()
 	}
 
 	{
-		StylesheetExecutionContextDefault::TextOutputStreamSetType	theSet;
+		StylesheetExecutionContextDefault::OutputStreamSetType	theSet;
 		
 		for_each(theSet.begin(),
 			 theSet.end(),
-			 DeleteFunctor<TextOutputStream>());
+			 DeleteFunctor<XalanOutputStream>());
 	}
 
 	{
