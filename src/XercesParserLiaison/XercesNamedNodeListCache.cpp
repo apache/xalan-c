@@ -112,7 +112,7 @@ XercesNamedNodeListCache::getElementsByTagName(const XalanDOMString&	tagname) co
 
 	if (i != m_cachedNodeLists.end())
 	{
-		return i->second;
+		return (*i).second;
 	}
 	else
 	{
@@ -148,7 +148,7 @@ XercesNamedNodeListCache::getElementsByTagNameNS(
 
 	if (i != m_cachedNodeLists.end())
 	{
-		return i->second;
+		return (*i).second;
 	}
 	else
 	{
