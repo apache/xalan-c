@@ -126,7 +126,7 @@ public:
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XalanNode*
 #else
-	virtual ResultTreeFragBase*
+	virtual XNodeSetResultTreeFragProxy*
 #endif
 	cloneNode(bool deep) const;
 
@@ -178,7 +178,11 @@ public:
 	virtual unsigned long
 	getIndex() const;
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual ResultTreeFragBase*
+#else
+	virtual XNodeSetResultTreeFragProxy*
+#endif
 	clone(bool	deep) const;
 
 private:
