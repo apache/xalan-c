@@ -104,6 +104,9 @@ public:
 	virtual const XalanDOMString&
 	getElementName() const;
 
+	virtual void
+	postConstruction(const NamespacesHandler&	theParentHandler);
+
 	virtual bool
 	isAttrOK(
 			int						tok,

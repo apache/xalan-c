@@ -197,6 +197,34 @@ ElemLiteralResult::getElementName() const
 
 
 void
+ElemLiteralResult::postConstruction(const NamespacesHandler&	theParentHandler)
+{
+	// OK, now check all attribute AVTs to make sure
+	// our NamespacesHandler knows about any prefixes
+	// that will need namespace declarations...
+	const AVTVectorType::size_type	nAttrs = m_avts.size();
+
+	for(AVTVectorType::size_type i = 0; i < nAttrs; ++i)
+	{
+		const AVT* const	avt = m_avts[i];
+
+		const XalanDOMString&	theName = avt->getName();
+
+		const unsigned int	theColonIndex = indexOf(theName, XalanUnicode::charColon);
+
+		if (theColonIndex != length(theName))
+		{
+			m_namespacesHandler.addActivePrefix(substring(theName, 0, theColonIndex));
+		}
+	}
+
+	// OK, now we can chain-up...
+	ElemUse::postConstruction(theParentHandler);
+}
+
+
+
+void
 ElemLiteralResult::execute(StylesheetExecutionContext&		executionContext) const
 {
 	executionContext.startElement(c_wstr(getElementName()));
@@ -215,7 +243,7 @@ ElemLiteralResult::execute(StylesheetExecutionContext&		executionContext) const
 		XalanDOMString&		thePrefix = theGuard1.get();
 		XalanDOMString&		theStringedValue = theGuard2.get();
 
-		for(AVTVectorType::size_type i = 0; i < nAttrs; i++)
+		for(AVTVectorType::size_type i = 0; i < nAttrs; ++i)
 		{
 			const AVT* const	avt = m_avts[i];
 
@@ -236,7 +264,7 @@ ElemLiteralResult::execute(StylesheetExecutionContext&		executionContext) const
 					theStringedValue) == false)
 			{
 				executionContext.addResultAttribute(
-						avt->getName(), 
+						theName, 
 						theStringedValue);
 			}
 

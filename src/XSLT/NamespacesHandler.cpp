@@ -83,6 +83,7 @@ NamespacesHandler::NamespacesHandler() :
 	m_namespaceDeclarations(),
 	m_extensionNamespaceURIs(),
 	m_namespaceAliases(),
+	m_activePrefixes(),
 	m_processAliases(true)
 {
 }
@@ -97,6 +98,7 @@ NamespacesHandler::NamespacesHandler(
 	m_namespaceDeclarations(),
 	m_extensionNamespaceURIs(),
 	m_namespaceAliases(),
+	m_activePrefixes(),
 	m_processAliases(true)
 {
 	// Go through the namespaces stack in reverse order...
@@ -149,6 +151,7 @@ NamespacesHandler::NamespacesHandler(const NamespacesHandler&	theSource) :
 	m_namespaceDeclarations(theSource.m_namespaceDeclarations),
 	m_extensionNamespaceURIs(theSource.m_extensionNamespaceURIs),
 	m_namespaceAliases(theSource.m_namespaceAliases),
+	m_activePrefixes(theSource.m_activePrefixes),
 	m_processAliases(theSource.m_processAliases)
 {
 }
@@ -326,6 +329,9 @@ NamespacesHandler::postConstruction(
 	processNamespaceAliases();
 
 	createResultAttributeNames();
+
+	// We don't need these any more...
+	m_activePrefixes.clear();
 }
 
 
@@ -447,6 +453,8 @@ NamespacesHandler::clear()
 	m_extensionNamespaceURIs.clear();
 
 	m_namespaceAliases.clear();
+
+	m_activePrefixes.clear();
 }
 
 
@@ -461,6 +469,8 @@ NamespacesHandler::swap(NamespacesHandler&	theOther)
 	m_extensionNamespaceURIs.swap(theOther.m_extensionNamespaceURIs);
 
 	m_namespaceAliases.swap(theOther.m_namespaceAliases);
+
+	m_activePrefixes.swap(theOther.m_activePrefixes);
 }
 
 
@@ -543,6 +553,7 @@ NamespacesHandler::processExcludeResultPrefixes(const XalanDOMString&	theElement
 			// We can never exclude the prefix of our owner element, so
 			// check that first...
 			if (equals(thePrefix, theElementPrefix) == false &&
+				m_activePrefixes.find(thePrefix) == m_activePrefixes.end() &&
 				(m_excludedResultPrefixes.find(thePrefix) != m_excludedResultPrefixes.end() ||
 				 m_extensionNamespaceURIs.find(theURI) != m_extensionNamespaceURIs.end()))
 			{

@@ -178,6 +178,9 @@ public:
 
 	typedef set<XalanDOMString,
 				less<XalanDOMString> >					ExtensionNamespaceURISetType;
+
+	typedef set<XalanDOMString,
+				less<XalanDOMString> >					ActivePrefixesSetType;
 #else
 	typedef std::map<XalanDOMString, XalanDOMString>	ExcludedResultPrefixesMapType;
 
@@ -187,6 +190,8 @@ public:
 	typedef std::map<XalanDOMString, XalanDOMString>	NamespaceAliasesMapType;
 
 	typedef std::set<XalanDOMString>					ExtensionNamespaceURISetType;
+
+	typedef std::set<XalanDOMString>					ActivePrefixesSetType;
 #endif
 
 	/**
@@ -323,6 +328,17 @@ public:
 	}
 
 	/**
+	 * Add a prefix to the list of active prefixes.
+	 *
+	 * @param thePrefix The prefix that is active and requires a namespace declaration.
+	 */
+	void
+	addActivePrefix(const XalanDOMString&	thePrefix)
+	{
+		m_activePrefixes.insert(thePrefix);
+	}
+
+	/**
 	 * Copy the aliases from the given NamespacesHandler.
 	 *
 	 * @param parentNamespacesHandler The parent handler.
@@ -437,6 +453,8 @@ private:
 	ExtensionNamespaceURISetType	m_extensionNamespaceURIs;
 
 	NamespaceAliasesMapType			m_namespaceAliases;
+
+	ActivePrefixesSetType			m_activePrefixes;
 
 	// If true namespace aliases will be processed.  If false, they will not.
 	bool							m_processAliases;
