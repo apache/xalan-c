@@ -33,6 +33,8 @@
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
+#include "XalanMemoryManagerImpl.hpp"
+
 
 int
 main(
@@ -55,19 +57,26 @@ main(
 		try
 		{
 			XALAN_USING_XERCES(XMLPlatformUtils)
+            
+            XALAN_USING_XERCES(XMLUni)
 
 			XALAN_USING_XALAN(XalanTransformer)
 
+            XalanMemoryManagerImpl memoryManager;
 
 			// Call the static initializer for Xerces.
-			XMLPlatformUtils::Initialize();
+			XMLPlatformUtils::Initialize( 
+                                    XMLUni::fgXercescDefaultLocale,
+                                    0,
+                                    0,
+                                    &memoryManager );
 
 			// Initialize Xalan.
-			XalanTransformer::initialize();
+			XalanTransformer::initialize( memoryManager );
 
 			{
 				// Create a XalanTransformer.
-				XalanTransformer theXalanTransformer;
+				XalanTransformer theXalanTransformer( memoryManager );
 
 				// The assumption is that the executable will be run
 				// from same directory as the input files.
