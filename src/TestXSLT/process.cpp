@@ -244,7 +244,7 @@ printArgOptions()
 		 << endl
 		 << " [-DE (Disable built-in extension functions.)]"
 		 << endl
-		 << " [-EN (Specify the namespace URI for Xalan extension functions.  The default is 'http://xml.apache.org/xslt')]"
+		 << " [-EN (Specify the namespace URI for Xalan extension functions.  The default is 'http://xml.apache.org/xalan')]"
 		 << endl
 		 << endl
 		 << "The following options are valid only with -HTML or -XML."
@@ -315,7 +315,7 @@ struct CmdLineParams
 		traceSelectionEvent(false),
 		traceTemplateChildren(false),
 		shouldWriteXMLHeader(true),
-		doValidation(true),
+		doValidation(false),
 		noIndent(false),
 		formatToNull(false),
 		formatToSourceTree(false),
@@ -855,7 +855,7 @@ installExtensions(
 	}
 	else
 	{
-		theXalanNamespace = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt");
+		theXalanNamespace = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan");
 	}
 
 	theXSLProcessorSupport.installExternalFunctionLocal(
