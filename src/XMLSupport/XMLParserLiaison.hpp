@@ -88,6 +88,8 @@ class XALAN_XMLSUPPORT_EXPORT XMLParserLiaison : public Resettable
 {
 public:
 
+	typedef unsigned long	DocumentNumberType;
+
 	XMLParserLiaison();
 
 	virtual
@@ -184,8 +186,8 @@ public:
 	 *
 	 * @return The unique number
 	 */
-	virtual unsigned long
-	getDocumentNumber() = 0;
+	virtual DocumentNumberType
+	getNextDocumentNumber() = 0;
 
 	/**
 	 * Get the amount to indent when indent-result="yes".
