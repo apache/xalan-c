@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
+
+
+
 #include "XercesDOM_NodeHack.hpp"
 
 
@@ -273,3 +278,8 @@ XercesDOM_TextHack::getDataImpl() const
 
 
 XALAN_CPP_NAMESPACE_END
+
+
+#endif //XALAN_BUILD_DEPRECATED_DOM_BRIDGE 
+
+

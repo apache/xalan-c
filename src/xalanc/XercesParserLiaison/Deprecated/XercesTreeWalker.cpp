@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
+
+
 // Class header file.
 #include "XercesTreeWalker.hpp"
 
@@ -118,3 +123,8 @@ XercesTreeWalker::traverse(
 
 
 XALAN_CPP_NAMESPACE_END
+
+
+#endif //XALAN_BUILD_DEPRECATED_DOM_BRIDGE 
+
+

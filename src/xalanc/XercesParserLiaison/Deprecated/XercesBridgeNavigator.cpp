@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
+
+
 #include "XercesBridgeNavigator.hpp"
 
 
@@ -353,3 +358,8 @@ XercesBridgeNavigator::	getPooledString(const DOMStringType&	theString) const
 
 
 XALAN_CPP_NAMESPACE_END
+
+
+#endif //XALAN_BUILD_DEPRECATED_DOM_BRIDGE 
+
+

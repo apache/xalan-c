@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
+
+
+
 // Class header file.
 #include "XercesElementBridgeAllocator.hpp"
 
@@ -62,3 +67,8 @@ XercesElementBridgeAllocator::reset()
 
 
 XALAN_CPP_NAMESPACE_END
+
+
+#endif //XALAN_BUILD_DEPRECATED_DOM_BRIDGE 
+
+

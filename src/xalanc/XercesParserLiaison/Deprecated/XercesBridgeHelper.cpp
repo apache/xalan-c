@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
+
+
+
 #include "XercesBridgeHelper.hpp"
 
 
@@ -189,3 +194,8 @@ XercesBridgeHelper::replaceData(
 
 
 XALAN_CPP_NAMESPACE_END
+
+
+#endif //XALAN_BUILD_DEPRECATED_DOM_BRIDGE 
+
+
