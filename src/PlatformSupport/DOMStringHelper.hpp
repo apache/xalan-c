@@ -64,6 +64,7 @@
 
 
 
+#include <algorithm>
 #include <cassert>
 #include <functional>
 #if defined(XALAN_OLD_STREAMS)
