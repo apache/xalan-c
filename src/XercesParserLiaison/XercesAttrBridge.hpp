@@ -71,7 +71,7 @@
 
 
 
-#include <XalanDom/XalanAttr.hpp>
+#include <XalanDOM/XalanAttr.hpp>
 
 
 
