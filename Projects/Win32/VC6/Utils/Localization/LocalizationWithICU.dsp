@@ -111,6 +111,10 @@ CFG=LocalizationWithICU - Win32 Release
 
 !ELSEIF  "$(CFG)" == "LocalizationWithICU - Win32 Release with symbols"
 
+!ELSEIF  "$(CFG)" == "LocalizationWithICU - Win64 Release"
+
+!ELSEIF  "$(CFG)" == "LocalizationWithICU - Win32 Debug"
+
 !ENDIF 
 
 # Begin Source File
