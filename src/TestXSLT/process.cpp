@@ -55,29 +55,10 @@
  * <http://www.apache.org/>.
  */
 
-#if defined(WIN32)
-#	define WIN32_LEAN_AND_MEAN
-#	include <windows.h>
-#	define THREADFUNCTIONRETURN DWORD WINAPI
-#else
-
-#	define THREADFUNCTIONRETURN void *
-
-#	if defined(__GNUC__)
-#		include <pthread.h>
-#	endif
-
-#endif
-
 #include <cstdio>
 #include <cstring>
 #include <iostream>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-
 #include <string>
-#include <strstream>
 
 
 
@@ -91,9 +72,10 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
-#include <PlatformSupport/NullPrintWriter.hpp>
+
 
 #include <DOMSupport/DOMSupportDefault.hpp>
+
 
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
@@ -103,14 +85,15 @@
 #include <XPath/XPathFactoryDefault.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
 
+
 #include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
 #include <XercesPlatformSupport/TextFileOutputStream.hpp>
 #include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
-#include <XercesPlatformSupport/NullTextOutputStream.hpp>
+
 
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
-#include <XMLSupport/Formatter.hpp>
+
 #include <XMLSupport/FormatterToHTML.hpp>
 #include <XMLSupport/FormatterToText.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
@@ -166,7 +149,7 @@ printArgOptions()
 		 << endl
 		 << "	 [-QC (Quiet Pattern Conflicts Warnings)]"
 		 << endl
-		 << "	 [-Q	(Quiet Mode)]"
+		 << "	 [-Q (Quiet Mode)]"
 		 << endl
 		 << "	 [-ESCAPE (Which characters to escape {default is <>&\"\'\\r\\n}]"
 		 << endl
@@ -180,9 +163,11 @@ printArgOptions()
 		 << endl
 		 << "	 [-TTC (Trace the template children as they are being processed.)]"
 		 << endl
-		 << "	 [-VALIDATE (Set whether validation occurs.	Validation is off by default.)]"
+		 << "	 [-VALIDATE (Set whether validation occurs. Validation is off by default.)]"
 		 << endl
 		 << "	 [-XML (Use XML formatter and add XML header.)]"
+		 << endl
+		 << "	 [-NH (Don't write XML header. Works only with previous option.)]"
 		 << endl
 		 << "	 [-TEXT (Use simple Text formatter.)]"
 		 << endl
@@ -193,7 +178,10 @@ printArgOptions()
 }
 
 
+
 typedef map<string, string> String2StringMapType;
+
+
 
 struct CmdLineParams
 {
@@ -210,15 +198,15 @@ struct CmdLineParams
 	bool traceGenerationEvent;
 	bool traceSelectionEvent;
 	bool traceTemplateChildren;
+	bool shouldWriteXMLHeader;
 	int indentAmount;
-	int nThreads;
 	int outputType;
 	string dumpFileName;
 	string  outFileName;
 	string specialCharacters;
 	string treedumpFileName;
 	string xslFileName;
-	vector <string> inFileNames;
+	string inFileName;
 
 	CmdLineParams() :
 		paramsMap(),
@@ -234,25 +222,24 @@ struct CmdLineParams
 		traceGenerationEvent(false),
 		traceSelectionEvent(false),
 		traceTemplateChildren(false),
+		shouldWriteXMLHeader(true),
 		indentAmount(0),
-		nThreads(1),
 		outputType(-1),
 		dumpFileName(),
 		specialCharacters(),
 		treedumpFileName(),
 		outFileName(),
 		xslFileName(),
-		inFileNames() { }
-private:	
-	CmdLineParams(const CmdLineParams& other);
+		inFileName()
+	{
+	}
 };
 
 
-void getArgs(int argc, const char* argv[], CmdLineParams& p) throw()
+
+void
+getArgs(int argc, const char* argv[], CmdLineParams& p)
 {
-	p.outputType = -1;
-	p.nThreads = 1;
-	p.indentAmount = 0;
 	for (int i = 1;	i < argc;	i ++) 
 	{
 		if (!stricmp("-ESCAPE", argv[i])) 
@@ -266,9 +253,7 @@ void getArgs(int argc, const char* argv[], CmdLineParams& p) throw()
 		} 
 		else if (!stricmp("-IN", argv[i])) 
 		{
-			p.inFileNames.push_back(argv[++i]);
-			while ((i+1) < argc && ! (*argv[i+1] == '-'))	// Multiple entries
-				p.inFileNames.push_back(argv[++i]);
+			p.inFileName = argv[++i];
 		}
 		else if (!stricmp("-OUT", argv[i])) 
 		{
@@ -320,6 +305,10 @@ void getArgs(int argc, const char* argv[], CmdLineParams& p) throw()
 		{
 			p.escapeCData = true;
 		}
+		else if (!stricmp("-NH", argv[i]))
+		{
+			p.shouldWriteXMLHeader = false;
+		}
 		else if(!stricmp("-TT", argv[i]))
 		{
 			p.traceTemplates = true;
@@ -343,122 +332,144 @@ void getArgs(int argc, const char* argv[], CmdLineParams& p) throw()
 	}
 }
 
-/*
- * Support for multiple threads
- */
 
-THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException);
 
-#if defined(WIN32)
-
-void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
+FormatterListener*
+createFormatter(
+			const CmdLineParams&		params,
+			PrintWriter&				resultWriter,
+			int							indentAmount,
+			const XalanDOMString&		mimeEncoding,
+			const StylesheetRoot*		stylesheet)
 {
-	DWORD dwStackSize = 4096;              	// initial thread stack size
-	LPTHREAD_START_ROUTINE lpStartAddress = (LPTHREAD_START_ROUTINE)xsltMain;
-	DWORD dwCreationFlags = 0;             	// creation flags
- 	int nThreads = params.nThreads;
-	DWORD *ThreadIds = new DWORD[nThreads];   // array to receive thread IDs
-	HANDLE *hThreads = new HANDLE[nThreads];	// array to receive thread handles
- 	int i=0;
+	FormatterListener*	formatter = 0;
 
- 	for (i=0; i< nThreads; i++)
+	const int	outputType = params.outputType;
+
+	if(FormatterListener::OUTPUT_METHOD_XML == outputType)
 	{
-		HANDLE hThread;
+		XalanDOMString	version;
+		bool			outputIndent = false;
+		XalanDOMString	mediatype;
+		XalanDOMString	doctypeSystem;
+		XalanDOMString	doctypePublic;
+		XalanDOMString	standalone;
 
-		hThread = CreateThread(
-				0, dwStackSize,
-				lpStartAddress,     // pointer to thread function
-				(LPVOID)&params,    // argument for new thread
-				dwCreationFlags,    // creation flags
-				&ThreadIds[i]);
-		if (! hThread)
+		if (stylesheet != 0)
 		{
-			LPTSTR lpBuffer;    // pointer to message buffer
-
-			FormatMessage(
-					FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
-					LPCVOID (0),   // pointer to  message source
-					GetLastError(),
-					DWORD (0), // language identifier for requested message
-					(LPSTR)&lpBuffer,    // pointer to message buffer
-					DWORD (0),        // maximum size of message buffer
-					0  // pointer to array of message inserts
-									 );
-			MessageBox(0, lpBuffer, "Error", MB_ICONSTOP);
+			version = stylesheet->m_version;
+			outputIndent = stylesheet->getOutputIndent();
+			mediatype = stylesheet->m_mediatype;
+			doctypeSystem = stylesheet->getOutputDoctypeSystem();
+			doctypePublic = stylesheet->getOutputDoctypePublic();
+			standalone = stylesheet->m_standalone;
 		}
-		else 
-			hThreads[i] = hThread;
+
+		FormatterToXML* fToXML = new FormatterToXML(resultWriter,
+					version,
+					outputIndent,
+					indentAmount,
+					mimeEncoding,
+					mediatype,
+					doctypeSystem,
+					doctypePublic,
+					true,	// xmlDecl
+					standalone);
+
+		fToXML->setShouldWriteXMLHeader(params.shouldWriteXMLHeader);
+		fToXML->setStripCData(params.stripCData);
+		fToXML->setEscapeCData(params.escapeCData);
+		formatter = fToXML;
 	}
- 	for (i=0; i< nThreads; i++)
+	else if(FormatterListener::OUTPUT_METHOD_TEXT == outputType)
 	{
-		DWORD exitCode = STILL_ACTIVE;
-		while (exitCode == STILL_ACTIVE)
-			GetExitCodeThread(hThreads[i], &exitCode);
-		cout << "Process " << hThreads[i] << " finished with exit code " <<
-		exitCode << endl;
+		formatter = new FormatterToText(resultWriter);
 	}
- 	for (i=0; i< nThreads; i++)
-		CloseHandle(hThreads[i]);
-	delete []ThreadIds;
-	delete []hThreads;
-}
-
-#elif defined(__GNUC__)
-
-void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
-{
-
-	const int nThreads = params.nThreads;
-	pthread_t *threads = new pthread_t[nThreads];   // array to receive thread IDs
- 	for (int i=0; i< nThreads; i++)
+	else if(FormatterListener::OUTPUT_METHOD_HTML == outputType)
 	{
-		pthread_t  thread;
-		int retVal = pthread_create(&thread, 0,
-		       (void * (*)(void *))xsltMain, (void *) &params);
-		if (retVal)
-			cout << "Thread creation failed." << endl;
-		else	
+		XalanDOMString	version;
+		bool			outputIndent = false;
+		XalanDOMString	mediatype;
+		XalanDOMString	doctypeSystem;
+		XalanDOMString	doctypePublic;
+		XalanDOMString	standalone;
+
+		if (stylesheet != 0)
 		{
-			cout << "Created thread: " << thread << endl;
-			threads[i] = thread;
+			version = stylesheet->m_version;
+			outputIndent = stylesheet->getOutputIndent();
+			mediatype = stylesheet->m_mediatype;
+			doctypeSystem = stylesheet->getOutputDoctypeSystem();
+			doctypePublic = stylesheet->getOutputDoctypePublic();
+			standalone = stylesheet->m_standalone;
 		}
+
+		FormatterToHTML* fToHTML
+				= new FormatterToHTML(
+						resultWriter,
+						mimeEncoding,
+						mediatype,
+						doctypeSystem,
+						doctypePublic,
+						outputIndent,
+						indentAmount,
+						version,
+						standalone,
+						false);	// xmlDecl
+
+		fToHTML->setStripCData(params.stripCData);
+		formatter = fToHTML;
 	}
-	// Wait for them to finish
- 	for (int i=0; i< nThreads; i++)
-		pthread_join(threads[i], 0);
+
+	return formatter;
 }
 
-#else
 
-void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
+
+TextOutputStream*
+createOutputStream(const CmdLineParams&		params)
 {
-	cerr << "xsltMultiThreadedMain: Not valid on this platform" << endl;
+	if (params.outFileName.empty())
+	{
+		return new XercesStdTextOutputStream(cout);
+	}
+	else
+	{
+		return new TextFileOutputStream(params.outFileName.c_str());
+	}
 }
 
-#endif
 
 
-
-static inline bool exists(const string&		filename)
+TraceListener*
+createTraceListener(
+			const CmdLineParams&	params,
+			PrintWriter&			diagnosticsWriter)
 {
-	struct stat statBuffer;
-	return (0 == stat(filename.c_str(), &statBuffer));
+	if (params.traceTemplates == true ||
+		params.traceTemplateChildren == true ||
+		params.traceGenerationEvent == true ||
+		params.traceSelectionEvent)
+	{
+		return new TraceListenerDefault(
+				diagnosticsWriter,
+				params.traceTemplates,
+				params.traceTemplateChildren,
+				params.traceGenerationEvent,
+				params.traceSelectionEvent);
+	}
+	else
+	{
+		return 0;
+	}
+
 }
 
-static	CmdLineParams theParams;
-	
-THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
+
+
+int
+xsltMain(const CmdLineParams&	params)
 {
- 	const CmdLineParams&	params = *((CmdLineParams *)vptr);
-	const string			outputFileNameBase = theParams.outFileName;
-
-	// @@ This should become a command line switch
-	bool shouldWriteXMLHeader = false;
-
-	// Runtime.getRuntime().traceMethodCalls(false);	
-	// Runtime.getRuntime().traceInstructions(false);
-
-
 #if defined(XALAN_USE_ICU)
 	// Create an installer to install the substitue format-number() function.
 	FunctionICUFormatNumber::FunctionICUFormatNumberInstaller	theInstaller;
@@ -471,16 +482,14 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 	StylesheetExecutionContextDefault::installXalanNumberFormatFactory(&theXalanNumberFormatFactory);
 #endif
 
+	const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
+	const XalanDOMString	encoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
+
 	/**
 	 * The default diagnostic writer...
 	 */
-	XercesStdTextOutputStream				theStdOut(cout);
 	XercesStdTextOutputStream				theStdErr(cerr);
-	NullTextOutputStream					theNullStream;
 	XercesDOMPrintWriter					diagnosticsWriter(theStdErr);
-
-	auto_ptr<TextFileOutputStream>	outputFileStream;
-	TextOutputStream*				outputStream = &theStdOut;
 
 	DOMSupportDefault theDOMSupport;
 	XercesParserLiaison xmlParserLiaison(theDOMSupport);
@@ -501,29 +510,13 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 	theXSLProcessorSupport.setProcessor(&processor);
 
 
-	auto_ptr<TraceListener>		theTraceListener;
+	auto_ptr<TraceListener>		theTraceListener(
+			createTraceListener(
+				params,
+				diagnosticsWriter));
 
-	if (params.traceTemplates == true ||
-		params.traceTemplateChildren == true ||
-		params.traceGenerationEvent == true ||
-		params.traceSelectionEvent)
+	if (theTraceListener.get() != 0)
 	{
-#if defined(XALAN_OLD_AUTO_PTR)
-		theTraceListener = auto_ptr<TraceListener>(new TraceListenerDefault(
-				diagnosticsWriter,
-				params.traceTemplates,
-				params.traceTemplateChildren,
-				params.traceGenerationEvent,
-				params.traceSelectionEvent));
-#else
-		theTraceListener.reset(new TraceListenerDefault(
-				diagnosticsWriter,
-				params.traceTemplates,
-				params.traceTemplateChildren,
-				params.traceGenerationEvent,
-				params.traceSelectionEvent));
-#endif
-
 		processor.setTraceSelects(params.traceSelectionEvent);
 		processor.addTraceListener(theTraceListener.get());
 	}
@@ -539,216 +532,100 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 			theStylesheetXObjectFactory,
 			theStylesheetXPathFactory);
 
-	StylesheetExecutionContextDefault		theExecutionContext(processor,
-			theXSLProcessorSupport,
-			theXPathSupport,
-			theXObjectFactory);
-
 	/*
 	 * Set specified processor flags
 	 */
-	if (params.setQuietConflictWarnings)
-		processor.setQuietConflictWarnings(true);
+	processor.setQuietConflictWarnings(params.setQuietConflictWarnings);
 
 	if (params.paramsMap.size())	
 	{
-		String2StringMapType::const_iterator it = params.paramsMap.begin();
+		String2StringMapType::const_iterator	it = params.paramsMap.begin();
+
 		for ( ; it != params.paramsMap.end(); ++it)
-			processor.setStylesheetParam((*it).first.c_str(),
+		{
+			processor.setStylesheetParam(
+					(*it).first.c_str(),
 					(*it).second.c_str());
+		}
 	}
 
 	/*
 	 * Set specified parser flags
 	 */
-	if (params.indentAmount)
+	if (params.indentAmount != 0)
+	{
 		xmlParserLiaison.setIndent(params.indentAmount);
+	}
+
 	xmlParserLiaison.setSpecialCharacters(params.specialCharacters.c_str());
 	xmlParserLiaison.SetShouldExpandEntityRefs(params.shouldExpandEntityRefs);
 
-	bool noOutputFileSpecified =  outputFileNameBase.empty();
-	assert(! params.inFileNames.empty());
-	int nInputFiles = params.inFileNames.size();
- 	int nThreads = params.nThreads;
-	int outputType = params.outputType;
-	bool stripCData = params.stripCData;
-	bool escapeCData = params.escapeCData;
+	assert(params.inFileName.size() > 0);
 
-	// The main XSL transformation occurs here!
-	if (! params.setQuietMode)
-		processor.setDiagnosticsOutput( &diagnosticsWriter );
+	if (!params.setQuietMode)
+	{
+		processor.setDiagnosticsOutput(&diagnosticsWriter);
+	}
 
-
-	StylesheetRoot* stylesheet = 0;
-
-	XalanDOMString xslFileName;
+	XalanDOMString	xslFileName;
 
 	if(0 != params.xslFileName.size())
 	{
 		xslFileName = params.xslFileName.c_str();
 	}
 
-	if (! isEmpty(xslFileName))
+	const StylesheetRoot*	stylesheet = 0;
+
+	StylesheetExecutionContextDefault		theExecutionContext(processor,
+			theXSLProcessorSupport,
+			theXPathSupport,
+			theXObjectFactory);
+
+	if (!isEmpty(xslFileName))
+	{
 		stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
 
-	const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
-	const XalanDOMString	encoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
-
-	FormatterListener* formatter = 0;
-
-
-	/*
-	 * Main loop to process multiple documents with a single stylesheet
-	 */
-	for (int i=0; i< nInputFiles; i++)
-	{
-
-		string theInputFileName = params.inFileNames[i];
-		string outputFileName;
-		XSLTInputSource theInputSource(theInputFileName.c_str());
-		XalanNode* const	sourceTree = processor.getSourceTreeFromInput(theInputSource);
-
-	/*
-	 * If no output file specified, and multiple input files, generate an
-	 * output file based on the root of each input file; otherwise construct
-	 * as many unique filenames as required using the original output file
-	 * name as a base.
-	 */
-		if (noOutputFileSpecified)
-		{
-			if (nInputFiles > 1)
-			{
-				outputFileName =
-					theInputFileName.substr(0, theInputFileName.find_last_of('.'));
-				outputFileName += ".out";
-				//	Strip off protocol, if its a file protocol for local machine,
-				//	otherwise we're out of luck
-				string LOCALFILE = "file:///";
-				if (0 == outputFileName.find(LOCALFILE))
-					outputFileName = outputFileName.substr(LOCALFILE.size());
-			}
-		}
-		else
-		{
-			outputFileName = outputFileNameBase;
-			if (nInputFiles > 1)
-			{
-				int ix = 0;
-				while (exists(outputFileName))		// Make sure it's unique
-				{
-					char buffer[16];
-               sprintf(buffer, "%d", ix++);
-					outputFileName = outputFileNameBase;
-               outputFileName += buffer;
-				}
-			}
-		}
-	/*
-	 * If multithreaded option specified, append the thread id
-	 * to the output file name
-	 */
-		if (nThreads > 1)
-		{
-			long pid = 
-#if defined(WIN32)
-				GetCurrentThreadId();
-#else
-#if defined(__GNUC__)
-			pthread_self();
-#else
-			0;
-#endif
-#endif
-			char buffer[16];
-         sprintf(buffer, ".%d", pid);
-         outputFileName += buffer;
-		}
-		if (! outputFileName.empty())	
-		{
-#if defined(XALAN_OLD_AUTO_PTR)
-			outputFileStream = 
-				auto_ptr<TextFileOutputStream>(new TextFileOutputStream(
-							outputFileName.c_str()));
-#else
-			outputFileStream.reset(new TextFileOutputStream(outputFileName.c_str()));
-#endif
-
-			outputStream = outputFileStream.get();
-		}
-
-		XercesDOMPrintWriter	resultWriter(*outputStream);
-
-
-		if(FormatterListener::OUTPUT_METHOD_XML == outputType)
-		{
-			FormatterToXML* fToXML = new FormatterToXML(resultWriter,
-					stylesheet->m_version,
-					stylesheet->getOutputIndent(),
-					xmlParserLiaison.getIndent(),
-					mimeEncoding,
-					stylesheet->m_mediatype,
-					stylesheet->getOutputDoctypeSystem(),
-					stylesheet->getOutputDoctypePublic(),
-					true,	// xmlDecl
-					stylesheet->m_standalone);
-			fToXML->setShouldWriteXMLHeader(shouldWriteXMLHeader);
-			fToXML->setStripCData(stripCData);
-			fToXML->setEscapeCData(escapeCData);
-			formatter = fToXML;
-		}
-		else if(FormatterListener::OUTPUT_METHOD_TEXT == outputType)
-		{
-			FormatterToText* fToText = new FormatterToText(resultWriter);
-			formatter = fToText;
-		}
-		else if(FormatterListener::OUTPUT_METHOD_HTML == outputType)
-		{
-			FormatterToHTML* fToHTML
-				= new FormatterToHTML(
-						resultWriter,
-						mimeEncoding,
-						stylesheet->m_mediatype,
-						stylesheet->getOutputDoctypeSystem(),
-						stylesheet->getOutputDoctypePublic(),
-						stylesheet->getOutputIndent(),
-						xmlParserLiaison.getIndent(),
-						stylesheet->m_version,
-						stylesheet->m_standalone,
-						false);	// xmlDecl
-
-			fToHTML->setStripCData(stripCData);
-			formatter = fToHTML;
-		}
-		XSLTResultTarget* rTreeTarget = 0;
-		if(0 == formatter)
-		{
-			rTreeTarget = new XSLTResultTarget(&resultWriter);
-		}
-		else
-		{
-			rTreeTarget = new XSLTResultTarget();
-			rTreeTarget->setFormatterListener(formatter);
-			xmlParserLiaison.setFormatterListener(formatter);
-		}
-
-		if (stylesheet != 0)
-		{
-			theExecutionContext.setStylesheetRoot(stylesheet);
-		}
-
-		XSLTInputSource		theSourceTree(sourceTree);
-
-		processor.process(
-			theSourceTree,
-			*rTreeTarget,
-			theExecutionContext);
-
-		delete formatter;
-		delete rTreeTarget;
+		theExecutionContext.setStylesheetRoot(stylesheet);
 	}
+
+	auto_ptr<TextOutputStream>	outputFileStream(createOutputStream(params));
+	assert(outputFileStream.get() != 0);
+
+	XercesDOMPrintWriter	resultWriter(*outputFileStream.get());
+
+	const auto_ptr<FormatterListener>	formatter(
+			createFormatter(
+				params,
+				resultWriter,
+				xmlParserLiaison.getIndent(),
+				mimeEncoding,
+				stylesheet));
+
+	XSLTInputSource		theInputSource(params.inFileName.c_str());
+
+	XSLTResultTarget	rTreeTarget;
+
+	if(formatter.get() == 0)
+	{
+		rTreeTarget.setCharacterStream(&resultWriter);
+	}
+	else
+	{
+		rTreeTarget.setFormatterListener(formatter.get());
+
+		xmlParserLiaison.setFormatterListener(formatter.get());
+	}
+
+	// Do the transformation...
+	processor.process(
+			theInputSource,
+			rTreeTarget,
+			theExecutionContext);
 
 	return 0;
 }
+
+
 
 int main(int argc, const char* argv[]) throw()
 {
@@ -764,7 +641,10 @@ int main(int argc, const char* argv[]) throw()
 	XMLPlatformUtils::Initialize();
 	XSLTEngineImpl::Initialize();
 
-	int	theResult = 0;
+	int				theResult = 0;
+
+	CmdLineParams	theParams;
+	
 
 	/*
 	 *		Get command line arguments
@@ -779,10 +659,11 @@ int main(int argc, const char* argv[]) throw()
 
 		if (theParams.versionOnly == true)
 		{
-			cout << "TestXSLT version 0.31.0 (Xalan C++ version 0.31.0)"
+			cout << endl
+				 << "TestXSLT version 0.31.0 (Xalan C++ version 0.31.0)"
 				 << endl;
 		}
-		else if (theParams.inFileNames.size() == 0)
+		else if (theParams.inFileName.size() == 0)
 		{
 			printArgOptions();
 		}
@@ -790,10 +671,7 @@ int main(int argc, const char* argv[]) throw()
 		{
 			try
 			{
-				if (theParams.nThreads > 1)
-					xsltMultiThreadedMain(theParams);
-				else		
-					xsltMain(&theParams);
+				theResult = xsltMain(theParams);
 			}
 			catch (XSLException& e)
 			{
