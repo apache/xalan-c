@@ -494,6 +494,7 @@ StylesheetHandler::startElement(
 				case StylesheetConstructionContext::ELEMNAME_INCLUDE:
 				case StylesheetConstructionContext::ELEMNAME_PRESERVE_SPACE:
 				case StylesheetConstructionContext::ELEMNAME_STRIP_SPACE:
+				case StylesheetConstructionContext::ELEMNAME_DECIMAL_FORMAT:
 					{
 						error(name, XALAN_STATIC_UCODE_STRING(" is not allowed inside a template."), locator);
 					}
