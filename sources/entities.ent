@@ -3,9 +3,9 @@
 <!ENTITY xslt4c "Xalan-C++">
 <!ENTITY xslt4c-dist "Xalan-C_1_5">
 <!ENTITY xslt4c-current "Xalan-C++ version 1.5">
-<!ENTITY xslt4c-windlls "DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XalanSourceTree,dll, XercesParserLiaison.dll, XMLSupport.dll, XPath.dll, XSLT.dll, XalanTransformer.dll, XalanExtensions.dll">
+<!ENTITY xslt4c-windll "Xalan-C_1_5_0.dll">
 <!ENTITY xslt4c-linuxlib "libxalan-c1_5.so">
-<!ENTITY xslt4c-aixlib "libxalan-c1_5.a">
+<!ENTITY xslt4c-aixlib "libxalan-c1_5.so">
 <!ENTITY xslt4c-hplib "libxalan-c1_5.sl">
 <!ENTITY xslt4c-solarislib "libxalan-c1_5.so">
 <!ENTITY xml4c "Xerces-C++">
@@ -25,7 +25,7 @@
 <!ENTITY xml4c-solarisdist "&xml4c-dist;-Sol2.7ForCC.tar.gz">
 <!ENTITY xml4c-solaris64dist "&xml4c-dist;-Sol2.7ForCC_64.tar.gz">
 <!ENTITY xslt4j "Xalan-Java">
-<!ENTITY icu-used "International Components for Unicode(ICU) 2.2 source files">
+<!ENTITY icu-used "International Components for Unicode(ICU) 2.4 source files">
 <!ENTITY icu-windlls "icui18n.dll, icuuc.dll">
 <!ENTITY icubridge-win "ICUBridge.dll">
 <!ENTITY done SYSTEM "xalan/DONE">
