@@ -1517,6 +1517,129 @@ DoubleToDOMString(
 
 
 
+void
+DOMStringHelper::DoubleToCharacters(
+			double				theDouble,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
+{
+	if (DoubleSupport::isNaN(theDouble) == true)
+	{
+		(formatterListener.*function)(
+			theNaNString,
+			sizeof(theNaNString) / sizeof(theNaNString[0]) - 1);
+	}
+	else if (DoubleSupport::isPositiveInfinity(theDouble) == true)
+	{
+		(formatterListener.*function)(
+			thePositiveInfinityString,
+			sizeof(thePositiveInfinityString) / sizeof(thePositiveInfinityString[0]) - 1);
+	}
+	else if (DoubleSupport::isNegativeInfinity(theDouble) == true)
+	{
+		(formatterListener.*function)(
+			theNegativeInfinityString,
+			sizeof(theNegativeInfinityString) / sizeof(theNegativeInfinityString[0]) - 1);
+	}
+	else if (DoubleSupport::isPositiveZero(theDouble) == true)
+	{
+		(formatterListener.*function)(
+			thePositiveZeroString,
+			sizeof(thePositiveZeroString) / sizeof(thePositiveZeroString[0]) - 1);
+	}
+	else if (DoubleSupport::isNegativeZero(theDouble) == true)
+	{
+		(formatterListener.*function)(
+			theNegativeZeroString,
+			sizeof(theNegativeZeroString) / sizeof(theNegativeZeroString[0]) - 1);
+	}
+	else if (long(theDouble) == theDouble)
+	{
+		LongToCharacters(long(theDouble), formatterListener, function);
+	}
+	else
+	{
+		char			theBuffer[MAX_PRINTF_DIGITS + 1];
+
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		XALAN_USING_STD(sprintf)
+		XALAN_USING_STD(atof)
+		XALAN_USING_STD(isdigit)
+#endif
+
+		const char* const *		thePrintfString = thePrintfStrings;
+
+		int		theCharsWritten = 0;
+
+		do
+		{
+			theCharsWritten = sprintf(theBuffer, *thePrintfString, theDouble);
+			assert(theCharsWritten != 0);
+
+			++thePrintfString;
+		}
+		while(atof(theBuffer) != theDouble && *thePrintfString != 0);
+
+		// First, cleanup the output to conform to the XPath standard,
+		// which says no trailing '0's for the decimal portion.
+		// So start with the last digit, and search until we find
+		// the last correct character for the output.
+		// Also, according to the XPath standard, any values without
+		// a fractional part are printed as integers.  There's always
+		// a decimal point, so we have to strip stuff away...
+
+		// Now, move back while there are zeros...
+		while(theBuffer[--theCharsWritten] == '0')
+		{
+		}
+
+		int		theCurrentIndex = theCharsWritten;
+
+		// If a decimal point stopped the loop, then
+		// we don't want to preserve it.  Otherwise,
+		// another digit stopped the loop, so we must
+		// preserve it.
+		if(isdigit(theBuffer[theCharsWritten]))
+		{
+			++theCharsWritten;
+		}
+
+		// Some other character other than '.' can be the
+		// separator.  This can happen if the locale is
+		// not the "C" locale, etc.  If that's the case,
+		// replace it with '.'.
+		while(theCurrentIndex > 0)
+		{
+			if (isdigit(theBuffer[theCurrentIndex]))
+			{
+				--theCurrentIndex;
+			}
+			else
+			{
+				if (theBuffer[theCurrentIndex] != '.')
+				{
+					theBuffer[theCurrentIndex] = '.';
+				}
+
+				break;
+			}
+		}
+
+		XalanDOMChar	theResult[MAX_PRINTF_DIGITS + 1];
+
+		TranscodeNumber(
+				theBuffer,
+				theBuffer + theCharsWritten,
+				theResult);
+
+		(formatterListener.*function)(
+			theResult,
+			theCharsWritten);
+	}
+}
+
+
+
 template <class ScalarType>
 XalanDOMChar*
 ScalarToDecimalString(
@@ -1634,6 +1757,21 @@ UnsignedScalarToHexadecimalString(
 
 		append(theResult, theBegin, theEnd - theBegin);
 	}
+}
+
+
+
+void
+DOMStringHelper::LongToCharacters(
+			long				theLong,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
+{
+	XalanDOMChar	theBuffer[MAX_PRINTF_DIGITS + 1];
+
+	const XalanDOMChar* const	theResult = ScalarToDecimalString(theLong, &theBuffer[MAX_PRINTF_DIGITS]);
+
+	(formatterListener.*function)(theResult, XalanDOMString::length(theResult));
 }
 
 

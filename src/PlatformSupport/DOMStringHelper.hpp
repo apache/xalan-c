@@ -80,6 +80,7 @@ class ostream;
 
 
 
+#include <PlatformSupport/FormatterListener.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 #include <PlatformSupport/XalanXMLChar.hpp>
 
@@ -762,6 +763,27 @@ DoubleToDOMString(double	theValue)
 
 	return theResult;
 }
+
+
+
+class XALAN_PLATFORMSUPPORT_EXPORT DOMStringHelper
+{
+public:
+
+	typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const unsigned int);
+
+	static void
+	DoubleToCharacters(
+			double				theDouble,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function);
+
+	static void
+	LongToCharacters(
+			long				theLong,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function);
+};
 
 
 
