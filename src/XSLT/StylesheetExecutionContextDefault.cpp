@@ -1296,6 +1296,8 @@ StylesheetExecutionContextDefault::reset()
 
 	assert(m_matchPatternCache.size() == 0);
 
+	m_countersTable.reset();
+
 	// Reset the default execution context...
 	m_xpathExecutionContextDefault.reset();
 }
