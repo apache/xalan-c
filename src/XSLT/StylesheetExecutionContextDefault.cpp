@@ -213,7 +213,7 @@ StylesheetExecutionContextDefault::createDocument() const
 void
 StylesheetExecutionContextDefault::setStylesheetRoot(const StylesheetRoot*	theStylesheet)
 {
-	assert(theStylesheet->isRoot() == true);
+	assert(theStylesheet == 0 || theStylesheet->isRoot() == true);
 
 	m_stylesheetRoot = theStylesheet;
 
