@@ -220,8 +220,8 @@
 </trans-unit>
 
 <trans-unit id="IllegalSyntaxOfPredicatesParent">
-		<source>Use 'self::node()[predicate]' instead of '..[predicate]'</source>
-		<target>Use 'self::node()[predicate]' instead of '..[predicate]'</target>
+		<source>Use 'parent::node()[predicate]' instead of '..[predicate]'</source>
+		<target>Use 'parent::node()[predicate]' instead of '..[predicate]'</target>
 </trans-unit>
 
 <trans-unit id="UnexpectedTokenFound_1Param">
@@ -305,8 +305,8 @@
 </trans-unit>
 
 <trans-unit id="UnknownXSLElement">
-		<source> is an unknown XSL element. </source>
-		<target> is an unknown XSL element. </target>
+		<source> is an unknown XSLT element. </source>
+		<target> is an unknown XSLT element. </target>
 </trans-unit>
 
 <trans-unit id="IllegalTopLevelElement">
@@ -421,19 +421,14 @@
 		<target> The attribute '{0}' has an illegal value</target>
 </trans-unit>
 
-<trans-unit id="ProgrammerError">
-		<source>Programmer error. countMatchPattern should never be 0</source>
-		<target>Programmer error. countMatchPattern should never be 0</target>
-</trans-unit>
-
 <trans-unit id="Grouping_separatorValueMustSeOneCharacterLength">
 		<source>The grouping-separator value must be one character in length</source>
 		<target>The grouping-separator value must be one character in length</target>
 </trans-unit>
 
-<trans-unit id="NumberingFormatNotSupported">
-		<source>Numbering format not supported yet</source>
-		<target>Numbering format not supported yet</target>
+<trans-unit id="NumberingFormatNotSupported_1Param">
+		<source>The numbering format '{0}' is not yet supported</source>
+		<target>The numbering format '{0}' is not yet supported</target>
 </trans-unit>
 
 <trans-unit id="LegalValuesAre">
@@ -571,6 +566,11 @@
 		<target>The stylesheet already has a wrapperless template</target>
 </trans-unit>
 
+<trans-unit id="StylesheetHasDuplicateNamedTemplate">
+		<source>The stylesheet already has a template with this name</source>
+		<target>The stylesheet already has a template with this name</target>
+</trans-unit>
+
 <trans-unit id="LastFoundStylesheetWillBeUsed">
 		<source>Last found in stylesheet will be used</source>
 		<target>Last found in stylesheet will be used</target>
@@ -655,23 +655,16 @@
 <trans-unit id="ImportingItself_1Param">
 		<source>{0} is directly or indirectly importing itself</source>
 		<target>{0} is directly or indirectly importing itself</target>
-
 </trans-unit>
 
 <trans-unit id="IncludingItself_1Param">
 		<source>{0} is directly or indirectly including itself</source>
 		<target>{0} is directly or indirectly including itself</target>
-
 </trans-unit>
 
 <trans-unit id="CharIsNotAllowedInStylesheet">
 		<source>Character data is not allowed at this position in the stylesheet</source>
 		<target>Character data is not allowed at this position in the stylesheet</target>
-</trans-unit>
-
-<trans-unit id="Illegal_1Param">
-		<source>May be it  '{0}' </source>
-		<target>May be it  '{0}' </target>
 </trans-unit>
 
 <trans-unit id="Transforming">
@@ -683,23 +676,17 @@
 		<source> transform </source>
 		<target> transform </target>
 </trans-unit>
-       		
-       		
-       		
+
 <trans-unit id="NoValidResultTarget">
 		<source>There is no valid result target </source>
 		<target>There is no valid result target </target>
-
 </trans-unit>
-       		
-       		
+
 <trans-unit id="HasAnUnknownMethod_2Param">
 		<source> {0} has an unknown method: {1} </source>
 		<target> {0} has an unknown method: {1} </target>
-
 </trans-unit>
-       		
-        	
+
 <trans-unit id="UnsupportedXalanSpecificAttribute_1Param">
 		<source>'{0}' is an unsupported Xalan-specific attribute</source>
 		<target>'{0}' is an unsupported Xalan-specific attribute</target>
@@ -708,11 +695,6 @@
 <trans-unit id="HasIllegalAttribute_2Param">
 		<source>The element '{0}' has an illegal attribute '{1}'</source>
 		<target>The element '{0}' has an illegal attribute '{1}'</target>
-</trans-unit>
-
-<trans-unit id="MatchConflictBetween_strip_space_preserve_space">
-		<source>Match conflict between 'xsl:strip-space' and 'xsl:preserve-space'</source>
-		<target>Match conflict between 'xsl:strip-space' and 'xsl:preserve-space'</target>
 </trans-unit>
 
 <trans-unit id="TextAndColumnNumber_2Param">
@@ -734,7 +716,7 @@
 		<source>  match="{0}"  </source>
 		<target>  match="{0}"  </target>
 </trans-unit>
-        	
+
 <trans-unit id="Warning2">
 		<source>Warning </source>
 		<target>Warning </target>
@@ -1125,8 +1107,4 @@
 </trans-unit>
     </body>
   </file>
-</xliff>  	
- 	
-  
-    
-  
+</xliff>
