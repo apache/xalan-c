@@ -67,12 +67,10 @@
   <separator/>
   
   <document id="index"
-            label="Xalan-C++ 1.6"
+            label="Xalan-C++ 1.7"
             source="xalan/index.xml"/>
             
  <separator/>            
-  
-  <external href="getstarted.html#download"  label="Downloads"/>
   
   <document id="overview" 
             label="Overview" 
@@ -120,8 +118,11 @@
  <document id="readme" 
             label="Release Notes" 
             source="xalan/readme.xml"/> 
+  <external href="getstarted.html#download"  label="Downloads"/>
+  
 
 <separator/>
+<external href="http://cvs.apache.org/viewcvs.cgi/xml-xalan/c"     label="CVS Repository"/>
 
 <external href="readme.html#bugs" label="Bugs"/>
 

@@ -106,7 +106,7 @@ implementation.</p>
 Xalan, using the internal DOM implementation is the best approach.</p>
 
 	  <p>In cases where you want to modify the DOM document on the fly,
-you should use the Xerces DOM as the base document.  You can wrap the 
+wyou should use the Xerces DOM as the base document.  You can wrap the 
 Xerces DOM in a wrapper (see  <link anchor="xercesdomwrapperparsedsource">
 passing in a Xerces DOM</link>) to then use as an input to a Xalan
 transformation.  Alternatively you can output the result of
@@ -145,31 +145,7 @@ Xalan wrappers.</p></a>
 <faq title="Building on UNIX">
 <q>What do I need to rebuild &xslt4c; on UNIX?</q>
 
-<a><p>To build &xslt4c; on supported UNIX platforms, you need &xml4c;, the GNU make utility, and a supported C++ compilers (see the table below).</p>
-<p>For more details see: http://xml.apache.org/xalan-c/readme.html#unix</p>
-     <table>
-       <tr>
-         <th>Platform - Operating System</th>
-         <th>Compilers</th>
-       </tr>
-       <tr>
-         <td>AIX 5.1</td>
-         <td>IBM C and C++ for AIX 6.00</td>
-      </tr>
-       <tr>
-         <td>Solaris 2.8</td>
-         <td>Sun Workshop 6 update 2</td>
-      </tr>
-       <tr>
-         <td>HP/UX 11.0</td>
-         <td>aCC A.03.37</td>
-      </tr>
-       <tr>
-         <td>RedHat Linux 7.2</td>
-         <td>Intel C++ Compiler, version 6.0.1</td>
-      </tr>
-    </table>
- <p>For more details see: <link idref="readme" anchor="unix">Steps for doing a UNIX build</link>.</p>
+<a><p>To build &xslt4c; on supported UNIX platforms, you need &xml4c;, the GNU make utility, and a supported C++ compiler.  For more details see: <link idref="readme" anchor="unix">Steps for doing a UNIX build</link>.</p>
 </a></faq>
 
 <faq title="Make errors on UNIX platforms">
@@ -183,7 +159,7 @@ Xalan wrappers.</p></a>
 
 <a><p>The International Components for Unicode(ICU) is a C and C++ library that provides robust and full-featured Unicode support on a wide variety of platforms. &xslt4c; uses the ICU to extend support for encoding, number formatting, and sorting.</p> 
 <p>The ICU is available for download from <jump href="http://oss.software.ibm.com/icu/index.html">http://oss.software.ibm.com/icu/index.html</jump>.</p>
-<p>This release of Xalan was tested with ICU 2.4.</p>
+<p>This release of Xalan was tested with ICU 2.6.1.</p>
 <p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p><!--icuNote--><anchor name="gnutar"/><p/></a>
 </faq>
 

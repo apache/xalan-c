@@ -55,6 +55,19 @@
  * <http://www.apache.org/>.
  -->
 
+   <s3 title="Changes for &xslt4c; version 1.6">
+     <p>Major updates since version 1.5 include:</p>
+     <ul>
+	<li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
+	<li>Directory "sane include" reorganization.  A new sub-directory called &apos;xalanc&apos; has been added to the src directory (for source distribution packages) and include directory (for binary distribution packages).  New source files which include Xalan headers will need to be modified to include the 'xalanc' prefix in the header path.  
+            For example: <br/><br/>
+            <code>#include &lt;XPath/XObject.hpp&gt;</code><br/><br/>
+            will need to be changed to <br/><br/>
+            <code>#include &lt;xalanc/XPath/XObject.hpp&gt;</code><br/><br/>
+            For Windows users, all project files have been modified to reflect this change.  For UNIX users, please see <link anchor="unix">Steps for doing a UNIX build</link> for migration considerations.</li>
+     </ul>  
+   </s3>  
+
    <s3 title="Changes for &xslt4c; version 1.5">
      <p>Major updates since version 1.4 include:</p>
      <ul>

@@ -2,10 +2,10 @@
 
   <property name="name" value="xalan"/>
   <property name="Name" value="Xalan-C++"/>
-  <property name="year" value="2003"/>
+  <property name="year" value="2004"/>
   
   <property name="version.VERSION" value="1"/>
-  <property name="version.RELEASE" value="6"/>
+  <property name="version.RELEASE" value="7"/>
   <property name="version.MINOR"   value="0"/>
 
   <property name="xdocs.dir" value="./xdocs"/>
@@ -42,7 +42,7 @@
     
   </target>
 
-  <target name="docs" depends="prepare">
+  <target name="docs" depends="prepare, apidocs">
     <java fork="yes" classname="${doc.generator}" classpath="${java.class.path}">
       <arg line="targetDirectory=${build.docs} ${xdocs.book} ${xdocs.style}"/>    
     </java>  
@@ -52,7 +52,7 @@
     <copy todir="${build.apidocs}">
       <fileset dir="${xdocs.apidocs}"/>
     </copy>
-    <exec executable="doxygen.exe" dir="${xdocs.dir}">
+    <exec executable="doxygen" dir="${xdocs.dir}">
       <arg value="DoxyfileXalan"/>
     </exec>  
   </target>
@@ -130,7 +130,7 @@
     <gzip src="${src.package.name}.tar" zipfile="${src.package.name}.tar.gz"/>
     <delete file="${src.package.name}.tar"/>
     
-    <!-- this rule is not picking up the CVS directories -- anybody know how to fix? -->
+    <!-- this rule is not picking up the CVS directories dd anybody know how to fix? -->
     <zip zipfile="${src.package.name}.zip" basedir="../.." includes="xml-xalan/**" excludes="xml-xalan/c/build/** xml-xalan/c/xml-site/**" defaultexcludes="no"/>
   </target>
   

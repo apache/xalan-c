@@ -63,19 +63,15 @@
 <ul>
 <li><link anchor="use">Using a command-line utility</link></li>
 <li><link anchor="xalanexe">Using the Xalan executable</link></li>
-<li><link anchor="testxslt">Using TestXSLT</link></li>
-<li><link anchor="icu">Enabling ICU support for the Xalan executable and/or testXSLT</link></li>
 </ul><anchor name="use"/>
 <s2 title="Using a command-line utility">
 <p>To perform a transformation, you can call &xslt4c; from the command line (or script), 
       or from within an application (see <link idref="usagepatterns">Usage Patterns</link>).</p>
-<p>To perform a transformation from the command line or a script, you can use Xalan or testXSLT. The testXSLT executable has been around since the inception of &xslt4c; and supports a variety of options. The Xalan executable is newer, simpler to use, and supports fewer options.</p>
-<p>To perform a transformation from the command line or a script with either executable,
-    do the following:</p>
+<p>To perform a transformation from the command line or a script, do the following:</p>
  		<ol>
     <li><link idref="getstarted" anchor="download">Download &xslt4c;</link>.<br/><br/></li> 
     <li><link idref="getstarted" anchor="path">Set the path/library path</link> to include the Xalan executable and the Xalan and Xerces libraries.<br/><br/></li>
-    <li>Call the executable with the appropriate flags and arguments (described below).</li>
+    <li>Call the Xalan executable with the appropriate flags and arguments (described below).</li>
   </ol>  
 </s2><anchor name="xalanexe"/>
 <s2 title="Using the Xalan executable">
@@ -97,85 +93,5 @@ where <ref>xmlSource</ref> is the XML source document, <ref>xslStylesheet</ref> 
  </table>
  <p>To display a list of the options call the Xalan executable as follows:</p>
 <p><code>Xalan -?</code></p>
-</s2><anchor name="testxslt"/>
-<s2 title="Using TestXSLT">
-    <p>Call the testXSLT executable with the flags and arguments described below. The following command line, for example, includes the -IN, -XSL, and -OUT flags with their accompanying arguments -- the XML source document, the XSL
-    stylesheet, and the output file:<br/><br/>
-    <code>testXSLT -IN foo.xml -XSL foo.xsl -OUT foo.out</code></p>
-    <p>The testXSLT executable can take the following flags and arguments (the flags are case insensitive):</p> 
-      <source>-IN inputXMLURL
--XSL XSLTransformationURL
--OUT outputFileName
--H (Display list of command-line options)
--? (Display list of command-line options)
--V (Version info)
--QC (Quiet Pattern Conflicts Warnings)
--Q  (Quiet Mode)
--INDENT (Number of spaces to indent each level in output tree --default is 0)
--VALIDATE (Validate the XSL and XML input -- default is not to validate)
--TT (Trace the templates as they are being called)
--TG (Trace each result tree generation event)
--TS (Trace each selection event)
--TTC (Trace the template children as they are being processed)
--XML (Use XML formatter and add XML header)
-The -XML flag must be set:
-&nbsp;&nbsp;-NH (Don't write XML header)
--HTML (Use HTML formatter)
-The -HTML flag must be set:
-&nbsp;&nbsp;-NOINDENT (turns off HTML indenting)
-The -XML or -HTML flag must be set:
-&nbsp;&nbsp;-STRIPCDATA (Strip CDATA sections of their brackets, but do not escape)
-&nbsp;&nbsp;-ESCAPECDATA (Strip CDATA sections of their brackets, and escape)
--TEXT (Use simple Text formatter)
--DOM (Test for well-formed output --format to DOM then to XML for output)
--XST (Format to Xalan source tree, then to XML for output)
--XD (Use Xerces DOM instead of Xalan source tree)
--DE Disable built-in extension functions)
--EN (Specify the namespace URI for Xalan extension functions; the default
-     is 'http://xml.apache.org/xslt')
--PARAM name expression (Set a stylesheet parameter)</source>
-      <p>Use -IN to specify the XML source document.</p> 
-      <p>Use -XSL to specify the XSL stylesheet file.</p>
-      <p>Use -DE not to load the standard set of <link idref="extensionslib">extension functions</link>.</p>
-      <p>Use -TEXT if you want the output to include only text nodes without any escaping.</p>
-      <p>Use -HTML to write 4.0 transitional HTML (some elements, such as &lt;br&gt;, are
-      not well formed XML).</p>
-      <p>To set stylesheet parameters from the command line, use <br/>
-      <code>testXSLT -PARAM <ref>name expression</ref></code><br/>
-      To set the parameter to a string value, enclose the string in single quotes (') to
-      make it an expression.</p>
-    </s2><anchor name="icu"/>
-    <s2 title="Enabling ICU support for the Xalan executable and/or testXSLT">
-     <p>You can set up the <resource-ref idref="icu"/> to enhance the support that &xslt4c; provides for encoding, number
-     formatting, and sorting. For more information, see <link idref="usagepatterns" anchor="icu">Using the ICU</link>.</p>
-     <p>If you have built and integrated the ICU with &xml4c;, Xalan and testXSLT (like any &xslt4c; application) automatically uses ICU
-     support for output encoding. See <resource-ref idref="xerces-build-icu"/>.</p>     
-     <p>The Xalan executable depends on the use of an ICU-enabled Xalan library for number formatting and sorting (see below).   The testXSLT executable conditionally includes ICU support for number formatting and sorting. For testXSLT, look in process.cpp for the
-     <code>#if defined(XALAN_USE_ICU)</code> blocks. These blocks #include the ICUBridge headers, and
-     substitutes ICU support for xsl:number, format-number(), and xsl:sort. To activate this support:</p>
-     <ol>
-       <li>Download and build the ICU (see <link idref="usagepatterns" anchor="icu">Using the ICU</link>).<br/><br/></li>
-       <li>Rebuild Xalan and or testXSLT with the ICU enabled (see below).</li>
-     </ol>
-     <s3 title="Rebuilding Xalan and/or TestXSLT in Windows">
-     <ol>
-       <li>For Windows, the ICUBridge is part of the Xalan library.    Build an ICU-enabled Xalan library using the AllInOneWithICU project.<br/><br/></li>
-       <li>For TestXSLT, uncomment "#define XALAN_USE_ICU" in process.cpp.<br/><br/></li>
-       <li>Build Xalan.exe and/or TestXSLT.exe.</li>     
-     </ol>     
-     </s3>
-     <s3 title="Rebuilding Xalan and/or testXSLT in UNIX">
-     <p>In the Linux, AIX, HP-UX 11, and Solaris builds, the ICUBridge is in the core Xalan library (&xslt4c-linuxlib; in Linux; &xslt4c-aixlib; in
-     AIX; &xslt4c-hplib; in HP-UX 11; &xslt4c-solarislib; in Solaris ), so you must rebuild this library along with Xalan and/or testXSLT.</p>
-     <p>Before you do the build, define the XALAN_USE_ICU environment variable.  For information about defining this
-     environment variable and doing a build, see <link idref="readme" anchor="unix">Steps for doing a
-     UNIX build</link>.</p>
-     <note>The make file uses the XALAN_USE_ICU environment variable to do the equivalent of a #define and to add
-     ICUBridge to the list of dependencies for testXSLT. If you uncomment the <code>#define XALAN_USE_ICU</code>
-     statement in process.cpp (which is the right thing to do in Windows), you will get an error in AIX ("The
-     macro 'XALAN_USE_ICU' has already been defined"), an error in HP-UX 11 ("Redefinition of macro 'XALAN_USE_ICU' 
-     differs from previous definition"), or a warning in Linux or Solaris about duplicate settings when you
-     run the make, and testXSLT does not link with ICUBridge.</note>
-     </s3>
-   </s2>
+</s2>
 </s1>

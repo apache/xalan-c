@@ -4,7 +4,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -160,7 +160,7 @@ XALAN_USING_XALAN(XalanTransformer)
 		Whilst you can use the standard C++ namespace syntax directly, 
 		the &xml4c; and &xslt4c; namespaces are linked to the version
 		number.  For example, the Xalan namespace is currently
-		<em>xalanc_1_5</em>.  The macros will automatically take care
+		<em>xalanc_1_7</em>.  The macros will automatically take care
 		of this when code is re-compiled against a new version of the
 		libraries.  Using the namespaces directly will require each
 		namespace related statement be updated by hand.
@@ -587,6 +587,7 @@ void parseWithXerces(XalanTransformer &amp;xalan,
 		<br/>If you install ICU support for xml:sort, &xslt4c; implements Unicode-style collation.</li>
 	</ul>
 
+    <p>If you choose to build Xalan with ICU, you will need to rebuild Xerces with ICU as well.</p>
     <p>To get the ICU:</p> 
     <ol>
       <li>Download and unzip the <resource-ref idref="icu-download"/> from the IBM
