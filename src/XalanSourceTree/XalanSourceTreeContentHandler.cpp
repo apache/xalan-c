@@ -315,13 +315,6 @@ XalanSourceTreeContentHandler::startElement(
 			const XMLCh* const	qname,
 			const Attributes& 	attrs)
 {
-	// $$$ ToDo: This is a workaround for a bug in Xerces 1.5.1.
-#if 1
-	if (m_currentElement == 0 && m_inDTD == true)
-	{
-		m_inDTD = false;
-	}
-#endif
 	assert(m_inDTD == false);
 
 	processAccumulatedText();
