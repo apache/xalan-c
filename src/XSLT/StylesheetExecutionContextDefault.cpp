@@ -1376,7 +1376,7 @@ StylesheetExecutionContextDefault::error(
 			const XalanNode* 		sourceNode,
 			const XalanNode*		styleNode) const
 {
-	m_xpathExecutionContextDefault.error(msg, sourceNode, styleNode);
+	m_xsltProcessor.error(msg, sourceNode, styleNode);
 }
 
 
@@ -1387,7 +1387,7 @@ StylesheetExecutionContextDefault::warn(
 			const XalanNode* 		sourceNode,
 			const XalanNode*		styleNode) const
 {
-	m_xpathExecutionContextDefault.warn(msg, sourceNode, styleNode);
+	m_xsltProcessor.warn(msg, sourceNode, styleNode);
 }
 
 
@@ -1398,5 +1398,5 @@ StylesheetExecutionContextDefault::message(
 			const XalanNode* 		sourceNode,
 			const XalanNode*		styleNode) const
 {
-	m_xpathExecutionContextDefault.message(msg, sourceNode, styleNode);
+	m_xsltProcessor.message(msg, sourceNode, styleNode);
 }
