@@ -169,22 +169,6 @@ using std::vector;
 
 
 
-#if defined(OS390)
-#undef stricmp                                                   
-#include <strings.h>                                             
-                                                                  
-int
-stricmp(
-			const char*		str1,
-			const char*		str2)     
-{
-	return strcasecmp(str1, str2);
-}
-
-#endif
-
-
-
 /**
  * Print argument options.
  */ 
@@ -363,6 +347,31 @@ warnPreviousOutputMethod(int	outputMethod)
 
 
 
+#if defined(OS390)
+#include <strings.h>                                             
+                                                                  
+int
+compareNoCase(
+			const char*		str1,
+			const char*		str2)     
+{
+	return strcasecmp(str1, str2);
+}
+
+#else
+
+int
+compareNoCase(
+			const char*		str1,
+			const char*		str2)     
+{
+	return stricmp(str1, str2);
+}
+
+#endif
+
+
+
 bool
 getArgs(
 			int				argc,
@@ -373,7 +382,7 @@ getArgs(
 
 	for (int i = 1; i < argc && fSuccess == true; ++i)
 	{
-		if (!stricmp("-IN", argv[i]))
+		if (!compareNoCase("-IN", argv[i]))
 		{
 			++i;
 
@@ -386,7 +395,7 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if (!stricmp("-XSL", argv[i]))
+		else if (!compareNoCase("-XSL", argv[i]))
 		{
 			++i;
 
@@ -399,7 +408,7 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if (!stricmp("-OUT", argv[i]))
+		else if (!compareNoCase("-OUT", argv[i]))
 		{
 			++i;
 
@@ -412,7 +421,7 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if (!stricmp("-ESCAPE", argv[i]))
+		else if (!compareNoCase("-ESCAPE", argv[i]))
 		{
 			++i;
 
@@ -425,11 +434,11 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if (!stricmp("-NOINDENT", argv[i]))
+		else if (!compareNoCase("-NOINDENT", argv[i]))
 		{
 			p.noIndent = true;
 		} 
-		else if (!stricmp("-INDENT", argv[i]))
+		else if (!compareNoCase("-INDENT", argv[i]))
 		{
 			++i;
 
@@ -442,15 +451,15 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if(!stricmp("-VALIDATE", argv[i]))
+		else if(!compareNoCase("-VALIDATE", argv[i]))
 		{
 			p.doValidation = true;
 		}
-		else if(!stricmp("-EER", argv[i]))
+		else if(!compareNoCase("-EER", argv[i]))
 		{
 			p.shouldExpandEntityRefs = true;
 		}
-		else if (!stricmp("-PARAM", argv[i])) 
+		else if (!compareNoCase("-PARAM", argv[i])) 
 		{
 			++i;
 
@@ -482,19 +491,19 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if(!stricmp("-V", argv[i]))
+		else if(!compareNoCase("-V", argv[i]))
 		{
 			p.versionOnly = true;
 		}
-		else if(!stricmp("-QC", argv[i]))
+		else if(!compareNoCase("-QC", argv[i]))
 		{
 			p.setQuietConflictWarnings = true;
 		}
-		else if(!stricmp("-Q", argv[i]))
+		else if(!compareNoCase("-Q", argv[i]))
 		{
 			p.setQuietMode = true;
 		}
-		else if(!stricmp("-XML", argv[i]))
+		else if(!compareNoCase("-XML", argv[i]))
 		{
 			if (p.outputType != -1)
 			{
@@ -503,7 +512,7 @@ getArgs(
 
 			p.outputType = FormatterListener::OUTPUT_METHOD_XML;
 		}
-		else if(!stricmp("-TEXT", argv[i]))
+		else if(!compareNoCase("-TEXT", argv[i]))
 		{
 			if (p.outputType != -1)
 			{
@@ -512,7 +521,7 @@ getArgs(
 
 			p.outputType = FormatterListener::OUTPUT_METHOD_TEXT;
 		}
-		else if(!stricmp("-HTML", argv[i]))
+		else if(!compareNoCase("-HTML", argv[i]))
 		{
 			if (p.outputType != -1)
 			{
@@ -521,7 +530,7 @@ getArgs(
 
 			p.outputType = FormatterListener::OUTPUT_METHOD_HTML;
 		}
-		else if(!stricmp("-DOM", argv[i]))
+		else if(!compareNoCase("-DOM", argv[i]))
 		{
 			if (p.outputType != -1)
 			{
@@ -530,7 +539,7 @@ getArgs(
 
 			p.outputType = FormatterListener::OUTPUT_METHOD_DOM;
 		}
-		else if(!stricmp("-XST", argv[i]))
+		else if(!compareNoCase("-XST", argv[i]))
 		{
 			if (p.outputType != -1)
 			{
@@ -541,43 +550,43 @@ getArgs(
 
 			p.formatToSourceTree = true;
 		}
-		else if(!stricmp("-DRTF", argv[i]))
+		else if(!compareNoCase("-DRTF", argv[i]))
 		{
 			p.useDOMForRTFs = true;
 		}
-		else if(!stricmp("-NULL", argv[i]))
+		else if(!compareNoCase("-NULL", argv[i]))
 		{
 			p.formatToNull = true;
 		}
-		else if(!stricmp("-STRIPCDATA", argv[i]))
+		else if(!compareNoCase("-STRIPCDATA", argv[i]))
 		{
 			p.stripCData = true;
 		}
-		else if(!stricmp("-ESCAPECDATA", argv[i]))
+		else if(!compareNoCase("-ESCAPECDATA", argv[i]))
 		{
 			p.escapeCData = true;
 		}
-		else if (!stricmp("-NH", argv[i]))
+		else if (!compareNoCase("-NH", argv[i]))
 		{
 			p.shouldWriteXMLHeader = false;
 		}
-		else if(!stricmp("-TT", argv[i]))
+		else if(!compareNoCase("-TT", argv[i]))
 		{
 			p.traceTemplates = true;
 		}
-		else if(!stricmp("-TG", argv[i]))
+		else if(!compareNoCase("-TG", argv[i]))
 		{
 			p.traceGenerationEvent = true;
 		}
-		else if(!stricmp("-TS", argv[i]))
+		else if(!compareNoCase("-TS", argv[i]))
 		{
 			p.traceSelectionEvent = true;
 		}
-		else if(!stricmp("-TTC", argv[i]))
+		else if(!compareNoCase("-TTC", argv[i]))
 		{
 			p.traceTemplateChildren = true;
 		}
-		else if (!stricmp("-XD", argv[i]))
+		else if (!compareNoCase("-XD", argv[i]))
 		{
 			p.useDOM = true;
 		}

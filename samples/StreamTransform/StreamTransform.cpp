@@ -115,13 +115,26 @@ main(
 							theXObjectFactory);
 
 				// A simple input document...
-				const char* const  theInputDocument = "<?xml version='1.0'?><doc>Hello world!</doc>";
+#if defined(XALAN_NON_ASCII_PLATFORM)
+				const char* const  theInputDocument = "<?xml version='1.0' encoding='EBCDIC-CP-US' ?><doc>Hello world!</doc>";
+#else
+				const char* const  theInputDocument = "<?xml version='1.0' encoding='ISO-8859-1' ?><doc>Hello world!</doc>";
+#endif
 
-				// A "hello world" stylesheet.  Note that the encoding for the output is US-ASCII,
+				// A "hello world" stylesheet.  Note that the encoding for the output is platform-dependent,
 				// since we're writing to a string.  It could be any encoding, but "binary" encodings,
 				// or encodings that could produce multi-byte characters would require transcoding on
 				// some platforms.
 				const char* const  theStylesheet =
+#if defined(XALAN_NON_ASCII_PLATFORM)
+"<?xml version='1.0' encoding='EBCDIC-CP-US'?>\
+<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='1.0'>\
+<xsl:output encoding='EBCDIC-CP-US'/>\
+<xsl:template match='doc'>\
+<out><xsl:value-of select='.'/></out>\
+</xsl:template>\
+</xsl:stylesheet>";
+#else
 "<?xml version='1.0'?>\
 <xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='1.0'>\
 <xsl:output encoding='US-ASCII'/>\
@@ -129,6 +142,7 @@ main(
 <out><xsl:value-of select='.'/></out>\
 </xsl:template>\
 </xsl:stylesheet>";
+#endif
 
 				// Our input streams...
 				istrstream	theInputDocumentStream(theInputDocument, strlen(theInputDocument));
