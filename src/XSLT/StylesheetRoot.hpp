@@ -198,7 +198,7 @@ public:
 	 *
 	 * @return true to output declarations
 	 */
-	bool getOutputXMLDecl() { return m_xmlDecl; }
+	bool getOmitOutputXMLDecl() { return m_omitxmlDecl; }
 
 	/**
 	 * Get the standalone string that was specified in the stylesheet, either
@@ -307,7 +307,7 @@ public:
 	/**
 	 * Tells whether or not to output an XML declaration.
 	 */
-	bool m_xmlDecl; // = false;
+	bool m_omitxmlDecl; // = false;
 
 	/**
 	 * Tells what the xmldecl should specify for the standalone value.

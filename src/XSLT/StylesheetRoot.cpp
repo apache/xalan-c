@@ -124,7 +124,7 @@ StylesheetRoot::StylesheetRoot(
 	m_mediatype(),
 	m_doctypeSystem(),
 	m_doctypePublic(),
-	m_xmlDecl(true),
+	m_omitxmlDecl(false),
 	m_standalone(),
 	m_cdataSectionElems(),
 	m_defaultTextRule(0),
@@ -297,7 +297,7 @@ void StylesheetRoot::process(
 			case Formatter::OUTPUT_METH_HTML:
 				flistener = new FormatterToHTML(
 					*pw, m_version, doIndent, indentAmount, m_encoding, m_mediatype,
-					m_doctypeSystem, m_doctypePublic, m_xmlDecl, m_standalone,
+					m_doctypeSystem, m_doctypePublic, ! m_omitxmlDecl, m_standalone,
 					&m_cdataSectionElems);
 				newListener = true;
 				break;
@@ -309,7 +309,7 @@ void StylesheetRoot::process(
 			default:
 				flistener = new FormatterToXML(
 					*pw, m_version, doIndent, indentAmount, m_encoding, m_mediatype,
-					m_doctypeSystem, m_doctypePublic, m_xmlDecl, m_standalone,
+					m_doctypeSystem, m_doctypePublic, ! m_omitxmlDecl, m_standalone,
 					&m_cdataSectionElems);
 				newListener = true;
 				break;
@@ -528,9 +528,9 @@ StylesheetRoot::processOutputSpec(
 		{
 			m_doctypePublic = atts.getValue(i);
 		}
-		else if(equals(aname,Constants::ATTRNAME_OUTPUT_XMLDECL))
+		else if(equals(aname,Constants::ATTRNAME_OUTPUT_OMITXMLDECL))
 		{
-			m_xmlDecl = getYesOrNo(aname, atts.getValue(i), constructionContext);
+			m_omitxmlDecl = getYesOrNo(aname, atts.getValue(i), constructionContext);
 		}
 		else if(equals(aname,Constants::ATTRNAME_OUTPUT_STANDALONE))
 		{
