@@ -188,9 +188,9 @@ public:
 	 * Evaluate the supplied XPath expression, within the given context.  The
 	 * result is returned as a generalized object.  The object will be
 	 * destroyed when the returned when the user's copy of the returned
-	 * XObjectPtr goes out of scope, or when the XalanXPathEvaluator instance
+	 * XObjectPtr goes out of scope, or when the XPathEvaluator instance
 	 * is reset or goes out of scope.  The user's XObjectPtr copy _must_ no
-	 * longer be in scope when the XalanXPathEvaluator instance is reset or
+	 * longer be in scope when the XPathEvaluator instance is reset or
 	 * out of scope.
 	 *
 	 * @param domSupport An instance of the corresponding DOMSupport-derived for the DOM implementation being used.
@@ -212,7 +212,7 @@ public:
 	 * destroyed when the returned when the user's copy of the returned
 	 * XObjectPtr goes out of scope, or when the XalanXPathEvaluator instance
 	 * is reset or goes out of scope.  The user's XObjectPtr copy _must_ no
-	 * longer be in scope when the XalanXPathEvaluator instance is reset or
+	 * longer be in scope when the XPathEvaluator instance is reset or
 	 * out of scope.
 	 *
 	 * @param domSupport An instance of the corresponding DOMSupport-derived for the DOM implementation being used.
