@@ -634,6 +634,14 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStreamPrintWriter.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanParsedURI.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanParsedURI.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanReferenceCountedObject.cpp
 # End Source File
 # Begin Source File
