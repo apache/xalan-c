@@ -88,7 +88,7 @@
 
 // GLOBAL VARIABLES...
 FileUtility				futil;
-XalanDOMString			baseDir, outputRoot, goldRoot, goldFile;  // These are set by the getParams routine.
+XalanDOMString			baseDir, outputRoot, goldRoot, theGoldFile;  // These are set by the getParams routine.
 const XalanDOMString	testDir("params");
 XalanDOMString			fileName;
 
@@ -253,83 +253,65 @@ main(
 				{
 					fileName = files[i];
 					sprintf(testCase, "%s%d","TestCase",i+1);
+					futil.data.testOrFile = testCase;
 
-						// Output file name to result log and console.
-						logFile.logTestCaseInit(fileName);
-						//cout << fileName << endl;
 
-						// Set up the input/output files.
-						const XalanDOMString  theXSLFile= baseDir + testDir + pathSep + fileName;
-						const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
-						const XalanDOMString  theOutput =  outputRoot + testDir + pathSep + fileName; 
-						const XalanDOMString  theOutputFile = futil.GenerateFileName(theOutput, "out");
-						goldFile = goldRoot +testDir + pathSep + fileName;
-						goldFile = futil.GenerateFileName(goldFile, "out");
+					// Set up the input/output files.
+					const XalanDOMString  theXSLFile= baseDir + testDir + pathSep + fileName;
+					const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
+					const XalanDOMString  theOutput =  outputRoot + testDir + pathSep + fileName; 
+					const XalanDOMString  theOutputFile = futil.GenerateFileName(theOutput, "out");
+					theGoldFile = goldRoot +testDir + pathSep + fileName;
+					theGoldFile = futil.GenerateFileName(theGoldFile, "out");
 
-						XSLTResultTarget		theResultTarget(theOutputFile);
-						const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-						const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+					XSLTResultTarget		theResultTarget(theOutputFile);
+					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
 						
-						// Set the desired parameters
-						switch (getTestNumber(fileName))
-						{	
-							case 2:
-								transformEngine.setStylesheetParam("in1", "'A '");
+					// Set the desired parameters
+					switch (getTestNumber(fileName))
+					{	
+						case 2:
+							transformEngine.setStylesheetParam("in1", "'A '");
 
-								transformEngine.setStylesheetParam("in2", "'B '");
+							transformEngine.setStylesheetParam("in2", "'B '");
 
-								transformEngine.setStylesheetParam(
-									XalanDOMString("in3"),
-									XalanDOMString("'C '"));
-								transformEngine.setStylesheetParam(
-									XalanDOMString("in4"),
-									XalanDOMString("'D '"));
-								transformEngine.setStylesheetParam(
-									XalanDOMString("in5"),
-									XalanDOMString("'E '"));
-								break;
+							transformEngine.setStylesheetParam(
+								XalanDOMString("in3"),
+								XalanDOMString("'C '"));
+							transformEngine.setStylesheetParam(
+								XalanDOMString("in4"),
+								XalanDOMString("'D '"));
+							transformEngine.setStylesheetParam(
+								XalanDOMString("in5"),
+								XalanDOMString("'E '"));
+							break;
 
-							case 3:
-								transformEngine.setStylesheetParam(
-									XalanDOMString("'xyz:in1'"),
-									XalanDOMString("'DATA'"));
-								break;
+						case 3:
+							transformEngine.setStylesheetParam(
+								XalanDOMString("'xyz:in1'"),
+								XalanDOMString("'DATA'"));
+							break;
 
-							default:
-								transformEngine.setStylesheetParam(
-									XalanDOMString("input"),
-									XalanDOMString("'testing 1 2 3'"));
-								break;
-						}
+						default:
+							transformEngine.setStylesheetParam(
+								XalanDOMString("input"),
+								XalanDOMString("'testing 1 2 3'"));
+							break;
+					}
 
-						// Do a total end to end transform with no pre parsing of either xsl or xml files.
-						int	theResult =
-							transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+					// Do a total end to end transform with no pre parsing of either xsl or xml files.
+					transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
 
-						if (!theResult)
-						{
-							//const XSLTInputSource resultInputSource(c_wstr(theOutputFile));
-							//const XSLTInputSource goldInputSource(c_wstr(goldFile));
-							if(futil.compareSerializedResults(theOutputFile, goldFile)) 
-							{
-								cout << "Passed: " << fileName << endl;
-								logFile.logCheckPass(fileName);
-							}
-							else
-							{
-								logFile.logCheckFail(fileName);
-							}
-						}
-						else
-						{
-							cout  << "Failed: " << testCase << endl;
-						}		
+					// Check and report the results.
+					futil.checkResults(theOutputFile, theGoldFile, logFile);
 				}
 				
 			}
 
 			XalanTransformer::terminate();
 
+			futil.reportPassFail(logFile);
 			logFile.logTestFileClose("Param Testing: ", "Done");
 			logFile.close();
 

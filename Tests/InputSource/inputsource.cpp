@@ -196,66 +196,41 @@ getParams(int argc,
 	return fSuccess;
 }
 
-// This routine will output the results.
-//
-void reportResult(const char* name, int &results, XMLFileReporter &logFile, XalanTransformer &xalan)
-{
-	if(results != 0)
-	{
-		logFile.logTestCaseClose("Done","Fail");
-		cerr << "XalanError: \n" << xalan.getLastError();
-	}
-	else
-	{
-		cerr << "Pass " << name << endl;
-	}
-}
 
 // TestCase1 will use the following method of XSLTInputSource
 //		- XSLTInputSource(const XMLCh* systemId)
 //		- XSLTInputSource(const XMLCh* systemId,
 //						  const XMLCh* publicId)
-void testCase1(XalanTransformer &xalan, const XalanDOMString &xml, 
-			   const XalanDOMString &xsl, const XalanDOMString outBase, 
-			   XalanDOMString &goldInputFile, XalanDOMString &fileName)
+void testCase1(XalanTransformer &xalan, XMLFileReporter& logFile, 
+			   const XalanDOMString &xml, const XalanDOMString &xsl, 
+			   const XalanDOMString outBase, XalanDOMString &theGoldFile)
 {
 	const XalanDOMString  publicID("public-smublic");
 
-	const XalanDOMString	theOutputFile = futil.GenerateFileName(outBase, "out1");
+	const XalanDOMString	theOutputFile = outBase + XalanDOMString("\\TestCase1.out");
 	const XSLTResultTarget	theResultTarget(theOutputFile);
-	futil.data.testOrFile = xsl;
+
+	futil.data.testOrFile = "TestCase1";
 
 	// This code excersized the stated methods of XSLTInputSource
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
 	const XSLTInputSource	xslInputSource(c_wstr(xsl), c_wstr(publicID));
 
 	// Do the transform and report the results.
-	int	theResult = xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
-	if (!theResult)
-	{ 
-		if(futil.compareSerializedResults(theOutputFile, goldInputFile))
-		{
-			cout << "Passed: " << "TestCase1" << endl;
-//			logFile.logCheckPass(currentFile);
-		}
-		else
-		{
-//			logFile.logCheckFail(currentFile);
-		}
-
-	}
-
+	xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
+	futil.checkResults(theOutputFile, theGoldFile, logFile);
+		
 }
 
 // TestCase2 will use the following methods of XSLTInputSource
 //		- XSLTInputSource(const char* systemId)
 //		- XSLTInputSource(const char* systemId,
 //						  const char* publicId)
-void testCase2(XalanTransformer &xalan, const XalanDOMString outBase, 
-			   XalanDOMString &goldInputFile, XalanDOMString &fileName)
+void testCase2(XalanTransformer &xalan, XMLFileReporter& logFile, 
+			   const XalanDOMString outBase, XalanDOMString &theGoldFile)
 
 {
-	const XalanDOMString	theOutputFile = futil.GenerateFileName(outBase, "one2");
+	const XalanDOMString	theOutputFile = outBase + XalanDOMString("\\TestCase2.out");
 	const XSLTResultTarget	theResultTarget2(theOutputFile);
 
 	futil.data.testOrFile = "TestCase2";
@@ -266,20 +241,8 @@ void testCase2(XalanTransformer &xalan, const XalanDOMString outBase,
 
 
 	// Do the transform and report the results.
-	int theResult = xalan.transform(xmlStringSource, xslStringSource, theResultTarget2);
-	if (!theResult)
-	{ 
-		if(futil.compareSerializedResults(theOutputFile, goldInputFile))
-		{
-			cout << "Passed: " << "TestCase2" << endl;
-//			logFile.logCheckPass(currentFile);
-		}
-		else
-		{
-//			logFile.logCheckFail(currentFile);
-		}
-
-	}
+	xalan.transform(xmlStringSource, xslStringSource, theResultTarget2);
+	futil.checkResults(theOutputFile, theGoldFile, logFile);
 
 }
 
@@ -289,15 +252,21 @@ void testCase2(XalanTransformer &xalan, const XalanDOMString outBase,
 //		- XSLTInputSource::setNode(XalanNode* node)
 //		- XSLTInputSource::getNode()
 //		- NOTE:  We can't use the XalanTransformer Class with this test. So we create the processor directly.
-void testCase3(XalanTransformer &xalan, XMLFileReporter &logFile,
-			   const XalanDOMString &xml, const XalanDOMString &xsl, const XalanDOMString &out)
-{
 
-	const XalanDOMString	theOutputFile = futil.GenerateFileName(out, "out3");
+void testCase3(XalanTransformer &xalan, XMLFileReporter &logFile, 
+			   const XalanDOMString &outBase, const XalanDOMString &theGoldFile)
+
+{
+	XalanSourceTreeDocument::NodeType	type;		// actual values used for testing.
+	XalanDOMString						name, value;	
+
+	const XalanDOMString	theOutputFile = outBase + XalanDOMString("\\TestCase3.out");
 	XSLTResultTarget		theResultTarget3(theOutputFile);
 
+	futil.data.testOrFile = "TestCase3a";
+
 	// Create necessary Infrastructure to perform transform without the XalanTransformer Class.
-	// Can't use it because ....
+	// Can't use it because it doesn't take a DOM.
 	XalanSourceTreeDOMSupport		domSupport;
 	XalanSourceTreeParserLiaison	parserLiaison(domSupport);
 	domSupport.setParserLiaison(&parserLiaison);
@@ -333,75 +302,76 @@ void testCase3(XalanTransformer &xalan, XMLFileReporter &logFile,
 											xObjectFactory);
 
 	// Create the XSL Input Source
-	const XSLTInputSource	xslStringSource("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xsl","public-smublic");
+	const XSLTInputSource	xslStringSource("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xsl");
+
 	XalanDocument* domXSL = parserLiaison.createXalanSourceTreeDocument();
 	domXSL = parserLiaison.parseXMLStream(xslStringSource);
 
-	const XSLTInputSource	xslXalanNode(domXSL);
-	XalanNode*				theNode;
+	// Here is one of the tests. It will be verified when we do the transform.
+	XSLTInputSource	xslXalanNode(domXSL);
+
+	// Set the system ID, so relative URIs are resolved properly...
+	xslXalanNode.setSystemId(xslStringSource.getSystemId());
+
+	XalanNode	*theNode, *firstChild;
+
+	// Here is another test 
 	theNode = xslXalanNode.getNode();
 
+	firstChild = theNode->getFirstChild();
+	value = firstChild->getNodeValue();
 
+	futil.checkAPIResults(value, XalanDOMString(" This is THE Smoke Test "), "XSLTInputSource.getNode()", logFile);
 
 	// Create the XML Input Source
-	const XSLTInputSource	xmlStringSource("\\xslt\\xsl-test\\conf\\capi\\capi01.xml");
+	const XSLTInputSource	xmlStringSource("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xml");
+
 	XalanDocument* domXML = parserLiaison.createXalanSourceTreeDocument();
 	domXML = parserLiaison.parseXMLStream(xmlStringSource);
 
+	// Here is the final test. It too will be verified when we do the transform.
 	XSLTInputSource	xmlXalanNode;
 	xmlXalanNode.setNode(domXML);
-	
-	
 
 	// Do the transform and report the results. 
-	// NOTE: Until a dom compairator is written I'm checking the results manually.
-	//
-	int theResult = 0;
 	theProcessor.process(xmlXalanNode,		//inputSource, 
 			        	xslXalanNode,		//stylesheetSource,
 				    	theResultTarget3,	//outputTarget,
 						constContext,
 						execuContext);
 
+	// Reset testcase name
+	futil.data.testOrFile = "TestCase3b";
+	futil.checkResults(theOutputFile, 
+					  theGoldFile, 
+					  logFile);
 
-	//int theResult = xalan.transform(xmlXalanNode, xslXalanNode, theResultTarget3);
-	reportResult("testCase3", theResult, logFile, xalan);
 
 }
 
 // TestCase4 will use the following API.  Default constructor of XSLTInputSource will take a string.
 //		- XSLTInputSource(const char*)
 //		- XSLTInputSource(const char*)
-void testCase4(XalanTransformer &xalan)
+void testCase4(XalanTransformer &xalan, XMLFileReporter& logFile)
 {
+
+	const XalanDOMString theOutputFile("\\xml-xalan\\test\\tests\\ISOURCE-results\\smoke\\testCase4.out");
+	const XalanDOMString theGoldFile("\\xml-xalan\\test\\tests\\capi-gold\\smoke\\smoke01.out");
+
+	futil.data.testOrFile = "TestCase4";
+
 	// This code excersized the stated methods of XSLTInputSource
-
 	// Do the transform and report the results.
-	int theResult = xalan.transform("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xml", 
-									"\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xsl",
-									"\\xml-xalan\\test\\tests\\ISOURCE-results\\smoke\\testCase4.out");
-	if (!theResult)
-	{
-		const XalanDOMString result("\\xml-xalan\\test\\tests\\ISOURCE-results\\smoke\\testCase4.out");
-		const XalanDOMString gold("\\xml-xalan\\test\\tests\\capi-gold\\smoke\\capi01.out");
-		if(futil.compareSerializedResults(result, gold))
-		{
-			cout << "Passed: " << "TestCase4" << endl;
-//			logFile.logCheckPass(currentFile);
-		}
-		else
-		{
-//			logFile.logCheckFail(currentFile);
-		}
-		
-	}
+	xalan.transform("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xml", 
+					"\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xsl",
+					"\\xml-xalan\\test\\tests\\ISOURCE-results\\smoke\\TestCase4.out");
 
+	futil.checkResults(theOutputFile, theGoldFile, logFile);
 }
 
 int
-main(
-		  int			argc,
-		  const char*	argv [])
+main(int			argc,
+		const char*	argv [])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
@@ -410,9 +380,6 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-//	FileUtility		futil;
-
-	XalanDOMString  category;	// Test all of base dir by default
 	XalanDOMString  baseDir, outputRoot, goldRoot;	 	
 
 
@@ -436,58 +403,47 @@ main(
 			HarnessInit xmlPlatformUtils;
 			XalanTransformer::initialize();
 
-			XalanSourceTreeDOMSupport domSupport;
-			XalanSourceTreeParserLiaison parserLiaison(domSupport);
-			domSupport.setParserLiaison(&parserLiaison);
-
 			{
-				XalanTransformer		transformEngine;
-					
-				// Check that output directory is there.
-				XalanDOMString		  fileName;
+				XalanTransformer	transformEngine;
+				XalanDOMString		fileName;
+				
+				// Set the test directory.
 				const XalanDOMString  xDir("smoke");
+
+				// Create the output directory.
 				const XalanDOMString  theOutputDir = outputRoot + xDir;
 				futil.checkAndCreateDir(theOutputDir);
 
-				// Get the files found in the "simpletests" directory
+				// Get the files found in the "smoke" directory
 				const FileNameVectorType	files = futil.getTestFileNames(baseDir, xDir, true);
 
+				// This only processes a single file, smoke01.xsl
 				for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 				{
 
-					// Output file name to result log and console.
-					//logFile.logTestCaseInit(files[i]);
 					fileName = files[i];
 					futil.data.testOrFile = fileName;
-					//cout << fileName << endl;
 
 					// Set up the input/output files.
 					const XalanDOMString  theXSLFile= baseDir + xDir + pathSep + fileName;
 					const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
-					const XalanDOMString  theOutput =  outputRoot + xDir + pathSep + fileName; 
+					
+					// Set the gold file.
 					XalanDOMString  theGoldFile = goldRoot +xDir + pathSep + fileName;
 					theGoldFile = futil.GenerateFileName(theGoldFile, "out");
-
-
-					// Use a XalanSourceTreeDocument to create the XSLTResultTarget. 
-					XalanSourceTreeDocument* dom = parserLiaison.createXalanSourceTreeDocument();
-					FormatterToSourceTree domOut(dom); 
-					XSLTResultTarget domResultTarget;
-					domResultTarget.setDocumentHandler(&domOut);
-
-					testCase1(transformEngine, theXMLFile, theXSLFile, theOutput, theGoldFile, fileName);
-
-					testCase2(transformEngine, theOutput, theGoldFile, fileName);
-
-					//testCase3(transformEngine, logFile, theXMLFile, theXSLFile, theOutput);
-
-					testCase4(transformEngine);
+					
+					// Execute the test cases. 
+					testCase1(transformEngine, logFile, theXMLFile, theXSLFile, theOutputDir, theGoldFile);
+					testCase2(transformEngine, logFile, theOutputDir, theGoldFile);
+					testCase3(transformEngine, logFile, theOutputDir, theGoldFile);
+					testCase4(transformEngine, logFile);
 				}
 				
 			}
 
 			XalanTransformer::terminate();
 
+			futil.reportPassFail(logFile);
 			logFile.logTestFileClose("ISource Testing: ", "Done");
 			logFile.close();
 
