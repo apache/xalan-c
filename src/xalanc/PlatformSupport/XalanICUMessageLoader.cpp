@@ -18,19 +18,25 @@
 
 
 // Class header file.
-#include "xalanc/Include/XalanVersion.hpp"
+#include "XalanICUMessageLoader.hpp"
 
-#include <xalanc/PlatformSupport/XalanICUMessageLoader.hpp>
-#include <xalanc/PlatformSupport/PlatformSupportInit.hpp>
-#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include "PlatformSupportInit.hpp"
+
+#include "DOMStringHelper.hpp"
 
 #include "unicode/uloc.h"
+
 #include "unicode/udata.h" 
 
-#include <xercesc/util/XMLMsgLoader.hpp> 
+#include <xercesc/util/XMLMsgLoader.hpp>
+
 #include <xercesc/util/XMLString.hpp>
 
-#define XALAN_MESSAGES_NAME XalanMessages_
+#include "xalanc/Include/XalanVersion.hpp"
+
+#define XALAN_MESSAGES_NAME xalanMsg
+
+#define XALAN_MESSAGES_NAME_W_UNDERSCORE INVK_CAT2_RAW_NUMERIC(XALAN_MESSAGES_NAME,_)
 
 #define MAKE_STRING(a) #a
 #define INVK_MAKE_STRING(a) MAKE_STRING(a)
@@ -55,25 +61,25 @@
 #endif // NDEBUG_SYMBOLS
 
 
-#define ICUDLL_ENTRYPOINT_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME,\
-									INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\
+#define ICUDLL_ENTRYPOINT_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME_W_UNDERSCORE,\
+									INVK_CAT3_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR,XALAN_VERSION_REVISION),\
 									ENTRY_POINT_SUFFIX)
 
-#define PACKAGE_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME,\
-									INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\
+#define PACKAGE_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME_W_UNDERSCORE,\
+									INVK_CAT3_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR,XALAN_VERSION_REVISION),\
 									PACKAGE_NAME_SUFFIX)
-
-extern "C" const char U_IMPORT  ICUDLL_ENTRYPOINT_NAME [];
- 
-static const char* const	sPackageName=INVK_MAKE_STRING(PACKAGE_NAME)	;	
 												   
 #else // NON-WIN32 systems
 
-extern "C" const char U_IMPORT  xalanMsg_dat [];
-static const char* const	sPackageName="xalanMsg";
+#define ICUDLL_ENTRYPOINT_NAME INVK_CAT2_RAW_NUMERIC(XALAN_MESSAGES_NAME_W_UNDERSCORE,dat)
+
+#define PACKAGE_NAME XALAN_MESSAGES_NAME
 
 #endif // WIN32
 
+static const char* const	sPackageName=INVK_MAKE_STRING(PACKAGE_NAME);
+
+extern "C" const char U_IMPORT  ICUDLL_ENTRYPOINT_NAME [];
 
 
 XALAN_CPP_NAMESPACE_BEGIN
@@ -101,18 +107,14 @@ static const char* domainName = INVK_MAKE_STRING(XALAN_PRODUCT);
 
 
 
-XalanICUMessageLoader::XalanICUMessageLoader(MemoryManagerType& theManage):
+XalanICUMessageLoader::XalanICUMessageLoader(MemoryManagerType &theManager):
 	m_localeBundle(0),
 	m_domainBundle(0),
-	m_unknownMessage(XALAN_STATIC_UCODE_STRING("The message was not found in the ICU resource bundle."), theManage)
+	m_unknownMessage(XALAN_STATIC_UCODE_STRING("The message was not found in the ICU resource bundle."), theManager)
 {
  	UErrorCode err = U_ZERO_ERROR;
 
-#ifdef WIN32
 	udata_setAppData(sPackageName, &ICUDLL_ENTRYPOINT_NAME, &err);
-#else
-	udata_setAppData(sPackageName, &xalanMsg_dat, &err);
-#endif
 
 	if (! U_SUCCESS(err))
 	{

@@ -996,7 +996,7 @@ xsltMain(const CmdLineParams&	params)
 #if defined(XALAN_USE_ICU)
 	// Create a collation function for the ICU, and have it
 	// cache collators...
-	ICUBridgeCollationCompareFunctor	theICUFunctor(true);
+	ICUBridgeCollationCompareFunctor	theICUFunctor(theManager, true);
 
 	theExecutionContext.installCollationCompareFunctor(&theICUFunctor);
 #endif
