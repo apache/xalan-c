@@ -129,6 +129,11 @@ public:
 	getDOMFactory() const = 0;
 
 	virtual bool
+	elementAvailable(
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const = 0;
+
+	virtual bool
 	functionAvailable(
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	extensionName) const = 0;

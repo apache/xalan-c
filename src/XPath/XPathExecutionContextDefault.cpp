@@ -217,6 +217,16 @@ XPathExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contex
 
 
 bool
+XPathExecutionContextDefault::elementAvailable(
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const
+{
+	return m_xpathEnvSupport.elementAvailable(theNamespace, extensionName);
+}
+
+
+
+bool
 XPathExecutionContextDefault::functionAvailable(
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	extensionName) const

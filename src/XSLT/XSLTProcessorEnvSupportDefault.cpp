@@ -294,6 +294,17 @@ XSLTProcessorEnvSupportDefault::getDOMFactory() const
 
 
 bool
+XSLTProcessorEnvSupportDefault::elementAvailable(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName) const
+{
+	return m_defaultSupport.elementAvailable(theNamespace,
+											 extensionName);
+}
+
+
+
+bool
 XSLTProcessorEnvSupportDefault::functionAvailable(
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	extensionName) const

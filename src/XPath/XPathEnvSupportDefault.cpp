@@ -201,6 +201,16 @@ XPathEnvSupportDefault::getDOMFactory() const
 
 
 bool
+XPathEnvSupportDefault::elementAvailable(
+			const XalanDOMString&	/* theNamespace */,
+			const XalanDOMString&	/* extensionName */) const
+{
+	return false;
+}
+
+
+
+bool
 XPathEnvSupportDefault::functionAvailable(
 			const XalanDOMString&	/* theNamespace */,
 			const XalanDOMString&	/* extensionName */) const

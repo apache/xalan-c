@@ -120,11 +120,15 @@ public:
 	getDOMFactory() const;
 
 	virtual bool
+	elementAvailable(
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const;
+
+	virtual bool
 	functionAvailable(
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	extensionName) const;
 
-	// $$$ ToDo: How do we implement this?
 	virtual XObject*
 	extFunction(
 			XPathExecutionContext&			executionContext,

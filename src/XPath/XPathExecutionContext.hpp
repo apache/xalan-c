@@ -215,9 +215,21 @@ public:
 	getContextNodeListPosition(const XalanNode&		contextNode) const = 0;
 
 	/**
+	 * Determine if an external element is available.
+	 *
+	 * @param theNamespace  namespace for the element
+	 * @param extensionName name of extension element
+	 * @return whether the given element is available or not
+	 */
+	virtual bool
+	elementAvailable(
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const = 0;
+
+	/**
 	 * Determine if an external function is available.
 	 *
-	 * @param theNamespace  namespace for function
+	 * @param theNamespace  namespace for the function
 	 * @param extensionName name of extension function
 	 * @return whether the given function is available or not
 	 */

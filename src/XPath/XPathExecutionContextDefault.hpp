@@ -148,6 +148,18 @@ public:
 	virtual int
 	getContextNodeListPosition(const XalanNode&		contextNode) const;
 
+	/**
+	 * Determine if an external element is available.
+	 *
+	 * @param theNamespace  namespace for the element
+	 * @param extensionName name of extension element
+	 * @return whether the given element is available or not
+	 */
+	virtual bool
+	elementAvailable(
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const;
+
 	virtual bool
 	functionAvailable(
 			const XalanDOMString&	theNamespace, 
