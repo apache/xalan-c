@@ -372,7 +372,7 @@ main(
 					// Time the parsing(compile) of the XSL stylesheet and report the results..
 					//
 					startTime = clock();
-						XalanCompiledStylesheet* const compiledSS = xalan.compileStylesheet(xslInputSource);
+					const XalanCompiledStylesheet* const	compiledSS = xalan.compileStylesheet(xslInputSource);
 					endTime = clock();
 					//	assert(glbStylesheetRoot != 0);
 
@@ -384,7 +384,7 @@ main(
 					// Time the parsing of the input XML and report the results..
 					//
 					startTime = clock();
-						 XalanParsedSource*  parsedSource = xalan.parseSource(xmlInputSource);
+					const XalanParsedSource* const	parsedSource = xalan.parseSource(xmlInputSource);
 					endTime = clock();
 					//	assert(glbSourceXML != 0);
 
