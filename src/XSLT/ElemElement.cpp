@@ -68,6 +68,7 @@
 
 #include "AVT.hpp"
 #include "Constants.hpp"
+#include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
@@ -87,7 +88,10 @@ ElemElement::ElemElement(
 			columnNumber,
 			Constants::ELEMNAME_ELEMENT),
 	m_nameAVT(0),
-	m_namespaceAVT(0)	
+	m_namespaceAVT(0),
+	m_namespacesHandler(stylesheetTree.getNamespacesHandler(),
+						stylesheetTree.getNamespaces(),
+						stylesheetTree.getXSLTNamespaceURI())	
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -132,6 +136,24 @@ ElemElement::~ElemElement()
 
 	delete m_namespaceAVT;
 #endif
+}
+
+
+
+void
+ElemElement::postConstruction(const NamespacesHandler&	theParentHandler)
+{
+	m_namespacesHandler.postConstruction(getElementName(), &theParentHandler);
+
+	ElemUse::postConstruction(m_namespacesHandler);
+}
+
+
+
+const NamespacesHandler&
+ElemElement::getNamespacesHandler() const
+{
+	return m_namespacesHandler;
 }
 
 
@@ -198,7 +220,7 @@ ElemElement::execute(
 
 			if(!isEmpty(elemNameSpace))
 			{
-				XalanDOMString	prefix = executionContext.getResultPrefixForNamespace(elemNameSpace);
+				XalanDOMString		prefix = executionContext.getResultPrefixForNamespace(elemNameSpace);
 
 				if(isEmpty(prefix))
 				{
@@ -223,6 +245,8 @@ ElemElement::execute(
 	}
 
 	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
+
+	m_namespacesHandler.outputResultNamespaces(executionContext);
 
 	executeChildren(executionContext, sourceTree, sourceNode, mode);
 

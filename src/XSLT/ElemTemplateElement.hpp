@@ -81,7 +81,6 @@
 
 
 #include <XPath/PrefixResolver.hpp>
-#include <XPath/NameSpace.hpp>
 
 
 
@@ -90,6 +89,7 @@
 
 
 class AttributeList;
+class NamespacesHandler;
 class NodeRefListBase;
 class QName;
 class Stylesheet;
@@ -205,7 +205,7 @@ public:
 	 * Execute the element's primary function.  Subclasses of this function may
 	 * recursively execute down the element tree.
 	 * 
-	 * @param processor  XSLT Processor
+	 * @param executionContext  The current execution context
 	 * @param sourceTree input source tree
 	 * @param sourceNode current context node
 	 * @param mode       current mode
@@ -236,19 +236,7 @@ public:
 	 * Take the contents of a template element, process it, and
 	 * convert it to a string.
 	 * 
-	 * @exception XSLProcessorException thrown from one of the child execute  
-	 *                                  methods
-	 * @exception java.net.MalformedURLException might be thrown from the       
-	 *                                  document() function, or from xsl:include or xsl:import
-	 * @exception java.io.FileNotFoundException might be thrown from the        
-	 *                                  document() function, or from
-	 *                                  xsl:include or xsl:import
-	 * @exception java.io.IOException might be thrown from the  document()      
-	 *                                function, or from xsl:include or
-	 *                                xsl:import
-	 * @exception SAXException might be thrown from the  document() function, or
-	 *                         from xsl:include or xsl:import
-	 * @param processor  XSLT processor instance
+	 * @param executionContext  The current execution context
 	 * @param sourceTree primary source tree
 	 * @param sourceNode current source node context
 	 * @param mode       current mode
@@ -322,24 +310,21 @@ public:
 	}
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef	vector<NameSpace>		NamespaceVectorType;
-	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	String2StringMapType;
+	typedef map<XalanDOMString,
+				XalanDOMString,
+				less<XalanDOMString> >	StringToStringMapType;
 #else
-	typedef	std::vector<NameSpace>		NamespaceVectorType;
-	typedef std::map<XalanDOMString, XalanDOMString>	String2StringMapType;
-
+	typedef std::map<XalanDOMString,
+					 XalanDOMString>	StringToStringMapType;
 #endif
 
 	/** 
-	 * Get the list of namespaces for this element.
+	 * Get the namespaces handler for this element.
 	 * 
-	 * @return vector of namespaces
+	 * @return The element's NamespacesHandler instance.
 	 */
-	const NamespaceVectorType&
-	getNameSpace() const
-	{
-		return m_namespaces;
-	}
+	virtual const NamespacesHandler&
+	getNamespacesHandler() const;
 
 	/**
 	 * Retrieve the stylesheet from which this element comes
@@ -354,22 +339,18 @@ public:
 
 	/** 
 	 * Set a flag indicating construction of the element is completed.
-	 * 
-	 * @param bFinished true if construction completed
 	 */
 	void
-	setFinishedConstruction(bool bFinished)
+	finishedConstruction()
 	{
-		m_finishedConstruction = bFinished;
+		m_finishedConstruction = true;
 	}
 
-  /**
-   * Remove any excluded prefixes from the current namespaces.
-	* 
-	* @param map of prefixes and associated namespaces to be excluded
-   */
-  void removeExcludedPrefixes(const String2StringMapType& excludeResultPrefixes);
-
+	/**
+	 * Called after construction is completed.
+	 */
+	virtual void
+	postConstruction(const NamespacesHandler&	theParentHandler);
 
 	// Type-safe getters/setters...
 
@@ -671,6 +652,7 @@ protected:
 	/**
 	 * Perform a query if needed, and call transformChild for each child.
 	 * 
+	 * @param executionContext  The current execution context
 	 * @param stylesheetTree The owning stylesheet tree.
 	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
 	 *      not think we need this).
@@ -700,6 +682,7 @@ protected:
 	/**
 	 * Perform a query if needed, and call transformChild for each child.
 	 * 
+	 * @param executionContext The current execution context
 	 * @param stylesheetTree The owning stylesheet tree.
 	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
 	 *      not think we need this).
@@ -731,6 +714,7 @@ protected:
 	/**
 	 * Perform a query if needed, and call transformChild for each child.
 	 * 
+	 * @param executionContext The current execution context
 	 * @param stylesheetTree The owning stylesheet tree.
 	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
 	 *      not think we need this).
@@ -772,26 +756,11 @@ protected:
 			const NodeRefListBase&				sourceNodes,
 			unsigned int						sourceNodesCount) const;
 
-  /**
-   * Tell if the result namespace decl should be excluded.  Should be called before 
-   * namespace aliasing (I think).
-   * TODO: I believe this contains a bug, in that included elements will check with with 
-   * their including stylesheet, since in this implementation right now the included 
-   * templates are merged with the including stylesheet.  The XSLT Recommendation says: "The 
-   * designation of a namespace as an excluded namespace is effective within 
-   * the subtree of the stylesheet rooted at the element bearing the 
-   * <code>exclude-result-prefixes</code> or <code>xsl:exclude-result-prefixes</code> 
-   * attribute; a subtree rooted at an <code>xsl:stylesheet</code> element
-   * does not include any stylesheets imported or included by children
-   * of that <code>xsl:stylesheet</code> element."
-   */
-  bool shouldExcludeResultNamespaceNode(
-		  const XalanDOMString& prefix, const XalanDOMString& uri);
-
 	/**
 	 * Given an element and mode, find the corresponding
 	 * template and process the contents.
 	 * 
+	 * @param executionContext The current execution context
 	 * @param stylesheetTree The current Stylesheet object.
 	 * @param xslInstruction The calling element (deprecated -- I dont think we 
 	 *      need this).
@@ -831,6 +800,10 @@ protected:
 	virtual bool
 	childTypeAllowed(int	xslToken) const;
 
+protected:
+
+	bool					m_finishedConstruction;
+
 private:
 
 	Stylesheet&				m_stylesheet;
@@ -838,19 +811,7 @@ private:
 	const int				m_lineNumber;
 	const int				m_columnNumber;
 
-	NamespaceVectorType 	m_namespaces;
-
-	/** 
-	 * The table of namespaces that are excluded from being 
-	 * used in the result tree but which need to be used 
-	 * in to resolve prefixes.
-	 * @serial
-	 */
-	String2StringMapType	m_excludedNamespaces;
-
 	bool					m_defaultSpace;
-	bool					m_finishedConstruction;
-
 	const XalanDOMString	m_elemName;
 
 	const int				m_xslToken;

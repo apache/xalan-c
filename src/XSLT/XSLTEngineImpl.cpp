@@ -582,6 +582,8 @@ XSLTEngineImpl::processStylesheet(
 				if(0 != m_diagnosticsPrintWriter)
 					displayDuration(XALAN_STATIC_UCODE_STRING("Parse of ") + xslIdentifier, &xslIdentifier);
 			}
+
+			theStylesheet->postConstruction();
 		}
 		catch(const XSLException&)
 		{
@@ -881,6 +883,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 			displayDuration(XalanDOMString(XALAN_STATIC_UCODE_STRING("Setup of ")) +
 								localXSLURLString,
 								&frag);
+
+			stylesheet->postConstruction();
 		}
 		else
 		{
@@ -924,6 +928,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		XSLTInputSource		inputSource(xslURL->getURLText());
 
 		m_parserLiaison.parseXMLStream(inputSource, stylesheetProcessor);
+
+		stylesheet->postConstruction();
 
 		displayDuration("Parsing and init of " + localXSLURLString, &localXSLURLString);
 	}
@@ -2330,7 +2336,7 @@ XSLTEngineImpl::qnameEqualsResultElemName(
 
 
 
-XalanDOMString
+const XalanDOMString&
 XSLTEngineImpl::getResultNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
 	// Search vector from first element back
@@ -2339,7 +2345,7 @@ XSLTEngineImpl::getResultNamespaceForPrefix(const XalanDOMString&	prefix) const
   
 
 
-XalanDOMString
+const XalanDOMString&
 XSLTEngineImpl::getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const
 {
 	// Search vector from first element back

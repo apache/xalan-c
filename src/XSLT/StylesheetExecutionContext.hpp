@@ -569,7 +569,7 @@ public:
 	 * 
 	 * @param theNamespace namespace for prefix
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const = 0;
 
 	/**
@@ -577,7 +577,7 @@ public:
 	 * 
 	 * @param thePrefix prefix for namespace
 	 */
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getResultNamespaceForPrefix(const XalanDOMString&	thePrefix) const = 0;
 
 	/**

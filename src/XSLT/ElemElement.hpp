@@ -76,6 +76,10 @@
 
 
 
+#include <XSLT/NamespacesHandler.hpp>
+
+
+
 class AVT;
 
 
@@ -107,6 +111,12 @@ public:
 
 	// These methods are inherited from ElemUse ...
 
+	virtual const NamespacesHandler&
+	getNamespacesHandler() const;
+
+	virtual void
+	postConstruction(const NamespacesHandler&	theParentHandler);
+
 	virtual void 
 	execute(
 			StylesheetExecutionContext&		executionContext,
@@ -122,8 +132,12 @@ private:
 	ElemElement&
 	operator=(const ElemElement &);
 
-	const AVT*	m_nameAVT;
-	const AVT*	m_namespaceAVT;
+	const AVT*				m_nameAVT;
+	const AVT*				m_namespaceAVT;
+	/*
+	 * This object handles all result tree namespace processing.
+	 */
+	NamespacesHandler		m_namespacesHandler;
 };
 
 

@@ -98,7 +98,11 @@ ElemLiteralResult::ElemLiteralResult(
 			name,
 			lineNumber,
 			columnNumber,
-			xslToken)
+			xslToken),
+	m_avts(),
+	m_namespacesHandler(stylesheetTree.getNamespacesHandler(),
+						stylesheetTree.getNamespaces(),
+						stylesheetTree.getXSLTNamespaceURI())
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -125,9 +129,7 @@ ElemLiteralResult::ElemLiteralResult(
 				{
 					const XalanDOMString localName = substring(aname,indexOfNSSep + 1);
 
-					processPrefixControl(localName, atts.getValue(i));
-
-					if(0 != m_excludeResultPrefixes.size())
+					if(processPrefixControl(constructionContext, stylesheetTree, localName, atts.getValue(i)) == true)
 					{
 						needToProcess = false;
 					}
@@ -159,8 +161,6 @@ ElemLiteralResult::ElemLiteralResult(
 							*this, constructionContext));
 			}
 		}
-
-		removeExcludedPrefixes(m_excludeResultPrefixes);
 	}
 
 	// Shrink the vector of AVTS, if necessary...
@@ -188,14 +188,41 @@ ElemLiteralResult::~ElemLiteralResult()
 
 
 
-void ElemLiteralResult::execute(
+const NamespacesHandler&
+ElemLiteralResult::getNamespacesHandler() const
+{
+	return m_namespacesHandler;
+}
+
+
+
+void
+ElemLiteralResult::postConstruction(const NamespacesHandler&	theParentHandler)
+{
+	const XalanDOMString&	theElementName = getElementName();
+	assert(length(theElementName) > 0);
+
+	const unsigned int		indexOfNSSep = indexOf(theElementName, ':');
+
+	const XalanDOMString	thePrefix = indexOfNSSep < length(theElementName) ?
+					substring(theElementName, 0, indexOfNSSep) : XalanDOMString();
+
+	m_namespacesHandler.postConstruction(thePrefix, &theParentHandler);
+
+	ElemUse::postConstruction(m_namespacesHandler);
+}
+
+
+
+void
+ElemLiteralResult::execute(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	executionContext.startElement(toCharArray(getElementName()));
-	
+
 	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
 
 	if(0 != m_avts.size())
@@ -206,109 +233,36 @@ void ElemLiteralResult::execute(
 		{
 			const AVT* const	avt = m_avts[i];
 
-			XalanDOMString	stringedValue;
+			XalanDOMString	theStringedValue;
 
-			avt->evaluate(stringedValue, sourceNode, *this, executionContext);
+			avt->evaluate(theStringedValue, sourceNode, *this, executionContext);
 
-			if(!isEmpty(stringedValue))
+			if(isEmpty(theStringedValue) == false)
 			{
-				executionContext.replacePendingAttribute(
-					c_wstr(avt->getName()), 
-					c_wstr(avt->getType()),
-					c_wstr(stringedValue));
-			}
-		}
-	}
+				XalanDOMString		thePrefix;
 
-	// @@@ JMD:
-	// This logic has been eliminated in the java version and replaced by a
-	// method 'processResultNS' in the base class ElemTemplateElement
-	// This also requires implementation of namespace alias logic
-	const ElemTemplateElement*	elem = this;
+				const XalanDOMString&	theName = avt->getName();
 
-	const NamespaceVectorType*	nsVector = &elem->getNameSpace();
-
-	bool more = true;
-
-	while(more == true)
-	{
-		for (NamespaceVectorType::size_type i = 0; i < nsVector->size(); i++)
-		{
-			const NameSpace&	ns = (*nsVector)[i];
-
-			if(ns.getResultCandidate() == true)
-			{
-				const XalanDOMString&	srcURI = ns.getURI();
-
-				if (!isEmpty(srcURI))
+				if (startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true)
 				{
-					const bool		hasPrefix = !isEmpty(ns.getPrefix());
+					thePrefix = substring(theName, DOMServices::s_XMLNamespaceWithSeparatorLength);
+				}
 
-					const XalanDOMString	prefix = hasPrefix ? ns.getPrefix() : XalanDOMString();
-
-					XalanDOMString	attrName;
-
-					if (hasPrefix == true)
-					{
-						reserve(attrName, DOMServices::s_XMLNamespaceWithSeparatorLength + length(prefix) + 1);
-
-						attrName += DOMServices::s_XMLNamespaceWithSeparator;
-						attrName += prefix;
-					}
-					else
-					{
-						attrName = DOMServices::s_XMLNamespace;
-					}
-
-					const XalanDOMString	alias = getStylesheet().getAliasNamespaceURI(srcURI);
-
-					const XalanDOMString&	resultURI = length(alias) != 0 ? alias : srcURI;
-
-					const bool	isXSLNS =
-						equals(resultURI, executionContext.getXSLNameSpaceURL()) ||
-							   0 != getStylesheet().lookupExtensionNSHandler(srcURI) ||
-							   equals(resultURI, executionContext.getXalanXSLNameSpaceURL());
-
-					const XalanDOMString	desturi = executionContext.getResultNamespaceForPrefix(prefix);
-
-					if(!isXSLNS && !equals(resultURI, desturi)) // TODO: Check for extension namespaces
-					{
-						executionContext.addResultAttribute(attrName, resultURI);
-					}
+				if (isEmpty(thePrefix) == true ||
+				    shouldExcludeResultNamespaceNode(
+						thePrefix,
+						theStringedValue) == false)
+				{
+					executionContext.replacePendingAttribute(
+						c_wstr(avt->getName()), 
+						c_wstr(avt->getType()),
+						c_wstr(theStringedValue));
 				}
 			}
 		}
-
-		// We didn't find a namespace, start looking at the parents
-		if (0 != elem)
-		{
-			elem = elem->getParentNodeElem();
-
-			while(0 != elem)
-			{
-				nsVector = &elem->getNameSpace();
-
-				if(0 == nsVector->size())
-					elem = elem->getParentNodeElem();
-				else
-					break;
-			}
-
-			// Last chance, try the stylesheet namespace
-			if (0 == nsVector || 0 == nsVector->size())
-				nsVector = &getStylesheet().getNamespaceDecls();
-			if (0 == nsVector || 0 == nsVector->size())
-				more = false;
-		}
-		else
-			more = false;
 	}
-/*
-	java:
-    // Handle namespaces(including those on the ancestor chain 
-    // and stylesheet root declarations).
-    processResultNS(processor);           
-*/
+
+	m_namespacesHandler.outputResultNamespaces(executionContext);
 
 	executeChildren(executionContext, sourceTree, sourceNode, mode);
 
@@ -349,9 +303,9 @@ ElemLiteralResult::isAttrOK(
 
 			const XalanDOMString	ns = getStylesheet().getNamespaceForPrefixFromStack(prefix);
 
-			if (equals(ns, constructionContext.getXSLTNamespaceURI()) == true)
+			if (equals(ns, constructionContext.getXSLTNamespaceURI()) == false)
 			{
-				isAttrOK = false;
+				isAttrOK = true;
 			}
 		}
 		else
@@ -367,35 +321,40 @@ ElemLiteralResult::isAttrOK(
 
 
 
-void
+bool
 ElemLiteralResult::processPrefixControl(
-			const XalanDOMString& localName, 
-			const XalanDOMString& attrValue) 
-{                                                                                                                   
-	if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES) ||
-			equals(localName, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
+			StylesheetConstructionContext&	constructionContext,
+			const Stylesheet&				stylesheetTree,
+			const XalanDOMString&			localName,
+			const XalanDOMString&			attrValue)
+{
+	if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
 	{
-		const XalanDOMString qnames = attrValue;
+		m_namespacesHandler.processExtensionElementPrefixes(c_wstr(attrValue), stylesheetTree.getNamespaces(), constructionContext);
 
-		StringTokenizer tokenizer(qnames, " \t\n\r", false);
-
-		while(tokenizer.hasMoreTokens() == true)
-		{
-			XalanDOMString	prefix = tokenizer.nextToken();
-
-			if(equalsIgnoreCase(prefix, XALAN_STATIC_UCODE_STRING("#default")) == true)
-			{
-				clear(prefix);
-			}
-
-			const XalanDOMString	ns = getStylesheet().getNamespaceForPrefixFromStack(prefix);
-
-			if(isEmpty(ns) == true)
-			{
-				throw SAXException("Invalid prefix in exclude-result-prefixes");
-			}
-
-			m_excludeResultPrefixes.insert(String2StringMapType::value_type(prefix, ns));
-		}
+		return true;
 	}
+	else if (equals(localName, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
+	{
+		m_namespacesHandler.processExcludeResultPrefixes(c_wstr(attrValue), stylesheetTree.getNamespaces(), constructionContext);
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+
+bool
+ElemLiteralResult::shouldExcludeResultNamespaceNode(
+			const XalanDOMString&	thePrefix,
+			const XalanDOMString&	theURI) const
+{
+	return m_namespacesHandler.shouldExcludeResultNamespaceNode(
+				getStylesheet().getXSLTNamespaceURI(),
+				thePrefix,
+				theURI);
 }

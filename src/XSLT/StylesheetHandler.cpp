@@ -548,18 +548,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 						}
 						else if(equals(aname, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
 						{
-							m_constructionContext.warn(Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES
-									+ " not supported yet!");
-
-						/*
-							@@ TODO: implement this ---
-							StringToStringTable excluded =
-								m_stylesheet.getExcludeResultPrefixes();
-							excluded =
-								m_stylesheet.processExcludeResultPrefixes(atts.getValue(i),
-										excluded);
-							m_stylesheet.setExcludeResultPrefixes(excluded);
-						*/
+							m_stylesheet.processExcludeResultPrefixes(atts.getValue(i), m_constructionContext);
 						}
 						else if(equals(aname, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
 						{
@@ -1202,6 +1191,8 @@ StylesheetHandler::processImport(
 
 			m_constructionContext.parseXML(hrefUrl, &tp, importedStylesheet.get());
 
+			importedStylesheet->postConstruction();
+
 			// Add it to the front of the imports, releasing the XalanAutoPtr...
 			m_stylesheet.addImport(importedStylesheet.release(), true);
 
@@ -1290,7 +1281,7 @@ StylesheetHandler::endElement(const XMLCh* const name)
 	m_lastPopped = m_elemStack.back();
 	m_elemStack.pop_back();
 	m_elemStackParentedElements.erase(m_lastPopped);
-	m_lastPopped->setFinishedConstruction(true);
+	m_lastPopped->finishedConstruction();
 
 	const int tok = m_lastPopped->getXSLToken();
 
@@ -1628,7 +1619,8 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 	m_XSLNameSpaceURL(theHandler.m_stylesheet.getXSLTNamespaceURI()),
 	m_foundNotImport(theHandler.m_foundNotImport),
 	m_namespaceDecls(),
-	m_namespaces()
+	m_namespaces(),
+	m_namespacesHandler()
 {
 	m_handler.m_elemStack.clear();
 	m_handler.m_pTemplate = 0;
@@ -1641,6 +1633,7 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 	// underlying data.  This clears out the stack as well...
 	m_namespaceDecls.swap(theHandler.m_stylesheet.getNamespaceDecls());
 	m_namespaces.swap(theHandler.m_stylesheet.getNamespaces());
+	m_namespacesHandler.swap(theHandler.m_stylesheet.getNamespacesHandler());
 }
 
 
@@ -1670,4 +1663,5 @@ StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 	// underlying data.
 	m_handler.m_stylesheet.getNamespaceDecls().swap(m_namespaceDecls);
 	m_handler.m_stylesheet.getNamespaces().swap(m_namespaces);
+	m_handler.m_stylesheet.getNamespacesHandler().swap(m_namespacesHandler);
 }

@@ -96,6 +96,7 @@
 #include "ElemForEach.hpp"
 #include "ElemSort.hpp"
 #include "ElemTemplate.hpp"
+#include "NamespacesHandler.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetExecutionContext.hpp"
 #include "StylesheetRoot.hpp"
@@ -127,7 +128,6 @@ ElemTemplateElement::ElemTemplateElement(
 	m_columnNumber(columnNumber),
 	m_defaultSpace(true),
 	m_finishedConstruction(false),
-	m_namespaces(),
 	m_elemName(name),
 	m_xslToken(xslToken),
 	m_parentNode(0),
@@ -139,36 +139,6 @@ ElemTemplateElement::ElemTemplateElement(
 	m_baseIndentifier(stylesheetTree.getCurrentIncludeBaseIdentifier())
 {
 	assert(length(m_baseIndentifier) > 0);
-
-	/*
-	 * Copy the stylesheet namespaces to the element namespace vector
-	 */
-	const Stylesheet::NamespacesStackType& stylesheetNamespaces =
-		m_stylesheet.getNamespaces();
-
-	const int	n = stylesheetNamespaces.size();
-
-	for(int i = (n-1); i >= 0; i--)
-	{
-		const Stylesheet::NamespaceVectorType& nsVector = stylesheetNamespaces[i];
-
-		for(unsigned int j = 0; j < nsVector.size(); j++)
-		{
-			const NameSpace&	ns = nsVector[j];
-
-			if(isEmpty(ns.getURI()) == false)
-			{
-				if(!shouldExcludeResultNamespaceNode(ns.getPrefix(), ns.getURI()))
-				{
-					m_namespaces.push_back(ns);
-				}
-				else
-				{
-					m_excludedNamespaces.insert(String2StringMapType::value_type(ns.getPrefix(), ns.getURI()));
-				}
-			}
-		}
-	}
 }
 
 
@@ -178,6 +148,21 @@ ElemTemplateElement::~ElemTemplateElement()
 	delete m_nextSibling;
 
 	delete m_firstChild;
+}
+
+
+
+const NamespacesHandler&
+ElemTemplateElement::getNamespacesHandler() const
+{
+	if (m_parentNode != 0)
+	{
+		return m_parentNode->getNamespacesHandler();
+	}
+	else
+	{
+		return m_stylesheet.getNamespacesHandler();
+	}
 }
 
 
@@ -332,6 +317,7 @@ ElemTemplateElement::childrenToString(
 	// a string.
 	DOMStringPrintWriter		thePrintWriter;
 
+	// Create a FormatterToText.
 	FormatterToText				theFormatter(thePrintWriter);
 
 	// Create an object to set and restore the execution state.
@@ -913,133 +899,112 @@ ElemTemplateElement::transformChild(
 			const QName&				mode,
 			int							xslToken) const
 {
-	bool				doApplyTemplate = true;
-	bool				shouldStrip = false;
-
 	const XalanNode::NodeType	nodeType = child->getNodeType();
 
-	const Stylesheet*	stylesheetTree = &stylesheet_tree;
-
-	const bool			isApplyImports = xslToken == Constants::ELEMNAME_APPLY_IMPORTS;
-
-	if(!shouldStrip) // rcw: odd, seems that shouldStripis always false
+	if(0 == theTemplate)
 	{
-		if(0 == theTemplate)
-		{
-			// Find the XSL template that is the best match for the 
-			// element, and call buildResultFromTemplate.
-			const Stylesheet*	foundStylesheet = 0;
+		// Find the XSL template that is the best match for the 
+		// element, and call buildResultFromTemplate.
+		const Stylesheet*	foundStylesheet = 0;
 
-			if(!isApplyImports)
-			{
-				
-				stylesheetTree = &getStylesheet().getStylesheetRoot();
-			}
-			
-			theTemplate = stylesheetTree->findTemplate(executionContext, sourceTree, child, mode,
-				isApplyImports,	foundStylesheet);
-			
-			if(isApplyImports && (0 != theTemplate))
-			{
-				stylesheetTree = foundStylesheet;
-			}
-			// mode = null; // non-sticky modes
-		}
+		const bool			isApplyImports = xslToken == Constants::ELEMNAME_APPLY_IMPORTS;
 
-		if(doApplyTemplate)  //rcw: seems to always be true
-		{
-			if(0 == theTemplate)
-			{
-				switch(nodeType)
-				{
-				case XalanNode::DOCUMENT_FRAGMENT_NODE:
-				case XalanNode::ELEMENT_NODE:
-					theTemplate = getStylesheet().getStylesheetRoot().getDefaultRule();
-					break;
+		const Stylesheet*	stylesheetTree = isApplyImports ?
+								&stylesheet_tree :
+								&getStylesheet().getStylesheetRoot();
 
-				case XalanNode::CDATA_SECTION_NODE:
-				case XalanNode::TEXT_NODE:
-				case XalanNode::ATTRIBUTE_NODE:
-					theTemplate = getStylesheet().getStylesheetRoot().getDefaultTextRule();
-					break;
-
-				case XalanNode::DOCUMENT_NODE:
-					theTemplate = getStylesheet().getStylesheetRoot().getDefaultRootRule();
-					break;
-
-				default:
-					break;
-
-				}     
-
-				if(0 != theTemplate)
-				{
-				  // Not sure if this is needed. -sb
-					stylesheetTree = &getStylesheet().getStylesheetRoot();
-				}
-			}
-			
-			if(0 != theTemplate)
-			{
-				executionContext.resetCurrentState(sourceTree, child);
-				
-				if(theTemplate == getStylesheet().getStylesheetRoot().getDefaultTextRule())
-				{
-					switch(nodeType)
-					{
-					case XalanNode::CDATA_SECTION_NODE:
-					case XalanNode::TEXT_NODE:
-						executionContext.cloneToResultTree(
-							*child, false, false, false);
-						break;
-
-					case XalanNode::ATTRIBUTE_NODE:
-						{
-							const XalanAttr* const	attr =
-#if defined(XALAN_OLD_STYLE_CASTS)
-								(const XalanAttr*)child;
-#else
-								static_cast<const XalanAttr*>(child);
-#endif
-
-							const XalanDOMString	val = attr->getValue();
-
-							executionContext.characters(toCharArray(val), 
-														0,
-														length(val));
-						}
-						break;
-
-					default:
-						assert(false);
-						break;
-					}
-				}
-				else
-				{
-					if(0 != executionContext.getTraceListeners())
-					{
-						TracerEvent te(executionContext,
-									   sourceTree,
-									   child, 
-										mode,
-										*theTemplate);
-
-						executionContext.fireTraceEvent(te);
-					}
-
-					theTemplate->executeChildren(executionContext, 
-												 sourceTree,
-												 child,
-												 mode);
-				}
-
-				executionContext.resetCurrentState(sourceTree, selectContext);
-			}
-		}
+		theTemplate = stylesheetTree->findTemplate(
+						executionContext,
+						sourceTree,
+						child,
+						mode,
+						isApplyImports,
+						foundStylesheet);
 	}
 
-	return doApplyTemplate;
+	if(0 == theTemplate)
+	{
+		switch(nodeType)
+		{
+		case XalanNode::DOCUMENT_FRAGMENT_NODE:
+		case XalanNode::ELEMENT_NODE:
+			theTemplate = getStylesheet().getStylesheetRoot().getDefaultRule();
+			break;
+
+		case XalanNode::CDATA_SECTION_NODE:
+		case XalanNode::TEXT_NODE:
+		case XalanNode::ATTRIBUTE_NODE:
+			theTemplate = getStylesheet().getStylesheetRoot().getDefaultTextRule();
+			break;
+
+		case XalanNode::DOCUMENT_NODE:
+			theTemplate = getStylesheet().getStylesheetRoot().getDefaultRootRule();
+			break;
+
+		default:
+			break;
+		}     
+	}
+			
+	if(0 != theTemplate)
+	{
+		executionContext.resetCurrentState(sourceTree, child);
+				
+		if(theTemplate == getStylesheet().getStylesheetRoot().getDefaultTextRule())
+		{
+			switch(nodeType)
+			{
+			case XalanNode::CDATA_SECTION_NODE:
+			case XalanNode::TEXT_NODE:
+				executionContext.cloneToResultTree(
+							*child, false, false, false);
+				break;
+
+			case XalanNode::ATTRIBUTE_NODE:
+				{
+					const XalanAttr* const	attr =
+#if defined(XALAN_OLD_STYLE_CASTS)
+						(const XalanAttr*)child;
+#else
+						static_cast<const XalanAttr*>(child);
+#endif
+
+					const XalanDOMString	val = attr->getValue();
+
+					executionContext.characters(toCharArray(val), 
+												0,
+												length(val));
+				}
+				break;
+
+			default:
+				assert(false);
+				break;
+			}
+		}
+		else
+		{
+			if(0 != executionContext.getTraceListeners())
+			{
+				TracerEvent te(executionContext,
+							   sourceTree,
+							   child, 
+								mode,
+								*theTemplate);
+
+				executionContext.fireTraceEvent(te);
+			}
+
+			theTemplate->executeChildren(executionContext, 
+										 sourceTree,
+										 child,
+										 mode);
+		}
+
+		executionContext.resetCurrentState(sourceTree, selectContext);
+	}
+
+	return true;
 }
 
 
@@ -1370,69 +1335,14 @@ ElemTemplateElement::getAttributeNode(const XalanDOMString&		/* name */) const
 }
 
 
+
 void
-ElemTemplateElement::removeExcludedPrefixes(const String2StringMapType&		excludeResultPrefixes)
+ElemTemplateElement::postConstruction(const NamespacesHandler&	theParentHandler)
 {
-	if(0 !=excludeResultPrefixes.size() && 0 != m_namespaces.size())
-	{
-		const NamespaceVectorType::iterator		theEnd =
-			m_namespaces.end();
-
-		for(NamespaceVectorType::iterator it = m_namespaces.begin();
-				it != theEnd; )
-		{
-			const NameSpace&	ns = *it;
-
-			const XalanDOMString&	prefix = ns.getPrefix();
-
-			const String2StringMapType::const_iterator	it2 =
-				excludeResultPrefixes.find(prefix);
-
-			if(it2 != excludeResultPrefixes.end())
-			{
-				m_excludedNamespaces.insert(String2StringMapType::value_type(prefix, ns.getURI()));
-
-				it = m_namespaces.erase(it);
-			}
-			else
-			{
-				++it;
-			}
-		}
+    for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
+    {
+		node->postConstruction(theParentHandler);
 	}
-}
- 
-
- 
-bool
-ElemTemplateElement::shouldExcludeResultNamespaceNode(
-		const XalanDOMString&	prefix,
-		const XalanDOMString&	uri)
-{
-/*
-	@@ JMD: Need to implement this ---
-
-	if(uri.equals(m_stylesheet.m_XSLNameSpaceURL)
-			|| (null != m_stylesheet.lookupExtensionNSHandler(uri))
-			|| uri.equals("http://xml.apache.org/xslt")
-			|| uri.equals("http://xsl.lotus.com/")
-			|| uri.equals("http://xsl.lotus.com"))
-		return true; 
-	ElemTemplateElement elem = this;
-	while(0 != elem)
-	{
-		elem = elem.m_parentNode;
-		if(0 == elem)
-		{
-			if(0 != m_stylesheet.m_excludeResultPrefixes)
-			{
-				if(m_stylesheet.m_excludeResultPrefixes.contains(prefix))
-					return true;
-			}
-		}
-	}
-*/
-	return false;
 }
 
 
@@ -1575,20 +1485,16 @@ ElemTemplateElement::getNamespaceForPrefixInternal(
 			 }
 			 else
 			 {
-				 const ElemTemplateElement*  elem = this;
+				 nameSpace = getNamespacesHandler().getNamespace(prefix);
 
-				 while(isEmpty(nameSpace) && elem != 0)
-				 {
-					 const NamespaceVectorType&		nsVector = elem->getNameSpace();
-
-					 nameSpace = QName::getNamespaceForPrefix(nsVector, prefix);
-
-					 if (!isEmpty(nameSpace))
-						 break;
-
-					 elem = elem->getParentNodeElem();
-				 }
-			 }
+				if(isEmpty(nameSpace) == true)
+				{
+					 if (m_parentNode != 0)
+					 {
+						nameSpace = m_parentNode->getNamespaceForPrefixInternal(prefix, false);
+					 }
+				}
+			}
 		}
 		else
 		{

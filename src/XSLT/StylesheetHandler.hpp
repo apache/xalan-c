@@ -79,6 +79,7 @@
 
 
 
+#include <XSLT/NamespacesHandler.hpp>
 #include <XSLT/Stylesheet.hpp>
 
 
@@ -520,6 +521,8 @@ private:
 		Stylesheet::NamespaceVectorType		m_namespaceDecls;
 
 		Stylesheet::NamespacesStackType		m_namespaces;
+
+		NamespacesHandler					m_namespacesHandler;
 	};
 
 	friend class PushPopIncludeState;

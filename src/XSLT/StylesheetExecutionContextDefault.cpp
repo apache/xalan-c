@@ -324,7 +324,7 @@ StylesheetExecutionContextDefault::copyNamespaceAttributes(
 
 
 
-XalanDOMString
+const XalanDOMString&
 StylesheetExecutionContextDefault::getResultPrefixForNamespace(
 			const XalanDOMString&	theNamespace) const
 {
@@ -333,7 +333,7 @@ StylesheetExecutionContextDefault::getResultPrefixForNamespace(
 
 
 
-XalanDOMString
+const XalanDOMString&
 StylesheetExecutionContextDefault::getResultNamespaceForPrefix(const XalanDOMString&	thePrefix) const
 {
 	return m_xsltProcessor.getResultNamespaceForPrefix(thePrefix);

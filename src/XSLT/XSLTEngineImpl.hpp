@@ -812,7 +812,7 @@ public:
 	 * @param prefix prefix for namespace
 	 * @return string for namespace URI
 	 */
-	XalanDOMString
+	const XalanDOMString&
 	getResultNamespaceForPrefix(const XalanDOMString&	prefix) const;
   
 	/**
@@ -821,7 +821,7 @@ public:
 	 * @param theNamespace namespace for prefix
 	 * @return string for namespace prefix
 	 */
-	XalanDOMString
+	const XalanDOMString&
 	getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const;
 
 	/**

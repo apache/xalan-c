@@ -144,11 +144,13 @@ Stylesheet::Stylesheet(
 	m_surrogateChildren(*this),
 	m_fakeAttributes(),
 	m_elemDecimalFormats(),
-	m_prefixAliases()
+	m_prefixAliases(),
+	m_namespacesHandler()
 {
 	if (length(m_baseIdent) != 0)
 	{
 		const XalanDOMString urlString = constructionContext.getURLStringFromString(m_baseIdent);
+
 		if (length(urlString) != 0)
 		{
 			m_includeStack.push_back(urlString);
@@ -317,6 +319,41 @@ Stylesheet::popNamespaces()
 	assert(m_namespaces.empty() == false);
 
 	m_namespaces.pop_back(); 
+}
+
+
+
+void
+Stylesheet::postConstruction()
+{
+	// Get any aliases from the imported stylesheets, in reverse order, to
+	// preserve import precedence.
+	const StylesheetVectorType::reverse_iterator	theEnd = m_imports.rend();
+	StylesheetVectorType::reverse_iterator	i = m_imports.rbegin();
+
+	while(i != theEnd)
+	{
+		m_namespacesHandler.copyNamespaceAliases((*i)->getNamespacesHandler());
+
+		++i;
+	}
+
+	// Call postConstruction() on our own handler...
+	m_namespacesHandler.postConstruction();
+
+	ElemTemplateElement* node = m_firstTemplate;
+
+    for (; node != 0; node = node->getNextSiblingElem()) 
+    {
+		node->postConstruction(m_namespacesHandler);
+	}
+
+	node = m_wrapperlessTemplate;
+
+    for (; node != 0; node = node->getNextSiblingElem())
+    {
+		node->postConstruction(m_namespacesHandler);
+	}
 }
 
 
@@ -1068,11 +1105,14 @@ Stylesheet::addExtensionNamespace(
 			ExtensionNSHandler*		nsh)
 {
 	m_extensionNamespaces.insert(ExtensionNamespacesMapType::value_type(uri, nsh));
+
+	m_namespacesHandler.addExtensionNamespaceURI(uri);
 }
 
 
 
-void Stylesheet::pushTopLevelVariables(
+void
+Stylesheet::pushTopLevelVariables(
 			StylesheetExecutionContext& 	executionContext,
 			const ParamVectorType&			topLevelParams) const
 {
@@ -1228,6 +1268,8 @@ Stylesheet::processNSAliasElement(
 #if 1
 		// $$$ ToDo: Enable other code.  Perhaps an error?
 		m_prefixAliases[stylesheetNamespace] = resultNamespace;
+
+		m_namespacesHandler.setNamespaceAlias(stylesheetNamespace, resultNamespace);
 #else
 		const PrefixAliasesMapType::iterator	i =
 			m_prefixAliases.find(stylesheetNamespace);
@@ -1256,7 +1298,7 @@ Stylesheet::getAliasNamespaceURI(const XalanDOMString&	uri) const
 {
 	XalanDOMString	result;
 
-	const PrefixAliasesMapType::const_iterator	i =
+	const StringToStringMapType::const_iterator	i =
 		m_prefixAliases.find(uri);
 
 	if (i != m_prefixAliases.end())
@@ -1282,6 +1324,16 @@ Stylesheet::getAliasNamespaceURI(const XalanDOMString&	uri) const
 	}
 
 	return result;
+}
+
+
+
+void
+Stylesheet::processExcludeResultPrefixes(
+		const XalanDOMChar*				theValue,
+		StylesheetConstructionContext&	theConstructionContext)
+{
+	m_namespacesHandler.processExcludeResultPrefixes(theValue, m_namespaces, theConstructionContext);
 }
 
 
@@ -1395,7 +1447,8 @@ Stylesheet::addAttributeSet(
  * contain the same attribute unless there is a definition of the attribute 
  * set with higher import precedence that also contains the attribute."
  */
-void Stylesheet::applyAttrSets(
+void
+Stylesheet::applyAttrSets(
 			const QNameVectorType&			attributeSetsNames, 
 			StylesheetExecutionContext& 	executionContext, 
 			XalanNode*						sourceTree, 

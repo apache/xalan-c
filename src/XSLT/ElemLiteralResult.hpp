@@ -65,7 +65,11 @@
 
 
 // Base class header file.
-#include "ElemUse.hpp"
+#include <XSLT/ElemUse.hpp>
+
+
+
+#include <XSLT/NamespacesHandler.hpp>
 
 
 
@@ -101,6 +105,12 @@ public:
 
 	// These methods are inherited from ElemUse ...
 	
+	virtual const NamespacesHandler&
+	getNamespacesHandler() const;
+
+	virtual void
+	postConstruction(const NamespacesHandler&	theParentHandler);
+
 	virtual bool
 	isAttrOK(
 			int						tok,
@@ -130,37 +140,49 @@ private:
 	ElemLiteralResult&
 	operator=(const ElemLiteralResult&);
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<const AVT*>				AVTVectorType;
-	typedef vector<XalanDOMString>			ExtensionElementPrefixesVectorType;
-#else
-	typedef std::vector<const AVT*>			AVTVectorType;
-	typedef std::vector<XalanDOMString>		ExtensionElementPrefixesVectorType;
-#endif
-
-	/**
-	 * A stack to keep track of the attribute elements.
-	 */
-	AVTVectorType							m_avts;
-
-
-	ExtensionElementPrefixesVectorType		m_extensionElementPrefixes;
-	
-	/**
-	 * This is in support of the exclude-result-prefixes attribute.  It is
-	 * really needed only at construction time, and so should probably go
-	 * somewhere else.
-	 */
-	String2StringMapType					m_excludeResultPrefixes;
-
 	/**
 	 * Process the exclude-result-prefixes or the extension-element-prefixes
 	 * attributes, for the purpose of prefix exclusion.
+	 *
+	 * @param constructionContext  context when object consructed
+	 * @param stylesheetTree The current Stylesheet object.
+	 * @param localName The local name of the attribute.
+	 * @param attrValue The value of the attribute.
 	 */
-	void
-	ElemLiteralResult::processPrefixControl(
-			const XalanDOMString&	localName, 
-			const XalanDOMString&	attrValue);
+	bool
+	processPrefixControl(
+			StylesheetConstructionContext&	constructionContext,
+			const Stylesheet&				stylesheetTree,
+			const XalanDOMString&			localName, 
+			const XalanDOMString&			attrValue);
+
+	/**
+	 * Determine if the namespace node should be excluded.
+	 *
+	 * @param executionContext The current execution context
+	 * @param thePrefix The namespace prefix.
+	 * @param theURI The namespace URI.
+	 */
+	bool
+	shouldExcludeResultNamespaceNode(
+			const XalanDOMString&	thePrefix,
+			const XalanDOMString&	theURI) const;
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<const AVT*>				AVTVectorType;
+#else
+	typedef std::vector<const AVT*>			AVTVectorType;
+#endif
+
+	/**
+	 * A vector to keep track of the attribute elements.
+	 */
+	AVTVectorType		m_avts;
+
+	/*
+	 * This object handles all result tree namespace processing.
+	 */
+	NamespacesHandler		m_namespacesHandler;
 };
 
 

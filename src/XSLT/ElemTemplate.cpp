@@ -157,7 +157,7 @@ ElemTemplate::execute(
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
-{    
+{
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
 	executeChildren(executionContext, sourceTree, sourceNode, mode);

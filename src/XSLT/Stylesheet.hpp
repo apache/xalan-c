@@ -85,6 +85,7 @@
 
 
 
+#include "NamespacesHandler.hpp"
 #include "KeyDeclaration.hpp"
 #include "StylesheetExecutionContext.hpp"
 
@@ -120,10 +121,14 @@ class XALAN_XSLT_EXPORT Stylesheet : public XalanDocument, private PrefixResolve
 
 public:
 
+	typedef StylesheetExecutionContext::ParamVectorType		ParamVectorType;
+	typedef NamespacesHandler::NamespaceVectorType			NamespaceVectorType;
+	typedef NamespacesHandler::NamespacesStackType			NamespacesStackType;
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
 				XalanDOMString,
-				less<XalanDOMString> >				PrefixAliasesMapType;
+				less<XalanDOMString> >				StringToStringMapType;
 	typedef map<XalanDOMString,
 				ExtensionNSHandler*,
 				less<XalanDOMString> >				ExtensionNamespacesMapType;
@@ -137,15 +142,13 @@ public:
 	typedef map<const XalanNode*,
 				KeyTable*,
 				less<const XalanNode*> >			KeyTablesTableType;
-	typedef vector<NameSpace> 						NamespaceVectorType;
-	typedef vector<NamespaceVectorType>				NamespacesStackType;
 	typedef vector<QName> 							QNameVectorType;
 	typedef vector<const Stylesheet*>				StylesheetVectorType;
 	typedef vector<XalanDOMString>					URLStackType;
 	typedef vector<const XPath*>					XPathVectorType;
 	typedef vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 #else
-	typedef std::map<XalanDOMString, XalanDOMString>		PrefixAliasesMapType;
+	typedef std::map<XalanDOMString, XalanDOMString>		StringToStringMapType;
 	typedef std::map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
 	typedef std::map<QName, ElemTemplate*>					ElemTemplateMapType;
 	typedef std::vector<ElemAttributeSet*> 					AttributeSetMapType;
@@ -153,17 +156,12 @@ public:
 	typedef std::vector<KeyDeclaration>						KeyDeclarationVectorType;
 	typedef std::vector<KeyTable*> 							KeyTableVectorType;
 	typedef std::map<const XalanNode*, KeyTable*>			KeyTablesTableType;
-	typedef std::vector<NameSpace> 							NamespaceVectorType;
-	typedef std::vector<NamespaceVectorType>				NamespacesStackType;
 	typedef std::vector<QName> 								QNameVectorType;
 	typedef std::vector<const Stylesheet*>					StylesheetVectorType;
 	typedef std::vector<XalanDOMString>						URLStackType;
 	typedef std::vector<const XPath*>						XPathVectorType;
 	typedef std::vector<ElemDecimalFormat*>					ElemDecimalFormatVectorType;
 #endif
-
-
-	typedef StylesheetExecutionContext::ParamVectorType	ParamVectorType;
 
 	/**
 	 * Constructor for a Stylesheet needs a Document.
@@ -267,6 +265,18 @@ public:
 		return m_namespaces;
 	}
 
+	const NamespacesHandler&
+	getNamespacesHandler() const
+	{
+		return m_namespacesHandler;
+	}
+
+	NamespacesHandler&
+	getNamespacesHandler()
+	{
+		return m_namespacesHandler;
+	}
+
 	/**
 	 * Retrieve the list of namespace declarations currently in effect
 	 * 
@@ -322,6 +332,12 @@ public:
 	void
 	popNamespaces();
 
+	/**
+	 * Called after construction is completed.
+	 */
+	virtual void
+	postConstruction();
+
 	/** 
 	 * See if this is a xmlns attribute, and, if so, process it.
 	 * 
@@ -365,6 +381,18 @@ public:
 	 */
 	XalanDOMString
 	getAliasNamespaceURI(const XalanDOMString&	uri) const;
+
+	/**
+	 * See if a namespace should be excluded.
+	 * 
+	 * @param theValue the prefix of the namespace.
+	 * @param theConstructionContext the current construction context.
+	 * @return
+	 */
+	void
+	processExcludeResultPrefixes(
+		const XalanDOMChar*				theValue,
+		StylesheetConstructionContext&	theConstructionContext);
 
 	/**
 	 * This recursive function is called starting from the
@@ -1139,6 +1167,15 @@ protected:
 
 private:	
 
+	// Not defined...
+	Stylesheet(const Stylesheet&);
+
+	Stylesheet&
+	operator=(const Stylesheet&);
+
+	bool
+	operator==(const Stylesheet&) const;
+
 	/**
 	 * The full XSLT Namespace URI.  To be replaced by the one actually
 	 * found.
@@ -1282,7 +1319,9 @@ private:
 
 	ElemDecimalFormatVectorType		m_elemDecimalFormats;
 
-	PrefixAliasesMapType	m_prefixAliases;
+	StringToStringMapType			m_prefixAliases;
+
+	NamespacesHandler		m_namespacesHandler;
 };
 
 

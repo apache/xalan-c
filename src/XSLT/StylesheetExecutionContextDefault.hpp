@@ -174,10 +174,10 @@ public:
 			const XalanNode&	src,
 			bool				srcIsStylesheetTree);
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getResultNamespaceForPrefix(const XalanDOMString&	thePrefix) const;
 
 	virtual XalanDOMString
