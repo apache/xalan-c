@@ -200,7 +200,8 @@ ElemForEach::transformSelectedChildren(
 			XalanNode*						sourceNodeContext,
 			int								selectStackFrameIndex) const
 {
-	const unsigned int	nChildren = getSortElems().size();
+	const SortElemsVectorType&				sortElements = getSortElems();
+	const SortElemsVectorType::size_type	nChildren = sortElements.size();
 
 	if (nChildren == 0)
 	{
@@ -239,9 +240,9 @@ ElemForEach::transformSelectedChildren(
 
 		// March backwards, performing a sort on each xsl:sort child.
 		// Probably not the most efficient method.
-		for(unsigned int i = 0; i < nChildren; i++)
+		for(SortElemsVectorType::size_type	i = 0; i < nChildren; i++)
 		{
-			const ElemSort* const	sort = getSortElems()[i];
+			const ElemSort* const	sort = sortElements[i];
 			assert(sort != 0);
 
 			const AVT* avt = sort->getLangAVT();

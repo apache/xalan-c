@@ -491,8 +491,8 @@ StylesheetExecutionContextDefault::createMatchPattern(
 	// enhance XPath so that we can tell if str would match
 	// the XPath, once the namespace is resolved, but it may
 	// not be worth it...
-	const unsigned int	index = indexOf(str, XalanUnicode::charColon);
-	const unsigned int	len = length(str);
+	const XalanDOMString::size_type		index = indexOf(str, XalanUnicode::charColon);
+	const XalanDOMString::size_type		len = length(str);
 
 	// If we found a ':' before the end of the string, and
 	// it's by itself (:: would indicate an axis), don't
@@ -804,9 +804,9 @@ StylesheetExecutionContextDefault::endDocument()
 
 void
 StylesheetExecutionContextDefault::characters(
-			const XalanDOMChar*		ch,
-			unsigned int			start,
-			unsigned int			length)
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length)
 {
 	assert(m_xsltProcessor != 0);
 
@@ -817,9 +817,9 @@ StylesheetExecutionContextDefault::characters(
 
 void
 StylesheetExecutionContextDefault::charactersRaw(
-			const XalanDOMChar*		ch,
-			unsigned int			start,
-			unsigned int			length)
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length)
 {
 	assert(m_xsltProcessor != 0);
 
@@ -1493,7 +1493,7 @@ StylesheetExecutionContextDefault::setContextNodeList(const NodeRefListBase&	the
 
 
 
-unsigned int
+StylesheetExecutionContextDefault::size_type
 StylesheetExecutionContextDefault::getContextNodeListLength() const
 {
 	return m_xpathExecutionContextDefault.getContextNodeListLength();
@@ -1501,7 +1501,7 @@ StylesheetExecutionContextDefault::getContextNodeListLength() const
 
 
 
-unsigned int
+StylesheetExecutionContextDefault::size_type
 StylesheetExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contextNode) const
 {
 	return m_xpathExecutionContextDefault.getContextNodeListPosition(contextNode);
@@ -1861,7 +1861,7 @@ StylesheetExecutionContextDefault::charactersRaw(const XObjectPtr&	xobject)
 
 
 
-unsigned long
+StylesheetExecutionContextDefault::size_type
 StylesheetExecutionContextDefault::getTraceListeners() const
 {
 	assert(m_xsltProcessor != 0);

@@ -79,7 +79,7 @@ GenerateEvent::GenerateEvent(
 	m_characters(),
 	m_start(0),
 	m_length(0),
-	m_name(XalanDOMString(name)),
+	m_name(name),
 	m_data(),
 	m_pAtts(atts)
 {
@@ -103,10 +103,10 @@ GenerateEvent::GenerateEvent(
 
 
 GenerateEvent::GenerateEvent(
-			EventType				eventType,
-			const XalanDOMChar*		ch,
-			unsigned int			start,
-			unsigned int			length) :
+			EventType					eventType,
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length) :
 	m_eventType(eventType),
 	m_characters(ch + start, length),
 	m_start(start),
@@ -127,8 +127,8 @@ GenerateEvent::GenerateEvent(
 	m_characters(),
 	m_start(0),
 	m_length(0),
-	m_name(XalanDOMString(name)),
-	m_data(XalanDOMString(data)),
+	m_name(name),
+	m_data(data),
 	m_pAtts(0)
 {
 }
@@ -143,7 +143,7 @@ GenerateEvent::GenerateEvent(
 	m_start(0),
 	m_length(0),
 	m_name(),
-	m_data(XalanDOMString(data)),
+	m_data(data),
 	m_pAtts(0)
 {
 }

@@ -281,7 +281,7 @@ KeyTable::processKeyDeclaration(
 
 		// Use each node in the node list as a key value that we'll be 
 		// able to use to look up the given node.
-		const unsigned int	nUseValues = nl.getLength();
+		const NodeRefListBase::size_type	nUseValues = nl.getLength();
 
 		StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
 

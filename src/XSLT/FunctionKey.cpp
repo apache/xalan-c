@@ -157,7 +157,7 @@ FunctionKey::execute(
 		{
 			const NodeRefListBase&	theNodeSet = arg2->nodeset();
 
-			const unsigned int		nRefs = theNodeSet.getLength();
+			const NodeRefListBase::size_type	nRefs = theNodeSet.getLength();
 
 			if (nRefs > 0)
 			{
@@ -171,7 +171,7 @@ FunctionKey::execute(
 
 				XalanDOMString	ref;
 
-				for(unsigned int i = 0; i < nRefs; i++)
+				for(NodeRefListBase::size_type i = 0; i < nRefs; i++)
 				{
 					assert(theNodeSet.item(i) != 0);
 

@@ -95,9 +95,9 @@ FunctionSystemProperty::execute(
 {
 	assert(arg1.null() == false);
 
-	const XalanDOMString&	fullName = arg1->str();
-	const unsigned int		fullNameLength = length(fullName);
-	const unsigned int		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
+	const XalanDOMString&				fullName = arg1->str();
+	const XalanDOMString::size_type		fullNameLength = length(fullName);
+	const XalanDOMString::size_type		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
 
 	bool			fNumberResult = false;
 

@@ -130,7 +130,7 @@ AVT::AVT(
 {
 	StringTokenizer		tokenizer(stringedValue, theTokenDelimiterCharacters, true);
 
-	const unsigned int	nTokens = tokenizer.countTokens();
+	const StringTokenizer::size_type	nTokens = tokenizer.countTokens();
 
 	if(nTokens < 2)
 	{

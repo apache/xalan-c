@@ -116,11 +116,11 @@ private:
 	bool
 	operator==(const FunctionGenerateID&) const;
 
-	const XalanDOMString			m_prefix;
+	const XalanDOMString				m_prefix;
 
-	const unsigned int				m_prefixLength;
+	const XalanDOMString::size_type		m_prefixLength;
 
-	static const XalanDOMString		s_emptyString;
+	static const XalanDOMString			s_emptyString;
 };
 
 

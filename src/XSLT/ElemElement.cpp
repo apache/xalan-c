@@ -171,17 +171,17 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 		m_namespaceAVT->evaluate(elemNameSpace, sourceNode, *this, executionContext);
 	}
 
-	unsigned int		namespaceLen = length(elemNameSpace);
+	XalanDOMString::size_type	namespaceLen = length(elemNameSpace);
 
-	bool				isIllegalElement = false;
+	bool	isIllegalElement = false;
 
-	bool				hasUnresolvedPrefix = false;
+	bool	hasUnresolvedPrefix = false;
 
-	unsigned int		len = length(elemName);
+	XalanDOMString::size_type			len = length(elemName);
 
-	const unsigned int	indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
+	const XalanDOMString::size_type		indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
 
-	const bool			haveNamespace = indexOfNSSep == len ? false : true;
+	const bool	haveNamespace = indexOfNSSep == len ? false : true;
 
 	StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(executionContext);
 

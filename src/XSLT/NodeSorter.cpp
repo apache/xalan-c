@@ -133,7 +133,7 @@ NodeSorter::sort(
 {
 	if (m_keys.size() > 0)
 	{
-		const unsigned int	theLength = theList.getLength();
+		const NodeRefListBase::size_type	theLength = theList.getLength();
 
 		// Copy the nodes to a vector...
 		assert(m_scratchVector.size() == 0);

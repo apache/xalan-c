@@ -132,7 +132,7 @@ CountersTable::countNode(
 				{
 					Counter&	counter = counters[i];
 
-					const unsigned int	cacheLen = counter.m_countNodes.size();
+					const Counter::NodeVectorType::size_type	cacheLen = counter.m_countNodes.size();
 
 					if(cacheLen > 0 && counter.m_countNodes[cacheLen - 1] == target)
 					{
@@ -176,19 +176,19 @@ Counter::getPreviouslyCounted(
 		StylesheetExecutionContext&		executionContext,
 		const XalanNode*				node) const
 {
-	const int	n = m_countNodes.size();
+	const NodeVectorType::size_type		n = m_countNodes.size();
 
 	int			result = 0;
 
-	for(int i = n - 1; i >= 0; --i)
+	for(NodeVectorType::size_type i = n; i > 0; --i)
 	{
-		const XalanNode* const	countedNode = m_countNodes[i];
+		const XalanNode* const	countedNode = m_countNodes[i - 1];
 
 		if(node == countedNode)
 		{
 			// Since the list is in backwards order, the count is 
 			// how many are in the rest of the list.
-			result = i + 1 + m_countNodesStartCount;
+			result = i + m_countNodesStartCount;
 			break;
 		}
 

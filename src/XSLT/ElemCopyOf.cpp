@@ -210,9 +210,9 @@ ElemCopyOf::doCloneNodeSet(
 			StylesheetExecutionContext&		executionContext,
 			const NodeRefListBase&			theNodeList) const
 {
-	unsigned int	nChildren = theNodeList.getLength();
+	const NodeRefListBase::size_type	nChildren = theNodeList.getLength();
 
-	for(unsigned int i = 0; i < nChildren; i++)
+	for(NodeRefListBase::size_type i = 0; i < nChildren; i++)
 	{
 		assert(theNodeList.item(i) != 0);
 

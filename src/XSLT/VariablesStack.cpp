@@ -107,12 +107,13 @@ VariablesStack::reset()
 bool
 VariablesStack::elementFrameAlreadyPushed(const ElemTemplateElement*	elem) const
 {
-	const unsigned int	nElems = m_stack.size();
+	const VariableStackStackType::size_type		nElems = m_stack.size();
+	assert(nElems > 0);
 
 	// There is guaranteed to be a context marker at
 	// the bottom of the stack, so i should stop at
 	// 1.
-	for(unsigned int i = nElems - 1; i > 0; --i)
+	for(VariableStackStackType::size_type i = nElems - 1; i > 0; --i)
 	{
 		const StackEntry&	theEntry = m_stack[i];
 
@@ -141,11 +142,11 @@ VariablesStack::pushContextMarker()
 void
 VariablesStack::popContextMarker()
 {
-	const int	nElems = m_stack.size();
+	const VariableStackStackType::size_type		nElems = m_stack.size();
 
-	for(int i = nElems - 1; i >= 0 && m_stack.empty() == false; --i)
+	for(VariableStackStackType::size_type i = nElems; i > 0 && m_stack.empty() == false; --i)
 	{
-		const StackEntry&			theEntry = m_stack[i];
+		const StackEntry&			theEntry = m_stack[i - 1];
 		assert(theEntry == back());
 
 		const StackEntry::eType		type = theEntry.getType();
@@ -546,9 +547,13 @@ private:
 void
 VariablesStack::popElementFrame(const ElemTemplateElement*	elem)
 {
-	const unsigned int	nElems = m_stack.size();
+	const VariableStackStackType::size_type		nElems = m_stack.size();
+	assert(nElems > 0);
 
-	for(unsigned int i = nElems - 1; i > 0; --i)
+	// There is guaranteed to be a context marker at
+	// the bottom of the stack, so i should stop at
+	// 1.
+	for(VariableStackStackType::size_type i = nElems - 1; i > 0; --i)
 	{
 		const StackEntry&	theEntry = m_stack[i];
 

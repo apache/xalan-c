@@ -77,8 +77,8 @@ ElemTextLiteral::ElemTextLiteral(
 			int								lineNumber,
 			int								columnNumber,
             const XMLCh*					ch,
-			int								start,
-			int								length,
+			XalanDOMString::size_type		start,
+			XalanDOMString::size_type		length,
             bool							isCData,
 			bool							preserveSpace,
             bool							disableOutputEscaping) :

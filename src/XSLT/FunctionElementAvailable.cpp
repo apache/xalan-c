@@ -87,10 +87,10 @@ FunctionElementAvailable::execute(
 {
 	assert(arg1.null() == false);
 
-	const XalanDOMString&	fullName = arg1->str();
+	const XalanDOMString&				fullName = arg1->str();
 
-	const unsigned int		nameLength = length(fullName);
-	const unsigned int		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
+	const XalanDOMString::size_type		nameLength = length(fullName);
+	const XalanDOMString::size_type		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
 
 	const XalanDOMString			prefix =
 		indexOfNSSep < nameLength ? substring(fullName, 0, indexOfNSSep) : XalanDOMString();

@@ -170,7 +170,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 			XObjectFactory&		xobjectFactory,
 			XPathFactory&		xpathFactory) :
 	XSLTProcessor(),
-	DocumentHandler(),
 	PrefixResolver(),
 	m_useDOMResultTreeFactory(false),
 	m_domResultTreeFactory(0),
@@ -668,7 +667,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 	XalanDOMString			localXSLURLString = trim(xslURLString);
 
-	const unsigned int		fragIndex = indexOf(localXSLURLString, XalanUnicode::charNumberSign);
+	const XalanDOMString::size_type		fragIndex = indexOf(localXSLURLString, XalanUnicode::charNumberSign);
 
 	const XalanDocument*	stylesheetDoc = 0;
 
@@ -1003,9 +1002,9 @@ XSLTEngineImpl::outputToResultTree(
 		{
 			const NodeRefListBase&	nl = value.nodeset();
 
-			const unsigned int		nChildren = nl.getLength();
+			const NodeRefListBase::size_type	nChildren = nl.getLength();
 
-			for(unsigned int i = 0; i < nChildren; i++)
+			for(NodeRefListBase::size_type i = 0; i < nChildren; i++)
 			{
 				XalanNode*			pos = nl.item(i);
 				assert(pos != 0);
@@ -1107,7 +1106,7 @@ XSLTEngineImpl::setExecutionContext(StylesheetExecutionContext*		theExecutionCon
 // SECTION: Diagnostic functions
 //==========================================================
 
-unsigned long
+XSLTEngineImpl::size_type
 XSLTEngineImpl::getTraceListeners() const
 {
 	return m_traceListeners.size();
@@ -1612,13 +1611,13 @@ XSLTEngineImpl::traceSelect(
 		{
 			msg += attr->getValue();
 			msg += XALAN_STATIC_UCODE_STRING(", ");
-			msg += LongToDOMString(nl.getLength());
+			msg += UnsignedLongToDOMString(nl.getLength());
 			msg += XALAN_STATIC_UCODE_STRING(" selected");
 		}
 		else
 		{
 			msg += XALAN_STATIC_UCODE_STRING("*|text(), (default select), ");
-			msg += LongToDOMString(nl.getLength());
+			msg += UnsignedLongToDOMString(nl.getLength());
 			msg += XALAN_STATIC_UCODE_STRING(" selected");
 		}
 
@@ -1974,9 +1973,9 @@ XSLTEngineImpl::characters(
 
 void
 XSLTEngineImpl::characters(
-			const XMLCh* const	ch,
-			const unsigned int	start,
-			const unsigned int 	length)
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length)
 {
 	assert(getFormatterListener() != 0);
 	assert(ch != 0);
@@ -2066,9 +2065,9 @@ XSLTEngineImpl::characters(const XObjectPtr&	xobject)
 
 void 
 XSLTEngineImpl::charactersRaw(
-			const XMLCh* const	ch,
-			const unsigned int	start,
-			const unsigned int	length)
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length)
 {
 	assert(ch != 0);
 
@@ -2128,8 +2127,8 @@ XSLTEngineImpl::resetDocument()
 
 void
 XSLTEngineImpl::ignorableWhitespace(
-			const XMLCh* const	ch,
-			const unsigned int 	length)
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	length)
 {
 	assert(getFormatterListener() != 0);
 	assert(ch != 0);
@@ -2151,8 +2150,8 @@ XSLTEngineImpl::ignorableWhitespace(
 
 void
 XSLTEngineImpl::processingInstruction(
-			const XMLCh* const	target,
-			const XMLCh* const	data)
+			const XalanDOMChar*		target,
+			const XalanDOMChar*		data)
 {
 	assert(getFormatterListener() != 0);
 	assert(target != 0);
@@ -2176,7 +2175,7 @@ XSLTEngineImpl::processingInstruction(
 
 
 void
-XSLTEngineImpl::comment(const XMLCh* const	data)
+XSLTEngineImpl::comment(const XalanDOMChar*		data)
 {
 	assert(getFormatterListener() != 0);
 	assert(data != 0);
@@ -2195,7 +2194,7 @@ XSLTEngineImpl::comment(const XMLCh* const	data)
 
 
 void
-XSLTEngineImpl::entityReference(const XMLCh* const	name)
+XSLTEngineImpl::entityReference(const XalanDOMChar*		name)
 {
 	assert(getFormatterListener() != 0);
 	assert(name != 0);
@@ -2217,9 +2216,9 @@ XSLTEngineImpl::entityReference(const XMLCh* const	name)
 
 void
 XSLTEngineImpl::cdata(
-			const XMLCh* const	ch,
-			const unsigned int 	start,
-			const unsigned int 	length)
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length)
 {
 	assert(getFormatterListener() != 0);
 	assert(ch != 0);
@@ -2474,7 +2473,7 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 	{
 		bool	fResult = false;
 
-		const unsigned int	indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
+		const XalanDOMString::size_type		indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
 
 		if(indexOfNSSep == length(elementName))
 		{
@@ -2539,10 +2538,10 @@ XSLTEngineImpl::getResultPrefixForNamespace(const XalanDOMString&	theNamespace) 
 
 inline bool
 isPrefixUsed(
-			const XalanDOMString&	thePrefix,
-			unsigned int			thePrefixLength,
-			const XalanDOMChar*		theName,
-			unsigned int			theNameLength)
+			const XalanDOMString&		thePrefix,
+			XalanDOMString::size_type	thePrefixLength,
+			const XalanDOMChar*			theName,
+			XalanDOMString::size_type	theNameLength)
 {
 	assert(thePrefixLength != 0);
 
@@ -2556,7 +2555,7 @@ isPrefixUsed(
 	{
 		assert(theName != 0);
 
-		const unsigned int	theIndex = indexOf(
+		const XalanDOMString::size_type		theIndex = indexOf(
 			theName,
 			XalanUnicode::charColon);
 
@@ -2578,9 +2577,9 @@ isPrefixUsed(
 
 inline bool
 isPrefixUsed(
-			const XalanDOMString&	thePrefix,
-			unsigned int			thePrefixLength,
-			const XalanDOMString&	theName)
+			const XalanDOMString&		thePrefix,
+			XalanDOMString::size_type	thePrefixLength,
+			const XalanDOMString&		theName)
 {
 	return isPrefixUsed(thePrefix, thePrefixLength, c_wstr(theName), length(theName));
 }
@@ -2589,10 +2588,10 @@ isPrefixUsed(
 
 inline bool
 isPrefixUsedOrDeclared(
-			const XalanDOMString&	thePrefix,
-			unsigned int			thePrefixLength,
-			const XalanDOMChar*		theName,
-			unsigned int			theNameLength)
+			const XalanDOMString&		thePrefix,
+			XalanDOMString::size_type	thePrefixLength,
+			const XalanDOMChar*			theName,
+			XalanDOMString::size_type	theNameLength)
 {
 	if (isPrefixUsed(thePrefix, thePrefixLength, theName, theNameLength) == true)
 	{
@@ -2600,7 +2599,7 @@ isPrefixUsedOrDeclared(
 	}
 	else
 	{
-		const unsigned int	theDeclarationLength =
+		const XalanDOMString::size_type		theDeclarationLength =
 			thePrefixLength + DOMServices::s_XMLNamespaceWithSeparatorLength;
 
 		// If this is a namespace declaration for this prefix, then all of
@@ -2624,7 +2623,7 @@ inline bool
 isPendingAttributePrefix(
 			const AttributeList&		thePendingAttributes,
 			const XalanDOMString&		thePrefix,
-			unsigned int				thePrefixLength)
+			XalanDOMString::size_type	thePrefixLength)
 {
 	const unsigned int	thePendingAttributesCount =
 				thePendingAttributes.getLength();
@@ -2666,7 +2665,7 @@ isPendingAttributePrefix(
 bool
 XSLTEngineImpl::isPendingResultPrefix(const XalanDOMString&		thePrefix) const
 {
-	const unsigned int	thePrefixLength = length(thePrefix);
+	const XalanDOMString::size_type		thePrefixLength = length(thePrefix);
 	assert(thePrefixLength > 0);
 
 	// The element name must be greater than the length of the prefix + 1, since
@@ -3166,10 +3165,10 @@ XSLTEngineImpl::fireCharacterGenerateEvent(
 
 void
 XSLTEngineImpl::fireCharacterGenerateEvent(
-			const XMLCh*	ch,
-			unsigned int	start,
-			unsigned int	length,
-			bool			isCDATA)
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length,
+			bool						isCDATA)
 {
 	const GenerateEvent		ge(
 		isCDATA == true ? GenerateEvent::EVENTTYPE_CDATA : GenerateEvent::EVENTTYPE_CHARACTERS,

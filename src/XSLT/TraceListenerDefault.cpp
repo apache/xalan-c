@@ -257,7 +257,7 @@ TraceListenerDefault::selected(const SelectionEvent&	ev)
 
 			const NodeRefListBase&	nl = ev.m_selection->nodeset();
 
-			const unsigned int	n = nl.getLength();
+			const NodeRefListBase::size_type	n = nl.getLength();
 
 			if(n == 0)
 			{
@@ -265,7 +265,7 @@ TraceListenerDefault::selected(const SelectionEvent&	ev)
 			}
 			else
 			{
-				for(unsigned int i = 0; i < n; i++)
+				for(NodeRefListBase::size_type i = 0; i < n; i++)
 				{
 					assert(nl.item(i) != 0);
 

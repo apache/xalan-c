@@ -111,8 +111,8 @@ ElemLiteralResult::ElemLiteralResult(
 	{
 		const XalanDOMChar*	const	aname = atts.getName(i);
 
-		bool						needToProcess = true;
-		const unsigned int			indexOfNSSep = indexOf(aname, XalanUnicode::charColon);
+		bool								needToProcess = true;
+		const XalanDOMString::size_type		indexOfNSSep = indexOf(aname, XalanUnicode::charColon);
 
 		XalanDOMString				prefix;
 
@@ -216,7 +216,7 @@ ElemLiteralResult::postConstruction(
 
 		const XalanDOMString&	theName = avt->getName();
 
-		const unsigned int	theColonIndex = indexOf(theName, XalanUnicode::charColon);
+		const XalanDOMString::size_type		theColonIndex = indexOf(theName, XalanUnicode::charColon);
 
 		if (theColonIndex != length(theName))
 		{
@@ -363,7 +363,7 @@ ElemLiteralResult::isAttrOK(
 
     if(isAttrOK == false)
     {
-		const unsigned int	indexOfNSSep = indexOf(attrName, XalanUnicode::charColon);
+		const XalanDOMString::size_type		indexOfNSSep = indexOf(attrName, XalanUnicode::charColon);
 
 		if(indexOfNSSep < length(attrName))
 		{

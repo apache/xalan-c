@@ -453,15 +453,15 @@ public:
 
 	virtual void
 	characters(
-			const XalanDOMChar*		ch,
-			unsigned int			start,
-			unsigned int			length);
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length);
 
 	virtual void
 	charactersRaw(
-			const XalanDOMChar*		ch,
-			unsigned int			start,
-			unsigned int			length);
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length);
 
 	virtual void
 	comment(const XalanDOMChar*		data);
@@ -597,7 +597,7 @@ public:
 	installXalanNumberFormatFactory(XalanNumberFormatFactory*	theFactory);
 
 
-	virtual unsigned long
+	virtual size_type
 	getTraceListeners() const;
 
 	virtual void
@@ -759,10 +759,10 @@ public:
 	virtual void	
 	setContextNodeList(const NodeRefListBase&	theList);
 
-	virtual unsigned int
+	virtual size_type
 	getContextNodeListLength() const;
 
-	virtual unsigned int
+	virtual size_type
 	getContextNodeListPosition(const XalanNode&		contextNode) const;
 
 	virtual bool

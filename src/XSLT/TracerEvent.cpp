@@ -87,11 +87,11 @@ TracerEvent::~TracerEvent()
 XalanDOMString
 TracerEvent::printNode(const XalanNode&		n)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	XalanDOMString	r = UnsignedLongToDOMString((unsigned long)&n) + XALAN_STATIC_UCODE_STRING(" ");
-#else
-	XalanDOMString	r = UnsignedLongToDOMString(reinterpret_cast<unsigned long>(&n)) + XALAN_STATIC_UCODE_STRING(" ");
-#endif
+	XalanDOMString	r;
+
+	PointerToDOMString(&n, r);
+
+	append(r, XALAN_STATIC_UCODE_STRING(" "));
 
 	if (n.getNodeType() == XalanNode::ELEMENT_NODE)
 	{
@@ -140,13 +140,11 @@ TracerEvent::printNode(const XalanNode&		n)
 XalanDOMString
 TracerEvent::printNodeList(const XalanNodeList&	l)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	XalanDOMString	r = UnsignedLongToDOMString((unsigned long)&l) +
-								XALAN_STATIC_UCODE_STRING("[");
-#else
-	XalanDOMString	r = UnsignedLongToDOMString(reinterpret_cast<long>(&l)) +
-								XALAN_STATIC_UCODE_STRING("[");
-#endif
+	XalanDOMString	r;
+
+	PointerToDOMString(&l, r);
+
+	append(r, XALAN_STATIC_UCODE_STRING("["));
 
 	unsigned int	len = l.getLength();
 	unsigned int	i = 0;

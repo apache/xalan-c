@@ -179,10 +179,10 @@ public:
 	* @param length    end offset to be used in the chara array
 	*/
 	GenerateEvent(
-			EventType				eventType,
-			const XalanDOMChar*		ch,
-			unsigned int			start,
-			unsigned int			length);
+			EventType					eventType,
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length);
 	
 	/** 
 	* Constructor for processingInstruction events.
@@ -221,12 +221,12 @@ public:
 	/** 
 	 * The start position of the current data in m_characters.
 	 */
-	unsigned int			m_start;
+	XalanDOMString::size_type	m_start;
 
 	/** 
 	 * The length of the current data in m_characters.
 	 */
-	unsigned int			m_length;
+	XalanDOMString::size_type	m_length;
 
 	/** 
 	 * The name of the element or PI.

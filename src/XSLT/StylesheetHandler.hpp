@@ -454,13 +454,13 @@ private:
 
 	void
 	processText(
-			const XMLCh* const	chars,
-			const unsigned int	length);
+			const XMLCh*				chars,
+			XalanDOMString::size_type	length);
 
 	void
 	accumulateText(
-			const XMLCh* const	chars,
-			const unsigned int	length);
+			const XMLCh*				chars,
+			XalanDOMString::size_type	length);
 
 	void
 	processAccumulatedText();

@@ -103,19 +103,19 @@ public:
 	~ElemForEach();
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<ElemSort*>		SortElemsVector;
+	typedef vector<ElemSort*>		SortElemsVectorType;
 #else
-	typedef std::vector<ElemSort*>	SortElemsVector;
+	typedef std::vector<ElemSort*>	SortElemsVectorType;
 #endif
 
 
-	const SortElemsVector&
+	const SortElemsVectorType&
 	getSortElems() const
 	{
 		return m_sortElems;
 	}
 
-	SortElemsVector&
+	SortElemsVectorType&
 	getSortElems()
 	{
 		return m_sortElems;
@@ -163,11 +163,11 @@ protected:
 			XalanNode*						sourceNodeContext,
 			int								selectStackFrameIndex) const;
 
-	const XPath*		m_selectPattern;
+	const XPath*			m_selectPattern;
 
 private:
 
-	SortElemsVector		m_sortElems;
+	SortElemsVectorType		m_sortElems;
 };
 
 

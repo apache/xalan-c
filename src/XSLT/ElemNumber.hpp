@@ -220,7 +220,7 @@ protected:
 			const MutableNodeRefList&		ancestors,
 			CountersTable&					ctable,
 			int								numberList[],
-			unsigned int					numberListLength,
+			NodeRefListBase::size_type		numberListLength,
 			XalanDOMString&					theResult) const;
 
 	/**
@@ -263,7 +263,7 @@ protected:
 	formatNumberList(	
 			StylesheetExecutionContext&		executionContext,
 			const int						theList[],
-			unsigned int					theListLength,
+			NodeRefListBase::size_type		theListLength,
 			XalanNode*						contextNode,
 			XalanDOMString&					formattedNumber) const;
 
@@ -353,7 +353,7 @@ private:
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						contextNode,
 			XalanDOMChar					numberType,
-			int								numberWidth,
+			XalanDOMString::size_type		numberWidth,
 			int								listElement,
 			XalanDOMString&					theResult) const;
 
@@ -443,6 +443,8 @@ private:
 	{
 	public:
 
+		typedef XalanDOMString::size_type	size_type;
+
 		/**
 		 * Construct a NumberFormatStringTokenizer.
 		 *
@@ -500,14 +502,14 @@ private:
 		 * 
 		 * @return number of remaining tokens
 		 */
-		unsigned int
+		size_type
 		countTokens() const;
 
 	private:
 
-		unsigned int			m_currentPosition;
+		size_type				m_currentPosition;
 
-		unsigned int			m_maxPosition;
+		size_type				m_maxPosition;
 
 		const XalanDOMString*	m_string;
 	};

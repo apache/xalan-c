@@ -151,7 +151,7 @@ class XSLTResultTarget;
  *
  */
 
-class XALAN_XSLT_EXPORT XSLTEngineImpl : public XSLTProcessor, private DocumentHandler, public PrefixResolver
+class XALAN_XSLT_EXPORT XSLTEngineImpl : public XSLTProcessor, public PrefixResolver
 {
 public:
 
@@ -288,7 +288,7 @@ public:
 
 	// Trace-related functions...
 
-	virtual unsigned long
+	virtual size_type
 	getTraceListeners() const;
 
 	virtual void
@@ -449,35 +449,53 @@ public:
 						   value);
 	}
 
+	void
+	setDocumentLocator(const Locator*	locator);
+
+	void
+	startDocument();
+
+	void
+	endDocument();
+	
+	void
+	startElement(
+			const XalanDOMChar*		name,
+			AttributeList&			atts);
+
+	void
+	endElement(const XalanDOMChar*	name);
+
+	void
+	characters (
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	length);
+
+	void
+	ignorableWhitespace(
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	length);
+
+	void
+	processingInstruction(
+			const XalanDOMChar*		target,
+			const XalanDOMChar*		data);
+
+	void
+	resetDocument();
+
 	/**
 	 * Receive notification of character data.
-	 *
-	 * <p>The Parser will call this method to report each chunk of
-	 * character data.	SAX parsers may return all contiguous character
-	 * data in a single chunk, or they may split it into several
-	 * chunks; however, all of the characters in any single event
-	 * must come from the same external entity, so that the Locator
-	 * provides useful information.</p>
-	 *
-	 * <p>The application must not attempt to read from the array
-	 * outside of the specified range.</p>
-	 *
-	 * <p>Note that some parsers will report whitespace using the
-	 * ignorableWhitespace() method rather than this one (validating
-	 * parsers must do so).</p>
-	 *
-	 * NOTE: This method is only provided for compatibility with existing code
 	 *
 	 * @param ch	 pointer to characters from the XML document
 	 * @param start  startng offset in 'ch' array
 	 * @param length number of characters to read from the array 
-	 * @deprecated
 	 */
-	virtual void
+	void
 	characters(
-			const XMLCh* const	ch,
-			const unsigned int	start,
-			const unsigned int	length);
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length);
 
 	/**
 	 * Send character data from the node to the result tree.
@@ -492,7 +510,7 @@ public:
 	 *
 	 * @param node The xobject to send.
 	 */
-	virtual void
+	void
 	characters(const XObjectPtr&	xobject);
 
 	/**
@@ -500,10 +518,9 @@ public:
 	 * attribute list
 	 *
 	 * @param name element type name
-	 * @exception SAXException
 	 */
-	virtual void
-	startElement(const XMLCh* const		name);
+	void
+	startElement(const XalanDOMChar*	name);
 
 	/**
 	 * Receive notification of character data. If available, when the
@@ -513,20 +530,19 @@ public:
 	 * @param ch pointer to characters from the XML document
 	 * @param start start position in the array
 	 * @param length number of characters to read from the array
-	 * @exception SAXException
 	 */
-	virtual void
+	void
 	charactersRaw(
-			const XMLCh* const	ch,
-			const unsigned int	start,
-			const unsigned int	length);
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length);
 
 	/**
 	 * Send raw character data from the node to the result tree.
 	 *
 	 * @param node The node to send.
 	 */
-	virtual void
+	void
 	charactersRaw(const XalanNode&	node);
 
 	/**
@@ -534,18 +550,16 @@ public:
 	 *
 	 * @param node The xobject to send.
 	 */
-	virtual void
+	void
 	charactersRaw(const XObjectPtr&		xobject);
 
 	/**
 	 * Called when a Comment is to be constructed.
 	 *
 	 * @param	data	pointer to comment data
-	 * @exception SAXException
 	 */
-	virtual void
-	comment(
-			const XMLCh* const	data);
+	void
+	comment(const XalanDOMChar*		data);
 
 	/**
 	 * Receive notification of a entityReference.
@@ -553,37 +567,21 @@ public:
 	 * @param data pointer to characters from the XML document
 	 * @exception SAXException
 	 */
-	virtual void
-	entityReference(
-			const XMLCh* const	data);
+	void
+	entityReference(const XalanDOMChar*		data);
 
 	/**
 	 * Receive notification of cdata.
 	 *
-	 * <p>The Parser will call this method to report each chunk of
-	 * character data.	SAX parsers may return all contiguous character
-	 * data in a single chunk, or they may split it into several
-	 * chunks; however, all of the characters in any single event
-	 * must come from the same external entity, so that the Locator
-	 * provides useful information.</p>
-	 *
-	 * <p>The application must not attempt to read from the array
-	 * outside of the specified range.</p>
-	 *
-	 * <p>Note that some parsers will report whitespace using the
-	 * ignorableWhitespace() method rather than this one (validating
-	 * parsers must do so).</p>
-	 *
 	 * @param ch	 pointer to characters from the XML document
 	 * @param start  start position in the array
 	 * @param length number of characters to read from the array
-	 * @exception SAXException
 	 */
-	virtual void
+	void
 	cdata(
-			const XMLCh* const	ch,
-			const unsigned int	start,
-			const unsigned int	length);
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length);
 
 	/**
 	 * Clone an element with or without children.
@@ -1279,44 +1277,6 @@ public:
 		}
 	}
 
-
-	// These methods are inherited from DocumentHandler ...
-	
-	virtual void
-	setDocumentLocator(const Locator* const		locator);
-
-	virtual void
-	startDocument();
-
-	virtual void
-	endDocument();
-	
-	virtual void
-	startElement(
-			const XMLCh* const	name,
-			AttributeList&		atts);
-
-	virtual void
-	endElement(
-			const XMLCh* const	name);
-
-	virtual void characters (
-		const XMLCh* const	chars,
-		const unsigned int	length);
-
-	virtual void
-	ignorableWhitespace(
-			const XMLCh* const	ch,
-			const unsigned int	length);
-
-	virtual void
-	processingInstruction(
-			const XMLCh* const	target,
-			const XMLCh* const	data);
-
-	virtual void
-	resetDocument();
-
 protected:
 
 	/**
@@ -1672,10 +1632,10 @@ private:
 
 	void
 	fireCharacterGenerateEvent(
-			const XMLCh*	ch,
-			unsigned int	start,
-			unsigned int	length,
-			bool			isCDATA);
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length,
+			bool						isCDATA);
 
 
 	XMLParserLiaison&	m_parserLiaison;

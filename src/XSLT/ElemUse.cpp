@@ -167,7 +167,7 @@ ElemUse::processUseAttributeSets(
 		isUAS = equals(attrName, Constants::ATTRNAME_USEATTRIBUTESETS);
 	}
 
-	if(isUAS)
+	if(isUAS == true)
 	{
 		const XalanDOMChar* const	qnames = atts.getValue(which);
 
@@ -175,9 +175,7 @@ ElemUse::processUseAttributeSets(
 											  c_wstr(XALAN_STATIC_UCODE_STRING(" \t\n\r")),
 											  false);
 
-		const unsigned int			numTokens = tokenizer.countTokens();
-
-		m_attributeSetsNames.reserve(numTokens);
+		m_attributeSetsNames.reserve(tokenizer.countTokens());
 
 		XalanDOMString	qname;
 

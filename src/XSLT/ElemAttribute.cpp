@@ -183,9 +183,9 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 
 		assign(origAttrName, attrName);
 
-		const unsigned int		origAttrNameLength = length(origAttrName);
+		const XalanDOMString::size_type		origAttrNameLength = length(origAttrName);
 
-		unsigned int			indexOfNSSep = 0;
+		XalanDOMString::size_type			indexOfNSSep = 0;
 
 		StylesheetExecutionContext::GetAndReleaseCachedString	attrNameSpaceGuard(executionContext);
 

@@ -85,6 +85,10 @@
 
 
 
+#include <XPath/NodeRefListBase.hpp>
+
+
+
 #include <XSLT/NamespacesHandler.hpp>
 
 
@@ -92,7 +96,6 @@
 class AttributeList;
 class ElemTemplate;
 class NamespacesHandler;
-class NodeRefListBase;
 class NodeSorter;
 class Stylesheet;
 class StylesheetConstructionContext;
@@ -756,8 +759,7 @@ protected:
 	 * Perform a query if needed, and call transformChild for each child.
 	 * 
 	 * @param executionContext The current execution context
-	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
-	 *      not think we need this).
+	 * @param xslInstruction The stylesheet element context
 	 * @param theTemplate The owning template context.
 	 * @param sourceNodes The source nodes to transform.
 	 * @param sourceNodesCount The count of source nodes to transform.
@@ -768,7 +770,7 @@ protected:
 			const ElemTemplateElement&			xslInstruction,
 			const ElemTemplateElement*			theTemplate,
 			const NodeRefListBase&				sourceNodes,
-			unsigned int						sourceNodesCount) const;
+			NodeRefListBase::size_type			sourceNodesCount) const;
 
 	/**
 	 * Given an element, find the corresponding

@@ -255,7 +255,7 @@ ElemTemplateElement::processSpaceAttr(
 bool
 ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 {
-    const unsigned int	len = length(s);
+    const XalanDOMString::size_type		len = length(s);
 
 	if (len == 0)
 	{
@@ -270,7 +270,7 @@ ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 
 		if(len > 1)
 		{
-			for(unsigned int i = 1; i < len; i++)
+			for(XalanDOMString::size_type i = 1; i < len; i++)
 			{
 				c = charAt(s, i); 
 
@@ -742,7 +742,7 @@ ElemTemplateElement::transformSelectedChildren(
 						theXObject));
 		}
 
-		const unsigned int	nNodes = sourceNodes.getLength();
+		const NodeRefListBase::size_type	nNodes = sourceNodes.getLength();
 
 		if (nNodes > 0)
 		{
@@ -798,7 +798,7 @@ ElemTemplateElement::transformSelectedChildren(
 			const ElemTemplateElement&			xslInstruction,
 			const ElemTemplateElement*			theTemplate,
 			const NodeRefListBase&				sourceNodes,
-			unsigned int						sourceNodesCount) const
+			NodeRefListBase::size_type			sourceNodesCount) const
 {
 	if(executionContext.getTraceSelects() == true)
 	{

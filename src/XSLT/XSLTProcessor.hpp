@@ -68,6 +68,10 @@
 
 
 
+#include <cstddef>
+
+
+
 #include <XalanDOM/XalanDOMString.hpp>
 
 
@@ -111,6 +115,8 @@ class XSLTResultTarget;
 class XALAN_XSLT_EXPORT XSLTProcessor
 {
 public:
+
+	typedef size_t	size_type;
 
 	XSLTProcessor();
 
@@ -336,7 +342,7 @@ public:
 	 * 
 	 * @return number of listeners
 	 */
-	virtual unsigned long
+	virtual size_type
 	getTraceListeners() const = 0;
 
 	/**

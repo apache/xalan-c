@@ -78,6 +78,7 @@
 
 
 
+#include <cstddef>
 #include <memory>
 
 
@@ -153,6 +154,8 @@ class XObjectPtr;
 class XALAN_XSLT_EXPORT StylesheetExecutionContext : public XPathExecutionContext
 {
 public:
+
+	typedef size_t	size_type;
 
 	explicit
 	StylesheetExecutionContext();
@@ -878,18 +881,7 @@ public:
 	/**
 	 * Receive notification of the beginning of an element.
 	 *
-	 * <p>The Parser will invoke this method at the beginning of every
-	 * element in the XML document; there will be a corresponding
-	 * endElement() event for every startElement() event (even when the
-	 * element is empty). All of the element's content will be
-	 * reported, in order, before the corresponding endElement()
-	 * event.</p>
-	 *
-	 * <p>If the element name has a namespace prefix, the prefix will
-	 * still be attached.</p>
-	 *
 	 * @param name element type name
-	 * @exception SAXException
 	 */
 	virtual void
 	startElement(const XalanDOMChar*	name) = 0;
@@ -897,16 +889,7 @@ public:
 	/**
 	 * Receive notification of the end of an element.
 	 *
-	 * <p>The SAX parser will invoke this method at the end of every
-	 * element in the XML document; there will be a corresponding
-	 * startElement() event for every endElement() event (even when the
-	 * element is empty).</p>
-	 *
-	 * <p>If the element name has a namespace prefix, the prefix will
-	 * still be attached to the name.</p>
-	 *
 	 * @param name element type name
-	 * @exception SAXException
 	 */
 	virtual void
 	endElement(const XalanDOMChar*	name) = 0;
@@ -914,30 +897,15 @@ public:
 	/**
 	 * Receive notification of character data.
 	 *
-	 * <p>The Parser will call this method to report each chunk of
-	 * character data.  SAX parsers may return all contiguous character
-	 * data in a single chunk, or they may split it into several
-	 * chunks; however, all of the characters in any single event
-	 * must come from the same external entity, so that the Locator
-	 * provides useful information.</p>
-	 *
-	 * <p>The application must not attempt to read from the array
-	 * outside of the specified range.</p>
-	 *
-	 * <p>Note that some parsers will report whitespace using the
-	 * ignorableWhitespace() method rather than this one (validating
-	 * parsers must do so).</p>
-	 *
 	 * @param ch     pointer to characters from the XML document
 	 * @param start  start position in the array
 	 * @param length number of characters to read from the array
-	 * @exception SAXException
 	 */
 	virtual void
 	characters(
-			const XalanDOMChar*		ch,
-			unsigned int			start,
-			unsigned int			length) = 0;
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length) = 0;
 
 	/**
 	 * Receive notification of character data. If available, when the
@@ -947,19 +915,17 @@ public:
 	 * @param ch     pointer to characters from the XML document
 	 * @param start  start position in the array
 	 * @param length number of characters to read from the array
-	 * @exception SAXException
 	 */
 	virtual void
 	charactersRaw(
-			const XalanDOMChar*		ch,
-			unsigned int			start,
-			unsigned int			length) = 0;
+			const XalanDOMChar*			ch,
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length) = 0;
 
 	/**
 	 * Called when a Comment is to be constructed.
 	 *
 	 * @param   data	pointer to comment data
-	 * @exception SAXException
 	 */
 	virtual void
 	comment(const XalanDOMChar*		data) = 0;
@@ -967,17 +933,8 @@ public:
 	/**
 	 * Receive notification of a processing instruction.
 	 *
-	 * <p>The Parser will invoke this method once for each processing
-	 * instruction found: note that processing instructions may occur
-	 * before or after the main document element.</p>
-	 *
-	 * <p>A SAX parser should never report an XML declaration (XML 1.0,
-	 * section 2.8) or a text declaration (XML 1.0, section 4.3.1)
-	 * using this method.</p>
-	 *
 	 * @param target processing instruction target
 	 * @param data   processing instruction data, or null if none was supplied
-	 * @exception SAXException
 	 */
 	virtual void
 	processingInstruction(
@@ -1367,7 +1324,7 @@ public:
 	 * 
 	 * @return number of listeners
 	 */
-	virtual unsigned long
+	virtual size_type
 	getTraceListeners() const = 0;
 
 	/**
@@ -1485,7 +1442,7 @@ public:
 	 */
 	virtual	void
 	beginConstruction(const KeyDeclaration& keyDeclaration) = 0; 
-	
+
 	/**
 	 * Remove KeyDeclaration from construction list.
 	 * 
@@ -1600,10 +1557,10 @@ public:
 	virtual void	
 	setContextNodeList(const NodeRefListBase&	theList) = 0;
 
-	virtual unsigned int
+	virtual size_type
 	getContextNodeListLength() const = 0;
 
-	virtual unsigned int
+	virtual size_type
 	getContextNodeListPosition(const XalanNode&		contextNode) const = 0;
 
 	virtual bool

@@ -508,7 +508,7 @@ Stylesheet::isAttrOK(
 	{
 		// Others are OK if their prefix has been
 		// bound to a non-null Namespace URI other than XSLT's
-		const unsigned int	indexOfNSSep = indexOf(attrName, XalanUnicode::charColon);
+		const XalanDOMString::size_type		indexOfNSSep = indexOf(attrName, XalanUnicode::charColon);
 
 		if(indexOfNSSep < length(attrName))
 		{
@@ -533,7 +533,7 @@ Stylesheet::getNamespaceFromStack(const XalanDOMChar* 	nodeName) const
 {
 	assert(nodeName != 0);
 
-	const unsigned int		indexOfNSSep = indexOf(nodeName, XalanUnicode::charColon);
+	const XalanDOMString::size_type		indexOfNSSep = indexOf(nodeName, XalanUnicode::charColon);
 
 	const XalanDOMString	prefix =
 		indexOfNSSep < length(nodeName) ?
@@ -1332,13 +1332,17 @@ Stylesheet::getDecimalFormatSymbols(const XalanDOMString&	name) const
 	if(theSize > 0)
 	{
 		// Start from the top of the stack
-		for (int i = theSize - 1; i >= 0; --i)
+		for (ElemDecimalFormatVectorType::size_type i = theSize; i > 0; --i)
 		{
-			assert(m_elemDecimalFormats[i] != 0);
+			assert(m_elemDecimalFormats[i - 1] != 0);
 
-			if (equals(m_elemDecimalFormats[i]->getName(), name) == true)
+			const ElemDecimalFormat* const	theCurrent =
+				m_elemDecimalFormats[i - 1];
+			assert(theCurrent != 0);
+
+			if (equals(theCurrent->getName(), name) == true)
 			{
-				dfs = &m_elemDecimalFormats[i]->getDecimalFormatSymbols();
+				dfs = &theCurrent->getDecimalFormatSymbols();
 
 				break;
 			}

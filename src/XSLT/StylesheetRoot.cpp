@@ -477,7 +477,7 @@ StylesheetRoot::processOutputSpec(
 		{
 			StringTokenizer	theTokenizer(atts.getValue(i));
 
-			unsigned int	theTokenCount =
+			StringTokenizer::size_type	theTokenCount =
 				theTokenizer.countTokens();
 
 			m_cdataSectionElems.reserve(theTokenCount);

@@ -367,8 +367,8 @@ StylesheetHandler::startElement(
 
 		const XalanDOMString&	ns = getNamespaceFromStack(name);
 
-		const unsigned int		nameLength = length(name);
-		const unsigned int		index = indexOf(name, XalanUnicode::charColon);
+		const XalanDOMString::size_type		nameLength = length(name);
+		const XalanDOMString::size_type		index = indexOf(name, XalanUnicode::charColon);
 
 		const XalanDOMString	localName = index == nameLength ? XalanDOMString(name) : substring(name, index + 1);
 
@@ -380,7 +380,7 @@ StylesheetHandler::startElement(
 
 		ElemTemplateElement* elem = 0;
 
-		const unsigned	origStackSize = m_elemStack.size();
+		const ElemTemplateStackType::size_type	origStackSize = m_elemStack.size();
 
 		if(equals(ns, m_constructionContext.getXSLTNamespaceURI()))
 		{
@@ -1370,11 +1370,11 @@ stackContains(
 			const Stylesheet::URLStackType&		stack, 
 			const XalanDOMString&				urlString)
 {
-	const unsigned int	n = stack.size();
+	const Stylesheet::URLStackType::size_type	n = stack.size();
 
 	bool				contains = false;
 
-	for(unsigned int i = 0; i < n && contains == false; ++i)
+	for(Stylesheet::URLStackType::size_type i = 0; i < n && contains == false; ++i)
 	{
 		if(equals(stack[i], urlString))
 		{
@@ -1710,8 +1710,8 @@ StylesheetHandler::charactersRaw(
 
 void
 StylesheetHandler::processText(
-			const XMLCh* const	chars,
-			const unsigned int	length)
+			const XMLCh*				chars,
+			XalanDOMString::size_type	length)
 {
 	if(m_inTemplate)
 	{
@@ -1742,9 +1742,13 @@ StylesheetHandler::processText(
 
 		XalanAutoPtr<ElemTextLiteral>	elem(new ElemTextLiteral(m_constructionContext,
 			m_stylesheet,
-			lineNumber, columnNumber,
-			chars, 0, length,
-			true, preserveSpace, 
+			lineNumber,
+			columnNumber,
+			chars,
+			0,
+			length,
+			true,
+			preserveSpace, 
 			disableOutputEscaping));
 
 		const bool	isWhite = elem->isWhitespace();
@@ -1807,8 +1811,8 @@ StylesheetHandler::processText(
 
 void
 StylesheetHandler::accumulateText(
-			const XMLCh* const	chars,
-			const unsigned int	length)
+			const XMLCh*				chars,
+			XalanDOMString::size_type	length)
 {	
 	if(m_inTemplate)
 	{

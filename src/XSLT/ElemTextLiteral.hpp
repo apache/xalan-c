@@ -96,8 +96,8 @@ public:
 			int								lineNumber,
 			int								columnNumber,
             const XalanDOMChar*				ch,
-			int								start,
-			int								length,
+			XalanDOMString::size_type		start,
+			XalanDOMString::size_type		length,
             bool							isCData,
 			bool							preserveSpace,
             bool							disableOutputEscaping);

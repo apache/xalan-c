@@ -391,10 +391,10 @@ ElemNumber::getCountString(
 			const MutableNodeRefList&		ancestors,
 			CountersTable&					ctable,
 			int								numberList[],
-			unsigned int					numberListLength,
+			NodeRefListBase::size_type		numberListLength,
 			XalanDOMString&					theResult) const
 {
-	for(unsigned int i = 0; i < numberListLength; i++)
+	for(NodeRefListBase::size_type i = 0; i < numberListLength; i++)
 	{
 		XalanNode* const target = ancestors.item(numberListLength - i - 1);
 
@@ -472,11 +472,11 @@ ElemNumber::getCountString(
 				Constants::NUMBERLEVEL_SINGLE == m_level,
 				*ancestors.get());
 
-			const unsigned int	lastIndex = ancestors->getLength();
+			const NodeRefListBase::size_type	lastIndex = ancestors->getLength();
 
 			if(lastIndex > 0)
 			{
-				const unsigned int	theStackArrayThreshold = 100;
+				const NodeRefListBase::size_type	theStackArrayThreshold = 100;
 
 				if (lastIndex < theStackArrayThreshold)
 				{
@@ -775,7 +775,7 @@ ElemNumber::formatNumberList(
 
 	XalanDOMChar	numberType = XalanUnicode::charDigit_1;
 
-	int			numberWidth = 1;
+	XalanDOMString::size_type	numberWidth = 1;
 
 	typedef vector<XalanDOMString>		StringVectorType;
 	typedef StringVectorType::iterator	StringVectorTypeIterator;
@@ -806,14 +806,14 @@ ElemNumber::formatNumberList(
 			formatValue = XalanUnicode::charDigit_1;
 		}
 
-		NumberFormatStringTokenizer		formatTokenizer(formatValue);
+		NumberFormatStringTokenizer						formatTokenizer(formatValue);
 
-		const unsigned int	theTokenCount = formatTokenizer.countTokens();
+		const NumberFormatStringTokenizer::size_type	theTokenCount = formatTokenizer.countTokens();
 
 		tokenVector.resize(theTokenCount);
 
 		// Tokenize directly into the vector...
-		for(unsigned int i = 0; i < theTokenCount; ++i)
+		for(NumberFormatStringTokenizer::size_type i = 0; i < theTokenCount; ++i)
 		{
 			formatTokenizer.nextToken(tokenVector[i]);
 		}
@@ -1224,7 +1224,7 @@ ElemNumber::getFormattedNumber(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						contextNode,
 			XalanDOMChar					numberType,
-			int								numberWidth,
+			XalanDOMString::size_type		numberWidth,
 			int								listElement,
 			XalanDOMString&					theResult) const
 {
@@ -1290,17 +1290,17 @@ ElemNumber::getFormattedNumber(
 
 				formatter->format(listElement, theResult);
 
-				const unsigned int	lengthNumString = length(theResult);
+				const XalanDOMString::size_type		lengthNumString = length(theResult);
 
-				const int	nPadding = numberWidth - lengthNumString;
-
-				if (nPadding > 0)
+				if (numberWidth > lengthNumString)
 				{
+					const XalanDOMString::size_type	nPadding = numberWidth - lengthNumString;
+
 					const XalanDOMString	padString = formatter->format(0);
 
 					reserve(theResult, nPadding * length(padString) + lengthNumString + 1);
 
-					for(int i = 0; i < nPadding; i++)
+					for(XalanDOMString::size_type i = 0; i < nPadding; i++)
 					{
 						insert(theResult, 0, padString);
 					}
@@ -1318,7 +1318,9 @@ ElemNumber::int2singlealphaCount(
 		const XalanDOMString&	table,
 		XalanDOMString&			theResult)
 {
-	const int		radix = length(table);
+	assert(int(length(table)) == length(table));
+
+	const int	radix = int(length(table));
 
 	// TODO:  throw error on out of range input
 	if (val > radix)
@@ -1343,7 +1345,9 @@ ElemNumber::int2alphaCount(
 			const XalanDOMString&	table,
 			XalanDOMString&			theResult)
 {
-	const int		radix = length(table);
+	assert(int(length(table)) == length(table));
+
+	const int	radix = int(length(table));
 
 	// Create a buffer to hold the result
 	// TODO:  size of the table can be determined by computing
@@ -1394,7 +1398,7 @@ ElemNumber::int2alphaCount(
 		// term after the "|| " is that it correctly propagates carries across
 		// multiple columns.  
 		correction = ((lookupIndex == 0) || 
-			(correction != 0 && lookupIndex == radix-1 )) ? (radix-1) : 0;
+			(correction != 0 && lookupIndex == radix - 1 )) ? (radix - 1) : 0;
 
 		// index in "table" of the next char to emit
 		lookupIndex  = (val + correction) % radix;  
@@ -1507,7 +1511,7 @@ ElemNumber::NumberFormatStringTokenizer::nextToken()
 		return XalanDOMString();
 	}
 
-	const unsigned int	start = m_currentPosition;
+	const size_type		start = m_currentPosition;
 
 	if (isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
 	{
@@ -1539,7 +1543,7 @@ ElemNumber::NumberFormatStringTokenizer::nextToken(XalanDOMString&	theToken)
 		clear(theToken);
 	}
 
-	const unsigned int	start = m_currentPosition;
+	const size_type		start = m_currentPosition;
 
 	if (isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
 	{
@@ -1563,11 +1567,11 @@ ElemNumber::NumberFormatStringTokenizer::nextToken(XalanDOMString&	theToken)
 
 
 
-unsigned int
+ElemNumber::NumberFormatStringTokenizer::size_type
 ElemNumber::NumberFormatStringTokenizer::countTokens() const
 {
-	unsigned int 	count = 0;
-	unsigned int 	currpos = m_currentPosition;
+	size_type 	count = 0;
+	size_type 	currpos = m_currentPosition;
 
 	// Tokens consist of sequences of alphabetic characters and sequences of
 	// non-alphabetic characters

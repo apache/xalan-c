@@ -280,13 +280,13 @@ FunctionDocument::doExecute(
 	// This list will hold the nodes...
 	BorrowReturnMutableNodeRefList	mnl(executionContext);
 
-	const XObject::eObjectType	theType = arg->getType();
+	const XObject::eObjectType			theType = arg->getType();
 
-	const unsigned int		nRefs = XObject::eTypeNodeSet == theType ?
+	const NodeRefListBase::size_type	nRefs = XObject::eTypeNodeSet == theType ?
 												arg->nodeset().getLength()
 												: 1;
 
-	for(unsigned int i = 0; i < nRefs; i++)
+	for(NodeRefListBase::size_type i = 0; i < nRefs; i++)
 	{
 		assert(XObject::eTypeNodeSet != theType ||
 							arg->nodeset().item(i) != 0);
@@ -327,13 +327,13 @@ FunctionDocument::doExecute(
 			// characters. Systems not requiring partial forms should not use any
 			// unencoded slashes in their naming schemes.  If they do, absolute URIs
 			// will still work, but confusion may result.
-			const unsigned int	theLength = length(ref);
+			const XalanDOMString::size_type		theLength = length(ref);
 
-			const unsigned int	indexOfColon = indexOf(ref, XalanUnicode::charColon);
-			unsigned int		indexOfSlash = indexOf(ref, XalanUnicode::charSolidus);
+			const XalanDOMString::size_type		indexOfColon = indexOf(ref, XalanUnicode::charColon);
+			XalanDOMString::size_type			indexOfSlash = indexOf(ref, XalanUnicode::charSolidus);
 
 #if defined(WIN32)				
-			const unsigned int	indexOfBackSlash = indexOf(ref, XalanUnicode::charReverseSolidus);
+			const XalanDOMString::size_type		indexOfBackSlash = indexOf(ref, XalanUnicode::charReverseSolidus);
 
 			if(indexOfBackSlash > indexOfSlash && indexOfBackSlash < theLength)
 			{

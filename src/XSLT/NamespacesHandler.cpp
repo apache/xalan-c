@@ -319,7 +319,7 @@ NamespacesHandler::postConstruction(
 
 	// Figure out the prefix of the owning element, to make sure we
 	// don't exclude its prefix.
-	const unsigned int		indexOfNSSep = indexOf(theElementName, XalanUnicode::charColon);
+	const XalanDOMString::size_type		indexOfNSSep = indexOf(theElementName, XalanUnicode::charColon);
 
 	const XalanDOMString	thePrefix = indexOfNSSep < length(theElementName) ?
 					substring(theElementName, 0, indexOfNSSep) : XalanDOMString();
