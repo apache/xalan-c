@@ -83,12 +83,12 @@ and C API for performing standard transformations.</p>
 <note>As we expand the functionality of the XalanTransformer, we will revise the remainder of this chapter and the samples to indicate 
 how to take advantage of the API it provides.</note>
 <ul>
-  <li><link anchor="cpp">Basic XalanTransformer pattern with the C++ API</link></li>
+  <li><link anchor="cpp">Basic usage pattern with the XalanTransformer C++ API</link></li>
   <li><link anchor="cppvar">Variations with the XalanTransformer C++ API</link></li>  
-  <li><link anchor="c">Basic pattern with the XalanTransformer C API</link></li>
+  <li><link anchor="capi">Basic usage pattern with the XalanTransformer C API</link></li>
   <li><link anchor="cvar">Variations with the XalanTransformer C API</link></li>  
 </ul><anchor name="cpp"/>
-<s3 title="Basic XalanTransformer patten with C++ API">
+<s3 title="Basic usage patten with XalanTransformer C++ API">
 <p>Using XalanTransformer and the C++ API, you can perform one or more transformations as follows:</p>
 <ol>
   <li>Include the XalanTransformer header file.<br/>
@@ -136,8 +136,8 @@ transform( const XSLTInputSource&amp; xmlInput,
            const XSLTInputSource&amp; xslStylesheet,
            const XSLTResultTarget&amp; transformResult);</source>
                                             
-</s3><anchor name="c"/>
-<s3 title="Basic XalanTransformer pattern with the C API">
+</s3><anchor name="capi"/>
+<s3 title="Basic XalanTransformer usage pattern with the C API">
 <p>We also include a simple C interface for using the XalanTransformer class. See XalanTransformer/XalanCAPI.h in the source tree. 
 The <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> sample illustrates the use of this C API.</p>
 <p>Basic strategy:</p>
@@ -164,12 +164,6 @@ The <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> samp
 </s3><anchor name="cvar"/>
 <s3 title="Variations with the XalanTransformer C API">
 <p>The C API supports basically the same options as the C++ API.</p>
-<p>Transform from files to a character array:</p>
-<source>int
-XalanTransformToData(const char*  xmlInFile,
-                     const char*  xslFile,
-                     const char** transformOutput,
-                     XalanHandle  xalan);</source>
 <p>Transform from files to a character array:</p>
 <source>int
 XalanTransformToData(const char*  xmlInFile,
