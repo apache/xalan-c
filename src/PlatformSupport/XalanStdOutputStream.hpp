@@ -87,18 +87,21 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanStdOutputStream : public XalanOutputStre
 {
 public:
 
+#if defined (XALAN_NO_NAMESPACES)
+	typedef ostream		StreamType;
+	typedef int			StreamSizeType;
+#else
+	typedef std::ostream		StreamType;
+	typedef std::streamsize		StreamSizeType;
+#endif
+
 	/**
 	 * Construct a XalanStdOutputStream instance for output to the
 	 * standard output device.
 	 *
 	 * @param theOutputStream output stream to use
 	 */
-    XalanStdOutputStream(
-#if defined (XALAN_NO_NAMESPACES)
-			ostream&		theOutputStream);
-#else
-			std::ostream&	theOutputStream);
-#endif
+    XalanStdOutputStream(StreamType&	theOutputStream);
 
     virtual
 	~XalanStdOutputStream();
@@ -118,8 +121,9 @@ public:
 protected:
 
 	virtual void
-	writeData(const char*		theBuffer,
-			  unsigned long		theBufferLength);
+	writeData(
+			const char*		theBuffer,
+			size_type		theBufferLength);
 
 	virtual void
 	doFlush();
@@ -133,11 +137,7 @@ private:
 	operator=(const XalanStdOutputStream&);
 
 	// Data members...
-#if defined (XALAN_NO_NAMESPACES)
-	ostream&		m_outputStream;
-#else
-	std::ostream&	m_outputStream;
-#endif
+	StreamType&		m_outputStream;
 };
 
 

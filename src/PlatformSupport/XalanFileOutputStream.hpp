@@ -142,7 +142,7 @@ protected:
 	virtual void
 	writeData(
 			const char*		theBuffer,
-			unsigned long	theBufferLength);
+			size_type		theBufferLength);
 
 	virtual void
 	doFlush();

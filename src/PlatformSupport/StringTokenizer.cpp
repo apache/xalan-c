@@ -250,7 +250,7 @@ StringTokenizer::nextToken(XalanDOMString&	theToken)
 
 
 
-size_t
+StringTokenizer::size_type
 StringTokenizer::countTokens() const
 {
 	size_t						theCount = 0;

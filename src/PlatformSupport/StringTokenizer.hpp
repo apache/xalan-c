@@ -78,6 +78,8 @@ public:
 
 	static const XalanDOMChar	s_defaultTokens[];
 
+	typedef size_t	size_type;
+
 	/**
 	 * Constructs a tokenizer for the target string
 	 * 
@@ -130,7 +132,6 @@ public:
 					const XalanDOMString&	theTokens,
 					bool					fReturnTokens = false);
 
-	virtual
 	~StringTokenizer();
 
 	/**
@@ -138,7 +139,7 @@ public:
 	 * 
 	 * @return true if there are more tokens
 	 */
-	virtual bool
+	bool
 	hasMoreTokens() const;
 
 	/**
@@ -147,7 +148,7 @@ public:
 	 * 
 	 * @return next token string
 	 */
-	virtual XalanDOMString
+	XalanDOMString
 	nextToken();
 
 	/**
@@ -156,7 +157,7 @@ public:
 	 * 
 	 * @param theToken next token string
 	 */
-	virtual void
+	void
 	nextToken(XalanDOMString&	theToken);
 
 	/**
@@ -164,7 +165,7 @@ public:
 	 * 
 	 * @return number of remaining tokens
 	 */
-	virtual size_t
+	size_type
 	countTokens() const;
 
 protected:

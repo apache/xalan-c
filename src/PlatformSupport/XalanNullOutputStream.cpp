@@ -75,7 +75,7 @@ XalanNullOutputStream::~XalanNullOutputStream()
 void
 XalanNullOutputStream::writeData(
 			const char*		/* theBuffer */,
-			unsigned long	/* theBufferLength */)
+			size_type		/* theBufferLength */)
 {
 }
 

@@ -97,6 +97,8 @@ public :
 	typedef std::vector<char>			TranscodeVectorType;
 #endif
 
+	typedef BufferType::size_type	size_type;
+
 	/**
 	 * Constructor.
 	 *
@@ -191,7 +193,7 @@ public :
     void
 	write(
 			const char*		theBuffer,
-			size_t			theBufferLength)
+			size_type		theBufferLength)
 	{
 		assert(theBuffer != 0);
 
@@ -211,7 +213,7 @@ public :
     void
 	write(
 			const XalanDOMChar*		theBuffer,
-			size_t					theBufferLength);
+			size_type				theBufferLength);
 
 	/**
 	 * Get the output encoding for the stream.
@@ -357,12 +359,13 @@ protected:
 	void
 	transcode(
 			const XalanDOMChar*		theBuffer,
-			size_t					theBufferLength,
+			size_type				theBufferLength,
 			TranscodeVectorType&	theDestination);
 
 	virtual void
-	writeData(const char*	theBuffer,
-			  size_t		theBufferLength) = 0;
+	writeData(
+			const char*		theBuffer,
+			size_type		theBufferLength) = 0;
 
 	virtual void
 	doFlush() = 0;

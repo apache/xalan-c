@@ -152,12 +152,14 @@ XalanFileOutputStream::doFlush()
 void
 XalanFileOutputStream::writeData(
 			const char*		theBuffer,
-			unsigned long	theBufferLength)
+			size_type		theBufferLength)
 {
 #if defined(WIN32)
 	DWORD			theBytesWritten;
 
-	if (WriteFile(m_handle, theBuffer, theBufferLength, &theBytesWritten, 0) == false ||
+	assert(size_t(DWORD(theBufferLength)) == theBufferLength);
+
+	if (WriteFile(m_handle, theBuffer, DWORD(theBufferLength), &theBytesWritten, 0) == false ||
 	    theBytesWritten != theBufferLength)
 	{
 		throw XalanFileOutputStreamWriteException(

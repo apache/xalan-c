@@ -116,9 +116,11 @@ XalanStdOutputStream::doFlush()
 void
 XalanStdOutputStream::writeData(
 			const char*		theBuffer,
-			unsigned long	theBufferLength)
+			size_type		theBufferLength)
 {
-	m_outputStream.write(theBuffer, theBufferLength);
+	assert(StreamSizeType(theBufferLength) == theBufferLength);
+
+	m_outputStream.write(theBuffer, StreamSizeType(theBufferLength));
 
 	if(!m_outputStream)
 	{
