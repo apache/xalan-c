@@ -376,6 +376,11 @@ xsltMain(
 						theParams.m_xslFileName,
 						cout);
 			}
+
+			if (theResult != 0)
+			{
+				cerr << theTransformer.getLastError() << endl;
+			}
 		}
 
 		// Terminate Xalan...
