@@ -77,7 +77,7 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<Type>					VectorType;
-	typedef VectorType::size_type			size_type;
+	typedef typename VectorType::size_type	size_type;
 	typedef pair<size_type, VectorType>		ListEntryType;
 	typedef list<ListEntryType>				ListType;
 #else
@@ -86,6 +86,8 @@ public:
 	typedef std::pair<size_type, VectorType>	ListEntryType;
 	typedef std::list<ListEntryType>			ListType;
 #endif
+
+	typedef typename ListType::iterator		ListIteratorType;
 
     // Default size for vector allocation.
 	enum { eDefaultBlockSize = 500 };
@@ -125,8 +127,8 @@ public:
 	void
 	reset()
 	{
-		const ListType::iterator	theEnd = m_list.end();
-		ListType::iterator	theCurrent = m_list.begin();
+		const ListIteratorType	theEnd = m_list.end();
+		ListIteratorType		theCurrent = m_list.begin();
 
 		ListEntryType*	theEntry = 0;
 
@@ -221,8 +223,8 @@ private:
 		}
 		else
 		{
-			const ListType::iterator	theEnd = m_list.end();
-			ListType::iterator	theCurrent = m_list.begin();
+			const ListIteratorType	theEnd = m_list.end();
+			ListIteratorType		theCurrent = m_list.begin();
 
 			ListEntryType*	theEntry = 0;
 
