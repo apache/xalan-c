@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -91,48 +91,80 @@ typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutabl
 
 
 
+inline void
+doWarn(
+			XPathExecutionContext&				executionContext,
+			const XalanDOMString&				uri,
+			const XalanDOMString&				base,
+			const XalanNode*					sourceNode,
+			const Locator*						locator)
+{
+	XalanDOMString	theMessage(TranscodeFromLocalCodePage("Cannot load requested document: "));
+
+	theMessage += uri;
+
+	if (length(base) > 0)
+	{
+		theMessage += TranscodeFromLocalCodePage(" (Base URI: ");
+		theMessage += base;
+		theMessage += TranscodeFromLocalCodePage(")");
+	}
+
+	executionContext.warn(theMessage, sourceNode, locator);
+}
+
+
+
+inline XalanDocument*
+parseDoc(
+			XPathExecutionContext&	executionContext,
+			const XalanDOMString&	uri,
+			const XalanDOMString&	base,
+			const XalanNode*		sourceNode,
+			const Locator*			locator)
+{
+	try
+	{
+		return executionContext.parseXML(uri, base);
+	}
+	catch(...)
+	{
+		doWarn(executionContext, uri, base, sourceNode, locator);
+	}
+
+	return 0;
+}
+
+
+
 static void
 getDoc(
 			XPathExecutionContext&				executionContext,
 			const XalanDOMString&				uri,
 			const XalanDOMString&				base,
-			BorrowReturnMutableNodeRefList&		mnl)
+			BorrowReturnMutableNodeRefList&		mnl,
+			const XalanNode*					sourceNode,
+			const Locator*						locator)
 {
-	XalanDOMString	localURI(uri);
-
-    XalanDocument*	newDoc = executionContext.getSourceDocument(localURI);
+    XalanDocument*	newDoc = executionContext.getSourceDocument(uri);
 
 	if(newDoc == 0)
 	{
-		if(length(localURI) == 0)
+		if(length(uri) != 0)
+		{
+			newDoc = parseDoc(executionContext, uri, base, sourceNode, locator);
+		}
+		else
 		{
 			assert(executionContext.getPrefixResolver() != 0);
 
-			localURI = executionContext.getPrefixResolver()->getURI();
-		}
-
-		try
-		{
-			newDoc = executionContext.parseXML(localURI, base);
-		}
-		catch(...)
-		{
-		}
-
-		if(newDoc == 0)
-		{
-			XalanDOMString	theMessage(TranscodeFromLocalCodePage("Cannot load requested doc: "));
-
-			theMessage += localURI;
-
-			if (length(base) > 0)
-			{
-				theMessage += TranscodeFromLocalCodePage(" (Base URI: ");
-				theMessage += base;
-				theMessage += TranscodeFromLocalCodePage(")");
-			}
-
-			executionContext.warn(theMessage);
+			newDoc =
+				parseDoc(
+					executionContext,
+					executionContext.getPrefixResolver()->getURI(),
+					base,
+					sourceNode,
+					locator);
 		}
     }
 
@@ -148,9 +180,11 @@ inline void
 getDoc(
 			XPathExecutionContext&				executionContext,
 			const XalanDOMString&				uri,
-			BorrowReturnMutableNodeRefList&		mnl)
+			BorrowReturnMutableNodeRefList&		mnl,
+			const XalanNode*					sourceNode,
+			const Locator*						locator)
 {
-	getDoc(executionContext, uri, XalanDOMString(), mnl);
+	getDoc(executionContext, uri, XalanDOMString(), mnl, sourceNode, locator);
 }
 
 
@@ -160,7 +194,8 @@ getDoc(
 			XPathExecutionContext&				executionContext,
 			const XalanDOMString&				uri,
 			const XalanNode*					resolver,
-			BorrowReturnMutableNodeRefList&		mnl)
+			BorrowReturnMutableNodeRefList&		mnl,
+			const Locator*						locator)
 {
 	assert(resolver != 0);
 
@@ -172,7 +207,13 @@ getDoc(
 #endif
 			resolver->getOwnerDocument();
 
-	getDoc(executionContext, uri, executionContext.findURIFromDoc(ownerDocument), mnl);
+	getDoc(
+		executionContext,
+		uri,
+		executionContext.findURIFromDoc(ownerDocument),
+		mnl,
+		resolver,
+		locator);
 }
 
 
@@ -182,13 +223,13 @@ FunctionDocument::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
 			const XObjectPtr		arg1,
-			const Locator*			/* locator */) const
+			const Locator*			locator) const
 {
 	assert(arg1.null() == false);
 
 	if (arg1->getType() == XObject::eTypeNodeSet)
 	{
-		return doExecute(executionContext, context, arg1, 0, 1);
+		return doExecute(executionContext, context, arg1, 0, 1, locator);
 	}
 	else
 	{
@@ -198,7 +239,7 @@ FunctionDocument::execute(
 
 		base = executionContext.getPrefixResolver()->getURI();
 
-		return doExecute(executionContext, context, arg1, &base, 1);
+		return doExecute(executionContext, context, arg1, &base, 1, locator);
 	}
 }
 
@@ -262,18 +303,19 @@ FunctionDocument::execute(
 		}
 	}
 
-	return doExecute(executionContext, context, arg1, &base, 2);
+	return doExecute(executionContext, context, arg1, &base, 2, locator);
 }
 
 
 
 XObjectPtr
 FunctionDocument::doExecute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,
-		const XObjectPtr				arg,
-		XalanDOMString*					base,
-		int								argCount) const
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectPtr				arg,
+			XalanDOMString*					base,
+			int								argCount,
+			const Locator*					locator) const
 {
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
@@ -346,7 +388,7 @@ FunctionDocument::doExecute(
 			   indexOfColon < indexOfSlash)
 			{
 				// The ref is absolute...
-				getDoc(executionContext, ref, mnl);
+				getDoc(executionContext, ref, mnl, context, locator);
 			}
 			else
 			{
@@ -354,7 +396,7 @@ FunctionDocument::doExecute(
 				// provided, use that...
 				if (base != 0)
 				{
-					getDoc(executionContext, ref, *base, mnl);
+					getDoc(executionContext, ref, *base, mnl, context, locator);
 				}
 				else
 				{
@@ -362,11 +404,11 @@ FunctionDocument::doExecute(
 					// relative ref...
 					if (resolver == 0)
 					{
-						getDoc(executionContext, ref, mnl);
+						getDoc(executionContext, ref, mnl, context, locator);
 					}
 					else
 					{
-						getDoc(executionContext, ref, resolver, mnl);
+						getDoc(executionContext, ref, resolver, mnl, locator);
 					}
 				}
 			}
