@@ -161,7 +161,7 @@ bits19to21(unsigned int	theChar)
 inline char
 bits13to18(unsigned int	theChar)
 {
-	return char((theChar >> 12) & 0x1F);
+	return char((theChar >> 12) & 0x3F);
 }
 
 
