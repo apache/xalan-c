@@ -72,7 +72,7 @@
  <anchor name="status"/>
  <s2 title="Status">
    <ul>
-    <li><link anchor="done">Changes since &xslt4c; version 1.0</link></li>    
+    <li><link anchor="done">Changes since &xslt4c; version 1.1</link></li>    
     <li><link anchor="bugs">Bug reporting</link></li>    
     <li><link anchor="xml4j">Version of &xml4c; to use</link></li>
     <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
