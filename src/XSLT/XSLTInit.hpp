@@ -77,6 +77,10 @@
 
 
 
+#include <XalanSourceTree/XalanSourceTreeInit.hpp>
+
+
+
 #include <XPath/XPathInit.hpp>
 
 
@@ -111,9 +115,11 @@ private:
 
 	const XMLSupportInit		m_xmlSupportInit;
 
+	const XalanSourceTreeInit	m_xalanSourceTreeInit;
+
 	const XPathInit				m_xpathInit;
 
-	static unsigned long	s_initCounter;
+	static unsigned long		s_initCounter;
 };
 
 

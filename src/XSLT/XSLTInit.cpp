@@ -74,6 +74,7 @@ XSLTInit::XSLTInit() :
 	m_platformSupportInit(),
 	m_domSupportInit(),
 	m_xmlSupportInit(),
+	m_xalanSourceTreeInit(),
 	m_xpathInit()
 {
 	++s_initCounter;
