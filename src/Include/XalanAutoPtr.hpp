@@ -214,7 +214,7 @@ public:
 	}
 
 	Type&
-	operator[](size_t	index) const
+	operator[](unsigned long	index) const
 	{
 		return m_pointer[index];
 	}
