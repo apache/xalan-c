@@ -65,8 +65,6 @@
 
 #include <dom/DOM_Node.hpp>
 #include <dom/DOM_DOMException.hpp>
-#include <dom/DocumentImpl.hpp>
-#include <dom/NodeImpl.hpp>
 
 
 
@@ -178,14 +176,11 @@ XercesDocumentBridge::mapNode(NodeImpl*		theXercesNodeImpl) const
 
 		if (theXalanNode == 0)
 		{
-			// Make sure the node belongs to our document...
-			NodeImpl* const	theOwnerDocument =
-				XercesDOM_NodeHack::getImpl(m_xercesDocument);
-			assert(theOwnerDocument != 0);
+			XercesDOM_NodeHack	theHack(theXercesNodeImpl);
 
-			if (theXercesNodeImpl != theOwnerDocument &&
-					theXercesNodeImpl->getOwnerDocument() != theOwnerDocument &&
-				theXercesNodeImpl->getParentNode() != theOwnerDocument)
+			if (theHack != m_xercesDocument &&
+					theHack.getOwnerDocument() != m_xercesDocument &&
+				theHack.getParentNode() != m_xercesDocument)
 			{
 				throw XalanDOMException(XalanDOMException::WRONG_DOCUMENT_ERR);
 			}
@@ -193,7 +188,7 @@ XercesDocumentBridge::mapNode(NodeImpl*		theXercesNodeImpl) const
 			{
 				// OK, we haven't yet created a bridge not, so go ahead and
 				// create one.
-				theXalanNode = createBridgeNode(XercesDOM_NodeHack(theXercesNodeImpl));
+				theXalanNode = createBridgeNode(theHack);
 				assert(theXalanNode != 0);
 			}
 		}
