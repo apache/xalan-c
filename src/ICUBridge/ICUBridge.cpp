@@ -148,11 +148,13 @@ ICUBridge::FormatNumber(
 	theDFS.setInternationalCurrencySymbol(UnicodeString(&theInternationalCurrencySymbolString[0], theInternationalCurrencySymbolString.size()));
 	theDFS.setMonetaryDecimalSeparator(theMonetaryDecimalSeparatorChar);
 
-	if (theStatus == U_ZERO_ERROR)
+	if (theStatus == U_ZERO_ERROR ||
+		theStatus == U_USING_DEFAULT_ERROR)
 	{
 		DecimalFormat			theFormatter(theUnicodePattern, theDFS, theStatus);
 
-		if (theStatus == U_ZERO_ERROR)
+		if (theStatus == U_ZERO_ERROR ||
+			theStatus == U_USING_DEFAULT_ERROR)
 		{
 			// Do the format...
 			theFormatter.format(theNumber, theUnicodeResult);
@@ -164,6 +166,8 @@ ICUBridge::FormatNumber(
 			theResult.resize(theLength);
 
 			theUnicodeResult.extract(0, theLength, &theResult[0]);
+
+			theStatus = U_ZERO_ERROR;
 		}
 	}
 
