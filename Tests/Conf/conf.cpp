@@ -118,7 +118,7 @@ printArgOptions()
 		 << endl
 		 << "-gold dir	(base directory for gold files)"
 		 << endl
-		 << "-source	(parsed source; XalanSourceTree(d), XercesParserLiasion, XercesDOM)"
+		 << "-src type	(parsed source; XalanSourceTree(d), XercesParserLiasion, XercesDOM)"
 		 << endl;
 }
 
@@ -269,10 +269,7 @@ getParams(int argc,
 
 static const char* const 	excludeStylesheets[] =
 {
-	"output22.xsl",
-	"entref01.xsl",
-	"select73.xsl",
-	"sort07.xsl",
+	"output22.xsl",		// Excluded because it outputs EBCDIC
 	0
 };
 
@@ -328,7 +325,7 @@ parseWithTransformer(int sourceType, XalanTransformer &xalan, const XSLTInputSou
 
 
 void
-parseWithXerces(int sourceType, XalanTransformer &xalan, const XSLTInputSource &xmlInput, 
+parseWithXerces(XalanTransformer &xalan, const XSLTInputSource &xmlInput, 
 				const XalanCompiledStylesheet* styleSheet, const XSLTResultTarget &output, 
 				XMLFileReporter &logFile)
 {
@@ -405,11 +402,13 @@ main(
 
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("Conformance Testing:");
+		futil.data.testBase = baseDir;
+		futil.data.xmlFormat = XalanDOMString("NotSet");
 
 
 		// Get the list of Directories that are below conf
+		bool foundDir = false;		// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
 		const FileNameVectorType	dirs = futil.getDirectoryNames(baseDir);
-
 
 		for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 		{
@@ -420,12 +419,13 @@ main(
 			{
 				continue;
 			}					
-					
+				
 			// Check that output directory is there.
 			const XalanDOMString  theOutputDir = outputRoot + currentDir;
 			futil.checkAndCreateDir(theOutputDir);
 				
-			// Get the files found in the test directory
+			// Indicate that directory was processed and get test files from the directory
+			foundDir = true;
 			const FileNameVectorType files = futil.getTestFileNames(baseDir, currentDir, true);
 				
 			logFile.logTestCaseInit(currentDir);
@@ -443,7 +443,7 @@ main(
 				const XalanDOMString  theXMLFile = futil.generateFileName(theXSLFile,"xml");
 				futil.data.xmlFileURL = theXMLFile;
 				futil.data.xslFileURL = theXSLFile;
-				futil.data.testBase = baseDir;
+				
 
 				XalanDOMString  theGoldFile = goldRoot + currentDir + pathSep + currentFile;
 				theGoldFile = futil.generateFileName(theGoldFile, "out");
@@ -480,7 +480,7 @@ main(
 						break;
 
 					case 2:
-						parseWithXerces(source, xalan, xmlInputSource, compiledSS, resultFile, logFile);
+						parseWithXerces(xalan, xmlInputSource, compiledSS, resultFile, logFile);
 						break;
 				}
 
@@ -498,6 +498,12 @@ main(
 			logFile.logTestCaseClose("Done", "Pass");
 
 		}		//for directories
+
+		// Check to see if -sub cmd-line directory was processed correctly.
+		if (!foundDir)
+		{
+			cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(category)) << "\" not found" << endl;
+		}
 
 		futil.reportPassFail(logFile, UniqRunid);
 		logFile.logTestFileClose("Conformance ", "Done");
