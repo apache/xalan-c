@@ -63,6 +63,11 @@
 
 
 
+#include "XalanUnicode.hpp"
+#include "DOMStringHelper.hpp"
+
+
+
 XSLException::XSLException(
 		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theURI,
@@ -108,4 +113,90 @@ XSLException::XSLException(
 
 XSLException::~XSLException()
 {
+}
+
+
+
+XalanDOMString
+XSLException::defaultFormat() const
+{
+	XalanDOMString	theBuffer;
+
+	defaultFormat(theBuffer);
+
+	return theBuffer;
+}
+
+
+
+void
+XSLException::defaultFormat(XalanDOMString&		theBuffer) const
+{
+	defaultFormat(m_message, m_uri, m_lineNumber, m_columnNumber, m_type, theBuffer);
+}
+
+
+
+static
+XalanDOMChar	colonString[] =
+{
+	XalanUnicode::charColon,
+	XalanUnicode::charSpace,
+	0
+};
+
+
+
+static
+XalanDOMChar	lineString[] =
+{
+	XalanUnicode::charComma,
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charSpace,
+	0
+};
+
+
+
+static
+XalanDOMChar	columnString[] =
+{
+	XalanUnicode::charComma,
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charSpace,
+	0
+};
+
+
+
+void
+XSLException::defaultFormat(
+			const XalanDOMString&	theMessage,
+			const XalanDOMString&	theURI,
+			int						theLineNumber,
+			int						theColumnNumber,
+			const XalanDOMString&	theType,
+			XalanDOMString&			theBuffer)
+{
+	theBuffer += theType;
+	theBuffer += colonString;
+	theBuffer += theMessage;
+	theBuffer += XalanDOMChar(XalanUnicode::charSpace);
+	theBuffer += XalanDOMChar(XalanUnicode::charLeftParenthesis);
+	theBuffer += theURI;
+	theBuffer += lineString;
+	LongToDOMString(theLineNumber, theBuffer);
+	theBuffer += columnString;
+	LongToDOMString(theColumnNumber, theBuffer);
+	theBuffer += XalanDOMChar(XalanUnicode::charRightParenthesis);
 }

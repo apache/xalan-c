@@ -172,6 +172,21 @@ public:
 		return m_columnNumber;
 	}
 
+	XalanDOMString
+	defaultFormat() const;
+
+	void
+	defaultFormat(XalanDOMString&	theBuffer) const;
+
+	static void
+	defaultFormat(
+			const XalanDOMString&	theMessage,
+			const XalanDOMString&	theURI,
+			int						theLineNumber,
+			int						theColumnNumber,
+			const XalanDOMString&	theType,
+			XalanDOMString&			theBuffer);
+
 private:
 	
 	const XalanDOMString	m_message;
