@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,7 +66,7 @@ XPathParserException::XPathParserException(
 			int						theLineNumber,
 			int						theColumnNumber,
 			const XalanDOMString&	theType) :
-	XPathException(message, theURI, theLineNumber, theColumnNumber, 0, theType)
+	XalanXPathException(message, theURI, theLineNumber, theColumnNumber, 0, theType)
 {
 }
 
@@ -76,7 +76,7 @@ XPathParserException::XPathParserException(
 			const Locator&			theLocator,
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theType) :
-	XPathException(theLocator, theMessage, 0, theType)
+	XalanXPathException(theLocator, theMessage, 0, theType)
 {
 }
 
@@ -85,7 +85,7 @@ XPathParserException::XPathParserException(
 XPathParserException::XPathParserException(
 			const XalanDOMString&	message,
 			const XalanDOMString&	theType) :
-	XPathException(message, 0, theType)
+	XalanXPathException(message, 0, theType)
 {
 }
 

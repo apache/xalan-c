@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,11 +64,11 @@
 
 
 
-#include <XPath/XPathException.hpp>
+#include <XPath/XalanXPathException.hpp>
 
 
 
-class XALAN_XPATH_EXPORT FoundIndex : public XPathException
+class XALAN_XPATH_EXPORT FoundIndex : public XalanXPathException
 {
 public:
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -452,7 +452,7 @@ XPathExecutionContextDefault::error(
 			-1,
 			-1) == true)
 	{
-		throw XPathException(msg, 0);
+		throw XalanXPathException(msg, 0);
 	}
 }
 
@@ -504,7 +504,7 @@ XPathExecutionContextDefault::error(
 			lineNumber,
 			columnNumber) == true)
 	{
-		throw XPathException(msg, uri, lineNumber, columnNumber);
+		throw XalanXPathException(msg, uri, lineNumber, columnNumber);
 	}
 }
 
@@ -550,7 +550,7 @@ XPathExecutionContextDefault::warn(
 			-1,
 			-1) == true)
 	{
-		throw XPathException(msg, sourceNode);
+		throw XalanXPathException(msg, sourceNode);
 	}
 }
 
@@ -602,7 +602,7 @@ XPathExecutionContextDefault::warn(
 			lineNumber,
 			columnNumber) == true)
 	{
-		throw XPathException(msg, uri, lineNumber, columnNumber);
+		throw XalanXPathException(msg, uri, lineNumber, columnNumber);
 	}
 }
 
@@ -649,7 +649,7 @@ XPathExecutionContextDefault::message(
 			-1) == true)
 	{
 		// $$$ ToDo: Do something with the PrefixResolver here...
-		throw XPathException(msg);
+		throw XalanXPathException(msg);
 	}
 }
 
@@ -701,7 +701,7 @@ XPathExecutionContextDefault::message(
 			lineNumber,
 			columnNumber) == true)
 	{
-		throw XPathException(msg, uri, lineNumber, columnNumber);
+		throw XalanXPathException(msg, uri, lineNumber, columnNumber);
 	}
 }
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -309,7 +309,7 @@ XPathFunctionTable::DestroyTable()
 XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 		int					theFunctionNumber,
 		const XalanNode*	styleNode) :
-	XPathException(TranscodeFromLocalCodePage("The specified function ID is not available: ") + LongToDOMString(theFunctionNumber),
+	XalanXPathException(TranscodeFromLocalCodePage("The specified function ID is not available: ") + LongToDOMString(theFunctionNumber),
 				   styleNode)
 {
 }
@@ -319,7 +319,7 @@ XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 			const XalanDOMString&	theFunctionName,
 			const XalanNode*		styleNode) :
-	XPathException(TranscodeFromLocalCodePage("The specified function is not available: ") + theFunctionName,
+	XalanXPathException(TranscodeFromLocalCodePage("The specified function is not available: ") + theFunctionName,
 				   styleNode)
 {
 }
