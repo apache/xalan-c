@@ -426,6 +426,10 @@ SOURCE=..\..\..\..\src\XSLT\XalanNumberingResourceBundle.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentFragmentAllocator.cpp
 # End Source File
 # Begin Source File
@@ -790,6 +794,10 @@ SOURCE=..\..\..\..\src\XSLT\VariablesStack.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\XalanNumberingResourceBundle.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentAllocator.hpp
 # End Source File
 # Begin Source File
 
