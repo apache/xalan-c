@@ -55,7 +55,6 @@ main(
 			const char*		argv[])
 {
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
 	using std::cerr;
 	using std::endl;
 #endif
