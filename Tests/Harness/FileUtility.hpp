@@ -76,6 +76,7 @@
 #include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
 #include <PlatformSupport/XalanFileOutputStream.hpp>
 #include <PlatformSupport/DirectoryEnumerator.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
 
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
@@ -89,6 +90,8 @@
 
 #include <XalanTransformer/XalanCompiledStylesheetDefault.hpp>
 #include <XalanTransformer/XalanTransformer.hpp>
+
+#include "XMLFileReporter.hpp"
 
 using namespace std;
 
@@ -128,11 +131,13 @@ public:
 
 	struct reportStruct
 	{
-		XalanDOMString testOrFile;
+		XalanDOMString	testOrFile;
 		char* msg;
-		XalanDOMString currentNode;
-		XalanDOMString actual;
-		XalanDOMString expected;
+		XalanDOMString	currentNode;
+		XalanDOMString	actual;
+		XalanDOMString	expected;
+		int				pass;
+		int				fail;
 
 		void reset()
 		{
@@ -147,7 +152,6 @@ public:
 	/** Simple constructor, does not perform initialization.  */
 	FileUtility()
 	{
-		//reportStruct data;
 		cout << endl << "Using Xerces Version " << gXercesFullVersionStr << endl;
 	}
 	
@@ -198,16 +202,21 @@ public:
 	*/
 	XalanDOMString FileUtility::getXercesVersion();
 
+
+	void
+	FileUtility::checkResults(const XalanDOMString& outputFile, 
+							  const XalanDOMString& goldFile, 
+							  XMLFileReporter& logfile);
+
 	/**
 	* Utility method used to compare the results. It inturn
 	* call domCompare.  
 	* @returns Void.
 	*/
-	void
-	FileUtility::compareResults(const XalanDOMString& theOutputFile, 
+	bool
+	FileUtility::compareDOMResults(const XalanDOMString& theOutputFile, 
 								const XalanCompiledStylesheet* compiledSS, 
 								XalanSourceTreeDocument* dom,
-								XalanDOMString fileName,
 								const XSLTInputSource& goldInputSource);
 	/** 
 	* Simplified version of above.
@@ -218,9 +227,8 @@ public:
 //								XalanDOMString fileName, const char* testCase);
 
 	bool
-	FileUtility::compareSerializedResults(const XSLTInputSource& transformResult,
-								const XSLTInputSource& goldInputSource,
-								XalanDOMString fileName, const char* testCase);
+	FileUtility::compareSerializedResults(const XalanDOMString& transformResult,
+								const XalanDOMString& goldInputSource);
 	/**
 	* Utility method used to create a FormatterToXML FormatterListener.
 	* This is required to DOM comparisions. 
@@ -236,45 +244,57 @@ public:
 				const StylesheetRoot*	stylesheet);
 
 
+	bool
+	FileUtility::fileCompare(const char* goldFile,
+						const char* outputFile);
+
+
 	/** 
 	* Utility methods used to perform a DOM Compare
 	* @returns boolean
 	*/
 	bool 
-	FileUtility::domCompare(const XalanNode& gold, const XalanNode& doc,  const XalanDOMString& fileName);
+	FileUtility::domCompare(const XalanNode& gold, const XalanNode& doc);
 
 	/** 
 	* Utility methods used to diff two Element nodes.
 	* @returns boolean.
 	*/
 	bool 
-	FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc, const XalanDOMString& fileName);
+	FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc);
 
 	/** 
 	* Utility methods used to diff two attribute nodes.
 	* @returns boolean.
 	*/
 	bool 
-	FileUtility::diffATTR(const XalanNode* gAttr, const XalanNode* dAttr, const XalanDOMString& fileName);
+	FileUtility::diffAttr(const XalanNode* gAttr, const XalanNode* dAttr);
+
+	/** 
+	* Utility methods used to report Pass/Fail numbers.
+	* @returns void.
+	*/
+	void
+	FileUtility::reportPassFail(XMLFileReporter& logfile);
+
+private:
+
+	/** 
+	* Utility methods used to collect information about compare failures.
+	* @returns void.
+	*/
+	void 
+	FileUtility::collectData(char* errmsg, 
+						 XalanDOMString currentnode, 
+						 XalanDOMString actdata, 
+						 XalanDOMString expdata);
 
 	/** 
 	* Utility methods used to report DOM compare errors.
 	* @returns void.
 	*/
-	void 
-	FileUtility::reportDOMError( XalanDOMString file, XalanDOMString node, char* msg);
-
 	void
 	FileUtility::reportDOMError();
-
-
-private:
-
-void 
-FileUtility::collectData(char* errmsg, 
-						 XalanDOMString currentnode, 
-						 XalanDOMString actdata, 
-						 XalanDOMString expdata);
 
 };        // end of class FileUtility
 #endif
