@@ -19,7 +19,7 @@
 
 
 #include <cassert>
-#include <set>
+#include <functional>
 #include <memory>
 
 
