@@ -265,7 +265,8 @@ DOMServices::getNameOfNode(const XalanNode&		n)
 }
 
 
-
+// Note: This may be inefficient in a Level 2 DOM, where localname
+// and prefix may (or may not) have been stored in separate fields
 XalanDOMString
 DOMServices::getLocalNameOfNode(const XalanNode&	n)
 {
@@ -383,7 +384,27 @@ DOMServices::getParentOfNode(const XalanNode&	node)
 }
 
 
-
+// Note functional overlap with NamespaceResolver's 
+// getNamespaceOfNode() method.  
+//
+// ***** Also: although this may not yet impact Xalan,
+// as of DOM Level 2 it is possible for a hand-constructed DOM to 
+// have namespaced nodes with no declaration in scope. In DOM2 it's 
+// considered the responsibility of application code such as DOM 
+// serializers to recognize these cases and synthesize appropriate 
+// declarations when necessary. DOM3 is expected to add 
+// some form of namespaceNormalize() operation to assist this task.
+//
+// DOM3 may also add a resolveNamespacePrefix() operation 
+// which is aware of these issues and can generate reasonable 
+// results even for a non-NS-normalized tree. The expected logic
+// is that a Namespaced node with a prefix will constitute an
+// implicit declaration of that prefix. 
+//
+// If we cut over to DOM2 and want to accept DOMs from sources other
+// than the parser, we need to decide between demanding a 
+// namespace-normalized DOM as input, doing a normalize pass
+// (full treewalk, expensive), or recognizing implicit declarations.
 XalanDOMString
 DOMServices::getNamespaceForPrefix(
 			const XalanDOMString&	prefix,
@@ -391,6 +412,7 @@ DOMServices::getNamespaceForPrefix(
 {
 	XalanDOMString theNamespace;
 
+	// Reserved xml: is hardcoded
 	if(equals(prefix, s_XMLString) == true)
 	{
 		theNamespace = s_XMLNamespaceURI;
@@ -400,12 +422,17 @@ DOMServices::getNamespaceForPrefix(
 		XalanNode::NodeType		type;
 		const XalanNode*		parent = &namespaceContext;
     
+		// Consider elements until NS is resolved, or we run out of
+		// ancestors, or we hit something other than an Element or 
+		// EntityReference node (ie, Document or DocumentFragment)
 		while (parent != 0 && length(theNamespace) == 0
 			&& ((type = parent->getNodeType()) == XalanNode::ELEMENT_NODE
 				|| type == XalanNode::ENTITY_REFERENCE_NODE)) 
 		{
 			if (type == XalanNode::ELEMENT_NODE) 
 			{
+				// Scan the attributes for xmlns:* or xmlns:
+				// (The latter is the prefix=="" case.)
 				const XalanNamedNodeMap* const	nnm = parent->getAttributes();
 				assert(nnm != 0);
 
@@ -428,13 +455,13 @@ DOMServices::getNamespaceForPrefix(
 
 					if (equals(aname, s_XMLNamespace) || isPrefix) 
 					{
+						// slightly inefficient for default decl.
 						const unsigned int	index = indexOf(aname,
 															':');
               
-						const XalanDOMString	p =
-							isPrefix ? substring(aname,
-												 index + 1,
-												 len) : XalanDOMString();
+						const XalanDOMString	p = (isPrefix)
+							? substring(aname,index + 1,len) 
+							: XalanDOMString();
 
 						if (equals(p, prefix) == true)
 						{
