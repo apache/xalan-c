@@ -614,18 +614,6 @@ SOURCE=..\..\..\..\src\XPath\NodeRefListBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\QName.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\QNameByReference.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\QNameByValue.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\ResultTreeFragBase.hpp
 # End Source File
 # Begin Source File
