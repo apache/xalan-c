@@ -187,6 +187,36 @@ public:
 		assert(m_blocks.back()->ownsObject(theObject) == true);
 	}
 
+	virtual bool
+	ownsObject(const ObjectType*	theObject) const
+	{
+		bool	fResult = false;
+
+		// Search back for a block that may have allocated the object...
+		// Note that this-> is required by template lookup rules.
+		const typename ArenaBlockListType::const_reverse_iterator	theEnd = this->m_blocks.rend();
+
+		typename ArenaBlockListType::const_reverse_iterator	i = this->m_blocks.rbegin();
+
+		while(i != theEnd)
+		{
+			assert(*i != 0);
+
+			if ((*i)->ownsObject(theObject) == true)
+			{
+				fResult = true;
+
+				break;
+			}
+			else
+			{
+				++i;
+			}
+		}
+
+		return fResult;
+	}
+
 	virtual void
 	reset()
 	{
