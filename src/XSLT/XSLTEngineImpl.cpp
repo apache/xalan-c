@@ -180,7 +180,7 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_problemListener(&m_defaultProblemListener),
 	m_stylesheetRoot(0),
 	m_traceSelects(false),
-	m_quietConflictWarnings(false),
+	m_quietConflictWarnings(true),
 	m_diagnosticsPrintWriter(0),
 	m_durationsTable(),
 	m_traceListeners(),
