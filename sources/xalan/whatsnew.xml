@@ -46,7 +46,14 @@
       stylesheets/input documents may cause the program stack to overflow and cause the application to fail.  It also may 
       inhibit executing stylesheets that are heavily dependent on recursive functions.  This feature will prevent these types 
       of failure. </li>
-  <li>Upgrade from Xerces-C 2.5 to Xerces-C 2.6. </li>
+  <li>Provided a global option to pool all text node strings.  This feature allows developers to set a flag to determine if a 
+      parsed source tree will pool the values of all of the text nodes in the XML document.  By doing so, this can result in a 
+      significant reduction in memory usage, particularly if there are a lot of repeated values in text nodes.  Please see 
+      the class descriptions for <jump href="apiDocs/classXalanSourceTreeDocument.html">XalanSourceTreeDocument</jump>,  
+      <jump href="apiDocs/classXalanDefaultParsedSource.html">XalanDefaultParsedSource</jump>, and
+      <jump href="apiDocs/classXalanTransformer.html">XalanTransformer</jump> in the <jump href="apiDocs/index.html">
+      API Reference</jump> section for more information.</li> 
+      <li>Upgrade from Xerces-C 2.5 to Xerces-C 2.6. </li>
   <li><link anchor="bugfixes">Bugs fixed in this release</link>.</li>
  </ul>  
 </s3>  
