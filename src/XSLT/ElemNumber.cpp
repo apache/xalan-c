@@ -462,7 +462,11 @@ ElemNumber::getCountMatchPattern(
 
 			theMatchPatternString.get() = s_piString;
 			append(theMatchPatternString.get(), contextNode->getNodeName());
+#if defined(XALAN_NO_NAMESPACES)
+			append(theMatchPatternString.get(), XalanDOMChar(XalanUnicode::charRightParenthesis));
+#else
 			append(theMatchPatternString.get(), XalanUnicode::charRightParenthesis);
+#endif
 
 			countMatchPattern = executionContext.createMatchPattern(
 					theMatchPatternString.get(),
