@@ -105,7 +105,7 @@
    <p>The required &xml4c; files are in the &xml4c; binary distributions.</p>
    <p>For information on using the <resource-ref idref="icu"/>, see  
    <link idref="usagepatterns" anchor="icu">Using the ICU</link>.</p>
-   <note>If you are not rebuilding ICUBridge, you do not need the ICU header or .lib files.</note>
+   <note>If you are not rebuilding with the ICU, you do not need the ICU header or .lib files.</note>
    <p>To rebuild the Windows32 release, use the Microsoft Visual C++ 6.0 project files. To rebuild
     the Linux or AIX release, use the make file in the root of the source directory. The builds look
     for &xml4c; and ICU in directories parallel to the
@@ -118,7 +118,7 @@
 <s4 title="&xml4c; and ICU layout for &xslt4c; build">
 <p><img src="xerces-icu.gif" alt="xerces-icu.gif"/></p>
 </s4>
-<note>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xslt4c; we certify that it is compabible with a given release of &xml4c;. To be safe, stick with distributions that we certify to be compatible. Reminder: &xslt4c-current; is compatible with &xml4c-used;.<br/><br/>
+<note>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xslt4c; we certify that it is compatible with a given release of &xml4c;. To be safe, stick with distributions that we certify to be compatible. Reminder: &xslt4c-current; is compatible with &xml4c-used;.<br/><br/>
 &xslt4c-current; has been tested with &icu-used;. You may be able to use newer ICU releases as they appear.</note>
   </s3><anchor name="win32"/>
   <s3 title="Steps for doing a Windows build">
@@ -158,7 +158,7 @@
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>chmod +x conf*</code><br/><br/></li>
       <li>Run the runConfigure utility with at least the platform flag (Linux) or the platform, C compilier, and C++ compiler flags (AIX) as indicated below.<br/><br/>
       <ref>Linux:</ref>&nbsp;&nbsp;<code>runConfigure -p linux</code><br/>
-      <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc_r -x xlC-R</code><br/><br/>
+      <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc_r -x xlC-R</code><br/><br/>
       To see the other runConfigure flags you may include, use the help flag:<br/><br/>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -h</code><br/><br/></li>
       <li>Run the make file:<br/><br/>

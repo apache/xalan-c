@@ -98,9 +98,6 @@
      Windows, &xml4c-linuxlib; for Linux, and &xml4c-aixlib; for AIX.</p>
      <p>To build applications with Xalan and Xerces, you also need the &xml4c; binary distribution
      for your platform, which you can download from the <resource-ref idref="xml4c-distdir"/>.</p>
-     <note>Be sure you are using a compatible &xml4c; build. For information about the build with
-     which this release of &xml4c; was tested, see <link idref="readme" anchor="status">Version of
-     Xerces to use</link>.</note>
   </s2>
   <s2 title="How about support for internationalization?">
     <p>To extend Unicode support for encoding, number formatting, and sorting, you can download,
