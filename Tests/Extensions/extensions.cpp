@@ -207,7 +207,7 @@ getParams(int argc,
 void installExtensions(XalanTransformer &transformer)
 {
 	// The namespace for our functions...
-	const XalanDOMString	theNamespace("http://xml.apache.org/xslt");
+	const XalanDOMString	theNamespace("http://xml.apache.org/xalan");
 
 	// Install the functions in the local space.  They will only
 	// be installed in this instance, so no other instances
@@ -216,32 +216,30 @@ void installExtensions(XalanTransformer &transformer)
 	transformer.installExternalFunction(
 		theNamespace,
 		XalanDOMString("difference"),
-		FunctionNodeSet());
+		FunctionDifference());
 
 	transformer.installExternalFunction(
 		theNamespace,
 		XalanDOMString("distinct"),
-		FunctionNodeSet());
+		FunctionDistinct());
 
 	transformer.installExternalFunction(
 		theNamespace,
 		XalanDOMString("evaluate"),
-		FunctionNodeSet());
+		FunctionEvaluate());
 
 	transformer.installExternalFunction(
 		theNamespace,
-		XalanDOMString("hassamenodes"),
-		FunctionNodeSet());
+		XalanDOMString("hasSameNodes"),
+		FunctionHasSameNodes());
 
 	transformer.installExternalFunction(
 		theNamespace,
 		XalanDOMString("intersection"),
-		FunctionNodeSet());
-
-	const XalanDOMString	theNamespace2("http://ExternalFunction.xalan-c.xml.apache.org");
+		FunctionIntersection());
 
 	transformer.installExternalFunction(
-		theNamespace2,
+		theNamespace,
 		XalanDOMString("nodeset"),
 		FunctionNodeSet());
 
@@ -315,8 +313,8 @@ main(
 				const XalanDOMString  theOutputDir = outputRoot + xDir;
 				futil.checkAndCreateDir(theOutputDir);
 
-				// Get the files found in the "simpletests" directory
-				const FileNameVectorType	files = futil.getTestFileNames(baseDir, xDir, false);
+				// Get the files found in the "cextension" directory
+				const FileNameVectorType	files = futil.getTestFileNames(baseDir, xDir, true);
 
 				for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 				{
