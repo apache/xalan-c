@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.21  2000/11/29 17:55:11  auriemma
+# HP port based on work from Trevor Smigiel .
+#
 # Revision 1.20  2000/10/11 21:13:29  auriemma
 # Reordered members and added -Wall as recommended by Nile Geisinger.
 #
@@ -179,6 +182,22 @@ LINK =  g++ -D${PLATFORM} -fpic
 
 endif
 
+#=============== HPUX SPECIFIC OPTIONS =========================
+ifeq ($(PLATFORM), HPUX)
+
+SUPPORTED = TRUE
+PLATFORM_COMPILE_OPTIONS = +Z -D${PLATFORM} -D_THREAD_SAFE
+ALLLIBS = ${LIBS}
+SHLIBSUFFIX=.sl
+CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS)
+MAKE_SHARED = $(CXX) -b +Z
+LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+
+
+endif
+
+
 #=============== SOLARIS SPECIFIC OPTIONS =========================
 ifeq ($(PLATFORM), SOLARIS)
 
@@ -223,7 +242,7 @@ endif
 
 ifndef SUPPORTED
 nogood:
-	@echo Linux Solaris and AIX are the only unix platforms supported.
+	@echo Linux Solaris AIX and HPUX are the only unix platforms supported.
 endif
 
 # We need the Xerces library
