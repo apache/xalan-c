@@ -232,19 +232,19 @@ private:
 	operator==(const XercesWrapperNavigator&	theRHS) const;
 
 	// Data members...
-	XercesDocumentWrapper*		m_ownerDocument;
+	XercesDocumentWrapper*	m_ownerDocument;
 
-	mutable	XalanNode*			m_parentNode;
+	XalanNode*				m_parentNode;
 
-	mutable	XalanNode*			m_previousSibling;
+	XalanNode*				m_previousSibling;
 
-	mutable	XalanNode*			m_nextSibling;
+	XalanNode*				m_nextSibling;
 
-	mutable	XalanNode*			m_firstChild;
+	XalanNode*				m_firstChild;
 
-	mutable	XalanNode*			m_lastChild;
+	XalanNode*				m_lastChild;
 
-	unsigned long				m_index;
+	unsigned long			m_index;
 
 	const static XalanDOMString	s_emptyString;
 };

@@ -73,26 +73,16 @@
 const XalanDOMString	XercesWrapperNavigator::s_emptyString;
 
 
-// I'm using this to distinguish between null nodes, which are valid, and
-// an uninitialized cached node address.  This is pretty bogus, and I'll
-// probably just change this to 0, but this is experimental anyway...
-#if defined(XALAN_OLD_STYLE_CASTS)
-static XalanNode* const		invalidNodeAddress = (XalanNode*)1;
-#else
-static XalanNode* const		invalidNodeAddress = reinterpret_cast<XalanNode*>(1);
-#endif
-
-
 
 XercesWrapperNavigator::XercesWrapperNavigator(
 			XercesDocumentWrapper*	theOwnerDocument,
 			bool					mappingMode) :
 	m_ownerDocument(theOwnerDocument),
-	m_parentNode(mappingMode == true ? invalidNodeAddress : 0),
-	m_previousSibling(mappingMode == true ? invalidNodeAddress : 0),
-	m_nextSibling(mappingMode == true ? invalidNodeAddress : 0),
-	m_firstChild(mappingMode == true ? invalidNodeAddress : 0),
-	m_lastChild(mappingMode == true ? invalidNodeAddress : 0),
+	m_parentNode(0),
+	m_previousSibling(0),
+	m_nextSibling(0),
+	m_firstChild(0),
+	m_lastChild(0),
 	m_index(UINT_MAX)
 {
 	assert(theOwnerDocument != 0);
@@ -154,16 +144,14 @@ XercesWrapperNavigator::mapNode(XalanAttr*	theXalanNode) const
 XalanNode*
 XercesWrapperNavigator::getParentNode(const DOMNode*	theXercesNode) const
 {
-	if (m_parentNode == invalidNodeAddress)
+	if (m_parentNode == 0)
 	{
-#if defined(XALAN_NO_MUTABLE)
-		((XercesWrapperNavigator*)this)->m_parentNode = m_ownerDocument->mapNode(theXercesNode->getParentNode());
-#else
-		m_parentNode = m_ownerDocument->mapNode(theXercesNode->getParentNode());
-#endif
+		return m_ownerDocument->mapNode(theXercesNode->getParentNode());
 	}
-
-	return m_parentNode;
+	else
+	{
+		return m_parentNode;
+	}
 }
 
 
@@ -171,16 +159,14 @@ XercesWrapperNavigator::getParentNode(const DOMNode*	theXercesNode) const
 XalanNode*
 XercesWrapperNavigator::getPreviousSibling(const DOMNode*	theXercesNode) const
 {
-	if (m_previousSibling == invalidNodeAddress)
+	if (m_previousSibling == 0)
 	{
-#if defined(XALAN_NO_MUTABLE)
-		((XercesWrapperNavigator*)this)->m_previousSibling = m_ownerDocument->mapNode(theXercesNode->getPreviousSibling());
-#else
-		m_previousSibling = m_ownerDocument->mapNode(theXercesNode->getPreviousSibling());
-#endif
+		return m_ownerDocument->mapNode(theXercesNode->getPreviousSibling());
 	}
-
-	return m_previousSibling;
+	else
+	{
+		return m_previousSibling;
+	}
 }
 
 
@@ -188,16 +174,14 @@ XercesWrapperNavigator::getPreviousSibling(const DOMNode*	theXercesNode) const
 XalanNode*
 XercesWrapperNavigator::getNextSibling(const DOMNode*	theXercesNode) const
 {
-	if (m_nextSibling == invalidNodeAddress)
+	if (m_nextSibling == 0)
 	{
-#if defined(XALAN_NO_MUTABLE)
-		((XercesWrapperNavigator*)this)->m_nextSibling = m_ownerDocument->mapNode(theXercesNode->getNextSibling());
-#else
-		m_nextSibling = m_ownerDocument->mapNode(theXercesNode->getNextSibling());
-#endif
+		return m_ownerDocument->mapNode(theXercesNode->getNextSibling());
 	}
-
-	return m_nextSibling;
+	else
+	{
+		return m_nextSibling;
+	}
 }
 
 
@@ -205,16 +189,14 @@ XercesWrapperNavigator::getNextSibling(const DOMNode*	theXercesNode) const
 XalanNode*
 XercesWrapperNavigator::getFirstChild(const DOMNode*	theXercesNode) const
 {
-	if (m_firstChild == invalidNodeAddress)
+	if (m_firstChild == 0)
 	{
-#if defined(XALAN_NO_MUTABLE)
-		((XercesWrapperNavigator*)this)->m_firstChild = m_ownerDocument->mapNode(theXercesNode->getFirstChild());
-#else
-		m_firstChild = m_ownerDocument->mapNode(theXercesNode->getFirstChild());
-#endif
+		return m_ownerDocument->mapNode(theXercesNode->getFirstChild());
 	}
-
-	return m_firstChild;
+	else
+	{
+		return m_firstChild;
+	}
 }
 
 
@@ -222,16 +204,14 @@ XercesWrapperNavigator::getFirstChild(const DOMNode*	theXercesNode) const
 XalanNode*
 XercesWrapperNavigator::getLastChild(const DOMNode*	theXercesNode) const
 {
-	if (m_lastChild == invalidNodeAddress)
+	if (m_lastChild == 0)
 	{
-#if defined(XALAN_NO_MUTABLE)
-		((XercesWrapperNavigator*)this)->m_lastChild = m_ownerDocument->mapNode(theXercesNode->getLastChild());
-#else
-		m_lastChild = m_ownerDocument->mapNode(theXercesNode->getLastChild());
-#endif
+		return m_ownerDocument->mapNode(theXercesNode->getLastChild());
 	}
-
-	return m_lastChild;
+	else
+	{
+		return m_lastChild;
+	}
 }
 
 
@@ -241,7 +221,7 @@ XercesWrapperNavigator::getOwnerElement(const DOMAttr*	theXercesAttr) const
 {
 	assert(theXercesAttr != 0);
 
-	if (m_parentNode != invalidNodeAddress)
+	if (m_parentNode != 0)
 	{
 		assert(m_parentNode->getNodeType() == XalanNode::ELEMENT_NODE);
 
