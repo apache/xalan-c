@@ -329,14 +329,14 @@ XPathEnvSupportDefault::functionAvailable(
 	bool	theResult = false;
 
 	// See if there's a table for that namespace...
-	const NamespaceFunctionTablesType::iterator		i =
+	const NamespaceFunctionTablesType::const_iterator	i =
 		m_externalFunctions.find(theNamespace);
 
 	if (i != m_externalFunctions.end())
 	{
 		// There is a table for the namespace,
 		// so look for the function...
-		const FunctionTableType::iterator	j =
+		const FunctionTableType::const_iterator		j =
 			i->second.find(extensionName);
 
 		if (j != i->second.end())
@@ -384,14 +384,14 @@ XPathEnvSupportDefault::findFunction(
 	Function*	theFunction = 0;
 
 	// See if there's a table for that namespace...
-	const NamespaceFunctionTablesType::iterator		i =
+	const NamespaceFunctionTablesType::const_iterator	i =
 		theTable.find(theNamespace);
 
 	if (i != theTable.end())
 	{
 		// There is a table for the namespace,
 		// so look for the function...
-		const FunctionTableType::iterator	j =
+		const FunctionTableType::const_iterator		j =
 			i->second.find(extensionName);
 
 		if (j != i->second.end())
