@@ -496,13 +496,13 @@ ElemNumber::getCountString(
 
 		m_valueExpr->execute(*this, executionContext, theValue);
 
-		if (DoubleSupport::isNaN(theValue) == true)
+        // Note these checks are in a specific order...
+        if (DoubleSupport::isNaN(theValue) == true ||
+            DoubleSupport::isPositiveInfinity(theValue) == true ||
+            DoubleSupport::isNegativeInfinity(theValue) == true ||
+            DoubleSupport::lessThan(theValue, 0.5) == true)
         {
             DoubleToDOMString(theValue, theResult);
-        }
-        else if (DoubleSupport::lessThan(theValue, 0.5) == true)
-        {
-            DoubleToDOMString(DoubleSupport::getNaN(), theResult);
         }
         else
 		{
