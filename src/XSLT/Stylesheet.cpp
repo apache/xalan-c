@@ -521,9 +521,9 @@ Stylesheet::isAttrOK(
 
 			attrOK = ns != 0 && !::isEmpty(*ns) && !equals(*ns, constructionContext.getXSLTNamespaceURI());
 		}
-		else
+		else if (m_XSLTVerDeclared > constructionContext.getXSLTVersionSupported())
 		{
-			attrOK = false;
+			attrOK = true;
 		}
 	}
 
