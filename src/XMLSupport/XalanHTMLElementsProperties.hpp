@@ -109,7 +109,7 @@ public:
 		ATTREMPTY = (1 << 2)
 	};
 
-	struct InternalAttributeProperties
+	struct XALAN_XMLSUPPORT_EXPORT InternalAttributeProperties
 	{
 		typedef unsigned char	FlagsType;
 
@@ -132,7 +132,7 @@ public:
 		}
 	};
 
-	struct InternalElementProperties
+	struct XALAN_XMLSUPPORT_EXPORT InternalElementProperties
 	{
 		typedef InternalAttributeProperties::FlagsType	AttributeFlagsType;
 		typedef unsigned int							FlagsType;
