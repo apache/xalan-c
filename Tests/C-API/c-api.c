@@ -92,7 +92,7 @@ main(
 				XalanGetLastError(xalan));
 		}
 
-		XalanTerminate();
+		XalanTerminate(1);
 	}
 
 	return 0;

@@ -94,7 +94,7 @@ static void xslt_child_init(server_rec *s, pool *p)
 
 static void xslt_child_exit(server_rec *s, pool *p)
 {
-	XalanTerminate();
+	XalanTerminate(1);
 }
 
 
