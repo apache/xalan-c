@@ -809,7 +809,9 @@ ifeq ($(PLATFORM), OS390)
 	cp -p *.x  ${LIB_DIR}        
 endif                                
 
-clean:
+clean:	prepare doClean
+
+doClean:
 	(cd $(ALL_OBJECTS_DIR); rm -rf *)
 ifeq ($(PLATFORM), TRU64)
 	rm -rf $(OUTDIR)/so_locations
