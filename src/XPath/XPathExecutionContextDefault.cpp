@@ -98,8 +98,8 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
-	m_nodeListCache(),
-	m_resultTreeFragCache(),
+	m_nodeListCache(eNodeListCacheListSize),
+	m_resultTreeFragCache(eResultTreeFragCacheListSize),
 	m_stringCache()
 {
 }
@@ -118,8 +118,8 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
-	m_nodeListCache(),
-	m_resultTreeFragCache(),
+	m_nodeListCache(eNodeListCacheListSize),
+	m_resultTreeFragCache(eResultTreeFragCacheListSize),
 	m_stringCache()
 {
 }
@@ -323,16 +323,7 @@ XPathExecutionContextDefault::borrowMutableNodeRefList()
 bool
 XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	theList)
 {
-	if (m_nodeListCache.release(theList) == false)
-	{
-		return false;
-	}
-	else
-	{
-		theList->clear();
-
-		return true;
-	}
+	return m_nodeListCache.release(theList);
 }
 
 

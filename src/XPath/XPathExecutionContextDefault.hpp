@@ -347,18 +347,11 @@ public:
 
 protected:
 
-	class XalanResultTreeFragCache : public XalanObjectCache<ResultTreeFragBase>
-	{
-	protected:
+	typedef XalanObjectCache<MutableNodeRefList, DefaultCacheCreateFunctor<MutableNodeRefList>, DeleteFunctor<MutableNodeRefList>, ClearCacheResetFunctor<MutableNodeRefList> >	NodeListCacheType;
+	typedef XalanObjectCache<ResultTreeFragBase, DefaultCacheCreateFunctor<ResultTreeFrag>, DeleteFunctor<ResultTreeFragBase>, ClearCacheResetFunctor<ResultTreeFragBase> >		ResultTreeFragCacheType;
 
-		virtual ResultTreeFragBase*
-		create()
-		{
-			return new ResultTreeFrag;
-		}
-	};
-
-	enum { eCachedArgVectorDefaultSize = 10 };
+	enum { eNodeListCacheListSize = 50,
+ 		   eResultTreeFragCacheListSize = 50 };
 
 	XPathEnvSupport*			m_xpathEnvSupport;
 
@@ -376,9 +369,9 @@ protected:
 
 	XalanDOMString				m_currentPattern;
 
-	XalanObjectCacheDefault<MutableNodeRefList>		m_nodeListCache;
+	NodeListCacheType			m_nodeListCache;
 
-	XalanResultTreeFragCache	m_resultTreeFragCache;
+	ResultTreeFragCacheType		m_resultTreeFragCache;
 
 	XalanDOMStringCache			m_stringCache;
 
