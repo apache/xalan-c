@@ -98,6 +98,13 @@ struct  XalanDequeIterator
         return *this;
     }
 
+    XalanDequeIterator operator++(int)
+    {
+        XalanDequeIterator temp = *this;
+        ++m_pos;
+        return temp;
+    }
+
     XalanDequeIterator& operator--()
     {   
         --m_pos;
@@ -199,7 +206,7 @@ public:
         m_memoryManager(memoryManager),
         m_blockSize(blockSize),
         m_blockIndex(memoryManager,
-                    initialSize / m_blockSize + (initialSize % m_blockSize == 0 ? 0 : 1))                    
+                    initialSize / blockSize + (initialSize % blockSize == 0 ? 0 : 1))                    
     {
         XALAN_STD_QUALIFIER fill_n(XALAN_STD_QUALIFIER back_inserter(*this), initialSize, value_type());
     }
@@ -208,7 +215,7 @@ public:
         m_memoryManager(theRhs.m_memoryManager),
         m_blockSize(theRhs.m_blockSize),
         m_blockIndex(theRhs.m_memoryManager,
-                    theRhs.size() / m_blockSize + (theRhs.size() % m_blockSize == 0 ? 0 : 1))
+                    theRhs.size() / theRhs.m_blockSize + (theRhs.size() % theRhs.m_blockSize == 0 ? 0 : 1))
     {
         XALAN_STD_QUALIFIER copy(theRhs.begin(), theRhs.end(), XALAN_STD_QUALIFIER back_inserter(*this));
     }
@@ -216,7 +223,7 @@ public:
     ~XalanDeque()
     {
         clear();
-        BlockIndexType::iterator iter = m_freeBlockVector.begin();
+        typename BlockIndexType::iterator iter = m_freeBlockVector.begin();
 
         while (iter != m_freeBlockVector.end())
         {
@@ -293,7 +300,7 @@ public:
 
     void clear()
     {
-        BlockIndexType::iterator iter = m_blockIndex.begin();
+        typename BlockIndexType::iterator iter = m_blockIndex.begin();
 
         m_freeBlockVector.reserve(m_freeBlockVector.size() + m_blockIndex.size());
 
