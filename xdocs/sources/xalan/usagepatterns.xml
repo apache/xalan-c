@@ -154,8 +154,12 @@ theXalanTransformer.setStylesheetParam(key, expression);
 theXalanTransformer.transform("foo.xml","foo.xsl","foo-out.xml")</source>
 <note>If the expression is a string, enclose it in single quotes to make it a string expression.</note>
 <p>You can include the -param flag with two arguments when you call the <link idref="commandline">command line utility</link>. The first argument is the parameter name or key, and the second argument is the string expression (in single quotes). For example:</p>
+<p><code>Xalan -p param1 'boo' foo.xml foo.xsl</code></p>
+<p>or</p>
 <p><code>TestXSLT -in foo.xml -xsl foo.xsl -param param1 'boo'</code></p>
 <p>If the string expression includes spaces or other characters that the shell intercepts, first enclose the string in single quotes so &xslt4c; interprets it as a string expression, and then enclose the resulting string in double quotes so the shell interprets it as a single argument. For example:</p>
+<p><code>Xalan -p "'hello there'" foo.xml foo.xsl</code></p>
+<p>or</p>
 <p><code>TestXSLT -in foo.xml -xsl foo.xsl -param param1 "'hello there'"</code></p>
 <p>The <link idref="samples" anchor="usestylesheetparam">UseStylesheetParam</link> sample application also uses a command-line parameter.</p>
 </s2><anchor name="incremental"/>
@@ -245,7 +249,12 @@ void parseWithXerces(XalanTransformer &amp;xalan,
                      XMLFileReporter &amp;logFile)
 {
   DOMParser the Parser;
+  
+  // You MUST instruct the Xerces DOMParser NOT to create a DOM_XMLDecNode
+  // in the DOM to represent the XML declaration. See "Limitations" above.
   theParser.setToCreateXMLDeclTypeNode(false);
+  
+  // Turn on validatiion and namespace support.
   theParser.setDoValidation(true);
   theParser.setDoNamespaces(true);
   
@@ -253,7 +262,10 @@ void parseWithXerces(XalanTransformer &amp;xalan,
   DOM_Document theDOM = theParser.getDocument();
   theDOM.normalize();
   XercesDOMSupport theDOMSupport;
-  XercdesParserLiaison theParserLiaison(theDOMSupport);
+  XercesParserLiaison theParserLiaison(theDOMSupport);
+  
+  // Use the DOM to create a XercesDOMWrapperParsedSource, 
+  // which you can pass to the transform method.
   try
   {
     const XercesDOMWrapperParsedSource parsedSource(
@@ -288,7 +300,7 @@ executing XPath expressions.</p>
   <li>Result tree generation events</li>
  </ul>
 <p>To construct a TraceListener with TraceListenerDefault, you need a PrintWriter and a boolean for each of these four tracing options. You can then use the XSLTEngimeImpl setTraceSelects and addTraceListener methods to add the TraceListener to an XSLTProcessor. See the <link idref="samples" anchor="tracelisten">TraceListen</link> sample application.</p>
-<p>The <link idref="commandline">command-line utility (testXSLT)</link> and TraceListen both use TraceListenerDefault to write events to the screen.</p>
+<p>The <link idref="commandline" anchor="testxslt">testXSLT command-line utility</link> and TraceListen both use TraceListenerDefault to write events to the screen.</p>
 </s2><anchor name="icu"/>
 <s2 title="Using the ICU">
     <p>You can use the <resource-ref idref="icu"/> to extend support for encoding, number

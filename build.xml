@@ -97,19 +97,24 @@
     </java>
   </target>
 
-  <!-- pack apidocs for transfer to website -->
- <target name="pack.apidocs">
+  <!-- pack doc for distribution -->
+ <target name="pack.distribdocs">
     <!--tar tarfile="./build/xalan-c-apidocs.tar" basedir="./build/docs/apidocs" includes="*"/>
     <gzip src="./build/xalan-c-apidocs.tar" zipfile="./build/xalan-c-apidocs.tar.gz"/-->
-    <zip zipfile="./build/xalan-c-apidocs.zip" basedir="./build/docs/apidocs" includes="*"/>
+    <zip zipfile="./build/xalan-c-distribdocs.zip" basedir="./build/docs" includes="**"/>
   </target>
 
-  <!-- pack all doc for transfer to website -->
+  <!-- pack user guide doc for transfer to website -->
  <target name="pack.docs">
     <!--tar tarfile="./build/xalan-c-docs.tar" basedir="./build/docs" includes="**"/>
     <gzip src="./build/xalan-c-docs.tar" zipfile="./build/xalan-c-docs.tar.gz"/-->
     <zip zipfile="./build/xalan-c-docs.zip" basedir="./xml-site" includes="**" excludes="apidocs/*"/>
   </target>
-
+  <!-- pack all doc for transfer to website -->
+ <target name="pack.webdocs">
+    <!--tar tarfile="./build/xalan-c-docs.tar" basedir="./build/docs" includes="**"/>
+    <gzip src="./build/xalan-c-docs.tar" zipfile="./build/xalan-c-docs.tar.gz"/-->
+    <zip zipfile="./build/xalan-c-webdocs.zip" basedir="./xml-site" includes="**"/>
+  </target>
   
 </project>

@@ -71,7 +71,7 @@
     <li><link anchor="threadsafe">ThreadSafe</link></li>  
     <li><link anchor="xpathwrapper">XPathWrapper</link></li>
     <li><link anchor="simplexpathapi">SimpleXPathAPI</link></li>
-    <li><link anchor="simplexapthcapi">SimpleXPathCAPI</link></li>
+    <li><link anchor="simplexpathcapi">SimpleXPathCAPI</link></li>
     <li><link anchor="serializenodeset">SerializeNodeSet</link></li>    
     <li><link anchor="externalfunctions">ExternalFunctions</link></li>
     <li><link anchor="apachemodulexslt">ApacheModuleXSLT</link></li>

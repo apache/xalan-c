@@ -22,9 +22,9 @@ Please contact us at <human-resource-ref idref="xalandev"/> if you would like to
 <p><img src="xalan-c-unixdist.gif" alt="xalan-cdist.gif"/></p>
 </s3>
 <p>For the Linux build, download <resource-ref idref="xslt4c-linux-download"/>. This Red Hat Linux 6.1 distribution was built with egcs-2.91.66 and glibc-2.1.2-11.</p>
-<p>For the AIX build, download <resource-ref idref="xslt4c-aix-download"/>. This AIX 4.3 distribution was built with IBM C and C++ for AIX 3.6.6.</p>
+<p>For the AIX build, download <resource-ref idref="xslt4c-aix-download"/>. This AIX 4.3 distribution was built with IBM C and C++ for AIX 5.02.</p>
 <p>For the HP-UX 11 build, download <resource-ref idref="xslt4c-hp-ux-download"/>. This HP-UX 11 distribution was built with aCC A.03.27.</p>
-<p>For the Solaris build, download <resource-ref idref="xslt4c-Solaris-download"/>. This Solaris distribution was built with Workshop 4.2.</p>
+<p>For the Solaris build, download <resource-ref idref="xslt4c-Solaris-download"/>.[This Solaris distribution was built with Workshop 4.2.]</p>
 <note>Use GNU tar to untar the Solaris distribution file; see <link idref="faq" anchor="gnutar">A tar checksum error on Solaris </link>.</note>
 <p>Each distribution contains all you need to run the Xalan command-line transformations utility and to build your own applications. 
 If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also download and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
@@ -61,7 +61,7 @@ If you want to take advantage of the support for number formatting, sorting, and
   <li>The Xalan-C++ shared library: &xslt4c-solarislib;</li>
   <li>The Xerces-C++ shared library: &xml4c-solarislib;</li>
 </ul>
-<p>If you want to enable ICU support for the command-line utility, you must build the ICU and rebuild the Xalan-C++ shared/load library (Linux/AIX/HP-UX 11) and TestXSLT (all platforms) with the ICUBridge. See <link idref="usagepatterns" anchor="icu">Using the ICU</link> and <link idref="commandline" anchor="icu">Enabling ICU support for TestXSLT</link>.</p>
+<p>If you want to enable ICU support for the command-line utility, you must build the ICU and rebuild the Xalan-C++ shared/load library (Linux/AIX/HP-UX 11) and Xalan or TestXSLT (all platforms) with the ICUBridge. See <link idref="usagepatterns" anchor="icu">Using the ICU</link> and <link idref="commandline" anchor="icu">Enabling ICU support for the Xalan and/or TestXSLT executable</link>.</p>
 <p>For information about using the command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
 <note>If you want to do your own AIX or Solaris build, you must download <resource-ref idref="stlport"/> and set the STLPORTROOT
 environment variable to the complete path to the STLPort distribution (see the <link idref="readme" anchor="build">Build notes</link>)</note>
@@ -104,7 +104,7 @@ xml-xalan\c\Build\Win32\VC6\Release. In the UNIX distributions, the executables 
 <p>For more information about the samples, see <link idref="samples">&xslt4c; Samples</link>.</p>
 </s2><anchor name="commandline"/>
 <s2 title="Performing your own transformations from the command line">
-<p>TestXSLT provides a basic utility for performing transformations from the command line. The command line for 
+<p>The Xalan executable lets you perform transformations from the command line. The command line for 
 most standard transformations is as follows:</p>
 <p><code>Xalan -o <ref>outputfile</ref> <ref>xmlSource</ref> <ref>stylesheet</ref></code></p>
 <p>where <ref>xmlSource</ref> is the XML source file name, <ref>stylesheet</ref> is the XSL stylesheet file name, and <ref>outputfile</ref> is the output file name.</p>
