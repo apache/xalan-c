@@ -697,9 +697,7 @@ XalanTransformer::parseSource(
 int
 XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
+	XALAN_USING_STD(find)
 
 	const ParsedSourcePtrVectorType::iterator	i =
 		find(
