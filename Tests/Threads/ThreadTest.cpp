@@ -154,8 +154,8 @@ ThreadInfo
 
 
 // Used to hold compiled stylesheet and pre-parsed source...
-XalanCompiledStylesheet*	glbCompiledStylesheet = 0;
-XalanParsedSource*			glbParsedSource = 0;
+const XalanCompiledStylesheet*	glbCompiledStylesheet = 0;
+const XalanParsedSource*		glbParsedSource = 0;
 
 
 
