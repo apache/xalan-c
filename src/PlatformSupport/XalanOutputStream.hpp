@@ -97,10 +97,18 @@ public :
 	typedef std::vector<char>			TranscodeVectorType;
 #endif
 
+	/**
+	 * Constructor.
+	 *
+	 * @param theBufferSize the size of the transcoding buffer
+	 * @param theTranscoderBlockSize the size of the block used by the transcoder
+	 * @param fThrowTranscodeException If true, an error transcoding will result in an exception being thrown.
+	 */
 	explicit
 	XalanOutputStream(
 			BufferType::size_type			theBufferSize = eDefaultBufferSize,
-			TranscodeVectorType::size_type	theTranscoderBlockSize = eDefaultTranscoderBlockSize);
+			TranscodeVectorType::size_type	theTranscoderBlockSize = eDefaultTranscoderBlockSize,
+			bool							fThrowTranscodeException = true);
 
 	virtual
 	~XalanOutputStream();
@@ -223,6 +231,36 @@ public :
 	 */
 	void
 	setOutputEncoding(const XalanDOMString&		theEncoding);
+
+	/**
+	 * Set the flag that indicates whether a transcoding
+	 * error should throw an exception.  The default is
+	 * to throw an exception.  If this flag is false, and
+	 * and an error occurs transcoding, then data will
+	 * likely be lost.
+	 *
+	 * @return the value of the flag.
+	 */
+	bool
+	getThrowTranscodeException() const
+	{
+		return m_throwTranscodeException;
+	}
+
+	/**
+	 * Set the flag that indicates whether a transcoding
+	 * error should throw an exception.  The default is
+	 * to throw an exception.  If this flag is false, and
+	 * and an error occurs transcoding, then data will
+	 * likely be lost.
+	 *
+	 * @param the new value of the flag.
+	 */
+	void
+	setThrowTranscodeException(bool	flag)
+	{
+		m_throwTranscodeException = flag;
+	}
 
 	/**
 	 * Set the size of the output buffer.
@@ -361,6 +399,8 @@ private:
 	XalanDOMString							m_encoding;
 
 	bool									m_writeAsUTF16;
+
+	bool									m_throwTranscodeException;
 
 	TranscodeVectorType						m_transcodingBuffer;
 };

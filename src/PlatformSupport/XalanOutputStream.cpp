@@ -70,13 +70,15 @@
 
 XalanOutputStream::XalanOutputStream(
 			BufferType::size_type			theBufferSize,
-			TranscodeVectorType::size_type	theTranscoderBlockSize) :
+			TranscodeVectorType::size_type	theTranscoderBlockSize,
+			bool							fThrowTranscodeException) :
 	m_transcoderBlockSize(theTranscoderBlockSize),
 	m_transcoder(0),
 	m_bufferSize(theBufferSize),
 	m_buffer(),
 	m_encoding(),
 	m_writeAsUTF16(false),
+	m_throwTranscodeException(fThrowTranscodeException),
 	m_transcodingBuffer()
 {
 	if (m_bufferSize == 0)
@@ -135,7 +137,13 @@ XalanOutputStream::transcode(
 				theBufferLength,
 				theDestination) == false)
 		{
-			throw TranscodingException();
+			if (m_throwTranscodeException == true)
+			{
+				throw TranscodingException();
+			}
+			else
+			{
+			}
 		}
 	}
 	else
@@ -186,7 +194,13 @@ XalanOutputStream::transcode(
 
 			if(theResult != XalanTranscodingServices::OK)
 			{
-				throw TranscodingException();
+				if (m_throwTranscodeException == true)
+				{
+					throw TranscodingException();
+				}
+				else
+				{
+				}
 			}
 
 			theTotalBytesFilled += theTargetBytesEaten;
