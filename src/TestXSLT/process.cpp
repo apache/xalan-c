@@ -633,7 +633,8 @@ createFormatter(
 			const StylesheetRoot*			stylesheet,
 			XMLParserLiaison&				parserLiaison,
 			XalanSourceTreeParserLiaison&	sourceTreeParserLiaison,
-			const PrefixResolver&			prefixResolver)
+			const PrefixResolver&			prefixResolver,
+			const XalanDocument*&			theResultDocument)
 {
 	FormatterListener*	formatter = 0;
 
@@ -729,8 +730,14 @@ createFormatter(
 	{
 		if (formatToSourceTree == true)
 		{
+			XalanSourceTreeDocument*	theDocument =
+				sourceTreeParserLiaison.createXalanSourceTreeDocument();
+			assert(theDocument != 0);
+
+			theResultDocument = theDocument;
+
 			FormatterToSourceTree* const	fToSourceTree =
-				new FormatterToSourceTree(sourceTreeParserLiaison.createXalanSourceTreeDocument());
+				new FormatterToSourceTree(theDocument);
 
 			fToSourceTree->setPrefixResolver(&prefixResolver);
 
@@ -738,8 +745,14 @@ createFormatter(
 		}
 		else
 		{
+			XalanDocument* const	theDocument =
+				parserLiaison.createDOMFactory();
+			assert(theDocument != 0);
+
+			theResultDocument = theDocument;
+
 			FormatterToDOM* const	fToDOM =
-				new FormatterToDOM(parserLiaison.createDOMFactory(), 0);
+				new FormatterToDOM(theDocument, 0);
 
 			fToDOM->setPrefixResolver(&prefixResolver);
 
@@ -901,6 +914,13 @@ xsltMain(const CmdLineParams&	params)
 	XalanStdOutputStream				theStdErr(cerr);
 	XalanOutputStreamPrintWriter		diagnosticsWriter(theStdErr);
 
+	// Make sure that error reporting, which includes any TraceListener output
+	// does not throw exceptions when transcoding, since that could result in
+	// an exception being thrown will another exception is active.  In particular,
+	// characters that the TraceListener writes might not be representable in the
+	// local code page.
+	theStdErr.setThrowTranscodeException(false);
+
 	// Initialize the XalanSourceTree subsystem.  This must stay in scope until
 	// we're done with the subsystem, since its destructor shuts down the
 	// subsystem.
@@ -1019,6 +1039,8 @@ xsltMain(const CmdLineParams&	params)
 
 	XalanOutputStreamPrintWriter	resultWriter(*outputFileStream.get());
 
+	const XalanDocument*	theResultDocument = 0;
+
 	const XalanAutoPtr<FormatterListener>	formatter(
 			createFormatter(
 				params.outputType,
@@ -1034,7 +1056,8 @@ xsltMain(const CmdLineParams&	params)
 				stylesheet,
 				xmlParserLiaison,
 				theXalanSourceTreeParserLiaison,
-				processor));
+				processor,
+				theResultDocument));
 
 	XSLTResultTarget	rTreeTarget;
 
@@ -1114,38 +1137,9 @@ xsltMain(const CmdLineParams&	params)
 			   rTreeTarget.getFormatterListener()->getOutputFormat() ==
 					FormatterListener::OUTPUT_METHOD_DOM);
 
-		const XalanDocument*	theResultDocument = 0;
-
-		if (params.formatToSourceTree == true)
-		{
-			// Get the FormatterToDOM that produced the result document...
-			const FormatterToSourceTree* const	theResultFormatter =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(FormatterToSourceTree*)rTreeTarget.getFormatterListener();
-#else
-				static_cast<FormatterToSourceTree*>(rTreeTarget.getFormatterListener());
-#endif
-
-			// Get the document...
-			theResultDocument = theResultFormatter->getDocument();
-		}
-		else
-		{
-			// Get the FormatterToDOM that produced the result document...
-			const FormatterToDOM* const	theResultFormatter =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(FormatterToDOM*)rTreeTarget.getFormatterListener();
-#else
-				static_cast<FormatterToDOM*>(rTreeTarget.getFormatterListener());
-#endif
-
-			// Get the document...
-			theResultDocument = theResultFormatter->getDocument();
-		}
-
 		if (theResultDocument == 0)
 		{
-			cerr << endl << "Warning: No document to format!!!" << endl;
+			cerr << endl << "Error: No document to format!!!" << endl;
 		}
 		else
 		{
@@ -1166,7 +1160,8 @@ xsltMain(const CmdLineParams&	params)
 						stylesheet,
 						xmlParserLiaison,
 						theXalanSourceTreeParserLiaison,
-						processor));
+						processor,
+						theResultDocument));
 
 			// Create a FormatterTreeWalker with the the
 			// new formatter...
