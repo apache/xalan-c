@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,18 +84,23 @@ public:
 	 * @param preLetter  prefix for quantity, for example, "XC" represents 90
 	 */
 	DecimalToRoman(
-			long					postValue = 0L,
-			const XalanDOMString&	postLetter = XalanDOMString(), 
-			long					preValue = 0L,
-			const XalanDOMString&	preLetter = XalanDOMString());
+			long					postValue,
+			const XalanDOMString&	postLetter, 
+			long					preValue,
+			const XalanDOMString&	preLetter);
+
+	DecimalToRoman();
 
 	~DecimalToRoman();
 
-	long			m_postValue;      
+	void
+	swap(DecimalToRoman&	theOther);
+
+	long			m_postValue;
 
 	XalanDOMString	m_postLetter;
 
-	long			m_preValue;      
+	long			m_preValue;
 
 	XalanDOMString	m_preLetter;
 };

@@ -216,6 +216,9 @@ public:
 		return m_digitsTableTable;
 	}
 
+	void
+	swap(XalanNumberingResourceBundle&	theOther);
+
 private:
 
 	XalanDOMString			m_language;

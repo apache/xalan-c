@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,42 @@ DecimalToRoman::DecimalToRoman(
 
 
 
+DecimalToRoman::DecimalToRoman() :
+	m_postValue(0),
+	m_postLetter(),
+	m_preValue(0),
+	m_preLetter()
+{
+}
+
+
+
 DecimalToRoman::~DecimalToRoman()
 {
+}
+
+
+
+void
+DecimalToRoman::swap(DecimalToRoman&	theOther)
+{
+	{
+		const long	temp = m_postValue;
+
+		m_postValue = theOther.m_postValue;
+
+		theOther.m_postValue = temp;
+	}
+
+	m_postLetter.swap(theOther.m_postLetter);
+
+	{
+		const long	temp = m_preValue;
+
+		m_preValue = theOther.m_preValue;
+
+		theOther.m_preValue = temp;
+	}
+
+	m_preLetter.swap(theOther.m_preLetter);
 }

@@ -125,3 +125,63 @@ XalanNumberingResourceBundle::XalanNumberingResourceBundle(const XalanNumberingR
 XalanNumberingResourceBundle::~XalanNumberingResourceBundle()
 {
 }
+
+
+
+void
+XalanNumberingResourceBundle::swap(XalanNumberingResourceBundle&	theOther)
+{
+	m_language.swap(theOther.m_language);
+
+	m_uiLanguage.swap(theOther.m_uiLanguage);
+
+	m_helpLanguage.swap(theOther.m_helpLanguage);
+
+	m_alphabet.swap(theOther.m_alphabet);
+
+	m_traditionalAlphabet.swap(theOther.m_traditionalAlphabet);
+
+	{
+		const eOrientation	temp = m_orientation;
+
+		m_orientation = theOther.m_orientation;
+
+		theOther.m_orientation = temp;
+	}
+
+	{
+		const eNumberingMethod	temp = m_numberingMethod;
+
+		m_numberingMethod = theOther.m_numberingMethod;
+
+		theOther.m_numberingMethod = temp;
+	}
+
+	{
+		const eMultiplierOrder	temp = m_multiplierOrder;
+
+		m_multiplierOrder = theOther.m_multiplierOrder;
+
+		theOther.m_multiplierOrder = temp;
+	}
+
+	{
+		const int	temp = m_maxNumericalValue;
+
+		m_maxNumericalValue = theOther.m_maxNumericalValue;
+
+		theOther.m_maxNumericalValue = temp;
+	}
+
+	m_numberGroups.swap(theOther.m_numberGroups);
+
+	m_multipliers.swap(theOther.m_multipliers);
+
+	m_zeroChar.swap(theOther.m_zeroChar);
+
+	m_multiplierChars.swap(theOther.m_multiplierChars);
+
+	m_digitsTable.swap(theOther.m_digitsTable);
+
+	m_digitsTableTable.swap(theOther.m_digitsTableTable);
+}
