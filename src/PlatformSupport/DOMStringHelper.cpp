@@ -77,9 +77,7 @@ using std::hex;
 using std::ostream;
 using std::ostrstream;
 using std::string;
-//using std::stringstream;
 using std::vector;
-using std::wstring;
 #endif
 
 
