@@ -65,6 +65,8 @@
 #include "AIXDefinitions.hpp"
 #elif defined(__hpux)
 #include "HPUXDefinitions.hpp"
+#elif defined(SOLARIS)
+#include "SolarisDefinitions.hpp"
 #endif
 
 #endif	// PLATFORMDEFINITIONS_HEADER_GUARD_1357924680

@@ -302,9 +302,9 @@ struct CmdLineParams
 		doValidation(false),
 		noIndent(false),
 		formatToNull(false),
+		formatToSourceTree(false),
 		useDOM(false),
 		useDOMForRTFs(false),
-		formatToSourceTree(false),
 		indentAmount(-1),
 		outputType(-1),
 		outFileName(),
@@ -1229,7 +1229,9 @@ main(
 					 << endl
 					 << endl;
 
-				vector<XalanNode*>	theNodes(theInstanceCount, 0);
+				typedef vector<XalanNode*>	NodeVectorType;
+
+				NodeVectorType	theNodes(theInstanceCount, NodeVectorType::value_type(0));
 
 				XalanNode::getLiveInstances(&*theNodes.begin());
 

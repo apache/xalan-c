@@ -302,7 +302,7 @@ XalanSourceTreeContentHandler::startDocument()
 
 	// Push a dummy value for the current element, so we
 	// don't have to check for an empty stack in endElement().
-	m_elementStack.push_back(0);
+	m_elementStack.push_back(ElementStackType::value_type(0));
 }
 
 
