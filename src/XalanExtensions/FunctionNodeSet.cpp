@@ -62,6 +62,9 @@
 #include <XPath/XObjectFactory.hpp>
 
 
+#include <XSLT/ResultTreeFragBaseNodeRefListBaseProxy.hpp>
+
+
 
 class XResultTreeFragNodeSetProxy : public XNodeSetBase
 {
@@ -139,6 +142,74 @@ private:
 
 
 
+class ResultTreeFragBaseXNodeSetBaseProxy : public XNodeSetBase
+{
+public:
+
+	ResultTreeFragBaseXNodeSetBaseProxy(const XObjectPtr&	theXObject) :
+		XNodeSetBase(),
+		m_xobject(theXObject),
+		m_proxy(theXObject->rtree())
+	{
+	}
+
+	ResultTreeFragBaseXNodeSetBaseProxy(const ResultTreeFragBaseXNodeSetBaseProxy&	theSource) :
+		XNodeSetBase(theSource),
+		m_xobject(theSource.m_xobject),
+		m_proxy(theSource.m_proxy)
+	{
+	}
+
+	virtual
+	~ResultTreeFragBaseXNodeSetBaseProxy()
+	{
+	}
+
+	// These methods are inherited from XNodeSetBase...
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual XObject*
+#else
+	virtual ResultTreeFragBaseXNodeSetBaseProxy*
+#endif
+	clone(void*		theAddress = 0) const
+	{
+		return theAddress == 0 ? new ResultTreeFragBaseXNodeSetBaseProxy(*this) :
+				new (theAddress) ResultTreeFragBaseXNodeSetBaseProxy(*this);
+	}
+
+	virtual const NodeRefListBase&
+	nodeset() const
+	{
+		return m_proxy;
+	}
+
+	virtual void
+	dereferenced()
+	{
+		delete this;
+	}
+
+	virtual XalanNode*
+	item(size_type	index) const
+	{
+		return m_proxy.item(index);
+	}
+
+	virtual size_type
+	getLength() const
+	{
+		return m_proxy.getLength();
+	}
+
+private:
+
+	const XObjectPtr								m_xobject;
+
+	const ResultTreeFragBaseNodeRefListBaseProxy	m_proxy;
+};
+
+
+
 FunctionNodeSet::FunctionNodeSet(bool	convertString) :
 	m_convertString(convertString)
 {
@@ -171,7 +242,7 @@ FunctionNodeSet::execute(
 	if (theType == XObject::eTypeResultTreeFrag ||
 		(theType == XObject::eTypeString && m_convertString == true))
 	{
-		return XObjectPtr(new XResultTreeFragNodeSetProxy(args[0]));
+		return XObjectPtr(new ResultTreeFragBaseXNodeSetBaseProxy(args[0]));
 	}
 	else
 	{
