@@ -1660,16 +1660,8 @@ XPathProcessorImpl::FunctionCall()
 			FunctionRound();
 			break;
 
-		case XPathExpression::eOP_FUNCTION_STRING_0:
-			FunctionString(opPos);
-			break;
-
 		case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
 			FunctionStringLength(opPos);
-			break;
-
-		case XPathExpression::eOP_FUNCTION_NAMESPACEURI_0:
-			FunctionNamespaceURI(opPos);
 			break;
 
 		case XPathExpression::eOP_FUNCTION_SUM:
