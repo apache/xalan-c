@@ -697,10 +697,7 @@ createFormatter(
 						doctypeSystem,
 						doctypePublic,
 						outputIndent,
-						indentAmount,
-						version,
-						standalone,
-						false);	// xmlDecl
+						indentAmount);
 
 		fToHTML->setStripCData(stripCData);
 		fToHTML->setPrefixResolver(&prefixResolver);
