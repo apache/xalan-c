@@ -203,6 +203,18 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\..\..\Tests\Performance\Logger.cpp">
+		</File>
+		<File
+			RelativePath="..\..\..\..\Tests\Performance\Logger.hpp">
+		</File>
+		<File
+			RelativePath="..\..\..\..\Tests\Performance\Parameters.cpp">
+		</File>
+		<File
+			RelativePath="..\..\..\..\Tests\Performance\Parameters.hpp">
+		</File>
+		<File
 			RelativePath="..\..\..\..\Tests\Performance\perf.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
@@ -222,6 +234,27 @@
 					Name="VCCLCompilerTool"
 					ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\..\..\..\Tests\Performance\TestHarness.cpp">
+		</File>
+		<File
+			RelativePath="..\..\..\..\Tests\Performance\TestHarness.hpp">
+		</File>
+		<File
+			RelativePath="..\..\..\..\Tests\Performance\Timer.hpp">
+		</File>
+		<File
+			RelativePath="..\..\..\..\Tests\Performance\Utils.cpp">
+		</File>
+		<File
+			RelativePath="..\..\..\..\Tests\Performance\Utils.hpp">
+		</File>
+		<File
+			RelativePath="..\..\..\..\Tests\Performance\XalanCProcessor.cpp">
+		</File>
+		<File
+			RelativePath="..\..\..\..\Tests\Performance\XalanCProcessor.hpp">
 		</File>
 	</Files>
 	<Globals>

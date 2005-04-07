@@ -18,558 +18,284 @@
 #include <xalanc/Include/PlatformDefinitions.hpp>
 
 
-
-#include <cstdio>
-
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
-// This is here for memory leak testing.
-#if !defined(NDEBUG) && defined(_MSC_VER)
-#include <crtdbg.h>
-#endif
 
 
 #include <xercesc/util/PlatformUtils.hpp>
 
 
 
-#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
-#include <xalanc/PlatformSupport/XalanFileOutputStream.hpp>
-#include <xalanc/PlatformSupport/XalanOutputStreamPrintWriter.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
-#include <xalanc/XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <xalanc/XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
-#include <xalanc/XPath/XObjectFactoryDefault.hpp>
-#include <xalanc/XPath/XPathFactoryDefault.hpp>
 
-#include <xalanc/XSLT/StylesheetConstructionContextDefault.hpp>
-#include <xalanc/XSLT/StylesheetExecutionContextDefault.hpp>
-#include <xalanc/XSLT/StylesheetRoot.hpp>
-#include <xalanc/XSLT/XSLTEngineImpl.hpp>
-#include <xalanc/XSLT/XSLTInit.hpp>
-#include <xalanc/XSLT/XSLTInputSource.hpp>
-#include <xalanc/XSLT/XSLTProcessorEnvSupportDefault.hpp>
-#include <xalanc/XSLT/XSLTResultTarget.hpp>  
+#include <xalanc/XalanDOM/XalanDOMString.hpp>
+
+
 
 #include <xalanc/Harness/XalanXMLFileReporter.hpp>
 #include <xalanc/Harness/XalanFileUtility.hpp>
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
+#include "Parameters.hpp"
+#include "TestHarness.hpp"
+#include "XalanCProcessor.hpp"
+#include "Logger.hpp"
+#include "Utils.hpp"
 
 
 
-const char* const 	excludeStylesheets[] =
+XALAN_USING_STD(cout);
+XALAN_USING_STD(cerr);
+XALAN_USING_STD(endl);
+
+
+XALAN_USING_XERCES(XMLPlatformUtils)
+
+
+
+XALAN_USING_XALAN(XalanTransformer)
+XALAN_USING_XALAN(XalanDOMString)
+XALAN_USING_XALAN(XalanXMLFileReporter)
+XALAN_USING_XALAN(XalanFileUtility)
+
+
+
+void usage()
 {
-	"large-evans_large.xsl",
-	0
-};
-
-
-
-// Just hoist everything...
-XALAN_CPP_NAMESPACE_USE
-
-
-
-inline bool
-checkForExclusion(const XalanDOMString&		currentFile)
-{
-	for (int i=0; excludeStylesheets[i] != 0; i++)
-	{	
-		if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
-		{
-			return true;
-		}
-	}
-
-	return false;
+    cerr << "Usage: perf"
+         << " [options]"
+         << " -test [test directory ]"
+         << " -result [result directory ]"
+		 << " -report [report directory ]"
+		 << " configfile" << endl
+         << "Options:" << endl
+         << "        -?    Display this message" << endl;
 }
 
 
 
-inline StylesheetRoot*
-processStylesheet(
-			const XalanDOMString&			theFileName,
-			XSLTProcessor&					theProcessor,
-			StylesheetConstructionContext&	theConstructionContext)
+void generateReports(
+		Parameters&				params,
+		const XalanDOMString&	reportFile,
+		Logger&					logger)
 {
-	const XSLTInputSource	theInputSource(theFileName);
+	XalanTransformer transformer;
 
-	return theProcessor.processStylesheet(theInputSource, theConstructionContext);
-}
+	// report XSL file
+	XalanDOMString reportFileXSL = params.getReportDirectory();
+	reportFileXSL += XalanDOMString("report.xsl");
 
+	// html result
+	XalanDOMString htmlReport = params.getResultDirectory();
+	htmlReport += params.getResultFile();
+	htmlReport += params.getUniqId();
+	htmlReport += XalanDOMString(".html");
 
-
-inline XalanNode*
-parseSourceDocument(
-			const XalanDOMString&	theFileName,
-			XSLTProcessor&			theProcessor)
-{
-	const XSLTInputSource	theInputSource(theFileName);
-
-	return theProcessor.getSourceTreeFromInput(theInputSource);
-}
-
-
-
-inline double
-calculateElapsedTime(
-			clock_t		theStartTime,
-			clock_t		theEndTime)
-{
-	return double(theEndTime - theStartTime) / CLOCKS_PER_SEC * 1000.0;
-}
-
-
-
-inline double
-calculateAvgTime(
-			clock_t		accTime,
-			long		theIterationCount)
-{
-	assert(theIterationCount > 0);
-
-	return double(accTime) / theIterationCount;
-}
-
-
-
-inline double
-calculateAverageElapsedTime( 
-			clock_t     theStartTime,
-			clock_t		theEndTime,
-			long		theIterationCount)
-{
-	assert(theIterationCount > 0);
-
-	return calculateElapsedTime(theStartTime, theEndTime) / theIterationCount;
-}
-
-
-
-inline clock_t
-transformWUnparsedSource(
-			const XalanDOMString&				theFileName,
-			XSLTProcessor&						theProcessor,
-			const StylesheetRoot*				theStylesheetRoot,
-			XSLTResultTarget&					theResults,
-			StylesheetExecutionContextDefault&  theExecutionContext)
-{
-	const XSLTInputSource	csSourceXML(c_wstr(theFileName));
-
-	theProcessor.setStylesheetRoot(theStylesheetRoot);
-
-	const clock_t startTime = clock();
-
-	theProcessor.process(csSourceXML, theResults, theExecutionContext);
-
-	return clock() - startTime;
-
-}
-
-
-
-inline clock_t
-transformWParsedSource(
-			XalanNode*							theParsedSource,
-			XSLTProcessor&						theProcessor,
-			const StylesheetRoot*				theStylesheetRoot,
-			XSLTResultTarget&					theResults,
-			StylesheetExecutionContextDefault&	theExecutionContext)
-{
-	// Put the parsed document into an XSLTInputSource, 
-	// and set stylesheet root in the processor
-	const XSLTInputSource	csSourceDocument(theParsedSource);
-
-	theProcessor.setStylesheetRoot(theStylesheetRoot);
-
-	const clock_t startTime = clock();
-
-	theProcessor.process(csSourceDocument, theResults, theExecutionContext);
-	
-	return clock() - startTime;
-}
-
-
-
-inline long
-eTOeTransform(
-			const XSLTInputSource&			inputSource,
-	        const XSLTInputSource&			stylesheetSource,
-	        XSLTResultTarget&				outputTarget,
-			StylesheetConstructionContext&	constructionContext,
-			StylesheetExecutionContext&		executionContext,
-			XSLTProcessor&					theProcessor)
-{
-	const clock_t startTime=clock();
-
-	theProcessor.process(
-				inputSource, 
-			    stylesheetSource,
-				outputTarget,
-				constructionContext,
-				executionContext);
-
-	const clock_t endTime=clock();
-
-	return endTime - startTime;
-}
-
-
-
-void
-setHelp(XalanFileUtility&	h)
-{
-	h.args.getHelpStream() << endl
-		 << "Perf dir [-out -sub -i -iter]"
-		 << endl
-		 << endl
-		 << "dir		(base directory for testcases)"
-		 << endl
-		 << "-out dir	(base directory for output)"
-		 << endl
-		 << "-sub dir (run files only from a specific directory)"
-		 << endl
-		 << "-i                (include all testcases)"
-		 << endl
-		 << "-iter n           (specifies number of iterations; must be > 0)"
-		 << endl;
-}
-
-int
-main(
-			int		argc,
-			char*	argv[])
-{
-#if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-#endif
-    
-	XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtils::Initialize();
-
-	MemoryManagerType & theManager = XalanMemMgrs::getDefaultXercesMemMgr();
-
-	const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"), theManager);
-	bool skip = true;		// Default will skip long tests
-	bool setGold = false;
-
-	XalanFileUtility	h(theManager);
-
-	// Set the program help string,  then get the command line parameters.
-	//
-	setHelp(h);
-
-	if (h.getParams(argc, argv, "PERF-RESULTS", setGold) == true)
+	if (checkFileExists(reportFileXSL))
 	{
-
-		// Generate Unique Run id and processor info
-		XalanDOMString	UniqRunid(theManager);
-        h.generateUniqRunid(UniqRunid);
-		const XalanDOMString	resultFilePrefix(XalanDOMString("cpp"));
-		XalanDOMString	resultsFile = h.args.output;
-		resultsFile += resultFilePrefix;
-		resultsFile += UniqRunid;
-		resultsFile += XalanFileUtility::s_xmlSuffix;
-
-		XalanXMLFileReporter	logFile(theManager, resultsFile);
-
-		logFile.logTestFileInit("Performance Testing - Reports performance times for single transform, and average for multiple transforms using compiled stylesheet");
-
-		try
+		if (transformer.transform(reportFile, reportFileXSL, htmlReport) < 0)
 		{
-			// Call the static initializers... and define file suffixes
-			// Having xmlplatformutils in it's own class like this means that if there are
-			// exceptions then terminate() is sure to run because it will automatically get
-			// cleaned up when this instance goes out of scope.
-			bool foundDir = false;	// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
-			{
-				XSLTInit	theInit(theManager);  
-		
-				typedef XalanFileUtility::FileNameVectorType		FileNameVectorType;
-
-				// Get the list of Directories that are below perf and iterate through them
-				FileNameVectorType dirs(theManager);
-				
-				h.getDirectoryNames(h.args.base, dirs);
-
-				const long 	iterCount = h.args.iters;
-
-				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
-				{
-					// Run specific sub of files from given directory
-					if (length(h.args.sub) > 0 && !equals(dirs[j], h.args.sub))
-					{
-						continue;
-					}
-
-					// Check that output directory is there.
-					XalanDOMString  theOutputDir = h.args.output;
-					theOutputDir += dirs[j];
-					h.checkAndCreateDir(theOutputDir);
-
-					XalanDOMString logEntry("Performance Directory: ");
-					logEntry += dirs[j];
-					logFile.logTestCaseInit(logEntry);
-					
-					// Indicate that directory was processed and get test files from the directory
-					foundDir = true;
-					FileNameVectorType files(theManager);
-					h.getTestFileNames(h.args.base, dirs[j], false, files);
-
-					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
-					{
-						// Define  variables used for timing and reporting ...
-						clock_t startTime, endTime, accmTime, avgEtoe;
-						double timeinMilliseconds, theAverage;
-
-						typedef XalanXMLFileReporter::Hashtable	Hashtable;
-
-						Hashtable attrs(theManager);
-					
-						if (skip && checkForExclusion(files[i]))
-						{
-							continue;
-						}
-
-						XalanDOMString  theXSLFile= h.args.base;
-						theXSLFile += dirs[j];
-						theXSLFile += XalanFileUtility::s_pathSep;
-						theXSLFile += files[i];
-						XalanDOMString  theXMLFile(theManager);
-						h.generateFileName(theXSLFile,"xml", theXMLFile);
-
-						XalanDOMString  theOutput = h.args.output;
-						theOutput += dirs[j];
-						theOutput += XalanFileUtility::s_pathSep;
-						theOutput += files[i]; 
-						XalanDOMString  theOutputFile;
-						h.generateFileName(theOutput, "out", theOutputFile);
-
-
-						attrs.insert(Hashtable::value_type(XalanDOMString("href"), theXSLFile));
-						// Create the necessary support objects to instantiate a processor.
-
-						XercesDOMSupport				csDOMSupport;
-						XercesParserLiaison				csParserLiaison(theManager, csDOMSupport);
-
-						/*XalanSourceTreeDOMSupport		csDOMSupport;
-						XalanSourceTreeParserLiaison	csParserLiaison(csDOMSupport);
-
-						csDOMSupport.setParserLiaison(&csParserLiaison);
-						*/
-
-						XSLTProcessorEnvSupportDefault	csXSLTProcessorEnvSupport(theManager);
-						XObjectFactoryDefault			csXObjectFactory;
-						XPathFactoryDefault				csXPathFactory;
-	
-						// Create a processor and connect to ProcessorEnvSupport object
-						XSLTEngineImpl	csProcessor(
-								theManager,
-								csParserLiaison,
-								csXSLTProcessorEnvSupport,
-								csDOMSupport,
-								csXObjectFactory,
-								csXPathFactory);
-
-						// Hook up the processor the the support object.
-						csXSLTProcessorEnvSupport.setProcessor(&csProcessor);
-
-						// Create separate factory support object, so the stylesheet's
-						// factory-created XPath instance are independent from processor's.
-						XPathFactoryDefault			ssXPathFactory;
-
-						// Create a stylesheet construction context, using the
-						// stylesheet's factory support objects.
-						StylesheetConstructionContextDefault	csConstructionContext(
-														theManager,
-														csProcessor,
-														ssXPathFactory);
-						cout << endl << files[i] << endl;
-
-						// Create a parsed stylesheet (StylesheetRoot) for the
-						// specified input XSL. We don't have to delete it, since
-						// it is owned by the StylesheetConstructionContextDefault
-						// instance. Time it as well...
-	
-						startTime = clock();
-						const StylesheetRoot* const glbStylesheetRoot = processStylesheet(
-																theXSLFile,
-																csProcessor,
-																csConstructionContext);
-						endTime = clock();
-						assert(glbStylesheetRoot != 0);
-
-						// Calculate & report performance on stylesheet parse to console and log file.
-						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
-						cout << "   XSL: " << timeinMilliseconds << " milliseconds, Parse" << endl;
-						logFile.addMetricToAttrs("parsexsl",timeinMilliseconds, attrs);						
-
-						
-						// Parse the input XML and report how long it took...                             
-						startTime = clock();
-						XalanNode* const  glbSourceXML = parseSourceDocument(theXMLFile, 
-																	csProcessor);
-						endTime = clock();
-						assert(glbSourceXML != 0);
-
-						// Calculate & report performance on source document parse to console and log file.
-						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
-						cout << "   XML: " << timeinMilliseconds << " milliseconds, Parse" << endl;
-						logFile.addMetricToAttrs("parsexml",timeinMilliseconds, attrs);
-
-
-
-						// The execution context uses the same factory support objects as
-						// the processor, since those objects have the same lifetime as
-						// other objects created as a result of the execution.
-
-						XSLTResultTarget		theResultTarget(theOutputFile);
-						const XSLTInputSource	xslInputSource(theXSLFile);
-						const XSLTInputSource	xmlInputSource(theXMLFile);
-
-						StylesheetExecutionContextDefault	psExecutionContext(
-											theManager,
-											csProcessor,
-											csXSLTProcessorEnvSupport,
-											csDOMSupport,
-											csXObjectFactory);
-
-						// Perform a single transform using parsed stylesheet and unparsed xml source, report results...
-						csProcessor.setStylesheetRoot(glbStylesheetRoot);
-						//const XSLTInputSource	csSourceDocument(glbSourceXML);
-
-						startTime = clock();
-						csProcessor.process(xmlInputSource, 
-									theResultTarget, 
-									psExecutionContext);
-						endTime = clock();
-
-						psExecutionContext.reset();	// Reset the execution context...
-						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
-
-						// Output single transform time to console and result log
-						cout << endl << "   One: " << timeinMilliseconds << " w/Parsed XSL" << endl;
-						logFile.addMetricToAttrs("single",timeinMilliseconds, attrs);
-
-
-						// Do a total end to end transform with no pre parsing of either xsl or xml files.
-						const etoetran = eTOeTransform(xmlInputSource, 
-													xslInputSource,
-													theResultTarget,
-													csConstructionContext,
-													psExecutionContext,
-													csProcessor);
-	
-						// Output single etoe transform time to console and result log
-						cout << "   One: " << etoetran << " eToe" << endl;
-						logFile.addMetricToAttrs("etoe", etoetran, attrs);
-
-
-						// Perform multiple transforms and calculate the average time ..
-						// These are done 3 different ways.
-						// FIRST: Parsed XSL Stylesheet and Parsed XML Source.
-
-						accmTime = 0;
-						for(int j = 0; j < iterCount; ++j)
-						{	
-							accmTime += transformWParsedSource(glbSourceXML,
-														 csProcessor,
-														 glbStylesheetRoot,
-														 theResultTarget,
-														 psExecutionContext);
-							psExecutionContext.reset();							
-						}
-						csParserLiaison.reset();
-						theAverage = calculateAvgTime(accmTime, iterCount); 
-
-						// Output average transform time to console and result log
-						cout << endl  << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Parsed files" << endl;
-						logFile.addMetricToAttrs("avgparsedxml",theAverage, attrs);
-
-						// SECOND: Parsed Stylesheet and UnParsed XML Source.
-						// This is currently how the XalanJ 2.0 is performing transforms,
-						// i.e. with the unparsed XML Source.
-						
-						accmTime = 0;
-						for(int k = 0; k < iterCount; ++k)
-						{
-							accmTime += transformWUnparsedSource(theXMLFile,
-														 csProcessor,
-														 glbStylesheetRoot,
-														 theResultTarget,
-														 psExecutionContext);
-							psExecutionContext.reset();		// Resets the execution context
-							csParserLiaison.reset();		// This deletes the document
-						}
-
-						theAverage = calculateAvgTime(accmTime, iterCount);
-						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/UnParsed XML" << endl;
-
-						logFile.addMetricToAttrs("avgunparsedxml",theAverage, attrs);
-
-						// THIRD: Neither Stylesheet nor XML Source are parsed.
-						// Perform multiple etoe transforms and calculate the average ...
-		
-						avgEtoe = 0;
-						for(int jj = 0; jj < iterCount; ++jj)
-						{	
-						avgEtoe += eTOeTransform(xmlInputSource, 
-													xslInputSource,
-													theResultTarget,
-													csConstructionContext,
-													psExecutionContext,
-													csProcessor);
-						psExecutionContext.reset();	
-						csParserLiaison.reset();						
-						}
-
-						theAverage = calculateAvgTime(avgEtoe,iterCount);
-
-						// Output average transform time to console and result log
-						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's of eToe" << endl;
-						logFile.addMetricToAttrs("avgetoe",theAverage, attrs);
-						logFile.logElementWAttrs(10, "perf", attrs, "xxx");
-					}
-	
-					logEntry = "Performance Directory: ";
-					logEntry += dirs[j];
-					logFile.logTestCaseClose(logEntry, XalanDOMString("Done"));
-				}
-
-			}
-
-			// Check to see if -sub cmd-line directory was processed correctly.
-			if (!foundDir)
-			{	
-				cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
-			}
-
-			h.reportPassFail(logFile, UniqRunid);
-			logFile.logTestFileClose("Performance", "Done");
-			logFile.close();
+			logger.warning() 
+				<< "Failed to generate HTML report: " 
+				<< htmlReport.c_str()
+				<< ", error: " 
+				<< transformer.getLastError() << endl;
 		}
-		catch(const XalanFileOutputStream::XalanFileOutputStreamOpenException& ex)
+		else
 		{
-			cerr << ex.getMessage() << endl << endl;
-		}
-		catch(...)
-		{
-			cerr << "Exception caught!!!" << endl  << endl;
+			logger.message() << "Generated HTML report: " << htmlReport.c_str() << endl;
 		}
 	}
+	else
+	{
+		logger.warning()
+			<< "Could not generate HTML report, stylesheet: "
+			<< reportFileXSL.c_str()
+			<< ", file not found" << endl;
+	}
 
-	XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtils::Terminate();
+	XalanDOMString baselineFile = params.getBaselineDirectory();
+	baselineFile += params.getBaselineFile();
+
+	if (checkFileExists(baselineFile))
+	{
+		// comparison report XSL file
+		XalanDOMString compareReportFileXSL = params.getReportDirectory();
+		compareReportFileXSL += XalanDOMString("comparereport.xsl");
+
+		// html result
+		XalanDOMString htmlCompareReport = params.getResultDirectory();
+		htmlCompareReport += XalanDOMString("compare");
+		htmlCompareReport += params.getResultFile();
+		htmlCompareReport += params.getUniqId();
+		htmlCompareReport += XalanDOMString(".html");
+
+		transformer.setStylesheetParam(XalanDOMString("threshold"),params.getThreshold());
+		transformer.setStylesheetParam(XalanDOMString("baseline"), baselineFile);
+
+		if (checkFileExists(compareReportFileXSL))
+		{
+			if (transformer.transform(reportFile, compareReportFileXSL, htmlCompareReport) < 0)
+			{
+				logger.warning() 
+					<< "Failed to generate HTML report: " 
+					<< htmlCompareReport.c_str()
+					<< ", error: " 
+					<< transformer.getLastError() << endl;
+			}
+			else
+			{
+				logger.message() << "Generated HTML report: " << htmlCompareReport.c_str() << endl;
+			}
+		}
+		else
+		{
+			logger.warning()
+				<< "Could not generate HTML report, stylesheet: "
+				<< compareReportFileXSL.c_str()
+				<< ", file not found" << endl;
+		}
+	}
+	else
+	{
+		logger.warning()
+			<< "No baseline file found: "
+			<< baselineFile.c_str() 
+			<< endl;
+	}
+}
+
+
+int main(int argc, char* argv[])
+{
+	XMLPlatformUtils::Initialize();
+    XalanTransformer::initialize();
+
+	Logger logger(cerr);
+
+	if (argc < 2 ||
+        XalanDOMString("-?").compare(XalanDOMString(argv[1])) == 0)
+    {
+        usage();
+    }
+    else
+    { 
+        XalanDOMString testDirectory;
+        XalanDOMString resultDirectory;
+		XalanDOMString reportDirectory;
+        XalanDOMString runFileName;
+
+		// process command line parameters
+        int i = 1;
+        while (i < argc)
+        {
+            if (stricmp(argv[i],"-test") == 0)
+            {
+                ++i;
+                if (i >= argc)
+                {
+					logger.error() << "Test directory missing" << endl;
+					usage();
+                    exit(1);
+                }
+                testDirectory.assign(argv[i]);
+            }
+            else if (stricmp(argv[i],"-result") == 0)
+            {
+                ++i;
+                if (i >= argc)
+                {
+                    logger.error() << "Result directory missing" << endl;
+					usage();
+					exit(1);
+                }
+                resultDirectory.assign(argv[i]);
+            }
+			else if (stricmp(argv[i],"-report") == 0)
+            {
+                ++i;
+                if (i >= argc)
+                {
+					logger.error() << "Report directory missing" << endl;
+					usage();
+					exit(1);
+                }
+                reportDirectory.assign(argv[i]);
+            }
+            else
+            {
+				break;
+			}
+
+			++i;
+        }
+
+        if (i >= argc)
+        {
+            logger.error() << "Run file not specified" << endl;
+			usage();
+			exit(1);
+        }
+		else
+		{
+			runFileName.assign(argv[i]);
+		}
+
+
+		XalanFileUtility fileUtility(XalanMemMgrs::getDefaultXercesMemMgr());
+
+		// setup testing parameters
+        Parameters params(
+				runFileName,
+				testDirectory,
+				resultDirectory,
+				reportDirectory,
+				fileUtility,
+				logger);
+
+		if (!params.initialized())
+		{
+			exit(1);
+		}
+
+		// create report file 
+		XalanDOMString reportFile = params.getResultDirectory();
+		reportFile += params.getResultFile();
+		reportFile += params.getUniqId();
+		reportFile += XalanDOMString(".xml");
+
+		XalanXMLFileReporter reporter(XalanMemMgrs::getDefaultXercesMemMgr(), reportFile);
+
+		reporter.logTestFileInit(params.getDescription());
+
+		// run test harness
+		typedef TestHarness<XalanCProcessor> XalanCTestHarness;
+
+		XalanCTestHarness testHarness;
+
+        testHarness.init(fileUtility, reporter, logger);
+
+		testHarness.executeTestCases(params.getTestCases());
+
+		reporter.logTestFileClose("","");
+
+		reporter.close();
+
+		// generate reports
+		generateReports(params, reportFile, logger);
+		
+		// create latest copy for baseline testing
+		XalanDOMString latestReportFile = params.getResultDirectory();
+		latestReportFile += params.getResultFile();
+		latestReportFile += XalanDOMString("_latest.xml");
+		copyFile(latestReportFile, reportFile);
+	}
+
+	XalanTransformer::terminate();
+    XMLPlatformUtils::Terminate();
 
 	return 0;
 }
