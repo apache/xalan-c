@@ -22,8 +22,6 @@
 
 #if defined(_MSC_VER)
 #include "VCPPDefinitions.hpp"
-#elif defined(CYGWIN)
-#include "CygwinDefinitions.hpp"
 #elif defined(__GNUC__)
 #include "GCCDefinitions.hpp"
 #elif defined(_AIX)
