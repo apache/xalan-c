@@ -301,8 +301,9 @@ ifeq ($(PLATFORM), HPUX)
   SUPPORTED = TRUE
   PLATFORM_COMPILE_OPTIONS = +Z -D${PLATFORM} -D_THREAD_SAFE
   # +p option removed, +W849 option added
-  # to avoid error created by instantiated template symbol length limiation.
-  PLATFORM_CXX_COMPILE_OPTIONS = +W849 -mt  -Wc,-koenig_lookup,on -Wc,-ansi_for_scope,on
+  # to avoid error created by instantiated template symbol length limitation.
+  # Also disable warning 930 about placement delete not implemented.
+  PLATFORM_CXX_COMPILE_OPTIONS = +W849,930 -mt  -Wc,-koenig_lookup,on -Wc,-ansi_for_scope,on
 
   ALLLIBS = ${LIBS}
   SHLIBSUFFIX=.sl
