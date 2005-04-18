@@ -724,6 +724,8 @@ XercesParserLiaison::createDOMParser()
 	DOMParserType* const	theParser = new DOMParserType(0,&(getMemoryManager()));
 
 	theParser->setExpandEntityReferences(true);
+    theParser->setDoNamespaces(m_doNamespaces);
+    theParser->setEntityResolver(m_entityResolver);
 
 #if XERCES_VERSION_MAJOR < 2
 	// Xerces has a non-standard node type to represent the XML decl.
