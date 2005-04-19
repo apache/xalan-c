@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"> 
 	<xsl:output method="html"/>
-	<xsl:param name="baseline" select="'R2.xml'"/>
+	<xsl:param name="baseline" select="ResultReport_latest.xml"/>
 	<xsl:param name="threshold" select="5"/>
 
 	<xsl:template match="/">
@@ -184,7 +184,10 @@
 					<xsl:when test="$n-new > $n-orig">
 						<xsl:variable name="difference" select="(($n-new div $n-orig) - 1) * 100"/>
 						<xsl:choose>
-							<xsl:when test="$difference > ($threshold div 100)">
+							<xsl:when test="$difference = 0">
+								<td align="center">--</td>
+							</xsl:when>
+							<xsl:when test="$difference > $threshold">
 								<td bgcolor="red">
 									<xsl:value-of select="concat($difference,'%')"/>
 								</td>	
@@ -199,7 +202,10 @@
 					<xsl:otherwise>
 						<xsl:variable name="difference" select="(1 - ($n-new div $n-orig)) * 100"/>
 						<xsl:choose>
-							<xsl:when test="$difference > ($threshold div 100)">
+							<xsl:when test="$difference = 0">
+								<td align="center">--</td>
+							</xsl:when>
+							<xsl:when test="$difference > $threshold">
 								<td bgcolor="#10F0F0">
 									<xsl:value-of select="concat($difference,'%')"/>
 								</td>
@@ -215,6 +221,9 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
+					<xsl:when test="not($orig) and not($new)">
+						<td></td>
+					</xsl:when>
 					<xsl:when test="$orig = $new">
 						<td>Same</td>
 					</xsl:when>
@@ -227,6 +236,3 @@
 	</xsl:template>
 </xsl:stylesheet>
 
-		
-		
-		

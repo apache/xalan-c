@@ -69,6 +69,7 @@ void usage()
          << " [options]"
          << " -test [test directory ]"
          << " -result [result directory ]"
+		 << " -baseline [baseline directory]"
 		 << " -report [report directory ]"
 		 << " configfile" << endl
          << "Options:" << endl
@@ -133,8 +134,12 @@ void generateReports(
 		htmlCompareReport += params.getUniqId();
 		htmlCompareReport += XalanDOMString(".html");
 
+		XalanDOMString baselineFileStr = XalanDOMString("'");
+					baselineFileStr += baselineFile;
+					baselineFileStr += XalanDOMString("'");
+
 		transformer.setStylesheetParam(XalanDOMString("threshold"),params.getThreshold());
-		transformer.setStylesheetParam(XalanDOMString("baseline"), baselineFile);
+		transformer.setStylesheetParam(XalanDOMString("baseline"), baselineFileStr);
 
 		if (checkFileExists(compareReportFileXSL))
 		{
@@ -185,6 +190,7 @@ int main(int argc, char* argv[])
     { 
         XalanDOMString testDirectory;
         XalanDOMString resultDirectory;
+		XalanDOMString baselineDirectory;
 		XalanDOMString reportDirectory;
         XalanDOMString runFileName;
 
@@ -213,6 +219,17 @@ int main(int argc, char* argv[])
 					exit(1);
                 }
                 resultDirectory.assign(argv[i]);
+            }
+			else if (stricmp(argv[i],"-baseline") == 0)
+            {
+                ++i;
+                if (i >= argc)
+                {
+                    logger.error() << "Baseline directory missing" << endl;
+					usage();
+					exit(1);
+                }
+                baselineDirectory.assign(argv[i]);
             }
 			else if (stricmp(argv[i],"-report") == 0)
             {
@@ -245,6 +262,8 @@ int main(int argc, char* argv[])
 		}
 
 
+		logger.message() << "Loading configuration file: " << runFileName.c_str() << endl;
+
 		XalanFileUtility fileUtility(XalanMemMgrs::getDefaultXercesMemMgr());
 
 		// setup testing parameters
@@ -252,6 +271,7 @@ int main(int argc, char* argv[])
 				runFileName,
 				testDirectory,
 				resultDirectory,
+				baselineDirectory,
 				reportDirectory,
 				fileUtility,
 				logger);

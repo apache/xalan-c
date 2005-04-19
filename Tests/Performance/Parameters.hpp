@@ -53,6 +53,7 @@ public:
 	    const XalanDOMString&	runFileName,
         const XalanDOMString&	testDirectory,
         const XalanDOMString&	resultDirectory,
+		const XalanDOMString&   baselineDirectory,
 		const XalanDOMString&	reportDirectory,
 		XalanFileUtility&		fileUtility,
 		Logger& log);

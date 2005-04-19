@@ -68,19 +68,20 @@ Parameters::Parameters(
         const XalanDOMString& runFileName,
         const XalanDOMString& testDirectory,
         const XalanDOMString& resultDirectory,
+		const XalanDOMString& baselineDirectory,
 		const XalanDOMString& reportDirectory,
 		XalanFileUtility&		fileUtility,
 		Logger & logger) :
-	m_name(),
-	m_description(),
+	m_name("default"),
+	m_description(""),
 	m_resultDirectory(resultDirectory),
 	m_resultFile("results"),
 	m_threshold("5"),
-	m_baselineDirectory(),
-	m_baselineFile(),
+	m_baselineDirectory(baselineDirectory),
+	m_baselineFile(""),
 	m_defaultTestCase(),
 	m_testDirectory(testDirectory),
-	m_goldDirectory(),
+	m_goldDirectory(""),
 	m_reportDirectory(reportDirectory),
 	m_transformer(),
 	m_initialized(false),
@@ -279,7 +280,11 @@ Parameters::parseConfigurationFile(
 			attributeNode = attributeParams->getNamedItem(XalanDOMString("file-path"));
 			if (attributeNode != 0)
 			{
-				m_baselineDirectory = attributeNode->getNodeValue();
+				if (!m_baselineDirectory.empty())
+				{
+					m_baselineDirectory += getPathSep();
+				}
+				m_baselineDirectory += attributeNode->getNodeValue();
 			}
 			// baseline file
 			XalanNode * baselineNode = currentNode->getFirstChild();
@@ -417,10 +422,13 @@ Parameters::readTestCases(
 		return false;
     }
 
-	if (!fileUtility.checkDir(m_goldDirectory))
+	if (m_goldDirectory.empty())
 	{
-		logger.error() << "Invalid gold directory: " << m_goldDirectory.c_str() << endl;
-		return false;
+		logger.message() << "No gold directory specified" << endl;
+		if (!fileUtility.checkDir(m_goldDirectory))
+		{
+			logger.warning() << "Invalid gold directory: " << m_goldDirectory.c_str() << endl;
+		}
 	}
 
     fileUtility.checkAndCreateDir(m_resultDirectory);
@@ -431,7 +439,7 @@ Parameters::readTestCases(
     fileUtility.getDirectoryNames(m_testDirectory, dirNames);
 
     FileNamesType::iterator dirIter = dirNames.begin();
-
+	
 	// for each test directory
     while (dirIter != dirNames.end())
     {
@@ -458,7 +466,7 @@ Parameters::readTestCases(
             fileUtility.generateFileName(testCase.stylesheet, "xml", testCase.inputDocument, &status);
             if (status != true)
             {
-				logger.warning() << "No matching input file for" << testCase.stylesheet.c_str() << endl;
+				logger.warning() << "No matching input file for: " << testCase.stylesheet.c_str() << endl;
                 ++xslIter;
                 continue;
 			}
