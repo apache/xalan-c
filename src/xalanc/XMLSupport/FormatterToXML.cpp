@@ -97,7 +97,6 @@ FormatterToXML::FormatterToXML(
 	m_shouldFlush(fBufferData),
 	m_spaceBeforeClose(false),
 	m_escapeCData(false),
-	m_inEntityRef(false),
 	m_version(version, theManager),
 	m_standalone(standalone, theManager),
 	m_mediaType(mediaType, theManager),
@@ -968,41 +967,39 @@ FormatterToXML::startDocument()
 	// Clear the buffer, just in case...
 	clear(m_stringBuffer);
 
-	if(m_inEntityRef == false)
+	m_needToOutputDocTypeDecl = true;
+	m_startNewLine = false;
+
+	if(m_shouldWriteXMLHeader == true)
 	{
-		m_needToOutputDocTypeDecl = true;
-		m_startNewLine = false;
+		// "<?xml version=\""
+		accumName(s_xmlHeaderStartString, 0, s_xmlHeaderStartStringLength);
 
-		if(m_shouldWriteXMLHeader == true)
+		if (length(m_version) != 0)
 		{
-			// "<?xml version=\""
-			accumName(s_xmlHeaderStartString, 0, s_xmlHeaderStartStringLength);
+			accumName(m_version);
+		}
+		else
+		{
+			accumName(s_defaultVersionString, 0, s_defaultVersionStringLength);
+		}
 
-			if (length(m_version) != 0)
-			{
-				accumName(m_version);
-			}
-			else
-			{
-				accumName(s_defaultVersionString, 0, s_defaultVersionStringLength);
-			}
+		// "\" encoding=\""
+		accumName(s_xmlHeaderEncodingString, 0, s_xmlHeaderEncodingStringLength);
 
-			// "\" encoding=\""
-			accumName(s_xmlHeaderEncodingString, 0, s_xmlHeaderEncodingStringLength);
+		accumName(m_encoding);
 
-			accumName(m_encoding);
+		if (length(m_standalone) != 0)
+		{
+			accumName(s_xmlHeaderStandaloneString, 0, s_xmlHeaderStandaloneStringLength);
+			accumName(m_standalone);
+		}
 
-			if (length(m_standalone) != 0)
-			{
-				accumName(s_xmlHeaderStandaloneString, 0, s_xmlHeaderStandaloneStringLength);
-				accumName(m_standalone);
-			}
+		accumName(s_xmlHeaderEndString, 0, s_xmlHeaderEndStringLength);
 
-			accumName(s_xmlHeaderEndString, 0, s_xmlHeaderEndStringLength);
+		outputLineSep();
+	}	   
 
-			outputLineSep();
-		}	   
-	}
 }
 
 
@@ -1033,45 +1030,42 @@ FormatterToXML::startElement(
 			const XMLCh* const	name,
 			AttributeListType&	attrs)
 {
-    if(m_inEntityRef == false)
-	{
-		if(true == m_needToOutputDocTypeDecl &&
-		   isEmpty(m_doctypeSystem) == false)
-		{
-			outputDocTypeDecl(name);
+    if(true == m_needToOutputDocTypeDecl &&
+        isEmpty(m_doctypeSystem) == false)
+    {
+        outputDocTypeDecl(name);
 
-			m_needToOutputDocTypeDecl = false;
-		}
+        m_needToOutputDocTypeDecl = false;
+    }
 
-		writeParentTagEnd();
+    writeParentTagEnd();
 
-		m_ispreserve = false;
+    m_ispreserve = false;
 
-		if (shouldIndent() == true &&
-			m_startNewLine == true) 
-		{
-			indent(m_currentIndent);
-		}
+    if (shouldIndent() == true &&
+        m_startNewLine == true) 
+    {
+        indent(m_currentIndent);
+    }
 
-		m_startNewLine = true;
+    m_startNewLine = true;
 
-		accumName(XalanUnicode::charLessThanSign);
-		accumName(name);
+    accumName(XalanUnicode::charLessThanSign);
+    accumName(name);
 
-		const unsigned int	nAttrs = attrs.getLength();
+    const unsigned int	nAttrs = attrs.getLength();
 
-		for (unsigned int i = 0;  i < nAttrs ;  i++)
-		{
-			processAttribute(attrs.getName(i), attrs.getValue(i));
-		}
+    for (unsigned int i = 0;  i < nAttrs ;  i++)
+    {
+        processAttribute(attrs.getName(i), attrs.getValue(i));
+    }
 
-		// Flag the current element as not yet having any children.
-		openElementForChildren();
+    // Flag the current element as not yet having any children.
+    openElementForChildren();
 
-		m_currentIndent += m_indent;
+    m_currentIndent += m_indent;
 
-		m_isprevtext = false;
-	}
+    m_isprevtext = false;
 }
 
 
@@ -1130,50 +1124,49 @@ FormatterToXML::processingInstruction(
 			const XMLCh* const	target,
 			const XMLCh* const	data)
 {
-	if(m_inEntityRef == false)
-	{
-		// Use a fairly nasty hack to tell if the next node is supposed to be 
-		// unescaped text.
-		if(equals(target, length(target), s_piTarget, s_piTargetLength) == true &&
-		   equals(data, length(data), s_piData, s_piDataLength) == true)
-		{
-			m_nextIsRaw = true;
-		}
-		else	
-		{
-			writeParentTagEnd();
 
-			if (shouldIndent() == true)  
-			{
-				indent(m_currentIndent);
-			}
+    // Use a fairly nasty hack to tell if the next node is supposed to be 
+    // unescaped text.
+    if(equals(target, length(target), s_piTarget, s_piTargetLength) == true &&
+        equals(data, length(data), s_piData, s_piDataLength) == true)
+    {
+        m_nextIsRaw = true;
+    }
+    else	
+    {
+        writeParentTagEnd();
 
-			accumName(XalanUnicode::charLessThanSign);
-			accumName(XalanUnicode::charQuestionMark);
-			accumName(target);
+        if (shouldIndent() == true)  
+        {
+            indent(m_currentIndent);
+        }
 
-			const XalanDOMString::size_type		len = length(data);
+        accumName(XalanUnicode::charLessThanSign);
+        accumName(XalanUnicode::charQuestionMark);
+        accumName(target);
 
-			if ( len > 0 && !isXMLWhitespace(data[0]))
-			{
-				accumName(XalanUnicode::charSpace);
-			}
+        const XalanDOMString::size_type		len = length(data);
 
-			accumNormalizedPIData(data, len);
+        if ( len > 0 && !isXMLWhitespace(data[0]))
+        {
+            accumName(XalanUnicode::charSpace);
+        }
 
-			accumName(XalanUnicode::charQuestionMark);
-			accumName(XalanUnicode::charGreaterThanSign);
+        accumNormalizedPIData(data, len);
 
-			// If outside of an element, then put in a new line.  This whitespace
-			// is not significant.
-			if (m_elemStack.empty() == true)
-			{
-				outputLineSep();
-			}
+        accumName(XalanUnicode::charQuestionMark);
+        accumName(XalanUnicode::charGreaterThanSign);
 
-			m_startNewLine = true;
-		}
-	}
+        // If outside of an element, then put in a new line.  This whitespace
+        // is not significant.
+        if (m_elemStack.empty() == true)
+        {
+            outputLineSep();
+        }
+
+        m_startNewLine = true;
+    }
+
 }
 
 
@@ -1183,7 +1176,7 @@ FormatterToXML::characters(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	if(m_inEntityRef == false && length != 0)
+	if(length != 0)
 	{
 		if(m_inCData == true)
 		{
@@ -1233,7 +1226,7 @@ FormatterToXML::characters(
 				m_isprevtext = true;
 			}
 		}
-	}
+    }
 }
 
 
@@ -1243,14 +1236,11 @@ FormatterToXML::charactersRaw(
 		const XMLCh* const	chars,
 		const unsigned int	length)
 {
-	if(m_inEntityRef == false)
-	{
-		writeParentTagEnd();
+    writeParentTagEnd();
 
-		m_ispreserve = true;
+    m_ispreserve = true;
 
-		accumContent(chars, 0, length);
-	}
+    accumContent(chars, 0, length);
 }
 
 
@@ -1553,7 +1543,7 @@ FormatterToXML::ignorableWhitespace(
 	}
 #else
 	// We'ed like to be able to do this...
-	if(m_inEntityRef == false && length != 0)
+	if(length != 0)
 	{
 		assert(isXMLWhitespace(chars, 0, length));
 
@@ -1597,28 +1587,27 @@ FormatterToXML::resetDocument()
 void
 FormatterToXML::comment(const XMLCh* const	data)
 {
-	if(m_inEntityRef == false)
-	{
-		writeParentTagEnd();
 
-		if (shouldIndent() == true)  
-		{
-			indent(m_currentIndent);
-		}
+    writeParentTagEnd();
 
-		accumName(XalanUnicode::charLessThanSign);
-		accumName(XalanUnicode::charExclamationMark);
-		accumName(XalanUnicode::charHyphenMinus);
-		accumName(XalanUnicode::charHyphenMinus);
+    if (shouldIndent() == true)  
+    {
+        indent(m_currentIndent);
+    }
 
-		accumCommentData(data);
+    accumName(XalanUnicode::charLessThanSign);
+    accumName(XalanUnicode::charExclamationMark);
+    accumName(XalanUnicode::charHyphenMinus);
+    accumName(XalanUnicode::charHyphenMinus);
 
-		accumName(XalanUnicode::charHyphenMinus);
-		accumName(XalanUnicode::charHyphenMinus);
-		accumName(XalanUnicode::charGreaterThanSign);
+    accumCommentData(data);
 
-		m_startNewLine = true;
-	}
+    accumName(XalanUnicode::charHyphenMinus);
+    accumName(XalanUnicode::charHyphenMinus);
+    accumName(XalanUnicode::charGreaterThanSign);
+
+    m_startNewLine = true;
+
 }
 
 

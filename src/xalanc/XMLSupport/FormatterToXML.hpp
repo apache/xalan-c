@@ -984,11 +984,6 @@ private:
 	bool		m_escapeCData;
 
 	/**
-	 * Tells if we're in an EntityRef event.
-	 */
-	bool		m_inEntityRef;
-
-	/**
 	 * Tells the XML version, for writing out to the XML decl.
 	 */
 	const XalanDOMString	m_version;
