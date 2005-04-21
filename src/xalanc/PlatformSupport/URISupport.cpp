@@ -126,7 +126,15 @@ URISupport::getURLStringFromString(
 
 			// Assume it's a file specification...
 #if _XERCES_VERSION >= 20300
-            const ArrayJanitor<XMLCh>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)), & (theNormalizedURI.getMemoryManager()));
+			XALAN_USING_XERCES(MemoryManager)
+
+            MemoryManager&  theMemoryManager = theNormalizedURI.getMemoryManager();
+
+            const ArrayJanitor<XMLCh>	theFullPathGuard(
+                        XMLPlatformUtils::getFullPath(
+                            c_wstr(urlString),
+                            &theMemoryManager),
+                        &theMemoryManager);
 #else
 			const ArrayJanitor<XMLCh>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
 #endif
