@@ -52,8 +52,8 @@ XalanSourceTreeElement::XalanSourceTreeElement(
 			XalanNode*					theNextSibling,
 			IndexType					theIndex) :
 	XalanElement(),
-    m_memoryManager(theManager),
 	m_tagName(theTagName),
+    m_memoryManager(theManager),
 	m_ownerDocument(theOwnerDocument),
 	m_parentNode(theParentNode),
 	m_previousSibling(thePreviousSibling),
@@ -76,8 +76,8 @@ XalanSourceTreeElement::XalanSourceTreeElement(
 			const XalanSourceTreeElement&	theSource,
 			bool								deep) :
 	XalanElement(theSource),
-    m_memoryManager(theManager),
 	m_tagName(theSource.m_tagName),
+    m_memoryManager(theManager),
 	m_ownerDocument(theSource.m_ownerDocument),
 	m_parentNode(0),
 	m_previousSibling(0),
