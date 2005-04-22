@@ -54,11 +54,11 @@ public:
 
 
 
+static XalanDummyMemoryManager  s_dummyMemMgr;
+
 MemoryManagerType&
 XalanMemMgrs::getDummyMemMgr()
 {
-	static XalanDummyMemoryManager s_dummyMemMgr;
-	
 	return s_dummyMemMgr;
 }
 

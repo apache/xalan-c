@@ -341,13 +341,18 @@ XalanCopyConstruct(
 class XALAN_PLATFORM_EXPORT XalanMemMgrs
 {
 public:
-	
-	static MemoryManagerType&
-	getDummyMemMgr();
-	
-	
-	static MemoryManagerType&
-	getDefaultXercesMemMgr();
+
+    static MemoryManagerType&
+    getDummyMemMgr();
+
+    static MemoryManagerType&
+    getDefaultXercesMemMgr();
+
+    static MemoryManagerType&
+    getDefault()
+    {
+        return getDefaultXercesMemMgr();
+    }
 };
 
 
