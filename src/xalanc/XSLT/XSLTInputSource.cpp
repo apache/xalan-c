@@ -36,8 +36,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XSLTInputSource::XSLTInputSource() :
-	InputSource(),
+XSLTInputSource::XSLTInputSource(MemoryManager&     theMemoryManager) :
+	InputSource(&theMemoryManager),
 	m_stream(0),
 	m_node(0)
 {
@@ -47,16 +47,13 @@ XSLTInputSource::XSLTInputSource() :
 
 // $$$ ToDo:  Xerces' InputSource class does not yet have a copy
 // constructor or assignment operator.  See bug #7944.
-XSLTInputSource::XSLTInputSource(const XSLTInputSource&		theSource) :
-#if 1
-	InputSource(),
-#else
-	InputSource(theSource)
-#endif
+XSLTInputSource::XSLTInputSource(
+            const XSLTInputSource&	theSource,
+            MemoryManager&          theMemoryManager) :
+	InputSource(&theMemoryManager),
 	m_stream(theSource.m_stream),
 	m_node(theSource.m_node)
 {
-#if 1
 	setIssueFatalErrorIfNotFound(theSource.getIssueFatalErrorIfNotFound());
 
 	const XMLCh*	theValue = theSource.getSystemId();
@@ -79,7 +76,6 @@ XSLTInputSource::XSLTInputSource(const XSLTInputSource&		theSource) :
 	{
 		setEncoding(theValue);
 	}
-#endif
 }
 
 
@@ -91,7 +87,7 @@ XSLTInputSource::operator=(const XSLTInputSource&	theRHS)
 	{
 		m_stream = theRHS.m_stream;
 		m_node = theRHS.m_node;
-#if 1
+
 		setIssueFatalErrorIfNotFound(theRHS.getIssueFatalErrorIfNotFound());
 
 		const XMLCh*	theValue = theRHS.getSystemId();
@@ -114,20 +110,20 @@ XSLTInputSource::operator=(const XSLTInputSource&	theRHS)
 		{
 			setEncoding(theValue);
 		}
-#endif
+
 	}
 
-#if 1
 	return *this;
-#else
-	return InputSource::operator=(theRHS);
-#endif
 }
 
 
 
-XSLTInputSource::XSLTInputSource(const XMLCh*	systemId) :
-	InputSource(systemId),
+XSLTInputSource::XSLTInputSource(
+            const XMLCh*	systemId,
+            MemoryManager&  theMemoryManager) :
+	InputSource(
+        systemId,
+        &theMemoryManager),
 	m_stream(0),
 	m_node(0)
 {
@@ -135,8 +131,12 @@ XSLTInputSource::XSLTInputSource(const XMLCh*	systemId) :
 
 
 
-XSLTInputSource::XSLTInputSource(const XalanDOMString&	systemId) :
-	InputSource(systemId.c_str()),
+XSLTInputSource::XSLTInputSource(
+            const XalanDOMString&	systemId,
+            MemoryManager&          theMemoryManager) :
+	InputSource(
+        systemId.c_str(),
+        &theMemoryManager),
 	m_stream(0),
 	m_node(0)
 {
@@ -146,8 +146,12 @@ XSLTInputSource::XSLTInputSource(const XalanDOMString&	systemId) :
 
 XSLTInputSource::XSLTInputSource(
 			const XMLCh*	systemId,
-			const XMLCh*	publicId) :
-	InputSource(systemId, publicId),
+			const XMLCh*	publicId,
+            MemoryManager&  theMemoryManager) :
+	InputSource(
+        systemId,
+        publicId,
+        &theMemoryManager),
 	m_stream(0),
 	m_node(0)
 {
@@ -157,8 +161,12 @@ XSLTInputSource::XSLTInputSource(
 
 XSLTInputSource::XSLTInputSource(
 			const XalanDOMString&	systemId,
-			const XalanDOMString&	publicId) :
-	InputSource(systemId.c_str(), publicId.c_str()),
+			const XalanDOMString&	publicId,
+            MemoryManager&          theMemoryManager) :
+	InputSource(
+        systemId.c_str(),
+        publicId.c_str(),
+        &theMemoryManager),
 	m_stream(0),
 	m_node(0)
 {
@@ -166,8 +174,12 @@ XSLTInputSource::XSLTInputSource(
 
 
 
-XSLTInputSource::XSLTInputSource(const char*	systemId) :
-	InputSource(systemId),
+XSLTInputSource::XSLTInputSource(
+            const char*     systemId,
+            MemoryManager&  theMemoryManager) :
+	InputSource(
+        systemId,
+        &theMemoryManager),
 	m_stream(0),
 	m_node(0)
 {
@@ -177,9 +189,12 @@ XSLTInputSource::XSLTInputSource(const char*	systemId) :
 
 XSLTInputSource::XSLTInputSource(
 			const char*		systemId,
-			const char*		publicId) :
-	InputSource(systemId,
-				publicId),
+			const char*		publicId,
+            MemoryManager&  theMemoryManager) :
+	InputSource(
+        systemId,
+		publicId,
+        &theMemoryManager),
 	m_stream(0),
 	m_node(0)
 {
@@ -187,8 +202,10 @@ XSLTInputSource::XSLTInputSource(
 
 
 
-XSLTInputSource::XSLTInputSource(XalanNode*		node) :
-	InputSource(),
+XSLTInputSource::XSLTInputSource(
+            XalanNode*		node,
+            MemoryManager&  theMemoryManager) :
+	InputSource(&theMemoryManager),
 	m_stream(0),
 	m_node(node)
 {
@@ -196,8 +213,10 @@ XSLTInputSource::XSLTInputSource(XalanNode*		node) :
 
 
 
-XSLTInputSource::XSLTInputSource(StreamType*	stream) :
-	InputSource(),
+XSLTInputSource::XSLTInputSource(
+            StreamType*	    stream,
+            MemoryManager&  theMemoryManager) :
+	InputSource(&theMemoryManager),
 	m_stream(stream),
 	m_node(0)
 {
@@ -205,8 +224,10 @@ XSLTInputSource::XSLTInputSource(StreamType*	stream) :
 
 
 
-XSLTInputSource::XSLTInputSource(StreamType&	stream) :
-	InputSource(),
+XSLTInputSource::XSLTInputSource(
+            StreamType&	    stream,
+            MemoryManager&  theMemoryManager) :
+	InputSource(&theMemoryManager),
 	m_stream(&stream),
 	m_node(0)
 {
@@ -234,7 +255,9 @@ XSLTInputSource::makeStream() const
 
 		if (theSystemId != 0)
 		{
-			XERCES_CPP_NAMESPACE_QUALIFIER XMLURL	theURL;
+            XALAN_USING_XERCES(XMLURL)
+
+			XMLURL  theURL(theManager);
 
 			URISupport::getURLFromString(theSystemId, theURL, *theManager);
 

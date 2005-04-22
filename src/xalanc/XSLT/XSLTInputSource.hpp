@@ -32,7 +32,11 @@
 
 
 
-#include <xercesc/sax/InputSource.hpp>
+#include "xercesc/sax/InputSource.hpp"
+
+
+
+#include "xalanc/Include/XalanMemoryManagement.hpp"
 
 
 
@@ -46,7 +50,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 typedef XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream	BinInputStreamType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource		InputSourceType;
-
+XALAN_USING_XERCES(MemoryManager)
 
 
 class XalanDOMString;
@@ -65,12 +69,14 @@ public:
 #endif
 
 	explicit
-	XSLTInputSource();
+    XSLTInputSource(MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
 	/**
 	 * Copy constructor.
 	 */
-	XSLTInputSource(const XSLTInputSource&	theSource);
+	XSLTInputSource(
+            const XSLTInputSource&  theSource,
+            MemoryManager&          theMemoryManager = XalanMemMgrs::getDefault());
 
 	/**
 	 * Assignment operator.
@@ -87,8 +93,11 @@ public:
 	 * <p>If the system identifier is a URL, it must be full resolved.</p>
 	 *
 	 * @param systemId  system identifier (URI)
+	 * @param theMemoryManager  The MemoryManager instance to use.
 	 */
-	XSLTInputSource(const XMLCh*	systemId);
+	XSLTInputSource(
+            const XMLCh*    systemId,
+            MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
 	/**
 	 * Create a new input source with a system identifier.
@@ -99,8 +108,11 @@ public:
 	 * <p>If the system identifier is a URL, it must be full resolved.</p>
 	 *
 	 * @param systemId  system identifier (URI)
+	 * @param theMemoryManager  The MemoryManager instance to use.
 	 */
-	XSLTInputSource(const XalanDOMString&	systemId);
+	XSLTInputSource(
+            const XalanDOMString&	systemId,
+            MemoryManager&          theMemoryManager = XalanMemMgrs::getDefault());
 
 	/**
 	 * Create a new input source with a system identifier.
@@ -111,8 +123,11 @@ public:
 	 * <p>If the system identifier is a URL, it must be full resolved.</p>
 	 *
 	 * @param systemId  system identifier (URI)
+	 * @param theMemoryManager  The MemoryManager instance to use.
 	 */
-	XSLTInputSource(const char*		systemId);
+	XSLTInputSource(
+            const char*		systemId,
+            MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
 	/**
 	 * Create a new input source with a system identifier and a public
@@ -122,10 +137,12 @@ public:
 	 *
 	 * @param systemId system identifier (URI)
 	 * @param publicId public identifier
+	 * @param theMemoryManager  The MemoryManager instance to use.
 	 */
 	XSLTInputSource(
 			const char*		systemId,
-			const char*		publicId);
+			const char*		publicId,
+            MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
 	/**
 	 * Create a new input source with a system identifier and a public
@@ -135,10 +152,12 @@ public:
 	 *
 	 * @param systemId system identifier (URI)
 	 * @param publicId public identifier
+	 * @param theMemoryManager  The MemoryManager instance to use.
 	 */
 	XSLTInputSource(
 			const XMLCh*	systemId,
-			const XMLCh*	publicId);
+			const XMLCh*	publicId,
+            MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
 	/**
 	 * Create a new input source with a system identifier and a public
@@ -148,10 +167,12 @@ public:
 	 *
 	 * @param systemId system identifier (URI)
 	 * @param publicId public identifier
+	 * @param theMemoryManager  The MemoryManager instance to use.
 	 */
 	XSLTInputSource(
 			const XalanDOMString&	systemId,
-			const XalanDOMString&	publicId);
+			const XalanDOMString&	publicId,
+            MemoryManager&          theMemoryManager = XalanMemMgrs::getDefault());
 
 	/**
 	 * Create a new input source with a DOM node.
@@ -161,8 +182,11 @@ public:
 	 * identifier.</p>
 	 *
 	 * @param node DOM node that is root of the document
+	 * @param theMemoryManager  The MemoryManager instance to use.
 	 */
-	XSLTInputSource(XalanNode*	node);
+	XSLTInputSource(
+            XalanNode*	    node,
+            MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
 	/**
 	 * Create a new input source with std stream.
@@ -172,8 +196,11 @@ public:
 	 * identifier.</p>
 	 *
 	 * @param stream the input stream...
+	 * @param theMemoryManager  The MemoryManager instance to use.
 	 */
-	XSLTInputSource(StreamType*		stream);
+	XSLTInputSource(
+            StreamType*		stream,
+            MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
 	/**
 	 * Create a new input source with std stream.
@@ -183,8 +210,11 @@ public:
 	 * identifier.</p>
 	 *
 	 * @param stream the input stream...
+	 * @param theMemoryManager  The MemoryManager instance to use.
 	 */
-	XSLTInputSource(StreamType&		stream);
+	XSLTInputSource(
+            StreamType&     stream,
+            MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
 	/**
 	 * Makes the byte stream for this input source.
