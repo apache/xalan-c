@@ -43,10 +43,11 @@ XALAN_USING_XALAN(XalanDOMString)
 XALAN_USING_XALAN(XalanParsedSource)
 XALAN_USING_XALAN(XalanTransformer)
 XALAN_USING_XERCES(XMLPlatformUtils)
-XALAN_USING_XALAN(MemoryManagerType)
+XALAN_USING_XERCES(MemoryManager)
 
 XALAN_USING_XALAN(XalanMemMgrAutoPtr)
 XALAN_USING_XALAN(XalanMemMgrs)
+XALAN_USING_XALAN(XSLTInputSource)
 XALAN_USING_XALAN(XSLTResultTarget)
 
 static bool	fInitialized = false;
@@ -97,8 +98,10 @@ XalanTerminate(int	fCleanUpICU)
 XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanHandle)
 CreateXalanTransformer()
 {	
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
-	// Create a XalanTransformer object.
+    MemoryManager&  theManager =
+        XalanMemMgrs::getDefaultXercesMemMgr();
+
+    // Create a XalanTransformer object.
     typedef XalanTransformer ThisType;
 
     XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
@@ -183,14 +186,14 @@ XalanTransformToFile(
 	if(theXSLFileName == 0)
 	{
 		return getTransformer(theXalanHandle)->transform(
-			theXMLFileName,
+			XSLTInputSource(theXMLFileName, XalanMemMgrs::getDefaultXercesMemMgr()),
 			XSLTResultTarget(theOutFileName, XalanMemMgrs::getDefaultXercesMemMgr()));
 	}
 	else
 	{
 		return getTransformer(theXalanHandle)->transform(
-			theXMLFileName,
-			theXSLFileName,
+			XSLTInputSource(theXMLFileName, XalanMemMgrs::getDefaultXercesMemMgr()),
+			XSLTInputSource(theXSLFileName, XalanMemMgrs::getDefaultXercesMemMgr()),
 			XSLTResultTarget(theOutFileName, XalanMemMgrs::getDefaultXercesMemMgr()));
 	}
 }
@@ -226,18 +229,26 @@ XalanTransformToData(
 
 	ostrstream	theOutputStream;	
 
+    XalanTransformer* const     theTransformer =
+        getTransformer(theXalanHandle);
+
+    MemoryManager&  theMemoryManager =
+        theTransformer->getMemoryManager();
+
 	if(theXSLFileName == 0)
 	{
-		status = getTransformer(theXalanHandle)->transform(
-			theXMLFileName,
-			XSLTResultTarget(theOutputStream, XalanMemMgrs::getDefaultXercesMemMgr()));
+		status = 
+            theTransformer->transform(
+			    XSLTInputSource(theXMLFileName, theMemoryManager),
+			    XSLTResultTarget(theOutputStream, theMemoryManager));
 	}
 	else
 	{
-		status = getTransformer(theXalanHandle)->transform(
-			theXMLFileName,
-			theXSLFileName,
-			XSLTResultTarget(theOutputStream, XalanMemMgrs::getDefaultXercesMemMgr()));
+		status =
+            theTransformer->transform(
+			    XSLTInputSource(theXMLFileName, theMemoryManager),
+			    XSLTInputSource(theXSLFileName, theMemoryManager),
+			    XSLTResultTarget(theOutputStream, theMemoryManager));
 	}
 
 	if (status == 0)
@@ -302,13 +313,19 @@ XalanTransformToHandler(
 			XalanOutputHandlerType	theOutputHandler,
 			XalanFlushHandlerType	theFlushHandler)
 {
+    XalanTransformer* const     theTransformer =
+        getTransformer(theXalanHandle);
+
+    MemoryManager&  theMemoryManager =
+        theTransformer->getMemoryManager();
+
 	// Do the transformation...
-	return getTransformer(theXalanHandle)->transform(
-			theXMLFileName,
-			theXSLFileName,
-			theOutputHandle,
-			theOutputHandler,
-			theFlushHandler);
+	return theTransformer->transform(
+			    XSLTInputSource(theXMLFileName, theMemoryManager),
+			    XSLTInputSource(theXSLFileName, theMemoryManager),
+			    theOutputHandle,
+			    theOutputHandler,
+			    theFlushHandler);
 }
 
 
@@ -339,11 +356,17 @@ XalanCompileStylesheet(
 			XalanHandle			theXalanHandle,
 			XalanCSSHandle*		theCSSHandle)
 {
+    XalanTransformer* const     theTransformer =
+        getTransformer(theXalanHandle);
+
+    MemoryManager&  theMemoryManager =
+        theTransformer->getMemoryManager();
+
 	const XalanCompiledStylesheet*	theCompiledStylesheet = 0;
 
 	const int	theResult =
-		getTransformer(theXalanHandle)->compileStylesheet(
-			theXSLFileName,
+		theTransformer->compileStylesheet(
+			XSLTInputSource(theXSLFileName, theMemoryManager),
 			theCompiledStylesheet);
 
 	if (theResult == 0)
@@ -363,13 +386,19 @@ XalanCompileStylesheetFromStream(
 			XalanHandle			theXalanHandle,
 			XalanCSSHandle*		theCSSHandle)
 {
+    XalanTransformer* const     theTransformer =
+        getTransformer(theXalanHandle);
+
+    MemoryManager&  theMemoryManager =
+        theTransformer->getMemoryManager();
+
 	const XalanCompiledStylesheet*	theCompiledStylesheet = 0;
 
 	istrstream	theInputStream(theXSLStream, theXSLStreamLength);
 
 	const int	theResult =
-		getTransformer(theXalanHandle)->compileStylesheet(
-			&theInputStream,
+		theTransformer->compileStylesheet(
+			XSLTInputSource(theInputStream, theMemoryManager),
 			theCompiledStylesheet);
 
 	if (theResult == 0)
@@ -398,11 +427,17 @@ XalanParseSource(
 			XalanHandle		theXalanHandle,
 			XalanPSHandle*	thePSHandle)
 {
+    XalanTransformer* const     theTransformer =
+        getTransformer(theXalanHandle);
+
+    MemoryManager&  theMemoryManager =
+        theTransformer->getMemoryManager();
+
 	const XalanParsedSource*	theParsedSource = 0;
 
 	const int	theResult =
-		getTransformer(theXalanHandle)->parseSource(
-			theXMLFileName,
+		theTransformer->parseSource(
+			XSLTInputSource(theXMLFileName, theMemoryManager),
 			theParsedSource);
 
 	if (theResult == 0)
@@ -422,13 +457,19 @@ XalanParseSourceFromStream(
 			XalanHandle		theXalanHandle,
 			XalanPSHandle*	thePSHandle)
 {
+    XalanTransformer* const     theTransformer =
+        getTransformer(theXalanHandle);
+
+    MemoryManager&  theMemoryManager =
+        theTransformer->getMemoryManager();
+
 	const XalanParsedSource*	theParsedSource = 0;
 
 	istrstream	theInputStream(theXMLStream, theXMLStreamLength);
 
 	const int	theResult =
-		getTransformer(theXalanHandle)->parseSource(
-			&theInputStream,
+		theTransformer->parseSource(
+			XSLTInputSource(theInputStream, theMemoryManager),
 			theParsedSource);
 
 	if (theResult == 0)

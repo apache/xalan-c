@@ -45,7 +45,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 #define MAX_MESSAGE_LEN 1024
 
 
-XalanMessageLoader*		XalanMessageLoader::s_msgLoader = 0;
+XalanMessageLoader*     XalanMessageLoader::s_msgLoader = 0;
 
 static MemoryManagerType*      s_initManager;
 
@@ -68,14 +68,14 @@ XalanMessageLoader::initialize(MemoryManagerType&      theManager)
 #error You must provide a message loader
 #endif
 
-	if (s_msgLoader == 0)
-	{
+    if (s_msgLoader == 0)
+    {
         s_initManager = &theManager;
 
         s_msgLoader = LoaderCreatorType()(theManager);
-	}
+    }
 
-	assert(s_msgLoader != 0);
+    assert(s_msgLoader != 0);
 }
 
 
@@ -90,196 +90,238 @@ XalanMessageLoader::terminate()
     
     LoaderDestructType()(*s_initManager, s_msgLoader);
 
-	s_msgLoader = 0;
+    s_msgLoader = 0;
 }
 
 
 
 XalanDOMString&
 XalanMessageLoader::getMessage(
-			XalanMessages::Codes	msgToLoad,
+            XalanMessages::Codes    msgToLoad,
             XalanDOMString&         theResultMessage,
-			const XalanDOMString& 	repText1 )
+            const XalanDOMString&   repText1 )
 {
-	assert(s_msgLoader != 0);
+    assert(s_msgLoader != 0);
 
-	XalanDOMChar	sBuffer[MAX_MESSAGE_LEN];
+    XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
 
-	s_msgLoader->load(msgToLoad,
-		                sBuffer,
-		                MAX_MESSAGE_LEN,
-		                repText1.c_str());
+    s_msgLoader->load(
+        msgToLoad,
+        theResultMessage.getMemoryManager(),
+        sBuffer,
+        MAX_MESSAGE_LEN,
+        repText1.c_str());
 
     theResultMessage.assign(sBuffer);
 
-	return theResultMessage;
+    return theResultMessage;
 }
 
 
+
 XalanDOMString&
-XalanMessageLoader::getMessage(XalanMessages::Codes		msgToLoad,
-                                XalanDOMString&         theResultMessage,
-		                        const XalanDOMString& 				repText1, 
-		                        const XalanDOMString& 				repText2)
+XalanMessageLoader::getMessage(
+            XalanMessages::Codes    msgToLoad,
+            XalanDOMString&         theResultMessage,
+            const XalanDOMString&   repText1, 
+            const XalanDOMString&   repText2)
 {
-	assert(s_msgLoader != 0);
+    assert(s_msgLoader != 0);
 
-	XalanDOMChar	sBuffer[MAX_MESSAGE_LEN];
+    XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
 
-	s_msgLoader->load(msgToLoad,
-		                sBuffer,
-		                MAX_MESSAGE_LEN,
-		                repText1.c_str(),
-		                repText2.c_str());
+    s_msgLoader->load(
+        msgToLoad,
+        theResultMessage.getMemoryManager(),
+        sBuffer,
+        MAX_MESSAGE_LEN,
+        repText1.c_str(),
+        repText2.c_str());
 
     theResultMessage.assign(sBuffer);
 
-	return theResultMessage;
+    return theResultMessage;
 }
 
+
+
 XalanDOMString&
-XalanMessageLoader::getMessage(XalanMessages::Codes		msgToLoad,
-                               XalanDOMString&         theResultMessage,
-		                        const XalanDOMString& 	repText1 ,
-		                        const XalanDOMString& 	repText2 ,
-		                        const XalanDOMString& 	repText3)
+XalanMessageLoader::getMessage(
+            XalanMessages::Codes    msgToLoad,
+            XalanDOMString&         theResultMessage,
+            const XalanDOMString&   repText1 ,
+            const XalanDOMString&   repText2 ,
+            const XalanDOMString&   repText3)
 {
-	assert(s_msgLoader != 0);
+    assert(s_msgLoader != 0);
 
-	XalanDOMChar	sBuffer[MAX_MESSAGE_LEN];
+    XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
 
-	s_msgLoader->load(msgToLoad,
-		                sBuffer,
-		                MAX_MESSAGE_LEN,
-		                repText1.c_str(),
-		                repText2.c_str(),
-		                repText3.c_str());
-
+    s_msgLoader->load(
+        msgToLoad,
+        theResultMessage.getMemoryManager(),
+        sBuffer,
+        MAX_MESSAGE_LEN,
+        repText1.c_str(),
+        repText2.c_str(),
+        repText3.c_str());
 
     theResultMessage.assign(sBuffer);
 
-	return theResultMessage;
+    return theResultMessage;
 }
 
+
+
 XalanDOMString&
-XalanMessageLoader::getMessage(XalanMessages::Codes		msgToLoad,
-                               XalanDOMString&         theResultMessage)
+XalanMessageLoader::getMessage(
+            XalanMessages::Codes    msgToLoad,
+            XalanDOMString&         theResultMessage)
 
 {
-	assert(s_msgLoader != 0);
+    assert(s_msgLoader != 0);
 
-	XalanDOMChar	sBuffer[MAX_MESSAGE_LEN];
+    XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
 
-	s_msgLoader->loadMsg(msgToLoad,
+    s_msgLoader->loadMsg(msgToLoad,
                             sBuffer,
-		                    MAX_MESSAGE_LEN) ;
+                            MAX_MESSAGE_LEN) ;
 
     theResultMessage.assign(sBuffer);
 
-	return theResultMessage;
+    return theResultMessage;
 }
+
+
 
 bool
-XalanMessageLoader::load(XalanMessages::Codes	msgToLoad,
-				            XalanDOMChar*			toFill,
-				            unsigned int			maxChars,
-				            const XalanDOMChar* 	repText1, 
-				            const XalanDOMChar*	    repText2, 
-				            const XalanDOMChar*	    repText3,
-				            const XalanDOMChar*	    repText4) 
+XalanMessageLoader::load(
+            XalanMessages::Codes    msgToLoad,
+            MemoryManager&          theMemoryManager,
+            XalanDOMChar*           toFill,
+            unsigned int            maxChars,
+            const XalanDOMChar*     repText1, 
+            const XalanDOMChar*     repText2, 
+            const XalanDOMChar*     repText3,
+            const XalanDOMChar*     repText4) 
 {
     // Call the other version to load up the message
     if (!loadMsg(msgToLoad, toFill, maxChars))
         return false;
 
-	XALAN_USING_XERCES(XMLString)
+    XALAN_USING_XERCES(XMLString)
 
     // And do the token replacement
-    XMLString::replaceTokens(toFill, maxChars, repText1, repText2, repText3, repText4);
+    XMLString::replaceTokens(
+        toFill,
+        maxChars,
+        repText1,
+        repText2,
+        repText3,
+        repText4,
+        &theMemoryManager);
 
     return true;
 }
 
+
+
 XalanDOMString&
-XalanMessageLoader::getMessage(XalanMessages::Codes		msgToLoad,
-                                    XalanDOMString&         theResultMessage,
-					                const char* 			repText1,
-					                const char* 			repText2,
-					                const char* 			repText3,
-					                const char* 			repText4)
+XalanMessageLoader::getMessage(
+            XalanMessages::Codes    msgToLoad,
+            XalanDOMString&         theResultMessage,
+            const char*             repText1,
+            const char*             repText2,
+            const char*             repText3,
+            const char*             repText4)
 {
-	
-	XalanDOMChar	sBuffer[MAX_MESSAGE_LEN];
+    XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
 
+    s_msgLoader->load(
+        msgToLoad,
+        theResultMessage.getMemoryManager(),
+        sBuffer,
+        MAX_MESSAGE_LEN,
+        repText1,
+        repText2,
+        repText3,
+        repText4);
 
-	s_msgLoader->load(msgToLoad,
-                        theResultMessage.getMemoryManager(),
- 					    sBuffer,
-					    MAX_MESSAGE_LEN,
-					    repText1, repText2, repText3 , repText4) ;
-
-	return theResultMessage;
+    return theResultMessage;
 }
 
 
 
 XalanDOMString&
-XalanMessageLoader::getMessage(XalanMessages::Codes		msgToLoad,
-                                    XalanDOMString&                 theResultMessage,
-					                const XalanDOMChar* 			repText1, 
-					                const XalanDOMChar* 			repText2,
-					                const XalanDOMChar* 			repText3,
-					                const XalanDOMChar* 			repText4)
+XalanMessageLoader::getMessage(
+            XalanMessages::Codes     msgToLoad,
+            XalanDOMString&          theResultMessage,
+            const XalanDOMChar*      repText1, 
+            const XalanDOMChar*      repText2,
+            const XalanDOMChar*      repText3,
+            const XalanDOMChar*      repText4)
 {
-	
-	XalanDOMChar	sBuffer[MAX_MESSAGE_LEN];
+    XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
 
-	s_msgLoader->load(msgToLoad,
-					sBuffer,
-					MAX_MESSAGE_LEN,
-					repText1, repText2, repText3 , repText4) ;
+    s_msgLoader->load(
+        msgToLoad,
+        theResultMessage.getMemoryManager(),
+        sBuffer,
+        MAX_MESSAGE_LEN,
+        repText1,
+        repText2,
+        repText3,
+        repText4);
 
-	return theResultMessage;
+    return theResultMessage;
 }
 
 
 
 bool 
-XalanMessageLoader::load(XalanMessages::Codes	msgToLoad,
-                            MemoryManagerType&      theManager,
-				            XalanDOMChar*			toFill,
-				            unsigned int			maxChars,
-				            const char* 			repText1, 
-				            const char* 			repText2, 
-				            const char* 			repText3, 
-				            const char* 			repText4)
+XalanMessageLoader::load(
+            XalanMessages::Codes    msgToLoad,
+            MemoryManagerType&      theManager,
+            XalanDOMChar*           toFill,
+            unsigned int            maxChars,
+            const char*             repText1, 
+            const char*             repText2, 
+            const char*             repText3, 
+            const char*             repText4)
 {
-	XalanDOMString theFirstParam(theManager);
-	if (repText1 != 0)
-	{
-		theFirstParam.assign(repText1);
-	}
+    XalanDOMString theFirstParam(theManager);
+    if (repText1 != 0)
+    {
+        theFirstParam.assign(repText1);
+    }
 
-	XalanDOMString theSecParam(theManager);
-	if (repText2 != 0)
-	{
-		theSecParam.assign(repText2);
-	}
+    XalanDOMString theSecParam(theManager);
+    if (repText2 != 0)
+    {
+        theSecParam.assign(repText2);
+    }
 
-	XalanDOMString theThirdParam(theManager);
-	if( repText3 != 0)
-	{
-		theThirdParam.assign(repText3);
-	}
+    XalanDOMString theThirdParam(theManager);
+    if( repText3 != 0)
+    {
+        theThirdParam.assign(repText3);
+    }
 
-	XalanDOMString theForthParam(theManager);
-	if (repText4 != 0)
-	{
-		theForthParam.assign(repText4);
-	}
+    XalanDOMString theForthParam(theManager);
+    if (repText4 != 0)
+    {
+        theForthParam.assign(repText4);
+    }
 
-    return load(msgToLoad, toFill, maxChars, theFirstParam.c_str(), theSecParam.c_str(), 
-							theThirdParam.c_str(), theForthParam.c_str());
+    return load(
+                msgToLoad,
+                theManager,
+                toFill,
+                maxChars,
+                theFirstParam.c_str(),
+                theSecParam.c_str(),
+                theThirdParam.c_str(),
+                theForthParam.c_str());
 }
 
 

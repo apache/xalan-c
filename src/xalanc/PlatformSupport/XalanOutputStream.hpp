@@ -48,7 +48,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanOutputStream
 {
 public :
 
-	enum { eDefaultBufferSize = 512, eDefaultTranscoderBlockSize = 1024 };
+	enum { eDefaultBufferSize = 512u, eDefaultTranscoderBlockSize = 1024u };
 
 	typedef XalanVector<XalanDOMChar>		BufferType;
 	typedef XalanVector<char>				TranscodeVectorType;
@@ -64,10 +64,10 @@ public :
 	 */
 	explicit
 	XalanOutputStream(
-            MemoryManagerType&      theManager,
-			size_type	theBufferSize = eDefaultBufferSize,
-			size_type	theTranscoderBlockSize = eDefaultTranscoderBlockSize,
-			bool		fThrowTranscodeException = true);
+            MemoryManagerType&  theManager,
+			size_type	        theBufferSize = eDefaultBufferSize,
+			size_type	        theTranscoderBlockSize = eDefaultTranscoderBlockSize,
+			bool		        fThrowTranscodeException = true);
 
 	virtual
 	~XalanOutputStream();

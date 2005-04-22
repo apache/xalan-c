@@ -105,7 +105,7 @@ URISupport::getURLStringFromString(
 
 			// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
 			const XMLURLType::Protocols		theProtocol =
-				XMLURLType().lookupByName(c_wstr(theProtocolString));
+                XMLURLType::lookupByName(c_wstr(theProtocolString));
 
 			if (theProtocol != XMLURLType::Unknown)
 			{

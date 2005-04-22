@@ -35,27 +35,32 @@ XALAN_USING_STD(endl)
 
 
 
-#include <xercesc/util/PlatformUtils.hpp>
+#include "xercesc/util/PlatformUtils.hpp"
 
 
 
-#include <xercesc/parsers/XercesDOMParser.hpp>
+#include "xercesc/parsers/XercesDOMParser.hpp"
 
 
 
-#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
-#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
+#include "xalanc/PlatformSupport/XalanMemoryManagerDefault.hpp"
 
 
 
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
-#include <xalanc/XalanTransformer/XercesDOMWrapperParsedSource.hpp>
+#include "xalanc/XercesParserLiaison/XercesParserLiaison.hpp"
+#include "xalanc/XercesParserLiaison/XercesDOMSupport.hpp"
+
+
+
+#include "xalanc/XalanTransformer/XalanTransformer.hpp"
+#include "xalanc/XalanTransformer/XercesDOMWrapperParsedSource.hpp"
 
 
 
 // HARNESS HEADERS...
-#include "xalanc/Harness/XalanXMLFileReporter.hpp"
 #include "xalanc/Harness/XalanFileUtility.hpp"
+#include "xalanc/Harness/XalanDiagnosticMemoryManager.hpp"
+#include "xalanc/Harness/XalanXMLFileReporter.hpp"
 
 
 
@@ -75,6 +80,10 @@ XALAN_CPP_NAMESPACE_USE
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
+
+
+
+XALAN_USING_XERCES(MemoryManager)
 
 
 
@@ -109,13 +118,13 @@ static const char* const 	excludeStylesheets[] =
 
 
 inline bool
-checkForExclusion(const XalanDOMString&		currentFile)
+checkForExclusion(
+            const XalanDOMString&   currentFile,
+            MemoryManager&          theMemoryManager)
 {
-    MemoryManagerType& mgr = XalanMemMgrs::getDefaultXercesMemMgr();
-
 	for (size_t i = 0; excludeStylesheets[i] != 0; ++i)
 	{	
-		if (equals(currentFile, XalanDOMString(excludeStylesheets[i], mgr)))
+		if (currentFile == XalanDOMString(excludeStylesheets[i], theMemoryManager))
 		{
 			return true;
 		}
@@ -133,12 +142,12 @@ parseWithTransformer(
 			const XSLTInputSource&			xmlInput,
 			const XalanCompiledStylesheet*	styleSheet,
 			const XSLTResultTarget&			output, 
-			XalanXMLFileReporter&				logFile,
-			XalanFileUtility&					h)
+			XalanXMLFileReporter&			logFile,
+			XalanFileUtility&				h)
 {
 	const XalanParsedSource* parsedSource = 0;
 
-    MemoryManagerType& mgr = XalanMemMgrs::getDefaultXercesMemMgr();
+    MemoryManagerType& mgr = h.getMemoryManager();
 
     int theResult = 0;
 
@@ -241,16 +250,15 @@ parseWithXerces(
 
 int
 runTests(
-			int		argc,
-			char*	argv[])
+			int		        argc,
+			char*	        argv[],
+            MemoryManager&  theMemoryManager)
 {
 	int	theResult = 0;
 
-    MemoryManagerType& mgr = XalanMemMgrs::getDefaultXercesMemMgr();
-
 	try
 	{
-		XalanFileUtility	h(mgr);
+		XalanFileUtility	h(theMemoryManager);
 
 		// Set the program help string,  then get the command line parameters.
 		//
@@ -258,16 +266,16 @@ runTests(
 
 		if (h.getParams(argc, argv, "CONF-RESULTS") == true)
 		{
-			XalanTransformer	xalan;
+			XalanTransformer	xalan(theMemoryManager);
 
 			// Get drive designation for final analysis and generate Unique name for results log.
 			//
-			XalanDOMString  drive( mgr);			// This is used to get stylesheet for final analysis
+			XalanDOMString  drive(theMemoryManager);			// This is used to get stylesheet for final analysis
             h.getDrive(drive);
-			const XalanDOMString  resultFilePrefix("conf", mgr);		// This & UniqRunid used for log file name.
-			XalanDOMString  UniqRunid(  mgr); 
+			const XalanDOMString  resultFilePrefix("conf", theMemoryManager);		// This & UniqRunid used for log file name.
+			XalanDOMString  UniqRunid(theMemoryManager); 
             h.generateUniqRunid(UniqRunid);
-			XalanDOMString  resultsFile(drive, mgr);
+			XalanDOMString  resultsFile(drive, theMemoryManager);
             resultsFile += h.args.output;
             resultsFile += resultFilePrefix;
             resultsFile += UniqRunid;
@@ -275,9 +283,9 @@ runTests(
 
 			// Open results log, and do some initialization of result data.
 			//
-			XalanXMLFileReporter	logFile(mgr, resultsFile);
+			XalanXMLFileReporter	logFile(theMemoryManager, resultsFile);
 			logFile.logTestFileInit("Conformance Testing:");
-			h.data.xmlFormat = XalanDOMString("NotSet", mgr);
+			h.data.xmlFormat = XalanDOMString("NotSet", theMemoryManager);
 
 			// Get the list of Directories that are below conf and iterate through them
 			//
@@ -287,7 +295,7 @@ runTests(
 
 			typedef XalanFileUtility::FileNameVectorType		FileNameVectorType;
 
-			FileNameVectorType	dirs(mgr);
+			FileNameVectorType	dirs(theMemoryManager);
             h.getDirectoryNames(h.args.base, dirs);
 
             int theResult = 0;
@@ -304,7 +312,7 @@ runTests(
 				{
 					// Check that output directory is there.
 					//
-					XalanDOMString  theOutputDir(mgr);
+					XalanDOMString  theOutputDir(theMemoryManager);
                     theOutputDir = h.args.output;
                     theOutputDir += currentDir;
 
@@ -313,7 +321,7 @@ runTests(
 					// Indicate that directory was processed and get test files from the directory
 					//
 					foundDir = true;
-					FileNameVectorType files(mgr);
+					FileNameVectorType files(theMemoryManager);
                     h.getTestFileNames(h.args.base, currentDir, true, files);
 
 					// Log directory in results log and process it's files.
@@ -322,21 +330,21 @@ runTests(
 
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
-						XalanXMLFileReporter::Hashtable	attrs(mgr);
+						XalanXMLFileReporter::Hashtable	attrs(theMemoryManager);
 
 						const XalanDOMString&	currentFile = files[i];
-						if (checkForExclusion(currentFile))
+						if (checkForExclusion(currentFile, theMemoryManager))
 							continue;
 
 						h.data.testOrFile = currentFile;
-						XalanDOMString  theXSLFile( h.args.base, mgr);
+						XalanDOMString  theXSLFile( h.args.base, theMemoryManager);
                         theXSLFile += currentDir;
                         theXSLFile += XalanFileUtility::s_pathSep;
                         theXSLFile += currentFile;
 
 						// Check and see if the .xml file exists. If not skip this .xsl file and continue.
 						bool fileStatus = true;
-						XalanDOMString  theXMLFile(mgr); 
+						XalanDOMString  theXMLFile(theMemoryManager); 
                         h.generateFileName(theXSLFile, "xml", theXMLFile, &fileStatus);
 						if (!fileStatus)
 							continue;
@@ -345,23 +353,23 @@ runTests(
 						h.data.xslFileURL = theXSLFile;
 
 
-						XalanDOMString  theGoldFile(h.args.gold, mgr);
+						XalanDOMString  theGoldFile(h.args.gold, theMemoryManager);
                         theGoldFile += currentDir;
                         theGoldFile += XalanFileUtility::s_pathSep;
                         theGoldFile += currentFile;
 						 
                         h.generateFileName(theGoldFile, "out", theGoldFile);
 
-						XalanDOMString  outbase (h.args.output, mgr);
+						XalanDOMString  outbase (h.args.output, theMemoryManager);
                         outbase += currentDir;
                         outbase += XalanFileUtility::s_pathSep;
                         outbase += currentFile; 
-						XalanDOMString  theOutputFile(mgr);
+						XalanDOMString  theOutputFile(theMemoryManager);
                         h.generateFileName(outbase, "out", theOutputFile);
 
-						const XSLTInputSource	xslInputSource(theXSLFile, mgr);
-						const XSLTInputSource	xmlInputSource(theXMLFile, mgr);
-						const XSLTResultTarget	resultFile(theOutputFile, mgr);
+						const XSLTInputSource	xslInputSource(theXSLFile, theMemoryManager);
+						const XSLTInputSource	xmlInputSource(theXMLFile, theMemoryManager);
+						const XSLTResultTarget	resultFile(theOutputFile, theMemoryManager);
 
 						// Parsing(compile) the XSL stylesheet and report the results..
 						//
@@ -371,11 +379,17 @@ runTests(
 						{
 							// Report the failure and be sure to increment fail count.
 							//
-							cout << "Failed to parse stylesheet for " << currentFile << endl;
+                            CharVectorType  theVector(theMemoryManager);
+
+                            TranscodeToLocalCodePage(currentFile, theVector);
+
+							cout << "Failed to parse stylesheet for "
+                                 << theVector
+                                 << endl;
 							h.data.fail += 1;
-                            XalanDOMString tmp("Failed to parse stylesheet.  ", mgr);
-                            tmp += XalanDOMString(xalan.getLastError(), mgr);
-							logFile.logErrorResult(currentFile, mgr);
+                            XalanDOMString tmp("Failed to parse stylesheet.  ", theMemoryManager);
+                            tmp += XalanDOMString(xalan.getLastError(), theMemoryManager);
+							logFile.logErrorResult(currentFile, theMemoryManager);
 							continue;
 						}
 
@@ -407,7 +421,7 @@ runTests(
 			//
 			if (!foundDir)
 			{
-                CharVectorType vect(mgr);
+                CharVectorType  vect(theMemoryManager);
                 TranscodeToLocalCodePage(h.args.sub, vect);
 
 				cout << "Specified test directory: \"" << c_str(vect) << "\" not found" << endl;
@@ -460,14 +474,30 @@ main(
 	try
 	{
 		XALAN_USING_XERCES(XMLPlatformUtils)
+		XALAN_USING_XERCES(XMLUni)
+
+        XalanMemoryManagerDefault       theGlobalMemoryManager;
+        XalanDiagnosticMemoryManager    theDiagnosticMemoryManager(theGlobalMemoryManager);
+        XalanMemoryManagerDefault       theTestingMemoryManager;
 
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
-		XMLPlatformUtils::Initialize();
+		XMLPlatformUtils::Initialize(
+            XMLUni::fgXercescDefaultLocale,
+            0,
+            0,
+            &theDiagnosticMemoryManager,
+            true);
 
-		XalanTransformer::initialize();
+		XalanTransformer::initialize(theDiagnosticMemoryManager);
 
-		theResult = runTests(argc, argv);
+        theDiagnosticMemoryManager.lock();
+
+        {
+		    theResult = runTests(argc, argv, theTestingMemoryManager);
+        }
+
+        theDiagnosticMemoryManager.unlock();
 
 		XalanTransformer::terminate();
 
@@ -475,6 +505,16 @@ main(
 
 		XalanTransformer::ICUCleanUp();
 	}
+    catch(const XalanDiagnosticMemoryManager::LockException&)
+    {
+		cerr << "An attempt was made to allocate memory "
+                "from a locked XalanDiagnosticMemoryManager "
+                "instance!"
+             << endl
+             << endl;
+
+		theResult = -1;
+    }
 	catch(...)
 	{
 		cerr << "Initialization failed!" << endl << endl;

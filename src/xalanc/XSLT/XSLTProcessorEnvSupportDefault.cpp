@@ -142,7 +142,6 @@ XSLTProcessorEnvSupportDefault::parseXML(
 		const URLAutoPtrType	xslURL =
 			URISupport::getURLFromString(urlString, base, theManager);
 
-		// $$$ ToDo: Explicit XalanDOMString constructor
 		const XalanDOMString	urlText(xslURL->getURLText(), theManager);
 
 		// First see if it's already been parsed...
@@ -161,11 +160,9 @@ XSLTProcessorEnvSupportDefault::parseXML(
 
 			if (theResolver == 0)
 			{
-				const XSLTInputSource	inputSource(c_wstr(urlText));
+				const XSLTInputSource	inputSource(c_wstr(urlText), theManager);
 
-               
-
-				theDocument = parserLiaison.parseXMLStream(inputSource, theEmptyString);
+                theDocument = parserLiaison.parseXMLStream(inputSource, theEmptyString);
 			}
 			else
 			{
@@ -180,7 +177,7 @@ XSLTProcessorEnvSupportDefault::parseXML(
 				}
 				else
 				{
-					const XSLTInputSource	inputSource(c_wstr(urlText));
+					const XSLTInputSource	inputSource(c_wstr(urlText), theManager);
 
 					theDocument = parserLiaison.parseXMLStream(inputSource, theEmptyString);
 				}

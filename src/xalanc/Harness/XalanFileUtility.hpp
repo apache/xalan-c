@@ -386,6 +386,18 @@ public:
 
     static const XalanDOMChar   s_pathSep[];
 
+    const MemoryManager&
+    getMemoryManager() const
+    {
+        return m_memoryManager;
+    }
+
+    MemoryManager&
+    getMemoryManager()
+    {
+        return m_memoryManager;
+    }
+
 private:
 
     static const XalanDOMString     s_emptyString;

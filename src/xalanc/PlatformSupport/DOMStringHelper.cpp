@@ -367,9 +367,10 @@ OutputString(XalanOutputStream&		theStream,
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
 			ostream&				theStream,
-			const XalanDOMChar*		theString)
+			const XalanDOMChar*		theString,
+            MemoryManager&          theMemoryManager)
 {
-    CharVectorType  theVector(XalanMemMgrs::getDefaultXercesMemMgr());
+    CharVectorType  theVector(theMemoryManager);
 
     TranscodeToLocalCodePage(theString, theVector);
 

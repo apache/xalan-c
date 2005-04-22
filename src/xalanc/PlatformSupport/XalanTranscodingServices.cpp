@@ -267,9 +267,8 @@ XalanTranscodingServices::makeNewTranscoder(
 			XMLPlatformUtils::fgTransService->makeNewTranscoderFor(
 					c_wstr(theEncodingName),
 					theCode,
-// A glitch in Xerces 2.3 omits the default parameter, so
-// we have to provide one.
-#if XERCES_VERSION_MAJOR == 2 && XERCES_VERSION_MINOR == 3
+
+#if _XERCES_VERSION >= 2030
 					theBlockSize,
 					&theManager);
 #else

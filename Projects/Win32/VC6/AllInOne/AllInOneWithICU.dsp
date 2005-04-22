@@ -727,6 +727,14 @@ SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagement.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagerDefault.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagerDefault.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanMessageLoader.cpp
 # End Source File
 # Begin Source File
@@ -3521,6 +3529,14 @@ SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperTypes.hpp
 # Begin Group "Harness"
 
 # PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\Harness\XalanDiagnosticMemoryManager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\Harness\XalanDiagnosticMemoryManager.hpp
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\xalanc\Harness\XalanFileUtility.cpp

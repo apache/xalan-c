@@ -30,9 +30,6 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <errno.h>
-
-
-
 #endif
 
 
@@ -41,13 +38,21 @@
 #include <iterator>
 
 
-#include <xalanc/PlatformSupport/XalanFileOutputStream.hpp>
-#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
-#include <xalanc/PlatformSupport/XalanUnicode.hpp>
+#include "xercesc/framework/MemoryManager.hpp"
+
+
+
+#include "xalanc/PlatformSupport/XalanFileOutputStream.hpp"
+#include "xalanc/PlatformSupport/DOMStringHelper.hpp"
+#include "xalanc/PlatformSupport/XalanUnicode.hpp"
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+XALAN_USING_XERCES(MemoryManager)
 
 
 
@@ -145,17 +150,9 @@ public:
 	{
 
 		struct	stat stat_Info;
-		int	retCode = stat (d_name, &stat_Info);
+		const int   retCode = stat(d_name, &stat_Info);
  
-		if ( retCode == -1 )
-		{
-			XalanDOMString theBuffer(XalanMemMgrs::getDefaultXercesMemMgr());
-			typedef	XalanFileOutputStream::XalanFileOutputStreamOpenException XalanStatDirectoryException;
-			throw	XalanStatDirectoryException( XalanDOMString(d_name, XalanMemMgrs::getDefaultXercesMemMgr()), errno , theBuffer);
-		}
-
-		return S_ISDIR(stat_Info.st_mode);
-		
+        return retCode == -1 ? false : S_ISDIR(stat_Info.st_mode);
 	}
 
 	bool
@@ -231,6 +228,7 @@ template<class OutputIteratorType,
 		 class StringConversionFunction>
 void
 EnumerateDirectory(
+            MemoryManager&              theMemoryManager,
 			const StringType&			theFullSearchSpec,
 			OutputIteratorType			theOutputIterator,
 			FilterPredicateType			theFilterPredicate,
@@ -241,7 +239,6 @@ EnumerateDirectory(
 			bool						fIncludeSelfAndParent = false)
 #endif
 {
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 #if defined(_MSC_VER)
 	FindFileStruct 		theFindData;
 	
@@ -253,8 +250,10 @@ EnumerateDirectory(
 
 #pragma warning(push)
 #pragma warning(disable: 4244)
-	theHandleType	theSearchHandle = _wfindfirst(const_cast<wchar_t*>(theConversionFunction(theFullSearchSpec)),
-										  &theFindData);
+	theHandleType	theSearchHandle =
+        _wfindfirst(
+            const_cast<wchar_t*>(theConversionFunction(theFullSearchSpec)),
+			&theFindData);
 #pragma warning(pop)
 
 	if (theSearchHandle != -1)
@@ -267,7 +266,7 @@ EnumerateDirectory(
 				if ((fIncludeSelfAndParent == true || theFindData.isSelfOrParent() == false) &&
 					theFilterPredicate(theFindData) == true)
 				{
-					*theOutputIterator = StringType(theFindData.getName(), theManager);
+					*theOutputIterator = StringType(theFindData.getName(), theMemoryManager);
 				}
 			}
 			while(_wfindnext(theSearchHandle,
@@ -286,7 +285,7 @@ EnumerateDirectory(
 
 #else	
 
-	CharVectorType	theTargetVector(theManager);
+	CharVectorType	theTargetVector(theMemoryManager);
 
 	TranscodeToLocalCodePage(theFullSearchSpec, theTargetVector, false);
 
@@ -330,8 +329,8 @@ EnumerateDirectory(
 		const char* const	theSpec = c_str(theTargetVector);
 		assert(theSpec != 0);
 		
-		XalanDOMString		theName(theManager);
-		XalanDOMString		theSuffix(theManager);
+		XalanDOMString		theName(theMemoryManager);
+		XalanDOMString		theSuffix(theMemoryManager);
 		if ( !target_Dir )
 		{
 #if defined(XALAN_STRICT_ANSI_HEADERS)
@@ -361,18 +360,18 @@ EnumerateDirectory(
 						{
 							if( target_Dir )
 							{
-								*theOutputIterator = StringType(theEntry->getName(), theManager);
+								*theOutputIterator = StringType(theEntry->getName(), theMemoryManager);
 							}
 							else
 							{
-								XalanDOMString	Getname(theEntry->getName(), theManager);
+								XalanDOMString	Getname(theEntry->getName(), theMemoryManager);
 								int	Check_1 = Getname.compare(theName);
-								XalanDOMString	GetnameSuffix(theManager);
+								XalanDOMString	GetnameSuffix(theMemoryManager);
                                 Getname.substr(GetnameSuffix, Getname.size() -indexSuffix, indexSuffix);            
 								int Check_2 = GetnameSuffix.compare(theSuffix);
 								if ( Check_1 == 1 && (!Check_2) )
 								{
-								*theOutputIterator = StringType(theEntry->getName(), theManager);
+								*theOutputIterator = StringType(theEntry->getName(), theMemoryManager);
 								}
 							}
 						}
@@ -406,6 +405,7 @@ template<class OutputIteratorType,
 		 class StringConversionFunction>
 void
 EnumerateDirectory(
+            MemoryManager&              theMemoryManager,
 			const StringType&			theDirectory,
 			const StringType&			theSearchSpec,
 			OutputIteratorType			theOutputIterator,
@@ -417,13 +417,17 @@ EnumerateDirectory(
 			bool						fIncludeSelfAndParent = false)
 #endif
 {
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
-
-	StringType	theFullSearchSpec(theDirectory, theManager);
+	StringType	theFullSearchSpec(theDirectory, theMemoryManager);
 
 	theFullSearchSpec += theSearchSpec;
 
-	EnumerateDirectory(theFullSearchSpec, theOutputIterator, theFilterPredicate, theConversionFunction, fIncludeSelfAndParent);
+	EnumerateDirectory(
+        theMemoryManager,
+        theFullSearchSpec,
+        theOutputIterator,
+        theFilterPredicate,
+        theConversionFunction,
+        fIncludeSelfAndParent);
 }
 
 
@@ -471,8 +475,11 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
 	typedef typename BaseClassType::argument_type	argument_type;
 
 	explicit
-	DirectoryEnumeratorFunctor(bool		fIncludeSelfAndParent = false) :
-		m_includeSelfAndParent(fIncludeSelfAndParent)
+	DirectoryEnumeratorFunctor(
+                MemoryManager&  theMemoryManager,
+                bool            fIncludeSelfAndParent = false) :
+		m_includeSelfAndParent(fIncludeSelfAndParent),
+        m_memoryManager(theMemoryManager)
 	{
 	}
 			
@@ -484,11 +491,12 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
 		XALAN_USING_STD(back_inserter)
 
 		EnumerateDirectory(
-				theFullSearchSpec,
-				XALAN_STD_QUALIFIER back_inserter(theCollection),
-				m_filterPredicate,
-				m_conversionFunction,
-				m_includeSelfAndParent);
+            m_memoryManager,
+			theFullSearchSpec,
+			XALAN_STD_QUALIFIER back_inserter(theCollection),
+			m_filterPredicate,
+			m_conversionFunction,
+			m_includeSelfAndParent);
 	}
 
 	result_type
@@ -510,12 +518,13 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
 			CollectionType&			theCollection) const
 	{
 		EnumerateDirectory(
-				theDirectory,
-				theSearchSpec,
-				XALAN_STD_QUALIFIER back_inserter(theCollection),
-				m_filterPredicate,
-				m_conversionFunction,
-				m_includeSelfAndParent);
+            m_memoryManager,
+		    theDirectory,
+			theSearchSpec,
+			XALAN_STD_QUALIFIER back_inserter(theCollection),
+			m_filterPredicate,
+			m_conversionFunction,
+			m_includeSelfAndParent);
 	}
 
 	result_type
@@ -540,6 +549,8 @@ private:
 	StringConversionFunction	m_conversionFunction;
 
 	const bool					m_includeSelfAndParent;
+
+    MemoryManager&              m_memoryManager;
 };
 #endif
 

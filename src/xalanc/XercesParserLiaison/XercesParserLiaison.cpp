@@ -721,17 +721,15 @@ XercesParserLiaison::resetErrors()
 XercesParserLiaison::DOMParserType*
 XercesParserLiaison::createDOMParser()
 {
-	DOMParserType* const	theParser = new DOMParserType(0,&(getMemoryManager()));
+    MemoryManagerType&  theMemoryManager =
+        getMemoryManager();
+
+	DOMParserType* const	theParser =
+        new (&theMemoryManager) DOMParserType(0, &theMemoryManager);
 
 	theParser->setExpandEntityReferences(true);
     theParser->setDoNamespaces(m_doNamespaces);
     theParser->setEntityResolver(m_entityResolver);
-
-#if XERCES_VERSION_MAJOR < 2
-	// Xerces has a non-standard node type to represent the XML decl.
-	// Why did they ever do this?
-	theParser->setToCreateXMLDeclTypeNode(false);
-#endif
 
 	return theParser;
 }
@@ -741,7 +739,11 @@ XercesParserLiaison::createDOMParser()
 XercesParserLiaison::SAXParserType*
 XercesParserLiaison::createSAXParser()
 {
-	SAXParserType* const	theParser = new SAXParserType(0,&(getMemoryManager()));
+    MemoryManagerType&  theMemoryManager =
+        getMemoryManager();
+
+	SAXParserType* const	theParser =
+        new (&theMemoryManager) SAXParserType(0, &theMemoryManager);
 
 	theParser->setDoValidation(false);
 

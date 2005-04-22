@@ -241,7 +241,19 @@
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMgrAutoPtr.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMgrAutoPtr.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMgrHelper.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMngArrayAllocate.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMngArrayAllocate.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp">
@@ -260,18 +272,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanVersion.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMgrAutoPtr.hpp">
-			</File>			
-			<File
-				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMgrHelper.hpp">
-			</File>			
-			<File
-				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMngArrayAllocate.hpp">
-			</File>			
-			<File
-				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp">
 			</File>
 		</Filter>
 		<Filter
@@ -642,6 +642,15 @@
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanLocator.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagement.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagerDefault.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagerDefault.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanMessageLoader.cpp">
 			</File>
 			<File
@@ -725,9 +734,6 @@
 			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanXMLChar.hpp">
 			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagement.cpp">
-			</File>	
 		</Filter>
 		<Filter
 			Name="DOMSupport"
@@ -2767,6 +2773,12 @@
 		<Filter
 			Name="Harness"
 			Filter="">
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Harness\XalanDiagnosticMemoryManager.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Harness\XalanDiagnosticMemoryManager.hpp">
+			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\Harness\XalanFileUtility.cpp">
 			</File>

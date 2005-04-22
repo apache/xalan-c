@@ -462,7 +462,9 @@ XalanFileUtility::getTestFileNames(
     }
 
 
-    DirectoryEnumeratorFunctor<FileNameVectorType, XalanDOMString>  theEnumerator;
+    DirectoryEnumeratorFunctor<
+        FileNameVectorType,
+        XalanDOMString>     theEnumerator(m_memoryManager);
 
     theEnumerator(searchSpecification, theFiles);
 
@@ -486,7 +488,10 @@ XalanFileUtility::getDirectoryNames(
 
     const XalanDOMString    dirSpec(XALAN_STATIC_UCODE_STRING("*"), m_memoryManager);
 
-    DirectoryEnumeratorFunctor<FileNameVectorType, XalanDOMString, DirectoryFilterPredicate> theEnumerator;
+    DirectoryEnumeratorFunctor<
+        FileNameVectorType,
+        XalanDOMString,
+        DirectoryFilterPredicate>   theEnumerator(m_memoryManager);
 
     theEnumerator(
         XalanDOMString(
@@ -547,11 +552,11 @@ void XalanFileUtility::checkAndCreateDir(const XalanDOMString&   directory)
         if ( !mkdir(c_str(theResult), DIR_MODE_BITS))
 #endif
         {
-            cout << directory << " created." << endl;
+            cout << theResult1 << " created." << endl;
         }
         else
         {
-            cout << directory << " NOT created." << endl;
+            cout << theResult1 << " NOT created." << endl;
         }
     }
 

@@ -197,7 +197,7 @@ XalanTransformer::initialize(MemoryManagerType&  theManager)
 {
 	// Initialize Xalan. 
     XalanMemMgrAutoPtr<XSLTInit, true>			initGuard(theManager, XSLTInit::create(theManager));
-	XalanAutoPtr<XSLTInputSource>	inputSourceGuard(new (&theManager) XSLTInputSource);
+	XalanAutoPtr<XSLTInputSource>	inputSourceGuard(new (&theManager) XSLTInputSource(theManager));
 	EnsureFunctionsInstallation		instalGuard(theManager); 
 
 	instalGuard.install();
@@ -1256,7 +1256,7 @@ XalanTransformer::doTransform(
 		}
 
 		// Create an input source for the source document...
-		XSLTInputSource		theDocumentInputSource(theSourceDocument);
+		XSLTInputSource		theDocumentInputSource(theSourceDocument, m_memoryManager);
 
 		// Set the system ID, so relative URIs are resolved properly...
 		theDocumentInputSource.setSystemId(c_wstr(theSourceURI));

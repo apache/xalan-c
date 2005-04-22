@@ -36,6 +36,7 @@ class ostream;
 
 #include <xalanc/Include/XalanVector.hpp>
 #include <xalanc/Include/XalanMap.hpp>
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 #include <xalanc/Include/STLHelper.hpp>
 
 
@@ -51,6 +52,10 @@ class ostream;
 
 
 XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+XALAN_USING_XERCES(MemoryManager)
 
 
 
@@ -835,10 +840,13 @@ WideStringToUnsignedLong(const XalanDOMChar*	theString);
  * Converts a wide string into a double value
  * 
  * @param theString target string
+ * @param theMemoryManager The MemoryManager instance to use.
  * @return double value of target string
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(double)
-WideStringToDouble(const XalanDOMChar*	theString, MemoryManagerType&   theManager);
+WideStringToDouble(
+            const XalanDOMChar*     theString,
+            MemoryManager&          theMemoryManager);
 
 
 
@@ -888,13 +896,17 @@ DOMStringToUnsignedLong(const XalanDOMString&	theString)
  * Converts a XalanDOMString into a double value
  * 
  * @param theString target string
+ * @param theMemoryManager The MemoryManager instance to use.
  * @return double value of target string
  */
 inline double
-DOMStringToDouble(const XalanDOMString&		theString,
-                  MemoryManagerType&        theManager)
+DOMStringToDouble(
+            const XalanDOMString&	theString,
+            MemoryManager&          theMemoryManager)
 {
-	return WideStringToDouble(c_wstr(theString), theManager);
+	return WideStringToDouble(
+                c_wstr(theString),
+                theMemoryManager);
 }
 
 
@@ -959,7 +971,8 @@ OutputString(
 #else
 			std::ostream&			theStream,
 #endif
-			const XalanDOMChar*		theString);
+			const XalanDOMChar*		theString,
+            MemoryManager&          theMemoryManager);
 
 
 
@@ -977,7 +990,9 @@ OutputString(
 {
 	if (isEmpty(theString) == false)
 	{
-		OutputString(theStream, c_wstr(theString));
+		OutputString(
+            theStream,
+            c_wstr(theString));
 	}
 }
 
@@ -988,6 +1003,7 @@ OutputString(
  * 
  * @param theStream output stream
  * @param theString target string
+ * @param theMemoryManager The MemoryManager instance to use.
  * @see operator<<
  */
 inline void
@@ -997,9 +1013,13 @@ OutputString(
 #else
 			std::ostream&			theStream,
 #endif
-			const XalanDOMString&	theString)
+			const XalanDOMString&	theString,
+            MemoryManager&          theMemoryManager)
 {
-	OutputString(theStream, c_wstr(theString));
+	OutputString(
+        theStream,
+        c_wstr(theString),
+        theMemoryManager);
 }
 
 
@@ -1016,7 +1036,9 @@ operator<<(
 			XalanOutputStream&		theStream,
 			const CharVectorType&	theString)
 {
-	OutputString(theStream, theString);
+	OutputString(
+        theStream,
+        theString);
 
 	return theStream;
 }
@@ -1041,7 +1063,9 @@ operator<<(
 #endif
 			const CharVectorType&	theString)
 {
-	OutputString(theStream, theString);
+	OutputString(
+        theStream,
+        theString);
 
 	return theStream;
 }
@@ -1060,8 +1084,9 @@ operator<<(
 			XalanOutputStream&		theStream,
 			const XalanDOMChar*		theString)
 {
-	OutputString(theStream,
-				 theString);
+	OutputString(
+        theStream,
+		theString);
 
 	return theStream;
 }
@@ -1086,8 +1111,10 @@ operator<<(
 #endif
 			const XalanDOMChar*		theString)
 {
-	OutputString(theStream,
-				 theString);
+	OutputString(
+        theStream,
+		theString,
+        XalanMemMgrs::getDefault());
 
 	return theStream;
 }
@@ -1132,8 +1159,38 @@ operator<<(
 #endif
 			const XalanDOMString&	theString)
 {
-	OutputString(theStream,
-				 theString);
+	OutputString(
+        theStream,
+		theString,
+        XalanMemMgrs::getDefault());
+
+	return theStream;
+}
+
+
+
+/**
+ * Outputs the target string to the specified stream
+ * 
+ * @param theStream output stream
+ * @param theString target string
+ * @see OutputString
+ */
+#if defined(XALAN_NO_STD_NAMESPACE)
+inline ostream&
+operator<<(
+			ostream&			theStream,
+#else
+inline std::ostream&
+operator<<(
+			std::ostream&		theStream,
+#endif
+			XalanDOMString&	    theString)
+{
+	OutputString(
+        theStream,
+		theString,
+        theString.getMemoryManager());
 
 	return theStream;
 }

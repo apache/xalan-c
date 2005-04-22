@@ -420,7 +420,9 @@ XSLTEngineImpl::processStylesheet(
 			const XalanDOMString&			xsldocURLString,
 			StylesheetConstructionContext&	constructionContext)
 {
-	const XSLTInputSource	input(c_wstr(xsldocURLString));
+	const XSLTInputSource	input(
+                                c_wstr(xsldocURLString),
+                                constructionContext.getMemoryManager());
 
 	return processStylesheet(input, constructionContext);
 }
@@ -643,7 +645,7 @@ XSLTEngineImpl::parseXML(
 
 		if (theResolver == 0)
 		{
-			const XSLTInputSource	inputSource(c_wstr(urlString));
+			const XSLTInputSource	inputSource(c_wstr(urlString), m_parserLiaison.getMemoryManager());
 
 			doc = parseXML(inputSource, docHandler, docToRegister);
 		}
@@ -661,7 +663,7 @@ XSLTEngineImpl::parseXML(
 			}
 			else
 			{
-				const XSLTInputSource	inputSource(c_wstr(urlString));
+				const XSLTInputSource	inputSource(c_wstr(urlString), m_parserLiaison.getMemoryManager());
 
 				doc = parseXML(
                             inputSource,
@@ -687,14 +689,12 @@ XSLTEngineImpl::parseXML(
 			DocumentHandlerType*	docHandler,
 			XalanDocument*			docToRegister)
 {
-	XalanDOMString  theEmptyString(getMemoryManager());
-
     if(0 != docHandler)
 	{
 		m_parserLiaison.parseXMLStream(
             inputSource,
             *docHandler,
-            theEmptyString);
+            s_emptyString);
 
 		return docToRegister;
 	}
@@ -702,7 +702,7 @@ XSLTEngineImpl::parseXML(
 	{
 		return m_parserLiaison.parseXMLStream(
                     inputSource,
-                    theEmptyString);
+                    s_emptyString);
 	}
 }
 
@@ -716,7 +716,10 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 			bool							isRoot,
 			StylesheetConstructionContext&	constructionContext)
 {
-	Stylesheet*				stylesheet = 0;
+    MemoryManager&          theMemoryManager =
+        constructionContext.getMemoryManager();
+
+    Stylesheet*				stylesheet = 0;
 
     const CCGetAndReleaseCachedString theGuard(constructionContext);
 	XalanDOMString	&		stringHolder = theGuard.get();
@@ -790,9 +793,9 @@ XSLTEngineImpl::getStylesheetFromPIURL(
         ds.append("id(");
 
 		ds += fragID;
-		ds += XalanDOMString(XALAN_STATIC_UCODE_STRING(")"),getMemoryManager());
+		ds += XalanDOMString(XALAN_STATIC_UCODE_STRING(")"), theMemoryManager);
 
-		ElementPrefixResolverProxy		theProxy(  nsNode, m_xpathEnvSupport, m_domSupport, getMemoryManager());
+		ElementPrefixResolverProxy		theProxy(nsNode, m_xpathEnvSupport, m_domSupport, theMemoryManager);
 
 		XPathExecutionContextDefault	theExecutionContext(m_xpathEnvSupport,
 															m_domSupport,
@@ -804,7 +807,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		const XObjectPtr	xobj(evalXPathStr(ds, theExecutionContext));
 		assert(xobj.null() == false);
 
-		NodeRefList		nl( xobj->nodeset(), constructionContext.getMemoryManager());
+		NodeRefList		nl( xobj->nodeset(), theMemoryManager);
 
 		if(nl.getLength() == 0)
 		{
@@ -874,12 +877,12 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 				stylesheet = constructionContext.create( *const_cast<StylesheetRoot*>(m_stylesheetRoot), stringHolder);
 #endif
 
-                theGuard.reset(&(constructionContext.getMemoryManager()), stylesheet);
+                theGuard.reset(&theMemoryManager, stylesheet);
 			}
 
 			StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);
 
-			FormatterTreeWalker tw(stylesheetProcessor,  getMemoryManager());
+			FormatterTreeWalker tw(stylesheetProcessor,  theMemoryManager);
 
 			stylesheetProcessor.startDocument();
 
@@ -975,13 +978,17 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		}
 		else
 		{
+            stylesheet = Stylesheet::create(
+                            theMemoryManager,
 #if defined(XALAN_OLD_STYLE_CASTS)
-            stylesheet = Stylesheet::create( getMemoryManager(), *(StylesheetRoot*)m_stylesheetRoot, localXSLURLString, constructionContext);
+                            *(StylesheetRoot*)m_stylesheetRoot,
 #else
-            stylesheet = Stylesheet::create( getMemoryManager(), *const_cast<StylesheetRoot*>(m_stylesheetRoot), localXSLURLString, constructionContext);
+                            *const_cast<StylesheetRoot*>(m_stylesheetRoot),
 #endif
+                            localXSLURLString,
+                            constructionContext);
 
-			theGuard.reset(&(getMemoryManager()), stylesheet);
+			theGuard.reset(&theMemoryManager, stylesheet);
 		}
 
 		StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);
@@ -990,11 +997,9 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		URLAutoPtrType	xslURL(constructionContext.getURLFromString(localXSLURLString));
 
-		XSLTInputSource		inputSource(xslURL->getURLText());
+		XSLTInputSource		inputSource(xslURL->getURLText(), theMemoryManager);
 
-        XalanDOMString  theEmptyString( getMemoryManager());
-
-		m_parserLiaison.parseXMLStream(inputSource, stylesheetProcessor, theEmptyString);
+		m_parserLiaison.parseXMLStream(inputSource, stylesheetProcessor, s_emptyString);
 
 		stylesheet->postConstruction(constructionContext);
 
@@ -1004,7 +1009,12 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		{
             const CCGetAndReleaseCachedString theGuard(constructionContext);
 
-			displayDuration(XalanMessageLoader::getMessage(XalanMessages::ParsingAndInitOf_1Param, theGuard.get(),localXSLURLString),&localXSLURLString);
+			displayDuration(
+                XalanMessageLoader::getMessage(
+                    XalanMessages::ParsingAndInitOf_1Param,
+                    theGuard.get(),
+                    localXSLURLString),
+                    &localXSLURLString);
 
 		}
 	}
