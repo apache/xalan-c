@@ -52,6 +52,9 @@ class XalanXMLFileReporter;
 class XSLTInputSource;
 
 
+XALAN_USING_XERCES(MemoryManager)
+
+
 
 // This class is exported from the Harness.dll
 class XALAN_HARNESS_EXPORT XalanFileUtility 
@@ -78,7 +81,7 @@ public:
         int             fail;
         int             nogold;
 
-        reportStruct(MemoryManagerType& theManager);
+        reportStruct(MemoryManager& theManager);
 
         void
         reset();
@@ -112,7 +115,7 @@ public:
         long            iters;
 
 
-        cmdParams(MemoryManagerType& theManager);
+        cmdParams(MemoryManager& theManager);
 
         ~cmdParams()
         {
@@ -134,7 +137,7 @@ public:
     } args;
 
     /** Simple constructor, does not perform initialization.  */
-    XalanFileUtility(MemoryManagerType& theManager);
+    XalanFileUtility(MemoryManager& theManager);
 
     ~XalanFileUtility();
 
@@ -231,6 +234,8 @@ public:
             const XalanDOMString&   goldFile,
             bool                    containsOnly = false);
 
+    // This API is deprecated.  Please use the following
+    // one.
     void
     checkAPIResults(
             const char*             actual,
@@ -239,12 +244,32 @@ public:
             XalanXMLFileReporter&        logfile,
             const XalanDOMString&   outputFile,
             const XalanDOMString&   goldFile,
-            MemoryManagerType&      theManager,
+            MemoryManager&          /* theManager */,
             bool                    containsOnly = false)
     {
         checkAPIResults(
-            XalanDOMString(actual, theManager), 
-            XalanDOMString(expected, theManager),
+            actual,
+            expected,
+            msg,
+            logfile,
+            outputFile,
+            goldFile,
+            containsOnly);
+    }
+
+    void
+    checkAPIResults(
+            const char*             actual,
+            const char*             expected,
+            const char*             msg,
+            XalanXMLFileReporter&   logfile,
+            const XalanDOMString&   outputFile,
+            const XalanDOMString&   goldFile,
+            bool                    containsOnly = false)
+    {
+        checkAPIResults(
+            XalanDOMString(actual, m_memoryManager), 
+            XalanDOMString(expected, m_memoryManager),
             msg,
             logfile,
             outputFile,
@@ -419,11 +444,13 @@ private:
 
 #endif
 private:
+
+    MemoryManager&  m_memoryManager;
+
     //Not implemented
     XalanFileUtility();
     XalanFileUtility(const XalanFileUtility&);
-
-};        // end of class FileUtility
+};
 
 
 

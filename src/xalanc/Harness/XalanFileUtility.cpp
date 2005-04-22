@@ -125,7 +125,7 @@ const XalanDOMString    XalanFileUtility::s_emptyString(XalanMemMgrs::getDummyMe
 
 
 
-XalanFileUtility::reportStruct::reportStruct(MemoryManagerType& theManager) :
+XalanFileUtility::reportStruct::reportStruct(MemoryManagerType&     theManager) :
     theDrive(theManager),
     testOrFile(theManager),
     xmlFileURL(theManager),
@@ -187,9 +187,10 @@ XalanFileUtility::cmdParams::getHelpMessage()
 
 
 
-XalanFileUtility::XalanFileUtility(MemoryManagerType& theManager) :
+XalanFileUtility::XalanFileUtility(MemoryManagerType&   theManager) :
     data(theManager),
-    args(theManager)
+    args(theManager),
+    m_memoryManager(theManager)
 {
     cout << endl
          << "Using Xalan version "
@@ -211,7 +212,7 @@ XalanFileUtility::~XalanFileUtility()
 
 #if !defined(WIN32)
 XalanDOMString&
-XalanFileUtility::getDrive(XalanDOMString& theResult)
+XalanFileUtility::getDrive(XalanDOMString&  theResult)
 {
     theResult.erase();
 
@@ -219,7 +220,7 @@ XalanFileUtility::getDrive(XalanDOMString& theResult)
 }
 #else
 XalanDOMString&
-XalanFileUtility::getDrive(XalanDOMString& theResult)
+XalanFileUtility::getDrive(XalanDOMString&  theResult)
 {
     const char temp[] =
     {
@@ -256,9 +257,9 @@ XalanFileUtility::getParams(
     }
     else
     {
-        if (checkDir(XalanDOMString(argv[1],XalanMemMgrs::getDefaultXercesMemMgr())))
+        if (checkDir(XalanDOMString(argv[1], m_memoryManager)))
         {
-            assign(args.base, XalanDOMString(argv[1],XalanMemMgrs::getDefaultXercesMemMgr()));
+            assign(args.base, XalanDOMString(argv[1], m_memoryManager));
         }
         else
         {
@@ -277,7 +278,7 @@ XalanFileUtility::getParams(
             ++i;
             if(i < argc && argv[i][0] != '-')
             {
-                assign(args.output, XalanDOMString(argv[i],XalanMemMgrs::getDefaultXercesMemMgr()));
+                assign(args.output, XalanDOMString(argv[i], m_memoryManager));
                 append(args.output, s_pathSep);
                 checkAndCreateDir(args.output);
                 fsetOut = false;
@@ -293,11 +294,11 @@ XalanFileUtility::getParams(
             ++i;
             if(i < argc && argv[i][0] != '-')
             {
-                assign(args.gold, XalanDOMString(argv[i],XalanMemMgrs::getDefaultXercesMemMgr()));
+                assign(args.gold, XalanDOMString(argv[i], m_memoryManager));
 
                 if ( !checkDir(args.gold) )
                 {   
-                    CharVectorType     theResult(XalanMemMgrs::getDefaultXercesMemMgr());
+                    CharVectorType     theResult(m_memoryManager);
                     TranscodeToLocalCodePage(args.gold, theResult, true);
 
                     cout << "Given Gold dir - " << c_str(theResult) << " - does not exist" << endl;
@@ -345,7 +346,7 @@ XalanFileUtility::getParams(
             ++i;
             if(i < argc && argv[i][0] != '-')
             {
-                assign(args.sub, XalanDOMString(argv[i],XalanMemMgrs::getDefaultXercesMemMgr()));
+                assign(args.sub, XalanDOMString(argv[i], m_memoryManager));
             }
             else
             {
@@ -391,7 +392,7 @@ XalanFileUtility::getParams(
             args.output.assign(args.base, 0, ii + 1);
         }
 
-        append(args.output,XalanDOMString(outDir,XalanMemMgrs::getDefaultXercesMemMgr()));
+        append(args.output,XalanDOMString(outDir, m_memoryManager));
         checkAndCreateDir(args.output);
         append(args.output,s_pathSep); 
 
@@ -401,10 +402,10 @@ XalanFileUtility::getParams(
     if (fsetGold)
     {
         args.gold = args.base;
-        append(args.gold,XalanDOMString("-gold",XalanMemMgrs::getDefaultXercesMemMgr()));
+        append(args.gold,XalanDOMString("-gold", m_memoryManager));
         if ( !checkDir(args.gold) )
         {   
-            CharVectorType     theResult(XalanMemMgrs::getDefaultXercesMemMgr());
+            CharVectorType     theResult(m_memoryManager);
             TranscodeToLocalCodePage(args.gold, theResult, true);
             cout << "Assumed Gold dir - " << c_str(theResult) << " - does not exist" << endl;
             fSuccess = false;
@@ -439,8 +440,8 @@ XalanFileUtility::getTestFileNames(
     char buffer3[PATH_MAX];
     getcwd(buffer3, PATH_MAX);
 
-    const XalanDOMString    searchSuffix(XALAN_STATIC_UCODE_STRING("*.xsl"),XalanMemMgrs::getDefaultXercesMemMgr());
-    XalanDOMString  searchSpecification(XalanMemMgrs::getDefaultXercesMemMgr());
+    const XalanDOMString    searchSuffix(XALAN_STATIC_UCODE_STRING("*.xsl"), m_memoryManager);
+    XalanDOMString  searchSpecification(m_memoryManager);
 
     // Allow directory search w/o mandating files start with directory name. Required for files
     // garnered from XSLTMARK performance directory exm.
@@ -476,19 +477,25 @@ XalanFileUtility::getTestFileNames(
 //  Notes:  The searchSpecification in this case is just "*". 
 //                                                                          */  
 XalanFileUtility::FileNameVectorType&
-XalanFileUtility::getDirectoryNames(const XalanDOMString&        rootDirectory,
-                      XalanFileUtility::FileNameVectorType&      theFiles)
+XalanFileUtility::getDirectoryNames(
+            const XalanDOMString&                   rootDirectory,
+            XalanFileUtility::FileNameVectorType&   theFiles)
 {
     char buffer2[PATH_MAX];
     getcwd(buffer2, PATH_MAX);
 
-    const XalanDOMString    dirSpec(XALAN_STATIC_UCODE_STRING("*"),XalanMemMgrs::getDefaultXercesMemMgr());
+    const XalanDOMString    dirSpec(XALAN_STATIC_UCODE_STRING("*"), m_memoryManager);
 
     DirectoryEnumeratorFunctor<FileNameVectorType, XalanDOMString, DirectoryFilterPredicate> theEnumerator;
 
-    theEnumerator(XalanDOMString(rootDirectory, XalanMemMgrs::getDefaultXercesMemMgr()), 
-                                    XalanDOMString(dirSpec, XalanMemMgrs::getDefaultXercesMemMgr()), 
-                                    theFiles);
+    theEnumerator(
+        XalanDOMString(
+            rootDirectory,
+            m_memoryManager),
+        XalanDOMString(
+            dirSpec,
+            m_memoryManager), 
+        theFiles);
     
     chdir(buffer2);
 
@@ -504,7 +511,8 @@ bool XalanFileUtility::checkDir(const XalanDOMString&    directory )
 
     bool    fResult = false;
 
-    CharVectorType     theResult(XalanMemMgrs::getDefaultXercesMemMgr());
+    CharVectorType     theResult(m_memoryManager);
+
     TranscodeToLocalCodePage(directory, theResult, true);
 
     if ( !chdir(c_str(theResult)) )
@@ -524,13 +532,14 @@ void XalanFileUtility::checkAndCreateDir(const XalanDOMString&   directory)
 
     getcwd(buffer, PATH_MAX);
 
-    CharVectorType     theResult(XalanMemMgrs::getDefaultXercesMemMgr());
+    CharVectorType     theResult(m_memoryManager);
+
     TranscodeToLocalCodePage(directory, theResult, true);
 
     if ( (chdir(c_str(theResult))))
     {
         //cout << "Couldn't change to " << directory << ", will create it." << endl;
-            CharVectorType     theResult1(XalanMemMgrs::getDefaultXercesMemMgr());
+            CharVectorType     theResult1(m_memoryManager);
             TranscodeToLocalCodePage(directory, theResult1, true);
 #if defined(WIN32)
         if ( !mkdir(c_str(theResult)))
@@ -579,13 +588,13 @@ XalanFileUtility::generateFileName(
     {
         targetFile.assign(theXMLFileName, 0, thePeriodIndex + 1);
 
-        targetFile += XalanDOMString(suffix, XalanMemMgrs::getDefaultXercesMemMgr());
+        targetFile += XalanDOMString(suffix, m_memoryManager);
     }
 
     // Check the .xml file exists.
     if (!strcmp(suffix,"xml"))
     {
-        CharVectorType     theResult(XalanMemMgrs::getDefaultXercesMemMgr());
+        CharVectorType     theResult(m_memoryManager);
         TranscodeToLocalCodePage(targetFile, theResult, true);
 
         FILE* fileHandle = fopen(c_str(theResult), "r");
@@ -667,16 +676,16 @@ XalanFileUtility::getXMLFormatter(
             const XalanDOMString&   mimeEncoding,
             const StylesheetRoot*   stylesheet)
 {
-    XalanDOMString  version(resultWriter.getMemoryManager());
+    XalanDOMString  version(m_memoryManager);
     bool            outputIndent= 0;
-    XalanDOMString  mediatype(resultWriter.getMemoryManager());
-    XalanDOMString  doctypeSystem(resultWriter.getMemoryManager());
-    XalanDOMString  doctypePublic(resultWriter.getMemoryManager());
-    XalanDOMString  standalone(resultWriter.getMemoryManager());
+    XalanDOMString  mediatype(m_memoryManager);
+    XalanDOMString  doctypeSystem(m_memoryManager);
+    XalanDOMString  doctypePublic(m_memoryManager);
+    XalanDOMString  standalone(m_memoryManager);
 
     if (stylesheet != 0)
     {
-        XalanDOMString theBuffer(resultWriter.getMemoryManager());
+        XalanDOMString  theBuffer(m_memoryManager);
 
         version = stylesheet->getOutputVersion(theBuffer);
 
@@ -734,20 +743,20 @@ XalanFileUtility::checkResults(
 
         // if the compairson fails gather up the failure data and determine if it failed 
         // due to bad output or missing Gold file. Lastly, log the failure.
-        Hashtable   attrs(logfile.getMemoryManager());
-        Hashtable   actexp(logfile.getMemoryManager());
+        Hashtable   attrs(m_memoryManager);
+        Hashtable   actexp(m_memoryManager);
 
         reportError();
 
-        attrs.insert(XalanDOMString("reason", logfile.getMemoryManager()), XalanDOMString(data.msg, logfile.getMemoryManager()));
-        attrs.insert(XalanDOMString("atNode", logfile.getMemoryManager()), data.currentNode);
-        actexp.insert(XalanDOMString("exp", logfile.getMemoryManager()),data.expected);
-        actexp.insert(XalanDOMString("act", logfile.getMemoryManager()), data.actual);
+        attrs.insert(XalanDOMString("reason", m_memoryManager), XalanDOMString(data.msg, m_memoryManager));
+        attrs.insert(XalanDOMString("atNode", m_memoryManager), data.currentNode);
+        actexp.insert(XalanDOMString("exp", m_memoryManager),data.expected);
+        actexp.insert(XalanDOMString("act", m_memoryManager), data.actual);
 
-        actexp.insert(XalanDOMString("xsl", logfile.getMemoryManager()), data.xslFileURL);
-        actexp.insert( XalanDOMString("xml", logfile.getMemoryManager()),  data.xmlFileURL);
-        actexp.insert( XalanDOMString("result", logfile.getMemoryManager()),  outputFile );
-        actexp.insert( XalanDOMString("gold", logfile.getMemoryManager()),  goldFile);
+        actexp.insert(XalanDOMString("xsl", m_memoryManager), data.xslFileURL);
+        actexp.insert( XalanDOMString("xml", m_memoryManager),  data.xmlFileURL);
+        actexp.insert( XalanDOMString("result", m_memoryManager),  outputFile );
+        actexp.insert( XalanDOMString("gold", m_memoryManager),  goldFile);
 
         if (ambgFlag < data.nogold)
         {
@@ -771,8 +780,6 @@ XalanFileUtility::checkAPIResults(
             const XalanDOMString&   goldFile,
             bool                    containsOnly)
 {
-    MemoryManagerType& mgr = logfile.getMemoryManager();
-
     if(actual == expected ||
        (containsOnly == true && indexOf(actual, expected) != XalanDOMString::npos))
     {
@@ -791,14 +798,14 @@ XalanFileUtility::checkAPIResults(
 
         typedef XalanXMLFileReporter::Hashtable  Hashtable;
 
-        Hashtable   actexp(mgr);
+        Hashtable   actexp(m_memoryManager);
 
-        actexp.insert( XalanDOMString("exp", mgr), expected);
-        actexp.insert( XalanDOMString("act", mgr), actual);
-        actexp.insert( XalanDOMString("xsl", mgr), data.xslFileURL);
-        actexp.insert( XalanDOMString("xml", mgr), data.xmlFileURL);
-        actexp.insert( XalanDOMString("result", mgr), outputFile);
-        actexp.insert( XalanDOMString("gold", mgr), goldFile);
+        actexp.insert( XalanDOMString("exp", m_memoryManager), expected);
+        actexp.insert( XalanDOMString("act", m_memoryManager), actual);
+        actexp.insert( XalanDOMString("xsl", m_memoryManager), data.xslFileURL);
+        actexp.insert( XalanDOMString("xml", m_memoryManager), data.xmlFileURL);
+        actexp.insert( XalanDOMString("result", m_memoryManager), outputFile);
+        actexp.insert( XalanDOMString("gold", m_memoryManager), goldFile);
 
         // Todo: Need to determine if I should check for missing gold in these cases.
         logfile.logCheckFail(data.testOrFile, actexp);
@@ -827,13 +834,11 @@ XalanFileUtility::checkDOMResults(
             const XSLTInputSource&          goldInputSource,
             XalanXMLFileReporter&                logfile)
 {
-    MemoryManagerType& theManager = logfile.getMemoryManager();
-
     const int   ambgFlag = data.nogold;
 
-    const XalanDOMString    mimeEncoding("", theManager);
+    const XalanDOMString    mimeEncoding("", m_memoryManager);
 
-    XalanFileOutputStream           myOutput(theOutputFile, theManager);
+    XalanFileOutputStream           myOutput(theOutputFile, m_memoryManager);
     XalanOutputStreamPrintWriter    myResultWriter(myOutput);
 
     FormatterListener* const    theFormatter =
@@ -843,14 +848,14 @@ XalanFileUtility::checkDOMResults(
             mimeEncoding,
             compiledSS->getStylesheetRoot());
 
-    FormatterTreeWalker     theTreeWalker(*theFormatter, theManager);
+    FormatterTreeWalker     theTreeWalker(*theFormatter, m_memoryManager);
 
     theTreeWalker.traverse(dom);
 
-    destroyObjWithMemMgr( theFormatter, theManager);
+    destroyObjWithMemMgr(theFormatter, m_memoryManager);
 
     XalanSourceTreeDOMSupport       domSupport;
-    XalanSourceTreeParserLiaison    parserLiaison(domSupport, theManager);
+    XalanSourceTreeParserLiaison    parserLiaison(domSupport, m_memoryManager);
     
     domSupport.setParserLiaison(&parserLiaison);
 
@@ -869,15 +874,26 @@ XalanFileUtility::checkDOMResults(
 
         // if the compairson fails gather up the failure data and determine if it failed 
         // due to bad output or missing Gold file. Lastly, log the failure.
-        Hashtable attrs(theManager);
-        Hashtable actexp(theManager);
+        Hashtable attrs(m_memoryManager);
+        Hashtable actexp(m_memoryManager);
 
         reportError();
 
-        attrs.insert( XalanDOMString("reason", theManager),  XalanDOMString(data.msg, theManager));
-        attrs.insert( XalanDOMString("atNode", theManager), data.currentNode );
-        actexp.insert( XalanDOMString("exp", theManager), data.expected);
-        actexp.insert( XalanDOMString("act", theManager), data.actual);
+        attrs.insert(
+            XalanDOMString("reason", m_memoryManager), 
+            XalanDOMString(data.msg, m_memoryManager));
+
+        attrs.insert(
+            XalanDOMString("atNode", m_memoryManager),
+            data.currentNode);
+
+        actexp.insert(
+            XalanDOMString("exp", m_memoryManager),
+            data.expected);
+
+        actexp.insert(
+            XalanDOMString("act", m_memoryManager),
+            data.actual);
 
         if (ambgFlag < data.nogold)
         {
@@ -909,13 +925,11 @@ XalanFileUtility::compareSerializedResults(
             const XalanDOMString&   goldFile)
 {
 
-    const XSLTInputSource resultInputSource(outputFile);
-    const XSLTInputSource goldInputSource(goldFile);
-
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+    const XSLTInputSource   resultInputSource(outputFile, m_memoryManager);
+    const XSLTInputSource   goldInputSource(goldFile, m_memoryManager);
 
     XalanSourceTreeDOMSupport       domSupport;
-    XalanSourceTreeParserLiaison    parserLiaison(domSupport, theManager );
+    XalanSourceTreeParserLiaison    parserLiaison(domSupport, m_memoryManager);
 
     domSupport.setParserLiaison(&parserLiaison);
 
@@ -938,10 +952,10 @@ XalanFileUtility::compareSerializedResults(
     {
         cout << "SAXException: Using fileCompare to check output.\n";
 
-        CharVectorType     goldFileVec(XalanMemMgrs::getDefaultXercesMemMgr());
+        CharVectorType     goldFileVec(m_memoryManager);
         TranscodeToLocalCodePage(goldFile, goldFileVec, true);
 
-        CharVectorType     outputFileVec(XalanMemMgrs::getDefaultXercesMemMgr());
+        CharVectorType     outputFileVec(m_memoryManager);
         TranscodeToLocalCodePage(outputFile, outputFileVec, true);
         return fileCompare(c_str(goldFileVec), c_str(outputFileVec));
     }
@@ -988,15 +1002,13 @@ XalanFileUtility::fileCompare(
 
     char rline[maxBuffer] = {'0'};  // declare buffers to hold single line from file
     char gline[maxBuffer] = {'0'};  
-    char temp[10];              // buffer to hold line number
+    char temp[20];              // buffer to hold line number
     char lineNum = 1;
 
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
-
     // Set fail data incase there are i/o problems with the files to compare.
-    data.expected = XalanDOMString(" ", theManager);
-    data.actual = XalanDOMString(" ", theManager);
-    data.currentNode = XalanDOMString("Line: 0", theManager);
+    data.expected = XalanDOMString(" ", m_memoryManager);
+    data.actual = XalanDOMString(" ", m_memoryManager);
+    data.currentNode = XalanDOMString("Line: 0", m_memoryManager);
 
     // Attempt to open the files. 
     FILE* const     result = fopen(outputFile, "r");
@@ -1028,8 +1040,8 @@ XalanFileUtility::fileCompare(
         if (ferror(gold) || ferror(result))
         {
             data.msg = "Read Error - Gold/Result file";
-            data.currentNode = XalanDOMString("Line: ", theManager);
-            data.currentNode += XalanDOMString(temp, theManager);
+            data.currentNode = XalanDOMString("Line: ", m_memoryManager);
+            data.currentNode += XalanDOMString(temp, m_memoryManager);
             return false;
         }
 
@@ -1051,25 +1063,29 @@ XalanFileUtility::fileCompare(
                 replaceNonAsciiCharacters(rline, '?');
 
                 data.msg = "Text based comparison failure";
-                data.expected = XalanDOMString("<![CDATA[", theManager);
-                data.expected += XalanDOMString(gline, theManager);
-                data.expected += XalanDOMString("]]>", theManager);
+                data.expected = XalanDOMString("<![CDATA[", m_memoryManager);
+                data.expected += XalanDOMString(gline, m_memoryManager);
+                data.expected += XalanDOMString("]]>", m_memoryManager);
 
-                data.actual = XalanDOMString("<![CDATA[", theManager);
-                data.actual += XalanDOMString(rline, theManager);
-                data.actual += XalanDOMString("]]>", theManager);
+                data.actual = XalanDOMString("<![CDATA[", m_memoryManager);
+                data.actual += XalanDOMString(rline, m_memoryManager);
+                data.actual += XalanDOMString("]]>", m_memoryManager);
 
-                data.currentNode = XalanDOMString("Line: ", theManager);
-                data.currentNode += XalanDOMString(temp, theManager);
+                data.currentNode = XalanDOMString("Line: ", m_memoryManager);
+                data.currentNode += XalanDOMString(temp, m_memoryManager);
                 data.fail += 1;
-            fclose(result);     fclose(gold);
+                fclose(result);
+                fclose(gold);
                 return false;
             }
         }
 
         lineNum += 1;
     }
-            fclose(result);     fclose(gold);
+
+    fclose(result);
+    fclose(gold);
+
     return true;
 }
 
@@ -1095,14 +1111,13 @@ XalanFileUtility::domCompare(
 
     const XalanDOMString&  docNodeName  = doc.getNodeName();    
 
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
-
     if (goldNodeType != docNodeType)
     {
-        collectData("NodeType mismatch.",
-                    docNodeName,
-                    XalanDOMString(xalanNodeTypes[docNodeType], theManager),
-                    XalanDOMString(xalanNodeTypes[goldNodeType], theManager));
+        collectData(
+            "NodeType mismatch.",
+            docNodeName,
+            XalanDOMString(xalanNodeTypes[docNodeType], m_memoryManager),
+            XalanDOMString(xalanNodeTypes[goldNodeType], m_memoryManager));
 
         return false;
     }
@@ -1128,10 +1143,12 @@ XalanFileUtility::domCompare(
             
             if(goldNodeValue != docNodeValue)
             {
-                collectData("Text node mismatch. ", 
-                             docNodeName,
-                             goldNodeValue,
-                             docNodeValue);
+                collectData(
+                    "Text node mismatch. ", 
+                    docNodeName,
+                    goldNodeValue,
+                    docNodeValue);
+
                 return false;
             }
         }
@@ -1139,28 +1156,30 @@ XalanFileUtility::domCompare(
 
     case XalanNode::PROCESSING_INSTRUCTION_NODE:
         {
-            const XalanDOMString&  goldNodeName  = gold.getNodeName();
+            const XalanDOMString&  goldNodeName = gold.getNodeName();
 
             if (goldNodeName != docNodeName)
             {
-                collectData("processing-instruction target mismatch. ", 
-                             docNodeName,
-                             goldNodeName,
-                             docNodeName);
+                collectData(
+                    "processing-instruction target mismatch. ", 
+                    docNodeName,
+                    goldNodeName,
+                    docNodeName);
 
                 return false;
             }
             else
             {
-                const XalanDOMString&   docNodeValue  = doc.getNodeValue();
+                const XalanDOMString&   docNodeValue = doc.getNodeValue();
                 const XalanDOMString&   goldNodeValue = gold.getNodeValue();
 
                 if (goldNodeValue != docNodeValue)
                 {
-                    collectData("processing-instruction data mismatch. ", 
-                                 docNodeName,
-                                 goldNodeValue,
-                                 docNodeValue);
+                    collectData(
+                        "processing-instruction data mismatch. ", 
+                        docNodeName,
+                        goldNodeValue,
+                        docNodeValue);
 
                     return false;
                 }
@@ -1170,15 +1189,16 @@ XalanFileUtility::domCompare(
 
     case XalanNode::COMMENT_NODE:
         {
-            const XalanDOMString&   docNodeValue  = doc.getNodeValue();
+            const XalanDOMString&   docNodeValue = doc.getNodeValue();
             const XalanDOMString&   goldNodeValue = gold.getNodeValue();
 
             if (goldNodeValue != docNodeValue)
             {
-                collectData("comment data mismatch. ", 
-                             docNodeName,
-                             goldNodeValue,
-                             docNodeValue);
+                collectData(
+                    "comment data mismatch. ", 
+                    docNodeName,
+                    goldNodeValue,
+                    docNodeValue);
 
                 return false;
             }
@@ -1232,17 +1252,19 @@ XalanFileUtility::domCompare(
         }
         else
         {
-            collectData("Missing sibling node. ", 
-                     docNodeName,
-                     goldNextNode->getNodeName(),
-                     goldNextNode->getNodeName());
+            collectData(
+                "Missing sibling node. ", 
+                docNodeName,
+                goldNextNode->getNodeName(),
+                goldNextNode->getNodeName());
 
             return false;
         }
     }
     else if (0 != domNextNode)
     {
-        collectData("Extra sibling node. ", 
+        collectData(
+            "Extra sibling node. ", 
             docNodeName,
             domNextNode->getNodeName(),
             domNextNode->getNodeName());
@@ -1342,14 +1364,13 @@ XalanFileUtility::diffNode(
 
     const XalanDOMString&  docNodeName  = doc.getNodeName();    
 
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
-
     if (goldNodeType != docNodeType)
     {
-        collectData("NodeType mismatch.",
-                    docNodeName,
-                    XalanDOMString(xalanNodeTypes[docNodeType], theManager),
-                    XalanDOMString(xalanNodeTypes[goldNodeType], theManager));
+        collectData(
+            "NodeType mismatch.",
+            docNodeName,
+            XalanDOMString(xalanNodeTypes[docNodeType], m_memoryManager),
+            XalanDOMString(xalanNodeTypes[goldNodeType], m_memoryManager));
 
         return false;
     }
@@ -1370,10 +1391,12 @@ XalanFileUtility::diffNode(
             
             if(goldNodeValue != docNodeValue)
             {
-                collectData("Text node mismatch. ", 
-                             docNodeName,
-                             goldNodeValue,
-                             docNodeValue);
+                collectData(
+                    "Text node mismatch. ",
+                    docNodeName,
+                    goldNodeValue,
+                    docNodeValue);
+
                 return false;
             }
         }
@@ -1385,10 +1408,11 @@ XalanFileUtility::diffNode(
 
             if (goldNodeName != docNodeName)
             {
-                collectData("processing-instruction target mismatch. ", 
-                             docNodeName,
-                             goldNodeName,
-                             docNodeName);
+                collectData(
+                    "processing-instruction target mismatch. ", 
+                    docNodeName,
+                    goldNodeName,
+                    docNodeName);
 
                 return false;
             }
@@ -1399,10 +1423,11 @@ XalanFileUtility::diffNode(
 
                 if (goldNodeValue != docNodeValue)
                 {
-                    collectData("processing-instruction data mismatch. ", 
-                                 docNodeName,
-                                 goldNodeValue,
-                                 docNodeValue);
+                    collectData(
+                        "processing-instruction data mismatch. ", 
+                        docNodeName,
+                        goldNodeValue,
+                        docNodeValue);
 
                     return false;
                 }
@@ -1417,10 +1442,11 @@ XalanFileUtility::diffNode(
 
             if (goldNodeValue != docNodeValue)
             {
-                collectData("comment data mismatch. ", 
-                             docNodeName,
-                             goldNodeValue,
-                             docNodeValue);
+                collectData(
+                    "comment data mismatch. ", 
+                    docNodeName,
+                    goldNodeValue,
+                    docNodeValue);
 
                 return false;
             }
@@ -1518,19 +1544,23 @@ XalanFileUtility::diffElement(
     // same.  So specific checks of these items are not necessary.
     if (goldNodeName != docNodeName)
     {
-        collectData("Element mismatch. ", 
-                         docNodeName,
-                         goldNodeName,
-                         docNodeName);
+        collectData(
+            "Element mismatch. ", 
+            docNodeName,
+            goldNodeName,
+            docNodeName);
+
         return false;
     }
 
     if ( goldNsUri != docNsUri)
     {
-        collectData("Element NamespaceURI mismatch. ",
-                         docNodeName,
-                         goldNsUri,
-                         docNsUri);
+        collectData(
+            "Element NamespaceURI mismatch. ",
+            docNodeName,
+            goldNsUri,
+            docNsUri);
+
         return false;
     }
 
@@ -1541,8 +1571,6 @@ XalanFileUtility::diffElement(
     // Get number of Attributes
     const unsigned int  numGoldAttr = goldAttrs->getLength();
     const unsigned int  numDomAttr  = docAttrs ->getLength();
-
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
     /*
     // This needs to be uncommented if 'compare.exe' is to work. 
@@ -1575,10 +1603,11 @@ XalanFileUtility::diffElement(
             }
             else
             {
-                collectData("Element missing named Attribute. ",
-                         docNodeName,
-                         goldAttrName,
-                         XalanDOMString("NOTHING", theManager));
+                collectData(
+                    "Element missing named Attribute. ",
+                    docNodeName,
+                    goldAttrName,
+                    XalanDOMString("NOTHING", m_memoryManager));
 
                 return false;
             }
@@ -1586,13 +1615,15 @@ XalanFileUtility::diffElement(
     }
     else
     {
-        char  buf1[2], buf2[2];
-        sprintf(buf1, "%u", numGoldAttr);
-        sprintf(buf2, "%u", numDomAttr);
-        collectData("Wrong number of attributes. ",
-                         docNodeName,
-                         XalanDOMString(buf1, theManager),
-                         XalanDOMString(buf2, theManager));
+        XalanDOMString  numGoldStr(m_memoryManager);
+        XalanDOMString  numDOMStr(m_memoryManager);
+
+        collectData(
+            "Wrong number of attributes. ",
+            docNodeName,
+            UnsignedLongToDOMString(numGoldAttr, numGoldStr),
+            UnsignedLongToDOMString(numDomAttr, numDOMStr));
+
         return false;
     }
 
@@ -1608,10 +1639,12 @@ XalanFileUtility::diffElement(
         }
         else
         {
-            collectData("Element missing ChildNode. ", 
-                         docNodeName,
-                         XalanDOMString(goldNextNode->getNodeName(), theManager),
-                         XalanDOMString("NOTHING", theManager));
+            collectData(
+                "Element missing ChildNode. ", 
+                docNodeName,
+                XalanDOMString(goldNextNode->getNodeName(), m_memoryManager),
+                XalanDOMString("NOTHING", m_memoryManager));
+
             return false;
         }
     }
@@ -1621,23 +1654,25 @@ XalanFileUtility::diffElement(
         // then gather up the text and print it out.
         if ( domNextNode->getNodeType() == XalanNode::TEXT_NODE)
         {
-            collectData("Result has additional Child node: ", 
-                    docNodeName,
-                    XalanDOMString("NOTHING", theManager),       
-                    XalanDOMString(domNextNode->getNodeName(), theManager).append(XalanDOMString("  \"", theManager).append(
-                    XalanDOMString(domNextNode->getNodeValue(), theManager).append(XalanDOMString("\"", theManager)))));
+            collectData(
+                "Result has additional Child node: ", 
+                docNodeName,
+                XalanDOMString("NOTHING", m_memoryManager),       
+                XalanDOMString(domNextNode->getNodeName(), m_memoryManager).append(XalanDOMString("  \"", m_memoryManager).append(
+                XalanDOMString(domNextNode->getNodeValue(), m_memoryManager).append(XalanDOMString("\"", m_memoryManager)))));
         }
         // Additional node is NOT text, so just print it's Name.
         else
         {
-            collectData("Result has additional Child node: ", 
-                        docNodeName,
-                        XalanDOMString("NOTHING", theManager),       
-                        XalanDOMString(domNextNode->getNodeName(), theManager));
+            collectData(
+                "Result has additional Child node: ",
+                docNodeName,
+                XalanDOMString("NOTHING", m_memoryManager),
+                XalanDOMString(domNextNode->getNodeName(), m_memoryManager));
 
         }
-        return false;
 
+        return false;
     }
 
     return true;
@@ -1658,27 +1693,29 @@ XalanFileUtility::diffElement2(
     const XalanDOMString&  docNsUri  = doc.getNamespaceURI();
     const XalanDOMString&  goldNsUri = gold.getNamespaceURI();
 
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
-
     //debugNodeData(docNodeName);
 
     // This essentially checks 2 things, that the prefix and localname are the
     // same.  So specific checks of these items are not necessary.
     if (goldNodeName != docNodeName)
     {
-        collectData("Element mismatch. ", 
-                         docNodeName,
-                         goldNodeName,
-                         docNodeName);
+        collectData(
+            "Element mismatch. ", 
+            docNodeName,
+            goldNodeName,
+            docNodeName);
+
         return false;
     }
 
     if ( goldNsUri != docNsUri)
     {
-        collectData("Element NamespaceURI mismatch. ",
-                         docNodeName,
-                         goldNsUri,
-                         docNsUri);
+        collectData(
+            "Element NamespaceURI mismatch. ",
+            docNodeName,
+            goldNsUri,
+            docNsUri);
+
         return false;
     }
 
@@ -1713,10 +1750,11 @@ XalanFileUtility::diffElement2(
             }
             else
             {
-                collectData("Element missing named Attribute. ",
-                         docNodeName,
-                         goldAttrName,
-                         XalanDOMString("NOTHING", theManager));
+                collectData(
+                    "Element missing named Attribute. ",
+                    docNodeName,
+                    goldAttrName,
+                    XalanDOMString("NOTHING", m_memoryManager));
 
                 return false;
             }
@@ -1724,13 +1762,15 @@ XalanFileUtility::diffElement2(
     }
     else
     {
-        char  buf1[2], buf2[2];
-        sprintf(buf1, "%u", numGoldAttr);
-        sprintf(buf2, "%u", numDomAttr);
-        collectData("Wrong number of attributes. ",
-                         docNodeName,
-                         XalanDOMString(buf1, theManager),
-                         XalanDOMString(buf2, theManager));
+        XalanDOMString  numGoldStr(m_memoryManager);
+        XalanDOMString  numDOMStr(m_memoryManager);
+
+        collectData(
+            "Wrong number of attributes. ",
+            docNodeName,
+            UnsignedLongToDOMString(numGoldAttr, numGoldStr),
+            UnsignedLongToDOMString(numDomAttr, numDOMStr));
+
         return false;
     }
 
@@ -1823,7 +1863,8 @@ void
 XalanFileUtility::debugNodeData(const XalanDOMString&    value) const
 {
 
-    CharVectorType     valueVec(XalanMemMgrs::getDefaultXercesMemMgr());
+    CharVectorType     valueVec(m_memoryManager);
+
     TranscodeToLocalCodePage(value, valueVec, true);
 
     cout << "Node is: " << c_str(valueVec) << endl;
@@ -1837,10 +1878,10 @@ XalanFileUtility::debugNodeData(
             const XalanDOMString&   value) const
 {
 
-    CharVectorType     valueVec(XalanMemMgrs::getDefaultXercesMemMgr());
+    CharVectorType     valueVec(m_memoryManager);
     TranscodeToLocalCodePage(value, valueVec, true);
 
-    CharVectorType     nodeVec(XalanMemMgrs::getDefaultXercesMemMgr());
+    CharVectorType     nodeVec(m_memoryManager);
     TranscodeToLocalCodePage(node, nodeVec, true);
 
     cout << "Node is: " << c_str(nodeVec) << "   "
@@ -1852,7 +1893,7 @@ XalanFileUtility::debugNodeData(
 void
 XalanFileUtility::debugAttributeData(const XalanDOMString&   value) const
 {
-    CharVectorType		theTargetVector(XalanMemMgrs::getDefaultXercesMemMgr());
+    CharVectorType		theTargetVector(m_memoryManager);
 
     TranscodeToLocalCodePage(value, theTargetVector, true);
 
@@ -1894,37 +1935,62 @@ XalanFileUtility::collectData(
 */
 void
 XalanFileUtility::reportPassFail(
-            XalanXMLFileReporter&        logfile,
+            XalanXMLFileReporter&   logfile,
             const XalanDOMString&   runid)
 {
     typedef XalanXMLFileReporter::Hashtable  Hashtable;
 
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+    Hashtable   runResults(m_memoryManager);
 
-    Hashtable   runResults(theManager);
-
-    char temp[5];
+    char temp[10];
 
     // Create entrys that contain runid, xerces version, and numbers for Pass, Fail and No Gold.
 
-    XalanDOMString theBuffer( theManager);
+    XalanDOMString theBuffer(m_memoryManager);
 
-    runResults.insert( XalanDOMString("UniqRunid",theManager), runid );
-    runResults.insert( XalanDOMString("Xerces-Version ",theManager), getXercesVersion(theBuffer));
-    runResults.insert( XalanDOMString("BaseDrive ",theManager),  XalanDOMString(getDrive(theBuffer), theManager));
-    runResults.insert( XalanDOMString("TestBase ",theManager), XalanDOMString(args.base,theManager));
-    runResults.insert( XalanDOMString("xmlFormat ",theManager), data.xmlFormat);
+    runResults.insert(
+        XalanDOMString("UniqRunid", m_memoryManager),
+        runid);
+
+    runResults.insert(
+        XalanDOMString("Xerces-Version ", m_memoryManager),
+        getXercesVersion(theBuffer));
+
+    runResults.insert(
+        XalanDOMString("BaseDrive ", m_memoryManager), 
+        XalanDOMString(getDrive(theBuffer), m_memoryManager));
+
+    runResults.insert(
+        XalanDOMString("TestBase ", m_memoryManager),
+        XalanDOMString(args.base, m_memoryManager));
+
+    runResults.insert(
+        XalanDOMString("xmlFormat ", m_memoryManager),
+        data.xmlFormat);
+
     sprintf(temp, "%ld", args.iters);
-    runResults.insert( XalanDOMString("Iters ",theManager), XalanDOMString(temp,theManager));
+
+    runResults.insert(
+        XalanDOMString("Iters ", m_memoryManager),
+        XalanDOMString(temp, m_memoryManager));
 
     sprintf(temp, "%d", data.pass);
-    runResults.insert( XalanDOMString("Passed",theManager), XalanDOMString(temp,theManager));
+
+    runResults.insert(
+        XalanDOMString("Passed", m_memoryManager),
+        XalanDOMString(temp, m_memoryManager));
     
     sprintf(temp, "%d", data.fail);
-    runResults.insert( XalanDOMString("Failed",theManager), XalanDOMString(temp,theManager));
+
+    runResults.insert(
+        XalanDOMString("Failed", m_memoryManager),
+        XalanDOMString(temp, m_memoryManager));
 
     sprintf(temp, "%d", data.nogold);
-    runResults.insert( XalanDOMString("No_Gold_Files",theManager), XalanDOMString(temp,theManager));
+
+    runResults.insert(
+        XalanDOMString("No_Gold_Files", m_memoryManager),
+        XalanDOMString(temp, m_memoryManager));
 
     logfile.logElementWAttrs(10, "RunResults", runResults, "xxx");  
 
@@ -1943,13 +2009,14 @@ XalanFileUtility::reportPassFail(
 void
 XalanFileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resultsFile)
 {
-    XalanDOMString paramValue(XalanMemMgrs::getDefaultXercesMemMgr());
+    XalanDOMString paramValue(m_memoryManager);
+
     bool    fileStatus;
 
 #if defined(AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX)
 
     bool    pathStatus;
-    CharVectorType     withPath(XalanMemMgrs::getDefaultXercesMemMgr());
+    CharVectorType     withPath(m_memoryManager);
     TranscodeToLocalCodePage(resultsFile, withPath, false);
     if (withPath[0] == '/')
         pathStatus=true;
@@ -1957,7 +2024,7 @@ XalanFileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& 
         pathStatus=false;
     
     char buffer5[PATH_MAX];
-    XalanDOMString resultPath(getcwd(buffer5, PATH_MAX), XalanMemMgrs::getDefaultXercesMemMgr());
+    XalanDOMString resultPath(getcwd(buffer5, PATH_MAX), m_memoryManager);
     append(resultPath, s_pathSep);
 #endif
     
@@ -1966,37 +2033,39 @@ XalanFileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& 
     // quotes so that it is not considered an expression.
     //
   #if defined (AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX)
-    assign(paramValue, XalanDOMString("\'", XalanMemMgrs::getDefaultXercesMemMgr()));
+    assign(paramValue, XalanDOMString("\'", m_memoryManager));
     if ( !pathStatus )
         append(paramValue, resultPath);
     append(paramValue, resultsFile);
-    append(paramValue, XalanDOMString("\'", XalanMemMgrs::getDefaultXercesMemMgr()));
+    append(paramValue, XalanDOMString("\'", m_memoryManager));
   #else 
-    assign(paramValue, XalanDOMString("'", XalanMemMgrs::getDefaultXercesMemMgr()));
+    assign(paramValue, XalanDOMString("'", m_memoryManager));
         append(paramValue, resultsFile);
-        append(paramValue, XalanDOMString("'", XalanMemMgrs::getDefaultXercesMemMgr()));
+        append(paramValue, XalanDOMString("'", m_memoryManager));
   #endif
 
     // Set the parameter
     //
-    xalan.setStylesheetParam(XalanDOMString("testfile", XalanMemMgrs::getDefaultXercesMemMgr()), paramValue);
+    xalan.setStylesheetParam(
+        XalanDOMString("testfile", m_memoryManager),
+        paramValue);
 
     // Generate the input and output file names.
     //
-    XalanDOMString  theHTMLFile(XalanMemMgrs::getDefaultXercesMemMgr());
+    XalanDOMString  theHTMLFile(m_memoryManager);
     generateFileName(resultsFile,"html", theHTMLFile, &fileStatus);
     
-    XalanDOMString  theStylesheet(XalanMemMgrs::getDefaultXercesMemMgr());
+    XalanDOMString  theStylesheet(m_memoryManager);
     theStylesheet += args.base;
-    theStylesheet += XalanDOMString("cconf.xsl", XalanMemMgrs::getDefaultXercesMemMgr());
+    theStylesheet += XalanDOMString("cconf.xsl", m_memoryManager);
 
-    XalanDOMString  theXMLSource(XalanMemMgrs::getDefaultXercesMemMgr());
+    XalanDOMString  theXMLSource(m_memoryManager);
     theXMLSource += args.base;
-    theXMLSource += XalanDOMString("cconf.xml", XalanMemMgrs::getDefaultXercesMemMgr());
+    theXMLSource += XalanDOMString("cconf.xml", m_memoryManager);
 
     // Check that we can find the stylesheet to analyze the results.
     //
-    CharVectorType theBuffer(XalanMemMgrs::getDefaultXercesMemMgr());
+    CharVectorType theBuffer(m_memoryManager);
     TranscodeToLocalCodePage(theStylesheet, theBuffer, true);
     FILE* fileHandle = fopen(c_str(theBuffer), "r");
     if (fileHandle == 0)
@@ -2010,9 +2079,9 @@ XalanFileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& 
     }
 
     // Create the InputSources and ResultTarget.
-    const XSLTInputSource   xslInputSource(theStylesheet);
-    const XSLTInputSource   xmlInputSource(theXMLSource);
-    const XSLTResultTarget  resultFile(theHTMLFile, XalanMemMgrs::getDefaultXercesMemMgr());
+    const XSLTInputSource   xslInputSource(theStylesheet, m_memoryManager);
+    const XSLTInputSource   xmlInputSource(theXMLSource, m_memoryManager);
+    const XSLTResultTarget  resultFile(theHTMLFile, m_memoryManager);
 
     // Do the transform, display the output HTML, or report any failure.
     const int   result = xalan.transform(xmlInputSource, xslInputSource, resultFile);
@@ -2020,7 +2089,7 @@ XalanFileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& 
     if (result == 0)
     {
 #if defined(_MSC_VER)
-        CharVectorType theBuffer(XalanMemMgrs::getDefaultXercesMemMgr());
+        CharVectorType theBuffer(m_memoryManager);
         TranscodeToLocalCodePage(theHTMLFile, theBuffer, true);
 
         // system(c_str(theBuffer));
