@@ -1196,7 +1196,7 @@ main(
 
 			if (theSystemID != 0)
 			{
-				cout << XalanDOMString(theSystemID,XalanMemMgrs::getDefaultXercesMemMgr());
+				cout << theSystemID;
 			}
 			else
 			{

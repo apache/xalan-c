@@ -1246,7 +1246,7 @@ TestAxes(
 
     typedef XalanVector<XalanDOMString>     FileNameVectorType;
 
-    DirectoryEnumeratorFunctor<FileNameVectorType, XalanDOMString>  theEnumerator;
+    DirectoryEnumeratorFunctor<FileNameVectorType, XalanDOMString>  theEnumerator(theMemoryManager);
 
     FileNameVectorType  theFiles(theMemoryManager);
 
