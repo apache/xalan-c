@@ -210,7 +210,27 @@ SOURCE=..\..\..\..\src\xalanc\Include\XalanMap.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\Include\XalanMemMgrAutoPtr.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\Include\XalanMemMgrHelper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\Include\XalanMemMngArrayAllocate.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\Include\XalanObjectCache.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\Include\XalanObjectStackCache.hpp
 # End Source File
 # Begin Source File
 
@@ -3453,21 +3473,5 @@ SOURCE=..\..\..\..\src\xalanc\Harness\XalanXMLFileReporter.cpp
 SOURCE=..\..\..\..\src\xalanc\Harness\XalanXMLFileReporter.hpp
 # End Source File
 # End Group
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\Include\XalanMemMgrAutoPtr.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\Include\XalanMemMgrHelper.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\Include\XalanMemMngArrayAllocate.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp
-# End Source File
 # End Target
 # End Project
