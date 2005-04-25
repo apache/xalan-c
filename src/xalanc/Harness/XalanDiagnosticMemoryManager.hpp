@@ -26,6 +26,15 @@
 
 
 
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#else
+#include <iosfwd>
+#include <ios>
+#endif
+
+
+
 #include "xercesc/framework/MemoryManager.hpp"
 
 
@@ -45,6 +54,12 @@ XALAN_USING_XERCES(MemoryManager)
 class XALAN_HARNESS_EXPORT XalanDiagnosticMemoryManager : public MemoryManager
 {
 public:
+
+#if defined(XALAN_NO_STD_NAMESPACE)
+	typedef ostream				StreamType;
+#else
+	typedef std::ostream		StreamType;
+#endif
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::size_t     size_type;
@@ -67,7 +82,8 @@ public:
 
     XalanDiagnosticMemoryManager(
                 MemoryManager&  theMemoryManager,
-                bool            fAssertErrors = false);
+                bool            fAssertErrors = false,
+                StreamType*     theStream = 0);
 
     virtual
     ~XalanDiagnosticMemoryManager();
@@ -85,9 +101,9 @@ public:
     }
 
     void
-    setAssertErrors(bool    fAssertErrors)
+    setAssertErrors(bool    fFlag)
     {
-        m_assertErrors = fAssertErrors;
+        m_assertErrors = fFlag;
     }
 
     // Get the high-water mark (the highest amount
@@ -155,6 +171,16 @@ public:
         m_locked = false;
     }
 
+    enum
+    {
+        defaultBytesToDump = 20u
+    };
+
+    void
+    dumpStatistics(
+                StreamType*  theStream = 0,
+                size_type    theBytesToDump = defaultBytesToDump);
+
 private:
 
     XalanDiagnosticMemoryManager(const XalanDiagnosticMemoryManager&);
@@ -175,6 +201,8 @@ private:
     size_type       m_currentAllocated;
 
     MapType         m_allocations;
+
+    StreamType*     m_stream;
 };
 
 

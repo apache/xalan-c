@@ -17,20 +17,36 @@
 
 
 
+#if !defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream>
+#endif
+
+
+
+#include <ctype.h>
+
+
+
+#include "xercesc/util/PlatformUtils.hpp"
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 
 XalanDiagnosticMemoryManager::XalanDiagnosticMemoryManager(
             MemoryManager&  theMemoryManager,
-            bool            fAssertErrors) :
+            bool            fAssertErrors,
+            StreamType*     theStream) :
     m_memoryManager(theMemoryManager),
     m_assertErrors(fAssertErrors),
     m_locked(false),
     m_sequence(0),
     m_highWaterMark(0),
     m_currentAllocated(0),
-    m_allocations(theMemoryManager)
+    m_allocations(theMemoryManager),
+    m_stream(theStream)
 {
 }
 
@@ -38,11 +54,11 @@ XalanDiagnosticMemoryManager::XalanDiagnosticMemoryManager(
 
 XalanDiagnosticMemoryManager::~XalanDiagnosticMemoryManager()
 {
-    if (m_allocations.size() > 0)
+    if (m_allocations.size() > 0 && m_stream != 0)
     {
-//        std::cerr << "Detected memory leaks. "
-//                  << m_allocations.size()
-//                  << " blocks are still allocated.";
+        *m_stream << "Detected memory leaks. "
+                  << m_allocations.size()
+                  << " blocks are still allocated.\n";
     }
 }
 
@@ -55,6 +71,17 @@ XalanDiagnosticMemoryManager::allocate(size_type  size)
 
     if (m_locked == true)
     {
+        if (m_stream != 0)
+        {
+            *m_stream << "Attempt to allocate "
+                      << size
+                      << " bytes from locked instance "
+                      << this
+                      << ".\n";
+
+            dumpStatistics(m_stream);
+        }
+
         throw LockException();
     }
     else
@@ -85,6 +112,15 @@ XalanDiagnosticMemoryManager::deallocate(void*    pointer)
 {
     if (m_locked == true)
     {
+        if (m_stream != 0)
+        {
+            *m_stream << "Attempt to deallocate address "
+                      << pointer
+                      << " with locked instance "
+                      << this
+                      << ".\n";
+        }
+
         throw LockException();
     }
     else
@@ -106,15 +142,123 @@ XalanDiagnosticMemoryManager::deallocate(void*    pointer)
             }
             else
             {
-                //std::cerr << "Attempt to free unallocated pointer "
-                //    << pointer
-                //    << ".\n";
+                if (m_stream != 0)
+                {
+                    *m_stream << "Attempt to free unallocated address "
+                              << pointer
+                              << " with instance "
+                              << this
+                              << ".\n";
+                }
 
                 assert(!m_assertErrors);
             }
         }
     }
 }
+
+
+
+void
+XalanDiagnosticMemoryManager::dumpStatistics(
+            StreamType*     theStream,
+            size_type       theBytesToDump)
+{
+    StreamType* const   diagStream = theStream != 0 ? theStream : m_stream;
+
+    if (diagStream != 0)
+    {
+        *diagStream << "Total number of allocations: "
+                    << m_sequence
+                    << ".\n"
+                    << "Total current allocations: "
+                    << m_allocations.size()
+                    << ".\n"
+                    << "Total bytes currently allocated: "
+                    << m_currentAllocated
+                    << ".\n"
+                    << "Peak bytes allocated: "
+                    << m_highWaterMark
+                    << ".\n";
+
+        for(const_iterator i = m_allocations.begin();
+                i != m_allocations.end();
+                    ++i)
+        {
+            const void* const   thePointer = i->first;
+            const Data&         theData = i->second;
+
+            XALAN_USING_STD(dec);
+
+            *diagStream << "Block at address "
+                        << thePointer
+                        << " with sequence "
+                        << dec
+                        << theData.m_sequence
+                        << " is "
+                        << theData.m_size
+                        << " bytes long.\n";
+
+            XALAN_USING_XERCES(XMLPlatformUtils);
+
+	        const size_type     theHeaderSize =
+                XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(MemoryManager*));
+
+            const char* const   theChars =
+                reinterpret_cast<const char*>(thePointer) + 
+                    theHeaderSize;
+
+            const unsigned char* const  theUChars =
+                reinterpret_cast<const unsigned char*>(theChars);
+
+            if (theBytesToDump != 0)
+            {
+                XALAN_USING_STD(hex);
+
+                const size_type     theCount =
+                    theBytesToDump > theData.m_size ?
+                        theData.m_size :
+                        theBytesToDump;
+
+                {
+                    *diagStream << "(";
+
+                    for (size_t j = 0; j < theCount; ++j)
+                    {
+                        const char  ch = isprint(theChars[j]) ?
+                                            theChars[j] :
+                                            ' ';
+
+                        *diagStream << ch;
+                    }
+
+                    *diagStream << ")  ";
+                }
+
+                if (theCount < theBytesToDump)
+                {
+                    for (size_t j = theCount; j < theBytesToDump; ++j)
+                    {
+                        *diagStream << ' ';
+                    }
+                }
+
+                {
+                    *diagStream << hex;
+
+                    for (size_t j = 0; j < theCount; ++j)
+                    {
+                        *diagStream << unsigned(theUChars[j])
+                                    << " ";
+                    }
+                }
+
+                *diagStream << "\n";
+            }
+        }
+    }
+}
+
 
 
 XALAN_CPP_NAMESPACE_END
