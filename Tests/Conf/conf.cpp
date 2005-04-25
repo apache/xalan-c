@@ -487,7 +487,7 @@ main(
         XALAN_USING_XERCES(XMLUni)
 
         XalanMemoryManagerDefault       theGlobalMemoryManager;
-        XalanDiagnosticMemoryManager    theDiagnosticMemoryManager(theGlobalMemoryManager);
+        XalanDiagnosticMemoryManager    theDiagnosticMemoryManager(theGlobalMemoryManager, true, &cerr);
         XalanMemoryManagerDefault       theTestingMemoryManager;
 
         // Call the static initializers for xerces and xalan, and create a transformer
