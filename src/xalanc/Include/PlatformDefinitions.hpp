@@ -119,7 +119,17 @@ typedef wchar_t			XalanDOMChar;
 // UTF-16 character...
 typedef unsigned short	XalanDOMChar;
 #endif
+
+template<bool value>
+struct XalanCompileErrorBoolean
+{
+    char    foo[value];
+};
+ 
 XALAN_CPP_NAMESPACE_END
+
+
+#define XALAN_STATIC_ASSERT(expr) XALAN_CPP_NAMESPACE_QUALIFIER XalanCompileErrorBoolean<bool(expr)>()
 
 
 

@@ -28,11 +28,6 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-template<bool> struct CompileTimeError;
-
-template<> struct CompileTimeError<true>{};
-
-#define XALAN_STATIC_CHECK(expr) CompileTimeError<bool(expr)>()
 
 
 template <class ObjectType,
@@ -100,7 +95,7 @@ public:
 		m_nextFreeBlock(0)
 
 	{
-		XALAN_STATIC_CHECK(sizeof(ObjectType) >= sizeof(NextBlock));
+		XALAN_STATIC_ASSERT(sizeof(ObjectType) >= sizeof(NextBlock));
 		
 		for( size_type i = 0; i < this->m_blockSize; ++i )
 		{
